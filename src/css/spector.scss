@@ -1,0 +1,25 @@
+// Spector is based heavily on Basscss, Copyright (c) 2013 – 2016 Brent Jackson
+
+// Variable config
+@import 'config';
+
+// Set Default Values
+@import 'reset';
+
+// Layout
+@import 'flexbox';
+@import 'grid';
+@import 'layout';
+@import 'margin';
+@import 'padding';
+@import 'align';
+@import 'position';
+@import 'hide';
+
+// Styling
+@import 'hover';
+@import 'border';
+@import 'background';
+@import 'opacity';
+@import 'color';
+@import 'typography';

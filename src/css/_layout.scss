@@ -1,0 +1,24 @@
+.inline { display: inline }
+.block { display: block }
+.inline-block { display: inline-block }
+.table { display: table }
+.table-cell { display: table-cell }
+
+.overflow-hidden { overflow: hidden }
+.overflow-scroll { overflow: scroll }
+.overflow-auto { overflow: auto }
+
+.fit { max-width: 100% }
+.fill-x { width: 100% }
+.fill-y { height: 100% }
+.fill { width: 100%; height: 100%; }
+.fill-viewport { width: 100vw; min-height: 100vh; }
+
+@for $i from 1 through $layout-count {
+  .x#{$i} {width: #{$i * .5}rem;}
+    .max-x#{$i} {max-width: #{$i * .5}rem;}
+    .min-x#{$i} {min-width: #{$i * .5}rem;}
+  .y#{$i} {height: #{$i * .5}rem;}
+    .max-y#{$i} {max-height: #{$i * .5}rem;}
+    .min-y#{$i} {min-height: #{$i * .5}rem;}
+}

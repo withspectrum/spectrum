@@ -1,0 +1,61 @@
+.flex { display: flex; }
+.flex-column { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.items-center { align-items: center; }
+.items-baseline { align-items: baseline; }
+.items-stretch { align-items: stretch; }
+
+.self-start { align-self: flex-start; }
+.self-end { align-self: flex-end; }
+.self-center { align-self: center; }
+.self-baseline { align-self: baseline; }
+.self-stretch { align-self: stretch; }
+
+.justify-start { justify-content: flex-start; }
+.justify-end { justify-content: flex-end; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-around { justify-content: space-around; }
+
+.content-start { align-content: flex-start; }
+.content-end { align-content: flex-end; }
+.content-center { align-content: center; }
+.content-between { align-content: space-between; }
+.content-around { align-content: space-around; }
+.content-stretch { align-content: stretch; }
+
+// 1. Fix for Chrome 44 bug. https://code.google.com/p/chromium/issues/detail?id=506893
+.flex-auto {
+  flex: 1 0 auto;
+  min-height: 0; // 1
+  min-width: 0; // 1
+}
+
+.flex-none { flex: none; }
+
+.order-0 { order: 0; }
+.order-1 { order: 1; }
+.order-2 { order: 2; }
+.order-3 { order: 3; }
+.order-last { order: 99999; }
+
+@media #{$breakpoint-sm} {
+  .sm-flex { display: flex; }
+  .sm-row { flex-direction: row; }
+  .sm-column {flex-direction: column; }
+}
+
+@media #{$breakpoint-md} {
+  .md-flex { display: flex; }
+  .md-row { flex-direction: row; }
+  .md-column { flex-direction: column; }
+}
+
+@media #{$breakpoint-lg} {
+  .lg-flex { display: flex; }
+  .lg-row { flex-direction: row; }
+  .lg-column { flex-direction: column; }
+}

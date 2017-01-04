@@ -1,0 +1,9 @@
+@for $i from 1 through $padding-count {
+  .p#{$i} { padding: #{$i * .5}rem; }
+  .pt#{$i} { padding-top: #{$i * .5}rem; }
+  .pb#{$i} { padding-bottom: #{$i * .5}rem; }
+  .pl#{$i} { padding-left: #{$i * .5}rem; }
+  .pr#{$i} { padding-right: #{$i * .5}rem; }
+  .py#{$i} { padding-bottom: #{$i * .5}rem; padding-top: #{$i * .5}rem; }
+  .px#{$i} { padding-left: #{$i * .5}rem; padding-right: #{$i * .5}rem; }
+}

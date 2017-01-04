@@ -1,0 +1,22 @@
+.ml-auto { margin-left: auto; }
+.mr-auto { margin-right: auto; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.mb-auto { margin-bottom: auto; }
+.mt-auto { margin-top: auto; }
+.mx-none { margin-left: none; margin-right: none; }
+.my-none { margin-bottom: none; margin-top: none; }
+.m-none { margin: none;}
+
+
+@for $i from 0 through $margin-count {
+  .m#{$i} { margin: #{$i * .5}rem; }
+  .mt#{$i} { margin-top: #{$i * .5}rem; }
+  .mr#{$i} { margin-right: #{$i * .5}rem; }
+  .mb#{$i} { margin-bottom: #{$i * .5}rem; }
+  .ml#{$i} { margin-left: #{$i * .5}rem; }
+  .my#{$i} { margin-bottom: #{$i * .5}rem; margin-top: #{$i * .5}rem; }
+  .mx#{$i} { margin-left: #{$i * .5}rem; margin-right: #{$i * .5}rem; }
+  .mnt#{$i} { margin-top: #{$i * .5}rem; }
+  .mnb#{$i} { margin-bottom: #{$i * -.5}rem; }
+  .mnx#{$i} { margin-left: #{$i * -.5}rem; margin-right: #{$i * -.5}rem; }
+}

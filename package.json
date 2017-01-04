@@ -1,0 +1,24 @@
+{
+  "name": "Spectrum",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "react-scripts": "0.7.0"
+  },
+  "dependencies": {
+    "react": "^15.4.1",
+    "react-dom": "^15.4.1",
+    "re-base": "^2.2.0",
+    "react-router": "^4.0.0-alpha.4",
+    "gulp-ruby-sass": "*",
+    "gulp": "*",
+    "gulp-autoprefixer": "*",
+    "gulp-sourcemaps": "*"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

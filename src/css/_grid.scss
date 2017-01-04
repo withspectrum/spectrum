@@ -1,0 +1,33 @@
+// Default Breakpoint (Mobile) Columns
+@for $i from 1 through 12 {
+  .col-#{$i} {
+    width: calc(#{$i}/12 * 100%);
+  }
+}
+
+// Small Breakpoint (640px) Columns
+@media #{$breakpoint-sm} {
+  @for $i from 1 through 12 {
+    .sm-col-#{$i} {
+      width: calc(#{$i}/12 * 100%);
+    }
+  }
+}
+
+// Medium Breakpoint (832px) Columns
+@media #{$breakpoint-md} {
+  @for $i from 1 through 12 {
+    .md-col-#{$i} {
+      width: calc(#{$i}/12 * 100%);
+    }
+  }
+}
+
+// Large Breakpoint (1024px) Columns
+@media #{$breakpoint-lg} {
+  @for $i from 1 through 12 {
+    .lg-col-#{$i} {
+      width: calc(#{$i}/12 * 100%);
+    }
+  }
+}
