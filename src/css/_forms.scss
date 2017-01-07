@@ -1,0 +1,18 @@
+input, button {
+  padding: .4rem;
+  line-height: 1.2rem;
+  margin: .2rem;
+}
+button {
+  &:hover {
+    cursor: pointer;
+  }
+}
+.loginForm {
+  width: 90%;
+  text-align: center;
+  button, input {
+    display: block;
+    width: 100%;
+  }
+}

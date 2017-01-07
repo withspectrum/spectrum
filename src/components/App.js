@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import SideBar from './SideBar';
 import PostList from './PostList';
 import Chat from './Chat';
-import Login from './Login';
 import * as firebase from 'firebase';
-
 import FIREBASE_CONFIG from '../config/FirebaseConfig';
-
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,
   authDomain: FIREBASE_CONFIG.AUTH_DOMAIN,
@@ -33,8 +30,7 @@ class App extends Component{
 	render() {
 		return (
 	    <div className="flex col-12 fill-viewport">
-        <Login setCurrentUser={this.setCurrentUser.bind(this)} currentUser={this.state.currentUser} />
-	    	<SideBar />
+	    	<SideBar setCurrentUser={this.setCurrentUser.bind(this)} currentUser={this.state.currentUser} />
 	    	<PostList />
 		    <Chat />
 	    </div>

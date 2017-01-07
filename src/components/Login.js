@@ -15,7 +15,7 @@ class Login extends Component{
   updatePassword(e){
     this.setState({ password: e.target.value });
   }
-  login(){
+  loginAction(){
     var that = this;
     firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then(function(res){
       console.log(res);
@@ -27,20 +27,22 @@ class Login extends Component{
     var that = this;
     firebase.auth().onAuthStateChanged(function(user) {
       if (!that.props.currentUser){
-        that.props.setCurrentUser(user);
+        that.props.setUser(user);
       }
     });
 		return (
-      <div>
-        <input type="email" onChange={this.updateEmail.bind(this)} value={this.state.email} />
-        <input type="password" onChange={this.updatePassword.bind(this)} value={this.state.password} />
-        <button onClick={this.login.bind(this)}>Log In</button>
+      <form onSubmit={this.loginAction} className="loginForm">
+        <div>
+          <input type="email" onChange={this.updateEmail.bind(this)} value={this.state.email} placeholder="Email" />
+          <input type="password" onChange={this.updatePassword.bind(this)} value={this.state.password} placeholder="Password" />
+        </div>
+        <button type="submit" className="bg-brand color-light">Log In</button>
         {that.state.error &&
-          <div>
+          <div className="login-error">
             {that.state.errorMessage}
           </div>
         }
-      </div>
+      </form>
 	  );
 	}
 }
