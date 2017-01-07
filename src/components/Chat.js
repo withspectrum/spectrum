@@ -4,9 +4,11 @@ import Message from './Message';
 class Chat extends Component{
 	render() {
 		return (
-    	<div className="flex-auto flex lg-col-8 col-6 bg-default">
-    		<Message />
-    	</div>
+      <div>
+        <div className="flex-auto flex lg-col-8 col-6 bg-default">
+          <Message />
+        </div>
+      </div>
 	  );
 	}
 }
