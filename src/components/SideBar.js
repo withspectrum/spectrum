@@ -27,7 +27,8 @@ class SideBar extends Component{
   renderTags(){
     let that = this;
     return this.state.tags.map(function(tag){
-      return (<TagButton key={tag} name={tag} clickHandler={that.selectTag.bind(that, tag)} />);
+      let current = tag == that.props.currentTag;
+      return (<TagButton current={current} key={tag} name={tag} clickHandler={that.selectTag.bind(that, tag)} />);
     });
   }
 	render() {

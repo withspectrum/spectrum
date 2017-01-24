@@ -44,7 +44,7 @@ class PostList extends Component{
     let database = firebase.database();
     let userId = firebase.auth().currentUser.uid;
     let timestamp = Math.round(new Date() / 1);
-    let newPostRef = firebase.database().ref().child(`posts/${this.props.activeTag}`).push();
+    let newPostRef = firebase.database().ref().child(`posts/${this.props.currentTag}`).push();
     let postData = {
       uid: userId,
       timestamp: timestamp,
