@@ -15,10 +15,15 @@ class Login extends Component{
   updatePassword(e){
     this.setState({ password: e.target.value });
   }
-  loginAction(){
+  //setCurrentUser(userObject){
+    //this.props.setCurrentUser(userObject);
+  //}
+  loginAction(e){
+    e.preventDefault();
     var that = this;
-    firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).then(function(res){
-      console.log(res);
+    firebase.auth().signInWithEmailAndPassword(that.state.email, that.state.password).then(function(res){
+      //console.log(res);
+      //that.props.setUser(res);
     }, function(err){
       that.setState({error: true, errorMessage: err.message});
     });
@@ -26,12 +31,13 @@ class Login extends Component{
 	render() {
     var that = this;
     firebase.auth().onAuthStateChanged(function(user) {
+      console.log(user);
       if (!that.props.currentUser){
         that.props.setUser(user);
       }
     });
 		return (
-      <form onSubmit={this.loginAction} className="loginForm">
+      <form onSubmit={this.loginAction.bind(this)} className="loginForm">
         <div>
           <input type="email" onChange={this.updateEmail.bind(this)} value={this.state.email} placeholder="Email" />
           <input type="password" onChange={this.updatePassword.bind(this)} value={this.state.password} placeholder="Password" />

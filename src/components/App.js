@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SideBar from './SideBar';
 import PostList from './PostList';
 import Chat from './Chat';
+import ListDetail from './ListDetail';
 import * as firebase from 'firebase';
 import FIREBASE_CONFIG from '../config/FirebaseConfig';
 const fbconfig = {
@@ -16,8 +17,15 @@ class App extends Component{
   constructor(props){
     super(props);
     this.state = {
-      currentUser: null 
+      currentUser: null,
+      currentTag: "",
+      currentPost: {
+        id: 1
+      }
     }
+  }
+  selectTag(tag){
+    this.setState({ currentTag: tag });
   }
   setCurrentUser(user){
     this.setState({
@@ -27,12 +35,16 @@ class App extends Component{
   componentWillMount(){
     firebase.initializeApp(fbconfig);
   }
+  selectPost(){
+  }
 	render() {
 		return (
 	    <div className="flex col-12 fill-viewport">
-	    	<SideBar setCurrentUser={this.setCurrentUser.bind(this)} currentUser={this.state.currentUser} />
-	    	<PostList />
-		    <Chat />
+	    	<SideBar selectTag={this.selectTag.bind(this)} currentTag={this.state.currentTag} setCurrentUser={this.setCurrentUser.bind(this)} currentUser={this.state.currentUser} />
+        <ListDetail>
+          <PostList currentTag={this.state.currentTag} selectPost={this.selectPost.bind(this)} currentData={{currentPost: this.state.currentPost, currentUser: this.state.currentUser }} />
+          <Chat currentData={{currentPost: this.state.currentPost}} />
+        </ListDetail>
 	    </div>
 	  );
 	}
