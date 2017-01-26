@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import Post from './Post';
+import Post from '../Post';
 import * as firebase from 'firebase';
 
 class PostList extends Component{
-  constructor(props){
-    super(props);
+  constructor(){
+    super();
     this.state = {
       newPostContent: "",
       posts: [
@@ -24,16 +24,18 @@ class PostList extends Component{
       false: "col-8"
     }[this.props.currentData.currentPost.id === undefined]
   }
-  changeNewPostContent(e){
+
+  changeNewPostContent = (e) => {
     this.setState({
       newPostContent: e.target.value
     });
   }
+
   postForm(){
     if (this.props.currentData.currentUser !== undefined){
       return(
-        <form onSubmit={this.createPost.bind(this)}>
-          <input value={this.state.newPostContent} onChange={this.changeNewPostContent.bind(this)} />
+        <form onSubmit={this.createPost}>
+          <input value={this.state.newPostContent} onChange={this.changeNewPostContent} />
           <input type="submit" />
         </form>
       );

@@ -47,6 +47,25 @@ import { IncludeAvatarMask } from '../SVG';
 // 	  );
 // 	}
 // }
+
+export default class NavBar extends Component{
+  render() {
+    return(
+      <Column>
+        <IncludeAvatarMask />
+        <UserHeader>
+          <Avatar src="./img/avatar.jpg"></Avatar>
+          <UserMeta>
+            <UserName>Bryn Jackson</UserName>
+            <ProfileURL>spec.fm/uberbryn</ProfileURL>
+          </UserMeta>
+        </UserHeader>
+        <TopicSearch type='text' placeholder='Search'></TopicSearch>
+      </Column>
+    )
+  }
+};
+
 const Column = styled.div`
   display: flex;
   flex-direction: column;
@@ -106,21 +125,3 @@ const TopicSearch = styled.input`
   &:-moz-placeholder { color: #747E8D }
   &:-ms-input-placeholder { color: #747E8D }
 `;
-
-export default class NavBar extends Component{
-  render() {
-    return(
-      <Column>
-        <IncludeAvatarMask />
-        <UserHeader>
-          <Avatar src="./img/avatar.jpg"></Avatar>
-          <UserMeta>
-            <UserName>Bryn Jackson</UserName>
-            <ProfileURL>spec.fm/uberbryn</ProfileURL>
-          </UserMeta>
-        </UserHeader>
-        <TopicSearch type='text' placeholder='Search'></TopicSearch>
-      </Column>
-    )
-  }
-};
