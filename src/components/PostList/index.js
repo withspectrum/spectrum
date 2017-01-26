@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Column, ActionHeader } from './style';
+import { Column, ActionHeader, ScrollBody } from './style';
 import Post from '../Post';
 import * as firebase from 'firebase';
 
@@ -54,11 +54,13 @@ export default class PostList extends Component{
 		return (
 	    	<Column>
 	    		<ActionHeader />
-          { that.postForm() }
-	    		<Post />
-          <Post />
-          <Post />
-          <Post />
+          {/* that.postForm() */}
+          <ScrollBody>
+  	    		<Post />
+            <Post />
+            <Post />
+            <Post />
+          </ScrollBody>
 	    	</Column>
 	  );
 	}

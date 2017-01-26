@@ -14,3 +14,14 @@ export const PostWrapper = styled.div`
 		transition: box-shadow 0.2s ease-out;
 	}
 `;
+
+export const PostBody = styled.div`
+	display: inline-block;
+	font-size: 14px;
+`;
+
+export const PostImg = styled.img`
+	max-width: calc(100% - 0px);
+	margin-top: 16px;
+	border-radius: 2px;
+`;
