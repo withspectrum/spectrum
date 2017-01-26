@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { IncludeAvatarMask } from '../SVG';
 // import Login from './Login';
 // import * as firebase from 'firebase';
 // import TagButton from './TagButton';
@@ -90,7 +91,7 @@ const TopicSearch = styled.input`
   background-color: #2E313F;
   border-radius: 4px;
   height: 24px;
-  margin: 16px;
+  margin: 8px;
   margin-top: 0;
   padding: 8px;
   font-weight: 500;
@@ -98,6 +99,7 @@ const TopicSearch = styled.input`
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   line-height: 24px;
   vertical-align: middle;
+  color: #ffffff;
 
   &::placeholder { color: #747E8D }
   &::-webkit-input-placeholder { color: #747E8D }
@@ -109,13 +111,7 @@ export default class NavBar extends Component{
   render() {
     return(
       <Column>
-        <svg width="0" height="0">
-          <defs>
-            <clipPath id="mask-avatar">
-              <path d="M 20 4.26325e-13C 37.5 -8.42935e-07 40 2.50005 40 20C 40 37.4999 37.5 39.9999 20 39.9999C 2.50001 39.9999 5.90057e-06 37.4999 1.0445e-11 20C -5.90055e-06 2.50005 2.49999 1.68587e-06 20 4.26325e-13Z"/>
-            </clipPath>
-          </defs>
-        </svg>
+        <IncludeAvatarMask />
         <UserHeader>
           <Avatar src="./img/avatar.jpg"></Avatar>
           <UserMeta>

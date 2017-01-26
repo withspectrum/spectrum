@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import NavBar from './NavBar';
+import NavBar from '../NavBar';
 import styled from 'styled-components';
 // import PostList from './PostList';
 // import Chat from './Chat';
