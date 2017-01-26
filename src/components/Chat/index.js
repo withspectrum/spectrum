@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Message from './Message';
+import Message from '../Message';
 
 class Chat extends Component{
-  constructor(props){
-    super(props);
+  constructor(){
+    super();
     this.state = {
       messages: [
         {
