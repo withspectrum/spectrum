@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class TagButton extends Component{
+export default class TagButton extends Component{
   getStyle(){
     return {
       color: "#FFF",
@@ -14,5 +14,3 @@ class TagButton extends Component{
 	  );
 	}
 }
-
-export default TagButton;

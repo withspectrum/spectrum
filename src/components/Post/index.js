@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import posts from '../../data/posts.js';
+import { PostWrapper } from './style';
 
 class Post extends Component{
 	render() {
 		return (
-	    	<div className="inline-block font-body p2 hairline-bottom bg-wash border-right br-brand">
+	    	<PostWrapper>
 	    		<div className="flex items-center">
 	    			<img src="/img/avatar-spectrum.png" className="y4 x4 rounded bg-reverse inline-block" role="presentation"/>
 	    			<div className="inline-block ml1 flex flex-column">
@@ -16,7 +17,7 @@ class Post extends Component{
 	    			<p className="mt2 h5 color-primary">{posts[0].post.body.text}</p>
 	    			<img src="/img/media.png" className="mt2 flex-auto rounded" width="384px" role="presentation"/>
 	    		</div>
-    		</div>
+    		</PostWrapper>
 	  );
 	}
 }

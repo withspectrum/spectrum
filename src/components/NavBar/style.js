@@ -10,15 +10,23 @@ export const Column = styled.div`
 `;
 
 export const Avatar = styled.img`
-  height: 40px;
-  width: 40px;
-  clip-path: url(#avatar-mask);
+  height: 32px;
+  width: 32px;
+  clip-path: url(#avatar-32);
 `;
 
 export const UserHeader = styled.div`
   display: flex;
-  margin: 16px;
+  margin: 8px;
+  padding: 8px;
   align-items: center;
+  border-radius: 8px;
+  transition: box-shadow 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 4px 8px #000000;
+    transition: box-shadow 0.2s ease-in-out;
+  }
 `;
 
 export const UserMeta = styled.div`
@@ -28,13 +36,13 @@ export const UserMeta = styled.div`
   margin-top: -2px;
 `;
 
-export const UserName = styled.h3`
+export const Name = styled.h3`
   font-size: 16px;
   color: #ffffff;
   font-weight: 500;
 `;
 
-export const ProfileURL = styled.h4`
+export const Username = styled.h4`
   font-size: 12px;
   color: #747E8D;
   font-weight: 500;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Column, Avatar, UserHeader, UserMeta, UserName, ProfileURL, TopicSearch } from './style';
+import { Column, Avatar, UserHeader, UserMeta, Name, Username, TopicSearch } from './style';
 import { AvatarMask } from './svg';
 // import Login from './Login';
 // import * as firebase from 'firebase';
@@ -54,10 +54,10 @@ export default class NavBar extends Component{
       <Column>
         <AvatarMask />
         <UserHeader>
-          <Avatar src="./img/avatar.jpg"></Avatar>
+          <Avatar src="./img/avatar.jpg" title="Bryn Jackson"></Avatar>
           <UserMeta>
-            <UserName>Bryn Jackson</UserName>
-            <ProfileURL>spec.fm/uberbryn</ProfileURL>
+            <Name>Bryn Jackson</Name>
+            <Username>@uberbryn</Username>
           </UserMeta>
         </UserHeader>
         <TopicSearch type='text' placeholder='Search'></TopicSearch>

@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
+import { Column, ActionHeader } from './style';
 import Post from '../Post';
 import * as firebase from 'firebase';
 
-class PostList extends Component{
+export default class PostList extends Component{
   constructor(){
     super();
     this.state = {
       newPostContent: "",
-      posts: [
-
-      ]
+      posts: []
     }
   }
   componentDidMount(){
@@ -17,12 +16,6 @@ class PostList extends Component{
     postRef.on('value', function(snapshot){
       console.log(snapshot.val());
     });
-  }
-  containerClassName(){
-    return {
-      true: "col-12",
-      false: "col-8"
-    }[this.props.currentData.currentPost.id === undefined]
   }
 
   changeNewPostContent = (e) => {
@@ -41,6 +34,7 @@ class PostList extends Component{
       );
     }
   }
+
   createPost(e){
     e.preventDefault();
     let database = firebase.database();
@@ -54,16 +48,18 @@ class PostList extends Component{
     }
     newPostRef.set(postData);
   }
+
 	render() {
     let that = this;
 		return (
-	    	<div className={`flex-auto flex flex-column hairline-right ${this.containerClassName()}`}>
-	    		<div className="bg-default y6 hairline-bottom flex-none"></div>
+	    	<Column>
+	    		<ActionHeader />
           { that.postForm() }
 	    		<Post />
-	    	</div>
+          <Post />
+          <Post />
+          <Post />
+	    	</Column>
 	  );
 	}
 }
-
-export default PostList;
