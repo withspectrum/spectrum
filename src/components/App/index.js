@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import NavBar from '../NavBar';
-import styled from 'styled-components';
+import { Body } from './style';
 // import PostList from './PostList';
 // import Chat from './Chat';
 // import ListDetail from './ListDetail';
 // import * as firebase from 'firebase';
-// import FIREBASE_CONFIG from '../config/FirebaseConfig';
+// import FIREBASE_CONFIG from '../../config/FirebaseConfig';
 // const fbconfig = {
 //   apiKey: FIREBASE_CONFIG.API_KEY,
 //   authDomain: FIREBASE_CONFIG.AUTH_DOMAIN,
@@ -13,11 +13,6 @@ import styled from 'styled-components';
 //   storageBucket: FIREBASE_CONFIG.STORAGE_BUCKET,
 //   messagingSenderId: FIREBASE_CONFIG.MESSAGING_SENDER_ID
 // };
-
-const Body = styled.div`
-  display: flex;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-`;
 
 export default class App extends Component{
   render() {

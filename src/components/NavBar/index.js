@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
-import { IncludeAvatarMask } from '../SVG';
+import { Column, Avatar, UserHeader, UserMeta, UserName, ProfileURL, TopicSearch } from './style';
+import { AvatarMask } from './svg';
 // import Login from './Login';
 // import * as firebase from 'firebase';
 // import TagButton from './TagButton';
@@ -47,71 +47,12 @@ import { IncludeAvatarMask } from '../SVG';
 // 	  );
 // 	}
 // }
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: #171A21;
-  width: 16vw;
-  min-height: 100vh;
-  height: 100%;
-`;
-
-const Avatar = styled.img`
-  height: 40px;
-  width: 40px;
-  clip-path: url(#mask-avatar);
-`;
-
-const UserHeader = styled.div`
-  display: flex;
-  margin: 16px;
-  align-items: center;
-`;
-
-const UserMeta = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: 8px;
-  margin-top: -2px;
-`;
-
-const UserName = styled.h3`
-  font-size: 16px;
-  color: #ffffff;
-  font-weight: 500;
-`;
-
-const ProfileURL = styled.h4`
-  font-size: 12px;
-  color: #747E8D;
-  font-weight: 500;
-`;
-
-const TopicSearch = styled.input`
-  background-color: #2E313F;
-  border-radius: 4px;
-  height: 24px;
-  margin: 8px;
-  margin-top: 0;
-  padding: 8px;
-  font-weight: 500;
-  font-size: 12px;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-  line-height: 24px;
-  vertical-align: middle;
-  color: #ffffff;
-
-  &::placeholder { color: #747E8D }
-  &::-webkit-input-placeholder { color: #747E8D }
-  &:-moz-placeholder { color: #747E8D }
-  &:-ms-input-placeholder { color: #747E8D }
-`;
 
 export default class NavBar extends Component{
   render() {
     return(
       <Column>
-        <IncludeAvatarMask />
+        <AvatarMask />
         <UserHeader>
           <Avatar src="./img/avatar.jpg"></Avatar>
           <UserMeta>
