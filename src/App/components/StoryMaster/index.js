@@ -3,7 +3,7 @@ import { Column, Header, ScrollBody, Button } from './style';
 import Post from '../Post';
 import * as firebase from 'firebase';
 
-export default class PostList extends Component{
+export default class StoryMaster extends Component{
   constructor(){
     super();
     this.state = {

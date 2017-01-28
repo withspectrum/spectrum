@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import NavBar from './components/NavBar';
 import { Body } from './style';
-import PostList from './components/PostList';
-import Chat from './components/Chat';
-import ListDetail from './components/ListDetail';
+import StoryMaster from './components/StoryMaster';
+import DetailView from './components/DetailView';
+// import ListDetail from './components/ListDetail';
 import * as firebase from 'firebase';
 import FIREBASE_CONFIG from '../config/FirebaseConfig'
 const fbconfig = {
@@ -47,11 +47,11 @@ export default class App extends Component {
     return(
       <Body>
         <NavBar></NavBar>
-				<PostList 
+				<StoryMaster 
 					currentTag={this.state.currentTag} 
 					selectPost={this.selectPost} 
 					currentData={{currentPost: this.state.currentPost, currentUser: this.state.currentUser }} />
-				<Chat currentData={{currentPost: this.state.currentPost}} />
+				<DetailView />
       </Body>
     )
   }
