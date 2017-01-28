@@ -21,7 +21,7 @@ class Chat extends Component{
     let that = this;
 		return (
       <div className="flex-auto flex lg-col-8 col-6 bg-default">
-        {
+        {/*
           (function(){
             if (that.props.currentData.currentPost.id !== undefined){
               return that.state.messages.map(function(thing, i){
@@ -31,7 +31,7 @@ class Chat extends Component{
               return <div />;
             }
           }())
-        }
+        */}
       </div>
 	  );
 	}

@@ -1,21 +1,19 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
+import { setPosts, createPost } from '../../../actions/posts'
 import { Column, ActionHeader, ScrollBody } from './style';
 import Post from '../Post';
-import * as firebase from 'firebase';
 
-export default class PostList extends Component{
+class PostList extends Component{
   constructor(){
     super();
     this.state = {
-      newPostContent: "",
-      posts: []
+      newPostContent: ""
     }
   }
-  componentDidMount(){
-    let postRef = firebase.database().ref('posts');
-    postRef.on('value', function(snapshot){
-      console.log(snapshot.val());
-    });
+
+  componentWillMount(){
+    this.props.dispatch(setPosts())
   }
 
   changeNewPostContent = (e) => {
@@ -24,44 +22,60 @@ export default class PostList extends Component{
     });
   }
 
-  postForm(){
-    if (this.props.currentData.currentUser !== undefined){
-      return(
-        <form onSubmit={this.createPost}>
-          <input value={this.state.newPostContent} onChange={this.changeNewPostContent} />
-          <input type="submit" />
-        </form>
-      );
-    }
+  createPost = (e) => {
+    e.preventDefault();
+    this.props.dispatch(createPost(this.state.newPostContent))
+    this.setState({
+      newPostContent: ""
+    })
   }
 
-  createPost(e){
-    e.preventDefault();
-    let database = firebase.database();
-    let userId = firebase.auth().currentUser.uid;
-    let timestamp = Math.round(new Date() / 1);
-    let newPostRef = firebase.database().ref().child(`posts/${this.props.currentTag}`).push();
-    let postData = {
-      uid: userId,
-      timestamp: timestamp,
-      content: this.state.newPostContent
-    }
-    newPostRef.set(postData);
+  renderPosts() {
+    this.props.posts.map((post, i) => {
+      return <Post data={post} />
+    })
   }
 
 	render() {
-    let that = this;
+
+    /**
+      Firebase returns posts as a bunch of nested objects. In order to have better control over
+      iterative rendering (i.e. using .map()) we need to get these posts into an array.
+    */
+    let posts = this.props.posts.posts
+    let postsToRender = []
+    for (let key in posts) {
+      if (!posts.hasOwnProperty(key)) continue;
+
+      let arr = posts[key];
+      postsToRender.push(arr)
+    }
+
 		return (
 	    	<Column>
 	    		<ActionHeader />
-          {/* that.postForm() */}
+          <form style={{paddingTop: "100px"}} onSubmit={ this.createPost }>
+            <input value={this.state.newPostContent} onChange={this.changeNewPostContent} />
+            <input type="submit" />
+          </form>          
           <ScrollBody>
-  	    		<Post />
-            <Post />
-            <Post />
-            <Post />
+            { postsToRender.length > 0 &&
+              // slice and reverse makes sure our posts show up in revers chron order
+              postsToRender.slice(0).reverse().map((post, i) => {
+                return <Post data={post} key={i} />
+              }) 
+            }
           </ScrollBody>
 	    	</Column>
 	  );
 	}
 }
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+    posts: state.posts
+  }
+}
+
+export default connect(mapStateToProps)(PostList)

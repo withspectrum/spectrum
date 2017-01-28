@@ -7,7 +7,7 @@ import { BrowserRouter, Match } from 'react-router';
 const Root = () => {
 	return(
 		<BrowserRouter>
-				<Match exactly pattern="/" component={App}/>
+			<Match exactly pattern="/" component={App}/>
 		</BrowserRouter>
 	)
 }
