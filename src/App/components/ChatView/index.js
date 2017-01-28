@@ -21,7 +21,7 @@ export default class ChatView extends Component{
     let that = this;
 		return (
       <div>
-        {that.state.messages.map((thing, i) => { return <ChatMessage data={thing} key={i} />})} 
+        {that.state.messages.map((thing, i) => <ChatMessage data={thing} key={i} />)} 
       </div>
 	  );
 	}
