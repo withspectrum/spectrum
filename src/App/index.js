@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import NavBar from '../NavBar';
+import NavBar from './components/NavBar';
 import { Body } from './style';
-import PostList from '../PostList';
-import Chat from '../Chat';
-import ListDetail from '../ListDetail';
+import PostList from './components/PostList';
+import Chat from './components/Chat';
+import ListDetail from './components/ListDetail';
 import * as firebase from 'firebase';
-import FIREBASE_CONFIG from '../../config/FirebaseConfig'
+import FIREBASE_CONFIG from '../config/FirebaseConfig'
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,
   authDomain: FIREBASE_CONFIG.AUTH_DOMAIN,
@@ -47,13 +47,11 @@ export default class App extends Component {
     return(
       <Body>
         <NavBar></NavBar>
-        <ListDetail>
-					<PostList 
-						currentTag={this.state.currentTag} 
-						selectPost={this.selectPost} 
-						currentData={{currentPost: this.state.currentPost, currentUser: this.state.currentUser }} />
-					<Chat currentData={{currentPost: this.state.currentPost}} />
-				</ListDetail>
+				<PostList 
+					currentTag={this.state.currentTag} 
+					selectPost={this.selectPost} 
+					currentData={{currentPost: this.state.currentPost, currentUser: this.state.currentUser }} />
+				<Chat currentData={{currentPost: this.state.currentPost}} />
       </Body>
     )
   }

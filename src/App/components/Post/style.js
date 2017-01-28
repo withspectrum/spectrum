@@ -17,6 +17,7 @@ export const PostWrapper = styled.div`
 
 export const PostBody = styled.div`
 	display: inline-block;
+	margin-top: 16px;
 	font-size: 14px;
 `;
 
