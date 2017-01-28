@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import NavBar from './components/NavBar';
 import { Body } from './style';
+import { Provider } from 'react-redux'
+import { initStore } from '../store'
 import PostList from './components/PostList';
 import Chat from './components/Chat';
 import ListDetail from './components/ListDetail';
@@ -24,6 +26,8 @@ export default class App extends Component {
         id: 1
       }
     }
+
+    this.store = initStore(this.state)
   }
 
   selectTag = (tag) => {
@@ -45,14 +49,16 @@ export default class App extends Component {
 
   render() {
     return(
-      <Body>
-        <NavBar></NavBar>
-				<PostList 
-					currentTag={this.state.currentTag} 
-					selectPost={this.selectPost} 
-					currentData={{currentPost: this.state.currentPost, currentUser: this.state.currentUser }} />
-				<Chat currentData={{currentPost: this.state.currentPost}} />
-      </Body>
+      <Provider store={this.store}>
+        <Body>
+          <NavBar></NavBar>
+  				<PostList 
+  					currentTag={this.state.currentTag} 
+  					selectPost={this.selectPost} 
+  					currentData={{currentPost: this.state.currentPost, currentUser: this.state.currentUser }} />
+  				<Chat currentData={{currentPost: this.state.currentPost}} />
+        </Body>
+      </Provider>
     )
   }
 }

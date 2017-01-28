@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import { Column, ActionHeader, ScrollBody } from './style';
 import Post from '../Post';
 import * as firebase from 'firebase';
 
-export default class PostList extends Component{
+class PostList extends Component{
   constructor(){
     super();
     this.state = {
@@ -65,3 +66,11 @@ export default class PostList extends Component{
 	  );
 	}
 }
+
+const mapStateToProps = (state) => {
+  return {
+    test: state.test
+  }
+}
+
+export default connect(mapStateToProps)(PostList)

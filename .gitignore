@@ -1,3 +1,4 @@
 node_modules
 .sass-cache
 src/config/FirebaseConfig.js
+npm-debug.log
