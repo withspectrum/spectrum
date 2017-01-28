@@ -9,7 +9,10 @@
     "re-base": "^2.2.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
+    "react-redux": "^5.0.2",
     "react-router": "^4.0.0-alpha.4",
+    "redux": "^3.6.0",
+    "redux-thunk": "^2.2.0",
     "styled-components": "^1.3.1"
   },
   "scripts": {

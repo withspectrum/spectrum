@@ -16,7 +16,7 @@ class Post extends Component{
 					  </UpvoteWrapper>
 					</PostHeader>
 	    		<PostBody>
-	    			<p>This is just a post with an image. Nothing super fancy or anything...</p>
+	    			<p>{this.props.data.content}</p>
 	    			<PostImg src="/img/media.png" role="presentation"/>
 	    		</PostBody>
     		</PostWrapper>

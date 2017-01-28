@@ -3,9 +3,12 @@ import NavBar from './components/NavBar';
 import { Body } from './style';
 import StoryMaster from './components/StoryMaster';
 import DetailView from './components/DetailView';
+import { Provider } from 'react-redux'
+import { initStore } from '../store'
 // import ListDetail from './components/ListDetail';
 import * as firebase from 'firebase';
-import FIREBASE_CONFIG from '../config/FirebaseConfig'
+import { setUser } from '../actions/user';
+import FIREBASE_CONFIG from '../config/FirebaseConfig';
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,
   authDomain: FIREBASE_CONFIG.AUTH_DOMAIN,
@@ -17,13 +20,10 @@ const fbconfig = {
 export default class App extends Component {
 	constructor() {
     super()
-    this.state = {
-      currentUser: null,
-      currentTag: "",
-      currentPost: {
-        id: 1
-      }
-    }
+    firebase.initializeApp(fbconfig);
+
+    this.store = initStore({})
+    this.store.dispatch(setUser())
   }
 
   selectTag = (tag) => {
@@ -36,23 +36,18 @@ export default class App extends Component {
     });
   }
 
-  componentWillMount(){
-    firebase.initializeApp(fbconfig);
-  }
-
   selectPost(){
   }
 
   render() {
     return(
-      <Body>
-        <NavBar></NavBar>
-				<StoryMaster 
-					currentTag={this.state.currentTag} 
-					selectPost={this.selectPost} 
-					currentData={{currentPost: this.state.currentPost, currentUser: this.state.currentUser }} />
-				<DetailView />
-      </Body>
+      <Provider store={this.store}>
+        <Body>
+          <NavBar />
+  				<StoryMaster />
+        <DetailView />
+        </Body>
+      </Provider>
     )
   }
 }
