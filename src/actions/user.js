@@ -14,3 +14,16 @@ export const login = (email, password) => (dispatch) => {
   	console.log(err)
   });
 }
+
+export const setUser = () => (dispatch) => {
+	firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      dispatch({
+				type: 'SET_USER',
+				user
+			})
+    } else {
+      console.log('not a user')
+    }
+  });
+}

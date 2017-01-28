@@ -1,21 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { getPosts } from '../../../actions/posts'
+import { setPosts, createPost } from '../../../actions/posts'
 import { Column, ActionHeader, ScrollBody } from './style';
 import Post from '../Post';
-import * as firebase from 'firebase';
 
 class PostList extends Component{
   constructor(){
     super();
     this.state = {
-      newPostContent: "",
-      posts: []
+      newPostContent: ""
     }
   }
 
   componentWillMount(){
-    this.props.dispatch(getPosts())
+    this.props.dispatch(setPosts())
   }
 
   changeNewPostContent = (e) => {
@@ -24,18 +22,9 @@ class PostList extends Component{
     });
   }
 
-  createPost(e){
+  createPost = (e) => {
     e.preventDefault();
-    // let database = firebase.database();
-    let userId = firebase.auth().currentUser.uid;
-    let timestamp = Math.round(new Date() / 1);
-    let newPostRef = firebase.database().ref().child(`posts/${this.props.currentTag}`).push();
-    let postData = {
-      uid: userId,
-      timestamp: timestamp,
-      content: this.state.newPostContent
-    }
-    newPostRef.set(postData);
+    this.props.dispatch(createPost(this.state.newPostContent))
   }
 
   renderPosts() {
@@ -53,6 +42,8 @@ class PostList extends Component{
     let posts = this.props.posts.posts
     let postsToRender = []
     for (let key in posts) {
+      if (!posts.hasOwnProperty(key)) continue;
+
       let arr = posts[key];
       postsToRender.push(arr)
     }
@@ -60,15 +51,14 @@ class PostList extends Component{
 		return (
 	    	<Column>
 	    		<ActionHeader />
-          { this.props.user &&
-            <form onSubmit={this.createPost}>
-              <input value={this.state.newPostContent} onChange={this.changeNewPostContent} />
-              <input type="submit" />
-            </form>
-          }
+          <form style={{paddingTop: "100px"}} onSubmit={ this.createPost }>
+            <input value={this.state.newPostContent} onChange={this.changeNewPostContent} />
+            <input type="submit" />
+          </form>          
           <ScrollBody>
             { postsToRender.length > 0 &&
-              postsToRender.map((post, i) => {
+              // slice and reverse makes sure our posts show up in revers chron order
+              postsToRender.slice(0).reverse().map((post, i) => {
                 return <Post data={post} key={i} />
               }) 
             }

@@ -1,18 +1,4 @@
 import FirebaseConfig from '../config/FirebaseConfig'
-
-const createPost = () => new Promise((res. rej) => {
-	let database = firebase.database();
-  let userId = firebase.auth().currentUser.uid;
-  let timestamp = Math.round(new Date() / 1);
-  let newPostRef = firebase.database().ref().child(`posts/${this.props.currentTag}`).push();
-  let postData = {
-    uid: userId,
-    timestamp: timestamp,
-    content: this.state.newPostContent
-  }
-  newPostRef.set(postData);
-})
-
 /**
  * Log a user in
  *

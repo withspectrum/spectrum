@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Column, Avatar, UserHeader, UserMeta, Name, Username, TopicSearch } from './style';
 import { AvatarMask } from './svg';
 import Login from '../Login';
@@ -47,7 +48,7 @@ import Login from '../Login';
 // 	}
 // }
 
-export default class NavBar extends Component{
+class NavBar extends Component{
   render() {
     return(
       <Column>
@@ -59,7 +60,10 @@ export default class NavBar extends Component{
             <Username>@uberbryn</Username>
           </UserMeta> */}
           <div className="flex y10 justify-center items-center flex-column">
-            { this.props.currentUser ? <p>LoggedIn!</p> : <Login /> }
+            { this.props.user.uid
+              ? <p>Logged in Wuddup</p>
+              : <Login />
+            }
           </div>
         </UserHeader>
         <TopicSearch type='text' placeholder='Search'></TopicSearch>
@@ -67,3 +71,9 @@ export default class NavBar extends Component{
     )
   }
 };
+
+const mapStateToProps = (state) => ({
+  user: state.user
+})
+
+export default connect(mapStateToProps)(NavBar)

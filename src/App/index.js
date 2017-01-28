@@ -7,7 +7,8 @@ import PostList from './components/PostList';
 import Chat from './components/Chat';
 // import ListDetail from './components/ListDetail';
 import * as firebase from 'firebase';
-import FIREBASE_CONFIG from '../config/FirebaseConfig'
+import { setUser } from '../actions/user';
+import FIREBASE_CONFIG from '../config/FirebaseConfig';
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,
   authDomain: FIREBASE_CONFIG.AUTH_DOMAIN,
@@ -19,15 +20,10 @@ const fbconfig = {
 export default class App extends Component {
 	constructor() {
     super()
-    this.state = {
-      currentUser: null,
-      currentTag: "",
-      currentPost: {
-        id: 1
-      }
-    }
+    firebase.initializeApp(fbconfig);
 
-    this.store = initStore(this.state)
+    this.store = initStore({})
+    this.store.dispatch(setUser())
   }
 
   selectTag = (tag) => {
@@ -40,10 +36,6 @@ export default class App extends Component {
     });
   }
 
-  componentWillMount(){
-    firebase.initializeApp(fbconfig);
-  }
-
   selectPost(){
   }
 
@@ -53,7 +45,7 @@ export default class App extends Component {
         <Body>
           <NavBar />
   				<PostList />
-  				<Chat currentData={{currentPost: this.state.currentPost}} />
+  				<Chat />
         </Body>
       </Provider>
     )

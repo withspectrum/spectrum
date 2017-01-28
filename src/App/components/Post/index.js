@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { PostWrapper, PostBody, PostImg } from './style';
+import { PostWrapper, PostBody } from './style';
 import UserHeader from '../UserHeader'
 
 class Post extends Component{
