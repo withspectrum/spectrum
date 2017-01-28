@@ -25,6 +25,9 @@ class PostList extends Component{
   createPost = (e) => {
     e.preventDefault();
     this.props.dispatch(createPost(this.state.newPostContent))
+    this.setState({
+      newPostContent: ""
+    })
   }
 
   renderPosts() {
