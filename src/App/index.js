@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import { initStore } from '../store'
 import PostList from './components/PostList';
 import Chat from './components/Chat';
-import ListDetail from './components/ListDetail';
+// import ListDetail from './components/ListDetail';
 import * as firebase from 'firebase';
 import FIREBASE_CONFIG from '../config/FirebaseConfig'
 const fbconfig = {
@@ -51,11 +51,8 @@ export default class App extends Component {
     return(
       <Provider store={this.store}>
         <Body>
-          <NavBar></NavBar>
-  				<PostList 
-  					currentTag={this.state.currentTag} 
-  					selectPost={this.selectPost} 
-  					currentData={{currentPost: this.state.currentPost, currentUser: this.state.currentUser }} />
+          <NavBar />
+  				<PostList />
   				<Chat currentData={{currentPost: this.state.currentPost}} />
         </Body>
       </Provider>

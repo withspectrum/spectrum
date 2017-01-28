@@ -8,8 +8,9 @@ class Post extends Component{
 	    	<PostWrapper>
 	    		<UserHeader />
 	    		<PostBody>
-	    			<p className="mt2 h5 color-primary"></p>
-	    			<PostImg src="/img/media.png" role="presentation"/>
+	    			<p>{this.props.data.content}</p>
+	    			{/*<p className="mt2 h5 color-primary"></p>
+	    			<PostImg src="/img/media.png" role="presentation"/> */}
 	    		</PostBody>
     		</PostWrapper>
 	  );

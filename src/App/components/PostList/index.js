@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import { getPosts } from '../../../actions/posts'
 import { Column, ActionHeader, ScrollBody } from './style';
 import Post from '../Post';
 import * as firebase from 'firebase';
@@ -12,11 +13,9 @@ class PostList extends Component{
       posts: []
     }
   }
-  componentDidMount(){
-    let postRef = firebase.database().ref('posts');
-    postRef.on('value', function(snapshot){
-      console.log(snapshot.val());
-    });
+
+  componentWillMount(){
+    this.props.dispatch(getPosts())
   }
 
   changeNewPostContent = (e) => {
@@ -25,20 +24,9 @@ class PostList extends Component{
     });
   }
 
-  postForm(){
-    if (this.props.currentData.currentUser !== undefined){
-      return(
-        <form onSubmit={this.createPost}>
-          <input value={this.state.newPostContent} onChange={this.changeNewPostContent} />
-          <input type="submit" />
-        </form>
-      );
-    }
-  }
-
   createPost(e){
     e.preventDefault();
-    let database = firebase.database();
+    // let database = firebase.database();
     let userId = firebase.auth().currentUser.uid;
     let timestamp = Math.round(new Date() / 1);
     let newPostRef = firebase.database().ref().child(`posts/${this.props.currentTag}`).push();
@@ -50,17 +38,40 @@ class PostList extends Component{
     newPostRef.set(postData);
   }
 
+  renderPosts() {
+    this.props.posts.map((post, i) => {
+      return <Post data={post} />
+    })
+  }
+
 	render() {
-    let that = this;
+
+    /**
+      Firebase returns posts as a bunch of nested objects. In order to have better control over
+      iterative rendering (i.e. using .map()) we need to get these posts into an array.
+    */
+    let posts = this.props.posts.posts
+    let postsToRender = []
+    for (let key in posts) {
+      let arr = posts[key];
+      postsToRender.push(arr)
+    }
+
 		return (
 	    	<Column>
 	    		<ActionHeader />
-          {/* that.postForm() */}
+          { this.props.user &&
+            <form onSubmit={this.createPost}>
+              <input value={this.state.newPostContent} onChange={this.changeNewPostContent} />
+              <input type="submit" />
+            </form>
+          }
           <ScrollBody>
-  	    		<Post />
-            <Post />
-            <Post />
-            <Post />
+            { postsToRender.length > 0 &&
+              postsToRender.map((post, i) => {
+                return <Post data={post} key={i} />
+              }) 
+            }
           </ScrollBody>
 	    	</Column>
 	  );
@@ -69,7 +80,8 @@ class PostList extends Component{
 
 const mapStateToProps = (state) => {
   return {
-    test: state.test
+    user: state.user,
+    posts: state.posts
   }
 }
 

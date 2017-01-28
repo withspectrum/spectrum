@@ -1,12 +1,12 @@
 const initialState = {
-	test: null
+	posts: null
 }
 
 export default function root(state = initialState, action) {
 	switch (action.type) {
-		case 'TEST_REDUX':
+		case 'SET_POSTS':
 			return Object.assign({}, state, {
-				test: action.test
+				posts: action.posts
 			})
 		default:
 			return state

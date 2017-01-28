@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
+import { login } from '../../../actions/user';
+import { connect } from 'react-redux'
 
 class Login extends Component{
   constructor(){
@@ -17,39 +18,24 @@ class Login extends Component{
   updatePassword = (e) => {
     this.setState({ password: e.target.value });
   }
-  //setCurrentUser(userObject){
-    //this.props.setCurrentUser(userObject);
-  //}
 
-  loginAction = (e) => {
+  login = (e) => {
     e.preventDefault();
-    var that = this;
-    firebase.auth().signInWithEmailAndPassword(that.state.email, that.state.password).then(function(res){
-      //console.log(res);
-      //that.props.setUser(res);
-    }, function(err){
-      that.setState({error: true, errorMessage: err.message});
-    });
+    this.props.dispatch(login(this.state.email, this.state.password))
   }
 
 	render() {
-    var that = this;
-    firebase.auth().onAuthStateChanged(function(user) {
-      console.log(user);
-      if (!that.props.currentUser){
-        that.props.setUser(user);
-      }
-    });
 		return (
-      <form onSubmit={this.loginAction} className="loginForm">
+      <form onSubmit={this.login} className="loginForm">
         <div>
           <input type="email" onChange={this.updateEmail} value={this.state.email} placeholder="Email" />
           <input type="password" onChange={this.updatePassword} value={this.state.password} placeholder="Password" />
         </div>
         <button type="submit" className="bg-brand color-light">Log In</button>
-        {that.state.error &&
+        
+        { this.props.user.loginErr && 
           <div className="login-error">
-            {that.state.errorMessage}
+            {this.props.user.loginError}
           </div>
         }
       </form>
@@ -57,4 +43,10 @@ class Login extends Component{
 	}
 }
 
-export default Login;
+const mapStateToProps = (state) => ({
+  user: state.user,
+  loginError: state.user.loginError
+})
+
+export default connect(mapStateToProps)(Login)
+
