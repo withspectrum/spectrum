@@ -26,3 +26,44 @@ export const PostImg = styled.img`
 	margin-top: 16px;
 	border-radius: 2px;
 `;
+
+export const Avatar = styled.img`
+  height: 40px;
+  width: 40px;
+  clip-path: url(#avatar-40);
+`;
+
+export const PostHeader = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const UserMeta = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 12px;
+  flex: 1 0 auto;
+`;
+
+export const Name = styled.h3`
+  font-size: 14px;
+  color: #43484F;
+  font-weight: 600;
+`;
+
+export const Meta = styled.h4`
+  font-size: 12px;
+  color: #747E8D;
+  font-weight: 400;
+`;
+
+export const UpvoteWrapper = styled.div`
+	display: flex;
+	justify-self: end;
+	flex: 0 0 auto;
+`;
+
+export const UpvoteButton = styled.div`
+	justify-self: start;
+	font-weight: 700;
+`;

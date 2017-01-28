@@ -17,13 +17,27 @@ export const ScrollBody = styled.div`
 	padding-top: 56px;
 	`;
 
-export const ActionHeader = styled.div`
-	flex: 0 0 56px;
+export const Header = styled.div`
+	min-height: 48px;
 	position: fixed;
 	background-color: #ffffff;
-	height: 56px;
-	width: 100%;
+	width: 30vw;
 	top: 0;
 	border-bottom: 1px solid rgba(0,0,0,0.1);
 	z-index: 2
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 8px;
+`;
+
+export const Button = styled.div`
+	font-size: 16px;
+	padding: 8px;
+	border-radius: 4px;
+	flex: 0 0 auto;
+
+	&:hover {
+		box-shadow: 0 2px 4px #000000;
+	}
 `;
