@@ -39,20 +39,16 @@ class NavBar extends Component{
     return(
       <Column>
         <AvatarMask />
-        <UserHeader>
-          {/* <Avatar src="./img/avatar.jpg" title="Bryn Jackson"></Avatar>
-          <UserMeta>
-            <Name>Bryn Jackson</Name>
-            <Username>@uberbryn</Username>
-          </UserMeta> */}
-          <div className="flex y10 justify-center items-center flex-column">
-            { this.props.user.uid
-              ? <p>Logged in Wuddup</p>
-              : <Login />
-            }
-          </div>
-        </UserHeader>
-        <TopicSearch type='text' placeholder='Search'></TopicSearch>
+        { this.props.user.uid
+          ? <UserHeader>
+              <Avatar src="./img/avatar.jpg" title="Bryn Jackson"></Avatar>
+              <UserMeta>
+                <Name>Bryn Jackson</Name>
+                <Username>@uberbryn</Username>
+              </UserMeta>
+              <TopicSearch type='text' placeholder='Search' />
+            </UserHeader>
+          : <Login />}
       </Column>
     )
   }

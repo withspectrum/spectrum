@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Bubble, LeftBubble, RightBubble, OpBubble, BubbleGroup } from './style'
+import { LeftBubble, RightBubble, OpBubble, BubbleGroup } from './style'
 
 export default class ChatMessage extends Component {
   render() {

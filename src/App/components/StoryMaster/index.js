@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { setPosts, createPost } from '../../../actions/posts'
-import { Column, ActionHeader, ScrollBody, Button } from './style';
+import { Column, Header, ScrollBody, Button } from './style';
 import Post from '../Post';
 
 class StoryMaster extends Component{
