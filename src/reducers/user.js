@@ -15,7 +15,6 @@ export default function root(state = initialState, action) {
 				loginError: action.message
 			})
 		case 'SET_USER':
-			console.log(action)
 			return Object.assign({}, state, {
 				uid: action.user.uid
 			})
