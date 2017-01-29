@@ -13,7 +13,7 @@ class StoryMaster extends Component{
   }
 
   componentWillMount(){
-    this.props.dispatch(setPosts())
+    this.props.dispatch(setPosts(this.props.frequencies.active))
   }
 
   changeNewPostContent = (e) => {
@@ -53,6 +53,7 @@ class StoryMaster extends Component{
 
 		return (
 	    	<Column>
+<<<<<<< HEAD:src/App/components/StoryMaster/index.js
 	    		<Header>
             <Button>➕</Button>   
           </Header>
@@ -60,6 +61,15 @@ class StoryMaster extends Component{
             <input value={this.state.newPostContent} onChange={this.changeNewPostContent} />
             <input type="submit" />
           </form>          
+=======
+	    		<ActionHeader />
+          { this.props.frequencies.active && 
+            <form style={{paddingTop: "100px"}} onSubmit={ this.createPost }>
+              <input value={this.state.newPostContent} onChange={this.changeNewPostContent} />
+              <input type="submit" />
+            </form>     
+          }     
+>>>>>>> post filtering, frequency filtering, signout, twitter auth...all the things:src/App/components/PostList/index.js
           <ScrollBody>
             { postsToRender.length > 0 &&
               // slice and reverse makes sure our posts show up in revers chron order
@@ -76,7 +86,8 @@ class StoryMaster extends Component{
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    posts: state.posts
+    posts: state.posts,
+    frequencies: state.frequencies
   }
 }
 
