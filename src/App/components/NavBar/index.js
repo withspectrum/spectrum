@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setFrequencies, addFrequency } from '../../../actions/frequencies'
+import { setFrequencies, addFrequency, setActiveFrequency } from '../../../actions/frequencies'
+import { setPosts } from '../../../actions/posts'
+import { signOut, login } from '../../../actions/user'
 import { Column, Avatar, UserHeader, UserMeta, Name, Username, TopicSearch } from './style';
 import { AvatarMask } from './svg';
 import Login from '../Login';
@@ -18,10 +20,25 @@ class NavBar extends Component{
     this.props.dispatch(setFrequencies())
   }
 
+  login = (e) => {
+    e.preventDefault();
+    this.props.dispatch(login())
+  }
+
+  signOut = (e) => {
+    e.preventDefault();
+    this.props.dispatch(signOut())
+  }
+
   updateFrequencyName = (e) => {
     this.setState({
       frequencyName: e.target.value
     })
+  }
+
+  setActiveFrequency = (e) => {
+    this.props.dispatch(setActiveFrequency(e.target.id))
+    this.props.dispatch(setPosts(e.target.id))
   }
 
   addFrequency = (e) => {
@@ -58,8 +75,8 @@ class NavBar extends Component{
           </UserMeta> */}
           <div className="flex y10 justify-center items-center flex-column">
             { this.props.user.uid
-              ? <p>Logged in Wuddup</p>
-              : <Login />
+              ? <p>Logged in as {this.props.user.displayName} <button onClick={this.signOut}>sign out</button></p>
+              : <button onClick={this.login}>log in with twitter</button>
             }
           </div>
         </UserHeader>
@@ -75,7 +92,11 @@ class NavBar extends Component{
         <ul>
           { frequenciesToRender.length > 0 &&
             frequenciesToRender.map((frequency, i) => {
-              return <li key={i}>{ frequency.name }</li>
+              if (frequency.id === this.props.frequencies.active) {
+                return <li key={i} onClick={this.setActiveFrequency} id={frequency.id}>{ frequency.name } is Active</li>
+              } else {
+                return <li key={i} onClick={this.setActiveFrequency} id={frequency.id}>{ frequency.name }</li>
+              }
             }) 
           }
         </ul>

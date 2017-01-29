@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Message from '../Message';
+// import Message from '../Message';
 
 class Chat extends Component{
   constructor(){
@@ -18,7 +18,7 @@ class Chat extends Component{
     }
   }
 	render() {
-    let that = this;
+    // let that = this;
 		return (
       <div className="flex-auto flex lg-col-8 col-6 bg-default">
         {/*

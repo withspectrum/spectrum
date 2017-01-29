@@ -16,7 +16,9 @@ export default function root(state = initialState, action) {
 			})
 		case 'SET_USER':
 			return Object.assign({}, state, {
-				uid: action.user.uid
+				uid: action.user.uid,
+				photoURL: action.user.photoURL,
+				displayName: action.user.displayName
 			})
 		default:
 			return state

@@ -13,7 +13,7 @@ class PostList extends Component{
   }
 
   componentWillMount(){
-    this.props.dispatch(setPosts())
+    this.props.dispatch(setPosts(this.props.frequencies.active))
   }
 
   changeNewPostContent = (e) => {
@@ -54,10 +54,12 @@ class PostList extends Component{
 		return (
 	    	<Column>
 	    		<ActionHeader />
-          <form style={{paddingTop: "100px"}} onSubmit={ this.createPost }>
-            <input value={this.state.newPostContent} onChange={this.changeNewPostContent} />
-            <input type="submit" />
-          </form>          
+          { this.props.frequencies.active && 
+            <form style={{paddingTop: "100px"}} onSubmit={ this.createPost }>
+              <input value={this.state.newPostContent} onChange={this.changeNewPostContent} />
+              <input type="submit" />
+            </form>     
+          }     
           <ScrollBody>
             { postsToRender.length > 0 &&
               // slice and reverse makes sure our posts show up in revers chron order
@@ -74,7 +76,8 @@ class PostList extends Component{
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    posts: state.posts
+    posts: state.posts,
+    frequencies: state.frequencies
   }
 }
 
