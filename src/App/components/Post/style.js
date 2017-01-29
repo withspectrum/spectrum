@@ -28,6 +28,7 @@ export const PostImg = styled.img`
 `;
 
 export const Avatar = styled.img`
+	display: inline-bl
   height: 40px;
   width: 40px;
   clip-path: url(#avatar-40);

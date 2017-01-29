@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
-import { LeftBubble, RightBubble, OpBubble, BubbleGroup } from './style'
+import { Bubble, LeftBubble, RightBubble, OpBubble, BubbleGroup, FromName } from './style'
 
 export default class ChatMessage extends Component {
   render() {
     return (
-    	<BubbleGroup fromName={this.props.data.fromName}>
-	      <LeftBubble>
-	        {this.props.data.text}
-	      </LeftBubble>
-	      <LeftBubble>
-	        {this.props.data.text}
-	      </LeftBubble>
-	      <LeftBubble>
-	        {this.props.data.text}
-	      </LeftBubble>
-	      <LeftBubble>
-	        {this.props.data.text}
-	      </LeftBubble>
-	    </BubbleGroup>
+    {
+    	(props) => (props.date.userType == 'op' 
+    	?
+    		<BubbleGroup>
+	    		<FromName>{this.props.data.fromName}</FromName>
+		      <OpBubble>
+		        {this.props.data.text}
+		      </OpBubble>
+		    </BubbleGroup>
+	    :
+	    	<BubbleGroup>
+	    		<FromName>{this.props.data.fromName}</FromName>
+		      <RightBubble>
+		        {this.props.data.text}
+		      </RightBubble>
+		    </BubbleGroup>
+	    )
+    }
     );
   }
 };

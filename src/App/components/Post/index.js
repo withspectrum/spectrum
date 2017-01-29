@@ -6,7 +6,7 @@ class Post extends Component{
 		return (
 	    	<PostWrapper>
 	    		<PostHeader>
-					  <Avatar src="./img/avatar.jpg" title="Bryn Jackson" />
+					  <Avatar src="./img/avatar.jpg" alt="Bryn Jackson" />
 					  <UserMeta>
 					    <Name>Bryn Jackson</Name>
 					    <Meta>Just now • No messages yet</Meta>

@@ -7,21 +7,15 @@ export const LoginHeader = styled.form`
   padding: 8px;
   align-items: center;
   border-radius: 8px;
-  transition: box-shadow 0.2s ease-in-out;
-
-  &:hover {
-    box-shadow: 0 4px 8px #000000;
-    transition: box-shadow 0.2s ease-in-out;
-  }
 `;
 
 export const Input = styled.input`
   background-color: #2E313F;
   border-radius: 4px;
-  height: 24px;
   width: 100%;
   margin-top: 8px;
-  padding-left: 8px;
+  padding: 4px;
+  padding-left: 12px;
   font-weight: 500;
   font-size: 12px;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -40,4 +34,26 @@ export const Logo = styled.img`
   width: 137px;
   height: 24px;
   align-self: flex-start;
+`;
+
+export const Button = styled.button`
+  padding: 8px 0;
+  position: relative;
+  padding-bottom: 10px;
+  width: 50%
+  align-self: flex-end;
+  background-color: #3919E6;
+  background-image: radial-gradient(ellipse farthest-corner at top left , #3919E6 0%, #7B16FF 100%);
+  color: #ffffff;
+  font-weight: bold;
+  border-radius: 4px;
+  margin-top: 8px;
+  transition: all 0.3s ease-out;
+
+  &:hover {
+    transform: scale(1.1);
+    border-radius: 6px;
+    box-shadow: 0 4px 8px #000000;
+    transition: box-shadow 0.2s ease-in, transform 0.2s ease-in, border-radius: 0.2s ease-in 0.1s;
+  }
 `;

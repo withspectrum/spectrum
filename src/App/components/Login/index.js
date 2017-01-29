@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { login } from '../../../actions/user';
 import { connect } from 'react-redux';
-import { Input, LoginHeader, Logo } from './style';
+import { Input, LoginHeader, Logo, Button } from './style';
 
 class Login extends Component{
   constructor(){
@@ -31,7 +31,7 @@ class Login extends Component{
         <Logo src="/img/logo.png" alt="Spectrum Logo" />
         <Input type="email" onChange={this.updateEmail} value={this.state.email} placeholder="Email" />
         <Input type="password" onChange={this.updatePassword} value={this.state.password} placeholder="Password" />
-        <button type="submit">Log In</button>
+        <Button type="submit">Log In</Button>
         
         { this.props.user.loginErr && 
           <div className="login-error">

@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
 export const Bubble = styled.div`
-	padding: 16px;
-	border-radius: 16px;
+	padding: 8px 12px;
+	border-radius: 1.25rem;
 	margin-top: 4px;
+	font-size: 14px;
 
 	&:first-of-type {
 		margin-top: 0;
@@ -11,8 +12,11 @@ export const Bubble = styled.div`
 `;
 
 export const LeftBubble = styled(Bubble)`
-	background-color: gray;
-	color: black;
+	background-color: #D6E0EE;
+	background-image: radial-gradient(ellipse farthest-corner at 0px 0px , #D6E0EE 0%, #CBD9ED 100%);
+	color: #171A27;
+	float: left;
+	clear: both;
 
 	&:not(:first-of-type) {
 		border-top-left-radius: 4px;
@@ -24,13 +28,17 @@ export const LeftBubble = styled(Bubble)`
 `;
 
 export const OpBubble = styled(LeftBubble)`
-	background-color: black;
+	background-color: #0F1628;
+	background-image: radial-gradient(ellipse farthest-corner at 0px 0px , #0F1628 0%, #3A3D51 100%);
 	color: white;
 `;
 
 export const RightBubble = styled(Bubble)`
 	background-color: purple;
 	color: white;
+	float: right;
+	clear: both;
+
 	&:not(:first-of-type) {
 		border-top-right-radius: 4px;
 	}
@@ -41,14 +49,14 @@ export const RightBubble = styled(Bubble)`
 `;
 
 export const BubbleGroup = styled.div`
-	display: flex;
-	flex-direction: column;
+	width: 100%;
 	margin-top: 16px;
+`;
 
-	&:before {
-		content: 'Commenter Name';
-		display: inline-block;
-		font-size: 12px;
-		color: gray;
-	}
+export const FromName = styled.span`
+	display: inline-block;
+	font-size: 12px;
+	color: #747E8D;
+	float: left;
+	clear: both;
 `;

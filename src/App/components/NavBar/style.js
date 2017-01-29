@@ -51,10 +51,10 @@ export const Username = styled.h4`
 export const TopicSearch = styled.input`
   background-color: #2E313F;
   border-radius: 4px;
-  height: 24px;
-  margin: 8px;
-  margin-top: 0;
-  padding: 8px;
+  width: 100%;
+  margin-top: 8px;
+  padding: 4px;
+  padding-left: 12px;
   font-weight: 500;
   font-size: 12px;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -62,6 +62,7 @@ export const TopicSearch = styled.input`
   vertical-align: middle;
   color: #ffffff;
 
+  &:first-of-type { margin-top: 16px }
   &::placeholder { color: #747E8D }
   &::-webkit-input-placeholder { color: #747E8D }
   &:-moz-placeholder { color: #747E8D }
