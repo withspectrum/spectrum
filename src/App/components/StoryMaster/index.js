@@ -54,16 +54,12 @@ class StoryMaster extends Component{
 		return (
 	    	<Column>
 
-	    		<Header>
-            <Button>➕</Button>   
-          </Header>
           { this.props.frequencies.active && 
             <form style={{paddingTop: "100px"}} onSubmit={ this.createPost }>
               <input value={this.state.newPostContent} onChange={this.changeNewPostContent} />
               <input type="submit" />
             </form>     
           }     
-
           <ScrollBody>
             { postsToRender.length > 0 &&
               // slice and reverse makes sure our posts show up in revers chron order
