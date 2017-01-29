@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ChatMessage from '../ChatMessage';
+import { ScrollBody } from './style';
 
 export default class ChatView extends Component{
   constructor(){
@@ -27,9 +28,9 @@ export default class ChatView extends Component{
 	render() {
     let that = this;
 		return (
-      <div>
+      <ScrollBody>
         {that.state.messages.map((thing, i) => <ChatMessage data={thing} key={i} />)} 
-      </div>
+      </ScrollBody>
 	  );
 	}
 }

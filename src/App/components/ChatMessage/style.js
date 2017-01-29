@@ -15,8 +15,6 @@ export const LeftBubble = styled(Bubble)`
 	background-color: #D6E0EE;
 	background-image: radial-gradient(ellipse farthest-corner at 0px 0px , #D6E0EE 0%, #CBD9ED 100%);
 	color: #171A27;
-	float: left;
-	clear: both;
 
 	&:not(:first-of-type) {
 		border-top-left-radius: 4px;
@@ -36,8 +34,6 @@ export const OpBubble = styled(LeftBubble)`
 export const RightBubble = styled(Bubble)`
 	background-color: purple;
 	color: white;
-	float: right;
-	clear: both;
 
 	&:not(:first-of-type) {
 		border-top-right-radius: 4px;
@@ -57,6 +53,4 @@ export const FromName = styled.span`
 	display: inline-block;
 	font-size: 12px;
 	color: #747E8D;
-	float: left;
-	clear: both;
 `;
