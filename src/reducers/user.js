@@ -15,9 +15,10 @@ export default function root(state = initialState, action) {
 				loginError: action.message
 			})
 		case 'SET_USER':
-			console.log(action)
 			return Object.assign({}, state, {
-				uid: action.user.uid
+				uid: action.user.uid,
+				photoURL: action.user.photoURL,
+				displayName: action.user.displayName
 			})
 		default:
 			return state
