@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { login } from '../../../actions/user';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import { Input, LoginHeader, Logo, Button } from './style';
 
 class Login extends Component{
   constructor(){
@@ -26,19 +27,18 @@ class Login extends Component{
 
 	render() {
 		return (
-      <form onSubmit={this.login} className="loginForm">
-        <div>
-          <input type="email" onChange={this.updateEmail} value={this.state.email} placeholder="Email" />
-          <input type="password" onChange={this.updatePassword} value={this.state.password} placeholder="Password" />
-        </div>
-        <button type="submit" className="bg-brand color-light">Log In</button>
+      <LoginHeader onSubmit={this.login} className="loginForm">
+        <Logo src="/img/logo.png" alt="Spectrum Logo" />
+        <Input type="email" onChange={this.updateEmail} value={this.state.email} placeholder="Email" />
+        <Input type="password" onChange={this.updatePassword} value={this.state.password} placeholder="Password" />
+        <Button type="submit">Log In</Button>
         
         { this.props.user.loginErr && 
           <div className="login-error">
             {this.props.user.loginError}
           </div>
         }
-      </form>
+      </LoginHeader>
 	  );
 	}
 }

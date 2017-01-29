@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { setPosts, createPost } from '../../../actions/posts'
-import { Column, ActionHeader, ScrollBody } from './style';
+import { Column, Header, ScrollBody, Button } from './style';
 import Post from '../Post';
 
-class PostList extends Component{
+class StoryMaster extends Component{
   constructor(){
     super();
     this.state = {
@@ -53,7 +53,9 @@ class PostList extends Component{
 
 		return (
 	    	<Column>
-	    		<ActionHeader />
+	    		<Header>
+            <Button>➕</Button>   
+          </Header>
           <form style={{paddingTop: "100px"}} onSubmit={ this.createPost }>
             <input value={this.state.newPostContent} onChange={this.changeNewPostContent} />
             <input type="submit" />
@@ -78,4 +80,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(PostList)
+export default connect(mapStateToProps)(StoryMaster);

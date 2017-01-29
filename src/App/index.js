@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import NavBar from './components/NavBar';
 import { Body } from './style';
+import StoryMaster from './components/StoryMaster';
+import DetailView from './components/DetailView';
 import { Provider } from 'react-redux'
 import { initStore } from '../store'
-import PostList from './components/PostList';
-import Chat from './components/Chat';
 // import ListDetail from './components/ListDetail';
 import * as firebase from 'firebase';
 import { setUser } from '../actions/user';
@@ -44,8 +44,8 @@ export default class App extends Component {
       <Provider store={this.store}>
         <Body>
           <NavBar />
-  				<PostList />
-  				<Chat />
+  				<StoryMaster />
+        <DetailView />
         </Body>
       </Provider>
     )
