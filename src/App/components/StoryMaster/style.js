@@ -13,8 +13,9 @@ export const Column = styled.div`
 
 export const ScrollBody = styled.div`
 	position: relative;
+	display: flex;
+	flex-direction: column;
 	z-index: 1;
-	padding-top: 56px;
 	`;
 
 export const Header = styled.div`

@@ -13,7 +13,7 @@ class Story extends Component{
 
 	render() {
 		return (
-	    	<StoryWrapper onClick={ this.setActiveStory }>
+	    	<StoryWrapper selected onClick={ this.setActiveStory }>
 	    		<StoryHeader>
 					  <Avatar src="./img/avatar.jpg" alt="Bryn Jackson" />
 					  <UserMeta>
@@ -26,7 +26,7 @@ class Story extends Component{
 					</StoryHeader>
 	    		<StoryBody>
 	    			<p>{this.props.data.content}</p>
-	    			<StoryImg src="/img/media.png" role="presentation"/>
+	    			{/*<StoryImg src="/img/media.png" role="presentation"/>*/}
 	    		</StoryBody>
     		</StoryWrapper>
 	  );
