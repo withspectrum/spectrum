@@ -12,7 +12,6 @@ export const login = () => (dispatch) => {
     
     // our user is created and authenticated, now lets save them to the db
     const uid = user.uid
-    const timestamp = Math.round(new Date() / 1)
     let newUserRef = firebase.database().ref().child(`users/${uid}`)
 
     newUserRef.once('value', function(snapshot) { // take a look at the ref via a snapshot
@@ -20,7 +19,7 @@ export const login = () => (dispatch) => {
       if (!exists) { // if the user doesn't exist
         let userData = { // set the user's data
           uid: uid,
-          created: timestamp,
+          created: firebase.database.ServerValue.TIMESTAMP,
           displayName: user.displayName,
           photoURL: user.photoURL,
           frequencies: []

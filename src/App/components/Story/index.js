@@ -1,27 +1,45 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { StoryWrapper, StoryBody, StoryImg, StoryHeader, Avatar, UserMeta, Name, Meta, UpvoteWrapper, UpvoteButton } from './style';
-import { setActiveStory } from '../../../actions/stories'
+import { setActiveStory, upvote } from '../../../actions/stories'
 import { setMessages } from '../../../actions/messages'
 
 class Story extends Component{
 
-  setActiveStory = () => {
+  setActiveStory = (e) => {
     this.props.dispatch(setActiveStory(this.props.data.id))
     this.props.dispatch(setMessages(this.props.data.id))
+  }
+
+  getUpvotes = () => {
+    return Math.round(Math.random() * 150);
+  }
+
+  upvote = (e) => {
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+    this.props.dispatch(upvote(this.props.data.id))
+  }
+
+  getUpvoteCount = () => {
+    if (this.props.data.upvotes){
+      return Object.keys(this.props.data.upvotes).length
+    } else {
+      return 0
+    }
   }
 
 	render() {
 		return (
 	    	<StoryWrapper onClick={ this.setActiveStory }>
 	    		<StoryHeader>
-					  <Avatar src="./img/avatar.jpg" alt="Bryn Jackson" />
+					  <Avatar src={this.props.data.creator.photoURL} alt={this.props.data.creator.displayName} />
 					  <UserMeta>
-					    <Name>Bryn Jackson</Name>
-					    <Meta>Just now • No messages yet</Meta>
+					    <Name>{this.props.data.creator.displayName}</Name>
+					    <Meta>Just now • 20 Messages</Meta>
 					  </UserMeta>
 					  <UpvoteWrapper>
-					  	<UpvoteButton>🔼 150</UpvoteButton>
+					  	<UpvoteButton onClick={this.upvote}>🔼 {this.getUpvoteCount()}</UpvoteButton>
 					  </UpvoteWrapper>
 					</StoryHeader>
 	    		<StoryBody>

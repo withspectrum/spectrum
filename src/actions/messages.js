@@ -14,19 +14,18 @@ export const setMessages = (id) => (dispatch, getState) => {
 }
 
 export const sendMessage = (user, story, message) => (dispatch) => {
-  const timestamp = Math.round(new Date() / 1);
-  let newMessageRef = firebase.database().ref().child(`messages`).push();
+  let newMessageRef = firebase.database().ref().child('messages').push();
   const key = newMessageRef.key
   let messageData = {
     id: key,
     userId: user.uid,
     userDisplayName: user.displayName,
-    timestamp: timestamp,
+    timestamp: firebase.database.ServerValue.TIMESTAMP,
     message: message,
     storyId: story
   }
 
-  newMessageRef.set(messageData, function(err){
-    console.log(err)
+  newMessageRef.set(messageData, function(e){
+    console.log(e)
   });
 }
