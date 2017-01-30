@@ -3,12 +3,12 @@ import styled from 'styled-components';
 export const StoryWrapper = styled.div`
 	display: inline-block;
 	margin: 8px;
+	flex: 1 1 auto;
 	padding: 16px;
 	border-radius: 2px;
 	background-color: #ffffff;
-	box-shadow: 0 2px 4px rgba(129, 148, 175, 0.5);
 	transition: box-shadow 0.2s ease-in;
-	border: ${props => props.dark ? '1px solid red' : 'none'}
+	box-shadow: ${props => props.selected ? '0 2px 8px rgba(73, 92, 240, 0.8)' : '0 2px 4px rgba(129, 148, 175, 0.2)'};
 
 	&:hover {
 		box-shadow: 0 4px 16px rgba(129, 148, 175, 0.8);

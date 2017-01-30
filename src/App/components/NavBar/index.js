@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { setFrequencies, addFrequency, setActiveFrequency } from '../../../actions/frequencies'
 import { setStories } from '../../../actions/stories'
 import { signOut, login } from '../../../actions/user'
-import { Column, Avatar, Header, MetaWrapper, Name, Logout, TopicSearch } from './style';
+import { Column, Avatar, Header, MetaWrapper, Form, Input, Button, Name, MetaLink, FreqList, FreqActive, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta } from './style';
 import { AvatarMask } from './svg';
 
 class NavBar extends Component{
@@ -72,32 +72,44 @@ class NavBar extends Component{
                 <Avatar src={this.props.user.photoURL} title="Bryn Jackson" />
                 <MetaWrapper>
                   <Name>{this.props.user.displayName}</Name> 
-                  <Logout onClick={this.signOut}>Sign Out</Logout>
+                  <MetaLink onClick={this.signOut}>Sign Out</MetaLink>
                 </MetaWrapper>
               </Header>
             : 
               <button onClick={this.login}>log in with twitter</button>
           }
-        <TopicSearch type='text' placeholder='Search'></TopicSearch>
-
-        <form onSubmit={this.addFrequency}>
-          <div>
-            <input type="text" onChange={this.updateFrequencyName} value={this.state.frequencyName} placeholder="New Frequency Name..." />            
-          </div>
-          <button type="submit">Submit</button>
-        </form>
-
-        <ul>
+        <FreqList>
           { frequenciesToRender.length > 0 &&
             frequenciesToRender.map((frequency, i) => {
               if (frequency.id === this.props.frequencies.active) {
-                return <li key={i} onClick={this.setActiveFrequency} id={frequency.id}>{ frequency.name } is Active</li>
+                return <FreqActive key={i} onClick={this.setActiveFrequency} id={frequency.id}>
+                        <FreqIcon src="/img/freq-icon.svg"/>
+                        <FreqLabel>{ frequency.name }</FreqLabel>
+                        </FreqActive>
               } else {
-                return <li key={i} onClick={this.setActiveFrequency} id={frequency.id}>{ frequency.name }</li>
+                return <Freq key={i} onClick={this.setActiveFrequency} id={frequency.id}>
+                        <FreqIcon src="/img/freq-icon.svg"/>
+                        <FreqLabel>{ frequency.name }</FreqLabel>
+                        </Freq>
               }
             }) 
           }
-        </ul>
+        </FreqList>
+
+        <Form onSubmit={this.addFrequency}>
+          <Input type="text" onChange={this.updateFrequencyName} value={this.state.frequencyName} placeholder="New Frequency" />            
+          <Button type="submit">~</Button>
+        </Form>
+        <Footer>
+          <FooterLogo src="/img/mark.svg" />
+          <MetaWrapper>
+            <FooterMeta>© 2017 Spec Network, Inc.</FooterMeta>
+            <FooterMeta>
+              <MetaLink href="https://spec.fm/about"> About</MetaLink> • <MetaLink href="mailto:spectrum@spec.fm">Contact</MetaLink>
+            </FooterMeta>
+          </MetaWrapper>
+        </Footer>
+
       </Column>
     )
   }
