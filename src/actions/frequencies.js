@@ -1,7 +1,9 @@
 import * as firebase from 'firebase'
+window.firebase = firebase;
 
 export const setFrequencies = () => (dispatch) => {
-	let frequenciesRef = firebase.database().ref('frequencies');
+  const database = firebase.database()
+	let frequenciesRef = database.ref('frequencies');
 
 	// once we get our frequencies, dispatch them to the store
   frequenciesRef.on('value', function(snapshot){
@@ -13,15 +15,14 @@ export const setFrequencies = () => (dispatch) => {
 }
 
 export const addFrequency = (name) => (dispatch, getState) => {
-	const database = firebase.database()
 
 	// generate a new entry in the frequencies collection with a key id
+  const database = firebase.database()
 	const newFrequencyRef = database.ref().child(`frequencies`).push();
 	const newFrequencyKey = newFrequencyRef.key
 
 	// define data we'll want to update on the db
 	const uid = getState().user.uid
-	const timestamp = Math.round(new Date() / 1);
 	let users = [] // a new frequency will have an array of users that join it
 	users.push({ // the person doing the creation should be the first user
 		uid: uid,
@@ -36,7 +37,7 @@ export const addFrequency = (name) => (dispatch, getState) => {
 	updatedData["frequencies/" + newFrequencyKey] = { // add the new frequency
 		users: users,
     id: newFrequencyKey,
-    createdAt: timestamp,
+    createdAt: firebase.database.ServerValue.TIMESTAMP,
     createdBy: uid,
     name: name,
     settings: {
@@ -44,40 +45,33 @@ export const addFrequency = (name) => (dispatch, getState) => {
 	    icon: null,
 	    tint: "#3818E5",
 	  },
-	}
+	}	
 
-	function setFrequencies() {
-		database.ref(`/users/${uid}/frequencies`).once('value').then(function(snapshot) { // we need to see what frequencies the user has already
-		  let existingFrequencies = snapshot.val(); // this is a users existing frequencies
+	saveFrequencies()
 
-		  let newFrequencies, updatedFrequencies
-		  if (existingFrequencies !== null) {
-		  	// the user already has some frequencies
-		  	updatedFrequencies = existingFrequencies // this is an array
-		  	updatedFrequencies.push(newFrequencyKey) // add the new frequency to the array
-		  } else {
-		  	// the user has no frequencies at all, this is their first
-		  	newFrequencies = [] // create an empty array
-		  	newFrequencies.push(newFrequencyKey) // and push the new frequency
-		  }
+  function saveFrequencies() {
+    // we need to see what frequencies the user has already:
+    database.ref(`/users/${uid}/frequencies`).once('value').then(function(snapshot) {
 
-		  updatedData[`users/${uid}/frequencies`] = newFrequencies || updatedFrequencies // add the frequency id to the user object
+      let updatedFrequencies = snapshot.val() || [];
+      updatedFrequencies.push(newFrequencyKey) // and push the new frequency
+      updatedData[`users/${uid}/frequencies`] = updatedFrequencies // add the frequency id to the user object
 
-		  database.ref().update(updatedData, function(error) {
-			  if (error) {
-			    console.log("Error updating data:", error);
-			  }
-			});
+      database.ref().update(updatedData, function(error) {
+        if (error) {
+          console.log("Error updating data:", error);
+        }
+      });
 
-			dispatch({
-				type: 'SET_ACTIVE_FREQUENCY',
-				id: newFrequencyKey
-			})
-		});
-	}
-
-	setFrequencies()
+      dispatch({
+        type: 'SET_ACTIVE_FREQUENCY',
+        id: newFrequencyKey
+      })
+    });
+  }
 }
+
+
 
 export const setActiveFrequency = (id) => (dispatch) => {
 	dispatch({
