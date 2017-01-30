@@ -11,17 +11,25 @@ class Story extends Component{
     this.props.dispatch(setMessages(this.props.data.id))
   }
 
+  getUpvotes = () => {
+    return Math.round(Math.random() * 150);
+  }
+  getCreatorName = () => {
+
+  }
+
 	render() {
+    console.log(this.props);
 		return (
 	    	<StoryWrapper onClick={ this.setActiveStory }>
 	    		<StoryHeader>
-					  <Avatar src="./img/avatar.jpg" alt="Bryn Jackson" />
+					  <Avatar src={this.props.data.creator.photoUrl} alt={this.props.data.creator.displayName} />
 					  <UserMeta>
-					    <Name>Bryn Jackson</Name>
-					    <Meta>Just now • No messages yet</Meta>
+					    <Name>{this.props.data.creator.displayName}</Name>
+					    <Meta>Just now • 20 Messages</Meta>
 					  </UserMeta>
 					  <UpvoteWrapper>
-					  	<UpvoteButton>🔼 150</UpvoteButton>
+					  	<UpvoteButton>🔼 {this.getUpvotes()}</UpvoteButton>
 					  </UpvoteWrapper>
 					</StoryHeader>
 	    		<StoryBody>

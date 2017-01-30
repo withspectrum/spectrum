@@ -13,13 +13,18 @@ export const setStories = () => (dispatch, getState) => {
 }
 
 export const createStory = (content) => (dispatch, getState) => {
-	const uid = getState().user.uid
+	const user = getState().user
+  const uid = user.uid
   const activeFrequency = getState().frequencies.active
 	let newStoryRef = firebase.database().ref().child(`stories`).push();
   const key = newStoryRef.key
   let storyData = {
     id: key,
-    creator: uid,
+    creator: {
+      displayName: user.displayName,
+      photoUrl: user.photoUrl,
+      uid
+    },
     timestamp: firebase.database.ServerValue.TIMESTAMP,
     content: content,
     frequency: activeFrequency
