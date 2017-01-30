@@ -30,23 +30,24 @@ export const MetaWrapper = styled.div`
 `;
 
 export const Name = styled.h3`
-  font-size: 16px;
+  font-size: 14px;
   color: #ffffff;
   font-weight: 500;
+  margin-top: 4px;
+  margin-bottom: 2px;
 `;
 
-export const Logout = styled.h4`
+export const MetaLink = styled.a`
+  text-decoration: none;
   font-size: 12px;
   color: #747E8D;
   font-weight: 500;
-  margin-top: 2px;
 `;
 
-export const TopicSearch = styled.input`
+export const Input = styled.input`
   background-color: #2E313F;
-  border-radius: 4px;
+  border-radius: 4px 0px 0px 4px;
   width: 100%;
-  margin-top: 8px;
   padding: 4px;
   padding-left: 12px;
   font-weight: 500;
@@ -56,7 +57,6 @@ export const TopicSearch = styled.input`
   vertical-align: middle;
   color: #ffffff;
 
-  &:first-of-type { margin-top: 16px }
   &::placeholder { color: #747E8D }
   &::-webkit-input-placeholder { color: #747E8D }
   &:-moz-placeholder { color: #747E8D }
@@ -70,6 +70,7 @@ export const FreqList = styled.div`
   width: 100%;
   flex: 1 0 auto;
   margin-top: 8px;
+  overflow-y: scroll;
 `;
 
 export const Freq = styled.div`
@@ -109,4 +110,46 @@ export const FreqLabel = styled.span`
 export const FreqIcon = styled.img`
   height: 32px;
   width: 32px;
+`;
+
+export const Footer = styled.div`
+  display: flex;
+  align-self: flex-end;
+  align-items: center;
+  width: 100%;
+  padding: 0 8px 8px 8px;
+  justify-content: space-between;
+`;
+
+export const FooterLogo = styled.img`
+  height: 24px;
+  width: 24px;
+`;
+
+export const FooterMeta = styled.p`
+  font-size: 12px;
+  color: #747E8D;
+  font-weight: 500;
+  text-align: right;
+`;
+
+export const Form = styled.div`
+  margin: 8px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+`;
+
+export const Button = styled.button`
+  background-color: #3818e5;
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+  height: 32px;
+  width: 40px;
+  line-height: 32px;
+  text-align: center;
+  vertical-align: middle;
+  border-left: 2px solid #171a21;
+  border-radius: 0px 4px 4px 0px;
 `;
