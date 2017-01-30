@@ -22,7 +22,7 @@ export const createStory = (content) => (dispatch, getState) => {
     id: key,
     creator: {
       displayName: user.displayName,
-      photoUrl: user.photoUrl,
+      photoURL: user.photoURL,
       uid
     },
     timestamp: firebase.database.ServerValue.TIMESTAMP,

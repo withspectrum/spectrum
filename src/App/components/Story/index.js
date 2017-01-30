@@ -23,7 +23,7 @@ class Story extends Component{
 		return (
 	    	<StoryWrapper onClick={ this.setActiveStory }>
 	    		<StoryHeader>
-					  <Avatar src={this.props.data.creator.photoUrl} alt={this.props.data.creator.displayName} />
+					  <Avatar src={this.props.data.creator.photoURL} alt={this.props.data.creator.displayName} />
 					  <UserMeta>
 					    <Name>{this.props.data.creator.displayName}</Name>
 					    <Meta>Just now • 20 Messages</Meta>
