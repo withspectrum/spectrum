@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { setFrequencies, addFrequency, setActiveFrequency } from '../../../actions/frequencies'
 import { setPosts } from '../../../actions/posts'
 import { signOut, login } from '../../../actions/user'
-import { Column, Avatar, UserHeader, UserMeta, Name, Username, TopicSearch } from './style';
+import { Column, Avatar, Header, MetaWrapper, Name, Logout, TopicSearch } from './style';
 import { AvatarMask } from './svg';
 import Login from '../Login';
 
@@ -67,19 +67,18 @@ class NavBar extends Component{
     return(
       <Column>
         <AvatarMask />
-        <UserHeader>
-          {/* <Avatar src="./img/avatar.jpg" title="Bryn Jackson"></Avatar>
-          <UserMeta>
-            <Name>Bryn Jackson</Name>
-            <Username>@uberbryn</Username>
-          </UserMeta> */}
-          <div className="flex y10 justify-center items-center flex-column">
-            { this.props.user.uid
-              ? <p>Logged in as {this.props.user.displayName} <button onClick={this.signOut}>sign out</button></p>
-              : <button onClick={this.login}>log in with twitter</button>
-            }
-          </div>
-        </UserHeader>
+          { this.props.user.uid
+            ? 
+              <Header>
+                <Avatar src="./img/avatar.jpg" title="Bryn Jackson" />
+                <MetaWrapper>
+                  <Name>{this.props.user.displayName}</Name> 
+                  <Logout onClick={this.signOut}>Sign Out</Logout>
+                </MetaWrapper>
+              </Header>
+            : 
+              <button onClick={this.login}>log in with twitter</button>
+          }
         <TopicSearch type='text' placeholder='Search'></TopicSearch>
 
         <form onSubmit={this.addFrequency}>
