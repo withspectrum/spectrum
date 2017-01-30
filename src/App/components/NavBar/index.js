@@ -69,7 +69,7 @@ class NavBar extends Component{
           { this.props.user.uid
             ? 
               <Header>
-                <Avatar src="./img/avatar.jpg" title="Bryn Jackson" />
+                <Avatar src={this.props.user.photoURL} title="Bryn Jackson" />
                 <MetaWrapper>
                   <Name>{this.props.user.displayName}</Name> 
                   <Logout onClick={this.signOut}>Sign Out</Logout>

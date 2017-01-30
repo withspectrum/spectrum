@@ -1,7 +1,8 @@
 const initialState = {
 	uid: null,
 	loginError: null,
-	displayName: null
+	displayName: null,
+	photoURL: null
 }
 
 export default function root(state = initialState, action) {
