@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setFrequencies, addFrequency, setActiveFrequency } from '../../../actions/frequencies'
-import { setPosts } from '../../../actions/posts'
+import { setStories } from '../../../actions/stories'
 import { signOut, login } from '../../../actions/user'
 import { Column, Avatar, Header, MetaWrapper, Name, Logout, TopicSearch } from './style';
 import { AvatarMask } from './svg';
-import Login from '../Login';
 
 class NavBar extends Component{
   constructor() {
@@ -38,7 +37,7 @@ class NavBar extends Component{
 
   setActiveFrequency = (e) => {
     this.props.dispatch(setActiveFrequency(e.target.id))
-    this.props.dispatch(setPosts(e.target.id))
+    this.props.dispatch(setStories(e.target.id))
   }
 
   addFrequency = (e) => {

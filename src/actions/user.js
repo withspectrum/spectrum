@@ -48,13 +48,12 @@ export const login = () => (dispatch) => {
 export const setUser = () => (dispatch) => {
 	firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-      console.log('user model is: ', user)
       dispatch({
 				type: 'SET_USER',
 				user
 			})
     } else {
-      console.log('not a user')
+      // the person isn't a user
     }
   });
 }

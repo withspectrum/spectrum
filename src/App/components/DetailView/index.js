@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import StoryView from '../StoryView';
+// import StoryView from '../StoryView';
 import ChatView from '../ChatView';
+import ChatInput from '../ChatInput';
 import { Header, ViewContainer, StoryTitle } from './style';
 
 export default class DetailView extends Component {
@@ -10,7 +11,8 @@ export default class DetailView extends Component {
 				<Header>
 					<StoryTitle>This is a story title</StoryTitle>
 				</Header>
-				<StoryView />
+				
+				<ChatInput />
 				<ChatView />
 			</ViewContainer>
 		)
