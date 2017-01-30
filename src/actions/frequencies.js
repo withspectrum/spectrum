@@ -29,21 +29,19 @@ export const addFrequency = (name) => (dispatch, getState) => {
     
     // create the data we want updated
     let updatedData = {}
-    // let newFrequencyObject = {}
-    // newFrequencyObject[newFrequencyKey] = true
-    // updatedData[`users/${uid}/frequencies`] = newFrequencyObject // add the frequency id to the user object
-    updatedData["frequencies/" + newFrequencyKey] = { // add the new frequency
-    users: users,
-    id: newFrequencyKey,
-    createdAt: firebase.database.ServerValue.TIMESTAMP,
-    createdBy: uid,
-    name: name,
-    settings: {
+    let newFrequencyData = { // add the new frequency
+      users: users,
+      id: newFrequencyKey,
+      createdAt: firebase.database.ServerValue.TIMESTAMP,
+      createdBy: uid,
+      name: name,
+      settings: {
         private: false, // frequencies are public by default
         icon: null,
         tint: "#3818E5",
       },
-    }    
+    }
+    updatedData["frequencies/" + newFrequencyKey] = newFrequencyData;
 
     saveFrequencies()
 
@@ -68,8 +66,6 @@ export const addFrequency = (name) => (dispatch, getState) => {
       });
     }
 }
-
-
 
 export const setActiveFrequency = (id) => (dispatch) => {
     dispatch({
