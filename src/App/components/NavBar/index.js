@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { setFrequencies, addFrequency, setActiveFrequency } from '../../../actions/frequencies'
 import { setStories } from '../../../actions/stories'
 import { signOut, login } from '../../../actions/user'
-import { Column, Avatar, Header, MetaWrapper, Name, Logout, TopicSearch } from './style';
+import { Column, Avatar, Header, MetaWrapper, Name, Logout, FreqList, FreqActive, Freq, FreqLabel, FreqIcon } from './style';
 import { AvatarMask } from './svg';
 
 class NavBar extends Component{
@@ -78,7 +78,6 @@ class NavBar extends Component{
             : 
               <button onClick={this.login}>log in with twitter</button>
           }
-        <TopicSearch type='text' placeholder='Search'></TopicSearch>
 
         <form onSubmit={this.addFrequency}>
           <div>
@@ -87,17 +86,23 @@ class NavBar extends Component{
           <button type="submit">Submit</button>
         </form>
 
-        <ul>
+        <FreqList>
           { frequenciesToRender.length > 0 &&
             frequenciesToRender.map((frequency, i) => {
               if (frequency.id === this.props.frequencies.active) {
-                return <li key={i} onClick={this.setActiveFrequency} id={frequency.id}>{ frequency.name } is Active</li>
+                return <FreqActive key={i} onClick={this.setActiveFrequency} id={frequency.id}>
+                        <FreqIcon src="/img/freq-icon.svg"/>
+                        <FreqLabel>{ frequency.name }</FreqLabel>
+                        </FreqActive>
               } else {
-                return <li key={i} onClick={this.setActiveFrequency} id={frequency.id}>{ frequency.name }</li>
+                return <Freq key={i} onClick={this.setActiveFrequency} id={frequency.id}>
+                        <FreqIcon src="/img/freq-icon.svg"/>
+                        <FreqLabel>{ frequency.name }</FreqLabel>
+                        </Freq>
               }
             }) 
           }
-        </ul>
+        </FreqList>
       </Column>
     )
   }
