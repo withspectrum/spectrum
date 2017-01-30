@@ -1,14 +1,22 @@
 import * as firebase from 'firebase'
+import { hashToArray } from '../helpers/utils'
 
 export const setFrequencies = () => (dispatch) => {
 	let frequenciesRef = firebase.database().ref('frequencies');
 
 	// once we get our frequencies, dispatch them to the store
   frequenciesRef.on('value', function(snapshot){
+  	const frequencies = hashToArray(snapshot.val())
     dispatch({
 	  	type: 'SET_FREQUENCIES',
-	  	frequencies: snapshot.val()
+	  	frequencies: frequencies
 	  })
+
+    // when we first set the freqeuencies, make the first one in the list active by default
+	  dispatch({
+			type: 'SET_ACTIVE_FREQUENCY',
+			id: frequencies[0].id
+		})
   })
 }
 
@@ -30,9 +38,6 @@ export const addFrequency = (name) => (dispatch, getState) => {
 	
 	// create the data we want updated
 	let updatedData = {}
-	// let newFrequencyObject = {}
-	// newFrequencyObject[newFrequencyKey] = true
-	// updatedData[`users/${uid}/frequencies`] = newFrequencyObject // add the frequency id to the user object
 	updatedData["frequencies/" + newFrequencyKey] = { // add the new frequency
 		users: users,
     id: newFrequencyKey,
@@ -46,7 +51,7 @@ export const addFrequency = (name) => (dispatch, getState) => {
 	  },
 	}
 
-	function setFrequencies() {
+	function updateFrequencies() {
 		database.ref(`/users/${uid}/frequencies`).once('value').then(function(snapshot) { // we need to see what frequencies the user has already
 		  let existingFrequencies = snapshot.val(); // this is a users existing frequencies
 
@@ -69,6 +74,7 @@ export const addFrequency = (name) => (dispatch, getState) => {
 			  }
 			});
 
+		  // after the frequency is created, set it as active in the app
 			dispatch({
 				type: 'SET_ACTIVE_FREQUENCY',
 				id: newFrequencyKey
@@ -76,7 +82,7 @@ export const addFrequency = (name) => (dispatch, getState) => {
 		});
 	}
 
-	setFrequencies()
+	updateFrequencies()
 }
 
 export const setActiveFrequency = (id) => (dispatch) => {

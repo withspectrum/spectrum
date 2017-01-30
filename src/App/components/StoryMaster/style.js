@@ -14,7 +14,7 @@ export const Column = styled.div`
 export const ScrollBody = styled.div`
 	position: relative;
 	z-index: 1;
-	padding-top: 56px;
+	margin-top: 56px;
 	`;
 
 export const Header = styled.div`
