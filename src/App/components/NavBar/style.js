@@ -9,31 +9,24 @@ export const Column = styled.div`
   height: 100%;
 `;
 
+export const Header = styled.div`
+  display: flex;
+  margin: 8px;
+  padding: 8px;
+  align-items: center;
+  border-radius: 8px;
+`;
+
 export const Avatar = styled.img`
   height: 32px;
   width: 32px;
   clip-path: url(#avatar-32);
 `;
 
-export const UserHeader = styled.div`
-  display: flex;
-  margin: 8px;
-  padding: 8px;
-  align-items: center;
-  border-radius: 8px;
-  transition: box-shadow 0.2s ease-in-out;
-
-  &:hover {
-    box-shadow: 0 4px 8px #000000;
-    transition: box-shadow 0.2s ease-in-out;
-  }
-`;
-
-export const UserMeta = styled.div`
+export const MetaWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 8px;
-  margin-top: -2px;
 `;
 
 export const Name = styled.h3`
@@ -42,10 +35,11 @@ export const Name = styled.h3`
   font-weight: 500;
 `;
 
-export const Username = styled.h4`
+export const Logout = styled.h4`
   font-size: 12px;
   color: #747E8D;
   font-weight: 500;
+  margin-top: 2px;
 `;
 
 export const TopicSearch = styled.input`
