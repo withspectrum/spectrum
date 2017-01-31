@@ -34,7 +34,6 @@ class Composer extends Component {
     let description = this.state.description
     let title = this.state.title
     let file = this.state.file
-    
     if (title && description) {
 	    this.props.dispatch(createStory(title, description, file))
 	    this.setState({
