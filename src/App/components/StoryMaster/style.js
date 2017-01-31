@@ -26,7 +26,7 @@ export const Header = styled.div`
 	width: 30vw;
 	top: 0;
 	border-bottom: 1px solid rgba(0,0,0,0.1);
-	z-index: 2
+	z-index: 10;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -43,3 +43,14 @@ export const Button = styled.div`
 		box-shadow: 0 2px 4px #000000;
 	}
 `;
+
+export const ComposerOverlay = styled.div`
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 48px;
+	background-color: ${props => props.isOpen ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0)'};
+	pointer-events: ${props => props.isOpen ? 'auto' : 'none'};
+	transition: all 0.2s;
+	z-index: 7;
+`

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { Column, Header, ScrollBody, Button } from './style';
+import { Column, Header, ScrollBody, Button, ComposerOverlay } from './style';
 import { toggleComposer } from '../../../actions/composer'
 import Story from '../Story';
 import Composer from '../Composer';
@@ -20,6 +20,7 @@ class StoryMaster extends Component{
             <Button onClick={ this.toggleComposer }> + </Button>
           </Header>
 
+          <ComposerOverlay onClick={ this.toggleComposer } isOpen={ this.props.composer.isOpen } />
           <Composer isOpen={ this.props.composer.isOpen } />
 
           <ScrollBody>
