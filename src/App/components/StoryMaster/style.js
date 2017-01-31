@@ -16,6 +16,7 @@ export const ScrollBody = styled.div`
 	display: flex;
 	flex-direction: column;
 	z-index: 1;
+	margin-top: 56px;
 	`;
 
 export const Header = styled.div`

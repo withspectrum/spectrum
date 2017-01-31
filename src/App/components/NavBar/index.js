@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setFrequencies, addFrequency, setActiveFrequency } from '../../../actions/frequencies'
+import { addFrequency, setActiveFrequency } from '../../../actions/frequencies'
 import { setStories } from '../../../actions/stories'
 import { signOut, login } from '../../../actions/user'
 import { Column, Avatar, Header, MetaWrapper, Form, Input, Button, Name, MetaLink, FreqList, FreqActive, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta } from './style';
@@ -13,10 +13,6 @@ class NavBar extends Component{
     this.state = {
       frequencyName: ''
     }
-  }
-
-  componentWillMount(){
-    this.props.dispatch(setFrequencies())
   }
 
   login = (e) => {
@@ -37,7 +33,7 @@ class NavBar extends Component{
 
   setActiveFrequency = (e) => {
     this.props.dispatch(setActiveFrequency(e.target.id))
-    this.props.dispatch(setStories(e.target.id))
+    this.props.dispatch(setStories())
   }
 
   addFrequency = (e) => {
@@ -54,14 +50,7 @@ class NavBar extends Component{
       Firebase returns frequencies as a bunch of nested objects. In order to have better control over
       iterative rendering (i.e. using .map()) we need to get these frequencies into an array.
     */
-    let frequencies = this.props.frequencies.frequencies
-    let frequenciesToRender = []
-    for (let key in frequencies) {
-      if (!frequencies.hasOwnProperty(key)) continue;
-
-      let arr = frequencies[key];
-      frequenciesToRender.push(arr)
-    }
+    const frequencies = this.props.frequencies.frequencies
 
     return(
       <Column>
@@ -79,8 +68,8 @@ class NavBar extends Component{
               <button onClick={this.login}>log in with twitter</button>
           }
         <FreqList>
-          { frequenciesToRender.length > 0 &&
-            frequenciesToRender.map((frequency, i) => {
+          { frequencies.length > 0 &&
+            frequencies.map((frequency, i) => {
               if (frequency.id === this.props.frequencies.active) {
                 return <FreqActive key={i} onClick={this.setActiveFrequency} id={frequency.id}>
                         <FreqIcon src="/img/freq-icon.svg"/>
@@ -100,6 +89,7 @@ class NavBar extends Component{
           <Input type="text" onChange={this.updateFrequencyName} value={this.state.frequencyName} placeholder="New Frequency" />            
           <Button type="submit">~</Button>
         </Form>
+        
         <Footer>
           <FooterLogo src="/img/mark.svg" />
           <MetaWrapper>

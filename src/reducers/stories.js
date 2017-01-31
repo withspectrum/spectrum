@@ -1,5 +1,5 @@
 const initialState = {
-	stories: null,
+	stories: [],
 	active: null
 }
 

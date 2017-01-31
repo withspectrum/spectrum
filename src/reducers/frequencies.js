@@ -1,5 +1,5 @@
 const initialState = {
-	frequencies: null,
+	frequencies: [],
 	active: null
 }
 
