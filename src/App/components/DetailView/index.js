@@ -11,9 +11,9 @@ class DetailView extends Component {
 			<ViewContainer>
 				{ this.props.stories.active !== null
 					? <div>
-							<Header>
+							{/*<Header>
 								<StoryTitle>Title</StoryTitle>
-							</Header>
+							</Header>*/}
 							
 							<ChatInput />
 							<ChatView />
