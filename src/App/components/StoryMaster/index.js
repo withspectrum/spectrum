@@ -1,22 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { Column, Header, ScrollBody, Button } from './style';
+import { toggleComposer } from '../../../actions/composer'
 import Story from '../Story';
 import Composer from '../Composer';
 
 class StoryMaster extends Component{
-  constructor() {
-    super()
-
-    this.state = {
-      composerIsOpen: false
-    }
-  }
-
   toggleComposer = () => {
-    this.setState({
-      composerIsOpen: !this.state.composerIsOpen
-    })
+    this.props.dispatch(toggleComposer())
   }
 
 	render() {
@@ -29,7 +20,7 @@ class StoryMaster extends Component{
             <Button onClick={ this.toggleComposer }> + </Button>
           </Header>
 
-          <Composer isOpen={this.state.composerIsOpen} />
+          <Composer isOpen={ this.props.composer.isOpen } />
 
           <ScrollBody>
             { stories.length > 0 &&
@@ -47,7 +38,8 @@ class StoryMaster extends Component{
 const mapStateToProps = (state) => {
   return {
     stories: state.stories,
-    frequencies: state.frequencies
+    frequencies: state.frequencies,
+    composer: state.composer
   }
 }
 

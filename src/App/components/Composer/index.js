@@ -72,7 +72,7 @@ class Composer extends Component {
 
 	render() {
 		return (
-			<ComposerContainer isOpen={true}>
+			<ComposerContainer isOpen={this.props.isOpen}>
 				{ this.props.frequencies.active && 
 	        <form onSubmit={ this.createStory } encType="multipart/form-data">
 	          <Input placeholder="Title..." value={this.state.title} onChange={this.changeTitle} />

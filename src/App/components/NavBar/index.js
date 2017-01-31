@@ -54,7 +54,8 @@ class NavBar extends Component{
 
     return(
       <Column>
-        <AvatarMask />
+        <div>
+          <AvatarMask />
           { this.props.user.uid
             ? 
               <Header>
@@ -67,38 +68,41 @@ class NavBar extends Component{
             : 
               <button onClick={this.login}>log in with twitter</button>
           }
-        <FreqList>
-          { frequencies.length > 0 &&
-            frequencies.map((frequency, i) => {
-              if (frequency.id === this.props.frequencies.active) {
-                return <FreqActive key={i} onClick={this.setActiveFrequency} id={frequency.id}>
-                        <FreqIcon src="/img/freq-icon.svg"/>
-                        <FreqLabel>{ frequency.name }</FreqLabel>
-                        </FreqActive>
-              } else {
-                return <Freq key={i} onClick={this.setActiveFrequency} id={frequency.id}>
-                        <FreqIcon src="/img/freq-icon.svg"/>
-                        <FreqLabel>{ frequency.name }</FreqLabel>
-                        </Freq>
-              }
-            }) 
-          }
-        </FreqList>
+          <FreqList>
+            { frequencies.length > 0 &&
+              frequencies.map((frequency, i) => {
+                if (frequency.id === this.props.frequencies.active) {
+                  return <FreqActive key={i} onClick={this.setActiveFrequency} id={frequency.id}>
+                          <FreqIcon src="/img/freq-icon.svg"/>
+                          <FreqLabel>{ frequency.name }</FreqLabel>
+                          </FreqActive>
+                } else {
+                  return <Freq key={i} onClick={this.setActiveFrequency} id={frequency.id}>
+                          <FreqIcon src="/img/freq-icon.svg"/>
+                          <FreqLabel>{ frequency.name }</FreqLabel>
+                          </Freq>
+                }
+              }) 
+            }
+          </FreqList>
+        </div>
 
-        <Form onSubmit={this.addFrequency}>
-          <Input type="text" onChange={this.updateFrequencyName} value={this.state.frequencyName} placeholder="New Frequency" />            
-          <Button type="submit">~</Button>
-        </Form>
-        
-        <Footer>
-          <FooterLogo src="/img/mark.svg" />
-          <MetaWrapper>
-            <FooterMeta>© 2017 Spec Network, Inc.</FooterMeta>
-            <FooterMeta>
-              <MetaLink href="https://spec.fm/about"> About</MetaLink> • <MetaLink href="mailto:spectrum@spec.fm">Contact</MetaLink>
-            </FooterMeta>
-          </MetaWrapper>
-        </Footer>
+        <div>
+          <Form onSubmit={this.addFrequency}>
+            <Input type="text" onChange={this.updateFrequencyName} value={this.state.frequencyName} placeholder="New Frequency" />            
+            <Button type="submit">~</Button>
+          </Form>
+          
+          <Footer>
+            <FooterLogo src="/img/mark.svg" />
+            <MetaWrapper>
+              <FooterMeta>© 2017 Spec Network, Inc.</FooterMeta>
+              <FooterMeta>
+                <MetaLink href="https://spec.fm/about"> About</MetaLink>&nbsp;·&nbsp;<MetaLink href="mailto:spectrum@spec.fm">Contact</MetaLink>
+              </FooterMeta>
+            </MetaWrapper>
+          </Footer>
+        </div>
 
       </Column>
     )

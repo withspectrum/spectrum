@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { StoryWrapper, StoryBody, StoryImg, StoryHeader, Avatar, UserMeta, Name, Meta, UpvoteWrapper, UpvoteButton } from './style';
+import { StoryWrapper, StoryBody, StoryImg, StoryHeader, Avatar, UserMeta, Name, Meta, UpvoteWrapper, UpvoteButton, Media } from './style';
 import { setActiveStory, upvote } from '../../../actions/stories'
 import { setMessages } from '../../../actions/messages'
 
@@ -43,7 +43,15 @@ class Story extends Component{
 					  </UpvoteWrapper>
 					</StoryHeader>
 	    		<StoryBody>
-	    			<p>{this.props.data.content}</p>
+	    			<p>{this.props.data.content.title}</p>
+            
+            <p>{this.props.data.content.description}</p>
+            
+            {this.props.data.content.media && this.props.data.content.media !== ''
+              ? <Media src={this.props.data.content.media} />
+              : ''
+            }
+
 	    			{/*<StoryImg src="/img/media.png" role="presentation"/>*/}
 	    		</StoryBody>
     		</StoryWrapper>
