@@ -1,17 +1,12 @@
 const initialState = {
-	stories: [],
-	active: null
+	isOpen: false
 }
 
 export default function root(state = initialState, action) {
 	switch (action.type) {
-		case 'SET_STORIES':
+		case 'TOGGLE_COMPOSER_OPEN':
 			return Object.assign({}, state, {
-				stories: action.stories
-			})
-		case 'SET_ACTIVE_STORY':
-			return Object.assign({}, state, {
-				active: action.id
+				isOpen: action.isOpen
 			})
 		default:
 			return state

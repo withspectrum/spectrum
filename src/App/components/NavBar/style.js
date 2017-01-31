@@ -3,18 +3,21 @@ import styled from 'styled-components';
 export const Column = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   background-color: #171A21;
   width: 16vw;
+  min-width: 240px;
   min-height: 100vh;
   height: 100%;
+  overflow-y: scroll;
 `;
 
 export const Header = styled.div`
   display: flex;
-  margin: 8px;
-  padding: 8px;
+  flex: 0 1 auto;
+  padding: 16px;
+  padding-top: 0;
   align-items: center;
-  border-radius: 8px;
 `;
 
 export const Avatar = styled.img`
@@ -42,6 +45,10 @@ export const MetaLink = styled.a`
   font-size: 12px;
   color: #747E8D;
   font-weight: 500;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const Input = styled.input`
@@ -68,8 +75,7 @@ export const FreqList = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  flex: 1 0 auto;
-  margin-top: 8px;
+  flex: 0 1 auto;
   overflow-y: scroll;
 `;
 
@@ -105,17 +111,18 @@ export const FreqLabel = styled.span`
   font-weight: 500;
   color: #ffffff;
   margin-left: 8px;
+  pointer-events: none;
 `;
 
 export const FreqIcon = styled.img`
   height: 32px;
   width: 32px;
+  pointer-events: none;
 `;
 
 export const Footer = styled.div`
   display: flex;
-  align-self: flex-end;
-  align-items: center;
+  flex: 0 1 auto;
   width: 100%;
   padding: 0 8px 8px 8px;
   justify-content: space-between;
@@ -127,16 +134,18 @@ export const FooterLogo = styled.img`
 `;
 
 export const FooterMeta = styled.p`
+  display: flex;
   font-size: 12px;
   color: #747E8D;
   font-weight: 500;
   text-align: right;
 `;
 
-export const Form = styled.div`
+export const Form = styled.form`
   margin: 8px;
   margin-bottom: 16px;
   display: flex;
+  flex: 0 1 auto;
   align-items: center;
 `;
 

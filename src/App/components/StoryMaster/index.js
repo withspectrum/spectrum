@@ -1,67 +1,32 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { setStories, createStory } from '../../../actions/stories'
-import { Column, Header, ScrollBody, Button } from './style';
+import { Column, Header, ScrollBody, Button, ComposerOverlay } from './style';
+import { toggleComposer } from '../../../actions/composer'
 import Story from '../Story';
+import Composer from '../Composer';
 
 class StoryMaster extends Component{
-  constructor(){
-    super();
-    this.state = {
-      newStoryContent: ""
-    }
-  }
-
-  componentWillMount(){
-    this.props.dispatch(setStories(this.props.frequencies.active))
-  }
-
-  changeNewStoryContent = (e) => {
-    this.setState({
-      newStoryContent: e.target.value
-    });
-  }
-
-  createStory = (e) => {
-    e.preventDefault();
-    this.props.dispatch(createStory(this.state.newStoryContent))
-    this.setState({
-      newStoryContent: ""
-    })
+  toggleComposer = () => {
+    this.props.dispatch(toggleComposer())
   }
 
 	render() {
-
-    /**
-      Firebase returns stories as a bunch of nested objects. In order to have better control over
-      iterative rendering (i.e. using .map()) we need to get these stories into an array.
-    */
     let stories = this.props.stories.stories
-    let storiesToRender = []
-    for (let key in stories) {
-      if (!stories.hasOwnProperty(key)) continue;
-
-      let arr = stories[key];
-      storiesToRender.push(arr)
-    }
 
 		return (
-	    	<Column>
+	    	<Column >
 
           <Header>
-            <Button> + </Button>
+            <Button onClick={ this.toggleComposer }> + </Button>
           </Header>
 
-          { this.props.frequencies.active && 
-            <form style={{paddingTop: "100px"}} onSubmit={ this.createStory }>
-              <input value={this.state.newStoryContent} onChange={this.changeNewStoryContent} />
-              <input type="submit" />
-            </form>     
-          }     
+          <ComposerOverlay onClick={ this.toggleComposer } isOpen={ this.props.composer.isOpen } />
+          <Composer isOpen={ this.props.composer.isOpen } />
+
           <ScrollBody>
-            { storiesToRender.length > 0 &&
+            { stories.length > 0 &&
               // slice and reverse makes sure our stories show up in revers chron order
-              storiesToRender.slice(0).reverse().map((story, i) => {
+              stories.slice(0).reverse().map((story, i) => {
                 return <Story data={story} key={i} />
               }) 
             }
@@ -73,9 +38,9 @@ class StoryMaster extends Component{
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user,
     stories: state.stories,
-    frequencies: state.frequencies
+    frequencies: state.frequencies,
+    composer: state.composer
   }
 }
 

@@ -8,6 +8,7 @@ import { initStore } from '../store'
 // import ListDetail from './components/ListDetail';
 import * as firebase from 'firebase';
 import { setUser } from '../actions/user';
+import { setFrequencies } from '../actions/frequencies'
 import FIREBASE_CONFIG from '../config/FirebaseConfig';
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,
@@ -23,7 +24,8 @@ export default class App extends Component {
     firebase.initializeApp(fbconfig);
 
     this.store = initStore({})
-    this.store.dispatch(setUser())
+    this.store.dispatch(setUser()) // on first load, set the user
+    this.store.dispatch(setFrequencies()) // on first load, get frequences from the server
   }
 
   selectTag = (tag) => {
