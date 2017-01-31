@@ -34,24 +34,7 @@ class Composer extends Component {
     let description = this.state.description
     let title = this.state.title
     let file = this.state.file
-    // let type = base64MimeType(this.state.media)
-
-  //   function base64MimeType(encoded) {
-		//   let result = null;
-
-		//   if (typeof encoded !== 'string') {
-		//     return result;
-		//   }
-
-		//   var mime = encoded.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/);
-
-		//   if (mime && mime.length) {
-		//     result = mime[1];
-		//   }
-
-		//   return result;
-		// }
-
+    
     if (title && description) {
 	    this.props.dispatch(createStory(title, description, file))
 	    this.setState({
