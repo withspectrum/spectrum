@@ -84,25 +84,12 @@ export const Freq = styled.div`
   height: 48px;
   padding-left: 16px;
   align-items: center;
-  background-color: #171a21;
-  transition: background-color 0.2s ease-out;
+  background-color: ${props => props.active ? '#3818e5' : '#171a21' };
+  color: #fff;  
 
   &:hover {
     cursor: pointer;
-    background-color: #2E313F;
-    transition: background-color 0.2s ease-in;
-  }
-`;
-
-export const FreqActive = styled(Freq)`
-  background-color: #3818e5;
-  color: rgba(255, 255, 255, 1);
-  transition: background-color 0.2s ease-out;
-
-  &:hover {
-    cursor: pointer;
-    background-color: #3818e5;
-    transition: background-color 0.2s ease-in;
+    background-color: ${props => props.active ? '#3818e5' : '#2E313F' };
   }
 `;
 

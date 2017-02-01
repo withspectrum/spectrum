@@ -47,10 +47,18 @@ export const login = () => (dispatch) => {
 export const setUser = () => (dispatch) => {
 	firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
-      dispatch({
-				type: 'SET_USER',
-				user
-			})
+      const database = firebase.database()
+      let usersRef = database.ref('users');
+
+      usersRef.orderByChild('uid').equalTo(user.uid).on('value', function(snapshot){
+        let userObject = snapshot.val()
+        userObject = userObject[user.uid] // get the first user returned, which should be the current user
+        
+        dispatch({
+          type: 'SET_USER',
+          user: userObject
+        })
+      });
     } else {
       // the person isn't a user
     }
