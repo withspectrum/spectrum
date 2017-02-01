@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { ScrollBody, Bubble, BubbleGroup, FromName } from './style';
-import ChatMessage from '../ChatMessage';
 
 class ChatView extends Component{
   render() {
