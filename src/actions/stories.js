@@ -7,10 +7,25 @@ export const setStories = () => (dispatch, getState) => {
 
   stories.orderByChild('frequency').equalTo(activeFrequency).on('value', function(snapshot){
     const snapval = snapshot.val();
-    if (!snapval) return true;
+
+    // if there aren't stories for this frequency, clear the stories from state
+    if (!snapval) {
+      dispatch({
+        type: 'SET_STORIES',
+        stories: []
+      })
+
+      dispatch({
+        type: 'SET_ACTIVE_STORY',
+        id: ''
+      })
+
+      return
+    };
     // test to see if this is a snapshot of the full list
     let key = Object.keys(snapshot.val())[0];
     const stories = hashToArray(snapshot.val())
+    console.log('stories being set are: ', stories)
     if (snapshot.val()[key].creator){
       dispatch({
         type: 'SET_STORIES',
@@ -93,5 +108,10 @@ export const setActiveStory = (id) => (dispatch) => {
   dispatch({
     type: 'SET_ACTIVE_STORY',
     id
+  })
+
+  dispatch({
+    type: 'SET_MESSAGES',
+    mesages: ''
   })
 }
