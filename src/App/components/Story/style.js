@@ -24,12 +24,6 @@ export const StoryBody = styled.div`
 	font-size: 14px;
 `;
 
-export const StoryImg = styled.img`
-	max-width: calc(100% - 0px);
-	margin-top: 16px;
-	border-radius: 2px;
-`;
-
 export const Avatar = styled.img`
 	display: inline-block;
   height: 40px;
@@ -41,6 +35,18 @@ export const Avatar = styled.img`
 export const StoryHeader = styled.div`
   display: flex;
   align-items: center;
+`;
+
+export const Title = styled.p`
+	font-size: 14px;
+	font-weight: bold;
+	margin-bottom: 8px;
+`;
+
+export const Desc = styled.p`
+	font-size: 14px;
+	font-weight: regular;
+	margin-bottom: 8px;
 `;
 
 export const Media = styled.img`

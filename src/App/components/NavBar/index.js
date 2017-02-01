@@ -94,7 +94,6 @@ class NavBar extends Component{
             : 
               <Header login>
                 <HeaderLogo src="/img/logo.png" role="presentation"/>
-                <Login onClick={this.login}>Join</Login>
               </Header>
           }
           <FreqList>

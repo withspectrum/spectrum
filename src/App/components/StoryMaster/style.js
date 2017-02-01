@@ -11,10 +11,12 @@ export const Column = styled.div`
 `;
 
 export const ScrollBody = styled.div`
-	flex: 1 0 auto;
+	flex: 1 1 auto;
 	display: flex;
+	overflow-y: auto;
+	overflow-x: hidden;
 	flex-direction: column;
-	align-items: center;
+	align-items: stretch;
 
 	> img {
 		margin-top: 32px;
@@ -29,16 +31,19 @@ export const ScrollBody = styled.div`
 
 export const Header = styled.div`
 	display: flex;
-	flex: 0 0 auto;
-	width: 30vw;
+	flex-direction: row-reverse;
+	flex: 0 0 48px;
+	width: 100%;
 	background-color: #ffffff;
-	border-bottom: 1px solid rgba(0,0,0,0.1);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
 	align-items: center;
 	align-self: flex-start;
 	justify-content: space-between;
-	padding: 8px 16px;
+	padding: 8px;
+
 
 	> img {
+		flex: 0 0 32px;
 		transition: all 0.2s ease-out;
 
 		&:hover {

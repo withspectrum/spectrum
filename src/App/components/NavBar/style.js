@@ -100,6 +100,7 @@ export const Freq = styled.div`
   padding-left: 16px;
   align-items: center;
   background-color: ${props => props.active ? '#3818e5' : '#171a21' };
+  background-image: ${props => props.active ? `radial-gradient(ellipse farthest-corner at top left , #7B16FF 0%, #3819E6 100%)` : `none`};
   color: #fff;  
 
   &:hover {
@@ -173,6 +174,7 @@ export const Input = styled.input`
 
 export const Button = styled.button`
   background-color: #3818e5;
+  background-image: radial-gradient(ellipse farthest-corner at top left , #7B16FF 0%, #3819E6 100%);
   font-size: 18px;
   font-weight: bold;
   color: #ffffff;
