@@ -39,8 +39,8 @@ class StoryMaster extends Component{
 	    	<Column >
 
           <Header>
-            { subscribeButton(this.props.user.frequencies, this.props.frequencies.active) }
             <img src="/img/add-story.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
+            { subscribeButton(this.props.user.frequencies, this.props.frequencies.active) }
           </Header>
 
           {/*<ComposerOverlay onClick={ this.toggleComposer } isOpen={ this.props.composer.isOpen } />

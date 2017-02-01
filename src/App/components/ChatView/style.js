@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
 export const ScrollBody = styled.div`
-	flex: 0 1 auto;
+	flex: 1 1 auto;
 	padding: 0 16px;
-	max-height: 100%;
+	padding-bottom: 16px;
 	display: flex;
 	flex-direction: column;
-	overflow-y: scroll;
+	overflow-y: auto;
 `;
 
 export const Bubble = styled.p`
@@ -56,6 +56,7 @@ export const BubbleGroup = styled.div`
 export const FromName = styled.span`
 	display: inline-block;
 	font-size: 10px;
+	font-weight: 500;
 	color: #747E8D;
 	float: ${props => props.me ? `right;` : `left;`}
 `;

@@ -1,0 +1,12 @@
+<svg width="24" height="24" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:figma="http://www.figma.com/figma/ns">
+<title>mark</title>
+<desc>Created using Figma</desc>
+<g id="Canvas" transform="translate(-2639 -1639)" figma:type="canvas">
+<g id="mark" style="mix-blend-mode:normal;" figma:type="vector">
+<use xlink:href="#path0_fill" transform="translate(2639 1639)" fill="#747E8D" style="mix-blend-mode:normal;"/>
+</g>
+</g>
+<defs>
+<path id="path0_fill" fill-rule="evenodd" d="M 0 0L 3 0C 14.598 0 24 9.40202 24 21L 24 24L 13 24C 12.4477 24 12 23.5523 12 23L 12 21C 12 16.0294 7.97056 12 3 12L 1 12C 0.447715 12 0 11.5523 0 11L 0 0Z"/>
+</defs>
+</svg>
