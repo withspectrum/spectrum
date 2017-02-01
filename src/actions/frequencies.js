@@ -76,3 +76,29 @@ export const setActiveFrequency = (id) => (dispatch) => {
         id: id
     })
 }
+
+export const subscribeFrequency = () => (dispatch, getState) => {
+	const database = firebase.database()	
+	const uid = getState().user.uid
+	let usersFrequencies = getState().user.frequencies || []
+	let activeFrequency = getState().frequencies.active
+	usersFrequencies.push(`${activeFrequency}`)
+
+	database.ref(`/users/${uid}`).update({
+		frequencies: usersFrequencies
+	})
+
+}
+
+export const unsubscribeFrequency = () => (dispatch, getState) => {
+	const database = firebase.database()	
+	const uid = getState().user.uid
+	let usersFrequencies = getState().user.frequencies
+	let activeFrequency = getState().frequencies.active
+	let index = usersFrequencies.indexOf(activeFrequency)
+	usersFrequencies.splice(index, 1)
+
+	database.ref(`/users/${uid}`).update({
+		frequencies: usersFrequencies
+	})
+}

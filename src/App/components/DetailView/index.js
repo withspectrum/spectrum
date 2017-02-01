@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 // import StoryView from '../StoryView';
 import ChatView from '../ChatView';
 import ChatInput from '../ChatInput';
+// eslint-disable-next-line
 import { Header, ViewContainer, StoryTitle, NullContainer, NullText } from './style';
 
 class DetailView extends Component {
