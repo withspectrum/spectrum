@@ -4,21 +4,21 @@ import { connect } from 'react-redux'
 import ChatView from '../ChatView';
 import ChatInput from '../ChatInput';
 // eslint-disable-next-line
-import { Header, ViewContainer, StoryTitle, NullContainer, NullText } from './style';
+import { Header, ViewContainer, LogicContainer, StoryTitle, NullContainer, NullText } from './style';
 
 class DetailView extends Component {
 	render() {
 		return(
 			<ViewContainer>
 				{ this.props.stories.active !== null
-					? <div>
-							{/*<Header>
+					? <LogicContainer>
+							<Header>
 								<StoryTitle>Title</StoryTitle>
-							</Header>*/}
+							</Header>
 							
-							<ChatInput />
 							<ChatView />
-						</div>
+							<ChatInput />
+						</LogicContainer>
 					: <NullContainer>
 							<NullText>Choose a story to get started!</NullText>
 						</NullContainer>

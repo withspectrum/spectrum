@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
 export const ScrollBody = styled.div`
-	height: 100%;
-	margin-bottom: 60px;
+	flex: 0 1 auto;
 	padding: 0 16px;
+	max-height: 100%;
 	display: flex;
 	flex-direction: column;
-	justify-content: flex-end;
+	overflow-y: scroll;
 `;
 
 export const Bubble = styled.p`

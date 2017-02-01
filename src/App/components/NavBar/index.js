@@ -4,8 +4,7 @@ import { addFrequency, setActiveFrequency } from '../../../actions/frequencies'
 import { setStories } from '../../../actions/stories'
 import { setMessages } from '../../../actions/messages'
 import { signOut, login } from '../../../actions/user'
-import { Column, Avatar, Header, MetaWrapper, Form, Input, Button, Name, MetaLink, FreqList, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta } from './style';
-import { AvatarMask } from './svg';
+import { Column, Header, HeaderLogo, Login, Avatar, MetaWrapper, Name, MetaLink, FreqList, FreqListHeading, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta, Form, Input, Button } from './style';
 
 class NavBar extends Component{
   constructor() {
@@ -83,8 +82,6 @@ class NavBar extends Component{
 
     return(
       <Column>
-        <div>
-          <AvatarMask />
           { this.props.user.uid
             ? 
               <Header>
@@ -95,16 +92,19 @@ class NavBar extends Component{
                 </MetaWrapper>
               </Header>
             : 
-              <button onClick={this.login}>log in with twitter</button>
+              <Header login>
+                <HeaderLogo src="/img/logo.png" role="presentation"/>
+                <Login onClick={this.login}>Join</Login>
+              </Header>
           }
           <FreqList>
-            <p>My Frequencies</p>
+            <FreqListHeading>My Frequencies</FreqListHeading>
             <Freq 
               onClick={this.setActiveFrequency} 
               id={'all'}
               active={this.props.frequencies.active === 'all'}>
-              <FreqIcon src="/img/freq-icon.svg"/>
-              <FreqLabel>All</FreqLabel>
+              <FreqIcon src="/img/everything-icon.svg"/>
+              <FreqLabel>Everything</FreqLabel>
             </Freq>
 
             { myFrequencies &&
@@ -120,7 +120,7 @@ class NavBar extends Component{
               })
             }
 
-            <p>Other Frequencies</p>
+            <FreqListHeading style={{marginTop:"16px"}}>Other Frequencies</FreqListHeading>
             { allFrequencies &&
               allFrequencies.map((frequency, i) => {
                 return <Freq 
@@ -134,11 +134,8 @@ class NavBar extends Component{
               })
             }
           </FreqList>
-        </div>
-
-        <div>
           <Form onSubmit={this.addFrequency}>
-            <Input type="text" onChange={this.updateFrequencyName} value={this.state.frequencyName} placeholder="New Frequency" />            
+            <Input type="text" onChange={this.updateFrequencyName} value={this.state.frequencyName} placeholder="+ Frequency" />            
             <Button type="submit">~</Button>
           </Form>
           
@@ -151,7 +148,6 @@ class NavBar extends Component{
               </FooterMeta>
             </MetaWrapper>
           </Footer>
-        </div>
 
       </Column>
     )

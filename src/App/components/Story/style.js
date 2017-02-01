@@ -3,7 +3,8 @@ import styled from 'styled-components';
 export const StoryWrapper = styled.div`
 	display: inline-block;
 	margin: 8px;
-	flex: 1 1 auto;
+	margin-bottom: 0;
+	flex: 0 0 auto;
 	padding: 16px;
 	border-radius: 2px;
 	background-color: #ffffff;
@@ -30,10 +31,11 @@ export const StoryImg = styled.img`
 `;
 
 export const Avatar = styled.img`
-	display: inline-bl
+	display: inline-block;
   height: 40px;
   width: 40px;
-  clip-path: url(#avatar-40);
+	border-radius: 12px;
+	box-shadow: 0 0 1px rgba(0,0,0,0.3);
 `;
 
 export const StoryHeader = styled.div`

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { sendMessage } from '../../../actions/messages'
 import { connect } from 'react-redux'
-import { Input } from './style'
+import { Input, Form, Footer, Button } from './style'
 
 class ChatInput extends Component {
 	constructor() {
@@ -31,14 +31,20 @@ class ChatInput extends Component {
 
   render() {
     return (
-    	<div>
-	    	{ this.props.stories.active &&
-	    		<form onSubmit={ this.sendMessage }>
+    	<Footer>
+	    	{ this.props.stories.active ?
+	    		<Form onSubmit={ this.sendMessage }>
 	    			<Input placeholder="Your message here..." value={this.state.message} onChange={this.updateMessageState} />
-	    			<button onSubmit={this.login}>Submit</button>
-	    		</form>
+	    			<Button onClick={this.sendMessage}>↩︎</Button>
+	    		</Form>
+
+	    		:
+	    		<div>
+		    		<span>Log in with Twitter to get started!</span>
+		    		<button onClick={this.login}>Join</button>
+	    		</div>
 	    	}
-    	</div>
+    	</Footer>
     );
   }
 };
