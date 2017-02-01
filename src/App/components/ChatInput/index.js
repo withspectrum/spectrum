@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { sendMessage } from '../../../actions/messages'
+import { login } from '../../../actions/user';
 import { connect } from 'react-redux'
 import { Input, Form, Footer, Button, LoginText, LoginButton, LoginWrapper } from './style'
 
@@ -28,6 +29,10 @@ class ChatInput extends Component {
 			message: ''
 		})
 	}
+  login = (e) => {
+    e.preventDefault();
+    this.props.dispatch(login(this.state.email, this.state.password))
+  }
 
   render() {
     return (
