@@ -31,7 +31,7 @@ class ChatInput extends Component {
 	}
   login = (e) => {
     e.preventDefault();
-    this.props.dispatch(login(this.state.email, this.state.password))
+    this.props.dispatch(login())
   }
 
   render() {

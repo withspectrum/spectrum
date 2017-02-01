@@ -3,6 +3,19 @@ import { connect } from 'react-redux';
 import { ScrollBody, Bubble, BubbleGroup, FromName } from './style';
 
 class ChatView extends Component{
+
+  componentWillUpdate() {
+    var node = this.getDOMNode();
+    this.shouldScrollBottom = node.scrollTop + node.offsetHeight === node.scrollHeight;
+  }
+
+  componentDidUpdate() {
+    if (this.shouldScrollBottom) {
+      var node = this.getDOMNode();
+      node.scrollTop = node.scrollHeight
+    }
+  }
+
   render() {
 		return (
       <ScrollBody>
