@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+// eslint-disable-next-line
 import ChatMessage from '../ChatMessage';
 import { ScrollBody } from './style';
 

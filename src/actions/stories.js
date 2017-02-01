@@ -3,8 +3,30 @@ import { hashToArray } from '../helpers/utils'
 
 export const setStories = () => (dispatch, getState) => {
   let stories = firebase.database().ref('stories')
+  let usersFrequencies = getState().user.frequencies
   const activeFrequency = getState().frequencies.active
 
+  if (activeFrequency === "all") { // we want stories for all a user's frequencies
+    let storiesToReturn = []
+
+    stories.orderByChild('frequency').on('value', function(snapshot) {
+      snapshot.forEach(function(story) {
+        let val = story.val()
+        let frequencyOfStory = val.frequency
+        if (usersFrequencies.indexOf(frequencyOfStory) > -1) {
+          storiesToReturn.push(story.val())
+        }
+      })
+
+      dispatch({
+        type: 'SET_STORIES',
+        stories: storiesToReturn
+      })
+    })
+    return
+  }
+
+  // if the active frequency doesn't equal 'all', just get the stories for the single selected frequency
   stories.orderByChild('frequency').equalTo(activeFrequency).on('value', function(snapshot){
     const snapval = snapshot.val();
 
@@ -25,7 +47,6 @@ export const setStories = () => (dispatch, getState) => {
     // test to see if this is a snapshot of the full list
     let key = Object.keys(snapshot.val())[0];
     const stories = hashToArray(snapshot.val())
-    console.log('stories being set are: ', stories)
     if (snapshot.val()[key].creator){
       dispatch({
         type: 'SET_STORIES',
@@ -101,6 +122,11 @@ export const createStory = (title, description, file) => (dispatch, getState) =>
   dispatch({
     type: 'SET_ACTIVE_STORY',
     key
+  })
+
+  dispatch({
+    type: 'TOGGLE_COMPOSER_OPEN',
+    isOpen: false
   })
 }
 

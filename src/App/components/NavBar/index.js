@@ -4,7 +4,7 @@ import { addFrequency, setActiveFrequency } from '../../../actions/frequencies'
 import { setStories } from '../../../actions/stories'
 import { setMessages } from '../../../actions/messages'
 import { signOut, login } from '../../../actions/user'
-import { Column, Avatar, Header, MetaWrapper, Form, Input, Button, Name, MetaLink, FreqList, FreqActive, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta } from './style';
+import { Column, Avatar, Header, MetaWrapper, Form, Input, Button, Name, MetaLink, FreqList, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta } from './style';
 import { AvatarMask } from './svg';
 
 class NavBar extends Component{
@@ -47,12 +47,39 @@ class NavBar extends Component{
   }
 
   render() {
-
-    /**
-      Firebase returns frequencies as a bunch of nested objects. In order to have better control over
-      iterative rendering (i.e. using .map()) we need to get these frequencies into an array.
-    */
     const frequencies = this.props.frequencies.frequencies
+    const activeFrequency = this.props.frequencies.active
+    const usersFrequencies = this.props.user.frequencies
+
+    let myFrequencies = [], allFrequencies = []
+    if (frequencies && usersFrequencies) {
+      for (let i = 0; i < frequencies.length; i++) {
+        if (usersFrequencies.indexOf(frequencies[i].id) > -1) {
+          myFrequencies.push(
+            {
+              id: frequencies[i].id,
+              name: frequencies[i].name
+            }
+          )
+        } else {
+          allFrequencies.push(
+            {
+              id: frequencies[i].id,
+              name: frequencies[i].name
+            }
+          )
+        }
+      }
+    } else {
+      for (let i = 0; i < frequencies.length; i++) {
+        allFrequencies.push(
+          {
+            id: frequencies[i].id,
+            name: frequencies[i].name
+          }
+        )
+      }
+    }
 
     return(
       <Column>
@@ -71,20 +98,40 @@ class NavBar extends Component{
               <button onClick={this.login}>log in with twitter</button>
           }
           <FreqList>
-            { frequencies.length > 0 &&
-              frequencies.map((frequency, i) => {
-                if (frequency.id === this.props.frequencies.active) {
-                  return <FreqActive key={i} onClick={this.setActiveFrequency} id={frequency.id}>
-                          <FreqIcon src="/img/freq-icon.svg"/>
-                          <FreqLabel>{ frequency.name }</FreqLabel>
-                          </FreqActive>
-                } else {
-                  return <Freq key={i} onClick={this.setActiveFrequency} id={frequency.id}>
-                          <FreqIcon src="/img/freq-icon.svg"/>
-                          <FreqLabel>{ frequency.name }</FreqLabel>
-                          </Freq>
-                }
-              }) 
+            <p>My Frequencies</p>
+            <Freq 
+              onClick={this.setActiveFrequency} 
+              id={'all'}
+              active={this.props.frequencies.active === 'all'}>
+              <FreqIcon src="/img/freq-icon.svg"/>
+              <FreqLabel>All</FreqLabel>
+            </Freq>
+
+            { myFrequencies &&
+              myFrequencies.map((frequency, i) => {                
+                return <Freq 
+                        key={i} 
+                        onClick={this.setActiveFrequency} 
+                        id={frequency.id}
+                        active={frequency.id === activeFrequency}>
+                        <FreqIcon src="/img/freq-icon.svg"/>
+                        <FreqLabel>{ frequency.name }</FreqLabel>
+                      </Freq>
+              })
+            }
+
+            <p>Other Frequencies</p>
+            { allFrequencies &&
+              allFrequencies.map((frequency, i) => {
+                return <Freq 
+                        key={i} 
+                        onClick={this.setActiveFrequency} 
+                        id={frequency.id}
+                        active={frequency.id === activeFrequency}>
+                        <FreqIcon src="/img/freq-icon.svg"/>
+                        <FreqLabel>{ frequency.name }</FreqLabel>
+                      </Freq>
+              })
             }
           </FreqList>
         </div>

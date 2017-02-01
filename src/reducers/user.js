@@ -2,7 +2,8 @@ const initialState = {
 	uid: null,
 	loginError: null,
 	displayName: null,
-	photoURL: null
+	photoURL: null,
+	frequencies: null,
 }
 
 export default function root(state = initialState, action) {
@@ -15,7 +16,8 @@ export default function root(state = initialState, action) {
 			return Object.assign({}, state, {
 				uid: action.user.uid,
 				photoURL: action.user.photoURL,
-				displayName: action.user.displayName
+				displayName: action.user.displayName,
+				frequencies: action.user.frequencies
 			})
 		default:
 			return state

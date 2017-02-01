@@ -6,7 +6,6 @@ export const setMessages = (id) => (dispatch, getState) => {
 
   messages.orderByChild('storyId').equalTo(id).on('value', function(snapshot){
     // if there are no messages available in the story, or no story is selected, clear the messages state
-    console.log('messages are: ', snapshot.val())
     if (!snapshot.val()) {
       dispatch({
         type: 'SET_MESSAGES',
@@ -26,10 +25,8 @@ export const setMessages = (id) => (dispatch, getState) => {
 }
 
 export const sendMessage = (user, story, message) => (dispatch) => {
-  console.log('new messages: ', user, story, message)
   let newMessageRef = firebase.database().ref().child('messages').push();
   const key = newMessageRef.key
-  console.warn('all message data: ', key, user.uid, user.displayName, firebase.database.ServerValue.TIMESTAMP, message, story)
   let messageData = {
     id: key,
     userId: user.uid,

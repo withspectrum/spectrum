@@ -9,8 +9,8 @@ export const hashToArray = (hash) => {
 }
 
 export const sortAndGroupBubbles = (messages) => {
-	let masterArray = new Array()
-	let newArray = new Array()
+	let masterArray = []
+	let newArray = []
 	if (messages.length > 0) {
 		let checkId
 		
