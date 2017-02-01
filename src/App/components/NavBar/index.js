@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addFrequency, setActiveFrequency } from '../../../actions/frequencies'
 import { setStories } from '../../../actions/stories'
+import { setMessages } from '../../../actions/messages'
 import { signOut, login } from '../../../actions/user'
 import { Column, Avatar, Header, MetaWrapper, Form, Input, Button, Name, MetaLink, FreqList, FreqActive, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta } from './style';
 import { AvatarMask } from './svg';
@@ -34,6 +35,7 @@ class NavBar extends Component{
   setActiveFrequency = (e) => {
     this.props.dispatch(setActiveFrequency(e.target.id))
     this.props.dispatch(setStories())
+    this.props.dispatch(setMessages(''))
   }
 
   addFrequency = (e) => {

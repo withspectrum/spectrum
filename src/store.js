@@ -7,7 +7,13 @@ const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOO
 
 // init the store with the thunkMiddleware which allows us to make async actions play nicely with the store
 export const initStore = (initialState) => {
-  return createStore(reducers, initialState, composeEnhancers(
-		applyMiddleware(thunkMiddleware)
-	))
+	if (initialState) {
+	  return createStore(reducers, initialState, composeEnhancers(
+			applyMiddleware(thunkMiddleware)
+		))
+	} else {		
+		return createStore(reducers, {}, composeEnhancers(
+			applyMiddleware(thunkMiddleware)
+		))
+	}
 }

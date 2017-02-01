@@ -12,14 +12,6 @@ export const setFrequencies = () => (dispatch) => {
 	  	type: 'SET_FREQUENCIES',
 	  	frequencies: frequencies
 	  })
-
-    if (frequencies[0]) {
-	    // when we first set the freqeuencies, make the first one in the list active by default
-		  dispatch({
-				type: 'SET_ACTIVE_FREQUENCY',
-				id: frequencies[0].id
-			})
-		}
   })
 }
 
