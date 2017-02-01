@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ChatMessage from '../ChatMessage';
-import { ScrollBody } from './style';
+import { ScrollBody, Bubble, BubbleGroup, FromName } from './style';
 
 class ChatView extends Component{
   render() {
@@ -10,13 +9,25 @@ class ChatView extends Component{
       <ScrollBody>
         { this.props.messages !== null &&
           this.props.messages.map((group, i) => {
-            return (
-              <ul key={i} style={{marginBottom: '2rem'}}>
-                {group.map((message, i) => {
-                  return <li key={i}>{message.message}</li>
-                })}
-              </ul>
-            )
+            let me = this.props.user.uid;
+            if (group[0].userId === me) {
+              return( 
+                <BubbleGroup key={i} me>
+                  {group.map((message, i) => {
+                    return <Bubble key={i}>{message.message}</Bubble>
+                  })}
+                </BubbleGroup>
+              )
+            }else{ 
+              return( 
+                <BubbleGroup key={i}>
+                <FromName>{ group[0].userDisplayName }</FromName>
+                  {group.map((message, i) => {
+                    return <Bubble key={i}>{message.message}</Bubble>
+                  })}
+                </BubbleGroup>
+              )
+            }
           })
         } 
       </ScrollBody>
@@ -26,6 +37,7 @@ class ChatView extends Component{
 
 const mapStateToProps = (state) => {
   return {
+    user: state.user,
     stories: state.stories,
     messages: state.messages.messages
   }
