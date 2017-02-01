@@ -6,7 +6,7 @@ class ChatView extends Component{
   render() {
 		return (
       <ScrollBody>
-        { this.props.messages !== null &&
+        { this.props.messages &&
           this.props.messages.map((group, i) => {
             let me = this.props.user.uid;
             if (group[0].userId === me) {

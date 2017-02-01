@@ -17,6 +17,8 @@ export const setMessages = (id) => (dispatch, getState) => {
 
     const messages = hashToArray(snapshot.val())
     const sortedMessages = sortAndGroupBubbles(messages)
+    const story = firebase.database().ref(`stories/${id}`)
+    story.update({message_count: snapshot.numChildren()})
     dispatch({
 	  	type: 'SET_MESSAGES',
 	  	messages: sortedMessages

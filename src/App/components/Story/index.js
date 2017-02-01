@@ -37,7 +37,7 @@ class Story extends Component{
 					  <Avatar src={this.props.data.creator.photoURL} alt={this.props.data.creator.displayName} />
 					  <UserMeta>
 					    <Name>{this.props.data.creator.displayName}</Name>
-					    <Meta>Just now • 20 Messages</Meta>
+					    <Meta>Just now • {this.props.data.message_count} Messages</Meta>
 					  </UserMeta>
 					  <UpvoteWrapper>
 					  	<UpvoteButton onClick={this.upvote}>🔼 {this.getUpvoteCount()}</UpvoteButton>
