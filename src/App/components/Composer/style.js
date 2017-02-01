@@ -1,17 +1,16 @@
 import styled from 'styled-components'
 
 export const ComposerContainer = styled.div`
-	position: absolute;
-	top: ${props => props.isOpen ? '48px' : '-300px'}
-	display: inline-block;
+	display: ${props => props.isOpen ? 'inline-block' : 'none'};
+	align-self: stretch;
+	flex: 0 0 auto;
 	margin: 8px;
+	margin-bottom: 0;
 	padding: 16px;
 	border-radius: 2px;
 	background-color: #ffffff;
 	box-shadow: 0 2px 4px rgba(129, 148, 175, 0.5);
 	transition: all 0.2s ease-in-out;
-	width: calc(100% - 16px);
-	z-index: 9;
 
 	&:hover {
 		box-shadow: 0 4px 16px rgba(129, 148, 175, 0.8);

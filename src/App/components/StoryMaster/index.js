@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { Column, Header, ScrollBody, Button, ComposerOverlay } from './style';
+import { Column, Header, ScrollBody, Button, ComposerOverlay, JoinBtn, BgText} from './style';
 import { toggleComposer } from '../../../actions/composer'
 import { unsubscribeFrequency, subscribeFrequency } from '../../../actions/frequencies'
 import Story from '../Story';
@@ -23,15 +23,15 @@ class StoryMaster extends Component{
     let stories = this.props.stories.stories
     let subscribeButton = (usersFrequencies, activeFrequency) => {
       if (!usersFrequencies && activeFrequency !== "all" && activeFrequency !== null) {
-        return <Button onClick={ this.subscribeFrequency }>Subscribe</Button>
+        return <JoinBtn onClick={ this.subscribeFrequency }>Join</JoinBtn>
       } else if (activeFrequency === "all" || activeFrequency === null) {
         return ''
       } else if (usersFrequencies.indexOf(activeFrequency) > -1) {
-        return <Button onClick={ this.unsubscribeFrequency }>Unsubscribe</Button>
+        return <JoinBtn member onClick={ this.unsubscribeFrequency }>Leave</JoinBtn>
       } else if (!activeFrequency) {
         return ''
       } else {
-        return <Button onClick={ this.subscribeFrequency }>Subscribe</Button>
+        return <JoinBtn onClick={ this.subscribeFrequency }>Join</JoinBtn>
       }
     }
 
@@ -39,21 +39,22 @@ class StoryMaster extends Component{
 	    	<Column >
 
           <Header>
-            <Button onClick={ this.toggleComposer }> + </Button>
-            
             { subscribeButton(this.props.user.frequencies, this.props.frequencies.active) }
+            <img src="/img/add-story.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
           </Header>
 
-          <ComposerOverlay onClick={ this.toggleComposer } isOpen={ this.props.composer.isOpen } />
-          <Composer isOpen={ this.props.composer.isOpen } />
+          {/*<ComposerOverlay onClick={ this.toggleComposer } isOpen={ this.props.composer.isOpen } />
+          <Composer isOpen={ this.props.composer.isOpen } />*/}
 
           <ScrollBody>
+            <Composer isOpen={ this.props.composer.isOpen } />
             { stories.length > 0 &&
               // slice and reverse makes sure our stories show up in revers chron order
               stories.slice(0).reverse().map((story, i) => {
                 return <Story data={story} key={i} />
               }) 
             }
+            <img src="/img/add-story_secondary.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
           </ScrollBody>
 	    	</Column>
 	  );

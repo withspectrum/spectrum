@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 export const Header = styled.div`
-	position: fixed;
-	min-height: 48px;
+	flex: 0 0 48px;
+	align-self: flex-start;
 	width: 100%;
 	color: #ffffff;
 	padding: 16px;
@@ -17,10 +17,17 @@ export const StoryTitle = styled.span`
 
 export const ViewContainer = styled.div`
 	display: flex;
-	width: 54vw;
+	flex: 0 0 54vw;
 	height: 100%;
 	flex-direction: column;
-	overflow-y: scroll;
+`;
+
+export const LogicContainer = styled.div`
+	flex: 1 0 auto;
+	max-height: 100%;
+	align-self: stretch;
+	flex-direction: column;
+	display: flex;
 `;
 
 export const NullContainer = styled.div`
