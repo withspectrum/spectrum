@@ -4,7 +4,7 @@ import { addFrequency, setActiveFrequency } from '../../../actions/frequencies'
 import { setStories } from '../../../actions/stories'
 import { setMessages } from '../../../actions/messages'
 import { signOut, login } from '../../../actions/user'
-import { Column, Avatar, Header, MetaWrapper, Form, Input, Button, Name, MetaLink, FreqList, FreqActive, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta } from './style';
+import { Column, Avatar, Header, MetaWrapper, Form, Input, Button, Name, MetaLink, FreqList, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta } from './style';
 import { AvatarMask } from './svg';
 
 class NavBar extends Component{
@@ -73,17 +73,14 @@ class NavBar extends Component{
           <FreqList>
             { frequencies.length > 0 &&
               frequencies.map((frequency, i) => {
-                if (frequency.id === this.props.frequencies.active) {
-                  return <FreqActive key={i} onClick={this.setActiveFrequency} id={frequency.id}>
-                          <FreqIcon src="/img/freq-icon.svg"/>
-                          <FreqLabel>{ frequency.name }</FreqLabel>
-                          </FreqActive>
-                } else {
-                  return <Freq key={i} onClick={this.setActiveFrequency} id={frequency.id}>
-                          <FreqIcon src="/img/freq-icon.svg"/>
-                          <FreqLabel>{ frequency.name }</FreqLabel>
+                  return <Freq 
+                            key={i} 
+                            onClick={this.setActiveFrequency} 
+                            id={frequency.id}
+                            active={frequency.id === this.props.frequencies.active}>
+                            <FreqIcon src="/img/freq-icon.svg"/>
+                            <FreqLabel>{ frequency.name }</FreqLabel>
                           </Freq>
-                }
               }) 
             }
           </FreqList>
