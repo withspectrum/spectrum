@@ -4,7 +4,6 @@ import { ScrollBody, Bubble, BubbleGroup, FromName } from './style';
 
 class ChatView extends Component{
   render() {
-
 		return (
       <ScrollBody>
         { this.props.messages !== null &&

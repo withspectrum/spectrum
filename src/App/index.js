@@ -5,6 +5,7 @@ import StoryMaster from './components/StoryMaster';
 import DetailView from './components/DetailView';
 import { Provider } from 'react-redux'
 import { initStore } from '../store'
+import { loadState, saveState } from '../helpers/localStorage'
 // import ListDetail from './components/ListDetail';
 import * as firebase from 'firebase';
 import { setUser } from '../actions/user';
@@ -23,7 +24,13 @@ export default class App extends Component {
     super()
     firebase.initializeApp(fbconfig);
 
-    this.store = initStore({})
+    const localStorageState = loadState()
+    this.store = initStore(localStorageState)
+
+    this.store.subscribe(() => {
+      saveState(this.store.getState())
+    })
+
     this.store.dispatch(setUser()) // on first load, set the user
     this.store.dispatch(setFrequencies()) // on first load, get frequences from the server
   }
