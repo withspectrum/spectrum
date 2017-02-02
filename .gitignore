@@ -1,5 +1,6 @@
 node_modules
 .sass-cache
 npm-debug.log
+src/config
 build/
 .DS_Store
