@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+// import { login } from '../../../actions/user'
 import { sendMessage } from '../../../actions/messages'
 import { login } from '../../../actions/user';
 import { connect } from 'react-redux'

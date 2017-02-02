@@ -24,22 +24,6 @@ export const HeaderLogo = styled.img`
   width: 137px;
 `;
 
-export const Login = styled.button`
-  display: inline-block;
-  font-size: 14px;
-  font-weight: 500;
-  flex: 0 0 28px;
-  line-height: 28px;
-  vertical-align: middle;
-  align-self: stretch;
-  padding: 0 16px;
-  margin-top: 16px;
-  border-radius: 12px;
-  color: #ffffff;
-  background-color: #3819E6;
-  background-image: radial-gradient(ellipse farthest-corner at 0px 0px , #7B16FF 0%, #3819E6 100%);
-`;
-
 export const Avatar = styled.img`
   height: 32px;
   flex: 0 0 32px;
