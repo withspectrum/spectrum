@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { login } from '../../../actions/user';
+// import { login } from '../../../actions/user';
 import { connect } from 'react-redux';
 import { Input, LoginHeader, Logo, Button } from './style';
 

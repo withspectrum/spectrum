@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { Column, Header, ScrollBody, Button, ComposerOverlay, JoinBtn, BgText} from './style';
+import { Column, Header, ScrollBody, JoinBtn} from './style';
 import { toggleComposer } from '../../../actions/composer'
 import { unsubscribeFrequency, subscribeFrequency } from '../../../actions/frequencies'
 import Story from '../Story';

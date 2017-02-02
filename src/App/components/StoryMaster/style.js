@@ -79,25 +79,27 @@ export const BgText = styled.p`
 `;
 
 export const JoinBtn = styled.button`
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
   flex: 0 0 80px;
-  height: 32px;
-  line-height: 28px;
+  height: 28px;
+  line-height: 26px;
+  margin-left: 4px;
   text-align: center;
   vertical-align: middle;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 2px solid ${props => props.member ?  `#D6E0EE` : 'transparent'};
   color: ${props => props.member ? `#D6E0EE` : `#ffffff` };
   background-color: ${props => props.member ? `transparent` : `#3819E6`};
   background-image: ${props => props.member ? `none` : `radial-gradient(ellipse farthest-corner at top left , #7B16FF 0%, #3819E6 100%)` };
-  transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-out;
 
   &:hover {
   	cursor: pointer;
-		border-radius: 16px
+		border-radius: 12px
 		color: ${props => props.member ? '#3819E6' : '#ffffff'};
 		border-color: ${props => props.member ? '#3819E6' : 'transparent'};
+		transition: all 0.2s ease-in;
   }
 `;
 
