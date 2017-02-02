@@ -4,16 +4,27 @@ import { connect } from 'react-redux'
 import ChatView from '../ChatView';
 import ChatInput from '../ChatInput';
 // eslint-disable-next-line
-import { Header, ViewContainer, LogicContainer, StoryTitle, NullContainer, NullText } from './style';
+import { Header, ViewContainer, LogicContainer, StoryTitle, StoryDescription, NullContainer, NullText } from './style';
 
 class DetailView extends Component {
+  getActiveStory(){
+    var that = this;
+    if (this.props.stories.stories){
+      return this.props.stories.stories.filter(function(story){
+       return story.id == that.props.stories.active;
+      })[0];
+    } else {
+      return { content: { title: "Choose a story." } }
+    }
+  }
 	render() {
 		return(
 			<ViewContainer>
 				{ this.props.stories.active !== null
 					? <LogicContainer>
 							<Header>
-								<StoryTitle>Title</StoryTitle>
+								<StoryTitle>{this.getActiveStory().content.title}</StoryTitle>
+								<StoryDescription>{this.getActiveStory().content.description}</StoryDescription>
 							</Header>
 							
 							<ChatView />
@@ -29,7 +40,8 @@ class DetailView extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  stories: state.stories
+  stories: state.stories,
+  activeStory: state.active
 })
 
 export default connect(mapStateToProps)(DetailView);

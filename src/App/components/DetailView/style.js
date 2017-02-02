@@ -10,9 +10,15 @@ export const Header = styled.div`
 	background-image: radial-gradient(ellipse farthest-corner at top left, #10172A 0%, #363A4F 100%);
 `;
 
-export const StoryTitle = styled.span`
+export const StoryTitle = styled.h4`
 	font-weight: bold;
 	font-size: 16px;
+  margin: 1rem 0;
+`;
+
+export const StoryDescription = styled.p`
+	font-weight: 400;
+	font-size: 12px;
 `;
 
 export const ViewContainer = styled.div`

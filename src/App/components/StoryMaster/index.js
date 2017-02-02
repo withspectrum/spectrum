@@ -43,8 +43,6 @@ class StoryMaster extends Component{
             { subscribeButton(this.props.user.frequencies, this.props.frequencies.active) }
           </Header>
 
-          {/*<ComposerOverlay onClick={ this.toggleComposer } isOpen={ this.props.composer.isOpen } />
-          <Composer isOpen={ this.props.composer.isOpen } />*/}
 
           <ScrollBody>
             <Composer isOpen={ this.props.composer.isOpen } />
