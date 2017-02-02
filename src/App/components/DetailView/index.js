@@ -4,9 +4,26 @@ import { connect } from 'react-redux'
 import ChatView from '../ChatView';
 import ChatInput from '../ChatInput';
 // eslint-disable-next-line
-import { Header, ViewContainer, LogicContainer, StoryTitle, StoryDescription, NullContainer, NullText } from './style';
+import { Avatar,
+         AuthorName,
+         Header,
+         ViewContainer,
+         LogicContainer,
+         Media,
+         StoryMeta,
+         StoryTitle,
+         StoryDescription,
+         NullContainer,
+         NullText } from './style';
 
 class DetailView extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      activeStory: null
+    }
+
+  }
   getActiveStory(){
     var that = this;
     if (this.props.stories.stories){
@@ -17,14 +34,34 @@ class DetailView extends Component {
       return { content: { title: "Choose a story." } }
     }
   }
+  componentDidUpdate() {
+    if (this.state.activeStory.id !== this.getActiveStory().id){
+      this.setState({
+        activeStory: this.getActiveStory()
+      })
+    }
+  }
+  componentWillMount() {
+    this.setState({
+      activeStory: this.getActiveStory()
+    })
+  }
 	render() {
 		return(
 			<ViewContainer>
 				{ this.props.stories.active !== null
 					? <LogicContainer>
 							<Header>
-								<StoryTitle>{this.getActiveStory().content.title}</StoryTitle>
-								<StoryDescription>{this.getActiveStory().content.description}</StoryDescription>
+								<StoryMeta>
+                  <Avatar src={this.state.activeStory.creator.photoURL} />
+                  <StoryTitle>{this.state.activeStory.content.title}</StoryTitle>
+                  <AuthorName>{this.state.activeStory.creator.displayName}</AuthorName>
+                </StoryMeta>
+								<StoryDescription>{this.state.activeStory.content.description}</StoryDescription>
+                {this.state.activeStory.content.media && this.state.activeStory.content.media !== ''
+                  ? <a href={this.state.activeStory.content.media} target="_blank"><Media src={this.state.activeStory.content.media} /></a>
+                  : ''
+                }
 							</Header>
 							
 							<ChatView />
