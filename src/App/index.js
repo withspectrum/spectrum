@@ -54,6 +54,7 @@ export default class App extends Component {
         <Body>
           <NavBar />
   				<StoryMaster />
+  				<DetailView />
         
         </Body>
       </Provider>

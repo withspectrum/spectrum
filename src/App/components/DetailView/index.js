@@ -22,7 +22,6 @@ class DetailView extends Component {
     this.state = {
       activeStory: null
     }
-
   }
   getActiveStory(){
     var that = this;
@@ -49,7 +48,7 @@ class DetailView extends Component {
 	render() {		
 		return(
 			<ViewContainer>
-				{ this.state.activeStory !== null
+				{ this.state.activeStory
 					? <LogicContainer>
 							<Header>
 								<StoryMeta>
