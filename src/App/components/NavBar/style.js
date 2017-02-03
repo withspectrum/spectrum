@@ -63,7 +63,7 @@ export const FreqList = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  flex: 0 1 auto;
+  flex: 0 1 100%;
   overflow-y: scroll;
   justify-self: stretch;
 `;
