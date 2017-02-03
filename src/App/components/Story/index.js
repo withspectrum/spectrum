@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { StoryWrapper, StoryBody, StoryHeader, Avatar, UserMeta, Name, Meta, UpvoteWrapper, UpvoteButton, Title, Desc, Media } from './style';
 import { setActiveStory, upvote } from '../../../actions/stories'
 import { setMessages } from '../../../actions/messages'
-import { isStoryCreator, isStoryModerator } from '../../../helpers/stories'
+import { isStoryCreator, getStoryPermission } from '../../../helpers/stories'
 
 class Story extends Component{
 
@@ -33,7 +33,7 @@ class Story extends Component{
 
 	render() {
     const creator = isStoryCreator(this.props.data, this.props.user)
-    const moderator = isStoryModerator(this.props.data, this.props.user, this.props.frequencies)
+    const moderator = getStoryPermission(this.props.data, this.props.user, this.props.frequencies)
 
 		return (
 	    	<StoryWrapper selected onClick={ this.setActiveStory }>

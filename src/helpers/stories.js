@@ -1,4 +1,4 @@
-import { findIndex } from 'lodash'
+import findIndex from 'lodash.findindex'
 
 export const isStoryCreator = (story, user) => {
   if (!user.uid) { return }
@@ -14,7 +14,7 @@ export const isStoryCreator = (story, user) => {
   }
 }
 
-export const isStoryModerator = (story, user, frequencies) => {
+export const getStoryPermission = (story, user, frequencies) => {
   if (!user.uid) { return }
   
   let uid = user.uid
@@ -22,8 +22,19 @@ export const isStoryModerator = (story, user, frequencies) => {
 	let creator = story.creator.uid
 	let allFrequencies = frequencies.frequencies
 
-	const freqIndex = _.findIndex(allFrequencies, function(o) { return o.id === storyFrequency})
+	let freqIndex = findIndex(allFrequencies, (o) => { 
+		return o.id === storyFrequency
+	})
 	
-	console.log(freqIndex)
+	freqIndex = allFrequencies[freqIndex]
+	let freqUsers = freqIndex.users
+
+	let userIndex = findIndex(freqUsers, (o) => {
+		return o.uid = uid
+	})
+
+	let userPermissionsFromFreq = freqUsers[userIndex].permission
+
+	return userPermissionsFromFreq
   
 }

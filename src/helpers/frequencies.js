@@ -52,10 +52,3 @@ export const isCurrentFrequencyOwner = (frequency, user) => {
     return false
   }
 }
-
-export const getCurrentUsersRoleInFrequency = (frequency, user) => {
-  if (!user.uid) { return }
-
-  let frequencyUsers = hashToArray(frequency.users)
-  console.log(frequencyUsers, frequency, user)
-}
