@@ -65,10 +65,9 @@ export const upvote = (storyId) => (dispatch, getState) => {
   })
 } 
 
-export const createStory = (title, description, file) => (dispatch, getState) => {
+export const createStory = (frequency, title, description, file) => (dispatch, getState) => {
   const user = getState().user
   const uid = user.uid
-  const activeFrequency = getState().frequencies.active
   let newStoryRef = firebase.database().ref().child(`stories`).push();
   const key = newStoryRef.key
 
@@ -90,11 +89,11 @@ export const createStory = (title, description, file) => (dispatch, getState) =>
           description: description,
           media: imageUrl
         },
-        frequency: activeFrequency
+        frequency: frequency
       }
 
       newStoryRef.set(storyData, function(err){
-        console.log('err: ', err)
+        console.log('err 1: ', err)
       });
     });
   } else {
@@ -111,11 +110,11 @@ export const createStory = (title, description, file) => (dispatch, getState) =>
         description: description,
         media: ''
       },
-      frequency: activeFrequency
+      frequency: frequency
     }
 
     newStoryRef.set(storyData, function(err){
-      console.log('err: ', err)
+      console.log('err 2: ', err)
     });
   }
 

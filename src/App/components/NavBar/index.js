@@ -4,7 +4,8 @@ import { addFrequency, setActiveFrequency } from '../../../actions/frequencies'
 import { setStories } from '../../../actions/stories'
 import { setMessages } from '../../../actions/messages'
 import { signOut, login } from '../../../actions/user'
-import { Column, Header, HeaderLogo, Login, Avatar, MetaWrapper, Name, MetaLink, FreqList, FreqListHeading, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta, Form, Input, Button } from './style';
+import { getMyFrequencies, getPublicFrequencies } from '../../../helpers/frequencies'
+import { Column, Header, HeaderLogo, Avatar, MetaWrapper, Name, MetaLink, FreqList, FreqListHeading, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta, Form, Input, Button } from './style';
 
 class NavBar extends Component{
   constructor() {
@@ -48,37 +49,9 @@ class NavBar extends Component{
   render() {
     const frequencies = this.props.frequencies.frequencies
     const activeFrequency = this.props.frequencies.active
-    const usersFrequencies = this.props.user.frequencies
-
-    let myFrequencies = [], allFrequencies = []
-    if (frequencies && usersFrequencies) {
-      for (let i = 0; i < frequencies.length; i++) {
-        if (usersFrequencies.indexOf(frequencies[i].id) > -1) {
-          myFrequencies.push(
-            {
-              id: frequencies[i].id,
-              name: frequencies[i].name
-            }
-          )
-        } else {
-          allFrequencies.push(
-            {
-              id: frequencies[i].id,
-              name: frequencies[i].name
-            }
-          )
-        }
-      }
-    } else {
-      for (let i = 0; i < frequencies.length; i++) {
-        allFrequencies.push(
-          {
-            id: frequencies[i].id,
-            name: frequencies[i].name
-          }
-        )
-      }
-    }
+    const user = this.props.user
+    const myFrequencies = getMyFrequencies(frequencies, user)
+    const publicFrequencies = getPublicFrequencies(frequencies, user)
 
     return(
       <Column>
@@ -120,8 +93,8 @@ class NavBar extends Component{
             }
 
             <FreqListHeading style={{marginTop:"16px"}}>Other Frequencies</FreqListHeading>
-            { allFrequencies &&
-              allFrequencies.map((frequency, i) => {
+            { publicFrequencies &&
+              publicFrequencies.map((frequency, i) => {
                 return <Freq 
                         key={i} 
                         onClick={this.setActiveFrequency} 
@@ -134,7 +107,7 @@ class NavBar extends Component{
             }
           </FreqList>
           <Form onSubmit={this.addFrequency}>
-            <Input type="text" onChange={this.updateFrequencyName} value={this.state.frequencyName} placeholder="+ Frequency" />            
+            <Input type="text" onChange={this.updateFrequencyName} value={this.state.frequencyName} placeholder="+ Create a Frequency" />            
             <Button type="submit">~</Button>
           </Form>
           

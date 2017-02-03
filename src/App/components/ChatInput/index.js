@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
-// import { login } from '../../../actions/user'
 import { sendMessage } from '../../../actions/messages'
-import { login } from '../../../actions/user';
 import { connect } from 'react-redux'
-import { Input, Form, Footer, Button, LoginText, LoginButton, LoginWrapper } from './style'
+import { Input, Form, Footer, Button } from './style'
 
 class ChatInput extends Component {
 	constructor() {
@@ -30,25 +28,15 @@ class ChatInput extends Component {
 			message: ''
 		})
 	}
-  login = (e) => {
-    e.preventDefault();
-    this.props.dispatch(login())
-  }
 
   render() {
     return (
     	<Footer>
-	    	{ this.props.user.uid ?
+	    	{ this.props.user.uid &&
 	    		<Form onSubmit={ this.sendMessage }>
 	    			<Input placeholder="Your message here..." value={this.state.message} onChange={this.updateMessageState} />
 	    			<Button onClick={this.sendMessage}>↩︎</Button>
 	    		</Form>
-
-	    		:
-	    		<LoginWrapper>
-		    		<LoginText>Log in with Twitter to get started!</LoginText>
-		    		<LoginButton onClick={this.login}>Join</LoginButton>
-	    		</LoginWrapper>
 	    	}
     	</Footer>
     );

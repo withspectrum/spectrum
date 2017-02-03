@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "lodash": "^4.17.4",
     "react-scripts": "0.7.0"
   },
   "dependencies": {
@@ -17,7 +18,7 @@
     "serve": "latest"
   },
   "scripts": {
-    "start": "serve ./build --single",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

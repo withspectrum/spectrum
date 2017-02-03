@@ -66,6 +66,7 @@ export const FreqList = styled.div`
   flex: 0 1 auto;
   overflow-y: scroll;
   justify-self: stretch;
+  margin-bottom: 2rem;
 `;
 
 export const FreqListHeading = styled.p`
