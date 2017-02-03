@@ -1,3 +1,5 @@
+import { hashToArray } from './utils'
+
 export const getMyFrequencies = (frequencies, user) => {
 	if (!user.uid) { return }
 	
@@ -39,4 +41,21 @@ export const getPublicFrequencies = (frequencies, user) => {
       )
     }
   }
+}
+
+export const isCurrentFrequencyOwner = (frequency, user) => {
+  if (!user.uid) { return }
+
+  if (user.frequencies.indexOf(frequency) > -1) {
+    return true
+  } else {
+    return false
+  }
+}
+
+export const getCurrentUsersRoleInFrequency = (frequency, user) => {
+  if (!user.uid) { return }
+
+  let frequencyUsers = hashToArray(frequency.users)
+  console.log(frequencyUsers, frequency, user)
 }
