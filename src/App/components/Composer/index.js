@@ -13,7 +13,7 @@ class Composer extends Component {
       media: null,
       error: null,
       file: '',
-      frequencyPicker: props.user.frequencies[0] // by default the user's first frequency is selected in the frequency picker
+      frequencyPicker: props.user.frequencies ? props.user.frequencies[0] : '' // by default the user's first frequency is selected in the frequency picker
     }
   }
 
@@ -97,7 +97,7 @@ class Composer extends Component {
 				{ activeFrequency && 
 	        <form onSubmit={ this.createStory } encType="multipart/form-data">
 
-            { activeFrequency === "all" && myFrequencies
+            { activeFrequency === "all" && myFrequencies.length > 0
               ? <select onChange={this.selectFrequencyFromDropdown} defaultValue={myFrequencies[0].id}>
                 { 
                   myFrequencies.map((frequency, i) => {
