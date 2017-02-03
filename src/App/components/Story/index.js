@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { StoryWrapper, StoryBody, StoryHeader, Avatar, UserMeta, Name, Meta, UpvoteWrapper, UpvoteLabel, Title, Desc, Media } from './style';
 import { setActiveStory, upvote } from '../../../actions/stories'
 import { setMessages } from '../../../actions/messages'
+import { isStoryCreator, getStoryPermission } from '../../../helpers/stories'
 
 class Story extends Component{
 
@@ -31,6 +32,9 @@ class Story extends Component{
   }
 
 	render() {
+    const creator = isStoryCreator(this.props.data, this.props.user)
+    const moderator = getStoryPermission(this.props.data, this.props.user, this.props.frequencies)
+
 		return (
 	    	<StoryWrapper selected onClick={ this.setActiveStory }>
 	    		<StoryHeader>
@@ -45,6 +49,9 @@ class Story extends Component{
 					  </UpvoteWrapper>
 					</StoryHeader>
 	    		<StoryBody>
+            { creator &&
+              <p>I made dis</p>
+            }
 	    			<Title>{this.props.data.content.title}</Title>
             
             <Desc>{this.props.data.content.description}</Desc>
@@ -64,6 +71,8 @@ class Story extends Component{
 const mapStateToProps = (state) => {
   return {
     stories: state.stories,
+    user: state.user,
+    frequencies: state.frequencies
   }
 }
 
