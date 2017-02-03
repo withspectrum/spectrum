@@ -2,11 +2,12 @@ import styled from 'styled-components';
 
 export const ScrollBody = styled.div`
 	flex: 1 1 auto;
-	padding: 0 16px;
-	padding-bottom: 16px;
+	padding: 0 8px;
+	padding-bottom: 8px;
 	display: flex;
 	flex-direction: column;
 	overflow-y: auto;
+	justify-content: flex-end;
 `;
 
 export const Bubble = styled.p`
@@ -15,7 +16,7 @@ export const Bubble = styled.p`
 	padding: 8px 14px;
 	vertical-align: middle;
 	border-radius: 1.25rem;
-	margin-top: 4px;
+	margin-top: 2px;
 	font-size: 14px;
 	max-width: 60%;
 	line-height: 1.4;
@@ -33,7 +34,7 @@ export const Bubble = styled.p`
 
 export const BubbleGroup = styled.div`
 	width: 100%;
-	margin-top: 16px;
+	margin-top: 8px;
 
 	> p {
 
