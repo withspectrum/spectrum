@@ -28,7 +28,7 @@ class DetailView extends Component {
     var that = this;
     if (this.props.stories.stories){
       return this.props.stories.stories.filter(function(story){
-       return story.id == that.props.stories.active;
+       return story.id === that.props.stories.active;
       })[0];
     } else {
       return { content: { title: "Choose a story." } }
@@ -46,10 +46,10 @@ class DetailView extends Component {
       activeStory: this.getActiveStory()
     })
   }
-	render() {
+	render() {		
 		return(
 			<ViewContainer>
-				{ this.props.stories.active !== null
+				{ this.state.activeStory !== null
 					? <LogicContainer>
 							<Header>
 								<StoryMeta>
