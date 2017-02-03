@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 export const Column = styled.div`
 	display: flex;
-	width: 30vw;
+	flex: 0 1 480px;
+	min-width: 400px;
 	flex-direction: column;
 	border-right: 1px solid rgba(0,0,0,0.1);
 	background-color: #F5F6F7;
@@ -19,7 +20,7 @@ export const ScrollBody = styled.div`
 	align-items: stretch;
 
 	> img {
-		margin-top: 32px;
+		margin: 32px auto;
 		transition: all 0.2s ease-out;
 
 		&:hover {
