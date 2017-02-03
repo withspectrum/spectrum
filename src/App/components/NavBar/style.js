@@ -4,11 +4,9 @@ export const Column = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #171A21;
-  flex-shrink: 0;
-  width: 16vw;
+  flex: 0 0 12vw;
   min-width: 240px;
   height: 100vh;
-  align-items: stretch;
 `;
 
 export const Header = styled.div`
@@ -96,14 +94,21 @@ export const Freq = styled.div`
 export const FreqLabel = styled.span`
   font-size: 14px;
   font-weight: 500;
+  display: inline-block;
+  flex: 0 1 auto;
   color: #ffffff;
   margin-left: 12px;
+  margin-right: 12px;
   pointer-events: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+
 `;
 
 export const FreqIcon = styled.img`
   height: 32px;
-  width: 32px;
+  flex: 0 0 32px;
   pointer-events: none;
 `;
 
@@ -113,7 +118,7 @@ export const Footer = styled.div`
   width: 100%;
   padding: 0 8px 8px 8px;
   align-self: flex-end;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
 `;
 
@@ -128,6 +133,7 @@ export const FooterMeta = styled.p`
   color: #747E8D;
   font-weight: 500;
   text-align: right;
+  align-self: flex-end;
 `;
 
 export const Form = styled.form`

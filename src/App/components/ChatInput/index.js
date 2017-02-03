@@ -41,7 +41,7 @@ class ChatInput extends Component {
 	    	{ this.props.user.uid ?
 	    		<Form onSubmit={ this.sendMessage }>
 	    			<Input placeholder="Your message here..." value={this.state.message} onChange={this.updateMessageState} />
-	    			<Button onClick={this.sendMessage}>↩︎</Button>
+	    			<Button onClick={this.sendMessage}>&#8617;</Button>
 	    		</Form>
 
 	    		:

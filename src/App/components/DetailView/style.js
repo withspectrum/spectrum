@@ -54,7 +54,8 @@ export const Media = styled.img`
 
 export const ViewContainer = styled.div`
 	display: flex;
-	flex: 0 0 54vw;
+	flex: 1 1 auto;
+	min-width: 540px;
 	height: 100%;
 	flex-direction: column;
 `;

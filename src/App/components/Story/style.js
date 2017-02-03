@@ -76,11 +76,35 @@ export const Meta = styled.h4`
 
 export const UpvoteWrapper = styled.div`
 	display: flex;
+	flex-direction: column;
+	align-items: stretch;
 	justify-self: end;
+	align-items: center;
 	flex: 0 0 auto;
+	padding: 4px 12px 8px 12px;
+	height: 48px;
+	border-radius: 4px;
+	border: 2px solid transparent;
+	background-color: #ffffff;
+	transition: all 0.2s ease-out;
+
+	&:hover {
+		border: 2px solid #3818e5;
+		border-radius: 8px;
+		transition: all 0.2s ease-in;
+		
+		> div {
+			color: #3818e5;
+		}
+	}
 `;
 
-export const UpvoteButton = styled.div`
-	justify-self: start;
+export const UpvoteLabel = styled.div`
+	flex: 1 0 auto;
 	font-weight: 700;
+	color: #747E8D;
+
+	&:first-of-type {
+		font-size: 10px;
+	}
 `;
