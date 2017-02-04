@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 import { hashToArray, sortAndGroupBubbles } from '../helpers/utils'
 import fetch from 'whatwg-fetch-importable'
-import * as Autolinker from 'autolinker'
+import Autolinker from 'autolinker'
 
 export const setMessages = (id) => (dispatch, getState) => {
 	let messages = firebase.database().ref(`messages/${id}`)
