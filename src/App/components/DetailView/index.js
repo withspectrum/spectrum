@@ -79,7 +79,7 @@ class DetailView extends Component {
 
 const mapStateToProps = (state) => ({
   stories: state.stories,
-  activeStory: state.active
+  frequencies: state.frequencies
 })
 
 export default connect(mapStateToProps)(DetailView);
