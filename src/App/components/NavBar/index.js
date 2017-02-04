@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addFrequency, setActiveFrequency } from '../../../actions/frequencies'
 import { setStories } from '../../../actions/stories'
-import { setMessages } from '../../../actions/messages'
 import { signOut, login } from '../../../actions/user'
 import { getMyFrequencies, getPublicFrequencies } from '../../../helpers/frequencies'
 import { Column, Header, HeaderLogo, Avatar, MetaWrapper, Name, MetaLink, FreqList, FreqListHeading, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta, Form, Input, Button } from './style';
@@ -35,7 +34,6 @@ class NavBar extends Component{
   setActiveFrequency = (e) => {
     this.props.dispatch(setActiveFrequency(e.target.id))
     this.props.dispatch(setStories())
-    //this.props.dispatch(setMessages(e.target.id))
   }
 
   addFrequency = (e) => {
