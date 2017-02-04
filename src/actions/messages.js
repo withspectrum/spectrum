@@ -1,10 +1,12 @@
 import * as firebase from 'firebase';
 import { hashToArray, sortAndGroupBubbles } from '../helpers/utils'
+import fetch from 'whatwg-fetch-importable'
+import * as Autolinker from 'autolinker'
 
 export const setMessages = (id) => (dispatch, getState) => {
-	let messages = firebase.database().ref('messages')
+	let messages = firebase.database().ref(`messages/${id}`)
 
-  messages.orderByChild('storyId').equalTo(id).on('value', function(snapshot){
+  messages.on('value', function(snapshot){
     // if there are no messages available in the story, or no story is selected, clear the messages state
     if (!snapshot.val()) {
       dispatch({
@@ -27,18 +29,37 @@ export const setMessages = (id) => (dispatch, getState) => {
 }
 
 export const sendMessage = (user, story, message) => (dispatch) => {
-  let newMessageRef = firebase.database().ref().child('messages').push();
+  let newMessageRef = firebase.database().ref().child(`messages/${story}`).push();
   const key = newMessageRef.key
+  const autolinker = new Autolinker();
+  let urls = autolinker.parse(message)
   let messageData = {
     id: key,
     userId: user.uid,
     userDisplayName: user.displayName,
     timestamp: firebase.database.ServerValue.TIMESTAMP,
     message: message,
-    storyId: story
+    storyId: story,
+    meta: {}
   }
-
   newMessageRef.set(messageData, function(e){
     console.log('error: ', e)
   });
+  
+  if(Array.from(urls).length){
+    fetch('https://metacheck.now.sh:443/',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({message: message})
+      }
+    ).then(function(response){
+      return response.json()
+    }).then(function(data){
+      messageData.meta = data;
+      newMessageRef.update(messageData);
+    })
+  }
 }

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { ScrollBody, Bubble, BubbleGroup, FromName } from './style';
+import * as Autolinker from 'autolinker'
+import sanitizeHtml from 'sanitize-html'
 
 class ChatView extends Component{
 
@@ -17,7 +19,14 @@ class ChatView extends Component{
     }
   }
 
+  formatMessage(message){
+    let cleanMessage = sanitizeHtml(message)
+    let linkedMessage = Autolinker.link(cleanMessage)
+    return linkedMessage
+  }
+
   render() {
+    let that = this
 		return (
       <ScrollBody>
         { this.props.messages &&
@@ -27,7 +36,7 @@ class ChatView extends Component{
               return( 
                 <BubbleGroup key={i} me>
                   {group.map((message, i) => {
-                    return <Bubble key={i}>{message.message}</Bubble>
+                    return <Bubble key={i} dangerouslySetInnerHTML={{__html: that.formatMessage(message.message)}}/>
                   })}
                 </BubbleGroup>
               )
@@ -36,7 +45,7 @@ class ChatView extends Component{
                 <BubbleGroup key={i}>
                 <FromName>{ group[0].userDisplayName }</FromName>
                   {group.map((message, i) => {
-                    return <Bubble key={i}>{message.message}</Bubble>
+                    return <Bubble key={i}>{that.formatMessage(message.message)}</Bubble>
                   })}
                 </BubbleGroup>
               )

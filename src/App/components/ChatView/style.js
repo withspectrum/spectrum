@@ -23,6 +23,7 @@ export const Bubble = styled.p`
 	&:first-of-type {
 		margin-top: 0;
 	}
+  a { text-decoration: underline; }
 `;
 
 // export const OpBubble = styled(LeftBubble)`

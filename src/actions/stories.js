@@ -2,9 +2,9 @@ import * as firebase from 'firebase';
 import { hashToArray } from '../helpers/utils'
 
 export const setStories = () => (dispatch, getState) => {
-  let stories = firebase.database().ref('stories')
   let usersFrequencies = getState().user.frequencies
   const activeFrequency = getState().frequencies.active
+  let stories = firebase.database().ref(`stories/${frequency}`)
 
   if (activeFrequency === "all") { // we want stories for all a user's frequencies
     let storiesToReturn = []
