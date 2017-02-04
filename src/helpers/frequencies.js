@@ -1,5 +1,3 @@
-import { hashToArray } from './utils'
-
 export const getMyFrequencies = (frequencies, user) => {
 	if (!user.uid) { return [] }
 	
