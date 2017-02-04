@@ -1,7 +1,7 @@
 import { hashToArray } from './utils'
 
 export const getMyFrequencies = (frequencies, user) => {
-	if (!user.uid) { return }
+	if (!user.uid) { return [] }
 	
 	let myFrequencies = []
   for (let i = 0; i < frequencies.length; i++) {

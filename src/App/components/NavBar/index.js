@@ -35,7 +35,7 @@ class NavBar extends Component{
   setActiveFrequency = (e) => {
     this.props.dispatch(setActiveFrequency(e.target.id))
     this.props.dispatch(setStories())
-    this.props.dispatch(setMessages(''))
+    //this.props.dispatch(setMessages(e.target.id))
   }
 
   addFrequency = (e) => {

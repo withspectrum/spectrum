@@ -1,14 +1,27 @@
 import * as firebase from 'firebase';
 import { hashToArray } from '../helpers/utils'
+import { fetchStoriesForFrequencies } from '../helpers/stories'
 
 export const setStories = () => (dispatch, getState) => {
   let usersFrequencies = getState().user.frequencies
   const activeFrequency = getState().frequencies.active
-  let stories = firebase.database().ref(`stories/${frequency}`)
+  let stories = firebase.database().ref(`stories`)
 
-  if (activeFrequency === "all") { // we want stories for all a user's frequencies
+  if (activeFrequency === "all" && usersFrequencies) { // we want stories for all a user's frequencies
     let storiesToReturn = []
-
+    fetchStoriesForFrequencies(usersFrequencies).then(function(freq){
+      freq.forEach(function(f){
+        let a = hashToArray(f)
+        a.map(function(item){
+          storiesToReturn.push(item)
+        })
+      })
+      dispatch({
+        type: 'SET_STORIES',
+        stories: storiesToReturn
+      })
+    })
+    /*
     stories.orderByChild('frequency').on('value', function(snapshot) {
       snapshot.forEach(function(story) {
         let val = story.val()
@@ -18,12 +31,13 @@ export const setStories = () => (dispatch, getState) => {
         }
       })
 
-      dispatch({
-        type: 'SET_STORIES',
-        stories: storiesToReturn
-      })
-    })
-    return
+   */
+    //})
+      //dispatch({
+        //type: 'SET_STORIES',
+        //stories: []
+      //})
+    return true;
   }
 
   // if the active frequency doesn't equal 'all', just get the stories for the single selected frequency

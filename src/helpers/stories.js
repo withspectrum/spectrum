@@ -1,4 +1,5 @@
 import findIndex from 'lodash.findindex'
+import * as firebase from 'firebase';
 
 export const isStoryCreator = (story, user) => {
   if (!user.uid) { return }
@@ -12,6 +13,16 @@ export const isStoryCreator = (story, user) => {
   } else {
     return false
   }
+}
+
+export const fetchStoriesForFrequencies = (frequencies) => {
+  return Promise.all(frequencies.map(fetchStoriesForFrequency))
+}
+
+export const fetchStoriesForFrequency = (frequency) => {
+  return firebase.database().ref('stories').orderByChild('frequency').equalTo(frequency).once('value').then(function(snapshot) {
+    return snapshot.val();
+  });
 }
 
 export const getStoryPermission = (story, user, frequencies) => {

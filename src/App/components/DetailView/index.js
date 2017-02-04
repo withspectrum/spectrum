@@ -20,7 +20,9 @@ class DetailView extends Component {
   constructor(props){
     super(props)
     this.state = {
-      activeStory: null
+      activeStory: {
+        id: 0
+      }
     }
   }
   getActiveStory(){
@@ -30,7 +32,7 @@ class DetailView extends Component {
        return story.id === that.props.stories.active;
       })[0];
     } else {
-      return { content: { title: "Choose a story." } }
+      return { content: { title: "Choose a story." }, id: 0 }
     }
   }
   componentDidUpdate() {
