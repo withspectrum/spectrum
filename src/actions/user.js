@@ -22,7 +22,7 @@ export const login = () => (dispatch) => {
           created: firebase.database.ServerValue.TIMESTAMP,
           displayName: user.displayName,
           photoURL: user.photoURL,
-          frequencies: []
+          frequencies: {"-Kbmn0PG3Y9WcUEh-I7y": { id: "-Kbmn0PG3Y9WcUEh-I7y"}}
         }
 
         newUserRef.set(userData, function(err){ // and then write that data to the db

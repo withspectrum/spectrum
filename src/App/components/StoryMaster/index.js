@@ -28,11 +28,13 @@ class StoryMaster extends Component{
 	render() {
     let stories = this.props.stories.stories
     let subscribeButton = (usersFrequencies, activeFrequency) => {
+      let keys = Object.keys(usersFrequencies)
+      
       if (!usersFrequencies && activeFrequency !== "all" && activeFrequency !== null) {
         return <JoinBtn onClick={ this.subscribeFrequency }>Join</JoinBtn>
       } else if (activeFrequency === "all" || activeFrequency === null) {
         return ''
-      } else if (usersFrequencies.indexOf(activeFrequency) > -1) {
+      } else if (keys.indexOf(activeFrequency) > -1) {
         return <JoinBtn member onClick={ this.unsubscribeFrequency }>Leave</JoinBtn>
       } else if (!activeFrequency) {
         return ''

@@ -1,9 +1,11 @@
 export const getMyFrequencies = (frequencies, user) => {
 	if (!user.uid) { return [] }
+
+  let keys = Object.keys(user.frequencies)
 	
 	let myFrequencies = []
   for (let i = 0; i < frequencies.length; i++) {
-    if (user.frequencies.indexOf(frequencies[i].id) > -1) {
+    if (keys.indexOf(frequencies[i].id) > -1) {
       myFrequencies.push(
         {
           id: frequencies[i].id,
@@ -21,10 +23,12 @@ export const getMyFrequencies = (frequencies, user) => {
 
 export const getPublicFrequencies = (frequencies, user) => {
 	if (!user.uid) { return }
+
+  let keys = Object.keys(user.frequencies)
 	
 	let publicFrequencies = []
   for (let i = 0; i < frequencies.length; i++) {
-    if (user.frequencies.indexOf(frequencies[i].id) !== -1) {
+    if (keys.indexOf(frequencies[i].id) !== -1) {
     	// do nothing
     } else {
       publicFrequencies.push(
@@ -39,12 +43,16 @@ export const getPublicFrequencies = (frequencies, user) => {
       )
     }
   }
+
+  return publicFrequencies
 }
 
 export const isCurrentFrequencyOwner = (frequency, user) => {
   if (!user.uid) { return }
 
-  if (user.frequencies.indexOf(frequency) > -1) {
+  let keys = Object.keys(user.frequencies)
+
+  if (keys.indexOf(frequency) > -1) {
     return true
   } else {
     return false

@@ -20,7 +20,8 @@ export const fetchStoriesForFrequency = (frequency) => {
 }
 
 export const fetchStoriesForFrequencies = (frequencies) => {
-  return Promise.all(frequencies.map(fetchStoriesForFrequency))
+  let keys = Object.keys(frequencies)
+  return Promise.all(keys.map(fetchStoriesForFrequency))
 }
 
 export const getStoryPermission = (story, user, frequencies) => {
