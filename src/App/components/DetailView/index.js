@@ -55,7 +55,7 @@ class DetailView extends Component {
 					? <LogicContainer>
 							<Header>
 								<StoryMeta>
-                  <Avatar src={this.state.activeStory.creator.photoURL} />
+                {this.state.activeStory.creator.photoURL ? <Avatar src={this.state.activeStory.creator.photoURL} />: ""}
                   <StoryTitle>{this.state.activeStory.content.title}</StoryTitle>
                   <AuthorName>{this.state.activeStory.creator.displayName}</AuthorName>
                 </StoryMeta>
