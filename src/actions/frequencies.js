@@ -23,16 +23,16 @@ export const addFrequency = (name) => (dispatch, getState) => {
 
 	// define data we'll want to update on the db
 	const uid = getState().user.uid
-	let users = [] // a new frequency will have an array of users that join it
-	users.push({ // the person doing the creation should be the first user
-	    uid: uid,
-	    permission: "owner" // if the person is creating the frequency, they are the owner
-	})
+	let user = { // the person doing the creation should be the first user
+    permission: "owner" // if the person is creating the frequency, they are the owner
+	}
 
 	// create the data we want updated
 	let updatedData = {}
 	let newFrequencyData = { // add the new frequency
-	  users: users,
+	  users: {
+      [uid]: user
+    },
 	  id: newFrequencyKey,
 	  createdAt: firebase.database.ServerValue.TIMESTAMP,
 	  createdBy: uid,
@@ -87,6 +87,14 @@ export const subscribeFrequency = () => (dispatch, getState) => {
 	database.ref(`/users/${uid}`).update({
 		frequencies: usersFrequencies
 	})
+  database.ref(`/frequencies/${activeFrequency}`).once('value').then(function(snapshot){
+    let users = snapshot.val().users
+    let user = {
+	    permission: "subscriber"
+    }
+    users.push(user)
+    database.ref(`/frequences/${activeFrequency}/users/${uid}`).update(user)
+  })
 
 }
 

@@ -1,4 +1,3 @@
-import findIndex from 'lodash.findindex'
 import * as firebase from 'firebase';
 
 export const isStoryCreator = (story, user) => {
@@ -28,22 +27,14 @@ export const getStoryPermission = (story, user, frequencies) => {
   if (!user.uid) { return }
   
   let uid = user.uid
-	let storyFrequency = story.frequency
-	let allFrequencies = frequencies.frequencies
+	let storyFrequencyId = story.frequency
+	let frequencyMatch = frequencies.frequencies.filter((freq) => {
+		return freq.id === storyFrequencyId
+  })
 
-	let freqIndex = findIndex(allFrequencies, (o) => { 
-		return o.id === storyFrequency
-	})
-	
-	freqIndex = allFrequencies[freqIndex]
-	let freqUsers = freqIndex.users
+	let storyFrequency = frequencyMatch[0]
+  let permission = storyFrequency.length ? storyFrequency.users[uid].permission : "subscriber"
 
-	let userIndex = findIndex(freqUsers, (o) => {
-		return o.uid = uid
-	})
-
-	let userPermissionsFromFreq = freqUsers[userIndex].permission
-
-	return userPermissionsFromFreq
+	return permission
   
 }
