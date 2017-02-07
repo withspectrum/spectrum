@@ -53,7 +53,7 @@ export const addFrequency = (name) => (dispatch, getState) => {
 	  database.ref(`/users/${uid}/frequencies`).once('value').then(function(snapshot) {
 
 	    let updatedFrequencies = snapshot.val() || [];
-	    updatedFrequencies.push(newFrequencyKey) // and push the new frequency
+	    updatedFrequencies[newFrequencyKey] = {id: newFrequencyKey} // and push the new frequency
 	    updatedData[`users/${uid}/frequencies`] = updatedFrequencies // add the frequency id to the user object
 
 	    database.ref().update(updatedData, function(error) {
@@ -78,33 +78,34 @@ export const setActiveFrequency = (id) => (dispatch) => {
 }
 
 export const subscribeFrequency = () => (dispatch, getState) => {
-	const database = firebase.database()	
-	const uid = getState().user.uid
-	let usersFrequencies = getState().user.frequencies || []
-	let activeFrequency = getState().frequencies.active
-	usersFrequencies.push(`${activeFrequency}`)
+	const database = firebase.database()
+	const state = getState()
+	const uid = state.user.uid
+	let usersFrequencies = state.user.frequencies || []
+	let activeFrequency = state.frequencies.active
+	usersFrequencies[activeFrequency] = {id: activeFrequency}
 
 	database.ref(`/users/${uid}`).update({
 		frequencies: usersFrequencies
 	})
   database.ref(`/frequencies/${activeFrequency}`).once('value').then(function(snapshot){
     let users = snapshot.val().users
-    let user = {
+    let permission = {
 	    permission: "subscriber"
     }
-    users.push(user)
-    database.ref(`/frequences/${activeFrequency}/users/${uid}`).update(user)
+    users[uid] = permission
+    database.ref(`/frequences/${activeFrequency}/users/${uid}`).update(permission)
   })
 
 }
 
 export const unsubscribeFrequency = () => (dispatch, getState) => {
-	const database = firebase.database()	
-	const uid = getState().user.uid
-	let usersFrequencies = getState().user.frequencies
-	let activeFrequency = getState().frequencies.active
-	let index = usersFrequencies.indexOf(activeFrequency)
-	usersFrequencies.splice(index, 1)
+	const database = firebase.database()
+	const state = getState()
+	const uid = state.user.uid	
+	let usersFrequencies = state.user.frequencies
+	let activeFrequency = state.frequencies.active
+	delete usersFrequencies[activeFrequency]
 
 	database.ref(`/users/${uid}`).update({
 		frequencies: usersFrequencies

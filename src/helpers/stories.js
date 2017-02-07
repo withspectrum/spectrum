@@ -20,21 +20,30 @@ export const fetchStoriesForFrequency = (frequency) => {
 }
 
 export const fetchStoriesForFrequencies = (frequencies) => {
-  return Promise.all(frequencies.map(fetchStoriesForFrequency))
+  let keys = Object.keys(frequencies)
+  return Promise.all(keys.map(fetchStoriesForFrequency))
 }
 
 export const getStoryPermission = (story, user, frequencies) => {
   if (!user.uid) { return }
   
-  let uid = user.uid
-	let storyFrequencyId = story.frequency
-	let frequencyMatch = frequencies.frequencies.filter((freq) => {
-		return freq.id === storyFrequencyId
-  })
+  if (story) { // make sure we're evaluating a story
+    let uid = user.uid
+  	let storyFrequencyId = story.frequency // get the frequency the story was posted in
+  	let frequencyMatch = frequencies.frequencies.filter((freq) => { // and filter that against all the stories returned
+  		return freq.id === storyFrequencyId // when we have a match, return the frequency object
+    })
 
-	let storyFrequency = frequencyMatch[0]
-  let permission = storyFrequency.length ? storyFrequency.users[uid].permission : "subscriber"
+    if (frequencyMatch.length > 0) {
+    	let storyFrequency = frequencyMatch[0]
 
-	return permission
-  
+      let permission = frequencies.frequencies.length && storyFrequency.users[uid] ? storyFrequency.users[uid].permission : "subscriber"
+
+    	return permission
+    } else {
+      return
+    }
+  } else {
+    return
+  }
 }

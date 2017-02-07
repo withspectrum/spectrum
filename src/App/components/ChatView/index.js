@@ -26,9 +26,7 @@ class ChatView extends Component{
     return linkedMessage
   }
 
-  render() {
-    let that = this
-    console.log(this.props.messages)
+  render() {    
 		return (
       <ScrollBody>
         { this.props.messages &&
@@ -38,7 +36,7 @@ class ChatView extends Component{
               return( 
                 <BubbleGroup key={i} me>
                   {group.map((message, i) => {
-                    return <Bubble key={i} dangerouslySetInnerHTML={{__html: that.formatMessage(message.message)}}/>
+                    return <Bubble key={i} dangerouslySetInnerHTML={{__html: this.formatMessage(message.message)}}/>
                   })}
                 </BubbleGroup>
               )
@@ -47,7 +45,7 @@ class ChatView extends Component{
                 <BubbleGroup key={i}>
                 <FromName>{ group[0].userDisplayName }</FromName>
                   {group.map((message, i) => {
-                    return <Bubble key={i} dangerouslySetInnerHTML={{__html: that.formatMessage(message.message)}} />
+                    return <Bubble key={i} dangerouslySetInnerHTML={{__html: this.formatMessage(message.message)}} />
                   })}
                 </BubbleGroup>
               )
