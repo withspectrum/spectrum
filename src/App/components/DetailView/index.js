@@ -27,12 +27,13 @@ class DetailView extends Component {
   }
   getActiveStory(){
     var that = this;
+    let nullStory = Object.create({ content: { title: "Choose a story." }, creator: {}, id: 0 })
     if (this.props.stories.stories){
       return this.props.stories.stories.filter(function(story){
        return story.id === that.props.stories.active;
-      })[0];
+      })[0] || nullStory 
     } else {
-      return { content: { title: "Choose a story." }, id: 0 }
+      return nullStory
     }
   }
   componentDidUpdate() {
