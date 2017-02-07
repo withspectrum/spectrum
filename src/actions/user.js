@@ -26,7 +26,7 @@ export const login = () => (dispatch) => {
         }
 
         newUserRef.set(userData, function(err){ // and then write that data to the db
-          console.log(err)
+          console.log('error setting new user: ', err)
         });
       }
     })

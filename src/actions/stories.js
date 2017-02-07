@@ -75,7 +75,7 @@ export const upvote = (storyId) => (dispatch, getState) => {
   const upvote = {};
   upvote[`stories/${storyId}/upvotes/${uid}`] = true;
   firebase.database().ref().update(upvote, function(error){
-    console.log(error);
+    console.log('err upvote: ', error);
   })
 } 
 

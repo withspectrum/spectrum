@@ -53,7 +53,7 @@ export const addFrequency = (name) => (dispatch, getState) => {
 	  database.ref(`/users/${uid}/frequencies`).once('value').then(function(snapshot) {
 
 	    let updatedFrequencies = snapshot.val() || [];
-	    updatedFrequencies.push(newFrequencyKey) // and push the new frequency
+	    updatedFrequencies[newFrequencyKey] = {id: newFrequencyKey} // and push the new frequency
 	    updatedData[`users/${uid}/frequencies`] = updatedFrequencies // add the frequency id to the user object
 
 	    database.ref().update(updatedData, function(error) {
@@ -90,11 +90,11 @@ export const subscribeFrequency = () => (dispatch, getState) => {
 	})
   database.ref(`/frequencies/${activeFrequency}`).once('value').then(function(snapshot){
     let users = snapshot.val().users
-    let user = {
+    let permission = {
 	    permission: "subscriber"
     }
-    users.push(user)
-    database.ref(`/frequences/${activeFrequency}/users/${uid}`).update(user)
+    users[uid] = permission
+    database.ref(`/frequences/${activeFrequency}/users/${uid}`).update(permission)
   })
 
 }

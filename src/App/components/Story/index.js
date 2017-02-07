@@ -49,9 +49,13 @@ class Story extends Component{
 					  </UpvoteWrapper>
 					</StoryHeader>
 	    		<StoryBody>
-            {/* creator &&
+            { creator &&
               <p>I made dis</p>
-            */}
+            }
+
+            { moderator &&
+              <p>mod role: {moderator}</p>
+            }
 	    			<Title>{this.props.data.content.title}</Title>
             
             <Desc>{this.props.data.content.description}</Desc>
