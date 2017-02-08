@@ -154,3 +154,10 @@ export const setActiveStory = (id) => (dispatch) => {
     mesages: ''
   })
 }
+
+export default {
+  setStories,
+  upvote,
+  createStory,
+  setActiveStory
+}

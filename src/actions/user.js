@@ -1,4 +1,4 @@
-import * as firebase from 'firebase';
+import * as firebase from 'firebase'
 
 export const login = () => (dispatch) => {
   let provider = new firebase.auth.TwitterAuthProvider();
@@ -45,7 +45,7 @@ export const login = () => (dispatch) => {
   });
 }
 
-export const setUser = () => (dispatch) => {
+export const startListeningToAuth = () => (dispatch) => {
 	firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
       const database = firebase.database()
@@ -69,8 +69,15 @@ export const setUser = () => (dispatch) => {
 export const signOut = () => (dispatch) => {
   firebase.auth().signOut().then(function() {
     // sign out successful
+    localStorage.removeItem('state') // clear the localstorage state
     window.location.href = '/' // refresh the page
   }, function(error) {
     // error on signout
   })
+}
+
+export default {
+  login,
+  startListeningToAuth,
+  signOut
 }

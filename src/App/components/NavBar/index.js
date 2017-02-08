@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { addFrequency, setActiveFrequency } from '../../../actions/frequencies'
-import { setStories } from '../../../actions/stories'
-import { signOut, login } from '../../../actions/user'
+import actions from '../../../actions'
 import { getMyFrequencies, getPublicFrequencies } from '../../../helpers/frequencies'
 import { Column, Header, HeaderLogo, Avatar, MetaWrapper, Name, MetaLink, FreqList, FreqListHeading, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta, Form, Input, Button } from './style';
 
@@ -18,12 +16,12 @@ class NavBar extends Component{
 
   login = (e) => {
     e.preventDefault();
-    this.props.dispatch(login())
+    this.props.dispatch(actions.login())
   }
 
   signOut = (e) => {
     e.preventDefault();
-    this.props.dispatch(signOut())
+    this.props.dispatch(actions.signOut())
   }
 
   updateFrequencyName = (e) => {
@@ -33,13 +31,13 @@ class NavBar extends Component{
   }
 
   setActiveFrequency = (e) => {
-    this.props.dispatch(setActiveFrequency(e.target.id))
-    this.props.dispatch(setStories())
+    this.props.dispatch(actions.setActiveFrequency(e.target.id))
+    this.props.dispatch(actions.setStories())
   }
 
   addFrequency = (e) => {
     e.preventDefault()
-    this.props.dispatch(addFrequency(this.state.frequencyName))
+    this.props.dispatch(actions.addFrequency(this.state.frequencyName))
     this.setState({
       frequencyName: ''
     })

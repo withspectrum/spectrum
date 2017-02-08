@@ -111,3 +111,11 @@ export const unsubscribeFrequency = () => (dispatch, getState) => {
 		frequencies: usersFrequencies
 	})
 }
+
+export default {
+	setFrequencies,
+	addFrequency,
+	setActiveFrequency,
+	subscribeFrequency,
+	unsubscribeFrequency
+}

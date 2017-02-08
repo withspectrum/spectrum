@@ -2,15 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 // eslint-disable-next-line
 import { StoryWrapper, StoryBody, StoryHeader, Avatar, UserMeta, Name, Meta, UpvoteWrapper, UpvoteLabel, Title, Desc, Media } from './style';
-import { setActiveStory, upvote } from '../../../actions/stories'
-import { setMessages } from '../../../actions/messages'
+import actions from '../../../actions'
 import { isStoryCreator, getStoryPermission } from '../../../helpers/stories'
 
 class Story extends Component{
 
   setActiveStory = (e) => {
-    this.props.dispatch(setActiveStory(this.props.data.id))
-    this.props.dispatch(setMessages(this.props.data.id))
+    this.props.dispatch(actions.setActiveStory(this.props.data.id))
+    this.props.dispatch(actions.setMessages(this.props.data.id))
   }
 
   getUpvotes = () => {
@@ -20,7 +19,7 @@ class Story extends Component{
   upvote = (e) => {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
-    this.props.dispatch(upvote(this.props.data.id))
+    this.props.dispatch(actions.upvote(this.props.data.id))
   }
 
   getUpvoteCount = () => {

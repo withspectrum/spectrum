@@ -63,3 +63,8 @@ export const sendMessage = (user, story, message) => (dispatch) => {
     })
   }
 }
+
+export default {
+  setMessages,
+  sendMessage
+}

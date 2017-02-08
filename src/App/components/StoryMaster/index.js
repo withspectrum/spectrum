@@ -2,28 +2,26 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { Column, Header, ScrollBody, JoinBtn, LoginWrapper, LoginText, LoginButton } from './style'
-import { toggleComposer } from '../../../actions/composer'
-import { login } from '../../../actions/user'
-import { unsubscribeFrequency, subscribeFrequency } from '../../../actions/frequencies'
+import actions from '../../../actions'
 import Story from '../Story'
 import Composer from '../Composer'
 
 class StoryMaster extends Component{
   toggleComposer = () => {
-    this.props.dispatch(toggleComposer())
+    this.props.dispatch(actions.toggleComposer())
   }
 
   unsubscribeFrequency = () => {
-    this.props.dispatch(unsubscribeFrequency())
+    this.props.dispatch(actions.unsubscribeFrequency())
   }
 
   subscribeFrequency = () => {
-    this.props.dispatch(subscribeFrequency())
+    this.props.dispatch(actions.subscribeFrequency())
   }
 
   login = (e) => {
     e.preventDefault();
-    this.props.dispatch(login())
+    this.props.dispatch(actions.login())
   }
 
 	render() {

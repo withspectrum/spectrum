@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { createStory } from '../../../actions/stories'
+import actions from '../../../actions'
 import { getMyFrequencies } from '../../../helpers/frequencies'
 import { ComposerContainer, Input, Submit, Textarea, Media, MediaInput, MediaLabel, MediaWrapper, Alert } from './style'
 
@@ -47,7 +47,7 @@ class Composer extends Component {
     let frequency = this.props.frequencies.active === "all" ? this.state.frequencyPicker : this.props.frequencies.active
 
     if (frequency && title && description) {      
-	    this.props.dispatch(createStory(frequency, title, description, file))
+	    this.props.dispatch(actions.createStory(frequency, title, description, file))
 	    this.setState({
 	      title: '',
 	      description: '',
