@@ -93,8 +93,8 @@ export const subscribeFrequency = () => (dispatch, getState) => {
     let permission = {
 	    permission: "subscriber"
     }
-    users[uid] = permission
-    database.ref(`/frequences/${activeFrequency}/users/${uid}`).update(permission)
+    users[uid] = permission    
+    database.ref(`/frequencies/${activeFrequency}/users/${uid}`).update(permission)
   })
 
 }
@@ -110,6 +110,20 @@ export const unsubscribeFrequency = () => (dispatch, getState) => {
 	database.ref(`/users/${uid}`).update({
 		frequencies: usersFrequencies
 	})
+
+	database.ref(`/frequencies/${activeFrequency}/users/${uid}`).remove()
+}
+
+export const toggleFrequencyPrivacy = () => (dispatch, getState) => {
+	const database = firebase.database()
+	const state = getState()
+	const frequencies = state.frequencies.frequencies
+	const activeFrequency = state.frequencies.active
+	const freqToUpdate = helpers.getCurrentFrequency(activeFrequency, frequencies)
+	
+	database.ref(`/frequencies/${activeFrequency}/settings`).update({
+		private: !freqToUpdate.settings.private
+	})
 }
 
 export default {
@@ -117,5 +131,6 @@ export default {
 	addFrequency,
 	setActiveFrequency,
 	subscribeFrequency,
-	unsubscribeFrequency
+	unsubscribeFrequency,
+	toggleFrequencyPrivacy
 }
