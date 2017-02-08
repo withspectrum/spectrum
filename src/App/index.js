@@ -15,14 +15,17 @@ class App extends Component {
     
     dispatch(actions.setActiveFrequency(activeFrequencyParam))
     dispatch(actions.setStories())
-    if (activeStoryParam) { dispatch(actions.setActiveStory(activeStoryParam)) }
+    if (activeStoryParam) { 
+      dispatch(actions.setActiveStory(activeStoryParam)) 
+      dispatch(actions.setMessages())
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return true
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  componentWillReceiveProps(nextProps, nextState) {
     const { dispatch, params } = this.props
 
     if (nextProps.params.frequency !== params.frequency) {
