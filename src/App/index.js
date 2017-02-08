@@ -5,13 +5,19 @@ import { Body } from './style'
 import StoryMaster from './components/StoryMaster'
 import DetailView from './components/DetailView'
 import { setUser } from '../actions/user'
-import { setFrequencies } from '../actions/frequencies'
+import { setActiveStory } from '../actions/stories'
+import { setFrequencies, setActiveFrequency } from '../actions/frequencies'
 
 class App extends Component {
-	constructor(props) {
-    super(props)
-    props.dispatch(setUser()) // on first load, set the user
-    props.dispatch(setFrequencies()) // on first load, get frequences from the server
+	componentDidMount() {
+    const activeFrequencyParam = this.props.params.frequency || "all"
+    const activeStoryParam = this.props.params.story || ""
+    
+    this.props.dispatch(setUser()) // on first load, set the user
+    this.props.dispatch(setFrequencies()) // on first load, get frequences from the server
+    
+    this.props.dispatch(setActiveFrequency(activeFrequencyParam))
+    if (activeStoryParam) { this.props.dispatch(setActiveStory(activeStoryParam)) }
   }
 
   render() {

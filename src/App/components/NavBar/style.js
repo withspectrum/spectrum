@@ -80,7 +80,8 @@ export const FreqListHeading = styled.p`
 export const Freq = styled.div`
   display: flex;
   flex: 0 0 48px;
-  padding-left: 16px;
+  padding: 0.5rem;
+  padding-lefT: 1rem;
   align-items: center;
   background-color: ${props => props.active ? '#3818e5' : '#171a21' };
   background-image: ${props => props.active ? `radial-gradient(ellipse farthest-corner at top left , #7B16FF 0%, #3819E6 100%)` : `none`};

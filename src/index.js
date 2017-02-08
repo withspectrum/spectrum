@@ -27,7 +27,11 @@ const Root = () => {
 	return(
 		<Provider store={store}>
 			<BrowserRouter>
-				<Match exactly pattern="/" component={App}/>
+				<div>
+					<Match exactly pattern="/" component={App}/>
+					<Match pattern="/:frequency" component={App}/>
+					<Match pattern="/:frequency/:story" component={App}/>
+				</div>
 			</BrowserRouter>
 		</Provider>
 	)

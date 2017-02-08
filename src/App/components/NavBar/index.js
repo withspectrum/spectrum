@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Link } from 'react-router'
 import { addFrequency, setActiveFrequency } from '../../../actions/frequencies'
 import { setStories } from '../../../actions/stories'
 import { signOut, login } from '../../../actions/user'
@@ -69,38 +70,43 @@ class NavBar extends Component{
           }
           <FreqList>
             <FreqListHeading>My Frequencies</FreqListHeading>
-            <Freq 
-              onClick={this.setActiveFrequency} 
-              id={'all'}
-              active={this.props.frequencies.active === 'all'}>
-              <FreqIcon src="/img/everything-icon.svg"/>
-              <FreqLabel>Everything</FreqLabel>
-            </Freq>
+            
+            <Link to="/">
+              <Freq active={this.props.frequencies.active === 'all'}>
+                <FreqIcon src="/img/everything-icon.svg"/>
+                <FreqLabel>Everything</FreqLabel>
+              </Freq>
+            </Link>
 
             { myFrequencies &&
               myFrequencies.map((frequency, i) => {                
-                return <Freq 
-                        key={i} 
-                        onClick={this.setActiveFrequency} 
-                        id={frequency.id}
-                        active={frequency.id === activeFrequency}>
-                        <FreqIcon src="/img/freq-icon.svg"/>
-                        <FreqLabel>{ frequency.name }</FreqLabel>
-                      </Freq>
+                return (
+                  <Link to={`/${frequency.id}`} key={i}>
+                    <Freq 
+                      active={frequency.id === activeFrequency}>
+                      <FreqIcon src="/img/freq-icon.svg"/>
+                      <FreqLabel>{ frequency.name }</FreqLabel>
+                    </Freq>
+                  </Link>
+                )
               })
             }
 
             <FreqListHeading style={{marginTop:"16px"}}>Other Frequencies</FreqListHeading>
             { publicFrequencies &&
               publicFrequencies.map((frequency, i) => {
-                return <Freq 
-                        key={i} 
-                        onClick={this.setActiveFrequency} 
-                        id={frequency.id}
-                        active={frequency.id === activeFrequency}>
-                        <FreqIcon src="/img/freq-icon.svg"/>
-                        <FreqLabel>{ frequency.name }</FreqLabel>
-                      </Freq>
+                return (
+                  <Link to={`/${frequency.id}`} key={i}>
+                    <Freq 
+                      key={i} 
+                      onClick={this.setActiveFrequency} 
+                      id={frequency.id}
+                      active={frequency.id === activeFrequency}>
+                      <FreqIcon src="/img/freq-icon.svg"/>
+                      <FreqLabel>{ frequency.name }</FreqLabel>
+                    </Freq>
+                  </Link>
+                )
               })
             }
           </FreqList>
