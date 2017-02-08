@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { addFrequency, setActiveFrequency } from '../../../actions/frequencies'
-import { setStories } from '../../../actions/stories'
-import { signOut, login } from '../../../actions/user'
-import { getMyFrequencies, getPublicFrequencies } from '../../../helpers/frequencies'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Link } from 'react-router'
+import actions from '../../../actions'
+import helpers from '../../../helpers'
 import { Column, Header, HeaderLogo, Avatar, MetaWrapper, Name, MetaLink, FreqList, FreqListHeading, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta, Form, Input, Button } from './style';
 
 class NavBar extends Component{
@@ -17,12 +16,12 @@ class NavBar extends Component{
 
   login = (e) => {
     e.preventDefault();
-    this.props.dispatch(login())
+    this.props.dispatch(actions.login())
   }
 
   signOut = (e) => {
     e.preventDefault();
-    this.props.dispatch(signOut())
+    this.props.dispatch(actions.signOut())
   }
 
   updateFrequencyName = (e) => {
@@ -32,13 +31,13 @@ class NavBar extends Component{
   }
 
   setActiveFrequency = (e) => {
-    this.props.dispatch(setActiveFrequency(e.target.id))
-    this.props.dispatch(setStories())
+    this.props.dispatch(actions.setActiveFrequency(e.target.id))
+    this.props.dispatch(actions.setStories())
   }
 
   addFrequency = (e) => {
     e.preventDefault()
-    this.props.dispatch(addFrequency(this.state.frequencyName))
+    this.props.dispatch(actions.addFrequency(this.state.frequencyName))
     this.setState({
       frequencyName: ''
     })
@@ -48,8 +47,8 @@ class NavBar extends Component{
     const frequencies = this.props.frequencies.frequencies
     const activeFrequency = this.props.frequencies.active
     const user = this.props.user
-    const myFrequencies = getMyFrequencies(frequencies, user)
-    const publicFrequencies = getPublicFrequencies(frequencies, user)
+    const myFrequencies = helpers.getMyFrequencies(frequencies, user)
+    const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
 
     return(
       <Column>
@@ -69,38 +68,43 @@ class NavBar extends Component{
           }
           <FreqList>
             <FreqListHeading>My Frequencies</FreqListHeading>
-            <Freq 
-              onClick={this.setActiveFrequency} 
-              id={'all'}
-              active={this.props.frequencies.active === 'all'}>
-              <FreqIcon src="/img/everything-icon.svg"/>
-              <FreqLabel>Everything</FreqLabel>
-            </Freq>
+            
+            <Link to="/">
+              <Freq active={this.props.frequencies.active === 'all'}>
+                <FreqIcon src="/img/everything-icon.svg"/>
+                <FreqLabel>Everything</FreqLabel>
+              </Freq>
+            </Link>
 
             { myFrequencies &&
               myFrequencies.map((frequency, i) => {                
-                return <Freq 
-                        key={i} 
-                        onClick={this.setActiveFrequency} 
-                        id={frequency.id}
-                        active={frequency.id === activeFrequency}>
-                        <FreqIcon src="/img/freq-icon.svg"/>
-                        <FreqLabel>{ frequency.name }</FreqLabel>
-                      </Freq>
+                return (
+                  <Link to={`/${frequency.id}`} key={i}>
+                    <Freq 
+                      active={frequency.id === activeFrequency}>
+                      <FreqIcon src="/img/freq-icon.svg"/>
+                      <FreqLabel>{ frequency.name }</FreqLabel>
+                    </Freq>
+                  </Link>
+                )
               })
             }
-
+            
             <FreqListHeading style={{marginTop:"16px"}}>Other Frequencies</FreqListHeading>
             { publicFrequencies &&
               publicFrequencies.map((frequency, i) => {
-                return <Freq 
-                        key={i} 
-                        onClick={this.setActiveFrequency} 
-                        id={frequency.id}
-                        active={frequency.id === activeFrequency}>
-                        <FreqIcon src="/img/freq-icon.svg"/>
-                        <FreqLabel>{ frequency.name }</FreqLabel>
-                      </Freq>
+                return (
+                  <Link to={`/${frequency.id}`} key={i}>
+                    <Freq 
+                      key={i} 
+                      onClick={this.setActiveFrequency} 
+                      id={frequency.id}
+                      active={frequency.id === activeFrequency}>
+                      <FreqIcon src="/img/freq-icon.svg"/>
+                      <FreqLabel>{ frequency.name }</FreqLabel>
+                    </Freq>
+                  </Link>
+                )
               })
             }
           </FreqList>

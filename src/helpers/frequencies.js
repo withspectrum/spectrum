@@ -58,3 +58,9 @@ export const isCurrentFrequencyOwner = (frequency, user) => {
     return false
   }
 }
+
+export default {
+  getMyFrequencies,
+  getPublicFrequencies,
+  isCurrentFrequencyOwner
+}

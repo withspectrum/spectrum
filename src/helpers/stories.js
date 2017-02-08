@@ -47,3 +47,10 @@ export const getStoryPermission = (story, user, frequencies) => {
     return
   }
 }
+
+export default {
+  isStoryCreator,
+  fetchStoriesForFrequency,
+  fetchStoriesForFrequencies,
+  getStoryPermission
+}

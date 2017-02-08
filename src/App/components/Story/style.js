@@ -9,10 +9,10 @@ export const StoryWrapper = styled.div`
 	border-radius: 2px;
 	background-color: #ffffff;
 	transition: box-shadow 0.2s ease-in;
-	box-shadow: ${props => props.selected ? '0 2px 4px rgba(129, 148, 175, 0.2)' : '0 2px 8px rgba(73, 92, 240, 0.8)'};
+	box-shadow: ${props => props.selected ? '0 0 12px rgba(73, 92, 240, 0.8)' : '0 2px 4px rgba(129, 148, 175, 0.2)'};
 
 	&:hover {
-		box-shadow: 0 4px 16px rgba(129, 148, 175, 0.8);
+		box-shadow: ${props => props.selected ? '0 0 12px rgba(73, 92, 240, 0.8)' : '0 4px 16px rgba(129, 148, 175, 0.8)'};
 		transition: box-shadow 0.2s ease-out;
 		cursor: pointer;
 	}

@@ -1,5 +1,5 @@
 import * as firebase from 'firebase'
-import { hashToArray } from '../helpers/utils'
+import helpers from '../helpers'
 
 export const setFrequencies = () => (dispatch) => {
   const database = firebase.database()
@@ -7,7 +7,7 @@ export const setFrequencies = () => (dispatch) => {
 
   // once we get our frequencies, dispatch them to the store
   frequenciesRef.on('value', function(snapshot){
-  	const frequencies = hashToArray(snapshot.val())
+  	const frequencies = helpers.hashToArray(snapshot.val())
     dispatch({
 	  	type: 'SET_FREQUENCIES',
 	  	frequencies: frequencies
@@ -110,4 +110,12 @@ export const unsubscribeFrequency = () => (dispatch, getState) => {
 	database.ref(`/users/${uid}`).update({
 		frequencies: usersFrequencies
 	})
+}
+
+export default {
+	setFrequencies,
+	addFrequency,
+	setActiveFrequency,
+	subscribeFrequency,
+	unsubscribeFrequency
 }
