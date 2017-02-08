@@ -6,7 +6,7 @@ import actions from '../../../actions'
 import Story from '../Story'
 import Composer from '../Composer'
 
-class StoryMaster extends Component{
+class StoryMaster extends Component {
   toggleComposer = () => {
     this.props.dispatch(actions.toggleComposer())
   }
@@ -67,7 +67,11 @@ class StoryMaster extends Component{
               // slice and reverse makes sure our stories show up in revers chron order
               stories.slice(0).reverse().map((story, i) => {
                 if (this.props.frequencies.active === "all") { // if we're in everything, just load the story in the sidebar
-                  return <Story data={story} key={i} />
+                  return (
+                    <Link to={`/all/${story.id}`} key={i}>
+                      <Story data={story} key={i} />
+                    </Link>
+                  )
                 } else { // else, let's do dynamic url handling
                   return (
                     <Link to={`/${this.props.frequencies.active}/${story.id}`} key={i}>
