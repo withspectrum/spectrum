@@ -3,12 +3,17 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { Column, Header, ScrollBody, JoinBtn, LoginWrapper, LoginText, LoginButton } from './style'
 import actions from '../../../actions'
+import helpers from '../../../helpers'
 import Story from '../Story'
 import Composer from '../Composer'
 
 class StoryMaster extends Component {
   toggleComposer = () => {
     this.props.dispatch(actions.toggleComposer())
+  }
+
+  togglePrivacy = () => {
+    this.props.dispatch(actions.toggleFrequencyPrivacy())
   }
 
   unsubscribeFrequency = () => {
@@ -25,11 +30,15 @@ class StoryMaster extends Component {
   }
 
 	render() {
-    let stories = this.props.stories.stories
+    const { user, stories, frequencies } = this.props
+    let usersPermissionOnFrequency = helpers.getFrequencyPermission(user, frequencies.active, frequencies.frequencies)
+
     let subscribeButton = (usersFrequencies, activeFrequency) => {
       let keys = Object.keys(usersFrequencies)
       
-      if (!usersFrequencies && activeFrequency !== "all" && activeFrequency !== null) {
+      if (usersPermissionOnFrequency === 'owner') {
+        return
+      } else if (!usersFrequencies && activeFrequency !== "all" && activeFrequency !== null) {
         return <JoinBtn onClick={ this.subscribeFrequency }>Join</JoinBtn>
       } else if (activeFrequency === "all" || activeFrequency === null) {
         return ''
@@ -42,6 +51,26 @@ class StoryMaster extends Component {
       }
     }
 
+    const currentFrequency = helpers.getCurrentFrequency(frequencies.active, frequencies.frequencies)
+    const currentFrequencyPrivacy = currentFrequency.settings.private
+
+
+    const getPrivacyButton = (usersPermissionOnFrequency) => {
+      switch (usersPermissionOnFrequency) {
+        case 'owner':
+          return (
+            <label>Private 
+              <input type="checkbox" checked={currentFrequencyPrivacy} onChange={this.togglePrivacy} />
+            </label>
+          )
+        case 'subscriber':
+          return
+        default:
+          return
+      }
+    }
+    const privacyButton = getPrivacyButton(usersPermissionOnFrequency)
+
 		return (
 	    	<Column >
 
@@ -49,6 +78,7 @@ class StoryMaster extends Component {
             <Header>
               <img src="/img/add-story.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
               { subscribeButton(this.props.user.frequencies, this.props.frequencies.active) }
+              { privacyButton }
             </Header>
           }
 
@@ -63,9 +93,9 @@ class StoryMaster extends Component {
               </LoginWrapper>
             }
 
-            { stories.length > 0 &&
+            { stories.stories.length > 0 &&
               // slice and reverse makes sure our stories show up in revers chron order
-              stories.slice(0).reverse().map((story, i) => {
+              stories.stories.slice(0).reverse().map((story, i) => {
                 if (this.props.frequencies.active === "all") { // if we're in everything, just load the story in the sidebar
                   return (
                     <Link to={`/all/${story.id}`} key={i}>
