@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import actions from '../../../actions'
-import { getMyFrequencies, getPublicFrequencies } from '../../../helpers/frequencies'
+import helpers from '../../../helpers'
 import { Column, Header, HeaderLogo, Avatar, MetaWrapper, Name, MetaLink, FreqList, FreqListHeading, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta, Form, Input, Button } from './style';
 
 class NavBar extends Component{
@@ -47,8 +47,8 @@ class NavBar extends Component{
     const frequencies = this.props.frequencies.frequencies
     const activeFrequency = this.props.frequencies.active
     const user = this.props.user
-    const myFrequencies = getMyFrequencies(frequencies, user)
-    const publicFrequencies = getPublicFrequencies(frequencies, user)
+    const myFrequencies = helpers.getMyFrequencies(frequencies, user)
+    const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
 
     return(
       <Column>

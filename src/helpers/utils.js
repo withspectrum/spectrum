@@ -38,3 +38,8 @@ export const sortAndGroupBubbles = (messages) => {
 	masterArray.push(newArray)
 	return masterArray
 }
+
+export default {
+	hashToArray,
+	sortAndGroupBubbles
+}

@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import { hashToArray, sortAndGroupBubbles } from '../helpers/utils'
+import helpers from '../helpers'
 import fetch from 'whatwg-fetch-importable'
 import Autolinker from 'autolinker'
 
@@ -17,8 +17,8 @@ export const setMessages = (id) => (dispatch, getState) => {
       return
     };
 
-    const messages = hashToArray(snapshot.val())
-    const sortedMessages = sortAndGroupBubbles(messages)
+    const messages = helpers.hashToArray(snapshot.val())
+    const sortedMessages = helpers.sortAndGroupBubbles(messages)
     const story = firebase.database().ref(`stories/${id}`)
     story.update({message_count: snapshot.numChildren()})
     dispatch({

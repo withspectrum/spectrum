@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 // eslint-disable-next-line
 import { StoryWrapper, StoryBody, StoryHeader, Avatar, UserMeta, Name, Meta, UpvoteWrapper, UpvoteLabel, Title, Desc, Media } from './style';
 import actions from '../../../actions'
-import { isStoryCreator, getStoryPermission } from '../../../helpers/stories'
+import helpers from '../../../helpers'
 
 class Story extends Component{
 
@@ -31,8 +31,8 @@ class Story extends Component{
   }
 
 	render() {
-    const creator = isStoryCreator(this.props.data, this.props.user)
-    const moderator = getStoryPermission(this.props.data, this.props.user, this.props.frequencies)
+    const creator = helpers.isStoryCreator(this.props.data, this.props.user)
+    const moderator = helpers.getStoryPermission(this.props.data, this.props.user, this.props.frequencies)
 
 		return (
 	    	<StoryWrapper selected onClick={ this.setActiveStory }>

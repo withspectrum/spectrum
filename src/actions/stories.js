@@ -1,6 +1,5 @@
-import * as firebase from 'firebase';
-import { hashToArray } from '../helpers/utils'
-import { fetchStoriesForFrequencies } from '../helpers/stories'
+import * as firebase from 'firebase'
+import helpers from '../helpers'
 
 export const setStories = () => (dispatch, getState) => {
   let usersFrequencies = getState().user.frequencies
@@ -9,9 +8,9 @@ export const setStories = () => (dispatch, getState) => {
 
   if (activeFrequency === "all" && usersFrequencies) { // we want stories for all a user's frequencies
     let storiesToReturn = []
-    fetchStoriesForFrequencies(usersFrequencies).then(function(freq){
+    helpers.fetchStoriesForFrequencies(usersFrequencies).then(function(freq){
       freq.forEach(function(f){
-        let a = hashToArray(f)
+        let a = helpers.hashToArray(f)
         a.map(function(item){
           storiesToReturn.push(item)
         })
@@ -60,7 +59,7 @@ export const setStories = () => (dispatch, getState) => {
     };
     // test to see if this is a snapshot of the full list
     let key = Object.keys(snapshot.val())[0];
-    const stories = hashToArray(snapshot.val())
+    const stories = helpers.hashToArray(snapshot.val())
     if (snapshot.val()[key].creator){
       dispatch({
         type: 'SET_STORIES',

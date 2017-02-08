@@ -4,7 +4,7 @@ import App from './App'
 import { BrowserRouter, Match } from 'react-router'
 import { Provider } from 'react-redux'
 import { initStore } from './store'
-import { loadState, saveState } from './helpers/localStorage'
+import helpers from './helpers'
 import * as firebase from 'firebase'
 import FIREBASE_CONFIG from './config/FirebaseConfig'
 import actions from './actions'
@@ -18,11 +18,11 @@ const fbconfig = {
 };
 
 const database = firebase.initializeApp(fbconfig)
-const localStorageState = loadState()
+const localStorageState = helpers.loadState()
 const store = initStore(localStorageState)
 
 store.subscribe(() => {
-  saveState(store.getState())
+  helpers.saveState(store.getState())
 })
 
 const Root = () => {
@@ -41,7 +41,7 @@ const Root = () => {
 
 render(<Root/>, document.querySelector('#root'));
 
-// setup Firebase listeners
+// when the app first loads, we'll listen for auth changes
 setTimeout(() => {
 	store.dispatch( actions.startListeningToAuth() )
 })

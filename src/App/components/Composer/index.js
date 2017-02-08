@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import actions from '../../../actions'
-import { getMyFrequencies } from '../../../helpers/frequencies'
+import helpers from '../../../helpers'
 import { ComposerContainer, Input, Submit, Textarea, Media, MediaInput, MediaLabel, MediaWrapper, Alert } from './style'
 
 class Composer extends Component {
@@ -90,7 +90,7 @@ class Composer extends Component {
     const frequencies = this.props.frequencies.frequencies
     const activeFrequency = this.props.frequencies.active
     const user = this.props.user
-    const myFrequencies = getMyFrequencies(frequencies, user)
+    const myFrequencies = helpers.getMyFrequencies(frequencies, user)
 
 		return (
 			<ComposerContainer isOpen={this.props.isOpen}>
