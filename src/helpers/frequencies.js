@@ -69,9 +69,11 @@ export const getFrequencyPermission = (user, activeFrequency, frequencies) => {
 }
 
 export const getCurrentFrequency = (activeFrequency, frequencies) => {
+  if (activeFrequency === "all") { return }
   const obj = frequencies.filter((freq) => {
     return freq.id === activeFrequency
   })
+  console.log('obj ', obj)
   return obj[0]
 }
 

@@ -110,6 +110,8 @@ export const unsubscribeFrequency = () => (dispatch, getState) => {
 	database.ref(`/users/${uid}`).update({
 		frequencies: usersFrequencies
 	})
+
+	database.ref(`/frequencies/${activeFrequency}/users/${uid}`).remove()
 }
 
 export const toggleFrequencyPrivacy = () => (dispatch, getState) => {
