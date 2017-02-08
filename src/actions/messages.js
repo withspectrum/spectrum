@@ -3,29 +3,40 @@ import helpers from '../helpers'
 import fetch from 'whatwg-fetch-importable'
 import Autolinker from 'autolinker'
 
-export const setMessages = (id) => (dispatch, getState) => {
-	let messages = firebase.database().ref(`messages/${id}`)
+export const clearMessages = () => (dispatch) => {
+  // totally wipes messages from store
+  dispatch({ type: 'CLEAR_MESSAGES' })
+}
 
-  messages.on('value', function(snapshot){
-    // if there are no messages available in the story, or no story is selected, clear the messages state
-    if (!snapshot.val()) {
+export const setMessages = () => (dispatch, getState) => {
+  const state = getState()
+  const activeStory = state.stories.active
+
+  if (activeStory) { // we should only be setting messages if there is an active story
+  	let messages = firebase.database().ref(`messages/${activeStory}`) // query the database only for messages from the active story
+
+    messages.on('value', function(snapshot){
+      // if there are no messages available in the story, or no story is selected, clear the messages state
+      if (!snapshot.val()) {
+        clearMessages() // clear the messages in the store
+        return
+      };
+
+      // if there are messages
+      const messages = helpers.hashToArray(snapshot.val()) // convert our hash into an array of messages
+      const sortedMessages = helpers.sortAndGroupBubbles(messages) // and pass our array to be sorted into groups based on the user who posted the message
+      
+      // any time we click into a story, we can update the message count simultaneously
+      const story = firebase.database().ref(`stories/${activeStory}`) // 
+      story.update({message_count: snapshot.numChildren()})
+      
+      // then set our store with our sorted and grouped messages
       dispatch({
-        type: 'SET_MESSAGES',
-        messages: []
-      })
-
-      return
-    };
-
-    const messages = helpers.hashToArray(snapshot.val())
-    const sortedMessages = helpers.sortAndGroupBubbles(messages)
-    const story = firebase.database().ref(`stories/${id}`)
-    story.update({message_count: snapshot.numChildren()})
-    dispatch({
-	  	type: 'SET_MESSAGES',
-	  	messages: sortedMessages
-	  })
-  });
+  	  	type: 'SET_MESSAGES',
+  	  	messages: sortedMessages
+  	  })
+    });
+  }
 }
 
 export const sendMessage = (user, story, message) => (dispatch) => {

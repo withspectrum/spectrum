@@ -89,7 +89,7 @@ class NavBar extends Component{
                 )
               })
             }
-
+            
             <FreqListHeading style={{marginTop:"16px"}}>Other Frequencies</FreqListHeading>
             { publicFrequencies &&
               publicFrequencies.map((frequency, i) => {

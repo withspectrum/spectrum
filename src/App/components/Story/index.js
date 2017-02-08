@@ -6,12 +6,6 @@ import actions from '../../../actions'
 import helpers from '../../../helpers'
 
 class Story extends Component{
-
-  setActiveStory = (e) => {
-    this.props.dispatch(actions.setActiveStory(this.props.data.id))
-    this.props.dispatch(actions.setMessages(this.props.data.id))
-  }
-
   getUpvotes = () => {
     return Math.round(Math.random() * 150);
   }
@@ -33,14 +27,16 @@ class Story extends Component{
 	render() {
     const creator = helpers.isStoryCreator(this.props.data, this.props.user)
     const moderator = helpers.getStoryPermission(this.props.data, this.props.user, this.props.frequencies)
+    const story = this.props.data
 
 		return (
-	    	<StoryWrapper selected onClick={ this.setActiveStory }>
+	    	<StoryWrapper 
+          selected={ story.id === this.props.stories.active }>
 	    		<StoryHeader>
-					  <Avatar src={this.props.data.creator.photoURL} alt={this.props.data.creator.displayName} />
+					  <Avatar src={story.creator.photoURL} alt={story.creator.displayName} />
 					  <UserMeta>
-					    <Name>{this.props.data.creator.displayName}</Name>
-					    <Meta>Just now • {this.props.data.message_count} Messages</Meta>
+					    <Name>{story.creator.displayName}</Name>
+					    <Meta>Just now • {story.message_count} Messages</Meta>
 					  </UserMeta>
 					  <UpvoteWrapper onClick={this.upvote}>
               <UpvoteLabel>&#9650;</UpvoteLabel>
@@ -55,12 +51,12 @@ class Story extends Component{
             { moderator &&
               <p>mod role: {moderator}</p>
             }
-	    			<Title>{this.props.data.content.title}</Title>
+	    			<Title>{story.content.title}</Title>
             
-            <Desc>{this.props.data.content.description}</Desc>
+            <Desc>{story.content.description}</Desc>
             
-            {this.props.data.content.media && this.props.data.content.media !== ''
-              ? <Media src={this.props.data.content.media} />
+            {story.content.media && story.content.media !== ''
+              ? <Media src={story.content.media} />
               : ''
             }
 

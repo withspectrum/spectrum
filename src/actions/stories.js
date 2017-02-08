@@ -149,7 +149,7 @@ export const setActiveStory = (id) => (dispatch) => {
   })
 
   dispatch({
-    type: 'SET_MESSAGES',
+    type: 'CLEAR_MESSAGES',
     mesages: ''
   })
 }

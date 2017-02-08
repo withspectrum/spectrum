@@ -8,13 +8,14 @@ import actions from '../actions'
 
 class App extends Component {
 	componentDidMount() {
-    const activeFrequencyParam = this.props.params.frequency || "all"
-    const activeStoryParam = this.props.params.story || ""
+    const { dispatch, params } = this.props
+
+    const activeFrequencyParam = params.frequency || "all"
+    const activeStoryParam = params.story || ""
     
-    this.props.dispatch(actions.setFrequencies()) // on first load, get frequences from the server
-    this.props.dispatch(actions.setStories())
-    this.props.dispatch(actions.setActiveFrequency(activeFrequencyParam))
-    if (activeStoryParam) { this.props.dispatch(actions.setActiveStory(activeStoryParam)) }
+    dispatch(actions.setActiveFrequency(activeFrequencyParam))
+    dispatch(actions.setStories())
+    if (activeStoryParam) { dispatch(actions.setActiveStory(activeStoryParam)) }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -22,14 +23,16 @@ class App extends Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
-    if (nextProps.params.frequency !== this.props.params.frequency) {
-      this.props.dispatch(actions.setActiveFrequency(nextProps.params.frequency))
-      this.props.dispatch(actions.setStories())
+    const { dispatch, params } = this.props
+
+    if (nextProps.params.frequency !== params.frequency) {
+      dispatch(actions.setActiveFrequency(nextProps.params.frequency))
+      dispatch(actions.setStories())
     }
 
-    if (nextProps.params.story !== this.props.params.frequency) {
-      this.props.dispatch(actions.setActiveStory(this.props.params.story))
-      this.props.dispatch(actions.setMessages(this.props.params.story))
+    if (nextProps.params.story !== params.frequency) {
+      dispatch(actions.setActiveStory(nextProps.params.story))
+      dispatch(actions.setMessages())
     }
   }
 

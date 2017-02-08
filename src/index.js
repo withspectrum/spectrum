@@ -41,7 +41,9 @@ const Root = () => {
 
 render(<Root/>, document.querySelector('#root'));
 
-// when the app first loads, we'll listen for auth changes
 setTimeout(() => {
+	// when the app first loads, we'll listen for firebase changes
 	store.dispatch( actions.startListeningToAuth() )
+	// and immediately query for the frequencies, as these will persist across the whole session
+	store.dispatch( actions.setFrequencies() )
 })
