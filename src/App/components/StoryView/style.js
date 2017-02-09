@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const StoryWrapper = styled.div`
+export const Wrapper = styled.div`
 	position: fixed;
 	min-height: 48px;
 	top: 48px;
@@ -15,18 +15,13 @@ export const StoryWrapper = styled.div`
 	z-index: 1;
 `;
 
-export const StoryStatic = styled.div`
+export const Section = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-self: flex-end;
 `;
 
-export const StoryText = styled.div`
-	display: flex;
-	flex-direction: column;
-`;
-
-export const StoryDescription = styled.p`
+export const Description = styled.p`
 	font-size: 14px;
 	display: inline-block;
 	margin-bottom: 24px;
@@ -34,13 +29,9 @@ export const StoryDescription = styled.p`
 	max-height: 50%;
 	line-height: 1.5;
 	color: #363A4F;
-
-	&:last-of-type {
-		margin-bottom: 0;
-	}
 `;
 
-export const StorySectionLabel = styled.h4`
+export const SectionLabel = styled.h4`
 	font-size: 10px;
 	display: inline-block;
 	text-transform: uppercase;
@@ -50,33 +41,20 @@ export const StorySectionLabel = styled.h4`
 	font-weight: bold;
 `;
 
-export const StoryImgList = styled.div`
+export const RowList = styled.div`
 	display: flex;
 	overflow-x: scroll;
 	flex: 1 0 calc(15vh + 2px);
 `;
 
-export const StoryImg = styled.img`
-	max-height: 15vh;
-	width: auto;
-	border-radius: 2px;
-	display: inline-block;
-	margin-right: 8px;
 
-	background-color: #000000;
-
-	&:last-of-type {
-		margin-right: 0;
-	}
-`;
-
-export const StoryTagList = styled.ul`
+export const TagList = styled.ul`
 	list-style: none;
 	display: flex;
 	flex: 1 0 auto;
 `;
 
-export const StoryTag = styled.li`
+export const Tag = styled.li`
 	height: 24px;
 	padding: 0 12px;
 	line-height: 24px;
@@ -96,7 +74,7 @@ export const StoryTag = styled.li`
 	}
 `;
 
-export const StoryMeta = styled.div`
+export const Meta = styled.div`
   display: block;
   overflow: auto;
 `

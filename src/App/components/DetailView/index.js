@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import StoryView from '../StoryView';
-import ChatView from '../ChatView';
-import ChatInput from '../ChatInput';
+import ChatView from '../ChatView'
+import ChatInput from '../ChatInput'
+import actions from '../../../actions'
+import helpers from '../../../helpers'
 // eslint-disable-next-line
 import {  Header,
           ViewContainer,
@@ -12,49 +14,47 @@ import {  Header,
           NullText } from './style';
 
 class DetailView extends Component {
-  constructor(props){
-    super(props)
-    this.state = {
-      activeStory: {
-        id: 0
-      }
-    }
-  }
-  getActiveStory(){
-    var that = this;
-    let nullStory = Object.create({ content: { title: "Choose a story." }, creator: {}, id: 0 })
+  getActiveStory = () => {
     if (this.props.stories.stories){
-      return this.props.stories.stories.filter(function(story){
-       return story.id === that.props.stories.active;
-      })[0] || nullStory 
+      return this.props.stories.stories.filter((story) => {
+        return story.id === this.props.stories.active;
+      })[0] || ''
     } else {
-      return nullStory
+      return
     }
   }
-  componentDidUpdate() {
-    if (this.state.activeStory.id !== this.getActiveStory().id){
-      this.setState({
-        activeStory: this.getActiveStory()
-      })
+
+  deleteStory = () => {
+    const story = this.getActiveStory()
+    this.props.dispatch(actions.deleteStory(story.id))
+  }
+
+  toggleLockedStory = () => {
+    const story = this.getActiveStory()
+    this.props.dispatch(actions.toggleLockedStory(story))
+  }
+
+	render() {	
+    const story = this.getActiveStory()
+    let moderator, creator, locked
+    if (story) {
+      creator = helpers.isStoryCreator(story, this.props.user)
+      moderator = helpers.getStoryPermission(story, this.props.user, this.props.frequencies)
+      locked = story.locked ? story.locked : false
     }
-  }
-  componentWillMount() {
-    this.setState({
-      activeStory: this.getActiveStory()
-    })
-  }
-	render() {		
+
 		return(
 			<ViewContainer>
-				{ this.state.activeStory
-					? 
-            <LogicContainer>
-							<Header> 
-                <StoryTitle> {this.state.activeStory.content.title} </StoryTitle> 
-              </Header>
-							<StoryView activeStory={this.state.activeStory}/>
+				{ story
+					? <LogicContainer>
+							<Header>
+                <StoryTitle>{story.content.title}</StoryTitle>
+							</Header>
+              <StoryView activeStory={story} creator={creator} moderator={moderator} locked={locked} />
 							<ChatView />
-							<ChatInput />
+							{!story.locked &&
+                <ChatInput />
+              }
 						</LogicContainer>
 					: 
             <NullContainer>
@@ -68,7 +68,8 @@ class DetailView extends Component {
 
 const mapStateToProps = (state) => ({
   stories: state.stories,
-  frequencies: state.frequencies
+  frequencies: state.frequencies,
+  user: state.user
 })
 
 export default connect(mapStateToProps)(DetailView);
