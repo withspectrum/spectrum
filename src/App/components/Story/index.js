@@ -3,15 +3,10 @@ import { connect } from 'react-redux'
 // eslint-disable-next-line
 import { StoryWrapper, StoryBody, StoryHeader, Avatar, UserMeta, Name, Meta, UpvoteWrapper, UpvoteLabel, Title, Desc, Media } from './style';
 import actions from '../../../actions'
-import helpers from '../../../helpers'
 
 class Story extends Component{
   getUpvotes = () => {
     return Math.round(Math.random() * 150);
-  }
-
-  deleteStory = () => {
-    this.props.dispatch(actions.deleteStory(this.props.data.id))
   }
 
   upvote = (e) => {
@@ -29,8 +24,6 @@ class Story extends Component{
   }
 
 	render() {
-    const creator = helpers.isStoryCreator(this.props.data, this.props.user)
-    const moderator = helpers.getStoryPermission(this.props.data, this.props.user, this.props.frequencies)
     const story = this.props.data
 
 		return (
@@ -47,11 +40,6 @@ class Story extends Component{
 					  </UpvoteWrapper>
 					</StoryHeader>
 	    		<StoryBody>
-            { creator || moderator === "owner" // if the story was created by the current user, or is in a frequency the current user owns
-              ? <button onClick={this.deleteStory}>Delete Story</button>
-              : ''
-            }
-
 	    			<Title>{story.content.title}</Title>
             
             <Desc>{story.content.description}</Desc>

@@ -8,7 +8,7 @@ import helpers from './helpers'
 import * as firebase from 'firebase'
 import FIREBASE_CONFIG from './config/FirebaseConfig'
 import actions from './actions'
-import { Body, RootWrapper } from './App/style'
+import { Body } from './App/style'
 
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,

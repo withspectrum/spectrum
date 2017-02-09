@@ -169,10 +169,26 @@ export const deleteStory = (id) => (dispatch) => {
   })
 }
 
+export const toggleLockedStory = (story) => (dispatch) => {
+  const id = story.id
+  const locked = story.locked ? story.locked : false // if we haven't set a 'locked' status on the story, it defaults to false (which means people can write messages)
+
+  firebase.database().ref(`/stories/${id}`).update({
+    locked: !locked
+  })
+
+  dispatch({
+    type: 'TOGGLE_STORY_LOCK',
+    id,
+    locked
+  })
+}
+
 export default {
   setStories,
   upvote,
   createStory,
   setActiveStory,
-  deleteStory
+  deleteStory,
+  toggleLockedStory
 }
