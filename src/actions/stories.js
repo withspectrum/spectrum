@@ -20,22 +20,7 @@ export const setStories = () => (dispatch, getState) => {
         stories: storiesToReturn
       })
     })
-    /*
-    stories.orderByChild('frequency').on('value', function(snapshot) {
-      snapshot.forEach(function(story) {
-        let val = story.val()
-        let frequencyOfStory = val.frequency
-        if (usersFrequencies.indexOf(frequencyOfStory) > -1) {
-          storiesToReturn.push(story.val())
-        }
-      })
-
-   */
-    //})
-      //dispatch({
-        //type: 'SET_STORIES',
-        //stories: []
-      //})
+    
     return true;
   }
 
