@@ -53,6 +53,18 @@ export const setStories = () => (dispatch, getState) => {
   });
 }
 
+export const setActiveStory = (id) => (dispatch) => {
+  dispatch({
+    type: 'SET_ACTIVE_STORY',
+    id
+  })
+
+  dispatch({
+    type: 'CLEAR_MESSAGES',
+    mesages: ''
+  })
+}
+
 export const upvote = (storyId) => (dispatch, getState) => {
   const uid = getState().user.uid
   const upvote = {};
@@ -68,33 +80,8 @@ export const createStory = (frequency, title, description, file) => (dispatch, g
   let newStoryRef = firebase.database().ref().child(`stories`).push();
   const key = newStoryRef.key
 
-  // this if/else is messy. need to clean up in the future
-  if (file) {
-    let storage = firebase.storage().ref();
-    storage.child(`story/${file.name}`).put(file).then(function(snapshot) {
-      const imageUrl = snapshot.downloadURL
-      let storyData = {
-        id: key,
-        creator: {
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-          uid
-        },
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
-        content: {
-          title: title,
-          description: description,
-          media: imageUrl
-        },
-        frequency: frequency
-      }
-
-      newStoryRef.set(storyData, function(err){
-        console.log('err 1: ', err)
-      });
-    });
-  } else {
-    let storyData = {
+  function buildStoryData(imageUrl){
+    return {
       id: key,
       creator: {
         displayName: user.displayName,
@@ -105,36 +92,33 @@ export const createStory = (frequency, title, description, file) => (dispatch, g
       content: {
         title: title,
         description: description,
-        media: ''
+        media: imageUrl
       },
       frequency: frequency
     }
+  }
 
-    newStoryRef.set(storyData, function(err){
-      console.log('err 2: ', err)
+  let storyData = buildStoryData();
+  newStoryRef.set(storyData, function(err){
+    console.log('err 2: ', err)
+    setActiveStory(key)
+  });
+
+  if (file) {
+    // create a file storage ref
+    let storage = firebase.storage().ref();
+    storage.child(`story/${file.name}`).put(file).then(function(snapshot) {
+      const imageUrl = snapshot.downloadURL
+      let storyData = buildStoryData(imageUrl);
+      newStoryRef.update(storyData, function(err){
+        console.log('err 1: ', err)
+      });
     });
   }
 
   dispatch({
-    type: 'SET_ACTIVE_STORY',
-    key
-  })
-
-  dispatch({
     type: 'TOGGLE_COMPOSER_OPEN',
     isOpen: false
-  })
-}
-
-export const setActiveStory = (id) => (dispatch) => {
-  dispatch({
-    type: 'SET_ACTIVE_STORY',
-    id
-  })
-
-  dispatch({
-    type: 'CLEAR_MESSAGES',
-    mesages: ''
   })
 }
 
