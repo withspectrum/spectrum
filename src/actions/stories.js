@@ -11,7 +11,7 @@ export const setStories = () => (dispatch, getState) => {
     helpers.fetchStoriesForFrequencies(usersFrequencies).then(function(freq){
       freq.forEach(function(f){
         let a = helpers.hashToArray(f)
-        a.map(function(item){
+        a.forEach(function(item){
           storiesToReturn.push(item)
         })
       })
@@ -20,22 +20,6 @@ export const setStories = () => (dispatch, getState) => {
         stories: storiesToReturn
       })
     })
-    /*
-    stories.orderByChild('frequency').on('value', function(snapshot) {
-      snapshot.forEach(function(story) {
-        let val = story.val()
-        let frequencyOfStory = val.frequency
-        if (usersFrequencies.indexOf(frequencyOfStory) > -1) {
-          storiesToReturn.push(story.val())
-        }
-      })
-
-   */
-    //})
-      //dispatch({
-        //type: 'SET_STORIES',
-        //stories: []
-      //})
     return true;
   }
 
