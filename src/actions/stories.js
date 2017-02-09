@@ -154,9 +154,25 @@ export const setActiveStory = (id) => (dispatch) => {
   })
 }
 
+export const deleteStory = (id) => (dispatch) => {
+  firebase.database().ref(`/stories/${id}`).remove() // delete the story
+  firebase.database().ref(`/messages/${id}`).remove() // delete the messages for the story
+
+  dispatch({
+    type: 'DELETE_STORY',
+    id
+  })
+
+  dispatch({
+    type: 'CLEAR_MESSAGES',
+    messages: ''
+  })
+}
+
 export default {
   setStories,
   upvote,
   createStory,
-  setActiveStory
+  setActiveStory,
+  deleteStory
 }

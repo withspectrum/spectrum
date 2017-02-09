@@ -10,6 +10,10 @@ class Story extends Component{
     return Math.round(Math.random() * 150);
   }
 
+  deleteStory = () => {
+    this.props.dispatch(actions.deleteStory(this.props.data.id))
+  }
+
   upvote = (e) => {
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
@@ -43,13 +47,11 @@ class Story extends Component{
 					  </UpvoteWrapper>
 					</StoryHeader>
 	    		<StoryBody>
-            { creator &&
-              <p>I made dis</p>
+            { creator || moderator === "owner" // if the story was created by the current user, or is in a frequency the current user owns
+              ? <button onClick={this.deleteStory}>Delete Story</button>
+              : ''
             }
 
-            { moderator &&
-              <p>mod role: {moderator}</p>
-            }
 	    			<Title>{story.content.title}</Title>
             
             <Desc>{story.content.description}</Desc>

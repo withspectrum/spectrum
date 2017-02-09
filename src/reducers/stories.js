@@ -13,6 +13,10 @@ export default function root(state = initialState, action) {
 			return Object.assign({}, state, {
 				active: action.id
 			})
+		case 'DELETE_STORY': {
+			const stories = state.stories.slice().filter(story => story.id !== action.id)
+			return Object.assign({}, state, { stories })
+		}
 		default:
 			return state
 	}
