@@ -9,7 +9,25 @@ function setup(stateFetch){
 	}
 }
 
-export const setFrequencies = () => (dispatch) => {
+function saveFrequencies(newFrequencyKey, updatedData) {
+  // we need to see what frequencies the user has already:
+  let { database, state, uid } = setup(getState)
+  database.ref(`/users/${uid}/frequencies`).once('value').then(function(snapshot) {
+
+    let updatedFrequencies = snapshot.val() || [];
+    updatedFrequencies[newFrequencyKey] = {id: newFrequencyKey} // and push the new frequency
+    updatedData[`users/${uid}/frequencies`] = updatedFrequencies // add the frequency id to the user object
+
+    database.ref().update(updatedData, function(error) {
+      if (error) {
+        console.log("Error updating data:", error);
+      }
+    });
+  	setActiveFrequency(newFrequencyKey)
+  });
+}
+
+export const setFrequencies = () => (dispatch, getState) => {
   let { database } = setup(getState)
   let frequenciesRef = database.ref('frequencies');
 
@@ -53,24 +71,6 @@ export const addFrequency = (name) => (dispatch, getState) => {
 	updatedData["frequencies/" + newFrequencyKey] = newFrequencyData;
 
 	saveFrequencies(newFrequencyKey, updatedData)
-}
-
-function saveFrequencies(newFrequencyKey, updatedData) {
-  // we need to see what frequencies the user has already:
-  let { database, state, uid } = setup(getState)
-  database.ref(`/users/${uid}/frequencies`).once('value').then(function(snapshot) {
-
-    let updatedFrequencies = snapshot.val() || [];
-    updatedFrequencies[newFrequencyKey] = {id: newFrequencyKey} // and push the new frequency
-    updatedData[`users/${uid}/frequencies`] = updatedFrequencies // add the frequency id to the user object
-
-    database.ref().update(updatedData, function(error) {
-      if (error) {
-        console.log("Error updating data:", error);
-      }
-    });
-  	setActiveFrequency(newFrequencyKey)
-  });
 }
 
 export const setActiveFrequency = (id) => (dispatch) => {
