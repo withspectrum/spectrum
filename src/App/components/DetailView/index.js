@@ -4,17 +4,12 @@ import StoryView from '../StoryView';
 import ChatView from '../ChatView';
 import ChatInput from '../ChatInput';
 // eslint-disable-next-line
-import { Avatar,
-         AuthorName,
-         Header,
-         ViewContainer,
-         LogicContainer,
-         Media,
-         StoryMeta,
-         StoryTitle,
-         StoryDescription,
-         NullContainer,
-         NullText } from './style';
+import {  Header,
+          ViewContainer,
+          LogicContainer,
+          StoryTitle,
+          NullContainer,
+          NullText } from './style';
 
 class DetailView extends Component {
   constructor(props){
@@ -52,15 +47,17 @@ class DetailView extends Component {
 		return(
 			<ViewContainer>
 				{ this.state.activeStory
-					? <LogicContainer>
-							<Header>
-                <StoryTitle>{this.state.activeStory.content.title}</StoryTitle>
-							</Header>
-							<StoryView />
+					? 
+            <LogicContainer>
+							<Header> 
+                <StoryTitle> {this.state.activeStory.content.title} </StoryTitle> 
+              </Header>
+							<StoryView activeStory={this.state.activeStory}/>
 							<ChatView />
 							<ChatInput />
 						</LogicContainer>
-					: <NullContainer>
+					: 
+            <NullContainer>
 							<NullText>Choose a story to get started!</NullText>
 						</NullContainer>
 				}

@@ -1,28 +1,39 @@
 import React, { Component } from 'react';
-import { StoryWrapper, StoryP, StorySectionLabel, StoryStatic, StoryText, StoryImgList, StoryImg, StoryTagList, StoryTag } from './style';
+import {  StoryWrapper, 
+					StorySectionLabel, 
+					StoryStatic, 
+					StoryMeta, 
+					AuthorName, 
+					StoryDescription, 
+					Media, 
+					StoryImgList} from './style';
 
 export default class StoryView extends Component {
 	render() {
 		return(
 			<StoryWrapper>
 				<StoryMeta>
-				  <AuthorName>{this.state.activeStory.creator.displayName}</AuthorName>
+				  <AuthorName>{this.props.activeStory.creator.displayName}</AuthorName>
 				</StoryMeta>
-				<StoryDescription>{this.state.activeStory.content.description}</StoryDescription>
+				<StoryDescription>{this.props.activeStory.content.description}</StoryDescription>
+					{this.props.activeStory.content.media && this.props.activeStory.content.media !== ''
+						?
+							<StoryStatic>
+								<StorySectionLabel>Images</StorySectionLabel>
+								<StoryImgList>
+									<a href={this.props.activeStory.content.media} target="_blank"><Media src={this.props.activeStory.content.media} /></a>
+							  </StoryImgList>
+						  </StoryStatic>
+					  : 
+						  ''
+					}
 				<StoryStatic>
-					<StorySectionLabel>Images</StorySectionLabel>
-					<StoryImgList>
-						{this.state.activeStory.content.media && this.state.activeStory.content.media !== ''
-						  ? <a href={this.state.activeStory.content.media} target="_blank"><Media src={this.state.activeStory.content.media} /></a>
-						  : ''
-						}
-					</StoryImgList>
 					<StorySectionLabel>Tags</StorySectionLabel>
-					<StoryTagList>
-						<StoryTag>Design</StoryTag>
-						<StoryTag>iOS</StoryTag>
-						<StoryTag>Show n Tell</StoryTag>
-					</StoryTagList>
+					{/*<StoryTagList>
+						<StoryTag>design</StoryTag>
+						<StoryTag>ios</StoryTag>
+						<StoryTag>show-n-tell</StoryTag>
+					</StoryTagList>*/}
 				</StoryStatic>
 			</StoryWrapper>
 		)

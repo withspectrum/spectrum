@@ -10,7 +10,7 @@ export const StoryWrapper = styled.div`
 	padding: 24px;
 	padding-right: 0;
 	flex-direction: column;
-	border-bottom: 1px solid gray;
+	box-shadow: 0 4px 16px -8px black;
 	overflow-y: scroll;
 	z-index: 1;
 `;
@@ -26,7 +26,7 @@ export const StoryText = styled.div`
 	flex-direction: column;
 `;
 
-export const StoryP = styled.p`
+export const StoryDescription = styled.p`
 	font-size: 14px;
 	display: inline-block;
 	margin-bottom: 24px;
@@ -94,4 +94,25 @@ export const StoryTag = styled.li`
 	&:last-of-type {
 		margin-right: 0;
 	}
+`;
+
+export const StoryMeta = styled.div`
+  display: block;
+  overflow: auto;
+`
+
+export const AuthorName = styled.small`
+  display: block;
+  overflow: auto;
+  text-indent: 1rem;
+`
+
+export const Media = styled.img`
+	width: 100px;
+	margin: 8px 8px 0 0;
+	border-radius: 4px;
+  border: 2px solid transparent;
+  &:hover {
+    border-color: #4422ED;
+  }
 `;
