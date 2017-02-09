@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 // eslint-disable-next-line
-import { StoryWrapper, StoryBody, StoryHeader, Avatar, UserMeta, Name, Meta, UpvoteWrapper, UpvoteLabel, Title, Desc, Media } from './style';
+import { StoryWrapper, StoryBody, StoryHeader, Avatar, UserMeta, Name, Meta, UpvoteWrapper, UpvoteLabel, Title, Media } from './style';
 import { setActiveStory, upvote } from '../../../actions/stories'
 import { setMessages } from '../../../actions/messages'
 import { isStoryCreator, getStoryPermission } from '../../../helpers/stories'
@@ -49,17 +49,7 @@ class Story extends Component{
 					  </UpvoteWrapper>
 					</StoryHeader>
 	    		<StoryBody>
-            { creator &&
-              <p>I made dis</p>
-            }
-
-            { moderator &&
-              <p>mod role: {moderator}</p>
-            }
 	    			<Title>{this.props.data.content.title}</Title>
-            
-            <Desc>{this.props.data.content.description}</Desc>
-            
             {this.props.data.content.media && this.props.data.content.media !== ''
               ? <Media src={this.props.data.content.media} />
               : ''

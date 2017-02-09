@@ -38,9 +38,11 @@ export const StoryHeader = styled.div`
 `;
 
 export const Title = styled.p`
-	font-size: 14px;
-	font-weight: bold;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.6;
 	margin-bottom: 8px;
+	color: #171a21;
 `;
 
 export const Desc = styled.p`
