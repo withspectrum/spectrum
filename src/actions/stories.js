@@ -89,6 +89,10 @@ export const createStory = (frequency, title, description, file) => (dispatch, g
   let storyData = buildStoryData();
   newStoryRef.set(storyData, function(err){
     console.log('err 2: ', err)
+    dispatch({
+      type: 'SET_ACTIVE_STORY',
+      key
+    })
   });
 
   if (file) {
@@ -102,11 +106,6 @@ export const createStory = (frequency, title, description, file) => (dispatch, g
       });
     });
   }
-
-  dispatch({
-    type: 'SET_ACTIVE_STORY',
-    key
-  })
 
   dispatch({
     type: 'TOGGLE_COMPOSER_OPEN',
