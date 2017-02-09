@@ -11,7 +11,7 @@ export const setStories = () => (dispatch, getState) => {
     helpers.fetchStoriesForFrequencies(usersFrequencies).then(function(freq){
       freq.forEach(function(f){
         let a = helpers.hashToArray(f)
-        a.map(function(item){
+        a.forEach(function(item){
           storiesToReturn.push(item)
         })
       })
@@ -20,7 +20,6 @@ export const setStories = () => (dispatch, getState) => {
         stories: storiesToReturn
       })
     })
-    
     return true;
   }
 
