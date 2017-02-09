@@ -5,13 +5,24 @@ function setup(stateFetch){
 	return {
 		database: firebase.database(),
 		state: stateFetch(),
-		uid: this.state.user.uid
-	}
+    initState: function(){
+      this.user = this.state.user;
+      this.uid = this.state.user.uid;
+      return this;
+    }
+	}.initState()
+}
+
+export const setActiveFrequency = (id) => (dispatch) => {
+    dispatch({
+        type: 'SET_ACTIVE_FREQUENCY',
+        id: id
+    })
 }
 
 function saveFrequencies(newFrequencyKey, updatedData) {
   // we need to see what frequencies the user has already:
-  let { database, state, uid } = setup(getState)
+  let { database, uid } = setup({})
   database.ref(`/users/${uid}/frequencies`).once('value').then(function(snapshot) {
 
     let updatedFrequencies = snapshot.val() || [];
@@ -43,7 +54,7 @@ export const setFrequencies = () => (dispatch, getState) => {
 
 export const addFrequency = (name) => (dispatch, getState) => {
 	// generate a new entry in the frequencies collection with a key id
-	let { database, state, uid } = setup(getState)
+	let { database, uid } = setup(getState)
 	const newFrequencyRef = database.ref().child("frequencies").push();
 	const newFrequencyKey = newFrequencyRef.key
 
@@ -71,13 +82,6 @@ export const addFrequency = (name) => (dispatch, getState) => {
 	updatedData["frequencies/" + newFrequencyKey] = newFrequencyData;
 
 	saveFrequencies(newFrequencyKey, updatedData)
-}
-
-export const setActiveFrequency = (id) => (dispatch) => {
-    dispatch({
-        type: 'SET_ACTIVE_FREQUENCY',
-        id: id
-    })
 }
 
 export const subscribeFrequency = () => (dispatch, getState) => {
