@@ -8,6 +8,10 @@ export default function root(state = initialState, action) {
 			return Object.assign({}, state, {
 				messages: action.messages
 			})
+		case 'CLEAR_MESSAGES':
+			return Object.assign({}, state, {
+				messages: ''
+			})
 		case 'SEND_MESSAGE':
 			let newMessages = state.messages
 			console.log('new messages are: ', newMessages)

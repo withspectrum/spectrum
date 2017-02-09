@@ -47,14 +47,39 @@ export const getPublicFrequencies = (frequencies, user) => {
   return publicFrequencies
 }
 
-export const isCurrentFrequencyOwner = (frequency, user) => {
+export const getFrequencyPermission = (user, activeFrequency, frequencies) => {
   if (!user.uid) { return }
 
-  let keys = Object.keys(user.frequencies)
+  const uid = user.uid
+  if (activeFrequency !== "all") { // we wont' even show this if you're viewing all, so skip
+    const frequencyToEval = frequencies.filter((freq) => {
+      return freq.id === activeFrequency
+    })
 
-  if (keys.indexOf(frequency) > -1) {
-    return true
+    let frequencyUsers = frequencyToEval[0].users
+    if (frequencyUsers[uid]) { // make sure this user is viewing a frequency they have joined
+      const usersPerm = frequencyUsers[uid].permission
+      return usersPerm
+    } else {
+      return // the user isn't even part of the frequency
+    }
   } else {
-    return false
+    return
   }
+}
+
+export const getCurrentFrequency = (activeFrequency, frequencies) => {
+  if (activeFrequency === "all") { return }
+  const obj = frequencies.filter((freq) => {
+    return freq.id === activeFrequency
+  })
+  console.log('obj ', obj)
+  return obj[0]
+}
+
+export default {
+  getMyFrequencies,
+  getPublicFrequencies,
+  getFrequencyPermission,
+  getCurrentFrequency
 }

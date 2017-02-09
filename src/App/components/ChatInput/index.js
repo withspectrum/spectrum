@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { sendMessage } from '../../../actions/messages'
+import actions from '../../../actions'
 import { connect } from 'react-redux'
 import { Input, Form, Footer, Button } from './style'
 
@@ -23,7 +23,7 @@ class ChatInput extends Component {
 		const activeStory = this.props.stories.active
 		const message = this.state.message
 
-		this.props.dispatch(sendMessage(user, activeStory, message))
+		this.props.dispatch(actions.sendMessage(user, activeStory, message))
 		this.setState({
 			message: ''
 		})

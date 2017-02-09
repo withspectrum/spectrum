@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-// import StoryView from '../StoryView';
+import StoryView from '../StoryView';
 import ChatView from '../ChatView';
 import ChatInput from '../ChatInput';
 // eslint-disable-next-line
@@ -54,18 +54,9 @@ class DetailView extends Component {
 				{ this.state.activeStory
 					? <LogicContainer>
 							<Header>
-								<StoryMeta>
-                {this.state.activeStory.creator.photoURL ? <Avatar src={this.state.activeStory.creator.photoURL} />: ""}
-                  <StoryTitle>{this.state.activeStory.content.title}</StoryTitle>
-                  <AuthorName>{this.state.activeStory.creator.displayName}</AuthorName>
-                </StoryMeta>
-								<StoryDescription>{this.state.activeStory.content.description}</StoryDescription>
-                {this.state.activeStory.content.media && this.state.activeStory.content.media !== ''
-                  ? <a href={this.state.activeStory.content.media} target="_blank"><Media src={this.state.activeStory.content.media} /></a>
-                  : ''
-                }
+                <StoryTitle>{this.state.activeStory.content.title}</StoryTitle>
 							</Header>
-							
+							<StoryView />
 							<ChatView />
 							<ChatInput />
 						</LogicContainer>

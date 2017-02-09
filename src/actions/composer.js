@@ -5,3 +5,7 @@ export const toggleComposer = () => (dispatch, getState) => {
 		isOpen: !isOpen
 	})
 }
+
+export default {
+	toggleComposer
+}

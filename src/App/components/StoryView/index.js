@@ -5,20 +5,17 @@ export default class StoryView extends Component {
 	render() {
 		return(
 			<StoryWrapper>
-				<StoryText>
-					<StoryP>Yo. This is a paragraph inside the StoryDetail View. This is just a place to put a bunch of context about a set of images or maybe ask a question or voice an opinion or something.</StoryP>
-					<StoryP>Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...</StoryP>
-					<StoryP>We really don't want to be prescriptive about how people use it... 😁</StoryP>
-				</StoryText>
+				<StoryMeta>
+				  <AuthorName>{this.state.activeStory.creator.displayName}</AuthorName>
+				</StoryMeta>
+				<StoryDescription>{this.state.activeStory.content.description}</StoryDescription>
 				<StoryStatic>
 					<StorySectionLabel>Images</StorySectionLabel>
 					<StoryImgList>
-						<StoryImg src="/img/media.png" align="middle"/>
-						<StoryImg src="/img/media.png" align="middle"/>
-						<StoryImg src="/img/media.png" align="middle"/>
-						<StoryImg src="/img/media.png" align="middle"/>
-						<StoryImg src="/img/media.png" align="middle"/>
-						<StoryImg src="/img/media.png" align="middle"/>
+						{this.state.activeStory.content.media && this.state.activeStory.content.media !== ''
+						  ? <a href={this.state.activeStory.content.media} target="_blank"><Media src={this.state.activeStory.content.media} /></a>
+						  : ''
+						}
 					</StoryImgList>
 					<StorySectionLabel>Tags</StorySectionLabel>
 					<StoryTagList>

@@ -18,3 +18,8 @@ export const saveState = (state) => {
 		// errors here
 	}
 }
+
+export default {
+	loadState,
+	saveState
+}
