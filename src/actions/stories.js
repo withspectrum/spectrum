@@ -53,6 +53,18 @@ export const setStories = () => (dispatch, getState) => {
   });
 }
 
+export const setActiveStory = (id) => (dispatch) => {
+  dispatch({
+    type: 'SET_ACTIVE_STORY',
+    id
+  })
+
+  dispatch({
+    type: 'CLEAR_MESSAGES',
+    mesages: ''
+  })
+}
+
 export const upvote = (storyId) => (dispatch, getState) => {
   const uid = getState().user.uid
   const upvote = {};
@@ -89,10 +101,7 @@ export const createStory = (frequency, title, description, file) => (dispatch, g
   let storyData = buildStoryData();
   newStoryRef.set(storyData, function(err){
     console.log('err 2: ', err)
-    dispatch({
-      type: 'SET_ACTIVE_STORY',
-      key
-    })
+    setActiveStory(key)
   });
 
   if (file) {
@@ -110,18 +119,6 @@ export const createStory = (frequency, title, description, file) => (dispatch, g
   dispatch({
     type: 'TOGGLE_COMPOSER_OPEN',
     isOpen: false
-  })
-}
-
-export const setActiveStory = (id) => (dispatch) => {
-  dispatch({
-    type: 'SET_ACTIVE_STORY',
-    id
-  })
-
-  dispatch({
-    type: 'CLEAR_MESSAGES',
-    mesages: ''
   })
 }
 
