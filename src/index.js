@@ -17,7 +17,7 @@ const fbconfig = {
   messagingSenderId: FIREBASE_CONFIG.MESSAGING_SENDER_ID
 };
 
-const database = firebase.initializeApp(fbconfig)
+firebase.initializeApp(fbconfig)
 const localStorageState = helpers.loadState()
 const store = initStore(localStorageState)
 
