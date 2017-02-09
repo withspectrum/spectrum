@@ -8,6 +8,7 @@ import helpers from './helpers'
 import * as firebase from 'firebase'
 import FIREBASE_CONFIG from './config/FirebaseConfig'
 import actions from './actions'
+import { Body } from './App/style'
 
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,
@@ -29,11 +30,11 @@ const Root = () => {
 	return(
 		<Provider store={store}>
 			<BrowserRouter>
-				<div>
+				<Body>
 					<Match exactly pattern="/" component={App}/>
-					<Match pattern="/:frequency" component={App}/>
-					<Match pattern="/:frequency/:story" component={App}/>
-				</div>
+					<Match exactly pattern="/:frequency" component={App}/>
+					<Match exactly pattern="/:frequency/:story" component={App}/>
+				</Body>
 			</BrowserRouter>
 		</Provider>
 	)

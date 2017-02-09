@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 // eslint-disable-next-line
 import { StoryWrapper, StoryBody, StoryHeader, Avatar, UserMeta, Name, Meta, UpvoteWrapper, UpvoteLabel, Title, Desc, Media } from './style';
 import actions from '../../../actions'
-import helpers from '../../../helpers'
 
 class Story extends Component{
   getUpvotes = () => {
@@ -25,8 +24,6 @@ class Story extends Component{
   }
 
 	render() {
-    const creator = helpers.isStoryCreator(this.props.data, this.props.user)
-    const moderator = helpers.getStoryPermission(this.props.data, this.props.user, this.props.frequencies)
     const story = this.props.data
 
 		return (
@@ -43,13 +40,6 @@ class Story extends Component{
 					  </UpvoteWrapper>
 					</StoryHeader>
 	    		<StoryBody>
-            { creator &&
-              <p>I made dis</p>
-            }
-
-            { moderator &&
-              <p>mod role: {moderator}</p>
-            }
 	    			<Title>{story.content.title}</Title>
             
             <Desc>{story.content.description}</Desc>

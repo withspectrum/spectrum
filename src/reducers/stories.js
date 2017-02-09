@@ -13,6 +13,19 @@ export default function root(state = initialState, action) {
 			return Object.assign({}, state, {
 				active: action.id
 			})
+		case 'DELETE_STORY':
+			const stories = state.stories.slice().filter(story => story.id !== action.id)
+			return Object.assign({}, state, { stories })
+		case 'TOGGLE_STORY_LOCK':
+			const foo = state.stories.slice().map(story => {
+				if (story.id !== action.id) return story
+
+				return {
+					...story,
+					locked: !action.locked,
+				}
+			})
+			return Object.assign({}, state, { stories: foo })
 		default:
 			return state
 	}

@@ -73,7 +73,6 @@ export const getCurrentFrequency = (activeFrequency, frequencies) => {
   const obj = frequencies.filter((freq) => {
     return freq.id === activeFrequency
   })
-  console.log('obj ', obj)
   return obj[0]
 }
 

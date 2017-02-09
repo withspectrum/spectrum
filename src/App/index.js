@@ -25,7 +25,7 @@ class App extends Component {
     return true
   }
 
-  componentWillReceiveProps(nextProps, nextState) {
+  componentWillReceiveProps(nextProps) {
     const { dispatch, params } = this.props
 
     if (nextProps.params.frequency !== params.frequency) {

@@ -138,9 +138,41 @@ export const setActiveStory = (id) => (dispatch) => {
   })
 }
 
+export const deleteStory = (id) => (dispatch) => {
+  firebase.database().ref(`/stories/${id}`).remove() // delete the story
+  firebase.database().ref(`/messages/${id}`).remove() // delete the messages for the story
+
+  dispatch({
+    type: 'DELETE_STORY',
+    id
+  })
+
+  dispatch({
+    type: 'CLEAR_MESSAGES',
+    messages: ''
+  })
+}
+
+export const toggleLockedStory = (story) => (dispatch) => {
+  const id = story.id
+  const locked = story.locked ? story.locked : false // if we haven't set a 'locked' status on the story, it defaults to false (which means people can write messages)
+
+  firebase.database().ref(`/stories/${id}`).update({
+    locked: !locked
+  })
+
+  dispatch({
+    type: 'TOGGLE_STORY_LOCK',
+    id,
+    locked
+  })
+}
+
 export default {
   setStories,
   upvote,
   createStory,
-  setActiveStory
+  setActiveStory,
+  deleteStory,
+  toggleLockedStory
 }

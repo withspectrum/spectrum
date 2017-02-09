@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const StoryWrapper = styled.div`
 	display: inline-block;
+	width: calc(100% - 16px);
 	margin: 8px;
 	margin-bottom: 0;
 	flex: 0 0 auto;

@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 
 export const isStoryCreator = (story, user) => {
-  if (!user.uid) { return }
+  if (!user) { return }
 
 	let uid = user.uid
 	let creator = story.creator.uid
