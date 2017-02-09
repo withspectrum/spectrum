@@ -11,7 +11,7 @@ export const setStories = () => (dispatch, getState) => {
     helpers.fetchStoriesForFrequencies(usersFrequencies).then(function(freq){
       freq.forEach(function(f){
         let a = helpers.hashToArray(f)
-        a.map(function(item){
+        a.forEach(function(item){
           storiesToReturn.push(item)
         })
       })
@@ -20,22 +20,6 @@ export const setStories = () => (dispatch, getState) => {
         stories: storiesToReturn
       })
     })
-    /*
-    stories.orderByChild('frequency').on('value', function(snapshot) {
-      snapshot.forEach(function(story) {
-        let val = story.val()
-        let frequencyOfStory = val.frequency
-        if (usersFrequencies.indexOf(frequencyOfStory) > -1) {
-          storiesToReturn.push(story.val())
-        }
-      })
-
-   */
-    //})
-      //dispatch({
-        //type: 'SET_STORIES',
-        //stories: []
-      //})
     return true;
   }
 
@@ -101,20 +85,21 @@ export const createStory = (frequency, title, description, file) => (dispatch, g
       frequency: frequency
     }
   }
+
+  let storyData = buildStoryData();
+  newStoryRef.set(storyData, function(err){
+    console.log('err 2: ', err)
+  });
+
   if (file) {
     // create a file storage ref
     let storage = firebase.storage().ref();
     storage.child(`story/${file.name}`).put(file).then(function(snapshot) {
       const imageUrl = snapshot.downloadURL
       let storyData = buildStoryData(imageUrl);
-      newStoryRef.set(storyData, function(err){
+      newStoryRef.update(storyData, function(err){
         console.log('err 1: ', err)
       });
-    });
-  } else {
-    let storyData = buildStoryData('');
-    newStoryRef.set(storyData, function(err){
-      console.log('err 2: ', err)
     });
   }
 
