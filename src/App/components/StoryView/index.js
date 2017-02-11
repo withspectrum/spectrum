@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Lock, Delete } from '../../../shared/Icons'
 import {  Wrapper, 
 					SectionLabel, 
 					Section, 
@@ -33,8 +34,9 @@ export default class StoryView extends Component {
 					}
 					{ creator || moderator === "owner" // if the story was created by the current user, or is in a frequency the current user owns
             ? <div>
-                <button onClick={this.deleteStory}>Delete Story</button>
-                <label>{`${locked}`}
+                <button onClick={this.deleteStory}><Delete /> Delete Story</button>
+                <label>
+	                <Lock fill='url(#defaultGradient)' />
                   <input type="checkbox" onChange={this.toggleLockedStory} checked={locked} />
                 </label>
               </div>

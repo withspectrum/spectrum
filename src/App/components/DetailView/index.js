@@ -5,6 +5,7 @@ import ChatView from '../ChatView'
 import ChatInput from '../ChatInput'
 import actions from '../../../actions'
 import helpers from '../../../helpers'
+
 // eslint-disable-next-line
 import {  Header,
           ViewContainer,
