@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 
-const maxWidth = "480px"
+const maxWidth = "640px"
 export const modalStyles = {
   overlay: {
     backgroundColor: 'rgba(0,0,0,0.40)'
@@ -24,8 +24,12 @@ export const modalStyles = {
 }
 
 export const Section = styled.section`
-  width: 100%;
+  width: ${props => props.width ? props.width : "100%"};
   text-align: ${props => props.centered ? 'center' : 'auto'};
+
+  @media all and (max-width: 600px) {
+    width: 100%;
+  }
 `
 
 export const SectionAlert = styled(Section)`
@@ -35,6 +39,13 @@ export const SectionAlert = styled(Section)`
   font-weight: 600;
   font-size: 0.875rem;
   text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  margin: 1rem auto 0.5rem;
+
+  @media all and (max-width: 600px) {
+    margin-top: 0;
+    border-radius: 0;
+  }
 `
 
 export const Badge = styled.div`
@@ -54,7 +65,7 @@ export const Padding = styled.span`
 `
 
 export const Heading = styled.h2`
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.2px;
@@ -67,4 +78,12 @@ export const Subheading = styled.h4`
   font-weight: 500;
   line-height: 1.3;
   color: rgba(23, 26, 33, 0.8);
+`
+
+export const Flex = styled.div`
+  display: flex;
+
+  @media all and (max-width: 600px) {
+    flex-direction: column;
+  }
 `

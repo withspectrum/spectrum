@@ -6,7 +6,7 @@ import axios from 'axios'
 import actions from '../../../actions'
 import { connect } from 'react-redux'
 import { ButtonPrimary } from '../../buttons'
-import { modalStyles, Section, SectionAlert, Badge, Heading, Subheading, Padding } from './style'
+import { modalStyles, Section, SectionAlert, Badge, Heading, Subheading, Flex, Padding } from './style'
 
 
 class ProModal extends React.Component {
@@ -45,33 +45,35 @@ class ProModal extends React.Component {
 			  closeTimeoutMS={330}>
 
 			  <ModalContainer title={"Upgrade"} hideModal={this.hideModal}>
-					<SectionAlert centered={true}>
+					<SectionAlert width={"calc(100% - 2rem)"} centered={true}>
 						<Badge>Limited Time</Badge> 
 						<Padding padding={"0.5rem 1rem"}>
 							During beta, Pro subscriptions are just $5 per month ($10/mo after beta).
 						</Padding>
 					</SectionAlert>
 
-					<Section centered={true}>
-						<Padding padding={"1rem"}>
-							<Heading>Save Stories</Heading>
-							<Subheading>Save any stories to a private collection, making it easier to find the things that matter most.</Subheading>
-						</Padding>
-					</Section>
+					<Flex>
+						<Section width={"33%"} centered={true}>
+							<Padding padding={"1rem"}>
+								<Heading>Save Stories</Heading>
+								<Subheading>Save any stories to a private collection, making it easier to find the things that matter most.</Subheading>
+							</Padding>
+						</Section>
 
-					<Section centered={true}>
-						<Padding padding={"1rem"}>
-							<Heading>Follow People</Heading>
-							<Subheading>Get updates whenever someone important to you posts a new public story.</Subheading>
-						</Padding>
-					</Section>
+						<Section width={"33%"} centered={true}>
+							<Padding padding={"1rem"}>
+								<Heading>Follow People</Heading>
+								<Subheading>Get updates whenever someone important to you posts a new public story.</Subheading>
+							</Padding>
+						</Section>
 
-					<Section centered={true}>
-						<Padding padding={"1rem"}>
-							<Heading>Show it Off</Heading>
-							<Subheading>A new <em>Pro</em> badge will find itself attached to your name, wherever you go on Spectrum.</Subheading>
-						</Padding>
-					</Section>
+						<Section width={"33%"} centered={true}>
+							<Padding padding={"1rem"}>
+								<Heading>Show it Off</Heading>
+								<Subheading>A new <em>Pro</em> badge will find itself attached to your name, wherever you go on Spectrum.</Subheading>
+							</Padding>
+						</Section>
+					</Flex>
 
 					<Section centered={true}>
 						<Padding padding={"1rem 1rem 2rem 1rem"}>
