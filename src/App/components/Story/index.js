@@ -34,10 +34,6 @@ class Story extends Component{
 					    <Name>{story.creator.displayName}</Name>
 					    <Meta>Just now • {story.message_count} Messages</Meta>
 					  </UserMeta>
-					  <UpvoteWrapper onClick={this.upvote}>
-              <UpvoteLabel>&#9650;</UpvoteLabel>
-					  	<UpvoteLabel>{this.getUpvoteCount()}</UpvoteLabel>
-					  </UpvoteWrapper>
 					</StoryHeader>
 	    		<StoryBody>
 	    			<Title>{this.props.data.content.title}</Title>
