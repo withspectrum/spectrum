@@ -5,7 +5,7 @@ export const Body = styled.div`
   overflow: hidden;
   height: 100%;
   width: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 `;
 
 export const RootWrapper = styled.div`

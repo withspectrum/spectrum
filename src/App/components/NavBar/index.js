@@ -24,6 +24,10 @@ class NavBar extends Component{
     this.props.dispatch(actions.signOut())
   }
 
+  goPro = () => {
+    this.props.dispatch(actions.showProModal())
+  }
+
   updateFrequencyName = (e) => {
     this.setState({
       frequencyName: e.target.value
@@ -52,77 +56,77 @@ class NavBar extends Component{
 
     return(
       <Column>
-          { this.props.user.uid
-            ? 
-              <Header>
-                <Avatar src={this.props.user.photoURL} title="Bryn Jackson" />
-                <MetaWrapper>
-                  <Name>{this.props.user.displayName}</Name> 
-                  <MetaLink onClick={this.signOut}>Sign Out</MetaLink>
-                </MetaWrapper>
-              </Header>
-            : 
-              <Header login>
-                <HeaderLogo src="/img/logo.png" role="presentation"/>
-              </Header>
-          }
-          <FreqList>
-            <FreqListHeading>My Frequencies</FreqListHeading>
-            
-            <Link to="/">
-              <Freq active={this.props.frequencies.active === 'all'}>
-                <FreqIcon src="/img/everything-icon.svg"/>
-                <FreqLabel>Everything</FreqLabel>
-              </Freq>
-            </Link>
-
-            { myFrequencies &&
-              myFrequencies.map((frequency, i) => {                
-                return (
-                  <Link to={`/${frequency.id}`} key={i}>
-                    <Freq 
-                      active={frequency.id === activeFrequency}>
-                      <FreqIcon src="/img/freq-icon.svg"/>
-                      <FreqLabel>{ frequency.name }</FreqLabel>
-                    </Freq>
-                  </Link>
-                )
-              })
-            }
-            
-            <FreqListHeading style={{marginTop:"16px"}}>Other Frequencies</FreqListHeading>
-            { publicFrequencies &&
-              publicFrequencies.map((frequency, i) => {
-                return (
-                  <Link to={`/${frequency.id}`} key={i}>
-                    <Freq 
-                      key={i} 
-                      onClick={this.setActiveFrequency} 
-                      id={frequency.id}
-                      active={frequency.id === activeFrequency}>
-                      <FreqIcon src="/img/freq-icon.svg"/>
-                      <FreqLabel>{ frequency.name }</FreqLabel>
-                    </Freq>
-                  </Link>
-                )
-              })
-            }
-          </FreqList>
-          <Form onSubmit={this.addFrequency}>
-            <Input type="text" onChange={this.updateFrequencyName} value={this.state.frequencyName} placeholder="+ Create a Frequency" />            
-            <Button type="submit">~</Button>
-          </Form>
+        { this.props.user.uid
+          ? 
+            <Header>
+              <Avatar src={this.props.user.photoURL} title="Bryn Jackson" />
+              <MetaWrapper>
+                <Name>{this.props.user.displayName}</Name> 
+                <MetaLink onClick={this.goPro}>Upgrade to Pro</MetaLink>                  
+                <MetaLink onClick={this.signOut}>Sign Out</MetaLink>                  
+              </MetaWrapper>
+            </Header>
+          : 
+            <Header login>
+              <HeaderLogo src="/img/logo.png" role="presentation"/>
+            </Header>
+        }
+        <FreqList>
+          <FreqListHeading>My Frequencies</FreqListHeading>
           
-          <Footer>
-            <FooterLogo src="/img/mark.svg" />
-            <MetaWrapper>
-              <FooterMeta>© 2017 Spec Network, Inc.</FooterMeta>
-              <FooterMeta>
-                <MetaLink href="https://spec.fm/about"> About</MetaLink>&nbsp;·&nbsp;<MetaLink href="mailto:spectrum@spec.fm">Contact</MetaLink>
-              </FooterMeta>
-            </MetaWrapper>
-          </Footer>
+          <Link to="/">
+            <Freq active={this.props.frequencies.active === 'all'}>
+              <FreqIcon src="/img/everything-icon.svg"/>
+              <FreqLabel>Everything</FreqLabel>
+            </Freq>
+          </Link>
 
+          { myFrequencies &&
+            myFrequencies.map((frequency, i) => {                
+              return (
+                <Link to={`/${frequency.id}`} key={i}>
+                  <Freq 
+                    active={frequency.id === activeFrequency}>
+                    <FreqIcon src="/img/freq-icon.svg"/>
+                    <FreqLabel>{ frequency.name }</FreqLabel>
+                  </Freq>
+                </Link>
+              )
+            })
+          }
+          
+          <FreqListHeading style={{marginTop:"16px"}}>Other Frequencies</FreqListHeading>
+          { publicFrequencies &&
+            publicFrequencies.map((frequency, i) => {
+              return (
+                <Link to={`/${frequency.id}`} key={i}>
+                  <Freq 
+                    key={i} 
+                    onClick={this.setActiveFrequency} 
+                    id={frequency.id}
+                    active={frequency.id === activeFrequency}>
+                    <FreqIcon src="/img/freq-icon.svg"/>
+                    <FreqLabel>{ frequency.name }</FreqLabel>
+                  </Freq>
+                </Link>
+              )
+            })
+          }
+        </FreqList>
+        <Form onSubmit={this.addFrequency}>
+          <Input type="text" onChange={this.updateFrequencyName} value={this.state.frequencyName} placeholder="+ Create a Frequency" />            
+          <Button type="submit">~</Button>
+        </Form>
+        
+        <Footer>
+          <FooterLogo src="/img/mark.svg" />
+          <MetaWrapper>
+            <FooterMeta>© 2017 Spec Network, Inc.</FooterMeta>
+            <FooterMeta>
+              <MetaLink href="https://spec.fm/about"> About</MetaLink>&nbsp;·&nbsp;<MetaLink href="mailto:spectrum@spec.fm">Contact</MetaLink>
+            </FooterMeta>
+          </MetaWrapper>
+        </Footer>
       </Column>
     )
   }
