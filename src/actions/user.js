@@ -88,7 +88,8 @@ export const getUserSubscriptions = () => (dispatch, getState) => {
             name: subscription.plan.name,
             status: subscription.status,
             current_period_start: subscription.current_period_start,
-            current_period_end: subscription.current_period_end
+            current_period_end: subscription.current_period_end,
+            id: subscription.id
           })
         })
 
