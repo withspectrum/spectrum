@@ -4,6 +4,7 @@ import messageActions from './messages'
 import frequencyActions from './frequencies'
 import composerActions from './composer'
 import modalActions from './modals'
+import galleryActions from './gallery'
 
 export default Object.assign({},
 	userActions,
@@ -11,5 +12,6 @@ export default Object.assign({},
 	messageActions,
 	frequencyActions,
 	composerActions,
-	modalActions
+	modalActions,
+	galleryActions
 )

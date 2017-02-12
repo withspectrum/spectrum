@@ -38,6 +38,12 @@ class DetailView extends Component {
     this.props.dispatch(actions.toggleLockedStory(story))
   }
 
+  showGallery = (e) => {
+    let arr = []
+    arr.push(e.target.src)
+    this.props.dispatch(actions.showGallery(arr))
+  }
+
 	render() {	
     const story = this.getActiveStory()
     let moderator, creator, locked
@@ -59,7 +65,7 @@ class DetailView extends Component {
                 </StoryMeta>
 								<StoryDescription>{story.content.description}</StoryDescription>
                 {story.content.media && story.content.media !== ''
-                  ? <a href={story.content.media} target="_blank"><Media src={story.content.media} /></a>
+                  ? <Media onClick={this.showGallery} src={story.content.media} />
                   : ''
                 }
 
