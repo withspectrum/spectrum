@@ -1,20 +1,46 @@
-import React, { Component } from 'react';
-import { Lock, Delete } from '../../../shared/Icons'
+import React, { Component } from 'react'
+import { connect } from 'react-redux' 
+import { Lock, Unlock, Delete } from '../../../shared/Icons'
 import {  Wrapper, 
 					SectionLabel, 
 					Section, 
 					Meta, 
 					AuthorName, 
 					Description, 
-					Media, 
+					Media,
+					Button,
+					HiddenInput, 
 					RowList} from './style';
+import actions from '../../../actions'
 
-export default class StoryView extends Component {
+class StoryView extends Component {
+	getActiveStory = () => {
+    if (this.props.stories.stories){
+      return this.props.stories.stories.filter((story) => {
+        return story.id === this.props.stories.active;
+      })[0] || ''
+    } else {
+      return
+    }
+  }
+	
+	deleteStory = () => {
+    const story = this.getActiveStory()
+    this.props.dispatch(actions.deleteStory(story.id))
+  }
+
+  toggleLockedStory = () => {
+    const story = this.getActiveStory()
+    this.props.dispatch(actions.toggleLockedStory(story))
+  }
+
 	render() {
 		const story = this.props.activeStory
 		const creator = this.props.creator
 		const moderator = this.props.moderator
 		const locked = this.props.locked
+
+
 		return(
 			<Wrapper>
 				<Meta>
@@ -34,23 +60,27 @@ export default class StoryView extends Component {
 					}
 					{ creator || moderator === "owner" // if the story was created by the current user, or is in a frequency the current user owns
             ? <div>
-                <button onClick={this.deleteStory}><Delete /> Delete Story</button>
+                <Button onClick={this.deleteStory}><Delete /></Button>
                 <label>
-	                <Lock />
-                  <input type="checkbox" onChange={this.toggleLockedStory} checked={locked} />
+                	{locked ?
+                		<Lock />
+                	:
+                		<Unlock />
+                	}
+                  <HiddenInput type="checkbox" onChange={this.toggleLockedStory} checked={locked} />
                 </label>
               </div>
             : ''
           }
-				{/*<StoryStatic>
-					<StorySectionLabel>Tags</StorySectionLabel>
-					<StoryTagList>
-						<StoryTag>design</StoryTag>
-						<StoryTag>ios</StoryTag>
-						<StoryTag>show-n-tell</StoryTag>
-					</StoryTagList>
-				</StoryStatic>*/}
 			</Wrapper>
 		)
 	}
 }
+
+const mapStateToProps = (state) => ({
+  stories: state.stories,
+  frequencies: state.frequencies,
+  user: state.user
+})
+
+export default connect(mapStateToProps)(StoryView);

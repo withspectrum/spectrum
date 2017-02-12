@@ -5,9 +5,10 @@ export const Wrapper = styled.div`
 	flex: 0 0 auto;
 	background-color: #ffffff;
 	padding: 24px;
+	max-height: 50vh;
 	flex-direction: column;
 	box-shadow: 0 4px 16px -8px black;
-	overflow-y: scroll;
+	overflow-y: auto;
 	z-index: 1;
 `;
 
@@ -21,7 +22,6 @@ export const Description = styled.p`
 	font-size: 16px;
 	display: inline-block;
 	margin-bottom: 24px;
-	max-height: 50%;
 	line-height: 1.6;
 	color: #363A4F;
 `;
@@ -39,7 +39,7 @@ export const SectionLabel = styled.h4`
 export const RowList = styled.div`
 	display: flex;
 	overflow-x: scroll;
-	flex: 1 0 calc(15vh + 2px);
+	flex: 0 0 15%;
 `;
 
 
@@ -74,10 +74,11 @@ export const Meta = styled.div`
   overflow: auto;
 `
 
-export const AuthorName = styled.small`
-  display: block;
-  overflow: auto;
-  text-indent: 1rem;
+export const AuthorName = styled.span`
+  display: inline-block;
+  font-size: 12px;
+  color: #c2c2c2;
+  margin-bottom: 16px;
 `
 
 export const Media = styled.img`
@@ -89,3 +90,11 @@ export const Media = styled.img`
     border-color: #4422ED;
   }
 `;
+
+export const HiddenInput = styled.input`
+	display: none;
+`;
+
+export const Button = styled.button`
+	background-color: #ffffff;
+`

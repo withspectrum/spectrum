@@ -1,32 +1,36 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export const Fills = (props) => {
-	const gradientStart = props.gradientStart || '#000000'
-	const gradientEnd = props.gradientEnd || '#000000'
-
-	return(
-	<defs>
-		<radialGradient id="defaultGradient"
-			fx="0%" fy="0%" r="100%"
-			spreadMethod="pad">
-			<stop offset="0%" stopColor={gradientStart} stopOpacity="1" />
-			<stop offset="0%" stopColor={gradientEnd} stopOpacity="1" />
-		</radialGradient>
-	</defs>
-	)
-}
-
 export const Delete = (props) => {
-	const fill = props.fill || '#000000'
+	const gradientStart = props.gradientStart || '#E2197A'
+	const gradientEnd = props.gradientEnd || '#E3353C'
+	const IconDelete = styled.svg`
+		fill: #cccccc;
+		transition: all 0.2s ease-out;
+
+		&:hover {
+			fill: url(#deleteGradient)
+			transform: scale(1.1);
+			transition: all 0.2s ease-in;
+			cursor: pointer;
+		}
+	`;
 	return(
-		<svg fill={fill} viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="delete" aria-labelledby="title" xmlns="http://www.w3.org/2000/svg">
+		<IconDelete viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="delete" aria-labelledby="title" xmlns="http://www.w3.org/2000/svg">
 			<title id='title'>Delete</title>
+			<defs>
+				<radialGradient id="deleteGradient"
+					fx="0%" fy="0%" r="100%"
+					spreadMethod="pad">
+					<stop offset="0%" stopColor={gradientStart} stopOpacity="1" />
+					<stop offset="100%" stopColor={gradientEnd} stopOpacity="1" />
+				</radialGradient>
+			</defs>
 			<path d="M8.391 12.32c-.636-.131-1.248.368-1.213 1.016.808 14.714 1.271 14.711 7.681 14.669C15.22 28.003 15.6 28 16 28s.78.003 1.141.005c6.41.042 6.873.045 7.681-14.669.035-.648-.577-1.147-1.212-1.016a.975.975 0 0 0-.784.896c-.17 3.094-.323 5.51-.519 7.407-.266 2.584-.588 3.883-.95 4.566-.225.426-.422.586-1.067.701-.716.128-1.615.123-3.019.115h-.002a161.358 161.358 0 0 0-2.538 0h-.001c-1.405.008-2.304.013-3.02-.115-.645-.115-.842-.275-1.067-.701-.362-.683-.684-1.982-.95-4.566-.196-1.897-.349-4.313-.519-7.407a.975.975 0 0 0-.783-.896z"/>
 			<path d="M6 10a1 1 0 0 1 1-1h18a1 1 0 0 1 0 2H7a1 1 0 0 1-1-1z" fillRule="nonzero"/>
 			<path d="M12.25 7.973C12.112 8.185 12 8.5 12 9h-2c0-.81.186-1.525.576-2.121.366-.536.963-1.006 1.525-1.271C13.24 5.087 14.687 5 16 5c1.313 0 2.76.087 3.899.608.562.265 1.158.735 1.525 1.271C21.814 7.475 22 8.19 22 9h-2c0-.5-.112-.815-.25-1.027-.161-.272-.324-.388-.684-.546C18.36 7.103 17.306 7 16 7c-1.306 0-2.36.103-3.066.427-.36.158-.523.274-.684.546z"/>
 			<path d="M12.044 14.086a1 1 0 1 1 1.998-.087l.349 7.992a1 1 0 0 1-1.998.087l-.349-7.992zM17.956 13.999a1 1 0 0 1 1.998.087l-.348 7.993a1 1 0 0 1-1.999-.088l.349-7.992z" fillRule="nonzero"/>
-		</svg>
+		</IconDelete>
 	)
 }
 
@@ -64,12 +68,14 @@ export const Lock = (props) => {
 	const gradientStart = props.gradientStart || '#E2197A'
 	const gradientEnd = props.gradientEnd || '#E3353C'
 	const IconLock = styled.svg`
-		fill: ${props => props.reverse ? 'rgba(255,255,255,0.4' : 'rgba(0,0,0,0.4' };
-		transition: fill 0.2s;
+		fill: #cccccc;
+		transition: all 0.2s ease-out;
 
 		&:hover {
-			fill: url(#defaultGradient);
-			transition: fill 0.2s;
+			fill: url(#lockGradient)
+			transform: scale(1.1);
+			transition: all 0.2s ease-in;
+			cursor: pointer;
 		}
 	`;
 
@@ -77,7 +83,7 @@ export const Lock = (props) => {
 		<IconLock viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="lock" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
 			<title id='title'>Lock</title>
 			<defs>
-				<radialGradient id="defaultGradient"
+				<radialGradient id="lockGradient"
 					fx="0%" fy="0%" r="100%"
 					spreadMethod="pad">
 					<stop offset="0%" stopColor={gradientStart} stopOpacity="1" />
@@ -90,19 +96,38 @@ export const Lock = (props) => {
 }
 
 export const Unlock = (props) => {
-	const fill = props.fill || '#000000'
+	const gradientStart = props.gradientStart || '#3818e5'
+	const gradientEnd = props.gradientEnd || '#7B16FF'
+	const IconUnlock = styled.svg`
+		fill: #cccccc;
+		transition: all 0.2s ease-out;
+
+		&:hover {
+			fill: url(#unlockGradient)
+			transform: scale(1.1);
+			transition: all 0.2s ease-in;
+			cursor: pointer;
+		}
+	`;
 	return(
-		<svg fill={fill} viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="unlock" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
+		<IconUnlock viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="unlock" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
 			<title id='title'>Lock</title>
+			<defs>
+				<radialGradient id="unlockGradient"
+					fx="0%" fy="0%" r="100%"
+					spreadMethod="pad">
+					<stop offset="0%" stopColor={gradientStart} stopOpacity="1" />
+					<stop offset="100%" stopColor={gradientEnd} stopOpacity="1" />
+				</radialGradient>
+			</defs>
 			<path d="M16 5c1.479-.001 2.44.041 3.195.238.606.15.826.343.976.551.208.291.452.872.614 2.111.146 1.108.202 2.492.213 4.316C19.693 12.052 18.055 12 16 12c-9 0-10 1-10 8s1 8 10 8 10-1 10-8c0-4.444-.403-6.47-3-7.357C22.976 3.973 22.043 3 16 3c-5.168 0-6.599.712-6.919 6.342-.036.626.582 1.092 1.199.982a.957.957 0 0 0 .796-.88c.033-.571.078-1.082.14-1.544.162-1.239.405-1.82.613-2.111.15-.208.37-.401.976-.551C13.56 5.041 14.521 4.999 16 5zM8.251 16.222C8.046 17.134 7.999 18.295 8 20c-.001 1.705.046 2.866.251 3.778.173.795.41 1.111.64 1.299.283.231.836.499 2.045.679 1.248.19 2.85.244 5.064.244s3.816-.054 5.064-.244c1.209-.18 1.762-.448 2.044-.679.231-.188.468-.504.641-1.299.205-.912.251-2.073.251-3.778s-.046-2.866-.251-3.778c-.173-.795-.41-1.11-.641-1.299-.282-.231-.835-.499-2.044-.679C19.816 14.054 18.214 14 16 14s-3.816.054-5.064.244c-1.209.18-1.762.448-2.045.679-.23.189-.467.504-.64 1.299zM17 20.733a2 2 0 1 0-2 0V22a1 1 0 0 0 2 0v-1.267z"/>
-		</svg>
+		</IconUnlock>
 	)
 }
 
 export const NewPost = (props) => {
-	const fill = props.fill || '#000000'
 	return(
-		<svg fill={fill} viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="newPost" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
+		<svg viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="newPost" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
 			<title id='title'>New Post</title>
 			<path d="M16 6c5.1 0 7.247.575 8.336 1.664C25.425 8.753 26 10.9 26 16s-.575 7.247-1.664 8.336C23.247 25.425 21.1 26 16 26s-7.247-.575-8.336-1.664C6.575 23.247 6 21.1 6 16s.575-7.247 1.664-8.336C8.753 6.575 10.9 6 16 6zm0-2c10 0 12 2 12 12s-2 12-12 12S4 26 4 16 6 4 16 4zm-1 8a1 1 0 0 1 2 0v3h3a1 1 0 0 1 0 2h-3v3a1 1 0 0 1-2 0v-3h-3a1 1 0 0 1 0-2h3v-3z"/>
 		</svg>

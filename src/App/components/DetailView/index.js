@@ -25,16 +25,6 @@ class DetailView extends Component {
     }
   }
 
-  deleteStory = () => {
-    const story = this.getActiveStory()
-    this.props.dispatch(actions.deleteStory(story.id))
-  }
-
-  toggleLockedStory = () => {
-    const story = this.getActiveStory()
-    this.props.dispatch(actions.toggleLockedStory(story))
-  }
-
 	render() {	
     const story = this.getActiveStory()
     let moderator, creator, locked
