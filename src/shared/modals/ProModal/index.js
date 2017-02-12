@@ -6,14 +6,19 @@ import axios from 'axios'
 import actions from '../../../actions'
 import { connect } from 'react-redux'
 import { ButtonPrimary } from '../../buttons'
-import { modalStyles, Section, SectionAlert, Badge, Heading, Subheading, Flex, Padding } from './style'
+import { ButtonLabel, modalStyles, Section, SectionAlert, SectionError, Badge, Heading, Subheading, Flex, Padding, Spinner } from './style'
 
 
 class ProModal extends React.Component {
 	constructor(props) {
 		super(props)
 
-		this.state = { isOpen: props.isOpen }
+		this.state = { 
+			isOpen: props.isOpen,
+			error: null,
+			errorCount: 0,
+			loading: false
+		}
 	}
 
 	hideModal = () => {
@@ -25,12 +30,28 @@ class ProModal extends React.Component {
 	}
 
   onToken = (token) => {
+  	this.setState({
+  		loading: true
+  	})
+
     axios.post('http://localhost:3001/customer/create', {token: JSON.stringify(token)})
-    .then(function (response) {
-      console.log(response);
+    .then((response) => {
+      if (!response.data.success && response.data.error) {
+      	// there was an error on the backend processing the card - likely a card failure
+      	this.setState({
+      		error: response.data.error,
+      		errorCount: 1,
+      		loading: false
+      	})
+      }
+
+      if (response.data.success) {
+      	// if the customer and subscription were created successfully
+      	this.props.dispatch(actions.upgradeUser())
+      }
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch((error) => {
+      // something went wrong with the stripe form, not an error from the backend
     });
   }
 
@@ -76,7 +97,7 @@ class ProModal extends React.Component {
 					</Flex>
 
 					<Section centered={true}>
-						<Padding padding={"1rem 1rem 2rem 1rem"}>
+						<Padding padding={"1rem"}>
 							<StripeCheckout
 			          token={this.onToken}
 			          stripeKey="pk_test_A6pKi4xXOdgg9FrZJ84NW9mP"
@@ -86,9 +107,25 @@ class ProModal extends React.Component {
 			          amount={500}
 			          currency="USD">
 
-				          <ButtonPrimary large>Upgrade to Pro</ButtonPrimary>
+								<ButtonPrimary large loading={this.state.loading}>
+	          			<ButtonLabel loading={this.state.loading}>
+	          				{this.state.errorCount ? "Try Again" : "Upgrade to Pro" }
+	          				</ButtonLabel>
+									<Spinner size={'16'} loading={this.state.loading} />
+			          </ButtonPrimary>
+
 			        </StripeCheckout>
 			      </Padding>
+
+			      <SectionError 
+							width={"100%"} 
+							centered={true}
+							error={this.state.error}
+						>							
+							<Padding padding={"1rem"}>
+								{ this.state.error } Please try again.
+							</Padding>
+						</SectionError>
 	        </Section>
 	      </ModalContainer>
 		  </Modal>

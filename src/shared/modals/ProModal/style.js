@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
 
 const maxWidth = "640px"
@@ -48,6 +48,18 @@ export const SectionAlert = styled(Section)`
   }
 `
 
+export const SectionError = styled(SectionAlert)`
+  border-radius: 0 0 4px 4px;
+  background: radial-gradient(ellipse farthest-corner at top left , #ff7600 0%, #fa0202 100%);
+  height: ${props => props.error ? 'auto' : '0px'};
+  overflow: ${props => props.error ? 'visible' : 'hidden'};
+  transition: all 0.2s ease-out;
+  margin-bottom: 0;
+  position: relative;
+  top: 1px;
+`
+
+
 export const Badge = styled.div`
   text-transform: uppercase;
   font-size: 0.675rem;
@@ -86,4 +98,35 @@ export const Flex = styled.div`
   @media all and (max-width: 600px) {
     flex-direction: column;
   }
+`
+
+const rotate = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+export const Spinner = styled.div`
+  margin: 0 auto;
+  opacity: ${props => props.loading ? '1' : '0'};
+  height: ${props => props.size ? props.size + 'px' : '1rem'};
+  width: ${props => props.size ? props.size + 'px' : '1rem'};
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0);
+  border-top-color: #FFF;
+  animation: ${rotate} 1s infinite linear;
+  position: absolute;
+  top: 12px;
+  left: 72px;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.2s ease-out;
+`
+
+export const ButtonLabel = styled.span`
+  opacity: ${props => props.loading ? '0' : '1'};
+  transition: opacity 0.2s ease-out;
 `
