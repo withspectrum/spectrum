@@ -20,7 +20,7 @@ export default function root(state = initialState, action) {
 				photoURL: action.user.photoURL,
 				displayName: action.user.displayName,
 				frequencies: action.user.frequencies,
-				customerId: action.user.customerId
+				customerId: action.user.customerId || null
 			})
 		case 'SET_SUBSCRIPTIONS':
 			return Object.assign({}, state, {
