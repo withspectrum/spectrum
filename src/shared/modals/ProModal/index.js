@@ -5,7 +5,7 @@ import StripeCheckout from 'react-stripe-checkout'
 import axios from 'axios'
 import actions from '../../../actions'
 import { connect } from 'react-redux'
-import { ButtonPrimary } from '../../buttons'
+import { ButtonPrimary, Button } from '../../buttons'
 import { ButtonLabel, modalStyles, Section, SectionAlert, SectionError, Badge, Heading, Subheading, Flex, Padding, Spinner } from './style'
 
 
@@ -17,7 +17,8 @@ class ProModal extends React.Component {
 			isOpen: props.isOpen,
 			error: null,
 			errorCount: 0,
-			loading: false
+			loading: false,
+			complete: false
 		}
 	}
 
@@ -47,11 +48,27 @@ class ProModal extends React.Component {
 
       if (response.data.success) {
       	// if the customer and subscription were created successfully
-      	this.props.dispatch(actions.upgradeUser())
+      	this.setState({
+      		loading: false,
+      		complete: true
+      	})
+
+      	// save the updates to our user model
+      	this.props.dispatch(actions.upgradeUser(response.data))
+
+      	// close the modal after a second
+      	setTimeout(() => { this.hideModal() }, 1000)
       }
     })
     .catch((error) => {
       // something went wrong with the stripe form, not an error from the backend
+      console.log('error is: ', error)
+	    if (error) {
+	     	this.setState({
+	    		error: "Whoops, something went wrong.",
+	    		loading: false
+	    	})
+  		}
     });
   }
 
@@ -98,23 +115,32 @@ class ProModal extends React.Component {
 
 					<Section centered={true}>
 						<Padding padding={"1rem"}>
-							<StripeCheckout
-			          token={this.onToken}
-			          stripeKey="pk_test_A6pKi4xXOdgg9FrZJ84NW9mP"
-			          name="🔐 &nbsp; Pay Securely"
-			          description="Secured and Encrypted by Stripe"
-			          panelLabel="Subscribe for "
-			          amount={500}
-			          currency="USD">
-
-								<ButtonPrimary large loading={this.state.loading}>
-	          			<ButtonLabel loading={this.state.loading}>
-	          				{this.state.errorCount ? "Try Again" : "Upgrade to Pro" }
+							{ this.state.complete
+								// if user has finished upgrading, woo!
+								? <Button large>
+		          			<ButtonLabel>
+		          				Boom! You're a Pro 👌✨
 	          				</ButtonLabel>
-									<Spinner size={'16'} loading={this.state.loading} />
-			          </ButtonPrimary>
+				          </Button>
+								// otherwise, show the upgrade button
+								: <StripeCheckout
+					          token={this.onToken}
+					          stripeKey="pk_test_A6pKi4xXOdgg9FrZJ84NW9mP"
+					          name="🔐 &nbsp; Pay Securely"
+					          description="Secured and Encrypted by Stripe"
+					          panelLabel="Subscribe for "
+					          amount={500}
+					          currency="USD">
 
-			        </StripeCheckout>
+										<ButtonPrimary large loading={this.state.loading}>
+			          			<ButtonLabel loading={this.state.loading}>
+			          				{this.state.errorCount ? "Try Again" : "Upgrade to Pro" }
+			          				</ButtonLabel>
+											<Spinner size={'16'} loading={this.state.loading} />
+					          </ButtonPrimary>
+
+					        </StripeCheckout>
+					    }
 			      </Padding>
 
 			      <SectionError 

@@ -63,8 +63,15 @@ export const signOut = () => (dispatch) => {
   })
 }
 
+export const upgradeUser = (subscription) => (dispatch, getState) => {
+  const uid = getState().user.uid
+  console.log('subscription is: ', subscription)
+  // firebase.database().ref(`users/${uid}`).once
+}
+
 export default {
   login,
   startListeningToAuth,
-  signOut
+  signOut,
+  upgradeUser
 }

@@ -81,25 +81,9 @@ export const ButtonPrimary = styled(Button)`
   }
 `
 
-export const ButtonWarning = styled(ButtonPrimary)`
-	background: linear-gradient(180deg, #FA443E, #EF3A34);
-	color: #fff;
-	border: 1px solid #EF3A34;
-
-	&:hover {
-		background: linear-gradient(180deg, #FA443E, #F83D36);
-  }
-
-  &:active {
-  	border: 1px solid #EF3A34;
-  	background: linear-gradient(180deg, #E63832, #FA443E);
-  }
-`
-
 export default {
 	Button,
 	ButtonOutline,
 	ButtonLink,
-	ButtonPrimary,
-	ButtonWarning
+	ButtonPrimary
 }
