@@ -17,8 +17,7 @@ class ProModal extends React.Component {
 			isOpen: props.isOpen,
 			error: null,
 			errorCount: 0,
-			loading: false,
-			complete: false
+			loading: false
 		}
 	}
 
@@ -49,8 +48,7 @@ class ProModal extends React.Component {
       if (response.data.success) {
       	// if the customer and subscription were created successfully
       	this.setState({
-      		loading: false,
-      		complete: true
+      		loading: false
       	})
 
       	// save the updates to our user model
@@ -69,7 +67,7 @@ class ProModal extends React.Component {
 	    		loading: false
 	    	})
   		}
-    });
+    })
   }
 
 	render() {
@@ -115,32 +113,23 @@ class ProModal extends React.Component {
 
 					<Section centered={true}>
 						<Padding padding={"1rem"}>
-							{ this.state.complete
-								// if user has finished upgrading, woo!
-								? <Button large>
-		          			<ButtonLabel>
-		          				Boom! You're a Pro 👌✨
+							<StripeCheckout
+			          token={this.onToken}
+			          stripeKey="pk_test_A6pKi4xXOdgg9FrZJ84NW9mP"
+			          name="🔐 &nbsp; Pay Securely"
+			          description="Secured and Encrypted by Stripe"
+			          panelLabel="Subscribe for "
+			          amount={500}
+			          currency="USD">
+
+								<ButtonPrimary large loading={this.state.loading}>
+	          			<ButtonLabel loading={this.state.loading}>
+	          				{this.state.errorCount ? "Try Again" : "Upgrade to Pro" }
 	          				</ButtonLabel>
-				          </Button>
-								// otherwise, show the upgrade button
-								: <StripeCheckout
-					          token={this.onToken}
-					          stripeKey="pk_test_A6pKi4xXOdgg9FrZJ84NW9mP"
-					          name="🔐 &nbsp; Pay Securely"
-					          description="Secured and Encrypted by Stripe"
-					          panelLabel="Subscribe for "
-					          amount={500}
-					          currency="USD">
+									<Spinner size={'16'} loading={this.state.loading} />
+			          </ButtonPrimary>
 
-										<ButtonPrimary large loading={this.state.loading}>
-			          			<ButtonLabel loading={this.state.loading}>
-			          				{this.state.errorCount ? "Try Again" : "Upgrade to Pro" }
-			          				</ButtonLabel>
-											<Spinner size={'16'} loading={this.state.loading} />
-					          </ButtonPrimary>
-
-					        </StripeCheckout>
-					    }
+			        </StripeCheckout>
 			      </Padding>
 
 			      <SectionError 

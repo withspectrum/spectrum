@@ -1,4 +1,5 @@
 import * as firebase from 'firebase'
+import axios from 'axios'
 
 export const login = () => (dispatch) => {
   let provider = new firebase.auth.TwitterAuthProvider();
@@ -65,13 +66,50 @@ export const signOut = () => (dispatch) => {
 
 export const upgradeUser = (subscription) => (dispatch, getState) => {
   const uid = getState().user.uid
-  console.log('subscription is: ', subscription)
-  // firebase.database().ref(`users/${uid}`).once
+  // console.log('subscription is: ', subscription)
+  firebase.database().ref(`users/${uid}`).update({
+    customerId: subscription.customer,
+    email: subscription.email
+  })
+}
+
+export const getUserSubscriptions = () => (dispatch, getState) => {
+  const customerId = getState().user.customerId
+
+  if (customerId) {
+    axios.get('http://localhost:3001/customer', { params: { id: customerId }})
+      .then((response) => {
+
+        let subscriptionsData = response.data.subscriptions.data
+        let subscriptions = []
+
+        subscriptionsData.map((subscription) => {
+          subscriptions.push({
+            name: subscription.plan.name,
+            status: subscription.status,
+            current_period_start: subscription.current_period_start,
+            current_period_end: subscription.current_period_end
+          })
+        })
+
+        dispatch({
+          type: 'SET_SUBSCRIPTIONS',
+          subscriptions: subscriptions
+        })
+      })
+      .catch((error) => {
+        return
+      });
+  } else {
+    // if we can't find a customer id, it means the user triggered this somehow without being a paying customer
+    return
+  }
 }
 
 export default {
   login,
   startListeningToAuth,
   signOut,
-  upgradeUser
+  upgradeUser,
+  getUserSubscriptions
 }

@@ -49,4 +49,6 @@ setTimeout(() => {
 	store.dispatch( actions.startListeningToAuth() )
 	// and immediately query for the frequencies, as these will persist across the whole session
 	store.dispatch( actions.setFrequencies() )
+	// once everything is loaded up, lets hit up stripe to get the latest info about this user's plan status
+	store.dispatch( actions.getUserSubscriptions() )
 })

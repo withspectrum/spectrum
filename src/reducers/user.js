@@ -4,6 +4,8 @@ const initialState = {
 	displayName: null,
 	photoURL: null,
 	frequencies: null,
+	customerId: null,
+	subscriptions: null
 }
 
 export default function root(state = initialState, action) {
@@ -17,7 +19,12 @@ export default function root(state = initialState, action) {
 				uid: action.user.uid,
 				photoURL: action.user.photoURL,
 				displayName: action.user.displayName,
-				frequencies: action.user.frequencies
+				frequencies: action.user.frequencies,
+				customerId: action.user.customerId
+			})
+		case 'SET_SUBSCRIPTIONS':
+			return Object.assign({}, state, {
+				subscriptions: action.subscriptions
 			})
 		default:
 			return state
