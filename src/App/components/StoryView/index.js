@@ -36,7 +36,7 @@ export default class StoryView extends Component {
             ? <div>
                 <button onClick={this.deleteStory}><Delete /> Delete Story</button>
                 <label>
-	                <Lock fill='url(#defaultGradient)' />
+	                <Lock />
                   <input type="checkbox" onChange={this.toggleLockedStory} checked={locked} />
                 </label>
               </div>

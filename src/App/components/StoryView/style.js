@@ -1,14 +1,10 @@
 import styled from 'styled-components';
 
 export const Wrapper = styled.div`
-	position: fixed;
-	min-height: 48px;
-	top: 48px;
 	display: flex;
+	flex: 0 0 auto;
 	background-color: #ffffff;
-	width: 54vw;
 	padding: 24px;
-	padding-right: 0;
 	flex-direction: column;
 	box-shadow: 0 4px 16px -8px black;
 	overflow-y: scroll;
@@ -22,12 +18,11 @@ export const Section = styled.div`
 `;
 
 export const Description = styled.p`
-	font-size: 14px;
+	font-size: 16px;
 	display: inline-block;
 	margin-bottom: 24px;
-	max-width: 560px;
 	max-height: 50%;
-	line-height: 1.5;
+	line-height: 1.6;
 	color: #363A4F;
 `;
 
