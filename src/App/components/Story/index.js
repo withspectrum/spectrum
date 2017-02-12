@@ -23,6 +23,12 @@ class Story extends Component{
     }
   }
 
+  showGallery = (e) => {   
+    let arr = []
+    arr.push(e.target.src)
+    this.props.dispatch(actions.showGallery(arr))
+  }
+
 	render() {
     const story = this.props.data
 
@@ -45,7 +51,7 @@ class Story extends Component{
             <Desc>{story.content.description}</Desc>
             
             {story.content.media && story.content.media !== ''
-              ? <Media src={story.content.media} />
+              ? <Media src={story.content.media} onClick={this.showGallery} />
               : ''
             }
 

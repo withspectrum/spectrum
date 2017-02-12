@@ -5,6 +5,7 @@ import frequencies from './frequencies'
 import messages from './messages'
 import composer from './composer'
 import modals from './modals'
+import gallery from './gallery'
 
 export default combineReducers({
 	user,
@@ -12,5 +13,6 @@ export default combineReducers({
 	frequencies,
 	messages,
 	composer,
-	modals
+	modals,
+	gallery
 })
