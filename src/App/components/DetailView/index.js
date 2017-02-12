@@ -15,8 +15,7 @@ import { Avatar,
          StoryTitle,
          StoryDescription,
          NullContainer,
-         NullText,
-         Controls } from './style';
+         NullText } from './style';
 
 class DetailView extends Component {
   getActiveStory = () => {
