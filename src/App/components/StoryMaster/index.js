@@ -144,7 +144,10 @@ class StoryMaster extends Component {
                 }) 
               }
 
-              <ShareCard data={currentFrequency} />
+              { frequencies.active && frequencies.active !== "all"
+               ? <ShareCard data={currentFrequency} />
+               : ''
+              }
 
               { this.props.user.uid &&
                 <img src="/img/add-story_secondary.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
