@@ -7,7 +7,12 @@ import { ComposerContainer, Input, Submit, Textarea, Media, MediaInput, MediaLab
 class Composer extends Component {
   constructor(props) {
     super(props)
-    let userFreqs = Object.keys(props.user.frequencies)
+
+    let userFreqs
+    if (props.user.uid) { // we can only evaulate this if a user is logged in
+      userFreqs = Object.keys(props.user.frequencies)
+    }
+
     this.state = {
       title: '',
       description: '',
