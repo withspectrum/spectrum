@@ -1,46 +1,32 @@
 import styled from 'styled-components';
+import { Tooltip } from '../../../shared/Globals'
 
-export const StoryWrapper = styled.div`
-	position: fixed;
-	min-height: 48px;
-	top: 48px;
+export const Wrapper = styled.div`
 	display: flex;
+	flex: 0 0 auto;
 	background-color: #ffffff;
-	width: 54vw;
 	padding: 24px;
-	padding-right: 0;
+	max-height: 50vh;
 	flex-direction: column;
-	border-bottom: 1px solid gray;
-	overflow-y: scroll;
-	z-index: 1;
+	box-shadow: 0 4px 16px -8px black;
+	overflow-y: auto;
 `;
 
-export const StoryStatic = styled.div`
+export const Section = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-self: flex-end;
 `;
 
-export const StoryText = styled.div`
-	display: flex;
-	flex-direction: column;
-`;
-
-export const StoryP = styled.p`
-	font-size: 14px;
+export const Description = styled.p`
+	font-size: 16px;
 	display: inline-block;
 	margin-bottom: 24px;
-	max-width: 560px;
-	max-height: 50%;
-	line-height: 1.5;
+	line-height: 1.6;
 	color: #363A4F;
-
-	&:last-of-type {
-		margin-bottom: 0;
-	}
 `;
 
-export const StorySectionLabel = styled.h4`
+export const SectionLabel = styled.h4`
 	font-size: 10px;
 	display: inline-block;
 	text-transform: uppercase;
@@ -50,33 +36,20 @@ export const StorySectionLabel = styled.h4`
 	font-weight: bold;
 `;
 
-export const StoryImgList = styled.div`
+export const RowList = styled.div`
 	display: flex;
 	overflow-x: scroll;
-	flex: 1 0 calc(15vh + 2px);
+	flex: 0 0 15%;
 `;
 
-export const StoryImg = styled.img`
-	max-height: 15vh;
-	width: auto;
-	border-radius: 2px;
-	display: inline-block;
-	margin-right: 8px;
 
-	background-color: #000000;
-
-	&:last-of-type {
-		margin-right: 0;
-	}
-`;
-
-export const StoryTagList = styled.ul`
+export const TagList = styled.ul`
 	list-style: none;
 	display: flex;
 	flex: 1 0 auto;
 `;
 
-export const StoryTag = styled.li`
+export const Tag = styled.li`
 	height: 24px;
 	padding: 0 12px;
 	line-height: 24px;
@@ -95,3 +68,34 @@ export const StoryTag = styled.li`
 		margin-right: 0;
 	}
 `;
+
+export const Meta = styled.div`
+  display: block;
+  overflow: auto;
+`
+
+export const AuthorName = styled.span`
+  display: inline-block;
+  font-size: 12px;
+  color: #c2c2c2;
+  margin-bottom: 16px;
+`
+
+export const Media = styled.img`
+	width: 100px;
+	margin: 8px 8px 0 0;
+	border-radius: 4px;
+  border: 2px solid transparent;
+  &:hover {
+    border-color: #4422ED;
+  }
+`;
+
+export const HiddenInput = styled.input`
+	display: none;
+`;
+
+export const Button = styled.button`
+	background-color: transparent;
+	${props => props.tooltip ? Tooltip(props.tooltip) : console.log(false) };
+`

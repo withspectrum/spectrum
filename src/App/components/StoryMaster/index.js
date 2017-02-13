@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { Column, Header, ScrollBody, JoinBtn, LoginWrapper, LoginText, LoginButton, FrequencyName } from './style'
+import { Column, Header, ScrollBody, JoinBtn, LoginWrapper, LoginText, LoginButton, HiddenInput, Button } from './style'
 import actions from '../../../actions'
 import helpers from '../../../helpers'
+import { Lock, Unlock, NewPost, ClosePost } from '../../../shared/Icons'
 import Story from '../Story'
 import Composer from '../Composer'
 import ShareCard from '../ShareCard'
@@ -62,9 +63,19 @@ class StoryMaster extends Component {
       if (!usersFrequencies) {
         return ''
       } else if (keys.indexOf(activeFrequency) > -1) {
-        return <img src="/img/add-story.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
+        return <Button onClick={ this.toggleComposer } tooltip="Add Story">
+                  { this.props.composer.isOpen 
+                  ? <ClosePost/>
+                  : <NewPost/>
+                   }
+                  </Button>
       } else if (activeFrequency === "all") {
-        return <img src="/img/add-story.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
+        return <Button onClick={ this.toggleComposer } tooltip="Add Story">
+                  { this.props.composer.isOpen 
+                  ? <ClosePost/>
+                  : <NewPost/>
+                   }
+                  </Button>
       } else {
         return ''
       }
@@ -86,8 +97,13 @@ class StoryMaster extends Component {
       switch (usersPermissionOnFrequency) {
         case 'owner':
           return (
-            <label>Private 
-              <input type="checkbox" checked={currentFrequencyPrivacy} onChange={this.togglePrivacy} />
+            <label>
+              {currentFrequencyPrivacy ?
+                <Lock />
+              :
+                <Unlock />
+              }
+              <HiddenInput type="checkbox" checked={currentFrequencyPrivacy} onChange={this.togglePrivacy} />
             </label>
           )
         case 'subscriber':
@@ -150,14 +166,14 @@ class StoryMaster extends Component {
               }
 
               { this.props.user.uid &&
-                <img src="/img/add-story_secondary.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
+                <NewPost onClick={ this.toggleComposer } tooltip={'New Story'}/>
               }
             </ScrollBody>
   	    	</Column>
   	  );
     } else {
       return (
-        <p> You can't view this </p>
+        <Lock />
       )
     }
 	}

@@ -1,11 +1,11 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
+import { Palette, Scale } from '../../../shared/Globals'
 
 export const Column = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #171A21;
-  flex: 0 0 12vw;
-  min-width: 240px;
+  flex: 0 0 256px;
   height: 100vh;
 `;
 
@@ -31,7 +31,7 @@ export const Avatar = styled.img`
 export const MetaWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 12px;
+  margin-left: 8px;
 `;
 
 export const Name = styled.h3`
@@ -40,6 +40,13 @@ export const Name = styled.h3`
   font-weight: 500;
   margin-top: 4px;
   margin-bottom: 2px;
+`;
+
+export const P = styled.p`
+  display: flex;
+  font-size: 12px;
+  color: #747E8D;
+  font-weight: 500;
 `;
 
 export const MetaLink = styled.a`
@@ -97,15 +104,15 @@ export const FreqLabel = styled.span`
   font-size: 14px;
   font-weight: 500;
   display: inline-block;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   color: #ffffff;
-  margin-left: 12px;
-  margin-right: 12px;
+  margin-left: 8px;
+  margin-right: 8px;
   pointer-events: none;
   text-overflow: ellipsis;
   white-space: nowrap;
   word-wrap: normal;
-  max-width: 11vw;
+  padding: 8px 0;
   overflow: hidden;
 `;
 
@@ -113,6 +120,15 @@ export const FreqIcon = styled.img`
   height: 32px;
   flex: 0 0 32px;
   pointer-events: none;
+`;
+
+export const FreqGlyph = styled.span`
+  margin-left: ${Scale(1)};
+  margin-right: ${Scale(1)};
+  display: inline-block;
+  font-size: 24px;
+  font-weight: bold;
+  color: ${Palette.text.reverse}
 `;
 
 export const Footer = styled.div`
@@ -130,11 +146,7 @@ export const FooterLogo = styled.img`
   width: 24px;
 `;
 
-export const FooterMeta = styled.p`
-  display: flex;
-  font-size: 12px;
-  color: #747E8D;
-  font-weight: 500;
+export const FooterP = styled(P)`
   text-align: right;
   align-self: flex-end;
 `;

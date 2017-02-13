@@ -1,33 +1,86 @@
-import React, { Component } from 'react';
-import { StoryWrapper, StoryP, StorySectionLabel, StoryStatic, StoryText, StoryImgList, StoryImg, StoryTagList, StoryTag } from './style';
+import React, { Component } from 'react'
+import { connect } from 'react-redux' 
+import { Lock, Unlock, Delete } from '../../../shared/Icons'
+import {  Wrapper, 
+					SectionLabel, 
+					Section, 
+					Meta, 
+					AuthorName, 
+					Description, 
+					Media,
+					Button,
+					HiddenInput, 
+					RowList} from './style';
+import actions from '../../../actions'
 
-export default class StoryView extends Component {
+class StoryView extends Component {
+	getActiveStory = () => {
+    if (this.props.stories.stories){
+      return this.props.stories.stories.filter((story) => {
+        return story.id === this.props.stories.active;
+      })[0] || ''
+    } else {
+      return
+    }
+  }
+	
+	deleteStory = () => {
+    const story = this.getActiveStory()
+    this.props.dispatch(actions.deleteStory(story.id))
+  }
+
+  toggleLockedStory = () => {
+    const story = this.getActiveStory()
+    this.props.dispatch(actions.toggleLockedStory(story))
+  }
+
 	render() {
+		const story = this.props.activeStory
+		const creator = this.props.creator
+		const moderator = this.props.moderator
+		const locked = this.props.locked
+
+
 		return(
-			<StoryWrapper>
-				<StoryText>
-					<StoryP>Yo. This is a paragraph inside the StoryDetail View. This is just a place to put a bunch of context about a set of images or maybe ask a question or voice an opinion or something.</StoryP>
-					<StoryP>Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...Testing overflow...</StoryP>
-					<StoryP>We really don't want to be prescriptive about how people use it... 😁</StoryP>
-				</StoryText>
-				<StoryStatic>
-					<StorySectionLabel>Images</StorySectionLabel>
-					<StoryImgList>
-						<StoryImg src="/img/media.png" align="middle"/>
-						<StoryImg src="/img/media.png" align="middle"/>
-						<StoryImg src="/img/media.png" align="middle"/>
-						<StoryImg src="/img/media.png" align="middle"/>
-						<StoryImg src="/img/media.png" align="middle"/>
-						<StoryImg src="/img/media.png" align="middle"/>
-					</StoryImgList>
-					<StorySectionLabel>Tags</StorySectionLabel>
-					<StoryTagList>
-						<StoryTag>Design</StoryTag>
-						<StoryTag>iOS</StoryTag>
-						<StoryTag>Show n Tell</StoryTag>
-					</StoryTagList>
-				</StoryStatic>
-			</StoryWrapper>
+			<Wrapper>
+				<Meta>
+				  <AuthorName>{story.creator.displayName}</AuthorName>
+				</Meta>
+				<Description>{story.content.description}</Description>
+					{story.content.media && story.content.media !== ''
+						?
+							<Section>
+								<SectionLabel>Images</SectionLabel>
+								<RowList>
+									<a href={story.content.media} target="_blank"><Media src={story.content.media} /></a>
+							  </RowList>
+						  </Section>
+					  : 
+						  ''
+					}
+					{ creator || moderator === "owner" // if the story was created by the current user, or is in a frequency the current user owns
+            ? <div>
+                <Button onClick={this.deleteStory} tooltip={'Delete Story'}><Delete /></Button>
+                <label>
+                	{locked ?
+                		<Lock />
+                	:
+                		<Unlock />
+                	}
+                  <HiddenInput type="checkbox" onChange={this.toggleLockedStory} checked={locked} />
+                </label>
+              </div>
+            : ''
+          }
+			</Wrapper>
 		)
 	}
 }
+
+const mapStateToProps = (state) => ({
+  stories: state.stories,
+  frequencies: state.frequencies,
+  user: state.user
+})
+
+export default connect(mapStateToProps)(StoryView);
