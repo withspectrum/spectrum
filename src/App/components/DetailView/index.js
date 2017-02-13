@@ -7,26 +7,13 @@ import actions from '../../../actions'
 import helpers from '../../../helpers'
 
 // eslint-disable-next-line
-<<<<<<< HEAD
+
 import {  Header,
           ViewContainer,
           LogicContainer,
           StoryTitle,
           NullContainer,
           NullText } from './style';
-=======
-import { Avatar,
-         AuthorName,
-         Header,
-         ViewContainer,
-         LogicContainer,
-         Media,
-         StoryMeta,
-         StoryTitle,
-         StoryDescription,
-         NullContainer,
-         NullText } from './style';
->>>>>>> 9c804cf00b6c449f4eb49ec4e0effd49234f7537
 
 class DetailView extends Component {
   getActiveStory = () => {
@@ -39,8 +26,6 @@ class DetailView extends Component {
     }
   }
 
-<<<<<<< HEAD
-=======
   deleteStory = () => {
     const story = this.getActiveStory()
     this.props.dispatch(actions.deleteStory(story.id))
@@ -57,7 +42,6 @@ class DetailView extends Component {
     this.props.dispatch(actions.showGallery(arr))
   }
 
->>>>>>> 9c804cf00b6c449f4eb49ec4e0effd49234f7537
 	render() {	
     const story = this.getActiveStory()
     let moderator, creator, locked
@@ -72,30 +56,9 @@ class DetailView extends Component {
 				{ story
 					? <LogicContainer>
 							<Header>
-<<<<<<< HEAD
-                <StoryTitle>{story.content.title}</StoryTitle>
-=======
-								<StoryMeta>
-                {story.creator.photoURL ? <Avatar src={story.creator.photoURL} />: ""}
-                  <StoryTitle>{story.content.title}</StoryTitle>
-                  <AuthorName>{story.creator.displayName}</AuthorName>
-                </StoryMeta>
-								<StoryDescription>{story.content.description}</StoryDescription>
-                {story.content.media && story.content.media !== ''
-                  ? <Media onClick={this.showGallery} src={story.content.media} />
-                  : ''
-                }
 
-                { creator || moderator === "owner" // if the story was created by the current user, or is in a frequency the current user owns
-                  ? <div>
-                      <button onClick={this.deleteStory}>Delete Story</button> · 
-                      <label>Lock Conversation is {`${locked}`}
-                        <input type="checkbox" onChange={this.toggleLockedStory} checked={locked} />
-                      </label>
-                    </div>
-                  : ''
-                }
->>>>>>> 9c804cf00b6c449f4eb49ec4e0effd49234f7537
+                <StoryTitle>{story.content.title}</StoryTitle>
+
 							</Header>
               <StoryView activeStory={story} creator={creator} moderator={moderator} locked={locked} />
 							<ChatView />

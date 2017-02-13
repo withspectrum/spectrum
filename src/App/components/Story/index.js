@@ -77,8 +77,6 @@ class Story extends Component{
       }
     }
 
-    const story = this.props.data
-
 		return (
 	    	<StoryWrapper selected={ story.id === this.props.stories.active }>
 	    		<StoryHeader>

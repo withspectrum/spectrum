@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import actions from '../../../actions'
 import helpers from '../../../helpers'
-import { Column, Header, HeaderLogo, Avatar, MetaWrapper, Name, MetaLink, FreqList, FreqListHeading, Freq, FreqLabel, FreqIcon, Footer, FooterLogo, FooterMeta, Form, Input, Button } from './style';
+import { Column, Header, HeaderLogo, Avatar, MetaWrapper, Name, MetaLink, FreqList, FreqListHeading, Freq, FreqLabel, FreqIcon, FreqGlyph, Footer, FooterLogo, FooterMeta, Form, Input, Button } from './style';
 
 class NavBar extends Component{
   constructor() {
@@ -87,7 +87,7 @@ class NavBar extends Component{
                 <Link to={`/${frequency.id}`} key={i}>
                   <Freq 
                     active={frequency.id === activeFrequency}>
-                    <FreqIcon src="/img/freq-icon.svg"/>
+                    <FreqGlyph>~</FreqGlyph>
                     <FreqLabel>{ frequency.name }</FreqLabel>
                   </Freq>
                 </Link>
@@ -105,7 +105,7 @@ class NavBar extends Component{
                     onClick={this.setActiveFrequency} 
                     id={frequency.id}
                     active={frequency.id === activeFrequency}>
-                    <FreqIcon src="/img/freq-icon.svg"/>
+                    <FreqGlyph>~</FreqGlyph>
                     <FreqLabel>{ frequency.name }</FreqLabel>
                   </Freq>
                 </Link>

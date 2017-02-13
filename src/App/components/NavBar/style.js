@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
+import { Palette, Scale } from '../../../shared/Globals'
 
 export const Column = styled.div`
   display: flex;
@@ -105,13 +106,23 @@ export const FreqLabel = styled.span`
   text-overflow: ellipsis;
   white-space: nowrap;
   word-wrap: normal;
-
+  padding: 8px 12px;
 `;
 
 export const FreqIcon = styled.img`
   height: 32px;
   flex: 0 0 32px;
+  margin-left: 4px;
   pointer-events: none;
+`;
+
+export const FreqGlyph = styled.span`
+  margin-left: ${Scale(1.5)};
+  margin-right: ${Scale(1)};
+  display: inline-block;
+  font-size: 24px;
+  font-weight: bold;
+  color: ${Palette.text.reverse}
 `;
 
 export const Footer = styled.div`
