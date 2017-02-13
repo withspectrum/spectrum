@@ -6,6 +6,7 @@ import actions from '../../../actions'
 import helpers from '../../../helpers'
 import Story from '../Story'
 import Composer from '../Composer'
+import ShareCard from '../ShareCard'
 
 class StoryMaster extends Component {
   toggleComposer = () => {
@@ -142,6 +143,8 @@ class StoryMaster extends Component {
                   }
                 }) 
               }
+
+              <ShareCard data={currentFrequency} />
 
               { this.props.user.uid &&
                 <img src="/img/add-story_secondary.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
