@@ -88,7 +88,6 @@ class Composer extends Component {
   }
 
 	render() {
-    console.log(this.state)
     const frequencies = this.props.frequencies.frequencies
     const activeFrequency = this.props.frequencies.active
     const user = this.props.user

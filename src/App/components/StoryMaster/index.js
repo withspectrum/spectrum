@@ -55,6 +55,20 @@ class StoryMaster extends Component {
       }
     }
 
+    let addStoryButton = (usersFrequencies, activeFrequency) => {
+      let keys = Object.keys(usersFrequencies)
+
+      if (!usersFrequencies) {
+        return ''
+      } else if (keys.indexOf(activeFrequency) > -1) {
+        return <img src="/img/add-story.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
+      } else if (activeFrequency === "all") {
+        return <img src="/img/add-story.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
+      } else {
+        return ''
+      }
+    }
+
 
     const canViewStories = () => {
       if (currentFrequencyPrivacy && usersPermissionOnFrequency !== undefined) {
@@ -90,8 +104,7 @@ class StoryMaster extends Component {
 
             { this.props.user.uid &&
               <Header>
-                <img src="/img/add-story.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
-                
+                { addStoryButton(this.props.user.frequencies, this.props.frequencies.active) }
                 { subscribeButton(this.props.user.frequencies, this.props.frequencies.active) }
                 { frequencies.active === 'all'
                   ? ''

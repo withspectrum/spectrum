@@ -57,6 +57,7 @@ export const Submit = styled.input`
 	font-size: 0.75rem;
 	font-weight: 600;
 	margin-top: 1rem;
+	float: right;
 
 	&:hover {
 		cursor: pointer;
