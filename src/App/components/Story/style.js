@@ -56,6 +56,7 @@ export const Media = styled.img`
 	width: 100%;
 	margin: 8px 8px 0 0;
 	border-radius: 4px;
+	border: 1px solid #eee;
 `;
 
 export const UserMeta = styled.div`

@@ -7,6 +7,7 @@ import helpers from '../../../helpers'
 import { Lock, Unlock, NewPost, ClosePost } from '../../../shared/Icons'
 import Story from '../Story'
 import Composer from '../Composer'
+import ShareCard from '../ShareCard'
 
 class StoryMaster extends Component {
   toggleComposer = () => {
@@ -56,6 +57,30 @@ class StoryMaster extends Component {
       }
     }
 
+    let addStoryButton = (usersFrequencies, activeFrequency) => {
+      let keys = Object.keys(usersFrequencies)
+
+      if (!usersFrequencies) {
+        return ''
+      } else if (keys.indexOf(activeFrequency) > -1) {
+        return <Button onClick={ this.toggleComposer } tooltip="Add Story">
+                  { this.props.composer.isOpen 
+                  ? <ClosePost/>
+                  : <NewPost/>
+                   }
+                  </Button>
+      } else if (activeFrequency === "all") {
+        return <Button onClick={ this.toggleComposer } tooltip="Add Story">
+                  { this.props.composer.isOpen 
+                  ? <ClosePost/>
+                  : <NewPost/>
+                   }
+                  </Button>
+      } else {
+        return ''
+      }
+    }
+
 
     const canViewStories = () => {
       if (currentFrequencyPrivacy && usersPermissionOnFrequency !== undefined) {
@@ -96,12 +121,7 @@ class StoryMaster extends Component {
 
             { this.props.user.uid &&
               <Header>
-                <Button onClick={ this.toggleComposer } tooltip="Add Story">
-                  { this.props.composer.isOpen 
-                  ? <ClosePost/>
-                  : <NewPost/>
-                   }
-                  </Button>
+                { addStoryButton(this.props.user.frequencies, this.props.frequencies.active) }
                 { subscribeButton(this.props.user.frequencies, this.props.frequencies.active) }
                 { frequencies.active === 'all'
                   ? ''
@@ -138,6 +158,11 @@ class StoryMaster extends Component {
                     )
                   }
                 }) 
+              }
+
+              { frequencies.active && frequencies.active !== "all"
+               ? <ShareCard data={currentFrequency} />
+               : ''
               }
 
               { this.props.user.uid &&

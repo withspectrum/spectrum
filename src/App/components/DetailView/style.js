@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Palette, Scale } from '../../../shared/Globals'
+import { Scale } from '../../../shared/Globals'
 
 export const Header = styled.div`
 	flex: 0 0 48px;
