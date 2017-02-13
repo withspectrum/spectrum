@@ -1,45 +1,28 @@
 import * as firebase from 'firebase'
 import helpers from '../helpers'
 
-function setup(stateFetch){
+export const setup = (stateFetch) => {
+	let state = stateFetch
+	let user = state.user
+	let uid = user.uid
+
 	return {
 		database: firebase.database(),
-		state: stateFetch(),
-    initState: function(){
-      this.user = this.state.user;
-      this.uid = this.state.user.uid;
-      return this;
-    }
-	}.initState()
+		state: stateFetch,
+    user: user,
+    uid: uid
+	}
 }
 
 export const setActiveFrequency = (id) => (dispatch) => {
-    dispatch({
-        type: 'SET_ACTIVE_FREQUENCY',
-        id: id
-    })
-}
-
-function saveFrequencies(newFrequencyKey, updatedData) {
-  // we need to see what frequencies the user has already:
-  let { database, uid } = setup({})
-  database.ref(`/users/${uid}/frequencies`).once('value').then(function(snapshot) {
-
-    let updatedFrequencies = snapshot.val() || [];
-    updatedFrequencies[newFrequencyKey] = {id: newFrequencyKey} // and push the new frequency
-    updatedData[`users/${uid}/frequencies`] = updatedFrequencies // add the frequency id to the user object
-
-    database.ref().update(updatedData, function(error) {
-      if (error) {
-        console.log("Error updating data:", error);
-      }
-    });
-  	setActiveFrequency(newFrequencyKey)
-  });
+  dispatch({
+    type: 'SET_ACTIVE_FREQUENCY',
+    id: id
+  })
 }
 
 export const setFrequencies = () => (dispatch, getState) => {
-  let { database } = setup(getState)
+  let { database } = setup(getState())
   let frequenciesRef = database.ref('frequencies');
 
   // once we get our frequencies, dispatch them to the store
@@ -54,7 +37,7 @@ export const setFrequencies = () => (dispatch, getState) => {
 
 export const addFrequency = (name) => (dispatch, getState) => {
 	// generate a new entry in the frequencies collection with a key id
-	let { database, uid } = setup(getState)
+	let { database, uid } = setup(getState())
 	const newFrequencyRef = database.ref().child("frequencies").push();
 	const newFrequencyKey = newFrequencyRef.key
 
@@ -81,11 +64,29 @@ export const addFrequency = (name) => (dispatch, getState) => {
 
 	updatedData["frequencies/" + newFrequencyKey] = newFrequencyData;
 
+	const saveFrequencies = (newFrequencyKey, updatedData) => {
+	  // we need to see what frequencies the user has already:
+	  let { database, uid } = setup(getState())
+	  database.ref(`/users/${uid}/frequencies`).once('value').then(function(snapshot) {
+
+	    let updatedFrequencies = snapshot.val() || [];
+	    updatedFrequencies[newFrequencyKey] = {id: newFrequencyKey} // and push the new frequency
+	    updatedData[`users/${uid}/frequencies`] = updatedFrequencies // add the frequency id to the user object
+
+	    database.ref().update(updatedData, function(error) {
+	      if (error) {
+	        console.log("Error updating data:", error);
+	      }
+	    });
+	  	setActiveFrequency(newFrequencyKey)
+	  });
+	}
+
 	saveFrequencies(newFrequencyKey, updatedData)
 }
 
 export const subscribeFrequency = () => (dispatch, getState) => {
-	let { database, state, uid } = setup(getState)
+	let { database, state, uid } = setup(getState())
 	let usersFrequencies = state.user.frequencies || []
 	let activeFrequency = state.frequencies.active
 	usersFrequencies[activeFrequency] = {id: activeFrequency}
@@ -93,6 +94,7 @@ export const subscribeFrequency = () => (dispatch, getState) => {
 	database.ref(`/users/${uid}`).update({
 		frequencies: usersFrequencies
 	})
+
   database.ref(`/frequencies/${activeFrequency}`).once('value').then(function(snapshot){
     let users = snapshot.val().users
     let permission = {
@@ -101,11 +103,10 @@ export const subscribeFrequency = () => (dispatch, getState) => {
     users[uid] = permission    
     database.ref(`/frequencies/${activeFrequency}/users/${uid}`).update(permission)
   })
-
 }
 
 export const unsubscribeFrequency = () => (dispatch, getState) => {
-	let { database, state, uid } = setup(getState)
+	let { database, state, uid } = setup(getState())
 	let usersFrequencies = state.user.frequencies
 	let activeFrequency = state.frequencies.active
 	delete usersFrequencies[activeFrequency]
@@ -113,10 +114,12 @@ export const unsubscribeFrequency = () => (dispatch, getState) => {
 	database.ref(`/users/${uid}`).update({
 		frequencies: usersFrequencies
 	})
+
+	database.ref(`/frequencies/${activeFrequency}/users/${uid}`).remove()
 }
 
 export const toggleFrequencyPrivacy = () => (dispatch, getState) => {
-	let { database, state } = setup(getState)
+	let { database, state } = setup(getState())
 	const frequencies = state.frequencies.frequencies
 	const activeFrequency = state.frequencies.active
 	const freqToUpdate = helpers.getCurrentFrequency(activeFrequency, frequencies)
