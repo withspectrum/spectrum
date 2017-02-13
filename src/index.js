@@ -9,6 +9,8 @@ import * as firebase from 'firebase'
 import FIREBASE_CONFIG from './config/FirebaseConfig'
 import actions from './actions'
 import { Body } from './App/style'
+import ModalRoot from './shared/modals/ModalRoot'
+import GalleryRoot from './shared/gallery/GalleryRoot'
 
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,
@@ -31,6 +33,8 @@ const Root = () => {
 		<Provider store={store}>
 			<BrowserRouter>
 				<Body>
+					<ModalRoot />
+					<GalleryRoot />
 					<Match exactly pattern="/" component={App}/>
 					<Match exactly pattern="/:frequency" component={App}/>
 					<Match exactly pattern="/:frequency/:story" component={App}/>

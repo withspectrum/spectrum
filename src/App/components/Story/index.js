@@ -6,6 +6,12 @@ import actions from '../../../actions'
 
 class Story extends Component{
 
+  showGallery = (e) => {   
+    let arr = []
+    arr.push(e.target.src)
+    this.props.dispatch(actions.showGallery(arr))
+  }
+
 	render() {
     const story     = this.props.data
     const timestamp = story.timestamp
@@ -71,6 +77,8 @@ class Story extends Component{
       }
     }
 
+    const story = this.props.data
+
 		return (
 	    	<StoryWrapper selected={ story.id === this.props.stories.active }>
 	    		<StoryHeader>
@@ -81,9 +89,11 @@ class Story extends Component{
 					  </UserMeta>
 					</StoryHeader>
 	    		<StoryBody>
-	    			<Title>{this.props.data.content.title}</Title>
-            {this.props.data.content.media && this.props.data.content.media !== ''
-              ? <Media src={this.props.data.content.media} role="presentation"/>
+
+	    			<Title>{story.content.title}</Title>
+            
+            {story.content.media && story.content.media !== ''
+              ? <Media src={story.content.media} onClick={this.showGallery} />
               : ''
             }
 	    		</StoryBody>
