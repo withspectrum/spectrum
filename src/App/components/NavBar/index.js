@@ -88,7 +88,7 @@ class NavBar extends Component{
                   <Freq 
                     active={frequency.id === activeFrequency}>
                     <FreqIcon src="/img/freq-icon.svg"/>
-                    <FreqLabel>{ frequency.name }</FreqLabel>
+                    <FreqLabel title={frequency.name}>{ frequency.name }</FreqLabel>
                   </Freq>
                 </Link>
               )

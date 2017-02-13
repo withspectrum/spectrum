@@ -81,7 +81,7 @@ export const Freq = styled.div`
   display: flex;
   flex: 0 0 48px;
   padding: 0.5rem;
-  padding-lefT: 1rem;
+  padding-left: 1rem;
   align-items: center;
   background-color: ${props => props.active ? '#3818e5' : '#171a21' };
   background-image: ${props => props.active ? `radial-gradient(ellipse farthest-corner at top left , #7B16FF 0%, #3819E6 100%)` : `none`};
@@ -105,7 +105,8 @@ export const FreqLabel = styled.span`
   text-overflow: ellipsis;
   white-space: nowrap;
   word-wrap: normal;
-
+  max-width: 11vw;
+  overflow: hidden;
 `;
 
 export const FreqIcon = styled.img`

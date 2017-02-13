@@ -54,6 +54,12 @@ export const Header = styled.div`
 	}
 `;
 
+export const FrequencyName = styled.h2`
+	margin: 0;
+	font-size: 1rem;
+	font-weight: 700;
+`
+
 export const Button = styled.div`
 	font-size: 16px;
 	padding: 8px;
