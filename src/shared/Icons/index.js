@@ -167,11 +167,62 @@ export const Unlock = (props) => {
 }
 
 export const NewPost = (props) => {
+	const gradientStart = Palette.brand.alt
+	const gradientEnd = Palette.brand.default
+	const Svg = styled.svg`
+		fill: url(#newGradient);
+		transition: all 0.2s ease-out;
+
+		&:hover {
+			transform: scale(1.1);
+			transition: all 0.2s ease-in;
+			cursor: pointer;
+		}
+	`;
 	return(
-		<svg viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="newPost" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
+		<Svg viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="newPost" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
 			<title id='title'>New Post</title>
+			<defs>
+				<radialGradient id="newGradient"
+					fx="0%" fy="0%" r="100%"
+					spreadMethod="pad">
+					<stop offset="0%" stopColor={gradientStart} stopOpacity="1" />
+					<stop offset="100%" stopColor={gradientEnd} stopOpacity="1" />
+				</radialGradient>
+			</defs>
 			<path d="M16 6c5.1 0 7.247.575 8.336 1.664C25.425 8.753 26 10.9 26 16s-.575 7.247-1.664 8.336C23.247 25.425 21.1 26 16 26s-7.247-.575-8.336-1.664C6.575 23.247 6 21.1 6 16s.575-7.247 1.664-8.336C8.753 6.575 10.9 6 16 6zm0-2c10 0 12 2 12 12s-2 12-12 12S4 26 4 16 6 4 16 4zm-1 8a1 1 0 0 1 2 0v3h3a1 1 0 0 1 0 2h-3v3a1 1 0 0 1-2 0v-3h-3a1 1 0 0 1 0-2h3v-3z"/>
-		</svg>
+		</Svg>
+	)
+}
+
+export const ClosePost = (props) => {
+	const gradientStart = Palette.warn.alt
+	const gradientEnd = Palette.warn.default
+	const Svg = styled.svg`
+		fill: ${Palette.inactive};
+		transition: all 0.2s ease-out;
+
+		&:hover {
+			fill: url(#closeGradient);
+			transform: scale(1.1);
+			transition: all 0.2s ease-in;
+			cursor: pointer;
+		}
+	`;
+
+	return(
+		<Svg viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="closePost" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
+			<title id='title'>Close Post</title>
+			<defs>
+				<radialGradient id="closeGradient"
+					fx="0%" fy="0%" r="100%"
+					spreadMethod="pad">
+					<stop offset="0%" stopColor={gradientStart} stopOpacity="1" />
+					<stop offset="100%" stopColor={gradientEnd} stopOpacity="1" />
+				</radialGradient>
+			</defs>
+			<path id="closePost" d="M16,5.986c5.1,0 7.247,0.575 8.336,1.664c1.089,1.089 1.664,3.236 1.664,8.336c0,5.1 -0.575,7.247 -1.664,8.336c-1.089,1.088 -3.236,1.664 -8.336,1.664c-5.1,0 -7.247,-0.575 -8.336,-1.664c-1.089,-1.089 -1.664,-3.236 -1.664,-8.336c0,-5.1 0.575,-7.247 1.664,-8.336c1.089,-1.089 3.236,-1.664 8.336,-1.664Zm0,-2c10,0 12,2 12,12c0,10 -2,12 -12,12c-10,0 -12,-2 -12,-12c0,-10 2,-12 12,-12Zm-4,11l8,0c0.552,0 1,0.448 1,1c0,0.552 -0.448,1 -1,1l-8,0c-0.552,0 -1,-0.448 -1,-1c0,-0.552 0.448,-1 1,-1Z"/>
+		</Svg>
 	)
 }
 

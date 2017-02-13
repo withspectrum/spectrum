@@ -12,7 +12,7 @@ export const Palette = {
 	},
 	warn: {
 		default: '#E3353C',
-		alt: '#E3353C',
+		alt: '#E2197A',
 	},
 	success: {
 		default: '#00C383',
@@ -28,7 +28,15 @@ export const Palette = {
 		alt: '#747E8D',
 		reverse: '#FFFFFF',
 	},
+	generic: {
+		default: '#D8E3F2',
+		alt: '#E2E9F4',
+	},
 	inactive: '#D6E0EE',
+}
+
+export const Gradient = (type) => {
+
 }
 
 const fontStack = `

@@ -10,7 +10,6 @@ export const Wrapper = styled.div`
 	flex-direction: column;
 	box-shadow: 0 4px 16px -8px black;
 	overflow-y: auto;
-	z-index: 1;
 `;
 
 export const Section = styled.div`

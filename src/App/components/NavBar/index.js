@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import actions from '../../../actions'
 import helpers from '../../../helpers'
-import { Column, Header, HeaderLogo, Avatar, MetaWrapper, Name, MetaLink, FreqList, FreqListHeading, Freq, FreqLabel, FreqIcon, FreqGlyph, Footer, FooterLogo, FooterMeta, Form, Input, Button } from './style';
+import { Column, Header, HeaderLogo, Avatar, MetaWrapper, P, Name, MetaLink, FreqList, FreqListHeading, Freq, FreqLabel, FreqIcon, FreqGlyph, Footer, FooterLogo, FooterP, Form, Input, Button } from './style';
 
 class NavBar extends Component{
   constructor() {
@@ -62,8 +62,9 @@ class NavBar extends Component{
               <Avatar src={this.props.user.photoURL} title="Bryn Jackson" />
               <MetaWrapper>
                 <Name>{this.props.user.displayName}</Name> 
-                <MetaLink onClick={this.goPro}>Upgrade to Pro</MetaLink>                  
-                <MetaLink onClick={this.signOut}>Sign Out</MetaLink>                  
+                <P>
+                  <MetaLink onClick={this.goPro}>Get Pro</MetaLink>&nbsp;·&nbsp;<MetaLink onClick={this.signOut}>Sign Out</MetaLink>                  
+                </P>
               </MetaWrapper>
             </Header>
           : 
@@ -121,10 +122,10 @@ class NavBar extends Component{
         <Footer>
           <FooterLogo src="/img/mark.svg" />
           <MetaWrapper>
-            <FooterMeta>© 2017 Spec Network, Inc.</FooterMeta>
-            <FooterMeta>
+            <FooterP>© 2017 Spec Network, Inc.</FooterP>
+            <FooterP>
               <MetaLink href="https://spec.fm/about"> About</MetaLink>&nbsp;·&nbsp;<MetaLink href="mailto:spectrum@spec.fm">Contact</MetaLink>
-            </FooterMeta>
+            </FooterP>
           </MetaWrapper>
         </Footer>
       </Column>

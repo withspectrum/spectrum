@@ -1,11 +1,13 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
+import { Palette, Scale } from '../../../shared/Globals'
 
 export const Header = styled.div`
 	flex: 0 0 48px;
 	align-self: flex-start;
 	width: 100%;
 	color: #ffffff;
-	padding: 16px;
+	display: flex;
+	align-items: center;
 	background-color: #10172A;
 	background-image: radial-gradient(ellipse farthest-corner at top left, #10172A 0%, #363A4F 100%);
 `;
@@ -13,7 +15,6 @@ export const Header = styled.div`
 export const ViewContainer = styled.div`
 	display: flex;
 	flex: 1 1 auto;
-	min-width: 540px;
 	height: 100%;
 	flex-direction: column;
 `;
@@ -29,7 +30,7 @@ export const LogicContainer = styled.div`
 export const StoryTitle = styled.h4`
 	font-weight: bold;
   line-height: 20px;
-  text-indent: 1rem;
+  padding-left: ${Scale(2)};
 	font-size: 16px;
 `;
 

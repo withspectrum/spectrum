@@ -5,8 +5,7 @@ export const Column = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #171A21;
-  flex: 0 0 12vw;
-  min-width: 240px;
+  flex: 0 0 256px;
   height: 100vh;
 `;
 
@@ -32,7 +31,7 @@ export const Avatar = styled.img`
 export const MetaWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 12px;
+  margin-left: 8px;
 `;
 
 export const Name = styled.h3`
@@ -41,6 +40,13 @@ export const Name = styled.h3`
   font-weight: 500;
   margin-top: 4px;
   margin-bottom: 2px;
+`;
+
+export const P = styled.p`
+  display: flex;
+  font-size: 12px;
+  color: #747E8D;
+  font-weight: 500;
 `;
 
 export const MetaLink = styled.a`
@@ -140,11 +146,7 @@ export const FooterLogo = styled.img`
   width: 24px;
 `;
 
-export const FooterMeta = styled.p`
-  display: flex;
-  font-size: 12px;
-  color: #747E8D;
-  font-weight: 500;
+export const FooterP = styled(P)`
   text-align: right;
   align-self: flex-end;
 `;

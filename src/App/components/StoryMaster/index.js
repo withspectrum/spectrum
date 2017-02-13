@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { Column, Header, ScrollBody, JoinBtn, LoginWrapper, LoginText, LoginButton, HiddenInput, FrequencyName } from './style'
+import { Column, Header, ScrollBody, JoinBtn, LoginWrapper, LoginText, LoginButton, HiddenInput, Button } from './style'
 import actions from '../../../actions'
 import helpers from '../../../helpers'
-import { Lock, Unlock, NewPost } from '../../../shared/Icons'
+import { Lock, Unlock, NewPost, ClosePost } from '../../../shared/Icons'
 import Story from '../Story'
 import Composer from '../Composer'
 
@@ -35,7 +35,6 @@ class StoryMaster extends Component {
     let usersPermissionOnFrequency = helpers.getFrequencyPermission(user, frequencies.active, frequencies.frequencies)
     const currentFrequency = helpers.getCurrentFrequency(frequencies.active, frequencies.frequencies)
     const currentFrequencyPrivacy = currentFrequency ? currentFrequency.settings.private : ''
-    console.log(frequencies.active, frequencies.frequencies)
 
     let subscribeButton = (usersFrequencies, activeFrequency) => {
       let keys = Object.keys(usersFrequencies)
@@ -97,8 +96,12 @@ class StoryMaster extends Component {
 
             { this.props.user.uid &&
               <Header>
-                <img src="/img/add-story.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
-                <FrequencyName>{ currentFrequency.name ? currentFrequency.name : ''}</FrequencyName>
+                <Button onClick={ this.toggleComposer } tooltip="Add Story">
+                  { this.props.composer.isOpen 
+                  ? <ClosePost/>
+                  : <NewPost/>
+                   }
+                  </Button>
                 { subscribeButton(this.props.user.frequencies, this.props.frequencies.active) }
                 { frequencies.active === 'all'
                   ? ''
