@@ -107,6 +107,7 @@ export const FreqLabel = styled.span`
   white-space: nowrap;
   word-wrap: normal;
   padding: 8px 0;
+  overflow: hidden;
 `;
 
 export const FreqIcon = styled.img`
