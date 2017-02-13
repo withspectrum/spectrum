@@ -138,9 +138,11 @@ export const setActiveStory = (id) => (dispatch) => {
   })
 }
 
-export const deleteStory = (id) => (dispatch) => {
+export const deleteStory = (id) => (dispatch, getState) => {
   firebase.database().ref(`/stories/${id}`).remove() // delete the story
   firebase.database().ref(`/messages/${id}`).remove() // delete the messages for the story
+
+  let activeFrequency = getState().frequencies.active
 
   dispatch({
     type: 'DELETE_STORY',
@@ -151,6 +153,13 @@ export const deleteStory = (id) => (dispatch) => {
     type: 'CLEAR_MESSAGES',
     messages: ''
   })
+
+  // redirect the user so that they don't end up on a broken url
+  if (activeFrequency && activeFrequency !== "all") {
+    window.location.href = `/${activeFrequency}`
+  } else { 
+    window.location.href = '/'
+  }
 }
 
 export const toggleLockedStory = (story) => (dispatch) => {

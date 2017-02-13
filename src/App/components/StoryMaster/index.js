@@ -34,7 +34,6 @@ class StoryMaster extends Component {
     let usersPermissionOnFrequency = helpers.getFrequencyPermission(user, frequencies.active, frequencies.frequencies)
     const currentFrequency = helpers.getCurrentFrequency(frequencies.active, frequencies.frequencies)
     const currentFrequencyPrivacy = currentFrequency ? currentFrequency.settings.private : ''
-    console.log(frequencies.active, frequencies.frequencies)
 
     let subscribeButton = (usersFrequencies, activeFrequency) => {
       let keys = Object.keys(usersFrequencies)
@@ -53,6 +52,20 @@ class StoryMaster extends Component {
         return ''
       } else {
         return <JoinBtn onClick={ this.subscribeFrequency }>Join</JoinBtn>
+      }
+    }
+
+    let addStoryButton = (usersFrequencies, activeFrequency) => {
+      let keys = Object.keys(usersFrequencies)
+
+      if (!usersFrequencies) {
+        return ''
+      } else if (keys.indexOf(activeFrequency) > -1) {
+        return <img src="/img/add-story.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
+      } else if (activeFrequency === "all") {
+        return <img src="/img/add-story.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
+      } else {
+        return ''
       }
     }
 
@@ -91,8 +104,7 @@ class StoryMaster extends Component {
 
             { this.props.user.uid &&
               <Header>
-                <img src="/img/add-story.svg" onClick={ this.toggleComposer } alt="Add Story Button"/>
-                <FrequencyName>{ currentFrequency.name ? currentFrequency.name : ''}</FrequencyName>
+                { addStoryButton(this.props.user.frequencies, this.props.frequencies.active) }
                 { subscribeButton(this.props.user.frequencies, this.props.frequencies.active) }
                 { frequencies.active === 'all'
                   ? ''
