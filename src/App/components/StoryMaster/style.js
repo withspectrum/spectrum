@@ -2,8 +2,7 @@ import styled from 'styled-components';
 
 export const Column = styled.div`
 	display: flex;
-	flex: 0 1 480px;
-	min-width: 400px;
+	flex: 0 0 420px;
 	flex-direction: column;
 	border-right: 1px solid rgba(0,0,0,0.1);
 	background-color: #F5F6F7;
@@ -61,14 +60,7 @@ export const FrequencyName = styled.h2`
 `
 
 export const Button = styled.div`
-	font-size: 16px;
-	padding: 8px;
-	border-radius: 4px;
-	flex: 0 0 auto;
-
-	&:hover {
-		box-shadow: 0 2px 4px #000000;
-	}
+	background-color: transparent;
 `;
 
 export const BgText = styled.p`
@@ -170,4 +162,8 @@ export const LoginButton = styled.button`
 		border-radius: 16px
 		color: #ffffff;
   }
+`;
+
+export const HiddenInput = styled.input`
+	display: none;
 `;

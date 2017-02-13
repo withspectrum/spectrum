@@ -1,21 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import StoryView from '../StoryView';
 import ChatView from '../ChatView'
 import ChatInput from '../ChatInput'
 import actions from '../../../actions'
 import helpers from '../../../helpers'
+
 // eslint-disable-next-line
-import { Avatar,
-         AuthorName,
-         Header,
-         ViewContainer,
-         LogicContainer,
-         Media,
-         StoryMeta,
-         StoryTitle,
-         StoryDescription,
-         NullContainer,
-         NullText } from './style';
+
+import {  Header,
+          ViewContainer,
+          LogicContainer,
+          StoryTitle,
+          NullContainer,
+          NullText } from './style';
 
 class DetailView extends Component {
   getActiveStory = () => {
@@ -58,34 +56,18 @@ class DetailView extends Component {
 				{ story
 					? <LogicContainer>
 							<Header>
-								<StoryMeta>
-                {story.creator.photoURL ? <Avatar src={story.creator.photoURL} />: ""}
-                  <StoryTitle>{story.content.title}</StoryTitle>
-                  <AuthorName>{story.creator.displayName}</AuthorName>
-                </StoryMeta>
-								<StoryDescription>{story.content.description}</StoryDescription>
-                {story.content.media && story.content.media !== ''
-                  ? <Media onClick={this.showGallery} src={story.content.media} />
-                  : ''
-                }
 
-                { creator || moderator === "owner" // if the story was created by the current user, or is in a frequency the current user owns
-                  ? <div>
-                      <button onClick={this.deleteStory}>Delete Story</button> · 
-                      <label>Lock Conversation is {`${locked}`}
-                        <input type="checkbox" onChange={this.toggleLockedStory} checked={locked} />
-                      </label>
-                    </div>
-                  : ''
-                }
+                <StoryTitle>{story.content.title}</StoryTitle>
+
 							</Header>
-							
+              <StoryView activeStory={story} creator={creator} moderator={moderator} locked={locked} />
 							<ChatView />
 							{!story.locked &&
                 <ChatInput />
               }
 						</LogicContainer>
-					: <NullContainer>
+					: 
+            <NullContainer>
 							<NullText>Choose a story to get started!</NullText>
 						</NullContainer>
 				}
