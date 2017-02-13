@@ -165,3 +165,7 @@ export const LoginButton = styled.button`
 		color: #ffffff;
   }
 `;
+
+export const HiddenInput = styled.input`
+	display: none;
+`;

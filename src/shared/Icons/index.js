@@ -1,22 +1,23 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
+import { Palette } from '../Globals'
 
 export const Delete = (props) => {
-	const gradientStart = props.gradientStart || '#E2197A'
-	const gradientEnd = props.gradientEnd || '#E3353C'
-	const IconDelete = styled.svg`
-		fill: #cccccc;
+	const gradientStart = Palette.warn.alt
+	const gradientEnd = Palette.warn.default
+	const Svg = styled.svg`
+		fill: ${Palette.inactive};
 		transition: all 0.2s ease-out;
 
 		&:hover {
-			fill: url(#deleteGradient)
+			fill: url(#deleteGradient);
 			transform: scale(1.1);
 			transition: all 0.2s ease-in;
 			cursor: pointer;
 		}
 	`;
 	return(
-		<IconDelete viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="delete" aria-labelledby="title" xmlns="http://www.w3.org/2000/svg">
+		<Svg viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="delete" aria-labelledby="title" xmlns="http://www.w3.org/2000/svg">
 			<title id='title'>Delete</title>
 			<defs>
 				<radialGradient id="deleteGradient"
@@ -30,27 +31,67 @@ export const Delete = (props) => {
 			<path d="M6 10a1 1 0 0 1 1-1h18a1 1 0 0 1 0 2H7a1 1 0 0 1-1-1z" fillRule="nonzero"/>
 			<path d="M12.25 7.973C12.112 8.185 12 8.5 12 9h-2c0-.81.186-1.525.576-2.121.366-.536.963-1.006 1.525-1.271C13.24 5.087 14.687 5 16 5c1.313 0 2.76.087 3.899.608.562.265 1.158.735 1.525 1.271C21.814 7.475 22 8.19 22 9h-2c0-.5-.112-.815-.25-1.027-.161-.272-.324-.388-.684-.546C18.36 7.103 17.306 7 16 7c-1.306 0-2.36.103-3.066.427-.36.158-.523.274-.684.546z"/>
 			<path d="M12.044 14.086a1 1 0 1 1 1.998-.087l.349 7.992a1 1 0 0 1-1.998.087l-.349-7.992zM17.956 13.999a1 1 0 0 1 1.998.087l-.348 7.993a1 1 0 0 1-1.999-.088l.349-7.992z" fillRule="nonzero"/>
-		</IconDelete>
+		</Svg>
 	)
 }
 
 export const Flag = (props) => {
-	const fill = props.fill || '#000000'
+	const gradientStart = props.gradientStart || Palette.warn.alt
+	const gradientEnd = props.gradientEnd || Palette.warn.default
+	const Svg = styled.svg`
+		fill: ${Palette.inactive};
+		transition: all 0.2s ease-out;
+
+		&:hover {
+			fill: url(#flagGradient);
+			transform: scale(1.1);
+			transition: all 0.2s ease-in;
+			cursor: pointer;
+		}
+	`;
 	return(
-		<svg fill={fill} viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="flag" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
+		<Svg viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="flag" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
 			<title id='title'>Flag</title>
+			<defs>
+				<radialGradient id="flagGradient"
+					fx="0%" fy="0%" r="100%"
+					spreadMethod="pad">
+					<stop offset="0%" stopColor={gradientStart} stopOpacity="1" />
+					<stop offset="100%" stopColor={gradientEnd} stopOpacity="1" />
+				</radialGradient>
+			</defs>
 			<path d="M10.953 5.034a1 1 0 0 0-1.225.707L4.034 26.992a1 1 0 1 0 1.932.517l5.694-21.25a1 1 0 0 0-.707-1.225zm2.107 9.005c.425-1.703.798-3.036 1.225-4.079.429-1.058.766-1.43.912-1.532a.216.216 0 0 0 .022-.023l.017.003c.131-.022.133-.021.353.073l.065.028c.584.23 1.492.826 2.826 2.076 1.584 1.462 3.173 2.338 4.36 2.738a9.906 9.906 0 0 0 2.045.4c-.312 1.161-.627 2.297-1.028 3.334-.405 1.061-.756 1.774-1.284 2.307-.385.41-.719.542-1.131.527-.519-.018-1.447-.289-2.901-1.37-1.746-1.291-3.25-2.073-4.327-2.514a17.61 17.61 0 0 0-1.498-.524c.08-.375.193-.838.344-1.444zm12.104-1.615a.522.522 0 0 1 0 0zm-13.21 2.816l.017.008a.08.08 0 0 1-.017-.008zm-.834-1.685c1.727-6.93 3.174-9.634 8.727-4.43 2.833 2.655 4.933 2.646 6.14 2.641 1.16-.005 1.494-.007.86 2.359-1.294 4.83-3.053 10.796-9.5 6-2.638-1.962-4.392-2.486-5.449-2.801-1.526-.456-1.599-.478-.778-3.769z"/>
-		</svg>
+		</Svg>
 	)
 }
 
 export const Like = (props) => {
-	const fill = props.fill || '#000000'
+	const gradientStart = props.gradientStart || Palette.brand.alt
+	const gradientEnd = props.gradientEnd || Palette.brand.default
+	const Svg = styled.svg`
+		fill: ${Palette.inactive};
+		transition: all 0.2s ease-out;
+
+		&:hover {
+			fill: url(#likeGradient);
+			transform: scale(1.1);
+			transition: all 0.2s ease-in;
+			cursor: pointer;
+		}
+	`;
 	return(
-		<svg fill={fill} viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="like" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
+		<Svg viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="like" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
 			<title id='title'>Like</title>
+			<defs>
+				<radialGradient id="flagGradient"
+					fx="0%" fy="0%" r="100%"
+					spreadMethod="pad">
+					<stop offset="0%" stopColor={gradientStart} stopOpacity="1" />
+					<stop offset="100%" stopColor={gradientEnd} stopOpacity="1" />
+				</radialGradient>
+			</defs>
 			<path d="M15.982 13.578l-1.414-1.414C12.876 10.473 11.364 10 10.232 10c-1.17 0-2.175.503-2.836 1.164-1.592 1.592-1.887 3.022-1.676 4.288.235 1.407 1.152 2.928 2.579 4.412 1.432 1.501 3.108 2.703 4.719 3.616.789.451 1.453.769 2.062 1.001.344.134.65.199.809.233l.093.02.092-.02c.159-.034.466-.099.81-.233.608-.232 1.273-.55 2.062-1.001 1.611-.913 3.287-2.115 4.719-3.616 1.427-1.484 2.344-3.005 2.578-4.412.211-1.266-.083-2.696-1.675-4.288A4.035 4.035 0 0 0 21.732 10c-1.132 0-2.644.473-4.336 2.164l-1.414 1.414zm0-2.828c4-4 8-3 10-1 8 8-7 17-10 17s-18-9-10-17c2-2 6-3 10 1z"/>
-		</svg>
+		</Svg>
 	)
 }
 
@@ -68,7 +109,7 @@ export const Lock = (props) => {
 	const gradientStart = props.gradientStart || '#E2197A'
 	const gradientEnd = props.gradientEnd || '#E3353C'
 	const IconLock = styled.svg`
-		fill: #cccccc;
+		fill: url(#lockGradient)
 		transition: all 0.2s ease-out;
 
 		&:hover {
@@ -99,7 +140,7 @@ export const Unlock = (props) => {
 	const gradientStart = props.gradientStart || '#3818e5'
 	const gradientEnd = props.gradientEnd || '#7B16FF'
 	const IconUnlock = styled.svg`
-		fill: #cccccc;
+		fill: ${Palette.inactive};
 		transition: all 0.2s ease-out;
 
 		&:hover {

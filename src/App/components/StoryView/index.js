@@ -60,7 +60,7 @@ class StoryView extends Component {
 					}
 					{ creator || moderator === "owner" // if the story was created by the current user, or is in a frequency the current user owns
             ? <div>
-                <Button onClick={this.deleteStory}><Delete /></Button>
+                <Button onClick={this.deleteStory} tooltip={'Delete Story'}><Delete /></Button>
                 <label>
                 	{locked ?
                 		<Lock />

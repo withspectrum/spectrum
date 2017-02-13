@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Tooltip } from '../../../shared/Globals'
 
 export const Wrapper = styled.div`
 	display: flex;
@@ -96,5 +97,6 @@ export const HiddenInput = styled.input`
 `;
 
 export const Button = styled.button`
-	background-color: #ffffff;
+	background-color: transparent;
+	${props => props.tooltip ? Tooltip(props.tooltip) : console.log(false) };
 `
