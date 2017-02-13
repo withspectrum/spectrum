@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
+import { Palette, Scale } from '../../../shared/Globals'
 
 export const ScrollBody = styled.div`
 	flex: 1 1 auto;
@@ -43,7 +44,7 @@ export const BubbleGroup = styled.div`
 	> p {
 
 		background-color: ${props => props.me ? `#3819E6` : `#D6E0EE;`}
-		background-image: ${props => props.me ? `radial-gradient(ellipse farthest-corner at 0px 0px , #7B16FF 0%, #3819E6 100%);` : `radial-gradient(ellipse farthest-corner at 0px 0px , #D6E0EE 0%, #CBD9ED 100%);`}
+		background-image: ${props => props.me ? `radial-gradient(ellipse farthest-corner at 0px 0px , #7B16FF 0%, #3818e5 100%);` : `radial-gradient(ellipse farthest-corner at 0px 0px , ##E5F0FF 0%, #EBF3FF 100%);`}
 		color: ${props => props.me ? `#ffffff` : `#171A27;`}
 		float: ${props => props.me ? `right;` : `left;`}
 		font-weight: ${props => props.me ? `500` : `400`};

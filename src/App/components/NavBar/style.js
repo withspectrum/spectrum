@@ -82,7 +82,7 @@ export const Freq = styled.div`
   display: flex;
   flex: 0 0 48px;
   padding: 0.5rem;
-  padding-lefT: 1rem;
+  padding-left: 1rem;
   align-items: center;
   background-color: ${props => props.active ? '#3818e5' : '#171a21' };
   background-image: ${props => props.active ? `radial-gradient(ellipse farthest-corner at top left , #7B16FF 0%, #3819E6 100%)` : `none`};
@@ -98,26 +98,25 @@ export const FreqLabel = styled.span`
   font-size: 14px;
   font-weight: 500;
   display: inline-block;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   color: #ffffff;
-  margin-left: 12px;
-  margin-right: 12px;
+  margin-left: 8px;
+  margin-right: 8px;
   pointer-events: none;
   text-overflow: ellipsis;
   white-space: nowrap;
   word-wrap: normal;
-  padding: 8px 12px;
+  padding: 8px 0;
 `;
 
 export const FreqIcon = styled.img`
   height: 32px;
   flex: 0 0 32px;
-  margin-left: 4px;
   pointer-events: none;
 `;
 
 export const FreqGlyph = styled.span`
-  margin-left: ${Scale(1.5)};
+  margin-left: ${Scale(1)};
   margin-right: ${Scale(1)};
   display: inline-block;
   font-size: 24px;
