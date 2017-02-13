@@ -7,13 +7,14 @@ import { ComposerContainer, Input, Submit, Textarea, Media, MediaInput, MediaLab
 class Composer extends Component {
   constructor(props) {
     super(props)
+    let userFreqs = Object.keys(props.user.frequencies)
     this.state = {
       title: '',
       description: '',
       media: null,
       error: null,
       file: '',
-      frequencyPicker: props.user.frequencies ? props.user.frequencies[0] : '' // by default the user's first frequency is selected in the frequency picker
+      frequencyPicker: userFreqs ? userFreqs[0] : '' // by default the user's first frequency is selected in the frequency picker
     }
   }
 
@@ -87,6 +88,7 @@ class Composer extends Component {
   }
 
 	render() {
+    console.log(this.state)
     const frequencies = this.props.frequencies.frequencies
     const activeFrequency = this.props.frequencies.active
     const user = this.props.user
