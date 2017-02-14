@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Palette, Shadow } from '../../../shared/Globals'
 
 export const Column = styled.div`
 	display: flex;
@@ -40,6 +41,8 @@ export const Header = styled.div`
 	align-self: flex-start;
 	justify-content: space-between;
 	padding: 8px;
+	z-index: 1;
+	box-shadow: ${Shadow.low};
 
 
 	> img {

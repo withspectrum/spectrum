@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Palette, Shadow } from '../../../shared/Globals'
 
 export const ComposerContainer = styled.div`
 	display: ${props => props.isOpen ? 'inline-block' : 'none'};
@@ -8,12 +9,12 @@ export const ComposerContainer = styled.div`
 	margin-bottom: 0;
 	padding: 16px;
 	border-radius: 2px;
-	background-color: #ffffff;
-	box-shadow: 0 2px 4px rgba(129, 148, 175, 0.5);
+	background-color: ${Palette.bg.default};
+	box-shadow: ${Shadow.low};
 	transition: all 0.2s ease-in-out;
 
 	&:hover {
-		box-shadow: 0 4px 16px rgba(129, 148, 175, 0.8);
+		box-shadow: ${Shadow.mid};
 		transition: box-shadow 0.2s ease-out;
 		cursor: pointer;
 	}

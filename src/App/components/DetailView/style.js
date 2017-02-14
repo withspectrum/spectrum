@@ -32,6 +32,7 @@ export const StoryTitle = styled.h4`
   line-height: 20px;
   padding-left: ${Scale(2)};
 	font-size: 16px;
+	whitespace: no-wrap;
 `;
 
 export const NullContainer = styled.div`

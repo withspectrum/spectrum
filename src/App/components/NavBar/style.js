@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Palette, Scale } from '../../../shared/Globals'
+import { Palette, Scale, Shadow } from '../../../shared/Globals'
 
 export const Column = styled.div`
   display: flex;
@@ -166,15 +166,15 @@ export const Input = styled.input`
   padding-left: 12px;
   font-weight: 500;
   font-size: 12px;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
   line-height: 24px;
   vertical-align: middle;
   color: #ffffff;
+  position: relative;
 
-  &::placeholder { color: #747E8D }
-  &::-webkit-input-placeholder { color: #747E8D }
-  &:-moz-placeholder { color: #747E8D }
-  &:-ms-input-placeholder { color: #747E8D }
+  &::placeholder { color: ${Palette.text.alt} }
+  &::-webkit-input-placeholder { color: ${Palette.text.alt} }
+  &:-moz-placeholder { color: ${Palette.text.alt} }
+  &:-ms-input-placeholder { color: ${Palette.text.alt} }
 `;
 
 export const Button = styled.button`

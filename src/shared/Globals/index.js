@@ -27,20 +27,31 @@ export const Palette = {
 		default: '#171A21',
 		alt: '#747E8D',
 		reverse: '#FFFFFF',
+		placeholder: '#B2B9C6',
 	},
 	generic: {
 		default: '#D8E3F2',
 		alt: '#E2E9F4',
 	},
 	inactive: '#D6E0EE',
+	border: {
+		default: '#DFE7EF',
+	},
 }
 
-export const Gradient = (type) => {
-
+export const Gradient = (g1, g2) => {
+	return `radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`
 }
 
-const fontStack = `
-	font-family: -apple-system, BlinkMacSystemFont, sans-serif
+export const Shadow = {
+	low: '0 4px 8px -2px rgba(23,26,33, 0.15)',
+	mid: '0 8px 16px -4px rgba(23,26,33, 0.2)',
+	high: '0 16px 32px -8px rgba(23,26,33, 0.25)',
+	input: 'inset 0 3px 5px rgba(23,26,33, 0.05), inset 0 0 1px rgba(23,26,33, 0.1)'
+}
+
+export const fontStack = `
+	font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe', sans-serif
 `;
 
 export const H1 = styled.h1`
@@ -166,7 +177,7 @@ export const Tooltip = (text) => `
     text-overflow: ellipsis;
     padding: ${Scale(1)} ${Scale(1.5)};
     border-radius: ${Scale(1)};
-    box-shadow: 0 ${Scale(2)} ${Scale(4)} ${Scale(-1)} rgba(0, 0, 0, 0.35);
+    box-shadow: ${Shadow.mid};
     background: #333;
     color: #fff;
     bottom: calc(100% + 5px);

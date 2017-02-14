@@ -1,10 +1,10 @@
 import styled from 'styled-components'
-import { Palette, Scale } from '../../../shared/Globals'
+import { Palette, Scale, Gradient } from '../../../shared/Globals'
 
 export const ScrollBody = styled.div`
 	flex: 1 1 auto;
-	padding: 0 ${Scale(1)};
-	padding-bottom: ${Scale(1)};
+	padding: 0 8px;
+	padding-bottom: 8px;
 	display: flex;
 	flex-direction: column;
 	overflow-y: auto;
@@ -13,9 +13,9 @@ export const ScrollBody = styled.div`
 export const Bubble = styled.p`
 	display: inline-block;
 	flex: 0 0 auto;
-	padding: ${Scale(1)} ${Scale(2)};
+	padding: 8px 16px;
 	vertical-align: middle;
-	border-radius: ${Scale(2)}
+	border-radius: 16px
 	margin-top: 2px;
 	font-size: 14px;
 	max-width: 60%;
@@ -36,7 +36,7 @@ export const Bubble = styled.p`
 
 export const BubbleGroup = styled.div`
 	width: 100%;
-	margin-top: ${Scale(1)};
+	margin-top: 8px;
 
 	&:first-of-type {
 		margin-top: auto;
@@ -44,19 +44,19 @@ export const BubbleGroup = styled.div`
 
 	> p {
 
-		background-color: ${props => props.me ? `#3819E6` : `#D6E0EE;`}
-		background-image: ${props => props.me ? `radial-gradient(ellipse farthest-corner at 0px 0px , ${Palette.brand.alt} 0%, ${Palette.brand.default} 100%);` : `radial-gradient(ellipse farthest-corner at 0px 0px , ${Palette.generic.alt} 0%, ${Palette.generic.default} 100%);`}
-		color: ${props => props.me ? `#ffffff` : `#171A27;`}
+		background-color: ${props => props.me ? Palette.brand.default : Palette.generic.default };
+		background-image: ${props => props.me ? Gradient(Palette.brand.alt, Palette.brand.default) : `radial-gradient(ellipse farthest-corner at 0px 0px , ${Palette.generic.alt} 0%, ${Palette.generic.default} 100%);`}
+		color: ${props => props.me ? Palette.text.reverse : Palette.text.default };
 		float: ${props => props.me ? `right;` : `left;`}
 		font-weight: ${props => props.me ? `500` : `400`};
 		clear: both;
 
 		&:not(:first-of-type) {
-			${props => props.me? `border-top-right-radius: ${Scale(.5)}` : `border-top-left-radius: ${Scale(.5)}`};
+			${props => props.me? `border-top-right-radius: 4px` : `border-top-left-radius: 4px` };
 		}
 
 		&:not(:last-of-type) {
-			${props => props.me? `border-bottom-right-radius: ${Scale(.5)}` : `border-bottom-left-radius: ${Scale(.5)}`};
+			${props => props.me? `border-bottom-right-radius: 4px` : `border-bottom-left-radius: 4px` };
 		}
 	}
 `;
@@ -64,8 +64,8 @@ export const BubbleGroup = styled.div`
 export const FromName = styled.span`
 	display: inline-block;
 	font-size: 10px;
-	line-height: ${Scale(2)};
+	line-height: 16px;
 	font-weight: 500;
-	color: #747E8D;
+	color: ${Palette.text.alt};
 	float: ${props => props.me ? `right;` : `left;`}
 `;
