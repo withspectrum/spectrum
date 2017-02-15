@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import StoryView from '../StoryView';
-import ChatView from '../ChatView'
+import StoryDetail from '../StoryDetail';
+import ChatDetail from '../ChatDetail'
 import ChatInput from '../ChatInput'
 import actions from '../../../actions'
 import helpers from '../../../helpers'
@@ -12,6 +12,8 @@ import {  Header,
           ViewContainer,
           LogicContainer,
           StoryTitle,
+          Byline,
+          FlexColumn,
           NullContainer,
           NullText } from './style';
 
@@ -56,12 +58,14 @@ class DetailView extends Component {
 				{ story
 					? <LogicContainer>
 							<Header>
-
-                <StoryTitle>{story.content.title}</StoryTitle>
+                <FlexColumn>
+                  <Byline>{story.creator.displayName}</Byline>
+                  <StoryTitle>{story.content.title}</StoryTitle>
+                </FlexColumn>
 
 							</Header>
-              <StoryView activeStory={story} creator={creator} moderator={moderator} locked={locked} />
-							<ChatView />
+              <StoryDetail activeStory={story} creator={creator} moderator={moderator} locked={locked} />
+							<ChatDetail />
 							{!story.locked &&
                 <ChatInput />
               }

@@ -5,7 +5,7 @@ import { Column, Header, ScrollBody, JoinBtn, LoginWrapper, LoginText, LoginButt
 import actions from '../../../actions'
 import helpers from '../../../helpers'
 import { Lock, Unlock, NewPost, ClosePost } from '../../../shared/Icons'
-import Story from '../Story'
+import StoryCard from '../StoryCard'
 import Composer from '../Composer'
 import ShareCard from '../ShareCard'
 
@@ -147,13 +147,13 @@ class StoryMaster extends Component {
                   if (this.props.frequencies.active === "all") { // if we're in everything, just load the story in the sidebar
                     return (
                       <Link to={`/all/${story.id}`} key={i}>
-                        <Story data={story} key={i} />
+                        <StoryCard data={story} key={i} />
                       </Link>
                     )
                   } else { // else, let's do dynamic url handling
                     return (
                       <Link to={`/${this.props.frequencies.active}/${story.id}`} key={i}>
-                        <Story data={story} />
+                        <StoryCard data={story} />
                       </Link>
                     )
                   }

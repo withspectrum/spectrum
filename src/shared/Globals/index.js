@@ -58,8 +58,8 @@ export const H1 = styled.h1`
 	${fontStack};
 	color: ${Palette.text.default};
 	font-weight: 700;
-	font-size: ${Scale(3)};
-	line-height: ${Scale(3)};
+	font-size: ${Scale(3.5)};
+	line-height: ${Scale(5)};
 	margin: 0;
 	padding: 0;
 `;
@@ -68,13 +68,33 @@ export const H2 = styled.h2`
 	color: ${Palette.text.default};
 	${fontStack};
 	font-weight: 500;
-	font-size: ${Scale(2)};
-	line-height: ${Scale(2)};
+	font-size: ${Scale(3)};
+	line-height: ${Scale(4)};
 	margin: 0;
 	padding: 0;
 `;
 
 export const H3 = styled.h3`
+	color: ${Palette.text.default};
+	${fontStack};
+	font-weight: 500;
+	font-size: ${Scale(2)};
+	line-height: ${Scale(3)};
+	margin: 0;
+	padding: 0;
+`;
+
+export const H4 = styled.h4`
+	color: ${Palette.text.default};
+	${fontStack};
+	font-weight: 500;
+	font-size: ${Scale(1.75)};
+	line-height: ${Scale(2)};
+	margin: 0;
+	padding: 0;
+`;
+
+export const H5 = styled.h5`
 	color: ${Palette.text.default};
 	${fontStack};
 	font-weight: 500;
@@ -84,33 +104,13 @@ export const H3 = styled.h3`
 	padding: 0;
 `;
 
-export const H4 = styled.h4`
-	color: ${Palette.text.default};
-	${fontStack};
-	font-weight: 500;
-	font-size: ${Scale(1.25)};
-	line-height: ${Scale(1.5)};
-	margin: 0;
-	padding: 0;
-`;
-
-export const H5 = styled.h5`
-	color: ${Palette.text.default};
-	${fontStack};
-	font-weight: 500;
-	font-size: ${Scale(1)};
-	line-height: ${Scale(1)};
-	margin: 0;
-	padding: 0;
-`;
-
 export const H6 = styled.h6`
 	color: ${Palette.text.default};
 	${fontStack};
 	font-weight: 600;
 	text-transform: uppercase;
-	font-size: ${Scale(1)};
-	line-height: ${Scale(1)};
+	font-size: ${Scale(1.25)};
+	line-height: ${Scale(1.5)};
 	margin: 0;
 	padding: 0;
 `;

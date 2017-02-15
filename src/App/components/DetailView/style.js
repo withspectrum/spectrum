@@ -1,15 +1,29 @@
 import styled from 'styled-components'
-import { Scale } from '../../../shared/Globals'
+import { Palette, Scale, H1, H4 } from '../../../shared/Globals'
 
 export const Header = styled.div`
-	flex: 0 0 48px;
+	flex: 0 0 auto;
 	align-self: flex-start;
 	width: 100%;
-	color: #ffffff;
 	display: flex;
-	align-items: center;
-	background-color: #10172A;
-	background-image: radial-gradient(ellipse farthest-corner at top left, #10172A 0%, #363A4F 100%);
+	background-color: ${Palette.bg.default};
+	padding: 32px;
+`;
+
+export const StoryTitle = styled(H1)`
+	font-size: 28px;
+	line-height: 40px;
+	font-weight: 800;
+	color: ${Palette.text.default};
+`;
+
+export const Byline = styled(H4)`
+	color: ${Palette.brand.default};
+`;
+
+export const FlexColumn = styled.div`
+	display:flex;
+	flex-direction: column;
 `;
 
 export const ViewContainer = styled.div`
@@ -25,14 +39,6 @@ export const LogicContainer = styled.div`
 	align-self: stretch;
 	flex-direction: column;
 	display: flex;
-`;
-
-export const StoryTitle = styled.h4`
-	font-weight: bold;
-  line-height: 20px;
-  padding-left: ${Scale(2)};
-	font-size: 16px;
-	whitespace: no-wrap;
 `;
 
 export const NullContainer = styled.div`

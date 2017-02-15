@@ -1,16 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux' 
 import { Lock, Unlock, Delete } from '../../../shared/Icons'
-import {  Wrapper, 
-					SectionLabel, 
-					Section, 
-					Meta, 
-					AuthorName, 
+import {  Wrapper,
 					Description, 
 					Media,
 					Button,
-					HiddenInput, 
-					RowList} from './style';
+					HiddenInput} from './style';
 import actions from '../../../actions'
 
 class StoryView extends Component {
@@ -43,18 +38,10 @@ class StoryView extends Component {
 
 		return(
 			<Wrapper>
-				<Meta>
-				  <AuthorName>{story.creator.displayName}</AuthorName>
-				</Meta>
 				<Description>{story.content.description}</Description>
 					{story.content.media && story.content.media !== ''
 						?
-							<Section>
-								<SectionLabel>Images</SectionLabel>
-								<RowList>
-									<a href={story.content.media} target="_blank"><Media src={story.content.media} /></a>
-							  </RowList>
-						  </Section>
+							<a href={story.content.media} target="_blank"><Media src={story.content.media} /></a>
 					  : 
 						  ''
 					}
@@ -63,9 +50,9 @@ class StoryView extends Component {
                 <Button onClick={this.deleteStory} tooltip={'Delete Story'}><Delete /></Button>
                 <label>
                 	{locked ?
-                		<Lock />
+                		<Lock tooltip={'Unlock Story'}/>
                 	:
-                		<Unlock />
+                		<Unlock tooltip={'Lock Story'}/>
                 	}
                   <HiddenInput type="checkbox" onChange={this.toggleLockedStory} checked={locked} />
                 </label>

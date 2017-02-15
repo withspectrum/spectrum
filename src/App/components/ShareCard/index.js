@@ -1,5 +1,5 @@
 import React from 'react'
-import { StoryWrapper } from '../Story/style';
+import { StoryWrapper } from '../StoryCard/style';
 import { Body, Title, Desc, Input, ButtonWrapper, Button } from './style'
 
 const ShareCard = (props) => {
