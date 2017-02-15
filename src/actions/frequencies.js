@@ -1,53 +1,129 @@
 import * as firebase from 'firebase'
 import helpers from '../helpers'
 
+
+/*------------------------------------------------------------\*
+*             
+
+setup
+Takes getState() as an only argument. The reason we do this is so that in any future
+action creator we can easily destructure the returned object of setup to get
+any necessary bits of data
+
+*
+\*------------------------------------------------------------*/
 export const setup = (stateFetch) => {
 	let state = stateFetch
+	let frequencies = state.frequencies
+	let stories = state.stories
 	let user = state.user
 	let uid = user.uid
 
+	// return an object that we can destructure in future functions
 	return {
-		database: firebase.database(),
-		state: stateFetch,
-    user: user,
-    uid: uid
+		database: firebase.database(), // we're also including the database so we don't have to keep defining it elsewhere
+		state,
+		frequencies,
+		stories,
+    user,
+    uid
 	}
 }
 
+/*------------------------------------------------------------\*
+*             
+
+setActiveFrequency
+Always takes an ID of a frequency.
+
+Note:
+A frequency can be public, private, or 1:1. Therefore, we will need to
+run checks in our other components and actions to make sure the user
+always has permissions to see/interact with frequencies safely.
+
+*
+\*------------------------------------------------------------*/
 export const setActiveFrequency = (id) => (dispatch) => {
   dispatch({
     type: 'SET_ACTIVE_FREQUENCY',
-    id: id
+    id
   })
 }
 
+/*------------------------------------------------------------\*
+*             
+
+setFrequencies
+This creates an active listener to the frequencies that are saved in the database.
+
+NOTE: Right now we are returning ALL frequencies. This will need to change
+very soon as we want to respect private frequencies and avoid a noisy new user experience.
+
+*
+\*------------------------------------------------------------*/
 export const setFrequencies = () => (dispatch, getState) => {
   let { database } = setup(getState())
+  
+  // connect to the entire frequencies table
+  // NOTE: We will need to change this in the future to filter by a user's subscribed frequencies
   let frequenciesRef = database.ref('frequencies');
 
   // once we get our frequencies, dispatch them to the store
-  frequenciesRef.on('value', function(snapshot){
-  	const frequencies = helpers.hashToArray(snapshot.val())
+  frequenciesRef.on('value', (snapshot) => {
+  	// we will convert our JSON object into array so that in our components we can easily map, filter, and reduce them
+  	let frequencies = helpers.hashToArray(snapshot.val())
+    
     dispatch({
 	  	type: 'SET_FREQUENCIES',
-	  	frequencies: frequencies
+	  	frequencies
 	  })
   })
 }
 
-export const addFrequency = (name) => (dispatch, getState) => {
-	// generate a new entry in the frequencies collection with a key id
-	let { database, uid } = setup(getState())
-	const newFrequencyRef = database.ref().child("frequencies").push();
-	const newFrequencyKey = newFrequencyRef.key
 
-	let user = { // the person doing the creation should be the first user
-    permission: "owner" // if the person is creating the frequency, they are the owner
+/*------------------------------------------------------------\*
+*             
+
+addFrequency
+Creating a new frequency requires a few operations:
+
+1. Create the record on Firebase
+2. Set initial data for that new record, including information about the user who is doing the creation
+3. Add the newly created Frequency id to the user's record in Firebase
+
+We have a two-way relationship between a user and frequencies:
+1. A user is subscribed to many frequencies
+2. A frequency has many users
+
+This means that a change in one of these fields requires a change in the other
+
+NOTE: We do not dispatch anything in this action because we have an open listener to any changes in the frequencies that was set in setFrequencies()
+
+*
+\*------------------------------------------------------------*/
+export const addFrequency = (name) => (dispatch, getState) => {
+	// NOTE: Eventually we may want to pass more than the name into this function, for example we might include default privacy settings, a frequency icon, and more.
+
+	let { database, uid } = setup(getState())
+
+	// .push() creates a new key in the database
+	let newFrequencyRef = database.ref().child("frequencies").push();
+
+	// this key can now be used to update the user and set metadata about the frequency
+	let newFrequencyKey = newFrequencyRef.key
+
+	// we're going to populate the first user in the frequency object
+	let user = {
+    permission: "owner" // with the 'owner' permission so that the current user will have full admin rights
 	}
 
-	// create the data we want updated
-	let updatedData = {}
-	let newFrequencyData = { // add the new frequency
+	// since we want to simultaneously update the frequencies table and the users table, we're going to construct a data fan-out
+	// documentation: https://firebase.google.com/docs/database/web/read-and-write
+	let updates = {}
+
+	// here we're creating the new frequency
+	let newFrequencyData = {
+		// with our first user set as a key, with a value of the permission
 	  users: {
       [uid]: user
     },
@@ -62,72 +138,161 @@ export const addFrequency = (name) => (dispatch, getState) => {
 	  },
 	}
 
-	updatedData["frequencies/" + newFrequencyKey] = newFrequencyData;
-
-	const saveFrequencies = (newFrequencyKey, updatedData) => {
-	  // we need to see what frequencies the user has already:
-	  let { database, uid } = setup(getState())
-	  database.ref(`/users/${uid}/frequencies`).once('value').then(function(snapshot) {
-
-	    let updatedFrequencies = snapshot.val() || [];
-	    updatedFrequencies[newFrequencyKey] = {id: newFrequencyKey} // and push the new frequency
-	    updatedData[`users/${uid}/frequencies`] = updatedFrequencies // add the frequency id to the user object
-
-	    database.ref().update(updatedData, function(error) {
-	      if (error) {
-	        console.log("Error updating data:", error);
-	      }
-	    });
-	  	setActiveFrequency(newFrequencyKey)
-	  });
+	// create the object we want saved in the user model
+	let userFrequencyData = {
+		id: newFrequencyKey,
+		permission: "owner"
 	}
 
-	saveFrequencies(newFrequencyKey, updatedData)
+	// prep our simultaneous saves in Firebase
+	updates[`frequencies/${newFrequencyKey}`] = newFrequencyData
+	updates[`users/${uid}/frequencies/${newFrequencyKey}`] = userFrequencyData
+
+	// set the active frequency in redux as the newly created frequency
+	dispatch({
+    type: 'SET_ACTIVE_FREQUENCY',
+    id: newFrequencyKey
+  })
+
+	// save the new data to Firebase
+	return database.ref().update(updates)
 }
 
+
+/*------------------------------------------------------------\*
+*             
+
+subscribeFrequency
+When subscribing a user to a frequency, we need to perform two simultaneous actions:
+
+1. Update the frequency record to reflect the new user
+2. Update the user's record to reflect the new frequency
+
+We will always set role as "subscriber" in this function and let moderation roles be set elsewhere (usually by frequency owners)
+
+*
+\*------------------------------------------------------------*/
 export const subscribeFrequency = () => (dispatch, getState) => {
-	let { database, state, uid } = setup(getState())
-	let usersFrequencies = state.user.frequencies || []
-	let activeFrequency = state.frequencies.active
-	usersFrequencies[activeFrequency] = {id: activeFrequency}
+	let { database, frequencies, uid } = setup(getState())
+	
+	// we'll use this key to update the user record and to find the correct frequency record to update
+	let frequencyKey = frequencies.active
 
-	database.ref(`/users/${uid}`).update({
-		frequencies: usersFrequencies
-	})
+	// data to be stored on the user record
+	let userFrequencyData = {
+		id: frequencyKey,
+		permission: "subscriber"
+	}
 
-  database.ref(`/frequencies/${activeFrequency}`).once('value').then(function(snapshot){
-    let users = snapshot.val().users
-    let permission = {
-	    permission: "subscriber"
-    }
-    users[uid] = permission    
-    database.ref(`/frequencies/${activeFrequency}/users/${uid}`).update(permission)
+	// data to be inserted into the frequency record for 'users'
+	let user = {
+    permission: "subscriber"
+	}
+
+	// set up a new simultaneous update
+	let updates = {}
+
+	// prep our simultaneous saves in Firebase
+	updates[`users/${uid}/frequencies/${frequencyKey}`] = userFrequencyData
+	updates[`frequencies/${frequencyKey}/users/${uid}`] = user
+
+	// save the new data to Firebase
+	return database.ref().update(updates)
+}
+
+
+/*------------------------------------------------------------\*
+*             
+
+unsubscribeFrequency
+When unsubscribing a user from a frequency, we need to perform two simultaneous actions:
+
+1. Update the frequency record to remove the user
+2. Update the user's record to reflect the removed frequency
+
+We do not allower the user of the frequency to leave via an unsubscribe button. While we check for this in the component and hide the 'leave' button, we'll double check here when the action is being performed
+
+*
+\*------------------------------------------------------------*/
+export const unsubscribeFrequency = () => (dispatch, getState) => {
+	let { database, frequencies, uid } = setup(getState())
+	
+	// we'll use this key to update the user record and to find the correct frequency record to update
+	let frequencyKey = frequencies.active
+
+	// these are the refs we'll be updating
+	let userRef = database.ref(`/users/${uid}/frequencies/${frequencyKey}`)
+	let frequencyRef = database.ref(`/frequencies/${frequencyKey}/users/${uid}`)
+
+	// handle removing the frequency from the user record
+	userRef.once('value')
+  .then((snapshot) => {
+    let frequency = snapshot.val()
+
+    // make sure the user isn't the owner
+    if (frequency.permission === "owner") return
+
+    // if they're not, it's save to remove this node from the user's frequencies
+    userRef.remove()
+  });
+
+	// handle removing the frequency from the user record
+	frequencyRef.once('value')
+  .then((snapshot) => {
+    let user = snapshot.val()
+
+    // make sure the user isn't the owner
+    if (user.permission === "owner") return
+
+    // if they're not, it's save to remove this node from the user's frequencies
+    frequencyRef.remove()
   })
 }
 
-export const unsubscribeFrequency = () => (dispatch, getState) => {
-	let { database, state, uid } = setup(getState())
-	let usersFrequencies = state.user.frequencies
-	let activeFrequency = state.frequencies.active
-	delete usersFrequencies[activeFrequency]
 
-	database.ref(`/users/${uid}`).update({
-		frequencies: usersFrequencies
-	})
+/*------------------------------------------------------------\*
+*             
 
-	database.ref(`/frequencies/${activeFrequency}/users/${uid}`).remove()
-}
+toggleFrequencyPrivacy
+Changes the boolean value of a frequencies privacy. We will run checks throughout the app to ensure the user always has the correct permissions when attempting to view a frequency with private set to 'true'
 
+We need to ensure at this step that the user doing the toggling has permission, as indicated by being an owner in the frequency
+
+*
+\*------------------------------------------------------------*/
 export const toggleFrequencyPrivacy = () => (dispatch, getState) => {
-	let { database, state } = setup(getState())
-	const frequencies = state.frequencies.frequencies
-	const activeFrequency = state.frequencies.active
-	const freqToUpdate = helpers.getCurrentFrequency(activeFrequency, frequencies)
+	let { database, frequencies, user } = setup(getState())
+	
+	// we'll compare user ids to make sure this action is allowed
+	let uid = user.uid
 
-	database.ref(`/frequencies/${activeFrequency}/settings`).update({
-		private: !freqToUpdate.settings.private
-	})
+	// the frequency key we want to toggle on the server
+	let frequencyKey = frequencies.active
+
+	// the frequency object which we use to check the current privacy
+	let frequencyToUpdate = helpers.getCurrentFrequency(frequencyKey, frequencies.frequencies)
+	let isPrivate = frequencyToUpdate.settings.private
+
+	// we're going to first check the users ref to ensure the right permissions
+	let frequencyUsersRef = database.ref(`/frequencies/${frequencyKey}/users/${uid}`)
+	// and if the permission looks good, we'll update the settings ref
+	let frequencySettingsRef = database.ref(`/frequencies/${frequencyKey}/settings`)
+
+
+	// first we're going to check the users of this frequency
+	frequencyUsersRef.once('value')
+  .then((snapshot) => {
+    let user = snapshot.val()
+
+    // make sure the user is the owner, then toggle the privacy
+    if (user.permission === "owner") {
+    	frequencySettingsRef.update({
+    		private: !isPrivate
+    	})
+    }
+  })
 }
+
 
 export default {
 	setFrequencies,
