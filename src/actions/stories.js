@@ -111,14 +111,17 @@ export const createStory = (frequency, title, description, file) => (dispatch, g
     }
 
     newStoryRef.set(storyData, function(err){
-      console.log('err 2: ', err)
+      if (err) {
+        console.log('there was an error saving your story: ', err)
+      } else {
+        console.log('here with ', key)
+        dispatch({
+          type: 'SET_ACTIVE_STORY',
+          id: key
+        })
+      }
     });
   }
-
-  dispatch({
-    type: 'SET_ACTIVE_STORY',
-    key
-  })
 
   dispatch({
     type: 'TOGGLE_COMPOSER_OPEN',
