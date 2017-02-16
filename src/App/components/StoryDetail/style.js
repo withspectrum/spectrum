@@ -76,7 +76,12 @@ export const HiddenInput = styled.input`
 	display: none;
 `;
 
-export const Button = styled.button`
+export const HiddenLabel = styled.span`
+	display: inline-block;
+	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip') };
+`
+
+export const HiddenButton = styled.button`
 	background-color: transparent;
-	${props => props.tooltip ? Tooltip(props.tooltip) : console.log(false) };
+	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip') };
 `

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Palette, Shadow, Gradient } from '../../../shared/Globals'
+import { Palette, Shadow, Gradient, Tooltip } from '../../../shared/Globals'
 
 export const Column = styled.div`
 	display: flex;
@@ -160,3 +160,8 @@ export const LoginButton = styled.button`
 export const HiddenInput = styled.input`
 	display: none;
 `;
+
+export const TipButton = styled.button`
+	background-color: transparent;
+	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip') };
+`

@@ -12,7 +12,8 @@ import {  ScrollBody,
           Byline,
 					TextBody, 
 					Media,
-					Button,
+					HiddenButton,
+          HiddenLabel,
 					HiddenInput} from './style';
 import actions from '../../../actions'
 
@@ -60,13 +61,13 @@ class StoryView extends Component {
                 ? <FlexColumnEnd>
                     <label>
                       {locked ?
-                        <Lock color='warn' stayActive tooltip={'Unlock Story'}/>
+                      <HiddenLabel tipText='Story locked' tipLocation='left' ><Lock color='warn' stayActive /></HiddenLabel>
                       :
-                        <Unlock tooltip={'Lock Story'}/>
+                      <HiddenLabel tipText='Story unlocked' tipLocation='left' ><Unlock /></HiddenLabel>
                       }
                       <HiddenInput type="checkbox" onChange={this.toggleLockedStory} checked={locked} />
                     </label>
-                    <Button onClick={this.deleteStory} tooltip={'Delete Story'}><Delete color='warn' /></Button>
+                    <HiddenButton onClick={this.deleteStory} tipText='Delete Story' tipLocation='left' ><Delete color='warn' /></HiddenButton>
                   </FlexColumnEnd>
                 : ''
               }

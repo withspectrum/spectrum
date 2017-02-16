@@ -35,7 +35,7 @@ const Defs = (props) => {
 
 export const Delete = (props) => {
 	return(
-		<Svg color={props.color} stayActive={props.stayActive } viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="delete" aria-labelledby="title" xmlns="http://www.w3.org/2000/svg">
+		<Svg color={props.color} stayActive={ props.stayActive } viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="delete" aria-labelledby="title" xmlns="http://www.w3.org/2000/svg">
 			<title id='title'>Delete</title>
 			<Defs />
 			<path d="M8.391 12.32c-.636-.131-1.248.368-1.213 1.016.808 14.714 1.271 14.711 7.681 14.669C15.22 28.003 15.6 28 16 28s.78.003 1.141.005c6.41.042 6.873.045 7.681-14.669.035-.648-.577-1.147-1.212-1.016a.975.975 0 0 0-.784.896c-.17 3.094-.323 5.51-.519 7.407-.266 2.584-.588 3.883-.95 4.566-.225.426-.422.586-1.067.701-.716.128-1.615.123-3.019.115h-.002a161.358 161.358 0 0 0-2.538 0h-.001c-1.405.008-2.304.013-3.02-.115-.645-.115-.842-.275-1.067-.701-.362-.683-.684-1.982-.95-4.566-.196-1.897-.349-4.313-.519-7.407a.975.975 0 0 0-.783-.896z"/>
@@ -48,7 +48,7 @@ export const Delete = (props) => {
 
 export const Flag = (props) => {
 	return(
-		<Svg color={props.color} stayActive={props.stayActive } viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="flag" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
+		<Svg color={props.color} stayActive={ props.stayActive } viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="flag" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
 			<title id='title'>Flag</title>
 			<Defs />
 			<path d="M10.953 5.034a1 1 0 0 0-1.225.707L4.034 26.992a1 1 0 1 0 1.932.517l5.694-21.25a1 1 0 0 0-.707-1.225zm2.107 9.005c.425-1.703.798-3.036 1.225-4.079.429-1.058.766-1.43.912-1.532a.216.216 0 0 0 .022-.023l.017.003c.131-.022.133-.021.353.073l.065.028c.584.23 1.492.826 2.826 2.076 1.584 1.462 3.173 2.338 4.36 2.738a9.906 9.906 0 0 0 2.045.4c-.312 1.161-.627 2.297-1.028 3.334-.405 1.061-.756 1.774-1.284 2.307-.385.41-.719.542-1.131.527-.519-.018-1.447-.289-2.901-1.37-1.746-1.291-3.25-2.073-4.327-2.514a17.61 17.61 0 0 0-1.498-.524c.08-.375.193-.838.344-1.444zm12.104-1.615a.522.522 0 0 1 0 0zm-13.21 2.816l.017.008a.08.08 0 0 1-.017-.008zm-.834-1.685c1.727-6.93 3.174-9.634 8.727-4.43 2.833 2.655 4.933 2.646 6.14 2.641 1.16-.005 1.494-.007.86 2.359-1.294 4.83-3.053 10.796-9.5 6-2.638-1.962-4.392-2.486-5.449-2.801-1.526-.456-1.599-.478-.778-3.769z"/>
@@ -98,7 +98,7 @@ export const Unlock = (props) => {
 
 export const NewPost = (props) => {
 	return(
-		<Svg color={props.color} stayActive={props.stayActive } viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="newPost" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
+		<Svg color={props.color} stayActive={ props.stayActive } viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="newPost" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
 			<title id='title'>New Post</title>
 			<Defs />
 			<path d="M16 6c5.1 0 7.247.575 8.336 1.664C25.425 8.753 26 10.9 26 16s-.575 7.247-1.664 8.336C23.247 25.425 21.1 26 16 26s-7.247-.575-8.336-1.664C6.575 23.247 6 21.1 6 16s.575-7.247 1.664-8.336C8.753 6.575 10.9 6 16 6zm0-2c10 0 12 2 12 12s-2 12-12 12S4 26 4 16 6 4 16 4zm-1 8a1 1 0 0 1 2 0v3h3a1 1 0 0 1 0 2h-3v3a1 1 0 0 1-2 0v-3h-3a1 1 0 0 1 0-2h3v-3z"/>
@@ -108,7 +108,7 @@ export const NewPost = (props) => {
 
 export const ClosePost = (props) => {
 	return(
-		<Svg color={props.color} stayActive={props.stayActive } viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="closePost" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
+		<Svg color={props.color} stayActive={ props.stayActive } viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="closePost" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
 			<title id='title'>Close Post</title>
 			<Defs />
 			<path id="closePost" d="M16,5.986c5.1,0 7.247,0.575 8.336,1.664c1.089,1.089 1.664,3.236 1.664,8.336c0,5.1 -0.575,7.247 -1.664,8.336c-1.089,1.088 -3.236,1.664 -8.336,1.664c-5.1,0 -7.247,-0.575 -8.336,-1.664c-1.089,-1.089 -1.664,-3.236 -1.664,-8.336c0,-5.1 0.575,-7.247 1.664,-8.336c1.089,-1.089 3.236,-1.664 8.336,-1.664Zm0,-2c10,0 12,2 12,12c0,10 -2,12 -12,12c-10,0 -12,-2 -12,-12c0,-10 2,-12 12,-12Zm-4,11l8,0c0.552,0 1,0.448 1,1c0,0.552 -0.448,1 -1,1l-8,0c-0.552,0 -1,-0.448 -1,-1c0,-0.552 0.448,-1 1,-1Z"/>
@@ -118,7 +118,7 @@ export const ClosePost = (props) => {
 
 export const Share = (props) => {
 	return(
-		<Svg color={props.color} stayActive={props.stayActive } viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="share" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
+		<Svg color={props.color} stayActive={ props.stayActive } viewBox="0 0 32 32" width="32" height="32" fillRule="evenodd" clipRule="evenodd" strokeLinejoin="round" strokeMiterlimit="1.414" id="share" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title">
 			<title id='title'>Share</title>
 			<Defs />
 			<g fillRule="nonzero">

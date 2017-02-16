@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { Column, Header, ScrollBody, JoinBtn, LoginWrapper, LoginText, LoginButton, HiddenInput, Button } from './style'
+import { Column, Header, ScrollBody, JoinBtn, LoginWrapper, LoginText, LoginButton, HiddenInput, TipButton } from './style'
 import actions from '../../../actions'
 import helpers from '../../../helpers'
 import { Lock, Unlock, NewPost, ClosePost } from '../../../shared/Icons'
@@ -63,19 +63,19 @@ class StoryMaster extends Component {
       if (!usersFrequencies) {
         return ''
       } else if (keys.indexOf(activeFrequency) > -1) {
-        return <Button onClick={ this.toggleComposer } tooltip="Add Story">
+        return <TipButton onClick={ this.toggleComposer } tipText="New Story" tipLocation="bottom">
                   { this.props.composer.isOpen 
                   ? <ClosePost color='warn' />
                   : <NewPost color='brand' stayActive />
                    }
-                  </Button>
+                  </TipButton>
       } else if (activeFrequency === "all") {
-        return <Button onClick={ this.toggleComposer } tooltip="Add Story">
+        return <TipButton onClick={ this.toggleComposer } tipText="New Story" tipLocation="bottom">
                   { this.props.composer.isOpen 
                   ? <ClosePost color='warn' />
                   : <NewPost color='brand' stayActive />
                    }
-                  </Button>
+                  </TipButton>
       } else {
         return ''
       }

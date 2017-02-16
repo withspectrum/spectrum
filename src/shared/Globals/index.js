@@ -131,15 +131,8 @@ export const Span = styled.span`
 	padding: 0;
 `;
 
-export const Tooltip = (text) => `
+export const Tooltip = (props) => `
 	position: relative;
-
-	@keyframes tooltips-vert {
-	  to {
-	    opacity: .9;
-	    transform: translate(-50%, 0);
-	  }
-	}
 
 	&:after,
 	&:before {
@@ -148,24 +141,56 @@ export const Tooltip = (text) => `
     pointer-events: none;
     position: absolute;
     opacity: 0;
-    display: ${text ? `block` : `none !important`};
+    display: block;
 	}
 
 	&:before {
 		content: '';
     z-index: 1001;
     border: 5px solid transparent;
-    bottom: 100%;
-    border-bottom-width: 0;
-    border-top-color: #333;
-    left: 50%;
-    transform: translate(-50%, 0px);
+
+    ${ props.tipLocation === 'top' ? `
+			bottom: 100%;
+			left: 33%;
+	    border-bottom-width: 0;
+	    border-top-color: ${Palette.bg.reverse};
+	    ` : '' }
+
+	  ${ props.tipLocation === 'right' ? `
+			top: 50%;
+	    border-left-width: 0;
+	    border-right-color: ${Palette.bg.reverse};
+	    right: calc(0em - 5px);
+	    transform: translate(.5em, -50%);
+			` : '' }
+
+		${ props.tipLocation === 'bottom' ? `
+			top: 100%;
+			left: 33%;
+	    border-top-width: 0;
+	    border-bottom-color: ${Palette.bg.reverse};
+			` : '' }
+
+		${ props.tipLocation === 'left' ? 
+		`	top: 50%;
+	    border-right-width: 0;
+	    border-left-color: ${Palette.bg.reverse};
+	    left: calc(0em - 6px);
+	    transform: translate( -6px, -50%);` : '' }
+
+	  ${ !props.tipLocation ? `
+			bottom: 100%;
+	    border-bottom-width: 0;
+	    border-top-color: ${Palette.bg.reverse};
+	    ` : '' }
 	}
 
 	&:after {
-		content: ${text ? `'${text}'` : `''` };
+		content: ${props.tipText ? `'${props.tipText}'` : `''` };
     z-index: 1000;
     ${fontStack};
+    font-size: 14px;
+    font-weight: 500;
 		min-width: 3em;
     max-width: 21em;
     white-space: nowrap;
@@ -174,13 +199,38 @@ export const Tooltip = (text) => `
     padding: 8px 12px;
     border-radius: 8px;
     box-shadow: ${Shadow.mid};
-    background: #333;
-    color: #fff;
-    bottom: calc(100% + 5px);
+    background: ${Palette.bg.reverse};
+    color: ${Palette.text.reverse};
+
+    ${ props.tipLocation === 'top' ? `
+			bottom: calc(100% + 5px);
+			left: -100%;
+	    ` : '' }
+
+	  ${ props.tipLocation === 'right' ? `
+			top: 50%;
+	    left: calc(100% + 5px);
+	    transform: translate(.5em, -50%);
+			` : '' }
+
+		${ props.tipLocation === 'bottom' ? `
+			top: calc(100% + 5px);
+			left: -175%;
+			` : '' }
+
+		${ props.tipLocation === 'left' ? `
+			top: 50%;
+	    right: calc(100% + 5px);
+	    transform: translate(-.5em, -50%);
+			` : '' }
+
+		${ !props.tipLocation ? `
+			bottom: calc(100% + 5px);
+	    ` : '' }
 	}
 
 	&:hover:after,
 	&:hover:before {
 		opacity: 1;
-		transition: all 0.2s ease-in;
+		transition: all 0.2s ease-in 0.2s;
 `;
