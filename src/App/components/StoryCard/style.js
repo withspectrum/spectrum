@@ -11,14 +11,17 @@ export const StoryWrapper = styled.div`
 	border-radius: 2px;
 	background-color: ${Palette.bg.default};
 	transition: all 0.2s ease-in;
+	-webkit-font-smoothing: subpixel-antialiased;
 	z-index: 1;
-	transform: scale( ${props => props.selected ? `1` : `0.98`} );
+	transform: translateZ(0) scale( ${props => props.selected ? `1` : `0.975`} );
 	box-shadow: ${props => props.selected ? `0 2px 16px -4px ${Palette.brand.default}` : `${Shadow.low}` };
 
 	&:hover {
-		box-shadow: ${props => props.selected ? `0 16px 32px -16px ${Palette.brand.default}` : `${Shadow.high}` };
-		transition: all 0.2s ease-out;
+		box-shadow: ${props => props.selected ? `0 4px 32px -8px ${Palette.brand.default}` : `${Shadow.high}` };
+		transition: box-shadow 0.2s ease-out;
 		cursor: pointer;
+		z-index: 1;
+		transform: translateZ(0) scale( ${props => props.selected ? `1` : `0.975`} );
 	}
 `;
 

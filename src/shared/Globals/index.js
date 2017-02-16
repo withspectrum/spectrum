@@ -1,10 +1,5 @@
 import styled from 'styled-components'
 
-export const Scale = (n) => {
-	const unit = '8px';
-	return `calc(${n} * ${unit})`
-}
-
 export const Palette = {
 	brand: {
 		default: '#3818E5',
@@ -59,8 +54,8 @@ export const H1 = styled.h1`
 	${fontStack};
 	color: ${Palette.text.default};
 	font-weight: 700;
-	font-size: ${Scale(3.5)};
-	line-height: ${Scale(5)};
+	font-size: 32px;
+	line-height: 40px;
 	margin: 0;
 	padding: 0;
 `;
@@ -69,8 +64,8 @@ export const H2 = styled.h2`
 	color: ${Palette.text.default};
 	${fontStack};
 	font-weight: 500;
-	font-size: ${Scale(3)};
-	line-height: ${Scale(4)};
+	font-size: 24px;
+	line-height: 32px;
 	margin: 0;
 	padding: 0;
 `;
@@ -79,8 +74,8 @@ export const H3 = styled.h3`
 	color: ${Palette.text.default};
 	${fontStack};
 	font-weight: 500;
-	font-size: ${Scale(2)};
-	line-height: ${Scale(3)};
+	font-size: 16px;
+	line-height: 24px;
 	margin: 0;
 	padding: 0;
 `;
@@ -89,8 +84,8 @@ export const H4 = styled.h4`
 	color: ${Palette.text.default};
 	${fontStack};
 	font-weight: 500;
-	font-size: ${Scale(1.75)};
-	line-height: ${Scale(2)};
+	font-size: 14px;
+	line-height: 20px;
 	margin: 0;
 	padding: 0;
 `;
@@ -99,8 +94,8 @@ export const H5 = styled.h5`
 	color: ${Palette.text.default};
 	${fontStack};
 	font-weight: 500;
-	font-size: ${Scale(1.5)};
-	line-height: ${Scale(2)};
+	font-size: 12px;
+	line-height: 16px;
 	margin: 0;
 	padding: 0;
 `;
@@ -110,8 +105,8 @@ export const H6 = styled.h6`
 	${fontStack};
 	font-weight: 600;
 	text-transform: uppercase;
-	font-size: ${Scale(1.25)};
-	line-height: ${Scale(1.5)};
+	font-size: 10px;
+	line-height: 12px;
 	margin: 0;
 	padding: 0;
 `;
@@ -120,8 +115,8 @@ export const P = styled.p`
 	color: ${Palette.text.default};
 	${fontStack};
 	font-weight: 400;
-	font-size: ${Scale(1.75)};
-	line-height: ${Scale(2.5)};
+	font-size: 14px;
+	line-height: 20px;
 	margin: 0;
 	padding: 0;
 `;
@@ -130,8 +125,8 @@ export const Span = styled.span`
 	color: ${Palette.text.default};
 	${fontStack};
 	font-weight: 400;
-	font-size: ${Scale(1.75)};
-	line-height: ${Scale(2.5)};
+	font-size: 14px;
+	line-height: 20px;
 	margin: 0;
 	padding: 0;
 `;
@@ -176,8 +171,8 @@ export const Tooltip = (text) => `
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: ${Scale(1)} ${Scale(1.5)};
-    border-radius: ${Scale(1)};
+    padding: 8px 12px;
+    border-radius: 8px;
     box-shadow: ${Shadow.mid};
     background: #333;
     color: #fff;

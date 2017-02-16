@@ -60,13 +60,13 @@ class StoryView extends Component {
                 ? <FlexColumnEnd>
                     <label>
                       {locked ?
-                        <Lock tooltip={'Unlock Story'}/>
+                        <Lock color='warn' stayActive tooltip={'Unlock Story'}/>
                       :
                         <Unlock tooltip={'Lock Story'}/>
                       }
                       <HiddenInput type="checkbox" onChange={this.toggleLockedStory} checked={locked} />
                     </label>
-                    <Button onClick={this.deleteStory} tooltip={'Delete Story'}><Delete /></Button>
+                    <Button onClick={this.deleteStory} tooltip={'Delete Story'}><Delete color='warn' /></Button>
                   </FlexColumnEnd>
                 : ''
               }

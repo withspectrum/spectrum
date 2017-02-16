@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Palette, Scale, H3 } from '../../../shared/Globals'
+import { Palette, Gradient, H3 } from '../../../shared/Globals'
 
 export const Column = styled.div`
   display: flex;
@@ -90,13 +90,13 @@ export const Freq = styled.div`
   padding: 0.5rem;
   padding-left: 1rem;
   align-items: center;
-  background-color: ${props => props.active ? '#3818e5' : '#171a21' };
-  background-image: ${props => props.active ? `radial-gradient(ellipse farthest-corner at top left , #7B16FF 0%, #3819E6 100%)` : `none`};
+  background-color: ${props => props.active ? Palette.brand.default : Palette.bg.reverse };
+  background-image: ${props => props.active ? Gradient(Palette.brand.alt, Palette.brand.default) : `none`};
   color: ${Palette.text.alt};  
 
   &:hover {
     cursor: pointer;
-    background-color: ${props => props.active ? '#3818e5' : '#2E313F' };
+    background-color: ${props => props.active ? Palette.brand.default : '#2E313F' };
   }
 `;
 
@@ -123,8 +123,8 @@ export const FreqIcon = styled.img`
 `;
 
 export const FreqGlyph = styled.span`
-  margin-left: ${Scale(1)};
-  margin-right: ${Scale(1)};
+  margin-left: 8px;
+  margin-right: 8px;
   display: inline-block;
   font-size: 24px;
   font-weight: bold;

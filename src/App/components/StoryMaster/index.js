@@ -65,15 +65,15 @@ class StoryMaster extends Component {
       } else if (keys.indexOf(activeFrequency) > -1) {
         return <Button onClick={ this.toggleComposer } tooltip="Add Story">
                   { this.props.composer.isOpen 
-                  ? <ClosePost/>
-                  : <NewPost/>
+                  ? <ClosePost color='warn' />
+                  : <NewPost color='brand' stayActive />
                    }
                   </Button>
       } else if (activeFrequency === "all") {
         return <Button onClick={ this.toggleComposer } tooltip="Add Story">
                   { this.props.composer.isOpen 
-                  ? <ClosePost/>
-                  : <NewPost/>
+                  ? <ClosePost color='warn' />
+                  : <NewPost color='brand' stayActive />
                    }
                   </Button>
       } else {

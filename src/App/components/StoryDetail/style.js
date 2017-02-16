@@ -44,7 +44,7 @@ export const FlexColumn = styled.div`
 `;
 
 export const FlexColumnEnd = styled(FlexColumn)`
-	align-self: flex-end;
+	align-self: flex-start;
 `;
 
 export const TextBody = styled.p`
