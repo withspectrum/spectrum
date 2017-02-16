@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import { Palette, Shadow } from '../../../shared/Globals'
+import { Palette, Shadow, Gradient } from '../../../shared/Globals'
 
 export const Column = styled.div`
 	display: flex;
 	flex: 0 0 420px;
 	flex-direction: column;
-	border-right: 1px solid rgba(0,0,0,0.1);
-	background-color: #F5F6F7;
+	border-right: 1px solid ${Palette.border.default};
+	background-color: ${Palette.bg.wash};
 	height: 100%;
 	overflow-y: scroll;
 `;
@@ -18,6 +18,7 @@ export const ScrollBody = styled.div`
 	overflow-x: hidden;
 	flex-direction: column;
 	align-items: stretch;
+	background-color: ${Palette.bg.wash};
 
 	> img {
 		margin: 32px auto;
@@ -35,8 +36,7 @@ export const Header = styled.div`
 	flex-direction: row-reverse;
 	flex: 0 0 48px;
 	width: 100%;
-	background-color: #ffffff;
-	box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+	background-color: ${Palette.bg.default};
 	align-items: center;
 	align-self: flex-start;
 	justify-content: space-between;
@@ -73,7 +73,7 @@ export const BgText = styled.p`
 	flex: 0 0 auto;
 	font-weight: bold;
 	font-size: 14px;
-	color: #747E8D;
+	color: ${Palette.text.alt};
 
 	&:first-of-type {
 		margin-top: 16px;
@@ -90,30 +90,20 @@ export const JoinBtn = styled.button`
   text-align: center;
   vertical-align: middle;
   border-radius: 8px;
-  border: 2px solid ${props => props.member ?  `#D6E0EE` : 'transparent'};
-  color: ${props => props.member ? `#D6E0EE` : `#ffffff` };
-  background-color: ${props => props.member ? `transparent` : `#3819E6`};
-  background-image: ${props => props.member ? `none` : `radial-gradient(ellipse farthest-corner at top left , #7B16FF 0%, #3819E6 100%)` };
+  border: 2px solid ${props => props.member ?  `${Palette.inactive}` : 'transparent'};
+  color: ${props => props.member ? `${Palette.inactive}` : `${Palette.text.reverse}` };
+  background-color: ${props => props.member ? `transparent` : `${Palette.brand.default}`};
+  background-image: ${props => props.member ? `none` : Gradient(Palette.brand.alt, Palette.brand.default) };
   transition: all 0.2s ease-out;
 
   &:hover {
   	cursor: pointer;
 		border-radius: 12px
-		color: ${props => props.member ? '#3819E6' : '#ffffff'};
-		border-color: ${props => props.member ? '#3819E6' : 'transparent'};
+		color: ${props => props.member ? `${Palette.brand.default}` : `${Palette.text.reverse}`};
+		border-color: ${props => props.member ? `${Palette.brand.default}` : 'transparent'};
 		transition: all 0.2s ease-in;
   }
 `;
-
-export const ComposerOverlay = styled.div`
-	width: 100%;
-	height: 100%;
-	top: 48px;
-	background-color: ${props => props.isOpen ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0)'};
-	pointer-events: ${props => props.isOpen ? 'auto' : 'none'};
-	transition: all 0.2s;
-	z-index: 2;
-`
 
 export const LoginWrapper = styled.div`
 	width: 100%;
@@ -123,14 +113,14 @@ export const LoginWrapper = styled.div`
 	align-self: stretch;
 	padding: 16px;
 	border-radius: 2px;
-	background-color: #ffffff;
+	background-color: ${Palette.bg.default};
 	margin: 8px;
-	box-shadow: 0 2px 4px rgba(129, 148, 175, 0.2);
+	box-shadow: ${Shadow.low};
 	transition: box-shadow 0.2s ease-in;
 	width: calc(100% - 16px);
 
 	&:hover {
-		box-shadow: 0 4px 16px rgba(129, 148, 175, 0.8);
+		box-shadow: ${Shadow.mid};
 		transition: box-shadow 0.2s ease-out;
 		cursor: pointer;
 	}
@@ -155,15 +145,15 @@ export const LoginButton = styled.button`
   text-align: center;
   vertical-align: middle;
   border-radius: 12px;
-  color: #ffffff;
-  background-color: #3819E6;
-  background-image: radial-gradient(ellipse farthest-corner at top left , #7B16FF 0%, #3819E6 100%);
+  color: ${Palette.text.reverse};
+  background-color: ${Palette.brand.default};
+  background-image: ${Gradient(Palette.brand.alt, Palette.brand.default)};
   transition: all 0.2s ease-in-out;
 
   &:hover {
   	cursor: pointer;
 		border-radius: 16px
-		color: #ffffff;
+		color: ${Palette.bg.default};;
   }
 `;
 

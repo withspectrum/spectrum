@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Palette, Scale, H1, H4 } from '../../../shared/Globals'
+import { Palette, H1, H4 } from '../../../shared/Globals'
 
 export const Header = styled.div`
 	flex: 0 0 auto;
@@ -45,18 +45,15 @@ export const NullContainer = styled.div`
 	width: 100%;
 	height: 100%;
 	position: relative;
-	background: #F5F6F7;
+	background: ${Palette.bg.wash};
 `
 
-export const NullText = styled.h1`
+export const NullText = styled(H1)`
 	position: relative;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
 	margin: 0 auto;
 	display: inline-block;
-	font-size: 2rem;
-	font-weight: 800;
-	text-shadow: 0px 1px 0px rgba(255,255,255,0.3);
-	color: #c9ccd0;
+	color: ${Palette.text.alt};
 `

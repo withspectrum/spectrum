@@ -1,93 +1,74 @@
 import styled from 'styled-components';
-import { Tooltip } from '../../../shared/Globals'
+import { Tooltip, H1, H4, Palette, Shadow } from '../../../shared/Globals'
 
-export const Wrapper = styled.div`
+export const ScrollBody = styled.div`
 	display: flex;
-	flex: 0 0 auto;
-	background-color: #ffffff;
-	padding: 24px;
-	max-height: 50vh;
+	flex: 1 1 100%;
+	background-color: ${Palette.bg.default};
+	max-height: 100vh;
 	flex-direction: column;
-	box-shadow: 0 4px 16px -8px black;
 	overflow-y: auto;
 `;
 
-export const Section = styled.div`
+export const ContentView = styled.div`
 	display: flex;
+	flex: 0 0 auto;
 	flex-direction: column;
-	justify-self: flex-end;
+	padding: 32px;
 `;
 
-export const Description = styled.p`
+export const Header = styled.div`
+	flex: 1 0 auto;
+	align-self: flex-start;
+	justify-content: space-between;
+	width: 100%;
+	display: flex;
+	background-color: ${Palette.bg.default};
+`;
+
+export const StoryTitle = styled(H1)`
+	font-size: 32px;
+	line-height: 40px;
+	font-weight: 800;
+	color: ${Palette.text.default};
+`;
+
+export const Byline = styled(H4)`
+	color: ${Palette.brand.default};
+	margin-bottom: 8px;
+`;
+
+export const FlexColumn = styled.div`
+	display:flex;
+	flex-direction: column;
+`;
+
+export const FlexColumnEnd = styled(FlexColumn)`
+	align-self: flex-end;
+`;
+
+export const TextBody = styled.p`
 	font-size: 16px;
 	display: inline-block;
-	margin-bottom: 24px;
+	max-width: 640px;
+	margin-top: 16px;
+	margin-bottom: 32px;
+	margin-right: 64px;
 	line-height: 1.6;
-	color: #363A4F;
+	color: ${Palette.text.default};
 `;
-
-export const SectionLabel = styled.h4`
-	font-size: 10px;
-	display: inline-block;
-	text-transform: uppercase;
-	color: #9BA6AF;
-	margin-top: 24px;
-	margin-bottom: 4px;
-	font-weight: bold;
-`;
-
-export const RowList = styled.div`
-	display: flex;
-	overflow-x: scroll;
-	flex: 0 0 15%;
-`;
-
-
-export const TagList = styled.ul`
-	list-style: none;
-	display: flex;
-	flex: 1 0 auto;
-`;
-
-export const Tag = styled.li`
-	height: 24px;
-	padding: 0 12px;
-	line-height: 24px;
-	vertical-align: middle;
-	border-radius: 12px;
-	word-wrap: none;
-	white-space: no-wrap;
-	background-color: #CBD9ED;
-	color: #ffffff;
-	text-transform: uppercase;
-	font-size: 10px;
-	font-weight: bold;
-	margin-right: 8px;
-
-	&:last-of-type {
-		margin-right: 0;
-	}
-`;
-
-export const Meta = styled.div`
-  display: block;
-  overflow: auto;
-`
-
-export const AuthorName = styled.span`
-  display: inline-block;
-  font-size: 12px;
-  color: #c2c2c2;
-  margin-bottom: 16px;
-`
 
 export const Media = styled.img`
-	width: 100px;
-	margin: 8px 8px 0 0;
+	max-width: 50%;
+	max-height: 240px;
+	width: auto;
+	height: auto;
+	object-fit: cover;
 	border-radius: 4px;
   border: 2px solid transparent;
+  box-shadow: ${Shadow.border};
   &:hover {
-    border-color: #4422ED;
+    border-color: ${Palette.brand.alt};
   }
 `;
 

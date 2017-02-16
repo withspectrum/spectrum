@@ -21,7 +21,7 @@ export const Palette = {
 	bg: {
 		default: '#FFFFFF',
 		reverse: '#171A21',
-		wash: '#F6FBFF', 
+		wash: '#e4edf5', 
 	},
 	text: {
 		default: '#171A21',
@@ -30,8 +30,8 @@ export const Palette = {
 		placeholder: '#B2B9C6',
 	},
 	generic: {
-		default: '#D8E3F2',
-		alt: '#E2E9F4',
+		default: '#E6ECF7',
+		alt: '#F6FBFF',
 	},
 	inactive: '#D6E0EE',
 	border: {
@@ -47,7 +47,8 @@ export const Shadow = {
 	low: '0 4px 8px -2px rgba(23,26,33, 0.15)',
 	mid: '0 8px 16px -4px rgba(23,26,33, 0.2)',
 	high: '0 16px 32px -8px rgba(23,26,33, 0.25)',
-	input: 'inset 0 3px 5px rgba(23,26,33, 0.05), inset 0 0 1px rgba(23,26,33, 0.1)'
+	input: 'inset 0 3px 5px rgba(23,26,33, 0.05), inset 0 0 1px rgba(23,26,33, 0.1)',
+	border: '0 0 1px rgba(23,26,33, 0.3)',
 }
 
 export const fontStack = `

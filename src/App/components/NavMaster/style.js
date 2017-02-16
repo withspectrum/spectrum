@@ -1,10 +1,10 @@
 import styled from 'styled-components'
-import { Palette, Scale, Shadow } from '../../../shared/Globals'
+import { Palette, Scale, H3 } from '../../../shared/Globals'
 
 export const Column = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: #171A21;
+  background-color: ${Palette.bg.reverse};
   flex: 0 0 256px;
   height: 100vh;
 `;
@@ -34,9 +34,9 @@ export const MetaWrapper = styled.div`
   margin-left: 8px;
 `;
 
-export const Name = styled.h3`
+export const Name = styled(H3)`
   font-size: 16px;
-  color: #ffffff;
+  color: ${Palette.text.reverse};
   font-weight: 500;
   margin-top: 4px;
   margin-bottom: 2px;
@@ -45,20 +45,20 @@ export const Name = styled.h3`
 export const P = styled.p`
   display: flex;
   font-size: 12px;
-  color: #747E8D;
+  color: ${Palette.text.alt};
   font-weight: 500;
 `;
 
 export const MetaLink = styled.a`
   text-decoration: none;
   font-size: 12px;
-  color: #747E8D;
+  color: ${Palette.text.alt};
   font-weight: 500;
   transition: color 0.2s ease-out;
 
   &:hover {
     cursor: pointer;
-    color: #ffffff;
+    color: ${Palette.text.reverse};
     transition: color 0.2s ease-out;
   }
 `;
@@ -92,7 +92,7 @@ export const Freq = styled.div`
   align-items: center;
   background-color: ${props => props.active ? '#3818e5' : '#171a21' };
   background-image: ${props => props.active ? `radial-gradient(ellipse farthest-corner at top left , #7B16FF 0%, #3819E6 100%)` : `none`};
-  color: #fff;  
+  color: ${Palette.text.alt};  
 
   &:hover {
     cursor: pointer;
@@ -105,7 +105,7 @@ export const FreqLabel = styled.span`
   font-weight: 500;
   display: inline-block;
   flex: 0 0 auto;
-  color: #ffffff;
+  color: ${Palette.text.reverse};
   margin-left: 8px;
   margin-right: 8px;
   pointer-events: none;
@@ -168,7 +168,7 @@ export const Input = styled.input`
   font-size: 12px;
   line-height: 24px;
   vertical-align: middle;
-  color: #ffffff;
+  color: ${Palette.text.reverse};
   position: relative;
 
   &::placeholder { color: ${Palette.text.alt} }
@@ -178,16 +178,16 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.button`
-  background-color: #3818e5;
-  background-image: radial-gradient(ellipse farthest-corner at top left , #7B16FF 0%, #3819E6 100%);
+  background-color: ${Palette.brand.default};
+  background-image: radial-gradient(ellipse farthest-corner at top left , ${Palette.brand.alt} 0%, ${Palette.brand.default} 100%);
   font-size: 18px;
   font-weight: bold;
-  color: #ffffff;
+  color: ${Palette.text.reverse};
   height: 32px;
   flex: 0 0 40px;
   line-height: 32px;
   text-align: center;
   vertical-align: middle;
-  border-left: 2px solid #171a21;
+  border-left: 2px solid ${Palette.bg.reverse};
   border-radius: 0px 4px 4px 0px;
 `;

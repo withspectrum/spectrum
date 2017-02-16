@@ -1,13 +1,12 @@
 import styled from 'styled-components'
-import { Palette, Scale, Gradient } from '../../../shared/Globals'
+import { Palette, Gradient } from '../../../shared/Globals'
 
-export const ScrollBody = styled.div`
-	flex: 1 1 auto;
+export const ChatContainer = styled.div`
+	flex: 1 0 auto;
 	padding: 0 8px;
 	padding-bottom: 8px;
 	display: flex;
 	flex-direction: column;
-	overflow-y: auto;
 `;
 
 export const Bubble = styled.p`
@@ -28,12 +27,6 @@ export const Bubble = styled.p`
   a { text-decoration: underline; }
 `;
 
-// export const OpBubble = styled(LeftBubble)`
-// 	background-color: #0F1628;
-// 	background-image: radial-gradient(ellipse farthest-corner at 0px 0px , #0F1628 0%, #3A3D51 100%);
-// 	color: white;
-// `;
-
 export const BubbleGroup = styled.div`
 	width: 100%;
 	margin-top: 8px;
@@ -45,7 +38,7 @@ export const BubbleGroup = styled.div`
 	> p {
 
 		background-color: ${props => props.me ? Palette.brand.default : Palette.generic.default };
-		background-image: ${props => props.me ? Gradient(Palette.brand.alt, Palette.brand.default) : `radial-gradient(ellipse farthest-corner at 0px 0px , ${Palette.generic.alt} 0%, ${Palette.generic.default} 100%);`}
+		background-image: ${props => props.me ? Gradient(Palette.brand.alt, Palette.brand.default) : Gradient(Palette.generic.alt, Palette.generic.default) }
 		color: ${props => props.me ? Palette.text.reverse : Palette.text.default };
 		float: ${props => props.me ? `right;` : `left;`}
 		font-weight: ${props => props.me ? `500` : `400`};

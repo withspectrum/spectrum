@@ -4,7 +4,8 @@ import styled, { keyframes } from 'styled-components'
 const maxWidth = "640px"
 export const modalStyles = {
   overlay: {
-    backgroundColor: 'rgba(0,0,0,0.40)'
+    backgroundColor: 'rgba(0,0,0,0.40)',
+    zIndex: 5
   },
   content: {
     borderRadius: '8px',
@@ -15,6 +16,7 @@ export const modalStyles = {
     left: '50%',
     padding: '0',
     transform: 'translate(-50%, -50%)',
+    zIndex: 10,
     width: '100%',
     maxWidth: maxWidth,
     backgroundColor: 'rgba(0,0,0,0)',

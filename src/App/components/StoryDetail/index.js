@@ -1,8 +1,16 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux' 
+import ReactDOM from 'react-dom'
+import { connect } from 'react-redux'
+import ChatDetail from '../ChatDetail' 
 import { Lock, Unlock, Delete } from '../../../shared/Icons'
-import {  Wrapper,
-					Description, 
+import {  ScrollBody,
+          ContentView,
+          Header,
+          StoryTitle,
+          FlexColumn,
+          FlexColumnEnd,
+          Byline,
+					TextBody, 
 					Media,
 					Button,
 					HiddenInput} from './style';
@@ -17,6 +25,11 @@ class StoryView extends Component {
     } else {
       return
     }
+  }
+
+  componentWillUpdate() {
+    var node = ReactDOM.findDOMNode(this);
+    this.shouldScrollBottom = node.scrollTop + node.offsetHeight === node.scrollHeight || node.scrollTop === 0;
   }
 	
 	deleteStory = () => {
@@ -35,31 +48,39 @@ class StoryView extends Component {
 		const moderator = this.props.moderator
 		const locked = this.props.locked
 
-
 		return(
-			<Wrapper>
-				<Description>{story.content.description}</Description>
-					{story.content.media && story.content.media !== ''
-						?
-							<a href={story.content.media} target="_blank"><Media src={story.content.media} /></a>
-					  : 
-						  ''
-					}
-					{ creator || moderator === "owner" // if the story was created by the current user, or is in a frequency the current user owns
-            ? <div>
-                <Button onClick={this.deleteStory} tooltip={'Delete Story'}><Delete /></Button>
-                <label>
-                	{locked ?
-                		<Lock tooltip={'Unlock Story'}/>
-                	:
-                		<Unlock tooltip={'Lock Story'}/>
-                	}
-                  <HiddenInput type="checkbox" onChange={this.toggleLockedStory} checked={locked} />
-                </label>
-              </div>
-            : ''
-          }
-			</Wrapper>
+			<ScrollBody>
+        <ContentView>
+          <Header>
+            <FlexColumn>
+              <Byline>{story.creator.displayName}</Byline>
+              <StoryTitle>{story.content.title}</StoryTitle>
+            </FlexColumn>
+              { creator || moderator === "owner" // if the story was created by the current user, or is in a frequency the current user owns
+                ? <FlexColumnEnd>
+                    <label>
+                      {locked ?
+                        <Lock tooltip={'Unlock Story'}/>
+                      :
+                        <Unlock tooltip={'Lock Story'}/>
+                      }
+                      <HiddenInput type="checkbox" onChange={this.toggleLockedStory} checked={locked} />
+                    </label>
+                    <Button onClick={this.deleteStory} tooltip={'Delete Story'}><Delete /></Button>
+                  </FlexColumnEnd>
+                : ''
+              }
+          </Header>
+  				<TextBody>{story.content.description}</TextBody>
+  					{story.content.media && story.content.media !== ''
+  						?
+  							<Media src={story.content.media} onClick={this.showGallery} />
+  					  : 
+  						  ''
+  					}
+        </ContentView>
+        <ChatDetail />
+			</ScrollBody>
 		)
 	}
 }

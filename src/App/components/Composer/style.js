@@ -24,7 +24,7 @@ export const Input = styled.input`
 	outline: none;
 	border: 0;
 	box-shadow: none;
-	background: #fff;
+	background: ${Palette.bg.default};
 	display: block;
 	margin-bottom: 8px;
 	font-size: 1rem;
@@ -36,7 +36,7 @@ export const Textarea = styled.textarea`
 	outline: none;
 	border: 0;
 	box-shadow: none;
-	background: #fff;
+	background: ${Palette.bg.default};
 	display: block;
 	margin-bottom: 8px;
 	font-size: 1rem;
@@ -48,8 +48,8 @@ export const Textarea = styled.textarea`
 
 export const Submit = styled.input`
 	display: block;
-	background-color: #3818E5;
-	color: #fff;
+	background-color: ${Palette.brand.default};
+	color: ${Palette.text.reverse};
 	outline: none;
 	border: 0;
 	border-radius: 4px;
@@ -83,10 +83,10 @@ export const MediaWrapper = styled.div`
 	    top: 0;
 	    right: 0;
 	    width: auto;
-	    background: #000;
+	    background: ${Palette.bg.reverse};
 	    border-radius: 0 4px 0 4px;
 	    padding: 2px 8px 4px;
-	    color: #fff;
+	    color: ${Palette.text.reverse};
 	    text-transform: uppercase;
 	    pointer-events: none;
 		}
@@ -104,7 +104,7 @@ export const MediaInput = styled.input`
 
 export const MediaLabel = styled.label`
 	width: 100%;
-	background: #f6f7f8;
+	background: ${Palette.bg.wash};
 	border-radius: 4px;
 	text-align: center;
 	border: 1px dashed rgba(0,0,0,0.1);
@@ -112,7 +112,7 @@ export const MediaLabel = styled.label`
 	display: block;
 	font-size: 0.75rem;
 	text-transform: uppercase;
-	color: #c9ccd0;
+	color: ${Palette.text.alt};
 	font-weight: 800;
 
 	&:hover {
@@ -124,11 +124,11 @@ export const Alert = styled.div`
 	display: block;
 	margin-top: 1rem;
 	border-radius: 4px;
-	background: #EE4F4F;
-	color: #fff;
+	background: ${Palette.warn.default};
+	color: ${Palette.text.reverse};
 	font-size: 0.75rem;
 	font-weight: 500;
 	text-align: center;
 	padding: 0.5rem;
-	border: 1px solid #D44646;
+	border: 1px solid ${Palette.warn.alt};
 `

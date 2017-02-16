@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Palette, Shadow, H4, H5 } from '../../../shared/Globals'
 
 export const StoryWrapper = styled.div`
 	display: inline-block;
@@ -8,13 +9,15 @@ export const StoryWrapper = styled.div`
 	flex: 0 0 auto;
 	padding: 16px;
 	border-radius: 2px;
-	background-color: #ffffff;
-	transition: box-shadow 0.2s ease-in;
-	box-shadow: ${props => props.selected ? '0 0 12px rgba(73, 92, 240, 0.8)' : '0 2px 4px rgba(129, 148, 175, 0.2)'};
+	background-color: ${Palette.bg.default};
+	transition: all 0.2s ease-in;
+	z-index: 1;
+	transform: scale( ${props => props.selected ? `1` : `0.98`} );
+	box-shadow: ${props => props.selected ? `0 2px 16px -4px ${Palette.brand.default}` : `${Shadow.low}` };
 
 	&:hover {
-		box-shadow: ${props => props.selected ? '0 0 12px rgba(73, 92, 240, 0.8)' : '0 4px 16px rgba(129, 148, 175, 0.8)'};
-		transition: box-shadow 0.2s ease-out;
+		box-shadow: ${props => props.selected ? `0 16px 32px -16px ${Palette.brand.default}` : `${Shadow.high}` };
+		transition: all 0.2s ease-out;
 		cursor: pointer;
 	}
 `;
@@ -30,7 +33,7 @@ export const Avatar = styled.img`
   height: 40px;
   width: 40px;
 	border-radius: 12px;
-	box-shadow: 0 0 1px rgba(0,0,0,0.3);
+	box-shadow: ${Shadow.border};
 `;
 
 export const StoryHeader = styled.div`
@@ -40,23 +43,20 @@ export const StoryHeader = styled.div`
 
 export const Title = styled.p`
 	font-size: 16px;
-	font-weight: 500;
-	line-height: 1.6;
+	font-weight: 600;
+	line-height: 1.5;
 	margin-bottom: 8px;
-	color: #171a21;
-`;
-
-export const Desc = styled.p`
-	font-size: 14px;
-	font-weight: regular;
-	margin-bottom: 8px;
+	color: ${Palette.text.default};
 `;
 
 export const Media = styled.img`
 	width: 100%;
+	max-height: 240px;
+	object-fit: cover;
+	background-color: ${Palette.inactive};
 	margin: 8px 8px 0 0;
 	border-radius: 4px;
-	border: 1px solid #eee;
+	box-shadow: ${Shadow.border};
 `;
 
 export const UserMeta = styled.div`
@@ -66,49 +66,11 @@ export const UserMeta = styled.div`
   flex: 1 0 auto;
 `;
 
-export const Name = styled.h3`
-  font-size: 14px;
-  color: #43484F;
-  font-weight: 600;
+export const Name = styled(H4)`
+  color: ${Palette.text.default};
+  font-weight: 700;
 `;
 
-export const Meta = styled.h4`
-  font-size: 12px;
-  color: #747E8D;
-  font-weight: 400;
-`;
-
-export const UpvoteWrapper = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: stretch;
-	justify-self: end;
-	align-items: center;
-	flex: 0 0 auto;
-	padding: 4px 12px 8px 12px;
-	height: 48px;
-	border-radius: 4px;
-	border: 2px solid transparent;
-	background-color: #ffffff;
-	transition: all 0.2s ease-out;
-
-	&:hover {
-		border: 2px solid #3818e5;
-		border-radius: 8px;
-		transition: all 0.2s ease-in;
-		
-		> div {
-			color: #3818e5;
-		}
-	}
-`;
-
-export const UpvoteLabel = styled.div`
-	flex: 1 0 auto;
-	font-weight: 700;
-	color: #747E8D;
-
-	&:first-of-type {
-		font-size: 10px;
-	}
+export const Meta = styled(H5)`
+  color: ${Palette.text.alt};
 `;
