@@ -1,6 +1,6 @@
 node_modules
 .sass-cache
 npm-debug.log
-build/
+build
 .DS_Store
 src/config/FirebaseConfig

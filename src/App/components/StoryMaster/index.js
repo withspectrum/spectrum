@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
-import { Column, Header, ScrollBody, JoinBtn, LoginWrapper, LoginText, LoginButton, HiddenInput, Button } from './style'
+import { Column, Header, ScrollBody, JoinBtn, LoginWrapper, LoginText, LoginButton, HiddenInput, TipButton } from './style'
 import actions from '../../../actions'
 import helpers from '../../../helpers'
 import { Lock, Unlock, NewPost, ClosePost } from '../../../shared/Icons'
-import Story from '../Story'
+import StoryCard from '../StoryCard'
 import Composer from '../Composer'
 import ShareCard from '../ShareCard'
 
@@ -63,19 +63,19 @@ class StoryMaster extends Component {
       if (!usersFrequencies) {
         return ''
       } else if (keys.indexOf(activeFrequency) > -1) {
-        return <Button onClick={ this.toggleComposer } tooltip="Add Story">
+        return <TipButton onClick={ this.toggleComposer } tipText="New Story" tipLocation="bottom">
                   { this.props.composer.isOpen 
-                  ? <ClosePost/>
-                  : <NewPost/>
+                  ? <ClosePost color='warn' />
+                  : <NewPost color='brand' stayActive />
                    }
-                  </Button>
+                  </TipButton>
       } else if (activeFrequency === "all") {
-        return <Button onClick={ this.toggleComposer } tooltip="Add Story">
+        return <TipButton onClick={ this.toggleComposer } tipText="New Story" tipLocation="bottom">
                   { this.props.composer.isOpen 
-                  ? <ClosePost/>
-                  : <NewPost/>
+                  ? <ClosePost color='warn' />
+                  : <NewPost color='brand' stayActive />
                    }
-                  </Button>
+                  </TipButton>
       } else {
         return ''
       }
@@ -147,13 +147,13 @@ class StoryMaster extends Component {
                   if (this.props.frequencies.active === "all") { // if we're in everything, just load the story in the sidebar
                     return (
                       <Link to={`/all/${story.id}`} key={i}>
-                        <Story data={story} key={i} />
+                        <StoryCard data={story} key={i} />
                       </Link>
                     )
                   } else { // else, let's do dynamic url handling
                     return (
                       <Link to={`/${this.props.frequencies.active}/${story.id}`} key={i}>
-                        <Story data={story} />
+                        <StoryCard data={story} />
                       </Link>
                     )
                   }

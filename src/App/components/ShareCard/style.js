@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Palette } from '../../../shared/Globals' 
 
 export const Body = styled.div`
 	width: 100%;
@@ -11,6 +12,7 @@ export const Title = styled.p`
 	margin-bottom: 0.5rem;
 	text-align: center;
 	width: 100%;
+	color: ${Palette.text.alt};
 `;
 
 export const Desc = styled.p`
@@ -19,6 +21,7 @@ export const Desc = styled.p`
 	font-weight: regular;
 	margin-bottom: 8px;
 	text-align: center;
+	color: ${Palette.text.alt};
 `;
 
 export const ButtonWrapper = styled.div`
@@ -32,16 +35,13 @@ export const ButtonWrapper = styled.div`
 export const Button = styled.a`
 	display: flex;
 	align-self: center;
-	color: #fff;
-	border-radius: 4px;
+	color: ${Palette.text.reverse};
+	border-radius: 12px;
 	font-size: 12px;
-	text-transform: uppercase;
-	font-weight: 700;
-	text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+	font-weight: 500;
 	padding: 0.5rem 1rem;
-	border: ${props => props.type === "twitter" ? '1px solid #00aced' : '1px solid #3b5998'}
-	box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
 	background: ${props => props.type === "twitter" ? 'radial-gradient(ellipse farthest-corner at top left , #53D0FF 0%, #00aced 100%);' : 'radial-gradient(ellipse farthest-corner at top left , #5A85DF 0%, #3b5998 100%);'}
+	
 	&:first-of-type {
 		margin-right: 0.5rem;
 	}
@@ -58,15 +58,16 @@ export const Button = styled.a`
 export const Input = styled.input`
 	width: 100%;
 	border-radius: 4px;
-	border: 1px solid #eee;
+	border: 2px solid ${Palette.border.default};
 	padding: 8px 12px;
 	font-size: 0.875rem;
 	margin-top: 1rem;
 	outline: none;
 	box-shadow: none;
 	-webkit-appearance: none;
+	color: ${Palette.text.default};
 
 	&:focus {
-		border: 1px solid #3819E6;
+		border-color: ${Palette.brand.default};
 	}
 `

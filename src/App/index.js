@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import NavBar from './components/NavBar'
+import NavMaster from './components/NavMaster'
 import { Body } from './style'
 import StoryMaster from './components/StoryMaster'
 import DetailView from './components/DetailView'
@@ -42,7 +42,7 @@ class App extends Component {
   render() {
     return(
       <Body>
-        <NavBar />
+        <NavMaster />
 				<StoryMaster />
 				<DetailView />
       </Body>
