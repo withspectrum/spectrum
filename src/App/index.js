@@ -14,7 +14,6 @@ class App extends Component {
     const activeStoryParam = params.story || ""
     
     dispatch(actions.setActiveFrequency(activeFrequencyParam))
-    dispatch(actions.setStories())
     if (activeStoryParam) { 
       dispatch(actions.setActiveStory(activeStoryParam)) 
       dispatch(actions.setMessages())
@@ -30,7 +29,6 @@ class App extends Component {
 
     if (nextProps.params.frequency !== params.frequency) {
       dispatch(actions.setActiveFrequency(nextProps.params.frequency))
-      dispatch(actions.setStories())
     }
 
     if (nextProps.params.story !== params.frequency) {

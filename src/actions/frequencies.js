@@ -7,8 +7,8 @@ import helpers from '../helpers'
 
 setup
 Takes getState() as an only argument. The reason we do this is so that in any future
-action creator we can easily destructure the returned object of setup to get
-any necessary bits of data
+actions or functions, we can easily destructure the returned object of setup() to get
+any necessary bits of data about the current state of the app
 
 *
 \*------------------------------------------------------------*/
@@ -62,21 +62,17 @@ very soon as we want to respect private frequencies and avoid a noisy new user e
 *
 \*------------------------------------------------------------*/
 export const setFrequencies = () => (dispatch, getState) => {
-  let { database } = setup(getState())
-  
-  // connect to the entire frequencies table
-  // NOTE: We will need to change this in the future to filter by a user's subscribed frequencies
-  let frequenciesRef = database.ref('frequencies');
+  let { user } = setup(getState())
+  let userFrequencies = user.frequencies
+  if (!user.uid) return
 
-  // once we get our frequencies, dispatch them to the store
-  frequenciesRef.on('value', (snapshot) => {
-  	// we will convert our JSON object into array so that in our components we can easily map, filter, and reduce them
-  	let frequencies = helpers.hashToArray(snapshot.val())
-    
-    dispatch({
-	  	type: 'SET_FREQUENCIES',
-	  	frequencies
-	  })
+  helpers.fetchFrequenciesForUser(userFrequencies)
+  .then((frequencies) => {
+  	let obj = frequencies.slice().filter(frequency => frequency !== null)
+  	dispatch({
+  		type: 'SET_FREQUENCIES',
+  		frequencies: obj
+  	})
   })
 }
 
@@ -256,7 +252,9 @@ export const unsubscribeFrequency = () => (dispatch, getState) => {
 toggleFrequencyPrivacy
 Changes the boolean value of a frequencies privacy. We will run checks throughout the app to ensure the user always has the correct permissions when attempting to view a frequency with private set to 'true'
 
-We need to ensure at this step that the user doing the toggling has permission, as indicated by being an owner in the frequency
+We need to ensure at this step that the user doing the toggling has permission, as indicated by being an owner in the frequency.
+
+TODO: Move this permission check to Firebase Rules
 
 *
 \*------------------------------------------------------------*/

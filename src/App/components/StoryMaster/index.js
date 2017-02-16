@@ -31,8 +31,23 @@ class StoryMaster extends Component {
     this.props.dispatch(actions.login())
   }
 
+  sortArrayByKey = (array, key) => {
+    return array.sort((a, b) => {
+      let x = a[key]
+      let y = b[key]
+
+      return ((x < y) ? -1 : ((x > y) ? 1 : 0))
+    })
+  }
+
 	render() {
     const { user, stories, frequencies } = this.props
+    let sortedStories = this.sortArrayByKey(stories.stories, 'timestamp')
+
+    if (frequencies.active !== "all") {
+      sortedStories = sortedStories.filter((story => story.frequency === frequencies.active))
+    }
+    
     let usersPermissionOnFrequency = helpers.getFrequencyPermission(user, frequencies.active, frequencies.frequencies)
     const currentFrequency = helpers.getCurrentFrequency(frequencies.active, frequencies.frequencies)
     const currentFrequencyPrivacy = currentFrequency ? currentFrequency.settings.private : ''
@@ -143,21 +158,13 @@ class StoryMaster extends Component {
 
               { stories.stories.length > 0 &&
                 // slice and reverse makes sure our stories show up in revers chron order
-                stories.stories.slice(0).reverse().map((story, i) => {
-                  if (this.props.frequencies.active === "all") { // if we're in everything, just load the story in the sidebar
-                    return (
-                      <Link to={`/all/${story.id}`} key={i}>
-                        <Story data={story} key={i} />
-                      </Link>
-                    )
-                  } else { // else, let's do dynamic url handling
-                    return (
-                      <Link to={`/${this.props.frequencies.active}/${story.id}`} key={i}>
-                        <Story data={story} />
-                      </Link>
-                    )
-                  }
-                }) 
+                sortedStories.slice().reverse().map((story, i) => {
+                 return (
+                    <Link to={`/all/${story.id}`} key={i}>
+                      <Story data={story} key={i} />
+                    </Link>
+                  )
+                })
               }
 
               { frequencies.active && frequencies.active !== "all"

@@ -1,4 +1,5 @@
 import * as firebase from 'firebase'
+import actions from './index'
 
 /*------------------------------------------------------------\*
 *             
@@ -15,7 +16,7 @@ We have to manually create a "User" record in a separate "User" table
 \*------------------------------------------------------------*/
 export const login = () => (dispatch) => {
   let provider = new firebase.auth.TwitterAuthProvider();
-  firebase.auth().signInWithPopup(provider).then(function(result) {
+  firebase.auth().signInWithPopup(provider).then((result) => {
     // the result contains the Authentication record created on Firebase
     let user = result.user;
     
@@ -84,6 +85,9 @@ export const startListeningToAuth = () => (dispatch) => {
           type: 'SET_USER',
           user: userObject
         })
+
+        dispatch(actions.setFrequencies())
+        dispatch(actions.setStories())
       });
     }
   });
