@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const Button = styled.button`
   position: relative;
@@ -42,7 +42,7 @@ export const ButtonOutline = styled(Button)`
   &:active {
   	border: 1px solid #403E3E;
   }
-`
+`;
 
 export const ButtonLink = styled(ButtonOutline)`
 	border: 1px solid rgba(255,255,255,0);
@@ -59,7 +59,7 @@ export const ButtonLink = styled(ButtonOutline)`
   &:active {
   	border: 1px solid rgba(255,255,255,0);
   }
-`
+`;
 
 export const ButtonPrimary = styled(Button)`
 	background-image: radial-gradient(ellipse farthest-corner at top left , #7B16FF 0%, #3819E6 100%);
@@ -79,7 +79,7 @@ export const ButtonPrimary = styled(Button)`
   &:active {
   	background: radial-gradient(ellipse farthest-corner at bottom left , #7B16FF 0%, #3819E6 100%);
   }
-`
+`;
 
 export const ButtonWarning = styled(ButtonPrimary)`
 	background: linear-gradient(180deg, #FA443E, #EF3A34);
@@ -94,12 +94,12 @@ export const ButtonWarning = styled(ButtonPrimary)`
   	border: 1px solid #EF3A34;
   	background: linear-gradient(180deg, #E63832, #FA443E);
   }
-`
+`;
 
 export default {
-	Button,
-	ButtonOutline,
-	ButtonLink,
-	ButtonPrimary,
-	ButtonWarning
-}
+  Button,
+  ButtonOutline,
+  ButtonLink,
+  ButtonPrimary,
+  ButtonWarning,
+};

@@ -1,18 +1,18 @@
 const initialState = {
   media: null,
-  isOpen: false
-}
+  isOpen: false,
+};
 
 export default function gallery(state = initialState, action) {
   switch (action.type) {
     case 'SHOW_GALLERY':
       return {
         media: action.media,
-        isOpen: true
-      }
+        isOpen: true,
+      };
     case 'HIDE_GALLERY':
-      return initialState
+      return initialState;
     default:
-      return state
+      return state;
   }
 }

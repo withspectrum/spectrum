@@ -1,5 +1,5 @@
-import styled from 'styled-components'
-import { Shadow } from '../Globals'
+import styled from 'styled-components';
+import { Shadow } from '../Globals';
 
 export const Overlay = styled.div`
 	position: fixed;
@@ -10,7 +10,7 @@ export const Overlay = styled.div`
 	background: ${({ theme }) => theme.bg.reverse};
 	opacity: 0.75;
 	z-index: 5;
-`
+`;
 
 export const ActiveImage = styled.img`
 	position: absolute;
@@ -22,4 +22,4 @@ export const ActiveImage = styled.img`
 	margin: auto 0;
 	box-shadow: ${Shadow.high};
 	z-index: 10;
-`
+`;

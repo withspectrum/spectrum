@@ -1,11 +1,10 @@
-import styled, { keyframes } from 'styled-components'
+import styled, { keyframes } from 'styled-components';
 
-
-const maxWidth = "640px"
+const maxWidth = '640px';
 export const modalStyles = {
   overlay: {
     backgroundColor: 'rgba(0,0,0,0.40)',
-    zIndex: 5
+    zIndex: 5,
   },
   content: {
     borderRadius: '8px',
@@ -21,18 +20,18 @@ export const modalStyles = {
     maxWidth: maxWidth,
     backgroundColor: 'rgba(0,0,0,0)',
     boxShadow: '0 4px 24px rgba(0,0,0,0.40)',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"'
-  }
-}
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+  },
+};
 
 export const Section = styled.section`
-  width: ${props => props.width ? props.width : "100%"};
+  width: ${props => props.width ? props.width : '100%'};
   text-align: ${props => props.centered ? 'center' : 'auto'};
 
   @media all and (max-width: 600px) {
     width: 100%;
   }
-`
+`;
 
 export const SectionAlert = styled(Section)`
   background: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%);
@@ -48,7 +47,7 @@ export const SectionAlert = styled(Section)`
     margin-top: 0;
     border-radius: 0;
   }
-`
+`;
 
 export const SectionError = styled(SectionAlert)`
   border-radius: 0 0 4px 4px;
@@ -59,8 +58,7 @@ export const SectionError = styled(SectionAlert)`
   margin-bottom: 0;
   position: relative;
   top: 1px;
-`
-
+`;
 
 export const Badge = styled.div`
   text-transform: uppercase;
@@ -71,12 +69,12 @@ export const Badge = styled.div`
   padding: 0.25rem 0.5rem;
   background: rgba(0,0,0,0.06);
   box-shadow: 0 1px 0 0 rgba(255,255,255,0.1);
-`
+`;
 
 export const Padding = styled.span`
   display: inline-block;
   padding: ${props => props.padding};
-`
+`;
 
 export const Heading = styled.h2`
   font-size: 0.875rem;
@@ -85,14 +83,14 @@ export const Heading = styled.h2`
   letter-spacing: 0.2px;
   color: rgba(23, 26, 33, 1);
   margin: 0.5rem 0;
-`
+`;
 
 export const Subheading = styled.h4`
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.3;
   color: rgba(23, 26, 33, 0.8);
-`
+`;
 
 export const Flex = styled.div`
   display: flex;
@@ -100,7 +98,7 @@ export const Flex = styled.div`
   @media all and (max-width: 600px) {
     flex-direction: column;
   }
-`
+`;
 
 const rotate = keyframes`
   from {
@@ -126,9 +124,9 @@ export const Spinner = styled.div`
   left: 72px;
   transform: translate(-50%, -50%);
   transition: opacity 0.2s ease-out;
-`
+`;
 
 export const ButtonLabel = styled.span`
   opacity: ${props => props.loading ? '0' : '1'};
   transition: opacity 0.2s ease-out;
-`
+`;

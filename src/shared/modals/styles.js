@@ -5,7 +5,7 @@ export const Wrapper = styled.div`
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-`
+`;
 
 export const Header = styled.div`
   display: flex;
@@ -23,7 +23,7 @@ export const Close = styled.div`
   &:hover {
     cursor: pointer;
   }
-`
+`;
 
 export const Title = styled.div`
   margin-right: 3rem;
@@ -31,14 +31,14 @@ export const Title = styled.div`
   font-weight: 600;
   font-size: 1rem;  
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-`
+`;
 
 export const Body = styled.div`
   background-color: #F5F6F7;
   display: flex;
   flex: 1 0 auto;
   flex-direction: column;
-`
+`;
 
 export const Footer = styled.div`
   padding: 0 1rem;
@@ -47,4 +47,4 @@ export const Footer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-`
+`;

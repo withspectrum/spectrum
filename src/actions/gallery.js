@@ -6,17 +6,17 @@ Accepts an array of URLs which will be parsed and populated in the gallery compo
 
 *
 \*------------------------------------------------------------*/
-export const showGallery = (media) => ({
-	type: 'SHOW_GALLERY',
-	isOpen: true,
-	media: media // => array
-})
+export const showGallery = media => ({
+  type: 'SHOW_GALLERY',
+  isOpen: true,
+  media: media, // => array
+});
 
 export const hideGallery = () => ({
-	type: 'HIDE_GALLERY'
-})
+  type: 'HIDE_GALLERY',
+});
 
 export default {
-	showGallery,
-	hideGallery
-}
+  showGallery,
+  hideGallery,
+};

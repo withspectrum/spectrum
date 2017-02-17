@@ -1,8 +1,8 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const Body = styled.div`
 	width: 100%;
-`
+`;
 
 export const Title = styled.p`
 	font-size: 1rem;
@@ -29,7 +29,7 @@ export const ButtonWrapper = styled.div`
 	margin-top: 1rem;
 	text-align: center;
 	justify-content: center;
-`
+`;
 
 export const Button = styled.a`
 	display: flex;
@@ -39,7 +39,10 @@ export const Button = styled.a`
 	font-size: 12px;
 	font-weight: 500;
 	padding: 0.5rem 1rem;
-	background: ${props => props.type === "twitter" ? 'radial-gradient(ellipse farthest-corner at top left , #53D0FF 0%, #00aced 100%);' : 'radial-gradient(ellipse farthest-corner at top left , #5A85DF 0%, #3b5998 100%);'}
+	background: ${props =>
+  props.type === 'twitter'
+    ? 'radial-gradient(ellipse farthest-corner at top left , #53D0FF 0%, #00aced 100%);'
+    : 'radial-gradient(ellipse farthest-corner at top left , #5A85DF 0%, #3b5998 100%);'}
 
 	&:first-of-type {
 		margin-right: 0.5rem;
@@ -52,7 +55,7 @@ export const Button = styled.a`
 	&:hover {
 		cursor: pointer;
 	}
-`
+`;
 
 export const Input = styled.input`
 	width: 100%;
@@ -69,4 +72,4 @@ export const Input = styled.input`
 	&:focus {
 		border-color: ${({ theme }) => theme.brand.default};
 	}
-`
+`;

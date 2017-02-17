@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Tooltip, H1, H4, Shadow } from '../../../shared/Globals'
+import { Tooltip, H1, H4, Shadow } from '../../../shared/Globals';
 
 export const ScrollBody = styled.div`
 	display: flex;
@@ -78,10 +78,10 @@ export const HiddenInput = styled.input`
 
 export const HiddenLabel = styled.span`
 	display: inline-block;
-	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip') };
-`
+	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip')};
+`;
 
 export const HiddenButton = styled.button`
 	background-color: transparent;
-	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip') };
-`
+	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip')};
+`;
