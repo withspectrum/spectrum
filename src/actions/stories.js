@@ -154,17 +154,10 @@ export const createStory = (frequency, title, description, file) => (dispatch, g
   })
 }
 
-export const setActiveStory = (id) => (dispatch) => {
-  dispatch({
-    type: 'SET_ACTIVE_STORY',
-    id
-  })
-
-  dispatch({
-    type: 'CLEAR_MESSAGES',
-    mesages: ''
-  })
-}
+export const setActiveStory = (id) => ({
+  type: 'SET_ACTIVE_STORY',
+  id
+})
 
 export const deleteStory = (id) => (dispatch, getState) => {
   firebase.database().ref(`/stories/${id}`).remove() // delete the story
@@ -175,11 +168,6 @@ export const deleteStory = (id) => (dispatch, getState) => {
   dispatch({
     type: 'DELETE_STORY',
     id
-  })
-
-  dispatch({
-    type: 'CLEAR_MESSAGES',
-    messages: ''
   })
 
   // redirect the user so that they don't end up on a broken url

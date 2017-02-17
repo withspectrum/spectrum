@@ -43,13 +43,10 @@ always has permissions to see/interact with frequencies safely.
 
 *
 \*------------------------------------------------------------*/
-export const setActiveFrequency = (id) => (dispatch) => {
-	console.log('setActiveFrequency: ', id)
-  dispatch({
-    type: 'SET_ACTIVE_FREQUENCY',
-    id
-  })
-}
+export const setActiveFrequency = (id) => ({
+  type: 'SET_ACTIVE_FREQUENCY',
+  id
+})
 
 /*------------------------------------------------------------\*
 *
@@ -63,7 +60,7 @@ very soon as we want to respect private frequencies and avoid a noisy new user e
 *
 \*------------------------------------------------------------*/
 export const setFrequencies = () => (dispatch, getState) => {
-  let { user } = setup(getState())
+  let { user } = getState()
   let userFrequencies = user.frequencies
   if (!user.uid) return
 
