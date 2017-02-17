@@ -5,7 +5,7 @@ import StripeCheckout from 'react-stripe-checkout'
 import axios from 'axios'
 import actions from '../../../actions'
 import { connect } from 'react-redux'
-import { ButtonPrimary } from '../../buttons'
+import { ButtonPrimary, Button } from '../../buttons'
 import { ButtonLabel, modalStyles, Section, SectionAlert, SectionError, Badge, Heading, Subheading, Flex, Padding, Spinner } from './style'
 
 
@@ -47,12 +47,27 @@ class ProModal extends React.Component {
 
       if (response.data.success) {
       	// if the customer and subscription were created successfully
-      	this.props.dispatch(actions.upgradeUser())
+      	this.setState({
+      		loading: false
+      	})
+
+      	// save the updates to our user model
+      	this.props.dispatch(actions.upgradeUser(response.data))
+
+      	// close the modal after a second
+      	setTimeout(() => { this.hideModal() }, 1000)
       }
     })
     .catch((error) => {
       // something went wrong with the stripe form, not an error from the backend
-    });
+      console.log('error is: ', error)
+	    if (error) {
+	     	this.setState({
+	    		error: "Whoops, something went wrong.",
+	    		loading: false
+	    	})
+  		}
+    })
   }
 
 	render() {
