@@ -1,9 +1,8 @@
 import React from 'react'
-import styled from 'styled-components'
-import { Palette } from '../Globals'
+import styled, { withTheme } from 'styled-components'
 
 const Svg = styled.svg`
-	fill: ${props => props.stayActive ? `url(#${props.color}Gradient)` : Palette.inactive };
+	fill: ${props => props.stayActive ? `url(#${props.color}Gradient)` : props.theme.inactive };
 	transition: all 0.2s ease-out;
 
 	&:hover {
@@ -14,24 +13,24 @@ const Svg = styled.svg`
 	}
 `;
 
-const Defs = (props) => {
+const Defs = withTheme((props) => {
 	return(
 		<defs>
 			<radialGradient id='warnGradient' fx="0%" fy="0%" r="100%" spreadMethod="pad">
-				<stop offset="0%" stopColor={ Palette.warn.alt } stopOpacity="1" />
-				<stop offset="100%" stopColor={ Palette.warn.default } stopOpacity="1" />
+				<stop offset="0%" stopColor={ props.theme.warn.alt } stopOpacity="1" />
+				<stop offset="100%" stopColor={ props.theme.warn.default } stopOpacity="1" />
 			</radialGradient>
 			<radialGradient id='successGradient' fx="0%" fy="0%" r="100%" spreadMethod="pad">
-				<stop offset="0%" stopColor={ Palette.success.alt } stopOpacity="1" />
-				<stop offset="100%" stopColor={ Palette.success.default } stopOpacity="1" />
+				<stop offset="0%" stopColor={ props.theme.success.alt } stopOpacity="1" />
+				<stop offset="100%" stopColor={ props.theme.success.default } stopOpacity="1" />
 			</radialGradient>
 			<radialGradient id='brandGradient' fx="0%" fy="0%" r="100%" spreadMethod="pad">
-				<stop offset="0%" stopColor={ Palette.brand.alt } stopOpacity="1" />
-				<stop offset="100%" stopColor={ Palette.brand.default } stopOpacity="1" />
+				<stop offset="0%" stopColor={ props.theme.brand.alt } stopOpacity="1" />
+				<stop offset="100%" stopColor={ props.theme.brand.default } stopOpacity="1" />
 			</radialGradient>
 		</defs>
 	)
-}
+})
 
 export const Delete = (props) => {
 	return(

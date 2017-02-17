@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Palette, Shadow } from '../../../shared/Globals'
+import { Shadow } from '../../../shared/Globals'
 
 export const ComposerContainer = styled.div`
 	display: ${props => props.isOpen ? 'inline-block' : 'none'};
@@ -9,7 +9,7 @@ export const ComposerContainer = styled.div`
 	margin-bottom: 0;
 	padding: 16px;
 	border-radius: 2px;
-	background-color: ${Palette.bg.default};
+	background-color: ${({ theme }) => theme.bg.default};
 	box-shadow: ${Shadow.low};
 	transition: all 0.2s ease-in-out;
 
@@ -24,7 +24,7 @@ export const Input = styled.input`
 	outline: none;
 	border: 0;
 	box-shadow: none;
-	background: ${Palette.bg.default};
+	background: ${({ theme }) => theme.bg.default};
 	display: block;
 	margin-bottom: 8px;
 	font-size: 1rem;
@@ -36,7 +36,7 @@ export const Textarea = styled.textarea`
 	outline: none;
 	border: 0;
 	box-shadow: none;
-	background: ${Palette.bg.default};
+	background: ${({ theme }) => theme.bg.default};
 	display: block;
 	margin-bottom: 8px;
 	font-size: 1rem;
@@ -48,8 +48,8 @@ export const Textarea = styled.textarea`
 
 export const Submit = styled.input`
 	display: block;
-	background-color: ${Palette.brand.default};
-	color: ${Palette.text.reverse};
+	background-color: ${({ theme }) => theme.brand.default};
+	color: ${({ theme }) => theme.text.reverse};
 	outline: none;
 	border: 0;
 	border-radius: 4px;
@@ -83,10 +83,10 @@ export const MediaWrapper = styled.div`
 	    top: 0;
 	    right: 0;
 	    width: auto;
-	    background: ${Palette.bg.reverse};
+	    background: ${({ theme }) => theme.bg.reverse};
 	    border-radius: 0 4px 0 4px;
 	    padding: 2px 8px 4px;
-	    color: ${Palette.text.reverse};
+	    color: ${({ theme }) => theme.text.reverse};
 	    text-transform: uppercase;
 	    pointer-events: none;
 		}
@@ -104,7 +104,7 @@ export const MediaInput = styled.input`
 
 export const MediaLabel = styled.label`
 	width: 100%;
-	background: ${Palette.bg.wash};
+	background: ${({ theme }) => theme.bg.wash};
 	border-radius: 4px;
 	text-align: center;
 	border: 1px dashed rgba(0,0,0,0.1);
@@ -112,7 +112,7 @@ export const MediaLabel = styled.label`
 	display: block;
 	font-size: 0.75rem;
 	text-transform: uppercase;
-	color: ${Palette.text.alt};
+	color: ${({ theme }) => theme.text.alt};
 	font-weight: 800;
 
 	&:hover {
@@ -124,11 +124,11 @@ export const Alert = styled.div`
 	display: block;
 	margin-top: 1rem;
 	border-radius: 4px;
-	background: ${Palette.warn.default};
-	color: ${Palette.text.reverse};
+	background: ${({ theme }) => theme.warn.default};
+	color: ${({ theme }) => theme.text.reverse};
 	font-size: 0.75rem;
 	font-weight: 500;
 	text-align: center;
 	padding: 0.5rem;
-	border: 1px solid ${Palette.warn.alt};
+	border: 1px solid ${({ theme }) => theme.warn.alt};
 `

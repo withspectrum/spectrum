@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Palette, Gradient } from '../../../shared/Globals'
+import { Gradient } from '../../../shared/Globals'
 
 export const ChatContainer = styled.div`
 	flex: 1 0 auto;
@@ -37,9 +37,9 @@ export const BubbleGroup = styled.div`
 
 	> p {
 
-		background-color: ${props => props.me ? Palette.brand.default : Palette.generic.default };
-		background-image: ${props => props.me ? Gradient(Palette.brand.alt, Palette.brand.default) : Gradient(Palette.generic.alt, Palette.generic.default) }
-		color: ${props => props.me ? Palette.text.reverse : Palette.text.default };
+		background-color: ${props => props.me ? props.theme.brand.default : props.theme.generic.default };
+		background-image: ${props => props.me ? Gradient(props.theme.brand.alt, props.theme.brand.default) : Gradient(props.theme.generic.alt, props.theme.generic.default) }
+		color: ${props => props.me ? props.theme.text.reverse : props.theme.text.default };
 		float: ${props => props.me ? `right;` : `left;`}
 		font-weight: ${props => props.me ? `500` : `400`};
 		clear: both;
@@ -59,6 +59,6 @@ export const FromName = styled.span`
 	font-size: 10px;
 	line-height: 16px;
 	font-weight: 500;
-	color: ${Palette.text.alt};
+	color: ${({ theme }) => theme.text.alt};
 	float: ${props => props.me ? `right;` : `left;`}
 `;

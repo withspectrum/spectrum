@@ -1,41 +1,7 @@
-import styled from 'styled-components'
-
-export const Palette = {
-	brand: {
-		default: '#3818E5',
-		alt: '#7B16FF',
-	},
-	warn: {
-		default: '#E3353C',
-		alt: '#E2197A',
-	},
-	success: {
-		default: '#00C383',
-		alt: '#03AAFB',
-	},
-	bg: {
-		default: '#FFFFFF',
-		reverse: '#171A21',
-		wash: '#f6f7f8', 
-	},
-	text: {
-		default: '#171A21',
-		alt: '#747E8D',
-		reverse: '#FFFFFF',
-		placeholder: '#B2B9C6',
-	},
-	generic: {
-		default: '#E6ECF7',
-		alt: '#F6FBFF',
-	},
-	inactive: '#D6E0EE',
-	border: {
-		default: '#DFE7EF',
-	},
-}
+import styled, { css } from 'styled-components'
 
 export const Gradient = (g1, g2) => {
-	return `radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`
+	return css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`
 }
 
 export const Shadow = {
@@ -46,13 +12,13 @@ export const Shadow = {
 	border: '0 0 1px rgba(23,26,33, 0.3)',
 }
 
-export const fontStack = `
+export const fontStack = css`
 	font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe', sans-serif
 `;
 
 export const H1 = styled.h1`
 	${fontStack};
-	color: ${Palette.text.default};
+	color: ${({ theme }) => theme.text.default};
 	font-weight: 700;
 	font-size: 32px;
 	line-height: 40px;
@@ -61,7 +27,7 @@ export const H1 = styled.h1`
 `;
 
 export const H2 = styled.h2`
-	color: ${Palette.text.default};
+	color: ${({ theme }) => theme.text.default};
 	${fontStack};
 	font-weight: 500;
 	font-size: 24px;
@@ -71,7 +37,7 @@ export const H2 = styled.h2`
 `;
 
 export const H3 = styled.h3`
-	color: ${Palette.text.default};
+	color: ${({ theme }) => theme.text.default};
 	${fontStack};
 	font-weight: 500;
 	font-size: 16px;
@@ -81,7 +47,7 @@ export const H3 = styled.h3`
 `;
 
 export const H4 = styled.h4`
-	color: ${Palette.text.default};
+	color: ${({ theme }) => theme.text.default};
 	${fontStack};
 	font-weight: 500;
 	font-size: 14px;
@@ -91,7 +57,7 @@ export const H4 = styled.h4`
 `;
 
 export const H5 = styled.h5`
-	color: ${Palette.text.default};
+	color: ${({ theme }) => theme.text.default};
 	${fontStack};
 	font-weight: 500;
 	font-size: 12px;
@@ -101,7 +67,7 @@ export const H5 = styled.h5`
 `;
 
 export const H6 = styled.h6`
-	color: ${Palette.text.default};
+	color: ${({ theme }) => theme.text.default};
 	${fontStack};
 	font-weight: 600;
 	text-transform: uppercase;
@@ -112,7 +78,7 @@ export const H6 = styled.h6`
 `;
 
 export const P = styled.p`
-	color: ${Palette.text.default};
+	color: ${({ theme }) => theme.text.default};
 	${fontStack};
 	font-weight: 400;
 	font-size: 14px;
@@ -122,7 +88,7 @@ export const P = styled.p`
 `;
 
 export const Span = styled.span`
-	color: ${Palette.text.default};
+	color: ${({ theme }) => theme.text.default};
 	${fontStack};
 	font-weight: 400;
 	font-size: 14px;
@@ -131,7 +97,7 @@ export const Span = styled.span`
 	padding: 0;
 `;
 
-export const Tooltip = (props) => `
+export const Tooltip = (props) => css`
 	position: relative;
 
 	&:after,
@@ -149,39 +115,39 @@ export const Tooltip = (props) => `
     z-index: 1001;
     border: 5px solid transparent;
 
-    ${ props.tipLocation === 'top' ? `
+    ${ props.tipLocation === 'top' ? css`
 			bottom: 100%;
 			left: 33%;
 	    border-bottom-width: 0;
-	    border-top-color: ${Palette.bg.reverse};
+	    border-top-color: ${({ theme }) => theme.bg.reverse};
 	    ` : '' }
 
-	  ${ props.tipLocation === 'right' ? `
+	  ${ props.tipLocation === 'right' ? css`
 			top: 50%;
 	    border-left-width: 0;
-	    border-right-color: ${Palette.bg.reverse};
+	    border-right-color: ${({ theme }) => theme.bg.reverse};
 	    right: calc(0em - 5px);
 	    transform: translate(.5em, -50%);
 			` : '' }
 
-		${ props.tipLocation === 'bottom' ? `
+		${ props.tipLocation === 'bottom' ? css`
 			top: 100%;
 			left: 33%;
 	    border-top-width: 0;
-	    border-bottom-color: ${Palette.bg.reverse};
+	    border-bottom-color: ${({ theme }) => theme.bg.reverse};
 			` : '' }
 
-		${ props.tipLocation === 'left' ? 
-		`	top: 50%;
+		${ props.tipLocation === 'left' ?
+		css`	top: 50%;
 	    border-right-width: 0;
-	    border-left-color: ${Palette.bg.reverse};
+	    border-left-color: ${({ theme }) => theme.bg.reverse};
 	    left: calc(0em - 6px);
 	    transform: translate( -6px, -50%);` : '' }
 
-	  ${ !props.tipLocation ? `
+	  ${ !props.tipLocation ? css`
 			bottom: 100%;
 	    border-bottom-width: 0;
-	    border-top-color: ${Palette.bg.reverse};
+	    border-top-color: ${({ theme }) => theme.bg.reverse};
 	    ` : '' }
 	}
 
@@ -199,32 +165,32 @@ export const Tooltip = (props) => `
     padding: 8px 12px;
     border-radius: 8px;
     box-shadow: ${Shadow.mid};
-    background: ${Palette.bg.reverse};
-    color: ${Palette.text.reverse};
+    background: ${({ theme }) => theme.bg.reverse};
+    color: ${({ theme }) => theme.text.reverse};
 
-    ${ props.tipLocation === 'top' ? `
+    ${ props.tipLocation === 'top' ? css`
 			bottom: calc(100% + 5px);
 			left: -100%;
 	    ` : '' }
 
-	  ${ props.tipLocation === 'right' ? `
+	  ${ props.tipLocation === 'right' ? css`
 			top: 50%;
 	    left: calc(100% + 5px);
 	    transform: translate(.5em, -50%);
 			` : '' }
 
-		${ props.tipLocation === 'bottom' ? `
+		${ props.tipLocation === 'bottom' ? css`
 			top: calc(100% + 5px);
 			left: -175%;
 			` : '' }
 
-		${ props.tipLocation === 'left' ? `
+		${ props.tipLocation === 'left' ? css`
 			top: 50%;
 	    right: calc(100% + 5px);
 	    transform: translate(-.5em, -50%);
 			` : '' }
 
-		${ !props.tipLocation ? `
+		${ !props.tipLocation ? css`
 			bottom: calc(100% + 5px);
 	    ` : '' }
 	}
