@@ -16,7 +16,7 @@ export const Palette = {
 	bg: {
 		default: '#FFFFFF',
 		reverse: '#171A21',
-		wash: '#e4edf5', 
+		wash: '#f6f7f8', 
 	},
 	text: {
 		default: '#171A21',

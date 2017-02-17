@@ -163,7 +163,7 @@ class StoryMaster extends Component {
                 sortedStories.slice().reverse().map((story, i) => {
                  return (
                     <Link to={`/${urlBase}/${story.id}`} key={i}>
-                      <Story data={story} key={i} />
+                      <StoryCard data={story} key={i} />
                     </Link>
                   )
                 })
