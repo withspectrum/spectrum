@@ -6,7 +6,7 @@ export default function root(state = initialState, action) {
 	switch (action.type) {
 		case 'TOGGLE_COMPOSER_OPEN':
 			return Object.assign({}, state, {
-				isOpen: action.isOpen
+				isOpen: !state.isOpen
 			})
 		default:
 			return state
