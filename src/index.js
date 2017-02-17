@@ -22,10 +22,14 @@ const fbconfig = {
 };
 
 firebase.initializeApp(fbconfig)
-// TODO: On prod, uncomment this stuff so we can use localstorage as a poor man's cache
-let localStorageState = helpers.loadState()
-// let store = initStore(localStorageState)
-let store = initStore({})
+let store
+// In production load previously saved data from localStorage
+if (process.env.NODE_ENV === 'production') {
+  let localStorageState = helpers.loadState()
+  store = initStore(localStorageState)
+} else {
+  store = initStore({})
+}
 
 // store.subscribe(() => {
 //   helpers.saveState(store.getState())
