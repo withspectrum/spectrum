@@ -1,26 +1,26 @@
-import React from 'react'
-import { Wrapper, Header, Title, Body, Footer, Close } from './styles'
+import React from 'react';
+import { Wrapper, Header, Title, Body, Footer, Close } from './styles';
 
-const ModalContainer = (props) => {
-	return (
-		<Wrapper>
-			<Header>
-				<Title>{props.title}</Title>
+const ModalContainer = props => {
+  return (
+    <Wrapper>
+      <Header>
+        <Title>{props.title}</Title>
 
-				<Close onClick={props.hideModal}>
-					✕
-				</Close>
-			</Header>
+        <Close onClick={props.hideModal}>
+          ✕
+        </Close>
+      </Header>
 
-			<Body>
-				{ props.children }
-			</Body>
+      <Body>
+        {props.children}
+      </Body>
 
-			<Footer>
-				{ props.footer }
-			</Footer>
-		</Wrapper>
-	)
-}
+      <Footer>
+        {props.footer}
+      </Footer>
+    </Wrapper>
+  );
+};
 
-export default ModalContainer
+export default ModalContainer;

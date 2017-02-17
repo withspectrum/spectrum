@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Shadow, Gradient, Tooltip } from '../../../shared/Globals'
+import { Shadow, Gradient, Tooltip } from '../../../shared/Globals';
 
 export const Column = styled.div`
 	display: flex;
@@ -60,7 +60,7 @@ export const FrequencyName = styled.h2`
 	margin: 0;
 	font-size: 1rem;
 	font-weight: 700;
-`
+`;
 
 export const Button = styled.div`
 	background-color: transparent;
@@ -90,17 +90,27 @@ export const JoinBtn = styled.button`
   text-align: center;
   vertical-align: middle;
   border-radius: 8px;
-  border: 2px solid ${props => props.member ?  `${props.theme.inactive}` : 'transparent'};
-  color: ${props => props.member ? `${props.theme.inactive}` : `${props.theme.text.reverse}` };
-  background-color: ${props => props.member ? `transparent` : `${props.theme.brand.default}`};
-  background-image: ${props => props.member ? `none` : Gradient(props.theme.brand.alt, props.theme.brand.default) };
+  border: 2px solid ${props =>
+  props.member ? `${props.theme.inactive}` : 'transparent'};
+  color: ${props =>
+  props.member ? `${props.theme.inactive}` : `${props.theme.text.reverse}`};
+  background-color: ${props =>
+  props.member ? `transparent` : `${props.theme.brand.default}`};
+  background-image: ${props =>
+  props.member
+    ? `none`
+    : Gradient(props.theme.brand.alt, props.theme.brand.default)};
   transition: all 0.2s ease-out;
 
   &:hover {
   	cursor: pointer;
 		border-radius: 12px
-		color: ${props => props.member ? `${props.theme.brand.default}` : `${props.theme.text.reverse}`};
-		border-color: ${props => props.member ? `${props.theme.brand.default}` : 'transparent'};
+		color: ${props =>
+  props.member
+    ? `${props.theme.brand.default}`
+    : `${props.theme.text.reverse}`};
+		border-color: ${props =>
+  props.member ? `${props.theme.brand.default}` : 'transparent'};
 		transition: all 0.2s ease-in;
   }
 `;
@@ -147,7 +157,8 @@ export const LoginButton = styled.button`
   border-radius: 12px;
   color: ${({ theme }) => theme.text.reverse};
   background-color: ${({ theme }) => theme.brand.default};
-  background-image: ${({ theme }) => Gradient(theme.brand.alt, theme.brand.default)};
+  background-image: ${({ theme }) =>
+  Gradient(theme.brand.alt, theme.brand.default)};
   transition: all 0.2s ease-in-out;
 
   &:hover {
@@ -163,5 +174,5 @@ export const HiddenInput = styled.input`
 
 export const TipButton = styled.button`
 	background-color: transparent;
-	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip') };
-`
+	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip')};
+`;

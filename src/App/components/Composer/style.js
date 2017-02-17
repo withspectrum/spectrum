@@ -1,5 +1,5 @@
-import styled from 'styled-components'
-import { Shadow } from '../../../shared/Globals'
+import styled from 'styled-components';
+import { Shadow } from '../../../shared/Globals';
 
 export const ComposerContainer = styled.div`
 	display: ${props => props.isOpen ? 'inline-block' : 'none'};
@@ -18,7 +18,7 @@ export const ComposerContainer = styled.div`
 		transition: box-shadow 0.2s ease-out;
 		cursor: pointer;
 	}
-`
+`;
 
 export const Input = styled.input`
 	outline: none;
@@ -30,7 +30,7 @@ export const Input = styled.input`
 	font-size: 1rem;
 	width: 100%;
 	font-weight: 500;
-`
+`;
 
 export const Textarea = styled.textarea`
 	outline: none;
@@ -44,7 +44,7 @@ export const Textarea = styled.textarea`
 	resize: none;
 	width: 100%;
 	font-size: 0.875rem;
-`
+`;
 
 export const Submit = styled.input`
 	display: block;
@@ -63,13 +63,13 @@ export const Submit = styled.input`
 	&:hover {
 		cursor: pointer;
 	}
-`
+`;
 
 export const Media = styled.img`
 	width: 100%;
 	border-radius: 4px;
 	position: relative;
-`
+`;
 
 export const MediaWrapper = styled.div`
 	position: relative;
@@ -91,7 +91,7 @@ export const MediaWrapper = styled.div`
 	    pointer-events: none;
 		}
 	}
-`
+`;
 
 export const MediaInput = styled.input`
 	width: 0.1px;
@@ -100,7 +100,7 @@ export const MediaInput = styled.input`
 	overflow: hidden;
 	position: absolute;
 	z-index: -1;
-`
+`;
 
 export const MediaLabel = styled.label`
 	width: 100%;
@@ -118,7 +118,7 @@ export const MediaLabel = styled.label`
 	&:hover {
 		cursor: pointer;
 	}
-`
+`;
 
 export const Alert = styled.div`
 	display: block;
@@ -131,4 +131,4 @@ export const Alert = styled.div`
 	text-align: center;
 	padding: 0.5rem;
 	border: 1px solid ${({ theme }) => theme.warn.alt};
-`
+`;

@@ -9,9 +9,9 @@ we'll be able to persist the UI
 *
 \*------------------------------------------------------------*/
 export const toggleComposer = () => ({
-	type: 'TOGGLE_COMPOSER_OPEN'
-})
+  type: 'TOGGLE_COMPOSER_OPEN',
+});
 
 export default {
-	toggleComposer
-}
+  toggleComposer,
+};

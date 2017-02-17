@@ -1,8 +1,8 @@
 const initialState = {
   modalType: null,
   modalProps: {},
-  isOpen: false
-}
+  isOpen: false,
+};
 
 export default function modal(state = initialState, action) {
   switch (action.type) {
@@ -10,11 +10,11 @@ export default function modal(state = initialState, action) {
       return {
         modalType: action.modalType,
         modalProps: action.modalProps,
-        isOpen: true
-      }
+        isOpen: true,
+      };
     case 'HIDE_MODAL':
-      return initialState
+      return initialState;
     default:
-      return state
+      return state;
   }
 }

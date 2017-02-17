@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Shadow, H4, H5 } from '../../../shared/Globals'
+import { Shadow, H4, H5 } from '../../../shared/Globals';
 
 export const StoryWrapper = styled.div`
 	display: inline-block;
@@ -14,10 +14,16 @@ export const StoryWrapper = styled.div`
 	-webkit-font-smoothing: subpixel-antialiased;
 	z-index: 1;
 	transform: translateZ(0) scale( ${props => props.selected ? `1` : `0.975`} );
-	box-shadow: ${props => props.selected ? `0 2px 16px -4px ${props.theme.brand.default}` : `${Shadow.low}` };
+	box-shadow: ${props =>
+  props.selected
+    ? `0 2px 16px -4px ${props.theme.brand.default}`
+    : `${Shadow.low}`};
 
 	&:hover {
-		box-shadow: ${props => props.selected ? `0 4px 32px -8px ${props.theme.brand.default}` : `${Shadow.high}` };
+		box-shadow: ${props =>
+  props.selected
+    ? `0 4px 32px -8px ${props.theme.brand.default}`
+    : `${Shadow.high}`};
 		transition: box-shadow 0.2s ease-out;
 		cursor: pointer;
 		z-index: 1;

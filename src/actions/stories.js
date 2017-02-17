@@ -1,5 +1,5 @@
-import * as firebase from 'firebase'
-import helpers from '../helpers'
+import * as firebase from 'firebase';
+import helpers from '../helpers';
 
 /*------------------------------------------------------------\*
 *
@@ -11,12 +11,12 @@ any necessary bits of data about the current state of the app
 
 *
 \*------------------------------------------------------------*/
-export const setup = (stateFetch) => {
-  let state = stateFetch
-  let frequencies = state.frequencies
-  let stories = state.stories
-  let user = state.user
-  let uid = user.uid
+export const setup = stateFetch => {
+  let state = stateFetch;
+  let frequencies = state.frequencies;
+  let stories = state.stories;
+  let user = state.user;
+  let uid = user.uid;
 
   // return an object that we can destructure in future functions
   return {
@@ -25,10 +25,9 @@ export const setup = (stateFetch) => {
     frequencies,
     stories,
     user,
-    uid
-  }
-}
-
+    uid,
+  };
+};
 
 /*------------------------------------------------------------\*
 *
@@ -41,34 +40,33 @@ setStories
 *
 \*------------------------------------------------------------*/
 export const setStories = () => (dispatch, getState) => {
-  let { user } = setup(getState())
-  let userFrequencies = user.frequencies
+  let { user } = setup(getState());
+  let userFrequencies = user.frequencies;
 
-  if (!user.uid) return
+  if (!user.uid) return;
 
-  let mapStoryGroupsToArray = (storyGroups) => {
-
+  let mapStoryGroupsToArray = storyGroups => {
     return new Promise((resolve, reject) => {
-        let storiesArray = []
+      let storiesArray = [];
 
-        // for each group of stories (grouped by frequency ID)
-        storyGroups.map((group) => {
-          // loop through each story in that group
-          for (let i in group) {
-            // and push it to our return array
-            storiesArray.push(group[i])
-          }
-        })
+      // for each group of stories (grouped by frequency ID)
+      storyGroups.map(group => {
+        // loop through each story in that group
+        for (let i in group) {
+          // and push it to our return array
+          storiesArray.push(group[i]);
+        }
+      });
 
-        // once this is done, we can resolve the promise with our flattened array
-        resolve(storiesArray)
-    })
-  }
+      // once this is done, we can resolve the promise with our flattened array
+      resolve(storiesArray);
+    });
+  };
 
-  helpers.fetchStoriesForFrequencies(userFrequencies)
-  .then((storiesGroupedByFrequency) => {
-
-    /*  this returns an array of arrays
+  helpers
+    .fetchStoriesForFrequencies(userFrequencies)
+    .then(storiesGroupedByFrequency => {
+      /*  this returns an array of arrays
         it looks like this:
         [
           frequencyIdA: [{story}, {story}, ...],
@@ -77,18 +75,17 @@ export const setStories = () => (dispatch, getState) => {
 
         Because of this structure, we need to iterate through this nested array and destructure it into one flat array containing all the stories
     */
-    return mapStoryGroupsToArray(storiesGroupedByFrequency)
-  }).then((stories) => {
-
-    // we now have all the stories fetched from each frequency the user is a member of in a flattened array. We can send this to the ui and filter by frequency based on active frequency
-
-    dispatch({
-      type: 'SET_STORIES',
-      stories
+      return mapStoryGroupsToArray(storiesGroupedByFrequency);
     })
-  })
-}
+    .then(stories => {
+      // we now have all the stories fetched from each frequency the user is a member of in a flattened array. We can send this to the ui and filter by frequency based on active frequency
 
+      dispatch({
+        type: 'SET_STORIES',
+        stories,
+      });
+    });
+};
 
 /*------------------------------------------------------------\*
 *
@@ -98,17 +95,20 @@ createStory
 
 *
 \*------------------------------------------------------------*/
-export const createStory = (frequency, title, description, file) => (dispatch, getState) => {
-  const user = getState().user
-  const uid = user.uid
+export const createStory = (frequency, title, description, file) => (
+  dispatch,
+  getState,
+) => {
+  const user = getState().user;
+  const uid = user.uid;
   let newStoryRef = firebase.database().ref().child(`stories`).push();
-  const key = newStoryRef.key
+  const key = newStoryRef.key;
   let storyData = {
     id: key,
     creator: {
       displayName: user.displayName,
       photoURL: user.photoURL,
-      uid
+      uid,
     },
     timestamp: firebase.database.ServerValue.TIMESTAMP,
     content: {
@@ -116,13 +116,13 @@ export const createStory = (frequency, title, description, file) => (dispatch, g
       description: description,
       media: '',
     },
-    frequency: frequency
-  }
+    frequency: frequency,
+  };
 
-  const saveStory = (storyData) => {
-    newStoryRef.set(storyData, (err) => {
+  const saveStory = storyData => {
+    newStoryRef.set(storyData, err => {
       if (err) {
-        console.log('there was an error saving your story: ', err)
+        console.log('there was an error saving your story: ', err);
       } else {
         dispatch({
           type: 'CREATE_STORY',
@@ -132,71 +132,71 @@ export const createStory = (frequency, title, description, file) => (dispatch, g
             // now
             timestamp: Date.now(),
           },
-        })
+        });
       }
     });
-  }
+  };
 
   // If there's a file, upload it before saving the story
   if (file) {
     let storage = firebase.storage().ref();
-    storage.child(`story/${file.name}`).put(file).then((snapshot) => {
-      storyData.content.media = snapshot.downloadURL
-      saveStory(storyData)
+    storage.child(`story/${file.name}`).put(file).then(snapshot => {
+      storyData.content.media = snapshot.downloadURL;
+      saveStory(storyData);
     });
   } else {
-    saveStory(storyData)
+    saveStory(storyData);
   }
 
   dispatch({
     type: 'TOGGLE_COMPOSER_OPEN',
-    isOpen: false
-  })
-}
+    isOpen: false,
+  });
+};
 
-export const setActiveStory = (id) => ({
+export const setActiveStory = id => ({
   type: 'SET_ACTIVE_STORY',
-  id
-})
+  id,
+});
 
-export const deleteStory = (id) => (dispatch, getState) => {
-  firebase.database().ref(`/stories/${id}`).remove() // delete the story
-  firebase.database().ref(`/messages/${id}`).remove() // delete the messages for the story
+export const deleteStory = id => (dispatch, getState) => {
+  firebase.database().ref(`/stories/${id}`).remove(); // delete the story
+  firebase.database().ref(`/messages/${id}`).remove(); // delete the messages for the story
 
-  let activeFrequency = getState().frequencies.active
+  let activeFrequency = getState().frequencies.active;
 
   dispatch({
     type: 'DELETE_STORY',
-    id
-  })
+    id,
+  });
 
   // redirect the user so that they don't end up on a broken url
-  if (activeFrequency && activeFrequency !== "all") {
-    window.location.href = `/${activeFrequency}`
+  if (activeFrequency && activeFrequency !== 'all') {
+    window.location.href = `/${activeFrequency}`;
   } else {
-    window.location.href = '/'
+    window.location.href = '/';
   }
-}
+};
 
-export const toggleLockedStory = (story) => (dispatch) => {
-  const id = story.id
-  const locked = story.locked ? story.locked : false // if we haven't set a 'locked' status on the story, it defaults to false (which means people can write messages)
+export const toggleLockedStory = story => dispatch => {
+  const id = story.id;
+  const locked = story.locked ? story.locked : false; // if we haven't set a 'locked' status on the story, it defaults to false (which means people can write messages)
 
   firebase.database().ref(`/stories/${id}`).update({
-    locked: !locked
-  })
+    locked: !locked,
+  });
 
   dispatch({
     type: 'TOGGLE_STORY_LOCK',
     id,
-    locked
-  })
-}
+    locked,
+  });
+};
 
 export default {
   setStories,
   createStory,
   setActiveStory,
   deleteStory,
-  toggleLockedStory
-}
+  toggleLockedStory,
+};

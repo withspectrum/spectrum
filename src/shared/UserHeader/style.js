@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 // TODO: Fix svg url so that masks work. (old: clip-path: ${props => props.size === 'small' ? 'url(#avatar-32)' : 'url(#avatar-48)' };)
 export const Avatar = styled.img`
-  height: ${props => props.size === 'small' ? '32px' : '40px' };
-  width: ${props => props.size === 'small' ? '32px' : '40x' }
+  height: ${props => props.size === 'small' ? '32px' : '40px'};
+  width: ${props => props.size === 'small' ? '32px' : '40x'}
   border-radius: 4px;
 `;
 

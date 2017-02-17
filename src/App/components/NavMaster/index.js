@@ -1,122 +1,147 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Link } from 'react-router'
-import actions from '../../../actions'
-import { Column, Header, HeaderLogo, Avatar, MetaWrapper, P, Name, MetaLink, FreqList, FreqListHeading, Freq, FreqLabel, FreqIcon, FreqGlyph, Footer, FooterLogo, FooterP, Form, Input, Button } from './style';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router';
+import actions from '../../../actions';
+import {
+  Column,
+  Header,
+  HeaderLogo,
+  Avatar,
+  MetaWrapper,
+  P,
+  Name,
+  MetaLink,
+  FreqList,
+  FreqListHeading,
+  Freq,
+  FreqLabel,
+  FreqIcon,
+  FreqGlyph,
+  Footer,
+  FooterLogo,
+  FooterP,
+  Form,
+  Input,
+  Button,
+} from './style';
 
-class NavigationMaster extends Component{
+class NavigationMaster extends Component {
   constructor() {
-    super()
+    super();
 
     this.state = {
-      frequencyName: ''
-    }
+      frequencyName: '',
+    };
   }
 
-  login = (e) => {
+  login = e => {
     e.preventDefault();
-    this.props.dispatch(actions.login())
-  }
+    this.props.dispatch(actions.login());
+  };
 
-  signOut = (e) => {
+  signOut = e => {
     e.preventDefault();
-    this.props.dispatch(actions.signOut())
-  }
+    this.props.dispatch(actions.signOut());
+  };
 
   goPro = () => {
-    this.props.dispatch(actions.showModal('PRO_MODAL'))
-  }
+    this.props.dispatch(actions.showModal('PRO_MODAL'));
+  };
 
-  updateFrequencyName = (e) => {
+  updateFrequencyName = e => {
     this.setState({
-      frequencyName: e.target.value
-    })
-  }
+      frequencyName: e.target.value,
+    });
+  };
 
-  setActiveFrequency = (e) => {
-    this.props.dispatch(actions.setActiveFrequency(e.target.id))
-  }
+  setActiveFrequency = e => {
+    this.props.dispatch(actions.setActiveFrequency(e.target.id));
+  };
 
-  addFrequency = (e) => {
-    e.preventDefault()
-    this.props.dispatch(actions.addFrequency(this.state.frequencyName))
+  addFrequency = e => {
+    e.preventDefault();
+    this.props.dispatch(actions.addFrequency(this.state.frequencyName));
     this.setState({
-      frequencyName: ''
-    })
-  }
+      frequencyName: '',
+    });
+  };
 
   render() {
-    const frequencies = this.props.frequencies.frequencies
-    const activeFrequency = this.props.frequencies.active
-    const user = this.props.user
+    const frequencies = this.props.frequencies.frequencies;
+    const activeFrequency = this.props.frequencies.active;
+    const user = this.props.user;
     // const myFrequencies = helpers.getMyFrequencies(frequencies, user)
     // const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
 
-    return(
+    return (
       <Column>
-        { user.uid
-          ? 
-            <Header>
+        {user.uid
+          ? <Header>
               <Avatar src={user.photoURL} title="Bryn Jackson" />
               <MetaWrapper>
-                <Name>{user.displayName}</Name> 
+                <Name>{user.displayName}</Name>
                 <P>
-                  <MetaLink onClick={this.goPro}>Get Pro</MetaLink>&nbsp;·&nbsp;<MetaLink onClick={this.signOut}>Sign Out</MetaLink>                  
+                  <MetaLink onClick={this.goPro}>Get Pro</MetaLink>
+                  &nbsp;·&nbsp;
+                  <MetaLink onClick={this.signOut}>Sign Out</MetaLink>
                 </P>
               </MetaWrapper>
             </Header>
-          : 
-            <Header login>
-              <HeaderLogo src="/img/logo.png" role="presentation"/>
-            </Header>
-        }
+          : <Header login>
+              <HeaderLogo src="/img/logo.png" role="presentation" />
+            </Header>}
         <FreqList>
           <FreqListHeading>My Frequencies</FreqListHeading>
-          
+
           <Link to="/">
             <Freq active={this.props.frequencies.active === 'all'}>
-              <FreqIcon src="/img/everything-icon.svg"/>
+              <FreqIcon src="/img/everything-icon.svg" />
               <FreqLabel>Everything</FreqLabel>
             </Freq>
           </Link>
 
-          { frequencies &&
-            frequencies.map((frequency, i) => {                
+          {frequencies &&
+            frequencies.map((frequency, i) => {
               return (
                 <Link to={`/${frequency.id}`} key={i}>
-                  <Freq 
-                    active={frequency.id === activeFrequency}>
+                  <Freq active={frequency.id === activeFrequency}>
                     <FreqGlyph>~</FreqGlyph>
-                    <FreqLabel>{ frequency.name }</FreqLabel>
+                    <FreqLabel>{frequency.name}</FreqLabel>
                   </Freq>
                 </Link>
-              )
-            })
-          }
-          
+              );
+            })}
+
         </FreqList>
         <Form onSubmit={this.addFrequency}>
-          <Input type="text" onChange={this.updateFrequencyName} value={this.state.frequencyName} placeholder="+ Create a Frequency" />            
+          <Input
+            type="text"
+            onChange={this.updateFrequencyName}
+            value={this.state.frequencyName}
+            placeholder="+ Create a Frequency"
+          />
           <Button type="submit">~</Button>
         </Form>
-        
+
         <Footer>
           <FooterLogo src="/img/mark.svg" />
           <MetaWrapper>
             <FooterP>© 2017 Spec Network, Inc.</FooterP>
             <FooterP>
-              <MetaLink href="https://spec.fm/about"> About</MetaLink>&nbsp;·&nbsp;<MetaLink href="mailto:spectrum@spec.fm">Contact</MetaLink>
+              <MetaLink href="https://spec.fm/about"> About</MetaLink>
+              &nbsp;·&nbsp;
+              <MetaLink href="mailto:spectrum@spec.fm">Contact</MetaLink>
             </FooterP>
           </MetaWrapper>
         </Footer>
       </Column>
-    )
+    );
   }
-};
+}
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   user: state.user,
-  frequencies: state.frequencies
-})
+  frequencies: state.frequencies,
+});
 
 export default connect(mapStateToProps)(NavigationMaster);

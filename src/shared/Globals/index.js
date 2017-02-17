@@ -1,16 +1,16 @@
-import styled, { css } from 'styled-components'
+import styled, { css } from 'styled-components';
 
 export const Gradient = (g1, g2) => {
-	return css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`
-}
+  return css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`;
+};
 
 export const Shadow = {
-	low: '0 4px 8px -2px rgba(23,26,33, 0.15)',
-	mid: '0 8px 16px -4px rgba(23,26,33, 0.2)',
-	high: '0 16px 32px -8px rgba(23,26,33, 0.25)',
-	input: 'inset 0 3px 5px rgba(23,26,33, 0.05), inset 0 0 1px rgba(23,26,33, 0.1)',
-	border: '0 0 1px rgba(23,26,33, 0.3)',
-}
+  low: '0 4px 8px -2px rgba(23,26,33, 0.15)',
+  mid: '0 8px 16px -4px rgba(23,26,33, 0.2)',
+  high: '0 16px 32px -8px rgba(23,26,33, 0.25)',
+  input: 'inset 0 3px 5px rgba(23,26,33, 0.05), inset 0 0 1px rgba(23,26,33, 0.1)',
+  border: '0 0 1px rgba(23,26,33, 0.3)',
+};
 
 export const fontStack = css`
 	font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe', sans-serif
@@ -97,7 +97,7 @@ export const Span = styled.span`
 	padding: 0;
 `;
 
-export const Tooltip = (props) => css`
+export const Tooltip = props => css`
 	position: relative;
 
 	&:after,
@@ -115,44 +115,53 @@ export const Tooltip = (props) => css`
     z-index: 1001;
     border: 5px solid transparent;
 
-    ${ props.tipLocation === 'top' ? css`
+    ${props.tipLocation === 'top'
+  ? css`
 			bottom: 100%;
 			left: 33%;
 	    border-bottom-width: 0;
 	    border-top-color: ${({ theme }) => theme.bg.reverse};
-	    ` : '' }
+	    `
+  : ''}
 
-	  ${ props.tipLocation === 'right' ? css`
+	  ${props.tipLocation === 'right'
+  ? css`
 			top: 50%;
 	    border-left-width: 0;
 	    border-right-color: ${({ theme }) => theme.bg.reverse};
 	    right: calc(0em - 5px);
 	    transform: translate(.5em, -50%);
-			` : '' }
+			`
+  : ''}
 
-		${ props.tipLocation === 'bottom' ? css`
+		${props.tipLocation === 'bottom'
+  ? css`
 			top: 100%;
 			left: 33%;
 	    border-top-width: 0;
 	    border-bottom-color: ${({ theme }) => theme.bg.reverse};
-			` : '' }
+			`
+  : ''}
 
-		${ props.tipLocation === 'left' ?
-		css`	top: 50%;
+		${props.tipLocation === 'left'
+  ? css`	top: 50%;
 	    border-right-width: 0;
 	    border-left-color: ${({ theme }) => theme.bg.reverse};
 	    left: calc(0em - 6px);
-	    transform: translate( -6px, -50%);` : '' }
+	    transform: translate( -6px, -50%);`
+  : ''}
 
-	  ${ !props.tipLocation ? css`
+	  ${!props.tipLocation
+  ? css`
 			bottom: 100%;
 	    border-bottom-width: 0;
 	    border-top-color: ${({ theme }) => theme.bg.reverse};
-	    ` : '' }
+	    `
+  : ''}
 	}
 
 	&:after {
-		content: ${props.tipText ? `'${props.tipText}'` : `''` };
+		content: ${props.tipText ? `'${props.tipText}'` : `''`};
     z-index: 1000;
     ${fontStack};
     font-size: 14px;
@@ -168,31 +177,41 @@ export const Tooltip = (props) => css`
     background: ${({ theme }) => theme.bg.reverse};
     color: ${({ theme }) => theme.text.reverse};
 
-    ${ props.tipLocation === 'top' ? css`
+    ${props.tipLocation === 'top'
+  ? css`
 			bottom: calc(100% + 5px);
 			left: -100%;
-	    ` : '' }
+	    `
+  : ''}
 
-	  ${ props.tipLocation === 'right' ? css`
+	  ${props.tipLocation === 'right'
+  ? css`
 			top: 50%;
 	    left: calc(100% + 5px);
 	    transform: translate(.5em, -50%);
-			` : '' }
+			`
+  : ''}
 
-		${ props.tipLocation === 'bottom' ? css`
+		${props.tipLocation === 'bottom'
+  ? css`
 			top: calc(100% + 5px);
 			left: -175%;
-			` : '' }
+			`
+  : ''}
 
-		${ props.tipLocation === 'left' ? css`
+		${props.tipLocation === 'left'
+  ? css`
 			top: 50%;
 	    right: calc(100% + 5px);
 	    transform: translate(-.5em, -50%);
-			` : '' }
+			`
+  : ''}
 
-		${ !props.tipLocation ? css`
+		${!props.tipLocation
+  ? css`
 			bottom: calc(100% + 5px);
-	    ` : '' }
+	    `
+  : ''}
 	}
 
 	&:hover:after,

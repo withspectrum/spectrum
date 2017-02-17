@@ -1,5 +1,5 @@
-import styled from 'styled-components'
-import { H1, H4 } from '../../../shared/Globals'
+import styled from 'styled-components';
+import { H1, H4 } from '../../../shared/Globals';
 
 export const Header = styled.div`
 	flex: 0 0 auto;
@@ -46,7 +46,7 @@ export const NullContainer = styled.div`
 	height: 100%;
 	position: relative;
 	background: ${({ theme }) => theme.bg.wash};
-`
+`;
 
 export const NullText = styled(H1)`
 	position: relative;
@@ -56,4 +56,4 @@ export const NullText = styled(H1)`
 	margin: 0 auto;
 	display: inline-block;
 	color: ${({ theme }) => theme.text.alt};
-`
+`;

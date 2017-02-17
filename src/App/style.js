@@ -11,4 +11,4 @@ export const Body = styled.div`
 export const RootWrapper = styled.div`
 	height: 100%;
 	overflow: hidden;
-`
+`;

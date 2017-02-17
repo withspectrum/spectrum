@@ -1,5 +1,5 @@
-import styled from 'styled-components'
-import { Gradient, Shadow } from '../../../shared/Globals'
+import styled from 'styled-components';
+import { Gradient, Shadow } from '../../../shared/Globals';
 
 export const Form = styled.form`
 	flex: 0 0 auto;
@@ -19,7 +19,8 @@ export const Input = styled.input`
 	box-shadow: ${Shadow.input};
 
 	&::placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &::-webkit-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
+  &::-webkit-input-placeholder { color: ${({ theme }) =>
+  theme.text.placeholder} }
   &:-moz-placeholder { color: ${({ theme }) => theme.text.placeholder} }
   &:-ms-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
 `;
@@ -33,7 +34,8 @@ export const Button = styled.button`
 	font-size: 18px;
 	border-radius: 0 8px 8px 0;
 	background-color: ${({ theme }) => theme.brand.default};
-	background-image: ${({ theme }) => Gradient(theme.brand.alt, theme.brand.default)};
+	background-image: ${({ theme }) =>
+  Gradient(theme.brand.alt, theme.brand.default)};
 `;
 
 export const Footer = styled.div`

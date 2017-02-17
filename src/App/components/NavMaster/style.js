@@ -1,5 +1,5 @@
-import styled from 'styled-components'
-import { Gradient, H3 } from '../../../shared/Globals'
+import styled from 'styled-components';
+import { Gradient, H3 } from '../../../shared/Globals';
 
 export const Column = styled.div`
   display: flex;
@@ -13,8 +13,8 @@ export const Header = styled.div`
   display: flex;
   flex: 0 0 auto;
   padding: 16px;
-  align-items: ${props => props.login ? `flex-start` : `center` };
-  flex-direction: ${props => props.login ? `column` : `row` };
+  align-items: ${props => props.login ? `flex-start` : `center`};
+  flex-direction: ${props => props.login ? `column` : `row`};
 `;
 
 export const HeaderLogo = styled.img`
@@ -90,13 +90,18 @@ export const Freq = styled.div`
   padding: 0.5rem;
   padding-left: 1rem;
   align-items: center;
-  background-color: ${props => props.active ? props.theme.brand.default : props.theme.bg.reverse };
-  background-image: ${props => props.active ? Gradient(props.theme.brand.alt, props.theme.brand.default) : `none`};
+  background-color: ${props =>
+  props.active ? props.theme.brand.default : props.theme.bg.reverse};
+  background-image: ${props =>
+  props.active
+    ? Gradient(props.theme.brand.alt, props.theme.brand.default)
+    : `none`};
   color: ${({ theme }) => theme.text.alt};
 
   &:hover {
     cursor: pointer;
-    background-color: ${props => props.active ? props.theme.brand.default : '#2E313F' };
+    background-color: ${props =>
+  props.active ? props.theme.brand.default : '#2E313F'};
   }
 `;
 
@@ -179,7 +184,10 @@ export const Input = styled.input`
 
 export const Button = styled.button`
   background-color: ${({ theme }) => theme.brand.default};
-  background-image: radial-gradient(ellipse farthest-corner at top left , ${({ theme }) => theme.brand.alt} 0%, ${({ theme }) => theme.brand.default} 100%);
+  background-image: radial-gradient(ellipse farthest-corner at top left , ${(
+  { theme },
+) =>
+  theme.brand.alt} 0%, ${({ theme }) => theme.brand.default} 100%);
   font-size: 18px;
   font-weight: bold;
   color: ${({ theme }) => theme.text.reverse};
