@@ -150,10 +150,9 @@ export const createStory = (frequency, title, description, file) => (dispatch, g
       if (err) {
         console.log('there was an error saving your story: ', err)
       } else {
-        console.log('here with ', key)
         dispatch({
-          type: 'SET_ACTIVE_STORY',
-          id: key
+          type: 'CREATE_STORY',
+          story: storyData,
         })
       }
     });
