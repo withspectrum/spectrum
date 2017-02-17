@@ -3,7 +3,7 @@ import helpers from '../helpers'
 
 
 /*------------------------------------------------------------\*
-*             
+*
 
 setup
 Takes getState() as an only argument. The reason we do this is so that in any future
@@ -31,7 +31,7 @@ export const setup = (stateFetch) => {
 }
 
 /*------------------------------------------------------------\*
-*             
+*
 
 setActiveFrequency
 Always takes an ID of a frequency.
@@ -52,7 +52,7 @@ export const setActiveFrequency = (id) => (dispatch) => {
 }
 
 /*------------------------------------------------------------\*
-*             
+*
 
 setFrequencies
 This creates an active listener to the frequencies that are saved in the database.
@@ -68,7 +68,7 @@ export const setFrequencies = () => (dispatch, getState) => {
   if (!user.uid) return
 
   helpers.fetchFrequenciesForUser(userFrequencies)
-  .then((frequencies) => {  	
+  .then((frequencies) => {
   	let obj = frequencies.slice().filter(frequency => frequency !== null)
 
   	dispatch({
@@ -80,7 +80,7 @@ export const setFrequencies = () => (dispatch, getState) => {
 
 
 /*------------------------------------------------------------\*
-*             
+*
 
 addFrequency
 Creating a new frequency requires a few operations:
@@ -148,8 +148,8 @@ export const addFrequency = (name) => (dispatch, getState) => {
 
 	// set the active frequency in redux as the newly created frequency
 	dispatch({
-    type: 'SET_ACTIVE_FREQUENCY',
-    id: newFrequencyKey
+    type: 'ADD_FREQUENCY',
+    frequency: newFrequencyData,
   })
 
 	// save the new data to Firebase
@@ -158,7 +158,7 @@ export const addFrequency = (name) => (dispatch, getState) => {
 
 
 /*------------------------------------------------------------\*
-*             
+*
 
 subscribeFrequency
 When subscribing a user to a frequency, we need to perform two simultaneous actions:
@@ -172,7 +172,7 @@ We will always set role as "subscriber" in this function and let moderation role
 \*------------------------------------------------------------*/
 export const subscribeFrequency = () => (dispatch, getState) => {
 	let { database, frequencies, uid } = setup(getState())
-	
+
 	// we'll use this key to update the user record and to find the correct frequency record to update
 	let frequencyKey = frequencies.active
 
@@ -200,7 +200,7 @@ export const subscribeFrequency = () => (dispatch, getState) => {
 
 
 /*------------------------------------------------------------\*
-*             
+*
 
 unsubscribeFrequency
 When unsubscribing a user from a frequency, we need to perform two simultaneous actions:
@@ -214,7 +214,7 @@ We do not allower the user of the frequency to leave via an unsubscribe button. 
 \*------------------------------------------------------------*/
 export const unsubscribeFrequency = () => (dispatch, getState) => {
 	let { database, frequencies, uid } = setup(getState())
-	
+
 	// we'll use this key to update the user record and to find the correct frequency record to update
 	let frequencyKey = frequencies.active
 
@@ -249,7 +249,7 @@ export const unsubscribeFrequency = () => (dispatch, getState) => {
 
 
 /*------------------------------------------------------------\*
-*             
+*
 
 toggleFrequencyPrivacy
 Changes the boolean value of a frequencies privacy. We will run checks throughout the app to ensure the user always has the correct permissions when attempting to view a frequency with private set to 'true'
@@ -262,7 +262,7 @@ TODO: Move this permission check to Firebase Rules
 \*------------------------------------------------------------*/
 export const toggleFrequencyPrivacy = () => (dispatch, getState) => {
 	let { database, frequencies, user } = setup(getState())
-	
+
 	// we'll compare user ids to make sure this action is allowed
 	let uid = user.uid
 

@@ -26,6 +26,10 @@ export default function root(state = initialState, action) {
 				}
 			})
 			return Object.assign({}, state, { stories: foo })
+		case 'ADD_FREQUENCY':
+			return Object.assign({}, state, {
+				active: null,
+			})
 		default:
 			return state
 	}
