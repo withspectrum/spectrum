@@ -31,7 +31,7 @@ class ChatView extends Component{
               return( 
                 <BubbleGroup key={i} me>
                   {group.map((message, i) => {
-                    return <Bubble key={i} dangerouslySetInnerHTML={{__html: this.formatMessage(message.message)}}/>
+                    return <Bubble key={i} dangerouslySetInnerHTML={{__html: this.formatMessage(message.message.content)}}/>
                   })}
                 </BubbleGroup>
               )
@@ -40,7 +40,7 @@ class ChatView extends Component{
                 <BubbleGroup key={i}>
                 <FromName>{ group[0].userDisplayName }</FromName>
                   {group.map((message, i) => {
-                    return <Bubble key={i} dangerouslySetInnerHTML={{__html: this.formatMessage(message.message)}} />
+                    return <Bubble key={i} dangerouslySetInnerHTML={{__html: this.formatMessage(message.message.content)}} />
                   })}
                 </BubbleGroup>
               )
