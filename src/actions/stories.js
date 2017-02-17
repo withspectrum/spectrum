@@ -2,7 +2,7 @@ import * as firebase from 'firebase'
 import helpers from '../helpers'
 
 /*------------------------------------------------------------\*
-*             
+*
 
 setup
 Takes getState() as an only argument. The reason we do this is so that in any future
@@ -31,7 +31,7 @@ export const setup = (stateFetch) => {
 
 
 /*------------------------------------------------------------\*
-*             
+*
 
 setStories
 1. Get all the frequencies the user is subscribed to
@@ -43,9 +43,9 @@ setStories
 export const setStories = () => (dispatch, getState) => {
   let { user } = setup(getState())
   let userFrequencies = user.frequencies
-  
+
   if (!user.uid) return
-  
+
   let mapStoryGroupsToArray = (storyGroups) => {
 
     return new Promise((resolve, reject) => {
@@ -59,7 +59,7 @@ export const setStories = () => (dispatch, getState) => {
             storiesArray.push(group[i])
           }
         })
-        
+
         // once this is done, we can resolve the promise with our flattened array
         resolve(storiesArray)
     })
@@ -76,12 +76,12 @@ export const setStories = () => (dispatch, getState) => {
         ]
 
         Because of this structure, we need to iterate through this nested array and destructure it into one flat array containing all the stories
-    */ 
+    */
     return mapStoryGroupsToArray(storiesGroupedByFrequency)
   }).then((stories) => {
 
     // we now have all the stories fetched from each frequency the user is a member of in a flattened array. We can send this to the ui and filter by frequency based on active frequency
-    
+
     dispatch({
       type: 'SET_STORIES',
       stories
@@ -91,7 +91,7 @@ export const setStories = () => (dispatch, getState) => {
 
 
 /*------------------------------------------------------------\*
-*             
+*
 
 createStory
 
@@ -103,60 +103,49 @@ export const createStory = (frequency, title, description, file) => (dispatch, g
   const uid = user.uid
   let newStoryRef = firebase.database().ref().child(`stories`).push();
   const key = newStoryRef.key
+  let storyData = {
+    id: key,
+    creator: {
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      uid
+    },
+    timestamp: firebase.database.ServerValue.TIMESTAMP,
+    content: {
+      title: title,
+      description: description,
+      media: '',
+    },
+    frequency: frequency
+  }
 
-  // this if/else is messy. need to clean up in the future
-  if (file) {
-    let storage = firebase.storage().ref();
-    storage.child(`story/${file.name}`).put(file).then(function(snapshot) {
-      const imageUrl = snapshot.downloadURL
-      let storyData = {
-        id: key,
-        creator: {
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-          uid
-        },
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
-        content: {
-          title: title,
-          description: description,
-          media: imageUrl
-        },
-        frequency: frequency
-      }
-
-      newStoryRef.set(storyData, function(err){
-        console.log('err 1: ', err)
-      });
-    });
-  } else {
-    let storyData = {
-      id: key,
-      creator: {
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        uid
-      },
-      timestamp: firebase.database.ServerValue.TIMESTAMP,
-      content: {
-        title: title,
-        description: description,
-        media: ''
-      },
-      frequency: frequency
-    }
-
-    newStoryRef.set(storyData, function(err){
+  const saveStory = (storyData) => {
+    newStoryRef.set(storyData, (err) => {
       if (err) {
         console.log('there was an error saving your story: ', err)
       } else {
-        console.log('here with ', key)
         dispatch({
-          type: 'SET_ACTIVE_STORY',
-          id: key
+          type: 'CREATE_STORY',
+          story: {
+            ...storyData,
+            // Timestamp is set on the server by Firebase, this simulates that by setting it to right
+            // now
+            timestamp: Date.now(),
+          },
         })
       }
     });
+  }
+
+  // If there's a file, upload it before saving the story
+  if (file) {
+    let storage = firebase.storage().ref();
+    storage.child(`story/${file.name}`).put(file).then((snapshot) => {
+      storyData.content.media = snapshot.downloadURL
+      saveStory(storyData)
+    });
+  } else {
+    saveStory(storyData)
   }
 
   dispatch({
@@ -196,7 +185,7 @@ export const deleteStory = (id) => (dispatch, getState) => {
   // redirect the user so that they don't end up on a broken url
   if (activeFrequency && activeFrequency !== "all") {
     window.location.href = `/${activeFrequency}`
-  } else { 
+  } else {
     window.location.href = '/'
   }
 }

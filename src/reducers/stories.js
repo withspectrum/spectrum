@@ -9,6 +9,11 @@ export default function root(state = initialState, action) {
 			return Object.assign({}, state, {
 				stories: action.stories
 			})
+		case 'CREATE_STORY':
+			return Object.assign({}, state, {
+				stories: state.stories.concat([action.story]),
+				active: action.story.id,
+			})
 		case 'SET_ACTIVE_STORY':
 			return Object.assign({}, state, {
 				active: action.id
