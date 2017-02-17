@@ -49,7 +49,6 @@ class StoryMaster extends Component {
     }
 
     let urlBase = frequencies.active === "all" ? "all" : frequencies.active
-    console.log('we are gonna get the permissions now: ', user, frequencies)
     let usersPermissionOnFrequency = helpers.getFrequencyPermission(user, frequencies.active, frequencies.frequencies)
     const currentFrequency = helpers.getCurrentFrequency(frequencies.active, frequencies.frequencies)
     const currentFrequencyPrivacy = currentFrequency ? currentFrequency.settings.private : ''
@@ -109,6 +108,7 @@ class StoryMaster extends Component {
       }
     }
     const canView = canViewStories()
+    console.log('canview ', canView)
 
     const getPrivacyButton = (usersPermissionOnFrequency) => {
       switch (usersPermissionOnFrequency) {

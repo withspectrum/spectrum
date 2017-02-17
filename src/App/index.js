@@ -12,7 +12,6 @@ class App extends Component {
 
     const activeFrequencyParam = params.frequency || "all"
     const activeStoryParam = params.story || ""
-    console.log('check our url params: ', params)
     dispatch(actions.setActiveFrequency(activeFrequencyParam))
 
     if (activeStoryParam) { 
@@ -27,7 +26,6 @@ class App extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { dispatch, params } = this.props
-    console.log('the props have changed')
     if (nextProps.params.frequency !== params.frequency) {
       dispatch(actions.setActiveFrequency(nextProps.params.frequency))
       dispatch(actions.setStories())

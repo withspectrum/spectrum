@@ -10,6 +10,7 @@ import actions from './actions'
 import { Body } from './App/style'
 import ModalRoot from './shared/modals/ModalRoot'
 import GalleryRoot from './shared/gallery/GalleryRoot'
+import helpers from './helpers'
 
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,
@@ -20,8 +21,10 @@ const fbconfig = {
 };
 
 firebase.initializeApp(fbconfig)
-// const localStorageState = helpers.loadState()
-const store = initStore({})
+// TODO: On prod, uncomment this stuff so we can use localstorage as a poor man's cache
+let localStorageState = helpers.loadState()
+// let store = initStore(localStorageState)
+let store = initStore({})
 
 // store.subscribe(() => {
 //   helpers.saveState(store.getState())
@@ -47,18 +50,10 @@ render(<Root/>, document.querySelector('#root'));
 
 setTimeout(() => {
 	// when the app first loads, we'll listen for firebase changes
-	console.log('run: startListeningToAuth')
 	store.dispatch( actions.startListeningToAuth() )
-	.then(() => {
-		console.log('run: setFrequencies')
+	.then(() => {		
+		// once auth has completed, if the user exists we'll set the frequencies and stories
 		store.dispatch( actions.setFrequencies() )
-		console.log('run: setStories')
 		store.dispatch( actions.setStories() )
 	})
-	// and immediately query for the frequencies, as these will persist across the whole session
-	// console.log('run: setFrequencies')
-	// store.dispatch( actions.setFrequencies() )
-	// // once the frequencies are set, get the relevant stories
-	// console.log('run: setStories')
-	// store.dispatch( actions.setStories() )
 })

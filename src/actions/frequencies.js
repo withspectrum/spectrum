@@ -63,16 +63,14 @@ very soon as we want to respect private frequencies and avoid a noisy new user e
 *
 \*------------------------------------------------------------*/
 export const setFrequencies = () => (dispatch, getState) => {
-	console.log('we are going to set the frequencies')
   let { user } = setup(getState())
   let userFrequencies = user.frequencies
   if (!user.uid) return
 
   helpers.fetchFrequenciesForUser(userFrequencies)
   .then((frequencies) => {  	
-  	console.log('we have fetched the frequencies')
   	let obj = frequencies.slice().filter(frequency => frequency !== null)
-  	console.log('we are dispatching the frequencies')
+
   	dispatch({
   		type: 'SET_FREQUENCIES',
   		frequencies: obj

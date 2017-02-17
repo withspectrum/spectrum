@@ -33,22 +33,21 @@ export const setup = (stateFetch) => {
 /*------------------------------------------------------------\*
 *             
 
-setup
-Takes getState() as an only argument. The reason we do this is so that in any future
-actions or functions, we can easily destructure the returned object of setup() to get
-any necessary bits of data about the current state of the app
+setStories
+1. Get all the frequencies the user is subscribed to
+2. Return all the stories on the server for each of those frequencies
+3. Sort and filter all of those stories on the frontend
 
 *
 \*------------------------------------------------------------*/
 export const setStories = () => (dispatch, getState) => {
   let { user } = setup(getState())
-  console.log('we are going to set the stories')
   let userFrequencies = user.frequencies
-  console.log('we have a user ', user)
+  
   if (!user.uid) return
-  console.log('the user exists')
+  
   let mapStoryGroupsToArray = (storyGroups) => {
-    console.log('we have mapped out the stories')
+
     return new Promise((resolve, reject) => {
         let storiesArray = []
 
@@ -68,7 +67,7 @@ export const setStories = () => (dispatch, getState) => {
 
   helpers.fetchStoriesForFrequencies(userFrequencies)
   .then((storiesGroupedByFrequency) => {
-    console.log('we have fetched stories', storiesGroupedByFrequency)
+
     /*  this returns an array of arrays
         it looks like this:
         [
@@ -80,7 +79,7 @@ export const setStories = () => (dispatch, getState) => {
     */ 
     return mapStoryGroupsToArray(storiesGroupedByFrequency)
   }).then((stories) => {
-    console.log('we are dispatching the stories', stories)
+
     // we now have all the stories fetched from each frequency the user is a member of in a flattened array. We can send this to the ui and filter by frequency based on active frequency
     
     dispatch({
@@ -90,15 +89,15 @@ export const setStories = () => (dispatch, getState) => {
   })
 }
 
-export const upvote = (storyId) => (dispatch, getState) => {
-  const uid = getState().user.uid
-  const upvote = {};
-  upvote[`stories/${storyId}/upvotes/${uid}`] = true;
-  firebase.database().ref().update(upvote, function(error){
-    console.log('err upvote: ', error);
-  })
-} 
 
+/*------------------------------------------------------------\*
+*             
+
+createStory
+
+
+*
+\*------------------------------------------------------------*/
 export const createStory = (frequency, title, description, file) => (dispatch, getState) => {
   const user = getState().user
   const uid = user.uid
@@ -219,7 +218,6 @@ export const toggleLockedStory = (story) => (dispatch) => {
 
 export default {
   setStories,
-  upvote,
   createStory,
   setActiveStory,
   deleteStory,
