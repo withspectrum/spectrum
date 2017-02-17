@@ -47,7 +47,9 @@ class StoryMaster extends Component {
     if (frequencies.active !== "all") {
       sortedStories = sortedStories.filter((story => story.frequency === frequencies.active))
     }
-    
+
+    let urlBase = frequencies.active === "all" ? "all" : frequencies.active
+    console.log('we are gonna get the permissions now: ', user, frequencies)
     let usersPermissionOnFrequency = helpers.getFrequencyPermission(user, frequencies.active, frequencies.frequencies)
     const currentFrequency = helpers.getCurrentFrequency(frequencies.active, frequencies.frequencies)
     const currentFrequencyPrivacy = currentFrequency ? currentFrequency.settings.private : ''
@@ -160,14 +162,14 @@ class StoryMaster extends Component {
                 // slice and reverse makes sure our stories show up in revers chron order
                 sortedStories.slice().reverse().map((story, i) => {
                  return (
-                    <Link to={`/all/${story.id}`} key={i}>
+                    <Link to={`/${urlBase}/${story.id}`} key={i}>
                       <Story data={story} key={i} />
                     </Link>
                   )
                 })
               }
 
-              { frequencies.active && frequencies.active !== "all"
+              { currentFrequency && frequencies.active && frequencies.active !== "all"
                ? <ShareCard data={currentFrequency} />
                : ''
               }

@@ -41,13 +41,14 @@ any necessary bits of data about the current state of the app
 *
 \*------------------------------------------------------------*/
 export const setStories = () => (dispatch, getState) => {
-  let { user, frequencies } = setup(getState())
+  let { user } = setup(getState())
+  console.log('we are going to set the stories')
   let userFrequencies = user.frequencies
-  let activeFrequency = frequencies.active
-
+  console.log('we have a user ', user)
   if (!user.uid) return
-
+  console.log('the user exists')
   let mapStoryGroupsToArray = (storyGroups) => {
+    console.log('we have mapped out the stories')
     return new Promise((resolve, reject) => {
         let storiesArray = []
 
@@ -67,6 +68,7 @@ export const setStories = () => (dispatch, getState) => {
 
   helpers.fetchStoriesForFrequencies(userFrequencies)
   .then((storiesGroupedByFrequency) => {
+    console.log('we have fetched stories', storiesGroupedByFrequency)
     /*  this returns an array of arrays
         it looks like this:
         [
@@ -78,6 +80,7 @@ export const setStories = () => (dispatch, getState) => {
     */ 
     return mapStoryGroupsToArray(storiesGroupedByFrequency)
   }).then((stories) => {
+    console.log('we are dispatching the stories', stories)
     // we now have all the stories fetched from each frequency the user is a member of in a flattened array. We can send this to the ui and filter by frequency based on active frequency
     
     dispatch({

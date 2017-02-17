@@ -45,30 +45,25 @@ export const sortAndGroupBubbles = (messages) => {
 const fetch = (ref, orderBy, equalTo) => {
 	if (ref === 'stories') {
 		return new Promise((resolve, reject) => {
-
 			return firebase.database().ref(ref).orderByChild(orderBy).equalTo(equalTo).on('value', (snapshot) => {
 				let val = snapshot.val()
 		    resolve(val)
 			})
-
 		})
 	}
 
 	if (ref === 'frequencies') {
 		return new Promise((resolve, reject) => {
-
 			return firebase.database().ref(ref).orderByChild(orderBy).equalTo(equalTo).on('value', (snapshot) => {
 		  	let val = snapshot.val()
 		  	let obj = val[equalTo]
 		    resolve(obj)
 		  })
-
 		})
 	}
 }
 
 const fetchDataByIds = (obj, params) => {
-	// console.log('obj params: ', obj, params)
   let keys = Object.keys(obj)
   return Promise.all(keys.map(key => fetch(...params, key)))
 }

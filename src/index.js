@@ -4,7 +4,6 @@ import App from './App'
 import { BrowserRouter, Match } from 'react-router'
 import { Provider } from 'react-redux'
 import { initStore } from './store'
-import helpers from './helpers'
 import * as firebase from 'firebase'
 import FIREBASE_CONFIG from './config/FirebaseConfig'
 import actions from './actions'
@@ -48,9 +47,18 @@ render(<Root/>, document.querySelector('#root'));
 
 setTimeout(() => {
 	// when the app first loads, we'll listen for firebase changes
+	console.log('run: startListeningToAuth')
 	store.dispatch( actions.startListeningToAuth() )
+	.then(() => {
+		console.log('run: setFrequencies')
+		store.dispatch( actions.setFrequencies() )
+		console.log('run: setStories')
+		store.dispatch( actions.setStories() )
+	})
 	// and immediately query for the frequencies, as these will persist across the whole session
+	// console.log('run: setFrequencies')
 	// store.dispatch( actions.setFrequencies() )
-	// once the frequencies are set, get the relevant stories
+	// // once the frequencies are set, get the relevant stories
+	// console.log('run: setStories')
 	// store.dispatch( actions.setStories() )
 })

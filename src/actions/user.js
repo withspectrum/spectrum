@@ -1,5 +1,4 @@
 import * as firebase from 'firebase'
-import actions from './index'
 
 /*------------------------------------------------------------\*
 *             
@@ -69,28 +68,35 @@ from the backend.
 *
 \*------------------------------------------------------------*/
 export const startListeningToAuth = () => (dispatch) => {
-	firebase.auth().onAuthStateChanged((user) => {
-    // if the user exists, we can boot up the app
-    if (user) {
-      let database = firebase.database()
-      let usersRef = database.ref('users');
+	return new Promise((resolve, reject) => {
+      firebase.auth().onAuthStateChanged((user) => {
+      // if the user exists, we can boot up the app
+      console.log('startListeningToAuth')
+      if (user) {
+        console.log('we have a user')
+        let database = firebase.database()
+        let usersRef = database.ref('users');
 
-      // we know the user exists, so lets fetch their data by matching the uid
-      usersRef.orderByChild('uid').equalTo(user.uid).on('value', (snapshot) => {
-        let userObject = snapshot.val()
-        userObject = userObject[user.uid] // get the first user returned, which should be the current user
-        
-        // once we've retreived our user, we can dispatch to redux and store their info in state
-        dispatch({
-          type: 'SET_USER',
-          user: userObject
+        // we know the user exists, so lets fetch their data by matching the uid
+        usersRef.orderByChild('uid').equalTo(user.uid).on('value', (snapshot) => {
+          let userObject = snapshot.val()
+          userObject = userObject[user.uid] // get the first user returned, which should be the current user
+
+          console.log('we are resolving the user')
+          resolve(userObject)
+          
+          // once we've retreived our user, we can dispatch to redux and store their info in state
+          console.log('we are dispatching the user')
+          dispatch({
+            type: 'SET_USER',
+            user: userObject
+          })
+          console.log('we are resolving the user')
+          resolve(userObject)
         })
-
-        dispatch(actions.setFrequencies())
-        dispatch(actions.setStories())
-      });
-    }
-  });
+      }
+    })
+  })
 }
 
 

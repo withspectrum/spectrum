@@ -6,6 +6,7 @@ const ShareCard = (props) => {
 	const handleFocus = (e) => {
 		e.target.select();
 	}
+  
 	return (
 		<StoryWrapper>
   		
@@ -21,6 +22,7 @@ const ShareCard = (props) => {
   		</Body>
 		</StoryWrapper>
 	)
+
 }
 
 export default ShareCard

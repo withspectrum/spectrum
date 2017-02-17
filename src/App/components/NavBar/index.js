@@ -54,12 +54,12 @@ class NavBar extends Component{
 
     return(
       <Column>
-        { this.props.user.uid
+        { user.uid
           ? 
             <Header>
-              <Avatar src={this.props.user.photoURL} title="Bryn Jackson" />
+              <Avatar src={user.photoURL} title="Bryn Jackson" />
               <MetaWrapper>
-                <Name>{this.props.user.displayName}</Name> 
+                <Name>{user.displayName}</Name> 
                 <P>
                   <MetaLink onClick={this.goPro}>Get Pro</MetaLink>&nbsp;·&nbsp;<MetaLink onClick={this.signOut}>Sign Out</MetaLink>                  
                 </P>
