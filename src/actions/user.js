@@ -39,7 +39,7 @@ export const login = () => (dispatch) => {
           created: firebase.database.ServerValue.TIMESTAMP,
           displayName: user.displayName, // returned from Twitter
           photoURL: user.photoURL, // returned from Twitter
-          frequencies: {"-KcpUngtORLZzm56Biz4": { id: "-KcpUngtORLZzm56Biz4"}, "-KcvXPfCdrKFDPQsY_PU": {id: "-KcvXPfCdrKFDPQsY_PU"}} // auto subscribe the user to the Bugs n Hugs Frequency
+          frequencies: {"-KcpUngtORLZzm56Biz4": { id: "-KcpUngtORLZzm56Biz4"}} // auto subscribe the user to the Bugs n Hugs Frequency
         }
 
         // now we can set the user data
