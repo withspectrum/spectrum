@@ -1,67 +1,103 @@
 import * as firebase from 'firebase'
 import helpers from '../helpers'
 
-export const setStories = () => (dispatch, getState) => {
-  let usersFrequencies = getState().user.frequencies
-  const activeFrequency = getState().frequencies.active
-  let stories = firebase.database().ref(`stories`)
+/*------------------------------------------------------------\*
+*             
 
-  if (activeFrequency === "all" && usersFrequencies) { // we want stories for all a user's frequencies
-    let storiesToReturn = []
-    helpers.fetchStoriesForFrequencies(usersFrequencies).then(function(freq){
-      freq.forEach(function(f){
-        let a = helpers.hashToArray(f)
-        a.forEach(function(item){
-          storiesToReturn.push(item)
-        })
-      })
-      dispatch({
-        type: 'SET_STORIES',
-        stories: storiesToReturn
-      })
-    })
-    return true;
+setup
+Takes getState() as an only argument. The reason we do this is so that in any future
+actions or functions, we can easily destructure the returned object of setup() to get
+any necessary bits of data about the current state of the app
+
+*
+\*------------------------------------------------------------*/
+export const setup = (stateFetch) => {
+  let state = stateFetch
+  let frequencies = state.frequencies
+  let stories = state.stories
+  let user = state.user
+  let uid = user.uid
+
+  // return an object that we can destructure in future functions
+  return {
+    database: firebase.database(), // we're also including the database so we don't have to keep defining it elsewhere
+    state,
+    frequencies,
+    stories,
+    user,
+    uid
   }
-
-  // if the active frequency doesn't equal 'all', just get the stories for the single selected frequency
-  stories.orderByChild('frequency').equalTo(activeFrequency).on('value', function(snapshot){
-    const snapval = snapshot.val();
-
-    // if there aren't stories for this frequency, clear the stories from state
-    if (!snapval) {
-      dispatch({
-        type: 'SET_STORIES',
-        stories: []
-      })
-
-      dispatch({
-        type: 'SET_ACTIVE_STORY',
-        id: ''
-      })
-
-      return
-    };
-    // test to see if this is a snapshot of the full list
-    let key = Object.keys(snapshot.val())[0];
-    const stories = helpers.hashToArray(snapshot.val())
-    if (snapshot.val()[key].creator){
-      dispatch({
-        type: 'SET_STORIES',
-        stories: stories
-      })
-    }
-  });
 }
 
-export const upvote = (storyId) => (dispatch, getState) => {
-  const uid = getState().user.uid
-  const upvote = {};
-  upvote[`stories/${storyId}/upvotes/${uid}`] = true;
-  firebase.database().ref().update(upvote, function(error){
-    console.log('err upvote: ', error);
-  })
-} 
 
+/*------------------------------------------------------------\*
+*             
+
+setStories
+1. Get all the frequencies the user is subscribed to
+2. Return all the stories on the server for each of those frequencies
+3. Sort and filter all of those stories on the frontend
+
+*
+\*------------------------------------------------------------*/
+export const setStories = () => (dispatch, getState) => {
+  let { user } = setup(getState())
+  let userFrequencies = user.frequencies
+  
+  if (!user.uid) return
+  
+  let mapStoryGroupsToArray = (storyGroups) => {
+
+    return new Promise((resolve, reject) => {
+        let storiesArray = []
+
+        // for each group of stories (grouped by frequency ID)
+        storyGroups.map((group) => {
+          // loop through each story in that group
+          for (let i in group) {
+            // and push it to our return array
+            storiesArray.push(group[i])
+          }
+        })
+        
+        // once this is done, we can resolve the promise with our flattened array
+        resolve(storiesArray)
+    })
+  }
+
+  helpers.fetchStoriesForFrequencies(userFrequencies)
+  .then((storiesGroupedByFrequency) => {
+
+    /*  this returns an array of arrays
+        it looks like this:
+        [
+          frequencyIdA: [{story}, {story}, ...],
+          frequencyIdB: [{story}, {story}, ...]
+        ]
+
+        Because of this structure, we need to iterate through this nested array and destructure it into one flat array containing all the stories
+    */ 
+    return mapStoryGroupsToArray(storiesGroupedByFrequency)
+  }).then((stories) => {
+
+    // we now have all the stories fetched from each frequency the user is a member of in a flattened array. We can send this to the ui and filter by frequency based on active frequency
+    
+    dispatch({
+      type: 'SET_STORIES',
+      stories
+    })
+  })
+}
+
+
+/*------------------------------------------------------------\*
+*             
+
+createStory
+
+
+*
+\*------------------------------------------------------------*/
 export const createStory = (frequency, title, description, file) => (dispatch, getState) => {
   const user = getState().user
   const uid = user.uid
@@ -182,7 +218,6 @@ export const toggleLockedStory = (story) => (dispatch) => {
 
 export default {
   setStories,
-  upvote,
   createStory,
   setActiveStory,
   deleteStory,

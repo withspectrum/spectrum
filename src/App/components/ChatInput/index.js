@@ -19,11 +19,9 @@ class ChatInput extends Component {
 
 	sendMessage = (e) => {
 		e.preventDefault()
-		const user = this.props.user
-		const activeStory = this.props.stories.active
 		const message = this.state.message
 
-		this.props.dispatch(actions.sendMessage(user, activeStory, message))
+		this.props.dispatch(actions.sendMessage(message))
 		this.setState({
 			message: ''
 		})

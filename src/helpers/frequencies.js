@@ -48,17 +48,23 @@ export const getPublicFrequencies = (frequencies, user) => {
 }
 
 export const getFrequencyPermission = (user, activeFrequency, frequencies) => {
+  console.log('we are getting the frequency permission for this user')
   if (!user.uid) { return }
-
+  console.log('we have a user and can proceed')
   const uid = user.uid
+  console.log('use user is ', user, uid)
   if (activeFrequency !== "all") { // we wont' even show this if you're viewing all, so skip
     const frequencyToEval = frequencies.filter((freq) => {
       return freq.id === activeFrequency
     })
 
+    console.log('we have pulled out the freq: ', frequencyToEval[0])
+    console.log('with the users: ', frequencyToEval[0].users)
     let frequencyUsers = frequencyToEval[0].users
     if (frequencyUsers[uid]) { // make sure this user is viewing a frequency they have joined
+      console.log('the user is a member of this frequency')
       const usersPerm = frequencyUsers[uid].permission
+      console.log('and they have a permission of ', usersPerm)
       return usersPerm
     } else {
       return // the user isn't even part of the frequency

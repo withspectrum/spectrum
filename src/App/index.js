@@ -7,14 +7,13 @@ import DetailView from './components/DetailView'
 import actions from '../actions'
 
 class App extends Component {
-	componentDidMount() {
+	componentWillMount() {
     const { dispatch, params } = this.props
 
     const activeFrequencyParam = params.frequency || "all"
     const activeStoryParam = params.story || ""
-    
     dispatch(actions.setActiveFrequency(activeFrequencyParam))
-    dispatch(actions.setStories())
+
     if (activeStoryParam) { 
       dispatch(actions.setActiveStory(activeStoryParam)) 
       dispatch(actions.setMessages())
@@ -27,7 +26,6 @@ class App extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { dispatch, params } = this.props
-
     if (nextProps.params.frequency !== params.frequency) {
       dispatch(actions.setActiveFrequency(nextProps.params.frequency))
       dispatch(actions.setStories())

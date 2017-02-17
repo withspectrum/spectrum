@@ -4,13 +4,13 @@ import App from './App'
 import { BrowserRouter, Match } from 'react-router'
 import { Provider } from 'react-redux'
 import { initStore } from './store'
-import helpers from './helpers'
 import * as firebase from 'firebase'
 import FIREBASE_CONFIG from './config/FirebaseConfig'
 import actions from './actions'
 import { Body } from './App/style'
 import ModalRoot from './shared/modals/ModalRoot'
 import GalleryRoot from './shared/gallery/GalleryRoot'
+import helpers from './helpers'
 
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,
@@ -21,12 +21,14 @@ const fbconfig = {
 };
 
 firebase.initializeApp(fbconfig)
-const localStorageState = helpers.loadState()
-const store = initStore(localStorageState)
+// TODO: On prod, uncomment this stuff so we can use localstorage as a poor man's cache
+let localStorageState = helpers.loadState()
+// let store = initStore(localStorageState)
+let store = initStore({})
 
-store.subscribe(() => {
-  helpers.saveState(store.getState())
-})
+// store.subscribe(() => {
+//   helpers.saveState(store.getState())
+// })
 
 const Root = () => {
 	return(
@@ -49,6 +51,9 @@ render(<Root/>, document.querySelector('#root'));
 setTimeout(() => {
 	// when the app first loads, we'll listen for firebase changes
 	store.dispatch( actions.startListeningToAuth() )
-	// and immediately query for the frequencies, as these will persist across the whole session
-	store.dispatch( actions.setFrequencies() )
+	.then(() => {		
+		// once auth has completed, if the user exists we'll set the frequencies and stories
+		store.dispatch( actions.setFrequencies() )
+		store.dispatch( actions.setStories() )
+	})
 })

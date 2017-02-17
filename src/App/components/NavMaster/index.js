@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import actions from '../../../actions'
-import helpers from '../../../helpers'
 import { Column, Header, HeaderLogo, Avatar, MetaWrapper, P, Name, MetaLink, FreqList, FreqListHeading, Freq, FreqLabel, FreqIcon, FreqGlyph, Footer, FooterLogo, FooterP, Form, Input, Button } from './style';
 
 class NavigationMaster extends Component{
@@ -25,7 +24,7 @@ class NavigationMaster extends Component{
   }
 
   goPro = () => {
-    this.props.dispatch(actions.showProModal())
+    this.props.dispatch(actions.showModal('PRO_MODAL'))
   }
 
   updateFrequencyName = (e) => {
@@ -36,7 +35,6 @@ class NavigationMaster extends Component{
 
   setActiveFrequency = (e) => {
     this.props.dispatch(actions.setActiveFrequency(e.target.id))
-    this.props.dispatch(actions.setStories())
   }
 
   addFrequency = (e) => {
@@ -51,17 +49,17 @@ class NavigationMaster extends Component{
     const frequencies = this.props.frequencies.frequencies
     const activeFrequency = this.props.frequencies.active
     const user = this.props.user
-    const myFrequencies = helpers.getMyFrequencies(frequencies, user)
-    const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
+    // const myFrequencies = helpers.getMyFrequencies(frequencies, user)
+    // const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
 
     return(
       <Column>
-        { this.props.user.uid
+        { user.uid
           ? 
             <Header>
-              <Avatar src={this.props.user.photoURL} title="Bryn Jackson" />
+              <Avatar src={user.photoURL} title="Bryn Jackson" />
               <MetaWrapper>
-                <Name>{this.props.user.displayName}</Name> 
+                <Name>{user.displayName}</Name> 
                 <P>
                   <MetaLink onClick={this.goPro}>Get Pro</MetaLink>&nbsp;·&nbsp;<MetaLink onClick={this.signOut}>Sign Out</MetaLink>                  
                 </P>
@@ -82,8 +80,8 @@ class NavigationMaster extends Component{
             </Freq>
           </Link>
 
-          { myFrequencies &&
-            myFrequencies.map((frequency, i) => {                
+          { frequencies &&
+            frequencies.map((frequency, i) => {                
               return (
                 <Link to={`/${frequency.id}`} key={i}>
                   <Freq 
@@ -96,23 +94,6 @@ class NavigationMaster extends Component{
             })
           }
           
-          <FreqListHeading style={{marginTop:"16px"}}>Other Frequencies</FreqListHeading>
-          { publicFrequencies &&
-            publicFrequencies.map((frequency, i) => {
-              return (
-                <Link to={`/${frequency.id}`} key={i}>
-                  <Freq 
-                    key={i} 
-                    onClick={this.setActiveFrequency} 
-                    id={frequency.id}
-                    active={frequency.id === activeFrequency}>
-                    <FreqGlyph>~</FreqGlyph>
-                    <FreqLabel>{ frequency.name }</FreqLabel>
-                  </Freq>
-                </Link>
-              )
-            })
-          }
         </FreqList>
         <Form onSubmit={this.addFrequency}>
           <Input type="text" onChange={this.updateFrequencyName} value={this.state.frequencyName} placeholder="+ Create a Frequency" />            
