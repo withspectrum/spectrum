@@ -1,12 +1,12 @@
 import styled from 'styled-components'
-import { Palette, H1, H4 } from '../../../shared/Globals'
+import { H1, H4 } from '../../../shared/Globals'
 
 export const Header = styled.div`
 	flex: 0 0 auto;
 	align-self: flex-start;
 	width: 100%;
 	display: flex;
-	background-color: ${Palette.bg.default};
+	background-color: ${({ theme }) => theme.bg.default};
 	padding: 32px;
 `;
 
@@ -14,11 +14,11 @@ export const StoryTitle = styled(H1)`
 	font-size: 28px;
 	line-height: 40px;
 	font-weight: 800;
-	color: ${Palette.text.default};
+	color: ${({ theme }) => theme.text.default};
 `;
 
 export const Byline = styled(H4)`
-	color: ${Palette.brand.default};
+	color: ${({ theme }) => theme.brand.default};
 `;
 
 export const FlexColumn = styled.div`
@@ -45,7 +45,7 @@ export const NullContainer = styled.div`
 	width: 100%;
 	height: 100%;
 	position: relative;
-	background: ${Palette.bg.wash};
+	background: ${({ theme }) => theme.bg.wash};
 `
 
 export const NullText = styled(H1)`
@@ -55,5 +55,5 @@ export const NullText = styled(H1)`
 	transform: translate(-50%, -50%);
 	margin: 0 auto;
 	display: inline-block;
-	color: ${Palette.text.alt};
+	color: ${({ theme }) => theme.text.alt};
 `

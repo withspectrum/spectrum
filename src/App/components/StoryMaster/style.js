@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import { Palette, Shadow, Gradient, Tooltip } from '../../../shared/Globals'
+import { Shadow, Gradient, Tooltip } from '../../../shared/Globals'
 
 export const Column = styled.div`
 	display: flex;
 	flex: 0 0 420px;
 	flex-direction: column;
-	border-right: 1px solid ${Palette.border.default};
-	background-color: ${Palette.bg.wash};
+	border-right: 1px solid ${({ theme }) => theme.border.default};
+	background-color: ${({ theme }) => theme.bg.wash};
 	height: 100%;
 	overflow-y: scroll;
 `;
@@ -18,7 +18,7 @@ export const ScrollBody = styled.div`
 	overflow-x: hidden;
 	flex-direction: column;
 	align-items: stretch;
-	background-color: ${Palette.bg.wash};
+	background-color: ${({ theme }) => theme.bg.wash};
 
 	> img {
 		margin: 32px auto;
@@ -36,7 +36,7 @@ export const Header = styled.div`
 	flex-direction: row-reverse;
 	flex: 0 0 48px;
 	width: 100%;
-	background-color: ${Palette.bg.default};
+	background-color: ${({ theme }) => theme.bg.default};
 	align-items: center;
 	align-self: flex-start;
 	justify-content: space-between;
@@ -73,7 +73,7 @@ export const BgText = styled.p`
 	flex: 0 0 auto;
 	font-weight: bold;
 	font-size: 14px;
-	color: ${Palette.text.alt};
+	color: ${({ theme }) => theme.text.alt};
 
 	&:first-of-type {
 		margin-top: 16px;
@@ -90,17 +90,17 @@ export const JoinBtn = styled.button`
   text-align: center;
   vertical-align: middle;
   border-radius: 8px;
-  border: 2px solid ${props => props.member ?  `${Palette.inactive}` : 'transparent'};
-  color: ${props => props.member ? `${Palette.inactive}` : `${Palette.text.reverse}` };
-  background-color: ${props => props.member ? `transparent` : `${Palette.brand.default}`};
-  background-image: ${props => props.member ? `none` : Gradient(Palette.brand.alt, Palette.brand.default) };
+  border: 2px solid ${props => props.member ?  `${props.theme.inactive}` : 'transparent'};
+  color: ${props => props.member ? `${props.theme.inactive}` : `${props.theme.text.reverse}` };
+  background-color: ${props => props.member ? `transparent` : `${props.theme.brand.default}`};
+  background-image: ${props => props.member ? `none` : Gradient(props.theme.brand.alt, props.theme.brand.default) };
   transition: all 0.2s ease-out;
 
   &:hover {
   	cursor: pointer;
 		border-radius: 12px
-		color: ${props => props.member ? `${Palette.brand.default}` : `${Palette.text.reverse}`};
-		border-color: ${props => props.member ? `${Palette.brand.default}` : 'transparent'};
+		color: ${props => props.member ? `${props.theme.brand.default}` : `${props.theme.text.reverse}`};
+		border-color: ${props => props.member ? `${props.theme.brand.default}` : 'transparent'};
 		transition: all 0.2s ease-in;
   }
 `;
@@ -113,7 +113,7 @@ export const LoginWrapper = styled.div`
 	align-self: stretch;
 	padding: 16px;
 	border-radius: 2px;
-	background-color: ${Palette.bg.default};
+	background-color: ${({ theme }) => theme.bg.default};
 	margin: 8px;
 	box-shadow: ${Shadow.low};
 	transition: box-shadow 0.2s ease-in;
@@ -145,15 +145,15 @@ export const LoginButton = styled.button`
   text-align: center;
   vertical-align: middle;
   border-radius: 12px;
-  color: ${Palette.text.reverse};
-  background-color: ${Palette.brand.default};
-  background-image: ${Gradient(Palette.brand.alt, Palette.brand.default)};
+  color: ${({ theme }) => theme.text.reverse};
+  background-color: ${({ theme }) => theme.brand.default};
+  background-image: ${({ theme }) => Gradient(theme.brand.alt, theme.brand.default)};
   transition: all 0.2s ease-in-out;
 
   &:hover {
   	cursor: pointer;
 		border-radius: 16px
-		color: ${Palette.bg.default};;
+		color: ${({ theme }) => theme.bg.default};;
   }
 `;
 

@@ -3,6 +3,7 @@ import { render } from 'react-dom'
 import App from './App'
 import { BrowserRouter, Match } from 'react-router'
 import { Provider } from 'react-redux'
+import { ThemeProvider } from 'styled-components'
 import { initStore } from './store'
 import * as firebase from 'firebase'
 import FIREBASE_CONFIG from './config/FirebaseConfig'
@@ -10,6 +11,7 @@ import actions from './actions'
 import { Body } from './App/style'
 import ModalRoot from './shared/modals/ModalRoot'
 import GalleryRoot from './shared/gallery/GalleryRoot'
+import { theme } from './shared/Globals'
 import helpers from './helpers'
 
 const fbconfig = {
@@ -34,13 +36,15 @@ const Root = () => {
 	return(
 		<Provider store={store}>
 			<BrowserRouter>
-				<Body>
-					<ModalRoot />
-					<GalleryRoot />
-					<Match exactly pattern="/" component={App}/>
-					<Match exactly pattern="/:frequency" component={App}/>
-					<Match exactly pattern="/:frequency/:story" component={App}/>
-				</Body>
+        <ThemeProvider theme={theme}>
+  				<Body>
+  					<ModalRoot />
+  					<GalleryRoot />
+  					<Match exactly pattern="/" component={App}/>
+  					<Match exactly pattern="/:frequency" component={App}/>
+  					<Match exactly pattern="/:frequency/:story" component={App}/>
+  				</Body>
+        </ThemeProvider>
 			</BrowserRouter>
 		</Provider>
 	)
@@ -51,7 +55,7 @@ render(<Root/>, document.querySelector('#root'));
 setTimeout(() => {
 	// when the app first loads, we'll listen for firebase changes
 	store.dispatch( actions.startListeningToAuth() )
-	.then(() => {		
+	.then(() => {
 		// once auth has completed, if the user exists we'll set the frequencies and stories
 		store.dispatch( actions.setFrequencies() )
 		store.dispatch( actions.setStories() )

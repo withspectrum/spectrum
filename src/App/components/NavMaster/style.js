@@ -1,10 +1,10 @@
 import styled from 'styled-components'
-import { Palette, Gradient, H3 } from '../../../shared/Globals'
+import { Gradient, H3 } from '../../../shared/Globals'
 
 export const Column = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${Palette.bg.reverse};
+  background-color: ${({ theme }) => theme.bg.reverse};
   flex: 0 0 256px;
   height: 100vh;
 `;
@@ -36,7 +36,7 @@ export const MetaWrapper = styled.div`
 
 export const Name = styled(H3)`
   font-size: 16px;
-  color: ${Palette.text.reverse};
+  color: ${({ theme }) => theme.text.reverse};
   font-weight: 500;
   margin-top: 4px;
   margin-bottom: 2px;
@@ -45,20 +45,20 @@ export const Name = styled(H3)`
 export const P = styled.p`
   display: flex;
   font-size: 12px;
-  color: ${Palette.text.alt};
+  color: ${({ theme }) => theme.text.alt};
   font-weight: 500;
 `;
 
 export const MetaLink = styled.a`
   text-decoration: none;
   font-size: 12px;
-  color: ${Palette.text.alt};
+  color: ${({ theme }) => theme.text.alt};
   font-weight: 500;
   transition: color 0.2s ease-out;
 
   &:hover {
     cursor: pointer;
-    color: ${Palette.text.reverse};
+    color: ${({ theme }) => theme.text.reverse};
     transition: color 0.2s ease-out;
   }
 `;
@@ -90,13 +90,13 @@ export const Freq = styled.div`
   padding: 0.5rem;
   padding-left: 1rem;
   align-items: center;
-  background-color: ${props => props.active ? Palette.brand.default : Palette.bg.reverse };
-  background-image: ${props => props.active ? Gradient(Palette.brand.alt, Palette.brand.default) : `none`};
-  color: ${Palette.text.alt};  
+  background-color: ${props => props.active ? props.theme.brand.default : props.theme.bg.reverse };
+  background-image: ${props => props.active ? Gradient(props.theme.brand.alt, props.theme.brand.default) : `none`};
+  color: ${({ theme }) => theme.text.alt};
 
   &:hover {
     cursor: pointer;
-    background-color: ${props => props.active ? Palette.brand.default : '#2E313F' };
+    background-color: ${props => props.active ? props.theme.brand.default : '#2E313F' };
   }
 `;
 
@@ -105,7 +105,7 @@ export const FreqLabel = styled.span`
   font-weight: 500;
   display: inline-block;
   flex: 0 0 auto;
-  color: ${Palette.text.reverse};
+  color: ${({ theme }) => theme.text.reverse};
   margin-left: 8px;
   margin-right: 8px;
   pointer-events: none;
@@ -128,7 +128,7 @@ export const FreqGlyph = styled.span`
   display: inline-block;
   font-size: 24px;
   font-weight: bold;
-  color: ${Palette.text.reverse}
+  color: ${({ theme }) => theme.text.reverse}
 `;
 
 export const Footer = styled.div`
@@ -168,26 +168,26 @@ export const Input = styled.input`
   font-size: 12px;
   line-height: 24px;
   vertical-align: middle;
-  color: ${Palette.text.reverse};
+  color: ${({ theme }) => theme.text.reverse};
   position: relative;
 
-  &::placeholder { color: ${Palette.text.alt} }
-  &::-webkit-input-placeholder { color: ${Palette.text.alt} }
-  &:-moz-placeholder { color: ${Palette.text.alt} }
-  &:-ms-input-placeholder { color: ${Palette.text.alt} }
+  &::placeholder { color: ${({ theme }) => theme.text.alt} }
+  &::-webkit-input-placeholder { color: ${({ theme }) => theme.text.alt} }
+  &:-moz-placeholder { color: ${({ theme }) => theme.text.alt} }
+  &:-ms-input-placeholder { color: ${({ theme }) => theme.text.alt} }
 `;
 
 export const Button = styled.button`
-  background-color: ${Palette.brand.default};
-  background-image: radial-gradient(ellipse farthest-corner at top left , ${Palette.brand.alt} 0%, ${Palette.brand.default} 100%);
+  background-color: ${({ theme }) => theme.brand.default};
+  background-image: radial-gradient(ellipse farthest-corner at top left , ${({ theme }) => theme.brand.alt} 0%, ${({ theme }) => theme.brand.default} 100%);
   font-size: 18px;
   font-weight: bold;
-  color: ${Palette.text.reverse};
+  color: ${({ theme }) => theme.text.reverse};
   height: 32px;
   flex: 0 0 40px;
   line-height: 32px;
   text-align: center;
   vertical-align: middle;
-  border-left: 2px solid ${Palette.bg.reverse};
+  border-left: 2px solid ${({ theme }) => theme.bg.reverse};
   border-radius: 0px 4px 4px 0px;
 `;

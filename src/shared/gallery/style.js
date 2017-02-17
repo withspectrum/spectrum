@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Palette, Shadow } from '../Globals'
+import { Shadow } from '../Globals'
 
 export const Overlay = styled.div`
 	position: fixed;
@@ -7,7 +7,7 @@ export const Overlay = styled.div`
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background: ${Palette.bg.reverse};
+	background: ${({ theme }) => theme.bg.reverse};
 	opacity: 0.75;
 	z-index: 5;
 `

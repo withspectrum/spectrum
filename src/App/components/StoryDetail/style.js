@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { Tooltip, H1, H4, Palette, Shadow } from '../../../shared/Globals'
+import { Tooltip, H1, H4, Shadow } from '../../../shared/Globals'
 
 export const ScrollBody = styled.div`
 	display: flex;
 	flex: 1 1 100%;
-	background-color: ${Palette.bg.default};
+	background-color: ${({ theme }) => theme.bg.default};
 	max-height: 100vh;
 	flex-direction: column;
 	overflow-y: auto;
@@ -23,18 +23,18 @@ export const Header = styled.div`
 	justify-content: space-between;
 	width: 100%;
 	display: flex;
-	background-color: ${Palette.bg.default};
+	background-color: ${({ theme }) => theme.bg.default};
 `;
 
 export const StoryTitle = styled(H1)`
 	font-size: 32px;
 	line-height: 40px;
 	font-weight: 800;
-	color: ${Palette.text.default};
+	color: ${({ theme }) => theme.text.default};
 `;
 
 export const Byline = styled(H4)`
-	color: ${Palette.brand.default};
+	color: ${({ theme }) => theme.brand.default};
 	margin-bottom: 8px;
 `;
 
@@ -55,7 +55,7 @@ export const TextBody = styled.p`
 	margin-bottom: 32px;
 	margin-right: 64px;
 	line-height: 1.6;
-	color: ${Palette.text.default};
+	color: ${({ theme }) => theme.text.default};
 `;
 
 export const Media = styled.img`
@@ -68,7 +68,7 @@ export const Media = styled.img`
   border: 2px solid transparent;
   box-shadow: ${Shadow.border};
   &:hover {
-    border-color: ${Palette.brand.alt};
+    border-color: ${({ theme }) => theme.brand.alt};
   }
 `;
 
