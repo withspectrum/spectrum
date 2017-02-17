@@ -68,7 +68,7 @@ export const setMessages = () => (dispatch, getState) => {
       // the main use case here is a person switching from an existing story to a newly created story, which will swap the IDs of activeStory, but no messages will exist yet
       if (!snapshot.val()) {
         console.log('No messages for this story.')
-        clearMessages() // clear the messages in the store
+        dispatch(clearMessages()) // clear the messages in the store
         return
       }
 
@@ -93,7 +93,7 @@ export const setMessages = () => (dispatch, getState) => {
     })
   } else {
     // if there's no active story, lets flush the messages
-    clearMessages()
+    dispatch(clearMessages())
   }
 }
 

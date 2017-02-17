@@ -2,7 +2,7 @@ import * as firebase from 'firebase'
 import helpers from '../helpers'
 
 /*------------------------------------------------------------\*
-*             
+*
 
 setup
 Takes getState() as an only argument. The reason we do this is so that in any future
@@ -31,7 +31,7 @@ export const setup = (stateFetch) => {
 
 
 /*------------------------------------------------------------\*
-*             
+*
 
 setStories
 1. Get all the frequencies the user is subscribed to
@@ -43,9 +43,9 @@ setStories
 export const setStories = () => (dispatch, getState) => {
   let { user } = setup(getState())
   let userFrequencies = user.frequencies
-  
+
   if (!user.uid) return
-  
+
   let mapStoryGroupsToArray = (storyGroups) => {
 
     return new Promise((resolve, reject) => {
@@ -59,7 +59,7 @@ export const setStories = () => (dispatch, getState) => {
             storiesArray.push(group[i])
           }
         })
-        
+
         // once this is done, we can resolve the promise with our flattened array
         resolve(storiesArray)
     })
@@ -76,12 +76,12 @@ export const setStories = () => (dispatch, getState) => {
         ]
 
         Because of this structure, we need to iterate through this nested array and destructure it into one flat array containing all the stories
-    */ 
+    */
     return mapStoryGroupsToArray(storiesGroupedByFrequency)
   }).then((stories) => {
 
     // we now have all the stories fetched from each frequency the user is a member of in a flattened array. We can send this to the ui and filter by frequency based on active frequency
-    
+
     dispatch({
       type: 'SET_STORIES',
       stories
@@ -91,7 +91,7 @@ export const setStories = () => (dispatch, getState) => {
 
 
 /*------------------------------------------------------------\*
-*             
+*
 
 createStory
 
@@ -165,17 +165,10 @@ export const createStory = (frequency, title, description, file) => (dispatch, g
   })
 }
 
-export const setActiveStory = (id) => (dispatch) => {
-  dispatch({
-    type: 'SET_ACTIVE_STORY',
-    id
-  })
-
-  dispatch({
-    type: 'CLEAR_MESSAGES',
-    mesages: ''
-  })
-}
+export const setActiveStory = (id) => ({
+  type: 'SET_ACTIVE_STORY',
+  id
+})
 
 export const deleteStory = (id) => (dispatch, getState) => {
   firebase.database().ref(`/stories/${id}`).remove() // delete the story
@@ -188,15 +181,10 @@ export const deleteStory = (id) => (dispatch, getState) => {
     id
   })
 
-  dispatch({
-    type: 'CLEAR_MESSAGES',
-    messages: ''
-  })
-
   // redirect the user so that they don't end up on a broken url
   if (activeFrequency && activeFrequency !== "all") {
     window.location.href = `/${activeFrequency}`
-  } else { 
+  } else {
     window.location.href = '/'
   }
 }
