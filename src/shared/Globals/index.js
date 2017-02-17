@@ -1,41 +1,5 @@
 import styled, { css } from 'styled-components'
 
-// This is globally available in styled-components when interpolating a function like so:
-// ${(props) => props.theme}
-export const theme = {
-	brand: {
-		default: '#3818E5',
-		alt: '#7B16FF',
-	},
-	warn: {
-		default: '#E3353C',
-		alt: '#E2197A',
-	},
-	success: {
-		default: '#00C383',
-		alt: '#03AAFB',
-	},
-	bg: {
-		default: '#FFFFFF',
-		reverse: '#171A21',
-		wash: '#f6f7f8',
-	},
-	text: {
-		default: '#171A21',
-		alt: '#747E8D',
-		reverse: '#FFFFFF',
-		placeholder: '#B2B9C6',
-	},
-	generic: {
-		default: '#E6ECF7',
-		alt: '#F6FBFF',
-	},
-	inactive: '#D6E0EE',
-	border: {
-		default: '#DFE7EF',
-	},
-}
-
 export const Gradient = (g1, g2) => {
 	return css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`
 }
