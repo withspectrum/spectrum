@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import actions from '../../../actions'
 import { Column, Header, HeaderLogo, Avatar, MetaWrapper, P, Name, MetaLink, FreqList, FreqListHeading, Freq, FreqLabel, FreqIcon, FreqGlyph, Footer, FooterLogo, FooterP, Form, Input, Button } from './style';
 
-class NavBar extends Component{
+class NavigationMaster extends Component{
   constructor() {
     super()
 
@@ -119,4 +119,4 @@ const mapStateToProps = (state) => ({
   frequencies: state.frequencies
 })
 
-export default connect(mapStateToProps)(NavBar);
+export default connect(mapStateToProps)(NavigationMaster);

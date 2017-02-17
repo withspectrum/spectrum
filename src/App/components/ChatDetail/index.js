@@ -1,16 +1,11 @@
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import { connect } from 'react-redux';
-import { ScrollBody, Bubble, BubbleGroup, FromName } from './style';
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
+import { connect } from 'react-redux'
+import { ChatContainer, Bubble, BubbleGroup, FromName } from './style'
 import * as Autolinker from 'autolinker'
 import sanitizeHtml from 'sanitize-html'
 
 class ChatView extends Component{
-
-  componentWillUpdate() {
-    var node = ReactDOM.findDOMNode(this);
-    this.shouldScrollBottom = node.scrollTop + node.offsetHeight === node.scrollHeight || node.scrollTop === 0;
-  }
 
   componentDidUpdate() {
     if (this.shouldScrollBottom) {
@@ -28,7 +23,7 @@ class ChatView extends Component{
 
   render() {    
 		return (
-      <ScrollBody>
+      <ChatContainer>
         { this.props.messages &&
           this.props.messages.map((group, i) => {
             let me = this.props.user.uid;
@@ -52,7 +47,7 @@ class ChatView extends Component{
             }
           })
         } 
-      </ScrollBody>
+      </ChatContainer>
 	  );
 	}
 }

@@ -1,17 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import StoryView from '../StoryView';
-import ChatView from '../ChatView'
+import StoryDetail from '../StoryDetail';
 import ChatInput from '../ChatInput'
 import actions from '../../../actions'
 import helpers from '../../../helpers'
 
 // eslint-disable-next-line
 
-import {  Header,
-          ViewContainer,
+import {  ViewContainer,
           LogicContainer,
-          StoryTitle,
           NullContainer,
           NullText } from './style';
 
@@ -55,13 +52,7 @@ class DetailView extends Component {
 			<ViewContainer>
 				{ story
 					? <LogicContainer>
-							<Header>
-
-                <StoryTitle>{story.content.title}</StoryTitle>
-
-							</Header>
-              <StoryView activeStory={story} creator={creator} moderator={moderator} locked={locked} />
-							<ChatView />
+              <StoryDetail activeStory={story} creator={creator} moderator={moderator} locked={locked} />
 							{!story.locked &&
                 <ChatInput />
               }
