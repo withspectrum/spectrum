@@ -5,7 +5,7 @@ import Autolinker from 'autolinker'
 
 
 /*------------------------------------------------------------\*
-*             
+*
 
 setup
 Takes getState() as an only argument. The reason we do this is so that in any future
@@ -33,7 +33,7 @@ export const setup = (stateFetch) => {
 }
 
 /*------------------------------------------------------------\*
-*             
+*
 
 clearMessages
 Force the messages to be cleared. I'm not sure this is the best way to handle this, but in the meantime it can be used for:
@@ -43,14 +43,11 @@ Force the messages to be cleared. I'm not sure this is the best way to handle th
 
 *
 \*------------------------------------------------------------*/
-export const clearMessages = () => (dispatch) => {
-  // totally wipes messages from store
-  dispatch({ type: 'CLEAR_MESSAGES' })
-}
+export const clearMessages = () => ({ type: 'CLEAR_MESSAGES' })
 
 
 /*------------------------------------------------------------\*
-*             
+*
 
 setMessages
 Fetches all messages for the active story.
@@ -86,7 +83,7 @@ export const setMessages = () => (dispatch, getState) => {
       })
 
       // update the story's message count to the latest number of messages
-      let story = database.ref(`stories/${activeStory}`) 
+      let story = database.ref(`stories/${activeStory}`)
       story.update({
         message_count: snapshot.numChildren()
       })
@@ -101,7 +98,7 @@ export const setMessages = () => (dispatch, getState) => {
 }
 
 /*------------------------------------------------------------\*
-*             
+*
 
 sendMessages
 Takes a message of any type, creates a new message, and saves it with relation to the current active story and current authed user.
@@ -113,7 +110,7 @@ Note + TODO: we'll do backend checks on Firebase Rules to ensure that the user h
 export const sendMessage = (message) => (dispatch, getState) => {
   let { user, stories, database } = setup(getState())
   let activeStory = stories.active
-  
+
   // create a new child in the messages for this story
   let newMessageRef = database.ref().child(`messages/${activeStory}`).push()
   // store the key to be used for the metadata
@@ -129,7 +126,7 @@ export const sendMessage = (message) => (dispatch, getState) => {
     type: 'text',
     content: message
   }
-  
+
   // the metadata to save for each message
   let messageData = {
     id: newMessageKey,
@@ -144,7 +141,7 @@ export const sendMessage = (message) => (dispatch, getState) => {
   newMessageRef.set(messageData, (err) => {
     if (err) console.log('Error posting a new message: ', err)
   })
-  
+
   // if our url checker returns data, parse the url for metadata to store along with the message (for link unfurling)
   if (Array.from(urls).length){
     fetch('https://metacheck.now.sh:443/',

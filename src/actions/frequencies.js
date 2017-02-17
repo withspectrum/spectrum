@@ -60,7 +60,7 @@ very soon as we want to respect private frequencies and avoid a noisy new user e
 *
 \*------------------------------------------------------------*/
 export const setFrequencies = () => (dispatch, getState) => {
-  let { user } = setup(getState())
+  let { user } = getState()
   let userFrequencies = user.frequencies
   if (!user.uid) return
 
