@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "lint-staged": "^3.3.0",
     "lodash": "^4.17.4",
     "lodash.findindex": "^4.6.0",
+    "prettier": "^0.18.0",
     "react-scripts": "0.7.0"
   },
   "dependencies": {
@@ -32,6 +34,14 @@
     "now-start": "serve ./build --single",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  }
+    "eject": "react-scripts eject",
+    "lint:staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "pre-commit": "lint:staged"
 }
