@@ -51,13 +51,14 @@ class ComposerNew extends Component {
 
   uploadMedia = (e) => {
     let file = e.target.files[0]
-    let body = this.state.body
+    let body = this.props.composer.body
     this.setState({ loading: true })
     let fileUrl = helpers.uploadMedia(file)
       .then((fileUrl) => {
         body = `${body}\n![Alt Text](${fileUrl})\n`
+        this.props.dispatch(actions.updateBody(body))
+        
         this.setState({
-          body: body,
           loading: false
         })
       })
@@ -65,8 +66,8 @@ class ComposerNew extends Component {
 
   createStory = (e) => {
     e.preventDefault()
-    let title = this.state.title
-    let body = this.state.body
+    let title = this.props.composer.title
+    let body = this.props.composer.body
     // if we pass in a custom frequency, it means the user is in 'all' and has selected a frequency from the dropdown
     // if the user isn't in all, we'll send the currently active frequency via the redux state
     let frequency = this.props.frequencies.active === 'all'
@@ -98,6 +99,7 @@ class ComposerNew extends Component {
 
 
   render() {
+    console.log('state ' , this.state)
     let { frequencies, user, composer } = this.props
     let activeFrequency = frequencies.active
     let currentFrequency = frequencies.frequencies.filter((freq) => {
@@ -156,7 +158,7 @@ class ComposerNew extends Component {
                 <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
                 <SubmitContainer>
                   { byline }
-                  <Submit type="submit" disabled={this.state.loading} value={this.state.loading ? "Loading..." : "Post Story"} active={this.state.title} />
+                  <Submit type="submit" disabled={this.state.loading} value={this.state.loading ? "Loading..." : "Post Story"} active={composer.title} />
                 </SubmitContainer>
 
                 {this.state.error && <Alert>{this.state.error}</Alert>}
