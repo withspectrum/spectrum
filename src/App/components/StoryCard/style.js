@@ -12,22 +12,20 @@ export const StoryWrapper = styled.div`
 	background-color: ${({ theme }) => theme.bg.default};
 	transition: all 0.2s ease-in;
 	-webkit-font-smoothing: subpixel-antialiased;
-	z-index: 1;
-	transform: translateZ(0) scale( ${props => props.selected ? `1` : `0.975`} );
-	box-shadow: ${props =>
+	box-shadow: ${Shadow.low};
+	border-right: ${props =>
   props.selected
-    ? `0 2px 16px -4px ${props.theme.brand.default}`
-    : `${Shadow.low}`};
+    ? `8px solid ${props.theme.brand.default}`
+    : `0px solid transparent`};
 
 	&:hover {
-		box-shadow: ${props =>
+		box-shadow: ${Shadow.high}; 
+		border-right: ${props =>
   props.selected
-    ? `0 4px 32px -8px ${props.theme.brand.default}`
-    : `${Shadow.high}`};
-		transition: box-shadow 0.2s ease-out;
+    ? `16px solid ${props.theme.brand.default}`
+    : `8px solid transparent`};
+		transition: all 0.2s ease-out;
 		cursor: pointer;
-		z-index: 1;
-		transform: translateZ(0) scale( ${props => props.selected ? `1` : `0.975`} );
 	}
 `;
 
