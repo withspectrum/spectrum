@@ -12,7 +12,6 @@ import {
   FlexColumn,
   FlexColumnEnd,
   Byline,
-  TextBody,
   Media,
   HiddenButton,
   HiddenLabel,
