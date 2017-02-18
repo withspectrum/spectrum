@@ -53,10 +53,6 @@ body {
   padding: 0;
   overflow-y: hidden;
   overflow-x: hidden;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
@@ -85,10 +81,6 @@ body {
   -moz-flex-direction: column;
   -webkit-flex-direction: column;
   height: 100%;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
 }
 
 .markdown {
