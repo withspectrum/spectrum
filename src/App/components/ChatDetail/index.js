@@ -71,7 +71,7 @@ const mapStateToProps = state => {
   return {
     user: state.user,
     stories: state.stories,
-    messages: state.messages.messages,
+    messages: state.messages.messages[state.stories.active],
   };
 };
 

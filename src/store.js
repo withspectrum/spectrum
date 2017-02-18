@@ -3,8 +3,10 @@ import { createStore, compose, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import reducers from './reducers';
 
-// this enables the chrome devtools for redux
-const composeEnhancers = typeof window !== 'undefined' &&
+// this enables the chrome devtools for redux only in development
+const composeEnhancers = 
+  process.env.NODE_ENV !== 'production' &&
+  typeof window !== 'undefined' &&
   window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
   compose;
 

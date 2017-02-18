@@ -34,19 +34,6 @@ export const setup = stateFetch => {
 /*------------------------------------------------------------\*
 *
 
-clearMessages
-Force the messages to be cleared. I'm not sure this is the best way to handle this, but in the meantime it can be used for:
-- clearing messages when a story is deleted
-- clearing messages when frequencies are changed
-- clearing messages when caching or localstorage is out of sync
-
-*
-\*------------------------------------------------------------*/
-export const clearMessages = () => ({ type: 'CLEAR_MESSAGES' });
-
-/*------------------------------------------------------------\*
-*
-
 setMessages
 Fetches all messages for the active story.
 
@@ -56,47 +43,38 @@ export const setMessages = () => (dispatch, getState) => {
   let { stories, database } = setup(getState());
   let activeStory = stories.active;
 
-  // if an active story is set in redux we'll populate the messages
-  if (activeStory) {
-    let messagesRef = database.ref(`messages/${activeStory}`);
+  if (!activeStory) return;
 
-    // get all the messages for this story
-    messagesRef.on(
-      'value',
-      snapshot => {
-        // if there are no messages available in the story clear the messages state
-        // the main use case here is a person switching from an existing story to a newly created story, which will swap the IDs of activeStory, but no messages will exist yet
-        if (!snapshot.val()) {
-          console.log('No messages for this story.');
-          dispatch(clearMessages()); // clear the messages in the store
-          return;
-        }
+  let messagesRef = database.ref(`messages/${activeStory}`);
 
-        // convert the messages into an array
-        let messagesArray = helpers.hashToArray(snapshot.val());
-        // and pass our array to be sorted into groups based on the user who posted the message
-        let sortedMessages = helpers.sortAndGroupBubbles(messagesArray);
-        // send the sorted messages to redux
-        dispatch({
-          type: 'SET_MESSAGES',
-          messages: sortedMessages,
-        });
+  // get all the messages for this story
+  messagesRef.on(
+    'value',
+    snapshot => {
+      const val = snapshot.val();
+      if (!val) return;
+      // convert the messages into an array
+      let messagesArray = helpers.hashToArray(val);
+      // and pass our array to be sorted into groups based on the user who posted the message
+      let sortedMessages = helpers.sortAndGroupBubbles(messagesArray);
+      // send the sorted messages to redux
+      dispatch({
+        type: 'SET_MESSAGES',
+        messages: sortedMessages,
+        story: activeStory,
+      });
 
-        // update the story's message count to the latest number of messages
-        let story = database.ref(`stories/${activeStory}`);
-        story.update({
-          message_count: snapshot.numChildren(),
-        });
-      },
-      err => {
-        // if there was an error fetching messages
-        if (err) console.log('Error settings messages: ', err);
-      },
-    );
-  } else {
-    // if there's no active story, lets flush the messages
-    dispatch(clearMessages());
-  }
+      // update the story's message count to the latest number of messages
+      let story = database.ref(`stories/${activeStory}`);
+      story.update({
+        message_count: snapshot.numChildren(),
+      });
+    },
+    err => {
+      // if there was an error fetching messages
+      if (err) console.log('Error settings messages: ', err);
+    },
+  );
 };
 
 /*------------------------------------------------------------\*
