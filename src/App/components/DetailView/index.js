@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import StoryDetail from '../StoryDetail';
 import ChatInput from '../ChatInput';
+// eslint-disable-next-line
+import ComposerNew from '../ComposerNew';
 import actions from '../../../actions';
 import helpers from '../../../helpers';
-
-// eslint-disable-next-line
 
 import {
   ViewContainer,
@@ -43,35 +43,51 @@ class DetailView extends Component {
   };
 
   render() {
-    const story = this.getActiveStory();
+    let { composer, user, frequencies } = this.props
+    let story = this.getActiveStory();
+    
     let moderator, creator, locked;
     if (story) {
-      creator = helpers.isStoryCreator(story, this.props.user);
+      creator = helpers.isStoryCreator(story, user);
       moderator = helpers.getStoryPermission(
         story,
-        this.props.user,
-        this.props.frequencies,
+        user,
+        frequencies,
       );
       locked = story.locked ? story.locked : false;
     }
 
-    return (
-      <ViewContainer>
-        {story
-          ? <LogicContainer>
-              <StoryDetail
-                activeStory={story}
-                creator={creator}
-                moderator={moderator}
-                locked={locked}
-              />
-              {!story.locked && <ChatInput />}
-            </LogicContainer>
-          : <NullContainer>
-              <NullText>Choose a story to get started!</NullText>
-            </NullContainer>}
-      </ViewContainer>
-    );
+    if (story && !composer.isOpen) { // if we're viewing a story and the composer is not open
+      return (
+        <ViewContainer>
+          <LogicContainer>
+            <StoryDetail
+              activeStory={story}
+              creator={creator}
+              moderator={moderator}
+              locked={locked}
+            />
+            {!story.locked && <ChatInput />}
+          </LogicContainer>
+        </ViewContainer>
+      );
+    } else if (composer.isOpen) { // otherwise if the composer is open
+      return (
+        <ViewContainer>
+          <LogicContainer>
+            <ComposerNew />
+          </LogicContainer>
+        </ViewContainer>
+      )
+    } else { // otherwise show a null state
+      return (
+        <ViewContainer>
+          <NullContainer>
+            <NullText>Choose a story to get started!</NullText>
+          </NullContainer>
+        </ViewContainer>
+      )
+    }
   }
 }
 
@@ -79,6 +95,7 @@ const mapStateToProps = state => ({
   stories: state.stories,
   frequencies: state.frequencies,
   user: state.user,
+  composer: state.composer
 });
 
 export default connect(mapStateToProps)(DetailView);

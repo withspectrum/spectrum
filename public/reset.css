@@ -59,6 +59,21 @@ body {
   user-select: none;
 }
 
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #B2B9C6;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #B2B9C6;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #B2B9C6;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    #B2B9C6;
+}
+
 #root {
   display: flex;
   display: -webkit-box;

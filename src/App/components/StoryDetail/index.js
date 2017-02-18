@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import ChatDetail from '../ChatDetail';
+import Markdown from 'react-remarkable';
 import { Lock, Unlock, Delete } from '../../../shared/Icons';
 import {
   ScrollBody,
@@ -49,10 +50,10 @@ class StoryView extends Component {
   };
 
   render() {
-    const story = this.props.activeStory;
-    const creator = this.props.creator;
-    const moderator = this.props.moderator;
-    const locked = this.props.locked;
+    let story = this.props.activeStory;
+    let creator = this.props.creator;
+    let moderator = this.props.moderator;
+    let locked = this.props.locked;
 
     return (
       <ScrollBody>
@@ -92,7 +93,7 @@ class StoryView extends Component {
                 </FlexColumnEnd>
               : ''}
           </Header>
-          <TextBody>{story.content.description}</TextBody>
+          <Markdown source={story.content.description} />
           {story.content.media && story.content.media !== ''
             ? <Media src={story.content.media} onClick={this.showGallery} />
             : ''}

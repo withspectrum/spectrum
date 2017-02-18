@@ -27,13 +27,14 @@ let store;
 if (process.env.NODE_ENV === 'production') {
   let localStorageState = helpers.loadState();
   store = initStore(localStorageState);
+  
+  // sync the store with localstorage
+  store.subscribe(() => {
+    helpers.saveState(store.getState())
+  })
 } else {
   store = initStore({});
 }
-
-// store.subscribe(() => {
-//   helpers.saveState(store.getState())
-// })
 
 // This is globally available in styled-components when interpolating a function like so:
 // ${(props) => props.theme}
