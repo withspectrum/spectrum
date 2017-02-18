@@ -81,7 +81,10 @@ class ComposerNew extends Component {
     }
 
     if (frequency && title) { // if everything is filled out
-      this.props.dispatch( actions.createStory(newStoryObj));
+      this.props.dispatch( actions.createStory(newStoryObj))
+      .then(() => { // after the story is created, we need to set messages so that the chat will work right away
+        this.props.dispatch( actions.setMessages() )
+      });
     } else if (!frequency && title) { // if no frequency is chosen
       this.setState({
         error: 'Choose a frequency to share this story to!'
@@ -99,7 +102,6 @@ class ComposerNew extends Component {
 
 
   render() {
-    console.log('state ' , this.state)
     let { frequencies, user, composer } = this.props
     let activeFrequency = frequencies.active
     let currentFrequency = frequencies.frequencies.filter((freq) => {

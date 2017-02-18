@@ -113,6 +113,8 @@ export const sendMessage = message => (dispatch, getState) => {
   let { user, stories, database } = setup(getState());
   let activeStory = stories.active;
 
+  console.log('sendMessage() ', message, user, activeStory)
+
   // create a new child in the messages for this story
   let newMessageRef = database.ref().child(`messages/${activeStory}`).push();
   // store the key to be used for the metadata
