@@ -1,172 +1,174 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import actions from '../../../actions';
 import helpers from '../../../helpers';
+import Textarea from 'react-textarea-autosize';
+
 import {
-  ComposerContainer,
-  Input,
-  Submit,
-  Textarea,
-  Media,
-  MediaInput,
-  MediaLabel,
-  MediaWrapper,
+  ScrollBody,
+  ContentView,
+  Header,
+  StoryTitle,
+  FlexColumn,
+  Byline,
+  TextBody,
   Alert,
+  Select,
+  Submit,
+  SubmitContainer,
+  MediaInput,
+  MediaLabel
 } from './style';
 
 class Composer extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    let userFreqs;
-    if (props.user.uid) {
-      // we can only evaulate this if a user is logged in
-      userFreqs = Object.keys(props.user.frequencies);
-    }
+    let { frequencies, user } = props
+    let userFreqs = Object.keys(user.frequencies)
 
     this.state = {
-      title: '',
-      description: '',
-      media: null,
       error: null,
-      file: '',
-      frequencyPicker: userFreqs ? userFreqs[0] : '', // by default the user's first frequency is selected in the frequency picker
-    };
+      frequencyPicker: userFreqs ? userFreqs[0] : '',
+      loading: false
+    }
   }
 
-  changeTitle = e => {
-    this.setState({
-      title: e.target.value,
-      error: null,
-    });
+  changeTitle = (e) => {
+    this.props.dispatch(actions.updateTitle(e.target.value))
   };
 
-  changeDescription = e => {
-    this.setState({
-      description: e.target.value,
-      error: null,
-    });
+  changeBody = (e) => {
+    this.props.dispatch(actions.updateBody(e.target.value))
   };
 
-  selectFrequencyFromDropdown = e => {
+  selectFrequencyFromDropdown = (e) => {
     this.setState({
       frequencyPicker: e.target.value,
     });
   };
 
-  createStory = e => {
-    e.preventDefault();
-    let description = this.state.description;
-    let title = this.state.title;
-    let file = this.state.file;
+  uploadMedia = (e) => {
+    let file = e.target.files[0]
+    let body = this.props.composer.body
+    this.setState({ loading: true })
+    let fileUrl = helpers.uploadMedia(file)
+      .then((fileUrl) => {
+        body = `${body}\n![Alt Text](${fileUrl})\n`
+        this.props.dispatch(actions.updateBody(body))
+        
+        this.setState({
+          loading: false
+        })
+      })
+  }
+
+  createStory = (e) => {
+    e.preventDefault()
+    let title = this.props.composer.title
+    let body = this.props.composer.body
     // if we pass in a custom frequency, it means the user is in 'all' and has selected a frequency from the dropdown
     // if the user isn't in all, we'll send the currently active frequency via the redux state
     let frequency = this.props.frequencies.active === 'all'
       ? this.state.frequencyPicker
       : this.props.frequencies.active;
 
-    if (frequency && title && description) {
-      this.props.dispatch(
-        actions.createStory(frequency, title, description, file),
-      );
-      this.setState({
-        title: '',
-        description: '',
-        media: '',
-        file: '',
-      });
-    } else if (!title || !description) {
-      this.setState({
-        error: 'Be sure to add a title and description!',
-      });
-    } else {
-      this.setState({
-        error: 'Be sure to pick a frequency to share this story to!',
-      });
+    let newStoryObj = {
+      frequency,
+      title,
+      body
     }
-  };
 
-  removeMedia = () => {
-    this.setState({
-      media: null,
-    });
-  };
-
-  uploadMediaLocally = e => {
-    let input = e.target;
-    let reader = new FileReader();
-    let file = e.target.files[0];
-    reader.onload = () => {
-      let dataURL = reader.result;
-      this.setState({
-        media: dataURL,
-        file: file,
+    if (frequency && title) { // if everything is filled out
+      this.props.dispatch( actions.createStory(newStoryObj))
+      .then(() => { // after the story is created, we need to set messages so that the chat will work right away
+        this.props.dispatch( actions.setMessages() )
       });
-    };
+    } else if (!frequency && title) { // if no frequency is chosen
+      this.setState({
+        error: 'Choose a frequency to share this story to!'
+      })
+    } else if (!title) { // missing a title
+      this.setState({
+        error: "Be sure to type a title!"
+      })
+    } else { // something else went wrong...
+      this.setState({
+        error: "Oops!"
+      })
+    }
+  }
 
-    reader.readAsDataURL(input.files[0]);
-  };
 
   render() {
-    const frequencies = this.props.frequencies.frequencies;
-    const activeFrequency = this.props.frequencies.active;
-    const user = this.props.user;
-    const myFrequencies = helpers.getMyFrequencies(frequencies, user);
+    let { frequencies, user, composer } = this.props
+    let activeFrequency = frequencies.active
+    let currentFrequency = frequencies.frequencies.filter((freq) => {
+      return freq.id === activeFrequency
+    })
+
+    let byline = activeFrequency === "all"
+      ? <span>
+            <Byline>Post in
+            <Select
+              onChange={this.selectFrequencyFromDropdown}
+              defaultValue={frequencies.frequencies[0].id}>
+              
+              {frequencies.frequencies.map((frequency, i) => {
+                return (
+                  <option key={i} value={frequency.id}>
+                    {frequency.name}
+                  </option>
+                );
+              })}
+
+            </Select>
+          </Byline>
+        </span>
+      : <Byline>New Story in {currentFrequency[0].name}</Byline>
 
     return (
-      <ComposerContainer isOpen={this.props.isOpen}>
-        {activeFrequency &&
-          <form onSubmit={this.createStory} encType="multipart/form-data">
+      <ScrollBody>
+        <ContentView>
+          <Header>
+            <FlexColumn>
 
-            {activeFrequency === 'all' && myFrequencies.length > 0
-              ? <select
-                  onChange={this.selectFrequencyFromDropdown}
-                  defaultValue={myFrequencies[0].id}
-                >
-                  {myFrequencies.map((frequency, i) => {
-                    return (
-                      <option key={i} value={frequency.id}>
-                        {frequency.name}
-                      </option>
-                    );
-                  })}
-                </select>
-              : ''}
+              <form onSubmit={this.createStory} encType="multipart/form-data">
+                <Byline>New Story</Byline>
+                <Textarea 
+                  onChange={this.changeTitle}
+                  style={StoryTitle} 
+                  value={composer.title}
+                  placeholder={"What's up?"} 
+                  autoFocus></Textarea>
+                
+                <Textarea 
+                  onChange={this.changeBody}
+                  value={composer.body}
+                  style={TextBody}
+                  placeholder={"Say more words..."}></Textarea>
 
-            <Input
-              placeholder="Title..."
-              value={this.state.title}
-              onChange={this.changeTitle}
-            />
-            <Textarea
-              placeholder="Description..."
-              value={this.state.description}
-              onChange={this.changeDescription}
-            />
-
-            {this.state.media &&
-              <MediaWrapper>
-                <Media src={this.state.media} onClick={this.removeMedia} />
-              </MediaWrapper>}
-
-            {!this.state.media &&
-              <div>
                 <MediaInput
                   ref="media"
                   type="file"
                   id="file"
                   name="file"
                   accept=".png, .jpg, .jpeg, .gif"
-                  onChange={this.uploadMediaLocally}
+                  onChange={this.uploadMedia}
                 />
-                <MediaLabel htmlFor="file">Add Image</MediaLabel>
-              </div>}
+                <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
+                <SubmitContainer>
+                  { byline }
+                  <Submit type="submit" disabled={this.state.loading} value={this.state.loading ? "Loading..." : "Post Story"} active={composer.title} />
+                </SubmitContainer>
 
-            <Submit type="submit" />
-
-            {this.state.error && <Alert>{this.state.error}</Alert>}
-          </form>}
-      </ComposerContainer>
+                {this.state.error && <Alert>{this.state.error}</Alert>}
+              </form>
+            </FlexColumn>
+          </Header>
+        </ContentView>
+      </ScrollBody>
     );
   }
 }
@@ -175,7 +177,8 @@ const mapStateToProps = state => {
   return {
     user: state.user,
     frequencies: state.frequencies,
-  };
-};
+    composer: state.composer
+  }
+}
 
 export default connect(mapStateToProps)(Composer);

@@ -1,97 +1,108 @@
 import styled from 'styled-components';
-import { Shadow } from '../../../shared/Globals';
+import { Gradient, H4 } from '../../../shared/Globals';
 
-export const ComposerContainer = styled.div`
-	display: ${props => props.isOpen ? 'inline-block' : 'none'};
-	align-self: stretch;
-	flex: 0 0 auto;
-	margin: 8px;
-	margin-bottom: 0;
-	padding: 16px;
-	border-radius: 2px;
+export const ScrollBody = styled.div`
+	display: flex;
+	flex: 1 1 100%;
 	background-color: ${({ theme }) => theme.bg.default};
-	box-shadow: ${Shadow.low};
-	transition: all 0.2s ease-in-out;
-
-	&:hover {
-		box-shadow: ${Shadow.mid};
-		transition: box-shadow 0.2s ease-out;
-		cursor: pointer;
-	}
+	max-height: 100vh;
+	flex-direction: column;
+	overflow-y: auto;
 `;
 
-export const Input = styled.input`
-	outline: none;
-	border: 0;
-	box-shadow: none;
-	background: ${({ theme }) => theme.bg.default};
-	display: block;
-	margin-bottom: 8px;
-	font-size: 1rem;
+export const ContentView = styled.div`
+	display: flex;
+	flex: 0 0 auto;
+	flex-direction: column;
+	padding: 32px;
+`;
+
+export const Header = styled.div`
+	flex: 1 0 auto;
+	align-self: flex-start;
+	justify-content: space-between;
 	width: 100%;
-	font-weight: 500;
+	display: flex;
+	background-color: ${({ theme }) => theme.bg.default};
 `;
 
-export const Textarea = styled.textarea`
-	outline: none;
-	border: 0;
-	box-shadow: none;
-	background: ${({ theme }) => theme.bg.default};
-	display: block;
+export const Byline = styled(H4)`
+	color: ${({ theme }) => theme.brand.default};
 	margin-bottom: 8px;
-	font-size: 1rem;
-	font-weight: 500;
-	resize: none;
-	width: 100%;
-	font-size: 0.875rem;
+	position: relative;
+	display: inline-block;
 `;
 
-export const Submit = styled.input`
+export const Select = styled.select`
+	color: ${({ theme }) => theme.brand.default};
+  border: none;
+  border-radius: 3px;
+  background: rgba(56, 24, 229, 0.05);
+  -webkit-appearance: none;
+  font-size: 14px;
+  padding: 4px 8px;
+  margin-left: 5px;
+  position: relative;
+ 	width: auto;
+ 	transition: all 0.1s;
+ 	font-weight: 600;
+
+ 	&:hover {
+ 		transition: all 0.1s;
+ 		cursor: pointer;
+ 		background: rgba(56, 24, 229, 0.08);
+ 	}
+`;
+
+export const FlexColumn = styled.div`
+	display:flex;
+	flex-direction: column;
+	width: 100%;
+`;
+
+export const Alert = styled.div`
 	display: block;
-	background-color: ${({ theme }) => theme.brand.default};
-	color: ${({ theme }) => theme.text.reverse};
-	outline: none;
-	border: 0;
-	border-radius: 4px;
-	padding: 0.5rem 1rem;
-	text-transform: uppercase;
+	margin-top: 1rem;
+	color: ${({ theme }) => theme.warn.default};
 	font-size: 0.75rem;
 	font-weight: 600;
-	margin-top: 1rem;
-	float: right;
-
-	&:hover {
-		cursor: pointer;
-	}
 `;
 
-export const Media = styled.img`
+export const Upload = styled.input`
+	border: none;
+	outline: 0;
+	color: ${props => props.theme.brand.default};
+	font-weight: 800;
+	font-size: 0.75rem;
+	margin: 0.5rem 0 1rem;
+	background: transparent;
+`
+
+export const SubmitContainer = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	width: 100%;
-	border-radius: 4px;
-	position: relative;
-`;
+	border-top: 1px solid ${props => props.theme.border.default};
+	padding: 1rem 0;
+`
 
-export const MediaWrapper = styled.div`
-	position: relative;
+export const Submit = styled.input`
+	background-color: ${props => 
+		props.active ? props.theme.brand.default : props.theme.text.placeholder};
+  background-image: ${props => 
+  	props.active ? Gradient(props.theme.brand.alt, props.theme.brand.default) : props.theme.text.placeholder};
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 800;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.2);
 
-	&:hover {
-		&:after {
-			content: 'Remove';
-	    font-size: 10px;
-	    font-weight: 600;
-	    position: absolute;
-	    top: 0;
-	    right: 0;
-	    width: auto;
-	    background: ${({ theme }) => theme.bg.reverse};
-	    border-radius: 0 4px 0 4px;
-	    padding: 2px 8px 4px;
-	    color: ${({ theme }) => theme.text.reverse};
-	    text-transform: uppercase;
-	    pointer-events: none;
-		}
-	}
-`;
+  &:hover {
+  	cursor: pointer;
+  }
+`
 
 export const MediaInput = styled.input`
 	width: 0.1px;
@@ -103,32 +114,46 @@ export const MediaInput = styled.input`
 `;
 
 export const MediaLabel = styled.label`
-	width: 100%;
-	background: ${({ theme }) => theme.bg.wash};
-	border-radius: 4px;
-	text-align: center;
-	border: 1px dashed rgba(0,0,0,0.1);
-	padding: 1rem 2rem;
-	display: block;
-	font-size: 0.75rem;
-	text-transform: uppercase;
-	color: ${({ theme }) => theme.text.alt};
+	border: none;
+	outline: 0;
+	color: ${props => props.theme.brand.default};
 	font-weight: 800;
+	font-size: 0.75rem;
+	display: inline-block;
+	margin: 0.5rem 0 1rem;
+	background: transparent;
 
 	&:hover {
 		cursor: pointer;
 	}
 `;
 
-export const Alert = styled.div`
-	display: block;
-	margin-top: 1rem;
-	border-radius: 4px;
-	background: ${({ theme }) => theme.warn.default};
-	color: ${({ theme }) => theme.text.reverse};
-	font-size: 0.75rem;
-	font-weight: 500;
-	text-align: center;
-	padding: 0.5rem;
-	border: 1px solid ${({ theme }) => theme.warn.alt};
-`;
+
+// these are style objects because i'm custom styling another react component to handle autoresizign
+export const StoryTitle = {
+	fontSize: "32px",
+	padding: "0",
+	outline: "none",
+	border: "0",
+	lineHeight: "40px",
+	fontWeight: "800",
+	boxShadow: "none",
+	width: "100%",
+	color: "#171A21",
+	whiteSpace: "pre-wrap"
+}
+
+export const TextBody = {
+	marginTop: "16px",
+	fontSize: "16px",
+	width: "100%",
+	display: "inline-block",
+	marginBottom: "32px",
+	lineHeight: "1.6",
+	padding: "0",
+	outline: "none",
+	border: "0",
+	boxShadow: "none",
+	color: "#171A21",
+	whiteSpace: "pre-wrap"
+}

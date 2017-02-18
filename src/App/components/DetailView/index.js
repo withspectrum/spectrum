@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import StoryDetail from '../StoryDetail';
 import ChatInput from '../ChatInput';
 // eslint-disable-next-line
-import ComposerNew from '../ComposerNew';
+import Composer from '../Composer';
 import actions from '../../../actions';
 import helpers from '../../../helpers';
 
@@ -75,7 +75,7 @@ class DetailView extends Component {
       return (
         <ViewContainer>
           <LogicContainer>
-            <ComposerNew />
+            <Composer />
           </LogicContainer>
         </ViewContainer>
       )
