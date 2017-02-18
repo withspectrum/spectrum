@@ -92,7 +92,14 @@ class StoryView extends Component {
                 </FlexColumnEnd>
               : ''}
           </Header>
-          <div className="markdown"><Markdown source={story.content.description} /></div>
+          <div className="markdown">
+            <Markdown 
+              options={{
+                html: true,
+                linkify: true
+              }}
+              source={story.content.description} />
+          </div>
           {story.content.media && story.content.media !== ''
             ? <Media src={story.content.media} onClick={this.showGallery} />
             : ''}
