@@ -8,6 +8,7 @@ export default function root(state = initialState, action) {
       return Object.assign({}, state, {
         messages: action.messages,
       });
+    case 'CREATE_STORY':
     case 'SET_ACTIVE_STORY':
     case 'CLEAR_MESSAGE':
     case 'CLEAR_STORY':
