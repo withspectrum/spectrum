@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import actions from '../../../actions';
 import helpers from '../../../helpers';
@@ -16,7 +16,9 @@ import {
   Alert,
   Select,
   Submit,
-  SubmitContainer
+  SubmitContainer,
+  MediaInput,
+  MediaLabel
 } from './style';
 
 class ComposerNew extends Component {
@@ -30,7 +32,8 @@ class ComposerNew extends Component {
       title: '',
       body: '',
       error: null,
-      frequencyPicker: userFreqs ? userFreqs[0] : ''
+      frequencyPicker: userFreqs ? userFreqs[0] : '',
+      loading: false
     }
   }
 
@@ -54,6 +57,20 @@ class ComposerNew extends Component {
     });
   };
 
+  uploadMedia = (e) => {
+    let file = e.target.files[0]
+    let body = this.state.body
+    this.setState({ loading: true })
+    let fileUrl = helpers.uploadMedia(file)
+      .then((fileUrl) => {
+        body = `${body}\n![Alt Text](${fileUrl})\n`
+        this.setState({
+          body: body,
+          loading: false
+        })
+      })
+  }
+
   createStory = (e) => {
     e.preventDefault()
     let title = this.state.title
@@ -70,15 +87,19 @@ class ComposerNew extends Component {
       body
     }
 
-    if (frequency && title || body) { // if everything is filled out
+    if (frequency && title) { // if everything is filled out
       this.props.dispatch( actions.createStory(newStoryObj));
-    } else if (!frequency && title || body) { // if no frequency is chosen
+    } else if (!frequency && title) { // if no frequency is chosen
       this.setState({
         error: 'Choose a frequency to share this story to!'
       })
-    } else { // missing a title or body
+    } else if (!title) { // missing a title
       this.setState({
-        error: "Be sure to type something first!"
+        error: "Be sure to type a title!"
+      })
+    } else { // something else went wrong...
+      this.setState({
+        error: "Oops!"
       })
     }
   }
@@ -123,16 +144,28 @@ class ComposerNew extends Component {
                 <Textarea 
                   onChange={this.changeTitle}
                   style={StoryTitle} 
+                  value={this.state.title}
                   placeholder={"Title"} 
                   autoFocus></Textarea>
                 
                 <Textarea 
                   onChange={this.changeBody}
-                  style={TextBody} 
+                  value={this.state.body}
+                  style={TextBody}
                   placeholder={"What's this about?"}></Textarea>
 
+                <MediaInput
+                  ref="media"
+                  type="file"
+                  id="file"
+                  name="file"
+                  accept=".png, .jpg, .jpeg, .gif"
+                  onChange={this.uploadMedia}
+                />
+                <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
+
                 <SubmitContainer>
-                  <Submit type="submit" value="Post" active={this.state.title || this.state.body} />
+                  <Submit type="submit" disabled={this.state.loading} value={this.state.loading ? "Loading..." : "Post Story"} active={this.state.title} />
                 </SubmitContainer>
 
                 {this.state.error && <Alert>{this.state.error}</Alert>}

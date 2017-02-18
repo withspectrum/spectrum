@@ -63,9 +63,21 @@ export const getStoryPermission = (story, user, frequencies) => {
   }
 };
 
+export const uploadMedia = file => {
+  return new Promise((resolve, reject) => {
+    if (file) {
+      let storage = firebase.storage().ref();
+      storage.child(`story/${file.name}`).put(file).then(snapshot => {
+        resolve(snapshot.downloadURL)
+      });
+    }
+  })
+}
+
 export default {
   isStoryCreator,
   fetchStoriesForFrequency,
   fetchStoriesForFrequencies,
   getStoryPermission,
+  uploadMedia
 };

@@ -23,7 +23,6 @@
     "react-textarea-autosize": "^4.0.5",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
-    "remarkable": "^1.7.1",
     "request": "^2.79.0",
     "sanitize-html": "^1.14.1",
     "serve": "latest",

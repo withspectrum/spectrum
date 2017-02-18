@@ -68,6 +68,16 @@ export const Alert = styled.div`
 	font-weight: 600;
 `;
 
+export const Upload = styled.input`
+	border: none;
+	outline: 0;
+	color: ${props => props.theme.brand.default};
+	font-weight: 800;
+	font-size: 0.75rem;
+	margin: 0.5rem 0 1rem;
+	background: transparent;
+`
+
 export const SubmitContainer = styled.div`
 	width: 100%;
 	border-top: 1px solid ${props => props.theme.border.default};
@@ -90,6 +100,30 @@ export const Submit = styled.input`
   	cursor: pointer;
   }
 `
+
+export const MediaInput = styled.input`
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+`;
+
+export const MediaLabel = styled.label`
+	border: none;
+	outline: 0;
+	color: ${props => props.theme.brand.default};
+	font-weight: 800;
+	font-size: 0.75rem;
+	display: inline-block;
+	margin: 0.5rem 0 1rem;
+	background: transparent;
+
+	&:hover {
+		cursor: pointer;
+	}
+`;
 
 
 // these are style objects because i'm custom styling another react component to handle autoresizign

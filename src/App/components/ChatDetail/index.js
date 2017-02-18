@@ -23,10 +23,11 @@ class ChatView extends Component {
   }
 
   render() {
+    let { messages } = this.props
     return (
       <ChatContainer>
-        {this.props.messages &&
-          this.props.messages.map((group, i) => {
+        {messages &&
+          messages.map((group, i) => {
             let me = this.props.user.uid;
             if (group[0].userId === me) {
               return (
