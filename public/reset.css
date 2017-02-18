@@ -53,10 +53,21 @@ body {
   padding: 0;
   overflow-y: hidden;
   overflow-x: hidden;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+}
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #B2B9C6;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #B2B9C6;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #B2B9C6;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    #B2B9C6;
 }
 
 #root {
@@ -70,8 +81,147 @@ body {
   -moz-flex-direction: column;
   -webkit-flex-direction: column;
   height: 100%;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+}
+
+.markdown {
+  font-size: 16px;
+  line-height: 24px;
+  color: #171a21;
+}
+
+.markdown > *:first-of-type {
+  margin-top: 16px;
+}
+
+.markdown > *: last-of-type {
+  margin-bottom: 32px;
+}
+
+.markdown img {
+  margin-top: 16px;
+  max-width: 100%;
+}
+
+.markdown em {
+  color: inherit;
+  font-size: inherit;
+  font-style: italic;
+}
+
+.markdown strong {
+  color: inherit;
+  font-size: inherit;
+  font-weight: 700;
+}
+
+.markdown p {
+  color: inherit;
+  font-size: 16px;
+  line-height: 24px;
+  margin-top: 16px;
+  font-weight: 400;
+}
+
+.markdown span {
+  color: inherit;
+  font-size: inherit;
+}
+
+.markdown ul,
+.markdown ol {
+  color: inherit;
+  margin-top: 16px;
+}
+
+.markdown li {
+  color: inherit;
+  font-size: 16px;
+  line-height: 32px;
+  font-weight: 400;
+}
+
+.markdown blockquote {
+  color: inherit;
+  border-left: 4px solid currentColor;
+  padding: 4px 8px;
+  font-size: 20px;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 36px;
+}
+
+.markdown a {
+  color: #3818e5;
+  font-weight: bold;
+  text-decoration: none;
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 2px;
+  font-size: inherit;
+  transition: all 0.2s ease-out;
+}
+
+.markdown a:visited {
+  opacity: .6;
+  transition: all 0.2s ease-in;
+}
+
+.markdown a:active {
+  padding-bottom: 4px;
+  transition: padding-bottom 0.2s ease-in;
+}
+
+.markdown a:focus {
+  border-bottom: 4px solid currentColor;
+  transition: border-bottom 0.2s ease-in;
+}
+
+.markdown code {
+  font-family: "Input Mono", "Menlo", "Inconsolata", "Roboto Mono", monospace;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  background-color: #f6f7f8;
+  padding: 8px 16px;
+  display: inline-block;
+  width: 100%;
+  border: 1px solid #D6E0EE;
+  border-radius: 4px;
+}
+
+.markdown h1 {
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 800;
+}
+
+.markdown h2 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 500;
+}
+
+.markdown h3 {
+  font-size: 20px;
+  line-height: 28px;
+  text-transform: lowercase;
+  font-variant: small-caps;
+  font-weight: 600;
+}
+
+.markdown h4 {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+}
+
+.markdown h5 {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.markdown h6 {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
 }

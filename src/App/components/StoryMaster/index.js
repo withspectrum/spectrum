@@ -11,12 +11,12 @@ import {
   LoginButton,
   HiddenInput,
   TipButton,
+  Overlay
 } from './style';
 import actions from '../../../actions';
 import helpers from '../../../helpers';
 import { Lock, Unlock, NewPost, ClosePost } from '../../../shared/Icons';
 import StoryCard from '../StoryCard';
-import Composer from '../Composer';
 import ShareCard from '../ShareCard';
 
 class StoryMaster extends Component {
@@ -51,7 +51,7 @@ class StoryMaster extends Component {
   };
 
   render() {
-    const { user, stories, frequencies } = this.props;
+    const { user, stories, frequencies, composer } = this.props;
     let sortedStories = this.sortArrayByKey(stories.stories, 'timestamp');
 
     if (frequencies.active !== 'all') {
@@ -114,7 +114,7 @@ class StoryMaster extends Component {
             tipText="New Story"
             tipLocation="bottom"
           >
-            {this.props.composer.isOpen
+            {composer.isOpen
               ? <ClosePost color="warn" />
               : <NewPost color="brand" stayActive />}
           </TipButton>
@@ -126,7 +126,7 @@ class StoryMaster extends Component {
             tipText="New Story"
             tipLocation="bottom"
           >
-            {this.props.composer.isOpen
+            {composer.isOpen
               ? <ClosePost color="warn" />
               : <NewPost color="brand" stayActive />}
           </TipButton>
@@ -148,7 +148,6 @@ class StoryMaster extends Component {
       }
     };
     const canView = canViewStories();
-    console.log('canview ', canView);
 
     const getPrivacyButton = usersPermissionOnFrequency => {
       switch (usersPermissionOnFrequency) {
@@ -190,8 +189,7 @@ class StoryMaster extends Component {
             </Header>}
 
           <ScrollBody>
-            <Composer isOpen={this.props.composer.isOpen} />
-
+            <Overlay active={composer.isOpen} />
             {!this.props.user.uid /* if a user doesn't exist, show a login at the top of the story master */ &&
               <LoginWrapper onClick={this.login}>
                 <LoginText>Sign in to join the conversation.</LoginText>

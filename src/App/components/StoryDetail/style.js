@@ -47,17 +47,6 @@ export const FlexColumnEnd = styled(FlexColumn)`
 	align-self: flex-start;
 `;
 
-export const TextBody = styled.p`
-	font-size: 16px;
-	display: inline-block;
-	max-width: 640px;
-	margin-top: 16px;
-	margin-bottom: 32px;
-	margin-right: 64px;
-	line-height: 1.6;
-	color: ${({ theme }) => theme.text.default};
-`;
-
 export const Media = styled.img`
 	max-width: 50%;
 	max-height: 240px;

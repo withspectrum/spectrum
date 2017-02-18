@@ -41,34 +41,23 @@ export const sortAndGroupBubbles = messages => {
 };
 
 const fetch = (ref, orderBy, equalTo) => {
-  if (ref === 'stories') {
-    return new Promise((resolve, reject) => {
-      return firebase
-        .database()
-        .ref(ref)
-        .orderByChild(orderBy)
-        .equalTo(equalTo)
-        .on('value', snapshot => {
-          let val = snapshot.val();
-          resolve(val);
-        });
-    });
-  }
+  return new Promise((resolve, reject) => {
+    return firebase
+      .database()
+      .ref(ref)
+      .orderByChild(orderBy)
+      .equalTo(equalTo)
+      .on('value', snapshot => {
+        let val = snapshot.val();
 
-  if (ref === 'frequencies') {
-    return new Promise((resolve, reject) => {
-      return firebase
-        .database()
-        .ref(ref)
-        .orderByChild(orderBy)
-        .equalTo(equalTo)
-        .on('value', snapshot => {
-          let val = snapshot.val();
+        if (ref === 'stories') {
+          resolve(val);
+        } else if (ref === 'frequencies') {
           let obj = val[equalTo];
-          resolve(obj);
-        });
-    });
-  }
+          resolve(obj);  
+        }
+      });
+  });
 };
 
 const fetchDataByIds = (obj, params) => {

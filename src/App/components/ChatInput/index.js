@@ -19,7 +19,7 @@ class ChatInput extends Component {
 
   sendMessage = e => {
     e.preventDefault();
-    const message = this.state.message;
+    let message = this.state.message;
 
     this.props.dispatch(actions.sendMessage(message));
     this.setState({

@@ -95,63 +95,56 @@ createStory
 
 *
 \*------------------------------------------------------------*/
-export const createStory = (frequency, title, description, file) => (
+export const createStory = (story) => (
   dispatch,
   getState,
 ) => {
-  const user = getState().user;
-  const uid = user.uid;
-  let newStoryRef = firebase.database().ref().child(`stories`).push();
-  const key = newStoryRef.key;
-  let storyData = {
-    id: key,
-    creator: {
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      uid,
-    },
-    timestamp: firebase.database.ServerValue.TIMESTAMP,
-    content: {
-      title: title,
-      description: description,
-      media: '',
-    },
-    frequency: frequency,
-  };
+  return new Promise((resolve, reject) => {
+    let state = getState()
+    let user = state.user
+    let uid = user.uid
+    let newStoryRef = firebase.database().ref().child('stories').push();
+    let newStoryKey = newStoryRef.key;
+    
+    let newStoryData = {
+      id: newStoryKey,
+      creator: {
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        uid,
+      },
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+      content: {
+        title: story.title,
+        description: story.body
+      },
+      frequency: story.frequency,
+    };
 
-  const saveStory = storyData => {
-    newStoryRef.set(storyData, err => {
+    newStoryRef.set(newStoryData, err => {
       if (err) {
         console.log('there was an error saving your story: ', err);
       } else {
         dispatch({
           type: 'CREATE_STORY',
           story: {
-            ...storyData,
+            ...newStoryData,
             // Timestamp is set on the server by Firebase, this simulates that by setting it to right
             // now
             timestamp: Date.now(),
           },
         });
+
+        dispatch({
+          type: 'TOGGLE_COMPOSER_OPEN',
+          isOpen: false,
+        });
+
+        resolve()
       }
     });
-  };
 
-  // If there's a file, upload it before saving the story
-  if (file) {
-    let storage = firebase.storage().ref();
-    storage.child(`story/${file.name}`).put(file).then(snapshot => {
-      storyData.content.media = snapshot.downloadURL;
-      saveStory(storyData);
-    });
-  } else {
-    saveStory(storyData);
-  }
-
-  dispatch({
-    type: 'TOGGLE_COMPOSER_OPEN',
-    isOpen: false,
-  });
+  })
 };
 
 export const setActiveStory = id => ({
