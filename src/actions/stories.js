@@ -100,7 +100,6 @@ export const createStory = (story) => (
   getState,
 ) => {
   return new Promise((resolve, reject) => {
-
     let state = getState()
     let user = state.user
     let uid = user.uid
@@ -140,7 +139,7 @@ export const createStory = (story) => (
           type: 'TOGGLE_COMPOSER_OPEN',
           isOpen: false,
         });
-        
+
         resolve()
       }
     });

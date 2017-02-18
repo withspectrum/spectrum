@@ -10,6 +10,10 @@ export default function root(state = initialState, action) {
       return Object.assign({}, state, {
         isOpen: !state.isOpen,
       });
+    case 'SET_ACTIVE_STORY':
+    	return Object.assign({}, state, {
+    		isOpen: false
+    	});
     case 'UPDATE_TITLE':
       return Object.assign({}, state, {
         title: action.title,

@@ -11,6 +11,7 @@ import {
   LoginButton,
   HiddenInput,
   TipButton,
+  Overlay
 } from './style';
 import actions from '../../../actions';
 import helpers from '../../../helpers';
@@ -50,7 +51,7 @@ class StoryMaster extends Component {
   };
 
   render() {
-    const { user, stories, frequencies } = this.props;
+    const { user, stories, frequencies, composer } = this.props;
     let sortedStories = this.sortArrayByKey(stories.stories, 'timestamp');
 
     if (frequencies.active !== 'all') {
@@ -113,7 +114,7 @@ class StoryMaster extends Component {
             tipText="New Story"
             tipLocation="bottom"
           >
-            {this.props.composer.isOpen
+            {composer.isOpen
               ? <ClosePost color="warn" />
               : <NewPost color="brand" stayActive />}
           </TipButton>
@@ -125,7 +126,7 @@ class StoryMaster extends Component {
             tipText="New Story"
             tipLocation="bottom"
           >
-            {this.props.composer.isOpen
+            {composer.isOpen
               ? <ClosePost color="warn" />
               : <NewPost color="brand" stayActive />}
           </TipButton>
@@ -188,6 +189,7 @@ class StoryMaster extends Component {
             </Header>}
 
           <ScrollBody>
+            <Overlay active={composer.isOpen} />
             {!this.props.user.uid /* if a user doesn't exist, show a login at the top of the story master */ &&
               <LoginWrapper onClick={this.login}>
                 <LoginText>Sign in to join the conversation.</LoginText>

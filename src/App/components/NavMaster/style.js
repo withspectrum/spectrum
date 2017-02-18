@@ -7,6 +7,8 @@ export const Column = styled.div`
   background-color: ${({ theme }) => theme.bg.reverse};
   flex: 0 0 256px;
   height: 100vh;
+  position: relative;
+  z-index: 3;
 `;
 
 export const Header = styled.div`

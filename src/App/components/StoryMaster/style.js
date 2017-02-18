@@ -19,6 +19,7 @@ export const ScrollBody = styled.div`
 	flex-direction: column;
 	align-items: stretch;
 	background-color: ${({ theme }) => theme.bg.wash};
+	position: relative;
 
 	> img {
 		margin: 32px auto;
@@ -30,6 +31,19 @@ export const ScrollBody = styled.div`
 		}
 	}
 	`;
+
+export const Overlay = styled.div`
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #000;
+	opacity: ${props => props.active ? '0.1' : '0'};
+	transition: opacity 0.1s ease-in;
+	z-index: 2;
+	pointer-events: none;
+`
 
 export const Header = styled.div`
 	display: flex;
@@ -43,6 +57,8 @@ export const Header = styled.div`
 	padding: 8px;
 	z-index: 1;
 	box-shadow: ${Shadow.low};
+	position: relative;
+	z-index: 3;
 
 
 	> img {
