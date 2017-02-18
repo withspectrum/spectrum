@@ -114,7 +114,7 @@ class ComposerNew extends Component {
 
     let byline = activeFrequency === "all"
       ? <span>
-            <Byline>New Story in
+            <Byline>Post in
             <Select
               onChange={this.selectFrequencyFromDropdown}
               defaultValue={frequencies.frequencies[0].id}>
@@ -139,20 +139,19 @@ class ComposerNew extends Component {
             <FlexColumn>
 
               <form onSubmit={this.createStory} encType="multipart/form-data">
-                { byline }
-
+                <Byline>New Story</Byline>
                 <Textarea 
                   onChange={this.changeTitle}
                   style={StoryTitle} 
                   value={this.state.title}
-                  placeholder={"Title"} 
+                  placeholder={"What's up?"} 
                   autoFocus></Textarea>
                 
                 <Textarea 
                   onChange={this.changeBody}
                   value={this.state.body}
                   style={TextBody}
-                  placeholder={"What's this about?"}></Textarea>
+                  placeholder={"Say more words..."}></Textarea>
 
                 <MediaInput
                   ref="media"
@@ -163,8 +162,8 @@ class ComposerNew extends Component {
                   onChange={this.uploadMedia}
                 />
                 <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
-
                 <SubmitContainer>
+                  { byline }
                   <Submit type="submit" disabled={this.state.loading} value={this.state.loading ? "Loading..." : "Post Story"} active={this.state.title} />
                 </SubmitContainer>
 

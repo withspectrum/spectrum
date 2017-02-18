@@ -79,6 +79,9 @@ export const Upload = styled.input`
 `
 
 export const SubmitContainer = styled.div`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 	width: 100%;
 	border-top: 1px solid ${props => props.theme.border.default};
 	padding: 1rem 0;
