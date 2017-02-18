@@ -63,11 +63,12 @@ export const getStoryPermission = (story, user, frequencies) => {
   }
 };
 
-export const uploadMedia = file => {
+export const uploadMedia = (file, story) => {
   return new Promise((resolve, reject) => {
-    if (file) {
+    if (file && story) {
+      let timestamp = Date.now()
       let storage = firebase.storage().ref();
-      storage.child(`story/${file.name}`).put(file).then(snapshot => {
+      storage.child(`${story}/${timestamp}`).put(file).then(snapshot => {
         resolve(snapshot.downloadURL)
       });
     }

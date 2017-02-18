@@ -35,6 +35,13 @@ class Composer extends Component {
     }
   }
 
+  componentDidMount() {
+    // if a draft already exists, no need to init another
+    if (this.props.composer.newStoryKey) return
+    // otherwise init a new draft
+    this.props.dispatch(actions.initStory())
+  }
+
   changeTitle = (e) => {
     this.props.dispatch(actions.updateTitle(e.target.value))
   };
@@ -52,8 +59,10 @@ class Composer extends Component {
   uploadMedia = (e) => {
     let file = e.target.files[0]
     let body = this.props.composer.body
+    let story = this.props.composer.newStoryKey
+    
     this.setState({ loading: true })
-    let fileUrl = helpers.uploadMedia(file)
+    let fileUrl = helpers.uploadMedia(file, story)
       .then((fileUrl) => {
         body = `${body}\n![Alt Text](${fileUrl})\n`
         this.props.dispatch(actions.updateBody(body))
@@ -64,7 +73,7 @@ class Composer extends Component {
       })
   }
 
-  createStory = (e) => {
+  publishStory = (e) => {
     e.preventDefault()
     let title = this.props.composer.title
     let body = this.props.composer.body
@@ -81,7 +90,7 @@ class Composer extends Component {
     }
 
     if (frequency && title) { // if everything is filled out
-      this.props.dispatch( actions.createStory(newStoryObj))
+      this.props.dispatch( actions.publishStory(newStoryObj))
       .then(() => { // after the story is created, we need to set messages so that the chat will work right away
         this.props.dispatch( actions.setMessages() )
       });
@@ -134,7 +143,7 @@ class Composer extends Component {
           <Header>
             <FlexColumn>
 
-              <form onSubmit={this.createStory} encType="multipart/form-data">
+              <form onSubmit={this.publishStory} encType="multipart/form-data">
                 <Byline>New Story</Byline>
                 <Textarea 
                   onChange={this.changeTitle}

@@ -95,40 +95,42 @@ createStory
 
 *
 \*------------------------------------------------------------*/
-export const createStory = (story) => (
+export const publishStory = (story) => (
   dispatch,
   getState,
 ) => {
   return new Promise((resolve, reject) => {
     let state = getState()
+    let storyKey = state.composer.newStoryKey
     let user = state.user
     let uid = user.uid
-    let newStoryRef = firebase.database().ref().child('stories').push();
-    let newStoryKey = newStoryRef.key;
+
+    let storyRef = firebase.database().ref().child(`stories/${storyKey}`);
     
-    let newStoryData = {
-      id: newStoryKey,
-      creator: {
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        uid,
-      },
+    let storyData = {
+      id: storyKey, // we need this id again in the CREATE_STORY reducer
+      published: true,
       timestamp: firebase.database.ServerValue.TIMESTAMP,
       content: {
         title: story.title,
         description: story.body
       },
+      creator: {
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        uid,
+      },
       frequency: story.frequency,
     };
 
-    newStoryRef.set(newStoryData, err => {
+    storyRef.update(storyData, err => {
       if (err) {
-        console.log('there was an error saving your story: ', err);
+        console.log('there was an error publishing your story: ', err);
       } else {
         dispatch({
           type: 'CREATE_STORY',
           story: {
-            ...newStoryData,
+            ...storyData,
             // Timestamp is set on the server by Firebase, this simulates that by setting it to right
             // now
             timestamp: Date.now(),
@@ -146,6 +148,40 @@ export const createStory = (story) => (
 
   })
 };
+
+export const initStory = () => (dispatch, getState) => {
+  return new Promise((resolve, reject) => {
+    let state = getState()
+    let user = state.user
+    let uid = user.uid
+    let newStoryRef = firebase.database().ref().child('stories').push();
+    let newStoryKey = newStoryRef.key;
+
+    let draft = {
+      id: newStoryKey,
+      published: false,
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+      creator: {
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        uid,
+      }
+    };
+
+    newStoryRef.set(draft, err => {
+      if (err) {
+        console.log('there was an error creating the draft: ', err);
+      } else {
+        dispatch({
+          type: 'CREATE_DRAFT',
+          newStoryKey
+        });
+
+        resolve()
+      }
+    });
+  })
+}
 
 export const setActiveStory = id => ({
   type: 'SET_ACTIVE_STORY',
@@ -188,7 +224,8 @@ export const toggleLockedStory = story => dispatch => {
 
 export default {
   setStories,
-  createStory,
+  initStory,
+  publishStory,
   setActiveStory,
   deleteStory,
   toggleLockedStory,
