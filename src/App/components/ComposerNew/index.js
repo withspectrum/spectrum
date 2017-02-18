@@ -29,8 +29,6 @@ class ComposerNew extends Component {
     let userFreqs = Object.keys(user.frequencies)
 
     this.state = {
-      title: '',
-      body: '',
       error: null,
       frequencyPicker: userFreqs ? userFreqs[0] : '',
       loading: false
@@ -38,17 +36,11 @@ class ComposerNew extends Component {
   }
 
   changeTitle = (e) => {
-    this.setState({
-      title: e.target.value,
-      error: null,
-    });
+    this.props.dispatch(actions.updateTitle(e.target.value))
   };
 
   changeBody = (e) => {
-    this.setState({
-      body: e.target.value,
-      error: null,
-    });
+    this.props.dispatch(actions.updateBody(e.target.value))
   };
 
   selectFrequencyFromDropdown = (e) => {
@@ -106,7 +98,7 @@ class ComposerNew extends Component {
 
 
   render() {
-    let { frequencies, user } = this.props
+    let { frequencies, user, composer } = this.props
     let activeFrequency = frequencies.active
     let currentFrequency = frequencies.frequencies.filter((freq) => {
       return freq.id === activeFrequency
@@ -143,13 +135,13 @@ class ComposerNew extends Component {
                 <Textarea 
                   onChange={this.changeTitle}
                   style={StoryTitle} 
-                  value={this.state.title}
+                  value={composer.title}
                   placeholder={"What's up?"} 
                   autoFocus></Textarea>
                 
                 <Textarea 
                   onChange={this.changeBody}
-                  value={this.state.body}
+                  value={composer.body}
                   style={TextBody}
                   placeholder={"Say more words..."}></Textarea>
 
@@ -180,7 +172,8 @@ class ComposerNew extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
-    frequencies: state.frequencies
+    frequencies: state.frequencies,
+    composer: state.composer
   }
 }
 

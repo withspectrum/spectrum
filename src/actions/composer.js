@@ -12,6 +12,18 @@ export const toggleComposer = () => ({
   type: 'TOGGLE_COMPOSER_OPEN',
 });
 
+export const updateTitle = (title) => ({
+  type: 'UPDATE_TITLE',
+  title
+});
+
+export const updateBody = (body) => ({
+  type: 'UPDATE_BODY',
+  body
+});
+
 export default {
   toggleComposer,
+  updateTitle,
+  updateBody
 };
