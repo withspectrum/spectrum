@@ -27,7 +27,7 @@ let store;
 if (process.env.NODE_ENV === 'production') {
   let localStorageState = helpers.loadState();
   store = initStore(localStorageState);
-  
+
   // sync the store with localstorage
   store.subscribe(() => {
     helpers.saveState(store.getState())
@@ -82,8 +82,8 @@ const Root = () => {
             <ModalRoot />
             <GalleryRoot />
             <Match exactly pattern="/" component={App} />
-            <Match exactly pattern="/:frequency" component={App} />
-            <Match exactly pattern="/:frequency/:story" component={App} />
+            <Match exactly pattern="/~:frequency" component={App} />
+            <Match exactly pattern="/~:frequency/:story" component={App} />
           </Body>
         </ThemeProvider>
       </BrowserRouter>

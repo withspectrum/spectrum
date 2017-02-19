@@ -60,7 +60,6 @@ class StoryMaster extends Component {
       );
     }
 
-    let urlBase = frequencies.active === 'all' ? 'all' : frequencies.active;
     let usersPermissionOnFrequency = helpers.getFrequencyPermission(
       user,
       frequencies.active,
@@ -200,7 +199,7 @@ class StoryMaster extends Component {
               // slice and reverse makes sure our stories show up in revers chron order
               sortedStories.slice().reverse().map((story, i) => {
                 return (
-                  <Link to={`/${urlBase}/${story.id}`} key={i}>
+                  <Link to={`/~${frequencies.active}/${story.id}`} key={i}>
                     <StoryCard data={story} key={i} />
                   </Link>
                 );
