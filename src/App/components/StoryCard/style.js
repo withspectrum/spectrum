@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Shadow, H4, H5 } from '../../../shared/Globals';
 
 export const StoryWrapper = styled.div`
@@ -17,14 +17,15 @@ export const StoryWrapper = styled.div`
     ? `-16px 0 0 -8px ${props.theme.brand.default}`
     : `0px 0 0 0px transparent`};
 
-	&:hover {
-		box-shadow: ${Shadow.high}, inset ${props =>
-  props.selected
-    ? `-24px 0 0 -8px ${props.theme.brand.default}`
-    : `-16px 0 0 -8px ${props.theme.border.default}`};
-		transition: all 0.2s ease-out;
-		cursor: pointer;
-	}
+	${props => !props.static && css`
+		&:hover {
+			box-shadow: ${Shadow.high}, inset ${props.selected
+	    ? `-24px 0 0 -8px ${props.theme.brand.default}`
+	    : `-16px 0 0 -8px ${props.theme.border.default}`};
+			transition: all 0.2s ease-out;
+			cursor: pointer;
+		}
+	`}
 `;
 
 export const StoryBody = styled.div`

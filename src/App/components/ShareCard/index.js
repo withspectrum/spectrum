@@ -8,14 +8,15 @@ const ShareCard = props => {
   };
 
   return (
-    <StoryWrapper>
+    <StoryWrapper static>
 
       <Body>
         <Title>Get the conversation started.</Title>
 
         <Desc>Share your new frequency with the world!</Desc>
         <Input
-          onFocus={e => handleFocus(e)}
+          onClick={handleFocus}
+          onFocus={handleFocus}
           readOnly
           value={`https://spectrum.chat/${props.data.id}`}
         />
