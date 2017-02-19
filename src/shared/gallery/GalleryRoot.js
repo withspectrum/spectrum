@@ -9,7 +9,6 @@ class GalleryRoot extends Component {
   };
 
   handleKeyPress = e => {
-    this.props.dispatch({ type: 'LOADING' })
     // if no media, skip on outta here
     if (!this.props.media.media) return
 

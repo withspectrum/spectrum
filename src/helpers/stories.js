@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import uniq from 'lodash.uniq';
 import { hashToArray } from './utils'
 
 export const isStoryCreator = (story, user) => {
@@ -16,6 +17,30 @@ export const isStoryCreator = (story, user) => {
   }
 };
 
+export const getUserFromId = (uid) => {
+  
+    return firebase
+      .database()
+      .ref(`users/${uid}`)
+      .once('value')
+      .then((snapshot) => {
+        let val = snapshot.val()
+        let obj = {}
+        obj["uid"] = uid
+        obj["name"] = val.displayName
+        return ( obj )
+      })
+  
+}
+
+export const getUsersFromMessageGroups = (groups) => {
+  let users = groups.map((group) => {
+    return group[0].userId
+  })
+  users = uniq(users)
+  return Promise.all(users.map(getUserFromId))
+}
+
 export const fetchStoriesForFrequency = frequency => {
   return firebase
     .database()
@@ -23,7 +48,7 @@ export const fetchStoriesForFrequency = frequency => {
     .orderByChild('frequency')
     .equalTo(frequency)
     .once('value')
-    .then(function(snapshot) {
+    .then((snapshot) => {
       return snapshot.val();
     });
 };
@@ -104,6 +129,8 @@ export const uploadMultipleMedia = (files, story, user) => {
 
 export default {
   isStoryCreator,
+  getUserFromId,
+  getUsersFromMessageGroups,
   fetchStoriesForFrequency,
   fetchStoriesForFrequencies,
   getStoryPermission,
