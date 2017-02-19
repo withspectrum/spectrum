@@ -36,8 +36,9 @@ class StoryView extends Component {
 
   scrollToBottom = () => {
     let node = ReactDOM.findDOMNode(this)
-    console.log('here')
-    node.scrollTop = node.scrollHeight - node.clientHeight    
+    if (node.scrollHeight - node.clientHeight < node.scrollTop + 100) {
+      node.scrollTop = node.scrollHeight - node.clientHeight
+    }
   }
 
   getActiveStory = () => {
