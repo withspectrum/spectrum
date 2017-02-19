@@ -60,7 +60,9 @@ class NavigationMaster extends Component {
 
   addFrequency = e => {
     e.preventDefault();
-    this.props.dispatch(actions.addFrequency(this.state.frequencyName));
+    const frequencyName = this.state.frequencyName.trim();
+    if (frequencyName === '') return;
+    this.props.dispatch(actions.addFrequency(frequencyName));
     this.setState({
       frequencyName: '',
     });
