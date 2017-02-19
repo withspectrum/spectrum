@@ -40,6 +40,7 @@ setStories
 *
 \*------------------------------------------------------------*/
 export const setStories = () => (dispatch, getState) => {
+  dispatch({ type: 'LOADING' })
   let { user } = setup(getState());
   let userFrequencies = user.frequencies;
 
@@ -99,6 +100,8 @@ export const publishStory = (story) => (
   dispatch,
   getState,
 ) => {
+  dispatch({ type: 'LOADING' })
+
   return new Promise((resolve, reject) => {
     let state = getState()
     let storyKey = state.composer.newStoryKey
@@ -189,6 +192,8 @@ export const setActiveStory = id => ({
 });
 
 export const deleteStory = id => (dispatch, getState) => {
+  dispatch({ type: 'LOADING' })
+
   firebase.database().ref(`/stories/${id}`).remove(); // delete the story
   firebase.database().ref(`/messages/${id}`).remove(); // delete the messages for the story
 
@@ -208,6 +213,7 @@ export const deleteStory = id => (dispatch, getState) => {
 };
 
 export const toggleLockedStory = story => dispatch => {
+  dispatch({ type: 'LOADING' })
   const id = story.id;
   const locked = story.locked ? story.locked : false; // if we haven't set a 'locked' status on the story, it defaults to false (which means people can write messages)
 

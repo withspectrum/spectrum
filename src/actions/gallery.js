@@ -27,6 +27,7 @@ Accepts an array of URLs which will be parsed and populated in the gallery compo
 *
 \*------------------------------------------------------------*/
 export const showGallery = (e) => (dispatch, getState) => {
+  dispatch({ type: 'LOADING' })
   let state = getState()
   let src = e.target.src
   let activeStory = state.stories.active

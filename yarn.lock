@@ -5202,6 +5202,12 @@ react-history@^0.13.0:
   dependencies:
     history "^4.0.0"
 
+react-medium-spinner@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-medium-spinner/-/react-medium-spinner-1.1.0.tgz#1e69fb8345629b0c0a3746bfc324885cbd7a5353"
+  dependencies:
+    react ">=0.13.0"
+
 react-modal@^1.6.5:
   version "1.6.5"
   resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-1.6.5.tgz#f720d99bd81b1def5c2c32e0ffaa48bdaf484862"
@@ -5286,12 +5292,6 @@ react-scripts@0.7.0:
   optionalDependencies:
     fsevents "1.0.14"
 
-react-scroll@^1.4.6:
-  version "1.4.6"
-  resolved "https://registry.yarnpkg.com/react-scroll/-/react-scroll-1.4.6.tgz#fcfa942e622aae0fd31ca0b7eb9fad8275a25ce6"
-  dependencies:
-    object-assign "^4.0.1"
-
 react-stripe-checkout@^2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/react-stripe-checkout/-/react-stripe-checkout-2.2.5.tgz#1369fb44f522cfa21ba451d6be97d1a2b86ff84a"
@@ -5300,7 +5300,7 @@ react-textarea-autosize@^4.0.5:
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/react-textarea-autosize/-/react-textarea-autosize-4.0.5.tgz#55379f6a6fa575fc87d1b8de2756e57e3b6c995d"
 
-react@^15.4.1:
+react@>=0.13.0, react@^15.4.1:
   version "15.4.2"
   resolved "https://registry.yarnpkg.com/react/-/react-15.4.2.tgz#41f7991b26185392ba9bae96c8889e7e018397ef"
   dependencies:

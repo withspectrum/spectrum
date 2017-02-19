@@ -14,6 +14,8 @@ We have to manually create a "User" record in a separate "User" table
 *
 \*------------------------------------------------------------*/
 export const login = () => dispatch => {
+  dispatch({ type: 'LOADING' })
+
   let provider = new firebase.auth.TwitterAuthProvider();
   firebase
     .auth()
@@ -77,6 +79,7 @@ from the backend.
 *
 \*------------------------------------------------------------*/
 export const startListeningToAuth = () => dispatch => {
+  dispatch({ type: 'LOADING' })
   return new Promise((resolve, reject) => {
     firebase.auth().onAuthStateChanged(user => {
       // if the user exists, we can boot up the app
