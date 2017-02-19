@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { ChatContainer, Bubble, BubbleGroup, FromName } from './style';
 import * as Autolinker from 'autolinker';
@@ -7,10 +6,7 @@ import sanitizeHtml from 'sanitize-html';
 
 class ChatView extends Component {
   componentDidUpdate() {
-    if (this.shouldScrollBottom) {
-      var node = ReactDOM.findDOMNode(this);
-      node.scrollTop = node.scrollHeight;
-    }
+    this.props.scrollToBottom()  
   }
 
   formatMessage(message) {
