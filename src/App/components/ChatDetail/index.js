@@ -15,12 +15,17 @@ class ChatView extends Component {
   }
 
   componentDidMount() {
-    this.fetchUsers()
+    if (this.props.messages) {
+      this.fetchUsers()
+    }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     this.props.scrollToBottom()
-    this.fetchUsers()
+
+    if (prevProps !== this.props && this.props.messages) {
+      this.fetchUsers()
+    }
   }
 
   formatMessage(message) {
@@ -48,6 +53,8 @@ class ChatView extends Component {
   render() {
     let { messages } = this.props
     if (!messages) return <span />
+
+      console.log(this.state)
     
     return (
       <ChatContainer>
