@@ -30,8 +30,8 @@ class StoryView extends Component {
     }
   }
 
-  showGallery = () => {
-    this.props.dispatch(actions.showGallery())
+  showGallery = (e) => {
+    this.props.dispatch(actions.showGallery(e))
   }
 
   getActiveStory = () => {

@@ -4,14 +4,6 @@ import { Overlay, ActiveImage, Minigallery, MiniImg, MiniContainer } from './sty
 import actions from '../../actions';
 
 class GalleryRoot extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      count: 0
-    }
-  }
-
   hideGallery = () => {
     this.props.dispatch(actions.hideGallery());
   };
@@ -20,7 +12,9 @@ class GalleryRoot extends Component {
     // length of image array
     let length = this.props.media.media.length
     // keeping count of which index we are viewing
-    let count = this.state.count
+    let index = this.props.media.index
+
+    console.log('length ', length, ', index ', index)
 
     // if person taps esc, close the dialog
     if (e.keyCode === 27) {
@@ -29,33 +23,38 @@ class GalleryRoot extends Component {
 
     // left arrow key
     if (e.keyCode === 37) {
-      if (count === 0) {
-        this.setState({
-          count: length - 1
+      if (index === 0) {
+        this.props.dispatch({
+          type: 'CHANGE_GALLERY_INDEX',
+          index: length - 1
         })
       } else {
-        this.setState({
-          count: count - 1
+        this.props.dispatch({
+          type: 'CHANGE_GALLERY_INDEX',
+          index: index - 1
         })
       }
     }
 
     if (e.keyCode === 39) {
-      if (count < length - 1) {
-        this.setState({
-          count: count + 1
+      if (index < length - 1) {
+        this.props.dispatch({
+          type: 'CHANGE_GALLERY_INDEX',
+          index: index + 1
         })
       } else {
-        this.setState({
-          count: 0
+        this.props.dispatch({
+          type: 'CHANGE_GALLERY_INDEX',
+          index: 0
         })
       }
     }
   };
 
   setCount = (i) => {
-    this.setState({
-      count: i
+    this.props.dispatch({
+      type: 'CHANGE_GALLERY_INDEX',
+      index: i
     })
   }
 
@@ -70,18 +69,18 @@ class GalleryRoot extends Component {
   render() {
     let { media } = this.props;
     let images = media.media;
-    let count = this.state.count
+    let index = media.index
 
     if (media.isOpen) {
       return (
         <div>
           <Overlay onClick={this.hideGallery} onKeyDown={this.handleKeyPress} />
-          <ActiveImage onClick={this.incrementImage} src={images[count]} />
+          <ActiveImage onClick={this.incrementImage} src={images[index]} />
           <Minigallery>
             <MiniContainer>
               { 
                 images.map((image, i) => {
-                  return <MiniImg src={image} key={i} onClick={() => this.setCount(i)} active={i === this.state.count} />
+                  return <MiniImg src={image} key={i} onClick={() => this.setCount(i)} active={i === index} />
                 })
               }
             </MiniContainer>

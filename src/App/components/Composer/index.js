@@ -68,7 +68,7 @@ class Composer extends Component {
     let filesArr = helpers.uploadMultipleMedia(files, story, user)
       .then((filesArr) => {
         for (let file of filesArr) {
-          body = `${body}\n![Alt Text](${file})\n`
+          body = `${body}\n![](${file})\n`
           this.props.dispatch(actions.updateBody(body))
         }
         

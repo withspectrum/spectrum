@@ -9,8 +9,9 @@ Accepts an array of URLs which will be parsed and populated in the gallery compo
 
 *
 \*------------------------------------------------------------*/
-export const showGallery = () => (dispatch, getState) => {
+export const showGallery = (e) => (dispatch, getState) => {
   let state = getState()
+  let src = e.target.src
   let activeStory = state.stories.active
 
   let storyRef = firebase.database().ref(`stories/${activeStory}/media`).on('value', (snapshot) => {
@@ -18,12 +19,26 @@ export const showGallery = () => (dispatch, getState) => {
   	let arr = helpers.hashToArray(val)
   	let urlArr = arr.slice().map((img, i) => img.fileName)//=> convert hash to array of filename urls
 
+  	let checkForMatch = urlArr.filter((url) => {
+  		let long = src.toString()
+  		let match = url.toString()
+  		let re = new RegExp(match, 'g')
+  		let itMatches = long.match(re)
+  		return itMatches
+  	})
+
+  	let matchToIndex = checkForMatch[0]
+  	let index = urlArr.indexOf(matchToIndex)
+
+  	console.log('index ', index)
+
   	getStorageUrlsFromArr(urlArr, activeStory)
   	.then((arr) => {
   		dispatch({
   			type: 'SHOW_GALLERY',
   			isOpen: true,
-  			media: arr
+  			media: arr,
+  			index: index ? index : 0 // i
   		})
   	})
   })
