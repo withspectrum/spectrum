@@ -4,6 +4,7 @@ import NavMaster from './components/NavMaster';
 import { Body } from './style';
 import StoryMaster from './components/StoryMaster';
 import DetailView from './components/DetailView';
+import LoadingIndicator from '../shared/loading';
 import actions from '../actions';
 
 class App extends Component {
@@ -40,6 +41,7 @@ class App extends Component {
   render() {
     return (
       <Body>
+        <LoadingIndicator />
         <NavMaster />
         <StoryMaster />
         <DetailView />

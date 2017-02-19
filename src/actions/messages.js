@@ -40,6 +40,8 @@ Fetches all messages for the active story.
 *
 \*------------------------------------------------------------*/
 export const setMessages = () => (dispatch, getState) => {
+  dispatch({ type: 'LOADING' })
+
   let { stories, database } = setup(getState());
   let activeStory = stories.active;
 
@@ -52,7 +54,10 @@ export const setMessages = () => (dispatch, getState) => {
     'value',
     snapshot => {
       const val = snapshot.val();
-      if (!val) return;
+      if (!val) {
+        dispatch({ type: 'STOP_LOADING' })
+        return;
+      }
       // convert the messages into an array
       let messagesArray = helpers.hashToArray(val);
       // and pass our array to be sorted into groups based on the user who posted the message

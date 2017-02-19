@@ -62,6 +62,7 @@ export const setFrequencies = () => (dispatch, getState) => {
   let { user } = getState();
   let userFrequencies = user.frequencies;
   if (!user.uid) return;
+  dispatch({ type: 'LOADING' })
 
   helpers.fetchFrequenciesForUser(userFrequencies).then(frequencies => {
     let obj = frequencies.slice().filter(frequency => frequency !== null);
@@ -95,6 +96,7 @@ NOTE: We do not dispatch anything in this action because we have an open listene
 \*------------------------------------------------------------*/
 export const addFrequency = name => (dispatch, getState) => {
   // NOTE: Eventually we may want to pass more than the name into this function, for example we might include default privacy settings, a frequency icon, and more.
+  dispatch({ type: 'LOADING' })
 
   let { database, uid } = setup(getState());
 

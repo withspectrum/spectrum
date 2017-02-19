@@ -5,6 +5,7 @@ import frequencyActions from './frequencies';
 import composerActions from './composer';
 import modalActions from './modals';
 import galleryActions from './gallery';
+import loadingActions from './loading';
 
 export default Object.assign(
   {},
@@ -15,4 +16,5 @@ export default Object.assign(
   composerActions,
   modalActions,
   galleryActions,
+  loadingActions
 );

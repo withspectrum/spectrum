@@ -6,6 +6,7 @@ import messages from './messages';
 import composer from './composer';
 import modals from './modals';
 import gallery from './gallery';
+import loading from './loading';
 
 export default combineReducers({
   user,
@@ -15,4 +16,5 @@ export default combineReducers({
   composer,
   modals,
   gallery,
+  loading
 });
