@@ -60,6 +60,11 @@ export const BubbleGroup = styled.div`
     ? `border-bottom-right-radius: 4px`
     : `border-bottom-left-radius: 4px`};
 		}
+
+		&::selection {
+		  background-color: ${props =>
+  props.me ? props.theme.text.default : props.theme.brand.alt};
+}
 	}
 `;
 
