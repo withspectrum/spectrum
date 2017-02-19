@@ -181,11 +181,20 @@ body {
   font-size: 14px;
   line-height: 20px;
   background-color: #f6f7f8;
-  padding: 8px 16px;
-  display: inline-block;
+  padding: 2px 4px;
+  display: inline;
   width: 100%;
   border: 1px solid #D6E0EE;
   border-radius: 4px;
+}
+
+.markdown pre {
+  margin: 16px 0 0;
+  display: block;
+}
+
+.markdown pre code {
+  padding: 8px 16px;
 }
 
 .markdown iframe {
