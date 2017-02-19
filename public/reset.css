@@ -188,6 +188,11 @@ body {
   border-radius: 4px;
 }
 
+.markdown iframe {
+  width: 100%;
+  height: 60vh;
+}
+
 .markdown h1 {
   font-size: 32px;
   line-height: 40px;
