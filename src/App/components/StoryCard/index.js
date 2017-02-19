@@ -26,7 +26,7 @@ class Story extends Component {
 
   render() {
     const story = this.props.data;
-    const storyFrequencyName = helpers.getCurrentFrequency(story.frequency, this.props.frequencies.frequencies).name
+    const frequency = helpers.getCurrentFrequency(story.frequency, this.props.frequencies.frequencies);
     const timestamp = story.timestamp;
     let currentTime = Date.now();
 
@@ -110,9 +110,9 @@ class Story extends Component {
             : ''}
           <Link to={`/${story.frequency}`}>
             <MetaFreq>{
-                  this.props.frequencies.active === 'all' ?
-                    `~${storyFrequencyName}`
-                  : 
+                  this.props.frequencies.active === 'all' && frequency ?
+                    `~${frequency.name}`
+                  :
                     ``
                 }
             </MetaFreq>
