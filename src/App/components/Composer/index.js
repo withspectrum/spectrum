@@ -35,6 +35,13 @@ class Composer extends Component {
     }
   }
 
+  componentDidMount() {
+    // if a draft already exists, no need to init another
+    if (this.props.composer.newStoryKey) return
+    // otherwise init a new draft
+    this.props.dispatch(actions.initStory())
+  }
+
   changeTitle = (e) => {
     this.props.dispatch(actions.updateTitle(e.target.value))
   };
@@ -50,21 +57,32 @@ class Composer extends Component {
   };
 
   uploadMedia = (e) => {
-    let file = e.target.files[0]
+    let user = this.props.user
+    let files = e.target.files
     let body = this.props.composer.body
+    let story = this.props.composer.newStoryKey
+
+    // disable the submit button until uploads are done
     this.setState({ loading: true })
-    let fileUrl = helpers.uploadMedia(file)
-      .then((fileUrl) => {
-        body = `${body}\n![Alt Text](${fileUrl})\n`
-        this.props.dispatch(actions.updateBody(body))
+    
+    let filesArr = helpers.uploadMultipleMedia(files, story, user)
+      .then((filesArr) => {
+        for (let file of filesArr) {
+          body = `${body}\n![](${file})\n`
+          this.props.dispatch(actions.updateBody(body))
+        }
         
         this.setState({
           loading: false
         })
+      }).catch((e) => {
+        this.setState({
+          error: e
+        })
       })
   }
 
-  createStory = (e) => {
+  publishStory = (e) => {
     e.preventDefault()
     let title = this.props.composer.title
     let body = this.props.composer.body
@@ -81,7 +99,7 @@ class Composer extends Component {
     }
 
     if (frequency && title) { // if everything is filled out
-      this.props.dispatch( actions.createStory(newStoryObj))
+      this.props.dispatch( actions.publishStory(newStoryObj))
       .then(() => { // after the story is created, we need to set messages so that the chat will work right away
         this.props.dispatch( actions.setMessages() )
       });
@@ -134,7 +152,7 @@ class Composer extends Component {
           <Header>
             <FlexColumn>
 
-              <form onSubmit={this.createStory} encType="multipart/form-data">
+              <form onSubmit={this.publishStory} encType="multipart/form-data">
                 <Byline>New Story</Byline>
                 <Textarea 
                   onChange={this.changeTitle}
@@ -155,6 +173,7 @@ class Composer extends Component {
                   id="file"
                   name="file"
                   accept=".png, .jpg, .jpeg, .gif"
+                  multiple={true} 
                   onChange={this.uploadMedia}
                 />
                 <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>

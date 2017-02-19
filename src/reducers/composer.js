@@ -1,7 +1,8 @@
 const initialState = {
   isOpen: false,
   title: '',
-  body: ''
+  body: '',
+  newStoryKey: null
 };
 
 export default function root(state = initialState, action) {
@@ -10,6 +11,16 @@ export default function root(state = initialState, action) {
       return Object.assign({}, state, {
         isOpen: !state.isOpen,
       });
+    case 'CREATE_DRAFT':
+      return Object.assign({}, state, {
+        newStoryKey: action.newStoryKey
+      })
+    case 'CREATE_STORY':
+      return Object.assign({}, state, {
+        title: '',
+        body: '',
+        newStoryKey: null
+      })
     case 'SET_ACTIVE_STORY':
     	return Object.assign({}, state, {
     		isOpen: false

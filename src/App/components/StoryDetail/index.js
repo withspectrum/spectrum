@@ -20,6 +20,20 @@ import {
 import actions from '../../../actions';
 
 class StoryView extends Component {
+  componentDidMount() {
+    // we're going to loop through all the dom nodes of the story and look for images so that we can attach event listeners for the gallery
+    let story = this.refs.story
+    let imageNodes = story.querySelectorAll('img')
+
+    for (let image of imageNodes) {      
+      image.addEventListener('click', this.showGallery, false)
+    }
+  }
+
+  showGallery = (e) => {
+    this.props.dispatch(actions.showGallery(e))
+  }
+
   getActiveStory = () => {
     if (this.props.stories.stories) {
       return this.props.stories.stories.filter(story => {
@@ -39,12 +53,12 @@ class StoryView extends Component {
   }
 
   deleteStory = () => {
-    const story = this.getActiveStory();
+    let story = this.getActiveStory();
     this.props.dispatch(actions.deleteStory(story.id));
   };
 
   toggleLockedStory = () => {
-    const story = this.getActiveStory();
+    let story = this.getActiveStory();
     this.props.dispatch(actions.toggleLockedStory(story));
   };
 
@@ -92,8 +106,8 @@ class StoryView extends Component {
                 </FlexColumnEnd>
               : ''}
           </Header>
-          <div className="markdown">
-            <Markdown 
+          <div className="markdown" ref="story">
+            <Markdown               
               options={{
                 html: true,
                 linkify: true
