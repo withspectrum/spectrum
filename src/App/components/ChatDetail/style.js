@@ -68,6 +68,22 @@ export const BubbleGroup = styled.div`
 	}
 `;
 
+export const ImgBubble = styled.img`
+	display: block;
+	clear: both;
+	flex: 0 0 auto;
+	padding: 4px;
+	vertical-align: middle;
+	border-radius: 16px
+	margin-top: 2px;
+	max-width: 60%;
+	float: ${props => props.me ? `right;` : `left;`}
+
+	&:first-of-type {
+		margin-top: 0;
+	}
+`
+
 export const FromName = styled.span`
 	display: inline-block;
 	font-size: 10px;

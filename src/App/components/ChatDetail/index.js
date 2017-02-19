@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ChatContainer, Bubble, BubbleGroup, FromName } from './style';
+import { ChatContainer, Bubble, ImgBubble, BubbleGroup, FromName } from './style';
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
+import actions from '../../../actions';
 
 class ChatView extends Component {
   componentDidUpdate() {
     this.props.scrollToBottom()  
+  }
+
+  showGallery = (e) => {
+    this.props.dispatch(actions.showGallery(e))
   }
 
   formatMessage(message) {
@@ -29,14 +34,26 @@ class ChatView extends Component {
               return (
                 <BubbleGroup key={i} me>
                   {group.map((message, i) => {
-                    return (
-                      <Bubble
-                        key={i}
-                        dangerouslySetInnerHTML={{
-                          __html: this.formatMessage(message.message.content),
-                        }}
-                      />
-                    );
+                    if (message.message.type === "text") {
+                      return (
+                        <Bubble
+                          key={i}
+                          dangerouslySetInnerHTML={{
+                            __html: this.formatMessage(message.message.content),
+                          }}
+                        />
+                      );
+                    }
+
+                    if (message.message.type === "media") {
+                      return (
+                        <ImgBubble 
+                          me 
+                          onClick={this.showGallery}
+                          src={message.message.content} 
+                          key={i} />
+                      )
+                    }
                   })}
                 </BubbleGroup>
               );
@@ -45,14 +62,25 @@ class ChatView extends Component {
                 <BubbleGroup key={i}>
                   <FromName>{group[0].userDisplayName}</FromName>
                   {group.map((message, i) => {
-                    return (
-                      <Bubble
-                        key={i}
-                        dangerouslySetInnerHTML={{
-                          __html: this.formatMessage(message.message.content),
-                        }}
-                      />
-                    );
+                    if (message.message.type === "text") {
+                      return (
+                        <Bubble
+                          key={i}
+                          dangerouslySetInnerHTML={{
+                            __html: this.formatMessage(message.message.content),
+                          }}
+                        />
+                      );
+                    }
+
+                    if (message.message.type === "media") {
+                      return (
+                        <ImgBubble 
+                          onClick={this.showGallery} 
+                          src={message.message.content} 
+                          key={i} />
+                      )
+                    }
                   })}
                 </BubbleGroup>
               );
