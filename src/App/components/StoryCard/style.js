@@ -12,18 +12,16 @@ export const StoryWrapper = styled.div`
 	background-color: ${({ theme }) => theme.bg.default};
 	transition: all 0.2s ease-in;
 	-webkit-font-smoothing: subpixel-antialiased;
-	box-shadow: ${Shadow.low};
-	border-right: ${props =>
+	box-shadow: ${Shadow.low}, inset ${props =>
   props.selected
-    ? `8px solid ${props.theme.brand.default}`
-    : `0px solid transparent`};
+    ? `-16px 0 0 -8px ${props.theme.brand.default}`
+    : `0px 0 0 0px transparent`};
 
 	&:hover {
-		box-shadow: ${Shadow.high}; 
-		border-right: ${props =>
+		box-shadow: ${Shadow.high}, inset ${props =>
   props.selected
-    ? `16px solid ${props.theme.brand.default}`
-    : `8px solid transparent`};
+    ? `-24px 0 0 -8px ${props.theme.brand.default}`
+    : `-16px 0 0 -8px ${props.theme.border.default}`};
 		transition: all 0.2s ease-out;
 		cursor: pointer;
 	}
