@@ -75,6 +75,10 @@ class Composer extends Component {
         this.setState({
           loading: false
         })
+      }).catch((e) => {
+        this.setState({
+          error: e
+        })
       })
   }
 

@@ -30,8 +30,6 @@ export const showGallery = (e) => (dispatch, getState) => {
   	let matchToIndex = checkForMatch[0]
   	let index = urlArr.indexOf(matchToIndex)
 
-  	console.log('index ', index)
-
   	getStorageUrlsFromArr(urlArr, activeStory)
   	.then((arr) => {
   		dispatch({
