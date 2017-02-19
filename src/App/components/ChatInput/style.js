@@ -2,8 +2,7 @@ import styled from 'styled-components';
 import { Gradient, Shadow } from '../../../shared/Globals';
 
 export const Form = styled.form`
-	flex: 0 0 auto;
-	width: 100%;
+	flex: 1 0 auto;	
 	display: flex;
 	align-items: stretch;
 `;
@@ -46,4 +45,28 @@ export const Footer = styled.div`
 	padding: 8px;
 	background-color: ${({ theme }) => theme.bg.wash};
 	border-top: 1px solid ${({ theme }) => theme.border.default};
+`;
+
+export const MediaInput = styled.input`
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+`;
+
+export const MediaLabel = styled.label`
+	border: none;
+	outline: 0;
+	color: ${props => props.theme.brand.default};
+	font-weight: 800;
+	font-size: 0.75rem;
+	display: inline-block;
+	margin: 0.5rem 0 1rem;
+	background: transparent;
+
+	&:hover {
+		cursor: pointer;
+	}
 `;

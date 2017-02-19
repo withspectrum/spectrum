@@ -105,19 +105,12 @@ export const sendMessage = message => (dispatch, getState) => {
   let autolinker = new Autolinker();
   let urls = autolinker.parse(message);
 
-  // create a message object to story type
-  // TODO: Add checks for message type so we can know if this is an image, url, embed, audio, or just plain text (etc)
-  let messageObj = {
-    type: 'text',
-    content: message,
-  };
-
   // the metadata to save for each message
   let messageData = {
     id: newMessageKey,
     userId: user.uid,
     timestamp: firebase.database.ServerValue.TIMESTAMP,
-    message: messageObj,
+    message: message,
     storyId: activeStory,
     meta: {},
   };
