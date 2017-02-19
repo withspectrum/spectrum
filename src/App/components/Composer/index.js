@@ -57,12 +57,15 @@ class Composer extends Component {
   };
 
   uploadMedia = (e) => {
+    let user = this.props.user
+    console.log('user is ', user)
     let file = e.target.files[0]
     let body = this.props.composer.body
     let story = this.props.composer.newStoryKey
     
     this.setState({ loading: true })
-    let fileUrl = helpers.uploadMedia(file, story)
+
+    let fileUrl = helpers.uploadMedia(file, story, user)
       .then((fileUrl) => {
         body = `${body}\n![Alt Text](${fileUrl})\n`
         this.props.dispatch(actions.updateBody(body))
