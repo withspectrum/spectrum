@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 // eslint-disable-next-line
 import {
   StoryWrapper,
@@ -9,9 +10,11 @@ import {
   UserMeta,
   Name,
   Meta,
+  MetaFreq,
   Title,
   Media,
 } from './style';
+import helpers from '../../../helpers';
 import actions from '../../../actions';
 
 class Story extends Component {
@@ -23,6 +26,7 @@ class Story extends Component {
 
   render() {
     const story = this.props.data;
+    const storyFrequencyName = helpers.getCurrentFrequency(story.frequency, this.props.frequencies.frequencies).name
     const timestamp = story.timestamp;
     let currentTime = Date.now();
 
@@ -54,21 +58,27 @@ class Story extends Component {
       } else if (elapsed < msPerMonth) {
         const now = Math.round(elapsed / msPerDay);
         if (now === 1) {
-          return `1 day ago`;
+          return `Yesterday`;
+        } else if (now >= 7 && now <= 13) {
+          return 'A week ago';
+        } else if (now >= 14 && now <= 20) {
+          return '2 weeks ago';
+        } else if (now >= 21 && now <= 28) {
+          return '3 weeks ago';
         } else {
           return `${now} days ago`;
         }
       } else if (elapsed < msPerYear) {
         const now = Math.round(elapsed / msPerMonth);
         if (now === 1) {
-          return `1 month ago`;
+          return `A month ago`;
         } else {
           return `${now} months ago`;
         }
       } else {
         const now = Math.round(elapsed / msPerYear);
         if (now === 1) {
-          return `1 year ago`;
+          return `A year ago`;
         } else {
           return `${now} years ago`;
         }
@@ -85,9 +95,7 @@ class Story extends Component {
           <UserMeta>
             <Name>{story.creator.displayName}</Name>
             <Meta>
-              {timeDifference(currentTime, timestamp)}
-              {' '}•&nbsp;
-              {story.message_count > 0
+              {timeDifference(currentTime, timestamp)}&nbsp;•&nbsp;{story.message_count > 0
                 ? `${story.message_count} messages`
                 : 'No messages yet'}
             </Meta>
@@ -100,6 +108,15 @@ class Story extends Component {
           {story.content.media && story.content.media !== ''
             ? <Media src={story.content.media} onClick={this.showGallery} />
             : ''}
+          <Link to={`/${story.frequency}`}>
+            <MetaFreq>{
+                  this.props.frequencies.active === 'all' ?
+                    `~${storyFrequencyName}`
+                  : 
+                    ``
+                }
+            </MetaFreq>
+          </Link>
         </StoryBody>
       </StoryWrapper>
     );

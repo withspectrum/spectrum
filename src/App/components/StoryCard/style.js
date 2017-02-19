@@ -47,11 +47,11 @@ export const StoryHeader = styled.div`
 `;
 
 export const Title = styled.p`
-	font-size: 16px;
-	font-weight: 600;
-	line-height: 1.5;
-	margin-bottom: 8px;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 20px;
 	color: ${({ theme }) => theme.text.default};
+	margin-bottom: 8px;
 `;
 
 export const Media = styled.img`
@@ -78,4 +78,15 @@ export const Name = styled(H4)`
 
 export const Meta = styled(H5)`
   color: ${({ theme }) => theme.text.alt};
+`;
+
+export const MetaFreq = styled(Meta)`
+  color: ${({ theme }) => theme.text.placeholder};
+  font-weight: 400;
+  transition: color 0.2s ease-out;
+
+  &:hover {
+  	color: ${({ theme }) => theme.brand.default}
+  	transition: color 0.2s ease-in;
+  }
 `;
