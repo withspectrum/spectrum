@@ -27,7 +27,7 @@ textarea {
 }
 
 ::selection {
-  background: #7D16FF;
+  background: #3818e5;
   color: #ffffff;
 }
 
@@ -186,6 +186,11 @@ body {
   width: 100%;
   border: 1px solid #D6E0EE;
   border-radius: 4px;
+}
+
+.markdown iframe {
+  width: 100%;
+  height: 60vh;
 }
 
 .markdown h1 {
