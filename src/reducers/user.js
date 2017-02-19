@@ -4,6 +4,7 @@ const initialState = {
   displayName: null,
   photoURL: null,
   frequencies: null,
+  notregistered: null,
 };
 
 export default function root(state = initialState, action) {
@@ -18,7 +19,12 @@ export default function root(state = initialState, action) {
         photoURL: action.user.photoURL,
         displayName: action.user.displayName,
         frequencies: action.user.frequencies,
+        notregistered: false,
       });
+    case 'SHOW_MARKETING_PAGE':
+      return Object.assign({}, state, {
+        notregistered: true,
+      })
     default:
       return state;
   }
