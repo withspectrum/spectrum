@@ -53,8 +53,6 @@ class ChatView extends Component {
   render() {
     let { messages } = this.props
     if (!messages) return <span />
-
-      console.log(this.state)
     
     return (
       <ChatContainer>
