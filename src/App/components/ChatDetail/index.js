@@ -104,25 +104,24 @@ class ChatView extends Component {
                 </FromName>
                 {group.map((message, i) => {
                   if (message.message.type === "text") {
-                      return (
-                        <Bubble
-                          key={i}
-                          dangerouslySetInnerHTML={{
-                            __html: this.formatMessage(message.message.content),
-                          }}
-                        />
-                      );
-                    }
+                    return (
+                      <Bubble
+                        key={i}
+                        dangerouslySetInnerHTML={{
+                          __html: this.formatMessage(message.message.content),
+                        }}
+                      />
+                    );
+                  }
 
-                    if (message.message.type === "media") {
-                      return (
-                        <ImgBubble 
-                          onClick={this.showGallery} 
-                          src={message.message.content} 
-                          key={i} />
-                      )
-                    }
-                  })}
+                  if (message.message.type === "media") {
+                    return (
+                      <ImgBubble 
+                        onClick={this.showGallery} 
+                        src={message.message.content} 
+                        key={i} />
+                    )
+                  }
                 })}
               </BubbleGroup>
             );
