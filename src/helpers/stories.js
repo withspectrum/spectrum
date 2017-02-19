@@ -64,7 +64,20 @@ export const uploadMedia = (file, story, user) => {
     
     let timestamp = Date.now()
     let storageRef = firebase.storage().ref();
-    let fileRef = storageRef.child(`${story}/${file.name}.${timestamp}`)
+    let fileName = `${file.name}.${timestamp}`
+    let fileRef = storageRef.child(`${story}/${fileName}`)
+
+    // we have to story an array of media urls so that we can fetch galleries from storage
+    let storyRef = firebase.database().ref(`stories/${story}/media`).push()
+    let mediaKey = storyRef.key
+
+    let updates = {}
+    let mediaData = {
+      fileName
+    }
+
+    updates[`stories/${story}/media/${mediaKey}`] = mediaData
+    firebase.database().ref().update(updates) 
     
     // cache the image for a year
     let metaData = {
