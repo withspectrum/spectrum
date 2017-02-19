@@ -108,11 +108,11 @@ class Story extends Component {
           {story.content.media && story.content.media !== ''
             ? <Media src={story.content.media} onClick={this.showGallery} />
             : ''}
-          <Link to={`/${story.frequency}`}>
+          <Link to={`/~${story.frequency}`}>
             <MetaFreq>{
                   this.props.frequencies.active === 'all' ?
                     `~${storyFrequencyName}`
-                  : 
+                  :
                     ``
                 }
             </MetaFreq>
