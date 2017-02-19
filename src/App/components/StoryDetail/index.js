@@ -21,6 +21,15 @@ import actions from '../../../actions';
 
 class StoryView extends Component {
   componentDidMount() {
+    this.addEventListeners()
+  }
+
+  componentDidUpdate() {
+    // account for story switching where the story may or may not contain images
+    this.addEventListeners()
+  }
+
+  addEventListeners = () => {
     // we're going to loop through all the dom nodes of the story and look for images so that we can attach event listeners for the gallery
     let story = this.refs.story
     let imageNodes = story.querySelectorAll('img')
