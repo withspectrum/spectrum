@@ -21,9 +21,11 @@ class ChatInput extends Component {
 
   sendMessage = e => {
     e.preventDefault();
+    const messageText = this.state.message.trim();
+    if (messageText === '') return
     let messageObj = {
       type: 'text',
-      content: this.state.message
+      content: messageText
     }
 
     this.props.dispatch(actions.sendMessage(messageObj));
@@ -68,7 +70,7 @@ class ChatInput extends Component {
           id="file"
           name="file"
           accept=".png, .jpg, .jpeg, .gif, .mp4"
-          multiple={false} 
+          multiple={false}
           onChange={this.sendMediaMessage}
         />
         <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
