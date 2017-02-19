@@ -58,17 +58,19 @@ class Composer extends Component {
 
   uploadMedia = (e) => {
     let user = this.props.user
-    console.log('user is ', user)
-    let file = e.target.files[0]
+    let files = e.target.files
     let body = this.props.composer.body
     let story = this.props.composer.newStoryKey
-    
-    this.setState({ loading: true })
 
-    let fileUrl = helpers.uploadMedia(file, story, user)
-      .then((fileUrl) => {
-        body = `${body}\n![Alt Text](${fileUrl})\n`
-        this.props.dispatch(actions.updateBody(body))
+    // disable the submit button until uploads are done
+    this.setState({ loading: true })
+    
+    let filesArr = helpers.uploadMultipleMedia(files, story, user)
+      .then((filesArr) => {
+        for (let file of filesArr) {
+          body = `${body}\n![Alt Text](${file})\n`
+          this.props.dispatch(actions.updateBody(body))
+        }
         
         this.setState({
           loading: false
@@ -167,6 +169,7 @@ class Composer extends Component {
                   id="file"
                   name="file"
                   accept=".png, .jpg, .jpeg, .gif"
+                  multiple={true} 
                   onChange={this.uploadMedia}
                 />
                 <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>

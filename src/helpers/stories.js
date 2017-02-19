@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import { hashToArray } from './utils'
 
 export const isStoryCreator = (story, user) => {
   if (!user) {
@@ -58,25 +59,31 @@ export const getStoryPermission = (story, user, frequencies) => {
 
 export const uploadMedia = (file, story, user) => {
   return new Promise((resolve, reject) => {
-    if (file && story) {
-      let timestamp = Date.now()
-      let storageRef = firebase.storage().ref();
-      let fileRef = storageRef.child(`${story}/${timestamp}`)
-      
-      // cache the image for a year
-      let metaData = {
-        cacheControl: `public, max-age=${60 * 60 * 24 * 365}`,
-        customMetadata: {
-          creator: user.uid
-        }
+    // ensure we have the necessary bits to upload media
+    if (!file || !story || !user) return
+    
+    let timestamp = Date.now()
+    let storageRef = firebase.storage().ref();
+    let fileRef = storageRef.child(`${story}/${file.name}.${timestamp}`)
+    
+    // cache the image for a year
+    let metaData = {
+      cacheControl: `public, max-age=${60 * 60 * 24 * 365}`,
+      customMetadata: {
+        creator: user.uid,
+        name: file.name
       }
-
-      fileRef.put(file, metaData).then(snapshot => {
-        console.log('image ' , snapshot)
-        resolve(snapshot.downloadURL)
-      });
     }
+
+    fileRef.put(file, metaData).then(snapshot => {
+      resolve(snapshot.downloadURL)
+    })
   })
+}
+
+export const uploadMultipleMedia = (files, story, user) => {
+  let filesArr = hashToArray(files)
+  return Promise.all(filesArr.map((file) => uploadMedia(file, story, user)))
 }
 
 export default {
@@ -84,5 +91,6 @@ export default {
   fetchStoriesForFrequency,
   fetchStoriesForFrequencies,
   getStoryPermission,
-  uploadMedia
+  uploadMedia,
+  uploadMultipleMedia
 };
