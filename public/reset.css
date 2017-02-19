@@ -193,6 +193,10 @@ body {
   display: block;
 }
 
+.markdown pre code {
+  padding: 8px 16px;
+}
+
 .markdown iframe {
   width: 100%;
   height: 60vh;
