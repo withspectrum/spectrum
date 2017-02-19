@@ -9,12 +9,12 @@ class GalleryRoot extends Component {
   };
 
   handleKeyPress = e => {
-    // length of image array
+    // if no media, skip on outta here
+    if (!this.props.media.media) return
+
     let length = this.props.media.media.length
     // keeping count of which index we are viewing
     let index = this.props.media.index
-
-    console.log('length ', length, ', index ', index)
 
     // if person taps esc, close the dialog
     if (e.keyCode === 27) {
@@ -59,11 +59,11 @@ class GalleryRoot extends Component {
   }
 
   componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyPress);
+    document.addEventListener('keydown', this.handleKeyPress, false);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyPress);
+    document.removeEventListener('keydown', this.handleKeyPress, false);
   }
 
   render() {

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import actions from '../../../actions';
 import helpers from '../../../helpers';
@@ -25,7 +24,7 @@ class Composer extends Component {
   constructor(props) {
     super(props)
 
-    let { frequencies, user } = props
+    let { user } = props
     let userFreqs = Object.keys(user.frequencies)
 
     this.state = {
@@ -65,7 +64,7 @@ class Composer extends Component {
     // disable the submit button until uploads are done
     this.setState({ loading: true })
     
-    let filesArr = helpers.uploadMultipleMedia(files, story, user)
+    helpers.uploadMultipleMedia(files, story, user)
       .then((filesArr) => {
         for (let file of filesArr) {
           body = `${body}\n![](${file})\n`
@@ -120,7 +119,7 @@ class Composer extends Component {
 
 
   render() {
-    let { frequencies, user, composer } = this.props
+    let { frequencies, composer } = this.props
     let activeFrequency = frequencies.active
     let currentFrequency = frequencies.frequencies.filter((freq) => {
       return freq.id === activeFrequency

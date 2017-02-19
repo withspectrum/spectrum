@@ -34,6 +34,13 @@ class StoryView extends Component {
     this.props.dispatch(actions.showGallery(e))
   }
 
+  scrollToBottom = () => {
+    let node = ReactDOM.findDOMNode(this)
+    if (node.scrollHeight - node.clientHeight < node.scrollTop + 100) {
+      node.scrollTop = node.scrollHeight - node.clientHeight
+    }
+  }
+
   getActiveStory = () => {
     if (this.props.stories.stories) {
       return this.props.stories.stories.filter(story => {
@@ -44,13 +51,6 @@ class StoryView extends Component {
       return;
     }
   };
-
-  componentWillUpdate() {
-    var node = ReactDOM.findDOMNode(this);
-    this.shouldScrollBottom = node.scrollTop + node.offsetHeight ===
-      node.scrollHeight ||
-      node.scrollTop === 0;
-  }
 
   deleteStory = () => {
     let story = this.getActiveStory();
@@ -118,7 +118,7 @@ class StoryView extends Component {
             ? <Media src={story.content.media} onClick={this.showGallery} />
             : ''}
         </ContentView>
-        <ChatDetail />
+        <ChatDetail scrollToBottom={this.scrollToBottom} />
       </ScrollBody>
     );
   }
