@@ -181,9 +181,9 @@ export const initStory = () => (dispatch, getState) => {
   });
 };
 
-export const setActiveStory = id => ({
+export const setActiveStory = story => ({
   type: 'SET_ACTIVE_STORY',
-  id,
+  story,
 });
 
 export const deleteStory = id => (dispatch, getState) => {

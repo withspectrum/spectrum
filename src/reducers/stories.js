@@ -14,9 +14,10 @@ export default function root(state = initialState, action) {
         stories: state.stories.concat([action.story]),
         active: action.story.id,
       });
+    case 'SET_INITIAL_DATA':
     case 'SET_ACTIVE_STORY':
       return Object.assign({}, state, {
-        active: action.id,
+        active: action.story,
       });
     case 'DELETE_STORY':
       const stories = state.stories
