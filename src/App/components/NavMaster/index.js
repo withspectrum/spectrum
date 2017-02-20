@@ -96,7 +96,7 @@ class NavigationMaster extends Component {
           <FreqListHeading>My Frequencies</FreqListHeading>
 
           <Link to="/">
-            <Freq active={this.props.frequencies.active === 'all'}>
+            <Freq active={this.props.frequencies.active === 'everything'}>
               <FreqIcon src="/img/everything-icon.svg" />
               <FreqLabel>Everything</FreqLabel>
             </Freq>

@@ -67,14 +67,14 @@ class StoryMaster extends Component {
       frequencies.frequencies,
     );
 
-    if (frequencies.active !== 'all') {
+    if (frequencies.active !== 'everything') {
       sortedStories = sortedStories.filter(
         story => story.frequency === currentFrequency.id,
       );
     }
 
 
-    let urlBase = frequencies.active === 'all' ? 'all' : `~${frequencies.active}`;
+    let urlBase = frequencies.active === 'everything' ? '~everything' : `~${frequencies.active}`;
     let usersPermissionOnFrequency = getFrequencyPermission(
       user,
       frequencies.active,
@@ -96,11 +96,11 @@ class StoryMaster extends Component {
         return;
       } else if (
         !usersFrequencies &&
-        activeFrequency !== 'all' &&
+        activeFrequency !== 'everything' &&
         activeFrequency !== null
       ) {
         return <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>;
-      } else if (activeFrequency === 'all' || activeFrequency === null) {
+      } else if (activeFrequency === 'everything' || activeFrequency === null) {
         return '';
       } else if (keys.indexOf(activeFrequency) > -1) {
         return (
@@ -130,7 +130,7 @@ class StoryMaster extends Component {
               : <NewPost color="brand" stayActive />}
           </TipButton>
         );
-      } else if (activeFrequency === 'all') {
+      } else if (activeFrequency === 'everything') {
         return (
           <TipButton
             onClick={this.toggleComposer}
@@ -196,7 +196,7 @@ class StoryMaster extends Component {
                 this.props.user.frequencies,
                 this.props.frequencies.active,
               )}
-              {frequencies.active === 'all' ? '' : privacyButton}
+              {frequencies.active === 'everything' ? '' : privacyButton}
             </Header>}
 
           <ScrollBody>
@@ -215,7 +215,7 @@ class StoryMaster extends Component {
 
             {currentFrequency &&
               frequencies.active &&
-              frequencies.active !== 'all'
+              frequencies.active !== 'everything'
               ? <ShareCard data={currentFrequency} />
               : ''}
 

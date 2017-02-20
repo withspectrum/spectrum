@@ -3,8 +3,8 @@ export const getFrequencyPermission = (user, activeFrequency, frequencies) => {
     return;
   }
   let uid = user.uid;
-  if (activeFrequency !== 'all') {
-    // we wont' even show this if you're viewing all, so skip
+  if (activeFrequency !== 'everything') {
+    // we wont' even show this if you're viewing everything, so skip
     let frequencyToEval = frequencies.filter(freq => {
       return freq.slug === activeFrequency;
     });
@@ -23,7 +23,7 @@ export const getFrequencyPermission = (user, activeFrequency, frequencies) => {
 };
 
 export const getCurrentFrequency = (activeFrequency, frequencies) => {
-  if (activeFrequency === 'all') {
+  if (activeFrequency === 'everything') {
     return;
   }
   let obj = frequencies.filter(freq => {

@@ -90,7 +90,7 @@ class Composer extends Component {
     let body = this.props.composer.body;
     // if we pass in a custom frequency, it means the user is in 'all' and has selected a frequency from the dropdown
     // if the user isn't in all, we'll send the currently active frequency via the redux state
-    let frequency = this.props.frequencies.active === 'all'
+    let frequency = this.props.frequencies.active === 'everything'
       ? this.state.frequencyPicker
       : this.props.frequencies.active;
 
@@ -131,7 +131,7 @@ class Composer extends Component {
       return freq.id === activeFrequency;
     });
 
-    let byline = activeFrequency === 'all'
+    let byline = activeFrequency === 'everything'
       ? <span>
           <Byline>
             Post in
