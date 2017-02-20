@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { ChatContainer, Bubble, ImgBubble, BubbleGroup, FromName } from './style';
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
-import helpers from '../../../helpers'
+import { getUsersFromMessageGroups } from '../../../helpers/stories';
 import { showGallery } from '../../../actions/gallery';
 
 class ChatView extends Component {
@@ -44,7 +44,7 @@ class ChatView extends Component {
 
   fetchUsers = () => {
     let messages = this.props.messages
-    helpers.getUsersFromMessageGroups(this.props.messages).then(data => {
+    getUsersFromMessageGroups(this.props.messages).then(data => {
       this.setUsersData(data)
     })
   }

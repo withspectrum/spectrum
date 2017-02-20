@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { sendMessage } from '../../../actions/messages';
-import helpers from '../../../helpers';
+import { uploadMedia } from '../../../helpers/stories';
 import { connect } from 'react-redux';
 import { Input, Form, Footer, Button, MediaInput, MediaLabel } from './style';
 
@@ -44,7 +44,7 @@ class ChatInput extends Component {
       type: 'LOADING'
     })
 
-    helpers.uploadMedia(file, activeStory, user)
+    uploadMedia(file, activeStory, user)
       .then((file) => {
         let messageObj = {
           type: 'media',

@@ -20,8 +20,3 @@ export const loadState = () => {
     return undefined;
   }
 };
-
-export default {
-  loadState,
-  saveState,
-};

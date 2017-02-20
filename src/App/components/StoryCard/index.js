@@ -14,7 +14,7 @@ import {
   Title,
   Media,
 } from './style';
-import helpers from '../../../helpers';
+import { getCurrentFrequency } from '../../../helpers/frequencies';
 import {
   showGallery
 } from '../../../actions/gallery';
@@ -28,7 +28,7 @@ class Story extends Component {
 
   render() {
     const story = this.props.data;
-    const frequency = helpers.getCurrentFrequency(story.frequency, this.props.frequencies.frequencies);
+    const frequency = getCurrentFrequency(story.frequency, this.props.frequencies.frequencies);
     const timestamp = story.timestamp;
     let currentTime = Date.now();
 

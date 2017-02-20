@@ -18,7 +18,7 @@ export const isStoryCreator = (story, user) => {
 };
 
 export const getUserFromId = (uid) => {
-  
+
     return firebase
       .database()
       .ref(`users/${uid}`)
@@ -30,7 +30,7 @@ export const getUserFromId = (uid) => {
         obj["name"] = val.displayName
         return ( obj )
       })
-  
+
 }
 
 export const getUsersFromMessageGroups = (groups) => {
@@ -89,7 +89,7 @@ export const uploadMedia = (file, story, user) => {
     if (file.size > 3000000) {
       reject('Please upload files smaller than 3mb 😘')
     } // if the file is larger than 3mb
-    
+
     let timestamp = Date.now()
     let storageRef = firebase.storage().ref();
     let fileName = `${file.name}.${timestamp}`
@@ -105,8 +105,8 @@ export const uploadMedia = (file, story, user) => {
     }
 
     updates[`stories/${story}/media/${mediaKey}`] = mediaData
-    firebase.database().ref().update(updates) 
-    
+    firebase.database().ref().update(updates)
+
     // cache the image for a year
     let metaData = {
       cacheControl: `public, max-age=${60 * 60 * 24 * 365}`,
@@ -126,14 +126,3 @@ export const uploadMultipleMedia = (files, story, user) => {
   let filesArr = hashToArray(files)
   return Promise.all(filesArr.map((file) => uploadMedia(file, story, user)))
 }
-
-export default {
-  isStoryCreator,
-  getUserFromId,
-  getUsersFromMessageGroups,
-  fetchStoriesForFrequency,
-  fetchStoriesForFrequencies,
-  getStoryPermission,
-  uploadMedia,
-  uploadMultipleMedia
-};

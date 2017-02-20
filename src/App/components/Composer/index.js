@@ -11,7 +11,7 @@ import {
 import {
   setMessages
 } from '../../../actions/messages';
-import helpers from '../../../helpers';
+import { uploadMultipleMedia } from '../../../helpers/stories';
 import Textarea from 'react-textarea-autosize';
 
 import {
@@ -74,7 +74,7 @@ class Composer extends Component {
     // disable the submit button until uploads are done
     this.setState({ loading: true })
 
-    helpers.uploadMultipleMedia(files, story, user)
+    uploadMultipleMedia(files, story, user)
       .then((filesArr) => {
         for (let file of filesArr) {
           body = `${body}\n![](${file})\n`

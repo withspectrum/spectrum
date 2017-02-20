@@ -18,7 +18,8 @@ import {
 import { Body } from './App/style';
 import ModalRoot from './shared/modals/ModalRoot';
 import GalleryRoot from './shared/gallery/GalleryRoot';
-import helpers from './helpers';
+import { asyncComponent } from './helpers/utils';
+import { loadState, saveState } from './helpers/localStorage';
 
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,
@@ -32,12 +33,12 @@ firebase.initializeApp(fbconfig);
 let store;
 // In production load previously saved data from localStorage
 if (process.env.NODE_ENV === 'production') {
-  let localStorageState = helpers.loadState();
+  let localStorageState = loadState();
   store = initStore(localStorageState);
 
   // sync the store with localstorage
   store.subscribe(() => {
-    helpers.saveState(store.getState())
+    saveState(store.getState())
   })
 } else {
   store = initStore({});
@@ -81,8 +82,8 @@ const theme = {
 };
 
 // Let webpack know the App component should be put into its own bundle (code splitting)
-const App = helpers.asyncComponent(() => System.import('./App').then(module => module.default));
-const Homepage = helpers.asyncComponent(() => System.import('./Homepage').then(module => module.default));
+const App = asyncComponent(() => System.import('./App').then(module => module.default));
+const Homepage = asyncComponent(() => System.import('./Homepage').then(module => module.default));
 
 // Rendered at the root of the page, renders the homepage or the App based on the login state
 const Root = ({ notregistered, uid, loginError }) => {

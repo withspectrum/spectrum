@@ -31,8 +31,3 @@ export const getCurrentFrequency = (activeFrequency, frequencies) => {
   });
   return obj[0];
 };
-
-export default {
-  getFrequencyPermission,
-  getCurrentFrequency,
-};

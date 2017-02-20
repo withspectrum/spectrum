@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import helpers from '../helpers';
+import { fetchStoriesForFrequencies } from '../helpers/stories';
 
 /*------------------------------------------------------------\*
 *
@@ -64,8 +64,7 @@ export const setStories = () => (dispatch, getState) => {
     });
   };
 
-  helpers
-    .fetchStoriesForFrequencies(userFrequencies)
+  fetchStoriesForFrequencies(userFrequencies)
     .then(storiesGroupedByFrequency => {
       /*  this returns an array of arrays
         it looks like this:

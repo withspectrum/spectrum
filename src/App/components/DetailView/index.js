@@ -9,7 +9,7 @@ import {
   toggleLockedStory
 } from '../../../actions/stories';
 import { showGallery } from '../../../actions/gallery';
-import helpers from '../../../helpers';
+import { isStoryCreator, getStoryPermission } from '../../../helpers/stories';
 
 import {
   ViewContainer,
@@ -52,8 +52,8 @@ class DetailView extends Component {
 
     let moderator, creator, locked;
     if (story) {
-      creator = helpers.isStoryCreator(story, user);
-      moderator = helpers.getStoryPermission(
+      creator = isStoryCreator(story, user);
+      moderator = getStoryPermission(
         story,
         user,
         frequencies,

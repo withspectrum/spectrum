@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import helpers from '../helpers';
+import { hashToArray } from '../helpers/utils';
 
 
 export const getFile = (file, story) => {
@@ -34,7 +34,7 @@ export const showGallery = (e) => (dispatch, getState) => {
 
   firebase.database().ref(`stories/${activeStory}/media`).on('value', (snapshot) => {
   	let val = snapshot.val()
-  	let arr = helpers.hashToArray(val)
+  	let arr = hashToArray(val)
   	let urlArr = arr.slice().map((img, i) => img.fileName)//=> convert hash to array of filename urls
 
   	let checkForMatch = urlArr.filter((url) => {

@@ -24,7 +24,7 @@ import {
 import {
   login,
 } from '../../../actions/user';
-import helpers from '../../../helpers';
+import { getFrequencyPermission, getCurrentFrequency } from '../../../helpers/frequencies';
 import { Lock, Unlock, NewPost, ClosePost } from '../../../shared/Icons';
 import StoryCard from '../StoryCard';
 import ShareCard from '../ShareCard';
@@ -71,12 +71,12 @@ class StoryMaster extends Component {
     }
 
     let urlBase = frequencies.active === 'all' ? 'all' : frequencies.active;
-    let usersPermissionOnFrequency = helpers.getFrequencyPermission(
+    let usersPermissionOnFrequency = getFrequencyPermission(
       user,
       frequencies.active,
       frequencies.frequencies,
     );
-    const currentFrequency = helpers.getCurrentFrequency(
+    const currentFrequency = getCurrentFrequency(
       frequencies.active,
       frequencies.frequencies,
     );

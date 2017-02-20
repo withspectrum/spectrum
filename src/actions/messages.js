@@ -1,5 +1,8 @@
 import * as firebase from 'firebase';
-import helpers from '../helpers';
+import {
+  hashToArray,
+  sortAndGroupBubbles
+} from '../helpers/utils';
 import fetch from 'whatwg-fetch-importable';
 import Autolinker from 'autolinker';
 
@@ -59,9 +62,9 @@ export const setMessages = () => (dispatch, getState) => {
         return;
       }
       // convert the messages into an array
-      let messagesArray = helpers.hashToArray(val);
+      let messagesArray = hashToArray(val);
       // and pass our array to be sorted into groups based on the user who posted the message
-      let sortedMessages = helpers.sortAndGroupBubbles(messagesArray);
+      let sortedMessages = sortAndGroupBubbles(messagesArray);
       // send the sorted messages to redux
       dispatch({
         type: 'SET_MESSAGES',
