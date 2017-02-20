@@ -83,8 +83,6 @@ class NavigationMaster extends Component {
               <MetaWrapper>
                 <Name>{user.displayName}</Name>
                 <P>
-                  <MetaLink onClick={this.goPro}>Get Pro</MetaLink>
-                  &nbsp;·&nbsp;
                   <MetaLink onClick={this.signOut}>Sign Out</MetaLink>
                 </P>
               </MetaWrapper>
