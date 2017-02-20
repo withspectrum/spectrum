@@ -32,14 +32,14 @@ export const setup = stateFetch => {
 /*------------------------------------------------------------\*
 *
 
-setStories
+loadStories
 1. Get all the frequencies the user is subscribed to
 2. Return all the stories on the server for each of those frequencies
 3. Sort and filter all of those stories on the frontend
 
 *
 \*------------------------------------------------------------*/
-export const setStories = () => (dispatch, getState) => {
+export const loadStories = () => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
   let { user } = setup(getState());
   let userFrequencies = user.frequencies;

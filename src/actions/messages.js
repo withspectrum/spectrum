@@ -34,12 +34,12 @@ export const setup = stateFetch => {
 /*------------------------------------------------------------\*
 *
 
-setMessages
+loadMessages
 Fetches all messages for the active story.
 
 *
 \*------------------------------------------------------------*/
-export const setMessages = () => (dispatch, getState) => {
+export const loadMessages = () => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
 
   let { stories, database } = setup(getState());

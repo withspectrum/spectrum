@@ -51,7 +51,7 @@ export const setActiveFrequency = id => ({
 /*------------------------------------------------------------\*
 *
 
-setFrequencies
+loadFrequencies
 This creates an active listener to the frequencies that are saved in the database.
 
 NOTE: Right now we are returning ALL frequencies. This will need to change
@@ -59,7 +59,7 @@ very soon as we want to respect private frequencies and avoid a noisy new user e
 
 *
 \*------------------------------------------------------------*/
-export const setFrequencies = () => (dispatch, getState) => {
+export const loadFrequencies = () => (dispatch, getState) => {
   let { user } = getState();
   let userFrequencies = user.frequencies;
   if (!user.uid) return;
@@ -91,7 +91,7 @@ We have a two-way relationship between a user and frequencies:
 
 This means that a change in one of these fields requires a change in the other
 
-NOTE: We do not dispatch anything in this action because we have an open listener to any changes in the frequencies that was set in setFrequencies()
+NOTE: We do not dispatch anything in this action because we have an open listener to any changes in the frequencies that was set in loadFrequencies()
 
 *
 \*------------------------------------------------------------*/

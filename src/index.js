@@ -7,8 +7,8 @@ import { initStore } from './store';
 import * as firebase from 'firebase';
 import FIREBASE_CONFIG from './config/FirebaseConfig';
 import { startListeningToAuth } from './actions/user';
-import { setFrequencies } from './actions/frequencies';
-import { setStories } from './actions/stories';
+import { loadFrequencies } from './actions/frequencies';
+import { loadStories } from './actions/stories';
 import { Body } from './App/style';
 import ModalRoot from './shared/modals/ModalRoot';
 import GalleryRoot from './shared/gallery/GalleryRoot';
@@ -116,7 +116,7 @@ setTimeout(() => {
   // when the app first loads, we'll listen for firebase changes
   store.dispatch(startListeningToAuth()).then(() => {
     // once auth has completed, if the user exists we'll set the frequencies and stories
-    store.dispatch(setFrequencies());
-    store.dispatch(setStories());
+    store.dispatch(loadFrequencies());
+    store.dispatch(loadStories());
   });
 });
