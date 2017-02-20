@@ -86,6 +86,10 @@ export const startListeningToAuth = () => dispatch => {
         type: 'SHOW_MARKETING_PAGE',
       })
       // if the user exists, we can boot up the app
+      dispatch({
+        type: 'STOP_LOADING'
+      })
+      
       if (user) {
         let database = firebase.database();
         let usersRef = database.ref('users');
