@@ -39,11 +39,12 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint:staged": "lint-staged"
+    "lint:staged": "lint-staged",
+    "prettier": "prettier --write --single-quote --trailing-comma 'src/**/*.js'"
   },
   "lint-staged": {
     "*.js": [
-      "prettier --write",
+      "npm run prettier",
       "git add"
     ]
   },

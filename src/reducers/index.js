@@ -16,5 +16,5 @@ export default combineReducers({
   composer,
   modals,
   gallery,
-  loading
+  loading,
 });

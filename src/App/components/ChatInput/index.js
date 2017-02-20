@@ -9,7 +9,7 @@ class ChatInput extends Component {
     super();
     this.state = {
       message: '',
-      file: ''
+      file: '',
     };
   }
 
@@ -22,11 +22,11 @@ class ChatInput extends Component {
   sendMessage = e => {
     e.preventDefault();
     const messageText = this.state.message.trim();
-    if (messageText === '') return
+    if (messageText === '') return;
     let messageObj = {
       type: 'text',
-      content: messageText
-    }
+      content: messageText,
+    };
 
     this.props.dispatch(sendMessage(messageObj));
 
@@ -35,31 +35,32 @@ class ChatInput extends Component {
     });
   };
 
-  sendMediaMessage = (e) => {
-    let user = this.props.user
-    let file = e.target.files[0]
-    let activeStory = this.props.stories.active
+  sendMediaMessage = e => {
+    let user = this.props.user;
+    let file = e.target.files[0];
+    let activeStory = this.props.stories.active;
 
     this.props.dispatch({
-      type: 'LOADING'
-    })
+      type: 'LOADING',
+    });
 
     uploadMedia(file, activeStory, user)
-      .then((file) => {
+      .then(file => {
         let messageObj = {
           type: 'media',
-          content: file
-        }
+          content: file,
+        };
 
         this.props.dispatch({
-          type: 'STOP_LOADING'
-        })
+          type: 'STOP_LOADING',
+        });
 
-        this.props.dispatch(sendMessage(messageObj))
-      }).catch(err => {
-        if (err) console.log('Error while uploading image to message: ', err)
+        this.props.dispatch(sendMessage(messageObj));
       })
-  }
+      .catch(err => {
+        if (err) console.log('Error while uploading image to message: ', err);
+      });
+  };
 
   render() {
     return (

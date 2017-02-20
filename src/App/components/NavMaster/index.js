@@ -1,17 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import {
-  login,
-  signOut
-} from '../../../actions/user';
-import {
-  showModal
-} from '../../../actions/modals';
-import {
-  setActiveFrequency,
-  addFrequency
-} from '../../../actions/frequencies';
+import { login, signOut } from '../../../actions/user';
+import { showModal } from '../../../actions/modals';
+import { setActiveFrequency, addFrequency } from '../../../actions/frequencies';
 import {
   Column,
   Header,

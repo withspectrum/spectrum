@@ -34,7 +34,7 @@ export const Minigallery = styled.div`
 	background: rgba(0,0,0,0.2);
 	max-height: 3rem;
 	z-index: 10;
-`
+`;
 export const MiniImg = styled.img`
 	height: 2rem;
 	border-radius: 2px;
@@ -47,9 +47,9 @@ export const MiniImg = styled.img`
 		cursor: pointer;
 		opacity: ${props => props.active ? 1 : 0.7};
 	}
-`
+`;
 
 export const MiniContainer = styled.div`
 	display: flex;
 	justify-content: center;
-`
+`;

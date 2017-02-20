@@ -82,7 +82,7 @@ export const ImgBubble = styled.img`
 	&:first-of-type {
 		margin-top: 0;
 	}
-`
+`;
 
 export const FromName = styled.span`
 	display: inline-block;

@@ -6,15 +6,9 @@ import { ThemeProvider } from 'styled-components';
 import { initStore } from './store';
 import * as firebase from 'firebase';
 import FIREBASE_CONFIG from './config/FirebaseConfig';
-import {
-  startListeningToAuth
-} from './actions/user';
-import {
-  setFrequencies,
-} from './actions/frequencies';
-import {
-  setStories,
-} from './actions/stories';
+import { startListeningToAuth } from './actions/user';
+import { setFrequencies } from './actions/frequencies';
+import { setStories } from './actions/stories';
 import { Body } from './App/style';
 import ModalRoot from './shared/modals/ModalRoot';
 import GalleryRoot from './shared/gallery/GalleryRoot';
@@ -38,8 +32,8 @@ if (process.env.NODE_ENV === 'production') {
 
   // sync the store with localstorage
   store.subscribe(() => {
-    saveState(store.getState())
-  })
+    saveState(store.getState());
+  });
 } else {
   store = initStore({});
 }
@@ -82,16 +76,18 @@ const theme = {
 };
 
 // Let webpack know the App component should be put into its own bundle (code splitting)
-const App = asyncComponent(() => System.import('./App').then(module => module.default));
-const Homepage = asyncComponent(() => System.import('./Homepage').then(module => module.default));
+const App = asyncComponent(() =>
+  System.import('./App').then(module => module.default));
+const Homepage = asyncComponent(() =>
+  System.import('./Homepage').then(module => module.default));
 
 // Rendered at the root of the page, renders the homepage or the App based on the login state
 const Root = ({ notregistered, uid, loginError }) => {
   if (!notregistered && !uid && !loginError) return <p>Loading...</p>;
-  if (notregistered) return <Homepage />
-  if (uid) return <App params={{}} />
-  return <p>Error</p>
-}
+  if (notregistered) return <Homepage />;
+  if (uid) return <App params={{}} />;
+  return <p>Error</p>;
+};
 
 const ConnectedRoot = connect(state => ({
   notregistered: state.user.notregistered,
@@ -113,7 +109,7 @@ render(
       </ThemeProvider>
     </BrowserRouter>
   </Provider>,
-  document.querySelector('#root')
+  document.querySelector('#root'),
 );
 
 setTimeout(() => {

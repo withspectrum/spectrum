@@ -43,7 +43,7 @@ export const Overlay = styled.div`
 	transition: opacity 0.1s ease-in;
 	z-index: 2;
 	pointer-events: none;
-`
+`;
 
 export const Header = styled.div`
 	display: flex;

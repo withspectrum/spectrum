@@ -15,9 +15,7 @@ import {
   Media,
 } from './style';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
-import {
-  showGallery
-} from '../../../actions/gallery';
+import { showGallery } from '../../../actions/gallery';
 
 class Story extends Component {
   showGallery = e => {
@@ -28,7 +26,10 @@ class Story extends Component {
 
   render() {
     const story = this.props.data;
-    const frequency = getCurrentFrequency(story.frequency, this.props.frequencies.frequencies);
+    const frequency = getCurrentFrequency(
+      story.frequency,
+      this.props.frequencies.frequencies,
+    );
     const timestamp = story.timestamp;
     let currentTime = Date.now();
 
@@ -97,7 +98,9 @@ class Story extends Component {
           <UserMeta>
             <Name>{story.creator.displayName}</Name>
             <Meta>
-              {timeDifference(currentTime, timestamp)}&nbsp;•&nbsp;{story.message_count > 0
+              {timeDifference(currentTime, timestamp)}
+              &nbsp;•&nbsp;
+              {story.message_count > 0
                 ? `${story.message_count} messages`
                 : 'No messages yet'}
             </Meta>
@@ -111,12 +114,10 @@ class Story extends Component {
             ? <Media src={story.content.media} onClick={this.showGallery} />
             : ''}
           <Link to={`/${story.frequency}`}>
-            <MetaFreq>{
-                  this.props.frequencies.active === 'all' && frequency ?
-                    `~${frequency.name}`
-                  :
-                    ``
-                }
+            <MetaFreq>
+              {this.props.frequencies.active === 'all' && frequency
+                ? `~${frequency.name}`
+                : ``}
             </MetaFreq>
           </Link>
         </StoryBody>

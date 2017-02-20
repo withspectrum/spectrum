@@ -1,7 +1,7 @@
 export const loading = () => ({
-	type: 'LOADING'
-})
+  type: 'LOADING',
+});
 
 export const stopLoading = () => ({
-	type: 'STOP_LOADING'
-})
+  type: 'STOP_LOADING',
+});
