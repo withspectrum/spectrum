@@ -83,6 +83,10 @@ export const startListeningToAuth = () => dispatch => {
   return new Promise((resolve, reject) => {
     firebase.auth().onAuthStateChanged(user => {
       // if the user exists, we can boot up the app
+      dispatch({
+        type: 'STOP_LOADING'
+      })
+      
       if (user) {
         let database = firebase.database();
         let usersRef = database.ref('users');
