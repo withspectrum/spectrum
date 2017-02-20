@@ -1,5 +1,5 @@
 import React from 'react';
-import { StoryWrapper } from '../StoryCard/style';
+import { Card } from '../StoryCard/style';
 import { Body, Title, Desc, Input, ButtonWrapper, Button } from './style';
 
 const ShareCard = props => {
@@ -8,7 +8,7 @@ const ShareCard = props => {
   };
 
   return (
-    <StoryWrapper static>
+    <Card static>
 
       <Body>
         <Title>Get the conversation started.</Title>
@@ -41,7 +41,7 @@ const ShareCard = props => {
           </Button>
         </ButtonWrapper>
       </Body>
-    </StoryWrapper>
+    </Card>
   );
 };
 
