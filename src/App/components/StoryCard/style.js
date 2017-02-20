@@ -7,11 +7,20 @@ export const Card = styled.div`
 	margin: 8px;
 	margin-bottom: 0;
 	flex: 0 0 auto;
-	padding: 16px;
 	border-radius: 2px;
 	background-color: ${({ theme }) => theme.bg.default};
 	transition: all 0.2s ease-in;
 	-webkit-font-smoothing: subpixel-antialiased;
+`;
+
+export const LinkWrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	flex: 0 0 auto;
+	background-color: #ffffff;
+	padding: 16px;
+	transition: all 0.2s ease-in;
+
 	box-shadow: ${Shadow.low}, inset ${props =>
   props.selected
     ? `-16px 0 0 -8px ${props.theme.brand.default}`
@@ -27,13 +36,6 @@ css`
 			cursor: pointer;
 		}
 	`}
-`;
-
-export const LinkWrapper = styled.div`
-	display: flex;
-	flex-direction: column;
-	flex: 0 0 auto;
-	background-color: #ffffff;
 `;
 
 export const StoryBody = styled.div`

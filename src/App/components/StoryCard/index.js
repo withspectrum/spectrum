@@ -90,9 +90,9 @@ class StoryCard extends Component {
     }
 
     return (
-      <Card selected={story.id === this.props.stories.active}>
+      <Card>
         <Link to={`/${this.props.urlBase}/${story.id}`}>
-          <LinkWrapper>
+          <LinkWrapper selected={story.id === this.props.stories.active}>
             <StoryHeader>
               <Avatar
                 src={story.creator.photoURL}
@@ -117,13 +117,15 @@ class StoryCard extends Component {
             </StoryBody>
           </LinkWrapper>
         </Link>
-        <Link to={`/${story.frequency}`}>
-          <MetaFreq>
-            {this.props.frequencies.active === 'everything' && frequency
-              ? `~${frequency.name}`
-              : ``}
-          </MetaFreq>
-        </Link>
+        
+        {this.props.frequencies.active === 'everything' && frequency
+          ? <Link to={`/${story.frequency}`}>
+              <MetaFreq>
+                `~${frequency.name}`
+              </MetaFreq>
+            </Link>
+          : ``}
+        
       </Card>
     );
   }
