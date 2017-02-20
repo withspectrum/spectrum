@@ -1,5 +1,6 @@
 import * as firebase from 'firebase';
-import helpers from '../helpers';
+import { getCurrentFrequency } from '../helpers/frequencies';
+import { fetchFrequenciesForUser } from '../helpers/utils';
 
 /*------------------------------------------------------------\*
 *
@@ -42,15 +43,15 @@ always has permissions to see/interact with frequencies safely.
 
 *
 \*------------------------------------------------------------*/
-export const setActiveFrequency = id => ({
+export const setActiveFrequency = frequency => ({
   type: 'SET_ACTIVE_FREQUENCY',
-  id,
+  frequency,
 });
 
 /*------------------------------------------------------------\*
 *
 
-setFrequencies
+loadFrequencies
 This creates an active listener to the frequencies that are saved in the database.
 
 NOTE: Right now we are returning ALL frequencies. This will need to change
@@ -58,13 +59,13 @@ very soon as we want to respect private frequencies and avoid a noisy new user e
 
 *
 \*------------------------------------------------------------*/
-export const setFrequencies = () => (dispatch, getState) => {
+export const loadFrequencies = () => (dispatch, getState) => {
   let { user } = getState();
   let userFrequencies = user.frequencies;
   if (!user.uid) return;
-  dispatch({ type: 'LOADING' })
+  dispatch({ type: 'LOADING' });
 
-  helpers.fetchFrequenciesForUser(userFrequencies).then(frequencies => {
+  fetchFrequenciesForUser(userFrequencies).then(frequencies => {
     let obj = frequencies.slice().filter(frequency => frequency !== null);
 
     dispatch({
@@ -90,13 +91,13 @@ We have a two-way relationship between a user and frequencies:
 
 This means that a change in one of these fields requires a change in the other
 
-NOTE: We do not dispatch anything in this action because we have an open listener to any changes in the frequencies that was set in setFrequencies()
+NOTE: We do not dispatch anything in this action because we have an open listener to any changes in the frequencies that was set in loadFrequencies()
 
 *
 \*------------------------------------------------------------*/
 export const addFrequency = name => (dispatch, getState) => {
   // NOTE: Eventually we may want to pass more than the name into this function, for example we might include default privacy settings, a frequency icon, and more.
-  dispatch({ type: 'LOADING' })
+  dispatch({ type: 'LOADING' });
 
   let { database, uid } = setup(getState());
 
@@ -261,7 +262,7 @@ export const toggleFrequencyPrivacy = () => (dispatch, getState) => {
   let frequencyKey = frequencies.active;
 
   // the frequency object which we use to check the current privacy
-  let frequencyToUpdate = helpers.getCurrentFrequency(
+  let frequencyToUpdate = getCurrentFrequency(
     frequencyKey,
     frequencies.frequencies,
   );
@@ -287,13 +288,4 @@ export const toggleFrequencyPrivacy = () => (dispatch, getState) => {
       });
     }
   });
-};
-
-export default {
-  setFrequencies,
-  addFrequency,
-  setActiveFrequency,
-  subscribeFrequency,
-  unsubscribeFrequency,
-  toggleFrequencyPrivacy,
 };

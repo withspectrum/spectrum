@@ -4,8 +4,9 @@ import StoryDetail from '../StoryDetail';
 import ChatInput from '../ChatInput';
 // eslint-disable-next-line
 import Composer from '../Composer';
-import actions from '../../../actions';
-import helpers from '../../../helpers';
+import { deleteStory, toggleLockedStory } from '../../../actions/stories';
+import { showGallery } from '../../../actions/gallery';
+import { isStoryCreator, getStoryPermission } from '../../../helpers/stories';
 
 import {
   ViewContainer,
@@ -28,36 +29,33 @@ class DetailView extends Component {
 
   deleteStory = () => {
     const story = this.getActiveStory();
-    this.props.dispatch(actions.deleteStory(story.id));
+    this.props.dispatch(deleteStory(story.id));
   };
 
   toggleLockedStory = () => {
     const story = this.getActiveStory();
-    this.props.dispatch(actions.toggleLockedStory(story));
+    this.props.dispatch(toggleLockedStory(story));
   };
 
   showGallery = e => {
     let arr = [];
     arr.push(e.target.src);
-    this.props.dispatch(actions.showGallery(arr));
+    this.props.dispatch(showGallery(arr));
   };
 
   render() {
-    let { composer, user, frequencies } = this.props
+    let { composer, user, frequencies } = this.props;
     let story = this.getActiveStory();
-    
+
     let moderator, creator, locked;
     if (story) {
-      creator = helpers.isStoryCreator(story, user);
-      moderator = helpers.getStoryPermission(
-        story,
-        user,
-        frequencies,
-      );
+      creator = isStoryCreator(story, user);
+      moderator = getStoryPermission(story, user, frequencies);
       locked = story.locked ? story.locked : false;
     }
 
-    if (story && !composer.isOpen) { // if we're viewing a story and the composer is not open
+    if (story && !composer.isOpen) {
+      // if we're viewing a story and the composer is not open
       return (
         <ViewContainer>
           <LogicContainer>
@@ -71,22 +69,24 @@ class DetailView extends Component {
           </LogicContainer>
         </ViewContainer>
       );
-    } else if (composer.isOpen) { // otherwise if the composer is open
+    } else if (composer.isOpen) {
+      // otherwise if the composer is open
       return (
         <ViewContainer>
           <LogicContainer>
             <Composer />
           </LogicContainer>
         </ViewContainer>
-      )
-    } else { // otherwise show a null state
+      );
+    } else {
+      // otherwise show a null state
       return (
         <ViewContainer>
           <NullContainer>
             <NullText>Choose a story to get started!</NullText>
           </NullContainer>
         </ViewContainer>
-      )
+      );
     }
   }
 }
@@ -95,7 +95,7 @@ const mapStateToProps = state => ({
   stories: state.stories,
   frequencies: state.frequencies,
   user: state.user,
-  composer: state.composer
+  composer: state.composer,
 });
 
 export default connect(mapStateToProps)(DetailView);

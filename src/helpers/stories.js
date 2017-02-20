@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import uniq from 'lodash.uniq';
-import { hashToArray } from './utils'
+import { hashToArray } from './utils';
 
 export const isStoryCreator = (story, user) => {
   if (!user) {
@@ -17,29 +17,27 @@ export const isStoryCreator = (story, user) => {
   }
 };
 
-export const getUserFromId = (uid) => {
-  
-    return firebase
-      .database()
-      .ref(`users/${uid}`)
-      .once('value')
-      .then((snapshot) => {
-        let val = snapshot.val()
-        let obj = {}
-        obj["uid"] = uid
-        obj["name"] = val.displayName
-        return ( obj )
-      })
-  
-}
+export const getUserFromId = uid => {
+  return firebase
+    .database()
+    .ref(`users/${uid}`)
+    .once('value')
+    .then(snapshot => {
+      let val = snapshot.val();
+      let obj = {};
+      obj['uid'] = uid;
+      obj['name'] = val.displayName;
+      return obj;
+    });
+};
 
-export const getUsersFromMessageGroups = (groups) => {
-  let users = groups.map((group) => {
-    return group[0].userId
-  })
-  users = uniq(users)
-  return Promise.all(users.map(getUserFromId))
-}
+export const getUsersFromMessageGroups = groups => {
+  let users = groups.map(group => {
+    return group[0].userId;
+  });
+  users = uniq(users);
+  return Promise.all(users.map(getUserFromId));
+};
 
 export const fetchStoriesForFrequency = frequency => {
   return firebase
@@ -48,7 +46,7 @@ export const fetchStoriesForFrequency = frequency => {
     .orderByChild('frequency')
     .equalTo(frequency)
     .once('value')
-    .then((snapshot) => {
+    .then(snapshot => {
       return snapshot.val();
     });
 };
@@ -59,7 +57,7 @@ export const fetchStoriesForFrequencies = frequencies => {
 };
 
 export const getStoryPermission = (story, user, frequencies) => {
-  if (!user.uid || !story) return
+  if (!user.uid || !story) return;
 
   let uid = user.uid;
   let storyFrequencyId = story.frequency; // get the frequency the story was posted in
@@ -71,8 +69,7 @@ export const getStoryPermission = (story, user, frequencies) => {
   if (frequencyMatch.length > 0) {
     let storyFrequency = frequencyMatch[0];
 
-    let permission = frequencies.frequencies.length &&
-      storyFrequency.users[uid]
+    let permission = frequencies.frequencies.length && storyFrequency.users[uid]
       ? storyFrequency.users[uid].permission
       : 'subscriber';
 
@@ -85,55 +82,44 @@ export const getStoryPermission = (story, user, frequencies) => {
 export const uploadMedia = (file, story, user) => {
   return new Promise((resolve, reject) => {
     // ensure we have the necessary bits to upload media
-    if (!file || !story || !user) return
+    if (!file || !story || !user) return;
     if (file.size > 3000000) {
-      reject('Please upload files smaller than 3mb 😘')
+      reject('Please upload files smaller than 3mb 😘');
     } // if the file is larger than 3mb
-    
-    let timestamp = Date.now()
+
+    let timestamp = Date.now();
     let storageRef = firebase.storage().ref();
-    let fileName = `${file.name}.${timestamp}`
-    let fileRef = storageRef.child(`${story}/${fileName}`)
+    let fileName = `${file.name}.${timestamp}`;
+    let fileRef = storageRef.child(`${story}/${fileName}`);
 
     // we have to story an array of media urls so that we can fetch galleries from storage
-    let storyRef = firebase.database().ref(`stories/${story}/media`).push()
-    let mediaKey = storyRef.key
+    let storyRef = firebase.database().ref(`stories/${story}/media`).push();
+    let mediaKey = storyRef.key;
 
-    let updates = {}
+    let updates = {};
     let mediaData = {
-      fileName
-    }
+      fileName,
+    };
 
-    updates[`stories/${story}/media/${mediaKey}`] = mediaData
-    firebase.database().ref().update(updates) 
-    
+    updates[`stories/${story}/media/${mediaKey}`] = mediaData;
+    firebase.database().ref().update(updates);
+
     // cache the image for a year
     let metaData = {
       cacheControl: `public, max-age=${60 * 60 * 24 * 365}`,
       customMetadata: {
         creator: user.uid,
-        name: file.name
-      }
-    }
+        name: file.name,
+      },
+    };
 
     fileRef.put(file, metaData).then(snapshot => {
-      resolve(snapshot.downloadURL)
-    })
-  })
-}
+      resolve(snapshot.downloadURL);
+    });
+  });
+};
 
 export const uploadMultipleMedia = (files, story, user) => {
-  let filesArr = hashToArray(files)
-  return Promise.all(filesArr.map((file) => uploadMedia(file, story, user)))
-}
-
-export default {
-  isStoryCreator,
-  getUserFromId,
-  getUsersFromMessageGroups,
-  fetchStoriesForFrequency,
-  fetchStoriesForFrequencies,
-  getStoryPermission,
-  uploadMedia,
-  uploadMultipleMedia
+  let filesArr = hashToArray(files);
+  return Promise.all(filesArr.map(file => uploadMedia(file, story, user)));
 };

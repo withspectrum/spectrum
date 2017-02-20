@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
-import actions from '../../../actions';
+import { login, signOut } from '../../../actions/user';
+import { showModal } from '../../../actions/modals';
+import { setActiveFrequency, addFrequency } from '../../../actions/frequencies';
 import {
   Column,
   Header,
@@ -36,16 +38,16 @@ class NavigationMaster extends Component {
 
   login = e => {
     e.preventDefault();
-    this.props.dispatch(actions.login());
+    this.props.dispatch(login());
   };
 
   signOut = e => {
     e.preventDefault();
-    this.props.dispatch(actions.signOut());
+    this.props.dispatch(signOut());
   };
 
   goPro = () => {
-    this.props.dispatch(actions.showModal('PRO_MODAL'));
+    this.props.dispatch(showModal('PRO_MODAL'));
   };
 
   updateFrequencyName = e => {
@@ -55,14 +57,14 @@ class NavigationMaster extends Component {
   };
 
   setActiveFrequency = e => {
-    this.props.dispatch(actions.setActiveFrequency(e.target.id));
+    this.props.dispatch(setActiveFrequency(e.target.id));
   };
 
   addFrequency = e => {
     e.preventDefault();
     const frequencyName = this.state.frequencyName.trim();
     if (frequencyName === '') return;
-    this.props.dispatch(actions.addFrequency(frequencyName));
+    this.props.dispatch(addFrequency(frequencyName));
     this.setState({
       frequencyName: '',
     });

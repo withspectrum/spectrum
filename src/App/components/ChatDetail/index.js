@@ -1,37 +1,43 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ChatContainer, Bubble, ImgBubble, BubbleGroup, FromName } from './style';
+import {
+  ChatContainer,
+  Bubble,
+  ImgBubble,
+  BubbleGroup,
+  FromName,
+} from './style';
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
-import helpers from '../../../helpers'
-import actions from '../../../actions';
+import { getUsersFromMessageGroups } from '../../../helpers/stories';
+import { showGallery } from '../../../actions/gallery';
 
 class ChatView extends Component {
   constructor() {
-    super()
+    super();
 
     this.state = {
-      users: []
-    }
+      users: [],
+    };
   }
 
   componentDidMount() {
     if (this.props.messages) {
-      this.fetchUsers()
+      this.fetchUsers();
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.props.scrollToBottom()
+    this.props.scrollToBottom();
 
     if (prevProps !== this.props && this.props.messages) {
-      this.fetchUsers()
+      this.fetchUsers();
     }
   }
 
-  showGallery = (e) => {
-    this.props.dispatch(actions.showGallery(e))
-  }
+  showGallery = e => {
+    this.props.dispatch(showGallery(e));
+  };
 
   formatMessage(message) {
     if (!message) {
@@ -43,22 +49,22 @@ class ChatView extends Component {
   }
 
   fetchUsers = () => {
-    let messages = this.props.messages
-    helpers.getUsersFromMessageGroups(this.props.messages).then(data => {
-      this.setUsersData(data)
-    })
-  }
+    let messages = this.props.messages;
+    getUsersFromMessageGroups(this.props.messages).then(data => {
+      this.setUsersData(data);
+    });
+  };
 
-  setUsersData = (data) => {
+  setUsersData = data => {
     this.setState({
-      users: data
-    })
-  }
+      users: data,
+    });
+  };
 
   render() {
-    let { messages } = this.props
-    if (!messages) return <span />
-    
+    let { messages } = this.props;
+    if (!messages) return <span />;
+
     return (
       <ChatContainer>
         {messages.map((group, i) => {
@@ -67,7 +73,7 @@ class ChatView extends Component {
             return (
               <BubbleGroup key={i} me>
                 {group.map((message, i) => {
-                  if (message.message.type === "text") {
+                  if (message.message.type === 'text') {
                     return (
                       <Bubble
                         key={i}
@@ -78,14 +84,15 @@ class ChatView extends Component {
                     );
                   }
 
-                  if (message.message.type === "media") {
+                  if (message.message.type === 'media') {
                     return (
-                      <ImgBubble 
-                        me 
+                      <ImgBubble
+                        me
                         onClick={this.showGallery}
-                        src={message.message.content} 
-                        key={i} />
-                    )
+                        src={message.message.content}
+                        key={i}
+                      />
+                    );
                   }
                 })}
               </BubbleGroup>
@@ -97,13 +104,12 @@ class ChatView extends Component {
                   {this.state.users &&
                     this.state.users.map(user => {
                       if (user.uid === group[0].userId) {
-                        return user.name
+                        return user.name;
                       }
-                    })
-                  }
+                    })}
                 </FromName>
                 {group.map((message, i) => {
-                  if (message.message.type === "text") {
+                  if (message.message.type === 'text') {
                     return (
                       <Bubble
                         key={i}
@@ -114,13 +120,14 @@ class ChatView extends Component {
                     );
                   }
 
-                  if (message.message.type === "media") {
+                  if (message.message.type === 'media') {
                     return (
-                      <ImgBubble 
-                        onClick={this.showGallery} 
-                        src={message.message.content} 
-                        key={i} />
-                    )
+                      <ImgBubble
+                        onClick={this.showGallery}
+                        src={message.message.content}
+                        key={i}
+                      />
+                    );
                   }
                 })}
               </BubbleGroup>
@@ -129,7 +136,7 @@ class ChatView extends Component {
         })}
 
       </ChatContainer>
-    )
+    );
   }
 }
 

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 import {
   Column,
   Header,
@@ -11,34 +10,43 @@ import {
   LoginButton,
   HiddenInput,
   TipButton,
-  Overlay
+  Overlay,
 } from './style';
-import actions from '../../../actions';
-import helpers from '../../../helpers';
+import { toggleComposer } from '../../../actions/composer';
+import {
+  toggleFrequencyPrivacy,
+  unsubscribeFrequency,
+  subscribeFrequency,
+} from '../../../actions/frequencies';
+import { login } from '../../../actions/user';
+import {
+  getFrequencyPermission,
+  getCurrentFrequency,
+} from '../../../helpers/frequencies';
 import { Lock, Unlock, NewPost, ClosePost } from '../../../shared/Icons';
 import StoryCard from '../StoryCard';
 import ShareCard from '../ShareCard';
 
 class StoryMaster extends Component {
   toggleComposer = () => {
-    this.props.dispatch(actions.toggleComposer());
+    this.props.dispatch(toggleComposer());
   };
 
   togglePrivacy = () => {
-    this.props.dispatch(actions.toggleFrequencyPrivacy());
+    this.props.dispatch(toggleFrequencyPrivacy());
   };
 
   unsubscribeFrequency = () => {
-    this.props.dispatch(actions.unsubscribeFrequency());
+    this.props.dispatch(unsubscribeFrequency());
   };
 
   subscribeFrequency = () => {
-    this.props.dispatch(actions.subscribeFrequency());
+    this.props.dispatch(subscribeFrequency());
   };
 
   login = e => {
     e.preventDefault();
-    this.props.dispatch(actions.login());
+    this.props.dispatch(login());
   };
 
   sortArrayByKey = (array, key) => {
@@ -61,12 +69,12 @@ class StoryMaster extends Component {
     }
 
     let urlBase = frequencies.active === 'all' ? 'all' : frequencies.active;
-    let usersPermissionOnFrequency = helpers.getFrequencyPermission(
+    let usersPermissionOnFrequency = getFrequencyPermission(
       user,
       frequencies.active,
       frequencies.frequencies,
     );
-    const currentFrequency = helpers.getCurrentFrequency(
+    const currentFrequency = getCurrentFrequency(
       frequencies.active,
       frequencies.frequencies,
     );
@@ -199,11 +207,7 @@ class StoryMaster extends Component {
             {stories.stories.length > 0 &&
               // slice and reverse makes sure our stories show up in revers chron order
               sortedStories.slice().reverse().map((story, i) => {
-                return (
-                  <Link to={`/${urlBase}/${story.id}`} key={i}>
-                    <StoryCard data={story} key={i} />
-                  </Link>
-                );
+                return <StoryCard urlBase={urlBase} data={story} key={i} />;
               })}
 
             {currentFrequency &&

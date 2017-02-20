@@ -3,7 +3,8 @@ import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import StripeCheckout from 'react-stripe-checkout';
 import axios from 'axios';
-import actions from '../../../actions';
+import { hideModal } from '../../../actions/modals';
+import { upgradeUser } from '../../../actions/user';
 import { connect } from 'react-redux';
 import { ButtonPrimary } from '../../buttons';
 import {
@@ -36,8 +37,8 @@ class ProModal extends React.Component {
     this.setState({
       isOpen: !this.state.isOpen,
     });
-    // setTimeout(() => { this.props.dispatch(actions.hideModal()) }, 300)
-    this.props.dispatch(actions.hideModal());
+    // setTimeout(() => { this.props.dispatch(hideModal()) }, 300)
+    this.props.dispatch(hideModal());
   };
 
   onToken = token => {
@@ -61,7 +62,7 @@ class ProModal extends React.Component {
 
         if (response.data.success) {
           // if the customer and subscription were created successfully
-          this.props.dispatch(actions.upgradeUser());
+          this.props.dispatch(upgradeUser());
         }
       })
       .catch(error => {
@@ -113,7 +114,8 @@ class ProModal extends React.Component {
                 <Subheading>
                   A new{' '}
                   <em>Pro</em>
-                  {' '}badge will find itself attached to your name, wherever you go on Spectrum.
+                  {' '}
+                  badge will find itself attached to your name, wherever you go on Spectrum.
                 </Subheading>
               </Padding>
             </Section>

@@ -1,5 +1,6 @@
 import * as firebase from 'firebase';
 import React from 'react';
+import LoadingIndicator from '../shared/loading/global';
 
 export const hashToArray = hash => {
   let array = [];
@@ -74,7 +75,7 @@ export const fetchStoriesForFrequencies = frequencies => {
   return fetchDataByIds(frequencies, ['stories', 'frequency']);
 };
 
-export const asyncComponent = (getComponent) => {
+export const asyncComponent = getComponent => {
   return class AsyncComponent extends React.Component {
     static Component = null;
     state = { Component: AsyncComponent.Component };
@@ -82,25 +83,17 @@ export const asyncComponent = (getComponent) => {
     componentWillMount() {
       if (!this.state.Component) {
         getComponent().then(Component => {
-          AsyncComponent.Component = Component
-          this.setState({ Component })
-        })
+          AsyncComponent.Component = Component;
+          this.setState({ Component });
+        });
       }
     }
     render() {
-      const { Component } = this.state
+      const { Component } = this.state;
       if (Component) {
-        return <Component {...this.props} />
+        return <Component {...this.props} />;
       }
-      return <p>Loading...</p>
+      return <LoadingIndicator />;
     }
-  }
-}
-
-export default {
-  asyncComponent,
-  hashToArray,
-  sortAndGroupBubbles,
-  fetchFrequenciesForUser,
-  fetchStoriesForFrequencies,
+  };
 };

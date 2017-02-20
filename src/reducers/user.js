@@ -4,7 +4,7 @@ const initialState = {
   displayName: null,
   photoURL: null,
   frequencies: null,
-  notregistered: null,
+  loaded: false,
 };
 
 export default function root(state = initialState, action) {
@@ -12,19 +12,22 @@ export default function root(state = initialState, action) {
     case 'LOGIN_SIGNUP_ERROR':
       return Object.assign({}, state, {
         loginError: action.message,
+        loaded: true,
       });
+    case 'SET_INITIAL_DATA':
     case 'SET_USER':
       return Object.assign({}, state, {
         uid: action.user.uid,
         photoURL: action.user.photoURL,
         displayName: action.user.displayName,
         frequencies: action.user.frequencies,
-        notregistered: false,
+        loaded: true,
       });
-    case 'SHOW_MARKETING_PAGE':
-      return Object.assign({}, state, {
-        notregistered: true,
-      })
+    case 'USER_NOT_AUTHENTICATED':
+      // Reset the state
+      return Object.assign({}, initialState, {
+        loaded: true,
+      });
     default:
       return state;
   }

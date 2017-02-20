@@ -14,7 +14,7 @@ We have to manually create a "User" record in a separate "User" table
 *
 \*------------------------------------------------------------*/
 export const login = () => dispatch => {
-  dispatch({ type: 'LOADING' })
+  dispatch({ type: 'LOADING' });
 
   let provider = new firebase.auth.TwitterAuthProvider();
   firebase
@@ -69,49 +69,6 @@ export const login = () => dispatch => {
 /*------------------------------------------------------------\*
 *
 
-startListeningToAuth
-We listen for any changes to the auth, including the first render of the app
-at which point we're validating the cookies on the browser with Firebase.
-
-This function continues to run and will acknowledge logouts and user deletion
-from the backend.
-
-*
-\*------------------------------------------------------------*/
-export const startListeningToAuth = () => dispatch => {
-  dispatch({ type: 'LOADING' })
-  return new Promise((resolve, reject) => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (!user) return dispatch({
-        type: 'SHOW_MARKETING_PAGE',
-      })
-      // if the user exists, we can boot up the app
-      if (user) {
-        let database = firebase.database();
-        let usersRef = database.ref('users');
-
-        // we know the user exists, so lets fetch their data by matching the uid
-        usersRef.orderByChild('uid').equalTo(user.uid).on('value', snapshot => {
-          let userObject = snapshot.val();
-          userObject = userObject[user.uid]; // get the first user returned, which should be the current user
-
-          // resolve so that the app can now fetch frequencies and stories
-          resolve(userObject);
-
-          // once we've retreived our user, we can dispatch to redux and store their info in state
-          dispatch({
-            type: 'SET_USER',
-            user: userObject,
-          });
-        });
-      }
-    });
-  });
-};
-
-/*------------------------------------------------------------\*
-*
-
 signOut
 Ensures we clear the browser's cookies, unauth on the backend, and reset our redux
 store by triggering a refresh after clearing out localstorage
@@ -135,10 +92,4 @@ export const signOut = () => dispatch => {
       console.log('Error signing out: ', err);
     }
   });
-};
-
-export default {
-  login,
-  startListeningToAuth,
-  signOut,
 };

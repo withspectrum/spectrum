@@ -1,12 +1,14 @@
 export const loading = () => ({
-	type: 'LOADING'
-})
+  type: 'LOADING',
+});
 
 export const stopLoading = () => ({
-	type: 'STOP_LOADING'
-})
+  type: 'STOP_LOADING',
+});
 
-export default {
-  loading,
-  stopLoading
-};
+export const setInitialData = (user, frequency, story) => ({
+  type: 'SET_INITIAL_DATA',
+  user,
+  frequency,
+  story,
+});

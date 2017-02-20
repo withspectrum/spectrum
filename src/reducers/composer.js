@@ -2,7 +2,7 @@ const initialState = {
   isOpen: false,
   title: '',
   body: '',
-  newStoryKey: null
+  newStoryKey: null,
 };
 
 export default function root(state = initialState, action) {
@@ -13,18 +13,18 @@ export default function root(state = initialState, action) {
       });
     case 'CREATE_DRAFT':
       return Object.assign({}, state, {
-        newStoryKey: action.newStoryKey
-      })
+        newStoryKey: action.newStoryKey,
+      });
     case 'CREATE_STORY':
       return Object.assign({}, state, {
         title: '',
         body: '',
-        newStoryKey: null
-      })
+        newStoryKey: null,
+      });
     case 'SET_ACTIVE_STORY':
-    	return Object.assign({}, state, {
-    		isOpen: false
-    	});
+      return Object.assign({}, state, {
+        isOpen: false,
+      });
     case 'UPDATE_TITLE':
       return Object.assign({}, state, {
         title: action.title,
