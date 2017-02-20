@@ -11,6 +11,17 @@ export const Card = styled.div`
 	background-color: ${({ theme }) => theme.bg.default};
 	transition: all 0.2s ease-in;
 	-webkit-font-smoothing: subpixel-antialiased;
+
+	box-shadow: ${Shadow.low};
+
+	${props => !props.static &&
+css`
+		&:hover {
+			box-shadow: ${Shadow.high};
+			transition: all 0.2s ease-out;
+			cursor: pointer;
+		}
+	`}
 `;
 
 export const LinkWrapper = styled.div`
@@ -21,7 +32,7 @@ export const LinkWrapper = styled.div`
 	padding: 16px;
 	transition: all 0.2s ease-in;
 
-	box-shadow: ${Shadow.low}, inset ${props =>
+	box-shadow: inset ${props =>
   props.selected
     ? `-16px 0 0 -8px ${props.theme.brand.default}`
     : `0px 0 0 0px transparent`};
@@ -29,7 +40,7 @@ export const LinkWrapper = styled.div`
 	${props => !props.static &&
 css`
 		&:hover {
-			box-shadow: ${Shadow.high} ${props.selected
+			box-shadow: ${props.selected
   ? `, inset -32px 0 0 -16px ${props.theme.brand.default}`
   : ``};
 			transition: all 0.2s ease-out;
@@ -97,7 +108,12 @@ export const MetaFreq = styled(Meta)`
   color: ${({ theme }) => theme.text.placeholder};
   font-weight: 400;
   transition: color 0.2s ease-out;
-  display: inline-block;
+  display: block;
+  width: 100%;
+  background: #f6f7f8;
+  padding: 8px 16px;
+  border-radius: 0 0 2px 2px;
+  border-top: 1px solid ${({ theme }) => theme.border.default};
 
   &:hover {
   	color: ${({ theme }) => theme.brand.default}

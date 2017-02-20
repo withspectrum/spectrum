@@ -60,14 +60,9 @@ class NavigationMaster extends Component {
     this.props.dispatch(setActiveFrequency(e.target.id));
   };
 
-  addFrequency = e => {
+  createFrequency = e => {
     e.preventDefault();
-    const frequencyName = this.state.frequencyName.trim();
-    if (frequencyName === '') return;
-    this.props.dispatch(addFrequency(frequencyName));
-    this.setState({
-      frequencyName: '',
-    });
+    this.props.dispatch(showModal('FREQUENCY_CREATION_MODAL'));
   };
 
   render() {
@@ -115,15 +110,8 @@ class NavigationMaster extends Component {
             })}
 
         </FreqList>
-        <Form onSubmit={this.addFrequency}>
-          <Input
-            type="text"
-            onChange={this.updateFrequencyName}
-            value={this.state.frequencyName}
-            placeholder="+ Create a Frequency"
-          />
-          <Button type="submit">~</Button>
-        </Form>
+
+        <Button onClick={this.createFrequency}>~ Create Frequency</Button>
 
         <Footer>
           <FooterLogo src="/img/mark.svg" />
