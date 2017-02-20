@@ -43,9 +43,9 @@ always has permissions to see/interact with frequencies safely.
 
 *
 \*------------------------------------------------------------*/
-export const setActiveFrequency = id => ({
+export const setActiveFrequency = frequency => ({
   type: 'SET_ACTIVE_FREQUENCY',
-  id,
+  frequency,
 });
 
 /*------------------------------------------------------------\*

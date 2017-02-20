@@ -10,8 +10,7 @@ import { startListeningToAuth } from './actions/user';
 import { loadFrequencies } from './actions/frequencies';
 import { loadStories } from './actions/stories';
 import { Body } from './App/style';
-import ModalRoot from './shared/modals/ModalRoot';
-import GalleryRoot from './shared/gallery/GalleryRoot';
+import Root from './Root';
 import { asyncComponent } from './helpers/utils';
 import { loadState, saveState } from './helpers/localStorage';
 
@@ -75,48 +74,17 @@ const theme = {
   },
 };
 
-// Let webpack know the App component should be put into its own bundle (code splitting)
-const App = asyncComponent(() =>
-  System.import('./App').then(module => module.default));
-const Homepage = asyncComponent(() =>
-  System.import('./Homepage').then(module => module.default));
-
-// Rendered at the root of the page, renders the homepage or the App based on the login state
-const Root = ({ notregistered, uid, loginError }) => {
-  if (!notregistered && !uid && !loginError) return <p>Loading...</p>;
-  if (notregistered) return <Homepage />;
-  if (uid) return <App params={{}} />;
-  return <p>Error</p>;
-};
-
-const ConnectedRoot = connect(state => ({
-  notregistered: state.user.notregistered,
-  uid: state.user.uid,
-  loginError: state.user.loginError,
-}))(Root);
-
 render(
   <Provider store={store}>
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <Body>
-          <ModalRoot />
-          <GalleryRoot />
-          <Match exactly pattern="/" component={ConnectedRoot} />
-          <Match exactly pattern="/:frequency" component={App} />
-          <Match exactly pattern="/:frequency/:story" component={App} />
+          <Match exactly pattern="/" component={Root} />
+          <Match exactly pattern="/:frequency" component={Root} />
+          <Match exactly pattern="/:frequency/:story" component={Root} />
         </Body>
       </ThemeProvider>
     </BrowserRouter>
   </Provider>,
   document.querySelector('#root'),
 );
-
-setTimeout(() => {
-  // when the app first loads, we'll listen for firebase changes
-  store.dispatch(startListeningToAuth()).then(() => {
-    // once auth has completed, if the user exists we'll set the frequencies and stories
-    store.dispatch(loadFrequencies());
-    store.dispatch(loadStories());
-  });
-});

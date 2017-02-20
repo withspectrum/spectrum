@@ -1,5 +1,6 @@
 import * as firebase from 'firebase';
 import React from 'react';
+import LoadingIndicator from '../shared/loading/global';
 
 export const hashToArray = hash => {
   let array = [];
@@ -92,7 +93,7 @@ export const asyncComponent = getComponent => {
       if (Component) {
         return <Component {...this.props} />;
       }
-      return <p>Loading...</p>;
+      return <LoadingIndicator />;
     }
   };
 };

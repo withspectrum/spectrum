@@ -1,6 +1,7 @@
 const initialState = {
   frequencies: [],
   active: null,
+  loaded: false,
 };
 
 export default function root(state = initialState, action) {
@@ -13,10 +14,12 @@ export default function root(state = initialState, action) {
     case 'SET_FREQUENCIES':
       return Object.assign({}, state, {
         frequencies: action.frequencies,
+        loaded: true,
       });
+    case 'SET_INITIAL_DATA':
     case 'SET_ACTIVE_FREQUENCY':
       return Object.assign({}, state, {
-        active: action.id,
+        active: action.frequency,
       });
     default:
       return state;
