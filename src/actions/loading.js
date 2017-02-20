@@ -5,8 +5,3 @@ export const loading = () => ({
 export const stopLoading = () => ({
 	type: 'STOP_LOADING'
 })
-
-export default {
-  loading,
-  stopLoading
-};

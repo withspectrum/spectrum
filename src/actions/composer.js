@@ -21,9 +21,3 @@ export const updateBody = (body) => ({
   type: 'UPDATE_BODY',
   body
 });
-
-export default {
-  toggleComposer,
-  updateTitle,
-  updateBody
-};

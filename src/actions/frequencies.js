@@ -1,5 +1,10 @@
 import * as firebase from 'firebase';
-import helpers from '../helpers';
+import {
+  getCurrentFrequency,
+} from '../helpers/frequencies';
+import {
+  fetchFrequenciesForUser
+} from '../helpers/utils';
 
 /*------------------------------------------------------------\*
 *
@@ -64,7 +69,7 @@ export const setFrequencies = () => (dispatch, getState) => {
   if (!user.uid) return;
   dispatch({ type: 'LOADING' })
 
-  helpers.fetchFrequenciesForUser(userFrequencies).then(frequencies => {
+  fetchFrequenciesForUser(userFrequencies).then(frequencies => {
     let obj = frequencies.slice().filter(frequency => frequency !== null);
 
     dispatch({
@@ -261,7 +266,7 @@ export const toggleFrequencyPrivacy = () => (dispatch, getState) => {
   let frequencyKey = frequencies.active;
 
   // the frequency object which we use to check the current privacy
-  let frequencyToUpdate = helpers.getCurrentFrequency(
+  let frequencyToUpdate = getCurrentFrequency(
     frequencyKey,
     frequencies.frequencies,
   );
@@ -287,13 +292,4 @@ export const toggleFrequencyPrivacy = () => (dispatch, getState) => {
       });
     }
   });
-};
-
-export default {
-  setFrequencies,
-  addFrequency,
-  setActiveFrequency,
-  subscribeFrequency,
-  unsubscribeFrequency,
-  toggleFrequencyPrivacy,
 };

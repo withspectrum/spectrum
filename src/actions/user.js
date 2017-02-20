@@ -89,7 +89,7 @@ export const startListeningToAuth = () => dispatch => {
       dispatch({
         type: 'STOP_LOADING'
       })
-      
+
       if (user) {
         let database = firebase.database();
         let usersRef = database.ref('users');
@@ -139,10 +139,4 @@ export const signOut = () => dispatch => {
       console.log('Error signing out: ', err);
     }
   });
-};
-
-export default {
-  login,
-  startListeningToAuth,
-  signOut,
 };

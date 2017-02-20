@@ -4,8 +4,12 @@ import StoryDetail from '../StoryDetail';
 import ChatInput from '../ChatInput';
 // eslint-disable-next-line
 import Composer from '../Composer';
-import actions from '../../../actions';
-import helpers from '../../../helpers';
+import {
+  deleteStory,
+  toggleLockedStory
+} from '../../../actions/stories';
+import { showGallery } from '../../../actions/gallery';
+import { isStoryCreator, getStoryPermission } from '../../../helpers/stories';
 
 import {
   ViewContainer,
@@ -28,28 +32,28 @@ class DetailView extends Component {
 
   deleteStory = () => {
     const story = this.getActiveStory();
-    this.props.dispatch(actions.deleteStory(story.id));
+    this.props.dispatch(deleteStory(story.id));
   };
 
   toggleLockedStory = () => {
     const story = this.getActiveStory();
-    this.props.dispatch(actions.toggleLockedStory(story));
+    this.props.dispatch(toggleLockedStory(story));
   };
 
   showGallery = e => {
     let arr = [];
     arr.push(e.target.src);
-    this.props.dispatch(actions.showGallery(arr));
+    this.props.dispatch(showGallery(arr));
   };
 
   render() {
     let { composer, user, frequencies } = this.props
     let story = this.getActiveStory();
-    
+
     let moderator, creator, locked;
     if (story) {
-      creator = helpers.isStoryCreator(story, user);
-      moderator = helpers.getStoryPermission(
+      creator = isStoryCreator(story, user);
+      moderator = getStoryPermission(
         story,
         user,
         frequencies,

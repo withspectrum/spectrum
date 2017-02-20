@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Overlay, ActiveImage, Minigallery, MiniImg, MiniContainer } from './style';
-import actions from '../../actions';
+import { hideGallery } from '../../actions/gallery';
 
 class GalleryRoot extends Component {
   hideGallery = () => {
-    this.props.dispatch(actions.hideGallery());
+    this.props.dispatch(hideGallery());
   };
 
   handleKeyPress = e => {
@@ -78,7 +78,7 @@ class GalleryRoot extends Component {
           <ActiveImage onClick={this.incrementImage} src={images[index]} />
           <Minigallery>
             <MiniContainer>
-              { 
+              {
                 images.map((image, i) => {
                   return <MiniImg src={image} key={i} onClick={() => this.setCount(i)} active={i === index} />
                 })

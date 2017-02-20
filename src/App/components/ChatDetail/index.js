@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { ChatContainer, Bubble, ImgBubble, BubbleGroup, FromName } from './style';
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
-import helpers from '../../../helpers'
-import actions from '../../../actions';
+import { getUsersFromMessageGroups } from '../../../helpers/stories';
+import { showGallery } from '../../../actions/gallery';
 
 class ChatView extends Component {
   constructor() {
@@ -30,7 +30,7 @@ class ChatView extends Component {
   }
 
   showGallery = (e) => {
-    this.props.dispatch(actions.showGallery(e))
+    this.props.dispatch(showGallery(e))
   }
 
   formatMessage(message) {
@@ -44,7 +44,7 @@ class ChatView extends Component {
 
   fetchUsers = () => {
     let messages = this.props.messages
-    helpers.getUsersFromMessageGroups(this.props.messages).then(data => {
+    getUsersFromMessageGroups(this.props.messages).then(data => {
       this.setUsersData(data)
     })
   }
@@ -58,7 +58,7 @@ class ChatView extends Component {
   render() {
     let { messages } = this.props
     if (!messages) return <span />
-    
+
     return (
       <ChatContainer>
         {messages.map((group, i) => {
@@ -80,10 +80,10 @@ class ChatView extends Component {
 
                   if (message.message.type === "media") {
                     return (
-                      <ImgBubble 
-                        me 
+                      <ImgBubble
+                        me
                         onClick={this.showGallery}
-                        src={message.message.content} 
+                        src={message.message.content}
                         key={i} />
                     )
                   }
@@ -116,9 +116,9 @@ class ChatView extends Component {
 
                   if (message.message.type === "media") {
                     return (
-                      <ImgBubble 
-                        onClick={this.showGallery} 
-                        src={message.message.content} 
+                      <ImgBubble
+                        onClick={this.showGallery}
+                        src={message.message.content}
                         key={i} />
                     )
                   }

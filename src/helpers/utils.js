@@ -96,11 +96,3 @@ export const asyncComponent = (getComponent) => {
     }
   }
 }
-
-export default {
-  asyncComponent,
-  hashToArray,
-  sortAndGroupBubbles,
-  fetchFrequenciesForUser,
-  fetchStoriesForFrequencies,
-};

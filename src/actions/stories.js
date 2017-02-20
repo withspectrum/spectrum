@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import helpers from '../helpers';
+import { fetchStoriesForFrequencies } from '../helpers/stories';
 
 /*------------------------------------------------------------\*
 *
@@ -64,8 +64,7 @@ export const setStories = () => (dispatch, getState) => {
     });
   };
 
-  helpers
-    .fetchStoriesForFrequencies(userFrequencies)
+  fetchStoriesForFrequencies(userFrequencies)
     .then(storiesGroupedByFrequency => {
       /*  this returns an array of arrays
         it looks like this:
@@ -109,7 +108,7 @@ export const publishStory = (story) => (
     let uid = user.uid
 
     let storyRef = firebase.database().ref().child(`stories/${storyKey}`);
-    
+
     let storyData = {
       id: storyKey, // we need this id again in the CREATE_STORY reducer
       published: true,
@@ -226,13 +225,4 @@ export const toggleLockedStory = story => dispatch => {
     id,
     locked,
   });
-};
-
-export default {
-  setStories,
-  initStory,
-  publishStory,
-  setActiveStory,
-  deleteStory,
-  toggleLockedStory,
 };
