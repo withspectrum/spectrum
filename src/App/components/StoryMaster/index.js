@@ -207,9 +207,7 @@ class StoryMaster extends Component {
             {stories.stories.length > 0 &&
               // slice and reverse makes sure our stories show up in revers chron order
               sortedStories.slice().reverse().map((story, i) => {
-                return (
-                  <StoryCard urlBase={urlBase} data={story} key={i} />
-                );
+                return <StoryCard urlBase={urlBase} data={story} key={i} />;
               })}
 
             {currentFrequency &&

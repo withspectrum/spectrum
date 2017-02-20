@@ -93,36 +93,35 @@ class StoryCard extends Component {
       <Card selected={story.id === this.props.stories.active}>
         <Link to={`/${this.props.urlBase}/${story.id}`}>
           <LinkWrapper>
-          <StoryHeader>
-            <Avatar
-              src={story.creator.photoURL}
-              alt={story.creator.displayName}
-            />
-            <UserMeta>
-              <Name>{story.creator.displayName}</Name>
-              <Meta>
-                {timeDifference(currentTime, timestamp)}&nbsp;•&nbsp;{story.message_count > 0
-                  ? `${story.message_count} messages`
-                  : 'No messages yet'}
-              </Meta>
-            </UserMeta>
-          </StoryHeader>
-          <StoryBody>
-            <Title>{story.content.title}</Title>
-            {story.content.media && story.content.media !== ''
-              ? <Media src={story.content.media} onClick={this.showGallery} />
-              : ''}
-          </StoryBody>
+            <StoryHeader>
+              <Avatar
+                src={story.creator.photoURL}
+                alt={story.creator.displayName}
+              />
+              <UserMeta>
+                <Name>{story.creator.displayName}</Name>
+                <Meta>
+                  {timeDifference(currentTime, timestamp)}
+                  &nbsp;•&nbsp;
+                  {story.message_count > 0
+                    ? `${story.message_count} messages`
+                    : 'No messages yet'}
+                </Meta>
+              </UserMeta>
+            </StoryHeader>
+            <StoryBody>
+              <Title>{story.content.title}</Title>
+              {story.content.media && story.content.media !== ''
+                ? <Media src={story.content.media} onClick={this.showGallery} />
+                : ''}
+            </StoryBody>
           </LinkWrapper>
         </Link>
         <Link to={`/${story.frequency}`}>
           <MetaFreq>
-          {
-            this.props.frequencies.active === 'all' && frequency ?
-              `~${frequency.name}`
-            :
-              ``
-          }
+            {this.props.frequencies.active === 'all' && frequency
+              ? `~${frequency.name}`
+              : ``}
           </MetaFreq>
         </Link>
       </Card>

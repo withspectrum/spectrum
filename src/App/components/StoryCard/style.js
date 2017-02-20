@@ -21,8 +21,8 @@ export const Card = styled.div`
 css`
 		&:hover {
 			box-shadow: ${Shadow.high} ${props.selected
-	    ? `, inset -32px 0 0 -16px ${props.theme.brand.default}`
-	    : ``};
+  ? `, inset -32px 0 0 -16px ${props.theme.brand.default}`
+  : ``};
 			transition: all 0.2s ease-out;
 			cursor: pointer;
 		}
