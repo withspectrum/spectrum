@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { Shadow, H4, H5 } from '../../../shared/Globals';
 
-export const StoryWrapper = styled.div`
+export const Card = styled.div`
 	display: inline-block;
 	width: calc(100% - 16px);
 	margin: 8px;
@@ -19,19 +19,27 @@ export const StoryWrapper = styled.div`
 
 	${props => !props.static && css`
 		&:hover {
-			box-shadow: ${Shadow.high}, inset ${props.selected
-	    ? `-24px 0 0 -8px ${props.theme.brand.default}`
-	    : `-16px 0 0 -8px ${props.theme.border.default}`};
+			box-shadow: ${Shadow.high} ${props.selected
+	    ? `, inset -32px 0 0 -16px ${props.theme.brand.default}`
+	    : ``};
 			transition: all 0.2s ease-out;
 			cursor: pointer;
 		}
 	`}
 `;
 
+export const LinkWrapper = styled.div`
+	display: flex;
+	flex-direction: column;
+	flex: 0 0 auto;
+	background-color: #ffffff;
+`;
+
 export const StoryBody = styled.div`
 	display: inline-block;
 	margin-top: 16px;
 	font-size: 14px;
+	flex: 0 0 auto;
 `;
 
 export const Avatar = styled.img`
@@ -45,6 +53,7 @@ export const Avatar = styled.img`
 export const StoryHeader = styled.div`
   display: flex;
   align-items: center;
+  flex: 0 0 auto;
 `;
 
 export const Title = styled.p`
@@ -83,7 +92,7 @@ export const Meta = styled(H5)`
 
 export const MetaFreq = styled(Meta)`
   color: ${({ theme }) => theme.text.placeholder};
-  font-weight: 400;
+  font-weight: 700;
   transition: color 0.2s ease-out;
 
   &:hover {

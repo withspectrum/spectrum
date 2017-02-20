@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
 import {
   Column,
   Header,
@@ -200,9 +199,7 @@ class StoryMaster extends Component {
               // slice and reverse makes sure our stories show up in revers chron order
               sortedStories.slice().reverse().map((story, i) => {
                 return (
-                  <Link to={`/${urlBase}/${story.id}`} key={i}>
-                    <StoryCard data={story} key={i} />
-                  </Link>
+                  <StoryCard urlBase={urlBase} data={story} key={i} />
                 );
               })}
 

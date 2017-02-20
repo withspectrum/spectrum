@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 // eslint-disable-next-line
 import {
-  StoryWrapper,
+  Card,
+  LinkWrapper,
   StoryBody,
   StoryHeader,
   Avatar,
@@ -17,7 +18,7 @@ import {
 import helpers from '../../../helpers';
 import actions from '../../../actions';
 
-class Story extends Component {
+class StoryCard extends Component {
   showGallery = e => {
     let arr = [];
     arr.push(e.target.src);
@@ -86,39 +87,44 @@ class Story extends Component {
     }
 
     return (
-      <StoryWrapper selected={story.id === this.props.stories.active}>
-        <StoryHeader>
-          <Avatar
-            src={story.creator.photoURL}
-            alt={story.creator.displayName}
-          />
-          <UserMeta>
-            <Name>{story.creator.displayName}</Name>
-            <Meta>
-              {timeDifference(currentTime, timestamp)}&nbsp;•&nbsp;{story.message_count > 0
-                ? `${story.message_count} messages`
-                : 'No messages yet'}
-            </Meta>
-          </UserMeta>
-        </StoryHeader>
-        <StoryBody>
+      <Card selected={story.id === this.props.stories.active}>
+        <Link to={`/${this.props.urlBase}/${story.id}`}>
+          <LinkWrapper>
+          <StoryHeader>
+            <Avatar
+              src={story.creator.photoURL}
+              alt={story.creator.displayName}
+            />
+            <UserMeta>
+              <Name>{story.creator.displayName}</Name>
+              <Meta>
+                {timeDifference(currentTime, timestamp)}&nbsp;•&nbsp;{story.message_count > 0
+                  ? `${story.message_count} messages`
+                  : 'No messages yet'}
+              </Meta>
+            </UserMeta>
+          </StoryHeader>
+          <StoryBody>
 
-          <Title>{story.content.title}</Title>
+            <Title>{story.content.title}</Title>
 
-          {story.content.media && story.content.media !== ''
-            ? <Media src={story.content.media} onClick={this.showGallery} />
-            : ''}
-          <Link to={`/${story.frequency}`}>
-            <MetaFreq>{
-                  this.props.frequencies.active === 'all' && frequency ?
-                    `~${frequency.name}`
-                  :
-                    ``
-                }
-            </MetaFreq>
-          </Link>
-        </StoryBody>
-      </StoryWrapper>
+            {story.content.media && story.content.media !== ''
+              ? <Media src={story.content.media} onClick={this.showGallery} />
+              : ''}
+          </StoryBody>
+          </LinkWrapper>
+        </Link>
+        <Link to={`/${story.frequency}`}>
+          <MetaFreq>
+          {
+            this.props.frequencies.active === 'all' && frequency ?
+              `~${frequency.name}`
+            :
+              ``
+          }
+          </MetaFreq>
+        </Link>
+      </Card>
     );
   }
 }
@@ -131,4 +137,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Story);
+export default connect(mapStateToProps)(StoryCard);
