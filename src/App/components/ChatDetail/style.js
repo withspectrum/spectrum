@@ -18,13 +18,17 @@ export const Bubble = styled.p`
 	margin-top: 2px;
 	font-size: 14px;
 	max-width: 60%;
-	line-height: 1.4;
+	line-height: 20px;
 
 	&:first-of-type {
 		margin-top: 0;
 	}
 
-  a { text-decoration: underline; }
+  a { 
+  	text-decoration: underline;
+  	word-wrap: break-word;
+  	line-height: inherit; 
+  }
 `;
 
 export const BubbleGroup = styled.div`

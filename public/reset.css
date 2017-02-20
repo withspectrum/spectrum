@@ -158,6 +158,8 @@ body {
   padding-bottom: 2px;
   font-size: inherit;
   transition: all 0.2s ease-out;
+  word-wrap: break-word;
+  line-height: inherit;
 }
 
 .markdown a:visited {
