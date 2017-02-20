@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import actions from '../../../actions';
-import helpers from '../../../helpers';
+import { sendMessage } from '../../../actions/messages';
+import { uploadMedia } from '../../../helpers/stories';
 import { connect } from 'react-redux';
 import { Input, Form, Footer, Button, MediaInput, MediaLabel } from './style';
 
@@ -9,7 +9,7 @@ class ChatInput extends Component {
     super();
     this.state = {
       message: '',
-      file: ''
+      file: '',
     };
   }
 
@@ -22,44 +22,45 @@ class ChatInput extends Component {
   sendMessage = e => {
     e.preventDefault();
     const messageText = this.state.message.trim();
-    if (messageText === '') return
+    if (messageText === '') return;
     let messageObj = {
       type: 'text',
-      content: messageText
-    }
+      content: messageText,
+    };
 
-    this.props.dispatch(actions.sendMessage(messageObj));
+    this.props.dispatch(sendMessage(messageObj));
 
     this.setState({
       message: '',
     });
   };
 
-  sendMediaMessage = (e) => {
-    let user = this.props.user
-    let file = e.target.files[0]
-    let activeStory = this.props.stories.active
+  sendMediaMessage = e => {
+    let user = this.props.user;
+    let file = e.target.files[0];
+    let activeStory = this.props.stories.active;
 
     this.props.dispatch({
-      type: 'LOADING'
-    })
+      type: 'LOADING',
+    });
 
-    helpers.uploadMedia(file, activeStory, user)
-      .then((file) => {
+    uploadMedia(file, activeStory, user)
+      .then(file => {
         let messageObj = {
           type: 'media',
-          content: file
-        }
+          content: file,
+        };
 
         this.props.dispatch({
-          type: 'STOP_LOADING'
-        })
+          type: 'STOP_LOADING',
+        });
 
-        this.props.dispatch(actions.sendMessage(messageObj))
-      }).catch(err => {
-        if (err) console.log('Error while uploading image to message: ', err)
+        this.props.dispatch(sendMessage(messageObj));
       })
-  }
+      .catch(err => {
+        if (err) console.log('Error while uploading image to message: ', err);
+      });
+  };
 
   render() {
     return (

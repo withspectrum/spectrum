@@ -24,7 +24,7 @@ export default function root(state = initialState, action) {
     case 'SHOW_MARKETING_PAGE':
       return Object.assign({}, state, {
         notregistered: true,
-      })
+      });
     default:
       return state;
   }

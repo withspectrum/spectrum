@@ -5,7 +5,9 @@ import { Body } from './style';
 import StoryMaster from './components/StoryMaster';
 import DetailView from './components/DetailView';
 import LoadingIndicator from '../shared/loading';
-import actions from '../actions';
+import { setActiveFrequency } from '../actions/frequencies';
+import { setActiveStory, setStories } from '../actions/stories';
+import { setMessages } from '../actions/messages';
 
 class App extends Component {
   componentWillMount() {
@@ -13,11 +15,11 @@ class App extends Component {
 
     const activeFrequencyParam = params.frequency || 'all';
     const activeStoryParam = params.story || '';
-    dispatch(actions.setActiveFrequency(activeFrequencyParam));
+    dispatch(setActiveFrequency(activeFrequencyParam));
 
     if (activeStoryParam) {
-      dispatch(actions.setActiveStory(activeStoryParam));
-      dispatch(actions.setMessages());
+      dispatch(setActiveStory(activeStoryParam));
+      dispatch(setMessages());
     }
   }
 
@@ -28,13 +30,13 @@ class App extends Component {
   componentWillReceiveProps(nextProps) {
     const { dispatch, params } = this.props;
     if (nextProps.params.frequency !== params.frequency) {
-      dispatch(actions.setActiveFrequency(nextProps.params.frequency));
-      dispatch(actions.setStories());
+      dispatch(setActiveFrequency(nextProps.params.frequency));
+      dispatch(setStories());
     }
 
     if (nextProps.params.story !== params.frequency) {
-      dispatch(actions.setActiveStory(nextProps.params.story));
-      dispatch(actions.setMessages());
+      dispatch(setActiveStory(nextProps.params.story));
+      dispatch(setMessages());
     }
   }
 

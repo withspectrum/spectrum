@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import helpers from '../helpers';
+import { fetchStoriesForFrequencies } from '../helpers/stories';
 
 /*------------------------------------------------------------\*
 *
@@ -40,7 +40,7 @@ setStories
 *
 \*------------------------------------------------------------*/
 export const setStories = () => (dispatch, getState) => {
-  dispatch({ type: 'LOADING' })
+  dispatch({ type: 'LOADING' });
   let { user } = setup(getState());
   let userFrequencies = user.frequencies;
 
@@ -64,8 +64,7 @@ export const setStories = () => (dispatch, getState) => {
     });
   };
 
-  helpers
-    .fetchStoriesForFrequencies(userFrequencies)
+  fetchStoriesForFrequencies(userFrequencies)
     .then(storiesGroupedByFrequency => {
       /*  this returns an array of arrays
         it looks like this:
@@ -96,27 +95,24 @@ createStory
 
 *
 \*------------------------------------------------------------*/
-export const publishStory = (story) => (
-  dispatch,
-  getState,
-) => {
-  dispatch({ type: 'LOADING' })
+export const publishStory = story => (dispatch, getState) => {
+  dispatch({ type: 'LOADING' });
 
   return new Promise((resolve, reject) => {
-    let state = getState()
-    let storyKey = state.composer.newStoryKey
-    let user = state.user
-    let uid = user.uid
+    let state = getState();
+    let storyKey = state.composer.newStoryKey;
+    let user = state.user;
+    let uid = user.uid;
 
     let storyRef = firebase.database().ref().child(`stories/${storyKey}`);
-    
+
     let storyData = {
       id: storyKey, // we need this id again in the CREATE_STORY reducer
       published: true,
       timestamp: firebase.database.ServerValue.TIMESTAMP,
       content: {
         title: story.title,
-        description: story.body
+        description: story.body,
       },
       creator: {
         displayName: user.displayName,
@@ -145,18 +141,17 @@ export const publishStory = (story) => (
           isOpen: false,
         });
 
-        resolve()
+        resolve();
       }
     });
-
-  })
+  });
 };
 
 export const initStory = () => (dispatch, getState) => {
   return new Promise((resolve, reject) => {
-    let state = getState()
-    let user = state.user
-    let uid = user.uid
+    let state = getState();
+    let user = state.user;
+    let uid = user.uid;
     let newStoryRef = firebase.database().ref().child('stories').push();
     let newStoryKey = newStoryRef.key;
 
@@ -168,7 +163,7 @@ export const initStory = () => (dispatch, getState) => {
         displayName: user.displayName,
         photoURL: user.photoURL,
         uid,
-      }
+      },
     };
 
     newStoryRef.set(draft, err => {
@@ -177,14 +172,14 @@ export const initStory = () => (dispatch, getState) => {
       } else {
         dispatch({
           type: 'CREATE_DRAFT',
-          newStoryKey
+          newStoryKey,
         });
 
-        resolve()
+        resolve();
       }
     });
-  })
-}
+  });
+};
 
 export const setActiveStory = id => ({
   type: 'SET_ACTIVE_STORY',
@@ -192,7 +187,7 @@ export const setActiveStory = id => ({
 });
 
 export const deleteStory = id => (dispatch, getState) => {
-  dispatch({ type: 'LOADING' })
+  dispatch({ type: 'LOADING' });
 
   firebase.database().ref(`/stories/${id}`).remove(); // delete the story
   firebase.database().ref(`/messages/${id}`).remove(); // delete the messages for the story
@@ -213,7 +208,7 @@ export const deleteStory = id => (dispatch, getState) => {
 };
 
 export const toggleLockedStory = story => dispatch => {
-  dispatch({ type: 'LOADING' })
+  dispatch({ type: 'LOADING' });
   const id = story.id;
   const locked = story.locked ? story.locked : false; // if we haven't set a 'locked' status on the story, it defaults to false (which means people can write messages)
 
@@ -226,13 +221,4 @@ export const toggleLockedStory = story => dispatch => {
     id,
     locked,
   });
-};
-
-export default {
-  setStories,
-  initStory,
-  publishStory,
-  setActiveStory,
-  deleteStory,
-  toggleLockedStory,
 };

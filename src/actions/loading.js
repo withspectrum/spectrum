@@ -1,12 +1,7 @@
 export const loading = () => ({
-	type: 'LOADING'
-})
+  type: 'LOADING',
+});
 
 export const stopLoading = () => ({
-	type: 'STOP_LOADING'
-})
-
-export default {
-  loading,
-  stopLoading
-};
+  type: 'STOP_LOADING',
+});

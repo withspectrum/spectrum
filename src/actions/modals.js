@@ -14,8 +14,3 @@ export const showModal = name => ({
 export const hideModal = () => ({
   type: 'HIDE_MODAL',
 });
-
-export default {
-  showModal,
-  hideModal,
-};

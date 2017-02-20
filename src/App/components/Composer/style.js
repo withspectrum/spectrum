@@ -76,7 +76,7 @@ export const Upload = styled.input`
 	font-size: 0.75rem;
 	margin: 0.5rem 0 1rem;
 	background: transparent;
-`
+`;
 
 export const SubmitContainer = styled.div`
 	display: flex;
@@ -85,13 +85,15 @@ export const SubmitContainer = styled.div`
 	width: 100%;
 	border-top: 1px solid ${props => props.theme.border.default};
 	padding: 1rem 0;
-`
+`;
 
 export const Submit = styled.input`
-	background-color: ${props => 
-		props.active ? props.theme.brand.default : props.theme.text.placeholder};
-  background-image: ${props => 
-  	props.active ? Gradient(props.theme.brand.alt, props.theme.brand.default) : props.theme.text.placeholder};
+	background-color: ${props =>
+  props.active ? props.theme.brand.default : props.theme.text.placeholder};
+  background-image: ${props =>
+  props.active
+    ? Gradient(props.theme.brand.alt, props.theme.brand.default)
+    : props.theme.text.placeholder};
   color: #fff;
   border-radius: 8px;
   padding: 0.5rem 1rem;
@@ -102,7 +104,7 @@ export const Submit = styled.input`
   &:hover {
   	cursor: pointer;
   }
-`
+`;
 
 export const MediaInput = styled.input`
 	width: 0.1px;
@@ -128,32 +130,31 @@ export const MediaLabel = styled.label`
 	}
 `;
 
-
 // these are style objects because i'm custom styling another react component to handle autoresizign
 export const StoryTitle = {
-	fontSize: "32px",
-	padding: "0",
-	outline: "none",
-	border: "0",
-	lineHeight: "40px",
-	fontWeight: "800",
-	boxShadow: "none",
-	width: "100%",
-	color: "#171A21",
-	whiteSpace: "pre-wrap"
-}
+  fontSize: '32px',
+  padding: '0',
+  outline: 'none',
+  border: '0',
+  lineHeight: '40px',
+  fontWeight: '800',
+  boxShadow: 'none',
+  width: '100%',
+  color: '#171A21',
+  whiteSpace: 'pre-wrap',
+};
 
 export const TextBody = {
-	marginTop: "16px",
-	fontSize: "16px",
-	width: "100%",
-	display: "inline-block",
-	marginBottom: "32px",
-	lineHeight: "1.6",
-	padding: "0",
-	outline: "none",
-	border: "0",
-	boxShadow: "none",
-	color: "#171A21",
-	whiteSpace: "pre-wrap"
-}
+  marginTop: '16px',
+  fontSize: '16px',
+  width: '100%',
+  display: 'inline-block',
+  marginBottom: '32px',
+  lineHeight: '1.6',
+  padding: '0',
+  outline: 'none',
+  border: '0',
+  boxShadow: 'none',
+  color: '#171A21',
+  whiteSpace: 'pre-wrap',
+};

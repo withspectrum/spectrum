@@ -15,19 +15,22 @@ import {
   Title,
   Media,
 } from './style';
-import helpers from '../../../helpers';
-import actions from '../../../actions';
+import { getCurrentFrequency } from '../../../helpers/frequencies';
+import { showGallery } from '../../../actions/gallery';
 
 class StoryCard extends Component {
   showGallery = e => {
     let arr = [];
     arr.push(e.target.src);
-    this.props.dispatch(actions.showGallery(arr));
+    this.props.dispatch(showGallery(arr));
   };
 
   render() {
     const story = this.props.data;
-    const frequency = helpers.getCurrentFrequency(story.frequency, this.props.frequencies.frequencies);
+    const frequency = getCurrentFrequency(
+      story.frequency,
+      this.props.frequencies.frequencies,
+    );
     const timestamp = story.timestamp;
     let currentTime = Date.now();
 
@@ -105,9 +108,7 @@ class StoryCard extends Component {
             </UserMeta>
           </StoryHeader>
           <StoryBody>
-
             <Title>{story.content.title}</Title>
-
             {story.content.media && story.content.media !== ''
               ? <Media src={story.content.media} onClick={this.showGallery} />
               : ''}

@@ -17,7 +17,8 @@ export const Card = styled.div`
     ? `-16px 0 0 -8px ${props.theme.brand.default}`
     : `0px 0 0 0px transparent`};
 
-	${props => !props.static && css`
+	${props => !props.static &&
+css`
 		&:hover {
 			box-shadow: ${Shadow.high} ${props.selected
 	    ? `, inset -32px 0 0 -16px ${props.theme.brand.default}`

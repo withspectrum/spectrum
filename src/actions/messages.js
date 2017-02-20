@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import helpers from '../helpers';
+import { hashToArray, sortAndGroupBubbles } from '../helpers/utils';
 import fetch from 'whatwg-fetch-importable';
 import Autolinker from 'autolinker';
 
@@ -40,7 +40,7 @@ Fetches all messages for the active story.
 *
 \*------------------------------------------------------------*/
 export const setMessages = () => (dispatch, getState) => {
-  dispatch({ type: 'LOADING' })
+  dispatch({ type: 'LOADING' });
 
   let { stories, database } = setup(getState());
   let activeStory = stories.active;
@@ -55,13 +55,13 @@ export const setMessages = () => (dispatch, getState) => {
     snapshot => {
       const val = snapshot.val();
       if (!val) {
-        dispatch({ type: 'STOP_LOADING' })
+        dispatch({ type: 'STOP_LOADING' });
         return;
       }
       // convert the messages into an array
-      let messagesArray = helpers.hashToArray(val);
+      let messagesArray = hashToArray(val);
       // and pass our array to be sorted into groups based on the user who posted the message
-      let sortedMessages = helpers.sortAndGroupBubbles(messagesArray);
+      let sortedMessages = sortAndGroupBubbles(messagesArray);
       // send the sorted messages to redux
       dispatch({
         type: 'SET_MESSAGES',
@@ -137,9 +137,4 @@ export const sendMessage = message => (dispatch, getState) => {
         newMessageRef.update(messageData);
       });
   }
-};
-
-export default {
-  setMessages,
-  sendMessage,
 };
