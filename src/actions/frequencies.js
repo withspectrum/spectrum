@@ -288,12 +288,3 @@ export const toggleFrequencyPrivacy = () => (dispatch, getState) => {
     }
   });
 };
-
-export default {
-  setFrequencies,
-  addFrequency,
-  setActiveFrequency,
-  subscribeFrequency,
-  unsubscribeFrequency,
-  toggleFrequencyPrivacy,
-};

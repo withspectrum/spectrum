@@ -138,8 +138,3 @@ export const sendMessage = message => (dispatch, getState) => {
       });
   }
 };
-
-export default {
-  setMessages,
-  sendMessage,
-};

@@ -13,7 +13,17 @@ import {
   TipButton,
   Overlay
 } from './style';
-import actions from '../../../actions';
+import {
+  toggleComposer
+} from '../../../actions/composer';
+import {
+  toggleFrequencyPrivacy,
+  unsubscribeFrequency,
+  subscribeFrequency
+} from '../../../actions/frequencies';
+import {
+  login,
+} from '../../../actions/user';
 import helpers from '../../../helpers';
 import { Lock, Unlock, NewPost, ClosePost } from '../../../shared/Icons';
 import StoryCard from '../StoryCard';
@@ -21,24 +31,24 @@ import ShareCard from '../ShareCard';
 
 class StoryMaster extends Component {
   toggleComposer = () => {
-    this.props.dispatch(actions.toggleComposer());
+    this.props.dispatch(toggleComposer());
   };
 
   togglePrivacy = () => {
-    this.props.dispatch(actions.toggleFrequencyPrivacy());
+    this.props.dispatch(toggleFrequencyPrivacy());
   };
 
   unsubscribeFrequency = () => {
-    this.props.dispatch(actions.unsubscribeFrequency());
+    this.props.dispatch(unsubscribeFrequency());
   };
 
   subscribeFrequency = () => {
-    this.props.dispatch(actions.subscribeFrequency());
+    this.props.dispatch(subscribeFrequency());
   };
 
   login = e => {
     e.preventDefault();
-    this.props.dispatch(actions.login());
+    this.props.dispatch(login());
   };
 
   sortArrayByKey = (array, key) => {

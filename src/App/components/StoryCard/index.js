@@ -15,13 +15,15 @@ import {
   Media,
 } from './style';
 import helpers from '../../../helpers';
-import actions from '../../../actions';
+import {
+  showGallery
+} from '../../../actions/gallery';
 
 class Story extends Component {
   showGallery = e => {
     let arr = [];
     arr.push(e.target.src);
-    this.props.dispatch(actions.showGallery(arr));
+    this.props.dispatch(showGallery(arr));
   };
 
   render() {

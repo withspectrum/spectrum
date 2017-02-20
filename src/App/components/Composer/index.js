@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import actions from '../../../actions';
+import {
+  updateTitle,
+  updateBody,
+} from '../../../actions/composer';
+import {
+  publishStory,
+  initStory,
+} from '../../../actions/stories';
+import {
+  setMessages
+} from '../../../actions/messages';
 import helpers from '../../../helpers';
 import Textarea from 'react-textarea-autosize';
 
@@ -38,15 +48,15 @@ class Composer extends Component {
     // if a draft already exists, no need to init another
     if (this.props.composer.newStoryKey) return
     // otherwise init a new draft
-    this.props.dispatch(actions.initStory())
+    this.props.dispatch(initStory())
   }
 
   changeTitle = (e) => {
-    this.props.dispatch(actions.updateTitle(e.target.value))
+    this.props.dispatch(updateTitle(e.target.value))
   };
 
   changeBody = (e) => {
-    this.props.dispatch(actions.updateBody(e.target.value))
+    this.props.dispatch(updateBody(e.target.value))
   };
 
   selectFrequencyFromDropdown = (e) => {
@@ -63,14 +73,14 @@ class Composer extends Component {
 
     // disable the submit button until uploads are done
     this.setState({ loading: true })
-    
+
     helpers.uploadMultipleMedia(files, story, user)
       .then((filesArr) => {
         for (let file of filesArr) {
           body = `${body}\n![](${file})\n`
-          this.props.dispatch(actions.updateBody(body))
+          this.props.dispatch(updateBody(body))
         }
-        
+
         this.setState({
           loading: false
         })
@@ -98,9 +108,9 @@ class Composer extends Component {
     }
 
     if (frequency && title) { // if everything is filled out
-      this.props.dispatch( actions.publishStory(newStoryObj))
+      this.props.dispatch(publishStory(newStoryObj))
       .then(() => { // after the story is created, we need to set messages so that the chat will work right away
-        this.props.dispatch( actions.setMessages() )
+        this.props.dispatch(setMessages() )
       });
     } else if (!frequency && title) { // if no frequency is chosen
       this.setState({
@@ -131,7 +141,7 @@ class Composer extends Component {
             <Select
               onChange={this.selectFrequencyFromDropdown}
               defaultValue={frequencies.frequencies[0].id}>
-              
+
               {frequencies.frequencies.map((frequency, i) => {
                 return (
                   <option key={i} value={frequency.id}>
@@ -153,14 +163,14 @@ class Composer extends Component {
 
               <form onSubmit={this.publishStory} encType="multipart/form-data">
                 <Byline>New Story</Byline>
-                <Textarea 
+                <Textarea
                   onChange={this.changeTitle}
-                  style={StoryTitle} 
+                  style={StoryTitle}
                   value={composer.title}
-                  placeholder={"What's up?"} 
+                  placeholder={"What's up?"}
                   autoFocus></Textarea>
-                
-                <Textarea 
+
+                <Textarea
                   onChange={this.changeBody}
                   value={composer.body}
                   style={TextBody}
@@ -172,7 +182,7 @@ class Composer extends Component {
                   id="file"
                   name="file"
                   accept=".png, .jpg, .jpeg, .gif"
-                  multiple={true} 
+                  multiple={true}
                   onChange={this.uploadMedia}
                 />
                 <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>

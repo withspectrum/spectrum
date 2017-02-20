@@ -17,7 +17,13 @@ import {
   HiddenLabel,
   HiddenInput,
 } from './style';
-import actions from '../../../actions';
+import {
+  showGallery
+} from '../../../actions/gallery';
+import {
+  toggleLockedStory,
+  deleteStory
+} from '../../../actions/stories';
 
 class StoryView extends Component {
   componentDidMount() {
@@ -34,13 +40,13 @@ class StoryView extends Component {
     let story = this.refs.story
     let imageNodes = story.querySelectorAll('img')
 
-    for (let image of imageNodes) {      
+    for (let image of imageNodes) {
       image.addEventListener('click', this.showGallery, false)
     }
   }
 
   showGallery = (e) => {
-    this.props.dispatch(actions.showGallery(e))
+    this.props.dispatch(showGallery(e))
   }
 
   scrollToBottom = () => {
@@ -63,12 +69,12 @@ class StoryView extends Component {
 
   deleteStory = () => {
     let story = this.getActiveStory();
-    this.props.dispatch(actions.deleteStory(story.id));
+    this.props.dispatch(deleteStory(story.id));
   };
 
   toggleLockedStory = () => {
     let story = this.getActiveStory();
-    this.props.dispatch(actions.toggleLockedStory(story));
+    this.props.dispatch(toggleLockedStory(story));
   };
 
   render() {
@@ -116,7 +122,7 @@ class StoryView extends Component {
               : ''}
           </Header>
           <div className="markdown" ref="story">
-            <Markdown               
+            <Markdown
               options={{
                 html: true,
                 linkify: true

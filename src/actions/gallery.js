@@ -63,8 +63,3 @@ export const showGallery = (e) => (dispatch, getState) => {
 export const hideGallery = () => ({
   type: 'HIDE_GALLERY',
 });
-
-export default {
-  showGallery,
-  hideGallery,
-};

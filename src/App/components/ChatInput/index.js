@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import actions from '../../../actions';
+import { sendMessage } from '../../../actions/messages';
 import helpers from '../../../helpers';
 import { connect } from 'react-redux';
 import { Input, Form, Footer, Button, MediaInput, MediaLabel } from './style';
@@ -28,7 +28,7 @@ class ChatInput extends Component {
       content: messageText
     }
 
-    this.props.dispatch(actions.sendMessage(messageObj));
+    this.props.dispatch(sendMessage(messageObj));
 
     this.setState({
       message: '',
@@ -55,7 +55,7 @@ class ChatInput extends Component {
           type: 'STOP_LOADING'
         })
 
-        this.props.dispatch(actions.sendMessage(messageObj))
+        this.props.dispatch(sendMessage(messageObj))
       }).catch(err => {
         if (err) console.log('Error while uploading image to message: ', err)
       })
