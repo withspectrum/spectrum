@@ -118,7 +118,7 @@ class StoryMaster extends Component {
 
       if (!usersFrequencies) {
         return '';
-      } else if (keys.indexOf(activeFrequency) > -1) {
+      } else if (keys.indexOf(currentFrequency.id) > -1) {
         return (
           <TipButton
             onClick={this.toggleComposer}
