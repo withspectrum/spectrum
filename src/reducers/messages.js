@@ -9,7 +9,7 @@ export default function root(state = initialState, action) {
         messages: {
           ...state.messages,
           [action.story]: action.messages,
-        }
+        },
       });
     default:
       return state;

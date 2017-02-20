@@ -12,12 +12,12 @@ export const toggleComposer = () => ({
   type: 'TOGGLE_COMPOSER_OPEN',
 });
 
-export const updateTitle = (title) => ({
+export const updateTitle = title => ({
   type: 'UPDATE_TITLE',
-  title
+  title,
 });
 
-export const updateBody = (body) => ({
+export const updateBody = body => ({
   type: 'UPDATE_BODY',
-  body
+  body,
 });

@@ -1,16 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  updateTitle,
-  updateBody,
-} from '../../../actions/composer';
-import {
-  publishStory,
-  initStory,
-} from '../../../actions/stories';
-import {
-  setMessages
-} from '../../../actions/messages';
+import { updateTitle, updateBody } from '../../../actions/composer';
+import { publishStory, initStory } from '../../../actions/stories';
+import { setMessages } from '../../../actions/messages';
 import { uploadMultipleMedia } from '../../../helpers/stories';
 import Textarea from 'react-textarea-autosize';
 
@@ -27,74 +19,75 @@ import {
   Submit,
   SubmitContainer,
   MediaInput,
-  MediaLabel
+  MediaLabel,
 } from './style';
 
 class Composer extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    let { user } = props
-    let userFreqs = Object.keys(user.frequencies)
+    let { user } = props;
+    let userFreqs = Object.keys(user.frequencies);
 
     this.state = {
       error: null,
       frequencyPicker: userFreqs ? userFreqs[0] : '',
-      loading: false
-    }
+      loading: false,
+    };
   }
 
   componentDidMount() {
     // if a draft already exists, no need to init another
-    if (this.props.composer.newStoryKey) return
+    if (this.props.composer.newStoryKey) return;
     // otherwise init a new draft
-    this.props.dispatch(initStory())
+    this.props.dispatch(initStory());
   }
 
-  changeTitle = (e) => {
-    this.props.dispatch(updateTitle(e.target.value))
+  changeTitle = e => {
+    this.props.dispatch(updateTitle(e.target.value));
   };
 
-  changeBody = (e) => {
-    this.props.dispatch(updateBody(e.target.value))
+  changeBody = e => {
+    this.props.dispatch(updateBody(e.target.value));
   };
 
-  selectFrequencyFromDropdown = (e) => {
+  selectFrequencyFromDropdown = e => {
     this.setState({
       frequencyPicker: e.target.value,
     });
   };
 
-  uploadMedia = (e) => {
-    let user = this.props.user
-    let files = e.target.files
-    let body = this.props.composer.body
-    let story = this.props.composer.newStoryKey
+  uploadMedia = e => {
+    let user = this.props.user;
+    let files = e.target.files;
+    let body = this.props.composer.body;
+    let story = this.props.composer.newStoryKey;
 
     // disable the submit button until uploads are done
-    this.setState({ loading: true })
+    this.setState({ loading: true });
 
     uploadMultipleMedia(files, story, user)
-      .then((filesArr) => {
+      .then(filesArr => {
         for (let file of filesArr) {
-          body = `${body}\n![](${file})\n`
-          this.props.dispatch(updateBody(body))
+          body = `${body}\n![](${file})\n`;
+          this.props.dispatch(updateBody(body));
         }
 
         this.setState({
-          loading: false
-        })
-      }).catch((e) => {
-        this.setState({
-          error: e
-        })
+          loading: false,
+        });
       })
-  }
+      .catch(e => {
+        this.setState({
+          error: e,
+        });
+      });
+  };
 
-  publishStory = (e) => {
-    e.preventDefault()
-    let title = this.props.composer.title
-    let body = this.props.composer.body
+  publishStory = e => {
+    e.preventDefault();
+    let title = this.props.composer.title;
+    let body = this.props.composer.body;
     // if we pass in a custom frequency, it means the user is in 'all' and has selected a frequency from the dropdown
     // if the user isn't in all, we'll send the currently active frequency via the redux state
     let frequency = this.props.frequencies.active === 'all'
@@ -104,43 +97,48 @@ class Composer extends Component {
     let newStoryObj = {
       frequency,
       title,
-      body
-    }
+      body,
+    };
 
-    if (frequency && title) { // if everything is filled out
-      this.props.dispatch(publishStory(newStoryObj))
-      .then(() => { // after the story is created, we need to set messages so that the chat will work right away
-        this.props.dispatch(setMessages() )
+    if (frequency && title) {
+      // if everything is filled out
+      this.props.dispatch(publishStory(newStoryObj)).then(() => {
+        // after the story is created, we need to set messages so that the chat will work right away
+        this.props.dispatch(setMessages());
       });
-    } else if (!frequency && title) { // if no frequency is chosen
+    } else if (!frequency && title) {
+      // if no frequency is chosen
       this.setState({
-        error: 'Choose a frequency to share this story to!'
-      })
-    } else if (!title) { // missing a title
+        error: 'Choose a frequency to share this story to!',
+      });
+    } else if (!title) {
+      // missing a title
       this.setState({
-        error: "Be sure to type a title!"
-      })
-    } else { // something else went wrong...
+        error: 'Be sure to type a title!',
+      });
+    } else {
+      // something else went wrong...
       this.setState({
-        error: "Oops!"
-      })
+        error: 'Oops!',
+      });
     }
-  }
-
+  };
 
   render() {
-    let { frequencies, composer } = this.props
-    let activeFrequency = frequencies.active
-    let currentFrequency = frequencies.frequencies.filter((freq) => {
-      return freq.id === activeFrequency
-    })
+    let { frequencies, composer } = this.props;
+    let activeFrequency = frequencies.active;
+    let currentFrequency = frequencies.frequencies.filter(freq => {
+      return freq.id === activeFrequency;
+    });
 
-    let byline = activeFrequency === "all"
+    let byline = activeFrequency === 'all'
       ? <span>
-            <Byline>Post in
+          <Byline>
+            Post in
             <Select
               onChange={this.selectFrequencyFromDropdown}
-              defaultValue={frequencies.frequencies[0].id}>
+              defaultValue={frequencies.frequencies[0].id}
+            >
 
               {frequencies.frequencies.map((frequency, i) => {
                 return (
@@ -153,7 +151,7 @@ class Composer extends Component {
             </Select>
           </Byline>
         </span>
-      : <Byline>New Story in {currentFrequency[0].name}</Byline>
+      : <Byline>New Story in {currentFrequency[0].name}</Byline>;
 
     return (
       <ScrollBody>
@@ -168,13 +166,15 @@ class Composer extends Component {
                   style={StoryTitle}
                   value={composer.title}
                   placeholder={"What's up?"}
-                  autoFocus></Textarea>
+                  autoFocus
+                />
 
                 <Textarea
                   onChange={this.changeBody}
                   value={composer.body}
                   style={TextBody}
-                  placeholder={"Say more words..."}></Textarea>
+                  placeholder={'Say more words...'}
+                />
 
                 <MediaInput
                   ref="media"
@@ -187,8 +187,13 @@ class Composer extends Component {
                 />
                 <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
                 <SubmitContainer>
-                  { byline }
-                  <Submit type="submit" disabled={this.state.loading} value={this.state.loading ? "Loading..." : "Post Story"} active={composer.title} />
+                  {byline}
+                  <Submit
+                    type="submit"
+                    disabled={this.state.loading}
+                    value={this.state.loading ? 'Loading...' : 'Post Story'}
+                    active={composer.title}
+                  />
                 </SubmitContainer>
 
                 {this.state.error && <Alert>{this.state.error}</Alert>}
@@ -205,8 +210,8 @@ const mapStateToProps = state => {
   return {
     user: state.user,
     frequencies: state.frequencies,
-    composer: state.composer
-  }
-}
+    composer: state.composer,
+  };
+};
 
 export default connect(mapStateToProps)(Composer);

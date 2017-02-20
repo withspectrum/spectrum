@@ -114,7 +114,8 @@ class ProModal extends React.Component {
                 <Subheading>
                   A new{' '}
                   <em>Pro</em>
-                  {' '}badge will find itself attached to your name, wherever you go on Spectrum.
+                  {' '}
+                  badge will find itself attached to your name, wherever you go on Spectrum.
                 </Subheading>
               </Padding>
             </Section>

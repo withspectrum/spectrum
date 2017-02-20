@@ -17,11 +17,12 @@ export const StoryWrapper = styled.div`
     ? `-16px 0 0 -8px ${props.theme.brand.default}`
     : `0px 0 0 0px transparent`};
 
-	${props => !props.static && css`
+	${props => !props.static &&
+css`
 		&:hover {
 			box-shadow: ${Shadow.high}, inset ${props.selected
-	    ? `-24px 0 0 -8px ${props.theme.brand.default}`
-	    : `-16px 0 0 -8px ${props.theme.border.default}`};
+  ? `-24px 0 0 -8px ${props.theme.brand.default}`
+  : `-16px 0 0 -8px ${props.theme.border.default}`};
 			transition: all 0.2s ease-out;
 			cursor: pointer;
 		}

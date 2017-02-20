@@ -5,16 +5,9 @@ import { Body } from './style';
 import StoryMaster from './components/StoryMaster';
 import DetailView from './components/DetailView';
 import LoadingIndicator from '../shared/loading';
-import {
-  setActiveFrequency
-} from '../actions/frequencies';
-import {
-  setActiveStory,
-  setStories,
-} from '../actions/stories';
-import {
-  setMessages,
-} from '../actions/messages';
+import { setActiveFrequency } from '../actions/frequencies';
+import { setActiveStory, setStories } from '../actions/stories';
+import { setMessages } from '../actions/messages';
 
 class App extends Component {
   componentWillMount() {

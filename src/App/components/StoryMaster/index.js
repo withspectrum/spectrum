@@ -11,20 +11,19 @@ import {
   LoginButton,
   HiddenInput,
   TipButton,
-  Overlay
+  Overlay,
 } from './style';
-import {
-  toggleComposer
-} from '../../../actions/composer';
+import { toggleComposer } from '../../../actions/composer';
 import {
   toggleFrequencyPrivacy,
   unsubscribeFrequency,
-  subscribeFrequency
+  subscribeFrequency,
 } from '../../../actions/frequencies';
+import { login } from '../../../actions/user';
 import {
-  login,
-} from '../../../actions/user';
-import { getFrequencyPermission, getCurrentFrequency } from '../../../helpers/frequencies';
+  getFrequencyPermission,
+  getCurrentFrequency,
+} from '../../../helpers/frequencies';
 import { Lock, Unlock, NewPost, ClosePost } from '../../../shared/Icons';
 import StoryCard from '../StoryCard';
 import ShareCard from '../ShareCard';

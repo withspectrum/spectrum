@@ -17,44 +17,39 @@ import {
   HiddenLabel,
   HiddenInput,
 } from './style';
-import {
-  showGallery
-} from '../../../actions/gallery';
-import {
-  toggleLockedStory,
-  deleteStory
-} from '../../../actions/stories';
+import { showGallery } from '../../../actions/gallery';
+import { toggleLockedStory, deleteStory } from '../../../actions/stories';
 
 class StoryView extends Component {
   componentDidMount() {
-    this.addEventListeners()
+    this.addEventListeners();
   }
 
   componentDidUpdate() {
     // account for story switching where the story may or may not contain images
-    this.addEventListeners()
+    this.addEventListeners();
   }
 
   addEventListeners = () => {
     // we're going to loop through all the dom nodes of the story and look for images so that we can attach event listeners for the gallery
-    let story = this.refs.story
-    let imageNodes = story.querySelectorAll('img')
+    let story = this.refs.story;
+    let imageNodes = story.querySelectorAll('img');
 
     for (let image of imageNodes) {
-      image.addEventListener('click', this.showGallery, false)
+      image.addEventListener('click', this.showGallery, false);
     }
-  }
+  };
 
-  showGallery = (e) => {
-    this.props.dispatch(showGallery(e))
-  }
+  showGallery = e => {
+    this.props.dispatch(showGallery(e));
+  };
 
   scrollToBottom = () => {
-    let node = ReactDOM.findDOMNode(this)
+    let node = ReactDOM.findDOMNode(this);
     if (node.scrollHeight - node.clientHeight < node.scrollTop + 100) {
-      node.scrollTop = node.scrollHeight - node.clientHeight
+      node.scrollTop = node.scrollHeight - node.clientHeight;
     }
-  }
+  };
 
   getActiveStory = () => {
     if (this.props.stories.stories) {
@@ -125,9 +120,10 @@ class StoryView extends Component {
             <Markdown
               options={{
                 html: true,
-                linkify: true
+                linkify: true,
               }}
-              source={story.content.description} />
+              source={story.content.description}
+            />
           </div>
           {story.content.media && story.content.media !== ''
             ? <Media src={story.content.media} onClick={this.showGallery} />
