@@ -1,8 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
-import App from './App';
 import { BrowserRouter, Match } from 'react-router';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { initStore } from './store';
 import * as firebase from 'firebase';
@@ -27,7 +26,7 @@ let store;
 if (process.env.NODE_ENV === 'production') {
   let localStorageState = helpers.loadState();
   store = initStore(localStorageState);
-  
+
   // sync the store with localstorage
   store.subscribe(() => {
     helpers.saveState(store.getState())
@@ -73,25 +72,40 @@ const theme = {
   },
 };
 
-const Root = () => {
-  return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <Body>
-            <ModalRoot />
-            <GalleryRoot />
-            <Match exactly pattern="/" component={App} />
-            <Match exactly pattern="/:frequency" component={App} />
-            <Match exactly pattern="/:frequency/:story" component={App} />
-          </Body>
-        </ThemeProvider>
-      </BrowserRouter>
-    </Provider>
-  );
-};
+// Let webpack know the App component should be put into its own bundle (code splitting)
+const App = helpers.asyncComponent(() => System.import('./App').then(module => module.default));
+const Homepage = helpers.asyncComponent(() => System.import('./Homepage').then(module => module.default));
 
-render(<Root />, document.querySelector('#root'));
+// Rendered at the root of the page, renders the homepage or the App based on the login state
+const Root = ({ notregistered, uid, loginError }) => {
+  if (!notregistered && !uid && !loginError) return <p>Loading...</p>;
+  if (notregistered) return <Homepage />
+  if (uid) return <App params={{}} />
+  return <p>Error</p>
+}
+
+const ConnectedRoot = connect(state => ({
+  notregistered: state.user.notregistered,
+  uid: state.user.uid,
+  loginError: state.user.loginError,
+}))(Root);
+
+render(
+  <Provider store={store}>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <Body>
+          <ModalRoot />
+          <GalleryRoot />
+          <Match exactly pattern="/" component={ConnectedRoot} />
+          <Match exactly pattern="/:frequency" component={App} />
+          <Match exactly pattern="/:frequency/:story" component={App} />
+        </Body>
+      </ThemeProvider>
+    </BrowserRouter>
+  </Provider>,
+  document.querySelector('#root')
+);
 
 setTimeout(() => {
   // when the app first loads, we'll listen for firebase changes

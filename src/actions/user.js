@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 
 /*------------------------------------------------------------\*
-*             
+*
 
 LOGIN
 We're using Twitter auth for login.
@@ -67,7 +67,7 @@ export const login = () => dispatch => {
 };
 
 /*------------------------------------------------------------\*
-*             
+*
 
 startListeningToAuth
 We listen for any changes to the auth, including the first render of the app
@@ -82,6 +82,9 @@ export const startListeningToAuth = () => dispatch => {
   dispatch({ type: 'LOADING' })
   return new Promise((resolve, reject) => {
     firebase.auth().onAuthStateChanged(user => {
+      if (!user) return dispatch({
+        type: 'SHOW_MARKETING_PAGE',
+      })
       // if the user exists, we can boot up the app
       if (user) {
         let database = firebase.database();
@@ -107,7 +110,7 @@ export const startListeningToAuth = () => dispatch => {
 };
 
 /*------------------------------------------------------------\*
-*             
+*
 
 signOut
 Ensures we clear the browser's cookies, unauth on the backend, and reset our redux
