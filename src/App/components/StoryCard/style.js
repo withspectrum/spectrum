@@ -93,8 +93,9 @@ export const Meta = styled(H5)`
 
 export const MetaFreq = styled(Meta)`
   color: ${({ theme }) => theme.text.placeholder};
-  font-weight: 700;
+  font-weight: 400;
   transition: color 0.2s ease-out;
+  display: inline-block;
 
   &:hover {
   	color: ${({ theme }) => theme.brand.default}

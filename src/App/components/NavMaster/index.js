@@ -105,8 +105,8 @@ class NavigationMaster extends Component {
           {frequencies &&
             frequencies.map((frequency, i) => {
               return (
-                <Link to={`/${frequency.id}`} key={i}>
-                  <Freq active={frequency.id === activeFrequency}>
+                <Link to={`/~${frequency.slug}`} key={i}>
+                  <Freq active={frequency.slug === activeFrequency}>
                     <FreqGlyph>~</FreqGlyph>
                     <FreqLabel>{frequency.name}</FreqLabel>
                   </Freq>

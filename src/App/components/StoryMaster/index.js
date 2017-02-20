@@ -59,25 +59,28 @@ class StoryMaster extends Component {
   };
 
   render() {
-    const { user, stories, frequencies, composer } = this.props;
+    let { user, stories, frequencies, composer } = this.props;
     let sortedStories = this.sortArrayByKey(stories.stories, 'timestamp');
+
+    let currentFrequency = getCurrentFrequency(
+      frequencies.active,
+      frequencies.frequencies,
+    );
 
     if (frequencies.active !== 'all') {
       sortedStories = sortedStories.filter(
-        story => story.frequency === frequencies.active,
+        story => story.frequency === currentFrequency.id,
       );
     }
 
-    let urlBase = frequencies.active === 'all' ? 'all' : frequencies.active;
+
+    let urlBase = frequencies.active === 'all' ? 'all' : `~${frequencies.active}`;
     let usersPermissionOnFrequency = getFrequencyPermission(
       user,
       frequencies.active,
       frequencies.frequencies,
     );
-    const currentFrequency = getCurrentFrequency(
-      frequencies.active,
-      frequencies.frequencies,
-    );
+   
     const currentFrequencyPrivacy = currentFrequency
       ? currentFrequency.settings.private
       : '';
