@@ -6,8 +6,8 @@ import StoryMaster from './components/StoryMaster';
 import DetailView from './components/DetailView';
 import LoadingIndicator from '../shared/loading';
 import { setActiveFrequency } from '../actions/frequencies';
-import { setActiveStory, setStories } from '../actions/stories';
-import { setMessages } from '../actions/messages';
+import { setActiveStory, loadStories } from '../actions/stories';
+import { loadMessages } from '../actions/messages';
 
 class App extends Component {
   componentWillMount() {
@@ -19,24 +19,20 @@ class App extends Component {
 
     if (activeStoryParam) {
       dispatch(setActiveStory(activeStoryParam));
-      dispatch(setMessages());
+      dispatch(loadMessages());
     }
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return true;
   }
 
   componentWillReceiveProps(nextProps) {
     const { dispatch, params } = this.props;
     if (nextProps.params.frequency !== params.frequency) {
       dispatch(setActiveFrequency(nextProps.params.frequency));
-      dispatch(setStories());
+      dispatch(loadStories());
     }
 
     if (nextProps.params.story !== params.frequency) {
       dispatch(setActiveStory(nextProps.params.story));
-      dispatch(setMessages());
+      dispatch(loadMessages());
     }
   }
 

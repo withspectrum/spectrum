@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { updateTitle, updateBody } from '../../../actions/composer';
 import { publishStory, initStory } from '../../../actions/stories';
-import { setMessages } from '../../../actions/messages';
+import { loadMessages } from '../../../actions/messages';
 import { uploadMultipleMedia } from '../../../helpers/stories';
 import Textarea from 'react-textarea-autosize';
 
@@ -104,7 +104,7 @@ class Composer extends Component {
       // if everything is filled out
       this.props.dispatch(publishStory(newStoryObj)).then(() => {
         // after the story is created, we need to set messages so that the chat will work right away
-        this.props.dispatch(setMessages());
+        this.props.dispatch(loadMessages());
       });
     } else if (!frequency && title) {
       // if no frequency is chosen
