@@ -128,7 +128,7 @@ class Composer extends Component {
     let { frequencies, composer } = this.props;
     let activeFrequency = frequencies.active;
     let currentFrequency = frequencies.frequencies.filter(freq => {
-      return freq.id === activeFrequency;
+      return freq.slug === activeFrequency;
     });
 
     let byline = activeFrequency === 'everything'

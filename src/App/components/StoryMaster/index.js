@@ -118,7 +118,7 @@ class StoryMaster extends Component {
 
       if (!usersFrequencies) {
         return '';
-      } else if (keys.indexOf(currentFrequency.id) > -1) {
+      } else if (activeFrequency === 'everything') {
         return (
           <TipButton
             onClick={this.toggleComposer}
@@ -130,7 +130,7 @@ class StoryMaster extends Component {
               : <NewPost color="brand" stayActive />}
           </TipButton>
         );
-      } else if (activeFrequency === 'everything') {
+      } else if (keys.indexOf(currentFrequency.id) > -1) {
         return (
           <TipButton
             onClick={this.toggleComposer}
