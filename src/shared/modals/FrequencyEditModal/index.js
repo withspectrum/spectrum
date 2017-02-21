@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import { hideModal } from '../../../actions/modals';
-import { addFrequency } from '../../../actions/frequencies';
+import { editFrequency, deleteFrequency } from '../../../actions/frequencies';
 import { checkUniqueFrequencyName, debounce } from '../../../helpers/utils';
 import { connect } from 'react-redux';
 import slugg from 'slugg';
@@ -16,43 +16,48 @@ import {
   NameLabel,
   NameInput,
   ErrorMessage,
-  CreateButton,
   Privacy,
   PrivacyLabel,
   PrivacyCheckbox,
-  PrivacyText
+  PrivacyText,
+  SaveButton,
+  DeleteButton,
+  BigDeleteButton,
+  DeleteWarning
 } from './style'
 
-class FrequencyCreationModal extends React.Component {
+class FrequencyEditModal extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       isOpen: props.isOpen,
-      name: '',
-      slug: '',
+      name: props.name,
+      slug: props.slug,
       error: '',
       exists: false,
       editedSlug: false,
-      private: false,
-      loading: false
+      private: props.settings.private,
+      loading: false,
+      disabled: true,
+      deleteAttempted: false,
+      deleteText: 'Confirm Delete'
     };
 
-    this.handleChange = debounce(this.handleChange, 200)
     this.editSlug = debounce(this.editSlug, 200) // query the server every 200ms instead of on every keystroke
   }
 
-  handleChange = () => {
+  toggleDeleteAttempt = () => {
+    this.setState({
+      deleteAttempted: !this.state.deleteAttempted
+    })
+  }
+
+  handleChange = (e) => {
     let name = ReactDOM.findDOMNode(this.refs.name).value
     let lowercaseName = name.toLowerCase().trim()
     name.trim()
-    let slug = slugg(name)
 
-    this.setState({
-      loading: true
-    })
-
-    // don't allow 'everything' to be used as it will conflict with our first party ~everything frequency
     if (lowercaseName === 'everything') {
       this.setState({
         error: "Everything can't be a frequency name, sorry!"
@@ -60,6 +65,7 @@ class FrequencyCreationModal extends React.Component {
 
       return
     }
+
     if (name.length > 20) {
       this.setState({
         error: "Frequency names can only be 20 characters long."
@@ -68,35 +74,11 @@ class FrequencyCreationModal extends React.Component {
       return
     }
 
-    if (this.state.editedSlug) {
-      this.setState({
-        name: name,
-        loading: false,
-        error: null
-      })
-    } else {
-      this.setState({
-        name: name,
-        slug: slug,
-        error: null
-      })
-
-      // check the db to see if this frequency slug exists
-      checkUniqueFrequencyName(slug).then(bool => {
-        if (bool === false) { // the slug is taken
-          this.setState({
-            exists: true,
-            loading: false
-          })
-        } else { // the slug is available
-          this.setState({
-            loading: false,
-            exists: false,
-            error: null
-          })
-        }
-      })
-    }
+    this.setState({
+      name: e.target.value,
+      error: '',
+      disabled: false
+    })
   }
 
   editSlug = () => {
@@ -107,7 +89,8 @@ class FrequencyCreationModal extends React.Component {
     this.setState({
       slug: editedSlug,
       editedSlug: true,
-      loading: true
+      loading: true,
+      disabled: false
     })
 
     if (editedSlug === "everything") {
@@ -126,8 +109,24 @@ class FrequencyCreationModal extends React.Component {
       return
     }
 
+    if (editedSlug === this.props.slug) {
+      this.setState({
+        editedSlug: false
+      })
+
+      return
+    }
+
     // check the db to see if this frequency slug exists
     checkUniqueFrequencyName(editedSlug).then(bool => {
+      if (editedSlug === this.props.slug) {
+        this.setState({
+          loading: false
+        })
+
+        return
+      }
+
       if (bool === false) { // the slug is taken
         this.setState({
           exists: true,
@@ -137,7 +136,7 @@ class FrequencyCreationModal extends React.Component {
         this.setState({
           loading: false,
           exists: false,
-          error: null
+          error: this.state.error || null
         })
       }
     })
@@ -145,7 +144,8 @@ class FrequencyCreationModal extends React.Component {
 
   togglePrivacy = e => {
     this.setState({
-      private: !this.state.private
+      private: !this.state.private,
+      disabled: false
     })
   }
 
@@ -155,22 +155,41 @@ class FrequencyCreationModal extends React.Component {
     });
     // setTimeout(() => { this.props.dispatch(hideModal()) }, 300)
     this.props.dispatch(hideModal());
-  };
+  }
 
-  prepareNewFrequency = () => {
+  prepareEditedFrequency = () => {
     // just in case a user tries to modify the html
     if (this.state.error || this.state.loading || this.state.exists || !this.state.name || !this.state.slug) {
       return
     }
 
     let frequencyObj = {
+      id: this.props.id,
       name: this.state.name,
       slug: this.state.slug,
-      private: this.state.private
+      settings: {
+        private: this.state.private,
+        tint: this.props.settings.tint
+      }
     }
 
-    this.props.dispatch(addFrequency(frequencyObj)).then(() => {
+    this.props.dispatch(editFrequency(frequencyObj)).then(() => {
       this.props.dispatch(hideModal());
+
+      // TODO: Figure out how to refresh the page if the slug changes
+    })
+  }
+
+  deleteFrequency = () => {
+    let id = this.props.id
+    this.setState({
+      deleteText: 'Deleting...'
+    })
+
+    this.props.dispatch(deleteFrequency(id)).then(() => {
+      this.props.dispatch(hideModal());
+
+      // TODO: Figure out how to refresh the page when it is deleted
     })
   }
 
@@ -178,16 +197,16 @@ class FrequencyCreationModal extends React.Component {
     return (
       <Modal
         isOpen={this.state.isOpen}
-        contentLabel="Create a Frequency"
+        contentLabel="Edit Frequency"
         onRequestClose={this.hideModal}
         shouldCloseOnOverlayClick={true}
         style={modalStyles}
         closeTimeoutMS={330}
       >
 
-        <ModalContainer title={'Create a Frequency'} hideModal={this.hideModal}>
-          <NameLabel>Choose a Name
-            <NameInput ref="name" autoFocus type="text" defaultValue={this.state.name} placeholder="Frequency Name..." onChange={this.handleChange} />
+        <ModalContainer title={'Edit Frequency'} hideModal={this.hideModal}>
+          <NameLabel>Change Name
+            <NameInput ref="name" type="text" defaultValue={this.state.name} placeholder="Frequency Name..." onChange={this.handleChange} />
           </NameLabel>
 
           <EditSlug>
@@ -202,11 +221,15 @@ class FrequencyCreationModal extends React.Component {
           {this.state.error &&
             <ErrorMessage>{this.state.error}</ErrorMessage>
           }
+
+          {this.state.editedSlug &&
+            <ErrorMessage warn>Just a heads up: if you edit your URL, anyone who visits your old link (<a href={`/~${this.props.slug}`}>spectrum.chat/~{this.props.slug}</a>) won't find your frequency.</ErrorMessage>
+          }
           
           <Privacy>
             <PrivacyLabel>
               <PrivacyCheckbox type="checkbox" checked={this.state.private} onChange={this.togglePrivacy} />
-              Private Frequency?
+              Private
             </PrivacyLabel>
 
             <PrivacyText>Only members will be able to see stories posted in this frequency. You will be able to approve and block specific people from this frequency.</PrivacyText>
@@ -215,11 +238,22 @@ class FrequencyCreationModal extends React.Component {
             <br />
           </Privacy>
 
-          <Footer>
-            <CreateButton 
-              disabled={this.state.error || !this.state.name || this.state.loading || this.state.exists || !this.state.slug}
-              onClick={this.prepareNewFrequency}>Create</CreateButton>
-          </Footer>
+          {this.state.deleteAttempted &&
+            <DeleteWarning>Heads up: once you delete this frequency there's no going back. All the stories, members, messages and settings will be gone. You sure?</DeleteWarning>
+          }
+          
+            {this.state.deleteAttempted
+              ? <Footer>
+                  <DeleteButton gray onClick={this.toggleDeleteAttempt}>Cancel</DeleteButton>
+                  <BigDeleteButton onClick={this.deleteFrequency}>{this.state.deleteText}</BigDeleteButton>
+                </Footer>
+              : <Footer>
+                  <DeleteButton onClick={this.toggleDeleteAttempt}>Delete Frequency</DeleteButton>
+                  <SaveButton 
+                    onClick={this.prepareEditedFrequency}
+                    disabled={this.state.disabled || this.state.error || !this.state.name || !this.state.slug || this.state.exists}>Save</SaveButton>
+                </Footer>
+            }          
         </ModalContainer>
       </Modal>
     );
@@ -230,4 +264,4 @@ const mapStateToProps = state => ({
   isOpen: state.modals.isOpen,
 });
 
-export default connect(mapStateToProps)(FrequencyCreationModal);
+export default connect(mapStateToProps)(FrequencyEditModal);

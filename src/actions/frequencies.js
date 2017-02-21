@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import { getCurrentFrequency } from '../helpers/frequencies';
-import { fetchFrequenciesForUser } from '../helpers/utils';
+import { fetchFrequenciesForUser, deleteFrequencyFromAllUsers } from '../helpers/utils';
 
 /*------------------------------------------------------------\*
 *
@@ -155,6 +155,80 @@ export const addFrequency = (obj) => (dispatch, getState) => {
       if (err) console.log('Error creating a frequency: ', err)
       resolve()
     });
+  })
+};
+
+/*------------------------------------------------------------\*
+*
+
+editFrequency
+
+
+*
+\*------------------------------------------------------------*/
+export const editFrequency = (obj) => (dispatch, getState) => {
+  return new Promise((resolve, reject) => {
+    dispatch({ type: 'LOADING' });
+
+    let { database, uid } = setup(getState());
+
+    // save the new data to Firebase
+    return database.ref(`frequencies/${obj.id}`).update(obj, err => {
+      if (err) console.log('Error editing a frequency: ', err)
+      
+      // set the active frequency in redux as the newly created frequency
+      dispatch({
+        type: 'SET_ACTIVE_FREQUENCY',
+        frequency: obj.slug,
+      });
+
+      dispatch({
+        type: 'EDIT_FREQUENCY',
+        frequency: obj
+      });
+
+      resolve()
+    });
+  })
+};
+
+/*------------------------------------------------------------\*
+*
+
+deleteFrequency
+
+
+*
+\*------------------------------------------------------------*/
+export const deleteFrequency = (id) => (dispatch, getState) => {
+  return new Promise((resolve, reject) => {
+    dispatch({ type: 'LOADING' });
+    let { database, uid } = setup(getState());
+
+    let frequencyRef = database.ref(`frequencies/${id}`)
+    let getFrequencyUsers = frequencyRef.child('users').once('value').then(snapshot => {
+      return snapshot.val()
+    })
+
+    getFrequencyUsers.then(users => {
+      let keys = Object.keys(users)
+      return deleteFrequencyFromAllUsers(keys, id)      
+    })
+    .then(() => {
+      firebase.database().ref(`/frequencies/${id}`).remove(); // delete the frequency
+
+      dispatch({
+        type: 'DELETE_FREQUENCY',
+        id,
+      });
+
+      // redirect the user so that they don't end up on a broken url
+      window.location.href = '/';
+    }).catch(err => {
+      if (err) {
+        console.log("Unable to delete frequency ", err)
+      }
+    })
   })
 };
 

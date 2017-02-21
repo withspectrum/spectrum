@@ -99,6 +99,7 @@ export const Span = styled.span`
 
 export const Tooltip = props => css`
 	position: relative;
+	z-index: 100;
 
 	&:after,
 	&:before {

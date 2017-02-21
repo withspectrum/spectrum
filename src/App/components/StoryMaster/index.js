@@ -8,7 +8,6 @@ import {
   LoginWrapper,
   LoginText,
   LoginButton,
-  HiddenInput,
   TipButton,
   Overlay,
 } from './style';
@@ -19,6 +18,7 @@ import {
   subscribeFrequency,
 } from '../../../actions/frequencies';
 import { login } from '../../../actions/user';
+import { showModal } from '../../../actions/modals';
 import {
   getFrequencyPermission,
   getCurrentFrequency,
@@ -57,6 +57,15 @@ class StoryMaster extends Component {
       return x < y ? -1 : x > y ? 1 : 0;
     });
   };
+
+  editFrequency = () => {
+    let currentFrequency = getCurrentFrequency(
+      this.props.frequencies.active,
+      this.props.frequencies.frequencies,
+    );
+
+    this.props.dispatch(showModal('FREQUENCY_EDIT_MODAL', currentFrequency));
+  }
 
   render() {
     let { user, stories, frequencies, composer } = this.props;
@@ -164,14 +173,13 @@ class StoryMaster extends Component {
       switch (usersPermissionOnFrequency) {
         case 'owner':
           return (
-            <label>
-              {currentFrequencyPrivacy ? <Lock /> : <Unlock />}
-              <HiddenInput
-                type="checkbox"
-                checked={currentFrequencyPrivacy}
-                onChange={this.togglePrivacy}
-              />
-            </label>
+            <TipButton
+              onClick={this.editFrequency}
+              tipText="Frequency Settings"
+              tipLocation="bottom"
+            >
+              <Lock />
+            </TipButton>
           );
         case 'subscriber':
           return;
@@ -187,7 +195,7 @@ class StoryMaster extends Component {
         <Column>
 
           {this.props.user.uid &&
-            <Header>
+            <Header>              
               {addStoryButton(
                 this.props.user.frequencies,
                 this.props.frequencies.active,

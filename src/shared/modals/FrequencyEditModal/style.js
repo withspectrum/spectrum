@@ -26,10 +26,12 @@ export const modalStyles = {
 };
 
 export const Footer = styled.div`
-  padding: 0;
+  padding: 0.5rem;
+  border-top: 1px solid #eee;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: space-between;
+  background: #fff;
 `;
 
 export const NameLabel = styled.label`
@@ -100,35 +102,14 @@ export const EditSlugInput = styled.input`
 
 export const ErrorMessage = styled.span`
   font-size: 12px;
-  color: ${({ theme }) => theme.brand.default};
-  padding-left: 16px;
+  color: ${props => props.warn ? props.theme.warn.default : props.theme.brand.default};
+  padding: 0 16px;
   margin-bottom: 8px;
   margin-top: 8px;
   position: relative;
 
   a {
     text-decoration: underline;
-  }
-`
-
-export const CreateButton = styled.button`
-  position: relative;
-  top: 2px;
-  text-align: center;
-  display: block;
-  width: 100%;
-  padding: 1rem;
-  font-size: 1rem;
-  font-weight: 700;
-  -webkit-display: none;
-  background: ${props => props.disabled ? '#fff' : props.theme.brand.default};
-  background-image: ${props => props.disabled ? '#fff' : Gradient(props.theme.brand.alt, props.theme.brand.default)};
-  border-radius: 0 0 8px 8px;
-  border-top: ${props => props.disabled ? '1px solid #eee' : `1px solid ${props.theme.brand.default}`};
-  color: ${props => props.disabled ? props.theme.text.alt : '#fff'};
-
-  &:hover {
-    cursor: pointer;
   }
 `
 
@@ -154,4 +135,60 @@ export const PrivacyText = styled.p`
   b {
     color: ${({ theme }) => theme.text.default};
   }
+`
+
+export const SaveButton = styled.button`
+  position: relative;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  -webkit-display: none;
+  display: inline-block;
+  background: ${props => props.disabled ? '#fff' : props.theme.brand.default};
+  background-image: ${props => props.disabled ? '#fff' : Gradient(props.theme.brand.alt, props.theme.brand.default)};
+  border-radius: 4px;
+  color: ${props => props.disabled ? props.theme.text.alt : '#fff'};
+
+  &:hover {
+    cursor: pointer;
+  }
+`
+
+export const DeleteButton = styled.button`
+  position: relative;
+  padding-left: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  -webkit-display: none;
+  display: inline-block;
+  background: #fff;
+  color: ${props => props.gray ? props.theme.text.alt : props.theme.warn.default};
+
+  &:hover {
+    cursor: pointer;
+  }
+`
+
+export const BigDeleteButton = styled.button`
+  position: relative;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  -webkit-display: none;
+  display: inline-block;
+  background: ${props => props.theme.warn.default};
+  border-radius: 4px;
+  color: #fff;
+
+  &:hover {
+    cursor: pointer;
+  }
+`
+
+export const DeleteWarning = styled.div`
+  width: 100%;
+  padding: 1rem;
+  font-size: 0.875rem;
+  color: #fff;
+  background: ${props => props.theme.warn.default};
 `
