@@ -48,10 +48,6 @@ class FrequencyCreationModal extends React.Component {
     name.trim()
     let slug = slugg(name)
 
-    this.setState({
-      loading: true
-    })
-
     // don't allow 'everything' to be used as it will conflict with our first party ~everything frequency
     if (lowercaseName === 'everything') {
       this.setState({
