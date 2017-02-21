@@ -28,6 +28,7 @@ export const Bubble = styled.p`
   	text-decoration: underline;
   	word-wrap: break-word;
   	line-height: inherit; 
+  	word-break: break-all;
   }
 `;
 
