@@ -38,8 +38,8 @@ class FrequencyCreationModal extends React.Component {
       loading: false
     };
 
-    this.handleChange = debounce(this.handleChange, 200)
-    this.editSlug = debounce(this.editSlug, 200) // query the server every 200ms instead of on every keystroke
+    this.handleChange = debounce(this.handleChange, 500)
+    this.editSlug = debounce(this.editSlug, 500) // query the server every 200ms instead of on every keystroke
   }
 
   handleChange = () => {

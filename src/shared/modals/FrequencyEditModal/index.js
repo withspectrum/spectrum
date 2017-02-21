@@ -44,7 +44,7 @@ class FrequencyEditModal extends React.Component {
       deleteText: 'Confirm Delete'
     };
 
-    this.editSlug = debounce(this.editSlug, 200) // query the server every 200ms instead of on every keystroke
+    this.editSlug = debounce(this.editSlug, 500) // query the server every 200ms instead of on every keystroke
   }
 
   toggleDeleteAttempt = () => {
