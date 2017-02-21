@@ -36,7 +36,7 @@ class Root extends Component {
         dispatch(
           setInitialData(
             userData,
-            params.frequency || 'all',
+            params.frequency || 'everything',
             params.story || '',
           ),
         );

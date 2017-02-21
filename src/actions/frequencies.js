@@ -1,6 +1,6 @@
 import * as firebase from 'firebase';
 import { getCurrentFrequency } from '../helpers/frequencies';
-import { fetchFrequenciesForUser } from '../helpers/utils';
+import { fetchFrequenciesForUser, deleteFrequencyFromAllUsers } from '../helpers/utils';
 
 /*------------------------------------------------------------\*
 *
@@ -95,62 +95,141 @@ NOTE: We do not dispatch anything in this action because we have an open listene
 
 *
 \*------------------------------------------------------------*/
-export const addFrequency = name => (dispatch, getState) => {
-  // NOTE: Eventually we may want to pass more than the name into this function, for example we might include default privacy settings, a frequency icon, and more.
-  dispatch({ type: 'LOADING' });
+export const addFrequency = (obj) => (dispatch, getState) => {
+  return new Promise((resolve, reject) => {
+    dispatch({ type: 'LOADING' });
 
-  let { database, uid } = setup(getState());
+    let { database, uid } = setup(getState());
 
-  // .push() creates a new key in the database
-  let newFrequencyRef = database.ref().child('frequencies').push();
+    // .push() creates a new key in the database
+    let newFrequencyRef = database.ref().child('frequencies').push();
 
-  // this key can now be used to update the user and set metadata about the frequency
-  let newFrequencyKey = newFrequencyRef.key;
+    // this key can now be used to update the user and set metadata about the frequency
+    let newFrequencyKey = newFrequencyRef.key;
 
-  // we're going to populate the first user in the frequency object
-  let user = {
-    permission: 'owner', // with the 'owner' permission so that the current user will have full admin rights
-  };
+    // we're going to populate the first user in the frequency object
+    let user = {
+      permission: 'owner', // with the 'owner' permission so that the current user will have full admin rights
+    };
 
-  // since we want to simultaneously update the frequencies table and the users table, we're going to construct a data fan-out
-  // documentation: https://firebase.google.com/docs/database/web/read-and-write
-  let updates = {};
+    // since we want to simultaneously update the frequencies table and the users table, we're going to construct a data fan-out
+    // documentation: https://firebase.google.com/docs/database/web/read-and-write
+    let updates = {};
 
-  // here we're creating the new frequency
-  let newFrequencyData = {
-    // with our first user set as a key, with a value of the permission
-    users: {
-      [uid]: user,
-    },
-    id: newFrequencyKey,
-    createdAt: firebase.database.ServerValue.TIMESTAMP,
-    createdBy: uid,
-    name: name,
-    settings: {
-      private: false, // frequencies are public by default
-      icon: null,
-      tint: '#3818E5',
-    },
-  };
+    // here we're creating the new frequency
+    let newFrequencyData = {
+      // with our first user set as a key, with a value of the permission
+      users: {
+        [uid]: user,
+      },
+      id: newFrequencyKey,
+      createdAt: firebase.database.ServerValue.TIMESTAMP,
+      createdBy: uid,
+      name: obj.name,
+      slug: obj.slug,
+      settings: {
+        private: obj.private,
+        icon: null,
+        tint: '#3818E5',
+      },
+    };
 
-  // create the object we want saved in the user model
-  let userFrequencyData = {
-    id: newFrequencyKey,
-    permission: 'owner',
-  };
+    // create the object we want saved in the user model
+    let userFrequencyData = {
+      id: newFrequencyKey,
+      permission: 'owner',
+    };
 
-  // prep our simultaneous saves in Firebase
-  updates[`frequencies/${newFrequencyKey}`] = newFrequencyData;
-  updates[`users/${uid}/frequencies/${newFrequencyKey}`] = userFrequencyData;
+    // prep our simultaneous saves in Firebase
+    updates[`frequencies/${newFrequencyKey}`] = newFrequencyData;
+    updates[`users/${uid}/frequencies/${newFrequencyKey}`] = userFrequencyData;
 
-  // set the active frequency in redux as the newly created frequency
-  dispatch({
-    type: 'ADD_FREQUENCY',
-    frequency: newFrequencyData,
-  });
+    // set the active frequency in redux as the newly created frequency
+    dispatch({
+      type: 'ADD_FREQUENCY',
+      frequency: newFrequencyData,
+    });
 
-  // save the new data to Firebase
-  return database.ref().update(updates);
+    // save the new data to Firebase
+    return database.ref().update(updates, err => {
+      if (err) console.log('Error creating a frequency: ', err)
+      resolve()
+    });
+  })
+};
+
+/*------------------------------------------------------------\*
+*
+
+editFrequency
+
+
+*
+\*------------------------------------------------------------*/
+export const editFrequency = (obj) => (dispatch, getState) => {
+  return new Promise((resolve, reject) => {
+    dispatch({ type: 'LOADING' });
+
+    let { database, uid } = setup(getState());
+
+    // save the new data to Firebase
+    return database.ref(`frequencies/${obj.id}`).update(obj, err => {
+      if (err) console.log('Error editing a frequency: ', err)
+      
+      // set the active frequency in redux as the newly created frequency
+      dispatch({
+        type: 'SET_ACTIVE_FREQUENCY',
+        frequency: obj.slug,
+      });
+
+      dispatch({
+        type: 'EDIT_FREQUENCY',
+        frequency: obj
+      });
+
+      resolve()
+    });
+  })
+};
+
+/*------------------------------------------------------------\*
+*
+
+deleteFrequency
+
+
+*
+\*------------------------------------------------------------*/
+export const deleteFrequency = (id) => (dispatch, getState) => {
+  return new Promise((resolve, reject) => {
+    dispatch({ type: 'LOADING' });
+    let { database, uid } = setup(getState());
+
+    let frequencyRef = database.ref(`frequencies/${id}`)
+    let getFrequencyUsers = frequencyRef.child('users').once('value').then(snapshot => {
+      return snapshot.val()
+    })
+
+    getFrequencyUsers.then(users => {
+      let keys = Object.keys(users)
+      return deleteFrequencyFromAllUsers(keys, id)      
+    })
+    .then(() => {
+      firebase.database().ref(`/frequencies/${id}`).remove(); // delete the frequency
+
+      dispatch({
+        type: 'DELETE_FREQUENCY',
+        id,
+      });
+
+      // redirect the user so that they don't end up on a broken url
+      window.location.href = '/';
+    }).catch(err => {
+      if (err) {
+        console.log("Unable to delete frequency ", err)
+      }
+    })
+  })
 };
 
 /*------------------------------------------------------------\*

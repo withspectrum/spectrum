@@ -8,7 +8,7 @@ export const Column = styled.div`
 	border-right: 1px solid ${({ theme }) => theme.border.default};
 	background-color: ${({ theme }) => theme.bg.wash};
 	height: 100%;
-	overflow-y: scroll;
+	overflow: visible;
 `;
 
 export const ScrollBody = styled.div`
@@ -182,10 +182,6 @@ export const LoginButton = styled.button`
 		border-radius: 16px
 		color: ${({ theme }) => theme.bg.default};;
   }
-`;
-
-export const HiddenInput = styled.input`
-	display: none;
 `;
 
 export const TipButton = styled.button`

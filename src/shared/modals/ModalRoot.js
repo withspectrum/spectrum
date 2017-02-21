@@ -1,9 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ProModal from './ProModal/index';
+import FrequencyCreationModal from './FrequencyCreationModal/index';
+import FrequencyEditModal from './FrequencyEditModal/index';
 
 const MODAL_COMPONENTS = {
   PRO_MODAL: ProModal,
+  FREQUENCY_CREATION_MODAL: FrequencyCreationModal,
+  FREQUENCY_EDIT_MODAL: FrequencyEditModal
 };
 
 const ModalRoot = ({ modalType, modalProps }) => {

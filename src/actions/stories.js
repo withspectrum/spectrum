@@ -119,7 +119,7 @@ export const publishStory = story => (dispatch, getState) => {
         photoURL: user.photoURL,
         uid,
       },
-      frequency: story.frequency,
+      frequency: story.frequencyId,
     };
 
     storyRef.update(storyData, err => {
@@ -201,7 +201,7 @@ export const deleteStory = id => (dispatch, getState) => {
 
   // redirect the user so that they don't end up on a broken url
   if (activeFrequency && activeFrequency !== 'all') {
-    window.location.href = `/${activeFrequency}`;
+    window.location.href = `/~${activeFrequency}`;
   } else {
     window.location.href = '/';
   }
