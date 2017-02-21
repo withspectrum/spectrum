@@ -16,7 +16,7 @@ class GalleryRoot extends Component {
 
   handleKeyPress = e => {
     // if no media, skip on outta here
-    if (!this.props.media.media) return;
+    if (!this.props.media.media || !this.props.media.isOpen) return;
 
     let length = this.props.media.media.length;
     // keeping count of which index we are viewing
