@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { updateTitle, updateBody } from '../../../actions/composer';
 import { publishStory, initStory } from '../../../actions/stories';
+import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { loadMessages } from '../../../actions/messages';
 import { uploadMultipleMedia } from '../../../helpers/stories';
 import Textarea from 'react-textarea-autosize';
@@ -94,8 +95,10 @@ class Composer extends Component {
       ? this.state.frequencyPicker
       : this.props.frequencies.active;
 
+    let frequencyId = getCurrentFrequency(this.props.frequencies.active, this.props.frequencies.frequencies).id
+
     let newStoryObj = {
-      frequency,
+      frequencyId,
       title,
       body,
     };

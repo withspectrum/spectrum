@@ -119,7 +119,7 @@ export const publishStory = story => (dispatch, getState) => {
         photoURL: user.photoURL,
         uid,
       },
-      frequency: story.frequency,
+      frequency: story.frequencyId,
     };
 
     storyRef.update(storyData, err => {

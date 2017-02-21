@@ -202,5 +202,17 @@ export const Button = styled.button`
     cursor: pointer;
     transition: all 0.2s;
     color: rgba(255,255,255,1);
+    background-color: ${props => props.theme.brand.default};
+    background-image: ${props => Gradient(props.theme.brand.alt, props.theme.brand.default)};
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+
+  &:active {
+    box-shadow: 0 1px 0 rgba(255,255,255,0.04);
+    background-color: #0f1010;
+    background-image: none;
+    position: relative;
+    top: 1px;
+    transition: all 0s;
   }
 `;
