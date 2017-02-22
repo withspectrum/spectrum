@@ -29,6 +29,7 @@ export const showGallery = e => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
   let state = getState();
   let src = e.target.src;
+  src = src.toString();
   let activeStory = state.stories.active;
 
   firebase
@@ -38,17 +39,16 @@ export const showGallery = e => (dispatch, getState) => {
       let val = snapshot.val();
       let arr = hashToArray(val);
       let urlArr = arr.slice().map((img, i) => img.fileName); //=> convert hash to array of filename urls
-
       let checkForMatch = urlArr.filter(url => {
-        let long = src.toString();
         let match = url.toString();
+        match = encodeURI(match)
         let re = new RegExp(match, 'g');
-        let itMatches = long.match(re);
+        let itMatches = src.match(re);
         return itMatches;
       });
 
       let matchToIndex = checkForMatch[0];
-      let index = urlArr.indexOf(matchToIndex);
+      let index = urlArr.indexOf(matchToIndex);      
 
       getStorageUrlsFromArr(urlArr, activeStory).then(arr => {
         dispatch({
