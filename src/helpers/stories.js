@@ -33,7 +33,7 @@ export const getUserFromId = uid => {
 
 export const getUsersFromMessageGroups = groups => {
   let users = groups.map(group => {
-    return group[0].userId;
+    return group.userId;
   });
   users = uniq(users);
   return Promise.all(users.map(getUserFromId));

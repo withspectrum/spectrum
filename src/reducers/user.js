@@ -5,6 +5,7 @@ const initialState = {
   photoURL: null,
   frequencies: null,
   loaded: false,
+  lastRead: {},
 };
 
 export default function root(state = initialState, action) {
@@ -27,6 +28,13 @@ export default function root(state = initialState, action) {
       // Reset the state
       return Object.assign({}, initialState, {
         loaded: true,
+      });
+    case 'SET_LAST_READ_MESSAGE':
+      return Object.assign({}, state, {
+        lastRead: {
+          ...state.lastRead,
+          [action.story]: action.id,
+        },
       });
     default:
       return state;

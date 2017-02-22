@@ -4,9 +4,11 @@ import { connect } from 'react-redux';
 import { ChatContainer, BubbleGroup, FromName } from './style';
 import Bubble from '../Bubble';
 import { getUsersFromMessageGroups } from '../../../helpers/stories';
+import { setLastReadMessage } from '../../../actions/messages';
+import { sortAndGroupBubbles } from '../../../helpers/utils';
 
 function isElementInViewport(el) {
-  if (!el) return false;
+  if (!el) return;
   var rect = findDOMNode(el).getBoundingClientRect();
 
   return rect.top >= 0 &&
@@ -24,19 +26,7 @@ class ChatView extends Component {
     super();
 
     this.bubbles = [];
-    this.interval = setInterval(
-      () => {
-        let lastSeen;
-        for (let i = this.bubbles.length - 1; i > 0; i--) {
-          if (isElementInViewport(this.bubbles[i])) {
-            lastSeen = this.bubbles[i];
-            break;
-          }
-        }
-        console.log(lastSeen && findDOMNode(lastSeen));
-      },
-      1000,
-    );
+    this.interval = setInterval(this.checkLastUnreadBubble, 5000);
     this.state = {
       users: [],
     };
@@ -60,8 +50,21 @@ class ChatView extends Component {
     }
   }
 
+  checkLastUnreadBubble = () => {
+    const { dispatch, stories: { active } } = this.props;
+    let lastSeen;
+    // Iterate over the messages from the bottom, finding the first one that's in view
+    for (let i = this.bubbles.length - 1; i > 0; i--) {
+      if (isElementInViewport(this.bubbles[i])) {
+        lastSeen = this.bubbles[i];
+        break;
+      }
+    }
+    if (lastSeen) dispatch(setLastReadMessage(active, lastSeen.props.id));
+  };
+
   fetchUsers = () => {
-    let messages = this.props.messages;
+    let messages = sortAndGroupBubbles(this.props.messages);
     getUsersFromMessageGroups(this.props.messages).then(data => {
       this.setUsersData(data);
     });
@@ -81,7 +84,7 @@ class ChatView extends Component {
 
     return (
       <ChatContainer>
-        {messages.map((group, i) => {
+        {sortAndGroupBubbles(messages).map((group, i) => {
           const itsaMe = group[0].userId === this.props.user.uid;
           const user = !itsaMe &&
             users &&
@@ -89,12 +92,14 @@ class ChatView extends Component {
           return (
             <BubbleGroup key={i} me={itsaMe}>
               <FromName>{user && user.name}</FromName>
-              {group.map(({ message }, index) => (
+              {group.map(({ message, id }, index) => (
                 <Bubble
                   key={`bubble-${i}/${index}`}
                   ref={comp => {
                     this.bubbles.push(comp);
                   }}
+                  // The id is needed in checkLastUnreadBubble above, do not remove
+                  id={id}
                   content={message.content}
                   type={message.type}
                   me={itsaMe}
