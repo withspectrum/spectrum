@@ -99,16 +99,22 @@ export const asyncComponent = getComponent => {
   };
 };
 
-export const checkUniqueFrequencyName = (name) => {
+export const checkUniqueFrequencyName = name => {
   return new Promise((resolve, reject) => {
-    let frequenciesRef = firebase.database().ref('frequencies').orderByChild('slug').equalTo(name).once('value').then(snapshot => {
-      let val = snapshot.val()
-      if (!val) return resolve(true) // if a frequency with this slug doesn't exist, it's okay to use the new name
-      if (val.id === name) return resolve(true) // and if we're looking at the current frequency (i.e. changing the slug after creation), it's okay
-      return resolve(false) // otherwise we can assume the slug is taken
-    })
-  })
-}
+    let frequenciesRef = firebase
+      .database()
+      .ref('frequencies')
+      .orderByChild('slug')
+      .equalTo(name)
+      .once('value')
+      .then(snapshot => {
+        let val = snapshot.val();
+        if (!val) return resolve(true); // if a frequency with this slug doesn't exist, it's okay to use the new name
+        if (val.id === name) return resolve(true); // and if we're looking at the current frequency (i.e. changing the slug after creation), it's okay
+        return resolve(false); // otherwise we can assume the slug is taken
+      });
+  });
+};
 
 export const debounce = (func, wait, immediate) => {
   let timeout;
@@ -131,19 +137,23 @@ const deleteFrequencyFromUser = (user, frequency) => {
       .database()
       .ref(`users/${user}/frequencies/${frequency}`)
       .remove(err => {
-        if (err) console.log('Error deleting frequency from user: ', err)
-        resolve()
-      })
+        if (err) console.log('Error deleting frequency from user: ', err);
+        resolve();
+      });
   });
 };
 
 export const deleteFrequencyFromAllUsers = (users, frequency) => {
-  return Promise.all(users.map(user => deleteFrequencyFromUser(user, frequency)))
-}
+  return Promise.all(
+    users.map(user => deleteFrequencyFromUser(user, frequency)),
+  );
+};
 
 // This regex matches every string with any emoji in it, not just strings that only have emojis
 const originalEmojiRegex = createEmojiRegex();
 // Make sure we match strings that only contain emojis (and whitespace)
-const regex = new RegExp(`^(${originalEmojiRegex.toString().replace(/\/g$/, '')}|\\s)+$`);
+const regex = new RegExp(
+  `^(${originalEmojiRegex.toString().replace(/\/g$/, '')}|\\s)+$`,
+);
 
 export const onlyContainsEmoji = text => regex.test(text);

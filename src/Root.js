@@ -46,11 +46,10 @@ class Root extends Component {
     });
 
     // Listen to changes in messages
-    firebase.database().ref('messages')
-    .on('value', snapshot => {
+    firebase.database().ref('messages').on('value', snapshot => {
       const messages = snapshot.val();
-      dispatch(setAllMessages(messages))
-    })
+      dispatch(setAllMessages(messages));
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -70,8 +69,7 @@ class Root extends Component {
   render() {
     const { user, frequencies, params } = this.props;
     if (!user.loaded) return <LoadingIndicator />;
-    if (!user.uid && params.frequency === undefined)
-      return <Homepage />;
+    if (!user.uid && params.frequency === undefined) return <Homepage />;
     if (user.loginError) return <p>Login error</p>;
     if (!frequencies.loaded) return <LoadingIndicator />;
     return <App />;

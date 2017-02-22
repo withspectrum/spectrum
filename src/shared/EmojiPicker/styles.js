@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const EmojiDialog = styled.div`
   width: 276px;
@@ -12,7 +12,7 @@ export const EmojiDialog = styled.div`
   left: 1rem;
   z-index: 10;
   box-shadow: 0 0 0 1px rgba(0,0,0,0.1), 0 2px 15px rgba(0,0,0,0.1);
-`
+`;
 
 export const EmojiGrandlist = styled.div`
   left: 0;
@@ -24,13 +24,13 @@ export const EmojiGrandlist = styled.div`
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
-`
+`;
 
 export const EmojiCategoryList = styled.ul`
   padding: 0;
   margin: 0;
   list-style: none;
-`
+`;
 
 export const EmojiListItem = styled.li`
   display: inline-block;
@@ -44,4 +44,4 @@ export const EmojiListItem = styled.li`
   	background: #eee;
   	cursor: pointer;
   }
-`
+`;

@@ -81,10 +81,10 @@ export const EmojiToggle = styled.div`
 	padding: 12px;
 	padding-top: 11px;
 	padding-bottom: 4px;
-	background: ${props => props.active ? props.theme.brand.default : "#f6f7f8"};
+	background: ${props => props.active ? props.theme.brand.default : '#f6f7f8'};
 
 	&:hover {
 		cursor: pointer;
-		background: ${props => props.active ? props.theme.brand.default : "#eee"};
+		background: ${props => props.active ? props.theme.brand.default : '#eee'};
 	}
 `;
