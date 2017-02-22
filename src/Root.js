@@ -45,10 +45,15 @@ class Root extends Component {
       });
     });
 
+    let first = true;
     // Listen to changes in messages
     firebase.database().ref('messages').on('value', snapshot => {
       const messages = snapshot.val();
       dispatch(setAllMessages(messages));
+      if (first) {
+        first = false;
+        dispatch(setActiveStory(params.story));
+      }
     });
   }
 

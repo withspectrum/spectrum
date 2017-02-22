@@ -98,20 +98,3 @@ export const sendMessage = message => (dispatch, getState) => {
       });
   }
 };
-
-export const setLastReadMessage = (story, id) => (dispatch, getState) => {
-  const {
-    stories: { active },
-    messages: { messages },
-    user: { lastRead },
-  } = getState();
-  // Check that the new "last unread message" is below the currently marked last unread message
-  // if not we exit out of this–don't want to mark something unread that's already been read
-  const messageIds = messages[active].map(msg => msg.id);
-  if (messageIds.indexOf(lastRead[active]) > messageIds.indexOf(id)) return;
-  dispatch({
-    type: 'SET_LAST_READ_MESSAGE',
-    story,
-    id,
-  });
-};

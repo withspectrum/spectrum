@@ -29,11 +29,11 @@ export default function root(state = initialState, action) {
       return Object.assign({}, initialState, {
         loaded: true,
       });
-    case 'SET_LAST_READ_MESSAGE':
+    case 'SET_ACTIVE_STORY':
       return Object.assign({}, state, {
         lastRead: {
           ...state.lastRead,
-          [action.story]: action.id,
+          [action.story]: action.message,
         },
       });
     default:

@@ -177,11 +177,16 @@ export const initStory = () => (dispatch, getState) => {
   });
 };
 
-export const setActiveStory = story => ({
-  type: 'SET_ACTIVE_STORY',
-  story,
-});
-
+export const setActiveStory = story => (dispatch, getState) => {
+  const { messages: { messages } } = getState();
+  const msgs = messages[story];
+  dispatch({
+    type: 'SET_ACTIVE_STORY',
+    story,
+    // We need this for storing the last unread messages
+    message: msgs[msgs.length - 1].id,
+  });
+};
 export const deleteStory = id => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
 

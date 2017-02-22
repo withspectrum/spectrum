@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { ChatContainer, BubbleGroup, FromName } from './style';
 import Bubble from '../Bubble';
 import { getUsersFromMessageGroups } from '../../../helpers/stories';
-import { setLastReadMessage } from '../../../actions/messages';
 import { sortAndGroupBubbles } from '../../../helpers/utils';
 
 class ChatView extends Component {
@@ -20,7 +19,6 @@ class ChatView extends Component {
   componentDidMount() {
     if (this.props.messages) {
       this.fetchUsers();
-      this.setLastReadMessage();
     }
   }
 
@@ -30,16 +28,7 @@ class ChatView extends Component {
     if (prevProps !== this.props && this.props.messages) {
       this.fetchUsers();
     }
-
-    if (prevProps.lastRead !== this.props.lastRead) {
-      this.setLastReadMessage();
-    }
   }
-
-  setLastReadMessage = () => {
-    const { dispatch, stories: { active }, messages } = this.props;
-    dispatch(setLastReadMessage(active, messages[messages.length - 1].id));
-  };
 
   fetchUsers = () => {
     let messages = sortAndGroupBubbles(this.props.messages);
