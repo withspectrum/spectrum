@@ -14,6 +14,7 @@
     "axios": "^0.15.3",
     "emoji-regex": "^6.1.0",
     "lodash.uniq": "^4.5.0",
+    "pre-commit": "^1.2.2",
     "re-base": "^2.2.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
