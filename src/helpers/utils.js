@@ -1,6 +1,7 @@
 import * as firebase from 'firebase';
 import React from 'react';
 import LoadingIndicator from '../shared/loading/global';
+import createEmojiRegex from 'emoji-regex';
 
 export const hashToArray = hash => {
   let array = [];
@@ -139,3 +140,10 @@ const deleteFrequencyFromUser = (user, frequency) => {
 export const deleteFrequencyFromAllUsers = (users, frequency) => {
   return Promise.all(users.map(user => deleteFrequencyFromUser(user, frequency)))
 }
+
+// This regex matches every string with any emoji in it, not just strings that only have emojis
+const originalEmojiRegex = createEmojiRegex();
+// Make sure we match strings that only contain emojis (and whitespace)
+const regex = new RegExp(`^(${originalEmojiRegex.toString().replace(/\/g$/, '')}|\\s)+$`);
+
+export const onlyContainsEmoji = text => regex.test(text);
