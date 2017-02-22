@@ -7,26 +7,11 @@ import { getUsersFromMessageGroups } from '../../../helpers/stories';
 import { setLastReadMessage } from '../../../actions/messages';
 import { sortAndGroupBubbles } from '../../../helpers/utils';
 
-function isElementInViewport(el) {
-  if (!el) return;
-  var rect = findDOMNode(el).getBoundingClientRect();
-
-  return rect.top >= 0 &&
-    rect.left >= 0 &&
-    rect.bottom <=
-      (window.innerHeight ||
-        document.documentElement.clientHeight) /*or $(window).height() */ &&
-    rect.right <=
-      (window.innerWidth ||
-        document.documentElement.clientWidth) /*or $(window).width() */;
-}
-
 class ChatView extends Component {
   constructor() {
     super();
 
     this.bubbles = [];
-    this.interval = setInterval(this.checkLastUnreadBubble, 5000);
     this.state = {
       users: [],
     };
@@ -35,11 +20,8 @@ class ChatView extends Component {
   componentDidMount() {
     if (this.props.messages) {
       this.fetchUsers();
+      this.setLastReadMessage();
     }
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -48,19 +30,15 @@ class ChatView extends Component {
     if (prevProps !== this.props && this.props.messages) {
       this.fetchUsers();
     }
+
+    if (prevProps.lastRead !== this.props.lastRead) {
+      this.setLastReadMessage();
+    }
   }
 
-  checkLastUnreadBubble = () => {
-    const { dispatch, stories: { active } } = this.props;
-    let lastSeen;
-    // Iterate over the messages from the bottom, finding the first one that's in view
-    for (let i = this.bubbles.length - 1; i > 0; i--) {
-      if (isElementInViewport(this.bubbles[i])) {
-        lastSeen = this.bubbles[i];
-        break;
-      }
-    }
-    if (lastSeen) dispatch(setLastReadMessage(active, lastSeen.props.id));
+  setLastReadMessage = () => {
+    const { dispatch, stories: { active }, messages } = this.props;
+    dispatch(setLastReadMessage(active, messages[messages.length - 1].id));
   };
 
   fetchUsers = () => {
@@ -118,6 +96,7 @@ const mapStateToProps = state => {
     user: state.user,
     stories: state.stories,
     messages: state.messages.messages[state.stories.active],
+    lastRead: state.user.lastRead[state.stories.active],
   };
 };
 
