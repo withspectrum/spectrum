@@ -6,6 +6,7 @@ import {
   ImgBubble,
   BubbleGroup,
   FromName,
+  EmojiBubble
 } from './style';
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
@@ -84,6 +85,18 @@ class ChatView extends Component {
                     );
                   }
 
+                  if (message.message.type === 'emoji') {
+                    return (
+                      <EmojiBubble
+                        key={i}
+                        me
+                        dangerouslySetInnerHTML={{
+                          __html: this.formatMessage(message.message.content),
+                        }}
+                      />
+                    );
+                  }
+
                   if (message.message.type === 'media') {
                     return (
                       <ImgBubble
@@ -112,6 +125,17 @@ class ChatView extends Component {
                   if (message.message.type === 'text') {
                     return (
                       <Bubble
+                        key={i}
+                        dangerouslySetInnerHTML={{
+                          __html: this.formatMessage(message.message.content),
+                        }}
+                      />
+                    );
+                  }
+
+                  if (message.message.type === 'emoji') {
+                    return (
+                      <EmojiBubble
                         key={i}
                         dangerouslySetInnerHTML={{
                           __html: this.formatMessage(message.message.content),

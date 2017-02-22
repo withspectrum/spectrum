@@ -89,6 +89,16 @@ export const ImgBubble = styled.img`
 	}
 `;
 
+export const EmojiBubble = styled.div`
+	font-size: 40px;
+  padding: 8px;
+  clear: both;
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 8px;
+	float: ${props => props.me ? `right;` : `left;`}
+`;
+
 export const FromName = styled.span`
 	display: inline-block;
 	font-size: 10px;

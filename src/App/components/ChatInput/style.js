@@ -70,3 +70,21 @@ export const MediaLabel = styled.label`
 		cursor: pointer;
 	}
 `;
+
+export const EmojiToggle = styled.div`
+	font-size: 20px;
+	margin: 1px 8px;
+	line-height: 1;
+	border-radius: 4px;
+	-webkit-flex: 0 0 auto;
+	height: 40px;
+	padding: 12px;
+	padding-top: 11px;
+	padding-bottom: 4px;
+	background: ${props => props.active ? props.theme.brand.default : "#f6f7f8"};
+
+	&:hover {
+		cursor: pointer;
+		background: ${props => props.active ? props.theme.brand.default : "#eee"};
+	}
+`;
