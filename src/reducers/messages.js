@@ -4,13 +4,10 @@ const initialState = {
 
 export default function root(state = initialState, action) {
   switch (action.type) {
-    case 'SET_MESSAGES':
+    case 'SET_ALL_MESSAGES':
       return Object.assign({}, state, {
-        messages: {
-          ...state.messages,
-          [action.story]: action.messages,
-        },
-      });
+        messages: action.messages
+      })
     default:
       return state;
   }

@@ -8,7 +8,7 @@ import * as firebase from 'firebase';
 import { setInitialData } from './actions/loading';
 import { setActiveFrequency, loadFrequencies } from './actions/frequencies';
 import { setActiveStory, loadStories } from './actions/stories';
-import { loadMessages } from './actions/messages';
+import { setAllMessages } from './actions/messages';
 import { asyncComponent } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
 
@@ -30,7 +30,7 @@ class Root extends Component {
       let users = firebase.database().ref('users');
 
       // we know the user exists, so lets fetch their data by matching the uid
-      users.orderByChild('uid').equalTo(user.uid).on('value', snapshot => {
+      users.orderByChild('uid').equalTo(user.uid).once('value', snapshot => {
         // once we've retreived our user, we can dispatch to redux and store their info in state
         const userData = snapshot.val()[user.uid];
         dispatch(
@@ -44,6 +44,13 @@ class Root extends Component {
         dispatch(loadStories());
       });
     });
+
+    // Listen to changes in messages
+    firebase.database().ref('messages')
+    .on('value', snapshot => {
+      const messages = snapshot.val();
+      dispatch(setAllMessages(messages))
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,7 +64,6 @@ class Root extends Component {
     // If the story changes sync the active story to the store and load the messages
     if (nextProps.params.story !== params.frequency) {
       dispatch(setActiveStory(nextProps.params.story));
-      dispatch(loadMessages());
     }
   }
 
