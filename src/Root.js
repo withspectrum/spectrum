@@ -61,7 +61,7 @@ class Root extends Component {
     }
 
     // If the story changes sync the active story to the store and load the messages
-    if (nextProps.params.story !== params.frequency) {
+    if (nextProps.params.story !== params.story) {
       dispatch(setActiveStory(nextProps.params.story));
     }
   }
