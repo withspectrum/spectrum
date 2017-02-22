@@ -28,16 +28,16 @@ class ChatInput extends Component {
     })
   }
 
-  sendMessageEmoji = (emoji) => {
+  sendEmojiMessage = (emoji) => {
     let textInput = ReactDOM.findDOMNode(this.refs.textInput)
 
-    let messageObj = {
-      type: 'emoji',
+    let message = {
+      type: 'text',
       content: emoji,
     };
 
-    this.props.dispatch(sendMessage(messageObj));
-    
+    this.dispatchMessage(message)
+
     // refocus the input
     textInput.focus()
     // close the emoji picker
@@ -55,12 +55,16 @@ class ChatInput extends Component {
       content: messageText,
     };
 
-    this.props.dispatch(sendMessage(messageObj));
+    this.dispatchMessage(messageObj);
 
     this.setState({
       message: '',
     });
   };
+
+  dispatchMessage = (message) => {
+    this.props.dispatch(sendMessage(message))
+  }
 
   sendMediaMessage = e => {
     let user = this.props.user;
@@ -103,7 +107,7 @@ class ChatInput extends Component {
         />
         <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
         { this.state.emojiPickerOpen &&
-          <EmojiPicker onChange={this.sendMessageEmoji} />
+          <EmojiPicker onChange={this.sendEmojiMessage} />
         }
         <EmojiToggle active={this.state.emojiPickerOpen} onClick={this.toggleEmojiPicker}>😀</EmojiToggle>
         {this.props.user.uid &&
