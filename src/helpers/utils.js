@@ -1,7 +1,9 @@
 import * as firebase from 'firebase';
 import React from 'react';
-import LoadingIndicator from '../shared/loading/global';
 import createEmojiRegex from 'emoji-regex';
+import * as Autolinker from 'autolinker';
+import sanitizeHtml from 'sanitize-html';
+import LoadingIndicator from '../shared/loading/global';
 
 export const hashToArray = hash => {
   let array = [];
@@ -157,3 +159,12 @@ const regex = new RegExp(
 );
 
 export const onlyContainsEmoji = text => regex.test(text);
+
+export const formatMessage = message => {
+  if (!message) {
+    return '';
+  }
+  let cleanMessage = sanitizeHtml(message);
+  let linkedMessage = Autolinker.link(cleanMessage);
+  return linkedMessage;
+};

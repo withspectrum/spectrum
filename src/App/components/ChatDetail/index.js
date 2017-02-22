@@ -1,18 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  ChatContainer,
-  Bubble,
-  ImgBubble,
-  BubbleGroup,
-  FromName,
-  EmojiBubble,
-} from './style';
-import * as Autolinker from 'autolinker';
-import sanitizeHtml from 'sanitize-html';
+import { ChatContainer, BubbleGroup, FromName } from './style';
+import Bubble from '../Bubble';
 import { getUsersFromMessageGroups } from '../../../helpers/stories';
-import { onlyContainsEmoji } from '../../../helpers/utils';
-import { showGallery } from '../../../actions/gallery';
 
 class ChatView extends Component {
   constructor() {
@@ -35,19 +25,6 @@ class ChatView extends Component {
     if (prevProps !== this.props && this.props.messages) {
       this.fetchUsers();
     }
-  }
-
-  showGallery = e => {
-    this.props.dispatch(showGallery(e));
-  };
-
-  formatMessage(message) {
-    if (!message) {
-      return '';
-    }
-    let cleanMessage = sanitizeHtml(message);
-    let linkedMessage = Autolinker.link(cleanMessage);
-    return linkedMessage;
   }
 
   fetchUsers = () => {
@@ -79,41 +56,17 @@ class ChatView extends Component {
           return (
             <BubbleGroup key={i} me={itsaMe}>
               <FromName>{user && user.name}</FromName>
-              {group.map((message, i) => {
-                // mxstbr: The "emoji" specific type is legacy, remove in the future
-                if (
-                  message.message.type === 'text' ||
-                  message.message.type === 'emoji'
-                ) {
-                  let TextBubble = onlyContainsEmoji(message.message.content)
-                    ? EmojiBubble
-                    : Bubble;
-                  return (
-                    <TextBubble
-                      key={i}
-                      me={itsaMe}
-                      dangerouslySetInnerHTML={{
-                        __html: this.formatMessage(message.message.content),
-                      }}
-                    />
-                  );
-                }
-
-                if (message.message.type === 'media') {
-                  return (
-                    <ImgBubble
-                      me={itsaMe}
-                      onClick={this.showGallery}
-                      src={message.message.content}
-                      key={i}
-                    />
-                  );
-                }
-              })}
+              {group.map(({ message }, i) => (
+                <Bubble
+                  key={`bubble-${i}`}
+                  content={message.content}
+                  type={message.type}
+                  me={itsaMe}
+                />
+              ))}
             </BubbleGroup>
           );
         })}
-
       </ChatContainer>
     );
   }
