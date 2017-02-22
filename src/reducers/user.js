@@ -29,11 +29,20 @@ export default function root(state = initialState, action) {
       return Object.assign({}, initialState, {
         loaded: true,
       });
+    case 'SEND_MESSAGE':
     case 'SET_ACTIVE_STORY':
       return Object.assign({}, state, {
         lastRead: {
           ...state.lastRead,
           [action.story]: action.message,
+        },
+      });
+    case 'SET_ALL_MESSAGES':
+      const msgs = action.messages[action.story];
+      return Object.assign({}, state, {
+        lastRead: {
+          ...state.lastRead,
+          [action.story]: msgs[msgs.length - 1].id,
         },
       });
     default:
