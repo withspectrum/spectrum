@@ -13,7 +13,7 @@ export default function root(state = initialState, action) {
       });
     case 'EDIT_FREQUENCY': {
       let frequencies = state.frequencies.slice().map(frequency => {
-        if (frequency.id !== action.frequency.id) return frequency
+        if (frequency.id !== action.frequency.id) return frequency;
         return {
           ...frequency,
           name: action.frequency.name,
@@ -21,14 +21,16 @@ export default function root(state = initialState, action) {
           settings: {
             private: action.frequency.settings.private,
             tint: action.frequency.settings.tint,
-          }
-        }
-      })
-      return Object.assign({}, state, { frequencies })
+          },
+        };
+      });
+      return Object.assign({}, state, { frequencies });
     }
     case 'DELETE_FREQUENCY': {
-      let frequencies = state.frequencies.slice().filter(frequency => frequency.id !== action.id)
-      return Object.assign({}, state, { frequencies })
+      let frequencies = state.frequencies
+        .slice()
+        .filter(frequency => frequency.id !== action.id);
+      return Object.assign({}, state, { frequencies });
     }
     case 'SET_FREQUENCIES':
       return Object.assign({}, state, {

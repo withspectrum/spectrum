@@ -7,7 +7,7 @@ import FrequencyEditModal from './FrequencyEditModal/index';
 const MODAL_COMPONENTS = {
   PRO_MODAL: ProModal,
   FREQUENCY_CREATION_MODAL: FrequencyCreationModal,
-  FREQUENCY_EDIT_MODAL: FrequencyEditModal
+  FREQUENCY_EDIT_MODAL: FrequencyEditModal,
 };
 
 const ModalRoot = ({ modalType, modalProps }) => {

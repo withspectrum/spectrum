@@ -94,7 +94,10 @@ class Composer extends Component {
       ? this.state.frequencyPicker
       : this.props.frequencies.active;
 
-    let frequencyId = getCurrentFrequency(this.props.frequencies.active, this.props.frequencies.frequencies).id
+    let frequencyId = getCurrentFrequency(
+      this.props.frequencies.active,
+      this.props.frequencies.frequencies,
+    ).id;
 
     let newStoryObj = {
       frequencyId,
@@ -104,7 +107,7 @@ class Composer extends Component {
 
     if (frequency && title) {
       // if everything is filled out
-      this.props.dispatch(publishStory(newStoryObj))
+      this.props.dispatch(publishStory(newStoryObj));
     } else if (!frequency && title) {
       // if no frequency is chosen
       this.setState({

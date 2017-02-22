@@ -41,7 +41,7 @@ export const showGallery = e => (dispatch, getState) => {
       let urlArr = arr.slice().map((img, i) => img.fileName); //=> convert hash to array of filename urls
       let checkForMatch = urlArr.filter(url => {
         let match = url.toString();
-        match = encodeURI(match)
+        match = encodeURI(match);
         let re = new RegExp(match, 'g');
         let itMatches = src.match(re);
         return itMatches;

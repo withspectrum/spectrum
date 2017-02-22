@@ -4,7 +4,15 @@ import { sendMessage } from '../../../actions/messages';
 import { uploadMedia } from '../../../helpers/stories';
 import EmojiPicker from '../../../shared/EmojiPicker';
 import { connect } from 'react-redux';
-import { Input, Form, Footer, Button, MediaInput, MediaLabel, EmojiToggle } from './style';
+import {
+  Input,
+  Form,
+  Footer,
+  Button,
+  MediaInput,
+  MediaLabel,
+  EmojiToggle,
+} from './style';
 
 class ChatInput extends Component {
   constructor() {
@@ -12,7 +20,7 @@ class ChatInput extends Component {
     this.state = {
       message: '',
       file: '',
-      emojiPickerOpen: false
+      emojiPickerOpen: false,
     };
   }
 
@@ -24,27 +32,27 @@ class ChatInput extends Component {
 
   toggleEmojiPicker = e => {
     this.setState({
-      emojiPickerOpen: !this.state.emojiPickerOpen
-    })
-  }
+      emojiPickerOpen: !this.state.emojiPickerOpen,
+    });
+  };
 
-  sendEmojiMessage = (emoji) => {
-    let textInput = ReactDOM.findDOMNode(this.refs.textInput)
+  sendEmojiMessage = emoji => {
+    let textInput = ReactDOM.findDOMNode(this.refs.textInput);
 
     let message = {
       type: 'text',
       content: emoji,
     };
 
-    this.dispatchMessage(message)
+    this.dispatchMessage(message);
 
     // refocus the input
-    textInput.focus()
+    textInput.focus();
     // close the emoji picker
     this.setState({
-      emojiPickerOpen: false
-    })
-  }
+      emojiPickerOpen: false,
+    });
+  };
 
   sendMessage = e => {
     e.preventDefault();
@@ -62,9 +70,9 @@ class ChatInput extends Component {
     });
   };
 
-  dispatchMessage = (message) => {
-    this.props.dispatch(sendMessage(message))
-  }
+  dispatchMessage = message => {
+    this.props.dispatch(sendMessage(message));
+  };
 
   sendMediaMessage = e => {
     let user = this.props.user;
@@ -106,10 +114,14 @@ class ChatInput extends Component {
           onChange={this.sendMediaMessage}
         />
         <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
-        { this.state.emojiPickerOpen &&
-          <EmojiPicker onChange={this.sendEmojiMessage} />
-        }
-        <EmojiToggle active={this.state.emojiPickerOpen} onClick={this.toggleEmojiPicker}>😀</EmojiToggle>
+        {this.state.emojiPickerOpen &&
+          <EmojiPicker onChange={this.sendEmojiMessage} />}
+        <EmojiToggle
+          active={this.state.emojiPickerOpen}
+          onClick={this.toggleEmojiPicker}
+        >
+          😀
+        </EmojiToggle>
         {this.props.user.uid &&
           <Form onSubmit={this.sendMessage}>
             <Input

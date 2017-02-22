@@ -117,7 +117,7 @@ class StoryCard extends Component {
             </StoryBody>
           </LinkWrapper>
         </Link>
-        
+
         {this.props.frequencies.active === 'everything' && frequency
           ? <Link to={`/~${frequency.slug}`}>
               <MetaFreq>
@@ -125,7 +125,7 @@ class StoryCard extends Component {
               </MetaFreq>
             </Link>
           : ``}
-        
+
       </Card>
     );
   }

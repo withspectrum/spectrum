@@ -6,7 +6,7 @@ import {
   ImgBubble,
   BubbleGroup,
   FromName,
-  EmojiBubble
+  EmojiBubble,
 } from './style';
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
@@ -73,14 +73,21 @@ class ChatView extends Component {
       <ChatContainer>
         {messages.map((group, i) => {
           const itsaMe = group[0].userId === this.props.user.uid;
-          const user = !itsaMe && users && users.find(user => user.uid === group[0].userId);
+          const user = !itsaMe &&
+            users &&
+            users.find(user => user.uid === group[0].userId);
           return (
             <BubbleGroup key={i} me={itsaMe}>
               <FromName>{user && user.name}</FromName>
               {group.map((message, i) => {
                 // mxstbr: The "emoji" specific type is legacy, remove in the future
-                if (message.message.type === 'text' || message.message.type === 'emoji') {
-                  let TextBubble = onlyContainsEmoji(message.message.content) ? EmojiBubble : Bubble
+                if (
+                  message.message.type === 'text' ||
+                  message.message.type === 'emoji'
+                ) {
+                  let TextBubble = onlyContainsEmoji(message.message.content)
+                    ? EmojiBubble
+                    : Bubble;
                   return (
                     <TextBubble
                       key={i}

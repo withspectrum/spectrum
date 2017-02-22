@@ -65,7 +65,7 @@ class StoryMaster extends Component {
     );
 
     this.props.dispatch(showModal('FREQUENCY_EDIT_MODAL', currentFrequency));
-  }
+  };
 
   render() {
     let { user, stories, frequencies, composer } = this.props;
@@ -82,14 +82,15 @@ class StoryMaster extends Component {
       );
     }
 
-
-    let urlBase = frequencies.active === 'everything' ? '~everything' : `~${frequencies.active}`;
+    let urlBase = frequencies.active === 'everything'
+      ? '~everything'
+      : `~${frequencies.active}`;
     let usersPermissionOnFrequency = getFrequencyPermission(
       user,
       frequencies.active,
       frequencies.frequencies,
     );
-   
+
     const currentFrequencyPrivacy = currentFrequency
       ? currentFrequency.settings.private
       : '';
@@ -195,7 +196,7 @@ class StoryMaster extends Component {
         <Column>
 
           {this.props.user.uid &&
-            <Header>              
+            <Header>
               {addStoryButton(
                 this.props.user.frequencies,
                 this.props.frequencies.active,

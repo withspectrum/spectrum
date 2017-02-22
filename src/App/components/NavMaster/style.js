@@ -203,7 +203,8 @@ export const Button = styled.button`
     transition: all 0.2s;
     color: rgba(255,255,255,1);
     background-color: ${props => props.theme.brand.default};
-    background-image: ${props => Gradient(props.theme.brand.alt, props.theme.brand.default)};
+    background-image: ${props =>
+  Gradient(props.theme.brand.alt, props.theme.brand.default)};
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
   }
 

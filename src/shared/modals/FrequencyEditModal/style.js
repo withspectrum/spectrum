@@ -41,7 +41,7 @@ export const NameLabel = styled.label`
   font-weight: 700;
   font-size: 12px;
   color: ${({ theme }) => theme.text.default};
-`
+`;
 
 export const NameInput = styled.input`
   display: block;
@@ -57,14 +57,14 @@ export const NameInput = styled.input`
   &:focus {
     border: 1px solid ${({ theme }) => theme.brand.default};
   }
-`
+`;
 
 export const EditSlug = styled.label`
   position: relative;
   display: block;
   width: 100%;
   padding-left: 1rem;
-`
+`;
 
 export const Pre = styled.span`
   position: absolute;
@@ -82,9 +82,10 @@ export const Pre = styled.span`
     width: 4px;
     height: 4px;
     border-radius: 10px;
-    background: ${props => props.error ? props.theme.warn.default : 'transparent'};
+    background: ${props =>
+  props.error ? props.theme.warn.default : 'transparent'};
   }
-`
+`;
 
 export const EditSlugInput = styled.input`
   background: #f5f6f7;
@@ -98,11 +99,12 @@ export const EditSlugInput = styled.input`
   &:focus {
     border-bottom: 1px solid ${({ theme }) => theme.brand.default};
   }
-`
+`;
 
 export const ErrorMessage = styled.span`
   font-size: 12px;
-  color: ${props => props.warn ? props.theme.warn.default : props.theme.brand.default};
+  color: ${props =>
+  props.warn ? props.theme.warn.default : props.theme.brand.default};
   padding: 0 16px;
   margin-bottom: 8px;
   margin-top: 8px;
@@ -111,21 +113,21 @@ export const ErrorMessage = styled.span`
   a {
     text-decoration: underline;
   }
-`
+`;
 
 export const Privacy = styled.div`
   padding: 1rem 1rem 0;
-`
+`;
 
 export const PrivacyLabel = styled.label`
   color: ${({ theme }) => theme.text.default};
   font-weight: 700;
   font-size: 12px;
-`
+`;
 export const PrivacyCheckbox = styled.input`
   display: inline-block;
   margin-right: 8px;
-`
+`;
 
 export const PrivacyText = styled.p`
   font-size: 12px;
@@ -135,7 +137,7 @@ export const PrivacyText = styled.p`
   b {
     color: ${({ theme }) => theme.text.default};
   }
-`
+`;
 
 export const SaveButton = styled.button`
   position: relative;
@@ -145,14 +147,17 @@ export const SaveButton = styled.button`
   -webkit-display: none;
   display: inline-block;
   background: ${props => props.disabled ? '#fff' : props.theme.brand.default};
-  background-image: ${props => props.disabled ? '#fff' : Gradient(props.theme.brand.alt, props.theme.brand.default)};
+  background-image: ${props =>
+  props.disabled
+    ? '#fff'
+    : Gradient(props.theme.brand.alt, props.theme.brand.default)};
   border-radius: 4px;
   color: ${props => props.disabled ? props.theme.text.alt : '#fff'};
 
   &:hover {
     cursor: pointer;
   }
-`
+`;
 
 export const DeleteButton = styled.button`
   position: relative;
@@ -162,12 +167,13 @@ export const DeleteButton = styled.button`
   -webkit-display: none;
   display: inline-block;
   background: #fff;
-  color: ${props => props.gray ? props.theme.text.alt : props.theme.warn.default};
+  color: ${props =>
+  props.gray ? props.theme.text.alt : props.theme.warn.default};
 
   &:hover {
     cursor: pointer;
   }
-`
+`;
 
 export const BigDeleteButton = styled.button`
   position: relative;
@@ -183,7 +189,7 @@ export const BigDeleteButton = styled.button`
   &:hover {
     cursor: pointer;
   }
-`
+`;
 
 export const DeleteWarning = styled.div`
   width: 100%;
@@ -191,4 +197,4 @@ export const DeleteWarning = styled.div`
   font-size: 0.875rem;
   color: #fff;
   background: ${props => props.theme.warn.default};
-`
+`;
