@@ -7,22 +7,17 @@ export const Card = styled.div`
 	margin: 8px;
 	margin-bottom: 0;
 	flex: 0 0 auto;
-	padding: 16px;
 	border-radius: 2px;
 	background-color: ${({ theme }) => theme.bg.default};
 	transition: all 0.2s ease-in;
 	-webkit-font-smoothing: subpixel-antialiased;
-	box-shadow: ${Shadow.low}, inset ${props =>
-  props.selected
-    ? `-16px 0 0 -8px ${props.theme.brand.default}`
-    : `0px 0 0 0px transparent`};
+
+	box-shadow: ${Shadow.low};
 
 	${props => !props.static &&
 css`
 		&:hover {
-			box-shadow: ${Shadow.high} ${props.selected
-  ? `, inset -32px 0 0 -16px ${props.theme.brand.default}`
-  : ``};
+			box-shadow: ${Shadow.high};
 			transition: all 0.2s ease-out;
 			cursor: pointer;
 		}
@@ -34,6 +29,24 @@ export const LinkWrapper = styled.div`
 	flex-direction: column;
 	flex: 0 0 auto;
 	background-color: #ffffff;
+	padding: 16px;
+	transition: all 0.2s ease-in;
+
+	box-shadow: inset ${props =>
+  props.selected
+    ? `-16px 0 0 -8px ${props.theme.brand.default}`
+    : `0px 0 0 0px transparent`};
+
+	${props => !props.static &&
+css`
+		&:hover {
+			box-shadow: ${props.selected
+  ? `, inset -32px 0 0 -16px ${props.theme.brand.default}`
+  : ``};
+			transition: all 0.2s ease-out;
+			cursor: pointer;
+		}
+	`}
 `;
 
 export const StoryBody = styled.div`
@@ -93,8 +106,14 @@ export const Meta = styled(H5)`
 
 export const MetaFreq = styled(Meta)`
   color: ${({ theme }) => theme.text.placeholder};
-  font-weight: 700;
+  font-weight: 400;
   transition: color 0.2s ease-out;
+  display: block;
+  width: 100%;
+  background: #f6f7f8;
+  padding: 8px 16px;
+  border-radius: 0 0 2px 2px;
+  border-top: 1px solid ${({ theme }) => theme.border.default};
 
   &:hover {
   	color: ${({ theme }) => theme.brand.default}

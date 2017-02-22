@@ -185,19 +185,34 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.button`
-  background-color: ${({ theme }) => theme.brand.default};
-  background-image: radial-gradient(ellipse farthest-corner at top left , ${(
-  { theme },
-) =>
-  theme.brand.alt} 0%, ${({ theme }) => theme.brand.default} 100%);
-  font-size: 18px;
+  margin: 16px;
+  background-color: #0f1010;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.02);
+  font-size: 12px;
   font-weight: bold;
-  color: ${({ theme }) => theme.text.reverse};
-  height: 32px;
-  flex: 0 0 40px;
-  line-height: 32px;
-  text-align: center;
-  vertical-align: middle;
-  border-left: 2px solid ${({ theme }) => theme.bg.reverse};
-  border-radius: 0px 4px 4px 0px;
+  color: rgba(255,255,255,0.7);
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  flex: 0 0 auto;
+  border-radius: 2px;
+  transition: all 0.2s;
+
+  &:hover {
+    cursor: pointer;
+    transition: all 0.2s;
+    color: rgba(255,255,255,1);
+    background-color: ${props => props.theme.brand.default};
+    background-image: ${props => Gradient(props.theme.brand.alt, props.theme.brand.default)};
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+
+  &:active {
+    box-shadow: 0 1px 0 rgba(255,255,255,0.04);
+    background-color: #0f1010;
+    background-image: none;
+    position: relative;
+    top: 1px;
+    transition: all 0s;
+  }
 `;

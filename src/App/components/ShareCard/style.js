@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const Body = styled.div`
 	width: 100%;
+	padding: 1rem;
 `;
 
 export const Title = styled.p`

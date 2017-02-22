@@ -8,7 +8,6 @@ import {
   LoginWrapper,
   LoginText,
   LoginButton,
-  HiddenInput,
   TipButton,
   Overlay,
 } from './style';
@@ -19,6 +18,7 @@ import {
   subscribeFrequency,
 } from '../../../actions/frequencies';
 import { login } from '../../../actions/user';
+import { showModal } from '../../../actions/modals';
 import {
   getFrequencyPermission,
   getCurrentFrequency,
@@ -58,26 +58,38 @@ class StoryMaster extends Component {
     });
   };
 
+  editFrequency = () => {
+    let currentFrequency = getCurrentFrequency(
+      this.props.frequencies.active,
+      this.props.frequencies.frequencies,
+    );
+
+    this.props.dispatch(showModal('FREQUENCY_EDIT_MODAL', currentFrequency));
+  }
+
   render() {
-    const { user, stories, frequencies, composer } = this.props;
+    let { user, stories, frequencies, composer } = this.props;
     let sortedStories = this.sortArrayByKey(stories.stories, 'timestamp');
 
-    if (frequencies.active !== 'all') {
+    let currentFrequency = getCurrentFrequency(
+      frequencies.active,
+      frequencies.frequencies,
+    );
+
+    if (frequencies.active !== 'everything') {
       sortedStories = sortedStories.filter(
-        story => story.frequency === frequencies.active,
+        story => story.frequency === currentFrequency.id,
       );
     }
 
-    let urlBase = frequencies.active === 'all' ? 'all' : frequencies.active;
+
+    let urlBase = frequencies.active === 'everything' ? '~everything' : `~${frequencies.active}`;
     let usersPermissionOnFrequency = getFrequencyPermission(
       user,
       frequencies.active,
       frequencies.frequencies,
     );
-    const currentFrequency = getCurrentFrequency(
-      frequencies.active,
-      frequencies.frequencies,
-    );
+   
     const currentFrequencyPrivacy = currentFrequency
       ? currentFrequency.settings.private
       : '';
@@ -93,11 +105,11 @@ class StoryMaster extends Component {
         return;
       } else if (
         !usersFrequencies &&
-        activeFrequency !== 'all' &&
+        activeFrequency !== 'everything' &&
         activeFrequency !== null
       ) {
         return <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>;
-      } else if (activeFrequency === 'all' || activeFrequency === null) {
+      } else if (activeFrequency === 'everything' || activeFrequency === null) {
         return '';
       } else if (keys.indexOf(activeFrequency) > -1) {
         return (
@@ -115,7 +127,7 @@ class StoryMaster extends Component {
 
       if (!usersFrequencies) {
         return '';
-      } else if (keys.indexOf(activeFrequency) > -1) {
+      } else if (activeFrequency === 'everything') {
         return (
           <TipButton
             onClick={this.toggleComposer}
@@ -127,7 +139,7 @@ class StoryMaster extends Component {
               : <NewPost color="brand" stayActive />}
           </TipButton>
         );
-      } else if (activeFrequency === 'all') {
+      } else if (keys.indexOf(currentFrequency.id) > -1) {
         return (
           <TipButton
             onClick={this.toggleComposer}
@@ -161,14 +173,13 @@ class StoryMaster extends Component {
       switch (usersPermissionOnFrequency) {
         case 'owner':
           return (
-            <label>
-              {currentFrequencyPrivacy ? <Lock /> : <Unlock />}
-              <HiddenInput
-                type="checkbox"
-                checked={currentFrequencyPrivacy}
-                onChange={this.togglePrivacy}
-              />
-            </label>
+            <TipButton
+              onClick={this.editFrequency}
+              tipText="Frequency Settings"
+              tipLocation="bottom"
+            >
+              <Lock />
+            </TipButton>
           );
         case 'subscriber':
           return;
@@ -184,7 +195,7 @@ class StoryMaster extends Component {
         <Column>
 
           {this.props.user.uid &&
-            <Header>
+            <Header>              
               {addStoryButton(
                 this.props.user.frequencies,
                 this.props.frequencies.active,
@@ -193,7 +204,7 @@ class StoryMaster extends Component {
                 this.props.user.frequencies,
                 this.props.frequencies.active,
               )}
-              {frequencies.active === 'all' ? '' : privacyButton}
+              {frequencies.active === 'everything' ? '' : privacyButton}
             </Header>}
 
           <ScrollBody>
@@ -212,7 +223,7 @@ class StoryMaster extends Component {
 
             {currentFrequency &&
               frequencies.active &&
-              frequencies.active !== 'all'
+              frequencies.active !== 'everything'
               ? <ShareCard data={currentFrequency} />
               : ''}
 

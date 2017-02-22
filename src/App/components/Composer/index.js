@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { updateTitle, updateBody } from '../../../actions/composer';
 import { publishStory, initStory } from '../../../actions/stories';
+import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { loadMessages } from '../../../actions/messages';
 import { uploadMultipleMedia } from '../../../helpers/stories';
 import Textarea from 'react-textarea-autosize';
@@ -90,12 +91,14 @@ class Composer extends Component {
     let body = this.props.composer.body;
     // if we pass in a custom frequency, it means the user is in 'all' and has selected a frequency from the dropdown
     // if the user isn't in all, we'll send the currently active frequency via the redux state
-    let frequency = this.props.frequencies.active === 'all'
+    let frequency = this.props.frequencies.active === 'everything'
       ? this.state.frequencyPicker
       : this.props.frequencies.active;
 
+    let frequencyId = getCurrentFrequency(this.props.frequencies.active, this.props.frequencies.frequencies).id
+
     let newStoryObj = {
-      frequency,
+      frequencyId,
       title,
       body,
     };
@@ -128,10 +131,10 @@ class Composer extends Component {
     let { frequencies, composer } = this.props;
     let activeFrequency = frequencies.active;
     let currentFrequency = frequencies.frequencies.filter(freq => {
-      return freq.id === activeFrequency;
+      return freq.slug === activeFrequency;
     });
 
-    let byline = activeFrequency === 'all'
+    let byline = activeFrequency === 'everything'
       ? <span>
           <Byline>
             Post in

@@ -28,6 +28,7 @@ export const Bubble = styled.p`
   	text-decoration: underline;
   	word-wrap: break-word;
   	line-height: inherit; 
+  	word-break: break-all;
   }
 `;
 
@@ -86,6 +87,16 @@ export const ImgBubble = styled.img`
 	&:first-of-type {
 		margin-top: 0;
 	}
+`;
+
+export const EmojiBubble = styled.div`
+	font-size: 40px;
+  padding: 8px;
+  clear: both;
+  display: block;
+  margin-top: 12px;
+  margin-bottom: 8px;
+	float: ${props => props.me ? `right;` : `left;`}
 `;
 
 export const FromName = styled.span`

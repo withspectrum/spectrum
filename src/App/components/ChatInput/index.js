@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { sendMessage } from '../../../actions/messages';
 import { uploadMedia } from '../../../helpers/stories';
+import EmojiPicker from '../../../shared/EmojiPicker';
 import { connect } from 'react-redux';
-import { Input, Form, Footer, Button, MediaInput, MediaLabel } from './style';
+import { Input, Form, Footer, Button, MediaInput, MediaLabel, EmojiToggle } from './style';
 
 class ChatInput extends Component {
   constructor() {
@@ -10,6 +12,7 @@ class ChatInput extends Component {
     this.state = {
       message: '',
       file: '',
+      emojiPickerOpen: false
     };
   }
 
@@ -18,6 +21,30 @@ class ChatInput extends Component {
       message: e.target.value,
     });
   };
+
+  toggleEmojiPicker = e => {
+    this.setState({
+      emojiPickerOpen: !this.state.emojiPickerOpen
+    })
+  }
+
+  sendMessageEmoji = (emoji) => {
+    let textInput = ReactDOM.findDOMNode(this.refs.textInput)
+
+    let messageObj = {
+      type: 'emoji',
+      content: emoji,
+    };
+
+    this.props.dispatch(sendMessage(messageObj));
+    
+    // refocus the input
+    textInput.focus()
+    // close the emoji picker
+    this.setState({
+      emojiPickerOpen: false
+    })
+  }
 
   sendMessage = e => {
     e.preventDefault();
@@ -75,9 +102,15 @@ class ChatInput extends Component {
           onChange={this.sendMediaMessage}
         />
         <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
+        { this.state.emojiPickerOpen &&
+          <EmojiPicker onChange={this.sendMessageEmoji} />
+        }
+        <EmojiToggle active={this.state.emojiPickerOpen} onClick={this.toggleEmojiPicker}>😀</EmojiToggle>
         {this.props.user.uid &&
           <Form onSubmit={this.sendMessage}>
             <Input
+              autoFocus={true}
+              ref="textInput"
               placeholder="Your message here..."
               value={this.state.message}
               onChange={this.updateMessageState}
