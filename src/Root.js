@@ -30,7 +30,7 @@ class Root extends Component {
       let users = firebase.database().ref('users');
 
       // we know the user exists, so lets fetch their data by matching the uid
-      users.orderByChild('uid').equalTo(user.uid).on('value', snapshot => {
+      users.orderByChild('uid').equalTo(user.uid).once('value', snapshot => {
         // once we've retreived our user, we can dispatch to redux and store their info in state
         const userData = snapshot.val()[user.uid];
         dispatch(

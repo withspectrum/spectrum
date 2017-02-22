@@ -49,7 +49,7 @@ const fetch = (ref, orderBy, equalTo) => {
       .ref(ref)
       .orderByChild(orderBy)
       .equalTo(equalTo)
-      .on('value', snapshot => {
+      .once('value', snapshot => {
         let val = snapshot.val();
 
         if (ref === 'stories') {

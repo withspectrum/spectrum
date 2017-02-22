@@ -50,7 +50,7 @@ export const loadMessages = () => (dispatch, getState) => {
   let messagesRef = database.ref(`messages/${activeStory}`);
 
   // get all the messages for this story
-  messagesRef.on(
+  messagesRef.once(
     'value',
     snapshot => {
       const val = snapshot.val();

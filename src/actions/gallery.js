@@ -35,7 +35,7 @@ export const showGallery = e => (dispatch, getState) => {
   firebase
     .database()
     .ref(`stories/${activeStory}/media`)
-    .on('value', snapshot => {
+    .once('value', snapshot => {
       let val = snapshot.val();
       let arr = hashToArray(val);
       let urlArr = arr.slice().map((img, i) => img.fileName); //=> convert hash to array of filename urls
@@ -48,7 +48,7 @@ export const showGallery = e => (dispatch, getState) => {
       });
 
       let matchToIndex = checkForMatch[0];
-      let index = urlArr.indexOf(matchToIndex);      
+      let index = urlArr.indexOf(matchToIndex);
 
       getStorageUrlsFromArr(urlArr, activeStory).then(arr => {
         dispatch({
