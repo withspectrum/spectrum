@@ -31,56 +31,16 @@ export const setup = stateFetch => {
   };
 };
 
-/*------------------------------------------------------------\*
-*
-
-loadMessages
-Fetches all messages for the active story.
-
-*
-\*------------------------------------------------------------*/
-export const loadMessages = () => (dispatch, getState) => {
-  dispatch({ type: 'LOADING' });
-
-  let { stories, database } = setup(getState());
-  let activeStory = stories.active;
-
-  if (!activeStory) return;
-
-  let messagesRef = database.ref(`messages/${activeStory}`);
-
-  // get all the messages for this story
-  messagesRef.once(
-    'value',
-    snapshot => {
-      const val = snapshot.val();
-      if (!val) {
-        dispatch({ type: 'STOP_LOADING' });
-        return;
-      }
-      // convert the messages into an array
-      let messagesArray = hashToArray(val);
-      // and pass our array to be sorted into groups based on the user who posted the message
-      let sortedMessages = sortAndGroupBubbles(messagesArray);
-      // send the sorted messages to redux
-      dispatch({
-        type: 'SET_MESSAGES',
-        messages: sortedMessages,
-        story: activeStory,
-      });
-
-      // update the story's message count to the latest number of messages
-      let story = database.ref(`stories/${activeStory}`);
-      story.update({
-        message_count: snapshot.numChildren(),
-      });
-    },
-    err => {
-      // if there was an error fetching messages
-      if (err) console.log('Error settings messages: ', err);
-    },
-  );
-};
+export const setAllMessages = messages => {
+  let sorted = {}
+  Object.keys(messages).map(story => {
+    sorted[story] = sortAndGroupBubbles(hashToArray(messages[story]));
+  })
+  return {
+    type: 'SET_ALL_MESSAGES',
+    messages: sorted,
+  }
+}
 
 /*------------------------------------------------------------\*
 *

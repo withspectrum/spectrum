@@ -98,52 +98,48 @@ createStory
 export const publishStory = story => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
 
-  return new Promise((resolve, reject) => {
-    let state = getState();
-    let storyKey = state.composer.newStoryKey;
-    let user = state.user;
-    let uid = user.uid;
+  let state = getState();
+  let storyKey = state.composer.newStoryKey;
+  let user = state.user;
+  let uid = user.uid;
 
-    let storyRef = firebase.database().ref().child(`stories/${storyKey}`);
+  let storyRef = firebase.database().ref().child(`stories/${storyKey}`);
 
-    let storyData = {
-      id: storyKey, // we need this id again in the CREATE_STORY reducer
-      published: true,
-      timestamp: firebase.database.ServerValue.TIMESTAMP,
-      content: {
-        title: story.title,
-        description: story.body,
-      },
-      creator: {
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        uid,
-      },
-      frequency: story.frequencyId,
-    };
+  let storyData = {
+    id: storyKey, // we need this id again in the CREATE_STORY reducer
+    published: true,
+    timestamp: firebase.database.ServerValue.TIMESTAMP,
+    content: {
+      title: story.title,
+      description: story.body,
+    },
+    creator: {
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      uid,
+    },
+    frequency: story.frequencyId,
+  };
 
-    storyRef.update(storyData, err => {
-      if (err) {
-        console.log('there was an error publishing your story: ', err);
-      } else {
-        dispatch({
-          type: 'CREATE_STORY',
-          story: {
-            ...storyData,
-            // Timestamp is set on the server by Firebase, this simulates that by setting it to right
-            // now
-            timestamp: Date.now(),
-          },
-        });
+  storyRef.update(storyData, err => {
+    if (err) {
+      console.log('there was an error publishing your story: ', err);
+    } else {
+      dispatch({
+        type: 'CREATE_STORY',
+        story: {
+          ...storyData,
+          // Timestamp is set on the server by Firebase, this simulates that by setting it to right
+          // now
+          timestamp: Date.now(),
+        },
+      });
 
-        dispatch({
-          type: 'TOGGLE_COMPOSER_OPEN',
-          isOpen: false,
-        });
-
-        resolve();
-      }
-    });
+      dispatch({
+        type: 'TOGGLE_COMPOSER_OPEN',
+        isOpen: false,
+      });
+    }
   });
 };
 
