@@ -14,6 +14,7 @@ import {
   MetaFreq,
   Title,
   Media,
+  UnreadCount,
 } from './style';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { showGallery } from '../../../actions/gallery';
@@ -106,6 +107,10 @@ class StoryCard extends Component {
                   {story.message_count > 0
                     ? `${story.message_count} messages`
                     : 'No messages yet'}
+                  {this.props.unreadCount > 0 &&
+                    <UnreadCount>
+                      &nbsp;({this.props.unreadCount} new!)
+                    </UnreadCount>}
                 </Meta>
               </UserMeta>
             </StoryHeader>

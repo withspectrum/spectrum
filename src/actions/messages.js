@@ -31,15 +31,17 @@ export const setup = stateFetch => {
   };
 };
 
-export const setAllMessages = messages => {
+export const setAllMessages = (messages, story) => (dispatch, getState) => {
+  const { stories: { stories } } = getState();
   let sorted = {};
   Object.keys(messages).map(story => {
-    sorted[story] = sortAndGroupBubbles(hashToArray(messages[story]));
+    sorted[story] = hashToArray(messages[story]);
   });
-  return {
+  dispatch({
     type: 'SET_ALL_MESSAGES',
     messages: sorted,
-  };
+    story: story || stories.active,
+  });
 };
 
 /*------------------------------------------------------------\*
@@ -77,7 +79,12 @@ export const sendMessage = message => (dispatch, getState) => {
 
   // save our new message
   newMessageRef.set(messageData, err => {
-    if (err) console.log('Error posting a new message: ', err);
+    if (err) return console.log('Error posting a new message: ', err);
+    dispatch({
+      type: 'SEND_MESSAGE',
+      message: newMessageKey,
+      story: activeStory,
+    });
   });
 
   // if our url checker returns data, parse the url for metadata to store along with the message (for link unfurling)

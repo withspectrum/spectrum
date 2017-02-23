@@ -48,7 +48,7 @@ class Root extends Component {
     // Listen to changes in messages
     firebase.database().ref('messages').on('value', snapshot => {
       const messages = snapshot.val();
-      dispatch(setAllMessages(messages));
+      dispatch(setAllMessages(messages, params.story));
     });
   }
 
@@ -61,7 +61,7 @@ class Root extends Component {
     }
 
     // If the story changes sync the active story to the store and load the messages
-    if (nextProps.params.story !== params.frequency) {
+    if (nextProps.params.story !== params.story) {
       dispatch(setActiveStory(nextProps.params.story));
     }
   }

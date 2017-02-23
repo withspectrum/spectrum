@@ -68,7 +68,7 @@ class StoryMaster extends Component {
   };
 
   render() {
-    let { user, stories, frequencies, composer } = this.props;
+    let { user, stories, frequencies, composer, messages } = this.props;
     let sortedStories = this.sortArrayByKey(stories.stories, 'timestamp');
 
     let currentFrequency = getCurrentFrequency(
@@ -219,7 +219,19 @@ class StoryMaster extends Component {
             {stories.stories.length > 0 &&
               // slice and reverse makes sure our stories show up in revers chron order
               sortedStories.slice().reverse().map((story, i) => {
-                return <StoryCard urlBase={urlBase} data={story} key={i} />;
+                const msgs = messages[story.id];
+                const unreadCount = msgs &&
+                  msgs.length -
+                    1 -
+                    msgs.map(msg => msg.id).indexOf(user.lastRead[story.id]);
+                return (
+                  <StoryCard
+                    urlBase={urlBase}
+                    data={story}
+                    key={i}
+                    unreadCount={unreadCount}
+                  />
+                );
               })}
 
             {currentFrequency &&
@@ -245,6 +257,7 @@ const mapStateToProps = state => {
     frequencies: state.frequencies,
     composer: state.composer,
     user: state.user,
+    messages: state.messages.messages,
   };
 };
 
