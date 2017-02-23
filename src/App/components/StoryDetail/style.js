@@ -8,6 +8,11 @@ export const ScrollBody = styled.div`
 	max-height: 100vh;
 	flex-direction: column;
 	overflow-y: auto;
+
+	@media (max-width: 768px) {
+    width: 100%;
+    flex: 1 0 100%;    
+  }
 `;
 
 export const ContentView = styled.div`
@@ -15,6 +20,11 @@ export const ContentView = styled.div`
 	flex: 0 0 auto;
 	flex-direction: column;
 	padding: 32px;
+
+	@media (max-width: 768px) {
+		padding: 16px;
+		padding-top: 127px;
+	}
 `;
 
 export const Header = styled.div`
@@ -74,3 +84,23 @@ export const HiddenButton = styled.button`
 	background-color: transparent;
 	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip')};
 `;
+
+export const BackArrow = styled.span`
+	margin-bottom: 16px;
+	font-size: 20px;
+	width: 100%;
+	border-bottom: 1px solid ${props => props.theme.border.default};
+	background: #fff;
+	box-shadow: 0 1px 1px rgba(0,0,0,0.02);
+	padding: 1rem;
+	display: none;
+
+	@media (max-width: 768px) {
+		display: block;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 1000;
+	}
+`

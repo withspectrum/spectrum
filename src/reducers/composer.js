@@ -11,6 +11,10 @@ export default function root(state = initialState, action) {
       return Object.assign({}, state, {
         isOpen: !state.isOpen,
       });
+    case 'CLOSE_COMPOSER':
+      return Object.assign({}, state, {
+        isOpen: false
+      })
     case 'CREATE_DRAFT':
       return Object.assign({}, state, {
         newStoryKey: action.newStoryKey,

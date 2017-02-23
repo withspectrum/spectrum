@@ -9,6 +9,14 @@ export const Column = styled.div`
 	background-color: ${({ theme }) => theme.bg.wash};
 	height: 100%;
 	overflow: visible;
+	transition: transform 0.2s ease-in-out;
+
+	@media (max-width: 768px) {
+    width: 100%;
+    flex: 1 0 auto
+    transition: transform 0.2s ease-in-out;
+    transform: translateX(${props => props.navVisible ? '0px' : '-359px'});
+  }
 `;
 
 export const ScrollBody = styled.div`
@@ -43,11 +51,13 @@ export const Overlay = styled.div`
 	transition: opacity 0.1s ease-in;
 	z-index: 2;
 	pointer-events: none;
+	width: 100vw;
+	height: 100vh;
 `;
 
 export const Header = styled.div`
 	display: flex;
-	flex-direction: row-reverse;
+	flex-direction: row;
 	flex: 0 0 48px;
 	width: 100%;
 	background-color: ${({ theme }) => theme.bg.default};
@@ -188,3 +198,14 @@ export const TipButton = styled.button`
 	background-color: transparent;
 	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip')};
 `;
+
+export const MenuButton = styled.div`
+	font-size: 20px;
+	color: ${props => props.theme.text.alt};
+	display: none;
+	padding-left: 8px;
+
+	@media (max-width: 768px) {
+		display: block;
+	}
+`

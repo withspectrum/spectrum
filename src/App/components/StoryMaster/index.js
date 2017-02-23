@@ -10,6 +10,7 @@ import {
   LoginButton,
   TipButton,
   Overlay,
+  MenuButton
 } from './style';
 import { toggleComposer } from '../../../actions/composer';
 import {
@@ -66,6 +67,12 @@ class StoryMaster extends Component {
 
     this.props.dispatch(showModal('FREQUENCY_EDIT_MODAL', currentFrequency));
   };
+
+  toggleNav = () => {
+    this.props.dispatch({
+      type: 'TOGGLE_NAV'
+    })
+  }
 
   render() {
     let { user, stories, frequencies, composer } = this.props;
@@ -193,19 +200,23 @@ class StoryMaster extends Component {
 
     if (canView) {
       return (
-        <Column>
+        <Column navVisible={this.props.ui.navVisible}>
 
           {this.props.user.uid &&
             <Header>
-              {addStoryButton(
-                this.props.user.frequencies,
-                this.props.frequencies.active,
-              )}
+              <MenuButton onClick={this.toggleNav}>☰</MenuButton>
+
+              {frequencies.active === 'everything' ? '' : privacyButton}
+
               {subscribeButton(
                 this.props.user.frequencies,
                 this.props.frequencies.active,
               )}
-              {frequencies.active === 'everything' ? '' : privacyButton}
+
+              {addStoryButton(
+                this.props.user.frequencies,
+                this.props.frequencies.active,
+              )}
             </Header>}
 
           <ScrollBody>
@@ -245,6 +256,7 @@ const mapStateToProps = state => {
     frequencies: state.frequencies,
     composer: state.composer,
     user: state.user,
+    ui: state.ui,
   };
 };
 

@@ -15,6 +15,10 @@ export const ContentView = styled.div`
 	flex: 0 0 auto;
 	flex-direction: column;
 	padding: 32px;
+
+	@media (max-width: 768px) {
+		padding: 16px;
+	}
 `;
 
 export const Header = styled.div`
@@ -158,3 +162,17 @@ export const TextBody = {
   color: '#171A21',
   whiteSpace: 'pre-wrap',
 };
+
+export const BackArrow = styled.span`
+	font-size: 20px;
+	width: 100%;
+	border-bottom: 1px solid ${props => props.theme.border.default};
+	background: #fff;
+	box-shadow: 0 1px 1px rgba(0,0,0,0.02);
+	padding: 1rem;
+	display: none;
+
+	@media (max-width: 768px) {
+		display: block;
+	}
+`

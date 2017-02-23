@@ -87,4 +87,8 @@ export const EmojiToggle = styled.div`
 		cursor: pointer;
 		background: ${props => props.active ? props.theme.brand.default : '#eee'};
 	}
+
+	@media (max-width: 768px) {
+		display: none;
+	}
 `;

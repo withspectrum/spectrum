@@ -57,7 +57,7 @@ class DetailView extends Component {
     if (story && !composer.isOpen) {
       // if we're viewing a story and the composer is not open
       return (
-        <ViewContainer>
+        <ViewContainer mobile={this.props.stories.active || this.props.composer.isOpen}>
           <LogicContainer>
             <StoryDetail
               activeStory={story}
@@ -72,7 +72,7 @@ class DetailView extends Component {
     } else if (composer.isOpen) {
       // otherwise if the composer is open
       return (
-        <ViewContainer>
+        <ViewContainer mobile={this.props.stories.active || this.props.composer.isOpen}>
           <LogicContainer>
             <Composer />
           </LogicContainer>
@@ -81,7 +81,7 @@ class DetailView extends Component {
     } else {
       // otherwise show a null state
       return (
-        <ViewContainer>
+        <ViewContainer mobile={this.props.stories.active || this.props.composer.isOpen}>
           <NullContainer>
             <NullText>Choose a story to get started!</NullText>
           </NullContainer>

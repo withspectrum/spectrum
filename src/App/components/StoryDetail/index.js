@@ -16,6 +16,7 @@ import {
   HiddenButton,
   HiddenLabel,
   HiddenInput,
+  BackArrow,
 } from './style';
 import { showGallery } from '../../../actions/gallery';
 import { toggleLockedStory, deleteStory } from '../../../actions/stories';
@@ -72,6 +73,12 @@ class StoryView extends Component {
     this.props.dispatch(toggleLockedStory(story));
   };
 
+  clearActiveStory = () => {
+    this.props.dispatch({
+      type: 'CLEAR_ACTIVE_STORY'
+    })
+  }
+
   render() {
     let story = this.props.activeStory;
     let creator = this.props.creator;
@@ -80,6 +87,8 @@ class StoryView extends Component {
 
     return (
       <ScrollBody>
+        <BackArrow onClick={this.clearActiveStory}>&larr;</BackArrow>
+
         <ContentView>
           <Header>
             <FlexColumn>
