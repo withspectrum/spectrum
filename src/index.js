@@ -7,8 +7,6 @@ import { initStore } from './store';
 import * as firebase from 'firebase';
 import FIREBASE_CONFIG from './config/FirebaseConfig';
 import { startListeningToAuth } from './actions/user';
-import { loadFrequencies } from './actions/frequencies';
-import { loadStories } from './actions/stories';
 import { Body } from './App/style';
 import Root from './Root';
 import { asyncComponent } from './helpers/utils';

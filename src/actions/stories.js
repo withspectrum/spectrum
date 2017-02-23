@@ -32,64 +32,6 @@ export const setup = stateFetch => {
 /*------------------------------------------------------------\*
 *
 
-loadStories
-1. Get all the frequencies the user is subscribed to
-2. Return all the stories on the server for each of those frequencies
-3. Sort and filter all of those stories on the frontend
-
-*
-\*------------------------------------------------------------*/
-export const loadStories = () => (dispatch, getState) => {
-  dispatch({ type: 'LOADING' });
-  let { user } = setup(getState());
-  let userFrequencies = user.frequencies;
-
-  if (!user.uid) return;
-
-  let mapStoryGroupsToArray = storyGroups => {
-    return new Promise((resolve, reject) => {
-      let storiesArray = [];
-
-      // for each group of stories (grouped by frequency ID)
-      storyGroups.map(group => {
-        // loop through each story in that group
-        for (let i in group) {
-          // and push it to our return array
-          storiesArray.push(group[i]);
-        }
-      });
-
-      // once this is done, we can resolve the promise with our flattened array
-      resolve(storiesArray);
-    });
-  };
-
-  fetchStoriesForFrequencies(userFrequencies)
-    .then(storiesGroupedByFrequency => {
-      /*  this returns an array of arrays
-        it looks like this:
-        [
-          frequencyIdA: [{story}, {story}, ...],
-          frequencyIdB: [{story}, {story}, ...]
-        ]
-
-        Because of this structure, we need to iterate through this nested array and destructure it into one flat array containing all the stories
-    */
-      return mapStoryGroupsToArray(storiesGroupedByFrequency);
-    })
-    .then(stories => {
-      // we now have all the stories fetched from each frequency the user is a member of in a flattened array. We can send this to the ui and filter by frequency based on active frequency
-
-      dispatch({
-        type: 'SET_STORIES',
-        stories,
-      });
-    });
-};
-
-/*------------------------------------------------------------\*
-*
-
 createStory
 
 

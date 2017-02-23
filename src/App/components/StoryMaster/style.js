@@ -46,7 +46,7 @@ export const Overlay = styled.div`
 `;
 
 export const Header = styled.div`
-	display: flex;
+	display: ${props => props.visible ? 'flex' : 'none'};
 	flex-direction: row-reverse;
 	flex: 0 0 48px;
 	width: 100%;
