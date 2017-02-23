@@ -54,33 +54,6 @@ export const setActiveFrequency = frequency => ({
 /*------------------------------------------------------------\*
 *
 
-loadFrequencies
-This creates an active listener to the frequencies that are saved in the database.
-
-NOTE: Right now we are returning ALL frequencies. This will need to change
-very soon as we want to respect private frequencies and avoid a noisy new user experience.
-
-*
-\*------------------------------------------------------------*/
-export const loadFrequencies = () => (dispatch, getState) => {
-  let { user } = getState();
-  let userFrequencies = user.frequencies;
-  if (!user.uid) return;
-  dispatch({ type: 'LOADING' });
-
-  fetchFrequenciesForUser(userFrequencies).then(frequencies => {
-    let obj = frequencies.slice().filter(frequency => frequency !== null);
-
-    dispatch({
-      type: 'SET_FREQUENCIES',
-      frequencies: obj,
-    });
-  });
-};
-
-/*------------------------------------------------------------\*
-*
-
 addFrequency
 Creating a new frequency requires a few operations:
 
@@ -94,7 +67,7 @@ We have a two-way relationship between a user and frequencies:
 
 This means that a change in one of these fields requires a change in the other
 
-NOTE: We do not dispatch anything in this action because we have an open listener to any changes in the frequencies that was set in loadFrequencies()
+NOTE: We do not dispatch anything in this action because we have an open listener to any changes in the frequencies that was set in <Root />
 
 *
 \*------------------------------------------------------------*/
@@ -182,7 +155,7 @@ export const editFrequency = obj => (dispatch, getState) => {
       // set the active frequency in redux as the newly created frequency
       dispatch({
         type: 'SET_ACTIVE_FREQUENCY',
-        frequency: obj.slug,
+        frequency: obj.id,
       });
 
       dispatch({
@@ -256,8 +229,12 @@ We will always set role as "subscriber" in this function and let moderation role
 export const subscribeFrequency = () => (dispatch, getState) => {
   let { database, frequencies, uid } = setup(getState());
 
+  const frequency = getCurrentFrequency(
+    frequencies.active,
+    frequencies.frequencies,
+  );
   // we'll use this key to update the user record and to find the correct frequency record to update
-  let frequencyKey = frequencies.active;
+  let frequencyKey = frequency.id;
 
   // data to be stored on the user record
   let userFrequencyData = {
@@ -298,7 +275,10 @@ export const unsubscribeFrequency = () => (dispatch, getState) => {
   let { database, frequencies, uid } = setup(getState());
 
   // we'll use this key to update the user record and to find the correct frequency record to update
-  let frequencyKey = frequencies.active;
+  let frequencyKey = getCurrentFrequency(
+    frequencies.active,
+    frequencies.frequencies,
+  ).id;
 
   // these are the refs we'll be updating
   let userRef = database.ref(`/users/${uid}/frequencies/${frequencyKey}`);
@@ -344,15 +324,15 @@ export const toggleFrequencyPrivacy = () => (dispatch, getState) => {
 
   // we'll compare user ids to make sure this action is allowed
   let uid = user.uid;
-
-  // the frequency key we want to toggle on the server
-  let frequencyKey = frequencies.active;
-
   // the frequency object which we use to check the current privacy
   let frequencyToUpdate = getCurrentFrequency(
-    frequencyKey,
+    frequencies.active,
     frequencies.frequencies,
   );
+
+  // the frequency key we want to toggle on the server
+  let frequencyKey = frequencyToUpdate.id;
+
   let isPrivate = frequencyToUpdate.settings.private;
 
   // we're going to first check the users ref to ensure the right permissions

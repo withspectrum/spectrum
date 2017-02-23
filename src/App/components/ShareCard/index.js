@@ -18,14 +18,14 @@ const ShareCard = props => {
           onClick={handleFocus}
           onFocus={handleFocus}
           readOnly
-          value={`https://spectrum.chat/~${props.data.slug}`}
+          value={`https://spectrum.chat/~${props.slug}`}
         />
         <ButtonWrapper>
           <Button
             type={'twitter'}
             target="_blank"
             href={
-              `https://twitter.com/share?text=${props.data.name}&url=https://spectrum.chat/~${props.data.slug}&via=withspectrum`
+              `https://twitter.com/share?text=${props.name}&url=https://spectrum.chat/~${props.slug}&via=withspectrum`
             }
           >
             Share on Twitter
@@ -34,7 +34,7 @@ const ShareCard = props => {
             type={'facebook'}
             target="_blank"
             href={
-              `https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/~${props.data.slug}`
+              `https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/~${props.slug}`
             }
           >
             Post to Facebook

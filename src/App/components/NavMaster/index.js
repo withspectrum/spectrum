@@ -66,9 +66,11 @@ class NavigationMaster extends Component {
   };
 
   render() {
-    const frequencies = this.props.frequencies.frequencies;
-    const activeFrequency = this.props.frequencies.active;
     const user = this.props.user;
+    const frequencies = this.props.frequencies.frequencies.filter(
+      frequency => frequency.users[user.uid],
+    );
+    const activeFrequency = this.props.frequencies.active;
     // const myFrequencies = helpers.getMyFrequencies(frequencies, user)
     // const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
 
