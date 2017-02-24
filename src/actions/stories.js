@@ -1,5 +1,6 @@
 import * as firebase from 'firebase';
 import { fetchStoriesForFrequencies } from '../helpers/stories';
+import { createBrowserHistory } from 'history';
 
 /*------------------------------------------------------------\*
 *
@@ -156,22 +157,24 @@ export const setActiveStory = story => ({
 
 export const deleteStory = id => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
+  const { frequencies, stories } = getState();
+  let activeFrequency = frequencies.active;
+  const frequencyId = stories.stories.find(story => story.id === id).frequency;
 
-  firebase.database().ref(`/stories/${id}`).remove(); // delete the story
+  firebase.database().ref(`/stories/${frequencyId}/${id}`).remove(); // delete the story
   firebase.database().ref(`/messages/${id}`).remove(); // delete the messages for the story
-
-  let activeFrequency = getState().frequencies.active;
 
   dispatch({
     type: 'DELETE_STORY',
     id,
   });
 
+  const history = createBrowserHistory();
   // redirect the user so that they don't end up on a broken url
   if (activeFrequency && activeFrequency !== 'all') {
-    window.location.href = `/~${activeFrequency}`;
+    history.push(`/~${activeFrequency}`);
   } else {
-    window.location.href = '/';
+    history.push('/');
   }
 };
 
