@@ -1,7 +1,6 @@
 html,
 body {
   min-height: 100vh;
-  height: 100%;
   min-width: 100%;
   box-sizing: border-box;
 }

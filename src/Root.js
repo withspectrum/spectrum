@@ -6,10 +6,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as firebase from 'firebase';
 import { setInitialData } from './actions/loading';
-import { setActiveFrequency, loadFrequencies } from './actions/frequencies';
-import { setActiveStory, loadStories } from './actions/stories';
+import { setActiveFrequency } from './actions/frequencies';
+import { setActiveStory } from './actions/stories';
 import { setAllMessages } from './actions/messages';
-import { asyncComponent } from './helpers/utils';
+import { asyncComponent, hashToArray } from './helpers/utils';
+import { fetchStoriesForFrequencies } from './helpers/stories';
 import LoadingIndicator from './shared/loading/global';
 
 // Codesplit the App and the Homepage to only load what we need based on which route we're on
@@ -40,8 +41,23 @@ class Root extends Component {
             params.story || '',
           ),
         );
-        dispatch(loadFrequencies());
-        dispatch(loadStories());
+      });
+    });
+
+    firebase.database().ref('frequencies').once('value').then(snapshot => {
+      const frequencies = snapshot.val();
+      fetchStoriesForFrequencies(frequencies).then(stories => {
+        const result = [];
+        // Flatten the stories
+        stories.forEach(story => result.push(...hashToArray(story)));
+        dispatch({
+          type: 'SET_STORIES',
+          stories: result,
+        });
+        dispatch({
+          type: 'SET_FREQUENCIES',
+          frequencies: hashToArray(snapshot.val()),
+        });
       });
     });
 
@@ -57,7 +73,6 @@ class Root extends Component {
     // If the frequency changes sync the active frequency to the store and load the stories
     if (nextProps.params.frequency !== params.frequency) {
       dispatch(setActiveFrequency(nextProps.params.frequency));
-      dispatch(loadStories());
     }
 
     // If the story changes sync the active story to the store and load the messages

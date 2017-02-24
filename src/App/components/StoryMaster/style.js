@@ -56,8 +56,8 @@ export const Overlay = styled.div`
 `;
 
 export const Header = styled.div`
-	display: flex;
 	flex-direction: row;
+	display: ${props => props.visible ? 'flex' : 'none'};
 	flex: 0 0 48px;
 	width: 100%;
 	background-color: ${({ theme }) => theme.bg.default};
