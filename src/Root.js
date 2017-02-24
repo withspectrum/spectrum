@@ -69,30 +69,51 @@ class Root extends Component {
                 .then(res => res.val()),
             );
           });
+          // Set the initial frequencies all together
           Promise.all(freqPromises).then(frequencies => {
             dispatch({
               type: 'SET_FREQUENCIES',
               frequencies: hashToArray(frequencies),
             });
           });
-          // Get this users stories
+          // Set the initial stories all together
           Promise.all(storyPromises).then(stories => {
             const result = [];
-            // Flatten the stories
-            stories.forEach(story => result.push(...hashToArray(story)));
+            const messagePromises = [];
+            // Flatten the stories, they come in a nested array grouped per frequency
+            // [[{ ... }, { ... }], [{ ... }]]
+            stories.forEach(storyArray => {
+              result.push(...hashToArray(storyArray));
+            });
             dispatch({
               type: 'SET_STORIES',
               stories: result,
             });
+            result.forEach(story => {
+              messagePromises.push(
+                firebase
+                  .database()
+                  .ref(`messages/${story.id}`)
+                  .once('value')
+                  .then(res => ({
+                    story: story.id,
+                    messages: res.val(),
+                  })),
+              );
+            });
+            // Load all the messages
+            Promise.all(messagePromises).then(messages => {
+              const result = [];
+              messages.forEach(group => {
+                if (!group.messages) return;
+                delete group.messages.frequencyId;
+                result[group.story] = group.messages;
+              });
+              dispatch(setAllMessages(result));
+            });
           });
         });
     });
-
-    // Listen to changes in messages
-    // firebase.database().ref('messages').on('value', snapshot => {
-    //   const messages = snapshot.val();
-    //   dispatch(setAllMessages(messages));
-    // });
   }
 
   componentWillReceiveProps(nextProps) {
