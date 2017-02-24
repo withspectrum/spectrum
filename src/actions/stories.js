@@ -42,15 +42,23 @@ export const publishStory = story => (dispatch, getState) => {
 
   let state = getState();
   let storyKey = state.composer.newStoryKey;
+  const frequency = state.frequencies.frequencies.find(
+    frequency => frequency.slug === state.frequencies.active,
+  );
   let user = state.user;
   let uid = user.uid;
 
-  let storyRef = firebase.database().ref().child(`stories/${storyKey}`);
+  let storyRef = firebase
+    .database()
+    .ref()
+    .child(`stories/${frequency.id}/${storyKey}`);
+  const messageRef = firebase.database().ref(`messages/${storyKey}`);
 
   let storyData = {
     id: storyKey, // we need this id again in the CREATE_STORY reducer
     published: true,
     timestamp: firebase.database.ServerValue.TIMESTAMP,
+    frequency: frequency.id,
     content: {
       title: story.title,
       description: story.body,
@@ -60,43 +68,65 @@ export const publishStory = story => (dispatch, getState) => {
       photoURL: user.photoURL,
       uid,
     },
-    frequency: story.frequencyId,
   };
 
   storyRef.update(storyData, err => {
     if (err) {
       console.log('there was an error publishing your story: ', err);
     } else {
-      dispatch({
-        type: 'CREATE_STORY',
-        story: {
-          ...storyData,
-          // Timestamp is set on the server by Firebase, this simulates that by setting it to right
-          // now
-          timestamp: Date.now(),
+      // Create the message storage for that story
+      messageRef.set(
+        {
+          frequencyId: frequency.id,
         },
-      });
+        err => {
+          if (err) {
+            console.log(
+              'There was an error creating the messages for yor story',
+              err,
+            );
+          } else {
+            dispatch({
+              type: 'CREATE_STORY',
+              story: {
+                ...storyData,
+                // Timestamp is set on the server by Firebase, this simulates that by setting it to right
+                // now
+                timestamp: Date.now(),
+              },
+            });
 
-      dispatch({
-        type: 'TOGGLE_COMPOSER_OPEN',
-        isOpen: false,
-      });
+            dispatch({
+              type: 'TOGGLE_COMPOSER_OPEN',
+              isOpen: false,
+            });
+          }
+        },
+      );
     }
   });
 };
 
 export const initStory = () => (dispatch, getState) => {
   return new Promise((resolve, reject) => {
-    let state = getState();
-    let user = state.user;
-    let uid = user.uid;
-    let newStoryRef = firebase.database().ref().child('stories').push();
-    let newStoryKey = newStoryRef.key;
+    const state = getState();
+    const user = state.user;
+    const uid = user.uid;
+    const frequency = state.frequencies.frequencies.find(
+      frequency => frequency.slug === state.frequencies.active,
+    );
+    const newStoryRef = firebase
+      .database()
+      .ref()
+      .child(`stories/${frequency.id}`)
+      .push();
+    const newStoryKey = newStoryRef.key;
 
     let draft = {
       id: newStoryKey,
       published: false,
       timestamp: firebase.database.ServerValue.TIMESTAMP,
+      frequency: frequency.id,
       creator: {
         displayName: user.displayName,
         photoURL: user.photoURL,

@@ -87,7 +87,7 @@ class Root extends Component {
             });
             dispatch({
               type: 'SET_STORIES',
-              stories: result,
+              stories: result.filter(story => story.published === true),
             });
             result.forEach(story => {
               messagePromises.push(
