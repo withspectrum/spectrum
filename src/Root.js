@@ -10,7 +10,6 @@ import { setActiveFrequency } from './actions/frequencies';
 import { setActiveStory } from './actions/stories';
 import { setAllMessages } from './actions/messages';
 import { asyncComponent, hashToArray } from './helpers/utils';
-import { fetchStoriesForFrequencies } from './helpers/stories';
 import LoadingIndicator from './shared/loading/global';
 
 // Codesplit the App and the Homepage to only load what we need based on which route we're on
@@ -28,44 +27,72 @@ class Root extends Component {
         return dispatch({
           type: 'USER_NOT_AUTHENTICATED',
         });
-      let users = firebase.database().ref('users');
 
-      // we know the user exists, so lets fetch their data by matching the uid
-      users.orderByChild('uid').equalTo(user.uid).once('value', snapshot => {
-        // once we've retreived our user, we can dispatch to redux and store their info in state
-        const userData = snapshot.val()[user.uid];
-        dispatch(
-          setInitialData(
-            userData,
-            params.frequency || 'everything',
-            params.story || '',
-          ),
-        );
-      });
-    });
-
-    firebase.database().ref('frequencies').once('value').then(snapshot => {
-      const frequencies = snapshot.val();
-      fetchStoriesForFrequencies(frequencies).then(stories => {
-        const result = [];
-        // Flatten the stories
-        stories.forEach(story => result.push(...hashToArray(story)));
-        dispatch({
-          type: 'SET_STORIES',
-          stories: result,
+      // we know the user exists, so lets fetch their frequencies
+      firebase
+        .database()
+        .ref(`users/${user.uid}/private/frequencies`)
+        .once('value', userFreqs => {
+          const userFrequencies = userFreqs.val();
+          // Fetch the users public data
+          firebase
+            .database()
+            .ref(`users/${user.uid}/public`)
+            .once('value', publicUserData => {
+              dispatch(
+                setInitialData(
+                  {
+                    ...publicUserData.val(),
+                    frequencies: userFrequencies,
+                  },
+                  params.frequency || 'everything',
+                  params.story || '',
+                ),
+              );
+            });
+          // Get this users frequencies
+          const freqPromises = [];
+          const storyPromises = [];
+          Object.keys(userFrequencies).map(frequency => {
+            freqPromises.push(
+              firebase
+                .database()
+                .ref(`frequencies/${frequency}/`)
+                .once('value')
+                .then(res => res.val()),
+            );
+            storyPromises.push(
+              firebase
+                .database()
+                .ref(`stories/${frequency}`)
+                .once('value')
+                .then(res => res.val()),
+            );
+          });
+          Promise.all(freqPromises).then(frequencies => {
+            dispatch({
+              type: 'SET_FREQUENCIES',
+              frequencies: hashToArray(frequencies),
+            });
+          });
+          // Get this users stories
+          Promise.all(storyPromises).then(stories => {
+            const result = [];
+            // Flatten the stories
+            stories.forEach(story => result.push(...hashToArray(story)));
+            dispatch({
+              type: 'SET_STORIES',
+              stories: result,
+            });
+          });
         });
-        dispatch({
-          type: 'SET_FREQUENCIES',
-          frequencies: hashToArray(snapshot.val()),
-        });
-      });
     });
 
     // Listen to changes in messages
-    firebase.database().ref('messages').on('value', snapshot => {
-      const messages = snapshot.val();
-      dispatch(setAllMessages(messages));
-    });
+    // firebase.database().ref('messages').on('value', snapshot => {
+    //   const messages = snapshot.val();
+    //   dispatch(setAllMessages(messages));
+    // });
   }
 
   componentWillReceiveProps(nextProps) {
