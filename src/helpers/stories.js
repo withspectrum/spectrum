@@ -20,7 +20,7 @@ export const isStoryCreator = (story, user) => {
 export const getUserFromId = uid => {
   return firebase
     .database()
-    .ref(`users/${uid}`)
+    .ref(`users/${uid}/public`)
     .once('value')
     .then(snapshot => {
       let val = snapshot.val();
