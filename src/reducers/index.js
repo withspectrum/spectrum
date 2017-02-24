@@ -7,6 +7,7 @@ import composer from './composer';
 import modals from './modals';
 import gallery from './gallery';
 import loading from './loading';
+import ui from './ui';
 
 export default combineReducers({
   user,
@@ -17,4 +18,5 @@ export default combineReducers({
   modals,
   gallery,
   loading,
+  ui,
 });

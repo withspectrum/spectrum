@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import ChatDetail from '../ChatDetail';
 import Markdown from 'react-remarkable';
@@ -16,8 +17,11 @@ import {
   HiddenButton,
   HiddenLabel,
   HiddenInput,
+  BackArrow,
 } from './style';
 import { showGallery } from '../../../actions/gallery';
+import { getCurrentFrequency } from '../../../helpers/frequencies';
+import { hashToArray } from '../../../helpers/utils';
 import { toggleLockedStory, deleteStory } from '../../../actions/stories';
 
 class StoryView extends Component {
@@ -72,14 +76,26 @@ class StoryView extends Component {
     this.props.dispatch(toggleLockedStory(story));
   };
 
+  clearActiveStory = () => {
+    this.props.dispatch({
+      type: 'CLEAR_ACTIVE_STORY'
+    })
+  }
+
   render() {
     let story = this.props.activeStory;
     let creator = this.props.creator;
     let moderator = this.props.moderator;
     let locked = this.props.locked;
-
+    let frequencies = this.props.frequencies
+    let currentFrequency = getCurrentFrequency(story.frequency, frequencies.frequencies)
+    let returnUrl = this.props.frequencies.active === 'everything' ? 'everything' : currentFrequency[0].slug
     return (
       <ScrollBody>
+        <Link to={`/~${returnUrl}`}>
+          <BackArrow onClick={this.clearActiveStory}>&larr;</BackArrow>
+        </Link>
+
         <ContentView>
           <Header>
             <FlexColumn>

@@ -65,6 +65,12 @@ class NavigationMaster extends Component {
     this.props.dispatch(showModal('FREQUENCY_CREATION_MODAL'));
   };
 
+  hideNav = () => {
+    this.props.dispatch({
+      type: 'HIDE_NAV'
+    })
+  }
+
   render() {
     const user = this.props.user;
     const frequencies = this.props.frequencies.frequencies.filter(
@@ -75,7 +81,7 @@ class NavigationMaster extends Component {
     // const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
 
     return (
-      <Column>
+      <Column navVisible={this.props.ui.navVisible}>
         {user.uid
           ? <Header>
               <Avatar src={user.photoURL} title="Bryn Jackson" />
@@ -93,7 +99,7 @@ class NavigationMaster extends Component {
           <FreqListHeading>My Frequencies</FreqListHeading>
 
           <Link to="/">
-            <Freq active={this.props.frequencies.active === 'everything'}>
+            <Freq active={this.props.frequencies.active === 'everything'} onClick={this.hideNav}>
               <FreqIcon src="/img/everything-icon.svg" />
               <FreqLabel>Everything</FreqLabel>
             </Freq>
@@ -103,7 +109,7 @@ class NavigationMaster extends Component {
             frequencies.map((frequency, i) => {
               return (
                 <Link to={`/~${frequency.slug}`} key={i}>
-                  <Freq active={frequency.slug === activeFrequency}>
+                  <Freq active={frequency.slug === activeFrequency} onClick={this.hideNav}>
                     <FreqGlyph>~</FreqGlyph>
                     <FreqLabel>{frequency.name}</FreqLabel>
                   </Freq>
@@ -134,6 +140,7 @@ class NavigationMaster extends Component {
 const mapStateToProps = state => ({
   user: state.user,
   frequencies: state.frequencies,
+  ui: state.ui
 });
 
 export default connect(mapStateToProps)(NavigationMaster);

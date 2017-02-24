@@ -10,6 +10,7 @@ import {
   LoginButton,
   TipButton,
   Overlay,
+  MenuButton
 } from './style';
 import { toggleComposer } from '../../../actions/composer';
 import {
@@ -59,6 +60,12 @@ class StoryMaster extends Component {
     this.props.dispatch(showModal('FREQUENCY_EDIT_MODAL', frequencyData));
   };
 
+  toggleNav = () => {
+    this.props.dispatch({
+      type: 'TOGGLE_NAV'
+    })
+  }
+
   render() {
     const { user, stories, frequencies, composer } = this.props;
 
@@ -68,7 +75,7 @@ class StoryMaster extends Component {
     );
 
     const isEverything = frequencies.active === 'everything';
-    const isPrivate = frequencyData && frequencyData.settings.private;
+    const isPrivate = frequencyData && frequencyData[0].settings.private;
     const role = getFrequencyPermission(
       user,
       frequencies.active,
@@ -86,13 +93,26 @@ class StoryMaster extends Component {
 
     if (frequencyData && !isEverything) {
       sortedStories = sortedStories.filter(
-        story => story.frequency === frequencyData.id,
+        story => {
+          return story.frequency === frequencyData[0].id
+        }
       );
     }
 
     return (
-      <Column>
+      <Column navVisible={this.props.ui.navVisible}>
         <Header visible={user.uid}>
+          <MenuButton onClick={this.toggleNav}>☰</MenuButton>
+
+          {role === 'owner' &&
+            <TipButton
+              onClick={this.editFrequency}
+              tipText="Frequency Settings"
+              tipLocation="bottom"
+            >
+              <Lock />
+            </TipButton>}
+
           {(isEverything || role) &&
             <TipButton
               onClick={this.toggleComposer}
@@ -103,20 +123,13 @@ class StoryMaster extends Component {
                 ? <ClosePost color="warn" />
                 : <NewPost color="brand" stayActive />}
             </TipButton>}
+
           {!(isEverything || role === 'owner' || hidden) &&
             (role
               ? <JoinBtn member onClick={this.unsubscribeFrequency}>
                   Leave
                 </JoinBtn>
-              : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}
-          {role === 'owner' &&
-            <TipButton
-              onClick={this.editFrequency}
-              tipText="Frequency Settings"
-              tipLocation="bottom"
-            >
-              <Lock />
-            </TipButton>}
+              : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}          
         </Header>
 
         <ScrollBody>
@@ -152,6 +165,7 @@ const mapStateToProps = state => {
     frequencies: state.frequencies,
     composer: state.composer,
     user: state.user,
+    ui: state.ui,
   };
 };
 

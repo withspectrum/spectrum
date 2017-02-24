@@ -20,7 +20,7 @@ export const getCurrentFrequency = (activeFrequency, frequencies) => {
   if (activeFrequency === 'everything') {
     return;
   }
-  return frequencies.find(
+  return frequencies.filter(
     freq => freq.slug === activeFrequency || freq.id === activeFrequency,
   );
 };

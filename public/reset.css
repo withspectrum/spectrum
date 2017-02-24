@@ -44,7 +44,6 @@ body {
   position: relative;  
   height: 100vh;
   width: 100vw;
-  min-width: 768px;
   -webkit-font-smoothing: antialiased;
   font-size: 1rem;
   line-height: 1rem;

@@ -31,6 +31,7 @@ class StoryCard extends Component {
       story.frequency,
       this.props.frequencies.frequencies,
     );
+
     const timestamp = story.timestamp;
     let currentTime = Date.now();
 
@@ -119,9 +120,9 @@ class StoryCard extends Component {
         </Link>
 
         {this.props.frequencies.active === 'everything' && frequency
-          ? <Link to={`/~${frequency.slug}`}>
+          ? <Link to={`/~${frequency[0].slug}`}>
               <MetaFreq>
-                ~{frequency.name}
+                ~{frequency[0].name}
               </MetaFreq>
             </Link>
           : ``}

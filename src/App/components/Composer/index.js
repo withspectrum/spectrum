@@ -20,6 +20,7 @@ import {
   SubmitContainer,
   MediaInput,
   MediaLabel,
+  BackArrow
 } from './style';
 
 class Composer extends Component {
@@ -126,6 +127,12 @@ class Composer extends Component {
     }
   };
 
+  closeComposer = () => {
+    this.props.dispatch({
+      type: 'CLOSE_COMPOSER'
+    })
+  }
+
   render() {
     let { frequencies, composer } = this.props;
     let activeFrequency = frequencies.active;
@@ -157,10 +164,11 @@ class Composer extends Component {
 
     return (
       <ScrollBody>
+        <BackArrow onClick={this.closeComposer}>&larr;</BackArrow>
+        
         <ContentView>
           <Header>
             <FlexColumn>
-
               <form onSubmit={this.publishStory} encType="multipart/form-data">
                 <Byline>New Story</Byline>
                 <Textarea
