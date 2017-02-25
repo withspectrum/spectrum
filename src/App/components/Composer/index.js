@@ -20,7 +20,7 @@ import {
   SubmitContainer,
   MediaInput,
   MediaLabel,
-  BackArrow
+  BackArrow,
 } from './style';
 
 class Composer extends Component {
@@ -41,7 +41,7 @@ class Composer extends Component {
     // if a draft already exists, no need to init another
     if (this.props.composer.newStoryKey) return;
     // otherwise init a new draft
-    this.props.dispatch(initStory());
+    this.props.dispatch(initStory(this.state.frequencyPicker));
   }
 
   changeTitle = e => {
@@ -87,28 +87,28 @@ class Composer extends Component {
 
   publishStory = e => {
     e.preventDefault();
-    let title = this.props.composer.title;
-    let body = this.props.composer.body;
+    const title = this.props.composer.title;
+    const description = this.props.composer.body;
     // if we pass in a custom frequency, it means the user is in 'all' and has selected a frequency from the dropdown
     // if the user isn't in all, we'll send the currently active frequency via the redux state
-    let frequency = this.props.frequencies.active === 'everything'
+    const frequency = this.props.frequencies.active === 'everything'
       ? this.state.frequencyPicker
       : this.props.frequencies.active;
 
-    let frequencyId = getCurrentFrequency(
-      this.props.frequencies.active,
+    const frequencyId = getCurrentFrequency(
+      frequency,
       this.props.frequencies.frequencies,
     ).id;
 
-    let newStoryObj = {
-      frequencyId,
-      title,
-      body,
-    };
-
     if (frequency && title) {
       // if everything is filled out
-      this.props.dispatch(publishStory(newStoryObj));
+      this.props.dispatch(
+        publishStory({
+          frequencyId,
+          title,
+          description,
+        }),
+      );
     } else if (!frequency && title) {
       // if no frequency is chosen
       this.setState({
@@ -129,9 +129,9 @@ class Composer extends Component {
 
   closeComposer = () => {
     this.props.dispatch({
-      type: 'CLOSE_COMPOSER'
-    })
-  }
+      type: 'CLOSE_COMPOSER',
+    });
+  };
 
   render() {
     let { frequencies, composer } = this.props;
@@ -164,8 +164,8 @@ class Composer extends Component {
 
     return (
       <ScrollBody>
-        <BackArrow onClick={this.closeComposer}>&larr;</BackArrow>
-        
+        <BackArrow onClick={this.closeComposer}>←</BackArrow>
+
         <ContentView>
           <Header>
             <FlexColumn>

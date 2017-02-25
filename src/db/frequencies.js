@@ -23,7 +23,7 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
       icon: null,
       tint: '#3818E5',
     },
-    stories: [],
+    stories: {},
     users: {
       // Creator gets full admin rights
       [uid]: {

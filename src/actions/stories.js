@@ -1,6 +1,7 @@
 import * as firebase from 'firebase';
 import { fetchStoriesForFrequencies } from '../helpers/stories';
 import { createBrowserHistory } from 'history';
+import { createDraft, createStory } from '../db/stories';
 
 /*------------------------------------------------------------\*
 *
@@ -30,124 +31,50 @@ export const setup = stateFetch => {
   };
 };
 
-/*------------------------------------------------------------\*
-*
-
-createStory
-
-
-*
-\*------------------------------------------------------------*/
-export const publishStory = story => (dispatch, getState) => {
+/**
+ * Publish a drafted story
+ */
+export const publishStory = ({ frequencyId, title, description }) => (
+  dispatch,
+  getState,
+) => {
   dispatch({ type: 'LOADING' });
 
   let state = getState();
   let storyKey = state.composer.newStoryKey;
-  const frequency = state.frequencies.frequencies.find(
-    frequency => frequency.slug === state.frequencies.active,
-  );
-  let user = state.user;
-  let uid = user.uid;
 
-  let storyRef = firebase
-    .database()
-    .ref()
-    .child(`stories/${frequency.id}/${storyKey}`);
-  const messageRef = firebase.database().ref(`messages/${storyKey}`);
-
-  let storyData = {
-    id: storyKey, // we need this id again in the CREATE_STORY reducer
-    published: true,
-    timestamp: firebase.database.ServerValue.TIMESTAMP,
-    frequency: frequency.id,
-    content: {
-      title: story.title,
-      description: story.body,
-    },
-    creator: {
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      uid,
-    },
-  };
-
-  storyRef.update(storyData, err => {
-    if (err) {
-      console.log('there was an error publishing your story: ', err);
-    } else {
-      // Create the message storage for that story
-      messageRef.set(
-        {
-          frequencyId: frequency.id,
-        },
-        err => {
-          if (err) {
-            console.log(
-              'There was an error creating the messages for yor story',
-              err,
-            );
-          } else {
-            dispatch({
-              type: 'CREATE_STORY',
-              story: {
-                ...storyData,
-                // Timestamp is set on the server by Firebase, this simulates that by setting it to right
-                // now
-                timestamp: Date.now(),
-              },
-            });
-
-            dispatch({
-              type: 'TOGGLE_COMPOSER_OPEN',
-              isOpen: false,
-            });
-          }
-        },
-      );
-    }
-  });
+  createStory({ key: storyKey, frequencyId, content: { title, description } })
+    .then(story => {
+      dispatch({
+        type: 'CREATE_STORY',
+        story,
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };
 
-export const initStory = () => (dispatch, getState) => {
-  return new Promise((resolve, reject) => {
-    const state = getState();
-    const user = state.user;
-    const uid = user.uid;
-    const frequency = state.frequencies.frequencies.find(
-      frequency => frequency.slug === state.frequencies.active,
-    );
-    const newStoryRef = firebase
-      .database()
-      .ref()
-      .child(`stories/${frequency.id}`)
-      .push();
-    const newStoryKey = newStoryRef.key;
+/**
+ * Initialise a story by creating a draft on the server
+ *
+ * Pass a frequency ID as the first (and only) argument if there's no active frequency, otherwise we take the active one
+ */
+export const initStory = freqId => (dispatch, getState) => {
+  const { user, frequencies: { frequencies, active } } = getState();
+  const frequencyId = freqId ||
+    frequencies.find(freq => freq.slug === active).id;
 
-    let draft = {
-      id: newStoryKey,
-      published: false,
-      timestamp: firebase.database.ServerValue.TIMESTAMP,
-      frequency: frequency.id,
-      creator: {
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        uid,
-      },
-    };
-
-    newStoryRef.set(draft, err => {
-      if (err) {
-        console.log('there was an error creating the draft: ', err);
-      } else {
-        dispatch({
-          type: 'CREATE_DRAFT',
-          newStoryKey,
-        });
-
-        resolve();
-      }
+  createDraft({ user, frequencyId })
+    .then(key => {
+      dispatch({
+        type: 'CREATE_DRAFT',
+        key,
+      });
+    })
+    .catch(err => {
+      console.log(err);
     });
-  });
 };
 
 export const setActiveStory = story => ({

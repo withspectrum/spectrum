@@ -54,7 +54,9 @@ class Root extends Component {
                 if (index === Object.keys(userData.frequencies).length - 1)
                   dispatch({ type: 'FREQUENCIES_LOADED' });
                 if (!data.stories) return;
-                data.stories.forEach(story => {
+                const stories = Object.keys(data.stories);
+                if (stories.length === 0) return;
+                stories.forEach(story => {
                   firebase
                     .database()
                     .ref(`stories/${story}`)
@@ -62,19 +64,21 @@ class Root extends Component {
                     .then(snapshot => {
                       const storyData = snapshot.val();
                       if (!storyData.published) return;
-                      storyData.messages &&
-                        storyData.messages.forEach(message => {
-                          firebase
-                            .database()
-                            .ref(`messages/${message}`)
-                            .once('value')
-                            .then(snapshot => {
-                              dispatch({
-                                type: 'ADD_MESSAGE',
-                                message: snapshot.val(),
-                              });
+                      if (!storyData.messages) return;
+                      const messages = Object.keys(storyData.messages);
+                      if (!messages || messages.length === 0) return;
+                      messages.forEach(message => {
+                        firebase
+                          .database()
+                          .ref(`messages/${message}`)
+                          .once('value')
+                          .then(snapshot => {
+                            dispatch({
+                              type: 'ADD_MESSAGE',
+                              message: snapshot.val(),
                             });
-                        });
+                          });
+                      });
                       dispatch({
                         type: 'ADD_STORY',
                         story: snapshot.val(),
