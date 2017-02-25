@@ -64,6 +64,10 @@ class Root extends Component {
                     .then(snapshot => {
                       const storyData = snapshot.val();
                       if (!storyData.published) return;
+                      dispatch({
+                        type: 'ADD_STORY',
+                        story: snapshot.val(),
+                      });
                       if (!storyData.messages) return;
                       const messages = Object.keys(storyData.messages);
                       if (!messages || messages.length === 0) return;
@@ -78,10 +82,6 @@ class Root extends Component {
                               message: snapshot.val(),
                             });
                           });
-                      });
-                      dispatch({
-                        type: 'ADD_STORY',
-                        story: snapshot.val(),
                       });
                     });
                 });

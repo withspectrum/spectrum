@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 import { fetchStoriesForFrequencies } from '../helpers/stories';
 import { createBrowserHistory } from 'history';
-import { createDraft, createStory } from '../db/stories';
+import { createDraft, createStory, removeStory } from '../db/stories';
 
 /*------------------------------------------------------------\*
 *
@@ -86,23 +86,26 @@ export const deleteStory = id => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
   const { frequencies, stories } = getState();
   let activeFrequency = frequencies.active;
-  const frequencyId = stories.stories.find(story => story.id === id).frequency;
+  const { frequencyId } = stories.stories.find(story => story.id === id);
 
-  firebase.database().ref(`/stories/${frequencyId}/${id}`).remove(); // delete the story
-  firebase.database().ref(`/messages/${id}`).remove(); // delete the messages for the story
-
-  dispatch({
-    type: 'DELETE_STORY',
-    id,
-  });
-
-  const history = createBrowserHistory();
-  // redirect the user so that they don't end up on a broken url
-  if (activeFrequency && activeFrequency !== 'all') {
-    history.push(`/~${activeFrequency}`);
-  } else {
-    history.push('/');
-  }
+  removeStory({ storyId: id, frequencyId })
+    .then(() => {
+      dispatch({
+        type: 'DELETE_STORY',
+        id,
+      });
+      const history = createBrowserHistory();
+      // redirect the user so that they don't end up on a broken url
+      if (activeFrequency && activeFrequency !== 'all') {
+        history.push(`/~${activeFrequency}`);
+      } else {
+        history.push('/');
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      dispatch({ type: 'STOP_LOADING' });
+    });
 };
 
 export const toggleLockedStory = story => dispatch => {

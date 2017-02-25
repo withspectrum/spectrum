@@ -62,3 +62,15 @@ export const createStory = (
       .then(snapshot => snapshot.val());
   });
 };
+
+export const removeStory = ({ storyId, frequencyId }) =>
+  new Promise(resolve => {
+    const db = firebase.database();
+
+    console.log({ storyId, frequencyId });
+
+    db.ref(`frequencies/${frequencyId}/stories/${storyId}`).remove();
+    db.ref(`stories/${storyId}`).remove();
+
+    resolve();
+  });

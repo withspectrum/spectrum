@@ -67,6 +67,7 @@ export const removeFrequency = id => new Promise((resolve, reject) => {
         db.ref(`/users/${userId}/public/frequencies/${id}`).remove();
       });
       db.ref(`/frequencies/${id}`).remove();
+      // TODO: Delete all stories associated with a frequency?
       resolve();
     })
     .catch(reject);
