@@ -63,6 +63,11 @@ export const createStory = (
   });
 };
 
+/**
+ * Remove a story
+ *
+ * Returns a promise that's resolved with nothing if the story was deleted successfully
+ */
 export const removeStory = ({ storyId, frequencyId }) =>
   new Promise(resolve => {
     const db = firebase.database();
@@ -74,3 +79,14 @@ export const removeStory = ({ storyId, frequencyId }) =>
 
     resolve();
   });
+
+/**
+ * Set the locked status of a story
+ *
+ * Returns a promise that's resolved with nothing if it was set successfully
+ */
+export const setStoryLock = ({ id, locked }) => {
+  return firebase.database().ref(`/stories/${id}`).update({
+    locked,
+  });
+};

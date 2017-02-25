@@ -1,35 +1,12 @@
 import * as firebase from 'firebase';
 import { fetchStoriesForFrequencies } from '../helpers/stories';
 import { createBrowserHistory } from 'history';
-import { createDraft, createStory, removeStory } from '../db/stories';
-
-/*------------------------------------------------------------\*
-*
-
-setup
-Takes getState() as an only argument. The reason we do this is so that in any future
-actions or functions, we can easily destructure the returned object of setup() to get
-any necessary bits of data about the current state of the app
-
-*
-\*------------------------------------------------------------*/
-export const setup = stateFetch => {
-  let state = stateFetch;
-  let frequencies = state.frequencies;
-  let stories = state.stories;
-  let user = state.user;
-  let uid = user.uid;
-
-  // return an object that we can destructure in future functions
-  return {
-    database: firebase.database(), // we're also including the database so we don't have to keep defining it elsewhere
-    state,
-    frequencies,
-    stories,
-    user,
-    uid,
-  };
-};
+import {
+  createDraft,
+  createStory,
+  removeStory,
+  setStoryLock,
+} from '../db/stories';
 
 /**
  * Publish a drafted story
@@ -82,6 +59,9 @@ export const setActiveStory = story => ({
   story,
 });
 
+/**
+ * Delete a story
+ */
 export const deleteStory = id => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
   const { frequencies, stories } = getState();
@@ -108,18 +88,24 @@ export const deleteStory = id => (dispatch, getState) => {
     });
 };
 
+/**
+ * Toggle the locked status of a story
+ */
 export const toggleLockedStory = story => dispatch => {
   dispatch({ type: 'LOADING' });
   const id = story.id;
   const locked = story.locked ? story.locked : false; // if we haven't set a 'locked' status on the story, it defaults to false (which means people can write messages)
 
-  firebase.database().ref(`/stories/${id}`).update({
-    locked: !locked,
-  });
-
-  dispatch({
-    type: 'TOGGLE_STORY_LOCK',
-    id,
-    locked,
-  });
+  setStoryLock({ id, locked })
+    .then(() => {
+      dispatch({
+        type: 'TOGGLE_STORY_LOCK',
+        id,
+        locked,
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      dispatch({ type: 'STOP_LOADING' });
+    });
 };
