@@ -31,17 +31,6 @@ export const setup = stateFetch => {
   };
 };
 
-export const setAllMessages = messages => {
-  let sorted = {};
-  Object.keys(messages).map(story => {
-    sorted[story] = sortAndGroupBubbles(hashToArray(messages[story]));
-  });
-  return {
-    type: 'SET_ALL_MESSAGES',
-    messages: sorted,
-  };
-};
-
 /*------------------------------------------------------------\*
 *
 

@@ -28,6 +28,13 @@ export default function root(state = initialState, action) {
       return Object.assign({}, initialState, {
         loaded: true,
       });
+    case 'CREATE_FREQUENCY':
+      return Object.assign({}, state, {
+        frequencies: {
+          ...state.frequencies,
+          [action.frequency.id]: action.frequency,
+        },
+      });
     default:
       return state;
   }

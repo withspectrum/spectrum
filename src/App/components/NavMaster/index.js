@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { login, signOut } from '../../../actions/user';
 import { showModal } from '../../../actions/modals';
-import { setActiveFrequency, addFrequency } from '../../../actions/frequencies';
+import { setActiveFrequency } from '../../../actions/frequencies';
 import {
   Column,
   Header,
@@ -67,9 +67,9 @@ class NavigationMaster extends Component {
 
   hideNav = () => {
     this.props.dispatch({
-      type: 'HIDE_NAV'
-    })
-  }
+      type: 'HIDE_NAV',
+    });
+  };
 
   render() {
     const user = this.props.user;
@@ -99,7 +99,10 @@ class NavigationMaster extends Component {
           <FreqListHeading>My Frequencies</FreqListHeading>
 
           <Link to="/">
-            <Freq active={this.props.frequencies.active === 'everything'} onClick={this.hideNav}>
+            <Freq
+              active={this.props.frequencies.active === 'everything'}
+              onClick={this.hideNav}
+            >
               <FreqIcon src="/img/everything-icon.svg" />
               <FreqLabel>Everything</FreqLabel>
             </Freq>
@@ -109,7 +112,10 @@ class NavigationMaster extends Component {
             frequencies.map((frequency, i) => {
               return (
                 <Link to={`/~${frequency.slug}`} key={i}>
-                  <Freq active={frequency.slug === activeFrequency} onClick={this.hideNav}>
+                  <Freq
+                    active={frequency.slug === activeFrequency}
+                    onClick={this.hideNav}
+                  >
                     <FreqGlyph>~</FreqGlyph>
                     <FreqLabel>{frequency.name}</FreqLabel>
                   </Freq>
@@ -140,7 +146,7 @@ class NavigationMaster extends Component {
 const mapStateToProps = state => ({
   user: state.user,
   frequencies: state.frequencies,
-  ui: state.ui
+  ui: state.ui,
 });
 
 export default connect(mapStateToProps)(NavigationMaster);
