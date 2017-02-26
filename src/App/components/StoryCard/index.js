@@ -27,7 +27,11 @@ class StoryCard extends Component {
 
   render() {
     const { frequency, story, urlBase, isEverything, active } = this.props;
-    const messages = Object.keys(story.messages);
+
+    let messages;
+    if (story.messages) {
+      messages = Object.keys(story.messages);
+    }
 
     return (
       <Card>
@@ -43,7 +47,7 @@ class StoryCard extends Component {
                 <Meta>
                   {timeDifference(Date.now(), story.timestamp)}
                   &nbsp;•&nbsp;
-                  {messages.length > 0
+                  {messages && messages.length > 0
                     ? `${messages.length} messages`
                     : 'No messages yet'}
                 </Meta>
