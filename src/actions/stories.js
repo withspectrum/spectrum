@@ -106,7 +106,7 @@ export const toggleLockedStory = story => dispatch => {
   const id = story.id;
   const locked = story.locked ? story.locked : false; // if we haven't set a 'locked' status on the story, it defaults to false (which means people can write messages)
 
-  setStoryLock({ id, locked })
+  setStoryLock({ id, locked: !locked })
     .then(() => {
       dispatch({
         type: 'TOGGLE_STORY_LOCK',
