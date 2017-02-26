@@ -21,6 +21,7 @@ class Root extends Component {
   componentWillMount() {
     // On the initial render of the app we authenticate the user
     const { dispatch, params } = this.props;
+    console.log('active story is: ', params.story)
     firebase.auth().onAuthStateChanged(user => {
       if (!user)
         return dispatch({
@@ -99,7 +100,8 @@ class Root extends Component {
     }
 
     // If the story changes sync the active story to the store and load the messages
-    if (nextProps.params.story !== params.frequency) {
+    if (nextProps.params.story !== params.story) {
+      console.log('navigating: ', nextProps.params.story, params.story)
       dispatch(setActiveStory(nextProps.params.story));
     }
   }

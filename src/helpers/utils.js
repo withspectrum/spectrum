@@ -101,7 +101,7 @@ export const asyncComponent = getComponent => {
 
 export const checkUniqueFrequencyName = name => {
   return new Promise((resolve, reject) => {
-    let frequenciesRef = firebase
+    firebase
       .database()
       .ref('frequencies')
       .orderByChild('slug')

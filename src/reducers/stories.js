@@ -30,8 +30,8 @@ export default function root(state = initialState, action) {
         .slice()
         .filter(story => story.id !== action.id);
       return Object.assign({}, state, { stories });
-    case 'TOGGLE_STORY_LOCK':
-      const foo = state.stories.slice().map(story => {
+    case 'TOGGLE_STORY_LOCK': {
+      let stories = state.stories.slice().map(story => {
         if (story.id !== action.id) return story;
 
         return {
@@ -39,8 +39,8 @@ export default function root(state = initialState, action) {
           locked: !action.locked,
         };
       });
-      return Object.assign({}, state, { stories: foo });
-    case 'ADD_FREQUENCY':
+      return Object.assign({}, state, { stories });
+    }
     case 'CLEAR_ACTIVE_STORY':
       return Object.assign({}, state, {
         active: null,
