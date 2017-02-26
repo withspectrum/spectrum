@@ -1,4 +1,23 @@
 import * as firebase from 'firebase';
+import { getFrequency } from './frequencies';
+
+export const getStory = storyId => {
+  const db = firebase.database();
+
+  return db
+    .ref(`stories/${storyId}`)
+    .once('value')
+    .then(snapshot => snapshot.val());
+};
+
+export const getStories = frequencyId => {
+  const db = firebase.database();
+
+  return getFrequency(frequencyId).then(frequency => {
+    const stories = Object.keys(frequency.stories);
+    return Promise.all(stories.map(story => getStory(story)));
+  });
+};
 
 /**
  * Create a draft story in the database
