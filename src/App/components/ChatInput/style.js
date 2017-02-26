@@ -25,8 +25,7 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.button`
-	flex: 0 0 72px;
-	height: 100%;
+	flex: 0 0 48px;
 	color: ${({ theme }) => theme.text.reverse};
 	font-weight: bold;
 	padding-top: 2px;
@@ -35,6 +34,7 @@ export const Button = styled.button`
 	background-color: ${({ theme }) => theme.brand.default};
 	background-image: ${({ theme }) =>
   Gradient(theme.brand.alt, theme.brand.default)};
+  align-self: stretch;
 `;
 
 export const Footer = styled.div`
@@ -42,6 +42,7 @@ export const Footer = styled.div`
 	width: 100%;
 	flex: 0 0 auto;
 	align-self: flex-end;
+	align-items: center;
 	padding: 8px;
 	background-color: ${({ theme }) => theme.bg.wash};
 	border-top: 1px solid ${({ theme }) => theme.border.default};
@@ -59,33 +60,38 @@ export const MediaInput = styled.input`
 export const MediaLabel = styled.label`
 	border: none;
 	outline: 0;
-	color: ${props => props.theme.brand.default};
-	font-weight: 800;
-	font-size: 0.75rem;
 	display: inline-block;
-	margin: 0.5rem 0 1rem;
 	background: transparent;
+	transition: all 0.3s ease-out;
+	border-radius: 4px;
+	padding: 4px;
 
 	&:hover {
 		cursor: pointer;
+		background-color: #eee;
+		transition: all 0.2s ease-in;
 	}
 `;
 
 export const EmojiToggle = styled.div`
-	font-size: 20px;
-	margin: 1px 8px;
-	line-height: 1;
+	display: inline-block;
+	font-size: 24px;
+	line-height: 40px;
+	vertical-align: middle;
+	text-align: center;
 	border-radius: 4px;
 	-webkit-flex: 0 0 auto;
 	height: 40px;
-	padding: 12px;
-	padding-top: 11px;
-	padding-bottom: 4px;
+	width: 40px;
+	margin: 0 8px 0 4px;
 	background: ${props => props.active ? props.theme.brand.default : '#f6f7f8'};
+	transition: all 0.3s ease-out;
 
 	&:hover {
 		cursor: pointer;
+		transform: scale(1.1);
 		background: ${props => props.active ? props.theme.brand.default : '#eee'};
+		transition: all 0.2s ease-in;
 	}
 
 	@media (max-width: 768px) {
