@@ -19,14 +19,19 @@ const Homepage = asyncComponent(() =>
 
 class Root extends Component {
   componentWillMount() {
+    console.log('root component will mount');
     // On the initial render of the app we authenticate the user
     const { dispatch, params } = this.props;
-    console.log('active story is: ', params.story)
     firebase.auth().onAuthStateChanged(user => {
       if (!user)
         return dispatch({
           type: 'USER_NOT_AUTHENTICATED',
         });
+
+      // temporarily force-clear the messages so that it doesn't bloat the store
+      dispatch({
+        type: 'CLEAR_MESSAGES',
+      });
 
       // we know the user exists, so lets fetch their frequencies
       firebase
@@ -63,6 +68,7 @@ class Root extends Component {
                     .ref(`stories/${story}`)
                     .once('value')
                     .then(snapshot => {
+                      console.log('story fetched', snapshot.val());
                       const storyData = snapshot.val();
                       if (!storyData.published) return;
                       dispatch({
@@ -78,6 +84,7 @@ class Root extends Component {
                           .ref(`messages/${message}`)
                           .once('value')
                           .then(snapshot => {
+                            // console.log('in root about to dispatch a message')
                             dispatch({
                               type: 'ADD_MESSAGE',
                               message: snapshot.val(),
@@ -101,7 +108,6 @@ class Root extends Component {
 
     // If the story changes sync the active story to the store and load the messages
     if (nextProps.params.story !== params.story) {
-      console.log('navigating: ', nextProps.params.story, params.story)
       dispatch(setActiveStory(nextProps.params.story));
     }
   }

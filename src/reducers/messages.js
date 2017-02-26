@@ -5,6 +5,7 @@ const initialState = {
 export default function root(state = initialState, action) {
   switch (action.type) {
     case 'ADD_MESSAGE':
+      console.log('adding a message');
       return Object.assign({}, state, {
         messages: state.messages.concat([action.message]),
       });
@@ -12,6 +13,8 @@ export default function root(state = initialState, action) {
       return Object.assign({}, state, {
         messages: action.messages,
       });
+    case 'CLEAR_MESSAGES':
+      return initialState;
     default:
       return state;
   }
