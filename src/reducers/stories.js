@@ -15,21 +15,30 @@ export default function root(state = initialState, action) {
       return Object.assign({}, state, {
         stories: state.stories.concat([action.story]),
       });
+    case 'ADD_STORIES': {
+      const stories = action.stories.filter(
+        story =>
+          !state.stories.find(storedStory => story.id === storedStory.id),
+      );
+      return Object.assign({}, state, {
+        stories: state.stories.concat(stories),
+      });
+    }
     case 'CREATE_STORY':
       return Object.assign({}, state, {
         stories: state.stories.concat([action.story]),
         active: action.story.id,
       });
-    case 'SET_INITIAL_DATA':
     case 'SET_ACTIVE_STORY':
       return Object.assign({}, state, {
         active: action.story,
       });
-    case 'DELETE_STORY':
+    case 'DELETE_STORY': {
       const stories = state.stories
         .slice()
         .filter(story => story.id !== action.id);
       return Object.assign({}, state, { stories });
+    }
     case 'TOGGLE_STORY_LOCK': {
       let stories = state.stories.slice().map(story => {
         if (story.id !== action.id) return story;

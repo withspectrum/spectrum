@@ -19,11 +19,6 @@ import {
 } from '../../../actions/frequencies';
 import { login } from '../../../actions/user';
 import { showModal } from '../../../actions/modals';
-import {
-  getFrequencyPermission,
-  getCurrentFrequency,
-} from '../../../helpers/frequencies';
-import { sortArrayByKey } from '../../../helpers/utils';
 import { Lock, NewPost, ClosePost } from '../../../shared/Icons';
 import StoryCard from '../StoryCard';
 import ShareCard from '../ShareCard';
@@ -34,11 +29,11 @@ class StoryMaster extends Component {
   };
 
   unsubscribeFrequency = () => {
-    this.props.dispatch(unsubscribeFrequency(this.props.frequencies.active));
+    this.props.dispatch(unsubscribeFrequency(this.props.activeFrequency));
   };
 
   subscribeFrequency = () => {
-    this.props.dispatch(subscribeFrequency(this.props.frequencies.active));
+    this.props.dispatch(subscribeFrequency(this.props.activeFrequency));
   };
 
   login = e => {
@@ -47,12 +42,9 @@ class StoryMaster extends Component {
   };
 
   editFrequency = () => {
-    let frequencyData = getCurrentFrequency(
-      this.props.frequencies.active,
-      this.props.frequencies.frequencies,
+    this.props.dispatch(
+      showModal('FREQUENCY_EDIT_MODAL', this.props.frequency),
     );
-
-    this.props.dispatch(showModal('FREQUENCY_EDIT_MODAL', frequencyData));
   };
 
   toggleNav = () => {
@@ -62,39 +54,25 @@ class StoryMaster extends Component {
   };
 
   render() {
-    const { user, stories, frequencies, composer } = this.props;
+    const {
+      frequency,
+      activeFrequency,
+      stories,
+      isPrivate,
+      role,
+      loggedIn,
+      composer,
+      ui: { navVisible },
+    } = this.props;
 
-    const frequencyData = getCurrentFrequency(
-      frequencies.active,
-      frequencies.frequencies,
-    );
-
-    const isEverything = frequencies.active === 'everything';
-    const isPrivate = frequencyData && frequencyData.settings.private;
-    const role = getFrequencyPermission(
-      user,
-      frequencies.active,
-      frequencies.frequencies,
-    );
+    const isEverything = activeFrequency === 'everything';
     const hidden = !role && isPrivate;
 
     if (!isEverything && hidden) return <Lock />;
 
-    // Show stories in reverse chronological order
-    let sortedStories = sortArrayByKey(
-      stories.stories.slice(),
-      'timestamp',
-    ).reverse();
-
-    if (frequencyData && !isEverything) {
-      sortedStories = sortedStories.filter(story => {
-        return story.frequencyId === frequencyData.id;
-      });
-    }
-
     return (
-      <Column navVisible={this.props.ui.navVisible}>
-        <Header visible={user.uid}>
+      <Column navVisible={navVisible}>
+        <Header visible={loggedIn}>
           <MenuButton onClick={this.toggleNav}>☰</MenuButton>
 
           {role === 'owner' &&
@@ -127,16 +105,16 @@ class StoryMaster extends Component {
 
         <ScrollBody>
           <Overlay active={composer.isOpen} />
-          {!user.uid &&
+          {!loggedIn &&
             <LoginWrapper onClick={this.login}>
               <LoginText>Sign in to join the conversation.</LoginText>
               <LoginButton>Sign in with Twitter</LoginButton>
             </LoginWrapper>}
 
-          {isEverything || frequencyData
-            ? sortedStories.map((story, i) => (
+          {isEverything || frequency
+            ? stories.map((story, i) => (
                 <StoryCard
-                  urlBase={`~${frequencies.active}`}
+                  urlBase={`~${activeFrequency}`}
                   data={story}
                   key={`story-${i}`}
                 />
@@ -144,8 +122,8 @@ class StoryMaster extends Component {
             : ''}
 
           {!isEverything &&
-            frequencyData &&
-            <ShareCard slug={frequencies.active} name={frequencyData.name} />}
+            frequency &&
+            <ShareCard slug={activeFrequency} name={frequency.name} />}
         </ScrollBody>
       </Column>
     );
@@ -154,10 +132,7 @@ class StoryMaster extends Component {
 
 const mapStateToProps = state => {
   return {
-    stories: state.stories,
-    frequencies: state.frequencies,
     composer: state.composer,
-    user: state.user,
     ui: state.ui,
   };
 };

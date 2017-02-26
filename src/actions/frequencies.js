@@ -8,11 +8,28 @@ import {
   removeUserFromFrequency,
 } from '../db/frequencies';
 const history = createBrowserHistory();
+import { getStories } from '../db/stories';
 
-export const setActiveFrequency = frequency => ({
-  type: 'SET_ACTIVE_FREQUENCY',
-  frequency,
-});
+export const setActiveFrequency = frequency => (dispatch, getState) => {
+  const { frequencies: { frequencies } } = getState();
+  const id = getCurrentFrequency(frequency, frequencies).id;
+  dispatch({
+    type: 'SET_ACTIVE_FREQUENCY',
+    frequency,
+  });
+  dispatch({ type: 'LOADING' });
+  getStories(id)
+    .then(stories => {
+      dispatch({
+        type: 'ADD_STORIES',
+        stories,
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      dispatch({ type: 'STOP_LOADING' });
+    });
+};
 
 // NOTE: We do not dispatch anything in this action because we have an open listener to any changes in the frequencies in <Root />
 export const createFrequency = data => (dispatch, getState) => {

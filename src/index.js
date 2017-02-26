@@ -76,8 +76,8 @@ render(
       <ThemeProvider theme={theme}>
         <Body>
           <Match exactly pattern="/" component={Root} />
-          <Match exactly pattern="/~:frequency" component={Root} />
-          <Match exactly pattern="/~:frequency/:story" component={Root} />
+          <Match exactly pattern="/(\~):frequency" component={Root} />
+          <Match exactly pattern="/(\~):frequency/:story" component={Root} />
         </Body>
       </ThemeProvider>
     </BrowserRouter>

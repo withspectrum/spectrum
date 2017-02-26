@@ -1,6 +1,20 @@
 import * as firebase from 'firebase';
 
 /**
+ * Get a frequency from the database
+ *
+ * Returns a Promise which resolves with the data
+ */
+export const getFrequency = id => {
+  const db = firebase.database();
+
+  return db
+    .ref(`frequencies/${id}`)
+    .once('value')
+    .then(snapshot => snapshot.val());
+};
+
+/**
  * Save a new frequency in the db
  *
  * Returns a Promise that either resolves with the created frequency or rejects with an error
