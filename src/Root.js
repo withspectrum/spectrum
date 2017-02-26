@@ -40,6 +40,7 @@ class Root extends Component {
       dispatch({
         type: 'CLEAR_MESSAGES',
       });
+
       // Get the public userdata
       getPublicUserInfo(user.uid)
         .then(userData => {
