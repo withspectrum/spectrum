@@ -19,7 +19,6 @@ const Homepage = asyncComponent(() =>
 
 class Root extends Component {
   componentWillMount() {
-    console.log('root component will mount');
     // On the initial render of the app we authenticate the user
     const { dispatch, params } = this.props;
     firebase.auth().onAuthStateChanged(user => {
@@ -68,7 +67,6 @@ class Root extends Component {
                     .ref(`stories/${story}`)
                     .once('value')
                     .then(snapshot => {
-                      console.log('story fetched', snapshot.val());
                       const storyData = snapshot.val();
                       if (!storyData.published) return;
                       dispatch({

@@ -90,7 +90,7 @@ export const uploadMedia = (file, story, user) => {
     let timestamp = Date.now();
     let storageRef = firebase.storage().ref();
     let fileName = `${file.name}.${timestamp}`;
-    let fileRef = storageRef.child(`${story}/${fileName}`);
+    let fileRef = storageRef.child(`stories/${story}/${fileName}`);
 
     // we have to story an array of media urls so that we can fetch galleries from storage
     let storyRef = firebase.database().ref(`stories/${story}/media`).push();

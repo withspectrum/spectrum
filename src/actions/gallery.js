@@ -6,7 +6,7 @@ export const getFile = (file, story) => {
     if (!file) return;
 
     let storageRef = firebase.storage().ref();
-    let fileRef = storageRef.child(`${story}/${file}`);
+    let fileRef = storageRef.child(`/stories/${story}/${file}`);
     fileRef.getDownloadURL().then(url => {
       resolve(url);
     });
