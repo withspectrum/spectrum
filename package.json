@@ -26,6 +26,7 @@
     "react-stripe-checkout": "^2.2.5",
     "react-textarea-autosize": "^4.0.5",
     "redux": "^3.6.0",
+    "redux-google-analytics": "^1.0.1",
     "redux-thunk": "^2.2.0",
     "request": "^2.79.0",
     "sanitize-html": "^1.14.1",
