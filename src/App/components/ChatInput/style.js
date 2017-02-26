@@ -75,7 +75,7 @@ export const MediaLabel = styled.label`
 
 export const EmojiToggle = styled.div`
 	display: inline-block;
-	font-size: 20px;
+	font-size: 24px;
 	line-height: 40px;
 	vertical-align: middle;
 	text-align: center;
