@@ -28,7 +28,7 @@ class StoryCard extends Component {
   render() {
     const story = this.props.data;
     const frequency = getCurrentFrequency(
-      story.frequency,
+      story.frequencyId,
       this.props.frequencies.frequencies,
     );
 

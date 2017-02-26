@@ -89,7 +89,7 @@ class StoryView extends Component {
     let locked = this.props.locked;
     let frequencies = this.props.frequencies;
     let currentFrequency = getCurrentFrequency(
-      story.frequency,
+      story.frequencyId,
       frequencies.frequencies,
     );
     let returnUrl = this.props.frequencies.active === 'everything'

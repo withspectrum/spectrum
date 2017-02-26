@@ -88,7 +88,7 @@ class StoryMaster extends Component {
 
     if (frequencyData && !isEverything) {
       sortedStories = sortedStories.filter(story => {
-        return story.frequency === frequencyData.id;
+        return story.frequencyId === frequencyData.id;
       });
     }
 
