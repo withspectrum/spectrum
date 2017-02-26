@@ -46,7 +46,6 @@ export default function root(state = initialState, action) {
         frequencies: action.frequencies,
         loaded: true,
       });
-    case 'SET_INITIAL_DATA':
     case 'SET_ACTIVE_FREQUENCY':
       return Object.assign({}, state, {
         active: action.frequency,
