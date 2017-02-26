@@ -1,122 +1,55 @@
-import * as firebase from 'firebase';
-import { fetchStoriesForFrequencies } from '../helpers/stories';
+import { createBrowserHistory } from 'history';
+import {
+  createDraft,
+  createStory,
+  removeStory,
+  setStoryLock,
+} from '../db/stories';
 
-/*------------------------------------------------------------\*
-*
-
-setup
-Takes getState() as an only argument. The reason we do this is so that in any future
-actions or functions, we can easily destructure the returned object of setup() to get
-any necessary bits of data about the current state of the app
-
-*
-\*------------------------------------------------------------*/
-export const setup = stateFetch => {
-  let state = stateFetch;
-  let frequencies = state.frequencies;
-  let stories = state.stories;
-  let user = state.user;
-  let uid = user.uid;
-
-  // return an object that we can destructure in future functions
-  return {
-    database: firebase.database(), // we're also including the database so we don't have to keep defining it elsewhere
-    state,
-    frequencies,
-    stories,
-    user,
-    uid,
-  };
-};
-
-/*------------------------------------------------------------\*
-*
-
-createStory
-
-
-*
-\*------------------------------------------------------------*/
-export const publishStory = story => (dispatch, getState) => {
+/**
+ * Publish a drafted story
+ */
+export const publishStory = ({ frequencyId, title, description }) => (
+  dispatch,
+  getState,
+) => {
   dispatch({ type: 'LOADING' });
 
   let state = getState();
   let storyKey = state.composer.newStoryKey;
-  let user = state.user;
-  let uid = user.uid;
 
-  let storyRef = firebase.database().ref().child(`stories/${storyKey}`);
-
-  let storyData = {
-    id: storyKey, // we need this id again in the CREATE_STORY reducer
-    published: true,
-    timestamp: firebase.database.ServerValue.TIMESTAMP,
-    content: {
-      title: story.title,
-      description: story.body,
-    },
-    creator: {
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      uid,
-    },
-    frequency: story.frequencyId,
-  };
-
-  storyRef.update(storyData, err => {
-    if (err) {
-      console.log('there was an error publishing your story: ', err);
-    } else {
+  createStory({ key: storyKey, frequencyId, content: { title, description } })
+    .then(story => {
       dispatch({
         type: 'CREATE_STORY',
-        story: {
-          ...storyData,
-          // Timestamp is set on the server by Firebase, this simulates that by setting it to right
-          // now
-          timestamp: Date.now(),
-        },
+        story,
       });
-
-      dispatch({
-        type: 'TOGGLE_COMPOSER_OPEN',
-        isOpen: false,
-      });
-    }
-  });
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };
 
-export const initStory = () => (dispatch, getState) => {
-  return new Promise((resolve, reject) => {
-    let state = getState();
-    let user = state.user;
-    let uid = user.uid;
-    let newStoryRef = firebase.database().ref().child('stories').push();
-    let newStoryKey = newStoryRef.key;
+/**
+ * Initialise a story by creating a draft on the server
+ *
+ * Pass a frequency ID as the first (and only) argument if there's no active frequency, otherwise we take the active one
+ */
+export const initStory = freqId => (dispatch, getState) => {
+  const { user, frequencies: { frequencies, active } } = getState();
+  const frequencyId = freqId ||
+    frequencies.find(freq => freq.slug === active).id;
 
-    let draft = {
-      id: newStoryKey,
-      published: false,
-      timestamp: firebase.database.ServerValue.TIMESTAMP,
-      creator: {
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        uid,
-      },
-    };
-
-    newStoryRef.set(draft, err => {
-      if (err) {
-        console.log('there was an error creating the draft: ', err);
-      } else {
-        dispatch({
-          type: 'CREATE_DRAFT',
-          newStoryKey,
-        });
-
-        resolve();
-      }
+  createDraft({ user, frequencyId })
+    .then(key => {
+      dispatch({
+        type: 'CREATE_DRAFT',
+        key,
+      });
+    })
+    .catch(err => {
+      console.log(err);
     });
-  });
 };
 
 export const setActiveStory = story => ({
@@ -124,39 +57,53 @@ export const setActiveStory = story => ({
   story,
 });
 
+/**
+ * Delete a story
+ */
 export const deleteStory = id => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
+  const { frequencies, stories } = getState();
+  let activeFrequency = frequencies.active;
+  const { frequencyId } = stories.stories.find(story => story.id === id);
 
-  firebase.database().ref(`/stories/${id}`).remove(); // delete the story
-  firebase.database().ref(`/messages/${id}`).remove(); // delete the messages for the story
-
-  let activeFrequency = getState().frequencies.active;
-
-  dispatch({
-    type: 'DELETE_STORY',
-    id,
-  });
-
-  // redirect the user so that they don't end up on a broken url
-  if (activeFrequency && activeFrequency !== 'all') {
-    window.location.href = `/~${activeFrequency}`;
-  } else {
-    window.location.href = '/';
-  }
+  removeStory({ storyId: id, frequencyId })
+    .then(() => {
+      dispatch({
+        type: 'DELETE_STORY',
+        id,
+      });
+      const history = createBrowserHistory();
+      // redirect the user so that they don't end up on a broken url
+      if (activeFrequency && activeFrequency !== 'all') {
+        history.push(`/~${activeFrequency}`);
+      } else {
+        history.push('/');
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      dispatch({ type: 'STOP_LOADING' });
+    });
 };
 
+/**
+ * Toggle the locked status of a story
+ */
 export const toggleLockedStory = story => dispatch => {
   dispatch({ type: 'LOADING' });
   const id = story.id;
   const locked = story.locked ? story.locked : false; // if we haven't set a 'locked' status on the story, it defaults to false (which means people can write messages)
 
-  firebase.database().ref(`/stories/${id}`).update({
-    locked: !locked,
-  });
-
-  dispatch({
-    type: 'TOGGLE_STORY_LOCK',
-    id,
-    locked,
-  });
+  setStoryLock({ id, locked })
+    .then(() => {
+      dispatch({
+        type: 'TOGGLE_STORY_LOCK',
+        id,
+        locked,
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      dispatch({ type: 'STOP_LOADING' });
+    });
 };

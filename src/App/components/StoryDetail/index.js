@@ -21,7 +21,6 @@ import {
 } from './style';
 import { showGallery } from '../../../actions/gallery';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
-import { hashToArray } from '../../../helpers/utils';
 import { toggleLockedStory, deleteStory } from '../../../actions/stories';
 
 class StoryView extends Component {
@@ -78,22 +77,27 @@ class StoryView extends Component {
 
   clearActiveStory = () => {
     this.props.dispatch({
-      type: 'CLEAR_ACTIVE_STORY'
-    })
-  }
+      type: 'CLEAR_ACTIVE_STORY',
+    });
+  };
 
   render() {
     let story = this.props.activeStory;
     let creator = this.props.creator;
     let moderator = this.props.moderator;
     let locked = this.props.locked;
-    let frequencies = this.props.frequencies
-    let currentFrequency = getCurrentFrequency(story.frequency, frequencies.frequencies)
-    let returnUrl = this.props.frequencies.active === 'everything' ? 'everything' : currentFrequency[0].slug
+    let frequencies = this.props.frequencies;
+    let currentFrequency = getCurrentFrequency(
+      story.frequencyId,
+      frequencies.frequencies,
+    );
+    let returnUrl = this.props.frequencies.active === 'everything'
+      ? 'everything'
+      : currentFrequency.slug;
     return (
       <ScrollBody>
         <Link to={`/~${returnUrl}`}>
-          <BackArrow onClick={this.clearActiveStory}>&larr;</BackArrow>
+          <BackArrow onClick={this.clearActiveStory}>←</BackArrow>
         </Link>
 
         <ContentView>

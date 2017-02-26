@@ -11,7 +11,7 @@ import {
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
 import { getUsersFromMessageGroups } from '../../../helpers/stories';
-import { onlyContainsEmoji } from '../../../helpers/utils';
+import { onlyContainsEmoji, sortAndGroupBubbles } from '../../../helpers/utils';
 import { showGallery } from '../../../actions/gallery';
 
 class ChatView extends Component {
@@ -120,10 +120,13 @@ class ChatView extends Component {
 }
 
 const mapStateToProps = state => {
+  const messages = state.messages.messages.filter(
+    message => message.storyId === state.stories.active,
+  );
   return {
     user: state.user,
     stories: state.stories,
-    messages: state.messages.messages[state.stories.active],
+    messages: sortAndGroupBubbles(messages),
   };
 };
 

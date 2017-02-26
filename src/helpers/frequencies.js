@@ -1,26 +1,20 @@
-export const getFrequencyPermission = (user, activeFrequency, frequencies) => {
-  const { uid } = user;
-  if (!uid || activeFrequency === 'everything') {
-    return;
-  }
-
-  let frequencyToEval = frequencies.filter(freq => {
-    return freq.slug === activeFrequency;
-  });
-
-  if (frequencyToEval.length < 1) return;
-  let frequencyUsers = frequencyToEval[0].users;
-  // make sure this user is viewing a frequency they have joined
-  if (!frequencyUsers[uid]) return;
-  let usersPerm = frequencyUsers[uid].permission;
-  return usersPerm;
-};
-
 export const getCurrentFrequency = (activeFrequency, frequencies) => {
   if (activeFrequency === 'everything') {
     return;
   }
-  return frequencies.filter(
+  
+  return frequencies.find(
     freq => freq.slug === activeFrequency || freq.id === activeFrequency,
   );
+};
+
+export const getFrequencyPermission = (user, activeFrequency, frequencies) => {
+  let frequencyToEval = getCurrentFrequency(activeFrequency, frequencies);
+  if (!frequencyToEval) return;
+
+  let frequencyUsers = frequencyToEval.users;
+  // make sure this user is viewing a frequency they have joined
+  if (!frequencyUsers[user.uid]) return;
+  let usersPerm = frequencyUsers[user.uid].permission;
+  return usersPerm;
 };

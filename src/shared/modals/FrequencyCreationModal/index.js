@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import { hideModal } from '../../../actions/modals';
-import { addFrequency } from '../../../actions/frequencies';
+import { createFrequency } from '../../../actions/frequencies';
 import { checkUniqueFrequencyName, debounce } from '../../../helpers/utils';
 import { connect } from 'react-redux';
 import slugg from 'slugg';
@@ -175,9 +175,7 @@ class FrequencyCreationModal extends React.Component {
       private: this.state.private,
     };
 
-    this.props.dispatch(addFrequency(frequencyObj)).then(() => {
-      this.props.dispatch(hideModal());
-    });
+    this.props.dispatch(createFrequency(frequencyObj));
   };
 
   render() {
