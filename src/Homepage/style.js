@@ -6,24 +6,13 @@ export const Background = styled.div`
 	position: relative;
 	background-color: ${({ theme }) => theme.space.dark};
 	background-image: ${({ theme }) =>
-  Gradient(theme.space.dark, theme.space.light)};
+  Gradient(theme.space.dark, theme.brand.alt)};
 	width: 100%;
 	height: 100%;
 	background-size: cover;
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-
-	&:after {
-		content: "";
-		background: url('/img/starfield.png');
-		opacity: 0.85;
-		width: 100%;
-		height: 100%;
-		background-size: cover;
-		position: absolute;
-		z-index: 0;
-	} 
 `;
 
 export const Tagline = styled(H2)`
