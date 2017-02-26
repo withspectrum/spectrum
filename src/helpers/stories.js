@@ -99,6 +99,7 @@ export const uploadMedia = (file, story, user) => {
     let updates = {};
     let mediaData = {
       fileName,
+      type: file.type,
     };
 
     updates[`stories/${story}/media/${mediaKey}`] = mediaData;
