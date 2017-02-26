@@ -41,6 +41,10 @@ const theme = {
     default: '#3818E5',
     alt: '#7B16FF',
   },
+  space: {
+    dark: '#0F015E',
+    light: '#031957',
+  },
   warn: {
     default: '#E3353C',
     alt: '#E2197A',
@@ -75,9 +79,7 @@ render(
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <Body>
-          <Match exactly pattern="/" component={Root} />
-          <Match exactly pattern="/~:frequency" component={Root} />
-          <Match exactly pattern="/~:frequency/:story" component={Root} />
+          <Match exactly pattern="/(\~?):frequency?/:story?" component={Root} />
         </Body>
       </ThemeProvider>
     </BrowserRouter>

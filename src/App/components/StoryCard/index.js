@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router';
 // eslint-disable-next-line
 import {
@@ -17,6 +16,7 @@ import {
 } from './style';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { showGallery } from '../../../actions/gallery';
+import { timeDifference } from '../../../helpers/utils';
 
 class StoryCard extends Component {
   showGallery = e => {
@@ -26,74 +26,17 @@ class StoryCard extends Component {
   };
 
   render() {
-    const story = this.props.data;
-    const frequency = getCurrentFrequency(
-      story.frequencyId,
-      this.props.frequencies.frequencies,
-    );
+    const { frequency, story, urlBase, isEverything, active } = this.props;
 
-    const timestamp = story.timestamp;
-    let currentTime = Date.now();
-
-    function timeDifference(current, previous) {
-      const msPerMinute = 60 * 1000;
-      const msPerHour = msPerMinute * 60;
-      const msPerDay = msPerHour * 24;
-      const msPerMonth = msPerDay * 30;
-      const msPerYear = msPerDay * 365;
-
-      let elapsed = current - previous;
-
-      if (elapsed < msPerMinute) {
-        return 'Just now';
-      } else if (elapsed < msPerHour) {
-        const now = Math.round(elapsed / msPerMinute);
-        if (now === 1) {
-          return `1 minute ago`;
-        } else {
-          return `${now} minutes ago`;
-        }
-      } else if (elapsed < msPerDay) {
-        const now = Math.round(elapsed / msPerHour);
-        if (now === 1) {
-          return `1 hour ago`;
-        } else {
-          return `${now} hours ago`;
-        }
-      } else if (elapsed < msPerMonth) {
-        const now = Math.round(elapsed / msPerDay);
-        if (now === 1) {
-          return `Yesterday`;
-        } else if (now >= 7 && now <= 13) {
-          return 'A week ago';
-        } else if (now >= 14 && now <= 20) {
-          return '2 weeks ago';
-        } else if (now >= 21 && now <= 28) {
-          return '3 weeks ago';
-        } else {
-          return `${now} days ago`;
-        }
-      } else if (elapsed < msPerYear) {
-        const now = Math.round(elapsed / msPerMonth);
-        if (now === 1) {
-          return `A month ago`;
-        } else {
-          return `${now} months ago`;
-        }
-      } else {
-        const now = Math.round(elapsed / msPerYear);
-        if (now === 1) {
-          return `A year ago`;
-        } else {
-          return `${now} years ago`;
-        }
-      }
+    let messages;
+    if (story.messages) {
+      messages = Object.keys(story.messages);
     }
 
     return (
       <Card>
-        <Link to={`/${this.props.urlBase}/${story.id}`}>
-          <LinkWrapper selected={story.id === this.props.stories.active}>
+        <Link to={`/${urlBase}/${story.id}`}>
+          <LinkWrapper selected={story.id === active}>
             <StoryHeader>
               <Avatar
                 src={story.creator.photoURL}
@@ -102,10 +45,10 @@ class StoryCard extends Component {
               <UserMeta>
                 <Name>{story.creator.displayName}</Name>
                 <Meta>
-                  {timeDifference(currentTime, timestamp)}
+                  {timeDifference(Date.now(), story.timestamp)}
                   &nbsp;•&nbsp;
-                  {story.message_count > 0
-                    ? `${story.message_count} messages`
+                  {messages && messages.length > 0
+                    ? `${messages.length} messages`
                     : 'No messages yet'}
                 </Meta>
               </UserMeta>
@@ -119,7 +62,7 @@ class StoryCard extends Component {
           </LinkWrapper>
         </Link>
 
-        {this.props.frequencies.active === 'everything' && frequency
+        {isEverything && frequency
           ? <Link to={`/~${frequency.slug}`}>
               <MetaFreq>
                 ~{frequency.name}
@@ -131,13 +74,4 @@ class StoryCard extends Component {
     );
   }
 }
-
-const mapStateToProps = state => {
-  return {
-    stories: state.stories,
-    user: state.user,
-    frequencies: state.frequencies,
-  };
-};
-
-export default connect(mapStateToProps)(StoryCard);
+export default StoryCard;

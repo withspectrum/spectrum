@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import { getStory } from './stories';
 
 /**
  * Create a message in the db
@@ -27,4 +28,20 @@ export const createMessage = ({ storyId, frequencyId, userId, message }) => {
     })
     .then(() => db.ref(`messages/${key}`).once('value'))
     .then(snapshot => snapshot.val());
+};
+
+const getMessage = messageId => {
+  const db = firebase.database();
+
+  return db
+    .ref(`messages/${messageId}`)
+    .once('value')
+    .then(snapshot => snapshot.val());
+};
+
+export const getMessages = storyId => {
+  return getStory(storyId).then(story => {
+    const messages = Object.keys(story.messages);
+    return Promise.all(messages.map(message => getMessage(message)));
+  });
 };
