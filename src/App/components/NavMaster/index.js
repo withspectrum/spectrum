@@ -22,8 +22,6 @@ import {
   Footer,
   FooterLogo,
   FooterP,
-  Form,
-  Input,
   Button,
 } from './style';
 

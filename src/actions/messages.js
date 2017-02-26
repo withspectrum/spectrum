@@ -1,6 +1,3 @@
-import { hashToArray, sortAndGroupBubbles } from '../helpers/utils';
-import fetch from 'whatwg-fetch-importable';
-import Autolinker from 'autolinker';
 import { createMessage } from '../db/messages';
 
 /**
@@ -12,10 +9,6 @@ export const sendMessage = message => (dispatch, getState) => {
   const frequencyId = stories.stories.find(
     story => story.id === stories.active,
   ).frequencyId;
-
-  // create an autolinker to parse the message body for urls to convert them into hyperlinks
-  const autolinker = new Autolinker();
-  const urls = autolinker.parse(message);
 
   createMessage({
     storyId,

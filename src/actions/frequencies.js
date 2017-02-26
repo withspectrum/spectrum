@@ -1,7 +1,5 @@
-import * as firebase from 'firebase';
 import { createBrowserHistory } from 'history';
 import { getCurrentFrequency } from '../helpers/frequencies';
-import { fetchFrequenciesForUser } from '../helpers/utils';
 import {
   saveNewFrequency,
   removeFrequency,

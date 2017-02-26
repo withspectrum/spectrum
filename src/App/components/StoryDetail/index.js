@@ -21,7 +21,6 @@ import {
 } from './style';
 import { showGallery } from '../../../actions/gallery';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
-import { hashToArray } from '../../../helpers/utils';
 import { toggleLockedStory, deleteStory } from '../../../actions/stories';
 
 class StoryView extends Component {

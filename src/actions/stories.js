@@ -1,5 +1,3 @@
-import * as firebase from 'firebase';
-import { fetchStoriesForFrequencies } from '../helpers/stories';
 import { createBrowserHistory } from 'history';
 import {
   createDraft,

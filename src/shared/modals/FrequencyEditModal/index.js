@@ -4,14 +4,10 @@ import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import { hideModal } from '../../../actions/modals';
 import { editFrequency, deleteFrequency } from '../../../actions/frequencies';
-import { checkUniqueFrequencyName, debounce } from '../../../helpers/utils';
 import { connect } from 'react-redux';
 import {
   modalStyles,
   Footer,
-  EditSlug,
-  EditSlugInput,
-  Pre,
   NameLabel,
   NameInput,
   ErrorMessage,

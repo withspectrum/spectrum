@@ -167,32 +167,6 @@ export const FooterP = styled(P)`
   align-self: flex-end;
 `;
 
-export const Form = styled.form`
-  margin: 8px;
-  margin-bottom: 16px;
-  display: flex;
-  flex: 0 0 auto;
-`;
-
-export const Input = styled.input`
-  background-color: #2E313F;
-  border-radius: 4px 0px 0px 4px;
-  flex: 1 0 auto;
-  padding: 4px;
-  padding-left: 12px;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 24px;
-  vertical-align: middle;
-  color: ${({ theme }) => theme.text.reverse};
-  position: relative;
-
-  &::placeholder { color: ${({ theme }) => theme.text.alt} }
-  &::-webkit-input-placeholder { color: ${({ theme }) => theme.text.alt} }
-  &:-moz-placeholder { color: ${({ theme }) => theme.text.alt} }
-  &:-ms-input-placeholder { color: ${({ theme }) => theme.text.alt} }
-`;
-
 export const Button = styled.button`
   margin: 16px;
   background-color: #0f1010;

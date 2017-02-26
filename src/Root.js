@@ -8,7 +8,7 @@ import * as firebase from 'firebase';
 import { setInitialData } from './actions/loading';
 import { setActiveFrequency } from './actions/frequencies';
 import { setActiveStory } from './actions/stories';
-import { asyncComponent, hashToArray } from './helpers/utils';
+import { asyncComponent } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
 
 // Codesplit the App and the Homepage to only load what we need based on which route we're on
@@ -92,7 +92,7 @@ class Root extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, params, frequencies } = this.props;
+    const { dispatch, params } = this.props;
     // If the frequency changes sync the active frequency to the store and load the stories
     if (nextProps.params.frequency !== params.frequency) {
       dispatch(setActiveFrequency(nextProps.params.frequency));
