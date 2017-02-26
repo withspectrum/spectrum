@@ -106,6 +106,6 @@ export const removeStory = ({ storyId, frequencyId }) =>
  */
 export const setStoryLock = ({ id, locked }) => {
   return firebase.database().ref(`/stories/${id}`).update({
-    locked: !locked,
+    locked,
   });
 };
