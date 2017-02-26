@@ -9,6 +9,12 @@ export default function root(state = initialState, action) {
       return Object.assign({}, state, {
         stories: action.stories,
       });
+    case 'ADD_STORY':
+      if (state.stories.find(story => story.id === action.story.id))
+        return state;
+      return Object.assign({}, state, {
+        stories: state.stories.concat([action.story]),
+      });
     case 'CREATE_STORY':
       return Object.assign({}, state, {
         stories: state.stories.concat([action.story]),
@@ -24,8 +30,8 @@ export default function root(state = initialState, action) {
         .slice()
         .filter(story => story.id !== action.id);
       return Object.assign({}, state, { stories });
-    case 'TOGGLE_STORY_LOCK':
-      const foo = state.stories.slice().map(story => {
+    case 'TOGGLE_STORY_LOCK': {
+      let stories = state.stories.slice().map(story => {
         if (story.id !== action.id) return story;
 
         return {
@@ -33,11 +39,15 @@ export default function root(state = initialState, action) {
           locked: !action.locked,
         };
       });
-      return Object.assign({}, state, { stories: foo });
-    case 'ADD_FREQUENCY':
+      return Object.assign({}, state, { stories });
+    }
     case 'CLEAR_ACTIVE_STORY':
       return Object.assign({}, state, {
         active: null,
+      });
+    case 'DELETE_FREQUENCY':
+      return Object.assign({}, state, {
+        stories: state.stories.filter(story => story.frequencyId !== action.id),
       });
     default:
       return state;

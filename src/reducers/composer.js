@@ -13,17 +13,18 @@ export default function root(state = initialState, action) {
       });
     case 'CLOSE_COMPOSER':
       return Object.assign({}, state, {
-        isOpen: false
-      })
+        isOpen: false,
+      });
     case 'CREATE_DRAFT':
       return Object.assign({}, state, {
-        newStoryKey: action.newStoryKey,
+        newStoryKey: action.key,
       });
     case 'CREATE_STORY':
       return Object.assign({}, state, {
         title: '',
         body: '',
         newStoryKey: null,
+        isOpen: false,
       });
     case 'SET_ACTIVE_STORY':
       return Object.assign({}, state, {

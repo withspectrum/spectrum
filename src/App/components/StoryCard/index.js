@@ -28,7 +28,7 @@ class StoryCard extends Component {
   render() {
     const story = this.props.data;
     const frequency = getCurrentFrequency(
-      story.frequency,
+      story.frequencyId,
       this.props.frequencies.frequencies,
     );
 
@@ -120,9 +120,9 @@ class StoryCard extends Component {
         </Link>
 
         {this.props.frequencies.active === 'everything' && frequency
-          ? <Link to={`/~${frequency[0].slug}`}>
+          ? <Link to={`/~${frequency.slug}`}>
               <MetaFreq>
-                ~{frequency[0].name}
+                ~{frequency.name}
               </MetaFreq>
             </Link>
           : ``}

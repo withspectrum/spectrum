@@ -10,11 +10,10 @@ import {
   LoginButton,
   TipButton,
   Overlay,
-  MenuButton
+  MenuButton,
 } from './style';
 import { toggleComposer } from '../../../actions/composer';
 import {
-  toggleFrequencyPrivacy,
   unsubscribeFrequency,
   subscribeFrequency,
 } from '../../../actions/frequencies';
@@ -34,16 +33,12 @@ class StoryMaster extends Component {
     this.props.dispatch(toggleComposer());
   };
 
-  togglePrivacy = () => {
-    this.props.dispatch(toggleFrequencyPrivacy());
-  };
-
   unsubscribeFrequency = () => {
-    this.props.dispatch(unsubscribeFrequency());
+    this.props.dispatch(unsubscribeFrequency(this.props.frequencies.active));
   };
 
   subscribeFrequency = () => {
-    this.props.dispatch(subscribeFrequency());
+    this.props.dispatch(subscribeFrequency(this.props.frequencies.active));
   };
 
   login = e => {
@@ -62,9 +57,9 @@ class StoryMaster extends Component {
 
   toggleNav = () => {
     this.props.dispatch({
-      type: 'TOGGLE_NAV'
-    })
-  }
+      type: 'TOGGLE_NAV',
+    });
+  };
 
   render() {
     const { user, stories, frequencies, composer } = this.props;
@@ -75,7 +70,7 @@ class StoryMaster extends Component {
     );
 
     const isEverything = frequencies.active === 'everything';
-    const isPrivate = frequencyData && frequencyData[0].settings.private;
+    const isPrivate = frequencyData && frequencyData.settings.private;
     const role = getFrequencyPermission(
       user,
       frequencies.active,
@@ -92,11 +87,9 @@ class StoryMaster extends Component {
     ).reverse();
 
     if (frequencyData && !isEverything) {
-      sortedStories = sortedStories.filter(
-        story => {
-          return story.frequency === frequencyData[0].id
-        }
-      );
+      sortedStories = sortedStories.filter(story => {
+        return story.frequencyId === frequencyData.id;
+      });
     }
 
     return (
@@ -129,7 +122,7 @@ class StoryMaster extends Component {
               ? <JoinBtn member onClick={this.unsubscribeFrequency}>
                   Leave
                 </JoinBtn>
-              : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}          
+              : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}
         </Header>
 
         <ScrollBody>

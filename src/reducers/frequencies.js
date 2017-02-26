@@ -7,9 +7,15 @@ const initialState = {
 export default function root(state = initialState, action) {
   switch (action.type) {
     case 'ADD_FREQUENCY':
+      if (state.frequencies.find(freq => freq.id === action.frequency.id))
+        return state;
       return Object.assign({}, state, {
         frequencies: state.frequencies.concat([action.frequency]),
-        active: action.frequency.id,
+      });
+    case 'CREATE_FREQUENCY':
+      return Object.assign({}, state, {
+        frequencies: state.frequencies.concat([action.frequency]),
+        active: action.frequency.slug,
       });
     case 'EDIT_FREQUENCY': {
       let frequencies = state.frequencies.slice().map(frequency => {
@@ -30,7 +36,10 @@ export default function root(state = initialState, action) {
       let frequencies = state.frequencies
         .slice()
         .filter(frequency => frequency.id !== action.id);
-      return Object.assign({}, state, { frequencies });
+      return Object.assign({}, state, {
+        frequencies,
+        active: 'everything',
+      });
     }
     case 'SET_FREQUENCIES':
       return Object.assign({}, state, {
@@ -42,6 +51,18 @@ export default function root(state = initialState, action) {
       return Object.assign({}, state, {
         active: action.frequency,
       });
+    case 'FREQUENCIES_LOADED':
+      return Object.assign({}, state, {
+        loaded: true,
+      });
+    case 'UNSUBSCRIBE_FREQUENCY': {
+      const frequencies = state.frequencies
+        .slice()
+        .filter(frequency => frequency.id !== action.id);
+      return Object.assign({}, state, {
+        frequencies,
+      });
+    }
     default:
       return state;
   }

@@ -20,7 +20,7 @@ export const isStoryCreator = (story, user) => {
 export const getUserFromId = uid => {
   return firebase
     .database()
-    .ref(`users/${uid}`)
+    .ref(`users/${uid}/public`)
     .once('value')
     .then(snapshot => {
       let val = snapshot.val();
@@ -60,7 +60,7 @@ export const getStoryPermission = (story, user, frequencies) => {
   if (!user.uid || !story) return;
 
   let uid = user.uid;
-  let storyFrequencyId = story.frequency; // get the frequency the story was posted in
+  let storyFrequencyId = story.frequencyId; // get the frequency the story was posted in
   let frequencyMatch = frequencies.frequencies.filter(freq => {
     // and filter that against all the stories returned
     return freq.id === storyFrequencyId; // when we have a match, return the frequency object

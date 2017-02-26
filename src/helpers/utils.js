@@ -14,29 +14,29 @@ export const hashToArray = hash => {
 };
 
 export const sortAndGroupBubbles = messages => {
+  if (!messages.length > 0) return [];
+
   let masterArray = [];
   let newArray = [];
-  if (messages.length > 0) {
-    let checkId;
+  let checkId;
 
-    for (let i = 0; i < messages.length; i++) {
-      if (i === 0) {
-        checkId = messages[i].userId;
-      }
+  for (let i = 0; i < messages.length; i++) {
+    if (i === 0) {
+      checkId = messages[i].userId;
+    }
 
-      if (messages[i].userId === checkId) {
-        // this message user id does match
-        newArray.push(messages[i]);
-        checkId = messages[i].userId;
-      } else {
-        // this message user id doesn't match
-        masterArray.push(newArray);
+    if (messages[i].userId === checkId) {
+      // this message user id does match
+      newArray.push(messages[i]);
+      checkId = messages[i].userId;
+    } else {
+      // this message user id doesn't match
+      masterArray.push(newArray);
 
-        // reset
-        checkId = messages[i].userId;
-        newArray = [];
-        newArray.push(messages[i]);
-      }
+      // reset
+      checkId = messages[i].userId;
+      newArray = [];
+      newArray.push(messages[i]);
     }
   }
   masterArray.push(newArray);
@@ -101,7 +101,7 @@ export const asyncComponent = getComponent => {
 
 export const checkUniqueFrequencyName = name => {
   return new Promise((resolve, reject) => {
-    let frequenciesRef = firebase
+    firebase
       .database()
       .ref('frequencies')
       .orderByChild('slug')
@@ -129,24 +129,6 @@ export const debounce = (func, wait, immediate) => {
     timeout = setTimeout(later, wait);
     if (callNow) func.apply(context, args);
   };
-};
-
-const deleteFrequencyFromUser = (user, frequency) => {
-  return new Promise((resolve, reject) => {
-    return firebase
-      .database()
-      .ref(`users/${user}/frequencies/${frequency}`)
-      .remove(err => {
-        if (err) console.log('Error deleting frequency from user: ', err);
-        resolve();
-      });
-  });
-};
-
-export const deleteFrequencyFromAllUsers = (users, frequency) => {
-  return Promise.all(
-    users.map(user => deleteFrequencyFromUser(user, frequency)),
-  );
 };
 
 // This regex matches every string with any emoji in it, not just strings that only have emojis

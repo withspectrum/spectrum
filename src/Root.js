@@ -8,9 +8,7 @@ import * as firebase from 'firebase';
 import { setInitialData } from './actions/loading';
 import { setActiveFrequency } from './actions/frequencies';
 import { setActiveStory } from './actions/stories';
-import { setAllMessages } from './actions/messages';
-import { asyncComponent, hashToArray } from './helpers/utils';
-import { fetchStoriesForFrequencies } from './helpers/stories';
+import { asyncComponent } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
 
 // Codesplit the App and the Homepage to only load what we need based on which route we're on
@@ -21,6 +19,7 @@ const Homepage = asyncComponent(() =>
 
 class Root extends Component {
   componentWillMount() {
+    console.log('root component will mount');
     // On the initial render of the app we authenticate the user
     const { dispatch, params } = this.props;
     firebase.auth().onAuthStateChanged(user => {
@@ -28,43 +27,75 @@ class Root extends Component {
         return dispatch({
           type: 'USER_NOT_AUTHENTICATED',
         });
-      let users = firebase.database().ref('users');
 
-      // we know the user exists, so lets fetch their data by matching the uid
-      users.orderByChild('uid').equalTo(user.uid).once('value', snapshot => {
-        // once we've retreived our user, we can dispatch to redux and store their info in state
-        const userData = snapshot.val()[user.uid];
-        dispatch(
-          setInitialData(
-            userData,
-            params.frequency || 'everything',
-            params.story || '',
-          ),
-        );
+      // temporarily force-clear the messages so that it doesn't bloat the store
+      dispatch({
+        type: 'CLEAR_MESSAGES',
       });
-    });
 
-    firebase.database().ref('frequencies').once('value').then(snapshot => {
-      const frequencies = snapshot.val();
-      fetchStoriesForFrequencies(frequencies).then(stories => {
-        const result = [];
-        // Flatten the stories
-        stories.forEach(story => result.push(...hashToArray(story)));
-        dispatch({
-          type: 'SET_STORIES',
-          stories: result,
+      // we know the user exists, so lets fetch their frequencies
+      firebase
+        .database()
+        .ref(`users/${user.uid}/public`)
+        .once('value', snapshot => {
+          const userData = snapshot.val();
+          dispatch(
+            setInitialData(
+              userData,
+              params.frequency || 'everything',
+              params.story || '',
+            ),
+          );
+          Object.keys(userData.frequencies).map((frequency, index) => {
+            // Get the frequencies
+            firebase
+              .database()
+              .ref(`frequencies/${frequency}/`)
+              .once('value', snapshot => {
+                const data = snapshot.val();
+                dispatch({
+                  type: 'ADD_FREQUENCY',
+                  frequency: data,
+                });
+                if (index === Object.keys(userData.frequencies).length - 1)
+                  dispatch({ type: 'FREQUENCIES_LOADED' });
+                if (!data.stories) return;
+                const stories = Object.keys(data.stories);
+                if (stories.length === 0) return;
+                stories.forEach(story => {
+                  firebase
+                    .database()
+                    .ref(`stories/${story}`)
+                    .once('value')
+                    .then(snapshot => {
+                      console.log('story fetched', snapshot.val());
+                      const storyData = snapshot.val();
+                      if (!storyData.published) return;
+                      dispatch({
+                        type: 'ADD_STORY',
+                        story: snapshot.val(),
+                      });
+                      if (!storyData.messages) return;
+                      const messages = Object.keys(storyData.messages);
+                      if (!messages || messages.length === 0) return;
+                      messages.forEach(message => {
+                        firebase
+                          .database()
+                          .ref(`messages/${message}`)
+                          .once('value')
+                          .then(snapshot => {
+                            // console.log('in root about to dispatch a message')
+                            dispatch({
+                              type: 'ADD_MESSAGE',
+                              message: snapshot.val(),
+                            });
+                          });
+                      });
+                    });
+                });
+              });
+          });
         });
-        dispatch({
-          type: 'SET_FREQUENCIES',
-          frequencies: hashToArray(snapshot.val()),
-        });
-      });
-    });
-
-    // Listen to changes in messages
-    firebase.database().ref('messages').on('value', snapshot => {
-      const messages = snapshot.val();
-      dispatch(setAllMessages(messages));
     });
   }
 
@@ -76,7 +107,7 @@ class Root extends Component {
     }
 
     // If the story changes sync the active story to the store and load the messages
-    if (nextProps.params.story !== params.frequency) {
+    if (nextProps.params.story !== params.story) {
       dispatch(setActiveStory(nextProps.params.story));
     }
   }

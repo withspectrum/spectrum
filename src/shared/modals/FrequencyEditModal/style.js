@@ -59,48 +59,6 @@ export const NameInput = styled.input`
   }
 `;
 
-export const EditSlug = styled.label`
-  position: relative;
-  display: block;
-  width: 100%;
-  padding-left: 1rem;
-`;
-
-export const Pre = styled.span`
-  position: absolute;
-  top: 2px;
-  left: 28px;
-  font-size: 12px;
-  font-weight: 500;
-  color: ${({ theme }) => theme.text.alt};
-  
-  &:before {
-    content: '';
-    position: absolute;
-    top: 6px;
-    left: -8px;
-    width: 4px;
-    height: 4px;
-    border-radius: 10px;
-    background: ${props =>
-  props.error ? props.theme.warn.default : 'transparent'};
-  }
-`;
-
-export const EditSlugInput = styled.input`
-  background: #f5f6f7;
-  padding: 0 12px 4px 97px;
-  margin-left: 12px;
-  -webkit-display: none;
-  box-shadow: none;
-  width: calc(100% - 32px);
-  border-bottom: 1px solid transparent;
-
-  &:focus {
-    border-bottom: 1px solid ${({ theme }) => theme.brand.default};
-  }
-`;
-
 export const ErrorMessage = styled.span`
   font-size: 12px;
   color: ${props =>

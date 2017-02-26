@@ -4,15 +4,10 @@ import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import { hideModal } from '../../../actions/modals';
 import { editFrequency, deleteFrequency } from '../../../actions/frequencies';
-import { checkUniqueFrequencyName, debounce } from '../../../helpers/utils';
 import { connect } from 'react-redux';
-import slugg from 'slugg';
 import {
   modalStyles,
   Footer,
-  EditSlug,
-  EditSlugInput,
-  Pre,
   NameLabel,
   NameInput,
   ErrorMessage,
@@ -33,18 +28,14 @@ class FrequencyEditModal extends React.Component {
     this.state = {
       isOpen: props.isOpen,
       name: props.name,
-      slug: props.slug,
       error: '',
       exists: false,
-      editedSlug: false,
       private: props.settings.private,
       loading: false,
       disabled: true,
       deleteAttempted: false,
       deleteText: 'Confirm Delete',
     };
-
-    this.editSlug = debounce(this.editSlug, 500); // query the server every 200ms instead of on every keystroke
   }
 
   toggleDeleteAttempt = () => {
@@ -81,69 +72,6 @@ class FrequencyEditModal extends React.Component {
     });
   };
 
-  editSlug = () => {
-    let customSlug = ReactDOM.findDOMNode(this.refs.customSlug).value;
-    customSlug.trim();
-    let editedSlug = slugg(customSlug);
-
-    this.setState({
-      slug: editedSlug,
-      editedSlug: true,
-      loading: true,
-      disabled: false,
-    });
-
-    if (editedSlug === 'everything') {
-      this.setState({
-        error: "~everything can't be used, sorry!",
-      });
-
-      return;
-    }
-
-    if (editedSlug.length > 20) {
-      this.setState({
-        error: "Getting a bit carried away now, eh? It's best to use a shorter, more memorable URL (less than 20 characters).",
-      });
-
-      return;
-    }
-
-    if (editedSlug === this.props.slug) {
-      this.setState({
-        editedSlug: false,
-      });
-
-      return;
-    }
-
-    // check the db to see if this frequency slug exists
-    checkUniqueFrequencyName(editedSlug).then(bool => {
-      if (editedSlug === this.props.slug) {
-        this.setState({
-          loading: false,
-        });
-
-        return;
-      }
-
-      if (bool === false) {
-        // the slug is taken
-        this.setState({
-          exists: true,
-          loading: false,
-        });
-      } else {
-        // the slug is available
-        this.setState({
-          loading: false,
-          exists: false,
-          error: this.state.error || null,
-        });
-      }
-    });
-  };
-
   togglePrivacy = e => {
     this.setState({
       private: !this.state.private,
@@ -165,8 +93,7 @@ class FrequencyEditModal extends React.Component {
       this.state.error ||
       this.state.loading ||
       this.state.exists ||
-      !this.state.name ||
-      !this.state.slug
+      !this.state.name
     ) {
       return;
     }
@@ -174,18 +101,14 @@ class FrequencyEditModal extends React.Component {
     let frequencyObj = {
       id: this.props.id,
       name: this.state.name,
-      slug: this.state.slug,
+      slug: this.props.slug,
       settings: {
         private: this.state.private,
         tint: this.props.settings.tint,
       },
     };
 
-    this.props.dispatch(editFrequency(frequencyObj)).then(() => {
-      this.props.dispatch(hideModal());
-
-      // TODO: Figure out how to refresh the page if the slug changes
-    });
+    this.props.dispatch(editFrequency(frequencyObj));
   };
 
   deleteFrequency = () => {
@@ -194,11 +117,7 @@ class FrequencyEditModal extends React.Component {
       deleteText: 'Deleting...',
     });
 
-    this.props.dispatch(deleteFrequency(id)).then(() => {
-      this.props.dispatch(hideModal());
-
-      // TODO: Figure out how to refresh the page when it is deleted
-    });
+    this.props.dispatch(deleteFrequency(id));
   };
 
   render() {
@@ -224,34 +143,12 @@ class FrequencyEditModal extends React.Component {
             />
           </NameLabel>
 
-          <EditSlug>
-            <Pre error={this.state.exists}>spectrum.chat/~</Pre>
-            <EditSlugInput
-              ref="customSlug"
-              type="text"
-              placeholder={this.state.slug}
-              defaultValue={this.state.slug}
-              onChange={this.editSlug}
-            />
-          </EditSlug>
-
           {this.state.exists &&
             <ErrorMessage>
-              Oops, a{' '}
-              <a href={`/~${this.state.slug}`}>frequency with this name</a>
-              {' '}already exists.
+              Oops, a frequency with this name already exists.
             </ErrorMessage>}
 
           {this.state.error && <ErrorMessage>{this.state.error}</ErrorMessage>}
-
-          {this.state.editedSlug &&
-            <ErrorMessage warn>
-              Just a heads up: if you edit your URL, anyone who visits your old link (
-              <a href={`/~${this.props.slug}`}>
-                spectrum.chat/~{this.props.slug}
-              </a>
-              ) won't find your frequency.
-            </ErrorMessage>}
 
           <Privacy>
             <PrivacyLabel>
@@ -269,7 +166,7 @@ class FrequencyEditModal extends React.Component {
 
             <PrivacyText>
               People will be able to request approval at{' '}
-              <b>https://spectrum.chat/~{this.state.slug}</b>
+              <b>https://spectrum.chat/~{this.props.slug}</b>
             </PrivacyText>
             <br />
           </Privacy>
@@ -298,7 +195,6 @@ class FrequencyEditModal extends React.Component {
                     this.state.disabled ||
                       this.state.error ||
                       !this.state.name ||
-                      !this.state.slug ||
                       this.state.exists
                   }
                 >
