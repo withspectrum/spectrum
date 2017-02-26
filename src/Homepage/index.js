@@ -1,6 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { LoginButton } from '../App/components/StoryMaster/style';
+import { Twitter } from '../shared/Icons';
+import {
+  Background,
+  Tagline,
+  Button,
+  LogoWhite,
+  ContentWrapper,
+} from './style';
 import { login } from '../actions/user';
 
 class Homepage extends React.Component {
@@ -11,10 +18,17 @@ class Homepage extends React.Component {
 
   render() {
     return (
-      <div>
-        <h1>Homepage</h1>
-        <LoginButton onClick={this.login}>Sign in with Twitter</LoginButton>
-      </div>
+      <Background>
+        <ContentWrapper>
+          <LogoWhite />
+          <Tagline>It's like a forum, but for Mars colonists.</Tagline>
+          <Button onClick={this.login}>
+            <Twitter color={'brand'} stayActive />
+            {' '}
+            <span>Sign in with Twitter</span>
+          </Button>
+        </ContentWrapper>
+      </Background>
     );
   }
 }

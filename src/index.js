@@ -41,6 +41,10 @@ const theme = {
     default: '#3818E5',
     alt: '#7B16FF',
   },
+  space: {
+    dark: '#0F015E',
+    light: '#031957',
+  },
   warn: {
     default: '#E3353C',
     alt: '#E2197A',
