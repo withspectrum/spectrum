@@ -15,10 +15,5 @@ export const sendMessage = message => (dispatch, getState) => {
     frequencyId,
     userId: user.uid,
     message,
-  }).then(message => {
-    dispatch({
-      type: 'ADD_MESSAGE',
-      message,
-    });
   });
 };

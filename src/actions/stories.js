@@ -4,8 +4,10 @@ import {
   createStory,
   removeStory,
   setStoryLock,
+  listenToStory,
+  stopListening,
 } from '../db/stories';
-import { getMessages } from '../db/messages';
+import { getMessages, getMessage } from '../db/messages';
 
 /**
  * Publish a drafted story
@@ -53,6 +55,7 @@ export const initStory = freqId => (dispatch, getState) => {
     });
 };
 
+let listener;
 export const setActiveStory = story => (dispatch, getState) => {
   dispatch({
     type: 'SET_ACTIVE_STORY',
@@ -67,6 +70,17 @@ export const setActiveStory = story => (dispatch, getState) => {
       console.log(err);
       dispatch({ type: 'STOP_LOADING' });
     });
+
+  if (listener) stopListening(listener);
+  listener = listenToStory(story, story => {
+    const messages = Object.keys(story.messages);
+    Promise.all(messages.map(message => getMessage(message))).then(messages => {
+      dispatch({
+        type: 'ADD_MESSAGES',
+        messages,
+      });
+    });
+  });
 };
 
 /**
