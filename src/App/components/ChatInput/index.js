@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { sendMessage } from '../../../actions/messages';
 import { uploadMedia } from '../../../helpers/stories';
 import EmojiPicker from '../../../shared/EmojiPicker';
+import { Photo } from '../../../shared/Icons';
 import { connect } from 'react-redux';
 import {
   Input,
@@ -113,7 +114,9 @@ class ChatInput extends Component {
           multiple={false}
           onChange={this.sendMediaMessage}
         />
-        <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
+        <MediaLabel htmlFor="file">
+          <Photo stayActive color={'brand'} />
+        </MediaLabel>
         {this.state.emojiPickerOpen &&
           <EmojiPicker onChange={this.sendEmojiMessage} />}
         <EmojiToggle
