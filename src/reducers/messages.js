@@ -5,10 +5,20 @@ const initialState = {
 export default function root(state = initialState, action) {
   switch (action.type) {
     case 'ADD_MESSAGE':
-      console.log('adding a message');
       return Object.assign({}, state, {
         messages: state.messages.concat([action.message]),
       });
+    case 'ADD_MESSAGES': {
+      const messages = action.messages.filter(
+        message =>
+          !state.messages.find(
+            storedMessage => message.id === storedMessage.id,
+          ),
+      );
+      return Object.assign({}, state, {
+        messages: state.messages.concat(messages),
+      });
+    }
     case 'SET_ALL_MESSAGES':
       return Object.assign({}, state, {
         messages: action.messages,

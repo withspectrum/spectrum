@@ -5,6 +5,7 @@ import {
   removeStory,
   setStoryLock,
 } from '../db/stories';
+import { getMessages } from '../db/messages';
 
 /**
  * Publish a drafted story
@@ -52,10 +53,21 @@ export const initStory = freqId => (dispatch, getState) => {
     });
 };
 
-export const setActiveStory = story => ({
-  type: 'SET_ACTIVE_STORY',
-  story,
-});
+export const setActiveStory = story => (dispatch, getState) => {
+  dispatch({
+    type: 'SET_ACTIVE_STORY',
+    story,
+  });
+  dispatch({ type: 'LOADING' });
+  getMessages(story)
+    .then(messages => {
+      dispatch({ type: 'ADD_MESSAGES', messages });
+    })
+    .catch(err => {
+      console.log(err);
+      dispatch({ type: 'STOP_LOADING' });
+    });
+};
 
 /**
  * Delete a story
