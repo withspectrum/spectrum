@@ -61,8 +61,7 @@ export const Button = styled.button`
 `;
 
 export const LogoWhite = styled(Logo)`
-	height: 62px;
-	width: 389px;
+	max-width: 389px;
 `;
 
 export const ContentWrapper = styled.div`
@@ -70,4 +69,8 @@ export const ContentWrapper = styled.div`
 	margin-top: 40vh;
 	position: relative;
 	z-index: 1;
+
+	@media (max-width: 480px) {
+		margin-left: 5vw;
+	}
 `;

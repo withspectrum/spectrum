@@ -613,8 +613,6 @@ export const Logo = props => {
       color={props.color}
       stayActive={props.stayActive}
       viewBox="0 0 389 62"
-      height="62"
-      width="389"
       fillRule="evenodd"
       clipRule="evenodd"
       strokeLinejoin="round"
