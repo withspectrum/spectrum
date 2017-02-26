@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 import { getFrequency } from './frequencies';
 
-const getStory = storyId => {
+export const getStory = storyId => {
   const db = firebase.database();
 
   return db

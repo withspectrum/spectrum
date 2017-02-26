@@ -63,6 +63,7 @@ class StoryMaster extends Component {
       loggedIn,
       composer,
       ui: { navVisible },
+      activeStory,
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
@@ -115,8 +116,11 @@ class StoryMaster extends Component {
             ? stories.map((story, i) => (
                 <StoryCard
                   urlBase={`~${activeFrequency}`}
-                  data={story}
+                  story={story}
+                  isEverything={isEverything}
+                  frequency={frequency}
                   key={`story-${i}`}
+                  active={activeStory}
                 />
               ))
             : ''}
@@ -134,6 +138,7 @@ const mapStateToProps = state => {
   return {
     composer: state.composer,
     ui: state.ui,
+    activeStory: state.stories.active,
   };
 };
 

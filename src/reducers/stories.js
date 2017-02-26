@@ -1,14 +1,11 @@
 const initialState = {
   stories: [],
   active: null,
+  loaded: false,
 };
 
 export default function root(state = initialState, action) {
   switch (action.type) {
-    case 'SET_STORIES':
-      return Object.assign({}, state, {
-        stories: action.stories,
-      });
     case 'ADD_STORY':
       if (state.stories.find(story => story.id === action.story.id))
         return state;
@@ -22,6 +19,7 @@ export default function root(state = initialState, action) {
       );
       return Object.assign({}, state, {
         stories: state.stories.concat(stories),
+        loaded: true,
       });
     }
     case 'CREATE_STORY':

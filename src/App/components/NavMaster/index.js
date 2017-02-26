@@ -112,8 +112,8 @@ class NavigationMaster extends Component {
                 <Link to={`/~${frequency.slug || frequency.id}`} key={i}>
                   <Freq
                     active={
-                      frequency.slug === activeFrequency ||
-                        frequency.id === activeFrequency
+                      frequency.slug && frequency.slug === activeFrequency ||
+                        frequency.id && frequency.id === activeFrequency
                     }
                     onClick={this.hideNav}
                   >

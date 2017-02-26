@@ -64,7 +64,7 @@ class Root extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, params, frequencies } = this.props;
+    const { dispatch, params, frequencies, stories } = this.props;
     // If the frequency changes or we've finished loading the frequencies sync the active frequency to the store and load the stories
     if (
       nextProps.frequencies.loaded !== frequencies.loaded ||
@@ -74,7 +74,10 @@ class Root extends Component {
     }
 
     // If the story changes sync the active story to the store and load the messages
-    if (nextProps.params.story !== params.story) {
+    if (
+      nextProps.stories.loaded !== stories.loaded ||
+      nextProps.params.story !== params.story
+    ) {
       dispatch(setActiveStory(nextProps.params.story));
     }
   }
@@ -92,4 +95,5 @@ class Root extends Component {
 export default connect(state => ({
   user: state.user || {},
   frequencies: state.frequencies || {},
+  stories: state.stories || {},
 }))(Root);

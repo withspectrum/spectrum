@@ -18,6 +18,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
     frequency,
   });
   dispatch({ type: 'LOADING' });
+  if (frequency === 'everything') return;
   getStories(id)
     .then(stories => {
       dispatch({
