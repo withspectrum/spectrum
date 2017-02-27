@@ -30,7 +30,7 @@ export const createMessage = ({ storyId, frequencyId, userId, message }) => {
     .then(snapshot => snapshot.val());
 };
 
-const getMessage = messageId => {
+export const getMessage = messageId => {
   const db = firebase.database();
 
   return db
