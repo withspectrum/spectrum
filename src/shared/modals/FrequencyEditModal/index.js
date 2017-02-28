@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
-import { hideModal } from '../../../actions/modals';
+import { closeModal } from '../../../actions/modals';
 import { editFrequency, deleteFrequency } from '../../../actions/frequencies';
 import { connect } from 'react-redux';
 import {
@@ -79,12 +79,12 @@ class FrequencyEditModal extends React.Component {
     });
   };
 
-  hideModal = () => {
+  closeModal = () => {
     this.setState({
       isOpen: !this.state.isOpen,
     });
-    // setTimeout(() => { this.props.dispatch(hideModal()) }, 300)
-    this.props.dispatch(hideModal());
+    // setTimeout(() => { this.props.dispatch(closeModal()) }, 300)
+    this.props.dispatch(closeModal());
   };
 
   prepareEditedFrequency = () => {
@@ -125,13 +125,13 @@ class FrequencyEditModal extends React.Component {
       <Modal
         isOpen={this.state.isOpen}
         contentLabel="Edit Frequency"
-        onRequestClose={this.hideModal}
+        onRequestClose={this.closeModal}
         shouldCloseOnOverlayClick={true}
         style={modalStyles}
         closeTimeoutMS={330}
       >
 
-        <ModalContainer title={'Edit Frequency'} hideModal={this.hideModal}>
+        <ModalContainer title={'Edit Frequency'} closeModal={this.closeModal}>
           <NameLabel>
             Change Name
             <NameInput

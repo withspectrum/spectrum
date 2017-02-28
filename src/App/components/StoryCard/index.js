@@ -14,14 +14,14 @@ import {
   Title,
   Media,
 } from './style';
-import { showGallery } from '../../../actions/gallery';
+import { openGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
 
 class StoryCard extends Component {
-  showGallery = e => {
+  openGallery = e => {
     let arr = [];
     arr.push(e.target.src);
-    this.props.dispatch(showGallery(arr));
+    this.props.dispatch(openGallery(arr));
   };
 
   render() {
@@ -55,7 +55,7 @@ class StoryCard extends Component {
             <StoryBody>
               <Title>{story.content.title}</Title>
               {story.content.media && story.content.media !== ''
-                ? <Media src={story.content.media} onClick={this.showGallery} />
+                ? <Media src={story.content.media} onClick={this.openGallery} />
                 : ''}
             </StoryBody>
           </LinkWrapper>

@@ -83,7 +83,7 @@ so a user doesn't see dead data in their browser.
 *
 \*------------------------------------------------------------*/
 export const signOut = () => dispatch => {
-  track('user', 'sign out');
+  track('user', 'sign out', null);
 
   firebase.auth().signOut().then(() => {
     // once firebase verifies the logout is successful, clear localStorage

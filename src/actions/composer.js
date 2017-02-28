@@ -1,3 +1,4 @@
+import { track } from '../EventTracker';
 /*------------------------------------------------------------\*
 *
 
@@ -8,9 +9,13 @@ we'll be able to persist the UI
 
 *
 \*------------------------------------------------------------*/
-export const toggleComposer = () => ({
-  type: 'TOGGLE_COMPOSER_OPEN',
-});
+export const toggleComposer = () => {
+  track('composer', 'toggled', null);
+
+  return {
+    type: 'TOGGLE_COMPOSER_OPEN',
+  };
+};
 
 export const updateTitle = title => ({
   type: 'UPDATE_TITLE',
