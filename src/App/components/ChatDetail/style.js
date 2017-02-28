@@ -7,6 +7,10 @@ export const ChatContainer = styled.div`
 	padding-bottom: 8px;
 	display: flex;
 	flex-direction: column;
+
+	@media (max-width: 768px) {
+    padding-bottom: 70px;
+  }
 `;
 
 export const Bubble = styled.p`

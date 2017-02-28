@@ -17,6 +17,10 @@ export const Input = styled.input`
 	border-radius: 8px 0 0 8px;
 	box-shadow: ${Shadow.input};
 
+	@media (max-width: 768px) {
+    font-size: 16px;
+  }
+
 	&::placeholder { color: ${({ theme }) => theme.text.placeholder} }
   &::-webkit-input-placeholder { color: ${({ theme }) =>
   theme.text.placeholder} }
@@ -46,6 +50,13 @@ export const Footer = styled.div`
 	padding: 8px;
 	background-color: ${({ theme }) => theme.bg.wash};
 	border-top: 1px solid ${({ theme }) => theme.border.default};
+
+	@media (max-width: 768px) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
 `;
 
 export const MediaInput = styled.input`
