@@ -18,7 +18,7 @@ import {
   subscribeFrequency,
 } from '../../../actions/frequencies';
 import { login } from '../../../actions/user';
-import { showModal } from '../../../actions/modals';
+import { openModal } from '../../../actions/modals';
 import { Lock, NewPost, ClosePost } from '../../../shared/Icons';
 import StoryCard from '../StoryCard';
 import ShareCard from '../ShareCard';
@@ -43,7 +43,7 @@ class StoryMaster extends Component {
 
   editFrequency = () => {
     this.props.dispatch(
-      showModal('FREQUENCY_EDIT_MODAL', this.props.frequency),
+      openModal('FREQUENCY_EDIT_MODAL', this.props.frequency),
     );
   };
 

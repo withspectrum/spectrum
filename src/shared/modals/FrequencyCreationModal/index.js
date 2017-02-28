@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
-import { hideModal } from '../../../actions/modals';
+import { closeModal } from '../../../actions/modals';
 import { createFrequency } from '../../../actions/frequencies';
 import { checkUniqueFrequencyName, debounce } from '../../../helpers/utils';
 import { connect } from 'react-redux';
@@ -149,12 +149,12 @@ class FrequencyCreationModal extends React.Component {
     });
   };
 
-  hideModal = () => {
+  closeModal = () => {
     this.setState({
       isOpen: !this.state.isOpen,
     });
-    // setTimeout(() => { this.props.dispatch(hideModal()) }, 300)
-    this.props.dispatch(hideModal());
+    // setTimeout(() => { this.props.dispatch(closeModal()) }, 300)
+    this.props.dispatch(closeModal());
   };
 
   prepareNewFrequency = () => {
@@ -183,13 +183,16 @@ class FrequencyCreationModal extends React.Component {
       <Modal
         isOpen={this.state.isOpen}
         contentLabel="Create a Frequency"
-        onRequestClose={this.hideModal}
+        onRequestClose={this.closeModal}
         shouldCloseOnOverlayClick={true}
         style={modalStyles}
         closeTimeoutMS={330}
       >
 
-        <ModalContainer title={'Create a Frequency'} hideModal={this.hideModal}>
+        <ModalContainer
+          title={'Create a Frequency'}
+          closeModal={this.closeModal}
+        >
           <NameLabel>
             Choose a Name
             <NameInput

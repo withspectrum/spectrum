@@ -1,5 +1,6 @@
 import * as firebase from 'firebase';
 import { hashToArray } from '../helpers/utils';
+import { track } from '../EventTracker';
 
 export const getFile = (file, story) => {
   return new Promise((resolve, reject) => {
@@ -25,12 +26,14 @@ Accepts an array of URLs which will be parsed and populated in the gallery compo
 
 *
 \*------------------------------------------------------------*/
-export const showGallery = e => (dispatch, getState) => {
+export const openGallery = e => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
   let state = getState();
   let src = e.target.src;
   src = src.toString();
   let activeStory = state.stories.active;
+
+  track('gallery', 'opened', null);
 
   firebase
     .database()
@@ -61,6 +64,10 @@ export const showGallery = e => (dispatch, getState) => {
     });
 };
 
-export const hideGallery = () => ({
-  type: 'HIDE_GALLERY',
-});
+export const closeGallery = () => {
+  track('gallery', 'closed', null);
+
+  return {
+    type: 'HIDE_GALLERY',
+  };
+};

@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import StripeCheckout from 'react-stripe-checkout';
 import axios from 'axios';
-import { hideModal } from '../../../actions/modals';
+import { closeModal } from '../../../actions/modals';
 import { upgradeUser } from '../../../actions/user';
 import { connect } from 'react-redux';
 import { ButtonPrimary } from '../../buttons';
@@ -33,12 +33,12 @@ class ProModal extends React.Component {
     };
   }
 
-  hideModal = () => {
+  closeModal = () => {
     this.setState({
       isOpen: !this.state.isOpen,
     });
-    // setTimeout(() => { this.props.dispatch(hideModal()) }, 300)
-    this.props.dispatch(hideModal());
+
+    this.props.dispatch(closeModal());
   };
 
   onToken = token => {
@@ -75,13 +75,13 @@ class ProModal extends React.Component {
       <Modal
         isOpen={this.state.isOpen}
         contentLabel="Edit Item"
-        onRequestClose={this.hideModal}
+        onRequestClose={this.closeModal}
         shouldCloseOnOverlayClick={true}
         style={modalStyles}
         closeTimeoutMS={330}
       >
 
-        <ModalContainer title={'Upgrade'} hideModal={this.hideModal}>
+        <ModalContainer title={'Upgrade'} closeModal={this.closeModal}>
           <SectionAlert width={'calc(100% - 2rem)'} centered={true}>
             <Badge>Limited Time</Badge>
             <Padding padding={'0.5rem 1rem'}>

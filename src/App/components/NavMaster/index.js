@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { login, signOut } from '../../../actions/user';
-import { showModal } from '../../../actions/modals';
+import { openModal } from '../../../actions/modals';
 import { setActiveFrequency } from '../../../actions/frequencies';
 import {
   Column,
@@ -45,7 +45,7 @@ class NavigationMaster extends Component {
   };
 
   goPro = () => {
-    this.props.dispatch(showModal('PRO_MODAL'));
+    this.props.dispatch(openModal('PRO_MODAL'));
   };
 
   updateFrequencyName = e => {
@@ -60,7 +60,7 @@ class NavigationMaster extends Component {
 
   createFrequency = e => {
     e.preventDefault();
-    this.props.dispatch(showModal('FREQUENCY_CREATION_MODAL'));
+    this.props.dispatch(openModal('FREQUENCY_CREATION_MODAL'));
   };
 
   hideNav = () => {

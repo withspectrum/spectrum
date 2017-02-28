@@ -7,11 +7,11 @@ import {
   MiniImg,
   MiniContainer,
 } from './style';
-import { hideGallery } from '../../actions/gallery';
+import { closeGallery } from '../../actions/gallery';
 
 class GalleryRoot extends Component {
-  hideGallery = () => {
-    this.props.dispatch(hideGallery());
+  closeGallery = () => {
+    this.props.dispatch(closeGallery());
   };
 
   handleKeyPress = e => {
@@ -24,7 +24,7 @@ class GalleryRoot extends Component {
 
     // if person taps esc, close the dialog
     if (e.keyCode === 27) {
-      this.hideGallery();
+      this.closeGallery();
     }
 
     // left arrow key
@@ -80,7 +80,10 @@ class GalleryRoot extends Component {
     if (media.isOpen) {
       return (
         <div>
-          <Overlay onClick={this.hideGallery} onKeyDown={this.handleKeyPress} />
+          <Overlay
+            onClick={this.closeGallery}
+            onKeyDown={this.handleKeyPress}
+          />
           <ActiveImage onClick={this.incrementImage} src={images[index]} />
           <Minigallery>
             <MiniContainer>

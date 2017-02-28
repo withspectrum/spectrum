@@ -12,7 +12,7 @@ import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
 import { getUsersFromMessageGroups } from '../../../helpers/stories';
 import { onlyContainsEmoji, sortAndGroupBubbles } from '../../../helpers/utils';
-import { showGallery } from '../../../actions/gallery';
+import { openGallery } from '../../../actions/gallery';
 
 class ChatView extends Component {
   constructor() {
@@ -37,8 +37,8 @@ class ChatView extends Component {
     }
   }
 
-  showGallery = e => {
-    this.props.dispatch(showGallery(e));
+  openGallery = e => {
+    this.props.dispatch(openGallery(e));
   };
 
   formatMessage(message) {
@@ -102,7 +102,7 @@ class ChatView extends Component {
                   return (
                     <ImgBubble
                       me={itsaMe}
-                      onClick={this.showGallery}
+                      onClick={this.openGallery}
                       src={message.message.content}
                       key={i}
                     />
