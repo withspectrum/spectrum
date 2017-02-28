@@ -61,6 +61,7 @@ export const setActiveStory = story => (dispatch, getState) => {
     type: 'SET_ACTIVE_STORY',
     story,
   });
+  if (!story) return;
   dispatch({ type: 'LOADING' });
   getMessages(story)
     .then(messages => {
@@ -73,7 +74,13 @@ export const setActiveStory = story => (dispatch, getState) => {
 
   if (listener) stopListening(listener);
   listener = listenToStory(story, story => {
-    const messages = Object.keys(story.messages);
+    if (!story.messages) return;
+    const existingMessages = getState().messages.messages.map(
+      message => message.id,
+    );
+    // Get all messages that aren't in the store yet
+    const messages = Object.keys(story.messages)
+      .filter(message => existingMessages.indexOf(message));
     Promise.all(messages.map(message => getMessage(message))).then(messages => {
       dispatch({
         type: 'ADD_MESSAGES',

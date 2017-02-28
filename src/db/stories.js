@@ -12,6 +12,7 @@ export const getStory = storyId => {
 
 export const getStories = frequencyId => {
   return getFrequency(frequencyId).then(frequency => {
+    if (!frequency.stories) return Promise.resolve([]);
     const stories = Object.keys(frequency.stories);
     return Promise.all(stories.map(story => getStory(story)));
   });

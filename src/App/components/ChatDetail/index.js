@@ -51,7 +51,6 @@ class ChatView extends Component {
   }
 
   fetchUsers = () => {
-    let messages = this.props.messages;
     getUsersFromMessageGroups(this.props.messages).then(data => {
       this.setUsersData(data);
     });
@@ -109,6 +108,8 @@ class ChatView extends Component {
                     />
                   );
                 }
+
+                return null;
               })}
             </BubbleGroup>
           );
