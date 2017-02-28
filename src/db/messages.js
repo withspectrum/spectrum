@@ -41,6 +41,7 @@ export const getMessage = messageId => {
 
 export const getMessages = storyId => {
   return getStory(storyId).then(story => {
+    if (!story.messages) return Promise.resolve([]);
     const messages = Object.keys(story.messages);
     return Promise.all(messages.map(message => getMessage(message)));
   });

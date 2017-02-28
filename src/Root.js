@@ -4,8 +4,6 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as firebase from 'firebase';
-import { setInitialData } from './actions/loading';
 import { setActiveFrequency } from './actions/frequencies';
 import { setActiveStory } from './actions/stories';
 import { asyncComponent } from './helpers/utils';
@@ -28,7 +26,7 @@ class Root extends Component {
   // INITIAL LOAD OF THE APP
   componentWillMount() {
     // On the initial render of the app we authenticate the user
-    const { dispatch, params } = this.props;
+    const { dispatch } = this.props;
     // Authenticate the user
     listenToAuth(user => {
       if (!user)

@@ -14,7 +14,6 @@ import {
   Title,
   Media,
 } from './style';
-import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { showGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
 
