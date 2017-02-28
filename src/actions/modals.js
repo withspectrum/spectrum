@@ -17,10 +17,13 @@ export const openModal = (name, props) => {
   };
 };
 
-export const closeModal = () => {
-  track('modal', 'closed', null);
+export const closeModal = () => (dispatch, getState) => {
+  let state = getState();
+  let name = state.modals.modalType;
 
-  return {
+  track(`modal ${name}`, 'closed', null);
+
+  dispatch({
     type: 'HIDE_MODAL',
-  };
+  });
 };

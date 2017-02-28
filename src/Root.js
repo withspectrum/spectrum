@@ -10,7 +10,7 @@ import { asyncComponent } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
 import { getPublicUserInfo, listenToAuth } from './db/users';
 import { getFrequency } from './db/frequencies';
-import { set } from './EventTracker';
+import { set, track } from './EventTracker';
 
 // Codesplit the App and the Homepage to only load what we need based on which route we're on
 const App = asyncComponent(() =>
@@ -41,6 +41,7 @@ class Root extends Component {
       });
 
       // set this uid in google analytics
+      track('user', 'authed', null);
       set(user.uid);
 
       // Get the public userdata

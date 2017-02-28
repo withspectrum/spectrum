@@ -29,6 +29,7 @@ export const login = () => dispatch => {
       let uid = user.uid;
 
       // set this uid in google analytics
+      track('user', 'logged in', null);
       set(uid);
 
       // Initiate a new child

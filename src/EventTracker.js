@@ -8,7 +8,11 @@ export const set = uid => {
 	*
 	*/
 
-  ga('set', 'userId', uid); // Set the user ID using signed-in user_id.
+  try {
+    ga('set', 'userId', uid); // Set the user ID using signed-in user_id.
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const track = (category, action, label) => {
@@ -31,10 +35,14 @@ export const track = (category, action, label) => {
 
 	* Some examples:
 	* track('user', 'signed out') => User category, sign out action
-	* track('frequency', 'created') => User category, sign out action
-	* track('story', 'deleted') => User category, sign out action
+	* track('frequency', 'created') => Frequency category, created action
+	* track('story', 'deleted') => Story category, deleted action
 
   */
 
-  ga('send', 'event', category, action, label);
+  try {
+    ga('send', 'event', category, action, label);
+  } catch (err) {
+    console.log(err);
+  }
 };
