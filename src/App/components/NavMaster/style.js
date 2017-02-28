@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import { Link } from 'react-router';
 import { Gradient, H3 } from '../../../shared/Globals';
 
 export const Column = styled.div`
@@ -60,7 +61,7 @@ export const P = styled.p`
   font-weight: 500;
 `;
 
-export const MetaLink = styled.a`
+const linkStyles = css`
   text-decoration: none;
   font-size: 12px;
   color: ${({ theme }) => theme.text.alt};
@@ -73,6 +74,9 @@ export const MetaLink = styled.a`
     transition: color 0.2s ease-out;
   }
 `;
+
+export const MetaLink = styled(Link)`${linkStyles}`;
+export const MetaAnchor = styled.a`${linkStyles}`;
 
 export const FreqList = styled.div`
   list-style: none;
