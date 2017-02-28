@@ -8,7 +8,7 @@ export const Overlay = styled.div`
 	right: 0;
 	bottom: 0;
 	background: ${({ theme }) => theme.bg.reverse};
-	opacity: 0.75;
+	opacity: 0.85;
 	z-index: 5;
 `;
 
@@ -19,6 +19,7 @@ export const ActiveImage = styled.img`
 	transform: translate(-50%, -50%);
 	object-fit: cover;
 	max-height: 90%;
+	max-width: 100%;
 	margin: auto 0 5rem;
 	box-shadow: ${Shadow.high};
 	z-index: 10;
@@ -31,9 +32,11 @@ export const Minigallery = styled.div`
 	bottom: 0;
 	width: 100%;
 	padding: 0.25rem;
-	background: rgba(0,0,0,0.2);
+	background: #000;
 	max-height: 3rem;
-	z-index: 10;
+	z-index: 11;
+
+
 `;
 export const MiniImg = styled.img`
 	height: 2rem;
@@ -52,4 +55,9 @@ export const MiniImg = styled.img`
 export const MiniContainer = styled.div`
 	display: flex;
 	justify-content: center;
+
+	@media (max-width: 768px) {
+    justify-content: flex-start;
+    overflow-x: scroll;
+  }
 `;
