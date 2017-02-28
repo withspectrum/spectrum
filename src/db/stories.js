@@ -11,12 +11,26 @@ export const getStory = storyId => {
 };
 
 export const getStories = frequencyId => {
-  const db = firebase.database();
-
   return getFrequency(frequencyId).then(frequency => {
     const stories = Object.keys(frequency.stories);
     return Promise.all(stories.map(story => getStory(story)));
   });
+};
+
+let activeStory;
+export const listenToStory = (storyId, cb) => {
+  const db = firebase.database();
+  activeStory = storyId;
+
+  return db.ref(`stories/${storyId}`).on('value', snapshot => {
+    cb(snapshot.val());
+  });
+};
+
+export const stopListening = listener => {
+  const db = firebase.database();
+
+  return db.ref(`stories/${activeStory}`).off('value', listener);
 };
 
 /**
@@ -106,6 +120,6 @@ export const removeStory = ({ storyId, frequencyId }) =>
  */
 export const setStoryLock = ({ id, locked }) => {
   return firebase.database().ref(`/stories/${id}`).update({
-    locked: !locked,
+    locked,
   });
 };
