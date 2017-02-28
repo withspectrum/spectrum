@@ -20,13 +20,15 @@ class Homepage extends React.Component {
     return (
       <Background>
         <ContentWrapper>
-          <LogoWhite />
-          <Tagline>It's like a forum, but for Mars colonists.</Tagline>
-          <Button onClick={this.login}>
-            <Twitter color={'brand'} stayActive />
-            {' '}
-            <span>Sign in with Twitter</span>
-          </Button>
+          <div>
+            <LogoWhite />
+            <Tagline>It's like a forum, but for Mars colonists.</Tagline>
+            <Button onClick={this.login}>
+              <Twitter color={'brand'} stayActive />
+              {' '}
+              <span>Sign in with Twitter</span>
+            </Button>
+          </div>
         </ContentWrapper>
       </Background>
     );
