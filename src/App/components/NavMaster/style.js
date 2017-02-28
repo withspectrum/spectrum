@@ -177,9 +177,16 @@ export const Button = styled.button`
   padding: 8px;
   display: flex;
   justify-content: center;
+  text-align: center;
+  text-align: -webkit-center;
   flex: 0 0 auto;
   border-radius: 2px;
   transition: all 0.2s;
+
+  span {
+    margin: 0 auto;
+    display: inline-block;
+  }
 
   &:hover {
     cursor: pointer;
