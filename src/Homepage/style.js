@@ -19,58 +19,65 @@ export const Tagline = styled(H2)`
 	color: ${({ theme }) => theme.text.reverse};
 	font-weight: 500;
 	font-size: 20px;
-	margin: 16px 0 40px 0;
+	margin-top: 16px;
+	margin-bottom: 40px;
 `;
 
 export const Button = styled.button`
 	display: flex;
 	align-items: center;
-	background-color: ${({ theme }) => theme.bg.default};
-	border: 2px solid transparent;
+	background: transparent;
+	border: 2px solid ${({ theme }) => theme.bg.default};
 	border-radius: 8px;
 	padding: 8px;
 	padding-right: 16px;
 	font-size: 14px;
 	font-weight: 700;
-	color: ${({ theme }) => theme.brand.default};
+	color: ${({ theme }) => theme.text.reverse};
 
 	span {
 		display: inline-block;
 		margin-top: -1px;
 		margin-left: 8px;
-		color: ${({ theme }) => theme.brand.default};
+		line-height: 2.45;
+		color: ${({ theme }) => theme.brand.reverse};
+	}
+
+	svg {
+		fill: ${({ theme }) => theme.bg.default} !important;
 	}
 
 	transition: all 0.3s ease-out;
 
 	&:hover {
 		border-radius: 16px;
-		background-color: transparent;
-		border: 2px solid ${({ theme }) => theme.bg.default};
+		border: 2px solid transparent;
+		background-color: ${({ theme }) => theme.bg.default};
 		transition: all 0.2s ease-in;
 		cursor: pointer;
 
 		span {
-			color: ${({ theme }) => theme.text.reverse};
+			color: ${({ theme }) => theme.brand.default};
 		}
 
 		svg {
-			fill: ${({ theme }) => theme.bg.default} !important;
+			fill: ${({ theme }) => theme.brand.default} !important;
 		}
 	}
 `;
 
 export const LogoWhite = styled(Logo)`
-	max-width: 389px;
+	max-width: 360px;
 `;
 
 export const ContentWrapper = styled.div`
-	margin-left: 15vw;
-	margin-top: 40vh;
+	box-sizing: border-box;
+	display: flex;
+	flex-grow: 1;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
 	position: relative;
 	z-index: 1;
-
-	@media (max-width: 480px) {
-		margin-left: 5vw;
-	}
 `;

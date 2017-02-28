@@ -5,10 +5,10 @@ const Svg = styled.svg`
 	fill: ${props =>
   props.stayActive ? `url(#${props.color}Gradient)` : props.theme.inactive};
 	transition: all 0.2s ease-out;
+  max-width: 100%;
 
 	&:hover {
 		fill: url(#${props => props.color ? props.color : `brand`}Gradient);
-		transform: scale(1.1);
 		transition: all 0.2s ease-in;
 		cursor: pointer;
 	}

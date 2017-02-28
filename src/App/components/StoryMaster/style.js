@@ -28,6 +28,7 @@ export const ScrollBody = styled.div`
 	align-items: stretch;
 	background-color: ${({ theme }) => theme.bg.wash};
 	position: relative;
+	padding-bottom: 80px;
 
 	> img {
 		margin: 32px auto;
@@ -208,4 +209,4 @@ export const MenuButton = styled.div`
 	@media (max-width: 768px) {
 		display: block;
 	}
-`
+`;

@@ -126,7 +126,9 @@ class NavigationMaster extends Component {
 
         </FreqList>
 
-        <Button onClick={this.createFrequency}>~ Create Frequency</Button>
+        <Button onClick={this.createFrequency}>
+          <span>~ Create Frequency</span>
+        </Button>
 
         <Footer>
           <FooterLogo src="/img/mark.svg" />

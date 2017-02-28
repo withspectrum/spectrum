@@ -1,24 +1,40 @@
 import styled from 'styled-components';
 import { Gradient } from '../../Globals';
+import { isMobile } from '../../../helpers/utils';
 
 const maxWidth = '360px';
+const mobile = isMobile();
 export const modalStyles = {
   overlay: {
-    backgroundColor: 'rgba(0,0,0,0.40)',
-    zIndex: 5,
+    background: 'rgba(0, 0, 0, 0.75)',
+    display: 'flex',
+    alignItems: mobile ? 'flex-start' : 'center',
+    justifyContent: 'center',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    zIndex: 1000,
+    padding: '1.2rem',
   },
   content: {
+    position: 'relative',
+    padding: '1.2rem',
+    background: '#ffffff',
+    backgroundClip: 'padding-box',
     borderRadius: '8px',
     border: '0',
-    position: 'absolute',
-    bottom: 'auto',
-    top: '50%',
-    left: '50%',
     padding: '0',
-    transform: 'translate(-50%, -50%)',
-    zIndex: 10,
+    zIndex: 1001,
     width: '100%',
     maxWidth: maxWidth,
+    top: 'auto',
+    bottom: 'auto',
+    left: 'auto',
+    right: 'auto',
     backgroundColor: 'rgba(0,0,0,0)',
     boxShadow: '0 4px 24px rgba(0,0,0,0.40)',
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
