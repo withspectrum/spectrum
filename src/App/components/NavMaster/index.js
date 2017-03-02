@@ -10,6 +10,7 @@ import {
   HeaderLogo,
   Avatar,
   MetaWrapper,
+  MetaAnchor,
   P,
   Name,
   MetaLink,
@@ -86,7 +87,7 @@ class NavigationMaster extends Component {
               <MetaWrapper>
                 <Name>{user.displayName}</Name>
                 <P>
-                  <MetaLink onClick={this.signOut}>Sign Out</MetaLink>
+                  <MetaAnchor onClick={this.signOut}>Sign Out</MetaAnchor>
                 </P>
               </MetaWrapper>
             </Header>
@@ -133,11 +134,11 @@ class NavigationMaster extends Component {
         <Footer>
           <FooterLogo src="/img/mark.svg" />
           <MetaWrapper>
-            <FooterP>© 2017 Spec Network, Inc.</FooterP>
+            <FooterP>© 2017 Space Program, Inc.</FooterP>
             <FooterP>
-              <MetaLink href="https://spec.fm/about"> About</MetaLink>
+              <MetaLink to="/about"> About</MetaLink>
               &nbsp;·&nbsp;
-              <MetaLink href="mailto:spectrum@spec.fm">Contact</MetaLink>
+              <MetaAnchor href="mailto:hi@spectrum.chat">Contact</MetaAnchor>
             </FooterP>
           </MetaWrapper>
         </Footer>
