@@ -1,5 +1,6 @@
 import * as firebase from 'firebase';
 import { set, track } from '../EventTracker';
+import { createUser } from '../db/users';
 
 /*------------------------------------------------------------\*
 *
@@ -22,47 +23,14 @@ export const login = () => dispatch => {
     .auth()
     .signInWithPopup(provider)
     .then(result => {
-      // the result contains the Authentication record created on Firebase
       let user = result.user;
-
-      // We're going to use the uid to create a new record in the User table
-      let uid = user.uid;
 
       // set this uid in google analytics
       track('user', 'logged in', null);
-      set(uid);
+      set(user.uid);
 
-      // Initiate a new child
-      let newUserRef = firebase.database().ref().child(`users/${uid}`);
-
-      // Make a one-time write
-      newUserRef.once('value', snapshot => {
-        // the callback function returns a snapshot of the new User record
-
-        // if the record exists based on the uid, we'll end up skipping this step
-        var exists = snapshot.val() !== null;
-
-        // if the record doesn't exist, we'll create the new record
-        if (!exists) {
-          let userData = {
-            uid: uid,
-            created: firebase.database.ServerValue.TIMESTAMP,
-            displayName: user.displayName, // returned from Twitter
-            photoURL: user.photoURL, // returned from Twitter
-            frequencies: {
-              '-KcpUngtORLZzm56Biz4': { id: '-KcpUngtORLZzm56Biz4' },
-            }, // auto subscribe the user to the Bugs n Hugs Frequency
-          };
-
-          // now we can set the user data
-          newUserRef.set(userData, err => {
-            // if something went wrong, we'll find out about it here
-            if (err) {
-              console.log('Error creating new user record: ', err);
-            }
-          });
-        }
-      });
+      // create the user in the db
+      createUser(user);
     })
     .catch(err => {
       if (err) {
