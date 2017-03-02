@@ -21,8 +21,6 @@ export const closeModal = () => (dispatch, getState) => {
   let state = getState();
   let name = state.modals.modalType;
 
-  track(`modal ${name}`, 'closed', null);
-
   dispatch({
     type: 'HIDE_MODAL',
   });
