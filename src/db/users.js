@@ -37,9 +37,7 @@ export const getPublicUserInfo = uid => {
   const db = firebase.database();
 
   return db.ref(`users/${uid}/public`).once('value').then(snapshot => {
-    let exists = snapshot.val() !== null;
-    // the user is re-logging in or re-authencating, which means a user obj exists in the db
-    if (exists) return snapshot.val();
+    return snapshot.val();
   });
 };
 
