@@ -1,10 +1,17 @@
 import React from 'react';
+import { track } from '../../../EventTracker';
 import { Card } from '../StoryCard/style';
 import { Body, Title, Desc, Input, ButtonWrapper, Button } from './style';
 
 const ShareCard = props => {
   const handleFocus = e => {
     e.target.select();
+    track('share card', 'focused', null);
+  };
+
+  const handleClick = e => {
+    e.preventDefault();
+    track('share card', 'clicked', null);
   };
 
   return (
@@ -22,6 +29,7 @@ const ShareCard = props => {
         />
         <ButtonWrapper>
           <Button
+            onClick={handleClick}
             type={'twitter'}
             target="_blank"
             href={
@@ -31,6 +39,7 @@ const ShareCard = props => {
             Share on Twitter
           </Button>
           <Button
+            onClick={handleClick}
             type={'facebook'}
             target="_blank"
             href={

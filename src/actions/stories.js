@@ -1,4 +1,5 @@
 import { createBrowserHistory } from 'history';
+import { track } from '../EventTracker';
 import {
   createDraft,
   createStory,
@@ -23,6 +24,8 @@ export const publishStory = ({ frequencyId, title, description }) => (
 
   createStory({ key: storyKey, frequencyId, content: { title, description } })
     .then(story => {
+      track('story', 'created', null);
+
       dispatch({
         type: 'CREATE_STORY',
         story,
@@ -45,6 +48,7 @@ export const initStory = freqId => (dispatch, getState) => {
 
   createDraft({ user, frequencyId })
     .then(key => {
+      track('draft', 'created', null);
       dispatch({
         type: 'CREATE_DRAFT',
         key,
@@ -62,6 +66,9 @@ export const setActiveStory = story => (dispatch, getState) => {
     story,
   });
   if (!story) return;
+
+  track('story', 'viewed', null);
+
   dispatch({ type: 'LOADING' });
   getMessages(story)
     .then(messages => {
@@ -101,6 +108,8 @@ export const deleteStory = id => (dispatch, getState) => {
 
   removeStory({ storyId: id, frequencyId })
     .then(() => {
+      track('story', 'deleted', null);
+
       dispatch({
         type: 'DELETE_STORY',
         id,
@@ -129,6 +138,8 @@ export const toggleLockedStory = story => dispatch => {
 
   setStoryLock({ id, locked: !locked })
     .then(() => {
+      track('story', 'lock toggled', null);
+
       dispatch({
         type: 'TOGGLE_STORY_LOCK',
         id,

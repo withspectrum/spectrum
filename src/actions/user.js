@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import { set, track } from '../EventTracker';
 
 /*------------------------------------------------------------\*
 *
@@ -26,6 +27,10 @@ export const login = () => dispatch => {
 
       // We're going to use the uid to create a new record in the User table
       let uid = user.uid;
+
+      // set this uid in google analytics
+      track('user', 'logged in', null);
+      set(uid);
 
       // Initiate a new child
       let newUserRef = firebase.database().ref().child(`users/${uid}`);
@@ -79,6 +84,8 @@ so a user doesn't see dead data in their browser.
 *
 \*------------------------------------------------------------*/
 export const signOut = () => dispatch => {
+  track('user', 'sign out', null);
+
   firebase.auth().signOut().then(() => {
     // once firebase verifies the logout is successful, clear localStorage
     localStorage.removeItem('state');

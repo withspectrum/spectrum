@@ -19,7 +19,7 @@ import {
   HiddenInput,
   BackArrow,
 } from './style';
-import { showGallery } from '../../../actions/gallery';
+import { openGallery } from '../../../actions/gallery';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { toggleLockedStory, deleteStory } from '../../../actions/stories';
 
@@ -39,12 +39,12 @@ class StoryView extends Component {
     let imageNodes = story.querySelectorAll('img');
 
     for (let image of imageNodes) {
-      image.addEventListener('click', this.showGallery, false);
+      image.addEventListener('click', this.openGallery, false);
     }
   };
 
-  showGallery = e => {
-    this.props.dispatch(showGallery(e));
+  openGallery = e => {
+    this.props.dispatch(openGallery(e));
   };
 
   scrollToBottom = () => {
@@ -146,7 +146,7 @@ class StoryView extends Component {
             />
           </div>
           {story.content.media && story.content.media !== ''
-            ? <Media src={story.content.media} onClick={this.showGallery} />
+            ? <Media src={story.content.media} onClick={this.openGallery} />
             : ''}
         </ContentView>
         <ChatDetail scrollToBottom={this.scrollToBottom} />

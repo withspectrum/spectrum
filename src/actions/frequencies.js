@@ -1,5 +1,6 @@
 import { createBrowserHistory } from 'history';
 import { getCurrentFrequency } from '../helpers/frequencies';
+import { track } from '../EventTracker';
 import {
   saveNewFrequency,
   removeFrequency,
@@ -13,6 +14,9 @@ import { getStories } from '../db/stories';
 export const setActiveFrequency = frequency => (dispatch, getState) => {
   const { frequencies: { frequencies } } = getState();
   const id = getCurrentFrequency(frequency, frequencies).id;
+
+  track('frequency', 'viewed', null);
+
   dispatch({
     type: 'SET_ACTIVE_FREQUENCY',
     frequency,
@@ -39,6 +43,8 @@ export const createFrequency = data => (dispatch, getState) => {
   const { user: { uid } } = getState();
   saveNewFrequency({ uid, data })
     .then(frequency => {
+      track('frequency', 'created', null);
+
       dispatch({
         type: 'CREATE_FREQUENCY',
         frequency,
@@ -56,6 +62,8 @@ export const editFrequency = data => (dispatch, getState) => {
 
   updateFrequency(data)
     .then(() => {
+      track('frequency', 'edited', null);
+
       dispatch({
         type: 'EDIT_FREQUENCY',
         frequency: data,
@@ -70,6 +78,8 @@ export const deleteFrequency = id => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
   removeFrequency(id)
     .then(() => {
+      track('frequency', 'deleted', null);
+
       dispatch({ type: 'DELETE_FREQUENCY', id });
       history.push('/');
     })
@@ -85,6 +95,8 @@ export const subscribeFrequency = slug => (dispatch, getState) => {
 
   addUserToFrequency(uid, slug)
     .then(frequency => {
+      track('frequency', 'subscribed', null);
+
       dispatch({
         type: 'CREATE_FREQUENCY',
         frequency,
@@ -106,6 +118,8 @@ export const unsubscribeFrequency = frequency => (dispatch, getState) => {
 
   removeUserFromFrequency(uid, id)
     .then(() => {
+      track('frequency', 'unsubscribed', null);
+
       dispatch({
         type: 'UNSUBSCRIBE_FREQUENCY',
         id,

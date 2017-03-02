@@ -5,6 +5,7 @@ import { uploadMedia } from '../../../helpers/stories';
 import EmojiPicker from '../../../shared/EmojiPicker';
 import { Photo } from '../../../shared/Icons';
 import { connect } from 'react-redux';
+import { track } from '../../../EventTracker';
 import {
   Input,
   Form,
@@ -38,6 +39,8 @@ class ChatInput extends Component {
   };
 
   sendEmojiMessage = emoji => {
+    track('emojiPicker', 'sent', null);
+
     let textInput = ReactDOM.findDOMNode(this.refs.textInput);
 
     let message = {

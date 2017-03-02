@@ -1,17 +1,29 @@
+import { track } from '../EventTracker';
 /*------------------------------------------------------------\*
 *
 
-showModal
+openModal
 Takes a name and shows that modal. The name gets parsed in ModalRoot.js in order to determine which component to render
 
 *
 \*------------------------------------------------------------*/
-export const showModal = (name, props) => ({
-  type: 'SHOW_MODAL',
-  modalType: name,
-  modalProps: props || {},
-});
+export const openModal = (name, props) => {
+  track(`modal ${name}`, 'opened', null);
 
-export const hideModal = () => ({
-  type: 'HIDE_MODAL',
-});
+  return {
+    type: 'SHOW_MODAL',
+    modalType: name,
+    modalProps: props || {},
+  };
+};
+
+export const closeModal = () => (dispatch, getState) => {
+  let state = getState();
+  let name = state.modals.modalType;
+
+  track(`modal ${name}`, 'closed', null);
+
+  dispatch({
+    type: 'HIDE_MODAL',
+  });
+};

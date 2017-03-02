@@ -7,7 +7,7 @@ const ModalContainer = props => {
       <Header>
         <Title>{props.title}</Title>
 
-        <Close onClick={props.hideModal}>
+        <Close onClick={props.closeModal}>
           ✕
         </Close>
       </Header>

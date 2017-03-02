@@ -1,6 +1,7 @@
 import * as firebase from 'firebase';
 import uniq from 'lodash.uniq';
 import { hashToArray } from './utils';
+import { track } from '../EventTracker';
 
 export const isStoryCreator = (story, user) => {
   if (!user) {
@@ -115,6 +116,8 @@ export const uploadMedia = (file, story, user) => {
     };
 
     fileRef.put(file, metaData).then(snapshot => {
+      track('media', 'uploaded', null);
+
       resolve(snapshot.downloadURL);
     });
   });

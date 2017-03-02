@@ -5,7 +5,7 @@ import ChatInput from '../ChatInput';
 // eslint-disable-next-line
 import Composer from '../Composer';
 import { deleteStory, toggleLockedStory } from '../../../actions/stories';
-import { showGallery } from '../../../actions/gallery';
+import { openGallery } from '../../../actions/gallery';
 import { isStoryCreator, getStoryPermission } from '../../../helpers/stories';
 
 import {
@@ -37,10 +37,10 @@ class DetailView extends Component {
     this.props.dispatch(toggleLockedStory(story));
   };
 
-  showGallery = e => {
+  openGallery = e => {
     let arr = [];
     arr.push(e.target.src);
-    this.props.dispatch(showGallery(arr));
+    this.props.dispatch(openGallery(arr));
   };
 
   render() {
@@ -57,7 +57,9 @@ class DetailView extends Component {
     if (story && !composer.isOpen) {
       // if we're viewing a story and the composer is not open
       return (
-        <ViewContainer mobile={this.props.stories.active || this.props.composer.isOpen}>
+        <ViewContainer
+          mobile={this.props.stories.active || this.props.composer.isOpen}
+        >
           <LogicContainer>
             <StoryDetail
               activeStory={story}
@@ -72,7 +74,9 @@ class DetailView extends Component {
     } else if (composer.isOpen) {
       // otherwise if the composer is open
       return (
-        <ViewContainer mobile={this.props.stories.active || this.props.composer.isOpen}>
+        <ViewContainer
+          mobile={this.props.stories.active || this.props.composer.isOpen}
+        >
           <LogicContainer>
             <Composer />
           </LogicContainer>
@@ -81,7 +85,9 @@ class DetailView extends Component {
     } else {
       // otherwise show a null state
       return (
-        <ViewContainer mobile={this.props.stories.active || this.props.composer.isOpen}>
+        <ViewContainer
+          mobile={this.props.stories.active || this.props.composer.isOpen}
+        >
           <NullContainer>
             <NullText>Choose a story to get started!</NullText>
           </NullContainer>
