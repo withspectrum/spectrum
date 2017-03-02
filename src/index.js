@@ -8,6 +8,7 @@ import * as firebase from 'firebase';
 import FIREBASE_CONFIG from './config/FirebaseConfig';
 import { Body } from './App/style';
 import Root from './Root';
+import throttle from 'lodash.throttle';
 import { loadStorage, saveStorage, clearStorage } from './helpers/localStorage';
 
 const fbconfig = {
@@ -26,9 +27,19 @@ if (process.env.NODE_ENV === 'production') {
   store = initStore(localStorageState);
 
   // sync the store with localstorage
-  store.subscribe(() => {
-    saveStorage(store.getState());
-  });
+  store.subscribe(
+    throttle(
+      () => {
+        let state = store.getState();
+        saveStorage({
+          user: state.user,
+          frequencies: state.frequencies,
+          stories: state.stories,
+        });
+      },
+      1000,
+    ),
+  );
 } else {
   store = initStore({});
 }
