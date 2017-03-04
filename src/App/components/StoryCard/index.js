@@ -32,6 +32,8 @@ class StoryCard extends Component {
       messages = Object.keys(story.messages);
     }
 
+    if (!story.published) return <span />;
+
     return (
       <Card>
         <Link to={`/${urlBase}/${story.id}`}>

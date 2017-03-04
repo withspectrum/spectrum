@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom';
 import { BrowserRouter, Match } from 'react-router';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
@@ -8,7 +8,8 @@ import * as firebase from 'firebase';
 import FIREBASE_CONFIG from './config/FirebaseConfig';
 import { Body } from './App/style';
 import Root from './Root';
-import { loadState, saveState } from './helpers/localStorage';
+import { loadStorage, saveStorage, clearStorage } from './helpers/localStorage';
+import { debounce } from './helpers/utils';
 
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,
@@ -22,13 +23,21 @@ firebase.initializeApp(fbconfig);
 let store;
 // In production load previously saved data from localStorage
 if (process.env.NODE_ENV === 'production') {
-  let localStorageState = loadState();
+  let localStorageState = loadStorage();
   store = initStore(localStorageState);
 
   // sync the store with localstorage
-  store.subscribe(() => {
-    saveState(store.getState());
-  });
+  let state = store.getState();
+  store.subscribe(
+    debounce(
+      saveStorage({
+        user: state.user,
+        frequencies: state.frequencies,
+        stories: state.stories,
+      }),
+      1000,
+    ),
+  );
 } else {
   store = initStore({});
 }
@@ -74,15 +83,28 @@ const theme = {
   },
 };
 
-render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <ThemeProvider theme={theme}>
-        <Body>
-          <Match exactly pattern="/(\~?):frequency?/:story?" component={Root} />
-        </Body>
-      </ThemeProvider>
-    </BrowserRouter>
-  </Provider>,
-  document.querySelector('#root'),
-);
+const render = () => {
+  ReactDOM.render(
+    <Provider store={store}>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <Body>
+            <Match
+              exactly
+              pattern="/(\~?):frequency?/:story?"
+              component={Root}
+            />
+          </Body>
+        </ThemeProvider>
+      </BrowserRouter>
+    </Provider>,
+    document.querySelector('#root'),
+  );
+};
+
+try {
+  render();
+} catch (err) {
+  clearStorage();
+  render();
+}

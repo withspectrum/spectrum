@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { sendMessage } from '../../../actions/messages';
 import { uploadMedia } from '../../../helpers/stories';
+import { isMobile } from '../../../helpers/utils';
 import EmojiPicker from '../../../shared/EmojiPicker';
 import { Photo } from '../../../shared/Icons';
 import { connect } from 'react-redux';
@@ -106,6 +107,8 @@ class ChatInput extends Component {
   };
 
   render() {
+    let mobile = isMobile();
+
     return (
       <Footer>
         <MediaInput
@@ -131,7 +134,9 @@ class ChatInput extends Component {
         {this.props.user.uid &&
           <Form onSubmit={this.sendMessage}>
             <Input
-              autoFocus={true}
+              autoFocus={
+                !mobile /* autofocus on desktop, don't autofocus on mobile */
+              }
               ref="textInput"
               placeholder="Your message here..."
               value={this.state.message}

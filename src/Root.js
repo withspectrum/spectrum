@@ -44,9 +44,11 @@ class Root extends Component {
       track('user', 'authed', null);
       set(user.uid);
 
+      console.log('user is: ', user);
       // Get the public userdata
       getPublicUserInfo(user.uid)
         .then(userData => {
+          console.log('public info is : ', userData);
           dispatch({
             type: 'SET_USER',
             user: userData,
