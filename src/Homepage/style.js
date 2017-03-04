@@ -19,8 +19,7 @@ export const Tagline = styled(H2)`
 	color: ${({ theme }) => theme.text.reverse};
 	font-weight: 500;
 	font-size: 20px;
-	margin-top: 16px;
-	margin-bottom: 40px;
+	margin-top: 8px;
 `;
 
 export const Button = styled.button`
@@ -68,6 +67,35 @@ export const Button = styled.button`
 
 export const LogoWhite = styled(Logo)`
 	max-width: 360px;
+`;
+
+export const LogoContainer = styled.div`
+	max-width: 360px;
+`;
+
+export const EmailInput = styled.input`
+	padding: 8px 12px;
+	border-radius: 4px;
+	background: #fff;
+	-webkit-display: none;
+	outline: none;
+	font-size: 16px;
+	border: 1px solid ${props => props.theme.brand.default};
+	margin-top: 32px;
+	width: 240px;
+`;
+
+export const Submit = styled.input`
+	padding: 6px 16px;
+	font-size: 16px;
+	font-weight: 500;
+	background: transparent;
+	border-radius: 4px;
+	border: 2px solid ${props =>
+  props.disabled ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,1)'};
+	color: ${props =>
+  props.disabled ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,1)'};
+	margin-left: 8px;
 `;
 
 export const ContentWrapper = styled.div`
