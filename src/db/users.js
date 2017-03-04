@@ -12,18 +12,25 @@ export const createUser = user => {
   return db
     .ref()
     .update({
-      [`users/${uid}/public`]: {
-        uid: uid,
-        displayName: user.displayName, // returned from Twitter
-        photoURL: user.photoURL, // returned from Twitter
-        frequencies: {
-          '-KcpUngtORLZzm56Biz4': { id: '-KcpUngtORLZzm56Biz4' },
-        }, // auto subscribe the user to the Bugs n Hugs Frequency
+      [`users/${uid}/public/displayName`]: user.displayName,
+      [`users/${uid}/public/uid`]: uid,
+      [`users/${uid}/public/photoURL`]: user.photoURL,
+      [`users/${uid}/public/frequencies/-KcpUngtORLZzm56Biz4`]: {
+        //=> add `hugs n bugs` to user's default frequencies
+        id: '-KcpUngtORLZzm56Biz4',
+        permission: 'subscriber',
+        joined: firebase.database.ServerValue.TIMESTAMP,
       },
       [`users/${uid}/private`]: {
         created: firebase.database.ServerValue.TIMESTAMP,
       },
     })
+    .then(() => db.ref().update({
+      [`frequencies/-KcpUngtORLZzm56Biz4/users/${uid}`]: {
+        permission: 'subscriber',
+        joined: firebase.database.ServerValue.TIMESTAMP,
+      },
+    }))
     .then(() => db.ref(`users/${uid}/public`).once('value'))
     .then(snapshot => snapshot.val());
 };

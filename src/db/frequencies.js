@@ -116,10 +116,12 @@ export const addUserToFrequency = (userId, slug) => {
     .then(data => db.ref().update({
       [`frequencies/${data.id}/users/${userId}`]: {
         permission: 'subscriber',
+        joined: firebase.database.ServerValue.TIMESTAMP,
       },
       [`users/${userId}/public/frequencies/${data.id}`]: {
         id: data.id,
         permission: 'subscriber',
+        joined: firebase.database.ServerValue.TIMESTAMP,
       },
     }))
     .then(() =>
