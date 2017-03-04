@@ -76,6 +76,13 @@ class StoryMaster extends Component {
         <Header visible={loggedIn}>
           <MenuButton onClick={this.toggleNav}>☰</MenuButton>
 
+          {!(isEverything || role === 'owner' || hidden) &&
+            (role
+              ? <JoinBtn member onClick={this.unsubscribeFrequency}>
+                  Leave
+                </JoinBtn>
+              : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}
+
           {role === 'owner' &&
             <TipButton
               onClick={this.editFrequency}
@@ -96,21 +103,10 @@ class StoryMaster extends Component {
                 : <NewPost color="brand" stayActive />}
             </TipButton>}
 
-          {!(isEverything || role === 'owner' || hidden) &&
-            (role
-              ? <JoinBtn member onClick={this.unsubscribeFrequency}>
-                  Leave
-                </JoinBtn>
-              : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}
         </Header>
 
         <ScrollBody>
           <Overlay active={composer.isOpen} />
-          {!loggedIn &&
-            <LoginWrapper onClick={this.login}>
-              <LoginText>Sign in to join the conversation.</LoginText>
-              <LoginButton>Sign in with Twitter</LoginButton>
-            </LoginWrapper>}
 
           {isEverything || frequency
             ? stories.map((story, i) => (

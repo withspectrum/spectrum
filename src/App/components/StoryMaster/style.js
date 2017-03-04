@@ -71,16 +71,6 @@ export const Header = styled.div`
 	position: relative;
 	z-index: 3;
 
-
-	> img {
-		flex: 0 0 32px;
-		transition: all 0.2s ease-out;
-
-		&:hover {
-			transform: scale(1.15);
-			transition: all 0.2s ease-out;
-		}
-	}
 `;
 
 export const FrequencyName = styled.h2`
