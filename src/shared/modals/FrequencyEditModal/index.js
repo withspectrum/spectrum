@@ -49,9 +49,13 @@ class FrequencyEditModal extends React.Component {
     let lowercaseName = name.toLowerCase().trim();
     name.trim();
 
-    if (lowercaseName === 'everything') {
+    if (
+      lowercaseName === 'everything' ||
+      lowercaseName === 'null' ||
+      lowercaseName === 'undefined'
+    ) {
       this.setState({
-        error: "Everything can't be a frequency name, sorry!",
+        error: "'Everything', 'null', and 'undefined' can't be used as a frequency name, but nice try!",
       });
 
       return;

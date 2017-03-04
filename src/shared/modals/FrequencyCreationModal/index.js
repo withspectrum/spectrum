@@ -49,9 +49,13 @@ class FrequencyCreationModal extends React.Component {
     let slug = slugg(name);
 
     // don't allow 'everything' to be used as it will conflict with our first party ~everything frequency
-    if (lowercaseName === 'everything') {
+    if (
+      lowercaseName === 'everything' ||
+      lowercaseName === 'null' ||
+      lowercaseName === 'undefined'
+    ) {
       this.setState({
-        error: "Everything can't be a frequency name, sorry!",
+        error: "'Everything', 'null', and 'undefined' can't be used as a frequency name, but nice try!",
       });
 
       return;
@@ -108,9 +112,13 @@ class FrequencyCreationModal extends React.Component {
       loading: true,
     });
 
-    if (editedSlug === 'everything') {
+    if (
+      editedSlug === 'everything' ||
+      editedSlug === 'null' ||
+      editedSlug === 'undefined'
+    ) {
       this.setState({
-        error: "~everything can't be used, sorry!",
+        error: "~everything, ~null, and ~undefined can't be used, but nice try!",
       });
 
       return;

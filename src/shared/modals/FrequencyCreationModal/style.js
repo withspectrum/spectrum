@@ -87,7 +87,7 @@ export const Pre = styled.span`
   font-size: 12px;
   font-weight: 500;
   color: ${({ theme }) => theme.text.alt};
-  
+
   &:before {
     content: '';
     position: absolute;
@@ -118,7 +118,7 @@ export const EditSlugInput = styled.input`
 export const ErrorMessage = styled.span`
   font-size: 12px;
   color: ${({ theme }) => theme.brand.default};
-  padding-left: 16px;
+  padding-left: 24px;
   margin-bottom: 8px;
   margin-top: 8px;
   position: relative;
