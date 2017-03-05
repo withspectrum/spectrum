@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Shadow, Gradient, Tooltip } from '../../../shared/Globals';
+import { Shadow, Gradient, Tooltip, H2, H4, P } from '../../../shared/Globals';
 
 export const Column = styled.div`
 	display: flex;
@@ -57,15 +57,14 @@ export const Overlay = styled.div`
 `;
 
 export const Header = styled.div`
-	flex-direction: row;
+	flex-direction: column;
 	display: ${props => props.visible ? 'flex' : 'none'};
-	flex: 0 0 48px;
+	flex: 0 0 auto;
+	min-height: 48px;
 	width: 100%;
 	background-color: ${({ theme }) => theme.bg.default};
-	align-items: center;
 	align-self: flex-start;
 	justify-content: space-between;
-	padding: 8px;
 	z-index: 1;
 	box-shadow: ${Shadow.low};
 	position: relative;
@@ -199,4 +198,37 @@ export const MenuButton = styled.div`
 	@media (max-width: 768px) {
 		display: block;
 	}
+`;
+
+export const FreqTitle = styled(H2)`
+	font-weight: 800;
+	font-size: 20px;
+	margin: 16px;
+	margin-bottom: 8px;
+`;
+
+export const FlexCol = styled.div`
+	display: flex;
+	flex-direction: column;
+`;
+
+export const FlexRow = styled.div`
+	display: flex;
+	justify-content: space-between;
+`;
+
+export const Count = styled(H4)`
+	margin: 0 16px;
+	font-weight: 700;
+`;
+
+export const Description = styled(P)`
+	margin: 16px;
+	margin-top: 8px;
+`;
+
+export const Actions = styled(FlexRow)`
+	flex: 0 0 48px;
+	padding: 8px;
+	align-items: center;
 `;
