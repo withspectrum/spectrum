@@ -25,6 +25,7 @@ export const getUserFromId = uid => {
     .once('value')
     .then(snapshot => {
       let val = snapshot.val();
+      console.log(val);
       let obj = {};
       obj['uid'] = uid;
       obj['name'] = val.displayName;
