@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Logo } from '../shared/Icons';
+import { Logo } from '../shared/Logos';
 import { Gradient, H2 } from '../shared/Globals';
 
 export const Background = styled.div`

@@ -31,8 +31,8 @@ textarea {
   color: #ffffff;
 }
 
-::-webkit-scrollbar { 
-    display: none; 
+::-webkit-scrollbar {
+    display: none;
 }
 
 input,
@@ -40,19 +40,15 @@ textarea {
   box-shadow: inset 0 1px 1px rgba(0,0,0,0.1);
 }
 
-input:focus {
-  font-size: 16px;
-}
-
 body {
-  position: relative;  
+  position: relative;
   height: 100vh;
   width: 100vw;
   -webkit-font-smoothing: antialiased;
-  font-size: 1rem;
-  line-height: 1rem;
+  font-size: 16px;
+  line-height: 24px;
   background: #fff;
-  color: #555459;
+  color: #171a21;
   padding: 0;
   overflow-y: hidden;
   overflow-x: hidden;

@@ -27,6 +27,7 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
   const id = db.ref().child('frequencies').push().key;
 
   const frequency = {
+    //=> used in the resolve below
     id,
     createdAt: firebase.database.ServerValue.TIMESTAMP,
     createdBy: uid,
@@ -42,6 +43,7 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
       // Creator gets full admin rights
       [uid]: {
         permission: 'owner',
+        joined: firebase.database.ServerValue.TIMESTAMP,
       },
     },
   };
@@ -50,12 +52,28 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
   return db
     .ref()
     .update({
-      [`frequencies/${id}`]: frequency,
       [`users/${uid}/public/frequencies/${id}`]: {
+        //=> add the frequency id to the user first
         id,
         permission: 'owner',
+        joined: firebase.database.ServerValue.TIMESTAMP,
       },
     })
+    .then(() => db.ref().update({
+      //=> create the frequency and add the user
+      [`frequencies/${id}/id`]: frequency.id,
+      [`frequencies/${id}/users/${uid}/permission`]: 'owner',
+      [`frequencies/${id}/users/${uid}/joined`]: firebase.database.ServerValue.TIMESTAMP,
+    }))
+    .then(() => db.ref().update({
+      //=> then add the rest of the frequency data, since we'll validate against the user above
+      [`frequencies/${id}/createdAt`]: frequency.createdAt,
+      [`frequencies/${id}/createdBy`]: frequency.createdBy,
+      [`frequencies/${id}/name`]: frequency.name,
+      [`frequencies/${id}/slug`]: frequency.slug,
+      [`frequencies/${id}/settings`]: frequency.settings,
+      [`frequencies/${id}/stories`]: frequency.stories,
+    }))
     .then(() => {
       // Simulate the saved frequency for the client-side update
       resolve({ ...frequency, timestamp: Date.now() });
@@ -93,7 +111,10 @@ export const removeFrequency = id => new Promise((resolve, reject) => {
 export const updateFrequency = data => {
   const db = firebase.database();
 
-  return db.ref(`frequencies/${data.id}`).update(data);
+  return db.ref().update({
+    [`frequencies/${data.id}/name`]: data.name,
+    [`frequencies/${data.id}/settings`]: data.settings,
+  });
 };
 
 /**
