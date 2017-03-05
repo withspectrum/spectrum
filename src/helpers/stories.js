@@ -28,6 +28,7 @@ export const getUserFromId = uid => {
       let obj = {};
       obj['uid'] = uid;
       obj['name'] = val.displayName;
+      obj['photoURL'] = val.photoURL;
       return obj;
     });
 };

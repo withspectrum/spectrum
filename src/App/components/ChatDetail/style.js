@@ -28,23 +28,39 @@ export const Bubble = styled.p`
 		margin-top: 0;
 	}
 
-  a { 
+  a {
   	text-decoration: underline;
   	word-wrap: break-word;
-  	line-height: inherit; 
+  	line-height: inherit;
   	word-break: break-all;
   }
+`;
+
+export const Messages = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+`;
+
+export const Avatar = styled.img`
+	width: 32px;
+	height: 32px;
+	border-radius: 50px;
+	margin-right: 8px;
+	align-self: flex-end;
 `;
 
 export const BubbleGroup = styled.div`
 	width: 100%;
 	margin-top: 8px;
+	display: flex;
+	justify-content: ${props => props.me ? `flex-end;` : `flex-start;`}
 
 	&:first-of-type {
 		margin-top: auto;
 	}
 
-	> p {
+	p {
 
 		background-color: ${props =>
   props.me ? props.theme.brand.default : props.theme.generic.default};
@@ -54,7 +70,7 @@ export const BubbleGroup = styled.div`
     : Gradient(props.theme.generic.alt, props.theme.generic.default)}
 		color: ${props =>
   props.me ? props.theme.text.reverse : props.theme.text.default};
-		float: ${props => props.me ? `right;` : `left;`}
+		align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
 		font-weight: ${props => props.me ? `500` : `400`};
 		clear: both;
 
@@ -86,7 +102,8 @@ export const ImgBubble = styled.img`
 	border-radius: 16px
 	margin-top: 2px;
 	max-width: 60%;
-	float: ${props => props.me ? `right;` : `left;`}
+	display: flex;
+	align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
 
 	&:first-of-type {
 		margin-top: 0;
@@ -100,7 +117,8 @@ export const EmojiBubble = styled.div`
   display: block;
   margin-top: 12px;
   margin-bottom: 8px;
-	float: ${props => props.me ? `right;` : `left;`}
+	display: flex;
+	align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
 `;
 
 export const FromName = styled.span`
