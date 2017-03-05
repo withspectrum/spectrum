@@ -181,12 +181,15 @@ export const MiniGallery = styled.div`
 	width: 100%;
 	display: flex;
 	overflow-x: scroll;
+	background: #f6f7f8;
+	padding: 0 16px;
 `;
 
 export const MiniImageContainer = styled.span`
 	display: inline-block;
-	width: 3rem;
-	height: 3rem;
+	max-width: 4rem;
+	max-height: 4rem;
+	border-radius: 2px;
 	border-radius: 2px;
 	margin-right: 16px;
 	margin-top: 16px;
