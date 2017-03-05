@@ -43,9 +43,9 @@ export const Messages = styled.div`
 `;
 
 export const Avatar = styled.img`
-	width: 32px;
-	height: 32px;
-	border-radius: 50px;
+	width: 20px;
+	height: 20px;
+	border-radius: 100%;
 	margin-right: 8px;
 	align-self: flex-end;
 `;
@@ -61,7 +61,6 @@ export const BubbleGroup = styled.div`
 	}
 
 	p {
-
 		background-color: ${props =>
   props.me ? props.theme.brand.default : props.theme.generic.default};
 		background-image: ${props =>
@@ -116,16 +115,18 @@ export const EmojiBubble = styled.div`
   clear: both;
   display: block;
   margin-top: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 	display: flex;
 	align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
 `;
 
 export const FromName = styled.span`
 	display: inline-block;
-	font-size: 10px;
+	font-size: 11px;
 	line-height: 16px;
 	font-weight: 500;
+	margin-bottom: 1px;
+	margin-left: 16px;
 	color: ${({ theme }) => theme.text.alt};
 	float: ${props => props.me ? `right;` : `left;`}
 `;
