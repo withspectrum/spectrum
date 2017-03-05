@@ -62,6 +62,7 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
       [`users/${uid}/public/frequencies/${id}`]: {
         id,
         permission: 'owner',
+        joined: firebase.database.ServerValue.TIMESTAMP,
       },
     })
     .then(() => {
