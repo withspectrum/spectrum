@@ -175,4 +175,49 @@ export const BackArrow = styled.span`
 	@media (max-width: 768px) {
 		display: block;
 	}
-`
+`;
+
+export const MiniGallery = styled.div`
+	width: 100%;
+	display: flex;
+	overflow-x: scroll;
+`;
+
+export const MiniImageContainer = styled.span`
+	display: inline-block;
+	width: 3rem;
+	height: 3rem;
+	border-radius: 2px;
+	margin-right: 16px;
+	margin-top: 16px;
+	margin-bottom: 16px;
+	position: relative;
+`;
+
+export const Delete = styled.span`
+	position: absolute;
+	top: -8px;
+	right: -8px;
+	width: 16px;
+	height: 16px;
+	border-radius: 8px;
+	background: #000;
+	z-index: 3;
+	transition: background 0.2s;
+	color: #fff;
+	padding-left: 5px;
+	font-weight: 900;
+	font-size: 8px;
+
+	&:hover {
+		transition: background 0.2s;
+		background: ${props => props.theme.warn.default};
+		cursor: pointer;
+	}
+`;
+
+export const Image = styled.img`
+	width: 100%;
+	height: 100%;
+	border-radius: 2px;
+`;

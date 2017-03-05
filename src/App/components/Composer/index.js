@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateTitle, updateBody } from '../../../actions/composer';
+import {
+  updateTitle,
+  updateBody,
+  addMediaList,
+  removeImageFromStory,
+} from '../../../actions/composer';
 import { publishStory, initStory } from '../../../actions/stories';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { uploadMultipleMedia } from '../../../helpers/stories';
@@ -21,6 +26,10 @@ import {
   MediaInput,
   MediaLabel,
   BackArrow,
+  MiniGallery,
+  MiniImageContainer,
+  Image,
+  Delete,
 } from './style';
 
 class Composer extends Component {
@@ -70,7 +79,8 @@ class Composer extends Component {
     uploadMultipleMedia(files, story, user)
       .then(filesArr => {
         for (let file of filesArr) {
-          body = `${body}\n![](${file})\n`;
+          body = `${body}\n![](${file.url})\n`;
+          this.props.dispatch(addMediaList(file));
           this.props.dispatch(updateBody(body));
         }
 
@@ -127,6 +137,12 @@ class Composer extends Component {
     }
   };
 
+  removeImage = e => {
+    let key = e.target.id;
+    let story = this.props.composer.newStoryKey;
+    this.props.dispatch(removeImageFromStory(key, story));
+  };
+
   closeComposer = () => {
     this.props.dispatch({
       type: 'CLOSE_COMPOSER',
@@ -139,6 +155,7 @@ class Composer extends Component {
     let currentFrequency = frequencies.frequencies.filter(freq => {
       return freq.slug === activeFrequency;
     });
+    let media = composer.mediaList;
 
     let byline = activeFrequency === 'everything'
       ? <span>
@@ -196,6 +213,16 @@ class Composer extends Component {
                   onChange={this.uploadMedia}
                 />
                 <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
+                <MiniGallery>
+                  {media.map((file, i) => (
+                    <MiniImageContainer key={i}>
+                      <Delete id={file.meta.key} onClick={this.removeImage}>
+                        ✕
+                      </Delete>
+                      <Image src={file.url} />
+                    </MiniImageContainer>
+                  ))}
+                </MiniGallery>
                 <SubmitContainer>
                   {byline}
                   <Submit
