@@ -112,7 +112,7 @@ export const removeFrequency = id => new Promise((resolve, reject) => {
  */
 export const updateFrequency = data => {
   const db = firebase.database();
-
+  console.log(data);
   return db.ref().update({
     [`frequencies/${data.id}/name`]: data.name,
     [`frequencies/${data.id}/description`]: data.description,

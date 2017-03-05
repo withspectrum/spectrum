@@ -155,8 +155,17 @@ class FrequencyCreationModal extends React.Component {
   };
 
   editDescription = e => {
+    if (e.target.value.length > 140) {
+      this.setState({
+        error: 'Frequency descriptions can only be up to 140 characters long.',
+      });
+
+      return;
+    }
+
     this.setState({
       description: e.target.value,
+      error: '',
     });
   };
 
@@ -188,10 +197,10 @@ class FrequencyCreationModal extends React.Component {
     }
 
     let frequencyObj = {
-      name: this.state.name,
-      slug: this.state.slug,
+      name: this.state.name.toString(),
+      slug: this.state.slug.toString(),
       private: this.state.private,
-      description: this.state.description,
+      description: this.state.description.toString(),
     };
 
     this.props.dispatch(createFrequency(frequencyObj));
@@ -238,7 +247,6 @@ class FrequencyCreationModal extends React.Component {
           <EditDescription>
             <EditDescriptionInput
               ref="customDescription"
-              type="text"
               placeholder={this.state.description}
               defaultValue={this.state.description}
               onChange={this.editDescription}
@@ -282,7 +290,8 @@ class FrequencyCreationModal extends React.Component {
                   !this.state.name ||
                   this.state.loading ||
                   this.state.exists ||
-                  !this.state.slug
+                  !this.state.slug ||
+                  this.state.description.length === 0
               }
               onClick={this.prepareNewFrequency}
             >

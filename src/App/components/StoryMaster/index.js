@@ -74,7 +74,10 @@ class StoryMaster extends Component {
 
     const isEverything = activeFrequency === 'everything';
     let usersCount = Object.keys(frequency.users).length;
-    let storiesCount = Object.keys(frequency.stories).length;
+    let storiesCount = 0;
+    if (frequency.stories) {
+      storiesCount = Object.keys(frequency.stories).length;
+    }
     const hidden = !role && isPrivate;
 
     if (!isEverything && hidden) return <Lock />;
@@ -84,14 +87,14 @@ class StoryMaster extends Component {
         <Header visible={loggedIn}>
           {!isEverything &&
             <FlexCol>
-              <FreqTitle>~{activeFrequency}</FreqTitle>
+              <FreqTitle>~ {frequency.name}</FreqTitle>
               <FlexRow>
                 <Count>{usersCount} members</Count>
                 <Count>{storiesCount} stories</Count>
               </FlexRow>
-              <Description>
-                What happens when this gets really long? How about if it's like four full sentences. Brian, thank you for coding this up so it actually works. Or maybe just helping me figure out how to do it?
-              </Description>
+              {frequency.description
+                ? <Description>{frequency.description}</Description>
+                : <span />}
             </FlexCol>}
           <Actions>
             <MenuButton onClick={this.toggleNav}>☰</MenuButton>

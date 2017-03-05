@@ -95,8 +95,18 @@ class FrequencyEditModal extends React.Component {
   };
 
   editDescription = e => {
+    if (e.target.value.length > 140) {
+      this.setState({
+        error: 'Frequency descriptions can only be up to 140 characters long.',
+      });
+
+      return;
+    }
+
     this.setState({
       description: e.target.value,
+      error: '',
+      disabled: false,
     });
   };
 
@@ -114,9 +124,9 @@ class FrequencyEditModal extends React.Component {
 
     let frequencyObj = {
       id: this.props.id,
-      name: this.state.name,
-      slug: this.props.slug,
-      description: this.state.description,
+      name: this.state.name.toString(),
+      slug: this.props.slug.toString(),
+      description: this.state.description.toString(),
       settings: {
         private: this.state.private,
         tint: this.props.settings.tint,
@@ -169,7 +179,7 @@ class FrequencyEditModal extends React.Component {
               type="text"
               placeholder={this.state.description}
               defaultValue={this.state.description}
-              onChange={this.editdescription}
+              onChange={this.editDescription}
             />
           </EditDescription>
 
@@ -220,7 +230,8 @@ class FrequencyEditModal extends React.Component {
                     this.state.disabled ||
                       this.state.error ||
                       !this.state.name ||
-                      this.state.exists
+                      this.state.exists ||
+                      this.state.description.length === 0
                   }
                 >
                   Save
