@@ -27,6 +27,7 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
   const id = db.ref().child('frequencies').push().key;
 
   const frequency = {
+    //=> used in the resolve below
     id,
     createdAt: firebase.database.ServerValue.TIMESTAMP,
     createdBy: uid,
@@ -50,7 +51,14 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
   return db
     .ref()
     .update({
-      [`frequencies/${id}`]: frequency,
+      [`frequencies/${id}/id`]: frequency.id,
+      [`frequencies/${id}/createdAt`]: frequency.createdAt,
+      [`frequencies/${id}/createdBy`]: frequency.createdBy,
+      [`frequencies/${id}/name`]: frequency.name,
+      [`frequencies/${id}/slug`]: frequency.slug,
+      [`frequencies/${id}/settings`]: frequency.settings,
+      [`frequencies/${id}/stories`]: frequency.stories,
+      [`frequencies/${id}/users`]: frequency.users,
       [`users/${uid}/public/frequencies/${id}`]: {
         id,
         permission: 'owner',
