@@ -48,8 +48,6 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
     },
   };
 
-  console.log('users: ', frequency.users);
-
   // Save the new data to Firebase
   return db
     .ref()
@@ -62,13 +60,13 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
       },
     })
     .then(() => db.ref().update({
-      //=> create the frequency
+      //=> create the frequency and add the user
       [`frequencies/${id}/id`]: frequency.id,
       [`frequencies/${id}/users/${uid}/permission`]: 'owner',
       [`frequencies/${id}/users/${uid}/joined`]: firebase.database.ServerValue.TIMESTAMP,
     }))
     .then(() => db.ref().update({
-      //=> create the frequency
+      //=> then add the rest of the frequency data, since we'll validate against the user above
       [`frequencies/${id}/createdAt`]: frequency.createdAt,
       [`frequencies/${id}/createdBy`]: frequency.createdBy,
       [`frequencies/${id}/name`]: frequency.name,
