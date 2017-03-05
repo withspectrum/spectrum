@@ -21,6 +21,8 @@ import {
   PrivacyLabel,
   PrivacyCheckbox,
   PrivacyText,
+  EditDescription,
+  EditDescriptionInput,
 } from './style';
 
 class FrequencyCreationModal extends React.Component {
@@ -31,6 +33,7 @@ class FrequencyCreationModal extends React.Component {
       isOpen: props.isOpen,
       name: '',
       slug: '',
+      description: '',
       error: '',
       exists: false,
       editedSlug: false,
@@ -151,6 +154,12 @@ class FrequencyCreationModal extends React.Component {
     });
   };
 
+  editDescription = e => {
+    this.setState({
+      description: e.target.value,
+    });
+  };
+
   togglePrivacy = e => {
     this.setState({
       private: !this.state.private,
@@ -172,7 +181,8 @@ class FrequencyCreationModal extends React.Component {
       this.state.loading ||
       this.state.exists ||
       !this.state.name ||
-      !this.state.slug
+      !this.state.slug ||
+      !this.state.description
     ) {
       return;
     }
@@ -181,6 +191,7 @@ class FrequencyCreationModal extends React.Component {
       name: this.state.name,
       slug: this.state.slug,
       private: this.state.private,
+      description: this.state.description,
     };
 
     this.props.dispatch(createFrequency(frequencyObj));
@@ -223,6 +234,16 @@ class FrequencyCreationModal extends React.Component {
               onChange={this.editSlug}
             />
           </EditSlug>
+
+          <EditDescription>
+            <EditDescriptionInput
+              ref="customDescription"
+              type="text"
+              placeholder={this.state.description}
+              defaultValue={this.state.description}
+              onChange={this.editDescription}
+            />
+          </EditDescription>
 
           {this.state.exists &&
             <ErrorMessage>

@@ -33,6 +33,7 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
     createdBy: uid,
     name: data.name,
     slug: data.slug,
+    description: data.description,
     settings: {
       private: data.private,
       icon: null,
@@ -56,6 +57,7 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
       [`frequencies/${id}/createdBy`]: frequency.createdBy,
       [`frequencies/${id}/name`]: frequency.name,
       [`frequencies/${id}/slug`]: frequency.slug,
+      [`frequencies/${id}/description`]: frequency.description,
       [`frequencies/${id}/settings`]: frequency.settings,
       [`frequencies/${id}/stories`]: frequency.stories,
       [`frequencies/${id}/users`]: frequency.users,
@@ -103,6 +105,7 @@ export const updateFrequency = data => {
 
   return db.ref().update({
     [`frequencies/${data.id}/name`]: data.name,
+    [`frequencies/${data.id}/description`]: data.description,
     [`frequencies/${data.id}/settings`]: data.settings,
   });
 };

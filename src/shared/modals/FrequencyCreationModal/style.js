@@ -176,3 +176,11 @@ export const PrivacyText = styled.p`
     color: ${({ theme }) => theme.text.default};
   }
 `;
+
+export const EditDescription = styled.div`
+
+`;
+
+export const EditDescriptionInput = styled.textarea`
+
+`;

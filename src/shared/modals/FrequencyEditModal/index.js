@@ -19,6 +19,8 @@ import {
   DeleteButton,
   BigDeleteButton,
   DeleteWarning,
+  EditDescription,
+  EditDescriptionInput,
 } from './style';
 
 class FrequencyEditModal extends React.Component {
@@ -28,6 +30,7 @@ class FrequencyEditModal extends React.Component {
     this.state = {
       isOpen: props.isOpen,
       name: props.name,
+      description: props.description || '',
       error: '',
       exists: false,
       private: props.settings.private,
@@ -91,13 +94,20 @@ class FrequencyEditModal extends React.Component {
     this.props.dispatch(closeModal());
   };
 
+  editDescription = e => {
+    this.setState({
+      description: e.target.value,
+    });
+  };
+
   prepareEditedFrequency = () => {
     // just in case a user tries to modify the html
     if (
       this.state.error ||
       this.state.loading ||
       this.state.exists ||
-      !this.state.name
+      !this.state.name ||
+      !this.state.description
     ) {
       return;
     }
@@ -106,6 +116,7 @@ class FrequencyEditModal extends React.Component {
       id: this.props.id,
       name: this.state.name,
       slug: this.props.slug,
+      description: this.state.description,
       settings: {
         private: this.state.private,
         tint: this.props.settings.tint,
@@ -151,6 +162,16 @@ class FrequencyEditModal extends React.Component {
             <ErrorMessage>
               Oops, a frequency with this name already exists.
             </ErrorMessage>}
+
+          <EditDescription>
+            <EditDescriptionInput
+              ref="customDescription"
+              type="text"
+              placeholder={this.state.description}
+              defaultValue={this.state.description}
+              onChange={this.editdescription}
+            />
+          </EditDescription>
 
           {this.state.error && <ErrorMessage>{this.state.error}</ErrorMessage>}
 

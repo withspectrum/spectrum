@@ -172,3 +172,11 @@ export const DeleteWarning = styled.div`
   color: #fff;
   background: ${props => props.theme.warn.default};
 `;
+
+export const EditDescription = styled.div`
+
+`;
+
+export const EditDescriptionInput = styled.textarea`
+
+`;
