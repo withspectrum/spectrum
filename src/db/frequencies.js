@@ -43,27 +43,39 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
       // Creator gets full admin rights
       [uid]: {
         permission: 'owner',
+        joined: firebase.database.ServerValue.TIMESTAMP,
       },
     },
   };
+
+  console.log('users: ', frequency.users);
 
   // Save the new data to Firebase
   return db
     .ref()
     .update({
+      [`users/${uid}/public/frequencies/${id}`]: {
+        //=> add the frequency id to the user first
+        id,
+        permission: 'owner',
+        joined: firebase.database.ServerValue.TIMESTAMP,
+      },
+    })
+    .then(() => db.ref().update({
+      //=> create the frequency
       [`frequencies/${id}/id`]: frequency.id,
+      [`frequencies/${id}/users/${uid}/permission`]: 'owner',
+      [`frequencies/${id}/users/${uid}/joined`]: firebase.database.ServerValue.TIMESTAMP,
+    }))
+    .then(() => db.ref().update({
+      //=> create the frequency
       [`frequencies/${id}/createdAt`]: frequency.createdAt,
       [`frequencies/${id}/createdBy`]: frequency.createdBy,
       [`frequencies/${id}/name`]: frequency.name,
       [`frequencies/${id}/slug`]: frequency.slug,
       [`frequencies/${id}/settings`]: frequency.settings,
       [`frequencies/${id}/stories`]: frequency.stories,
-      [`frequencies/${id}/users`]: frequency.users,
-      [`users/${uid}/public/frequencies/${id}`]: {
-        id,
-        permission: 'owner',
-      },
-    })
+    }))
     .then(() => {
       // Simulate the saved frequency for the client-side update
       resolve({ ...frequency, timestamp: Date.now() });
