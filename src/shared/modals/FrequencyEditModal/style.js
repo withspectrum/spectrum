@@ -79,7 +79,7 @@ export const ErrorMessage = styled.span`
   font-size: 12px;
   color: ${props =>
   props.warn ? props.theme.warn.default : props.theme.brand.default};
-  padding: 0 16px;
+  padding: 0 16px 0 24px;
   margin-bottom: 8px;
   margin-top: 8px;
   position: relative;
