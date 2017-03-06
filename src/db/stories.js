@@ -12,10 +12,10 @@ export const getStory = storyId => {
     .then(snapshot => snapshot.val());
 };
 
-export const getStories = frequencyId => {
-  return getFrequency(frequencyId).then(frequency => {
-    if (!frequency.stories) return Promise.resolve([]);
-    const stories = Object.keys(frequency.stories);
+export const getStories = ({ frequencyId, frequencySlug }) => {
+  return getFrequency({ id: frequencyId, slug: frequencySlug }).then(freq => {
+    if (!freq.stories) return Promise.resolve([]);
+    const stories = Object.keys(freq.stories);
     return Promise.all(stories.map(story => getStory(story)));
   });
 };
@@ -25,7 +25,7 @@ export const getAllStories = userId => {
     .then(user => {
       if (!user.frequencies) return [];
       const freqs = Object.keys(user.frequencies);
-      return Promise.all(freqs.map(freq => getStories(freq)));
+      return Promise.all(freqs.map(freq => getStories({ frequencyId: freq })));
     })
     .then(nested => flattenArray(nested));
 };

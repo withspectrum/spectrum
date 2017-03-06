@@ -76,10 +76,11 @@ class StoryMaster extends Component {
     const hidden = !role && isPrivate;
 
     if (!isEverything && hidden) return <Lock />;
+    if (!frequency && !isEverything) return <p>Loading...</p>;
 
     return (
       <Column navVisible={navVisible}>
-        <Header visible={loggedIn}>
+        <Header>
           {!isEverything &&
             <FlexCol>
               <FreqTitle>~{activeFrequency}</FreqTitle>
@@ -91,7 +92,7 @@ class StoryMaster extends Component {
                 What happens when this gets really long? How about if it's like four full sentences. Brian, thank you for coding this up so it actually works. Or maybe just helping me figure out how to do it?
               </Description>
             </FlexCol>}
-          <Actions>
+          <Actions visible={loggedIn}>
             <MenuButton onClick={this.toggleNav}>☰</MenuButton>
 
             {!(isEverything || role === 'owner' || hidden) &&

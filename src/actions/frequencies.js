@@ -7,12 +7,13 @@ import {
   updateFrequency,
   addUserToFrequency,
   removeUserFromFrequency,
+  getFrequency,
 } from '../db/frequencies';
 const history = createBrowserHistory();
 import { getStories, getAllStories } from '../db/stories';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
-  const { frequencies: { frequencies }, user: { uid } } = getState();
+  const { user: { uid } } = getState();
   track('frequency', 'viewed', null);
 
   dispatch({
@@ -20,7 +21,10 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
     frequency,
   });
   if (frequency === 'everything') {
+    console.log(uid);
+    if (!uid) return;
     getAllStories(uid).then(stories => {
+      console.log(stories);
       dispatch({
         type: 'ADD_STORIES',
         stories,
@@ -29,8 +33,20 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
     return;
   }
   dispatch({ type: 'LOADING' });
-  const id = getCurrentFrequency(frequency, frequencies).id;
-  getStories(id)
+  getFrequency({ slug: frequency })
+    .then(data => {
+      dispatch({
+        type: 'ADD_FREQUENCY',
+        frequency: data,
+      });
+      return data;
+    })
+    .then(data => {
+      const freqs = getState().user.frequencies;
+      if (data && data.settings.private && (!freqs || !freqs[data.id]))
+        return [];
+      return getStories({ frequencySlug: frequency });
+    })
     .then(stories => {
       dispatch({
         type: 'ADD_STORIES',

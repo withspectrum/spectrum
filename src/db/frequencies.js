@@ -1,17 +1,38 @@
 import * as firebase from 'firebase';
 
-/**
- * Get a frequency from the database
- *
- * Returns a Promise which resolves with the data
- */
-export const getFrequency = id => {
+const getFrequencyById = id => {
   const db = firebase.database();
 
   return db
     .ref(`frequencies/${id}`)
     .once('value')
     .then(snapshot => snapshot.val());
+};
+
+const getFrequencyBySlug = slug => {
+  const db = firebase.database();
+
+  return db
+    .ref(`frequencies`)
+    .orderByChild('slug')
+    .equalTo(slug)
+    .once('value')
+    .then(snapshot => {
+      const frequencies = snapshot.val();
+      // We assume there is only one frequency with a given slug
+      return frequencies[Object.keys(frequencies)[0]];
+    });
+};
+
+/**
+ * Get a frequency from the database
+ *
+ * Returns a Promise which resolves with the data
+ */
+export const getFrequency = ({ id, slug }) => {
+  if (id) return getFrequencyById(id);
+  if (slug) return getFrequencyBySlug(slug);
+  return Promise.resolve({});
 };
 
 /**

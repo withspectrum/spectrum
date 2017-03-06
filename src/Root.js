@@ -57,7 +57,7 @@ class Root extends Component {
         // Load the users frequencies
         .then(frequencies => {
           const keys = Object.keys(frequencies);
-          return Promise.all(keys.map(key => getFrequency(key)));
+          return Promise.all(keys.map(key => getFrequency({ id: key })));
         })
         .then(frequencies => {
           dispatch({
@@ -93,10 +93,13 @@ class Root extends Component {
 
   render() {
     const { user, frequencies, params } = this.props;
-    if (!user.loaded) return <LoadingIndicator />;
-    if (!user.uid && params.frequency === undefined) return <Homepage />;
-    if (user.loginError) return <p>Login error</p>;
-    if (!frequencies.loaded) return <LoadingIndicator />;
+    // Handle loading the homepage
+    if (params.frequency === undefined) {
+      if (user.loginError) return <p>Login error</p>;
+      if (user.uid) return <App />;
+      if (user.loaded) return <Homepage />;
+      return <LoadingIndicator />;
+    }
     return <App />;
   }
 }

@@ -58,7 +58,7 @@ export const Overlay = styled.div`
 
 export const Header = styled.div`
 	flex-direction: column;
-	display: ${props => props.visible ? 'flex' : 'none'};
+	display: 'flex';
 	flex: 0 0 auto;
 	min-height: 48px;
 	width: 100%;
@@ -135,6 +135,7 @@ export const LoginWrapper = styled.div`
 	width: 100%;
 	padding: 4px;
 	display: flex;
+	flex: 0 0 auto;
 	flex-direction: column;
 	align-self: stretch;
 	padding: 16px;
@@ -228,6 +229,7 @@ export const Description = styled(P)`
 `;
 
 export const Actions = styled(FlexRow)`
+	display: ${props => props.visible ? 'flex' : 'none'};
 	flex: 0 0 48px;
 	padding: 8px;
 	align-items: center;
