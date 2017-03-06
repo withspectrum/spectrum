@@ -175,7 +175,7 @@ class Composer extends Component {
                   onChange={this.changeTitle}
                   style={StoryTitle}
                   value={composer.title}
-                  placeholder={"What's up?"}
+                  placeholder={'What’s up?'}
                   autoFocus
                 />
 
