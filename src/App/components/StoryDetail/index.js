@@ -97,7 +97,6 @@ class StoryView extends Component {
   };
 
   render() {
-    console.log(this.state.deleteInited);
     let story = this.props.activeStory;
     let creator = this.props.creator;
     let moderator = this.props.moderator;
