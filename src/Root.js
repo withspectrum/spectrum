@@ -27,7 +27,8 @@ class Root extends Component {
   // INITIAL LOAD OF THE APP
   componentWillMount() {
     // On the initial render of the app we authenticate the user
-    const { dispatch } = this.props;
+    const { dispatch, params } = this.props;
+    this.handleProps({ frequencies: {}, stories: {}, params });
     // Authenticate the user
     listenToAuth(user => {
       if (!user)
@@ -68,6 +69,10 @@ class Root extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.handleProps(nextProps);
+  }
+
+  handleProps = nextProps => {
     const { dispatch, params, frequencies, stories } = this.props;
     // If the frequency changes or we've finished loading the frequencies sync the active frequency to the store and load the stories
     if (
@@ -84,7 +89,7 @@ class Root extends Component {
     ) {
       dispatch(setActiveStory(nextProps.params.story));
     }
-  }
+  };
 
   render() {
     const { user, frequencies, params } = this.props;
