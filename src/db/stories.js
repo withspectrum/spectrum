@@ -1,5 +1,7 @@
 import * as firebase from 'firebase';
 import { getFrequency } from './frequencies';
+import { getPublicUserInfo } from './users';
+import { flattenArray } from '../helpers/utils';
 
 export const getStory = storyId => {
   const db = firebase.database();
@@ -16,6 +18,16 @@ export const getStories = frequencyId => {
     const stories = Object.keys(frequency.stories);
     return Promise.all(stories.map(story => getStory(story)));
   });
+};
+
+export const getAllStories = userId => {
+  return getPublicUserInfo(userId)
+    .then(user => {
+      if (!user.frequencies) return [];
+      const freqs = Object.keys(user.frequencies);
+      return Promise.all(freqs.map(freq => getStories(freq)));
+    })
+    .then(nested => flattenArray(nested));
 };
 
 let activeStory;

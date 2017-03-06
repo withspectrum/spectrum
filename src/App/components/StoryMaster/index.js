@@ -73,8 +73,6 @@ class StoryMaster extends Component {
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
-    let usersCount = Object.keys(frequency.users).length;
-    let storiesCount = Object.keys(frequency.stories).length;
     const hidden = !role && isPrivate;
 
     if (!isEverything && hidden) return <Lock />;
@@ -86,8 +84,8 @@ class StoryMaster extends Component {
             <FlexCol>
               <FreqTitle>~{activeFrequency}</FreqTitle>
               <FlexRow>
-                <Count>{usersCount} members</Count>
-                <Count>{storiesCount} stories</Count>
+                <Count>{Object.keys(frequency.users).length} members</Count>
+                <Count>{Object.keys(frequency.stories).length} stories</Count>
               </FlexRow>
               <Description>
                 What happens when this gets really long? How about if it's like four full sentences. Brian, thank you for coding this up so it actually works. Or maybe just helping me figure out how to do it?

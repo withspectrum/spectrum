@@ -9,20 +9,27 @@ import {
   removeUserFromFrequency,
 } from '../db/frequencies';
 const history = createBrowserHistory();
-import { getStories } from '../db/stories';
+import { getStories, getAllStories } from '../db/stories';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
-  const { frequencies: { frequencies } } = getState();
-  const id = getCurrentFrequency(frequency, frequencies).id;
-
+  const { frequencies: { frequencies }, user: { uid } } = getState();
   track('frequency', 'viewed', null);
 
   dispatch({
     type: 'SET_ACTIVE_FREQUENCY',
     frequency,
   });
+  if (frequency === 'everything') {
+    getAllStories(uid).then(stories => {
+      dispatch({
+        type: 'ADD_STORIES',
+        stories,
+      });
+    });
+    return;
+  }
   dispatch({ type: 'LOADING' });
-  if (frequency === 'everything') return;
+  const id = getCurrentFrequency(frequency, frequencies).id;
   getStories(id)
     .then(stories => {
       dispatch({

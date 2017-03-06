@@ -74,7 +74,7 @@ class Root extends Component {
       nextProps.frequencies.loaded !== frequencies.loaded ||
       nextProps.params.frequency !== params.frequency
     ) {
-      dispatch(setActiveFrequency(nextProps.params.frequency));
+      dispatch(setActiveFrequency(nextProps.params.frequency || 'everything'));
     }
 
     // If the story changes sync the active story to the store and load the messages
