@@ -96,10 +96,17 @@ export const removeFrequency = id => new Promise((resolve, reject) => {
     .then(snapshot => {
       const users = snapshot.val();
       Object.keys(users).forEach(userId => {
+        //=> delete the frequency from every user who was a member
         db.ref(`/users/${userId}/public/frequencies/${id}`).remove();
       });
-      db.ref(`/frequencies/${id}`).remove();
       // TODO: Delete all stories associated with a frequency?
+    })
+    .then(() => {
+      db.ref().update({
+        [`frequencies/${id}/slug`]: id, //=> reset the slug to be the id, so that future frequencies can use the slug
+      });
+    })
+    .then(() => {
       resolve();
     })
     .catch(reject);
