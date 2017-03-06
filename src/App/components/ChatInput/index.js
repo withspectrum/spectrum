@@ -124,7 +124,10 @@ class ChatInput extends Component {
           <Photo stayActive color={'brand'} />
         </MediaLabel>
         {this.state.emojiPickerOpen &&
-          <EmojiPicker onChange={this.sendEmojiMessage} />}
+          <EmojiPicker
+            onChange={this.sendEmojiMessage}
+            closePicker={this.toggleEmojiPicker}
+          />}
         <EmojiToggle
           active={this.state.emojiPickerOpen}
           onClick={this.toggleEmojiPicker}
