@@ -43,6 +43,7 @@ export const Byline = styled(H4)`
 	margin-right: 16px;
 	margin-bottom: 16px;
 	position: relative;
+	pointer-events: ${props => props.hasContent ? 'auto' : 'none'};
 	opacity: ${props => props.hasContent ? 1 : 0};
 	transition: all 0.2s;
 	display: inline-block;
