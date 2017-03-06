@@ -18,12 +18,21 @@ import {
   HiddenLabel,
   HiddenInput,
   BackArrow,
+  DeleteConfirm,
 } from './style';
 import { openGallery } from '../../../actions/gallery';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { toggleLockedStory, deleteStory } from '../../../actions/stories';
 
 class StoryView extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      deleteInited: false,
+    };
+  }
+
   componentDidMount() {
     this.addEventListeners();
   }
@@ -45,6 +54,12 @@ class StoryView extends Component {
 
   openGallery = e => {
     this.props.dispatch(openGallery(e));
+  };
+
+  initDeleteStory = () => {
+    this.setState({
+      deleteInited: !this.state.deleteInited,
+    });
   };
 
   scrollToBottom = () => {
@@ -82,6 +97,7 @@ class StoryView extends Component {
   };
 
   render() {
+    console.log(this.state.deleteInited);
     let story = this.props.activeStory;
     let creator = this.props.creator;
     let moderator = this.props.moderator;
@@ -127,11 +143,18 @@ class StoryView extends Component {
                     />
                   </label>
                   <HiddenButton
-                    onClick={this.deleteStory}
+                    onClick={this.initDeleteStory}
                     tipText="Delete Story"
-                    tipLocation="left"
+                    tipLocation="bottom"
+                    visible={this.state.deleteInited}
                   >
                     <Delete color="warn" />
+                    <DeleteConfirm
+                      visible={this.state.deleteInited}
+                      onClick={this.deleteStory}
+                    >
+                      Confirm
+                    </DeleteConfirm>
                   </HiddenButton>
                 </FlexColumnEnd>
               : ''}
