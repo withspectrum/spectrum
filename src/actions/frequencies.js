@@ -79,9 +79,8 @@ export const deleteFrequency = id => (dispatch, getState) => {
   removeFrequency(id)
     .then(() => {
       track('frequency', 'deleted', null);
-
+      history.push('/~hugs-n-bugs');
       dispatch({ type: 'DELETE_FREQUENCY', id });
-      history.push('/');
     })
     .catch(err => {
       dispatch({ type: 'HIDE_MODAL' });
