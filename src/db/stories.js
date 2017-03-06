@@ -102,6 +102,7 @@ export const createStory = (
           users: Object.keys(frequency.users),
           activityType: ACTIVITY_TYPES.NEW_STORY,
           objectType: OBJECT_TYPES.FREQUENCY,
+          objectId: story.id,
           objectUrl: `https://spectrum.chat/~${frequency.slug ||
             frequency.id}/${story.id}`,
           senderId: draft.creator.uid,

@@ -4,7 +4,7 @@ import * as firebase from 'firebase';
  * Create notifications for a bunch of users
  */
 export const createNotifications = (
-  { users, activityType, objectType, objectUrl, senderId },
+  { users, activityType, objectType, objectId, objectUrl, senderId },
 ) => {
   const db = firebase.database();
   let updates = {};
@@ -15,6 +15,7 @@ export const createNotifications = (
         activityType,
         id: key,
         objectType,
+        objectId,
         objectUrl,
         senderId,
         timestamp: firebase.database.ServerValue.TIMESTAMP,
@@ -43,7 +44,7 @@ export const listenToNotifications = (userId, cb) => {
 
   return db.ref(`notifications/${userId}`).on('value', snapshot => {
     const notifications = snapshot.val();
-    if (!notifications) cb([]);
+    if (!notifications) return cb([]);
     const array = Object.keys(notifications).map(id => notifications[id]);
     cb(array);
   });

@@ -35,6 +35,7 @@ export const createMessage = ({ storyId, frequency, userId, message }) => {
         users: Object.keys(frequency.users),
         activityType: ACTIVITY_TYPES.NEW_MESSAGE,
         objectType: OBJECT_TYPES.STORY,
+        objectId: storyId,
         objectUrl: `https://spectrum.chat/~${frequency.slug ||
           frequency.id}/${storyId}`,
         senderId: userId,
