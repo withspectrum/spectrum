@@ -217,3 +217,9 @@ export function isMobile() {
 
   return false;
 }
+
+export const flattenArray = arr =>
+  arr.reduce(
+    (acc, val) => acc.concat(Array.isArray(val) ? flattenArray(val) : val),
+    [],
+  );
