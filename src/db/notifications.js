@@ -26,8 +26,6 @@ export const createNotifications = (
     }
   });
 
-  console.log(updates);
-
   return db
     .ref()
     .update(updates)
@@ -35,4 +33,18 @@ export const createNotifications = (
     .catch(err => {
       console.log('Sending notification failed', err);
     });
+};
+
+/**
+ * Listen to notifications
+ */
+export const listenToNotifications = (userId, cb) => {
+  const db = firebase.database();
+
+  return db.ref(`notifications/${userId}`).on('value', snapshot => {
+    const notifications = snapshot.val();
+    if (!notifications) cb([]);
+    const array = Object.keys(notifications).map(id => notifications[id]);
+    cb(array);
+  });
 };

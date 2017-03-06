@@ -10,6 +10,7 @@ import { asyncComponent } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
 import { getPublicUserInfo, listenToAuth } from './db/users';
 import { getFrequency } from './db/frequencies';
+import { listenToNotifications } from './db/notifications';
 import { set, track } from './EventTracker';
 
 // Codesplit the App and the Homepage to only load what we need based on which route we're on
@@ -43,6 +44,13 @@ class Root extends Component {
       // set this uid in google analytics
       track('user', 'authed', null);
       set(user.uid);
+
+      listenToNotifications(user.uid, notifications => {
+        dispatch({
+          type: 'SET_NOTIFICATIONS',
+          notifications,
+        });
+      });
 
       // Get the public userdata
       getPublicUserInfo(user.uid)
