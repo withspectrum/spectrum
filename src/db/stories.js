@@ -1,5 +1,7 @@
 import * as firebase from 'firebase';
 import { getFrequency } from './frequencies';
+import { createNotifications } from './notifications';
+import { ACTIVITY_TYPES, OBJECT_TYPES } from './types';
 
 export const getStory = storyId => {
   const db = firebase.database();
@@ -68,32 +70,44 @@ export const createDraft = (
  * Resolves the returned promise with the stored story data from the db
  */
 export const createStory = (
-  { key, frequencyId, content: { media = '', title = '', description = '' } },
+  { key, frequency, content: { media = '', title = '', description = '' } },
 ) => {
   const db = firebase.database();
 
   // Fetch story data to merge it with the new data
-  return db.ref(`stories/${key}`).once('value').then(story => {
+  return db.ref(`stories/${key}`).once('value').then(draftSnapshot => {
+    const draft = draftSnapshot.val();
     return db
       .ref()
       .update({
         [`stories/${key}`]: {
-          ...story.val(),
+          ...draft,
           timestamp: firebase.database.ServerValue.TIMESTAMP,
           published: true,
-          frequencyId,
+          frequencyId: frequency.id,
           content: {
             media,
             title,
             description,
           },
         },
-        [`frequencies/${frequencyId}/stories/${key}`]: {
+        [`frequencies/${frequency.id}/stories/${key}`]: {
           id: key,
         },
       })
       .then(() => db.ref(`stories/${key}`).once('value'))
-      .then(snapshot => snapshot.val());
+      .then(storySnapshot => {
+        const story = storySnapshot.val();
+        createNotifications({
+          users: Object.keys(frequency.users),
+          activityType: ACTIVITY_TYPES.NEW_STORY,
+          objectType: OBJECT_TYPES.FREQUENCY,
+          objectUrl: `https://spectrum.chat/~${frequency.slug ||
+            frequency.id}/${story.id}`,
+          senderId: draft.creator.uid,
+        });
+        return story;
+      });
   });
 };
 
