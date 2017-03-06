@@ -21,10 +21,8 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
     frequency,
   });
   if (frequency === 'everything') {
-    console.log(uid);
     if (!uid) return;
     getAllStories(uid).then(stories => {
-      console.log(stories);
       dispatch({
         type: 'ADD_STORIES',
         stories,
