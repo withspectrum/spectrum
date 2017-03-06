@@ -49,3 +49,24 @@ export const listenToNotifications = (userId, cb) => {
     cb(array);
   });
 };
+
+/**
+ * Mark notifications of a story read
+ */
+export const markMessagesRead = (storyId, userId) => new Promise(resolve => {
+  const db = firebase.database();
+
+  db
+    .ref(`notifications/${userId}`)
+    .orderByChild('objectId')
+    .equalTo(storyId)
+    .once('value', snapshot => {
+      const storyNotifications = snapshot.val();
+      if (!storyNotifications) return;
+      let updates = {};
+      Object.keys(storyNotifications).forEach(id => {
+        updates[`${id}/read`] = true;
+      });
+      resolve(db.ref(`notifications/${userId}`).update(updates));
+    });
+});

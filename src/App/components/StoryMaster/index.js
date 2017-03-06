@@ -28,6 +28,7 @@ import { openModal } from '../../../actions/modals';
 import { Lock, NewPost, ClosePost, Settings } from '../../../shared/Icons';
 import StoryCard from '../StoryCard';
 import ShareCard from '../ShareCard';
+import { ACTIVITY_TYPES } from '../../../db/types';
 
 class StoryMaster extends Component {
   toggleComposer = () => {
@@ -70,6 +71,7 @@ class StoryMaster extends Component {
       composer,
       ui: { navVisible },
       activeStory,
+      notifications,
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
@@ -142,6 +144,15 @@ class StoryMaster extends Component {
                   frequency={frequency}
                   key={`story-${i}`}
                   active={activeStory}
+                  unread={
+                    notifications.filter(
+                      notification =>
+                        notification.activityType ===
+                          ACTIVITY_TYPES.NEW_MESSAGE &&
+                        notification.objectId === story.id &&
+                        notification.read === false,
+                    ).length
+                  }
                 />
               ))
             : ''}
@@ -160,6 +171,7 @@ const mapStateToProps = state => {
     composer: state.composer,
     ui: state.ui,
     activeStory: state.stories.active,
+    notifications: state.notifications.notifications,
   };
 };
 

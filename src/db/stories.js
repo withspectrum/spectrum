@@ -99,10 +99,12 @@ export const createStory = (
       .then(storySnapshot => {
         const story = storySnapshot.val();
         createNotifications({
-          users: Object.keys(frequency.users),
+          // Only create notifications for other users
+          users: Object.keys(frequency.users)
+            .filter(user => user !== draft.creator.uid),
           activityType: ACTIVITY_TYPES.NEW_STORY,
           objectType: OBJECT_TYPES.FREQUENCY,
-          objectId: story.id,
+          objectId: frequency.id,
           objectUrl: `https://spectrum.chat/~${frequency.slug ||
             frequency.id}/${story.id}`,
           senderId: draft.creator.uid,

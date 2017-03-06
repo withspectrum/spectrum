@@ -13,6 +13,7 @@ import {
   MetaFreq,
   Title,
   Media,
+  UnreadCout,
 } from './style';
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
@@ -25,7 +26,14 @@ class StoryCard extends Component {
   };
 
   render() {
-    const { frequency, story, urlBase, isEverything, active } = this.props;
+    const {
+      frequency,
+      story,
+      urlBase,
+      isEverything,
+      active,
+      unread,
+    } = this.props;
 
     let messages;
     if (story.messages) {
@@ -51,6 +59,7 @@ class StoryCard extends Component {
                   {messages && messages.length > 0
                     ? `${messages.length} messages`
                     : 'No messages yet'}
+                  {unread > 0 && <UnreadCout>{` (${unread} new!)`}</UnreadCout>}
                 </Meta>
               </UserMeta>
             </StoryHeader>

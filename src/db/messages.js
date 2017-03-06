@@ -32,7 +32,8 @@ export const createMessage = ({ storyId, frequency, userId, message }) => {
     .then(snapshot => {
       const data = snapshot.val();
       createNotifications({
-        users: Object.keys(frequency.users),
+        // Only add notifications for other users
+        users: Object.keys(frequency.users).filter(user => user !== userId),
         activityType: ACTIVITY_TYPES.NEW_MESSAGE,
         objectType: OBJECT_TYPES.STORY,
         objectId: storyId,
