@@ -216,8 +216,8 @@ class Composer extends Component {
 
     let byline = activeFrequency === 'everything'
       ? <span>
-          <Byline>
-            Post in
+          <Byline hasContent={true}>
+            New story in
             <Select
               onChange={this.selectFrequencyFromDropdown}
               defaultValue={frequencies.frequencies[0].id}
@@ -234,7 +234,11 @@ class Composer extends Component {
             </Select>
           </Byline>
         </span>
-      : <Byline>New Story in {currentFrequency[0].name}</Byline>;
+      : <Byline hasContent={true}>
+          New story in {currentFrequency[0].name}
+        </Byline>;
+
+    console.log('byline: ', byline);
 
     return (
       <ScrollBody>

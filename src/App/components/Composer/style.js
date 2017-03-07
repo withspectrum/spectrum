@@ -39,9 +39,7 @@ export const Byline = styled(H4)`
   props.active ? props.theme.brand.default : props.theme.text.alt};
 	border-bottom: 2px solid ${props =>
   props.active ? props.theme.brand.default : 'transparent'};
-	margin-bottom: 8px;
 	margin-right: 16px;
-	margin-bottom: 16px;
 	position: relative;
 	pointer-events: ${props => props.hasContent ? 'auto' : 'none'};
 	opacity: ${props => props.hasContent ? 1 : 0};
@@ -168,6 +166,7 @@ export const StoryTitle = {
   width: '100%',
   color: '#171A21',
   whiteSpace: 'pre-wrap',
+  marginTop: '16px',
 };
 
 export const StoryTitlePreview = styled(H1)`
@@ -175,6 +174,7 @@ export const StoryTitlePreview = styled(H1)`
 	line-height: 40px;
 	font-weight: 800;
 	color: ${({ theme }) => theme.text.default};
+	margin-top: 16px;
 `;
 
 export const TextBody = {
