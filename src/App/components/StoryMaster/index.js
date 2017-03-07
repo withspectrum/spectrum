@@ -29,6 +29,7 @@ import { Lock, NewPost, ClosePost, Settings } from '../../../shared/Icons';
 import GenericCard from '../GenericCard';
 import ShareCard from '../ShareCard';
 import { ACTIVITY_TYPES } from '../../../db/types';
+import { getCurrentFrequency } from '../../../helpers/frequencies';
 
 class StoryMaster extends Component {
   toggleComposer = () => {
@@ -64,6 +65,7 @@ class StoryMaster extends Component {
     const {
       frequency,
       activeFrequency,
+      frequencies,
       stories,
       isPrivate,
       role,
@@ -136,32 +138,36 @@ class StoryMaster extends Component {
             </LoginWrapper>}
 
           {isEverything || frequency
-            ? stories.filter(story => story.published).map((story, i) => (
-                <GenericCard
-                  isActive={activeStory === story.id}
-                  key={`story-${i}`}
-                  link={`/~${activeFrequency}/${story.id}`}
-                  media={story.content.media}
-                  messages={story.messages ? Object.keys(story.messages).length : 0}
-                  metaLink={isEverything && frequency && `/~${frequency.slug}`}
-                  metaText={isEverything && frequency && `~${frequency.name}`}
-                  person={{
-                    photo: story.creator.photoURL,
-                    name: story.creator.displayName,
-                  }}
-                  timestamp={story.timestamp}
-                  title={story.content.title}
-                  unread={
-                    notifications.filter(
-                      notification =>
-                        notification.activityType ===
-                          ACTIVITY_TYPES.NEW_MESSAGE &&
-                        notification.objectId === story.id &&
-                        notification.read === false,
-                    ).length
-                  }
-                />
-              ))
+            ? stories.filter(story => story.published).map((story, i) => {
+                const unread = notifications.filter(
+                  notification =>
+                    notification.activityType === ACTIVITY_TYPES.NEW_MESSAGE &&
+                    notification.objectId === story.id &&
+                    notification.read === false,
+                ).length;
+                const freq = isEverything &&
+                  getCurrentFrequency(story.frequencyId, frequencies);
+                return (
+                  <GenericCard
+                    isActive={activeStory === story.id}
+                    key={`story-${i}`}
+                    link={`/~${activeFrequency}/${story.id}`}
+                    media={story.content.media}
+                    messages={
+                      story.messages ? Object.keys(story.messages).length : 0
+                    }
+                    metaLink={isEverything && freq && `/~${freq.slug}`}
+                    metaText={isEverything && freq && `~${freq.name}`}
+                    person={{
+                      photo: story.creator.photoURL,
+                      name: story.creator.displayName,
+                    }}
+                    timestamp={story.timestamp}
+                    title={story.content.title}
+                    unread={unread}
+                  />
+                );
+              })
             : ''}
 
           {!isEverything &&
@@ -179,6 +185,7 @@ const mapStateToProps = state => {
     ui: state.ui,
     activeStory: state.stories.active,
     notifications: state.notifications.notifications,
+    frequencies: state.frequencies.frequencies,
   };
 };
 
