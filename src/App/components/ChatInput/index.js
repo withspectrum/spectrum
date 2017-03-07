@@ -17,6 +17,8 @@ import {
   EmojiToggle,
 } from './style';
 
+const NEWLINES = /(\r\n|\n|\r)/gm;
+
 class ChatInput extends Component {
   constructor() {
     super();
@@ -37,7 +39,8 @@ class ChatInput extends Component {
 
   updateMessageState = e => {
     this.setState({
-      message: e.target.value,
+      // Don't let newlines be entered into messages
+      message: e.target.value.replace(NEWLINES, ''),
     });
   };
 
