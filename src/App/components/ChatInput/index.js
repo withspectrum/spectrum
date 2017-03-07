@@ -27,6 +27,14 @@ class ChatInput extends Component {
     };
   }
 
+  handleKeyPress = e => {
+    if (e.keyCode === 13) {
+      //=> make the enter key send a message, not create a new line in the next autoexpanding textarea
+      e.preventDefault(); //=> prevent linebreak
+      this.sendMessage(e); //=> send the message instead
+    }
+  };
+
   updateMessageState = e => {
     this.setState({
       message: e.target.value,
@@ -137,13 +145,14 @@ class ChatInput extends Component {
         {this.props.user.uid &&
           <Form onSubmit={this.sendMessage}>
             <Input
-              autoFocus={
-                !mobile /* autofocus on desktop, don't autofocus on mobile */
-              }
               ref="textInput"
               placeholder="Your message here..."
               value={this.state.message}
               onChange={this.updateMessageState}
+              onKeyUp={this.handleKeyPress}
+              autoFocus={
+                !mobile /* autofocus on desktop, don’t autofocus on mobile */
+              }
             />
             <Button onClick={this.sendMessage}>↩</Button>
           </Form>}
