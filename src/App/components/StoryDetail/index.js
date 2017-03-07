@@ -93,7 +93,7 @@ class StoryView extends Component {
     );
     let returnUrl = this.props.frequencies.active === 'everything'
       ? 'everything'
-      : currentFrequency.slug;
+      : currentFrequency && currentFrequency.slug;
     return (
       <ScrollBody>
         <Link to={`/~${returnUrl}`}>

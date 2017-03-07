@@ -5,12 +5,15 @@ import { publishStory, initStory } from '../../../actions/stories';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { uploadMultipleMedia } from '../../../helpers/stories';
 import Textarea from 'react-textarea-autosize';
+import Markdown from 'react-remarkable';
 
 import {
   ScrollBody,
   ContentView,
   Header,
   StoryTitle,
+  StoryTitlePreview,
+  PreviewWrapper,
   FlexColumn,
   Byline,
   TextBody,
@@ -34,6 +37,7 @@ class Composer extends Component {
       error: null,
       frequencyPicker: userFreqs ? userFreqs[0] : '',
       loading: false,
+      creating: true,
     };
   }
 
@@ -133,6 +137,18 @@ class Composer extends Component {
     });
   };
 
+  setCreating = () => {
+    this.setState({
+      creating: true,
+    });
+  };
+
+  setPreviewing = () => {
+    this.setState({
+      creating: false,
+    });
+  };
+
   render() {
     let { frequencies, composer } = this.props;
     let activeFrequency = frequencies.active;
@@ -170,33 +186,64 @@ class Composer extends Component {
           <Header>
             <FlexColumn>
               <form onSubmit={this.publishStory} encType="multipart/form-data">
-                <Byline>New Story</Byline>
-                <Textarea
-                  onChange={this.changeTitle}
-                  style={StoryTitle}
-                  value={composer.title}
-                  placeholder={'What’s up?'}
-                  autoFocus
-                />
+                <Byline
+                  onClick={this.setCreating}
+                  hasContent={true}
+                  active={this.state.creating}
+                >
+                  Create
+                </Byline>
+                <Byline
+                  onClick={this.setPreviewing}
+                  active={!this.state.creating}
+                  hasContent={
+                    composer.title.length > 0 && composer.body.length > 0
+                  }
+                >
+                  Preview
+                </Byline>
 
-                <Textarea
-                  onChange={this.changeBody}
-                  value={composer.body}
-                  style={TextBody}
-                  placeholder={'Say more words...'}
-                />
+                {this.state.creating
+                  ? <div>
+                      <Textarea
+                        onChange={this.changeTitle}
+                        style={StoryTitle}
+                        value={composer.title}
+                        placeholder={'What’s up?'}
+                        autoFocus
+                      />
 
-                <MediaInput
-                  ref="media"
-                  type="file"
-                  id="file"
-                  name="file"
-                  accept=".png, .jpg, .jpeg, .gif"
-                  multiple={true}
-                  onChange={this.uploadMedia}
-                />
-                <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
-                <SubmitContainer>
+                      <Textarea
+                        onChange={this.changeBody}
+                        value={composer.body}
+                        style={TextBody}
+                        placeholder={'Say more words...'}
+                      />
+
+                      <MediaInput
+                        ref="media"
+                        type="file"
+                        id="file"
+                        name="file"
+                        accept=".png, .jpg, .jpeg, .gif"
+                        multiple={true}
+                        onChange={this.uploadMedia}
+                      />
+                      <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
+                    </div>
+                  : <PreviewWrapper>
+                      <StoryTitlePreview>{composer.title}</StoryTitlePreview>
+                      <div className="markdown" ref="story">
+                        <Markdown
+                          options={{
+                            html: true,
+                            linkify: true,
+                          }}
+                          source={composer.body}
+                        />
+                      </div>
+                    </PreviewWrapper>}
+                <SubmitContainer sticky={!this.state.creating}>
                   {byline}
                   <Submit
                     type="submit"

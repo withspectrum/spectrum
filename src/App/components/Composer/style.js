@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient, H4 } from '../../../shared/Globals';
+import { Gradient, H4, H1 } from '../../../shared/Globals';
 
 export const ScrollBody = styled.div`
 	display: flex;
@@ -21,6 +21,10 @@ export const ContentView = styled.div`
 	}
 `;
 
+export const PreviewWrapper = styled.div`
+	padding-bottom: 32px;
+`;
+
 export const Header = styled.div`
 	flex: 1 0 auto;
 	align-self: flex-start;
@@ -31,10 +35,22 @@ export const Header = styled.div`
 `;
 
 export const Byline = styled(H4)`
-	color: ${({ theme }) => theme.brand.default};
+	color: ${props =>
+  props.active ? props.theme.brand.default : props.theme.text.alt};
+	border-bottom: 2px solid ${props =>
+  props.active ? props.theme.brand.default : 'transparent'};
 	margin-bottom: 8px;
+	margin-right: 16px;
+	margin-bottom: 16px;
 	position: relative;
+	pointer-events: ${props => props.hasContent ? 'auto' : 'none'};
+	opacity: ${props => props.hasContent ? 1 : 0};
+	transition: all 0.2s;
 	display: inline-block;
+
+	&:hover {
+		cursor: pointer;
+	}
 `;
 
 export const Select = styled.select`
@@ -87,8 +103,13 @@ export const SubmitContainer = styled.div`
 	justify-content: space-between;
 	align-items: center;
 	width: 100%;
+	background: #fff;
 	border-top: 1px solid ${props => props.theme.border.default};
-	padding: 1rem 0;
+	padding: ${props => props.sticky ? '1rem' : '1rem 0'};
+	position: ${props => props.sticky ? 'absolute' : 'relative'};
+	bottom: ${props => props.sticky ? '0' : 'auto'};
+	left: ${props => props.sticky ? '0' : 'auto'};
+	right: ${props => props.sticky ? '0' : 'auto'};
 `;
 
 export const Submit = styled.input`
@@ -148,6 +169,13 @@ export const StoryTitle = {
   whiteSpace: 'pre-wrap',
 };
 
+export const StoryTitlePreview = styled(H1)`
+	font-size: 32px;
+	line-height: 40px;
+	font-weight: 800;
+	color: ${({ theme }) => theme.text.default};
+`;
+
 export const TextBody = {
   marginTop: '16px',
   fontSize: '16px',
@@ -175,4 +203,4 @@ export const BackArrow = styled.span`
 	@media (max-width: 768px) {
 		display: block;
 	}
-`
+`;

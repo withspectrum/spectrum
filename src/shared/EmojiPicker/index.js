@@ -4,12 +4,28 @@ import {
   EmojiGrandlist,
   EmojiCategoryList,
   EmojiListItem,
+  Overlay,
 } from './styles';
 
 class EmojiPicker extends React.Component {
   onChange = emoji => {
     this.props.onChange(emoji);
   };
+
+  handleKeyPress = e => {
+    // if person taps esc, close the dialog
+    if (e.keyCode === 27) {
+      this.props.closePicker();
+    }
+  };
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyPress, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyPress, false);
+  }
 
   getEmojis = () => {
     const emojis = [
@@ -890,13 +906,16 @@ class EmojiPicker extends React.Component {
     });
 
     return (
-      <EmojiDialog role="dialog">
-        <EmojiGrandlist role="listbox">
-          <EmojiCategoryList>
-            {listItems}
-          </EmojiCategoryList>
-        </EmojiGrandlist>
-      </EmojiDialog>
+      <div>
+        <Overlay onClick={this.props.closePicker} />
+        <EmojiDialog role="dialog">
+          <EmojiGrandlist role="listbox">
+            <EmojiCategoryList>
+              {listItems}
+            </EmojiCategoryList>
+          </EmojiGrandlist>
+        </EmojiDialog>
+      </div>
     );
   }
 }
