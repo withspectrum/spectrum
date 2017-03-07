@@ -120,3 +120,7 @@ export const MetaFreq = styled(Meta)`
   	transition: color 0.2s ease-in;
   }
 `;
+
+export const UnreadCount = styled.span`
+	color: ${({ theme }) => theme.warn.default};
+`;

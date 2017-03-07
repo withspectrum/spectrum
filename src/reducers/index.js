@@ -7,6 +7,7 @@ import composer from './composer';
 import modals from './modals';
 import gallery from './gallery';
 import loading from './loading';
+import notifications from './notifications';
 import ui from './ui';
 
 export default combineReducers({
@@ -19,4 +20,5 @@ export default combineReducers({
   gallery,
   loading,
   ui,
+  notifications,
 });
