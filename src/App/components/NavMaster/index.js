@@ -125,7 +125,6 @@ class NavigationMaster extends Component {
                 </Link>
               );
             })}
-
         </FreqList>
 
         {user.uid &&
