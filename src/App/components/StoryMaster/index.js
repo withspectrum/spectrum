@@ -28,8 +28,9 @@ import { openModal } from '../../../actions/modals';
 import { Lock, NewPost, ClosePost, Settings } from '../../../shared/Icons';
 import GenericCard from '../GenericCard';
 import ShareCard from '../ShareCard';
-import { ACTIVITY_TYPES } from '../../../db/types';
+import { ACTIVITY_TYPES, OBJECT_TYPES } from '../../../db/types';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
+import { formatSenders } from '../../../helpers/notifications';
 
 class StoryMaster extends Component {
   toggleComposer = () => {
@@ -61,6 +62,43 @@ class StoryMaster extends Component {
     });
   };
 
+  renderNotification = notification => {
+    const { stories, frequencies } = this.props;
+    const {
+      activityType,
+      objectType,
+      objectId,
+      id,
+      objectUrl,
+      senders,
+      timestamp,
+      contentBlocks,
+    } = notification;
+    const isNewMsg = activityType === ACTIVITY_TYPES.NEW_MESSAGE;
+    // TODO: Notifications for new stories in frequencies
+    if (!isNewMsg) return;
+    const object = objectType === OBJECT_TYPES.STORY
+      ? stories.find(story => story.id === objectId)
+      : frequencies.find(freq => freq.id === objectId);
+    return (
+      <GenericCard
+        key={id}
+        link={isNewMsg ? `/notifications/${objectId}` : `/~${objectId}`}
+        messages={notification.occurrences}
+        // metaLink={isEverything && freq && `/~${freq.slug}`}
+        // metaText={isEverything && freq && `~${freq.name}`}
+        person={{
+          photo: '',
+          name: `${formatSenders(senders)} ${isNewMsg
+            ? 'replied to your story'
+            : 'posted a new story'}`,
+        }}
+        timestamp={timestamp}
+        title={contentBlocks[contentBlocks.length - 1]}
+      />
+    );
+  };
+
   render() {
     const {
       frequency,
@@ -81,12 +119,14 @@ class StoryMaster extends Component {
     const hidden = !role && isPrivate;
 
     if (!isEverything && hidden) return <Lock />;
-    if (!frequency && !isEverything) return <p>Loading...</p>;
+    if (!frequency && !isEverything && !isNotifications)
+      return <p>Loading...</p>;
 
     return (
       <Column navVisible={navVisible}>
         <Header>
           {!isEverything &&
+            !isNotifications &&
             <FlexCol>
               <FreqTitle>~{activeFrequency}</FreqTitle>
               <FlexRow>
@@ -100,7 +140,7 @@ class StoryMaster extends Component {
           <Actions visible={loggedIn}>
             <MenuButton onClick={this.toggleNav}>☰</MenuButton>
 
-            {!(isEverything || role === 'owner' || hidden) &&
+            {!(isEverything || role === 'owner' || hidden || isNotifications) &&
               (role
                 ? <Settings color={'brand'} />
                 : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}
@@ -136,6 +176,8 @@ class StoryMaster extends Component {
               <LoginText>Sign in to join the conversation.</LoginText>
               <LoginButton>Sign in with Twitter</LoginButton>
             </LoginWrapper>}
+
+          {isNotifications && notifications.map(this.renderNotification)}
 
           {isEverything || frequency
             ? stories.filter(story => story.published).map((story, i) => {
