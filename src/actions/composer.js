@@ -1,4 +1,6 @@
 import { track } from '../EventTracker';
+import * as firebase from 'firebase';
+
 /*------------------------------------------------------------\*
 *
 
@@ -26,3 +28,23 @@ export const updateBody = body => ({
   type: 'UPDATE_BODY',
   body,
 });
+
+export const addMediaList = file => {
+  return {
+    type: 'ADD_MEDIA_LIST',
+    file,
+  };
+};
+
+export const removeImageFromStory = (key, story) => dispatch => {
+  return firebase
+    .database()
+    .ref(`stories/${story}/media/${key}`)
+    .remove()
+    .then(() => {
+      dispatch({
+        type: 'REMOVE_MEDIA_LIST',
+        key,
+      });
+    });
+};
