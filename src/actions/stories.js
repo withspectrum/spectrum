@@ -9,6 +9,8 @@ import {
   stopListening,
 } from '../db/stories';
 import { getMessages, getMessage } from '../db/messages';
+import { getCurrentFrequency } from '../helpers/frequencies';
+import { markMessagesRead } from '../db/notifications';
 
 /**
  * Publish a drafted story
@@ -21,8 +23,12 @@ export const publishStory = ({ frequencyId, title, description }) => (
 
   let state = getState();
   let storyKey = state.composer.newStoryKey;
+  const frequency = getCurrentFrequency(
+    frequencyId,
+    state.frequencies.frequencies,
+  );
 
-  createStory({ key: storyKey, frequencyId, content: { title, description } })
+  createStory({ key: storyKey, frequency, content: { title, description } })
     .then(story => {
       track('story', 'created', null);
 
@@ -83,6 +89,8 @@ export const setActiveStory = story => (dispatch, getState) => {
       console.log(err);
       dispatch({ type: 'STOP_LOADING' });
     });
+
+  markMessagesRead(story, getState().user.uid);
 
   if (listener) stopListening(listener);
   listener = listenToStory(story, story => {

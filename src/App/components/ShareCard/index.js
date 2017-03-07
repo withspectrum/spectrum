@@ -1,6 +1,6 @@
 import React from 'react';
 import { track } from '../../../EventTracker';
-import { Card } from '../StoryCard/style';
+import { Card } from '../GenericCard/style';
 import { Body, Title, Desc, Input, ButtonWrapper, Button } from './style';
 
 const ShareCard = props => {
