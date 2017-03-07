@@ -27,7 +27,8 @@ class Root extends Component {
   // INITIAL LOAD OF THE APP
   componentWillMount() {
     // On the initial render of the app we authenticate the user
-    const { dispatch } = this.props;
+    const { dispatch, params } = this.props;
+    this.handleProps({ frequencies: {}, stories: {}, params });
     // Authenticate the user
     listenToAuth(user => {
       if (!user)
@@ -56,7 +57,7 @@ class Root extends Component {
         // Load the users frequencies
         .then(frequencies => {
           const keys = Object.keys(frequencies);
-          return Promise.all(keys.map(key => getFrequency(key)));
+          return Promise.all(keys.map(key => getFrequency({ id: key })));
         })
         .then(frequencies => {
           dispatch({
@@ -68,13 +69,17 @@ class Root extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    this.handleProps(nextProps);
+  }
+
+  handleProps = nextProps => {
     const { dispatch, params, frequencies, stories } = this.props;
     // If the frequency changes or we've finished loading the frequencies sync the active frequency to the store and load the stories
     if (
       nextProps.frequencies.loaded !== frequencies.loaded ||
       nextProps.params.frequency !== params.frequency
     ) {
-      dispatch(setActiveFrequency(nextProps.params.frequency));
+      dispatch(setActiveFrequency(nextProps.params.frequency || 'everything'));
     }
 
     // If the story changes sync the active story to the store and load the messages
@@ -84,14 +89,17 @@ class Root extends Component {
     ) {
       dispatch(setActiveStory(nextProps.params.story));
     }
-  }
+  };
 
   render() {
     const { user, frequencies, params } = this.props;
-    if (!user.loaded) return <LoadingIndicator />;
-    if (!user.uid && params.frequency === undefined) return <Homepage />;
-    if (user.loginError) return <p>Login error</p>;
-    if (!frequencies.loaded) return <LoadingIndicator />;
+    // Handle loading the homepage
+    if (params.frequency === undefined) {
+      if (user.loginError) return <p>Login error</p>;
+      if (user.uid) return <App />;
+      if (user.loaded) return <Homepage />;
+      return <LoadingIndicator />;
+    }
     return <App />;
   }
 }
