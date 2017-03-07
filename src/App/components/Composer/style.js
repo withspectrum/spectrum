@@ -7,7 +7,8 @@ export const ScrollBody = styled.div`
 	background-color: ${({ theme }) => theme.bg.default};
 	max-height: 100vh;
 	flex-direction: column;
-	overflow-y: auto;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 `;
 
 export const ContentView = styled.div`

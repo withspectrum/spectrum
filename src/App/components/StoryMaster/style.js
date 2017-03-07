@@ -22,7 +22,8 @@ export const Column = styled.div`
 export const ScrollBody = styled.div`
 	flex: 1 1 auto;
 	display: flex;
-	overflow-y: auto;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 	overflow-x: hidden;
 	flex-direction: column;
 	align-items: stretch;
