@@ -27,6 +27,7 @@ export default function root(state = initialState, action) {
         isOpen: false,
       });
     case 'SET_ACTIVE_STORY':
+    case 'SET_ACTIVE_FREQUENCY':
       return Object.assign({}, state, {
         isOpen: false,
       });
