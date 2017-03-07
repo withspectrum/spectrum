@@ -4,26 +4,19 @@ import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import { closeModal } from '../../../actions/modals';
 import { createFrequency } from '../../../actions/frequencies';
+import {
+  Button,
+  TextButton,
+  Label,
+  Input,
+  TextArea,
+  UnderlineInput,
+  PrefixLabel,
+} from '../../Globals';
 import { checkUniqueFrequencyName, debounce } from '../../../helpers/utils';
 import { connect } from 'react-redux';
 import slugg from 'slugg';
-import {
-  modalStyles,
-  Footer,
-  EditSlug,
-  EditSlugInput,
-  Pre,
-  NameLabel,
-  NameInput,
-  ErrorMessage,
-  CreateButton,
-  Privacy,
-  PrivacyLabel,
-  PrivacyCheckbox,
-  PrivacyText,
-  EditDescription,
-  EditDescriptionInput,
-} from './style';
+import { modalStyles, Footer, ErrorMessage } from './style';
 
 class FrequencyCreationModal extends React.Component {
   constructor(props) {
@@ -218,40 +211,41 @@ class FrequencyCreationModal extends React.Component {
       >
 
         <ModalContainer
-          title={'Create a Frequency'}
+          title={'Make a new frequency!'}
           closeModal={this.closeModal}
         >
-          <NameLabel>
-            Choose a Name
-            <NameInput
+          <Label>
+            What should we call it?
+            <Input
               ref="name"
               autoFocus
               type="text"
               defaultValue={this.state.name}
-              placeholder="Frequency Name..."
+              placeholder="Make it memorable!"
               onChange={this.handleChange}
             />
-          </NameLabel>
+          </Label>
 
-          <EditSlug>
-            <Pre error={this.state.exists}>spectrum.chat/~</Pre>
-            <EditSlugInput
+          <PrefixLabel>
+            spectrum.chat/~
+            <UnderlineInput
               ref="customSlug"
               type="text"
               placeholder={this.state.slug}
               defaultValue={this.state.slug}
               onChange={this.editSlug}
             />
-          </EditSlug>
+          </PrefixLabel>
 
-          <EditDescription>
-            <EditDescriptionInput
+          <Label>
+            Describe it in 140 characters or less...
+            <TextArea
               ref="customDescription"
-              placeholder={this.state.description}
+              placeholder={'What will make people love it?'}
               defaultValue={this.state.description}
               onChange={this.editDescription}
             />
-          </EditDescription>
+          </Label>
 
           {this.state.exists &&
             <ErrorMessage>
@@ -262,29 +256,9 @@ class FrequencyCreationModal extends React.Component {
 
           {this.state.error && <ErrorMessage>{this.state.error}</ErrorMessage>}
 
-          <Privacy>
-            <PrivacyLabel>
-              <PrivacyCheckbox
-                type="checkbox"
-                checked={this.state.private}
-                onChange={this.togglePrivacy}
-              />
-              Private Frequency?
-            </PrivacyLabel>
-
-            <PrivacyText>
-              Only members will be able to see stories posted in this frequency. You will be able to approve and block specific people from this frequency.
-            </PrivacyText>
-
-            <PrivacyText>
-              People will be able to request approval at{' '}
-              <b>https://spectrum.chat/~{this.state.slug}</b>
-            </PrivacyText>
-            <br />
-          </Privacy>
-
           <Footer>
-            <CreateButton
+            <TextButton onClick={this.closeModal}>Cancel</TextButton>
+            <Button
               disabled={
                 this.state.error ||
                   !this.state.name ||
@@ -296,7 +270,7 @@ class FrequencyCreationModal extends React.Component {
               onClick={this.prepareNewFrequency}
             >
               Create
-            </CreateButton>
+            </Button>
           </Footer>
         </ModalContainer>
       </Modal>

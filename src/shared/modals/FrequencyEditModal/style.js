@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient } from '../../Globals';
+import { Gradient, P } from '../../Globals';
 import { isMobile } from '../../../helpers/utils';
 
 const maxWidth = '360px';
@@ -22,7 +22,6 @@ export const modalStyles = {
   },
   content: {
     position: 'relative',
-    padding: '1.2rem',
     background: '#ffffff',
     backgroundClip: 'padding-box',
     borderRadius: '8px',
@@ -42,110 +41,27 @@ export const modalStyles = {
 };
 
 export const Footer = styled.div`
-  padding: 0.5rem;
-  border-top: 1px solid #eee;
+  padding: 0;
+  margin-top: 24px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  background: #fff;
-`;
+  justify-content: flex-end;
 
-export const NameLabel = styled.label`
-  display: block;
-  padding: 1rem 1rem 4px;
-  width: 100%;
-  font-weight: 700;
-  font-size: 12px;
-  color: ${({ theme }) => theme.text.default};
-`;
-
-export const NameInput = styled.input`
-  display: block;
-  width: 100%;
-  background: #fff;
-  font-weight: 400;
-  font-size: 1rem;
-  border: 1px solid ${({ theme }) => theme.border.default};
-  border-radius: 2px;
-  padding: 8px 12px;
-  margin-top: 8px;
-
-  &:focus {
-    border: 1px solid ${({ theme }) => theme.brand.default};
+  > button:last-of-type {
+    margin-left: 16px;
   }
 `;
 
-export const ErrorMessage = styled.span`
-  font-size: 12px;
-  color: ${props =>
-  props.warn ? props.theme.warn.default : props.theme.brand.default};
-  padding: 0 16px 0 24px;
+export const ErrorMessage = styled(P)`
+  font-size: 14px;
+  color: ${({ theme }) => theme.warn.alt};
+  font-weight: 500;
   margin-bottom: 8px;
-  margin-top: 8px;
-  position: relative;
+  margin-top: 16px;
 
   a {
-    text-decoration: underline;
-  }
-`;
-
-export const Privacy = styled.div`
-  padding: 1rem 1rem 0;
-`;
-
-export const PrivacyLabel = styled.label`
-  color: ${({ theme }) => theme.text.default};
-  font-weight: 700;
-  font-size: 12px;
-`;
-export const PrivacyCheckbox = styled.input`
-  display: inline-block;
-  margin-right: 8px;
-`;
-
-export const PrivacyText = styled.p`
-  font-size: 12px;
-  color: ${({ theme }) => theme.text.alt};
-  margin-top: 8px;
-
-  b {
-    color: ${({ theme }) => theme.text.default};
-  }
-`;
-
-export const SaveButton = styled.button`
-  position: relative;
-  padding: 8px 12px;
-  font-size: 0.875rem;
-  font-weight: 700;
-  -webkit-display: none;
-  display: inline-block;
-  background: ${props => props.disabled ? '#fff' : props.theme.brand.default};
-  background-image: ${props =>
-  props.disabled
-    ? '#fff'
-    : Gradient(props.theme.brand.alt, props.theme.brand.default)};
-  border-radius: 4px;
-  color: ${props => props.disabled ? props.theme.text.alt : '#fff'};
-
-  &:hover {
-    cursor: pointer;
-  }
-`;
-
-export const DeleteButton = styled.button`
-  position: relative;
-  padding-left: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 400;
-  -webkit-display: none;
-  display: inline-block;
-  background: #fff;
-  color: ${props =>
-  props.gray ? props.theme.text.alt : props.theme.warn.default};
-
-  &:hover {
-    cursor: pointer;
+    font-weight: 700;
+    border-bottom: 2px solid ${({ theme }) => theme.warn.alt};
   }
 `;
 
@@ -167,16 +83,11 @@ export const BigDeleteButton = styled.button`
 
 export const DeleteWarning = styled.div`
   width: 100%;
-  padding: 1rem;
+  padding: 12px 16px;
+  margin-top: 24px;
   font-size: 0.875rem;
-  color: #fff;
+  font-weight: 500;
+  border-radius: 4px;
+  color: ${props => props.theme.text.reverse};
   background: ${props => props.theme.warn.default};
-`;
-
-export const EditDescription = styled.div`
-
-`;
-
-export const EditDescriptionInput = styled.textarea`
-
 `;

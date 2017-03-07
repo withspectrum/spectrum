@@ -4,23 +4,22 @@ import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import { closeModal } from '../../../actions/modals';
 import { editFrequency, deleteFrequency } from '../../../actions/frequencies';
+import {
+  Button,
+  TextButton,
+  Label,
+  Input,
+  TextArea,
+  UnderlineInput,
+  PrefixLabel,
+} from '../../Globals';
 import { connect } from 'react-redux';
 import {
   modalStyles,
   Footer,
-  NameLabel,
-  NameInput,
   ErrorMessage,
-  Privacy,
-  PrivacyLabel,
-  PrivacyCheckbox,
-  PrivacyText,
-  SaveButton,
-  DeleteButton,
   BigDeleteButton,
   DeleteWarning,
-  EditDescription,
-  EditDescriptionInput,
 } from './style';
 
 class FrequencyEditModal extends React.Component {
@@ -149,62 +148,45 @@ class FrequencyEditModal extends React.Component {
     return (
       <Modal
         isOpen={this.state.isOpen}
-        contentLabel="Edit Frequency"
+        contentLabel="Edit frequency"
         onRequestClose={this.closeModal}
         shouldCloseOnOverlayClick={true}
         style={modalStyles}
         closeTimeoutMS={330}
       >
 
-        <ModalContainer title={'Edit Frequency'} closeModal={this.closeModal}>
-          <NameLabel>
-            Change Name
-            <NameInput
+        <ModalContainer
+          title={'Frequency Settings'}
+          closeModal={this.closeModal}
+        >
+          <Label>
+            Name
+            <Input
               ref="name"
               type="text"
               defaultValue={this.state.name}
-              placeholder="Frequency Name..."
+              placeholder="A bit minimalist, don't you think?"
               onChange={this.handleChange}
             />
-          </NameLabel>
+          </Label>
 
           {this.state.exists &&
             <ErrorMessage>
               Oops, a frequency with this name already exists.
             </ErrorMessage>}
 
-          <EditDescription>
-            <EditDescriptionInput
+          <Label>
+            Description
+            <TextArea
               ref="customDescription"
               type="text"
               placeholder={this.state.description}
               defaultValue={this.state.description}
               onChange={this.editDescription}
             />
-          </EditDescription>
+          </Label>
 
           {this.state.error && <ErrorMessage>{this.state.error}</ErrorMessage>}
-
-          <Privacy>
-            <PrivacyLabel>
-              <PrivacyCheckbox
-                type="checkbox"
-                checked={this.state.private}
-                onChange={this.togglePrivacy}
-              />
-              Private
-            </PrivacyLabel>
-
-            <PrivacyText>
-              Only members will be able to see stories posted in this frequency. You will be able to approve and block specific people from this frequency.
-            </PrivacyText>
-
-            <PrivacyText>
-              People will be able to request approval at{' '}
-              <b>https://spectrum.chat/~{this.props.slug}</b>
-            </PrivacyText>
-            <br />
-          </Privacy>
 
           {this.state.deleteAttempted &&
             <DeleteWarning>
@@ -213,18 +195,18 @@ class FrequencyEditModal extends React.Component {
 
           {this.state.deleteAttempted
             ? <Footer>
-                <DeleteButton gray onClick={this.toggleDeleteAttempt}>
+                <TextButton onClick={this.toggleDeleteAttempt}>
                   Cancel
-                </DeleteButton>
+                </TextButton>
                 <BigDeleteButton onClick={this.deleteFrequency}>
                   {this.state.deleteText}
                 </BigDeleteButton>
               </Footer>
             : <Footer>
-                <DeleteButton onClick={this.toggleDeleteAttempt}>
+                <TextButton onClick={this.toggleDeleteAttempt}>
                   Delete Frequency
-                </DeleteButton>
-                <SaveButton
+                </TextButton>
+                <Button
                   onClick={this.prepareEditedFrequency}
                   disabled={
                     this.state.disabled ||
@@ -235,7 +217,7 @@ class FrequencyEditModal extends React.Component {
                   }
                 >
                   Save
-                </SaveButton>
+                </Button>
               </Footer>}
         </ModalContainer>
       </Modal>
