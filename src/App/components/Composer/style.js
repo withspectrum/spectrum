@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient, H4 } from '../../../shared/Globals';
+import { Gradient, H4, H1 } from '../../../shared/Globals';
 
 export const ScrollBody = styled.div`
 	display: flex;
@@ -7,7 +7,8 @@ export const ScrollBody = styled.div`
 	background-color: ${({ theme }) => theme.bg.default};
 	max-height: 100vh;
 	flex-direction: column;
-	overflow-y: auto;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 `;
 
 export const ContentView = styled.div`
@@ -21,6 +22,10 @@ export const ContentView = styled.div`
 	}
 `;
 
+export const PreviewWrapper = styled.div`
+	padding-bottom: 32px;
+`;
+
 export const Header = styled.div`
 	flex: 1 0 auto;
 	align-self: flex-start;
@@ -31,10 +36,20 @@ export const Header = styled.div`
 `;
 
 export const Byline = styled(H4)`
-	color: ${({ theme }) => theme.brand.default};
-	margin-bottom: 8px;
+	color: ${props =>
+  props.active ? props.theme.brand.default : props.theme.text.alt};
+	border-bottom: 2px solid ${props =>
+  props.active ? props.theme.brand.default : 'transparent'};
+	margin-right: 16px;
 	position: relative;
+	pointer-events: ${props => props.hasContent ? 'auto' : 'none'};
+	opacity: ${props => props.hasContent ? 1 : 0};
+	transition: all 0.2s;
 	display: inline-block;
+
+	&:hover {
+		cursor: pointer;
+	}
 `;
 
 export const Select = styled.select`
@@ -87,8 +102,13 @@ export const SubmitContainer = styled.div`
 	justify-content: space-between;
 	align-items: center;
 	width: 100%;
+	background: #fff;
 	border-top: 1px solid ${props => props.theme.border.default};
-	padding: 1rem 0;
+	padding: ${props => props.sticky ? '1rem' : '1rem 0'};
+	position: ${props => props.sticky ? 'absolute' : 'relative'};
+	bottom: ${props => props.sticky ? '0' : 'auto'};
+	left: ${props => props.sticky ? '0' : 'auto'};
+	right: ${props => props.sticky ? '0' : 'auto'};
 `;
 
 export const Submit = styled.input`
@@ -104,6 +124,7 @@ export const Submit = styled.input`
   font-size: 0.875rem;
   font-weight: 800;
   text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+  -webkit-display: none;
 
   &:hover {
   	cursor: pointer;
@@ -146,7 +167,16 @@ export const StoryTitle = {
   width: '100%',
   color: '#171A21',
   whiteSpace: 'pre-wrap',
+  marginTop: '16px',
 };
+
+export const StoryTitlePreview = styled(H1)`
+	font-size: 32px;
+	line-height: 40px;
+	font-weight: 800;
+	color: ${({ theme }) => theme.text.default};
+	margin-top: 16px;
+`;
 
 export const TextBody = {
   marginTop: '16px',
@@ -175,4 +205,86 @@ export const BackArrow = styled.span`
 	@media (max-width: 768px) {
 		display: block;
 	}
-`
+`;
+
+export const MiniGallery = styled.div`
+	width: 100%;
+	display: flex;
+	overflow-x: scroll;
+	background: #f6f7f8;
+	padding: 0 16px;
+`;
+
+export const MiniImageContainer = styled.span`
+	display: inline-block;
+	max-width: 4rem;
+	max-height: 4rem;
+	border-radius: 2px;
+	border-radius: 2px;
+	margin-right: 16px;
+	margin-top: 16px;
+	margin-bottom: 16px;
+	position: relative;
+`;
+
+export const Delete = styled.span`
+	position: absolute;
+	top: -8px;
+	right: -8px;
+	width: 16px;
+	height: 16px;
+	border-radius: 8px;
+	background: #000;
+	z-index: 3;
+	transition: background 0.2s;
+	color: #fff;
+	padding-left: 5px;
+	font-weight: 900;
+	font-size: 8px;
+	line-height: 2.1;
+
+	&:hover {
+		transition: background 0.2s;
+		background: ${props => props.theme.warn.default};
+		cursor: pointer;
+	}
+`;
+
+export const Image = styled.img`
+	width: 100%;
+	height: 100%;
+	border-radius: 2px;
+`;
+
+export const EmbedInput = styled.input`
+	border: 1px solid transparent;
+	outline: 0;
+	font-weight: 800;
+	font-size: 0.75rem;
+	display: inline-block;
+	margin: 0.5rem 0 1rem 1rem;
+	padding: 8px;
+	box-shadow: none;
+	width: 200px;
+
+	&:hover {
+		cursor: pointer;
+	}
+
+	&:focus {
+		border-bottom: 1px solid ${props => props.theme.brand.default};
+	}
+
+	::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+	  color: ${props => props.theme.brand.default};
+	}
+	::-moz-placeholder { /* Firefox 19+ */
+	  color: ${props => props.theme.brand.default};
+	}
+	:-ms-input-placeholder { /* IE 10+ */
+	  color: ${props => props.theme.brand.default};
+	}
+	:-moz-placeholder { /* Firefox 18- */
+	  color: ${props => props.theme.brand.default};
+	}
+`;

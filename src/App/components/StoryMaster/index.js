@@ -81,22 +81,23 @@ class StoryMaster extends Component {
     const hidden = !role && isPrivate;
 
     if (!isEverything && hidden) return <Lock />;
+    if (!frequency && !isEverything) return <p>Loading...</p>;
 
     return (
       <Column navVisible={navVisible}>
-        <Header visible={loggedIn}>
+        <Header>
           {!isEverything &&
             <FlexCol>
               <FreqTitle>~ {frequency.name}</FreqTitle>
               <FlexRow>
-                <Count>{usersCount} members</Count>
-                <Count>{storiesCount} stories</Count>
+                <Count>{Object.keys(frequency.users).length} members</Count>
+                <Count>{Object.keys(frequency.stories).length} stories</Count>
               </FlexRow>
               {frequency.description
                 ? <Description>{frequency.description}</Description>
                 : <span />}
             </FlexCol>}
-          <Actions>
+          <Actions visible={loggedIn}>
             <MenuButton onClick={this.toggleNav}>☰</MenuButton>
 
             {!(isEverything || role === 'owner' || hidden) &&

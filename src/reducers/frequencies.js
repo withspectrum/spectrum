@@ -39,7 +39,7 @@ export default function root(state = initialState, action) {
         .filter(frequency => frequency.id !== action.id);
       return Object.assign({}, state, {
         frequencies,
-        active: 'everything',
+        active: 'hugs-n-bugs',
       });
     }
     case 'SET_FREQUENCIES':

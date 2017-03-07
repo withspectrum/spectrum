@@ -1,16 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateTitle, updateBody } from '../../../actions/composer';
+import {
+  updateTitle,
+  updateBody,
+  addMediaList,
+  removeImageFromStory,
+} from '../../../actions/composer';
 import { publishStory, initStory } from '../../../actions/stories';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { uploadMultipleMedia } from '../../../helpers/stories';
 import Textarea from 'react-textarea-autosize';
+import Markdown from 'react-remarkable';
 
 import {
   ScrollBody,
   ContentView,
   Header,
   StoryTitle,
+  StoryTitlePreview,
+  PreviewWrapper,
   FlexColumn,
   Byline,
   TextBody,
@@ -21,6 +29,11 @@ import {
   MediaInput,
   MediaLabel,
   BackArrow,
+  MiniGallery,
+  MiniImageContainer,
+  Image,
+  Delete,
+  EmbedInput,
 } from './style';
 
 class Composer extends Component {
@@ -34,6 +47,9 @@ class Composer extends Component {
       error: null,
       frequencyPicker: userFreqs ? userFreqs[0] : '',
       loading: false,
+      placeholder: '+ Embed',
+      embedUrl: '',
+      creating: true,
     };
   }
 
@@ -70,7 +86,8 @@ class Composer extends Component {
     uploadMultipleMedia(files, story, user)
       .then(filesArr => {
         for (let file of filesArr) {
-          body = `${body}\n![](${file})\n`;
+          body = `${body}\n![](${file.url})\n`;
+          this.props.dispatch(addMediaList(file));
           this.props.dispatch(updateBody(body));
         }
 
@@ -127,9 +144,65 @@ class Composer extends Component {
     }
   };
 
+  removeImage = e => {
+    let key = e.target.id;
+    let story = this.props.composer.newStoryKey;
+    this.props.dispatch(removeImageFromStory(key, story));
+  };
+
+  handleKeyPress = e => {
+    // if person taps enter, add the url in an iframe to the body
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      let body = this.props.composer.body;
+      body = `${body}\n<iframe src='${this.state.embedUrl}' />\n`;
+      this.props.dispatch(updateBody(body));
+
+      this.setState({
+        placeholder: 'Paste another URL here...',
+        embedUrl: '',
+      });
+    }
+  };
+
+  handleChange = e => {
+    // if there are no characters, don't attach the event listener
+    if (e.target.value.length === 0) return;
+    document.addEventListener('keydown', this.handleKeyPress, false);
+    this.setState({
+      embedUrl: e.target.value,
+    });
+  };
+
+  handleFocus = () => {
+    this.setState({
+      placeholder: 'Paste a URL here...',
+    });
+  };
+
+  handleBlur = () => {
+    document.removeEventListener('keydown', this.handleKeyPress, false);
+
+    this.setState({
+      placeholder: '+ Embed',
+    });
+  };
+
   closeComposer = () => {
     this.props.dispatch({
       type: 'CLOSE_COMPOSER',
+    });
+  };
+
+  setCreating = () => {
+    this.setState({
+      creating: true,
+    });
+  };
+
+  setPreviewing = () => {
+    this.setState({
+      creating: false,
     });
   };
 
@@ -139,11 +212,12 @@ class Composer extends Component {
     let currentFrequency = frequencies.frequencies.filter(freq => {
       return freq.slug === activeFrequency;
     });
+    let media = composer.mediaList;
 
     let byline = activeFrequency === 'everything'
       ? <span>
-          <Byline>
-            Post in
+          <Byline hasContent={true}>
+            New story in
             <Select
               onChange={this.selectFrequencyFromDropdown}
               defaultValue={frequencies.frequencies[0].id}
@@ -160,7 +234,11 @@ class Composer extends Component {
             </Select>
           </Byline>
         </span>
-      : <Byline>New Story in {currentFrequency[0].name}</Byline>;
+      : <Byline hasContent={true}>
+          New story in {currentFrequency[0].name}
+        </Byline>;
+
+    console.log('byline: ', byline);
 
     return (
       <ScrollBody>
@@ -170,33 +248,86 @@ class Composer extends Component {
           <Header>
             <FlexColumn>
               <form onSubmit={this.publishStory} encType="multipart/form-data">
-                <Byline>New Story</Byline>
-                <Textarea
-                  onChange={this.changeTitle}
-                  style={StoryTitle}
-                  value={composer.title}
-                  placeholder={"What's up?"}
-                  autoFocus
-                />
+                <Byline
+                  onClick={this.setCreating}
+                  hasContent={true}
+                  active={this.state.creating}
+                >
+                  Create
+                </Byline>
+                <Byline
+                  onClick={this.setPreviewing}
+                  active={!this.state.creating}
+                  hasContent={
+                    composer.title.length > 0 && composer.body.length > 0
+                  }
+                >
+                  Preview
+                </Byline>
 
-                <Textarea
-                  onChange={this.changeBody}
-                  value={composer.body}
-                  style={TextBody}
-                  placeholder={'Say more words...'}
-                />
+                {this.state.creating
+                  ? <div>
+                      <Textarea
+                        onChange={this.changeTitle}
+                        style={StoryTitle}
+                        value={composer.title}
+                        placeholder={'What’s up?'}
+                        autoFocus
+                      />
 
-                <MediaInput
-                  ref="media"
-                  type="file"
-                  id="file"
-                  name="file"
-                  accept=".png, .jpg, .jpeg, .gif"
-                  multiple={true}
-                  onChange={this.uploadMedia}
-                />
-                <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
-                <SubmitContainer>
+                      <Textarea
+                        onChange={this.changeBody}
+                        value={composer.body}
+                        style={TextBody}
+                        placeholder={'Say more words...'}
+                      />
+
+                      <MediaInput
+                        ref="media"
+                        type="file"
+                        id="file"
+                        name="file"
+                        accept=".png, .jpg, .jpeg, .gif"
+                        multiple={true}
+                        onChange={this.uploadMedia}
+                      />
+                      <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
+
+                      <EmbedInput
+                        placeholder={this.state.placeholder}
+                        onFocus={this.handleFocus}
+                        onBlur={this.handleBlur}
+                        onChange={this.handleChange}
+                        value={this.state.embedUrl}
+                      />
+
+                      <MiniGallery>
+                        {media.map((file, i) => (
+                          <MiniImageContainer key={i}>
+                            <Delete
+                              id={file.meta.key}
+                              onClick={this.removeImage}
+                            >
+                              ✕
+                            </Delete>
+                            <Image src={file.url} />
+                          </MiniImageContainer>
+                        ))}
+                      </MiniGallery>
+                    </div>
+                  : <PreviewWrapper>
+                      <StoryTitlePreview>{composer.title}</StoryTitlePreview>
+                      <div className="markdown" ref="story">
+                        <Markdown
+                          options={{
+                            html: true,
+                            linkify: true,
+                          }}
+                          source={composer.body}
+                        />
+                      </div>
+                    </PreviewWrapper>}
+                <SubmitContainer sticky={!this.state.creating}>
                   {byline}
                   <Submit
                     type="submit"

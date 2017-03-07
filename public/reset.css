@@ -94,6 +94,7 @@ body {
 .markdown img {
   margin-top: 16px;
   max-width: 100%;
+  display: inline;
 }
 
 .markdown em {
@@ -124,13 +125,14 @@ body {
 .markdown ul,
 .markdown ol {
   color: inherit;
-  margin-top: 16px;
+  margin: 8px 0;
+  margin-left: 16px;
 }
 
 .markdown li {
   color: inherit;
   font-size: 16px;
-  line-height: 32px;
+  line-height: 28px;
   font-weight: 400;
 }
 
@@ -142,16 +144,18 @@ body {
   font-weight: 300;
   font-style: italic;
   line-height: 36px;
+  margin: 16px 0;
+}
+
+.markdown blockquote p {
+  margin-top: 0;
 }
 
 .markdown a {
   color: #3818e5;
-  font-weight: bold;
+  font-weight: 500;
   text-decoration: none;
-  border-bottom: 2px solid currentColor;
-  padding-bottom: 2px;
   font-size: inherit;
-  transition: all 0.2s ease-out;
   word-wrap: break-word;
   line-height: inherit;
 }
@@ -182,15 +186,17 @@ body {
   width: 100%;
   border: 1px solid #D6E0EE;
   border-radius: 4px;
+  margin-bottom: 16px;
 }
 
 .markdown pre {
-  margin: 16px 0 0;
+  margin: 16px 0;
   display: block;
 }
 
 .markdown pre code {
   padding: 8px 16px;
+  display: inline-block;
 }
 
 .markdown iframe {
@@ -198,40 +204,65 @@ body {
   height: 60vh;
 }
 
+.markdown hr {
+  width: 100%;
+  height: 1px;
+  background: #DFE7EF;
+  display: block;
+  margin: 32px 0;
+}
+
 .markdown h1 {
-  font-size: 32px;
+  font-size: 24px;
   line-height: 40px;
+  border-bottom: 1px solid #DFE7EF;
   font-weight: 800;
+  margin-top: 1rem;
+  margin-bottom: 8px;
 }
 
 .markdown h2 {
-  font-size: 24px;
+  font-size: 20px;
   line-height: 32px;
-  font-weight: 500;
+  font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 8px;
 }
 
 .markdown h3 {
-  font-size: 20px;
+  font-size: 18px;
   line-height: 28px;
-  text-transform: lowercase;
-  font-variant: small-caps;
-  font-weight: 600;
+  font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 8px;
 }
 
 .markdown h4 {
   font-size: 16px;
   line-height: 20px;
   font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 8px;
+  text-transform: lowercase;
+  font-variant: small-caps;
 }
 
 .markdown h5 {
   font-size: 14px;
   line-height: 20px;
-  font-weight: 500;
+  font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 8px;
+  text-transform: lowercase;
+  font-variant: small-caps;
 }
 
 .markdown h6 {
   font-size: 12px;
   line-height: 16px;
   font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 8px;
+  text-transform: lowercase;
+  font-variant: small-caps;
 }

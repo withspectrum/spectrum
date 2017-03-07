@@ -1,17 +1,38 @@
 import * as firebase from 'firebase';
 
-/**
- * Get a frequency from the database
- *
- * Returns a Promise which resolves with the data
- */
-export const getFrequency = id => {
+const getFrequencyById = id => {
   const db = firebase.database();
 
   return db
     .ref(`frequencies/${id}`)
     .once('value')
     .then(snapshot => snapshot.val());
+};
+
+const getFrequencyBySlug = slug => {
+  const db = firebase.database();
+
+  return db
+    .ref(`frequencies`)
+    .orderByChild('slug')
+    .equalTo(slug)
+    .once('value')
+    .then(snapshot => {
+      const frequencies = snapshot.val();
+      // We assume there is only one frequency with a given slug
+      return frequencies[Object.keys(frequencies)[0]];
+    });
+};
+
+/**
+ * Get a frequency from the database
+ *
+ * Returns a Promise which resolves with the data
+ */
+export const getFrequency = ({ id, slug }) => {
+  if (id) return getFrequencyById(id);
+  if (slug) return getFrequencyBySlug(slug);
+  return Promise.resolve({});
 };
 
 /**
@@ -98,10 +119,17 @@ export const removeFrequency = id => new Promise((resolve, reject) => {
     .then(snapshot => {
       const users = snapshot.val();
       Object.keys(users).forEach(userId => {
+        //=> delete the frequency from every user who was a member
         db.ref(`/users/${userId}/public/frequencies/${id}`).remove();
       });
-      db.ref(`/frequencies/${id}`).remove();
       // TODO: Delete all stories associated with a frequency?
+    })
+    .then(() => {
+      db.ref().update({
+        [`frequencies/${id}/slug`]: id, //=> reset the slug to be the id, so that future frequencies can use the slug
+      });
+    })
+    .then(() => {
       resolve();
     })
     .catch(reject);
