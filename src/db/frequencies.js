@@ -1,17 +1,38 @@
 import * as firebase from 'firebase';
 
-/**
- * Get a frequency from the database
- *
- * Returns a Promise which resolves with the data
- */
-export const getFrequency = id => {
+const getFrequencyById = id => {
   const db = firebase.database();
 
   return db
     .ref(`frequencies/${id}`)
     .once('value')
     .then(snapshot => snapshot.val());
+};
+
+const getFrequencyBySlug = slug => {
+  const db = firebase.database();
+
+  return db
+    .ref(`frequencies`)
+    .orderByChild('slug')
+    .equalTo(slug)
+    .once('value')
+    .then(snapshot => {
+      const frequencies = snapshot.val();
+      // We assume there is only one frequency with a given slug
+      return frequencies[Object.keys(frequencies)[0]];
+    });
+};
+
+/**
+ * Get a frequency from the database
+ *
+ * Returns a Promise which resolves with the data
+ */
+export const getFrequency = ({ id, slug }) => {
+  if (id) return getFrequencyById(id);
+  if (slug) return getFrequencyBySlug(slug);
+  return Promise.resolve({});
 };
 
 /**
@@ -43,6 +64,7 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
       // Creator gets full admin rights
       [uid]: {
         permission: 'owner',
+        joined: firebase.database.ServerValue.TIMESTAMP,
       },
     },
   };
@@ -51,19 +73,28 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
   return db
     .ref()
     .update({
+      [`users/${uid}/public/frequencies/${id}`]: {
+        //=> add the frequency id to the user first
+        id,
+        permission: 'owner',
+        joined: firebase.database.ServerValue.TIMESTAMP,
+      },
+    })
+    .then(() => db.ref().update({
+      //=> create the frequency and add the user
       [`frequencies/${id}/id`]: frequency.id,
+      [`frequencies/${id}/users/${uid}/permission`]: 'owner',
+      [`frequencies/${id}/users/${uid}/joined`]: firebase.database.ServerValue.TIMESTAMP,
+    }))
+    .then(() => db.ref().update({
+      //=> then add the rest of the frequency data, since we'll validate against the user above
       [`frequencies/${id}/createdAt`]: frequency.createdAt,
       [`frequencies/${id}/createdBy`]: frequency.createdBy,
       [`frequencies/${id}/name`]: frequency.name,
       [`frequencies/${id}/slug`]: frequency.slug,
       [`frequencies/${id}/settings`]: frequency.settings,
       [`frequencies/${id}/stories`]: frequency.stories,
-      [`frequencies/${id}/users`]: frequency.users,
-      [`users/${uid}/public/frequencies/${id}`]: {
-        id,
-        permission: 'owner',
-      },
-    })
+    }))
     .then(() => {
       // Simulate the saved frequency for the client-side update
       resolve({ ...frequency, timestamp: Date.now() });
@@ -86,10 +117,17 @@ export const removeFrequency = id => new Promise((resolve, reject) => {
     .then(snapshot => {
       const users = snapshot.val();
       Object.keys(users).forEach(userId => {
+        //=> delete the frequency from every user who was a member
         db.ref(`/users/${userId}/public/frequencies/${id}`).remove();
       });
-      db.ref(`/frequencies/${id}`).remove();
       // TODO: Delete all stories associated with a frequency?
+    })
+    .then(() => {
+      db.ref().update({
+        [`frequencies/${id}/slug`]: id, //=> reset the slug to be the id, so that future frequencies can use the slug
+      });
+    })
+    .then(() => {
       resolve();
     })
     .catch(reject);

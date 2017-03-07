@@ -18,12 +18,17 @@ import {
   HiddenLabel,
   HiddenInput,
   BackArrow,
+  DeleteConfirm,
 } from './style';
 import { openGallery } from '../../../actions/gallery';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { toggleLockedStory, deleteStory } from '../../../actions/stories';
 
 class StoryView extends Component {
+  state = {
+    deleteInited: false,
+  };
+
   componentDidMount() {
     this.addEventListeners();
   }
@@ -45,6 +50,12 @@ class StoryView extends Component {
 
   openGallery = e => {
     this.props.dispatch(openGallery(e));
+  };
+
+  initDeleteStory = () => {
+    this.setState({
+      deleteInited: !this.state.deleteInited,
+    });
   };
 
   scrollToBottom = () => {
@@ -93,7 +104,7 @@ class StoryView extends Component {
     );
     let returnUrl = this.props.frequencies.active === 'everything'
       ? 'everything'
-      : currentFrequency.slug;
+      : currentFrequency && currentFrequency.slug;
     return (
       <ScrollBody>
         <Link to={`/~${returnUrl}`}>
@@ -127,11 +138,18 @@ class StoryView extends Component {
                     />
                   </label>
                   <HiddenButton
-                    onClick={this.deleteStory}
+                    onClick={this.initDeleteStory}
                     tipText="Delete Story"
-                    tipLocation="left"
+                    tipLocation="bottom"
+                    visible={this.state.deleteInited}
                   >
                     <Delete color="warn" />
+                    <DeleteConfirm
+                      visible={this.state.deleteInited}
+                      onClick={this.deleteStory}
+                    >
+                      Confirm
+                    </DeleteConfirm>
                   </HiddenButton>
                 </FlexColumnEnd>
               : ''}

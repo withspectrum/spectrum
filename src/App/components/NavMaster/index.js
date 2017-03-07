@@ -103,11 +103,12 @@ class NavigationMaster extends Component {
               onClick={this.hideNav}
             >
               <FreqIcon src="/img/everything-icon.svg" />
-              <FreqLabel>Everything</FreqLabel>
+              <FreqLabel>{user.uid ? 'Everything' : 'Home'}</FreqLabel>
             </Freq>
           </Link>
 
-          {frequencies &&
+          {user.uid &&
+            frequencies &&
             frequencies.map((frequency, i) => {
               return (
                 <Link to={`/~${frequency.slug || frequency.id}`} key={i}>
@@ -127,9 +128,10 @@ class NavigationMaster extends Component {
 
         </FreqList>
 
-        <Button onClick={this.createFrequency}>
-          <span>~ Create Frequency</span>
-        </Button>
+        {user.uid &&
+          <Button onClick={this.createFrequency}>
+            <span>~ Create Frequency</span>
+          </Button>}
 
         <Footer>
           <FooterLogo src="/img/mark.svg" />

@@ -7,6 +7,8 @@ import {
   BubbleGroup,
   FromName,
   EmojiBubble,
+  Messages,
+  Avatar,
 } from './style';
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
@@ -77,40 +79,43 @@ class ChatView extends Component {
             users.find(user => user.uid === group[0].userId);
           return (
             <BubbleGroup key={i} me={itsaMe}>
-              <FromName>{user && user.name}</FromName>
-              {group.map((message, i) => {
-                // mxstbr: The "emoji" specific type is legacy, remove in the future
-                if (
-                  message.message.type === 'text' ||
-                  message.message.type === 'emoji'
-                ) {
-                  let TextBubble = onlyContainsEmoji(message.message.content)
-                    ? EmojiBubble
-                    : Bubble;
-                  return (
-                    <TextBubble
-                      key={i}
-                      me={itsaMe}
-                      dangerouslySetInnerHTML={{
-                        __html: this.formatMessage(message.message.content),
-                      }}
-                    />
-                  );
-                }
+              {user && !itsaMe && <Avatar src={user.photoURL} />}
+              <Messages>
+                <FromName>{user && user.name}</FromName>
+                {group.map((message, i) => {
+                  // mxstbr: The "emoji" specific type is legacy, remove in the future
+                  if (
+                    message.message.type === 'text' ||
+                    message.message.type === 'emoji'
+                  ) {
+                    let TextBubble = onlyContainsEmoji(message.message.content)
+                      ? EmojiBubble
+                      : Bubble;
+                    return (
+                      <TextBubble
+                        key={i}
+                        me={itsaMe}
+                        dangerouslySetInnerHTML={{
+                          __html: this.formatMessage(message.message.content),
+                        }}
+                      />
+                    );
+                  }
 
-                if (message.message.type === 'media') {
-                  return (
-                    <ImgBubble
-                      me={itsaMe}
-                      onClick={this.openGallery}
-                      src={message.message.content}
-                      key={i}
-                    />
-                  );
-                }
+                  if (message.message.type === 'media') {
+                    return (
+                      <ImgBubble
+                        me={itsaMe}
+                        onClick={this.openGallery}
+                        src={message.message.content}
+                        key={i}
+                      />
+                    );
+                  }
 
-                return null;
-              })}
+                  return null;
+                })}
+              </Messages>
             </BubbleGroup>
           );
         })}

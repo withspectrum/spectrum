@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Shadow, Gradient, Tooltip } from '../../../shared/Globals';
+import { Shadow, Gradient, Tooltip, H2, H4, P } from '../../../shared/Globals';
 
 export const Column = styled.div`
 	display: flex;
@@ -57,30 +57,19 @@ export const Overlay = styled.div`
 `;
 
 export const Header = styled.div`
-	flex-direction: row;
-	display: ${props => props.visible ? 'flex' : 'none'};
-	flex: 0 0 48px;
+	flex-direction: column;
+	display: 'flex';
+	flex: 0 0 auto;
+	min-height: 48px;
 	width: 100%;
 	background-color: ${({ theme }) => theme.bg.default};
-	align-items: center;
 	align-self: flex-start;
 	justify-content: space-between;
-	padding: 8px;
 	z-index: 1;
 	box-shadow: ${Shadow.low};
 	position: relative;
 	z-index: 3;
 
-
-	> img {
-		flex: 0 0 32px;
-		transition: all 0.2s ease-out;
-
-		&:hover {
-			transform: scale(1.15);
-			transition: all 0.2s ease-out;
-		}
-	}
 `;
 
 export const FrequencyName = styled.h2`
@@ -146,6 +135,7 @@ export const LoginWrapper = styled.div`
 	width: 100%;
 	padding: 4px;
 	display: flex;
+	flex: 0 0 auto;
 	flex-direction: column;
 	align-self: stretch;
 	padding: 16px;
@@ -209,4 +199,38 @@ export const MenuButton = styled.div`
 	@media (max-width: 768px) {
 		display: block;
 	}
+`;
+
+export const FreqTitle = styled(H2)`
+	font-weight: 800;
+	font-size: 20px;
+	margin: 16px;
+	margin-bottom: 8px;
+`;
+
+export const FlexCol = styled.div`
+	display: flex;
+	flex-direction: column;
+`;
+
+export const FlexRow = styled.div`
+	display: flex;
+	justify-content: space-between;
+`;
+
+export const Count = styled(H4)`
+	margin: 0 16px;
+	font-weight: 700;
+`;
+
+export const Description = styled(P)`
+	margin: 16px;
+	margin-top: 8px;
+`;
+
+export const Actions = styled(FlexRow)`
+	display: ${props => props.visible ? 'flex' : 'none'};
+	flex: 0 0 48px;
+	padding: 8px;
+	align-items: center;
 `;

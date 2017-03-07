@@ -77,7 +77,7 @@ const theme = {
     default: '#E6ECF7',
     alt: '#F6FBFF',
   },
-  inactive: '#D6E0EE',
+  inactive: '#C0C0E0',
   border: {
     default: '#DFE7EF',
   },

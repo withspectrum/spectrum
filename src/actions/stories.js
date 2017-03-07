@@ -30,6 +30,11 @@ export const publishStory = ({ frequencyId, title, description }) => (
         type: 'CREATE_STORY',
         story,
       });
+
+      const history = createBrowserHistory();
+      history.push(`/~${state.frequencies.active}/${storyKey}`);
+
+      dispatch(setActiveStory(storyKey));
     })
     .catch(err => {
       console.log(err);
