@@ -25,13 +25,9 @@ import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { toggleLockedStory, deleteStory } from '../../../actions/stories';
 
 class StoryView extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      deleteInited: false,
-    };
-  }
+  state = {
+    deleteInited: false,
+  };
 
   componentDidMount() {
     this.addEventListeners();
