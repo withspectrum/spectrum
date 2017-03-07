@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateTitle, updateBody } from '../../../actions/composer';
+import {
+  updateTitle,
+  updateBody,
+  addMediaList,
+  removeImageFromStory,
+} from '../../../actions/composer';
 import { publishStory, initStory } from '../../../actions/stories';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { uploadMultipleMedia } from '../../../helpers/stories';
@@ -24,6 +29,10 @@ import {
   MediaInput,
   MediaLabel,
   BackArrow,
+  MiniGallery,
+  MiniImageContainer,
+  Image,
+  Delete,
   EmbedInput,
 } from './style';
 
@@ -77,7 +86,8 @@ class Composer extends Component {
     uploadMultipleMedia(files, story, user)
       .then(filesArr => {
         for (let file of filesArr) {
-          body = `${body}\n![](${file})\n`;
+          body = `${body}\n![](${file.url})\n`;
+          this.props.dispatch(addMediaList(file));
           this.props.dispatch(updateBody(body));
         }
 
@@ -134,10 +144,16 @@ class Composer extends Component {
     }
   };
 
+  removeImage = e => {
+    let key = e.target.id;
+    let story = this.props.composer.newStoryKey;
+    this.props.dispatch(removeImageFromStory(key, story));
+  };
+
   handleKeyPress = e => {
     // if person taps enter, add the url in an iframe to the body
     if (e.keyCode === 13) {
-      console.log('hit enter');
+      e.preventDefault();
       let body = this.props.composer.body;
       body = `${body}\n<iframe src='${this.state.embedUrl}' />\n`;
       this.props.dispatch(updateBody(body));
@@ -196,11 +212,12 @@ class Composer extends Component {
     let currentFrequency = frequencies.frequencies.filter(freq => {
       return freq.slug === activeFrequency;
     });
+    let media = composer.mediaList;
 
     let byline = activeFrequency === 'everything'
       ? <span>
-          <Byline>
-            Post in
+          <Byline hasContent={true}>
+            New story in
             <Select
               onChange={this.selectFrequencyFromDropdown}
               defaultValue={frequencies.frequencies[0].id}
@@ -217,7 +234,11 @@ class Composer extends Component {
             </Select>
           </Byline>
         </span>
-      : <Byline>New Story in {currentFrequency[0].name}</Byline>;
+      : <Byline hasContent={true}>
+          New story in {currentFrequency[0].name}
+        </Byline>;
+
+    console.log('byline: ', byline);
 
     return (
       <ScrollBody>
@@ -271,6 +292,28 @@ class Composer extends Component {
                         onChange={this.uploadMedia}
                       />
                       <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
+
+                      <EmbedInput
+                        placeholder={this.state.placeholder}
+                        onFocus={this.handleFocus}
+                        onBlur={this.handleBlur}
+                        onChange={this.handleChange}
+                        value={this.state.embedUrl}
+                      />
+
+                      <MiniGallery>
+                        {media.map((file, i) => (
+                          <MiniImageContainer key={i}>
+                            <Delete
+                              id={file.meta.key}
+                              onClick={this.removeImage}
+                            >
+                              ✕
+                            </Delete>
+                            <Image src={file.url} />
+                          </MiniImageContainer>
+                        ))}
+                      </MiniGallery>
                     </div>
                   : <PreviewWrapper>
                       <StoryTitlePreview>{composer.title}</StoryTitlePreview>

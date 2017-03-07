@@ -3,6 +3,7 @@ const initialState = {
   title: '',
   body: '',
   newStoryKey: null,
+  mediaList: [],
 };
 
 export default function root(state = initialState, action) {
@@ -39,6 +40,16 @@ export default function root(state = initialState, action) {
       return Object.assign({}, state, {
         body: action.body,
       });
+    case 'ADD_MEDIA_LIST':
+      return Object.assign({}, state, {
+        mediaList: state.mediaList.concat(action.file),
+      });
+    case 'REMOVE_MEDIA_LIST': {
+      const mediaList = state.mediaList
+        .slice()
+        .filter(file => file.meta.key !== action.key);
+      return Object.assign({}, state, { mediaList });
+    }
     default:
       return state;
   }

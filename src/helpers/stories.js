@@ -102,6 +102,7 @@ export const uploadMedia = (file, story, user) => {
     let mediaData = {
       fileName,
       type: file.type,
+      key: mediaKey,
     };
 
     updates[`stories/${story}/media/${mediaKey}`] = mediaData;
@@ -119,7 +120,10 @@ export const uploadMedia = (file, story, user) => {
     fileRef.put(file, metaData).then(snapshot => {
       track('media', 'uploaded', null);
 
-      resolve(snapshot.downloadURL);
+      resolve({
+        url: snapshot.downloadURL,
+        meta: mediaData,
+      });
     });
   });
 };
