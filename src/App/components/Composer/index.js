@@ -24,6 +24,7 @@ import {
   MediaInput,
   MediaLabel,
   BackArrow,
+  EmbedInput,
 } from './style';
 
 class Composer extends Component {
@@ -37,6 +38,8 @@ class Composer extends Component {
       error: null,
       frequencyPicker: userFreqs ? userFreqs[0] : '',
       loading: false,
+      placeholder: '+ Embed',
+      embedUrl: '',
       creating: true,
     };
   }
@@ -129,6 +132,44 @@ class Composer extends Component {
         error: 'Oops!',
       });
     }
+  };
+
+  handleKeyPress = e => {
+    // if person taps enter, add the url in an iframe to the body
+    if (e.keyCode === 13) {
+      console.log('hit enter');
+      let body = this.props.composer.body;
+      body = `${body}\n<iframe src='${this.state.embedUrl}' />\n`;
+      this.props.dispatch(updateBody(body));
+
+      this.setState({
+        placeholder: 'Paste another URL here...',
+        embedUrl: '',
+      });
+    }
+  };
+
+  handleChange = e => {
+    // if there are no characters, don't attach the event listener
+    if (e.target.value.length === 0) return;
+    document.addEventListener('keydown', this.handleKeyPress, false);
+    this.setState({
+      embedUrl: e.target.value,
+    });
+  };
+
+  handleFocus = () => {
+    this.setState({
+      placeholder: 'Paste a URL here...',
+    });
+  };
+
+  handleBlur = () => {
+    document.removeEventListener('keydown', this.handleKeyPress, false);
+
+    this.setState({
+      placeholder: '+ Embed',
+    });
   };
 
   closeComposer = () => {
