@@ -11,7 +11,7 @@ export const ScrollBody = styled.div`
 
 	@media (max-width: 768px) {
     width: 100%;
-    flex: 1 0 100%;    
+    flex: 1 0 100%;
   }
 `;
 
@@ -82,6 +82,7 @@ export const HiddenLabel = styled.span`
 
 export const HiddenButton = styled.button`
 	background-color: transparent;
+	position: relative;
 	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip')};
 `;
 
@@ -103,4 +104,25 @@ export const BackArrow = styled.span`
 		right: 0;
 		z-index: 1000;
 	}
-`
+`;
+
+export const DeleteConfirm = styled.span`
+	position: absolute;
+	background: ${props => props.theme.warn.default};
+	padding: 8px;
+	border-radius: 4px;
+	width: 115px;
+	color: #fff;
+	font-size: 13px;
+	font-weight: 700;
+	pointer-events: ${props => props.visible ? 'auto' : 'none'};
+	opacity: ${props => props.visible ? '1' : '0'};
+	right: ${props => props.visible ? '38px' : '28px'};
+	transition: all 0.2s;
+
+	&:hover {
+		cursor: pointer;
+		box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+		transition: all 0.2s;
+	}
+`;
