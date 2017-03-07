@@ -10,10 +10,140 @@ export const Shadow = {
   high: '0 16px 32px -8px rgba(23,26,33, 0.25)',
   input: 'inset 0 3px 5px rgba(23,26,33, 0.05), inset 0 0 1px rgba(23,26,33, 0.1)',
   border: '0 0 1px rgba(23,26,33, 0.3)',
+  button: '0 2px 8px rgba(23,26,33, 0.15)',
 };
 
 export const fontStack = css`
 	font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe', sans-serif
+`;
+
+export const Button = styled.button`
+	background-color: ${props =>
+  props.disabled ? props.theme.inactive : props.theme.brand.default};
+	background-image: ${props =>
+  props.disabled
+    ? 'none'
+    : Gradient(props.theme.brand.alt, props.theme.brand.default)};
+	border: 2px solid ${props =>
+  props.disabled ? 'transparent' : props.theme.brand.alt};
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	color: ${({ theme }) => theme.text.reverse};
+	transition: all 0.2s ease-out;
+	padding: 8px 16px;
+	
+	&:hover {
+		border-radius: ${props => props.disabled ? '8px' : '16px'};
+		opacity: ${props => props.disabled ? '0.5' : '1'};
+		transition: all 0.2s ease-in;
+		cursor: pointer;
+	}
+`;
+
+export const TextButton = styled(Button)`
+	background-color: transparent;
+	background-image: none;
+	border: none;
+	border-radius: 0px;
+	font-size: 14px;
+	font-weight: 500;
+	color: ${props =>
+  props.inactive ? props.theme.inactive : props.theme.warn.alt};
+	transition: all 0.2s ease-out;
+	padding: 8px 16px;
+
+	&:hover {
+				border-radius: 8px;
+				background-color: ${({ theme }) => theme.bg.default};
+				box-shadow: ${Shadow.button};
+			}
+	`;
+
+export const Label = styled.label`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: -0.4px;
+  color: ${({ theme }) => theme.text.default};
+	
+	&:not(:first-of-type) {
+		margin-top: 24px;
+	}
+`;
+
+export const PrefixLabel = styled.label`
+  display: flex;
+  width: 100%;
+  margin-top: 4px;
+  padding-left: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.text.placeholder};
+
+  > input {
+  	margin-left: 2px;
+  }
+`;
+
+export const Input = styled.input`
+  flex: 1 0 auto;
+  background: ${({ theme }) => theme.bg.default};
+  font-weight: 500;
+  width: 100%;
+  font-size: 14px;
+  border: 2px solid ${({ theme }) => theme.inactive};
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-top: 2px;
+  box-shadow: none;
+
+  &::placeholder { color: ${({ theme }) => theme.text.placeholder} }
+  &::-webkit-input-placeholder { color: ${({ theme }) =>
+  theme.text.placeholder} }
+  &:-moz-placeholder { color: ${({ theme }) => theme.text.placeholder} }
+  &:-ms-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
+
+  &:focus {
+    border-color: ${({ theme }) => theme.brand.default};
+  }
+`;
+
+export const TextArea = styled.textarea`
+	flex: 1 0 auto;
+	width: 100%;
+  background: ${({ theme }) => theme.bg.default};
+  font-weight: 500;
+  font-size: 14px;
+  border: 2px solid ${({ theme }) => theme.inactive};
+  border-radius: 4px;
+  padding: 12px;
+  margin-top: 2px;
+  box-shadow: none;
+
+  &::placeholder { color: ${({ theme }) => theme.text.placeholder} }
+  &::-webkit-input-placeholder { color: ${({ theme }) =>
+  theme.text.placeholder} }
+  &:-moz-placeholder { color: ${({ theme }) => theme.text.placeholder} }
+  &:-ms-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
+
+  &:focus {
+    border-color: ${({ theme }) => theme.brand.default};
+  }
+`;
+
+export const UnderlineInput = styled.input`
+		font-size: inherit;
+		font-weight: inherit;
+		color: ${({ theme }) => theme.text.default};
+    border-bottom: 2px solid ${({ theme }) => theme.inactive};
+
+  &:focus {
+    border-color: ${({ theme }) => theme.brand.default};
+  }
 `;
 
 export const H1 = styled.h1`

@@ -6,7 +6,7 @@ import axios from 'axios';
 import { closeModal } from '../../../actions/modals';
 import { upgradeUser } from '../../../actions/user';
 import { connect } from 'react-redux';
-import { ButtonPrimary } from '../../buttons';
+import { Button } from '../../Globals';
 import {
   ButtonLabel,
   modalStyles,
@@ -133,12 +133,12 @@ class ProModal extends React.Component {
                 currency="USD"
               >
 
-                <ButtonPrimary large loading={this.state.loading}>
+                <Button large loading={this.state.loading}>
                   <ButtonLabel loading={this.state.loading}>
                     {this.state.errorCount ? 'Try Again' : 'Upgrade to Pro'}
                   </ButtonLabel>
                   <Spinner size={'16'} loading={this.state.loading} />
-                </ButtonPrimary>
+                </Button>
 
               </StripeCheckout>
             </Padding>
