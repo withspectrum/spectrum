@@ -13,7 +13,7 @@ import {
   MetaFreq,
   Title,
   Media,
-  UnreadCout,
+  UnreadCount,
 } from './style';
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
@@ -59,7 +59,8 @@ class StoryCard extends Component {
                   {messages && messages.length > 0
                     ? `${messages.length} messages`
                     : 'No messages yet'}
-                  {unread > 0 && <UnreadCout>{` (${unread} new!)`}</UnreadCout>}
+                  {unread > 0 &&
+                    <UnreadCount>{` (${unread} new!)`}</UnreadCount>}
                 </Meta>
               </UserMeta>
             </StoryHeader>

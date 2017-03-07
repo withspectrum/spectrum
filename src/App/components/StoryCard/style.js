@@ -121,6 +121,6 @@ export const MetaFreq = styled(Meta)`
   }
 `;
 
-export const UnreadCout = styled.span`
+export const UnreadCount = styled.span`
 	color: ${({ theme }) => theme.warn.default};
 `;
