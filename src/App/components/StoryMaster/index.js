@@ -26,7 +26,7 @@ import {
 import { login } from '../../../actions/user';
 import { openModal } from '../../../actions/modals';
 import { Lock, NewPost, ClosePost, Settings } from '../../../shared/Icons';
-import StoryCard from '../StoryCard';
+import GenericCard from '../GenericCard';
 import ShareCard from '../ShareCard';
 import { ACTIVITY_TYPES } from '../../../db/types';
 
@@ -75,6 +75,7 @@ class StoryMaster extends Component {
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
+    const isNotifications = activeFrequency === 'notifications';
     const hidden = !role && isPrivate;
 
     if (!isEverything && hidden) return <Lock />;
@@ -135,14 +136,21 @@ class StoryMaster extends Component {
             </LoginWrapper>}
 
           {isEverything || frequency
-            ? stories.map((story, i) => (
-                <StoryCard
-                  urlBase={`~${activeFrequency}`}
-                  story={story}
-                  isEverything={isEverything}
-                  frequency={frequency}
+            ? stories.filter(story => story.published).map((story, i) => (
+                <GenericCard
+                  isActive={activeStory === story.id}
                   key={`story-${i}`}
-                  active={activeStory}
+                  link={`/~${activeFrequency}/${story.id}`}
+                  media={story.content.media}
+                  messages={story.messages ? Object.keys(story.messages).length : 0}
+                  metaLink={isEverything && frequency && `/~${frequency.slug}`}
+                  metaText={isEverything && frequency && `~${frequency.name}`}
+                  person={{
+                    photo: story.creator.photoURL,
+                    name: story.creator.displayName,
+                  }}
+                  timestamp={story.timestamp}
+                  title={story.content.title}
                   unread={
                     notifications.filter(
                       notification =>
