@@ -73,11 +73,6 @@ class StoryMaster extends Component {
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
-    let usersCount = Object.keys(frequency.users).length;
-    let storiesCount = 0;
-    if (frequency.stories) {
-      storiesCount = Object.keys(frequency.stories).length;
-    }
     const hidden = !role && isPrivate;
 
     if (!isEverything && hidden) return <Lock />;
