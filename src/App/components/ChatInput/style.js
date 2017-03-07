@@ -1,17 +1,18 @@
 import styled from 'styled-components';
 import { Gradient, Shadow } from '../../../shared/Globals';
+import Textarea from 'react-textarea-autosize';
 
 export const Form = styled.form`
-	flex: 1 0 auto;	
+	flex: 1 0 auto;
 	display: flex;
 	align-items: stretch;
 `;
 
-export const Input = styled.input`
+export const Input = styled(Textarea)`
 	flex: 1 0 auto;
 	font-size: 14px;
-	line-height: 32px;
-	padding: 4px 16px;
+	line-height: 22px;
+	padding: 10px 16px;
 	border: 1px solid ${({ theme }) => theme.border.default};
 	border-right: none;
 	border-radius: 8px 0 0 8px;
@@ -76,6 +77,8 @@ export const MediaLabel = styled.label`
 	transition: all 0.3s ease-out;
 	border-radius: 4px;
 	padding: 4px;
+	position: relative;
+	top: 2px;
 
 	&:hover {
 		cursor: pointer;
