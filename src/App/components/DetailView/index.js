@@ -67,7 +67,7 @@ class DetailView extends Component {
               moderator={moderator}
               locked={locked}
             />
-            {!story.locked && <ChatInput />}
+            {!story.locked && user.uid && <ChatInput />}
           </LogicContainer>
         </ViewContainer>
       );

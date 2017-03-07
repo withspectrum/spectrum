@@ -7,23 +7,44 @@ import {
   updateFrequency,
   addUserToFrequency,
   removeUserFromFrequency,
+  getFrequency,
 } from '../db/frequencies';
 const history = createBrowserHistory();
-import { getStories } from '../db/stories';
+import { getStories, getAllStories } from '../db/stories';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
-  const { frequencies: { frequencies } } = getState();
-  const id = getCurrentFrequency(frequency, frequencies).id;
-
+  const { user: { uid } } = getState();
   track('frequency', 'viewed', null);
 
   dispatch({
     type: 'SET_ACTIVE_FREQUENCY',
     frequency,
   });
+  if (frequency === 'everything') {
+    if (!uid) return;
+    getAllStories(uid).then(stories => {
+      dispatch({
+        type: 'ADD_STORIES',
+        stories,
+      });
+    });
+    return;
+  }
   dispatch({ type: 'LOADING' });
-  if (frequency === 'everything') return;
-  getStories(id)
+  getFrequency({ slug: frequency })
+    .then(data => {
+      dispatch({
+        type: 'ADD_FREQUENCY',
+        frequency: data,
+      });
+      return data;
+    })
+    .then(data => {
+      const freqs = getState().user.frequencies;
+      if (data && data.settings.private && (!freqs || !freqs[data.id]))
+        return [];
+      return getStories({ frequencySlug: frequency });
+    })
     .then(stories => {
       dispatch({
         type: 'ADD_STORIES',
@@ -79,9 +100,8 @@ export const deleteFrequency = id => (dispatch, getState) => {
   removeFrequency(id)
     .then(() => {
       track('frequency', 'deleted', null);
-
+      history.push('/~hugs-n-bugs');
       dispatch({ type: 'DELETE_FREQUENCY', id });
-      history.push('/');
     })
     .catch(err => {
       dispatch({ type: 'HIDE_MODAL' });
