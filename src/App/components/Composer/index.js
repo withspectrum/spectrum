@@ -238,8 +238,6 @@ class Composer extends Component {
           New story in {currentFrequency[0].name}
         </Byline>;
 
-    console.log('byline: ', byline);
-
     return (
       <ScrollBody>
         <BackArrow onClick={this.closeComposer}>←</BackArrow>
