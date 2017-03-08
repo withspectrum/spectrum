@@ -172,8 +172,8 @@ export const UnderlineInput = styled.input`
 export const H1 = styled.h1`
 	${fontStack};
 	color: ${({ theme }) => theme.text.default};
-	font-weight: 700;
-	font-size: 32px;
+	font-weight: 800;
+	font-size: 24px;
 	line-height: 40px;
 	margin: 0;
 	padding: 0;
@@ -182,8 +182,8 @@ export const H1 = styled.h1`
 export const H2 = styled.h2`
 	color: ${({ theme }) => theme.text.default};
 	${fontStack};
-	font-weight: 500;
-	font-size: 24px;
+	font-weight: 700;
+	font-size: 20px;
 	line-height: 32px;
 	margin: 0;
 	padding: 0;

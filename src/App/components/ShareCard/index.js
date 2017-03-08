@@ -1,9 +1,9 @@
 import React from 'react';
 import { track } from '../../../EventTracker';
 import { Card } from '../GenericCard/style';
-import { SocialButton } from '../../../shared/Globals';
+import { SocialButton, Label, Input } from '../../../shared/Globals';
 import { Twitter, Facebook } from '../../../shared/Icons';
-import { Body, Title, Desc, Input, ButtonWrapper } from './style';
+import { Body, Title, ButtonWrapper } from './style';
 
 const ShareCard = props => {
   const handleFocus = e => {
@@ -22,13 +22,15 @@ const ShareCard = props => {
       <Body>
         <Title>Get the conversation started.</Title>
 
-        <Desc>Share your new frequency with the world!</Desc>
-        <Input
-          onClick={handleFocus}
-          onFocus={handleFocus}
-          readOnly
-          value={`https://spectrum.chat/~${props.slug}`}
-        />
+        <Label>
+          Share your new frequency with the world!
+          <Input
+            onClick={handleFocus}
+            onFocus={handleFocus}
+            readOnly
+            value={`https://spectrum.chat/~${props.slug}`}
+          />
+        </Label>
         <ButtonWrapper>
           <SocialButton
             onClick={handleClick}
