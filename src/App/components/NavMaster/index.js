@@ -108,6 +108,15 @@ class NavigationMaster extends Component {
           </Link>
 
           {user.uid &&
+            <Link to={`/notifications`}>
+              <Freq
+                active={activeFrequency === 'notifications'}
+                onClick={this.hideNav}
+              >
+                <FreqLabel>Notifications</FreqLabel>
+              </Freq>
+            </Link>}
+          {user.uid &&
             frequencies &&
             frequencies.map((frequency, i) => {
               return (

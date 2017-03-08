@@ -8,7 +8,7 @@ import { ACTIVITY_TYPES, OBJECT_TYPES } from './types';
  *
  * Resolves the returned promise with the created message data
  */
-export const createMessage = ({ storyId, frequency, userId, message }) => {
+export const createMessage = ({ storyId, frequency, user, message }) => {
   const db = firebase.database();
 
   const key = db.ref('messages').push().key;
@@ -21,7 +21,7 @@ export const createMessage = ({ storyId, frequency, userId, message }) => {
         storyId,
         frequencyId: frequency.id,
         timestamp: firebase.database.ServerValue.TIMESTAMP,
-        userId,
+        userId: user.uid,
         message,
       },
       [`stories/${storyId}/messages/${key}`]: {
@@ -33,13 +33,17 @@ export const createMessage = ({ storyId, frequency, userId, message }) => {
       const data = snapshot.val();
       createNotifications({
         // Only add notifications for other users
-        users: Object.keys(frequency.users).filter(user => user !== userId),
+        users: Object.keys(frequency.users).filter(user => user !== user.uid),
         activityType: ACTIVITY_TYPES.NEW_MESSAGE,
         objectType: OBJECT_TYPES.STORY,
         objectId: storyId,
-        objectUrl: `https://spectrum.chat/~${frequency.slug ||
-          frequency.id}/${storyId}`,
-        senderId: userId,
+        objectUrl: `/~${frequency.slug || frequency.id}/${storyId}`,
+        sender: {
+          uid: user.uid,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        },
+        content: message.content.substr(0, 140),
       });
       return data;
     });

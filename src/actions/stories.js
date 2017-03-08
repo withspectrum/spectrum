@@ -7,6 +7,7 @@ import {
   setStoryLock,
   listenToStory,
   stopListening,
+  getStory,
 } from '../db/stories';
 import { getMessages, getMessage } from '../db/messages';
 import { getCurrentFrequency } from '../helpers/frequencies';
@@ -81,9 +82,17 @@ export const setActiveStory = story => (dispatch, getState) => {
   track('story', 'viewed', null);
 
   dispatch({ type: 'LOADING' });
-  getMessages(story)
+  const { stories: { stories } } = getState();
+  let promise = Promise.resolve();
+  if (!stories.find(existing => existing.id === story)) {
+    promise = getStory(story).then(story => {
+      dispatch({ type: 'ADD_STORY', story });
+    });
+  }
+  promise
+    .then(getMessages(story))
     .then(messages => {
-      dispatch({ type: 'ADD_MESSAGES', messages });
+      if (messages) dispatch({ type: 'ADD_MESSAGES', messages });
     })
     .catch(err => {
       console.log(err);
@@ -94,7 +103,7 @@ export const setActiveStory = story => (dispatch, getState) => {
 
   if (listener) stopListening(listener);
   listener = listenToStory(story, story => {
-    if (!story.messages) return;
+    if (!story || !story.messages) return;
     const existingMessages = getState().messages.messages.map(
       message => message.id,
     );
