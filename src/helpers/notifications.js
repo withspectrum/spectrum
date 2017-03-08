@@ -38,7 +38,7 @@ export const groupNotifications = notifications => {
   });
 
   // Convert that back into an array
-  return hashToArray(data);
+  return hashToArray(data).sort((a, b) => b.timestamp - a.timestamp);
 };
 
 export const formatSenders = senders => {
