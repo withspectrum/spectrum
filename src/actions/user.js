@@ -29,13 +29,14 @@ export const login = () => dispatch => {
       track('user', 'logged in', null);
       set(user.uid);
 
+      dispatch({ type: 'STOP_LOADING' });
+
       // create the user in the db
       createUser(user);
     })
     .catch(err => {
-      if (err) {
-        console.log('Error logging in: ', err);
-      }
+      dispatch({ type: 'STOP_LOADING' });
+      console.log('Error logging in: ', err);
     });
 };
 
@@ -62,9 +63,7 @@ export const signOut = () => dispatch => {
     window.location.href = '/';
   }, err => {
     // if something funky goes wrong during signout, throw an error and clear localStorage for good measure
-    if (err) {
-      localStorage.removeItem('state');
-      console.log('Error signing out: ', err);
-    }
+    localStorage.removeItem('state');
+    console.log('Error signing out: ', err);
   });
 };
