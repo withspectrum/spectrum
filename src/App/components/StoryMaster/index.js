@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import LoadingIndicator from '../../../shared/loading/global';
 import {
   Column,
   Header,
@@ -17,6 +18,7 @@ import {
   FlexRow,
   Description,
   Actions,
+  LoadingBlock,
 } from './style';
 import { toggleComposer } from '../../../actions/composer';
 import {
@@ -120,7 +122,7 @@ class StoryMaster extends Component {
 
     if (!isEverything && hidden) return <Lock />;
     if (!frequency && !isEverything && !isNotifications)
-      return <p>Loading...</p>;
+      return <LoadingBlock><LoadingIndicator /></LoadingBlock>;
 
     return (
       <Column navVisible={navVisible}>
