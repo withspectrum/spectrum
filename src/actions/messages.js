@@ -18,7 +18,7 @@ export const sendMessage = message => (dispatch, getState) => {
   createMessage({
     storyId,
     frequency,
-    userId: user.uid,
+    user,
     message,
   });
 };

@@ -15,7 +15,6 @@ import {
   Name,
   MetaLink,
   FreqList,
-  FreqListHeading,
   Freq,
   FreqLabel,
   FreqIcon,
@@ -95,8 +94,6 @@ class NavigationMaster extends Component {
               <HeaderLogo src="/img/logo.png" role="presentation" />
             </Header>}
         <FreqList>
-          <FreqListHeading>My Frequencies</FreqListHeading>
-
           <Link to="/">
             <Freq
               active={this.props.frequencies.active === 'everything'}
@@ -107,6 +104,15 @@ class NavigationMaster extends Component {
             </Freq>
           </Link>
 
+          {user.uid &&
+            <Link to={`/notifications`}>
+              <Freq
+                active={activeFrequency === 'notifications'}
+                onClick={this.hideNav}
+              >
+                <FreqLabel>Notifications</FreqLabel>
+              </Freq>
+            </Link>}
           {user.uid &&
             frequencies &&
             frequencies.map((frequency, i) => {
@@ -125,7 +131,6 @@ class NavigationMaster extends Component {
                 </Link>
               );
             })}
-
         </FreqList>
 
         {user.uid &&

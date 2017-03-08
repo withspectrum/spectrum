@@ -13,24 +13,39 @@ const history = createBrowserHistory();
 import { getStories, getAllStories } from '../db/stories';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
-  const { user: { uid } } = getState();
-  track('frequency', 'viewed', null);
-
   dispatch({
     type: 'SET_ACTIVE_FREQUENCY',
     frequency,
   });
-  if (frequency === 'everything') {
-    if (!uid) return;
-    getAllStories(uid).then(stories => {
-      dispatch({
-        type: 'ADD_STORIES',
-        stories,
-      });
-    });
+  // Notifications
+  if (frequency === 'notifications') {
+    track('notifications', 'viewed', null);
     return;
   }
+
   dispatch({ type: 'LOADING' });
+  // Everything
+  if (frequency === 'everything') {
+    // If there's no UID yet we might need to show the homepage, so don't do anything
+    const { user: { uid } } = getState();
+    if (!uid) return;
+    track('everything', 'viewed', null);
+    // Get all the stories from all the frequencies
+    getAllStories(uid)
+      .then(stories => {
+        dispatch({
+          type: 'ADD_STORIES',
+          stories,
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        dispatch({ type: 'STOP_LOADING' });
+      });
+    return;
+  }
+  track('frequency', 'viewed', null);
+  // Get the frequency
   getFrequency({ slug: frequency })
     .then(data => {
       dispatch({
@@ -41,6 +56,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
     })
     .then(data => {
       const freqs = getState().user.frequencies;
+      // If it's a private frequency, don't even get any stories
       if (data && data.settings.private && (!freqs || !freqs[data.id]))
         return [];
       return getStories({ frequencySlug: frequency });

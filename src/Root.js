@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { setActiveFrequency } from './actions/frequencies';
 import { setActiveStory } from './actions/stories';
 import { asyncComponent } from './helpers/utils';
+import { groupNotifications } from './helpers/notifications';
 import LoadingIndicator from './shared/loading/global';
 import { getPublicUserInfo, listenToAuth } from './db/users';
 import { getFrequency } from './db/frequencies';
@@ -49,7 +50,7 @@ class Root extends Component {
       listenToNotifications(user.uid, notifications => {
         dispatch({
           type: 'SET_NOTIFICATIONS',
-          notifications,
+          notifications: groupNotifications(notifications),
         });
       });
 
