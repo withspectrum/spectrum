@@ -71,9 +71,9 @@ export const StoryHeader = styled.div`
 `;
 
 export const Title = styled.p`
-	font-size: 14px;
+	font-size: 16px;
 	font-weight: 400;
-	line-height: 20px;
+	line-height: 24px;
 	color: ${({ theme }) => theme.text.default};
 	margin-bottom: 8px;
 `;
