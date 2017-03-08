@@ -1,15 +1,11 @@
 import React from 'react';
-import { Wrapper, Header, Title, Body, Footer, Close } from './styles';
+import { Wrapper, Header, Title, Body, Footer } from './styles';
 
 const ModalContainer = props => {
   return (
     <Wrapper>
       <Header>
         <Title>{props.title}</Title>
-
-        <Close onClick={props.closeModal}>
-          ✕
-        </Close>
       </Header>
 
       <Body>
