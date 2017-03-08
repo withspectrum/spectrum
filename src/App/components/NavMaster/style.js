@@ -48,15 +48,17 @@ export const MetaWrapper = styled.div`
 
 export const Name = styled(H3)`
   font-size: 16px;
+  line-height: 16px;
   color: ${({ theme }) => theme.text.reverse};
   font-weight: 500;
-  margin-top: 4px;
-  margin-bottom: 2px;
+  margin-top: 2px;
+  margin-bottom: 4px;
 `;
 
 export const P = styled.p`
   display: flex;
   font-size: 12px;
+  line-height: 12px;
   color: ${({ theme }) => theme.text.alt};
   font-weight: 500;
 `;
@@ -87,16 +89,6 @@ export const FreqList = styled.div`
   overflow-y: scroll;
   justify-self: stretch;
   margin-bottom: 2rem;
-`;
-
-export const FreqListHeading = styled.p`
-  font-size: 10px;
-  text-transform: uppercase;
-  color: #3e4256;
-  margin-bottom: 8px;
-  margin-left: 16px;
-  font-weight: bold;
-  letter-spacing: .4px;
 `;
 
 export const Freq = styled.div`
