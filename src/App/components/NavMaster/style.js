@@ -61,6 +61,10 @@ export const P = styled.p`
   line-height: 12px;
   color: ${({ theme }) => theme.text.alt};
   font-weight: 500;
+
+  + p {
+    margin-top: 8px;
+  }
 `;
 
 const linkStyles = css`
@@ -78,6 +82,7 @@ const linkStyles = css`
 `;
 
 export const MetaLink = styled(Link)`${linkStyles}`;
+
 export const MetaAnchor = styled.a`${linkStyles}`;
 
 export const FreqList = styled.div`
@@ -147,9 +152,9 @@ export const Footer = styled.div`
   display: flex;
   flex: 0 0 auto;
   width: 100%;
-  padding: 0 8px 8px 8px;
+  padding: 0 16px 16px 16px;
   align-self: flex-end;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
 `;
 
