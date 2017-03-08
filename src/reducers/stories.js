@@ -56,6 +56,7 @@ export default function root(state = initialState, action) {
       });
       return Object.assign({}, state, { stories });
     }
+    case 'CREATE_FREQUENCY':
     case 'CLEAR_ACTIVE_STORY':
       return Object.assign({}, state, {
         active: null,
