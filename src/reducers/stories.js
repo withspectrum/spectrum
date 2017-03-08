@@ -27,6 +27,14 @@ export default function root(state = initialState, action) {
         stories: state.stories.concat([action.story]),
         active: action.story.id,
       });
+    case 'UPDATE_STORY':
+      return Object.assign({}, state, {
+        stories: state.stories.map(story => {
+          if (story.id !== action.story.id) return story;
+
+          return action.story;
+        }),
+      });
     case 'SET_ACTIVE_STORY':
       return Object.assign({}, state, {
         active: action.story,

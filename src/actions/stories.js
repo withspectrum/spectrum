@@ -103,6 +103,11 @@ export const setActiveStory = story => (dispatch, getState) => {
 
   if (listener) stopListening(listener);
   listener = listenToStory(story, story => {
+    dispatch({
+      type: 'UPDATE_STORY',
+      story,
+    });
+
     if (!story || !story.messages) return;
     const existingMessages = getState().messages.messages.map(
       message => message.id,

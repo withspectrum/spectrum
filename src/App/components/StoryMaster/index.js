@@ -133,7 +133,12 @@ class StoryMaster extends Component {
               <FreqTitle>~ {frequency.name}</FreqTitle>
               <FlexRow>
                 <Count>{Object.keys(frequency.users).length} members</Count>
-                <Count>{Object.keys(frequency.stories).length} stories</Count>
+                <Count>
+                  {frequency.stories
+                    ? Object.keys(frequency.stories).length
+                    : 0}
+                  {' '}stories
+                </Count>
               </FlexRow>
               {frequency.description
                 ? <Description>{frequency.description}</Description>
