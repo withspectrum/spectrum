@@ -81,6 +81,16 @@ const theme = {
   border: {
     default: '#DFE7EF',
   },
+  social: {
+    facebook: {
+      default: '#3b5998',
+      alt: '#5A85DF',
+    },
+    twitter: {
+      default: '#00aced',
+      alt: '#53D0FF',
+    },
+  },
 };
 
 const render = () => {
