@@ -4,19 +4,20 @@ import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import { closeModal } from '../../../actions/modals';
 import { editFrequency, deleteFrequency } from '../../../actions/frequencies';
+import {
+  Button,
+  TextButton,
+  Label,
+  Input,
+  TextArea,
+  UnderlineInput,
+  PrefixLabel,
+} from '../../Globals';
 import { connect } from 'react-redux';
 import {
   modalStyles,
   Footer,
-  NameLabel,
-  NameInput,
   ErrorMessage,
-  Privacy,
-  PrivacyLabel,
-  PrivacyCheckbox,
-  PrivacyText,
-  SaveButton,
-  DeleteButton,
   BigDeleteButton,
   DeleteWarning,
 } from './style';
@@ -28,6 +29,7 @@ class FrequencyEditModal extends React.Component {
     this.state = {
       isOpen: props.isOpen,
       name: props.name,
+      description: props.description || '',
       error: '',
       exists: false,
       private: props.settings.private,
@@ -91,21 +93,39 @@ class FrequencyEditModal extends React.Component {
     this.props.dispatch(closeModal());
   };
 
+  editDescription = e => {
+    if (e.target.value.length > 140) {
+      this.setState({
+        error: 'Frequency descriptions can only be up to 140 characters long.',
+      });
+
+      return;
+    }
+
+    this.setState({
+      description: e.target.value,
+      error: '',
+      disabled: false,
+    });
+  };
+
   prepareEditedFrequency = () => {
     // just in case a user tries to modify the html
     if (
       this.state.error ||
       this.state.loading ||
       this.state.exists ||
-      !this.state.name
+      !this.state.name ||
+      !this.state.description
     ) {
       return;
     }
 
     let frequencyObj = {
       id: this.props.id,
-      name: this.state.name,
-      slug: this.props.slug,
+      name: this.state.name.toString(),
+      slug: this.props.slug.toString(),
+      description: this.state.description.toString(),
       settings: {
         private: this.state.private,
         tint: this.props.settings.tint,
@@ -128,52 +148,45 @@ class FrequencyEditModal extends React.Component {
     return (
       <Modal
         isOpen={this.state.isOpen}
-        contentLabel="Edit Frequency"
+        contentLabel="Edit frequency"
         onRequestClose={this.closeModal}
         shouldCloseOnOverlayClick={true}
         style={modalStyles}
         closeTimeoutMS={330}
       >
 
-        <ModalContainer title={'Edit Frequency'} closeModal={this.closeModal}>
-          <NameLabel>
-            Change Name
-            <NameInput
+        <ModalContainer
+          title={'Frequency Settings'}
+          closeModal={this.closeModal}
+        >
+          <Label>
+            Name
+            <Input
               ref="name"
               type="text"
               defaultValue={this.state.name}
-              placeholder="Frequency Name..."
+              placeholder="A bit minimalist, don't you think?"
               onChange={this.handleChange}
             />
-          </NameLabel>
+          </Label>
 
           {this.state.exists &&
             <ErrorMessage>
               Oops, a frequency with this name already exists.
             </ErrorMessage>}
 
+          <Label>
+            Description
+            <TextArea
+              ref="customDescription"
+              type="text"
+              placeholder={this.state.description}
+              defaultValue={this.state.description}
+              onChange={this.editDescription}
+            />
+          </Label>
+
           {this.state.error && <ErrorMessage>{this.state.error}</ErrorMessage>}
-
-          <Privacy>
-            <PrivacyLabel>
-              <PrivacyCheckbox
-                type="checkbox"
-                checked={this.state.private}
-                onChange={this.togglePrivacy}
-              />
-              Private
-            </PrivacyLabel>
-
-            <PrivacyText>
-              Only members will be able to see stories posted in this frequency. You will be able to approve and block specific people from this frequency.
-            </PrivacyText>
-
-            <PrivacyText>
-              People will be able to request approval at{' '}
-              <b>https://spectrum.chat/~{this.props.slug}</b>
-            </PrivacyText>
-            <br />
-          </Privacy>
 
           {this.state.deleteAttempted &&
             <DeleteWarning>
@@ -182,28 +195,29 @@ class FrequencyEditModal extends React.Component {
 
           {this.state.deleteAttempted
             ? <Footer>
-                <DeleteButton gray onClick={this.toggleDeleteAttempt}>
+                <TextButton onClick={this.toggleDeleteAttempt}>
                   Cancel
-                </DeleteButton>
+                </TextButton>
                 <BigDeleteButton onClick={this.deleteFrequency}>
                   {this.state.deleteText}
                 </BigDeleteButton>
               </Footer>
             : <Footer>
-                <DeleteButton onClick={this.toggleDeleteAttempt}>
+                <TextButton onClick={this.toggleDeleteAttempt}>
                   Delete Frequency
-                </DeleteButton>
-                <SaveButton
+                </TextButton>
+                <Button
                   onClick={this.prepareEditedFrequency}
                   disabled={
                     this.state.disabled ||
                       this.state.error ||
                       !this.state.name ||
-                      this.state.exists
+                      this.state.exists ||
+                      this.state.description.length === 0
                   }
                 >
                   Save
-                </SaveButton>
+                </Button>
               </Footer>}
         </ModalContainer>
       </Modal>
