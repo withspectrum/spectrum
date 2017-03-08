@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient, P } from '../../Globals';
+import { P } from '../../Globals';
 import { isMobile } from '../../../helpers/utils';
 
 const maxWidth = '360px';
