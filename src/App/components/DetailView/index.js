@@ -7,12 +7,15 @@ import Composer from '../Composer';
 import { deleteStory, toggleLockedStory } from '../../../actions/stories';
 import { openGallery } from '../../../actions/gallery';
 import { isStoryCreator, getStoryPermission } from '../../../helpers/stories';
+import { LoginButton, LoginText } from '../StoryMaster/style';
+import { login } from '../../../actions/user';
 
 import {
   ViewContainer,
   LogicContainer,
   NullContainer,
   NullText,
+  Footer,
 } from './style';
 
 class DetailView extends Component {
@@ -43,6 +46,10 @@ class DetailView extends Component {
     this.props.dispatch(openGallery(arr));
   };
 
+  login = () => {
+    this.props.dispatch(login());
+  };
+
   render() {
     let { composer, user, frequencies } = this.props;
     let story = this.getActiveStory();
@@ -67,7 +74,14 @@ class DetailView extends Component {
               moderator={moderator}
               locked={locked}
             />
-            {!story.locked && user.uid && <ChatInput />}
+            {!story.locked &&
+              <Footer centered={!user.uid}>
+                {user.uid
+                  ? <ChatInput />
+                  : <LoginButton onClick={this.login}>
+                      Sign in with Twitter to chat
+                    </LoginButton>}
+              </Footer>}
           </LogicContainer>
         </ViewContainer>
       );

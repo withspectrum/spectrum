@@ -10,7 +10,7 @@ import { track } from '../../../EventTracker';
 import {
   Input,
   Form,
-  Footer,
+  Wrapper,
   Button,
   MediaInput,
   MediaLabel,
@@ -121,7 +121,7 @@ class ChatInput extends Component {
     let mobile = isMobile();
 
     return (
-      <Footer>
+      <Wrapper>
         <MediaInput
           ref="media"
           type="file"
@@ -159,7 +159,7 @@ class ChatInput extends Component {
             />
             <Button onClick={this.sendMessage}>↩</Button>
           </Form>}
-      </Footer>
+      </Wrapper>
     );
   }
 }

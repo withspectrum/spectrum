@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { H1, H4 } from '../../../shared/Globals';
 
 export const Header = styled.div`
@@ -65,4 +65,23 @@ export const NullText = styled(H1)`
 	margin: 0 auto;
 	display: inline-block;
 	color: ${({ theme }) => theme.text.alt};
+`;
+
+export const Footer = styled.div`
+	display: flex;
+	width: 100%;
+	flex: 0 0 auto;
+	align-self: flex-end;
+	align-items: center;
+	padding: 8px;
+	background-color: ${({ theme }) => theme.bg.wash};
+	border-top: 1px solid ${({ theme }) => theme.border.default};
+	${props => props.centered && `justify-content: center;`}
+
+	@media (max-width: 768px) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
 `;
