@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { H1, Label, Input } from '../../../shared/Globals';
+import { H1 } from '../../../shared/Globals';
 
 export const Body = styled.div`
 	width: 100%;

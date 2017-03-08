@@ -28,9 +28,9 @@ import {
 import { login } from '../../../actions/user';
 import { openModal } from '../../../actions/modals';
 import { Lock, NewPost, ClosePost, Settings } from '../../../shared/Icons';
-import GenericCard from '../GenericCard';
+import Card from '../Card';
 import ShareCard from '../ShareCard';
-import { ACTIVITY_TYPES, OBJECT_TYPES } from '../../../db/types';
+import { ACTIVITY_TYPES } from '../../../db/types';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { formatSenders } from '../../../helpers/notifications';
 
@@ -65,13 +65,10 @@ class StoryMaster extends Component {
   };
 
   renderNotification = notification => {
-    const { stories, frequencies } = this.props;
     const {
       activityType,
-      objectType,
       objectId,
       id,
-      objectUrl,
       senders,
       timestamp,
       contentBlocks,
@@ -79,11 +76,9 @@ class StoryMaster extends Component {
     const isNewMsg = activityType === ACTIVITY_TYPES.NEW_MESSAGE;
     // TODO: Notifications for new stories in frequencies
     if (!isNewMsg) return;
-    const object = objectType === OBJECT_TYPES.STORY
-      ? stories.find(story => story.id === objectId)
-      : frequencies.find(freq => freq.id === objectId);
+
     return (
-      <GenericCard
+      <Card
         key={id}
         link={isNewMsg ? `/notifications/${objectId}` : `/~${objectId}`}
         messages={notification.occurrences}
@@ -124,6 +119,28 @@ class StoryMaster extends Component {
     if (!frequency && !isEverything && !isNotifications)
       return <LoadingBlock><LoadingIndicator /></LoadingBlock>;
 
+    let storyText = 'No stories yet 😢';
+    if (frequency && frequency.stories) {
+      const length = Object.keys(frequency.stories).length;
+
+      if (length === 1) {
+        storyText = '1 story';
+      } else {
+        storyText = `${length} stories`;
+      }
+    }
+
+    let membersText = 'No members yet 😢';
+    if (frequency && frequency.users && Object.keys(frequency.users).length) {
+      const length = Object.keys(frequency.users).length;
+
+      if (length === 1) {
+        membersText = '1 member';
+      } else {
+        membersText = `${length} members`;
+      }
+    }
+
     return (
       <Column navVisible={navVisible}>
         <Header>
@@ -132,13 +149,8 @@ class StoryMaster extends Component {
             <FlexCol>
               <FreqTitle>~ {frequency.name}</FreqTitle>
               <FlexRow>
-                <Count>{Object.keys(frequency.users).length} members</Count>
-                <Count>
-                  {frequency.stories
-                    ? Object.keys(frequency.stories).length
-                    : 0}
-                  {' '}stories
-                </Count>
+                <Count>{membersText}</Count>
+                <Count>{storyText}</Count>
               </FlexRow>
               {frequency.description
                 ? <Description>{frequency.description}</Description>
@@ -197,7 +209,7 @@ class StoryMaster extends Component {
                 const freq = isEverything &&
                   getCurrentFrequency(story.frequencyId, frequencies);
                 return (
-                  <GenericCard
+                  <Card
                     isActive={activeStory === story.id}
                     key={`story-${i}`}
                     link={`/~${activeFrequency}/${story.id}`}
