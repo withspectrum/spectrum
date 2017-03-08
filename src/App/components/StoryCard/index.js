@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 // eslint-disable-next-line
 import {
   Card,
@@ -60,10 +60,7 @@ class GenericCard extends Component {
         <Link to={link}>
           <LinkWrapper selected={isActive}>
             <StoryHeader>
-              <Avatar
-                src={person.photo}
-                alt={person.name}
-              />
+              <Avatar src={person.photo} alt={person.name} />
               <UserMeta>
                 <Name>{person.name}</Name>
                 <Meta>
@@ -86,11 +83,11 @@ class GenericCard extends Component {
           </LinkWrapper>
         </Link>
 
-        {metaText && metaLink && (
+        {metaText &&
+          metaLink &&
           <Link to={metaLink}>
             <MetaFreq>{metaText}</MetaFreq>
-          </Link>
-        )}
+          </Link>}
       </Card>
     );
   }

@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Match } from 'react-router';
+import { Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
+import history from './helpers/history';
 import { initStore } from './store';
 import * as firebase from 'firebase';
 import FIREBASE_CONFIG from './config/FirebaseConfig';
@@ -96,17 +97,13 @@ const theme = {
 const render = () => {
   ReactDOM.render(
     <Provider store={store}>
-      <BrowserRouter>
+      <Router history={history}>
         <ThemeProvider theme={theme}>
           <Body>
-            <Match
-              exactly
-              pattern="/(\~?):frequency?/:story?"
-              component={Root}
-            />
+            <Route exact path="/(\~?):frequency?/:story?" component={Root} />
           </Body>
         </ThemeProvider>
-      </BrowserRouter>
+      </Router>
     </Provider>,
     document.querySelector('#root'),
   );

@@ -1,4 +1,4 @@
-import { createBrowserHistory } from 'history';
+import history from '../helpers/history';
 import { track } from '../EventTracker';
 import {
   createDraft,
@@ -37,8 +37,6 @@ export const publishStory = ({ frequencyId, title, description }) => (
         type: 'CREATE_STORY',
         story,
       });
-
-      const history = createBrowserHistory();
       history.push(`/~${state.frequencies.active}/${storyKey}`);
 
       dispatch(setActiveStory(storyKey));
@@ -141,7 +139,6 @@ export const deleteStory = id => (dispatch, getState) => {
         type: 'DELETE_STORY',
         id,
       });
-      const history = createBrowserHistory();
       // redirect the user so that they don't end up on a broken url
       if (activeFrequency && activeFrequency !== 'all') {
         history.push(`/~${activeFrequency}`);
