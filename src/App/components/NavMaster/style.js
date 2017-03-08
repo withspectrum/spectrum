@@ -48,17 +48,23 @@ export const MetaWrapper = styled.div`
 
 export const Name = styled(H3)`
   font-size: 16px;
+  line-height: 16px;
   color: ${({ theme }) => theme.text.reverse};
   font-weight: 500;
-  margin-top: 4px;
-  margin-bottom: 2px;
+  margin-top: 2px;
+  margin-bottom: 4px;
 `;
 
 export const P = styled.p`
   display: flex;
   font-size: 12px;
+  line-height: 12px;
   color: ${({ theme }) => theme.text.alt};
   font-weight: 500;
+
+  + p {
+    margin-top: 8px;
+  }
 `;
 
 const linkStyles = css`
@@ -76,6 +82,7 @@ const linkStyles = css`
 `;
 
 export const MetaLink = styled(Link)`${linkStyles}`;
+
 export const MetaAnchor = styled.a`${linkStyles}`;
 
 export const FreqList = styled.div`
@@ -87,16 +94,6 @@ export const FreqList = styled.div`
   overflow-y: scroll;
   justify-self: stretch;
   margin-bottom: 2rem;
-`;
-
-export const FreqListHeading = styled.p`
-  font-size: 10px;
-  text-transform: uppercase;
-  color: #3e4256;
-  margin-bottom: 8px;
-  margin-left: 16px;
-  font-weight: bold;
-  letter-spacing: .4px;
 `;
 
 export const Freq = styled.div`
@@ -155,9 +152,9 @@ export const Footer = styled.div`
   display: flex;
   flex: 0 0 auto;
   width: 100%;
-  padding: 0 8px 8px 8px;
+  padding: 0 16px 16px 16px;
   align-self: flex-end;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
 `;
 

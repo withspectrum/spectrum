@@ -71,9 +71,9 @@ export const StoryHeader = styled.div`
 `;
 
 export const Title = styled.p`
-	font-size: 14px;
+	font-size: 16px;
 	font-weight: 400;
-	line-height: 20px;
+	line-height: 24px;
 	color: ${({ theme }) => theme.text.default};
 	margin-bottom: 8px;
 `;
@@ -105,15 +105,15 @@ export const Meta = styled(H5)`
 `;
 
 export const MetaFreq = styled(Meta)`
-  color: ${({ theme }) => theme.text.placeholder};
-  font-weight: 400;
+  color: ${({ theme }) => theme.text.alt};
+  font-weight: 600;
   transition: color 0.2s ease-out;
   display: block;
   width: 100%;
-  background: #f6f7f8;
+  background: ${({ theme }) => theme.generic.alt};
   padding: 8px 16px;
   border-radius: 0 0 2px 2px;
-  border-top: 1px solid ${({ theme }) => theme.border.default};
+  border-top: 1px solid ${({ theme }) => theme.generic.default};
 
   &:hover {
   	color: ${({ theme }) => theme.brand.default}

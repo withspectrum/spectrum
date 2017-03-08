@@ -117,9 +117,13 @@ export const createStory = (
           activityType: ACTIVITY_TYPES.NEW_STORY,
           objectType: OBJECT_TYPES.FREQUENCY,
           objectId: frequency.id,
-          objectUrl: `https://spectrum.chat/~${frequency.slug ||
-            frequency.id}/${story.id}`,
-          senderId: draft.creator.uid,
+          objectUrl: `/~${frequency.slug || frequency.id}/${story.id}`,
+          sender: {
+            uid: draft.creator.uid,
+            displayName: draft.creator.displayName,
+            photoURL: draft.creator.photoURL,
+          },
+          content: story.content.title.substr(0, 140),
         });
         return story;
       });

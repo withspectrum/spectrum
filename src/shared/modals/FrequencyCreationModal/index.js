@@ -4,24 +4,19 @@ import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import { closeModal } from '../../../actions/modals';
 import { createFrequency } from '../../../actions/frequencies';
+import {
+  Button,
+  TextButton,
+  Label,
+  Input,
+  TextArea,
+  UnderlineInput,
+  PrefixLabel,
+} from '../../Globals';
 import { checkUniqueFrequencyName, debounce } from '../../../helpers/utils';
 import { connect } from 'react-redux';
 import slugg from 'slugg';
-import {
-  modalStyles,
-  Footer,
-  EditSlug,
-  EditSlugInput,
-  Pre,
-  NameLabel,
-  NameInput,
-  ErrorMessage,
-  CreateButton,
-  Privacy,
-  PrivacyLabel,
-  PrivacyCheckbox,
-  PrivacyText,
-} from './style';
+import { modalStyles, Footer, ErrorMessage } from './style';
 
 class FrequencyCreationModal extends React.Component {
   constructor(props) {
@@ -31,6 +26,7 @@ class FrequencyCreationModal extends React.Component {
       isOpen: props.isOpen,
       name: '',
       slug: '',
+      description: '',
       error: '',
       exists: false,
       editedSlug: false,
@@ -151,6 +147,21 @@ class FrequencyCreationModal extends React.Component {
     });
   };
 
+  editDescription = e => {
+    if (e.target.value.length > 140) {
+      this.setState({
+        error: 'Frequency descriptions can only be up to 140 characters long.',
+      });
+
+      return;
+    }
+
+    this.setState({
+      description: e.target.value,
+      error: '',
+    });
+  };
+
   togglePrivacy = e => {
     this.setState({
       private: !this.state.private,
@@ -172,15 +183,17 @@ class FrequencyCreationModal extends React.Component {
       this.state.loading ||
       this.state.exists ||
       !this.state.name ||
-      !this.state.slug
+      !this.state.slug ||
+      !this.state.description
     ) {
       return;
     }
 
     let frequencyObj = {
-      name: this.state.name,
-      slug: this.state.slug,
+      name: this.state.name.toString(),
+      slug: this.state.slug.toString(),
       private: this.state.private,
+      description: this.state.description.toString(),
     };
 
     this.props.dispatch(createFrequency(frequencyObj));
@@ -198,31 +211,41 @@ class FrequencyCreationModal extends React.Component {
       >
 
         <ModalContainer
-          title={'Create a Frequency'}
+          title={'Make a new frequency!'}
           closeModal={this.closeModal}
         >
-          <NameLabel>
-            Choose a Name
-            <NameInput
+          <Label>
+            What should we call it?
+            <Input
               ref="name"
               autoFocus
               type="text"
               defaultValue={this.state.name}
-              placeholder="Frequency Name..."
+              placeholder="Make it memorable!"
               onChange={this.handleChange}
             />
-          </NameLabel>
+          </Label>
 
-          <EditSlug>
-            <Pre error={this.state.exists}>spectrum.chat/~</Pre>
-            <EditSlugInput
+          <PrefixLabel>
+            spectrum.chat/~
+            <UnderlineInput
               ref="customSlug"
               type="text"
               placeholder={this.state.slug}
               defaultValue={this.state.slug}
               onChange={this.editSlug}
             />
-          </EditSlug>
+          </PrefixLabel>
+
+          <Label>
+            Describe it in 140 characters or less...
+            <TextArea
+              ref="customDescription"
+              placeholder={'What will make people love it?'}
+              defaultValue={this.state.description}
+              onChange={this.editDescription}
+            />
+          </Label>
 
           {this.state.exists &&
             <ErrorMessage>
@@ -233,40 +256,21 @@ class FrequencyCreationModal extends React.Component {
 
           {this.state.error && <ErrorMessage>{this.state.error}</ErrorMessage>}
 
-          <Privacy>
-            <PrivacyLabel>
-              <PrivacyCheckbox
-                type="checkbox"
-                checked={this.state.private}
-                onChange={this.togglePrivacy}
-              />
-              Private Frequency?
-            </PrivacyLabel>
-
-            <PrivacyText>
-              Only members will be able to see stories posted in this frequency. You will be able to approve and block specific people from this frequency.
-            </PrivacyText>
-
-            <PrivacyText>
-              People will be able to request approval at{' '}
-              <b>https://spectrum.chat/~{this.state.slug}</b>
-            </PrivacyText>
-            <br />
-          </Privacy>
-
           <Footer>
-            <CreateButton
+            <TextButton onClick={this.closeModal}>Cancel</TextButton>
+            <Button
               disabled={
                 this.state.error ||
                   !this.state.name ||
                   this.state.loading ||
                   this.state.exists ||
-                  !this.state.slug
+                  !this.state.slug ||
+                  this.state.description.length === 0
               }
               onClick={this.prepareNewFrequency}
             >
               Create
-            </CreateButton>
+            </Button>
           </Footer>
         </ModalContainer>
       </Modal>

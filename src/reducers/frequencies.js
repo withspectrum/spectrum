@@ -24,6 +24,7 @@ export default function root(state = initialState, action) {
           ...frequency,
           name: action.frequency.name,
           slug: action.frequency.slug,
+          description: action.frequency.description,
           settings: {
             private: action.frequency.settings.private,
             tint: action.frequency.settings.tint,

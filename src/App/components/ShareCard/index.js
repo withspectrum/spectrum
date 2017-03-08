@@ -1,7 +1,9 @@
 import React from 'react';
 import { track } from '../../../EventTracker';
-import { Card } from '../StoryCard/style';
-import { Body, Title, Desc, Input, ButtonWrapper, Button } from './style';
+import { Card } from '../GenericCard/style';
+import { SocialButton, Label, Input } from '../../../shared/Globals';
+import { Twitter, Facebook } from '../../../shared/Icons';
+import { Body, Title, ButtonWrapper } from './style';
 
 const ShareCard = props => {
   const handleFocus = e => {
@@ -20,34 +22,38 @@ const ShareCard = props => {
       <Body>
         <Title>Get the conversation started.</Title>
 
-        <Desc>Share your new frequency with the world!</Desc>
-        <Input
-          onClick={handleFocus}
-          onFocus={handleFocus}
-          readOnly
-          value={`https://spectrum.chat/~${props.slug}`}
-        />
+        <Label>
+          Share your new frequency with the world!
+          <Input
+            onClick={handleFocus}
+            onFocus={handleFocus}
+            readOnly
+            value={`https://spectrum.chat/~${props.slug}`}
+          />
+        </Label>
         <ButtonWrapper>
-          <Button
+          <SocialButton
             onClick={handleClick}
             type={'twitter'}
+            reverse={false}
             target="_blank"
             href={
               `https://twitter.com/share?text=${props.name}&url=https://spectrum.chat/~${props.slug}&via=withspectrum`
             }
           >
-            Share on Twitter
-          </Button>
-          <Button
+            <Twitter color={'twitter'} stayActive /> Tweet it!
+          </SocialButton>
+          <SocialButton
             onClick={handleClick}
             type={'facebook'}
+            reverse={false}
             target="_blank"
             href={
               `https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/~${props.slug}`
             }
           >
-            Post to Facebook
-          </Button>
+            <Facebook color={'facebook'} stayActive /> Share on FB!
+          </SocialButton>
         </ButtonWrapper>
       </Body>
     </Card>
