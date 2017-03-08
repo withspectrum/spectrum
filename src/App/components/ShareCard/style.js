@@ -30,28 +30,9 @@ export const ButtonWrapper = styled.div`
 	margin-top: 1rem;
 	text-align: center;
 	justify-content: center;
-`;
 
-export const Button = styled.a`
-	display: flex;
-	align-self: center;
-	color: ${({ theme }) => theme.text.reverse};
-	border-radius: 12px;
-	font-size: 12px;
-	font-weight: 500;
-	padding: 0.5rem 1rem;
-	background: transparent;
-
-	&:first-of-type {
-		margin-right: 0.5rem;
-	}
-
-	&:last-of-type {
-		margin-left: 0.5rem;
-	}
-
-	&:hover {
-		cursor: pointer;
+	> button:last-of-type {
+		margin-left: 16px;
 	}
 `;
 

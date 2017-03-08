@@ -60,6 +60,29 @@ export const TextButton = styled(Button)`
 			}
 	`;
 
+export const SocialButton = styled(Button)`
+ 	display: flex;
+ 	align-items: center;
+ 	padding: 8px 16px 8px 8px;
+	background-color: transparent;
+	font-weight: 600;
+	line-height: 24px;
+	vertical-align: middle;
+	background-image: none;
+	border-color: ${props =>
+  props.type === 'facebook'
+    ? props.theme.social.facebook.default
+    : props.theme.social.twitter.default} ;
+	color: ${props =>
+  props.type === 'facebook'
+    ? props.theme.social.facebook.default
+    : props.theme.social.twitter.default} ;
+
+	> svg {
+		margin-right: 8px;
+	}
+`;
+
 export const Label = styled.label`
   display: flex;
   flex-direction: column;

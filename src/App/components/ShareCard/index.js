@@ -1,8 +1,9 @@
 import React from 'react';
 import { track } from '../../../EventTracker';
 import { Card } from '../GenericCard/style';
+import { SocialButton } from '../../../shared/Globals';
 import { Twitter, Facebook } from '../../../shared/Icons';
-import { Body, Title, Desc, Input, ButtonWrapper, Button } from './style';
+import { Body, Title, Desc, Input, ButtonWrapper } from './style';
 
 const ShareCard = props => {
   const handleFocus = e => {
@@ -29,24 +30,28 @@ const ShareCard = props => {
           value={`https://spectrum.chat/~${props.slug}`}
         />
         <ButtonWrapper>
-          <Button
+          <SocialButton
             onClick={handleClick}
+            type={'twitter'}
+            reverse={false}
             target="_blank"
             href={
               `https://twitter.com/share?text=${props.name}&url=https://spectrum.chat/~${props.slug}&via=withspectrum`
             }
           >
-            <Twitter color={'twitter'} stayActive />
-          </Button>
-          <Button
+            <Twitter color={'twitter'} stayActive /> Tweet it!
+          </SocialButton>
+          <SocialButton
             onClick={handleClick}
+            type={'facebook'}
+            reverse={false}
             target="_blank"
             href={
               `https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat/~${props.slug}`
             }
           >
-            <Facebook color={'facebook'} stayActive />
-          </Button>
+            <Facebook color={'facebook'} stayActive /> Share on FB!
+          </SocialButton>
         </ButtonWrapper>
       </Body>
     </Card>
