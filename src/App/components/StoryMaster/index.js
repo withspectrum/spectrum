@@ -28,9 +28,9 @@ import {
 import { login } from '../../../actions/user';
 import { openModal } from '../../../actions/modals';
 import { Lock, NewPost, ClosePost, Settings } from '../../../shared/Icons';
-import GenericCard from '../GenericCard';
+import Card from '../Card';
 import ShareCard from '../ShareCard';
-import { ACTIVITY_TYPES, OBJECT_TYPES } from '../../../db/types';
+import { ACTIVITY_TYPES } from '../../../db/types';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { formatSenders } from '../../../helpers/notifications';
 
@@ -65,13 +65,10 @@ class StoryMaster extends Component {
   };
 
   renderNotification = notification => {
-    const { stories, frequencies } = this.props;
     const {
       activityType,
-      objectType,
       objectId,
       id,
-      objectUrl,
       senders,
       timestamp,
       contentBlocks,
@@ -79,11 +76,9 @@ class StoryMaster extends Component {
     const isNewMsg = activityType === ACTIVITY_TYPES.NEW_MESSAGE;
     // TODO: Notifications for new stories in frequencies
     if (!isNewMsg) return;
-    const object = objectType === OBJECT_TYPES.STORY
-      ? stories.find(story => story.id === objectId)
-      : frequencies.find(freq => freq.id === objectId);
+
     return (
-      <GenericCard
+      <Card
         key={id}
         link={isNewMsg ? `/notifications/${objectId}` : `/~${objectId}`}
         messages={notification.occurrences}
@@ -214,7 +209,7 @@ class StoryMaster extends Component {
                 const freq = isEverything &&
                   getCurrentFrequency(story.frequencyId, frequencies);
                 return (
-                  <GenericCard
+                  <Card
                     isActive={activeStory === story.id}
                     key={`story-${i}`}
                     link={`/~${activeFrequency}/${story.id}`}

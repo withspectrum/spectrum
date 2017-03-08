@@ -18,7 +18,7 @@ import {
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
 
-class GenericCard extends Component {
+class Card extends Component {
   propTypes = {
     isActive: PropTypes.bool,
     link: PropTypes.string.isRequired,
@@ -60,10 +60,7 @@ class GenericCard extends Component {
         <Link to={link}>
           <LinkWrapper selected={isActive}>
             <StoryHeader>
-              <Avatar
-                src={person.photo}
-                alt={person.name}
-              />
+              <Avatar src={person.photo} alt={person.name} />
               <UserMeta>
                 <Name>{person.name}</Name>
                 <Meta>
@@ -86,13 +83,13 @@ class GenericCard extends Component {
           </LinkWrapper>
         </Link>
 
-        {metaText && metaLink && (
+        {metaText &&
+          metaLink &&
           <Link to={metaLink}>
             <MetaFreq>{metaText}</MetaFreq>
-          </Link>
-        )}
+          </Link>}
       </Card>
     );
   }
 }
-export default GenericCard;
+export default Card;
