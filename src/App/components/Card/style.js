@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { Shadow, H4, H5 } from '../../../shared/Globals';
 
-export const Card = styled.div`
+export const Wrapper = styled.div`
 	display: inline-block;
 	width: calc(100% - 16px);
 	margin: 8px;

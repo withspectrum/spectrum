@@ -1,6 +1,6 @@
 import React from 'react';
 import { track } from '../../../EventTracker';
-import { Card } from '../GenericCard/style';
+import { Wrapper } from '../Card/style';
 import { SocialButton, Label, Input } from '../../../shared/Globals';
 import { Twitter, Facebook } from '../../../shared/Icons';
 import { Body, Title, ButtonWrapper } from './style';
@@ -17,7 +17,7 @@ const ShareCard = props => {
   };
 
   return (
-    <Card static>
+    <Wrapper static>
 
       <Body>
         <Title>Get the conversation started.</Title>
@@ -56,7 +56,7 @@ const ShareCard = props => {
           </SocialButton>
         </ButtonWrapper>
       </Body>
-    </Card>
+    </Wrapper>
   );
 };
 

@@ -44,6 +44,9 @@ export const publishStory = ({ frequencyId, title, description }) => (
       dispatch(setActiveStory(storyKey));
     })
     .catch(err => {
+      dispatch({
+        type: 'STOP_LOADING',
+      });
       console.log(err);
     });
 };
@@ -92,7 +95,11 @@ export const setActiveStory = story => (dispatch, getState) => {
   promise
     .then(getMessages(story))
     .then(messages => {
-      if (messages) dispatch({ type: 'ADD_MESSAGES', messages });
+      if (messages) {
+        dispatch({ type: 'ADD_MESSAGES', messages });
+      } else {
+        dispatch({ type: 'STOP_LOADING' });
+      }
     })
     .catch(err => {
       console.log(err);
