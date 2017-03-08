@@ -28,8 +28,9 @@ import { openModal } from '../../../actions/modals';
 import { Lock, NewPost, ClosePost, Settings } from '../../../shared/Icons';
 import GenericCard from '../GenericCard';
 import ShareCard from '../ShareCard';
-import { ACTIVITY_TYPES } from '../../../db/types';
+import { ACTIVITY_TYPES, OBJECT_TYPES } from '../../../db/types';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
+import { formatSenders } from '../../../helpers/notifications';
 
 class StoryMaster extends Component {
   toggleComposer = () => {
@@ -61,6 +62,43 @@ class StoryMaster extends Component {
     });
   };
 
+  renderNotification = notification => {
+    const { stories, frequencies } = this.props;
+    const {
+      activityType,
+      objectType,
+      objectId,
+      id,
+      objectUrl,
+      senders,
+      timestamp,
+      contentBlocks,
+    } = notification;
+    const isNewMsg = activityType === ACTIVITY_TYPES.NEW_MESSAGE;
+    // TODO: Notifications for new stories in frequencies
+    if (!isNewMsg) return;
+    const object = objectType === OBJECT_TYPES.STORY
+      ? stories.find(story => story.id === objectId)
+      : frequencies.find(freq => freq.id === objectId);
+    return (
+      <GenericCard
+        key={id}
+        link={isNewMsg ? `/notifications/${objectId}` : `/~${objectId}`}
+        messages={notification.occurrences}
+        // metaLink={isEverything && freq && `/~${freq.slug}`}
+        // metaText={isEverything && freq && `~${freq.name}`}
+        person={{
+          photo: '',
+          name: `${formatSenders(senders)} ${isNewMsg
+            ? 'replied to your story'
+            : 'posted a new story'}`,
+        }}
+        timestamp={timestamp}
+        title={contentBlocks[contentBlocks.length - 1]}
+      />
+    );
+  };
+
   render() {
     const {
       frequency,
@@ -81,26 +119,28 @@ class StoryMaster extends Component {
     const hidden = !role && isPrivate;
 
     if (!isEverything && hidden) return <Lock />;
-    if (!frequency && !isEverything) return <p>Loading...</p>;
+    if (!frequency && !isEverything && !isNotifications)
+      return <p>Loading...</p>;
 
     return (
       <Column navVisible={navVisible}>
         <Header>
           {!isEverything &&
+            !isNotifications &&
             <FlexCol>
-              <FreqTitle>~{activeFrequency}</FreqTitle>
+              <FreqTitle>~ {frequency.name}</FreqTitle>
               <FlexRow>
                 <Count>{Object.keys(frequency.users).length} members</Count>
                 <Count>{Object.keys(frequency.stories).length} stories</Count>
               </FlexRow>
-              <Description>
-                What happens when this gets really long? How about if it's like four full sentences. Brian, thank you for coding this up so it actually works. Or maybe just helping me figure out how to do it?
-              </Description>
+              {frequency.description
+                ? <Description>{frequency.description}</Description>
+                : <span />}
             </FlexCol>}
           <Actions visible={loggedIn}>
             <MenuButton onClick={this.toggleNav}>☰</MenuButton>
 
-            {!(isEverything || role === 'owner' || hidden) &&
+            {!(isEverything || role === 'owner' || hidden || isNotifications) &&
               (role
                 ? <Settings color={'brand'} />
                 : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}
@@ -137,6 +177,8 @@ class StoryMaster extends Component {
               <LoginButton>Sign in with Twitter</LoginButton>
             </LoginWrapper>}
 
+          {isNotifications && notifications.map(this.renderNotification)}
+
           {isEverything || frequency
             ? stories.filter(story => story.published).map((story, i) => {
                 const unread = notifications.filter(
@@ -157,7 +199,7 @@ class StoryMaster extends Component {
                       story.messages ? Object.keys(story.messages).length : 0
                     }
                     metaLink={isEverything && freq && `/~${freq.slug}`}
-                    metaText={isEverything && freq && `~${freq.name}`}
+                    metaText={isEverything && freq && `~ ${freq.name}`}
                     person={{
                       photo: story.creator.photoURL,
                       name: story.creator.displayName,
