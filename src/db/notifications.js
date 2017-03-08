@@ -4,7 +4,7 @@ import * as firebase from 'firebase';
  * Create notifications for a bunch of users
  */
 export const createNotifications = (
-  { users, activityType, objectType, objectId, objectUrl, senderId },
+  { users, activityType, objectType, objectId, objectUrl, sender, content },
 ) => {
   const db = firebase.database();
   let updates = {};
@@ -17,7 +17,8 @@ export const createNotifications = (
         objectType,
         objectId,
         objectUrl,
-        senderId,
+        sender,
+        content,
         timestamp: firebase.database.ServerValue.TIMESTAMP,
         read: false,
       };
