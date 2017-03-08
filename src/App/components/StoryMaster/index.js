@@ -188,12 +188,12 @@ class StoryMaster extends Component {
 
           {isEverything || frequency
             ? stories.filter(story => story.published).map((story, i) => {
-                const unread = notifications.filter(
+                const notification = notifications.find(
                   notification =>
                     notification.activityType === ACTIVITY_TYPES.NEW_MESSAGE &&
                     notification.objectId === story.id &&
                     notification.read === false,
-                ).length;
+                );
                 const freq = isEverything &&
                   getCurrentFrequency(story.frequencyId, frequencies);
                 return (
@@ -213,7 +213,7 @@ class StoryMaster extends Component {
                     }}
                     timestamp={story.timestamp}
                     title={story.content.title}
-                    unread={unread}
+                    unread={notification ? notification.occurrences : 0}
                   />
                 );
               })
