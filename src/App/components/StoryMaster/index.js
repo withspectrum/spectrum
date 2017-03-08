@@ -184,7 +184,8 @@ class StoryMaster extends Component {
               <LoginButton>Sign in with Twitter</LoginButton>
             </LoginWrapper>}
 
-          {isNotifications && notifications.map(this.renderNotification)}
+          {isNotifications &&
+            notifications.reverse().map(this.renderNotification)}
 
           {isEverything || frequency
             ? stories.filter(story => story.published).map((story, i) => {
