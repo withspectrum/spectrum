@@ -235,3 +235,11 @@ export const Actions = styled(FlexRow)`
 	padding: 8px;
 	align-items: center;
 `;
+
+export const LoadingBlock = styled.div`
+	display: flex;
+	height: 100%;
+	width: 400px;
+	justify-content: center;
+	align-items: center;
+`;
