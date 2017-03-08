@@ -15,7 +15,6 @@ import {
   Name,
   MetaLink,
   FreqList,
-  FreqListHeading,
   Freq,
   FreqLabel,
   FreqIcon,
@@ -95,8 +94,6 @@ class NavigationMaster extends Component {
               <HeaderLogo src="/img/logo.png" role="presentation" />
             </Header>}
         <FreqList>
-          <FreqListHeading>My Frequencies</FreqListHeading>
-
           <Link to="/">
             <Freq
               active={this.props.frequencies.active === 'everything'}
