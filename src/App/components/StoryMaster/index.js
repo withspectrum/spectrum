@@ -119,6 +119,28 @@ class StoryMaster extends Component {
     if (!frequency && !isEverything && !isNotifications)
       return <LoadingBlock><LoadingIndicator /></LoadingBlock>;
 
+    let storyText = 'No stories yet 😢';
+    if (frequency && frequency.stories) {
+      const length = Object.keys(frequency.stories).length;
+
+      if (length === 1) {
+        storyText = '1 story';
+      } else {
+        storyText = `${length} stories`;
+      }
+    }
+
+    let membersText = 'No members yet 😢';
+    if (frequency && frequency.users && Object.keys(frequency.users).length) {
+      const length = Object.keys(frequency.users).length;
+
+      if (length === 1) {
+        membersText = '1 member';
+      } else {
+        membersText = `${length} members`;
+      }
+    }
+
     return (
       <Column navVisible={navVisible}>
         <Header>
@@ -127,13 +149,8 @@ class StoryMaster extends Component {
             <FlexCol>
               <FreqTitle>~ {frequency.name}</FreqTitle>
               <FlexRow>
-                <Count>{Object.keys(frequency.users).length} members</Count>
-                <Count>
-                  {frequency.stories
-                    ? Object.keys(frequency.stories).length
-                    : 0}
-                  {' '}stories
-                </Count>
+                <Count>{membersText}</Count>
+                <Count>{storyText}</Count>
               </FlexRow>
               {frequency.description
                 ? <Description>{frequency.description}</Description>
