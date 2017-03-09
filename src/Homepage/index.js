@@ -10,6 +10,7 @@ import {
   ContentWrapper,
   EmailInput,
   Submit,
+  Img,
 } from './style';
 import { login } from '../actions/user';
 
@@ -56,6 +57,7 @@ class Homepage extends React.Component {
               <span>Sign in with Twitter</span>
             </Button>
           </div>
+          <Img src="/img/login.svg" />
         </ContentWrapper>
       </Background>
     );
