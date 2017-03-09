@@ -107,7 +107,7 @@ class ChatView extends Component {
                       <ImgBubble
                         me={itsaMe}
                         onClick={this.openGallery}
-                        src={message.message.content.url}
+                        src={message.message.content}
                         key={i}
                       />
                     );

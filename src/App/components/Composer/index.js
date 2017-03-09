@@ -155,7 +155,7 @@ class Composer extends Component {
     if (e.keyCode === 13) {
       e.preventDefault();
       let body = this.props.composer.body;
-      body = `${body}\n<iframe src='${this.state.embedUrl}'></iframe>\n`;
+      body = `${body}\n<iframe src='${this.state.embedUrl}' />\n`;
       this.props.dispatch(updateBody(body));
 
       this.setState({

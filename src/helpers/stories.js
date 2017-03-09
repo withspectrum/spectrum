@@ -73,7 +73,7 @@ export const getStoryPermission = (story, user, frequencies) => {
 
     let permission = frequencies.frequencies.length && storyFrequency.users[uid]
       ? storyFrequency.users[uid].permission
-      : null;
+      : 'subscriber';
 
     return permission;
   } else {

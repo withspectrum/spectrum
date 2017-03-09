@@ -13,8 +13,6 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
 
   const key = db.ref('messages').push().key;
 
-  console.log('message info:', storyId, frequency, user, message);
-
   return db
     .ref()
     .update({
@@ -54,9 +52,7 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
             displayName: user.displayName,
             photoURL: user.photoURL,
           },
-          content: message.type === 'text'
-            ? message.content.substr(0, 140)
-            : '',
+          content: message.content.substr(0, 140),
         });
       });
     })
