@@ -4,13 +4,13 @@ import { sendMessage } from '../../../actions/messages';
 import { uploadMedia } from '../../../helpers/stories';
 import { isMobile } from '../../../helpers/utils';
 import EmojiPicker from '../../../shared/EmojiPicker';
-import { Photo } from '../../../shared/Icons';
+import { Photo, Send } from '../../../shared/Icons';
 import { connect } from 'react-redux';
 import { track } from '../../../EventTracker';
 import {
   Input,
   Form,
-  Footer,
+  Wrapper,
   Button,
   MediaInput,
   MediaLabel,
@@ -45,6 +45,12 @@ class ChatInput extends Component {
   };
 
   toggleEmojiPicker = e => {
+    track(
+      'emojiPicker',
+      `${this.state.emojiPickerOpen ? 'closed' : 'opened'}`,
+      null,
+    );
+
     this.setState({
       emojiPickerOpen: !this.state.emojiPickerOpen,
     });
@@ -121,7 +127,7 @@ class ChatInput extends Component {
     let mobile = isMobile();
 
     return (
-      <Footer>
+      <Wrapper>
         <MediaInput
           ref="media"
           type="file"
@@ -157,9 +163,11 @@ class ChatInput extends Component {
                 !mobile /* autofocus on desktop, don’t autofocus on mobile */
               }
             />
-            <Button onClick={this.sendMessage}>↩</Button>
+            <Button onClick={this.sendMessage}>
+              <Send color={'flatWhite'} stayActive />
+            </Button>
           </Form>}
-      </Footer>
+      </Wrapper>
     );
   }
 }

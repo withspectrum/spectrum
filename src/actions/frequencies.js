@@ -89,6 +89,7 @@ export const createFrequency = data => (dispatch, getState) => {
     })
     .catch(err => {
       dispatch({ type: 'HIDE_MODAL' });
+      dispatch({ type: 'STOP_LOADING' });
       console.log(err);
     });
 };
@@ -107,6 +108,7 @@ export const editFrequency = data => (dispatch, getState) => {
     })
     .catch(err => {
       console.log(err);
+      dispatch({ type: 'STOP_LOADING' });
     });
 };
 
@@ -120,6 +122,7 @@ export const deleteFrequency = id => (dispatch, getState) => {
     })
     .catch(err => {
       dispatch({ type: 'HIDE_MODAL' });
+      dispatch({ type: 'STOP_LOADING' });
       console.log(err);
     });
 };

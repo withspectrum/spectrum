@@ -3,16 +3,9 @@ import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import { closeModal } from '../../../actions/modals';
+import { track } from '../../../EventTracker';
 import { editFrequency, deleteFrequency } from '../../../actions/frequencies';
-import {
-  Button,
-  TextButton,
-  Label,
-  Input,
-  TextArea,
-  UnderlineInput,
-  PrefixLabel,
-} from '../../Globals';
+import { Button, TextButton, Label, Input, TextArea } from '../../Globals';
 import { connect } from 'react-redux';
 import {
   modalStyles,
@@ -41,6 +34,8 @@ class FrequencyEditModal extends React.Component {
   }
 
   toggleDeleteAttempt = () => {
+    track('frequency', 'delete inited', null);
+
     this.setState({
       deleteAttempted: !this.state.deleteAttempted,
     });
@@ -203,7 +198,7 @@ class FrequencyEditModal extends React.Component {
                 </BigDeleteButton>
               </Footer>
             : <Footer>
-                <TextButton onClick={this.toggleDeleteAttempt}>
+                <TextButton warn onClick={this.toggleDeleteAttempt}>
                   Delete Frequency
                 </TextButton>
                 <Button

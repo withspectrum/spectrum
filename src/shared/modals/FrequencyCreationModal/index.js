@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import { closeModal } from '../../../actions/modals';
+import { track } from '../../../EventTracker';
 import { createFrequency } from '../../../actions/frequencies';
 import {
   Button,
@@ -177,6 +178,11 @@ class FrequencyCreationModal extends React.Component {
   };
 
   prepareNewFrequency = () => {
+    if (this.state.editedSlug) {
+      // if the user edited the slug, let's keep an eye out
+      track('frequency', 'slug edited', null);
+    }
+
     // just in case a user tries to modify the html
     if (
       this.state.error ||

@@ -65,12 +65,12 @@ export const Header = styled.div`
 	width: 100%;
 	background-color: ${({ theme }) => theme.bg.default};
 	align-self: flex-start;
+	align-items: center;
 	justify-content: space-between;
 	z-index: 1;
 	box-shadow: ${Shadow.low};
 	position: relative;
 	z-index: 3;
-
 `;
 
 export const FrequencyName = styled.h2`
@@ -192,13 +192,14 @@ export const TipButton = styled.button`
 `;
 
 export const MenuButton = styled.div`
-	font-size: 20px;
-	color: ${props => props.theme.text.alt};
 	display: none;
-	padding-left: 8px;
+	margin-right: 16px;
 
 	@media (max-width: 768px) {
-		display: block;
+		position: absolute;
+		display: inline;
+		left: ${props => props.everything ? '-4px' : '8px'};
+		top: ${props => props.everything ? '3px' : '10px'};
 	}
 `;
 
@@ -207,6 +208,32 @@ export const FreqTitle = styled(H2)`
 	font-size: 20px;
 	margin: 16px;
 	margin-bottom: 8px;
+	position: relative;
+
+	@media (max-width: 768px) {
+		border-bottom: 1px solid ${props => props.theme.border.default};
+		margin: 0;
+    text-align: center;
+    padding: 8px 60px;
+    margin-bottom: 16px;
+    white-space: nowrap;
+    max-width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+	}
+`;
+
+export const Everything = styled(H2)`
+	font-weight: 800;
+	font-size: 20px;
+	position: relative;
+
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		text-align: center;
+		border-bottom: none;
+
 `;
 
 export const FlexCol = styled.div`

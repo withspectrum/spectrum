@@ -6,6 +6,7 @@ import {
   EmojiListItem,
   Overlay,
 } from './styles';
+import { track } from '../../EventTracker';
 
 class EmojiPicker extends React.Component {
   onChange = emoji => {
@@ -15,6 +16,7 @@ class EmojiPicker extends React.Component {
   handleKeyPress = e => {
     // if person taps esc, close the dialog
     if (e.keyCode === 27) {
+      track('emojiPicker', 'escaped', null);
       this.props.closePicker();
     }
   };

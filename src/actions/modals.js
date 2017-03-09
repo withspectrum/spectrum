@@ -17,11 +17,6 @@ export const openModal = (name, props) => {
   };
 };
 
-export const closeModal = () => (dispatch, getState) => {
-  let state = getState();
-  let name = state.modals.modalType;
-
-  dispatch({
-    type: 'HIDE_MODAL',
-  });
-};
+export const closeModal = () => ({
+  type: 'HIDE_MODAL',
+});

@@ -2,6 +2,13 @@ import styled from 'styled-components';
 import { Gradient, Shadow } from '../../../shared/Globals';
 import Textarea from 'react-textarea-autosize';
 
+export const Wrapper = styled.span`
+	display: flex;
+	width: 100%;
+	flex: 0 0 auto;
+	align-items: center;
+`;
+
 export const Form = styled.form`
 	flex: 1 0 auto;
 	display: flex;
@@ -33,31 +40,13 @@ export const Button = styled.button`
 	flex: 0 0 48px;
 	color: ${({ theme }) => theme.text.reverse};
 	font-weight: bold;
-	padding-top: 2px;
+	padding-top: 4px;
 	font-size: 18px;
 	border-radius: 0 8px 8px 0;
 	background-color: ${({ theme }) => theme.brand.default};
 	background-image: ${({ theme }) =>
   Gradient(theme.brand.alt, theme.brand.default)};
   align-self: stretch;
-`;
-
-export const Footer = styled.div`
-	display: flex;
-	width: 100%;
-	flex: 0 0 auto;
-	align-self: flex-end;
-	align-items: center;
-	padding: 8px;
-	background-color: ${({ theme }) => theme.bg.wash};
-	border-top: 1px solid ${({ theme }) => theme.border.default};
-
-	@media (max-width: 768px) {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
 `;
 
 export const MediaInput = styled.input`

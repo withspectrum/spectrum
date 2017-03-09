@@ -42,6 +42,9 @@ export const publishStory = ({ frequencyId, title, description }) => (
       dispatch(setActiveStory(storyKey));
     })
     .catch(err => {
+      dispatch({
+        type: 'STOP_LOADING',
+      });
       console.log(err);
     });
 };
@@ -90,7 +93,11 @@ export const setActiveStory = story => (dispatch, getState) => {
   promise
     .then(getMessages(story))
     .then(messages => {
-      if (messages) dispatch({ type: 'ADD_MESSAGES', messages });
+      if (messages) {
+        dispatch({ type: 'ADD_MESSAGES', messages });
+      } else {
+        dispatch({ type: 'STOP_LOADING' });
+      }
     })
     .catch(err => {
       console.log(err);
@@ -162,7 +169,7 @@ export const toggleLockedStory = story => dispatch => {
 
   setStoryLock({ id, locked: !locked })
     .then(() => {
-      track('story', 'lock toggled', null);
+      track('story', `${locked ? 'unlocked' : 'locked'}`, null);
 
       dispatch({
         type: 'TOGGLE_STORY_LOCK',

@@ -4,15 +4,19 @@ import StoryDetail from '../StoryDetail';
 import ChatInput from '../ChatInput';
 // eslint-disable-next-line
 import Composer from '../Composer';
+import { subscribeFrequency } from '../../../actions/frequencies';
 import { deleteStory, toggleLockedStory } from '../../../actions/stories';
 import { openGallery } from '../../../actions/gallery';
 import { isStoryCreator, getStoryPermission } from '../../../helpers/stories';
+import { LoginButton, LoginText } from '../StoryMaster/style';
+import { login } from '../../../actions/user';
 
 import {
   ViewContainer,
   LogicContainer,
   NullContainer,
   NullText,
+  Footer,
 } from './style';
 
 class DetailView extends Component {
@@ -25,6 +29,10 @@ class DetailView extends Component {
     } else {
       return;
     }
+  };
+
+  subscribeFrequency = () => {
+    this.props.dispatch(subscribeFrequency(this.props.frequencies.active));
   };
 
   deleteStory = () => {
@@ -41,6 +49,10 @@ class DetailView extends Component {
     let arr = [];
     arr.push(e.target.src);
     this.props.dispatch(openGallery(arr));
+  };
+
+  login = () => {
+    this.props.dispatch(login());
   };
 
   render() {
@@ -67,7 +79,21 @@ class DetailView extends Component {
               moderator={moderator}
               locked={locked}
             />
-            {!story.locked && user.uid && <ChatInput />}
+            {!story.locked &&
+              <Footer centered={!user.uid || moderator === null}>
+                {user.uid && moderator !== null && <ChatInput />}
+
+                {!user.uid &&
+                  <LoginButton onClick={this.login}>
+                    Sign in with Twitter to chat
+                  </LoginButton>}
+
+                {user.uid &&
+                  moderator === null &&
+                  <LoginButton onClick={this.subscribeFrequency}>
+                    Join this Frequency to chat!
+                  </LoginButton>}
+              </Footer>}
           </LogicContainer>
         </ViewContainer>
       );
@@ -88,9 +114,7 @@ class DetailView extends Component {
         <ViewContainer
           mobile={this.props.stories.active || this.props.composer.isOpen}
         >
-          <NullContainer>
-            <NullText>Choose a story to get started!</NullText>
-          </NullContainer>
+          <NullContainer />
         </ViewContainer>
       );
     }

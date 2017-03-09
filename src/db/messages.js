@@ -13,6 +13,8 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
 
   const key = db.ref('messages').push().key;
 
+  console.log('message info:', storyId, frequency, user, message);
+
   return db
     .ref()
     .update({
@@ -28,25 +30,38 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
         id: key,
       },
     })
-    .then(() => db.ref(`messages/${key}`).once('value'))
-    .then(snapshot => {
-      const data = snapshot.val();
-      createNotifications({
-        // Only add notifications for other users
-        users: Object.keys(frequency.users).filter(user => user !== user.uid),
-        activityType: ACTIVITY_TYPES.NEW_MESSAGE,
-        objectType: OBJECT_TYPES.STORY,
-        objectId: storyId,
-        objectUrl: `/~${frequency.slug || frequency.id}/${storyId}`,
-        sender: {
-          uid: user.uid,
-          displayName: user.displayName,
-          photoURL: user.photoURL,
-        },
-        content: message.content.substr(0, 140),
+    .then(() => db.ref(`stories/${storyId}`).once('value'))
+    .then(snapshot => snapshot.val())
+    .then(story => {
+      return getMessages(storyId).then(messages => {
+        createNotifications({
+          // Add notifications for
+          users: messages
+            // - Everybody who's sent a message in that story before
+            .map(({ userId }) => userId)
+            // - Creator of story
+            .concat([story.creator.uid])
+            // Avoid duplicates
+            .filter((v, i, a) => a.indexOf(v) === i)
+            // Avoid notifying the sender
+            .filter(uid => uid !== user.uid),
+          activityType: ACTIVITY_TYPES.NEW_MESSAGE,
+          objectType: OBJECT_TYPES.STORY,
+          objectId: storyId,
+          objectUrl: `/~${frequency.slug || frequency.id}/${storyId}`,
+          sender: {
+            uid: user.uid,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+          },
+          content: message.type === 'text'
+            ? message.content.substr(0, 140)
+            : '',
+        });
       });
-      return data;
-    });
+    })
+    .then(() => db.ref(`messages/${key}`).once('value'))
+    .then(snapshot => snapshot.val());
 };
 
 export const getMessage = messageId => {

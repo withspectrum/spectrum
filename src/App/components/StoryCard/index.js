@@ -18,7 +18,7 @@ import {
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
 
-class GenericCard extends Component {
+class Card extends Component {
   propTypes = {
     isActive: PropTypes.bool,
     link: PropTypes.string.isRequired,
@@ -92,4 +92,4 @@ class GenericCard extends Component {
     );
   }
 }
-export default GenericCard;
+export default Card;

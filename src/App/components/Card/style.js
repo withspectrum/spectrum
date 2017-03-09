@@ -1,13 +1,14 @@
 import styled, { css } from 'styled-components';
 import { Shadow, H4, H5 } from '../../../shared/Globals';
 
-export const Card = styled.div`
+export const Wrapper = styled.div`
 	display: inline-block;
 	width: calc(100% - 16px);
 	margin: 8px;
 	margin-bottom: 0;
 	flex: 0 0 auto;
-	border-radius: 2px;
+	border-radius: 4px;
+	overflow: hidden;
 	background-color: ${({ theme }) => theme.bg.default};
 	transition: all 0.2s ease-in;
 	-webkit-font-smoothing: subpixel-antialiased;
@@ -31,22 +32,14 @@ export const LinkWrapper = styled.div`
 	background-color: #ffffff;
 	padding: 16px;
 	transition: all 0.2s ease-in;
+	box-shadow: inset -4px 0 0 ${props =>
+  props.selected ? props.theme.brand.default : '#fff'};
 
-	box-shadow: inset ${props =>
-  props.selected
-    ? `-16px 0 0 -8px ${props.theme.brand.default}`
-    : `0px 0 0 0px transparent`};
-
-	${props => !props.static &&
-css`
-		&:hover {
-			box-shadow: ${props.selected
-  ? `, inset -32px 0 0 -16px ${props.theme.brand.default}`
-  : ``};
-			transition: all 0.2s ease-out;
-			cursor: pointer;
-		}
-	`}
+	&:hover {
+		box-shadow: inset -4px 0 0 ${props =>
+  props.selected ? props.theme.brand.default : '#fff'};
+		transition: all 0.2s ease-in-out;
+	}
 `;
 
 export const StoryBody = styled.div`
@@ -58,9 +51,9 @@ export const StoryBody = styled.div`
 
 export const Avatar = styled.img`
 	display: inline-block;
-  height: 40px;
-  width: 40px;
-	border-radius: 12px;
+  height: 32px;
+  width: 32px;
+	border-radius: 4px;
 	box-shadow: ${Shadow.border};
 `;
 
@@ -75,7 +68,6 @@ export const Title = styled.p`
 	font-weight: 400;
 	line-height: 24px;
 	color: ${({ theme }) => theme.text.default};
-	margin-bottom: 8px;
 `;
 
 export const Media = styled.img`
@@ -110,7 +102,7 @@ export const MetaFreq = styled(Meta)`
   transition: color 0.2s ease-out;
   display: block;
   width: 100%;
-  background: ${({ theme }) => theme.generic.alt};
+  background: #fff;
   padding: 8px 16px;
   border-radius: 0 0 2px 2px;
   border-top: 1px solid ${({ theme }) => theme.generic.default};

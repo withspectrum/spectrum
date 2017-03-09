@@ -19,6 +19,7 @@ import {
   Description,
   Actions,
   LoadingBlock,
+  Everything,
 } from './style';
 import { toggleComposer } from '../../../actions/composer';
 import {
@@ -27,10 +28,17 @@ import {
 } from '../../../actions/frequencies';
 import { login } from '../../../actions/user';
 import { openModal } from '../../../actions/modals';
-import { Lock, NewPost, ClosePost, Settings } from '../../../shared/Icons';
-import GenericCard from '../GenericCard';
+import {
+  Lock,
+  NewPost,
+  ClosePost,
+  Settings,
+  Menu,
+} from '../../../shared/Icons';
+import Card from '../Card';
 import ShareCard from '../ShareCard';
-import { ACTIVITY_TYPES, OBJECT_TYPES } from '../../../db/types';
+import NuxJoinCard from '../NuxJoinCard';
+import { ACTIVITY_TYPES } from '../../../db/types';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { formatSenders } from '../../../helpers/notifications';
 
@@ -65,13 +73,10 @@ class StoryMaster extends Component {
   };
 
   renderNotification = notification => {
-    const { stories, frequencies } = this.props;
     const {
       activityType,
-      objectType,
       objectId,
       id,
-      objectUrl,
       senders,
       timestamp,
       contentBlocks,
@@ -79,11 +84,9 @@ class StoryMaster extends Component {
     const isNewMsg = activityType === ACTIVITY_TYPES.NEW_MESSAGE;
     // TODO: Notifications for new stories in frequencies
     if (!isNewMsg) return;
-    const object = objectType === OBJECT_TYPES.STORY
-      ? stories.find(story => story.id === objectId)
-      : frequencies.find(freq => freq.id === objectId);
+
     return (
-      <GenericCard
+      <Card
         key={id}
         link={isNewMsg ? `/notifications/${objectId}` : `/~${objectId}`}
         messages={notification.occurrences}
@@ -114,6 +117,7 @@ class StoryMaster extends Component {
       ui: { navVisible },
       activeStory,
       notifications,
+      user,
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
@@ -124,32 +128,57 @@ class StoryMaster extends Component {
     if (!frequency && !isEverything && !isNotifications)
       return <LoadingBlock><LoadingIndicator /></LoadingBlock>;
 
+    let storyText = 'No stories yet 😢';
+    if (frequency && frequency.stories) {
+      const length = Object.keys(frequency.stories).length;
+
+      if (length === 1) {
+        storyText = '1 story';
+      } else {
+        storyText = `${length} stories`;
+      }
+    }
+
+    let membersText = 'No members yet 😢';
+    if (frequency && frequency.users && Object.keys(frequency.users).length) {
+      const length = Object.keys(frequency.users).length;
+
+      if (length === 1) {
+        membersText = '1 member';
+      } else {
+        membersText = `${length} members`;
+      }
+    }
+
     return (
       <Column navVisible={navVisible}>
         <Header>
           {!isEverything &&
             !isNotifications &&
             <FlexCol>
-              <FreqTitle>~ {frequency.name}</FreqTitle>
+              <FreqTitle>
+
+                <MenuButton onClick={this.toggleNav}>
+                  <Menu stayActive color={'brand'} />
+                </MenuButton>
+
+                ~ {frequency.name}
+              </FreqTitle>
               <FlexRow>
-                <Count>{Object.keys(frequency.users).length} members</Count>
-                <Count>
-                  {frequency.stories
-                    ? Object.keys(frequency.stories).length
-                    : 0}
-                  {' '}stories
-                </Count>
+                {user.uid && <Count>{membersText}</Count>}
+
+                {user.uid && <Count>{storyText}</Count>}
               </FlexRow>
               {frequency.description
                 ? <Description>{frequency.description}</Description>
                 : <span />}
             </FlexCol>}
           <Actions visible={loggedIn}>
-            <MenuButton onClick={this.toggleNav}>☰</MenuButton>
-
             {!(isEverything || role === 'owner' || hidden || isNotifications) &&
               (role
-                ? <Settings color={'brand'} />
+                ? <JoinBtn member={role} onClick={this.unsubscribeFrequency}>
+                    Leave
+                  </JoinBtn>
                 : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}
 
             {role === 'owner' &&
@@ -158,19 +187,29 @@ class StoryMaster extends Component {
                 tipText="Frequency Settings"
                 tipLocation="bottom"
               >
-                <Lock />
+                <Settings color={'brand'} />
               </TipButton>}
 
             {(isEverything || role) &&
-              <TipButton
-                onClick={this.toggleComposer}
-                tipText="New Story"
-                tipLocation="bottom"
-              >
-                {composer.isOpen
-                  ? <ClosePost color="warn" />
-                  : <NewPost color="brand" stayActive />}
-              </TipButton>}
+              <Everything>
+                <span />
+                {isEverything &&
+                  <MenuButton everything onClick={this.toggleNav}>
+                    <Menu stayActive color={'brand'} />
+                  </MenuButton>}
+
+                {isEverything && '~Everything'}
+
+                <TipButton
+                  onClick={this.toggleComposer}
+                  tipText="New Story"
+                  tipLocation="bottom"
+                >
+                  {composer.isOpen
+                    ? <ClosePost color="warn" />
+                    : <NewPost color="brand" stayActive />}
+                </TipButton>
+              </Everything>}
           </Actions>
 
         </Header>
@@ -188,16 +227,16 @@ class StoryMaster extends Component {
 
           {isEverything || frequency
             ? stories.filter(story => story.published).map((story, i) => {
-                const unread = notifications.filter(
+                const notification = notifications.find(
                   notification =>
                     notification.activityType === ACTIVITY_TYPES.NEW_MESSAGE &&
                     notification.objectId === story.id &&
                     notification.read === false,
-                ).length;
+                );
                 const freq = isEverything &&
                   getCurrentFrequency(story.frequencyId, frequencies);
                 return (
-                  <GenericCard
+                  <Card
                     isActive={activeStory === story.id}
                     key={`story-${i}`}
                     link={`/~${activeFrequency}/${story.id}`}
@@ -213,7 +252,7 @@ class StoryMaster extends Component {
                     }}
                     timestamp={story.timestamp}
                     title={story.content.title}
-                    unread={unread}
+                    unread={notification ? notification.occurrences : 0}
                   />
                 );
               })
@@ -222,6 +261,10 @@ class StoryMaster extends Component {
           {!isEverything &&
             frequency &&
             <ShareCard slug={activeFrequency} name={frequency.name} />}
+
+          {isEverything &&
+            frequencies.length === 0 && // user is viewing everything but isn't subscribed to anything
+            <NuxJoinCard />}
         </ScrollBody>
       </Column>
     );
@@ -235,6 +278,7 @@ const mapStateToProps = state => {
     activeStory: state.stories.active,
     notifications: state.notifications.notifications,
     frequencies: state.frequencies.frequencies,
+    user: state.user,
   };
 };
 

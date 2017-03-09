@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router-dom';
 // eslint-disable-next-line
 import {
-  Card,
+  Wrapper,
   LinkWrapper,
   StoryBody,
   StoryHeader,
@@ -18,14 +18,16 @@ import {
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
 
-class GenericCard extends Component {
+const canBeBool = (...types) => PropTypes.oneOfType([PropTypes.bool, ...types]);
+
+class Card extends Component {
   static propTypes = {
-    isActive: PropTypes.bool,
+    isActive: canBeBool(PropTypes.bool),
     link: PropTypes.string.isRequired,
-    media: PropTypes.string,
-    messages: PropTypes.number,
-    metaLink: PropTypes.string,
-    metaText: PropTypes.string,
+    media: canBeBool(PropTypes.string),
+    messages: canBeBool(PropTypes.number),
+    metaLink: canBeBool(PropTypes.string),
+    metaText: canBeBool(PropTypes.string),
     person: PropTypes.shape({
       name: PropTypes.string.isRequired,
       photo: PropTypes.string.isRequired,
@@ -56,7 +58,7 @@ class GenericCard extends Component {
     } = this.props;
 
     return (
-      <Card>
+      <Wrapper>
         <Link to={link}>
           <LinkWrapper selected={isActive}>
             <StoryHeader>
@@ -88,8 +90,8 @@ class GenericCard extends Component {
           <Link to={metaLink}>
             <MetaFreq>{metaText}</MetaFreq>
           </Link>}
-      </Card>
+      </Wrapper>
     );
   }
 }
-export default GenericCard;
+export default Card;
