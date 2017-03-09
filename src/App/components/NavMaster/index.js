@@ -91,7 +91,9 @@ class NavigationMaster extends Component {
               </MetaWrapper>
             </Header>
           : <Header login>
-              <HeaderLogo src="/img/logo.png" role="presentation" />
+              <Link to="/">
+                <HeaderLogo src="/img/logo.png" role="presentation" />
+              </Link>
             </Header>}
         <FreqList>
           <Link to="/">
