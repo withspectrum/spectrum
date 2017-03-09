@@ -19,7 +19,6 @@ import {
   Description,
   Actions,
   LoadingBlock,
-  Everything,
 } from './style';
 import { toggleComposer } from '../../../actions/composer';
 import {
@@ -31,7 +30,6 @@ import { openModal } from '../../../actions/modals';
 import { Lock, NewPost, ClosePost, Settings } from '../../../shared/Icons';
 import Card from '../Card';
 import ShareCard from '../ShareCard';
-import NuxJoinCard from '../NuxJoinCard';
 import { ACTIVITY_TYPES } from '../../../db/types';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { formatSenders } from '../../../helpers/notifications';
@@ -111,7 +109,6 @@ class StoryMaster extends Component {
       ui: { navVisible },
       activeStory,
       notifications,
-      user,
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
@@ -150,25 +147,21 @@ class StoryMaster extends Component {
           {!isEverything &&
             !isNotifications &&
             <FlexCol>
-              <FreqTitle>
-                <MenuButton onClick={this.toggleNav}>☰</MenuButton>
-                ~ {frequency.name}
-              </FreqTitle>
+              <FreqTitle>~ {frequency.name}</FreqTitle>
               <FlexRow>
-                {user.uid && <Count>{membersText}</Count>}
-
-                {user.uid && <Count>{storyText}</Count>}
+                <Count>{membersText}</Count>
+                <Count>{storyText}</Count>
               </FlexRow>
               {frequency.description
                 ? <Description>{frequency.description}</Description>
                 : <span />}
             </FlexCol>}
           <Actions visible={loggedIn}>
+            <MenuButton onClick={this.toggleNav}>☰</MenuButton>
+
             {!(isEverything || role === 'owner' || hidden || isNotifications) &&
               (role
-                ? <JoinBtn member={role} onClick={this.unsubscribeFrequency}>
-                    Leave
-                  </JoinBtn>
+                ? <Settings color={'brand'} />
                 : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}
 
             {role === 'owner' &&
@@ -177,29 +170,19 @@ class StoryMaster extends Component {
                 tipText="Frequency Settings"
                 tipLocation="bottom"
               >
-                <Settings color={'brand'} />
+                <Lock />
               </TipButton>}
 
             {(isEverything || role) &&
-              <Everything>
-                <span />
-                {isEverything &&
-                  <MenuButton everything={true} onClick={this.toggleNav}>
-                    ☰
-                  </MenuButton>}
-
-                {isEverything && '~Everything'}
-
-                <TipButton
-                  onClick={this.toggleComposer}
-                  tipText="New Story"
-                  tipLocation="bottom"
-                >
-                  {composer.isOpen
-                    ? <ClosePost color="warn" />
-                    : <NewPost color="brand" stayActive />}
-                </TipButton>
-              </Everything>}
+              <TipButton
+                onClick={this.toggleComposer}
+                tipText="New Story"
+                tipLocation="bottom"
+              >
+                {composer.isOpen
+                  ? <ClosePost color="warn" />
+                  : <NewPost color="brand" stayActive />}
+              </TipButton>}
           </Actions>
 
         </Header>
@@ -251,10 +234,6 @@ class StoryMaster extends Component {
           {!isEverything &&
             frequency &&
             <ShareCard slug={activeFrequency} name={frequency.name} />}
-
-          {isEverything &&
-            frequencies.length === 0 && // user is viewing everything but isn't subscribed to anything
-            <NuxJoinCard />}
         </ScrollBody>
       </Column>
     );
@@ -268,7 +247,6 @@ const mapStateToProps = state => {
     activeStory: state.stories.active,
     notifications: state.notifications.notifications,
     frequencies: state.frequencies.frequencies,
-    user: state.user,
   };
 };
 

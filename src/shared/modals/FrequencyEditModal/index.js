@@ -195,7 +195,7 @@ class FrequencyEditModal extends React.Component {
                 </BigDeleteButton>
               </Footer>
             : <Footer>
-                <TextButton warn onClick={this.toggleDeleteAttempt}>
+                <TextButton onClick={this.toggleDeleteAttempt}>
                   Delete Frequency
                 </TextButton>
                 <Button
