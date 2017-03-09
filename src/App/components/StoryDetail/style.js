@@ -79,6 +79,7 @@ export const HiddenInput = styled.input`
 
 export const HiddenLabel = styled.span`
 	display: inline-block;
+	width: 32px;
 	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip')};
 `;
 
