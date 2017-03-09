@@ -18,7 +18,7 @@ export const Bubble = styled.p`
 	flex: 0 0 auto;
 	padding: 8px 16px;
 	vertical-align: middle;
-	border-radius: 16px
+	border-radius: 24px
 	margin-top: 2px;
 	font-size: 14px;
 	max-width: 60%;
@@ -72,18 +72,6 @@ export const BubbleGroup = styled.div`
 		align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
 		font-weight: ${props => props.me ? `500` : `400`};
 		clear: both;
-
-		&:not(:first-of-type) {
-			${props =>
-  props.me ? `border-top-right-radius: 4px` : `border-top-left-radius: 4px`};
-		}
-
-		&:not(:last-of-type) {
-			${props =>
-  props.me
-    ? `border-bottom-right-radius: 4px`
-    : `border-bottom-left-radius: 4px`};
-		}
 
 		&::selection {
 		  background-color: ${props =>
