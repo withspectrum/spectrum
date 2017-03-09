@@ -10,6 +10,7 @@ import {
   ContentWrapper,
   EmailInput,
   Submit,
+  Img,
 } from './style';
 import { login } from '../actions/user';
 
@@ -48,9 +49,8 @@ class Homepage extends React.Component {
         <ContentWrapper>
           <div>
             <LogoContainer><LogoWhite /></LogoContainer>
-            <Tagline>Enter your email below to sign up for the beta.</Tagline>
             <Tagline>
-              Invites will be sent on a first-come basis - be quick!
+              Enter your email below to be the first to know when we launch the beta!
             </Tagline>
             {/*<Button onClick={this.login}>
               <Twitter color={'brand'} stayActive />
@@ -111,6 +111,7 @@ class Homepage extends React.Component {
               </form>
             </div>
           </div>
+          <Img src="/img/login.svg" />
         </ContentWrapper>
       </Background>
     );

@@ -96,6 +96,12 @@ export const Submit = styled.input`
 	color: ${props =>
   props.disabled ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,1)'};
 	margin-left: 8px;
+
+	@media (max-width: 540px) {
+		margin-left: 0;
+		margin-top: 8px;
+	}
+
 `;
 
 export const ContentWrapper = styled.div`
@@ -108,4 +114,16 @@ export const ContentWrapper = styled.div`
 	padding: 2rem;
 	position: relative;
 	z-index: 1;
+`;
+
+export const Img = styled.img`
+	height: 320px;
+	margin-left: 40px;
+	z-index: -1;
+
+	@media (max-width: 540px) {
+		position: absolute;
+		margin-left: 0;
+		bottom: -100px;
+	}
 `;
