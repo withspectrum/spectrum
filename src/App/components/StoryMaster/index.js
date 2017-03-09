@@ -28,7 +28,13 @@ import {
 } from '../../../actions/frequencies';
 import { login } from '../../../actions/user';
 import { openModal } from '../../../actions/modals';
-import { Lock, NewPost, ClosePost, Settings } from '../../../shared/Icons';
+import {
+  Lock,
+  NewPost,
+  ClosePost,
+  Settings,
+  Menu,
+} from '../../../shared/Icons';
 import Card from '../Card';
 import ShareCard from '../ShareCard';
 import NuxJoinCard from '../NuxJoinCard';
@@ -151,7 +157,11 @@ class StoryMaster extends Component {
             !isNotifications &&
             <FlexCol>
               <FreqTitle>
-                <MenuButton onClick={this.toggleNav}>☰</MenuButton>
+
+                <MenuButton onClick={this.toggleNav}>
+                  <Menu stayActive color={'brand'} />
+                </MenuButton>
+
                 ~ {frequency.name}
               </FreqTitle>
               <FlexRow>
@@ -184,8 +194,8 @@ class StoryMaster extends Component {
               <Everything>
                 <span />
                 {isEverything &&
-                  <MenuButton everything={true} onClick={this.toggleNav}>
-                    ☰
+                  <MenuButton everything onClick={this.toggleNav}>
+                    <Menu stayActive color={'brand'} />
                   </MenuButton>}
 
                 {isEverything && '~Everything'}

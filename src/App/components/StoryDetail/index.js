@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import ChatDetail from '../ChatDetail';
 import Markdown from 'react-remarkable';
-import { Lock, Unlock, Delete } from '../../../shared/Icons';
+import { Lock, Unlock, Delete, Back } from '../../../shared/Icons';
 import {
   ScrollBody,
   ContentView,
@@ -108,7 +108,9 @@ class StoryView extends Component {
     return (
       <ScrollBody>
         <Link to={`/~${returnUrl}`}>
-          <BackArrow onClick={this.clearActiveStory}>←</BackArrow>
+          <BackArrow onClick={this.clearActiveStory}>
+            <Back stayActive color={'brand'} />
+          </BackArrow>
         </Link>
 
         <ContentView>

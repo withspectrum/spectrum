@@ -65,6 +65,7 @@ export const Header = styled.div`
 	width: 100%;
 	background-color: ${({ theme }) => theme.bg.default};
 	align-self: flex-start;
+	align-items: center;
 	justify-content: space-between;
 	z-index: 1;
 	box-shadow: ${Shadow.low};
@@ -191,16 +192,14 @@ export const TipButton = styled.button`
 `;
 
 export const MenuButton = styled.div`
-	font-size: 20px;
-	color: ${props => props.theme.text.alt};
 	display: none;
 	margin-right: 16px;
 
 	@media (max-width: 768px) {
 		position: absolute;
 		display: inline;
-		left: ${props => props.everything ? '8px' : '16px'};
-		top: ${props => props.everything ? '0' : '8px'};
+		left: ${props => props.everything ? '-4px' : '8px'};
+		top: ${props => props.everything ? '3px' : '10px'};
 	}
 `;
 
