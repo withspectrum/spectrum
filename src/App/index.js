@@ -37,11 +37,12 @@ class App extends Component {
         <NavMaster />
         <StoryMaster
           loggedIn={!!user.uid}
-          role={getFrequencyPermission(
-            user,
-            frequencies.active,
-            frequencies.frequencies,
-          )}
+          role={
+            user &&
+              frequency &&
+              frequency.users[user.uid] &&
+              frequency.users[user.uid].permission
+          }
           activeFrequency={frequencies.active}
           isPrivate={frequency && frequency.settings.private}
           stories={sortedStories}
