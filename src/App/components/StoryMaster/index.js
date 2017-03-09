@@ -233,6 +233,7 @@ class StoryMaster extends Component {
                     notification.objectId === story.id &&
                     notification.read === false,
                 );
+                const unread = notification ? notification.unread : 0;
                 const freq = isEverything &&
                   getCurrentFrequency(story.frequencyId, frequencies);
                 return (
@@ -252,7 +253,7 @@ class StoryMaster extends Component {
                     }}
                     timestamp={story.timestamp}
                     title={story.content.title}
-                    unread={notification ? notification.occurrences : 0}
+                    unread={unread}
                   />
                 );
               })
