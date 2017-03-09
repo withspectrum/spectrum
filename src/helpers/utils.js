@@ -1,7 +1,9 @@
 import * as firebase from 'firebase';
 import React from 'react';
 import LoadingIndicator from '../shared/loading/global';
-import createEmojiRegex from 'emoji-regex';
+// NOTE (@mxstbr): The /dist here is a bug in a specific version of emoji-regex
+// Can be removed after the next release: https://github.com/mathiasbynens/emoji-regex/pull/12
+import createEmojiRegex from 'emoji-regex/dist';
 
 export const hashToArray = hash => {
   let array = [];
