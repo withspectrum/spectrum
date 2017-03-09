@@ -31,6 +31,7 @@ import { openModal } from '../../../actions/modals';
 import { Lock, NewPost, ClosePost, Settings } from '../../../shared/Icons';
 import Card from '../Card';
 import ShareCard from '../ShareCard';
+import NuxJoinCard from '../NuxJoinCard';
 import { ACTIVITY_TYPES } from '../../../db/types';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { formatSenders } from '../../../helpers/notifications';
@@ -250,6 +251,10 @@ class StoryMaster extends Component {
           {!isEverything &&
             frequency &&
             <ShareCard slug={activeFrequency} name={frequency.name} />}
+
+          {isEverything &&
+            frequencies.length === 0 && // user is viewing everything but isn't subscribed to anything
+            <NuxJoinCard />}
         </ScrollBody>
       </Column>
     );
