@@ -20,6 +20,7 @@ export const Tagline = styled(H2)`
 	font-weight: 500;
 	font-size: 20px;
 	margin-top: 8px;
+	margin-bottom: 24px;
 `;
 
 export const Button = styled.button`
