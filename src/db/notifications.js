@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import { ACTIVITY_TYPES } from './types';
 
 /**
  * Create notifications for a bunch of users
@@ -52,7 +53,7 @@ export const listenToNotifications = (userId, cb) => {
 };
 
 /**
- * Mark notifications of a story read
+ * Mark messages of a story read
  */
 export const markMessagesRead = (storyId, userId) => new Promise(resolve => {
   const db = firebase.database();
@@ -66,6 +67,28 @@ export const markMessagesRead = (storyId, userId) => new Promise(resolve => {
       if (!storyNotifications) return;
       let updates = {};
       Object.keys(storyNotifications).forEach(id => {
+        updates[`${id}/read`] = true;
+      });
+      resolve(db.ref(`notifications/${userId}`).update(updates));
+    });
+});
+
+/**
+ * Mark stories of a frequency read
+ */
+export const markStoriesRead = (frequencyId, userId) => new Promise(resolve => {
+  const db = firebase.database();
+
+  db
+    .ref(`notifications/${userId}`)
+    .orderByChild('objectId')
+    .equalTo(frequencyId)
+    .once('value', snapshot => {
+      const notifications = snapshot.val();
+      if (!notifications || notifications.length === 0) return;
+      let updates = {};
+      Object.keys(notifications).forEach(id => {
+        if (notifications[id].activityType !== ACTIVITY_TYPES.NEW_STORY) return;
         updates[`${id}/read`] = true;
       });
       resolve(db.ref(`notifications/${userId}`).update(updates));
