@@ -135,6 +135,8 @@ export const subscribeFrequency = slug => (dispatch, getState) => {
     .then(frequency => {
       track('frequency', 'subscribed', null);
 
+      history.push(`/~${frequency.slug || frequency.id}`);
+
       dispatch({
         type: 'CREATE_FREQUENCY',
         frequency,
@@ -157,6 +159,7 @@ export const unsubscribeFrequency = frequency => (dispatch, getState) => {
   removeUserFromFrequency(uid, id)
     .then(() => {
       track('frequency', 'unsubscribed', null);
+      history.push(`/~${frequency}`);
 
       dispatch({
         type: 'UNSUBSCRIBE_FREQUENCY',
