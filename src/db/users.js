@@ -15,9 +15,21 @@ export const createUser = user => {
       [`users/${uid}/public/displayName`]: user.displayName,
       [`users/${uid}/public/uid`]: uid,
       [`users/${uid}/public/photoURL`]: user.photoURL,
-      [`users/${uid}/public/frequencies/-KcpUngtORLZzm56Biz4`]: {
+      [`users/${uid}/public/frequencies/-Kenm0MXIRCq8GkwiJKb`]: {
         //=> add `hugs n bugs` to user's default frequencies
-        id: '-KcpUngtORLZzm56Biz4',
+        id: '-Kenm0MXIRCq8GkwiJKb',
+        permission: 'subscriber',
+        joined: firebase.database.ServerValue.TIMESTAMP,
+      },
+      [`users/${uid}/public/frequencies/-KenmQHXnkUDN0S9UUsn`]: {
+        //=> add `~Discover` to user's default frequencies
+        id: '-KenmQHXnkUDN0S9UUsn',
+        permission: 'subscriber',
+        joined: firebase.database.ServerValue.TIMESTAMP,
+      },
+      [`users/${uid}/public/frequencies/-Kenmw8GUeJYnxXNc0WS`]: {
+        //=> add `~Spectrum` to user's default frequencies
+        id: '-Kenmw8GUeJYnxXNc0WS',
         permission: 'subscriber',
         joined: firebase.database.ServerValue.TIMESTAMP,
       },
@@ -26,7 +38,15 @@ export const createUser = user => {
       },
     })
     .then(() => db.ref().update({
-      [`frequencies/-KcpUngtORLZzm56Biz4/users/${uid}`]: {
+      [`frequencies/-Kenm0MXIRCq8GkwiJKb/users/${uid}`]: {
+        permission: 'subscriber',
+        joined: firebase.database.ServerValue.TIMESTAMP,
+      },
+      [`frequencies/-KenmQHXnkUDN0S9UUsn/users/${uid}`]: {
+        permission: 'subscriber',
+        joined: firebase.database.ServerValue.TIMESTAMP,
+      },
+      [`frequencies/-Kenmw8GUeJYnxXNc0WS/users/${uid}`]: {
         permission: 'subscriber',
         joined: firebase.database.ServerValue.TIMESTAMP,
       },
