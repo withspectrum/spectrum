@@ -21,18 +21,16 @@ import {
 
 class DetailView extends Component {
   getActiveStory = () => {
-    if (this.props.stories.stories) {
-      return this.props.stories.stories.filter(story => {
-        return story.id === this.props.stories.active;
-      })[0] ||
-        '';
-    } else {
-      return;
-    }
+    const { stories: { stories, active } } = this.props;
+    if (!stories || stories.length === 0) return;
+
+    return stories.find(story => story.id === active);
   };
 
   subscribeFrequency = () => {
-    this.props.dispatch(subscribeFrequency(this.props.frequencies.active));
+    this.props.dispatch(
+      subscribeFrequency(this.props.frequencies.active, false),
+    );
   };
 
   deleteStory = () => {
@@ -56,13 +54,13 @@ class DetailView extends Component {
   };
 
   render() {
-    let { composer, user, frequencies } = this.props;
-    let story = this.getActiveStory();
+    const { composer, user, frequencies: { frequencies } } = this.props;
+    const story = this.getActiveStory();
 
-    let moderator, creator, locked;
+    let role, creator, locked;
     if (story) {
       creator = isStoryCreator(story, user);
-      moderator = getStoryPermission(story, user, frequencies);
+      role = getStoryPermission(story, user, frequencies);
       locked = story.locked ? story.locked : false;
     }
 
@@ -76,12 +74,12 @@ class DetailView extends Component {
             <StoryDetail
               activeStory={story}
               creator={creator}
-              moderator={moderator}
+              moderator={role}
               locked={locked}
             />
             {!story.locked &&
-              <Footer centered={!user.uid || moderator === null}>
-                {user.uid && moderator !== null && <ChatInput />}
+              <Footer centered={!role}>
+                {user.uid && role && <ChatInput />}
 
                 {!user.uid &&
                   <LoginButton onClick={this.login}>
@@ -89,7 +87,7 @@ class DetailView extends Component {
                   </LoginButton>}
 
                 {user.uid &&
-                  moderator === null &&
+                  !role &&
                   <LoginButton onClick={this.subscribeFrequency}>
                     Join this Frequency to chat!
                   </LoginButton>}
