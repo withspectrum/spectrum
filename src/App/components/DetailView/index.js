@@ -63,7 +63,6 @@ class DetailView extends Component {
     if (story) {
       creator = isStoryCreator(story, user);
       moderator = getStoryPermission(story, user, frequencies);
-      console.log('moderator: ', moderator);
       locked = story.locked ? story.locked : false;
     }
 
