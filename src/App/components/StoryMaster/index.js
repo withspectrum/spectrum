@@ -27,7 +27,13 @@ import {
 } from '../../../actions/frequencies';
 import { login } from '../../../actions/user';
 import { openModal } from '../../../actions/modals';
-import { Lock, NewPost, ClosePost, Settings } from '../../../shared/Icons';
+import {
+  Lock,
+  NewPost,
+  ClosePost,
+  Settings,
+  Menu,
+} from '../../../shared/Icons';
 import Card from '../Card';
 import ShareCard from '../ShareCard';
 import { ACTIVITY_TYPES } from '../../../db/types';
@@ -157,7 +163,9 @@ class StoryMaster extends Component {
                 : <span />}
             </FlexCol>}
           <Actions visible={loggedIn}>
-            <MenuButton onClick={this.toggleNav}>☰</MenuButton>
+            <MenuButton onClick={this.toggleNav}>
+              <Menu stayActive color={'brand'} />
+            </MenuButton>
 
             {!(isEverything || role === 'owner' || hidden || isNotifications) &&
               (role

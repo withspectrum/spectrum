@@ -99,6 +99,24 @@ const Defs = withTheme(props => {
           stopOpacity="1"
         />
       </radialGradient>
+      <radialGradient
+        id="flatWhiteGradient"
+        fx="0%"
+        fy="0%"
+        r="100%"
+        spreadMethod="pad"
+      >
+        <stop
+          offset="0%"
+          stopColor={props.theme.text.reverse}
+          stopOpacity="1"
+        />
+        <stop
+          offset="100%"
+          stopColor={props.theme.text.reverse}
+          stopOpacity="1"
+        />
+      </radialGradient>
     </defs>
   );
 });

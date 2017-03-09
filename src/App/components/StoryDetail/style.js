@@ -90,16 +90,16 @@ export const HiddenButton = styled.button`
 
 export const BackArrow = styled.span`
 	margin-bottom: 16px;
-	font-size: 20px;
 	width: 100%;
-	border-bottom: 1px solid ${props => props.theme.border.default};
 	background: #fff;
-	box-shadow: 0 1px 1px rgba(0,0,0,0.02);
-	padding: 1rem;
+	box-shadow: ${Shadow.low};
+	height: 48px;
+	align-items: center;
 	display: none;
+	padding-left: 8px;
 
 	@media (max-width: 768px) {
-		display: block;
+		display: flex;
 		position: fixed;
 		top: 0;
 		left: 0;
