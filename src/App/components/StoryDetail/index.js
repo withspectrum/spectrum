@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import ChatDetail from '../ChatDetail';
 import Markdown from 'react-remarkable';
-import { Lock, Unlock, Delete } from '../../../shared/Icons';
+import { Freeze, Delete, Back } from '../../../shared/Icons';
 import {
   ScrollBody,
   ContentView,
@@ -111,7 +111,9 @@ class StoryView extends Component {
     return (
       <ScrollBody>
         <Link to={`/~${returnUrl}`}>
-          <BackArrow onClick={this.clearActiveStory}>←</BackArrow>
+          <BackArrow onClick={this.clearActiveStory}>
+            <Back stayActive color={'brand'} />
+          </BackArrow>
         </Link>
 
         <ContentView>
@@ -125,14 +127,11 @@ class StoryView extends Component {
                 <FlexColumnEnd>
                   <label>
                     {locked
-                      ? <HiddenLabel tipText="Story locked" tipLocation="left">
-                          <Lock color="warn" stayActive />
+                      ? <HiddenLabel tipText="Unfreeze Chat" tipLocation="left">
+                          <Freeze stayActive color={'warn'} />
                         </HiddenLabel>
-                      : <HiddenLabel
-                          tipText="Story unlocked"
-                          tipLocation="left"
-                        >
-                          <Unlock />
+                      : <HiddenLabel tipText="Freeze Chat" tipLocation="left">
+                          <Freeze color={'warn'} />
                         </HiddenLabel>}
                     <HiddenInput
                       type="checkbox"

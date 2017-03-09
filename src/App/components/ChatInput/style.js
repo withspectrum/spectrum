@@ -40,7 +40,7 @@ export const Button = styled.button`
 	flex: 0 0 48px;
 	color: ${({ theme }) => theme.text.reverse};
 	font-weight: bold;
-	padding-top: 2px;
+	padding-top: 4px;
 	font-size: 18px;
 	border-radius: 0 8px 8px 0;
 	background-color: ${({ theme }) => theme.brand.default};

@@ -4,7 +4,7 @@ import { sendMessage } from '../../../actions/messages';
 import { uploadMedia } from '../../../helpers/stories';
 import { isMobile } from '../../../helpers/utils';
 import EmojiPicker from '../../../shared/EmojiPicker';
-import { Photo } from '../../../shared/Icons';
+import { Photo, Send } from '../../../shared/Icons';
 import { connect } from 'react-redux';
 import { track } from '../../../EventTracker';
 import {
@@ -163,7 +163,9 @@ class ChatInput extends Component {
                 !mobile /* autofocus on desktop, don’t autofocus on mobile */
               }
             />
-            <Button onClick={this.sendMessage}>↩</Button>
+            <Button onClick={this.sendMessage}>
+              <Send color={'flatWhite'} stayActive />
+            </Button>
           </Form>}
       </Wrapper>
     );
