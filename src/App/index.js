@@ -40,8 +40,8 @@ class App extends Component {
           role={
             user &&
               frequency &&
-              user.frequencies[frequency.id] &&
-              user.frequencies[frequency.id].permission
+              frequency.users[user.uid] &&
+              frequency.users[user.uid].permission
           }
           activeFrequency={frequencies.active}
           isPrivate={frequency && frequency.settings.private}

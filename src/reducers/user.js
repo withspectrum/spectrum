@@ -27,6 +27,7 @@ export default function root(state = initialState, action) {
       return Object.assign({}, initialState, {
         loaded: true,
       });
+    case 'SUBSCRIBE_FREQUENCY':
     case 'CREATE_FREQUENCY':
       return Object.assign({}, state, {
         frequencies: {
