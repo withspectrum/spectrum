@@ -106,7 +106,7 @@ class NavigationMaster extends Component {
             </Freq>
           </Link>
 
-          {user.uid &&
+          {/*user.uid &&
             <Link to={`/notifications`}>
               <Freq
                 active={activeFrequency === 'notifications'}
@@ -114,7 +114,8 @@ class NavigationMaster extends Component {
               >
                 <FreqLabel>Notifications</FreqLabel>
               </Freq>
-            </Link>}
+            </Link>*/
+          }
           {user.uid &&
             frequencies &&
             frequencies.map((frequency, i) => {
