@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { login, signOut } from '../../../actions/user';
 import { openModal } from '../../../actions/modals';
 import { setActiveFrequency } from '../../../actions/frequencies';
