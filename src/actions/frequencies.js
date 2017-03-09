@@ -160,6 +160,7 @@ export const unsubscribeFrequency = frequency => (dispatch, getState) => {
 
       dispatch({
         type: 'UNSUBSCRIBE_FREQUENCY',
+        uid,
         id,
       });
     })

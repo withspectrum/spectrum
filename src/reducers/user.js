@@ -34,6 +34,14 @@ export default function root(state = initialState, action) {
           [action.frequency.id]: action.frequency,
         },
       });
+    case 'UNSUBSCRIBE_FREQUENCY':
+      return {
+        ...state,
+        frequencies: Object.keys(state.frequencies).reduce((result, key) => {
+          if (key !== action.id) result[key] = state.frequencies[key];
+          return result;
+        }, {}),
+      };
     default:
       return state;
   }

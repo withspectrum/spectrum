@@ -56,12 +56,19 @@ export default function root(state = initialState, action) {
         loaded: true,
       });
     case 'UNSUBSCRIBE_FREQUENCY': {
-      const frequencies = state.frequencies
-        .slice()
-        .filter(frequency => frequency.id !== action.id);
-      return Object.assign({}, state, {
-        frequencies,
-      });
+      return {
+        ...state,
+        frequencies: state.frequencies.map(frequency => {
+          if (frequency.id !== action.id) return frequency;
+
+          delete frequency.users[action.uid];
+
+          return {
+            ...frequency,
+            users: frequency.users,
+          };
+        }),
+      };
     }
     default:
       return state;
