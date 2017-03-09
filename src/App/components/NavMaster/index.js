@@ -82,7 +82,7 @@ class NavigationMaster extends Component {
       <Column navVisible={this.props.ui.navVisible}>
         {user.uid
           ? <Header>
-              <Avatar src={user.photoURL} title="Bryn Jackson" />
+              <Avatar src={user.photoURL} title={user.displayName} />
               <MetaWrapper>
                 <Name>{user.displayName}</Name>
                 <P>
