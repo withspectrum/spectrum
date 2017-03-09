@@ -172,7 +172,7 @@ export const toggleLockedStory = story => dispatch => {
 
   setStoryLock({ id, locked: !locked })
     .then(() => {
-      track('story', 'lock toggled', null);
+      track('story', `${locked ? 'unlocked' : 'locked'}`, null);
 
       dispatch({
         type: 'TOGGLE_STORY_LOCK',

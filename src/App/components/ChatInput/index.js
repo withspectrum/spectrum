@@ -45,6 +45,12 @@ class ChatInput extends Component {
   };
 
   toggleEmojiPicker = e => {
+    track(
+      'emojiPicker',
+      `${this.state.emojiPickerOpen ? 'closed' : 'opened'}`,
+      null,
+    );
+
     this.setState({
       emojiPickerOpen: !this.state.emojiPickerOpen,
     });

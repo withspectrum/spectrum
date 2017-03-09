@@ -2,7 +2,7 @@ const ga = window.ga;
 
 export const set = uid => {
   /**
-	* 
+	*
 	* This get sets on login or on authentication. This helps us track the UID in GA
 	* which will allow for us to have more meaningful understanding of future experiments
 	*
@@ -39,6 +39,11 @@ export const track = (category, action, label) => {
 	* track('story', 'deleted') => Story category, deleted action
 
   */
+
+  // console log tracking events locally so that we can quickly make sure things are firing properly
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('tracking: ', category, action, label);
+  }
 
   try {
     ga('send', 'event', category, action, label);
