@@ -17,7 +17,7 @@ import {
 import { checkUniqueFrequencyName, debounce } from '../../../helpers/utils';
 import { connect } from 'react-redux';
 import slugg from 'slugg';
-import { modalStyles, Footer, ErrorMessage } from './style';
+import { modalStyles, Footer, ErrorMessage, CheckboxWrapper } from './style';
 
 class FrequencyCreationModal extends React.Component {
   constructor(props) {
@@ -33,6 +33,7 @@ class FrequencyCreationModal extends React.Component {
       editedSlug: false,
       private: false,
       loading: false,
+      acceptCoC: false,
     };
 
     this.handleChange = debounce(this.handleChange, 500);
@@ -169,6 +170,12 @@ class FrequencyCreationModal extends React.Component {
     });
   };
 
+  toggleCoC = e => {
+    this.setState(prevState => ({
+      acceptCoC: !prevState.acceptCoC,
+    }));
+  };
+
   closeModal = () => {
     this.setState({
       isOpen: !this.state.isOpen,
@@ -190,7 +197,8 @@ class FrequencyCreationModal extends React.Component {
       this.state.exists ||
       !this.state.name ||
       !this.state.slug ||
-      !this.state.description
+      !this.state.description ||
+      !this.state.acceptCoC
     ) {
       return;
     }
@@ -217,7 +225,7 @@ class FrequencyCreationModal extends React.Component {
       >
 
         <ModalContainer
-          title={'Make a new frequency!'}
+          title={'Create a new frequency!'}
           closeModal={this.closeModal}
         >
           <Label>
@@ -253,6 +261,24 @@ class FrequencyCreationModal extends React.Component {
             />
           </Label>
 
+          <Label>
+            <CheckboxWrapper>
+              <Input
+                type="checkbox"
+                checked={this.state.acceptCoC}
+                onChange={this.toggleCoC}
+              />
+              I have read the{' '}
+              <a
+                href="https://github.com/withspectrum/code-of-conduct"
+                target="_blank"
+              >
+                Spectrum Code of Conduct
+              </a>
+              {' '}and agree to enforce it in my community.
+            </CheckboxWrapper>
+          </Label>
+
           {this.state.exists &&
             <ErrorMessage>
               Oops, a{' '}
@@ -271,7 +297,8 @@ class FrequencyCreationModal extends React.Component {
                   this.state.loading ||
                   this.state.exists ||
                   !this.state.slug ||
-                  this.state.description.length === 0
+                  this.state.description.length === 0 ||
+                  !this.state.acceptCoC
               }
               onClick={this.prepareNewFrequency}
             >
