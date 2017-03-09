@@ -128,6 +128,31 @@ export const Attachment = props => {
   );
 };
 
+export const Back = props => {
+  return (
+    <Svg
+      color={props.color}
+      stayActive={props.stayActive}
+      viewBox="0 0 32 32"
+      width="32"
+      height="32"
+      fillRule="evenodd"
+      clipRule="evenodd"
+      strokeLinejoin="round"
+      strokeMiterlimit="1.414"
+      id="back"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-labelledby="title"
+    >
+      <title id="title">Back</title>
+      <Defs />
+      <path
+        d="M19.616,23.108c0.353,-0.424 0.296,-1.055 -0.128,-1.408c-1.645,-1.377 -5.466,-4.762 -6.775,-6.482c1.331,-1.749 5.1,-5.085 6.775,-6.482c0.424,-0.353 0.481,-0.984 0.128,-1.408c-0.354,-0.425 -0.985,-0.482 -1.409,-0.128c-1.84,1.532 -5.8,4.993 -7.201,6.964c-0.218,0.312 -0.409,0.664 -0.409,1.054c0,0.39 0.191,0.742 0.409,1.053c1.373,1.932 5.399,5.462 7.2,6.964l0.001,0.001c0.425,0.354 1.055,0.296 1.409,-0.128Z"
+      />
+    </Svg>
+  );
+};
+
 export const ClosePost = props => {
   return (
     <Svg
@@ -349,6 +374,39 @@ export const Lock = props => {
   );
 };
 
+export const Menu = props => {
+  return (
+    <Svg
+      color={props.color}
+      stayActive={props.stayActive}
+      viewBox="0 0 32 32"
+      width="32"
+      height="32"
+      fillRule="evenodd"
+      clipRule="evenodd"
+      strokeLinejoin="round"
+      strokeMiterlimit="1.414"
+      id="menu"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-labelledby="title"
+    >
+      <title id="title">Menu</title>
+      <Defs />
+      <g>
+        <path
+          d="M9,10c0,-0.552 0.448,-1 1,-1l12,0c0.552,0 1,0.448 1,1c0,0.552 -0.448,1 -1,1l-12,0c-0.552,0 -1,-0.448 -1,-1Z"
+        />
+        <path
+          d="M9,15c0,-0.552 0.448,-1 1,-1l12,0c0.552,0 1,0.448 1,1c0,0.552 -0.448,1 -1,1l-12,0c-0.552,0 -1,-0.448 -1,-1Z"
+        />
+        <path
+          d="M9,20c0,-0.552 0.448,-1 1,-1l12,0c0.552,0 1,0.448 1,1c0,0.552 -0.448,1 -1,1l-12,0c-0.552,0 -1,-0.448 -1,-1Z"
+        />
+      </g>
+    </Svg>
+  );
+};
+
 export const NewPost = props => {
   return (
     <Svg
@@ -483,6 +541,31 @@ export const ScrollTop = props => {
           d="M10.11,19.018c0.424,0.354 1.055,0.297 1.408,-0.128c1.391,-1.636 2.76,-3.464 4.482,-4.774c1.749,1.331 3.085,3.1 4.482,4.774c0.353,0.425 0.984,0.482 1.408,0.128c0.42,-0.349 0.476,-0.99 0.127,-1.409c-1.505,-1.799 -3.031,-3.827 -4.964,-5.2c-0.311,-0.219 -0.663,-0.409 -1.053,-0.409c-0.39,0 -0.742,0.19 -1.053,0.409c-1.914,1.359 -3.471,3.41 -4.965,5.201c-0.354,0.424 -0.296,1.055 0.128,1.408Z"
         />
       </g>
+    </Svg>
+  );
+};
+
+export const Send = props => {
+  return (
+    <Svg
+      color={props.color}
+      stayActive={props.stayActive}
+      viewBox="0 0 32 32"
+      width="32"
+      height="32"
+      fillRule="evenodd"
+      clipRule="evenodd"
+      strokeLinejoin="round"
+      strokeMiterlimit="1.414"
+      id="send"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-labelledby="title"
+    >
+      <title id="title">Send</title>
+      <Defs />
+      <path
+        d="M16.044,15.012c-0.005,-0.104 -0.071,-0.205 -0.198,-0.232l-7.45,-1.579c-0.231,-0.049 -0.396,-0.253 -0.396,-0.489l0,-5.712c0,-0.73 0.698,-1.159 1.419,-0.908c4.295,1.497 12.081,5.408 15.616,8.025c0.34,0.252 0.515,0.573 0.52,0.895c-0.005,0.323 -0.18,0.644 -0.52,0.896c-3.535,2.617 -11.321,6.868 -15.616,8.365c-0.721,0.251 -1.419,-0.178 -1.419,-0.908l0,-6.052c0,-0.236 0.165,-0.44 0.396,-0.489l7.45,-1.579c0.127,-0.027 0.193,-0.129 0.198,-0.233Z"
+      />
     </Svg>
   );
 };
