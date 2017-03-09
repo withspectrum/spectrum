@@ -99,9 +99,9 @@ export const FreqList = styled.div`
 export const Freq = styled.div`
   display: flex;
   flex: 0 0 48px;
-  padding: 0.5rem;
-  padding-left: 1rem;
+  padding: 0.5rem 1rem;
   align-items: center;
+  justify-content: space-between;
   background-color: ${props =>
   props.active ? props.theme.brand.default : props.theme.bg.reverse};
   background-image: ${props =>
@@ -115,6 +115,11 @@ export const Freq = styled.div`
     background-color: ${props =>
   props.active ? props.theme.brand.default : '#2E313F'};
   }
+`;
+
+export const FreqText = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 export const FreqLabel = styled.span`
@@ -207,4 +212,11 @@ export const Button = styled.button`
     top: 1px;
     transition: all 0s;
   }
+`;
+
+export const DirtyDot = styled.div`
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.warn.default};
+  width: 10px;
+  height: 10px;
 `;
