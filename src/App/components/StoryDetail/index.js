@@ -23,6 +23,7 @@ import {
 import { openGallery } from '../../../actions/gallery';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { toggleLockedStory, deleteStory } from '../../../actions/stories';
+import { track } from '../../../EventTracker';
 
 class StoryView extends Component {
   state = {
@@ -53,6 +54,8 @@ class StoryView extends Component {
   };
 
   initDeleteStory = () => {
+    track('story', 'delete inited', null);
+
     this.setState({
       deleteInited: !this.state.deleteInited,
     });

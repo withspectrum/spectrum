@@ -13,7 +13,7 @@ export const sendMessage = message => (dispatch, getState) => {
   ).frequencyId;
   const frequency = getCurrentFrequency(frequencyId, frequencies);
 
-  track('message', 'sent', null);
+  track(`${message.type} message`, 'sent', null);
 
   createMessage({
     storyId,

@@ -30,6 +30,8 @@ export const updateBody = body => ({
 });
 
 export const addMediaList = file => {
+  track('composer', 'media uploaded', null);
+
   return {
     type: 'ADD_MEDIA_LIST',
     file,
@@ -42,6 +44,8 @@ export const removeImageFromStory = (key, story) => dispatch => {
     .ref(`stories/${story}/media/${key}`)
     .remove()
     .then(() => {
+      track('composer', 'media removed', null);
+
       dispatch({
         type: 'REMOVE_MEDIA_LIST',
         key,

@@ -8,6 +8,7 @@ import {
   MiniContainer,
 } from './style';
 import { closeGallery } from '../../actions/gallery';
+import { track } from '../../EventTracker';
 
 class GalleryRoot extends Component {
   closeGallery = () => {
@@ -29,6 +30,8 @@ class GalleryRoot extends Component {
 
     // left arrow key
     if (e.keyCode === 37) {
+      track('gallery', 'mini gallery navigated', null);
+
       if (index === 0) {
         this.props.dispatch({
           type: 'CHANGE_GALLERY_INDEX',
@@ -43,6 +46,8 @@ class GalleryRoot extends Component {
     }
 
     if (e.keyCode === 39) {
+      track('gallery', 'mini gallery navigated', null);
+
       if (index < length - 1) {
         this.props.dispatch({
           type: 'CHANGE_GALLERY_INDEX',
@@ -58,6 +63,7 @@ class GalleryRoot extends Component {
   };
 
   setCount = i => {
+    track('gallery', 'mini gallery clicked', null);
     this.props.dispatch({
       type: 'CHANGE_GALLERY_INDEX',
       index: i,

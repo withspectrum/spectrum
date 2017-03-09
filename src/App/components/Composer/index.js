@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { track } from '../../../EventTracker';
 import {
   updateTitle,
   updateBody,
@@ -154,6 +155,8 @@ class Composer extends Component {
     // if person taps enter, add the url in an iframe to the body
     if (e.keyCode === 13) {
       e.preventDefault();
+      track('composer', 'embed created', null);
+
       let body = this.props.composer.body;
       body = `${body}\n<iframe src='${this.state.embedUrl}' />\n`;
       this.props.dispatch(updateBody(body));
@@ -201,6 +204,8 @@ class Composer extends Component {
   };
 
   setPreviewing = () => {
+    track('composer', 'previewed', null);
+
     this.setState({
       creating: false,
     });
