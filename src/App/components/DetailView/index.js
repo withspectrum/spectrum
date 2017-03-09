@@ -81,7 +81,7 @@ class DetailView extends Component {
               locked={locked}
             />
             {!story.locked &&
-              <Footer centered={user.uid}>
+              <Footer centered={!user.uid || moderator === null}>
                 {user.uid && moderator !== null && <ChatInput />}
 
                 {!user.uid &&
