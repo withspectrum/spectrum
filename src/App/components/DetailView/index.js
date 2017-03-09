@@ -102,9 +102,7 @@ class DetailView extends Component {
         <ViewContainer
           mobile={this.props.stories.active || this.props.composer.isOpen}
         >
-          <NullContainer>
-            <NullText>Choose a story to get started!</NullText>
-          </NullContainer>
+          <NullContainer />
         </ViewContainer>
       );
     }

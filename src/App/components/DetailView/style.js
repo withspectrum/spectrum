@@ -51,10 +51,12 @@ export const LogicContainer = styled.div`
 `;
 
 export const NullContainer = styled.div`
-	width: 100%;
-	height: 100%;
+	width: 110%;
+	height: 110%;
 	position: relative;
-	background: ${({ theme }) => theme.bg.wash};
+	background: ${({ theme }) =>
+  theme.bg.default} url('./img/empty.svg') no-repeat center right;
+	background-size: cover;
 `;
 
 export const NullText = styled(H1)`
