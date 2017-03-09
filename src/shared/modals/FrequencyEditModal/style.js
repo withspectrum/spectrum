@@ -86,6 +86,7 @@ export const DeleteWarning = styled.div`
   padding: 12px 16px;
   margin-top: 24px;
   font-size: 0.875rem;
+  line-height: 1.4;
   font-weight: 500;
   border-radius: 4px;
   color: ${props => props.theme.text.reverse};
