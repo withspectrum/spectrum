@@ -16,7 +16,7 @@ const Svg = styled.svg`
 	}
 `;
 
-export const Defs = withTheme(props => {
+const Defs = withTheme(props => {
   return (
     <defs>
       <radialGradient
