@@ -1,4 +1,4 @@
-import { createBrowserHistory } from 'history';
+import history from '../helpers/history';
 import { getCurrentFrequency } from '../helpers/frequencies';
 import { track } from '../EventTracker';
 import {
@@ -9,7 +9,6 @@ import {
   removeUserFromFrequency,
   getFrequency,
 } from '../db/frequencies';
-const history = createBrowserHistory();
 import { getStories, getAllStories } from '../db/stories';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
@@ -86,7 +85,7 @@ export const createFrequency = data => (dispatch, getState) => {
         type: 'CREATE_FREQUENCY',
         frequency,
       });
-      history.push(`~${frequency.slug}`);
+      history.push(`/~${frequency.slug}`);
     })
     .catch(err => {
       dispatch({ type: 'HIDE_MODAL' });

@@ -29,8 +29,8 @@ class Root extends Component {
   // INITIAL LOAD OF THE APP
   componentWillMount() {
     // On the initial render of the app we authenticate the user
-    const { dispatch, params } = this.props;
-    this.handleProps({ frequencies: {}, stories: {}, params });
+    const { dispatch, match } = this.props;
+    this.handleProps({ frequencies: {}, stories: {}, match });
     // Authenticate the user
     listenToAuth(user => {
       if (!user)
@@ -82,26 +82,28 @@ class Root extends Component {
   }
 
   handleProps = nextProps => {
-    const { dispatch, params, frequencies, stories } = this.props;
+    const { dispatch, match: { params }, frequencies, stories } = this.props;
     // If the frequency changes or we've finished loading the frequencies sync the active frequency to the store and load the stories
     if (
       nextProps.frequencies.loaded !== frequencies.loaded ||
-      nextProps.params.frequency !== params.frequency
+      nextProps.match.params.frequency !== params.frequency
     ) {
-      dispatch(setActiveFrequency(nextProps.params.frequency || 'everything'));
+      dispatch(
+        setActiveFrequency(nextProps.match.params.frequency || 'everything'),
+      );
     }
 
     // If the story changes sync the active story to the store and load the messages
     if (
       nextProps.stories.loaded !== stories.loaded ||
-      nextProps.params.story !== params.story
+      nextProps.match.params.story !== params.story
     ) {
-      dispatch(setActiveStory(nextProps.params.story));
+      dispatch(setActiveStory(nextProps.match.params.story));
     }
   };
 
   render() {
-    const { user, frequencies, params } = this.props;
+    const { user, frequencies, match: { params } } = this.props;
     // Handle loading the homepage
     if (params.frequency === undefined) {
       if (user.loginError) return <p>Login error</p>;
