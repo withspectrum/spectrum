@@ -110,6 +110,7 @@ class StoryMaster extends Component {
       ui: { navVisible },
       activeStory,
       notifications,
+      user,
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
@@ -153,8 +154,9 @@ class StoryMaster extends Component {
                 ~ {frequency.name}
               </FreqTitle>
               <FlexRow>
-                <Count>{membersText}</Count>
-                <Count>{storyText}</Count>
+                {user.uid && <Count>{membersText}</Count>}
+
+                {user.uid && <Count>{storyText}</Count>}
               </FlexRow>
               {frequency.description
                 ? <Description>{frequency.description}</Description>
@@ -261,6 +263,7 @@ const mapStateToProps = state => {
     activeStory: state.stories.active,
     notifications: state.notifications.notifications,
     frequencies: state.frequencies.frequencies,
+    user: state.user,
   };
 };
 
