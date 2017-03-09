@@ -143,7 +143,9 @@ class NavigationMaster extends Component {
           <MetaWrapper>
             <FooterP>© 2017 Space Program, Inc.</FooterP>
             <FooterP>
-              <MetaLink to="/about"> About</MetaLink>
+              <MetaAnchor href="mailto:support@spectrum.chat">
+                Support
+              </MetaAnchor>
               &nbsp;·&nbsp;
               <MetaAnchor href="mailto:hi@spectrum.chat">Contact</MetaAnchor>
             </FooterP>
