@@ -10,6 +10,7 @@ import {
   getFrequency,
 } from '../db/frequencies';
 import { getStories, getAllStories } from '../db/stories';
+import { markStoriesRead } from '../db/notifications';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
   dispatch({
@@ -23,10 +24,10 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   }
 
   dispatch({ type: 'LOADING' });
+  const { user: { uid } } = getState();
   // Everything
   if (frequency === 'everything') {
     // If there's no UID yet we might need to show the homepage, so don't do anything
-    const { user: { uid } } = getState();
     if (!uid) return;
     track('everything', 'viewed', null);
     // Get all the stories from all the frequencies
@@ -58,6 +59,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
       // If it's a private frequency, don't even get any stories
       if (data && data.settings.private && (!freqs || !freqs[data.id]))
         return [];
+      markStoriesRead(data.id, uid);
       return getStories({ frequencySlug: frequency });
     })
     .then(stories => {

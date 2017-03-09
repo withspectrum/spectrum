@@ -23,7 +23,10 @@ import {
   FooterLogo,
   FooterP,
   Button,
+  FreqText,
+  DirtyDot,
 } from './style';
+import { ACTIVITY_TYPES, OBJECT_TYPES } from '../../../db/types';
 
 class NavigationMaster extends Component {
   constructor() {
@@ -103,29 +106,37 @@ class NavigationMaster extends Component {
                   active={this.props.frequencies.active === 'everything'}
                   onClick={this.hideNav}
                 >
-                  <FreqIcon src="/img/everything-icon.svg" />
-                  <FreqLabel>{user.uid ? 'Everything' : 'Home'}</FreqLabel>
+                  <FreqText>
+                    <FreqIcon src="/img/everything-icon.svg" />
+                    <FreqLabel>{user.uid ? 'Everything' : 'Home'}</FreqLabel>
+                  </FreqText>
                 </Freq>
               </Link>
             : <div>
                 <Link to={`/~spectrum`}>
                   <Freq onClick={this.hideNav}>
-                    <FreqGlyph>~</FreqGlyph>
-                    <FreqLabel>Spectrum</FreqLabel>
+                    <FreqText>
+                      <FreqGlyph>~</FreqGlyph>
+                      <FreqLabel>Spectrum</FreqLabel>
+                    </FreqText>
                   </Freq>
                 </Link>
 
                 <Link to={`/~discover`}>
                   <Freq onClick={this.hideNav}>
-                    <FreqGlyph>~</FreqGlyph>
-                    <FreqLabel>Discover</FreqLabel>
+                    <FreqText>
+                      <FreqGlyph>~</FreqGlyph>
+                      <FreqLabel>Discover</FreqLabel>
+                    </FreqText>
                   </Freq>
                 </Link>
 
                 <Link to={`/~hugs-n-bugs`}>
                   <Freq onClick={this.hideNav}>
-                    <FreqGlyph>~</FreqGlyph>
-                    <FreqLabel>Hugs n Bugs</FreqLabel>
+                    <FreqText>
+                      <FreqGlyph>~</FreqGlyph>
+                      <FreqLabel>Hugs n Bugs</FreqLabel>
+                    </FreqText>
                   </Freq>
                 </Link>
               </div>}
@@ -140,9 +151,17 @@ class NavigationMaster extends Component {
               </Freq>
             </Link>*/
           }
+
           {user.uid &&
             frequencies &&
             frequencies.map((frequency, i) => {
+              // If there's any unread notification for this frequency
+              // show a dirty dot
+              const notif = this.props.notifications.find(
+                notification =>
+                  notification.objectId === frequency.id &&
+                  notification.objectType === OBJECT_TYPES.FREQUENCY,
+              );
               return (
                 <Link to={`/~${frequency.slug || frequency.id}`} key={i}>
                   <Freq
@@ -152,8 +171,11 @@ class NavigationMaster extends Component {
                     }
                     onClick={this.hideNav}
                   >
-                    <FreqGlyph>~</FreqGlyph>
-                    <FreqLabel>{frequency.name}</FreqLabel>
+                    <FreqText>
+                      <FreqGlyph>~</FreqGlyph>
+                      <FreqLabel>{frequency.name}</FreqLabel>
+                    </FreqText>
+                    {notif && !notif.read && <DirtyDot />}
                   </Freq>
                 </Link>
               );
@@ -187,6 +209,7 @@ const mapStateToProps = state => ({
   user: state.user,
   frequencies: state.frequencies,
   ui: state.ui,
+  notifications: state.notifications.notifications,
 });
 
 export default connect(mapStateToProps)(NavigationMaster);
