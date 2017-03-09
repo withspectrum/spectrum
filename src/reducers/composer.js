@@ -26,6 +26,7 @@ export default function root(state = initialState, action) {
         body: '',
         newStoryKey: null,
         isOpen: false,
+        mediaList: [],
       });
     case 'SET_ACTIVE_STORY':
     case 'SET_ACTIVE_FREQUENCY':
