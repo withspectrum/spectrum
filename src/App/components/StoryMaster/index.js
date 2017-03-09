@@ -19,6 +19,7 @@ import {
   Description,
   Actions,
   LoadingBlock,
+  Everything,
 } from './style';
 import { toggleComposer } from '../../../actions/composer';
 import {
@@ -147,7 +148,10 @@ class StoryMaster extends Component {
           {!isEverything &&
             !isNotifications &&
             <FlexCol>
-              <FreqTitle>~ {frequency.name}</FreqTitle>
+              <FreqTitle>
+                <MenuButton onClick={this.toggleNav}>☰</MenuButton>
+                ~ {frequency.name}
+              </FreqTitle>
               <FlexRow>
                 <Count>{membersText}</Count>
                 <Count>{storyText}</Count>
@@ -157,11 +161,11 @@ class StoryMaster extends Component {
                 : <span />}
             </FlexCol>}
           <Actions visible={loggedIn}>
-            <MenuButton onClick={this.toggleNav}>☰</MenuButton>
-
             {!(isEverything || role === 'owner' || hidden || isNotifications) &&
               (role
-                ? <Settings color={'brand'} />
+                ? <JoinBtn member={role} onClick={this.unsubscribeFrequency}>
+                    Leave
+                  </JoinBtn>
                 : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}
 
             {role === 'owner' &&
@@ -170,19 +174,29 @@ class StoryMaster extends Component {
                 tipText="Frequency Settings"
                 tipLocation="bottom"
               >
-                <Lock />
+                <Settings color={'brand'} />
               </TipButton>}
 
             {(isEverything || role) &&
-              <TipButton
-                onClick={this.toggleComposer}
-                tipText="New Story"
-                tipLocation="bottom"
-              >
-                {composer.isOpen
-                  ? <ClosePost color="warn" />
-                  : <NewPost color="brand" stayActive />}
-              </TipButton>}
+              <Everything>
+                <span />
+                {isEverything &&
+                  <MenuButton everything={true} onClick={this.toggleNav}>
+                    ☰
+                  </MenuButton>}
+
+                {isEverything && '~Everything'}
+
+                <TipButton
+                  onClick={this.toggleComposer}
+                  tipText="New Story"
+                  tipLocation="bottom"
+                >
+                  {composer.isOpen
+                    ? <ClosePost color="warn" />
+                    : <NewPost color="brand" stayActive />}
+                </TipButton>
+              </Everything>}
           </Actions>
 
         </Header>

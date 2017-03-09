@@ -4,6 +4,7 @@ import StoryDetail from '../StoryDetail';
 import ChatInput from '../ChatInput';
 // eslint-disable-next-line
 import Composer from '../Composer';
+import { subscribeFrequency } from '../../../actions/frequencies';
 import { deleteStory, toggleLockedStory } from '../../../actions/stories';
 import { openGallery } from '../../../actions/gallery';
 import { isStoryCreator, getStoryPermission } from '../../../helpers/stories';
@@ -28,6 +29,10 @@ class DetailView extends Component {
     } else {
       return;
     }
+  };
+
+  subscribeFrequency = () => {
+    this.props.dispatch(subscribeFrequency(this.props.frequencies.active));
   };
 
   deleteStory = () => {
@@ -58,6 +63,7 @@ class DetailView extends Component {
     if (story) {
       creator = isStoryCreator(story, user);
       moderator = getStoryPermission(story, user, frequencies);
+      console.log('moderator: ', moderator);
       locked = story.locked ? story.locked : false;
     }
 
@@ -75,12 +81,19 @@ class DetailView extends Component {
               locked={locked}
             />
             {!story.locked &&
-              <Footer centered={!user.uid}>
-                {user.uid
-                  ? <ChatInput />
-                  : <LoginButton onClick={this.login}>
-                      Sign in with Twitter to chat
-                    </LoginButton>}
+              <Footer centered={user.uid}>
+                {user.uid && moderator !== null && <ChatInput />}
+
+                {!user.uid &&
+                  <LoginButton onClick={this.login}>
+                    Sign in with Twitter to chat
+                  </LoginButton>}
+
+                {user.uid &&
+                  moderator === null &&
+                  <LoginButton onClick={this.subscribeFrequency}>
+                    Join this Frequency to chat!
+                  </LoginButton>}
               </Footer>}
           </LogicContainer>
         </ViewContainer>
