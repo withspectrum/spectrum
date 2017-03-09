@@ -62,3 +62,8 @@ export const ErrorMessage = styled(P)`
     border-bottom: 2px solid ${({ theme }) => theme.warn.alt};
   }
 `;
+
+// For some reason we need this so the checkbox is aligned with the text
+export const CheckboxWrapper = styled.span`
+
+`;

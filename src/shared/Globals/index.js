@@ -95,6 +95,10 @@ export const Label = styled.label`
 	&:not(:first-of-type) {
 		margin-top: 24px;
 	}
+
+  a {
+    text-decoration: underline;
+  }
 `;
 
 export const PrefixLabel = styled.label`
@@ -122,6 +126,13 @@ export const Input = styled.input`
   padding: 8px 12px;
   margin-top: 2px;
   box-shadow: none;
+
+  ${props => props.type === 'checkbox' &&
+css`
+    flex: initial;
+    width: initial;
+    margin-right: 0.5em;
+  `}
 
   &::placeholder { color: ${({ theme }) => theme.text.placeholder} }
   &::-webkit-input-placeholder { color: ${({ theme }) =>
