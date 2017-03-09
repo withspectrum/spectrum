@@ -19,6 +19,7 @@ import {
   Description,
   Actions,
   LoadingBlock,
+  Everything,
 } from './style';
 import { toggleComposer } from '../../../actions/composer';
 import {
@@ -36,6 +37,7 @@ import {
 } from '../../../shared/Icons';
 import Card from '../Card';
 import ShareCard from '../ShareCard';
+import NuxJoinCard from '../NuxJoinCard';
 import { ACTIVITY_TYPES } from '../../../db/types';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { formatSenders } from '../../../helpers/notifications';
@@ -115,6 +117,7 @@ class StoryMaster extends Component {
       ui: { navVisible },
       activeStory,
       notifications,
+      user,
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
@@ -153,23 +156,29 @@ class StoryMaster extends Component {
           {!isEverything &&
             !isNotifications &&
             <FlexCol>
-              <FreqTitle>~ {frequency.name}</FreqTitle>
+              <FreqTitle>
+
+                <MenuButton onClick={this.toggleNav}>
+                  <Menu stayActive color={'brand'} />
+                </MenuButton>
+
+                ~ {frequency.name}
+              </FreqTitle>
               <FlexRow>
-                <Count>{membersText}</Count>
-                <Count>{storyText}</Count>
+                {user.uid && <Count>{membersText}</Count>}
+
+                {user.uid && <Count>{storyText}</Count>}
               </FlexRow>
               {frequency.description
                 ? <Description>{frequency.description}</Description>
                 : <span />}
             </FlexCol>}
           <Actions visible={loggedIn}>
-            <MenuButton onClick={this.toggleNav}>
-              <Menu stayActive color={'brand'} />
-            </MenuButton>
-
             {!(isEverything || role === 'owner' || hidden || isNotifications) &&
               (role
-                ? <Settings color={'brand'} />
+                ? <JoinBtn member={role} onClick={this.unsubscribeFrequency}>
+                    Leave
+                  </JoinBtn>
                 : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}
 
             {role === 'owner' &&
@@ -178,19 +187,29 @@ class StoryMaster extends Component {
                 tipText="Frequency Settings"
                 tipLocation="bottom"
               >
-                <Lock />
+                <Settings color={'brand'} />
               </TipButton>}
 
             {(isEverything || role) &&
-              <TipButton
-                onClick={this.toggleComposer}
-                tipText="New Story"
-                tipLocation="bottom"
-              >
-                {composer.isOpen
-                  ? <ClosePost color="warn" />
-                  : <NewPost color="brand" stayActive />}
-              </TipButton>}
+              <Everything>
+                <span />
+                {isEverything &&
+                  <MenuButton everything onClick={this.toggleNav}>
+                    <Menu stayActive color={'brand'} />
+                  </MenuButton>}
+
+                {isEverything && '~Everything'}
+
+                <TipButton
+                  onClick={this.toggleComposer}
+                  tipText="New Story"
+                  tipLocation="bottom"
+                >
+                  {composer.isOpen
+                    ? <ClosePost color="warn" />
+                    : <NewPost color="brand" stayActive />}
+                </TipButton>
+              </Everything>}
           </Actions>
 
         </Header>
@@ -242,6 +261,10 @@ class StoryMaster extends Component {
           {!isEverything &&
             frequency &&
             <ShareCard slug={activeFrequency} name={frequency.name} />}
+
+          {isEverything &&
+            frequencies.length === 0 && // user is viewing everything but isn't subscribed to anything
+            <NuxJoinCard />}
         </ScrollBody>
       </Column>
     );
@@ -255,6 +278,7 @@ const mapStateToProps = state => {
     activeStory: state.stories.active,
     notifications: state.notifications.notifications,
     frequencies: state.frequencies.frequencies,
+    user: state.user,
   };
 };
 

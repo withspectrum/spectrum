@@ -158,7 +158,7 @@ class Composer extends Component {
       track('composer', 'embed created', null);
 
       let body = this.props.composer.body;
-      body = `${body}\n<iframe src='${this.state.embedUrl}' />\n`;
+      body = `${body}\n<iframe src='${this.state.embedUrl}'></iframe>\n`;
       this.props.dispatch(updateBody(body));
 
       this.setState({

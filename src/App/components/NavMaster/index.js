@@ -91,20 +91,46 @@ class NavigationMaster extends Component {
               </MetaWrapper>
             </Header>
           : <Header login>
-              <HeaderLogo src="/img/logo.png" role="presentation" />
+              <Link to="/">
+                <HeaderLogo src="/img/logo.png" role="presentation" />
+              </Link>
             </Header>}
         <FreqList>
-          <Link to="/">
-            <Freq
-              active={this.props.frequencies.active === 'everything'}
-              onClick={this.hideNav}
-            >
-              <FreqIcon src="/img/everything-icon.svg" />
-              <FreqLabel>{user.uid ? 'Everything' : 'Home'}</FreqLabel>
-            </Freq>
-          </Link>
+          {frequencies.length > 0
+            ? // if the user isn't subbed to any frequencies
+              <Link to="/">
+                <Freq
+                  active={this.props.frequencies.active === 'everything'}
+                  onClick={this.hideNav}
+                >
+                  <FreqIcon src="/img/everything-icon.svg" />
+                  <FreqLabel>{user.uid ? 'Everything' : 'Home'}</FreqLabel>
+                </Freq>
+              </Link>
+            : <div>
+                <Link to={`/~spectrum`}>
+                  <Freq onClick={this.hideNav}>
+                    <FreqGlyph>~</FreqGlyph>
+                    <FreqLabel>Spectrum</FreqLabel>
+                  </Freq>
+                </Link>
 
-          {user.uid &&
+                <Link to={`/~discover`}>
+                  <Freq onClick={this.hideNav}>
+                    <FreqGlyph>~</FreqGlyph>
+                    <FreqLabel>Discover</FreqLabel>
+                  </Freq>
+                </Link>
+
+                <Link to={`/~hugs-n-bugs`}>
+                  <Freq onClick={this.hideNav}>
+                    <FreqGlyph>~</FreqGlyph>
+                    <FreqLabel>Hugs n Bugs</FreqLabel>
+                  </Freq>
+                </Link>
+              </div>}
+
+          {/*user.uid &&
             <Link to={`/notifications`}>
               <Freq
                 active={activeFrequency === 'notifications'}
@@ -112,7 +138,8 @@ class NavigationMaster extends Component {
               >
                 <FreqLabel>Notifications</FreqLabel>
               </Freq>
-            </Link>}
+            </Link>*/
+          }
           {user.uid &&
             frequencies &&
             frequencies.map((frequency, i) => {

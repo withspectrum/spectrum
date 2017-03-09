@@ -5,9 +5,9 @@ export const Gradient = (g1, g2) => {
 };
 
 export const Shadow = {
-  low: '0 4px 8px -2px rgba(23,26,33, 0.15)',
-  mid: '0 8px 16px -4px rgba(23,26,33, 0.2)',
-  high: '0 16px 32px -8px rgba(23,26,33, 0.25)',
+  low: '0 1px 2px 0px rgba(23,26,33, 0.15)',
+  mid: '0 2px 4px 0px rgba(23,26,33, 0.2)',
+  high: '0 4px 8px 0px rgba(23,26,33, 0.25)',
   input: 'inset 0 3px 5px rgba(23,26,33, 0.05), inset 0 0 1px rgba(23,26,33, 0.1)',
   border: '0 0 1px rgba(23,26,33, 0.3)',
   button: '0 2px 8px rgba(23,26,33, 0.15)',
@@ -32,7 +32,7 @@ export const Button = styled.button`
 	color: ${({ theme }) => theme.text.reverse};
 	transition: all 0.2s ease-out;
 	padding: 8px 16px;
-	
+
 	&:hover {
 		border-radius: ${props => props.disabled ? '8px' : '16px'};
 		opacity: ${props => props.disabled ? '0.5' : '1'};
@@ -49,14 +49,13 @@ export const TextButton = styled(Button)`
 	font-size: 14px;
 	font-weight: 500;
 	color: ${props =>
-  props.inactive ? props.theme.inactive : props.theme.warn.alt};
+  props.warn ? props.theme.warn.default : props.theme.text.alt};
 	transition: all 0.2s ease-out;
 	padding: 8px 16px;
 
 	&:hover {
 				border-radius: 8px;
 				background-color: ${({ theme }) => theme.bg.default};
-				box-shadow: ${Shadow.button};
 			}
 	`;
 
@@ -92,7 +91,7 @@ export const Label = styled.label`
   font-size: 14px;
   letter-spacing: -0.4px;
   color: ${({ theme }) => theme.text.default};
-	
+
 	&:not(:first-of-type) {
 		margin-top: 24px;
 	}
