@@ -13,6 +13,7 @@ export default function loading(state = initialState, action) {
     case 'ADD_MESSAGES':
     case 'ADD_STORIES':
     case 'CHANGE_GALLERY_INDEX':
+    case 'SUBSCRIBE_FREQUENCY':
     case 'CREATE_FREQUENCY':
     case 'CREATE_STORY':
     case 'DELETE_FREQUENCY':

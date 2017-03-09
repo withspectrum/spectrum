@@ -62,23 +62,12 @@ export const getStoryPermission = (story, user, frequencies) => {
   if (!user.uid || !story) return;
 
   let uid = user.uid;
-  let storyFrequencyId = story.frequencyId; // get the frequency the story was posted in
-  let frequencyMatch = frequencies.frequencies.filter(freq => {
-    // and filter that against all the stories returned
-    return freq.id === storyFrequencyId; // when we have a match, return the frequency object
-  });
+  let frequency = frequencies &&
+    frequencies.find(freq => freq.id === story.frequencyId);
 
-  if (frequencyMatch.length > 0) {
-    let storyFrequency = frequencyMatch[0];
+  if (!frequency) return;
 
-    let permission = frequencies.frequencies.length && storyFrequency.users[uid]
-      ? storyFrequency.users[uid].permission
-      : null;
-
-    return permission;
-  } else {
-    return;
-  }
+  return frequency.users[uid] && frequency.users[uid].permission;
 };
 
 export const uploadMedia = (file, story, user) => {

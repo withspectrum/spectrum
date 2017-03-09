@@ -10,6 +10,7 @@ import {
   getFrequency,
 } from '../db/frequencies';
 import { getStories, getAllStories } from '../db/stories';
+import { markStoriesRead } from '../db/notifications';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
   dispatch({
@@ -23,10 +24,10 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   }
 
   dispatch({ type: 'LOADING' });
+  const { user: { uid } } = getState();
   // Everything
   if (frequency === 'everything') {
     // If there's no UID yet we might need to show the homepage, so don't do anything
-    const { user: { uid } } = getState();
     if (!uid) return;
     track('everything', 'viewed', null);
     // Get all the stories from all the frequencies
@@ -58,6 +59,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
       // If it's a private frequency, don't even get any stories
       if (data && data.settings.private && (!freqs || !freqs[data.id]))
         return [];
+      markStoriesRead(data.id, uid);
       return getStories({ frequencySlug: frequency });
     })
     .then(stories => {
@@ -127,7 +129,7 @@ export const deleteFrequency = id => (dispatch, getState) => {
     });
 };
 
-export const subscribeFrequency = slug => (dispatch, getState) => {
+export const subscribeFrequency = (slug, redirect) => (dispatch, getState) => {
   const { user: { uid } } = getState();
   dispatch({ type: 'LOADING' });
 
@@ -135,8 +137,12 @@ export const subscribeFrequency = slug => (dispatch, getState) => {
     .then(frequency => {
       track('frequency', 'subscribed', null);
 
+      if (redirect !== false)
+        history.push(`/~${frequency.slug || frequency.id}`);
+
       dispatch({
-        type: 'CREATE_FREQUENCY',
+        type: 'SUBSCRIBE_FREQUENCY',
+        uid,
         frequency,
       });
     })
@@ -157,9 +163,11 @@ export const unsubscribeFrequency = frequency => (dispatch, getState) => {
   removeUserFromFrequency(uid, id)
     .then(() => {
       track('frequency', 'unsubscribed', null);
+      history.push(`/~${frequency}`);
 
       dispatch({
         type: 'UNSUBSCRIBE_FREQUENCY',
+        uid,
         id,
       });
     })

@@ -12,6 +12,19 @@ export default function root(state = initialState, action) {
       return Object.assign({}, state, {
         frequencies: state.frequencies.concat([action.frequency]),
       });
+    case 'SUBSCRIBE_FREQUENCY':
+      // If we have the frequency in the state, update it
+      if (state.frequencies.find(freq => freq.id === action.frequency.id)) {
+        return {
+          ...state,
+          frequencies: state.frequencies.map(freq => {
+            if (freq.id !== action.frequency.id) return freq;
+
+            return action.frequency;
+          }),
+        };
+      }
+    // Otherwise just add it at the end
     case 'CREATE_FREQUENCY':
       return Object.assign({}, state, {
         frequencies: state.frequencies.concat([action.frequency]),
@@ -56,12 +69,19 @@ export default function root(state = initialState, action) {
         loaded: true,
       });
     case 'UNSUBSCRIBE_FREQUENCY': {
-      const frequencies = state.frequencies
-        .slice()
-        .filter(frequency => frequency.id !== action.id);
-      return Object.assign({}, state, {
-        frequencies,
-      });
+      return {
+        ...state,
+        frequencies: state.frequencies.map(frequency => {
+          if (frequency.id !== action.id) return frequency;
+
+          delete frequency.users[action.uid];
+
+          return {
+            ...frequency,
+            users: frequency.users,
+          };
+        }),
+      };
     }
     default:
       return state;

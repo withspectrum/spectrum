@@ -68,9 +68,7 @@ class Card extends Component {
                 <Meta>
                   {timeDifference(Date.now(), timestamp)}
                   &nbsp;•&nbsp;
-                  {messages && messages > 0
-                    ? `${messages} messages`
-                    : 'No messages yet'}
+                  {messages > 0 ? `${messages} messages` : 'No messages yet'}
                   {unread > 0 &&
                     <UnreadCount>{` (${unread} new!)`}</UnreadCount>}
                 </Meta>
