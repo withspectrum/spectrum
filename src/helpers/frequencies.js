@@ -1,8 +1,10 @@
+import { FREQUENCIES } from './regexps';
+
 export const getCurrentFrequency = (activeFrequency, frequencies) => {
   if (activeFrequency === 'everything') {
     return;
   }
-  
+
   return frequencies.find(
     freq => freq.slug === activeFrequency || freq.id === activeFrequency,
   );
@@ -17,4 +19,8 @@ export const getFrequencyPermission = (user, activeFrequency, frequencies) => {
   if (!frequencyUsers[user.uid]) return;
   let usersPerm = frequencyUsers[user.uid].permission;
   return usersPerm;
+};
+
+export const linkFreqsInMd = text => {
+  return text.replace(FREQUENCIES, '$1[$2](https://spectrum.chat/$2)');
 };

@@ -10,7 +10,7 @@ import {
   getStory,
 } from '../db/stories';
 import { getMessages, getMessage } from '../db/messages';
-import { getCurrentFrequency } from '../helpers/frequencies';
+import { getCurrentFrequency, linkFreqsInMd } from '../helpers/frequencies';
 import { markMessagesRead } from '../db/notifications';
 
 /**
@@ -29,7 +29,11 @@ export const publishStory = ({ frequencyId, title, description }) => (
     state.frequencies.frequencies,
   );
 
-  createStory({ key: storyKey, frequency, content: { title, description } })
+  createStory({
+    key: storyKey,
+    frequency,
+    content: { title, description: linkFreqsInMd(description) },
+  })
     .then(story => {
       track('story', 'created', null);
 
