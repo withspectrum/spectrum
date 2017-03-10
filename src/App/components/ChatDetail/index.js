@@ -16,6 +16,11 @@ import { getUsersFromMessageGroups } from '../../../helpers/stories';
 import { onlyContainsEmoji, sortAndGroupBubbles } from '../../../helpers/utils';
 import { openGallery } from '../../../actions/gallery';
 
+// Regex to match "~frequency-slug" in text
+const FREQUENCIES = /(^|\s)(~[A-Z0-9\-]+)/gi;
+// Regex to match ">spectrum.chat/~frequency</a>"
+const FREQUENCY_URLS = /\>spectrum\.chat\/(~[A-Z0-9\-]+)<\/a>/gi;
+
 class ChatView extends Component {
   constructor() {
     super();
@@ -47,9 +52,15 @@ class ChatView extends Component {
     if (!message) {
       return '';
     }
-    let cleanMessage = sanitizeHtml(message);
-    let linkedMessage = Autolinker.link(cleanMessage);
-    return linkedMessage;
+    const cleanMessage = sanitizeHtml(message);
+    // Replace "~frequency" with "spectrum.chat/~frequency" to get
+    // autolinker to link it
+    const linkedMessage = Autolinker.link(
+      cleanMessage.replace(FREQUENCIES, '$1https://spectrum.chat/$2'),
+    );
+    // Remove the "spectrum.chat" part from the link text so in the message
+    // you just see "~frequency", but it's linked to the frequency
+    return linkedMessage.replace(FREQUENCY_URLS, '>$1</a>');
   }
 
   fetchUsers = () => {
