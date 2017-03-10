@@ -8,7 +8,10 @@ import {
   removeImageFromStory,
 } from '../../../actions/composer';
 import { publishStory, initStory } from '../../../actions/stories';
-import { getCurrentFrequency } from '../../../helpers/frequencies';
+import {
+  getCurrentFrequency,
+  linkFreqsInMd,
+} from '../../../helpers/frequencies';
 import { uploadMultipleMedia } from '../../../helpers/stories';
 import Textarea from 'react-textarea-autosize';
 import Markdown from 'react-remarkable';
@@ -326,7 +329,7 @@ class Composer extends Component {
                             html: true,
                             linkify: true,
                           }}
-                          source={composer.body}
+                          source={linkFreqsInMd(composer.body)}
                         />
                       </div>
                     </PreviewWrapper>}

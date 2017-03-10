@@ -14,12 +14,8 @@ import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
 import { getUsersFromMessageGroups } from '../../../helpers/stories';
 import { onlyContainsEmoji, sortAndGroupBubbles } from '../../../helpers/utils';
+import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../helpers/regexps';
 import { openGallery } from '../../../actions/gallery';
-
-// Regex to match "~frequency-slug" in text
-const FREQUENCIES = /(^|\s)(~[A-Z0-9\-]+)/gi;
-// Regex to match ">spectrum.chat/~frequency</a>"
-const FREQUENCY_URLS = /\>spectrum\.chat\/(~[A-Z0-9\-]+)<\/a>/gi;
 
 class ChatView extends Component {
   constructor() {
@@ -60,7 +56,7 @@ class ChatView extends Component {
     );
     // Remove the "spectrum.chat" part from the link text so in the message
     // you just see "~frequency", but it's linked to the frequency
-    return linkedMessage.replace(FREQUENCY_URLS, '>$1</a>');
+    return linkedMessage.replace(FREQUENCY_ANCHORS, '>$1</a>');
   }
 
   fetchUsers = () => {
