@@ -19,6 +19,7 @@
     "re-base": "^2.2.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
+    "react-helmet": "^4.0.0",
     "react-medium-spinner": "^1.1.0",
     "react-modal": "^1.6.5",
     "react-redux": "^5.0.2",
