@@ -126,7 +126,6 @@ body {
 }
 
 .markdown span {
-  color: inherit;
   font-size: inherit;
 }
 
@@ -213,7 +212,8 @@ body {
 
 .markdown iframe {
   width: 100%;
-  height: 60vh;
+  max-height: 60vh;
+  margin: 1rem 0;
 }
 
 .markdown hr {

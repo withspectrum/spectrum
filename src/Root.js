@@ -38,11 +38,6 @@ class Root extends Component {
           type: 'USER_NOT_AUTHENTICATED',
         });
 
-      // temporarily force-clear the messages so that it doesn't bloat the store
-      dispatch({
-        type: 'CLEAR_MESSAGES',
-      });
-
       // set this uid in google analytics
       track('user', 'authed', null);
       set(user.uid);
