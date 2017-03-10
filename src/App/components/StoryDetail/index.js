@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ChatDetail from '../ChatDetail';
 import Markdown from 'react-remarkable';
-import { Freeze, Delete, Back } from '../../../shared/Icons';
+import { Freeze, Delete, Back, Share } from '../../../shared/Icons';
 import {
   ScrollBody,
   ContentView,
@@ -122,39 +122,52 @@ class StoryView extends Component {
               <Byline>{story.creator.displayName}</Byline>
               <StoryTitle>{story.content.title}</StoryTitle>
             </FlexColumn>
-            {creator || moderator === 'owner'
-              ? // if the story was created by the current user, or is in a frequency the current user owns
-                <FlexColumnEnd>
-                  <label>
-                    {locked
-                      ? <HiddenLabel tipText="Unfreeze Chat" tipLocation="left">
-                          <Freeze stayActive color={'warn'} />
-                        </HiddenLabel>
-                      : <HiddenLabel tipText="Freeze Chat" tipLocation="left">
-                          <Freeze color={'warn'} />
-                        </HiddenLabel>}
-                    <HiddenInput
-                      type="checkbox"
-                      onChange={this.toggleLockedStory}
-                      checked={locked}
-                    />
-                  </label>
-                  <HiddenButton
-                    onClick={this.initDeleteStory}
-                    tipText="Delete Story"
-                    tipLocation="bottom"
+            <FlexColumnEnd>
+              <a
+                href={
+                  `https://twitter.com/intent/tweet/?text=${encodeURIComponent(
+                    story.content.title.substr(0, 85),
+                  )}&amp;url=https://spectrum.chat/~${currentFrequency &&
+                    currentFrequency.slug ||
+                    '~everything'}/${story.id}`
+                }
+                target="_blank"
+              >
+                <HiddenLabel tipText="Share story" tipLocation="left">
+                  <Share color={'warn'} />
+                </HiddenLabel>
+              </a>
+              {(creator || moderator === 'owner') &&
+                <label>
+                  {locked
+                    ? <HiddenLabel tipText="Unfreeze Chat" tipLocation="left">
+                        <Freeze stayActive color={'warn'} />
+                      </HiddenLabel>
+                    : <HiddenLabel tipText="Freeze Chat" tipLocation="left">
+                        <Freeze color={'warn'} />
+                      </HiddenLabel>}
+                  <HiddenInput
+                    type="checkbox"
+                    onChange={this.toggleLockedStory}
+                    checked={locked}
+                  />
+                </label>}
+              {(creator || moderator === 'owner') &&
+                <HiddenButton
+                  onClick={this.initDeleteStory}
+                  tipText="Delete Story"
+                  tipLocation="bottom"
+                  visible={this.state.deleteInited}
+                >
+                  <Delete color="warn" />
+                  <DeleteConfirm
                     visible={this.state.deleteInited}
+                    onClick={this.deleteStory}
                   >
-                    <Delete color="warn" />
-                    <DeleteConfirm
-                      visible={this.state.deleteInited}
-                      onClick={this.deleteStory}
-                    >
-                      Confirm
-                    </DeleteConfirm>
-                  </HiddenButton>
-                </FlexColumnEnd>
-              : ''}
+                    Confirm
+                  </DeleteConfirm>
+                </HiddenButton>}
+            </FlexColumnEnd>
           </Header>
           <div className="markdown" ref="story">
             <Markdown
