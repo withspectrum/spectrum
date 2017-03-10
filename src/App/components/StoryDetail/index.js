@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ChatDetail from '../ChatDetail';
-import Markdown from 'react-remarkable';
+import Markdown from '../../../shared/Markdown';
 import { Freeze, Delete, Back } from '../../../shared/Icons';
 import {
   ScrollBody,
@@ -157,13 +157,7 @@ class StoryView extends Component {
               : ''}
           </Header>
           <div className="markdown" ref="story">
-            <Markdown
-              options={{
-                html: true,
-                linkify: true,
-              }}
-              source={story.content.description}
-            />
+            <Markdown>{story.content.description}</Markdown>
           </div>
           {story.content.media && story.content.media !== ''
             ? <Media src={story.content.media} onClick={this.openGallery} />
