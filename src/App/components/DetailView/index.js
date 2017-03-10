@@ -66,7 +66,10 @@ class DetailView extends Component {
       locked = story.locked ? story.locked : false;
     }
 
-    const frequency = getCurrentFrequency(active, frequencies);
+    const frequency = getCurrentFrequency(
+      story ? story.frequencyId : active,
+      frequencies,
+    );
 
     if (story && !composer.isOpen) {
       // if we're viewing a story and the composer is not open
@@ -75,7 +78,9 @@ class DetailView extends Component {
           mobile={this.props.stories.active || this.props.composer.isOpen}
         >
           <Helmet
-            title={`${story.content.title} | ~${frequency.name}`}
+            title={
+              `${story.content.title} | ~${frequency ? frequency.name : active}`
+            }
             meta={[
               {
                 name: 'description',
@@ -83,7 +88,9 @@ class DetailView extends Component {
               },
               {
                 name: 'og:title',
-                content: `${story.content.title} | ~${frequency.name}`,
+                content: `${story.content.title} | ~${frequency
+                  ? frequency.name
+                  : active}`,
               },
               {
                 name: 'og:description',
@@ -91,11 +98,15 @@ class DetailView extends Component {
               },
               {
                 name: 'og:url',
-                content: `https://spectrum.chat/~${active}/${story.id}`,
+                content: `https://spectrum.chat/~${frequency
+                  ? frequency.slug || frequency.id
+                  : active}/${story.id}`,
               },
               {
                 name: 'twitter:title',
-                content: `${story.content.title} | ~${frequency.name}`,
+                content: `${story.content.title} | ~${frequency
+                  ? frequency.name
+                  : active}`,
               },
               {
                 name: 'twitter:description',
@@ -140,7 +151,10 @@ class DetailView extends Component {
               { name: 'description', content: frequency.description },
               { name: 'og:title', content: `~${frequency.name || active}` },
               { name: 'og:description', content: frequency.description },
-              { name: 'og:url', content: `https://spectrum.chat/~${active}` },
+              {
+                name: 'og:url',
+                content: `https://spectrum.chat/~${frequency.slug || active}`,
+              },
               {
                 name: 'twitter:title',
                 content: `~${frequency.name || active}`,
@@ -166,7 +180,10 @@ class DetailView extends Component {
                 { name: 'description', content: frequency.description },
                 { name: 'og:title', content: `~${frequency.name || active}` },
                 { name: 'og:description', content: frequency.description },
-                { name: 'og:url', content: `https://spectrum.chat/~${active}` },
+                {
+                  name: 'og:url',
+                  content: `https://spectrum.chat/~${frequency.slug || active}`,
+                },
                 {
                   name: 'twitter:title',
                   content: `~${frequency.name || active}`,

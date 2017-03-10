@@ -116,7 +116,10 @@ const render = () => {
                 },
                 { name: 'og:url', content: 'https://spectrum.chat' },
                 { name: 'og:type', content: 'website' },
-                { name: 'og:image', content: '/img/media.png' },
+                {
+                  name: 'og:image',
+                  content: 'https://spectrum.chat/img/media.png',
+                },
                 { name: 'og:site_name', content: 'Spectrum' },
                 // Twitter
                 { name: 'twitter:card', content: 'summary_large_image' },
@@ -126,7 +129,10 @@ const render = () => {
                   name: 'twitter:description',
                   content: 'Like a forum but for Mars colonists.',
                 },
-                { name: 'twitter:image', content: '/img/media.png' },
+                {
+                  name: 'twitter:image',
+                  content: 'https://spectrum.chat/img/media.png',
+                },
                 {
                   name: 'twitter:image:alt',
                   content: 'Like a forum but for Mars colonists.',
