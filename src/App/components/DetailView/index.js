@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Helmet from 'react-helmet';
 import StoryDetail from '../StoryDetail';
 import ChatInput from '../ChatInput';
 // eslint-disable-next-line
@@ -8,6 +9,7 @@ import { subscribeFrequency } from '../../../actions/frequencies';
 import { deleteStory, toggleLockedStory } from '../../../actions/stories';
 import { openGallery } from '../../../actions/gallery';
 import { isStoryCreator, getStoryPermission } from '../../../helpers/stories';
+import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { LoginButton, LoginText } from '../StoryMaster/style';
 import { login } from '../../../actions/user';
 
@@ -54,7 +56,7 @@ class DetailView extends Component {
   };
 
   render() {
-    const { composer, user, frequencies: { frequencies } } = this.props;
+    const { composer, user, frequencies: { frequencies, active } } = this.props;
     const story = this.getActiveStory();
 
     let role, creator, locked;
@@ -64,12 +66,35 @@ class DetailView extends Component {
       locked = story.locked ? story.locked : false;
     }
 
+    const frequency = getCurrentFrequency(active, frequencies);
+
     if (story && !composer.isOpen) {
       // if we're viewing a story and the composer is not open
       return (
         <ViewContainer
           mobile={this.props.stories.active || this.props.composer.isOpen}
         >
+          <Helmet
+            title={`${story.content.title} | ~${frequency.name}`}
+            meta={[
+              {
+                name: 'description',
+                content: story.content.description.substr(0, 150),
+              },
+              {
+                name: 'og:title',
+                content: `${story.content.title} | ~${frequency.name}`,
+              },
+              {
+                name: 'og:description',
+                content: story.content.description.substr(0, 150),
+              },
+              {
+                name: 'og:url',
+                content: `https://spectrum.chat/~${active}/${story.id}`,
+              },
+            ]}
+          />
           <LogicContainer>
             <StoryDetail
               activeStory={story}
@@ -101,6 +126,15 @@ class DetailView extends Component {
         <ViewContainer
           mobile={this.props.stories.active || this.props.composer.isOpen}
         >
+          <Helmet
+            title={`~${frequency.name || active} - ${frequency.description}`}
+            meta={[
+              { name: 'description', content: frequency.description },
+              { name: 'og:title', content: `~${frequency.name || active}` },
+              { name: 'og:description', content: frequency.description },
+              { name: 'og:url', content: `https://spectrum.chat/~${active}` },
+            ]}
+          />
           <LogicContainer>
             <Composer />
           </LogicContainer>
@@ -112,6 +146,16 @@ class DetailView extends Component {
         <ViewContainer
           mobile={this.props.stories.active || this.props.composer.isOpen}
         >
+          {frequency &&
+            <Helmet
+              title={`~${frequency.name || active} - ${frequency.description}`}
+              meta={[
+                { name: 'description', content: frequency.description },
+                { name: 'og:title', content: `~${frequency.name || active}` },
+                { name: 'og:description', content: frequency.description },
+                { name: 'og:url', content: `https://spectrum.chat/~${active}` },
+              ]}
+            />}
           <NullContainer />
         </ViewContainer>
       );
