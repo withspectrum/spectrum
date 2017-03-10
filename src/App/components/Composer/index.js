@@ -14,7 +14,7 @@ import {
 } from '../../../helpers/frequencies';
 import { uploadMultipleMedia } from '../../../helpers/stories';
 import Textarea from 'react-textarea-autosize';
-import Markdown from 'react-remarkable';
+import Markdown from '../../../shared/Markdown';
 
 import {
   ScrollBody,
@@ -324,13 +324,7 @@ class Composer extends Component {
                   : <PreviewWrapper>
                       <StoryTitlePreview>{composer.title}</StoryTitlePreview>
                       <div className="markdown" ref="story">
-                        <Markdown
-                          options={{
-                            html: true,
-                            linkify: true,
-                          }}
-                          source={linkFreqsInMd(composer.body)}
-                        />
+                        <Markdown>{linkFreqsInMd(composer.body)}</Markdown>
                       </div>
                     </PreviewWrapper>}
                 <SubmitContainer sticky={!this.state.creating}>
