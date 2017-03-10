@@ -93,6 +93,14 @@ class DetailView extends Component {
                 name: 'og:url',
                 content: `https://spectrum.chat/~${active}/${story.id}`,
               },
+              {
+                name: 'twitter:title',
+                content: `${story.content.title} | ~${frequency.name}`,
+              },
+              {
+                name: 'twitter:description',
+                content: story.content.description.substr(0, 150),
+              },
             ]}
           />
           <LogicContainer>
@@ -133,6 +141,11 @@ class DetailView extends Component {
               { name: 'og:title', content: `~${frequency.name || active}` },
               { name: 'og:description', content: frequency.description },
               { name: 'og:url', content: `https://spectrum.chat/~${active}` },
+              {
+                name: 'twitter:title',
+                content: `~${frequency.name || active}`,
+              },
+              { name: 'twitter:description', content: frequency.description },
             ]}
           />
           <LogicContainer>
@@ -154,6 +167,11 @@ class DetailView extends Component {
                 { name: 'og:title', content: `~${frequency.name || active}` },
                 { name: 'og:description', content: frequency.description },
                 { name: 'og:url', content: `https://spectrum.chat/~${active}` },
+                {
+                  name: 'twitter:title',
+                  content: `~${frequency.name || active}`,
+                },
+                { name: 'twitter:description', content: frequency.description },
               ]}
             />}
           <NullContainer />
