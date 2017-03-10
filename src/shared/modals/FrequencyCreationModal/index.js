@@ -224,10 +224,7 @@ class FrequencyCreationModal extends React.Component {
         closeTimeoutMS={330}
       >
 
-        <ModalContainer
-          title={'Create a new frequency!'}
-          closeModal={this.closeModal}
-        >
+        <ModalContainer title={'Create a new frequency!'}>
           <Label>
             What should we call it?
             <Input
