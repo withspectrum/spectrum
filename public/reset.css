@@ -1,6 +1,7 @@
 html,
 body {
-  min-height: 100vh;
+  height: 100%;
+  min-height: 100%;
   min-width: 100%;
   box-sizing: border-box;
 }
@@ -37,7 +38,8 @@ textarea {
 
 body {
   position: relative;
-  height: 100vh;
+  height: 100%;
+  max-height: 100%;
   width: 100vw;
   -webkit-font-smoothing: antialiased;
   font-size: 16px;
@@ -45,7 +47,8 @@ body {
   background: #fff;
   color: #171a21;
   padding: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */

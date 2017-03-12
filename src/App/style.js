@@ -7,7 +7,7 @@ export const Body = styled.div`
   height: 100%;
   width: 100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  height: 100vh;
+  height: 100%;
 	overflow: auto;
   -webkit-overflow-scrolling: touch;
 `;
@@ -15,8 +15,8 @@ export const Body = styled.div`
 export const ScrollBody = styled.div`
   display: flex;
   position: relative;
-  height: 100vh;
-  max-height: 100vh;
+  height: 100%;
+  max-height: 100%;
   overflow-y: scroll;
 
   @media (max-width: 768px) {

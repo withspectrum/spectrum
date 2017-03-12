@@ -7,7 +7,7 @@ export const Column = styled.div`
   flex-direction: column;
   background-color: ${({ theme }) => theme.bg.reverse};
   width: 100%;
-  height: 100vh;
+  height: 100%;
   position: relative;
   z-index: 3;
   transition: transform 0.2s ease-in-out;

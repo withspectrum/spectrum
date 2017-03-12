@@ -5,7 +5,8 @@ export const Column = styled.div`
 	display: flex;
 	flex-direction: column;
 	background-color: ${({ theme }) => theme.bg.wash};
-	height: 100vh;
+	height: 100%;
+	overflow-y: scroll;
 `;
 
 export const StoryList = styled.div`
@@ -24,7 +25,7 @@ export const Overlay = styled.div`
 	z-index: 2;
 	pointer-events: none;
 	width: 100vw;
-	height: 100vh;
+	height: 100%;
 `;
 
 export const Header = styled.div`

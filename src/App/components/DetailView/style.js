@@ -29,7 +29,7 @@ export const FlexColumn = styled.div`
 export const ViewContainer = styled.div`
 	display: flex;
 	flex: 1 1 auto;
-	height: 100vh;
+	height: 100%;
 	overflow-y: scroll;
 	flex-direction: column;
 	position: relative;
