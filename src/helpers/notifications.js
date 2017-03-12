@@ -1,4 +1,5 @@
 import { hashToArray } from './utils';
+import { ACTIVITY_TYPES } from '../db/types';
 
 /**
  * Group incoming notifications by their objectId and type,
@@ -9,43 +10,46 @@ export const groupNotifications = notifications => {
 
   const data = {};
   notifications.forEach(notification => {
-    // Group notifications by "objectId"
-    if (!data[notification.objectId]) {
-      data[notification.objectId] = notification;
+    let id;
+    // Group new message and story notifications by story id and activity type
+    if (
+      notification.activityType === ACTIVITY_TYPES.NEW_MESSAGE ||
+      notification.activityType === ACTIVITY_TYPES.NEW_STORY
+    ) {
+      // This id will be removed in the last step
+      id = `${notification.ids.story}/${notification.activityType}`;
+    }
+    if (!data[id]) {
+      data[id] = notification;
       // Turn "sender" into an array of "senders"
-      data[notification.objectId].senders = [notification.sender];
-      delete data[notification.objectId].sender;
+      data[id].senders = [notification.sender];
+      delete data[id].sender;
       // Turn "content" into an array of "contentBlocks"
-      data[notification.objectId].contentBlocks = [notification.content];
-      delete data[notification.objectId].content;
+      data[id].contentBlocks = [notification.content];
+      delete data[id].content;
       // Keep track of how many times this happened
-      data[notification.objectId].occurrences = 1;
-      data[notification.objectId].unread = notification.read ? 0 : 1;
+      data[id].occurrences = 1;
+      data[id].unread = notification.read ? 0 : 1;
     } else {
       // Store unique senders in "senders"
       if (
-        !data[notification.objectId].senders.find(
-          sender => sender.uid === notification.sender.uid,
-        )
+        !data[id].senders.find(sender => sender.uid === notification.sender.uid)
       ) {
-        data[notification.objectId].senders.push(notification.sender);
+        data[id].senders.push(notification.sender);
       }
       // If this notification is unread, increment the unread count
       if (!notification.read) {
-        data[notification.objectId].unread += 1;
+        data[id].unread += 1;
       }
       // Increment the occurrences and set the timestamp to the last time it happened
-      data[notification.objectId].occurrences += 1;
+      data[id].occurrences += 1;
 
-      data[notification.objectId].timestamp = notification.timestamp;
+      data[id].timestamp = notification.timestamp;
       // If the notification read status is set to false, keep it at false
       // otherwise take the current notifications status
-      data[notification.objectId].read = data[notification.objectId].read ===
-        false
-        ? false
-        : notification.read;
+      data[id].read = data[id].read === false ? false : notification.read;
       // Add the content to "contentBlocks"
-      data[notification.objectId].contentBlocks.push(notification.content);
+      data[id].contentBlocks.push(notification.content);
     }
   });
 

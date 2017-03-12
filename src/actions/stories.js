@@ -11,7 +11,7 @@ import {
 } from '../db/stories';
 import { getMessages, getMessage } from '../db/messages';
 import { getCurrentFrequency, linkFreqsInMd } from '../helpers/frequencies';
-import { markMessagesRead } from '../db/notifications';
+import { markStoryRead } from '../db/notifications';
 
 /**
  * Publish a drafted story
@@ -108,7 +108,7 @@ export const setActiveStory = story => (dispatch, getState) => {
       dispatch({ type: 'STOP_LOADING' });
     });
 
-  markMessagesRead(story, getState().user.uid);
+  markStoryRead(story, getState().user.uid);
 
   if (listener) stopListening(listener);
   listener = listenToStory(story, story => {
