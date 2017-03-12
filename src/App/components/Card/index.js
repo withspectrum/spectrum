@@ -57,7 +57,6 @@ class Card extends Component {
       timestamp,
       title,
       unreadMessages,
-      showDirtyDot,
     } = this.props;
 
     return (
