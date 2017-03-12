@@ -3,44 +3,14 @@ import { Shadow, Gradient, Tooltip, H2, H4, P } from '../../../shared/Globals';
 
 export const Column = styled.div`
 	display: flex;
-	flex: 0 0 420px;
 	flex-direction: column;
-	border-right: 1px solid ${({ theme }) => theme.border.default};
 	background-color: ${({ theme }) => theme.bg.wash};
 	height: 100%;
-	overflow: visible;
-	transition: transform 0.2s ease-in-out;
-
-	@media (max-width: 768px) {
-    width: 100%;
-    flex: 1 0 auto
-    transition: transform 0.2s ease-in-out;
-    transform: translateX(${props => props.navVisible ? '0px' : '-359px'});
-  }
 `;
 
-export const ScrollBody = styled.div`
-	flex: 1 1 auto;
-	display: flex;
+export const StoryList = styled.div`
 	overflow-y: scroll;
-	-webkit-overflow-scrolling: touch;
-	overflow-x: hidden;
-	flex-direction: column;
-	align-items: stretch;
-	background-color: ${({ theme }) => theme.bg.wash};
-	position: relative;
-	padding-bottom: 80px;
-
-	> img {
-		margin: 32px auto;
-		transition: all 0.2s ease-out;
-
-		&:hover {
-			transform: scale(1.15);
-			transition: all 0.2s ease-out;
-		}
-	}
-	`;
+`;
 
 export const Overlay = styled.div`
 	position: fixed;
@@ -54,7 +24,7 @@ export const Overlay = styled.div`
 	z-index: 2;
 	pointer-events: none;
 	width: 100vw;
-	height: 100vh;
+	height: 100%;
 `;
 
 export const Header = styled.div`

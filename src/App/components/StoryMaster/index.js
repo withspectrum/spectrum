@@ -20,6 +20,7 @@ import {
   Actions,
   LoadingBlock,
   Everything,
+  StoryList,
 } from './style';
 import { toggleComposer } from '../../../actions/composer';
 import {
@@ -66,9 +67,9 @@ class StoryMaster extends Component {
     );
   };
 
-  toggleNav = () => {
+  showFrequenciesNav = () => {
     this.props.dispatch({
-      type: 'TOGGLE_NAV',
+      type: 'SHOW_FREQUENCY_NAV',
     });
   };
 
@@ -114,7 +115,6 @@ class StoryMaster extends Component {
       role,
       loggedIn,
       composer,
-      ui: { navVisible },
       activeStory,
       notifications,
       user,
@@ -151,14 +151,14 @@ class StoryMaster extends Component {
     }
 
     return (
-      <Column navVisible={navVisible}>
+      <Column>
         <Header>
           {!isEverything &&
             !isNotifications &&
             <FlexCol>
               <FreqTitle>
 
-                <MenuButton onClick={this.toggleNav}>
+                <MenuButton onClick={this.showFrequenciesNav}>
                   <Menu stayActive color={'brand'} />
                 </MenuButton>
 
@@ -194,7 +194,7 @@ class StoryMaster extends Component {
               <Everything>
                 <span />
                 {isEverything &&
-                  <MenuButton everything onClick={this.toggleNav}>
+                  <MenuButton everything onClick={this.showFrequenciesNav}>
                     <Menu stayActive color={'brand'} />
                   </MenuButton>}
 
@@ -214,7 +214,7 @@ class StoryMaster extends Component {
 
         </Header>
 
-        <ScrollBody>
+        <StoryList>
           <Overlay active={composer.isOpen} />
 
           {!loggedIn &&
@@ -273,7 +273,7 @@ class StoryMaster extends Component {
           {isEverything &&
             frequencies.length === 0 && // user is viewing everything but isn't subscribed to anything
             <NuxJoinCard />}
-        </ScrollBody>
+        </StoryList>
       </Column>
     );
   }

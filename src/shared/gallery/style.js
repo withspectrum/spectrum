@@ -9,7 +9,7 @@ export const Overlay = styled.div`
 	bottom: 0;
 	background: ${({ theme }) => theme.bg.reverse};
 	opacity: 0.85;
-	z-index: 5;
+	z-index: 100;
 `;
 
 export const ActiveImage = styled.img`
@@ -22,7 +22,7 @@ export const ActiveImage = styled.img`
 	max-width: 100%;
 	margin: auto 0 5rem;
 	box-shadow: ${Shadow.high};
-	z-index: 10;
+	z-index: 101;
 `;
 
 export const Minigallery = styled.div`
@@ -34,7 +34,7 @@ export const Minigallery = styled.div`
 	padding: 0.25rem;
 	background: #000;
 	max-height: 3rem;
-	z-index: 11;
+	z-index: 102;
 
 
 `;
