@@ -63,7 +63,8 @@ class StoryView extends Component {
   };
 
   scrollToBottom = () => {
-    let node = ReactDOM.findDOMNode(this);
+    if (!this.comp) return;
+    let node = this.comp;
     if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
       node.scrollTop = node.scrollHeight - node.clientHeight;
     }
@@ -117,7 +118,7 @@ class StoryView extends Component {
           </BackArrow>
         </Link>
 
-        <ScrollBody>
+        <ScrollBody innerRef={comp => this.comp = comp}>
           <ContentView>
             <Header>
               <FlexColumn>
