@@ -2,8 +2,41 @@ import { hashToArray } from './utils';
 import { ACTIVITY_TYPES } from '../db/types';
 
 /**
- * Group incoming notifications by their objectId and type,
+ * Group incoming notifications by their id and type,
  * which allows us to show nice messages in the UI
+ *
+ * [{
+ *   activityType: 'new-story',
+ *   id: 'asdf',
+ *   ids: { frequency: 'wer123' },
+ *   sender: {},
+ *   content: {},
+ *   read: false,
+ *   timestamp: 123,
+ * }, {
+ *   activityType: 'new-story',
+ *   id: 'asdf2',
+ *   ids: { frequency: 'wer123' },
+ *   sender: {},
+ *   content: {},
+ *   read: true,
+ *   timestamp: 125,
+ * }]
+ *
+ * |
+ * v
+ *
+ * [{
+ *   activityType: 'new-story',
+ *   id: 'asdf',
+ *   ids: { frequency: 'wer123' },
+ *   senders: [{}, {}],
+ *   contentBlocks: [{}, {}],
+ *   unread: 1,
+ *   occurrences: 2,
+ *   timestamp: 125,
+ *   read: false,
+ * }]
  */
 export const groupNotifications = notifications => {
   if (!notifications || notifications.length === 0) return [];
