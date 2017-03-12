@@ -33,6 +33,7 @@ export const ViewContainer = styled.div`
 	flex-direction: column;
 	position: relative;
 	z-index: 3;
+	background: #fff;
 `;
 
 export const LogicContainer = styled.div`

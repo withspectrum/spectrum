@@ -3,15 +3,15 @@ import { Shadow, Gradient, Tooltip, H2, H4, P } from '../../../shared/Globals';
 
 export const Column = styled.div`
 	display: flex;
-	
 	flex-direction: column;
-	border-right: 1px solid ${({ theme }) => theme.border.default};
 	background-color: ${({ theme }) => theme.bg.wash};
 	height: 100%;
 	overflow: visible;
 	transition: transform 0.2s ease-in-out;
+`;
 
-
+export const StoryList = styled.div`
+	overflow-y: scroll;
 `;
 
 export const Overlay = styled.div`

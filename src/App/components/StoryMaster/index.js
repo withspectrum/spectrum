@@ -20,6 +20,7 @@ import {
   Actions,
   LoadingBlock,
   Everything,
+  StoryList,
 } from './style';
 import { toggleComposer } from '../../../actions/composer';
 import {
@@ -214,7 +215,7 @@ class StoryMaster extends Component {
 
         </Header>
 
-        <div>
+        <StoryList>
           <Overlay active={composer.isOpen} />
 
           {!loggedIn &&
@@ -266,7 +267,7 @@ class StoryMaster extends Component {
           {isEverything &&
             frequencies.length === 0 && // user is viewing everything but isn't subscribed to anything
             <NuxJoinCard />}
-        </div>
+        </StoryList>
       </Column>
     );
   }
