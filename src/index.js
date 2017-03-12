@@ -31,9 +31,13 @@ if (process.env.NODE_ENV === 'production') {
   let state = store.getState();
   store.subscribe(
     debounce(
-      () => saveStorage({
-        user: state.user,
-      }),
+      () => {
+        if (!state.user || !state.user.uid) return;
+
+        saveStorage({
+          user: state.user,
+        });
+      },
       1000,
     ),
   );
