@@ -18,8 +18,6 @@ export const ScrollBody = styled.div`
   @media (max-width: 768px) {
     flex: 1 0 auto;
     width: 100%;
-    max-height: 100%;
-    overflow-y: scroll;
     transition: all 0.2s ease-in-out;
   }
 `;
