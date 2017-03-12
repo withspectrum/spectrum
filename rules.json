@@ -197,14 +197,10 @@
             ".validate": "newData.isString()"
           },
         	"id": { ".validate": "newData.val() === $notificationId" },
-          "objectType": {
-            ".validate": "newData.isString()"
-          },
-          "objectUrl": {
-            ".validate": "newData.isString()"
-          },
-          "objectId": {
-            ".validate": "newData.isString()"
+          "ids": {
+            "$type": {
+              ".validate": "newData.isString()"
+            }
           },
           "content": {
             ".validate": "newData.isString() && newData.val().length <= 140"
