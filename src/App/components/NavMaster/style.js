@@ -81,6 +81,9 @@ export const FreqList = styled.div`
   list-style: none;
   width: 100%;
   margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
 `;
 
 export const Freq = styled.div`
@@ -161,25 +164,19 @@ export const FooterP = styled(P)`
 `;
 
 export const Button = styled.button`
-  margin: 16px;
+  margin: 1rem;
   background-color: #0f1010;
   box-shadow: 0 1px 0 rgba(255,255,255,0.02);
   font-size: 12px;
   font-weight: bold;
   color: rgba(255,255,255,0.7);
   padding: 8px;
-  display: flex;
-  justify-content: center;
+  display: inline-block;
   text-align: center;
   text-align: -webkit-center;
-  flex: 0 0 auto;
+  width: calc(100% - 2rem);
   border-radius: 2px;
   transition: all 0.2s;
-
-  span {
-    margin: 0 auto;
-    display: inline-block;
-  }
 
   &:hover {
     cursor: pointer;
