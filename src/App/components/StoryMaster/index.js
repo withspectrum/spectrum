@@ -112,6 +112,10 @@ class StoryMaster extends Component {
     );
   };
 
+  jumpToTop = () => {
+    this.storyList.scrollTop = 0;
+  };
+
   render() {
     const {
       frequency,
@@ -178,7 +182,7 @@ class StoryMaster extends Component {
                   <Menu stayActive color={'brand'} />
                 </MenuButton>
 
-                ~ {frequency.name}
+                <a onClick={this.jumpToTop}>~ {frequency.name}</a>
               </FreqTitle>
               <FlexRow>
                 {user.uid && <Count>{membersText}</Count>}
@@ -214,7 +218,7 @@ class StoryMaster extends Component {
                     <Menu stayActive color={'brand'} />
                   </MenuButton>}
 
-                {isEverything && '~Everything'}
+                <a onClick={this.jumpToTop}>{isEverything && '~Everything'}</a>
 
                 <TipButton
                   onClick={this.toggleComposer}
@@ -230,7 +234,7 @@ class StoryMaster extends Component {
 
         </Header>
 
-        <StoryList>
+        <StoryList innerRef={comp => this.storyList = comp}>
           <Overlay active={composer.isOpen} />
 
           {!loggedIn &&
