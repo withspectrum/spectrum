@@ -65,7 +65,7 @@ export const SocialButton = styled(Button)`
  	padding: 8px 16px 8px 8px;
 	background-color: transparent;
 	font-weight: 600;
-	line-height: 24px;
+	line-height: 32px;
 	vertical-align: middle;
 	background-image: none;
 	border-color: ${props =>

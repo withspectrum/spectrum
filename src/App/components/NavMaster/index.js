@@ -98,11 +98,6 @@ class NavigationMaster extends Component {
               </Link>
             </Header>}
         <FreqList>
-          {user.uid &&
-            <Button onClick={this.createFrequency}>
-              <span>~ Create Frequency</span>
-            </Button>}
-
           {frequencies.length > 0
             ? // if the user isn't subbed to any frequencies
               <Link to="/">
@@ -182,6 +177,11 @@ class NavigationMaster extends Component {
                 </Link>
               );
             })}
+
+          {user.uid &&
+            <Button onClick={this.createFrequency}>
+              <span>~ Create Frequency</span>
+            </Button>}
         </FreqList>
 
         <Footer>
