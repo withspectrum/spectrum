@@ -21,11 +21,13 @@ import {
   LoadingBlock,
   Everything,
   StoryList,
+  NewIndicator,
 } from './style';
 import { toggleComposer } from '../../../actions/composer';
 import {
   unsubscribeFrequency,
   subscribeFrequency,
+  setActiveFrequency,
 } from '../../../actions/frequencies';
 import { login } from '../../../actions/user';
 import { openModal } from '../../../actions/modals';
@@ -35,6 +37,7 @@ import {
   ClosePost,
   Settings,
   Menu,
+  ScrollArrow,
 } from '../../../shared/Icons';
 import Card from '../Card';
 import ShareCard from '../ShareCard';
@@ -44,6 +47,10 @@ import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { formatSenders } from '../../../helpers/notifications';
 
 class StoryMaster extends Component {
+  loadStoriesAgain = () => {
+    this.props.dispatch(setActiveFrequency(this.props.activeFrequency));
+  };
+
   toggleComposer = () => {
     this.props.dispatch(toggleComposer());
   };
@@ -118,6 +125,7 @@ class StoryMaster extends Component {
       activeStory,
       notifications,
       user,
+      storiesLoaded,
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
@@ -149,6 +157,14 @@ class StoryMaster extends Component {
         membersText = `${length} members`;
       }
     }
+
+    const canLoadNewStories = storiesLoaded &&
+      notifications.some(notification => {
+        if (!isEverything && notification.ids.frequency !== frequency.id)
+          return false;
+
+        return stories.every(story => story.id !== notification.ids.story);
+      });
 
     return (
       <Column>
@@ -223,6 +239,12 @@ class StoryMaster extends Component {
               <LoginButton>Sign in with Twitter</LoginButton>
             </LoginWrapper>}
 
+          {canLoadNewStories &&
+            <NewIndicator onClick={this.loadStoriesAgain}>
+              <ScrollArrow color="flatWhite" upsideDown stayActive />
+              New stories!
+            </NewIndicator>}
+
           {isNotifications && notifications.map(this.renderNotification)}
 
           {isEverything || frequency
@@ -287,6 +309,7 @@ const mapStateToProps = state => {
     notifications: state.notifications.notifications,
     frequencies: state.frequencies.frequencies,
     user: state.user,
+    storiesLoaded: state.stories.loaded,
   };
 };
 

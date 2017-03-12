@@ -241,3 +241,33 @@ export const LoadingBlock = styled.div`
 	justify-content: center;
 	align-items: center;
 `;
+
+export const NewIndicator = styled.button`
+	background: ${({ theme }) => Gradient(theme.warn.alt, theme.warn.default)};
+	border: none;
+	font-size: 1em;
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 5px;
+	padding: 0.25em 1em;
+	padding-left: 0.25em;
+	padding-left: 0.25em;
+	font-weight: 600;
+	left: 50%;
+	transform: translateX(-50%) scale(0.9);
+	position: absolute;
+	margin-top: 0.75em;
+	box-shadow: ${Shadow.mid};
+	transition: box-shadow 0.2s ease-in;
+	cursor: pointer;
+
+	> svg {
+		margin-right: 0.4em;
+	}
+
+	&:hover {
+		box-shadow: ${Shadow.high};
+	}
+`;
