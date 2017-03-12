@@ -45,6 +45,8 @@ export const StoryMasterContainer = styled(ScrollBody)`
   @media (max-width: 768px) {
     border-right: 0;
     transform: translateX( -100% );
+    pointer-events: ${props =>
+  props.active || props.viewing === 'detail' ? 'none' : 'auto'};
   }
 `;
 
