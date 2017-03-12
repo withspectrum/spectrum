@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "spectrum-staging",
+    "prod": "specfm-spectrum"
+  }
+}

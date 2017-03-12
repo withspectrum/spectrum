@@ -15,6 +15,8 @@ firebase use
 
 ## Deployment
 
-**DO NOT DEPLOY YOUR CHANGES DIRECTLY**
-
-Submit changes to rules as PRs, and when they are merged to `master` do a `git pull origin master` and then run `firebase deploy`.
+```sh
+firebase use default
+# To deploy to production: firebase use prod
+firebase deploy
+```
