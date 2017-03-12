@@ -4,7 +4,6 @@ body {
   min-height: 100%;
   min-width: 100%;
   box-sizing: border-box;
-  -webkit-overflow-scrolling: touch;
 }
 
 * {
@@ -50,6 +49,7 @@ body {
   padding: 0;
   overflow-x: hidden;
   overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */

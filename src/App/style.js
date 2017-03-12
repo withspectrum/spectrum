@@ -40,6 +40,7 @@ export const StoryMasterContainer = styled(ScrollBody)`
   border-right: 1px solid ${({ theme }) => theme.border.default};
   flex: 0 0 512px;
   z-index: 1;
+  overflow-y: hidden;
 
   @media (max-width: 768px) {
     border-right: 0;

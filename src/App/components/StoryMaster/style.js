@@ -6,11 +6,10 @@ export const Column = styled.div`
 	flex-direction: column;
 	background-color: ${({ theme }) => theme.bg.wash};
 	height: 100%;
-	overflow-y: scroll;
 `;
 
 export const StoryList = styled.div`
-
+	overflow-y: scroll;
 `;
 
 export const Overlay = styled.div`
