@@ -44,7 +44,7 @@ class App extends Component {
           <NavMaster />
         </NavMasterContainer>
 
-        <StoryMasterContainer viewing={ui.viewing}>
+        <StoryMasterContainer active={stories.active} viewing={ui.viewing}>
           <StoryMaster
             loggedIn={!!user.uid}
             role={
