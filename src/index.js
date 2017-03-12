@@ -23,7 +23,7 @@ const fbconfig = {
 firebase.initializeApp(fbconfig);
 let store;
 // In production load previously saved data from localStorage
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'production') {
   let localStorageState = loadStorage();
   store = initStore(localStorageState ? localStorageState.user : {});
 
