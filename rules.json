@@ -192,7 +192,7 @@
         ".read": "auth.uid === $userId",
         "$notificationId": {
           ".write": "!data.exists() || auth.uid === $userId",
-          ".validate": "newData.hasChildren(['activityType', 'objectType', 'objectId', 'id', 'objectUrl', 'sender', 'timestamp', 'read']) || auth.uid === $userId",
+          ".validate": "newData.hasChildren(['activityType', 'id', 'ids', 'sender', 'timestamp', 'read']) || auth.uid === $userId",
           "activityType": {
             ".validate": "newData.isString()"
           },
