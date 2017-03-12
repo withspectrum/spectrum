@@ -1,0 +1,229 @@
+{
+  "rules": {
+    "frequencies": {
+      ".indexOn": ["id", "slug"],
+      ".read": true,
+      "$id": {
+        // Make sure all the necessary fields exist
+        // ".validate": "newData.hasChildren(['createdAt', 'createdBy', 'id', 'name', 'slug'])",
+        // Make sure createdAt is a date which was before right now (not in the future)
+        "createdAt": {
+          ".validate": "newData.val() <= now",
+          // Only let authenticated users write to this, and only once at creation
+          ".write": "!data.exists() && data.parent().child('users').hasChild(auth.uid)"
+        },
+        // Make sure the createdBy field contains a valid user ID
+        "createdBy": {
+          ".validate": "root.child('users').hasChild(newData.val())",
+          // Only set once at creation
+          ".write": "!data.exists()"
+        },
+        // Make sure the id is the same as the path
+        "id": {
+          ".validate": "newData.val() === $id",
+          ".write": "!data.exists()"
+        },
+        "name": {
+          ".validate": "newData.isString() && newData.val() !== 'everything' && newData.val() !== 'undefined' && newData.val() !== 'null'",
+          // Only owners can change the name
+          ".write": "data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
+        },
+        "settings": {
+          ".validate": "newData.exists()",
+          // Only owners can change the settings
+          ".write": "data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
+        },
+        "slug": {
+          ".validate": "newData.isString() && newData.val() !== 'everything' && newData.val() !== 'undefined' && newData.val() !== 'null'",
+          // A slug can be set if the frequency is new, or can be changed by the owner when it is being deleted
+          ".write": "!data.exists() || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
+        },
+        "description": {
+          ".validate": "newData.isString() && newData.val() !== 'undefined' && newData.val() !== 'null' && newData.val().length <= 140",
+          ".write": "!data.exists() || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
+        },
+        "users": {
+          "$userId": {
+            // Make sure a valid user is being added to the users
+            ".validate": "root.child('users').hasChild($userId)",
+            // Only let a user themselves or an owner edit this
+            ".write": "$userId === auth.uid || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'",
+            // Make sure the permissions being set are one of "owner" or "subscriber"
+            "permission": { ".validate": "newData.val() === 'owner' || newData.val() === 'subscriber'" },
+            "joined": { ".validate": "newData.val() <= now" },
+            "$other": { ".validate": false }
+          }
+        },
+        "stories": {
+          // Only let subscribers or owners post new stories
+          ".write": "data.parent().child('users/' + auth.uid + '/permission').val() === 'subscriber' || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'",
+          "$storyId": {
+            ".validate": "root.child('stories/' + $storyId).exists()",
+            "id": {
+              ".validate": "$storyId === newData.val()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        // Make sure not more fields than the ones specified above are added
+        "$other": { ".validate": false }
+      }
+    },
+    "messages": {
+      ".indexOn": ["storyId"],
+      "$messageId": {
+        // Only let users read the messages if there are no frequencies, if the frequency is public or the user is a member of the frequency
+        ".read": "root.child('/frequencies/' + data.child('frequencyId').val() + '/settings/private').val() === false || root.child('/frequencies/' + data.child('frequencyId').val() + '/users').hasChild(auth.uid)",
+        // Only let members of the frequency write messages
+        ".write": "root.child('/frequencies/' + newData.child('frequencyId').val() + '/users').hasChild(auth.uid)",
+        // Make sure all the necessary fields exists
+        ".validate": "newData.hasChildren(['id', 'storyId', 'frequencyId', 'timestamp', 'userId', 'message'])",
+        // Make sure the id field matches the path
+        "id": { ".validate": "newData.val() === $messageId" },
+        // Make sure the storyId field matches the path
+        "storyId": { ".validate": "root.child('stories/' + newData.val()).exists()" },
+        // Make sure frequencyId points to a valid frequency
+      	"frequencyId": { ".validate": "root.child('frequencies/' + newData.val()).exists()" },
+        // Make sure the timestamp is any value before now
+        "timestamp": { ".validate": "newData.val() <= now" },
+        // Make sure this is a valid user, and the one of the logged-in user
+        "userId": { ".validate": "auth.uid === newData.val() && root.child('users/' + newData.val()).exists()" },
+        "message": {
+          // Make sure both type and content exist
+          ".validate": "newData.hasChildren(['type', 'content'])",
+          // Make sure the type is text
+          "type": { ".validate": "newData.val() === 'text' || newData.val() === 'media'" },
+          "content": { ".validate": "newData.exists()" }
+        }
+      }
+    },
+    "stories": {
+      ".indexOn": ["frequencyId"],
+      "$story": {
+        // Only let users read the stories if the frequency is public or the user is a member of the frequency
+      	".read": "root.child('/frequencies/' + data.child('frequencyId').val() + '/settings/private').val() === false || root.child('/frequencies/' + data.child('frequencyId').val() + '/users').hasChild(auth.uid)",
+      	// Only let members of the frequency write stories and make sure a story is passed
+      	".write": "(!data.exists() && root.child('/frequencies/' + newData.child('frequencyId').val() + '/users').hasChild(auth.uid)) || (data.exists() && (root.child('/frequencies/' + data.child('frequencyId').val() + '/users/' + auth.uid + '/permission').val() === 'owner' || data.child('creator/uid').val() === auth.uid) || (data.exists() && root.child('/frequencies/' + data.child('frequencyId').val() + '/users/' + auth.uid + '/permission').val() === 'subscriber'))",
+        // Make sure content exists and the frequency is a real frequency
+        ".validate": "root.child('frequencies/' + newData.child('frequencyId').val()).exists()",
+        // Make sure the frequency field is the same as the top-level frequency path
+        "frequencyId": { ".validate": "root.child('/frequencies/' + newData.val()).exists()" },
+        // Make sure the ID is the same as the path
+        "id": { ".validate": "newData.val() === $story" },
+        // If this is a new story make sure the message_count is set to 0
+        "messages": {
+          "$messageId": {
+            "id": {
+              ".validate": "$messageId === newData.val()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        // Make sure the timestamp is any value before now
+        "timestamp": { ".validate": "newData.val() <= now" },
+        // Make sure published is a boolean
+        "published": { ".validate": "newData.isBoolean()"},
+        "content": {
+          // Make sure title and either description or media exist
+          ".validate": "newData.child('title').exists() && (newData.child('description').exists() || newData.child('media').exists())",
+          "description": { ".validate": "newData.isString()" },
+          "media": { ".validate": true },
+          "title": { ".validate": "newData.isString()" },
+          "$other": { ".validate": false }
+        },
+        "creator": {
+          ".validate": "newData.child('uid').exists() && newData.child('displayName').exists() && newData.child('photoURL').exists()",
+          // Make sure this is a valid UID, and the one of the logged-in user
+          "uid": { ".validate": "newData.isString() && auth.uid === newData.val() && root.child('users/' + newData.val()).exists()" },
+          // Make sure this is the correct displayName for the passed UID
+          "displayName": { ".validate": "newData.isString() && root.child('users/' + newData.parent().child('uid').val()).child('public/displayName').val() === newData.val()" },
+          // Make sure this is the correct photoURL for the passed UID
+          "photoURL": { ".validate": "newData.isString() && root.child('users/' + newData.parent().child('uid').val()).child('public/photoURL').val() === newData.val()" },
+          "$other": { ".validate": false }
+        }
+      }
+    },
+    "users": {
+      ".indexOn": ["public/uid"],
+      "$user": {
+        // Only let the user themselves change the data and read the private stuff
+      	"private": {
+      	  ".read": "auth.uid === $user",
+          ".write": "!data.exists() || auth.uid === $user",
+          ".validate": "data.exists() || newData.hasChildren(['created'])",
+          "created": { ".validate": "newData.val() <= now" },
+          "customerId": { ".validate": "newData.isString()" },
+          "email": { ".validate": "newData.isString()" }
+      	},
+        "public": {
+          ".read": true,
+          ".validate": "data.exists() || newData.hasChildren(['displayName', 'photoURL', 'uid'])",
+          "displayName": {
+            ".write": "auth.uid === $user",
+            ".validate": "data.exists() || newData.isString()"
+          },
+          "photoURL": {
+            ".write": "auth.uid === $user",
+            ".validate": "data.exists() || newData.isString()"
+          },
+          "uid": {
+            ".write": "auth.uid === $user",
+            ".validate": "data.exists() || newData.val() === $user"
+          },
+          "frequencies": {
+          	"$frequencyId": {
+              // Let the user themselves, and the owner of a frequency edit these settings
+              ".write": "auth.uid === $user || root.child('frequencies/' + data.child('id').val() + '/users/' + auth.uid + '/permission').val() === 'owner'",
+              ".validate": "data.hasChildren(['id']) || newData.hasChildren(['id'])",
+              "id": { ".validate": "$frequencyId === newData.val()" },
+              "permission": { ".validate": "newData.val() === 'owner' || newData.val() === 'subscriber'" }
+            }
+          }
+        },
+        "$other": { ".validate": false }
+      }
+    },
+    "notifications": {
+      "$userId": {
+        ".read": "auth.uid === $userId",
+        "$notificationId": {
+          ".write": "!data.exists() || auth.uid === $userId",
+          ".validate": "newData.hasChildren(['activityType', 'objectType', 'objectId', 'id', 'objectUrl', 'sender', 'timestamp', 'read']) || auth.uid === $userId",
+          "activityType": {
+            ".validate": "newData.isString()"
+          },
+        	"id": { ".validate": "newData.val() === $notificationId" },
+          "objectType": {
+            ".validate": "newData.isString()"
+          },
+          "objectUrl": {
+            ".validate": "newData.isString()"
+          },
+          "objectId": {
+            ".validate": "newData.isString()"
+          },
+          "content": {
+            ".validate": "newData.isString() && newData.val().length <= 140"
+          },
+          "sender": {
+            "uid": {
+              ".validate": "newData.val() === auth.uid"
+            },
+            "displayName": {
+              ".validate": "root.child('users/' + auth.uid + '/public/displayName').val() === newData.val()"
+            },
+            "photoURL": {
+              ".validate": "root.child('users/' + auth.uid + '/public/photoURL').val() === newData.val()"
+            }
+          },
+          "timestamp": { ".validate": "newData.val() <= now" },
+          "read": { ".validate": "newData.isBoolean()" }
+        }
+      }
+    }
+  }
+}
