@@ -8,11 +8,11 @@ fill: ${props =>
   max-width: 100%;
 
 	&:hover {
-    fill: ${props => props.theme.brand.default}
+    fill: ${props => props.theme.brand.default};
 		fill: url(#${props => props.color ? props.color : `brand`}Gradient);
 		transition: all 0.2s ease-in;
 		cursor: pointer;
-    transform: scale(1.1);
+    transform: scale(1.1) ${props => props.transform};
 	}
 `;
 
@@ -508,11 +508,12 @@ export const PrivateFrequency = props => {
   );
 };
 
-export const ScrollBottom = props => {
+export const ScrollArrow = props => {
   return (
     <Svg
       color={props.color}
       stayActive={props.stayActive}
+      transform={props.upsideDown ? 'rotate(180)' : ''}
       viewBox="0 0 32 32"
       width="32"
       height="32"
