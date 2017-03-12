@@ -6,19 +6,13 @@ export const Column = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.bg.reverse};
-  flex: 0 0 256px;
+  width: 100%;
   height: 100vh;
   position: relative;
   z-index: 3;
   transition: transform 0.2s ease-in-out;
 
-  @media (max-width: 768px) {
-    max-width: 360px;
-    width: 100%;
-    flex: 1 0 auto;
-    transition: transform 0.2s ease-in-out;
-    transform: translateX(${props => props.navVisible ? '0' : '-480px'});
-  }
+
 `;
 
 export const Header = styled.div`

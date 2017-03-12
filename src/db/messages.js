@@ -13,8 +13,6 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
 
   const key = db.ref('messages').push().key;
 
-  console.log('message info:', storyId, frequency, user, message);
-
   return db
     .ref()
     .update({

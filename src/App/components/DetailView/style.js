@@ -33,13 +33,6 @@ export const ViewContainer = styled.div`
 	flex-direction: column;
 	position: relative;
 	z-index: 3;
-
-	@media (max-width: 768px) {
-    width: 100%;
-    flex: 1;
-	  position: ${props => props.mobile ? 'absolute' : 'relative'};
-	  left: ${props => props.mobile ? '0' : ''};
-  }
 `;
 
 export const LogicContainer = styled.div`

@@ -66,9 +66,9 @@ class NavigationMaster extends Component {
     this.props.dispatch(openModal('FREQUENCY_CREATION_MODAL'));
   };
 
-  hideNav = () => {
+  showStoriesNav = () => {
     this.props.dispatch({
-      type: 'HIDE_NAV',
+      type: 'SHOW_STORIES_NAV',
     });
   };
 
@@ -104,7 +104,7 @@ class NavigationMaster extends Component {
               <Link to="/">
                 <Freq
                   active={this.props.frequencies.active === 'everything'}
-                  onClick={this.hideNav}
+                  onClick={this.showStoriesNav}
                 >
                   <FreqText>
                     <FreqIcon src="/img/everything-icon.svg" />
@@ -114,7 +114,7 @@ class NavigationMaster extends Component {
               </Link>
             : <div>
                 <Link to={`/~spectrum`}>
-                  <Freq onClick={this.hideNav}>
+                  <Freq onClick={this.showStoriesNav}>
                     <FreqText>
                       <FreqGlyph>~</FreqGlyph>
                       <FreqLabel>Spectrum</FreqLabel>
@@ -123,7 +123,7 @@ class NavigationMaster extends Component {
                 </Link>
 
                 <Link to={`/~discover`}>
-                  <Freq onClick={this.hideNav}>
+                  <Freq onClick={this.showStoriesNav}>
                     <FreqText>
                       <FreqGlyph>~</FreqGlyph>
                       <FreqLabel>Discover</FreqLabel>
@@ -132,7 +132,7 @@ class NavigationMaster extends Component {
                 </Link>
 
                 <Link to={`/~hugs-n-bugs`}>
-                  <Freq onClick={this.hideNav}>
+                  <Freq onClick={this.showStoriesNav}>
                     <FreqText>
                       <FreqGlyph>~</FreqGlyph>
                       <FreqLabel>Hugs n Bugs</FreqLabel>
@@ -145,7 +145,7 @@ class NavigationMaster extends Component {
             <Link to={`/notifications`}>
               <Freq
                 active={activeFrequency === 'notifications'}
-                onClick={this.hideNav}
+                onClick={this.showStoriesNav}
               >
                 <FreqLabel>Notifications</FreqLabel>
               </Freq>
@@ -169,7 +169,7 @@ class NavigationMaster extends Component {
                       frequency.slug && frequency.slug === activeFrequency ||
                         frequency.id && frequency.id === activeFrequency
                     }
-                    onClick={this.hideNav}
+                    onClick={this.showStoriesNav}
                   >
                     <FreqText>
                       <FreqGlyph>~</FreqGlyph>
