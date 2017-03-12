@@ -7,6 +7,8 @@ export const Wrapper = styled.span`
 	width: 100%;
 	flex: 0 0 auto;
 	align-items: center;
+	z-index: 50;
+	position: relative;
 `;
 
 export const Form = styled.form`
