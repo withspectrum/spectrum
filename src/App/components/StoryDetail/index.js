@@ -10,6 +10,7 @@ import {
   ContentView,
   Header,
   StoryTitle,
+  Flex,
   FlexColumn,
   FlexColumnEnd,
   Byline,
@@ -109,75 +110,77 @@ class StoryView extends Component {
       ? 'everything'
       : currentFrequency && currentFrequency.slug;
     return (
-      <ScrollBody>
+      <Flex>
         <Link to={`/~${returnUrl}`}>
           <BackArrow onClick={this.clearActiveStory}>
             <Back stayActive color={'brand'} />
           </BackArrow>
         </Link>
 
-        <ContentView>
-          <Header>
-            <FlexColumn>
-              <Byline>{story.creator.displayName}</Byline>
-              <StoryTitle>{story.content.title}</StoryTitle>
-            </FlexColumn>
-            <FlexColumnEnd>
-              <a
-                href={
-                  `https://twitter.com/intent/tweet/?text=${encodeURIComponent(
-                    story.content.title.substr(0, 85),
-                  )}&amp;url=https://spectrum.chat/~${currentFrequency &&
-                    currentFrequency.slug ||
-                    '~everything'}/${story.id}`
-                }
-                target="_blank"
-              >
-                <HiddenLabel tipText="Share story" tipLocation="left">
-                  <Share color={'warn'} />
-                </HiddenLabel>
-              </a>
-              {(creator || moderator === 'owner') &&
-                <label>
-                  {locked
-                    ? <HiddenLabel tipText="Unfreeze Chat" tipLocation="left">
-                        <Freeze stayActive color={'warn'} />
-                      </HiddenLabel>
-                    : <HiddenLabel tipText="Freeze Chat" tipLocation="left">
-                        <Freeze color={'warn'} />
-                      </HiddenLabel>}
-                  <HiddenInput
-                    type="checkbox"
-                    onChange={this.toggleLockedStory}
-                    checked={locked}
-                  />
-                </label>}
-              {(creator || moderator === 'owner') &&
-                <HiddenButton
-                  onClick={this.initDeleteStory}
-                  tipText="Delete Story"
-                  tipLocation="bottom"
-                  visible={this.state.deleteInited}
+        <ScrollBody>
+          <ContentView>
+            <Header>
+              <FlexColumn>
+                <Byline>{story.creator.displayName}</Byline>
+                <StoryTitle>{story.content.title}</StoryTitle>
+              </FlexColumn>
+              <FlexColumnEnd>
+                <a
+                  href={
+                    `https://twitter.com/intent/tweet/?text=${encodeURIComponent(
+                      story.content.title.substr(0, 85),
+                    )}&amp;url=https://spectrum.chat/~${currentFrequency &&
+                      currentFrequency.slug ||
+                      '~everything'}/${story.id}`
+                  }
+                  target="_blank"
                 >
-                  <Delete color="warn" />
-                  <DeleteConfirm
+                  <HiddenLabel tipText="Share story" tipLocation="left">
+                    <Share color={'warn'} />
+                  </HiddenLabel>
+                </a>
+                {(creator || moderator === 'owner') &&
+                  <label>
+                    {locked
+                      ? <HiddenLabel tipText="Unfreeze Chat" tipLocation="left">
+                          <Freeze stayActive color={'warn'} />
+                        </HiddenLabel>
+                      : <HiddenLabel tipText="Freeze Chat" tipLocation="left">
+                          <Freeze color={'warn'} />
+                        </HiddenLabel>}
+                    <HiddenInput
+                      type="checkbox"
+                      onChange={this.toggleLockedStory}
+                      checked={locked}
+                    />
+                  </label>}
+                {(creator || moderator === 'owner') &&
+                  <HiddenButton
+                    onClick={this.initDeleteStory}
+                    tipText="Delete Story"
+                    tipLocation="bottom"
                     visible={this.state.deleteInited}
-                    onClick={this.deleteStory}
                   >
-                    Confirm
-                  </DeleteConfirm>
-                </HiddenButton>}
-            </FlexColumnEnd>
-          </Header>
-          <div className="markdown" ref="story">
-            <Markdown>{story.content.description}</Markdown>
-          </div>
-          {story.content.media && story.content.media !== ''
-            ? <Media src={story.content.media} onClick={this.openGallery} />
-            : ''}
-        </ContentView>
-        <ChatDetail scrollToBottom={this.scrollToBottom} />
-      </ScrollBody>
+                    <Delete color="warn" />
+                    <DeleteConfirm
+                      visible={this.state.deleteInited}
+                      onClick={this.deleteStory}
+                    >
+                      Confirm
+                    </DeleteConfirm>
+                  </HiddenButton>}
+              </FlexColumnEnd>
+            </Header>
+            <div className="markdown" ref="story">
+              <Markdown>{story.content.description}</Markdown>
+            </div>
+            {story.content.media && story.content.media !== ''
+              ? <Media src={story.content.media} onClick={this.openGallery} />
+              : ''}
+          </ContentView>
+          <ChatDetail scrollToBottom={this.scrollToBottom} />
+        </ScrollBody>
+      </Flex>
     );
   }
 }

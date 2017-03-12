@@ -49,8 +49,13 @@ export const Byline = styled(H4)`
 `;
 
 export const FlexColumn = styled.div`
-	display:flex;
+	display: flex;
 	flex-direction: column;
+`;
+
+export const Flex = styled.div`
+	display: flex;
+	flex: 1 1 auto;
 `;
 
 export const FlexColumnEnd = styled(FlexColumn)`
