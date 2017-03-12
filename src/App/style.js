@@ -7,7 +7,7 @@ export const Body = styled.div`
   height: 100%;
   width: 100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  height: 100%;
+  height: 100vh;
 	overflow: auto;
   -webkit-overflow-scrolling: touch;
 `;
@@ -28,7 +28,7 @@ export const ScrollBody = styled.div`
 export const NavMasterContainer = styled(ScrollBody)`
   background: ${({ theme }) => theme.bg.reverse};
   flex: 0 0 256px;
-  z-index: 10;
+  z-index: 2;
 
   @media (max-width: 768px) {
     transform: translateX( ${props =>
@@ -40,19 +40,18 @@ export const StoryMasterContainer = styled(ScrollBody)`
   background: ${({ theme }) => theme.bg.wash};
   border-right: 1px solid ${({ theme }) => theme.border.default};
   flex: 0 0 512px;
-  z-index: 9;
+  z-index: 1;
 
   @media (max-width: 768px) {
     border-right: 0;
-    transform: translateX( -100% )
-    opacity: ${props => props.viewing === 'stories' ? '1' : '0'};
+    transform: translateX( -100% );
   }
 `;
 
 export const DetailViewContainer = styled(ScrollBody)`
   background${({ theme }) => theme.bg.default};
   flex: 1 1 auto;
-  z-index: 10;
+  z-index: 2;
 
   @media (max-width: 768px) {
     transform: translateX( ${props =>

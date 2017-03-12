@@ -82,7 +82,7 @@ class NavigationMaster extends Component {
     // const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
 
     return (
-      <Column navVisible={this.props.ui.navVisible}>
+      <Column>
         {user.uid
           ? <Header>
               <Avatar src={user.photoURL} title={user.displayName} />
@@ -187,7 +187,7 @@ class NavigationMaster extends Component {
             <span>~ Create Frequency</span>
           </Button>}
 
-        <Footer>
+        {/*<Footer>
           <FooterLogo src="/img/mark.svg" />
           <MetaWrapper>
             <FooterP>© 2017 Space Program, Inc.</FooterP>
@@ -197,7 +197,8 @@ class NavigationMaster extends Component {
               <MetaAnchor href="mailto:hi@spectrum.chat">Contact</MetaAnchor>
             </FooterP>
           </MetaWrapper>
-        </Footer>
+        </Footer>*/
+        }
       </Column>
     );
   }

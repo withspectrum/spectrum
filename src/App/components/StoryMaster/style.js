@@ -5,13 +5,11 @@ export const Column = styled.div`
 	display: flex;
 	flex-direction: column;
 	background-color: ${({ theme }) => theme.bg.wash};
-	height: 100%;
-	overflow: visible;
-	transition: transform 0.2s ease-in-out;
+	height: 100vh;
 `;
 
 export const StoryList = styled.div`
-	overflow-y: scroll;
+
 `;
 
 export const Overlay = styled.div`

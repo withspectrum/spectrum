@@ -17,7 +17,7 @@ export const modalStyles = {
     bottom: 0,
     overflowY: 'auto',
     overflowX: 'hidden',
-    zIndex: 1000,
+    zIndex: 200,
     padding: '1.2rem',
   },
   content: {
@@ -27,7 +27,7 @@ export const modalStyles = {
     borderRadius: '8px',
     border: '0',
     padding: '0',
-    zIndex: 1001,
+    zIndex: 201,
     width: '100%',
     maxWidth: maxWidth,
     top: 'auto',

@@ -61,9 +61,6 @@ class App extends Component {
         </StoryMasterContainer>
 
         <DetailViewContainer active={stories.active} viewing={ui.viewing}>
-          {' '}
-          {/* if a story is active, we need to set this view position for mobile  */
-          }
           <DetailView />
         </DetailViewContainer>
       </Body>

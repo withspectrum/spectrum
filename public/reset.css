@@ -45,6 +45,7 @@ body {
   background: #fff;
   color: #171a21;
   padding: 0;
+  overflow: hidden;
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */

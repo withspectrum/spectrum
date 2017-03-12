@@ -11,8 +11,6 @@ export const Column = styled.div`
   position: relative;
   z-index: 3;
   transition: transform 0.2s ease-in-out;
-
-
 `;
 
 export const Header = styled.div`
@@ -81,19 +79,14 @@ export const MetaAnchor = styled.a`${linkStyles}`;
 
 export const FreqList = styled.div`
   list-style: none;
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  flex: 0 1 100%;
-  overflow-y: scroll;
-  justify-self: stretch;
   margin-bottom: 2rem;
 `;
 
 export const Freq = styled.div`
   display: flex;
-  flex: 0 0 48px;
-  padding: 0.5rem 1rem;
+  flex: 0 0 36px;
+  padding: 0.2rem 1rem;
   align-items: center;
   justify-content: space-between;
   background-color: ${props =>

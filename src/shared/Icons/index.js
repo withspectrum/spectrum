@@ -2,7 +2,8 @@ import React from 'react';
 import styled, { withTheme } from 'styled-components';
 
 const Svg = styled.svg`
-	fill: ${props => `url(#${props.color}Gradient)`};
+fill: ${props =>
+  props.stayActive ? `url(#${props.color}Gradient)` : props.theme.inactive};
 	transition: all 0.2s ease-out;
   max-width: 100%;
 

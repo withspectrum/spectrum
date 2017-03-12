@@ -115,7 +115,6 @@ class StoryMaster extends Component {
       role,
       loggedIn,
       composer,
-      ui: { navVisible },
       activeStory,
       notifications,
       user,
@@ -152,7 +151,7 @@ class StoryMaster extends Component {
     }
 
     return (
-      <Column navVisible={navVisible}>
+      <Column>
         <Header>
           {!isEverything &&
             !isNotifications &&
