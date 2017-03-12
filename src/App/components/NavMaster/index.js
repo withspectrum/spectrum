@@ -98,6 +98,11 @@ class NavigationMaster extends Component {
               </Link>
             </Header>}
         <FreqList>
+          {user.uid &&
+            <Button onClick={this.createFrequency}>
+              <span>~ Create Frequency</span>
+            </Button>}
+
           {frequencies.length > 0
             ? // if the user isn't subbed to any frequencies
               <Link to="/">
@@ -179,12 +184,7 @@ class NavigationMaster extends Component {
             })}
         </FreqList>
 
-        {user.uid &&
-          <Button onClick={this.createFrequency}>
-            <span>~ Create Frequency</span>
-          </Button>}
-
-        {/*<Footer>
+        <Footer>
           <FooterLogo src="/img/mark.svg" />
           <MetaWrapper>
             <FooterP>© 2017 Space Program, Inc.</FooterP>
@@ -194,8 +194,7 @@ class NavigationMaster extends Component {
               <MetaAnchor href="mailto:hi@spectrum.chat">Contact</MetaAnchor>
             </FooterP>
           </MetaWrapper>
-        </Footer>*/
-        }
+        </Footer>
       </Column>
     );
   }

@@ -25,16 +25,14 @@ let store;
 // In production load previously saved data from localStorage
 if (process.env.NODE_ENV === 'production') {
   let localStorageState = loadStorage();
-  store = initStore(localStorageState);
+  store = initStore(localStorageState ? localStorageState.user : {});
 
   // sync the store with localstorage
   let state = store.getState();
   store.subscribe(
     debounce(
-      saveStorage({
+      () => saveStorage({
         user: state.user,
-        frequencies: state.frequencies,
-        stories: state.stories,
       }),
       1000,
     ),

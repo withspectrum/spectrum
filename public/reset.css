@@ -179,16 +179,6 @@ body {
   transition: all 0.2s ease-in;
 }
 
-.markdown a:active {
-  padding-bottom: 4px;
-  transition: padding-bottom 0.2s ease-in;
-}
-
-.markdown a:focus {
-  border-bottom: 4px solid currentColor;
-  transition: border-bottom 0.2s ease-in;
-}
-
 .markdown code {
   font-family: "Input Mono", "Menlo", "Inconsolata", "Roboto Mono", monospace;
   font-weight: 500;

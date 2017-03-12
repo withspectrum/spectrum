@@ -6,6 +6,7 @@ export const Column = styled.div`
 	flex-direction: column;
 	background-color: ${({ theme }) => theme.bg.wash};
 	height: 100%;
+	width: 100%;
 `;
 
 export const StoryList = styled.div`
