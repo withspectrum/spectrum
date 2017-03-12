@@ -22,7 +22,8 @@ const canBeBool = (...types) => PropTypes.oneOfType([PropTypes.bool, ...types]);
 
 class Card extends Component {
   static propTypes = {
-    isActive: canBeBool(PropTypes.bool),
+    isActive: PropTypes.bool,
+    isNew: PropTypes.bool,
     link: PropTypes.string.isRequired,
     media: canBeBool(PropTypes.string),
     messages: canBeBool(PropTypes.number),
@@ -34,7 +35,7 @@ class Card extends Component {
     }),
     timestamp: PropTypes.number,
     title: PropTypes.string.isRequired,
-    unread: PropTypes.number,
+    unreadMessages: PropTypes.number,
   };
 
   openGallery = e => {
@@ -46,6 +47,7 @@ class Card extends Component {
   render() {
     const {
       isActive,
+      isNew,
       link,
       media,
       messages,
@@ -54,7 +56,7 @@ class Card extends Component {
       person,
       timestamp,
       title,
-      unread,
+      unreadMessages,
     } = this.props;
 
     return (
@@ -67,10 +69,13 @@ class Card extends Component {
                 <Name>{person.name}</Name>
                 <Meta>
                   {timeDifference(Date.now(), timestamp)}
-                  &nbsp;•&nbsp;
-                  {messages > 0 ? `${messages} messages` : 'No messages yet'}
-                  {unread > 0 &&
-                    <UnreadCount>{` (${unread} new!)`}</UnreadCount>}
+                  {messages > 0
+                    ? <span>&nbsp;·&nbsp;{`${messages} messages`}</span>
+                    : isNew ? '' : <span>&nbsp;·&nbsp;No messages yet</span>}
+                  {unreadMessages > 0 &&
+                    <UnreadCount>{` (${unreadMessages} new!)`}</UnreadCount>}
+                  {isNew &&
+                    <span>&nbsp;·&nbsp;<UnreadCount>New!</UnreadCount></span>}
                 </Meta>
               </UserMeta>
             </StoryHeader>

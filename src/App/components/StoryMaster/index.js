@@ -76,7 +76,7 @@ class StoryMaster extends Component {
   renderNotification = notification => {
     const {
       activityType,
-      objectId,
+      ids,
       id,
       senders,
       timestamp,
@@ -89,7 +89,7 @@ class StoryMaster extends Component {
     return (
       <Card
         key={id}
-        link={isNewMsg ? `/notifications/${objectId}` : `/~${objectId}`}
+        link={isNewMsg ? `/notifications/${ids.story}` : `/~${ids.frequency}`}
         messages={notification.occurrences}
         // metaLink={isEverything && freq && `/~${freq.slug}`}
         // metaText={isEverything && freq && `~${freq.name}`}
@@ -230,10 +230,16 @@ class StoryMaster extends Component {
                 const notification = notifications.find(
                   notification =>
                     notification.activityType === ACTIVITY_TYPES.NEW_MESSAGE &&
-                    notification.objectId === story.id &&
+                    notification.ids.story === story.id &&
                     notification.read === false,
                 );
-                const unread = notification ? notification.unread : 0;
+                const isNew = notifications.some(
+                  notification =>
+                    notification.activityType === ACTIVITY_TYPES.NEW_STORY &&
+                    notification.ids.story === story.id &&
+                    notification.read === false,
+                );
+                const unreadMessages = notification ? notification.unread : 0;
                 const freq = isEverything &&
                   getCurrentFrequency(story.frequencyId, frequencies);
                 return (
@@ -253,7 +259,8 @@ class StoryMaster extends Component {
                     }}
                     timestamp={story.timestamp}
                     title={story.content.title}
-                    unread={unread}
+                    unreadMessages={unreadMessages}
+                    isNew={isNew}
                   />
                 );
               })

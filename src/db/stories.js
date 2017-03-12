@@ -1,7 +1,7 @@
 import * as firebase from 'firebase';
 import { getFrequency } from './frequencies';
 import { createNotifications } from './notifications';
-import { ACTIVITY_TYPES, OBJECT_TYPES } from './types';
+import { ACTIVITY_TYPES } from './types';
 import { getPublicUserInfo } from './users';
 import { flattenArray } from '../helpers/utils';
 
@@ -115,9 +115,10 @@ export const createStory = (
           users: Object.keys(frequency.users)
             .filter(user => user !== draft.creator.uid),
           activityType: ACTIVITY_TYPES.NEW_STORY,
-          objectType: OBJECT_TYPES.FREQUENCY,
-          objectId: frequency.id,
-          objectUrl: `/~${frequency.slug || frequency.id}/${story.id}`,
+          ids: {
+            frequency: frequency.id,
+            story: key,
+          },
           sender: {
             uid: draft.creator.uid,
             displayName: draft.creator.displayName,

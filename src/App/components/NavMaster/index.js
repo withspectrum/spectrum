@@ -26,7 +26,6 @@ import {
   FreqText,
   DirtyDot,
 } from './style';
-import { ACTIVITY_TYPES, OBJECT_TYPES } from '../../../db/types';
 
 class NavigationMaster extends Component {
   constructor() {
@@ -158,9 +157,7 @@ class NavigationMaster extends Component {
               // If there's any unread notification for this frequency
               // show a dirty dot
               const notif = this.props.notifications.find(
-                notification =>
-                  notification.objectId === frequency.id &&
-                  notification.objectType === OBJECT_TYPES.FREQUENCY,
+                notification => notification.ids.frequency === frequency.id,
               );
               return (
                 <Link to={`/~${frequency.slug || frequency.id}`} key={i}>

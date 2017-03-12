@@ -10,7 +10,6 @@ import {
   getFrequency,
 } from '../db/frequencies';
 import { getStories, getAllStories } from '../db/stories';
-import { markStoriesRead } from '../db/notifications';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
   dispatch({
@@ -59,7 +58,6 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
       // If it's a private frequency, don't even get any stories
       if (data && data.settings.private && (!freqs || !freqs[data.id]))
         return [];
-      markStoriesRead(data.id, uid);
       return getStories({ frequencySlug: frequency });
     })
     .then(stories => {

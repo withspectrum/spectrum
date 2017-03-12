@@ -5,7 +5,7 @@ import { ACTIVITY_TYPES } from './types';
  * Create notifications for a bunch of users
  */
 export const createNotifications = (
-  { users, activityType, objectType, objectId, objectUrl, sender, content },
+  { users, activityType, sender, content, ids = {} },
 ) => {
   const db = firebase.database();
   let updates = {};
@@ -15,9 +15,7 @@ export const createNotifications = (
       updates[`notifications/${user}/${key}`] = {
         activityType,
         id: key,
-        objectType,
-        objectId,
-        objectUrl,
+        ids,
         sender,
         content,
         timestamp: firebase.database.ServerValue.TIMESTAMP,
@@ -55,40 +53,18 @@ export const listenToNotifications = (userId, cb) => {
 /**
  * Mark messages of a story read
  */
-export const markMessagesRead = (storyId, userId) => new Promise(resolve => {
+export const markStoryRead = (storyId, userId) => new Promise(resolve => {
   const db = firebase.database();
 
   db
     .ref(`notifications/${userId}`)
-    .orderByChild('objectId')
+    .orderByChild('ids/story')
     .equalTo(storyId)
     .once('value', snapshot => {
       const storyNotifications = snapshot.val();
       if (!storyNotifications) return;
       let updates = {};
       Object.keys(storyNotifications).forEach(id => {
-        updates[`${id}/read`] = true;
-      });
-      resolve(db.ref(`notifications/${userId}`).update(updates));
-    });
-});
-
-/**
- * Mark stories of a frequency read
- */
-export const markStoriesRead = (frequencyId, userId) => new Promise(resolve => {
-  const db = firebase.database();
-
-  db
-    .ref(`notifications/${userId}`)
-    .orderByChild('objectId')
-    .equalTo(frequencyId)
-    .once('value', snapshot => {
-      const notifications = snapshot.val();
-      if (!notifications || notifications.length === 0) return;
-      let updates = {};
-      Object.keys(notifications).forEach(id => {
-        if (notifications[id].activityType !== ACTIVITY_TYPES.NEW_STORY) return;
         updates[`${id}/read`] = true;
       });
       resolve(db.ref(`notifications/${userId}`).update(updates));
