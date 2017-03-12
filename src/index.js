@@ -21,29 +21,7 @@ const fbconfig = {
 };
 
 firebase.initializeApp(fbconfig);
-let store;
-// In production load previously saved data from localStorage
-if (process.env.NODE_ENV === 'production') {
-  let localStorageState = loadStorage();
-  store = initStore(localStorageState ? localStorageState.user : {});
-
-  // sync the store with localstorage
-  let state = store.getState();
-  store.subscribe(
-    debounce(
-      () => {
-        if (!state.user || !state.user.uid) return;
-
-        saveStorage({
-          user: state.user,
-        });
-      },
-      1000,
-    ),
-  );
-} else {
-  store = initStore({});
-}
+let store = initStore({});
 
 // This is globally available in styled-components when interpolating a function like so:
 // ${(props) => props.theme}
