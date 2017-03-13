@@ -34,6 +34,10 @@ export const Bubble = styled.p`
   	line-height: inherit;
   	word-break: break-all;
   }
+
+	@media (max-width: 768px) {
+		max-width: 75%;
+	}
 `;
 
 export const Messages = styled.div`
