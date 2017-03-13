@@ -53,6 +53,7 @@ class Card extends Component {
       messages,
       metaLink,
       metaText,
+      privateFreq,
       person,
       timestamp,
       title,
@@ -91,7 +92,7 @@ class Card extends Component {
         {metaText &&
           metaLink &&
           <Link to={metaLink}>
-            <MetaFreq>{metaText}</MetaFreq>
+            <MetaFreq>{privateFreq && '🔒 '}{metaText}</MetaFreq>
           </Link>}
       </Wrapper>
     );

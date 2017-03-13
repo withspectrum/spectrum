@@ -13,7 +13,6 @@ import { getStories, getAllStories } from '../db/stories';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
   const lowerCaseFrequency = frequency.toLowerCase();
-  console.log('freq: ', frequency, ' lowercase: ', lowerCaseFrequency);
 
   dispatch({
     type: 'SET_ACTIVE_FREQUENCY',
