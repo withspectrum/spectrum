@@ -62,5 +62,6 @@ export const DetailViewContainer = styled(ScrollBody)`
   @media (max-width: 768px) {
     transform: translateX( ${props =>
   props.active || props.viewing === 'detail' ? '-200%' : '-100%'} )
+    overflow-y: hidden;
   }
 `;
