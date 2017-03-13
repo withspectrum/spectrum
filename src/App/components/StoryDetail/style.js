@@ -12,6 +12,7 @@ export const ScrollBody = styled.div`
 	@media (max-width: 768px) {
     width: 100%;
     flex: 1 0 100%;
+		overflow-x: hidden;
   }
 `;
 

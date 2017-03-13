@@ -199,7 +199,9 @@ class StoryMaster extends Component {
                 ? <JoinBtn member={role} onClick={this.unsubscribeFrequency}>
                     Leave
                   </JoinBtn>
-                : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}
+                : <JoinBtn onClick={this.subscribeFrequency}>
+                    Join ~{activeFrequency}
+                  </JoinBtn>)}
 
             {role === 'owner' &&
               <TipButton
