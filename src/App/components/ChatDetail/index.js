@@ -86,6 +86,14 @@ class ChatView extends Component {
           const user = !itsaMe &&
             users &&
             users.find(user => user.uid === group[0].userId);
+          const admins = [
+            'VToKcde16dREgDkXcDl3hhcrFN33',
+            'gVk5mYwccUOEKiN5vtOouqroGKo1',
+            '01p2A7kDCWUjGj6zQLlMQUOSQL42',
+          ];
+          const isAdmin = admins.includes(group[0].userId);
+          const isStoryCreator = this.props.story.creator.uid ===
+            group[0].userId;
           const itsaRobo = group[0].userId === 'robo';
           if (itsaRobo) {
             let monthNames = [
@@ -128,7 +136,15 @@ class ChatView extends Component {
                   <Avatar src={user.photoURL} />
                 </HiddenLabel>}
               <Messages>
-                <FromName>{user && user.name}</FromName>
+                <FromName>
+                  {user && user.name}
+                  {!itsaMe &&
+                    isAdmin &&
+                    isStoryCreator &&
+                    ' · Admin · Story Author'}
+                  {!itsaMe && !isAdmin && isStoryCreator && ' · Story Author'}
+                  {!itsaMe && isAdmin && !isStoryCreator && ' · Admin'}
+                </FromName>
                 {group.map((message, i) => {
                   // mxstbr: The "emoji" specific type is legacy, remove in the future
                   if (
