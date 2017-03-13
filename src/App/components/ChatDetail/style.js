@@ -33,6 +33,7 @@ export const Bubble = styled.p`
   	word-wrap: break-word;
   	line-height: inherit;
   	word-break: break-all;
+		display: inline-block;
   }
 
 	@media (max-width: 768px) {
