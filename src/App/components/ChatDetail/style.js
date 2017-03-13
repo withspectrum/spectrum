@@ -36,6 +36,10 @@ export const Bubble = styled.p`
 		display: inline-block;
   }
 
+	& + div { /* if bubble is followed by an emoji, don't let the emoji have bottom margin */
+		margin-bottom: 0;
+	}
+
 	@media (max-width: 768px) {
 		max-width: 75%;
 	}
@@ -48,8 +52,8 @@ export const Messages = styled.div`
 `;
 
 export const Avatar = styled.img`
-	width: 20px;
-	height: 20px;
+	width: 32px;
+	height: 32px;
 	border-radius: 100%;
 	margin-right: 8px;
 	align-self: flex-end;
@@ -57,7 +61,7 @@ export const Avatar = styled.img`
 
 export const BubbleGroup = styled.div`
 	width: 100%;
-	margin-top: 8px;
+	margin-top: 16px;
 	display: flex;
 	justify-content: ${props => props.me ? `flex-end;` : `flex-start;`}
 
@@ -111,6 +115,22 @@ export const EmojiBubble = styled.div`
   margin-bottom: 12px;
 	display: flex;
 	align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
+
+	&:last-of-type {
+		margin-bottom: 0;
+	}
+
+	&:first-of-type:not(:last-of-type) { /* if two emojis are posted back to back, don't add margin to the first one */
+		margin-bottom: 0;
+	}
+
+	& + & {
+		margin: 0; /* if two emojis are next to each other, no margin needed */
+	}
+
+	& + p {
+		margin-top: 8px; /* if emoji is followed by a bubble, add margin to the bubble */
+	}
 `;
 
 export const FromName = styled.span`
