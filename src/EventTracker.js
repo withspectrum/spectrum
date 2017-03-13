@@ -43,11 +43,12 @@ export const track = (category, action, label) => {
   // console log tracking events locally so that we can quickly make sure things are firing properly
   if (process.env.NODE_ENV !== 'production') {
     console.log('tracking: ', category, action, label);
-  }
-
-  try {
-    ga('send', 'event', category, action, label);
-  } catch (err) {
-    console.log(err);
+  } else {
+    // don't actually send events from dev
+    try {
+      ga('send', 'event', category, action, label);
+    } catch (err) {
+      console.log(err);
+    }
   }
 };
