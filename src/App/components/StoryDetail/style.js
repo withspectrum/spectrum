@@ -41,6 +41,7 @@ export const StoryTitle = styled(H1)`
 	line-height: 40px;
 	font-weight: 800;
 	color: ${({ theme }) => theme.text.default};
+	padding-right: 32px;
 `;
 
 export const Byline = styled(H4)`
@@ -51,6 +52,7 @@ export const Byline = styled(H4)`
 export const FlexColumn = styled.div`
 	display: flex;
 	flex-direction: column;
+	max-width: 100%;
 `;
 
 export const Flex = styled.div`
