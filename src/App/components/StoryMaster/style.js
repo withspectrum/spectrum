@@ -42,6 +42,7 @@ export const Header = styled.div`
 	box-shadow: ${Shadow.low};
 	position: relative;
 	z-index: 3;
+	margin-bottom: 6px;
 `;
 
 export const FrequencyName = styled.h2`
