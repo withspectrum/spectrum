@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient } from '../../../shared/Globals';
+import { Gradient, Tooltip } from '../../../shared/Globals';
 
 export const ChatContainer = styled.div`
 	flex: 1 0 auto;
@@ -24,7 +24,7 @@ export const Bubble = styled.p`
 	max-width: 60%;
 	line-height: 20px;
 
-	&:first-of-type {
+	&:first-of-type:first-child { /* first message bubble, but could be preceded by an emoji */
 		margin-top: 0;
 	}
 
@@ -55,8 +55,47 @@ export const Avatar = styled.img`
 	width: 32px;
 	height: 32px;
 	border-radius: 100%;
-	margin-right: 8px;
 	align-self: flex-end;
+`;
+
+export const HiddenLabel = styled.span`
+	display: inline-block;
+	width: 32px;
+	margin-right: 8px;
+	display: flex;
+	align-self: flex-end;
+	${props => props.tipText ? Tooltip(props) : ''};
+`;
+
+export const Timestamp = styled.div`
+	width: 100%;
+	margin: 32px 0 16px;
+	display: block;
+	text-align: center;
+	font-size: 12px;
+	color: ${({ theme }) => theme.text.alt};
+	background: #fff;
+	position: relative;
+
+	span {
+		margin: 0 auto;
+		display: inline-block;
+		padding: 4px 32px;
+		background: #fff;
+		position: relative;
+		z-index: 5;
+	}
+
+	&:after {
+		position: absolute;
+		width: 100%;
+		top: 16px;
+		left: 0;
+		right: 0;
+		z-index: 4;
+		content: '';
+		border-bottom: 1px solid #f6f7f8;
+	}
 `;
 
 export const BubbleGroup = styled.div`

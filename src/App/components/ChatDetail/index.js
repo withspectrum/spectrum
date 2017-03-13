@@ -9,6 +9,8 @@ import {
   EmojiBubble,
   Messages,
   Avatar,
+  HiddenLabel,
+  Timestamp,
 } from './style';
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
@@ -84,9 +86,47 @@ class ChatView extends Component {
           const user = !itsaMe &&
             users &&
             users.find(user => user.uid === group[0].userId);
+          const itsaRobo = group[0].userId === 'robo';
+          if (itsaRobo) {
+            let monthNames = [
+              'January',
+              'February',
+              'March',
+              'April',
+              'May',
+              'June',
+              'July',
+              'August',
+              'September',
+              'October',
+              'November',
+              'December',
+            ];
+            let date = new Date(group[0].message.content);
+            let day = date.getDate();
+            let monthIndex = date.getMonth();
+            let month = monthNames[monthIndex];
+            let year = date.getFullYear();
+            let hours = date.getHours();
+            let cleanHours = hours > 12 ? hours - 12 : hours; // todo: support 24hr time
+            let minutes = date.getMinutes();
+            minutes = minutes >= 10 ? minutes : '0' + minutes.toString(); // turns 4 minutes into 04 minutes
+            let ampm = hours >= 12 ? 'pm' : 'am'; // todo: support 24hr time
+            return (
+              <Timestamp>
+                <span>
+                  {month} {day}, {year} · {cleanHours}:{minutes}{ampm}
+                </span>
+              </Timestamp>
+            );
+          }
           return (
             <BubbleGroup key={i} me={itsaMe}>
-              {user && !itsaMe && <Avatar src={user.photoURL} />}
+              {user &&
+                !itsaMe &&
+                <HiddenLabel tipText={user.name} tipLocation="right">
+                  <Avatar src={user.photoURL} />
+                </HiddenLabel>}
               <Messages>
                 <FromName>{user && user.name}</FromName>
                 {group.map((message, i) => {
