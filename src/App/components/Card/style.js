@@ -47,6 +47,8 @@ export const StoryBody = styled.div`
 	margin-top: 16px;
 	font-size: 14px;
 	flex: 0 0 auto;
+	max-width: 100%;
+	word-wrap: break-word;
 `;
 
 export const Avatar = styled.img`
