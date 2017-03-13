@@ -113,7 +113,7 @@ class ChatView extends Component {
             minutes = minutes >= 10 ? minutes : '0' + minutes.toString(); // turns 4 minutes into 04 minutes
             let ampm = hours >= 12 ? 'pm' : 'am'; // todo: support 24hr time
             return (
-              <Timestamp>
+              <Timestamp key={i}>
                 <span>
                   {month} {day}, {year} · {cleanHours}:{minutes}{ampm}
                 </span>

@@ -79,7 +79,7 @@ class ChatInput extends Component {
 
   sendMessage = e => {
     e.preventDefault();
-    const messageText = this.state.message.trim();
+    let messageText = this.state.message.trim();
     if (messageText === '') return;
     let messageObj = {
       type: 'text',
