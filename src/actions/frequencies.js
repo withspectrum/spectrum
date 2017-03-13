@@ -12,12 +12,15 @@ import {
 import { getStories, getAllStories } from '../db/stories';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
+  const lowerCaseFrequency = frequency.toLowerCase();
+  console.log('freq: ', frequency, ' lowercase: ', lowerCaseFrequency);
+
   dispatch({
     type: 'SET_ACTIVE_FREQUENCY',
-    frequency,
+    frequency: lowerCaseFrequency,
   });
   // Notifications
-  if (frequency === 'notifications') {
+  if (lowerCaseFrequency === 'notifications') {
     track('notifications', 'viewed', null);
     return;
   }
@@ -25,7 +28,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
   const { user: { uid } } = getState();
   // Everything
-  if (frequency === 'everything') {
+  if (lowerCaseFrequency === 'everything') {
     // If there's no UID yet we might need to show the homepage, so don't do anything
     if (!uid) return;
     track('everything', 'viewed', null);
@@ -45,7 +48,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   }
   track('frequency', 'viewed', null);
   // Get the frequency
-  getFrequency({ slug: frequency })
+  getFrequency({ slug: lowerCaseFrequency })
     .then(data => {
       dispatch({
         type: 'ADD_FREQUENCY',
@@ -58,7 +61,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
       // If it's a private frequency, don't even get any stories
       if (data && data.settings.private && (!freqs || !freqs[data.id]))
         return [];
-      return getStories({ frequencySlug: frequency });
+      return getStories({ frequencySlug: lowerCaseFrequency });
     })
     .then(stories => {
       dispatch({
