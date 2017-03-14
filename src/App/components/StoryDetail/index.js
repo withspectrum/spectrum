@@ -44,6 +44,11 @@ class StoryView extends Component {
     // we're going to loop through all the dom nodes of the story and look for images so that we can attach event listeners for the gallery
     let story = this.refs.story;
     let imageNodes = story.querySelectorAll('img');
+    let linkNodes = story.querySelectorAll('a');
+
+    for (let link of linkNodes) {
+      link.setAttribute('target', '_blank');
+    }
 
     for (let image of imageNodes) {
       image.addEventListener('click', this.openGallery, false);
