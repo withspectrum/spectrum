@@ -52,7 +52,6 @@ export const sortAndGroupBubbles = messages => {
 
   for (let i = 0; i < messages.length; i++) {
     // on the first message, get the user id and set it to be checked against
-    console.log(messages[i], convertTimestampToDate(messages[i].timestamp));
     if (i === 0) {
       checkId = messages[i].userId;
 

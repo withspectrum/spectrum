@@ -61,8 +61,6 @@ class Card extends Component {
       unreadMessages,
     } = this.props;
 
-    console.log(person);
-
     return (
       <Wrapper>
         <Link to={link}>
