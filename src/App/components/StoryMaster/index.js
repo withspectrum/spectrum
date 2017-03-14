@@ -274,7 +274,7 @@ class StoryMaster extends Component {
                       story.messages ? Object.keys(story.messages).length : 0
                     }
                     metaLink={isEverything && freq && `/~${freq.slug}`}
-                    metaText={isEverything && freq && `~ ${freq.name}`}
+                    metaText={isEverything && freq && `~${freq.name}`}
                     privateFreq={isEverything && freq && freq.settings.private}
                     person={{
                       photo: story.creator.photoURL,
