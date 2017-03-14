@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ChatDetail from '../ChatDetail';
-import { Freeze, Delete, Back, Share } from '../../../shared/Icons';
+import Icon from '../../../shared/Icons';
 import Markdown from '../../../shared/Markdown';
 import {
   ScrollBody,
@@ -114,7 +114,7 @@ class StoryView extends Component {
       <Flex>
         <Link to={`/~${returnUrl}`}>
           <BackArrow onClick={this.clearActiveStory}>
-            <Back stayActive color={'brand'} />
+            <Icon icon="back" />
           </BackArrow>
         </Link>
 
@@ -137,17 +137,17 @@ class StoryView extends Component {
                   target="_blank"
                 >
                   <HiddenLabel tipText="Share story" tipLocation="left">
-                    <Share color={'warn'} />
+                    <Icon icon="share" subtle />
                   </HiddenLabel>
                 </a>
                 {(creator || moderator === 'owner') &&
                   <label>
                     {locked
                       ? <HiddenLabel tipText="Unfreeze Chat" tipLocation="left">
-                          <Freeze stayActive color={'warn'} />
+                          <Icon icon="freeze" color="warn.default" />
                         </HiddenLabel>
                       : <HiddenLabel tipText="Freeze Chat" tipLocation="left">
-                          <Freeze color={'warn'} />
+                          <Icon icon="freeze" color="success.alt" subtle />
                         </HiddenLabel>}
                     <HiddenInput
                       type="checkbox"
@@ -162,7 +162,7 @@ class StoryView extends Component {
                     tipLocation="bottom"
                     visible={this.state.deleteInited}
                   >
-                    <Delete color="warn" />
+                    <Icon icon="delete" color="warn.default" subtle />
                     <DeleteConfirm
                       visible={this.state.deleteInited}
                       onClick={this.deleteStory}
