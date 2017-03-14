@@ -4,7 +4,7 @@ import { Shadow, H4, H5 } from '../../../shared/Globals';
 export const Wrapper = styled.div`
 	display: inline-block;
 	width: calc(100% - 16px);
-	margin: 8px;
+	margin: 4px 8px;
 	margin-bottom: 0;
 	flex: 0 0 auto;
 	border-radius: 4px;
@@ -12,7 +12,6 @@ export const Wrapper = styled.div`
 	background-color: ${({ theme }) => theme.bg.default};
 	transition: all 0.2s ease-in;
 	-webkit-font-smoothing: subpixel-antialiased;
-
 	box-shadow: ${Shadow.low};
 
 	${props => !props.static &&
@@ -44,15 +43,18 @@ export const LinkWrapper = styled.div`
 
 export const StoryBody = styled.div`
 	display: inline-block;
-	margin-top: 16px;
-	font-size: 14px;
+	font-size: 16px;
+	font-weight: 600;
 	flex: 0 0 auto;
+	max-width: 100%;
+	word-wrap: break-word;
+	margin-bottom: 8px;
 `;
 
 export const Avatar = styled.img`
 	display: inline-block;
-  height: 32px;
-  width: 32px;
+  height: 16px;
+  width: 16px;
 	border-radius: 4px;
 	box-shadow: ${Shadow.border};
 `;
@@ -70,26 +72,19 @@ export const Title = styled.p`
 	color: ${({ theme }) => theme.text.default};
 `;
 
-export const Media = styled.img`
-	width: 100%;
-	max-height: 240px;
-	object-fit: cover;
-	background-color: ${({ theme }) => theme.inactive};
-	margin: 8px 8px 0 0;
-	border-radius: 4px;
-	box-shadow: ${Shadow.border};
-`;
-
 export const UserMeta = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 12px;
   flex: 1 0 auto;
 `;
 
-export const Name = styled(H4)`
-  color: ${({ theme }) => theme.text.default};
-  font-weight: 700;
+export const Name = styled(H5)`
+  color: ${({ theme }) => theme.text.alt};
+	margin-top: 4px;
+
+	a:hover {
+		color: ${({ theme }) => theme.brand.default};
+	}
 `;
 
 export const Meta = styled(H5)`

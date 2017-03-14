@@ -201,6 +201,13 @@ body {
 .markdown pre code {
   padding: 8px 16px;
   display: inline-block;
+  white-space: pre-wrap;
+}
+
+.markdown code span {
+  max-width: 100%;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .markdown iframe {

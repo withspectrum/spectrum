@@ -87,7 +87,7 @@ class DetailView extends Component {
                 {user.uid &&
                   !role &&
                   <LoginButton onClick={this.subscribeFrequency}>
-                    Join this Frequency to chat!
+                    Join ~{this.props.frequencies.active} to chat!
                   </LoginButton>}
               </Footer>}
           </LogicContainer>

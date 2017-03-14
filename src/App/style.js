@@ -9,6 +9,10 @@ export const Body = styled.div`
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   height: 100%;
 	overflow: auto;
+
+  @media (max-width: 768px) {
+    overflow-x: hidden;
+  }
 `;
 
 export const ScrollBody = styled.div`
@@ -38,7 +42,7 @@ export const NavMasterContainer = styled(ScrollBody)`
 export const StoryMasterContainer = styled(ScrollBody)`
   background: ${({ theme }) => theme.bg.wash};
   border-right: 1px solid ${({ theme }) => theme.border.default};
-  flex: 0 0 512px;
+  flex: 0 0 420px;
   z-index: 1;
   overflow-y: hidden;
 
@@ -58,5 +62,6 @@ export const DetailViewContainer = styled(ScrollBody)`
   @media (max-width: 768px) {
     transform: translateX( ${props =>
   props.active || props.viewing === 'detail' ? '-200%' : '-100%'} )
+    overflow-y: hidden;
   }
 `;

@@ -192,7 +192,9 @@ class StoryMaster extends Component {
                 ? <JoinBtn member={role} onClick={this.unsubscribeFrequency}>
                     Leave
                   </JoinBtn>
-                : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}
+                : <JoinBtn onClick={this.subscribeFrequency}>
+                    Join ~{activeFrequency}
+                  </JoinBtn>)}
 
             {role === 'owner' &&
               <TipButton
@@ -273,6 +275,7 @@ class StoryMaster extends Component {
                     }
                     metaLink={isEverything && freq && `/~${freq.slug}`}
                     metaText={isEverything && freq && `~ ${freq.name}`}
+                    privateFreq={isEverything && freq && freq.settings.private}
                     person={{
                       photo: story.creator.photoURL,
                       name: story.creator.displayName,
