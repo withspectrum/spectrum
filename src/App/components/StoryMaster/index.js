@@ -200,7 +200,7 @@ class StoryMaster extends Component {
               <TipButton
                 onClick={this.editFrequency}
                 tipText="Frequency Settings"
-                tipLocation="bottom"
+                tipLocation="right"
               >
                 <Icon icon="settings" subtle />
               </TipButton>}
@@ -218,7 +218,7 @@ class StoryMaster extends Component {
                 <TipButton
                   onClick={this.toggleComposer}
                   tipText="New Story"
-                  tipLocation="bottom"
+                  tipLocation="left"
                 >
                   {composer.isOpen
                     ? <Icon icon="post-cancel" color="warn.alt" />

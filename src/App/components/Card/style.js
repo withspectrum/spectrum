@@ -74,6 +74,7 @@ export const StoryHeader = styled.div`
   flex: 0 0 auto;
 	border-top: 1px solid #f6f7f8;
 	padding: 8px 16px;
+	background: #fff;
 `;
 
 export const Title = styled.p`
