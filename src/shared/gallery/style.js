@@ -8,7 +8,7 @@ export const Overlay = styled.div`
 	right: 0;
 	bottom: 0;
 	background: ${({ theme }) => theme.bg.reverse};
-	opacity: 0.85;
+	opacity: 0.95;
 	z-index: 100;
 `;
 
@@ -60,4 +60,24 @@ export const MiniContainer = styled.div`
     justify-content: flex-start;
     overflow-x: scroll;
   }
+`;
+
+export const CloseButton = styled.button`
+	position: absolute;
+	-webkit-appearance: none;
+	top: 4px;
+	right: 4px;
+	padding: 8px 12px;
+	border-radius: 23px;
+	background: #000;
+	color: rgba(255,255,255,0.8);
+	font-size: 20px;
+	font-weight: 400;
+	text-transform: uppercase;
+	z-index: 102;
+	cursor: pointer;
+
+	&:hover {
+		color: #fff;
+	}
 `;

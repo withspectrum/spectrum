@@ -9,7 +9,9 @@ import {
   Avatar,
   UserMeta,
   Name,
+  MessageCount,
   MetaFreq,
+  FrequencyLink,
   Title,
   Media,
   UnreadCount,
@@ -65,31 +67,34 @@ class Card extends Component {
           <LinkWrapper selected={isActive}>
             <StoryBody>
               <Title>{title}</Title>
+
+              <MessageCount>
+                {messages > 0
+                  ? <span>{`${messages} messages`}&nbsp;</span>
+                  : isNew ? <span /> : <span>No messages yet&nbsp;</span>}
+                {unreadMessages > 0 &&
+                  <span>
+                    <UnreadCount>
+                      {` (${unreadMessages} new!)`}&nbsp;
+                    </UnreadCount>
+                  </span>}
+                {isNew && <span><UnreadCount> New!</UnreadCount></span>}
+              </MessageCount>
             </StoryBody>
             <StoryHeader>
               <UserMeta>
                 <Name>
+                  <Avatar src={person.photo} />
                   {person.name}&nbsp;·&nbsp;
                   {timeDifference(Date.now(), timestamp)}
                   {metaText &&
                     metaLink &&
-                    <span>
+                    <FrequencyLink>
                       &nbsp;in&nbsp;
                       <Link to={metaLink}>
                         {metaText}
                       </Link>
-                    </span>}
-                </Name>
-                <Name>
-                  {messages > 0
-                    ? <span>{`${messages} messages`}</span>
-                    : isNew ? '' : <span>No messages yet</span>}
-                  {unreadMessages > 0 &&
-                    <span>
-                      &nbsp;·&nbsp;
-                      <UnreadCount>{` (${unreadMessages} new!)`}</UnreadCount>
-                    </span>}
-                  {isNew && <span><UnreadCount>New!</UnreadCount></span>}
+                    </FrequencyLink>}
                 </Name>
               </UserMeta>
             </StoryHeader>

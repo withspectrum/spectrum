@@ -10,7 +10,7 @@ export const EmojiDialog = styled.div`
   position: absolute;
   bottom: 4.6rem;
   left: 1rem;
-  z-index: 10;
+  z-index: 500;
   box-shadow: 0 0 0 1px rgba(0,0,0,0.1), 0 2px 15px rgba(0,0,0,0.1);
 `;
 

@@ -27,6 +27,11 @@ textarea {
   resize: none;
 }
 
+::-moz-selection { /* Code for Firefox */
+  background: #3818e5;
+  color: #ffffff;
+}
+
 ::selection {
   background: #3818e5;
   color: #ffffff;

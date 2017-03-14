@@ -72,13 +72,14 @@ export const BgText = styled.p`
 export const JoinBtn = styled.button`
   font-size: 12px;
   font-weight: 800;
-  flex: 0 0 80px;
+  flex: 0 0 auto;
   height: 28px;
   line-height: 26px;
   margin-left: 4px;
   text-align: center;
   vertical-align: middle;
   border-radius: 8px;
+	padding: 0 16px;
   border: 2px solid ${props =>
   props.member ? `${props.theme.inactive}` : 'transparent'};
   color: ${props =>

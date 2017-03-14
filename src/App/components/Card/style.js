@@ -14,6 +14,13 @@ export const Wrapper = styled.div`
 	-webkit-font-smoothing: subpixel-antialiased;
 	box-shadow: ${Shadow.low};
 
+	@media (max-width: 768px) {
+		width: 100%;
+		margin: 0;
+		margin-bottom: 4px;
+		border-radius: 0;
+	}
+
 	${props => !props.static &&
 css`
 		&:hover {
@@ -29,7 +36,6 @@ export const LinkWrapper = styled.div`
 	flex-direction: column;
 	flex: 0 0 auto;
 	background-color: #ffffff;
-	padding: 16px;
 	transition: all 0.2s ease-in;
 	box-shadow: inset -4px 0 0 ${props =>
   props.selected ? props.theme.brand.default : '#fff'};
@@ -49,20 +55,26 @@ export const StoryBody = styled.div`
 	max-width: 100%;
 	word-wrap: break-word;
 	margin-bottom: 8px;
+	padding: 16px;
+	padding-bottom: 8px;
 `;
 
 export const Avatar = styled.img`
 	display: inline-block;
   height: 16px;
   width: 16px;
-	border-radius: 4px;
+	border-radius: 50%;
 	box-shadow: ${Shadow.border};
+	margin-right: 8px;
 `;
 
 export const StoryHeader = styled.div`
   display: flex;
   align-items: center;
   flex: 0 0 auto;
+	border-top: 1px solid #f6f7f8;
+	padding: 8px 16px;
+	background: #fff;
 `;
 
 export const Title = styled.p`
@@ -76,19 +88,33 @@ export const UserMeta = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1 0 auto;
+	max-width: 100%;
 `;
 
 export const Name = styled(H5)`
   color: ${({ theme }) => theme.text.alt};
-	margin-top: 4px;
+	display: flex;
+	align-items: center;
 
 	a:hover {
 		color: ${({ theme }) => theme.brand.default};
 	}
 `;
 
+export const MessageCount = styled(Name)`
+	margin-top: 4px;
+`;
+
 export const Meta = styled(H5)`
   color: ${({ theme }) => theme.text.alt};
+	word-break: break-all;
+`;
+
+export const FrequencyLink = styled(H5)`
+	display: inline;
+	color: ${({ theme }) => theme.text.alt};
+	max-width: 100%;
+	word-break: break-all;
 `;
 
 export const MetaFreq = styled(Meta)`

@@ -262,7 +262,6 @@ export const Span = styled.span`
 
 export const Tooltip = props => css`
 	position: relative;
-	z-index: 100;
 
 	&:after,
 	&:before {
@@ -293,7 +292,7 @@ export const Tooltip = props => css`
 			top: 50%;
 	    border-left-width: 0;
 	    border-right-color: ${({ theme }) => theme.bg.reverse};
-	    right: calc(0em - 5px);
+	    right: calc(0em - 7px);
 	    transform: translate(.5em, -50%);
 			`
   : ''}
