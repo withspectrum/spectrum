@@ -85,9 +85,11 @@ class Card extends Component {
                     ? <span>{`${messages} messages`}</span>
                     : isNew ? '' : <span>No messages yet</span>}
                   {unreadMessages > 0 &&
-                    <UnreadCount>{` (${unreadMessages} new!)`}</UnreadCount>}
-                  {isNew &&
-                    <span>&nbsp;·&nbsp;<UnreadCount>New!</UnreadCount></span>}
+                    <span>
+                      &nbsp;·&nbsp;
+                      <UnreadCount>{` (${unreadMessages} new!)`}</UnreadCount>
+                    </span>}
+                  {isNew && <span><UnreadCount>New!</UnreadCount></span>}
                 </Name>
               </UserMeta>
             </StoryHeader>

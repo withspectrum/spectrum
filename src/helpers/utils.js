@@ -15,6 +15,34 @@ export const hashToArray = hash => {
   return array;
 };
 
+export const convertTimestampToDate = timestamp => {
+  let monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  let date = new Date(timestamp);
+  let day = date.getDate();
+  let monthIndex = date.getMonth();
+  let month = monthNames[monthIndex];
+  let year = date.getFullYear();
+  let hours = date.getHours();
+  let cleanHours = hours > 12 ? hours - 12 : hours; // todo: support 24hr time
+  let minutes = date.getMinutes();
+  minutes = minutes >= 10 ? minutes : '0' + minutes.toString(); // turns 4 minutes into 04 minutes
+  let ampm = hours >= 12 ? 'pm' : 'am'; // todo: support 24hr time
+  return `${month} ${day}, ${year} · ${cleanHours}:${minutes}${ampm}`;
+};
+
 export const sortAndGroupBubbles = messages => {
   if (!messages.length > 0) return [];
 
@@ -23,15 +51,26 @@ export const sortAndGroupBubbles = messages => {
   let checkId;
 
   for (let i = 0; i < messages.length; i++) {
-    console.log(messages[i]);
+    // on the first message, get the user id and set it to be checked against
+    console.log(messages[i], convertTimestampToDate(messages[i].timestamp));
     if (i === 0) {
       checkId = messages[i].userId;
+
+      // show a timestamp for when the first message in the conversation was sent
+      masterArray.push([
+        {
+          userId: 'robo',
+          timestamp: messages[i].timestamp,
+          message: {
+            content: messages[i].timestamp,
+            type: 'robo',
+          },
+        },
+      ]);
     }
 
-    if (i > 0) {
-      // if we're not on the first message
-      if (i > 1 && messages[i].timestamp > messages[i - 1].timestamp + 900000) {
-        // don't run this on the first message as we already show a timestamp for when the conversation was started
+    function checkToInjectTimestamp() {
+      if (i > 0 && messages[i].timestamp > messages[i - 1].timestamp + 900000) {
         masterArray.push([
           {
             userId: 'robo',
@@ -52,6 +91,8 @@ export const sortAndGroupBubbles = messages => {
     } else {
       // this message user id doesn't match
       masterArray.push(newArray);
+
+      checkToInjectTimestamp();
 
       // reset
       checkId = messages[i].userId;

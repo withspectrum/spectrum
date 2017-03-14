@@ -15,7 +15,11 @@ import {
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
 import { getUsersFromMessageGroups } from '../../../helpers/stories';
-import { onlyContainsEmoji, sortAndGroupBubbles } from '../../../helpers/utils';
+import {
+  onlyContainsEmoji,
+  sortAndGroupBubbles,
+  convertTimestampToDate,
+} from '../../../helpers/utils';
 import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../helpers/regexps';
 import { openGallery } from '../../../actions/gallery';
 
@@ -96,34 +100,11 @@ class ChatView extends Component {
             group[0].userId;
           const itsaRobo = group[0].userId === 'robo';
           if (itsaRobo) {
-            let monthNames = [
-              'January',
-              'February',
-              'March',
-              'April',
-              'May',
-              'June',
-              'July',
-              'August',
-              'September',
-              'October',
-              'November',
-              'December',
-            ];
-            let date = new Date(group[0].message.content);
-            let day = date.getDate();
-            let monthIndex = date.getMonth();
-            let month = monthNames[monthIndex];
-            let year = date.getFullYear();
-            let hours = date.getHours();
-            let cleanHours = hours > 12 ? hours - 12 : hours; // todo: support 24hr time
-            let minutes = date.getMinutes();
-            minutes = minutes >= 10 ? minutes : '0' + minutes.toString(); // turns 4 minutes into 04 minutes
-            let ampm = hours >= 12 ? 'pm' : 'am'; // todo: support 24hr time
+            let time = convertTimestampToDate(group[0].message.content);
             return (
               <Timestamp key={i}>
                 <span>
-                  {month} {day}, {year} · {cleanHours}:{minutes}{ampm}
+                  {time}
                 </span>
               </Timestamp>
             );
