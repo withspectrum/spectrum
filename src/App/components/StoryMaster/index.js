@@ -238,11 +238,12 @@ class StoryMaster extends Component {
               <LoginButton>Sign in with Twitter</LoginButton>
             </LoginWrapper>}
 
-          {canLoadNewStories &&
+          {/*canLoadNewStories &&
             <NewIndicator onClick={this.loadStoriesAgain}>
               <Icon icon="scroll-top" reverse />
               New stories!
-            </NewIndicator>}
+            </NewIndicator>*/
+          }
 
           {isNotifications && notifications.map(this.renderNotification)}
 
