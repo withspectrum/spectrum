@@ -80,6 +80,7 @@ export const UserMeta = styled.div`
 
 export const Name = styled(H5)`
   color: ${({ theme }) => theme.text.alt};
+	margin-top: 4px;
 
 	a:hover {
 		color: ${({ theme }) => theme.brand.default};

@@ -23,20 +23,9 @@ export const sortAndGroupBubbles = messages => {
   let checkId;
 
   for (let i = 0; i < messages.length; i++) {
+    console.log(messages[i]);
     if (i === 0) {
       checkId = messages[i].userId;
-
-      // init a timestamp for the start of the conversation
-      masterArray.push([
-        {
-          userId: 'robo',
-          timestamp: messages[i].timestamp - 1, // set it as slightly before, to avoid collisions
-          message: {
-            content: messages[i].timestamp,
-            type: 'robo',
-          },
-        },
-      ]);
     }
 
     if (i > 0) {
@@ -46,7 +35,7 @@ export const sortAndGroupBubbles = messages => {
         masterArray.push([
           {
             userId: 'robo',
-            timestamp: messages[i].timestamp - 1, // set it as slightly before, to avoid collisions
+            timestamp: messages[i].timestamp,
             message: {
               content: messages[i].timestamp,
               type: 'robo',
