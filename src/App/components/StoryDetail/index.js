@@ -184,7 +184,7 @@ class StoryView extends Component {
               ? <Media src={story.content.media} onClick={this.openGallery} />
               : ''}
           </ContentView>
-          <ChatDetail scrollToBottom={this.scrollToBottom} />
+          <ChatDetail scrollToBottom={this.scrollToBottom} story={story} />
         </ScrollBody>
       </Flex>
     );

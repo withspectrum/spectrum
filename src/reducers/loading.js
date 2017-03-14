@@ -10,7 +10,6 @@ export default function loading(state = initialState, action) {
         active: true,
         stacks: state.stacks + 1,
       };
-    case 'ADD_MESSAGES':
     case 'ADD_STORIES':
     case 'CHANGE_GALLERY_INDEX':
     case 'SUBSCRIBE_FREQUENCY':

@@ -9,7 +9,6 @@ import {
   Avatar,
   UserMeta,
   Name,
-  Meta,
   MetaFreq,
   Title,
   Media,
@@ -53,6 +52,7 @@ class Card extends Component {
       messages,
       metaLink,
       metaText,
+      privateFreq,
       person,
       timestamp,
       title,
@@ -63,36 +63,38 @@ class Card extends Component {
       <Wrapper>
         <Link to={link}>
           <LinkWrapper selected={isActive}>
-            <StoryHeader>
-              <Avatar src={person.photo} alt={person.name} />
-              <UserMeta>
-                <Name>{person.name}</Name>
-                <Meta>
-                  {timeDifference(Date.now(), timestamp)}
-                  {messages > 0
-                    ? <span>&nbsp;·&nbsp;{`${messages} messages`}</span>
-                    : isNew ? '' : <span>&nbsp;·&nbsp;No messages yet</span>}
-                  {unreadMessages > 0 &&
-                    <UnreadCount>{` (${unreadMessages} new!)`}</UnreadCount>}
-                  {isNew &&
-                    <span>&nbsp;·&nbsp;<UnreadCount>New!</UnreadCount></span>}
-                </Meta>
-              </UserMeta>
-            </StoryHeader>
             <StoryBody>
               <Title>{title}</Title>
-              {media && media !== ''
-                ? <Media src={media} onClick={this.openGallery} />
-                : ''}
             </StoryBody>
+            <StoryHeader>
+              <UserMeta>
+                <Name>
+                  {person.name}&nbsp;·&nbsp;
+                  {timeDifference(Date.now(), timestamp)}
+                  {metaText &&
+                    metaLink &&
+                    <span>
+                      &nbsp;in&nbsp;
+                      <Link to={metaLink}>
+                        {metaText}
+                      </Link>
+                    </span>}
+                </Name>
+                <Name>
+                  {messages > 0
+                    ? <span>{`${messages} messages`}</span>
+                    : isNew ? '' : <span>No messages yet</span>}
+                  {unreadMessages > 0 &&
+                    <span>
+                      &nbsp;·&nbsp;
+                      <UnreadCount>{` (${unreadMessages} new!)`}</UnreadCount>
+                    </span>}
+                  {isNew && <span><UnreadCount>New!</UnreadCount></span>}
+                </Name>
+              </UserMeta>
+            </StoryHeader>
           </LinkWrapper>
         </Link>
-
-        {metaText &&
-          metaLink &&
-          <Link to={metaLink}>
-            <MetaFreq>{metaText}</MetaFreq>
-          </Link>}
       </Wrapper>
     );
   }
