@@ -12,7 +12,6 @@ export const Wrapper = styled.div`
 	background-color: ${({ theme }) => theme.bg.default};
 	transition: all 0.2s ease-in;
 	-webkit-font-smoothing: subpixel-antialiased;
-
 	box-shadow: ${Shadow.low};
 
 	${props => !props.static &&
@@ -44,11 +43,12 @@ export const LinkWrapper = styled.div`
 
 export const StoryBody = styled.div`
 	display: inline-block;
-	margin-top: 16px;
-	font-size: 14px;
+	font-size: 16px;
+	font-weight: 600;
 	flex: 0 0 auto;
 	max-width: 100%;
 	word-wrap: break-word;
+	margin-bottom: 8px;
 `;
 
 export const Avatar = styled.img`
@@ -85,7 +85,6 @@ export const Media = styled.img`
 export const UserMeta = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 12px;
   flex: 1 0 auto;
 `;
 

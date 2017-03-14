@@ -63,11 +63,16 @@ class Card extends Component {
       <Wrapper>
         <Link to={link}>
           <LinkWrapper selected={isActive}>
+            <StoryBody>
+              <Title>{title}</Title>
+              {media && media !== ''
+                ? <Media src={media} onClick={this.openGallery} />
+                : ''}
+            </StoryBody>
             <StoryHeader>
-              <Avatar src={person.photo} alt={person.name} />
               <UserMeta>
                 <Name>
-                  {person.name}&nbsp;·&nbsp;
+                  By {person.name}&nbsp;·&nbsp;
                   {timeDifference(Date.now(), timestamp)}
                   {messages > 0
                     ? <span>&nbsp;·&nbsp;{`${messages} messages`}</span>
@@ -79,12 +84,6 @@ class Card extends Component {
                 </Name>
               </UserMeta>
             </StoryHeader>
-            <StoryBody>
-              <Title>{title}</Title>
-              {media && media !== ''
-                ? <Media src={media} onClick={this.openGallery} />
-                : ''}
-            </StoryBody>
           </LinkWrapper>
         </Link>
 

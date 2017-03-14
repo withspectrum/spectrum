@@ -42,7 +42,7 @@ export const NavMasterContainer = styled(ScrollBody)`
 export const StoryMasterContainer = styled(ScrollBody)`
   background: ${({ theme }) => theme.bg.wash};
   border-right: 1px solid ${({ theme }) => theme.border.default};
-  flex: 0 0 512px;
+  flex: 0 0 420px;
   z-index: 1;
   overflow-y: hidden;
 
