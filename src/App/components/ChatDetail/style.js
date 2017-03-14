@@ -56,6 +56,13 @@ export const Avatar = styled.img`
 	height: 32px;
 	border-radius: 100%;
 	align-self: flex-end;
+	-webkit-user-select: none; /* Chrome/Safari */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+
+	/* Rules below not implemented in browsers yet */
+	-o-user-select: none;
+	user-select: none;
 `;
 
 export const HiddenLabel = styled.span`
@@ -76,6 +83,13 @@ export const Timestamp = styled.div`
 	color: ${({ theme }) => theme.text.alt};
 	background: #fff;
 	position: relative;
+	-webkit-user-select: none; /* Chrome/Safari */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+
+	/* Rules below not implemented in browsers yet */
+	-o-user-select: none;
+	user-select: none;
 
 	span {
 		margin: 0 auto;
@@ -181,4 +195,11 @@ export const FromName = styled.span`
 	margin-left: 16px;
 	color: ${({ theme }) => theme.text.alt};
 	float: ${props => props.me ? `right;` : `left;`}
+	-webkit-user-select: none; /* Chrome/Safari */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+
+	/* Rules below not implemented in browsers yet */
+	-o-user-select: none;
+	user-select: none;
 `;
