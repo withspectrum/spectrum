@@ -72,16 +72,6 @@ export const Title = styled.p`
 	color: ${({ theme }) => theme.text.default};
 `;
 
-export const Media = styled.img`
-	width: 100%;
-	max-height: 240px;
-	object-fit: cover;
-	background-color: ${({ theme }) => theme.inactive};
-	margin: 8px 8px 0 0;
-	border-radius: 4px;
-	box-shadow: ${Shadow.border};
-`;
-
 export const UserMeta = styled.div`
   display: flex;
   flex-direction: column;
@@ -90,6 +80,10 @@ export const UserMeta = styled.div`
 
 export const Name = styled(H5)`
   color: ${({ theme }) => theme.text.alt};
+
+	a:hover {
+		color: ${({ theme }) => theme.brand.default};
+	}
 `;
 
 export const Meta = styled(H5)`

@@ -41,7 +41,7 @@ export const sortAndGroupBubbles = messages => {
 
     if (i > 0) {
       // if we're not on the first message
-      if (i > 1 && messages[i].timestamp > messages[i - 1].timestamp + 450000) {
+      if (i > 1 && messages[i].timestamp > messages[i - 1].timestamp + 900000) {
         // don't run this on the first message as we already show a timestamp for when the conversation was started
         masterArray.push([
           {

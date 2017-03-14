@@ -65,18 +65,25 @@ class Card extends Component {
           <LinkWrapper selected={isActive}>
             <StoryBody>
               <Title>{title}</Title>
-              {media && media !== ''
-                ? <Media src={media} onClick={this.openGallery} />
-                : ''}
             </StoryBody>
             <StoryHeader>
               <UserMeta>
                 <Name>
-                  By {person.name}&nbsp;·&nbsp;
+                  {person.name}&nbsp;·&nbsp;
                   {timeDifference(Date.now(), timestamp)}
+                  {metaText &&
+                    metaLink &&
+                    <span>
+                      &nbsp;in&nbsp;
+                      <Link to={metaLink}>
+                        {metaText}
+                      </Link>
+                    </span>}
+                </Name>
+                <Name>
                   {messages > 0
-                    ? <span>&nbsp;·&nbsp;{`${messages} messages`}</span>
-                    : isNew ? '' : <span>&nbsp;·&nbsp;No messages yet</span>}
+                    ? <span>{`${messages} messages`}</span>
+                    : isNew ? '' : <span>No messages yet</span>}
                   {unreadMessages > 0 &&
                     <UnreadCount>{` (${unreadMessages} new!)`}</UnreadCount>}
                   {isNew &&
@@ -86,12 +93,6 @@ class Card extends Component {
             </StoryHeader>
           </LinkWrapper>
         </Link>
-
-        {metaText &&
-          metaLink &&
-          <Link to={metaLink}>
-            <MetaFreq>{privateFreq && '🔒 '}{metaText}</MetaFreq>
-          </Link>}
       </Wrapper>
     );
   }
