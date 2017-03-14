@@ -9,7 +9,6 @@ import {
   Avatar,
   UserMeta,
   Name,
-  Meta,
   MetaFreq,
   Title,
   Media,
@@ -67,8 +66,8 @@ class Card extends Component {
             <StoryHeader>
               <Avatar src={person.photo} alt={person.name} />
               <UserMeta>
-                <Name>{person.name}</Name>
-                <Meta>
+                <Name>
+                  {person.name}&nbsp;·&nbsp;
                   {timeDifference(Date.now(), timestamp)}
                   {messages > 0
                     ? <span>&nbsp;·&nbsp;{`${messages} messages`}</span>
@@ -77,7 +76,7 @@ class Card extends Component {
                     <UnreadCount>{` (${unreadMessages} new!)`}</UnreadCount>}
                   {isNew &&
                     <span>&nbsp;·&nbsp;<UnreadCount>New!</UnreadCount></span>}
-                </Meta>
+                </Name>
               </UserMeta>
             </StoryHeader>
             <StoryBody>

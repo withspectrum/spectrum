@@ -53,8 +53,8 @@ export const StoryBody = styled.div`
 
 export const Avatar = styled.img`
 	display: inline-block;
-  height: 32px;
-  width: 32px;
+  height: 16px;
+  width: 16px;
 	border-radius: 4px;
 	box-shadow: ${Shadow.border};
 `;
@@ -89,9 +89,8 @@ export const UserMeta = styled.div`
   flex: 1 0 auto;
 `;
 
-export const Name = styled(H4)`
-  color: ${({ theme }) => theme.text.default};
-  font-weight: 700;
+export const Name = styled(H5)`
+  color: ${({ theme }) => theme.text.alt};
 `;
 
 export const Meta = styled(H5)`
