@@ -31,14 +31,7 @@ import {
 } from '../../../actions/frequencies';
 import { login } from '../../../actions/user';
 import { openModal } from '../../../actions/modals';
-import {
-  Lock,
-  NewPost,
-  ClosePost,
-  Settings,
-  Menu,
-  ScrollArrow,
-} from '../../../shared/Icons';
+import Icon from '../../../shared/Icons';
 import Card from '../Card';
 import ShareCard from '../ShareCard';
 import NuxJoinCard from '../NuxJoinCard';
@@ -136,7 +129,7 @@ class StoryMaster extends Component {
     const isNotifications = activeFrequency === 'notifications';
     const hidden = !role && isPrivate;
 
-    if (!isEverything && hidden) return <Lock />;
+    if (!isEverything && hidden) return <Icon icon="lock" />;
     if (!frequency && !isEverything && !isNotifications)
       return <LoadingBlock><LoadingIndicator /></LoadingBlock>;
 
@@ -179,7 +172,7 @@ class StoryMaster extends Component {
               <FreqTitle>
 
                 <MenuButton onClick={this.showFrequenciesNav}>
-                  <Menu stayActive color={'brand'} />
+                  <Icon icon="menu" />
                 </MenuButton>
 
                 <a onClick={this.jumpToTop}>~ {frequency.name}</a>
@@ -209,7 +202,7 @@ class StoryMaster extends Component {
                 tipText="Frequency Settings"
                 tipLocation="bottom"
               >
-                <Settings color={'brand'} />
+                <Icon icon="settings" subtle />
               </TipButton>}
 
             {(isEverything || role) &&
@@ -217,7 +210,7 @@ class StoryMaster extends Component {
                 <span />
                 {isEverything &&
                   <MenuButton everything onClick={this.showFrequenciesNav}>
-                    <Menu stayActive color={'brand'} />
+                    <Icon icon="menu" />
                   </MenuButton>}
 
                 <a onClick={this.jumpToTop}>{isEverything && '~Everything'}</a>
@@ -228,8 +221,8 @@ class StoryMaster extends Component {
                   tipLocation="bottom"
                 >
                   {composer.isOpen
-                    ? <ClosePost color="warn" />
-                    : <NewPost color="brand" stayActive />}
+                    ? <Icon icon="post-cancel" color="warn.alt" />
+                    : <Icon icon="post-new" />}
                 </TipButton>
               </Everything>}
           </Actions>
@@ -247,7 +240,7 @@ class StoryMaster extends Component {
 
           {canLoadNewStories &&
             <NewIndicator onClick={this.loadStoriesAgain}>
-              <ScrollArrow color="flatWhite" upsideDown stayActive />
+              <Icon icon="scroll-top" reverse />
               New stories!
             </NewIndicator>}
 

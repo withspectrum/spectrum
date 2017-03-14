@@ -4,7 +4,7 @@ import { sendMessage } from '../../../actions/messages';
 import { uploadMedia } from '../../../helpers/stories';
 import { isMobile } from '../../../helpers/utils';
 import EmojiPicker from '../../../shared/EmojiPicker';
-import { Photo, Send } from '../../../shared/Icons';
+import Icon from '../../../shared/Icons';
 import { connect } from 'react-redux';
 import { track } from '../../../EventTracker';
 import {
@@ -149,12 +149,11 @@ class ChatInput extends Component {
           multiple={false}
           onChange={this.sendMediaMessage}
         />
+
         <MediaLabel htmlFor="file">
-          <Photo
-            stayActive
-            color={this.state.mediaUploading ? 'inactive' : 'brand'}
-          />
+          <Icon icon="photo" />
         </MediaLabel>
+
         {this.state.emojiPickerOpen &&
           <EmojiPicker
             onChange={this.sendEmojiMessage}
@@ -179,7 +178,7 @@ class ChatInput extends Component {
               }
             />
             <Button onClick={this.sendMessage}>
-              <Send color={'flatWhite'} stayActive />
+              <Icon icon="send" reverse static />
             </Button>
           </Form>}
       </Wrapper>
