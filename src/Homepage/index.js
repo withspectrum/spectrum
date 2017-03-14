@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Twitter } from '../shared/Icons';
+import Icon from '../shared/Icons';
 import {
   Background,
   Tagline,
@@ -52,7 +52,7 @@ class Homepage extends React.Component {
             <Tagline>Like a forum, but for Mars colonists.</Tagline>
 
             <Button onClick={this.login}>
-              <Twitter color={'brand'} stayActive />
+              <Icon icon="twitter" reverse static />
               {' '}
               <span>Sign in with Twitter</span>
             </Button>
