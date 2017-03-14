@@ -26,6 +26,7 @@ class ChatInput extends Component {
       message: '',
       file: '',
       emojiPickerOpen: false,
+      mediaUploading: false,
     };
   }
 
@@ -78,7 +79,7 @@ class ChatInput extends Component {
 
   sendMessage = e => {
     e.preventDefault();
-    const messageText = this.state.message.trim();
+    let messageText = this.state.message.trim();
     if (messageText === '') return;
     let messageObj = {
       type: 'text',
@@ -101,6 +102,10 @@ class ChatInput extends Component {
     let file = e.target.files[0];
     let activeStory = this.props.stories.active;
 
+    this.setState({
+      mediaUploading: true,
+    });
+
     this.props.dispatch({
       type: 'LOADING',
     });
@@ -112,6 +117,10 @@ class ChatInput extends Component {
           content: file,
         };
 
+        this.setState({
+          mediaUploading: false,
+        });
+
         this.props.dispatch({
           type: 'STOP_LOADING',
         });
@@ -120,6 +129,9 @@ class ChatInput extends Component {
       })
       .catch(err => {
         if (err) console.log('Error while uploading image to message: ', err);
+        this.setState({
+          mediaUploading: false,
+        });
       });
   };
 
@@ -137,9 +149,11 @@ class ChatInput extends Component {
           multiple={false}
           onChange={this.sendMediaMessage}
         />
+
         <MediaLabel htmlFor="file">
           <Icon icon="photo" />
         </MediaLabel>
+
         {this.state.emojiPickerOpen &&
           <EmojiPicker
             onChange={this.sendEmojiMessage}

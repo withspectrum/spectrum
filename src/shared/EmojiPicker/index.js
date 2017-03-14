@@ -897,9 +897,7 @@ class EmojiPicker extends React.Component {
       return (
         <EmojiListItem key={i}>
           <div onClick={e => this.onChange(emoji)}>
-            <span
-              style={{ fontSize: '1.5rem', position: 'relative', top: '4px' }}
-            >
+            <span style={{ fontSize: '1.5rem', position: 'relative' }}>
               {emoji}
             </span>
           </div>

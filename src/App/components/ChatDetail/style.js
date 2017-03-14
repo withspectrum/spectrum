@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient } from '../../../shared/Globals';
+import { Gradient, Tooltip } from '../../../shared/Globals';
 
 export const ChatContainer = styled.div`
 	flex: 1 0 auto;
@@ -24,7 +24,7 @@ export const Bubble = styled.p`
 	max-width: 60%;
 	line-height: 20px;
 
-	&:first-of-type {
+	&:first-of-type:first-child { /* first message bubble, but could be preceded by an emoji */
 		margin-top: 0;
 	}
 
@@ -33,7 +33,16 @@ export const Bubble = styled.p`
   	word-wrap: break-word;
   	line-height: inherit;
   	word-break: break-all;
+		display: inline-block;
   }
+
+	& + div { /* if bubble is followed by an emoji, don't let the emoji have bottom margin */
+		margin-bottom: 0;
+	}
+
+	@media (max-width: 768px) {
+		max-width: 75%;
+	}
 `;
 
 export const Messages = styled.div`
@@ -43,16 +52,55 @@ export const Messages = styled.div`
 `;
 
 export const Avatar = styled.img`
-	width: 20px;
-	height: 20px;
+	width: 32px;
+	height: 32px;
 	border-radius: 100%;
-	margin-right: 8px;
 	align-self: flex-end;
+`;
+
+export const HiddenLabel = styled.span`
+	display: inline-block;
+	width: 32px;
+	margin-right: 8px;
+	display: flex;
+	align-self: flex-end;
+	${props => props.tipText ? Tooltip(props) : ''};
+`;
+
+export const Timestamp = styled.div`
+	width: 100%;
+	margin: 32px 0 16px;
+	display: block;
+	text-align: center;
+	font-size: 12px;
+	color: ${({ theme }) => theme.text.alt};
+	background: #fff;
+	position: relative;
+
+	span {
+		margin: 0 auto;
+		display: inline-block;
+		padding: 4px 32px;
+		background: #fff;
+		position: relative;
+		z-index: 5;
+	}
+
+	&:after {
+		position: absolute;
+		width: 100%;
+		top: 16px;
+		left: 0;
+		right: 0;
+		z-index: 4;
+		content: '';
+		border-bottom: 1px solid #f6f7f8;
+	}
 `;
 
 export const BubbleGroup = styled.div`
 	width: 100%;
-	margin-top: 8px;
+	margin-top: 16px;
 	display: flex;
 	justify-content: ${props => props.me ? `flex-end;` : `flex-start;`}
 
@@ -106,6 +154,22 @@ export const EmojiBubble = styled.div`
   margin-bottom: 12px;
 	display: flex;
 	align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
+
+	&:last-of-type {
+		margin-bottom: 0;
+	}
+
+	&:first-of-type:not(:last-of-type) { /* if two emojis are posted back to back, don't add margin to the first one */
+		margin-bottom: 0;
+	}
+
+	& + & {
+		margin: 0; /* if two emojis are next to each other, no margin needed */
+	}
+
+	& + p {
+		margin-top: 8px; /* if emoji is followed by a bubble, add margin to the bubble */
+	}
 `;
 
 export const FromName = styled.span`

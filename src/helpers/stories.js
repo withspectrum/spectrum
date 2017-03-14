@@ -37,6 +37,11 @@ export const getUsersFromMessageGroups = groups => {
   let users = groups.map(group => {
     return group[0].userId;
   });
+
+  // filter out robotexts
+  users = users.filter(group => group !== 'robo');
+
+  // dedupe
   users = uniq(users);
   return Promise.all(users.map(getUserFromId));
 };

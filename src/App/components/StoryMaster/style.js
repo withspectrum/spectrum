@@ -11,6 +11,7 @@ export const Column = styled.div`
 
 export const StoryList = styled.div`
 	overflow-y: scroll;
+	padding-top: 7px;
 `;
 
 export const Overlay = styled.div`
