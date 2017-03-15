@@ -62,6 +62,7 @@
             "id": {
               ".validate": "$storyId === newData.val()"
             },
+            "deleted": { ".validate": "newData.isBoolean()" },
             "$other": {
               ".validate": false
             }
