@@ -68,7 +68,14 @@ class StoryMaster extends Component {
   };
 
   componentWillReceiveProps = nextProps => {
-    if (storyArraysEqual(this.props.stories, nextProps.stories)) return;
+    // If any of the things the story list cares about change,
+    // rerender the list
+    if (
+      storyArraysEqual(this.props.stories, nextProps.stories) &&
+      nextProps.activeStory === this.props.activeStory &&
+      storyArraysEqual(this.props.stories, nextProps.stories)
+    )
+      return;
     this.setState({
       cache: new CellMeasurerCache({
         fixedWidth: true,
