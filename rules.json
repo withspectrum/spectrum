@@ -135,6 +135,7 @@
           "title": { ".validate": "newData.isString()" },
           "$other": { ".validate": false }
         },
+        "deleted": { ".validate": "newData.isBoolean()" },
         "creator": {
           ".validate": "newData.child('uid').exists() && newData.child('displayName').exists() && newData.child('photoURL').exists()",
           // Make sure this is a valid UID, and the one of the logged-in user
