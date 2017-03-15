@@ -176,6 +176,10 @@
             ".write": "auth.uid === $user",
             ".validate": "data.exists() || newData.val() === $user"
           },
+          "email": {
+            ".write": "auth.uid === $user",
+            ".validate": "data.exists() || newData.isString()"
+          },
           "frequencies": {
           	"$frequencyId": {
               // Let the user themselves, and the owner of a frequency edit these settings
