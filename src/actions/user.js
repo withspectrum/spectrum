@@ -21,7 +21,7 @@ export const login = () => dispatch => {
   let provider = new firebase.auth.TwitterAuthProvider();
   firebase
     .auth()
-    .signInWithRedirect(provider)
+    .signInWithPopup(provider)
     .then(result => {
       let user = result.user;
 
