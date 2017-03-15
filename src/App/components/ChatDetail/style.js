@@ -208,7 +208,7 @@ export const AdminBadge = styled.span`
 	background-color: ${props =>
   props.op ? props.theme.brand.default : props.theme.text.alt};
 	text-transform: uppercase;
-	padding: 2px 4px;
+	padding: 2px 5px 2px 4px;
 	margin-left: 4px;
 	font-size: 9px;
 	font-weight: 800;
