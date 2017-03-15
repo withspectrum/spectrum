@@ -5,7 +5,10 @@ import {
   Bubble,
   ImgBubble,
   BubbleGroup,
+  Byline,
   FromName,
+  OpName,
+  AdminBadge,
   EmojiBubble,
   Messages,
   Avatar,
@@ -117,15 +120,14 @@ class ChatView extends Component {
                   <Avatar src={user.photoURL} />
                 </HiddenLabel>}
               <Messages>
-                <FromName>
-                  {user && user.name}
-                  {!itsaMe &&
-                    isAdmin &&
-                    isStoryCreator &&
-                    ' · Admin · Story Author'}
-                  {!itsaMe && !isAdmin && isStoryCreator && ' · Story Author'}
-                  {!itsaMe && isAdmin && !isStoryCreator && ' · Admin'}
-                </FromName>
+                <Byline>
+                  {isStoryCreator
+                    ? <OpName>{user && user.name}</OpName>
+                    : <FromName>{user && user.name}</FromName>}
+
+                  {!itsaMe && isAdmin && <AdminBadge>Admin</AdminBadge>}
+
+                </Byline>
                 {group.map((message, i) => {
                   // mxstbr: The "emoji" specific type is legacy, remove in the future
                   if (

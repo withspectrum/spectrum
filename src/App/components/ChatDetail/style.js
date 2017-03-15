@@ -186,14 +186,13 @@ export const EmojiBubble = styled.div`
 	}
 `;
 
-export const FromName = styled.span`
+export const Byline = styled.span`
 	display: inline-block;
 	font-size: 11px;
 	line-height: 16px;
 	font-weight: 500;
 	margin-bottom: 1px;
 	margin-left: 16px;
-	color: ${({ theme }) => theme.text.alt};
 	float: ${props => props.me ? `right;` : `left;`}
 	-webkit-user-select: none; /* Chrome/Safari */
 	-moz-user-select: none; /* Firefox */
@@ -202,4 +201,24 @@ export const FromName = styled.span`
 	/* Rules below not implemented in browsers yet */
 	-o-user-select: none;
 	user-select: none;
+`;
+
+export const FromName = styled.span`
+	color: ${({ theme }) => theme.text.alt};
+`;
+
+export const OpName = styled.span`
+	color: ${({ theme }) => theme.brand.default};
+	font-weight: 700;
+`;
+
+export const AdminBadge = styled.span`
+	color: ${({ theme }) => theme.text.reverse};
+	background-color: ${({ theme }) => theme.brand.default};
+	text-transform: uppercase;
+	padding: 2px 4px;
+	margin-left: 4px;
+	font-size: 9px;
+	font-weight: 800;
+	border-radius: 4px;
 `;
