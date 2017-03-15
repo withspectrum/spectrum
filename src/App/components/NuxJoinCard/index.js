@@ -1,16 +1,44 @@
 import React from 'react';
 import { Wrapper } from '../Card/style';
-import { Body, Title, Description } from './style';
+import { Button } from '../../../shared/Globals';
+import { featured } from '../../../helpers/featuredFrequencies';
+import {
+  Body,
+  Title,
+  Description,
+  Hscroll,
+  FreqCard,
+  RightPadding,
+  Actions,
+} from './style';
 
 const NuxJoinCard = props => {
   return (
-    <Wrapper static>
+    <Wrapper static overflow={'visible'}>
       <Body>
-        <Title>Let's find some communities!</Title>
+        <Description emoji>👋</Description>
+        <Title>Discover Frequencies</Title>
         <Description>
-          Checkout some of the frequencies in the navigation to the left to see what's going on.
+          Explore some of the communities on Spectrum and join the conversation.
         </Description>
-        <Description emoji>👈</Description>
+
+        <Hscroll>
+          {featured.map((freq, i) => {
+            return (
+              <FreqCard key={i}>
+                <div>
+                  <img src="#" />
+                  <h3>{freq.title}</h3>
+                  <h4>{freq.description}</h4>
+                </div>
+                <Actions>
+                  <Button width={'100%'}>Join</Button>
+                </Actions>
+              </FreqCard>
+            );
+          })}
+          <RightPadding />
+        </Hscroll>
       </Body>
     </Wrapper>
   );

@@ -32,6 +32,7 @@ export const Button = styled.button`
 	color: ${({ theme }) => theme.text.reverse};
 	transition: all 0.2s ease-out;
 	padding: 8px 16px;
+  width: ${props => props.width ? props.width : ''};
 
 	&:hover {
 		border-radius: ${props => props.disabled ? '8px' : '16px'};

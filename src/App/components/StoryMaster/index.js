@@ -226,10 +226,13 @@ class StoryMaster extends Component {
                 </TipButton>
               </Everything>}
           </Actions>
-
         </Header>
 
         <StoryList innerRef={comp => this.storyList = comp}>
+          {isEverything &&
+            frequencies.length < 6 && // user is viewing everything and has subscribed to less than 3 frequencies
+            <NuxJoinCard />}
+
           <Overlay active={composer.isOpen} />
 
           {!loggedIn &&
@@ -292,10 +295,6 @@ class StoryMaster extends Component {
           {!isEverything &&
             frequency &&
             <ShareCard slug={activeFrequency} name={frequency.name} />}
-
-          {isEverything &&
-            frequencies.length === 0 && // user is viewing everything but isn't subscribed to anything
-            <NuxJoinCard />}
         </StoryList>
       </Column>
     );

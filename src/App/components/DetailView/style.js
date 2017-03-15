@@ -35,6 +35,7 @@ export const ViewContainer = styled.div`
 	position: relative;
 	z-index: 3;
 	background: #fff;
+	overflow-x: hidden;
 `;
 
 export const LogicContainer = styled.div`

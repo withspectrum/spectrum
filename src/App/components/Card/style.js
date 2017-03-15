@@ -5,10 +5,9 @@ export const Wrapper = styled.div`
 	display: inline-block;
 	width: calc(100% - 16px);
 	margin: 4px 8px;
-	margin-bottom: 0;
 	flex: 0 0 auto;
 	border-radius: 4px;
-	overflow: hidden;
+	overflow: ${props => props.overflow === 'visible' ? 'visible' : 'hidden'};
 	background-color: ${({ theme }) => theme.bg.default};
 	transition: all 0.2s ease-in;
 	-webkit-font-smoothing: subpixel-antialiased;
@@ -19,6 +18,10 @@ export const Wrapper = styled.div`
 		margin: 0;
 		margin-bottom: 4px;
 		border-radius: 0;
+
+		&:first-of-type {
+			margin-bottom: 8px;
+		}
 	}
 
 	${props => !props.static &&
