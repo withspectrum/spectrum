@@ -10,6 +10,7 @@ import { openGallery } from '../../../actions/gallery';
 import { isStoryCreator, getStoryPermission } from '../../../helpers/stories';
 import { LoginButton, LoginText } from '../StoryMaster/style';
 import { login } from '../../../actions/user';
+import history from '../../../helpers/history';
 
 import {
   ViewContainer,
@@ -54,11 +55,15 @@ class DetailView extends Component {
   };
 
   render() {
-    const { composer, user, frequencies: { frequencies } } = this.props;
-    const story = this.getActiveStory();
+    const { composer, user, frequencies: { frequencies, active } } = this.props;
+    let story = this.getActiveStory();
 
     let role, creator, locked;
     if (story) {
+      if (story.deleted) {
+        history.push(`/~${active || 'everything'}`);
+        story = null;
+      }
       creator = isStoryCreator(story, user);
       role = getStoryPermission(story, user, frequencies);
       locked = story.locked ? story.locked : false;
