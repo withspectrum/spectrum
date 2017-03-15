@@ -64,6 +64,16 @@ export const getPublicUserInfo = uid => {
   const db = firebase.database();
 
   return db.ref(`users/${uid}/public`).once('value').then(snapshot => {
+    if (!snapshot.val()) {
+      /* temporary hack to force a localstorage clear
+      * this happened as a result of a bug introduced on March 14th
+      * where a user could authenticate but a record would not be created in the users db
+      * as a result they would be stuck in infinite loading
+      * this snippet will force a localStorage clear when the user refreshes the page so that
+      * they will at least be able to log in again with the new and proper auth method
+      */
+      localStorage.clear();
+    }
     return snapshot.val();
   });
 };

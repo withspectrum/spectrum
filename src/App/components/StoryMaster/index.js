@@ -221,8 +221,8 @@ class StoryMaster extends Component {
                   tipLocation="left"
                 >
                   {composer.isOpen
-                    ? <Icon icon="post-cancel" color="warn.alt" />
-                    : <Icon icon="post-new" />}
+                    ? <Icon icon="write-cancel" color="warn.alt" />
+                    : <Icon icon="write" />}
                 </TipButton>
               </Everything>}
           </Actions>
