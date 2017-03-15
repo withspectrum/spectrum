@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { List, CellMeasurer, CellMeasurerCache } from 'react-virtualized';
+import {
+  List,
+  CellMeasurer,
+  CellMeasurerCache,
+  InfiniteLoader,
+} from 'react-virtualized';
 import LoadingIndicator from '../../../shared/loading/global';
 import {
   Column,
@@ -340,15 +345,25 @@ class StoryMaster extends Component {
           {isNotifications && notifications.map(this.renderNotification)}
 
           {(isEverything || frequency) &&
-            <List
-              ref={listElem => this.listElem = listElem}
-              height={window.innerHeight - 50}
-              width={419}
+            <InfiniteLoader
+              isRowLoaded={() => true}
+              loadMoreRows={() => Promise.resolve()}
               rowCount={stories.length}
-              rowRenderer={this.renderStory}
-              deferredMeasurementCache={this.state.cache}
-              rowHeight={this.state.cache.rowHeight}
-            />}
+            >
+              {({ onRowsRendered, registerChild }) => (
+                <List
+                  ref={registerChild}
+                  onRowsRendered={onRowsRendered}
+                  height={window.innerHeight - 50}
+                  width={419}
+                  rowCount={stories.length}
+                  rowRenderer={this.renderStory}
+                  deferredMeasurementCache={this.state.cache}
+                  rowHeight={this.state.cache.rowHeight}
+                />
+              )}
+            </InfiniteLoader>}
+
           {isEverything &&
             frequencies.length === 0 && // user is viewing everything but isn't subscribed to anything
             <NuxJoinCard />}
