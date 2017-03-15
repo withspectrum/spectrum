@@ -190,31 +190,23 @@ export const Byline = styled.span`
 	display: inline-block;
 	font-size: 11px;
 	line-height: 16px;
-	font-weight: 500;
+	font-weight: ${props => props.op ? '700' : '500'};
 	margin-bottom: 1px;
 	margin-left: 16px;
 	float: ${props => props.me ? `right;` : `left;`}
 	-webkit-user-select: none; /* Chrome/Safari */
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+ */
-
+	color: ${props => props.op ? props.theme.brand.default : props.theme.text.alt};
 	/* Rules below not implemented in browsers yet */
 	-o-user-select: none;
 	user-select: none;
 `;
 
-export const FromName = styled.span`
-	color: ${({ theme }) => theme.text.alt};
-`;
-
-export const OpName = styled.span`
-	color: ${({ theme }) => theme.brand.default};
-	font-weight: 700;
-`;
-
 export const AdminBadge = styled.span`
 	color: ${({ theme }) => theme.text.reverse};
-	background-color: ${({ theme }) => theme.brand.default};
+	background-color: ${props =>
+  props.op ? props.theme.brand.default : props.theme.text.alt};
 	text-transform: uppercase;
 	padding: 2px 4px;
 	margin-left: 4px;
