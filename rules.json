@@ -178,7 +178,7 @@
           },
           "email": {
             ".write": "auth.uid === $user",
-            ".validate": "data.exists() || newData.isString()"
+            ".validate": "data.exists() || newData.isBoolean()"
           },
           "frequencies": {
           	"$frequencyId": {
