@@ -140,10 +140,10 @@ export const removeStory = ({ storyId, frequencyId }) =>
   new Promise(resolve => {
     const db = firebase.database();
 
-    console.log({ storyId, frequencyId });
-
-    db.ref(`frequencies/${frequencyId}/stories/${storyId}`).remove();
-    db.ref(`stories/${storyId}`).remove();
+    db.ref().update({
+      [`/stories/${storyId}/deleted`]: true,
+      [`/frequencies/${frequencyId}/stories/${storyId}/deleted`]: true,
+    });
 
     resolve();
   });

@@ -55,7 +55,9 @@ class App extends Component {
             }
             activeFrequency={frequencies.active}
             isPrivate={frequency && frequency.settings.private}
-            stories={sortedStories.filter(story => story.published)}
+            stories={sortedStories.filter(
+              story => story.published && !story.deleted,
+            )}
             frequency={frequency}
           />
         </StoryMasterContainer>
