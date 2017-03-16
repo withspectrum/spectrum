@@ -2,7 +2,7 @@ import * as firebase from 'firebase';
 import { getFrequency } from './frequencies';
 import { createNotifications } from './notifications';
 import { ACTIVITY_TYPES } from './types';
-import { getPublicUserInfo } from './users';
+import { getUserInfo } from './users';
 import { flattenArray } from '../helpers/utils';
 
 export const getStory = storyId => {
@@ -23,7 +23,7 @@ export const getStories = ({ frequencyId, frequencySlug }) => {
 };
 
 export const getAllStories = userId => {
-  return getPublicUserInfo(userId)
+  return getUserInfo(userId)
     .then(user => {
       if (!user.frequencies) return [];
       const freqs = Object.keys(user.frequencies);
