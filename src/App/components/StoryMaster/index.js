@@ -46,7 +46,7 @@ import { formatSenders } from '../../../helpers/notifications';
 
 const MIN_STORY_CARD_HEIGHT = 109;
 
-function storyArraysEqual(a, b) {
+function arraysEqualById(a, b) {
   if (a === b) return true;
   if (a == null || b == null) return false;
   if (a.length != b.length) return false;
@@ -72,9 +72,10 @@ class StoryMaster extends Component {
     // If any of the things the story list cares about change,
     // rerender the list
     if (
-      storyArraysEqual(this.props.stories, nextProps.stories) &&
+      arraysEqualById(this.props.stories, nextProps.stories) &&
       nextProps.activeStory === this.props.activeStory &&
-      storyArraysEqual(this.props.stories, nextProps.stories)
+      nextProps.activeFrequency === this.props.activeFrequency &&
+      arraysEqualById(this.props.notifications, nextProps.notifications)
     )
       return;
     this.setState({
