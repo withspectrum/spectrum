@@ -9,8 +9,10 @@ import {
   stopListening,
   getStory,
 } from '../db/stories';
+import { getUserInfo } from '../db/users';
 import { getMessages, getMessage } from '../db/messages';
 import { getCurrentFrequency, linkFreqsInMd } from '../helpers/frequencies';
+import { arrayToHash } from '../helpers/utils';
 import { markStoryRead } from '../db/notifications';
 
 /**
@@ -97,11 +99,24 @@ export const setActiveStory = story => (dispatch, getState) => {
   promise
     .then(getMessages(story))
     .then(messages => {
-      if (messages) {
-        dispatch({ type: 'ADD_MESSAGES', messages });
-      } else {
+      if (!messages) {
         dispatch({ type: 'STOP_LOADING' });
+      } else {
+        return Promise.all([
+          messages,
+          // Get all the users that sent messages
+          Promise.all(messages.map(message => getUserInfo(message.userId))),
+        ]);
       }
+    })
+    .then(data => {
+      if (!data) return;
+      const [messages, users] = data;
+      dispatch({
+        type: 'ADD_MESSAGES',
+        messages,
+        users: arrayToHash(users, 'uid'),
+      });
     })
     .catch(err => {
       console.log(err);
@@ -124,12 +139,27 @@ export const setActiveStory = story => (dispatch, getState) => {
     // Get all messages that aren't in the store yet
     const messages = Object.keys(story.messages)
       .filter(message => existingMessages.indexOf(message));
-    Promise.all(messages.map(message => getMessage(message))).then(messages => {
-      dispatch({
-        type: 'ADD_MESSAGES',
-        messages,
+
+    Promise.all(messages.map(message => getMessage(message)))
+      .then(messages => {
+        if (!messages) {
+          return;
+        }
+        return Promise.all([
+          messages,
+          // Get all the users that sent messages
+          Promise.all(messages.map(message => getUserInfo(message.userId))),
+        ]);
+      })
+      .then(data => {
+        if (!data) return;
+        const [messages, users] = data;
+        dispatch({
+          type: 'ADD_MESSAGES',
+          messages,
+          users: arrayToHash(users, 'uid'),
+        });
       });
-    });
   });
 };
 

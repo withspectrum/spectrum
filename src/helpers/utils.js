@@ -15,6 +15,15 @@ export const hashToArray = hash => {
   return array;
 };
 
+// e.g. arrayToHash(arr, 'id')
+export const arrayToHash = (array, keyBy) => {
+  let hash = {};
+  array.forEach(elem => {
+    hash[elem[keyBy]] = elem;
+  });
+  return hash;
+};
+
 export const convertTimestampToDate = timestamp => {
   let monthNames = [
     'January',
