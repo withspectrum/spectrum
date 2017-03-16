@@ -220,6 +220,7 @@
       "$user": {
         ".validate": "data.exists() || newData.hasChildren(['displayName', 'created', 'photoURL', 'uid'])",
         "created": {
+          ".write": "auth.uid === $user",
           ".validate": "newData.val() <= now"
         },
         "displayName": {
