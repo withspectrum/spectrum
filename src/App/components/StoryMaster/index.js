@@ -39,7 +39,6 @@ import { login } from '../../../actions/user';
 import { openModal } from '../../../actions/modals';
 import Icon from '../../../shared/Icons';
 import Card from '../Card';
-import NuxJoinCard from '../NuxJoinCard';
 import { ACTIVITY_TYPES } from '../../../db/types';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { formatSenders } from '../../../helpers/notifications';
@@ -60,7 +59,6 @@ function arraysEqualById(a, b) {
 
 class StoryMaster extends Component {
   state = {
-    nuxFrequency: true,
     cache: new CellMeasurerCache({
       fixedWidth: true,
       minHeight: MIN_STORY_CARD_HEIGHT,
@@ -187,25 +185,29 @@ class StoryMaster extends Component {
         rowIndex={index}
       >
         <div style={style}>
-          <Card
-            isActive={activeStory === story.id}
-            key={key}
-            style={style}
-            link={`/~${activeFrequency}/${story.id}`}
-            media={story.content.media}
-            messages={story.messages ? Object.keys(story.messages).length : 0}
-            metaLink={isEverything && freq && `/~${freq.slug}`}
-            metaText={isEverything && freq && `~${freq.name}`}
-            privateFreq={isEverything && freq && freq.settings.private}
-            person={{
-              photo: story.creator.photoURL,
-              name: story.creator.displayName,
-            }}
-            timestamp={story.timestamp}
-            title={story.content.title}
-            unreadMessages={unreadMessages}
-            isNew={isNew}
-          />
+          {React.isValidElement(story)
+            ? story
+            : <Card
+                isActive={activeStory === story.id}
+                key={key}
+                style={style}
+                link={`/~${activeFrequency}/${story.id}`}
+                media={story.content.media}
+                messages={
+                  story.messages ? Object.keys(story.messages).length : 0
+                }
+                metaLink={isEverything && freq && `/~${freq.slug}`}
+                metaText={isEverything && freq && `~${freq.name}`}
+                privateFreq={isEverything && freq && freq.settings.private}
+                person={{
+                  photo: story.creator.photoURL,
+                  name: story.creator.displayName,
+                }}
+                timestamp={story.timestamp}
+                title={story.content.title}
+                unreadMessages={unreadMessages}
+                isNew={isNew}
+              />}
         </div>
       </CellMeasurer>
     );
@@ -213,15 +215,6 @@ class StoryMaster extends Component {
 
   jumpToTop = () => {
     this.storyList.scrollTop = 0;
-  };
-
-  componentDidMount = () => {
-    let numUserFrequencies = Object.keys(this.props.user.frequencies).length;
-
-    // using state here so that it doesn't randomly disappear whenever the user joins their Nth frequency
-    this.setState({
-      nuxFrequency: numUserFrequencies > 10 ? false : true,
-    });
   };
 
   render() {
@@ -344,10 +337,6 @@ class StoryMaster extends Component {
         </Header>
 
         <StoryList innerRef={comp => this.storyList = comp}>
-          {isEverything &&
-            this.state.nuxFrequency && // user is viewing everything and has subscribed to less than 3 frequencies
-            <NuxJoinCard />}
-
           <Overlay active={composer.isOpen} />
 
           {!loggedIn &&
@@ -376,7 +365,7 @@ class StoryMaster extends Component {
                   ref={registerChild}
                   onRowsRendered={onRowsRendered}
                   height={window.innerHeight - 50}
-                  width={419}
+                  width={window.innerWidth > 768 ? 419 : window.innerWidth}
                   rowCount={stories.length}
                   rowRenderer={this.renderStory}
                   deferredMeasurementCache={this.state.cache}
