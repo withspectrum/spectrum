@@ -215,7 +215,7 @@
       }
     },
     "users": {
-      ".indexOn": ["uid"],
+      ".indexOn": ["uid", "username"],
       ".read": true,
       "$user": {
         ".validate": "data.exists() || newData.hasChildren(['displayName', 'created', 'photoURL', 'uid'])",
@@ -227,6 +227,10 @@
           ".validate": "newData.isString()"
         },
         "photoURL": {
+          ".write": "auth.uid === $user",
+          ".validate": "newData.isString()"
+        },
+        "username": {
           ".write": "auth.uid === $user",
           ".validate": "newData.isString()"
         },
