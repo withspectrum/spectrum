@@ -1,56 +1,24 @@
 import styled from 'styled-components';
-import { Shadow, Gradient } from '../../../../shared/Globals';
+import { H1, H4 } from '../../../../shared/Globals';
 
-export const LoginWrapper = styled.div`
+export const Body = styled.div`
 	width: 100%;
-	padding: 4px;
-	display: flex;
-	flex: 0 0 auto;
-	flex-direction: column;
-	align-self: stretch;
-	padding: 16px;
-	border-radius: 2px;
-	background-color: ${({ theme }) => theme.bg.default};
-	margin: 8px 8px 0 8px;
-	box-shadow: ${Shadow.low};
-	transition: box-shadow 0.2s ease-in;
-	width: calc(100% - 16px);
-
-	&:hover {
-		box-shadow: ${Shadow.mid};
-		transition: box-shadow 0.2s ease-out;
-		cursor: pointer;
-	}
-`;
-
-export const LoginText = styled.p`
-	flex: 1 0 auto;
-	display: inline-block;
-	font-size: 16px;
-	font-weight: 600;
-	margin: 8px 8px 24px;
+	padding: 24px 16px 16px;
 	text-align: center;
+	overflow: hidden;
 `;
 
-export const LoginButton = styled.button`
-	font-size: 14px;
-  font-weight: 700;
-  padding-left: 16px;
-  padding-right: 16px;
-  height: 32px;
-  line-height: 28px;
-  text-align: center;
-  vertical-align: middle;
-  border-radius: 12px;
-  color: ${({ theme }) => theme.text.reverse};
-  background-color: ${({ theme }) => theme.brand.default};
-  background-image: ${({ theme }) =>
-  Gradient(theme.brand.alt, theme.brand.default)};
-  transition: all 0.2s ease-in-out;
+export const Title = styled(H1)`
+	width: 100%;
+	margin: 0;
+	margin-bottom: 8px;
+	color: ${({ theme }) => theme.text.default};
+`;
 
-  &:hover {
-  	cursor: pointer;
-		border-radius: 16px
-		color: ${({ theme }) => theme.bg.default};;
-  }
+export const Description = styled(H4)`
+	${props =>
+  props.emoji
+    ? 'font-size: 48px; margin: 16px 0 32px;'
+    : 'font-size: 14px; margin: 0 0 32px;'}
+	color: ${({ theme }) => theme.text.alt};
 `;

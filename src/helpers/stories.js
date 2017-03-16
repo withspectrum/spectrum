@@ -78,7 +78,6 @@ export const getStoryPermission = (story, user, frequencies) => {
 export const uploadMedia = (file, story, user) => {
   return new Promise((resolve, reject) => {
     // ensure we have the necessary bits to upload media
-    console.log(file, story, user);
     if (!file || !story || !user) return;
     if (file.size > 3000000) {
       reject('Please upload files smaller than 3mb 😘');

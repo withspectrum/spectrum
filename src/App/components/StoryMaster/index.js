@@ -222,6 +222,7 @@ class StoryMaster extends Component {
       notifications,
       user,
       storiesLoaded,
+      loading,
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
@@ -340,6 +341,7 @@ class StoryMaster extends Component {
           {isNotifications && notifications.map(this.renderNotification)}
 
           {(isEverything || frequency) &&
+            !loading.active &&
             <InfiniteLoader
               isRowLoaded={() => true}
               loadMoreRows={() => Promise.resolve()}
@@ -373,6 +375,7 @@ const mapStateToProps = state => {
     frequencies: state.frequencies.frequencies,
     user: state.user,
     storiesLoaded: state.stories.loaded,
+    loading: state.loading,
   };
 };
 

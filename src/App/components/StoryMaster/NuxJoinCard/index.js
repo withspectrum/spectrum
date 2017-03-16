@@ -54,10 +54,10 @@ class NuxJoinCard extends Component {
     return (
       <Wrapper static overflow={'visible'}>
         <Body>
-          <Description emoji>👋</Description>
+          <Description emoji>✨</Description>
           <Title>Discover Frequencies</Title>
           <Description>
-            Explore some of the communities on Spectrum and join the conversation.
+            Explore some of our favorite communities on Spectrum. And then join them. For fun's sake.
           </Description>
 
           <Hscroll>

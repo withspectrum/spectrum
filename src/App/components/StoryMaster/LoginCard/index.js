@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { LoginWrapper, LoginText, LoginButton } from './style';
+import { Wrapper } from '../../Card/style';
+import { Button } from '../../../../shared/Globals';
+import { Body, Title, Description, LoginButton } from './style';
 import { login } from '../../../../actions/user';
 
 class LoginCard extends Component {
@@ -11,10 +13,18 @@ class LoginCard extends Component {
 
   render() {
     return (
-      <LoginWrapper onClick={this.login}>
-        <LoginText>Sign in to join the conversation.</LoginText>
-        <LoginButton>Sign in with Twitter</LoginButton>
-      </LoginWrapper>
+      <Wrapper static overflow={'visible'}>
+        <Body>
+          <Description emoji>👋</Description>
+          <Title>C'mon in, the water's fine</Title>
+          <Description>
+            Welcome to Spectrum, a place to share news and stories with your community. Sign in with Twitter to get started.
+          </Description>
+          <Button width={'100%'} onClick={this.login}>
+            Sign in with Twitter
+          </Button>
+        </Body>
+      </Wrapper>
     );
   }
 }
