@@ -52,6 +52,11 @@ class Root extends Component {
       // Get the public userdata
       getUserInfo(user.uid)
         .then(userData => {
+          if (!userData) {
+            return dispatch({
+              type: 'USER_NOT_AUTHENTICATED',
+            });
+          }
           dispatch({
             type: 'SET_USER',
             user: userData,

@@ -9,32 +9,39 @@ export const createUser = user => {
   const db = firebase.database();
   const uid = user.uid;
 
+  const updates = {
+    [`users/${uid}/displayName`]: user.displayName,
+    [`users/${uid}/uid`]: uid,
+    [`users/${uid}/photoURL`]: user.photoURL,
+    [`users/${uid}/created`]: firebase.database.ServerValue.TIMESTAMP,
+    [`users/${uid}/frequencies/-Kenm0MXIRCq8GkwiJKb`]: {
+      //=> add `hugs n bugs` to user's default frequencies
+      id: '-Kenm0MXIRCq8GkwiJKb',
+      permission: 'subscriber',
+      joined: firebase.database.ServerValue.TIMESTAMP,
+    },
+    [`users/${uid}/frequencies/-KenmQHXnkUDN0S9UUsn`]: {
+      //=> add `~Discover` to user's default frequencies
+      id: '-KenmQHXnkUDN0S9UUsn',
+      permission: 'subscriber',
+      joined: firebase.database.ServerValue.TIMESTAMP,
+    },
+    [`users/${uid}/frequencies/-Kenmw8GUeJYnxXNc0WS`]: {
+      //=> add `~Spectrum` to user's default frequencies
+      id: '-Kenmw8GUeJYnxXNc0WS',
+      permission: 'subscriber',
+      joined: firebase.database.ServerValue.TIMESTAMP,
+    },
+  };
+
+  if (user.email) {
+    updates[`users/${uid}/email`] = true;
+    updates[`users_private/${uid}/email`] = user.email;
+  }
+
   return db
     .ref()
-    .update({
-      [`users/${uid}/displayName`]: user.displayName,
-      [`users/${uid}/uid`]: uid,
-      [`users/${uid}/photoURL`]: user.photoURL,
-      [`users/${uid}/created`]: firebase.database.ServerValue.TIMESTAMP,
-      [`users/${uid}/frequencies/-Kenm0MXIRCq8GkwiJKb`]: {
-        //=> add `hugs n bugs` to user's default frequencies
-        id: '-Kenm0MXIRCq8GkwiJKb',
-        permission: 'subscriber',
-        joined: firebase.database.ServerValue.TIMESTAMP,
-      },
-      [`users/${uid}/frequencies/-KenmQHXnkUDN0S9UUsn`]: {
-        //=> add `~Discover` to user's default frequencies
-        id: '-KenmQHXnkUDN0S9UUsn',
-        permission: 'subscriber',
-        joined: firebase.database.ServerValue.TIMESTAMP,
-      },
-      [`users/${uid}/frequencies/-Kenmw8GUeJYnxXNc0WS`]: {
-        //=> add `~Spectrum` to user's default frequencies
-        id: '-Kenmw8GUeJYnxXNc0WS',
-        permission: 'subscriber',
-        joined: firebase.database.ServerValue.TIMESTAMP,
-      },
-    })
+    .update(updates)
     .then(() => db.ref().update({
       [`frequencies/-Kenm0MXIRCq8GkwiJKb/users/${uid}`]: {
         permission: 'subscriber',
@@ -86,19 +93,38 @@ export const listenToAuth = cb => {
   return firebase.auth().onAuthStateChanged(cb);
 };
 
-export const checkUniqueUsername = name => {
+export const checkUniqueUsername = (name, uid) => {
   return new Promise((resolve, reject) => {
     firebase
       .database()
       .ref('users')
-      .orderByChild('public/username')
+      .orderByChild('username')
       .equalTo(name)
       .once('value')
       .then(snapshot => {
         let val = snapshot.val();
         if (!val) return resolve(true); // if a user with this username doesn't exist, it's okay to use the new name
-        if (val.id === name) return resolve(true); // and if we're looking at the current user (i.e. changing the username after creation), it's okay
+        if (val[uid]) return resolve(true); // and if we're looking at the current user (i.e. changing the username after creation), it's okay
         return resolve(false); // otherwise we can assume the username is taken
       });
   });
+};
+
+export const setUsernameAndEmail = ({ uid, username, email }) => {
+  const db = firebase.database();
+
+  const updates = {
+    [`users/${uid}/username`]: username,
+  };
+
+  if (email) {
+    updates[`users_private/${uid}/email`] = email;
+    updates[`users/${uid}/email`] = true;
+  }
+
+  return db
+    .ref()
+    .update(updates)
+    .then(() => db.ref(`users/${uid}`).once('value'))
+    .then(snapshot => snapshot.val());
 };
