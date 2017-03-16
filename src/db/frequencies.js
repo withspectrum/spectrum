@@ -74,7 +74,7 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
   return db
     .ref()
     .update({
-      [`users/${uid}/public/frequencies/${id}`]: {
+      [`users/${uid}/frequencies/${id}`]: {
         //=> add the frequency id to the user first
         id,
         permission: 'owner',
@@ -120,7 +120,7 @@ export const removeFrequency = id => new Promise((resolve, reject) => {
       const users = snapshot.val();
       Object.keys(users).forEach(userId => {
         //=> delete the frequency from every user who was a member
-        db.ref(`/users/${userId}/public/frequencies/${id}`).remove();
+        db.ref(`/users/${userId}/frequencies/${id}`).remove();
       });
       // TODO: Delete all stories associated with a frequency?
     })
@@ -169,7 +169,7 @@ export const addUserToFrequency = (userId, slug) => {
         permission: 'subscriber',
         joined: firebase.database.ServerValue.TIMESTAMP,
       },
-      [`users/${userId}/public/frequencies/${data.id}`]: {
+      [`users/${userId}/frequencies/${data.id}`]: {
         id: data.id,
         permission: 'subscriber',
         joined: firebase.database.ServerValue.TIMESTAMP,
@@ -193,6 +193,6 @@ export const removeUserFromFrequency = (userId, freqId) => {
   // Remove a user from a frequency
   return db.ref().update({
     [`/frequencies/${freqId}/users/${userId}`]: null,
-    [`/users/${userId}/public/frequencies/${freqId}`]: null,
+    [`/users/${userId}/frequencies/${freqId}`]: null,
   });
 };

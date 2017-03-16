@@ -17,6 +17,7 @@ export const Title = styled.div`
   font-weight: 800;
   font-size: 24px;
   padding-bottom: 24px;
+  line-height: 28px;
 `;
 
 export const Body = styled.div`

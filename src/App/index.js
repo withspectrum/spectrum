@@ -11,6 +11,7 @@ import StoryMaster from './components/StoryMaster';
 import DetailView from './components/DetailView';
 import LoadingIndicator from '../shared/loading';
 import ModalRoot from '../shared/modals/ModalRoot';
+import SelectUsernameModal from '../shared/modals/SelectUsernameModal';
 import GalleryRoot from '../shared/gallery/GalleryRoot';
 import NuxJoinCard from './components/StoryMaster/NuxJoinCard';
 import LoginCard from './components/StoryMaster/LoginCard';
@@ -23,6 +24,8 @@ import { sortArrayByKey } from '../helpers/utils';
 class App extends Component {
   state = {
     nuxFrequency: true, // determines if we should show the NuxJoinCard
+    selectModalOpen: this.props.user.uid &&
+      (!this.props.user.username || !this.props.user.email),
   };
 
   componentDidMount = () => {
@@ -30,6 +33,12 @@ class App extends Component {
     // set in state so it doesn't disappear when the user's freq count updates
     this.setState({
       nuxFrequency: numUserFrequencies > 10 ? false : true,
+    });
+  };
+
+  closeSelectModal = () => {
+    this.setState({
+      selectModalOpen: false,
     });
   };
 
@@ -72,6 +81,16 @@ class App extends Component {
         <NavMasterContainer viewing={ui.viewing}>
           <NavMaster />
         </NavMasterContainer>
+
+        {/* If the user is logged in, but hasn't selected a username yet prompt them to */
+        }
+        {!!user.uid &&
+          (!user.username || !user.email) &&
+          <SelectUsernameModal
+            isOpen={this.state.selectModalOpen}
+            promptEmail={!user.email}
+            onClose={this.closeSelectModal}
+          />}
 
         <StoryMasterContainer active={stories.active} viewing={ui.viewing}>
           <StoryMaster
