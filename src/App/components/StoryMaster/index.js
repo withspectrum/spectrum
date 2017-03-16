@@ -12,9 +12,6 @@ import {
   Header,
   ScrollBody,
   JoinBtn,
-  LoginWrapper,
-  LoginText,
-  LoginButton,
   TipButton,
   Overlay,
   MenuButton,
@@ -35,11 +32,9 @@ import {
   subscribeFrequency,
   setActiveFrequency,
 } from '../../../actions/frequencies';
-import { login } from '../../../actions/user';
 import { openModal } from '../../../actions/modals';
 import Icon from '../../../shared/Icons';
 import Card from '../Card';
-import NuxJoinCard from '../NuxJoinCard';
 import { ACTIVITY_TYPES } from '../../../db/types';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { formatSenders } from '../../../helpers/notifications';
@@ -100,11 +95,6 @@ class StoryMaster extends Component {
 
   subscribeFrequency = () => {
     this.props.dispatch(subscribeFrequency(this.props.activeFrequency));
-  };
-
-  login = e => {
-    e.preventDefault();
-    this.props.dispatch(login());
   };
 
   editFrequency = () => {
@@ -186,25 +176,29 @@ class StoryMaster extends Component {
         rowIndex={index}
       >
         <div style={style}>
-          <Card
-            isActive={activeStory === story.id}
-            key={key}
-            style={style}
-            link={`/~${activeFrequency}/${story.id}`}
-            media={story.content.media}
-            messages={story.messages ? Object.keys(story.messages).length : 0}
-            metaLink={isEverything && freq && `/~${freq.slug}`}
-            metaText={isEverything && freq && `~${freq.name}`}
-            privateFreq={isEverything && freq && freq.settings.private}
-            person={{
-              photo: story.creator.photoURL,
-              name: story.creator.displayName,
-            }}
-            timestamp={story.timestamp}
-            title={story.content.title}
-            unreadMessages={unreadMessages}
-            isNew={isNew}
-          />
+          {React.isValidElement(story)
+            ? story
+            : <Card
+                isActive={activeStory === story.id}
+                key={key}
+                style={style}
+                link={`/~${activeFrequency}/${story.id}`}
+                media={story.content.media}
+                messages={
+                  story.messages ? Object.keys(story.messages).length : 0
+                }
+                metaLink={isEverything && freq && `/~${freq.slug}`}
+                metaText={isEverything && freq && `~${freq.name}`}
+                privateFreq={isEverything && freq && freq.settings.private}
+                person={{
+                  photo: story.creator.photoURL,
+                  name: story.creator.displayName,
+                }}
+                timestamp={story.timestamp}
+                title={story.content.title}
+                unreadMessages={unreadMessages}
+                isNew={isNew}
+              />}
         </div>
       </CellMeasurer>
     );
@@ -228,6 +222,7 @@ class StoryMaster extends Component {
       notifications,
       user,
       storiesLoaded,
+      loading,
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
@@ -331,17 +326,10 @@ class StoryMaster extends Component {
                 </TipButton>
               </Everything>}
           </Actions>
-
         </Header>
 
         <StoryList innerRef={comp => this.storyList = comp}>
           <Overlay active={composer.isOpen} />
-
-          {!loggedIn &&
-            <LoginWrapper onClick={this.login}>
-              <LoginText>Sign in to join the conversation.</LoginText>
-              <LoginButton>Sign in with Twitter</LoginButton>
-            </LoginWrapper>}
 
           {/*canLoadNewStories &&
             <NewIndicator onClick={this.loadStoriesAgain}>
@@ -363,7 +351,7 @@ class StoryMaster extends Component {
                   ref={registerChild}
                   onRowsRendered={onRowsRendered}
                   height={window.innerHeight - 50}
-                  width={419}
+                  width={window.innerWidth > 768 ? 419 : window.innerWidth}
                   rowCount={stories.length}
                   rowRenderer={this.renderStory}
                   deferredMeasurementCache={this.state.cache}
@@ -371,10 +359,6 @@ class StoryMaster extends Component {
                 />
               )}
             </InfiniteLoader>}
-
-          {isEverything &&
-            frequencies.length === 0 && // user is viewing everything but isn't subscribed to anything
-            <NuxJoinCard />}
         </StoryList>
       </Column>
     );
@@ -390,6 +374,7 @@ const mapStateToProps = state => {
     frequencies: state.frequencies.frequencies,
     user: state.user,
     storiesLoaded: state.stories.loaded,
+    loading: state.loading,
   };
 };
 

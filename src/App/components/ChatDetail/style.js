@@ -83,6 +83,7 @@ export const Timestamp = styled.div`
 	color: ${({ theme }) => theme.text.alt};
 	background: #fff;
 	position: relative;
+	z-index: 0;
 	-webkit-user-select: none; /* Chrome/Safari */
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+ */

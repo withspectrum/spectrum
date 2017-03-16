@@ -11,7 +11,6 @@ export const Column = styled.div`
 
 export const StoryList = styled.div`
 	overflow-y: scroll;
-	padding-top: 7px;
 `;
 
 export const Overlay = styled.div`
@@ -115,7 +114,7 @@ export const LoginWrapper = styled.div`
 	padding: 16px;
 	border-radius: 2px;
 	background-color: ${({ theme }) => theme.bg.default};
-	margin: 8px;
+	margin: 8px 8px 0 8px;
 	box-shadow: ${Shadow.low};
 	transition: box-shadow 0.2s ease-in;
 	width: calc(100% - 16px);
