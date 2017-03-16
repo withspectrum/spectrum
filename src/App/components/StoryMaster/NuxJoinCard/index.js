@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Wrapper } from '../Card/style';
-import { Button } from '../../../shared/Globals';
-import { featured } from '../../../helpers/featuredFrequencies';
+import { Wrapper } from '../../Card/style';
+import { Button } from '../../../../shared/Globals';
+import { featured } from '../../../../helpers/featuredFrequencies';
 import {
   Body,
   Title,
@@ -17,16 +17,34 @@ import {
 import {
   unsubscribeFrequency,
   subscribeFrequency,
-} from '../../../actions/frequencies';
+} from '../../../../actions/frequencies';
 import includes from 'lodash.includes';
 
 class NuxJoinCard extends Component {
+  state = {
+    featured: [],
+  };
+
   unsubscribeFrequency = () => {
     this.props.dispatch(unsubscribeFrequency(this.props.activeFrequency));
   };
 
   subscribeFrequency = e => {
     this.props.dispatch(subscribeFrequency(e.target.id, false));
+  };
+
+  componentWillMount = () => {
+    const { user: { frequencies } } = this.props;
+    const usersFrequencies = Object.keys(frequencies);
+
+    // show the unjoined featured frequencies first
+    featured.map((freq, i) => {
+      if (includes(usersFrequencies, freq.id)) {
+        this.state.featured.push(freq);
+      } else {
+        this.state.featured.unshift(freq);
+      }
+    });
   };
 
   render() {
@@ -43,7 +61,7 @@ class NuxJoinCard extends Component {
           </Description>
 
           <Hscroll>
-            {featured.map((freq, i) => {
+            {this.state.featured.map((freq, i) => {
               let freqIdString = `"${freq.id}"`;
               return (
                 <FreqCard key={i}>

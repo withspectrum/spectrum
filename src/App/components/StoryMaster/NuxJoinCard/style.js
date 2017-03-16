@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { H4, H1, Button } from '../../../shared/Globals';
+import { H4, H1, Button } from '../../../../shared/Globals';
 
 export const Body = styled.div`
 	width: 100%;

@@ -7,7 +7,7 @@ export const Wrapper = styled.span`
 	width: 100%;
 	flex: 0 0 auto;
 	align-items: center;
-	z-index: 50;
+	z-index: 200;
 	position: relative;
 `;
 

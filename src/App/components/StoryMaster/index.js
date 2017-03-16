@@ -12,9 +12,6 @@ import {
   Header,
   ScrollBody,
   JoinBtn,
-  LoginWrapper,
-  LoginText,
-  LoginButton,
   TipButton,
   Overlay,
   MenuButton,
@@ -35,7 +32,6 @@ import {
   subscribeFrequency,
   setActiveFrequency,
 } from '../../../actions/frequencies';
-import { login } from '../../../actions/user';
 import { openModal } from '../../../actions/modals';
 import Icon from '../../../shared/Icons';
 import Card from '../Card';
@@ -99,11 +95,6 @@ class StoryMaster extends Component {
 
   subscribeFrequency = () => {
     this.props.dispatch(subscribeFrequency(this.props.activeFrequency));
-  };
-
-  login = e => {
-    e.preventDefault();
-    this.props.dispatch(login());
   };
 
   editFrequency = () => {
@@ -338,12 +329,6 @@ class StoryMaster extends Component {
 
         <StoryList innerRef={comp => this.storyList = comp}>
           <Overlay active={composer.isOpen} />
-
-          {!loggedIn &&
-            <LoginWrapper onClick={this.login}>
-              <LoginText>Sign in to join the conversation.</LoginText>
-              <LoginButton>Sign in with Twitter</LoginButton>
-            </LoginWrapper>}
 
           {/*canLoadNewStories &&
             <NewIndicator onClick={this.loadStoriesAgain}>
