@@ -156,6 +156,9 @@
         "timestamp": {
           ".validate": "newData.val() <= now"
         },
+        "last_activity": {
+          ".validate": "newData.val() <= now"
+        },
         // Make sure published is a boolean
         "published": {
           ".validate": "newData.isBoolean()"
