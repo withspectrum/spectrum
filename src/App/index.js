@@ -54,17 +54,17 @@ class App extends Component {
       stories.stories.slice(),
       'last_activity',
       'timestamp',
-    ).reverse();
+    )
+      .reverse()
+      .filter(story => !story.deleted);
 
     if (frequency && !frequency.active !== 'everything') {
       sortedStories = sortedStories.filter(story => {
-        return story.frequencyId === frequency.id &&
-          story.published &&
-          !story.deleted;
+        return story.frequencyId === frequency.id && story.published;
       });
     }
 
-    if (isEverything && this.state.nuxFrequency) {
+    if (isEverything && this.state.nuxFrequency && user.uid) {
       sortedStories.unshift(<NuxJoinCard />);
     }
 
