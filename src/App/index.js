@@ -64,7 +64,7 @@ class App extends Component {
       });
     }
 
-    if (isEverything && this.state.nuxFrequency) {
+    if (isEverything && this.state.nuxFrequency && user.uid) {
       sortedStories.unshift(<NuxJoinCard />);
     }
 
