@@ -1,5 +1,6 @@
 import history from '../helpers/history';
 import { getCurrentFrequency } from '../helpers/frequencies';
+import { flattenArray, arrayToHash } from '../helpers/utils';
 import { track } from '../EventTracker';
 import {
   saveNewFrequency,
@@ -10,6 +11,7 @@ import {
   getFrequency,
 } from '../db/frequencies';
 import { getStories, getAllStories } from '../db/stories';
+import { getUserInfo } from '../db/users';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
   const lowerCaseFrequency = frequency.toLowerCase();
@@ -63,9 +65,35 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
       return getStories({ frequencySlug: lowerCaseFrequency });
     })
     .then(stories => {
+      if (!stories) {
+        dispatch({ type: 'STOP_LOADING' });
+      } else {
+        return Promise.all([
+          stories,
+          // Get all the particpants on the story
+          Promise.all(
+            flattenArray(
+              stories
+                .map(
+                  story =>
+                    !story.participants
+                      ? undefined
+                      : Object.keys(story.participants)
+                          .map(participant => getUserInfo(participant)),
+                )
+                .filter(elem => !!elem),
+            ),
+          ),
+        ]);
+      }
+    })
+    .then(data => {
+      if (!data) return;
+      const [stories, users] = data;
       dispatch({
         type: 'ADD_STORIES',
         stories,
+        users: arrayToHash(users, 'uid'),
       });
     })
     .catch(err => {

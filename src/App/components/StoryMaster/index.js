@@ -194,11 +194,11 @@ class StoryMaster extends Component {
                   photo: story.creator.photoURL,
                   name: story.creator.displayName,
                 }}
-                timestamp={story.timestamp}
+                timestamp={story.last_activity || story.timestamp}
                 title={story.content.title}
                 unreadMessages={unreadMessages}
                 isNew={isNew}
-                participants={story.participants || null}
+                participants={story.participants}
               />}
         </div>
       </CellMeasurer>

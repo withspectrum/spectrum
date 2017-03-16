@@ -1,38 +1,38 @@
 import React, { Component } from 'react';
 import { getUserInfo } from '../../../../db/users';
+import { Head, Container, Label } from './style';
+import { UnreadCount } from '../style';
 
 class ParticipantHeads extends Component {
   render() {
-    const { participants } = this.props;
+    const { participants, list, unread, me, saying } = this.props;
+    const arr = Object.keys(participants);
 
-    // get an array of the participant IDs
-    const participantsIdArray = Object.keys(participants);
-
-    // create an array from the participants
-    let participantsObjArray = [];
-    participantsIdArray.map((participant, i) => {
-      participantsObjArray.push(participants[participant]);
-    });
-
-    // for each participant, get their user info and build an array
-    let usersArray = [];
-    for (let participant of participantsObjArray) {
-      getUserInfo(participant.id).then(user => {
-        usersArray.push(user);
-      });
-    }
-
-    console.log('users are', usersArray);
-
-    // render return
     return (
-      <div>
-        {usersArray.map((user, i) => {
-          console.log('in map', user);
-          return <div key={i}>{user.uid}</div>;
+      <Container>
+        {arr.map((participant, i) => {
+          while (i < 4 && list[participant]) {
+            return (
+              <Head
+                tipText="Share story"
+                tipLocation="left"
+                key={`${participant}-head`}
+                src={list[participant].photoURL}
+              />
+            );
+          }
         })}
-      </div>
+        <Label>
+          {list[arr[0]].uid === me ? 'You' : list[arr[0]].displayName}
+          {' '}and{' '}
+          {arr.length - 1}
+          {' '}others are{' '}
+          {saying}
+          {unread > 0 && <UnreadCount>{` (${unread} new!)`}</UnreadCount>}
+        </Label>
+      </Container>
     );
   }
 }
+
 export default ParticipantHeads;
