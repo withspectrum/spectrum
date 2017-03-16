@@ -5,6 +5,7 @@ const initialState = {
   photoURL: null,
   frequencies: {},
   loaded: false,
+  list: {},
 };
 
 export default function root(state = initialState, action) {
@@ -47,6 +48,14 @@ export default function root(state = initialState, action) {
           if (key !== action.id) result[key] = state.frequencies[key];
           return result;
         }, {}),
+      };
+    case 'ADD_MESSAGES':
+      return {
+        ...state,
+        list: {
+          ...state.list,
+          ...action.users,
+        },
       };
     default:
       return state;
