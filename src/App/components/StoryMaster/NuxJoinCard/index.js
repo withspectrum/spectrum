@@ -36,14 +36,19 @@ class NuxJoinCard extends Component {
   componentWillMount = () => {
     const { user: { frequencies } } = this.props;
     const usersFrequencies = Object.keys(frequencies);
+    let featuredArr = this.state.featured.slice();
 
     // show the unjoined featured frequencies first
     featured.map((freq, i) => {
       if (includes(usersFrequencies, freq.id)) {
-        this.state.featured.push(freq);
+        featuredArr.push(freq);
       } else {
-        this.state.featured.unshift(freq);
+        featuredArr.unshift(freq);
       }
+    });
+
+    this.setState({
+      featured: featuredArr,
     });
   };
 
@@ -61,34 +66,35 @@ class NuxJoinCard extends Component {
           </Description>
 
           <Hscroll>
-            {this.state.featured.map((freq, i) => {
-              let freqIdString = `"${freq.id}"`;
-              return (
-                <FreqCard key={i}>
-                  <div>
-                    {/*<img src={`${process.env.PUBLIC_URL}/${freq.image}`} />*/
-                    }
-                    <h3>{freq.title}</h3>
-                    <h4>{freq.description}</h4>
-                  </div>
-                  <Actions>
-                    {includes(usersFrequencies, freq.id)
-                      ? <Link to={`/~${freq.slug}`}>
-                          <JoinedButton id={freq.slug} width={'100%'}>
-                            Joined!
-                          </JoinedButton>
-                        </Link>
-                      : <Button
-                          id={freq.slug}
-                          onClick={this.subscribeFrequency}
-                          width={'100%'}
-                        >
-                          Join
-                        </Button>}
-                  </Actions>
-                </FreqCard>
-              );
-            })}
+            {this.state.featured.length > 0 &&
+              this.state.featured.map((freq, i) => {
+                let freqIdString = `"${freq.id}"`;
+                return (
+                  <FreqCard key={i}>
+                    <div>
+                      {/*<img src={`${process.env.PUBLIC_URL}/${freq.image}`} />*/
+                      }
+                      <h3>{freq.title}</h3>
+                      <h4>{freq.description}</h4>
+                    </div>
+                    <Actions>
+                      {includes(usersFrequencies, freq.id)
+                        ? <Link to={`/~${freq.slug}`}>
+                            <JoinedButton id={freq.slug} width={'100%'}>
+                              Joined!
+                            </JoinedButton>
+                          </Link>
+                        : <Button
+                            id={freq.slug}
+                            onClick={this.subscribeFrequency}
+                            width={'100%'}
+                          >
+                            Join
+                          </Button>}
+                    </Actions>
+                  </FreqCard>
+                );
+              })}
             <RightPadding />
           </Hscroll>
         </Body>
