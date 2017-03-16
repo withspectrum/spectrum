@@ -48,7 +48,7 @@ class NuxJoinCard extends Component {
               return (
                 <FreqCard key={i}>
                   <div>
-                    {/*}<img src={`${process.env.PUBLIC_URL}/${freq.image}`} />*/
+                    {/*<img src={`${process.env.PUBLIC_URL}/${freq.image}`} />*/
                     }
                     <h3>{freq.title}</h3>
                     <h4>{freq.description}</h4>

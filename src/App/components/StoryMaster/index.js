@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import {
+  List,
+  CellMeasurer,
+  CellMeasurerCache,
+  InfiniteLoader,
+} from 'react-virtualized';
 import LoadingIndicator from '../../../shared/loading/global';
 import {
   Column,
@@ -33,15 +39,51 @@ import { login } from '../../../actions/user';
 import { openModal } from '../../../actions/modals';
 import Icon from '../../../shared/Icons';
 import Card from '../Card';
-import ShareCard from '../ShareCard';
 import NuxJoinCard from '../NuxJoinCard';
 import { ACTIVITY_TYPES } from '../../../db/types';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { formatSenders } from '../../../helpers/notifications';
 
+const MIN_STORY_CARD_HEIGHT = 109;
+
+function storyArraysEqual(a, b) {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  if (a.length != b.length) return false;
+
+  for (var i = 0; i < a.length; ++i) {
+    // This is story specific!
+    if (a[i].id !== b[i].id) return false;
+  }
+  return true;
+}
+
 class StoryMaster extends Component {
   state = {
     nuxFrequency: true,
+    cache: new CellMeasurerCache({
+      fixedWidth: true,
+      minHeight: MIN_STORY_CARD_HEIGHT,
+      keyMapper: index => this.props.stories[index].id,
+    }),
+  };
+
+  componentWillReceiveProps = nextProps => {
+    // If any of the things the story list cares about change,
+    // rerender the list
+    if (
+      storyArraysEqual(this.props.stories, nextProps.stories) &&
+      nextProps.activeStory === this.props.activeStory &&
+      storyArraysEqual(this.props.stories, nextProps.stories)
+    )
+      return;
+    this.setState({
+      cache: new CellMeasurerCache({
+        fixedWidth: true,
+        minHeight: MIN_STORY_CARD_HEIGHT,
+        keyMapper: index => nextProps.stories[index].id,
+      }),
+    });
   };
 
   loadStoriesAgain = () => {
@@ -106,6 +148,65 @@ class StoryMaster extends Component {
         timestamp={timestamp}
         title={contentBlocks[contentBlocks.length - 1]}
       />
+    );
+  };
+
+  renderStory = ({ index, key, style, parent }) => {
+    const {
+      notifications,
+      stories,
+      frequencies,
+      activeFrequency,
+      activeStory,
+    } = this.props;
+    const isEverything = activeFrequency === 'everything';
+    const story = stories[index];
+
+    const notification = notifications.find(
+      notification =>
+        notification.activityType === ACTIVITY_TYPES.NEW_MESSAGE &&
+        notification.ids.story === story.id &&
+        notification.read === false,
+    );
+    const isNew = notifications.some(
+      notification =>
+        notification.activityType === ACTIVITY_TYPES.NEW_STORY &&
+        notification.ids.story === story.id &&
+        notification.read === false,
+    );
+    const unreadMessages = notification ? notification.unread : 0;
+    const freq = isEverything &&
+      getCurrentFrequency(story.frequencyId, frequencies);
+    return (
+      <CellMeasurer
+        cache={this.state.cache}
+        columnIndex={0}
+        key={key}
+        parent={parent}
+        rowIndex={index}
+      >
+        <div style={style}>
+          <Card
+            isActive={activeStory === story.id}
+            key={key}
+            style={style}
+            link={`/~${activeFrequency}/${story.id}`}
+            media={story.content.media}
+            messages={story.messages ? Object.keys(story.messages).length : 0}
+            metaLink={isEverything && freq && `/~${freq.slug}`}
+            metaText={isEverything && freq && `~${freq.name}`}
+            privateFreq={isEverything && freq && freq.settings.private}
+            person={{
+              photo: story.creator.photoURL,
+              name: story.creator.displayName,
+            }}
+            timestamp={story.timestamp}
+            title={story.content.title}
+            unreadMessages={unreadMessages}
+            isNew={isNew}
+          />
+        </div>
+      </CellMeasurer>
     );
   };
 
@@ -263,51 +364,25 @@ class StoryMaster extends Component {
 
           {isNotifications && notifications.map(this.renderNotification)}
 
-          {isEverything || frequency
-            ? stories.filter(story => story.published).map((story, i) => {
-                const notification = notifications.find(
-                  notification =>
-                    notification.activityType === ACTIVITY_TYPES.NEW_MESSAGE &&
-                    notification.ids.story === story.id &&
-                    notification.read === false,
-                );
-                const isNew = notifications.some(
-                  notification =>
-                    notification.activityType === ACTIVITY_TYPES.NEW_STORY &&
-                    notification.ids.story === story.id &&
-                    notification.read === false,
-                );
-                const unreadMessages = notification ? notification.unread : 0;
-                const freq = isEverything &&
-                  getCurrentFrequency(story.frequencyId, frequencies);
-                return (
-                  <Card
-                    isActive={activeStory === story.id}
-                    key={`story-${i}`}
-                    link={`/~${activeFrequency}/${story.id}`}
-                    media={story.content.media}
-                    messages={
-                      story.messages ? Object.keys(story.messages).length : 0
-                    }
-                    metaLink={isEverything && freq && `/~${freq.slug}`}
-                    metaText={isEverything && freq && `~${freq.name}`}
-                    privateFreq={isEverything && freq && freq.settings.private}
-                    person={{
-                      photo: story.creator.photoURL,
-                      name: story.creator.displayName,
-                    }}
-                    timestamp={story.timestamp}
-                    title={story.content.title}
-                    unreadMessages={unreadMessages}
-                    isNew={isNew}
-                  />
-                );
-              })
-            : ''}
-
-          {!isEverything &&
-            frequency &&
-            <ShareCard slug={activeFrequency} name={frequency.name} />}
+          {(isEverything || frequency) &&
+            <InfiniteLoader
+              isRowLoaded={() => true}
+              loadMoreRows={() => Promise.resolve()}
+              rowCount={stories.length}
+            >
+              {({ onRowsRendered, registerChild }) => (
+                <List
+                  ref={registerChild}
+                  onRowsRendered={onRowsRendered}
+                  height={window.innerHeight - 50}
+                  width={419}
+                  rowCount={stories.length}
+                  rowRenderer={this.renderStory}
+                  deferredMeasurementCache={this.state.cache}
+                  rowHeight={this.state.cache.rowHeight}
+                />
+              )}
+            </InfiniteLoader>}
         </StoryList>
       </Column>
     );

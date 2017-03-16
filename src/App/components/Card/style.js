@@ -4,7 +4,7 @@ import { Shadow, H4, H5 } from '../../../shared/Globals';
 export const Wrapper = styled.div`
 	display: inline-block;
 	width: calc(100% - 16px);
-	margin: 4px 8px;
+	margin: 8px 8px 0 8px;
 	flex: 0 0 auto;
 	border-radius: 4px;
 	overflow: ${props => props.overflow === 'visible' ? 'visible' : 'hidden'};

@@ -5,6 +5,7 @@ export const Body = styled.div`
 	width: 100%;
 	padding: 24px 16px 16px;
 	text-align: center;
+	overflow: hidden;
 `;
 
 export const Title = styled(H1)`
@@ -45,7 +46,7 @@ export const FreqCard = styled.div`
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	min-width: 172px;
+	min-width: 164px;
 	margin-left: 12px;
 	box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
 
@@ -54,8 +55,8 @@ export const FreqCard = styled.div`
 	}
 
 	img {
-		width: 172px;
-		height: 172px;
+		width: 164px;
+		height: 164px;
 		border: 0;
 		outline: none;
 	}
