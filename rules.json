@@ -187,11 +187,11 @@
           },
           // Make sure this is the correct displayName for the passed UID
           "displayName": {
-            ".validate": "newData.isString() && root.child('users/' + newData.parent().child('uid').val()).child('public/displayName').val() === newData.val()"
+            ".validate": "newData.isString() && root.child('users/' + newData.parent().child('uid').val()).child('displayName').val() === newData.val()"
           },
           // Make sure this is the correct photoURL for the passed UID
           "photoURL": {
-            ".validate": "newData.isString() && root.child('users/' + newData.parent().child('uid').val()).child('public/photoURL').val() === newData.val()"
+            ".validate": "newData.isString() && root.child('users/' + newData.parent().child('uid').val()).child('photoURL').val() === newData.val()"
           },
           "$other": {
             ".validate": false
@@ -283,10 +283,10 @@
               ".validate": "newData.val() === auth.uid"
             },
             "displayName": {
-              ".validate": "root.child('users/' + auth.uid + '/public/displayName').val() === newData.val()"
+              ".validate": "root.child('users/' + auth.uid + '/displayName').val() === newData.val()"
             },
             "photoURL": {
-              ".validate": "root.child('users/' + auth.uid + '/public/photoURL').val() === newData.val()"
+              ".validate": "root.child('users/' + auth.uid + '/photoURL').val() === newData.val()"
             }
           },
           "timestamp": {
