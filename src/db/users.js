@@ -15,7 +15,6 @@ export const createUser = user => {
       [`users/${uid}/public/displayName`]: user.displayName,
       [`users/${uid}/public/uid`]: uid,
       [`users/${uid}/public/photoURL`]: user.photoURL,
-      [`users/${uid}/public/email`]: user.email,
       [`users/${uid}/public/frequencies/-Kenm0MXIRCq8GkwiJKb`]: {
         //=> add `hugs n bugs` to user's default frequencies
         id: '-Kenm0MXIRCq8GkwiJKb',
@@ -35,6 +34,7 @@ export const createUser = user => {
         joined: firebase.database.ServerValue.TIMESTAMP,
       },
       [`users/${uid}/private`]: {
+        email: user.email,
         created: firebase.database.ServerValue.TIMESTAMP,
       },
     })
