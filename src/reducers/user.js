@@ -20,6 +20,8 @@ export default function root(state = initialState, action) {
         photoURL: action.user.photoURL,
         displayName: action.user.displayName,
         frequencies: action.user.frequencies,
+        email: action.user.email,
+        username: action.user.username,
         loaded: true,
       });
     case 'USER_NOT_AUTHENTICATED':
