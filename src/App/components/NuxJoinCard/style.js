@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { H4, H1 } from '../../../shared/Globals';
+import { H4, H1, Button } from '../../../shared/Globals';
 
 export const Body = styled.div`
 	width: 100%;
@@ -63,6 +63,7 @@ export const FreqCard = styled.div`
 	h3, h4 {
 		text-align: left;
 		padding: 0 12px;
+		line-height: 1.3;
 	}
 
 	h3 {
@@ -77,13 +78,20 @@ export const FreqCard = styled.div`
 		font-weight: 400;
 		color: ${({ theme }) => theme.text.alt};
 		margin-bottom: 16px;
-		line-height: 1.4;
+		margin-top: 8px;
 	}
 `;
 
 export const Actions = styled.div`
 	padding: 12px;
 	padding-top: 0;
+`;
+
+export const JoinedButton = styled(Button)`
+	background-image: none;
+	background-color: ${({ theme }) => theme.bg.wash};
+	border: none;
+	color: ${({ theme }) => theme.text.alt};
 `;
 
 export const RightPadding = styled.div`

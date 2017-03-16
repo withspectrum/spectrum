@@ -40,6 +40,10 @@ import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { formatSenders } from '../../../helpers/notifications';
 
 class StoryMaster extends Component {
+  state = {
+    nuxFrequency: true,
+  };
+
   loadStoriesAgain = () => {
     this.props.dispatch(setActiveFrequency(this.props.activeFrequency));
   };
@@ -107,6 +111,15 @@ class StoryMaster extends Component {
 
   jumpToTop = () => {
     this.storyList.scrollTop = 0;
+  };
+
+  componentDidMount = () => {
+    let numUserFrequencies = Object.keys(this.props.user.frequencies).length;
+
+    // using state here so that it doesn't randomly disappear whenever the user joins their Nth frequency
+    this.setState({
+      nuxFrequency: numUserFrequencies > 10 ? false : true,
+    });
   };
 
   render() {
@@ -230,7 +243,7 @@ class StoryMaster extends Component {
 
         <StoryList innerRef={comp => this.storyList = comp}>
           {isEverything &&
-            frequencies.length < 6 && // user is viewing everything and has subscribed to less than 3 frequencies
+            this.state.nuxFrequency && // user is viewing everything and has subscribed to less than 3 frequencies
             <NuxJoinCard />}
 
           <Overlay active={composer.isOpen} />

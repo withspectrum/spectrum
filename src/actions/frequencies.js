@@ -130,6 +130,7 @@ export const deleteFrequency = id => (dispatch, getState) => {
 };
 
 export const subscribeFrequency = (slug, redirect) => (dispatch, getState) => {
+  console.log(slug, redirect);
   const { user: { uid } } = getState();
   dispatch({ type: 'LOADING' });
 
@@ -137,8 +138,10 @@ export const subscribeFrequency = (slug, redirect) => (dispatch, getState) => {
     .then(frequency => {
       track('frequency', 'subscribed', null);
 
-      if (redirect !== false)
+      if (redirect !== false) {
+        console.log('redirecting');
         history.push(`/~${frequency.slug || frequency.id}`);
+      }
 
       dispatch({
         type: 'SUBSCRIBE_FREQUENCY',
