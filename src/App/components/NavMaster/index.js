@@ -156,11 +156,13 @@ class NavigationMaster extends Component {
             frequencies.map((frequency, i) => {
               // If there's any unread notification for this frequency
               // show a dirty dot
-              const notif = this.props.notifications.find(
-                notification =>
-                  notification.ids.frequency === frequency.id &&
-                  frequency.stories[notification.ids.story].deleted !== true,
-              );
+              const notif = this.props.notifications.find(notification => {
+                if (notification.ids.frequency !== frequency.id) return false;
+                if (!frequency.stories || !notification.ids.story) return true;
+                const storyData = frequency.stories[notification.ids.story];
+                if (storyData && storyData.deleted) return false;
+                return true;
+              });
               return (
                 <Link to={`/~${frequency.slug || frequency.id}`} key={i}>
                   <Freq
