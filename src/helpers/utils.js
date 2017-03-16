@@ -200,10 +200,10 @@ const regex = new RegExp(
 
 export const onlyContainsEmoji = text => regex.test(text);
 
-export const sortArrayByKey = (array, key) => {
+export const sortArrayByKey = (array, key, fallbackKey) => {
   return array.sort((a, b) => {
-    let x = a[key];
-    let y = b[key];
+    let x = a[key] || a[fallbackKey];
+    let y = b[key] || b[fallbackKey];
 
     return x < y ? -1 : x > y ? 1 : 0;
   });
