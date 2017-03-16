@@ -53,6 +53,7 @@ class App extends Component {
 
     let sortedStories = sortArrayByKey(
       stories.stories.slice(),
+      'last_activity',
       'timestamp',
     ).reverse();
 
