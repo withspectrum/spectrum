@@ -34,6 +34,7 @@ export const createUser = user => {
         joined: firebase.database.ServerValue.TIMESTAMP,
       },
       [`users/${uid}/private`]: {
+        email: user.email,
         created: firebase.database.ServerValue.TIMESTAMP,
       },
     })
