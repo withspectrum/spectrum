@@ -18,6 +18,7 @@ import {
 } from './style';
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
+import ParticipantHeads from './ParticipantHeads';
 
 const canBeBool = (...types) => PropTypes.oneOfType([PropTypes.bool, ...types]);
 
@@ -37,6 +38,7 @@ class Card extends Component {
     timestamp: PropTypes.number,
     title: PropTypes.string.isRequired,
     unreadMessages: PropTypes.number,
+    participants: PropTypes.object,
   };
 
   openGallery = e => {
@@ -59,6 +61,7 @@ class Card extends Component {
       timestamp,
       title,
       unreadMessages,
+      participants,
     } = this.props;
 
     return (
@@ -80,6 +83,9 @@ class Card extends Component {
                   </span>}
                 {isNew && <span><UnreadCount> New!</UnreadCount></span>}
               </MessageCount>
+
+              {participants && <ParticipantHeads participants={participants} />}
+
             </StoryBody>
             <StoryHeader>
               <UserMeta>

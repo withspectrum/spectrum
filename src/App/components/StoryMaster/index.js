@@ -198,6 +198,7 @@ class StoryMaster extends Component {
                 title={story.content.title}
                 unreadMessages={unreadMessages}
                 isNew={isNew}
+                participants={story.participants || null}
               />}
         </div>
       </CellMeasurer>
