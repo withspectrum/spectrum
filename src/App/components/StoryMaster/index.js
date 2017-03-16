@@ -341,7 +341,6 @@ class StoryMaster extends Component {
           {isNotifications && notifications.map(this.renderNotification)}
 
           {(isEverything || frequency) &&
-            !loading.active &&
             <InfiniteLoader
               isRowLoaded={() => true}
               loadMoreRows={() => Promise.resolve()}
