@@ -24,8 +24,7 @@ import { sortArrayByKey } from '../helpers/utils';
 class App extends Component {
   state = {
     nuxFrequency: true, // determines if we should show the NuxJoinCard
-    selectModalOpen: this.props.user.uid &&
-      (!this.props.user.username || !this.props.user.email),
+    selectModalOpen: true,
   };
 
   componentDidMount = () => {
