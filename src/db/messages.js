@@ -14,6 +14,7 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
   const db = firebase.database();
 
   const key = db.ref('messages').push().key;
+  let notified = [];
 
   return db
     .ref()
@@ -35,16 +36,17 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
     .then(snapshot => snapshot.val())
     .then(story => {
       return getMessages(storyId).then(messages => {
+        notified = messages
+          // - Everybody who's sent a message in that story before
+          .map(({ userId }) => userId)
+          // - Creator of story
+          .concat([story.creator.uid])
+          .filter(UNIQUE)
+          // Avoid notifying the sender
+          .filter(uid => uid !== user.uid);
         createNotifications({
           // Add notifications for
-          users: messages
-            // - Everybody who's sent a message in that story before
-            .map(({ userId }) => userId)
-            // - Creator of story
-            .concat([story.creator.uid])
-            .filter(UNIQUE)
-            // Avoid notifying the sender
-            .filter(uid => uid !== user.uid),
+          users: notified,
           activityType: ACTIVITY_TYPES.NEW_MESSAGE,
           ids: {
             frequency: frequency.id,
@@ -59,6 +61,34 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
             ? message.content.substr(0, 140)
             : '',
         });
+      });
+    })
+    .then(() => {
+      // asdfadsf <a href="spectrum.chat/@asdf123">@max</a>
+      // => spectrum.chat/@asdf123
+      const mentions = message.content.match(/spectrum.chat\/@(\w+)/gi);
+
+      return createNotifications({
+        // Add notifications for mentions
+        users: mentions
+          // spectrum.chat/@asdf123 => asdf123
+          .map(mention => mention.match(/@(\w+)/)[1])
+          .filter(UNIQUE)
+          // Avoid notifying the sender
+          .filter(uid => uid !== user.uid)
+          // Avoid notifying people who've already been notified of this message
+          .filter(uid => notified.indexOf(uid) === -1),
+        activityType: ACTIVITY_TYPES.MENTION,
+        ids: {
+          frequency: frequency.id,
+          story: storyId,
+        },
+        sender: {
+          uid: user.uid,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        },
+        content: message.type === 'text' ? message.content.substr(0, 140) : '',
       });
     })
     .then(() => db.ref(`messages/${key}`).once('value'))

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Gradient, Shadow } from '../../../shared/Globals';
-import Textarea from 'react-textarea-autosize';
+import { MentionsInput } from 'react-mentions';
 
 export const Wrapper = styled.span`
 	display: flex;
@@ -17,7 +17,7 @@ export const Form = styled.form`
 	align-items: stretch;
 `;
 
-export const Input = styled(Textarea)`
+export const Input = styled(MentionsInput)`
 	flex: 1 0 auto;
 	font-size: 14px;
 	line-height: 22px;
@@ -104,18 +104,6 @@ export const EmojiToggle = styled.div`
 	}
 `;
 
-export const Mentions = styled.div`
-	position: absolute;
-	background: white;
-	z-index: 2;
-	left: 6.7em;
-	padding: 0.75em;
-	bottom: 2.5em;
-	border: 1px solid black;
-	border-radius: 6px;
-	width: 20em;
-`;
+export const MentionSuggestion = styled.div`
 
-export const Mention = styled.div`
-	
 `;

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { Mention } from 'react-mentions';
 import { sendMessage } from '../../../actions/messages';
 import { uploadMedia } from '../../../helpers/stories';
 import { isMobile, debounce } from '../../../helpers/utils';
@@ -16,8 +17,7 @@ import {
   MediaInput,
   MediaLabel,
   EmojiToggle,
-  Mentions,
-  Mention,
+  MentionSuggestion,
 } from './style';
 
 const NEWLINES = /(\r\n|\n|\r)/gm;
@@ -31,19 +31,8 @@ class ChatInput extends Component {
       file: '',
       emojiPickerOpen: false,
       mediaUploading: false,
-      users: [],
     };
-
-    this.debouncedShowMentionSearch = debounce(this.showMentionSearch, 500);
   }
-
-  handleKeyPress = e => {
-    if (e.keyCode === 13) {
-      //=> make the enter key send a message, not create a new line in the next autoexpanding textarea
-      e.preventDefault(); //=> prevent linebreak
-      this.sendMessage(e); //=> send the message instead
-    }
-  };
 
   updateMessageState = e => {
     const value = e.target.value;
@@ -51,30 +40,18 @@ class ChatInput extends Component {
       // Don't let newlines be entered into messages
       message: value.replace(NEWLINES, ''),
     });
-
-    if (ENDS_WITH_MENTION.test(value)) {
-      if (this.state.users.length > 0) {
-        this.showMentionSearch();
-      } else {
-        this.debouncedShowMentionSearch();
-      }
-    } else {
-      this.hideMentionSearch();
-    }
   };
 
-  showMentionSearch = () => {
-    const mention = this.state.message.match(ENDS_WITH_MENTION)[1];
+  findUsers = (mention, cb) => {
     findUsersByUsername(mention).then(users => {
-      this.setState({
-        users: users || [],
-      });
-    });
-  };
-
-  hideMentionSearch = () => {
-    this.setState({
-      users: [],
+      cb(
+        users.map(user => ({
+          ...user,
+          // react-mentions expects this
+          id: user.uid,
+          display: user.username,
+        })),
+      );
     });
   };
 
@@ -108,6 +85,14 @@ class ChatInput extends Component {
     this.setState({
       emojiPickerOpen: false,
     });
+  };
+
+  renderUserSuggestion = user => {
+    return <MentionSuggestion>{user.username}</MentionSuggestion>;
+  };
+
+  displayTransform = (_, display) => {
+    return `@${display}`;
   };
 
   sendMessage = e => {
@@ -183,15 +168,6 @@ class ChatInput extends Component {
           onChange={this.sendMediaMessage}
         />
 
-        {this.state.users.length > 0 &&
-          <Mentions>
-            {this.state.users.map(user => (
-              <Mention key={`mention-suggestion-${user.uid}`}>
-                {user.username}
-              </Mention>
-            ))}
-          </Mentions>}
-
         <MediaLabel htmlFor="file">
           <Icon icon="photo" />
         </MediaLabel>
@@ -211,14 +187,25 @@ class ChatInput extends Component {
           <Form onSubmit={this.sendMessage}>
             <Input
               ref="textInput"
+              singleLine
               placeholder="Your message here..."
               value={this.state.message}
               onChange={this.updateMessageState}
-              onKeyUp={this.handleKeyPress}
+              displayTransform={this.displayTransform}
+              markup={
+                '<a href="https://spectrum.chat/@__id__">@__display__</a>'
+              }
               autoFocus={
                 !mobile /* autofocus on desktop, don’t autofocus on mobile */
               }
-            />
+            >
+              <Mention
+                trigger="@"
+                appendSpaceOnAdd
+                data={this.findUsers}
+                renderSuggestion={this.renderUserSuggestion}
+              />
+            </Input>
             <Button onClick={this.sendMessage}>
               <Icon icon="send" reverse static />
             </Button>

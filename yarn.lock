@@ -4120,7 +4120,7 @@ lodash.uniq@^4.3.0, lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-"lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0:
+"lodash@>=3.5 <5", lodash@^4.0.0, lodash@^4.14.0, lodash@^4.15.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.3.0, lodash@^4.5.1:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -5323,6 +5323,14 @@ react-medium-spinner@^1.1.0:
   dependencies:
     react ">=0.13.0"
 
+react-mentions@^0.6.4:
+  version "0.6.4"
+  resolved "https://registry.yarnpkg.com/react-mentions/-/react-mentions-0.6.4.tgz#21abfba6fb545504438f108f10acfef6f64d6dc5"
+  dependencies:
+    babel-runtime "^6.11.6"
+    lodash "^4.5.1"
+    substyle "^3.0.1"
+
 react-modal@^1.6.5:
   version "1.6.5"
   resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-1.6.5.tgz#f720d99bd81b1def5c2c32e0ffaa48bdaf484862"
@@ -6165,6 +6173,14 @@ styled-components@^1.3.1:
     is-plain-object "^2.0.1"
     supports-color "^3.1.2"
 
+substyle@^3.0.1:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/substyle/-/substyle-3.0.3.tgz#38b7d2b854c1cb9dba93a8ee32e02a5dd74bd7f0"
+  dependencies:
+    invariant "^2.2.0"
+    lodash "^4.3.0"
+    warning "^2.1.0"
+
 supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
@@ -6569,6 +6585,12 @@ walker@~1.0.5:
   resolved "https://registry.yarnpkg.com/walker/-/walker-1.0.7.tgz#2f7f9b8fd10d677262b18a884e28d19618e028fb"
   dependencies:
     makeerror "1.0.x"
+
+warning@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/warning/-/warning-2.1.0.tgz#21220d9c63afc77a8c92111e011af705ce0c6901"
+  dependencies:
+    loose-envify "^1.0.0"
 
 warning@^3.0.0:
   version "3.0.0"
