@@ -29,6 +29,7 @@ class App extends Component {
 
   componentDidMount = () => {
     let numUserFrequencies = Object.keys(this.props.user.frequencies).length;
+    console.log(numUserFrequencies);
     // set in state so it doesn't disappear when the user's freq count updates
     this.setState({
       nuxFrequency: numUserFrequencies > 10 ? false : true,

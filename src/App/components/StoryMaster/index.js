@@ -69,9 +69,18 @@ class StoryMaster extends Component {
       arraysEqualById(this.props.stories, nextProps.stories) &&
       nextProps.activeStory === this.props.activeStory &&
       nextProps.activeFrequency === this.props.activeFrequency &&
-      arraysEqualById(this.props.notifications, nextProps.notifications)
+      arraysEqualById(this.props.notifications, nextProps.notifications) &&
+      nextProps.stories.every(
+        (story, index) =>
+          !story.participants ||
+          arraysEqualById(
+            story.participants,
+            this.props.stories[index].participants,
+          ),
+      )
     )
       return;
+
     this.setState({
       cache: new CellMeasurerCache({
         fixedWidth: true,

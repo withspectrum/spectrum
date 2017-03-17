@@ -381,5 +381,5 @@ export const Tooltip = props => css`
 	&:hover:after,
 	&:hover:before {
 		opacity: 1;
-		transition: all 0.2s ease-in 0.2s;
+		transition: all 0.1s ease-in 0.1s;
 `;

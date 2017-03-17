@@ -95,6 +95,24 @@ export const featured = [
     slug: 'styled-components',
     id: '-KfI6HMaFhSt7_xhmyE8',
   },
+  {
+    title: '~Star Wars',
+    description: 'The Force will be with you. Always.',
+    slug: 'star-wars',
+    id: '-KfOsm6V8ex7wFbjnvvP',
+  },
+  {
+    title: '~Framer',
+    description: 'Bring your designs to life.',
+    slug: 'framer',
+    id: '-KfO4qnCt-7n34T2V9AN',
+  },
+  {
+    title: '~Android',
+    description: 'Android and beyond!',
+    slug: 'android',
+    id: '-KfKXG7nEr3Xxb0DGRTV',
+  },
 ];
 
 export default featured;

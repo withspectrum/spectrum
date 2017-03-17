@@ -29,14 +29,10 @@ class Card extends Component {
 
     const sayings = [
       "chit chattin'",
-      "goofin' around",
-      'having fun without you',
-      'making up jokes',
-      "tellin' secrets",
-      "vibin' and keeping it right",
-      "shootin' the breeze",
-      "gettin' silly",
-      'being real cool',
+      'talking',
+      'hanging out',
+      'chatting',
+      'connecting',
     ];
 
     this.state = {
