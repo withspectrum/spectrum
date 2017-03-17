@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import { hashToArray } from '../helpers/utils';
 
 /**
  * Create a new user
@@ -127,4 +128,18 @@ export const setUsernameAndEmail = ({ uid, username, email }) => {
     .update(updates)
     .then(() => db.ref(`users/${uid}`).once('value'))
     .then(snapshot => snapshot.val());
+};
+
+export const findUsersByUsername = username => {
+  const db = firebase.database();
+
+  return db
+    .ref('users')
+    .orderByChild('username')
+    .once('value')
+    .then(snapshot => snapshot.val())
+    .then(users =>
+      hashToArray(users).filter(
+        user => user.username && user.username.indexOf(username) > -1,
+      ));
 };

@@ -61,6 +61,16 @@ class ChatView extends Component {
     // autolinker to link it
     const linkedMessage = Autolinker.link(
       cleanMessage.replace(FREQUENCIES, '$1https://spectrum.chat/$2'),
+      {
+        mention: 'twitter',
+        replaceFn(match) {
+          switch (match.getType()) {
+            case 'mention': {
+              return `<strong>@${match.getMention()}</strong>`;
+            }
+          }
+        },
+      },
     );
     // Remove the "spectrum.chat" part from the link text so in the message
     // you just see "~frequency", but it's linked to the frequency
