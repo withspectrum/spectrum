@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { sendMessage } from '../../../actions/messages';
 import { uploadMedia } from '../../../helpers/stories';
-import { isMobile, debounce } from '../../../helpers/utils';
+import { isMobile } from '../../../helpers/utils';
 import EmojiPicker from '../../../shared/EmojiPicker';
 import Icon from '../../../shared/Icons';
 import { connect } from 'react-redux';
 import { track } from '../../../EventTracker';
-import { findUsersByUsername } from '../../../db/users';
 import {
   Input,
   Form,
@@ -16,12 +15,9 @@ import {
   MediaInput,
   MediaLabel,
   EmojiToggle,
-  Mentions,
-  Mention,
 } from './style';
 
 const NEWLINES = /(\r\n|\n|\r)/gm;
-const ENDS_WITH_MENTION = /@(\w+)$/;
 
 class ChatInput extends Component {
   constructor() {
@@ -31,10 +27,7 @@ class ChatInput extends Component {
       file: '',
       emojiPickerOpen: false,
       mediaUploading: false,
-      users: [],
     };
-
-    this.debouncedShowMentionSearch = debounce(this.showMentionSearch, 500);
   }
 
   handleKeyPress = e => {
@@ -46,35 +39,9 @@ class ChatInput extends Component {
   };
 
   updateMessageState = e => {
-    const value = e.target.value;
     this.setState({
       // Don't let newlines be entered into messages
-      message: value.replace(NEWLINES, ''),
-    });
-
-    if (ENDS_WITH_MENTION.test(value)) {
-      if (this.state.users.length > 0) {
-        this.showMentionSearch();
-      } else {
-        this.debouncedShowMentionSearch();
-      }
-    } else {
-      this.hideMentionSearch();
-    }
-  };
-
-  showMentionSearch = () => {
-    const mention = this.state.message.match(ENDS_WITH_MENTION)[1];
-    findUsersByUsername(mention).then(users => {
-      this.setState({
-        users: users || [],
-      });
-    });
-  };
-
-  hideMentionSearch = () => {
-    this.setState({
-      users: [],
+      message: e.target.value.replace(NEWLINES, ''),
     });
   };
 
@@ -182,15 +149,6 @@ class ChatInput extends Component {
           multiple={false}
           onChange={this.sendMediaMessage}
         />
-
-        {this.state.users.length > 0 &&
-          <Mentions>
-            {this.state.users.map(user => (
-              <Mention key={`mention-suggestion-${user.uid}`}>
-                {user.username}
-              </Mention>
-            ))}
-          </Mentions>}
 
         <MediaLabel htmlFor="file">
           <Icon icon="photo" />

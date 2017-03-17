@@ -103,19 +103,3 @@ export const EmojiToggle = styled.div`
 		display: none;
 	}
 `;
-
-export const Mentions = styled.div`
-	position: absolute;
-	background: white;
-	z-index: 2;
-	left: 6.7em;
-	padding: 0.75em;
-	bottom: 2.5em;
-	border: 1px solid black;
-	border-radius: 6px;
-	width: 20em;
-`;
-
-export const Mention = styled.div`
-	
-`;
