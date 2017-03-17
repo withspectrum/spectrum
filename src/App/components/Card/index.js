@@ -84,7 +84,7 @@ class Card extends Component {
     let heads;
 
     // if the story has at least 3 participants
-    if (participants && Object.keys(participants).length > 2) {
+    if (participants && Object.keys(participants).length >= 3) {
       if (
         !Object.keys(participants).every(participant => user.list[participant])
       ) {

@@ -17,11 +17,9 @@ class ParticipantHeads extends Component {
                 style={{ position: 'relative', left: `-${i * 4}px` }}
                 tipText={list[participant].displayName}
                 tipLocation="top"
+                key={`${participant}-head`}
               >
-                <Head
-                  key={`${participant}-head`}
-                  src={list[participant].photoURL}
-                />
+                <Head src={list[participant].photoURL} />
               </HeadWrapper>
             );
           }
