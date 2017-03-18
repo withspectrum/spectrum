@@ -279,6 +279,7 @@ class Icon extends React.Component {
         color={this.props.color}
         reverse={this.props.reverse}
         tipText={this.props.tipText}
+        tipLocation={this.props.tipLocation}
       >
         <InlineSvg
           fillRule="evenodd"

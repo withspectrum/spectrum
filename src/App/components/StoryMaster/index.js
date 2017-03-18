@@ -296,13 +296,13 @@ class StoryMaster extends Component {
                   </JoinBtn>)}
 
             {role === 'owner' &&
-              <TipButton
+              <Icon
                 onClick={this.editFrequency}
+                icon="settings"
+                subtle
                 tipText="Frequency Settings"
                 tipLocation="right"
-              >
-                <Icon icon="settings" subtle />
-              </TipButton>}
+              />}
 
             {(isEverything || role) &&
               <Everything>

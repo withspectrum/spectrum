@@ -56,7 +56,12 @@ class StoryActions extends Component {
           target="_blank"
           style={{ display: 'inline-block' }}
         >
-          <Icon icon="share" subtle tipText="Share story" tipLocation="right" />
+          <Icon
+            icon="share"
+            subtle
+            tipText="Share story"
+            tipLocation="top-right"
+          />
         </a>
 
         {(creator || moderator === 'owner') &&
@@ -67,7 +72,7 @@ class StoryActions extends Component {
             >
               <Icon
                 tipText="Delete Story"
-                tipLocation="top"
+                tipLocation="top-left"
                 icon="delete"
                 color="warn.default"
                 subtle
@@ -84,7 +89,7 @@ class StoryActions extends Component {
             <label>
               <Icon
                 tipText={locked ? 'Unfreeze Chat' : 'Freeze Chat'}
-                tipLocation="top"
+                tipLocation="top-left"
                 icon="freeze"
                 color={locked ? 'brand.default' : 'success.alt'}
                 subtle={locked ? false : true}
