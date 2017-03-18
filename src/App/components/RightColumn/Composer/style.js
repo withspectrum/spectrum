@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient, H4, H1 } from '../../../shared/Globals';
+import { Gradient, H4, H1 } from '../../../../shared/Globals';
 
 export const ScrollBody = styled.div`
 	display: flex;
@@ -7,6 +7,7 @@ export const ScrollBody = styled.div`
 	background-color: ${({ theme }) => theme.bg.default};
 	max-height: 100%;
 	flex-direction: column;
+	overflow-y: scroll;
 `;
 
 export const ContentView = styled.div`

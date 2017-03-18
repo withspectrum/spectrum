@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient, Tooltip } from '../../../shared/Globals';
+import { Gradient, Tooltip } from '../../../../shared/Globals';
 
 export const ChatContainer = styled.div`
 	flex: 1 0 auto;
@@ -9,7 +9,7 @@ export const ChatContainer = styled.div`
 	flex-direction: column;
 
 	@media (max-width: 768px) {
-    padding-bottom: 70px;
+    padding-bottom: 32px;
   }
 `;
 

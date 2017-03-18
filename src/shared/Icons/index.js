@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Tooltip } from '../Globals';
 
 export const InlineSvg = styled.svg`
   position: absolute;
@@ -23,13 +24,14 @@ export const InlineSvg = styled.svg`
 
 export const SvgWrapper = styled.div`
   display: inline-block;
-  width: ${props => props.size ? `${props.size}px` : '32px'};
-  height: ${props => props.size ? `${props.size}px` : '32px'};
+  min-width: ${props => props.size ? `${props.size}px` : '32px'};
+  min-height: ${props => props.size ? `${props.size}px` : '32px'};
   position: relative;
   color: ${props =>
   props.reverse
     ? props.theme.text.reverse
     : eval(`props.theme.${props.color}`)};
+  ${props => props.tipText ? Tooltip(props) : ''};
 `;
 
 class Icon extends React.Component {
@@ -295,6 +297,8 @@ class Icon extends React.Component {
         size={this.props.size}
         color={this.props.color}
         reverse={this.props.reverse}
+        tipText={this.props.tipText}
+        tipLocation={this.props.tipLocation}
       >
         <InlineSvg
           fillRule="evenodd"

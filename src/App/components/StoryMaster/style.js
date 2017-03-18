@@ -160,7 +160,7 @@ export const LoginButton = styled.button`
 
 export const TipButton = styled.button`
 	background-color: transparent;
-	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip')};
+	${props => props.tipText ? Tooltip(props) : ''};
 `;
 
 export const MenuButton = styled.div`

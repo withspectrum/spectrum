@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { sendMessage } from '../../../actions/messages';
-import { uploadMedia } from '../../../helpers/stories';
-import { isMobile } from '../../../helpers/utils';
-import EmojiPicker from '../../../shared/EmojiPicker';
-import Icon from '../../../shared/Icons';
+import { sendMessage } from '../../../../actions/messages';
+import { uploadMedia } from '../../../../helpers/stories';
+import { isMobile } from '../../../../helpers/utils';
+import EmojiPicker from '../../../../shared/EmojiPicker';
+import Icon from '../../../../shared/Icons';
 import { connect } from 'react-redux';
-import { track } from '../../../EventTracker';
+import { track } from '../../../../EventTracker';
 import {
   Input,
   Form,
@@ -57,23 +57,26 @@ class ChatInput extends Component {
     });
   };
 
-  sendEmojiMessage = emoji => {
+  appendEmoji = emoji => {
     track('emojiPicker', 'sent', null);
 
     let textInput = ReactDOM.findDOMNode(this.refs.textInput);
+    let value = textInput.value;
+    let startPosition = textInput.selectionStart;
 
-    let message = {
-      type: 'text',
-      content: emoji,
-    };
-
-    this.dispatchMessage(message);
+    // insert the emoji at the cursor position of the input
+    value = [
+      value.slice(0, startPosition),
+      emoji,
+      value.slice(startPosition),
+    ].join('');
 
     // refocus the input
     textInput.focus();
     // close the emoji picker
     this.setState({
       emojiPickerOpen: false,
+      message: value,
     });
   };
 
@@ -91,10 +94,6 @@ class ChatInput extends Component {
     this.setState({
       message: '',
     });
-  };
-
-  dispatchMessage = message => {
-    this.props.dispatch(sendMessage(message));
   };
 
   sendMediaMessage = e => {
@@ -135,6 +134,13 @@ class ChatInput extends Component {
       });
   };
 
+  dispatchMessage = message => {
+    // the current user has sent a message, so force the parent to scroll to bottom
+    this.props.forceScrollToBottom();
+
+    this.props.dispatch(sendMessage(message));
+  };
+
   render() {
     let mobile = isMobile();
 
@@ -156,7 +162,7 @@ class ChatInput extends Component {
 
         {this.state.emojiPickerOpen &&
           <EmojiPicker
-            onChange={this.sendEmojiMessage}
+            onChange={this.appendEmoji}
             closePicker={this.toggleEmojiPicker}
           />}
         <EmojiToggle

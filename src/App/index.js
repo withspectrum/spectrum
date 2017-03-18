@@ -5,20 +5,17 @@ import {
   Body,
   NavMasterContainer,
   StoryMasterContainer,
-  DetailViewContainer,
+  RightColumnContainer,
 } from './style';
 import StoryMaster from './components/StoryMaster';
-import DetailView from './components/DetailView';
+import RightColumn from './components/RightColumn';
 import LoadingIndicator from '../shared/loading';
 import ModalRoot from '../shared/modals/ModalRoot';
 import SelectUsernameModal from '../shared/modals/SelectUsernameModal';
 import GalleryRoot from '../shared/gallery/GalleryRoot';
 import NuxJoinCard from './components/StoryMaster/NuxJoinCard';
 import LoginCard from './components/StoryMaster/LoginCard';
-import {
-  getCurrentFrequency,
-  getFrequencyPermission,
-} from '../helpers/frequencies';
+import { getCurrentFrequency } from '../helpers/frequencies';
 import { sortArrayByKey } from '../helpers/utils';
 
 class App extends Component {
@@ -42,7 +39,7 @@ class App extends Component {
   };
 
   render() {
-    const { stories, frequencies, user, ui, loading } = this.props;
+    const { stories, frequencies, user, ui } = this.props;
     const frequency = getCurrentFrequency(
       frequencies.active,
       frequencies.frequencies,
@@ -108,9 +105,9 @@ class App extends Component {
           />
         </StoryMasterContainer>
 
-        <DetailViewContainer active={stories.active} viewing={ui.viewing}>
-          <DetailView />
-        </DetailViewContainer>
+        <RightColumnContainer active={stories.active} viewing={ui.viewing}>
+          <RightColumn />
+        </RightColumnContainer>
       </Body>
     );
   }
@@ -121,5 +118,4 @@ export default connect(state => ({
   frequencies: state.frequencies,
   user: state.user,
   ui: state.ui,
-  loading: state.loading,
 }))(App);
