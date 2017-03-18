@@ -10,8 +10,8 @@ export const HeadWrapper = styled.span`
 `;
 
 export const Head = styled.img`
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   box-shadow: 0 0 0 1px #fff, 0 1px 2px rgba(0,0,0,0.2);
 `;

@@ -25,7 +25,7 @@ class ParticipantHeads extends Component {
               <HeadWrapper
                 style={{ position: 'relative', left: `-${i * 4}px` }}
                 tipText={list[participant].displayName}
-                tipLocation="top"
+                tipLocation="top-right"
                 key={`${participant}-head`}
               >
                 <Head src={list[participant].photoURL} />

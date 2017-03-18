@@ -311,7 +311,7 @@ class StoryMaster extends Component {
                 icon="settings"
                 subtle
                 tipText="Frequency Settings"
-                tipLocation="right"
+                tipLocation="top-right"
               />}
 
             {(isEverything || role) &&
@@ -327,7 +327,7 @@ class StoryMaster extends Component {
                 <TipButton
                   onClick={this.toggleComposer}
                   tipText="New Story"
-                  tipLocation="left"
+                  tipLocation="top-left"
                 >
                   {composer.isOpen
                     ? <Icon icon="write-cancel" color="warn.alt" />
