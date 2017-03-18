@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { P } from '../../Globals';
 import { isMobile } from '../../../helpers/utils';
+import Icon from '../../../shared/Icons';
 
 const mobile = isMobile();
 export const modalStyles = {
@@ -65,5 +66,14 @@ export const ErrorMessage = styled(P)`
 
 // For some reason we need this so the checkbox is aligned with the text
 export const CheckboxWrapper = styled.span`
+  > div {
+    vertical-align: middle;
+    margin-left: -6px;
+  }
+`;
 
+export const HiddenInput = styled.input`
+  visibility: hidden;
+  width: 0;
+  height: 0;
 `;
