@@ -2,7 +2,6 @@ import React from 'react';
 import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import StripeCheckout from 'react-stripe-checkout';
-import axios from 'axios';
 import { closeModal } from '../../../actions/modals';
 import { upgradeUser } from '../../../actions/user';
 import { connect } from 'react-redux';
@@ -46,10 +45,10 @@ class ProModal extends React.Component {
       loading: true,
     });
 
-    axios
-      .post('http://localhost:3001/customer/create', {
-        token: JSON.stringify(token),
-      })
+    fetch('http://localhost:3001/customer/create', {
+      method: 'POST',
+      token: JSON.stringify(token),
+    })
       .then(response => {
         if (!response.data.success && response.data.error) {
           // there was an error on the backend processing the card - likely a card failure
