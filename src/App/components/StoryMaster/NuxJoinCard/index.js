@@ -18,7 +18,6 @@ import {
   unsubscribeFrequency,
   subscribeFrequency,
 } from '../../../../actions/frequencies';
-import includes from 'lodash.includes';
 
 class NuxJoinCard extends Component {
   state = {
@@ -40,7 +39,7 @@ class NuxJoinCard extends Component {
 
     // show the unjoined featured frequencies first
     featured.map((freq, i) => {
-      if (includes(usersFrequencies, freq.id)) {
+      if (usersFrequencies[freq.id]) {
         featuredArr.push(freq);
       } else {
         featuredArr.unshift(freq);
@@ -77,7 +76,7 @@ class NuxJoinCard extends Component {
                       <h4>{freq.description}</h4>
                     </div>
                     <Actions>
-                      {includes(usersFrequencies, freq.id)
+                      {usersFrequencies[freq.id]
                         ? <Link to={`/~${freq.slug}`}>
                             <JoinedButton id={freq.slug} width={'100%'}>
                               Joined!
