@@ -27,7 +27,6 @@ class StoryActions extends Component {
 
   deleteStory = () => {
     let { story } = this.props;
-    console.log(story);
     this.props.dispatch(deleteStory(story.id));
   };
 

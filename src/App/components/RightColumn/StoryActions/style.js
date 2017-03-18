@@ -22,7 +22,7 @@ export const HiddenLabel = styled.span`
 	display: inline-block;
 	width: 32px;
 	height: 32px;
-	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip')};
+	${props => props.tipText ? Tooltip(props) : ''};
 `;
 
 export const HiddenButton = styled.button`

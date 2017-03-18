@@ -85,8 +85,6 @@ class RightColumn extends Component {
 
       currentFrequency = getCurrentFrequency(story.frequencyId, frequencies);
 
-      console.log('current freq', currentFrequency);
-
       returnUrl = active === 'everything'
         ? 'everything'
         : currentFrequency && currentFrequency.slug;
