@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+import TextEditor from '../../../../shared/TextEditor';
 import { Gradient, Tooltip } from '../../../../shared/Globals';
 
 export const ChatContainer = styled.div`
@@ -13,12 +14,12 @@ export const ChatContainer = styled.div`
   }
 `;
 
-export const Bubble = styled.p`
+const bubbleStyles = css`
 	display: inline-block;
 	flex: 0 0 auto;
 	padding: 8px 16px;
 	vertical-align: middle;
-	border-radius: 24px
+	border-radius: 24px;
 	margin-top: 2px;
 	font-size: 14px;
 	max-width: 60%;
@@ -28,13 +29,13 @@ export const Bubble = styled.p`
 		margin-top: 0;
 	}
 
-  a {
-  	text-decoration: underline;
-  	word-wrap: break-word;
-  	line-height: inherit;
-  	word-break: break-all;
+	a {
+		text-decoration: underline;
+		word-wrap: break-word;
+		line-height: inherit;
+		word-break: break-all;
 		display: inline-block;
-  }
+	}
 
 	& + div { /* if bubble is followed by an emoji, don't let the emoji have bottom margin */
 		margin-bottom: 0;
@@ -43,6 +44,10 @@ export const Bubble = styled.p`
 	@media (max-width: 768px) {
 		max-width: 75%;
 	}
+`;
+
+export const Bubble = styled.p`
+	${bubbleStyles}
 `;
 
 export const Messages = styled.div`
@@ -113,36 +118,6 @@ export const Timestamp = styled.div`
 	}
 `;
 
-export const BubbleGroup = styled.div`
-	width: 100%;
-	margin-top: 16px;
-	display: flex;
-	justify-content: ${props => props.me ? `flex-end;` : `flex-start;`}
-
-	&:first-of-type {
-		margin-top: auto;
-	}
-
-	p {
-		background-color: ${props =>
-  props.me ? props.theme.brand.default : props.theme.generic.default};
-		background-image: ${props =>
-  props.me
-    ? Gradient(props.theme.brand.alt, props.theme.brand.default)
-    : Gradient(props.theme.generic.alt, props.theme.generic.default)}
-		color: ${props =>
-  props.me ? props.theme.text.reverse : props.theme.text.default};
-		align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
-		font-weight: ${props => props.me ? `500` : `400`};
-		clear: both;
-
-		&::selection {
-		  background-color: ${props =>
-  props.me ? props.theme.text.default : props.theme.brand.alt};
-}
-	}
-`;
-
 export const ImgBubble = styled.img`
 	display: block;
 	clear: both;
@@ -168,7 +143,7 @@ export const EmojiBubble = styled.div`
   margin-top: 12px;
   margin-bottom: 12px;
 	display: flex;
-	align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
+	align-self: ${props => props.me ? `flex-end;` : `flex-start;`};
 
 	&:last-of-type {
 		margin-bottom: 0;
@@ -214,4 +189,38 @@ export const AdminBadge = styled.span`
 	font-size: 9px;
 	font-weight: 800;
 	border-radius: 4px;
+`;
+
+export const DraftJSBubble = styled(TextEditor)`
+	${bubbleStyles}
+`;
+
+export const BubbleGroup = styled.div`
+	width: 100%;
+	margin-top: 16px;
+	display: flex;
+	justify-content: ${props => props.me ? `flex-end;` : `flex-start;`};
+
+	&:first-of-type {
+		margin-top: auto;
+	}
+
+	p {
+		background-color: ${props =>
+  props.me ? props.theme.brand.default : props.theme.generic.default};
+		background-image: ${props =>
+  props.me
+    ? Gradient(props.theme.brand.alt, props.theme.brand.default)
+    : Gradient(props.theme.generic.alt, props.theme.generic.default)};
+		color: ${props =>
+  props.me ? props.theme.text.reverse : props.theme.text.default};
+		align-self: ${props => props.me ? `flex-end;` : `flex-start;`};
+		font-weight: ${props => props.me ? `500` : `400`};
+		clear: both;
+
+		&::selection {
+		  background-color: ${props =>
+  props.me ? props.theme.text.default : props.theme.brand.alt};
+}
+	}
 `;

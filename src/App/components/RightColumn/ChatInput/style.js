@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Gradient, Shadow } from '../../../../shared/Globals';
 import Textarea from 'react-textarea-autosize';
+import TextEditor from '../../../../shared/TextEditor';
 
 export const Wrapper = styled.span`
 	display: flex;
@@ -11,13 +12,13 @@ export const Wrapper = styled.span`
 	position: relative;
 `;
 
-export const Form = styled.form`
+export const InputWrapper = styled.div`
 	flex: 1 0 auto;
 	display: flex;
 	align-items: stretch;
 `;
 
-export const Input = styled(Textarea)`
+export const Input = styled(TextEditor)`
 	flex: 1 0 auto;
 	font-size: 14px;
 	line-height: 22px;

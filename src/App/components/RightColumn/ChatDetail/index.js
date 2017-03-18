@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { EditorState, convertFromRaw } from 'draft-js';
 import {
   ChatContainer,
   Bubble,
   ImgBubble,
   BubbleGroup,
+  DraftJSBubble,
   Byline,
   AdminBadge,
   EmojiBubble,
@@ -151,6 +153,24 @@ class ChatView extends Component {
                         onClick={this.openGallery}
                         src={message.message.content.url}
                         key={i}
+                      />
+                    );
+                  }
+
+                  if (message.message.type === 'draft-js') {
+                    return (
+                      <DraftJSBubble
+                        key={i}
+                        me={itsaMe}
+                        editorState={EditorState.createWithContent(
+                          convertFromRaw({
+                            // Firebase ditches entityMap when it's null,
+                            // draft.js expects it to exist 🙄
+                            entityMap: {},
+                            ...message.message.content,
+                          }),
+                        )}
+                        readOnly
                       />
                     );
                   }
