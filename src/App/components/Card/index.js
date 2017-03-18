@@ -25,13 +25,7 @@ class Card extends Component {
   constructor() {
     super();
 
-    const sayings = [
-      "chit chattin'",
-      'talking',
-      'hanging out',
-      'chatting',
-      'connecting',
-    ];
+    const sayings = ["chit chattin'", 'talking', 'hanging out', 'chatting'];
 
     this.state = {
       saying: sayings[Math.floor(Math.random() * sayings.length)],
