@@ -189,7 +189,6 @@ class StoryMaster extends Component {
                 }
                 metaLink={isEverything && freq && `/~${freq.slug}`}
                 metaText={isEverything && freq && `~${freq.name}`}
-                privateFreq={isEverything && freq && freq.settings.private}
                 person={{
                   photo: story.creator.photoURL,
                   name: story.creator.displayName,

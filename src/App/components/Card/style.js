@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { Shadow, H4, H5 } from '../../../shared/Globals';
+import { Shadow, H5 } from '../../../shared/Globals';
 
 export const Wrapper = styled.div`
 	display: inline-block;
@@ -118,23 +118,6 @@ export const FrequencyLink = styled(H5)`
 	color: ${({ theme }) => theme.text.alt};
 	max-width: 100%;
 	word-break: break-all;
-`;
-
-export const MetaFreq = styled(Meta)`
-  color: ${({ theme }) => theme.text.alt};
-  font-weight: 600;
-  transition: color 0.2s ease-out;
-  display: block;
-  width: 100%;
-  background: #fff;
-  padding: 8px 16px;
-  border-radius: 0 0 2px 2px;
-  border-top: 1px solid ${({ theme }) => theme.generic.default};
-
-  &:hover {
-  	color: ${({ theme }) => theme.brand.default}
-  	transition: color 0.2s ease-in;
-  }
 `;
 
 export const UnreadCount = styled.span`

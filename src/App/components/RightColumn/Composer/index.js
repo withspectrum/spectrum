@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { track } from '../../../EventTracker';
+import { track } from '../../../../EventTracker';
 import {
   updateTitle,
   updateBody,
   addMediaList,
   removeImageFromStory,
-} from '../../../actions/composer';
-import { publishStory, initStory } from '../../../actions/stories';
+} from '../../../../actions/composer';
+import { publishStory, initStory } from '../../../../actions/stories';
 import {
   getCurrentFrequency,
   linkFreqsInMd,
-} from '../../../helpers/frequencies';
-import { uploadMultipleMedia } from '../../../helpers/stories';
+} from '../../../../helpers/frequencies';
+import { uploadMultipleMedia } from '../../../../helpers/stories';
 import Textarea from 'react-textarea-autosize';
-import Markdown from '../../../shared/Markdown';
+import Markdown from '../../../../shared/Markdown';
 
 import {
   ScrollBody,

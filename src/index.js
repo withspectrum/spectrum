@@ -9,8 +9,7 @@ import * as firebase from 'firebase';
 import FIREBASE_CONFIG from './config/FirebaseConfig';
 import { Body } from './App/style';
 import Root from './Root';
-import { loadStorage, saveStorage, clearStorage } from './helpers/localStorage';
-import { debounce } from './helpers/utils';
+import { clearStorage } from './helpers/localStorage';
 
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,

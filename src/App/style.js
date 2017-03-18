@@ -54,7 +54,7 @@ export const StoryMasterContainer = styled(ScrollBody)`
   }
 `;
 
-export const DetailViewContainer = styled(ScrollBody)`
+export const RightColumnContainer = styled(ScrollBody)`
   background${({ theme }) => theme.bg.default};
   flex: 1 1 auto;
   z-index: 2;
