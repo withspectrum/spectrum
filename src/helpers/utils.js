@@ -132,19 +132,6 @@ const fetch = (ref, orderBy, equalTo) => {
   });
 };
 
-const fetchDataByIds = (obj, params) => {
-  let keys = Object.keys(obj);
-  return Promise.all(keys.map(key => fetch(...params, key)));
-};
-
-export const fetchFrequenciesForUser = frequencies => {
-  return fetchDataByIds(frequencies, ['frequencies', 'id']);
-};
-
-export const fetchStoriesForFrequencies = frequencies => {
-  return fetchDataByIds(frequencies, ['stories', 'frequency']);
-};
-
 export const asyncComponent = getComponent => {
   return class AsyncComponent extends React.Component {
     static Component = null;
