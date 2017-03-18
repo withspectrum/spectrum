@@ -83,7 +83,7 @@ class Card extends Component {
       if (
         !Object.keys(participants).every(participant => user.list[participant])
       ) {
-        heads = <span />;
+        heads = <ParticipantHeads loading />;
       } else {
         heads = (
           <ParticipantHeads

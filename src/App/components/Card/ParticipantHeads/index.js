@@ -5,6 +5,15 @@ import { UnreadCount } from '../style';
 
 class ParticipantHeads extends Component {
   render() {
+    if (this.props.loading) {
+      return (
+        <Container>
+          <HeadWrapper>
+            <Head src={`${process.env.PUBLIC_URL}/img/head_placeholder.png`} />
+          </HeadWrapper>
+        </Container>
+      );
+    }
     const { participants, list, unread, me, saying } = this.props;
     const arr = Object.keys(participants);
 
