@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient, Shadow } from '../../../shared/Globals';
+import { Gradient, Shadow } from '../../../../shared/Globals';
 import Textarea from 'react-textarea-autosize';
 
 export const Wrapper = styled.span`

@@ -11,6 +11,7 @@ export default function ui(state = initialState, action) {
     case 'SHOW_STORIES_NAV':
     case 'CLOSE_COMPOSER':
     case 'CLEAR_ACTIVE_STORY':
+    case 'DELETE_STORY':
       return {
         viewing: 'stories',
       };

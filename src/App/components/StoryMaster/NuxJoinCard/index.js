@@ -68,7 +68,6 @@ class NuxJoinCard extends Component {
           <Hscroll>
             {this.state.featured.length > 0 &&
               this.state.featured.map((freq, i) => {
-                let freqIdString = `"${freq.id}"`;
                 return (
                   <FreqCard key={i}>
                     <div>

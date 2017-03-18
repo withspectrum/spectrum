@@ -198,7 +198,6 @@ class StoryMaster extends Component {
                 }
                 metaLink={isEverything && freq && `/~${freq.slug}`}
                 metaText={isEverything && freq && `~${freq.name}`}
-                privateFreq={isEverything && freq && freq.settings.private}
                 person={{
                   photo: story.creator.photoURL,
                   name: story.creator.displayName,
@@ -307,13 +306,13 @@ class StoryMaster extends Component {
                   </JoinBtn>)}
 
             {role === 'owner' &&
-              <TipButton
+              <Icon
                 onClick={this.editFrequency}
+                icon="settings"
+                subtle
                 tipText="Frequency Settings"
                 tipLocation="right"
-              >
-                <Icon icon="settings" subtle />
-              </TipButton>}
+              />}
 
             {(isEverything || role) &&
               <Everything>

@@ -6,7 +6,6 @@ import {
   ImgBubble,
   BubbleGroup,
   Byline,
-  FromName,
   AdminBadge,
   EmojiBubble,
   Messages,
@@ -16,14 +15,14 @@ import {
 } from './style';
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
-import { getUsersFromMessageGroups } from '../../../helpers/stories';
+import { getUsersFromMessageGroups } from '../../../../helpers/stories';
 import {
   onlyContainsEmoji,
   sortAndGroupBubbles,
   convertTimestampToDate,
-} from '../../../helpers/utils';
-import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../helpers/regexps';
-import { openGallery } from '../../../actions/gallery';
+} from '../../../../helpers/utils';
+import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../../helpers/regexps';
+import { openGallery } from '../../../../actions/gallery';
 
 class ChatView extends Component {
   constructor() {
@@ -41,7 +40,7 @@ class ChatView extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    this.props.scrollToBottom();
+    this.props.contextualScrollToBottom();
 
     if (prevProps !== this.props && this.props.messages) {
       this.fetchUsers();
