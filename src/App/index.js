@@ -20,15 +20,15 @@ import { sortArrayByKey } from '../helpers/utils';
 
 class App extends Component {
   state = {
-    nuxFrequency: true, // determines if we should show the NuxJoinCard
+    showDiscoverCard: true, // determines if we should show the NuxJoinCard
     selectModalOpen: true,
   };
 
-  componentDidMount = () => {
-    let numUserFrequencies = Object.keys(this.props.user.frequencies).length;
-    // set in state so it doesn't disappear when the user's freq count updates
+  componentWillReceiveProps = nextProps => {
     this.setState({
-      nuxFrequency: numUserFrequencies > 10 ? false : true,
+      showDiscoverCard: Object.keys(nextProps.user.frequencies).length > 10
+        ? false
+        : true,
     });
   };
 
@@ -61,7 +61,7 @@ class App extends Component {
       });
     }
 
-    if (isEverything && this.state.nuxFrequency && user.uid) {
+    if (isEverything && this.state.showDiscoverCard && user.uid) {
       sortedStories.unshift(<NuxJoinCard />);
     }
 

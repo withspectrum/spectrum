@@ -79,6 +79,7 @@ export const getUserInfo = uid => {
       */
       localStorage.clear();
     }
+
     return snapshot.val();
   });
 };

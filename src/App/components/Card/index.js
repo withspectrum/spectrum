@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 // eslint-disable-next-line
 import {
   Wrapper,
@@ -16,10 +17,20 @@ import {
 } from './style';
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
+import ParticipantHeads from './ParticipantHeads';
 
 const canBeBool = (...types) => PropTypes.oneOfType([PropTypes.bool, ...types]);
 
 class Card extends Component {
+  constructor() {
+    super();
+
+    const sayings = ["chit chattin'", 'talking', 'hanging out', 'chatting'];
+
+    this.state = {
+      saying: sayings[Math.floor(Math.random() * sayings.length)],
+    };
+  }
   static propTypes = {
     isActive: PropTypes.bool,
     isNew: PropTypes.bool,
@@ -34,6 +45,7 @@ class Card extends Component {
     timestamp: PropTypes.number,
     title: PropTypes.string.isRequired,
     unreadMessages: PropTypes.number,
+    participants: PropTypes.object,
   };
 
   openGallery = e => {
@@ -54,7 +66,45 @@ class Card extends Component {
       timestamp,
       title,
       unreadMessages,
+      participants,
+      user,
     } = this.props;
+
+    let heads;
+
+    // if the story has at least 3 participants
+    if (participants && Object.keys(participants).length >= 3) {
+      if (
+        !Object.keys(participants).every(participant => user.list[participant])
+      ) {
+        heads = <ParticipantHeads loading />;
+      } else {
+        heads = (
+          <ParticipantHeads
+            saying={this.state.saying}
+            me={user.uid}
+            unread={unreadMessages}
+            participants={participants}
+            list={user.list}
+          />
+        );
+      }
+    } else {
+      heads = (
+        <MessageCount>
+          {messages > 0
+            ? <span>{`${messages} messages`}&nbsp;</span>
+            : isNew ? <span /> : <span>No messages yet&nbsp;</span>}
+          {unreadMessages > 0 &&
+            <span>
+              <UnreadCount>
+                {` (${unreadMessages} new!)`}&nbsp;
+              </UnreadCount>
+            </span>}
+          {isNew && <span><UnreadCount> New!</UnreadCount></span>}
+        </MessageCount>
+      );
+    }
 
     return (
       <Wrapper>
@@ -63,23 +113,12 @@ class Card extends Component {
             <StoryBody>
               <Title>{title}</Title>
 
-              <MessageCount>
-                {messages > 0
-                  ? <span>{`${messages} messages`}&nbsp;</span>
-                  : isNew ? <span /> : <span>No messages yet&nbsp;</span>}
-                {unreadMessages > 0 &&
-                  <span>
-                    <UnreadCount>
-                      {` (${unreadMessages} new!)`}&nbsp;
-                    </UnreadCount>
-                  </span>}
-                {isNew && <span><UnreadCount> New!</UnreadCount></span>}
-              </MessageCount>
+              {heads}
+
             </StoryBody>
             <StoryHeader>
               <UserMeta>
                 <Name>
-                  <Avatar src={person.photo} />
                   {person.name}&nbsp;·&nbsp;
                   {timeDifference(Date.now(), timestamp)}
                   {metaText &&
@@ -99,4 +138,11 @@ class Card extends Component {
     );
   }
 }
-export default Card;
+
+const mapStateToProps = state => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(Card);

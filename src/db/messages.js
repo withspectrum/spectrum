@@ -27,6 +27,10 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
         message,
       },
       [`stories/${storyId}/last_activity`]: firebase.database.ServerValue.TIMESTAMP,
+      [`stories/${storyId}/participants/${user.uid}`]: {
+        id: user.uid,
+        last_activity: firebase.database.ServerValue.TIMESTAMP,
+      },
       [`stories/${storyId}/messages/${key}`]: {
         id: key,
       },
