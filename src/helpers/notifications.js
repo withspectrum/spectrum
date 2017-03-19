@@ -44,10 +44,11 @@ export const groupNotifications = notifications => {
   const data = {};
   notifications.forEach(notification => {
     let id;
-    // Group new message and story notifications by story id and activity type
+    // Group new message, story and mention notifications by story id and activity type
     if (
       notification.activityType === ACTIVITY_TYPES.NEW_MESSAGE ||
-      notification.activityType === ACTIVITY_TYPES.NEW_STORY
+      notification.activityType === ACTIVITY_TYPES.NEW_STORY ||
+      notification.activityType === ACTIVITY_TYPES.MENTION
     ) {
       // This id will be removed in the last step
       id = `${notification.ids.story}/${notification.activityType}`;

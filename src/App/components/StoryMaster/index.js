@@ -152,7 +152,7 @@ class StoryMaster extends Component {
     const isEverything = activeFrequency === 'everything';
     const story = stories[index];
 
-    const notification = notifications.find(
+    const unreadMessagesNotification = notifications.find(
       notification =>
         notification.activityType === ACTIVITY_TYPES.NEW_MESSAGE &&
         notification.ids.story === story.id &&
@@ -164,7 +164,18 @@ class StoryMaster extends Component {
         notification.ids.story === story.id &&
         notification.read === false,
     );
-    const unreadMessages = notification ? notification.unread : 0;
+    const unreadMentionsNotification = notifications.find(
+      notification =>
+        notification.activityType === ACTIVITY_TYPES.MENTION &&
+        notification.ids.story === story.id &&
+        notification.read === false,
+    );
+    const unreadMentions = unreadMentionsNotification
+      ? unreadMentionsNotification.unread
+      : 0;
+    const unreadMessages = unreadMessagesNotification
+      ? unreadMessagesNotification.unread
+      : 0;
     const freq = isEverything &&
       getCurrentFrequency(story.frequencyId, frequencies);
     return (
@@ -196,6 +207,7 @@ class StoryMaster extends Component {
                 timestamp={story.timestamp}
                 title={story.content.title}
                 unreadMessages={unreadMessages}
+                unreadMentions={unreadMentions}
                 isNew={isNew}
               />}
         </div>

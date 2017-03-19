@@ -15,7 +15,6 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
   const db = firebase.database();
 
   const key = db.ref('messages').push().key;
-  let notified = [];
 
   return db
     .ref()
@@ -37,17 +36,16 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
     .then(snapshot => snapshot.val())
     .then(story => {
       return getMessages(storyId).then(messages => {
-        notified = messages
-          // - Everybody who's sent a message in that story before
-          .map(({ userId }) => userId)
-          // - Creator of story
-          .concat([story.creator.uid])
-          .filter(UNIQUE)
-          // Avoid notifying the sender
-          .filter(uid => uid !== user.uid);
         createNotifications({
           // Add notifications for
-          users: notified,
+          users: messages
+            // - Everybody who's sent a message in that story before
+            .map(({ userId }) => userId)
+            // - Creator of story
+            .concat([story.creator.uid])
+            .filter(UNIQUE)
+            // Avoid notifying the sender
+            .filter(uid => uid !== user.uid),
           activityType: ACTIVITY_TYPES.NEW_MESSAGE,
           ids: {
             frequency: frequency.id,
@@ -76,12 +74,10 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
         // Add notifications for mentions
         users: mentions
           // Get the uids of all mentions
-          .map(mention => mention.data.mention.get('uid'))
+          .map(mention => mention.data.mention.uid)
           .filter(UNIQUE)
           // Avoid notifying the sender
-          .filter(uid => uid !== user.uid)
-          // Avoid notifying people who've already been notified of this message
-          .filter(uid => notified.indexOf(uid) === -1),
+          .filter(uid => uid !== user.uid),
         activityType: ACTIVITY_TYPES.MENTION,
         ids: {
           frequency: frequency.id,

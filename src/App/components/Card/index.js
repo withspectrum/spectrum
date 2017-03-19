@@ -34,6 +34,7 @@ class Card extends Component {
     timestamp: PropTypes.number,
     title: PropTypes.string.isRequired,
     unreadMessages: PropTypes.number,
+    unreadMentions: PropTypes.number,
   };
 
   openGallery = e => {
@@ -54,7 +55,18 @@ class Card extends Component {
       timestamp,
       title,
       unreadMessages,
+      unreadMentions,
     } = this.props;
+
+    let unreadText;
+
+    if (unreadMentions > 0) {
+      unreadText = ` (${unreadMentions} ${unreadMentions > 1
+        ? 'mentions'
+        : 'mention'}!)`;
+    } else if (unreadMessages > 0) {
+      unreadText = ` (${unreadMessages} new!)`;
+    }
 
     return (
       <Wrapper>
@@ -67,10 +79,10 @@ class Card extends Component {
                 {messages > 0
                   ? <span>{`${messages} messages`}&nbsp;</span>
                   : isNew ? <span /> : <span>No messages yet&nbsp;</span>}
-                {unreadMessages > 0 &&
+                {unreadText &&
                   <span>
                     <UnreadCount>
-                      {` (${unreadMessages} new!)`}&nbsp;
+                      {unreadText}&nbsp;
                     </UnreadCount>
                   </span>}
                 {isNew && <span><UnreadCount> New!</UnreadCount></span>}

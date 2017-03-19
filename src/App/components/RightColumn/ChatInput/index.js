@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { fromJS } from 'immutable';
 import { sendMessage } from '../../../../actions/messages';
 import { uploadMedia } from '../../../../helpers/stories';
 import { isMobile } from '../../../../helpers/utils';
@@ -74,7 +75,11 @@ class ChatInput extends Component {
     e && e.preventDefault();
     let messageObj = {
       type: 'draft-js',
-      content: convertToRaw(this.state.editorState.getCurrentContent()),
+      // NOTE (@mxstbr): The fromJS().toJS() part is necessary as there are undefined values deep
+      // inside the immutable object otherwise, which Firebase spits an error out on
+      content: fromJS(
+        convertToRaw(this.state.editorState.getCurrentContent()),
+      ).toJS(),
     };
 
     this.dispatchMessage(messageObj);
