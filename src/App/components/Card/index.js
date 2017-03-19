@@ -68,7 +68,7 @@ class Card extends Component {
       unreadMessages,
       participants,
       user,
-      frequencies,
+      frequencies: { active },
     } = this.props;
 
     let heads;
@@ -77,7 +77,7 @@ class Card extends Component {
     if (
       participants &&
       Object.keys(participants).length >= 3 &&
-      frequencies.active !== 'everything'
+      active !== 'everything'
     ) {
       if (
         !Object.keys(participants).every(participant => user.list[participant])

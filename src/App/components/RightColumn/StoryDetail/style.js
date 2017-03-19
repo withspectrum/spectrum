@@ -36,7 +36,7 @@ export const Byline = styled(H4)`
 	color: ${({ theme }) => theme.text.alt};
 	margin-bottom: 8px;
 
-	> a {
+	a {
 		color: ${({ theme }) => theme.text.default};
 	}
 `;
