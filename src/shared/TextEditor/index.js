@@ -4,16 +4,12 @@ import Editor from 'draft-js-plugins-editor';
 import createMentionPlugin, {
   defaultSuggestionsFilter,
 } from 'draft-js-mention-plugin';
-import createSingleLinePlugin from 'draft-js-single-line-plugin';
 import { fromJS } from 'immutable';
 import { findUsersByUsername } from '../../db/users';
 import { Wrapper } from './style';
 
 const noop = () => {};
 
-const singleLinePlugin = createSingleLinePlugin({
-  stripEntities: false,
-});
 const mentionPlugin = createMentionPlugin();
 const { MentionSuggestions } = mentionPlugin;
 
@@ -70,10 +66,6 @@ class TextEditor extends React.Component {
       className,
       ...editorProps
     } = this.props;
-
-    if (singleLine) {
-      plugins.push(singleLinePlugin);
-    }
 
     return (
       <Wrapper className={className}>
