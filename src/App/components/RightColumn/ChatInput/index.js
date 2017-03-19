@@ -135,10 +135,13 @@ class ChatInput extends Component {
   };
 
   dispatchMessage = message => {
-    // the current user has sent a message, so force the parent to scroll to bottom
-    this.props.forceScrollToBottom();
-
     this.props.dispatch(sendMessage(message));
+
+    // the current user has sent a message, so force the parent to scroll to bottom
+    // on the next tick, after the message has rendered
+    setTimeout(() => {
+      this.props.forceScrollToBottom();
+    });
   };
 
   render() {

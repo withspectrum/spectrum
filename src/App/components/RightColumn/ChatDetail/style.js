@@ -23,6 +23,7 @@ export const Bubble = styled.p`
 	font-size: 14px;
 	max-width: 60%;
 	line-height: 20px;
+	opacity: ${props => props.persisted === false ? 0.5 : 1};
 
 	&:first-of-type:first-child { /* first message bubble, but could be preceded by an emoji */
 		margin-top: 0;
@@ -153,7 +154,8 @@ export const ImgBubble = styled.img`
 	margin-top: 2px;
 	max-width: 60%;
 	display: flex;
-	align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
+	align-self: ${props => props.me ? `flex-end;` : `flex-start;`};
+	opacity: ${props => props.persisted === false ? 0.5 : 1};
 
 	&:first-of-type {
 		margin-top: 0;
@@ -168,7 +170,8 @@ export const EmojiBubble = styled.div`
   margin-top: 12px;
   margin-bottom: 12px;
 	display: flex;
-	align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
+	align-self: ${props => props.me ? `flex-end;` : `flex-start;`};
+	opacity: ${props => props.persisted === false ? 0.5 : 1};
 
 	&:last-of-type {
 		margin-bottom: 0;
