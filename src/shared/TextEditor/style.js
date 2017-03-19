@@ -65,7 +65,7 @@ export const Wrapper = styled.div`
 }
 .draftJsMentionPlugin__mentionSuggestions__2DWjA {
   border: 1px solid #eee;
-  margin-top: 1.75em;
+  margin-top: -10em;
   position: absolute;
   min-width: 220px;
   max-width: 440px;

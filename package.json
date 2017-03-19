@@ -17,6 +17,7 @@
     "draft-js-plugins-editor": "^2.0.0-beta1",
     "draft-js-single-line-plugin": "textioHQ/draft-js-single-line-plugin",
     "emoji-regex": "^6.1.1",
+    "fuzzy": "^0.1.3",
     "highlight.js": "^9.10.0",
     "immutable": "^3.8.1",
     "lodash.includes": "^4.3.0",
