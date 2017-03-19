@@ -83,7 +83,10 @@ class ChatInput extends Component {
     };
 
     this.dispatchMessage(messageObj);
+    this.clearInput();
+  };
 
+  clearInput = () => {
     const editorState = EditorState.push(
       this.state.editorState,
       ContentState.createFromText(''),
@@ -143,6 +146,22 @@ class ChatInput extends Component {
     this.input.focus();
   };
 
+  handleReturn = e => {
+    // This is a workaround so we don't send a message when users just want to
+    // select a mention. Didn't find a nicer way to do that!
+    const mentionSuggestionPopup = document.querySelector(
+      '.draftJsMentionPlugin__mentionSuggestions__2DWjA',
+    );
+
+    if (!mentionSuggestionPopup) {
+      this.sendMessage();
+      return true;
+    }
+    // NOTE (@mxstbr): Newest version of draft-js uses 'handled' and 'not-handled' instead of
+    // true/false. Will need to change when we upgrade.
+    return false;
+  };
+
   render() {
     let mobile = isMobile();
 
@@ -181,6 +200,7 @@ class ChatInput extends Component {
               editorRef={elem => this.input = elem}
               editorState={this.state.editorState}
               onChange={this.editMessage}
+              handleReturn={this.handleReturn}
             />
             <Button onClick={this.sendMessage}>
               <Icon icon="send" reverse static />
