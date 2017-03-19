@@ -94,28 +94,28 @@ class RightColumn extends Component {
     }
 
     if (story && !composer.isOpen) {
+      const title = this.props.title ||
+        `${story.content.title} | ~${currentFrequency
+          ? currentFrequency.name
+          : active}`;
+      const description = this.props.description ||
+        story.content.description.substr(0, 150);
       return (
         <ViewContainer>
           <Helmet
-            title={
-              `${story.content.title} | ~${currentFrequency
-                ? currentFrequency.name
-                : active}`
-            }
+            title={title}
             meta={[
               {
                 name: 'description',
-                content: story.content.description.substr(0, 150),
+                content: description,
               },
               {
                 name: 'og:title',
-                content: `${story.content.title} | ~${currentFrequency
-                  ? currentFrequency.name
-                  : active}`,
+                content: title,
               },
               {
                 name: 'og:description',
-                content: story.content.description.substr(0, 150),
+                content: description,
               },
               {
                 name: 'og:url',
@@ -125,13 +125,11 @@ class RightColumn extends Component {
               },
               {
                 name: 'twitter:title',
-                content: `${story.content.title} | ~${currentFrequency
-                  ? currentFrequency.name
-                  : active}`,
+                content: title,
               },
               {
                 name: 'twitter:description',
-                content: story.content.description.substr(0, 150),
+                content: description,
               },
             ]}
           />
@@ -183,20 +181,21 @@ class RightColumn extends Component {
         </ViewContainer>
       );
     } else if (composer.isOpen) {
+      const title = this.props.title ||
+        `~${currentFrequency.name || active} - ${currentFrequency.description}`;
+      const description = this.props.description ||
+        currentFrequency.description;
       return (
         <ViewContainer>
           <Helmet
-            title={
-              `~${currentFrequency.name ||
-                active} - ${currentFrequency.description}`
-            }
+            title={title}
             meta={[
-              { name: 'description', content: currentFrequency.description },
+              { name: 'description', content: description },
               {
                 name: 'og:title',
-                content: `~${currentFrequency.name || active}`,
+                content: title,
               },
-              { name: 'og:description', content: currentFrequency.description },
+              { name: 'og:description', content: description },
               {
                 name: 'og:url',
                 content: `https://spectrum.chat/~${currentFrequency.slug ||
@@ -204,11 +203,11 @@ class RightColumn extends Component {
               },
               {
                 name: 'twitter:title',
-                content: `~${currentFrequency.name || active}`,
+                content: title,
               },
               {
                 name: 'twitter:description',
-                content: currentFrequency.description,
+                content: description,
               },
             ]}
           />
@@ -216,23 +215,24 @@ class RightColumn extends Component {
         </ViewContainer>
       );
     } else {
+      const title = this.props.title ||
+        `~${currentFrequency.name || active} - ${currentFrequency.description}`;
+      const description = this.props.description ||
+        currentFrequency.description;
       return (
         <ViewContainer>
           {currentFrequency &&
             <Helmet
-              title={
-                `~${currentFrequency.name ||
-                  active} - ${currentFrequency.description}`
-              }
+              title={title}
               meta={[
-                { name: 'description', content: currentFrequency.description },
+                { name: 'description', content: description },
                 {
                   name: 'og:title',
-                  content: `~${currentFrequency.name || active}`,
+                  content: title,
                 },
                 {
                   name: 'og:description',
-                  content: currentFrequency.description,
+                  content: description,
                 },
                 {
                   name: 'og:url',
@@ -241,11 +241,11 @@ class RightColumn extends Component {
                 },
                 {
                   name: 'twitter:title',
-                  content: `~${currentFrequency.name || active}`,
+                  content: title,
                 },
                 {
                   name: 'twitter:description',
-                  content: currentFrequency.description,
+                  content: description,
                 },
               ]}
             />}

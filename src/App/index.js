@@ -16,7 +16,7 @@ import GalleryRoot from '../shared/gallery/GalleryRoot';
 import NuxJoinCard from './components/StoryMaster/NuxJoinCard';
 import LoginCard from './components/StoryMaster/LoginCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
-import { sortArrayByKey } from '../helpers/utils';
+import { sortArrayByKey, getParameterByName } from '../helpers/utils';
 
 class App extends Component {
   state = {
@@ -72,6 +72,8 @@ class App extends Component {
       sortedStories.unshift(<LoginCard />);
     }
 
+    console.log(this.props.location);
+
     return (
       <Body>
         <ModalRoot />
@@ -109,7 +111,10 @@ class App extends Component {
         </StoryMasterContainer>
 
         <RightColumnContainer active={stories.active} viewing={ui.viewing}>
-          <RightColumn />
+          <RightColumn
+            title={getParameterByName('t', this.props.location.search)}
+            description={getParameterByName('d', this.props.location.search)}
+          />
         </RightColumnContainer>
       </Body>
     );
