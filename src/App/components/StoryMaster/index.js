@@ -69,9 +69,18 @@ class StoryMaster extends Component {
       arraysEqualById(this.props.stories, nextProps.stories) &&
       nextProps.activeStory === this.props.activeStory &&
       nextProps.activeFrequency === this.props.activeFrequency &&
-      arraysEqualById(this.props.notifications, nextProps.notifications)
+      arraysEqualById(this.props.notifications, nextProps.notifications) &&
+      nextProps.stories.every(
+        (story, index) =>
+          !story.participants ||
+          arraysEqualById(
+            story.participants,
+            this.props.stories[index].participants,
+          ),
+      )
     )
       return;
+
     this.setState({
       cache: new CellMeasurerCache({
         fixedWidth: true,
@@ -204,11 +213,12 @@ class StoryMaster extends Component {
                   photo: story.creator.photoURL,
                   name: story.creator.displayName,
                 }}
-                timestamp={story.timestamp}
+                timestamp={story.last_activity || story.timestamp}
                 title={story.content.title}
                 unreadMessages={unreadMessages}
                 unreadMentions={unreadMentions}
                 isNew={isNew}
+                participants={story.participants}
               />}
         </div>
       </CellMeasurer>
@@ -313,7 +323,7 @@ class StoryMaster extends Component {
                 icon="settings"
                 subtle
                 tipText="Frequency Settings"
-                tipLocation="right"
+                tipLocation="top-right"
               />}
 
             {(isEverything || role) &&
@@ -329,7 +339,7 @@ class StoryMaster extends Component {
                 <TipButton
                   onClick={this.toggleComposer}
                   tipText="New Story"
-                  tipLocation="left"
+                  tipLocation="top-left"
                 >
                   {composer.isOpen
                     ? <Icon icon="write-cancel" color="warn.alt" />

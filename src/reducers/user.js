@@ -49,6 +49,7 @@ export default function root(state = initialState, action) {
           return result;
         }, {}),
       };
+    case 'ADD_STORIES':
     case 'ADD_MESSAGES':
       return {
         ...state,

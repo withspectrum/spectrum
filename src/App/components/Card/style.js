@@ -59,7 +59,7 @@ export const StoryBody = styled.div`
 	word-wrap: break-word;
 	margin-bottom: 8px;
 	padding: 16px;
-	padding-bottom: 8px;
+	padding-bottom: 4px;
 `;
 
 export const Avatar = styled.img`

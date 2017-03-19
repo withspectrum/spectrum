@@ -17,7 +17,6 @@ import {
 } from './style';
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
-import { getUsersFromMessageGroups } from '../../../../helpers/stories';
 import {
   onlyContainsEmoji,
   sortAndGroupBubbles,
@@ -27,26 +26,8 @@ import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../../helpers/regexps';
 import { openGallery } from '../../../../actions/gallery';
 
 class ChatView extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      users: [],
-    };
-  }
-
-  componentDidMount() {
-    if (this.props.messages) {
-      this.fetchUsers();
-    }
-  }
-
   componentDidUpdate(prevProps, prevState) {
     this.props.contextualScrollToBottom();
-
-    if (prevProps !== this.props && this.props.messages) {
-      this.fetchUsers();
-    }
   }
 
   openGallery = e => {
@@ -68,31 +49,15 @@ class ChatView extends Component {
     return linkedMessage.replace(FREQUENCY_ANCHORS, '>$1</a>');
   }
 
-  fetchUsers = () => {
-    getUsersFromMessageGroups(this.props.messages).then(data => {
-      this.setUsersData(data);
-    });
-  };
-
-  setUsersData = data => {
-    this.setState({
-      users: data,
-    });
-  };
-
   render() {
-    let { messages } = this.props;
+    let { messages, user: { list } } = this.props;
     if (!messages) return <span />;
-
-    const { users } = this.state;
 
     return (
       <ChatContainer>
         {messages.map((group, i) => {
           const itsaMe = group[0].userId === this.props.user.uid;
-          const user = !itsaMe &&
-            users &&
-            users.find(user => user.uid === group[0].userId);
+          const user = !itsaMe && list[group[0].userId];
           const admins = [
             'VToKcde16dREgDkXcDl3hhcrFN33',
             'gVk5mYwccUOEKiN5vtOouqroGKo1',
@@ -112,6 +77,7 @@ class ChatView extends Component {
               </Timestamp>
             );
           }
+
           return (
             <BubbleGroup key={i} me={itsaMe}>
               {user &&
@@ -121,7 +87,7 @@ class ChatView extends Component {
                 </HiddenLabel>}
               <Messages>
                 <Byline op={isStoryCreator}>
-                  {user && user.name}
+                  {user && user.displayName}
                   {!itsaMe &&
                     isAdmin &&
                     <AdminBadge op={isStoryCreator}>Admin</AdminBadge>}
