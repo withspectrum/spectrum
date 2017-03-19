@@ -10,11 +10,6 @@ import { Wrapper } from './style';
 
 const noop = () => {};
 
-const mentionPlugin = createMentionPlugin();
-const { MentionSuggestions } = mentionPlugin;
-
-let plugins = [mentionPlugin];
-
 class TextEditor extends React.Component {
   static propTypes = {
     editorState: React.PropTypes.any.isRequired,
@@ -27,7 +22,16 @@ class TextEditor extends React.Component {
   state = {
     suggestions: fromJS([]),
     editorState: this.props.editorState || EditorState.createEmpty(),
+    plugins: [
+      // This needs to be the first thing in this array for the componentWillMount to work!!
+      createMentionPlugin(),
+    ],
   };
+
+  componentWillMount() {
+    const { MentionSuggestions } = this.state.plugins[0];
+    this.MentionSuggestions = MentionSuggestions;
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
     return !nextState.suggestions.equals(this.state.suggestions) ||
@@ -67,6 +71,8 @@ class TextEditor extends React.Component {
       ...editorProps
     } = this.props;
 
+    const MentionSuggestions = this.MentionSuggestions;
+
     return (
       <Wrapper className={className}>
         <Editor
@@ -74,13 +80,14 @@ class TextEditor extends React.Component {
           ref={this.props.editorRef}
           editorState={this.props.editorState || this.state.editorState}
           onChange={this.props.onChange || this.onChange}
-          plugins={this.props.readOnly ? [] : plugins}
+          plugins={this.state.plugins}
           readOnly={this.props.readOnly || false}
         />
-        <MentionSuggestions
-          onSearchChange={this.onSearchChange}
-          suggestions={this.state.suggestions}
-        />
+        {!this.props.readOnly &&
+          <MentionSuggestions
+            onSearchChange={this.onSearchChange}
+            suggestions={this.state.suggestions}
+          />}
       </Wrapper>
     );
   }
