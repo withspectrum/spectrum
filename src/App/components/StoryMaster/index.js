@@ -55,6 +55,7 @@ function arraysEqualById(a, b) {
 
 class StoryMaster extends Component {
   state = {
+    jumpToTop: false,
     cache: new CellMeasurerCache({
       fixedWidth: true,
       minHeight: MIN_STORY_CARD_HEIGHT,
@@ -82,12 +83,22 @@ class StoryMaster extends Component {
       return;
 
     this.setState({
+      jumpToTop: true,
       cache: new CellMeasurerCache({
         fixedWidth: true,
         minHeight: MIN_STORY_CARD_HEIGHT,
         keyMapper: index => nextProps.stories[index].id,
       }),
     });
+  };
+
+  componentDidUpdate = () => {
+    if (this.state.jumpToTop) {
+      this.jumpToTop();
+      this.setState({
+        jumpToTop: false,
+      });
+    }
   };
 
   loadStoriesAgain = () => {
@@ -214,7 +225,9 @@ class StoryMaster extends Component {
   };
 
   jumpToTop = () => {
-    this.storyList.scrollTop = 0;
+    if (this.storyList) {
+      this.storyList.scrollTop = 0;
+    }
   };
 
   render() {
