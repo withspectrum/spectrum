@@ -116,10 +116,7 @@
           ".validate": "newData.hasChildren(['type', 'content'])",
           // Make sure the type is text
           "type": {
-            ".validate": "newData.val() === 'text' || newData.val() === 'media'"
-          },
-          "content": {
-            ".validate": "newData.exists()"
+            ".validate": "newData.val() === 'text' || newData.val() === 'media' || newData.val() === 'draft-js'"
           }
         }
       }
