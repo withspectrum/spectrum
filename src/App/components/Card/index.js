@@ -68,12 +68,17 @@ class Card extends Component {
       unreadMessages,
       participants,
       user,
+      frequencies: { active },
     } = this.props;
 
     let heads;
 
     // if the story has at least 3 participants
-    if (participants && Object.keys(participants).length >= 3) {
+    if (
+      participants &&
+      Object.keys(participants).length >= 3 &&
+      active !== 'everything'
+    ) {
       if (
         !Object.keys(participants).every(participant => user.list[participant])
       ) {
@@ -142,6 +147,7 @@ class Card extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
+    frequencies: state.frequencies,
   };
 };
 
