@@ -45,6 +45,7 @@ class Card extends Component {
     timestamp: PropTypes.number,
     title: PropTypes.string.isRequired,
     unreadMessages: PropTypes.number,
+    unreadMentions: PropTypes.number,
     participants: PropTypes.object,
   };
 
@@ -66,10 +67,21 @@ class Card extends Component {
       timestamp,
       title,
       unreadMessages,
+      unreadMentions,
       participants,
       user,
       frequencies: { active },
     } = this.props;
+
+    let unreadText;
+
+    if (unreadMentions > 0) {
+      unreadText = ` (${unreadMentions} ${unreadMentions > 1
+        ? 'mentions'
+        : 'mention'}!)`;
+    } else if (unreadMessages > 0) {
+      unreadText = ` (${unreadMessages} new!)`;
+    }
 
     let heads;
 
@@ -82,7 +94,17 @@ class Card extends Component {
       if (
         !Object.keys(participants).every(participant => user.list[participant])
       ) {
-        heads = <ParticipantHeads loading />;
+        heads = (
+          <ParticipantHeads loading>
+            {unreadText &&
+              <span>
+                <UnreadCount>
+                  {unreadText}&nbsp;
+                </UnreadCount>
+              </span>}
+            {isNew && <span><UnreadCount> New!</UnreadCount></span>}
+          </ParticipantHeads>
+        );
       } else {
         heads = (
           <ParticipantHeads
@@ -91,7 +113,15 @@ class Card extends Component {
             unread={unreadMessages}
             participants={participants}
             list={user.list}
-          />
+          >
+            {unreadText &&
+              <span>
+                <UnreadCount>
+                  {unreadText}&nbsp;
+                </UnreadCount>
+              </span>}
+            {isNew && <span><UnreadCount> New!</UnreadCount></span>}
+          </ParticipantHeads>
         );
       }
     } else {
@@ -100,10 +130,10 @@ class Card extends Component {
           {messages > 0
             ? <span>{`${messages} messages`}&nbsp;</span>
             : isNew ? <span /> : <span>No messages yet&nbsp;</span>}
-          {unreadMessages > 0 &&
+          {unreadText &&
             <span>
               <UnreadCount>
-                {` (${unreadMessages} new!)`}&nbsp;
+                {unreadText}&nbsp;
               </UnreadCount>
             </span>}
           {isNew && <span><UnreadCount> New!</UnreadCount></span>}
@@ -117,9 +147,7 @@ class Card extends Component {
           <LinkWrapper selected={isActive}>
             <StoryBody>
               <Title>{title}</Title>
-
               {heads}
-
             </StoryBody>
             <StoryHeader>
               <UserMeta>

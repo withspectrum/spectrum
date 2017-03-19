@@ -11,6 +11,7 @@ class ParticipantHeads extends Component {
           <HeadWrapper>
             <Head src={`${process.env.PUBLIC_URL}/img/head_placeholder.png`} />
           </HeadWrapper>
+          {this.props.children && <Label>{this.props.children}</Label>}
         </Container>
       );
     }
@@ -45,7 +46,7 @@ class ParticipantHeads extends Component {
           {arr.length - 1}
           {' '}others are{' '}
           {saying}
-          {unread > 0 && <UnreadCount>{` (${unread} new!)`}</UnreadCount>}
+          {this.props.children}
         </Label>
       </Container>
     );

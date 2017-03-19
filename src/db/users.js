@@ -1,4 +1,6 @@
 import * as firebase from 'firebase';
+import { filter as fuzzysearch } from 'fuzzy';
+import { hashToArray } from '../helpers/utils';
 
 /**
  * Create a new user
@@ -128,4 +130,30 @@ export const setUsernameAndEmail = ({ uid, username, email }) => {
     .update(updates)
     .then(() => db.ref(`users/${uid}`).once('value'))
     .then(snapshot => snapshot.val());
+};
+
+const cache = {};
+export const findUsersByUsername = username => {
+  if (!username) return Promise.resolve([]);
+  // Cache results so we don't stress the db unnecessarily
+  if (cache[username]) return Promise.resolve(cache[username]);
+  const db = firebase.database();
+
+  return db
+    .ref('users')
+    .orderByChild('username')
+    .once('value')
+    .then(snapshot => snapshot.val())
+    .then(users => {
+      const filtered = fuzzysearch(username, hashToArray(users), {
+        extract: user => user.username || '',
+      });
+      const formatted = filtered
+        // Sort results by descending score (maybe the lib already does this?)
+        .sort((a, b) => b.score - a.score)
+        // Return the original data, rather than fuzzy's wrapping
+        .map(user => user.original);
+      cache[username] = formatted;
+      return formatted;
+    });
 };

@@ -2,6 +2,7 @@ import * as firebase from 'firebase';
 import { getStory } from './stories';
 import { createNotifications } from './notifications';
 import { ACTIVITY_TYPES } from './types';
+import { hashToArray } from '../helpers/utils';
 
 const UNIQUE = (v, i, a) => a.indexOf(v) === i;
 
@@ -24,7 +25,7 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
         frequencyId: frequency.id,
         timestamp: firebase.database.ServerValue.TIMESTAMP,
         userId: user.uid,
-        message,
+        message: message,
       },
       [`stories/${storyId}/last_activity`]: firebase.database.ServerValue.TIMESTAMP,
       [`stories/${storyId}/participants/${user.uid}`]: {
@@ -63,6 +64,35 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
             ? message.content.substr(0, 140)
             : '',
         });
+      });
+    })
+    .then(() => {
+      if (message.type !== 'draft-js') return Promise.resolve();
+      // Get all mentions
+      const mentions = hashToArray(message.content.entityMap).filter(entity => {
+        if (entity.type === 'mention') return true;
+        return false;
+      });
+
+      return createNotifications({
+        // Add notifications for mentions
+        users: mentions
+          // Get the uids of all mentions
+          .map(mention => mention.data.mention.uid)
+          .filter(UNIQUE)
+          // Avoid notifying the sender
+          .filter(uid => uid !== user.uid),
+        activityType: ACTIVITY_TYPES.MENTION,
+        ids: {
+          frequency: frequency.id,
+          story: storyId,
+        },
+        sender: {
+          uid: user.uid,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        },
+        content: message.type === 'text' ? message.content.substr(0, 140) : '',
       });
     })
     .then(() => db.ref(`messages/${key}`).once('value'))

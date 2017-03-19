@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { fromJS } from 'immutable';
 import { sendMessage } from '../../../../actions/messages';
 import { uploadMedia } from '../../../../helpers/stories';
 import { isMobile } from '../../../../helpers/utils';
 import EmojiPicker from '../../../../shared/EmojiPicker';
 import Icon from '../../../../shared/Icons';
+import { EditorState, Modifier, convertToRaw, ContentState } from 'draft-js';
 import { connect } from 'react-redux';
 import { track } from '../../../../EventTracker';
 import {
   Input,
+  InputWrapper,
   Form,
   Wrapper,
   Button,
@@ -23,25 +26,16 @@ class ChatInput extends Component {
   constructor() {
     super();
     this.state = {
-      message: '',
+      editorState: EditorState.createEmpty(),
       file: '',
       emojiPickerOpen: false,
       mediaUploading: false,
     };
   }
 
-  handleKeyPress = e => {
-    if (e.keyCode === 13) {
-      //=> make the enter key send a message, not create a new line in the next autoexpanding textarea
-      e.preventDefault(); //=> prevent linebreak
-      this.sendMessage(e); //=> send the message instead
-    }
-  };
-
-  updateMessageState = e => {
+  editMessage = editorState => {
     this.setState({
-      // Don't let newlines be entered into messages
-      message: e.target.value.replace(NEWLINES, ''),
+      editorState,
     });
   };
 
@@ -60,39 +54,46 @@ class ChatInput extends Component {
   appendEmoji = emoji => {
     track('emojiPicker', 'sent', null);
 
-    let textInput = ReactDOM.findDOMNode(this.refs.textInput);
-    let value = textInput.value;
-    let startPosition = textInput.selectionStart;
-
-    // insert the emoji at the cursor position of the input
-    value = [
-      value.slice(0, startPosition),
-      emoji,
-      value.slice(startPosition),
-    ].join('');
-
-    // refocus the input
-    textInput.focus();
-    // close the emoji picker
-    this.setState({
-      emojiPickerOpen: false,
-      message: value,
+    this.focusInput();
+    this.setState(({ editorState }) => {
+      // Append emoji to text
+      const selection = editorState.getSelection();
+      const contentState = editorState.getCurrentContent();
+      const newContent = Modifier.insertText(contentState, selection, emoji);
+      return {
+        emojiPickerOpen: false,
+        editorState: EditorState.push(
+          editorState,
+          newContent,
+          'insert-fragment',
+        ),
+      };
     });
   };
 
   sendMessage = e => {
-    e.preventDefault();
-    let messageText = this.state.message.trim();
-    if (messageText === '') return;
+    e && e.preventDefault();
     let messageObj = {
-      type: 'text',
-      content: messageText,
+      type: 'draft-js',
+      // NOTE (@mxstbr): The fromJS().toJS() part is necessary as there are undefined values deep
+      // inside the immutable object otherwise, which Firebase spits an error out on
+      content: fromJS(
+        convertToRaw(this.state.editorState.getCurrentContent()),
+      ).toJS(),
     };
 
     this.dispatchMessage(messageObj);
+    this.clearInput();
+  };
+
+  clearInput = () => {
+    const editorState = EditorState.push(
+      this.state.editorState,
+      ContentState.createFromText(''),
+    );
 
     this.setState({
-      message: '',
+      editorState,
     });
   };
 
@@ -141,6 +142,26 @@ class ChatInput extends Component {
     this.props.dispatch(sendMessage(message));
   };
 
+  focusInput = () => {
+    this.input.focus();
+  };
+
+  handleReturn = e => {
+    // This is a workaround so we don't send a message when users just want to
+    // select a mention. Didn't find a nicer way to do that!
+    const mentionSuggestionPopup = document.querySelector(
+      '.draftJsMentionPlugin__mentionSuggestions__2DWjA',
+    );
+
+    if (!mentionSuggestionPopup) {
+      this.sendMessage();
+      return true;
+    }
+    // NOTE (@mxstbr): Newest version of draft-js uses 'handled' and 'not-handled' instead of
+    // true/false. Will need to change when we upgrade.
+    return false;
+  };
+
   render() {
     let mobile = isMobile();
 
@@ -172,21 +193,19 @@ class ChatInput extends Component {
           😀
         </EmojiToggle>
         {this.props.user.uid &&
-          <Form onSubmit={this.sendMessage}>
+          <InputWrapper onClick={this.focusInput}>
             <Input
-              ref="textInput"
+              singleLine
               placeholder="Your message here..."
-              value={this.state.message}
-              onChange={this.updateMessageState}
-              onKeyUp={this.handleKeyPress}
-              autoFocus={
-                !mobile /* autofocus on desktop, don’t autofocus on mobile */
-              }
+              editorRef={elem => this.input = elem}
+              editorState={this.state.editorState}
+              onChange={this.editMessage}
+              handleReturn={this.handleReturn}
             />
             <Button onClick={this.sendMessage}>
               <Icon icon="send" reverse static />
             </Button>
-          </Form>}
+          </InputWrapper>}
       </Wrapper>
     );
   }

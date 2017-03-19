@@ -78,9 +78,7 @@ const render = () => {
     <Provider store={store}>
       <Router history={history}>
         <ThemeProvider theme={theme}>
-          <Body>
-            <Route exact path="/(\~?):frequency?/:story?" component={Root} />
-          </Body>
+          <Route exact path="/(\~?):frequency?/:story?" component={Root} />
         </ThemeProvider>
       </Router>
     </Provider>,
