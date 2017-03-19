@@ -9,9 +9,11 @@ import {
   stopListening,
   getStory,
 } from '../db/stories';
+import { getUserInfo } from '../db/users';
 import { getMessages, getMessage } from '../db/messages';
 import { getCurrentFrequency, linkFreqsInMd } from '../helpers/frequencies';
-import { markMessagesRead } from '../db/notifications';
+import { arrayToHash } from '../helpers/utils';
+import { markStoryRead } from '../db/notifications';
 
 /**
  * Publish a drafted story
@@ -97,18 +99,31 @@ export const setActiveStory = story => (dispatch, getState) => {
   promise
     .then(getMessages(story))
     .then(messages => {
-      if (messages) {
-        dispatch({ type: 'ADD_MESSAGES', messages });
-      } else {
+      if (!messages) {
         dispatch({ type: 'STOP_LOADING' });
+      } else {
+        return Promise.all([
+          messages,
+          // Get all the users that sent messages
+          Promise.all(messages.map(message => getUserInfo(message.userId))),
+        ]);
       }
+    })
+    .then(data => {
+      if (!data) return;
+      const [messages, users] = data;
+      dispatch({
+        type: 'ADD_MESSAGES',
+        messages,
+        users: arrayToHash(users, 'uid'),
+      });
     })
     .catch(err => {
       console.log(err);
       dispatch({ type: 'STOP_LOADING' });
     });
 
-  markMessagesRead(story, getState().user.uid);
+  markStoryRead(story, getState().user.uid);
 
   if (listener) stopListening(listener);
   listener = listenToStory(story, story => {
@@ -124,12 +139,27 @@ export const setActiveStory = story => (dispatch, getState) => {
     // Get all messages that aren't in the store yet
     const messages = Object.keys(story.messages)
       .filter(message => existingMessages.indexOf(message));
-    Promise.all(messages.map(message => getMessage(message))).then(messages => {
-      dispatch({
-        type: 'ADD_MESSAGES',
-        messages,
+
+    Promise.all(messages.map(message => getMessage(message)))
+      .then(messages => {
+        if (!messages) {
+          return;
+        }
+        return Promise.all([
+          messages,
+          // Get all the users that sent messages
+          Promise.all(messages.map(message => getUserInfo(message.userId))),
+        ]);
+      })
+      .then(data => {
+        if (!data) return;
+        const [messages, users] = data;
+        dispatch({
+          type: 'ADD_MESSAGES',
+          messages,
+          users: arrayToHash(users, 'uid'),
+        });
       });
-    });
   });
 };
 

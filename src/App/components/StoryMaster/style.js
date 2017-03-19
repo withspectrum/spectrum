@@ -3,44 +3,15 @@ import { Shadow, Gradient, Tooltip, H2, H4, P } from '../../../shared/Globals';
 
 export const Column = styled.div`
 	display: flex;
-	flex: 0 0 420px;
 	flex-direction: column;
-	border-right: 1px solid ${({ theme }) => theme.border.default};
 	background-color: ${({ theme }) => theme.bg.wash};
 	height: 100%;
-	overflow: visible;
-	transition: transform 0.2s ease-in-out;
-
-	@media (max-width: 768px) {
-    width: 100%;
-    flex: 1 0 auto
-    transition: transform 0.2s ease-in-out;
-    transform: translateX(${props => props.navVisible ? '0px' : '-359px'});
-  }
+	width: 100%;
 `;
 
-export const ScrollBody = styled.div`
-	flex: 1 1 auto;
-	display: flex;
+export const StoryList = styled.div`
 	overflow-y: scroll;
-	-webkit-overflow-scrolling: touch;
-	overflow-x: hidden;
-	flex-direction: column;
-	align-items: stretch;
-	background-color: ${({ theme }) => theme.bg.wash};
-	position: relative;
-	padding-bottom: 80px;
-
-	> img {
-		margin: 32px auto;
-		transition: all 0.2s ease-out;
-
-		&:hover {
-			transform: scale(1.15);
-			transition: all 0.2s ease-out;
-		}
-	}
-	`;
+`;
 
 export const Overlay = styled.div`
 	position: fixed;
@@ -54,7 +25,7 @@ export const Overlay = styled.div`
 	z-index: 2;
 	pointer-events: none;
 	width: 100vw;
-	height: 100vh;
+	height: 100%;
 `;
 
 export const Header = styled.div`
@@ -100,13 +71,14 @@ export const BgText = styled.p`
 export const JoinBtn = styled.button`
   font-size: 12px;
   font-weight: 800;
-  flex: 0 0 80px;
+  flex: 0 0 auto;
   height: 28px;
   line-height: 26px;
   margin-left: 4px;
   text-align: center;
   vertical-align: middle;
   border-radius: 8px;
+	padding: 0 16px;
   border: 2px solid ${props =>
   props.member ? `${props.theme.inactive}` : 'transparent'};
   color: ${props =>
@@ -142,7 +114,7 @@ export const LoginWrapper = styled.div`
 	padding: 16px;
 	border-radius: 2px;
 	background-color: ${({ theme }) => theme.bg.default};
-	margin: 8px;
+	margin: 8px 8px 0 8px;
 	box-shadow: ${Shadow.low};
 	transition: box-shadow 0.2s ease-in;
 	width: calc(100% - 16px);
@@ -188,7 +160,7 @@ export const LoginButton = styled.button`
 
 export const TipButton = styled.button`
 	background-color: transparent;
-	${props => props.tipText ? Tooltip(props) : console.log('No Tooltip')};
+	${props => props.tipText ? Tooltip(props) : ''};
 `;
 
 export const MenuButton = styled.div`
@@ -269,4 +241,34 @@ export const LoadingBlock = styled.div`
 	width: 400px;
 	justify-content: center;
 	align-items: center;
+`;
+
+export const NewIndicator = styled.button`
+	background: ${({ theme }) => Gradient(theme.warn.alt, theme.warn.default)};
+	border: none;
+	font-size: 1em;
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 5px;
+	padding: 0.25em 1em;
+	padding-left: 0.25em;
+	padding-left: 0.25em;
+	font-weight: 600;
+	left: 50%;
+	transform: translateX(-50%) scale(0.9);
+	position: absolute;
+	margin-top: 0.75em;
+	box-shadow: ${Shadow.mid};
+	transition: box-shadow 0.2s ease-in;
+	cursor: pointer;
+
+	> svg {
+		margin-right: 0.4em;
+	}
+
+	&:hover {
+		box-shadow: ${Shadow.high};
+	}
 `;

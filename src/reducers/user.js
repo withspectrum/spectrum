@@ -5,6 +5,7 @@ const initialState = {
   photoURL: null,
   frequencies: {},
   loaded: false,
+  list: {},
 };
 
 export default function root(state = initialState, action) {
@@ -20,6 +21,8 @@ export default function root(state = initialState, action) {
         photoURL: action.user.photoURL,
         displayName: action.user.displayName,
         frequencies: action.user.frequencies,
+        email: action.user.email,
+        username: action.user.username,
         loaded: true,
       });
     case 'USER_NOT_AUTHENTICATED':
@@ -45,6 +48,15 @@ export default function root(state = initialState, action) {
           if (key !== action.id) result[key] = state.frequencies[key];
           return result;
         }, {}),
+      };
+    case 'ADD_STORIES':
+    case 'ADD_MESSAGES':
+      return {
+        ...state,
+        list: {
+          ...state.list,
+          ...action.users,
+        },
       };
     default:
       return state;

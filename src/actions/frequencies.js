@@ -1,5 +1,6 @@
 import history from '../helpers/history';
 import { getCurrentFrequency } from '../helpers/frequencies';
+import { flattenArray, arrayToHash } from '../helpers/utils';
 import { track } from '../EventTracker';
 import {
   saveNewFrequency,
@@ -10,15 +11,17 @@ import {
   getFrequency,
 } from '../db/frequencies';
 import { getStories, getAllStories } from '../db/stories';
-import { markStoriesRead } from '../db/notifications';
+import { getUserInfo } from '../db/users';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
+  const lowerCaseFrequency = frequency.toLowerCase();
+
   dispatch({
     type: 'SET_ACTIVE_FREQUENCY',
-    frequency,
+    frequency: lowerCaseFrequency,
   });
   // Notifications
-  if (frequency === 'notifications') {
+  if (lowerCaseFrequency === 'notifications') {
     track('notifications', 'viewed', null);
     return;
   }
@@ -26,7 +29,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
   const { user: { uid } } = getState();
   // Everything
-  if (frequency === 'everything') {
+  if (lowerCaseFrequency === 'everything') {
     // If there's no UID yet we might need to show the homepage, so don't do anything
     if (!uid) return;
     track('everything', 'viewed', null);
@@ -46,7 +49,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   }
   track('frequency', 'viewed', null);
   // Get the frequency
-  getFrequency({ slug: frequency })
+  getFrequency({ slug: lowerCaseFrequency })
     .then(data => {
       dispatch({
         type: 'ADD_FREQUENCY',
@@ -59,13 +62,38 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
       // If it's a private frequency, don't even get any stories
       if (data && data.settings.private && (!freqs || !freqs[data.id]))
         return [];
-      markStoriesRead(data.id, uid);
-      return getStories({ frequencySlug: frequency });
+      return getStories({ frequencySlug: lowerCaseFrequency });
     })
     .then(stories => {
+      if (!stories) {
+        dispatch({ type: 'STOP_LOADING' });
+      } else {
+        return Promise.all([
+          stories,
+          // Get all the particpants on the story
+          Promise.all(
+            flattenArray(
+              stories
+                .map(
+                  story =>
+                    !story.participants
+                      ? undefined
+                      : Object.keys(story.participants)
+                          .map(participant => getUserInfo(participant)),
+                )
+                .filter(elem => !!elem),
+            ),
+          ),
+        ]);
+      }
+    })
+    .then(data => {
+      if (!data) return;
+      const [stories, users] = data;
       dispatch({
         type: 'ADD_STORIES',
         stories,
+        users: arrayToHash(users, 'uid'),
       });
     })
     .catch(err => {
@@ -130,6 +158,7 @@ export const deleteFrequency = id => (dispatch, getState) => {
 };
 
 export const subscribeFrequency = (slug, redirect) => (dispatch, getState) => {
+  console.log(slug, redirect);
   const { user: { uid } } = getState();
   dispatch({ type: 'LOADING' });
 
@@ -137,8 +166,10 @@ export const subscribeFrequency = (slug, redirect) => (dispatch, getState) => {
     .then(frequency => {
       track('frequency', 'subscribed', null);
 
-      if (redirect !== false)
+      if (redirect !== false) {
+        console.log('redirecting');
         history.push(`/~${frequency.slug || frequency.id}`);
+      }
 
       dispatch({
         type: 'SUBSCRIBE_FREQUENCY',

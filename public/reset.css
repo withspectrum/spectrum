@@ -1,6 +1,7 @@
 html,
 body {
-  min-height: 100vh;
+  height: 100%;
+  min-height: 100%;
   min-width: 100%;
   box-sizing: border-box;
 }
@@ -15,6 +16,8 @@ body {
   padding: 0;
   text-decoration: none;
   text-rendering: optimizeLegibility;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 a {
@@ -24,6 +27,11 @@ a {
 
 textarea {
   resize: none;
+}
+
+::-moz-selection { /* Code for Firefox */
+  background: #3818e5;
+  color: #ffffff;
 }
 
 ::selection {
@@ -37,7 +45,8 @@ textarea {
 
 body {
   position: relative;
-  height: 100vh;
+  height: 100%;
+  max-height: 100%;
   width: 100vw;
   -webkit-font-smoothing: antialiased;
   font-size: 16px;
@@ -45,8 +54,9 @@ body {
   background: #fff;
   color: #171a21;
   padding: 0;
-  overflow-y: hidden;
   overflow-x: hidden;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
@@ -176,16 +186,6 @@ body {
   transition: all 0.2s ease-in;
 }
 
-.markdown a:active {
-  padding-bottom: 4px;
-  transition: padding-bottom 0.2s ease-in;
-}
-
-.markdown a:focus {
-  border-bottom: 4px solid currentColor;
-  transition: border-bottom 0.2s ease-in;
-}
-
 .markdown code {
   font-family: "Input Mono", "Menlo", "Inconsolata", "Roboto Mono", monospace;
   font-weight: 500;
@@ -208,6 +208,13 @@ body {
 .markdown pre code {
   padding: 8px 16px;
   display: inline-block;
+  white-space: pre-wrap;
+}
+
+.markdown code span {
+  max-width: 100%;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .markdown iframe {

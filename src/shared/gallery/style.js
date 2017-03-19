@@ -8,8 +8,8 @@ export const Overlay = styled.div`
 	right: 0;
 	bottom: 0;
 	background: ${({ theme }) => theme.bg.reverse};
-	opacity: 0.85;
-	z-index: 5;
+	opacity: 0.95;
+	z-index: 100;
 `;
 
 export const ActiveImage = styled.img`
@@ -22,7 +22,7 @@ export const ActiveImage = styled.img`
 	max-width: 100%;
 	margin: auto 0 5rem;
 	box-shadow: ${Shadow.high};
-	z-index: 10;
+	z-index: 101;
 `;
 
 export const Minigallery = styled.div`
@@ -34,7 +34,7 @@ export const Minigallery = styled.div`
 	padding: 0.25rem;
 	background: #000;
 	max-height: 3rem;
-	z-index: 11;
+	z-index: 102;
 
 
 `;
@@ -60,4 +60,24 @@ export const MiniContainer = styled.div`
     justify-content: flex-start;
     overflow-x: scroll;
   }
+`;
+
+export const CloseButton = styled.button`
+	position: absolute;
+	-webkit-appearance: none;
+	top: 4px;
+	right: 4px;
+	padding: 8px 12px;
+	border-radius: 23px;
+	background: #000;
+	color: rgba(255,255,255,0.8);
+	font-size: 20px;
+	font-weight: 400;
+	text-transform: uppercase;
+	z-index: 102;
+	cursor: pointer;
+
+	&:hover {
+		color: #fff;
+	}
 `;

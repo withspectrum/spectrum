@@ -10,8 +10,7 @@ import * as firebase from 'firebase';
 import FIREBASE_CONFIG from './config/FirebaseConfig';
 import { Body } from './App/style';
 import Root from './Root';
-import { loadStorage, saveStorage, clearStorage } from './helpers/localStorage';
-import { debounce } from './helpers/utils';
+import { clearStorage } from './helpers/localStorage';
 
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,
@@ -22,27 +21,7 @@ const fbconfig = {
 };
 
 firebase.initializeApp(fbconfig);
-let store;
-// In production load previously saved data from localStorage
-if (process.env.NODE_ENV === 'production') {
-  let localStorageState = loadStorage();
-  store = initStore(localStorageState);
-
-  // sync the store with localstorage
-  let state = store.getState();
-  store.subscribe(
-    debounce(
-      saveStorage({
-        user: state.user,
-        frequencies: state.frequencies,
-        stories: state.stories,
-      }),
-      1000,
-    ),
-  );
-} else {
-  store = initStore({});
-}
+let store = initStore({});
 
 // This is globally available in styled-components when interpolating a function like so:
 // ${(props) => props.theme}

@@ -6,19 +6,11 @@ export const Column = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${({ theme }) => theme.bg.reverse};
-  flex: 0 0 256px;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   position: relative;
   z-index: 3;
   transition: transform 0.2s ease-in-out;
-
-  @media (max-width: 768px) {
-    max-width: 360px;
-    width: 100%;
-    flex: 1 0 auto;
-    transition: transform 0.2s ease-in-out;
-    transform: translateX(${props => props.navVisible ? '0' : '-480px'});
-  }
 `;
 
 export const Header = styled.div`
@@ -87,19 +79,17 @@ export const MetaAnchor = styled.a`${linkStyles}`;
 
 export const FreqList = styled.div`
   list-style: none;
+  width: 100%;
+  margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  flex: 0 1 100%;
-  overflow-y: scroll;
-  justify-self: stretch;
-  margin-bottom: 2rem;
+  flex: 1 0 auto;
 `;
 
 export const Freq = styled.div`
   display: flex;
-  flex: 0 0 48px;
-  padding: 0.5rem 1rem;
+  flex: 0 0 36px;
+  padding: 0.2rem 1rem;
   align-items: center;
   justify-content: space-between;
   background-color: ${props =>
@@ -174,25 +164,19 @@ export const FooterP = styled(P)`
 `;
 
 export const Button = styled.button`
-  margin: 16px;
+  margin: 1rem;
   background-color: #0f1010;
   box-shadow: 0 1px 0 rgba(255,255,255,0.02);
   font-size: 12px;
   font-weight: bold;
   color: rgba(255,255,255,0.7);
   padding: 8px;
-  display: flex;
-  justify-content: center;
+  display: inline-block;
   text-align: center;
   text-align: -webkit-center;
-  flex: 0 0 auto;
+  width: calc(100% - 2rem);
   border-radius: 2px;
   transition: all 0.2s;
-
-  span {
-    margin: 0 auto;
-    display: inline-block;
-  }
 
   &:hover {
     cursor: pointer;

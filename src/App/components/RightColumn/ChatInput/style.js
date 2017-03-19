@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient, Shadow } from '../../../shared/Globals';
+import { Gradient, Shadow } from '../../../../shared/Globals';
 import Textarea from 'react-textarea-autosize';
 
 export const Wrapper = styled.span`
@@ -7,6 +7,8 @@ export const Wrapper = styled.span`
 	width: 100%;
 	flex: 0 0 auto;
 	align-items: center;
+	z-index: 200;
+	position: relative;
 `;
 
 export const Form = styled.form`

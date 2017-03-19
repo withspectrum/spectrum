@@ -40,10 +40,16 @@ export default function root(state = initialState, action) {
         active: action.story,
       });
     case 'DELETE_STORY': {
-      const stories = state.stories
-        .slice()
-        .filter(story => story.id !== action.id);
-      return Object.assign({}, state, { stories });
+      return Object.assign({}, state, {
+        stories: state.stories.map(story => {
+          if (story.id !== action.id) return story;
+
+          return {
+            ...story,
+            deleted: true,
+          };
+        }),
+      });
     }
     case 'TOGGLE_STORY_LOCK': {
       let stories = state.stories.slice().map(story => {

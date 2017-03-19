@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import { closeModal } from '../../../actions/modals';
+import Icon from '../../../shared/Icons';
 import { track } from '../../../EventTracker';
 import { createFrequency } from '../../../actions/frequencies';
 import {
@@ -17,7 +18,13 @@ import {
 import { checkUniqueFrequencyName, debounce } from '../../../helpers/utils';
 import { connect } from 'react-redux';
 import slugg from 'slugg';
-import { modalStyles, Footer, ErrorMessage, CheckboxWrapper } from './style';
+import {
+  HiddenInput,
+  modalStyles,
+  Footer,
+  ErrorMessage,
+  CheckboxWrapper,
+} from './style';
 
 class FrequencyCreationModal extends React.Component {
   constructor(props) {
@@ -260,7 +267,10 @@ class FrequencyCreationModal extends React.Component {
 
           <Label>
             <CheckboxWrapper>
-              <Input
+              {this.state.acceptCoC
+                ? <Icon icon="checked" />
+                : <Icon icon="unchecked" subtle />}
+              <HiddenInput
                 type="checkbox"
                 checked={this.state.acceptCoC}
                 onChange={this.toggleCoC}

@@ -1,7 +1,9 @@
 import * as firebase from 'firebase';
 import { getStory } from './stories';
 import { createNotifications } from './notifications';
-import { ACTIVITY_TYPES, OBJECT_TYPES } from './types';
+import { ACTIVITY_TYPES } from './types';
+
+const UNIQUE = (v, i, a) => a.indexOf(v) === i;
 
 /**
  * Create a message in the db
@@ -13,8 +15,6 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
 
   const key = db.ref('messages').push().key;
 
-  console.log('message info:', storyId, frequency, user, message);
-
   return db
     .ref()
     .update({
@@ -25,6 +25,11 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
         timestamp: firebase.database.ServerValue.TIMESTAMP,
         userId: user.uid,
         message,
+      },
+      [`stories/${storyId}/last_activity`]: firebase.database.ServerValue.TIMESTAMP,
+      [`stories/${storyId}/participants/${user.uid}`]: {
+        id: user.uid,
+        last_activity: firebase.database.ServerValue.TIMESTAMP,
       },
       [`stories/${storyId}/messages/${key}`]: {
         id: key,
@@ -41,14 +46,14 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
             .map(({ userId }) => userId)
             // - Creator of story
             .concat([story.creator.uid])
-            // Avoid duplicates
-            .filter((v, i, a) => a.indexOf(v) === i)
+            .filter(UNIQUE)
             // Avoid notifying the sender
             .filter(uid => uid !== user.uid),
           activityType: ACTIVITY_TYPES.NEW_MESSAGE,
-          objectType: OBJECT_TYPES.STORY,
-          objectId: storyId,
-          objectUrl: `/~${frequency.slug || frequency.id}/${storyId}`,
+          ids: {
+            frequency: frequency.id,
+            story: storyId,
+          },
           sender: {
             uid: user.uid,
             displayName: user.displayName,

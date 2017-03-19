@@ -5,39 +5,27 @@ import {
   Bubble,
   ImgBubble,
   BubbleGroup,
-  FromName,
+  Byline,
+  AdminBadge,
   EmojiBubble,
   Messages,
   Avatar,
+  HiddenLabel,
+  Timestamp,
 } from './style';
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
-import { getUsersFromMessageGroups } from '../../../helpers/stories';
-import { onlyContainsEmoji, sortAndGroupBubbles } from '../../../helpers/utils';
-import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../helpers/regexps';
-import { openGallery } from '../../../actions/gallery';
+import {
+  onlyContainsEmoji,
+  sortAndGroupBubbles,
+  convertTimestampToDate,
+} from '../../../../helpers/utils';
+import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../../helpers/regexps';
+import { openGallery } from '../../../../actions/gallery';
 
 class ChatView extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      users: [],
-    };
-  }
-
-  componentDidMount() {
-    if (this.props.messages) {
-      this.fetchUsers();
-    }
-  }
-
   componentDidUpdate(prevProps, prevState) {
-    this.props.scrollToBottom();
-
-    if (prevProps !== this.props && this.props.messages) {
-      this.fetchUsers();
-    }
+    this.props.contextualScrollToBottom();
   }
 
   openGallery = e => {
@@ -59,36 +47,49 @@ class ChatView extends Component {
     return linkedMessage.replace(FREQUENCY_ANCHORS, '>$1</a>');
   }
 
-  fetchUsers = () => {
-    getUsersFromMessageGroups(this.props.messages).then(data => {
-      this.setUsersData(data);
-    });
-  };
-
-  setUsersData = data => {
-    this.setState({
-      users: data,
-    });
-  };
-
   render() {
-    let { messages } = this.props;
+    let { messages, user: { list } } = this.props;
     if (!messages) return <span />;
-
-    const { users } = this.state;
 
     return (
       <ChatContainer>
         {messages.map((group, i) => {
           const itsaMe = group[0].userId === this.props.user.uid;
-          const user = !itsaMe &&
-            users &&
-            users.find(user => user.uid === group[0].userId);
+          const user = !itsaMe && list[group[0].userId];
+          const admins = [
+            'VToKcde16dREgDkXcDl3hhcrFN33',
+            'gVk5mYwccUOEKiN5vtOouqroGKo1',
+            '01p2A7kDCWUjGj6zQLlMQUOSQL42',
+          ];
+          const isAdmin = admins.includes(group[0].userId);
+          const isStoryCreator = this.props.story.creator.uid ===
+            group[0].userId;
+          const itsaRobo = group[0].userId === 'robo';
+          if (itsaRobo) {
+            let time = convertTimestampToDate(group[0].message.content);
+            return (
+              <Timestamp key={i}>
+                <span>
+                  {time}
+                </span>
+              </Timestamp>
+            );
+          }
+
           return (
             <BubbleGroup key={i} me={itsaMe}>
-              {user && !itsaMe && <Avatar src={user.photoURL} />}
+              {user &&
+                !itsaMe &&
+                <HiddenLabel tipText={user.name} tipLocation="right">
+                  <Avatar src={user.photoURL} />
+                </HiddenLabel>}
               <Messages>
-                <FromName>{user && user.name}</FromName>
+                <Byline op={isStoryCreator}>
+                  {user && user.displayName}
+                  {!itsaMe &&
+                    isAdmin &&
+                    <AdminBadge op={isStoryCreator}>Admin</AdminBadge>}
+                </Byline>
                 {group.map((message, i) => {
                   // mxstbr: The "emoji" specific type is legacy, remove in the future
                   if (

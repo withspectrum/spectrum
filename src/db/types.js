@@ -3,9 +3,4 @@ const ACTIVITY_TYPES = {
   NEW_STORY: 'new-story',
 };
 
-const OBJECT_TYPES = {
-  STORY: 'story',
-  FREQUENCY: 'frequency',
-};
-
-export { ACTIVITY_TYPES, OBJECT_TYPES };
+export { ACTIVITY_TYPES };

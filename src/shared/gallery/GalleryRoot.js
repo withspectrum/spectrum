@@ -6,6 +6,7 @@ import {
   Minigallery,
   MiniImg,
   MiniContainer,
+  CloseButton,
 } from './style';
 import { closeGallery } from '../../actions/gallery';
 import { track } from '../../EventTracker';
@@ -86,6 +87,7 @@ class GalleryRoot extends Component {
     if (media.isOpen) {
       return (
         <div>
+          <CloseButton onClick={this.closeGallery}>✕</CloseButton>
           <Overlay
             onClick={this.closeGallery}
             onKeyDown={this.handleKeyPress}

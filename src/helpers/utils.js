@@ -15,6 +15,43 @@ export const hashToArray = hash => {
   return array;
 };
 
+// e.g. arrayToHash(arr, 'id')
+export const arrayToHash = (array, keyBy) => {
+  let hash = {};
+  array.forEach(elem => {
+    hash[elem[keyBy]] = elem;
+  });
+  return hash;
+};
+
+export const convertTimestampToDate = timestamp => {
+  let monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  let date = new Date(timestamp);
+  let day = date.getDate();
+  let monthIndex = date.getMonth();
+  let month = monthNames[monthIndex];
+  let year = date.getFullYear();
+  let hours = date.getHours();
+  let cleanHours = hours > 12 ? hours - 12 : hours; // todo: support 24hr time
+  let minutes = date.getMinutes();
+  minutes = minutes >= 10 ? minutes : '0' + minutes.toString(); // turns 4 minutes into 04 minutes
+  let ampm = hours >= 12 ? 'pm' : 'am'; // todo: support 24hr time
+  return `${month} ${day}, ${year} · ${cleanHours}:${minutes}${ampm}`;
+};
+
 export const sortAndGroupBubbles = messages => {
   if (!messages.length > 0) return [];
 
@@ -23,8 +60,36 @@ export const sortAndGroupBubbles = messages => {
   let checkId;
 
   for (let i = 0; i < messages.length; i++) {
+    // on the first message, get the user id and set it to be checked against
     if (i === 0) {
       checkId = messages[i].userId;
+
+      // show a timestamp for when the first message in the conversation was sent
+      masterArray.push([
+        {
+          userId: 'robo',
+          timestamp: messages[i].timestamp,
+          message: {
+            content: messages[i].timestamp,
+            type: 'robo',
+          },
+        },
+      ]);
+    }
+
+    function checkToInjectTimestamp() {
+      if (i > 0 && messages[i].timestamp > messages[i - 1].timestamp + 900000) {
+        masterArray.push([
+          {
+            userId: 'robo',
+            timestamp: messages[i].timestamp,
+            message: {
+              content: messages[i].timestamp,
+              type: 'robo',
+            },
+          },
+        ]);
+      }
     }
 
     if (messages[i].userId === checkId) {
@@ -34,6 +99,8 @@ export const sortAndGroupBubbles = messages => {
     } else {
       // this message user id doesn't match
       masterArray.push(newArray);
+
+      checkToInjectTimestamp();
 
       // reset
       checkId = messages[i].userId;
@@ -63,19 +130,6 @@ const fetch = (ref, orderBy, equalTo) => {
         }
       });
   });
-};
-
-const fetchDataByIds = (obj, params) => {
-  let keys = Object.keys(obj);
-  return Promise.all(keys.map(key => fetch(...params, key)));
-};
-
-export const fetchFrequenciesForUser = frequencies => {
-  return fetchDataByIds(frequencies, ['frequencies', 'id']);
-};
-
-export const fetchStoriesForFrequencies = frequencies => {
-  return fetchDataByIds(frequencies, ['stories', 'frequency']);
 };
 
 export const asyncComponent = getComponent => {
@@ -142,10 +196,10 @@ const regex = new RegExp(
 
 export const onlyContainsEmoji = text => regex.test(text);
 
-export const sortArrayByKey = (array, key) => {
+export const sortArrayByKey = (array, key, fallbackKey) => {
   return array.sort((a, b) => {
-    let x = a[key];
-    let y = b[key];
+    let x = a[key] || a[fallbackKey];
+    let y = b[key] || b[fallbackKey];
 
     return x < y ? -1 : x > y ? 1 : 0;
   });

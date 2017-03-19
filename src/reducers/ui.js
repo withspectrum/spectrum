@@ -1,21 +1,24 @@
 const initialState = {
-  navVisible: false
+  viewing: 'stories',
 };
 
 export default function ui(state = initialState, action) {
   switch (action.type) {
-    case 'SHOW_NAV':
+    case 'SHOW_FREQUENCY_NAV':
       return {
-        navVisible: true
+        viewing: 'frequencies',
       };
-    case 'TOGGLE_NAV':
+    case 'SHOW_STORIES_NAV':
+    case 'CLOSE_COMPOSER':
+    case 'CLEAR_ACTIVE_STORY':
+    case 'DELETE_STORY':
       return {
-        navVisible: !state.navVisible
+        viewing: 'stories',
       };
-    case 'HIDE_NAV':
+    case 'TOGGLE_COMPOSER_OPEN':
       return {
-        navVisible: false
-      }    
+        viewing: 'detail',
+      };
     default:
       return state;
   }

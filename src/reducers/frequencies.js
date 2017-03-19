@@ -24,6 +24,9 @@ export default function root(state = initialState, action) {
           }),
         };
       }
+      return Object.assign({}, state, {
+        frequencies: state.frequencies.concat([action.frequency]),
+      });
     // Otherwise just add it at the end
     case 'CREATE_FREQUENCY':
       return Object.assign({}, state, {

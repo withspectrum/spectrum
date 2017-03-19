@@ -1,14 +1,13 @@
 import styled from 'styled-components';
-import { Gradient, H4, H1 } from '../../../shared/Globals';
+import { Gradient, H4, H1 } from '../../../../shared/Globals';
 
 export const ScrollBody = styled.div`
 	display: flex;
 	flex: 1 1 100%;
 	background-color: ${({ theme }) => theme.bg.default};
-	max-height: 100vh;
+	max-height: 100%;
 	flex-direction: column;
 	overflow-y: scroll;
-	-webkit-overflow-scrolling: touch;
 `;
 
 export const ContentView = styled.div`

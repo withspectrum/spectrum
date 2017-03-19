@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { sendMessage } from '../../../actions/messages';
-import { uploadMedia } from '../../../helpers/stories';
-import { isMobile } from '../../../helpers/utils';
-import EmojiPicker from '../../../shared/EmojiPicker';
-import { Photo, Send } from '../../../shared/Icons';
+import { sendMessage } from '../../../../actions/messages';
+import { uploadMedia } from '../../../../helpers/stories';
+import { isMobile } from '../../../../helpers/utils';
+import EmojiPicker from '../../../../shared/EmojiPicker';
+import Icon from '../../../../shared/Icons';
 import { connect } from 'react-redux';
-import { track } from '../../../EventTracker';
+import { track } from '../../../../EventTracker';
 import {
   Input,
   Form,
@@ -26,6 +26,7 @@ class ChatInput extends Component {
       message: '',
       file: '',
       emojiPickerOpen: false,
+      mediaUploading: false,
     };
   }
 
@@ -56,29 +57,32 @@ class ChatInput extends Component {
     });
   };
 
-  sendEmojiMessage = emoji => {
+  appendEmoji = emoji => {
     track('emojiPicker', 'sent', null);
 
     let textInput = ReactDOM.findDOMNode(this.refs.textInput);
+    let value = textInput.value;
+    let startPosition = textInput.selectionStart;
 
-    let message = {
-      type: 'text',
-      content: emoji,
-    };
-
-    this.dispatchMessage(message);
+    // insert the emoji at the cursor position of the input
+    value = [
+      value.slice(0, startPosition),
+      emoji,
+      value.slice(startPosition),
+    ].join('');
 
     // refocus the input
     textInput.focus();
     // close the emoji picker
     this.setState({
       emojiPickerOpen: false,
+      message: value,
     });
   };
 
   sendMessage = e => {
     e.preventDefault();
-    const messageText = this.state.message.trim();
+    let messageText = this.state.message.trim();
     if (messageText === '') return;
     let messageObj = {
       type: 'text',
@@ -92,14 +96,14 @@ class ChatInput extends Component {
     });
   };
 
-  dispatchMessage = message => {
-    this.props.dispatch(sendMessage(message));
-  };
-
   sendMediaMessage = e => {
     let user = this.props.user;
     let file = e.target.files[0];
     let activeStory = this.props.stories.active;
+
+    this.setState({
+      mediaUploading: true,
+    });
 
     this.props.dispatch({
       type: 'LOADING',
@@ -112,6 +116,10 @@ class ChatInput extends Component {
           content: file,
         };
 
+        this.setState({
+          mediaUploading: false,
+        });
+
         this.props.dispatch({
           type: 'STOP_LOADING',
         });
@@ -120,7 +128,17 @@ class ChatInput extends Component {
       })
       .catch(err => {
         if (err) console.log('Error while uploading image to message: ', err);
+        this.setState({
+          mediaUploading: false,
+        });
       });
+  };
+
+  dispatchMessage = message => {
+    // the current user has sent a message, so force the parent to scroll to bottom
+    this.props.forceScrollToBottom();
+
+    this.props.dispatch(sendMessage(message));
   };
 
   render() {
@@ -137,12 +155,14 @@ class ChatInput extends Component {
           multiple={false}
           onChange={this.sendMediaMessage}
         />
+
         <MediaLabel htmlFor="file">
-          <Photo stayActive color={'brand'} />
+          <Icon icon="photo" />
         </MediaLabel>
+
         {this.state.emojiPickerOpen &&
           <EmojiPicker
-            onChange={this.sendEmojiMessage}
+            onChange={this.appendEmoji}
             closePicker={this.toggleEmojiPicker}
           />}
         <EmojiToggle
@@ -164,7 +184,7 @@ class ChatInput extends Component {
               }
             />
             <Button onClick={this.sendMessage}>
-              <Send color={'flatWhite'} stayActive />
+              <Icon icon="send" reverse static />
             </Button>
           </Form>}
       </Wrapper>

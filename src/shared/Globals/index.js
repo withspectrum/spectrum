@@ -32,6 +32,7 @@ export const Button = styled.button`
 	color: ${({ theme }) => theme.text.reverse};
 	transition: all 0.2s ease-out;
 	padding: 8px 16px;
+  width: ${props => props.width ? props.width : ''};
 
 	&:hover {
 		border-radius: ${props => props.disabled ? '8px' : '16px'};
@@ -65,7 +66,7 @@ export const SocialButton = styled(Button)`
  	padding: 8px 16px 8px 8px;
 	background-color: transparent;
 	font-weight: 600;
-	line-height: 24px;
+	line-height: 32px;
 	vertical-align: middle;
 	background-image: none;
 	border-color: ${props =>
@@ -260,9 +261,104 @@ export const Span = styled.span`
 	padding: 0;
 `;
 
+const returnTooltip = props => {
+  switch (props.tipLocation) {
+    case 'top-left':
+      return `
+          &:after {
+            bottom: calc(100% + 5px);
+            right: 0;
+          }
+          &:before {
+            right: calc(50% - 5px);
+            bottom: 100%
+      	    border-bottom-width: 0;
+      	    border-top-color: ${props.theme.bg.reverse};
+          }
+      `;
+    case 'top-right':
+      return `
+          &:after {
+            bottom: calc(100% + 5px);
+            left: 0;
+          }
+          &:before {
+            right: calc(50% - 5px);
+            bottom: 100%;
+      	    border-bottom-width: 0;
+      	    border-top-color: ${props.theme.bg.reverse};
+          }
+      `;
+    case 'right':
+      return `
+          &:after {
+            left: calc(100% + 5px);
+            top: 2%;
+          }
+          &:before{
+            left: 100%;
+            top: calc(50% - 5px);
+            border-left-width: 0;
+            border-right-color: ${props.theme.bg.reverse};
+          }
+      `;
+    case 'bottom-left':
+      return `
+          &:after {
+            top: calc(100% + 5px);
+            right: 0;
+          }
+          &:before {
+            right: calc(50% - 5px);
+            top: 100%
+      	    border-top-width: 0;
+      	    border-bottom-color: ${props.theme.bg.reverse};
+          }
+      `;
+    case 'bottom-right':
+      return `
+          &:after {
+            top: calc(100% + 5px);
+            left: 0;
+          }
+          &:before {
+            right: calc(50% - 5px);
+            top: 100%;
+      	    border-top-width: 0;
+      	    border-bottom-color: ${props.theme.bg.reverse};
+          }
+      `;
+    case 'left':
+      return `
+          &:after {
+            right: calc(100% + 5px);
+            top: 6.775%;
+          }
+          &:before{
+            right: 100%;
+            top: calc(50% - 5px);
+            border-right-width: 0;
+            border-left-color: ${props.theme.bg.reverse};
+          }
+      `;
+    default:
+      return `
+          &:after {
+            left: calc(100% + 5px);
+            top: 2%;
+          }
+          &:before{
+            left: 100%;
+            top: calc(50% - 5px);
+            border-left-width: 0;
+            border-right-color: ${props.theme.bg.reverse};
+          }
+      `;
+  }
+};
+
 export const Tooltip = props => css`
 	position: relative;
-	z-index: 100;
 
 	&:after,
 	&:before {
@@ -276,57 +372,13 @@ export const Tooltip = props => css`
 
 	&:before {
 		content: '';
-    z-index: 1001;
+    z-index: 1000;
     border: 5px solid transparent;
-
-    ${props.tipLocation === 'top'
-  ? css`
-			bottom: 100%;
-			left: 33%;
-	    border-bottom-width: 0;
-	    border-top-color: ${({ theme }) => theme.bg.reverse};
-	    `
-  : ''}
-
-	  ${props.tipLocation === 'right'
-  ? css`
-			top: 50%;
-	    border-left-width: 0;
-	    border-right-color: ${({ theme }) => theme.bg.reverse};
-	    right: calc(0em - 5px);
-	    transform: translate(.5em, -50%);
-			`
-  : ''}
-
-		${props.tipLocation === 'bottom'
-  ? css`
-			top: 100%;
-			left: 33%;
-	    border-top-width: 0;
-	    border-bottom-color: ${({ theme }) => theme.bg.reverse};
-			`
-  : ''}
-
-		${props.tipLocation === 'left'
-  ? css`	top: 50%;
-	    border-right-width: 0;
-	    border-left-color: ${({ theme }) => theme.bg.reverse};
-	    left: calc(0em - 6px);
-	    transform: translate( -6px, -50%);`
-  : ''}
-
-	  ${!props.tipLocation
-  ? css`
-			bottom: 100%;
-	    border-bottom-width: 0;
-	    border-top-color: ${({ theme }) => theme.bg.reverse};
-	    `
-  : ''}
-	}
+  }
 
 	&:after {
 		content: ${props.tipText ? `'${props.tipText}'` : `''`};
-    z-index: 1000;
+    z-index: 1001;
     ${fontStack};
     font-size: 14px;
     font-weight: 500;
@@ -338,48 +390,15 @@ export const Tooltip = props => css`
     padding: 8px 12px;
     border-radius: 8px;
     box-shadow: ${Shadow.mid};
-    background: ${({ theme }) => theme.bg.reverse};
-    color: ${({ theme }) => theme.text.reverse};
-
-    ${props.tipLocation === 'top'
-  ? css`
-			bottom: calc(100% + 5px);
-			left: -100%;
-	    `
-  : ''}
-
-	  ${props.tipLocation === 'right'
-  ? css`
-			top: 50%;
-	    left: calc(100% + 5px);
-	    transform: translate(.5em, -50%);
-			`
-  : ''}
-
-		${props.tipLocation === 'bottom'
-  ? css`
-			top: calc(100% + 5px);
-			left: -175%;
-			`
-  : ''}
-
-		${props.tipLocation === 'left'
-  ? css`
-			top: 50%;
-	    right: calc(100% + 5px);
-	    transform: translate(-.5em, -50%);
-			`
-  : ''}
-
-		${!props.tipLocation
-  ? css`
-			bottom: calc(100% + 5px);
-	    `
-  : ''}
+    background: ${props.theme.bg.reverse};
+    color: ${props.theme.text.reverse};
 	}
+
+  ${props.tipText ? returnTooltip(props) : ''};
 
 	&:hover:after,
 	&:hover:before {
 		opacity: 1;
-		transition: all 0.2s ease-in 0.2s;
+		transition: all 0.1s ease-in 0.1s;
+  }
 `;

@@ -1,19 +1,28 @@
 import styled, { css } from 'styled-components';
-import { Shadow, H4, H5 } from '../../../shared/Globals';
+import { Shadow, H5 } from '../../../shared/Globals';
 
 export const Wrapper = styled.div`
 	display: inline-block;
 	width: calc(100% - 16px);
-	margin: 8px;
-	margin-bottom: 0;
+	margin: 8px 8px 0 8px;
 	flex: 0 0 auto;
 	border-radius: 4px;
-	overflow: hidden;
+	overflow: ${props => props.overflow === 'visible' ? 'visible' : 'hidden'};
 	background-color: ${({ theme }) => theme.bg.default};
 	transition: all 0.2s ease-in;
 	-webkit-font-smoothing: subpixel-antialiased;
-
 	box-shadow: ${Shadow.low};
+
+	@media (max-width: 768px) {
+		width: 100%;
+		margin: 0;
+		margin-bottom: 4px;
+		border-radius: 0;
+
+		&:first-of-type {
+			margin-bottom: 8px;
+		}
+	}
 
 	${props => !props.static &&
 css`
@@ -30,7 +39,6 @@ export const LinkWrapper = styled.div`
 	flex-direction: column;
 	flex: 0 0 auto;
 	background-color: #ffffff;
-	padding: 16px;
 	transition: all 0.2s ease-in;
 	box-shadow: inset -4px 0 0 ${props =>
   props.selected ? props.theme.brand.default : '#fff'};
@@ -44,23 +52,32 @@ export const LinkWrapper = styled.div`
 
 export const StoryBody = styled.div`
 	display: inline-block;
-	margin-top: 16px;
-	font-size: 14px;
+	font-size: 16px;
+	font-weight: 600;
 	flex: 0 0 auto;
+	max-width: 100%;
+	word-wrap: break-word;
+	margin-bottom: 8px;
+	padding: 16px;
+	padding-bottom: 4px;
 `;
 
 export const Avatar = styled.img`
 	display: inline-block;
-  height: 32px;
-  width: 32px;
-	border-radius: 4px;
+  height: 16px;
+  width: 16px;
+	border-radius: 50%;
 	box-shadow: ${Shadow.border};
+	margin-right: 8px;
 `;
 
 export const StoryHeader = styled.div`
   display: flex;
   align-items: center;
   flex: 0 0 auto;
+	border-top: 1px solid #f6f7f8;
+	padding: 8px 16px;
+	background: #fff;
 `;
 
 export const Title = styled.p`
@@ -70,47 +87,37 @@ export const Title = styled.p`
 	color: ${({ theme }) => theme.text.default};
 `;
 
-export const Media = styled.img`
-	width: 100%;
-	max-height: 240px;
-	object-fit: cover;
-	background-color: ${({ theme }) => theme.inactive};
-	margin: 8px 8px 0 0;
-	border-radius: 4px;
-	box-shadow: ${Shadow.border};
-`;
-
 export const UserMeta = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 12px;
   flex: 1 0 auto;
+	max-width: 100%;
 `;
 
-export const Name = styled(H4)`
-  color: ${({ theme }) => theme.text.default};
-  font-weight: 700;
+export const Name = styled(H5)`
+  color: ${({ theme }) => theme.text.alt};
+	display: flex;
+	align-items: center;
+
+	a:hover {
+		color: ${({ theme }) => theme.brand.default};
+	}
+`;
+
+export const MessageCount = styled(Name)`
+	margin-top: 4px;
 `;
 
 export const Meta = styled(H5)`
   color: ${({ theme }) => theme.text.alt};
+	word-break: break-all;
 `;
 
-export const MetaFreq = styled(Meta)`
-  color: ${({ theme }) => theme.text.alt};
-  font-weight: 600;
-  transition: color 0.2s ease-out;
-  display: block;
-  width: 100%;
-  background: #fff;
-  padding: 8px 16px;
-  border-radius: 0 0 2px 2px;
-  border-top: 1px solid ${({ theme }) => theme.generic.default};
-
-  &:hover {
-  	color: ${({ theme }) => theme.brand.default}
-  	transition: color 0.2s ease-in;
-  }
+export const FrequencyLink = styled(H5)`
+	display: inline;
+	color: ${({ theme }) => theme.text.alt};
+	max-width: 100%;
+	word-break: break-all;
 `;
 
 export const UnreadCount = styled.span`

@@ -4,19 +4,15 @@
   "private": true,
   "devDependencies": {
     "lint-staged": "^3.3.0",
-    "lodash": "^4.17.4",
-    "lodash.findindex": "^4.6.0",
     "prettier": "^0.18.0",
     "react-scripts-webpack-v2-fork-mxstbr": "^0.9.0"
   },
   "dependencies": {
     "autolinker": "^1.4.0",
-    "axios": "^0.15.3",
     "emoji-regex": "^6.1.1",
+    "firebase": "^3.7.2",
     "highlight.js": "^9.10.0",
-    "lodash.uniq": "^4.5.0",
     "pre-commit": "^1.2.2",
-    "re-base": "^2.2.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-helmet": "^4.0.0",
@@ -28,6 +24,7 @@
     "react-router-dom": "^4.0.0-beta.7",
     "react-stripe-checkout": "^2.2.5",
     "react-textarea-autosize": "^4.0.5",
+    "react-virtualized": "^9.2.3",
     "redux": "^3.6.0",
     "redux-thunk": "^2.2.0",
     "request": "^2.79.0",

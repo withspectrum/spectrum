@@ -26,7 +26,6 @@ import {
   FreqText,
   DirtyDot,
 } from './style';
-import { ACTIVITY_TYPES, OBJECT_TYPES } from '../../../db/types';
 
 class NavigationMaster extends Component {
   constructor() {
@@ -66,9 +65,9 @@ class NavigationMaster extends Component {
     this.props.dispatch(openModal('FREQUENCY_CREATION_MODAL'));
   };
 
-  hideNav = () => {
+  showStoriesNav = () => {
     this.props.dispatch({
-      type: 'HIDE_NAV',
+      type: 'SHOW_STORIES_NAV',
     });
   };
 
@@ -82,7 +81,7 @@ class NavigationMaster extends Component {
     // const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
 
     return (
-      <Column navVisible={this.props.ui.navVisible}>
+      <Column>
         {user.uid
           ? <Header>
               <Avatar src={user.photoURL} title={user.displayName} />
@@ -104,7 +103,7 @@ class NavigationMaster extends Component {
               <Link to="/">
                 <Freq
                   active={this.props.frequencies.active === 'everything'}
-                  onClick={this.hideNav}
+                  onClick={this.showStoriesNav}
                 >
                   <FreqText>
                     <FreqIcon src="/img/everything-icon.svg" />
@@ -114,7 +113,7 @@ class NavigationMaster extends Component {
               </Link>
             : <div>
                 <Link to={`/~spectrum`}>
-                  <Freq onClick={this.hideNav}>
+                  <Freq onClick={this.showStoriesNav}>
                     <FreqText>
                       <FreqGlyph>~</FreqGlyph>
                       <FreqLabel>Spectrum</FreqLabel>
@@ -123,7 +122,7 @@ class NavigationMaster extends Component {
                 </Link>
 
                 <Link to={`/~discover`}>
-                  <Freq onClick={this.hideNav}>
+                  <Freq onClick={this.showStoriesNav}>
                     <FreqText>
                       <FreqGlyph>~</FreqGlyph>
                       <FreqLabel>Discover</FreqLabel>
@@ -132,7 +131,7 @@ class NavigationMaster extends Component {
                 </Link>
 
                 <Link to={`/~hugs-n-bugs`}>
-                  <Freq onClick={this.hideNav}>
+                  <Freq onClick={this.showStoriesNav}>
                     <FreqText>
                       <FreqGlyph>~</FreqGlyph>
                       <FreqLabel>Hugs n Bugs</FreqLabel>
@@ -145,7 +144,7 @@ class NavigationMaster extends Component {
             <Link to={`/notifications`}>
               <Freq
                 active={activeFrequency === 'notifications'}
-                onClick={this.hideNav}
+                onClick={this.showStoriesNav}
               >
                 <FreqLabel>Notifications</FreqLabel>
               </Freq>
@@ -157,11 +156,13 @@ class NavigationMaster extends Component {
             frequencies.map((frequency, i) => {
               // If there's any unread notification for this frequency
               // show a dirty dot
-              const notif = this.props.notifications.find(
-                notification =>
-                  notification.objectId === frequency.id &&
-                  notification.objectType === OBJECT_TYPES.FREQUENCY,
-              );
+              const notif = this.props.notifications.find(notification => {
+                if (notification.ids.frequency !== frequency.id) return false;
+                if (!frequency.stories || !notification.ids.story) return true;
+                const storyData = frequency.stories[notification.ids.story];
+                if (storyData && storyData.deleted) return false;
+                return true;
+              });
               return (
                 <Link to={`/~${frequency.slug || frequency.id}`} key={i}>
                   <Freq
@@ -169,7 +170,7 @@ class NavigationMaster extends Component {
                       frequency.slug && frequency.slug === activeFrequency ||
                         frequency.id && frequency.id === activeFrequency
                     }
-                    onClick={this.hideNav}
+                    onClick={this.showStoriesNav}
                   >
                     <FreqText>
                       <FreqGlyph>~</FreqGlyph>
@@ -180,12 +181,12 @@ class NavigationMaster extends Component {
                 </Link>
               );
             })}
-        </FreqList>
 
-        {user.uid &&
-          <Button onClick={this.createFrequency}>
-            <span>~ Create Frequency</span>
-          </Button>}
+          {user.uid &&
+            <Button onClick={this.createFrequency}>
+              <span>~ Create Frequency</span>
+            </Button>}
+        </FreqList>
 
         <Footer>
           <FooterLogo src="/img/mark.svg" />

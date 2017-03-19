@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 // eslint-disable-next-line
 import {
   Wrapper,
@@ -9,22 +10,31 @@ import {
   Avatar,
   UserMeta,
   Name,
-  Meta,
-  MetaFreq,
+  MessageCount,
+  FrequencyLink,
   Title,
-  Media,
   UnreadCount,
 } from './style';
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
+import ParticipantHeads from './ParticipantHeads';
 
 const canBeBool = (...types) => PropTypes.oneOfType([PropTypes.bool, ...types]);
 
 class Card extends Component {
+  constructor() {
+    super();
+
+    const sayings = ["chit chattin'", 'talking', 'hanging out', 'chatting'];
+
+    this.state = {
+      saying: sayings[Math.floor(Math.random() * sayings.length)],
+    };
+  }
   static propTypes = {
-    isActive: canBeBool(PropTypes.bool),
+    isActive: PropTypes.bool,
+    isNew: PropTypes.bool,
     link: PropTypes.string.isRequired,
-    media: canBeBool(PropTypes.string),
     messages: canBeBool(PropTypes.number),
     metaLink: canBeBool(PropTypes.string),
     metaText: canBeBool(PropTypes.string),
@@ -34,7 +44,8 @@ class Card extends Component {
     }),
     timestamp: PropTypes.number,
     title: PropTypes.string.isRequired,
-    unread: PropTypes.number,
+    unreadMessages: PropTypes.number,
+    participants: PropTypes.object,
   };
 
   openGallery = e => {
@@ -46,50 +57,98 @@ class Card extends Component {
   render() {
     const {
       isActive,
+      isNew,
       link,
-      media,
       messages,
       metaLink,
       metaText,
       person,
       timestamp,
       title,
-      unread,
+      unreadMessages,
+      participants,
+      user,
+      frequencies: { active },
     } = this.props;
+
+    let heads;
+
+    // if the story has at least 3 participants
+    if (
+      participants &&
+      Object.keys(participants).length >= 3 &&
+      active !== 'everything'
+    ) {
+      if (
+        !Object.keys(participants).every(participant => user.list[participant])
+      ) {
+        heads = <ParticipantHeads loading />;
+      } else {
+        heads = (
+          <ParticipantHeads
+            saying={this.state.saying}
+            me={user.uid}
+            unread={unreadMessages}
+            participants={participants}
+            list={user.list}
+          />
+        );
+      }
+    } else {
+      heads = (
+        <MessageCount>
+          {messages > 0
+            ? <span>{`${messages} messages`}&nbsp;</span>
+            : isNew ? <span /> : <span>No messages yet&nbsp;</span>}
+          {unreadMessages > 0 &&
+            <span>
+              <UnreadCount>
+                {` (${unreadMessages} new!)`}&nbsp;
+              </UnreadCount>
+            </span>}
+          {isNew && <span><UnreadCount> New!</UnreadCount></span>}
+        </MessageCount>
+      );
+    }
 
     return (
       <Wrapper>
         <Link to={link}>
           <LinkWrapper selected={isActive}>
-            <StoryHeader>
-              <Avatar src={person.photo} alt={person.name} />
-              <UserMeta>
-                <Name>{person.name}</Name>
-                <Meta>
-                  {timeDifference(Date.now(), timestamp)}
-                  &nbsp;•&nbsp;
-                  {messages > 0 ? `${messages} messages` : 'No messages yet'}
-                  {unread > 0 &&
-                    <UnreadCount>{` (${unread} new!)`}</UnreadCount>}
-                </Meta>
-              </UserMeta>
-            </StoryHeader>
             <StoryBody>
               <Title>{title}</Title>
-              {media && media !== ''
-                ? <Media src={media} onClick={this.openGallery} />
-                : ''}
+
+              {heads}
+
             </StoryBody>
+            <StoryHeader>
+              <UserMeta>
+                <Name>
+                  {person.name}&nbsp;·&nbsp;
+                  {timeDifference(Date.now(), timestamp)}
+                  {metaText &&
+                    metaLink &&
+                    <FrequencyLink>
+                      &nbsp;in&nbsp;
+                      <Link to={metaLink}>
+                        {metaText}
+                      </Link>
+                    </FrequencyLink>}
+                </Name>
+              </UserMeta>
+            </StoryHeader>
           </LinkWrapper>
         </Link>
-
-        {metaText &&
-          metaLink &&
-          <Link to={metaLink}>
-            <MetaFreq>{metaText}</MetaFreq>
-          </Link>}
       </Wrapper>
     );
   }
 }
-export default Card;
+
+const mapStateToProps = state => {
+  return {
+    user: state.user,
+    frequencies: state.frequencies,
+  };
+};
+
+export default connect(mapStateToProps)(Card);

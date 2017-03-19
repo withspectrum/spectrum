@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import {
+  List,
+  CellMeasurer,
+  CellMeasurerCache,
+  InfiniteLoader,
+} from 'react-virtualized';
 import LoadingIndicator from '../../../shared/loading/global';
 import {
   Column,
   Header,
   ScrollBody,
   JoinBtn,
-  LoginWrapper,
-  LoginText,
-  LoginButton,
   TipButton,
   Overlay,
   MenuButton,
@@ -20,29 +23,88 @@ import {
   Actions,
   LoadingBlock,
   Everything,
+  StoryList,
+  NewIndicator,
 } from './style';
 import { toggleComposer } from '../../../actions/composer';
 import {
   unsubscribeFrequency,
   subscribeFrequency,
+  setActiveFrequency,
 } from '../../../actions/frequencies';
-import { login } from '../../../actions/user';
 import { openModal } from '../../../actions/modals';
-import {
-  Lock,
-  NewPost,
-  ClosePost,
-  Settings,
-  Menu,
-} from '../../../shared/Icons';
+import Icon from '../../../shared/Icons';
 import Card from '../Card';
-import ShareCard from '../ShareCard';
-import NuxJoinCard from '../NuxJoinCard';
 import { ACTIVITY_TYPES } from '../../../db/types';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { formatSenders } from '../../../helpers/notifications';
 
+const MIN_STORY_CARD_HEIGHT = 109;
+
+function arraysEqualById(a, b) {
+  if (a === b) return true;
+  if (a == null || b == null) return false;
+  if (a.length != b.length) return false;
+
+  for (var i = 0; i < a.length; ++i) {
+    // This is story specific!
+    if (a[i].id !== b[i].id) return false;
+  }
+  return true;
+}
+
 class StoryMaster extends Component {
+  state = {
+    jumpToTop: false,
+    cache: new CellMeasurerCache({
+      fixedWidth: true,
+      minHeight: MIN_STORY_CARD_HEIGHT,
+      keyMapper: index => this.props.stories[index].id,
+    }),
+  };
+
+  componentWillReceiveProps = nextProps => {
+    // If any of the things the story list cares about change,
+    // rerender the list
+    if (
+      arraysEqualById(this.props.stories, nextProps.stories) &&
+      nextProps.activeStory === this.props.activeStory &&
+      nextProps.activeFrequency === this.props.activeFrequency &&
+      arraysEqualById(this.props.notifications, nextProps.notifications) &&
+      nextProps.stories.every(
+        (story, index) =>
+          !story.participants ||
+          arraysEqualById(
+            story.participants,
+            this.props.stories[index].participants,
+          ),
+      )
+    )
+      return;
+
+    this.setState({
+      jumpToTop: true,
+      cache: new CellMeasurerCache({
+        fixedWidth: true,
+        minHeight: MIN_STORY_CARD_HEIGHT,
+        keyMapper: index => nextProps.stories[index].id,
+      }),
+    });
+  };
+
+  componentDidUpdate = () => {
+    if (this.state.jumpToTop) {
+      this.jumpToTop();
+      this.setState({
+        jumpToTop: false,
+      });
+    }
+  };
+
+  loadStoriesAgain = () => {
+    this.props.dispatch(setActiveFrequency(this.props.activeFrequency));
+  };
+
   toggleComposer = () => {
     this.props.dispatch(toggleComposer());
   };
@@ -55,27 +117,22 @@ class StoryMaster extends Component {
     this.props.dispatch(subscribeFrequency(this.props.activeFrequency));
   };
 
-  login = e => {
-    e.preventDefault();
-    this.props.dispatch(login());
-  };
-
   editFrequency = () => {
     this.props.dispatch(
       openModal('FREQUENCY_EDIT_MODAL', this.props.frequency),
     );
   };
 
-  toggleNav = () => {
+  showFrequenciesNav = () => {
     this.props.dispatch({
-      type: 'TOGGLE_NAV',
+      type: 'SHOW_FREQUENCY_NAV',
     });
   };
 
   renderNotification = notification => {
     const {
       activityType,
-      objectId,
+      ids,
       id,
       senders,
       timestamp,
@@ -88,7 +145,7 @@ class StoryMaster extends Component {
     return (
       <Card
         key={id}
-        link={isNewMsg ? `/notifications/${objectId}` : `/~${objectId}`}
+        link={isNewMsg ? `/notifications/${ids.story}` : `/~${ids.frequency}`}
         messages={notification.occurrences}
         // metaLink={isEverything && freq && `/~${freq.slug}`}
         // metaText={isEverything && freq && `~${freq.name}`}
@@ -104,6 +161,75 @@ class StoryMaster extends Component {
     );
   };
 
+  renderStory = ({ index, key, style, parent }) => {
+    const {
+      notifications,
+      stories,
+      frequencies,
+      activeFrequency,
+      activeStory,
+    } = this.props;
+    const isEverything = activeFrequency === 'everything';
+    const story = stories[index];
+
+    const notification = notifications.find(
+      notification =>
+        notification.activityType === ACTIVITY_TYPES.NEW_MESSAGE &&
+        notification.ids.story === story.id &&
+        notification.read === false,
+    );
+    const isNew = notifications.some(
+      notification =>
+        notification.activityType === ACTIVITY_TYPES.NEW_STORY &&
+        notification.ids.story === story.id &&
+        notification.read === false,
+    );
+    const unreadMessages = notification ? notification.unread : 0;
+    const freq = isEverything &&
+      getCurrentFrequency(story.frequencyId, frequencies);
+    return (
+      <CellMeasurer
+        cache={this.state.cache}
+        columnIndex={0}
+        key={key}
+        parent={parent}
+        rowIndex={index}
+      >
+        <div style={style}>
+          {React.isValidElement(story)
+            ? story
+            : <Card
+                isActive={activeStory === story.id}
+                key={key}
+                style={style}
+                link={`/~${activeFrequency}/${story.id}`}
+                media={story.content.media}
+                messages={
+                  story.messages ? Object.keys(story.messages).length : 0
+                }
+                metaLink={isEverything && freq && `/~${freq.slug}`}
+                metaText={isEverything && freq && `~${freq.name}`}
+                person={{
+                  photo: story.creator.photoURL,
+                  name: story.creator.displayName,
+                }}
+                timestamp={story.last_activity || story.timestamp}
+                title={story.content.title}
+                unreadMessages={unreadMessages}
+                isNew={isNew}
+                participants={story.participants}
+              />}
+        </div>
+      </CellMeasurer>
+    );
+  };
+
+  jumpToTop = () => {
+    if (this.storyList) {
+      this.storyList.scrollTop = 0;
+    }
+  };
+
   render() {
     const {
       frequency,
@@ -114,17 +240,18 @@ class StoryMaster extends Component {
       role,
       loggedIn,
       composer,
-      ui: { navVisible },
       activeStory,
       notifications,
       user,
+      storiesLoaded,
+      loading,
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
     const isNotifications = activeFrequency === 'notifications';
     const hidden = !role && isPrivate;
 
-    if (!isEverything && hidden) return <Lock />;
+    if (!isEverything && hidden) return <Icon icon="lock" />;
     if (!frequency && !isEverything && !isNotifications)
       return <LoadingBlock><LoadingIndicator /></LoadingBlock>;
 
@@ -150,19 +277,27 @@ class StoryMaster extends Component {
       }
     }
 
+    const canLoadNewStories = storiesLoaded &&
+      notifications.some(notification => {
+        if (!isEverything && notification.ids.frequency !== frequency.id)
+          return false;
+
+        return stories.every(story => story.id !== notification.ids.story);
+      });
+
     return (
-      <Column navVisible={navVisible}>
+      <Column>
         <Header>
           {!isEverything &&
             !isNotifications &&
             <FlexCol>
               <FreqTitle>
 
-                <MenuButton onClick={this.toggleNav}>
-                  <Menu stayActive color={'brand'} />
+                <MenuButton onClick={this.showFrequenciesNav}>
+                  <Icon icon="menu" />
                 </MenuButton>
 
-                ~ {frequency.name}
+                <a onClick={this.jumpToTop}>~ {frequency.name}</a>
               </FreqTitle>
               <FlexRow>
                 {user.uid && <Count>{membersText}</Count>}
@@ -179,94 +314,74 @@ class StoryMaster extends Component {
                 ? <JoinBtn member={role} onClick={this.unsubscribeFrequency}>
                     Leave
                   </JoinBtn>
-                : <JoinBtn onClick={this.subscribeFrequency}>Join</JoinBtn>)}
+                : <JoinBtn onClick={this.subscribeFrequency}>
+                    Join ~{activeFrequency}
+                  </JoinBtn>)}
 
             {role === 'owner' &&
-              <TipButton
+              <Icon
                 onClick={this.editFrequency}
+                icon="settings"
+                subtle
                 tipText="Frequency Settings"
-                tipLocation="bottom"
-              >
-                <Settings color={'brand'} />
-              </TipButton>}
+                tipLocation="top-right"
+              />}
 
             {(isEverything || role) &&
               <Everything>
                 <span />
                 {isEverything &&
-                  <MenuButton everything onClick={this.toggleNav}>
-                    <Menu stayActive color={'brand'} />
+                  <MenuButton everything onClick={this.showFrequenciesNav}>
+                    <Icon icon="menu" />
                   </MenuButton>}
 
-                {isEverything && '~Everything'}
+                <a onClick={this.jumpToTop}>{isEverything && '~Everything'}</a>
 
                 <TipButton
                   onClick={this.toggleComposer}
                   tipText="New Story"
-                  tipLocation="bottom"
+                  tipLocation="top-left"
                 >
                   {composer.isOpen
-                    ? <ClosePost color="warn" />
-                    : <NewPost color="brand" stayActive />}
+                    ? <Icon icon="write-cancel" color="warn.alt" />
+                    : <Icon icon="write" />}
                 </TipButton>
               </Everything>}
           </Actions>
-
         </Header>
 
-        <ScrollBody>
+        <StoryList innerRef={comp => this.storyList = comp}>
           <Overlay active={composer.isOpen} />
 
-          {!loggedIn &&
-            <LoginWrapper onClick={this.login}>
-              <LoginText>Sign in to join the conversation.</LoginText>
-              <LoginButton>Sign in with Twitter</LoginButton>
-            </LoginWrapper>}
+          {/*canLoadNewStories &&
+            <NewIndicator onClick={this.loadStoriesAgain}>
+              <Icon icon="scroll-top" reverse />
+              New stories!
+            </NewIndicator>*/
+          }
 
           {isNotifications && notifications.map(this.renderNotification)}
 
-          {isEverything || frequency
-            ? stories.filter(story => story.published).map((story, i) => {
-                const notification = notifications.find(
-                  notification =>
-                    notification.activityType === ACTIVITY_TYPES.NEW_MESSAGE &&
-                    notification.objectId === story.id &&
-                    notification.read === false,
-                );
-                const unread = notification ? notification.unread : 0;
-                const freq = isEverything &&
-                  getCurrentFrequency(story.frequencyId, frequencies);
-                return (
-                  <Card
-                    isActive={activeStory === story.id}
-                    key={`story-${i}`}
-                    link={`/~${activeFrequency}/${story.id}`}
-                    media={story.content.media}
-                    messages={
-                      story.messages ? Object.keys(story.messages).length : 0
-                    }
-                    metaLink={isEverything && freq && `/~${freq.slug}`}
-                    metaText={isEverything && freq && `~ ${freq.name}`}
-                    person={{
-                      photo: story.creator.photoURL,
-                      name: story.creator.displayName,
-                    }}
-                    timestamp={story.timestamp}
-                    title={story.content.title}
-                    unread={unread}
-                  />
-                );
-              })
-            : ''}
-
-          {!isEverything &&
-            frequency &&
-            <ShareCard slug={activeFrequency} name={frequency.name} />}
-
-          {isEverything &&
-            frequencies.length === 0 && // user is viewing everything but isn't subscribed to anything
-            <NuxJoinCard />}
-        </ScrollBody>
+          {(isEverything || frequency) &&
+            <InfiniteLoader
+              isRowLoaded={() => true}
+              loadMoreRows={() => Promise.resolve()}
+              rowCount={stories.length}
+            >
+              {({ onRowsRendered, registerChild }) => (
+                <List
+                  ref={registerChild}
+                  onRowsRendered={onRowsRendered}
+                  height={window.innerHeight - 50}
+                  width={window.innerWidth > 768 ? 419 : window.innerWidth}
+                  rowCount={stories.length}
+                  rowRenderer={this.renderStory}
+                  deferredMeasurementCache={this.state.cache}
+                  rowHeight={this.state.cache.rowHeight}
+                />
+              )}
+            </InfiniteLoader>}
+        </StoryList>
       </Column>
     );
   }
@@ -280,6 +395,8 @@ const mapStateToProps = state => {
     notifications: state.notifications.notifications,
     frequencies: state.frequencies.frequencies,
     user: state.user,
+    storiesLoaded: state.stories.loaded,
+    loading: state.loading,
   };
 };
 

@@ -1,7 +1,8 @@
 import * as firebase from 'firebase';
-import uniq from 'lodash.uniq';
 import { hashToArray } from './utils';
 import { track } from '../EventTracker';
+
+const UNIQUE = (v, i, a) => a.indexOf(v) === i;
 
 export const isStoryCreator = (story, user) => {
   if (!user) {
@@ -16,46 +17,6 @@ export const isStoryCreator = (story, user) => {
   } else {
     return false;
   }
-};
-
-export const getUserFromId = uid => {
-  return firebase
-    .database()
-    .ref(`users/${uid}/public`)
-    .once('value')
-    .then(snapshot => {
-      let val = snapshot.val();
-      let obj = {};
-      obj['uid'] = uid;
-      obj['name'] = val.displayName;
-      obj['photoURL'] = val.photoURL;
-      return obj;
-    });
-};
-
-export const getUsersFromMessageGroups = groups => {
-  let users = groups.map(group => {
-    return group[0].userId;
-  });
-  users = uniq(users);
-  return Promise.all(users.map(getUserFromId));
-};
-
-export const fetchStoriesForFrequency = frequency => {
-  return firebase
-    .database()
-    .ref('stories')
-    .orderByChild('frequency')
-    .equalTo(frequency)
-    .once('value')
-    .then(snapshot => {
-      return snapshot.val();
-    });
-};
-
-export const fetchStoriesForFrequencies = frequencies => {
-  let keys = Object.keys(frequencies);
-  return Promise.all(keys.map(fetchStoriesForFrequency));
 };
 
 export const getStoryPermission = (story, user, frequencies) => {

@@ -1,8 +1,8 @@
 import * as firebase from 'firebase';
 import { getFrequency } from './frequencies';
 import { createNotifications } from './notifications';
-import { ACTIVITY_TYPES, OBJECT_TYPES } from './types';
-import { getPublicUserInfo } from './users';
+import { ACTIVITY_TYPES } from './types';
+import { getUserInfo } from './users';
 import { flattenArray } from '../helpers/utils';
 
 export const getStory = storyId => {
@@ -23,7 +23,7 @@ export const getStories = ({ frequencyId, frequencySlug }) => {
 };
 
 export const getAllStories = userId => {
-  return getPublicUserInfo(userId)
+  return getUserInfo(userId)
     .then(user => {
       if (!user.frequencies) return [];
       const freqs = Object.keys(user.frequencies);
@@ -115,9 +115,10 @@ export const createStory = (
           users: Object.keys(frequency.users)
             .filter(user => user !== draft.creator.uid),
           activityType: ACTIVITY_TYPES.NEW_STORY,
-          objectType: OBJECT_TYPES.FREQUENCY,
-          objectId: frequency.id,
-          objectUrl: `/~${frequency.slug || frequency.id}/${story.id}`,
+          ids: {
+            frequency: frequency.id,
+            story: key,
+          },
           sender: {
             uid: draft.creator.uid,
             displayName: draft.creator.displayName,
@@ -139,10 +140,10 @@ export const removeStory = ({ storyId, frequencyId }) =>
   new Promise(resolve => {
     const db = firebase.database();
 
-    console.log({ storyId, frequencyId });
-
-    db.ref(`frequencies/${frequencyId}/stories/${storyId}`).remove();
-    db.ref(`stories/${storyId}`).remove();
+    db.ref().update({
+      [`/stories/${storyId}/deleted`]: true,
+      [`/frequencies/${frequencyId}/stories/${storyId}/deleted`]: true,
+    });
 
     resolve();
   });
