@@ -75,6 +75,7 @@ class ChatView extends Component {
               </Timestamp>
             );
           }
+          console.log(user);
           return (
             <BubbleGroup key={i} me={itsaMe}>
               {user &&
@@ -84,7 +85,7 @@ class ChatView extends Component {
                 </HiddenLabel>}
               <Messages>
                 <Byline op={isStoryCreator}>
-                  {user && user.name}
+                  {user && user.displayName}
                   {!itsaMe &&
                     isAdmin &&
                     <AdminBadge op={isStoryCreator}>Admin</AdminBadge>}
