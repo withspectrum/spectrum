@@ -33,6 +33,10 @@ export const StoryTitle = styled(H1)`
 `;
 
 export const Byline = styled(H4)`
-	color: ${({ theme }) => theme.brand.default};
+	color: ${({ theme }) => theme.text.alt};
 	margin-bottom: 8px;
+
+	a {
+		color: ${({ theme }) => theme.text.default};
+	}
 `;

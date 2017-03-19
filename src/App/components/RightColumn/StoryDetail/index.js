@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Markdown from '../../../../shared/Markdown';
 import { openGallery } from '../../../../actions/gallery';
+import { timeDifference } from '../../../../helpers/utils';
 
 import { StoryDetailContainer, Header, StoryTitle, Byline } from './style';
 
@@ -36,12 +38,24 @@ class StoryDetail extends Component {
   };
 
   render() {
-    let { story } = this.props;
+    let { story, frequency, active } = this.props;
+    const timestamp = timeDifference(Date.now(), story.timestamp);
+    console.log(frequency);
 
     return (
       <StoryDetailContainer>
         <Header>
-          <Byline>{story.creator.displayName}</Byline>
+          {!frequency
+            ? // this is required to account for async loading of the frequency data if a user hits a url like /~everything/{storyId}
+              <Byline>{story.creator.displayName} · Posted {timestamp}</Byline>
+            : <Byline>
+                {story.creator.displayName}
+                {' '}· Posted in{' '}
+                <Link to={`/~${frequency.slug}`}>~{frequency.slug}</Link>
+                {' '}
+                {timestamp}
+              </Byline>}
+
           <StoryTitle>{story.content.title}</StoryTitle>
         </Header>
 

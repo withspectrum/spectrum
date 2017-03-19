@@ -103,7 +103,11 @@ class RightColumn extends Component {
             innerRef={comp => this.comp = comp}
             locked={story.locked}
           >
-            <StoryDetail story={story} />
+            <StoryDetail
+              story={story}
+              frequency={currentFrequency}
+              active={active}
+            />
             <StoryActions
               locked={locked}
               moderator={role}

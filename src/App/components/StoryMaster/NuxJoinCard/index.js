@@ -34,12 +34,11 @@ class NuxJoinCard extends Component {
 
   componentWillMount = () => {
     const { user: { frequencies } } = this.props;
-    const usersFrequencies = Object.keys(frequencies);
     let featuredArr = this.state.featured.slice();
 
     // show the unjoined featured frequencies first
     featured.map((freq, i) => {
-      if (usersFrequencies[freq.id]) {
+      if (frequencies[freq.id]) {
         featuredArr.push(freq);
       } else {
         featuredArr.unshift(freq);
@@ -53,7 +52,6 @@ class NuxJoinCard extends Component {
 
   render() {
     const { user: { frequencies } } = this.props;
-    const usersFrequencies = Object.keys(frequencies);
 
     return (
       <Wrapper static overflow={'visible'}>
@@ -76,7 +74,7 @@ class NuxJoinCard extends Component {
                       <h4>{freq.description}</h4>
                     </div>
                     <Actions>
-                      {usersFrequencies[freq.id]
+                      {frequencies[freq.id]
                         ? <Link to={`/~${freq.slug}`}>
                             <JoinedButton id={freq.slug} width={'100%'}>
                               Joined!
