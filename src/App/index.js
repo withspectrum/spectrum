@@ -61,7 +61,10 @@ class App extends Component {
       });
     }
 
-    if (isEverything && this.state.showDiscoverCard && user.uid) {
+    if (
+      isEverything && this.state.showDiscoverCard && user.uid ||
+      user.uid && frequencies.active === 'discover'
+    ) {
       sortedStories.unshift(<NuxJoinCard />);
     }
 
