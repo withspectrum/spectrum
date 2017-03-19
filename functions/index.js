@@ -9,3 +9,4 @@ exports.emailNotifications = functions
     console.log(event.data.val());
     return event.data.val();
   });
+exports.shortener = require('./sp.chat.js');
