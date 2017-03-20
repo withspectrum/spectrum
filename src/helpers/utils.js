@@ -279,3 +279,21 @@ export const flattenArray = arr =>
     (acc, val) => acc.concat(Array.isArray(val) ? flattenArray(val) : val),
     [],
   );
+
+export const getParameterByName = (name, url) => {
+  name = name.replace(/[\[\]]/g, '\\$&');
+  var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+    results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, ' '));
+};
+
+// Truncate a string nicely to a certain length
+export const truncate = (str, length) => {
+  if (str.length <= length) {
+    return str;
+  }
+  const subString = str.substr(0, length);
+  return subString.substr(0, subString.lastIndexOf(' ')) + '…';
+};

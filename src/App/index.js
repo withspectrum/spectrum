@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Helmet from 'react-helmet';
 import NavMaster from './components/NavMaster';
 import {
   Body,
@@ -16,7 +17,7 @@ import GalleryRoot from '../shared/gallery/GalleryRoot';
 import NuxJoinCard from './components/StoryMaster/NuxJoinCard';
 import LoginCard from './components/StoryMaster/LoginCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
-import { sortArrayByKey } from '../helpers/utils';
+import { sortArrayByKey, getParameterByName, truncate } from '../helpers/utils';
 
 class App extends Component {
   state = {
@@ -72,8 +73,92 @@ class App extends Component {
       sortedStories.unshift(<LoginCard />);
     }
 
+    const titleParam = getParameterByName('t', this.props.location.search);
+    const descriptionParam = getParameterByName(
+      'd',
+      this.props.location.search,
+    );
+
+    let title = titleParam;
+    let description = descriptionParam;
+
+    if (!title && !description) {
+      const story = sortedStories.find(story => story.id === stories.active);
+      const freq = frequency ||
+        story &&
+          getCurrentFrequency(story.frequencyId, frequencies.frequencies);
+      title = `${story ? `${truncate(story.content.title, 40)} ` : ''}${freq
+        ? `~${freq.name} `
+        : ''}${story || freq ? '| ' : ''}Spectrum`;
+      description = story
+        ? `${story.content.description
+            ? truncate(story.content.description, 150)
+            : 'A story on Spectrum'}`
+        : freq ? freq.description : 'Like a forum but for Mars colonists.';
+    }
+
     return (
       <Body>
+        <Helmet
+          title={
+            titleParam && descriptionParam ? `${title} | ${description}` : title
+          }
+          meta={[
+            {
+              name: 'description',
+              content: description,
+            },
+            {
+              name: 'og:title',
+              content: title,
+            },
+            {
+              name: 'og:description',
+              content: description,
+            },
+            {
+              name: 'og:url',
+              content: `https://spectrum.chat${this.props.location.pathname}`,
+            },
+            {
+              name: 'og:image',
+              content: 'https://spectrum.chat/img/apple-icon-144x144-precomposed.png',
+            },
+            {
+              name: 'og:type',
+              content: 'website',
+            },
+            {
+              name: 'og:site_name',
+              content: 'Spectrum',
+            },
+            // Twitter
+            {
+              name: 'twitter:card',
+              content: 'summary',
+            },
+            {
+              name: 'twitter:site',
+              content: '@withspectrum',
+            },
+            {
+              name: 'twitter:image',
+              content: 'https://spectrum.chat/img/apple-icon-144x144-precomposed.png',
+            },
+            {
+              name: 'twitter:image:alt',
+              content: 'Like a forum but for Mars colonists.',
+            },
+            {
+              name: 'twitter:title',
+              content: title,
+            },
+            {
+              name: 'twitter:description',
+              content: description,
+            },
+          ]}
+        />
         <ModalRoot />
         <GalleryRoot />
         <LoadingIndicator />
