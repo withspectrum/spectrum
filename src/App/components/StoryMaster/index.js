@@ -37,6 +37,7 @@ import Card from '../Card';
 import { ACTIVITY_TYPES } from '../../../db/types';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { formatSenders } from '../../../helpers/notifications';
+import { debounce } from '../../../helpers/utils';
 
 const MIN_STORY_CARD_HEIGHT = 109;
 
@@ -62,6 +63,19 @@ class StoryMaster extends Component {
     }),
   };
 
+  constructor() {
+    super();
+    this.debouncedClearCache = debounce(this.clearCellMeasurerCache, 150);
+  }
+
+  componentWillMount() {
+    window.addEventListener('resize', this.debouncedClearCache, false);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.debouncedClearCache, false);
+  }
+
   componentWillReceiveProps = nextProps => {
     // If any of the things the story list cares about change,
     // rerender the list
@@ -81,13 +95,8 @@ class StoryMaster extends Component {
     )
       return;
 
-    this.setState({
+    this.clearCellMeasurerCache({
       jumpToTop: true,
-      cache: new CellMeasurerCache({
-        fixedWidth: true,
-        minHeight: MIN_STORY_CARD_HEIGHT,
-        keyMapper: index => nextProps.stories[index].id,
-      }),
     });
   };
 
@@ -98,6 +107,17 @@ class StoryMaster extends Component {
         jumpToTop: false,
       });
     }
+  };
+
+  clearCellMeasurerCache = otherUpdates => {
+    this.setState({
+      ...otherUpdates,
+      cache: new CellMeasurerCache({
+        fixedWidth: true,
+        minHeight: MIN_STORY_CARD_HEIGHT,
+        keyMapper: index => this.props.stories[index].id,
+      }),
+    });
   };
 
   loadStoriesAgain = () => {
