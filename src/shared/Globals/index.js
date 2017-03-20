@@ -13,52 +13,65 @@ export const Shadow = {
   button: '0 2px 8px rgba(23,26,33, 0.15)',
 };
 
+export const Transition = {
+  hover: {
+    on: 'all 0.2s ease-in',
+    off: 'all 0.3s ease-out',
+  },
+};
+
 export const fontStack = css`
 	font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe', sans-serif
 `;
 
 export const Button = styled.button`
-	background-color: ${props =>
+  background-color: ${props =>
   props.disabled ? props.theme.inactive : props.theme.brand.default};
-	background-image: ${props =>
+  background-image: ${props =>
   props.disabled
     ? 'none'
     : Gradient(props.theme.brand.alt, props.theme.brand.default)};
-	border: 2px solid ${props =>
-  props.disabled ? 'transparent' : props.theme.brand.alt};
 	border-radius: 8px;
 	font-size: 14px;
 	font-weight: 600;
 	color: ${({ theme }) => theme.text.reverse};
-	transition: all 0.2s ease-out;
-	padding: 8px 16px;
+	transition: ${Transition.hover.off};
+	padding: 12px 16px;
   width: ${props => props.width ? props.width : ''};
+  white-space: nowrap;
+  word-break: keep-all;
 
 	&:hover {
-		border-radius: ${props => props.disabled ? '8px' : '16px'};
+		border-radius: ${props => props.disabled ? '8px' : '12px'};
 		opacity: ${props => props.disabled ? '0.5' : '1'};
-		transition: all 0.2s ease-in;
+		transition: ${Transition.hover.on};
 		cursor: pointer;
+    box-shadow: ${Shadow.high};
 	}
 `;
 
 export const TextButton = styled(Button)`
 	background-color: transparent;
 	background-image: none;
-	border: none;
-	border-radius: 0px;
+	border: 2px solid ${props =>
+  props.border ? props.theme.bg.wash : 'transparent'};
+	border-radius: ${props => props.border ? '8px' : '4px'};
 	font-size: 14px;
 	font-weight: 500;
-	color: ${props =>
-  props.warn ? props.theme.warn.default : props.theme.text.alt};
-	transition: all 0.2s ease-out;
+	color: ${props => props.color ? props.color : props.theme.text.alt};
+	transition: ${Transition.hover.off};
 	padding: 8px 16px;
 
 	&:hover {
-				border-radius: 8px;
-				background-color: ${({ theme }) => theme.bg.default};
-			}
-	`;
+    cursor: pointer;
+    border: 2px solid transparent;
+		border-radius: ${props => props.border ? '12px' : '8px'};
+    color: ${props => props.color ? props.color : props.theme.warn.alt};
+		background-color: ${({ theme }) => theme.bg.default};
+    box-shadow: ${Shadow.high};
+    transition: ${Transition.hover.on};
+	}
+`;
 
 export const SocialButton = styled(Button)`
  	display: flex;
@@ -81,6 +94,12 @@ export const SocialButton = styled(Button)`
 	> svg {
 		margin-right: 8px;
 	}
+`;
+
+export const IconButton = styled.button`
+  display: inline-block;
+  appearance: none;
+  background-color: transparent;
 `;
 
 export const Label = styled.label`
@@ -290,6 +309,7 @@ const returnTooltip = props => {
           }
       `;
     case 'right':
+    default:
       return `
           &:after {
             left: calc(100% + 5px);
@@ -339,19 +359,6 @@ const returnTooltip = props => {
             top: calc(50% - 5px);
             border-right-width: 0;
             border-left-color: ${props.theme.bg.reverse};
-          }
-      `;
-    default:
-      return `
-          &:after {
-            left: calc(100% + 5px);
-            top: 2%;
-          }
-          &:before{
-            left: 100%;
-            top: calc(50% - 5px);
-            border-left-width: 0;
-            border-right-color: ${props.theme.bg.reverse};
           }
       `;
   }
