@@ -23,8 +23,7 @@ class ParticipantHeads extends Component {
     });
 
     // create a new array of the sorted participant IDs to be matched against the List in the store
-    let sortedArr = [];
-    sortedParticipants.map(participant => sortedArr.push(participant.id));
+    const sortedArr = sortedParticipants.map(participant => participant.id);
 
     return (
       <Container>
