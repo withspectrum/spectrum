@@ -73,8 +73,14 @@ class App extends Component {
       sortedStories.unshift(<LoginCard />);
     }
 
-    let title = getParameterByName('t', this.props.location.search);
-    let description = getParameterByName('d', this.props.location.search);
+    const titleParam = getParameterByName('t', this.props.location.search);
+    const descriptionParam = getParameterByName(
+      'd',
+      this.props.location.search,
+    );
+
+    let title = titleParam;
+    let description = descriptionParam;
 
     if (!title && !description) {
       const story = sortedStories.find(story => story.id === stories.active);
@@ -94,7 +100,9 @@ class App extends Component {
     return (
       <Body>
         <Helmet
-          title={title}
+          title={
+            titleParam && descriptionParam ? `${title} | ${description}` : title
+          }
           meta={[
             {
               name: 'description',
