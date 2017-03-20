@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import Helmet from 'react-helmet';
 import NavMaster from './components/NavMaster';
 import {
   Body,
@@ -72,8 +73,54 @@ class App extends Component {
       sortedStories.unshift(<LoginCard />);
     }
 
+    let title = getParameterByName('t', this.props.location.search);
+    let description = getParameterByName('d', this.props.location.search);
+
+    if (!title && !description) {
+      const story = sortedStories.find(story => story.id === stories.active);
+      const freq = frequency ||
+        story &&
+          getCurrentFrequency(story.frequencyId, frequencies.frequencies);
+      title = `${story ? `${story.content.title.substr(0, 40)}… ` : ''}${freq
+        ? `~${freq.name} `
+        : ''}${story || freq ? '| ' : ''}Spectrum`;
+      description = story && story.content.description
+        ? `${story.content.description.substr(0, 150)}…`
+        : freq ? freq.description : 'Like a forum but for Mars colonists.';
+    }
+
     return (
       <Body>
+        <Helmet
+          title={title}
+          meta={[
+            {
+              name: 'description',
+              content: description,
+            },
+            {
+              name: 'og:title',
+              content: title,
+            },
+            {
+              name: 'og:description',
+              content: description,
+            },
+            {
+              name: 'og:url',
+              content: this.props.location.href,
+            },
+            // Twitter
+            {
+              name: 'twitter:title',
+              content: title,
+            },
+            {
+              name: 'twitter:description',
+              content: description,
+            },
+          ]}
+        />
         <ModalRoot />
         <GalleryRoot />
         <LoadingIndicator />
@@ -109,10 +156,7 @@ class App extends Component {
         </StoryMasterContainer>
 
         <RightColumnContainer active={stories.active} viewing={ui.viewing}>
-          <RightColumn
-            title={getParameterByName('t', this.props.location.search)}
-            description={getParameterByName('d', this.props.location.search)}
-          />
+          <RightColumn />
         </RightColumnContainer>
       </Body>
     );

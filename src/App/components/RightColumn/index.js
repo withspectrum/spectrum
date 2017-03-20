@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Helmet from 'react-helmet';
 
 import { subscribeFrequency } from '../../../actions/frequencies';
 import { deleteStory, toggleLockedStory } from '../../../actions/stories';
@@ -89,68 +88,11 @@ class RightColumn extends Component {
       returnUrl = active === 'everything'
         ? 'everything'
         : currentFrequency && currentFrequency.slug;
-    } else {
-      currentFrequency = getCurrentFrequency(active, frequencies);
     }
 
     if (story && !composer.isOpen) {
-      const title = this.props.title ||
-        `${story.content.title} | ~${currentFrequency
-          ? currentFrequency.name
-          : active}`;
-      const description = this.props.description ||
-        story.content.description.substr(0, 150);
       return (
         <ViewContainer>
-          <Helmet
-            title={title}
-            meta={[
-              {
-                name: 'description',
-                content: description,
-              },
-              {
-                name: 'og:title',
-                content: title,
-              },
-              {
-                name: 'og:description',
-                content: description,
-              },
-              {
-                name: 'og:url',
-                content: `https://spectrum.chat/~${currentFrequency
-                  ? currentFrequency.slug || currentFrequency.id
-                  : active}/${story.id}`,
-              },
-              { name: 'og:type', content: 'website' },
-              {
-                name: 'og:image',
-                content: 'https://spectrum.chat/img/media.png',
-              },
-              { name: 'og:site_name', content: 'Spectrum' },
-              // Twitter
-              { name: 'twitter:card', content: 'summary_large_image' },
-              { name: 'twitter:site', content: '@withspectrum' },
-              { name: 'twitter:title', content: 'Spectrum' },
-              {
-                name: 'twitter:title',
-                content: title,
-              },
-              {
-                name: 'twitter:description',
-                content: description,
-              },
-              {
-                name: 'twitter:image',
-                content: 'https://spectrum.chat/img/media.png',
-              },
-              {
-                name: 'twitter:image:alt',
-                content: 'Like a forum but for Mars colonists.',
-              },
-            ]}
-          />
           <Link to={`/~${returnUrl}`}>
             <BackArrow onClick={this.clearActiveStory}>
               <Icon icon="back" />
@@ -199,114 +141,14 @@ class RightColumn extends Component {
         </ViewContainer>
       );
     } else if (composer.isOpen) {
-      const title = this.props.title ||
-        `~${currentFrequency && currentFrequency.name ||
-          active} - ${currentFrequency ? currentFrequency.description : ''}`;
-      const description = this.props.descripton ||
-        currentFrequency && currentFrequency.description ||
-        '';
       return (
         <ViewContainer>
-          <Helmet
-            title={title}
-            meta={[
-              { name: 'description', content: description },
-              {
-                name: 'og:title',
-                content: title,
-              },
-              { name: 'og:description', content: description },
-              {
-                name: 'og:url',
-                content: `https://spectrum.chat/~${currentFrequency.slug ||
-                  active}`,
-              },
-              { name: 'og:type', content: 'website' },
-              {
-                name: 'og:image',
-                content: 'https://spectrum.chat/img/media.png',
-              },
-              { name: 'og:site_name', content: 'Spectrum' },
-              // Twitter
-              { name: 'twitter:card', content: 'summary_large_image' },
-              { name: 'twitter:site', content: '@withspectrum' },
-              { name: 'twitter:title', content: 'Spectrum' },
-              {
-                name: 'twitter:title',
-                content: title,
-              },
-              {
-                name: 'twitter:description',
-                content: description,
-              },
-              {
-                name: 'twitter:image',
-                content: 'https://spectrum.chat/img/media.png',
-              },
-              {
-                name: 'twitter:image:alt',
-                content: 'Like a forum but for Mars colonists.',
-              },
-            ]}
-          />
           <Composer />
         </ViewContainer>
       );
     } else {
-      const title = this.props.title ||
-        `~${currentFrequency && currentFrequency.name ||
-          active} - ${currentFrequency ? currentFrequency.description : ''}`;
-      const description = this.props.descripton ||
-        currentFrequency && currentFrequency.description ||
-        '';
       return (
         <ViewContainer>
-          {currentFrequency &&
-            <Helmet
-              title={title}
-              meta={[
-                { name: 'description', content: description },
-                {
-                  name: 'og:title',
-                  content: title,
-                },
-                {
-                  name: 'og:description',
-                  content: description,
-                },
-                {
-                  name: 'og:url',
-                  content: `https://spectrum.chat/~${currentFrequency.slug ||
-                    active}`,
-                },
-                { name: 'og:type', content: 'website' },
-                {
-                  name: 'og:image',
-                  content: 'https://spectrum.chat/img/media.png',
-                },
-                { name: 'og:site_name', content: 'Spectrum' },
-                // Twitter
-                { name: 'twitter:card', content: 'summary_large_image' },
-                { name: 'twitter:site', content: '@withspectrum' },
-                { name: 'twitter:title', content: 'Spectrum' },
-                {
-                  name: 'twitter:title',
-                  content: title,
-                },
-                {
-                  name: 'twitter:description',
-                  content: description,
-                },
-                {
-                  name: 'twitter:image',
-                  content: 'https://spectrum.chat/img/media.png',
-                },
-                {
-                  name: 'twitter:image:alt',
-                  content: 'Like a forum but for Mars colonists.',
-                },
-              ]}
-            />}
           <NullContainer />
         </ViewContainer>
       );
