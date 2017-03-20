@@ -24,6 +24,7 @@ export const Bubble = styled.p`
 	max-width: 60%;
 	line-height: 20px;
 	opacity: ${props => props.persisted === false ? 0.5 : 1};
+	transition: opacity 0.2s ease-out;
 
 	&:first-of-type:first-child { /* first message bubble, but could be preceded by an emoji */
 		margin-top: 0;
