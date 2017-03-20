@@ -17,9 +17,18 @@ class ParticipantHeads extends Component {
     const { participants, list, unread, me, saying } = this.props;
     const arr = Object.keys(participants);
 
+    // sort the participants by last activity
+    const sortedParticipants = Object.values(participants).sort((a, b) => {
+      return a.last_activity < b.last_activity;
+    });
+
+    // create a new array of the sorted participant IDs to be matched against the List in the store
+    let sortedArr = [];
+    sortedParticipants.map(participant => sortedArr.push(participant.id));
+
     return (
       <Container>
-        {arr.map((participant, i) => {
+        {sortedArr.map((participant, i) => {
           while (i <= 4 && list[participant]) {
             return (
               <HeadWrapper
@@ -34,13 +43,15 @@ class ParticipantHeads extends Component {
           }
         })}
 
-        {arr.length > 4 && // if more than four participnats, tack on a placeholder
+        {sortedArr.length > 4 && // if more than four participnats, tack on a placeholder
           <HeadWrapper style={{ position: 'relative', left: '-16px' }}>
             <Head src={`${process.env.PUBLIC_URL}/img/head_placeholder.png`} />
           </HeadWrapper>}
 
-        <Label length={arr.length}>
-          {list[arr[0]].uid === me ? 'You' : list[arr[0]].displayName}
+        <Label length={sortedArr.length}>
+          {list[sortedArr[0]].uid === me
+            ? 'You'
+            : list[sortedArr[0]].displayName}
           {' '}and{' '}
           {arr.length - 1}
           {' '}others are{' '}
