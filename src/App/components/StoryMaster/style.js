@@ -1,5 +1,13 @@
 import styled from 'styled-components';
-import { Shadow, Gradient, Tooltip, H2, H4, P } from '../../../shared/Globals';
+import {
+  Shadow,
+  Gradient,
+  Tooltip,
+  H2,
+  H4,
+  P,
+  IconButton,
+} from '../../../shared/Globals';
 
 export const Column = styled.div`
 	display: flex;
@@ -33,6 +41,7 @@ export const Header = styled.div`
 	display: 'flex';
 	flex: 0 0 auto;
 	min-height: 48px;
+	padding: 8px;
 	width: 100%;
 	background-color: ${({ theme }) => theme.bg.default};
 	align-self: flex-start;
@@ -127,49 +136,19 @@ export const TipButton = styled.button`
 	${props => props.tipText ? Tooltip(props) : ''};
 `;
 
-export const MenuButton = styled.div`
+export const MenuButton = styled(IconButton)`
 	display: none;
-	margin-right: 16px;
 
 	@media (max-width: 768px) {
-		position: absolute;
-		display: inline;
-		left: ${props => props.everything ? '-4px' : '8px'};
-		top: ${props => props.everything ? '3px' : '10px'};
+		display: inline-block;
 	}
 `;
 
 export const FreqTitle = styled(H2)`
 	font-weight: 800;
 	font-size: 20px;
-	margin: 16px;
-	margin-bottom: 8px;
+	margin-left: 8px;
 	position: relative;
-
-	@media (max-width: 768px) {
-		border-bottom: 1px solid ${props => props.theme.border.default};
-		margin: 0;
-    text-align: center;
-    padding: 8px 60px;
-    margin-bottom: 16px;
-    white-space: nowrap;
-    max-width: 100%;
-    text-overflow: ellipsis;
-    overflow: hidden;
-	}
-`;
-
-export const Everything = styled(H2)`
-	font-weight: 800;
-	font-size: 20px;
-	position: relative;
-
-		width: 100%;
-		display: flex;
-		justify-content: space-between;
-		text-align: center;
-		border-bottom: none;
-
 `;
 
 export const FlexCol = styled.div`
@@ -179,24 +158,36 @@ export const FlexCol = styled.div`
 
 export const FlexRow = styled.div`
 	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+`;
+
+export const Spread = styled(FlexRow)`
 	justify-content: space-between;
-`;
-
-export const Count = styled(H4)`
-	margin: 0 16px;
-	font-weight: 700;
-`;
-
-export const Description = styled(P)`
-	margin: 16px;
-	margin-top: 8px;
+	margin: 0 8px;
 `;
 
 export const Actions = styled(FlexRow)`
 	display: ${props => props.visible ? 'flex' : 'none'};
 	flex: 0 0 48px;
-	padding: 8px;
+	justify-content: space-between;
 	align-items: center;
+`;
+
+export const Everything = styled(Actions)`
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	text-align: center;
+`;
+
+export const Count = styled(H4)`
+	margin-top: 8px;
+	font-weight: 700;
+`;
+
+export const Description = styled(P)`
+	margin: 8px;
 `;
 
 export const LoadingBlock = styled.div`

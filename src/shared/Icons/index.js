@@ -26,6 +26,9 @@ export const InlineSvg = styled.svg`
 
 export const SvgWrapper = styled.div`
   display: inline-block;
+  flex: 0 0 ${props => props.size ? `${props.size}px` : '32px'};
+  width: ${props => props.size ? `${props.size}px` : '32px'};
+  height: ${props => props.size ? `${props.size}px` : '32px'};
   min-width: ${props => props.size ? `${props.size}px` : '32px'};
   min-height: ${props => props.size ? `${props.size}px` : '32px'};
   position: relative;
@@ -299,6 +302,7 @@ class Icon extends React.Component {
         size={this.props.size}
         color={this.props.color}
         reverse={this.props.reverse}
+        justify={this.props.location}
         tipText={this.props.tipText}
         tipLocation={this.props.tipLocation}
       >
