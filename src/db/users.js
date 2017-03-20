@@ -129,3 +129,18 @@ export const setUsernameAndEmail = ({ uid, username, email }) => {
     .then(() => db.ref(`users/${uid}`).once('value'))
     .then(snapshot => snapshot.val());
 };
+
+export const setLastActivity = uid => {
+  console.log('set last activity');
+  const db = firebase.database();
+
+  db
+    .ref()
+    .update({
+      [`users/${uid}/lastActivity`]: firebase.database.ServerValue.TIMESTAMP,
+    })
+    .catch(err => {
+      // Don't let setting the last activity crash the app
+      console.log(err);
+    });
+};
