@@ -25,6 +25,42 @@
     </script>
   </head>
   <body>
+    <script>
+      function getParameterByName(name, url) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+          results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+      };
+
+      var t = getParameterByName('t', window.location.href);
+      var d = getParameterByName('d', window.location.href);
+
+      if (t && d) {
+
+        function meta(name, content) {
+          var meta = document.createElement('meta');
+          meta.setAttribute('name', name);
+          meta.setAttribute('content', content);
+          document.getElementsByTagName('head')[0].appendChild(meta);
+        }
+
+        meta('description', d);
+        meta('og:title', t);
+        meta('og:description', d);
+        meta('og:url', window.location.href);
+        meta('og:type', 'website');
+        meta('og:site_name', 'Spectrum');
+        meta('twitter:card', 'summary_large_image');
+        meta('twitter:site', '@withspectrum');
+        meta('twitter:title', t);
+        meta('twitter:description', d);
+        meta('twitter:image', 'https://spectrum.chat/img/media.png');
+        meta('twitter:image:alt', 'Like a forum but for Mars colonists.');
+      }
+    </script>
     <div id="root"></div>
   </body>
 </html>
