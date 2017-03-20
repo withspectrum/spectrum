@@ -54,7 +54,7 @@ class NuxJoinCard extends Component {
   componentDidMount = () => {
     const node = ReactDOM.findDOMNode(this.refs.hscroll);
 
-    let x, y, top, left, down;
+    let x, left, down;
     node.addEventListener('mousemove', e => {
       if (down) {
         let newX = e.pageX;
