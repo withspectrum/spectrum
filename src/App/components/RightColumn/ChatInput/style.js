@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient, Shadow } from '../../../../shared/Globals';
+import { Gradient, Shadow, Tooltip } from '../../../../shared/Globals';
 import Textarea from 'react-textarea-autosize';
 
 export const Wrapper = styled.span`
@@ -73,8 +73,6 @@ export const MediaLabel = styled.label`
 
 	&:hover {
 		cursor: pointer;
-		background-color: #eee;
-		transition: all 0.2s ease-in;
 	}
 `;
 
@@ -89,14 +87,17 @@ export const EmojiToggle = styled.div`
 	height: 40px;
 	width: 40px;
 	margin: 0 8px 0 4px;
-	background: ${props => props.active ? props.theme.brand.default : '#f6f7f8'};
+	background: ${props =>
+  props.active ? props.theme.brand.default : 'transparent'};
 	transition: all 0.3s ease-out;
 
 	&:hover {
 		cursor: pointer;
-		transform: scale(1.1);
-		background: ${props => props.active ? props.theme.brand.default : '#eee'};
+		background: ${props =>
+  props.active ? props.theme.brand.default : 'transparent'};
 		transition: all 0.2s ease-in;
+		${props => props.tipText ? Tooltip(props) : ''};
+
 	}
 
 	@media (max-width: 768px) {

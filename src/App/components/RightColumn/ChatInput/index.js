@@ -157,7 +157,7 @@ class ChatInput extends Component {
         />
 
         <MediaLabel htmlFor="file">
-          <Icon icon="photo" />
+          <Icon icon="photo" tipLocation="top-right" tipText="Upload Photo" />
         </MediaLabel>
 
         {this.state.emojiPickerOpen &&
@@ -166,6 +166,8 @@ class ChatInput extends Component {
             closePicker={this.toggleEmojiPicker}
           />}
         <EmojiToggle
+          tipText="Insert Emoji"
+          tipLocation="top-right"
           active={this.state.emojiPickerOpen}
           onClick={this.toggleEmojiPicker}
         >
