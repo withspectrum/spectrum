@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import { Wrapper } from '../../Card/style';
 import { Button } from '../../../../shared/Globals';
@@ -50,6 +51,31 @@ class NuxJoinCard extends Component {
     });
   };
 
+  componentDidMount = () => {
+    let node = ReactDOM.findDOMNode(this.refs.hscroll);
+    console.log(node.scrollWidth, node.scrollLeft);
+    let curYPos, curXPos, curDown;
+
+    node.addEventListener('mousemove', function(e) {
+      if (curDown) {
+        node.scrollTo(
+          document.body.scrollLeft + (curXPos - e.pageX),
+          document.body.scrollTop + (curYPos - e.pageY),
+        );
+      }
+    });
+
+    node.addEventListener('mousedown', function(e) {
+      curYPos = e.pageY;
+      curXPos = e.pageX;
+      curDown = true;
+    });
+
+    node.addEventListener('mouseup', function(e) {
+      curDown = false;
+    });
+  };
+
   render() {
     const { user: { frequencies } } = this.props;
 
@@ -62,7 +88,7 @@ class NuxJoinCard extends Component {
             Explore some of our favorite communities on Spectrum. And then join them. For fun's sake.
           </Description>
 
-          <Hscroll>
+          <Hscroll ref="hscroll">
             {this.state.featured.length > 0 &&
               this.state.featured.map((freq, i) => {
                 return (
