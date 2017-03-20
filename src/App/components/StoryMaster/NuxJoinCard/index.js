@@ -52,27 +52,29 @@ class NuxJoinCard extends Component {
   };
 
   componentDidMount = () => {
-    let node = ReactDOM.findDOMNode(this.refs.hscroll);
-    console.log(node.scrollWidth, node.scrollLeft);
-    let curYPos, curXPos, curDown;
+    const node = ReactDOM.findDOMNode(this.refs.hscroll);
 
-    node.addEventListener('mousemove', function(e) {
-      if (curDown) {
-        node.scrollTo(
-          document.body.scrollLeft + (curXPos - e.pageX),
-          document.body.scrollTop + (curYPos - e.pageY),
-        );
+    let x, y, top, left, down;
+    node.addEventListener('mousemove', e => {
+      if (down) {
+        let newX = e.pageX;
+        node.scrollLeft = left - newX + x;
       }
     });
 
-    node.addEventListener('mousedown', function(e) {
-      curYPos = e.pageY;
-      curXPos = e.pageX;
-      curDown = true;
+    node.addEventListener('mousedown', e => {
+      e.preventDefault();
+      down = true;
+      x = e.pageX;
+      left = node.scrollLeft;
     });
 
-    node.addEventListener('mouseup', function(e) {
-      curDown = false;
+    node.addEventListener('mouseup', e => {
+      down = false;
+    });
+
+    node.addEventListener('mouseleave', e => {
+      down = false;
     });
   };
 
