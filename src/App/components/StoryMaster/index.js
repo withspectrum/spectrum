@@ -305,8 +305,6 @@ class StoryMaster extends Component {
         return stories.every(story => story.id !== notification.ids.story);
       });
 
-    console.log(window.innerWidth);
-
     return (
       <Column>
         <Header>
