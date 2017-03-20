@@ -131,7 +131,6 @@ export const setUsernameAndEmail = ({ uid, username, email }) => {
 };
 
 export const setlastSeen = uid => {
-  console.log('set last activity');
   const db = firebase.database();
 
   db
