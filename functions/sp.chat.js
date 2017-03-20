@@ -8,6 +8,14 @@ const app = express();
 const toRoot = (res) => res.redirect('https://spectrum.chat')
 // Create redirect link
 const createLink = ({ story, frequency, title, description }) => `https://spectrum.chat/~${frequency}${story ? `/${story}` : ''}?t=${encodeURIComponent(title)}&d=${encodeURIComponent(description ? description.substr(0, 140) : '')}`
+// Truncate a string nicely to a certain length
+const truncate = (str, length) => {
+  if (str.length <= length) {
+    return str;
+  }
+  const subString = str.substr(0, length);
+  return subString.substr(0, subString.lastIndexOf(' ')) + '…';
+};
 
 app.get('/~:frequency', (req, res) => {
 	const { frequency } = req.params;
@@ -23,7 +31,7 @@ app.get('/~:frequency', (req, res) => {
 		.then((data) => {
 			if (!data) return toRoot(res)
 			const { name, description } = data[Object.keys(data)[0]];
-			return res.redirect(createLink({ frequency, title: name, description }));
+			return res.redirect(createLink({ frequency, title: `~${name}`, description: truncate(description, 150) }));
 		})
 });
 
@@ -43,8 +51,8 @@ app.get('/:storyId', (req, res) => {
 			if (!frequency || frequency.deleted) return toRoot(res);
 			res.redirect(createLink({
 				frequency: frequency.slug,
-				title: story.content.title,
-				description: story.content.description,
+				title: truncate(story.content.title, 40),
+				description: truncate(story.content.description, 150),
 				story: storyId,
 			}))
 		})
