@@ -223,6 +223,10 @@
           ".write": "auth.uid === $user",
           ".validate": "newData.val() <= now"
         },
+        "lastActivity": {
+          ".write": "auth.uid === $user",
+          ".validate": "newData.val() <= now"
+        },
         "displayName": {
           ".write": "auth.uid === $user",
           ".validate": "newData.isString()"
