@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
 import Icon from '../Icons';
 import { Tooltip, Shadow, Gradient, Transition } from '../Globals';
@@ -94,4 +93,4 @@ Button.defaultProps = {
   color: defaultColor(Button),
 };
 
-export default connect()(Button);
+export default Button;

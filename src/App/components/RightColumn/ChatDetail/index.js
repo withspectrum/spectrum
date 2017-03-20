@@ -103,6 +103,7 @@ class ChatView extends Component {
                       <TextBubble
                         key={i}
                         me={itsaMe}
+                        persisted={message.persisted}
                         dangerouslySetInnerHTML={{
                           __html: this.formatMessage(message.message.content),
                         }}
@@ -115,6 +116,7 @@ class ChatView extends Component {
                       <ImgBubble
                         me={itsaMe}
                         onClick={this.openGallery}
+                        persisted={message.persisted}
                         src={message.message.content.url}
                         key={i}
                       />

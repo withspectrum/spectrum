@@ -1,6 +1,7 @@
 import * as firebase from 'firebase';
 import { set, track } from '../EventTracker';
 import { createUser } from '../db/users';
+import { monitorUser, stopUserMonitor } from '../helpers/users';
 
 /*------------------------------------------------------------\*
 *
@@ -28,6 +29,7 @@ export const login = () => dispatch => {
       // set this uid in google analytics
       track('user', 'logged in', null);
       set(user.uid);
+      monitorUser(user.uid);
 
       dispatch({ type: 'STOP_LOADING' });
 
@@ -56,6 +58,7 @@ export const signOut = () => dispatch => {
   track('user', 'sign out', null);
 
   firebase.auth().signOut().then(() => {
+    stopUserMonitor();
     // once firebase verifies the logout is successful, clear localStorage
     localStorage.removeItem('state');
 

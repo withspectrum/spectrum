@@ -13,6 +13,7 @@ import { getUserInfo, listenToAuth } from './db/users';
 import { getFrequency } from './db/frequencies';
 import { listenToNotifications } from './db/notifications';
 import { set, track } from './EventTracker';
+import { monitorUser, stopUserMonitor } from './helpers/users';
 
 // Codesplit the App and the Homepage to only load what we need based on which route we're on
 const App = asyncComponent(() =>
@@ -33,10 +34,14 @@ class Root extends Component {
     this.handleProps({ frequencies: {}, stories: {}, match });
     // Authenticate the user
     listenToAuth(user => {
-      if (!user)
+      if (!user) {
+        stopUserMonitor();
         return dispatch({
           type: 'USER_NOT_AUTHENTICATED',
         });
+      }
+
+      monitorUser(user.uid);
 
       // set this uid in google analytics
       track('user', 'authed', null);
