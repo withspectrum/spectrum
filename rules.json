@@ -223,7 +223,7 @@
           ".write": "auth.uid === $user",
           ".validate": "newData.val() <= now"
         },
-        "lastActivity": {
+        "lastSeen": {
           ".write": "auth.uid === $user",
           ".validate": "newData.val() <= now"
         },
