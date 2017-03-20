@@ -18,7 +18,7 @@ export const Bubble = styled.p`
 	flex: 0 0 auto;
 	padding: 8px 16px;
 	vertical-align: middle;
-	border-radius: 24px
+	border-radius: 16px;
 	margin-top: 2px;
 	font-size: 14px;
 	max-width: 60%;
