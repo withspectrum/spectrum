@@ -70,6 +70,22 @@ export const CheckboxWrapper = styled.span`
     vertical-align: middle;
     margin-left: -6px;
   }
+
+  > a {
+    text-decoration: none;
+    color: ${({ theme }) => theme.brand.alt};
+    font-weight: 600;
+    border-bottom: 2px solid transparent;
+    position: relative;
+    padding-bottom: 0px;
+    transition: all 0.3s ease-out;
+
+    &:hover {
+      border-bottom: 2px solid ${({ theme }) => theme.brand.alt};
+      padding-bottom: 2px;
+      transition: all 0.2s ease-in;
+    }
+  }
 `;
 
 export const HiddenInput = styled.input`

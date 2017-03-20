@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { Tooltip } from '../Globals';
 
+/* eslint no-eval: 0 */
+
 export const InlineSvg = styled.svg`
   position: absolute;
   top: 0;
@@ -11,7 +13,7 @@ export const InlineSvg = styled.svg`
   height: 100%;
   width: 100%;
   color: inherit;
-  transition: fill 0.2s ease-out;
+  transition: fill 0.3s ease-out;
   fill: ${props => props.subtle ? props.theme.text.alt : 'currentColor'};
 
   &:hover {
