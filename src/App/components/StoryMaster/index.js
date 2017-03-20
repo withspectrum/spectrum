@@ -7,12 +7,11 @@ import {
   InfiniteLoader,
 } from 'react-virtualized';
 import LoadingIndicator from '../../../shared/loading/global';
+import { Button, TextButton, IconButton } from '../../../shared/Globals';
 import {
   Column,
   Header,
   ScrollBody,
-  JoinBtn,
-  TipButton,
   Overlay,
   MenuButton,
   FreqTitle,
@@ -38,6 +37,7 @@ import Card from '../Card';
 import { ACTIVITY_TYPES } from '../../../db/types';
 import { getCurrentFrequency } from '../../../helpers/frequencies';
 import { formatSenders } from '../../../helpers/notifications';
+import { debounce } from '../../../helpers/utils';
 
 const MIN_STORY_CARD_HEIGHT = 109;
 
@@ -63,6 +63,19 @@ class StoryMaster extends Component {
     }),
   };
 
+  constructor() {
+    super();
+    this.debouncedClearCache = debounce(this.clearCellMeasurerCache, 150);
+  }
+
+  componentWillMount() {
+    window.addEventListener('resize', this.debouncedClearCache, false);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.debouncedClearCache, false);
+  }
+
   componentWillReceiveProps = nextProps => {
     // If any of the things the story list cares about change,
     // rerender the list
@@ -82,13 +95,8 @@ class StoryMaster extends Component {
     )
       return;
 
-    this.setState({
+    this.clearCellMeasurerCache({
       jumpToTop: true,
-      cache: new CellMeasurerCache({
-        fixedWidth: true,
-        minHeight: MIN_STORY_CARD_HEIGHT,
-        keyMapper: index => nextProps.stories[index].id,
-      }),
     });
   };
 
@@ -99,6 +107,17 @@ class StoryMaster extends Component {
         jumpToTop: false,
       });
     }
+  };
+
+  clearCellMeasurerCache = otherUpdates => {
+    this.setState({
+      ...otherUpdates,
+      cache: new CellMeasurerCache({
+        fixedWidth: true,
+        minHeight: MIN_STORY_CARD_HEIGHT,
+        keyMapper: index => this.props.stories[index].id,
+      }),
+    });
   };
 
   loadStoriesAgain = () => {
@@ -311,42 +330,42 @@ class StoryMaster extends Component {
           <Actions visible={loggedIn}>
             {!(isEverything || role === 'owner' || hidden || isNotifications) &&
               (role
-                ? <JoinBtn member={role} onClick={this.unsubscribeFrequency}>
-                    Leave
-                  </JoinBtn>
-                : <JoinBtn onClick={this.subscribeFrequency}>
-                    Join ~{activeFrequency}
-                  </JoinBtn>)}
+                ? <TextButton member={role} onClick={this.unsubscribeFrequency}>
+                    Leave {activeFrequency}
+                  </TextButton>
+                : <Button onClick={this.subscribeFrequency}>
+                    Join {activeFrequency}
+                  </Button>)}
 
             {role === 'owner' &&
-              <Icon
-                onClick={this.editFrequency}
-                icon="settings"
-                subtle
-                tipText="Frequency Settings"
-                tipLocation="top-right"
-              />}
+              <IconButton onClick={this.editFrequency}>
+                <Icon
+                  icon="settings"
+                  subtle
+                  tipText="Frequency Settings"
+                  tipLocation="right"
+                />
+              </IconButton>}
 
             {(isEverything || role) &&
-              <Everything>
-                <span />
+              <FlexRow>
                 {isEverything &&
                   <MenuButton everything onClick={this.showFrequenciesNav}>
                     <Icon icon="menu" />
                   </MenuButton>}
 
-                <a onClick={this.jumpToTop}>{isEverything && '~Everything'}</a>
+                {isEverything && <a onClick={this.jumpToTop}>~Everything</a>}
 
-                <TipButton
-                  onClick={this.toggleComposer}
-                  tipText="New Story"
-                  tipLocation="top-left"
-                >
-                  {composer.isOpen
-                    ? <Icon icon="write-cancel" color="warn.alt" />
-                    : <Icon icon="write" />}
-                </TipButton>
-              </Everything>}
+                <IconButton onClick={this.toggleComposer}>
+                  <Icon
+                    icon={composer.isOpen ? 'write-cancel' : 'write'}
+                    tipLocation="left"
+                    tipText="New Story"
+                    color={composer.isOpen ? 'warn.alt' : 'brand.default'}
+                  />
+                </IconButton>
+
+              </FlexRow>}
           </Actions>
         </Header>
 
