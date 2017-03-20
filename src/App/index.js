@@ -84,8 +84,10 @@ class App extends Component {
       title = `${story ? `${story.content.title.substr(0, 40)}… ` : ''}${freq
         ? `~${freq.name} `
         : ''}${story || freq ? '| ' : ''}Spectrum`;
-      description = story && story.content.description
-        ? `${story.content.description.substr(0, 150)}…`
+      description = story
+        ? `${story.content.description
+            ? story.content.description.substr(0, 150)
+            : 'A story on Spectrum'}…`
         : freq ? freq.description : 'Like a forum but for Mars colonists.';
     }
 
@@ -108,9 +110,37 @@ class App extends Component {
             },
             {
               name: 'og:url',
-              content: this.props.location.href,
+              content: `https://spectrum.chat${this.props.location.pathname}`,
+            },
+            {
+              name: 'og:image',
+              content: 'https://spectrum.chat/img/apple-icon-144x144-precomposed.png',
+            },
+            {
+              name: 'og:type',
+              content: 'website',
+            },
+            {
+              name: 'og:site_name',
+              content: 'Spectrum',
             },
             // Twitter
+            {
+              name: 'twitter:card',
+              content: 'summary',
+            },
+            {
+              name: 'twitter:site',
+              content: '@withspectrum',
+            },
+            {
+              name: 'twitter:image',
+              content: 'https://spectrum.chat/img/apple-icon-144x144-precomposed.png',
+            },
+            {
+              name: 'twitter:image:alt',
+              content: 'Like a forum but for Mars colonists.',
+            },
             {
               name: 'twitter:title',
               content: title,
