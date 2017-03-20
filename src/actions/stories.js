@@ -137,8 +137,7 @@ export const setActiveStory = story => (dispatch, getState) => {
       message => message.id,
     );
     // Get all messages that aren't in the store yet
-    const messages = Object.keys(story.messages)
-      .filter(message => existingMessages.indexOf(message));
+    const messages = Object.keys(story.messages);
 
     Promise.all(messages.map(message => getMessage(message)))
       .then(messages => {

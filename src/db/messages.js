@@ -5,21 +5,24 @@ import { ACTIVITY_TYPES } from './types';
 
 const UNIQUE = (v, i, a) => a.indexOf(v) === i;
 
+export const getMessageKey = () =>
+  firebase.database().ref('messages').push().key;
+
 /**
  * Create a message in the db
  *
  * Resolves the returned promise with the created message data
  */
-export const createMessage = ({ storyId, frequency, user, message }) => {
+export const createMessage = ({ storyId, frequency, user, message, key }) => {
   const db = firebase.database();
 
-  const key = db.ref('messages').push().key;
+  const id = key || db.ref('messages').push().key;
 
   return db
     .ref()
     .update({
-      [`messages/${key}`]: {
-        id: key,
+      [`messages/${id}`]: {
+        id,
         storyId,
         frequencyId: frequency.id,
         timestamp: firebase.database.ServerValue.TIMESTAMP,
@@ -31,8 +34,8 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
         id: user.uid,
         last_activity: firebase.database.ServerValue.TIMESTAMP,
       },
-      [`stories/${storyId}/messages/${key}`]: {
-        id: key,
+      [`stories/${storyId}/messages/${id}`]: {
+        id,
       },
     })
     .then(() => db.ref(`stories/${storyId}`).once('value'))
@@ -65,7 +68,7 @@ export const createMessage = ({ storyId, frequency, user, message }) => {
         });
       });
     })
-    .then(() => db.ref(`messages/${key}`).once('value'))
+    .then(() => db.ref(`messages/${id}`).once('value'))
     .then(snapshot => snapshot.val());
 };
 
