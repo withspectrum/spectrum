@@ -57,7 +57,7 @@ export const TextButton = styled(Button)`
   props.border ? props.theme.bg.wash : 'transparent'};
 	border-radius: ${props => props.border ? '8px' : '4px'};
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: 600;
 	color: ${props => props.color ? props.color : props.theme.text.alt};
 	transition: ${Transition.hover.off};
 	padding: 8px 16px;
@@ -100,6 +100,9 @@ export const IconButton = styled.button`
   display: inline-block;
   appearance: none;
   background-color: transparent;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
 `;
 
 export const Label = styled.label`
