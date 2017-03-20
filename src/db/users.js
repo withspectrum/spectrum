@@ -130,14 +130,14 @@ export const setUsernameAndEmail = ({ uid, username, email }) => {
     .then(snapshot => snapshot.val());
 };
 
-export const setLastActivity = uid => {
+export const setlastSeen = uid => {
   console.log('set last activity');
   const db = firebase.database();
 
   db
     .ref()
     .update({
-      [`users/${uid}/lastActivity`]: firebase.database.ServerValue.TIMESTAMP,
+      [`users/${uid}/lastSeen`]: firebase.database.ServerValue.TIMESTAMP,
     })
     .catch(err => {
       // Don't let setting the last activity crash the app
