@@ -18,6 +18,7 @@ import {
   Count,
   FlexCol,
   FlexRow,
+  Spread,
   Description,
   Actions,
   LoadingBlock,
@@ -310,19 +311,19 @@ class StoryMaster extends Component {
           {!isEverything &&
             !isNotifications &&
             <FlexCol>
-              <FreqTitle>
-
+              <FlexRow>
                 <MenuButton onClick={this.showFrequenciesNav}>
                   <Icon icon="menu" />
                 </MenuButton>
-
-                <a onClick={this.jumpToTop}>~ {frequency.name}</a>
-              </FreqTitle>
-              <FlexRow>
+                <FreqTitle onClick={this.jumpToTop}>
+                  ~ {frequency.name}
+                </FreqTitle>
+              </FlexRow>
+              <Spread>
                 {user.uid && <Count>{membersText}</Count>}
 
                 {user.uid && <Count>{storyText}</Count>}
-              </FlexRow>
+              </Spread>
               {frequency.description
                 ? <Description>{frequency.description}</Description>
                 : <span />}
@@ -347,25 +348,20 @@ class StoryMaster extends Component {
                 />
               </IconButton>}
 
-            {(isEverything || role) &&
-              <FlexRow>
-                {isEverything &&
-                  <MenuButton everything onClick={this.showFrequenciesNav}>
-                    <Icon icon="menu" />
-                  </MenuButton>}
-
-                {isEverything && <a onClick={this.jumpToTop}>~Everything</a>}
-
-                <IconButton onClick={this.toggleComposer}>
-                  <Icon
-                    icon={composer.isOpen ? 'write-cancel' : 'write'}
-                    tipLocation="left"
-                    tipText="New Story"
-                    color={composer.isOpen ? 'warn.alt' : 'brand.default'}
-                  />
-                </IconButton>
-
-              </FlexRow>}
+            {isEverything &&
+              <MenuButton onClick={this.showFrequenciesNav}>
+                <Icon icon="menu" />
+              </MenuButton>}
+            {isEverything &&
+              <FreqTitle onClick={this.jumpToTop}>~Everything</FreqTitle>}
+            <IconButton onClick={this.toggleComposer}>
+              <Icon
+                icon={composer.isOpen ? 'write-cancel' : 'write'}
+                tipLocation="left"
+                tipText="New Story"
+                color={composer.isOpen ? 'warn.alt' : 'brand.default'}
+              />
+            </IconButton>
           </Actions>
         </Header>
 

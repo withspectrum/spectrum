@@ -108,15 +108,15 @@ class Root extends Component {
   };
 
   render() {
-    const { user, frequencies, match: { params } } = this.props;
+    const { user, frequencies, match: { params }, location } = this.props;
     // Handle loading the homepage
     if (params.frequency === undefined) {
       if (user.loginError) return <p>Login error</p>;
-      if (user.uid) return <App />;
+      if (user.uid) return <App location={location} />;
       if (user.loaded) return <Homepage />;
       return <LoadingIndicator />;
     }
-    return <App />;
+    return <App location={location} />;
   }
 }
 
