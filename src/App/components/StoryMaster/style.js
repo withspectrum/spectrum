@@ -68,42 +68,6 @@ export const BgText = styled.p`
 	}
 `;
 
-export const JoinBtn = styled.button`
-  font-size: 12px;
-  font-weight: 800;
-  flex: 0 0 auto;
-  height: 28px;
-  line-height: 26px;
-  margin-left: 4px;
-  text-align: center;
-  vertical-align: middle;
-  border-radius: 8px;
-	padding: 0 16px;
-  border: 2px solid ${props =>
-  props.member ? `${props.theme.inactive}` : 'transparent'};
-  color: ${props =>
-  props.member ? `${props.theme.inactive}` : `${props.theme.text.reverse}`};
-  background-color: ${props =>
-  props.member ? `transparent` : `${props.theme.brand.default}`};
-  background-image: ${props =>
-  props.member
-    ? `none`
-    : Gradient(props.theme.brand.alt, props.theme.brand.default)};
-  transition: all 0.2s ease-out;
-
-  &:hover {
-  	cursor: pointer;
-		border-radius: 12px
-		color: ${props =>
-  props.member
-    ? `${props.theme.brand.default}`
-    : `${props.theme.text.reverse}`};
-		border-color: ${props =>
-  props.member ? `${props.theme.brand.default}` : 'transparent'};
-		transition: all 0.2s ease-in;
-  }
-`;
-
 export const LoginWrapper = styled.div`
 	width: 100%;
 	padding: 4px;
