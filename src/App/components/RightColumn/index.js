@@ -182,9 +182,11 @@ class RightColumn extends Component {
       );
     } else if (composer.isOpen) {
       const title = this.props.title ||
-        `~${currentFrequency.name || active} - ${currentFrequency.description}`;
-      const description = this.props.description ||
-        currentFrequency.description;
+        `~${currentFrequency && currentFrequency.name ||
+          active} - ${currentFrequency ? currentFrequency.description : ''}`;
+      const description = this.props.description || currentFrequency
+        ? currentFrequency.description
+        : '';
       return (
         <ViewContainer>
           <Helmet
@@ -216,9 +218,11 @@ class RightColumn extends Component {
       );
     } else {
       const title = this.props.title ||
-        `~${currentFrequency.name || active} - ${currentFrequency.description}`;
-      const description = this.props.description ||
-        currentFrequency.description;
+        `~${currentFrequency && currentFrequency.name ||
+          active} - ${currentFrequency ? currentFrequency.description : ''}`;
+      const description = this.props.description || currentFrequency
+        ? currentFrequency.description
+        : '';
       return (
         <ViewContainer>
           {currentFrequency &&

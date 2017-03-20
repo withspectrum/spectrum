@@ -72,8 +72,6 @@ class App extends Component {
       sortedStories.unshift(<LoginCard />);
     }
 
-    console.log(this.props.location);
-
     return (
       <Body>
         <ModalRoot />
