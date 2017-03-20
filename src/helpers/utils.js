@@ -288,3 +288,12 @@ export const getParameterByName = (name, url) => {
   if (!results[2]) return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
+
+// Truncate a string nicely to a certain length
+export const truncate = (str, length) => {
+  if (str.length <= length) {
+    return str;
+  }
+  const subString = str.substr(0, length);
+  return subString.substr(0, subString.lastIndexOf(' ')) + '…';
+};

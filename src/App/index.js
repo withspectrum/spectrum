@@ -17,7 +17,7 @@ import GalleryRoot from '../shared/gallery/GalleryRoot';
 import NuxJoinCard from './components/StoryMaster/NuxJoinCard';
 import LoginCard from './components/StoryMaster/LoginCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
-import { sortArrayByKey, getParameterByName } from '../helpers/utils';
+import { sortArrayByKey, getParameterByName, truncate } from '../helpers/utils';
 
 class App extends Component {
   state = {
@@ -87,13 +87,13 @@ class App extends Component {
       const freq = frequency ||
         story &&
           getCurrentFrequency(story.frequencyId, frequencies.frequencies);
-      title = `${story ? `${story.content.title.substr(0, 40)}… ` : ''}${freq
+      title = `${story ? `${truncate(story.content.title, 40)} ` : ''}${freq
         ? `~${freq.name} `
         : ''}${story || freq ? '| ' : ''}Spectrum`;
       description = story
         ? `${story.content.description
-            ? story.content.description.substr(0, 150)
-            : 'A story on Spectrum'}…`
+            ? truncate(story.content.description, 150)
+            : 'A story on Spectrum'}`
         : freq ? freq.description : 'Like a forum but for Mars colonists.';
     }
 
