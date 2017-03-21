@@ -6,12 +6,9 @@ import {
   Wrapper,
   LinkWrapper,
   StoryBody,
-  StoryHeader,
-  Avatar,
-  UserMeta,
+  StoryFooter,
   Name,
   MessageCount,
-  FrequencyLink,
   Title,
   UnreadCount,
 } from './style';
@@ -121,22 +118,18 @@ class Card extends Component {
               {heads}
 
             </StoryBody>
-            <StoryHeader>
-              <UserMeta>
-                <Name>
-                  {person.name}&nbsp;·&nbsp;
-                  {timeDifference(Date.now(), timestamp)}
-                  {metaText &&
-                    metaLink &&
-                    <FrequencyLink>
-                      &nbsp;in&nbsp;
-                      <Link to={metaLink}>
-                        {metaText}
-                      </Link>
-                    </FrequencyLink>}
-                </Name>
-              </UserMeta>
-            </StoryHeader>
+            <StoryFooter>
+              <Name>
+                {person.name}&nbsp;·&nbsp;
+                {timeDifference(Date.now(), timestamp)}
+                {metaText && metaLink && `\u00A0in\u00A0`}
+                {metaText &&
+                  metaLink &&
+                  <Link to={metaLink}>
+                    {metaText}
+                  </Link>}
+              </Name>
+            </StoryFooter>
           </LinkWrapper>
         </Link>
       </Wrapper>
