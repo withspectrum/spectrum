@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Gradient, H3 } from '../../../shared/Globals';
+import { Gradient, H3 } from '../../shared/Globals';
 
 export const Column = styled.div`
   display: flex;

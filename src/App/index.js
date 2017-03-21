@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
-import NavMaster from './components/NavMaster';
+import NavMaster from './NavMaster';
 import {
   Body,
   NavMasterContainer,
