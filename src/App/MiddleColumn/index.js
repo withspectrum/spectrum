@@ -272,11 +272,13 @@ class MiddleColumn extends Component {
 
     let storyText = 'No stories yet 😢';
     if (frequency && frequency.stories) {
-      const length = Object.keys(frequency.stories).length;
+      // get number of stories, filtering out deleted stories
+      const length = Object.values(frequency.stories)
+        .filter(story => !story.deleted).length;
 
       if (length === 1) {
         storyText = '1 story';
-      } else {
+      } else if (length > 1) {
         storyText = `${length} stories`;
       }
     }
