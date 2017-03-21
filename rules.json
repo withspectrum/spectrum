@@ -1,5 +1,70 @@
 {
   "rules": {
+    "networks": {
+      ".indexOn": ["id", "slug"],
+      "$id": {
+        "createdAt": {
+          ".validate": "newData.val() <= now",
+          // Only let authenticated users write to this, and only once at creation
+          ".write": "!data.exists() && data.parent().child('users').hasChild(auth.uid)"
+        },
+        // Make sure the createdBy field contains a valid user ID
+        "createdBy": {
+          ".validate": "root.child('users').hasChild(newData.val())",
+          // Only set once at creation
+          ".write": "!data.exists()"
+        },
+        "id": {
+          ".validate": "newData.val() === $id",
+          ".write": "!data.exists()"
+        },
+        "name": {
+          ".validate": "newData.isString() && newData.val() !== 'everything' && newData.val() !== 'undefined' && newData.val() !== 'null'",
+          // Only owners can change the name
+          ".write": "data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
+        },
+        "slug": {
+          ".validate": "newData.isString() && newData.val() !== 'everything' && newData.val() !== 'undefined' && newData.val() !== 'null'",
+          // A slug can be set if the frequency is new, or can be changed by the owner when it is being deleted
+          ".write": "!data.exists() || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
+        },
+        "members": {
+          "$userId": {
+            // Make sure a valid user is being added to the users
+            ".validate": "root.child('users').hasChild($userId)",
+            // Only let a user themselves or an owner edit this
+            ".write": "$userId === auth.uid || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'",
+            // Make sure the permissions being set is "member" except when it's done by an owner
+            "permission": {
+              ".validate": "newData.val() === 'member' || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner' && newData.val()"
+            },
+            "joined": {
+              ".validate": "newData.val() <= now"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "frequencies": {
+          // Only let owners add new frequencies
+          ".write": "data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'",
+          "$frequencyId": {
+            ".validate": "root.child('frequencies').hasChild($frequencyId)",
+            "id": {
+              ".validate": "$frequencyId === newData.val()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        // Make sure not more fields than the ones specified above are added
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
     "frequencies": {
       ".indexOn": ["id", "slug"],
       ".read": true,
@@ -42,15 +107,19 @@
           ".validate": "newData.isString() && newData.val() !== 'undefined' && newData.val() !== 'null' && newData.val().length <= 140",
           ".write": "!data.exists() || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
         },
+        "network": {
+          ".validate": "newData.isString() && root.child('networks').hasChild(newData.val())",
+          ".write": "!data.parent().exists() || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
+        },
         "users": {
           "$userId": {
             // Make sure a valid user is being added to the users
             ".validate": "root.child('users').hasChild($userId)",
             // Only let a user themselves or an owner edit this
             ".write": "$userId === auth.uid || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'",
-            // Make sure the permissions being set are one of "owner" or "subscriber"
+            // Make sure the permissions being set is "subscriber" except when it's done by an owner
             "permission": {
-              ".validate": "newData.val() === 'owner' || newData.val() === 'subscriber'"
+              ".validate": "newData.val() === 'subscriber' || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner' && newData.val()"
             },
             "joined": {
               ".validate": "newData.val() <= now"
