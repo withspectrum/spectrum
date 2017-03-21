@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Icon from '../../../../shared/Icons';
-import { getCurrentFrequency } from '../../../../helpers/frequencies';
-import { toggleLockedStory, deleteStory } from '../../../../actions/stories';
-import { track } from '../../../../EventTracker';
+import Icon from '../../../shared/Icons';
+import { getCurrentFrequency } from '../../../helpers/frequencies';
+import { toggleLockedStory, deleteStory } from '../../../actions/stories';
+import { track } from '../../../EventTracker';
 
 import {
   StoryActionsContainer,

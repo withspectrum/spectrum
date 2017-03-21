@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { subscribeFrequency } from '../../../actions/frequencies';
-import { deleteStory, toggleLockedStory } from '../../../actions/stories';
-import { isStoryCreator, getStoryPermission } from '../../../helpers/stories';
-import { getCurrentFrequency } from '../../../helpers/frequencies';
-import { LoginButton, LoginText } from '../StoryMaster/style';
-import { login } from '../../../actions/user';
-import history from '../../../helpers/history';
-import Icon from '../../../shared/Icons';
+import { subscribeFrequency } from '../../actions/frequencies';
+import { deleteStory, toggleLockedStory } from '../../actions/stories';
+import { isStoryCreator, getStoryPermission } from '../../helpers/stories';
+import { getCurrentFrequency } from '../../helpers/frequencies';
+import { LoginButton, LoginText } from '../components/StoryMaster/style';
+import { login } from '../../actions/user';
+import history from '../../helpers/history';
+import Icon from '../../shared/Icons';
 
 import StoryDetail from './StoryDetail';
 import StoryActions from './StoryActions';

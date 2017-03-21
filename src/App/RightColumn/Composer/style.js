@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient, H4, H1 } from '../../../../shared/Globals';
+import { Gradient, H4, H1 } from '../../../shared/Globals';
 
 export const ScrollBody = styled.div`
 	display: flex;

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient, Tooltip } from '../../../../shared/Globals';
+import { Gradient, Tooltip } from '../../../shared/Globals';
 
 export const ChatContainer = styled.div`
 	flex: 1 0 auto;

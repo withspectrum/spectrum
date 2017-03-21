@@ -19,9 +19,9 @@ import {
   onlyContainsEmoji,
   sortAndGroupBubbles,
   convertTimestampToDate,
-} from '../../../../helpers/utils';
-import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../../helpers/regexps';
-import { openGallery } from '../../../../actions/gallery';
+} from '../../../helpers/utils';
+import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../helpers/regexps';
+import { openGallery } from '../../../actions/gallery';
 
 class ChatView extends Component {
   componentDidUpdate(prevProps, prevState) {

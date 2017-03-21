@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Markdown from '../../../../shared/Markdown';
-import { openGallery } from '../../../../actions/gallery';
-import { timeDifference } from '../../../../helpers/utils';
+import Markdown from '../../../shared/Markdown';
+import { openGallery } from '../../../actions/gallery';
+import { timeDifference } from '../../../helpers/utils';
 
 import { StoryDetailContainer, Header, StoryTitle, Byline } from './style';
 

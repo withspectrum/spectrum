@@ -9,7 +9,7 @@ import {
   RightColumnContainer,
 } from './style';
 import StoryMaster from './components/StoryMaster';
-import RightColumn from './components/RightColumn';
+import RightColumn from './RightColumn';
 import LoadingIndicator from '../shared/loading';
 import ModalRoot from '../shared/modals/ModalRoot';
 import SelectUsernameModal from '../shared/modals/SelectUsernameModal';

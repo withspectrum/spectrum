@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { H1, H4 } from '../../../../shared/Globals';
+import { H1, H4 } from '../../../shared/Globals';
 
 export const StoryDetailContainer = styled.div`
 	display: flex;

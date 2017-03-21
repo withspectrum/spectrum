@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Tooltip } from '../../../../shared/Globals';
+import { Tooltip } from '../../../shared/Globals';
 
 export const StoryActionsContainer = styled.div`
 	display: flex;

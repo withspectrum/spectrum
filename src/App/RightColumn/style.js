@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Shadow } from '../../../shared/Globals';
+import { Shadow } from '../../shared/Globals';
 
 export const ViewContainer = styled.div`
 	display: flex;

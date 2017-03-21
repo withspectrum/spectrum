@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { sendMessage } from '../../../../actions/messages';
-import { uploadMedia } from '../../../../helpers/stories';
-import { isMobile } from '../../../../helpers/utils';
-import EmojiPicker from '../../../../shared/EmojiPicker';
-import Icon from '../../../../shared/Icons';
+import { sendMessage } from '../../../actions/messages';
+import { uploadMedia } from '../../../helpers/stories';
+import { isMobile } from '../../../helpers/utils';
+import EmojiPicker from '../../../shared/EmojiPicker';
+import Icon from '../../../shared/Icons';
 import { connect } from 'react-redux';
-import { track } from '../../../../EventTracker';
+import { track } from '../../../EventTracker';
 import {
   Input,
   Form,
