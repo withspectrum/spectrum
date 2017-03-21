@@ -23,7 +23,7 @@ import {
 import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../helpers/regexps';
 import { openGallery } from '../../../actions/gallery';
 
-class ChatView extends Component {
+class ChatDetail extends Component {
   componentDidUpdate(prevProps, prevState) {
     this.props.contextualScrollToBottom();
   }
@@ -146,4 +146,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(ChatView);
+export default connect(mapStateToProps)(ChatDetail);
