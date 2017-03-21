@@ -15,7 +15,8 @@ import {
   UnderlineInput,
   PrefixLabel,
 } from '../../Globals';
-import { checkUniqueFrequencyName, debounce } from '../../../helpers/utils';
+import { checkUniqueFrequencyName } from '../../../db/frequencies';
+import { debounce } from '../../../helpers/utils';
 import { connect } from 'react-redux';
 import slugg from 'slugg';
 import {

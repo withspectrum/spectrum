@@ -9,7 +9,8 @@ import { setActiveStory } from './actions/stories';
 import { asyncComponent } from './helpers/utils';
 import { groupNotifications } from './helpers/notifications';
 import LoadingIndicator from './shared/loading/global';
-import { getUserInfo, listenToAuth } from './db/users';
+import { getUserInfo } from './db/users';
+import { listenToAuth } from './db/auth';
 import { getFrequency } from './db/frequencies';
 import { listenToNotifications } from './db/notifications';
 import { set, track } from './EventTracker';
@@ -108,7 +109,7 @@ class Root extends Component {
   };
 
   render() {
-    const { user, frequencies, match: { params }, location } = this.props;
+    const { user, match: { params }, location } = this.props;
     // Handle loading the homepage
     if (params.frequency === undefined) {
       if (user.loginError) return <p>Login error</p>;

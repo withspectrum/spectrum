@@ -1,67 +1,34 @@
-import * as firebase from 'firebase';
 import { hashToArray } from '../helpers/utils';
 import { track } from '../EventTracker';
+import { getFileUrl, getStoryMedia } from '../db/stories';
 
-export const getFile = (file, story) => {
-  return new Promise((resolve, reject) => {
-    if (!file) return;
-
-    let storageRef = firebase.storage().ref();
-    let fileRef = storageRef.child(`/stories/${story}/${file}`);
-    fileRef.getDownloadURL().then(url => {
-      resolve(url);
-    });
-  });
-};
-
-export const getStorageUrlsFromArr = (arr, story) => {
-  return Promise.all(arr.map(file => getFile(file, story)));
-};
-
-/*------------------------------------------------------------\*
-*
-
-Gallery
-Accepts an array of URLs which will be parsed and populated in the gallery component.
-
-*
-\*------------------------------------------------------------*/
+/**
+ * Open the gallery at a certain image
+ */
 export const openGallery = e => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
-  let state = getState();
-  let src = e.target.src;
-  src = src.toString();
-  let activeStory = state.stories.active;
+  const targetImg = e.target.src.toString();
+  const activeStory = getState().stories.active;
 
   track('gallery', 'opened', null);
 
-  firebase
-    .database()
-    .ref(`stories/${activeStory}/media`)
-    .once('value', snapshot => {
-      let val = snapshot.val();
-      let arr = hashToArray(val);
-      let urlArr = arr.slice().map((img, i) => img.fileName); //=> convert hash to array of filename urls
-      let checkForMatch = urlArr.filter(url => {
-        let match = url.toString();
-        match = encodeURI(match);
-        let re = new RegExp(match, 'g');
-        let itMatches = src.match(re);
-        return itMatches;
-      });
+  getStoryMedia(activeStory).then(media => {
+    const filenames = Object.keys(media).map(item => media[item].fileName);
+    // Find the index of the image that was clicked on
+    const index = filenames.findIndex(
+      filename => targetImg.indexOf(encodeURI(filename)) > -1,
+    );
 
-      let matchToIndex = checkForMatch[0];
-      let index = urlArr.indexOf(matchToIndex);
-
-      getStorageUrlsFromArr(urlArr, activeStory).then(arr => {
+    Promise.all(filenames.map(file => getFileUrl(file, activeStory)))
+      .then(fileUrls => {
         dispatch({
           type: 'SHOW_GALLERY',
           isOpen: true,
-          media: arr,
-          index: index ? index : 0, // i
+          media: fileUrls,
+          index: index || 0,
         });
       });
-    });
+  });
 };
 
 export const closeGallery = () => {

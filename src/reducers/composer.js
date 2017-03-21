@@ -48,7 +48,7 @@ export default function root(state = initialState, action) {
     case 'REMOVE_MEDIA_LIST': {
       const mediaList = state.mediaList
         .slice()
-        .filter(file => file.meta.key !== action.key);
+        .filter(file => file.meta.key !== action.image);
       return Object.assign({}, state, { mediaList });
     }
     default:
