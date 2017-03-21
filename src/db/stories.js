@@ -158,3 +158,28 @@ export const setStoryLock = ({ id, locked }) => {
     locked,
   });
 };
+
+export const removeImage = ({ story, image }) => {
+  const db = firebase.database();
+
+  return db.ref(`stories/${story}/media/${image}`).remove();
+};
+
+export const getFileUrl = (file, story) => {
+  if (!file) return;
+
+  return firebase
+    .storage()
+    .ref()
+    .child(`/stories/${story}/${file}`)
+    .getDownloadURL();
+};
+
+export const getStoryMedia = story => new Promise(resolve => {
+  const db = firebase.database();
+
+  firebase
+    .database()
+    .ref(`stories/${story}/media`)
+    .once('value', snapshot => resolve(snapshot.val()));
+});
