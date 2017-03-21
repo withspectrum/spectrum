@@ -1,4 +1,3 @@
-import * as firebase from 'firebase';
 import React from 'react';
 import LoadingIndicator from '../shared/loading/global';
 // NOTE (@mxstbr): The /dist here is a bug in a specific version of emoji-regex
@@ -138,23 +137,6 @@ export const asyncComponent = getComponent => {
       return <LoadingIndicator />;
     }
   };
-};
-
-export const checkUniqueFrequencyName = name => {
-  return new Promise((resolve, reject) => {
-    firebase
-      .database()
-      .ref('frequencies')
-      .orderByChild('slug')
-      .equalTo(name)
-      .once('value')
-      .then(snapshot => {
-        let val = snapshot.val();
-        if (!val) return resolve(true); // if a frequency with this slug doesn't exist, it's okay to use the new name
-        if (val.id === name) return resolve(true); // and if we're looking at the current frequency (i.e. changing the slug after creation), it's okay
-        return resolve(false); // otherwise we can assume the slug is taken
-      });
-  });
 };
 
 export const debounce = (func, wait, immediate) => {

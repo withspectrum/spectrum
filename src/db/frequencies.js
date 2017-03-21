@@ -196,3 +196,20 @@ export const removeUserFromFrequency = (userId, freqId) => {
     [`/users/${userId}/frequencies/${freqId}`]: null,
   });
 };
+
+export const checkUniqueFrequencyName = name => {
+  return new Promise((resolve, reject) => {
+    firebase
+      .database()
+      .ref('frequencies')
+      .orderByChild('slug')
+      .equalTo(name)
+      .once('value')
+      .then(snapshot => {
+        let val = snapshot.val();
+        if (!val) return resolve(true); // if a frequency with this slug doesn't exist, it's okay to use the new name
+        if (val.id === name) return resolve(true); // and if we're looking at the current frequency (i.e. changing the slug after creation), it's okay
+        return resolve(false); // otherwise we can assume the slug is taken
+      });
+  });
+};
