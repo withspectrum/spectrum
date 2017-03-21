@@ -12,7 +12,7 @@ import Icon from '../../shared/Icons';
 
 import Story from './Story';
 import ActionBar from './Story/ActionBar';
-import ChatDetail from './ChatDetail';
+import Chat from './Chat';
 import ChatInput from './ChatInput';
 import Composer from './Composer';
 
@@ -109,7 +109,7 @@ class RightColumn extends Component {
               creator={creator}
               story={story}
             />
-            <ChatDetail
+            <Chat
               contextualScrollToBottom={this.contextualScrollToBottom}
               story={story}
             />
