@@ -42,8 +42,16 @@ class ParticipantHeads extends Component {
           }
         })}
 
-        {sortedArr.length > 4 && // if more than four participnats, tack on a placeholder
-          <HeadWrapper style={{ position: 'relative', left: '-16px' }}>
+        {sortedArr.length > 5 && // if more than four participnats, tack on a placeholder
+          <HeadWrapper
+            style={{ position: 'relative', left: '-16px' }}
+            tipText={
+              sortedArr.length - 5 > 1
+                ? `${sortedArr.length - 5} others`
+                : `${sortedArr.length - 5} other`
+            }
+            tipLocation="top-right"
+          >
             <Head src={`${process.env.PUBLIC_URL}/img/head_placeholder.png`} />
           </HeadWrapper>}
 
