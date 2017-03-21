@@ -12,7 +12,7 @@ import {
   getCurrentFrequency,
   linkFreqsInMd,
 } from '../../../helpers/frequencies';
-import { uploadMultipleMedia } from '../../../helpers/stories';
+import { uploadMultipleMedia } from '../../../db/stories';
 import Textarea from 'react-textarea-autosize';
 import Markdown from '../../../shared/Markdown';
 
@@ -89,8 +89,10 @@ class Composer extends Component {
 
     uploadMultipleMedia(files, story, user)
       .then(filesArr => {
+        track('media', 'multiple uploaded', null);
         for (let file of filesArr) {
           body = `${body}\n![](${file.url})\n`;
+          track('media', 'uploaded', null);
           this.props.dispatch(addMediaList(file));
           this.props.dispatch(updateBody(body));
         }

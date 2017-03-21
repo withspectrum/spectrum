@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { sendMessage } from '../../../actions/messages';
-import { uploadMedia } from '../../../helpers/stories';
+import { uploadMedia } from '../../../db/stories';
 import { isMobile } from '../../../helpers/utils';
 import EmojiPicker from '../../../shared/EmojiPicker';
 import Icon from '../../../shared/Icons';
@@ -111,6 +111,7 @@ class ChatInput extends Component {
 
     uploadMedia(file, activeStory, user)
       .then(file => {
+        track('media', 'uploaded', null);
         let messageObj = {
           type: 'media',
           content: file,
