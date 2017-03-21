@@ -298,19 +298,21 @@ class MiddleColumn extends Component {
 
     // If we have a notification for a story but not loaded the story yet
     // show the New Stories! indicator
-    const canLoadNewStories = storiesLoaded &&
-      notifications.some(notification => {
-        if (notification.activityType !== ACTIVITY_TYPES.NEW_STORY)
-          return false;
-        if (!isEverything && notification.ids.frequency !== frequency.id)
-          return false;
+    const canLoadNewStories = false;
 
-        const result = allStories.find(
-          story => story.id === notification.ids.story,
-        );
-        if (!result) return true;
-        return false;
-      });
+    // storiesLoaded &&
+    //   notifications.some(notification => {
+    //     if (notification.activityType !== ACTIVITY_TYPES.NEW_STORY)
+    //       return false;
+    //     if (!isEverything && notification.ids.frequency !== frequency.id)
+    //       return false;
+    //
+    //     const result = allStories.find(
+    //       story => story.id === notification.ids.story,
+    //     );
+    //     if (!result) return true;
+    //     return false;
+    //   });
 
     return (
       <Column>
