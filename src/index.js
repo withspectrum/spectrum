@@ -5,11 +5,11 @@ import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import history from './helpers/history';
 import { initStore } from './store';
-import * as firebase from 'firebase';
 import FIREBASE_CONFIG from './config/FirebaseConfig';
 import { Body } from './App/style';
 import Root from './Root';
 import { clearStorage } from './helpers/localStorage';
+import { initializeDatabase } from './db/general';
 
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,
@@ -19,7 +19,7 @@ const fbconfig = {
   messagingSenderId: FIREBASE_CONFIG.MESSAGING_SENDER_ID,
 };
 
-firebase.initializeApp(fbconfig);
+initializeDatabase(fbconfig);
 let store = initStore({});
 
 // This is globally available in styled-components when interpolating a function like so:
