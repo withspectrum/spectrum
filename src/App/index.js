@@ -40,7 +40,7 @@ class App extends Component {
   };
 
   render() {
-    const { stories, frequencies, user, ui } = this.props;
+    const { stories, frequencies, user, ui, notifications } = this.props;
     const frequency = getCurrentFrequency(
       frequencies.active,
       frequencies.frequencies,
@@ -98,6 +98,19 @@ class App extends Component {
             : 'A story on Spectrum'}`
         : freq ? freq.description : 'Like a forum but for Mars colonists.';
     }
+
+    const unread = notifications.notifications.reduce(
+      (sum, notification) => {
+        const story = stories.stories.find(
+          story => story.id === notification.ids.story,
+        );
+        if (!story || story.deleted) return sum;
+        return sum + notification.unread;
+      },
+      0,
+    );
+
+    if (unread > 0) title = `(${unread}) ${title}`;
 
     return (
       <Body>
@@ -208,4 +221,5 @@ export default connect(state => ({
   frequencies: state.frequencies,
   user: state.user,
   ui: state.ui,
+  notifications: state.notifications,
 }))(App);
