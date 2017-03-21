@@ -89,7 +89,6 @@ class App extends Component {
           getCurrentFrequency(story.frequencyId, frequencies.frequencies);
 
       if (story && story.content || freq && freq.name) {
-        console.log(story, freq);
         title = `${story && story.content
           ? `${truncate(story.content.title, 40)} `
           : ''}${freq ? `~${freq.name} ` : ''}${story && story.content || freq
