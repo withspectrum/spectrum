@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { H1, H4 } from '../../../shared/Globals';
 
-export const StoryDetailContainer = styled.div`
+export const StoryContainer = styled.div`
 	display: flex;
 	flex: 0 0 auto;
 	flex-direction: column;

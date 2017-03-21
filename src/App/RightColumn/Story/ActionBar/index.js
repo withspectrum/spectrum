@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Icon from '../../../shared/Icons';
-import { getCurrentFrequency } from '../../../helpers/frequencies';
-import { toggleLockedStory, deleteStory } from '../../../actions/stories';
-import { track } from '../../../EventTracker';
+import Icon from '../../../../shared/Icons';
+import { getCurrentFrequency } from '../../../../helpers/frequencies';
+import { toggleLockedStory, deleteStory } from '../../../../actions/stories';
+import { track } from '../../../../EventTracker';
 
 import {
-  StoryActionsContainer,
+  ActionBarContainer,
   HiddenInput,
   DeleteConfirm,
   HiddenButton,
 } from './style';
 
-class StoryActions extends Component {
+class ActionBar extends Component {
   state = {
     deleteInited: false,
   };
@@ -43,7 +43,7 @@ class StoryActions extends Component {
     );
 
     return (
-      <StoryActionsContainer>
+      <ActionBarContainer>
         <a
           href={
             `https://twitter.com/intent/tweet/?text=${encodeURIComponent(
@@ -102,7 +102,7 @@ class StoryActions extends Component {
             </label>
           </div>}
 
-      </StoryActionsContainer>
+      </ActionBarContainer>
     );
   }
 }
@@ -111,4 +111,4 @@ const mapStateToProps = state => ({
   frequencies: state.frequencies,
 });
 
-export default connect(mapStateToProps)(StoryActions);
+export default connect(mapStateToProps)(ActionBar);

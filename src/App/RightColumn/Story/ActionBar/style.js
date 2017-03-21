@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { Tooltip } from '../../../shared/Globals';
+import { Tooltip } from '../../../../shared/Globals';
 
-export const StoryActionsContainer = styled.div`
+export const ActionBarContainer = styled.div`
 	display: flex;
 	flex: 0 0 auto;
 	justify-content: space-between;

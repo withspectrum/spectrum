@@ -10,8 +10,8 @@ import { login } from '../../actions/user';
 import history from '../../helpers/history';
 import Icon from '../../shared/Icons';
 
-import StoryDetail from './StoryDetail';
-import StoryActions from './StoryActions';
+import Story from './Story';
+import ActionBar from './Story/ActionBar';
 import ChatDetail from './ChatDetail';
 import ChatInput from './ChatInput';
 import Composer from './Composer';
@@ -102,12 +102,8 @@ class RightColumn extends Component {
             innerRef={comp => this.comp = comp}
             locked={story.locked}
           >
-            <StoryDetail
-              story={story}
-              frequency={currentFrequency}
-              active={active}
-            />
-            <StoryActions
+            <Story story={story} frequency={currentFrequency} active={active} />
+            <ActionBar
               locked={locked}
               moderator={role}
               creator={creator}

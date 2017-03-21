@@ -5,9 +5,9 @@ import Markdown from '../../../shared/Markdown';
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
 
-import { StoryDetailContainer, Header, StoryTitle, Byline } from './style';
+import { StoryContainer, Header, StoryTitle, Byline } from './style';
 
-class StoryDetail extends Component {
+class Story extends Component {
   componentDidMount() {
     this.addEventListeners();
   }
@@ -42,7 +42,7 @@ class StoryDetail extends Component {
     const timestamp = timeDifference(Date.now(), story.timestamp);
 
     return (
-      <StoryDetailContainer>
+      <StoryContainer>
         <Header>
           {!frequency
             ? // this is required to account for async loading of the frequency data if a user hits a url like /~everything/{storyId}
@@ -61,9 +61,9 @@ class StoryDetail extends Component {
         <div className="markdown" ref="story">
           <Markdown>{story.content.description}</Markdown>
         </div>
-      </StoryDetailContainer>
+      </StoryContainer>
     );
   }
 }
 
-export default connect()(StoryDetail);
+export default connect()(Story);
