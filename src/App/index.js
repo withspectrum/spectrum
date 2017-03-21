@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
-import NavMaster from './NavMaster';
+import LeftColumn from './LeftColumn';
 import {
   Body,
-  NavMasterContainer,
+  LeftColumnContainer,
   StoryMasterContainer,
   RightColumnContainer,
 } from './style';
@@ -165,9 +165,9 @@ class App extends Component {
         <GalleryRoot />
         <LoadingIndicator />
 
-        <NavMasterContainer viewing={ui.viewing}>
-          <NavMaster />
-        </NavMasterContainer>
+        <LeftColumnContainer viewing={ui.viewing}>
+          <LeftColumn />
+        </LeftColumnContainer>
 
         {/* If the user is logged in, but hasn't selected a username yet prompt them to */
         }

@@ -28,7 +28,7 @@ export const ScrollBody = styled.div`
   }
 `;
 
-export const NavMasterContainer = styled(ScrollBody)`
+export const LeftColumnContainer = styled(ScrollBody)`
   background: ${({ theme }) => theme.bg.reverse};
   flex: 0 0 256px;
   z-index: 2;
