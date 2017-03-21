@@ -16,46 +16,6 @@ import { arrayToHash } from '../helpers/utils';
 import { markStoryRead } from '../db/notifications';
 
 /**
- * Publish a drafted story
- */
-export const publishStory = ({ frequencyId, title, description }) => (
-  dispatch,
-  getState,
-) => {
-  dispatch({ type: 'LOADING' });
-
-  let state = getState();
-  let storyKey = state.composer.newStoryKey;
-  const frequency = getCurrentFrequency(
-    frequencyId,
-    state.frequencies.frequencies,
-  );
-
-  createStory({
-    key: storyKey,
-    frequency,
-    content: { title, description: linkFreqsInMd(description) },
-  })
-    .then(story => {
-      track('story', 'created', null);
-
-      dispatch({
-        type: 'CREATE_STORY',
-        story,
-      });
-      history.push(`/~${state.frequencies.active}/${storyKey}`);
-
-      dispatch(setActiveStory(storyKey));
-    })
-    .catch(err => {
-      dispatch({
-        type: 'STOP_LOADING',
-      });
-      console.log(err);
-    });
-};
-
-/**
  * Initialise a story by creating a draft on the server
  *
  * Pass a frequency ID as the first (and only) argument if there's no active frequency, otherwise we take the active one
@@ -133,9 +93,6 @@ export const setActiveStory = story => (dispatch, getState) => {
     });
 
     if (!story || !story.messages) return;
-    const existingMessages = getState().messages.messages.map(
-      message => message.id,
-    );
     // Get all messages that aren't in the store yet
     const messages = Object.keys(story.messages);
 
@@ -160,6 +117,46 @@ export const setActiveStory = story => (dispatch, getState) => {
         });
       });
   });
+};
+
+/**
+ * Publish a drafted story
+ */
+export const publishStory = ({ frequencyId, title, description }) => (
+  dispatch,
+  getState,
+) => {
+  dispatch({ type: 'LOADING' });
+
+  let state = getState();
+  let storyKey = state.composer.newStoryKey;
+  const frequency = getCurrentFrequency(
+    frequencyId,
+    state.frequencies.frequencies,
+  );
+
+  createStory({
+    key: storyKey,
+    frequency,
+    content: { title, description: linkFreqsInMd(description) },
+  })
+    .then(story => {
+      track('story', 'created', null);
+
+      dispatch({
+        type: 'CREATE_STORY',
+        story,
+      });
+      history.push(`/~${state.frequencies.active}/${storyKey}`);
+
+      dispatch(setActiveStory(storyKey));
+    })
+    .catch(err => {
+      dispatch({
+        type: 'STOP_LOADING',
+      });
+      console.log(err);
+    });
 };
 
 /**

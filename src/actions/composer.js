@@ -1,5 +1,5 @@
 import { track } from '../EventTracker';
-import * as firebase from 'firebase';
+import { removeImage } from '../db/stories';
 
 /*------------------------------------------------------------\*
 *
@@ -38,17 +38,13 @@ export const addMediaList = file => {
   };
 };
 
-export const removeImageFromStory = (key, story) => dispatch => {
-  return firebase
-    .database()
-    .ref(`stories/${story}/media/${key}`)
-    .remove()
-    .then(() => {
-      track('composer', 'media removed', null);
+export const removeImageFromStory = (image, story) => dispatch => {
+  removeImage({ image, story }).then(() => {
+    track('composer', 'media removed', null);
 
-      dispatch({
-        type: 'REMOVE_MEDIA_LIST',
-        key,
-      });
+    dispatch({
+      type: 'REMOVE_MEDIA_LIST',
+      image,
     });
+  });
 };

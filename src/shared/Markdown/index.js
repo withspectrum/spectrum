@@ -11,6 +11,7 @@ class Markdown extends React.Component {
   componentWillMount() {
     // Inject highlight.js theme
     if (!injected) {
+      // eslint-disable-next-line no-unused-expressions
       injectGlobal`
         .hljs {
         display: block;

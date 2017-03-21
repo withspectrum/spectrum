@@ -1,5 +1,4 @@
 import { setlastSeen } from '../db/users';
-import { throttle } from './utils';
 
 const TEN_SECONDS = 10000;
 let interval;

@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { P } from '../../Globals';
 import { isMobile } from '../../../helpers/utils';
-import Icon from '../../../shared/Icons';
 
 const mobile = isMobile();
 export const modalStyles = {
