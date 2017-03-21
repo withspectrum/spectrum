@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Wrapper } from '../../components/Card/style';
+import { Wrapper } from '../Card/style';
 import { Button } from '../../../shared/Globals';
 import { Body, Title, Description } from './style';
 import { login } from '../../../actions/user';

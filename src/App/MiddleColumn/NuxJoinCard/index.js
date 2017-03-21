@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { findDOMNode } from 'react-dom';
 import { Link } from 'react-router-dom';
-import { Wrapper } from '../../components/Card/style';
+import { Wrapper } from '../Card/style';
 import { Button } from '../../../shared/Globals';
 import { featured } from '../../../helpers/featuredFrequencies';
 import {

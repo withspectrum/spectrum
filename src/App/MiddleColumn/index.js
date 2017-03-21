@@ -34,7 +34,7 @@ import {
 } from '../../actions/frequencies';
 import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
-import Card from '../components/Card';
+import Card from './Card';
 import { ACTIVITY_TYPES } from '../../db/types';
 import { getCurrentFrequency } from '../../helpers/frequencies';
 import { formatSenders } from '../../helpers/notifications';
