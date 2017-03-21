@@ -218,6 +218,7 @@ export const NewIndicator = styled.button`
 	box-shadow: ${Shadow.mid};
 	transition: box-shadow 0.2s ease-in;
 	cursor: pointer;
+  z-index: 2;
 
 	> svg {
 		margin-right: 0.4em;

@@ -255,6 +255,7 @@ class StoryMaster extends Component {
       frequency,
       activeFrequency,
       frequencies,
+      allStories,
       stories,
       isPrivate,
       role,
@@ -297,12 +298,20 @@ class StoryMaster extends Component {
       }
     }
 
+    // If we have a notification for a story but not loaded the story yet
+    // show the New Stories! indicator
     const canLoadNewStories = storiesLoaded &&
       notifications.some(notification => {
+        if (notification.activityType !== ACTIVITY_TYPES.NEW_STORY)
+          return false;
         if (!isEverything && notification.ids.frequency !== frequency.id)
           return false;
 
-        return stories.every(story => story.id !== notification.ids.story);
+        const result = allStories.find(
+          story => story.id === notification.ids.story,
+        );
+        if (!result) return true;
+        return false;
       });
 
     return (
@@ -368,12 +377,11 @@ class StoryMaster extends Component {
         <StoryList innerRef={comp => this.storyList = comp}>
           <Overlay active={composer.isOpen} />
 
-          {/*canLoadNewStories &&
+          {canLoadNewStories &&
             <NewIndicator onClick={this.loadStoriesAgain}>
               <Icon icon="scroll-top" reverse />
               New stories!
-            </NewIndicator>*/
-          }
+            </NewIndicator>}
 
           {isNotifications && notifications.map(this.renderNotification)}
 
@@ -410,6 +418,7 @@ const mapStateToProps = state => {
     notifications: state.notifications.notifications,
     frequencies: state.frequencies.frequencies,
     user: state.user,
+    allStories: state.stories.stories,
     storiesLoaded: state.stories.loaded,
     loading: state.loading,
   };
