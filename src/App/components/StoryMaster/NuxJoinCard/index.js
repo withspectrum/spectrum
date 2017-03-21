@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ReactDOM from 'react-dom';
+import { findDOMNode } from 'react-dom';
 import { Link } from 'react-router-dom';
 import { Wrapper } from '../../Card/style';
 import { Button } from '../../../../shared/Globals';
@@ -52,7 +52,7 @@ class NuxJoinCard extends Component {
   };
 
   componentDidMount = () => {
-    const node = ReactDOM.findDOMNode(this.refs.hscroll);
+    const node = findDOMNode(this.refs.hscroll);
 
     let x, left, down;
     node.addEventListener('mousemove', e => {
