@@ -7,7 +7,7 @@ import {
   H4,
   P,
   IconButton,
-} from '../../../shared/Globals';
+} from '../../shared/Globals';
 
 export const Column = styled.div`
 	display: flex;

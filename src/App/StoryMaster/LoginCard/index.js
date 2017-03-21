@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Wrapper } from '../../Card/style';
-import { Button } from '../../../../shared/Globals';
+import { Wrapper } from '../../components/Card/style';
+import { Button } from '../../../shared/Globals';
 import { Body, Title, Description } from './style';
-import { login } from '../../../../actions/user';
+import { login } from '../../../actions/user';
 
 class LoginCard extends Component {
   login = e => {

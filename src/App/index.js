@@ -8,14 +8,14 @@ import {
   StoryMasterContainer,
   RightColumnContainer,
 } from './style';
-import StoryMaster from './components/StoryMaster';
+import StoryMaster from './StoryMaster';
 import RightColumn from './RightColumn';
 import LoadingIndicator from '../shared/loading';
 import ModalRoot from '../shared/modals/ModalRoot';
 import SelectUsernameModal from '../shared/modals/SelectUsernameModal';
 import GalleryRoot from '../shared/gallery/GalleryRoot';
-import NuxJoinCard from './components/StoryMaster/NuxJoinCard';
-import LoginCard from './components/StoryMaster/LoginCard';
+import NuxJoinCard from './StoryMaster/NuxJoinCard';
+import LoginCard from './StoryMaster/LoginCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
 import { sortArrayByKey, getParameterByName, truncate } from '../helpers/utils';
 

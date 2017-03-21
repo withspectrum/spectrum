@@ -6,8 +6,8 @@ import {
   CellMeasurerCache,
   InfiniteLoader,
 } from 'react-virtualized';
-import LoadingIndicator from '../../../shared/loading/global';
-import { Button, TextButton, IconButton } from '../../../shared/Globals';
+import LoadingIndicator from '../../shared/loading/global';
+import { Button, TextButton, IconButton } from '../../shared/Globals';
 import {
   Column,
   Header,
@@ -26,19 +26,19 @@ import {
   StoryList,
   NewIndicator,
 } from './style';
-import { toggleComposer } from '../../../actions/composer';
+import { toggleComposer } from '../../actions/composer';
 import {
   unsubscribeFrequency,
   subscribeFrequency,
   setActiveFrequency,
-} from '../../../actions/frequencies';
-import { openModal } from '../../../actions/modals';
-import Icon from '../../../shared/Icons';
-import Card from '../Card';
-import { ACTIVITY_TYPES } from '../../../db/types';
-import { getCurrentFrequency } from '../../../helpers/frequencies';
-import { formatSenders } from '../../../helpers/notifications';
-import { debounce } from '../../../helpers/utils';
+} from '../../actions/frequencies';
+import { openModal } from '../../actions/modals';
+import Icon from '../../shared/Icons';
+import Card from '../components/Card';
+import { ACTIVITY_TYPES } from '../../db/types';
+import { getCurrentFrequency } from '../../helpers/frequencies';
+import { formatSenders } from '../../helpers/notifications';
+import { debounce } from '../../helpers/utils';
 
 const MIN_STORY_CARD_HEIGHT = 109;
 
