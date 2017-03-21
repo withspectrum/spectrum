@@ -195,6 +195,7 @@ export const NewIndicator = styled.button`
 	background: ${({ theme }) => Gradient(theme.warn.alt, theme.warn.default)};
 	border: none;
 	font-size: 1em;
+  line-height: 1.9;
 	color: white;
 	display: flex;
 	align-items: center;
@@ -213,7 +214,7 @@ export const NewIndicator = styled.button`
 	cursor: pointer;
   z-index: 2;
 
-	> svg {
+	div {
 		margin-right: 0.4em;
 	}
 
