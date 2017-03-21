@@ -1,4 +1,5 @@
-import * as firebase from 'firebase';
+import database from 'firebase/database';
+import storage from 'firebase/storage';
 import { getFrequency } from './frequencies';
 import { createNotifications } from './notifications';
 import { ACTIVITY_TYPES } from './types';
@@ -6,7 +7,7 @@ import { getUserInfo } from './users';
 import { flattenArray, hashToArray } from '../helpers/utils';
 
 export const getStory = storyId => {
-  const db = firebase.database();
+  const db = database();
 
   return db
     .ref(`stories/${storyId}`)
@@ -34,7 +35,7 @@ export const getAllStories = userId => {
 
 let activeStory;
 export const listenToStory = (storyId, cb) => {
-  const db = firebase.database();
+  const db = database();
   activeStory = storyId;
 
   return db.ref(`stories/${storyId}`).on('value', snapshot => {
@@ -43,7 +44,7 @@ export const listenToStory = (storyId, cb) => {
 };
 
 export const stopListening = listener => {
-  const db = firebase.database();
+  const db = database();
 
   return db.ref(`stories/${activeStory}`).off('value', listener);
 };
@@ -56,7 +57,7 @@ export const stopListening = listener => {
 export const createDraft = (
   { user: { displayName, photoURL, uid }, frequencyId },
 ) => {
-  const db = firebase.database();
+  const db = database();
 
   const ref = db.ref().child('stories').push();
 
@@ -64,7 +65,7 @@ export const createDraft = (
     .set({
       id: ref.key,
       published: false,
-      timestamp: firebase.database.ServerValue.TIMESTAMP,
+      timestamp: database.ServerValue.TIMESTAMP,
       frequencyId,
       creator: {
         displayName,
@@ -84,7 +85,7 @@ export const createDraft = (
 export const createStory = (
   { key, frequency, content: { media = '', title = '', description = '' } },
 ) => {
-  const db = firebase.database();
+  const db = database();
 
   // Fetch story data to merge it with the new data
   return db.ref(`stories/${key}`).once('value').then(draftSnapshot => {
@@ -94,7 +95,7 @@ export const createStory = (
       .update({
         [`stories/${key}`]: {
           ...draft,
-          timestamp: firebase.database.ServerValue.TIMESTAMP,
+          timestamp: database.ServerValue.TIMESTAMP,
           published: true,
           frequencyId: frequency.id,
           content: {
@@ -138,7 +139,7 @@ export const createStory = (
  */
 export const removeStory = ({ storyId, frequencyId }) =>
   new Promise(resolve => {
-    const db = firebase.database();
+    const db = database();
 
     db.ref().update({
       [`/stories/${storyId}/deleted`]: true,
@@ -154,13 +155,13 @@ export const removeStory = ({ storyId, frequencyId }) =>
  * Returns a promise that's resolved with nothing if it was set successfully
  */
 export const setStoryLock = ({ id, locked }) => {
-  return firebase.database().ref(`/stories/${id}`).update({
+  return database().ref(`/stories/${id}`).update({
     locked,
   });
 };
 
 export const removeImage = ({ story, image }) => {
-  const db = firebase.database();
+  const db = database();
 
   return db.ref(`stories/${story}/media/${image}`).remove();
 };
@@ -168,18 +169,13 @@ export const removeImage = ({ story, image }) => {
 export const getFileUrl = (file, story) => {
   if (!file) return;
 
-  return firebase
-    .storage()
-    .ref()
-    .child(`/stories/${story}/${file}`)
-    .getDownloadURL();
+  return storage().ref().child(`/stories/${story}/${file}`).getDownloadURL();
 };
 
 export const getStoryMedia = story => new Promise(resolve => {
-  const db = firebase.database();
+  const db = database();
 
-  firebase
-    .database()
+  db
     .ref(`stories/${story}/media`)
     .once('value', snapshot => resolve(snapshot.val()));
 });
@@ -193,12 +189,12 @@ export const uploadMedia = (file, story, user) => {
     } // if the file is larger than 3mb
 
     let timestamp = Date.now();
-    let storageRef = firebase.storage().ref();
+    let storageRef = storage().ref();
     let fileName = `${file.name}.${timestamp}`;
     let fileRef = storageRef.child(`stories/${story}/${fileName}`);
 
     // we have to story an array of media urls so that we can fetch galleries from storage
-    let storyRef = firebase.database().ref(`stories/${story}/media`).push();
+    let storyRef = database().ref(`stories/${story}/media`).push();
     let mediaKey = storyRef.key;
 
     let updates = {};
@@ -209,7 +205,7 @@ export const uploadMedia = (file, story, user) => {
     };
 
     updates[`stories/${story}/media/${mediaKey}`] = mediaData;
-    firebase.database().ref().update(updates);
+    database().ref().update(updates);
 
     // cache the image for a year
     let metaData = {

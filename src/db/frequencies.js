@@ -1,7 +1,7 @@
-import * as firebase from 'firebase';
+import database from 'firebase/database';
 
 const getFrequencyById = id => {
-  const db = firebase.database();
+  const db = database();
 
   return db
     .ref(`frequencies/${id}`)
@@ -10,7 +10,7 @@ const getFrequencyById = id => {
 };
 
 const getFrequencyBySlug = slug => {
-  const db = firebase.database();
+  const db = database();
 
   return db
     .ref(`frequencies`)
@@ -44,13 +44,13 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
   resolve,
   reject,
 ) => {
-  const db = firebase.database();
+  const db = database();
   const id = db.ref().child('frequencies').push().key;
 
   const frequency = {
     //=> used in the resolve below
     id,
-    createdAt: firebase.database.ServerValue.TIMESTAMP,
+    createdAt: database.ServerValue.TIMESTAMP,
     createdBy: uid,
     name: data.name,
     slug: data.slug,
@@ -65,7 +65,7 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
       // Creator gets full admin rights
       [uid]: {
         permission: 'owner',
-        joined: firebase.database.ServerValue.TIMESTAMP,
+        joined: database.ServerValue.TIMESTAMP,
       },
     },
   };
@@ -78,14 +78,14 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
         //=> add the frequency id to the user first
         id,
         permission: 'owner',
-        joined: firebase.database.ServerValue.TIMESTAMP,
+        joined: database.ServerValue.TIMESTAMP,
       },
     })
     .then(() => db.ref().update({
       //=> create the frequency and add the user
       [`frequencies/${id}/id`]: frequency.id,
       [`frequencies/${id}/users/${uid}/permission`]: 'owner',
-      [`frequencies/${id}/users/${uid}/joined`]: firebase.database.ServerValue.TIMESTAMP,
+      [`frequencies/${id}/users/${uid}/joined`]: database.ServerValue.TIMESTAMP,
     }))
     .then(() => db.ref().update({
       //=> then add the rest of the frequency data, since we'll validate against the user above
@@ -110,7 +110,7 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
  * Returns a Promise that resolves with nothing or rejects with an error
  */
 export const removeFrequency = id => new Promise((resolve, reject) => {
-  const db = firebase.database();
+  const db = database();
 
   db
     .ref(`frequencies/${id}`)
@@ -139,7 +139,7 @@ export const removeFrequency = id => new Promise((resolve, reject) => {
  * Update a frequency in the db
  */
 export const updateFrequency = data => {
-  const db = firebase.database();
+  const db = database();
   return db.ref().update({
     [`frequencies/${data.id}/name`]: data.name,
     [`frequencies/${data.id}/description`]: data.description,
@@ -153,7 +153,7 @@ export const updateFrequency = data => {
  * Returns a promise that resolves either with the frequency data or rejects with an error
  */
 export const addUserToFrequency = (userId, slug) => {
-  const db = firebase.database();
+  const db = database();
   return db
     .ref(`/frequencies`)
     .orderByChild('slug')
@@ -167,12 +167,12 @@ export const addUserToFrequency = (userId, slug) => {
     .then(data => db.ref().update({
       [`frequencies/${data.id}/users/${userId}`]: {
         permission: 'subscriber',
-        joined: firebase.database.ServerValue.TIMESTAMP,
+        joined: database.ServerValue.TIMESTAMP,
       },
       [`users/${userId}/frequencies/${data.id}`]: {
         id: data.id,
         permission: 'subscriber',
-        joined: firebase.database.ServerValue.TIMESTAMP,
+        joined: database.ServerValue.TIMESTAMP,
       },
     }))
     .then(() =>
@@ -188,7 +188,7 @@ export const addUserToFrequency = (userId, slug) => {
  * Remove a user from a frequency
  */
 export const removeUserFromFrequency = (userId, freqId) => {
-  const db = firebase.database();
+  const db = database();
 
   // Remove a user from a frequency
   return db.ref().update({
@@ -199,8 +199,7 @@ export const removeUserFromFrequency = (userId, freqId) => {
 
 export const checkUniqueFrequencyName = name => {
   return new Promise((resolve, reject) => {
-    firebase
-      .database()
+    database()
       .ref('frequencies')
       .orderByChild('slug')
       .equalTo(name)

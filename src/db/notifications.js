@@ -1,4 +1,4 @@
-import * as firebase from 'firebase';
+import database from 'firebase/database';
 
 /**
  * Create notifications for a bunch of users
@@ -6,7 +6,7 @@ import * as firebase from 'firebase';
 export const createNotifications = (
   { users, activityType, sender, content, ids = {} },
 ) => {
-  const db = firebase.database();
+  const db = database();
   let updates = {};
   users.forEach(user => {
     try {
@@ -17,7 +17,7 @@ export const createNotifications = (
         ids,
         sender,
         content,
-        timestamp: firebase.database.ServerValue.TIMESTAMP,
+        timestamp: database.ServerValue.TIMESTAMP,
         read: false,
       };
     } catch (err) {
@@ -39,7 +39,7 @@ export const createNotifications = (
  * Listen to notifications
  */
 export const listenToNotifications = (userId, cb) => {
-  const db = firebase.database();
+  const db = database();
 
   return db.ref(`notifications/${userId}`).on('value', snapshot => {
     const notifications = snapshot.val();
@@ -53,7 +53,7 @@ export const listenToNotifications = (userId, cb) => {
  * Mark messages of a story read
  */
 export const markStoryRead = (storyId, userId) => new Promise(resolve => {
-  const db = firebase.database();
+  const db = database();
 
   db
     .ref(`notifications/${userId}`)
