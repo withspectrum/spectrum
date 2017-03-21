@@ -88,7 +88,10 @@ class App extends Component {
         story &&
           getCurrentFrequency(story.frequencyId, frequencies.frequencies);
 
-      if (story && story.content || freq && freq.name) {
+      if (!(story && story.content) && !(freq && freq.name)) {
+        title = 'Spectrum';
+        description = 'Like a forum but for Mars colonists.';
+      } else {
         title = `${story && story.content
           ? `${truncate(story.content.title, 40)} `
           : ''}${freq ? `~${freq.name} ` : ''}${story && story.content || freq
