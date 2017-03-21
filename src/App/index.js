@@ -40,7 +40,7 @@ class App extends Component {
   };
 
   render() {
-    const { stories, frequencies, user, ui } = this.props;
+    const { stories, frequencies, user, ui, notifications } = this.props;
     const frequency = getCurrentFrequency(
       frequencies.active,
       frequencies.frequencies,
@@ -87,23 +87,42 @@ class App extends Component {
       const freq = frequency ||
         story &&
           getCurrentFrequency(story.frequencyId, frequencies.frequencies);
-      title = `${story && story.content
-        ? `${truncate(story.content.title, 40)} `
-        : ''}${freq ? `~${freq.name} ` : ''}${story && story.content || freq
-        ? '| '
-        : ''}Spectrum`;
-      description = story && story.content
-        ? `${story.content.description
-            ? truncate(story.content.description, 150)
-            : 'A story on Spectrum'}`
-        : freq ? freq.description : 'Like a forum but for Mars colonists.';
+
+      if (!(story && story.content) && !(freq && freq.name)) {
+        title = 'Spectrum';
+        description = 'Like a forum but for Mars colonists.';
+      } else {
+        title = `${story && story.content
+          ? `${truncate(story.content.title, 40)} `
+          : ''}${freq ? `~${freq.name} ` : ''}${story && story.content || freq
+          ? '· '
+          : ''}Spectrum`;
+        description = story && story.content
+          ? `${story.content.description
+              ? truncate(story.content.description, 150)
+              : 'A story on Spectrum'}`
+          : freq ? freq.description : 'Like a forum but for Mars colonists.';
+      }
     }
+
+    const unread = notifications.notifications.reduce(
+      (sum, notification) => {
+        const story = stories.stories.find(
+          story => story.id === notification.ids.story,
+        );
+        if (!story || story.deleted) return sum;
+        return sum + notification.unread;
+      },
+      0,
+    );
+
+    if (unread > 0) title = `(${unread}) ${title}`;
 
     return (
       <Body>
         <Helmet
           title={
-            titleParam && descriptionParam ? `${title} | ${description}` : title
+            titleParam && descriptionParam ? `${title} · ${description}` : title
           }
           meta={[
             {
@@ -208,4 +227,5 @@ export default connect(state => ({
   frequencies: state.frequencies,
   user: state.user,
   ui: state.ui,
+  notifications: state.notifications,
 }))(App);

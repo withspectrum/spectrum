@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import deepEqual from 'deep-eql';
 import {
   List,
   CellMeasurer,
@@ -40,18 +41,6 @@ import { debounce } from '../../helpers/utils';
 
 const MIN_STORY_CARD_HEIGHT = 109;
 
-function arraysEqualById(a, b) {
-  if (a === b) return true;
-  if (a == null || b == null) return false;
-  if (a.length !== b.length) return false;
-
-  for (var i = 0; i < a.length; ++i) {
-    // This is story specific!
-    if (a[i].id !== b[i].id) return false;
-  }
-  return true;
-}
-
 class MiddleColumn extends Component {
   state = {
     jumpToTop: false,
@@ -76,26 +65,12 @@ class MiddleColumn extends Component {
   }
 
   componentWillReceiveProps = nextProps => {
+    if (deepEqual(this.props, nextProps)) return;
+
     // If any of the things the story list cares about change,
     // rerender the list
-    if (
-      arraysEqualById(this.props.stories, nextProps.stories) &&
-      nextProps.activeStory === this.props.activeStory &&
-      nextProps.activeFrequency === this.props.activeFrequency &&
-      arraysEqualById(this.props.notifications, nextProps.notifications) &&
-      nextProps.stories.every(
-        (story, index) =>
-          !story.participants ||
-          arraysEqualById(
-            story.participants,
-            this.props.stories[index].participants,
-          ),
-      )
-    )
-      return;
-
     this.clearCellMeasurerCache({
-      jumpToTop: true,
+      jumpToTop: nextProps.activeFrequency !== this.props.activeFrequency,
     });
   };
 
