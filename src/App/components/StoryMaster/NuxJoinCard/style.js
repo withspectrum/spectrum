@@ -33,6 +33,14 @@ export const Hscroll = styled.div`
 	align-items: stretch;
 	padding: 8px 24px;
 	background: transparent;
+	/* both cursor declarations are needed for x-browser support */
+	cursor: pointer;
+	cursor: hand;
+	cursor: grab;
+
+	&:active {
+		cursor: grabbing;
+	}
 
 	@media (max-width: 768px) {
 		width: calc(100% + 48px);
