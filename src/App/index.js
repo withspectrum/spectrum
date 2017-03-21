@@ -5,17 +5,17 @@ import LeftColumn from './LeftColumn';
 import {
   Body,
   LeftColumnContainer,
-  StoryMasterContainer,
+  MiddleColumnContainer,
   RightColumnContainer,
 } from './style';
-import StoryMaster from './StoryMaster';
+import MiddleColumn from './MiddleColumn';
 import RightColumn from './RightColumn';
 import LoadingIndicator from '../shared/loading';
 import ModalRoot from '../shared/modals/ModalRoot';
 import SelectUsernameModal from '../shared/modals/SelectUsernameModal';
 import GalleryRoot from '../shared/gallery/GalleryRoot';
-import NuxJoinCard from './StoryMaster/NuxJoinCard';
-import LoginCard from './StoryMaster/LoginCard';
+import NuxJoinCard from './MiddleColumn/NuxJoinCard';
+import LoginCard from './MiddleColumn/LoginCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
 import { sortArrayByKey, getParameterByName, truncate } from '../helpers/utils';
 
@@ -179,8 +179,8 @@ class App extends Component {
             onClose={this.closeSelectModal}
           />}
 
-        <StoryMasterContainer active={stories.active} viewing={ui.viewing}>
-          <StoryMaster
+        <MiddleColumnContainer active={stories.active} viewing={ui.viewing}>
+          <MiddleColumn
             loggedIn={!!user.uid}
             role={
               user &&
@@ -193,7 +193,7 @@ class App extends Component {
             stories={sortedStories}
             frequency={frequency}
           />
-        </StoryMasterContainer>
+        </MiddleColumnContainer>
 
         <RightColumnContainer active={stories.active} viewing={ui.viewing}>
           <RightColumn />

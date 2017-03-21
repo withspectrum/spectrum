@@ -39,7 +39,7 @@ export const LeftColumnContainer = styled(ScrollBody)`
   }
 `;
 
-export const StoryMasterContainer = styled(ScrollBody)`
+export const MiddleColumnContainer = styled(ScrollBody)`
   background: ${({ theme }) => theme.bg.wash};
   border-right: 1px solid ${({ theme }) => theme.border.default};
   flex: 0 0 420px;

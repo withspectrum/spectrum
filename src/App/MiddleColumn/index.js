@@ -54,7 +54,7 @@ function arraysEqualById(a, b) {
   return true;
 }
 
-class StoryMaster extends Component {
+class MiddleColumn extends Component {
   state = {
     jumpToTop: false,
     cache: new CellMeasurerCache({
@@ -415,4 +415,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(StoryMaster);
+export default connect(mapStateToProps)(MiddleColumn);

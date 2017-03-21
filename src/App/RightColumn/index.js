@@ -6,7 +6,7 @@ import { subscribeFrequency } from '../../actions/frequencies';
 import { deleteStory, toggleLockedStory } from '../../actions/stories';
 import { isStoryCreator, getStoryPermission } from '../../helpers/stories';
 import { getCurrentFrequency } from '../../helpers/frequencies';
-import { LoginButton, LoginText } from '../StoryMaster/style';
+import { LoginButton, LoginText } from '../MiddleColumn/style';
 import { login } from '../../actions/user';
 import history from '../../helpers/history';
 import Icon from '../../shared/Icons';
