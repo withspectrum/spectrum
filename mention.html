@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td align="center">
+          <table>
+            <tr>
+              <td>
+                <img width="32" height="32" src="logo.png"/>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table>
+                  <tr>
+                    {{each notification.user}}
+                    <td>
+                      <img width="32" height="32" style="border-radius: 16px;" src={{img}} alt={{name}} />
+                    </td>
+                    {{/each}}
+                  </tr>
+                  <tr>
+                    <td>
+                      <h2>Heads up, {{user.displayName}}!</h2>
+                      <p>{{notification.sender.displayName}} replied to a conversation that you were recently active in and we thought you might be interested...</p>
+                      <p>Check it out:</p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <table>
+                  {{#each notification.message}}
+                  <tr>
+                    <td>
+                      <table>
+                        <tr>
+                          <td>
+                            <h4 style="font-size: 12px; color: gray; margin: 0; margin-bottom: 2px; margin-left: 12px; padding: 0;">{{notification.sender.displayName}}</h4>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="background-color: gray; border-radius: 16px;">
+                            <div style="margin: 12px;">
+                              {{notification.message.body}}
+                            </div>
+                          </td>
+                        </tr>
+                        <tr></tr>
+                      </table>
+                    </td>
+                  </tr>
+                  {{/each}}
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
