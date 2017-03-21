@@ -87,16 +87,20 @@ class App extends Component {
       const freq = frequency ||
         story &&
           getCurrentFrequency(story.frequencyId, frequencies.frequencies);
-      title = `${story && story.content
-        ? `${truncate(story.content.title, 40)} `
-        : ''}${freq ? `~${freq.name} ` : ''}${story && story.content || freq
-        ? '· '
-        : ''}Spectrum`;
-      description = story && story.content
-        ? `${story.content.description
-            ? truncate(story.content.description, 150)
-            : 'A story on Spectrum'}`
-        : freq ? freq.description : 'Like a forum but for Mars colonists.';
+
+      if (story && story.content || freq && freq.name) {
+        console.log(story, freq);
+        title = `${story && story.content
+          ? `${truncate(story.content.title, 40)} `
+          : ''}${freq ? `~${freq.name} ` : ''}${story && story.content || freq
+          ? '· '
+          : ''}Spectrum`;
+        description = story && story.content
+          ? `${story.content.description
+              ? truncate(story.content.description, 150)
+              : 'A story on Spectrum'}`
+          : freq ? freq.description : 'Like a forum but for Mars colonists.';
+      }
     }
 
     const unread = notifications.notifications.reduce(
