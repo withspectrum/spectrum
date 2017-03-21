@@ -38,7 +38,7 @@ class NuxJoinCard extends Component {
     let featuredArr = this.state.featured.slice();
 
     // show the unjoined featured frequencies first
-    featured.map((freq, i) => {
+    featured.forEach((freq, i) => {
       if (frequencies[freq.id]) {
         featuredArr.push(freq);
       } else {

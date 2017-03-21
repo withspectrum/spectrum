@@ -2,8 +2,6 @@ import * as firebase from 'firebase';
 import { hashToArray } from './utils';
 import { track } from '../EventTracker';
 
-const UNIQUE = (v, i, a) => a.indexOf(v) === i;
-
 export const isStoryCreator = (story, user) => {
   if (!user) {
     return;

@@ -8,6 +8,23 @@ const UNIQUE = (v, i, a) => a.indexOf(v) === i;
 export const getMessageKey = () =>
   firebase.database().ref('messages').push().key;
 
+export const getMessage = messageId => {
+  const db = firebase.database();
+
+  return db
+    .ref(`messages/${messageId}`)
+    .once('value')
+    .then(snapshot => snapshot.val());
+};
+
+export const getMessages = storyId => {
+  return getStory(storyId).then(story => {
+    if (!story.messages) return Promise.resolve([]);
+    const messages = Object.keys(story.messages);
+    return Promise.all(messages.map(message => getMessage(message)));
+  });
+};
+
 /**
  * Create a message in the db
  *
@@ -70,21 +87,4 @@ export const createMessage = ({ storyId, frequency, user, message, key }) => {
     })
     .then(() => db.ref(`messages/${id}`).once('value'))
     .then(snapshot => snapshot.val());
-};
-
-export const getMessage = messageId => {
-  const db = firebase.database();
-
-  return db
-    .ref(`messages/${messageId}`)
-    .once('value')
-    .then(snapshot => snapshot.val());
-};
-
-export const getMessages = storyId => {
-  return getStory(storyId).then(story => {
-    if (!story.messages) return Promise.resolve([]);
-    const messages = Object.keys(story.messages);
-    return Promise.all(messages.map(message => getMessage(message)));
-  });
 };

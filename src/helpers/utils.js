@@ -117,26 +117,6 @@ export const sortAndGroupBubbles = messages => {
   return masterArray;
 };
 
-const fetch = (ref, orderBy, equalTo) => {
-  return new Promise((resolve, reject) => {
-    return firebase
-      .database()
-      .ref(ref)
-      .orderByChild(orderBy)
-      .equalTo(equalTo)
-      .once('value', snapshot => {
-        let val = snapshot.val();
-
-        if (ref === 'stories') {
-          resolve(val);
-        } else if (ref === 'frequencies') {
-          let obj = val[equalTo];
-          resolve(obj);
-        }
-      });
-  });
-};
-
 export const asyncComponent = getComponent => {
   return class AsyncComponent extends React.Component {
     static Component = null;
@@ -265,6 +245,7 @@ export function timeDifference(current, previous) {
   }
 }
 
+/* eslint-disable no-mixed-operators */
 export function isMobile() {
   let userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
@@ -278,6 +259,7 @@ export function isMobile() {
 
   return false;
 }
+/* eslint-enable no-mixed-operators */
 
 export const flattenArray = arr =>
   arr.reduce(

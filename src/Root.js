@@ -108,7 +108,7 @@ class Root extends Component {
   };
 
   render() {
-    const { user, frequencies, match: { params }, location } = this.props;
+    const { user, match: { params }, location } = this.props;
     // Handle loading the homepage
     if (params.frequency === undefined) {
       if (user.loginError) return <p>Login error</p>;

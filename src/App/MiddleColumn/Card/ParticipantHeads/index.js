@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { getUserInfo } from '../../../../db/users';
 import { Head, HeadWrapper, Container, Label } from './style';
 import { UnreadCount } from '../style';
 
@@ -28,7 +27,7 @@ class ParticipantHeads extends Component {
     return (
       <Container>
         {sortedArr.map((participant, i) => {
-          while (i <= 4 && list[participant]) {
+          if (i <= 4 && list[participant]) {
             return (
               <HeadWrapper
                 style={{ position: 'relative', left: `-${i * 4}px` }}
@@ -40,6 +39,7 @@ class ParticipantHeads extends Component {
               </HeadWrapper>
             );
           }
+          return null;
         })}
 
         {sortedArr.length > 5 && // if more than four participnats, tack on a placeholder

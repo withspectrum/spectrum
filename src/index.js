@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import Helmet from 'react-helmet';
 import history from './helpers/history';
 import { initStore } from './store';
 import * as firebase from 'firebase';

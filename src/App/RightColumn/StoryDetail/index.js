@@ -38,7 +38,7 @@ class StoryDetail extends Component {
   };
 
   render() {
-    let { story, frequency, active } = this.props;
+    let { story, frequency } = this.props;
     const timestamp = timeDifference(Date.now(), story.timestamp);
 
     return (

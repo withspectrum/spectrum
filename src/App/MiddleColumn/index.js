@@ -11,7 +11,6 @@ import { Button, TextButton, IconButton } from '../../shared/Globals';
 import {
   Column,
   Header,
-  ScrollBody,
   Overlay,
   MenuButton,
   FreqTitle,
@@ -22,7 +21,6 @@ import {
   Description,
   Actions,
   LoadingBlock,
-  Everything,
   StoryList,
   NewIndicator,
 } from './style';
@@ -45,7 +43,7 @@ const MIN_STORY_CARD_HEIGHT = 109;
 function arraysEqualById(a, b) {
   if (a === b) return true;
   if (a == null || b == null) return false;
-  if (a.length != b.length) return false;
+  if (a.length !== b.length) return false;
 
   for (var i = 0; i < a.length; ++i) {
     // This is story specific!
@@ -254,17 +252,14 @@ class MiddleColumn extends Component {
     const {
       frequency,
       activeFrequency,
-      frequencies,
       stories,
       isPrivate,
       role,
       loggedIn,
       composer,
-      activeStory,
       notifications,
       user,
       storiesLoaded,
-      loading,
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';

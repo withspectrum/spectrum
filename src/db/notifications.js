@@ -1,5 +1,4 @@
 import * as firebase from 'firebase';
-import { ACTIVITY_TYPES } from './types';
 
 /**
  * Create notifications for a bunch of users

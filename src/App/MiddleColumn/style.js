@@ -174,13 +174,6 @@ export const Actions = styled(FlexRow)`
 	align-items: center;
 `;
 
-export const Everything = styled(Actions)`
-	width: 100%;
-	display: flex;
-	justify-content: space-between;
-	text-align: center;
-`;
-
 export const Count = styled(H4)`
 	margin-top: 8px;
 	font-weight: 700;
