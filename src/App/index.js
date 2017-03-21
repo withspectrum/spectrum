@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
-import NavMaster from './components/NavMaster';
+import LeftColumn from './LeftColumn';
 import {
   Body,
-  NavMasterContainer,
-  StoryMasterContainer,
+  LeftColumnContainer,
+  MiddleColumnContainer,
   RightColumnContainer,
 } from './style';
-import StoryMaster from './components/StoryMaster';
-import RightColumn from './components/RightColumn';
+import MiddleColumn from './MiddleColumn';
+import RightColumn from './RightColumn';
 import LoadingIndicator from '../shared/loading';
 import ModalRoot from '../shared/modals/ModalRoot';
 import SelectUsernameModal from '../shared/modals/SelectUsernameModal';
 import GalleryRoot from '../shared/gallery/GalleryRoot';
-import NuxJoinCard from './components/StoryMaster/NuxJoinCard';
-import LoginCard from './components/StoryMaster/LoginCard';
+import NuxJoinCard from './MiddleColumn/NuxJoinCard';
+import LoginCard from './MiddleColumn/LoginCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
 import { sortArrayByKey, getParameterByName, truncate } from '../helpers/utils';
 
@@ -165,9 +165,9 @@ class App extends Component {
         <GalleryRoot />
         <LoadingIndicator />
 
-        <NavMasterContainer viewing={ui.viewing}>
-          <NavMaster />
-        </NavMasterContainer>
+        <LeftColumnContainer viewing={ui.viewing}>
+          <LeftColumn />
+        </LeftColumnContainer>
 
         {/* If the user is logged in, but hasn't selected a username yet prompt them to */
         }
@@ -179,8 +179,8 @@ class App extends Component {
             onClose={this.closeSelectModal}
           />}
 
-        <StoryMasterContainer active={stories.active} viewing={ui.viewing}>
-          <StoryMaster
+        <MiddleColumnContainer active={stories.active} viewing={ui.viewing}>
+          <MiddleColumn
             loggedIn={!!user.uid}
             role={
               user &&
@@ -193,7 +193,7 @@ class App extends Component {
             stories={sortedStories}
             frequency={frequency}
           />
-        </StoryMasterContainer>
+        </MiddleColumnContainer>
 
         <RightColumnContainer active={stories.active} viewing={ui.viewing}>
           <RightColumn />

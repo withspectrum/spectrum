@@ -1,4 +1,4 @@
-import * as firebase from 'firebase';
+import database from 'firebase/database';
 
 /**
  * Create a new user
@@ -6,31 +6,31 @@ import * as firebase from 'firebase';
  * Returns a Promise that resolves with the data
  */
 export const createUser = user => {
-  const db = firebase.database();
+  const db = database();
   const uid = user.uid;
 
   const updates = {
     [`users/${uid}/displayName`]: user.displayName,
     [`users/${uid}/uid`]: uid,
     [`users/${uid}/photoURL`]: user.photoURL,
-    [`users/${uid}/created`]: firebase.database.ServerValue.TIMESTAMP,
+    [`users/${uid}/created`]: database.ServerValue.TIMESTAMP,
     [`users/${uid}/frequencies/-Kenm0MXIRCq8GkwiJKb`]: {
       //=> add `hugs n bugs` to user's default frequencies
       id: '-Kenm0MXIRCq8GkwiJKb',
       permission: 'subscriber',
-      joined: firebase.database.ServerValue.TIMESTAMP,
+      joined: database.ServerValue.TIMESTAMP,
     },
     [`users/${uid}/frequencies/-KenmQHXnkUDN0S9UUsn`]: {
       //=> add `~Discover` to user's default frequencies
       id: '-KenmQHXnkUDN0S9UUsn',
       permission: 'subscriber',
-      joined: firebase.database.ServerValue.TIMESTAMP,
+      joined: database.ServerValue.TIMESTAMP,
     },
     [`users/${uid}/frequencies/-Kenmw8GUeJYnxXNc0WS`]: {
       //=> add `~Spectrum` to user's default frequencies
       id: '-Kenmw8GUeJYnxXNc0WS',
       permission: 'subscriber',
-      joined: firebase.database.ServerValue.TIMESTAMP,
+      joined: database.ServerValue.TIMESTAMP,
     },
   };
 
@@ -45,15 +45,15 @@ export const createUser = user => {
     .then(() => db.ref().update({
       [`frequencies/-Kenm0MXIRCq8GkwiJKb/users/${uid}`]: {
         permission: 'subscriber',
-        joined: firebase.database.ServerValue.TIMESTAMP,
+        joined: database.ServerValue.TIMESTAMP,
       },
       [`frequencies/-KenmQHXnkUDN0S9UUsn/users/${uid}`]: {
         permission: 'subscriber',
-        joined: firebase.database.ServerValue.TIMESTAMP,
+        joined: database.ServerValue.TIMESTAMP,
       },
       [`frequencies/-Kenmw8GUeJYnxXNc0WS/users/${uid}`]: {
         permission: 'subscriber',
-        joined: firebase.database.ServerValue.TIMESTAMP,
+        joined: database.ServerValue.TIMESTAMP,
       },
     }))
     .then(() => db.ref(`users/${uid}`).once('value'))
@@ -66,7 +66,7 @@ export const createUser = user => {
  * Returns a Promise that resolves with the data
  */
 export const getUserInfo = uid => {
-  const db = firebase.database();
+  const db = database();
 
   return db.ref(`users/${uid}`).once('value').then(snapshot => {
     if (!snapshot.val()) {
@@ -84,20 +84,9 @@ export const getUserInfo = uid => {
   });
 };
 
-/**
- * Listen to authentication changes
- *
- * Calls the passed callback with null if no authentication is there,
- * otherwise passes the user object
- */
-export const listenToAuth = cb => {
-  return firebase.auth().onAuthStateChanged(cb);
-};
-
 export const checkUniqueUsername = (name, uid) => {
   return new Promise((resolve, reject) => {
-    firebase
-      .database()
+    database()
       .ref('users')
       .orderByChild('username')
       .equalTo(name)
@@ -112,7 +101,7 @@ export const checkUniqueUsername = (name, uid) => {
 };
 
 export const setUsernameAndEmail = ({ uid, username, email }) => {
-  const db = firebase.database();
+  const db = database();
 
   const updates = {
     [`users/${uid}/username`]: username,
@@ -131,12 +120,12 @@ export const setUsernameAndEmail = ({ uid, username, email }) => {
 };
 
 export const setlastSeen = uid => {
-  const db = firebase.database();
+  const db = database();
 
   db
     .ref()
     .update({
-      [`users/${uid}/lastSeen`]: firebase.database.ServerValue.TIMESTAMP,
+      [`users/${uid}/lastSeen`]: database.ServerValue.TIMESTAMP,
     })
     .catch(err => {
       // Don't let setting the last activity crash the app

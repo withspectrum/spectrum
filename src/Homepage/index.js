@@ -8,8 +8,6 @@ import {
   LogoContainer,
   LogoWhite,
   ContentWrapper,
-  EmailInput,
-  Submit,
   Img,
 } from './style';
 import { login } from '../actions/user';
