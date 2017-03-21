@@ -54,6 +54,9 @@
             "id": {
               ".validate": "$frequencyId === newData.val()"
             },
+            "default": {
+              ".validate": "newData.isBoolean()"
+            },
             "$other": {
               ".validate": false
             }
