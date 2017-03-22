@@ -373,7 +373,7 @@ class MiddleColumn extends Component {
         </Header>
 
         <StoryList innerRef={comp => this.storyList = comp}>
-          <Overlay active={composer.isOpen} />
+          <Overlay active={composer.isOpen} onClick={this.toggleComposer} />
 
           {canLoadNewStories &&
             <NewIndicator onClick={this.loadStoriesAgain}>

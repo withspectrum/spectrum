@@ -55,7 +55,7 @@ export const MiddleColumnContainer = styled(ScrollBody)`
 `;
 
 export const RightColumnContainer = styled(ScrollBody)`
-  background${({ theme }) => theme.bg.default};
+  background: ${({ theme }) => theme.bg.default};
   flex: 1 1 auto;
   z-index: 2;
 
