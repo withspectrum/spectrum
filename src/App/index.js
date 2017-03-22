@@ -18,6 +18,7 @@ import NuxJoinCard from './MiddleColumn/NuxJoinCard';
 import LoginCard from './MiddleColumn/LoginCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
 import { sortArrayByKey, getParameterByName, truncate } from '../helpers/utils';
+import { ACTIVITY_TYPES } from '../db/types';
 
 class App extends Component {
   state = {
@@ -107,6 +108,8 @@ class App extends Component {
 
     const unread = notifications.notifications.reduce(
       (sum, notification) => {
+        if (notification.activityType !== ACTIVITY_TYPES.NEW_MESSAGE)
+          return sum;
         const story = stories.stories.find(
           story => story.id === notification.ids.story,
         );
