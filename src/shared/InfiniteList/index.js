@@ -6,7 +6,7 @@ import {
   CellMeasurerCache,
   InfiniteLoader,
 } from 'react-virtualized';
-import { debounce } from '../../../helpers/utils';
+import { debounce } from '../../helpers/utils';
 
 /**
  * Render an infinite list of things, possibly lazy loading them as they are needed

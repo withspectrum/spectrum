@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import InfiniteList from './InfiniteList';
+import InfiniteList from '../../shared/InfiniteList';
 import LoadingIndicator from '../../shared/loading/global';
 import { Button, TextButton, IconButton } from '../../shared/Globals';
 import {
