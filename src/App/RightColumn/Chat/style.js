@@ -59,6 +59,7 @@ export const Reaction = styled.b`
 	div {
 		position: relative;
 		top: 1px;
+		pointer-events: none;
 	}
 
 	svg, i {
