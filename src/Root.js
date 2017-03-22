@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setActiveFrequency } from './actions/frequencies';
 import { setActiveStory } from './actions/stories';
+import { addNotification } from './actions/notifications';
 import { asyncComponent } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
 import { getUserInfo } from './db/users';
@@ -48,10 +49,7 @@ class Root extends Component {
       set(user.uid);
 
       listenToNewNotifications(user.uid, notification => {
-        dispatch({
-          type: 'ADD_NOTIFICATION',
-          notification: notification,
-        });
+        dispatch(addNotification(notification));
       });
 
       // Get the public userdata
