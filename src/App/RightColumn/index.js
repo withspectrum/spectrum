@@ -132,7 +132,6 @@ class RightColumn extends Component {
                   Join ~{this.props.frequencies.active} to chat!
                 </LoginButton>}
             </Footer>}
-          <NullContainer />
         </ViewContainer>
       );
     } else if (composer.isOpen) {

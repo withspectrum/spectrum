@@ -30,7 +30,6 @@ export const NullContainer = styled.div`
   theme.bg.default} url('./img/empty.svg') no-repeat center left;
 	background-size: cover;
 	opacity: 0.2;
-	z-index: -1;
 `;
 
 export const Footer = styled.div`
