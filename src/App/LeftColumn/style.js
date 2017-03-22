@@ -91,7 +91,6 @@ export const Freq = styled.div`
   flex: 0 0 36px;
   padding: 0.2rem 1rem;
   align-items: center;
-  justify-content: space-between;
   background-color: ${props =>
   props.active ? props.theme.brand.default : props.theme.bg.reverse};
   background-image: ${props =>

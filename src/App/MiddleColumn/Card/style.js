@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
 		border-radius: 0;
 
 		&:first-of-type {
-			margin-bottom: 8px;
+			margin-top: 8px;
 		}
 	}
 

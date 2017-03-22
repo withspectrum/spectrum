@@ -283,6 +283,24 @@ export const Span = styled.span`
 	padding: 0;
 `;
 
+export const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: ${props => props.spread ? 'space-between' : 'initial'};
+  align-items: ${props => props.center ? 'center' : 'initial'};
+  padding: ${props => props.padding ? props.padding : '0'};
+  margin: ${props => props.margin ? props.margin : '0'};
+`;
+
+export const FlexCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: ${props => props.spread ? 'space-between' : 'flex-start'};
+  align-items: ${props => props.center ? 'center' : 'initial'};
+  padding: ${props => props.padding ? props.padding : '0'};
+  margin: ${props => props.margin ? props.margin : '0'};
+`;
+
 const returnTooltip = props => {
   switch (props.tipLocation) {
     case 'top-left':
