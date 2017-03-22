@@ -197,7 +197,7 @@ class App extends Component {
         <LoadingIndicator />
 
         <LeftColumnContainer viewing={ui.viewing}>
-          <LeftColumn />
+          <LeftColumn unread={unread} />
         </LeftColumnContainer>
 
         {/* If the user is logged in, but hasn't selected a username yet prompt them to */
