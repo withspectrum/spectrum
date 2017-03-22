@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import deepEqual from 'deep-eql';
-import {
-  List,
-  CellMeasurer,
-  CellMeasurerCache,
-  InfiniteLoader,
-} from 'react-virtualized';
+import InfiniteList from './InfiniteList';
 import LoadingIndicator from '../../shared/loading/global';
 import { Button, TextButton, IconButton } from '../../shared/Globals';
 import {
@@ -38,41 +32,20 @@ import Notification from './Notification';
 import { ACTIVITY_TYPES } from '../../db/types';
 import { getCurrentFrequency } from '../../helpers/frequencies';
 import { formatSenders } from '../../helpers/notifications';
-import { debounce } from '../../helpers/utils';
 
 const MIN_STORY_CARD_HEIGHT = 109;
 
 class MiddleColumn extends Component {
   state = {
     jumpToTop: false,
-    cache: new CellMeasurerCache({
-      fixedWidth: true,
-      minHeight: MIN_STORY_CARD_HEIGHT,
-      keyMapper: index => this.props.stories[index].id,
-    }),
   };
 
-  constructor() {
-    super();
-    this.debouncedClearCache = debounce(this.clearCellMeasurerCache, 150);
-  }
-
-  componentWillMount() {
-    window.addEventListener('resize', this.debouncedClearCache, false);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.debouncedClearCache, false);
-  }
-
-  componentWillReceiveProps = nextProps => {
-    if (deepEqual(this.props, nextProps)) return;
-
-    // If any of the things the story list cares about change,
-    // rerender the list
-    this.clearCellMeasurerCache({
-      jumpToTop: nextProps.activeFrequency !== this.props.activeFrequency,
-    });
+  componentWillUpdate = nextProps => {
+    if (nextProps.activeFrequency !== this.props.activeFrequency) {
+      this.setState({
+        jumpToTop: true,
+      });
+    }
   };
 
   componentDidUpdate = () => {
@@ -82,17 +55,6 @@ class MiddleColumn extends Component {
         jumpToTop: false,
       });
     }
-  };
-
-  clearCellMeasurerCache = otherUpdates => {
-    this.setState({
-      ...otherUpdates,
-      cache: new CellMeasurerCache({
-        fixedWidth: true,
-        minHeight: MIN_STORY_CARD_HEIGHT,
-        keyMapper: index => this.props.stories[index].id,
-      }),
-    });
   };
 
   loadStoriesAgain = () => {
@@ -159,7 +121,7 @@ class MiddleColumn extends Component {
     );
   };
 
-  renderStory = ({ index, key, style, parent }) => {
+  renderStory = ({ index, key }) => {
     const {
       notifications,
       stories,
@@ -185,41 +147,26 @@ class MiddleColumn extends Component {
     const unreadMessages = notification ? notification.unread : 0;
     const freq = isEverything &&
       getCurrentFrequency(story.frequencyId, frequencies);
-    return (
-      <CellMeasurer
-        cache={this.state.cache}
-        columnIndex={0}
-        key={key}
-        parent={parent}
-        rowIndex={index}
-      >
-        <div style={style}>
-          {React.isValidElement(story)
-            ? story
-            : <StoryCard
-                isActive={activeStory === story.id}
-                key={key}
-                style={style}
-                link={`/~${activeFrequency}/${story.id}`}
-                media={story.content.media}
-                messages={
-                  story.messages ? Object.keys(story.messages).length : 0
-                }
-                metaLink={isEverything && freq && `/~${freq.slug}`}
-                metaText={isEverything && freq && `~${freq.name}`}
-                person={{
-                  photo: story.creator.photoURL,
-                  name: story.creator.displayName,
-                }}
-                timestamp={story.last_activity || story.timestamp}
-                title={story.content.title}
-                unreadMessages={unreadMessages}
-                isNew={isNew}
-                participants={story.participants}
-              />}
-        </div>
-      </CellMeasurer>
-    );
+    return React.isValidElement(story)
+      ? story
+      : <StoryCard
+          isActive={activeStory === story.id}
+          key={key}
+          link={`/~${activeFrequency}/${story.id}`}
+          media={story.content.media}
+          messages={story.messages ? Object.keys(story.messages).length : 0}
+          metaLink={isEverything && freq && `/~${freq.slug}`}
+          metaText={isEverything && freq && `~${freq.name}`}
+          person={{
+            photo: story.creator.photoURL,
+            name: story.creator.displayName,
+          }}
+          timestamp={story.last_activity || story.timestamp}
+          title={story.content.title}
+          unreadMessages={unreadMessages}
+          isNew={isNew}
+          participants={story.participants}
+        />;
   };
 
   jumpToTop = () => {
@@ -232,8 +179,7 @@ class MiddleColumn extends Component {
     const {
       frequency,
       activeFrequency,
-      frequencies,
-      allStories,
+      // allStories,
       stories,
       isPrivate,
       role,
@@ -241,7 +187,7 @@ class MiddleColumn extends Component {
       composer,
       notifications,
       user,
-      storiesLoaded,
+      // storiesLoaded,
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
@@ -384,24 +330,13 @@ class MiddleColumn extends Component {
           {isNotifications && notifications.map(this.renderNotification)}
 
           {(isEverything || frequency) &&
-            <InfiniteLoader
-              isRowLoaded={() => true}
-              loadMoreRows={() => Promise.resolve()}
-              rowCount={stories.length}
-            >
-              {({ onRowsRendered, registerChild }) => (
-                <List
-                  ref={registerChild}
-                  onRowsRendered={onRowsRendered}
-                  height={window.innerHeight - 50}
-                  width={window.innerWidth > 768 ? 419 : window.innerWidth}
-                  rowCount={stories.length}
-                  rowRenderer={this.renderStory}
-                  deferredMeasurementCache={this.state.cache}
-                  rowHeight={this.state.cache.rowHeight}
-                />
-              )}
-            </InfiniteLoader>}
+            <InfiniteList
+              height={window.innerHeight - 50}
+              width={window.innerWidth > 768 ? 419 : window.innerWidth}
+              minElementHeight={MIN_STORY_CARD_HEIGHT}
+              elementCount={stories.length}
+              elementRenderer={this.renderStory}
+            />}
         </StoryList>
       </Column>
     );
