@@ -131,6 +131,7 @@ class MiddleColumn extends Component {
       senders,
       timestamp,
       contentBlocks,
+      read,
     } = notification;
     const isNewMsg = activityType === ACTIVITY_TYPES.NEW_MESSAGE;
     // TODO: Notifications for new stories in frequencies
@@ -139,6 +140,7 @@ class MiddleColumn extends Component {
     return (
       <Notification
         key={id}
+        isRead={read}
         link={isNewMsg ? `/notifications/${ids.story}` : `/~${ids.frequency}`}
         messages={notification.occurrences}
         person={{

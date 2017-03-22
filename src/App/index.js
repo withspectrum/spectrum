@@ -118,8 +118,6 @@ class App extends Component {
       sortedStories.unshift(<LoginCard />);
     }
 
-    console.log(frequencies.active, unread);
-
     if (user.uid && frequencies.active === 'notifications' && unread >= 0) {
       sortedStories.unshift(<NuxJoinCard />);
     }

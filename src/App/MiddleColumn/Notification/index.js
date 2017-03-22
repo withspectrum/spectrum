@@ -8,13 +8,17 @@ import { FlexCol, P } from '../../../shared/Globals';
 
 class Notification extends Component {
   render() {
-    const { link, person, title, messages } = this.props;
+    const { link, person, title, messages, isRead } = this.props;
     return (
       <Wrapper>
         <Link to={link}>
           <FlexCol>
             <CardHeader padding={'8px'}>
-              <Icon icon="send" static color="success.default" />
+              <Icon
+                icon="send"
+                static
+                color={isRead ? 'text.placeholder' : 'success.default'}
+              />
               <FlexCol padding={'0 0 0 8px'}>
                 <Heading>{person.name}</Heading>
                 <Title>{title}</Title>
