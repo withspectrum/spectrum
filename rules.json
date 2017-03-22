@@ -28,15 +28,15 @@
           // A slug can be set if the frequency is new, or can be changed by the owner when it is being deleted
           ".write": "data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
         },
-        "members": {
+        "users": {
           "$userId": {
             // Make sure a valid user is being added to the users
             ".validate": "root.child('users').hasChild($userId)",
             // Only let a user themselves or an owner edit this
-            ".write": "$userId === auth.uid || data.parent().child('members/' + auth.uid + '/permission').val() === 'owner'",
+            ".write": "$userId === auth.uid || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'",
             // Make sure the permissions being set is "member" except when it's done by an owner
             "permission": {
-              ".validate": "newData.val() === 'member' || data.parent().child('members/' + auth.uid + '/permission').val() === 'owner' && newData.val() === 'owner'"
+              ".validate": "newData.val() === 'member' || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner' && newData.val() === 'owner'"
             },
             "joined": {
               ".validate": "newData.val() <= now"
@@ -48,7 +48,7 @@
         },
         "frequencies": {
           // Only let owners add new frequencies
-          ".write": "data.parent().child('members/' + auth.uid + '/permission').val() === 'owner'",
+          ".write": "data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'",
           "$frequencyId": {
             ".validate": "root.child('frequencies').hasChild($frequencyId)",
             "id": {
