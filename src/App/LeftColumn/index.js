@@ -73,13 +73,20 @@ class NavigationMaster extends Component {
   };
 
   render() {
-    const user = this.props.user;
+    const {
+      notifications,
+      user,
+    } = this.props;
     const frequencies = this.props.frequencies.frequencies.filter(
       frequency => frequency.users[user.uid],
     );
     const activeFrequency = this.props.frequencies.active;
     // const myFrequencies = helpers.getMyFrequencies(frequencies, user)
     // const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
+    const unread = notifications.reduce(
+      (sum, notification) => sum + notification.unread,
+      0,
+    );
 
     return (
       <Column>
@@ -112,15 +119,17 @@ class NavigationMaster extends Component {
                   </FreqText>
                 </Freq>
               </Link>
-              <Link to={`/notifications`}>
-                <Freq
-                  active={activeFrequency === 'notifications'}
-                  onClick={this.showStoriesNav}
-                >
-                  <Icon reverse static icon="notification" />
-                  <FreqLabel>Notifications</FreqLabel>
-                </Freq>
-              </Link>
+              {notifications.length > 0 &&
+                <Link to={`/notifications`}>
+                  <Freq
+                    active={activeFrequency === 'notifications'}
+                    onClick={this.showStoriesNav}
+                  >
+                    <Icon reverse static icon="notification" />
+                    <FreqLabel>Notifications</FreqLabel>
+                    {unread > 0 && <DirtyDot>{unread}</DirtyDot>}
+                  </Freq>
+                </Link>}
             </div>}
           {frequencies.length > 0 ||
             <div>
@@ -157,7 +166,7 @@ class NavigationMaster extends Component {
             frequencies.map((frequency, i) => {
               // If there's any unread notification for this frequency
               // show a dirty dot
-              const notif = this.props.notifications.find(notification => {
+              const notif = notifications.find(notification => {
                 if (notification.ids.frequency !== frequency.id) return false;
                 if (!frequency.stories || !notification.ids.story) return true;
                 const storyData = frequency.stories[notification.ids.story];
