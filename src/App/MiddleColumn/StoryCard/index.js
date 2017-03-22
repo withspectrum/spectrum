@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 // eslint-disable-next-line
 import {
-  Wrapper,
-  LinkWrapper,
   StoryBody,
   StoryFooter,
   Name,
@@ -14,11 +12,12 @@ import {
 } from './style';
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
+import Card from '../../../shared/Card';
 import ParticipantHeads from './ParticipantHeads';
 
 const canBeBool = (...types) => PropTypes.oneOfType([PropTypes.bool, ...types]);
 
-class Card extends Component {
+class StoryCard extends Component {
   constructor() {
     super();
 
@@ -109,30 +108,26 @@ class Card extends Component {
     }
 
     return (
-      <Wrapper>
-        <Link to={link}>
-          <LinkWrapper selected={isActive}>
-            <StoryBody>
-              <Title>{title}</Title>
+      <Card link={link} selected={isActive}>
+        <StoryBody>
+          <Title>{title}</Title>
 
-              {heads}
+          {heads}
 
-            </StoryBody>
-            <StoryFooter>
-              <Name>
-                {person.name}&nbsp;·&nbsp;
-                {timeDifference(Date.now(), timestamp)}
-                {metaText && metaLink && `\u00A0in\u00A0`}
-                {metaText &&
-                  metaLink &&
-                  <Link to={metaLink}>
-                    {metaText}
-                  </Link>}
-              </Name>
-            </StoryFooter>
-          </LinkWrapper>
-        </Link>
-      </Wrapper>
+        </StoryBody>
+        <StoryFooter>
+          <Name>
+            {person.name}&nbsp;·&nbsp;
+            {timeDifference(Date.now(), timestamp)}
+            {metaText && metaLink && `\u00A0in\u00A0`}
+            {metaText &&
+              metaLink &&
+              <Link to={metaLink}>
+                {metaText}
+              </Link>}
+          </Name>
+        </StoryFooter>
+      </Card>
     );
   }
 }
@@ -144,4 +139,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Card);
+export default connect(mapStateToProps)(StoryCard);

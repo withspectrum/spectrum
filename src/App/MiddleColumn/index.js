@@ -33,7 +33,7 @@ import {
 } from '../../actions/frequencies';
 import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
-import Card from './Card';
+import StoryCard from './StoryCard';
 import Notification from './Notification';
 import { ACTIVITY_TYPES } from '../../db/types';
 import { getCurrentFrequency } from '../../helpers/frequencies';
@@ -196,7 +196,7 @@ class MiddleColumn extends Component {
         <div style={style}>
           {React.isValidElement(story)
             ? story
-            : <Card
+            : <StoryCard
                 isActive={activeStory === story.id}
                 key={key}
                 style={style}
