@@ -111,7 +111,7 @@ class MiddleColumn extends Component {
         person={{
           photo: '',
           name: `${formatSenders(senders)} ${isNewMsg
-            ? 'replied to your story'
+            ? 'replied:'
             : 'posted a new story'}`,
         }}
         timestamp={timestamp}
@@ -284,7 +284,7 @@ class MiddleColumn extends Component {
                 />
               </IconButton>}
 
-            {isEverything &&
+            {(isEverything || isNotifications) &&
               <MenuButton onClick={this.showFrequenciesNav}>
                 <Icon icon="menu" />
               </MenuButton>}
@@ -297,12 +297,7 @@ class MiddleColumn extends Component {
 
             {isNotifications &&
               <IconButton>
-                <Icon
-                  icon="settings"
-                  subtle
-                  tipText="Notification Settings"
-                  tipLocation="right"
-                />
+                <Icon subtle />
               </IconButton>}
 
             {isNotifications ||

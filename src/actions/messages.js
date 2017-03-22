@@ -1,4 +1,9 @@
-import { createMessage, getMessageKey } from '../db/messages';
+import {
+  createMessage,
+  getMessageKey,
+  createReaction,
+  deleteReaction,
+} from '../db/messages';
 import { track } from '../EventTracker';
 import { getCurrentFrequency } from '../helpers/frequencies';
 
@@ -37,5 +42,39 @@ export const sendMessage = message => (dispatch, getState) => {
     user,
     message,
     key,
+  });
+};
+
+export const addReaction = messageId => (dispatch, getState) => {
+  const { user: { uid } } = getState();
+
+  track('reaction', 'created', null);
+
+  createReaction({
+    messageId,
+    uid,
+  }).then(() => {
+    dispatch({
+      type: 'ADD_REACTION',
+      messageId,
+      uid,
+    });
+  });
+};
+
+export const removeReaction = messageId => (dispatch, getState) => {
+  const { user: { uid } } = getState();
+
+  track('reaction', 'removed', null);
+
+  deleteReaction({
+    messageId,
+    uid,
+  }).then(() => {
+    dispatch({
+      type: 'REMOVE_REACTION',
+      messageId,
+      uid,
+    });
   });
 };

@@ -1,6 +1,7 @@
 import database from 'firebase/database';
 import { getStory } from './stories';
 import { createNotifications } from './notifications';
+import { getUserInfo } from './users';
 import { ACTIVITY_TYPES } from './types';
 
 const UNIQUE = (v, i, a) => a.indexOf(v) === i;
@@ -86,4 +87,42 @@ export const createMessage = ({ storyId, frequency, user, message, key }) => {
     })
     .then(() => db.ref(`messages/${id}`).once('value'))
     .then(snapshot => snapshot.val());
+};
+
+export const createReaction = ({ messageId, uid }) => {
+  const db = database();
+
+  const TYPE = 'like';
+
+  return db
+    .ref()
+    .update({
+      [`messages/${messageId}/reactions/${uid}`]: {
+        type: TYPE,
+        timestamp: database.ServerValue.TIMESTAMP,
+      },
+    })
+    .then(() => Promise.all([getMessage(messageId), getUserInfo(uid)]))
+    .then(([message, user]) => {
+      createNotifications({
+        users: [message.userId],
+        activityType: ACTIVITY_TYPES.REACTION,
+        ids: {
+          frequency: message.frequencyId,
+          story: message.storyId,
+        },
+        sender: {
+          uid,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+        },
+        content: TYPE,
+      });
+    });
+};
+
+export const deleteReaction = ({ messageId, uid }) => {
+  const db = database();
+
+  return db.ref(`/messages/${messageId}/reactions/${uid}`).remove();
 };

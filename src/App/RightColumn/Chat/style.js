@@ -13,15 +13,107 @@ export const ChatContainer = styled.div`
   }
 `;
 
-export const Bubble = styled.p`
-	display: inline-block;
+export const BubbleWrapper = styled.span`
+	display: flex;
 	flex: 0 0 auto;
+	margin-top: 2px;
+	max-width: 60%;
+	align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
+	position: relative;
+
+	/* reactions */
+	b {
+
+	}
+`;
+
+export const Reaction = styled.b`
+	position: absolute;
+	bottom: 0;
+	left: calc(100% - 8px);
+	max-width: ${props => props.hasCount ? '100%' : '12px'};
+	max-height: ${props => props.hasCount ? '24px' : '12px'};
+	border: 2px solid #fff;
+	border-radius: ${props => props.hasCount ? '24px' : '8px'};
+	background: ${props =>
+  props.active ? props.theme.warn.default : props.theme.border.default};
+	background-image: ${props =>
+  props.active
+    ? Gradient(props.theme.warn.alt, props.theme.warn.default)
+    : Gradient(props.theme.border.default, props.theme.border.default)}
+	padding: ${props => props.hasCount ? '0 10px 0 6px' : '0'};
+	display: flex;
+	flex-direction: flex-row;
+	transition: all 0.15s ease-in-out;
+
+	i { /* count */
+		position: relative;
+		transform: ${props => props.hasCount ? 'translateX(0)' : 'translateX(-16px)'};
+		opacity: ${props => props.hasCount ? '1' : '0'};
+		padding-left: 6px;
+		line-height: 1.74;
+		vertical-align: middle;
+		font-style: normal;
+	}
+
+	div {
+		position: relative;
+		top: 1px;
+		pointer-events: none;
+	}
+
+	svg, i {
+		transform: ${props => props.hasCount ? 'scale(1)' : 'scale(0)'};
+		transition: all 0.15s ease-in-out;
+	}
+
+	&:hover {
+		max-width: 100px;
+		max-height: 24px;
+		border-radius: 24px;
+		padding: 0 10px 0 6px;
+		background: ${props =>
+  props.active ? props.theme.warn.default : props.theme.text.alt};
+		background-image: ${props =>
+  props.active
+    ? Gradient(props.theme.warn.alt, props.theme.warn.default)
+    : Gradient(props.theme.text.alt, props.theme.text.alt)}
+		cursor: pointer;
+		transform: ${props => props.active ? 'translateY(-2px)' : 'none'};
+		box-shadow: ${props => props.active ? '0 2px 4px rgba(0,0,0,0.1)' : 'none'};
+
+		i {
+			transform: translateX(0);
+			opacity: 1;
+		}
+
+		svg, i {
+			transform: scale(1);
+			transition: all 0.1s ease-in-out;
+		}
+	}
+
+	&:active {
+		transform: scale(0.9);
+		transition: all 0.1s eas-in-out;
+	}
+`;
+
+export const Count = styled.i`
+	font-weight: 600;
+	color: #fff;
+	font-size: 12px;
+	display: inline-block;
+`;
+
+export const Bubble = styled.p`
+
 	padding: 8px 16px;
 	vertical-align: middle;
 	border-radius: 16px;
-	margin-top: 2px;
+
 	font-size: 14px;
-	max-width: 60%;
+
 	line-height: 20px;
 	opacity: ${props => props.persisted === false ? 0.5 : 1};
 	transition: opacity 0.2s ease-out;
@@ -40,10 +132,6 @@ export const Bubble = styled.p`
 
 	& + div { /* if bubble is followed by an emoji, don't let the emoji have bottom margin */
 		margin-bottom: 0;
-	}
-
-	@media (max-width: 768px) {
-		max-width: 75%;
 	}
 `;
 
@@ -149,14 +237,14 @@ export const ImgBubble = styled.img`
 	display: block;
 	clear: both;
 	flex: 0 0 auto;
-	padding: 4px;
 	vertical-align: middle;
 	border-radius: 16px
 	margin-top: 2px;
-	max-width: 60%;
+	max-width: 100%;
 	display: flex;
 	align-self: ${props => props.me ? `flex-end;` : `flex-start;`};
 	opacity: ${props => props.persisted === false ? 0.5 : 1};
+	border: 1px solid #f6f7f8;
 
 	&:first-of-type {
 		margin-top: 0;

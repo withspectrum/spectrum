@@ -23,6 +23,40 @@ export default function root(state = initialState, action) {
         messages: storedMessages.concat(messages),
       });
     }
+    case 'ADD_REACTION': {
+      return {
+        ...state,
+        messages: state.messages.map(message => {
+          if (message.id !== action.messageId) return message;
+          return {
+            ...message,
+            reactions: {
+              ...message.reactions,
+              [action.uid]: {
+                timestamp: Date.now(),
+                type: 'like',
+              },
+            },
+          };
+        }),
+      };
+    }
+    case 'REMOVE_REACTION': {
+      return {
+        ...state,
+        messages: state.messages.map(message => {
+          if (message.id !== action.messageId) return message;
+
+          const reactions = Object.assign({}, message.reactions);
+          delete reactions[action.uid];
+
+          return {
+            ...message,
+            reactions,
+          };
+        }),
+      };
+    }
     case 'SEND_MESSAGE': {
       return {
         ...state,
