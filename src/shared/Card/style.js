@@ -24,7 +24,7 @@ export const Wrapper = styled.div`
 		}
 	}
 
-	${props => !props.static &&
+	${props => !props.still &&
 css`
 		&:hover {
 			box-shadow: ${Shadow.high};

@@ -6,14 +6,16 @@ import { Wrapper, LinkWrapper } from './style';
 
 class Card extends Component {
   render() {
-    const { link, selected } = this.props;
+    const { link, selected, overflow, still } = this.props;
+    // If there's a link, render a Link, otherwise render a div
+    const Anchor = link ? Link : ({ children }) => <div>{children}</div>;
     return (
-      <Wrapper>
-        <Link to={link}>
+      <Wrapper overflow={overflow} still={still}>
+        <Anchor to={link}>
           <LinkWrapper selected={selected}>
             {this.props.children}
           </LinkWrapper>
-        </Link>
+        </Anchor>
       </Wrapper>
     );
   }
