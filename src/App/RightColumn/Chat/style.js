@@ -30,21 +30,32 @@ export const BubbleWrapper = styled.span`
 export const Reaction = styled.b`
 	position: absolute;
 	bottom: 0;
-	left: calc(100% - 8px);
+	${props => props.me ? 'right: calc(100% - 8px)' : 'left: calc(100% - 8px)'};
 	max-width: ${props => props.hasCount ? '100%' : '12px'};
 	max-height: ${props => props.hasCount ? '24px' : '12px'};
 	border: 2px solid #fff;
 	border-radius: ${props => props.hasCount ? '24px' : '8px'};
-	background: ${props =>
-  props.active ? props.theme.warn.default : props.theme.border.default};
-	background-image: ${props =>
-  props.active
-    ? Gradient(props.theme.warn.alt, props.theme.warn.default)
-    : Gradient(props.theme.border.default, props.theme.border.default)}
+
+	${props => props.hasCount
+  ? `background: ${props.active
+      ? props.theme.warn.default
+      : props.theme.text.alt};
+			 background-image: ${props.active
+      ? Gradient(props.theme.warn.alt, props.theme.warn.default)
+      : Gradient(props.theme.text.alt, props.theme.text.alt)}
+			`
+  : `background: ${props.theme.border.default};
+			 background-image: ${Gradient(
+      props.theme.border.default,
+      props.theme.border.default,
+    )}
+			`}
+
 	padding: ${props => props.hasCount ? '0 10px 0 6px' : '0'};
 	display: flex;
 	flex-direction: flex-row;
 	transition: all 0.15s ease-in-out;
+	display: ${props => props.hide ? 'none' : 'auto'};
 
 	i { /* count */
 		position: relative;
