@@ -37,6 +37,11 @@ export const createNotifications = (
     });
 };
 
+export const deleteNotification = (userId, notificationId) => {
+  const db = database();
+  return db.ref(`notifications/${userId}/${notificationId}`).remove();
+};
+
 const UNIQUE = (v, i, a) => a.indexOf(v) === i;
 
 /**
@@ -48,11 +53,22 @@ export const listenToNewNotifications = (userId, cb) => {
   const handle = snapshot => {
     const notification = snapshot.val();
     if (!notification) return;
-    getStory(notification.ids.story).then(story => {
-      if (story && !story.deleted) return cb(notification);
-      // If we have an old notification for a deleted story get rid of it
-      db.ref(`notifications/${userId}/${notification.id}`).remove();
-    });
+    getStory(notification.ids.story)
+      .then(story => {
+        if (story && !story.deleted) return cb(notification);
+        console.log(
+          `Deleting ${userId}/${notification.id} because there is no story for it.`,
+        );
+        // If we have an old notification for a deleted story get rid of it
+        deleteNotification(userId, notification.id);
+      })
+      .catch(err => {
+        console.log(
+          `Deleting ${userId}/${notification.id} because there is no story for it.`,
+        );
+        // If we have an old notification for a deleted story get rid of it
+        deleteNotification(userId, notification.id);
+      });
   };
 
   // Handle adding of unread notifications
