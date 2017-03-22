@@ -150,7 +150,7 @@ class MiddleColumn extends Component {
         person={{
           photo: '',
           name: `${formatSenders(senders)} ${isNewMsg
-            ? 'replied to your story'
+            ? 'replied:'
             : 'posted a new story'}`,
         }}
         timestamp={timestamp}
