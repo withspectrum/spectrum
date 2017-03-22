@@ -173,6 +173,7 @@ class Chat extends Component {
                           hasCount={reactionCount}
                           active={userHasReacted}
                           me={itsaMe}
+                          hide={itsaMe && reactionCount === 0}
                           onClick={
                             itsaMe
                               ? () => this.doNothing
