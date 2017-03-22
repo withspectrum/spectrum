@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   ChatContainer,
+  BubbleWrapper,
   Bubble,
   ImgBubble,
   BubbleGroup,
+  Reaction,
+  Count,
   Byline,
   AdminBadge,
   EmojiBubble,
@@ -22,6 +25,7 @@ import {
 } from '../../../helpers/utils';
 import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../helpers/regexps';
 import { openGallery } from '../../../actions/gallery';
+import Icon from '../../../shared/Icons';
 
 class Chat extends Component {
   componentDidUpdate(prevProps, prevState) {
@@ -100,14 +104,26 @@ class Chat extends Component {
                       ? EmojiBubble
                       : Bubble;
                     return (
-                      <TextBubble
-                        key={i}
-                        me={itsaMe}
-                        persisted={message.persisted}
-                        dangerouslySetInnerHTML={{
-                          __html: this.formatMessage(message.message.content),
-                        }}
-                      />
+                      <BubbleWrapper key={message.id} me={itsaMe}>
+                        <TextBubble
+                          key={i}
+                          me={itsaMe}
+                          persisted={message.persisted}
+                          dangerouslySetInnerHTML={{
+                            __html: this.formatMessage(message.message.content),
+                          }}
+                        />
+                        {!itsaMe &&
+                          <Reaction>
+                            <Icon
+                              icon={'like-active'}
+                              reverse
+                              size={16}
+                              static
+                            />
+                            <Count>3,089</Count>
+                          </Reaction>}
+                      </BubbleWrapper>
                     );
                   }
 

@@ -13,15 +13,90 @@ export const ChatContainer = styled.div`
   }
 `;
 
-export const Bubble = styled.p`
-	display: inline-block;
+export const BubbleWrapper = styled.span`
+	display: flex;
 	flex: 0 0 auto;
+	margin-top: 2px;
+	max-width: 60%;
+	align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
+	position: relative;
+
+	/* reactions */
+	b {
+
+	}
+`;
+
+export const Reaction = styled.b`
+	position: absolute;
+	bottom: 0;
+	left: calc(100% - 8px);
+	max-width: 12px;
+	max-height: 12px;
+	border: 2px solid #fff;
+	border-radius: 8px;
+	background: ${({ theme }) => theme.generic.default};
+	padding: 0;
+	display: flex;
+	flex-direction: flex-row;
+	transition: all 0.15s ease-in-out;
+
+	i { /* count */
+		position: relative;
+		transform: translateX(-16px);
+		opacity: 0;
+		line-height: 1.74;
+		vertical-align: middle;
+	}
+
+	div { /* icon */
+		position: relative;
+		top: 1px;
+		pointer-events: none;
+	}
+
+	svg, i {
+		transform: scale(0);
+		transition: all 0.15s ease-in-out;
+	}
+
+	&:hover {
+		max-width: 100px;
+		max-height: 24px;
+		border-radius: 24px;
+		padding: 0 10px 0 6px;
+		background: ${({ theme }) => theme.text.alt};
+		cursor: pointer;
+
+		i {
+			transform: translateX(0);
+			opacity: 1;
+			padding-left: 6px;
+			font-style: normal;
+		}
+
+		svg, i {
+			transform: scale(1);
+			transition: all 0.1s ease-in-out;
+		}
+	}
+`;
+
+export const Count = styled.i`
+	font-weight: 600;
+	color: #fff;
+	font-size: 12px;
+	display: inline-block;
+`;
+
+export const Bubble = styled.p`
+
 	padding: 8px 16px;
 	vertical-align: middle;
 	border-radius: 16px;
-	margin-top: 2px;
+
 	font-size: 14px;
-	max-width: 60%;
+
 	line-height: 20px;
 	opacity: ${props => props.persisted === false ? 0.5 : 1};
 	transition: opacity 0.2s ease-out;
