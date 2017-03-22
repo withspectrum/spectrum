@@ -55,7 +55,11 @@ export const listenToNewNotifications = (userId, cb) => {
     if (!notification) return;
     getStory(notification.ids.story)
       .then(story => {
-        if (story && !story.deleted) return cb(notification);
+        if (story && !story.deleted)
+          return cb({
+            ...notification,
+            story,
+          });
         console.log(
           `Deleting ${userId}/${notification.id} because there is no story for it.`,
         );
@@ -90,7 +94,17 @@ export const getNotifications = uid => {
   return db
     .ref(`notifications/${uid}`)
     .once('value')
-    .then(snapshot => hashToArray(snapshot.val()));
+    .then(snapshot => hashToArray(snapshot.val()))
+    .then(notifications => Promise.all(
+      notifications.map(notification => getStory(
+        notification.ids.story,
+      ).then(story => {
+        return {
+          ...notification,
+          story,
+        };
+      })),
+    ));
 };
 
 /**

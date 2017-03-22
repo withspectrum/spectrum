@@ -45,7 +45,8 @@ export const groupNotifications = notifications => {
   notifications.forEach(notification => {
     if (
       notification.activityType !== ACTIVITY_TYPES.NEW_MESSAGE &&
-      notification.activityType !== ACTIVITY_TYPES.NEW_STORY
+      notification.activityType !== ACTIVITY_TYPES.NEW_STORY &&
+      notification.activityType !== ACTIVITY_TYPES.REACTION
     )
       return;
     // Group new message and story notifications by story id and activity type
