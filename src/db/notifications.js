@@ -46,15 +46,22 @@ export const listenToNotifications = (userId, cb) => {
     const notifications = snapshot.val();
     if (!notifications) return cb([]);
     const array = Object.keys(notifications).map(id => notifications[id]);
-    Promise.all(array.map(notification => getStory(notification.ids.story)))
+    Promise
+      .all(
+        array.map(notification => getStory(
+          notification.ids.story,
+        ).catch(err => {
+          console.log(err);
+        })),
+      )
       .then(stories => {
         cb(
-          array.filter(
-            notification =>
-              !stories.find(
-                story => notification.ids.story === story.id,
-              ).deleted,
-          ),
+          array.filter(notification => {
+            const story = stories.find(
+              story => notification.ids.story === story.id,
+            );
+            return story && !story.deleted;
+          }),
         );
       });
   });
