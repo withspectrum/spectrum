@@ -76,6 +76,7 @@ class NavigationMaster extends Component {
     const {
       notifications,
       user,
+      unread,
     } = this.props;
     const frequencies = this.props.frequencies.frequencies.filter(
       frequency => frequency.users[user.uid],
@@ -83,10 +84,6 @@ class NavigationMaster extends Component {
     const activeFrequency = this.props.frequencies.active;
     // const myFrequencies = helpers.getMyFrequencies(frequencies, user)
     // const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
-    const unread = notifications.reduce(
-      (sum, notification) => sum + notification.unread,
-      0,
-    );
 
     return (
       <Column>
