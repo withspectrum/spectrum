@@ -1,5 +1,6 @@
 import database from 'firebase/database';
 import { getStory } from './stories';
+import { hashToArray } from '../helpers/utils';
 
 /**
  * Create notifications for a bunch of users
@@ -39,35 +40,41 @@ export const createNotifications = (
 const UNIQUE = (v, i, a) => a.indexOf(v) === i;
 
 /**
- * Listen to notifications
+ * Listen to new notifications
  */
-export const listenToNotifications = (userId, cb) => {
+export const listenToNewNotifications = (userId, cb) => {
   const db = database();
 
-  return db.ref(`notifications/${userId}`).on('value', snapshot => {
-    const notifications = snapshot.val();
-    if (!notifications) return cb([]);
-    const array = Object.keys(notifications).map(id => notifications[id]);
-    Promise
-      .all(
-        array
-          .map(notification => notification.ids.story)
-          .filter(UNIQUE)
-          .map(id => getStory(id).catch(err => {
-            return {};
-          })),
-      )
-      .then(stories => {
-        cb(
-          array.filter(notification => {
-            const story = stories.find(
-              story => notification.ids.story === story.id,
-            );
-            return story && !story.deleted;
-          }),
-        );
-      });
-  });
+  const handle = snapshot => {
+    const notification = snapshot.val();
+    if (!notification) return;
+    getStory(notification.ids.story).then(story => {
+      if (story && !story.deleted) return cb(notification);
+      // If we have an old notification for a deleted story get rid of it
+      db.ref(`notifications/${userId}/${notification.id}`).remove();
+    });
+  };
+
+  // Handle adding of unread notifications
+  db
+    .ref(`notifications/${userId}`)
+    .orderByChild('read')
+    .equalTo(false)
+    .on('child_added', handle);
+  // Handle changing of any notifications
+  db.ref(`notifications/${userId}`).on('child_changed', handle);
+};
+
+/**
+ * Get all notifications of a user
+ */
+export const getNotifications = uid => {
+  const db = database();
+
+  return db
+    .ref(`notifications/${uid}`)
+    .once('value')
+    .then(snapshot => hashToArray(snapshot.val()));
 };
 
 /**

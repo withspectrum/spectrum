@@ -7,12 +7,11 @@ import { connect } from 'react-redux';
 import { setActiveFrequency } from './actions/frequencies';
 import { setActiveStory } from './actions/stories';
 import { asyncComponent } from './helpers/utils';
-import { groupNotifications } from './helpers/notifications';
 import LoadingIndicator from './shared/loading/global';
 import { getUserInfo } from './db/users';
 import { listenToAuth } from './db/auth';
 import { getFrequency } from './db/frequencies';
-import { listenToNotifications } from './db/notifications';
+import { listenToNewNotifications } from './db/notifications';
 import { set, track } from './EventTracker';
 import { monitorUser, stopUserMonitor } from './helpers/users';
 
@@ -48,10 +47,10 @@ class Root extends Component {
       track('user', 'authed', null);
       set(user.uid);
 
-      listenToNotifications(user.uid, notifications => {
+      listenToNewNotifications(user.uid, notification => {
         dispatch({
-          type: 'SET_NOTIFICATIONS',
-          notifications: groupNotifications(notifications),
+          type: 'ADD_NOTIFICATION',
+          notification: notification,
         });
       });
 

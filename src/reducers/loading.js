@@ -26,6 +26,7 @@ export default function loading(state = initialState, action) {
     case 'STOP_LOADING':
     case 'TOGGLE_STORY_LOCK':
     case 'UNSUBSCRIBE_FREQUENCY':
+    case 'SET_NOTIFICATIONS':
       const stacks = state.stacks - 1;
       return {
         active: stacks <= 0 ? false : true,
