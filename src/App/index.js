@@ -19,6 +19,7 @@ import LoginCard from './MiddleColumn/LoginCard';
 import ReportBugCard from './MiddleColumn/ReportBugCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
 import { sortArrayByKey, getParameterByName, truncate } from '../helpers/utils';
+import { ACTIVITY_TYPES } from '../db/types';
 
 class App extends Component {
   state = {
@@ -63,21 +64,6 @@ class App extends Component {
       });
     }
 
-    if (
-      isEverything && this.state.showDiscoverCard && user.uid ||
-      user.uid && frequencies.active === 'discover'
-    ) {
-      sortedStories.unshift(<NuxJoinCard />);
-    }
-
-    if (user.uid && frequencies.active === 'hugs-n-bugs') {
-      sortedStories.unshift(<ReportBugCard />);
-    }
-
-    if (!user.uid) {
-      sortedStories.unshift(<LoginCard />);
-    }
-
     const titleParam = getParameterByName('t', this.props.location.search);
     const descriptionParam = getParameterByName(
       'd',
@@ -112,6 +98,8 @@ class App extends Component {
 
     const unread = notifications.notifications.reduce(
       (sum, notification) => {
+        if (notification.activityType !== ACTIVITY_TYPES.NEW_MESSAGE)
+          return sum;
         const story = stories.stories.find(
           story => story.id === notification.ids.story,
         );
@@ -122,6 +110,25 @@ class App extends Component {
     );
 
     if (unread > 0) title = `(${unread}) ${title}`;
+
+    if (
+      isEverything && this.state.showDiscoverCard && user.uid ||
+      user.uid && frequencies.active === 'discover'
+    ) {
+      sortedStories.unshift(<NuxJoinCard />);
+    }
+
+    if (!user.uid) {
+      sortedStories.unshift(<LoginCard />);
+    }
+
+    if (user.uid && frequencies.active === 'hugs-n-bugs') {
+      sortedStories.unshift(<ReportBugCard />);
+    }
+
+    if (user.uid && frequencies.active === 'notifications' && unread >= 0) {
+      sortedStories.unshift(<NuxJoinCard />);
+    }
 
     return (
       <Body>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Wrapper } from '../Card/style';
+import Card from '../../../shared/Card';
 import { Button } from '../../../shared/Globals';
 import { Body, Title, Description } from './style';
 import { login } from '../../../actions/user';
@@ -13,7 +13,7 @@ class LoginCard extends Component {
 
   render() {
     return (
-      <Wrapper static overflow={'visible'}>
+      <Card static overflow={'visible'}>
         <Body>
           <Description emoji>👋</Description>
           <Title>C'mon in, the water's fine</Title>
@@ -24,7 +24,7 @@ class LoginCard extends Component {
             Sign in with Twitter
           </Button>
         </Body>
-      </Wrapper>
+      </Card>
     );
   }
 }

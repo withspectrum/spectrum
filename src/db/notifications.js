@@ -1,4 +1,5 @@
 import database from 'firebase/database';
+import { getStory } from './stories';
 
 /**
  * Create notifications for a bunch of users
@@ -35,6 +36,8 @@ export const createNotifications = (
     });
 };
 
+const UNIQUE = (v, i, a) => a.indexOf(v) === i;
+
 /**
  * Listen to notifications
  */
@@ -45,7 +48,25 @@ export const listenToNotifications = (userId, cb) => {
     const notifications = snapshot.val();
     if (!notifications) return cb([]);
     const array = Object.keys(notifications).map(id => notifications[id]);
-    cb(array);
+    Promise
+      .all(
+        array
+          .map(notification => notification.ids.story)
+          .filter(UNIQUE)
+          .map(id => getStory(id).catch(err => {
+            return {};
+          })),
+      )
+      .then(stories => {
+        cb(
+          array.filter(notification => {
+            const story = stories.find(
+              story => notification.ids.story === story.id,
+            );
+            return story && !story.deleted;
+          }),
+        );
+      });
   });
 };
 

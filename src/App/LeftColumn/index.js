@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { login, signOut } from '../../actions/user';
 import { openModal } from '../../actions/modals';
+import Icon from '../../shared/Icons';
 import { setActiveFrequency } from '../../actions/frequencies';
 import {
   Column,
@@ -72,13 +73,20 @@ class NavigationMaster extends Component {
   };
 
   render() {
-    const user = this.props.user;
+    const {
+      notifications,
+      user,
+    } = this.props;
     const frequencies = this.props.frequencies.frequencies.filter(
       frequency => frequency.users[user.uid],
     );
     const activeFrequency = this.props.frequencies.active;
     // const myFrequencies = helpers.getMyFrequencies(frequencies, user)
     // const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
+    const unread = notifications.reduce(
+      (sum, notification) => sum + notification.unread,
+      0,
+    );
 
     return (
       <Column>
@@ -98,65 +106,67 @@ class NavigationMaster extends Component {
               </Link>
             </Header>}
         <FreqList>
-          {frequencies.length > 0
-            ? // if the user isn't subbed to any frequencies
+          {user.uid &&
+            <div>
               <Link to="/">
                 <Freq
                   active={this.props.frequencies.active === 'everything'}
                   onClick={this.showStoriesNav}
                 >
                   <FreqText>
-                    <FreqIcon src="/img/everything-icon.svg" />
-                    <FreqLabel>{user.uid ? 'Everything' : 'Home'}</FreqLabel>
+                    <Icon icon="home" reverse static />
+                    <FreqLabel>{'Home'}</FreqLabel>
                   </FreqText>
                 </Freq>
               </Link>
-            : <div>
-                <Link to={`/~spectrum`}>
-                  <Freq onClick={this.showStoriesNav}>
-                    <FreqText>
-                      <FreqGlyph>~</FreqGlyph>
-                      <FreqLabel>Spectrum</FreqLabel>
-                    </FreqText>
+              {notifications.length > 0 &&
+                <Link to={`/notifications`}>
+                  <Freq
+                    active={activeFrequency === 'notifications'}
+                    onClick={this.showStoriesNav}
+                  >
+                    <Icon reverse static icon="notification" />
+                    <FreqLabel>Notifications</FreqLabel>
+                    {unread > 0 && <DirtyDot>{unread}</DirtyDot>}
                   </Freq>
-                </Link>
+                </Link>}
+            </div>}
+          {frequencies.length > 0 ||
+            <div>
+              <Link to={`/~spectrum`}>
+                <Freq onClick={this.showStoriesNav}>
+                  <FreqText>
+                    <Icon icon="frequency" reverse static />
+                    <FreqLabel>Spectrum</FreqLabel>
+                  </FreqText>
+                </Freq>
+              </Link>
 
-                <Link to={`/~discover`}>
-                  <Freq onClick={this.showStoriesNav}>
-                    <FreqText>
-                      <FreqGlyph>~</FreqGlyph>
-                      <FreqLabel>Discover</FreqLabel>
-                    </FreqText>
-                  </Freq>
-                </Link>
+              <Link to={`/~discover`}>
+                <Freq onClick={this.showStoriesNav}>
+                  <FreqText>
+                    <Icon icon="frequency" reverse static />
+                    <FreqLabel>Discover</FreqLabel>
+                  </FreqText>
+                </Freq>
+              </Link>
 
-                <Link to={`/~hugs-n-bugs`}>
-                  <Freq onClick={this.showStoriesNav}>
-                    <FreqText>
-                      <FreqGlyph>~</FreqGlyph>
-                      <FreqLabel>Hugs n Bugs</FreqLabel>
-                    </FreqText>
-                  </Freq>
-                </Link>
-              </div>}
-
-          {/*user.uid &&
-            <Link to={`/notifications`}>
-              <Freq
-                active={activeFrequency === 'notifications'}
-                onClick={this.showStoriesNav}
-              >
-                <FreqLabel>Notifications</FreqLabel>
-              </Freq>
-            </Link>*/
-          }
+              <Link to={`/~hugs-n-bugs`}>
+                <Freq onClick={this.showStoriesNav}>
+                  <FreqText>
+                    <Icon icon="frequency" reverse static />
+                    <FreqLabel>Hugs n Bugs</FreqLabel>
+                  </FreqText>
+                </Freq>
+              </Link>
+            </div>}
 
           {user.uid &&
             frequencies &&
             frequencies.map((frequency, i) => {
               // If there's any unread notification for this frequency
               // show a dirty dot
-              const notif = this.props.notifications.find(notification => {
+              const notif = notifications.find(notification => {
                 if (notification.ids.frequency !== frequency.id) return false;
                 if (!frequency.stories || !notification.ids.story) return true;
                 const storyData = frequency.stories[notification.ids.story];

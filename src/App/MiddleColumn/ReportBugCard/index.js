@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Wrapper } from '../Card/style';
+import Card from '../../../shared/Card';
 import { Button } from '../../../shared/Globals';
 import { Body, Title, Description } from './style';
 import { toggleComposer } from '../../../actions/composer';
@@ -12,7 +12,7 @@ class ReportBugCard extends Component {
 
   render() {
     return (
-      <Wrapper static overflow={'visible'}>
+      <Card static>
         <Body>
           <Description emoji>🐞</Description>
           <Title>Report Bugs & Give Feedback</Title>
@@ -23,7 +23,7 @@ class ReportBugCard extends Component {
             Report Bug or Share Feedback
           </Button>
         </Body>
-      </Wrapper>
+      </Card>
     );
   }
 }
