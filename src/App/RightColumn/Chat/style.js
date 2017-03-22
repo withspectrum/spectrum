@@ -133,10 +133,6 @@ export const Bubble = styled.p`
 	& + div { /* if bubble is followed by an emoji, don't let the emoji have bottom margin */
 		margin-bottom: 0;
 	}
-
-	@media (max-width: 768px) {
-		max-width: 75%;
-	}
 `;
 
 export const Messages = styled.div`
