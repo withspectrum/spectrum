@@ -36,6 +36,8 @@ export const createNotifications = (
     });
 };
 
+const UNIQUE = (v, i, a) => a.indexOf(v) === i;
+
 /**
  * Listen to notifications
  */
@@ -48,13 +50,15 @@ export const listenToNotifications = (userId, cb) => {
     const array = Object.keys(notifications).map(id => notifications[id]);
     Promise
       .all(
-        array.map(notification => getStory(
-          notification.ids.story,
-        ).catch(err => {
-          console.log(err);
-        })),
+        array
+          .map(notification => notification.ids.story)
+          .filter(UNIQUE)
+          .map(id => getStory(id).catch(err => {
+            return {};
+          })),
       )
       .then(stories => {
+        console.log(stories);
         cb(
           array.filter(notification => {
             const story = stories.find(
