@@ -91,7 +91,6 @@ export const Freq = styled.div`
   flex: 0 0 36px;
   padding: 0.2rem 1rem;
   align-items: center;
-  justify-content: space-between;
   background-color: ${props =>
   props.active ? props.theme.brand.default : props.theme.bg.reverse};
   background-image: ${props =>
@@ -201,6 +200,12 @@ export const Button = styled.button`
 export const DirtyDot = styled.div`
   border-radius: 50%;
   background-color: ${({ theme }) => theme.warn.default};
-  width: 10px;
-  height: 10px;
+  width: ${props => props.children ? '16px' : '10px'};
+  height: ${props => props.children ? '16px' : '10px'};
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 10px;
 `;

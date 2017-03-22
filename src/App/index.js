@@ -63,17 +63,6 @@ class App extends Component {
       });
     }
 
-    if (
-      isEverything && this.state.showDiscoverCard && user.uid ||
-      user.uid && frequencies.active === 'discover'
-    ) {
-      sortedStories.unshift(<NuxJoinCard />);
-    }
-
-    if (!user.uid) {
-      sortedStories.unshift(<LoginCard />);
-    }
-
     const titleParam = getParameterByName('t', this.props.location.search);
     const descriptionParam = getParameterByName(
       'd',
@@ -120,6 +109,21 @@ class App extends Component {
     );
 
     if (unread > 0) title = `(${unread}) ${title}`;
+
+    if (
+      isEverything && this.state.showDiscoverCard && user.uid ||
+      user.uid && frequencies.active === 'discover'
+    ) {
+      sortedStories.unshift(<NuxJoinCard />);
+    }
+
+    if (!user.uid) {
+      sortedStories.unshift(<LoginCard />);
+    }
+
+    if (user.uid && frequencies.active === 'notifications' && unread >= 0) {
+      sortedStories.unshift(<NuxJoinCard />);
+    }
 
     return (
       <Body>

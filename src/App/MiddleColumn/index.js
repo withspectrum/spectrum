@@ -33,7 +33,8 @@ import {
 } from '../../actions/frequencies';
 import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
-import Card from './Card';
+import StoryCard from './StoryCard';
+import Notification from './Notification';
 import { ACTIVITY_TYPES } from '../../db/types';
 import { getCurrentFrequency } from '../../helpers/frequencies';
 import { formatSenders } from '../../helpers/notifications';
@@ -124,24 +125,28 @@ class MiddleColumn extends Component {
 
   renderNotification = notification => {
     const {
+      activeStory,
+    } = this.props;
+    const {
       activityType,
       ids,
       id,
       senders,
       timestamp,
       contentBlocks,
+      read,
     } = notification;
     const isNewMsg = activityType === ACTIVITY_TYPES.NEW_MESSAGE;
     // TODO: Notifications for new stories in frequencies
     if (!isNewMsg) return;
 
     return (
-      <Card
+      <Notification
         key={id}
+        isActive={activeStory === notification.ids.story}
+        isRead={read}
         link={isNewMsg ? `/notifications/${ids.story}` : `/~${ids.frequency}`}
         messages={notification.occurrences}
-        // metaLink={isEverything && freq && `/~${freq.slug}`}
-        // metaText={isEverything && freq && `~${freq.name}`}
         person={{
           photo: '',
           name: `${formatSenders(senders)} ${isNewMsg
@@ -191,7 +196,7 @@ class MiddleColumn extends Component {
         <div style={style}>
           {React.isValidElement(story)
             ? story
-            : <Card
+            : <StoryCard
                 isActive={activeStory === story.id}
                 key={key}
                 style={style}
@@ -243,7 +248,8 @@ class MiddleColumn extends Component {
     const isNotifications = activeFrequency === 'notifications';
     const hidden = !role && isPrivate;
 
-    if (!isEverything && hidden) return <Icon icon="lock" />;
+    if (!isEverything && hidden)
+      return <LoadingBlock><Icon icon="lock" /></LoadingBlock>;
     if (!frequency && !isEverything && !isNotifications)
       return <LoadingBlock><LoadingIndicator /></LoadingBlock>;
 
@@ -337,16 +343,32 @@ class MiddleColumn extends Component {
               <MenuButton onClick={this.showFrequenciesNav}>
                 <Icon icon="menu" />
               </MenuButton>}
+
             {isEverything &&
-              <FreqTitle onClick={this.jumpToTop}>~Everything</FreqTitle>}
-            <IconButton onClick={this.toggleComposer}>
-              <Icon
-                icon={composer.isOpen ? 'write-cancel' : 'write'}
-                tipLocation="left"
-                tipText="New Story"
-                color={composer.isOpen ? 'warn.alt' : 'brand.default'}
-              />
-            </IconButton>
+              <FreqTitle onClick={this.jumpToTop}>Home</FreqTitle>}
+
+            {isNotifications &&
+              <FreqTitle onClick={this.jumpToTop}>Notifications</FreqTitle>}
+
+            {isNotifications &&
+              <IconButton>
+                <Icon
+                  icon="settings"
+                  subtle
+                  tipText="Notification Settings"
+                  tipLocation="right"
+                />
+              </IconButton>}
+
+            {isNotifications ||
+              <IconButton onClick={this.toggleComposer}>
+                <Icon
+                  icon={composer.isOpen ? 'write-cancel' : 'write'}
+                  tipLocation="left"
+                  tipText="New Story"
+                  color={composer.isOpen ? 'warn.alt' : 'brand.default'}
+                />
+              </IconButton>}
           </Actions>
         </Header>
 
