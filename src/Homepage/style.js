@@ -3,16 +3,14 @@ import { Logo } from '../shared/Logos';
 import { Gradient, H2 } from '../shared/Globals';
 
 export const Background = styled.div`
-	position: relative;
 	background-color: ${({ theme }) => theme.space.dark};
 	background-image: ${({ theme }) =>
   Gradient(theme.space.dark, theme.brand.alt)};
 	width: 100%;
-	height: 100%;
-	background-size: cover;
+	max-height: 100%;
+	overflow-y: hidden;
 	display: flex;
 	flex-direction: column;
-	align-items: flex-start;
 `;
 
 export const Tagline = styled(H2)`
@@ -75,25 +73,26 @@ export const LogoContainer = styled.div`
 `;
 
 export const ContentWrapper = styled.div`
-	box-sizing: border-box;
 	display: flex;
 	flex-grow: 1;
 	width: 100%;
 	align-items: center;
 	justify-content: center;
 	padding: 2rem;
-	position: relative;
-	z-index: 1;
+
+	@media (max-width: 768px) {
+		margin-top: 320px;
+		flex-direction: column;
+	}
 `;
 
 export const Img = styled.img`
-	height: 320px;
+	min-height: 320px;
+	max-height: 400px;
 	margin-left: 40px;
-	z-index: -1;
 
-	@media (max-width: 540px) {
-		position: absolute;
+	@media (max-width: 768px) {
 		margin-left: 0;
-		bottom: -100px;
+		margin-top: 40px;
 	}
 `;
