@@ -58,7 +58,6 @@ export const listenToNotifications = (userId, cb) => {
           })),
       )
       .then(stories => {
-        console.log(stories);
         cb(
           array.filter(notification => {
             const story = stories.find(
