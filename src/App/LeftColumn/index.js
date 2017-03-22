@@ -189,11 +189,11 @@ class NavigationMaster extends Component {
         </FreqList>
 
         <Footer>
-          <FooterP>
+          <FooterP onClick={this.showStoriesNav}>
             <MetaLink to="/~support">Support</MetaLink>&nbsp;·&nbsp;
             <MetaLink to="/~hugs-n-bugs">Report Bugs</MetaLink>
           </FooterP>
-          <FooterP>
+          <FooterP onClick={this.showStoriesNav}>
             <MetaLink to="/~feature-requests">Feature Requests</MetaLink>
             &nbsp;·&nbsp;
             <MetaAnchor href="mailto:hi@spectrum.chat">Contact</MetaAnchor>
