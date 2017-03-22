@@ -6,11 +6,11 @@
         "createdAt": {
           ".validate": "newData.val() <= now",
           // Only let authenticated users write to this, and only once at creation
-          ".write": "!data.exists() && data.parent().child('users').hasChild(auth.uid)"
+          ".write": "!data.exists()"
         },
         // Make sure the createdBy field contains a valid user ID
         "createdBy": {
-          ".validate": "root.child('users').hasChild(newData.val())",
+          ".validate": "root.child('users').hasChild(newData.val()) && newData.val() === auth.uid",
           // Only set once at creation
           ".write": "!data.exists()"
         },
@@ -19,51 +19,24 @@
           ".write": "!data.exists()"
         },
         "name": {
-          ".validate": "newData.isString() &&
-            newData.val() !== 'everything' &&
-            newData.val() !== 'notifications' &&
-            newData.val() !== 'undefined' &&
-            newData.val() !== 'null' &&
-            newData.val() !== 'legal' &&
-            newData.val() !== 'terms' &&
-            newData.val() !== 'privacy' &&
-            newData.val() !== 'cookies' &&
-            newData.val() !== 'team' &&
-            newData.val() !== 'about' &&
-            newData.val() !== 'contact' &&
-            newData.val() !== 'help' &&
-            newData.val() !== 'jobs' &&
-            newData.val() !== 'upgrade' &&
-            newData.val() !== 'pricing' &&
-            newData.val() !== 'business' &&
-            newData.val() !== 'blog' &&
-            newData.val() !== 'apps' &&
-            newData.val() !== 'developers' &&
-            newData.val() !== 'status' &&
-            newData.val() !== 'copyright' &&
-            newData.val() !== 'downgrade' &&
-            newData.val() !== 'faq' &&
-            newData.val() !== 'help' &&
-            newData.val() !== 'security' &&
-            newData.val() !== 'api' &&
-            newData.val() !== 'shop'",
+          ".validate": "newData.isString() && newData.val() !== 'everything' && newData.val() !== 'notifications' && newData.val() !== 'undefined' && newData.val() !== 'null'",
           // Only owners can change the name
           ".write": "data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
         },
         "slug": {
-          ".validate": "newData.isString() && newData.val() !== 'everything' && newData.val() !== 'undefined' && newData.val() !== 'null'",
+          ".validate": "newData.isString() && newData.val() !== 'everything' && newData.val() !== 'notifications' && newData.val() !== 'undefined' && newData.val() !== 'null' && newData.val() !== 'legal' && newData.val() !== 'terms' && newData.val() !== 'privacy' && newData.val() !== 'cookies' && newData.val() !== 'team' && newData.val() !== 'about' && newData.val() !== 'contact' && newData.val() !== 'help' && newData.val() !== 'jobs' && newData.val() !== 'upgrade' && newData.val() !== 'pricing' && newData.val() !== 'business' && newData.val() !== 'blog' && newData.val() !== 'apps' && newData.val() !== 'developers' && newData.val() !== 'status' && newData.val() !== 'copyright' && newData.val() !== 'downgrade' && newData.val() !== 'faq' && newData.val() !== 'help' && newData.val() !== 'security' && newData.val() !== 'api' && newData.val() !== 'shop'",
           // A slug can be set if the frequency is new, or can be changed by the owner when it is being deleted
-          ".write": "!data.exists() || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
+          ".write": "data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
         },
         "members": {
           "$userId": {
             // Make sure a valid user is being added to the users
             ".validate": "root.child('users').hasChild($userId)",
             // Only let a user themselves or an owner edit this
-            ".write": "$userId === auth.uid || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'",
+            ".write": "$userId === auth.uid || data.parent().child('members/' + auth.uid + '/permission').val() === 'owner'",
             // Make sure the permissions being set is "member" except when it's done by an owner
             "permission": {
-              ".validate": "newData.val() === 'member' || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner' && newData.val()"
+              ".validate": "newData.val() === 'member' || data.parent().child('members/' + auth.uid + '/permission').val() === 'owner' && newData.val() === 'owner'"
             },
             "joined": {
               ".validate": "newData.val() <= now"
@@ -75,7 +48,7 @@
         },
         "frequencies": {
           // Only let owners add new frequencies
-          ".write": "data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'",
+          ".write": "data.parent().child('members/' + auth.uid + '/permission').val() === 'owner'",
           "$frequencyId": {
             ".validate": "root.child('frequencies').hasChild($frequencyId)",
             "id": {
@@ -349,13 +322,13 @@
         "communities": {
           "$communityId": {
             // Let the user themselves, and the owner of a frequency edit these settings
-            ".write": "auth.uid === $user || root.child('communities/' + data.child('id').val() + '/users/' + auth.uid + '/permission').val() === 'owner'",
+            ".write": "auth.uid === $user || root.child('communities/' + $communityId + '/users/' + auth.uid + '/permission').val() === 'owner'",
             ".validate": "newData.hasChildren(['id']) && root.child('communities').hasChild($communityId)",
             "id": {
               ".validate": "$communityId === newData.val()"
             },
             "permission": {
-              ".validate": "newData.val() === 'owner' || newData.val() === 'subscriber'"
+              ".validate": "newData.val() === root.child('communities/' + $communityId + '/users/' + auth.uid + '/permission').val()"
             }
           }
         },
