@@ -339,10 +339,11 @@ class MiddleColumn extends Component {
                 />
               </IconButton>}
 
-            {isEverything &&
-              <MenuButton onClick={this.showFrequenciesNav}>
-                <Icon icon="menu" />
-              </MenuButton>}
+            {isEverything ||
+              isNotifications &&
+                <MenuButton onClick={this.showFrequenciesNav}>
+                  <Icon icon="menu" />
+                </MenuButton>}
 
             {isEverything &&
               <FreqTitle onClick={this.jumpToTop}>Home</FreqTitle>}
@@ -352,12 +353,7 @@ class MiddleColumn extends Component {
 
             {isNotifications &&
               <IconButton>
-                <Icon
-                  icon="settings"
-                  subtle
-                  tipText="Notification Settings"
-                  tipLocation="right"
-                />
+                <Icon subtle />
               </IconButton>}
 
             {isNotifications ||
