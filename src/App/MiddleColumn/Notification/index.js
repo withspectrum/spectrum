@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import deepEqual from 'deep-eql';
 import Icon from '../../../shared/Icons';
 import { timeDifference } from '../../../helpers/utils';
 import { Heading, Subheading, CardHeader, Title, B } from './style';
@@ -8,6 +8,10 @@ import Card from '../../../shared/Card';
 import { FlexCol, P } from '../../../shared/Globals';
 
 class Notification extends Component {
+  shouldComponentUpdate(nextProps) {
+    return !deepEqual(nextProps, this.props);
+  }
+
   render() {
     const { link, person, title, messages, isRead, isActive } = this.props;
     return (
@@ -40,4 +44,4 @@ Notification.propTypes = {
   messages: React.PropTypes.number.isRequired,
 };
 
-export default connect()(Notification);
+export default Notification;
