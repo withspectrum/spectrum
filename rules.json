@@ -1,6 +1,6 @@
 {
   "rules": {
-    "networks": {
+    "communities": {
       ".indexOn": ["id", "slug"],
       "$id": {
         "createdAt": {
@@ -19,7 +19,34 @@
           ".write": "!data.exists()"
         },
         "name": {
-          ".validate": "newData.isString() && newData.val() !== 'everything' && newData.val() !== 'undefined' && newData.val() !== 'null'",
+          ".validate": "newData.isString() &&
+            newData.val() !== 'everything' &&
+            newData.val() !== 'notifications' &&
+            newData.val() !== 'undefined' &&
+            newData.val() !== 'null' &&
+            newData.val() !== 'legal' &&
+            newData.val() !== 'terms' &&
+            newData.val() !== 'privacy' &&
+            newData.val() !== 'cookies' &&
+            newData.val() !== 'team' &&
+            newData.val() !== 'about' &&
+            newData.val() !== 'contact' &&
+            newData.val() !== 'help' &&
+            newData.val() !== 'jobs' &&
+            newData.val() !== 'upgrade' &&
+            newData.val() !== 'pricing' &&
+            newData.val() !== 'business' &&
+            newData.val() !== 'blog' &&
+            newData.val() !== 'apps' &&
+            newData.val() !== 'developers' &&
+            newData.val() !== 'status' &&
+            newData.val() !== 'copyright' &&
+            newData.val() !== 'downgrade' &&
+            newData.val() !== 'faq' &&
+            newData.val() !== 'help' &&
+            newData.val() !== 'security' &&
+            newData.val() !== 'api' &&
+            newData.val() !== 'shop'",
           // Only owners can change the name
           ".write": "data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
         },
@@ -110,8 +137,8 @@
           ".validate": "newData.isString() && newData.val() !== 'undefined' && newData.val() !== 'null' && newData.val().length <= 140",
           ".write": "!data.exists() || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
         },
-        "network": {
-          ".validate": "newData.isString() && root.child('networks').hasChild(newData.val())",
+        "community": {
+          ".validate": "newData.isString() && root.child('communities').hasChild(newData.val())",
           ".write": "!data.parent().exists() || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
         },
         "users": {
@@ -325,7 +352,7 @@
             ".write": "auth.uid === $user || root.child('communities/' + data.child('id').val() + '/users/' + auth.uid + '/permission').val() === 'owner'",
             ".validate": "newData.hasChildren(['id']) && root.child('communities').hasChild($communityId)",
             "id": {
-              ".validate": "$community === newData.val()"
+              ".validate": "$communityId === newData.val()"
             },
             "permission": {
               ".validate": "newData.val() === 'owner' || newData.val() === 'subscriber'"
