@@ -1,7 +1,10 @@
 import { groupNotifications } from '../helpers/notifications';
 
 const initialState = {
+  // The grouped notification data, as grouped by the helper
   notifications: [],
+  // The raw notifications as an array as they come from the database
+  // need those to group new notifications as they come in
   raw: [],
 };
 
