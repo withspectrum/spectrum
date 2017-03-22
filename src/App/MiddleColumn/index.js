@@ -125,6 +125,9 @@ class MiddleColumn extends Component {
 
   renderNotification = notification => {
     const {
+      activeStory,
+    } = this.props;
+    const {
       activityType,
       ids,
       id,
@@ -140,6 +143,7 @@ class MiddleColumn extends Component {
     return (
       <Notification
         key={id}
+        isActive={activeStory === notification.ids.story}
         isRead={read}
         link={isNewMsg ? `/notifications/${ids.story}` : `/~${ids.frequency}`}
         messages={notification.occurrences}
