@@ -1,5 +1,5 @@
 import { set, track } from '../EventTracker';
-import { createUser } from '../db/users';
+import { createUser, createSubscriptionCharge } from '../db/users';
 import { signInWithTwitter, signOut as logOut } from '../db/auth';
 import { monitorUser, stopUserMonitor } from '../helpers/users';
 
@@ -58,4 +58,25 @@ export const signOut = () => dispatch => {
       console.log('Error signing out: ', err);
     },
   );
+};
+
+/**
+ * Upgrade user takes a token and writes it to the users_private object in firebase. This write
+ * triggers a cloud function which will parse the token to create a customer in Stripe,
+ * and then immediately create a new subscription for that customer
+ */
+export const upgradeUser = token => (dispatch, getState) => {
+  dispatch({ type: 'LOADING' });
+  const user = getState().user;
+
+  createSubscriptionCharge(token, user)
+    .then(subscription => {
+      console.log('subscription: ', subscription);
+
+      dispatch({ type: 'STOP_LOADING' });
+    })
+    .catch(err => {
+      dispatch({ type: 'STOP_LOADING' });
+      console.log('Error logging in: ', err);
+    });
 };

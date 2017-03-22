@@ -132,3 +132,22 @@ export const setlastSeen = uid => {
       console.log(err);
     });
 };
+
+/**
+ * Create a new subscription
+ *
+ * Returns a Promise that resolves with the customer data
+ */
+export const createSubscriptionCharge = (token, user) => {
+  const db = database();
+  const uid = user.uid;
+  const updates = {
+    [`users_private/${uid}/subscription`]: token,
+  };
+
+  return db
+    .ref()
+    .update(updates)
+    .then(() => db.ref(`users_private/${uid}`).once('value'))
+    .then(snapshot => snapshot.val());
+};

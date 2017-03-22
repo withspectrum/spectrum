@@ -71,6 +71,10 @@ class NavigationMaster extends Component {
     });
   };
 
+  showUpgradeModal = () => {
+    this.props.dispatch(openModal('UPGRADE_MODAL', this.props.user));
+  };
+
   render() {
     const user = this.props.user;
     const frequencies = this.props.frequencies.frequencies.filter(
@@ -88,7 +92,10 @@ class NavigationMaster extends Component {
               <MetaWrapper>
                 <Name>{user.displayName}</Name>
                 <P>
-                  <MetaAnchor onClick={this.signOut}>Sign Out</MetaAnchor>
+                  @{user.username && user.username} ·&nbsp;
+                  <MetaAnchor onClick={this.showUpgradeModal}>
+                    Upgrade to Pro
+                  </MetaAnchor>
                 </P>
               </MetaWrapper>
             </Header>

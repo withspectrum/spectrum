@@ -20,7 +20,7 @@ import {
   Spinner,
 } from './style';
 
-class ProModal extends React.Component {
+class UpgradeModal extends React.Component {
   constructor(props) {
     super(props);
 
@@ -41,46 +41,21 @@ class ProModal extends React.Component {
   };
 
   onToken = token => {
-    this.setState({
-      loading: true,
-    });
-
-    fetch('http://localhost:3001/customer/create', {
-      method: 'POST',
-      token: JSON.stringify(token),
-    })
-      .then(response => {
-        if (!response.data.success && response.data.error) {
-          // there was an error on the backend processing the card - likely a card failure
-          this.setState({
-            error: response.data.error,
-            errorCount: 1,
-            loading: false,
-          });
-        }
-
-        if (response.data.success) {
-          // if the customer and subscription were created successfully
-          this.props.dispatch(upgradeUser());
-        }
-      })
-      .catch(error => {
-        // something went wrong with the stripe form, not an error from the backend
-      });
+    this.props.dispatch(upgradeUser(token));
   };
 
   render() {
     return (
       <Modal
         isOpen={this.state.isOpen}
-        contentLabel="Edit Item"
+        contentLabel="Level Up"
         onRequestClose={this.closeModal}
         shouldCloseOnOverlayClick={true}
         style={modalStyles}
         closeTimeoutMS={330}
       >
 
-        <ModalContainer title={'Upgrade'} closeModal={this.closeModal}>
+        <ModalContainer title={'Level Up'} closeModal={this.closeModal}>
           <SectionAlert width={'calc(100% - 2rem)'} centered={true}>
             <Badge>Limited Time</Badge>
             <Padding padding={'0.5rem 1rem'}>
@@ -162,4 +137,4 @@ const mapStateToProps = state => ({
   isOpen: state.modals.isOpen,
 });
 
-export default connect(mapStateToProps)(ProModal);
+export default connect(mapStateToProps)(UpgradeModal);
