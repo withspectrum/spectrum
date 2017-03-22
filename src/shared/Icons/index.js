@@ -371,7 +371,7 @@ Icon.defaultProps = {
 };
 
 Icon.propTypes = {
-  icon: React.PropTypes.string.isRequired,
+  icon: React.PropTypes.string,
   size: React.PropTypes.number.isRequired,
   reverse: React.PropTypes.bool.isRequired,
   subtle: React.PropTypes.bool.isRequired,

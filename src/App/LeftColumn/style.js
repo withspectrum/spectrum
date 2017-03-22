@@ -212,5 +212,5 @@ export const DirtyDot = styled.div`
   justify-content: center;
   color: white;
   font-size: 10px;
-  padding: 0 8px;
+  padding: 0 ${props => props.children ? '8px' : ''};
 `;
