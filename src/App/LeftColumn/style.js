@@ -65,6 +65,7 @@ const linkStyles = css`
   color: ${({ theme }) => theme.text.alt};
   font-weight: 500;
   transition: color 0.2s ease-out;
+  word-wrap: break-word;
 
   &:hover {
     cursor: pointer;
@@ -144,13 +145,9 @@ export const FreqGlyph = styled.span`
 `;
 
 export const Footer = styled.div`
-  display: flex;
-  flex: 0 0 auto;
   width: 100%;
-  padding: 0 16px 16px 16px;
-  align-self: flex-end;
-  align-items: center;
-  justify-content: space-between;
+  padding: 16px;
+  padding-top: 0;
 `;
 
 export const FooterLogo = styled.img`
@@ -158,9 +155,15 @@ export const FooterLogo = styled.img`
   width: 24px;
 `;
 
-export const FooterP = styled(P)`
-  text-align: right;
-  align-self: flex-end;
+export const FooterP = styled.p`
+  font-size: 12px;
+  color: ${({ theme }) => theme.text.alt};
+  font-weight: 500;
+  line-height: 1.4;
+
+  + p {
+    margin-top: 8px;
+  }
 `;
 
 export const Button = styled.button`

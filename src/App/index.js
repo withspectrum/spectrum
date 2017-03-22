@@ -16,6 +16,7 @@ import SelectUsernameModal from '../shared/modals/SelectUsernameModal';
 import GalleryRoot from '../shared/gallery/GalleryRoot';
 import NuxJoinCard from './MiddleColumn/NuxJoinCard';
 import LoginCard from './MiddleColumn/LoginCard';
+import ReportBugCard from './MiddleColumn/ReportBugCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
 import { sortArrayByKey, getParameterByName, truncate } from '../helpers/utils';
 
@@ -67,6 +68,10 @@ class App extends Component {
       user.uid && frequencies.active === 'discover'
     ) {
       sortedStories.unshift(<NuxJoinCard />);
+    }
+
+    if (user.uid && frequencies.active === 'hugs-n-bugs') {
+      sortedStories.unshift(<ReportBugCard />);
     }
 
     if (!user.uid) {

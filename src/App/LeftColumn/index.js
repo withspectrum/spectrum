@@ -189,15 +189,16 @@ class NavigationMaster extends Component {
         </FreqList>
 
         <Footer>
-          <FooterLogo src="/img/mark.svg" />
-          <MetaWrapper>
-            <FooterP>© 2017 Space Program, Inc.</FooterP>
-            <FooterP>
-              <MetaLink to="/~support">Support</MetaLink>
-              &nbsp;·&nbsp;
-              <MetaAnchor href="mailto:hi@spectrum.chat">Contact</MetaAnchor>
-            </FooterP>
-          </MetaWrapper>
+          <FooterP>
+            <MetaLink to="/~support">Support</MetaLink>&nbsp;·&nbsp;
+            <MetaLink to="/~hugs-n-bugs">Report Bugs</MetaLink>
+          </FooterP>
+          <FooterP>
+            <MetaLink to="/~feature-requests">Feature Requests</MetaLink>
+            &nbsp;·&nbsp;
+            <MetaAnchor href="mailto:hi@spectrum.chat">Contact</MetaAnchor>
+          </FooterP>
+          <FooterP>© 2017 Space Program, Inc.</FooterP>
         </Footer>
       </Column>
     );
