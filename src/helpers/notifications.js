@@ -43,15 +43,14 @@ export const groupNotifications = notifications => {
 
   const data = {};
   notifications.forEach(notification => {
-    let id;
-    // Group new message and story notifications by story id and activity type
     if (
-      notification.activityType === ACTIVITY_TYPES.NEW_MESSAGE ||
-      notification.activityType === ACTIVITY_TYPES.NEW_STORY
-    ) {
-      // This id will be removed in the last step
-      id = `${notification.ids.story}/${notification.activityType}`;
-    }
+      notification.activityType !== ACTIVITY_TYPES.NEW_MESSAGE &&
+      notification.activityType !== ACTIVITY_TYPES.NEW_STORY
+    )
+      return;
+    // Group new message and story notifications by story id and activity type
+    // This id will be removed in the last step
+    const id = `${notification.ids.story}/${notification.activityType}`;
     if (!data[id]) {
       data[id] = notification;
       // Turn "sender" into an array of "senders"
@@ -66,7 +65,9 @@ export const groupNotifications = notifications => {
     } else {
       // Store unique senders in "senders"
       if (
-        !data[id].senders.find(sender => sender.uid === notification.sender.uid)
+        !data[id].senders.find(
+          sender => sender && sender.uid === notification.sender.uid,
+        )
       ) {
         data[id].senders.push(notification.sender);
       }

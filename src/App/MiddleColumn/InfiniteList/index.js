@@ -8,11 +8,13 @@ import {
 } from 'react-virtualized';
 import { debounce } from '../../../helpers/utils';
 
+/**
+ * Render an infinite list of things, possibly lazy loading them as they are needed
+ */
 class InfiniteList extends React.Component {
   static propTypes = {
     height: PropTypes.number.isRequired,
     width: PropTypes.number.isRequired,
-    minElementHeight: PropTypes.number.isRequired,
     elementRenderer: PropTypes.func.isRequired,
     isElementLoaded: PropTypes.func,
     loadMoreElements: PropTypes.func,
@@ -26,12 +28,15 @@ class InfiniteList extends React.Component {
     this.state = {
       cache: new CellMeasurerCache({
         fixedWidth: true,
-        minHeight: props.minElementHeight,
+        defaultWidth: props.width,
         keyMapper: props.keyMapper,
       }),
     };
   }
 
+  // react-virtualized doesn't re-render except when the cache is cleared
+  // so we clear the cache on resize, but need to debounce it as otherwise
+  // one cannot resize due to the whole app hanging
   componentWillMount() {
     window.addEventListener('resize', this.debouncedClearCache, false);
   }
@@ -42,9 +47,6 @@ class InfiniteList extends React.Component {
 
   componentWillReceiveProps = nextProps => {
     if (deepEqual(this.props, nextProps)) return;
-
-    // If any of the things the story list cares about change,
-    // rerender the list
     this.clearCache(nextProps);
   };
 
@@ -54,12 +56,14 @@ class InfiniteList extends React.Component {
     this.setState({
       cache: new CellMeasurerCache({
         fixedWidth: true,
-        minHeight: props.minElementHeight,
+        defaultWidth: props.width,
         keyMapper: props.keyMapper,
       }),
     });
   };
 
+  // Wraps every element in a CellMeasurer, which allows us to
+  // render elements with dynamic heights
   renderElement = ({ index, key, style, parent }) => {
     return (
       <CellMeasurer
@@ -78,6 +82,7 @@ class InfiniteList extends React.Component {
 
   render() {
     const {
+      // These are set to not lazy-load by default
       isElementLoaded = () => true,
       loadMoreElements = () => Promise.resolve(),
       elementCount = 9999999,

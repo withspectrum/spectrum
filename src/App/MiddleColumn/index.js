@@ -33,8 +33,6 @@ import { ACTIVITY_TYPES } from '../../db/types';
 import { getCurrentFrequency } from '../../helpers/frequencies';
 import { formatSenders } from '../../helpers/notifications';
 
-const MIN_STORY_CARD_HEIGHT = 109;
-
 class MiddleColumn extends Component {
   state = {
     jumpToTop: false,
@@ -85,30 +83,31 @@ class MiddleColumn extends Component {
     });
   };
 
-  renderNotification = notification => {
+  renderNotification = ({ index, key }) => {
     const {
       activeStory,
+      notifications,
     } = this.props;
     const {
       activityType,
       ids,
-      id,
       senders,
       timestamp,
       contentBlocks,
       read,
-    } = notification;
+      occurrences,
+    } = notifications[index];
     const isNewMsg = activityType === ACTIVITY_TYPES.NEW_MESSAGE;
     // TODO: Notifications for new stories in frequencies
     if (!isNewMsg) return;
 
     return (
       <Notification
-        key={id}
-        isActive={activeStory === notification.ids.story}
+        key={key}
+        isActive={activeStory === ids.story}
         isRead={read}
         link={isNewMsg ? `/notifications/${ids.story}` : `/~${ids.frequency}`}
-        messages={notification.occurrences}
+        messages={occurrences}
         person={{
           photo: '',
           name: `${formatSenders(senders)} ${isNewMsg
@@ -327,13 +326,21 @@ class MiddleColumn extends Component {
               New stories!
             </NewIndicator>}
 
-          {isNotifications && notifications.map(this.renderNotification)}
+          {/* {isNotifications && notifications.map(this.renderNotification)} */
+          }
+
+          {isNotifications &&
+            <InfiniteList
+              height={window.innerHeight - 50}
+              width={window.innerWidth > 768 ? 419 : window.innerWidth}
+              elementCount={notifications.length}
+              elementRenderer={this.renderNotification}
+            />}
 
           {(isEverything || frequency) &&
             <InfiniteList
               height={window.innerHeight - 50}
               width={window.innerWidth > 768 ? 419 : window.innerWidth}
-              minElementHeight={MIN_STORY_CARD_HEIGHT}
               elementCount={stories.length}
               elementRenderer={this.renderStory}
             />}
