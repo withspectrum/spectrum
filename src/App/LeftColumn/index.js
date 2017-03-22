@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { login, signOut } from '../../actions/user';
 import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
+import { FlexRow } from '../../shared/Globals';
 import { setActiveFrequency } from '../../actions/frequencies';
 import {
   Column,
@@ -122,8 +123,10 @@ class NavigationMaster extends Component {
                     active={activeFrequency === 'notifications'}
                     onClick={this.showStoriesNav}
                   >
-                    <Icon reverse static icon="notification" />
-                    <FreqLabel>Notifications</FreqLabel>
+                    <FlexRow center>
+                      <Icon reverse static icon="notification" />
+                      <FreqLabel>Notifications</FreqLabel>
+                    </FlexRow>
                     {unread > 0 && <DirtyDot>{unread}</DirtyDot>}
                   </Freq>
                 </Link>}
@@ -179,10 +182,10 @@ class NavigationMaster extends Component {
                     }
                     onClick={this.showStoriesNav}
                   >
-                    <FreqText>
-                      <FreqGlyph>~</FreqGlyph>
+                    <FlexRow center>
+                      <Icon icon="frequency" reverse static />
                       <FreqLabel>{frequency.name}</FreqLabel>
-                    </FreqText>
+                    </FlexRow>
                     {notif && !notif.read && <DirtyDot />}
                   </Freq>
                 </Link>

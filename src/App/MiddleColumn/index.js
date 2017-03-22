@@ -339,11 +339,10 @@ class MiddleColumn extends Component {
                 />
               </IconButton>}
 
-            {isEverything ||
-              isNotifications &&
-                <MenuButton onClick={this.showFrequenciesNav}>
-                  <Icon icon="menu" />
-                </MenuButton>}
+            {(isEverything || isNotifications) &&
+              <MenuButton onClick={this.showFrequenciesNav}>
+                <Icon icon="menu" />
+              </MenuButton>}
 
             {isEverything &&
               <FreqTitle onClick={this.jumpToTop}>Home</FreqTitle>}
