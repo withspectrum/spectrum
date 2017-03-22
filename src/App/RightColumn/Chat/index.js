@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   ChatContainer,
+  BubbleWrapper,
   Bubble,
   ImgBubble,
   BubbleGroup,
+  Reaction,
+  Count,
   Byline,
   AdminBadge,
   EmojiBubble,
@@ -22,6 +25,8 @@ import {
 } from '../../../helpers/utils';
 import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../helpers/regexps';
 import { openGallery } from '../../../actions/gallery';
+import { addReaction, removeReaction } from '../../../actions/messages';
+import Icon from '../../../shared/Icons';
 
 class Chat extends Component {
   componentDidUpdate(prevProps, prevState) {
@@ -46,6 +51,14 @@ class Chat extends Component {
     // you just see "~frequency", but it's linked to the frequency
     return linkedMessage.replace(FREQUENCY_ANCHORS, '>$1</a>');
   }
+
+  toggleReaction = (messageId, userHasReacted) => {
+    if (userHasReacted) {
+      this.props.dispatch(removeReaction(messageId));
+    } else {
+      this.props.dispatch(addReaction(messageId));
+    }
+  };
 
   render() {
     let { messages, user: { list } } = this.props;
@@ -91,35 +104,79 @@ class Chat extends Component {
                     <AdminBadge op={isStoryCreator}>Admin</AdminBadge>}
                 </Byline>
                 {group.map((message, i) => {
+                  let reactionUsers = message.reactions
+                    ? Object.keys(message.reactions)
+                    : null;
+                  let reactionCount = message.reactions
+                    ? reactionUsers.length
+                    : 0;
+                  let userHasReacted = reactionUsers &&
+                    reactionUsers.includes(this.props.user.uid);
                   // mxstbr: The "emoji" specific type is legacy, remove in the future
                   if (
                     message.message.type === 'text' ||
                     message.message.type === 'emoji'
                   ) {
-                    let TextBubble = onlyContainsEmoji(message.message.content)
-                      ? EmojiBubble
-                      : Bubble;
+                    let emojiOnly = onlyContainsEmoji(message.message.content);
+                    let TextBubble = emojiOnly ? EmojiBubble : Bubble;
+
                     return (
-                      <TextBubble
-                        key={i}
-                        me={itsaMe}
-                        persisted={message.persisted}
-                        dangerouslySetInnerHTML={{
-                          __html: this.formatMessage(message.message.content),
-                        }}
-                      />
+                      <BubbleWrapper key={message.id} me={itsaMe}>
+                        <TextBubble
+                          key={i}
+                          me={itsaMe}
+                          persisted={message.persisted}
+                          dangerouslySetInnerHTML={{
+                            __html: this.formatMessage(message.message.content),
+                          }}
+                        />
+                        {!itsaMe &&
+                          !emojiOnly &&
+                          <Reaction
+                            hasCount={reactionCount}
+                            active={userHasReacted}
+                            onClick={() =>
+                              this.toggleReaction(message.id, userHasReacted)}
+                          >
+                            <Icon
+                              icon={'like-active'}
+                              reverse
+                              size={16}
+                              static
+                            />
+                            <Count>{reactionCount}</Count>
+                          </Reaction>}
+                      </BubbleWrapper>
                     );
                   }
 
                   if (message.message.type === 'media') {
                     return (
-                      <ImgBubble
-                        me={itsaMe}
-                        onClick={this.openGallery}
-                        persisted={message.persisted}
-                        src={message.message.content.url}
-                        key={i}
-                      />
+                      <BubbleWrapper key={message.id} me={itsaMe}>
+                        <ImgBubble
+                          me={itsaMe}
+                          onClick={this.openGallery}
+                          persisted={message.persisted}
+                          src={message.message.content.url}
+                          key={i}
+                        />
+
+                        {!itsaMe &&
+                          <Reaction
+                            hasCount={reactionCount}
+                            active={userHasReacted}
+                            onClick={() =>
+                              this.toggleReaction(message.id, userHasReacted)}
+                          >
+                            <Icon
+                              icon={'like-active'}
+                              reverse
+                              size={16}
+                              static
+                            />
+                            <Count>{reactionCount}</Count>
+                          </Reaction>}
+                      </BubbleWrapper>
                     );
                   }
 
