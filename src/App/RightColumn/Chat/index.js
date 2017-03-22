@@ -130,13 +130,21 @@ class Chat extends Component {
                             __html: this.formatMessage(message.message.content),
                           }}
                         />
-                        {!itsaMe &&
-                          !emojiOnly &&
+                        {!emojiOnly &&
                           <Reaction
                             hasCount={reactionCount}
                             active={userHasReacted}
-                            onClick={() =>
-                              this.toggleReaction(message.id, userHasReacted)}
+                            me={itsaMe}
+                            hide={itsaMe && reactionCount === 0}
+                            onClick={
+                              itsaMe
+                                ? () => this.doNothing
+                                : () =>
+                                    this.toggleReaction(
+                                      message.id,
+                                      userHasReacted,
+                                    )
+                            }
                           >
                             <Icon
                               icon={'like-active'}
@@ -161,21 +169,23 @@ class Chat extends Component {
                           key={i}
                         />
 
-                        {!itsaMe &&
-                          <Reaction
-                            hasCount={reactionCount}
-                            active={userHasReacted}
-                            onClick={() =>
-                              this.toggleReaction(message.id, userHasReacted)}
-                          >
-                            <Icon
-                              icon={'like-active'}
-                              reverse
-                              size={16}
-                              static
-                            />
-                            <Count>{reactionCount}</Count>
-                          </Reaction>}
+                        <Reaction
+                          hasCount={reactionCount}
+                          active={userHasReacted}
+                          me={itsaMe}
+                          onClick={
+                            itsaMe
+                              ? () => this.doNothing
+                              : () =>
+                                  this.toggleReaction(
+                                    message.id,
+                                    userHasReacted,
+                                  )
+                          }
+                        >
+                          <Icon icon={'like-active'} reverse size={16} static />
+                          <Count>{reactionCount}</Count>
+                        </Reaction>
                       </BubbleWrapper>
                     );
                   }

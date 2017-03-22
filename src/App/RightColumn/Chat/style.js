@@ -30,7 +30,7 @@ export const BubbleWrapper = styled.span`
 export const Reaction = styled.b`
 	position: absolute;
 	bottom: 0;
-	left: calc(100% - 8px);
+	${props => props.me ? 'right: calc(100% - 8px)' : 'left: calc(100% - 8px)'};
 	max-width: ${props => props.hasCount ? '100%' : '12px'};
 	max-height: ${props => props.hasCount ? '24px' : '12px'};
 	border: 2px solid #fff;
@@ -45,6 +45,7 @@ export const Reaction = styled.b`
 	display: flex;
 	flex-direction: flex-row;
 	transition: all 0.15s ease-in-out;
+	display: ${props => props.hide ? 'none' : 'auto'};
 
 	i { /* count */
 		position: relative;
