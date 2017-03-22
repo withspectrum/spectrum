@@ -23,6 +23,10 @@ export default function root(state = initialState, action) {
         messages: storedMessages.concat(messages),
       });
     }
+    case 'ADD_REACTION': {
+    }
+    case 'REMOVE_REACTION': {
+    }
     case 'SEND_MESSAGE': {
       return {
         ...state,

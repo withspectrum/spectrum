@@ -87,3 +87,20 @@ export const createMessage = ({ storyId, frequency, user, message, key }) => {
     .then(() => db.ref(`messages/${id}`).once('value'))
     .then(snapshot => snapshot.val());
 };
+
+export const createReaction = ({ messageId, uid }) => {
+  const db = database();
+
+  return db.ref().update({
+    [`messages/${messageId}/reactions/${uid}`]: {
+      type: 'like',
+      timestamp: database.ServerValue.TIMESTAMP,
+    },
+  });
+};
+
+export const deleteReaction = ({ messageId, uid }) => {
+  const db = database();
+
+  return db.ref(`/messages/${messageId}/reactions/${uid}`).remove();
+};
