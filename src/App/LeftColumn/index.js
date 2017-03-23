@@ -117,19 +117,18 @@ class NavigationMaster extends Component {
                   </FreqText>
                 </Freq>
               </Link>
-              {notifications.length > 0 &&
-                <Link to={`/notifications`}>
-                  <Freq
-                    active={activeFrequency === 'notifications'}
-                    onClick={this.showStoriesNav}
-                  >
-                    <FlexRow center>
-                      <Icon reverse static icon="notification" />
-                      <FreqLabel>Notifications</FreqLabel>
-                    </FlexRow>
-                    {unread > 0 && <DirtyDot>{unread}</DirtyDot>}
-                  </Freq>
-                </Link>}
+              <Link to={`/notifications`}>
+                <Freq
+                  active={activeFrequency === 'notifications'}
+                  onClick={this.showStoriesNav}
+                >
+                  <FlexRow center>
+                    <Icon reverse static icon="notification" />
+                    <FreqLabel>Notifications</FreqLabel>
+                  </FlexRow>
+                  {unread > 0 && <DirtyDot>{unread}</DirtyDot>}
+                </Freq>
+              </Link>
             </div>}
           {frequencies.length > 0 ||
             <div>
