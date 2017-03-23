@@ -8,4 +8,5 @@ exports.emailNotifications = functions.database
     console.log(event.data.val());
     return event.data.val();
   });
-exports.shortener = require('./sp.chat.js');
+// exports.shortener = require('./sp.chat.js');
+exports.payments = require('./payments.js');

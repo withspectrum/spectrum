@@ -1,136 +1,97 @@
-'use strict';
-
 const functions = require('firebase-functions'),
   admin = require('firebase-admin');
 
 const stripe = require('stripe')(functions.config().stripe.test_token),
   currency = functions.config().stripe.currency || 'USD';
 
-// [START chargecustomer]
-// Charge the Stripe customer whenever an amount is written to the Realtime database
-exports.createStripeSubscription = functions.database
-  .ref('/users_private/{userId}/subscription')
-  .onWrite(event => {
-    const val = event.data.val();
+const cors = require('cors');
 
-    // if no token was sent, return
-    if (val === null) return null;
+const express = require('express');
+const app = express();
+app.use(cors());
 
-    /*
-   * successful val looks like this:
+app.post('/subscriptions/create', (req, res) => {
+  const token = JSON.parse(req.body.token);
+  const plan = req.body.plan;
 
-    { card:
-      { brand: 'Visa',
-        country: 'US',
-        cvc_check: 'pass',
-        exp_month: 12,
-        exp_year: 2034,
-        funding: 'credit',
-        id: 'card_19zxRSLMElznt8M8CWi0Yw81',
-        last4: '4242',
-        name: 'briandlovin@gmail.com',
-        object: 'card'
-      },
-      client_ip: '136.24.34.93',
-      created: 1490142911,
-      email: 'briandlovin@gmail.com',
-      id: 'tok_19zxRTLMElznt8M89YBIaE45',
-      livemode: false,
-      object: 'token',
-      type: 'card',
-      used: false
-    }
+  if (!token) return res.json({ success: false, error: 'No token detected' });
+  // create a customer with the credit card sent down from the client
+  stripe.customers.create(
+    {
+      email: token.email,
+      source: token.id,
+    },
+    (err, customer) => {
+      if (err) returnError(res, err);
 
-  */
-
-    // create a customer with the credit card sent down from the client
-    return stripe.customers
-      .create({
-        email: val.email,
-        source: val.id,
-      })
-      .then(customer => {
-        /*
-     * customer looks like this:
-
-      customer {
-        id: 'cus_AKd963x8h8WQvb',
-        object: 'customer',
-        account_balance: 0,
-        created: 1490144626,
-        currency: null,
-        default_source: 'card_19zxt1LMElznt8M8ZaWa9Fev',
-        delinquent: false,
-        description: null,
-        discount: null,
-        email: 'briandlovin@gmail.com',
-        livemode: false,
-        metadata: {},
-        shipping: null,
-        sources:
-        { object: 'list',
-           data: [ [Object] ],
-           has_more: false,
-           total_count: 1,
-           url: '/v1/customers/cus_AKd963x8h8WQvb/sources'
+      // after the customer is created, charge them and put them on the subscription
+      stripe.subscriptions.create(
+        {
+          plan: plan,
+          customer: customer.id,
         },
-        subscriptions:
-         { object: 'list',
-           data: [],
-           has_more: false,
-           total_count: 0,
-           url: '/v1/customers/cus_AKd963x8h8WQvb/subscriptions'
-         }
-        }
+        (err, subscription) => {
+          // unable to create the subscription
+          if (err) returnError(res, err);
 
-    */
-
-        // once we have the customer, write their customerId to the db
-        return admin
-          .database()
-          .ref(`/users_private/${event.params.userId}`)
-          .update({ customerId: customer.id })
-          .then(() => {
-            // once the customer is safely written, create a subscription
-            stripe.subscriptions
-              .create({
-                plan: 'beta-pro',
-                customer: customer.id,
-              })
-              .then(subscription => {
-                return admin
-                  .database()
-                  .ref(`/users_private/${event.params.userId}`)
-                  .update({
-                    status: {
-                      subscriptionId: subscription.id,
-                      active: true,
-                      error: null, // when successful, clear out any errors on the status because errors get passed back and rendered on the client
-                      /*
-            * when a user downgrades in the future, we will set this active field to 'false'
-            * using another cloud function, we will listen to writes on the 'active' field which
-            * will trigger a subscription cancellation on Stripe
-            */
-                    },
-                  });
-              })
-              .catch(error => {
-                if (!error) return;
-                const errorMessage = userFacingMessage(error);
-                return admin
-                  .database()
-                  .ref(`/users_private/${event.params.userId}/status`)
-                  .update({
-                    error: errorMessage,
-                  });
-              });
+          // send back a response once we know the customer and subscription worked
+          return res.json({
+            success: true,
+            customerId: customer.id,
+            customerEmail: token.email,
+            subscriptionId: subscription.id,
+            tokenId: token.id,
           });
-      });
-  });
+        },
+      );
+    },
+  );
+});
 
-// Sanitize the error message for the user
-function userFacingMessage(error) {
-  return error.type
-    ? error.message
-    : 'An error occurred, developers have been alerted';
-}
+// Case and return the proper error to the client
+returnError = function(res, err) {
+  switch (err.type) {
+    case 'StripeCardError':
+      // A declined card error
+      return res.json({ success: false, error: err.message }); // => e.g. "Your card's expiration year is invalid."
+      break;
+    case 'RateLimitError':
+      // Too many requests made to the API too quickly
+      return res.json({ success: false });
+      break;
+    case 'StripeInvalidRequestError':
+      // Invalid parameters were supplied to Stripe's API
+      return res.json({ success: false });
+      break;
+    case 'StripeAPIError':
+      // An error occurred internally with Stripe's API
+      return res.json({
+        success: false,
+        error: "We weren't able to process your payment at this time.",
+      });
+      break;
+    case 'StripeConnectionError':
+      // Some kind of error occurred during the HTTPS communication
+      return res.json({
+        success: false,
+        error: "We weren't able to process your payment at this time.",
+      });
+      break;
+    case 'StripeAuthenticationError':
+      // You probably used an incorrect API key
+      return res.json({
+        success: false,
+        error: "We weren't able to process your payment at this time.",
+      });
+      break;
+    default:
+      // Handle any other types of unexpected errors
+      return res.json({
+        success: false,
+        error: "We weren't able to process your payment at this time.",
+      });
+      break;
+  }
+};
+
+module.exports = functions.https.onRequest(app);

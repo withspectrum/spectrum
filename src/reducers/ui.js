@@ -1,6 +1,6 @@
 const initialState = {
   viewing: 'stories',
-  error: null,
+  upgradeError: null,
 };
 
 export default function ui(state = initialState, action) {
@@ -23,7 +23,7 @@ export default function ui(state = initialState, action) {
     case 'SET_UPGRADE_ERROR':
       return {
         ...state,
-        error: action.error,
+        upgradeError: action.error,
       };
     default:
       return state;

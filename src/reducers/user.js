@@ -5,6 +5,7 @@ const initialState = {
   photoURL: null,
   frequencies: {},
   loaded: false,
+  plan: null,
   list: {},
 };
 
@@ -15,6 +16,7 @@ export default function root(state = initialState, action) {
         loginError: action.message,
         loaded: true,
       });
+    case 'UPGRADE_USER':
     case 'SET_USER':
       return Object.assign({}, state, {
         uid: action.user.uid,
@@ -23,6 +25,7 @@ export default function root(state = initialState, action) {
         frequencies: action.user.frequencies,
         email: action.user.email,
         username: action.user.username,
+        plan: action.user.plan || 'free', // to account for users without a plan field set
         loaded: true,
       });
     case 'USER_NOT_AUTHENTICATED':

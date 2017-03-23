@@ -123,41 +123,29 @@ export const setlastSeen = uid => {
     });
 };
 
-/**
- * Create a new subscription
- *
- * Returns a Promise that resolves with the customer data
- */
-export const createSubscriptionCharge = (token, user) => {
+export const createSubscription = (data, uid, plan) => {
   const db = database();
-  const uid = user.uid;
   const updates = {
-    [`users_private/${uid}/subscription`]: token,
+    [`users_private/${uid}/subscription/customerId`]: data.customerId,
+    [`users_private/${uid}/subscription/subscriptionId`]: data.subscriptionId,
+    [`users_private/${uid}/subscription/tokenId`]: data.tokenId,
+    [`users_private/${uid}/subscription/customerEmail`]: data.customerEmail,
+    [`users_private/${uid}/subscription/plan`]: plan,
   };
 
   return db
     .ref()
     .update(updates)
-    .then(() => db.ref(`users_private/${uid}`).once('value'))
+    .then(() => db.ref(`users/${uid}/plan`).update({
+      name: plan,
+      active: true,
+    }))
+    .then(() => db.ref(`users/${uid}`).once('value'))
     .then(snapshot => {
+      console.log('user is ', snapshot.val());
       return snapshot.val();
+    })
+    .catch(err => {
+      console.log('error upgrading: ', err);
     });
-};
-
-/**
- * Create a new subscription
- *
- * Returns a Promise that resolves with the customer data
- */
-export const listenForUserUpgradeErrors = (uid, cb) => {
-  const db = database();
-
-  return db.ref(`users_private/${uid}`).on('value', snapshot => {
-    const val = snapshot.val();
-    const status = val && val.status && val.status.error
-      ? val.status.error
-      : '';
-    if (!status) return cb();
-    cb(status);
-  });
 };

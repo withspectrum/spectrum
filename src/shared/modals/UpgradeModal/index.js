@@ -27,22 +27,9 @@ class UpgradeModal extends React.Component {
 
     this.state = {
       isOpen: props.isOpen,
-      error: null,
-      errorCount: 0,
+      error: this.props.ui.upgradeError,
       loading: false,
     };
-  }
-
-  componentDidMount() {
-    const { user: { uid }, dispatch } = this.props;
-    listenForUserUpgradeErrors(uid, status => {
-      if (!status) return;
-
-      dispatch({
-        type: 'SET_UPGRADE_ERROR',
-        error: status,
-      });
-    });
   }
 
   closeModal = () => {
@@ -54,7 +41,7 @@ class UpgradeModal extends React.Component {
   };
 
   onToken = token => {
-    this.props.dispatch(upgradeUser(token));
+    this.props.dispatch(upgradeUser(token, 'beta-pro'));
   };
 
   render() {
@@ -149,6 +136,7 @@ class UpgradeModal extends React.Component {
 const mapStateToProps = state => ({
   isOpen: state.modals.isOpen,
   user: state.user,
+  ui: state.ui,
 });
 
 export default connect(mapStateToProps)(UpgradeModal);

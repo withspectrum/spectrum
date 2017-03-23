@@ -1,11 +1,8 @@
 import { set, track } from '../EventTracker';
-import {
-  createUser,
-  createSubscriptionCharge,
-  getPrivateUser,
-} from '../db/users';
+import { createUser, getPrivateUser, createSubscription } from '../db/users';
 import { signInWithTwitter, signOut as logOut } from '../db/auth';
 import { monitorUser, stopUserMonitor } from '../helpers/users';
+import 'whatwg-fetch';
 
 /**
  * Firebase creates one "Authentication" record when a user signs up.
@@ -69,15 +66,49 @@ export const signOut = () => dispatch => {
  * triggers a cloud function which will parse the token to create a customer in Stripe,
  * and then immediately create a new subscription for that customer
  */
-export const upgradeUser = token => (dispatch, getState) => {
-  dispatch({ type: 'LOADING' });
-  const user = getState().user;
+export const upgradeUser = (token, plan) => (dispatch, getState) => {
+  const uid = getState().user.uid;
 
-  createSubscriptionCharge(token, user)
-    .then(subscription => {
-      dispatch({ type: 'STOP_LOADING' });
+  function checkStatus(response) {
+    if (response.status >= 200 && response.status < 300) {
+      return response;
+    } else {
+      var error = new Error(response.statusText);
+      error.response = response;
+      throw error;
+    }
+  }
+
+  function parseJSON(response) {
+    return response.json();
+  }
+
+  fetch(
+    'https://us-central1-spectrum-staging.cloudfunctions.net/payments/subscriptions/create',
+    {
+      method: 'POST',
+      headers: {
+        Accept: 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `token=${JSON.stringify(token)}&plan=${plan}`,
+    },
+  )
+    .then(checkStatus)
+    .then(parseJSON)
+    .then(data => {
+      createSubscription(data, uid, plan).then(user => {
+        console.log('user returned should be updated with plan ', user);
+        dispatch({
+          type: 'UPGRADE_USER',
+          user,
+        });
+      });
     })
-    .catch(err => {
-      dispatch({ type: 'STOP_LOADING' });
+    .catch(error => {
+      dispatch({
+        type: 'SET_UPGRADE_ERROR',
+        error: error,
+      });
     });
 };
