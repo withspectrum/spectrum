@@ -2,6 +2,7 @@ import { set, track } from '../EventTracker';
 import { createUser, getPrivateUser, createSubscription } from '../db/users';
 import { signInWithTwitter, signOut as logOut } from '../db/auth';
 import { monitorUser, stopUserMonitor } from '../helpers/users';
+import { apiURL } from '../config/api';
 import 'whatwg-fetch';
 
 /**
@@ -69,6 +70,10 @@ export const signOut = () => dispatch => {
 export const upgradeUser = (token, plan) => (dispatch, getState) => {
   const uid = getState().user.uid;
 
+  dispatch({
+    type: 'LOADING',
+  });
+
   function checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
       return response;
@@ -83,32 +88,38 @@ export const upgradeUser = (token, plan) => (dispatch, getState) => {
     return response.json();
   }
 
-  fetch(
-    'https://us-central1-spectrum-staging.cloudfunctions.net/payments/subscriptions/create',
-    {
-      method: 'POST',
-      headers: {
-        Accept: 'application/x-www-form-urlencoded',
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: `token=${JSON.stringify(token)}&plan=${plan}`,
+  fetch(`${apiURL}/payments/subscriptions/create`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded',
     },
-  )
+    body: `token=${JSON.stringify(token)}&plan=${plan}`,
+  })
     .then(checkStatus)
     .then(parseJSON)
     .then(data => {
       createSubscription(data, uid, plan).then(user => {
-        console.log('user returned should be updated with plan ', user);
         dispatch({
           type: 'UPGRADE_USER',
           user,
         });
+
+        dispatch({
+          type: 'STOP_LOADING',
+        });
       });
     })
     .catch(error => {
-      dispatch({
-        type: 'SET_UPGRADE_ERROR',
-        error: error,
-      });
+      if (error) {
+        dispatch({
+          type: 'SET_UPGRADE_ERROR',
+          error: error,
+        });
+
+        dispatch({
+          type: 'STOP_LOADING',
+        });
+      }
     });
 };

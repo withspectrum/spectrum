@@ -7,6 +7,7 @@ import { upgradeUser } from '../../../actions/user';
 import { listenForUserUpgradeErrors } from '../../../db/users';
 import { connect } from 'react-redux';
 import { Button } from '../../Globals';
+import { stripeKey } from '../../../config/api';
 import {
   ButtonLabel,
   modalStyles,
@@ -19,6 +20,7 @@ import {
   Flex,
   Padding,
   Spinner,
+  Profile,
 } from './style';
 
 class UpgradeModal extends React.Component {
@@ -28,7 +30,7 @@ class UpgradeModal extends React.Component {
     this.state = {
       isOpen: props.isOpen,
       error: this.props.ui.upgradeError,
-      loading: false,
+      loading: this.props.loading.active,
     };
   }
 
@@ -45,6 +47,8 @@ class UpgradeModal extends React.Component {
   };
 
   render() {
+    const { user } = this.props;
+
     return (
       <Modal
         isOpen={this.state.isOpen}
@@ -56,73 +60,65 @@ class UpgradeModal extends React.Component {
       >
 
         <ModalContainer title={'Level Up'} closeModal={this.closeModal}>
-          <SectionAlert width={'calc(100% - 2rem)'} centered={true}>
-            <Badge>Limited Time</Badge>
+          <SectionAlert width={'100%'} centered={true}>
             <Padding padding={'0.5rem 1rem'}>
-              During beta, Pro subscriptions are just $5 per month ($10/mo after beta).
+              The Beta Supporter Badge will only be available for a short period of time, grab it while you can!
             </Padding>
           </SectionAlert>
 
-          <Flex>
-            <Section width={'33%'} centered={true}>
+          <Flex direction={'column'}>
+            <Section width={'100%'} centered={true}>
               <Padding padding={'1rem'}>
-                <Heading>Save Stories</Heading>
-                <Subheading>
-                  Save any stories to a private collection, making it easier to find the things that matter most.
-                </Subheading>
-              </Padding>
-            </Section>
-
-            <Section width={'33%'} centered={true}>
-              <Padding padding={'1rem'}>
-                <Heading>Follow People</Heading>
-                <Subheading>
-                  Get updates whenever someone important to you posts a new public story.
-                </Subheading>
-              </Padding>
-            </Section>
-
-            <Section width={'33%'} centered={true}>
-              <Padding padding={'1rem'}>
+                <Profile>
+                  <img src={user.photoURL} />
+                  <span>PRO</span>
+                </Profile>
                 <Heading>Show it Off</Heading>
                 <Subheading>
                   A new{' '}
-                  <em>Pro</em>
+                  <b>Pro</b>
                   {' '}
                   badge will find itself attached to your name, wherever you go on Spectrum.
                 </Subheading>
               </Padding>
             </Section>
+
+            <Section width={'100%'} centered={true}>
+              <Padding padding={'1rem 1rem 2rem'}>
+                <Heading>More Pro Features...</Heading>
+                <Subheading>
+                  We're hard at work building more pro features, and your support helps us get there. Thank you!
+                </Subheading>
+              </Padding>
+            </Section>
           </Flex>
 
-          <Section centered={true}>
-            <Padding padding={'1rem'}>
-              <StripeCheckout
-                token={this.onToken}
-                stripeKey="pk_test_A6pKi4xXOdgg9FrZJ84NW9mP"
-                name="🔐   Pay Securely"
-                description="Secured and Encrypted by Stripe"
-                panelLabel="Subscribe for "
-                amount={500}
-                currency="USD"
-              >
+          <Section width={'100%'} centered={true}>
+            <StripeCheckout
+              token={this.onToken}
+              stripeKey={stripeKey}
+              name="🔐   Pay Securely"
+              description="Secured and Encrypted by Stripe"
+              panelLabel="Subscribe for "
+              amount={500}
+              currency="USD"
+            >
 
-                <Button large loading={this.state.loading}>
-                  <ButtonLabel loading={this.state.loading}>
-                    {this.state.errorCount ? 'Try Again' : 'Upgrade to Pro'}
-                  </ButtonLabel>
-                  <Spinner size={'16'} loading={this.state.loading} />
-                </Button>
+              <Button width={'100%'} loading={this.state.loading}>
+                <ButtonLabel loading={this.state.loading}>
+                  Upgrade to Pro
+                </ButtonLabel>
+                <Spinner size={'16'} loading={this.state.loading} />
+              </Button>
 
-              </StripeCheckout>
-            </Padding>
+            </StripeCheckout>
 
             <SectionError
               width={'100%'}
               centered={true}
               error={this.state.error}
             >
-              <Padding padding={'1rem'}>
+              <Padding padding={'0.5rem'}>
                 {this.state.error} Please try again.
               </Padding>
             </SectionError>
@@ -137,6 +133,7 @@ const mapStateToProps = state => ({
   isOpen: state.modals.isOpen,
   user: state.user,
   ui: state.ui,
+  loading: state.loading,
 });
 
 export default connect(mapStateToProps)(UpgradeModal);

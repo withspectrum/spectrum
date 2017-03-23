@@ -142,7 +142,6 @@ export const createSubscription = (data, uid, plan) => {
     }))
     .then(() => db.ref(`users/${uid}`).once('value'))
     .then(snapshot => {
-      console.log('user is ', snapshot.val());
       return snapshot.val();
     })
     .catch(err => {
