@@ -32,3 +32,17 @@ Nerds, initially (Spec, TeamSketch, Designer Hangout, PixelFireplace, etc...), b
   - Unlimited file history? (depending on our data retention policies generally)
 - Patronage tools?
 - Marketplace (let users sell to each other)?
+
+## Database Rules
+
+The Firebase realtime database security rules we use for Spectrum.
+
+> Note: This requires you to have [`firebase-tools`](https://github.com/firebase/firebase-tools) installed.
+
+## Deployment
+
+```sh
+firebase use staging
+# To deploy to production: firebase use prod
+firebase deploy
+```
