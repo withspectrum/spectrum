@@ -1,5 +1,9 @@
 import { set, track } from '../EventTracker';
-import { createUser, createSubscriptionCharge } from '../db/users';
+import {
+  createUser,
+  createSubscriptionCharge,
+  getPrivateUser,
+} from '../db/users';
 import { signInWithTwitter, signOut as logOut } from '../db/auth';
 import { monitorUser, stopUserMonitor } from '../helpers/users';
 
@@ -71,12 +75,9 @@ export const upgradeUser = token => (dispatch, getState) => {
 
   createSubscriptionCharge(token, user)
     .then(subscription => {
-      console.log('subscription: ', subscription);
-
       dispatch({ type: 'STOP_LOADING' });
     })
     .catch(err => {
       dispatch({ type: 'STOP_LOADING' });
-      console.log('Error logging in: ', err);
     });
 };

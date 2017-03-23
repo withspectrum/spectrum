@@ -149,5 +149,25 @@ export const createSubscriptionCharge = (token, user) => {
     .ref()
     .update(updates)
     .then(() => db.ref(`users_private/${uid}`).once('value'))
-    .then(snapshot => snapshot.val());
+    .then(snapshot => {
+      return snapshot.val();
+    });
+};
+
+/**
+ * Create a new subscription
+ *
+ * Returns a Promise that resolves with the customer data
+ */
+export const listenForUserUpgradeErrors = (uid, cb) => {
+  const db = database();
+
+  return db.ref(`users_private/${uid}`).on('value', snapshot => {
+    const val = snapshot.val();
+    const status = val && val.status && val.status.error
+      ? val.status.error
+      : '';
+    if (!status) return cb();
+    cb(status);
+  });
 };

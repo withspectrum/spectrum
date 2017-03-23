@@ -1,5 +1,6 @@
 const initialState = {
   viewing: 'stories',
+  error: null,
 };
 
 export default function ui(state = initialState, action) {
@@ -18,6 +19,11 @@ export default function ui(state = initialState, action) {
     case 'TOGGLE_COMPOSER_OPEN':
       return {
         viewing: 'detail',
+      };
+    case 'SET_UPGRADE_ERROR':
+      return {
+        ...state,
+        error: action.error,
       };
     default:
       return state;

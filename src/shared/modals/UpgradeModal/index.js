@@ -4,6 +4,7 @@ import ModalContainer from '../ModalContainer';
 import StripeCheckout from 'react-stripe-checkout';
 import { closeModal } from '../../../actions/modals';
 import { upgradeUser } from '../../../actions/user';
+import { listenForUserUpgradeErrors } from '../../../db/users';
 import { connect } from 'react-redux';
 import { Button } from '../../Globals';
 import {
@@ -30,6 +31,18 @@ class UpgradeModal extends React.Component {
       errorCount: 0,
       loading: false,
     };
+  }
+
+  componentDidMount() {
+    const { user: { uid }, dispatch } = this.props;
+    listenForUserUpgradeErrors(uid, status => {
+      if (!status) return;
+
+      dispatch({
+        type: 'SET_UPGRADE_ERROR',
+        error: status,
+      });
+    });
   }
 
   closeModal = () => {
@@ -135,6 +148,7 @@ class UpgradeModal extends React.Component {
 
 const mapStateToProps = state => ({
   isOpen: state.modals.isOpen,
+  user: state.user,
 });
 
 export default connect(mapStateToProps)(UpgradeModal);
