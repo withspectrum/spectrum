@@ -6,6 +6,7 @@ import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
 import { FlexRow } from '../../shared/Globals';
 import { setActiveFrequency } from '../../actions/frequencies';
+import { ACTIVITY_TYPES } from '../../db/types';
 import {
   Column,
   Header,
@@ -166,6 +167,9 @@ class NavigationMaster extends Component {
               // If there's any unread notification for this frequency
               // show a dirty dot
               const notif = notifications.find(notification => {
+                // Only show a dirty dot for new messages
+                if (notification.activityType !== ACTIVITY_TYPES.NEW_MESSAGE)
+                  return false;
                 if (notification.ids.frequency !== frequency.id) return false;
                 if (!frequency.stories || !notification.ids.story) return true;
                 const storyData = frequency.stories[notification.ids.story];
