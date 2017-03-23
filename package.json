@@ -44,7 +44,12 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint:staged": "lint-staged"
+    "lint:staged": "lint-staged",
+    "use:staging": "firebase use staging",
+    "use:prod": "firebase use prod",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:rules": "firebase deploy --only rules",
+    "deploy": "echo 'You are looking for either \"npm run deploy:functions\" or \"npm run deploy:rules\" instead.'"
   },
   "lint-staged": {
     "*.js": [

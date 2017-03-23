@@ -43,8 +43,8 @@ Both the realtime database security rules as well as our cloud functions live in
 ## Deployment
 
 ```sh
-firebase use staging
-# To deploy to production: firebase use prod
-firebase deploy rules
-firebase deploy functions
+npm run use:staging
+# To deploy to production: npm run use:prod
+npm run deploy:rules
+npm run deploy:functions
 ```
