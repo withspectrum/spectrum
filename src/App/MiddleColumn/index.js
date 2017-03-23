@@ -127,6 +127,7 @@ class MiddleColumn extends Component {
       frequencies,
       activeFrequency,
       activeStory,
+      communities,
     } = this.props;
     const isEverything = activeFrequency === 'everything';
     const story = stories[index];
@@ -144,17 +145,21 @@ class MiddleColumn extends Component {
         notification.read === false,
     );
     const unreadMessages = notification ? notification.unread : 0;
-    const freq = isEverything &&
-      getCurrentFrequency(story.frequencyId, frequencies);
+    const freq = getCurrentFrequency(
+      isEverything ? story.frequencyId : activeFrequency,
+      frequencies,
+    );
+    const community = freq &&
+      communities.find(community => community.id === freq.community);
     return React.isValidElement(story)
       ? story
       : <StoryCard
           isActive={activeStory === story.id}
           key={key}
-          link={`/~${activeFrequency}/${story.id}`}
+          link={`/${community.slug}/~${activeFrequency}/${story.id}`}
           media={story.content.media}
           messages={story.messages ? Object.keys(story.messages).length : 0}
-          metaLink={isEverything && freq && `/~${freq.slug}`}
+          metaLink={isEverything && freq && `/${community.slug}/~${freq.slug}`}
           metaText={isEverything && freq && `~${freq.name}`}
           person={{
             photo: story.creator.photoURL,
@@ -350,6 +355,7 @@ class MiddleColumn extends Component {
 const mapStateToProps = state => {
   return {
     composer: state.composer,
+    communities: state.communities.communities,
     ui: state.ui,
     activeStory: state.stories.active,
     notifications: state.notifications.notifications,

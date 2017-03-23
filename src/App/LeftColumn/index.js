@@ -161,7 +161,11 @@ class NavigationMaster extends Component {
                     });
                     return (
                       <Link
-                        to={`/~${frequency.slug || frequency.id}`}
+                        to={
+                          `/${communities.find(
+                            comm => comm.id === community,
+                          ).slug}/~${frequency.slug || frequency.id}`
+                        }
                         key={`nav-frequency-${frequency.id}`}
                       >
                         <Freq

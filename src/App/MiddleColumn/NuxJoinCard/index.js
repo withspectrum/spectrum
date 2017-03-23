@@ -79,7 +79,7 @@ class NuxJoinCard extends Component {
   };
 
   render() {
-    const { user: { frequencies } } = this.props;
+    const { user: { frequencies }, communities } = this.props;
 
     return (
       <Card still overflow="visible">
@@ -93,6 +93,9 @@ class NuxJoinCard extends Component {
           <Hscroll innerRef={comp => this.hscroll = comp}>
             {this.state.featured.length > 0 &&
               this.state.featured.map((freq, i) => {
+                const community = communities.find(
+                  community => community.id === freq.community,
+                );
                 return (
                   <FreqCard key={i}>
                     <div>
@@ -103,7 +106,7 @@ class NuxJoinCard extends Component {
                     </div>
                     <Actions>
                       {frequencies[freq.id]
-                        ? <Link to={`/~${freq.slug}`}>
+                        ? <Link to={`/${community.slug}/~${freq.slug}`}>
                             <JoinedButton id={freq.slug} width={'100%'}>
                               Joined!
                             </JoinedButton>
@@ -130,6 +133,7 @@ class NuxJoinCard extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
+    communities: state.communities.communities,
   };
 };
 

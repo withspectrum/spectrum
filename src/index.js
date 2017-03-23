@@ -79,7 +79,11 @@ const render = () => {
       <Router history={history}>
         <ThemeProvider theme={theme}>
           <Body>
-            <Route exact path="/(\~?):frequency?/:story?" component={Root} />
+            <Route
+              exact
+              path="/:community?/(\~?):frequency?/:story?"
+              component={Root}
+            />
           </Body>
         </ThemeProvider>
       </Router>
