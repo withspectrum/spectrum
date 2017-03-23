@@ -31,7 +31,7 @@ export const Overlay = styled.div`
 	opacity: ${props => props.active ? '0.1' : '0'};
 	transition: opacity 0.1s ease-in;
 	z-index: 2;
-	pointer-events: none;
+	pointer-events: ${props => props.active ? 'auto' : 'none'};
 	width: 100vw;
 	height: 100%;
 `;

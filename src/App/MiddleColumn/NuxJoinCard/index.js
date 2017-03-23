@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { findDOMNode } from 'react-dom';
 import { Link } from 'react-router-dom';
-import { Wrapper } from '../Card/style';
+import Card from '../../../shared/Card';
 import { Button } from '../../../shared/Globals';
 import { featured } from '../../../helpers/featuredFrequencies';
 import {
@@ -51,8 +51,8 @@ class NuxJoinCard extends Component {
     });
   };
 
-  componentDidMount = () => {
-    const node = findDOMNode(this.refs.hscroll);
+  componentDidUpdate = () => {
+    const node = this.hscroll;
 
     let x, left, down;
     node.addEventListener('mousemove', e => {
@@ -82,7 +82,7 @@ class NuxJoinCard extends Component {
     const { user: { frequencies } } = this.props;
 
     return (
-      <Wrapper static overflow={'visible'}>
+      <Card still overflow="visible">
         <Body>
           <Description emoji>✨</Description>
           <Title>Discover Frequencies</Title>
@@ -90,7 +90,7 @@ class NuxJoinCard extends Component {
             Explore some of our favorite communities on Spectrum. And then join them. For fun's sake.
           </Description>
 
-          <Hscroll ref="hscroll">
+          <Hscroll innerRef={comp => this.hscroll = comp}>
             {this.state.featured.length > 0 &&
               this.state.featured.map((freq, i) => {
                 return (
@@ -122,7 +122,7 @@ class NuxJoinCard extends Component {
             <RightPadding />
           </Hscroll>
         </Body>
-      </Wrapper>
+      </Card>
     );
   }
 }

@@ -3,4 +3,5 @@ node_modules
 npm-debug.log
 build
 .DS_Store
-src/config/FirebaseConfig
+src/config/FirebaseConfig.js
+npm-debug.log

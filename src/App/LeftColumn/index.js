@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { login, signOut } from '../../actions/user';
 import { openModal } from '../../actions/modals';
+import Icon from '../../shared/Icons';
+import { FlexRow } from '../../shared/Globals';
 import { setActiveFrequency } from '../../actions/frequencies';
+import { ACTIVITY_TYPES } from '../../db/types';
 import {
   Column,
   Header,
@@ -76,7 +79,11 @@ class NavigationMaster extends Component {
   };
 
   render() {
-    const user = this.props.user;
+    const {
+      notifications,
+      user,
+      unread,
+    } = this.props;
     const frequencies = this.props.frequencies.frequencies.filter(
       frequency => frequency.users[user.uid],
     );
@@ -105,65 +112,71 @@ class NavigationMaster extends Component {
               </Link>
             </Header>}
         <FreqList>
-          {frequencies.length > 0
-            ? // if the user isn't subbed to any frequencies
+          {user.uid &&
+            <div>
               <Link to="/">
                 <Freq
                   active={this.props.frequencies.active === 'everything'}
                   onClick={this.showStoriesNav}
                 >
                   <FreqText>
-                    <FreqIcon src="/img/everything-icon.svg" />
-                    <FreqLabel>{user.uid ? 'Everything' : 'Home'}</FreqLabel>
+                    <Icon icon="home" reverse static />
+                    <FreqLabel>{'Home'}</FreqLabel>
                   </FreqText>
                 </Freq>
               </Link>
-            : <div>
-                <Link to={`/~spectrum`}>
-                  <Freq onClick={this.showStoriesNav}>
-                    <FreqText>
-                      <FreqGlyph>~</FreqGlyph>
-                      <FreqLabel>Spectrum</FreqLabel>
-                    </FreqText>
-                  </Freq>
-                </Link>
+              <Link to={`/notifications`}>
+                <Freq
+                  active={activeFrequency === 'notifications'}
+                  onClick={this.showStoriesNav}
+                >
+                  <FlexRow center>
+                    <Icon reverse static icon="notification" />
+                    <FreqLabel>Notifications</FreqLabel>
+                  </FlexRow>
+                  {unread > 0 && <DirtyDot>{unread}</DirtyDot>}
+                </Freq>
+              </Link>
+            </div>}
+          {frequencies.length > 0 ||
+            <div>
+              <Link to={`/~spectrum`}>
+                <Freq onClick={this.showStoriesNav}>
+                  <FreqText>
+                    <Icon icon="frequency" reverse static />
+                    <FreqLabel>Spectrum</FreqLabel>
+                  </FreqText>
+                </Freq>
+              </Link>
 
-                <Link to={`/~discover`}>
-                  <Freq onClick={this.showStoriesNav}>
-                    <FreqText>
-                      <FreqGlyph>~</FreqGlyph>
-                      <FreqLabel>Discover</FreqLabel>
-                    </FreqText>
-                  </Freq>
-                </Link>
+              <Link to={`/~discover`}>
+                <Freq onClick={this.showStoriesNav}>
+                  <FreqText>
+                    <Icon icon="frequency" reverse static />
+                    <FreqLabel>Discover</FreqLabel>
+                  </FreqText>
+                </Freq>
+              </Link>
 
-                <Link to={`/~hugs-n-bugs`}>
-                  <Freq onClick={this.showStoriesNav}>
-                    <FreqText>
-                      <FreqGlyph>~</FreqGlyph>
-                      <FreqLabel>Hugs n Bugs</FreqLabel>
-                    </FreqText>
-                  </Freq>
-                </Link>
-              </div>}
-
-          {/*user.uid &&
-            <Link to={`/notifications`}>
-              <Freq
-                active={activeFrequency === 'notifications'}
-                onClick={this.showStoriesNav}
-              >
-                <FreqLabel>Notifications</FreqLabel>
-              </Freq>
-            </Link>*/
-          }
+              <Link to={`/~hugs-n-bugs`}>
+                <Freq onClick={this.showStoriesNav}>
+                  <FreqText>
+                    <Icon icon="frequency" reverse static />
+                    <FreqLabel>Hugs n Bugs</FreqLabel>
+                  </FreqText>
+                </Freq>
+              </Link>
+            </div>}
 
           {user.uid &&
             frequencies &&
             frequencies.map((frequency, i) => {
               // If there's any unread notification for this frequency
               // show a dirty dot
-              const notif = this.props.notifications.find(notification => {
+              const notif = notifications.find(notification => {
+                // Only show a dirty dot for new messages
+                if (notification.activityType !== ACTIVITY_TYPES.NEW_MESSAGE)
+                  return false;
                 if (notification.ids.frequency !== frequency.id) return false;
                 if (!frequency.stories || !notification.ids.story) return true;
                 const storyData = frequency.stories[notification.ids.story];
@@ -179,10 +192,10 @@ class NavigationMaster extends Component {
                     }
                     onClick={this.showStoriesNav}
                   >
-                    <FreqText>
-                      <FreqGlyph>~</FreqGlyph>
+                    <FlexRow center>
+                      <Icon icon="frequency" reverse static />
                       <FreqLabel>{frequency.name}</FreqLabel>
-                    </FreqText>
+                    </FlexRow>
                     {notif && !notif.read && <DirtyDot />}
                   </Freq>
                 </Link>
@@ -196,15 +209,16 @@ class NavigationMaster extends Component {
         </FreqList>
 
         <Footer>
-          <FooterLogo src="/img/mark.svg" />
-          <MetaWrapper>
-            <FooterP>© 2017 Space Program, Inc.</FooterP>
-            <FooterP>
-              <MetaLink to="/~support">Support</MetaLink>
-              &nbsp;·&nbsp;
-              <MetaAnchor href="mailto:hi@spectrum.chat">Contact</MetaAnchor>
-            </FooterP>
-          </MetaWrapper>
+          <FooterP onClick={this.showStoriesNav}>
+            <MetaLink to="/~support">Support</MetaLink>&nbsp;·&nbsp;
+            <MetaLink to="/~hugs-n-bugs">Report Bugs</MetaLink>
+          </FooterP>
+          <FooterP onClick={this.showStoriesNav}>
+            <MetaLink to="/~feature-requests">Feature Requests</MetaLink>
+            &nbsp;·&nbsp;
+            <MetaAnchor href="mailto:hi@spectrum.chat">Contact</MetaAnchor>
+          </FooterP>
+          <FooterP>© 2017 Space Program, Inc.</FooterP>
         </Footer>
       </Column>
     );

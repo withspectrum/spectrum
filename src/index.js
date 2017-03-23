@@ -40,7 +40,7 @@ const theme = {
   },
   success: {
     default: '#00C383',
-    alt: '#03AAFB',
+    alt: '#00D6A9',
   },
   bg: {
     default: '#FFFFFF',

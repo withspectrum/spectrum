@@ -1,4 +1,6 @@
 import database from 'firebase/database';
+import { getStory } from './stories';
+import { hashToArray } from '../helpers/utils';
 
 /**
  * Create notifications for a bunch of users
@@ -35,18 +37,74 @@ export const createNotifications = (
     });
 };
 
+export const deleteNotification = (userId, notificationId) => {
+  const db = database();
+  return db.ref(`notifications/${userId}/${notificationId}`).remove();
+};
+
+const UNIQUE = (v, i, a) => a.indexOf(v) === i;
+
 /**
- * Listen to notifications
+ * Listen to new notifications
  */
-export const listenToNotifications = (userId, cb) => {
+export const listenToNewNotifications = (userId, cb) => {
   const db = database();
 
-  return db.ref(`notifications/${userId}`).on('value', snapshot => {
-    const notifications = snapshot.val();
-    if (!notifications) return cb([]);
-    const array = Object.keys(notifications).map(id => notifications[id]);
-    cb(array);
-  });
+  const handle = snapshot => {
+    const notification = snapshot.val();
+    if (!notification) return;
+    getStory(notification.ids.story)
+      .then(story => {
+        if (story && !story.deleted)
+          return cb({
+            ...notification,
+            story,
+          });
+        console.log(
+          `Deleting ${userId}/${notification.id} because there is no story for it.`,
+        );
+        // If we have an old notification for a deleted story get rid of it
+        deleteNotification(userId, notification.id);
+      })
+      .catch(err => {
+        console.log(
+          `Deleting ${userId}/${notification.id} because there is no story for it.`,
+        );
+        // If we have an old notification for a deleted story get rid of it
+        deleteNotification(userId, notification.id);
+      });
+  };
+
+  // Handle adding of unread notifications
+  db
+    .ref(`notifications/${userId}`)
+    .orderByChild('read')
+    .equalTo(false)
+    .on('child_added', handle);
+  // Handle changing of any notifications
+  db.ref(`notifications/${userId}`).on('child_changed', handle);
+};
+
+/**
+ * Get all notifications of a user
+ */
+export const getNotifications = uid => {
+  const db = database();
+
+  return db
+    .ref(`notifications/${uid}`)
+    .once('value')
+    .then(snapshot => hashToArray(snapshot.val()))
+    .then(notifications => Promise.all(
+      notifications.map(notification => getStory(
+        notification.ids.story,
+      ).then(story => {
+        return {
+          ...notification,
+          story,
+        };
+      })),
+    ));
 };
 
 /**

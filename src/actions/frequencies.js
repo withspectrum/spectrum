@@ -12,6 +12,7 @@ import {
 } from '../db/frequencies';
 import { getStories, getAllStories } from '../db/stories';
 import { getUserInfo } from '../db/users';
+import { getNotifications } from '../db/notifications';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
   const lowerCaseFrequency = frequency.toLowerCase();
@@ -20,14 +21,21 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
     type: 'SET_ACTIVE_FREQUENCY',
     frequency: lowerCaseFrequency,
   });
-  // Notifications
-  if (lowerCaseFrequency === 'notifications') {
-    track('notifications', 'viewed', null);
-    return;
-  }
 
   dispatch({ type: 'LOADING' });
   const { user: { uid } } = getState();
+  // Notifications
+  if (lowerCaseFrequency === 'notifications') {
+    if (!uid) return;
+    track('notifications', 'viewed', null);
+    getNotifications(uid).then(notifications => {
+      dispatch({
+        type: 'SET_NOTIFICATIONS',
+        notifications,
+      });
+    });
+    return;
+  }
   // Everything
   if (lowerCaseFrequency === 'everything') {
     // If there's no UID yet we might need to show the homepage, so don't do anything
@@ -147,7 +155,7 @@ export const deleteFrequency = id => (dispatch, getState) => {
   removeFrequency(id)
     .then(() => {
       track('frequency', 'deleted', null);
-      history.push('/~hugs-n-bugs');
+      history.push('/');
       dispatch({ type: 'DELETE_FREQUENCY', id });
     })
     .catch(err => {

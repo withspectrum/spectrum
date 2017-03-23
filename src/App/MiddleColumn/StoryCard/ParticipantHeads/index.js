@@ -14,12 +14,14 @@ class ParticipantHeads extends Component {
       );
     }
     const { participants, list, unread, me, saying } = this.props;
-    const arr = Object.keys(participants);
+    const participantsArr = Object.keys(participants);
 
     // sort the participants by last activity
-    const sortedParticipants = Object.values(participants).sort((a, b) => {
-      return a.last_activity < b.last_activity;
-    });
+    const sortedParticipants = participantsArr
+      .map(key => participants[key])
+      .sort((a, b) => {
+        return a.last_activity < b.last_activity;
+      });
 
     // create a new array of the sorted participant IDs to be matched against the List in the store
     const sortedArr = sortedParticipants.map(participant => participant.id);
@@ -60,7 +62,7 @@ class ParticipantHeads extends Component {
             ? 'You'
             : list[sortedArr[0]].displayName}
           {' '}and{' '}
-          {arr.length - 1}
+          {participantsArr.length - 1}
           {' '}others are{' '}
           {saying}
           {unread > 0 && <UnreadCount>{` (${unread} new!)`}</UnreadCount>}
