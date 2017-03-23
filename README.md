@@ -38,8 +38,6 @@ Nerds, initially (Spec, TeamSketch, Designer Hangout, PixelFireplace, etc...), b
 
 Both the realtime database security rules as well as our cloud functions live in this repository. (`rules.json` and `functions/`, respectively)
 
-> Note: You have to have [`firebase-tools`](https://github.com/firebase/firebase-tools) installed and set up to do any of this.
-
 ## Deployment
 
 ```sh
