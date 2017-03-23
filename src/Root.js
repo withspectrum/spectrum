@@ -16,6 +16,7 @@ import { getCommunity } from './db/communities';
 import { listenToNewNotifications } from './db/notifications';
 import { set, track } from './EventTracker';
 import { monitorUser, stopUserMonitor } from './helpers/users';
+import history from './helpers/history';
 
 // Codesplit the App and the Homepage to only load what we need based on which route we're on
 const App = asyncComponent(() =>
@@ -95,6 +96,10 @@ class Root extends Component {
 
   handleProps = nextProps => {
     const { dispatch, match: { params }, frequencies, stories } = this.props;
+    if (nextProps.match.params.community && !nextProps.match.params.frequency) {
+      history.push(`/${nextProps.match.params.community}/~general`);
+      return;
+    }
     // If the frequency changes or we've finished loading the frequencies sync the active frequency to the store and load the stories
     if (
       nextProps.frequencies.loaded !== frequencies.loaded ||
