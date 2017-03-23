@@ -1,3 +1,4 @@
+
 # Spectrum
 
 ## What is it?
@@ -33,16 +34,17 @@ Nerds, initially (Spec, TeamSketch, Designer Hangout, PixelFireplace, etc...), b
 - Patronage tools?
 - Marketplace (let users sell to each other)?
 
-## Database Rules
+## Firebase
 
-The Firebase realtime database security rules we use for Spectrum.
+Both the realtime database security rules as well as our cloud functions live in this repository. (`rules.json` and `functions/`, respectively)
 
-> Note: This requires you to have [`firebase-tools`](https://github.com/firebase/firebase-tools) installed.
+> Note: You have to have [`firebase-tools`](https://github.com/firebase/firebase-tools) installed and set up to do any of this.
 
 ## Deployment
 
 ```sh
 firebase use staging
 # To deploy to production: firebase use prod
-firebase deploy
+firebase deploy rules
+firebase deploy functions
 ```
