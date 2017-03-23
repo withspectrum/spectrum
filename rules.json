@@ -2,6 +2,7 @@
   "rules": {
     "communities": {
       ".indexOn": ["id", "slug"],
+      ".read": true,
       "$id": {
         "createdAt": {
           ".validate": "newData.val() <= now",
@@ -34,6 +35,10 @@
             ".validate": "root.child('users').hasChild($userId)",
             // Only let a user themselves or an owner edit this
             ".write": "$userId === auth.uid || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'",
+            "id": {
+              ".validate": "newData.val() === $userId",
+              ".write": "!data.exists()"
+            },
             // Make sure the permissions being set is "member" except when it's done by an owner
             "permission": {
               ".validate": "newData.val() === 'member' || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner' && newData.val() === 'owner'"
@@ -122,7 +127,7 @@
             ".write": "$userId === auth.uid || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'",
             // Make sure the permissions being set is "subscriber" except when it's done by an owner
             "permission": {
-              ".validate": "newData.val() === 'subscriber' || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner' && newData.val()"
+              ".validate": "newData.val() === 'subscriber' || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner' && newData.exists()"
             },
             "joined": {
               ".validate": "newData.val() <= now"
