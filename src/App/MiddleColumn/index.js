@@ -330,6 +330,7 @@ class MiddleColumn extends Component {
               width={window.innerWidth > 768 ? 419 : window.innerWidth}
               elementCount={notifications.length}
               elementRenderer={this.renderNotification}
+              keyMapper={index => notifications[index].id}
             />}
 
           {(isEverything || frequency) &&
@@ -338,6 +339,7 @@ class MiddleColumn extends Component {
               width={window.innerWidth > 768 ? 419 : window.innerWidth}
               elementCount={stories.length}
               elementRenderer={this.renderStory}
+              keyMapper={index => stories[index].id}
             />}
         </StoryList>
       </Column>
