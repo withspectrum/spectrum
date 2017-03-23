@@ -1,5 +1,6 @@
 const initialState = {
   communities: [],
+  active: null,
 };
 
 export default function communities(state = initialState, action) {
@@ -17,6 +18,15 @@ export default function communities(state = initialState, action) {
     case 'SET_COMMUNITIES':
       return {
         communities: action.communities,
+      };
+    case 'SET_ACTIVE_COMMUNITY':
+      let communities = state.communities;
+      if (action.community) {
+        communities.push(action.community);
+      }
+      return {
+        active: action.slug,
+        communities,
       };
     default:
       return state;

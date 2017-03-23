@@ -6,6 +6,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setActiveFrequency } from './actions/frequencies';
 import { setActiveStory } from './actions/stories';
+import { setActiveCommunity } from './actions/communities';
 import { addNotification } from './actions/notifications';
 import { asyncComponent } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
@@ -99,6 +100,10 @@ class Root extends Component {
     if (nextProps.match.params.community && !nextProps.match.params.frequency) {
       history.push(`/${nextProps.match.params.community}/~general`);
       return;
+    }
+
+    if (nextProps.match.params.community || params.community) {
+      dispatch(setActiveCommunity(nextProps.match.params.community));
     }
     // If the frequency changes or we've finished loading the frequencies sync the active frequency to the store and load the stories
     if (
