@@ -16,6 +16,7 @@ class InfiniteList extends React.Component {
     height: PropTypes.number.isRequired,
     width: PropTypes.number.isRequired,
     elementRenderer: PropTypes.func.isRequired,
+    keyMapper: PropTypes.func,
     isElementLoaded: PropTypes.func,
     loadMoreElements: PropTypes.func,
     elementCount: PropTypes.number,
