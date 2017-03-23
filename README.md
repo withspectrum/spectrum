@@ -1,3 +1,4 @@
+
 # Spectrum
 
 ## What is it?
@@ -32,3 +33,16 @@ Nerds, initially (Spec, TeamSketch, Designer Hangout, PixelFireplace, etc...), b
   - Unlimited file history? (depending on our data retention policies generally)
 - Patronage tools?
 - Marketplace (let users sell to each other)?
+
+## Firebase
+
+Both the realtime database security rules as well as our cloud functions live in this repository. (`rules.json` and `functions/`, respectively)
+
+## Deployment
+
+```sh
+npm run use:staging
+# To deploy to production: npm run use:prod
+npm run deploy:rules
+npm run deploy:functions
+```
