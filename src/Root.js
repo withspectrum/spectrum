@@ -12,6 +12,7 @@ import LoadingIndicator from './shared/loading/global';
 import { getUserInfo } from './db/users';
 import { listenToAuth } from './db/auth';
 import { getFrequency } from './db/frequencies';
+import { getCommunity } from './db/communities';
 import { listenToNewNotifications } from './db/notifications';
 import { set, track } from './EventTracker';
 import { monitorUser, stopUserMonitor } from './helpers/users';
@@ -64,14 +65,22 @@ class Root extends Component {
             type: 'SET_USER',
             user: userData,
           });
-          return userData.frequencies;
+          return userData;
         })
-        // Load the users frequencies
-        .then(frequencies => {
-          const keys = Object.keys(frequencies);
-          return Promise.all(keys.map(key => getFrequency({ id: key })));
+        // Load the users frequencies and communities
+        .then(({ frequencies, communities }) => {
+          const freqIds = Object.keys(frequencies);
+          const communityIds = Object.keys(communities);
+          return Promise.all([
+            Promise.all(freqIds.map(id => getFrequency({ id }))),
+            Promise.all(communityIds.map(id => getCommunity({ id }))),
+          ]);
         })
-        .then(frequencies => {
+        .then(([frequencies, communities]) => {
+          dispatch({
+            type: 'SET_COMMUNITIES',
+            communities,
+          });
           dispatch({
             type: 'SET_FREQUENCIES',
             frequencies,

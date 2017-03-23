@@ -8,12 +8,14 @@ import modals from './modals';
 import gallery from './gallery';
 import loading from './loading';
 import notifications from './notifications';
+import communities from './communities';
 import ui from './ui';
 
 export default combineReducers({
   user,
   stories,
   frequencies,
+  communities,
   messages,
   composer,
   modals,

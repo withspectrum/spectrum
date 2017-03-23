@@ -13,6 +13,7 @@ import {
 import { getStories, getAllStories } from '../db/stories';
 import { getUserInfo } from '../db/users';
 import { getNotifications } from '../db/notifications';
+import { getCommunity } from '../db/communities';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
   const lowerCaseFrequency = frequency.toLowerCase();
@@ -58,7 +59,12 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   track('frequency', 'viewed', null);
   // Get the frequency
   getFrequency({ slug: lowerCaseFrequency })
-    .then(data => {
+    .then(data => Promise.all([data, getCommunity({ id: data.community })]))
+    .then(([data, community]) => {
+      dispatch({
+        type: 'ADD_COMMUNITY',
+        community,
+      });
       dispatch({
         type: 'ADD_FREQUENCY',
         frequency: data,

@@ -16,7 +16,7 @@ export const Column = styled.div`
 export const Header = styled.div`
   display: flex;
   flex: 0 0 auto;
-  padding: 16px;
+  padding: ${props => props.login ? '18px 16px' : '16px'};
   align-items: ${props => props.login ? `flex-start` : `center`};
   flex-direction: ${props => props.login ? `column` : `row`};
 `;

@@ -1,5 +1,8 @@
+import { groupFrequencies } from '../helpers/frequencies';
+
 const initialState = {
   frequencies: [],
+  byCommunity: {},
   active: null,
   loaded: false,
 };
@@ -11,56 +14,62 @@ export default function root(state = initialState, action) {
         return state;
       return Object.assign({}, state, {
         frequencies: state.frequencies.concat([action.frequency]),
+        byCommunity: groupFrequencies(
+          state.frequencies.concat([action.frequency]),
+        ),
       });
-    case 'SUBSCRIBE_FREQUENCY':
+    case 'SUBSCRIBE_FREQUENCY': {
+      let frequencies;
       // If we have the frequency in the state, update it
       if (state.frequencies.find(freq => freq.id === action.frequency.id)) {
-        return {
-          ...state,
-          frequencies: state.frequencies.map(freq => {
-            if (freq.id !== action.frequency.id) return freq;
+        frequencies = state.frequencies.map(freq => {
+          if (freq.id !== action.frequency.id) return freq;
 
-            return action.frequency;
-          }),
-        };
+          return action.frequency;
+        });
+      } else {
+        frequencies = state.frequencies.concat([action.frequency]);
       }
       return Object.assign({}, state, {
-        frequencies: state.frequencies.concat([action.frequency]),
+        frequencies,
+        byCommunity: groupFrequencies(frequencies),
       });
-    // Otherwise just add it at the end
-    case 'CREATE_FREQUENCY':
+    }
+    case 'CREATE_FREQUENCY': {
+      const frequencies = state.frequencies.concat([action.frequency]);
       return Object.assign({}, state, {
-        frequencies: state.frequencies.concat([action.frequency]),
+        frequencies,
+        byCommunity: groupFrequencies(frequencies),
         active: action.frequency.slug,
       });
+    }
     case 'EDIT_FREQUENCY': {
-      let frequencies = state.frequencies.slice().map(frequency => {
+      const frequencies = state.frequencies.slice().map(frequency => {
         if (frequency.id !== action.frequency.id) return frequency;
         return {
           ...frequency,
-          name: action.frequency.name,
-          slug: action.frequency.slug,
-          description: action.frequency.description,
-          settings: {
-            private: action.frequency.settings.private,
-            tint: action.frequency.settings.tint,
-          },
+          ...action.frequency,
         };
       });
-      return Object.assign({}, state, { frequencies });
+      return Object.assign({}, state, {
+        frequencies,
+        byCommunity: groupFrequencies(frequencies),
+      });
     }
     case 'DELETE_FREQUENCY': {
-      let frequencies = state.frequencies
+      const frequencies = state.frequencies
         .slice()
         .filter(frequency => frequency.id !== action.id);
       return Object.assign({}, state, {
         frequencies,
+        byCommunity: groupFrequencies(frequencies),
         active: 'hugs-n-bugs',
       });
     }
     case 'SET_FREQUENCIES':
       return Object.assign({}, state, {
         frequencies: action.frequencies,
+        byCommunity: groupFrequencies(action.frequencies),
         loaded: true,
       });
     case 'SET_ACTIVE_FREQUENCY':
@@ -72,18 +81,20 @@ export default function root(state = initialState, action) {
         loaded: true,
       });
     case 'UNSUBSCRIBE_FREQUENCY': {
+      const frequencies = state.frequencies.map(frequency => {
+        if (frequency.id !== action.id) return frequency;
+
+        delete frequency.users[action.uid];
+
+        return {
+          ...frequency,
+          users: frequency.users,
+        };
+      });
       return {
         ...state,
-        frequencies: state.frequencies.map(frequency => {
-          if (frequency.id !== action.id) return frequency;
-
-          delete frequency.users[action.uid];
-
-          return {
-            ...frequency,
-            users: frequency.users,
-          };
-        }),
+        frequencies,
+        byCommunity: groupFrequencies(frequencies),
       };
     }
     default:

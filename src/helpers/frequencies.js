@@ -24,3 +24,13 @@ export const getFrequencyPermission = (user, activeFrequency, frequencies) => {
 export const linkFreqsInMd = text => {
   return text.replace(FREQUENCIES, '$1[$2](https://spectrum.chat/$2)');
 };
+
+export const groupFrequencies = frequencies => {
+  const grouped = {};
+  frequencies.forEach(frequency => {
+    const { community } = frequency;
+    if (!grouped[community]) grouped[community] = [];
+    grouped[community].push(frequency);
+  });
+  return grouped;
+};
