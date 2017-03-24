@@ -32,9 +32,8 @@ export const Input = styled(Textarea)`
 	min-height: 40px;
 	padding: 8px;
 	padding-left: 40px;
-	border-radius: 24px 0 0 24px;
+	border-radius: 24px;
 	border: 2px solid ${props => props.theme.text.placeholder};
-	border-right: none;
 	transition: border-color 0.3s ease-out;
 	color: ${props => props.theme.text.default};
 
@@ -53,11 +52,6 @@ export const Input = styled(Textarea)`
 		border-color: ${props => props.theme.brand.default};
 		transition: ${Transition.hover.on};
 
-		+ button {
-			background-color: ${({ theme }) => theme.brand.default};
-			transition: ${Transition.hover.on};
-		}
-
 		&:hover {
 			border-color: ${props => props.theme.brand.default};
 		}
@@ -69,18 +63,10 @@ export const Input = styled(Textarea)`
 	}
 `;
 
-export const Button = styled.button`
-	flex: 0 0 48px;
-	color: ${({ theme }) => theme.text.reverse};
-	font-weight: bold;
-	padding-top: 4px;
-	padding-right: 4px;
-	font-size: 18px;
-	border-radius: 0 24px 24px 0;
-	background-color: ${({ theme }) => theme.text.alt};
-  align-self: stretch;
-	position: relative;
-	left: 2px;
+export const SendButton = styled(IconButton)`
+	position: absolute;
+	right: 10px;
+	background-color: transparent;
 	transition: ${Transition.hover.off};
 `;
 

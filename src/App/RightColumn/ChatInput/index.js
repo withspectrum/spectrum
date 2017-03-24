@@ -11,10 +11,10 @@ import {
   Input,
   Form,
   Wrapper,
-  Button,
   MediaInput,
   MediaLabel,
   EmojiToggle,
+  SendButton,
 } from './style';
 
 const NEWLINES = /(\r\n|\n|\r)/gm;
@@ -196,9 +196,15 @@ class ChatInput extends Component {
                 !mobile /* autofocus on desktop, don’t autofocus on mobile */
               }
             />
-            <Button onClick={this.sendMessage}>
-              <Icon icon="send" reverse static />
-            </Button>
+            <SendButton onClick={this.sendMessage}>
+              <Icon
+                icon="send"
+                color={
+                  !this.state.message ? 'text.placeholder' : 'brand.default'
+                }
+                static={!this.state.message}
+              />
+            </SendButton>
           </Form>}
       </Wrapper>
     );
