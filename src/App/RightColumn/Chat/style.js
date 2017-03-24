@@ -321,6 +321,7 @@ export const AdminBadge = styled.span`
 
 export const ProBadge = styled(AdminBadge)`
 	background: #00C384;
+	padding: 2px 3px 2px 4px;
 	background-image: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%);
 	cursor: pointer;
 	text-transform: none;

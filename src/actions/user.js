@@ -68,6 +68,24 @@ export const signOut = () => dispatch => {
 };
 
 /**
+ * checkStatus and parseJSON are used when upgrading and downgrading users to parse
+ * responses from the firebase cloud function
+ */
+function checkStatus(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  } else {
+    var error = new Error(response.statusText);
+    error.response = response;
+    throw error;
+  }
+}
+
+function parseJSON(response) {
+  return response.json();
+}
+
+/**
  * Upgrade user takes a token and writes it to the users_private object in firebase. This write
  * triggers a cloud function which will parse the token to create a customer in Stripe,
  * and then immediately create a new subscription for that customer
@@ -80,20 +98,6 @@ export const upgradeUser = (token, plan) => (dispatch, getState) => {
   dispatch({
     type: 'LOADING',
   });
-
-  function checkStatus(response) {
-    if (response.status >= 200 && response.status < 300) {
-      return response;
-    } else {
-      var error = new Error(response.statusText);
-      error.response = response;
-      throw error;
-    }
-  }
-
-  function parseJSON(response) {
-    return response.json();
-  }
 
   fetch(`${apiURL}/payments/subscriptions/create`, {
     method: 'POST',
@@ -133,8 +137,15 @@ export const upgradeUser = (token, plan) => (dispatch, getState) => {
     });
 };
 
-export const downgradeUser = () => (dispatch, getState) => {
+/**
+ * Because a user may have multiple subscriptions, we need to know which one to delete
+ * in the database. We pass a subscription ID to a cloud function endpoint, delete the
+ * subscription in stripe, then when successful, we delete the subscription data from the
+ * user and user_private objects.
+ */
+export const downgradeUser = subscriptionId => (dispatch, getState) => {
   const user = getState().user;
+
   track('downgrade', 'inited', null);
 
   dispatch({
@@ -142,19 +153,39 @@ export const downgradeUser = () => (dispatch, getState) => {
   });
 
   // if somehow a user triggers this without being on a paid plan, return
-  if (!user.plan || !user.plan.active) return;
+  if (!user.subscriptions) return;
 
-  // otherwise, remove the subscription
-  deleteSubscription(user.uid).then(user => {
-    track('downgrade', 'complete', null);
+  fetch(`${apiURL}/payments/subscriptions/delete`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `subscriptionId=${subscriptionId}`,
+  })
+    .then(checkStatus)
+    .then(parseJSON)
+    .then(data => {
+      deleteSubscription(user.uid, subscriptionId).then(user => {
+        track('downgrade', 'complete', null);
 
-    dispatch({
-      type: 'DOWNGRADE_USER',
-      user,
+        dispatch({
+          type: 'DOWNGRADE_USER',
+          user,
+        });
+
+        dispatch({
+          type: 'STOP_LOADING',
+        });
+      });
+    })
+    .catch(error => {
+      if (error) {
+        console.log('error downgrading: ', error);
+
+        dispatch({
+          type: 'STOP_LOADING',
+        });
+      }
     });
-
-    dispatch({
-      type: 'STOP_LOADING',
-    });
-  });
 };

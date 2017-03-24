@@ -41,11 +41,29 @@ app.post('/subscriptions/create', (req, res) => {
             customerEmail: token.email,
             subscriptionId: subscription.id,
             tokenId: token.id,
+            subscriptionName: subscription.plan.name,
+            created: subscription.created,
+            amount: subscription.plan.amount,
           });
         },
       );
     },
   );
+});
+
+app.post('/subscriptions/delete', (req, res) => {
+  const subscriptionId = req.body.subscriptionId.toString();
+
+  if (!subscriptionId)
+    return res.json({ success: false, error: 'No subscription found' });
+
+  stripe.subscriptions.del(subscriptionId, (err, confirmation) => {
+    if (err) return res.json({ success: false, error: err });
+
+    return res.json({
+      success: true,
+    });
+  });
 });
 
 // Case and return the proper error to the client

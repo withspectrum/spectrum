@@ -42,6 +42,7 @@ export const modalStyles = {
 export const Section = styled.section`
   width: ${props => props.width ? props.width : '100%'};
   text-align: ${props => props.centered ? 'center' : 'auto'};
+  position: relative;
 
   @media all and (max-width: 600px) {
     width: 100%;
@@ -74,17 +75,6 @@ export const SectionError = styled(SectionAlert)`
   margin-bottom: 0;
   position: relative;
   top: 1px;
-`;
-
-export const Badge = styled.div`
-  text-transform: uppercase;
-  font-size: 0.675rem;
-  color: rgba(255,255,255,1);
-  font-weight: 800;
-  text-shadow: 0 1px 1px rgba(0,0,0,0.1);
-  padding: 0.25rem 0.5rem;
-  background: rgba(0,0,0,0.06);
-  box-shadow: 0 1px 0 0 rgba(255,255,255,0.1);
 `;
 
 export const Padding = styled.span`
@@ -134,11 +124,11 @@ export const Spinner = styled.div`
   width: ${props => props.size ? props.size + 'px' : '1rem'};
   border-radius: 50%;
   border: 2px solid rgba(255,255,255,0);
-  border-top-color: #FFF;
+  border-top-color: ${props => props.color};
   animation: ${rotate} 1s infinite linear;
   position: absolute;
   top: 12px;
-  left: 72px;
+  left: 48%;
   transform: translate(-50%, -50%);
   transition: opacity 0.2s ease-out;
 `;

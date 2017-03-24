@@ -4,7 +4,6 @@ import ModalContainer from '../ModalContainer';
 import StripeCheckout from 'react-stripe-checkout';
 import { closeModal } from '../../../actions/modals';
 import { upgradeUser } from '../../../actions/user';
-import { listenForUserUpgradeErrors } from '../../../db/users';
 import { connect } from 'react-redux';
 import { Button } from '../../Globals';
 import { stripeKey } from '../../../config/api';
@@ -14,7 +13,6 @@ import {
   Section,
   SectionAlert,
   SectionError,
-  Badge,
   Heading,
   Subheading,
   Flex,
@@ -29,16 +27,10 @@ class UpgradeModal extends React.Component {
 
     this.state = {
       isOpen: props.isOpen,
-      error: this.props.ui.upgradeError,
-      loading: this.props.loading.active,
     };
   }
 
   closeModal = () => {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
-
     this.props.dispatch(closeModal());
   };
 
@@ -47,7 +39,7 @@ class UpgradeModal extends React.Component {
   };
 
   render() {
-    const { user } = this.props;
+    const { user, loading, ui: { upgradeError } } = this.props;
 
     return (
       <Modal
@@ -70,7 +62,7 @@ class UpgradeModal extends React.Component {
             <Section width={'100%'} centered={true}>
               <Padding padding={'1rem'}>
                 <Profile>
-                  <img src={user.photoURL} />
+                  <img alt={user.displayName} src={user.photoURL} />
                   <span>PRO</span>
                 </Profile>
                 <Heading>Show it Off</Heading>
@@ -104,24 +96,21 @@ class UpgradeModal extends React.Component {
               currency="USD"
             >
 
-              <Button width={'100%'} loading={this.state.loading}>
-                <ButtonLabel loading={this.state.loading}>
-                  Upgrade to Pro
+              <Button width={'100%'} disabled={loading.active}>
+                <ButtonLabel loading={loading.active}>
+                  Upgrade to Pro · $5 per Month
                 </ButtonLabel>
-                <Spinner size={'16'} loading={this.state.loading} />
+                <Spinner color={'#fff'} size={'16'} loading={loading.active} />
               </Button>
 
             </StripeCheckout>
 
-            <SectionError
-              width={'100%'}
-              centered={true}
-              error={this.state.error}
-            >
-              <Padding padding={'0.5rem'}>
-                {this.state.error} Please try again.
-              </Padding>
-            </SectionError>
+            {upgradeError &&
+              <SectionError width={'100%'} centered={true} error={upgradeError}>
+                <Padding padding={'0.5rem'}>
+                  {upgradeError} Please try again.
+                </Padding>
+              </SectionError>}
           </Section>
         </ModalContainer>
       </Modal>

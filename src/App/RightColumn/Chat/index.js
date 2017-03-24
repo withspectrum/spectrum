@@ -65,7 +65,12 @@ class Chat extends Component {
 
   handleProClick = () => {
     const { user } = this.props;
-    if (!user.plan || !user.plan.active) {
+
+    // if user isn't signed in, they shouldn't see a pro modal
+    if (!user.uid) return;
+
+    // otherwise if they aren't subscribed, show the modal
+    if (!user.subscriptions || !user.subscriptions) {
       track('upgrade', 'inited', 'chat badge');
 
       this.props.dispatch(openModal('UPGRADE_MODAL', user));
@@ -88,13 +93,10 @@ class Chat extends Component {
           ];
           const isAdmin = admins.includes(group[0].userId);
           const isPro = list[group[0].userId]
-            ? list[group[0].userId].plan
-                ? list[group[0].userId].plan.active
+            ? list[group[0].userId].subscriptions
+                ? list[group[0].userId].subscriptions
                 : false
             : false;
-          const isProp = list[group[0].userId] &&
-            list[group[0].userId].plan &&
-            list[group[0].userId].plan.active;
           const isStoryCreator = this.props.story.creator.uid ===
             group[0].userId;
           const itsaRobo = group[0].userId === 'robo';

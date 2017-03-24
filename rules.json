@@ -280,8 +280,11 @@
       "$user": {
         ".read": "auth.uid === $user",
         ".write": "auth.uid === $user",
-        "subscription": {
+        "subscriptions": {
           ".validate": "newData.exists()"
+        },
+        "customerId": {
+          ".validate": "newData.isString()"
         },
         "email": {
           ".validate": "newData.isString()"
@@ -324,7 +327,7 @@
           ".write": "auth.uid === $user",
           ".validate": "newData.isBoolean()"
         },
-        "plan": {
+        "subscriptions": {
           ".write": "auth.uid === $user",
           ".validate": "newData.exists()"
         },

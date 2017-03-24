@@ -106,15 +106,15 @@ class NavigationMaster extends Component {
               <MetaWrapper>
                 <Name>
                   {user.displayName}
-                  {user.plan.active && <ProBadge>PRO</ProBadge>}
+                  {user.subscriptions && <ProBadge>PRO</ProBadge>}
                 </Name>
                 <P>
                   @{user.username && user.username} ·&nbsp;
-                  {user.plan.active
+                  {user.subscriptions
                     ? <MetaAnchor onClick={this.showEditAccountModal}>
                         My Account
                       </MetaAnchor>
-                    : <MetaAnchor onClick={this.showUpgradeModal}>
+                    : <MetaAnchor pro onClick={this.showUpgradeModal}>
                         Upgrade to Pro
                       </MetaAnchor>}
                 </P>

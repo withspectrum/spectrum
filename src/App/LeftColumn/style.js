@@ -77,7 +77,13 @@ const linkStyles = css`
 
 export const MetaLink = styled(Link)`${linkStyles}`;
 
-export const MetaAnchor = styled.a`${linkStyles}`;
+export const MetaAnchor = styled.a`
+  ${linkStyles}
+  ${props =>
+  props.pro
+    ? 'color: #02AAFA; background-image: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'
+    : ''};
+`;
 
 export const FreqList = styled.div`
   list-style: none;
