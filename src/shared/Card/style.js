@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { Shadow, H5 } from '../Globals';
+import { Shadow, Transition } from '../Globals';
 
 export const Wrapper = styled.div`
 	display: inline-block;
@@ -9,7 +9,7 @@ export const Wrapper = styled.div`
 	border-radius: 4px;
 	overflow: ${props => props.overflow === 'visible' ? 'visible' : 'hidden'};
 	background-color: ${({ theme }) => theme.bg.default};
-	transition: all 0.2s ease-in;
+	transition: ${Transition.hover.off};
 	-webkit-font-smoothing: subpixel-antialiased;
 	box-shadow: ${Shadow.low};
 
@@ -28,7 +28,7 @@ export const Wrapper = styled.div`
 css`
 		&:hover {
 			box-shadow: ${Shadow.high};
-			transition: all 0.2s ease-out;
+			transition: ${Transition.hover.on};
 			cursor: pointer;
 		}
 	`}
@@ -39,13 +39,13 @@ export const LinkWrapper = styled.div`
 	flex-direction: column;
 	flex: 0 0 auto;
 	background-color: #ffffff;
-	transition: all 0.2s ease-in;
+	transition: ${Transition.hover.off};
 	box-shadow: inset -4px 0 0 ${props =>
   props.selected ? props.theme.brand.default : '#fff'};
 
 	&:hover {
 		box-shadow: inset -4px 0 0 ${props =>
   props.selected ? props.theme.brand.default : '#fff'};
-		transition: all 0.2s ease-in-out;
+		transition: ${Transition.hover.on};
 	}
 `;

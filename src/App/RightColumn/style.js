@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Shadow } from '../../shared/Globals';
+import { Shadow, FlexRow } from '../../shared/Globals';
 
 export const ViewContainer = styled.div`
 	display: flex;
@@ -11,6 +11,10 @@ export const ViewContainer = styled.div`
 	z-index: 3;
 	background: #fff;
 	overflow-x: hidden;
+
+	@media (max-width: 768px) {
+		overflow-y: auto;
+	}
 `;
 
 export const StoryChatContainer = styled.div`
@@ -38,10 +42,9 @@ export const Footer = styled.div`
 	flex: 0 0 auto;
 	align-self: flex-end;
 	align-items: center;
-	padding: 8px;
-	background-color: ${({ theme }) => theme.bg.wash};
-	border-top: 1px solid ${({ theme }) => theme.border.default};
-	${props => props.centered && `justify-content: center;`}
+	padding: 0;
+	margin: 0;
+	background-color: ${({ theme }) => theme.bg.default};
 
 	@media (max-width: 768px) {
     position: fixed;
@@ -49,6 +52,19 @@ export const Footer = styled.div`
     left: 0;
     right: 0;
   }
+`;
+
+export const LoginWrapper = styled(FlexRow)`
+	width: calc(100% - 16px);
+	margin: 0 8px;
+	border-top: 2px solid ${props => props.theme.border.default};
+	height: 64px;
+	align-self: center;
+	justify-content: center;
+
+	> h4 {
+		margin-right: 16px;
+	}
 `;
 
 export const BackArrow = styled.span`
