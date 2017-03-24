@@ -5,7 +5,7 @@ if (process.env.NODE_ENV === 'development') {
   stripeKey = 'pk_test_A6pKi4xXOdgg9FrZJ84NW9mP';
   apiURL = 'https://us-central1-spectrum-staging.cloudfunctions.net';
 } else {
-  stripeKey = process.env.STRIPE_KEY;
+  stripeKey = 'pk_live_8piI030RqVnqDc8QGTUwUj0Z';
   apiURL = 'https://us-central1-spectrum.cloudfunctions.net';
 }
 
