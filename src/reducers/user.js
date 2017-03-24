@@ -25,7 +25,7 @@ export default function root(state = initialState, action) {
         frequencies: action.user.frequencies,
         email: action.user.email,
         username: action.user.username,
-        plan: action.user.plan || 'free', // to account for users without a plan field set
+        plan: action.user.plan || { active: false, name: 'free' }, // to account for users without a plan field set
         loaded: true,
       });
     case 'USER_NOT_AUTHENTICATED':

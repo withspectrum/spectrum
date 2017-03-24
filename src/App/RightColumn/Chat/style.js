@@ -318,3 +318,11 @@ export const AdminBadge = styled.span`
 	font-weight: 800;
 	border-radius: 4px;
 `;
+
+export const ProBadge = styled(AdminBadge)`
+	background: #00C384;
+	background-image: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%);
+	cursor: pointer;
+	text-transform: none;
+	${props => props.tipText ? Tooltip(props) : ''};
+`;

@@ -28,6 +28,7 @@ import {
   Button,
   FreqText,
   DirtyDot,
+  ProBadge,
 } from './style';
 
 class NavigationMaster extends Component {
@@ -97,12 +98,19 @@ class NavigationMaster extends Component {
           ? <Header>
               <Avatar src={user.photoURL} title={user.displayName} />
               <MetaWrapper>
-                <Name>{user.displayName}</Name>
+                <Name>
+                  {user.displayName}
+                  {user.plan.active && <ProBadge>PRO</ProBadge>}
+                </Name>
                 <P>
                   @{user.username && user.username} ·&nbsp;
-                  <MetaAnchor onClick={this.showUpgradeModal}>
-                    Upgrade to Pro
-                  </MetaAnchor>
+                  {user.plan.active
+                    ? <MetaAnchor onClick={this.showUpgradeModal}>
+                        My Account
+                      </MetaAnchor>
+                    : <MetaAnchor onClick={this.showUpgradeModal}>
+                        Upgrade to Pro
+                      </MetaAnchor>}
                 </P>
               </MetaWrapper>
             </Header>
