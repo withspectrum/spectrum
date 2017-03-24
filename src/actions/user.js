@@ -99,7 +99,7 @@ export const upgradeUser = (token, plan) => (dispatch, getState) => {
     type: 'LOADING',
   });
 
-  fetch(`${apiURL}/payments/subscriptions/create`, {
+  fetch(`${apiURL}/payments-createSubscription`, {
     method: 'POST',
     headers: {
       Accept: 'application/x-www-form-urlencoded',
@@ -155,7 +155,7 @@ export const downgradeUser = subscriptionId => (dispatch, getState) => {
   // if somehow a user triggers this without being on a paid plan, return
   if (!user.subscriptions) return;
 
-  fetch(`${apiURL}/payments/subscriptions/delete`, {
+  fetch(`${apiURL}/payments-deleteSubscription`, {
     method: 'POST',
     headers: {
       Accept: 'application/x-www-form-urlencoded',
