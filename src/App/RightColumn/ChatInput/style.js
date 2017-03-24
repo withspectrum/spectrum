@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient, IconButton } from '../../../shared/Globals';
+import { Gradient, IconButton, Transition } from '../../../shared/Globals';
 import Textarea from 'react-textarea-autosize';
 
 export const Wrapper = styled.span`
@@ -20,8 +20,6 @@ export const Form = styled.form`
 	display: flex;
 	align-items: center;
 	margin-left: 4px;
-	padding-left: 4px;
-	border: 2px solid ${props => props.theme.brand.default};
 	border-radius: 24px;
 	background-color: transparent;
 `;
@@ -31,16 +29,18 @@ export const Input = styled(Textarea)`
 	font-size: 14px;
 	font-weight: 500;
 	line-height: 24px;
-	height: 24px;
-	padding: 2px 4px 4px 4px;
-	border: none;
-	margin-left: 8px;
+	height: 40px;
+	padding: 8px;
+	padding-left: 40px;
+	border-radius: 24px 0 0 24px;
+	border: 2px solid ${props => props.theme.text.placeholder};
+	border-right: none;
+	transition: border-color 0.3s ease-out;
+	color: ${props => props.theme.text.default};
 
 	@media (max-width: 768px) {
     font-size: 16px;
-		margin: 6px 0;
-		margin-left: 12px;
-		border-radius: 4px;
+		padding-left: 20px;
   }
 
 	&::placeholder { color: ${({ theme }) => theme.text.placeholder} }
@@ -48,6 +48,21 @@ export const Input = styled(Textarea)`
   theme.text.placeholder} }
   &:-moz-placeholder { color: ${({ theme }) => theme.text.placeholder} }
   &:-ms-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
+
+	&:focus {
+		border-color: ${props => props.theme.brand.default};
+		transition: ${Transition.hover.on};
+
+		+ button {
+			background-color: ${({ theme }) => theme.brand.default};
+			transition: ${Transition.hover.on};
+		}
+	}
+
+	&:hover {
+		border-color: ${props => props.theme.text.alt};
+		transition: ${Transition.hover.on};
+	}
 `;
 
 export const Button = styled.button`
@@ -58,12 +73,11 @@ export const Button = styled.button`
 	padding-right: 4px;
 	font-size: 18px;
 	border-radius: 0 24px 24px 0;
-	background-color: ${({ theme }) => theme.brand.default};
-	background-image: ${({ theme }) =>
-  Gradient(theme.brand.alt, theme.brand.default)};
+	background-color: ${({ theme }) => theme.text.alt};
   align-self: stretch;
 	position: relative;
 	left: 2px;
+	transition: ${Transition.hover.off};
 `;
 
 export const MediaInput = styled.input`
@@ -92,6 +106,9 @@ export const MediaLabel = styled.label`
 `;
 
 export const EmojiToggle = styled(IconButton)`
+	position: absolute;
+	left: 50px;
+	background-color: transparent;
 	@media (max-width: 768px) {
 		display: none;
 	}

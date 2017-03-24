@@ -168,6 +168,17 @@ class ChatInput extends Component {
             subtle
           />
         </MediaLabel>
+        <EmojiToggle
+          active={this.state.emojiPickerOpen}
+          onClick={this.toggleEmojiPicker}
+        >
+          <Icon
+            icon="emoji"
+            tipText="Insert Emoji"
+            tipLocation="top-right"
+            subtle
+          />
+        </EmojiToggle>
         {this.props.user.uid &&
           <Form onSubmit={this.sendMessage}>
             {this.state.emojiPickerOpen &&
@@ -175,17 +186,6 @@ class ChatInput extends Component {
                 onChange={this.appendEmoji}
                 closePicker={this.toggleEmojiPicker}
               />}
-            <EmojiToggle
-              active={this.state.emojiPickerOpen}
-              onClick={this.toggleEmojiPicker}
-            >
-              <Icon
-                icon="emoji"
-                tipText="Insert Emoji"
-                tipLocation="top-right"
-                subtle
-              />
-            </EmojiToggle>
             <Input
               ref="textInput"
               placeholder="Your message here..."

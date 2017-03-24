@@ -63,7 +63,7 @@ export const LoginWrapper = styled(FlexRow)`
 	justify-content: center;
 
 	> h4 {
-		margin-right: 8px;
+		margin-right: 16px;
 	}
 `;
 
