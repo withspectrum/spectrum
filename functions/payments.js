@@ -4,64 +4,66 @@ const functions = require('firebase-functions'),
 const stripe = require('stripe')(functions.config().stripe.test_token),
   currency = functions.config().stripe.currency || 'USD';
 
-const cors = require('cors');
-
+const cors = require('cors')({ origin: true });
 const express = require('express');
 const app = express();
-app.use(cors());
 
-app.post('/subscriptions/create', (req, res) => {
-  const token = JSON.parse(req.body.token);
-  const plan = req.body.plan;
+module.exports.createSubscription = functions.https.onRequest((req, res) => {
+  cors(req, res, () => {
+    const token = JSON.parse(req.body.token);
+    const plan = req.body.plan;
 
-  if (!token) return res.json({ success: false, error: 'No token detected' });
-  // create a customer with the credit card sent down from the client
-  stripe.customers.create(
-    {
-      email: token.email,
-      source: token.id,
-    },
-    (err, customer) => {
-      if (err) returnError(res, err);
+    if (!token) return res.json({ success: false, error: 'No token detected' });
+    // create a customer with the credit card sent down from the client
+    stripe.customers.create(
+      {
+        email: token.email,
+        source: token.id,
+      },
+      (err, customer) => {
+        if (err) returnError(res, err);
 
-      // after the customer is created, charge them and put them on the subscription
-      stripe.subscriptions.create(
-        {
-          plan: plan,
-          customer: customer.id,
-        },
-        (err, subscription) => {
-          // unable to create the subscription
-          if (err) returnError(res, err);
+        // after the customer is created, charge them and put them on the subscription
+        stripe.subscriptions.create(
+          {
+            plan: plan,
+            customer: customer.id,
+          },
+          (err, subscription) => {
+            // unable to create the subscription
+            if (err) returnError(res, err);
 
-          // send back a response once we know the customer and subscription worked
-          return res.json({
-            success: true,
-            customerId: customer.id,
-            customerEmail: token.email,
-            subscriptionId: subscription.id,
-            tokenId: token.id,
-            subscriptionName: subscription.plan.name,
-            created: subscription.created,
-            amount: subscription.plan.amount,
-          });
-        },
-      );
-    },
-  );
+            // send back a response once we know the customer and subscription worked
+            return res.json({
+              success: true,
+              customerId: customer.id,
+              customerEmail: token.email,
+              subscriptionId: subscription.id,
+              tokenId: token.id,
+              subscriptionName: subscription.plan.name,
+              created: subscription.created,
+              amount: subscription.plan.amount,
+            });
+          },
+        );
+      },
+    );
+  });
 });
 
-app.post('/subscriptions/delete', (req, res) => {
-  const subscriptionId = req.body.subscriptionId.toString();
+module.exports.deleteSubscription = functions.https.onRequest((req, res) => {
+  cors(req, res, () => {
+    const subscriptionId = req.body.subscriptionId.toString();
 
-  if (!subscriptionId)
-    return res.json({ success: false, error: 'No subscription found' });
+    if (!subscriptionId)
+      return res.json({ success: false, error: 'No subscription found' });
 
-  stripe.subscriptions.del(subscriptionId, (err, confirmation) => {
-    if (err) return res.json({ success: false, error: err });
+    stripe.subscriptions.del(subscriptionId, (err, confirmation) => {
+      if (err) return res.json({ success: false, error: err });
 
-    return res.json({
-      success: true,
+      return res.json({
+        success: true,
+      });
     });
   });
 });
@@ -111,5 +113,3 @@ returnError = function(res, err) {
       break;
   }
 };
-
-module.exports = functions.https.onRequest(app);
