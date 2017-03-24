@@ -6,6 +6,7 @@ import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
 import { FlexRow } from '../../shared/Globals';
 import { setActiveFrequency } from '../../actions/frequencies';
+import { track } from '../../EventTracker';
 import { ACTIVITY_TYPES } from '../../db/types';
 import {
   Column,
@@ -76,7 +77,12 @@ class NavigationMaster extends Component {
   };
 
   showUpgradeModal = () => {
+    track('upgrade', 'inited', 'nav profile');
     this.props.dispatch(openModal('UPGRADE_MODAL', this.props.user));
+  };
+
+  showEditAccountModal = () => {
+    this.props.dispatch(openModal('EDIT_ACCOUNT_MODAL', this.props.user));
   };
 
   render() {
@@ -105,7 +111,7 @@ class NavigationMaster extends Component {
                 <P>
                   @{user.username && user.username} ·&nbsp;
                   {user.plan.active
-                    ? <MetaAnchor onClick={this.showUpgradeModal}>
+                    ? <MetaAnchor onClick={this.showEditAccountModal}>
                         My Account
                       </MetaAnchor>
                     : <MetaAnchor onClick={this.showUpgradeModal}>
@@ -219,12 +225,13 @@ class NavigationMaster extends Component {
         <Footer>
           <FooterP onClick={this.showStoriesNav}>
             <MetaLink to="/~support">Support</MetaLink>&nbsp;·&nbsp;
-            <MetaLink to="/~hugs-n-bugs">Report Bugs</MetaLink>
+            <MetaLink to="/~hugs-n-bugs">Report Bugs</MetaLink>&nbsp;·&nbsp;
+            <MetaAnchor href="mailto:hi@spectrum.chat">Contact</MetaAnchor>
           </FooterP>
           <FooterP onClick={this.showStoriesNav}>
             <MetaLink to="/~feature-requests">Feature Requests</MetaLink>
             &nbsp;·&nbsp;
-            <MetaAnchor href="mailto:hi@spectrum.chat">Contact</MetaAnchor>
+            <MetaAnchor onClick={this.signOut}>Sign Out</MetaAnchor>
           </FooterP>
           <FooterP>© 2017 Space Program, Inc.</FooterP>
         </Footer>

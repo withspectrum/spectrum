@@ -1,5 +1,10 @@
 import { set, track } from '../EventTracker';
-import { createUser, getPrivateUser, createSubscription } from '../db/users';
+import {
+  createUser,
+  getPrivateUser,
+  createSubscription,
+  deleteSubscription,
+} from '../db/users';
 import { signInWithTwitter, signOut as logOut } from '../db/auth';
 import { monitorUser, stopUserMonitor } from '../helpers/users';
 import { apiURL } from '../config/api';
@@ -70,6 +75,8 @@ export const signOut = () => dispatch => {
 export const upgradeUser = (token, plan) => (dispatch, getState) => {
   const uid = getState().user.uid;
 
+  track('upgrade', 'payment inited', null);
+
   dispatch({
     type: 'LOADING',
   });
@@ -100,6 +107,8 @@ export const upgradeUser = (token, plan) => (dispatch, getState) => {
     .then(parseJSON)
     .then(data => {
       createSubscription(data, uid, plan).then(user => {
+        track('upgrade', 'payment completed', null);
+
         dispatch({
           type: 'UPGRADE_USER',
           user,
@@ -122,4 +131,30 @@ export const upgradeUser = (token, plan) => (dispatch, getState) => {
         });
       }
     });
+};
+
+export const downgradeUser = () => (dispatch, getState) => {
+  const user = getState().user;
+  track('downgrade', 'inited', null);
+
+  dispatch({
+    type: 'LOADING',
+  });
+
+  // if somehow a user triggers this without being on a paid plan, return
+  if (!user.plan || !user.plan.active) return;
+
+  // otherwise, remove the subscription
+  deleteSubscription(user.uid).then(user => {
+    track('downgrade', 'complete', null);
+
+    dispatch({
+      type: 'DOWNGRADE_USER',
+      user,
+    });
+
+    dispatch({
+      type: 'STOP_LOADING',
+    });
+  });
 };

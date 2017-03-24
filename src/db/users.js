@@ -148,3 +148,19 @@ export const createSubscription = (data, uid, plan) => {
       console.log('error upgrading: ', err);
     });
 };
+
+export const deleteSubscription = uid => {
+  const db = database();
+
+  return db
+    .ref(`/users_private/${uid}/subscription/`)
+    .remove()
+    .then(() => db.ref(`/users/${uid}/plan`).remove())
+    .then(() => db.ref(`/users/${uid}`).once('value'))
+    .then(snapshot => {
+      return snapshot.val();
+    })
+    .catch(err => {
+      console.log('error downgrading: ', err);
+    });
+};

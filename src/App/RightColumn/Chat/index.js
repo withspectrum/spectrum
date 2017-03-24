@@ -28,6 +28,7 @@ import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../helpers/regexps';
 import { openGallery } from '../../../actions/gallery';
 import { addReaction, removeReaction } from '../../../actions/messages';
 import { openModal } from '../../../actions/modals';
+import { track } from '../../../EventTracker';
 import Icon from '../../../shared/Icons';
 
 class Chat extends Component {
@@ -65,6 +66,8 @@ class Chat extends Component {
   handleProClick = () => {
     const { user } = this.props;
     if (!user.plan || !user.plan.active) {
+      track('upgrade', 'inited', 'chat badge');
+
       this.props.dispatch(openModal('UPGRADE_MODAL', user));
     }
   };

@@ -3,11 +3,13 @@ import { connect } from 'react-redux';
 import UpgradeModal from './UpgradeModal/index';
 import FrequencyCreationModal from './FrequencyCreationModal/index';
 import FrequencyEditModal from './FrequencyEditModal/index';
+import EditAccountModal from './EditAccountModal/index';
 
 const MODAL_COMPONENTS = {
   UPGRADE_MODAL: UpgradeModal,
   FREQUENCY_CREATION_MODAL: FrequencyCreationModal,
   FREQUENCY_EDIT_MODAL: FrequencyEditModal,
+  EDIT_ACCOUNT_MODAL: EditAccountModal,
 };
 
 const ModalRoot = ({ modalType, modalProps }) => {

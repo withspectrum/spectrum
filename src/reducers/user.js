@@ -17,6 +17,7 @@ export default function root(state = initialState, action) {
         loaded: true,
       });
     case 'UPGRADE_USER':
+    case 'DOWNGRADE_USER':
     case 'SET_USER':
       return Object.assign({}, state, {
         uid: action.user.uid,
