@@ -176,7 +176,7 @@ class ChatInput extends Component {
             icon="emoji"
             tipText="Insert Emoji"
             tipLocation="top-right"
-            subtle
+            subtle={!this.state.emojiPickerOpen}
           />
         </EmojiToggle>
         {this.props.user.uid &&

@@ -29,7 +29,7 @@ export const Input = styled(Textarea)`
 	font-size: 14px;
 	font-weight: 500;
 	line-height: 24px;
-	height: 40px;
+	min-height: 40px;
 	padding: 8px;
 	padding-left: 40px;
 	border-radius: 24px 0 0 24px;
@@ -56,6 +56,10 @@ export const Input = styled(Textarea)`
 		+ button {
 			background-color: ${({ theme }) => theme.brand.default};
 			transition: ${Transition.hover.on};
+		}
+
+		&:hover {
+			border-color: ${props => props.theme.brand.default};
 		}
 	}
 
