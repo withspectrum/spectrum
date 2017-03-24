@@ -28,6 +28,10 @@ class EditAccountModal extends React.Component {
     this.props.dispatch(openModal('UPGRADE_MODAL', this.props.user));
   };
 
+  emailSupport = () => {
+    location.href = '~support';
+  };
+
   render() {
     const { user, loading } = this.props;
 
@@ -58,8 +62,8 @@ class EditAccountModal extends React.Component {
                   <Section width={'100%'} key={id}>
                     <Subheading>{name} · ${amount} per month</Subheading>
 
-                    <Button width={'100%'}>
-                      Questions? Contact Us
+                    <Button onClick={this.emailSupport} width={'100%'}>
+                      Questions? Get Support
                     </Button>
 
                     <Or><span>or</span></Or>
