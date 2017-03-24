@@ -11,10 +11,10 @@ import {
   Input,
   Form,
   Wrapper,
-  Button,
   MediaInput,
   MediaLabel,
   EmojiToggle,
+  SendButton,
 } from './style';
 
 const NEWLINES = /(\r\n|\n|\r)/gm;
@@ -161,24 +161,31 @@ class ChatInput extends Component {
         />
 
         <MediaLabel htmlFor="file">
-          <Icon icon="photo" tipLocation="top-right" tipText="Upload Photo" />
+          <Icon
+            icon="photo"
+            tipLocation="top-right"
+            tipText="Upload Photo"
+            subtle
+          />
         </MediaLabel>
-
-        {this.state.emojiPickerOpen &&
-          <EmojiPicker
-            onChange={this.appendEmoji}
-            closePicker={this.toggleEmojiPicker}
-          />}
         <EmojiToggle
-          tipText="Insert Emoji"
-          tipLocation="top-right"
           active={this.state.emojiPickerOpen}
           onClick={this.toggleEmojiPicker}
         >
-          😀
+          <Icon
+            icon="emoji"
+            tipText="Insert Emoji"
+            tipLocation="top-right"
+            subtle={!this.state.emojiPickerOpen}
+          />
         </EmojiToggle>
         {this.props.user.uid &&
           <Form onSubmit={this.sendMessage}>
+            {this.state.emojiPickerOpen &&
+              <EmojiPicker
+                onChange={this.appendEmoji}
+                closePicker={this.toggleEmojiPicker}
+              />}
             <Input
               ref="textInput"
               placeholder="Your message here..."
@@ -189,9 +196,15 @@ class ChatInput extends Component {
                 !mobile /* autofocus on desktop, don’t autofocus on mobile */
               }
             />
-            <Button onClick={this.sendMessage}>
-              <Icon icon="send" reverse static />
-            </Button>
+            <SendButton onClick={this.sendMessage}>
+              <Icon
+                icon="send"
+                color={
+                  !this.state.message ? 'text.placeholder' : 'brand.default'
+                }
+                static={!this.state.message}
+              />
+            </SendButton>
           </Form>}
       </Wrapper>
     );

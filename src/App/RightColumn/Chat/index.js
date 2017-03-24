@@ -185,7 +185,7 @@ class Chat extends Component {
                           }
                         >
                           <Icon icon={'like-active'} reverse size={16} static />
-                          <Count>{reactionCount}</Count>
+                          <Count className={'count'}>{reactionCount}</Count>
                         </Reaction>
                       </BubbleWrapper>
                     );
