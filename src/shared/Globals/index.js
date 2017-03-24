@@ -46,7 +46,7 @@ export const Button = styled.button`
 		opacity: ${props => props.disabled ? '0.5' : '1'};
 		transition: ${Transition.hover.on};
 		cursor: pointer;
-    box-shadow: ${Shadow.high};
+    box-shadow: ${props => props.disabled ? 'none' : Shadow.high};
 	}
 `;
 

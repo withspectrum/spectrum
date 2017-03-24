@@ -1,34 +1,46 @@
 import styled from 'styled-components';
-import { Gradient, Shadow, Tooltip } from '../../../shared/Globals';
+import { Gradient, IconButton } from '../../../shared/Globals';
 import Textarea from 'react-textarea-autosize';
 
 export const Wrapper = styled.span`
 	display: flex;
-	width: 100%;
+	width: calc(100% - 16px);
 	flex: 0 0 auto;
 	align-items: center;
 	z-index: 200;
 	position: relative;
+	margin: 0 8px;
+	padding: 8px 0;
+	border-top: 2px solid ${({ theme }) => theme.border.default};
+	background-color: ${({ theme }) => theme.bg.default};
 `;
 
 export const Form = styled.form`
 	flex: 1 0 auto;
 	display: flex;
-	align-items: stretch;
+	align-items: center;
+	margin-left: 4px;
+	padding-left: 4px;
+	border: 2px solid ${props => props.theme.brand.default};
+	border-radius: 24px;
+	background-color: transparent;
 `;
 
 export const Input = styled(Textarea)`
 	flex: 1 0 auto;
 	font-size: 14px;
-	line-height: 22px;
-	padding: 10px 16px;
-	border: 1px solid ${({ theme }) => theme.border.default};
-	border-right: none;
-	border-radius: 8px 0 0 8px;
-	box-shadow: ${Shadow.input};
+	font-weight: 500;
+	line-height: 24px;
+	height: 24px;
+	padding: 2px 4px 4px 4px;
+	border: none;
+	margin-left: 8px;
 
 	@media (max-width: 768px) {
     font-size: 16px;
+		margin: 6px 0;
+		margin-left: 12px;
+		border-radius: 4px;
   }
 
 	&::placeholder { color: ${({ theme }) => theme.text.placeholder} }
@@ -43,12 +55,15 @@ export const Button = styled.button`
 	color: ${({ theme }) => theme.text.reverse};
 	font-weight: bold;
 	padding-top: 4px;
+	padding-right: 4px;
 	font-size: 18px;
-	border-radius: 0 8px 8px 0;
+	border-radius: 0 24px 24px 0;
 	background-color: ${({ theme }) => theme.brand.default};
 	background-image: ${({ theme }) =>
   Gradient(theme.brand.alt, theme.brand.default)};
   align-self: stretch;
+	position: relative;
+	left: 2px;
 `;
 
 export const MediaInput = styled.input`
@@ -76,30 +91,7 @@ export const MediaLabel = styled.label`
 	}
 `;
 
-export const EmojiToggle = styled.div`
-	display: inline-block;
-	font-size: 24px;
-	line-height: 40px;
-	vertical-align: middle;
-	text-align: center;
-	border-radius: 4px;
-	-webkit-flex: 0 0 auto;
-	height: 40px;
-	width: 40px;
-	margin: 0 8px 0 4px;
-	background: ${props =>
-  props.active ? props.theme.brand.default : 'transparent'};
-	transition: all 0.3s ease-out;
-
-	&:hover {
-		cursor: pointer;
-		background: ${props =>
-  props.active ? props.theme.brand.default : 'transparent'};
-		transition: all 0.2s ease-in;
-		${props => props.tipText ? Tooltip(props) : ''};
-
-	}
-
+export const EmojiToggle = styled(IconButton)`
 	@media (max-width: 768px) {
 		display: none;
 	}

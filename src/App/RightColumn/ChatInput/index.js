@@ -161,24 +161,31 @@ class ChatInput extends Component {
         />
 
         <MediaLabel htmlFor="file">
-          <Icon icon="photo" tipLocation="top-right" tipText="Upload Photo" />
+          <Icon
+            icon="photo"
+            tipLocation="top-right"
+            tipText="Upload Photo"
+            subtle
+          />
         </MediaLabel>
-
-        {this.state.emojiPickerOpen &&
-          <EmojiPicker
-            onChange={this.appendEmoji}
-            closePicker={this.toggleEmojiPicker}
-          />}
-        <EmojiToggle
-          tipText="Insert Emoji"
-          tipLocation="top-right"
-          active={this.state.emojiPickerOpen}
-          onClick={this.toggleEmojiPicker}
-        >
-          😀
-        </EmojiToggle>
         {this.props.user.uid &&
           <Form onSubmit={this.sendMessage}>
+            {this.state.emojiPickerOpen &&
+              <EmojiPicker
+                onChange={this.appendEmoji}
+                closePicker={this.toggleEmojiPicker}
+              />}
+            <EmojiToggle
+              active={this.state.emojiPickerOpen}
+              onClick={this.toggleEmojiPicker}
+            >
+              <Icon
+                icon="emoji"
+                tipText="Insert Emoji"
+                tipLocation="top-right"
+                subtle
+              />
+            </EmojiToggle>
             <Input
               ref="textInput"
               placeholder="Your message here..."
