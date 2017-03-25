@@ -39,7 +39,7 @@ export const Input = styled(Textarea)`
 
 	@media (max-width: 768px) {
     font-size: 16px;
-		padding-left: 20px;
+		padding-left: 16px;
   }
 
 	&::placeholder { color: ${({ theme }) => theme.text.placeholder} }
@@ -68,6 +68,10 @@ export const SendButton = styled(IconButton)`
 	right: 8px;
 	background-color: transparent;
 	transition: ${Transition.hover.off};
+
+	@media (max-width: 768px) {
+		top: 16px;
+	}
 `;
 
 export const MediaInput = styled.input`
