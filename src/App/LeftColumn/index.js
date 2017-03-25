@@ -118,7 +118,7 @@ class NavigationMaster extends Component {
                   </FreqText>
                 </Freq>
               </Link>
-              <Link to={`/notifications`}>
+              {/*<Link to={`/notifications`}>
                 <Freq
                   active={activeFrequency === 'notifications'}
                   onClick={this.showStoriesNav}
@@ -129,7 +129,8 @@ class NavigationMaster extends Component {
                   </FlexRow>
                   {unread > 0 && <DirtyDot>{unread}</DirtyDot>}
                 </Freq>
-              </Link>
+              </Link>*/
+              }
             </div>}
           {frequencies.length > 0 ||
             <div>
