@@ -1,23 +1,38 @@
 import styled, { keyframes } from 'styled-components';
+import { isMobile } from '../../../helpers/utils';
 
-const maxWidth = '640px';
+const maxWidth = '440px';
+const mobile = isMobile();
 export const modalStyles = {
   overlay: {
-    backgroundColor: 'rgba(0,0,0,0.40)',
+    background: 'rgba(0, 0, 0, 0.75)',
+    display: 'flex',
+    alignItems: mobile ? 'flex-start' : 'center',
+    justifyContent: 'center',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    overflowY: 'auto',
+    overflowX: 'hidden',
     zIndex: 200,
+    padding: '1.2rem',
   },
   content: {
+    position: 'relative',
+    background: '#ffffff',
+    backgroundClip: 'padding-box',
     borderRadius: '8px',
     border: '0',
-    position: 'absolute',
-    bottom: 'auto',
-    top: '50%',
-    left: '50%',
     padding: '0',
-    transform: 'translate(-50%, -50%)',
     zIndex: 201,
     width: '100%',
     maxWidth: maxWidth,
+    top: 'auto',
+    bottom: 'auto',
+    left: 'auto',
+    right: 'auto',
     backgroundColor: 'rgba(0,0,0,0)',
     boxShadow: '0 4px 24px rgba(0,0,0,0.40)',
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
@@ -27,6 +42,7 @@ export const modalStyles = {
 export const Section = styled.section`
   width: ${props => props.width ? props.width : '100%'};
   text-align: ${props => props.centered ? 'center' : 'auto'};
+  position: relative;
 
   @media all and (max-width: 600px) {
     width: 100%;
@@ -41,7 +57,7 @@ export const SectionAlert = styled(Section)`
   font-size: 0.875rem;
   text-shadow: 0 1px 1px rgba(0,0,0,0.1);
   border-radius: 4px;
-  margin: 1rem auto 0.5rem;
+  margin: 0 auto 0.5rem;
 
   @media all and (max-width: 600px) {
     margin-top: 0;
@@ -50,7 +66,8 @@ export const SectionAlert = styled(Section)`
 `;
 
 export const SectionError = styled(SectionAlert)`
-  border-radius: 0 0 4px 4px;
+  border-radius: 4px;
+  margin-top: 1rem;
   background: radial-gradient(ellipse farthest-corner at top left , #ff7600 0%, #fa0202 100%);
   height: ${props => props.error ? 'auto' : '0px'};
   overflow: ${props => props.error ? 'visible' : 'hidden'};
@@ -58,17 +75,6 @@ export const SectionError = styled(SectionAlert)`
   margin-bottom: 0;
   position: relative;
   top: 1px;
-`;
-
-export const Badge = styled.div`
-  text-transform: uppercase;
-  font-size: 0.675rem;
-  color: rgba(255,255,255,1);
-  font-weight: 800;
-  text-shadow: 0 1px 1px rgba(0,0,0,0.1);
-  padding: 0.25rem 0.5rem;
-  background: rgba(0,0,0,0.06);
-  box-shadow: 0 1px 0 0 rgba(255,255,255,0.1);
 `;
 
 export const Padding = styled.span`
@@ -94,6 +100,7 @@ export const Subheading = styled.h4`
 
 export const Flex = styled.div`
   display: flex;
+  flex-direction: ${props => props.direction || 'row'};
 
   @media all and (max-width: 600px) {
     flex-direction: column;
@@ -117,11 +124,11 @@ export const Spinner = styled.div`
   width: ${props => props.size ? props.size + 'px' : '1rem'};
   border-radius: 50%;
   border: 2px solid rgba(255,255,255,0);
-  border-top-color: #FFF;
+  border-top-color: ${props => props.color};
   animation: ${rotate} 1s infinite linear;
   position: absolute;
   top: 12px;
-  left: 72px;
+  left: 48%;
   transform: translate(-50%, -50%);
   transition: opacity 0.2s ease-out;
 `;
@@ -129,4 +136,30 @@ export const Spinner = styled.div`
 export const ButtonLabel = styled.span`
   opacity: ${props => props.loading ? '0' : '1'};
   transition: opacity 0.2s ease-out;
+  width: 100%;
+`;
+
+export const Profile = styled.div`
+  position: relative;
+  padding-top: 16px;
+
+  img {
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+  }
+
+  span {
+    background: #00C384;
+    background-image: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%);
+    position: absolute;
+    left: 52%;
+    top: 32px;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 4px;
+    border-radius: 4px;
+    line-height: 1.5;
+  }
 `;

@@ -32,7 +32,6 @@ class FrequencyCreationModal extends React.Component {
     super(props);
 
     this.state = {
-      isOpen: props.isOpen,
       name: '',
       slug: '',
       description: '',
@@ -185,10 +184,6 @@ class FrequencyCreationModal extends React.Component {
   };
 
   closeModal = () => {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
-    // setTimeout(() => { this.props.dispatch(closeModal()) }, 300)
     this.props.dispatch(closeModal());
   };
 
@@ -224,7 +219,7 @@ class FrequencyCreationModal extends React.Component {
   render() {
     return (
       <Modal
-        isOpen={this.state.isOpen}
+        isOpen={this.props.isOpen}
         contentLabel="Create a Frequency"
         onRequestClose={this.closeModal}
         shouldCloseOnOverlayClick={true}
@@ -232,7 +227,10 @@ class FrequencyCreationModal extends React.Component {
         closeTimeoutMS={330}
       >
 
-        <ModalContainer title={'Create a new frequency!'}>
+        <ModalContainer
+          title={'Create a new frequency!'}
+          closeModal={this.closeModal}
+        >
           <Label>
             What should we call it?
             <Input

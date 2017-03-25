@@ -10,6 +10,7 @@ import {
   Count,
   Byline,
   AdminBadge,
+  ProBadge,
   EmojiBubble,
   Messages,
   Avatar,
@@ -26,6 +27,8 @@ import {
 import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../helpers/regexps';
 import { openGallery } from '../../../actions/gallery';
 import { addReaction, removeReaction } from '../../../actions/messages';
+import { openModal } from '../../../actions/modals';
+import { track } from '../../../EventTracker';
 import Icon from '../../../shared/Icons';
 
 class Chat extends Component {
@@ -60,6 +63,20 @@ class Chat extends Component {
     }
   };
 
+  handleProClick = () => {
+    const { user } = this.props;
+
+    // if user isn't signed in, they shouldn't see a pro modal
+    if (!user.uid) return;
+
+    // otherwise if they aren't subscribed, show the modal
+    if (!user.subscriptions || !user.subscriptions) {
+      track('upgrade', 'inited', 'chat badge');
+
+      this.props.dispatch(openModal('UPGRADE_MODAL', user));
+    }
+  };
+
   render() {
     let { messages, user: { list } } = this.props;
     if (!messages) return <span />;
@@ -75,6 +92,11 @@ class Chat extends Component {
             '01p2A7kDCWUjGj6zQLlMQUOSQL42',
           ];
           const isAdmin = admins.includes(group[0].userId);
+          const isPro = list[group[0].userId]
+            ? list[group[0].userId].subscriptions
+                ? list[group[0].userId].subscriptions
+                : false
+            : false;
           const isStoryCreator = this.props.story.creator.uid ===
             group[0].userId;
           const itsaRobo = group[0].userId === 'robo';
@@ -102,6 +124,15 @@ class Chat extends Component {
                   {!itsaMe &&
                     isAdmin &&
                     <AdminBadge op={isStoryCreator}>Admin</AdminBadge>}
+                  {!itsaMe &&
+                    isPro &&
+                    <ProBadge
+                      tipText={'Beta Supporter'}
+                      tipLocation="top-right"
+                      onClick={this.handleProClick}
+                    >
+                      PRO
+                    </ProBadge>}
                 </Byline>
                 {group.map((message, i) => {
                   let reactionUsers = message.reactions
