@@ -68,10 +68,8 @@ export const SendButton = styled(IconButton)`
 	right: 8px;
 	background-color: transparent;
 	transition: ${Transition.hover.off};
+	top: calc(50% - 16px);
 
-	@media (max-width: 768px) {
-		top: 16px;
-	}
 `;
 
 export const MediaInput = styled.input`
@@ -103,6 +101,8 @@ export const EmojiToggle = styled(IconButton)`
 	position: absolute;
 	left: 48px;
 	background-color: transparent;
+	top: calc(50% - 16px);
+	
 	@media (max-width: 768px) {
 		display: none;
 	}

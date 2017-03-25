@@ -23,6 +23,8 @@ export const Tagline = styled(H2)`
 
 export const Button = styled.button`
 	display: flex;
+	flex: 1 0 auto;
+	flex-direction: flex-row;
 	align-items: center;
 	background: transparent;
 	border: 2px solid ${({ theme }) => theme.bg.default};
@@ -35,9 +37,12 @@ export const Button = styled.button`
 
 	span {
 		display: inline-block;
+		flex: 1 0 auto;
 		margin-top: -1px;
 		margin-left: 8px;
 		line-height: 2.45;
+		word-break: keep-all;
+		white-space: nowrap;
 		color: ${({ theme }) => theme.brand.reverse};
 	}
 
@@ -90,9 +95,11 @@ export const Img = styled.img`
 	min-height: 320px;
 	max-height: 400px;
 	margin-left: 40px;
+	max-width: 25%;
 
 	@media (max-width: 768px) {
 		margin-left: 0;
 		margin-top: 40px;
+		max-width: 80%;
 	}
 `;
