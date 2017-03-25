@@ -13,6 +13,7 @@ import {
   Header,
   HeaderLogo,
   Avatar,
+  Username,
   MetaWrapper,
   MetaAnchor,
   P,
@@ -109,7 +110,6 @@ class NavigationMaster extends Component {
                   {user.subscriptions && <ProBadge>PRO</ProBadge>}
                 </Name>
                 <P>
-                  @{user.username && user.username} ·&nbsp;
                   {user.subscriptions
                     ? <MetaAnchor onClick={this.showEditAccountModal}>
                         My Account

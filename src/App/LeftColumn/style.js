@@ -30,6 +30,7 @@ export const Avatar = styled.img`
   height: 32px;
   flex: 0 0 32px;
   border-radius: 8px;
+  align-self: flex-start;
 `;
 
 export const MetaWrapper = styled.div`
@@ -54,6 +55,7 @@ export const P = styled.p`
   line-height: 12px;
   color: ${({ theme }) => theme.text.alt};
   font-weight: 500;
+  flex-direction: column;
 
   + p {
     margin-top: 8px;
@@ -83,6 +85,10 @@ export const MetaAnchor = styled.a`
   props.pro
     ? 'color: #02AAFA; background-image: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'
     : ''};
+`;
+
+export const Username = styled.span`
+  margin-bottom: 4px;
 `;
 
 export const FreqList = styled.div`
