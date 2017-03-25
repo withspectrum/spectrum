@@ -8,7 +8,6 @@ import {
 import { signInWithTwitter, signOut as logOut } from '../db/auth';
 import { monitorUser, stopUserMonitor } from '../helpers/users';
 import { apiURL } from '../config/api';
-import 'whatwg-fetch';
 
 /**
  * Firebase creates one "Authentication" record when a user signs up.
