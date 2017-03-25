@@ -122,3 +122,53 @@ export const setlastSeen = uid => {
       console.log(err);
     });
 };
+
+export const createSubscription = (data, uid, plan) => {
+  const db = database();
+  const updates = {
+    [`users_private/${uid}/customerId`]: data.customerId,
+    [`users_private/${uid}/subscriptions/${data.subscriptionId}/customerId`]: data.customerId,
+    [`users_private/${uid}/subscriptions/${data.subscriptionId}/subscriptionId`]: data.subscriptionId,
+    [`users_private/${uid}/subscriptions/${data.subscriptionId}/tokenId`]: data.tokenId,
+    [`users_private/${uid}/subscriptions/${data.subscriptionId}/customerEmail`]: data.customerEmail,
+    [`users_private/${uid}/subscriptions/${data.subscriptionId}/plan`]: plan,
+    [`users_private/${uid}/subscriptions/${data.subscriptionId}/name`]: data.subscriptionName,
+    [`users_private/${uid}/subscriptions/${data.subscriptionId}/created`]: data.created,
+    [`users_private/${uid}/subscriptions/${data.subscriptionId}/amount`]: data.amount,
+  };
+
+  return db
+    .ref()
+    .update(updates)
+    .then(() =>
+      db.ref(`users/${uid}/subscriptions/${data.subscriptionId}`).update({
+        plan,
+        name: data.subscriptionName,
+        created: data.created,
+        amount: data.amount,
+      }))
+    .then(() => db.ref(`users/${uid}`).once('value'))
+    .then(snapshot => {
+      return snapshot.val();
+    })
+    .catch(err => {
+      console.log('error upgrading: ', err);
+    });
+};
+
+export const deleteSubscription = (uid, subscriptionId) => {
+  const db = database();
+
+  return db
+    .ref(`/users_private/${uid}/subscriptions/${subscriptionId}`)
+    .remove()
+    .then(() =>
+      db.ref(`/users/${uid}/subscriptions/${subscriptionId}`).remove())
+    .then(() => db.ref(`/users/${uid}`).once('value'))
+    .then(snapshot => {
+      return snapshot.val();
+    })
+    .catch(err => {
+      console.log('error downgrading: ', err);
+    });
+};
