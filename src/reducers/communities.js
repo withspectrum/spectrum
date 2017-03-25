@@ -13,18 +13,26 @@ export default function communities(state = initialState, action) {
       )
         return state;
       return {
+        ...state,
         communities: state.communities.concat([action.community]),
       };
     case 'SET_COMMUNITIES':
       return {
+        ...state,
         communities: action.communities,
       };
     case 'SET_ACTIVE_COMMUNITY':
       let communities = state.communities;
-      if (action.community) {
+      if (
+        action.community &&
+        !state.communities.find(
+          community => community.id === action.community.id,
+        )
+      ) {
         communities.push(action.community);
       }
       return {
+        ...state,
         active: action.slug,
         communities,
       };

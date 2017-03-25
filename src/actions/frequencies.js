@@ -24,7 +24,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   });
 
   dispatch({ type: 'LOADING' });
-  const { user: { uid } } = getState();
+  const { user: { uid }, communities: { active } } = getState();
   // Notifications
   if (lowerCaseFrequency === 'notifications') {
     if (!uid) return;
@@ -56,9 +56,10 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
       });
     return;
   }
+  if (!active) return;
   track('frequency', 'viewed', null);
   // Get the frequency
-  getFrequency({ slug: lowerCaseFrequency })
+  getFrequency({ slug: lowerCaseFrequency, communitySlug: active })
     .then(data => Promise.all([data, getCommunity({ id: data.community })]))
     .then(([data, community]) => {
       dispatch({
@@ -76,7 +77,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
       // If it's a private frequency, don't even get any stories
       if (data && data.settings.private && (!freqs || !freqs[data.id]))
         return [];
-      return getStories({ frequencySlug: lowerCaseFrequency });
+      return getStories({ frequencyId: data.id });
     })
     .then(stories => {
       if (!stories) {

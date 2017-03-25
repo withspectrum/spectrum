@@ -141,53 +141,56 @@ class NavigationMaster extends Component {
 
           {user.uid &&
             frequencies &&
-            Object.keys(frequencies).map(community => (
-              <div key={`nav-community-${community}`}>
-                <P>{communities.find(comm => comm.id === community).name}</P>
-                <div>
-                  {frequencies[community].map((frequency, i) => {
-                    // If there's any unread notification for this frequency
-                    // show a dirty dot
-                    const notif = notifications.find(notification => {
-                      if (notification.ids.frequency !== frequency.id)
-                        return false;
-                      if (!frequency.stories || !notification.ids.story)
+            Object.keys(frequencies).map(community => {
+              const comm = communities.find(comm => comm.id === community);
+              return (
+                <div key={`nav-community-${community}`}>
+                  <P>{comm ? comm.name : 'Loading...'}</P>
+                  <div>
+                    {frequencies[community].map((frequency, i) => {
+                      // If there's any unread notification for this frequency
+                      // show a dirty dot
+                      const notif = notifications.find(notification => {
+                        if (notification.ids.frequency !== frequency.id)
+                          return false;
+                        if (!frequency.stories || !notification.ids.story)
+                          return true;
+                        const storyData = frequency.stories[
+                          notification.ids.story
+                        ];
+                        if (storyData && storyData.deleted) return false;
                         return true;
-                      const storyData = frequency.stories[
-                        notification.ids.story
-                      ];
-                      if (storyData && storyData.deleted) return false;
-                      return true;
-                    });
-                    return (
-                      <Link
-                        to={
-                          `/${communities.find(
-                            comm => comm.id === community,
-                          ).slug}/~${frequency.slug || frequency.id}`
-                        }
-                        key={`nav-frequency-${frequency.id}`}
-                      >
-                        <Freq
-                          active={
-                            frequency.slug &&
-                              frequency.slug === activeFrequency ||
-                              frequency.id && frequency.id === activeFrequency
+                      });
+                      return (
+                        <Link
+                          to={
+                            `/${comm
+                              ? comm.slug
+                              : community}/~${frequency.slug || frequency.id}`
                           }
-                          onClick={this.showStoriesNav}
+                          key={`nav-frequency-${frequency.id}`}
                         >
-                          <FlexRow center>
-                            <Icon icon="frequency" reverse static />
-                            <FreqLabel>{frequency.name}</FreqLabel>
-                          </FlexRow>
-                          {notif && !notif.read && <DirtyDot />}
-                        </Freq>
-                      </Link>
-                    );
-                  })}
+                          <Freq
+                            active={
+                              frequency.slug &&
+                                frequency.slug === activeFrequency ||
+                                frequency.id && frequency.id === activeFrequency
+                            }
+                            onClick={this.showStoriesNav}
+                          >
+                            <FlexRow center>
+                              <Icon icon="frequency" reverse static />
+                              <FreqLabel>{frequency.name}</FreqLabel>
+                            </FlexRow>
+                            {notif && !notif.read && <DirtyDot />}
+                          </Freq>
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
           {/* {user.uid &&
             <Button onClick={this.createFrequency}>

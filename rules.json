@@ -74,7 +74,7 @@
       }
     },
     "frequencies": {
-      ".indexOn": ["id", "slug"],
+      ".indexOn": ["id", "slug", "communityId"],
       ".read": true,
       "$id": {
         // Make sure all the necessary fields exist

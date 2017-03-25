@@ -1,4 +1,6 @@
 import database from 'firebase/database';
+import { getCommunity } from './communities';
+import { hashToArray } from '../helpers/utils';
 
 const getFrequencyById = id => {
   const db = database();
@@ -9,18 +11,24 @@ const getFrequencyById = id => {
     .then(snapshot => snapshot.val());
 };
 
-const getFrequencyBySlug = slug => {
+const getFrequencyBySlug = (slug, communityId) => {
   const db = database();
+
+  if (!communityId)
+    throw new Error(
+      'To get a frequency by slug you also need to pass the community it belongs to.',
+    );
 
   return db
     .ref(`frequencies`)
-    .orderByChild('slug')
-    .equalTo(slug)
+    .orderByChild('community')
+    .equalTo(communityId)
     .once('value')
     .then(snapshot => {
       const frequencies = snapshot.val();
-      // We assume there is only one frequency with a given slug
-      return frequencies[Object.keys(frequencies)[0]];
+      return hashToArray(frequencies).find(
+        frequency => frequency.slug === slug,
+      );
     });
 };
 
@@ -29,9 +37,12 @@ const getFrequencyBySlug = slug => {
  *
  * Returns a Promise which resolves with the data
  */
-export const getFrequency = ({ id, slug }) => {
+export const getFrequency = ({ id, slug, communitySlug } = {}) => {
   if (id) return getFrequencyById(id);
-  if (slug) return getFrequencyBySlug(slug);
+  if (slug)
+    return getCommunity({
+      slug: communitySlug,
+    }).then(community => getFrequencyBySlug(slug, community.id));
   return Promise.resolve({});
 };
 
