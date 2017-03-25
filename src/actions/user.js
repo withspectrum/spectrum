@@ -1,7 +1,13 @@
 import { set, track } from '../EventTracker';
-import { createUser } from '../db/users';
+import {
+  createUser,
+  getPrivateUser,
+  createSubscription,
+  deleteSubscription,
+} from '../db/users';
 import { signInWithTwitter, signOut as logOut } from '../db/auth';
 import { monitorUser, stopUserMonitor } from '../helpers/users';
+import { apiURL } from '../config/api';
 
 /**
  * Firebase creates one "Authentication" record when a user signs up.
@@ -58,4 +64,127 @@ export const signOut = () => dispatch => {
       console.log('Error signing out: ', err);
     },
   );
+};
+
+/**
+ * checkStatus and parseJSON are used when upgrading and downgrading users to parse
+ * responses from the firebase cloud function
+ */
+function checkStatus(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  } else {
+    var error = new Error(response.statusText);
+    error.response = response;
+    throw error;
+  }
+}
+
+function parseJSON(response) {
+  return response.json();
+}
+
+/**
+ * Upgrade user takes a token and writes it to the users_private object in firebase. This write
+ * triggers a cloud function which will parse the token to create a customer in Stripe,
+ * and then immediately create a new subscription for that customer
+ */
+export const upgradeUser = (token, plan) => (dispatch, getState) => {
+  const uid = getState().user.uid;
+
+  track('upgrade', 'payment inited', null);
+
+  dispatch({
+    type: 'LOADING',
+  });
+
+  fetch(`${apiURL}/payments-createSubscription`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `token=${JSON.stringify(token)}&plan=${plan}`,
+  })
+    .then(checkStatus)
+    .then(parseJSON)
+    .then(data => {
+      createSubscription(data, uid, plan).then(user => {
+        track('upgrade', 'payment completed', null);
+
+        dispatch({
+          type: 'UPGRADE_USER',
+          user,
+        });
+
+        dispatch({
+          type: 'STOP_LOADING',
+        });
+      });
+    })
+    .catch(error => {
+      if (error) {
+        dispatch({
+          type: 'SET_UPGRADE_ERROR',
+          error: error,
+        });
+
+        dispatch({
+          type: 'STOP_LOADING',
+        });
+      }
+    });
+};
+
+/**
+ * Because a user may have multiple subscriptions, we need to know which one to delete
+ * in the database. We pass a subscription ID to a cloud function endpoint, delete the
+ * subscription in stripe, then when successful, we delete the subscription data from the
+ * user and user_private objects.
+ */
+export const downgradeUser = subscriptionId => (dispatch, getState) => {
+  const user = getState().user;
+
+  track('downgrade', 'inited', null);
+
+  dispatch({
+    type: 'LOADING',
+  });
+
+  // if somehow a user triggers this without being on a paid plan, return
+  if (!user.subscriptions) return;
+
+  fetch(`${apiURL}/payments-deleteSubscription`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: `subscriptionId=${subscriptionId}`,
+  })
+    .then(checkStatus)
+    .then(parseJSON)
+    .then(data => {
+      deleteSubscription(user.uid, subscriptionId).then(user => {
+        track('downgrade', 'complete', null);
+
+        dispatch({
+          type: 'DOWNGRADE_USER',
+          user,
+        });
+
+        dispatch({
+          type: 'STOP_LOADING',
+        });
+      });
+    })
+    .catch(error => {
+      if (error) {
+        console.log('error downgrading: ', error);
+
+        dispatch({
+          type: 'STOP_LOADING',
+        });
+      }
+    });
 };
