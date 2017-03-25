@@ -28,13 +28,13 @@ export const Input = styled(Textarea)`
 	flex: 1 0 auto;
 	font-size: 14px;
 	font-weight: 500;
-	line-height: 24px;
+	line-height: 20px;
+	max-height: 120px;
 	min-height: 40px;
-	padding: 8px;
-	padding-left: 40px;
+	padding: 8px 40px;
 	border-radius: 24px;
 	border: 2px solid ${props => props.theme.text.placeholder};
-	transition: border-color 0.3s ease-out;
+	transition: border 0.3s ease-out;
 	color: ${props => props.theme.text.default};
 
 	@media (max-width: 768px) {
@@ -50,7 +50,7 @@ export const Input = styled(Textarea)`
 
 	&:focus {
 		border-color: ${props => props.theme.brand.default};
-		transition: ${Transition.hover.on};
+		transition: border-color 0.2s ease-in;
 
 		&:hover {
 			border-color: ${props => props.theme.brand.default};
@@ -59,13 +59,13 @@ export const Input = styled(Textarea)`
 
 	&:hover {
 		border-color: ${props => props.theme.text.alt};
-		transition: ${Transition.hover.on};
+		transition: border-color 0.2s ease-in;
 	}
 `;
 
 export const SendButton = styled(IconButton)`
 	position: absolute;
-	right: 10px;
+	right: 8px;
 	background-color: transparent;
 	transition: ${Transition.hover.off};
 `;
@@ -97,7 +97,7 @@ export const MediaLabel = styled.label`
 
 export const EmojiToggle = styled(IconButton)`
 	position: absolute;
-	left: 50px;
+	left: 48px;
 	background-color: transparent;
 	@media (max-width: 768px) {
 		display: none;
