@@ -166,12 +166,15 @@ class Chat extends Component {
                             __html: this.formatMessage(message.message.content),
                           }}
                         />
-                        {!emojiOnly &&
+                        {emojiOnly ||
                           <Reaction
                             hasCount={reactionCount}
                             active={userHasReacted}
                             me={itsaMe}
-                            hide={itsaMe && reactionCount === 0}
+                            hide={
+                              (itsaMe || this.props.user.uid === null) &&
+                                reactionCount === 0
+                            }
                             onClick={
                               itsaMe
                                 ? () => this.doNothing
@@ -209,7 +212,10 @@ class Chat extends Component {
                           hasCount={reactionCount}
                           active={userHasReacted}
                           me={itsaMe}
-                          hide={itsaMe && reactionCount === 0}
+                          hide={
+                            (itsaMe || this.props.user.uid) &&
+                              reactionCount === 0
+                          }
                           onClick={
                             itsaMe
                               ? () => this.doNothing
