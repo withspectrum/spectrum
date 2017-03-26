@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { subscribeFrequency } from '../../actions/frequencies';
 import { isStoryCreator, getStoryPermission } from '../../helpers/stories';
 import { getCurrentFrequency } from '../../helpers/frequencies';
+import { throttle } from '../../helpers/utils';
 import { LoginButton } from '../MiddleColumn/style';
 import { login } from '../../actions/user';
 import history from '../../helpers/history';
@@ -27,6 +28,30 @@ import {
 } from './style';
 
 class RightColumn extends Component {
+  constructor() {
+    super();
+
+    this.onScroll = throttle(this.onScroll, 500);
+
+    this.state = {
+      atBottom: false,
+    };
+  }
+
+  componentDidMount = () => {
+    if (!this.comp) return;
+    let node = this.comp;
+    if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
+      this.setState({
+        atBottom: true,
+      });
+    } else {
+      this.setState({
+        atBottom: false,
+      });
+    }
+  };
+
   getActiveStory = () => {
     const { stories: { stories, active } } = this.props;
     if (!stories || stories.length === 0) return;
@@ -49,6 +74,20 @@ class RightColumn extends Component {
     let node = this.comp;
 
     node.scrollTop = node.scrollHeight - node.clientHeight;
+  };
+
+  onScroll = () => {
+    if (!this.comp) return;
+    let node = this.comp;
+    if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
+      this.setState({
+        atBottom: true,
+      });
+    } else {
+      this.setState({
+        atBottom: false,
+      });
+    }
   };
 
   subscribeFrequency = () => {
@@ -103,6 +142,7 @@ class RightColumn extends Component {
           <StoryChatContainer
             innerRef={comp => this.comp = comp}
             locked={story.locked}
+            onScroll={this.onScroll}
           >
             <Story story={story} frequency={currentFrequency} active={active} />
             <ActionBar
@@ -112,6 +152,8 @@ class RightColumn extends Component {
               story={story}
             />
             <Chat
+              atBottom={this.state.atBottom}
+              forceScrollToBottom={this.forceScrollToBottom}
               contextualScrollToBottom={this.contextualScrollToBottom}
               story={story}
             />

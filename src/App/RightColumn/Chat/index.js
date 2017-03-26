@@ -16,6 +16,7 @@ import {
   Avatar,
   HiddenLabel,
   Timestamp,
+  ScrollButton,
 } from './style';
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
@@ -38,6 +39,10 @@ class Chat extends Component {
 
   openGallery = e => {
     this.props.dispatch(openGallery(e));
+  };
+
+  forceScroll = () => {
+    this.props.forceScrollToBottom();
   };
 
   formatMessage(message) {
@@ -228,7 +233,15 @@ class Chat extends Component {
             </BubbleGroup>
           );
         })}
-
+        {messages &&
+          messages.length > 20 &&
+          <ScrollButton
+            atBottom={this.props.atBottom}
+            onClick={this.forceScroll}
+          >
+            <Icon icon="scroll-bottom" reverse static />
+            <span>Jump to latest</span>
+          </ScrollButton>}
       </ChatContainer>
     );
   }
