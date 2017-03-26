@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { Gradient, Tooltip, Transition } from '../../../shared/Globals';
+import styled, { keyframes } from 'styled-components';
+import { Gradient, Tooltip, Transition, Button } from '../../../shared/Globals';
 
 export const ChatContainer = styled.div`
 	flex: 1 0 auto;
@@ -50,7 +50,7 @@ export const Reaction = styled.b`
 	padding: ${props => props.hasCount ? '0 10px 0 6px' : '0'};
 	display: flex;
 	flex-direction: flex-row;
-	transition: ${Transition.hover.off};
+	transition: ${Transition.reaction.on};
 	display: ${props => props.hide ? 'none' : 'auto'};
 
 	i { /* count */
@@ -72,7 +72,7 @@ export const Reaction = styled.b`
 
 	svg, i {
 		transform: ${props => props.hasCount ? 'scale(1)' : 'scale(0)'};
-		transition: ${Transition.hover.off};
+		transition: ${Transition.reaction.off};
 	}
 
 	&:hover {
@@ -323,4 +323,30 @@ export const ProBadge = styled(AdminBadge)`
 	cursor: pointer;
 	text-transform: none;
 	${props => props.tipText ? Tooltip(props) : ''};
+`;
+
+export const ScrollButton = styled(Button)`
+	background-color: ${({ theme }) => theme.warn.alt};
+	background-image: ${({ theme }) =>
+  Gradient(theme.warn.alt, theme.warn.default)};
+	align-self: center;
+	justify-content: center;
+	display: flex;
+	opacity: ${props => props.atBottom ? '0' : '1'};
+	pointer-events: ${props => props.atBottom ? 'none' : 'auto'};
+	padding: 4px;
+	position: absolute;
+	bottom: 72px;
+	transition: opacity 0.2s ease-out;
+
+	> span {
+		height: 100%;
+		line-height: 32px;
+		padding: 0 12px 0 8px;
+		vertical-align: middle;
+		font-weight: 700;
+		display: inline-block;
+	}
+
+
 `;
