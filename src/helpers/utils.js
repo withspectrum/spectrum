@@ -154,6 +154,30 @@ export const debounce = (func, wait, immediate) => {
   };
 };
 
+export const throttle = (func, threshhold, scope) => {
+  threshhold || (threshhold = 250);
+  let last, deferTimer;
+  return function() {
+    let context = scope || this;
+
+    let now = +new Date(), args = arguments;
+    if (last && now < last + threshhold) {
+      // hold on to it
+      clearTimeout(deferTimer);
+      deferTimer = setTimeout(
+        function() {
+          last = now;
+          func.apply(context, args);
+        },
+        threshhold,
+      );
+    } else {
+      last = now;
+      func.apply(context, args);
+    }
+  };
+};
+
 // This regex matches every string with any emoji in it, not just strings that only have emojis
 const originalEmojiRegex = createEmojiRegex();
 // Make sure we match strings that only contain emojis (and whitespace)
