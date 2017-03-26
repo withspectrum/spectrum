@@ -1,6 +1,6 @@
 let fbConfig;
 
-if (process.env.NODE_ENV !== 'development') {
+if (process.env.NODE_ENV === 'development') {
   console.log('DEVELOPMENT');
   fbConfig = {
     API_KEY: 'AIzaSyDInfEkjxBnHpXKrP-ex7rxaGdTFVW3AJY',
