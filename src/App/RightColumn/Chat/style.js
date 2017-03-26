@@ -50,7 +50,7 @@ export const Reaction = styled.b`
 	padding: ${props => props.hasCount ? '0 10px 0 6px' : '0'};
 	display: flex;
 	flex-direction: flex-row;
-	transition: ${Transition.hover.off};
+	transition: ${Transition.reaction.on};
 	display: ${props => props.hide ? 'none' : 'auto'};
 
 	i { /* count */
@@ -72,7 +72,7 @@ export const Reaction = styled.b`
 
 	svg, i {
 		transform: ${props => props.hasCount ? 'scale(1)' : 'scale(0)'};
-		transition: ${Transition.hover.off};
+		transition: ${Transition.reaction.off};
 	}
 
 	&:hover {

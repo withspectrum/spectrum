@@ -18,6 +18,10 @@ export const Transition = {
     on: 'all 0.2s ease-in',
     off: 'all 0.3s ease-out',
   },
+  reaction: {
+    on: 'all 0.15s ease-in',
+    off: 'all 0.1s ease-out',
+  },
 };
 
 export const fontStack = css`
