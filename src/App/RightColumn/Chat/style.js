@@ -350,6 +350,7 @@ export const ScrollButton = styled(Button)`
 	}
 
 	@media (max-width: 768px) {
+		display: inline-block;
 		bottom: 72px;
 	}
 
