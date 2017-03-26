@@ -337,6 +337,7 @@ export const ScrollButton = styled(Button)`
 	padding: 4px;
 	position: absolute;
 	bottom: 72px;
+	left: calc(50% - 76px);
 	transition: opacity 0.2s ease-out;
 
 	> span {
@@ -346,6 +347,10 @@ export const ScrollButton = styled(Button)`
 		vertical-align: middle;
 		font-weight: 700;
 		display: inline-block;
+	}
+
+	@media (max-width: 768px) {
+		bottom: 72px;
 	}
 
 
