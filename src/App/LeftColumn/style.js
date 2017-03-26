@@ -30,6 +30,7 @@ export const Avatar = styled.img`
   height: 32px;
   flex: 0 0 32px;
   border-radius: 8px;
+  align-self: flex-start;
 `;
 
 export const MetaWrapper = styled.div`
@@ -39,12 +40,13 @@ export const MetaWrapper = styled.div`
 `;
 
 export const Name = styled(H3)`
-  font-size: 16px;
-  line-height: 16px;
+  font-size: 14px;
+  line-height: 18px;
   color: ${({ theme }) => theme.text.reverse};
   font-weight: 500;
-  margin-top: 2px;
-  margin-bottom: 4px;
+  margin-top: 0;
+  margin-bottom: 2px;
+  position: relative;
 `;
 
 export const P = styled.p`
@@ -53,6 +55,7 @@ export const P = styled.p`
   line-height: 12px;
   color: ${({ theme }) => theme.text.alt};
   font-weight: 500;
+  flex-direction: column;
 
   + p {
     margin-top: 8px;
@@ -76,7 +79,17 @@ const linkStyles = css`
 
 export const MetaLink = styled(Link)`${linkStyles}`;
 
-export const MetaAnchor = styled.a`${linkStyles}`;
+export const MetaAnchor = styled.a`
+  ${linkStyles}
+  ${props =>
+  props.pro
+    ? 'color: #02AAFA; background-image: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'
+    : ''};
+`;
+
+export const Username = styled.span`
+  margin-bottom: 4px;
+`;
 
 export const FreqList = styled.div`
   list-style: none;
@@ -213,4 +226,18 @@ export const DirtyDot = styled.div`
   color: white;
   font-size: 10px;
   padding: 0 ${props => props.children ? '8px' : ''};
+`;
+
+export const ProBadge = styled.span`
+  background: #00C384;
+  background-image: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%);
+  position: relative;
+  margin-left: 8px;
+  top: -2px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 4px;
+  border-radius: 4px;
+  line-height: 1.5;
 `;

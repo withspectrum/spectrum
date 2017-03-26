@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient, Tooltip } from '../../../shared/Globals';
+import { Gradient, Tooltip, Transition } from '../../../shared/Globals';
 
 export const ChatContainer = styled.div`
 	flex: 1 0 auto;
@@ -37,34 +37,31 @@ export const Reaction = styled.b`
 	border-radius: ${props => props.hasCount ? '24px' : '8px'};
 
 	${props => props.hasCount
-  ? `background: ${props.active
+  ? `background-color: ${props.active
       ? props.theme.warn.default
       : props.theme.text.alt};
-			 background-image: ${props.active
+		background-image: ${props.active
       ? Gradient(props.theme.warn.alt, props.theme.warn.default)
-      : Gradient(props.theme.text.alt, props.theme.text.alt)}
+      : 'none'}
 			`
-  : `background: ${props.theme.border.default};
-			 background-image: ${Gradient(
-      props.theme.border.default,
-      props.theme.border.default,
-    )}
-			`}
+  : `background-color: ${props.theme.border.default};
+		background-image: none;`}
 
 	padding: ${props => props.hasCount ? '0 10px 0 6px' : '0'};
 	display: flex;
 	flex-direction: flex-row;
-	transition: all 0.15s ease-in-out;
+	transition: ${Transition.hover.off};
 	display: ${props => props.hide ? 'none' : 'auto'};
 
 	i { /* count */
 		position: relative;
 		transform: ${props => props.hasCount ? 'translateX(0)' : 'translateX(-16px)'};
 		opacity: ${props => props.hasCount ? '1' : '0'};
-		padding-left: 6px;
+		padding-left: 4px;
 		line-height: 1.74;
 		vertical-align: middle;
 		font-style: normal;
+		font-weight: 600;
 	}
 
 	div {
@@ -75,7 +72,7 @@ export const Reaction = styled.b`
 
 	svg, i {
 		transform: ${props => props.hasCount ? 'scale(1)' : 'scale(0)'};
-		transition: all 0.15s ease-in-out;
+		transition: ${Transition.hover.off};
 	}
 
 	&:hover {
@@ -100,13 +97,13 @@ export const Reaction = styled.b`
 
 		svg, i {
 			transform: scale(1);
-			transition: all 0.1s ease-in-out;
+			transition: ${Transition.hover.on};
 		}
 	}
 
 	&:active {
 		transform: scale(0.9);
-		transition: all 0.1s eas-in-out;
+		transition: ${Transition.hover.off};
 	}
 `;
 
@@ -317,4 +314,13 @@ export const AdminBadge = styled.span`
 	font-size: 9px;
 	font-weight: 800;
 	border-radius: 4px;
+`;
+
+export const ProBadge = styled(AdminBadge)`
+	background: #00C384;
+	padding: 2px 3px 2px 4px;
+	background-image: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%);
+	cursor: pointer;
+	text-transform: none;
+	${props => props.tipText ? Tooltip(props) : ''};
 `;

@@ -7,11 +7,14 @@ import Icon from '../../shared/Icons';
 import { FlexRow } from '../../shared/Globals';
 import { groupBy } from '../../helpers/utils';
 import { setActiveFrequency } from '../../actions/frequencies';
+import { track } from '../../EventTracker';
+import { ACTIVITY_TYPES } from '../../db/types';
 import {
   Column,
   Header,
   HeaderLogo,
   Avatar,
+  Username,
   MetaWrapper,
   MetaAnchor,
   P,
@@ -28,6 +31,7 @@ import {
   Button,
   FreqText,
   DirtyDot,
+  ProBadge,
 } from './style';
 
 class NavigationMaster extends Component {
@@ -74,6 +78,15 @@ class NavigationMaster extends Component {
     });
   };
 
+  showUpgradeModal = () => {
+    track('upgrade', 'inited', 'nav profile');
+    this.props.dispatch(openModal('UPGRADE_MODAL', this.props.user));
+  };
+
+  showEditAccountModal = () => {
+    this.props.dispatch(openModal('EDIT_ACCOUNT_MODAL', this.props.user));
+  };
+
   render() {
     const {
       notifications,
@@ -93,9 +106,18 @@ class NavigationMaster extends Component {
           ? <Header>
               <Avatar src={user.photoURL} title={user.displayName} />
               <MetaWrapper>
-                <Name>{user.displayName}</Name>
+                <Name>
+                  {user.displayName}
+                  {user.subscriptions && <ProBadge>PRO</ProBadge>}
+                </Name>
                 <P>
-                  <MetaAnchor onClick={this.signOut}>Sign Out</MetaAnchor>
+                  {user.subscriptions
+                    ? <MetaAnchor onClick={this.showEditAccountModal}>
+                        My Account
+                      </MetaAnchor>
+                    : <MetaAnchor pro onClick={this.showUpgradeModal}>
+                        Upgrade to Pro
+                      </MetaAnchor>}
                 </P>
               </MetaWrapper>
             </Header>
@@ -118,7 +140,7 @@ class NavigationMaster extends Component {
                   </FreqText>
                 </Freq>
               </Link>
-              <Link to={`/notifications`}>
+              {/*<Link to={`/notifications`}>
                 <Freq
                   active={activeFrequency === 'notifications'}
                   onClick={this.showStoriesNav}
@@ -129,7 +151,8 @@ class NavigationMaster extends Component {
                   </FlexRow>
                   {unread > 0 && <DirtyDot>{unread}</DirtyDot>}
                 </Freq>
-              </Link>
+              </Link>*/
+              }
             </div>}
           {!loaded &&
             <Freq>
@@ -151,6 +174,12 @@ class NavigationMaster extends Component {
                       // If there's any unread notification for this frequency
                       // show a dirty dot
                       const notif = notifications.find(notification => {
+                        // Only show a dirty dot for new messages
+                        if (
+                          notification.activityType !==
+                          ACTIVITY_TYPES.NEW_MESSAGE
+                        )
+                          return false;
                         if (notification.ids.frequency !== frequency.id)
                           return false;
                         if (!frequency.stories || !notification.ids.story)
@@ -202,12 +231,13 @@ class NavigationMaster extends Component {
         <Footer>
           <FooterP onClick={this.showStoriesNav}>
             <MetaLink to="/~support">Support</MetaLink>&nbsp;·&nbsp;
-            <MetaLink to="/~hugs-n-bugs">Report Bugs</MetaLink>
+            <MetaLink to="/~hugs-n-bugs">Report Bugs</MetaLink>&nbsp;·&nbsp;
+            <MetaAnchor href="mailto:hi@spectrum.chat">Contact</MetaAnchor>
           </FooterP>
           <FooterP onClick={this.showStoriesNav}>
             <MetaLink to="/~feature-requests">Feature Requests</MetaLink>
             &nbsp;·&nbsp;
-            <MetaAnchor href="mailto:hi@spectrum.chat">Contact</MetaAnchor>
+            <MetaAnchor onClick={this.signOut}>Sign Out</MetaAnchor>
           </FooterP>
           <FooterP>© 2017 Space Program, Inc.</FooterP>
         </Footer>

@@ -46,7 +46,7 @@ export const Button = styled.button`
 		opacity: ${props => props.disabled ? '0.5' : '1'};
 		transition: ${Transition.hover.on};
 		cursor: pointer;
-    box-shadow: ${Shadow.high};
+    box-shadow: ${props => props.disabled ? 'none' : Shadow.high};
 	}
 `;
 
@@ -68,7 +68,7 @@ export const TextButton = styled(Button)`
 		border-radius: ${props => props.border ? '12px' : '8px'};
     color: ${props => props.color ? props.color : props.theme.warn.alt};
 		background-color: ${({ theme }) => theme.bg.default};
-    box-shadow: ${Shadow.high};
+    box-shadow: none;
     transition: ${Transition.hover.on};
 	}
 `;

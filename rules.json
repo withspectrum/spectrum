@@ -280,6 +280,9 @@
       "$user": {
         ".read": "auth.uid === $user",
         ".write": "auth.uid === $user",
+        "subscriptions": {
+          ".validate": "newData.exists()"
+        },
         "customerId": {
           ".validate": "newData.isString()"
         },
@@ -323,6 +326,10 @@
         "email": {
           ".write": "auth.uid === $user",
           ".validate": "newData.isBoolean()"
+        },
+        "subscriptions": {
+          ".write": "auth.uid === $user",
+          ".validate": "newData.exists()"
         },
         "communities": {
           "$communityId": {

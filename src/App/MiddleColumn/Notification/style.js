@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Shadow, H4, H5, H6, FlexRow, Gradient } from '../../../shared/Globals';
+import { Shadow, H4, H5, FlexRow } from '../../../shared/Globals';
 
 export const Wrapper = styled.div`
   display: inline-block;

@@ -9,6 +9,7 @@ import { LoginButton } from '../MiddleColumn/style';
 import { login } from '../../actions/user';
 import history from '../../helpers/history';
 import Icon from '../../shared/Icons';
+import { Button, H4 } from '../../shared/Globals';
 
 import Story from './Story';
 import ActionBar from './Story/ActionBar';
@@ -22,6 +23,7 @@ import {
   Footer,
   StoryChatContainer,
   BackArrow,
+  LoginWrapper,
 } from './style';
 
 class RightColumn extends Component {
@@ -127,15 +129,19 @@ class RightColumn extends Component {
                 <ChatInput forceScrollToBottom={this.forceScrollToBottom} />}
 
               {!user.uid &&
-                <LoginButton onClick={this.login}>
-                  Sign in with Twitter to chat
-                </LoginButton>}
+                <LoginWrapper center>
+                  <H4>Feel like weighing in?</H4>
+                  <Button onClick={this.login}>Sign in with Twitter</Button>
+                </LoginWrapper>}
 
               {user.uid &&
                 !role &&
-                <LoginButton onClick={this.subscribeFrequency}>
-                  Join ~{this.props.frequencies.active} to chat!
-                </LoginButton>}
+                <LoginWrapper center>
+                  <H4>Feel like weighing in?</H4>
+                  <Button onClick={this.subscribeFrequency}>
+                    Join ~{this.props.frequencies.active}
+                  </Button>
+                </LoginWrapper>}
             </Footer>}
         </ViewContainer>
       );
