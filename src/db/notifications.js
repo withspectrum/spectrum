@@ -42,7 +42,7 @@ export const deleteNotification = (userId, notificationId) => {
   return db.ref(`notifications/${userId}/${notificationId}`).remove();
 };
 
-const UNIQUE = (v, i, a) => a.indexOf(v) === i;
+// const UNIQUE = (v, i, a) => a.indexOf(v) === i;
 
 /**
  * Listen to new notifications
