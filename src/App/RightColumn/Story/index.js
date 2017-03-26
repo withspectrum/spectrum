@@ -41,7 +41,7 @@ class Story extends Component {
     const { story, frequency, communities } = this.props;
     const timestamp = timeDifference(Date.now(), story.timestamp);
     const community = frequency &&
-      communities.find(community => community.id === frequency.community);
+      communities.find(community => community.id === frequency.communityId);
 
     return (
       <StoryContainer>
