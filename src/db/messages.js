@@ -137,6 +137,9 @@ export const createPrivateMessage = (
       [`message_groups/${messageGroupId}/messages/${id}`]: {
         id,
       },
+      [`message_groups/${messageGroupId}/snippet`]: message.type === 'text'
+        ? message.content
+        : 'sent an attachment', // save a snippet of the last text message, or assume a media message
     })
     .then(() => db.ref(`message_groups/${messageGroupId}`).once('value'))
     .then(snapshot => snapshot.val())

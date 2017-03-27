@@ -1,6 +1,95 @@
 import styled from 'styled-components';
 import { H5 } from '../../../shared/Globals';
 
+export const MessageGroupContainer = styled.div`
+	display: flex;
+	flex: 1 1 auto;
+	padding: 8px;
+	align-items: center;
+	box-shadow: inset -4px 0 ${props =>
+  props.active ? props.theme.brand.default : 'transparent'};
+`;
+
+export const MessageGroupImagesContainer = styled.div`
+	display: flex;
+	margin-right: 8px;
+	border: 1px solid ${({ theme }) => theme.border.default};
+	overflow: hidden;
+	min-width: 44px;
+	width: 44px;
+	min-height: 44px;
+	height: 44px;
+	border-radius: 4px;
+`;
+
+export const MessageGroupImage = styled.div`
+	display: flex;
+	width: 100%;
+	background: ${props =>
+  props.loading ? '#eee' : `url(${props.image}) no-repeat`};
+	background-size: cover;
+`;
+
+export const MessageGroupTextContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	flex: 0 1 auto;
+	overflow: hidden;
+`;
+
+export const MessageGroupByline = styled.div`
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+`;
+
+export const Usernames = styled.span`
+	display: flex;
+	flex: 1 1 auto;
+	overflow: hidden;
+	flex-wrap: nowrap;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	color: ${({ theme }) => theme.text.default};
+	font-weight: 600;
+	line-height: 1;
+	margin-bottom: 4px;
+	font-size: 14px;
+	flex: 1 1 100%;
+
+	p {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		max-width: 100%;
+	}
+`;
+
+export const Timestamp = styled.span`
+	font-size: 10px;
+	text-transform: uppercase;
+	color: ${({ theme }) => theme.text.alt};
+	padding-right: 4px;
+	display: inline-block;
+	line-height: 1;
+	flex: 1 0 auto;
+	margin-left: 8px;
+`;
+
+export const Snippet = styled.p`
+	font-size: 12px;
+	color: ${({ theme }) => theme.text.alt};
+	padding-right: 4px;
+	display: inline-block;
+	line-height: 1;
+	margin-top: 4px;
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+`;
+
 export const StoryBody = styled.div`
 	display: inline-block;
 	font-size: 16px;

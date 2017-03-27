@@ -86,8 +86,6 @@ class Chat extends Component {
     let { messages, user: { list } } = this.props;
     if (!messages) return <span />;
 
-    console.log('in chat view ', this.props);
-
     return (
       <ChatContainer>
         {messages.map((group, i) => {

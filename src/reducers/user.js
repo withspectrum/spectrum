@@ -55,6 +55,7 @@ export default function root(state = initialState, action) {
       };
     case 'ADD_STORIES':
     case 'ADD_MESSAGES':
+    case 'ADD_USERS_TO_LIST':
       return {
         ...state,
         list: {
