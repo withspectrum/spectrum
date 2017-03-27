@@ -337,7 +337,8 @@ export const ScrollButton = styled(Button)`
 	padding: 4px;
 	position: absolute;
 	bottom: 72px;
-	left: calc(50% - 76px);
+	left: 50%;
+	transform: translateX(-50%);
 	transition: opacity 0.2s ease-out;
 
 	> span {
