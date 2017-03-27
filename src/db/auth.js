@@ -19,7 +19,6 @@ export const signInWithTwitter = () => new Promise((resolve, reject) => {
   const twitter = new auth.TwitterAuthProvider();
 
   return signIn(twitter).then(user => {
-    console.log('user');
     resolve(user);
   });
 });
