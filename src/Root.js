@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setActiveFrequency } from './actions/frequencies';
+import { setActiveMessageGroup } from './actions/messageGroups';
 import { setActiveStory } from './actions/stories';
 import { addNotification } from './actions/notifications';
 import { asyncComponent } from './helpers/utils';
@@ -12,6 +13,7 @@ import LoadingIndicator from './shared/loading/global';
 import { getUserInfo } from './db/users';
 import { listenToAuth } from './db/auth';
 import { getFrequency } from './db/frequencies';
+import { getMessageGroup } from './db/messageGroups';
 import { listenToNewNotifications } from './db/notifications';
 import { set, track } from './EventTracker';
 import { monitorUser, stopUserMonitor } from './helpers/users';
@@ -32,7 +34,12 @@ class Root extends Component {
   componentWillMount() {
     // On the initial render of the app we authenticate the user
     const { dispatch, match } = this.props;
-    this.handleProps({ frequencies: {}, stories: {}, match });
+    this.handleProps({
+      frequencies: {},
+      stories: {},
+      match,
+      messageGroups: {},
+    });
     // Authenticate the user
     listenToAuth(user => {
       if (!user) {
@@ -60,21 +67,37 @@ class Root extends Component {
               type: 'USER_NOT_AUTHENTICATED',
             });
           }
+
           dispatch({
             type: 'SET_USER',
             user: userData,
           });
-          return userData.frequencies;
+
+          const frequencyKeys = Object.keys(userData.frequencies);
+          const messageGroupsKeys = Object.keys(userData.messageGroups);
+
+          const frequencyData = Promise.all(
+            frequencyKeys.map(key => getFrequency({ id: key })),
+          );
+          const messageGroupsData = frequencyData.then(frequencies => {
+            return Promise.all(
+              messageGroupsKeys.map(key => getMessageGroup(key)),
+            );
+          });
+
+          return Promise.all([frequencyData, messageGroupsData]);
         })
-        // Load the users frequencies
-        .then(frequencies => {
-          const keys = Object.keys(frequencies);
-          return Promise.all(keys.map(key => getFrequency({ id: key })));
-        })
-        .then(frequencies => {
+        .then(data => {
+          // data[0] => frequencies
+          // data[1] => messageGroups
           dispatch({
             type: 'SET_FREQUENCIES',
-            frequencies,
+            frequencies: data[0],
+          });
+
+          dispatch({
+            type: 'SET_MESSAGE_GROUPS',
+            messageGroups: data[1],
           });
         });
     });
@@ -85,7 +108,13 @@ class Root extends Component {
   }
 
   handleProps = nextProps => {
-    const { dispatch, match: { params }, frequencies, stories } = this.props;
+    const {
+      dispatch,
+      match: { params },
+      frequencies,
+      stories,
+      messageGroups,
+    } = this.props;
     // If the frequency changes or we've finished loading the frequencies sync the active frequency to the store and load the stories
     if (
       nextProps.frequencies.loaded !== frequencies.loaded ||
@@ -96,8 +125,21 @@ class Root extends Component {
       );
     }
 
-    // If the story changes sync the active story to the store and load the messages
     if (
+      nextProps.match.params.frequency === 'messages' ||
+      params.frequency === 'messages'
+    ) {
+      // we are viewing messages
+      if (
+        nextProps.stories.loaded !== stories.loaded ||
+        nextProps.match.params.story !== params.story
+      ) {
+        // and have clicked into a specific thread
+        // so we need to fetch message_groups data, not story data
+        dispatch(setActiveMessageGroup(nextProps.match.params.story));
+      }
+    } else if (
+      // we aren't viewing messages, we can safely assume we are viewing stories
       nextProps.stories.loaded !== stories.loaded ||
       nextProps.match.params.story !== params.story
     ) {
@@ -122,4 +164,5 @@ export default connect(state => ({
   user: state.user || {},
   frequencies: state.frequencies || {},
   stories: state.stories || {},
+  messageGroups: state.messageGroups || {},
 }))(Root);

@@ -5,7 +5,6 @@ admin.initializeApp(functions.config().firebase);
 exports.emailNotifications = functions.database
   .ref('/notifications/{userId}')
   .onWrite(event => {
-    console.log(event.data.val());
     return event.data.val();
   });
 exports.shortener = require('./sp.chat.js');

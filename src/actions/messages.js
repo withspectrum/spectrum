@@ -1,6 +1,8 @@
 import {
   createMessage,
+  createPrivateMessage,
   getMessageKey,
+  getPrivateMessageKey,
   createReaction,
   deleteReaction,
 } from '../db/messages';
@@ -11,38 +13,79 @@ import { getCurrentFrequency } from '../helpers/frequencies';
  * Send a message
  */
 export const sendMessage = message => (dispatch, getState) => {
-  const { user, stories, frequencies: { frequencies } } = getState();
-  const storyId = stories.active;
-  const frequencyId = stories.stories.find(
-    story => story.id === stories.active,
-  ).frequencyId;
-  const frequency = getCurrentFrequency(frequencyId, frequencies);
-
-  track(`${message.type} message`, 'sent', null);
-
-  const key = getMessageKey();
-
-  // Show message locally before persisting to server
-  dispatch({
-    type: 'SEND_MESSAGE',
-    message: {
-      userId: user.uid,
-      timestamp: Date.now(),
-      frequencyId: frequency.id,
-      storyId: storyId,
-      id: key,
-      message,
-      persisted: false,
-    },
-  });
-
-  createMessage({
-    storyId,
-    frequency,
+  const {
     user,
-    message,
-    key,
-  });
+    stories,
+    frequencies: { frequencies },
+    messageGroups,
+  } = getState();
+  const storyId = stories.active;
+  const messageGroupId = messageGroups.active;
+
+  if (storyId) {
+    // if the user is sending this message from a story
+    const frequencyId = stories.stories.find(
+      story => story.id === stories.active,
+    ).frequencyId;
+    const frequency = getCurrentFrequency(frequencyId, frequencies);
+
+    track(`${message.type} message`, 'sent', null);
+
+    const key = getMessageKey();
+
+    // Show message locally before persisting to server
+    dispatch({
+      type: 'SEND_MESSAGE',
+      message: {
+        userId: user.uid,
+        timestamp: Date.now(),
+        frequencyId: frequency.id,
+        storyId: storyId,
+        id: key,
+        message,
+        persisted: false,
+      },
+    });
+
+    createMessage({
+      storyId,
+      frequency,
+      user,
+      message,
+      key,
+    });
+  }
+
+  if (messageGroupId) {
+    // if the user is in a private message group
+    const messageGroup = messageGroups.messageGroups.find(
+      messageGroup => messageGroup.id === messageGroupId,
+    );
+
+    track(`messageGroup ${message.type} message`, 'sent', null);
+
+    const key = getPrivateMessageKey();
+
+    // Show message locally before persisting to server
+    dispatch({
+      type: 'SEND_MESSAGE',
+      message: {
+        userId: user.uid,
+        timestamp: Date.now(),
+        messageGroupId: messageGroup.id,
+        id: key,
+        message,
+        persisted: false,
+      },
+    });
+
+    createPrivateMessage({
+      messageGroupId,
+      user,
+      message,
+      key,
+    });
+  }
 };
 
 export const addReaction = messageId => (dispatch, getState) => {

@@ -57,8 +57,8 @@ export const convertTimestampToDate = timestamp => {
 };
 
 export const sortAndGroupBubbles = messages => {
+  console.log('sorting and grouping ', messages);
   if (!messages.length > 0) return [];
-
   let masterArray = [];
   let newArray = [];
   let checkId;

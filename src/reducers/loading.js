@@ -21,6 +21,8 @@ export default function loading(state = initialState, action) {
     case 'HIDE_GALLERY':
     case 'HIDE_MODAL':
     case 'SET_FREQUENCIES':
+    case 'SET_ACTIVE_MESSAGE_GROUP':
+    case 'SET_MESSAGE_GROUPS':
     case 'SET_USER':
     case 'SHOW_GALLERY':
     case 'STOP_LOADING':

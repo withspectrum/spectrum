@@ -29,6 +29,7 @@ import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
 import StoryCard from './StoryCard';
 import Notification from './Notification';
+import MessageGroup from './MessageGroup';
 import { ACTIVITY_TYPES } from '../../db/types';
 import { getCurrentFrequency } from '../../helpers/frequencies';
 import { formatSenders } from '../../helpers/notifications';
@@ -81,6 +82,22 @@ class MiddleColumn extends Component {
     this.props.dispatch({
       type: 'SHOW_FREQUENCY_NAV',
     });
+  };
+
+  renderMessageGroup = ({ index, key }) => {
+    const {
+      notifications,
+      messageGroups,
+      activeMessageGroup,
+    } = this.props;
+    const messageGroup = messageGroups[index];
+
+    return (
+      <MessageGroup
+        link={`/messages/${messageGroup.id}`}
+        messageGroup={messageGroup}
+      />
+    );
   };
 
   renderNotification = ({ index, key }) => {
@@ -174,11 +191,14 @@ class MiddleColumn extends Component {
     }
   };
 
+  openMessageGroup = e => {
+    let messageGroupId = e.target.id;
+  };
+
   render() {
     const {
       frequency,
       activeFrequency,
-      // allStories,
       stories,
       isPrivate,
       role,
@@ -186,16 +206,17 @@ class MiddleColumn extends Component {
       composer,
       notifications,
       user,
-      // storiesLoaded,
+      messageGroups,
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
     const isNotifications = activeFrequency === 'notifications';
+    const isMessages = activeFrequency === 'messages';
     const hidden = !role && isPrivate;
 
     if (!isEverything && hidden)
       return <LoadingBlock><Icon icon="lock" /></LoadingBlock>;
-    if (!frequency && !isEverything && !isNotifications)
+    if (!frequency && !isEverything && !isNotifications && !isMessages)
       return <LoadingBlock><LoadingIndicator /></LoadingBlock>;
 
     let storyText = 'No stories yet 😢';
@@ -246,6 +267,7 @@ class MiddleColumn extends Component {
         <Header>
           {!isEverything &&
             !isNotifications &&
+            !isMessages &&
             <FlexCol>
               <FlexRow>
                 <MenuButton onClick={this.showFrequenciesNav}>
@@ -265,7 +287,11 @@ class MiddleColumn extends Component {
                 : <span />}
             </FlexCol>}
           <Actions visible={loggedIn}>
-            {!(isEverything || role === 'owner' || hidden || isNotifications) &&
+            {!(isEverything ||
+              role === 'owner' ||
+              hidden ||
+              isNotifications ||
+              isMessages) &&
               (role
                 ? <TextButton member={role} onClick={this.unsubscribeFrequency}>
                     Leave {activeFrequency}
@@ -284,7 +310,7 @@ class MiddleColumn extends Component {
                 />
               </IconButton>}
 
-            {(isEverything || isNotifications) &&
+            {(isEverything || isNotifications || isMessages) &&
               <MenuButton onClick={this.showFrequenciesNav}>
                 <Icon icon="menu" />
               </MenuButton>}
@@ -295,12 +321,30 @@ class MiddleColumn extends Component {
             {isNotifications &&
               <FreqTitle onClick={this.jumpToTop}>Notifications</FreqTitle>}
 
+            {isMessages &&
+              <FreqTitle onClick={this.jumpToTop}>Messages</FreqTitle>}
+
             {isNotifications &&
               <IconButton>
                 <Icon subtle />
               </IconButton>}
 
-            {isNotifications ||
+            {isMessages &&
+              <IconButton>
+                <Icon subtle />
+              </IconButton>}
+
+            {isNotifications &&
+              <IconButton onClick={this.toggleComposer}>
+                <Icon
+                  icon={composer.isOpen ? 'write-cancel' : 'write'}
+                  tipLocation="left"
+                  tipText="New Story"
+                  color={composer.isOpen ? 'warn.alt' : 'brand.default'}
+                />
+              </IconButton>}
+
+            {isMessages &&
               <IconButton onClick={this.toggleComposer}>
                 <Icon
                   icon={composer.isOpen ? 'write-cancel' : 'write'}
@@ -333,6 +377,15 @@ class MiddleColumn extends Component {
               keyMapper={index => notifications[index].id}
             />}
 
+          {isMessages &&
+            <InfiniteList
+              height={window.innerHeight - 50}
+              width={window.innerWidth > 768 ? 419 : window.innerWidth}
+              elementCount={messageGroups.length}
+              elementRenderer={this.renderMessageGroup}
+              keyMapper={index => messageGroups[index].id}
+            />}
+
           {(isEverything || frequency) &&
             <InfiniteList
               height={window.innerHeight - 50}
@@ -358,6 +411,8 @@ const mapStateToProps = state => {
     allStories: state.stories.stories,
     storiesLoaded: state.stories.loaded,
     loading: state.loading,
+    messageGroups: state.messageGroups.messageGroups,
+    activeMessageGroup: state.messageGroups.active,
   };
 };
 

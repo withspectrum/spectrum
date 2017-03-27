@@ -72,6 +72,7 @@ export const setActiveStory = story => (dispatch, getState) => {
     .then(data => {
       if (!data) return;
       const [messages, users] = data;
+
       dispatch({
         type: 'ADD_MESSAGES',
         messages,

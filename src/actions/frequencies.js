@@ -36,6 +36,18 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
     });
     return;
   }
+  // Messages
+  if (lowerCaseFrequency === 'messages') {
+    if (!uid) return;
+    track('direct messages', 'viewed', null);
+    getNotifications(uid).then(notifications => {
+      dispatch({
+        type: 'SET_NOTIFICATIONS',
+        notifications,
+      });
+    });
+    return;
+  }
   // Everything
   if (lowerCaseFrequency === 'everything') {
     // If there's no UID yet we might need to show the homepage, so don't do anything

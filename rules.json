@@ -198,6 +198,45 @@
         }
       }
     },
+    "messages_private": {
+      ".indexOn": ["messageGroupId"],
+      "$messageId": {
+        // Only let users read the messages if there are no frequencies, if the frequency is public or the user is a member of the frequency
+        ".read": true,
+        // Only let members of the frequency write messages
+        ".write": "root.child('/message_groups/' + newData.child('messageGroupId').val() + '/users').hasChild(auth.uid)",
+        // Make sure all the necessary fields exists
+        ".validate": "newData.hasChildren(['id', 'messageGroupId', 'timestamp', 'userId', 'message'])",
+        // Make sure the id field matches the path
+        "id": {
+          ".validate": "newData.val() === $messageId"
+        },
+        // Make sure the messageGroupId field matches the path
+        "messageGroupId": {
+          ".validate": "root.child('message_groups/' + newData.val()).exists()"
+        },
+        // Make sure the timestamp is any value before now
+        "timestamp": {
+          ".validate": "newData.val() <= now"
+        },
+        // Make sure this is a valid user, and the one of the logged-in user
+        "userId": {
+          ".validate": "auth.uid === newData.val() && root.child('users/' + newData.val()).exists()"
+        },
+        "message": {
+          // Make sure both type and content exist
+          ".validate": "newData.hasChildren(['type', 'content'])",
+          // Make sure the type is text
+          "type": {
+            ".validate": "newData.val() === 'text' || newData.val() === 'media' || newData.val() === 'draft-js'"
+          }
+        }
+      }
+    },
+    "message_groups": {
+      ".read": true,
+      ".write": true,
+    },
     "stories": {
       ".indexOn": ["frequencyId"],
       "$story": {

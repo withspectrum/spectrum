@@ -9,6 +9,7 @@ import gallery from './gallery';
 import loading from './loading';
 import notifications from './notifications';
 import ui from './ui';
+import messageGroups from './messageGroups';
 
 export default combineReducers({
   user,
@@ -21,4 +22,5 @@ export default combineReducers({
   loading,
   ui,
   notifications,
+  messageGroups,
 });

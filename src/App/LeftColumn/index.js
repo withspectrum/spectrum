@@ -152,7 +152,20 @@ class NavigationMaster extends Component {
                 </Freq>
               </Link>*/
               }
+
+              <Link to={`/messages`}>
+                <Freq
+                  active={activeFrequency === 'messages'}
+                  onClick={this.showStoriesNav}
+                >
+                  <FlexRow center>
+                    <Icon reverse static icon="notification" />
+                    <FreqLabel>Messages</FreqLabel>
+                  </FlexRow>
+                </Freq>
+              </Link>
             </div>}
+
           {frequencies.length > 0 ||
             <div>
               <Link to={`/~spectrum`}>

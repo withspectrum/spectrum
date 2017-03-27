@@ -86,6 +86,8 @@ class Chat extends Component {
     let { messages, user: { list } } = this.props;
     if (!messages) return <span />;
 
+    console.log('in chat view ', this.props);
+
     return (
       <ChatContainer>
         {messages.map((group, i) => {
@@ -102,8 +104,10 @@ class Chat extends Component {
                 ? list[group[0].userId].subscriptions
                 : false
             : false;
-          const isStoryCreator = this.props.story.creator.uid ===
-            group[0].userId;
+          let isStoryCreator;
+          if (this.props.story) {
+            isStoryCreator = this.props.story.creator.uid === group[0].userId;
+          }
           const itsaRobo = group[0].userId === 'robo';
           if (itsaRobo) {
             let time = convertTimestampToDate(group[0].message.content);
@@ -248,9 +252,19 @@ class Chat extends Component {
 }
 
 const mapStateToProps = state => {
-  const messages = state.messages.messages.filter(
-    message => message.storyId === state.stories.active,
-  );
+  let messages;
+  if (state.stories.active) {
+    messages = state.messages.messages.filter(
+      message => message.storyId === state.stories.active,
+    );
+  }
+
+  if (state.messageGroups.active) {
+    messages = state.messages.messages.filter(
+      message => message.messageGroupId === state.messageGroups.active,
+    );
+  }
+
   return {
     user: state.user,
     stories: state.stories,

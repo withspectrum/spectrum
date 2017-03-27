@@ -63,6 +63,7 @@ export default function root(state = initialState, action) {
       return Object.assign({}, state, { stories });
     }
     case 'CLEAR_ACTIVE_STORY':
+      console.log('clearing');
       return Object.assign({}, state, {
         active: null,
       });
