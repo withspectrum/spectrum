@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Logo } from '../shared/Logos';
 import { Gradient, H2 } from '../shared/Globals';
 
-export const Background = styled.div`
+export const SectionOne = styled.div`
 	background-color: ${({ theme }) => theme.space.dark};
 	background-image: ${({ theme }) =>
   Gradient(theme.space.dark, theme.brand.alt)};
@@ -77,7 +77,7 @@ export const LogoContainer = styled.div`
 	max-width: 360px;
 `;
 
-export const ContentWrapper = styled.div`
+export const SectionOneWrapper = styled.div`
 	display: flex;
 	flex-grow: 1;
 	width: 100%;

@@ -2,12 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Icon from '../shared/Icons';
 import {
-  Background,
   Tagline,
   Button,
   LogoContainer,
   LogoWhite,
-  ContentWrapper,
+  SectionOne,
+  SectionOneWrapper,
   Img,
 } from './style';
 import { login } from '../actions/user';
@@ -43,11 +43,11 @@ class Homepage extends React.Component {
 
   render() {
     return (
-      <Background>
-        <ContentWrapper>
+      <SectionOne>
+        <SectionOneWrapper>
           <div>
             <LogoContainer><LogoWhite /></LogoContainer>
-            <Tagline>Like a forum, but for Mars colonists.</Tagline>
+            <Tagline>Where communities are built.</Tagline>
 
             <Button onClick={this.login}>
               <Icon icon="twitter" reverse static />
@@ -56,8 +56,8 @@ class Homepage extends React.Component {
             </Button>
           </div>
           <Img src="/img/login.svg" />
-        </ContentWrapper>
-      </Background>
+        </SectionOneWrapper>
+      </SectionOne>
     );
   }
 }
