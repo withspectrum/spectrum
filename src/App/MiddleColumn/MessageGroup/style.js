@@ -26,7 +26,7 @@ export const MessageGroupImage = styled.div`
 	display: flex;
 	width: 100%;
 	background: ${props =>
-  props.loading ? '#eee' : `url(${props.image}) no-repeat`};
+  props.loading ? '#f6f7f8' : `url(${props.image}) no-repeat`};
 	background-size: cover;
 `;
 
@@ -53,8 +53,8 @@ export const Usernames = styled.span`
 	overflow: hidden;
 	color: ${({ theme }) => theme.text.default};
 	font-weight: 600;
-	line-height: 1;
-	margin-bottom: 4px;
+	line-height: 1.2;
+	margin-bottom: 2px;
 	font-size: 14px;
 	flex: 1 1 100%;
 

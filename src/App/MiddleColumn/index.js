@@ -90,14 +90,15 @@ class MiddleColumn extends Component {
       messageGroups,
       activeMessageGroup,
     } = this.props;
+    console.log('in middle column', messageGroups);
     const messageGroup = messageGroups[index];
 
-    return (
-      <MessageGroup
-        link={`/messages/${messageGroup.id}`}
-        messageGroup={messageGroup}
-      />
-    );
+    return React.isValidElement(messageGroup)
+      ? messageGroup
+      : <MessageGroup
+          link={`/messages/${messageGroup.id}`}
+          messageGroup={messageGroup}
+        />;
   };
 
   renderNotification = ({ index, key }) => {
@@ -343,16 +344,6 @@ class MiddleColumn extends Component {
                   color={composer.isOpen ? 'warn.alt' : 'brand.default'}
                 />
               </IconButton>}
-
-            {isMessages &&
-              <IconButton onClick={this.toggleComposer}>
-                <Icon
-                  icon={composer.isOpen ? 'write-cancel' : 'write'}
-                  tipLocation="left"
-                  tipText="New Story"
-                  color={composer.isOpen ? 'warn.alt' : 'brand.default'}
-                />
-              </IconButton>}
           </Actions>
         </Header>
 
@@ -411,7 +402,6 @@ const mapStateToProps = state => {
     allStories: state.stories.stories,
     storiesLoaded: state.stories.loaded,
     loading: state.loading,
-    messageGroups: state.messageGroups.messageGroups,
     activeMessageGroup: state.messageGroups.active,
   };
 };

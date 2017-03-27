@@ -82,6 +82,14 @@ class Chat extends Component {
     }
   };
 
+  openUserProfileModal = e => {
+    const user = e.target.id;
+    const { user: { list } } = this.props;
+    this.props.dispatch(
+      openModal('USER_PROFILE_MODAL', { userProfile: list[user] }),
+    );
+  };
+
   render() {
     let { messages, user: { list } } = this.props;
     if (!messages) return <span />;
@@ -123,11 +131,17 @@ class Chat extends Component {
               {user &&
                 !itsaMe &&
                 <HiddenLabel tipText={user.name} tipLocation="right">
-                  <Avatar src={user.photoURL} />
+                  <Avatar
+                    id={user.uid}
+                    onClick={this.openUserProfileModal}
+                    src={user.photoURL}
+                  />
                 </HiddenLabel>}
               <Messages>
                 <Byline op={isStoryCreator}>
-                  {user && user.displayName}
+                  <span id={user.uid} onClick={this.openUserProfileModal}>
+                    {user && user.displayName}
+                  </span>
                   {!itsaMe &&
                     isAdmin &&
                     <AdminBadge op={isStoryCreator}>Admin</AdminBadge>}

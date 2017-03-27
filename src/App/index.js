@@ -17,6 +17,7 @@ import GalleryRoot from '../shared/gallery/GalleryRoot';
 import NuxJoinCard from './MiddleColumn/NuxJoinCard';
 import LoginCard from './MiddleColumn/LoginCard';
 import ReportBugCard from './MiddleColumn/ReportBugCard';
+import NewMessageCard from './MiddleColumn/NewMessageCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
 import { sortArrayByKey, getParameterByName, truncate } from '../helpers/utils';
 import { ACTIVITY_TYPES } from '../db/types';
@@ -42,11 +43,20 @@ class App extends Component {
   };
 
   render() {
-    const { stories, frequencies, user, ui, notifications } = this.props;
+    const {
+      stories,
+      frequencies,
+      user,
+      ui,
+      notifications,
+      messageGroups,
+    } = this.props;
     const frequency = getCurrentFrequency(
       frequencies.active,
       frequencies.frequencies,
     );
+
+    console.log('props ', messageGroups);
 
     const isEverything = frequencies.active === 'everything';
 
@@ -63,6 +73,13 @@ class App extends Component {
         return story.frequencyId === frequency.id && story.published;
       });
     }
+
+    let sortedMessageGroups = sortArrayByKey(
+      messageGroups.messageGroups.slice(),
+      'last_activity',
+      null,
+    ).reverse();
+    console.log('right column sorted ', sortedMessageGroups);
 
     const titleParam = getParameterByName('t', this.props.location.search);
     const descriptionParam = getParameterByName(
@@ -128,6 +145,10 @@ class App extends Component {
 
     if (user.uid && frequencies.active === 'notifications' && unread >= 0) {
       sortedStories.unshift(<NuxJoinCard />);
+    }
+
+    if (user.uid && messageGroups.active === 'new') {
+      sortedMessageGroups.unshift(<NewMessageCard />);
     }
 
     return (
@@ -223,6 +244,7 @@ class App extends Component {
             isPrivate={frequency && frequency.settings.private}
             stories={sortedStories}
             frequency={frequency}
+            messageGroups={sortedMessageGroups}
           />
         </MiddleColumnContainer>
 
@@ -236,6 +258,7 @@ class App extends Component {
 
 export default connect(state => ({
   stories: state.stories,
+  messageGroups: state.messageGroups,
   frequencies: state.frequencies,
   user: state.user,
   ui: state.ui,
