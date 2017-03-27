@@ -75,8 +75,9 @@ class App extends Component {
 
     if (!title && !description) {
       const story = sortedStories.find(story => story.id === stories.active);
-      const freq = (frequency || story) &&
-        getCurrentFrequency(story.frequencyId, frequencies.frequencies);
+      const freq = frequency ||
+        story &&
+          getCurrentFrequency(story.frequencyId, frequencies.frequencies);
 
       if (!(story && story.content) && !(freq && freq.name)) {
         title = 'Spectrum';
