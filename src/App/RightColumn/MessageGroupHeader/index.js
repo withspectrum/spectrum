@@ -11,7 +11,6 @@ class MessageGroupHeader extends Component {
     const userIds = Object.keys(messageGroup.users);
     // everyone except currently viewing user
     const otherUsers = userIds.filter(user => user !== uid);
-    console.log(list, otherUsers);
 
     return (
       <StoryContainer>

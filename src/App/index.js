@@ -57,8 +57,6 @@ class App extends Component {
       frequencies.frequencies,
     );
 
-    console.log('props ', messageGroups);
-
     const isEverything = frequencies.active === 'everything';
 
     let sortedStories = sortArrayByKey(
@@ -80,7 +78,6 @@ class App extends Component {
       'last_activity',
       null,
     ).reverse();
-    console.log('right column sorted ', sortedMessageGroups);
 
     const titleParam = getParameterByName('t', this.props.location.search);
     const descriptionParam = getParameterByName(

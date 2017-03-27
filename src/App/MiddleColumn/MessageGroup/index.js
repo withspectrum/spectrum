@@ -41,13 +41,11 @@ class MessageGroup extends Component {
     const userIds = Object.keys(messageGroup.users);
     // everyone except currently viewing user
     const otherUsers = userIds.filter(user => user !== uid);
-
     const timestamp = timeDifference(Date.now(), messageGroup.last_activity);
-    const isActive = active === messageGroup.id;
 
     return (
       <Card link={link}>
-        <MessageGroupContainer active={isActive}>
+        <MessageGroupContainer active={this.props.active}>
           <MessageGroupImagesContainer>
             {otherUsers.length === 1
               ? list[otherUsers]
@@ -92,7 +90,7 @@ class MessageGroup extends Component {
 const mapStateToProps = state => {
   return {
     user: state.user,
-    active: state.messageGroups.active,
+    messageGroups: state.messageGroups,
   };
 };
 

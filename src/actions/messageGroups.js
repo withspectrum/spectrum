@@ -77,7 +77,7 @@ export const setActiveMessageGroup = messageGroupId => (dispatch, getState) => {
       .then(data => {
         if (!data) return;
         const [messages, users] = data;
-        console.log('getting private message users', users);
+
         dispatch({
           type: 'ADD_MESSAGES',
           messages,

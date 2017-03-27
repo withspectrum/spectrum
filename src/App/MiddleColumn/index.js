@@ -95,15 +95,21 @@ class MiddleColumn extends Component {
       notifications,
       messageGroups,
       activeMessageGroup,
+      messageComposer,
     } = this.props;
-    console.log('in middle column', messageGroups);
+
     const messageGroup = messageGroups[index];
+    const active = messageGroup.id === activeMessageGroup &&
+      !messageComposer.isOpen;
 
     return React.isValidElement(messageGroup)
       ? messageGroup
       : <MessageGroup
           link={`/messages/${messageGroup.id}`}
           messageGroup={messageGroup}
+          active={
+            messageGroup.id === activeMessageGroup && !messageComposer.isOpen
+          }
         />;
   };
 
@@ -367,6 +373,10 @@ class MiddleColumn extends Component {
 
         <StoryList innerRef={comp => this.storyList = comp}>
           <Overlay active={composer.isOpen} onClick={this.toggleComposer} />
+          <Overlay
+            active={messageComposer.isOpen}
+            onClick={this.toggleMessageComposer}
+          />
 
           {canLoadNewStories &&
             <NewIndicator onClick={this.loadStoriesAgain}>
