@@ -47,7 +47,7 @@ class Homepage extends React.Component {
         <ContentWrapper>
           <div>
             <LogoContainer><LogoWhite /></LogoContainer>
-            <Tagline>Like a forum, but for Mars colonists.</Tagline>
+            <Tagline>Where communities are built.</Tagline>
 
             <Button onClick={this.login}>
               <Icon icon="twitter" reverse static />
