@@ -159,6 +159,10 @@ class RightColumn extends Component {
         return (
           <ViewContainer>
             <MessageComposer />
+            <Footer>
+              {user.uid &&
+                <ChatInput forceScrollToBottom={this.forceScrollToBottom} />}
+            </Footer>
           </ViewContainer>
         );
       } else {
