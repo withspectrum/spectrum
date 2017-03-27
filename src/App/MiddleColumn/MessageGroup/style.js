@@ -67,8 +67,8 @@ export const Usernames = styled.span`
 `;
 
 export const Timestamp = styled.span`
-	font-size: 10px;
-	text-transform: uppercase;
+	font-size: 12px;
+	text-align: right;
 	color: ${({ theme }) => theme.text.alt};
 	padding-right: 4px;
 	display: inline-block;

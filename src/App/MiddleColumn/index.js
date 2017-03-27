@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import InfiniteList from '../../shared/InfiniteList';
 import LoadingIndicator from '../../shared/loading/global';
 import { Button, TextButton, IconButton } from '../../shared/Globals';
@@ -20,6 +21,7 @@ import {
   NewIndicator,
 } from './style';
 import { toggleComposer } from '../../actions/composer';
+import { toggleMessageComposer } from '../../actions/messageComposer';
 import {
   unsubscribeFrequency,
   subscribeFrequency,
@@ -62,6 +64,10 @@ class MiddleColumn extends Component {
 
   toggleComposer = () => {
     this.props.dispatch(toggleComposer());
+  };
+
+  toggleMessageComposer = () => {
+    this.props.dispatch(toggleMessageComposer());
   };
 
   unsubscribeFrequency = () => {
@@ -205,9 +211,11 @@ class MiddleColumn extends Component {
       role,
       loggedIn,
       composer,
+      messageComposer,
       notifications,
       user,
       messageGroups,
+      activeMessageGroup,
     } = this.props;
 
     const isEverything = activeFrequency === 'everything';
@@ -340,8 +348,18 @@ class MiddleColumn extends Component {
                 <Icon
                   icon={composer.isOpen ? 'write-cancel' : 'write'}
                   tipLocation="left"
-                  tipText="New Story"
+                  tipText={composer.isOpen ? 'Cancel' : 'New Story'}
                   color={composer.isOpen ? 'warn.alt' : 'brand.default'}
+                />
+              </IconButton>}
+
+            {isMessages &&
+              <IconButton onClick={this.toggleMessageComposer}>
+                <Icon
+                  icon={messageComposer.isOpen ? 'write-cancel' : 'write'}
+                  tipLocation="left"
+                  tipText={messageComposer.isOpen ? 'Cancel' : 'New Message'}
+                  color={messageComposer.isOpen ? 'warn.alt' : 'brand.default'}
                 />
               </IconButton>}
           </Actions>
@@ -394,6 +412,7 @@ class MiddleColumn extends Component {
 const mapStateToProps = state => {
   return {
     composer: state.composer,
+    messageComposer: state.messageComposer,
     ui: state.ui,
     activeStory: state.stories.active,
     notifications: state.notifications.notifications,

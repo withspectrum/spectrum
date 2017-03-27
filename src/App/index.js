@@ -50,6 +50,7 @@ class App extends Component {
       ui,
       notifications,
       messageGroups,
+      messageComposer,
     } = this.props;
     const frequency = getCurrentFrequency(
       frequencies.active,
@@ -147,8 +148,10 @@ class App extends Component {
       sortedStories.unshift(<NuxJoinCard />);
     }
 
-    if (user.uid && messageGroups.active === 'new') {
-      sortedMessageGroups.unshift(<NewMessageCard />);
+    if (user.uid && messageGroups.active === 'new' || messageComposer.isOpen) {
+      sortedMessageGroups.unshift(
+        <NewMessageCard active={messageComposer.isOpen} />,
+      );
     }
 
     return (
@@ -263,4 +266,5 @@ export default connect(state => ({
   user: state.user,
   ui: state.ui,
   notifications: state.notifications,
+  messageComposer: state.messageComposer,
 }))(App);

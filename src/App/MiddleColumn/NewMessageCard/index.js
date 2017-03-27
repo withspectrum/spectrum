@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Card from '../../../shared/Card';
+import { toggleMessageComposer } from '../../../actions/messageComposer';
 import {
   MessageGroupContainer,
   MessageGroupImagesContainer,
@@ -10,10 +11,15 @@ import {
 } from '../MessageGroup/style';
 
 class NewMessageCard extends Component {
+  toggleMessageComposer = () => {
+    this.props.dispatch(toggleMessageComposer());
+  };
+
   render() {
+    const { active } = this.props;
     return (
-      <Card>
-        <MessageGroupContainer active={true}>
+      <Card onClick={this.toggleMessageComposer}>
+        <MessageGroupContainer active={active}>
           <MessageGroupImagesContainer>
             <MessageGroupImage loading />
           </MessageGroupImagesContainer>

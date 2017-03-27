@@ -18,6 +18,7 @@ import Chat from './Chat';
 import MessageGroupHeader from './MessageGroupHeader';
 import ChatInput from './ChatInput';
 import Composer from './Composer';
+import MessageComposer from './MessageComposer';
 
 import {
   ViewContainer,
@@ -116,11 +117,17 @@ class RightColumn extends Component {
   };
 
   render() {
-    const { composer, user, frequencies: { frequencies, active } } = this.props;
+    const {
+      composer,
+      user,
+      frequencies: { frequencies, active },
+      messageGroups,
+      messageComposer,
+    } = this.props;
 
     if (active === 'messages') {
       let messageGroup = this.getActiveMessageGroup();
-      if (messageGroup) {
+      if (messageGroup && !messageComposer.isOpen) {
         return (
           <ViewContainer>
             <Link to={`/messages`}>
@@ -146,6 +153,18 @@ class RightColumn extends Component {
               {user.uid &&
                 <ChatInput forceScrollToBottom={this.forceScrollToBottom} />}
             </Footer>
+          </ViewContainer>
+        );
+      } else if (messageComposer.isOpen) {
+        return (
+          <ViewContainer>
+            <MessageComposer />
+          </ViewContainer>
+        );
+      } else {
+        return (
+          <ViewContainer>
+            <NullContainer />
           </ViewContainer>
         );
       }
@@ -245,6 +264,7 @@ const mapStateToProps = state => ({
   frequencies: state.frequencies,
   user: state.user,
   composer: state.composer,
+  messageComposer: state.messageComposer,
   messageGroups: state.messageGroups,
 });
 
