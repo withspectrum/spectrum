@@ -253,6 +253,9 @@
             ".validate": false
           }
         },
+        "coverPhoto": {
+          ".validate": "newData.exists()"
+        },
         "deleted": {
           ".validate": "newData.isBoolean()"
         },

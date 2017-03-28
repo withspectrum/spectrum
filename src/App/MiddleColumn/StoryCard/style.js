@@ -55,3 +55,14 @@ export const MessageCount = styled(Name)`
 export const UnreadCount = styled.span`
 	color: ${({ theme }) => theme.warn.default};
 `;
+
+export const CoverPhoto = styled.div`
+	height: 140px;
+	max-height: 140px;
+	width: 100%;
+	background: ${props =>
+  props.loading ? '#f6f7f8' : `url("${props.url}") no-repeat center center`};
+	background-repeat: no-repeat;
+	background-size: cover;
+	border-bottom: 1px solid ${({ theme }) => theme.border.default};
+`;

@@ -130,6 +130,10 @@ export const publishStory = ({ frequencyId, title, description }) => (
 
   let state = getState();
   let storyKey = state.composer.newStoryKey;
+  let coverPhoto = state.composer.mediaList &&
+    state.composer.mediaList.length >= 1
+    ? state.composer.mediaList[0].meta
+    : null;
   const frequency = getCurrentFrequency(
     frequencyId,
     state.frequencies.frequencies,
@@ -139,6 +143,7 @@ export const publishStory = ({ frequencyId, title, description }) => (
     key: storyKey,
     frequency,
     content: { title, description: linkFreqsInMd(description) },
+    coverPhoto,
   })
     .then(story => {
       track('story', 'created', null);

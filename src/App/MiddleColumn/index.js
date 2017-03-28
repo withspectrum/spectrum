@@ -160,10 +160,12 @@ class MiddleColumn extends Component {
             photo: story.creator.photoURL,
             name: story.creator.displayName,
           }}
+          coverPhoto={story.coverPhoto ? story.coverPhoto : false}
           timestamp={story.last_activity || story.timestamp}
           title={story.content.title}
           unreadMessages={unreadMessages}
           isNew={isNew}
+          story={story}
           participants={story.participants}
         />;
   };
@@ -188,6 +190,8 @@ class MiddleColumn extends Component {
       user,
       // storiesLoaded,
     } = this.props;
+
+    console.log('rendering middle column');
 
     const isEverything = activeFrequency === 'everything';
     const isNotifications = activeFrequency === 'notifications';
