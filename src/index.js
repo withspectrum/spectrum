@@ -33,6 +33,7 @@ const theme = {
   space: {
     dark: '#0F015E',
     light: '#1CD2F2',
+    soft: '#ACC7FF',
   },
   warn: {
     default: '#E3353C',

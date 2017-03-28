@@ -7,10 +7,10 @@
 </mask>
 <g id="goopy-3" mask="url(#mask0_alpha)" figma:type="frame">
 <g id="Vector 3" figma:type="vector">
-<use xlink:href="#path0_fill" transform="translate(-995 1833)" fill="#1CD2F2"/>
+<use xlink:href="#path0_fill" transform="translate(-995 1833)" fill="#FFFFFF"/>
 </g>
 <g id="Ellipse 10" figma:type="vector">
-<use xlink:href="#path1_fill" transform="matrix(0.991782 0.127935 -0.127935 0.991782 534.121 1800)" fill="#1CD2F2"/>
+<use xlink:href="#path1_fill" transform="matrix(0.991782 0.127935 -0.127935 0.991782 534.121 1800)" fill="#FFFFFF"/>
 </g>
 </g>
 </g>

@@ -7,6 +7,10 @@ import {
   SectionTwo,
   SectionThree,
   SectionFour,
+  ClusterOne,
+  ClusterTwo,
+  ClusterThree,
+  ClusterFour,
   GoopyOne,
   GoopyTwo,
   GoopyThree,
@@ -17,7 +21,6 @@ import {
   LogoWhite,
   SectionContent,
   Copy,
-  Img,
 } from './style';
 import { login } from '../actions/user';
 
@@ -65,12 +68,16 @@ class Homepage extends React.Component {
                 <span>Sign in with Twitter</span>
               </Button>
             </FlexCol>
-            <Img src="/img/login.svg" />
+            <img src="/img/login.svg" />
           </SectionContent>
           <GoopyOne />
         </SectionOne>
         <SectionTwo>
+          <ClusterOne src="/img/cluster-1.svg" />
+          <ClusterTwo src="/img/cluster-2.svg" />
+          <ClusterThree src="/img/cluster-5.svg" />
           <SectionContent>
+            <img src="/img/connect.svg" />
             <FlexCol>
               <Tagline>All your favorite communities. Only one you.</Tagline>
 
@@ -82,7 +89,6 @@ class Homepage extends React.Component {
               </Copy>
 
             </FlexCol>
-            <Img src="/img/connect.svg" />
           </SectionContent>
           <GoopyTwo />
         </SectionTwo>
@@ -100,26 +106,35 @@ class Homepage extends React.Component {
                 We know you're more than just your eyeballs.
               </Copy>
             </FlexCol>
-            <Img src="/img/share.svg" />
+            <img src="/img/share.svg" />
           </SectionContent>
           <GoopyThree />
         </SectionThree>
         <SectionFour>
           <SectionContent>
+            <ClusterOne src="/img/cluster-2.svg" />
+            <ClusterTwo src="/img/cluster-1.svg" />
+            <ClusterThree src="/img/cluster-5.svg" />
+            <ClusterFour src="/img/cluster-4.svg" />
+            <img src="/img/create.svg" />
             <FlexCol>
-              <Tagline>Something something, something else.</Tagline>
+              <Tagline>Come on in, the chatter's fine!</Tagline>
 
               <Copy>
-                Who even cares? You all know this is just marketing copy. Basically, we want to make a great place for people to support each other.
+                Conversations are impossible to keep up with on most platforms if you're not online all day.
               </Copy>
               <Copy>
-                Scaling communities and conversations on other platforms is hard. We're working our asses off to make that better.
+                We're focused on making sure conversations are easy to join and follow whenever you're ready.
               </Copy>
               <Copy>
-                But, we can't do it without you...
+                So, hop on in!
               </Copy>
+              <Button onClick={this.login}>
+                <Icon icon="twitter" color="brand.default" static />
+                {' '}
+                <span>Sign in with Twitter</span>
+              </Button>
             </FlexCol>
-            <Img src="/img/create.svg" />
           </SectionContent>
         </SectionFour>
       </Wrapper>
