@@ -56,7 +56,7 @@ class StoryCard extends Component {
     this.props.dispatch(openGallery(arr));
   };
 
-  componentDidMount = () => {
+  componentWillMount = () => {
     const { coverPhoto, story } = this.props;
     if (coverPhoto && !story.deleted) {
       getFileUrl(coverPhoto.fileName, story.id).then(file => {
@@ -64,6 +64,21 @@ class StoryCard extends Component {
           coverPhotoUrl: file,
         });
       });
+    }
+  };
+
+  componentWillUpdate = nextProps => {
+    if (nextProps.coverPhoto !== this.props.coverPhoto) {
+      if (nextProps.coverPhoto && !nextProps.story.deleted) {
+        getFileUrl(
+          nextProps.coverPhoto.fileName,
+          nextProps.story.id,
+        ).then(file => {
+          this.setState({
+            coverPhotoUrl: file,
+          });
+        });
+      }
     }
   };
 

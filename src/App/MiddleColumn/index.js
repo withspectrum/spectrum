@@ -191,8 +191,6 @@ class MiddleColumn extends Component {
       // storiesLoaded,
     } = this.props;
 
-    console.log('rendering middle column');
-
     const isEverything = activeFrequency === 'everything';
     const isNotifications = activeFrequency === 'notifications';
     const hidden = !role && isPrivate;
