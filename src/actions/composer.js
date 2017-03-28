@@ -48,3 +48,18 @@ export const removeImageFromStory = (image, story) => dispatch => {
     });
   });
 };
+
+export const updateMetadata = (metadata, trueUrl) => dispatch => {
+  console.log('action ', metadata, trueUrl);
+  dispatch({
+    type: 'UPDATE_METADATA',
+    metadata,
+    trueUrl,
+  });
+};
+
+export const removeMetadata = () => dispatch => {
+  dispatch({
+    type: 'REMOVE_METADATA',
+  });
+};

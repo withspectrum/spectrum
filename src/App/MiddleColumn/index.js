@@ -165,6 +165,7 @@ class MiddleColumn extends Component {
           unreadMessages={unreadMessages}
           isNew={isNew}
           participants={story.participants}
+          metadata={story.metadata ? story.metadata : null}
         />;
   };
 

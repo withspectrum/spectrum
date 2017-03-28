@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { findDOMNode } from 'react-dom';
 import { track } from '../../../EventTracker';
 import {
   updateTitle,
   updateBody,
+  updateMetadata,
+  removeMetadata,
   addMediaList,
   removeImageFromStory,
 } from '../../../actions/composer';
 import { publishStory, initStory } from '../../../actions/stories';
+import { loading, stopLoading } from '../../../actions/loading';
 import {
   getCurrentFrequency,
   linkFreqsInMd,
@@ -15,6 +19,8 @@ import {
 import { uploadMultipleMedia } from '../../../db/stories';
 import Textarea from 'react-textarea-autosize';
 import Markdown from '../../../shared/Markdown';
+import LinkPreview from '../../../shared/LinkPreview';
+import { getMetaDataFromUrl } from '../../../helpers/utils';
 
 import {
   ScrollBody,
@@ -54,6 +60,8 @@ class Composer extends Component {
       placeholder: '+ Embed',
       embedUrl: '',
       creating: true,
+      metadata: null,
+      metadataLength: 0,
     };
   }
 
@@ -112,6 +120,7 @@ class Composer extends Component {
     e.preventDefault();
     const title = this.props.composer.title;
     const description = this.props.composer.body;
+    const metadata = this.props.composer.metadata;
     // if we pass in a custom frequency, it means the user is in 'all' and has selected a frequency from the dropdown
     // if the user isn't in all, we'll send the currently active frequency via the redux state
     const frequency = this.props.frequencies.active === 'everything'
@@ -130,6 +139,7 @@ class Composer extends Component {
           frequencyId,
           title,
           description,
+          metadata,
         }),
       );
     } else if (!frequency && title) {
@@ -216,6 +226,80 @@ class Composer extends Component {
     });
   };
 
+  listenForUrl = e => {
+    const url = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+    let urls, input = [];
+    if (
+      e.keyCode !== 8 &&
+      e.keyCode !== 9 &&
+      e.keyCode !== 13 &&
+      e.keyCode !== 32 &&
+      e.keyCode !== 46
+    ) {
+      // Return if backspace, tab, enter, space or delete was not pressed.
+      // also don't check if we have an existing bundle of metadata saved in state
+      return;
+    }
+
+    // also don't check if we already have a url in the metadata state
+    if (this.state.metadata !== null) return;
+
+    let toCheck = [];
+    let len = toCheck.length;
+    let urlToCheck;
+
+    while ((urls = url.exec(e.target.value)) !== null) {
+      toCheck.push(urls[0]);
+      len = toCheck.length;
+      urlToCheck = urls[0];
+    }
+
+    if (this.state.metadataLength === len) return; // no new links, don't recheck
+
+    if (urlToCheck) {
+      const addhttp = url => new Promise((resolve, reject) => {
+        this.props.dispatch(loading());
+
+        if (!/^(f|ht)tps?:\/\//i.test(urlToCheck)) {
+          urlToCheck = 'https://' + urlToCheck;
+        }
+
+        getMetaDataFromUrl(urlToCheck)
+          .then(data => {
+            this.props.dispatch(stopLoading());
+
+            let metadataLength = this.state.metadataLength + 1;
+            this.setState({
+              metadata: data,
+              trueUrl: urlToCheck,
+              metadataLength: metadataLength,
+            });
+
+            this.props.dispatch(updateMetadata(data, urlToCheck));
+            resolve(data);
+          })
+          .catch(err => {
+            this.props.dispatch(stopLoading());
+            console.log('error fetching metadata: ', err);
+          });
+      });
+
+      addhttp(toCheck[len >= 1 ? len - 1 : len]);
+    } else
+      return;
+  };
+
+  removeMetadata = () => {
+    findDOMNode(this.refs.descriptionTextarea).focus();
+
+    this.props.dispatch(removeMetadata());
+
+    this.setState({
+      metadata: null,
+      trueUrl: null,
+    });
+  };
+
   render() {
     let { frequencies, composer } = this.props;
     let activeFrequency = frequencies.active;
@@ -279,7 +363,7 @@ class Composer extends Component {
                         onChange={this.changeTitle}
                         style={StoryTitle}
                         value={composer.title}
-                        placeholder={'What’s up?'}
+                        placeholder={"What's new?"}
                         autoFocus
                       />
 
@@ -287,8 +371,21 @@ class Composer extends Component {
                         onChange={this.changeBody}
                         value={composer.body}
                         style={TextBody}
-                        placeholder={'Say more words...'}
+                        onKeyUp={this.listenForUrl}
+                        ref="descriptionTextarea"
+                        placeholder={
+                          'Say more about this post, add an image, embed an iframe, or anything else!'
+                        }
                       />
+
+                      {this.state.metadata &&
+                        <LinkPreview
+                          data={this.state.metadata}
+                          size={'large'}
+                          remove={this.removeMetadata}
+                          editable={true}
+                          trueUrl={this.state.trueUrl}
+                        />}
 
                       <MediaInput
                         ref="media"

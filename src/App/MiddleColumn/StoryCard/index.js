@@ -9,11 +9,13 @@ import {
   MessageCount,
   Title,
   UnreadCount,
+  LinkPreviewContainer,
 } from './style';
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
 import Card from '../../../shared/Card';
 import ParticipantHeads from './ParticipantHeads';
+import LinkPreview from '../../../shared/LinkPreview';
 
 const canBeBool = (...types) => PropTypes.oneOfType([PropTypes.bool, ...types]);
 
@@ -42,6 +44,7 @@ class StoryCard extends Component {
     title: PropTypes.string.isRequired,
     unreadMessages: PropTypes.number,
     participants: PropTypes.object,
+    metadata: PropTypes.object,
   };
 
   openGallery = e => {
@@ -64,6 +67,7 @@ class StoryCard extends Component {
       unreadMessages,
       participants,
       user,
+      metadata,
       frequencies: { active },
     } = this.props;
 
@@ -111,6 +115,16 @@ class StoryCard extends Component {
       <Card link={link} selected={isActive}>
         <StoryBody>
           <Title>{title}</Title>
+
+          {metadata &&
+            <LinkPreviewContainer>
+              <LinkPreview
+                trueUrl={metadata.trueUrl}
+                data={metadata.data}
+                size={'small'}
+                editable={false}
+              />
+            </LinkPreviewContainer>}
 
           {heads}
 

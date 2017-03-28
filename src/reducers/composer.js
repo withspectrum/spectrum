@@ -4,6 +4,7 @@ const initialState = {
   body: '',
   newStoryKey: null,
   mediaList: [],
+  metadata: null,
 };
 
 export default function root(state = initialState, action) {
@@ -40,6 +41,17 @@ export default function root(state = initialState, action) {
     case 'UPDATE_BODY':
       return Object.assign({}, state, {
         body: action.body,
+      });
+    case 'UPDATE_METADATA':
+      return Object.assign({}, state, {
+        metadata: {
+          data: action.metadata,
+          trueUrl: action.trueUrl,
+        },
+      });
+    case 'REMOVE_METADATA':
+      return Object.assign({}, state, {
+        metadata: null,
       });
     case 'ADD_MEDIA_LIST':
       return Object.assign({}, state, {

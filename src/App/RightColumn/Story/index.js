@@ -2,10 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Markdown from '../../../shared/Markdown';
+import LinkPreview from '../../../shared/LinkPreview';
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
 
-import { StoryContainer, Header, StoryTitle, Byline } from './style';
+import {
+  StoryContainer,
+  Header,
+  StoryTitle,
+  Byline,
+  LinkPreviewContainer,
+} from './style';
 
 class Story extends Component {
   componentDidMount() {
@@ -61,6 +68,16 @@ class Story extends Component {
         <div className="markdown" ref="story">
           <Markdown>{story.content.description}</Markdown>
         </div>
+
+        {story.metadata &&
+          <LinkPreviewContainer>
+            <LinkPreview
+              trueUrl={story.metadata.trueUrl}
+              data={story.metadata.data}
+              size={'large'}
+              editable={false}
+            />
+          </LinkPreviewContainer>}
       </StoryContainer>
     );
   }

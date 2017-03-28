@@ -55,3 +55,7 @@ export const MessageCount = styled(Name)`
 export const UnreadCount = styled.span`
 	color: ${({ theme }) => theme.warn.default};
 `;
+
+export const LinkPreviewContainer = styled.div`
+	margin: 12px 0;
+`;
