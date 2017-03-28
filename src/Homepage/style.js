@@ -1,30 +1,91 @@
 import styled from 'styled-components';
 import { Logo } from '../shared/Logos';
-import { Gradient, H2 } from '../shared/Globals';
+import { Gradient, H2, FlexCol, FlexRow, P } from '../shared/Globals';
 
-export const Background = styled.div`
+export const Wrapper = styled(FlexCol)`
+	flex: 1 0 auto;
+	width: 100%;
+	background-color: ${({ theme }) => theme.bg.default};
+`;
+
+export const Section = styled(FlexCol)`
+	position: relative;
+	flex: 1 0 640px;
+	justify-content: center;
+	padding-bottom: 80px;
+`;
+
+export const SectionOne = styled(Section)`
 	background-color: ${({ theme }) => theme.space.dark};
 	background-image: ${({ theme }) =>
   Gradient(theme.space.dark, theme.brand.alt)};
-	width: 100%;
-	max-height: 100%;
-	overflow-y: hidden;
-	display: flex;
-	flex-direction: column;
+	color: ${({ theme }) => theme.text.reverse};
+`;
+
+export const SectionTwo = styled(Section)`
+	justify-content: space-between;
+	height: 640px;
+	background-color: ${({ theme }) => theme.bg.default};
+	color: ${({ theme }) => theme.text.default};
+	padding-bottom: 160px;
+`;
+
+export const SectionThree = styled(Section)`
+	height: 640px;
+	justify-content: space-around;
+	background-color: ${({ theme }) => theme.space.dark};
+	color: ${({ theme }) => theme.text.reverse};
+
+	> p {
+		font-weight: 500;
+	}
+`;
+
+export const SectionFour = styled(Section)`
+	height: 480px;
+	justify-content: space-around;
+	background-color: ${({ theme }) => theme.space.light};
+	color: ${({ theme }) => theme.space.dark};
+
+	> p {
+		font-weight: 600;
+	}
+`;
+
+export const GoopyOne = styled.div`
+	background-color: transparent;
+	background: url(/img/goopy.svg) center bottom no-repeat;
+	position: absolute;
+	background-size: contain;
+	z-index: 0;
+	height: 320px;
+	width: 110%;
+	bottom: -2px;
+	left: -5%;
+	right: -5%;
+`;
+
+export const GoopyTwo = styled(GoopyOne)`
+	background: url(/img/goopy-2.svg) center bottom no-repeat;
+`;
+
+export const GoopyThree = styled(GoopyOne)`
+	background: url(/img/goopy-3.svg) center bottom no-repeat;
 `;
 
 export const Tagline = styled(H2)`
-	color: ${({ theme }) => theme.text.reverse};
 	font-weight: 500;
-	font-size: 20px;
+	font-size: 24px;
 	margin-top: 8px;
 	margin-bottom: 24px;
+	color: inherit;
 `;
 
 export const Button = styled.button`
 	display: flex;
-	flex: 1 0 auto;
+	flex: 0 0 auto;
 	flex-direction: flex-row;
+	align-self: flex-start;
 	align-items: center;
 	background: transparent;
 	border: 2px solid ${({ theme }) => theme.bg.default};
@@ -33,17 +94,17 @@ export const Button = styled.button`
 	padding-right: 16px;
 	font-size: 14px;
 	font-weight: 700;
-	color: ${({ theme }) => theme.text.reverse};
+	color: inherit;
 
 	span {
 		display: inline-block;
-		flex: 1 0 auto;
+		flex: 0 0 auto;
 		margin-top: -1px;
 		margin-left: 8px;
 		line-height: 2.45;
 		word-break: keep-all;
 		white-space: nowrap;
-		color: ${({ theme }) => theme.brand.reverse};
+		color: inherit;
 	}
 
 	svg {
@@ -77,18 +138,14 @@ export const LogoContainer = styled.div`
 	max-width: 360px;
 `;
 
-export const ContentWrapper = styled.div`
-	display: flex;
+export const SectionContent = styled(FlexRow)`
 	flex-grow: 1;
 	width: 100%;
 	align-items: center;
 	justify-content: center;
-	padding: 2rem;
+	position: relative;
+	z-index: 2;
 
-	@media (max-width: 768px) {
-		margin-top: 320px;
-		flex-direction: column;
-	}
 `;
 
 export const Img = styled.img`
@@ -98,8 +155,18 @@ export const Img = styled.img`
 	max-width: 25%;
 
 	@media (max-width: 768px) {
-		margin-left: 0;
-		margin-top: 40px;
-		max-width: 80%;
+		display: none;
+	}
+`;
+
+export const Copy = styled(P)`
+	max-width: 320px;
+	width: 100%;
+	font-size: 18px;
+	line-height: 24px;
+	color: inherit;
+
+	&:not(:first-of-type){
+		margin-top: 24px;
 	}
 `;
