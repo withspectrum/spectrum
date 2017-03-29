@@ -144,7 +144,7 @@ export const GoopyOne = styled.div`
 	position: absolute;
 	background-size: 100%;
 	z-index: 0;
-	height: 100%;
+	height: calc(100% + 4px);
 	width: 110%;
 	top: 0;
 	bottom: -2px;
@@ -159,7 +159,7 @@ export const GoopyTwo = styled.div`
 	background-size: 100%;
 	transform: rotateY(180deg);
 	z-index: 0;
-	height: 100%;
+	height: calc(100% + 4px);
 	top: 0;
 	width: 110%;
 	bottom: -2px;
@@ -173,7 +173,7 @@ export const GoopyThree = styled.div`
 	position: absolute;
 	background-size: 100%;
 	z-index: 0;
-	height: 100%;
+	height: calc(100% + 4px);
 	top: 0;
 	width: 110%;
 	bottom: -2px;
