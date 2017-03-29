@@ -17,7 +17,8 @@ export const LinkPreviewContainer = styled.a`
 
   &:hover {
     transition: ${Transition.reaction.on};
-    border: 1px solid ${({ theme }) => theme.brand.default};
+    box-shadow: 0 2px 4px rgba(0,0,0,0.16);
+    border: 1px solid ${({ theme }) => '#cfd7e0'};
   }
 `;
 
@@ -28,8 +29,6 @@ export const Close = styled.span`
 `;
 
 export const LinkPreviewImage = styled.div`
-  border-radius: ${props =>
-  props.size === 'large' ? '4px 0 0 4px' : '4px 4px 0 0'};
   overflow: hidden;
   min-width: ${props => props.size === 'large' ? '140px' : '100%'};
   min-height: ${props => props.size === 'large' ? '140px' : '140px'};

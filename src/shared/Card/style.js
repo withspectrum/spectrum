@@ -3,8 +3,8 @@ import { Shadow, Transition } from '../Globals';
 
 export const Wrapper = styled.div`
 	display: inline-block;
-	width: calc(100% - 16px);
-	margin: 8px 8px 0 8px;
+	width: calc(100% - 32px);
+	margin: 16px 12px 0 16px;
 	flex: 0 0 auto;
 	border-radius: 4px;
 	overflow: ${props => props.overflow === 'visible' ? 'visible' : 'hidden'};

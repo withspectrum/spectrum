@@ -98,7 +98,7 @@ class NuxJoinCard extends Component {
                     <div>
                       {/*<img src={`${process.env.PUBLIC_URL}/${freq.image}`} />*/
                       }
-                      <h3>{freq.title}</h3>
+                      <Link to={`/~${freq.slug}`}>{freq.title}</Link>
                       <h4>{freq.description}</h4>
                     </div>
                     <Actions>
