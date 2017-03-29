@@ -136,7 +136,7 @@ class Homepage extends React.Component {
             </a>
           </FlexRow>
           <FlexRow smallCol center>
-            <LinkBlock href="">
+            <LinkBlock href="https://github.com/withspectrum/code-of-conduct">
               <div>Code of Conduct</div>
             </LinkBlock>
             <LinkBlock href="mailto:support@spectrum.chat">
