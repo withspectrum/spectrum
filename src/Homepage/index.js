@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Icon from '../shared/Icons';
-import { FlexCol } from '../shared/Globals';
+import { FlexCol, FlexRow } from '../shared/Globals';
 import {
   SectionOne,
   SectionTwo,
@@ -14,6 +14,7 @@ import {
   GoopyOne,
   GoopyTwo,
   GoopyThree,
+  GoopyFour,
   Wrapper,
   Tagline,
   Button,
@@ -21,6 +22,8 @@ import {
   LogoWhite,
   SectionContent,
   Copy,
+  Footer,
+  LinkBlock,
 } from './style';
 import { login } from '../actions/user';
 
@@ -61,33 +64,31 @@ class Homepage extends React.Component {
             <FlexCol>
               <LogoContainer><LogoWhite /></LogoContainer>
               <Tagline>Where communities are built.</Tagline>
-
               <Button onClick={this.login}>
                 <Icon icon="twitter" reverse static />
                 {' '}
                 <span>Sign in with Twitter</span>
               </Button>
             </FlexCol>
-            <img src="/img/login.svg" />
+            <img src="/img/login.svg" role="presentation" />
           </SectionContent>
           <GoopyOne />
         </SectionOne>
         <SectionTwo>
-          <ClusterOne src="/img/cluster-1.svg" />
-          <ClusterTwo src="/img/cluster-2.svg" />
-          <ClusterThree src="/img/cluster-5.svg" />
+          <ClusterOne src="/img/cluster-1.svg" role="presentation" />
+          <ClusterTwo src="/img/cluster-2.svg" role="presentation" />
+          <ClusterThree src="/img/cluster-5.svg" role="presentation" />
           <SectionContent>
-            <img src="/img/connect.svg" />
+            <img src="/img/connect.svg" role="presentation" />
             <FlexCol>
               <Tagline>All your favorite communities. Only one you.</Tagline>
 
               <Copy>
-                For years now, we've been hacking different messaging platforms to support large communities. We built something new to help you tap into the communities you care about all in one place.
+                For years people have been hacking different messaging platforms to support growing online communities.
               </Copy>
               <Copy>
-                One feed. One account.
+                Spectrum was built from the ground up to keep you connected with the communities you care about in one simple feed.
               </Copy>
-
             </FlexCol>
           </SectionContent>
           <GoopyTwo />
@@ -95,39 +96,29 @@ class Homepage extends React.Component {
         <SectionThree>
           <SectionContent>
             <FlexCol>
-              <Tagline>New things to love, no ads to hate.</Tagline>
+              <Tagline>A better way to stay connected.</Tagline>
               <Copy>
-                Most social platforms build for growth above all else and then sell ads to monetize their users' content.
+                In most apps, channels get jumbled, messages are lost, and that really great answer to your question from way-back-when is nowhere to be found.
               </Copy>
               <Copy>
-                We're dedicated to building a sustainable business that supports our users instead of selling them to advertisers.
-              </Copy>
-              <Copy>
-                We know you're more than just your eyeballs.
+                Spectrum keeps each conversation in its own unique and shareable place so that you can find it whenever you're ready.
               </Copy>
             </FlexCol>
-            <img src="/img/share.svg" />
+            <img src="/img/share.svg" role="presentation" />
           </SectionContent>
           <GoopyThree />
         </SectionThree>
         <SectionFour>
           <SectionContent>
-            <ClusterOne src="/img/cluster-2.svg" />
-            <ClusterTwo src="/img/cluster-1.svg" />
-            <ClusterThree src="/img/cluster-5.svg" />
-            <ClusterFour src="/img/cluster-4.svg" />
-            <img src="/img/create.svg" />
+            <ClusterOne src="/img/cluster-2.svg" role="presentation" />
+            <ClusterTwo src="/img/cluster-1.svg" role="presentation" />
+            <ClusterThree src="/img/cluster-5.svg" role="presentation" />
+            <ClusterFour src="/img/cluster-4.svg" role="presentation" />
+            <img src="/img/create.svg" role="presentation" />
             <FlexCol>
-              <Tagline>Come on in, the chatter's fine!</Tagline>
-
+              <Tagline>Come on in, the chatter's fine.</Tagline>
               <Copy>
-                Conversations are impossible to keep up with on most platforms if you're not online all day.
-              </Copy>
-              <Copy>
-                We're focused on making sure conversations are easy to join and follow whenever you're ready.
-              </Copy>
-              <Copy>
-                So, hop on in!
+                Spectrum is free for everyone, so hop on in!
               </Copy>
               <Button onClick={this.login}>
                 <Icon icon="twitter" color="brand.default" static />
@@ -136,7 +127,26 @@ class Homepage extends React.Component {
               </Button>
             </FlexCol>
           </SectionContent>
+          <GoopyFour />
         </SectionFour>
+        <Footer>
+          <FlexRow>
+            <LinkBlock href="https://spectrum.chat/~spectrum">
+              <Icon icon="logo" reverse static size={48} />
+            </LinkBlock>
+          </FlexRow>
+          <FlexRow smallCol>
+            <LinkBlock href="">
+              <div>Code of Conduct</div>
+            </LinkBlock>
+            <LinkBlock href="mailto:support@spectrum.chat">
+              <div>Support</div>
+            </LinkBlock>
+            <LinkBlock href="mailto:hi@spectrum.chat">
+              <div>Contact</div>
+            </LinkBlock>
+          </FlexRow>
+        </Footer>
       </Wrapper>
     );
   }

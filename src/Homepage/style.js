@@ -1,6 +1,13 @@
 import styled from 'styled-components';
 import { Logo } from '../shared/Logos';
-import { Gradient, H2, FlexCol, FlexRow, P, Shadow } from '../shared/Globals';
+import {
+  Gradient,
+  H2,
+  FlexCol,
+  FlexRow,
+  P,
+  Transition,
+} from '../shared/Globals';
 
 export const Wrapper = styled(FlexCol)`
 	flex: 1 0 auto;
@@ -98,6 +105,62 @@ export const SectionFour = styled(Section)`
 	}
 `;
 
+export const Footer = styled(Section)`
+	flex-direction: row;
+	flex: 0 0 auto;
+	background-color: ${({ theme }) => theme.space.light};
+	color: ${({ theme }) => theme.text.reverse};
+	justify-content: space-between;
+	align-items: center;
+	padding: 0;
+
+	@media (max-width: 768px) {
+		flex-basis: 240px;
+		flex-direction: column;
+		justify-content: flex-start;
+		padding: 40px;
+	}
+`;
+
+export const LinkBlock = styled.a`
+	display: inline-block;
+	margin: 0 48px 0 24px;
+	flex: 0 0 auto;
+	position: relative;
+
+	div {
+		font-size: 16px;
+		font-weight: 700;
+		padding-bottom: 0;
+		text-align: center;
+		transition: ${Transition.hover.off};
+		border-bottom: 2px solid transparent;
+
+		&:hover {
+			color: ${({ theme }) => theme.text.reverse};
+			border-bottom: 2px solid ${({ theme }) => theme.text.reverse};
+			padding-bottom: 4px;
+			transition: ${Transition.hover.on};
+		}
+	}
+
+	@media (max-width: 768px) {
+		flex-direction: column;
+		justify-content: flex-start;
+		padding-bottom: 24px;
+
+		div {
+			border-bottom: none;
+			
+			&:hover {
+				border-bottom: none;
+				padding-bottom: 0;
+				text-decoration: underline;
+			}
+		}
+	}
+`;
+
 export const Cluster = styled.img`
 	position: absolute;
 `;
@@ -105,7 +168,7 @@ export const Cluster = styled.img`
 export const ClusterOne = styled(Cluster)`
 	max-width: 120px;
 	max-height: 120px;
-	opacity: 0.25;
+	opacity: 0.15;
 	top: 10%;
 	left: 10%;
 	z-index: 1;
@@ -114,7 +177,7 @@ export const ClusterOne = styled(Cluster)`
 export const ClusterTwo = styled(Cluster)`
 	max-width: 160px;
 	max-height: 160px;
-	opacity: 0.5;
+	opacity: 0.15;
 	top: 60%;
 	right: 10%;
 	z-index: 1;
@@ -123,7 +186,7 @@ export const ClusterTwo = styled(Cluster)`
 export const ClusterThree = styled(Cluster)`
 	max-width: 80px;
 	max-height: 80px;
-	opacity: 0.3;
+	opacity: 0.15;
 	top: 10%;
 	right: 40%;
 	z-index: 1;
@@ -132,7 +195,7 @@ export const ClusterThree = styled(Cluster)`
 export const ClusterFour = styled(Cluster)`
 	max-width: 80px;
 	max-height: 80px;
-	opacity: 0.3;
+	opacity: 0.15;
 	top: 80%;
 	left: 40%;
 	z-index: 1;
@@ -173,6 +236,21 @@ export const GoopyThree = styled.div`
 	position: absolute;
 	background-size: 100%;
 	z-index: 0;
+	height: calc(100% + 4px);
+	top: 0;
+	width: 110%;
+	bottom: -2px;
+	left: -5%;
+	right: -5%;
+`;
+
+export const GoopyFour = styled.div`
+	background-color: transparent;
+	background: url(/img/goopy-4.svg) center bottom no-repeat;
+	position: absolute;
+	background-size: 100%;
+	z-index: 0;
+	transform: rotateY(180deg);
 	height: calc(100% + 4px);
 	top: 0;
 	width: 110%;
