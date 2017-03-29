@@ -14,6 +14,7 @@ export const Wrapper = styled(FlexCol)`
 	flex: 1 0 auto;
 	width: 100%;
 	background-color: ${({ theme }) => theme.bg.default};
+  overflow-x: hidden;
 `;
 
 export const Section = styled(FlexCol)`
