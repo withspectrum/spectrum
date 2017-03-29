@@ -74,10 +74,6 @@ export const SectionThree = styled(Section)`
 	img {
 		margin-left: 80px;
 	}
-
-	> p {
-		font-weight: 700;
-	}
 `;
 
 export const SectionFour = styled(Section)`
@@ -85,10 +81,6 @@ export const SectionFour = styled(Section)`
 	justify-content: space-around;
 	background-color: ${({ theme }) => theme.bg.default};
 	color: ${({ theme }) => theme.text.default};
-
-	> p {
-		font-weight: 700;
-	}
 
 	img {
 		margin-right: 80px;
@@ -107,7 +99,7 @@ export const SectionFour = styled(Section)`
 
 export const Footer = styled(Section)`
 	flex-direction: row;
-	flex: 0 0 auto;
+	flex: 0 0 80px;
 	background-color: ${({ theme }) => theme.space.light};
 	color: ${({ theme }) => theme.text.reverse};
 	justify-content: space-between;
@@ -151,7 +143,7 @@ export const LinkBlock = styled.a`
 
 		div {
 			border-bottom: none;
-			
+
 			&:hover {
 				border-bottom: none;
 				padding-bottom: 0;
@@ -222,7 +214,7 @@ export const GoopyTwo = styled.div`
 	background-size: 100%;
 	transform: rotateY(180deg);
 	z-index: 0;
-	height: calc(100% + 4px);
+	height: calc(100% + 2px);
 	top: 0;
 	width: 110%;
 	bottom: -2px;
@@ -236,7 +228,7 @@ export const GoopyThree = styled.div`
 	position: absolute;
 	background-size: 100%;
 	z-index: 0;
-	height: calc(100% + 4px);
+	height: calc(100% + 2px);
 	top: 0;
 	width: 110%;
 	bottom: -2px;
@@ -251,7 +243,7 @@ export const GoopyFour = styled.div`
 	background-size: 100%;
 	z-index: 0;
 	transform: rotateY(180deg);
-	height: calc(100% + 4px);
+	height: calc(100% + 2px);
 	top: 0;
 	width: 110%;
 	bottom: -2px;
@@ -260,7 +252,7 @@ export const GoopyFour = styled.div`
 `;
 
 export const Tagline = styled(H2)`
-	font-weight: 500;
+	font-weight: 700;
 	font-size: 24px;
 	margin-top: 8px;
 	margin-bottom: 24px;
