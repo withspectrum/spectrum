@@ -7,6 +7,7 @@ import {
   FlexRow,
   P,
   Transition,
+  Shadow,
 } from '../shared/Globals';
 
 export const Wrapper = styled(FlexCol)`
@@ -104,7 +105,7 @@ export const Footer = styled(Section)`
 	color: ${({ theme }) => theme.text.reverse};
 	justify-content: space-between;
 	align-items: center;
-	padding: 0;
+	padding: 0 40px;
 
 	@media (max-width: 768px) {
 		flex-basis: 240px;
@@ -116,22 +117,24 @@ export const Footer = styled(Section)`
 
 export const LinkBlock = styled.a`
 	display: inline-block;
-	margin: 0 48px 0 24px;
+	margin: 0 24px;
 	flex: 0 0 auto;
 	position: relative;
 
 	div {
 		font-size: 16px;
 		font-weight: 700;
-		padding-bottom: 0;
+		padding: 12px 16px;
+		top: 4px;
+		position: relative;
 		text-align: center;
 		transition: ${Transition.hover.off};
-		border-bottom: 2px solid transparent;
+		border-radius: 4px;
 
 		&:hover {
-			color: ${({ theme }) => theme.text.reverse};
-			border-bottom: 2px solid ${({ theme }) => theme.text.reverse};
-			padding-bottom: 4px;
+			border-radius: 12px;
+			background-color: ${({ theme }) => theme.bg.default};
+			color: #009EBA;
 			transition: ${Transition.hover.on};
 		}
 	}

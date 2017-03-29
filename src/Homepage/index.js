@@ -131,11 +131,11 @@ class Homepage extends React.Component {
         </SectionFour>
         <Footer>
           <FlexRow>
-            <LinkBlock href="https://spectrum.chat/~spectrum">
-              <Icon icon="logo" reverse static size={48} />
-            </LinkBlock>
+            <a href="https://spectrum.chat/~spectrum">
+              <Icon icon="logo" reverse size={48} />
+            </a>
           </FlexRow>
-          <FlexRow smallCol>
+          <FlexRow smallCol center>
             <LinkBlock href="">
               <div>Code of Conduct</div>
             </LinkBlock>
