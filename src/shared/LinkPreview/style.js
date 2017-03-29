@@ -13,6 +13,7 @@ export const LinkPreviewContainer = styled.a`
   position: relative;
   padding: ${props => props.padding ? 0 : '16px'};
   transition: ${Transition.reaction.off};
+  max-height: ${props => props.size === 'large' ? '140px' : '100%'};
 
   &:hover {
     transition: ${Transition.reaction.on};
@@ -27,7 +28,8 @@ export const Close = styled.span`
 `;
 
 export const LinkPreviewImage = styled.div`
-  border-radius: 4px 0 0 4px;
+  border-radius: ${props =>
+  props.size === 'large' ? '4px 0 0 4px' : '4px 4px 0 0'};
   overflow: hidden;
   min-width: ${props => props.size === 'large' ? '140px' : '100%'};
   min-height: ${props => props.size === 'large' ? '140px' : '140px'};
@@ -46,7 +48,8 @@ export const LinkPreviewTextContainer = styled.div`
   overflow: hidden;
   flex-direction: column;
   justify-content: ${props => props.size === 'large' ? 'center' : 'flex-start'};
-  padding: ${props => props.padding ? '16px' : 0};
+  padding: ${props => props.padding ? '8px 12px' : 0};
+  max-width: 100%;
 `;
 
 export const BaseMeta = styled.p`
@@ -54,10 +57,15 @@ export const BaseMeta = styled.p`
   flex: 1 1 auto;
   line-height: 1.3;
   margin: 2px 0;
+  width: calc(100% - 16px);
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const MetaTitle = styled(BaseMeta)`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 800;
   white-space: normal;
   color: ${({ theme }) => theme.text.default};
@@ -72,6 +80,6 @@ export const MetaDescription = styled(BaseMeta)`
 
 export const MetaUrl = styled(BaseMeta)`
   color: #9FA7B5;
-  margin-top: 8px;
+  margin-top: 4px;
   font-size: 12px;
 `;

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Markdown from '../../../shared/Markdown';
 import LinkPreview from '../../../shared/LinkPreview';
 import { openGallery } from '../../../actions/gallery';
+import { track } from '../../../EventTracker';
 import { timeDifference } from '../../../helpers/utils';
 
 import {
@@ -44,6 +45,10 @@ class Story extends Component {
     this.props.dispatch(openGallery(e));
   };
 
+  handleClick = url => {
+    track('link preview', 'clicked', url);
+  };
+
   render() {
     let { story, frequency } = this.props;
     const timestamp = timeDifference(Date.now(), story.timestamp);
@@ -70,7 +75,9 @@ class Story extends Component {
         </div>
 
         {story.metadata &&
-          <LinkPreviewContainer>
+          <LinkPreviewContainer
+            onClick={() => this.handleClick(story.metadata.trueUrl)}
+          >
             <LinkPreview
               trueUrl={story.metadata.trueUrl}
               data={story.metadata.data}

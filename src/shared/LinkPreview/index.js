@@ -26,7 +26,7 @@ class LinkPreview extends Component {
       editable,
     } = this.props;
     author = author ? truncate(author, 32) : '';
-    description = description ? truncate(description, 140) : '';
+    description = description ? truncate(description, 80) : '';
     publisher = publisher ? truncate(publisher, 32) : '';
     title = title ? truncate(title, 72) : '';
     url ? truncate(url, 30) : '';
@@ -50,8 +50,6 @@ class LinkPreview extends Component {
           {title && <MetaTitle>{title}</MetaTitle>}
 
           {description && <MetaDescription>{description}</MetaDescription>}
-
-          {author && <MetaDescription>{author}</MetaDescription>}
 
           <MetaUrl>
             {url ? url : trueUrl}

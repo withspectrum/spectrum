@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { track } from '../../../EventTracker';
 // eslint-disable-next-line
 import {
   StoryBody,
@@ -51,6 +52,13 @@ class StoryCard extends Component {
     let arr = [];
     arr.push(e.target.src);
     this.props.dispatch(openGallery(arr));
+  };
+
+  handleClick = (e, url) => {
+    e.preventDefault();
+
+    track('link preview', 'clicked', url);
+    window.open(url, '_blank');
   };
 
   render() {
@@ -113,23 +121,7 @@ class StoryCard extends Component {
 
     return (
       <Card link={link} selected={isActive}>
-        <StoryBody>
-          <Title>{title}</Title>
-
-          {metadata &&
-            <LinkPreviewContainer>
-              <LinkPreview
-                trueUrl={metadata.trueUrl}
-                data={metadata.data}
-                size={'small'}
-                editable={false}
-              />
-            </LinkPreviewContainer>}
-
-          {heads}
-
-        </StoryBody>
-        <StoryFooter>
+        <StoryFooter selected={isActive}>
           <Name>
             {person.name}&nbsp;·&nbsp;
             {timeDifference(Date.now(), timestamp)}
@@ -141,6 +133,25 @@ class StoryCard extends Component {
               </Link>}
           </Name>
         </StoryFooter>
+
+        <StoryBody>
+          <Title>{title}</Title>
+
+          {heads}
+
+          {metadata &&
+            <LinkPreviewContainer
+              onClick={e => this.handleClick(e, metadata.trueUrl)}
+            >
+              <LinkPreview
+                trueUrl={metadata.trueUrl}
+                data={metadata.data}
+                size={'small'}
+                editable={false}
+              />
+            </LinkPreviewContainer>}
+
+        </StoryBody>
       </Card>
     );
   }

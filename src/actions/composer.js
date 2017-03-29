@@ -50,7 +50,6 @@ export const removeImageFromStory = (image, story) => dispatch => {
 };
 
 export const updateMetadata = (metadata, trueUrl) => dispatch => {
-  console.log('action ', metadata, trueUrl);
   dispatch({
     type: 'UPDATE_METADATA',
     metadata,

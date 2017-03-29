@@ -17,9 +17,19 @@ export const StoryFooter = styled.div`
   display: flex;
   align-items: center;
   flex: 0 0 auto;
-	border-top: 1px solid #f6f7f8;
 	padding: 8px 16px;
-	background: #fff;
+	position: relative;
+
+	&:after {
+		content: '';
+		border-bottom: 1px solid #f6f7f8;
+		width: ${props => props.selected ? 'calc(100% - 4px)' : '100%'};
+		display: inline-block;
+		height: 0;
+		bottom: 0;
+		left: 0;
+		position: absolute;
+	}
 `;
 
 export const Title = styled.p`
@@ -57,5 +67,5 @@ export const UnreadCount = styled.span`
 `;
 
 export const LinkPreviewContainer = styled.div`
-	margin: 12px 0;
+	margin: 16px 0 8px;
 `;
