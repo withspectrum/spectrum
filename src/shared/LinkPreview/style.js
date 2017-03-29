@@ -17,7 +17,7 @@ export const LinkPreviewContainer = styled.a`
 
   &:hover {
     transition: ${Transition.reaction.on};
-    box-shadow: 0 2px 4px rgba(0,0,0,0.16);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
     border: 1px solid ${({ theme }) => '#cfd7e0'};
   }
 `;
@@ -54,7 +54,7 @@ export const LinkPreviewTextContainer = styled.div`
 export const BaseMeta = styled.p`
   display: flex;
   flex: 1 1 auto;
-  line-height: 1.3;
+  line-height: 1.2;
   margin: 2px 0;
   width: calc(100% - 16px);
   display: inline-block;
@@ -64,7 +64,7 @@ export const BaseMeta = styled.p`
 `;
 
 export const MetaTitle = styled(BaseMeta)`
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 800;
   white-space: normal;
   color: ${({ theme }) => theme.text.default};
@@ -79,6 +79,7 @@ export const MetaDescription = styled(BaseMeta)`
 
 export const MetaUrl = styled(BaseMeta)`
   color: #9FA7B5;
-  margin-top: 4px;
+  font-weight: 500;
+  margin-top: 8px;
   font-size: 12px;
 `;

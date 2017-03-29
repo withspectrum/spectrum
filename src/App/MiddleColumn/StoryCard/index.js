@@ -7,10 +7,15 @@ import {
   StoryBody,
   StoryFooter,
   Name,
+  JoinTheConvo,
   MessageCount,
   Title,
   UnreadCount,
   LinkPreviewContainer,
+  HeadsContainer,
+  StatusBar,
+  StatusText,
+  Dot,
 } from './style';
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference } from '../../../helpers/utils';
@@ -84,7 +89,7 @@ class StoryCard extends Component {
     // if the story has at least 3 participants
     if (
       participants &&
-      Object.keys(participants).length >= 3 &&
+      Object.keys(participants).length >= 0 &&
       active !== 'everything'
     ) {
       if (
@@ -102,42 +107,67 @@ class StoryCard extends Component {
           />
         );
       }
-    } else {
-      heads = (
-        <MessageCount>
-          {messages > 0
-            ? <span>{`${messages} messages`}&nbsp;</span>
-            : isNew ? <span /> : <span>No messages yet&nbsp;</span>}
-          {unreadMessages > 0 &&
-            <span>
-              <UnreadCount>
-                {` (${unreadMessages} new!)`}&nbsp;
-              </UnreadCount>
-            </span>}
-          {isNew && <span><UnreadCount> New!</UnreadCount></span>}
-        </MessageCount>
-      );
     }
+
+    let status;
+    status = 'default';
+    isActive ? status = 'active' : null;
+    isNew ? status = 'new' : null;
+    unreadMessages > 0 ? status = 'unread' : null;
 
     return (
       <Card link={link} selected={isActive}>
-        <StoryFooter selected={isActive}>
-          <Name>
-            {person.name}&nbsp;·&nbsp;
-            {timeDifference(Date.now(), timestamp)}
-            {metaText && metaLink && `\u00A0in\u00A0`}
-            {metaText &&
-              metaLink &&
-              <Link to={metaLink}>
-                {metaText}
-              </Link>}
-          </Name>
-        </StoryFooter>
+
+        <StatusBar status={status}>
+          {isNew &&
+            <span>
+              <StatusText status={status}>
+                New!
+              </StatusText>
+              <Dot status={status} />
+            </span>}
+
+          {unreadMessages > 0 &&
+            <span>
+              <StatusText status={status}>
+                {`${unreadMessages} new`}
+                {' '}·{' '}
+                {timeDifference(Date.now(), timestamp)}
+              </StatusText>
+              <Dot status={status} />
+            </span>}
+
+          {isActive &&
+            messages > 0 &&
+            <StatusText status={status}>
+              {`${messages} messages`} · {timeDifference(Date.now(), timestamp)}
+            </StatusText>}
+
+          {isActive &&
+            messages === 0 &&
+            <StatusText status={status}>
+              Posted {timeDifference(Date.now(), timestamp)}
+            </StatusText>}
+
+          {!isNew &&
+            !unreadMessages &&
+            !isActive &&
+            messages > 0 &&
+            <StatusText status={status}>
+              {`${messages} messages`} · {timeDifference(Date.now(), timestamp)}
+            </StatusText>}
+
+          {!isNew &&
+            !unreadMessages &&
+            !isActive &&
+            messages === 0 &&
+            <StatusText status={status}>
+              Posted {timeDifference(Date.now(), timestamp)}
+            </StatusText>}
+        </StatusBar>
 
         <StoryBody>
           <Title>{title}</Title>
-
-          {heads}
 
           {metadata &&
             <LinkPreviewContainer
@@ -150,8 +180,22 @@ class StoryCard extends Component {
                 editable={false}
               />
             </LinkPreviewContainer>}
-
         </StoryBody>
+
+        <HeadsContainer>
+          {heads}
+        </HeadsContainer>
+
+        <StoryFooter>
+          <Name>
+            By {person.name} {metaText ? ' · ' : ''}
+            {metaText &&
+              metaLink &&
+              <Link to={metaLink}>
+                {metaText}
+              </Link>}
+          </Name>
+        </StoryFooter>
       </Card>
     );
   }

@@ -12,7 +12,7 @@ import {
 export const Column = styled.div`
 	display: flex;
 	flex-direction: column;
-	background-color: hsla(210, 13%, 95%, 1);
+	background-color: hsla(210, 13%, 94%, 1);
 	height: 100%;
 	width: 100%;
 `;

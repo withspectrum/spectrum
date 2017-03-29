@@ -6,6 +6,7 @@ export const Body = styled.div`
 	padding: 24px 16px 16px;
 	border-radius: 4px;
 	text-align: center;
+	overflow: hidden;
 `;
 
 export const Title = styled(H1)`
@@ -24,7 +25,7 @@ export const Description = styled(H4)`
 `;
 
 export const Hscroll = styled.div`
-	overflow-x: auto;
+	overflow-x: scroll;
 	width: 100%;
 	margin-left: -32px;
 	width: calc(100% + 64px);

@@ -4,7 +4,7 @@ import { Shadow, Transition } from '../Globals';
 export const Wrapper = styled.div`
 	display: inline-block;
 	width: calc(100% - 32px);
-	margin: 16px 12px 0 16px;
+	margin: 16px 8px 0 16px;
 	flex: 0 0 auto;
 	border-radius: 4px;
 	overflow: ${props => props.overflow === 'visible' ? 'visible' : 'hidden'};
@@ -39,13 +39,5 @@ export const LinkWrapper = styled.div`
 	flex-direction: column;
 	flex: 0 0 auto;
 	background-color: #ffffff;
-	transition: ${Transition.hover.off};
-	box-shadow: inset -4px 0 0 ${props =>
-  props.selected ? props.theme.brand.default : '#fff'};
-
-	&:hover {
-		box-shadow: inset -4px 0 0 ${props =>
-  props.selected ? props.theme.brand.default : '#fff'};
-		transition: ${Transition.hover.on};
-	}
+	border-radius: 4px;
 `;
