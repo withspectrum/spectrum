@@ -108,7 +108,7 @@ export const Footer = styled(Section)`
 	padding: 0 40px;
 
 	@media (max-width: 768px) {
-		flex-basis: 240px;
+		flex-basis: auto;
 		flex-direction: column;
 		justify-content: flex-start;
 		padding: 40px;
@@ -142,7 +142,7 @@ export const LinkBlock = styled.a`
 	@media (max-width: 768px) {
 		flex-direction: column;
 		justify-content: flex-start;
-		padding-bottom: 24px;
+		padding-bottom: 16px;
 
 		div {
 			border-bottom: none;
@@ -215,7 +215,6 @@ export const GoopyTwo = styled.div`
 	background: url(/img/goopy-2.svg) center bottom no-repeat;
 	position: absolute;
 	background-size: 100%;
-	transform: rotateY(180deg);
 	z-index: 0;
 	height: calc(100% + 2px);
 	top: 0;
@@ -245,7 +244,6 @@ export const GoopyFour = styled.div`
 	position: absolute;
 	background-size: 100%;
 	z-index: 0;
-	transform: rotateY(180deg);
 	height: calc(100% + 2px);
 	top: 0;
 	width: 110%;
