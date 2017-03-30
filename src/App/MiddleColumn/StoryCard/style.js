@@ -31,7 +31,7 @@ export const Title = styled.p`
 `;
 
 export const Name = styled.p`
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 500;
 	color: #919CAC;
 
@@ -88,7 +88,7 @@ export const StatusBar = styled.div`
   : `background: #fff;`}
 `;
 export const StatusText = styled.p`
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: 400;
 	color: ${props => props.theme.text.alt};
 
