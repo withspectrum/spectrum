@@ -293,8 +293,6 @@ export const truncate = (str, length) => {
 };
 
 export const getMetaDataFromUrl = url => {
-  const myHeaders = new Headers();
-
   const myInit = {
     method: 'GET',
     headers: {
@@ -311,8 +309,6 @@ export const getMetaDataFromUrl = url => {
       return data.data;
     })
     .catch(error => {
-      if (error) {
-        console.log('error fetching metadata: ', error);
-      }
+      console.log('Could not resolve your URL');
     });
 };

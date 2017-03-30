@@ -44,6 +44,16 @@ import {
   Image,
   Delete,
   EmbedInput,
+  LinkPreviewSkeleton,
+  AnimatedBackground,
+  CoverTop,
+  CoverMiddle,
+  CoverMiddleMiddle,
+  CoverMiddleTopRight,
+  CoverLeft,
+  CoverMiddleBottomRight,
+  CoverBottom,
+  CoverMiddleMiddleBottomRight,
 } from './style';
 
 class Composer extends Component {
@@ -62,6 +72,7 @@ class Composer extends Component {
       creating: true,
       metadata: null,
       metadataLength: 0,
+      fetchingMetadata: false,
     };
   }
 
@@ -110,7 +121,8 @@ class Composer extends Component {
         });
       })
       .catch(e => {
-        this.setState({
+        this.props.dispatch({
+          type: 'SET_COMPOSER_ERROR',
           error: e,
         });
       });
@@ -144,18 +156,21 @@ class Composer extends Component {
       );
     } else if (!frequency && title) {
       // if no frequency is chosen
-      this.setState({
+      this.props.dispatch({
+        type: 'SET_COMPOSER_ERROR',
         error: 'Choose a frequency to share this story to!',
       });
     } else if (!title) {
       // missing a title
-      this.setState({
+      this.props.dispatch({
+        type: 'SET_COMPOSER_ERROR',
         error: 'Be sure to type a title!',
       });
     } else {
       // something else went wrong...
-      this.setState({
-        error: 'Oops!',
+      this.props.dispatch({
+        type: 'SET_COMPOSER_ERROR',
+        error: 'Oops, something went wrong!',
       });
     }
   };
@@ -258,7 +273,7 @@ class Composer extends Component {
 
     if (urlToCheck) {
       const addhttp = url => new Promise((resolve, reject) => {
-        this.props.dispatch(loading());
+        this.setState({ fetchingMetadata: true });
 
         if (!/^(f|ht)tps?:\/\//i.test(urlToCheck)) {
           urlToCheck = 'https://' + urlToCheck;
@@ -267,6 +282,7 @@ class Composer extends Component {
         getMetaDataFromUrl(urlToCheck)
           .then(data => {
             this.props.dispatch(stopLoading());
+            this.setState({ fetchingMetadata: false });
 
             let metadataLength = this.state.metadataLength + 1;
             this.setState({
@@ -279,8 +295,11 @@ class Composer extends Component {
             resolve(data);
           })
           .catch(err => {
-            this.props.dispatch(stopLoading());
-            console.log('error fetching metadata: ', err);
+            this.props.dispatch({
+              type: 'SET_COMPOSER_ERROR',
+              error: "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
+            });
+            this.setState({ fetchingMetadata: false });
           });
       });
 
@@ -387,6 +406,19 @@ class Composer extends Component {
                           trueUrl={this.state.trueUrl}
                         />}
 
+                      {this.state.fetchingMetadata &&
+                        <LinkPreviewSkeleton>
+                          <AnimatedBackground />
+                          <CoverLeft />
+                          <CoverTop />
+                          <CoverMiddle />
+                          <CoverMiddleMiddle />
+                          <CoverMiddleTopRight />
+                          <CoverMiddleBottomRight />
+                          <CoverMiddleMiddleBottomRight />
+                          <CoverBottom />
+                        </LinkPreviewSkeleton>}
+
                       <MediaInput
                         ref="media"
                         type="file"
@@ -436,7 +468,8 @@ class Composer extends Component {
                   />
                 </SubmitContainer>
 
-                {this.state.error && <Alert>{this.state.error}</Alert>}
+                {this.props.composer.error &&
+                  <Alert>{this.props.composer.error}</Alert>}
               </form>
             </FlexColumn>
           </Header>

@@ -1,5 +1,6 @@
 import { track } from '../EventTracker';
 import { removeImage } from '../db/stories';
+import { apiURL } from '../config/api';
 
 /*------------------------------------------------------------\*
 *

@@ -43,7 +43,7 @@ export const LinkPreviewImage = styled.div`
 
 export const LinkPreviewTextContainer = styled.div`
   display: flex;
-  flex: 0 1 auto;
+  flex: 1 1 auto;
   overflow: hidden;
   flex-direction: column;
   justify-content: ${props => props.size === 'large' ? 'center' : 'flex-start'};

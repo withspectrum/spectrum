@@ -5,6 +5,7 @@ const initialState = {
   newStoryKey: null,
   mediaList: [],
   metadata: null,
+  error: null,
 };
 
 export default function root(state = initialState, action) {
@@ -28,6 +29,7 @@ export default function root(state = initialState, action) {
         newStoryKey: null,
         isOpen: false,
         mediaList: [],
+        error: null,
       });
     case 'SET_ACTIVE_STORY':
     case 'SET_ACTIVE_FREQUENCY':
@@ -52,6 +54,10 @@ export default function root(state = initialState, action) {
     case 'REMOVE_METADATA':
       return Object.assign({}, state, {
         metadata: null,
+      });
+    case 'SET_COMPOSER_ERROR':
+      return Object.assign({}, state, {
+        error: action.error,
       });
     case 'ADD_MEDIA_LIST':
       return Object.assign({}, state, {

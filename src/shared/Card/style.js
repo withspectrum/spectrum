@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
 	margin: 16px 8px 0 16px;
 	flex: 0 0 auto;
 	border-radius: 4px;
-	overflow: ${props => props.overflow === 'visible' ? 'visible' : 'hidden'};
+	overflow: ${props => props.overflow === 'visible' ? 'visible' : 'visible'};
 	background-color: ${({ theme }) => theme.bg.default};
 	transition: ${Transition.hover.off};
 	-webkit-font-smoothing: subpixel-antialiased;

@@ -140,7 +140,9 @@ class StoryCard extends Component {
           {isActive &&
             messages > 0 &&
             <StatusText status={status}>
-              {`${messages} messages`} · {timeDifference(Date.now(), timestamp)}
+              {`${messages} messages`}
+              {' '}·{' '}
+              {timeDifference(Date.now(), timestamp).toLowerCase()}
             </StatusText>}
 
           {isActive &&
@@ -154,7 +156,9 @@ class StoryCard extends Component {
             !isActive &&
             messages > 0 &&
             <StatusText status={status}>
-              {`${messages} messages`} · {timeDifference(Date.now(), timestamp)}
+              {`${messages} messages`}
+              {' '}·{' '}
+              {timeDifference(Date.now(), timestamp).toLowerCase()}
             </StatusText>}
 
           {!isNew &&
@@ -162,7 +166,7 @@ class StoryCard extends Component {
             !isActive &&
             messages === 0 &&
             <StatusText status={status}>
-              Posted {timeDifference(Date.now(), timestamp)}
+              Posted {timeDifference(Date.now(), timestamp).toLowerCase()}
             </StatusText>}
         </StatusBar>
 
@@ -171,7 +175,7 @@ class StoryCard extends Component {
 
           {metadata &&
             <LinkPreviewContainer
-              onClick={e => this.handleClick(e, metadata.trueUrl)}
+              onClick={e => this.handleClick(e, metadata.trueUrl).toLowerCase()}
             >
               <LinkPreview
                 trueUrl={metadata.trueUrl}

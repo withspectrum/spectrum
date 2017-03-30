@@ -20,10 +20,11 @@ export const StoryFooter = styled.div`
 	padding: 6px 16px;
 	border-top: 1px solid ${props => props.theme.border.default};
 	background: #f6f7f8
+	border-radius: 0 0 4px 4px;
 `;
 
 export const Title = styled.p`
-	font-size: 18px;
+	font-size: 20px;
 	font-weight: 700;
 	line-height: 24px;
 	color: ${({ theme }) => theme.text.default};
@@ -77,6 +78,7 @@ export const StatusBar = styled.div`
 	justify-content: space-between;
 	position: relative;
 	padding: 6px 16px;
+	border-radius: 4px 4px 0 0;
 	border-bottom: 1px solid ${props =>
   props.status === 'active' ? props.theme.brand.default : '#f6f7f8'};
 	${props => props.status === 'active'
