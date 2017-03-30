@@ -96,6 +96,7 @@ class InfiniteList extends React.Component {
         isRowLoaded={isElementLoaded}
         loadMoreRows={loadMoreElements}
         rowCount={elementCount}
+        threshold={1}
       >
         {({ onRowsRendered, registerChild }) => (
           <List

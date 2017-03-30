@@ -30,6 +30,7 @@ import Icon from '../../shared/Icons';
 import StoryCard from './StoryCard';
 import Notification from './Notification';
 import { ACTIVITY_TYPES } from '../../db/types';
+import { getStories } from '../../db/stories';
 import { getCurrentFrequency } from '../../helpers/frequencies';
 import { formatSenders } from '../../helpers/notifications';
 
@@ -337,6 +338,26 @@ class MiddleColumn extends Component {
             <InfiniteList
               height={window.innerHeight - 50}
               width={window.innerWidth > 768 ? 419 : window.innerWidth}
+              isElementLoaded={({ index }) => index > stories.length - 1}
+              loadMoreElements={({ startIndex, stopIndex }) =>
+                new Promise(resolve => {
+                  if (
+                    stopIndex === stories.length - 1 &&
+                    Object.keys(frequency.stories).length > stories.length
+                  ) {
+                    getStories({
+                      frequencyId: frequency.id,
+                      startIndex: stories.length - 1,
+                      stopIndex: stories.length + 15,
+                    }).then(stories => {
+                      this.props.dispatch({
+                        type: 'ADD_STORIES',
+                        stories,
+                      });
+                    });
+                  }
+                  resolve();
+                })}
               elementCount={stories.length}
               elementRenderer={this.renderStory}
               keyMapper={index => stories[index].id}
