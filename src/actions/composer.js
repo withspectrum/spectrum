@@ -50,16 +50,18 @@ export const removeImageFromStory = (image, story) => dispatch => {
   });
 };
 
-export const updateMetadata = (metadata, trueUrl) => dispatch => {
+export const addLinkPreview = data => dispatch => {
   dispatch({
-    type: 'UPDATE_METADATA',
-    metadata,
-    trueUrl,
+    type: 'ADD_LINK_PREVIEW',
+    linkPreview: {
+      data: data.data,
+      trueUrl: data.trueUrl,
+    },
   });
 };
 
-export const removeMetadata = () => dispatch => {
+export const removeLinkPreview = () => dispatch => {
   dispatch({
-    type: 'REMOVE_METADATA',
+    type: 'REMOVE_LINK_PREVIEW',
   });
 };

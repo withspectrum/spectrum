@@ -292,12 +292,12 @@ export const truncate = (str, length) => {
   return subString.substr(0, subString.lastIndexOf(' ')) + '…';
 };
 
-export const getMetaDataFromUrl = url => {
+export const getLinkPreviewFromUrl = url => {
   const myInit = {
     method: 'GET',
     headers: {
-      Accept: 'text/plain',
-      'Content-Type': 'text/plain',
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
     },
   };
 
@@ -307,8 +307,5 @@ export const getMetaDataFromUrl = url => {
     })
     .then(data => {
       return data.data;
-    })
-    .catch(error => {
-      console.log('Could not resolve your URL');
     });
 };

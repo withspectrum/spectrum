@@ -44,16 +44,20 @@ export default function root(state = initialState, action) {
       return Object.assign({}, state, {
         body: action.body,
       });
-    case 'UPDATE_METADATA':
+    case 'ADD_LINK_PREVIEW':
       return Object.assign({}, state, {
         metadata: {
-          data: action.metadata,
-          trueUrl: action.trueUrl,
+          linkPreview: {
+            data: action.linkPreview.data,
+            trueUrl: action.linkPreview.trueUrl,
+          },
         },
       });
-    case 'REMOVE_METADATA':
+    case 'REMOVE_LINK_PREVIEW':
       return Object.assign({}, state, {
-        metadata: null,
+        metadata: {
+          linkPreview: null,
+        },
       });
     case 'SET_COMPOSER_ERROR':
       return Object.assign({}, state, {

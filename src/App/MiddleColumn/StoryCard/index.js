@@ -117,7 +117,6 @@ class StoryCard extends Component {
 
     return (
       <Card link={link} selected={isActive}>
-
         <StatusBar status={status}>
           {isNew &&
             <span>
@@ -130,7 +129,11 @@ class StoryCard extends Component {
           {unreadMessages > 0 &&
             <span>
               <StatusText status={status}>
-                {`${unreadMessages} new`}
+                {
+                  `${unreadMessages} new ${unreadMessages === 1
+                    ? 'message'
+                    : 'messages'}`
+                }
                 {' '}·{' '}
                 {timeDifference(Date.now(), timestamp)}
               </StatusText>
@@ -142,7 +145,7 @@ class StoryCard extends Component {
             <StatusText status={status}>
               {`${messages} messages`}
               {' '}·{' '}
-              {timeDifference(Date.now(), timestamp).toLowerCase()}
+              {timeDifference(Date.now(), timestamp)}
             </StatusText>}
 
           {isActive &&
@@ -158,7 +161,7 @@ class StoryCard extends Component {
             <StatusText status={status}>
               {`${messages} messages`}
               {' '}·{' '}
-              {timeDifference(Date.now(), timestamp).toLowerCase()}
+              {timeDifference(Date.now(), timestamp)}
             </StatusText>}
 
           {!isNew &&
@@ -166,20 +169,30 @@ class StoryCard extends Component {
             !isActive &&
             messages === 0 &&
             <StatusText status={status}>
-              Posted {timeDifference(Date.now(), timestamp).toLowerCase()}
+              Posted {timeDifference(Date.now(), timestamp)}
             </StatusText>}
+
+          <Name status={status}>
+            By {person.name} {metaText ? ' · ' : ''}
+            {metaText &&
+              metaLink &&
+              <Link to={metaLink}>
+                {metaText}
+              </Link>}
+          </Name>
         </StatusBar>
 
         <StoryBody>
           <Title>{title}</Title>
 
           {metadata &&
+            metadata.linkPreview &&
             <LinkPreviewContainer
-              onClick={e => this.handleClick(e, metadata.trueUrl).toLowerCase()}
+              onClick={e => this.handleClick(e, metadata.linkPreview.trueUrl)}
             >
               <LinkPreview
-                trueUrl={metadata.trueUrl}
-                data={metadata.data}
+                trueUrl={metadata.linkPreview.trueUrl}
+                data={metadata.linkPreview.data}
                 size={'small'}
                 editable={false}
               />
@@ -190,16 +203,6 @@ class StoryCard extends Component {
           {heads}
         </HeadsContainer>
 
-        <StoryFooter>
-          <Name>
-            By {person.name} {metaText ? ' · ' : ''}
-            {metaText &&
-              metaLink &&
-              <Link to={metaLink}>
-                {metaText}
-              </Link>}
-          </Name>
-        </StoryFooter>
       </Card>
     );
   }

@@ -75,12 +75,13 @@ class Story extends Component {
         </div>
 
         {story.metadata &&
+          story.metadata.linkPreview &&
           <LinkPreviewContainer
-            onClick={() => this.handleClick(story.metadata.trueUrl)}
+            onClick={() => this.handleClick(story.metadata.linkPreview.trueUrl)}
           >
             <LinkPreview
-              trueUrl={story.metadata.trueUrl}
-              data={story.metadata.data}
+              trueUrl={story.metadata.linkPreview.trueUrl}
+              data={story.metadata.linkPreview.data}
               size={'large'}
               editable={false}
             />

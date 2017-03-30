@@ -5,8 +5,8 @@ import { track } from '../../../EventTracker';
 import {
   updateTitle,
   updateBody,
-  updateMetadata,
-  removeMetadata,
+  addLinkPreview,
+  removeLinkPreview,
   addMediaList,
   removeImageFromStory,
 } from '../../../actions/composer';
@@ -20,7 +20,7 @@ import { uploadMultipleMedia } from '../../../db/stories';
 import Textarea from 'react-textarea-autosize';
 import Markdown from '../../../shared/Markdown';
 import LinkPreview from '../../../shared/LinkPreview';
-import { getMetaDataFromUrl } from '../../../helpers/utils';
+import { getLinkPreviewFromUrl } from '../../../helpers/utils';
 
 import {
   ScrollBody,
@@ -60,7 +60,7 @@ class Composer extends Component {
   constructor(props) {
     super(props);
 
-    let { user } = props;
+    let { user, composer: { metadata } } = props;
     let userFreqs = Object.keys(user.frequencies);
 
     this.state = {
@@ -69,10 +69,11 @@ class Composer extends Component {
       loading: false,
       placeholder: '+ Embed',
       embedUrl: '',
+      metadata: metadata,
       creating: true,
-      metadata: null,
-      metadataLength: 0,
-      fetchingMetadata: false,
+      linkPreview: null,
+      linkPreviewLength: 0,
+      fetchingLinkPreview: false,
     };
   }
 
@@ -252,12 +253,12 @@ class Composer extends Component {
       e.keyCode !== 46
     ) {
       // Return if backspace, tab, enter, space or delete was not pressed.
-      // also don't check if we have an existing bundle of metadata saved in state
+      // also don't check if we have an existing bundle of linkPreview saved in state
       return;
     }
 
-    // also don't check if we already have a url in the metadata state
-    if (this.state.metadata !== null) return;
+    // also don't check if we already have a url in the linkPreview state
+    if (this.state.linkPreview !== null) return;
 
     let toCheck = [];
     let len = toCheck.length;
@@ -269,37 +270,41 @@ class Composer extends Component {
       urlToCheck = urls[0];
     }
 
-    if (this.state.metadataLength === len) return; // no new links, don't recheck
+    if (this.state.linkPreviewLength === len) return; // no new links, don't recheck
 
     if (urlToCheck) {
       const addhttp = url => new Promise((resolve, reject) => {
-        this.setState({ fetchingMetadata: true });
+        this.setState({ fetchingLinkPreview: true });
 
         if (!/^(f|ht)tps?:\/\//i.test(urlToCheck)) {
           urlToCheck = 'https://' + urlToCheck;
         }
 
-        getMetaDataFromUrl(urlToCheck)
+        getLinkPreviewFromUrl(urlToCheck)
           .then(data => {
             this.props.dispatch(stopLoading());
-            this.setState({ fetchingMetadata: false });
+            this.setState({ fetchingLinkPreview: false });
 
-            let metadataLength = this.state.metadataLength + 1;
+            let linkPreviewLength = this.state.linkPreviewLength + 1;
             this.setState({
-              metadata: data,
+              linkPreview: data,
               trueUrl: urlToCheck,
-              metadataLength: metadataLength,
+              linkPreviewLength: linkPreviewLength,
+              error: null,
             });
 
-            this.props.dispatch(updateMetadata(data, urlToCheck));
+            const linkPreview = {};
+            linkPreview['data'] = data;
+            linkPreview['trueUrl'] = urlToCheck;
+
+            this.props.dispatch(addLinkPreview(linkPreview));
             resolve(data);
           })
           .catch(err => {
-            this.props.dispatch({
-              type: 'SET_COMPOSER_ERROR',
+            this.setState({
               error: "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
+              fetchingLinkPreview: false,
             });
-            this.setState({ fetchingMetadata: false });
           });
       });
 
@@ -308,13 +313,13 @@ class Composer extends Component {
       return;
   };
 
-  removeMetadata = () => {
+  removeLinkPreview = () => {
     findDOMNode(this.refs.descriptionTextarea).focus();
 
-    this.props.dispatch(removeMetadata());
+    this.props.dispatch(removeLinkPreview());
 
     this.setState({
-      metadata: null,
+      linkPreview: null,
       trueUrl: null,
     });
   };
@@ -397,16 +402,16 @@ class Composer extends Component {
                         }
                       />
 
-                      {this.state.metadata &&
+                      {this.state.linkPreview &&
                         <LinkPreview
-                          data={this.state.metadata}
+                          data={this.state.linkPreview}
                           size={'large'}
-                          remove={this.removeMetadata}
+                          remove={this.removeLinkPreview}
                           editable={true}
                           trueUrl={this.state.trueUrl}
                         />}
 
-                      {this.state.fetchingMetadata &&
+                      {this.state.fetchingLinkPreview &&
                         <LinkPreviewSkeleton>
                           <AnimatedBackground />
                           <CoverLeft />

@@ -27,7 +27,7 @@ export const Wrapper = styled.div`
 	${props => !props.still &&
 css`
 		&:hover {
-			box-shadow: ${Shadow.high};
+			box-shadow: ${Shadow.mid};
 			transition: ${Transition.hover.on};
 			cursor: pointer;
 		}

@@ -30,31 +30,12 @@ export const Title = styled.p`
 	color: ${({ theme }) => theme.text.default};
 `;
 
-export const Name = styled.p`
-	font-size: 12px;
-	font-weight: 500;
-	color: #919CAC;
-
-	a {
-		text-overflow: ellipsis;
-    overflow: hidden;
-	}
-
-	a:hover {
-		color: ${({ theme }) => theme.brand.default};
-	}
-`;
-
-export const MessageCount = styled(Name)`
-	margin-top: 4px;
-`;
-
 export const UnreadCount = styled.span`
 	color: ${({ theme }) => theme.warn.default};
 `;
 
 export const LinkPreviewContainer = styled.div`
-	margin: 16px 0 6px;
+	margin: 16px 0 4px;
 `;
 
 export const HeadsContainer = styled.div`
@@ -63,6 +44,7 @@ export const HeadsContainer = styled.div`
 	display: flex;
 	justify-content: flex-start;
 	padding: 0 8px;
+	border-radius: 0 0 4px 4px;
 `;
 
 export const JoinTheConvo = styled.span`
@@ -75,6 +57,7 @@ export const JoinTheConvo = styled.span`
 
 export const StatusBar = styled.div`
 	display: flex;
+	flex-direction: column;
 	justify-content: space-between;
 	position: relative;
 	padding: 6px 16px;
@@ -90,9 +73,11 @@ export const StatusBar = styled.div`
 export const StatusText = styled.p`
 	font-size: 12px;
 	font-weight: 400;
-	color: ${props => props.theme.text.alt};
+	color: #aab5c3;
+	line-height: 1.2;
+	margin-top: 8px;
 
-	${props => props.status === 'active' ? `color: #fff;` : ''}
+	${props => props.status === 'active' ? `color: #fff; font-weight: 600;` : ''}
 
 	${props => props.status === 'new'
   ? `color: ${props.theme.warn.default};
@@ -101,15 +86,15 @@ export const StatusText = styled.p`
   : ''}
 
 	${props => props.status === 'unread'
-  ? `color: #02AAFA;
+  ? `color: #00C384;
 			 font-weight: 600;
 			`
   : ''}
 `;
 export const Dot = styled.span`
 	position: absolute;
-	right: 16px;
-	top: 50%;
+	right: 10px;
+	top: 16px;
 	transform: translateY(-50%);
 	width: 8px;
 	height: 8px;
@@ -118,5 +103,24 @@ export const Dot = styled.span`
 	${props =>
   props.status === 'new'
     ? `background-color: ${props.theme.warn.default}`
-    : `background-color: #02AAFA`}
+    : `background-color: #00C384`}
+`;
+
+export const Name = styled(StatusText)`
+	font-size: 13px;
+	font-weight: ${props => props.status === 'active' ? '700' : '500'};
+	margin-top: 4px;
+	margin-bottom: 8px;
+	color: ${props => props.status === 'active' ? '#fff' : props.theme.text.alt};
+
+	a {
+		text-overflow: ellipsis;
+    overflow: hidden;
+	}
+
+	a:hover {
+		color: ${props =>
+  props.status === 'active' ? '#fff' : props.theme.brand.default};
+		text-decoration: ${props => props.status === 'active' ? 'underline' : 'none'};
+	}
 `;
