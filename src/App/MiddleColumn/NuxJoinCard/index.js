@@ -23,6 +23,7 @@ import {
 class NuxJoinCard extends Component {
   state = {
     featured: [],
+    scrollPos: null,
   };
 
   unsubscribeFrequency = () => {
@@ -30,6 +31,7 @@ class NuxJoinCard extends Component {
   };
 
   subscribeFrequency = e => {
+    e.preventDefault();
     this.props.dispatch(subscribeFrequency(e.target.id, false));
   };
 
@@ -53,6 +55,7 @@ class NuxJoinCard extends Component {
 
   componentDidUpdate = () => {
     const node = this.hscroll;
+    node.scrollLeft = this.state.scrollPos;
 
     let x, left, down;
     node.addEventListener('mousemove', e => {
@@ -64,6 +67,11 @@ class NuxJoinCard extends Component {
 
     node.addEventListener('mousedown', e => {
       e.preventDefault();
+
+      if (e.target.id) {
+        this.subscribeFrequency(e);
+      }
+
       down = true;
       x = e.pageX;
       left = node.scrollLeft;
@@ -71,6 +79,12 @@ class NuxJoinCard extends Component {
 
     node.addEventListener('mouseup', e => {
       down = false;
+
+      if (e.target.id) {
+        this.setState({
+          scrollPos: left - e.pageX + x,
+        });
+      }
     });
 
     node.addEventListener('mouseleave', e => {
@@ -104,7 +118,7 @@ class NuxJoinCard extends Component {
                     <Actions>
                       {frequencies[freq.id]
                         ? <Link to={`/~${freq.slug}`}>
-                            <JoinedButton id={freq.slug} width={'100%'}>
+                            <JoinedButton width={'100%'}>
                               Joined!
                             </JoinedButton>
                           </Link>

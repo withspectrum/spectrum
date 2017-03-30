@@ -294,6 +294,9 @@ export const FlexRow = styled.div`
   align-items: ${props => props.center ? 'center' : 'initial'};
   padding: ${props => props.padding ? props.padding : '0'};
   margin: ${props => props.margin ? props.margin : '0'};
+
+  ${props =>
+  props.smallCol ? `@media (max-width: 768px) { flex-direction: column }` : ''};
 `;
 
 export const FlexCol = styled.div`
