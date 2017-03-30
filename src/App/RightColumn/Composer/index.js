@@ -104,6 +104,7 @@ class Composer extends Component {
       .catch(e => {
         this.setState({
           error: e,
+          loading: false,
         });
       });
   };

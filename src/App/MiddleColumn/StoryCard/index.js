@@ -9,8 +9,10 @@ import {
   MessageCount,
   Title,
   UnreadCount,
+  CoverPhoto,
 } from './style';
 import { openGallery } from '../../../actions/gallery';
+import { getFileUrl } from '../../../db/stories';
 import { timeDifference } from '../../../helpers/utils';
 import Card from '../../../shared/Card';
 import ParticipantHeads from './ParticipantHeads';
@@ -25,6 +27,7 @@ class StoryCard extends Component {
 
     this.state = {
       saying: sayings[Math.floor(Math.random() * sayings.length)],
+      coverPhotoUrl: null,
     };
   }
   static propTypes = {
@@ -42,12 +45,40 @@ class StoryCard extends Component {
     title: PropTypes.string.isRequired,
     unreadMessages: PropTypes.number,
     participants: PropTypes.object,
+    coverPhoto: canBeBool(PropTypes.object),
+    story: PropTypes.object.isRequired,
   };
 
   openGallery = e => {
     let arr = [];
     arr.push(e.target.src);
     this.props.dispatch(openGallery(arr));
+  };
+
+  componentWillMount = () => {
+    const { coverPhoto, story } = this.props;
+    if (coverPhoto && !story.deleted) {
+      getFileUrl(coverPhoto.fileName, story.id).then(file => {
+        this.setState({
+          coverPhotoUrl: file,
+        });
+      });
+    }
+  };
+
+  componentWillUpdate = nextProps => {
+    if (nextProps.coverPhoto !== this.props.coverPhoto) {
+      if (nextProps.coverPhoto && !nextProps.story.deleted) {
+        getFileUrl(
+          nextProps.coverPhoto.fileName,
+          nextProps.story.id,
+        ).then(file => {
+          this.setState({
+            coverPhotoUrl: file,
+          });
+        });
+      }
+    }
   };
 
   render() {
@@ -64,6 +95,7 @@ class StoryCard extends Component {
       unreadMessages,
       participants,
       user,
+      coverPhoto,
       frequencies: { active },
     } = this.props;
 
@@ -109,6 +141,11 @@ class StoryCard extends Component {
 
     return (
       <Card link={link} selected={isActive}>
+        {coverPhoto
+          ? this.state.coverPhotoUrl
+              ? <CoverPhoto url={this.state.coverPhotoUrl} />
+              : <CoverPhoto loading />
+          : <span />}
         <StoryBody>
           <Title>{title}</Title>
 
