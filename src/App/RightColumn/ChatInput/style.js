@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Gradient, IconButton, Transition } from '../../../shared/Globals';
+import { IconButton, Transition } from '../../../shared/Globals';
 import Textarea from 'react-textarea-autosize';
 
 export const Wrapper = styled.span`
@@ -102,7 +102,7 @@ export const EmojiToggle = styled(IconButton)`
 	left: 48px;
 	background-color: transparent;
 	top: calc(50% - 16px);
-	
+
 	@media (max-width: 768px) {
 		display: none;
 	}

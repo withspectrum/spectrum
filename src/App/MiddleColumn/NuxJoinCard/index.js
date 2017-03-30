@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { findDOMNode } from 'react-dom';
 import { Link } from 'react-router-dom';
 import Card from '../../../shared/Card';
 import { Button } from '../../../shared/Globals';

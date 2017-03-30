@@ -1,4 +1,3 @@
-import { hashToArray } from '../helpers/utils';
 import { track } from '../EventTracker';
 import { getFileUrl, getStoryMedia } from '../db/stories';
 
