@@ -212,10 +212,11 @@ class NavigationMaster extends Component {
               );
             })}
 
-          {user.uid &&
+          {/*user.uid &&
             <Button onClick={this.createFrequency}>
               <span>~ Create Frequency</span>
-            </Button>}
+            </Button>*/
+          }
         </FreqList>
 
         <Footer>
