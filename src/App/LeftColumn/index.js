@@ -88,12 +88,14 @@ class NavigationMaster extends Component {
       notifications,
       user,
       frequencies,
-      communities,
+      communities: { communities, active },
       activeFrequency,
       loaded,
     } = this.props;
     // const myFrequencies = helpers.getMyFrequencies(frequencies, user)
     // const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
+
+    const isEverything = active === 'everything';
 
     return (
       <Column>
@@ -125,10 +127,7 @@ class NavigationMaster extends Component {
           {user.uid &&
             <div>
               <Link to="/">
-                <Freq
-                  active={activeFrequency === 'everything'}
-                  onClick={this.showStoriesNav}
-                >
+                <Freq active={isEverything} onClick={this.showStoriesNav}>
                   <FreqText>
                     <Icon icon="home" reverse static />
                     <FreqLabel>{'Home'}</FreqLabel>
@@ -137,7 +136,7 @@ class NavigationMaster extends Component {
               </Link>
               {/*<Link to={`/notifications`}>
                 <Freq
-                  active={activeFrequency === 'notifications'}
+                  active={active === 'notifications'}
                   onClick={this.showStoriesNav}
                 >
                   <FlexRow center>
@@ -244,7 +243,7 @@ class NavigationMaster extends Component {
 const mapStateToProps = state => ({
   user: state.user,
   frequencies: state.frequencies.byCommunity,
-  communities: state.communities.communities,
+  communities: state.communities,
   activeFrequency: state.frequencies.active,
   loaded: state.frequencies.loaded,
   ui: state.ui,

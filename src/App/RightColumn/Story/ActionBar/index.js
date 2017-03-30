@@ -48,9 +48,9 @@ class ActionBar extends Component {
           href={
             `https://twitter.com/intent/tweet/?text=${encodeURIComponent(
               story.content.title.substr(0, 85),
-            )}&amp;url=https://spectrum.chat/~${currentFrequency &&
-              currentFrequency.slug ||
-              '~everything'}/${story.id}`
+            )}&amp;url=https://spectrum.chat/${currentFrequency &&
+              `~${currentFrequency.slug}` ||
+              'everything'}/${story.id}`
           }
           target="_blank"
           style={{ display: 'inline-block' }}

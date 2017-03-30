@@ -129,7 +129,7 @@ class RightColumn extends Component {
 
       currentFrequency = getCurrentFrequency(story.frequencyId, frequencies);
 
-      returnUrl = active === 'everything'
+      returnUrl = activeCommunity === 'everything'
         ? 'everything'
         : currentFrequency && `${activeCommunity}/~${currentFrequency.slug}`;
     }

@@ -42,13 +42,21 @@ class App extends Component {
   };
 
   render() {
-    const { stories, frequencies, user, ui, notifications } = this.props;
+    const {
+      stories,
+      frequencies,
+      user,
+      ui,
+      notifications,
+      activeCommunity,
+    } = this.props;
     const frequency = getCurrentFrequency(
       frequencies.active,
       frequencies.frequencies,
     );
 
-    const isEverything = frequencies.active === 'everything';
+    const isEverything = activeCommunity === 'everything';
+    const isNotifications = activeCommunity === 'notifications';
 
     let sortedStories = sortArrayByKey(
       stories.stories.slice(),
@@ -58,7 +66,7 @@ class App extends Component {
       .reverse()
       .filter(story => !story.deleted);
 
-    if (frequency && !frequency.active !== 'everything') {
+    if (frequency && !isEverything) {
       sortedStories = sortedStories.filter(story => {
         return story.frequencyId === frequency.id && story.published;
       });
@@ -126,7 +134,7 @@ class App extends Component {
       sortedStories.unshift(<ReportBugCard />);
     }
 
-    if (user.uid && frequencies.active === 'notifications' && unread >= 0) {
+    if (user.uid && isNotifications && unread >= 0) {
       sortedStories.unshift(<NuxJoinCard />);
     }
 
@@ -237,6 +245,7 @@ class App extends Component {
 export default connect(state => ({
   stories: state.stories,
   frequencies: state.frequencies,
+  activeCommunity: state.communities.active,
   user: state.user,
   ui: state.ui,
   notifications: state.notifications,

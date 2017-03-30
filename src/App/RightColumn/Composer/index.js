@@ -114,7 +114,7 @@ class Composer extends Component {
     const description = this.props.composer.body;
     // if we pass in a custom frequency, it means the user is in 'all' and has selected a frequency from the dropdown
     // if the user isn't in all, we'll send the currently active frequency via the redux state
-    const frequency = this.props.frequencies.active === 'everything'
+    const frequency = this.props.activeCommunity === 'everything'
       ? this.state.frequencyPicker
       : this.props.frequencies.active;
 
@@ -217,14 +217,14 @@ class Composer extends Component {
   };
 
   render() {
-    let { frequencies, composer } = this.props;
+    let { frequencies, composer, activeCommunity } = this.props;
     let activeFrequency = frequencies.active;
     let currentFrequency = frequencies.frequencies.filter(freq => {
       return freq.slug === activeFrequency;
     });
     let media = composer.mediaList;
 
-    let byline = activeFrequency === 'everything'
+    let byline = activeCommunity === 'everything'
       ? <span>
           <Byline hasContent={true}>
             New story in
@@ -353,6 +353,7 @@ const mapStateToProps = state => {
   return {
     user: state.user,
     frequencies: state.frequencies,
+    activeCommunity: state.communities.active,
     composer: state.composer,
   };
 };

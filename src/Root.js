@@ -34,8 +34,8 @@ class Root extends Component {
   // INITIAL LOAD OF THE APP
   componentWillMount() {
     // On the initial render of the app we authenticate the user
-    const { dispatch, match } = this.props;
-    this.handleProps({ frequencies: {}, stories: {}, match });
+    const { dispatch, match, communities } = this.props;
+    this.handleProps({ frequencies: {}, stories: {}, match, communities });
     // Authenticate the user
     listenToAuth(user => {
       if (!user) {
@@ -96,23 +96,41 @@ class Root extends Component {
   }
 
   handleProps = nextProps => {
-    const { dispatch, match: { params }, frequencies, stories } = this.props;
-    if (nextProps.match.params.community && !nextProps.match.params.frequency) {
+    const {
+      dispatch,
+      match: { params },
+      frequencies,
+      stories,
+      user: { uid },
+    } = this.props;
+    if (
+      nextProps.match.params.community &&
+      nextProps.match.params.community !== 'everything' &&
+      !nextProps.match.params.frequency
+    ) {
       history.push(`/${nextProps.match.params.community}/~general`);
       return;
     }
 
-    if (nextProps.match.params.community || params.community) {
-      dispatch(setActiveCommunity(nextProps.match.params.community));
+    if (
+      nextProps.match.params.community !== params.community ||
+      !nextProps.communities.active ||
+      nextProps.user.uid !== uid
+    ) {
+      dispatch(
+        setActiveCommunity(nextProps.match.params.community || 'everything'),
+      );
     }
     // If the frequency changes or we've finished loading the frequencies sync the active frequency to the store and load the stories
     if (
       nextProps.frequencies.loaded !== frequencies.loaded ||
       nextProps.match.params.frequency !== params.frequency
     ) {
-      dispatch(
-        setActiveFrequency(nextProps.match.params.frequency || 'everything'),
-      );
+      if (nextProps.match.params.community === 'everything') {
+        dispatch(setActiveStory(nextProps.match.params.frequency));
+      } else {
+        dispatch(setActiveFrequency(nextProps.match.params.frequency));
+      }
     }
 
     // If the story changes sync the active story to the store and load the messages
@@ -120,7 +138,9 @@ class Root extends Component {
       nextProps.stories.loaded !== stories.loaded ||
       nextProps.match.params.story !== params.story
     ) {
-      dispatch(setActiveStory(nextProps.match.params.story));
+      if (nextProps.match.params.community !== 'everything') {
+        dispatch(setActiveStory(nextProps.match.params.story));
+      }
     }
   };
 
@@ -140,5 +160,6 @@ class Root extends Component {
 export default connect(state => ({
   user: state.user || {},
   frequencies: state.frequencies || {},
+  communities: state.communities || {},
   stories: state.stories || {},
 }))(Root);

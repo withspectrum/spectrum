@@ -1,20 +1,62 @@
 import { getCommunity } from '../db/communities';
+import { getAllStories } from '../db/stories';
+import { getNotifications } from '../db/notifications';
+import { track } from '../EventTracker';
 
 export const setActiveCommunity = slug => (dispatch, getState) => {
-  const { communities: { communities } } = getState();
+  const { communities: { communities }, user: { uid } } = getState();
 
-  if (!communities.find(community => community.slug === slug)) {
-    getCommunity({ slug }).then(community => {
+  const lowerCaseSlug = slug.toLowerCase();
+
+  if (
+    lowerCaseSlug === 'notifications' ||
+    lowerCaseSlug === 'everything' ||
+    communities.find(community => community.slug === lowerCaseSlug)
+  ) {
+    dispatch({
+      type: 'SET_ACTIVE_COMMUNITY',
+      slug: lowerCaseSlug,
+    });
+  } else {
+    getCommunity({ slug: lowerCaseSlug }).then(community => {
       dispatch({
         type: 'SET_ACTIVE_COMMUNITY',
-        slug,
+        slug: lowerCaseSlug,
         community,
       });
     });
-  } else {
-    dispatch({
-      type: 'SET_ACTIVE_COMMUNITY',
-      slug,
+    return;
+  }
+
+  // Notifications
+  if (lowerCaseSlug === 'notifications') {
+    if (!uid) return;
+    track('notifications', 'viewed', null);
+    getNotifications(uid).then(notifications => {
+      dispatch({
+        type: 'SET_NOTIFICATIONS',
+        notifications,
+      });
     });
+    return;
+  }
+  // Everything
+  if (lowerCaseSlug === 'everything') {
+    // If there's no UID yet we might need to show the homepage, so don't do anything
+    if (!uid) return;
+    track('everything', 'viewed', null);
+    // Get all the stories from all the frequencies
+    getAllStories(uid)
+      .then(stories => {
+        dispatch({
+          type: 'ADD_STORIES',
+          stories,
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        dispatch({ type: 'STOP_LOADING' });
+      });
+    return;
   }
 };
