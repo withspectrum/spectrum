@@ -89,7 +89,7 @@ class AddEmailModal extends React.Component {
                 ref="name"
                 type="text"
                 value={this.state.username}
-                placeholder="aschwarzenegger"
+                placeholder="username"
                 onChange={this.changeUsername}
               />
             </Label>
@@ -104,7 +104,7 @@ class AddEmailModal extends React.Component {
                   ref="name"
                   type="email"
                   value={this.state.email}
-                  placeholder="me@arnold.at"
+                  placeholder="me@mywebsite.cool"
                   onChange={this.changeEmail}
                 />
               </Label>}

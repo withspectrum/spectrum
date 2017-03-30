@@ -107,12 +107,7 @@ class RightColumn extends Component {
   };
 
   render() {
-    const {
-      composer,
-      user,
-      frequencies: { frequencies, active },
-      activeCommunity,
-    } = this.props;
+    const { composer, user, frequencies: { frequencies, active } } = this.props;
     let story = this.getActiveStory();
 
     let role, creator, locked, currentFrequency, returnUrl;
@@ -131,13 +126,13 @@ class RightColumn extends Component {
 
       returnUrl = active === 'everything'
         ? 'everything'
-        : currentFrequency && `${activeCommunity}/~${currentFrequency.slug}`;
+        : currentFrequency && currentFrequency.slug;
     }
 
     if (story && !composer.isOpen) {
       return (
         <ViewContainer>
-          <Link to={`/${returnUrl}`}>
+          <Link to={`/~${returnUrl}`}>
             <BackArrow onClick={this.clearActiveStory}>
               <Icon icon="back" />
             </BackArrow>
@@ -207,7 +202,6 @@ const mapStateToProps = state => ({
   frequencies: state.frequencies,
   user: state.user,
   composer: state.composer,
-  activeCommunity: state.communities.active,
 });
 
 export default connect(mapStateToProps)(RightColumn);

@@ -60,7 +60,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   track('frequency', 'viewed', null);
   // Get the frequency
   getFrequency({ slug: lowerCaseFrequency, communitySlug: active })
-    .then(data => Promise.all([data, getCommunity({ id: data.community })]))
+    .then(data => Promise.all([data, getCommunity({ id: data.communityId })]))
     .then(([data, community]) => {
       dispatch({
         type: 'ADD_COMMUNITY',
@@ -173,7 +173,6 @@ export const deleteFrequency = id => (dispatch, getState) => {
 };
 
 export const subscribeFrequency = (slug, redirect) => (dispatch, getState) => {
-  console.log(slug, redirect);
   const { user: { uid } } = getState();
   dispatch({ type: 'LOADING' });
 
@@ -182,7 +181,6 @@ export const subscribeFrequency = (slug, redirect) => (dispatch, getState) => {
       track('frequency', 'subscribed', null);
 
       if (redirect !== false) {
-        console.log('redirecting');
         history.push(`/~${frequency.slug || frequency.id}`);
       }
 

@@ -18,6 +18,10 @@ export const Transition = {
     on: 'all 0.2s ease-in',
     off: 'all 0.3s ease-out',
   },
+  reaction: {
+    on: 'all 0.15s ease-in',
+    off: 'all 0.1s ease-out',
+  },
 };
 
 export const fontStack = css`
@@ -290,6 +294,9 @@ export const FlexRow = styled.div`
   align-items: ${props => props.center ? 'center' : 'initial'};
   padding: ${props => props.padding ? props.padding : '0'};
   margin: ${props => props.margin ? props.margin : '0'};
+
+  ${props =>
+  props.smallCol ? `@media (max-width: 768px) { flex-direction: column }` : ''};
 `;
 
 export const FlexCol = styled.div`
