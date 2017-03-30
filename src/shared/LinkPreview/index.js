@@ -14,7 +14,6 @@ import {
 
 class LinkPreview extends Component {
   remove = e => {
-    console.log('is this getting triggered?');
     e.preventDefault();
     this.props.remove();
   };
