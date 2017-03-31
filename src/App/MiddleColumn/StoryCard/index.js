@@ -142,7 +142,7 @@ class StoryCard extends Component {
     status = 'default';
     isActive ? status = 'active' : null;
     isNew ? status = 'new' : null;
-    unreadMessages > 0 ? status = 'unread' : null;
+    unreadMessages > 0 && !isActive ? status = 'unread' : null;
 
     let hasMetadata = metadata ? true : false;
     let hasLinkPreview = hasMetadata && metadata.linkPreview ? true : false;
@@ -151,50 +151,37 @@ class StoryCard extends Component {
     let photosArray = photos ? hashToArray(photos) : null;
     let photoCount = photosArray ? photosArray.length : null;
 
+    let statusText;
+    isNew ? statusText = `New!` : null;
+    unreadMessages > 0
+      ? statusText = `${unreadMessages} new ${unreadMessages === 1
+          ? 'message'
+          : 'messages'} · ${timeDifference(Date.now(), timestamp)}`
+      : null;
+    isActive && messages > 0
+      ? statusText = `${messages} messages · ${timeDifference(
+          Date.now(),
+          timestamp,
+        )}`
+      : null;
+    isActive && messages === 0
+      ? statusText = `Posted ${timeDifference(Date.now(), timestamp)}`
+      : null;
+    !isNew && !unreadMessages && !isActive && messages > 0
+      ? statusText = `${messages} messages · ${timeDifference(
+          Date.now(),
+          timestamp,
+        )}`
+      : null;
+    !isNew && !unreadMessages && !isActive && messages === 0
+      ? statusText = `Posted ${timeDifference(Date.now(), timestamp)}`
+      : null;
+
     return (
       <Card link={link} selected={isActive}>
         <StatusBar status={status}>
           <StatusText status={status}>
-            {isNew && <span>New!</span>}
-
-            {unreadMessages > 0 &&
-              <span>
-                {
-                  `${unreadMessages} new ${unreadMessages === 1
-                    ? 'message'
-                    : 'messages'}`
-                }
-                {' '}·{' '}
-                {timeDifference(Date.now(), timestamp)}
-              </span>}
-
-            {isActive &&
-              messages > 0 &&
-              <span>
-                {`${messages} messages`}
-                {' '}·{' '}
-                {timeDifference(Date.now(), timestamp)}
-              </span>}
-
-            {isActive &&
-              messages === 0 &&
-              <span>Posted {timeDifference(Date.now(), timestamp)}</span>}
-
-            {!isNew &&
-              !unreadMessages &&
-              !isActive &&
-              messages > 0 &&
-              <span>
-                {`${messages} messages`}
-                {' '}·{' '}
-                {timeDifference(Date.now(), timestamp)}
-              </span>}
-
-            {!isNew &&
-              !unreadMessages &&
-              !isActive &&
-              messages === 0 &&
-              <span>Posted {timeDifference(Date.now(), timestamp)}</span>}
+            {statusText}
           </StatusText>
           <Dot status={status} />
 
@@ -227,7 +214,7 @@ class StoryCard extends Component {
 
           {hasMetadata &&
             hasPhotos &&
-            <PhotosContainer>
+            <PhotosContainer size={this.state.photos.length}>
               {this.state.photos.map((photo, i) => {
                 if (i < 3) {
                   return (

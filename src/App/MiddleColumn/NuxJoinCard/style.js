@@ -38,6 +38,7 @@ export const Hscroll = styled.div`
 	cursor: pointer;
 	cursor: hand;
 	cursor: grab;
+	min-height: 275px;
 
 	&:active {
 		cursor: grabbing;
