@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Card from '../../../shared/Card';
 import { Button } from '../../../shared/Globals';
-import { featured } from '../../../helpers/featuredFrequencies';
 import { truncate } from '../../../helpers/utils';
 import { getFeaturedFrequencies } from '../../../db/frequencies';
 import {
