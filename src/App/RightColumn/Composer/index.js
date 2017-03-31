@@ -56,7 +56,7 @@ import {
   CoverMiddleMiddleBottomRight,
 } from './style';
 
-const URLS = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+const URLS = /(^|\s)(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
 
 class Composer extends Component {
   constructor(props) {
@@ -268,7 +268,7 @@ class Composer extends Component {
     // also don't check if we already have a url in the linkPreview state
     if (this.state.linkPreview !== null) return;
 
-    const toCheck = e.target.value.match(URLS);
+    const toCheck = e.target.value.trim().match(URLS);
 
     if (toCheck) {
       const len = toCheck.length;
