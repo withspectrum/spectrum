@@ -13,7 +13,6 @@ import {
   Header,
   HeaderLogo,
   Avatar,
-  Username,
   MetaWrapper,
   MetaAnchor,
   P,
@@ -22,10 +21,7 @@ import {
   FreqList,
   Freq,
   FreqLabel,
-  FreqIcon,
-  FreqGlyph,
   Footer,
-  FooterLogo,
   FooterP,
   Button,
   FreqText,
@@ -90,7 +86,6 @@ class NavigationMaster extends Component {
     const {
       notifications,
       user,
-      unread,
     } = this.props;
     const frequencies = this.props.frequencies.frequencies.filter(
       frequency => frequency.users[user.uid],

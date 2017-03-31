@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import ModalContainer from '../ModalContainer';
 import { closeModal, openModal } from '../../../actions/modals';
 import { downgradeUser } from '../../../actions/user';
-import { modalStyles, Footer, ErrorMessage } from '../FrequencyEditModal/style';
+import { modalStyles } from '../FrequencyEditModal/style';
 import { Heading, Subheading, Or, Relative } from './style';
 import { ButtonLabel, Spinner, Section } from '../UpgradeModal/style';
 import { Button, TextButton } from '../../Globals';
