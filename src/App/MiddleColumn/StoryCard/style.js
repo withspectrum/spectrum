@@ -226,9 +226,17 @@ export const Dot = styled.span`
 	border-radius: 8px;
 
 	${props =>
-  props.status === 'new'
-    ? `background-color: ${props.theme.warn.default}`
-    : `background-color: #00C384`}
+  props.status === 'new' && `background-color: ${props.theme.warn.default}`};
+
+	${props => props.status === 'unread' && `background-color: #00C384`};
+
+	${props => props.status === 'active' && `background-color: transparent`};
+
+	${props =>
+  props.status !== 'active' &&
+  props.status !== 'unread' &&
+  props.status !== 'new' &&
+  `background-color: transparent`};
 `;
 
 export const Name = styled(StatusText)`

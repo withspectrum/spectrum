@@ -154,17 +154,11 @@ class StoryCard extends Component {
     return (
       <Card link={link} selected={isActive}>
         <StatusBar status={status}>
-          {isNew &&
-            <span>
-              <StatusText status={status}>
-                New!
-              </StatusText>
-              <Dot status={status} />
-            </span>}
+          <StatusText status={status}>
+            {isNew && <span>New!</span>}
 
-          {unreadMessages > 0 &&
-            <span>
-              <StatusText status={status}>
+            {unreadMessages > 0 &&
+              <span>
                 {
                   `${unreadMessages} new ${unreadMessages === 1
                     ? 'message'
@@ -172,41 +166,37 @@ class StoryCard extends Component {
                 }
                 {' '}·{' '}
                 {timeDifference(Date.now(), timestamp)}
-              </StatusText>
-              <Dot status={status} />
-            </span>}
+              </span>}
 
-          {isActive &&
-            messages > 0 &&
-            <StatusText status={status}>
-              {`${messages} messages`}
-              {' '}·{' '}
-              {timeDifference(Date.now(), timestamp)}
-            </StatusText>}
+            {isActive &&
+              messages > 0 &&
+              <span>
+                {`${messages} messages`}
+                {' '}·{' '}
+                {timeDifference(Date.now(), timestamp)}
+              </span>}
 
-          {isActive &&
-            messages === 0 &&
-            <StatusText status={status}>
-              Posted {timeDifference(Date.now(), timestamp)}
-            </StatusText>}
+            {isActive &&
+              messages === 0 &&
+              <span>Posted {timeDifference(Date.now(), timestamp)}</span>}
 
-          {!isNew &&
-            !unreadMessages &&
-            !isActive &&
-            messages > 0 &&
-            <StatusText status={status}>
-              {`${messages} messages`}
-              {' '}·{' '}
-              {timeDifference(Date.now(), timestamp)}
-            </StatusText>}
+            {!isNew &&
+              !unreadMessages &&
+              !isActive &&
+              messages > 0 &&
+              <span>
+                {`${messages} messages`}
+                {' '}·{' '}
+                {timeDifference(Date.now(), timestamp)}
+              </span>}
 
-          {!isNew &&
-            !unreadMessages &&
-            !isActive &&
-            messages === 0 &&
-            <StatusText status={status}>
-              Posted {timeDifference(Date.now(), timestamp)}
-            </StatusText>}
+            {!isNew &&
+              !unreadMessages &&
+              !isActive &&
+              messages === 0 &&
+              <span>Posted {timeDifference(Date.now(), timestamp)}</span>}
+          </StatusText>
+          <Dot status={status} />
 
           <Name status={status}>
             By {person.name} {metaText ? ' · ' : ''}
