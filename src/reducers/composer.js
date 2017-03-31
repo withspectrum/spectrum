@@ -4,6 +4,8 @@ const initialState = {
   body: '',
   newStoryKey: null,
   mediaList: [],
+  metadata: null,
+  error: null,
 };
 
 export default function root(state = initialState, action) {
@@ -27,6 +29,8 @@ export default function root(state = initialState, action) {
         newStoryKey: null,
         isOpen: false,
         mediaList: [],
+        error: null,
+        metadata: null,
       });
     case 'SET_ACTIVE_STORY':
     case 'SET_ACTIVE_FREQUENCY':
@@ -41,15 +45,50 @@ export default function root(state = initialState, action) {
       return Object.assign({}, state, {
         body: action.body,
       });
+    case 'ADD_LINK_PREVIEW':
+      return Object.assign({}, state, {
+        metadata: {
+          ...state.metadata,
+          linkPreview: {
+            data: action.linkPreview.data,
+            trueUrl: action.linkPreview.trueUrl,
+          },
+        },
+      });
+    case 'REMOVE_LINK_PREVIEW':
+      return Object.assign({}, state, {
+        metadata: {
+          ...state.metadata,
+          linkPreview: null,
+        },
+      });
+    case 'SET_COMPOSER_ERROR':
+      return Object.assign({}, state, {
+        error: action.error,
+      });
     case 'ADD_MEDIA_LIST':
       return Object.assign({}, state, {
         mediaList: state.mediaList.concat(action.file),
+        metadata: {
+          ...state.metadata,
+          photos: state.mediaList.concat(action.file),
+        },
       });
     case 'REMOVE_MEDIA_LIST': {
       const mediaList = state.mediaList
         .slice()
         .filter(file => file.meta.key !== action.image);
-      return Object.assign({}, state, { mediaList });
+      const photos = state.metadata.photos
+        .slice()
+        .filter(file => file.meta.key !== action.image);
+      return Object.assign({}, state, {
+        ...state,
+        mediaList,
+        metadata: {
+          ...state.metadata,
+          photos,
+        },
+      });
     }
     default:
       return state;

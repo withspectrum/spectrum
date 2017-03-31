@@ -2,10 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Markdown from '../../../shared/Markdown';
+import LinkPreview from '../../../shared/LinkPreview';
 import { openGallery } from '../../../actions/gallery';
+import { track } from '../../../EventTracker';
 import { timeDifference } from '../../../helpers/utils';
 
-import { StoryContainer, Header, StoryTitle, Byline } from './style';
+import {
+  StoryContainer,
+  Header,
+  StoryTitle,
+  Byline,
+  LinkPreviewContainer,
+} from './style';
 
 class Story extends Component {
   componentDidMount() {
@@ -37,6 +45,10 @@ class Story extends Component {
     this.props.dispatch(openGallery(e));
   };
 
+  handleClick = url => {
+    track('link preview', 'clicked', url);
+  };
+
   render() {
     const { story, frequency, communities } = this.props;
     const timestamp = timeDifference(Date.now(), story.timestamp);
@@ -65,6 +77,19 @@ class Story extends Component {
         <div className="markdown" ref="story">
           <Markdown>{story.content.description}</Markdown>
         </div>
+
+        {story.metadata &&
+          story.metadata.linkPreview &&
+          <LinkPreviewContainer
+            onClick={() => this.handleClick(story.metadata.linkPreview.trueUrl)}
+          >
+            <LinkPreview
+              trueUrl={story.metadata.linkPreview.trueUrl}
+              data={story.metadata.linkPreview.data}
+              size={'large'}
+              editable={false}
+            />
+          </LinkPreviewContainer>}
       </StoryContainer>
     );
   }

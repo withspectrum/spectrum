@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { findDOMNode } from 'react-dom';
 import { track } from '../../../EventTracker';
 import {
   updateTitle,
   updateBody,
+  addLinkPreview,
+  removeLinkPreview,
   addMediaList,
   removeImageFromStory,
 } from '../../../actions/composer';
 import { publishStory, initStory } from '../../../actions/stories';
+import { loading, stopLoading } from '../../../actions/loading';
 import {
   getCurrentFrequency,
   linkFreqsInMd,
@@ -15,6 +19,8 @@ import {
 import { uploadMultipleMedia } from '../../../db/stories';
 import Textarea from 'react-textarea-autosize';
 import Markdown from '../../../shared/Markdown';
+import LinkPreview from '../../../shared/LinkPreview';
+import { getLinkPreviewFromUrl } from '../../../helpers/utils';
 
 import {
   ScrollBody,
@@ -38,13 +44,25 @@ import {
   Image,
   Delete,
   EmbedInput,
+  LinkPreviewSkeleton,
+  AnimatedBackground,
+  CoverTop,
+  CoverMiddle,
+  CoverMiddleMiddle,
+  CoverMiddleTopRight,
+  CoverLeft,
+  CoverMiddleBottomRight,
+  CoverBottom,
+  CoverMiddleMiddleBottomRight,
 } from './style';
+
+const URLS = /(^|\s)(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
 
 class Composer extends Component {
   constructor(props) {
     super(props);
 
-    let { user } = props;
+    let { user, composer: { metadata } } = props;
     let userFreqs = Object.keys(user.frequencies);
 
     this.state = {
@@ -53,7 +71,11 @@ class Composer extends Component {
       loading: false,
       placeholder: '+ Embed',
       embedUrl: '',
+      metadata: metadata,
       creating: true,
+      linkPreview: null,
+      linkPreviewLength: 0,
+      fetchingLinkPreview: false,
     };
   }
 
@@ -70,6 +92,12 @@ class Composer extends Component {
 
   changeBody = e => {
     this.props.dispatch(updateBody(e.target.value));
+
+    if (!e.target.value && !this.state.linkPreview) {
+      this.setState({
+        linkPreviewLength: 0,
+      });
+    }
   };
 
   selectFrequencyFromDropdown = e => {
@@ -100,10 +128,14 @@ class Composer extends Component {
         this.setState({
           loading: false,
         });
+
+        findDOMNode(this.refs.descriptionTextarea).focus();
       })
       .catch(e => {
-        this.setState({
+        this.props.dispatch({
+          type: 'SET_COMPOSER_ERROR',
           error: e,
+          loading: false,
         });
       });
   };
@@ -112,6 +144,7 @@ class Composer extends Component {
     e.preventDefault();
     const title = this.props.composer.title;
     const description = this.props.composer.body;
+    const metadata = this.props.composer.metadata;
     // if we pass in a custom frequency, it means the user is in 'all' and has selected a frequency from the dropdown
     // if the user isn't in all, we'll send the currently active frequency via the redux state
     const frequency = this.props.activeCommunity === 'everything'
@@ -130,22 +163,26 @@ class Composer extends Component {
           frequencyId,
           title,
           description,
+          metadata,
         }),
       );
     } else if (!frequency && title) {
       // if no frequency is chosen
-      this.setState({
+      this.props.dispatch({
+        type: 'SET_COMPOSER_ERROR',
         error: 'Choose a frequency to share this story to!',
       });
     } else if (!title) {
       // missing a title
-      this.setState({
+      this.props.dispatch({
+        type: 'SET_COMPOSER_ERROR',
         error: 'Be sure to type a title!',
       });
     } else {
       // something else went wrong...
-      this.setState({
-        error: 'Oops!',
+      this.props.dispatch({
+        type: 'SET_COMPOSER_ERROR',
+        error: 'Oops, something went wrong!',
       });
     }
   };
@@ -216,6 +253,73 @@ class Composer extends Component {
     });
   };
 
+  listenForUrl = e => {
+    if (
+      e.keyCode !== 8 &&
+      e.keyCode !== 9 &&
+      e.keyCode !== 13 &&
+      e.keyCode !== 32 &&
+      e.keyCode !== 46
+    ) {
+      // Return if backspace, tab, enter, space or delete was not pressed.
+      return;
+    }
+
+    // also don't check if we already have a url in the linkPreview state
+    if (this.state.linkPreview !== null) return;
+
+    const toCheck = e.target.value.match(URLS);
+
+    if (toCheck) {
+      const len = toCheck.length;
+      if (this.state.linkPreviewLength === len) return; // no new links, don't recheck
+
+      let urlToCheck = toCheck[len - 1].trim();
+
+      this.setState({ fetchingLinkPreview: true });
+
+      if (!/^https?:\/\//i.test(urlToCheck)) {
+        urlToCheck = 'https://' + urlToCheck;
+      }
+
+      return getLinkPreviewFromUrl(urlToCheck)
+        .then(data => {
+          this.props.dispatch(stopLoading());
+
+          this.setState(prevState => ({
+            linkPreview: data,
+            trueUrl: urlToCheck,
+            linkPreviewLength: prevState.linkPreviewLength + 1,
+            fetchingLinkPreview: false,
+            error: null,
+          }));
+
+          const linkPreview = {};
+          linkPreview['data'] = data;
+          linkPreview['trueUrl'] = urlToCheck;
+
+          this.props.dispatch(addLinkPreview(linkPreview));
+        })
+        .catch(err => {
+          this.setState({
+            error: "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
+            fetchingLinkPreview: false,
+          });
+        });
+    }
+  };
+
+  removeLinkPreview = () => {
+    findDOMNode(this.refs.descriptionTextarea).focus();
+
+    this.props.dispatch(removeLinkPreview());
+
+    this.setState({
+      linkPreview: null,
+      trueUrl: null,
+    });
+  };
+
   render() {
     let { frequencies, composer, activeCommunity } = this.props;
     let activeFrequency = frequencies.active;
@@ -279,7 +383,7 @@ class Composer extends Component {
                         onChange={this.changeTitle}
                         style={StoryTitle}
                         value={composer.title}
-                        placeholder={'What’s up?'}
+                        placeholder={"What's up?"}
                         autoFocus
                       />
 
@@ -287,8 +391,34 @@ class Composer extends Component {
                         onChange={this.changeBody}
                         value={composer.body}
                         style={TextBody}
-                        placeholder={'Say more words...'}
+                        onKeyUp={this.listenForUrl}
+                        ref="descriptionTextarea"
+                        placeholder={
+                          'Say more about this post, add an image, embed an iframe, or anything else!'
+                        }
                       />
+
+                      {this.state.linkPreview &&
+                        <LinkPreview
+                          data={this.state.linkPreview}
+                          size={'large'}
+                          remove={this.removeLinkPreview}
+                          editable={true}
+                          trueUrl={this.state.trueUrl}
+                        />}
+
+                      {this.state.fetchingLinkPreview &&
+                        <LinkPreviewSkeleton>
+                          <AnimatedBackground />
+                          <CoverLeft />
+                          <CoverTop />
+                          <CoverMiddle />
+                          <CoverMiddleMiddle />
+                          <CoverMiddleTopRight />
+                          <CoverMiddleBottomRight />
+                          <CoverMiddleMiddleBottomRight />
+                          <CoverBottom />
+                        </LinkPreviewSkeleton>}
 
                       <MediaInput
                         ref="media"
@@ -339,7 +469,8 @@ class Composer extends Component {
                   />
                 </SubmitContainer>
 
-                {this.state.error && <Alert>{this.state.error}</Alert>}
+                {this.props.composer.error &&
+                  <Alert>{this.props.composer.error}</Alert>}
               </form>
             </FlexColumn>
           </Header>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
+import sanitize from 'slugg';
 import ModalContainer from '../ModalContainer';
 import { checkUniqueUsername, setUsernameAndEmail } from '../../../db/users';
 import { modalStyles, Footer, ErrorMessage } from '../FrequencyEditModal/style';
@@ -11,6 +12,7 @@ import { Button } from '../../Globals';
 class AddEmailModal extends React.Component {
   state = {
     username: '',
+    sanitized: null,
     email: '',
     error: null,
   };
@@ -18,20 +20,25 @@ class AddEmailModal extends React.Component {
   constructor() {
     super();
     this.checkUsername = debounce(this.checkUsername, 500);
+    this.checkSanitized = debounce(this.checkSanitized, 500);
   }
 
   changeUsername = e => {
+    const username = e.target.value;
+    if (this.state.username === username) return;
+
     this.setState({
-      username: e.target.value,
+      username,
+      sanitized: null,
     });
 
-    if (e.target.value > 20) {
+    if (username > 20) {
       this.setState({
         error: 'Getting a bit ahead of yourself, eh? Keep it to a maximum of 20 characters, please.',
       });
       return;
     }
-    if (e.target.value.length === 0) {
+    if (username.length === 0) {
       return;
     }
 
@@ -40,10 +47,20 @@ class AddEmailModal extends React.Component {
     });
 
     this.checkUsername();
+    this.checkSanitized();
+  };
+
+  checkSanitized = () => {
+    this.setState({
+      sanitized: sanitize(this.state.username),
+    });
   };
 
   checkUsername = () => {
-    checkUniqueUsername(this.state.username, this.props.uid).then(free => {
+    checkUniqueUsername(
+      sanitize(this.state.username),
+      this.props.uid,
+    ).then(free => {
       this.setState({
         error: !free && 'Oops, a user with this name already exists.',
         loading: false,
@@ -62,13 +79,14 @@ class AddEmailModal extends React.Component {
     setUsernameAndEmail({
       uid: this.props.uid,
       email: this.state.email,
-      username: this.state.username,
+      username: sanitize(this.state.username),
     }).then(() => {
       this.props.onClose();
     });
   };
 
   render() {
+    const { username, sanitized } = this.state;
     return (
       <Modal
         isOpen={this.props.isOpen}
@@ -88,10 +106,15 @@ class AddEmailModal extends React.Component {
               <Input
                 ref="name"
                 type="text"
-                value={this.state.username}
+                value={username}
                 placeholder="username"
                 onChange={this.changeUsername}
               />
+              {sanitized &&
+                username !== sanitized &&
+                <ErrorMessage>
+                  Invalid username, will be saved as "{sanitized}".
+                </ErrorMessage>}
             </Label>
 
             {this.state.error &&
@@ -117,6 +140,7 @@ class AddEmailModal extends React.Component {
                     this.state.exists ||
                     this.state.username.length === 0 ||
                     this.state.error ||
+                    !this.state.sanitized ||
                     this.props.promptEmail && !/^.+@.+$/.test(this.state.email)
                 }
               >
