@@ -30,6 +30,7 @@ export default function root(state = initialState, action) {
         isOpen: false,
         mediaList: [],
         error: null,
+        metadata: null,
       });
     case 'SET_ACTIVE_STORY':
     case 'SET_ACTIVE_FREQUENCY':
