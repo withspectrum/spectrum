@@ -40,3 +40,7 @@ export const Byline = styled(H4)`
 		color: ${({ theme }) => theme.text.default};
 	}
 `;
+
+export const LinkPreviewContainer = styled.div`
+	margin: 16px 0;
+`;
