@@ -164,7 +164,9 @@ class MiddleColumn extends Component {
           title={story.content.title}
           unreadMessages={unreadMessages}
           isNew={isNew}
+          story={story}
           participants={story.participants}
+          metadata={story.metadata ? story.metadata : null}
         />;
   };
 
@@ -327,7 +329,7 @@ class MiddleColumn extends Component {
           {isNotifications &&
             <InfiniteList
               height={window.innerHeight - 50}
-              width={window.innerWidth > 768 ? 419 : window.innerWidth}
+              width={window.innerWidth > 768 ? 511 : window.innerWidth}
               elementCount={notifications.length}
               elementRenderer={this.renderNotification}
               keyMapper={index => notifications[index].id}
@@ -336,7 +338,7 @@ class MiddleColumn extends Component {
           {(isEverything || frequency) &&
             <InfiniteList
               height={window.innerHeight - 50}
-              width={window.innerWidth > 768 ? 419 : window.innerWidth}
+              width={window.innerWidth > 768 ? 511 : window.innerWidth}
               elementCount={stories.length}
               elementRenderer={this.renderStory}
               keyMapper={index => stories[index].id}

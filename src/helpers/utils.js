@@ -290,3 +290,9 @@ export const truncate = (str, length) => {
   const subString = str.substr(0, length);
   return subString.substr(0, subString.lastIndexOf(' ')) + '…';
 };
+
+export const getLinkPreviewFromUrl = url => fetch(
+  `https://micro-open-graph-xiuqvckswd.now.sh/?url=${url}`,
+).then(response => {
+  return response.json();
+});

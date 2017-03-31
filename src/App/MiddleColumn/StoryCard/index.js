@@ -1,19 +1,33 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import deepEqual from 'deep-eql';
+import { track } from '../../../EventTracker';
 // eslint-disable-next-line
 import {
   StoryBody,
   StoryFooter,
   Name,
+  JoinTheConvo,
   MessageCount,
   Title,
   UnreadCount,
+  LinkPreviewContainer,
+  PhotosContainer,
+  PhotoContainer,
+  Photo,
+  PhotoPlaceholder,
+  HeadsContainer,
+  StatusBar,
+  StatusText,
+  Dot,
 } from './style';
+import Markdown from 'react-remarkable';
 import { openGallery } from '../../../actions/gallery';
-import { timeDifference } from '../../../helpers/utils';
+import { timeDifference, hashToArray } from '../../../helpers/utils';
 import Card from '../../../shared/Card';
 import ParticipantHeads from './ParticipantHeads';
+import LinkPreview from '../../../shared/LinkPreview';
 
 const canBeBool = (...types) => PropTypes.oneOfType([PropTypes.bool, ...types]);
 
@@ -21,10 +35,8 @@ class StoryCard extends Component {
   constructor() {
     super();
 
-    const sayings = ["chit chattin'", 'talking', 'hanging out', 'chatting'];
-
     this.state = {
-      saying: sayings[Math.floor(Math.random() * sayings.length)],
+      photos: [],
     };
   }
   static propTypes = {
@@ -42,12 +54,45 @@ class StoryCard extends Component {
     title: PropTypes.string.isRequired,
     unreadMessages: PropTypes.number,
     participants: PropTypes.object,
+    metadata: PropTypes.object,
+    story: PropTypes.object.isRequired,
   };
 
-  openGallery = e => {
-    let arr = [];
-    arr.push(e.target.src);
-    this.props.dispatch(openGallery(arr));
+  componentWillMount = () => {
+    const { metadata, story } = this.props;
+    if (metadata && metadata.photos && !story.deleted) {
+      let photoKeys = hashToArray(metadata.photos);
+      this.setState({
+        photos: photoKeys,
+      });
+    }
+  };
+
+  shouldComponentUpdate = (nextProps, nextState) => {
+    return !deepEqual(this.props, nextProps) ||
+      !deepEqual(this.state, nextState);
+  };
+
+  componentWillUpdate = nextProps => {
+    if (nextProps.metadata !== this.props.metadata) {
+      if (nextProps.metadata && !nextProps.story.deleted) {
+        let photoKeys = hashToArray(nextProps.metadata.photos);
+        this.setState({
+          photos: photoKeys,
+        });
+      }
+    }
+  };
+
+  openGallery = (e, story) => {
+    this.props.dispatch(openGallery(e, story));
+  };
+
+  handleClick = (e, url) => {
+    e.preventDefault();
+
+    track('link preview', 'clicked', url);
+    window.open(url, '_blank');
   };
 
   render() {
@@ -64,7 +109,9 @@ class StoryCard extends Component {
       unreadMessages,
       participants,
       user,
+      metadata,
       frequencies: { active },
+      story,
     } = this.props;
 
     let heads;
@@ -72,7 +119,7 @@ class StoryCard extends Component {
     // if the story has at least 3 participants
     if (
       participants &&
-      Object.keys(participants).length >= 3 &&
+      Object.keys(participants).length >= 0 &&
       active !== 'everything'
     ) {
       if (
@@ -82,7 +129,6 @@ class StoryCard extends Component {
       } else {
         heads = (
           <ParticipantHeads
-            saying={this.state.saying}
             me={user.uid}
             unread={unreadMessages}
             participants={participants}
@@ -90,43 +136,131 @@ class StoryCard extends Component {
           />
         );
       }
-    } else {
-      heads = (
-        <MessageCount>
-          {messages > 0
-            ? <span>{`${messages} messages`}&nbsp;</span>
-            : isNew ? <span /> : <span>No messages yet&nbsp;</span>}
-          {unreadMessages > 0 &&
-            <span>
-              <UnreadCount>
-                {` (${unreadMessages} new!)`}&nbsp;
-              </UnreadCount>
-            </span>}
-          {isNew && <span><UnreadCount> New!</UnreadCount></span>}
-        </MessageCount>
-      );
     }
+
+    let status;
+    status = 'default';
+    isActive ? status = 'active' : null;
+    isNew ? status = 'new' : null;
+    unreadMessages > 0 ? status = 'unread' : null;
+
+    let hasMetadata = metadata ? true : false;
+    let hasLinkPreview = hasMetadata && metadata.linkPreview ? true : false;
+    let hasPhotos = hasMetadata && metadata.photos ? true : false;
+    let photos = hasMetadata && metadata.photos ? metadata.photos : null;
+    let photosArray = photos ? hashToArray(photos) : null;
+    let photoCount = photosArray ? photosArray.length : null;
 
     return (
       <Card link={link} selected={isActive}>
-        <StoryBody>
-          <Title>{title}</Title>
+        <StatusBar status={status}>
+          <StatusText status={status}>
+            {isNew && <span>New!</span>}
 
-          {heads}
+            {unreadMessages > 0 &&
+              <span>
+                {
+                  `${unreadMessages} new ${unreadMessages === 1
+                    ? 'message'
+                    : 'messages'}`
+                }
+                {' '}·{' '}
+                {timeDifference(Date.now(), timestamp)}
+              </span>}
 
-        </StoryBody>
-        <StoryFooter>
-          <Name>
-            {person.name}&nbsp;·&nbsp;
-            {timeDifference(Date.now(), timestamp)}
-            {metaText && metaLink && `\u00A0in\u00A0`}
+            {isActive &&
+              messages > 0 &&
+              <span>
+                {`${messages} messages`}
+                {' '}·{' '}
+                {timeDifference(Date.now(), timestamp)}
+              </span>}
+
+            {isActive &&
+              messages === 0 &&
+              <span>Posted {timeDifference(Date.now(), timestamp)}</span>}
+
+            {!isNew &&
+              !unreadMessages &&
+              !isActive &&
+              messages > 0 &&
+              <span>
+                {`${messages} messages`}
+                {' '}·{' '}
+                {timeDifference(Date.now(), timestamp)}
+              </span>}
+
+            {!isNew &&
+              !unreadMessages &&
+              !isActive &&
+              messages === 0 &&
+              <span>Posted {timeDifference(Date.now(), timestamp)}</span>}
+          </StatusText>
+          <Dot status={status} />
+
+          <Name status={status}>
+            By {person.name} {metaText ? ' · ' : ''}
             {metaText &&
               metaLink &&
               <Link to={metaLink}>
                 {metaText}
               </Link>}
           </Name>
-        </StoryFooter>
+        </StatusBar>
+
+        <StoryBody>
+          <Title>{title}</Title>
+
+          {hasMetadata &&
+            hasLinkPreview &&
+            !hasPhotos &&
+            <LinkPreviewContainer
+              onClick={e => this.handleClick(e, metadata.linkPreview.trueUrl)}
+            >
+              <LinkPreview
+                trueUrl={metadata.linkPreview.trueUrl}
+                data={metadata.linkPreview.data}
+                size={'small'}
+                editable={false}
+              />
+            </LinkPreviewContainer>}
+
+          {hasMetadata &&
+            hasPhotos &&
+            <PhotosContainer>
+              {this.state.photos.map((photo, i) => {
+                if (i < 3) {
+                  return (
+                    <PhotoContainer
+                      key={photo.meta.key}
+                      size={this.state.photos.length}
+                    >
+                      <Photo
+                        src={photo.url}
+                        onClick={e => this.openGallery(e, story.id)}
+                      />
+                    </PhotoContainer>
+                  );
+                }
+
+                if (i === 3) {
+                  return (
+                    <PhotoContainer
+                      key={photo.meta.key}
+                      size={this.state.photos.length}
+                    >
+                      <PhotoPlaceholder count={this.state.photos.length - 3} />
+                    </PhotoContainer>
+                  );
+                }
+              })}
+            </PhotosContainer>}
+        </StoryBody>
+
+        <HeadsContainer>
+          {heads}
+        </HeadsContainer>
+
       </Card>
     );
   }
