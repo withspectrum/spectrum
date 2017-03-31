@@ -12,13 +12,18 @@ import {
   Title,
   UnreadCount,
   LinkPreviewContainer,
+  PhotosContainer,
+  PhotoContainer,
+  Photo,
+  PhotoPlaceholder,
   HeadsContainer,
   StatusBar,
   StatusText,
   Dot,
 } from './style';
+import Markdown from 'react-remarkable';
 import { openGallery } from '../../../actions/gallery';
-import { timeDifference } from '../../../helpers/utils';
+import { timeDifference, hashToArray, trimHtml } from '../../../helpers/utils';
 import Card from '../../../shared/Card';
 import ParticipantHeads from './ParticipantHeads';
 import LinkPreview from '../../../shared/LinkPreview';
@@ -29,10 +34,8 @@ class StoryCard extends Component {
   constructor() {
     super();
 
-    const sayings = ["chit chattin'", 'talking', 'hanging out', 'chatting'];
-
     this.state = {
-      saying: sayings[Math.floor(Math.random() * sayings.length)],
+      photos: [],
     };
   }
   static propTypes = {
@@ -51,12 +54,32 @@ class StoryCard extends Component {
     unreadMessages: PropTypes.number,
     participants: PropTypes.object,
     metadata: PropTypes.object,
+    story: PropTypes.object.isRequired,
   };
 
-  openGallery = e => {
-    let arr = [];
-    arr.push(e.target.src);
-    this.props.dispatch(openGallery(arr));
+  componentWillMount = () => {
+    const { metadata, story } = this.props;
+    if (metadata && metadata.photos && !story.deleted) {
+      let photoKeys = hashToArray(metadata.photos);
+      this.setState({
+        photos: photoKeys,
+      });
+    }
+  };
+
+  componentWillUpdate = nextProps => {
+    if (nextProps.metadata !== this.props.metadata) {
+      if (nextProps.metadata && !nextProps.story.deleted) {
+        let photoKeys = hashToArray(nextProps.metadata.photos);
+        this.setState({
+          photos: photoKeys,
+        });
+      }
+    }
+  };
+
+  openGallery = (e, story) => {
+    this.props.dispatch(openGallery(e, story));
   };
 
   handleClick = (e, url) => {
@@ -82,6 +105,7 @@ class StoryCard extends Component {
       user,
       metadata,
       frequencies: { active },
+      story,
     } = this.props;
 
     let heads;
@@ -99,7 +123,6 @@ class StoryCard extends Component {
       } else {
         heads = (
           <ParticipantHeads
-            saying={this.state.saying}
             me={user.uid}
             unread={unreadMessages}
             participants={participants}
@@ -114,6 +137,15 @@ class StoryCard extends Component {
     isActive ? status = 'active' : null;
     isNew ? status = 'new' : null;
     unreadMessages > 0 ? status = 'unread' : null;
+
+    let hasMetadata = metadata ? true : false;
+    let hasLinkPreview = hasMetadata && metadata.linkPreview ? true : false;
+    let hasPhotos = hasMetadata && metadata.photos ? true : false;
+    let photos = hasMetadata && metadata.photos ? metadata.photos : null;
+    let photosArray = photos ? hashToArray(photos) : null;
+    let photoCount = photosArray ? photosArray.length : null;
+
+    console.log('render ', photosArray);
 
     return (
       <Card link={link} selected={isActive}>
@@ -185,8 +217,9 @@ class StoryCard extends Component {
         <StoryBody>
           <Title>{title}</Title>
 
-          {metadata &&
-            metadata.linkPreview &&
+          {hasMetadata &&
+            hasLinkPreview &&
+            !hasPhotos &&
             <LinkPreviewContainer
               onClick={e => this.handleClick(e, metadata.linkPreview.trueUrl)}
             >
@@ -197,6 +230,37 @@ class StoryCard extends Component {
                 editable={false}
               />
             </LinkPreviewContainer>}
+
+          {hasMetadata &&
+            hasPhotos &&
+            <PhotosContainer>
+              {this.state.photos.map((photo, i) => {
+                if (i < 3) {
+                  return (
+                    <PhotoContainer
+                      key={photo.meta.key}
+                      size={this.state.photos.length}
+                    >
+                      <Photo
+                        src={photo.url}
+                        onClick={e => this.openGallery(e, story.id)}
+                      />
+                    </PhotoContainer>
+                  );
+                }
+
+                if (i === 3) {
+                  return (
+                    <PhotoContainer
+                      key={photo.meta.key}
+                      size={this.state.photos.length}
+                    >
+                      <PhotoPlaceholder count={this.state.photos.length - 3} />
+                    </PhotoContainer>
+                  );
+                }
+              })}
+            </PhotosContainer>}
         </StoryBody>
 
         <HeadsContainer>

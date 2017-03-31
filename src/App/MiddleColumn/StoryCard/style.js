@@ -38,6 +38,131 @@ export const LinkPreviewContainer = styled.div`
 	margin: 16px 0 4px;
 `;
 
+export const PhotosContainer = styled.div`
+	margin: 16px 0 2px;
+	border-radius: 4px;
+	display: flex;
+	flex-wrap: wrap;
+`;
+
+export const PhotoContainer = styled.div`
+	position: relative;
+
+	${props => props.size === 1
+  ? `
+		width: 100%;
+		height: 280px;
+		max-height: 280px;
+
+		&:first-child img {
+			border-radius: 4px;
+		}
+	`
+  : ''}
+
+	${props => props.size === 2
+  ? `
+		width: 49.5%;
+		height: 140px;
+		max-height: 140px;
+
+		&:first-child {
+			margin-right: 1%;
+		}
+
+		&:first-child img {
+			border-radius: 4px 0 0 4px;
+		}
+
+		&:last-child img {
+			border-radius: 0 4px 4px 0;
+		}
+	`
+  : ''}
+
+	${props => props.size === 3
+  ? `
+		width: 32.6%;
+		margin-right: 1%
+		height: 140px;
+		max-height: 140px;
+
+		&:first-child img {
+			border-radius: 4px 0 0 4px;
+		}
+
+		&:last-child {
+			margin-right: 0;
+		}
+
+		&:last-child img {
+			border-radius: 0 4px 4px 0;
+		}
+	`
+  : ''}
+
+	${props => props.size >= 4
+  ? `
+		width: 24.25%;
+		margin-right: 1%
+		min-height: 108px;
+		max-height: 140px;
+
+		&:first-child img {
+			border-radius: 4px 0 0 4px;
+		}
+
+		&:last-child {
+			margin-right: 0;
+		}
+
+		&:last-child img {
+			border-radius: 0 4px 4px 0;
+		}
+	`
+  : ''}
+`;
+
+export const Photo = styled.img`
+	object-fit: cover;
+	display: flex;
+	min-height: 100%;
+	min-width: 100%;
+	width: 100%;
+	height: 100%;
+	max-width: 100%;
+	max-height: 100%;
+	transition: all 0.2s ease-in-out;
+
+	&:hover {
+		transition: all 0.2s ease-in-out;
+		transform: translateY(-2px);
+		box-shadow: 0 2px 4px rgba(0,0,0,0.16);
+	}
+`;
+
+export const PhotoPlaceholder = styled.div`
+	display: flex;
+	width: 100%;
+	height: 100%;
+	max-width: 100%;
+	max-height: 100%;
+	position: relative;
+	background: #f6f7f8;
+	position: absolute;
+
+	&:after {
+		content: '+${props => props.count}';
+		position: absolute;
+		left: 47%;
+		top: 50%;
+		font-size: 16px;
+		color: ${props => props.theme.text.alt};
+		transform: translate(-50%, -50%);
+		font-weight: 800;
+	}
+`;
+
 export const HeadsContainer = styled.div`
 	background: #fff;
 	text-align: center

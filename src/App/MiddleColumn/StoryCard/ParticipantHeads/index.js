@@ -13,7 +13,7 @@ class ParticipantHeads extends Component {
         </Container>
       );
     }
-    const { participants, list, unread, me, saying } = this.props;
+    const { participants, list, unread, me } = this.props;
     const participantsArr = Object.keys(participants);
 
     // sort the participants by last activity

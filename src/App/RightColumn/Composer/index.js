@@ -90,6 +90,12 @@ class Composer extends Component {
 
   changeBody = e => {
     this.props.dispatch(updateBody(e.target.value));
+
+    if (!e.target.value && !this.state.linkPreview) {
+      this.setState({
+        linkPreviewLength: 0,
+      });
+    }
   };
 
   selectFrequencyFromDropdown = e => {
@@ -120,11 +126,14 @@ class Composer extends Component {
         this.setState({
           loading: false,
         });
+
+        findDOMNode(this.refs.descriptionTextarea).focus();
       })
       .catch(e => {
         this.props.dispatch({
           type: 'SET_COMPOSER_ERROR',
           error: e,
+          loading: false,
         });
       });
   };
@@ -243,7 +252,7 @@ class Composer extends Component {
   };
 
   listenForUrl = e => {
-    const url = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+    const url = /^[^\]\(][-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
     let urls, input = [];
     if (
       e.keyCode !== 8 &&
