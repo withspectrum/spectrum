@@ -96,7 +96,6 @@ class NuxJoinCard extends Component {
 
   render() {
     const { user: { frequencies } } = this.props;
-    console.log('state ', this.state.allFrequencies);
 
     return (
       <Card still overflow="visible">
