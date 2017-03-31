@@ -226,7 +226,7 @@ export const getFeaturedFrequencies = () => {
         let numUsersB = Object.keys(val[b].users).length;
         return numUsersA < numUsersB ? 1 : -1;
       })
-      .slice(4, 34);
+      .slice(3, 33);
 
     let finalArr = top30.map(id => val[id]);
 
