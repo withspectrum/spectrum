@@ -122,7 +122,7 @@ export const setActiveStory = story => (dispatch, getState) => {
 /**
  * Publish a drafted story
  */
-export const publishStory = ({ frequencyId, title, description }) => (
+export const publishStory = ({ frequencyId, title, description, metadata }) => (
   dispatch,
   getState,
 ) => {
@@ -139,6 +139,7 @@ export const publishStory = ({ frequencyId, title, description }) => (
     key: storyKey,
     frequency,
     content: { title, description: linkFreqsInMd(description) },
+    metadata,
   })
     .then(story => {
       track('story', 'created', null);

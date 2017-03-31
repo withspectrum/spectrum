@@ -1,5 +1,6 @@
 import { track } from '../EventTracker';
 import { removeImage } from '../db/stories';
+import { apiURL } from '../config/api';
 
 /*------------------------------------------------------------\*
 *
@@ -46,5 +47,21 @@ export const removeImageFromStory = (image, story) => dispatch => {
       type: 'REMOVE_MEDIA_LIST',
       image,
     });
+  });
+};
+
+export const addLinkPreview = data => dispatch => {
+  dispatch({
+    type: 'ADD_LINK_PREVIEW',
+    linkPreview: {
+      data: data.data,
+      trueUrl: data.trueUrl,
+    },
+  });
+};
+
+export const removeLinkPreview = () => dispatch => {
+  dispatch({
+    type: 'REMOVE_LINK_PREVIEW',
   });
 };
