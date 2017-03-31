@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { Gradient, Tooltip, Transition, Button } from '../../../shared/Globals';
 
 export const ChatContainer = styled.div`
