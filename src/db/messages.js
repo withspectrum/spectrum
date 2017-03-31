@@ -58,33 +58,34 @@ export const createMessage = ({ storyId, frequency, user, message, key }) => {
     .then(() => db.ref(`stories/${storyId}`).once('value'))
     .then(snapshot => snapshot.val())
     .then(story => {
-      return getMessages(storyId).then(messages => {
-        createNotifications({
-          // Add notifications for
-          users: messages
-            // - Everybody who's sent a message in that story before
-            .map(({ userId }) => userId)
-            // - Creator of story
-            .concat([story.creator.uid])
-            .filter(UNIQUE)
-            // Avoid notifying the sender
-            .filter(uid => uid !== user.uid),
-          activityType: ACTIVITY_TYPES.NEW_MESSAGE,
-          ids: {
-            frequency: frequency.id,
-            story: storyId,
-          },
-          sender: {
-            uid: user.uid,
-            displayName: user.displayName,
-            photoURL: user.photoURL,
-          },
-          content: message.type === 'text'
-            ? message.content.substr(0, 140)
-            : '',
-        });
-      });
+      // If this is a new story after the intro of story.participants, use that rather than
+      // getting them manually
+      if (story.participants) return Object.keys(story.participants);
+
+      // If this is an old story without story.participants, get all the messages
+      // and manually get all users that sent messages
+      return getMessages(storyId).then(messages => messages
+        // - Everybody who's sent a message in that story before
+        .map(({ userId }) => userId)
+        // - Creator of story
+        .concat([story.creator.uid])
+        .filter(UNIQUE));
     })
+    .then(users => createNotifications({
+      // Avoid notifying the sender
+      users: users.filter(uid => uid !== user.uid),
+      activityType: ACTIVITY_TYPES.NEW_MESSAGE,
+      ids: {
+        frequency: frequency.id,
+        story: storyId,
+      },
+      sender: {
+        uid: user.uid,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+      },
+      content: message.type === 'text' ? message.content.substr(0, 140) : '',
+    }))
     .then(() => db.ref(`messages/${id}`).once('value'))
     .then(snapshot => snapshot.val());
 };

@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Card from '../../../shared/Card';
 import { Button } from '../../../shared/Globals';
-import { featured } from '../../../helpers/featuredFrequencies';
+import { truncate } from '../../../helpers/utils';
+import { getFeaturedFrequencies } from '../../../db/frequencies';
 import {
   Body,
   Title,
@@ -21,7 +22,7 @@ import {
 
 class NuxJoinCard extends Component {
   state = {
-    featured: [],
+    allFrequencies: null,
     scrollPos: null,
   };
 
@@ -36,19 +37,20 @@ class NuxJoinCard extends Component {
 
   componentWillMount = () => {
     const { user: { frequencies } } = this.props;
-    let featuredArr = this.state.featured.slice();
 
-    // show the unjoined featured frequencies first
-    featured.forEach((freq, i) => {
-      if (frequencies[freq.id]) {
-        featuredArr.push(freq);
-      } else {
-        featuredArr.unshift(freq);
-      }
-    });
+    getFeaturedFrequencies().then(data => {
+      let sorted = Object.keys(data.frequencies)
+        .map(id => data.frequencies[id]);
 
-    this.setState({
-      featured: featuredArr,
+      const allFreqs = sorted.sort((a, b) => {
+        let isMemberA = frequencies[a.id] ? true : false;
+        let isMemberB = frequencies[b.id] ? true : false;
+        return isMemberA > isMemberB ? 1 : -1;
+      });
+
+      this.setState({
+        allFrequencies: allFreqs,
+      });
     });
   };
 
@@ -104,18 +106,16 @@ class NuxJoinCard extends Component {
           </Description>
 
           <Hscroll innerRef={comp => this.hscroll = comp}>
-            {this.state.featured.length > 0 &&
-              this.state.featured.map((freq, i) => {
-                const community = communities.find(
-                  community => community.id === freq.communityId,
-                );
+            {this.state.allFrequencies &&
+              this.state.allFrequencies.map((freq, i) => {
                 return (
                   <FreqCard key={i}>
                     <div>
                       {/*<img src={`${process.env.PUBLIC_URL}/${freq.image}`} />*/
                       }
-                      <Link to={`/~${freq.slug}`}>{freq.title}</Link>
-                      <h4>{freq.description}</h4>
+                      <Link to={`/~${freq.slug}`}>{freq.name}</Link>
+                      <h4>{Object.keys(freq.users).length} subscribers</h4>
+                      <h4>{truncate(freq.description, 80)}</h4>
                     </div>
                     <Actions>
                       {frequencies[freq.id]

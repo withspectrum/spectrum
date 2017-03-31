@@ -31,7 +31,7 @@ export const NullContainer = styled.div`
 	height: 110%;
 	position: relative;
 	background: ${({ theme }) =>
-  theme.bg.default} url('./img/empty.svg') no-repeat center left;
+  theme.bg.default} url('/img/empty.svg') no-repeat center left;
 	background-size: cover;
 	opacity: 0.2;
 `;
