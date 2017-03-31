@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import deepEqual from 'deep-eql';
 import { track } from '../../../EventTracker';
 // eslint-disable-next-line
 import {
@@ -65,6 +66,11 @@ class StoryCard extends Component {
         photos: photoKeys,
       });
     }
+  };
+
+  shouldComponentUpdate = (nextProps, nextState) => {
+    return !deepEqual(this.props, nextProps) ||
+      !deepEqual(this.state, nextState);
   };
 
   componentWillUpdate = nextProps => {
