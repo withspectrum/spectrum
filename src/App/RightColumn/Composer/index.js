@@ -56,6 +56,8 @@ import {
   CoverMiddleMiddleBottomRight,
 } from './style';
 
+const URLS = /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+
 class Composer extends Component {
   constructor(props) {
     super(props);
@@ -252,8 +254,6 @@ class Composer extends Component {
   };
 
   listenForUrl = e => {
-    const url = /^[^\]\(][-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
-    let urls, input = [];
     if (
       e.keyCode !== 8 &&
       e.keyCode !== 9 &&
@@ -262,64 +262,51 @@ class Composer extends Component {
       e.keyCode !== 46
     ) {
       // Return if backspace, tab, enter, space or delete was not pressed.
-      // also don't check if we have an existing bundle of linkPreview saved in state
       return;
     }
 
     // also don't check if we already have a url in the linkPreview state
     if (this.state.linkPreview !== null) return;
 
-    let toCheck = [];
-    let len = toCheck.length;
-    let urlToCheck;
+    const toCheck = e.target.value.match(URLS);
 
-    while ((urls = url.exec(e.target.value)) !== null) {
-      toCheck.push(urls[0]);
-      len = toCheck.length;
-      urlToCheck = urls[0];
-    }
+    if (toCheck) {
+      const len = toCheck.length;
+      if (this.state.linkPreviewLength === len) return; // no new links, don't recheck
 
-    if (this.state.linkPreviewLength === len) return; // no new links, don't recheck
+      let urlToCheck = toCheck[len - 1];
 
-    if (urlToCheck) {
-      const addhttp = url => new Promise((resolve, reject) => {
-        this.setState({ fetchingLinkPreview: true });
+      this.setState({ fetchingLinkPreview: true });
 
-        if (!/^(f|ht)tps?:\/\//i.test(urlToCheck)) {
-          urlToCheck = 'https://' + urlToCheck;
-        }
+      if (!/^https?:\/\//i.test(urlToCheck)) {
+        urlToCheck = 'https://' + urlToCheck;
+      }
 
-        getLinkPreviewFromUrl(urlToCheck)
-          .then(data => {
-            this.props.dispatch(stopLoading());
-            this.setState({ fetchingLinkPreview: false });
+      return getLinkPreviewFromUrl(urlToCheck)
+        .then(data => {
+          this.props.dispatch(stopLoading());
 
-            let linkPreviewLength = this.state.linkPreviewLength + 1;
-            this.setState({
-              linkPreview: data,
-              trueUrl: urlToCheck,
-              linkPreviewLength: linkPreviewLength,
-              error: null,
-            });
+          this.setState(prevState => ({
+            linkPreview: data,
+            trueUrl: urlToCheck,
+            linkPreviewLength: prevState.linkPreviewLength + 1,
+            fetchingLinkPreview: false,
+            error: null,
+          }));
 
-            const linkPreview = {};
-            linkPreview['data'] = data;
-            linkPreview['trueUrl'] = urlToCheck;
+          const linkPreview = {};
+          linkPreview['data'] = data;
+          linkPreview['trueUrl'] = urlToCheck;
 
-            this.props.dispatch(addLinkPreview(linkPreview));
-            resolve(data);
-          })
-          .catch(err => {
-            this.setState({
-              error: "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
-              fetchingLinkPreview: false,
-            });
+          this.props.dispatch(addLinkPreview(linkPreview));
+        })
+        .catch(err => {
+          this.setState({
+            error: "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
+            fetchingLinkPreview: false,
           });
-      });
-
-      addhttp(toCheck[len >= 1 ? len - 1 : len]);
-    } else
-      return;
+        });
+    }
   };
 
   removeLinkPreview = () => {
