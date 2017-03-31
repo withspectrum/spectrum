@@ -268,13 +268,13 @@ class Composer extends Component {
     // also don't check if we already have a url in the linkPreview state
     if (this.state.linkPreview !== null) return;
 
-    const toCheck = e.target.value.trim().match(URLS);
+    const toCheck = e.target.value.match(URLS);
 
     if (toCheck) {
       const len = toCheck.length;
       if (this.state.linkPreviewLength === len) return; // no new links, don't recheck
 
-      let urlToCheck = toCheck[len - 1];
+      let urlToCheck = toCheck[len - 1].trim();
 
       this.setState({ fetchingLinkPreview: true });
 
