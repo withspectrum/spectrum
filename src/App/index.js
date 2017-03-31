@@ -111,9 +111,9 @@ class App extends Component {
 
     if (unread > 0) title = `(${unread}) ${title}`;
 
-    if (isEverything) {
-      sortedStories.unshift(<OnboardingCard />);
-    }
+    // if (isEverything) {
+    //  sortedStories.unshift(<OnboardingCard />);
+    // }
 
     if (!user.uid) {
       sortedStories.unshift(<LoginCard />);
@@ -203,7 +203,7 @@ class App extends Component {
             onClose={this.closeSelectModal}
           />}
 
-        <MiddleColumnContainer active={stories.active} viewing={ui.viewing}>
+        {/*<MiddleColumnContainer active={stories.active} viewing={ui.viewing}>
           <MiddleColumn
             loggedIn={!!user.uid}
             role={
@@ -217,7 +217,8 @@ class App extends Component {
             stories={sortedStories}
             frequency={frequency}
           />
-        </MiddleColumnContainer>
+        </MiddleColumnContainer>*/
+        }
 
         <RightColumnContainer active={stories.active} viewing={ui.viewing}>
           <RightColumn />
