@@ -35,7 +35,7 @@ class NuxJoinCard extends Component {
     this.props.dispatch(subscribeFrequency(e.target.id, false));
   };
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     const { user: { frequencies } } = this.props;
 
     getFeaturedFrequencies().then(data => {
