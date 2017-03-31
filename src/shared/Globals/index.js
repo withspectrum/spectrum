@@ -320,7 +320,9 @@ const returnTooltip = props => {
             right: calc(50% - 5px);
             bottom: 100%
       	    border-bottom-width: 0;
-      	    border-top-color: ${props.theme.bg.reverse};
+      	    border-top-color: ${props.onboarding
+        ? props.theme.brand.alt
+        : props.theme.bg.reverse};
           }
       `;
     case 'top-right':
@@ -333,7 +335,9 @@ const returnTooltip = props => {
             right: calc(50% - 5px);
             bottom: 100%;
       	    border-bottom-width: 0;
-      	    border-top-color: ${props.theme.bg.reverse};
+      	    border-top-color: ${props.onboarding
+        ? props.theme.brand.alt
+        : props.theme.bg.reverse};
           }
       `;
     case 'right':
@@ -347,7 +351,9 @@ const returnTooltip = props => {
             left: 100%;
             top: calc(50% - 5px);
             border-left-width: 0;
-            border-right-color: ${props.theme.bg.reverse};
+            border-right-color: ${props.onboarding
+        ? props.theme.brand.alt
+        : props.theme.bg.reverse};
           }
       `;
     case 'bottom-left':
@@ -360,7 +366,9 @@ const returnTooltip = props => {
             right: calc(50% - 5px);
             top: 100%
       	    border-top-width: 0;
-      	    border-bottom-color: ${props.theme.bg.reverse};
+      	    border-bottom-color: ${props.onboarding
+        ? props.theme.brand.alt
+        : props.theme.bg.reverse};
           }
       `;
     case 'bottom-right':
@@ -373,20 +381,24 @@ const returnTooltip = props => {
             right: calc(50% - 5px);
             top: 100%;
       	    border-top-width: 0;
-      	    border-bottom-color: ${props.theme.bg.reverse};
+      	    border-bottom-color: ${props.onboarding
+        ? props.theme.brand.alt
+        : props.theme.bg.reverse};
           }
       `;
     case 'left':
       return `
           &:after {
             right: calc(100% + 5px);
-            top: 6.775%;
+            top: 1px;
           }
           &:before{
             right: 100%;
             top: calc(50% - 5px);
             border-right-width: 0;
-            border-left-color: ${props.theme.bg.reverse};
+            border-left-color: ${props.onboarding
+        ? props.theme.brand.alt
+        : props.theme.bg.reverse};
           }
       `;
   }
@@ -412,7 +424,7 @@ export const Tooltip = props => css`
   }
 
 	&:after {
-		content: ${props.tipText ? `'${props.tipText}'` : `''`};
+		content: ${props.tipText && !props.onboarding ? `'${props.tipText}'` : `''`};
     z-index: 1001;
     ${fontStack};
     font-size: 14px;
@@ -429,11 +441,57 @@ export const Tooltip = props => css`
     color: ${props.theme.text.reverse};
 	}
 
-  ${props.tipText ? returnTooltip(props) : ''};
+  ${props.tipText && !props.onboarding ? returnTooltip(props) : ''};
 
 	&:hover:after,
 	&:hover:before {
 		opacity: 1;
 		transition: all 0.1s ease-in 0.1s;
+  }
+`;
+
+export const Onboarding = props => css`
+  position: relative;
+
+  &:after,
+  &:before {
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+    position: absolute;
+    opacity: 0;
+    display: block;
+  }
+
+  &:before {
+    content: '';
+    z-index: 1000;
+    border: 5px solid transparent;
+  }
+
+  &:after {
+    content: ${props.onboarding ? `'${props.onboarding}'` : `''`};
+    z-index: 1000;
+    ${fontStack};
+    text-align: left;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    width: 300px;
+    white-space: normal;
+    overflow: hidden;
+    padding: 16px;
+    padding-left: 20px;
+    border-radius: 12px;
+    background: ${props.theme.brand.alt};
+    color: ${props.theme.text.reverse};
+  }
+
+  ${props.onboarding ? returnTooltip(props) : ''};
+
+  &:after,
+  &:before {
+    opacity: 1;
+    transition: all 0.1s ease-in 0.1s;
   }
 `;

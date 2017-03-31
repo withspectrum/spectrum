@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Tooltip } from '../Globals';
+import { Tooltip, Onboarding } from '../Globals';
 
 /* eslint no-eval: 0 */
 
@@ -36,7 +36,8 @@ export const SvgWrapper = styled.div`
   props.reverse
     ? props.theme.text.reverse
     : eval(`props.theme.${props.color}`)};
-  ${props => props.tipText ? Tooltip(props) : ''};
+  ${props => props.tipText && !props.onboarding ? Tooltip(props) : ''};
+  ${props => props.onboarding ? Onboarding(props) : ''};
 `;
 
 class Icon extends React.Component {
@@ -362,6 +363,7 @@ class Icon extends React.Component {
         justify={this.props.location}
         tipText={this.props.tipText}
         tipLocation={this.props.tipLocation}
+        onboarding={this.props.onboarding}
       >
         <InlineSvg
           fillRule="evenodd"
