@@ -17,8 +17,9 @@ class InfiniteList extends React.Component {
     width: PropTypes.number.isRequired,
     elementRenderer: PropTypes.func.isRequired,
     keyMapper: PropTypes.func,
-    isElementLoaded: PropTypes.func,
-    loadMoreElements: PropTypes.func,
+    isNextPageLoading: PropTypes.bool,
+    loadNextPage: PropTypes.func,
+    hasNextPage: PropTypes.bool,
     elementCount: PropTypes.number,
   };
 
@@ -75,7 +76,9 @@ class InfiniteList extends React.Component {
         rowIndex={index}
       >
         <div style={style}>
-          {this.props.elementRenderer({ index, key })}
+          {this.props.hasNextPage && index >= this.props.elementCount - 1
+            ? <span>Loading...</span>
+            : this.props.elementRenderer({ index, key })}
         </div>
       </CellMeasurer>
     );
@@ -84,17 +87,20 @@ class InfiniteList extends React.Component {
   render() {
     const {
       // These are set to not lazy-load by default
-      isElementLoaded = () => true,
-      loadMoreElements = () => Promise.resolve(),
       elementCount = 9999999,
+      loadNextPage = () => Promise.resolve(),
+      isNextPageLoading = true,
+      hasNextPage = false,
       height,
       width,
     } = this.props;
 
+    const loadMoreRows = isNextPageLoading ? () => {} : loadNextPage;
+
     return (
       <InfiniteLoader
-        isRowLoaded={isElementLoaded}
-        loadMoreRows={loadMoreElements}
+        isRowLoaded={({ index }) => !hasNextPage || index < elementCount - 1}
+        loadMoreRows={loadMoreRows}
         rowCount={elementCount}
         threshold={1}
       >

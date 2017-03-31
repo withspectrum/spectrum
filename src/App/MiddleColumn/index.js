@@ -37,6 +37,7 @@ import { formatSenders } from '../../helpers/notifications';
 class MiddleColumn extends Component {
   state = {
     jumpToTop: false,
+    loadingNextPage: false,
   };
 
   componentWillUpdate = nextProps => {
@@ -170,6 +171,7 @@ class MiddleColumn extends Component {
   };
 
   jumpToTop = () => {
+    console.log('JUMP TO TOP');
     if (this.storyList) {
       this.storyList.scrollTop = 0;
     }
@@ -338,29 +340,40 @@ class MiddleColumn extends Component {
             <InfiniteList
               height={window.innerHeight - 50}
               width={window.innerWidth > 768 ? 419 : window.innerWidth}
-              isElementLoaded={({ index }) => index > stories.length - 1}
-              loadMoreElements={({ startIndex, stopIndex }) =>
+              isNextPageLoading={this.state.loadingNextPage}
+              hasNextPage={
+                Object.keys(frequency.stories).length > stories.length
+              }
+              loadNextPage={({ startIndex, stopIndex }) =>
                 new Promise(resolve => {
-                  if (
-                    stopIndex === stories.length - 1 &&
-                    Object.keys(frequency.stories).length > stories.length
-                  ) {
-                    getStories({
-                      frequencyId: frequency.id,
-                      startIndex: stories.length - 1,
-                      stopIndex: stories.length + 15,
-                    }).then(stories => {
-                      this.props.dispatch({
-                        type: 'ADD_STORIES',
-                        stories,
-                      });
+                  console.log('loading new page');
+                  this.setState({
+                    loadingNextPage: true,
+                  });
+                  getStories({
+                    frequencyId: frequency.id,
+                    startIndex: stories.length - 1,
+                    stopIndex: stories.length + 15,
+                  }).then(stories => {
+                    console.log('fetched next few stories');
+                    this.props.dispatch({
+                      type: 'ADD_STORIES',
+                      stories,
                     });
-                  }
-                  resolve();
+                    this.setState({
+                      loadingNextPage: false,
+                    });
+                    resolve();
+                  });
                 })}
-              elementCount={stories.length}
+              elementCount={
+                Object.keys(frequency.stories).length > stories.length
+                  ? stories.length + 1
+                  : stories.length
+              }
               elementRenderer={this.renderStory}
-              keyMapper={index => stories[index].id}
+              keyMapper={index =>
+                stories[index] ? stories[index].id : 'loading-indicator'}
             />}
         </StoryList>
       </Column>

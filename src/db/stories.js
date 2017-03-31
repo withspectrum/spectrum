@@ -24,7 +24,9 @@ export const getStories = (
       hashToArray(freq.stories).filter(story => !story.deleted),
       'last_activity',
       'timestamp',
-    ).slice(startIndex, stopIndex);
+    )
+      .reverse()
+      .slice(startIndex, stopIndex);
     return Promise.all(stories.map(story => getStory(story.id)));
   });
 };
