@@ -6,11 +6,7 @@
     "express": "^4.15.2",
     "firebase-admin": "^4.1.2",
     "firebase-functions": "^0.5",
-    "stripe": "^4.16.0",
-    "memory-cache": "^0.1.6",
-    "micro": "^7.0.6",
-    "open-graph-scraper": "^2.4.2",
-    "metascraper": "^1.0.6"
+    "stripe": "^4.16.0"
   },
   "private": true
 }

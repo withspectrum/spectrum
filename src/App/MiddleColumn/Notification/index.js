@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import deepEqual from 'deep-eql';
 import Icon from '../../../shared/Icons';
-import { timeDifference } from '../../../helpers/utils';
-import { Heading, Subheading, CardHeader, Title, B } from './style';
+import { Heading, Subheading, CardHeader, Title } from './style';
 import Card from '../../../shared/Card';
-import { FlexCol, P } from '../../../shared/Globals';
+import { FlexCol } from '../../../shared/Globals';
 
 class Notification extends Component {
   shouldComponentUpdate(nextProps) {

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Shadow, FlexRow, Button, Gradient } from '../../shared/Globals';
+import { Shadow, FlexRow } from '../../shared/Globals';
 
 export const ViewContainer = styled.div`
 	display: flex;

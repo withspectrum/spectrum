@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import deepEqual from 'deep-eql';
 import { track } from '../../../EventTracker';
 // eslint-disable-next-line
 import {
@@ -23,7 +24,7 @@ import {
 } from './style';
 import Markdown from 'react-remarkable';
 import { openGallery } from '../../../actions/gallery';
-import { timeDifference, hashToArray, trimHtml } from '../../../helpers/utils';
+import { timeDifference, hashToArray } from '../../../helpers/utils';
 import Card from '../../../shared/Card';
 import ParticipantHeads from './ParticipantHeads';
 import LinkPreview from '../../../shared/LinkPreview';
@@ -65,6 +66,11 @@ class StoryCard extends Component {
         photos: photoKeys,
       });
     }
+  };
+
+  shouldComponentUpdate = (nextProps, nextState) => {
+    return !deepEqual(this.props, nextProps) ||
+      !deepEqual(this.state, nextState);
   };
 
   componentWillUpdate = nextProps => {
@@ -144,8 +150,6 @@ class StoryCard extends Component {
     let photos = hasMetadata && metadata.photos ? metadata.photos : null;
     let photosArray = photos ? hashToArray(photos) : null;
     let photoCount = photosArray ? photosArray.length : null;
-
-    console.log('render ', photosArray);
 
     return (
       <Card link={link} selected={isActive}>

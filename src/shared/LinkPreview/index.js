@@ -20,7 +20,7 @@ class LinkPreview extends Component {
 
   render() {
     let {
-      data: { author, date, description, image, publisher, title, url },
+      data: { author, date, description, image, publisher, title, url } = {},
       trueUrl,
       editable,
     } = this.props;

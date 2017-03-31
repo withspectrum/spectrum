@@ -3,7 +3,6 @@ import LoadingIndicator from '../shared/loading/global';
 // NOTE (@mxstbr): The /dist here is a bug in a specific version of emoji-regex
 // Can be removed after the next release: https://github.com/mathiasbynens/emoji-regex/pull/12
 import createEmojiRegex from 'emoji-regex';
-import { apiURL } from '../config/api';
 
 export const hashToArray = hash => {
   let array = [];
@@ -292,20 +291,8 @@ export const truncate = (str, length) => {
   return subString.substr(0, subString.lastIndexOf(' ')) + '…';
 };
 
-export const getLinkPreviewFromUrl = url => {
-  const myInit = {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  };
-
-  return fetch(`${apiURL}/meta-scrape?url=${url}`, myInit)
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      return data.data;
-    });
-};
+export const getLinkPreviewFromUrl = url => fetch(
+  `https://micro-open-graph-xiuqvckswd.now.sh/?url=${url}`,
+).then(response => {
+  return response.json();
+});

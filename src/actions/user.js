@@ -1,7 +1,6 @@
 import { set, track } from '../EventTracker';
 import {
   createUser,
-  getPrivateUser,
   createSubscription,
   deleteSubscription,
 } from '../db/users';

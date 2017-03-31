@@ -1,6 +1,3 @@
-import { hashToArray } from './utils';
-import { track } from '../EventTracker';
-
 export const isStoryCreator = (story, user) => {
   if (!user) {
     return;

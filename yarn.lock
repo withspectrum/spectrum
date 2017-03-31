@@ -8,6 +8,12 @@
   dependencies:
     "@types/node" "*"
 
+"@types/jsonwebtoken@^7.1.33":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-7.2.0.tgz#0fed32c8501da80ac9839d2d403a65c83d776ffd"
+  dependencies:
+    "@types/node" "*"
+
 "@types/mz@0.0.30":
   version "0.0.30"
   resolved "https://registry.yarnpkg.com/@types/mz/-/mz-0.0.30.tgz#58daa9f35811d607037bab1f9cc7d4a23e6aafae"
@@ -2849,6 +2855,14 @@ find-up@^1.0.0, find-up@^1.1.2:
   dependencies:
     path-exists "^2.0.0"
     pinkie-promise "^2.0.0"
+
+firebase-admin@^4.1.4:
+  version "4.1.4"
+  resolved "https://registry.yarnpkg.com/firebase-admin/-/firebase-admin-4.1.4.tgz#d36fdccf476ba91db071137f1e5acfdbc8895b02"
+  dependencies:
+    "@types/jsonwebtoken" "^7.1.33"
+    faye-websocket "0.9.3"
+    jsonwebtoken "7.1.9"
 
 firebase-tools@^3.5.0:
   version "3.5.0"

@@ -10,4 +10,3 @@ exports.emailNotifications = functions.database
   });
 exports.shortener = require('./sp.chat.js');
 exports.payments = require('./payments.js');
-exports.meta = require('./meta.js');
