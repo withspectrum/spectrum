@@ -24,7 +24,7 @@ import {
 } from './style';
 import Markdown from 'react-remarkable';
 import { openGallery } from '../../../actions/gallery';
-import { timeDifference, hashToArray, trimHtml } from '../../../helpers/utils';
+import { timeDifference, hashToArray } from '../../../helpers/utils';
 import Card from '../../../shared/Card';
 import ParticipantHeads from './ParticipantHeads';
 import LinkPreview from '../../../shared/LinkPreview';
