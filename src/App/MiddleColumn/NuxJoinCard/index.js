@@ -108,7 +108,6 @@ class NuxJoinCard extends Component {
           <Hscroll innerRef={comp => this.hscroll = comp}>
             {this.state.allFrequencies &&
               this.state.allFrequencies.map((freq, i) => {
-                console.log(freq);
                 return (
                   <FreqCard key={i}>
                     <div>
