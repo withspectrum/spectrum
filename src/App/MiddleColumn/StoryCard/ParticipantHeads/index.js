@@ -13,7 +13,7 @@ class ParticipantHeads extends Component {
         </Container>
       );
     }
-    const { participants, list, unread, me, saying } = this.props;
+    const { participants, list, unread, me } = this.props;
     const participantsArr = Object.keys(participants);
 
     // sort the participants by last activity
@@ -29,10 +29,9 @@ class ParticipantHeads extends Component {
     return (
       <Container>
         {sortedArr.map((participant, i) => {
-          if (i <= 4 && list[participant]) {
+          if (i <= 15 && list[participant]) {
             return (
               <HeadWrapper
-                style={{ position: 'relative', left: `-${i * 4}px` }}
                 tipText={list[participant].displayName}
                 tipLocation="top-right"
                 key={`${participant}-head`}
@@ -44,29 +43,17 @@ class ParticipantHeads extends Component {
           return null;
         })}
 
-        {sortedArr.length > 5 && // if more than four participnats, tack on a placeholder
+        {sortedArr.length > 16 && // if more than four participnats, tack on a placeholder
           <HeadWrapper
-            style={{ position: 'relative', left: '-16px' }}
             tipText={
-              sortedArr.length - 5 > 1
-                ? `${sortedArr.length - 5} others`
-                : `${sortedArr.length - 5} other`
+              sortedArr.length - 15 > 1
+                ? `${sortedArr.length - 15} others`
+                : `${sortedArr.length - 15} other`
             }
             tipLocation="top-right"
           >
             <Head src={`${process.env.PUBLIC_URL}/img/head_placeholder.png`} />
           </HeadWrapper>}
-
-        <Label length={sortedArr.length}>
-          {list[sortedArr[0]].uid === me
-            ? 'You'
-            : list[sortedArr[0]].displayName}
-          {' '}and{' '}
-          {participantsArr.length - 1}
-          {' '}others are{' '}
-          {saying}
-          {unread > 0 && <UnreadCount>{` (${unread} new!)`}</UnreadCount>}
-        </Label>
       </Container>
     );
   }

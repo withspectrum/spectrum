@@ -3,11 +3,11 @@ import { Shadow, Transition } from '../Globals';
 
 export const Wrapper = styled.div`
 	display: inline-block;
-	width: calc(100% - 16px);
-	margin: 8px 8px 0 8px;
+	width: calc(100% - 32px);
+	margin: 16px 8px 0 16px;
 	flex: 0 0 auto;
 	border-radius: 4px;
-	overflow: ${props => props.overflow === 'visible' ? 'visible' : 'hidden'};
+	overflow: ${props => props.overflow === 'visible' ? 'visible' : 'visible'};
 	background-color: ${({ theme }) => theme.bg.default};
 	transition: ${Transition.hover.off};
 	-webkit-font-smoothing: subpixel-antialiased;
@@ -27,7 +27,7 @@ export const Wrapper = styled.div`
 	${props => !props.still &&
 css`
 		&:hover {
-			box-shadow: ${Shadow.high};
+			box-shadow: ${Shadow.mid};
 			transition: ${Transition.hover.on};
 			cursor: pointer;
 		}
@@ -39,13 +39,5 @@ export const LinkWrapper = styled.div`
 	flex-direction: column;
 	flex: 0 0 auto;
 	background-color: #ffffff;
-	transition: ${Transition.hover.off};
-	box-shadow: inset -4px 0 0 ${props =>
-  props.selected ? props.theme.brand.default : '#fff'};
-
-	&:hover {
-		box-shadow: inset -4px 0 0 ${props =>
-  props.selected ? props.theme.brand.default : '#fff'};
-		transition: ${Transition.hover.on};
-	}
+	border-radius: 4px;
 `;
