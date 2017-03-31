@@ -145,8 +145,6 @@ class StoryCard extends Component {
     let photosArray = photos ? hashToArray(photos) : null;
     let photoCount = photosArray ? photosArray.length : null;
 
-    console.log('render ', photosArray);
-
     return (
       <Card link={link} selected={isActive}>
         <StatusBar status={status}>
