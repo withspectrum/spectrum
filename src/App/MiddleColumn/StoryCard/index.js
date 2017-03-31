@@ -142,7 +142,9 @@ class StoryCard extends Component {
     status = 'default';
     isActive ? status = 'active' : null;
     isNew ? status = 'new' : null;
-    unreadMessages > 0 && !isActive ? status = 'unread' : null;
+    if (unreadMessages > 0 && !isActive) {
+      status = 'unread';
+    }
 
     let hasMetadata = metadata ? true : false;
     let hasLinkPreview = hasMetadata && metadata.linkPreview ? true : false;
@@ -152,30 +154,37 @@ class StoryCard extends Component {
     let photoCount = photosArray ? photosArray.length : null;
 
     let statusText;
-    isNew ? statusText = `New!` : null;
-    unreadMessages > 0
-      ? statusText = `${unreadMessages} new ${unreadMessages === 1
-          ? 'message'
-          : 'messages'} · ${timeDifference(Date.now(), timestamp)}`
-      : null;
-    isActive && messages > 0
-      ? statusText = `${messages} messages · ${timeDifference(
-          Date.now(),
-          timestamp,
-        )}`
-      : null;
-    isActive && messages === 0
-      ? statusText = `Posted ${timeDifference(Date.now(), timestamp)}`
-      : null;
-    !isNew && !unreadMessages && !isActive && messages > 0
-      ? statusText = `${messages} messages · ${timeDifference(
-          Date.now(),
-          timestamp,
-        )}`
-      : null;
-    !isNew && !unreadMessages && !isActive && messages === 0
-      ? statusText = `Posted ${timeDifference(Date.now(), timestamp)}`
-      : null;
+    if (isNew) {
+      statusText = 'New!';
+    }
+
+    if (unreadMessages > 0) {
+      statusText = `${unreadMessages} new ${unreadMessages === 1
+        ? 'message'
+        : 'messages'} · ${timeDifference(Date.now(), timestamp)}`;
+    }
+
+    if (isActive && messages > 0) {
+      statusText = `${messages} messages · ${timeDifference(
+        Date.now(),
+        timestamp,
+      )}`;
+    }
+
+    if (isActive && messages === 0) {
+      statusText = `Posted ${timeDifference(Date.now(), timestamp)}`;
+    }
+
+    if (!isNew && !unreadMessages && !isActive && messages > 0) {
+      statusText = `${messages} messages · ${timeDifference(
+        Date.now(),
+        timestamp,
+      )}`;
+    }
+
+    if (!isNew && !unreadMessages && !isActive && messages === 0) {
+      statusText = `Posted ${timeDifference(Date.now(), timestamp)}`;
+    }
 
     return (
       <Card link={link} selected={isActive}>
