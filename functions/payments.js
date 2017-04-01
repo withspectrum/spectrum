@@ -1,7 +1,7 @@
 const functions = require('firebase-functions'),
   admin = require('firebase-admin');
 
-const stripe = require('stripe')(functions.config().stripe.test_token),
+const stripe = require('stripe')(functions.config().stripe.token),
   currency = functions.config().stripe.currency || 'USD';
 
 const cors = require('cors')({ origin: true });
