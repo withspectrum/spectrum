@@ -9,6 +9,7 @@ import {
   Shadow,
   Transition,
 } from '../../../shared/Globals';
+import ScrollRow from '../../../shared/ScrollRow';
 
 export const Wrapper = styled(FlexCol)`
   width: 100%;
@@ -91,11 +92,25 @@ export const FeaturedItemCopy = styled(P)`
 
 export const SecondaryRow = styled(FlexRow)`
   max-width: 100%;
-  overflow-x: scroll;
   width: 100%;
+  overflow-x: scroll;
   flex: 0 0 auto;
   padding: 16px 32px;
   padding-top: 8px;
+`;
+
+export const ScrollBodyX = styled(ScrollRow)`
+  width: 100%;
+  align-items: stretch;
+  background-color: red;
+  cursor: pointer;
+  cursor: hand;
+  cursor: grab;
+  min-height: 275px;
+
+  &:active {
+    cursor: grabbing;
+  }
 `;
 
 export const SecondaryItem = styled(FlexCol)`

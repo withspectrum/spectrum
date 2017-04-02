@@ -230,8 +230,6 @@ export const getFeaturedFrequencies = () => {
 
     let finalArr = top30.map(id => val[id]);
 
-    return {
-      frequencies: finalArr,
-    };
+    return finalArr;
   });
 };

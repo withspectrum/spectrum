@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
-import { featured } from '../../../helpers/featuredFrequencies';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Icon from '../../../shared/Icons';
 import { IconButton, Button, FlexCol, FlexRow } from '../../../shared/Globals';
+import { getFeaturedFrequencies } from '../../../db/frequencies';
+import { truncate } from '../../../helpers/utils';
+import {
+  unsubscribeFrequency,
+  subscribeFrequency,
+} from '../../../actions/frequencies';
 import {
   Wrapper,
   ViewTitle,
@@ -20,11 +27,55 @@ import {
   ChartRow,
   Chart,
   ScrollBody,
+  ScrollBodyX,
   Rank,
 } from './style';
 
 class Explore extends Component {
+  state = {
+    allFrequencies: null,
+  };
+
+  unsubscribeFrequency = () => {
+    this.props.dispatch(unsubscribeFrequency(this.props.activeFrequency));
+  };
+
+  subscribeFrequency = e => {
+    e.preventDefault();
+    this.props.dispatch(subscribeFrequency(e.target.id, false));
+  };
+
+  handleMouseDown = e => {
+    if (e.target.id) {
+      this.subscribeFrequency(e.target.id);
+    }
+  };
+
+  handleMouseUp = e => {
+    // if (e.target.id) { this.setState({scrollPos: left - e.pageX + x,}); }
+  };
+
+  componentDidMount = () => {
+    const { user: { frequencies } } = this.props;
+
+    getFeaturedFrequencies().then(data => {
+      let sorted = Object.keys(data).map(id => data[id]);
+
+      const allFreqs = sorted.sort((a, b) => {
+        let isMemberA = frequencies[a.id] ? true : false;
+        let isMemberB = frequencies[b.id] ? true : false;
+        return isMemberA > isMemberB ? 1 : -1;
+      });
+
+      this.setState({
+        allFrequencies: allFreqs,
+      });
+    });
+  };
+
   render() {
+    const { user: { frequencies } } = this.props;
+
     return (
       <Wrapper>
         <ScrollBody>
@@ -146,81 +197,38 @@ class Explore extends Component {
             </FeaturedRow>
           </FeaturedSection>
           <SecondaryRow>
-            <SecondaryItem>
-              <h1>🌈</h1>
-              <h3>~Spectrum</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
-            <SecondaryItem>
-              <h1>🌈</h1>
-              <h3>~Spectrum</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
-            <SecondaryItem>
-              <h1>💅</h1>
-              <h3>~Styled-Components</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
-            <SecondaryItem>
-              <h1>🌈</h1>
-              <h3>~Spectrum</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
-            <SecondaryItem>
-              <h1>🌈</h1>
-              <h3>~Spectrum</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
-            <SecondaryItem>
-              <h1>🌈</h1>
-              <h3>~Spectrum</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
-            <SecondaryItem>
-              <h1>🌈</h1>
-              <h3>~Spectrum</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
-            <SecondaryItem>
-              <h1>🌈</h1>
-              <h3>~Spectrum</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
-            <SecondaryItem>
-              <h1>🌈</h1>
-              <h3>~Spectrum</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
-            <SecondaryItem>
-              <h1>🌈</h1>
-              <h3>~Spectrum</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
-            <SecondaryItem>
-              <h1>🌈</h1>
-              <h3>~Spectrum</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
-            <SecondaryItem>
-              <h1>🌈</h1>
-              <h3>~Spectrum</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
-            <SecondaryItem>
-              <h1>🌈</h1>
-              <h3>~Spectrum</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
-            <SecondaryItem>
-              <h1>🌈</h1>
-              <h3>~Spectrum</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
-            <SecondaryItem>
-              <h1>🌈</h1>
-              <h3>~Spectrum</h3>
-              <Button>Join</Button>
-            </SecondaryItem>
+            <ScrollBodyX
+              onMouseDown={this.handleMouseDown}
+              onMouseUp={this.handleMouseUp}
+            >
+              {this.state.allFrequencies &&
+                this.state.allFrequencies.map((freq, i) => {
+                  return (
+                    <SecondaryItem key={i}>
+                      <div>
+                        <Link to={`/~${freq.slug}`}>{freq.name}</Link>
+                        <h4>{Object.keys(freq.users).length} subscribers</h4>
+                        <h4>{truncate(freq.description, 80)}</h4>
+                      </div>
+                      <div>
+                        {frequencies[freq.id]
+                          ? <Link to={`/~${freq.slug}`}>
+                              <Button disabled width={'100%'}>
+                                Joined!
+                              </Button>
+                            </Link>
+                          : <Button
+                              id={freq.slug}
+                              onClick={this.subscribeFrequency}
+                              width={'100%'}
+                            >
+                              Join
+                            </Button>}
+                      </div>
+                    </SecondaryItem>
+                  );
+                })}
+            </ScrollBodyX>
           </SecondaryRow>
           <ChartSection>
             <Chart>
@@ -480,4 +488,10 @@ class Explore extends Component {
   }
 }
 
-export default Explore;
+const mapStateToProps = state => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(Explore);
