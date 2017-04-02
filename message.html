@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Simple Transactional Email</title>
+    <title>{{notification.sender.displayName}} replied to your story!</title>
     <style>
       /* -------------------------------------
           GLOBAL RESETS
@@ -277,7 +277,6 @@
           <div class="content">
 
             <!-- START CENTERED WHITE CONTAINER -->
-            <span class="preheader">{{Sender}} replied to your chat</span>
             <table class="main">
 
               <!-- START MAIN CONTENT AREA -->
@@ -290,19 +289,25 @@
                           <tr>
                             <td>
                               <h2>Heads up, {{user.displayName}}!</h2>
-                              <p>{{notification.sender.displayName}} replied to a conversation that you were recently active in and we thought you might be interested...</p>
+                              <p>{{notification.sender.displayName}} replied to your story...</p>
                               <p>Check it out:</p>
                             </td>
                           </tr>
                           {{#each notification.message}}
                           <tr>
                             <td>
-                              <table>
+                              <table border="0" cellpadding="16" cellspacing="0">
                                 <tr>
-                                  <td style="background-color: #E6ECF7; border-radius: 16px;">
-                                    <p style="margin: 12px;">
-                                      {{notification.message.body}}
-                                    </p>
+                                  <td align="center">
+                                    <table>
+                                      <tr>
+                                        <td style="background-color: #E6ECF7; border-radius: 16px;">
+                                          <p style="margin: 12px;">
+                                            {{notification.message.body}}
+                                          </p>
+                                        </td>
+                                      </tr>
+                                    </table>
                                   </td>
                                 </tr>
                                 <tr></tr>
