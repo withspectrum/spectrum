@@ -59,11 +59,20 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   // Get the frequency
   getFrequency({ slug: lowerCaseFrequency })
     .then(data => {
+      const freq = {
+        ...data,
+        // Filter deleted stories from frequency
+        stories: Object.keys(data.stories).reduce((list, storyId) => {
+          if (!data.stories[storyId].deleted)
+            list[storyId] = data.stories[storyId];
+          return list;
+        }, {}),
+      };
       dispatch({
         type: 'ADD_FREQUENCY',
-        frequency: data,
+        frequency: freq,
       });
-      return data;
+      return freq;
     })
     .then(data => {
       const freqs = getState().user.frequencies;
@@ -180,7 +189,15 @@ export const subscribeFrequency = (slug, redirect) => (dispatch, getState) => {
       dispatch({
         type: 'SUBSCRIBE_FREQUENCY',
         uid,
-        frequency,
+        frequency: {
+          ...frequency,
+          // Filter deleted stories from frequency
+          stories: Object.keys(frequency.stories).reduce((list, storyId) => {
+            if (!frequency.stories[storyId].deleted)
+              list[storyId] = frequency.stories[storyId];
+            return list;
+          }, {}),
+        },
       });
     })
     .catch(err => {
