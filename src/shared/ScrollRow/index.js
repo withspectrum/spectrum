@@ -16,7 +16,7 @@ class ScrollRow extends Component {
       console.log('mousemove');
       if (down) {
         let newX = e.pageX;
-        console.log(newX, left, x);
+        console.log(node.scrollLeft);
         node.scrollLeft = left - newX + x;
       }
     });
@@ -41,7 +41,10 @@ class ScrollRow extends Component {
 
   render() {
     return (
-      <FlexRow innerRef={comp => this.hscroll = comp}>
+      <FlexRow
+        className={this.props.className}
+        innerRef={comp => this.hscroll = comp}
+      >
         {this.props.children}
       </FlexRow>
     );
