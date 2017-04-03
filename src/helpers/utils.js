@@ -292,7 +292,7 @@ export const truncate = (str, length) => {
 };
 
 export const getLinkPreviewFromUrl = url => fetch(
-  `https://micro-open-graph-xiuqvckswd.now.sh/?url=${url}`,
+  `https://micro-open-graph-phbmtaqieu.now.sh/?url=${url}`,
 ).then(response => {
   return response.json();
 });
