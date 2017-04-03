@@ -28,6 +28,7 @@ import {
   FreqText,
   DirtyDot,
   ProBadge,
+  CommunityHeading,
 } from './style';
 
 class NavigationMaster extends Component {
@@ -130,7 +131,7 @@ class NavigationMaster extends Component {
                 <Freq active={isEverything} onClick={this.showStoriesNav}>
                   <FreqText>
                     <Icon icon="home" reverse static />
-                    <FreqLabel>{'Home'}</FreqLabel>
+                    <FreqLabel ml>{'Home'}</FreqLabel>
                   </FreqText>
                 </Freq>
               </Link>
@@ -162,7 +163,9 @@ class NavigationMaster extends Component {
               const comm = communities.find(comm => comm.id === community);
               return (
                 <div key={`nav-community-${community}`}>
-                  <P>{comm ? comm.name : 'Loading...'}</P>
+                  <CommunityHeading>
+                    {comm ? comm.name : 'Loading...'}
+                  </CommunityHeading>
                   <div>
                     {frequencies[community].map((frequency, i) => {
                       // If there's any unread notification for this frequency
@@ -202,7 +205,6 @@ class NavigationMaster extends Component {
                             onClick={this.showStoriesNav}
                           >
                             <FlexRow center>
-                              <Icon icon="frequency" reverse static />
                               <FreqLabel>{frequency.name}</FreqLabel>
                             </FlexRow>
                             {notif && !notif.read && <DirtyDot />}

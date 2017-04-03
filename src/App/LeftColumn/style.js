@@ -52,7 +52,7 @@ export const Name = styled(H3)`
 export const P = styled.p`
   display: flex;
   font-size: 12px;
-  line-height: 12px;
+  line-height: 1.4;
   color: ${({ theme }) => theme.text.alt};
   font-weight: 500;
   flex-direction: column;
@@ -132,14 +132,13 @@ export const FreqLabel = styled.span`
   display: inline-block;
   flex: 0 0 auto;
   color: ${({ theme }) => theme.text.reverse};
-  margin-left: 8px;
-  margin-right: 8px;
   pointer-events: none;
   text-overflow: ellipsis;
   white-space: nowrap;
   word-wrap: normal;
-  padding: 8px 0;
+  padding: 4px 0;
   overflow: hidden;
+  ${props => props.ml ? 'margin-left: 8px;' : ''};
 `;
 
 export const FreqIcon = styled.img`
@@ -240,4 +239,14 @@ export const ProBadge = styled.span`
   padding: 2px 4px;
   border-radius: 4px;
   line-height: 1.5;
+`;
+
+export const CommunityHeading = styled(P)`
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: 16px;
+  padding: 16px 16px 8px 16px;
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
 `;
