@@ -14,10 +14,8 @@ import { Button, H4 } from '../../shared/Globals';
 import Story from './Story';
 import ActionBar from './Story/ActionBar';
 import Chat from './Chat';
-import MessageGroupHeader from './MessageGroupHeader';
 import ChatInput from './ChatInput';
 import Composer from './Composer';
-import MessageComposer from './MessageComposer';
 
 import {
   ViewContainer,
@@ -58,13 +56,6 @@ class RightColumn extends Component {
     if (!stories || stories.length === 0) return;
 
     return stories.find(story => story.id === active);
-  };
-
-  getActiveMessageGroup = () => {
-    const { messageGroups: { messageGroups, active } } = this.props;
-    if (!messageGroups || messageGroups.length === 0) return;
-
-    return messageGroups.find(group => group.id === active);
   };
 
   // if the user is at the bottom of the chat view and another user sends a message, scroll the view
@@ -116,63 +107,7 @@ class RightColumn extends Component {
   };
 
   render() {
-    const {
-      composer,
-      user,
-      frequencies: { frequencies, active },
-      messageGroups,
-      messageComposer,
-    } = this.props;
-
-    if (active === 'messages') {
-      let messageGroup = this.getActiveMessageGroup();
-      if (messageGroup && !messageComposer.isOpen) {
-        return (
-          <ViewContainer>
-            <Link to={`/messages`}>
-              <BackArrow onClick={this.clearActiveStory}>
-                <Icon icon="back" />
-              </BackArrow>
-            </Link>
-
-            <StoryChatContainer
-              innerRef={comp => this.comp = comp}
-              onScroll={this.onScroll}
-            >
-              <MessageGroupHeader messageGroup={messageGroup} />
-              <Chat
-                atBottom={this.state.atBottom}
-                forceScrollToBottom={this.forceScrollToBottom}
-                contextualScrollToBottom={this.contextualScrollToBottom}
-                messageGroup={messageGroup}
-              />
-            </StoryChatContainer>
-
-            <Footer>
-              {user.uid &&
-                <ChatInput forceScrollToBottom={this.forceScrollToBottom} />}
-            </Footer>
-          </ViewContainer>
-        );
-      } else if (messageComposer.isOpen) {
-        return (
-          <ViewContainer>
-            <MessageComposer />
-            <Footer>
-              {user.uid &&
-                <ChatInput forceScrollToBottom={this.forceScrollToBottom} />}
-            </Footer>
-          </ViewContainer>
-        );
-      } else {
-        return (
-          <ViewContainer>
-            <NullContainer />
-          </ViewContainer>
-        );
-      }
-    }
-
+    const { composer, user, frequencies: { frequencies, active } } = this.props;
     let story = this.getActiveStory();
 
     let role, creator, locked, currentFrequency, returnUrl;
@@ -267,8 +202,6 @@ const mapStateToProps = state => ({
   frequencies: state.frequencies,
   user: state.user,
   composer: state.composer,
-  messageComposer: state.messageComposer,
-  messageGroups: state.messageGroups,
 });
 
 export default connect(mapStateToProps)(RightColumn);

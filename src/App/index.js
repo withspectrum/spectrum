@@ -96,7 +96,7 @@ class App extends Component {
 
       if (!(story && story.content) && !(freq && freq.name)) {
         title = 'Spectrum';
-        description = 'Like a forum but for Mars colonists.';
+        description = 'Where communities are built.';
       } else {
         title = `${story && story.content
           ? `${truncate(story.content.title, 40)} `
@@ -107,7 +107,7 @@ class App extends Component {
           ? `${story.content.description
               ? truncate(story.content.description, 150)
               : 'A story on Spectrum'}`
-          : freq ? freq.description : 'Like a forum but for Mars colonists.';
+          : freq ? freq.description : 'Where communities are built.';
       }
     }
 
@@ -201,7 +201,7 @@ class App extends Component {
             },
             {
               name: 'twitter:image:alt',
-              content: 'Like a forum but for Mars colonists.',
+              content: 'Where communities are built.',
             },
             {
               name: 'twitter:title',

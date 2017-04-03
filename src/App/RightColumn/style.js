@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Shadow, FlexRow, Button, Gradient } from '../../shared/Globals';
+import { Shadow, FlexRow } from '../../shared/Globals';
 
 export const ViewContainer = styled.div`
 	display: flex;
@@ -31,7 +31,7 @@ export const NullContainer = styled.div`
 	height: 110%;
 	position: relative;
 	background: ${({ theme }) =>
-  theme.bg.default} url('./img/empty.svg') no-repeat center left;
+  theme.bg.default} url('/img/empty.svg') no-repeat center left;
 	background-size: cover;
 	opacity: 0.2;
 `;

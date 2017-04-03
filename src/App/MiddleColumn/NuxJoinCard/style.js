@@ -4,6 +4,7 @@ import { H4, H1, Button } from '../../../shared/Globals';
 export const Body = styled.div`
 	width: 100%;
 	padding: 24px 16px 16px;
+	border-radius: 4px;
 	text-align: center;
 	overflow: hidden;
 `;
@@ -24,19 +25,20 @@ export const Description = styled(H4)`
 `;
 
 export const Hscroll = styled.div`
-	overflow-x: auto;
+	overflow-x: scroll;
 	width: 100%;
 	margin-left: -32px;
-	width: calc(100% + 54px);
+	width: calc(100% + 64px);
 	display: flex;
 	flex-direction: row;
 	align-items: stretch;
-	padding: 8px 24px;
+	padding: 8px 24px 4px;
 	background: transparent;
 	/* both cursor declarations are needed for x-browser support */
 	cursor: pointer;
 	cursor: hand;
 	cursor: grab;
+	min-height: 275px;
 
 	&:active {
 		cursor: grabbing;
@@ -56,7 +58,9 @@ export const FreqCard = styled.div`
 	justify-content: space-between;
 	min-width: 164px;
 	margin-left: 12px;
-	box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
+	border: 1px solid ${props => props.theme.border.default};
+	box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+	transition: all 0.15s;
 
 	&:last-of-type {
 		margin-right: 24px;
@@ -69,17 +73,19 @@ export const FreqCard = styled.div`
 		outline: none;
 	}
 
-	h3, h4 {
+	a {
 		text-align: left;
 		padding: 0 12px;
 		line-height: 1.3;
-	}
-
-	h3 {
 		margin-top: 12px;
 		font-size: 14px;
 		font-weight: 800;
 		color: ${({ theme }) => theme.text.default};
+		display: block;
+
+		&:hover {
+			color: ${({ theme }) => theme.brand.default};
+		}
 	}
 
 	h4 {
@@ -88,6 +94,14 @@ export const FreqCard = styled.div`
 		color: ${({ theme }) => theme.text.alt};
 		margin-bottom: 16px;
 		margin-top: 8px;
+		text-align: left;
+		padding: 0 12px;
+		line-height: 1.3;
+	}
+
+	&:hover {
+		transition: all 0.15s;
+		box-shadow: 0 2px 4px rgba(0,0,0,0.08);
 	}
 `;
 
@@ -104,6 +118,6 @@ export const JoinedButton = styled(Button)`
 `;
 
 export const RightPadding = styled.div`
-	min-width: 24px;
+	min-width: 36px;
 	background: transparent;
 `;

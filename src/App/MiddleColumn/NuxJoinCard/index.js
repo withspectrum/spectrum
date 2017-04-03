@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { findDOMNode } from 'react-dom';
 import { Link } from 'react-router-dom';
 import Card from '../../../shared/Card';
 import { Button } from '../../../shared/Globals';
-import { featured } from '../../../helpers/featuredFrequencies';
+import { truncate } from '../../../helpers/utils';
+import { getFeaturedFrequencies } from '../../../db/frequencies';
 import {
   Body,
   Title,
@@ -22,7 +22,8 @@ import {
 
 class NuxJoinCard extends Component {
   state = {
-    featured: [],
+    allFrequencies: null,
+    scrollPos: null,
   };
 
   unsubscribeFrequency = () => {
@@ -30,29 +31,32 @@ class NuxJoinCard extends Component {
   };
 
   subscribeFrequency = e => {
+    e.preventDefault();
     this.props.dispatch(subscribeFrequency(e.target.id, false));
   };
 
-  componentWillMount = () => {
+  componentDidMount = () => {
     const { user: { frequencies } } = this.props;
-    let featuredArr = this.state.featured.slice();
 
-    // show the unjoined featured frequencies first
-    featured.forEach((freq, i) => {
-      if (frequencies[freq.id]) {
-        featuredArr.push(freq);
-      } else {
-        featuredArr.unshift(freq);
-      }
-    });
+    getFeaturedFrequencies().then(data => {
+      let sorted = Object.keys(data.frequencies)
+        .map(id => data.frequencies[id]);
 
-    this.setState({
-      featured: featuredArr,
+      const allFreqs = sorted.sort((a, b) => {
+        let isMemberA = frequencies[a.id] ? true : false;
+        let isMemberB = frequencies[b.id] ? true : false;
+        return isMemberA > isMemberB ? 1 : -1;
+      });
+
+      this.setState({
+        allFrequencies: allFreqs,
+      });
     });
   };
 
   componentDidUpdate = () => {
     const node = this.hscroll;
+    node.scrollLeft = this.state.scrollPos;
 
     let x, left, down;
     node.addEventListener('mousemove', e => {
@@ -64,6 +68,11 @@ class NuxJoinCard extends Component {
 
     node.addEventListener('mousedown', e => {
       e.preventDefault();
+
+      if (e.target.id) {
+        this.subscribeFrequency(e);
+      }
+
       down = true;
       x = e.pageX;
       left = node.scrollLeft;
@@ -71,6 +80,12 @@ class NuxJoinCard extends Component {
 
     node.addEventListener('mouseup', e => {
       down = false;
+
+      if (e.target.id) {
+        this.setState({
+          scrollPos: left - e.pageX + x,
+        });
+      }
     });
 
     node.addEventListener('mouseleave', e => {
@@ -91,20 +106,21 @@ class NuxJoinCard extends Component {
           </Description>
 
           <Hscroll innerRef={comp => this.hscroll = comp}>
-            {this.state.featured.length > 0 &&
-              this.state.featured.map((freq, i) => {
+            {this.state.allFrequencies &&
+              this.state.allFrequencies.map((freq, i) => {
                 return (
                   <FreqCard key={i}>
                     <div>
                       {/*<img src={`${process.env.PUBLIC_URL}/${freq.image}`} />*/
                       }
-                      <h3>{freq.title}</h3>
-                      <h4>{freq.description}</h4>
+                      <Link to={`/~${freq.slug}`}>{freq.name}</Link>
+                      <h4>{Object.keys(freq.users).length} subscribers</h4>
+                      <h4>{truncate(freq.description, 80)}</h4>
                     </div>
                     <Actions>
                       {frequencies[freq.id]
                         ? <Link to={`/~${freq.slug}`}>
-                            <JoinedButton id={freq.slug} width={'100%'}>
+                            <JoinedButton width={'100%'}>
                               Joined!
                             </JoinedButton>
                           </Link>
