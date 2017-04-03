@@ -357,8 +357,6 @@ class MiddleColumn extends Component {
 
           {(isEverything || frequency) &&
             <InfiniteList
-              height={window.innerHeight - 50}
-              width={window.innerWidth > 768 ? 511 : window.innerWidth}
               isNextPageLoading={this.state.loadingNextPage}
               hasNextPage={
                 Object.keys(frequency.stories).length > stories.length

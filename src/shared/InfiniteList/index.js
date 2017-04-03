@@ -5,6 +5,7 @@ import {
   CellMeasurer,
   CellMeasurerCache,
   InfiniteLoader,
+  AutoSizer,
 } from 'react-virtualized';
 import { debounce } from '../../helpers/utils';
 import LoadingIndicator from '../../shared/loading/global';
@@ -14,8 +15,6 @@ import LoadingIndicator from '../../shared/loading/global';
  */
 class InfiniteList extends React.Component {
   static propTypes = {
-    height: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
     elementRenderer: PropTypes.func.isRequired,
     keyMapper: PropTypes.func,
     isNextPageLoading: PropTypes.bool,
@@ -101,8 +100,6 @@ class InfiniteList extends React.Component {
       loadNextPage = () => Promise.resolve(),
       isNextPageLoading = true,
       hasNextPage = false,
-      height,
-      width,
     } = this.props;
 
     const loadMoreRows = isNextPageLoading ? () => {} : loadNextPage;
@@ -115,16 +112,20 @@ class InfiniteList extends React.Component {
         threshold={1}
       >
         {({ onRowsRendered, registerChild }) => (
-          <List
-            ref={registerChild}
-            onRowsRendered={onRowsRendered}
-            height={height}
-            width={width}
-            rowCount={elementCount}
-            rowRenderer={this.renderElement}
-            deferredMeasurementCache={this.state.cache}
-            rowHeight={this.state.cache.rowHeight}
-          />
+          <AutoSizer>
+            {({ width, height }) => (
+              <List
+                ref={registerChild}
+                onRowsRendered={onRowsRendered}
+                height={height}
+                width={width}
+                rowCount={elementCount}
+                rowRenderer={this.renderElement}
+                deferredMeasurementCache={this.state.cache}
+                rowHeight={this.state.cache.rowHeight}
+              />
+            )}
+          </AutoSizer>
         )}
       </InfiniteLoader>
     );
