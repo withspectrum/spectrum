@@ -20,9 +20,11 @@ import {
   subscribeFrequency,
 } from '../../../actions/frequencies';
 
+let cachedFrequencies = null;
+
 class NuxJoinCard extends Component {
   state = {
-    allFrequencies: null,
+    allFrequencies: cachedFrequencies,
     scrollPos: null,
   };
 
@@ -36,6 +38,7 @@ class NuxJoinCard extends Component {
   };
 
   componentDidMount = () => {
+    if (cachedFrequencies) return;
     const { user: { frequencies } } = this.props;
 
     getFeaturedFrequencies().then(data => {
@@ -47,6 +50,8 @@ class NuxJoinCard extends Component {
         let isMemberB = frequencies[b.id] ? true : false;
         return isMemberA > isMemberB ? 1 : -1;
       });
+
+      cachedFrequencies = allFreqs;
 
       this.setState({
         allFrequencies: allFreqs,
