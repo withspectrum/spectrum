@@ -228,6 +228,26 @@ class MiddleColumn extends Component {
       }
     }
 
+    const loadNextPage = ({ startIndex, stopIndex }) => new Promise(resolve => {
+      this.setState({
+        loadingNextPage: true,
+      });
+      getStories({
+        frequencyId: frequency.id,
+        startIndex: stories.length - 1,
+        stopIndex: stories.length + 15,
+      }).then(next => {
+        this.props.dispatch({
+          type: 'ADD_STORIES',
+          stories: next,
+        });
+        this.setState({
+          loadingNextPage: false,
+        });
+        resolve();
+      });
+    });
+
     // If we have a notification for a story but not loaded the story yet
     // show the New Stories! indicator
     const canLoadNewStories = false;
@@ -326,9 +346,6 @@ class MiddleColumn extends Component {
               New stories!
             </NewIndicator>}
 
-          {/* {isNotifications && notifications.map(this.renderNotification)} */
-          }
-
           {isNotifications &&
             <InfiniteList
               height={window.innerHeight - 50}
@@ -346,36 +363,14 @@ class MiddleColumn extends Component {
               hasNextPage={
                 Object.keys(frequency.stories).length > stories.length
               }
-              loadNextPage={({ startIndex, stopIndex }) =>
-                new Promise(resolve => {
-                  console.log('loading new page');
-                  this.setState({
-                    loadingNextPage: true,
-                  });
-                  getStories({
-                    frequencyId: frequency.id,
-                    startIndex: stories.length - 1,
-                    stopIndex: stories.length + 15,
-                  }).then(stories => {
-                    console.log('fetched next few stories');
-                    this.props.dispatch({
-                      type: 'ADD_STORIES',
-                      stories,
-                    });
-                    this.setState({
-                      loadingNextPage: false,
-                    });
-                    resolve();
-                  });
-                })}
+              loadNextPage={loadNextPage}
               elementCount={
                 Object.keys(frequency.stories).length > stories.length
                   ? stories.length + 1
                   : stories.length
               }
               elementRenderer={this.renderStory}
-              keyMapper={index =>
-                stories[index] ? stories[index].id : 'loading-indicator'}
+              keyMapper={index => stories[index].id}
             />}
         </StoryList>
       </Column>

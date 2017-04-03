@@ -7,6 +7,7 @@ import {
   InfiniteLoader,
 } from 'react-virtualized';
 import { debounce } from '../../helpers/utils';
+import LoadingIndicator from '../../shared/loading/global';
 
 /**
  * Render an infinite list of things, possibly lazy loading them as they are needed
@@ -31,7 +32,7 @@ class InfiniteList extends React.Component {
       cache: new CellMeasurerCache({
         fixedWidth: true,
         defaultWidth: props.width,
-        keyMapper: props.keyMapper,
+        keyMapper: this.keyMapper,
       }),
     };
   }
@@ -52,6 +53,15 @@ class InfiniteList extends React.Component {
     this.clearCache(nextProps);
   };
 
+  keyMapper = index => {
+    // Handle the loading indicator key mapping for the user
+    if (this.props.hasNextPage && index >= this.props.elementCount - 1) {
+      return 'list-loading-indicator';
+    } else {
+      return this.props.keyMapper(index);
+    }
+  };
+
   clearCache = nextProps => {
     const props = nextProps || this.props;
 
@@ -59,7 +69,7 @@ class InfiniteList extends React.Component {
       cache: new CellMeasurerCache({
         fixedWidth: true,
         defaultWidth: props.width,
-        keyMapper: props.keyMapper,
+        keyMapper: this.keyMapper,
       }),
     });
   };
@@ -77,7 +87,7 @@ class InfiniteList extends React.Component {
       >
         <div style={style}>
           {this.props.hasNextPage && index >= this.props.elementCount - 1
-            ? <span>Loading...</span>
+            ? <div><LoadingIndicator /></div>
             : this.props.elementRenderer({ index, key })}
         </div>
       </CellMeasurer>
