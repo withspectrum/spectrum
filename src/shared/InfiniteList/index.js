@@ -36,17 +36,6 @@ class InfiniteList extends React.Component {
     };
   }
 
-  // react-virtualized doesn't re-render except when the cache is cleared
-  // so we clear the cache on resize, but need to debounce it as otherwise
-  // one cannot resize due to the whole app hanging
-  componentWillMount() {
-    window.addEventListener('resize', this.debouncedClearCache, false);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.debouncedClearCache, false);
-  }
-
   componentWillReceiveProps = nextProps => {
     if (deepEqual(this.props, nextProps)) return;
     this.clearCache(nextProps);
@@ -111,8 +100,13 @@ class InfiniteList extends React.Component {
         rowCount={elementCount}
         threshold={1}
       >
-        {({ onRowsRendered, registerChild }) => (
-          <AutoSizer>
+        {(
+          { onRowsRendered, registerChild },
+        ) => // react-virtualized doesn't re-render except when the cache is cleared
+        // so we clear the cache on resize, but need to debounce it as otherwise
+        // one cannot resize due to the whole app hanging
+        (
+          <AutoSizer onResize={this.debouncedClearCache}>
             {({ width, height }) => (
               <List
                 ref={registerChild}
