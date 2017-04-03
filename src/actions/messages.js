@@ -6,6 +6,7 @@ import {
 } from '../db/messages';
 import { track } from '../EventTracker';
 import { getCurrentFrequency } from '../helpers/frequencies';
+import { logException } from '../helpers/utils';
 
 /**
  * Send a message
@@ -42,6 +43,8 @@ export const sendMessage = message => (dispatch, getState) => {
     user,
     message,
     key,
+  }).catch(err => {
+    logException(err);
   });
 };
 
@@ -53,13 +56,17 @@ export const addReaction = messageId => (dispatch, getState) => {
   createReaction({
     messageId,
     uid,
-  }).then(() => {
-    dispatch({
-      type: 'ADD_REACTION',
-      messageId,
-      uid,
+  })
+    .then(() => {
+      dispatch({
+        type: 'ADD_REACTION',
+        messageId,
+        uid,
+      });
+    })
+    .catch(err => {
+      logException(err);
     });
-  });
 };
 
 export const removeReaction = messageId => (dispatch, getState) => {
@@ -70,11 +77,15 @@ export const removeReaction = messageId => (dispatch, getState) => {
   deleteReaction({
     messageId,
     uid,
-  }).then(() => {
-    dispatch({
-      type: 'REMOVE_REACTION',
-      messageId,
-      uid,
+  })
+    .then(() => {
+      dispatch({
+        type: 'REMOVE_REACTION',
+        messageId,
+        uid,
+      });
+    })
+    .catch(err => {
+      logException(err);
     });
-  });
 };

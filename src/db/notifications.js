@@ -1,6 +1,6 @@
 import database from 'firebase/database';
 import { getStory } from './stories';
-import { hashToArray } from '../helpers/utils';
+import { hashToArray, logException } from '../helpers/utils';
 
 /**
  * Create notifications for a bunch of users
@@ -24,7 +24,7 @@ export const createNotifications = (
       };
     } catch (err) {
       // Ignore if sending a notification to a single user fails
-      console.log(err);
+      logException(err);
     }
   });
 
@@ -33,7 +33,7 @@ export const createNotifications = (
     .update(updates)
     // Failing to send a notification shouldn't block the UI from updating
     .catch(err => {
-      console.log('Sending notification failed', err);
+      logException(err);
     });
 };
 
@@ -60,18 +60,13 @@ export const listenToNewNotifications = (userId, cb) => {
             ...notification,
             story,
           });
-        console.log(
-          `Deleting ${userId}/${notification.id} because there is no story for it.`,
-        );
         // If we have an old notification for a deleted story get rid of it
         deleteNotification(userId, notification.id);
       })
       .catch(err => {
-        console.log(
-          `Deleting ${userId}/${notification.id} because there is no story for it.`,
-        );
         // If we have an old notification for a deleted story get rid of it
         deleteNotification(userId, notification.id);
+        logException(err);
       });
   };
 

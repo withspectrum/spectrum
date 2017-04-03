@@ -6,6 +6,7 @@ import {
 } from '../db/users';
 import { signInWithTwitter, signOut as logOut } from '../db/auth';
 import { monitorUser, stopUserMonitor } from '../helpers/users';
+import { logException } from '../helpers/utils';
 import { apiURL } from '../config/api';
 
 /**
@@ -29,7 +30,7 @@ export const login = () => dispatch => {
     })
     .catch(err => {
       dispatch({ type: 'STOP_LOADING' });
-      console.log('Error logging in: ', err);
+      logException(err);
     });
 };
 
@@ -60,7 +61,7 @@ export const signOut = () => dispatch => {
     err => {
       // if something funky goes wrong during signout, throw an error and clear localStorage for good measure
       localStorage.removeItem('state');
-      console.log('Error signing out: ', err);
+      logException(err);
     },
   );
 };
@@ -121,17 +122,19 @@ export const upgradeUser = (token, plan) => (dispatch, getState) => {
         });
       });
     })
-    .catch(error => {
-      if (error) {
+    .catch(err => {
+      if (err) {
         dispatch({
           type: 'SET_UPGRADE_ERROR',
-          error: error,
+          error: err,
         });
 
         dispatch({
           type: 'STOP_LOADING',
         });
       }
+
+      logException(err);
     });
 };
 
@@ -177,13 +180,15 @@ export const downgradeUser = subscriptionId => (dispatch, getState) => {
         });
       });
     })
-    .catch(error => {
-      if (error) {
-        console.log('error downgrading: ', error);
+    .catch(err => {
+      if (err) {
+        console.log('error downgrading: ', err);
 
         dispatch({
           type: 'STOP_LOADING',
         });
       }
+
+      logException(err);
     });
 };

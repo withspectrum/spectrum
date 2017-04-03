@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { setActiveFrequency } from './actions/frequencies';
 import { setActiveStory } from './actions/stories';
 import { addNotification } from './actions/notifications';
-import { asyncComponent } from './helpers/utils';
+import { asyncComponent, logException } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
 import { getUserInfo } from './db/users';
 import { listenToAuth } from './db/auth';
@@ -15,6 +15,7 @@ import { getFrequency } from './db/frequencies';
 import { listenToNewNotifications } from './db/notifications';
 import { set, track } from './EventTracker';
 import { monitorUser, stopUserMonitor } from './helpers/users';
+import Raven from 'raven-js';
 
 // Codesplit the App and the Homepage to only load what we need based on which route we're on
 const App = asyncComponent(() =>
@@ -48,6 +49,9 @@ class Root extends Component {
       track('user', 'authed', null);
       set(user.uid);
 
+      // logs the user uid to sentry errors
+      Raven.setUserContext({ uid: user.uid });
+
       listenToNewNotifications(user.uid, notification => {
         dispatch(addNotification(notification));
       });
@@ -76,6 +80,9 @@ class Root extends Component {
             type: 'SET_FREQUENCIES',
             frequencies,
           });
+        })
+        .catch(err => {
+          logException(err);
         });
     });
   }
