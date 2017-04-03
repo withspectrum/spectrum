@@ -43,6 +43,7 @@ export const PhotosContainer = styled.div`
 	border-radius: 4px;
 	display: flex;
 	flex-wrap: wrap;
+	min-height: ${props => props.size > 1 ? '140px' : '280px'};
 `;
 
 export const PhotoContainer = styled.div`
@@ -198,7 +199,7 @@ export const StatusBar = styled.div`
 export const StatusText = styled.p`
 	font-size: 12px;
 	font-weight: 400;
-	color: #aab5c3;
+	color: #909aa7;
 	line-height: 1.2;
 	margin-top: 8px;
 

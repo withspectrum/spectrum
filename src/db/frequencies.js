@@ -212,3 +212,26 @@ export const checkUniqueFrequencyName = name => {
       });
   });
 };
+
+export const getFeaturedFrequencies = () => {
+  const db = database();
+
+  return db.ref('/frequencies').once('value').then(snapshot => {
+    let val = snapshot.val();
+    let frequencies = Object.keys(val);
+
+    let top30 = frequencies
+      .sort((a, b) => {
+        let numUsersA = Object.keys(val[a].users).length;
+        let numUsersB = Object.keys(val[b].users).length;
+        return numUsersA < numUsersB ? 1 : -1;
+      })
+      .slice(3, 33);
+
+    let finalArr = top30.map(id => val[id]);
+
+    return {
+      frequencies: finalArr,
+    };
+  });
+};
