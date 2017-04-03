@@ -91,7 +91,12 @@ export const createDraft = (
  * Resolves the returned promise with the stored story data from the db
  */
 export const createStory = (
-  { key, frequency, content: { media = '', title = '', description = '' } },
+  {
+    key,
+    frequency,
+    content: { media = '', title = '', description = '' },
+    metadata,
+  },
 ) => {
   const db = database();
 
@@ -111,6 +116,7 @@ export const createStory = (
             title,
             description,
           },
+          metadata,
         },
         [`frequencies/${frequency.id}/stories/${key}`]: {
           id: key,

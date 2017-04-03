@@ -4,10 +4,10 @@ import { getFileUrl, getStoryMedia } from '../db/stories';
 /**
  * Open the gallery at a certain image
  */
-export const openGallery = e => (dispatch, getState) => {
+export const openGallery = (e, story) => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
   const targetImg = e.target.src.toString();
-  const activeStory = getState().stories.active;
+  const activeStory = story || getState().stories.active;
 
   track('gallery', 'opened', null);
 
