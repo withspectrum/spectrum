@@ -10,7 +10,20 @@ export default function root(state = initialState, action) {
       if (state.frequencies.find(freq => freq.id === action.frequency.id))
         return state;
       return Object.assign({}, state, {
-        frequencies: state.frequencies.concat([action.frequency]),
+        frequencies: state.frequencies.concat([
+          {
+            ...action.frequency,
+            // Filter deleted stories from frequency
+            stories: Object.keys(action.frequency.stories).reduce((
+              list,
+              storyId,
+            ) => {
+              if (!action.frequency.stories[storyId].deleted)
+                list[storyId] = action.frequency.stories[storyId];
+              return list;
+            }, {}),
+          },
+        ]),
       });
     case 'SUBSCRIBE_FREQUENCY':
       // If we have the frequency in the state, update it
@@ -20,7 +33,18 @@ export default function root(state = initialState, action) {
           frequencies: state.frequencies.map(freq => {
             if (freq.id !== action.frequency.id) return freq;
 
-            return action.frequency;
+            return {
+              ...action.frequency,
+              // Filter deleted stories from frequency
+              stories: Object.keys(action.frequency.stories).reduce((
+                list,
+                storyId,
+              ) => {
+                if (!action.frequency.stories[storyId].deleted)
+                  list[storyId] = action.frequency.stories[storyId];
+                return list;
+              }, {}),
+            };
           }),
         };
       }
@@ -60,7 +84,17 @@ export default function root(state = initialState, action) {
     }
     case 'SET_FREQUENCIES':
       return Object.assign({}, state, {
-        frequencies: action.frequencies,
+        frequencies: action.frequencies.map(freq => {
+          return {
+            ...freq,
+            // Filter deleted stories from frequency
+            stories: Object.keys(freq.stories).reduce((list, storyId) => {
+              if (!freq.stories[storyId].deleted)
+                list[storyId] = freq.stories[storyId];
+              return list;
+            }, {}),
+          };
+        }),
         loaded: true,
       });
     case 'SET_ACTIVE_FREQUENCY':

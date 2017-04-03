@@ -74,20 +74,7 @@ class Root extends Component {
         .then(frequencies => {
           dispatch({
             type: 'SET_FREQUENCIES',
-            frequencies: frequencies.map(frequency => {
-              return {
-                ...frequency,
-                // Filter deleted stories from frequency
-                stories: Object.keys(frequency.stories).reduce((
-                  list,
-                  storyId,
-                ) => {
-                  if (!frequency.stories[storyId].deleted)
-                    list[storyId] = frequency.stories[storyId];
-                  return list;
-                }, {}),
-              };
-            }),
+            frequencies,
           });
         });
     });

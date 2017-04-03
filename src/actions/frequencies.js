@@ -189,15 +189,7 @@ export const subscribeFrequency = (slug, redirect) => (dispatch, getState) => {
       dispatch({
         type: 'SUBSCRIBE_FREQUENCY',
         uid,
-        frequency: {
-          ...frequency,
-          // Filter deleted stories from frequency
-          stories: Object.keys(frequency.stories).reduce((list, storyId) => {
-            if (!frequency.stories[storyId].deleted)
-              list[storyId] = frequency.stories[storyId];
-            return list;
-          }, {}),
-        },
+        frequency,
       });
     })
     .catch(err => {
