@@ -16,11 +16,12 @@ import LoadingIndicator from '../../shared/loading/global';
 class InfiniteList extends React.Component {
   static propTypes = {
     elementRenderer: PropTypes.func.isRequired,
+    elementCount: PropTypes.number,
     keyMapper: PropTypes.func,
     isNextPageLoading: PropTypes.bool,
     loadNextPage: PropTypes.func,
     hasNextPage: PropTypes.bool,
-    elementCount: PropTypes.number,
+    loadingIndicator: PropTypes.element,
   };
 
   constructor(props) {
@@ -65,6 +66,8 @@ class InfiniteList extends React.Component {
   // Wraps every element in a CellMeasurer, which allows us to
   // render elements with dynamic heights
   renderElement = ({ index, key, style, parent }) => {
+    const Loading = this.props.loadingIndicator ||
+      <div><LoadingIndicator /></div>;
     return (
       <CellMeasurer
         cache={this.state.cache}
@@ -75,7 +78,7 @@ class InfiniteList extends React.Component {
       >
         <div style={style}>
           {this.props.hasNextPage && index >= this.props.elementCount - 1
-            ? <div><LoadingIndicator /></div>
+            ? Loading
             : this.props.elementRenderer({ index, key })}
         </div>
       </CellMeasurer>
@@ -101,9 +104,8 @@ class InfiniteList extends React.Component {
         threshold={1}
       >
         {(
-          { onRowsRendered, registerChild },
-        ) => // react-virtualized doesn't re-render except when the cache is cleared
-        // so we clear the cache on resize, but need to debounce it as otherwise
+          { onRowsRendered, registerChild }, // react-virtualized doesn't re-render except when the cache is cleared
+        ) => // so we clear the cache on resize, but need to debounce it as otherwise
         // one cannot resize due to the whole app hanging
         (
           <AutoSizer onResize={this.debouncedClearCache}>

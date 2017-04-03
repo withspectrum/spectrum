@@ -28,6 +28,7 @@ import {
 import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
 import StoryCard from './StoryCard';
+import Card from '../../shared/Card';
 import Notification from './Notification';
 import { ACTIVITY_TYPES } from '../../db/types';
 import { getStories } from '../../db/stories';
@@ -366,6 +367,13 @@ class MiddleColumn extends Component {
                 Object.keys(frequency.stories).length > stories.length
                   ? stories.length + 1
                   : stories.length
+              }
+              loadingIndicator={
+                (
+                  <Card still>
+                    <LoadingIndicator />
+                  </Card>
+                )
               }
               elementRenderer={this.renderStory}
               keyMapper={index => stories[index].id}
