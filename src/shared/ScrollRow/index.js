@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlexRow } from '../Globals';
+import { Hscroll } from './style';
 
 class ScrollRow extends Component {
   state = {
@@ -9,20 +9,16 @@ class ScrollRow extends Component {
   componentDidMount = () => {
     const node = this.hscroll;
     node.scrollLeft = this.state.scrollPos;
-    console.log(node);
 
     let x, left, down;
     node.addEventListener('mousemove', e => {
-      console.log('mousemove');
       if (down) {
         let newX = e.pageX;
-        console.log(node.scrollLeft);
         node.scrollLeft = left - newX + x;
       }
     });
 
     node.addEventListener('mousedown', e => {
-      console.log('mousedown');
       e.preventDefault();
 
       down = true;
@@ -32,6 +28,12 @@ class ScrollRow extends Component {
 
     node.addEventListener('mouseup', e => {
       down = false;
+
+      if (e.target.id) {
+        this.setState({
+          scrollPos: left - e.pageX + x,
+        });
+      }
     });
 
     node.addEventListener('mouseleave', e => {
@@ -41,12 +43,12 @@ class ScrollRow extends Component {
 
   render() {
     return (
-      <FlexRow
+      <Hscroll
         className={this.props.className}
         innerRef={comp => this.hscroll = comp}
       >
         {this.props.children}
-      </FlexRow>
+      </Hscroll>
     );
   }
 }
