@@ -216,22 +216,18 @@ export const checkUniqueFrequencyName = name => {
 export const getFeaturedFrequencies = () => {
   const db = database();
 
-  return db.ref('/frequencies').once('value').then(snapshot => {
-    let val = snapshot.val();
-    let frequencies = Object.keys(val);
-
-    let top30 = frequencies
-      .sort((a, b) => {
-        let numUsersA = Object.keys(val[a].users).length;
-        let numUsersB = Object.keys(val[b].users).length;
-        return numUsersA < numUsersB ? 1 : -1;
-      })
-      .slice(3, 33);
-
-    let finalArr = top30.map(id => val[id]);
-
-    return {
-      frequencies: finalArr,
-    };
-  });
+  return db
+    .ref('/frequencies')
+    .orderByChild('users')
+    .limitToFirst(33)
+    .once('value')
+    .then(snapshot => snapshot.val())
+    .then(frequencies => {
+      return {
+        // Cut out Spectrum, Discover and Hugs-n-bugs
+        frequencies: Object.keys(frequencies)
+          .slice(3, 33)
+          .map(id => frequencies[id]),
+      };
+    });
 };
