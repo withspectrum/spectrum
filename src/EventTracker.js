@@ -1,3 +1,5 @@
+import Raven from 'raven-js';
+
 const ga = window.ga;
 
 export const set = uid => {
@@ -50,5 +52,20 @@ export const track = (category, action, label) => {
     } catch (err) {
       console.log(err);
     }
+  }
+};
+
+export const crashReporter = store => next => action => {
+  try {
+    return next(action);
+  } catch (err) {
+    console.error('Caught an exception!', err);
+    Raven.captureException(err, {
+      extra: {
+        action,
+        state: store.getState(),
+      },
+    });
+    throw err;
   }
 };

@@ -6,7 +6,6 @@ import {
 } from '../db/users';
 import { signInWithTwitter, signOut as logOut } from '../db/auth';
 import { monitorUser, stopUserMonitor } from '../helpers/users';
-import { logException } from '../helpers/utils';
 import { apiURL } from '../config/api';
 
 /**
@@ -30,7 +29,7 @@ export const login = () => dispatch => {
     })
     .catch(err => {
       dispatch({ type: 'STOP_LOADING' });
-      logException(err);
+      console.log(err);
     });
 };
 
@@ -61,7 +60,7 @@ export const signOut = () => dispatch => {
     err => {
       // if something funky goes wrong during signout, throw an error and clear localStorage for good measure
       localStorage.removeItem('state');
-      logException(err);
+      console.log(err);
     },
   );
 };
@@ -134,7 +133,7 @@ export const upgradeUser = (token, plan) => (dispatch, getState) => {
         });
       }
 
-      logException(err);
+      console.log(err);
     });
 };
 
@@ -189,6 +188,6 @@ export const downgradeUser = subscriptionId => (dispatch, getState) => {
         });
       }
 
-      logException(err);
+      console.log(err);
     });
 };

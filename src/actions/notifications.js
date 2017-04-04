@@ -1,5 +1,4 @@
 import { markStoryRead } from '../db/notifications';
-import { logException } from '../helpers/utils';
 
 export const addNotification = notification => (dispatch, getState) => {
   const { stories: { active }, user: { uid } } = getState();
@@ -12,7 +11,7 @@ export const addNotification = notification => (dispatch, getState) => {
         });
       })
       .catch(err => {
-        logException(err);
+        console.log(err);
       });
   } else {
     dispatch({

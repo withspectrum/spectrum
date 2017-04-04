@@ -1,5 +1,4 @@
 import database from 'firebase/database';
-import { logException } from '../helpers/utils';
 
 /**
  * Create a new user
@@ -120,7 +119,7 @@ export const setlastSeen = uid => {
     })
     .catch(err => {
       // Don't let setting the last activity crash the app
-      logException(err);
+      console.log(err);
     });
 };
 
@@ -153,7 +152,7 @@ export const createSubscription = (data, uid, plan) => {
       return snapshot.val();
     })
     .catch(err => {
-      logException(err);
+      console.log(err);
     });
 };
 
@@ -170,6 +169,6 @@ export const deleteSubscription = (uid, subscriptionId) => {
       return snapshot.val();
     })
     .catch(err => {
-      logException(err);
+      console.log(err);
     });
 };

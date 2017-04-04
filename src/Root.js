@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { setActiveFrequency } from './actions/frequencies';
 import { setActiveStory } from './actions/stories';
 import { addNotification } from './actions/notifications';
-import { asyncComponent, logException } from './helpers/utils';
+import { asyncComponent } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
 import { getUserInfo } from './db/users';
 import { listenToAuth } from './db/auth';
@@ -80,9 +80,6 @@ class Root extends Component {
             type: 'SET_FREQUENCIES',
             frequencies,
           });
-        })
-        .catch(err => {
-          logException(err);
         });
     });
   }

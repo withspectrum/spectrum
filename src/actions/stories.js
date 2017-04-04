@@ -12,7 +12,7 @@ import {
 import { getUserInfo } from '../db/users';
 import { getMessages, getMessage } from '../db/messages';
 import { getCurrentFrequency, linkFreqsInMd } from '../helpers/frequencies';
-import { arrayToHash, logException } from '../helpers/utils';
+import { arrayToHash } from '../helpers/utils';
 import { markStoryRead } from '../db/notifications';
 
 /**
@@ -34,7 +34,7 @@ export const initStory = freqId => (dispatch, getState) => {
       });
     })
     .catch(err => {
-      logException(err);
+      console.log(err);
     });
 };
 
@@ -57,7 +57,7 @@ export const setActiveStory = story => (dispatch, getState) => {
         dispatch({ type: 'ADD_STORY', story });
       })
       .catch(err => {
-        logException(err);
+        console.log(err);
       });
   }
   promise
@@ -83,7 +83,7 @@ export const setActiveStory = story => (dispatch, getState) => {
       });
     })
     .catch(err => {
-      logException(err);
+      console.log(err);
       dispatch({ type: 'STOP_LOADING' });
     });
 
@@ -121,7 +121,7 @@ export const setActiveStory = story => (dispatch, getState) => {
         });
       })
       .catch(err => {
-        logException(err);
+        console.log(err);
       });
   });
 };
@@ -163,7 +163,7 @@ export const publishStory = ({ frequencyId, title, description, metadata }) => (
       dispatch({
         type: 'STOP_LOADING',
       });
-      logException(err);
+      console.log(err);
     });
 };
 
@@ -192,7 +192,7 @@ export const deleteStory = id => (dispatch, getState) => {
       }
     })
     .catch(err => {
-      logException(err);
+      console.log(err);
       dispatch({ type: 'STOP_LOADING' });
     });
 };
@@ -216,7 +216,7 @@ export const toggleLockedStory = story => dispatch => {
       });
     })
     .catch(err => {
-      logException(err);
+      console.log(err);
       dispatch({ type: 'STOP_LOADING' });
     });
 };
