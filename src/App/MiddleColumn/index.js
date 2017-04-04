@@ -306,9 +306,8 @@ class MiddleColumn extends Component {
               <IconButton onClick={this.toggleComposer}>
                 <Icon
                   icon={composer.isOpen ? 'write-cancel' : 'write'}
-                  tipLocation="bottom-left"
+                  tipLocation="left"
                   tipText="New Story"
-                  onboarding="To start a new conversation about something, post a story. You can set context for the conversation by posting images, videos, prototypes, or text with full Markdown support."
                   color={composer.isOpen ? 'warn.alt' : 'brand.default'}
                 />
               </IconButton>}

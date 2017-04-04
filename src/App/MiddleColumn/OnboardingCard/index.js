@@ -19,7 +19,7 @@ class OnboardingCard extends Component {
         <Copy>We've got some pretty neat features to make that easier.</Copy>
         <Question>Want a quick tour?</Question>
         <ButtonRow>
-          <Cancel>I'm good for now</Cancel>
+          <Cancel>I'm good.</Cancel>
           <Confirm>Sure!</Confirm>
         </ButtonRow>
       </HighlightedCard>

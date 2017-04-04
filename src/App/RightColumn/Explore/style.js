@@ -29,16 +29,6 @@ export const ScrollBody = styled(FlexCol)`
   margin-top: 16px;
   overflow-y: scroll;
   position: relative;
-
-  &:before {
-    position: absolute;
-    pointer-events: none;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0) 2% );
-  }
 `;
 
 export const ViewTitle = styled(H1)`

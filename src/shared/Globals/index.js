@@ -483,8 +483,11 @@ export const Onboarding = props => css`
     padding: 16px;
     padding-left: 20px;
     border-radius: 12px;
-    background: ${props.theme.brand.alt};
-    color: ${props.theme.text.reverse};
+    background-color: ${props.theme.bg.default};
+    background: ${props.theme.bg.default} url(/img/goopy-top.svg) center top no-repeat;
+    background-size: 100%;
+    color: ${props.theme.text.default};
+    box-shadow: 0 8px 32px rgba(23, 26, 33, 0.35);
   }
 
   ${props.onboarding ? returnTooltip(props) : ''};
