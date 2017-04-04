@@ -1,4 +1,6 @@
 import Raven from 'raven-js';
+Raven.config('https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812')
+  .install();
 
 const ga = window.ga;
 
@@ -57,6 +59,7 @@ export const track = (category, action, label) => {
 
 export const crashReporter = store => next => action => {
   try {
+    console.log('running crash reporter');
     return next(action);
   } catch (err) {
     console.error('Caught an exception!', err);
