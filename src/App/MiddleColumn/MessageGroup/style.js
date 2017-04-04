@@ -4,7 +4,7 @@ import { H5 } from '../../../shared/Globals';
 export const MessageGroupContainer = styled.div`
 	display: flex;
 	flex: 1 1 auto;
-	padding: 8px;
+	padding: 12px 8px;
 	align-items: center;
 	box-shadow: inset -4px 0 ${props =>
   props.active ? props.theme.brand.default : 'transparent'};
@@ -33,7 +33,7 @@ export const MessageGroupImage = styled.div`
 export const MessageGroupTextContainer = styled.div`
 	display: flex;
 	flex-direction: column;
-	flex: 0 1 auto;
+	flex: 1 0 calc(100% - 64px);
 	overflow: hidden;
 `;
 
@@ -45,7 +45,6 @@ export const MessageGroupByline = styled.div`
 
 export const Usernames = styled.span`
 	display: flex;
-	flex: 1 1 auto;
 	overflow: hidden;
 	flex-wrap: nowrap;
 	text-overflow: ellipsis;
@@ -69,7 +68,7 @@ export const Usernames = styled.span`
 export const Timestamp = styled.span`
 	font-size: 12px;
 	text-align: right;
-	color: ${({ theme }) => theme.text.alt};
+	color: #909aa7;
 	padding-right: 4px;
 	display: inline-block;
 	line-height: 1;

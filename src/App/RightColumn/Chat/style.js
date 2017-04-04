@@ -161,6 +161,7 @@ export const Avatar = styled.img`
 	/* Rules below not implemented in browsers yet */
 	-o-user-select: none;
 	user-select: none;
+	cursor: pointer;
 `;
 
 export const HiddenLabel = styled.span`
@@ -295,13 +296,8 @@ export const Byline = styled.span`
 	margin-bottom: 1px;
 	margin-left: 16px;
 	float: ${props => props.me ? `right;` : `left;`}
-	-webkit-user-select: none; /* Chrome/Safari */
-	-moz-user-select: none; /* Firefox */
-	-ms-user-select: none; /* IE10+ */
 	color: ${props => props.op ? props.theme.brand.default : props.theme.text.alt};
-	/* Rules below not implemented in browsers yet */
-	-o-user-select: none;
-	user-select: none;
+	cursor: pointer;
 `;
 
 export const AdminBadge = styled.span`

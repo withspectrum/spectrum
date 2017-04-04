@@ -14,6 +14,7 @@ class MessageGroupHeader extends Component {
 
     return (
       <StoryContainer>
+        <Byline>Message with</Byline>
         <Header>
           {list[otherUsers]
             ? <StoryTitle>{list[otherUsers].displayName}</StoryTitle>

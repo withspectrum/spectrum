@@ -172,3 +172,34 @@ export const deleteSubscription = (uid, subscriptionId) => {
       console.log('error downgrading: ', err);
     });
 };
+
+/**
+ * Given a current user, pass in a second userId to see if a message group exists or not between these two people
+ *
+ * In the future, we can add a new method to check an array of userIds to see if a group conversation exists
+ */
+export const getMessageGroups = uid => {
+  const db = database();
+
+  return db
+    .ref(`/users/${uid}/messageGroups`)
+    .once('value')
+    .then(snapshot => snapshot.val());
+};
+
+export const checkMessageGroupForUsersMatch = (
+  group,
+  currentUser,
+  checkingUser,
+) => {
+  const db = database();
+
+  return db.ref(`/message_groups/${group}`).once('value').then(snapshot => {
+    const messageGroupObj = snapshot.val();
+    const users = Object.keys(messageGroupObj.users);
+    const toCheck = [currentUser, checkingUser];
+    if (users.sort().join('') === toCheck.sort().join('')) {
+      return messageGroupObj.id;
+    }
+  });
+};

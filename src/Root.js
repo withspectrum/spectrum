@@ -74,7 +74,9 @@ class Root extends Component {
           });
 
           const frequencyKeys = Object.keys(userData.frequencies);
-          const messageGroupsKeys = Object.keys(userData.messageGroups);
+          const messageGroupsKeys = userData.messageGroups
+            ? Object.keys(userData.messageGroups)
+            : [];
 
           const frequencyData = Promise.all(
             frequencyKeys.map(key => getFrequency({ id: key })),

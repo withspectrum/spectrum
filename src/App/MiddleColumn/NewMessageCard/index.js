@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Card from '../../../shared/Card';
 import { toggleMessageComposer } from '../../../actions/messageComposer';
 import {
@@ -16,18 +17,19 @@ class NewMessageCard extends Component {
   };
 
   render() {
-    const { active } = this.props;
+    const { active, recipient } = this.props;
+
     return (
       <Card onClick={this.toggleMessageComposer}>
         <MessageGroupContainer active={active}>
           <MessageGroupImagesContainer>
-            <MessageGroupImage loading />
+            <MessageGroupImage image={recipient.photoURL} />
           </MessageGroupImagesContainer>
 
           <MessageGroupTextContainer>
             <MessageGroupByline>
               <Usernames>
-                <p>New Message...</p>
+                <p>New Message to {recipient.displayName}</p>
               </Usernames>
             </MessageGroupByline>
           </MessageGroupTextContainer>
@@ -37,4 +39,10 @@ class NewMessageCard extends Component {
   }
 }
 
-export default NewMessageCard;
+const mapStateToProps = state => {
+  return {
+    recipient: state.messageComposer.recipient,
+  };
+};
+
+export default connect(mapStateToProps)(NewMessageCard);

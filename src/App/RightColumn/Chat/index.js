@@ -35,6 +35,11 @@ import Icon from '../../../shared/Icons';
 class Chat extends Component {
   componentDidUpdate(prevProps, prevState) {
     this.props.contextualScrollToBottom();
+
+    // TODO: Not working properly
+    if (this.props.shouldScrollToBottomOnRender) {
+      this.props.forceScrollToBottom();
+    }
   }
 
   openGallery = e => {
@@ -84,10 +89,8 @@ class Chat extends Component {
 
   openUserProfileModal = e => {
     const user = e.target.id;
-    const { user: { list } } = this.props;
-    this.props.dispatch(
-      openModal('USER_PROFILE_MODAL', { userProfile: list[user] }),
-    );
+
+    this.props.dispatch(openModal('USER_PROFILE_MODAL', { user: user }));
   };
 
   render() {

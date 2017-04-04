@@ -3,7 +3,7 @@ import { Shadow, Transition } from '../Globals';
 
 export const Wrapper = styled.div`
 	display: inline-block;
-	width: calc(100% - 32px);
+	width: ${props => props.nomargin ? '100%' : 'calc(100% - 32px)'};
 	margin: 16px 8px 0 16px;
 	flex: 0 0 auto;
 	border-radius: 4px;

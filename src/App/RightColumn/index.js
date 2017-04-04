@@ -145,6 +145,7 @@ class RightColumn extends Component {
                 forceScrollToBottom={this.forceScrollToBottom}
                 contextualScrollToBottom={this.contextualScrollToBottom}
                 messageGroup={messageGroup}
+                shouldScrollToBottomOnRender
               />
             </StoryChatContainer>
 
@@ -158,6 +159,7 @@ class RightColumn extends Component {
         return (
           <ViewContainer>
             <MessageComposer />
+            <StoryChatContainer />
             <Footer>
               {user.uid &&
                 <ChatInput forceScrollToBottom={this.forceScrollToBottom} />}

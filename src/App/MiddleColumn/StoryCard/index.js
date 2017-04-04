@@ -24,6 +24,7 @@ import {
 } from './style';
 import Markdown from 'react-remarkable';
 import { openGallery } from '../../../actions/gallery';
+import { openModal } from '../../../actions/modals';
 import { timeDifference, hashToArray } from '../../../helpers/utils';
 import Card from '../../../shared/Card';
 import ParticipantHeads from './ParticipantHeads';
@@ -93,6 +94,12 @@ class StoryCard extends Component {
 
     track('link preview', 'clicked', url);
     window.open(url, '_blank');
+  };
+
+  openUserProfileModal = e => {
+    const user = e.target.id;
+
+    this.props.dispatch(openModal('USER_PROFILE_MODAL', { user: user }));
   };
 
   render() {
@@ -195,7 +202,12 @@ class StoryCard extends Component {
           <Dot status={status} />
 
           <Name status={status}>
-            By {person.name} {metaText ? ' · ' : ''}
+            By{' '}
+            <b id={person.uid} onClick={this.openUserProfileModal}>
+              {person.name}
+            </b>
+            {' '}
+            {metaText ? ' · ' : ''}
             {metaText &&
               metaLink &&
               <Link to={metaLink}>

@@ -189,6 +189,7 @@ class MiddleColumn extends Component {
           person={{
             photo: story.creator.photoURL,
             name: story.creator.displayName,
+            uid: story.creator.uid,
           }}
           timestamp={story.last_activity || story.timestamp}
           title={story.content.title}
@@ -351,23 +352,13 @@ class MiddleColumn extends Component {
                 <Icon subtle />
               </IconButton>}
 
-            {isNotifications &&
+            {isMessages ||
               <IconButton onClick={this.toggleComposer}>
                 <Icon
                   icon={composer.isOpen ? 'write-cancel' : 'write'}
                   tipLocation="left"
                   tipText={composer.isOpen ? 'Cancel' : 'New Story'}
                   color={composer.isOpen ? 'warn.alt' : 'brand.default'}
-                />
-              </IconButton>}
-
-            {isMessages &&
-              <IconButton onClick={this.toggleMessageComposer}>
-                <Icon
-                  icon={messageComposer.isOpen ? 'write-cancel' : 'write'}
-                  tipLocation="left"
-                  tipText={messageComposer.isOpen ? 'Cancel' : 'New Message'}
-                  color={messageComposer.isOpen ? 'warn.alt' : 'brand.default'}
                 />
               </IconButton>}
           </Actions>
@@ -401,7 +392,7 @@ class MiddleColumn extends Component {
           {isMessages &&
             <InfiniteList
               height={window.innerHeight - 50}
-              width={window.innerWidth > 768 ? 419 : window.innerWidth}
+              width={window.innerWidth > 768 ? 511 : window.innerWidth}
               elementCount={messageGroups.length}
               elementRenderer={this.renderMessageGroup}
               keyMapper={index => messageGroups[index].id}

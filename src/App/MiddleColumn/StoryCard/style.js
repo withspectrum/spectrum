@@ -247,6 +247,17 @@ export const Name = styled(StatusText)`
 	margin-bottom: 8px;
 	color: ${props => props.status === 'active' ? '#fff' : props.theme.text.alt};
 
+	b {
+		cursor: pointer;
+		color: ${props =>
+  props.status === 'active' ? '#fff' : props.theme.text.default};
+	}
+
+	b:hover {
+		color: ${props =>
+  props.status === 'active' ? '#fff' : props.theme.brand.default};
+	}
+
 	a {
 		text-overflow: ellipsis;
     overflow: hidden;

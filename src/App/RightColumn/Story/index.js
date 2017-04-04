@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Markdown from '../../../shared/Markdown';
 import LinkPreview from '../../../shared/LinkPreview';
 import { openGallery } from '../../../actions/gallery';
+import { openModal } from '../../../actions/modals';
 import { track } from '../../../EventTracker';
 import { timeDifference } from '../../../helpers/utils';
 
@@ -49,6 +50,12 @@ class Story extends Component {
     track('link preview', 'clicked', url);
   };
 
+  openUserProfileModal = e => {
+    const user = e.target.id;
+
+    this.props.dispatch(openModal('USER_PROFILE_MODAL', { user: user }));
+  };
+
   render() {
     let { story, frequency } = this.props;
     const timestamp = timeDifference(Date.now(), story.timestamp);
@@ -58,9 +65,15 @@ class Story extends Component {
         <Header>
           {!frequency
             ? // this is required to account for async loading of the frequency data if a user hits a url like /~everything/{storyId}
-              <Byline>{story.creator.displayName} · Posted {timestamp}</Byline>
+              <Byline>
+                <b id={story.creator.uid} onClick={this.openUserProfileModal}>
+                  {story.creator.displayName}
+                </b> · Posted {timestamp}
+              </Byline>
             : <Byline>
-                {story.creator.displayName}
+                <b id={story.creator.uid} onClick={this.openUserProfileModal}>
+                  {story.creator.displayName}
+                </b>
                 {' '}· Posted in{' '}
                 <Link to={`/~${frequency.slug}`}>~{frequency.slug}</Link>
                 {' '}

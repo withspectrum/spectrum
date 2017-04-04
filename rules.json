@@ -127,7 +127,7 @@
             ".write": "$userId === auth.uid || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'",
             // Make sure the permissions being set is "subscriber" except when it's done by an owner
             "permission": {
-              ".validate": "newData.val() === 'subscriber' || root.child('users/' + $userId + '/frequencies/' + $id + '/permission').val() === 'owner' && newData.exists()"
+              ".validate": "newData.val() === 'subscriber' || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner' && newData.exists()"
             },
             "joined": {
               ".validate": "newData.val() <= now"
@@ -147,6 +147,9 @@
             },
             "deleted": {
               ".validate": "newData.isBoolean()"
+            },
+            "last_activity": {
+              ".validate": "newData.val() <= now"
             },
             "$other": {
               ".validate": false
@@ -368,6 +371,11 @@
         },
         "subscriptions": {
           ".write": "auth.uid === $user",
+          ".validate": "newData.exists()"
+        },
+        "messageGroups": {
+          ".write": true,
+          ".read": "auth.uid === $user",
           ".validate": "newData.exists()"
         },
         "communities": {
