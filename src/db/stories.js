@@ -35,9 +35,24 @@ export const getAllStories = userId => {
   return getUserInfo(userId)
     .then(user => {
       if (!user.frequencies) return [];
-      const freqs = Object.keys(user.frequencies);
-      return Promise.all(freqs.map(freq => getStories({ frequencyId: freq })));
+      return Promise.all(
+        Object.keys(user.frequencies).map(id => getFrequency({ id })),
+      );
     })
+    .then(frequencies => {
+      return Object.keys(frequencies).reduce((arr, frequencyId) => {
+        if (!frequencies[frequencyId].stories) return arr;
+        return arr.concat(hashToArray(frequencies[frequencyId].stories));
+      }, []);
+    })
+    .then(stories =>
+      sortArrayByKey(
+        stories.filter(story => !story.deleted),
+        'last_activity',
+        'timestamp',
+      ))
+    .then(stories =>
+      Promise.all(stories.slice(0, 15).map(story => getStory(story.id))))
     .then(nested => flattenArray(nested));
 };
 

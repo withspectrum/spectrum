@@ -44,6 +44,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
     // Get all the stories from all the frequencies
     getAllStories(uid)
       .then(stories => {
+        console.log(stories);
         dispatch({
           type: 'ADD_STORIES',
           stories,

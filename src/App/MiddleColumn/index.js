@@ -360,13 +360,19 @@ class MiddleColumn extends Component {
             <InfiniteList
               isNextPageLoading={this.state.loadingNextPage}
               hasNextPage={
-                Object.keys(frequency.stories).length > stories.length
+                // TODO: Fix this true
+                isEverything
+                  ? true
+                  : Object.keys(frequency.stories).length > stories.length
               }
               loadNextPage={loadNextPage}
               elementCount={
-                Object.keys(frequency.stories).length > stories.length
-                  ? stories.length + 1
-                  : stories.length
+                // TODO: Fix this undefined
+                isEverything
+                  ? undefined
+                  : Object.keys(frequency.stories).length > stories.length
+                      ? stories.length + 1
+                      : stories.length
               }
               loadingIndicator={
                 (
