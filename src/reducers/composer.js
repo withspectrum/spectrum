@@ -40,12 +40,17 @@ export default function root(state = initialState, action) {
         newStoryKey: action.key,
       });
     case 'INIT_EDIT_STORY':
+      // if the edited story has photos in its metadata, set the mediaList so that they can be removed
+      const mediaList = action.story.metadata && action.story.metadata.photos
+        ? action.story.metadata.photos
+        : [];
       return Object.assign({}, state, {
         isOpen: true,
         title: action.story.content.title,
         body: action.story.content.description,
         newStoryKey: action.story.id,
         metadata: action.story.metadata,
+        mediaList,
         editing: true,
       });
     case 'EDIT_STORY':
