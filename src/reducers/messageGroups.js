@@ -11,6 +11,10 @@ export default function root(state = initialState, action) {
         messageGroups: action.messageGroups,
         loaded: true,
       });
+    case 'ADD_MESSAGE_GROUP':
+      return Object.assign({}, state, {
+        messageGroups: state.messageGroups.concat(action.messageGroup),
+      });
     case 'UPDATE_MESSAGE_GROUP':
       return Object.assign({}, state, {
         messageGroups: state.messageGroups.map(messageGroup => {

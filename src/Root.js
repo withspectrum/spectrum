@@ -10,7 +10,7 @@ import { setActiveStory } from './actions/stories';
 import { addNotification } from './actions/notifications';
 import { asyncComponent } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
-import { getUserInfo } from './db/users';
+import { getUserInfo, listenToNewMessages } from './db/users';
 import { listenToAuth } from './db/auth';
 import { getFrequency } from './db/frequencies';
 import { getMessageGroup } from './db/messageGroups';
@@ -57,6 +57,16 @@ class Root extends Component {
 
       listenToNewNotifications(user.uid, notification => {
         dispatch(addNotification(notification));
+      });
+
+      listenToNewMessages(user.uid, group => {
+        getMessageGroup(group.id).then(messageGroup => {
+          console.log('we have the data for a message group', messageGroup);
+          dispatch({
+            type: 'ADD_MESSAGE_GROUP',
+            messageGroup,
+          });
+        });
       });
 
       // Get the public userdata

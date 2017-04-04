@@ -34,6 +34,7 @@ import Notification from './Notification';
 import MessageGroup from './MessageGroup';
 import { ACTIVITY_TYPES } from '../../db/types';
 import { getCurrentFrequency } from '../../helpers/frequencies';
+import { listenForMessageGroups } from '../../db/users';
 import { formatSenders } from '../../helpers/notifications';
 
 class MiddleColumn extends Component {

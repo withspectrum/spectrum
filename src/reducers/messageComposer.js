@@ -10,6 +10,7 @@ export default function root(state = initialState, action) {
         isOpen: !state.isOpen,
       });
     case 'CLOSE_MESSAGE_COMPOSER':
+    case 'SET_ACTIVE_MESSAGE_GROUP':
       return Object.assign({}, state, {
         isOpen: false,
       });

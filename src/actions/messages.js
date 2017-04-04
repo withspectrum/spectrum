@@ -9,6 +9,7 @@ import {
 import { createNewMessageGroup } from '../db/messageGroups';
 import { track } from '../EventTracker';
 import { getCurrentFrequency } from '../helpers/frequencies';
+import history from '../helpers/history';
 
 /**
  * Send a message
@@ -116,6 +117,13 @@ export const sendMessage = message => (dispatch, getState) => {
         user,
         message,
         key,
+      }).then(() => {
+        history.push(`/messages/${newGroupKey}`);
+
+        dispatch({
+          type: 'SET_ACTIVE_MESSAGE_GROUP',
+          messageGroupId: newGroupKey,
+        });
       });
     });
   }

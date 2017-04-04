@@ -203,3 +203,18 @@ export const checkMessageGroupForUsersMatch = (
     }
   });
 };
+
+export const listenToNewMessages = (uid, cb) => {
+  const db = database();
+
+  const handle = snapshot => {
+    const messageGroups = snapshot.val();
+    if (!messageGroups) return;
+    return cb(messageGroups);
+  };
+
+  // Handle adding of unread messages
+  db.ref(`/users/${uid}/messageGroups`).on('child_added', handle);
+  // Handle changing of any messageGroups
+  db.ref(`/users/${uid}/messageGroups`).on('child_changed', handle);
+};
