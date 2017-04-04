@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Hscroll } from './style';
+import { ScrollableFlexRow } from './style';
 
 class ScrollRow extends Component {
   state = {
@@ -43,12 +43,12 @@ class ScrollRow extends Component {
 
   render() {
     return (
-      <Hscroll
+      <ScrollableFlexRow
         className={this.props.className}
         innerRef={comp => this.hscroll = comp}
       >
         {this.props.children}
-      </Hscroll>
+      </ScrollableFlexRow>
     );
   }
 }

@@ -49,6 +49,7 @@ class App extends Component {
     );
 
     const isEverything = frequencies.active === 'everything';
+    const isExplore = frequencies.active === 'explore';
 
     let sortedStories = sortArrayByKey(
       stories.stories.slice(),
@@ -202,23 +203,22 @@ class App extends Component {
             promptEmail={!user.email}
             onClose={this.closeSelectModal}
           />}
-
-        {/*<MiddleColumnContainer active={stories.active} viewing={ui.viewing}>
-          <MiddleColumn
-            loggedIn={!!user.uid}
-            role={
-              user &&
-                frequency &&
-                frequency.users[user.uid] &&
-                frequency.users[user.uid].permission
-            }
-            activeFrequency={frequencies.active}
-            isPrivate={frequency && frequency.settings.private}
-            stories={sortedStories}
-            frequency={frequency}
-          />
-        </MiddleColumnContainer>*/
-        }
+        {!isExplore &&
+          <MiddleColumnContainer active={stories.active} viewing={ui.viewing}>
+            <MiddleColumn
+              loggedIn={!!user.uid}
+              role={
+                user &&
+                  frequency &&
+                  frequency.users[user.uid] &&
+                  frequency.users[user.uid].permission
+              }
+              activeFrequency={frequencies.active}
+              isPrivate={frequency && frequency.settings.private}
+              stories={sortedStories}
+              frequency={frequency}
+            />
+          </MiddleColumnContainer>}
 
         <RightColumnContainer active={stories.active} viewing={ui.viewing}>
           <RightColumn />
