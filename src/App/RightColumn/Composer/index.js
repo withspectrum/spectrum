@@ -10,7 +10,12 @@ import {
   addMediaList,
   removeImageFromStory,
 } from '../../../actions/composer';
-import { publishStory, initStory } from '../../../actions/stories';
+import {
+  publishStory,
+  initStory,
+  cancelEditStory,
+  saveEditStory,
+} from '../../../actions/stories';
 import { loading, stopLoading } from '../../../actions/loading';
 import {
   getCurrentFrequency,
@@ -73,7 +78,9 @@ class Composer extends Component {
       embedUrl: '',
       metadata: metadata,
       creating: true,
-      linkPreview: null,
+      linkPreview: metadata && metadata.linkPreview
+        ? metadata.linkPreview.data
+        : null,
       linkPreviewLength: 0,
       fetchingLinkPreview: false,
     };
@@ -142,6 +149,7 @@ class Composer extends Component {
 
   publishStory = e => {
     e.preventDefault();
+    const isEditing = this.props.composer.editing;
     const title = this.props.composer.title;
     const description = this.props.composer.body;
     const metadata = this.props.composer.metadata;
@@ -156,11 +164,19 @@ class Composer extends Component {
       this.props.frequencies.frequencies,
     ).id;
 
-    if (frequency && title) {
+    if (frequency && title && !isEditing) {
       // if everything is filled out
       this.props.dispatch(
         publishStory({
           frequencyId,
+          title,
+          description,
+          metadata,
+        }),
+      );
+    } else if (frequency && title && isEditing) {
+      this.props.dispatch(
+        saveEditStory({
           title,
           description,
           metadata,
@@ -320,6 +336,10 @@ class Composer extends Component {
     });
   };
 
+  cancelEditing = () => {
+    this.props.dispatch(cancelEditStory());
+  };
+
   render() {
     let { frequencies, composer } = this.props;
     let activeFrequency = frequencies.active;
@@ -365,7 +385,7 @@ class Composer extends Component {
                   hasContent={true}
                   active={this.state.creating}
                 >
-                  Create
+                  {this.props.composer.editing ? 'Edit' : 'Create'}
                 </Byline>
                 <Byline
                   onClick={this.setPreviewing}
@@ -460,13 +480,26 @@ class Composer extends Component {
                       </div>
                     </PreviewWrapper>}
                 <SubmitContainer sticky={!this.state.creating}>
-                  {byline}
+                  {!composer.editing && byline}
+
+                  {this.props.composer.editing &&
+                    <Byline hasContent={true} onClick={this.cancelEditing}>
+                      Cancel
+                    </Byline>}
+
                   <Submit
                     type="submit"
                     disabled={this.state.loading}
-                    value={this.state.loading ? 'Loading...' : 'Post Story'}
+                    value={
+                      this.state.loading
+                        ? 'Loading...'
+                        : this.props.composer.editing
+                            ? 'Update Story'
+                            : 'Post Story'
+                    }
                     active={composer.title}
                   />
+
                 </SubmitContainer>
 
                 {this.props.composer.error &&

@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Icon from '../../../../shared/Icons';
 import { getCurrentFrequency } from '../../../../helpers/frequencies';
-import { toggleLockedStory, deleteStory } from '../../../../actions/stories';
+import {
+  toggleLockedStory,
+  deleteStory,
+  initEditStory,
+} from '../../../../actions/stories';
 import { track } from '../../../../EventTracker';
 
 import {
@@ -35,6 +39,11 @@ class ActionBar extends Component {
     this.props.dispatch(toggleLockedStory(story));
   };
 
+  initEditStory = () => {
+    let { story } = this.props;
+    this.props.dispatch(initEditStory(story));
+  };
+
   render() {
     let { creator, moderator, locked, frequencies, story } = this.props;
     let currentFrequency = getCurrentFrequency(
@@ -65,6 +74,16 @@ class ActionBar extends Component {
 
         {(creator || moderator === 'owner') &&
           <div>
+            <span onClick={this.initEditStory}>
+              <Icon
+                tipText={'Edit Story'}
+                tipLocation="top-left"
+                icon="write"
+                color={'warn.default'}
+                subtle={true}
+              />
+            </span>
+
             <HiddenButton
               onClick={this.initDeleteStory}
               visible={this.state.deleteInited}
