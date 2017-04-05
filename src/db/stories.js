@@ -1,3 +1,5 @@
+// @flow
+
 import database from 'firebase/database';
 import storage from 'firebase/storage';
 import { getFrequency } from './frequencies';
