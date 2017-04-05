@@ -9,3 +9,4 @@ exports.emailNotifications = functions.database
   });
 exports.shortener = require('./sp.chat.js');
 exports.payments = require('./payments.js');
+exports.topFreqs = require('./top-freqs.js');

@@ -159,6 +159,19 @@ class NavigationMaster extends Component {
                   </FlexRow>
                 </Freq>
               </Link>
+
+              <Link to="/explore">
+                <Freq
+                  active={this.props.frequencies.active === 'explore'}
+                  onClick={this.showStoriesNav}
+                >
+                  <FreqText>
+                    <Icon icon="explore" reverse static />
+                    <FreqLabel>{'Explore'}</FreqLabel>
+                  </FreqText>
+
+                </Freq>
+              </Link>
             </div>}
 
           {frequencies.length > 0 ||

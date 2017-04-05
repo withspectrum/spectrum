@@ -18,6 +18,7 @@ import MessageGroupHeader from './MessageGroupHeader';
 import ChatInput from './ChatInput';
 import Composer from './Composer';
 import MessageComposer from './MessageComposer';
+import Explore from './Explore';
 
 import {
   ViewContainer,
@@ -194,6 +195,10 @@ class RightColumn extends Component {
       returnUrl = active === 'everything'
         ? 'everything'
         : currentFrequency && currentFrequency.slug;
+
+      returnUrl = active === 'explore'
+        ? 'explore'
+        : currentFrequency && currentFrequency.slug;
     }
 
     if (story && !composer.isOpen) {
@@ -252,6 +257,12 @@ class RightColumn extends Component {
       return (
         <ViewContainer>
           <Composer />
+        </ViewContainer>
+      );
+    } else if (this.props.frequencies.active === 'explore') {
+      return (
+        <ViewContainer>
+          <Explore />
         </ViewContainer>
       );
     } else {
