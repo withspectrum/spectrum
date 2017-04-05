@@ -148,17 +148,18 @@ class NavigationMaster extends Component {
               </Link>*/
               }
 
-              <Link to={`/messages`}>
-                <Freq
-                  active={activeFrequency === 'messages'}
-                  onClick={this.showStoriesNav}
-                >
-                  <FlexRow center>
-                    <Icon reverse static icon="notification" />
-                    <FreqLabel>Messages</FreqLabel>
-                  </FlexRow>
-                </Freq>
-              </Link>
+              {user.messageGroups && // only show messages in sidebar if user has existing messageGroups
+                <Link to={`/messages`}>
+                  <Freq
+                    active={activeFrequency === 'messages'}
+                    onClick={this.showStoriesNav}
+                  >
+                    <FlexRow center>
+                      <Icon reverse static icon="notification" />
+                      <FreqLabel>Messages</FreqLabel>
+                    </FlexRow>
+                  </Freq>
+                </Link>}
 
               <Link to="/explore">
                 <Freq
