@@ -63,11 +63,14 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
       const freq = {
         ...data,
         // Filter deleted stories from frequency
-        stories: Object.keys(data.stories).reduce((list, storyId) => {
-          if (!data.stories[storyId].deleted)
-            list[storyId] = data.stories[storyId];
-          return list;
-        }, {}),
+        stories: !data.stories ? {} : Object.keys(data.stories).reduce((
+              list,
+              storyId,
+            ) => {
+              if (!data.stories[storyId].deleted)
+                list[storyId] = data.stories[storyId];
+              return list;
+            }, {}),
       };
       dispatch({
         type: 'ADD_FREQUENCY',

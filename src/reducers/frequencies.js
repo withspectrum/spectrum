@@ -14,14 +14,16 @@ export default function root(state = initialState, action) {
           {
             ...action.frequency,
             // Filter deleted stories from frequency
-            stories: Object.keys(action.frequency.stories).reduce((
-              list,
-              storyId,
-            ) => {
-              if (!action.frequency.stories[storyId].deleted)
-                list[storyId] = action.frequency.stories[storyId];
-              return list;
-            }, {}),
+            stories: !action.frequency.stories
+              ? {}
+              : Object.keys(action.frequency.stories).reduce((
+                  list,
+                  storyId,
+                ) => {
+                  if (!action.frequency.stories[storyId].deleted)
+                    list[storyId] = action.frequency.stories[storyId];
+                  return list;
+                }, {}),
           },
         ]),
       });
@@ -36,14 +38,16 @@ export default function root(state = initialState, action) {
             return {
               ...action.frequency,
               // Filter deleted stories from frequency
-              stories: Object.keys(action.frequency.stories).reduce((
-                list,
-                storyId,
-              ) => {
-                if (!action.frequency.stories[storyId].deleted)
-                  list[storyId] = action.frequency.stories[storyId];
-                return list;
-              }, {}),
+              stories: !action.frequency.stories
+                ? {}
+                : Object.keys(action.frequency.stories).reduce((
+                    list,
+                    storyId,
+                  ) => {
+                    if (!action.frequency.stories[storyId].deleted)
+                      list[storyId] = action.frequency.stories[storyId];
+                    return list;
+                  }, {}),
             };
           }),
         };
@@ -88,11 +92,14 @@ export default function root(state = initialState, action) {
           return {
             ...freq,
             // Filter deleted stories from frequency
-            stories: Object.keys(freq.stories).reduce((list, storyId) => {
-              if (!freq.stories[storyId].deleted)
-                list[storyId] = freq.stories[storyId];
-              return list;
-            }, {}),
+            stories: !freq.storis ? {} : Object.keys(freq.stories).reduce((
+                  list,
+                  storyId,
+                ) => {
+                  if (!freq.stories[storyId].deleted)
+                    list[storyId] = freq.stories[storyId];
+                  return list;
+                }, {}),
           };
         }),
         loaded: true,
