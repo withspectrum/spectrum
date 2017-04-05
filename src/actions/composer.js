@@ -39,7 +39,7 @@ export const addMediaList = file => {
   };
 };
 
-export const removeImageFromStory = (image, story) => dispatch => {
+export const removeImageFromComposer = (image, story) => dispatch => {
   removeImage({ image, story }).then(() => {
     track('composer', 'media removed', null);
 
