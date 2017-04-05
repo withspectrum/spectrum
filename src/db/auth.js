@@ -1,9 +1,13 @@
 import auth from 'firebase/auth';
 import Raven from 'raven-js';
 
-const signIn = provider => {
-  return auth().signInWithPopup(provider);
-};
+const signIn = provider => new Promise((resolve, reject) => {
+  auth().signInWithRedirect(provider);
+
+  auth().getRedirectResult().then(result => {
+    return resolve(result.user);
+  });
+});
 
 export const signOut = () => {
   Raven.setUserContext(); // stop tracking uid in sentry
@@ -13,10 +17,13 @@ export const signOut = () => {
 /**
  * Signs a user in with Twitter and returns the user
  */
-export const signInWithTwitter = () => {
+export const signInWithTwitter = () => new Promise((resolve, reject) => {
   const twitter = new auth.TwitterAuthProvider();
-  return signIn(twitter).then(result => result.user);
-};
+
+  return signIn(twitter).then(user => {
+    resolve(user);
+  });
+});
 
 /**
  * Listen to authentication changes
