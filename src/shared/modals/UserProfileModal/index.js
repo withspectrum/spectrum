@@ -140,7 +140,9 @@ class UserProfileModal extends React.Component {
                 : <Button onClick={this.handleClick} width={'100%'}>
                     Message
                   </Button>
-            : <span />}
+            : <Button disabled width={'100%'}>
+                Don't talk to yourself, ya dingus
+              </Button>}
         </ModalContainer>
       </Modal>
     );

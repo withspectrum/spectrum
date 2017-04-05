@@ -140,6 +140,7 @@ class StoryCard extends Component {
             unread={unreadMessages}
             participants={participants}
             list={user.list}
+            openUserProfileModal={e => this.openUserProfileModal(e)}
           />
         );
       }

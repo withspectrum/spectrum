@@ -4,6 +4,7 @@ const initialState = {
   displayName: null,
   photoURL: null,
   frequencies: {},
+  messageGroups: {},
   loaded: false,
   plan: null,
   list: {},
@@ -24,6 +25,7 @@ export default function root(state = initialState, action) {
         photoURL: action.user.photoURL,
         displayName: action.user.displayName,
         frequencies: action.user.frequencies,
+        messageGroups: action.user.messageGroups,
         email: action.user.email,
         username: action.user.username,
         subscriptions: action.user.subscriptions || null, // to account for users without a plan field set

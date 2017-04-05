@@ -44,7 +44,7 @@ class MessageGroup extends Component {
     const timestamp = timeDifference(Date.now(), messageGroup.last_activity);
 
     return (
-      <Card link={link}>
+      <Card nomargin link={link}>
         <MessageGroupContainer active={this.props.active}>
           <MessageGroupImagesContainer>
             {otherUsers.length === 1
@@ -54,7 +54,12 @@ class MessageGroup extends Component {
               : otherUsers.map(user => {
                   const userObj = list[user];
                   if (userObj) {
-                    return <MessageGroupImage image={userObj.photoURL} />;
+                    return (
+                      <MessageGroupImage
+                        key={userObj.uid}
+                        image={userObj.photoURL}
+                      />
+                    );
                   } else {
                     return <MessageGroupImage loading />;
                   }

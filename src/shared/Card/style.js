@@ -4,9 +4,9 @@ import { Shadow, Transition } from '../Globals';
 export const Wrapper = styled.div`
 	display: inline-block;
 	width: ${props => props.nomargin ? '100%' : 'calc(100% - 32px)'};
-	margin: 16px 8px 0 16px;
+	margin: ${props => props.nomargin ? '0' : '16px 8px 0 16px'};
 	flex: 0 0 auto;
-	border-radius: 4px;
+	border-radius: ${props => props.nomargin ? '0' : '4px'};
 	overflow: ${props => props.overflow === 'visible' ? 'visible' : 'visible'};
 	background-color: ${({ theme }) => theme.bg.default};
 	transition: ${Transition.hover.off};
@@ -16,11 +16,11 @@ export const Wrapper = styled.div`
 	@media (max-width: 768px) {
 		width: 100%;
 		margin: 0;
-		margin-bottom: 4px;
+		margin-bottom: ${props => props.nomargin ? '0' : '4px'};
 		border-radius: 0;
 
 		&:first-of-type {
-			margin-top: 8px;
+			margin-top: ${props => props.nomargin ? '0' : '8px'};
 		}
 	}
 

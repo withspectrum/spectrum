@@ -36,7 +36,11 @@ class ParticipantHeads extends Component {
                 tipLocation="top-right"
                 key={`${participant}-head`}
               >
-                <Head src={list[participant].photoURL} />
+                <Head
+                  src={list[participant].photoURL}
+                  id={list[participant].uid}
+                  onClick={e => this.props.openUserProfileModal(e)}
+                />
               </HeadWrapper>
             );
           }

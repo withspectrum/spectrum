@@ -65,7 +65,6 @@ class Root extends Component {
 
       listenToNewMessages(user.uid, group => {
         getMessageGroup(group.id).then(messageGroup => {
-          console.log('we have the data for a message group', messageGroup);
           dispatch({
             type: 'ADD_MESSAGE_GROUP',
             messageGroup,

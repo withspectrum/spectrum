@@ -53,6 +53,12 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
     });
     return;
   }
+  // Explore
+  if (lowerCaseFrequency === 'explore') {
+    if (!uid) return;
+    track('explore', 'viewed', null);
+    return;
+  }
   // Everything
   if (lowerCaseFrequency === 'everything') {
     // If there's no UID yet we might need to show the homepage, so don't do anything

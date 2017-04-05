@@ -86,13 +86,12 @@ class NavigationMaster extends Component {
     const {
       notifications,
       user,
+      messageGroups: { messageGroups },
     } = this.props;
     const frequencies = this.props.frequencies.frequencies.filter(
       frequency => frequency.users[user.uid],
     );
     const activeFrequency = this.props.frequencies.active;
-    // const myFrequencies = helpers.getMyFrequencies(frequencies, user)
-    // const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
 
     return (
       <Column>
@@ -148,7 +147,7 @@ class NavigationMaster extends Component {
               </Link>*/
               }
 
-              {user.messageGroups && // only show messages in sidebar if user has existing messageGroups
+              {messageGroups.length > 0 && // only show messages in sidebar if user has existing messageGroups
                 <Link to={`/messages`}>
                   <Freq
                     active={activeFrequency === 'messages'}
@@ -168,7 +167,7 @@ class NavigationMaster extends Component {
                 >
                   <FreqText>
                     <Icon icon="explore" reverse static />
-                    <FreqLabel>{'Explore'}</FreqLabel>
+                    <FreqLabel>Explore</FreqLabel>
                   </FreqText>
 
                 </Freq>
@@ -268,6 +267,7 @@ const mapStateToProps = state => ({
   frequencies: state.frequencies,
   ui: state.ui,
   notifications: state.notifications.notifications,
+  messageGroups: state.messageGroups,
 });
 
 export default connect(mapStateToProps)(NavigationMaster);

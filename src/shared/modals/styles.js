@@ -23,6 +23,7 @@ export const UserPhoto = styled.img`
   position: relative;
   z-index: 2;
   border: 2px solid #fff;
+  box-shadow: 0 2px 2px rgba(0,0,0,0.1);
 `;
 
 export const DisplayName = styled.h2`
@@ -54,9 +55,10 @@ export const Cover = styled.span`
 export const ProBadge = styled.span`
   background: #00C384;
   background-image: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%);
-  position: absolute;
-  left: 52%;
-  top: 32px;
+  display: inline-block;
+  margin-left: 4px;
+  position: relative;
+  top: -5px;
   color: #fff;
   font-size: 10px;
   font-weight: 800;

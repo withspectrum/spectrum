@@ -8,6 +8,15 @@ export const MessageGroupContainer = styled.div`
 	align-items: center;
 	box-shadow: inset -4px 0 ${props =>
   props.active ? props.theme.brand.default : 'transparent'};
+
+	&:after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		width: calc(100% - 16px);
+		border-bottom: 1px solid ${({ theme }) => theme.border.default};
+	}
 `;
 
 export const MessageGroupImagesContainer = styled.div`
@@ -19,12 +28,13 @@ export const MessageGroupImagesContainer = styled.div`
 	width: 44px;
 	min-height: 44px;
 	height: 44px;
-	border-radius: 4px;
+	border-radius: 44px;
 `;
 
 export const MessageGroupImage = styled.div`
 	display: flex;
 	width: 100%;
+	border-radius: 44px;
 	background: ${props =>
   props.loading ? '#f6f7f8' : `url(${props.image}) no-repeat`};
 	background-size: cover;

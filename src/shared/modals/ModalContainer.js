@@ -22,8 +22,8 @@ const ModalContainer = props => {
         <CloseButton onClick={props.closeModal}>
           <Icon
             icon="close"
-            reverse={props.user}
-            subtle={!props.user}
+            reverse={props.user ? true : false}
+            subtle={!props.user ? true : false}
             color={props.user ? 'text.reverse' : 'warn.alt'}
           />
         </CloseButton>}
@@ -32,10 +32,12 @@ const ModalContainer = props => {
         ? <UserHeader>
             <Cover />
             <UserPhoto src={props.user.photoURL} />
-            <DisplayName>{props.user.displayName}</DisplayName>
+            <DisplayName>
+              {props.user.displayName}
+              {' '}
+              {props.user.subscriptions && <ProBadge>PRO</ProBadge>}
+            </DisplayName>
             <Username>@{props.user.username}</Username>
-
-            {props.user.subscriptions && <ProBadge>PRO</ProBadge>}
           </UserHeader>
         : <Header>
             <Title>{props.title}</Title>

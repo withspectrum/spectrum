@@ -14,7 +14,12 @@ class Card extends Component {
     // If there's a link, render a Link, otherwise render a div
     const Anchor = link ? Link : ({ children }) => <div>{children}</div>;
     return (
-      <Wrapper overflow={overflow} still={still} nomargin={this.props.nomargin}>
+      <Wrapper
+        nomargin={this.props.nomargin}
+        overflow={overflow}
+        still={still}
+        nomargin={this.props.nomargin}
+      >
         <Anchor to={link}>
           <LinkWrapper selected={selected}>
             {this.props.children}
