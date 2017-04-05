@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { sendMessage } from '../../../actions/messages';
+import { throwError } from '../../../actions/errors';
 import { uploadMedia } from '../../../db/stories';
 import { isMobile } from '../../../helpers/utils';
 import EmojiPicker from '../../../shared/EmojiPicker';
@@ -128,7 +129,7 @@ class ChatInput extends Component {
         this.props.dispatch(sendMessage(messageObj));
       })
       .catch(err => {
-        if (err) console.log('Error while uploading image to message: ', err);
+        this.props.dispatch(throwError(err));
         this.setState({
           mediaUploading: false,
         });

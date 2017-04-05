@@ -1,5 +1,6 @@
 import { track } from '../EventTracker';
 import { getFileUrl, getStoryMedia } from '../db/stories';
+import { throwError } from './errors';
 
 /**
  * Open the gallery at a certain image
@@ -26,6 +27,9 @@ export const openGallery = (e, story) => (dispatch, getState) => {
           media: fileUrls,
           index: index || 0,
         });
+      })
+      .catch(err => {
+        dispatch(throwError(err));
       });
   });
 };

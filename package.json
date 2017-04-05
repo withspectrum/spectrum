@@ -17,6 +17,7 @@
     "for-own": "^1.0.0",
     "highlight.js": "^9.10.0",
     "pre-commit": "^1.2.2",
+    "raven-js": "^3.14.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-helmet": "^4.0.0",
