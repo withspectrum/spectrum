@@ -1,7 +1,8 @@
-import database from 'firebase/database';
-import storage from 'firebase/storage';
-
 // @flow
+//$FlowFixMe
+import database from 'firebase/database';
+//$FlowFixMe
+import storage from 'firebase/storage';
 
 import { getFrequency } from './frequencies';
 import { createNotifications } from './notifications';
