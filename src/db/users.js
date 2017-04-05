@@ -152,7 +152,7 @@ export const createSubscription = (data, uid, plan) => {
       return snapshot.val();
     })
     .catch(err => {
-      console.log('error upgrading: ', err);
+      console.log(err);
     });
 };
 
@@ -169,7 +169,7 @@ export const deleteSubscription = (uid, subscriptionId) => {
       return snapshot.val();
     })
     .catch(err => {
-      console.log('error downgrading: ', err);
+      console.log(err);
     });
 };
 

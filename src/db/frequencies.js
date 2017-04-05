@@ -100,8 +100,7 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
     .then(() => {
       // Simulate the saved frequency for the client-side update
       resolve({ ...frequency, timestamp: Date.now() });
-    })
-    .catch(reject);
+    });
 });
 
 /**
@@ -131,8 +130,7 @@ export const removeFrequency = id => new Promise((resolve, reject) => {
     })
     .then(() => {
       resolve();
-    })
-    .catch(reject);
+    });
 });
 
 /**

@@ -17,6 +17,7 @@ import { getMessageGroup } from './db/messageGroups';
 import { listenToNewNotifications } from './db/notifications';
 import { set, track } from './EventTracker';
 import { monitorUser, stopUserMonitor } from './helpers/users';
+import Raven from 'raven-js';
 
 // Codesplit the App and the Homepage to only load what we need based on which route we're on
 const App = asyncComponent(() =>
@@ -54,6 +55,9 @@ class Root extends Component {
       // set this uid in google analytics
       track('user', 'authed', null);
       set(user.uid);
+
+      // logs the user uid to sentry errors
+      Raven.setUserContext({ uid: user.uid });
 
       listenToNewNotifications(user.uid, notification => {
         dispatch(addNotification(notification));

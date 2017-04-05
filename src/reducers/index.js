@@ -9,6 +9,7 @@ import modals from './modals';
 import gallery from './gallery';
 import loading from './loading';
 import notifications from './notifications';
+import errors from './errors';
 import ui from './ui';
 import messageGroups from './messageGroups';
 
@@ -25,4 +26,5 @@ export default combineReducers({
   ui,
   notifications,
   messageGroups,
+  errors,
 });

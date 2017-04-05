@@ -10,6 +10,7 @@ import { createNewMessageGroup } from '../db/messageGroups';
 import { track } from '../EventTracker';
 import { getCurrentFrequency } from '../helpers/frequencies';
 import history from '../helpers/history';
+import { throwError } from './errors';
 
 /**
  * Send a message
@@ -137,13 +138,17 @@ export const addReaction = messageId => (dispatch, getState) => {
   createReaction({
     messageId,
     uid,
-  }).then(() => {
-    dispatch({
-      type: 'ADD_REACTION',
-      messageId,
-      uid,
+  })
+    .then(() => {
+      dispatch({
+        type: 'ADD_REACTION',
+        messageId,
+        uid,
+      });
+    })
+    .catch(err => {
+      dispatch(throwError(err));
     });
-  });
 };
 
 export const removeReaction = messageId => (dispatch, getState) => {
@@ -154,11 +159,15 @@ export const removeReaction = messageId => (dispatch, getState) => {
   deleteReaction({
     messageId,
     uid,
-  }).then(() => {
-    dispatch({
-      type: 'REMOVE_REACTION',
-      messageId,
-      uid,
+  })
+    .then(() => {
+      dispatch({
+        type: 'REMOVE_REACTION',
+        messageId,
+        uid,
+      });
+    })
+    .catch(err => {
+      dispatch(throwError(err));
     });
-  });
 };

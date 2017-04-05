@@ -155,7 +155,7 @@ class NavigationMaster extends Component {
                     onClick={this.showStoriesNav}
                   >
                     <FlexRow center>
-                      <Icon reverse static icon="notification" />
+                      <Icon reverse static icon="messages" />
                       <FreqLabel>Messages</FreqLabel>
                     </FlexRow>
                   </Freq>

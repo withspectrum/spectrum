@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-preset-flow": "^6.23.0",
     "firebase-tools": "^3.5.0",
+    "flow-bin": "^0.43.0",
     "lint-staged": "^3.3.0",
     "prettier": "^0.18.0",
     "react-scripts-webpack-v2-fork-mxstbr": "^0.9.0"
@@ -17,6 +20,7 @@
     "for-own": "^1.0.0",
     "highlight.js": "^9.10.0",
     "pre-commit": "^1.2.2",
+    "raven-js": "^3.14.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-helmet": "^4.0.0",
