@@ -7,6 +7,7 @@ import {
 import { signInWithTwitter, signOut as logOut } from '../db/auth';
 import { monitorUser, stopUserMonitor } from '../helpers/users';
 import { apiURL } from '../config/api';
+import { throwError } from './errors';
 
 /**
  * Firebase creates one "Authentication" record when a user signs up.
@@ -28,8 +29,7 @@ export const login = () => dispatch => {
       createUser(user);
     })
     .catch(err => {
-      dispatch({ type: 'STOP_LOADING' });
-      console.log('Error logging in: ', err);
+      dispatch(throwError(err, { stopLoading: true }));
     });
 };
 
@@ -60,7 +60,7 @@ export const signOut = () => dispatch => {
     err => {
       // if something funky goes wrong during signout, throw an error and clear localStorage for good measure
       localStorage.removeItem('state');
-      console.log('Error signing out: ', err);
+      console.log(err);
     },
   );
 };
@@ -121,17 +121,13 @@ export const upgradeUser = (token, plan) => (dispatch, getState) => {
         });
       });
     })
-    .catch(error => {
-      if (error) {
-        dispatch({
-          type: 'SET_UPGRADE_ERROR',
-          error: error,
-        });
+    .catch(err => {
+      dispatch({
+        type: 'SET_UPGRADE_ERROR',
+        error: err,
+      });
 
-        dispatch({
-          type: 'STOP_LOADING',
-        });
-      }
+      dispatch(throwError(err, { stopLoading: true }));
     });
 };
 
@@ -177,13 +173,7 @@ export const downgradeUser = subscriptionId => (dispatch, getState) => {
         });
       });
     })
-    .catch(error => {
-      if (error) {
-        console.log('error downgrading: ', error);
-
-        dispatch({
-          type: 'STOP_LOADING',
-        });
-      }
+    .catch(err => {
+      dispatch(throwError(err, { stopLoading: true }));
     });
 };

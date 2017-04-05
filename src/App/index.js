@@ -14,7 +14,7 @@ import LoadingIndicator from '../shared/loading';
 import ModalRoot from '../shared/modals/ModalRoot';
 import SelectUsernameModal from '../shared/modals/SelectUsernameModal';
 import GalleryRoot from '../shared/gallery/GalleryRoot';
-import NuxJoinCard from './MiddleColumn/NuxJoinCard';
+import OnboardingCard from './MiddleColumn/OnboardingCard';
 import LoginCard from './MiddleColumn/LoginCard';
 import ReportBugCard from './MiddleColumn/ReportBugCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
@@ -23,13 +23,13 @@ import { ACTIVITY_TYPES } from '../db/types';
 
 class App extends Component {
   state = {
-    showDiscoverCard: true, // determines if we should show the NuxJoinCard
+    showOnboardingCard: true, // determines if we should show the OnboardingCard
     selectModalOpen: true,
   };
 
   componentWillReceiveProps = nextProps => {
     this.setState({
-      showDiscoverCard: Object.keys(nextProps.user.frequencies).length > 10
+      showOnboardingCard: Object.keys(nextProps.user.frequencies).length > 10
         ? false
         : true,
     });
@@ -49,6 +49,7 @@ class App extends Component {
     );
 
     const isEverything = frequencies.active === 'everything';
+    const isExplore = frequencies.active === 'explore';
 
     let sortedStories = sortArrayByKey(
       stories.stories.slice(),
@@ -111,12 +112,9 @@ class App extends Component {
 
     if (unread > 0) title = `(${unread}) ${title}`;
 
-    if (
-      isEverything && this.state.showDiscoverCard && user.uid ||
-      user.uid && frequencies.active === 'discover'
-    ) {
-      sortedStories.unshift(<NuxJoinCard />);
-    }
+    // if (isEverything) {
+    //  sortedStories.unshift(<OnboardingCard />);
+    // }
 
     if (!user.uid) {
       sortedStories.unshift(<LoginCard />);
@@ -124,10 +122,6 @@ class App extends Component {
 
     if (user.uid && frequencies.active === 'hugs-n-bugs') {
       sortedStories.unshift(<ReportBugCard />);
-    }
-
-    if (user.uid && frequencies.active === 'notifications' && unread >= 0) {
-      sortedStories.unshift(<NuxJoinCard />);
     }
 
     return (
@@ -209,22 +203,22 @@ class App extends Component {
             promptEmail={!user.email}
             onClose={this.closeSelectModal}
           />}
-
-        <MiddleColumnContainer active={stories.active} viewing={ui.viewing}>
-          <MiddleColumn
-            loggedIn={!!user.uid}
-            role={
-              user &&
-                frequency &&
-                frequency.users[user.uid] &&
-                frequency.users[user.uid].permission
-            }
-            activeFrequency={frequencies.active}
-            isPrivate={frequency && frequency.settings.private}
-            stories={sortedStories}
-            frequency={frequency}
-          />
-        </MiddleColumnContainer>
+        {!isExplore &&
+          <MiddleColumnContainer active={stories.active} viewing={ui.viewing}>
+            <MiddleColumn
+              loggedIn={!!user.uid}
+              role={
+                user &&
+                  frequency &&
+                  frequency.users[user.uid] &&
+                  frequency.users[user.uid].permission
+              }
+              activeFrequency={frequencies.active}
+              isPrivate={frequency && frequency.settings.private}
+              stories={sortedStories}
+              frequency={frequency}
+            />
+          </MiddleColumnContainer>}
 
         <RightColumnContainer active={stories.active} viewing={ui.viewing}>
           <RightColumn />
