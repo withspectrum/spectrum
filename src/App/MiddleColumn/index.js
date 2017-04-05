@@ -368,11 +368,7 @@ class MiddleColumn extends Component {
               loadNextPage={loadNextPage}
               elementCount={
                 // TODO: Fix this undefined
-                isEverything
-                  ? undefined
-                  : Object.keys(frequency.stories).length > stories.length
-                      ? stories.length + 1
-                      : stories.length
+                isEverything ? undefined : stories.length
               }
               loadingIndicator={
                 (

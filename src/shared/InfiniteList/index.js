@@ -44,7 +44,7 @@ class InfiniteList extends React.Component {
 
   keyMapper = index => {
     // Handle the loading indicator key mapping for the user
-    if (this.props.hasNextPage && index >= this.props.elementCount - 1) {
+    if (this.props.hasNextPage && index >= this.props.elementCount) {
       return 'list-loading-indicator';
     } else {
       return this.props.keyMapper(index);
@@ -77,7 +77,7 @@ class InfiniteList extends React.Component {
         rowIndex={index}
       >
         <div style={style}>
-          {this.props.hasNextPage && index >= this.props.elementCount - 1
+          {this.props.hasNextPage && index >= this.props.elementCount
             ? Loading
             : this.props.elementRenderer({ index, key })}
         </div>
@@ -98,15 +98,14 @@ class InfiniteList extends React.Component {
 
     return (
       <InfiniteLoader
-        isRowLoaded={({ index }) => !hasNextPage || index < elementCount - 1}
+        isRowLoaded={({ index }) => !hasNextPage || index < elementCount}
         loadMoreRows={loadMoreRows}
-        rowCount={elementCount}
+        rowCount={hasNextPage ? elementCount + 1 : elementCount}
         threshold={1}
       >
         {(
-          { onRowsRendered, registerChild }, // react-virtualized doesn't re-render except when the cache is cleared
-        ) => // so we clear the cache on resize, but need to debounce it as otherwise
-        // one cannot resize due to the whole app hanging
+          { onRowsRendered, registerChild }, // react-virtualized doesn't re-render except when the cache is cleared // so we clear the cache on resize, but need to debounce it as otherwise
+        ) => // one cannot resize due to the whole app hanging
         (
           <AutoSizer onResize={this.debouncedClearCache}>
             {({ width, height }) => (
@@ -115,7 +114,7 @@ class InfiniteList extends React.Component {
                 onRowsRendered={onRowsRendered}
                 height={height}
                 width={width}
-                rowCount={elementCount}
+                rowCount={hasNextPage ? elementCount + 1 : elementCount}
                 rowRenderer={this.renderElement}
                 deferredMeasurementCache={this.state.cache}
                 rowHeight={this.state.cache.rowHeight}
