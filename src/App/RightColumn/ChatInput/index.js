@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { sendMessage } from '../../../actions/messages';
 import { throwError } from '../../../actions/errors';
 import { uploadMediaToStory } from '../../../db/stories';
+import { uploadMediaToMessageGroup } from '../../../db/messageGroups';
 import { isMobile } from '../../../helpers/utils';
 import EmojiPicker from '../../../shared/EmojiPicker';
 import Icon from '../../../shared/Icons';
@@ -102,6 +103,7 @@ class ChatInput extends Component {
     let uid = user.uid;
     let file = e.target.files[0];
     let activeStory = this.props.stories.active;
+    let activeMessageGroup = this.props.messageGroups.active;
 
     this.setState({
       mediaUploading: true,
@@ -111,30 +113,59 @@ class ChatInput extends Component {
       type: 'LOADING',
     });
 
-    uploadMediaToStory(file, activeStory, uid)
-      .then(file => {
-        track('media', 'uploaded', null);
-        let messageObj = {
-          type: 'media',
-          content: file,
-        };
+    if (activeStory) {
+      uploadMediaToStory(file, activeStory, uid)
+        .then(file => {
+          track('media', 'uploaded', null);
+          let messageObj = {
+            type: 'media',
+            content: file,
+          };
 
-        this.setState({
-          mediaUploading: false,
-        });
+          this.setState({
+            mediaUploading: false,
+          });
 
-        this.props.dispatch({
-          type: 'STOP_LOADING',
-        });
+          this.props.dispatch({
+            type: 'STOP_LOADING',
+          });
 
-        this.props.dispatch(sendMessage(messageObj));
-      })
-      .catch(err => {
-        this.props.dispatch(throwError(err));
-        this.setState({
-          mediaUploading: false,
+          this.props.dispatch(sendMessage(messageObj));
+        })
+        .catch(err => {
+          this.props.dispatch(throwError(err));
+          this.setState({
+            mediaUploading: false,
+          });
         });
-      });
+    }
+
+    if (activeMessageGroup) {
+      uploadMediaToMessageGroup(file, activeMessageGroup, uid)
+        .then(file => {
+          track('media', 'uploaded', null);
+          let messageObj = {
+            type: 'media',
+            content: file,
+          };
+
+          this.setState({
+            mediaUploading: false,
+          });
+
+          this.props.dispatch({
+            type: 'STOP_LOADING',
+          });
+
+          this.props.dispatch(sendMessage(messageObj));
+        })
+        .catch(err => {
+          this.props.dispatch(throwError(err));
+          this.setState({
+            mediaUploading: false,
+          });
+        });
+    }
   };
 
   dispatchMessage = message => {
@@ -216,6 +247,7 @@ class ChatInput extends Component {
 const mapStateToProps = state => ({
   user: state.user,
   stories: state.stories,
+  messageGroups: state.messageGroups,
 });
 
 export default connect(mapStateToProps)(ChatInput);

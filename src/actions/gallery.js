@@ -1,5 +1,9 @@
 import { track } from '../EventTracker';
 import { getFileUrlFromStory, getMediaFromStory } from '../db/stories';
+import {
+  getFileUrlFromMessageGroup,
+  getMediaFromMessageGroup,
+} from '../db/messageGroups';
 import { throwError } from './errors';
 
 /**
@@ -9,29 +13,59 @@ export const openGallery = (e, story) => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
   const targetImg = e.target.src.toString();
   const activeStory = story || getState().stories.active;
+  const activeMessageGroup = getState().messageGroups.active;
 
   track('gallery', 'opened', null);
 
-  getMediaFromStory(activeStory).then(media => {
-    const filenames = Object.keys(media).map(item => media[item].fileName);
-    // Find the index of the image that was clicked on
-    const index = filenames.findIndex(
-      filename => targetImg.indexOf(encodeURI(filename)) > -1,
-    );
+  if (activeStory) {
+    getMediaFromStory(activeStory).then(media => {
+      const filenames = Object.keys(media).map(item => media[item].fileName);
+      // Find the index of the image that was clicked on
+      const index = filenames.findIndex(
+        filename => targetImg.indexOf(encodeURI(filename)) > -1,
+      );
 
-    Promise.all(filenames.map(file => getFileUrlFromStory(file, activeStory)))
-      .then(fileUrls => {
-        dispatch({
-          type: 'SHOW_GALLERY',
-          isOpen: true,
-          media: fileUrls,
-          index: index || 0,
+      Promise.all(filenames.map(file => getFileUrlFromStory(file, activeStory)))
+        .then(fileUrls => {
+          dispatch({
+            type: 'SHOW_GALLERY',
+            isOpen: true,
+            media: fileUrls,
+            index: index || 0,
+          });
+        })
+        .catch(err => {
+          dispatch(throwError(err));
         });
-      })
-      .catch(err => {
-        dispatch(throwError(err));
-      });
-  });
+    });
+  }
+
+  if (activeMessageGroup) {
+    getMediaFromMessageGroup(activeMessageGroup).then(media => {
+      const filenames = Object.keys(media).map(item => media[item].fileName);
+      // Find the index of the image that was clicked on
+      const index = filenames.findIndex(
+        filename => targetImg.indexOf(encodeURI(filename)) > -1,
+      );
+
+      Promise
+        .all(
+          filenames.map(file =>
+            getFileUrlFromMessageGroup(file, activeMessageGroup)),
+        )
+        .then(fileUrls => {
+          dispatch({
+            type: 'SHOW_GALLERY',
+            isOpen: true,
+            media: fileUrls,
+            index: index || 0,
+          });
+        })
+        .catch(err => {
+          dispatch(throwError(err));
+        });
+    });
+  }
 };
 
 export const closeGallery = () => {

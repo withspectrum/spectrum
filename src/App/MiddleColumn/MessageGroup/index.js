@@ -51,7 +51,7 @@ class MessageGroup extends Component {
               ? list[otherUsers]
                   ? <MessageGroupImage image={list[otherUsers].photoURL} />
                   : <MessageGroupImage loading />
-              : otherUsers.map(user => {
+              : otherUsers.map((user, i) => {
                   const userObj = list[user];
                   if (userObj) {
                     return (
@@ -61,7 +61,7 @@ class MessageGroup extends Component {
                       />
                     );
                   } else {
-                    return <MessageGroupImage loading />;
+                    return <MessageGroupImage key={i} loading />;
                   }
                 })}
           </MessageGroupImagesContainer>
@@ -73,12 +73,12 @@ class MessageGroup extends Component {
                   ? list[otherUsers]
                       ? <p>{list[otherUsers].displayName}</p>
                       : <p>Loading...</p>
-                  : otherUsers.map(user => {
+                  : otherUsers.map((user, i) => {
                       const userObj = list[user];
                       if (userObj) {
-                        return <p>{userObj.displayName}</p>;
+                        return <p key={userObj.uid}>{userObj.displayName}</p>;
                       } else {
-                        return <p>Loading...</p>;
+                        return <p key={i}>Loading...</p>;
                       }
                     })}
               </Usernames>
