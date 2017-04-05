@@ -1,5 +1,5 @@
 import { track } from '../EventTracker';
-import { removeImage } from '../db/stories';
+import { removeImageFromStory } from '../db/stories';
 import { apiURL } from '../config/api';
 
 /*------------------------------------------------------------\*
@@ -40,7 +40,7 @@ export const addMediaList = file => {
 };
 
 export const removeImageFromComposer = (image, story) => dispatch => {
-  removeImage({ image, story }).then(() => {
+  removeImageFromStory({ image, story }).then(() => {
     track('composer', 'media removed', null);
 
     dispatch({
