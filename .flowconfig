@@ -1,8 +1,11 @@
 [ignore]
--.*/node_modules/.*
+.*/node_modules/.*
+.*/styled-components/src/.*
 
 [include]
 
 [libs]
+node_modules/styled-components/flow-typed/*.js
 
 [options]
+suppress_comment=.*\\$FlowFixMe
