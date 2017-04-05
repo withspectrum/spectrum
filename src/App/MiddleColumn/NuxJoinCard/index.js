@@ -39,8 +39,7 @@ class NuxJoinCard extends Component {
     const { user: { frequencies } } = this.props;
 
     getFeaturedFrequencies().then(data => {
-      let sorted = Object.keys(data.frequencies)
-        .map(id => data.frequencies[id]);
+      let sorted = Object.keys(data).map(id => data[id]);
 
       const allFreqs = sorted.sort((a, b) => {
         let isMemberA = frequencies[a.id] ? true : false;

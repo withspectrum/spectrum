@@ -1,3 +1,7 @@
+import Raven from 'raven-js';
+Raven.config('https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812')
+  .install();
+
 const ga = window.ga;
 
 export const set = uid => {
@@ -50,5 +54,31 @@ export const track = (category, action, label) => {
     } catch (err) {
       console.log(err);
     }
+  }
+};
+
+export const crashReporter = store => next => action => {
+  // Handle THROW_ERROR actions
+  if (action.type === 'THROW_ERROR') {
+    console.error('Caught an exception!', action.err);
+    Raven.captureException(action.err, {
+      extra: {
+        action,
+        state: store.getState(),
+      },
+    });
+  }
+
+  try {
+    return next(action);
+  } catch (err) {
+    console.error('Caught an exception!', err);
+    Raven.captureException(err, {
+      extra: {
+        action,
+        state: store.getState(),
+      },
+    });
+    throw err;
   }
 };

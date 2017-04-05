@@ -15,6 +15,7 @@ import { getMessages, getMessage } from '../db/messages';
 import { getCurrentFrequency, linkFreqsInMd } from '../helpers/frequencies';
 import { arrayToHash } from '../helpers/utils';
 import { markStoryRead } from '../db/notifications';
+import { throwError } from './errors';
 
 /**
  * Initialise a story by creating a draft on the server
@@ -35,7 +36,7 @@ export const initStory = freqId => (dispatch, getState) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      dispatch(throwError(err));
     });
 };
 
@@ -111,9 +112,13 @@ export const setActiveStory = story => (dispatch, getState) => {
   const { stories: { stories } } = getState();
   let promise = Promise.resolve();
   if (!stories.find(existing => existing.id === story)) {
-    promise = getStory(story).then(story => {
-      dispatch({ type: 'ADD_STORY', story });
-    });
+    promise = getStory(story)
+      .then(story => {
+        dispatch({ type: 'ADD_STORY', story });
+      })
+      .catch(err => {
+        dispatch(throwError(err));
+      });
   }
   promise
     .then(getMessages(story))
@@ -138,8 +143,7 @@ export const setActiveStory = story => (dispatch, getState) => {
       });
     })
     .catch(err => {
-      console.log(err);
-      dispatch({ type: 'STOP_LOADING' });
+      dispatch(throwError(err, { stopLoading: true }));
     });
 
   markStoryRead(story, getState().user.uid);
@@ -174,6 +178,9 @@ export const setActiveStory = story => (dispatch, getState) => {
           messages,
           users: arrayToHash(users, 'uid'),
         });
+      })
+      .catch(err => {
+        dispatch(throwError(err));
       });
   });
 };
@@ -212,10 +219,7 @@ export const publishStory = ({ frequencyId, title, description, metadata }) => (
       dispatch(setActiveStory(storyKey));
     })
     .catch(err => {
-      dispatch({
-        type: 'STOP_LOADING',
-      });
-      console.log(err);
+      dispatch(throwError(err, { stopLoading: true }));
     });
 };
 
@@ -244,8 +248,7 @@ export const deleteStory = id => (dispatch, getState) => {
       }
     })
     .catch(err => {
-      console.log(err);
-      dispatch({ type: 'STOP_LOADING' });
+      dispatch(throwError(err, { stopLoading: true }));
     });
 };
 
@@ -268,7 +271,6 @@ export const toggleLockedStory = story => dispatch => {
       });
     })
     .catch(err => {
-      console.log(err);
-      dispatch({ type: 'STOP_LOADING' });
+      dispatch(throwError(err, { stopLoading: true }));
     });
 };
