@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { sendMessage } from '../../../actions/messages';
 import { throwError } from '../../../actions/errors';
-import { uploadMedia } from '../../../db/stories';
+import { uploadMediaToStory } from '../../../db/stories';
 import { isMobile } from '../../../helpers/utils';
 import EmojiPicker from '../../../shared/EmojiPicker';
 import Icon from '../../../shared/Icons';
@@ -99,6 +99,7 @@ class ChatInput extends Component {
 
   sendMediaMessage = e => {
     let user = this.props.user;
+    let uid = user.uid;
     let file = e.target.files[0];
     let activeStory = this.props.stories.active;
 
@@ -110,7 +111,7 @@ class ChatInput extends Component {
       type: 'LOADING',
     });
 
-    uploadMedia(file, activeStory, user)
+    uploadMediaToStory(file, activeStory, uid)
       .then(file => {
         track('media', 'uploaded', null);
         let messageObj = {
