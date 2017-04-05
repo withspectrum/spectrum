@@ -1,6 +1,5 @@
 [ignore]
-.*/node_modules/.*
-.*/node_modules/firebase/database/.*
+
 [include]
 
 [libs]
