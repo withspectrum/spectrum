@@ -148,6 +148,9 @@
             "deleted": {
               ".validate": "newData.isBoolean()"
             },
+            "last_activity": {
+              ".validate": "newData.val() <= now"
+            },
             "$other": {
               ".validate": false
             }

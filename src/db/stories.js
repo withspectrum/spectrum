@@ -4,7 +4,7 @@ import { getFrequency } from './frequencies';
 import { createNotifications } from './notifications';
 import { ACTIVITY_TYPES } from './types';
 import { getUserInfo } from './users';
-import { flattenArray, hashToArray } from '../helpers/utils';
+import { flattenArray, hashToArray, sortArrayByKey } from '../helpers/utils';
 
 export const getStory = storyId => {
   const db = database();
@@ -15,11 +15,19 @@ export const getStory = storyId => {
     .then(snapshot => snapshot.val());
 };
 
-export const getStories = ({ frequencyId, frequencySlug }) => {
+export const getStories = (
+  { frequencyId, frequencySlug, startIndex = 0, stopIndex = 10 },
+) => {
   return getFrequency({ id: frequencyId, slug: frequencySlug }).then(freq => {
     if (!freq.stories) return Promise.resolve([]);
-    const stories = Object.keys(freq.stories);
-    return Promise.all(stories.map(story => getStory(story)));
+    const stories = sortArrayByKey(
+      hashToArray(freq.stories).filter(story => !story.deleted),
+      'last_activity',
+      'timestamp',
+    )
+      .reverse()
+      .slice(startIndex, stopIndex);
+    return Promise.all(stories.map(story => getStory(story.id)));
   });
 };
 
@@ -27,9 +35,24 @@ export const getAllStories = userId => {
   return getUserInfo(userId)
     .then(user => {
       if (!user.frequencies) return [];
-      const freqs = Object.keys(user.frequencies);
-      return Promise.all(freqs.map(freq => getStories({ frequencyId: freq })));
+      return Promise.all(
+        Object.keys(user.frequencies).map(id => getFrequency({ id })),
+      );
     })
+    .then(frequencies => {
+      return Object.keys(frequencies).reduce((arr, frequencyId) => {
+        if (!frequencies[frequencyId].stories) return arr;
+        return arr.concat(hashToArray(frequencies[frequencyId].stories));
+      }, []);
+    })
+    .then(stories =>
+      sortArrayByKey(
+        stories.filter(story => !story.deleted),
+        'last_activity',
+        'timestamp',
+      ))
+    .then(stories =>
+      Promise.all(stories.slice(0, 15).map(story => getStory(story.id))))
     .then(nested => flattenArray(nested));
 };
 

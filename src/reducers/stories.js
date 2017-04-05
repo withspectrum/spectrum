@@ -39,6 +39,12 @@ export default function root(state = initialState, action) {
       return Object.assign({}, state, {
         active: action.story,
       });
+    case 'SET_ACTIVE_FREQUENCY':
+      return {
+        ...state,
+        stories: [],
+        active: null,
+      };
     case 'DELETE_STORY': {
       return Object.assign({}, state, {
         stories: state.stories.map(story => {

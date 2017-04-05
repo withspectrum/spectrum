@@ -49,6 +49,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
     // Get all the stories from all the frequencies
     getAllStories(uid)
       .then(stories => {
+        console.log(stories);
         dispatch({
           type: 'ADD_STORIES',
           stories,
@@ -63,11 +64,23 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   // Get the frequency
   getFrequency({ slug: lowerCaseFrequency })
     .then(data => {
+      const freq = {
+        ...data,
+        // Filter deleted stories from frequency
+        stories: !data.stories ? {} : Object.keys(data.stories).reduce((
+              list,
+              storyId,
+            ) => {
+              if (!data.stories[storyId].deleted)
+                list[storyId] = data.stories[storyId];
+              return list;
+            }, {}),
+      };
       dispatch({
         type: 'ADD_FREQUENCY',
-        frequency: data,
+        frequency: freq,
       });
-      return data;
+      return freq;
     })
     .then(data => {
       const freqs = getState().user.frequencies;

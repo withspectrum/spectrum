@@ -28,14 +28,17 @@ import {
 import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
 import StoryCard from './StoryCard';
+import Card from '../../shared/Card';
 import Notification from './Notification';
 import { ACTIVITY_TYPES } from '../../db/types';
+import { getStories } from '../../db/stories';
 import { getCurrentFrequency } from '../../helpers/frequencies';
 import { formatSenders } from '../../helpers/notifications';
 
 class MiddleColumn extends Component {
   state = {
     jumpToTop: false,
+    loadingNextPage: false,
   };
 
   componentWillUpdate = nextProps => {
@@ -171,6 +174,7 @@ class MiddleColumn extends Component {
   };
 
   jumpToTop = () => {
+    console.log('JUMP TO TOP');
     if (this.storyList) {
       this.storyList.scrollTop = 0;
     }
@@ -224,6 +228,26 @@ class MiddleColumn extends Component {
         membersText = `${length} members`;
       }
     }
+
+    const loadNextPage = ({ startIndex, stopIndex }) => new Promise(resolve => {
+      this.setState({
+        loadingNextPage: true,
+      });
+      getStories({
+        frequencyId: frequency.id,
+        startIndex: stories.length - 1,
+        stopIndex: stories.length + 15,
+      }).then(next => {
+        this.props.dispatch({
+          type: 'ADD_STORIES',
+          stories: next,
+        });
+        this.setState({
+          loadingNextPage: false,
+        });
+        resolve();
+      });
+    });
 
     // If we have a notification for a story but not loaded the story yet
     // show the New Stories! indicator
@@ -323,9 +347,6 @@ class MiddleColumn extends Component {
               New stories!
             </NewIndicator>}
 
-          {/* {isNotifications && notifications.map(this.renderNotification)} */
-          }
-
           {isNotifications &&
             <InfiniteList
               height={window.innerHeight - 50}
@@ -337,9 +358,25 @@ class MiddleColumn extends Component {
 
           {(isEverything || frequency) &&
             <InfiniteList
-              height={window.innerHeight - 50}
-              width={window.innerWidth > 768 ? 511 : window.innerWidth}
-              elementCount={stories.length}
+              isNextPageLoading={this.state.loadingNextPage}
+              hasNextPage={
+                // TODO: Fix this true
+                isEverything
+                  ? true
+                  : Object.keys(frequency.stories).length > stories.length
+              }
+              loadNextPage={loadNextPage}
+              elementCount={
+                // TODO: Fix this undefined
+                isEverything ? undefined : stories.length
+              }
+              loadingIndicator={
+                (
+                  <Card still>
+                    <LoadingIndicator />
+                  </Card>
+                )
+              }
               elementRenderer={this.renderStory}
               keyMapper={index => stories[index].id}
             />}

@@ -5,21 +5,23 @@ import {
   CellMeasurer,
   CellMeasurerCache,
   InfiniteLoader,
+  AutoSizer,
 } from 'react-virtualized';
 import { debounce } from '../../helpers/utils';
+import LoadingIndicator from '../../shared/loading/global';
 
 /**
  * Render an infinite list of things, possibly lazy loading them as they are needed
  */
 class InfiniteList extends React.Component {
   static propTypes = {
-    height: PropTypes.number.isRequired,
-    width: PropTypes.number.isRequired,
     elementRenderer: PropTypes.func.isRequired,
-    keyMapper: PropTypes.func,
-    isElementLoaded: PropTypes.func,
-    loadMoreElements: PropTypes.func,
     elementCount: PropTypes.number,
+    keyMapper: PropTypes.func,
+    isNextPageLoading: PropTypes.bool,
+    loadNextPage: PropTypes.func,
+    hasNextPage: PropTypes.bool,
+    loadingIndicator: PropTypes.element,
   };
 
   constructor(props) {
@@ -30,25 +32,23 @@ class InfiniteList extends React.Component {
       cache: new CellMeasurerCache({
         fixedWidth: true,
         defaultWidth: props.width,
-        keyMapper: props.keyMapper,
+        keyMapper: this.keyMapper,
       }),
     };
-  }
-
-  // react-virtualized doesn't re-render except when the cache is cleared
-  // so we clear the cache on resize, but need to debounce it as otherwise
-  // one cannot resize due to the whole app hanging
-  componentWillMount() {
-    window.addEventListener('resize', this.debouncedClearCache, false);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.debouncedClearCache, false);
   }
 
   componentWillReceiveProps = nextProps => {
     if (deepEqual(this.props, nextProps)) return;
     this.clearCache(nextProps);
+  };
+
+  keyMapper = index => {
+    // Handle the loading indicator key mapping for the user
+    if (this.props.hasNextPage && index >= this.props.elementCount) {
+      return 'list-loading-indicator';
+    } else {
+      return this.props.keyMapper(index);
+    }
   };
 
   clearCache = nextProps => {
@@ -58,7 +58,7 @@ class InfiniteList extends React.Component {
       cache: new CellMeasurerCache({
         fixedWidth: true,
         defaultWidth: props.width,
-        keyMapper: props.keyMapper,
+        keyMapper: this.keyMapper,
       }),
     });
   };
@@ -66,6 +66,8 @@ class InfiniteList extends React.Component {
   // Wraps every element in a CellMeasurer, which allows us to
   // render elements with dynamic heights
   renderElement = ({ index, key, style, parent }) => {
+    const Loading = this.props.loadingIndicator ||
+      <div><LoadingIndicator /></div>;
     return (
       <CellMeasurer
         cache={this.state.cache}
@@ -75,7 +77,9 @@ class InfiniteList extends React.Component {
         rowIndex={index}
       >
         <div style={style}>
-          {this.props.elementRenderer({ index, key })}
+          {this.props.hasNextPage && index >= this.props.elementCount
+            ? Loading
+            : this.props.elementRenderer({ index, key })}
         </div>
       </CellMeasurer>
     );
@@ -84,30 +88,39 @@ class InfiniteList extends React.Component {
   render() {
     const {
       // These are set to not lazy-load by default
-      isElementLoaded = () => true,
-      loadMoreElements = () => Promise.resolve(),
       elementCount = 9999999,
-      height,
-      width,
+      loadNextPage = () => Promise.resolve(),
+      isNextPageLoading = true,
+      hasNextPage = false,
     } = this.props;
+
+    const loadMoreRows = isNextPageLoading ? () => {} : loadNextPage;
 
     return (
       <InfiniteLoader
-        isRowLoaded={isElementLoaded}
-        loadMoreRows={loadMoreElements}
-        rowCount={elementCount}
+        isRowLoaded={({ index }) => !hasNextPage || index < elementCount}
+        loadMoreRows={loadMoreRows}
+        rowCount={hasNextPage ? elementCount + 1 : elementCount}
+        threshold={1}
       >
-        {({ onRowsRendered, registerChild }) => (
-          <List
-            ref={registerChild}
-            onRowsRendered={onRowsRendered}
-            height={height}
-            width={width}
-            rowCount={elementCount}
-            rowRenderer={this.renderElement}
-            deferredMeasurementCache={this.state.cache}
-            rowHeight={this.state.cache.rowHeight}
-          />
+        {(
+          { onRowsRendered, registerChild }, // react-virtualized doesn't re-render except when the cache is cleared // so we clear the cache on resize, but need to debounce it as otherwise
+        ) => // one cannot resize due to the whole app hanging
+        (
+          <AutoSizer onResize={this.debouncedClearCache}>
+            {({ width, height }) => (
+              <List
+                ref={registerChild}
+                onRowsRendered={onRowsRendered}
+                height={height}
+                width={width}
+                rowCount={hasNextPage ? elementCount + 1 : elementCount}
+                rowRenderer={this.renderElement}
+                deferredMeasurementCache={this.state.cache}
+                rowHeight={this.state.cache.rowHeight}
+              />
+            )}
+          </AutoSizer>
         )}
       </InfiniteLoader>
     );
