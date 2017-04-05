@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import {
   FlexCol,
   FlexRow,
@@ -15,41 +16,93 @@ import ScrollRow from '../../../shared/ScrollRow';
 export const ViewContainer = styled(FlexCol)`
   flex: 1 1 auto;
   align-self: stretch;
-  padding: 48px;
   overflow: hidden;
   overflow-y: scroll;
-
-  @media (max-width: 768px) {
-    padding: 16px;
-  }
 `;
 
 export const ScrollBody = styled(FlexCol)`
   flex: 0 0 auto;
-  margin-top: 16px;
+  overflow-x: hidden;
   overflow-y: scroll;
   position: relative;
+  z-index: 1;
+  background-color: ${props => props.theme.generic.default};
 `;
 
 export const ViewTitle = styled(H1)`
+  margin-left: 48px;
+  margin-top: 48px;
   font-size: 32px;
   font-weight: 900;
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.reverse};
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: 768px) {
+    margin-left: 16px;
+    margin-top: 16px;
+  }
 `;
 
-export const ViewSubtitle = styled(H3)`
-  color: ${props => props.theme.text.default};
+export const ViewSubtitle = styled(H2)`
+  margin-left: 48px;
+  color: ${props => props.theme.text.reverse};
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: 768px) {
+    margin-left: 16px;
+    font-size: 16px;
+    line-height: 20px;
+  }
 `;
 
 export const Section = styled(FlexCol)`
-  margin-top: 32px;
+  padding-top: 32px;
   display: flex;
   justify-content: space-between;
+  position: relative;
+  z-index: 1;
+
+  &:nth-of-type(2) {
+    background-color: ${props => props.theme.space.dark};
+    background-image: ${props =>
+  `linear-gradient( ${props.theme.bg.default}, ${props.theme.generic.default} )`};
+  }
+`;
+
+export const ViewHeader = styled(Section)`
+  flex: 0 0 320px;
+  padding-bottom: 120px;
+  justify-content: flex-end;
+  background-color: ${props => props.theme.space.dark};
+  background-image: ${props =>
+  `linear-gradient( ${props.theme.space.dark}, ${props.theme.brand.alt} )`};
+
+  @media (max-width: 768px) {
+    flex: 0 0 240px;
+    padding-bottom: 48px;
+  }
 `;
 
 export const SectionTitle = styled(H2)`
   color: ${props => props.theme.text.default};
+  margin-left: 48px;
+
+
+  @media (max-width: 768px) {
+    margin-left: 16px;
+  }
+`;
+
+export const SectionSubtitle = styled(H3)`
+  color: ${props => props.theme.text.default};
   margin-bottom: 8px;
+  margin-left: 48px;
+
+  @media (max-width: 768px) {
+    margin-left: 16px;
+  }
 `;
 
 export const Row = styled(ScrollRow)`
@@ -58,7 +111,7 @@ export const Row = styled(ScrollRow)`
   flex: 0 0 320px;
   padding: 8px 16px 32px 16px;
 
-  &:after{
+  &:after, &:before{
     content: '';
     display: inline-block;
     flex: 0 0 32px;
@@ -112,7 +165,7 @@ export const ItemButton = styled(Button)`
   font-weight: 700;
   color: ${props => props.theme.text.reverse};
   background-color: ${props =>
-  props.active ? props.theme.text.placeholder : props.theme.brand.default};
+  props.active ? props.theme.inactive : props.theme.brand.default};
   background-image: ${props =>
   props.active
     ? 'none'
@@ -123,4 +176,18 @@ export const ItemButton = styled(Button)`
   &:hover {
     box-shadow: none;
   }
+`;
+
+export const Constellations = styled.div`
+	background-color: transparent;
+	background: url(/img/constellations.svg) center top no-repeat;
+	position: absolute;
+	background-size: cover 100%;
+	z-index: 0;
+	height: calc(100% + 4px);
+	width: 110%;
+	top: -10px;
+	bottom: 0;
+	left: 0;
+	right: 0;
 `;

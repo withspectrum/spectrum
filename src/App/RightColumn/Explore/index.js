@@ -8,11 +8,18 @@ import {
   subscribeFrequency,
 } from '../../../actions/frequencies';
 import {
+  GoopyOne,
+  GoopyTwo,
+  GoopyThree,
+  GoopyFour,
+} from '../../../Homepage/style';
+import {
   ViewContainer,
   ViewTitle,
   ViewSubtitle,
   Section,
   SectionTitle,
+  SectionSubtitle,
   Row,
   Item,
   ItemTitle,
@@ -21,6 +28,8 @@ import {
   ItemButton,
   ButtonContainer,
   ScrollBody,
+  ViewHeader,
+  Constellations,
 } from './style';
 
 class Explore extends Component {
@@ -193,14 +202,21 @@ class Explore extends Component {
     return (
       <ViewContainer>
         <ScrollBody>
-          <ViewTitle>Explore</ViewTitle>
-          <ViewSubtitle>
-            Here are 6 quick lists to get you started on Spectrum!
-          </ViewSubtitle>
+          <ViewHeader>
+            <ViewTitle>Explore</ViewTitle>
+            <ViewSubtitle>
+              Discover more of what Spectrum has to offer!
+            </ViewSubtitle>
+            <Constellations />
+            <GoopyThree />
+          </ViewHeader>
           <Section>
             <SectionTitle>
-              Best of alpha: The 30 most-popular pre-launch frequencies
+              Best of beta
             </SectionTitle>
+            <SectionSubtitle>
+              The 30 most-popular pre-launch frequencies
+            </SectionSubtitle>
             <Row
               onMouseDown={this.handleMouseDown}
               onMouseUp={this.handleMouseUp}
@@ -239,8 +255,11 @@ class Explore extends Component {
           </Section>
           <Section>
             <SectionTitle>
-              5 different ways to make use of frequencies!
+              5 cool ways to use frequencies
             </SectionTitle>
+            <SectionSubtitle>
+              News, journaling, communities, show and tell, and recommendations...
+            </SectionSubtitle>
             <Row>
               {this.state.curatedFrequencies &&
                 this.state.curatedFrequencies.map((freq, i) => {
@@ -276,8 +295,11 @@ class Explore extends Component {
           </Section>
           <Section>
             <SectionTitle>
-              For developers: programming languages, hot frameworks, podcasts, blogs, and more...
+              For developers
             </SectionTitle>
+            <SectionSubtitle>
+              Programming languages, hot frameworks, podcasts, blogs, and more...
+            </SectionSubtitle>
             <Row>
               {this.state.developerFrequencies &&
                 this.state.developerFrequencies.map((freq, i) => {
@@ -313,8 +335,11 @@ class Explore extends Component {
           </Section>
           <Section>
             <SectionTitle>
-              For designers: resources, inspiration, critique, podcasts, and more...
+              For designers
             </SectionTitle>
+            <SectionSubtitle>
+              Resources, inspiration, critique, podcasts, and more...
+            </SectionSubtitle>
             <Row>
               {this.state.designerFrequencies &&
                 this.state.designerFrequencies.map((freq, i) => {
@@ -350,8 +375,11 @@ class Explore extends Component {
           </Section>
           <Section>
             <SectionTitle>
+              Just for funsies
+            </SectionTitle>
+            <SectionSubtitle>
               Bond with the community over our favorite things to do after hours!
-            </SectionTitle>
+            </SectionSubtitle>
             <Row>
               {this.state.designerFrequencies &&
                 this.state.designerFrequencies.map((freq, i) => {
@@ -387,8 +415,11 @@ class Explore extends Component {
           </Section>
           <Section>
             <SectionTitle>
-              Need some help? We've got your back in our support frequencies...
+              Need help?
             </SectionTitle>
+            <SectionSubtitle>
+              We've got your back in our support frequencies...
+            </SectionSubtitle>
             <Row>
               {this.state.supportFrequencies &&
                 this.state.supportFrequencies.map((freq, i) => {
