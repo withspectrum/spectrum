@@ -8,7 +8,7 @@ import {
   addLinkPreview,
   removeLinkPreview,
   addMediaList,
-  removeImageFromStory,
+  removeImageFromComposer,
 } from '../../../actions/composer';
 import { publishStory, initStory } from '../../../actions/stories';
 import { loading, stopLoading } from '../../../actions/loading';
@@ -16,7 +16,7 @@ import {
   getCurrentFrequency,
   linkFreqsInMd,
 } from '../../../helpers/frequencies';
-import { uploadMultipleMedia } from '../../../db/stories';
+import { uploadMultipleMediaToStory } from '../../../db/stories';
 import Textarea from 'react-textarea-autosize';
 import Markdown from '../../../shared/Markdown';
 import LinkPreview from '../../../shared/LinkPreview';
@@ -108,6 +108,7 @@ class Composer extends Component {
 
   uploadMedia = e => {
     let user = this.props.user;
+    let uid = user.uid;
     let files = e.target.files;
     let body = this.props.composer.body;
     let story = this.props.composer.newStoryKey;
@@ -115,7 +116,7 @@ class Composer extends Component {
     // disable the submit button until uploads are done
     this.setState({ loading: true });
 
-    uploadMultipleMedia(files, story, user)
+    uploadMultipleMediaToStory(files, story, uid)
       .then(filesArr => {
         track('media', 'multiple uploaded', null);
         for (let file of filesArr) {
@@ -190,7 +191,7 @@ class Composer extends Component {
   removeImage = e => {
     let key = e.target.id;
     let story = this.props.composer.newStoryKey;
-    this.props.dispatch(removeImageFromStory(key, story));
+    this.props.dispatch(removeImageFromComposer(key, story));
   };
 
   handleKeyPress = e => {

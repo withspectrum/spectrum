@@ -1,5 +1,5 @@
 import { track } from '../EventTracker';
-import { getFileUrl, getStoryMedia } from '../db/stories';
+import { getFileUrlFromStory, getMediaFromStory } from '../db/stories';
 import { throwError } from './errors';
 
 /**
@@ -12,14 +12,14 @@ export const openGallery = (e, story) => (dispatch, getState) => {
 
   track('gallery', 'opened', null);
 
-  getStoryMedia(activeStory).then(media => {
+  getMediaFromStory(activeStory).then(media => {
     const filenames = Object.keys(media).map(item => media[item].fileName);
     // Find the index of the image that was clicked on
     const index = filenames.findIndex(
       filename => targetImg.indexOf(encodeURI(filename)) > -1,
     );
 
-    Promise.all(filenames.map(file => getFileUrl(file, activeStory)))
+    Promise.all(filenames.map(file => getFileUrlFromStory(file, activeStory)))
       .then(fileUrls => {
         dispatch({
           type: 'SHOW_GALLERY',
