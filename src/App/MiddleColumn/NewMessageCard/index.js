@@ -20,7 +20,7 @@ class NewMessageCard extends Component {
     const { active, recipient } = this.props;
 
     return (
-      <Card onClick={this.toggleMessageComposer}>
+      <Card nomargin onClick={this.toggleMessageComposer}>
         <MessageGroupContainer active={active}>
           <MessageGroupImagesContainer>
             <MessageGroupImage image={recipient.photoURL} />

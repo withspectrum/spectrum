@@ -16,7 +16,7 @@ import {
   getCurrentFrequency,
   linkFreqsInMd,
 } from '../../../helpers/frequencies';
-import { uploadMultipleMediaToStory } from '../../../db/stories';
+import { uploadMultipleMediaToLocation } from '../../../db/media';
 import Textarea from 'react-textarea-autosize';
 import Markdown from '../../../shared/Markdown';
 import LinkPreview from '../../../shared/LinkPreview';
@@ -107,16 +107,18 @@ class Composer extends Component {
   };
 
   uploadMedia = e => {
-    let user = this.props.user;
-    let uid = user.uid;
-    let files = e.target.files;
+    const user = this.props.user;
     let body = this.props.composer.body;
-    let story = this.props.composer.newStoryKey;
+
+    const files = e.target.files;
+    const location = 'stories';
+    const key = this.props.composer.newStoryKey;
+    const userId = user.uid;
 
     // disable the submit button until uploads are done
     this.setState({ loading: true });
 
-    uploadMultipleMediaToStory(files, story, uid)
+    uploadMultipleMediaToLocation(files, location, key, userId)
       .then(filesArr => {
         track('media', 'multiple uploaded', null);
         for (let file of filesArr) {

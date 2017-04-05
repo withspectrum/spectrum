@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { sendMessage } from '../../../actions/messages';
 import { throwError } from '../../../actions/errors';
-import { uploadMediaToStory } from '../../../db/stories';
-import { uploadMediaToMessageGroup } from '../../../db/messageGroups';
+import { uploadMediaToLocation } from '../../../db/media';
 import { isMobile } from '../../../helpers/utils';
 import EmojiPicker from '../../../shared/EmojiPicker';
 import Icon from '../../../shared/Icons';
@@ -99,11 +98,16 @@ class ChatInput extends Component {
   };
 
   sendMediaMessage = e => {
-    let user = this.props.user;
-    let uid = user.uid;
-    let file = e.target.files[0];
-    let activeStory = this.props.stories.active;
-    let activeMessageGroup = this.props.messageGroups.active;
+    const user = this.props.user;
+    const activeStory = this.props.stories.active;
+    const activeMessageGroup = this.props.messageGroups.active;
+
+    const file = e.target.files[0];
+    const location = activeStory
+      ? 'stories'
+      : activeMessageGroup ? 'message_groups' : null;
+    const key = activeStory || activeMessageGroup;
+    const userId = user.uid;
 
     this.setState({
       mediaUploading: true,
@@ -113,59 +117,30 @@ class ChatInput extends Component {
       type: 'LOADING',
     });
 
-    if (activeStory) {
-      uploadMediaToStory(file, activeStory, uid)
-        .then(file => {
-          track('media', 'uploaded', null);
-          let messageObj = {
-            type: 'media',
-            content: file,
-          };
+    uploadMediaToLocation(file, location, key, userId)
+      .then(file => {
+        track('media', 'uploaded', null);
+        let messageObj = {
+          type: 'media',
+          content: file,
+        };
 
-          this.setState({
-            mediaUploading: false,
-          });
-
-          this.props.dispatch({
-            type: 'STOP_LOADING',
-          });
-
-          this.props.dispatch(sendMessage(messageObj));
-        })
-        .catch(err => {
-          this.props.dispatch(throwError(err));
-          this.setState({
-            mediaUploading: false,
-          });
+        this.setState({
+          mediaUploading: false,
         });
-    }
 
-    if (activeMessageGroup) {
-      uploadMediaToMessageGroup(file, activeMessageGroup, uid)
-        .then(file => {
-          track('media', 'uploaded', null);
-          let messageObj = {
-            type: 'media',
-            content: file,
-          };
-
-          this.setState({
-            mediaUploading: false,
-          });
-
-          this.props.dispatch({
-            type: 'STOP_LOADING',
-          });
-
-          this.props.dispatch(sendMessage(messageObj));
-        })
-        .catch(err => {
-          this.props.dispatch(throwError(err));
-          this.setState({
-            mediaUploading: false,
-          });
+        this.props.dispatch({
+          type: 'STOP_LOADING',
         });
-    }
+
+        this.props.dispatch(sendMessage(messageObj));
+      })
+      .catch(err => {
+        this.props.dispatch(throwError(err));
+        this.setState({
+          mediaUploading: false,
+        });
+      });
   };
 
   dispatchMessage = message => {

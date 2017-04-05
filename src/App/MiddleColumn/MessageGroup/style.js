@@ -4,7 +4,7 @@ import { H5 } from '../../../shared/Globals';
 export const MessageGroupContainer = styled.div`
 	display: flex;
 	flex: 1 1 auto;
-	padding: 12px 8px;
+	padding: 16px 8px;
 	align-items: center;
 	box-shadow: inset -4px 0 ${props =>
   props.active ? props.theme.brand.default : 'transparent'};
@@ -15,7 +15,7 @@ export const MessageGroupContainer = styled.div`
 		bottom: 0;
 		right: 0;
 		width: calc(100% - 16px);
-		border-bottom: 1px solid ${({ theme }) => theme.border.default};
+		border-bottom: 1px solid #f6f7f8;
 	}
 `;
 
