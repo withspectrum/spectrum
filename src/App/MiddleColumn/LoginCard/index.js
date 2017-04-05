@@ -16,9 +16,9 @@ class LoginCard extends Component {
       <Card static overflow={'visible'}>
         <Body>
           <Description emoji>👋</Description>
-          <Title>C'mon in, the water's fine</Title>
+          <Title>C'mon in, the chatter's fine</Title>
           <Description>
-            Welcome to Spectrum, a place to share news and stories with your community. Sign in with Twitter to get started.
+            Welcome to Spectrum, a community platform for the future. Sign in with Twitter to get started.
           </Description>
           <Button width={'100%'} onClick={this.login}>
             Sign in with Twitter
