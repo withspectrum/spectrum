@@ -58,8 +58,18 @@ export const track = (category, action, label) => {
 };
 
 export const crashReporter = store => next => action => {
+  // Handle THROW_ERROR actions
+  if (action.type === 'THROW_ERROR') {
+    console.error('Caught an exception!', action.err);
+    Raven.captureException(action.err, {
+      extra: {
+        action,
+        state: store.getState(),
+      },
+    });
+  }
+
   try {
-    console.log('running crash reporter');
     return next(action);
   } catch (err) {
     console.error('Caught an exception!', err);

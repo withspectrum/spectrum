@@ -6,6 +6,7 @@ import {
 } from '../db/messages';
 import { track } from '../EventTracker';
 import { getCurrentFrequency } from '../helpers/frequencies';
+import { throwError } from './errors';
 
 /**
  * Send a message
@@ -43,7 +44,7 @@ export const sendMessage = message => (dispatch, getState) => {
     message,
     key,
   }).catch(err => {
-    console.log(err);
+    dispatch(throwError(err));
   });
 };
 
@@ -64,7 +65,7 @@ export const addReaction = messageId => (dispatch, getState) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      dispatch(throwError(err));
     });
 };
 
@@ -85,6 +86,6 @@ export const removeReaction = messageId => (dispatch, getState) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      dispatch(throwError(err));
     });
 };
