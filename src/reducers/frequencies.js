@@ -92,7 +92,7 @@ export default function root(state = initialState, action) {
           return {
             ...freq,
             // Filter deleted stories from frequency
-            stories: !freq.storis ? {} : Object.keys(freq.stories).reduce((
+            stories: !freq.stories ? {} : Object.keys(freq.stories).reduce((
                   list,
                   storyId,
                 ) => {
