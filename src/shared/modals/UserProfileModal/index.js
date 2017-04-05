@@ -16,6 +16,7 @@ import {
   getMessageGroups,
   checkMessageGroupForUsersMatch,
 } from '../../../db/users';
+import { Username } from './style';
 
 class UserProfileModal extends React.Component {
   state = {
@@ -125,7 +126,11 @@ class UserProfileModal extends React.Component {
         style={modalStyles}
         closeTimeoutMS={330}
       >
-        <ModalContainer title={displayName} closeModal={this.closeModal}>
+        <ModalContainer
+          user={this.state.recipient}
+          title={displayName}
+          closeModal={this.closeModal}
+        >
 
           {recipient !== uid
             ? this.state.loading
