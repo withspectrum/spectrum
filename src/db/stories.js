@@ -171,7 +171,7 @@ export const setStoryLock = ({ id, locked }: setStoryLockProps) => {
 };
 
 type removeImageProps = { storyId: string, image: string };
-export const removeImageFromStory = ({ storyId, image }: removeImageProps) => {
+export const removeImageFromStory = ({ image, storyId }: removeImageProps) => {
   const db = database();
 
   return db.ref(`stories/${storyId}/media/${image}`).remove();

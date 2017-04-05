@@ -39,8 +39,8 @@ export const addMediaList = file => {
   };
 };
 
-export const removeImageFromComposer = (image, story) => dispatch => {
-  removeImageFromStory({ image, story }).then(() => {
+export const removeImageFromComposer = (image, storyId) => dispatch => {
+  removeImageFromStory({ image, storyId }).then(() => {
     track('composer', 'media removed', null);
 
     dispatch({
