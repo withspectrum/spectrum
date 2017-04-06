@@ -230,7 +230,7 @@ export const publishStory = ({ frequencyId, title, description, metadata }) => (
  */
 export const deleteStory = id => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
-  const { frequencies, stories } = getState();
+  const { frequencies, communities, stories } = getState();
   let activeFrequency = frequencies.active;
   const { frequencyId } = stories.stories.find(story => story.id === id);
 
@@ -243,10 +243,10 @@ export const deleteStory = id => (dispatch, getState) => {
         id,
       });
       // redirect the user so that they don't end up on a broken url
-      if (activeFrequency && activeFrequency !== 'all') {
-        history.push(`/~${activeFrequency}`);
+      if (activeFrequency) {
+        history.push(`/${communities.active}/~${activeFrequency}`);
       } else {
-        history.push('/');
+        history.push(`/${communities.active}`);
       }
     })
     .catch(err => {
