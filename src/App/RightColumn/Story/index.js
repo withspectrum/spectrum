@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Markdown from '../../../shared/Markdown';
 import LinkPreview from '../../../shared/LinkPreview';
+import { getUserInfo } from '../../../db/users';
+import Badge from '../../../shared/Badge';
 import { openGallery } from '../../../actions/gallery';
 import { track } from '../../../EventTracker';
 import { timeDifference } from '../../../helpers/utils';
@@ -48,6 +50,14 @@ class Story extends Component {
   handleClick = url => {
     track('link preview', 'clicked', url);
   };
+
+  // const getCuratedFrequencies = () => Promise.all(
+  //   curatedFrequencyKeys.map(freq => {
+  //     return getFrequency({ slug: freq }).then(freq => {
+  //       return freq;
+  //     });
+  //   }),
+  // );
 
   render() {
     const { story, frequency, communities } = this.props;

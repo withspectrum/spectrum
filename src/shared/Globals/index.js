@@ -415,6 +415,7 @@ export const Tooltip = props => css`
     position: absolute;
     opacity: 0;
     display: block;
+    text-transform: none;
 	}
 
 	&:before {
