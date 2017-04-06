@@ -113,6 +113,7 @@ export const Freq = styled.div`
     ? Gradient(props.theme.brand.alt, props.theme.brand.default)
     : `none`};
   color: ${({ theme }) => theme.text.alt};
+  text-transform: capitalize;
 
   &:hover {
     cursor: pointer;
