@@ -477,7 +477,9 @@ class Composer extends Component {
                   : <PreviewWrapper>
                       <StoryTitlePreview>{composer.title}</StoryTitlePreview>
                       <div className="markdown" ref="story">
-                        <Markdown>{linkFreqsInMd(composer.body)}</Markdown>
+                        <Markdown>
+                          {linkFreqsInMd(composer.body, activeCommunity)}
+                        </Markdown>
                       </div>
                     </PreviewWrapper>}
                 <SubmitContainer sticky={!this.state.creating}>

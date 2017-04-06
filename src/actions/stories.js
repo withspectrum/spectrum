@@ -71,7 +71,10 @@ export const saveEditStory = ({ title, description, metadata }) => (
 
   editStory({
     key: storyKey,
-    content: { title, description: linkFreqsInMd(description) },
+    content: {
+      title,
+      description: linkFreqsInMd(description, state.communities.active),
+    },
     metadata,
   })
     .then(story => {
@@ -208,7 +211,10 @@ export const publishStory = ({ frequencyId, title, description, metadata }) => (
   createStory({
     key: storyKey,
     frequency,
-    content: { title, description: linkFreqsInMd(description) },
+    content: {
+      title,
+      description: linkFreqsInMd(description, state.communities.active),
+    },
     metadata,
   })
     .then(story => {
