@@ -78,7 +78,7 @@ class ActionBar extends Component {
               <Icon
                 tipText={'Edit Story'}
                 tipLocation="top-left"
-                icon="write"
+                icon="edit"
                 color={'warn.default'}
                 subtle={true}
               />
