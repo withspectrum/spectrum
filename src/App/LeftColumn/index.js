@@ -237,12 +237,15 @@ class NavigationMaster extends Component {
 
         <Footer>
           <FooterP onClick={this.showStoriesNav}>
-            <MetaLink to="/~support">Support</MetaLink>&nbsp;·&nbsp;
-            <MetaLink to="/~hugs-n-bugs">Report Bugs</MetaLink>&nbsp;·&nbsp;
+            <MetaLink to="/spectrum/~support">Support</MetaLink>&nbsp;·&nbsp;
+            <MetaLink to="/spectrum/~hugs-n-bugs">Report Bugs</MetaLink>
+            &nbsp;·&nbsp;
             <MetaAnchor href="mailto:hi@spectrum.chat">Contact</MetaAnchor>
           </FooterP>
           <FooterP onClick={this.showStoriesNav}>
-            <MetaLink to="/~feature-requests">Feature Requests</MetaLink>
+            <MetaLink to="/spectrum/~feature-requests">
+              Feature Requests
+            </MetaLink>
             &nbsp;·&nbsp;
             <MetaAnchor onClick={this.signOut}>Sign Out</MetaAnchor>
           </FooterP>
