@@ -122,11 +122,11 @@ class RightColumn extends Component {
     } = this.props;
     let story = this.getActiveStory();
 
-    let role, creator, locked, currentFrequency, returnUrl;
+    let role, creator, locked, storyFrequency, returnUrl;
     if (story !== undefined) {
       if (story.deleted) {
-        // a user has landed on an old url, boot them back to the story's frequency or everything
-        history.push(`/${activeCommunity || 'everything'}`);
+        // a user has landed on an old url, boot them back to the story's community or everything
+        history.push(`/${`${activeCommunity}/${active}` || 'everything'}`);
         story = null;
       }
 
@@ -134,19 +134,22 @@ class RightColumn extends Component {
       role = getStoryPermission(story, user, frequencies);
       locked = story && story.locked ? story.locked : false;
 
-      currentFrequency = story &&
+      storyFrequency = story &&
         getCurrentFrequency(story.frequencyId, frequencies);
 
       returnUrl = activeCommunity === 'everything'
         ? 'everything'
-        : currentFrequency && `${activeCommunity}/~${currentFrequency.slug}`;
+        : storyFrequency && `${activeCommunity}/~${storyFrequency.slug}`;
 
       returnUrl = active === 'explore'
         ? 'explore'
-        : currentFrequency && `${activeCommunity}/~${currentFrequency.slug}`;
+        : storyFrequency && `${activeCommunity}/~${storyFrequency.slug}`;
     }
 
     if (story && !composer.isOpen) {
+      const storyHref = storyFrequency
+        ? `/${activeCommunity}/~${storyFrequency.slug}/${story.id}`
+        : `/everything/${story.id}`;
       return (
         <ViewContainer>
           <Link to={`/${returnUrl}`}>
@@ -160,12 +163,13 @@ class RightColumn extends Component {
             locked={story.locked}
             onScroll={this.onScroll}
           >
-            <Story story={story} frequency={currentFrequency} active={active} />
+            <Story story={story} frequency={storyFrequency} active={active} />
             <ActionBar
               locked={locked}
               moderator={role}
               creator={creator}
               story={story}
+              shareUrl={`https://spectrum.chat${storyHref}`}
             />
             <Chat
               atBottom={this.state.atBottom}
