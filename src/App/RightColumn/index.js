@@ -128,11 +128,9 @@ class RightColumn extends Component {
       returnUrl = active === 'everything'
         ? 'everything'
         : currentFrequency && currentFrequency.slug;
-
-      returnUrl = active === 'explore'
-        ? 'explore'
-        : currentFrequency && currentFrequency.slug;
     }
+
+    console.log('active: ', active);
 
     if (story && !composer.isOpen) {
       return (
@@ -195,7 +193,7 @@ class RightColumn extends Component {
     } else if (this.props.frequencies.active === 'explore') {
       return (
         <ViewContainer>
-          <Link to={`/~${returnUrl}`}>
+          <Link to={`/~everything`}>
             <BackArrow onClick={this.clearActiveStory}>
               <Icon icon="back" />
             </BackArrow>
