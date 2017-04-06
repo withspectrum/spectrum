@@ -140,8 +140,6 @@ class RightColumn extends Component {
         : currentFrequency && `${activeCommunity}/~${currentFrequency.slug}`;
     }
 
-    console.log('active: ', active);
-
     if (story && !composer.isOpen) {
       return (
         <ViewContainer>
