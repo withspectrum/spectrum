@@ -92,7 +92,13 @@ class RightColumn extends Component {
 
   subscribeFrequency = () => {
     this.props.dispatch(
-      subscribeFrequency(this.props.frequencies.active, false),
+      subscribeFrequency(
+        {
+          frequencySlug: this.props.frequencies.active,
+          communitySlug: this.props.activeCommunity,
+        },
+        false,
+      ),
     );
   };
 

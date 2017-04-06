@@ -159,38 +159,33 @@ export const updateFrequency = data => {
 /**
  * Add a user to a frequency
  *
- * Returns a promise that resolves either with the frequency data or rejects with an error
+ * Returns a promise that resolves with the frequency and the community data as an array
  */
-export const addUserToFrequency = (userId, slug) => {
+export const addUserToFrequency = (userId, data) => {
+  const freqData = {
+    ...data,
+    id: data.frequencyId,
+    slug: data.frequencySlug,
+  };
+
   const db = database();
-  return db
-    .ref(`/frequencies`)
-    .orderByChild('slug')
-    .equalTo(slug)
-    .once('value')
-    .then(snapshot => {
-      const data = snapshot.val();
-      // { '-Kyasfde123': { ...frequencyData } } -> { ...frequencyData }
-      return data[Object.keys(data)[0]];
-    })
-    .then(data => db.ref().update({
-      [`frequencies/${data.id}/users/${userId}`]: {
+  return getFrequency(freqData)
+    .then(frequency => db.ref().update({
+      [`frequencies/${frequency.id}/users/${userId}`]: {
         permission: 'subscriber',
         joined: database.ServerValue.TIMESTAMP,
       },
-      [`users/${userId}/frequencies/${data.id}`]: {
-        id: data.id,
+      [`users/${userId}/frequencies/${frequency.id}`]: {
+        id: frequency.id,
         permission: 'subscriber',
         joined: database.ServerValue.TIMESTAMP,
       },
     }))
     .then(() =>
-      db.ref(`/frequencies`).orderByChild('slug').equalTo(slug).once('value'))
-    .then(snapshot => {
-      const data = snapshot.val();
-      // { '-Kyasfde123': { ...frequencyData } } -> { ...frequencyData }
-      return data[Object.keys(data)[0]];
-    });
+      Promise.all([
+        getFrequency(freqData),
+        getCommunity({ id: data.communityId, slug: data.communitySlug }),
+      ]));
 };
 
 /**

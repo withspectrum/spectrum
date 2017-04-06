@@ -68,7 +68,12 @@ class MiddleColumn extends Component {
   };
 
   subscribeFrequency = () => {
-    this.props.dispatch(subscribeFrequency(this.props.activeFrequency));
+    this.props.dispatch(
+      subscribeFrequency({
+        frequencySlug: this.props.activeFrequency,
+        communitySlug: this.props.communities.active,
+      }),
+    );
   };
 
   editFrequency = () => {

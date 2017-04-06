@@ -66,12 +66,17 @@ export default function root(state = initialState, action) {
         active: 'hugs-n-bugs',
       });
     }
-    case 'SET_FREQUENCIES':
+    case 'SET_FREQUENCIES': {
+      const frequencies = state.frequencies
+        .filter(frequency =>
+          action.frequencies.every(freq => freq.id !== frequency.id))
+        .concat(action.frequencies);
       return Object.assign({}, state, {
-        frequencies: action.frequencies,
-        byCommunity: groupFrequencies(action.frequencies),
+        frequencies: frequencies,
+        byCommunity: groupFrequencies(frequencies),
         loaded: true,
       });
+    }
     case 'SET_ACTIVE_FREQUENCY':
       return Object.assign({}, state, {
         active: action.frequency,

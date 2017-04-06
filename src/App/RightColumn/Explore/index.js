@@ -98,19 +98,16 @@ class Explore extends Component {
     this.props.dispatch(unsubscribeFrequency(this.props.activeFrequency));
   };
 
-  subscribeFrequency = e => {
-    e.preventDefault();
-    this.props.dispatch(subscribeFrequency(e.target.id, false));
-  };
-
-  handleMouseDown = e => {
-    if (e.target.id) {
-      this.subscribeFrequency(e.target.id);
-    }
-  };
-
-  handleMouseUp = e => {
-    // if (e.target.id) { this.setState({scrollPos: left - e.pageX + x,}); }
+  subscribeFrequency = (frequencyId, communityId) => {
+    this.props.dispatch(
+      subscribeFrequency(
+        {
+          frequencyId,
+          communityId,
+        },
+        false,
+      ),
+    );
   };
 
   componentDidMount = () => {
@@ -202,10 +199,7 @@ class Explore extends Component {
             <SectionSubtitle>
               The 30 most-popular pre-launch frequencies
             </SectionSubtitle>
-            <Row
-              onMouseDown={this.handleMouseDown}
-              onMouseUp={this.handleMouseUp}
-            >
+            <Row>
               {this.state.allFrequencies &&
                 this.state.allFrequencies.map((freq, i) => {
                   return (
@@ -235,7 +229,11 @@ class Explore extends Component {
                         : <ButtonContainer>
                             <ItemButton
                               id={freq.slug}
-                              onClick={this.subscribeFrequency}
+                              onClick={() =>
+                                this.subscribeFrequency(
+                                  freq.id,
+                                  freq.communityId,
+                                )}
                             >
                               Follow
                             </ItemButton>
@@ -282,7 +280,11 @@ class Explore extends Component {
                         : <ButtonContainer>
                             <ItemButton
                               id={freq.slug}
-                              onClick={this.subscribeFrequency}
+                              onClick={() =>
+                                this.subscribeFrequency(
+                                  freq.id,
+                                  freq.communityId,
+                                )}
                             >
                               Follow
                             </ItemButton>
@@ -329,7 +331,11 @@ class Explore extends Component {
                         : <ButtonContainer>
                             <ItemButton
                               id={freq.slug}
-                              onClick={this.subscribeFrequency}
+                              onClick={() =>
+                                this.subscribeFrequency(
+                                  freq.id,
+                                  freq.communityId,
+                                )}
                             >
                               Follow
                             </ItemButton>
@@ -376,7 +382,11 @@ class Explore extends Component {
                         : <ButtonContainer>
                             <ItemButton
                               id={freq.slug}
-                              onClick={this.subscribeFrequency}
+                              onClick={() =>
+                                this.subscribeFrequency(
+                                  freq.id,
+                                  freq.communityId,
+                                )}
                             >
                               Follow
                             </ItemButton>
@@ -423,7 +433,11 @@ class Explore extends Component {
                         : <ButtonContainer>
                             <ItemButton
                               id={freq.slug}
-                              onClick={this.subscribeFrequency}
+                              onClick={() =>
+                                this.subscribeFrequency(
+                                  freq.id,
+                                  freq.communityId,
+                                )}
                             >
                               Follow
                             </ItemButton>
@@ -470,7 +484,11 @@ class Explore extends Component {
                         : <ButtonContainer>
                             <ItemButton
                               id={freq.slug}
-                              onClick={this.subscribeFrequency}
+                              onClick={() =>
+                                this.subscribeFrequency(
+                                  freq.id,
+                                  freq.communityId,
+                                )}
                             >
                               Follow
                             </ItemButton>

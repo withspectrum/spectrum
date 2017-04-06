@@ -1,3 +1,4 @@
+// @flow
 import history from '../helpers/history';
 import { getCurrentFrequency } from '../helpers/frequencies';
 import { flattenArray, arrayToHash } from '../helpers/utils';
@@ -142,28 +143,43 @@ export const deleteFrequency = id => (dispatch, getState) => {
     });
 };
 
-export const subscribeFrequency = (slug, redirect) => (dispatch, getState) => {
-  const { user: { uid } } = getState();
-  dispatch({ type: 'LOADING' });
-
-  addUserToFrequency(uid, slug)
-    .then(frequency => {
-      track('frequency', 'subscribed', null);
-
-      if (redirect !== false) {
-        history.push(`/~${frequency.slug || frequency.id}`);
-      }
-
-      dispatch({
-        type: 'SUBSCRIBE_FREQUENCY',
-        uid,
-        frequency,
-      });
-    })
-    .catch(err => {
-      dispatch(throwError(err, { stopLoading: true }));
-    });
+type FrequencyData = {
+  frequencyId?: string,
+  communityId?: string,
+  frequencySlug?: string,
+  communitySlug?: string,
 };
+
+type SubscribingOptions = {
+  redirect: boolean,
+};
+
+export const subscribeFrequency = (
+  data: FrequencyData,
+  redirect: boolean = true,
+) =>
+  (dispatch: Function, getState: Function) => {
+    const { user: { uid } } = getState();
+    dispatch({ type: 'LOADING' });
+
+    addUserToFrequency(uid, data)
+      .then(([frequency, community]) => {
+        track('frequency', 'subscribed', null);
+
+        if (redirect) {
+          history.push(`/${community.slug}/~${frequency.slug}`);
+        }
+
+        dispatch({
+          type: 'SUBSCRIBE_FREQUENCY',
+          uid,
+          frequency,
+        });
+      })
+      .catch(err => {
+        dispatch(throwError(err, { stopLoading: true }));
+      });
+  };
 
 export const unsubscribeFrequency = frequency => (dispatch, getState) => {
   const { user: { uid }, frequencies } = getState();
