@@ -181,18 +181,21 @@ export const subscribeFrequency = (
       });
   };
 
-export const unsubscribeFrequency = frequency => (dispatch, getState) => {
+export const unsubscribeFrequency = (frequencySlug: string) => (
+  dispatch: Function,
+  getState: Function,
+) => {
   const { user: { uid }, frequencies } = getState();
 
   // we'll use this key to update the user record and to find the correct frequency record to update
-  const id = getCurrentFrequency(frequency, frequencies.frequencies).id;
+  const id = getCurrentFrequency(frequencySlug, frequencies.frequencies).id;
 
   dispatch({ type: 'LOADING' });
 
   removeUserFromFrequency(uid, id)
-    .then(() => {
+    .then(([frequency, community]) => {
       track('frequency', 'unsubscribed', null);
-      history.push(`/~${frequency}`);
+      history.push(`/${community.slug}/~${frequency.slug}`);
 
       dispatch({
         type: 'UNSUBSCRIBE_FREQUENCY',

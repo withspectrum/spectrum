@@ -195,10 +195,14 @@ export const removeUserFromFrequency = (userId, freqId) => {
   const db = database();
 
   // Remove a user from a frequency
-  return db.ref().update({
-    [`/frequencies/${freqId}/users/${userId}`]: null,
-    [`/users/${userId}/frequencies/${freqId}`]: null,
-  });
+  return db
+    .ref()
+    .update({
+      [`/frequencies/${freqId}/users/${userId}`]: null,
+      [`/users/${userId}/frequencies/${freqId}`]: null,
+    })
+    .then(() => getFrequency({ id: freqId }))
+    .then(freq => Promise.all([freq, getCommunity({ id: freq.communityId })]));
 };
 
 export const checkUniqueFrequencyName = name => {
