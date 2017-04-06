@@ -130,7 +130,7 @@ body {
 .markdown p {
   color: inherit;
   font-size: 16px;
-  line-height: 24px;
+  line-height: 1.5;
   margin-top: 16px;
   font-weight: 400;
 }
@@ -149,18 +149,19 @@ body {
 .markdown li {
   color: inherit;
   font-size: 16px;
-  line-height: 28px;
+  margin-bottom: 4px;
+  line-height: 1.5;
   font-weight: 400;
 }
 
 .markdown blockquote {
-  color: inherit;
-  border-left: 4px solid currentColor;
-  padding: 4px 8px;
-  font-size: 20px;
+  color: #747E8D;
+  border-left: 4px solid #747E8D;
+  padding: 4px 8px 4px 16px;
+  font-size: 24px;
   font-weight: 300;
   font-style: italic;
-  line-height: 36px;
+  line-height: 1.4;
   margin: 16px 0;
 }
 
