@@ -86,9 +86,13 @@ export const saveEditStory = ({ title, description, metadata }) => (
         type: 'STOP_LOADING',
       });
 
-      history.push(`/~${state.frequencies.active}/${storyKey}`);
-
-      dispatch(setActiveStory(storyKey));
+      if (state.communities.active === 'everything') {
+        history.push(`/${state.communities.active}/${storyKey}`);
+      } else {
+        history.push(
+          `/${state.communities.active}/~${state.frequencies.active}/${storyKey}`,
+        );
+      }
     })
     .catch(err => {
       dispatch({
