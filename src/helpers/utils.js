@@ -46,7 +46,7 @@ export const convertTimestampToDate = timestamp => {
   let monthIndex = date.getMonth();
   let month = monthNames[monthIndex];
   let year = date.getFullYear();
-  let hours = date.getHours();
+  let hours = date.getHours() || 0;
   let cleanHours;
   if (hours === 0) {
     cleanHours = 12; // if timestamp is between midnight and 1am, show 12:XX am
