@@ -28,9 +28,9 @@ export const linkFreqsInMd = text => {
 export const groupFrequencies = frequencies => {
   const grouped = {};
   frequencies.forEach(frequency => {
-    const { community } = frequency;
-    if (!grouped[community]) grouped[community] = [];
-    grouped[community].push(frequency);
+    const { communityId } = frequency;
+    if (!grouped[communityId]) grouped[communityId] = [];
+    grouped[communityId].push(frequency);
   });
   return grouped;
 };

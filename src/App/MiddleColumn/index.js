@@ -150,7 +150,7 @@ class MiddleColumn extends Component {
       frequencies,
     );
     const community = freq &&
-      communities.find(community => community.id === freq.community);
+      communities.find(community => community.id === freq.communityId);
     const linkPrefix = isEverything
       ? `/everything`
       : `/${community.slug}/~${activeFrequency}`;

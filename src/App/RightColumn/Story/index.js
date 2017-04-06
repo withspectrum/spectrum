@@ -54,7 +54,7 @@ class Story extends Component {
     const timestamp = timeDifference(Date.now(), story.timestamp);
 
     const community = frequency &&
-      communities.find(community => community.id === frequency.community);
+      communities.find(community => community.id === frequency.communityId);
 
     const editDate = story.edited
       ? timeDifference(Date.now(), story.edited)
