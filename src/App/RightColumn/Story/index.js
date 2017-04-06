@@ -51,14 +51,6 @@ class Story extends Component {
     track('link preview', 'clicked', url);
   };
 
-  // const getCuratedFrequencies = () => Promise.all(
-  //   curatedFrequencyKeys.map(freq => {
-  //     return getFrequency({ slug: freq }).then(freq => {
-  //       return freq;
-  //     });
-  //   }),
-  // );
-
   render() {
     let { story, frequency } = this.props;
     const timestamp = timeDifference(Date.now(), story.timestamp);
