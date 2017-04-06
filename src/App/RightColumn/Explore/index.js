@@ -33,6 +33,57 @@ import {
   Constellations,
 } from './style';
 
+const CURATED_FREQUENCIES = [
+  { slug: 'tech-tea', communitySlug: 'spectrum' },
+  { slug: 'journal', communitySlug: 'spectrum' },
+  { slug: 'ooohours', communitySlug: 'spectrum' },
+  { slug: 'show-n-tell', communitySlug: 'spectrum' },
+  { slug: 'tools', communitySlug: 'spectrum' },
+];
+
+const SUPPORT_FREQUENCIES = [
+  { slug: 'hugs-n-bugs', communitySlug: 'spectrum' },
+  { slug: 'support', communitySlug: 'spectrum' },
+  { slug: 'spectrum', communitySlug: 'spectrum' },
+];
+
+const DEVELOPER_FREQUENCIES = [
+  { slug: 'programming', communitySlug: 'spectrum' },
+  { slug: 'react', communitySlug: 'spectrum' },
+  { slug: 'android', communitySlug: 'spectrum' },
+  { slug: 'styled-components', communitySlug: 'spectrum' },
+  { slug: 'lboc', communitySlug: 'spectrum' },
+  { slug: 'developer-tea', communitySlug: 'specfm' },
+  { slug: 'does-not-compute', communitySlug: 'specfm' },
+  { slug: 'swift-unwrapped', communitySlug: 'specfm' },
+  { slug: 'front-end', communitySlug: 'spectrum' },
+];
+
+const DESIGNER_FREQUENCIES = [
+  { slug: 'design', communitySlug: 'spectrum' },
+  { slug: 'design-details', communitySlug: 'specfm' },
+  { slug: 'layout', communitySlug: 'spectrum' },
+  { slug: 'breadtime', communitySlug: 'specfm' },
+  { slug: 'design-inspiration', communitySlug: 'spectrum' },
+  { slug: 'design-resources', communitySlug: 'spectrum' },
+  { slug: 'figma', communitySlug: 'spectrum' },
+  { slug: 'framer', communitySlug: 'spectrum' },
+  { slug: 'vr', communitySlug: 'spectrum' },
+  { slug: 'design-systems', communitySlug: 'spectrum' },
+  { slug: 'typography', communitySlug: 'spectrum' },
+  { slug: 'inspect', communitySlug: 'spectrum' },
+];
+
+const AFTER_HOUR_FREQUENCIES = [
+  { slug: 'gaming', communitySlug: 'spectrum' },
+  { slug: 'music', communitySlug: 'spectrum' },
+  { slug: 'coffee', communitySlug: 'spectrum' },
+  { slug: 'bbq', communitySlug: 'spectrum' },
+  { slug: 'pokemon', communitySlug: 'spectrum' },
+  { slug: 'star-wars', communitySlug: 'spectrum' },
+  { slug: 'travel', communitySlug: 'spectrum' },
+];
+
 class Explore extends Component {
   state = {
     allFrequencies: null,
@@ -79,122 +130,55 @@ class Explore extends Component {
       });
     });
 
-    const curatedFrequencyKeys = [
-      'tech-tea',
-      'journal',
-      'ooohours',
-      'show-n-tell',
-      'tools',
-    ];
-
-    const getCuratedFrequencies = () => Promise.all(
-      curatedFrequencyKeys.map(freq => {
-        return getFrequency({ slug: freq }).then(freq => {
-          return freq;
+    Promise.all(CURATED_FREQUENCIES.map(getFrequency))
+      .then(data => {
+        this.setState({
+          curatedFrequencies: data.filter(freq => freq),
         });
-      }),
-    );
-
-    getCuratedFrequencies().then(data => {
-      this.setState({
-        curatedFrequencies: data,
+      })
+      .catch(err => {
+        console.log(err);
       });
-    });
 
-    const supportFreqList = ['hugs-n-bugs', 'support', 'spectrum'];
-
-    const getSupportFrequencies = () => Promise.all(
-      supportFreqList.map(freq => {
-        return getFrequency({ slug: freq }).then(freq => {
-          return freq;
+    Promise.all(SUPPORT_FREQUENCIES.map(getFrequency))
+      .then(data => {
+        this.setState({
+          supportFrequencies: data.filter(freq => freq),
         });
-      }),
-    );
-
-    getSupportFrequencies().then(data => {
-      this.setState({
-        supportFrequencies: data,
+      })
+      .catch(err => {
+        console.log(err);
       });
-    });
 
-    const developerFreqList = [
-      'programming',
-      'react',
-      'android',
-      'styled-components',
-      'lboc',
-      'developer-tea',
-      'does-not-compute',
-      'swift-unwrapped',
-      'front-end',
-    ];
-
-    const getDeveloperFrequencies = () => Promise.all(
-      developerFreqList.map(freq => {
-        return getFrequency({ slug: freq }).then(freq => {
-          return freq;
+    Promise.all(DEVELOPER_FREQUENCIES.map(getFrequency))
+      .then(data => {
+        this.setState({
+          developerFrequencies: data.filter(freq => freq),
         });
-      }),
-    );
-
-    getDeveloperFrequencies().then(data => {
-      this.setState({
-        developerFrequencies: data,
+      })
+      .catch(err => {
+        console.log(err);
       });
-    });
 
-    const designerFreqList = [
-      'design',
-      'design-details',
-      'layout',
-      'breadtime',
-      'design-inspiration',
-      'design-resources',
-      'figma',
-      'framer',
-      'vr',
-      'design-systems',
-      'typography',
-      'inspect',
-    ];
-
-    const getDesignerFrequencies = () => Promise.all(
-      designerFreqList.map(freq => {
-        return getFrequency({ slug: freq }).then(freq => {
-          return freq;
+    Promise.all(DESIGNER_FREQUENCIES.map(getFrequency))
+      .then(data => {
+        this.setState({
+          designerFrequencies: data.filter(freq => freq),
         });
-      }),
-    );
-
-    getDesignerFrequencies().then(data => {
-      this.setState({
-        designerFrequencies: data,
+      })
+      .catch(err => {
+        console.log(err);
       });
-    });
 
-    const afterHoursFreqList = [
-      'gaming',
-      'music',
-      'coffee',
-      'bbq',
-      'pokemon',
-      'star-wars',
-      'travel',
-    ];
-
-    const getAfterHoursFrequencies = () => Promise.all(
-      afterHoursFreqList.map(freq => {
-        return getFrequency({ slug: freq }).then(freq => {
-          return freq;
+    Promise.all(AFTER_HOUR_FREQUENCIES.map(getFrequency))
+      .then(data => {
+        this.setState({
+          afterHoursFrequencies: data.filter(freq => freq),
         });
-      }),
-    );
-
-    getAfterHoursFrequencies().then(data => {
-      this.setState({
-        afterHoursFrequencies: data,
+      })
+      .catch(err => {
+        console.log(err);
       });
-    });
   };
 
   render() {
