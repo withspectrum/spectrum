@@ -21,7 +21,7 @@ const getFrequencyBySlug = (slug, communityId) => {
 
   return db
     .ref(`frequencies`)
-    .orderByChild('communityId')
+    .orderByChild('community')
     .equalTo(communityId)
     .once('value')
     .then(snapshot => {

@@ -108,7 +108,7 @@ class NuxJoinCard extends Component {
             {this.state.allFrequencies &&
               this.state.allFrequencies.map((freq, i) => {
                 const community = communities.find(
-                  community => community.id === freq.communityId,
+                  community => community.id === freq.community,
                 );
 
                 return (

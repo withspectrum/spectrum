@@ -28,11 +28,11 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   const { communities: { active } } = getState();
 
   if (!active || active === 'everything' || active === 'explore') return;
-  
+
   track('frequency', 'viewed', null);
   // Get the frequency
   getFrequency({ slug: lowerCaseFrequency, communitySlug: active })
-    .then(data => Promise.all([data, getCommunity({ id: data.communityId })]))
+    .then(data => Promise.all([data, getCommunity({ id: data.community })]))
     .then(([data, community]) => {
       dispatch({
         type: 'ADD_COMMUNITY',

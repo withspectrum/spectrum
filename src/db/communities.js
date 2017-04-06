@@ -24,6 +24,7 @@ const getCommunityBySlug = slug => {
 };
 
 export const getCommunity = ({ id, slug }) => {
+  console.log('here ', id, slug);
   if (id) return getCommunityById(id);
   if (slug) return getCommunityBySlug(slug);
 

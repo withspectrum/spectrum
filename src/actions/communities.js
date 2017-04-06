@@ -11,6 +11,7 @@ export const setActiveCommunity = slug => (dispatch, getState) => {
   if (
     lowerCaseSlug === 'notifications' ||
     lowerCaseSlug === 'everything' ||
+    lowerCaseSlug === 'explore' ||
     communities.find(community => community.slug === lowerCaseSlug)
   ) {
     dispatch({
@@ -40,6 +41,14 @@ export const setActiveCommunity = slug => (dispatch, getState) => {
     });
     return;
   }
+
+  // Notifications
+  if (lowerCaseSlug === 'explore') {
+    if (!uid) return;
+    track('explore', 'viewed', null);
+    return;
+  }
+
   // Everything
   if (lowerCaseSlug === 'everything') {
     // If there's no UID yet we might need to show the homepage, so don't do anything
