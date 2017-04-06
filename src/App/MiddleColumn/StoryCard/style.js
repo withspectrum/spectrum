@@ -1,16 +1,14 @@
 import styled from 'styled-components';
-import { Gradient } from '../../../shared/Globals';
+import { Gradient, H4, Transition, Shadow } from '../../../shared/Globals';
 
 export const StoryBody = styled.div`
 	display: inline-block;
-	font-size: 16px;
-	font-weight: 600;
 	flex: 0 0 auto;
 	max-width: 100%;
 	word-wrap: break-word;
-	margin-bottom: 8px;
-	padding: 16px;
-	padding-bottom: 8px;
+	padding: 24px;
+	padding-top: 16px;
+	padding-bottom: 16px;
 `;
 
 export const StoryFooter = styled.div`
@@ -23,10 +21,26 @@ export const StoryFooter = styled.div`
 	border-radius: 0 0 4px 4px;
 `;
 
+export const FreqTag = styled(H4)`
+	font-weight: 900;
+	display: inline-block;
+	align-self: flex-start;
+	width: auto;
+	line-height: 1;
+	color: ${props => props.theme.text.placeholder};
+	margin-bottom: 8px;
+	transition: ${Transition.hover.off};
+
+	&:hover {
+		color: ${props => props.theme.brand.alt};
+		transition: ${Transition.hover.on};
+	}
+`;
+
 export const Title = styled.p`
 	font-size: 20px;
 	font-weight: 700;
-	line-height: 24px;
+	line-height: 1.2;
 	color: ${({ theme }) => theme.text.default};
 `;
 
@@ -133,12 +147,12 @@ export const Photo = styled.img`
 	height: 100%;
 	max-width: 100%;
 	max-height: 100%;
-	transition: all 0.2s ease-in-out;
+	transition: ${Transition.hover.off};
 
 	&:hover {
-		transition: all 0.2s ease-in-out;
+		transition: ${Transition.hover.on};
 		transform: translateY(-2px);
-		box-shadow: 0 2px 4px rgba(0,0,0,0.16);
+		box-shadow: ${Shadow.mid};
 	}
 `;
 
@@ -165,11 +179,11 @@ export const PhotoPlaceholder = styled.div`
 `;
 
 export const HeadsContainer = styled.div`
-	background: #fff;
-	text-align: center
+	background: ${props => props.theme.bg.default};
+	text-align: center;
 	display: flex;
 	justify-content: flex-start;
-	padding: 0 8px;
+	margin-top: 12px;
 	border-radius: 0 0 4px 4px;
 `;
 
@@ -183,40 +197,56 @@ export const JoinTheConvo = styled.span`
 
 export const StatusBar = styled.div`
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	justify-content: space-between;
+	align-items: center;
 	position: relative;
-	padding: 6px 16px;
-	border-radius: 4px 4px 0 0;
-	border-bottom: 1px solid ${props =>
-  props.status === 'active' ? props.theme.brand.default : '#f6f7f8'};
-	${props => props.status === 'active'
-  ? `background: ${props.theme.brand.default};
-		background-image: radial-gradient(ellipse farthest-corner at top left, ${props.theme.brand.alt} 0%, ${props.theme.brand.default} 100%);
-		`
-  : `background: #fff;`}
+	padding: 16px 16px 16px 24px;
+	border-radius: 16px 16px 0 0;
+	border-bottom: ${props =>
+  props.status === 'active' || props.status === 'new'
+    ? '0px solid transparent'
+    : `2px solid ${props.theme.bg.wash}`};
+	background-color: ${props =>
+  props.status === 'active'
+    ? props.theme.brand.default
+    : props.status === 'new'
+        ? props.theme.success.alt
+        : props.status === 'unread'
+            ? props.theme.warn.alt
+            : props.theme.bg.default};
+	background-image: ${props =>
+  props.status === 'active'
+    ? Gradient(props.theme.brand.alt, props.theme.brand.default)
+    : props.status === 'new'
+        ? Gradient(props.theme.success.alt, props.theme.success.default)
+        : props.status === 'unread'
+            ? Gradient(props.theme.warn.alt, props.theme.warn.default)
+            : 'none'};
+
+	&:after {
+		content: '';
+    z-index: 1000;
+    border: 8px solid transparent;
+		position: absolute;
+		left: calc(100% - 2px);
+		top: calc(50% - 7px);
+		border-radius: 2px;
+		border-right-width: 0;
+		border-left-color: ${props =>
+  props.status === 'active' ? props.theme.brand.default : 'transparent'};
+	}
 `;
+
 export const StatusText = styled.p`
-	font-size: 12px;
-	font-weight: 400;
-	color: #909aa7;
-	line-height: 1.2;
-	margin-top: 8px;
-
-	${props => props.status === 'active' ? `color: #fff; font-weight: 600;` : ''}
-
-	${props => props.status === 'new'
-  ? `color: ${props.theme.warn.default};
-			 font-weight: 600;
-			`
-  : ''}
-
-	${props => props.status === 'unread'
-  ? `color: #00C384;
-			 font-weight: 600;
-			`
-  : ''}
+	font-size: 14px;
+	font-weight: ${props => props.status !== 'default' ? '900' : '700'};
+	color: ${props =>
+  props.status !== 'default' ? props.theme.text.reverse : props.theme.text.alt};
+	line-height: 1;
+	margin-top: 2px;
 `;
+
 export const Dot = styled.span`
 	position: absolute;
 	right: 10px;
@@ -241,11 +271,10 @@ export const Dot = styled.span`
 `;
 
 export const Name = styled(StatusText)`
-	font-size: 13px;
-	font-weight: ${props => props.status === 'active' ? '700' : '500'};
-	margin-top: 4px;
-	margin-bottom: 8px;
-	color: ${props => props.status === 'active' ? '#fff' : props.theme.text.alt};
+	font-size: 12px;
+	font-weight: 600;
+	margin-top: 8px;
+	color: ${props => props.theme.text.alt};
 
 	a {
 		text-overflow: ellipsis;
@@ -253,8 +282,6 @@ export const Name = styled(StatusText)`
 	}
 
 	a:hover {
-		color: ${props =>
-  props.status === 'active' ? '#fff' : props.theme.brand.default};
-		text-decoration: ${props => props.status === 'active' ? 'underline' : 'none'};
+		color: ${props => props.theme.brand.default};
 	}
 `;
