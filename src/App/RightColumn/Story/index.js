@@ -59,6 +59,9 @@ class Story extends Component {
   render() {
     let { story, frequency } = this.props;
     const timestamp = timeDifference(Date.now(), story.timestamp);
+    const editDate = story.edited
+      ? timeDifference(Date.now(), story.edited)
+      : '';
 
     return (
       <StoryContainer>
@@ -68,7 +71,11 @@ class Story extends Component {
               <Byline>
                 <b id={story.creator.uid} onClick={this.openUserProfileModal}>
                   {story.creator.displayName}
-                </b> · Posted {timestamp}
+                </b>
+                {' '}· Posted{' '}
+                {timestamp}
+                {' '}
+                {story.edited && <span> (edited {editDate})</span>}
               </Byline>
             : <Byline>
                 <b id={story.creator.uid} onClick={this.openUserProfileModal}>
@@ -78,6 +85,7 @@ class Story extends Component {
                 <Link to={`/~${frequency.slug}`}>~{frequency.slug}</Link>
                 {' '}
                 {timestamp}
+                {story.edited && <span> (edited {editDate})</span>}
               </Byline>}
 
           <StoryTitle>{story.content.title}</StoryTitle>

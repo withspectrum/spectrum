@@ -9,8 +9,6 @@ import {
   Reaction,
   Count,
   Byline,
-  AdminBadge,
-  ProBadge,
   EmojiBubble,
   Messages,
   Avatar,
@@ -30,6 +28,7 @@ import { openGallery } from '../../../actions/gallery';
 import { addReaction, removeReaction } from '../../../actions/messages';
 import { openModal } from '../../../actions/modals';
 import { track } from '../../../EventTracker';
+import Badge from '../../../shared/Badge';
 import Icon from '../../../shared/Icons';
 
 class Chat extends Component {
@@ -101,7 +100,7 @@ class Chat extends Component {
       <ChatContainer>
         {messages.map((group, i) => {
           const itsaMe = group[0].userId === this.props.user.uid;
-          const user = !itsaMe && list[group[0].userId];
+          const user = list[group[0].userId];
           const admins = [
             'VToKcde16dREgDkXcDl3hhcrFN33',
             'gVk5mYwccUOEKiN5vtOouqroGKo1',
@@ -141,22 +140,18 @@ class Chat extends Component {
                   />
                 </HiddenLabel>}
               <Messages>
-                <Byline op={isStoryCreator}>
+                <Byline op={isStoryCreator} me={itsaMe}>
                   <span id={user.uid} onClick={this.openUserProfileModal}>
                     {user && user.displayName}
                   </span>
-                  {!itsaMe &&
-                    isAdmin &&
-                    <AdminBadge op={isStoryCreator}>Admin</AdminBadge>}
-                  {!itsaMe &&
-                    isPro &&
-                    <ProBadge
-                      tipText={'Beta Supporter'}
+                  {isAdmin && <Badge type="admin" />}
+                  {isPro &&
+                    <Badge
+                      type="pro"
+                      tipText="Beta Supporter"
                       tipLocation="top-right"
                       onClick={this.handleProClick}
-                    >
-                      PRO
-                    </ProBadge>}
+                    />}
                 </Byline>
                 {group.map((message, i) => {
                   let reactionUsers = message.reactions

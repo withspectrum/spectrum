@@ -292,33 +292,15 @@ export const Byline = styled.span`
 	display: inline-block;
 	font-size: 11px;
 	line-height: 16px;
-	font-weight: ${props => props.op ? '700' : '500'};
+	font-weight: 700;
 	margin-bottom: 1px;
-	margin-left: 16px;
-	float: ${props => props.me ? `right;` : `left;`}
+	${props => props.me ? 'margin-right: 16px' : 'margin-left: 16px'};
+	text-align: ${props => props.me ? 'right' : 'left'};
+	-webkit-user-select: none; /* Chrome/Safari */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
 	color: ${props => props.op ? props.theme.brand.default : props.theme.text.alt};
 	cursor: pointer;
-`;
-
-export const AdminBadge = styled.span`
-	color: ${({ theme }) => theme.text.reverse};
-	background-color: ${props =>
-  props.op ? props.theme.brand.default : props.theme.text.alt};
-	text-transform: uppercase;
-	padding: 2px 5px 2px 4px;
-	margin-left: 4px;
-	font-size: 9px;
-	font-weight: 800;
-	border-radius: 4px;
-`;
-
-export const ProBadge = styled(AdminBadge)`
-	background: #00C384;
-	padding: 2px 3px 2px 4px;
-	background-image: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%);
-	cursor: pointer;
-	text-transform: none;
-	${props => props.tipText ? Tooltip(props) : ''};
 `;
 
 export const ScrollButton = styled(Button)`

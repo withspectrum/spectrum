@@ -179,7 +179,7 @@ class RightColumn extends Component {
     let story = this.getActiveStory();
 
     let role, creator, locked, currentFrequency, returnUrl;
-    if (story) {
+    if (story !== undefined) {
       if (story.deleted) {
         // a user has landed on an old url, boot them back to the story's frequency or everything
         history.push(`/~${active || 'everything'}`);
@@ -188,16 +188,13 @@ class RightColumn extends Component {
 
       creator = isStoryCreator(story, user);
       role = getStoryPermission(story, user, frequencies);
-      locked = story.locked ? story.locked : false;
+      locked = story && story.locked ? story.locked : false;
 
-      currentFrequency = getCurrentFrequency(story.frequencyId, frequencies);
+      currentFrequency = story &&
+        getCurrentFrequency(story.frequencyId, frequencies);
 
       returnUrl = active === 'everything'
         ? 'everything'
-        : currentFrequency && currentFrequency.slug;
-
-      returnUrl = active === 'explore'
-        ? 'explore'
         : currentFrequency && currentFrequency.slug;
     }
 
@@ -262,6 +259,11 @@ class RightColumn extends Component {
     } else if (this.props.frequencies.active === 'explore') {
       return (
         <ViewContainer>
+          <Link to={`/~everything`}>
+            <BackArrow onClick={this.clearActiveStory}>
+              <Icon icon="back" />
+            </BackArrow>
+          </Link>
           <Explore />
         </ViewContainer>
       );

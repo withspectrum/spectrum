@@ -9,6 +9,7 @@ import {
   listenToStory,
   stopListening,
   getStory,
+  editStory,
 } from '../db/stories';
 import { getUserInfo } from '../db/users';
 import { getMessagesFromLocation, getMessage } from '../db/messages';
@@ -37,6 +38,64 @@ export const initStory = freqId => (dispatch, getState) => {
     })
     .catch(err => {
       dispatch(throwError(err));
+    });
+};
+
+export const initEditStory = story => (dispatch, getState) => {
+  track('story edit', 'inited', null);
+
+  dispatch({
+    type: 'INIT_EDIT_STORY',
+    story,
+  });
+};
+
+export const cancelEditStory = () => (dispatch, getState) => {
+  track('story edit', 'canceled', null);
+
+  dispatch({
+    type: 'CANCEL_EDIT_STORY',
+  });
+};
+
+/**
+ * Edit a published story
+ */
+export const saveEditStory = ({ title, description, metadata }) => (
+  dispatch,
+  getState,
+) => {
+  dispatch({ type: 'LOADING' });
+
+  let state = getState();
+  let storyKey = state.composer.newStoryKey;
+
+  editStory({
+    key: storyKey,
+    content: { title, description: linkFreqsInMd(description) },
+    metadata,
+  })
+    .then(story => {
+      track('story edit', 'saved', null);
+
+      dispatch({
+        type: 'EDIT_STORY',
+        story,
+      });
+
+      dispatch({
+        type: 'STOP_LOADING',
+      });
+
+      history.push(`/~${state.frequencies.active}/${storyKey}`);
+
+      dispatch(setActiveStory(storyKey));
+    })
+    .catch(err => {
+      dispatch({
+        type: 'STOP_LOADING',
+      });
+      console.log(err);
     });
 };
 

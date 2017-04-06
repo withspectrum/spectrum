@@ -77,6 +77,13 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
       });
     return;
   }
+  // Explore
+  if (lowerCaseFrequency === 'explore') {
+    if (!uid) return;
+    track('explore', 'viewed', null);
+    dispatch({ type: 'STOP_LOADING' });
+    return;
+  }
   track('frequency', 'viewed', null);
   // Get the frequency
   getFrequency({ slug: lowerCaseFrequency })
