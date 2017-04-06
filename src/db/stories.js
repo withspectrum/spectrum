@@ -151,6 +151,57 @@ export const createStory = (
   });
 };
 
+export const editStory = (
+  {
+    key,
+    content: { media = '', title = '', description = '' },
+    metadata,
+  },
+) => {
+  const db = database();
+
+  // Fetch story data to merge it with the new data
+  return db.ref(`stories/${key}`).once('value').then(snapshot => {
+    const story = snapshot.val();
+    const editDate = new Date().getTime();
+    return db
+      .ref()
+      .update({
+        [`stories/${key}/edits/${editDate}`]: {
+          content: {
+            title: story.content.title,
+            description: story.content.description,
+          },
+          metadata: story.metadata ? story.metadata : '',
+        },
+      })
+      .then(() => db.ref(`stories/${key}`).once('value'))
+      .then(story => {
+        db.ref().update({
+          [`stories/${key}`]: {
+            ...story.val(),
+            published: true,
+            edited: editDate,
+            content: {
+              title,
+              description,
+            },
+            metadata: metadata ? metadata : null,
+          },
+        });
+      })
+      .then(() => db.ref(`stories/${key}`).once('value'))
+      .then(story => {
+        return story.val();
+      });
+  });
+};
+
+/**
+ * Remove a story
+ *
+ * Returns a promise that's resolved with nothing if the story was deleted successfully
+ */
 type removeStoryProps = { storyId: string, frequencyId: string };
 export const removeStory = ({ storyId, frequencyId }: removeStoryProps) =>
   new Promise(resolve => {

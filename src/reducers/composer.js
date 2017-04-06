@@ -6,22 +6,55 @@ const initialState = {
   mediaList: [],
   metadata: null,
   error: null,
+  editing: false,
 };
 
 export default function root(state = initialState, action) {
   switch (action.type) {
     case 'TOGGLE_COMPOSER_OPEN':
-      return Object.assign({}, state, {
-        isOpen: !state.isOpen,
-      });
+      if (state.editing) {
+        // if the user was editing a post, when the close the composer clear the edit
+        return Object.assign({}, state, {
+          title: '',
+          body: '',
+          newStoryKey: null,
+          isOpen: false,
+          mediaList: [],
+          error: null,
+          metadata: null,
+          editing: false,
+        });
+      } else {
+        // otherwise we preserve the composer content in case the user comes back to it
+        return Object.assign({}, state, {
+          isOpen: !state.isOpen,
+        });
+      }
     case 'CLOSE_COMPOSER':
       return Object.assign({}, state, {
         isOpen: false,
+        editing: false,
       });
     case 'CREATE_DRAFT':
       return Object.assign({}, state, {
         newStoryKey: action.key,
       });
+    case 'INIT_EDIT_STORY':
+      // if the edited story has photos in its metadata, set the mediaList so that they can be removed
+      const mediaList = action.story.metadata && action.story.metadata.photos
+        ? action.story.metadata.photos
+        : [];
+      return Object.assign({}, state, {
+        isOpen: true,
+        title: action.story.content.title,
+        body: action.story.content.description,
+        newStoryKey: action.story.id,
+        metadata: action.story.metadata,
+        mediaList,
+        editing: true,
+      });
+    case 'EDIT_STORY':
+    case 'CANCEL_EDIT_STORY':
     case 'CREATE_STORY':
       return Object.assign({}, state, {
         title: '',
@@ -31,6 +64,7 @@ export default function root(state = initialState, action) {
         mediaList: [],
         error: null,
         metadata: null,
+        editing: false,
       });
     case 'SET_ACTIVE_STORY':
     case 'SET_ACTIVE_FREQUENCY':

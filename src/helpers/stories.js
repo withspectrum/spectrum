@@ -1,5 +1,5 @@
 export const isStoryCreator = (story, user) => {
-  if (!user) {
+  if (!user || !story) {
     return;
   }
 
