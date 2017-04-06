@@ -120,7 +120,7 @@ class RightColumn extends Component {
     if (story !== undefined) {
       if (story.deleted) {
         // a user has landed on an old url, boot them back to the story's frequency or everything
-        history.push(`/~${active || 'everything'}`);
+        history.push(`/${activeCommunity || 'everything'}`);
         story = null;
       }
 
@@ -201,7 +201,7 @@ class RightColumn extends Component {
     } else if (activeCommunity === 'explore') {
       return (
         <ViewContainer>
-          <Link to={`/~everything`}>
+          <Link to={`/everything`}>
             <BackArrow onClick={this.clearActiveStory}>
               <Icon icon="back" />
             </BackArrow>
