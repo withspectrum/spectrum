@@ -7,7 +7,7 @@ import { downgradeUser } from '../../../actions/user';
 import { modalStyles } from '../FrequencyEditModal/style';
 import { Heading, Subheading, Or, Relative } from './style';
 import { ButtonLabel, Spinner, Section } from '../UpgradeModal/style';
-import { Button, TextButton } from '../../Globals';
+import { Button, TextButton, Link } from '../../Globals';
 
 class EditAccountModal extends React.Component {
   state = {
@@ -26,10 +26,6 @@ class EditAccountModal extends React.Component {
 
   openUpgradeModal = () => {
     this.props.dispatch(openModal('UPGRADE_MODAL', this.props.user));
-  };
-
-  emailSupport = () => {
-    location.href = '~support';
   };
 
   render() {
@@ -62,9 +58,9 @@ class EditAccountModal extends React.Component {
                   <Section width={'100%'} key={id}>
                     <Subheading>{name} · ${amount} per month</Subheading>
 
-                    <Button onClick={this.emailSupport} width={'100%'}>
+                    <Link to="/spectrum/~support" width="100%">
                       Questions? Get Support
-                    </Button>
+                    </Link>
 
                     <Or><span>or</span></Or>
 

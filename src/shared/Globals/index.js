@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components';
+import { Link as RouterLink } from 'react-router-dom';
 
 export const Gradient = (g1, g2) => {
   return css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`;
@@ -28,30 +29,38 @@ export const fontStack = css`
 	font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe', sans-serif
 `;
 
-export const Button = styled.button`
+const buttonStyles = css`
   background-color: ${props =>
   props.disabled ? props.theme.inactive : props.theme.brand.default};
   background-image: ${props =>
   props.disabled
     ? 'none'
     : Gradient(props.theme.brand.alt, props.theme.brand.default)};
-	border-radius: 8px;
-	font-size: 14px;
-	font-weight: 600;
-	color: ${({ theme }) => theme.text.reverse};
-	transition: ${Transition.hover.off};
-	padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.text.reverse};
+  transition: ${Transition.hover.off};
+  padding: 12px 16px;
   width: ${props => props.width ? props.width : ''};
   white-space: nowrap;
   word-break: keep-all;
 
-	&:hover {
-		border-radius: ${props => props.disabled ? '8px' : '12px'};
-		opacity: ${props => props.disabled ? '0.5' : '1'};
-		transition: ${Transition.hover.on};
-		cursor: pointer;
+  &:hover {
+    border-radius: ${props => props.disabled ? '8px' : '12px'};
+    opacity: ${props => props.disabled ? '0.5' : '1'};
+    transition: ${Transition.hover.on};
+    cursor: pointer;
     box-shadow: ${props => props.disabled ? 'none' : Shadow.high};
-	}
+  }
+`;
+
+export const Button = styled.button`
+  ${buttonStyles}
+`;
+
+export const Link = styled(RouterLink)`
+  ${buttonStyles}
 `;
 
 export const TextButton = styled(Button)`
