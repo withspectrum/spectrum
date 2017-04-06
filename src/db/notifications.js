@@ -33,7 +33,7 @@ export const createNotifications = (
     .update(updates)
     // Failing to send a notification shouldn't block the UI from updating
     .catch(err => {
-      console.log('Sending notification failed', err);
+      console.log(err);
     });
 };
 
@@ -60,18 +60,13 @@ export const listenToNewNotifications = (userId, cb) => {
             ...notification,
             story,
           });
-        console.log(
-          `Deleting ${userId}/${notification.id} because there is no story for it.`,
-        );
         // If we have an old notification for a deleted story get rid of it
         deleteNotification(userId, notification.id);
       })
       .catch(err => {
-        console.log(
-          `Deleting ${userId}/${notification.id} because there is no story for it.`,
-        );
         // If we have an old notification for a deleted story get rid of it
         deleteNotification(userId, notification.id);
+        console.log(err);
       });
   };
 

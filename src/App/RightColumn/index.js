@@ -16,6 +16,7 @@ import ActionBar from './Story/ActionBar';
 import Chat from './Chat';
 import ChatInput from './ChatInput';
 import Composer from './Composer';
+import Explore from './Explore';
 
 import {
   ViewContainer,
@@ -132,6 +133,10 @@ class RightColumn extends Component {
       returnUrl = activeCommunity === 'everything'
         ? 'everything'
         : currentFrequency && `${activeCommunity}/~${currentFrequency.slug}`;
+
+      returnUrl = active === 'explore'
+        ? 'explore'
+        : currentFrequency && `${activeCommunity}/~${currentFrequency.slug}`;
     }
 
     if (story && !composer.isOpen) {
@@ -190,6 +195,17 @@ class RightColumn extends Component {
       return (
         <ViewContainer>
           <Composer />
+        </ViewContainer>
+      );
+    } else if (this.props.frequencies.active === 'explore') {
+      return (
+        <ViewContainer>
+          <Link to={`/~${returnUrl}`}>
+            <BackArrow onClick={this.clearActiveStory}>
+              <Icon icon="back" />
+            </BackArrow>
+          </Link>
+          <Explore />
         </ViewContainer>
       );
     } else {

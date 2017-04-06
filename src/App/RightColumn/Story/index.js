@@ -52,15 +52,23 @@ class Story extends Component {
   render() {
     const { story, frequency, communities } = this.props;
     const timestamp = timeDifference(Date.now(), story.timestamp);
+
     const community = frequency &&
       communities.find(community => community.id === frequency.communityId);
+    
+    const editDate = story.edited
+      ? timeDifference(Date.now(), story.edited)
+      : '';
 
     return (
       <StoryContainer>
         <Header>
           {!frequency
             ? // this is required to account for async loading of the frequency data if a user hits a url like /~everything/{storyId}
-              <Byline>{story.creator.displayName} · Posted {timestamp}</Byline>
+              <Byline>
+                {story.creator.displayName} · Posted {timestamp}
+                {story.edited && <span> (edited {editDate})</span>}
+              </Byline>
             : <Byline>
                 {story.creator.displayName}
                 {' '}· Posted in{' '}
@@ -69,6 +77,7 @@ class Story extends Component {
                 </Link>
                 {' '}
                 {timestamp}
+                {story.edited && <span> (edited {editDate})</span>}
               </Byline>}
 
           <StoryTitle>{story.content.title}</StoryTitle>

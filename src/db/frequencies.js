@@ -111,8 +111,7 @@ export const saveNewFrequency = ({ uid, data }) => new Promise((
     .then(() => {
       // Simulate the saved frequency for the client-side update
       resolve({ ...frequency, timestamp: Date.now() });
-    })
-    .catch(reject);
+    });
 });
 
 /**
@@ -142,8 +141,7 @@ export const removeFrequency = id => new Promise((resolve, reject) => {
     })
     .then(() => {
       resolve();
-    })
-    .catch(reject);
+    });
 });
 
 /**
@@ -224,25 +222,16 @@ export const checkUniqueFrequencyName = name => {
   });
 };
 
+let top = null;
 export const getFeaturedFrequencies = () => {
-  const db = database();
-
-  return db.ref('/frequencies').once('value').then(snapshot => {
-    let val = snapshot.val();
-    let frequencies = Object.keys(val);
-
-    let top30 = frequencies
-      .sort((a, b) => {
-        let numUsersA = Object.keys(val[a].users).length;
-        let numUsersB = Object.keys(val[b].users).length;
-        return numUsersA < numUsersB ? 1 : -1;
-      })
-      .slice(3, 33);
-
-    let finalArr = top30.map(id => val[id]);
-
-    return {
-      frequencies: finalArr,
-    };
-  });
+  if (top) return Promise.resolve(top);
+  return fetch(
+    'https://us-central1-specfm-spectrum.cloudfunctions.net/topFreqs',
+  )
+    .then(response => response.json())
+    .then(data => {
+      // Cache top frequencies per session to avoid stressing the db
+      top = data;
+      return data;
+    });
 };

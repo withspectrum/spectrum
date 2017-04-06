@@ -3,6 +3,9 @@ import LoadingIndicator from '../shared/loading/global';
 // NOTE (@mxstbr): The /dist here is a bug in a specific version of emoji-regex
 // Can be removed after the next release: https://github.com/mathiasbynens/emoji-regex/pull/12
 import createEmojiRegex from 'emoji-regex';
+import Raven from 'raven-js';
+Raven.config('https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812')
+  .install();
 
 export const hashToArray = hash => {
   let array = [];
@@ -292,7 +295,7 @@ export const truncate = (str, length) => {
 };
 
 export const getLinkPreviewFromUrl = url => fetch(
-  `https://micro-open-graph-xiuqvckswd.now.sh/?url=${url}`,
+  `https://micro-open-graph-phbmtaqieu.now.sh/?url=${url}`,
 ).then(response => {
   return response.json();
 });

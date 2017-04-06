@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import { crashReporter } from './EventTracker';
 import reducers from './reducers';
 
 // this enables the chrome devtools for redux only in development
@@ -15,13 +16,13 @@ export const initStore = initialState => {
     return createStore(
       reducers,
       initialState,
-      composeEnhancers(applyMiddleware(thunkMiddleware)),
+      composeEnhancers(applyMiddleware(thunkMiddleware, crashReporter)),
     );
   } else {
     return createStore(
       reducers,
       {},
-      composeEnhancers(applyMiddleware(thunkMiddleware)),
+      composeEnhancers(applyMiddleware(thunkMiddleware, crashReporter)),
     );
   }
 };

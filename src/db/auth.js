@@ -1,10 +1,12 @@
 import auth from 'firebase/auth';
+import Raven from 'raven-js';
 
 const signIn = provider => {
   return auth().signInWithPopup(provider);
 };
 
 export const signOut = () => {
+  Raven.setUserContext(); // stop tracking uid in sentry
   return auth().signOut();
 };
 

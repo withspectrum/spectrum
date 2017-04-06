@@ -14,6 +14,7 @@ import { getStories, getAllStories } from '../db/stories';
 import { getUserInfo } from '../db/users';
 import { getNotifications } from '../db/notifications';
 import { getCommunity } from '../db/communities';
+import { throwError } from './errors';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
   const lowerCaseFrequency = frequency ? frequency.toLowerCase() : '';
@@ -26,7 +27,8 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
   const { communities: { active } } = getState();
 
-  if (!active || active === 'everything') return;
+  if (!active || active === 'everything' || active === 'explore') return;
+  
   track('frequency', 'viewed', null);
   // Get the frequency
   getFrequency({ slug: lowerCaseFrequency, communitySlug: active })
@@ -82,8 +84,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
       });
     })
     .catch(err => {
-      console.log(err);
-      dispatch({ type: 'STOP_LOADING' });
+      dispatch(throwError(err, { stopLoading: true }));
     });
 };
 
@@ -104,8 +105,7 @@ export const createFrequency = data => (dispatch, getState) => {
     })
     .catch(err => {
       dispatch({ type: 'HIDE_MODAL' });
-      dispatch({ type: 'STOP_LOADING' });
-      console.log(err);
+      dispatch(throwError(err, { stopLoading: true }));
     });
 };
 
@@ -122,8 +122,7 @@ export const editFrequency = data => (dispatch, getState) => {
       });
     })
     .catch(err => {
-      console.log(err);
-      dispatch({ type: 'STOP_LOADING' });
+      dispatch(throwError(err, { stopLoading: true }));
     });
 };
 
@@ -137,8 +136,7 @@ export const deleteFrequency = id => (dispatch, getState) => {
     })
     .catch(err => {
       dispatch({ type: 'HIDE_MODAL' });
-      dispatch({ type: 'STOP_LOADING' });
-      console.log(err);
+      dispatch(throwError(err, { stopLoading: true }));
     });
 };
 
@@ -161,8 +159,7 @@ export const subscribeFrequency = (slug, redirect) => (dispatch, getState) => {
       });
     })
     .catch(err => {
-      dispatch({ type: 'STOP_LOADING' });
-      console.log(err);
+      dispatch(throwError(err, { stopLoading: true }));
     });
 };
 
@@ -186,7 +183,6 @@ export const unsubscribeFrequency = frequency => (dispatch, getState) => {
       });
     })
     .catch(err => {
-      dispatch({ type: 'STOP_LOADING' });
-      console.log(err);
+      dispatch(throwError(err, { stopLoading: true }));
     });
 };

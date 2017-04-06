@@ -9,6 +9,7 @@ import gallery from './gallery';
 import loading from './loading';
 import notifications from './notifications';
 import communities from './communities';
+import errors from './errors';
 import ui from './ui';
 
 export default combineReducers({
@@ -23,4 +24,5 @@ export default combineReducers({
   loading,
   ui,
   notifications,
+  errors,
 });
