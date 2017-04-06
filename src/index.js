@@ -1,12 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import history from './helpers/history';
 import { initStore } from './store';
 import FIREBASE_CONFIG from './config/FirebaseConfig';
-import { Body } from './App/style';
+import MainRouter from './MainRouter';
 import Root from './Root';
 import { clearStorage } from './helpers/localStorage';
 import { initializeDatabase } from './db/general';
@@ -77,17 +75,9 @@ const theme = {
 const render = () => {
   ReactDOM.render(
     <Provider store={store}>
-      <Router history={history}>
-        <ThemeProvider theme={theme}>
-          <Body>
-            <Route
-              exact
-              path="/:community?/(\~?):frequency?/:story?"
-              component={Root}
-            />
-          </Body>
-        </ThemeProvider>
-      </Router>
+      <ThemeProvider theme={theme}>
+        <MainRouter />
+      </ThemeProvider>
     </Provider>,
     document.querySelector('#root'),
   );

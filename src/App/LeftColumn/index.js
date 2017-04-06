@@ -150,7 +150,7 @@ class NavigationMaster extends Component {
               }
               <Link to="/explore">
                 <Freq
-                  active={this.props.frequencies.active === 'explore'}
+                  active={active === 'explore'}
                   onClick={this.showStoriesNav}
                 >
                   <FreqText>

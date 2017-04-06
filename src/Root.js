@@ -27,108 +27,49 @@ const Homepage = asyncComponent(() =>
   System.import('./Homepage').then(module => module.default));
 
 class Root extends Component {
-  state = {
-    frequency: '',
-    story: '',
-  };
-
-  // INITIAL LOAD OF THE APP
-  componentWillMount() {
-    // On the initial render of the app we authenticate the user
-    const { dispatch, match, communities } = this.props;
-    this.handleProps({ frequencies: {}, stories: {}, match, communities });
-    // Authenticate the user
-    listenToAuth(user => {
-      if (!user) {
-        stopUserMonitor();
-        return dispatch({
-          type: 'USER_NOT_AUTHENTICATED',
-        });
-      }
-
-      monitorUser(user.uid);
-
-      // set this uid in google analytics
-      track('user', 'authed', null);
-      set(user.uid);
-
-      // logs the user uid to sentry errors
-      Raven.setUserContext({ uid: user.uid });
-
-      listenToNewNotifications(user.uid, notification => {
-        dispatch(addNotification(notification));
-      });
-
-      // Get the public userdata
-      getUserInfo(user.uid)
-        .then(userData => {
-          if (!userData) {
-            return dispatch({
-              type: 'USER_NOT_AUTHENTICATED',
-            });
-          }
-          dispatch({
-            type: 'SET_USER',
-            user: userData,
-          });
-          return userData;
-        })
-        // Load the users frequencies and communities
-        .then(({ frequencies, communities }) => {
-          const freqIds = Object.keys(frequencies);
-          const communityIds = Object.keys(communities);
-          return Promise.all([
-            Promise.all(freqIds.map(id => getFrequency({ id }))),
-            Promise.all(communityIds.map(id => getCommunity({ id }))),
-          ]);
-        })
-        .then(([frequencies, communities]) => {
-          dispatch({
-            type: 'SET_COMMUNITIES',
-            communities,
-          });
-          dispatch({
-            type: 'SET_FREQUENCIES',
-            frequencies,
-          });
-        });
-    });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.handleProps(nextProps);
-  }
-
-  handleProps = nextProps => {
+  componentDidMount() {
     const {
       dispatch,
       match: { params },
       frequencies,
       stories,
       user: { uid },
+      communities,
     } = this.props;
     if (
-      nextProps.match.params.community &&
-      nextProps.match.params.community !== 'everything' &&
-      !nextProps.match.params.frequency
+      !params.frequency &&
+      params.community &&
+      params.community !== 'everything' &&
+      params.community !== 'explore'
     ) {
-      history.push(`/${nextProps.match.params.community}/~general`);
+      history.push(`/${params.community}/~general`);
       return;
     }
 
+    dispatch(setActiveCommunity(params.community || 'everything'));
+
+    if (params.community === 'everything') {
+      dispatch(setActiveStory(params.frequency));
+    } else {
+      dispatch(setActiveFrequency(params.frequency));
+      dispatch(setActiveStory(params.story));
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { dispatch } = nextProps;
+
     if (
-      nextProps.match.params.community !== params.community ||
-      !nextProps.communities.active ||
-      nextProps.user.uid !== uid
+      this.props.match.params.community !== nextProps.match.params.community ||
+      nextProps.user.uid !== this.props.user.uid
     ) {
       dispatch(
         setActiveCommunity(nextProps.match.params.community || 'everything'),
       );
     }
-    // If the frequency changes or we've finished loading the frequencies sync the active frequency to the store and load the stories
+
     if (
-      nextProps.frequencies.loaded !== frequencies.loaded ||
-      nextProps.match.params.frequency !== params.frequency
+      this.props.match.params.frequency !== nextProps.match.params.frequency
     ) {
       if (nextProps.match.params.community === 'everything') {
         dispatch(setActiveStory(nextProps.match.params.frequency));
@@ -137,16 +78,12 @@ class Root extends Component {
       }
     }
 
-    // If the story changes sync the active story to the store and load the messages
-    if (
-      nextProps.stories.loaded !== stories.loaded ||
-      nextProps.match.params.story !== params.story
-    ) {
+    if (this.props.match.params.story !== nextProps.match.params.story) {
       if (nextProps.match.params.community !== 'everything') {
         dispatch(setActiveStory(nextProps.match.params.story));
       }
     }
-  };
+  }
 
   render() {
     const { user, match: { params }, location } = this.props;

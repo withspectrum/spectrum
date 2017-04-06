@@ -198,7 +198,7 @@ class RightColumn extends Component {
           <Composer />
         </ViewContainer>
       );
-    } else if (this.props.frequencies.active === 'explore') {
+    } else if (activeCommunity === 'explore') {
       return (
         <ViewContainer>
           <Link to={`/~everything`}>

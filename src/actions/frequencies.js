@@ -27,7 +27,10 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
   const { communities: { active } } = getState();
 
-  if (!active || active === 'everything' || active === 'explore') return;
+  if (!active || active === 'everything' || active === 'explore') {
+    dispatch({ type: 'STOP_LOADING' });
+    return;
+  }
 
   track('frequency', 'viewed', null);
   // Get the frequency

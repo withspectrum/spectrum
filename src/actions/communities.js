@@ -7,22 +7,20 @@ export const setActiveCommunity = slug => (dispatch, getState) => {
   const { communities: { communities }, user: { uid } } = getState();
 
   const lowerCaseSlug = slug.toLowerCase();
+  dispatch({
+    type: 'SET_ACTIVE_COMMUNITY',
+    slug: lowerCaseSlug,
+  });
 
   if (
-    lowerCaseSlug === 'notifications' ||
-    lowerCaseSlug === 'everything' ||
-    lowerCaseSlug === 'explore' ||
-    communities.find(community => community.slug === lowerCaseSlug)
+    lowerCaseSlug !== 'notifications' &&
+    lowerCaseSlug !== 'everything' &&
+    lowerCaseSlug !== 'explore' &&
+    !communities.find(community => community.slug === lowerCaseSlug)
   ) {
-    dispatch({
-      type: 'SET_ACTIVE_COMMUNITY',
-      slug: lowerCaseSlug,
-    });
-  } else {
     getCommunity({ slug: lowerCaseSlug }).then(community => {
       dispatch({
-        type: 'SET_ACTIVE_COMMUNITY',
-        slug: lowerCaseSlug,
+        type: 'ADD_COMMUNITY',
         community,
       });
     });
@@ -66,6 +64,11 @@ export const setActiveCommunity = slug => (dispatch, getState) => {
         console.log(err);
         dispatch({ type: 'STOP_LOADING' });
       });
+    return;
+  }
+  // explore
+  if (lowerCaseSlug === 'explore') {
+    track('explore', 'viewed', null);
     return;
   }
 };
