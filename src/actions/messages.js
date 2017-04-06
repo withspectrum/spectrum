@@ -114,7 +114,7 @@ export const sendMessage = message => (dispatch, getState) => {
 
       createPrivateMessage({
         messageGroupId: newGroupKey,
-        user,
+        userId: user.uid,
         message,
         key,
       }).then(() => {
