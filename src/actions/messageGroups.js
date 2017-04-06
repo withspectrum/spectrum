@@ -6,7 +6,7 @@ import {
   listenToMessageGroup,
   stopListening,
 } from '../db/messageGroups';
-import { getPrivateMessages, getPrivateMessage } from '../db/messages';
+import { getMessagesFromLocation, getMessage } from '../db/messages';
 import { getUserInfo } from '../db/users';
 
 let listener;
@@ -26,7 +26,7 @@ export const setActiveMessageGroup = messageGroupId => (dispatch, getState) => {
 
   track('direct message thread', 'viewed', null);
 
-  getPrivateMessages(messageGroupId)
+  getMessagesFromLocation('message_groups', messageGroupId)
     .then(messages => {
       if (!messages) {
         dispatch({ type: 'STOP_LOADING' });
@@ -63,7 +63,8 @@ export const setActiveMessageGroup = messageGroupId => (dispatch, getState) => {
     // Get all messages that aren't in the store yet
     const messages = Object.keys(messageGroupId.messages);
 
-    Promise.all(messages.map(message => getPrivateMessage(message)))
+    Promise
+      .all(messages.map(message => getMessage('messages_private', message)))
       .then(messages => {
         if (!messages) {
           return;

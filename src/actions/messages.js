@@ -2,7 +2,6 @@ import {
   createMessage,
   createPrivateMessage,
   getMessageKey,
-  getPrivateMessageKey,
   createReaction,
   deleteReaction,
 } from '../db/messages';
@@ -35,7 +34,7 @@ export const sendMessage = message => (dispatch, getState) => {
 
     track(`${message.type} message`, 'sent', null);
 
-    const key = getMessageKey();
+    const key = getMessageKey('messages');
 
     // Show message locally before persisting to server
     dispatch({
@@ -53,7 +52,7 @@ export const sendMessage = message => (dispatch, getState) => {
 
     createMessage({
       storyId,
-      frequency,
+      frequencyId: frequency.id,
       user,
       message,
       key,
@@ -68,7 +67,7 @@ export const sendMessage = message => (dispatch, getState) => {
 
     track(`messageGroup ${message.type} message`, 'sent', null);
 
-    const key = getPrivateMessageKey();
+    const key = getMessageKey('messages_private');
 
     // Show message locally before persisting to server
     dispatch({
@@ -85,7 +84,7 @@ export const sendMessage = message => (dispatch, getState) => {
 
     createPrivateMessage({
       messageGroupId,
-      user,
+      userId: user.uid,
       message,
       key,
     });
@@ -98,7 +97,7 @@ export const sendMessage = message => (dispatch, getState) => {
     createNewMessageGroup(user.uid, recipient).then(newGroupKey => {
       track(`messageGroup ${message.type} message`, 'sent', null);
 
-      const key = getPrivateMessageKey();
+      const key = getMessageKey('messages_private');
 
       // Show message locally before persisting to server
       dispatch({
@@ -131,11 +130,17 @@ export const sendMessage = message => (dispatch, getState) => {
 };
 
 export const addReaction = messageId => (dispatch, getState) => {
-  const { user: { uid } } = getState();
+  const { user: { uid }, stories, messageGroups } = getState();
+  const activeStory = stories.active;
+  const activeMessageGroup = messageGroups.active;
+  const type = activeStory
+    ? 'messages'
+    : activeMessageGroup ? 'messages_private' : 'messages';
 
   track('reaction', 'created', null);
 
   createReaction({
+    type,
     messageId,
     uid,
   })
@@ -152,11 +157,17 @@ export const addReaction = messageId => (dispatch, getState) => {
 };
 
 export const removeReaction = messageId => (dispatch, getState) => {
-  const { user: { uid } } = getState();
+  const { user: { uid }, stories, messageGroups } = getState();
+  const activeStory = stories.active;
+  const activeMessageGroup = messageGroups.active;
+  const type = activeStory
+    ? 'messages'
+    : activeMessageGroup ? 'messages_private' : 'messages';
 
   track('reaction', 'removed', null);
 
   deleteReaction({
+    type,
     messageId,
     uid,
   })
