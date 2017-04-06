@@ -130,7 +130,7 @@ body {
 .markdown p {
   color: inherit;
   font-size: 16px;
-  line-height: 24px;
+  line-height: 1.5;
   margin-top: 16px;
   font-weight: 400;
 }
@@ -149,7 +149,8 @@ body {
 .markdown li {
   color: inherit;
   font-size: 16px;
-  line-height: 28px;
+  margin-bottom: 4px;
+  line-height: 1.5;
   font-weight: 400;
 }
 
