@@ -195,6 +195,11 @@ class RightColumn extends Component {
     } else if (this.props.frequencies.active === 'explore') {
       return (
         <ViewContainer>
+          <Link to={`/~${returnUrl}`}>
+            <BackArrow onClick={this.clearActiveStory}>
+              <Icon icon="back" />
+            </BackArrow>
+          </Link>
           <Explore />
         </ViewContainer>
       );

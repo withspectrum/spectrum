@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FlexCol } from '../../../shared/Globals';
+import Icon from '../../../shared/Icons';
 import { getFrequency, getFeaturedFrequencies } from '../../../db/frequencies';
 import {
   unsubscribeFrequency,
@@ -234,20 +235,27 @@ class Explore extends Component {
                         </ItemMeta>
                         <ItemCopy>{freq.description}</ItemCopy>
                       </FlexCol>
-                      <ButtonContainer>
-                        {frequencies[freq.id]
-                          ? <Link to={`/~${freq.slug}`}>
+                      {frequencies[freq.id]
+                        ? <ButtonContainer>
+                            <Icon
+                              icon="checked"
+                              color="success.default"
+                              static
+                            />
+                            <Link to={`/~${freq.slug}`}>
                               <ItemButton active>
                                 Go to {`~${freq.slug}`}
                               </ItemButton>
                             </Link>
-                          : <ItemButton
+                          </ButtonContainer>
+                        : <ButtonContainer>
+                            <ItemButton
                               id={freq.slug}
                               onClick={this.subscribeFrequency}
                             >
                               Follow
-                            </ItemButton>}
-                      </ButtonContainer>
+                            </ItemButton>
+                          </ButtonContainer>}
                     </Item>
                   );
                 })}
@@ -274,20 +282,27 @@ class Explore extends Component {
                         </ItemMeta>
                         <ItemCopy>{freq.description}</ItemCopy>
                       </FlexCol>
-                      <ButtonContainer>
-                        {frequencies[freq.id]
-                          ? <Link to={`/~${freq.slug}`}>
+                      {frequencies[freq.id]
+                        ? <ButtonContainer>
+                            <Icon
+                              icon="checked"
+                              color="success.default"
+                              static
+                            />
+                            <Link to={`/~${freq.slug}`}>
                               <ItemButton active>
                                 Go to {`~${freq.slug}`}
                               </ItemButton>
                             </Link>
-                          : <ItemButton
+                          </ButtonContainer>
+                        : <ButtonContainer>
+                            <ItemButton
                               id={freq.slug}
                               onClick={this.subscribeFrequency}
                             >
                               Follow
-                            </ItemButton>}
-                      </ButtonContainer>
+                            </ItemButton>
+                          </ButtonContainer>}
                     </Item>
                   );
                 })}
@@ -314,20 +329,27 @@ class Explore extends Component {
                         </ItemMeta>
                         <ItemCopy>{freq.description}</ItemCopy>
                       </FlexCol>
-                      <ButtonContainer>
-                        {frequencies[freq.id]
-                          ? <Link to={`/~${freq.slug}`}>
+                      {frequencies[freq.id]
+                        ? <ButtonContainer>
+                            <Icon
+                              icon="checked"
+                              color="success.default"
+                              static
+                            />
+                            <Link to={`/~${freq.slug}`}>
                               <ItemButton active>
                                 Go to {`~${freq.slug}`}
                               </ItemButton>
                             </Link>
-                          : <ItemButton
+                          </ButtonContainer>
+                        : <ButtonContainer>
+                            <ItemButton
                               id={freq.slug}
                               onClick={this.subscribeFrequency}
                             >
                               Follow
-                            </ItemButton>}
-                      </ButtonContainer>
+                            </ItemButton>
+                          </ButtonContainer>}
                     </Item>
                   );
                 })}
@@ -354,20 +376,27 @@ class Explore extends Component {
                         </ItemMeta>
                         <ItemCopy>{freq.description}</ItemCopy>
                       </FlexCol>
-                      <ButtonContainer>
-                        {frequencies[freq.id]
-                          ? <Link to={`/~${freq.slug}`}>
+                      {frequencies[freq.id]
+                        ? <ButtonContainer>
+                            <Icon
+                              icon="checked"
+                              color="success.default"
+                              static
+                            />
+                            <Link to={`/~${freq.slug}`}>
                               <ItemButton active>
                                 Go to {`~${freq.slug}`}
                               </ItemButton>
                             </Link>
-                          : <ItemButton
+                          </ButtonContainer>
+                        : <ButtonContainer>
+                            <ItemButton
                               id={freq.slug}
                               onClick={this.subscribeFrequency}
                             >
                               Follow
-                            </ItemButton>}
-                      </ButtonContainer>
+                            </ItemButton>
+                          </ButtonContainer>}
                     </Item>
                   );
                 })}
@@ -394,20 +423,27 @@ class Explore extends Component {
                         </ItemMeta>
                         <ItemCopy>{freq.description}</ItemCopy>
                       </FlexCol>
-                      <ButtonContainer>
-                        {frequencies[freq.id]
-                          ? <Link to={`/~${freq.slug}`}>
+                      {frequencies[freq.id]
+                        ? <ButtonContainer>
+                            <Icon
+                              icon="checked"
+                              color="success.default"
+                              static
+                            />
+                            <Link to={`/~${freq.slug}`}>
                               <ItemButton active>
                                 Go to {`~${freq.slug}`}
                               </ItemButton>
                             </Link>
-                          : <ItemButton
+                          </ButtonContainer>
+                        : <ButtonContainer>
+                            <ItemButton
                               id={freq.slug}
                               onClick={this.subscribeFrequency}
                             >
                               Follow
-                            </ItemButton>}
-                      </ButtonContainer>
+                            </ItemButton>
+                          </ButtonContainer>}
                     </Item>
                   );
                 })}
@@ -434,20 +470,27 @@ class Explore extends Component {
                         </ItemMeta>
                         <ItemCopy>{freq.description}</ItemCopy>
                       </FlexCol>
-                      <ButtonContainer>
-                        {frequencies[freq.id]
-                          ? <Link to={`/~${freq.slug}`}>
+                      {frequencies[freq.id]
+                        ? <ButtonContainer>
+                            <Icon
+                              icon="checked"
+                              color="success.default"
+                              static
+                            />
+                            <Link to={`/~${freq.slug}`}>
                               <ItemButton active>
                                 Go to {`~${freq.slug}`}
                               </ItemButton>
                             </Link>
-                          : <ItemButton
+                          </ButtonContainer>
+                        : <ButtonContainer>
+                            <ItemButton
                               id={freq.slug}
                               onClick={this.subscribeFrequency}
                             >
                               Follow
-                            </ItemButton>}
-                      </ButtonContainer>
+                            </ItemButton>
+                          </ButtonContainer>}
                     </Item>
                   );
                 })}
