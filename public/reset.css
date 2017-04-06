@@ -155,13 +155,13 @@ body {
 }
 
 .markdown blockquote {
-  color: inherit;
-  border-left: 4px solid currentColor;
-  padding: 4px 8px;
-  font-size: 20px;
+  color: #747E8D;
+  border-left: 4px solid #747E8D;
+  padding: 4px 8px 4px 16px;
+  font-size: 24px;
   font-weight: 300;
   font-style: italic;
-  line-height: 36px;
+  line-height: 1.4;
   margin: 16px 0;
 }
 
