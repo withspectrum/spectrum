@@ -10,6 +10,7 @@ import {
   Transition,
   Gradient,
   Button,
+  Shadow,
 } from '../../../shared/Globals';
 import ScrollRow from '../../../shared/ScrollRow';
 
@@ -130,15 +131,14 @@ export const Item = styled(FlexCol)`
   margin-right: 24px;
   justify-content: space-between;
   position: relative;
-  box-shadow: ${props =>
-  props.active
-    ? '0 2px 8px rgba(23,26,33, 0.25)'
-    : '0 4px 16px rgba(23,26,33, 0.25)'};
+  opacity: ${props => props.active ? '0.85' : '1'};
+  box-shadow: ${props => props.active ? Shadow.low : Shadow.high};
   transition: ${Transition.hover.off};
 
   &:hover {
-    box-shadow: 0 8px 32px rgba(23, 26, 33, 0.35);
+    box-shadow: ${Shadow.high};
     transition: ${Transition.hover.on};
+    opacity: 1;
   }
 `;
 
@@ -159,6 +159,11 @@ export const ItemMeta = styled(ItemCopy)`
 
 export const ButtonContainer = styled(FlexRow)`
   justify-content: flex-end;
+  align-items: center;
+
+  > div {
+    margin-right: 8px;
+  }
 `;
 
 export const ItemButton = styled(Button)`
