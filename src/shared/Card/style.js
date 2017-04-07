@@ -14,9 +14,10 @@ export const Wrapper = styled.div`
 	box-shadow: ${Shadow.low};
 
 	@media (max-width: 768px) {
-		width: 100%;
-		margin: 0;
-		border-radius: 0;
+		width: calc(100% - 16px);
+		margin: 8px;
+		margin-bottom: 0;
+		border-radius: 16px;
 	}
 
 	${props => !props.still &&
