@@ -45,10 +45,18 @@ class ActionBar extends Component {
   };
 
   render() {
-    let { creator, moderator, locked, frequencies, story } = this.props;
+    let {
+      creator,
+      moderator,
+      locked,
+      frequencies,
+      story,
+      activeCommunity,
+    } = this.props;
     let currentFrequency = getCurrentFrequency(
       story.frequencyId,
       frequencies.frequencies,
+      activeCommunity.id,
     );
 
     return (
@@ -126,6 +134,9 @@ class ActionBar extends Component {
 
 const mapStateToProps = state => ({
   frequencies: state.frequencies,
+  activeCommunity: state.communities.communities.find(
+    community => community.slug === state.communities.active,
+  ),
 });
 
 export default connect(mapStateToProps)(ActionBar);

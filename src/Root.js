@@ -69,6 +69,8 @@ class Root extends Component {
     }
 
     if (
+      // If the community changed, refetch the frequency
+      this.props.match.params.community !== nextProps.match.params.community ||
       this.props.match.params.frequency !== nextProps.match.params.frequency
     ) {
       if (nextProps.match.params.community === 'everything') {

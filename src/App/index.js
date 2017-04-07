@@ -48,16 +48,22 @@ class App extends Component {
       user,
       ui,
       notifications,
-      activeCommunity,
+      communities,
     } = this.props;
+    const community = communities.communities.find(
+      community => community.slug === communities.active,
+    );
+    if (!community) return <Body />;
     const frequency = getCurrentFrequency(
       frequencies.active,
       frequencies.frequencies,
+      community.id,
     );
+    const communitySlug = communities.active;
 
-    const isEverything = activeCommunity === 'everything';
-    const isNotifications = activeCommunity === 'notifications';
-    const isExplore = activeCommunity === 'explore';
+    const isEverything = communitySlug === 'everything';
+    const isNotifications = communitySlug === 'notifications';
+    const isExplore = communitySlug === 'explore';
 
     let sortedStories = sortArrayByKey(
       stories.stories.slice(),
@@ -239,7 +245,7 @@ class App extends Component {
 export default connect(state => ({
   stories: state.stories,
   frequencies: state.frequencies,
-  activeCommunity: state.communities.active,
+  communities: state.communities,
   user: state.user,
   ui: state.ui,
   notifications: state.notifications,

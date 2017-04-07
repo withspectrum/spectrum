@@ -1,12 +1,18 @@
 import { FREQUENCIES } from './regexps';
 
-export const getCurrentFrequency = (activeFrequency, frequencies) => {
+export const getCurrentFrequency = (
+  activeFrequency,
+  frequencies,
+  communityId,
+) => {
   if (activeFrequency === 'everything') {
     return;
   }
 
   return frequencies.find(
-    freq => freq.slug === activeFrequency || freq.id === activeFrequency,
+    freq =>
+      freq.slug === activeFrequency && communityId === freq.communityId ||
+      freq.id === activeFrequency,
   );
 };
 

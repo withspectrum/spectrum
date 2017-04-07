@@ -185,10 +185,20 @@ export const unsubscribeFrequency = (frequencySlug: string) => (
   dispatch: Function,
   getState: Function,
 ) => {
-  const { user: { uid }, frequencies } = getState();
+  const {
+    user: { uid },
+    frequencies,
+    communities: { active, communities },
+  } = getState();
+
+  const community = communities.find(community => community.slug === active);
 
   // we'll use this key to update the user record and to find the correct frequency record to update
-  const id = getCurrentFrequency(frequencySlug, frequencies.frequencies).id;
+  const id = getCurrentFrequency(
+    frequencySlug,
+    frequencies.frequencies,
+    community.id,
+  ).id;
 
   dispatch({ type: 'LOADING' });
 

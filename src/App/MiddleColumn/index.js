@@ -150,12 +150,12 @@ class MiddleColumn extends Component {
         notification.read === false,
     );
     const unreadMessages = notification ? notification.unread : 0;
-    const freq = getCurrentFrequency(
-      isEverything ? story.frequencyId : activeFrequency,
-      frequencies,
-    );
+    const freq = getCurrentFrequency(story.frequencyId, frequencies);
     const community = freq &&
       communities.find(community => community.id === freq.communityId);
+    if (!community) {
+      console.log(freq, story, communities);
+    }
     const linkPrefix = isEverything
       ? `/everything`
       : `/${community.slug}/~${activeFrequency}`;

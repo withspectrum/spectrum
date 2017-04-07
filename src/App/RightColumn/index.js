@@ -95,7 +95,7 @@ class RightColumn extends Component {
       subscribeFrequency(
         {
           frequencySlug: this.props.frequencies.active,
-          communitySlug: this.props.activeCommunity,
+          communitySlug: this.props.communities.active,
         },
         false,
       ),
@@ -118,15 +118,16 @@ class RightColumn extends Component {
       composer,
       user,
       frequencies: { frequencies, active },
-      activeCommunity,
+      communities,
     } = this.props;
     let story = this.getActiveStory();
 
-    let role, creator, locked, storyFrequency, returnUrl;
+    let role, creator, locked, storyFrequency, returnUrl, communitySlug;
     if (story !== undefined) {
+      communitySlug = communities.active;
       if (story.deleted) {
         // a user has landed on an old url, boot them back to the story's community or everything
-        history.push(`/${`${activeCommunity}/${active}` || 'everything'}`);
+        history.push(`/${`${communitySlug}/${active}` || 'everything'}`);
         story = null;
       }
 
@@ -134,21 +135,24 @@ class RightColumn extends Component {
       role = getStoryPermission(story, user, frequencies);
       locked = story && story.locked ? story.locked : false;
 
+      const community = communities.communities.find(
+        community => community.slug === communitySlug,
+      );
       storyFrequency = story &&
-        getCurrentFrequency(story.frequencyId, frequencies);
+        getCurrentFrequency(story.frequencyId, frequencies, community.id);
 
-      returnUrl = activeCommunity === 'everything'
+      returnUrl = communitySlug === 'everything'
         ? 'everything'
-        : storyFrequency && `${activeCommunity}/~${storyFrequency.slug}`;
+        : storyFrequency && `${communitySlug}/~${storyFrequency.slug}`;
 
       returnUrl = active === 'explore'
         ? 'explore'
-        : storyFrequency && `${activeCommunity}/~${storyFrequency.slug}`;
+        : storyFrequency && `${communitySlug}/~${storyFrequency.slug}`;
     }
 
     if (story && !composer.isOpen) {
       const storyHref = storyFrequency
-        ? `/${activeCommunity}/~${storyFrequency.slug}/${story.id}`
+        ? `/${communitySlug}/~${storyFrequency.slug}/${story.id}`
         : `/everything/${story.id}`;
       return (
         <ViewContainer>
@@ -208,7 +212,7 @@ class RightColumn extends Component {
           <Composer />
         </ViewContainer>
       );
-    } else if (activeCommunity === 'explore') {
+    } else if (communitySlug === 'explore') {
       return (
         <ViewContainer>
           <Link to={`/everything`}>
@@ -234,7 +238,7 @@ const mapStateToProps = state => ({
   frequencies: state.frequencies,
   user: state.user,
   composer: state.composer,
-  activeCommunity: state.communities.active,
+  communities: state.communities,
 });
 
 export default connect(mapStateToProps)(RightColumn);

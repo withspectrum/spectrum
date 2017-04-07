@@ -168,9 +168,14 @@ class Composer extends Component {
       ? this.state.frequencyPicker
       : this.props.frequencies.active;
 
+    const community = this.props.communities.find(
+      community => community.slug === this.props.activeCommunity,
+    );
+
     const frequencyId = getCurrentFrequency(
       frequency,
       this.props.frequencies.frequencies,
+      community.id,
     ).id;
 
     if (frequency && title && !isEditing) {
