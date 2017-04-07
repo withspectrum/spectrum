@@ -359,9 +359,8 @@ class Composer extends Component {
     const communitySelected = communities.filter(
       community => community.id === this.state.communityPicker,
     );
-    const availableFrequencies = frequencies.frequencies.map(
-      frequency =>
-        frequency.communityId === communitySelected[0].id ? frequency : null,
+    const availableFrequencies = frequencies.frequencies.filter(
+      frequency => frequency.communityId === communitySelected[0].id,
     );
 
     let byline = activeCommunity === 'everything'
@@ -384,12 +383,12 @@ class Composer extends Component {
             <Select
               right
               onChange={this.selectFrequencyFromDropdown}
-              defaultValue={availableFrequencies[0].id}
+              defaultValue={availableFrequencies.id}
             >
 
               {availableFrequencies.map((frequency, i) => {
                 return (
-                  <option key={i} value={frequency.id}>
+                  <option key={i} value={frequency}>
                     {frequency.name}
                   </option>
                 );
