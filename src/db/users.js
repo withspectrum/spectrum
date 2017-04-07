@@ -14,6 +14,11 @@ export const createUser = user => {
     [`users/${uid}/uid`]: uid,
     [`users/${uid}/photoURL`]: user.photoURL,
     [`users/${uid}/created`]: database.ServerValue.TIMESTAMP,
+    [`users/${uid}/communities/-Kh6RfPYjmSaIWbkck8i`]: {
+      //=> add Spectrum community to users communities
+      id: '-Kh6RfPYjmSaIWbkck8i',
+      permisson: 'member',
+    },
     [`users/${uid}/frequencies/-KenmQHXnkUDN0S9UUsn`]: {
       //=> add `~Discover` to user's default frequencies
       id: '-KenmQHXnkUDN0S9UUsn',
@@ -37,6 +42,11 @@ export const createUser = user => {
     .ref()
     .update(updates)
     .then(() => db.ref().update({
+      [`communities/-Kh6RfPYjmSaIWbkck8i/users/${uid}`]: {
+        id: uid,
+        permisson: 'member',
+        joined: database.ServerValue.TIMESTAMP,
+      },
       [`frequencies/-KenmQHXnkUDN0S9UUsn/users/${uid}`]: {
         permission: 'subscriber',
         joined: database.ServerValue.TIMESTAMP,
