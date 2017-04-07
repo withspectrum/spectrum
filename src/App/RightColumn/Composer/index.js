@@ -355,15 +355,15 @@ class Composer extends Component {
 
     let { frequencies, communities } = this.props;
     if (nextState.communityPicker !== this.state.communityPicker) {
-      const communitySelected = communities.filter(
+      const communitySelected = communities.find(
         community => community.id === nextState.communityPicker,
       );
-      const availableFrequencies = frequencies.frequencies.filter(
+      const firstAvailableFreq = frequencies.frequencies.find(
         frequency => frequency.communityId === communitySelected[0].id,
       );
 
       this.setState({
-        frequencyPicker: availableFrequencies[0].id,
+        frequencyPicker: firstAvailableFreq.id,
       });
     }
   }
@@ -376,12 +376,10 @@ class Composer extends Component {
     });
     let media = composer.mediaList;
 
-    const communitySelected = communities.filter(
+    const communitySelected = communities.find(
       community => community.id === this.state.communityPicker,
     );
-    const availableFrequencies = frequencies.frequencies.filter(
-      frequency => frequency.communityId === communitySelected[0].id,
-    );
+    const availableFrequencies = frequencies.byCommunity[communitySelected.id];
 
     let byline = activeCommunity === 'everything'
       ? <span>
