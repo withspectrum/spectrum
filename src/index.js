@@ -7,9 +7,19 @@ import history from './helpers/history';
 import { initStore } from './store';
 import FIREBASE_CONFIG from './config/FirebaseConfig';
 import { Body } from './App/style';
-import Root from './Root';
+// import Root from './Root';
 import { clearStorage } from './helpers/localStorage';
 import { initializeDatabase } from './db/general';
+import { FlexCol, FlexRow } from './shared/Globals';
+import {
+  Wrapper,
+  SectionOne,
+  Tagline,
+  LogoContainer,
+  LogoWhite,
+  SectionContent,
+  GoopyOne,
+} from './Homepage/style';
 
 const fbconfig = {
   apiKey: FIREBASE_CONFIG.API_KEY,
@@ -79,9 +89,30 @@ const render = () => {
     <Provider store={store}>
       <Router history={history}>
         <ThemeProvider theme={theme}>
-          <Body>
-            <Route exact path="/(\~?):frequency?/:story?" component={Root} />
-          </Body>
+          <Wrapper>
+            <SectionOne>
+              <SectionContent>
+                <FlexCol>
+                  <LogoContainer><LogoWhite /></LogoContainer>
+                  <Tagline>
+                    Spectrum is currently undergoing maintenance, we'll be back in a few hours! Follow{' '}
+                    <a
+                      style={{ textDecoration: 'underline' }}
+                      href="https://twitter.com/withspectrum"
+                    >
+                      @withspectrum on Twitter
+                    </a>
+                    {' '}for updates.
+                    <br />
+                    <span style={{ fontSize: '0.5em' }}>
+                      (posted at: 10:00am CEST)
+                    </span>
+                  </Tagline>
+                </FlexCol>
+              </SectionContent>
+              <GoopyOne />
+            </SectionOne>
+          </Wrapper>
         </ThemeProvider>
       </Router>
     </Provider>,
