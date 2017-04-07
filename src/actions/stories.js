@@ -224,9 +224,13 @@ export const publishStory = ({ frequencyId, title, description, metadata }) => (
         type: 'CREATE_STORY',
         story,
       });
-      history.push(
-        `/${state.communities.active}/~${frequency.slug}/${storyKey}`,
-      );
+      if (state.communities.active === 'everything') {
+        history.push(`/${state.communities.active}/${storyKey}`);
+      } else {
+        history.push(
+          `/${state.communities.active}/~${frequency.slug}/${storyKey}`,
+        );
+      }
 
       dispatch(setActiveStory(storyKey));
     })
