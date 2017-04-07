@@ -61,7 +61,7 @@ export const Usernames = styled.span`
 	white-space: nowrap;
 	overflow: hidden;
 	color: ${({ theme }) => theme.text.default};
-	font-weight: 600;
+	font-weight: ${props => props.unread ? 800 : 600};
 	line-height: 1.2;
 	margin-bottom: 2px;
 	font-size: 14px;
@@ -78,7 +78,7 @@ export const Usernames = styled.span`
 export const Timestamp = styled.span`
 	font-size: 12px;
 	text-align: right;
-	color: #909aa7;
+	color: ${props => props.unread ? props.theme.brand.default : '#909aa7'};
 	padding-right: 4px;
 	display: inline-block;
 	line-height: 1;
@@ -88,7 +88,9 @@ export const Timestamp = styled.span`
 
 export const Snippet = styled.p`
 	font-size: 12px;
-	color: ${({ theme }) => theme.text.alt};
+	font-weight: ${props => props.unread ? 600 : 500};
+	color: ${props =>
+  props.unread ? props.theme.text.default : props.theme.text.alt};
 	padding-right: 4px;
 	display: inline-block;
 	line-height: 1;

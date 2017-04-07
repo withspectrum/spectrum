@@ -3,6 +3,7 @@
 import database from 'firebase/database';
 import { getStory } from './stories';
 import { getMessageGroup } from './messageGroups';
+import { getActiveMessageGroupObject } from '../actions/messageGroups';
 import { createNotifications } from './notifications';
 import { getUserInfo } from './users';
 import { ACTIVITY_TYPES } from './types';
@@ -155,6 +156,7 @@ export const createPrivateMessage = (
         message,
       },
       [`${locationType}/${messageGroupId}/last_activity`]: database.ServerValue.TIMESTAMP,
+      [`${locationType}/${messageGroupId}/users/${userId}/last_activity`]: database.ServerValue.TIMESTAMP,
       [`${locationType}/${messageGroupId}/messages/${id}`]: {
         id,
       },
@@ -164,6 +166,26 @@ export const createPrivateMessage = (
     })
     .then(() => db.ref(`${messageType}/${id}`).once('value'))
     .then(snapshot => snapshot.val());
+};
+
+export const setLastActivityOnMessageGroupParticipants = (
+  messageGroup: Object,
+) => {
+  const users = Object.keys(messageGroup.users);
+  Promise.all(
+    users.map(user =>
+      setLastActiveOnMessageGroupForUser(messageGroup.id, user)),
+  );
+};
+
+export const setLastActiveOnMessageGroupForUser = (
+  messageGroup: string,
+  user: string,
+) => {
+  const db = database();
+  return db.ref(`/users/${user}/messageGroups/${messageGroup}`).update({
+    ['last_activity']: database.ServerValue.TIMESTAMP,
+  });
 };
 
 type CreateReactionProps = {

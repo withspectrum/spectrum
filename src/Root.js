@@ -5,15 +5,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setActiveFrequency } from './actions/frequencies';
-import { setActiveMessageGroup } from './actions/messageGroups';
+import {
+  setActiveMessageGroup,
+  addMessageGroup,
+} from './actions/messageGroups';
 import { setActiveStory } from './actions/stories';
 import { addNotification } from './actions/notifications';
-import { asyncComponent } from './helpers/utils';
+import { asyncComponent, arrayToHash } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
-import { getUserInfo, listenToNewMessages } from './db/users';
+import { getUserInfo } from './db/users';
 import { listenToAuth } from './db/auth';
 import { getFrequency } from './db/frequencies';
-import { getMessageGroup } from './db/messageGroups';
+import { getMessageGroup, listenToNewMessages } from './db/messageGroups';
 import { listenToNewNotifications } from './db/notifications';
 import { set, track } from './EventTracker';
 import { monitorUser, stopUserMonitor } from './helpers/users';
@@ -39,7 +42,6 @@ class Root extends Component {
       frequencies: {},
       stories: {},
       match,
-      messageGroups: {},
     });
     // Authenticate the user
     listenToAuth(user => {
@@ -64,12 +66,7 @@ class Root extends Component {
       });
 
       listenToNewMessages(user.uid, group => {
-        getMessageGroup(group.id).then(messageGroup => {
-          dispatch({
-            type: 'ADD_MESSAGE_GROUP',
-            messageGroup,
-          });
-        });
+        dispatch(addMessageGroup(group));
       });
 
       // Get the public userdata
@@ -87,32 +84,17 @@ class Root extends Component {
           });
 
           const frequencyKeys = Object.keys(userData.frequencies);
-          const messageGroupsKeys = userData.messageGroups
-            ? Object.keys(userData.messageGroups)
-            : [];
 
           const frequencyData = Promise.all(
             frequencyKeys.map(key => getFrequency({ id: key })),
           );
-          const messageGroupsData = frequencyData.then(frequencies => {
-            return Promise.all(
-              messageGroupsKeys.map(key => getMessageGroup(key)),
-            );
-          });
 
-          return Promise.all([frequencyData, messageGroupsData]);
+          return Promise.all([frequencyData]);
         })
         .then(data => {
-          // data[0] => frequencies
-          // data[1] => messageGroups
           dispatch({
             type: 'SET_FREQUENCIES',
             frequencies: data[0],
-          });
-
-          dispatch({
-            type: 'SET_MESSAGE_GROUPS',
-            messageGroups: data[1],
           });
         });
     });
@@ -179,5 +161,4 @@ export default connect(state => ({
   user: state.user || {},
   frequencies: state.frequencies || {},
   stories: state.stories || {},
-  messageGroups: state.messageGroups || {},
 }))(Root);

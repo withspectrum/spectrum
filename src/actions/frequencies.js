@@ -45,12 +45,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   if (lowerCaseFrequency === 'messages') {
     if (!uid) return;
     track('direct messages', 'viewed', null);
-    getNotifications(uid).then(notifications => {
-      dispatch({
-        type: 'SET_NOTIFICATIONS',
-        notifications,
-      });
-    });
+    dispatch({ type: 'STOP_LOADING' });
     return;
   }
   // Explore

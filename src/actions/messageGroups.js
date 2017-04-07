@@ -1,3 +1,5 @@
+//@flow
+
 import history from '../helpers/history';
 import { track } from '../EventTracker';
 import { arrayToHash } from '../helpers/utils';
@@ -8,21 +10,25 @@ import {
 } from '../db/messageGroups';
 import { getMessagesFromLocation, getMessage } from '../db/messages';
 import { getUserInfo } from '../db/users';
+import { throwError } from './errors';
+import {
+  CLEAR_ACTIVE_MESSAGE_GROUP,
+  SET_ACTIVE_MESSAGE_GROUP,
+  ADD_MESSAGE_GROUP,
+} from './actionTypes';
 
 let listener;
-export const setActiveMessageGroup = messageGroupId => (dispatch, getState) => {
-  if (!messageGroupId) {
-    dispatch({
-      type: 'CLEAR_ACTIVE_MESSAGE_GROUP',
-    });
-
-    return;
-  }
-
+export const setActiveMessageGroup = (messageGroupId: ?string): Object => (
+  dispatch: Function,
+  getState: Function,
+) => {
   dispatch({
-    type: 'SET_ACTIVE_MESSAGE_GROUP',
+    type: SET_ACTIVE_MESSAGE_GROUP,
     messageGroupId,
   });
+
+  // if a user navigates to /messages, clear the active messageGroup and return
+  if (!messageGroupId) return {};
 
   track('direct message thread', 'viewed', null);
 
@@ -31,59 +37,49 @@ export const setActiveMessageGroup = messageGroupId => (dispatch, getState) => {
       if (!messages) {
         dispatch({ type: 'STOP_LOADING' });
       } else {
-        return Promise.all([
+        dispatch({
+          type: 'ADD_MESSAGES',
           messages,
-          // Get all the users that sent messages
-          Promise.all(messages.map(message => getUserInfo(message.userId))),
-        ]);
+        });
       }
     })
-    .then(data => {
-      if (!data) return;
-      const [messages, users] = data;
-      dispatch({
-        type: 'ADD_MESSAGES',
-        messages,
-        users: arrayToHash(users, 'uid'),
-      });
-    })
     .catch(err => {
-      console.log(err);
+      dispatch(throwError(err));
       dispatch({ type: 'STOP_LOADING' });
     });
 
   if (listener) stopListening(listener);
-  listener = listenToMessageGroup(messageGroupId, messageGroupId => {
-    dispatch({
-      type: 'UPDATE_MESSAGE_GROUP',
-      messageGroupId,
-    });
-
-    if (!messageGroupId || !messageGroupId.messages) return;
-    // Get all messages that aren't in the store yet
-    const messages = Object.keys(messageGroupId.messages);
+  listener = listenToMessageGroup(messageGroupId, messageGroup => {
+    if (!messageGroup || !messageGroup.messages) return;
+    const messages = Object.keys(messageGroup.messages);
 
     Promise
       .all(messages.map(message => getMessage('messages_private', message)))
       .then(messages => {
-        if (!messages) {
-          return;
-        }
-        return Promise.all([
-          messages,
-          // Get all the users that sent messages
-          Promise.all(messages.map(message => getUserInfo(message.userId))),
-        ]);
-      })
-      .then(data => {
-        if (!data) return;
-        const [messages, users] = data;
-
         dispatch({
           type: 'ADD_MESSAGES',
           messages,
-          users: arrayToHash(users, 'uid'),
         });
       });
   });
+};
+
+export const addMessageGroup = (group: Object) => (dispatch: Function) => {
+  getMessageGroup(group.id)
+    .then(messageGroup => {
+      const users = Object.keys(messageGroup.users);
+      return Promise.all([
+        messageGroup,
+        Promise.all(users.map(user => getUserInfo(user))),
+      ]);
+    })
+    .then(data => {
+      if (!data) return;
+      const [messageGroup, users] = data;
+      dispatch({
+        type: ADD_MESSAGE_GROUP,
+        messageGroup,
+        users: arrayToHash(users, 'uid'),
+      });
+    });
 };

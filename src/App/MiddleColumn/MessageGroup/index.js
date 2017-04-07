@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Card from '../../../shared/Card';
+import deepEqual from 'deep-eql';
 import { getUserInfo } from '../../../db/users';
-import { timeDifference } from '../../../helpers/utils';
+import { setMessageGroupLastSeen } from '../../../db/messageGroups';
+import { timeDifference, arrayToHash } from '../../../helpers/utils';
 import {
   MessageGroupContainer,
   MessageGroupImagesContainer,
@@ -15,25 +17,6 @@ import {
 } from './style';
 
 class MessageGroup extends Component {
-  componentDidMount = () => {
-    const { messageGroup, user: { list } } = this.props;
-    const userIds = Object.keys(messageGroup.users);
-
-    // we need to populate the user list in store if a user visits /messages directly
-    Promise.all(userIds.map(user => getUserInfo(user))).then(users => {
-      let formattedUsers = {};
-
-      users.map((user, i) => {
-        formattedUsers[user.uid] = user;
-      });
-
-      this.props.dispatch({
-        type: 'ADD_USERS_TO_LIST',
-        users: formattedUsers,
-      });
-    });
-  };
-
   render() {
     const { messageGroup, link, user: { uid, list }, active } = this.props;
 
@@ -42,6 +25,10 @@ class MessageGroup extends Component {
     // everyone except currently viewing user
     const otherUsers = userIds.filter(user => user !== uid);
     const timestamp = timeDifference(Date.now(), messageGroup.last_activity);
+
+    const isUnread = messageGroup.last_activity >
+      messageGroup.users[uid].last_seen &&
+      !active;
 
     return (
       <Card nomargin link={link}>
@@ -68,7 +55,7 @@ class MessageGroup extends Component {
 
           <MessageGroupTextContainer>
             <MessageGroupByline>
-              <Usernames>
+              <Usernames unread={isUnread}>
                 {otherUsers.length === 1
                   ? list[otherUsers]
                       ? <p>{list[otherUsers].displayName}</p>
@@ -82,9 +69,9 @@ class MessageGroup extends Component {
                       }
                     })}
               </Usernames>
-              <Timestamp>{timestamp}</Timestamp>
+              <Timestamp unread={isUnread}>{timestamp}</Timestamp>
             </MessageGroupByline>
-            <Snippet>{messageGroup.snippet}</Snippet>
+            <Snippet unread={isUnread}>{messageGroup.snippet}</Snippet>
           </MessageGroupTextContainer>
         </MessageGroupContainer>
       </Card>

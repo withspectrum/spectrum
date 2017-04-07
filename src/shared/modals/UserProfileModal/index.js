@@ -11,11 +11,11 @@ import {
 } from '../../../actions/messageComposer';
 import { modalStyles } from '../FrequencyEditModal/style';
 import { Button } from '../../Globals';
+import { getUserInfo } from '../../../db/users';
 import {
-  getUserInfo,
   getMessageGroups,
   checkMessageGroupForUsersMatch,
-} from '../../../db/users';
+} from '../../../db/messageGroups';
 import { Username } from './style';
 
 class UserProfileModal extends React.Component {
@@ -28,7 +28,6 @@ class UserProfileModal extends React.Component {
   componentDidMount = () => {
     const { modalProps: { user }, user: { uid } } = this.props;
     const recipient = user;
-
     getUserInfo(recipient)
       .then(recipient => {
         this.setState({
@@ -39,6 +38,7 @@ class UserProfileModal extends React.Component {
       })
       .then(recipient => {
         getMessageGroups(uid).then(messageGroups => {
+          console.log('max', messageGroups);
           if (!messageGroups) {
             this.setState({
               messageId: null,
@@ -88,6 +88,7 @@ class UserProfileModal extends React.Component {
 
       history.push(`/messages/${messageId}`);
     } else {
+      console.log('button click here');
       this.props.dispatch({
         type: 'CLEAR_ACTIVE_STORY',
       });

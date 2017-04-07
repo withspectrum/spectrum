@@ -11,25 +11,18 @@ export default function root(state = initialState, action) {
         messageGroups: action.messageGroups,
         loaded: true,
       });
-    case 'ADD_MESSAGE_GROUP':
+    case 'ADD_MESSAGE_GROUP': {
+      // filter out the messageGroup that is being updated, then concat the state with the latest data
+      const messageGroups = state.messageGroups.filter(
+        group => group.id !== action.messageGroup.id,
+      );
       return Object.assign({}, state, {
-        messageGroups: state.messageGroups.concat(action.messageGroup),
+        messageGroups: messageGroups.concat(action.messageGroup),
       });
-    case 'UPDATE_MESSAGE_GROUP':
-      return Object.assign({}, state, {
-        messageGroups: state.messageGroups.map(messageGroup => {
-          if (messageGroup.id !== action.messageGroupId.id) return messageGroup;
-
-          return action.messageGroupId;
-        }),
-      });
+    }
     case 'SET_ACTIVE_MESSAGE_GROUP':
       return Object.assign({}, state, {
-        active: action.messageGroupId,
-      });
-    case 'CLEAR_ACTIVE_MESSAGE_GROUP':
-      return Object.assign({}, state, {
-        active: null,
+        active: action.messageGroupId || null,
       });
     default:
       return state;

@@ -1,6 +1,7 @@
 import {
   createMessage,
   createPrivateMessage,
+  setLastActivityOnMessageGroupParticipants,
   getMessageKey,
   createReaction,
   deleteReaction,
@@ -87,6 +88,8 @@ export const sendMessage = message => (dispatch, getState) => {
       userId: user.uid,
       message,
       key,
+    }).then(() => {
+      setLastActivityOnMessageGroupParticipants(messageGroup);
     });
   }
 
@@ -123,6 +126,10 @@ export const sendMessage = message => (dispatch, getState) => {
         dispatch({
           type: 'SET_ACTIVE_MESSAGE_GROUP',
           messageGroupId: newGroupKey,
+        });
+
+        dispatch({
+          type: 'CLOSE_MESSAGE_COMPOSER',
         });
       });
     });
