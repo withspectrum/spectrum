@@ -10,6 +10,7 @@ import {
   addMessageGroup,
 } from './actions/messageGroups';
 import { setActiveStory } from './actions/stories';
+import { setActiveCommunity } from './actions/communities';
 import { addNotification } from './actions/notifications';
 import { asyncComponent, arrayToHash } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
@@ -17,9 +18,11 @@ import { getUserInfo } from './db/users';
 import { listenToAuth } from './db/auth';
 import { getFrequency } from './db/frequencies';
 import { getMessageGroup, listenToNewMessages } from './db/messageGroups';
+import { getCommunity } from './db/communities';
 import { listenToNewNotifications } from './db/notifications';
 import { set, track } from './EventTracker';
 import { monitorUser, stopUserMonitor } from './helpers/users';
+import history from './helpers/history';
 import Raven from 'raven-js';
 
 // Codesplit the App and the Homepage to only load what we need based on which route we're on
@@ -29,120 +32,75 @@ const Homepage = asyncComponent(() =>
   System.import('./Homepage').then(module => module.default));
 
 class Root extends Component {
-  state = {
-    frequency: '',
-    story: '',
-  };
-
-  // INITIAL LOAD OF THE APP
-  componentWillMount() {
-    // On the initial render of the app we authenticate the user
-    const { dispatch, match } = this.props;
-    this.handleProps({
-      frequencies: {},
-      stories: {},
-      match,
-    });
-    // Authenticate the user
-    listenToAuth(user => {
-      if (!user) {
-        stopUserMonitor();
-        return dispatch({
-          type: 'USER_NOT_AUTHENTICATED',
-        });
-      }
-
-      monitorUser(user.uid);
-
-      // set this uid in google analytics
-      track('user', 'authed', null);
-      set(user.uid);
-
-      // logs the user uid to sentry errors
-      Raven.setUserContext({ uid: user.uid });
-
-      listenToNewNotifications(user.uid, notification => {
-        dispatch(addNotification(notification));
-      });
-
-      listenToNewMessages(user.uid, group => {
-        dispatch(addMessageGroup(group));
-      });
-
-      // Get the public userdata
-      getUserInfo(user.uid)
-        .then(userData => {
-          if (!userData) {
-            return dispatch({
-              type: 'USER_NOT_AUTHENTICATED',
-            });
-          }
-
-          dispatch({
-            type: 'SET_USER',
-            user: userData,
-          });
-
-          const frequencyKeys = Object.keys(userData.frequencies);
-
-          const frequencyData = Promise.all(
-            frequencyKeys.map(key => getFrequency({ id: key })),
-          );
-
-          return Promise.all([frequencyData]);
-        })
-        .then(data => {
-          dispatch({
-            type: 'SET_FREQUENCIES',
-            frequencies: data[0],
-          });
-        });
-    });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.handleProps(nextProps);
-  }
-
-  handleProps = nextProps => {
+  componentDidMount() {
     const {
       dispatch,
       match: { params },
       frequencies,
       stories,
-      messageGroups,
+      user: { uid },
+      communities,
     } = this.props;
-    // If the frequency changes or we've finished loading the frequencies sync the active frequency to the store and load the stories
     if (
-      nextProps.frequencies.loaded !== frequencies.loaded ||
-      nextProps.match.params.frequency !== params.frequency
+      !params.frequency &&
+      params.community &&
+      params.community !== 'everything' &&
+      params.community !== 'explore'
+    ) {
+      history.push(`/${params.community}/~general`);
+      return;
+    }
+
+    dispatch(setActiveCommunity(params.community || 'everything'));
+
+    if (params.community === 'everything') {
+      dispatch(setActiveStory(params.frequency));
+    } else if (params.community === 'messages') {
+      dispatch(setActiveMessageGroup(params.frequency));
+    } else {
+      dispatch(setActiveFrequency(params.frequency));
+      dispatch(setActiveStory(params.story));
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { dispatch } = nextProps;
+
+    if (this.props.match.params.community === 'messages') {
+      if (
+        this.props.match.params.frequency !== nextProps.match.params.frequency
+      ) {
+        dispatch(setActiveMessageGroup(nextProps.match.params.frequency));
+      }
+    }
+
+    if (
+      this.props.match.params.community !== nextProps.match.params.community ||
+      nextProps.user.uid !== this.props.user.uid
     ) {
       dispatch(
-        setActiveFrequency(nextProps.match.params.frequency || 'everything'),
+        setActiveCommunity(nextProps.match.params.community || 'everything'),
       );
     }
 
     if (
-      nextProps.match.params.frequency === 'messages' ||
-      params.frequency === 'messages'
+      // If the community changed, refetch the frequency
+      this.props.match.params.community !== nextProps.match.params.community ||
+      this.props.match.params.frequency !== nextProps.match.params.frequency
     ) {
-      // we are viewing messages
-      if (
-        nextProps.stories.loaded !== stories.loaded ||
-        nextProps.match.params.story !== params.story
-      ) {
-        // and have clicked into a specific thread
-        // so we need to fetch message_groups data, not story data
-        dispatch(setActiveMessageGroup(nextProps.match.params.story));
+      if (nextProps.match.params.community === 'everything') {
+        dispatch(setActiveStory(nextProps.match.params.frequency));
+      } else {
+        dispatch(setActiveFrequency(nextProps.match.params.frequency));
       }
-    } else if (
-      // we aren't viewing messages, we can safely assume we are viewing stories
-      nextProps.stories.loaded !== stories.loaded ||
-      nextProps.match.params.story !== params.story
-    ) {
-      dispatch(setActiveStory(nextProps.match.params.story));
     }
-  };
+
+    if (this.props.match.params.story !== nextProps.match.params.story) {
+      if (nextProps.match.params.community !== 'everything') {
+        dispatch(setActiveStory(nextProps.match.params.story));
+      }
+    }
+  }
 
   render() {
     const { user, match: { params }, location } = this.props;
@@ -160,5 +118,6 @@ class Root extends Component {
 export default connect(state => ({
   user: state.user || {},
   frequencies: state.frequencies || {},
+  communities: state.communities || {},
   stories: state.stories || {},
 }))(Root);

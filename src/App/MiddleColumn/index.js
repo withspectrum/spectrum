@@ -76,7 +76,12 @@ class MiddleColumn extends Component {
   };
 
   subscribeFrequency = () => {
-    this.props.dispatch(subscribeFrequency(this.props.activeFrequency));
+    this.props.dispatch(
+      subscribeFrequency({
+        frequencySlug: this.props.activeFrequency,
+        communitySlug: this.props.communities.active,
+      }),
+    );
   };
 
   editFrequency = () => {
@@ -158,10 +163,13 @@ class MiddleColumn extends Component {
       frequencies,
       activeFrequency,
       activeStory,
+      communities: { communities, active },
     } = this.props;
-    const isEverything = activeFrequency === 'everything';
     const story = stories[index];
 
+    if (React.isValidElement(story)) return story;
+
+    const isEverything = active === 'everything';
     const notification = notifications.find(
       notification =>
         notification.activityType === ACTIVITY_TYPES.NEW_MESSAGE &&
@@ -175,31 +183,34 @@ class MiddleColumn extends Component {
         notification.read === false,
     );
     const unreadMessages = notification ? notification.unread : 0;
-    const freq = isEverything &&
-      getCurrentFrequency(story.frequencyId, frequencies);
-    return React.isValidElement(story)
-      ? story
-      : <StoryCard
-          isActive={activeStory === story.id}
-          key={key}
-          link={`/~${activeFrequency}/${story.id}`}
-          media={story.content.media}
-          messages={story.messages ? Object.keys(story.messages).length : 0}
-          metaLink={isEverything && freq && `/~${freq.slug}`}
-          metaText={isEverything && freq && `~${freq.name}`}
-          person={{
-            photo: story.creator.photoURL,
-            name: story.creator.displayName,
-            uid: story.creator.uid,
-          }}
-          timestamp={story.last_activity || story.timestamp}
-          title={story.content.title}
-          unreadMessages={unreadMessages}
-          isNew={isNew}
-          story={story}
-          participants={story.participants}
-          metadata={story.metadata ? story.metadata : null}
-        />;
+    const freq = getCurrentFrequency(story.frequencyId, frequencies);
+    const community = freq &&
+      communities.find(community => community.id === freq.communityId);
+    const linkPrefix = isEverything
+      ? `/everything`
+      : `/${community.slug}/~${activeFrequency}`;
+    return (
+      <StoryCard
+        isActive={activeStory === story.id}
+        key={key}
+        link={`${linkPrefix}/${story.id}`}
+        media={story.content.media}
+        messages={story.messages ? Object.keys(story.messages).length : 0}
+        metaLink={isEverything && freq && `/${community.slug}/~${freq.slug}`}
+        metaText={isEverything && freq && `~${freq.name}`}
+        person={{
+          photo: story.creator.photoURL,
+          name: story.creator.displayName,
+        }}
+        timestamp={story.last_activity || story.timestamp}
+        title={story.content.title}
+        unreadMessages={unreadMessages}
+        isNew={isNew}
+        story={story}
+        participants={story.participants}
+        metadata={story.metadata ? story.metadata : null}
+      />
+    );
   };
 
   jumpToTop = () => {
@@ -216,6 +227,7 @@ class MiddleColumn extends Component {
     const {
       frequency,
       activeFrequency,
+      communities: { active },
       stories,
       isPrivate,
       role,
@@ -228,9 +240,9 @@ class MiddleColumn extends Component {
       activeMessageGroup,
     } = this.props;
 
-    const isEverything = activeFrequency === 'everything';
-    const isNotifications = activeFrequency === 'notifications';
-    const isMessages = activeFrequency === 'messages';
+    const isEverything = active === 'everything';
+    const isNotifications = active === 'notifications';
+    const isMessages = active === 'messages';
     const hidden = !role && isPrivate;
 
     if (!isEverything && hidden)
@@ -263,23 +275,7 @@ class MiddleColumn extends Component {
       }
     }
 
-    // If we have a notification for a story but not loaded the story yet
-    // show the New Stories! indicator
     const canLoadNewStories = false;
-
-    // storiesLoaded &&
-    //   notifications.some(notification => {
-    //     if (notification.activityType !== ACTIVITY_TYPES.NEW_STORY)
-    //       return false;
-    //     if (!isEverything && notification.ids.frequency !== frequency.id)
-    //       return false;
-    //
-    //     const result = allStories.find(
-    //       story => story.id === notification.ids.story,
-    //     );
-    //     if (!result) return true;
-    //     return false;
-    //   });
 
     return (
       <Column>
@@ -417,6 +413,7 @@ const mapStateToProps = state => {
   return {
     composer: state.composer,
     messageComposer: state.messageComposer,
+    communities: state.communities,
     ui: state.ui,
     activeStory: state.stories.active,
     notifications: state.notifications.notifications,

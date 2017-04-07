@@ -57,8 +57,12 @@ class Story extends Component {
   };
 
   render() {
-    let { story, frequency } = this.props;
+    const { story, frequency, communities } = this.props;
     const timestamp = timeDifference(Date.now(), story.timestamp);
+
+    const community = frequency &&
+      communities.find(community => community.id === frequency.communityId);
+
     const editDate = story.edited
       ? timeDifference(Date.now(), story.edited)
       : '';
@@ -82,7 +86,9 @@ class Story extends Component {
                   {story.creator.displayName}
                 </b>
                 {' '}· Posted in{' '}
-                <Link to={`/~${frequency.slug}`}>~{frequency.slug}</Link>
+                <Link to={`/${community.slug}/~${frequency.slug}`}>
+                  ~{frequency.slug}
+                </Link>
                 {' '}
                 {timestamp}
                 {story.edited && <span> (edited {editDate})</span>}
@@ -112,4 +118,8 @@ class Story extends Component {
   }
 }
 
-export default connect()(Story);
+const mapStateToProps = state => ({
+  communities: state.communities.communities,
+});
+
+export default connect(mapStateToProps)(Story);

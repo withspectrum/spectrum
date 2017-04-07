@@ -72,7 +72,10 @@ export const saveEditStory = ({ title, description, metadata }) => (
 
   editStory({
     key: storyKey,
-    content: { title, description: linkFreqsInMd(description) },
+    content: {
+      title,
+      description: linkFreqsInMd(description, state.communities.active),
+    },
     metadata,
   })
     .then(story => {
@@ -87,9 +90,13 @@ export const saveEditStory = ({ title, description, metadata }) => (
         type: 'STOP_LOADING',
       });
 
-      history.push(`/~${state.frequencies.active}/${storyKey}`);
-
-      dispatch(setActiveStory(storyKey));
+      if (state.communities.active === 'everything') {
+        history.push(`/${state.communities.active}/${storyKey}`);
+      } else {
+        history.push(
+          `/${state.communities.active}/~${state.frequencies.active}/${storyKey}`,
+        );
+      }
     })
     .catch(err => {
       dispatch({
@@ -206,7 +213,10 @@ export const publishStory = ({ frequencyId, title, description, metadata }) => (
   createStory({
     key: storyKey,
     frequency,
-    content: { title, description: linkFreqsInMd(description) },
+    content: {
+      title,
+      description: linkFreqsInMd(description, state.communities.active),
+    },
     metadata,
   })
     .then(story => {
@@ -216,7 +226,13 @@ export const publishStory = ({ frequencyId, title, description, metadata }) => (
         type: 'CREATE_STORY',
         story,
       });
-      history.push(`/~${state.frequencies.active}/${storyKey}`);
+      if (state.communities.active === 'everything') {
+        history.push(`/${state.communities.active}/${storyKey}`);
+      } else {
+        history.push(
+          `/${state.communities.active}/~${frequency.slug}/${storyKey}`,
+        );
+      }
 
       dispatch(setActiveStory(storyKey));
     })
@@ -230,7 +246,7 @@ export const publishStory = ({ frequencyId, title, description, metadata }) => (
  */
 export const deleteStory = id => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
-  const { frequencies, stories } = getState();
+  const { frequencies, communities, stories } = getState();
   let activeFrequency = frequencies.active;
   const { frequencyId } = stories.stories.find(story => story.id === id);
 
@@ -243,10 +259,10 @@ export const deleteStory = id => (dispatch, getState) => {
         id,
       });
       // redirect the user so that they don't end up on a broken url
-      if (activeFrequency && activeFrequency !== 'all') {
-        history.push(`/~${activeFrequency}`);
+      if (activeFrequency) {
+        history.push(`/${communities.active}/~${activeFrequency}`);
       } else {
-        history.push('/');
+        history.push(`/${communities.active}`);
       }
     })
     .catch(err => {

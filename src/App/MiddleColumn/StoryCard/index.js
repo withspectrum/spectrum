@@ -116,6 +116,7 @@ class StoryCard extends Component {
       unreadMessages,
       participants,
       user,
+      activeCommunity,
       metadata,
       frequencies: { active },
       story,
@@ -127,7 +128,7 @@ class StoryCard extends Component {
     if (
       participants &&
       Object.keys(participants).length >= 0 &&
-      active !== 'everything'
+      activeCommunity !== 'everything'
     ) {
       if (
         !Object.keys(participants).every(participant => user.list[participant])
@@ -279,6 +280,7 @@ const mapStateToProps = state => {
   return {
     user: state.user,
     frequencies: state.frequencies,
+    activeCommunity: state.communities.active,
   };
 };
 

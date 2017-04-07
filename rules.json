@@ -74,7 +74,7 @@
       }
     },
     "frequencies": {
-      ".indexOn": ["id", "slug"],
+      ".indexOn": ["id", "slug", "communityId"],
       ".read": true,
       "$id": {
         // Make sure all the necessary fields exist
@@ -115,7 +115,7 @@
           ".validate": "newData.isString() && newData.val() !== 'undefined' && newData.val() !== 'null' && newData.val().length <= 140",
           ".write": "!data.exists() || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
         },
-        "community": {
+        "communityId": {
           ".validate": "newData.isString() && root.child('communities').hasChild(newData.val())",
           ".write": "!data.parent().exists() || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'"
         },

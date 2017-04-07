@@ -49,20 +49,24 @@ class Chat extends Component {
     this.props.forceScrollToBottom();
   };
 
-  formatMessage(message) {
+  formatMessage = message => {
     if (!message) {
       return '';
     }
+    const { activeCommunity } = this.props;
     const cleanMessage = sanitizeHtml(message);
     // Replace "~frequency" with "spectrum.chat/~frequency" to get
     // autolinker to link it
     const linkedMessage = Autolinker.link(
-      cleanMessage.replace(FREQUENCIES, '$1https://spectrum.chat/$2'),
+      cleanMessage.replace(
+        FREQUENCIES,
+        `$1https://spectrum.chat/${activeCommunity}/$2`,
+      ),
     );
     // Remove the "spectrum.chat" part from the link text so in the message
     // you just see "~frequency", but it's linked to the frequency
     return linkedMessage.replace(FREQUENCY_ANCHORS, '>$1</a>');
-  }
+  };
 
   toggleReaction = (messageId, userHasReacted) => {
     if (userHasReacted) {
@@ -285,6 +289,7 @@ const mapStateToProps = state => {
     user: state.user,
     stories: state.stories,
     messages: sortAndGroupBubbles(messages),
+    activeCommunity: state.communities.active,
   };
 };
 

@@ -1,12 +1,18 @@
 import { FREQUENCIES } from './regexps';
 
-export const getCurrentFrequency = (activeFrequency, frequencies) => {
+export const getCurrentFrequency = (
+  activeFrequency,
+  frequencies,
+  communityId,
+) => {
   if (activeFrequency === 'everything') {
     return;
   }
 
   return frequencies.find(
-    freq => freq.slug === activeFrequency || freq.id === activeFrequency,
+    freq =>
+      freq.slug === activeFrequency && communityId === freq.communityId ||
+      freq.id === activeFrequency,
   );
 };
 
@@ -21,6 +27,19 @@ export const getFrequencyPermission = (user, activeFrequency, frequencies) => {
   return usersPerm;
 };
 
-export const linkFreqsInMd = text => {
-  return text.replace(FREQUENCIES, '$1[$2](https://spectrum.chat/$2)');
+export const linkFreqsInMd = (text, community) => {
+  return text.replace(
+    FREQUENCIES,
+    `$1[$2](https://spectrum.chat/${community}/$2)`,
+  );
+};
+
+export const groupFrequencies = frequencies => {
+  const grouped = {};
+  frequencies.forEach(frequency => {
+    const { communityId } = frequency;
+    if (!grouped[communityId]) grouped[communityId] = [];
+    grouped[communityId].push(frequency);
+  });
+  return grouped;
 };
