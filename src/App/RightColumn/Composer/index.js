@@ -67,11 +67,12 @@ class Composer extends Component {
   constructor(props) {
     super(props);
 
-    let { user, composer: { metadata } } = props;
+    let { user, composer: { metadata }, communities } = props;
     let userFreqs = Object.keys(user.frequencies);
 
     this.state = {
       error: null,
+      communityPicker: communities ? communities[0].id : '',
       frequencyPicker: userFreqs ? userFreqs[0] : '',
       loading: false,
       placeholder: '+ Embed',
@@ -110,6 +111,12 @@ class Composer extends Component {
   selectFrequencyFromDropdown = e => {
     this.setState({
       frequencyPicker: e.target.value,
+    });
+  };
+
+  selectCommunityFromDropdown = e => {
+    this.setState({
+      communityPicker: e.target.value,
     });
   };
 
@@ -342,30 +349,51 @@ class Composer extends Component {
   };
 
   render() {
-    let { frequencies, composer, activeCommunity } = this.props;
+    let { frequencies, composer, activeCommunity, communities } = this.props;
     let activeFrequency = frequencies.active;
     let currentFrequency = frequencies.frequencies.filter(freq => {
       return freq.slug === activeFrequency;
     });
     let media = composer.mediaList;
 
+    const communitySelected = communities.filter(
+      community => community.id === this.state.communityPicker,
+    );
+    const availableFrequencies = frequencies.frequencies.map(
+      frequency =>
+        frequency.communityId === communitySelected[0].id ? frequency : null,
+    );
+
     let byline = activeCommunity === 'everything'
       ? <span>
           <Byline hasContent={true}>
-            New story in
             <Select
-              onChange={this.selectFrequencyFromDropdown}
-              defaultValue={frequencies.frequencies[0].id}
+              onChange={this.selectCommunityFromDropdown}
+              defaultValue={communities[0].id}
             >
 
-              {frequencies.frequencies.map((frequency, i) => {
+              {communities.map((community, i) => {
+                return (
+                  <option key={i} value={community.id}>
+                    {community.name}
+                  </option>
+                );
+              })}
+            </Select>
+
+            <Select
+              right
+              onChange={this.selectFrequencyFromDropdown}
+              defaultValue={availableFrequencies[0].id}
+            >
+
+              {availableFrequencies.map((frequency, i) => {
                 return (
                   <option key={i} value={frequency.id}>
                     {frequency.name}
                   </option>
                 );
               })}
-
             </Select>
           </Byline>
         </span>
@@ -483,6 +511,7 @@ class Composer extends Component {
                       </div>
                     </PreviewWrapper>}
                 <SubmitContainer sticky={!this.state.creating}>
+
                   {!composer.editing && byline}
 
                   {this.props.composer.editing &&
@@ -521,6 +550,7 @@ const mapStateToProps = state => {
     user: state.user,
     frequencies: state.frequencies,
     activeCommunity: state.communities.active,
+    communities: state.communities.communities,
     composer: state.composer,
   };
 };

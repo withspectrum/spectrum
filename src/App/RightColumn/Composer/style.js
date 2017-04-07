@@ -54,16 +54,18 @@ export const Byline = styled(H4)`
 export const Select = styled.select`
 	color: ${({ theme }) => theme.brand.default};
   border: none;
-  border-radius: 3px;
+  border-radius: ${props => props.right ? '0 4px 4px 0' : '4px 0 0 4px'};
   background: rgba(56, 24, 229, 0.05);
   -webkit-appearance: none;
   font-size: 14px;
   padding: 4px 8px;
-  margin-left: 5px;
+  margin-right: ${props => props.right ? '5px' : '0'};
   position: relative;
  	width: auto;
  	transition: all 0.1s;
  	font-weight: 600;
+	border: 1px solid rgba(56, 24, 229, 0.1);
+	border-right: ${props => props.right ? 'auto' : 'none'};
 
  	&:hover {
  		transition: all 0.1s;
