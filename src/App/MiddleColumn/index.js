@@ -315,7 +315,8 @@ class MiddleColumn extends Component {
                 <Icon subtle />
               </IconButton>}
 
-            {isNotifications ||
+            {!isNotifications &&
+              !isEverything &&
               <IconButton onClick={this.toggleComposer}>
                 <Icon
                   icon={composer.isOpen ? 'write-cancel' : 'write'}
