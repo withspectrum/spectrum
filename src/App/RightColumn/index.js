@@ -122,9 +122,9 @@ class RightColumn extends Component {
     } = this.props;
     let story = this.getActiveStory();
 
-    let role, creator, locked, storyFrequency, returnUrl, communitySlug;
+    const communitySlug = communities.active;
+    let role, creator, locked, storyFrequency, returnUrl;
     if (story !== undefined) {
-      communitySlug = communities.active;
       if (story.deleted) {
         // a user has landed on an old url, boot them back to the story's community or everything
         history.push(`/${`${communitySlug}/${active}` || 'everything'}`);
