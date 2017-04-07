@@ -50,20 +50,22 @@ class App extends Component {
       notifications,
       communities,
     } = this.props;
-    const community = communities.communities.find(
-      community => community.slug === communities.active,
-    );
-    if (!community) return <Body />;
-    const frequency = getCurrentFrequency(
-      frequencies.active,
-      frequencies.frequencies,
-      community.id,
-    );
-    const communitySlug = communities.active;
 
+    const communitySlug = communities.active;
     const isEverything = communitySlug === 'everything';
     const isNotifications = communitySlug === 'notifications';
     const isExplore = communitySlug === 'explore';
+    const community = communities.communities.find(
+      community => community.slug === communitySlug,
+    );
+    if (!community && !isEverything && !isNotifications && !isExplore)
+      return <Body />;
+    const frequency = community &&
+      getCurrentFrequency(
+        frequencies.active,
+        frequencies.frequencies,
+        community.id,
+      );
 
     let sortedStories = sortArrayByKey(
       stories.stories.slice(),
