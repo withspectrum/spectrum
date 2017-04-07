@@ -134,9 +134,11 @@ class MiddleColumn extends Component {
       activeStory,
       communities: { communities, active },
     } = this.props;
-    const isEverything = active === 'everything';
     const story = stories[index];
 
+    if (React.isValidElement(story)) return story;
+
+    const isEverything = active === 'everything';
     const notification = notifications.find(
       notification =>
         notification.activityType === ACTIVITY_TYPES.NEW_MESSAGE &&
@@ -156,28 +158,28 @@ class MiddleColumn extends Component {
     const linkPrefix = isEverything
       ? `/everything`
       : `/${community.slug}/~${activeFrequency}`;
-    return React.isValidElement(story)
-      ? story
-      : <StoryCard
-          isActive={activeStory === story.id}
-          key={key}
-          link={`${linkPrefix}/${story.id}`}
-          media={story.content.media}
-          messages={story.messages ? Object.keys(story.messages).length : 0}
-          metaLink={isEverything && freq && `/${community.slug}/~${freq.slug}`}
-          metaText={isEverything && freq && `~${freq.name}`}
-          person={{
-            photo: story.creator.photoURL,
-            name: story.creator.displayName,
-          }}
-          timestamp={story.last_activity || story.timestamp}
-          title={story.content.title}
-          unreadMessages={unreadMessages}
-          isNew={isNew}
-          story={story}
-          participants={story.participants}
-          metadata={story.metadata ? story.metadata : null}
-        />;
+    return (
+      <StoryCard
+        isActive={activeStory === story.id}
+        key={key}
+        link={`${linkPrefix}/${story.id}`}
+        media={story.content.media}
+        messages={story.messages ? Object.keys(story.messages).length : 0}
+        metaLink={isEverything && freq && `/${community.slug}/~${freq.slug}`}
+        metaText={isEverything && freq && `~${freq.name}`}
+        person={{
+          photo: story.creator.photoURL,
+          name: story.creator.displayName,
+        }}
+        timestamp={story.last_activity || story.timestamp}
+        title={story.content.title}
+        unreadMessages={unreadMessages}
+        isNew={isNew}
+        story={story}
+        participants={story.participants}
+        metadata={story.metadata ? story.metadata : null}
+      />
+    );
   };
 
   jumpToTop = () => {
