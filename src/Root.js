@@ -45,7 +45,8 @@ class Root extends Component {
       !params.frequency &&
       params.community &&
       params.community !== 'everything' &&
-      params.community !== 'explore'
+      params.community !== 'explore' &&
+      params.community !== 'messages'
     ) {
       history.push(`/${params.community}/~general`);
       return;
@@ -66,7 +67,7 @@ class Root extends Component {
   componentWillReceiveProps(nextProps) {
     const { dispatch } = nextProps;
 
-    if (this.props.match.params.community === 'messages') {
+    if (nextProps.match.params.community === 'messages') {
       if (
         this.props.match.params.frequency !== nextProps.match.params.frequency
       ) {

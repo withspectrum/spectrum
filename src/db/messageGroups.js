@@ -41,6 +41,7 @@ export const checkMessageGroupForUsersMatch = (
     const messageGroupObj = snapshot.val();
     const users = Object.keys(messageGroupObj.users);
     const toCheck = [currentUser, checkingUser];
+
     if (users.sort().join('') === toCheck.sort().join('')) {
       return messageGroupObj.id;
     }

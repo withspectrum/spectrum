@@ -50,6 +50,7 @@ class StoryCard extends Component {
     person: PropTypes.shape({
       name: PropTypes.string.isRequired,
       photo: PropTypes.string.isRequired,
+      uid: PropTypes.string.isRequired,
     }),
     timestamp: PropTypes.number,
     title: PropTypes.string.isRequired,

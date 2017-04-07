@@ -38,7 +38,6 @@ class UserProfileModal extends React.Component {
       })
       .then(recipient => {
         getMessageGroups(uid).then(messageGroups => {
-          console.log('max', messageGroups);
           if (!messageGroups) {
             this.setState({
               messageId: null,
@@ -50,7 +49,7 @@ class UserProfileModal extends React.Component {
           // use .some() because it will break when a check returns true, so that
           // we don't keep iterating over messageGroups unnecessiarly
           Object.keys(messageGroups)
-            .some(group => checkMessageGroupForUsersMatch(
+            .map(group => checkMessageGroupForUsersMatch(
               group,
               uid,
               recipient.uid,
@@ -88,7 +87,6 @@ class UserProfileModal extends React.Component {
 
       history.push(`/messages/${messageId}`);
     } else {
-      console.log('button click here');
       this.props.dispatch({
         type: 'CLEAR_ACTIVE_STORY',
       });

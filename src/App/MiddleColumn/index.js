@@ -201,6 +201,7 @@ class MiddleColumn extends Component {
         person={{
           photo: story.creator.photoURL,
           name: story.creator.displayName,
+          uid: story.creator.uid,
         }}
         timestamp={story.last_activity || story.timestamp}
         title={story.content.title}
