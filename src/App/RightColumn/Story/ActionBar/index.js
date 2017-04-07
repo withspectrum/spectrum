@@ -56,7 +56,6 @@ class ActionBar extends Component {
     let currentFrequency = getCurrentFrequency(
       story.frequencyId,
       frequencies.frequencies,
-      activeCommunity.id,
     );
 
     return (
@@ -134,9 +133,6 @@ class ActionBar extends Component {
 
 const mapStateToProps = state => ({
   frequencies: state.frequencies,
-  activeCommunity: state.communities.communities.find(
-    community => community.slug === state.communities.active,
-  ),
 });
 
 export default connect(mapStateToProps)(ActionBar);

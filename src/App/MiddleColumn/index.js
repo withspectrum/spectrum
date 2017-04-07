@@ -153,9 +153,6 @@ class MiddleColumn extends Component {
     const freq = getCurrentFrequency(story.frequencyId, frequencies);
     const community = freq &&
       communities.find(community => community.id === freq.communityId);
-    if (!community) {
-      console.log(freq, story, communities);
-    }
     const linkPrefix = isEverything
       ? `/everything`
       : `/${community.slug}/~${activeFrequency}`;

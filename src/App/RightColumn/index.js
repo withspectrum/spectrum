@@ -95,7 +95,7 @@ class RightColumn extends Component {
       subscribeFrequency(
         {
           frequencySlug: this.props.frequencies.active,
-          communitySlug: this.props.communities.active,
+          communitySlug: this.props.activeCommunity,
         },
         false,
       ),
@@ -118,11 +118,11 @@ class RightColumn extends Component {
       composer,
       user,
       frequencies: { frequencies, active },
-      communities,
+      activeCommunity,
     } = this.props;
     let story = this.getActiveStory();
 
-    const communitySlug = communities.active;
+    const communitySlug = activeCommunity;
     let role, creator, locked, storyFrequency, returnUrl;
     if (story !== undefined) {
       if (story.deleted) {
@@ -135,11 +135,8 @@ class RightColumn extends Component {
       role = getStoryPermission(story, user, frequencies);
       locked = story && story.locked ? story.locked : false;
 
-      const community = communities.communities.find(
-        community => community.slug === communitySlug,
-      );
       storyFrequency = story &&
-        getCurrentFrequency(story.frequencyId, frequencies, community.id);
+        getCurrentFrequency(story.frequencyId, frequencies);
 
       returnUrl = communitySlug === 'everything'
         ? 'everything'
@@ -238,7 +235,7 @@ const mapStateToProps = state => ({
   frequencies: state.frequencies,
   user: state.user,
   composer: state.composer,
-  communities: state.communities,
+  activeCommunity: state.communities.active,
 });
 
 export default connect(mapStateToProps)(RightColumn);
