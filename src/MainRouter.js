@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Router, Redirect } from 'react-router-dom';
+import { Route, Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Raven from 'raven-js';
 import { set, track } from './EventTracker';
@@ -81,7 +81,6 @@ class MainRouter extends React.Component {
       <Router history={history}>
         <Body>
           <Route exact path="/" component={Root} />
-          <Redirect path="/~:oldfrequeny" to="/" />
           <Route exact path="/:community" component={Root} />
           <Route exact path="/:community/(\~?):frequency" component={Root} />
           <Route

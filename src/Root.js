@@ -39,7 +39,6 @@ class Root extends Component {
     if (
       !params.frequency &&
       params.community &&
-      params.community.indexOf('~') !== 0 &&
       params.community !== 'everything' &&
       params.community !== 'explore'
     ) {
