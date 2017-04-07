@@ -149,6 +149,7 @@ export const FreqTitle = styled(H2)`
 	font-size: 20px;
 	margin-left: 8px;
 	position: relative;
+  text-transform: capitalize;
 `;
 
 export const FlexCol = styled.div`
