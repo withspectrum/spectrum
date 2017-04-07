@@ -350,6 +350,9 @@ class Composer extends Component {
   };
 
   componentWillUpdate(nextProps, nextState) {
+    // if the community dropdown is toggled, we have to manually set the state for
+    // the frequency picker based on the newly selected community
+
     let { frequencies, communities } = this.props;
     if (nextState.communityPicker !== this.state.communityPicker) {
       const communitySelected = communities.filter(
@@ -379,8 +382,6 @@ class Composer extends Component {
     const availableFrequencies = frequencies.frequencies.filter(
       frequency => frequency.communityId === communitySelected[0].id,
     );
-
-    console.log(this.state.communityPicker, this.state.frequencyPicker);
 
     let byline = activeCommunity === 'everything'
       ? <span>
