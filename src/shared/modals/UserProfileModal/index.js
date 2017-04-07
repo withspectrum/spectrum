@@ -25,7 +25,19 @@ class UserProfileModal extends React.Component {
     loading: false,
   };
 
-  componentDidMount = () => {
+  componentWillMount() {
+    this.populateModal();
+  }
+
+  componentWillUnmount() {
+    this.setState({
+      recipient: null,
+      messageId: null,
+      loading: false,
+    });
+  }
+
+  populateModal = () => {
     const { modalProps: { user }, user: { uid } } = this.props;
     const recipient = user;
     getUserInfo(recipient)
@@ -59,11 +71,6 @@ class UserProfileModal extends React.Component {
               if (id) {
                 this.setState({
                   messageId: id,
-                  loading: false,
-                });
-              } else {
-                this.setState({
-                  messageId: null,
                   loading: false,
                 });
               }
@@ -115,6 +122,8 @@ class UserProfileModal extends React.Component {
     const displayName = this.state.recipient
       ? this.state.recipient.displayName
       : 'Loading...';
+
+    console.log(this.state);
 
     return (
       <Modal

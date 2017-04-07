@@ -99,6 +99,18 @@ class NavigationMaster extends Component {
     const isMessages = active === 'messages';
     const isExplore = active === 'explore';
 
+    // if any of the messageGroups have activity that is greater than last_seen, return
+    // true and show a dirty dot in the ui
+    const unreadMessageGroups = messageGroups.some(group => {
+      const me = group.users[user.uid];
+      if (
+        group.last_activity > me.last_seen &&
+        group.id !== this.props.messageGroups.active
+      ) {
+        return true;
+      }
+    });
+
     return (
       <Column>
         {user.uid
@@ -144,6 +156,8 @@ class NavigationMaster extends Component {
                       <Icon reverse static icon="messages" />
                       <FreqLabel ml>Messages</FreqLabel>
                     </FlexRow>
+
+                    {unreadMessageGroups && <DirtyDot />}
                   </Freq>
                 </Link>}
 

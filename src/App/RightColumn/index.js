@@ -41,6 +41,12 @@ class RightColumn extends Component {
   }
 
   componentDidMount = () => {
+    const { messageGroups: { active } } = this.props;
+    // if user is viewing a message group, scroll to bottom
+    if (active) {
+      this.forceScrollToBottom();
+    }
+
     if (!this.comp) return;
     let node = this.comp;
     if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
@@ -51,6 +57,14 @@ class RightColumn extends Component {
       this.setState({
         atBottom: false,
       });
+    }
+  };
+
+  componentDidUpdate = (prevProps, prevState) => {
+    const { messageGroups: { active } } = this.props;
+    // if user changes a message group, scroll to bottom
+    if (active !== prevProps.messageGroups.active) {
+      this.forceScrollToBottom();
     }
   };
 

@@ -58,6 +58,18 @@ class ChatInput extends Component {
     });
   };
 
+  componentDidUpdate = (prevProps, prevState) => {
+    const {
+      messageGroups: { active },
+      messageComposer: { isOpen },
+    } = this.props;
+    // if user changes a message group, autofocus the input
+    if (active || isOpen) {
+      let textInput = ReactDOM.findDOMNode(this.refs.textInput);
+      textInput.focus();
+    }
+  };
+
   appendEmoji = emoji => {
     track('emojiPicker', 'sent', null);
 
@@ -223,6 +235,7 @@ const mapStateToProps = state => ({
   user: state.user,
   stories: state.stories,
   messageGroups: state.messageGroups,
+  messageComposer: state.messageComposer,
 });
 
 export default connect(mapStateToProps)(ChatInput);
