@@ -209,9 +209,11 @@ class NavigationMaster extends Component {
                         >
                           <Freq
                             active={
-                              frequency.slug &&
+                              (frequency.slug &&
                                 frequency.slug === activeFrequency ||
-                                frequency.id && frequency.id === activeFrequency
+                                frequency.id &&
+                                  frequency.id === activeFrequency) &&
+                                comm.slug === active
                             }
                             onClick={this.showStoriesNav}
                           >
