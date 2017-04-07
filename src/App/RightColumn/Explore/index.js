@@ -206,7 +206,7 @@ class Explore extends Component {
                     <Item key={i} active={frequencies[freq.id]}>
                       <FlexCol>
                         <ItemTitle>
-                          <Link to={`/~${freq.slug}`}>~{freq.name}</Link>
+                          ~{freq.name}
                         </ItemTitle>
                         <ItemMeta>
                           {Object.keys(freq.users).length} followers
@@ -220,11 +220,9 @@ class Explore extends Component {
                               color="success.default"
                               static
                             />
-                            <Link to={`/~${freq.slug}`}>
-                              <ItemButton active>
-                                Go to {`~${freq.slug}`}
-                              </ItemButton>
-                            </Link>
+                            <ItemButton active>
+                              Subscribed!
+                            </ItemButton>
                           </ButtonContainer>
                         : <ButtonContainer>
                             <ItemButton
@@ -253,11 +251,16 @@ class Explore extends Component {
             <Row>
               {this.state.curatedFrequencies &&
                 this.state.curatedFrequencies.map((freq, i) => {
+                  const { communitySlug } = CURATED_FREQUENCIES.find(
+                    curated => curated.slug === freq.slug,
+                  );
                   return (
                     <Item key={i} active={frequencies[freq.id]}>
                       <FlexCol>
                         <ItemTitle>
-                          <Link to={`/~${freq.slug}`}>~{freq.name}</Link>
+                          <Link to={`/${communitySlug}/~${freq.slug}`}>
+                            ~{freq.name}
+                          </Link>
                         </ItemTitle>
                         <ItemMeta>
                           {Object.keys(freq.users).length} followers
@@ -271,7 +274,7 @@ class Explore extends Component {
                               color="success.default"
                               static
                             />
-                            <Link to={`/~${freq.slug}`}>
+                            <Link to={`/${communitySlug}/~${freq.slug}`}>
                               <ItemButton active>
                                 Go to {`~${freq.slug}`}
                               </ItemButton>
@@ -304,11 +307,16 @@ class Explore extends Component {
             <Row>
               {this.state.developerFrequencies &&
                 this.state.developerFrequencies.map((freq, i) => {
+                  const { communitySlug } = DEVELOPER_FREQUENCIES.find(
+                    curated => curated.slug === freq.slug,
+                  );
                   return (
                     <Item key={i} active={frequencies[freq.id]}>
                       <FlexCol>
                         <ItemTitle>
-                          <Link to={`/~${freq.slug}`}>~{freq.name}</Link>
+                          <Link to={`/${communitySlug}/~${freq.slug}`}>
+                            ~{freq.name}
+                          </Link>
                         </ItemTitle>
                         <ItemMeta>
                           {Object.keys(freq.users).length} followers
@@ -322,7 +330,7 @@ class Explore extends Component {
                               color="success.default"
                               static
                             />
-                            <Link to={`/~${freq.slug}`}>
+                            <Link to={`/${communitySlug}/~${freq.slug}`}>
                               <ItemButton active>
                                 Go to {`~${freq.slug}`}
                               </ItemButton>
@@ -355,11 +363,16 @@ class Explore extends Component {
             <Row>
               {this.state.designerFrequencies &&
                 this.state.designerFrequencies.map((freq, i) => {
+                  const { communitySlug } = DESIGNER_FREQUENCIES.find(
+                    curated => curated.slug === freq.slug,
+                  );
                   return (
                     <Item key={i} active={frequencies[freq.id]}>
                       <FlexCol>
                         <ItemTitle>
-                          <Link to={`/~${freq.slug}`}>~{freq.name}</Link>
+                          <Link to={`/${communitySlug}/~${freq.slug}`}>
+                            ~{freq.name}
+                          </Link>
                         </ItemTitle>
                         <ItemMeta>
                           {Object.keys(freq.users).length} followers
@@ -373,7 +386,7 @@ class Explore extends Component {
                               color="success.default"
                               static
                             />
-                            <Link to={`/~${freq.slug}`}>
+                            <Link to={`/${communitySlug}/~${freq.slug}`}>
                               <ItemButton active>
                                 Go to {`~${freq.slug}`}
                               </ItemButton>
@@ -404,13 +417,18 @@ class Explore extends Component {
               Bond with the community over our favorite things to do after hours!
             </SectionSubtitle>
             <Row>
-              {this.state.designerFrequencies &&
-                this.state.designerFrequencies.map((freq, i) => {
+              {this.state.afterHoursFrequencies &&
+                this.state.afterHoursFrequencies.map((freq, i) => {
+                  const { communitySlug } = AFTER_HOUR_FREQUENCIES.find(
+                    curated => curated.slug === freq.slug,
+                  );
                   return (
                     <Item key={i} active={frequencies[freq.id]}>
                       <FlexCol>
                         <ItemTitle>
-                          <Link to={`/~${freq.slug}`}>~{freq.name}</Link>
+                          <Link to={`/${communitySlug}/~${freq.slug}`}>
+                            ~{freq.name}
+                          </Link>
                         </ItemTitle>
                         <ItemMeta>
                           {Object.keys(freq.users).length} followers
@@ -424,7 +442,7 @@ class Explore extends Component {
                               color="success.default"
                               static
                             />
-                            <Link to={`/~${freq.slug}`}>
+                            <Link to={`/${communitySlug}/~${freq.slug}`}>
                               <ItemButton active>
                                 Go to {`~${freq.slug}`}
                               </ItemButton>
@@ -457,11 +475,16 @@ class Explore extends Component {
             <Row>
               {this.state.supportFrequencies &&
                 this.state.supportFrequencies.map((freq, i) => {
+                  const { communitySlug } = SUPPORT_FREQUENCIES.find(
+                    curated => curated.slug === freq.slug,
+                  );
                   return (
                     <Item key={i} active={frequencies[freq.id]}>
                       <FlexCol>
                         <ItemTitle>
-                          <Link to={`/~${freq.slug}`}>~{freq.name}</Link>
+                          <Link to={`/${communitySlug}/~${freq.slug}`}>
+                            ~{freq.name}
+                          </Link>
                         </ItemTitle>
                         <ItemMeta>
                           {Object.keys(freq.users).length} followers
@@ -475,7 +498,7 @@ class Explore extends Component {
                               color="success.default"
                               static
                             />
-                            <Link to={`/~${freq.slug}`}>
+                            <Link to={`/${communitySlug}/~${freq.slug}`}>
                               <ItemButton active>
                                 Go to {`~${freq.slug}`}
                               </ItemButton>
