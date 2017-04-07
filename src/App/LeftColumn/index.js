@@ -155,7 +155,7 @@ class NavigationMaster extends Component {
                 >
                   <FreqText>
                     <Icon icon="explore" reverse static />
-                    <FreqLabel>{'Explore'}</FreqLabel>
+                    <FreqLabel ml>{'Explore'}</FreqLabel>
                   </FreqText>
                 </Freq>
               </Link>
