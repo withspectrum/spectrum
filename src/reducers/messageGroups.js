@@ -20,6 +20,10 @@ export default function root(state = initialState, action) {
         messageGroups: messageGroups.concat(action.messageGroup),
       });
     }
+    case 'SET_ACTIVE_STORY':
+      return Object.assign({}, state, {
+        active: null,
+      });
     case 'SET_ACTIVE_MESSAGE_GROUP':
       return Object.assign({}, state, {
         active: action.messageGroupId || null,
