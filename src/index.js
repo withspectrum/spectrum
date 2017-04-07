@@ -5,7 +5,6 @@ import { ThemeProvider } from 'styled-components';
 import { initStore } from './store';
 import FIREBASE_CONFIG from './config/FirebaseConfig';
 import MainRouter from './MainRouter';
-import Root from './Root';
 import { clearStorage } from './helpers/localStorage';
 import { initializeDatabase } from './db/general';
 
