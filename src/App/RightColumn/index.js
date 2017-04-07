@@ -63,7 +63,8 @@ class RightColumn extends Component {
   componentDidUpdate = (prevProps, prevState) => {
     const { messageGroups: { active } } = this.props;
     // if user changes a message group, scroll to bottom
-    if (active !== prevProps.messageGroups.active) {
+
+    if (active !== prevProps.messageGroups.active || this.state.atBottom) {
       this.forceScrollToBottom();
     }
   };

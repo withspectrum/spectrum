@@ -34,7 +34,6 @@ import Icon from '../../../shared/Icons';
 class Chat extends Component {
   componentDidUpdate(prevProps, prevState) {
     this.props.contextualScrollToBottom();
-
     // TODO: Not working properly
     if (this.props.shouldScrollToBottomOnRender) {
       this.props.forceScrollToBottom();
