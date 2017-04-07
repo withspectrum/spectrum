@@ -161,6 +161,7 @@ class Composer extends Component {
     const title = this.props.composer.title;
     const description = this.props.composer.body;
     const metadata = this.props.composer.metadata;
+
     // if we pass in a custom frequency, it means the user is in 'all' and has selected a frequency from the dropdown
     // if the user isn't in all, we'll send the currently active frequency via the redux state
     const frequency = this.props.activeCommunity === 'everything'
@@ -348,6 +349,22 @@ class Composer extends Component {
     this.props.dispatch(cancelEditStory());
   };
 
+  componentWillUpdate(nextProps, nextState) {
+    let { frequencies, communities } = this.props;
+    if (nextState.communityPicker !== this.state.communityPicker) {
+      const communitySelected = communities.filter(
+        community => community.id === nextState.communityPicker,
+      );
+      const availableFrequencies = frequencies.frequencies.filter(
+        frequency => frequency.communityId === communitySelected[0].id,
+      );
+
+      this.setState({
+        frequencyPicker: availableFrequencies[0].id,
+      });
+    }
+  }
+
   render() {
     let { frequencies, composer, activeCommunity, communities } = this.props;
     let activeFrequency = frequencies.active;
@@ -362,6 +379,8 @@ class Composer extends Component {
     const availableFrequencies = frequencies.frequencies.filter(
       frequency => frequency.communityId === communitySelected[0].id,
     );
+
+    console.log(this.state.communityPicker, this.state.frequencyPicker);
 
     let byline = activeCommunity === 'everything'
       ? <span>
@@ -383,12 +402,12 @@ class Composer extends Component {
             <Select
               right
               onChange={this.selectFrequencyFromDropdown}
-              defaultValue={availableFrequencies.id}
+              defaultValue={availableFrequencies[0].id}
             >
 
               {availableFrequencies.map((frequency, i) => {
                 return (
-                  <option key={i} value={frequency}>
+                  <option key={i} value={frequency.id}>
                     {frequency.name}
                   </option>
                 );
