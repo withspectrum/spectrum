@@ -67,11 +67,12 @@ class Composer extends Component {
   constructor(props) {
     super(props);
 
-    let { user, composer: { metadata } } = props;
+    let { user, composer: { metadata }, communities } = props;
     let userFreqs = Object.keys(user.frequencies);
 
     this.state = {
       error: null,
+      communityPicker: communities ? communities[0].id : '',
       frequencyPicker: userFreqs ? userFreqs[0] : '',
       loading: false,
       placeholder: '+ Embed',
@@ -110,6 +111,12 @@ class Composer extends Component {
   selectFrequencyFromDropdown = e => {
     this.setState({
       frequencyPicker: e.target.value,
+    });
+  };
+
+  selectCommunityFromDropdown = e => {
+    this.setState({
+      communityPicker: e.target.value,
     });
   };
 
@@ -154,15 +161,21 @@ class Composer extends Component {
     const title = this.props.composer.title;
     const description = this.props.composer.body;
     const metadata = this.props.composer.metadata;
+
     // if we pass in a custom frequency, it means the user is in 'all' and has selected a frequency from the dropdown
     // if the user isn't in all, we'll send the currently active frequency via the redux state
-    const frequency = this.props.frequencies.active === 'everything'
+    const frequency = this.props.activeCommunity === 'everything'
       ? this.state.frequencyPicker
       : this.props.frequencies.active;
+
+    const community = this.props.communities.find(
+      community => community.slug === this.props.activeCommunity,
+    );
 
     const frequencyId = getCurrentFrequency(
       frequency,
       this.props.frequencies.frequencies,
+      community.id,
     ).id;
 
     if (frequency && title && !isEditing) {
@@ -341,31 +354,68 @@ class Composer extends Component {
     this.props.dispatch(cancelEditStory());
   };
 
+  componentWillUpdate(nextProps, nextState) {
+    // if the community dropdown is toggled, we have to manually set the state for
+    // the frequency picker based on the newly selected community
+
+    let { frequencies, communities } = this.props;
+    if (nextState.communityPicker !== this.state.communityPicker) {
+      const communitySelected = communities.find(
+        community => community.id === nextState.communityPicker,
+      );
+      const firstAvailableFreq = frequencies.frequencies.find(
+        frequency => frequency.communityId === communitySelected[0].id,
+      );
+
+      this.setState({
+        frequencyPicker: firstAvailableFreq.id,
+      });
+    }
+  }
+
   render() {
-    let { frequencies, composer } = this.props;
+    let { frequencies, composer, activeCommunity, communities } = this.props;
     let activeFrequency = frequencies.active;
     let currentFrequency = frequencies.frequencies.filter(freq => {
       return freq.slug === activeFrequency;
     });
     let media = composer.mediaList;
 
-    let byline = activeFrequency === 'everything'
+    const communitySelected = communities.find(
+      community => community.id === this.state.communityPicker,
+    );
+    const availableFrequencies = frequencies.byCommunity[communitySelected.id];
+
+    let byline = activeCommunity === 'everything'
       ? <span>
           <Byline hasContent={true}>
-            New story in
             <Select
-              onChange={this.selectFrequencyFromDropdown}
-              defaultValue={frequencies.frequencies[0].id}
+              onChange={this.selectCommunityFromDropdown}
+              defaultValue={communities[0].id}
             >
 
-              {frequencies.frequencies.map((frequency, i) => {
+              {communities.map((community, i) => {
+                return (
+                  <option key={i} value={community.id}>
+                    {community.name}
+                  </option>
+                );
+              })}
+            </Select>
+
+            <Select
+              right
+              onChange={this.selectFrequencyFromDropdown}
+              defaultValue={availableFrequencies[0].id}
+            >
+
+              {availableFrequencies.map((frequency, i) => {
                 return (
                   <option key={i} value={frequency.id}>
                     {frequency.name}
                   </option>
                 );
               })}
-
             </Select>
           </Byline>
         </span>
@@ -477,10 +527,13 @@ class Composer extends Component {
                   : <PreviewWrapper>
                       <StoryTitlePreview>{composer.title}</StoryTitlePreview>
                       <div className="markdown" ref="story">
-                        <Markdown>{linkFreqsInMd(composer.body)}</Markdown>
+                        <Markdown>
+                          {linkFreqsInMd(composer.body, activeCommunity)}
+                        </Markdown>
                       </div>
                     </PreviewWrapper>}
                 <SubmitContainer sticky={!this.state.creating}>
+
                   {!composer.editing && byline}
 
                   {this.props.composer.editing &&
@@ -518,6 +571,8 @@ const mapStateToProps = state => {
   return {
     user: state.user,
     frequencies: state.frequencies,
+    activeCommunity: state.communities.active,
+    communities: state.communities.communities,
     composer: state.composer,
   };
 };

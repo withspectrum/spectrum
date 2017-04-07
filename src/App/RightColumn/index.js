@@ -92,7 +92,13 @@ class RightColumn extends Component {
 
   subscribeFrequency = () => {
     this.props.dispatch(
-      subscribeFrequency(this.props.frequencies.active, false),
+      subscribeFrequency(
+        {
+          frequencySlug: this.props.frequencies.active,
+          communitySlug: this.props.activeCommunity,
+        },
+        false,
+      ),
     );
   };
 
@@ -108,14 +114,20 @@ class RightColumn extends Component {
   };
 
   render() {
-    const { composer, user, frequencies: { frequencies, active } } = this.props;
+    const {
+      composer,
+      user,
+      frequencies: { frequencies, active },
+      activeCommunity,
+    } = this.props;
     let story = this.getActiveStory();
 
-    let role, creator, locked, currentFrequency, returnUrl;
+    const communitySlug = activeCommunity;
+    let role, creator, locked, storyFrequency, returnUrl;
     if (story !== undefined) {
       if (story.deleted) {
-        // a user has landed on an old url, boot them back to the story's frequency or everything
-        history.push(`/~${active || 'everything'}`);
+        // a user has landed on an old url, boot them back to the story's community or everything
+        history.push(`/${`${communitySlug}/${active}` || 'everything'}`);
         story = null;
       }
 
@@ -123,18 +135,25 @@ class RightColumn extends Component {
       role = getStoryPermission(story, user, frequencies);
       locked = story && story.locked ? story.locked : false;
 
-      currentFrequency = story &&
+      storyFrequency = story &&
         getCurrentFrequency(story.frequencyId, frequencies);
 
-      returnUrl = active === 'everything'
+      returnUrl = communitySlug === 'everything'
         ? 'everything'
-        : currentFrequency && currentFrequency.slug;
+        : storyFrequency && `${communitySlug}/~${storyFrequency.slug}`;
+
+      returnUrl = active === 'explore'
+        ? 'explore'
+        : storyFrequency && `${communitySlug}/~${storyFrequency.slug}`;
     }
 
     if (story && !composer.isOpen) {
+      const storyHref = storyFrequency
+        ? `/${communitySlug}/~${storyFrequency.slug}/${story.id}`
+        : `/everything/${story.id}`;
       return (
         <ViewContainer>
-          <Link to={`/~${returnUrl}`}>
+          <Link to={`/${returnUrl}`}>
             <BackArrow onClick={this.clearActiveStory}>
               <Icon icon="back" />
             </BackArrow>
@@ -145,12 +164,13 @@ class RightColumn extends Component {
             locked={story.locked}
             onScroll={this.onScroll}
           >
-            <Story story={story} frequency={currentFrequency} active={active} />
+            <Story story={story} frequency={storyFrequency} active={active} />
             <ActionBar
               locked={locked}
               moderator={role}
               creator={creator}
               story={story}
+              shareUrl={`https://spectrum.chat${storyHref}`}
             />
             <Chat
               atBottom={this.state.atBottom}
@@ -189,10 +209,10 @@ class RightColumn extends Component {
           <Composer />
         </ViewContainer>
       );
-    } else if (this.props.frequencies.active === 'explore') {
+    } else if (communitySlug === 'explore') {
       return (
         <ViewContainer>
-          <Link to={`/~everything`}>
+          <Link to={`/everything`}>
             <BackArrow onClick={this.clearActiveStory}>
               <Icon icon="back" />
             </BackArrow>
@@ -215,6 +235,7 @@ const mapStateToProps = state => ({
   frequencies: state.frequencies,
   user: state.user,
   composer: state.composer,
+  activeCommunity: state.communities.active,
 });
 
 export default connect(mapStateToProps)(RightColumn);

@@ -42,14 +42,30 @@ class App extends Component {
   };
 
   render() {
-    const { stories, frequencies, user, ui, notifications } = this.props;
-    const frequency = getCurrentFrequency(
-      frequencies.active,
-      frequencies.frequencies,
-    );
+    const {
+      stories,
+      frequencies,
+      user,
+      ui,
+      notifications,
+      communities,
+    } = this.props;
 
-    const isEverything = frequencies.active === 'everything';
-    const isExplore = frequencies.active === 'explore';
+    const communitySlug = communities.active;
+    const isEverything = communitySlug === 'everything';
+    const isNotifications = communitySlug === 'notifications';
+    const isExplore = communitySlug === 'explore';
+    const community = communities.communities.find(
+      community => community.slug === communitySlug,
+    );
+    if (!community && !isEverything && !isNotifications && !isExplore)
+      return <Body />;
+    const frequency = community &&
+      getCurrentFrequency(
+        frequencies.active,
+        frequencies.frequencies,
+        community.id,
+      );
 
     let sortedStories = sortArrayByKey(
       stories.stories.slice(),
@@ -59,7 +75,7 @@ class App extends Component {
       .reverse()
       .filter(story => !story.deleted);
 
-    if (frequency && !frequency.active !== 'everything') {
+    if (frequency && !isEverything) {
       sortedStories = sortedStories.filter(story => {
         return story.frequencyId === frequency.id && story.published;
       });
@@ -231,6 +247,7 @@ class App extends Component {
 export default connect(state => ({
   stories: state.stories,
   frequencies: state.frequencies,
+  communities: state.communities,
   user: state.user,
   ui: state.ui,
   notifications: state.notifications,

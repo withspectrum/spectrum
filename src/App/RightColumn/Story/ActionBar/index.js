@@ -45,7 +45,14 @@ class ActionBar extends Component {
   };
 
   render() {
-    let { creator, moderator, locked, frequencies, story } = this.props;
+    let {
+      creator,
+      moderator,
+      locked,
+      frequencies,
+      story,
+      activeCommunity,
+    } = this.props;
     let currentFrequency = getCurrentFrequency(
       story.frequencyId,
       frequencies.frequencies,
@@ -57,9 +64,7 @@ class ActionBar extends Component {
           href={
             `https://twitter.com/intent/tweet/?text=${encodeURIComponent(
               story.content.title.substr(0, 85),
-            )}&amp;url=https://spectrum.chat/~${currentFrequency &&
-              currentFrequency.slug ||
-              '~everything'}/${story.id}`
+            )}&amp;url=${this.props.shareUrl}`
           }
           target="_blank"
           style={{ display: 'inline-block' }}
