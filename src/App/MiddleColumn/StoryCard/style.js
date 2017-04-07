@@ -22,11 +22,12 @@ export const StoryFooter = styled.div`
 `;
 
 export const FreqTag = styled(H4)`
-	font-weight: 900;
+	font-weight: 700;
 	display: inline-block;
 	align-self: flex-start;
 	width: auto;
 	line-height: 1;
+	font-size: 14px;
 	color: ${props => props.theme.text.placeholder};
 	margin-bottom: 8px;
 	transition: ${Transition.hover.off};
@@ -218,19 +219,15 @@ export const StatusBar = styled.div`
 	background-image: ${props =>
   props.status === 'active'
     ? Gradient(props.theme.brand.alt, props.theme.brand.default)
-    : props.status === 'new'
-        ? Gradient(props.theme.success.alt, props.theme.success.default)
-        : props.status === 'unread'
-            ? Gradient(props.theme.warn.alt, props.theme.warn.default)
-            : 'none'};
+    : 'none'};
 
 	&:after {
 		content: '';
     z-index: 1000;
     border: 8px solid transparent;
 		position: absolute;
-		left: calc(100% - 2px);
-		top: calc(50% - 7px);
+		left: calc(100% - 1px);
+		top: calc(50% - 8px);
 		border-radius: 2px;
 		border-right-width: 0;
 		border-left-color: ${props =>
@@ -271,8 +268,8 @@ export const Dot = styled.span`
 `;
 
 export const Name = styled(StatusText)`
-	font-size: 12px;
-	font-weight: 600;
+	font-size: 14px;
+	font-weight: 700;
 	margin-top: 8px;
 	color: ${props => props.theme.text.alt};
 

@@ -162,7 +162,7 @@ class StoryCard extends Component {
     }
 
     if (isActive) {
-      statusText = `I'm over there 👉`;
+      statusText = `${messages} messages`;
     }
 
     if (!isNew && !unreadMessages && !isActive && messages > 0) {
@@ -197,10 +197,7 @@ class StoryCard extends Component {
               </Link>
             </FreqTag>}
           <Title>{title}</Title>
-
-          <Name status={status}>
-            {person.name}
-          </Name>
+          <Name>{person.name}</Name>
 
           {hasMetadata &&
             hasLinkPreview &&
