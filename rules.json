@@ -240,44 +240,35 @@
       ".indexOn": ["id"],
       "$messageGroup": {
         // only participants of the message group can read from its data
-        ".read": "data.child('users').hasChild(auth.uid)",
+        ".read": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
         "creator": {
           // creator can only be written if it's a new message group and data doesn't exist yet
-          ".write": "(!data.exists() && root.child('/users/' + auth.uid + '/messageGroups').hasChild(newData.val()))",
-          ".read": "data.parent().child('users').hasChild(auth.uid)",
+          ".write": "!data.exists()",
           // it must equal the user id of the person creating the message group
           ".validate": "newData.val() === auth.uid"
         },
         "id": {
-          // must match the message group it is being keyed by
           ".write": "!data.exists()",
-          ".read": true,
           ".validate": "newData.val() === $messageGroup"
         },
         "last_activity": {
-          ".write": "root.child('/users/' + auth.uid + '/messageGroups').hasChild(data.parent().child('id'))",
+          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
           ".validate": "newData.val() <= now"
         },
         "media": {
-          "$media": {
-            "creator": {
-              ".validate": "newData.parent().child('users').hasChild(newData.val())"
-            }
-          }
+          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
         },
         "messages": {
-          ".write": "data.parent().child('users').hasChild(auth.uid)",
-          ".read": "data.parent().child('users').hasChild(auth.uid)"
+          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
         },
         "snippet": {
-          ".write": "data.parent().child('users').hasChild(auth.uid)",
-          ".read": "data.parent().child('users').hasChild(auth.uid)"
+          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
         },
         "users": {
-          // can be written if no users exist yet, or eventually people can add new users
-          // to a gropu chat if they are an existing user
-          ".write": "!data.exists() || data.parent().child('users').hasChild(auth.uid)",
-          ".read": "data.parent().child('user').hasChild(auth.uid)"
+          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
+        },
+        "$other": {
+          ".write": true
         }
       }
     },
