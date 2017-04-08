@@ -122,8 +122,6 @@ class UserProfileModal extends React.Component {
       ? this.state.recipient.displayName
       : 'Loading...';
 
-    console.log(this.state);
-
     return (
       <Modal
         isOpen={this.props.isOpen}

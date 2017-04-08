@@ -68,19 +68,28 @@ export const createNewMessageGroup = (
     last_activity: database.ServerValue.TIMESTAMP,
   };
 
-  // create the new message_group
-  updates[`message_groups/${messageGroupKey}/creator`] = sender;
-  updates[`message_groups/${messageGroupKey}/id`] = messageGroupKey;
-  updates[
-    `message_groups/${messageGroupKey}/last_activity`
-  ] = database.ServerValue.TIMESTAMP;
-  updates[`message_groups/${messageGroupKey}/private`] = true;
-  updates[`message_groups/${messageGroupKey}/users/${sender}`] = { id: sender };
-  updates[`message_groups/${messageGroupKey}/users/${recipient}`] = {
-    id: recipient,
-  };
+  return db
+    .ref()
+    .update(updates)
+    .then(() => {
+      let updates = {};
 
-  return db.ref().update(updates).then(() => messageGroupKey);
+      // create the new message_group
+      updates[`message_groups/${messageGroupKey}/creator`] = sender;
+      updates[`message_groups/${messageGroupKey}/id`] = messageGroupKey;
+      updates[
+        `message_groups/${messageGroupKey}/last_activity`
+      ] = database.ServerValue.TIMESTAMP;
+      updates[`message_groups/${messageGroupKey}/users/${sender}`] = {
+        id: sender,
+      };
+      updates[`message_groups/${messageGroupKey}/users/${recipient}`] = {
+        id: recipient,
+      };
+
+      return db.ref().update(updates);
+    })
+    .then(() => messageGroupKey);
 };
 
 export const listenToNewMessages = (uid: string, cb: Function) => {

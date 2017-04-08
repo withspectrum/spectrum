@@ -204,8 +204,8 @@
     "messages_private": {
       ".indexOn": ["messageGroupId"],
       "$messageId": {
-        // Only let users read the messages if there are no frequencies, if the frequency is public or the user is a member of the frequency
-        ".read": true,
+        // Only members of the message group can read the messages
+        ".read": "root.child('/message_groups/' + data.child('messageGroupId').val() + '/users').hasChild(auth.uid)",
         // Only let members of the frequency write messages
         ".write": "root.child('/message_groups/' + newData.child('messageGroupId').val() + '/users').hasChild(auth.uid)",
         // Make sure all the necessary fields exists
@@ -237,8 +237,49 @@
       }
     },
     "message_groups": {
-      ".read": true,
-      ".write": true,
+      ".indexOn": ["id"],
+      "$messageGroup": {
+        // only participants of the message group can read from its data
+        ".read": "data.child('users').hasChild(auth.uid)",
+        "creator": {
+          // creator can only be written if it's a new message group and data doesn't exist yet
+          ".write": "(!data.exists() && root.child('/users/' + auth.uid + '/messageGroups').hasChild(newData.val()))",
+          ".read": "data.parent().child('users').hasChild(auth.uid)",
+          // it must equal the user id of the person creating the message group
+          ".validate": "newData.val() === auth.uid"
+        },
+        "id": {
+          // must match the message group it is being keyed by
+          ".write": "!data.exists()",
+          ".read": true,
+          ".validate": "newData.val() === $messageGroup"
+        },
+        "last_activity": {
+          ".write": "root.child('/users/' + auth.uid + '/messageGroups').hasChild(data.parent().child('id'))",
+          ".validate": "newData.val() <= now"
+        },
+        "media": {
+          "$media": {
+            "creator": {
+              ".validate": "newData.parent().child('users').hasChild(newData.val())"
+            }
+          }
+        },
+        "messages": {
+          ".write": "data.parent().child('users').hasChild(auth.uid)",
+          ".read": "data.parent().child('users').hasChild(auth.uid)"
+        },
+        "snippet": {
+          ".write": "data.parent().child('users').hasChild(auth.uid)",
+          ".read": "data.parent().child('users').hasChild(auth.uid)"
+        },
+        "users": {
+          // can be written if no users exist yet, or eventually people can add new users
+          // to a gropu chat if they are an existing user
+          ".write": "!data.exists() || data.parent().child('users').hasChild(auth.uid)",
+          ".read": "data.parent().child('user').hasChild(auth.uid)"
+        }
+      }
     },
     "stories": {
       ".indexOn": ["frequencyId"],
