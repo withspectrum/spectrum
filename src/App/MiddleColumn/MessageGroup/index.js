@@ -26,8 +26,9 @@ class MessageGroup extends Component {
     const otherUsers = userIds.filter(user => user !== uid);
     const timestamp = timeDifference(Date.now(), messageGroup.last_activity);
 
-    const isUnread = messageGroup.last_activity >
-      messageGroup.users[uid].last_seen &&
+    const isUnread = (messageGroup.last_activity >
+      messageGroup.users[uid].last_seen ||
+      !messageGroup.users[uid].last_seen) &&
       !active;
 
     return (
@@ -36,7 +37,10 @@ class MessageGroup extends Component {
           <MessageGroupImagesContainer>
             {otherUsers.length === 1
               ? list[otherUsers]
-                  ? <MessageGroupImage image={list[otherUsers].photoURL} />
+                  ? <MessageGroupImage
+                      unread={isUnread}
+                      image={list[otherUsers].photoURL}
+                    />
                   : <MessageGroupImage loading />
               : otherUsers.map((user, i) => {
                   const userObj = list[user];

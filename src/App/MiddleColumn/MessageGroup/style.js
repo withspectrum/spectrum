@@ -4,10 +4,13 @@ import { H5 } from '../../../shared/Globals';
 export const MessageGroupContainer = styled.div`
 	display: flex;
 	flex: 1 1 auto;
-	padding: 16px 8px;
+	padding: 16px 8px 16px 16px;
 	align-items: center;
-	box-shadow: inset -4px 0 ${props =>
-  props.active ? props.theme.brand.default : 'transparent'};
+	${props =>
+  props.active
+    ? `box-shadow: inset -4px 0 ${props.theme.brand.default}`
+    : `transparent`};
+	transition: all 0.15s ease-in-out;
 
 	&:after {
 		content: '';
@@ -21,9 +24,7 @@ export const MessageGroupContainer = styled.div`
 
 export const MessageGroupImagesContainer = styled.div`
 	display: flex;
-	margin-right: 8px;
-	border: 1px solid ${({ theme }) => theme.border.default};
-	overflow: hidden;
+	margin-right: 12px;
 	min-width: 44px;
 	width: 44px;
 	min-height: 44px;
@@ -38,6 +39,10 @@ export const MessageGroupImage = styled.div`
 	background: ${props =>
   props.loading ? '#f6f7f8' : `url(${props.image}) no-repeat`};
 	background-size: cover;
+	${props =>
+  props.unread
+    ? `border: 2px solid #fff; box-shadow: 0 0 0 1px ${props.theme.brand.default};`
+    : ''};
 `;
 
 export const MessageGroupTextContainer = styled.div`
@@ -51,6 +56,7 @@ export const MessageGroupByline = styled.div`
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+	align-items: baseline;
 `;
 
 export const Usernames = styled.span`
@@ -81,20 +87,19 @@ export const Timestamp = styled.span`
 	color: ${props => props.unread ? props.theme.brand.default : '#909aa7'};
 	padding-right: 4px;
 	display: inline-block;
-	line-height: 1;
 	flex: 1 0 auto;
 	margin-left: 8px;
 `;
 
 export const Snippet = styled.p`
-	font-size: 12px;
-	font-weight: ${props => props.unread ? 600 : 500};
+	font-size: 13px;
+	font-weight: ${props => props.unread ? 700 : 500};
 	color: ${props =>
   props.unread ? props.theme.text.default : props.theme.text.alt};
 	padding-right: 4px;
 	display: inline-block;
-	line-height: 1;
-	margin-top: 4px;
+	line-height: 1.3;
+	margin-top: 0;
 	max-width: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;

@@ -103,6 +103,9 @@ class NavigationMaster extends Component {
     // true and show a dirty dot in the ui
     const unreadMessageGroups = messageGroups.some(group => {
       const me = group.users[user.uid];
+      if (!me.last_seen) {
+        return true;
+      }
       if (
         group.last_activity > me.last_seen &&
         group.id !== this.props.messageGroups.active

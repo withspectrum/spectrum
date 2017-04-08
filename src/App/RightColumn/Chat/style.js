@@ -17,7 +17,7 @@ export const BubbleWrapper = styled.span`
 	display: flex;
 	flex: 0 0 auto;
 	margin-top: 2px;
-	max-width: 60%;
+	max-width: 70%;
 	align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
 	position: relative;
 

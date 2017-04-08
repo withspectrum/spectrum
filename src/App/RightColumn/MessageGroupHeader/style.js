@@ -9,7 +9,7 @@ export const StoryContainer = styled.div`
 
 	@media (max-width: 768px) {
 		padding: 16px;
-		padding-top: 68px;
+		padding-top: 32px;
 	}
 `;
 
@@ -21,6 +21,10 @@ export const Header = styled.div`
 	display: flex;
 	flex-direction: column;
 	background-color: ${({ theme }) => theme.bg.default};
+
+	@media (max-width: 768px) {
+		display: none;
+	}
 `;
 
 export const StoryTitle = styled(H1)`
@@ -30,6 +34,10 @@ export const StoryTitle = styled(H1)`
 	color: ${({ theme }) => theme.text.default};
 	padding-right: 32px;
 	word-wrap: break-word;
+
+	@media (max-width: 768px) {
+		display: none;
+	}
 `;
 
 export const Byline = styled(H4)`
@@ -38,5 +46,9 @@ export const Byline = styled(H4)`
 
 	a {
 		color: ${({ theme }) => theme.text.default};
+	}
+
+	@media (max-width: 768px) {
+		display: none;
 	}
 `;
