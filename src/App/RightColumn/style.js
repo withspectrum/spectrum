@@ -67,9 +67,17 @@ export const LoginWrapper = styled(FlexRow)`
 	}
 `;
 
+export const Name = styled.h3`
+	font-weight: 800;
+	font-size: 20px;
+	position: relative;
+	text-transform: capitalize;
+`;
+
 export const BackArrow = styled.span`
 	margin-bottom: 16px;
-	width: 100%;
+	display: flex;
+	align-items: flex-start;
 	background: #fff;
 	box-shadow: ${Shadow.low};
 	height: 48px;

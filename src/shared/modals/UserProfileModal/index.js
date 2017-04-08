@@ -16,7 +16,6 @@ import {
   getMessageGroups,
   checkMessageGroupForUsersMatch,
 } from '../../../db/messageGroups';
-import { Username } from './style';
 
 class UserProfileModal extends React.Component {
   state = {

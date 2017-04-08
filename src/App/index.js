@@ -243,7 +243,10 @@ class App extends Component {
           />}
 
         {!isExplore &&
-          <MiddleColumnContainer active={stories.active} viewing={ui.viewing}>
+          <MiddleColumnContainer
+            active={stories.active || messageGroups.active}
+            viewing={ui.viewing}
+          >
             <MiddleColumn
               loggedIn={!!user.uid}
               role={

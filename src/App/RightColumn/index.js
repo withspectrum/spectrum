@@ -27,6 +27,7 @@ import {
   StoryChatContainer,
   BackArrow,
   LoginWrapper,
+  Name,
 } from './style';
 
 class RightColumn extends Component {
@@ -150,11 +151,18 @@ class RightColumn extends Component {
     if (activeCommunity === 'messages') {
       let messageGroup = this.getActiveMessageGroup();
       if (messageGroup && !messageComposer.isOpen) {
+        // all participants in the chat
+        const userIds = Object.keys(messageGroup.users);
+        // everyone except currently viewing user
+        const otherUsers = userIds.filter(userId => userId !== user.uid);
+        const otherName = user.list[otherUsers[0]].displayName;
+
         return (
           <ViewContainer>
             <Link to={`/messages`}>
               <BackArrow onClick={this.clearActiveStory}>
                 <Icon icon="back" />
+                <Name>{otherName}</Name>
               </BackArrow>
             </Link>
 
@@ -218,11 +226,9 @@ class RightColumn extends Component {
 
       returnUrl = communitySlug === 'everything'
         ? 'everything'
-        : storyFrequency && `${communitySlug}/~${storyFrequency.slug}`;
+        : `${communitySlug}/`;
 
-      returnUrl = active === 'explore'
-        ? 'explore'
-        : storyFrequency && `${communitySlug}/~${storyFrequency.slug}`;
+      returnUrl = active === 'explore' ? 'explore' : returnUrl;
     }
 
     if (story && !composer.isOpen) {
