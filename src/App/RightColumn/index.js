@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { subscribeFrequency } from '../../actions/frequencies';
 import { isStoryCreator, getStoryPermission } from '../../helpers/stories';
 import { getCurrentFrequency } from '../../helpers/frequencies';
-import { throttle } from '../../helpers/utils';
 import { login } from '../../actions/user';
 import history from '../../helpers/history';
 import Icon from '../../shared/Icons';
@@ -36,39 +35,30 @@ import {
 class RightColumn extends Component {
   constructor() {
     super();
-
-    this.onScroll = throttle(this.onScroll, 500);
-
-    this.state = {
-      atBottom: false,
-    };
   }
+
+  componentWillMount = () => {
+    const { messageGroups: { active } } = this.props;
+    if (active) {
+      console.log('7');
+      this.forceScrollToBottom();
+    }
+  };
 
   componentDidMount = () => {
     const { messageGroups: { active } } = this.props;
     // if user is viewing a message group, scroll to bottom
     if (active) {
+      console.log('6');
       this.forceScrollToBottom();
-    }
-
-    if (!this.comp) return;
-    let node = this.comp;
-    if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
-      this.setState({
-        atBottom: true,
-      });
-    } else {
-      this.setState({
-        atBottom: false,
-      });
     }
   };
 
   componentDidUpdate = (prevProps, prevState) => {
     const { messageGroups: { active } } = this.props;
-    // if user changes a message group, scroll to bottom
 
-    if (active !== prevProps.messageGroups.active || this.state.atBottom) {
+    if (active !== prevProps.messageGroups.active) {
+      console.log('5');
       this.forceScrollToBottom();
     }
   };
@@ -90,8 +80,10 @@ class RightColumn extends Component {
   // if the user is at the bottom of the chat view and another user sends a message, scroll the view
   contextualScrollToBottom = () => {
     if (!this.comp) return;
+    console.log('3');
     let node = this.comp;
     if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
+      console.log('4');
       node.scrollTop = node.scrollHeight - node.clientHeight;
     }
   };
@@ -102,20 +94,6 @@ class RightColumn extends Component {
     let node = this.comp;
 
     node.scrollTop = node.scrollHeight - node.clientHeight;
-  };
-
-  onScroll = () => {
-    if (!this.comp) return;
-    let node = this.comp;
-    if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
-      this.setState({
-        atBottom: true,
-      });
-    } else {
-      this.setState({
-        atBottom: false,
-      });
-    }
   };
 
   subscribeFrequency = () => {
@@ -173,13 +151,9 @@ class RightColumn extends Component {
               </BackArrow>
             </Link>
 
-            <StoryChatContainer
-              innerRef={comp => this.comp = comp}
-              onScroll={this.onScroll}
-            >
+            <StoryChatContainer innerRef={comp => this.comp = comp}>
               <MessageGroupHeader messageGroup={messageGroup} />
               <Chat
-                atBottom={this.state.atBottom}
                 forceScrollToBottom={this.forceScrollToBottom}
                 contextualScrollToBottom={this.contextualScrollToBottom}
                 messageGroup={messageGroup}
@@ -263,7 +237,6 @@ class RightColumn extends Component {
               shareUrl={`https://spectrum.chat${storyHref}`}
             />
             <Chat
-              atBottom={this.state.atBottom}
               forceScrollToBottom={this.forceScrollToBottom}
               contextualScrollToBottom={this.contextualScrollToBottom}
               story={story}
