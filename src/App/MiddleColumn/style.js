@@ -163,6 +163,10 @@ export const FlexRow = styled.div`
 	align-items: center;
 `;
 
+export const Dingus = styled.div`
+
+`;
+
 export const Spread = styled(FlexRow)`
 	justify-content: space-between;
 	margin: 0 8px;
@@ -171,7 +175,7 @@ export const Spread = styled(FlexRow)`
 export const Actions = styled(FlexRow)`
 	display: ${props => props.visible ? 'flex' : 'none'};
 	flex: 0 0 48px;
-	justify-content: flex-start;
+	justify-content: space-between;
 	align-items: flex-start;
 `;
 

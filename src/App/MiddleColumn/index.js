@@ -345,6 +345,8 @@ class MiddleColumn extends Component {
                 <Icon subtle />
               </IconButton>}
 
+            {(isEverything || isMessages) && <div style={{ width: '48px' }} />}
+
             {!isNotifications &&
               !isEverything &&
               !isMessages &&

@@ -28,6 +28,9 @@ import {
   BackArrow,
   LoginWrapper,
   Name,
+  SubText,
+  Heading,
+  Spacer,
 } from './style';
 
 class RightColumn extends Component {
@@ -162,7 +165,11 @@ class RightColumn extends Component {
             <Link to={`/messages`}>
               <BackArrow onClick={this.clearActiveStory}>
                 <Icon icon="back" />
-                <Name>{otherName}</Name>
+                <Heading>
+                  <SubText>Message with</SubText>
+                  <Name>{otherName}</Name>
+                </Heading>
+                <Spacer />
               </BackArrow>
             </Link>
 
@@ -207,7 +214,6 @@ class RightColumn extends Component {
     }
 
     let story = this.getActiveStory();
-
     const communitySlug = activeCommunity;
     let role, creator, locked, storyFrequency, returnUrl;
     if (story !== undefined) {
@@ -231,7 +237,7 @@ class RightColumn extends Component {
       returnUrl = active === 'explore' ? 'explore' : returnUrl;
     }
 
-    if (story && !composer.isOpen) {
+    if (story && !composer.isOpen && !messageGroups.active) {
       const storyHref = storyFrequency
         ? `/${communitySlug}/~${storyFrequency.slug}/${story.id}`
         : `/everything/${story.id}`;

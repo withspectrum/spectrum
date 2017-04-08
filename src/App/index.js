@@ -246,6 +246,7 @@ class App extends Component {
           <MiddleColumnContainer
             active={stories.active || messageGroups.active}
             viewing={ui.viewing}
+            absolute={messageGroups.active}
           >
             <MiddleColumn
               loggedIn={!!user.uid}

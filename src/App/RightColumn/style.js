@@ -67,17 +67,35 @@ export const LoginWrapper = styled(FlexRow)`
 	}
 `;
 
+export const SubText = styled.h5`
+	font-size: 12px;
+	font-weight: 500;
+	color: ${({ theme }) => theme.text.alt};
+`;
+
 export const Name = styled.h3`
 	font-weight: 800;
-	font-size: 20px;
+	font-size: 16px;
 	position: relative;
 	text-transform: capitalize;
+	margin-top: -8px;
+`;
+
+export const Heading = styled.div`
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	flex: 1;
+`;
+
+export const Spacer = styled.div`
+	width: 48px;
 `;
 
 export const BackArrow = styled.span`
 	margin-bottom: 16px;
 	display: flex;
-	align-items: flex-start;
+	justify-content: space-between;
 	background: #fff;
 	box-shadow: ${Shadow.low};
 	height: 48px;

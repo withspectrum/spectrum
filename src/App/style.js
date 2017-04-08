@@ -47,6 +47,7 @@ export const MiddleColumnContainer = styled(ScrollBody)`
   overflow-y: hidden;
 
   @media (max-width: 768px) {
+    position: ${props => props.absolute ? 'absolute' : 'relative'};
     border-right: 0;
     transform: translateX( -100% );
     pointer-events: ${props =>
