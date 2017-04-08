@@ -14,7 +14,6 @@ import {
   Avatar,
   HiddenLabel,
   Timestamp,
-  ScrollButton,
 } from './style';
 import * as Autolinker from 'autolinker';
 import sanitizeHtml from 'sanitize-html';
@@ -34,31 +33,25 @@ import Icon from '../../../shared/Icons';
 class Chat extends Component {
   componentDidMount = () => {
     const { messageGroups: { active } } = this.props;
-    console.log('1');
     if (active) {
-      console.log('1.5');
       this.props.forceScrollToBottom();
     }
   };
 
   componentDidUpdate(prevProps, prevState) {
     this.props.contextualScrollToBottom();
-    console.log('2');
     const { messageGroups: { active }, user: { uid }, story } = this.props;
 
     if (story) {
-      console.log('here');
       const isParticipant = story.participants
         ? Object.keys(story.participants).some(id => id === uid)
         : false;
       if (isParticipant) {
-        console.log('force story');
         this.props.forceScrollToBottom();
       }
     }
 
     if (active !== prevProps.messageGroups.active) {
-      console.log('force message');
       this.props.forceScrollToBottom();
     }
   }

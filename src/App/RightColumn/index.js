@@ -40,7 +40,6 @@ class RightColumn extends Component {
   componentWillMount = () => {
     const { messageGroups: { active } } = this.props;
     if (active) {
-      console.log('7');
       this.forceScrollToBottom();
     }
   };
@@ -49,7 +48,6 @@ class RightColumn extends Component {
     const { messageGroups: { active } } = this.props;
     // if user is viewing a message group, scroll to bottom
     if (active) {
-      console.log('6');
       this.forceScrollToBottom();
     }
   };
@@ -58,7 +56,6 @@ class RightColumn extends Component {
     const { messageGroups: { active } } = this.props;
 
     if (active !== prevProps.messageGroups.active) {
-      console.log('5');
       this.forceScrollToBottom();
     }
   };
@@ -80,10 +77,8 @@ class RightColumn extends Component {
   // if the user is at the bottom of the chat view and another user sends a message, scroll the view
   contextualScrollToBottom = () => {
     if (!this.comp) return;
-    console.log('3');
     let node = this.comp;
     if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
-      console.log('4');
       node.scrollTop = node.scrollHeight - node.clientHeight;
     }
   };

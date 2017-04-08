@@ -72,6 +72,11 @@ class UserProfileModal extends React.Component {
                   messageId: id,
                   loading: false,
                 });
+              } else {
+                this.setState({
+                  messageId: null,
+                  loading: false,
+                });
               }
             }));
         });

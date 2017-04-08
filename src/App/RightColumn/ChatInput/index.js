@@ -28,6 +28,7 @@ class ChatInput extends Component {
       file: '',
       emojiPickerOpen: false,
       mediaUploading: false,
+      autofocus: false,
     };
   }
 
@@ -57,6 +58,19 @@ class ChatInput extends Component {
       emojiPickerOpen: !this.state.emojiPickerOpen,
     });
   };
+
+  componentDidMount() {
+    const {
+      messageGroups: { active },
+      messageComposer: { isOpen },
+    } = this.props;
+    // if user changes a message group, autofocus the input
+    if (active || isOpen) {
+      this.setState({
+        autofocus: true,
+      });
+    }
+  }
 
   componentDidUpdate = (prevProps, prevState) => {
     const {
@@ -167,6 +181,7 @@ class ChatInput extends Component {
 
   render() {
     let mobile = isMobile();
+    const autofocus = !mobile || this.state.autofocus;
 
     return (
       <Wrapper>
@@ -212,9 +227,7 @@ class ChatInput extends Component {
               value={this.state.message}
               onChange={this.updateMessageState}
               onKeyUp={this.handleKeyPress}
-              autoFocus={
-                !mobile /* autofocus on desktop, don’t autofocus on mobile */
-              }
+              autoFocus={autofocus}
             />
             <SendButton onClick={this.sendMessage}>
               <Icon
