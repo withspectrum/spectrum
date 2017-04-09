@@ -16,7 +16,7 @@ import {
   cancelEditStory,
   saveEditStory,
 } from '../../../actions/stories';
-import { loading, stopLoading } from '../../../actions/loading';
+import { stopLoading } from '../../../actions/loading';
 import {
   getCurrentFrequency,
   linkFreqsInMd,

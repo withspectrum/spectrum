@@ -19,7 +19,6 @@ import {
   StatusBar,
   StatusText,
 } from './style';
-import Markdown from 'react-remarkable';
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference, hashToArray } from '../../../helpers/utils';
 import Card from '../../../shared/Card';
@@ -108,7 +107,6 @@ class StoryCard extends Component {
       user,
       activeCommunity,
       metadata,
-      frequencies: { active },
       story,
     } = this.props;
 
@@ -138,8 +136,12 @@ class StoryCard extends Component {
 
     let status;
     status = 'default';
-    isActive ? status = 'active' : null;
-    isNew ? status = 'new' : null;
+    if (isActive) {
+      status = 'active';
+    }
+    if (isNew) {
+      status = 'new';
+    }
     if (unreadMessages > 0 && !isActive) {
       status = 'unread';
     }
@@ -147,9 +149,6 @@ class StoryCard extends Component {
     let hasMetadata = metadata ? true : false;
     let hasLinkPreview = hasMetadata && metadata.linkPreview ? true : false;
     let hasPhotos = hasMetadata && metadata.photos ? true : false;
-    let photos = hasMetadata && metadata.photos ? metadata.photos : null;
-    let photosArray = photos ? hashToArray(photos) : null;
-    let photoCount = photosArray ? photosArray.length : null;
 
     let statusText;
     if (isNew) {
@@ -234,9 +233,7 @@ class StoryCard extends Component {
                       />
                     </PhotoContainer>
                   );
-                }
-
-                if (i === 3) {
+                } else if (i === 3) {
                   return (
                     <PhotoContainer
                       key={photo.meta.key}
@@ -245,6 +242,8 @@ class StoryCard extends Component {
                       <PhotoPlaceholder count={this.state.photos.length - 3} />
                     </PhotoContainer>
                   );
+                } else {
+                  return <span />;
                 }
               })}
             </PhotosContainer>}
