@@ -14,6 +14,9 @@ import { getFrequency } from './db/frequencies';
 import { getCommunity } from './db/communities';
 import { listenToNewNotifications } from './db/notifications';
 
+import LeftColumn from './shared/Columns/Left';
+import Navigation from './App/Navigation';
+
 class MainRouter extends React.Component {
   // INITIAL LOAD OF THE APP
   componentDidMount() {
@@ -80,6 +83,9 @@ class MainRouter extends React.Component {
     return (
       <Router history={history}>
         <Body>
+          <LeftColumn viewing={this.props.ui.viewing}>
+            <Navigation />
+          </LeftColumn>
           <Route exact path="/" component={Root} />
           <Route exact path="/:community" component={Root} />
           <Route exact path="/:community/(\~?):frequency" component={Root} />
@@ -94,4 +100,6 @@ class MainRouter extends React.Component {
   }
 }
 
-export default connect()(MainRouter);
+export default connect(state => ({
+  ui: state.ui,
+}))(MainRouter);

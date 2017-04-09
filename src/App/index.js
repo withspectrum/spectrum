@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
-import LeftColumn from './LeftColumn';
-import {
-  Body,
-  LeftColumnContainer,
-  MiddleColumnContainer,
-  RightColumnContainer,
-} from './style';
+import { Body } from './style';
 import MiddleColumn from './MiddleColumn';
 import RightColumn from './RightColumn';
+import MiddleColumnContainer from '../shared/Columns/Middle';
+import RightColumnContainer from '../shared/Columns/Right';
 import LoadingIndicator from '../shared/loading';
 import ModalRoot from '../shared/modals/ModalRoot';
 import SelectUsernameModal from '../shared/modals/SelectUsernameModal';
@@ -205,10 +201,6 @@ class App extends Component {
         <ModalRoot />
         <GalleryRoot />
         <LoadingIndicator />
-
-        <LeftColumnContainer viewing={ui.viewing}>
-          <LeftColumn unread={unread} />
-        </LeftColumnContainer>
 
         {/* If the user is logged in, but hasn't selected a username yet prompt them to */
         }

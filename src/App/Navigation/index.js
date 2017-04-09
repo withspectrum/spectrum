@@ -31,7 +31,7 @@ import {
   CommunityHeading,
 } from './style';
 
-class NavigationMaster extends Component {
+class Navigation extends Component {
   constructor() {
     super();
 
@@ -268,4 +268,4 @@ const mapStateToProps = state => ({
   notifications: state.notifications.notifications,
 });
 
-export default connect(mapStateToProps)(NavigationMaster);
+export default connect(mapStateToProps)(Navigation);
