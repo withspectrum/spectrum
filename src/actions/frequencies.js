@@ -1,3 +1,4 @@
+// @flow
 import history from '../helpers/history';
 import { getCurrentFrequency } from '../helpers/frequencies';
 import { flattenArray, arrayToHash } from '../helpers/utils';
@@ -13,10 +14,11 @@ import {
 import { getStories, getAllStories } from '../db/stories';
 import { getUserInfo } from '../db/users';
 import { getNotifications } from '../db/notifications';
+import { getCommunity } from '../db/communities';
 import { throwError } from './errors';
 
 export const setActiveFrequency = frequency => (dispatch, getState) => {
-  const lowerCaseFrequency = frequency.toLowerCase();
+  const lowerCaseFrequency = frequency ? frequency.toLowerCase() : '';
 
   dispatch({
     type: 'SET_ACTIVE_FREQUENCY',
@@ -24,52 +26,21 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   });
 
   dispatch({ type: 'LOADING' });
-  const { user: { uid } } = getState();
-  // Notifications
-  if (lowerCaseFrequency === 'notifications') {
-    if (!uid) return;
-    track('notifications', 'viewed', null);
-    getNotifications(uid)
-      .then(notifications => {
-        dispatch({
-          type: 'SET_NOTIFICATIONS',
-          notifications,
-        });
-      })
-      .catch(err => {
-        dispatch(throwError(err));
-      });
-    return;
-  }
-  // Everything
-  if (lowerCaseFrequency === 'everything') {
-    // If there's no UID yet we might need to show the homepage, so don't do anything
-    if (!uid) return;
-    track('everything', 'viewed', null);
-    // Get all the stories from all the frequencies
-    getAllStories(uid)
-      .then(stories => {
-        dispatch({
-          type: 'ADD_STORIES',
-          stories,
-        });
-      })
-      .catch(err => {
-        dispatch(throwError(err, { stopLoading: true }));
-      });
-    return;
-  }
-  // Explore
-  if (lowerCaseFrequency === 'explore') {
-    if (!uid) return;
-    track('explore', 'viewed', null);
+  const { communities: { active } } = getState();
+
+  if (!active || active === 'everything' || active === 'explore') {
     dispatch({ type: 'STOP_LOADING' });
     return;
   }
   track('frequency', 'viewed', null);
   // Get the frequency
-  getFrequency({ slug: lowerCaseFrequency })
-    .then(data => {
+  getFrequency({ slug: lowerCaseFrequency, communitySlug: active })
+    .then(data => Promise.all([data, getCommunity({ id: data.communityId })]))
+    .then(([data, community]) => {
+      dispatch({
+        type: 'ADD_COMMUNITY',
+        community,
+      });
       dispatch({
         type: 'ADD_FREQUENCY',
         frequency: data,
@@ -81,7 +52,7 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
       // If it's a private frequency, don't even get any stories
       if (data && data.settings.private && (!freqs || !freqs[data.id]))
         return [];
-      return getStories({ frequencySlug: lowerCaseFrequency });
+      return getStories({ frequencyId: data.id });
     })
     .then(stories => {
       if (!stories) {
@@ -172,41 +143,69 @@ export const deleteFrequency = id => (dispatch, getState) => {
     });
 };
 
-export const subscribeFrequency = (slug, redirect) => (dispatch, getState) => {
-  const { user: { uid } } = getState();
-  dispatch({ type: 'LOADING' });
-
-  addUserToFrequency(uid, slug)
-    .then(frequency => {
-      track('frequency', 'subscribed', null);
-
-      if (redirect !== false) {
-        history.push(`/~${frequency.slug || frequency.id}`);
-      }
-
-      dispatch({
-        type: 'SUBSCRIBE_FREQUENCY',
-        uid,
-        frequency,
-      });
-    })
-    .catch(err => {
-      dispatch(throwError(err, { stopLoading: true }));
-    });
+type FrequencyData = {
+  frequencyId?: string,
+  communityId?: string,
+  frequencySlug?: string,
+  communitySlug?: string,
 };
 
-export const unsubscribeFrequency = frequency => (dispatch, getState) => {
-  const { user: { uid }, frequencies } = getState();
+type SubscribingOptions = {
+  redirect: boolean,
+};
+
+export const subscribeFrequency = (
+  data: FrequencyData,
+  redirect: boolean = true,
+) =>
+  (dispatch: Function, getState: Function) => {
+    const { user: { uid } } = getState();
+    dispatch({ type: 'LOADING' });
+
+    addUserToFrequency(uid, data)
+      .then(([frequency, community]) => {
+        track('frequency', 'subscribed', null);
+
+        if (redirect) {
+          history.push(`/${community.slug}/~${frequency.slug}`);
+        }
+
+        dispatch({
+          type: 'SUBSCRIBE_FREQUENCY',
+          uid,
+          frequency,
+        });
+      })
+      .catch(err => {
+        dispatch(throwError(err, { stopLoading: true }));
+      });
+  };
+
+export const unsubscribeFrequency = (frequencySlug: string) => (
+  dispatch: Function,
+  getState: Function,
+) => {
+  const {
+    user: { uid },
+    frequencies,
+    communities: { active, communities },
+  } = getState();
+
+  const community = communities.find(community => community.slug === active);
 
   // we'll use this key to update the user record and to find the correct frequency record to update
-  const id = getCurrentFrequency(frequency, frequencies.frequencies).id;
+  const id = getCurrentFrequency(
+    frequencySlug,
+    frequencies.frequencies,
+    community.id,
+  ).id;
 
   dispatch({ type: 'LOADING' });
 
   removeUserFromFrequency(uid, id)
-    .then(() => {
+    .then(([frequency, community]) => {
       track('frequency', 'unsubscribed', null);
-      history.push(`/~${frequency}`);
+      history.push(`/${community.slug}/~${frequency.slug}`);
 
       dispatch({
         type: 'UNSUBSCRIBE_FREQUENCY',

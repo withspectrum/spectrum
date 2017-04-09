@@ -1,4 +1,6 @@
 import database from 'firebase/database';
+import { getCommunity } from './communities';
+import { hashToArray } from '../helpers/utils';
 
 const getFrequencyById = id => {
   const db = database();
@@ -9,18 +11,24 @@ const getFrequencyById = id => {
     .then(snapshot => snapshot.val());
 };
 
-const getFrequencyBySlug = slug => {
+const getFrequencyBySlug = (slug, communityId) => {
   const db = database();
+
+  if (!communityId)
+    throw new Error(
+      'To get a frequency by slug you also need to pass the community it belongs to.',
+    );
 
   return db
     .ref(`frequencies`)
-    .orderByChild('slug')
-    .equalTo(slug)
+    .orderByChild('communityId')
+    .equalTo(communityId)
     .once('value')
     .then(snapshot => {
       const frequencies = snapshot.val();
-      // We assume there is only one frequency with a given slug
-      return frequencies[Object.keys(frequencies)[0]];
+      return hashToArray(frequencies).find(
+        frequency => frequency.slug === slug,
+      );
     });
 };
 
@@ -29,9 +37,12 @@ const getFrequencyBySlug = slug => {
  *
  * Returns a Promise which resolves with the data
  */
-export const getFrequency = ({ id, slug }) => {
+export const getFrequency = ({ id, slug, communitySlug } = {}) => {
   if (id) return getFrequencyById(id);
-  if (slug) return getFrequencyBySlug(slug);
+  if (slug)
+    return getCommunity({
+      slug: communitySlug,
+    }).then(community => getFrequencyBySlug(slug, community.id));
   return Promise.resolve({});
 };
 
@@ -148,38 +159,33 @@ export const updateFrequency = data => {
 /**
  * Add a user to a frequency
  *
- * Returns a promise that resolves either with the frequency data or rejects with an error
+ * Returns a promise that resolves with the frequency and the community data as an array
  */
-export const addUserToFrequency = (userId, slug) => {
+export const addUserToFrequency = (userId, data) => {
+  const freqData = {
+    ...data,
+    id: data.frequencyId,
+    slug: data.frequencySlug,
+  };
+
   const db = database();
-  return db
-    .ref(`/frequencies`)
-    .orderByChild('slug')
-    .equalTo(slug)
-    .once('value')
-    .then(snapshot => {
-      const data = snapshot.val();
-      // { '-Kyasfde123': { ...frequencyData } } -> { ...frequencyData }
-      return data[Object.keys(data)[0]];
-    })
-    .then(data => db.ref().update({
-      [`frequencies/${data.id}/users/${userId}`]: {
+  return getFrequency(freqData)
+    .then(frequency => db.ref().update({
+      [`frequencies/${frequency.id}/users/${userId}`]: {
         permission: 'subscriber',
         joined: database.ServerValue.TIMESTAMP,
       },
-      [`users/${userId}/frequencies/${data.id}`]: {
-        id: data.id,
+      [`users/${userId}/frequencies/${frequency.id}`]: {
+        id: frequency.id,
         permission: 'subscriber',
         joined: database.ServerValue.TIMESTAMP,
       },
     }))
     .then(() =>
-      db.ref(`/frequencies`).orderByChild('slug').equalTo(slug).once('value'))
-    .then(snapshot => {
-      const data = snapshot.val();
-      // { '-Kyasfde123': { ...frequencyData } } -> { ...frequencyData }
-      return data[Object.keys(data)[0]];
-    });
+      Promise.all([
+        getFrequency(freqData),
+        getCommunity({ id: data.communityId, slug: data.communitySlug }),
+      ]));
 };
 
 /**
@@ -189,10 +195,14 @@ export const removeUserFromFrequency = (userId, freqId) => {
   const db = database();
 
   // Remove a user from a frequency
-  return db.ref().update({
-    [`/frequencies/${freqId}/users/${userId}`]: null,
-    [`/users/${userId}/frequencies/${freqId}`]: null,
-  });
+  return db
+    .ref()
+    .update({
+      [`/frequencies/${freqId}/users/${userId}`]: null,
+      [`/users/${userId}/frequencies/${freqId}`]: null,
+    })
+    .then(() => getFrequency({ id: freqId }))
+    .then(freq => Promise.all([freq, getCommunity({ id: freq.communityId })]));
 };
 
 export const checkUniqueFrequencyName = name => {
