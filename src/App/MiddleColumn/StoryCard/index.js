@@ -162,7 +162,7 @@ class StoryCard extends Component {
     }
 
     if (isActive && messages > 0) {
-      statusText = `${messages} messages`;
+      statusText = `${messages} ${messages === 1 ? 'message' : 'messages'}`;
     }
 
     if (isActive && messages === 0) {
