@@ -162,7 +162,7 @@ export const createPrivateMessage = (
       },
       [`${locationType}/${messageGroupId}/snippet`]: message.type === 'text'
         ? message.content
-        : 'sent an attachment', // save a snippet of the last text message, or assume a media message
+        : 'Sent an attachment', // save a snippet of the last text message, or assume a media message
     })
     .then(() => db.ref(`${messageType}/${id}`).once('value'))
     .then(snapshot => snapshot.val());

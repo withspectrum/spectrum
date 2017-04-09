@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Shadow, Transition } from '../Globals';
+import { Transition } from '../Globals';
 
 export const LinkPreviewContainer = styled.a`
   display: flex;

@@ -13,11 +13,8 @@ import { listenToAuth } from './db/auth';
 import { getFrequency } from './db/frequencies';
 import { getCommunity } from './db/communities';
 import { listenToNewNotifications } from './db/notifications';
-import { getMessageGroup, listenToNewMessages } from './db/messageGroups';
-import {
-  setActiveMessageGroup,
-  addMessageGroup,
-} from './actions/messageGroups';
+import { listenToNewMessages } from './db/messageGroups';
+import { addMessageGroup } from './actions/messageGroups';
 
 class MainRouter extends React.Component {
   // INITIAL LOAD OF THE APP

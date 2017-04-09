@@ -17,6 +17,11 @@ import {
 } from './style';
 
 class MessageGroup extends Component {
+  setLastSeen = () => {
+    const { user: { uid }, messageGroup: { id } } = this.props;
+    setMessageGroupLastSeen(uid, id);
+  };
+
   render() {
     const { messageGroup, link, user: { uid, list }, active } = this.props;
 
@@ -33,7 +38,10 @@ class MessageGroup extends Component {
 
     return (
       <Card nomargin link={link}>
-        <MessageGroupContainer active={this.props.active}>
+        <MessageGroupContainer
+          active={this.props.active}
+          onClick={this.setLastSeen}
+        >
           <MessageGroupImagesContainer>
             {otherUsers.length === 1
               ? list[otherUsers]

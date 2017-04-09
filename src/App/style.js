@@ -3,22 +3,32 @@ import styled from 'styled-components';
 export const Body = styled.div`
   background: #f6f7f8;
   display: flex;
+  flex-direction: column;
   overflow: hidden;
   height: 100%;
   width: 100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   height: 100%;
-	overflow: auto;
+	overflow-y: hidden;
 
   @media (max-width: 768px) {
     overflow-x: hidden;
   }
 `;
 
+export const AppContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+export const VerticalSpacer = styled.div`
+  display: block;
+  min-height: 48px;
+`;
+
 export const ScrollBody = styled.div`
   display: flex;
   position: relative;
-  height: 100%;
   max-height: 100%;
   overflow-y: scroll;
 
@@ -56,9 +66,10 @@ export const MiddleColumnContainer = styled(ScrollBody)`
 `;
 
 export const RightColumnContainer = styled(ScrollBody)`
-  background: ${({ theme }) => theme.bg.default};
+  background-color: ${({ theme }) => theme.bg.wash};
   flex: 1 1 auto;
   z-index: 2;
+  overflow: hidden;
 
   @media (max-width: 768px) {
     transform: translateX( ${props =>

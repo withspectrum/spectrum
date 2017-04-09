@@ -7,7 +7,10 @@ import {
   LeftColumnContainer,
   MiddleColumnContainer,
   RightColumnContainer,
+  AppContainer,
+  VerticalSpacer,
 } from './style';
+import Navbar from './NavBar';
 import MiddleColumn from './MiddleColumn';
 import RightColumn from './RightColumn';
 import LoadingIndicator from '../shared/loading';
@@ -224,49 +227,55 @@ class App extends Component {
             },
           ]}
         />
+
         <ModalRoot />
         <GalleryRoot />
         <LoadingIndicator />
 
-        <LeftColumnContainer viewing={ui.viewing}>
-          <LeftColumn unread={unread} />
-        </LeftColumnContainer>
+        <Navbar />
+        <VerticalSpacer />{/* used because NavBar is fixed position */}
 
-        {/* If the user is logged in, but hasn't selected a username yet prompt them to */
-        }
-        {!!user.uid &&
-          (!user.username || !user.email) &&
-          <SelectUsernameModal
-            isOpen={this.state.selectModalOpen}
-            promptEmail={!user.email}
-            onClose={this.closeSelectModal}
-          />}
+        <AppContainer>
+          <LeftColumnContainer viewing={ui.viewing}>
+            <LeftColumn unread={unread} />
+          </LeftColumnContainer>
 
-        {!isExplore &&
-          <MiddleColumnContainer
-            active={stories.active || messageGroups.active}
-            viewing={ui.viewing}
-            absolute={messageGroups.active}
-          >
-            <MiddleColumn
-              loggedIn={!!user.uid}
-              role={
-                user &&
-                  frequency &&
-                  frequency.users[user.uid] &&
-                  frequency.users[user.uid].permission
-              }
-              activeFrequency={frequencies.active}
-              isPrivate={frequency && frequency.settings.private}
-              stories={sortedStories}
-              frequency={frequency}
-              messageGroups={sortedMessageGroups}
-            />
-          </MiddleColumnContainer>}
+          {/* If the user is logged in, but hasn't selected a username yet prompt them to */
+          }
+          {!!user.uid &&
+            (!user.username || !user.email) &&
+            <SelectUsernameModal
+              isOpen={this.state.selectModalOpen}
+              promptEmail={!user.email}
+              onClose={this.closeSelectModal}
+            />}
 
-        <RightColumnContainer active={stories.active} viewing={ui.viewing}>
-          <RightColumn />
-        </RightColumnContainer>
+          {!isExplore &&
+            <MiddleColumnContainer
+              active={stories.active || messageGroups.active}
+              viewing={ui.viewing}
+              absolute={messageGroups.active}
+            >
+              <MiddleColumn
+                loggedIn={!!user.uid}
+                role={
+                  user &&
+                    frequency &&
+                    frequency.users[user.uid] &&
+                    frequency.users[user.uid].permission
+                }
+                activeFrequency={frequencies.active}
+                isPrivate={frequency && frequency.settings.private}
+                stories={sortedStories}
+                frequency={frequency}
+                messageGroups={sortedMessageGroups}
+              />
+            </MiddleColumnContainer>}
+
+          <RightColumnContainer active={stories.active} viewing={ui.viewing}>
+            <RightColumn />
+          </RightColumnContainer>
+        </AppContainer>
       </Body>
     );
   }

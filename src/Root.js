@@ -5,25 +5,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setActiveFrequency } from './actions/frequencies';
-import {
-  setActiveMessageGroup,
-  addMessageGroup,
-} from './actions/messageGroups';
+import { setActiveMessageGroup } from './actions/messageGroups';
 import { setActiveStory } from './actions/stories';
 import { setActiveCommunity } from './actions/communities';
-import { addNotification } from './actions/notifications';
-import { asyncComponent, arrayToHash } from './helpers/utils';
+import { asyncComponent } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
-import { getUserInfo } from './db/users';
-import { listenToAuth } from './db/auth';
-import { getFrequency } from './db/frequencies';
-import { getMessageGroup, listenToNewMessages } from './db/messageGroups';
-import { getCommunity } from './db/communities';
-import { listenToNewNotifications } from './db/notifications';
 import { set, track } from './EventTracker';
-import { monitorUser, stopUserMonitor } from './helpers/users';
 import history from './helpers/history';
-import Raven from 'raven-js';
 
 // Codesplit the App and the Homepage to only load what we need based on which route we're on
 const App = asyncComponent(() =>

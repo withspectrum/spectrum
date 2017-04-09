@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { track } from '../../EventTracker';
 import Icon from '../Icons';
 import { truncate } from '../../helpers/utils';
 import {
@@ -20,13 +19,11 @@ class LinkPreview extends Component {
 
   render() {
     let {
-      data: { author, date, description, image, publisher, title, url } = {},
+      data: { description, image, title, url } = {},
       trueUrl,
       editable,
     } = this.props;
-    author = author ? truncate(author, 32) : '';
     description = description ? truncate(description, 80) : '';
-    publisher = publisher ? truncate(publisher, 32) : '';
     title = title ? truncate(title, 72) : '';
     url ? truncate(url, 30) : '';
 

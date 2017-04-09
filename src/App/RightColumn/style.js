@@ -26,16 +26,6 @@ export const StoryChatContainer = styled.div`
 	overflow-x: hidden;
 `;
 
-export const NullContainer = styled.div`
-	width: 110%;
-	height: 110%;
-	position: relative;
-	background: ${({ theme }) =>
-  theme.bg.default} url('/img/empty.svg') no-repeat center left;
-	background-size: cover;
-	opacity: 0.2;
-`;
-
 export const Footer = styled.div`
 	display: flex;
 	width: 100%;

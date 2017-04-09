@@ -47,7 +47,7 @@ class Chat extends Component {
         ? Object.keys(story.participants).some(id => id === uid)
         : false;
       if (isParticipant) {
-        this.props.forceScrollToBottom();
+        this.props.contextualScrollToBottom();
       }
     }
 

@@ -18,7 +18,7 @@ export const UserHeader = styled.div`
 export const UserPhoto = styled.img`
   display: inline-block;
   margin: 0 auto;
-  border-radius: 4px;
+  border-radius: 44px;
   margin-bottom: 4px;
   position: relative;
   z-index: 2;

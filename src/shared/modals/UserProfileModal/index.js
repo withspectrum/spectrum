@@ -1,14 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Modal from 'react-modal';
-import { Link } from 'react-router-dom';
 import ModalContainer from '../ModalContainer';
 import { closeModal } from '../../../actions/modals';
 import history from '../../../helpers/history';
-import {
-  toggleMessageComposer,
-  setMessageComposerRecipient,
-} from '../../../actions/messageComposer';
+import { toggleMessageComposer } from '../../../actions/messageComposer';
 import { modalStyles } from '../FrequencyEditModal/style';
 import { Button } from '../../Globals';
 import { getUserInfo } from '../../../db/users';
