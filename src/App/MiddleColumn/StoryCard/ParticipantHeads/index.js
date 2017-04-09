@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Head, HeadWrapper, Container, Label } from './style';
-import { UnreadCount } from '../style';
+import { Head, HeadWrapper, Container } from './style';
 
 class ParticipantHeads extends Component {
   render() {
@@ -13,7 +12,7 @@ class ParticipantHeads extends Component {
         </Container>
       );
     }
-    const { participants, list, unread, me } = this.props;
+    const { participants, list } = this.props;
     const participantsArr = Object.keys(participants);
 
     // sort the participants by last activity

@@ -7,18 +7,9 @@ import { connect } from 'react-redux';
 import { setActiveFrequency } from './actions/frequencies';
 import { setActiveStory } from './actions/stories';
 import { setActiveCommunity } from './actions/communities';
-import { addNotification } from './actions/notifications';
 import { asyncComponent } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
-import { getUserInfo } from './db/users';
-import { listenToAuth } from './db/auth';
-import { getFrequency } from './db/frequencies';
-import { getCommunity } from './db/communities';
-import { listenToNewNotifications } from './db/notifications';
-import { set, track } from './EventTracker';
-import { monitorUser, stopUserMonitor } from './helpers/users';
 import history from './helpers/history';
-import Raven from 'raven-js';
 
 // Codesplit the App and the Homepage to only load what we need based on which route we're on
 const App = asyncComponent(() =>
@@ -31,10 +22,6 @@ class Root extends Component {
     const {
       dispatch,
       match: { params },
-      frequencies,
-      stories,
-      user: { uid },
-      communities,
     } = this.props;
     if (
       !params.frequency &&

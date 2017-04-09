@@ -7,7 +7,6 @@ import {
   FlexRow,
   P,
   Transition,
-  Shadow,
 } from '../shared/Globals';
 
 export const Wrapper = styled(FlexCol)`

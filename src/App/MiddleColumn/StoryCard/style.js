@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Gradient } from '../../../shared/Globals';
 
 export const StoryBody = styled.div`
 	display: inline-block;
