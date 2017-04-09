@@ -138,13 +138,17 @@ class RightColumn extends Component {
       storyFrequency = story &&
         getCurrentFrequency(story.frequencyId, frequencies);
 
-      returnUrl = communitySlug === 'everything'
-        ? 'everything'
-        : storyFrequency && `${communitySlug}/~${storyFrequency.slug}`;
-
-      returnUrl = active === 'explore'
-        ? 'explore'
-        : storyFrequency && `${communitySlug}/~${storyFrequency.slug}`;
+      switch (communitySlug) {
+        case 'everything':
+        case 'explore': {
+          returnUrl = communitySlug;
+          break;
+        }
+        default: {
+          returnUrl = storyFrequency &&
+            `${communitySlug}/~${storyFrequency.slug}`;
+        }
+      }
     }
 
     if (story && !composer.isOpen) {
