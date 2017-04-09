@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { Tooltip } from '../../../../../shared/Globals';
 
 export const Avatar = styled.img`
@@ -97,30 +97,6 @@ export const Time = styled.span`
   z-index: 5;
 `;
 
-const spin = keyframes`
-  to {transform: rotate(360deg);}
-`;
-
-export const Spinner = styled.span`
-  &:before {
-    content: '';
-    box-sizing: border-box;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin-top: -10px;
-    margin-left: -10px;
-    border-radius: 50%;
-    border: 1px solid ${props => props.theme.brand.default};
-    border-top-color: #fff;
-    border-right-color: ${props => props.theme.brand.alt};
-    border-bottom-color: #fff;
-    animation: ${spin} .6s linear infinite;
-  }
-`;
-
 export const Container = styled.div`
   flex: 1 0 auto;
   padding: 0 8px;
@@ -128,8 +104,6 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   background: #fff;
-  ${props =>
-  props.loading ? 'justify-content: center; align-items: center;' : ''};
 
   @media (max-width: 768px) {
     padding-bottom: 16px;

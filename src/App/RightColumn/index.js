@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import DirectMessagesContainer from './DirectMessagesContainer';
 import { Link } from 'react-router-dom';
 import { subscribeFrequency } from '../../actions/frequencies';
 import { isStoryCreator, getStoryPermission } from '../../helpers/stories';
@@ -9,7 +8,8 @@ import { login } from '../../actions/user';
 import history from '../../helpers/history';
 import Icon from '../../shared/Icons';
 import { Button, H4 } from '../../shared/Globals';
-import Story from './Story';
+import DirectMessagesContainer from './DirectMessagesContainer';
+import StoryChatContainer from './StoryChatContainer';
 import ActionBar from './Story/ActionBar';
 import Chat from './Chat';
 import ChatInput from './ChatInput';
@@ -20,7 +20,6 @@ import {
   ViewContainer,
   NullContainer,
   Footer,
-  StoryChatContainer,
   BackArrow,
   LoginWrapper,
   Name,

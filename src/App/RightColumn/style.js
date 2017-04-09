@@ -17,15 +17,6 @@ export const ViewContainer = styled.div`
 	}
 `;
 
-export const StoryChatContainer = styled.div`
-  overflow-y: scroll;
-	display: flex;
-	flex: 1 1 auto;
-	flex-direction: column;
-	max-height: ${props => props.locked ? '100%' : 'calc(100% - 60px)'};
-	overflow-x: hidden;
-`;
-
 export const Footer = styled.div`
 	display: flex;
 	width: 100%;

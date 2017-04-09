@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Markdown from '../../../shared/Markdown';
-import LinkPreview from '../../../shared/LinkPreview';
-import { openGallery } from '../../../actions/gallery';
-import { openModal } from '../../../actions/modals';
-import { track } from '../../../EventTracker';
-import { timeDifference } from '../../../helpers/utils';
+import Markdown from '../../../../../shared/Markdown';
+import LinkPreview from '../../../../../shared/LinkPreview';
+import { openGallery } from '../../../../../actions/gallery';
+import { openModal } from '../../../../../actions/modals';
+import { track } from '../../../../../EventTracker';
+import { timeDifference } from '../../../../../helpers/utils';
 
 import {
   StoryContainer,
@@ -57,11 +57,8 @@ class Story extends Component {
   };
 
   render() {
-    const { story, frequency, communities } = this.props;
+    const { story, community, frequency } = this.props;
     const timestamp = timeDifference(Date.now(), story.timestamp);
-
-    const community = frequency &&
-      communities.find(community => community.id === frequency.communityId);
 
     const editDate = story.edited
       ? timeDifference(Date.now(), story.edited)

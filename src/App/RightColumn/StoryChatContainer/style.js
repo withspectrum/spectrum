@@ -2,10 +2,9 @@ import styled from 'styled-components';
 
 export const StyledHeader = styled.div`
   display: flex;
-  flex: 0 0 auto;
+  flex: 1 0 auto;
   justify-content: center;
   align-items: center;
-  align-self: flex-start;
   flex-direction: column;
   width: 100%;
   background: ${props => props.wash ? props.theme.bg.wash : '#fff'};

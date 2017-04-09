@@ -23,7 +23,6 @@ import {
   Time,
   Container,
   MessagesWrapper,
-  Spinner,
 } from './style';
 
 class Chat extends Component {
@@ -106,14 +105,6 @@ class Chat extends Component {
   render() {
     const { messages, usersList, currentUser } = this.props;
 
-    if (messages.length === 0) {
-      return (
-        <Container loading>
-          <Spinner />
-        </Container>
-      );
-    }
-
     return (
       <Container>
         {messages.map((group, i) => {
@@ -138,7 +129,6 @@ class Chat extends Component {
 
               <MessagesWrapper>
                 {this.renderBubbleHeader(evaluating, me)}
-
                 {group.map((message, i) => {
                   if (
                     message.message.type === 'text' ||

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { findDOMNode } from 'react-dom';
-import { track } from '../../../EventTracker';
+import { track } from '../../../../EventTracker';
 import {
   updateTitle,
   updateBody,
@@ -9,23 +9,23 @@ import {
   removeLinkPreview,
   addMediaList,
   removeImageFromComposer,
-} from '../../../actions/composer';
+} from '../../../../actions/composer';
 import {
   publishStory,
   initStory,
   cancelEditStory,
   saveEditStory,
-} from '../../../actions/stories';
-import { stopLoading } from '../../../actions/loading';
+} from '../../../../actions/stories';
+import { stopLoading } from '../../../../actions/loading';
 import {
   getCurrentFrequency,
   linkFreqsInMd,
-} from '../../../helpers/frequencies';
-import { uploadMultipleMediaToLocation } from '../../../db/media';
+} from '../../../../helpers/frequencies';
+import { uploadMultipleMediaToLocation } from '../../../../db/media';
 import Textarea from 'react-textarea-autosize';
-import Markdown from '../../../shared/Markdown';
-import LinkPreview from '../../../shared/LinkPreview';
-import { getLinkPreviewFromUrl } from '../../../helpers/utils';
+import Markdown from '../../../../shared/Markdown';
+import LinkPreview from '../../../../shared/LinkPreview';
+import { getLinkPreviewFromUrl } from '../../../../helpers/utils';
 
 import {
   ScrollBody,
@@ -63,7 +63,7 @@ import {
 
 const URLS = /(^|\s)(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
 
-class Composer extends Component {
+class StoryComposer extends Component {
   constructor(props) {
     super(props);
 
@@ -579,4 +579,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Composer);
+export default connect(mapStateToProps)(StoryComposer);
