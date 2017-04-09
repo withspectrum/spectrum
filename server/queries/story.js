@@ -1,5 +1,13 @@
 const { getAllStories } = require('../models/story');
+const { getFrequency } = require('../models/frequency');
 
 module.exports = {
-  getAllStories,
+  Query: {
+    stories: getAllStories,
+  },
+  Story: {
+    frequency(story) {
+      return getFrequency(story.frequency);
+    },
+  },
 };

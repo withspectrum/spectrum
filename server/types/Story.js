@@ -1,4 +1,5 @@
 const Timestamped = require('./interfaces/Timestamped');
+const Frequency = require('./Frequency');
 
 const Story = /* GraphQL */ `
 	type Content {
@@ -11,7 +12,7 @@ const Story = /* GraphQL */ `
 		id: ID!
 		createdAt: Int!
 		modifiedAt: Int!
-		# frequency: Frequency!
+		frequency: Frequency!
 		last_activity: Int!
 		published: Boolean!
 		content: Content!
@@ -20,4 +21,4 @@ const Story = /* GraphQL */ `
 	}
 `;
 
-module.exports = () => [Story, Timestamped];
+module.exports = () => [Timestamped, Frequency, Story];
