@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import DirectMessagesContainer from './DirectMessagesContainer';
-
 import { Link } from 'react-router-dom';
 import { subscribeFrequency } from '../../actions/frequencies';
 import { isStoryCreator, getStoryPermission } from '../../helpers/stories';
@@ -125,6 +123,25 @@ class RightColumn extends Component {
     } else {
       return <StoryChatContainer />;
     }
+    // creator = isStoryCreator(story, user);
+    // role = getStoryPermission(story, user, frequencies);
+    // locked = story && story.locked ? story.locked : false;
+    //
+    // storyFrequency = story &&
+    //   getCurrentFrequency(story.frequencyId, frequencies);
+    //
+    // switch (communitySlug) {
+    //   case 'everything':
+    //   case 'explore': {
+    //     returnUrl = communitySlug;
+    //     break;
+    //   }
+    //   default: {
+    //     returnUrl = storyFrequency &&
+    //       `${communitySlug}/~${storyFrequency.slug}`;
+    //   }
+    // }
+    // }
 
     // if (activeCommunity === 'messages') {
     //   let messageGroup = this.getActiveMessageGroup();

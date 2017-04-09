@@ -8,12 +8,7 @@ import {
   unsubscribeFrequency,
   subscribeFrequency,
 } from '../../../actions/frequencies';
-import {
-  GoopyOne,
-  GoopyTwo,
-  GoopyThree,
-  GoopyFour,
-} from '../../../Homepage/style';
+import { GoopyThree } from '../../../Homepage/style';
 import {
   ViewContainer,
   ViewTitle,

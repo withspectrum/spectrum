@@ -17,7 +17,6 @@ import LoadingIndicator from '../shared/loading';
 import ModalRoot from '../shared/modals/ModalRoot';
 import SelectUsernameModal from '../shared/modals/SelectUsernameModal';
 import GalleryRoot from '../shared/gallery/GalleryRoot';
-import OnboardingCard from './MiddleColumn/OnboardingCard';
 import LoginCard from './MiddleColumn/LoginCard';
 import ReportBugCard from './MiddleColumn/ReportBugCard';
 import NewMessageCard from './MiddleColumn/NewMessageCard';

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Icon from '../../../../shared/Icons';
-import { getCurrentFrequency } from '../../../../helpers/frequencies';
 import {
   toggleLockedStory,
   deleteStory,
@@ -49,14 +48,8 @@ class ActionBar extends Component {
       creator,
       moderator,
       locked,
-      frequencies,
       story,
-      activeCommunity,
     } = this.props;
-    let currentFrequency = getCurrentFrequency(
-      story.frequencyId,
-      frequencies.frequencies,
-    );
 
     return (
       <ActionBarContainer>

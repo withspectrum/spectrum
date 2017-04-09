@@ -5,7 +5,6 @@ import { login, signOut } from '../../actions/user';
 import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
 import { FlexRow } from '../../shared/Globals';
-import { groupBy } from '../../helpers/utils';
 import { setActiveFrequency } from '../../actions/frequencies';
 import { track } from '../../EventTracker';
 import { ACTIVITY_TYPES } from '../../db/types';
@@ -24,7 +23,6 @@ import {
   FreqLabel,
   Footer,
   FooterP,
-  Button,
   FreqText,
   DirtyDot,
   ProBadge,

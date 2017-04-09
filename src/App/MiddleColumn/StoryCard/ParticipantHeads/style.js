@@ -2,8 +2,7 @@ import styled from 'styled-components';
 import { Tooltip } from '../../../../shared/Globals';
 
 export const Container = styled.div`
-  margin: 8px;
-  margin-top: 0;
+  margin-top: 8px;
 `;
 
 export const HeadWrapper = styled.span`
@@ -14,7 +13,8 @@ export const Head = styled.img`
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  margin: 0 3px 0 0;
+  margin: 0;
+  margin-right: 8px;
   box-shadow: 0 0 0 1px #fff, 0 1px 2px rgba(0,0,0,0.2);
 `;
 

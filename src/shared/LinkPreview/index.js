@@ -25,7 +25,7 @@ class LinkPreview extends Component {
     } = this.props;
     description = description ? truncate(description, 80) : '';
     title = title ? truncate(title, 72) : '';
-    url ? truncate(url, 30) : '';
+    url = url ? truncate(url, 30) : '';
 
     return (
       <LinkPreviewContainer

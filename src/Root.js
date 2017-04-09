@@ -10,7 +10,6 @@ import { setActiveStory } from './actions/stories';
 import { setActiveCommunity } from './actions/communities';
 import { asyncComponent } from './helpers/utils';
 import LoadingIndicator from './shared/loading/global';
-import { set, track } from './EventTracker';
 import history from './helpers/history';
 
 // Codesplit the App and the Homepage to only load what we need based on which route we're on
@@ -24,10 +23,6 @@ class Root extends Component {
     const {
       dispatch,
       match: { params },
-      frequencies,
-      stories,
-      user: { uid },
-      communities,
     } = this.props;
     if (
       !params.frequency &&
