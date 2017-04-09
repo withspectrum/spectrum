@@ -3,15 +3,13 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import deepEqual from 'deep-eql';
 import { track } from '../../../EventTracker';
+import Icon from '../../../shared/Icons';
 // eslint-disable-next-line
 import {
   StoryBody,
-  StoryFooter,
   Name,
-  JoinTheConvo,
-  MessageCount,
+  FreqTag,
   Title,
-  UnreadCount,
   LinkPreviewContainer,
   PhotosContainer,
   PhotoContainer,
@@ -20,9 +18,7 @@ import {
   HeadsContainer,
   StatusBar,
   StatusText,
-  Dot,
 } from './style';
-import Markdown from 'react-remarkable';
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference, hashToArray } from '../../../helpers/utils';
 import Card from '../../../shared/Card';
@@ -111,7 +107,6 @@ class StoryCard extends Component {
       user,
       activeCommunity,
       metadata,
-      frequencies: { active },
       story,
     } = this.props;
 
@@ -141,8 +136,12 @@ class StoryCard extends Component {
 
     let status;
     status = 'default';
-    isActive ? status = 'active' : null;
-    isNew ? status = 'new' : null;
+    if (isActive) {
+      status = 'active';
+    }
+    if (isNew) {
+      status = 'new';
+    }
     if (unreadMessages > 0 && !isActive) {
       status = 'unread';
     }
@@ -150,9 +149,6 @@ class StoryCard extends Component {
     let hasMetadata = metadata ? true : false;
     let hasLinkPreview = hasMetadata && metadata.linkPreview ? true : false;
     let hasPhotos = hasMetadata && metadata.photos ? true : false;
-    let photos = hasMetadata && metadata.photos ? metadata.photos : null;
-    let photosArray = photos ? hashToArray(photos) : null;
-    let photoCount = photosArray ? photosArray.length : null;
 
     let statusText;
     if (isNew) {
@@ -160,31 +156,25 @@ class StoryCard extends Component {
     }
 
     if (unreadMessages > 0) {
-      statusText = `${unreadMessages} new ${unreadMessages === 1
+      statusText = `${unreadMessages} unread ${unreadMessages === 1
         ? 'message'
-        : 'messages'} · ${timeDifference(Date.now(), timestamp)}`;
+        : 'messages'}`;
     }
 
     if (isActive && messages > 0) {
-      statusText = `${messages} messages · ${timeDifference(
-        Date.now(),
-        timestamp,
-      )}`;
+      statusText = `${messages} messages`;
     }
 
     if (isActive && messages === 0) {
-      statusText = `Posted ${timeDifference(Date.now(), timestamp)}`;
+      statusText = `${messages} messages`;
     }
 
     if (!isNew && !unreadMessages && !isActive && messages > 0) {
-      statusText = `${messages} messages · ${timeDifference(
-        Date.now(),
-        timestamp,
-      )}`;
+      statusText = `${timeDifference(Date.now(), timestamp)}`;
     }
 
     if (!isNew && !unreadMessages && !isActive && messages === 0) {
-      statusText = `Posted ${timeDifference(Date.now(), timestamp)}`;
+      statusText = `${timeDifference(Date.now(), timestamp)}`;
     }
 
     return (
@@ -193,20 +183,25 @@ class StoryCard extends Component {
           <StatusText status={status}>
             {statusText}
           </StatusText>
-          <Dot status={status} />
-
-          <Name status={status}>
-            By {person.name} {metaText ? ' · ' : ''}
-            {metaText &&
-              metaLink &&
-              <Link to={metaLink}>
-                {metaText}
-              </Link>}
-          </Name>
+          {!isActive &&
+            <Icon
+              icon="caret-gt"
+              subtle={status === 'default'}
+              reverse={status !== 'default'}
+              size={16}
+            />}
         </StatusBar>
 
         <StoryBody>
+          {metaText &&
+            metaLink &&
+            <FreqTag>
+              <Link to={metaLink}>
+                {metaText}
+              </Link>
+            </FreqTag>}
           <Title>{title}</Title>
+          <Name>{person.name}</Name>
 
           {hasMetadata &&
             hasLinkPreview &&
@@ -238,9 +233,7 @@ class StoryCard extends Component {
                       />
                     </PhotoContainer>
                   );
-                }
-
-                if (i === 3) {
+                } else if (i === 3) {
                   return (
                     <PhotoContainer
                       key={photo.meta.key}
@@ -249,15 +242,15 @@ class StoryCard extends Component {
                       <PhotoPlaceholder count={this.state.photos.length - 3} />
                     </PhotoContainer>
                   );
+                } else {
+                  return <span />;
                 }
               })}
             </PhotosContainer>}
+          <HeadsContainer>
+            {heads}
+          </HeadsContainer>
         </StoryBody>
-
-        <HeadsContainer>
-          {heads}
-        </HeadsContainer>
-
       </Card>
     );
   }

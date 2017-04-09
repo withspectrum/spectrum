@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Head, HeadWrapper, Container, Label } from './style';
-import { UnreadCount } from '../style';
+import { Head, HeadWrapper, Container } from './style';
 
 class ParticipantHeads extends Component {
   render() {
@@ -13,7 +12,7 @@ class ParticipantHeads extends Component {
         </Container>
       );
     }
-    const { participants, list, unread, me } = this.props;
+    const { participants, list } = this.props;
     const participantsArr = Object.keys(participants);
 
     // sort the participants by last activity
@@ -29,7 +28,7 @@ class ParticipantHeads extends Component {
     return (
       <Container>
         {sortedArr.map((participant, i) => {
-          if (i <= 15 && list[participant]) {
+          if (i <= 12 && list[participant]) {
             return (
               <HeadWrapper
                 tipText={list[participant].displayName}
@@ -43,12 +42,12 @@ class ParticipantHeads extends Component {
           return null;
         })}
 
-        {sortedArr.length > 16 && // if more than four participnats, tack on a placeholder
+        {sortedArr.length > 12 && // if more than four participnats, tack on a placeholder
           <HeadWrapper
             tipText={
-              sortedArr.length - 15 > 1
-                ? `${sortedArr.length - 15} others`
-                : `${sortedArr.length - 15} other`
+              sortedArr.length - 11 > 1
+                ? `${sortedArr.length - 11} others`
+                : `${sortedArr.length - 11} other`
             }
             tipLocation="top-right"
           >

@@ -14,7 +14,6 @@ import LoadingIndicator from '../shared/loading';
 import ModalRoot from '../shared/modals/ModalRoot';
 import SelectUsernameModal from '../shared/modals/SelectUsernameModal';
 import GalleryRoot from '../shared/gallery/GalleryRoot';
-import OnboardingCard from './MiddleColumn/OnboardingCard';
 import LoginCard from './MiddleColumn/LoginCard';
 import ReportBugCard from './MiddleColumn/ReportBugCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
@@ -92,9 +91,8 @@ class App extends Component {
 
     if (!title && !description) {
       const story = sortedStories.find(story => story.id === stories.active);
-      const freq = frequency ||
-        story &&
-          getCurrentFrequency(story.frequencyId, frequencies.frequencies);
+      const freq = (frequency || story) &&
+        getCurrentFrequency(story.frequencyId, frequencies.frequencies);
 
       if (!(story && story.content) && !(freq && freq.name)) {
         title = 'Spectrum';

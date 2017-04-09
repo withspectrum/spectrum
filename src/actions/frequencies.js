@@ -11,9 +11,8 @@ import {
   removeUserFromFrequency,
   getFrequency,
 } from '../db/frequencies';
-import { getStories, getAllStories } from '../db/stories';
+import { getStories } from '../db/stories';
 import { getUserInfo } from '../db/users';
-import { getNotifications } from '../db/notifications';
 import { getCommunity } from '../db/communities';
 import { throwError } from './errors';
 
@@ -148,10 +147,6 @@ type FrequencyData = {
   communityId?: string,
   frequencySlug?: string,
   communitySlug?: string,
-};
-
-type SubscribingOptions = {
-  redirect: boolean,
 };
 
 export const subscribeFrequency = (
