@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import deepEqual from 'deep-eql';
 import { track } from '../../../EventTracker';
+import Icon from '../../../shared/Icons';
 // eslint-disable-next-line
 import {
   StoryBody,
   Name,
+  FreqTag,
   Title,
   LinkPreviewContainer,
   PhotosContainer,
@@ -16,7 +18,6 @@ import {
   HeadsContainer,
   StatusBar,
   StatusText,
-  Dot,
 } from './style';
 import { openGallery } from '../../../actions/gallery';
 import { timeDifference, hashToArray } from '../../../helpers/utils';
@@ -155,31 +156,25 @@ class StoryCard extends Component {
     }
 
     if (unreadMessages > 0) {
-      statusText = `${unreadMessages} new ${unreadMessages === 1
+      statusText = `${unreadMessages} unread ${unreadMessages === 1
         ? 'message'
-        : 'messages'} · ${timeDifference(Date.now(), timestamp)}`;
+        : 'messages'}`;
     }
 
     if (isActive && messages > 0) {
-      statusText = `${messages} messages · ${timeDifference(
-        Date.now(),
-        timestamp,
-      )}`;
+      statusText = `${messages} messages`;
     }
 
     if (isActive && messages === 0) {
-      statusText = `Posted ${timeDifference(Date.now(), timestamp)}`;
+      statusText = `${messages} messages`;
     }
 
     if (!isNew && !unreadMessages && !isActive && messages > 0) {
-      statusText = `${messages} messages · ${timeDifference(
-        Date.now(),
-        timestamp,
-      )}`;
+      statusText = `${timeDifference(Date.now(), timestamp)}`;
     }
 
     if (!isNew && !unreadMessages && !isActive && messages === 0) {
-      statusText = `Posted ${timeDifference(Date.now(), timestamp)}`;
+      statusText = `${timeDifference(Date.now(), timestamp)}`;
     }
 
     return (
@@ -188,20 +183,25 @@ class StoryCard extends Component {
           <StatusText status={status}>
             {statusText}
           </StatusText>
-          <Dot status={status} />
-
-          <Name status={status}>
-            By {person.name} {metaText ? ' · ' : ''}
-            {metaText &&
-              metaLink &&
-              <Link to={metaLink}>
-                {metaText}
-              </Link>}
-          </Name>
+          {!isActive &&
+            <Icon
+              icon="caret-gt"
+              subtle={status === 'default'}
+              reverse={status !== 'default'}
+              size={16}
+            />}
         </StatusBar>
 
         <StoryBody>
+          {metaText &&
+            metaLink &&
+            <FreqTag>
+              <Link to={metaLink}>
+                {metaText}
+              </Link>
+            </FreqTag>}
           <Title>{title}</Title>
+          <Name>{person.name}</Name>
 
           {hasMetadata &&
             hasLinkPreview &&
@@ -247,12 +247,10 @@ class StoryCard extends Component {
                 }
               })}
             </PhotosContainer>}
+          <HeadsContainer>
+            {heads}
+          </HeadsContainer>
         </StoryBody>
-
-        <HeadsContainer>
-          {heads}
-        </HeadsContainer>
-
       </Card>
     );
   }
