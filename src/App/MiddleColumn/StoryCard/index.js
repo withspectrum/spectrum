@@ -166,11 +166,11 @@ class StoryCard extends Component {
     }
 
     if (isActive && messages === 0) {
-      statusText = `${messages} messages`;
+      statusText = `${timeDifference(Date.now(), timestamp)}`;
     }
 
     if (!isNew && !unreadMessages && !isActive && messages > 0) {
-      statusText = `${timeDifference(Date.now(), timestamp)}`;
+      statusText = `${messages} messages`;
     }
 
     if (!isNew && !unreadMessages && !isActive && messages === 0) {
