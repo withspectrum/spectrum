@@ -14,10 +14,8 @@ import { Button, H4 } from '../../shared/Globals';
 import Story from './Story';
 import ActionBar from './Story/ActionBar';
 import Chat from './Chat';
-import MessageGroupHeader from './MessageGroupHeader';
 import ChatInput from './ChatInput';
 import Composer from './Composer';
-import MessageComposer from './MessageComposer';
 import Explore from './Explore';
 
 import {
