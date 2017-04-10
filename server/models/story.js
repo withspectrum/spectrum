@@ -3,6 +3,11 @@
  */
 const { db } = require('./db');
 
+const getStory = id => {
+  const { connection } = require('./db');
+  return db.table('stories').get(id).run(connection);
+};
+
 const getAllStories = () => {
   const { connection } = require('./db');
   return db.table('stories').run(connection).then(
@@ -29,7 +34,52 @@ const getStoryByFrequency = frequency => {
   );
 };
 
+const addStory = story => {
+  const { connection } = require('./db');
+  return db
+    .table('stories')
+    .insert(
+      Object.assign({}, story, {
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+      }),
+      { returnChanges: true }
+    )
+    .run(connection)
+    .then(result => result.changes[0].new_val);
+};
+
+const publishStory = id => {
+  const { connection } = require('./db');
+  return db
+    .table('stories')
+    .get(id)
+    .update(
+      {
+        published: true,
+        modifiedAt: new Date(),
+      },
+      { returnChanges: true }
+    )
+    .run(connection)
+    .then(result => result.changes[0].new_val);
+};
+
+const deleteStory = id => {
+  const { connection } = require('./db');
+  return db
+    .table('stories')
+    .get(id)
+    .delete()
+    .run(connection)
+    .then(result => result.deleted === 1);
+};
+
 module.exports = {
+  addStory,
+  getStory,
+  publishStory,
+  deleteStory,
   getAllStories,
   getStoryByFrequency,
 };

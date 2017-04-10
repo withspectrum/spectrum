@@ -17,6 +17,7 @@ const communityQueries = require('./queries/community');
 const messageQueries = require('./queries/message');
 
 const messageMutations = require('./mutations/message');
+const storyMutations = require('./mutations/story');
 
 const messageSubscriptions = require('./subscriptions/message');
 
@@ -56,6 +57,7 @@ module.exports = makeExecutableSchema({
     communityQueries,
     messageQueries,
     messageMutations,
+    storyMutations,
     messageSubscriptions
   ),
 });

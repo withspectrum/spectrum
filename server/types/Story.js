@@ -11,7 +11,6 @@ const Story = /* GraphQL */ `
 		createdAt: Date!
 		modifiedAt: Date!
 		frequency: Frequency!
-		last_activity: Date!
 		published: Boolean!
 		content: StoryContent!
 		deleted: Boolean
@@ -19,7 +18,25 @@ const Story = /* GraphQL */ `
 	}
 
 	extend type Query {
-		stories: [Story!]
+		story(id: ID!): Story
+	}
+
+	input StoryContentInput {
+		title: String!
+		description: String
+		media: String
+	}
+
+	input StoryInput {
+		frequency: ID!
+		published: Boolean!
+		content: StoryContentInput!
+	}
+
+	extend type Mutation {
+		addStory(story: StoryInput!): Story
+		publishStory(id: ID!): Story
+		deleteStory(id: ID!): Boolean
 	}
 `;
 

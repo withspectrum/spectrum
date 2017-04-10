@@ -4,7 +4,6 @@ const communities = [
     createdAt: new Date(),
     name: 'Spectrum Staging',
     slug: 'spectrum',
-    frequencies: ['general-123asdf'],
   },
 ];
 
@@ -17,7 +16,6 @@ const frequencies = [
     name: 'General',
     description: "Let's get a frequency in here!",
     slug: 'general',
-    stories: ['first-story-asdf123', 'second-story-asddf123'],
   },
 ];
 
@@ -26,7 +24,7 @@ const stories = [
     id: 'first-story-asdf123',
     frequency: 'general-123asdf',
     createdAt: new Date(),
-    last_activity: new Date(),
+    modifiedAt: new Date(),
     published: true,
     content: {
       title: 'First story!',
@@ -37,7 +35,7 @@ const stories = [
     id: 'second-story-asddf123',
     frequency: 'general-123asdf',
     createdAt: new Date(),
-    last_activity: new Date(),
+    modifiedAt: new Date(),
     published: true,
     content: {
       title: 'Second story!',
