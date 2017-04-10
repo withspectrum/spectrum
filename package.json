@@ -53,6 +53,9 @@
   "scripts": {
     "start": "react-scripts start",
     "start:server": "node server/index.js",
+    "migrate": "rethinkdb-migrate -f ./server/migrations/config.js",
+    "migrate:up": "npm run migrate -- up",
+    "migrate:down": "npm run migrate -- down",
     "now-start": "serve ./build --single",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
