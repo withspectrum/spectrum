@@ -33,6 +33,10 @@ const Message = /* GraphQL */ `
 	extend type Mutation {
 		addMessage(message: MessageInput!): Message
 	}
+
+	extend type Subscription {
+		messageAdded(storyId: ID!): Message
+	}
 `;
 
 module.exports = Message;

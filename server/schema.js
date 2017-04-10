@@ -15,6 +15,8 @@ const messageQueries = require('./queries/message');
 
 const messageMutations = require('./mutations/message');
 
+const messageSubscriptions = require('./subscriptions/message');
+
 const Root = /* GraphQL */ `
 	# The dummy queries and mutations are necessary because
 	# graphql-js cannot have empty root types and we only extend
@@ -28,23 +30,19 @@ const Root = /* GraphQL */ `
 		dummy: String
 	}
 
+	type Subscription {
+		dummy: String
+	}
+
 	schema {
 		query: Query
 		mutation: Mutation
+		subscription: Subscription
 	}
 `;
 
 module.exports = makeExecutableSchema({
-  typeDefs: [
-    scalars.typeDefs,
-    Schema,
-    Mutation,
-    Query,
-    Community,
-    Frequency,
-    Story,
-    Message,
-  ],
+  typeDefs: [scalars.typeDefs, Root, Community, Frequency, Story, Message],
   resolvers: merge(
     {},
     scalars.resolvers,
@@ -53,5 +51,6 @@ module.exports = makeExecutableSchema({
     communityQueries,
     messageQueries,
     messageMutations,
+    messageSubscriptions,
   ),
 });
