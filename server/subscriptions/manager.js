@@ -7,7 +7,7 @@ module.exports = new SubscriptionManager({
   pubsub,
   setupFunctions: {
     messageAdded: (_, { storyId }) => ({
-      'mutation.addMessage': {
+      messageAdded: {
         filter: message => message.story === storyId,
       },
     }),

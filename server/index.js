@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
+const listeners = require('./subscriptions');
 const { init } = require('./models/db');
 const subscriptionManager = require('./subscriptions/manager');
 
@@ -42,5 +43,6 @@ init({ host: 'localhost', port: 28015 }).then(() => {
       server: websocketServer,
     },
   );
+  listeners.start();
   console.log('GraphQL server running on port', PORT);
 });

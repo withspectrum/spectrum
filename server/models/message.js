@@ -40,8 +40,26 @@ const storeMessage = message => {
     .then(([id]) => db.table('messages').get(id).run(connection));
 };
 
+const listenToNewMessages = cb => {
+  const { connection } = require('./db');
+  return db
+    .table('messages')
+    .changes({
+      includeInitial: false,
+    })
+    .filter(db.row('old_val').eq(null).and(db.not(db.row('new_val').eq(null))))
+    .run(connection, (err, cursor) => {
+      if (err) throw err;
+      cursor.each((err, data) => {
+        if (err) throw err;
+        cb(data.new_val);
+      });
+    });
+};
+
 module.exports = {
   getMessage,
   getMessagesByStory,
   storeMessage,
+  listenToNewMessages,
 };
