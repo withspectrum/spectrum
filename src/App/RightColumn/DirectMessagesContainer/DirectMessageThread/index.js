@@ -5,9 +5,9 @@ import deepEqual from 'deep-eql';
 
 import { Header } from './header';
 import { Container } from './container';
-import { ScrollBody } from './scrollbody';
-import Chat from './Chat';
-import ChatInput from '../../ChatInput';
+import { ScrollBody } from '../../Components/ScrollBody';
+import Chat from '../../Components/Chat';
+import ChatInput from '../../Components/ChatInput';
 
 class DirectMessageThread extends Component {
   static defaultProps = {
@@ -30,8 +30,8 @@ class DirectMessageThread extends Component {
       .filter(user => user.uid !== currentUser.uid); // filter out the current user
 
     return (
-      <Container ref={'container'}>
-        <ScrollBody>
+      <Container>
+        <ScrollBody active={activeThread} forceScrollToBottom>
           <Header users={users} />
           <Chat
             messages={messages}

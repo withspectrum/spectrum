@@ -6,7 +6,7 @@ import styled from 'styled-components';
 export class Container extends Component {
   render() {
     return (
-      <StyledContainer>
+      <StyledContainer innerRef={scrollBody => this.scrollBody = scrollBody}>
         {this.props.children}
       </StyledContainer>
     );
@@ -17,5 +17,6 @@ const StyledContainer = styled.div`
   display: flex;
   flex: 1 0 auto;
   flex-direction: column;
-  overflow-y: hidden;
+  height: auto;
+  overflow-y: auto;
 `;

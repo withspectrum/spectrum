@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { Link as RouterLink } from 'react-router-dom';
 
 export const Gradient = (g1, g2) => {
@@ -27,6 +27,30 @@ export const Transition = {
 
 export const fontStack = css`
 	font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe', sans-serif
+`;
+
+const spin = keyframes`
+  to {transform: rotate(360deg);}
+`;
+
+export const Spinner = styled.span`
+  &:before {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -10px;
+    margin-left: -10px;
+    border-radius: 50%;
+    border: 1px solid ${props => props.theme.brand.default};
+    border-top-color: #fff;
+    border-right-color: ${props => props.theme.brand.alt};
+    border-bottom-color: #fff;
+    animation: ${spin} .6s linear infinite;
+  }
 `;
 
 const buttonStyles = css`

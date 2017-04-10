@@ -5,14 +5,8 @@ export const Container = styled.div`
   flex: 1 0 auto;
   flex-direction: column;
   overflow-y: hidden;
-`;
-
-export const ScrollBody = styled.div`
-  display: flex;
-  flex: 1 1 auto;
-  max-height: 100%;
-  flex-direction: column;
-  overflow-y: scroll;
+  ${props =>
+  props.loading ? 'justify-content: center; align-items: center;' : ''};
 `;
 
 export const Footer = styled.div`

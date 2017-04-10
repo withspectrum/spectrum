@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { Header } from './header';
 import { Container } from '../DirectMessageThread/container';
-import { ScrollBody } from '../DirectMessageThread/scrollbody';
 import ChatInput from '../../ChatInput';
 
 class DirectMessageComposer extends Component {
@@ -16,9 +15,7 @@ class DirectMessageComposer extends Component {
 
     return (
       <Container ref={'container'}>
-        <ScrollBody>
-          <Header recipient={recipient} />
-        </ScrollBody>
+        <Header recipient={recipient} />
         <ChatInput />
       </Container>
     );

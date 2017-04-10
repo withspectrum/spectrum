@@ -1,13 +1,15 @@
+//@flow
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import { sendMessage } from '../../../actions/messages';
-import { throwError } from '../../../actions/errors';
-import { uploadMediaToLocation } from '../../../db/media';
-import { isMobile } from '../../../helpers/utils';
-import EmojiPicker from '../../../shared/EmojiPicker';
-import Icon from '../../../shared/Icons';
+//$FlowFixMe
 import { connect } from 'react-redux';
-import { track } from '../../../EventTracker';
+import ReactDOM from 'react-dom';
+import { sendMessage } from '../../../../actions/messages';
+import { throwError } from '../../../../actions/errors';
+import { uploadMediaToLocation } from '../../../../db/media';
+import { isMobile } from '../../../../helpers/utils';
+import EmojiPicker from '../../../../shared/EmojiPicker';
+import Icon from '../../../../shared/Icons';
+import { track } from '../../../../EventTracker';
 import {
   Input,
   Form,

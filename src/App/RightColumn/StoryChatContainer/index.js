@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 //$FlowFixMe
 import { connect } from 'react-redux';
+//$FlowFixMe
 import deepEqual from 'deep-eql';
 import { sortAndGroupBubbles } from '../../../helpers/utils';
 import StoryComposer from './StoryComposer';

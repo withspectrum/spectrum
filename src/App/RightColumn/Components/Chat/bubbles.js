@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Gradient } from '../../../../../shared/Globals';
+import { Gradient } from '../../../../shared/Globals';
 import sanitizeHtml from 'sanitize-html';
 
 type BubbleProps = {

@@ -7,21 +7,15 @@ import { connect } from 'react-redux';
 import { login } from '../../../../actions/user';
 import { subscribeFrequency } from '../../../../actions/frequencies';
 import { getPermission } from '../../../../helpers/permissions';
-import { Container, ScrollBody, Footer, Text } from './style';
+import { Container, Footer, Text } from './style';
 import Story from './Story';
 import StoryActions from './StoryActions';
-import Chat from './Chat';
-import ChatInput from '../../ChatInput';
-import { Button } from '../../../../shared/Globals';
+import Chat from '../../Components/Chat';
+import { ScrollBody } from '../../Components/ScrollBody';
+import ChatInput from '../../Components/ChatInput';
+import { Button, Spinner } from '../../../../shared/Globals';
 
 class StoryChat extends Component {
-  static defaultProps = {
-    story: React.PropTypes.object.isRequired,
-    community: React.PropTypes.object,
-    frequency: React.PropTypes.object,
-    messages: React.PropTypes.array,
-  };
-
   shouldComponentUpdate = (nextProps: Object) => {
     return !deepEqual(nextProps, this.props);
   };
@@ -49,28 +43,57 @@ class StoryChat extends Component {
     const { community, frequency, story, messages } = this.props;
     const usersList = state.user.list;
     const currentUser = state.user;
+
     const frequencyRole = currentUser.uid &&
       frequency &&
       getPermission(currentUser.uid, frequency);
     const communityRole = currentUser.uid &&
       community &&
       getPermission(currentUser.uid, community);
-    console.log('roles are: ', frequencyRole, communityRole);
+
+    const isParticipant = story.participants
+      ? story.participants[currentUser.uid] ? true : false
+      : false;
+    /*
+     * Sometimes the underlying data for the story loads in async, so we need to handle
+     * a fallback loading state while the data is retreived
+    */
+    if (!community || !frequency || !story) {
+      return (
+        <Container loading>
+          <Spinner />
+        </Container>
+      );
+    }
 
     return (
-      <Container ref={'container'}>
-        <ScrollBody>
+      <Container>
+        <ScrollBody active={story} forceScrollToBottom={isParticipant}>
           <Story story={story} frequency={frequency} community={community} />
-          <StoryActions story={story} role={communityRole} />
+          <StoryActions
+            story={story}
+            roles={{ communityRole, frequencyRole }}
+            currentUser={currentUser}
+            community={community}
+            frequency={frequency}
+          />
           <Chat
             messages={messages}
             usersList={usersList}
             currentUser={currentUser}
+            forceScrollToBottom={isParticipant}
           />
         </ScrollBody>
 
         {currentUser.uid &&
+          story.locked &&
+          <Footer>
+            <Text>It's cold in here...this chat has been frozen ❄️</Text>
+          </Footer>}
+
+        {currentUser.uid &&
           frequencyRole && //signed in and joined this frequency
+          !story.locked &&
           <ChatInput />}
 
         {currentUser.uid &&

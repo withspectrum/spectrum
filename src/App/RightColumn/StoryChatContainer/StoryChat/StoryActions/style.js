@@ -8,6 +8,7 @@ export const ActionBarContainer = styled.div`
 	padding: 16px 32px;
 	padding-top: 0;
 	border-bottom: 1px solid ${({ theme }) => theme.border.default};
+	background: #fff;
 
 	@media (max-width: 768px) {
 		padding: 16px;

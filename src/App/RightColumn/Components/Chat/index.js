@@ -6,11 +6,11 @@ import { connect } from 'react-redux';
 import {
   onlyContainsEmoji,
   convertTimestampToDate,
-} from '../../../../../helpers/utils';
-import { openModal } from '../../../../../actions/modals';
-import { openGallery } from '../../../../../actions/gallery';
-import { track } from '../../../../../EventTracker';
-import Badge from '../../../../../shared/Badge';
+} from '../../../../helpers/utils';
+import { openModal } from '../../../../actions/modals';
+import { openGallery } from '../../../../actions/gallery';
+import { track } from '../../../../EventTracker';
+import Badge from '../../../../shared/Badge';
 import { Bubble, EmojiBubble, ImgBubble } from './bubbles';
 
 import {
@@ -23,7 +23,6 @@ import {
   Time,
   Container,
   MessagesWrapper,
-  Spinner,
 } from './style';
 
 class Chat extends Component {
@@ -31,6 +30,7 @@ class Chat extends Component {
     messages: React.PropTypes.array.isRequired,
     usersList: React.PropTypes.object.isRequired,
     currentUser: React.PropTypes.object.isRequired,
+    forceScrollToBottom: React.PropTypes.boolean,
   };
 
   openGallery = e => {
@@ -106,16 +106,8 @@ class Chat extends Component {
   render() {
     const { messages, usersList, currentUser } = this.props;
 
-    if (messages.length === 0) {
-      return (
-        <Container loading>
-          <Spinner />
-        </Container>
-      );
-    }
-
     return (
-      <Container>
+      <Container innerRef={scrollBody => this.scrollBody = scrollBody}>
         {messages.map((group, i) => {
           const evaluating = group[0];
           const roboText = evaluating.userId === 'robo';
@@ -138,7 +130,6 @@ class Chat extends Component {
 
               <MessagesWrapper>
                 {this.renderBubbleHeader(evaluating, me)}
-
                 {group.map((message, i) => {
                   if (
                     message.message.type === 'text' ||
