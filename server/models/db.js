@@ -1,3 +1,6 @@
+/**
+ * Database setup is done here
+ */
 const r = require('rethinkdb');
 
 const main = {

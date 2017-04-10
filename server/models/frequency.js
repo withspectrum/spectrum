@@ -1,3 +1,6 @@
+/**
+ * Storing and retrieving frequencies
+ */
 const { db } = require('./db');
 
 const getAllFrequencies = () => {

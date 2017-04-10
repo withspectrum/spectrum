@@ -4,11 +4,13 @@ const Message = /* GraphQL */ `
 		media
 	}
 
+	# The content and type of a message
 	type MessageContent {
 		type: MessageType!
 		content: String!
 	}
 
+	# A message
 	type Message {
 		id: ID!
 		timestamp: Date!

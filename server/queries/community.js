@@ -1,3 +1,6 @@
+/**
+ * Community query resolvers
+ */
 const { getCommunity } = require('../models/community');
 const { getFrequenciesByCommunity } = require('../models/frequency');
 

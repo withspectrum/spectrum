@@ -1,3 +1,6 @@
+/**
+ * Story query resolvers
+ */
 const { getAllStories } = require('../models/story');
 const { getFrequency } = require('../models/frequency');
 const { getMessagesByStory } = require('../models/message');

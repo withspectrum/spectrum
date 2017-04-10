@@ -1,3 +1,6 @@
+/**
+ * Database listeners for subscriptions are initialised here
+ */
 const { listenToNewMessages } = require('../models/message');
 const pubsub = require('./pubsub');
 

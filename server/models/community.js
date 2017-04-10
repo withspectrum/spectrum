@@ -1,3 +1,6 @@
+/**
+ * Storing and retrieving communities
+ */
 const { db } = require('./db');
 
 const getCommunity = id => {

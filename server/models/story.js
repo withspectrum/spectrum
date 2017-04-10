@@ -1,3 +1,6 @@
+/**
+ * Storing and retrieving stories
+ */
 const { db } = require('./db');
 
 const getAllStories = () => {

@@ -1,3 +1,6 @@
+/**
+ * Message mutation resolvers
+ */
 const { storeMessage } = require('../models/message');
 const pubsub = require('../subscriptions/pubsub');
 

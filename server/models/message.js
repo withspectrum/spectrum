@@ -1,3 +1,6 @@
+/**
+ * Storing and retrieving messages
+ */
 const { db } = require('./db');
 
 const getMessage = id => {
@@ -19,6 +22,7 @@ const getMessagesByStory = story => {
 
 const storeMessage = message => {
   const { connection } = require('./db');
+  // Insert a message
   return db
     .table('messages')
     .insert(
@@ -27,6 +31,7 @@ const storeMessage = message => {
       }),
     )
     .run(connection)
+    // Add the message to the story
     .then(({ generated_keys }) => Promise.all([
       generated_keys[0],
       db
@@ -37,6 +42,7 @@ const storeMessage = message => {
         })
         .run(connection),
     ]))
+    // Return the message object from the db
     .then(([id]) => db.table('messages').get(id).run(connection));
 };
 
@@ -47,11 +53,13 @@ const listenToNewMessages = cb => {
     .changes({
       includeInitial: false,
     })
+    // Filter to only include newly inserted messages in the changefeed
     .filter(db.row('old_val').eq(null).and(db.not(db.row('new_val').eq(null))))
     .run(connection, (err, cursor) => {
       if (err) throw err;
       cursor.each((err, data) => {
         if (err) throw err;
+        // Call the passed callback with the message directly
         cb(data.new_val);
       });
     });

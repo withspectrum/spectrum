@@ -1,3 +1,6 @@
+/**
+ * The combined schema out of types and resolvers (queries, mutations and subscriptions)
+ */
 const { makeExecutableSchema } = require('graphql-tools');
 const { merge } = require('lodash');
 
@@ -41,6 +44,8 @@ const Root = /* GraphQL */ `
 	}
 `;
 
+// Create the final GraphQL schema out of the type definitions
+// and the resolvers
 module.exports = makeExecutableSchema({
   typeDefs: [scalars.typeDefs, Root, Community, Frequency, Story, Message],
   resolvers: merge(

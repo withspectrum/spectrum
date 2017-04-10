@@ -1,4 +1,5 @@
 const Story = /* GraphQL */ `
+	# The contents of a story
 	type StoryContent {
 		title: String!
 		description: String
