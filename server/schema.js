@@ -1,63 +1,42 @@
 const { makeExecutableSchema } = require('graphql-tools');
 const { merge } = require('lodash');
-const GraphQLDate = require('graphql-date');
+
+const scalars = require('./types/scalars');
 
 const Story = require('./types/Story');
 const Frequency = require('./types/Frequency');
 const Community = require('./types/Community');
 const Message = require('./types/Message');
+
 const storyQueries = require('./queries/story');
 const frequencyQueries = require('./queries/frequency');
 const communityQueries = require('./queries/community');
 const messageQueries = require('./queries/message');
+
 const messageMutations = require('./mutations/message');
 
-const Query = /* GraphQL */ `
-	# Root Query
+const Root = /* GraphQL */ `
+	# The dummy queries and mutations are necessary because
+	# graphql-js cannot have empty root types and we only extend
+	# these types later on
+	# Ref: apollographql/graphql-tools#293
 	type Query {
-		stories: [Story!]
-		frequency(id: ID!): Frequency
-		frequencies: [Frequency!]
-		community(id: ID!): Community
-		message(id: ID!): Message
-	}
-`;
-
-const Mutation = /* GraphQL */ `
-	input MessageContentInput {
-		type: MessageType!
-		content: String!
+		dummy: String
 	}
 
-	input MessageInput {
-		story: ID!
-		message: MessageContentInput!
-	}
-
-	# Root Mutation
 	type Mutation {
-		addMessage(message: MessageInput!): Message
+		dummy: String
 	}
-`;
 
-const customScalars = /* GraphQL */ `
-	scalar Date
-`;
-
-const Schema = /* GraphQL */ `
 	schema {
 		query: Query
 		mutation: Mutation
 	}
 `;
 
-const customScalarsResolver = {
-  Date: GraphQLDate,
-};
-
 module.exports = makeExecutableSchema({
   typeDefs: [
-    customScalars,
+    scalars.typeDefs,
     Schema,
     Mutation,
     Query,
@@ -68,7 +47,7 @@ module.exports = makeExecutableSchema({
   ],
   resolvers: merge(
     {},
-    customScalarsResolver,
+    scalars.resolvers,
     storyQueries,
     frequencyQueries,
     communityQueries,

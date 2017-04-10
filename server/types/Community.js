@@ -6,6 +6,10 @@ const Community = /* GraphQL */ `
 		slug: String!
 		frequencies: [Frequency!]
 	}
+
+	extend type Query {
+		community(id: ID!): Community
+	}
 `;
 
 module.exports = Community;

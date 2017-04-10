@@ -9,6 +9,11 @@ const Frequency = /* GraphQL */ `
 		community: Community!
 		stories: [Story!]
 	}
+
+	extend type Query {
+		frequency(id: ID!): Frequency
+		frequencies: [Frequency!]
+	}
 `;
 
 module.exports = Frequency;

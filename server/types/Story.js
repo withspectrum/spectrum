@@ -16,6 +16,10 @@ const Story = /* GraphQL */ `
 		deleted: Boolean
 		messages: [Message!]
 	}
+
+	extend type Query {
+		stories: [Story!]
+	}
 `;
 
 module.exports = Story;
