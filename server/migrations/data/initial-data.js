@@ -46,8 +46,39 @@ const stories = [
   },
 ];
 
+const messages = [
+  {
+    id: 'first-message-asdf123',
+    timestamp: Date.now(),
+    story: 'first-story-asdf123',
+    message: {
+      type: 'text',
+      content: 'This is the first message!',
+    },
+  },
+  {
+    id: 'second-message-asdf123',
+    timestamp: Date.now(),
+    story: 'first-story-asdf123',
+    message: {
+      type: 'text',
+      content: 'This is the second message!',
+    },
+  },
+  {
+    id: 'first-message-asdf123',
+    timestamp: Date.now(),
+    story: 'second-story-asddf123',
+    message: {
+      type: 'text',
+      content: 'This is the first message in this story!',
+    },
+  },
+];
+
 module.exports = {
   communities,
   frequencies,
   stories,
+  messages,
 };

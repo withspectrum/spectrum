@@ -1,5 +1,5 @@
 const Story = /* GraphQL */ `
-	type Content {
+	type StoryContent {
 		title: String!
 		description: String
 		media: String
@@ -12,9 +12,9 @@ const Story = /* GraphQL */ `
 		frequency: Frequency!
 		last_activity: Int!
 		published: Boolean!
-		content: Content!
+		content: StoryContent!
 		deleted: Boolean
-		# messages: [Message!]
+		messages: [Message!]
 	}
 `;
 
