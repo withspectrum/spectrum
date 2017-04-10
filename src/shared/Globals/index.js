@@ -38,7 +38,7 @@ const buttonStyles = css`
     : Gradient(props.theme.brand.alt, props.theme.brand.default)};
   border-radius: 8px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: ${({ theme }) => theme.text.reverse};
   transition: ${Transition.hover.off};
   padding: 12px 16px;

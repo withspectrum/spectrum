@@ -10,10 +10,8 @@ import Icon from '../../shared/Icons';
 import { Button, H4 } from '../../shared/Globals';
 import DirectMessagesContainer from './DirectMessagesContainer';
 import StoryChatContainer from './StoryChatContainer';
-import ActionBar from './Story/ActionBar';
 import Chat from './Chat';
 import ChatInput from './ChatInput';
-import Composer from './Composer';
 import Explore from './Explore';
 
 import {
