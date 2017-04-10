@@ -2,13 +2,12 @@
 const data = require('./data/initial-data');
 
 exports.up = function(r, conn) {
-  return Promise
-    .all([
-      r.tableCreate('stories').run(conn),
-      r.tableCreate('frequencies').run(conn),
-      r.tableCreate('communities').run(conn),
-      r.tableCreate('messages').run(conn),
-    ])
+  return Promise.all([
+    r.tableCreate('stories').run(conn),
+    r.tableCreate('frequencies').run(conn),
+    r.tableCreate('communities').run(conn),
+    r.tableCreate('messages').run(conn),
+  ])
     .then(() =>
       Promise.all([
         r.table('communities').insert(data.communities).run(conn),
@@ -22,14 +21,12 @@ exports.up = function(r, conn) {
 };
 
 exports.down = function(r, conn) {
-  return Promise
-    .all([
-      r.tableDrop('stories').run(conn),
-      r.tableDrop('frequencies').run(conn),
-      r.tableDrop('communities').run(conn),
-      r.tableDrop('messages').run(conn),
-    ])
-    .catch(err => {
-      console.log(err);
-    });
+  return Promise.all([
+    r.tableDrop('stories').run(conn),
+    r.tableDrop('frequencies').run(conn),
+    r.tableDrop('communities').run(conn),
+    r.tableDrop('messages').run(conn),
+  ]).catch(err => {
+    console.log(err);
+  });
 };

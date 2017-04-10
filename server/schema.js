@@ -56,6 +56,6 @@ module.exports = makeExecutableSchema({
     communityQueries,
     messageQueries,
     messageMutations,
-    messageSubscriptions,
+    messageSubscriptions
   ),
 });
