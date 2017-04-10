@@ -7,6 +7,7 @@ const main = {
 
 main.init = ({ host, port }) =>
   main.db.connect({ host, port }).then(connection => {
+    connection.use('spectrum');
     main.connection = connection;
     return connection;
   });

@@ -1,16 +1,14 @@
-const Timestamped = require('./interfaces/Timestamped');
-
 const Frequency = /* GraphQL */ `
-	type Frequency implements Timestamped {
+	type Frequency {
 		id: ID!
 		createdAt: Int!
 		modifiedAt: Int
 		name: String!
 		description: String!
 		slug: String!
-		# community: Community!
+		community: Community!
 		stories: [Story!]
 	}
 `;
 
-module.exports = () => [Timestamped, Frequency];
+module.exports = Frequency;

@@ -3,8 +3,10 @@ const { merge } = require('lodash');
 
 const Story = require('./types/Story');
 const Frequency = require('./types/Frequency');
+const Community = require('./types/Community');
 const storyQueries = require('./queries/story');
 const frequencyQueries = require('./queries/frequency');
+const communityQueries = require('./queries/community');
 
 const Query = /* GraphQL */ `
 	# Root Query
@@ -12,6 +14,7 @@ const Query = /* GraphQL */ `
 		stories: [Story!]
 		frequency(id: ID!): Frequency
 		frequencies: [Frequency!]
+		community(id: ID!): Community
 	}
 `;
 
@@ -22,6 +25,6 @@ const Schema = /* GraphQL */ `
 `;
 
 module.exports = makeExecutableSchema({
-  typeDefs: [Schema, Query, Frequency, Story],
-  resolvers: merge({}, storyQueries, frequencyQueries),
+  typeDefs: [Schema, Query, Community, Frequency, Story],
+  resolvers: merge({}, storyQueries, frequencyQueries, communityQueries),
 });

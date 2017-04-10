@@ -1,6 +1,7 @@
 const communities = [
   {
     id: 'spectrum-staging',
+    createdAt: Date.now(),
     name: 'Spectrum Staging',
     slug: 'spectrum',
     frequencies: ['general-123asdf'],
