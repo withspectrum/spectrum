@@ -1,7 +1,7 @@
 const communities = [
   {
     id: 'spectrum-staging',
-    createdAt: Date.now(),
+    createdAt: new Date(),
     name: 'Spectrum Staging',
     slug: 'spectrum',
     frequencies: ['general-123asdf'],
@@ -12,8 +12,8 @@ const frequencies = [
   {
     id: 'general-123asdf',
     community: 'spectrum-staging',
-    createdAt: Date.now(),
-    modifiedAt: Date.now(),
+    createdAt: new Date(),
+    modifiedAt: new Date(),
     name: 'General',
     description: "Let's get a frequency in here!",
     slug: 'general',
@@ -25,8 +25,8 @@ const stories = [
   {
     id: 'first-story-asdf123',
     frequency: 'general-123asdf',
-    createdAt: Date.now(),
-    last_activity: Date.now(),
+    createdAt: new Date(),
+    last_activity: new Date(),
     published: true,
     content: {
       title: 'First story!',
@@ -36,8 +36,8 @@ const stories = [
   {
     id: 'second-story-asddf123',
     frequency: 'general-123asdf',
-    createdAt: Date.now(),
-    last_activity: Date.now(),
+    createdAt: new Date(),
+    last_activity: new Date(),
     published: true,
     content: {
       title: 'Second story!',
@@ -49,7 +49,7 @@ const stories = [
 const messages = [
   {
     id: 'first-message-asdf123',
-    timestamp: Date.now(),
+    timestamp: new Date(),
     story: 'first-story-asdf123',
     message: {
       type: 'text',
@@ -58,7 +58,7 @@ const messages = [
   },
   {
     id: 'second-message-asdf123',
-    timestamp: Date.now(),
+    timestamp: new Date(),
     story: 'first-story-asdf123',
     message: {
       type: 'text',
@@ -67,7 +67,7 @@ const messages = [
   },
   {
     id: 'first-message-asdf123',
-    timestamp: Date.now(),
+    timestamp: new Date(),
     story: 'second-story-asddf123',
     message: {
       type: 'text',

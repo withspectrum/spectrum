@@ -1,7 +1,7 @@
 const Community = /* GraphQL */ `
 	type Community {
 		id: ID!
-		createdAt: Int!
+		createdAt: Date!
 		name: String!
 		slug: String!
 		frequencies: [Frequency!]

@@ -17,7 +17,31 @@ const getMessagesByStory = story => {
   );
 };
 
+const storeMessage = message => {
+  const { connection } = require('./db');
+  return db
+    .table('messages')
+    .insert(
+      Object.assign({}, message, {
+        timestamp: new Date(),
+      }),
+    )
+    .run(connection)
+    .then(({ generated_keys }) => Promise.all([
+      generated_keys[0],
+      db
+        .table('stories')
+        .get(message.story)
+        .update({
+          messages: db.row('messages').append(generated_keys[0]),
+        })
+        .run(connection),
+    ]))
+    .then(([id]) => db.table('messages').get(id).run(connection));
+};
+
 module.exports = {
   getMessage,
   getMessagesByStory,
+  storeMessage,
 };

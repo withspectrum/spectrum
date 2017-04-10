@@ -11,7 +11,7 @@ const Message = /* GraphQL */ `
 
 	type Message {
 		id: ID!
-		timestamp: Int!
+		timestamp: Date!
 		story: Story!
 		message: MessageContent!
 	}

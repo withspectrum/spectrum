@@ -1,8 +1,8 @@
 const Frequency = /* GraphQL */ `
 	type Frequency {
 		id: ID!
-		createdAt: Int!
-		modifiedAt: Int
+		createdAt: Date!
+		modifiedAt: Date
 		name: String!
 		description: String!
 		slug: String!

@@ -1,4 +1,4 @@
-const { getMessage } = require('../model/message');
+const { getMessage } = require('../models/message');
 
 module.exports = {
   Query: {

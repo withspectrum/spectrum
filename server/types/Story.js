@@ -7,10 +7,10 @@ const Story = /* GraphQL */ `
 
 	type Story {
 		id: ID!
-		createdAt: Int!
-		modifiedAt: Int!
+		createdAt: Date!
+		modifiedAt: Date!
 		frequency: Frequency!
-		last_activity: Int!
+		last_activity: Date!
 		published: Boolean!
 		content: StoryContent!
 		deleted: Boolean
