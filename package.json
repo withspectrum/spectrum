@@ -9,7 +9,7 @@
     "flow-bin": "^0.43.0",
     "lint-staged": "^3.3.0",
     "nodemon": "^1.11.0",
-    "prettier": "^0.18.0",
+    "prettier": "^0.22.0",
     "react-scripts-webpack-v2-fork-mxstbr": "^0.9.0"
   },
   "dependencies": {
@@ -75,7 +75,7 @@
   },
   "lint-staged": {
     "*.js": [
-      "prettier --write --single-quote --trailing-comma",
+      "prettier --write --single-quote --trailing-comma es5",
       "git add"
     ]
   },

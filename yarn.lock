@@ -163,6 +163,12 @@ ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
 
+ansi-styles@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-3.0.0.tgz#5404e93a544c4fec7f048262977bebfe3155e0c1"
+  dependencies:
+    color-convert "^1.0.0"
+
 ansicolors@~0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/ansicolors/-/ansicolors-0.2.1.tgz#be089599097b74a5c9c4a84a0cdbcdb62bd87aef"
@@ -1626,7 +1632,7 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
-color-convert@^1.3.0:
+color-convert@^1.0.0, color-convert@^1.3.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.0.tgz#1accf97dd739b983bf994d56fec8f95853641b7a"
   dependencies:
@@ -1662,11 +1668,11 @@ colors@0.5.x:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/colors/-/colors-0.5.1.tgz#7d0023eaeb154e8ee9fce75dcb923d0ed1667774"
 
-colors@1.0.3, colors@1.0.x, colors@>=0.6.2:
+colors@1.0.3, colors@1.0.x:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.0.3.tgz#0433f44d809680fdeb60ed260f1b0c262e82a40b"
 
-colors@~1.1.2:
+colors@>=0.6.2, colors@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.1.2.tgz#168a4701756b6a7f51a12ce0c97bfa28c084ed63"
 
@@ -3065,9 +3071,9 @@ flow-bin@^0.43.0:
   version "0.43.0"
   resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.43.0.tgz#5cd16696be4311c0b14f0932e89ba8661a39b1c1"
 
-flow-parser@0.38.0:
-  version "0.38.0"
-  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.38.0.tgz#a631c46170c5b42400d905a75cfc83ce8db29424"
+flow-parser@0.40.0:
+  version "0.40.0"
+  resolved "https://registry.yarnpkg.com/flow-parser/-/flow-parser-0.40.0.tgz#b3444742189093323c4319c4fe9d35391f46bcbc"
   dependencies:
     ast-types "0.8.18"
     colors ">=0.6.2"
@@ -4175,6 +4181,13 @@ jest-matcher-utils@^18.1.0:
     chalk "^1.1.3"
     pretty-format "^18.1.0"
 
+jest-matcher-utils@^19.0.0:
+  version "19.0.0"
+  resolved "https://registry.yarnpkg.com/jest-matcher-utils/-/jest-matcher-utils-19.0.0.tgz#5ecd9b63565d2b001f61fbf7ec4c7f537964564d"
+  dependencies:
+    chalk "^1.1.3"
+    pretty-format "^19.0.0"
+
 jest-matchers@^18.1.0:
   version "18.1.0"
   resolved "https://registry.yarnpkg.com/jest-matchers/-/jest-matchers-18.1.0.tgz#0341484bf87a1fd0bac0a4d2c899e2b77a3f1ead"
@@ -4246,14 +4259,14 @@ jest-util@^18.1.0:
     jest-mock "^18.0.0"
     mkdirp "^0.5.1"
 
-jest-validate@18.2.0:
-  version "18.2.0"
-  resolved "https://registry.yarnpkg.com/jest-validate/-/jest-validate-18.2.0.tgz#01f93ac78f23901cf9889808e2bbb931ffc58d86"
+jest-validate@19.0.0:
+  version "19.0.0"
+  resolved "https://registry.yarnpkg.com/jest-validate/-/jest-validate-19.0.0.tgz#8c6318a20ecfeaba0ba5378bfbb8277abded4173"
   dependencies:
     chalk "^1.1.1"
-    jest-matcher-utils "^18.1.0"
+    jest-matcher-utils "^19.0.0"
     leven "^2.0.0"
-    pretty-format "^18.1.0"
+    pretty-format "^19.0.0"
 
 jest@18.1.0:
   version "18.1.0"
@@ -5902,19 +5915,19 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
-prettier@^0.18.0:
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-0.18.0.tgz#9ef5918d53a56946cbc90c213be0db0b0aaea73c"
+prettier@^0.22.0:
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-0.22.0.tgz#7b37c4480d0858180407e5a8e13f0f47da7385d2"
   dependencies:
     ast-types "0.9.4"
     babel-code-frame "6.22.0"
     babylon "6.15.0"
     chalk "1.1.3"
     esutils "2.0.2"
-    flow-parser "0.38.0"
+    flow-parser "0.40.0"
     get-stdin "5.0.1"
     glob "7.1.1"
-    jest-validate "18.2.0"
+    jest-validate "19.0.0"
     minimist "1.2.0"
 
 pretty-error@^2.0.2:
@@ -5929,6 +5942,12 @@ pretty-format@^18.1.0:
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-18.1.0.tgz#fb65a86f7a7f9194963eee91865c1bcf1039e284"
   dependencies:
     ansi-styles "^2.2.1"
+
+pretty-format@^19.0.0:
+  version "19.0.0"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-19.0.0.tgz#56530d32acb98a3fa4851c4e2b9d37b420684c84"
+  dependencies:
+    ansi-styles "^3.0.0"
 
 private@^0.1.6:
   version "0.1.7"
