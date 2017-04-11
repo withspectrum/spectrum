@@ -11,11 +11,13 @@ const Story = require('./types/Story');
 const Frequency = require('./types/Frequency');
 const Community = require('./types/Community');
 const Message = require('./types/Message');
+const User = require('./types/User');
 
 const storyQueries = require('./queries/story');
 const frequencyQueries = require('./queries/frequency');
 const communityQueries = require('./queries/community');
 const messageQueries = require('./queries/message');
+const userQueries = require('./queries/user');
 
 const messageMutations = require('./mutations/message');
 const storyMutations = require('./mutations/story');
@@ -49,7 +51,15 @@ const Root = /* GraphQL */ `
 // Create the final GraphQL schema out of the type definitions
 // and the resolvers
 const schema = makeExecutableSchema({
-  typeDefs: [scalars.typeDefs, Root, Community, Frequency, Story, Message],
+  typeDefs: [
+    scalars.typeDefs,
+    Root,
+    Community,
+    Frequency,
+    Story,
+    Message,
+    User,
+  ],
   resolvers: merge(
     {},
     scalars.resolvers,
@@ -57,6 +67,7 @@ const schema = makeExecutableSchema({
     frequencyQueries,
     communityQueries,
     messageQueries,
+    userQueries,
     messageMutations,
     storyMutations,
     messageSubscriptions
