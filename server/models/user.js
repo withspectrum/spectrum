@@ -1,21 +1,23 @@
 const { db } = require('./db');
+const { cursorToArray } = require('./utils');
 
 const getUser = id => {
   const { connection } = require('./db');
   return db.table('users').get(id).run(connection);
 };
 
+const getUsers = uids => {
+  const { connection } = require('./db');
+  return db.table('users').getAll(...uids).run(connection).then(cursorToArray);
+};
+
 const getUserByProviderId = providerId => {
   const { connection } = require('./db');
-  return db.table('users').filter({ providerId }).run(connection).then(
-    cursor =>
-      new Promise(resolve => {
-        cursor.toArray((err, result) => {
-          if (err) throw err;
-          resolve(result ? result[0] : null);
-        });
-      })
-  );
+  return db
+    .table('users')
+    .filter({ providerId })
+    .run(connection)
+    .then(cursorToArray);
 };
 
 const storeUser = user => {
@@ -40,6 +42,7 @@ const createOrFindUser = user => {
 
 module.exports = {
   getUser,
+  getUsers,
   createOrFindUser,
   storeUser,
 };

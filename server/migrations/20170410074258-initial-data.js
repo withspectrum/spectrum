@@ -15,6 +15,7 @@ exports.up = function(r, conn) {
         r.table('frequencies').insert(data.frequencies).run(conn),
         r.table('stories').insert(data.stories).run(conn),
         r.table('messages').insert(data.messages).run(conn),
+        r.table('users').insert(data.users).run(conn),
       ]))
     .catch(err => {
       console.log(err);

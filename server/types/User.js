@@ -1,6 +1,6 @@
 const User = /* GraphQL */ `
 	type User {
-		id: ID!
+		uid: ID!
 		createdAt: Date!
 		lastSeen: Date!
 		photoURL: String
@@ -8,8 +8,8 @@ const User = /* GraphQL */ `
 		username: String
 		email: String
 		# subscriptions: [Subscription!]
-		# communities: [Community!]
-		# frequencies: [Frequency!]
+		communities: [Community!]
+		frequencies: [Frequency!]
 	}
 
 	extend type Query {

@@ -37,8 +37,7 @@ app.use(
   '/graphiql',
   graphiqlExpress({
     endpointURL: '/',
-    query: `query getCommunity($id: ID!) {\n  community(id: $id) {\n    name\n    frequencies {\n      name\n      stories {\n        content {\n          title\n          description\n          media\n        }\n      }\n    }\n  }\n}`,
-    variables: { id: 'spectrum-staging' },
+    query: `{\n  user(id: "58a023a4-912d-48fe-a61c-eec7274f7699") {\n    displayName\n    username\n    communities {\n      name\n      frequencies {\n        name\n        stories {\n          content {\n            title\n          }\n          messages {\n            message {\n              content\n            }\n          }\n        }\n      }\n    }\n  }\n}`,
   })
 );
 app.use(cookieParser());

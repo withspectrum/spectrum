@@ -2,18 +2,24 @@
  * Storing and retrieving frequencies
  */
 const { db } = require('./db');
+const { cursorToArray } = require('./utils');
 
 const getFrequenciesByCommunity = community => {
   const { connection } = require('./db');
-  return db.table('frequencies').filter({ community }).run(connection).then(
-    cursor =>
-      new Promise(resolve => {
-        cursor.toArray((err, result) => {
-          if (err) throw err;
-          resolve(result);
-        });
-      })
-  );
+  return db
+    .table('frequencies')
+    .filter({ community })
+    .run(connection)
+    .then(cursorToArray);
+};
+
+const getFrequenciesByUser = uid => {
+  const { connection } = require('./db');
+  return db
+    .table('frequencies')
+    .filter(frequency => frequency('subscribers').contains(uid))
+    .run(connection)
+    .then(cursorToArray);
 };
 
 const getFrequency = id => {
@@ -23,5 +29,6 @@ const getFrequency = id => {
 
 module.exports = {
   getFrequency,
+  getFrequenciesByUser,
   getFrequenciesByCommunity,
 };

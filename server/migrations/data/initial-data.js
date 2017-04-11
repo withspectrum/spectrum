@@ -4,6 +4,7 @@ const communities = [
     createdAt: new Date(),
     name: 'Spectrum Staging',
     slug: 'spectrum',
+    members: ['58a023a4-912d-48fe-a61c-eec7274f7699'],
   },
 ];
 
@@ -16,6 +17,7 @@ const frequencies = [
     name: 'General',
     description: "Let's get a frequency in here!",
     slug: 'general',
+    subscribers: ['58a023a4-912d-48fe-a61c-eec7274f7699'],
   },
 ];
 
@@ -39,6 +41,7 @@ const stories = [
         },
       },
     ],
+    author: '58a023a4-912d-48fe-a61c-eec7274f7699',
   },
   {
     id: 'second-story-asddf123',
@@ -59,6 +62,7 @@ const stories = [
         },
       },
     ],
+    author: '58a023a4-912d-48fe-a61c-eec7274f7699',
   },
 ];
 
@@ -71,6 +75,7 @@ const messages = [
       type: 'text',
       content: 'This is the first message!',
     },
+    sender: '58a023a4-912d-48fe-a61c-eec7274f7699',
   },
   {
     id: 'second-message-asdf123',
@@ -80,6 +85,7 @@ const messages = [
       type: 'text',
       content: 'This is the second message!',
     },
+    sender: '58a023a4-912d-48fe-a61c-eec7274f7699',
   },
   {
     id: 'first-message-asdf123',
@@ -89,6 +95,20 @@ const messages = [
       type: 'text',
       content: 'This is the first message in this story!',
     },
+    sender: '58a023a4-912d-48fe-a61c-eec7274f7699',
+  },
+];
+
+const users = [
+  {
+    createdAt: new Date(),
+    displayName: 'Max Stoiber',
+    email: null,
+    lastSeen: new Date(),
+    photoURL: 'https://pbs.twimg.com/profile_images/763033229993574400/6frGyDyA_normal.jpg',
+    providerId: '2451223458',
+    uid: '58a023a4-912d-48fe-a61c-eec7274f7699',
+    username: 'mxstbr',
   },
 ];
 
@@ -97,4 +117,5 @@ module.exports = {
   frequencies,
   stories,
   messages,
+  users,
 };
