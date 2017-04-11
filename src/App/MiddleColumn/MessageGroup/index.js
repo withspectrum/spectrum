@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import deepEqual from 'deep-eql';
 import { connect } from 'react-redux';
 import Card from '../../../shared/Card';
 import { setMessageGroupLastSeen } from '../../../db/messageGroups';
@@ -15,6 +16,10 @@ import {
 } from './style';
 
 class MessageGroup extends Component {
+  shouldComponentUpdate = (nextProps: Object) => {
+    return !deepEqual(nextProps, this.props);
+  };
+
   setLastSeen = () => {
     const { user: { uid }, messageGroup: { id } } = this.props;
     setMessageGroupLastSeen(uid, id);

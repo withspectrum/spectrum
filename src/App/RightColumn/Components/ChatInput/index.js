@@ -178,6 +178,7 @@ class ChatInput extends Component {
     // on the next tick, after the message has rendered
     setTimeout(() => {
       this.props.forceScrollToBottom();
+      this.props.setLastSeen ? this.props.setLastSeen() : '';
     });
   };
 

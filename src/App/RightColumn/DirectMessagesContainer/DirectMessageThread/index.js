@@ -11,6 +11,7 @@ import { ScrollBody } from './ScrollBody';
 import Chat from '../../Components/Chat';
 import ChatInput from '../../Components/ChatInput';
 import { openModal } from '../../../../actions/modals';
+import { setMessageGroupLastSeen } from '../../../../db/messageGroups';
 
 class DirectMessageThread extends Component {
   static defaultProps = {
@@ -29,6 +30,11 @@ class DirectMessageThread extends Component {
   forceScrollToBottom = () => {
     // calls the child method on ScrollBody to force a scroll to bottom when the current user sends a message
     this.scroll.forceScrollToBottom();
+  };
+
+  setLastSeen = () => {
+    const { user: { uid }, activeThread: { id } } = this.props;
+    setMessageGroupLastSeen(uid, id);
   };
 
   render() {
@@ -51,7 +57,10 @@ class DirectMessageThread extends Component {
             type={'groupMessage'}
           />
         </ScrollBody>
-        <ChatInput forceScrollToBottom={this.forceScrollToBottom} />
+        <ChatInput
+          forceScrollToBottom={this.forceScrollToBottom}
+          setLastSeen={this.setLastSeen}
+        />
       </Container>
     );
   }

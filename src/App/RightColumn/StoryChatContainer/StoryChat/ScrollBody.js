@@ -13,18 +13,21 @@ export class ScrollBody extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    // force scroll to bottom when thread is changed
-    if (prevProps.active !== this.props.active) {
-      setTimeout(this.contextualScrollToBottom(), 100);
+    // contextual scroll to bottom when a new message is sent in the thread
+    if (prevProps.active.last_activity !== this.props.active.last_activity) {
+      return this.contextualScrollToBottom();
+    } else if (
+      prevProps.active.id !== this.props.active.id &&
+      this.props.forceScrollToBottom
+    ) {
+      return this.forceScrollToBottom();
     }
   }
 
   contextualScrollToBottom = () => {
     if (!this.scrollBody) return;
     let node = this.scrollBody;
-    console.log('contextual');
     if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
-      console.log('triggered');
       node.scrollTop = node.scrollHeight - node.clientHeight;
     }
   };

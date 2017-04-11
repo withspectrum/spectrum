@@ -1,13 +1,10 @@
 //@flow
 import React from 'react';
 //$FlowFixMe
-import styled from 'styled-components';
-//$FlowFixMe
 import sanitizeHtml from 'sanitize-html';
 //$FlowFixMe
 import * as Autolinker from 'autolinker';
 import { TextBubble, Emoji, ImageBubble } from './style';
-import { Gradient } from '../../../../shared/Globals';
 import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../../../helpers/regexps';
 
 type BubbleProps = {
