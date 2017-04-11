@@ -256,16 +256,16 @@
           ".validate": "newData.val() <= now"
         },
         "media": {
-          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
+          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)"
         },
         "messages": {
-          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
+          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)"
         },
         "snippet": {
-          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
+          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)"
         },
         "users": {
-          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
+          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)"
         },
         "$other": {
           ".write": true
