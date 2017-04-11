@@ -18,6 +18,7 @@ const Span = styled.span`
 	border-radius: 4px;
   ${props => props.tipText ? 'cursor: pointer;' : ''};
   ${props => props.tipText ? Tooltip(props) : ''};
+	align-self: center;
 `;
 
 const Badge = props => {

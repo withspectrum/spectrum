@@ -14,7 +14,7 @@ export const NavBarContainer = styled.div`
   justify-content: space-between;
 
   a, span {
-    padding: 7px;
+    padding: 8px;
   }
 `;
 

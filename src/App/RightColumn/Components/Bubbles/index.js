@@ -20,7 +20,7 @@ type BubbleProps = {
 export const Bubble = (props: BubbleProps) => {
   const { me, persisted, message, type, activeCommunity } = props;
 
-  const formatMessage = (message: string): string => {
+  const formatMessageForFrequencyLinks = (message: string): string => {
     if (!message) {
       return '';
     }
@@ -37,6 +37,17 @@ export const Bubble = (props: BubbleProps) => {
     return linkedMessage.replace(FREQUENCY_ANCHORS, '>$1</a>');
   };
 
+  const formatMessageForLinks = (message: string): string => {
+    if (!message) {
+      return '';
+    }
+    const cleanMessage = sanitizeHtml(message);
+
+    const linkedMessage = Autolinker.link(cleanMessage);
+
+    return linkedMessage;
+  };
+
   return (
     <TextBubble
       me={me}
@@ -45,8 +56,8 @@ export const Bubble = (props: BubbleProps) => {
         // if in a story, we convert `~frequency` into a link.
         // if in a groupMessage, don't regex links
         __html: type === 'story'
-          ? formatMessage(message.content)
-          : sanitizeHtml(message.content),
+          ? formatMessageForFrequencyLinks(message.content)
+          : formatMessageForLinks(message.content),
       }}
     />
   );

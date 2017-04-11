@@ -20,8 +20,8 @@ export const TextBubble = styled.p`
   align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
   font-weight: ${props => props.me ? `500` : `400`};
   clear: both;
-  word-wrap: break-word;
-  word-break: break-all;
+  word-wrap: normal;
+  word-break: normal;
 
   & + & {
     margin-top: 2px;
@@ -29,6 +29,7 @@ export const TextBubble = styled.p`
 
   a {
     text-decoration: underline;
+    word-break: break-word;
   }
 
   &::selection {

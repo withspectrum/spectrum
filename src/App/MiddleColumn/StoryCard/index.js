@@ -234,10 +234,7 @@ class StoryCard extends Component {
               {this.state.photos.map((photo, i) => {
                 if (i < 3) {
                   return (
-                    <PhotoContainer
-                      key={photo.meta.key}
-                      size={this.state.photos.length}
-                    >
+                    <PhotoContainer key={i} size={this.state.photos.length}>
                       <Photo
                         src={photo.url}
                         onClick={e => this.openGallery(e, story.id)}

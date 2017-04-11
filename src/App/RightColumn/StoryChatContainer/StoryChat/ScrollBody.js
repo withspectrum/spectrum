@@ -53,4 +53,6 @@ const StyledScrollBody = styled.div`
   max-height: 100%;
   flex-direction: column;
   overflow-y: scroll;
+  max-width: 100%;
+  overflow-x: hidden;
 `;
