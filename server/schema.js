@@ -3,6 +3,7 @@
  */
 const { makeExecutableSchema } = require('graphql-tools');
 const { merge } = require('lodash');
+const { maskErrors } = require('graphql-errors');
 
 const scalars = require('./types/scalars');
 
@@ -47,7 +48,7 @@ const Root = /* GraphQL */ `
 
 // Create the final GraphQL schema out of the type definitions
 // and the resolvers
-module.exports = makeExecutableSchema({
+const schema = makeExecutableSchema({
   typeDefs: [scalars.typeDefs, Root, Community, Frequency, Story, Message],
   resolvers: merge(
     {},
@@ -61,3 +62,9 @@ module.exports = makeExecutableSchema({
     messageSubscriptions
   ),
 });
+
+if (process.env.NODE_ENV === 'production') {
+  maskErrors(schema);
+}
+
+module.exports = schema;

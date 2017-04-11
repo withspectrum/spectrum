@@ -23,6 +23,7 @@
     "for-own": "^1.0.0",
     "graphql": "^0.9.2",
     "graphql-date": "^1.0.3",
+    "graphql-errors": "^2.1.0",
     "graphql-server-express": "^0.6.0",
     "graphql-subscriptions": "^0.3.1",
     "graphql-tools": "^0.11.0",
@@ -57,7 +58,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:server": "node server/index.js",
+    "start:server": "NODE_ENV=production node server/index.js",
     "dev:server": "nodemon server/index.js",
     "migrate": "rethinkdb-migrate -f ./server/migrations/config.js",
     "migrate:up": "npm run migrate -- up",
