@@ -14,6 +14,7 @@ const Story = /* GraphQL */ `
 		published: Boolean!
 		content: StoryContent!
 		deleted: Boolean
+		locked: Boolean
 		messages: [Message!]
 	}
 
@@ -36,6 +37,7 @@ const Story = /* GraphQL */ `
 	extend type Mutation {
 		addStory(story: StoryInput!): Story
 		publishStory(id: ID!): Story
+		setStoryLock(id: ID!, value: Boolean!): Story
 		deleteStory(id: ID!): Boolean
 	}
 `;
