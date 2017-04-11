@@ -63,14 +63,14 @@ class UserProfileModal extends React.Component {
             ).then(id => {
               // if an id is returned here, it means that the current user already
               // has a thread with the user profile that is being viewed
-              if (id) {
+              if (id !== undefined) {
                 this.setState({
                   messageId: id,
                   loading: false,
                 });
+                return;
               } else {
                 this.setState({
-                  messageId: null,
                   loading: false,
                 });
               }
@@ -87,7 +87,7 @@ class UserProfileModal extends React.Component {
     const messageId = this.state.messageId;
     const recipient = this.state.recipient;
 
-    if (messageId) {
+    if (messageId !== (null || undefined)) {
       this.props.dispatch({
         type: 'CLEAR_ACTIVE_STORY',
       });

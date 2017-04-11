@@ -23,6 +23,7 @@ export const UserPhoto = styled.img`
   position: relative;
   z-index: 2;
   border: 2px solid #fff;
+  max-width: 64px;
   box-shadow: 0 2px 2px rgba(0,0,0,0.1);
 `;
 
