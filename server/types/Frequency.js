@@ -12,7 +12,6 @@ const Frequency = /* GraphQL */ `
 
 	extend type Query {
 		frequency(id: ID!): Frequency
-		frequencies: [Frequency!]
 	}
 `;
 

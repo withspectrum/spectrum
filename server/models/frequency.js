@@ -3,19 +3,6 @@
  */
 const { db } = require('./db');
 
-const getAllFrequencies = () => {
-  const { connection } = require('./db');
-  return db.table('frequencies').run(connection).then(
-    cursor =>
-      new Promise(resolve => {
-        cursor.toArray((err, result) => {
-          if (err) throw err;
-          resolve(result);
-        });
-      })
-  );
-};
-
 const getFrequenciesByCommunity = community => {
   const { connection } = require('./db');
   return db.table('frequencies').filter({ community }).run(connection).then(
@@ -35,7 +22,6 @@ const getFrequency = id => {
 };
 
 module.exports = {
-  getAllFrequencies,
   getFrequency,
   getFrequenciesByCommunity,
 };
