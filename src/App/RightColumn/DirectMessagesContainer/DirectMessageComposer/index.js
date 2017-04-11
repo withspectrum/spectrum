@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Header } from './header';
 import { Container } from '../DirectMessageThread/container';
-import ChatInput from '../../ChatInput';
+import ChatInput from '../../Components/ChatInput';
 
 class DirectMessageComposer extends Component {
   static defaultProps = {

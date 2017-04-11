@@ -9,9 +9,12 @@ import {
 } from '../../../../helpers/utils';
 import { openModal } from '../../../../actions/modals';
 import { openGallery } from '../../../../actions/gallery';
+import { addReaction, removeReaction } from '../../../../actions/messages';
 import { track } from '../../../../EventTracker';
 import Badge from '../../../../shared/Badge';
-import { Bubble, EmojiBubble, ImgBubble } from './bubbles';
+import Icon from '../../../../shared/Icons';
+import { Bubble, EmojiBubble, ImgBubble } from '../Bubbles';
+import { Reaction, Count } from '../Bubbles/style';
 
 import {
   Avatar,
@@ -23,6 +26,7 @@ import {
   Time,
   Container,
   MessagesWrapper,
+  MessageWrapper,
 } from './style';
 
 class Chat extends Component {
@@ -30,11 +34,20 @@ class Chat extends Component {
     messages: React.PropTypes.array.isRequired,
     usersList: React.PropTypes.object.isRequired,
     currentUser: React.PropTypes.object.isRequired,
-    forceScrollToBottom: React.PropTypes.boolean,
+    forceScrollToBottom: React.PropTypes.bool,
+    activeCommunity: React.PropTypes.string,
   };
 
   openGallery = e => {
     this.props.dispatch(openGallery(e));
+  };
+
+  toggleReaction = (messageId: string, userHasReacted: boolean) => {
+    if (userHasReacted) {
+      this.props.dispatch(removeReaction(messageId));
+    } else {
+      this.props.dispatch(addReaction(messageId));
+    }
   };
 
   handleProClick = () => {
@@ -97,14 +110,52 @@ class Chat extends Component {
             type="pro"
             tipText="Beta Supporter"
             tipLocation="top-right"
-            onClick={this.handleProClick}
+            onClick={() => this.handleProClick()}
           />}
       </Byline>
     );
   };
 
+  renderReaction = (
+    message: Object,
+    sender: Object,
+    me: boolean,
+  ): React$Element<any> => {
+    const { currentUser } = this.props;
+
+    let reactionUsers = message.reactions
+      ? Object.keys(message.reactions)
+      : null;
+    let reactionCount = message.reactions ? reactionUsers.length : 0;
+    let userHasReacted = reactionUsers &&
+      reactionUsers.includes(currentUser.uid);
+
+    return (
+      <Reaction
+        hasCount={reactionCount}
+        active={userHasReacted}
+        me={me}
+        hide={(me || currentUser.uid === null) && reactionCount === 0}
+        onClick={
+          me
+            ? () => this.doNothing
+            : () => this.toggleReaction(message.id, userHasReacted)
+        }
+      >
+        <Icon icon={'like-active'} reverse size={16} static />
+        <Count>{reactionCount}</Count>
+      </Reaction>
+    );
+  };
+
   render() {
-    const { messages, usersList, currentUser } = this.props;
+    const {
+      messages,
+      usersList,
+      currentUser,
+      type,
+      activeCommunity,
+    } = this.props;
 
     return (
       <Container innerRef={scrollBody => this.scrollBody = scrollBody}>
@@ -140,25 +191,32 @@ class Chat extends Component {
                     );
                     const TextBubble = emojiOnly ? EmojiBubble : Bubble;
                     return (
-                      <TextBubble
-                        key={message.id}
-                        me={me}
-                        persisted={message.persisted}
-                        sender={sender}
-                        message={message.message}
-                      />
+                      <MessageWrapper me={me} key={message.id}>
+                        <TextBubble
+                          me={me}
+                          persisted={message.persisted}
+                          sender={sender}
+                          message={message.message}
+                          type={type}
+                          activeCommunity={activeCommunity}
+                        />
+
+                        {!emojiOnly && this.renderReaction(message, sender, me)}
+                      </MessageWrapper>
                     );
                   } else if (message.message.type === 'media') {
                     return (
-                      <ImgBubble
-                        key={message.id}
-                        openGallery={this.openGallery}
-                        me={me}
-                        persisted={message.persisted}
-                        sender={sender}
-                        imgSrc={message.message.content.url}
-                        message={message.message}
-                      />
+                      <MessageWrapper me={me} key={message.id}>
+                        <ImgBubble
+                          openGallery={this.openGallery}
+                          me={me}
+                          persisted={message.persisted}
+                          sender={sender}
+                          imgSrc={message.message.content.url}
+                          message={message.message}
+                        />
+                        {this.renderReaction(message, sender, me)}
+                      </MessageWrapper>
                     );
                   }
                 })}

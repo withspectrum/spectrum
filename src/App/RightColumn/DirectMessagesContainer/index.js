@@ -31,7 +31,10 @@ class DirectMessagesContainer extends Component {
       return <DirectMessageComposer />;
     } else if (activeMessageGroup) {
       return (
-        <DirectMessageThread active={activeMessageGroup} messages={messages} />
+        <DirectMessageThread
+          activeThread={activeMessageGroup}
+          messages={messages}
+        />
       );
     } else {
       return <EmptyContainerIllustration />;

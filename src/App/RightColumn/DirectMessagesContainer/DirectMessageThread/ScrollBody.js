@@ -5,22 +5,24 @@ import styled from 'styled-components';
 
 export class ScrollBody extends Component {
   componentDidMount() {
-    const { forceScrollToBottom } = this.props;
-    // force scroll to bottom when thread loads if designated
-    if (forceScrollToBottom) {
-      this.forceScrollToBottom();
-    }
+    this.forceScrollToBottom();
   }
 
   componentDidUpdate(prevProps) {
     // force scroll to bottom when thread is changed
-    console.log(this.props.messages);
-    if (
-      prevProps.active !== this.props.active && this.props.forceScrollToBottom
-    ) {
-      this.forceScrollToBottom();
+    if (prevProps.active !== this.props.active) {
+      this.contextualScrollToBottom();
     }
   }
+
+  contextualScrollToBottom = () => {
+    if (!this.scrollBody) return;
+    let node = this.scrollBody;
+
+    if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
+      node.scrollTop = node.scrollHeight - node.clientHeight;
+    }
+  };
 
   forceScrollToBottom = () => {
     if (!this.scrollBody) return;

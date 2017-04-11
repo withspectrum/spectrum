@@ -19,4 +19,5 @@ const StyledContainer = styled.div`
   flex-direction: column;
   height: auto;
   overflow-y: auto;
+  max-width: 100%;
 `;

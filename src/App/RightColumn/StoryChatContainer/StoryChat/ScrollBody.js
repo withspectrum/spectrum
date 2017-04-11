@@ -14,13 +14,20 @@ export class ScrollBody extends Component {
 
   componentDidUpdate(prevProps) {
     // force scroll to bottom when thread is changed
-    console.log(this.props.messages);
-    if (
-      prevProps.active !== this.props.active && this.props.forceScrollToBottom
-    ) {
-      this.forceScrollToBottom();
+    if (prevProps.active !== this.props.active) {
+      setTimeout(this.contextualScrollToBottom(), 100);
     }
   }
+
+  contextualScrollToBottom = () => {
+    if (!this.scrollBody) return;
+    let node = this.scrollBody;
+    console.log('contextual');
+    if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
+      console.log('triggered');
+      node.scrollTop = node.scrollHeight - node.clientHeight;
+    }
+  };
 
   forceScrollToBottom = () => {
     if (!this.scrollBody) return;

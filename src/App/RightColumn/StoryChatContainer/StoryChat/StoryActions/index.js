@@ -24,15 +24,16 @@ class StoryActions extends Component {
     deleteInited: false,
   };
 
-  shouldComponentUpdate(nextProps: Object) {
-    return !deepEqual(nextProps, this.props);
+  shouldComponentUpdate(nextProps: Object, nextState: Object) {
+    return !deepEqual(nextProps, this.props) || nextState !== this.state;
   }
 
   initDeleteStory = () => {
     track('story', 'delete inited', null);
-
+    const state = !this.state.deleteInited;
+    console.log(state);
     this.setState({
-      deleteInited: !this.state.deleteInited,
+      deleteInited: state,
     });
   };
 
@@ -53,7 +54,7 @@ class StoryActions extends Component {
 
   render() {
     let {
-      roles: { frequencyRole, communityRole },
+      communityRole,
       story,
       currentUser,
       frequency,
@@ -63,9 +64,7 @@ class StoryActions extends Component {
     const canDelete = story.creator === currentUser.uid ||
       communityRole === 'owner';
     const canFreeze = communityRole === 'owner';
-
     const shareUrl = `https://spectrum.chat/${community.slug}/~${frequency.slug}/${story.id}`;
-
     return (
       <ActionBarContainer>
         <a

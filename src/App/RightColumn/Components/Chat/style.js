@@ -31,6 +31,7 @@ export const Byline = styled.span`
   line-height: 16px;
   font-weight: 700;
   margin-bottom: 1px;
+  align-self: ${props => props.me ? 'flex-end' : 'flex-start'};
   ${props => props.me ? 'margin-right: 16px' : 'margin-left: 16px'};
   text-align: ${props => props.me ? 'right' : 'left'};
   -webkit-user-select: none; /* Chrome/Safari */
@@ -57,6 +58,16 @@ export const BubbleGroupContainer = styled.div`
 export const MessagesWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: ${props => props.me ? `flex-end;` : `flex-start;`}
+`;
+
+export const MessageWrapper = styled.span`
+  display: flex;
+  align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
+  align-items: ${props => props.me ? `flex-end;` : `flex-start;`}
+  justify-content: ${props => props.me ? `flex-end;` : `flex-start;`}
+  padding: 1px 0;
+  position: relative;
 `;
 
 export const Timestamp = styled.div`

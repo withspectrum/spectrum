@@ -11,7 +11,7 @@ import { Container, Footer, Text } from './style';
 import Story from './Story';
 import StoryActions from './StoryActions';
 import Chat from '../../Components/Chat';
-import { ScrollBody } from '../../Components/ScrollBody';
+import { ScrollBody } from './ScrollBody';
 import ChatInput from '../../Components/ChatInput';
 import { Button, Spinner } from '../../../../shared/Globals';
 
@@ -38,6 +38,11 @@ class StoryChat extends Component {
     this.props.dispatch(login());
   };
 
+  forceScrollToBottom = () => {
+    // calls the child method on ScrollBody to force a scroll to bottom when the current user sends a message
+    this.scroll.forceScrollToBottom();
+  };
+
   render = () => {
     const state = this.context.store.getState();
     const { community, frequency, story, messages } = this.props;
@@ -47,6 +52,7 @@ class StoryChat extends Component {
     const frequencyRole = currentUser.uid &&
       frequency &&
       getPermission(currentUser.uid, frequency);
+
     const communityRole = currentUser.uid &&
       community &&
       getPermission(currentUser.uid, community);
@@ -68,11 +74,15 @@ class StoryChat extends Component {
 
     return (
       <Container>
-        <ScrollBody active={story} forceScrollToBottom={isParticipant}>
+        <ScrollBody
+          active={story}
+          forceScrollToBottom={isParticipant}
+          ref={scroll => this.scroll = scroll}
+        >
           <Story story={story} frequency={frequency} community={community} />
           <StoryActions
             story={story}
-            roles={{ communityRole, frequencyRole }}
+            communityRole={communityRole}
             currentUser={currentUser}
             community={community}
             frequency={frequency}
@@ -82,6 +92,8 @@ class StoryChat extends Component {
             usersList={usersList}
             currentUser={currentUser}
             forceScrollToBottom={isParticipant}
+            type={'story'}
+            activeCommunity={community.slug}
           />
         </ScrollBody>
 
@@ -94,7 +106,7 @@ class StoryChat extends Component {
         {currentUser.uid &&
           frequencyRole && //signed in and joined this frequency
           !story.locked &&
-          <ChatInput />}
+          <ChatInput forceScrollToBottom={this.forceScrollToBottom} />}
 
         {currentUser.uid &&
           !frequencyRole && // signed in, hasn't joined frequency

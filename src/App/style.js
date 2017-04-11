@@ -66,7 +66,7 @@ export const MiddleColumnContainer = styled(ScrollBody)`
 `;
 
 export const RightColumnContainer = styled(ScrollBody)`
-  background-color: ${({ theme }) => theme.bg.wash};
+  background-color: #fff;
   flex: 1 1 auto;
   z-index: 2;
   overflow: hidden;

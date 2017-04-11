@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Card from '../../../shared/Card';
-import deepEqual from 'deep-eql';
-import { getUserInfo } from '../../../db/users';
 import { setMessageGroupLastSeen } from '../../../db/messageGroups';
-import { timeDifference, arrayToHash } from '../../../helpers/utils';
+import { timeDifference } from '../../../helpers/utils';
 import {
   MessageGroupContainer,
   MessageGroupImagesContainer,
