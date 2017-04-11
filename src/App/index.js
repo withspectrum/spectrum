@@ -267,7 +267,11 @@ class App extends Component {
               />
             </MiddleColumnContainer>}
 
-          <RightColumnContainer active={stories.active} viewing={ui.viewing}>
+          <RightColumnContainer
+            active={stories.active}
+            viewing={ui.viewing}
+            absolute={messageGroups.active || messageComposer.isOpen}
+          >
             <RightColumn />
           </RightColumnContainer>
         </AppContainer>

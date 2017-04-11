@@ -77,5 +77,13 @@ export const RightColumnContainer = styled(ScrollBody)`
     ? '-200%'
     : `${props.viewing === 'messageGroup'}` ? '-100%' : '-100%'});
     overflow-y: hidden;
+    ${props => props.absolute
+  ? `position: absolute;
+        transform: translateX(0);
+        height: calc(100% - 48px);`
+  : `position: relative;
+        transform: translateX(${props =>
+      props.active || props.viewing === 'detail' ? '-200%' : '-100%'})`};
+
   }
 `;

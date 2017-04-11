@@ -8,6 +8,7 @@ export const Container = styled.div`
   ${props =>
   props.loading ? 'justify-content: center; align-items: center;' : ''};
   max-width: 100%;
+  overflow-x: hidden;
 `;
 
 export const Footer = styled.div`

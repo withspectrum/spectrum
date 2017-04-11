@@ -309,6 +309,7 @@ class NavBar extends Component {
       messageGroups,
       stories,
       composer,
+      messageComposer,
     } = this.props;
 
     const width = window.innerWidth;
@@ -371,6 +372,11 @@ class NavBar extends Component {
       subtitle = '';
     }
 
+    if (messageComposer.isOpen) {
+      title = 'New Message';
+      subtitle = '';
+    }
+
     if (
       messageGroups.active && !activeMessageGroup ||
       stories.active && !activeStory
@@ -421,6 +427,7 @@ export const mapStateToProps = state => ({
   stories: state.stories,
   ui: state.ui,
   composer: state.composer,
+  messageComposer: state.messageComposer,
 });
 
 export default connect(mapStateToProps)(NavBar);

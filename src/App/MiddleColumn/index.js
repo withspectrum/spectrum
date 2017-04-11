@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import deepEqual from 'deep-eql';
 import InfiniteList from '../../shared/InfiniteList';
 import LoadingIndicator from '../../shared/loading/global';
 import { Button, TextButton, IconButton, Spinner } from '../../shared/Globals';
@@ -41,6 +42,10 @@ class MiddleColumn extends Component {
   state = {
     jumpToTop: false,
   };
+
+  shouldComponentUpdate(nextProps: Object) {
+    return !deepEqual(nextProps, this.props);
+  }
 
   componentWillUpdate = nextProps => {
     if (nextProps.activeFrequency !== this.props.activeFrequency) {
@@ -333,7 +338,6 @@ const mapStateToProps = state => {
     composer: state.composer,
     messageComposer: state.messageComposer,
     communities: state.communities,
-    ui: state.ui,
     activeStory: state.stories.active,
     notifications: state.notifications.notifications,
     frequencies: state.frequencies.frequencies,

@@ -7,6 +7,8 @@ export const StoryContainer = styled.div`
 	flex-direction: column;
 	padding: 32px;
 	background: #fff;
+	max-width: 100%;
+	overflow-x: hidden;
 
 	@media (max-width: 768px) {
 		padding: 16px;
@@ -39,6 +41,10 @@ export const Byline = styled(H4)`
 	a, b {
 		color: ${({ theme }) => theme.text.default};
 		cursor: pointer;
+
+		&:hover {
+			color: ${({ theme }) => theme.brand.default};
+		}
 	}
 `;
 

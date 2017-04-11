@@ -26,7 +26,7 @@ export const AvatarLabel = styled.span`
 `;
 
 export const Byline = styled.span`
-  display: inline-block;
+  display: flex;
   font-size: 11px;
   line-height: 16px;
   font-weight: 700;
@@ -40,9 +40,11 @@ export const Byline = styled.span`
   color: ${props =>
   props.op ? props.theme.brand.default : props.theme.text.alt};
   cursor: pointer;
+  max-width: 100%;
 `;
 
 export const Name = styled.span`
+  margin-right: 4px;
   &:hover {
     color: ${({ theme }) => theme.brand.default};
   }
@@ -51,7 +53,7 @@ export const Name = styled.span`
 export const BubbleGroupContainer = styled.div`
   display: flex;
   flex: 0 0 auto;
-  margin-top: 2px;
+  margin-top: 16px;
   max-width: 70%;
   align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
   position: relative;
