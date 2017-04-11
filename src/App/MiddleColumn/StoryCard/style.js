@@ -6,9 +6,9 @@ export const StoryBody = styled.div`
 	flex: 0 0 auto;
 	max-width: 100%;
 	word-wrap: break-word;
-	padding: 24px;
-	padding-top: 16px;
-	padding-bottom: 16px;
+	padding: 16px;
+	padding-top: 12px;
+	padding-bottom: 4px;
 `;
 
 export const StoryFooter = styled.div`
@@ -22,12 +22,12 @@ export const StoryFooter = styled.div`
 `;
 
 export const FreqTag = styled(H4)`
-	font-weight: 700;
+	font-weight: 500;
 	display: inline-block;
 	align-self: flex-start;
 	width: auto;
 	line-height: 1;
-	font-size: 14px;
+	font-size: 12px;
 	color: ${props => props.theme.text.placeholder};
 	margin-bottom: 8px;
 	transition: ${Transition.hover.off};
@@ -39,22 +39,18 @@ export const FreqTag = styled(H4)`
 `;
 
 export const Title = styled.p`
-	font-size: 20px;
+	font-size: 16px;
 	font-weight: 700;
 	line-height: 1.2;
 	color: ${({ theme }) => theme.text.default};
 `;
 
-export const UnreadCount = styled.span`
-	color: ${({ theme }) => theme.warn.default};
-`;
-
 export const LinkPreviewContainer = styled.div`
-	margin: 16px 0 4px;
+	margin: 8px 0 16px 0;
 `;
 
 export const PhotosContainer = styled.div`
-	margin: 16px 0 2px;
+	margin: 8px 0 16px 0;
 	border-radius: 4px;
 	display: flex;
 	flex-wrap: wrap;
@@ -164,7 +160,7 @@ export const PhotoPlaceholder = styled.div`
 	max-width: 100%;
 	max-height: 100%;
 	position: relative;
-	background: #f6f7f8;
+	background-color: ${props => props.theme.bg.wash};
 	position: absolute;
 
 	&:after {
@@ -184,16 +180,8 @@ export const HeadsContainer = styled.div`
 	text-align: center;
 	display: flex;
 	justify-content: flex-start;
-	margin-top: 12px;
+	margin-top: 8px;
 	border-radius: 0 0 4px 4px;
-`;
-
-export const JoinTheConvo = styled.span`
-	color: ${({ theme }) => theme.brand.default};
-	font-weight: 600;
-	padding: 8px 0;
-	font-size: 14px;
-	align-self: flex-end;
 `;
 
 export const StatusBar = styled.div`
@@ -202,11 +190,11 @@ export const StatusBar = styled.div`
 	justify-content: space-between;
 	align-items: center;
 	position: relative;
-	padding: 16px 16px 16px 24px;
-	border-radius: 16px 16px 0 0;
+	padding: 12px 12px 12px 16px;
+	border-radius: 12px 12px 0 0;
 	border-bottom: ${props =>
   props.status === 'active' || props.status === 'new'
-    ? '0px solid transparent'
+    ? '2px solid transparent'
     : `2px solid ${props.theme.bg.wash}`};
 	background-color: ${props =>
   props.status === 'active'
@@ -227,7 +215,7 @@ export const StatusBar = styled.div`
     border: 8px solid transparent;
 		position: absolute;
 		left: calc(100% - 1px);
-		top: calc(50% - 8px);
+		top: calc(50% - 6px);
 		border-radius: 2px;
 		border-right-width: 0;
 		border-left-color: ${props =>
@@ -236,40 +224,17 @@ export const StatusBar = styled.div`
 `;
 
 export const StatusText = styled.p`
-	font-size: 14px;
-	font-weight: ${props => props.status !== 'default' ? '900' : '700'};
+	font-size: 12px;
+	font-weight: ${props => props.status !== 'default' ? '700' : '500'};
 	color: ${props =>
   props.status !== 'default' ? props.theme.text.reverse : props.theme.text.alt};
 	line-height: 1;
 	margin-top: 2px;
 `;
 
-export const Dot = styled.span`
-	position: absolute;
-	right: 10px;
-	top: 16px;
-	transform: translateY(-50%);
-	width: 8px;
-	height: 8px;
-	border-radius: 8px;
-
-	${props =>
-  props.status === 'new' && `background-color: ${props.theme.warn.default}`};
-
-	${props => props.status === 'unread' && `background-color: #00C384`};
-
-	${props => props.status === 'active' && `background-color: transparent`};
-
-	${props =>
-  props.status !== 'active' &&
-  props.status !== 'unread' &&
-  props.status !== 'new' &&
-  `background-color: transparent`};
-`;
-
 export const Name = styled(StatusText)`
-	font-size: 14px;
-	font-weight: 700;
+	font-size: 12px;
+	font-weight: 500;
 	margin-top: 8px;
 	color: ${props => props.theme.text.alt};
 	display: inline;
@@ -281,12 +246,16 @@ export const Name = styled(StatusText)`
 	b {
 		cursor: pointer;
 		color: ${props =>
-  props.status === 'active' ? '#fff' : props.theme.text.default};
+  props.status === 'active'
+    ? props.theme.text.reverse
+    : props.theme.text.default};
 	}
 
 	b:hover {
 		color: ${props =>
-  props.status === 'active' ? '#fff' : props.theme.brand.default};
+  props.status === 'active'
+    ? props.theme.text.reverse
+    : props.theme.brand.default};
 	}
 
 	a {
