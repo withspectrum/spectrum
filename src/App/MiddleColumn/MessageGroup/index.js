@@ -34,10 +34,10 @@ class MessageGroup extends Component {
     const otherUsers = userIds.filter(user => user !== uid);
     const timestamp = timeDifference(Date.now(), messageGroup.last_activity);
 
-    const isUnread = (messageGroup.last_activity >
-      messageGroup.users[uid].last_seen ||
-      !messageGroup.users[uid].last_seen) &&
-      !active;
+    const isUnread = messageGroup.last_activity >
+      messageGroup.users[uid].last_seen &&
+      !active ||
+      !messageGroup.users[uid].last_seen && !active;
 
     return (
       <Card nomargin link={link}>

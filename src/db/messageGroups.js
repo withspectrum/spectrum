@@ -82,9 +82,24 @@ export const createNewMessageGroup = (
       ] = database.ServerValue.TIMESTAMP;
       updates[`message_groups/${messageGroupKey}/users/${sender}`] = {
         id: sender,
+        last_activity: database.ServerValue.TIMESTAMP,
+        last_seen: database.ServerValue.TIMESTAMP,
       };
       updates[`message_groups/${messageGroupKey}/users/${recipient}`] = {
         id: recipient,
+      };
+
+      return db.ref().update(updates);
+    })
+    .then(() => {
+      // Call a third method on group creation to ensure that the sender's last_activity
+      // and last_seen are greater than the messagegroup that was created. This ensures
+      // that there isn't an unread state for the user who just sent the message
+      let updates = {};
+      updates[`message_groups/${messageGroupKey}/users/${sender}`] = {
+        id: sender,
+        last_activity: database.ServerValue.TIMESTAMP,
+        last_seen: database.ServerValue.TIMESTAMP,
       };
 
       return db.ref().update(updates);

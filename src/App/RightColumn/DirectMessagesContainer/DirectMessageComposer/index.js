@@ -16,7 +16,7 @@ class DirectMessageComposer extends Component {
     return (
       <Container ref={'container'} fill>
         <Header recipient={recipient} />
-        <ChatInput />
+        <ChatInput forceScrollToBottom={() => {}} />
       </Container>
     );
   }
