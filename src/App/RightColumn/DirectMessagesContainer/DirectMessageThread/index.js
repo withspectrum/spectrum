@@ -27,6 +27,12 @@ class DirectMessageThread extends Component {
     return !deepEqual(nextProps, this.props);
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.activeThread.id !== this.props.activeThread.id) {
+      setTimeout(() => this.forceScrollToBottom(), 100);
+    }
+  }
+
   forceScrollToBottom = () => {
     // calls the child method on ScrollBody to force a scroll to bottom when the current user sends a message
     this.scroll.forceScrollToBottom();
