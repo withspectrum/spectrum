@@ -29,6 +29,12 @@ const addStory = story => {
       Object.assign({}, story, {
         createdAt: new Date(),
         modifiedAt: new Date(),
+        edits: [
+          {
+            timestamp: new Date(),
+            content: story.content,
+          },
+        ],
       }),
       { returnChanges: true }
     )
@@ -86,10 +92,31 @@ const deleteStory = id => {
     .then(result => result.deleted === 1);
 };
 
+const editStory = (id, newContent) => {
+  const { connection } = require('./db');
+  return db
+    .table('stories')
+    .get(id)
+    .update(
+      {
+        content: newContent,
+        modifiedAt: new Date(),
+        edits: db.row('edits').append({
+          content: newContent,
+          timestamp: new Date(),
+        }),
+      },
+      { returnChanges: true }
+    )
+    .run(connection)
+    .then(result => result.changes[0].new_val);
+};
+
 module.exports = {
   addStory,
   getStory,
   publishStory,
+  editStory,
   setStoryLock,
   deleteStory,
   getStoryByFrequency,

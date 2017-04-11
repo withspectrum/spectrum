@@ -30,6 +30,15 @@ const stories = [
       title: 'First story!',
       description: 'Welcome to RethinkDB.',
     },
+    edits: [
+      {
+        timestamp: new Date(),
+        content: {
+          title: 'First story!',
+          description: 'Welcome to RethinkDB.',
+        },
+      },
+    ],
   },
   {
     id: 'second-story-asddf123',
@@ -41,6 +50,15 @@ const stories = [
       title: 'Second story!',
       description: 'Getting full in here...',
     },
+    edits: [
+      {
+        timestamp: new Date(),
+        content: {
+          title: 'Second story!',
+          description: 'Getting full in here...',
+        },
+      },
+    ],
   },
 ];
 

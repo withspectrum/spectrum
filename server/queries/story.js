@@ -14,5 +14,6 @@ module.exports = {
       return getFrequency(story.frequency);
     },
     messages: story => getMessagesByStory(story.id),
+    edits: story => story.edits,
   },
 };

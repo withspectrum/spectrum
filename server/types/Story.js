@@ -6,6 +6,11 @@ const Story = /* GraphQL */ `
 		media: String
 	}
 
+	type Edit {
+		timestamp: Date!
+		content: StoryContent!
+	}
+
 	type Story {
 		id: ID!
 		createdAt: Date!
@@ -15,6 +20,7 @@ const Story = /* GraphQL */ `
 		content: StoryContent!
 		deleted: Boolean
 		locked: Boolean
+		edits: [Edit!]
 		messages: [Message!]
 	}
 
@@ -37,6 +43,7 @@ const Story = /* GraphQL */ `
 	extend type Mutation {
 		addStory(story: StoryInput!): Story
 		publishStory(id: ID!): Story
+		editStory(id: ID!, newContent: StoryContentInput!): Story
 		setStoryLock(id: ID!, value: Boolean!): Story
 		deleteStory(id: ID!): Boolean
 	}
