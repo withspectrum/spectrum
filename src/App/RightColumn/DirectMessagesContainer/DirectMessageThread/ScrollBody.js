@@ -10,8 +10,15 @@ export class ScrollBody extends Component {
 
   componentDidUpdate(prevProps) {
     // force scroll to bottom when thread is changed
-    if (prevProps.active !== this.props.active) {
+    if (
+      prevProps.active.id === this.props.active.id &&
+      prevProps.active.last_activity !== this.props.active.last_activity
+    ) {
       this.contextualScrollToBottom();
+    }
+
+    if (prevProps.active.id !== this.props.active.id) {
+      this.forceUpdate();
     }
   }
 
@@ -45,4 +52,6 @@ const StyledScrollBody = styled.div`
   max-height: 100%;
   flex-direction: column;
   overflow-y: scroll;
+  overflow-x: hidden;
+  max-width: 100%;
 `;

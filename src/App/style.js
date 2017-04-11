@@ -52,7 +52,7 @@ export const LeftColumnContainer = styled(ScrollBody)`
 
 export const MiddleColumnContainer = styled(ScrollBody)`
   background: ${({ theme }) => theme.bg.wash};
-  border-right: 1px solid ${({ theme }) => theme.border.default};
+  box-shadow: inset -1px 0 0 ${({ theme }) => theme.border.default};
   flex: 0 0 480px;
   z-index: 1;
   overflow-y: hidden;

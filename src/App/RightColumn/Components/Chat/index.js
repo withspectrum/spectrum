@@ -94,18 +94,20 @@ class Chat extends Component {
   };
 
   renderBubbleHeader = (group: Object, me: boolean) => {
-    const { usersList }: Object = this.props;
+    const { usersList, type }: Object = this.props;
     const user = usersList[group.userId];
     const isAdmin = this.isAdmin(user.uid);
     const isPro = this.isPro(user.uid);
 
+    // if type !== 'story' we don't show admin or pro badges because it clutters group messages
     return (
       <Byline me={me}>
         <Name onClick={() => this.openUserProfileModal(user.uid)}>
           {me ? 'You' : user.displayName}
         </Name>
-        {isAdmin && <Badge type="admin" />}
+        {isAdmin && type === 'story' && <Badge type="admin" />}
         {isPro &&
+          type === 'story' &&
           <Badge
             type="pro"
             tipText="Beta Supporter"

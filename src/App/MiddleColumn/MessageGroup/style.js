@@ -6,18 +6,21 @@ export const MessageGroupContainer = styled.div`
 	flex: 1 1 auto;
 	padding: 16px 8px 16px 16px;
 	align-items: center;
+	overflow: hidden;
 	${props =>
   props.active
     ? `box-shadow: inset -4px 0 ${props.theme.brand.default}`
     : `transparent`};
+	${props =>
+  props.active ? `background: ${props.theme.bg.wash}` : `background: #fff`};
 	transition: all 0.15s ease-in-out;
 
 	&:after {
 		content: '';
 		position: absolute;
 		bottom: 0;
-		right: 0;
-		width: calc(100% - 16px);
+		left: 16px;
+		width: calc(100% - 48px);
 		border-bottom: 1px solid #f6f7f8;
 	}
 `;

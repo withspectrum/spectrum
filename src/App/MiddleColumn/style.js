@@ -12,13 +12,14 @@ import {
 export const Column = styled.div`
 	display: flex;
 	flex-direction: column;
-	background-color: hsla(210, 13%, 94%, 1);
 	height: 100%;
 	width: 100%;
+  overflow-x: hidden;
 `;
 
 export const StoryList = styled.div`
 	overflow-y: scroll;
+  overflow-x: hidden;
 `;
 
 export const Overlay = styled.div`
