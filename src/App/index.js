@@ -164,7 +164,7 @@ class App extends Component {
     let isViewing;
     if (stories.active) {
       isViewing = 'story';
-    } else if (messageGroups.active) {
+    } else if (messageGroups.active || isExplore) {
       isViewing = 'messageGroup';
     } else if (messageComposer.isOpen || composer.isOpen) {
       isViewing = 'composer';
