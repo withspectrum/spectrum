@@ -47,6 +47,7 @@ export const LeftColumnContainer = styled(ScrollBody)`
   @media (max-width: 768px) {
     transform: translateX( ${props =>
   props.viewing === 'frequencies' ? '0' : '-100%'} )
+    z-index: 3;
   }
 `;
 

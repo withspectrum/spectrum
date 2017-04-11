@@ -176,9 +176,18 @@ class NavBar extends Component {
 
     if (active === 'explore') {
       return (
-        <Link to={`/`}>
-          <Icon icon="close" reverse />
-        </Link>
+        <Menu
+          onClick={
+            this.props.ui.viewing === 'frequencies'
+              ? this.closeFrequenciesNav
+              : this.showFrequenciesNav
+          }
+        >
+          <Icon
+            icon={this.props.ui.viewing === 'frequencies' ? 'close' : 'menu'}
+            reverse
+          />
+        </Menu>
       );
     }
 
