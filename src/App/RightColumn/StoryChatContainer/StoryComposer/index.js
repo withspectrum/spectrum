@@ -174,11 +174,15 @@ class StoryComposer extends Component {
       community => community.slug === this.props.activeCommunity,
     );
 
-    const frequencyId = getCurrentFrequency(
-      frequency,
-      this.props.frequencies.frequencies,
-      community.id,
-    ).id;
+    // ignore the frequency id if we are editing a story while in /everything
+    let frequencyId;
+    if (!isEditing) {
+      frequencyId = getCurrentFrequency(
+        frequency,
+        this.props.frequencies.frequencies,
+        community.id,
+      ).id;
+    }
 
     if (frequency && title && !isEditing) {
       // if everything is filled out
@@ -427,8 +431,6 @@ class StoryComposer extends Component {
 
     return (
       <ScrollBody>
-        <BackArrow onClick={this.closeComposer}>←</BackArrow>
-
         <ContentView>
           <Header>
             <FlexColumn>

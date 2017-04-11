@@ -210,7 +210,9 @@ class StoryCard extends Component {
               </Link>
             </FreqTag>}
           <Title>{title}</Title>
-          <Name>{person.name}</Name>
+          <Name id={person.uid} onClick={this.openUserProfileModal}>
+            {person.name}
+          </Name>
 
           {hasMetadata &&
             hasLinkPreview &&

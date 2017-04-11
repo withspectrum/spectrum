@@ -273,6 +273,10 @@ export const Name = styled(StatusText)`
 	margin-top: 8px;
 	color: ${props => props.theme.text.alt};
 
+	&:hover {
+		color: ${props => props.theme.brand.default};
+	}
+
 	b {
 		cursor: pointer;
 		color: ${props =>

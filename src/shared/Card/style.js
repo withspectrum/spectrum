@@ -18,7 +18,7 @@ export const Wrapper = styled.div`
 		width: ${props => props.nomargin ? '100%' : 'calc(100% - 16px)'};
 		margin: ${props => props.nomargin ? '0' : '8px'};
 		margin-bottom: ${props => props.nomargin ? '0' : '4px'};
-		border-radius: 16px;
+		border-radius: ${props => props.nomargin ? '0' : '12px'};
 
 		&:first-of-type {
 			margin-top: ${props => props.nomargin ? '0' : '8px'};

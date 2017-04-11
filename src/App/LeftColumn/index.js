@@ -114,30 +114,25 @@ class NavigationMaster extends Component {
 
     return (
       <Column>
-        {user.uid
-          ? <Header>
-              <Avatar src={user.photoURL} title={user.displayName} />
-              <MetaWrapper>
-                <Name>
-                  {user.displayName}
-                  {user.subscriptions && <ProBadge>PRO</ProBadge>}
-                </Name>
-                <P>
-                  {user.subscriptions
-                    ? <MetaAnchor onClick={this.showEditAccountModal}>
-                        My Account
-                      </MetaAnchor>
-                    : <MetaAnchor pro onClick={this.showUpgradeModal}>
-                        Upgrade to Pro
-                      </MetaAnchor>}
-                </P>
-              </MetaWrapper>
-            </Header>
-          : <Header login>
-              <Link to="/">
-                <HeaderLogo src="/img/logo.png" role="presentation" />
-              </Link>
-            </Header>}
+        {user.uid &&
+          <Header>
+            <Avatar src={user.photoURL} title={user.displayName} />
+            <MetaWrapper>
+              <Name>
+                {user.displayName}
+                {user.subscriptions && <ProBadge>PRO</ProBadge>}
+              </Name>
+              <P>
+                {user.subscriptions
+                  ? <MetaAnchor onClick={this.showEditAccountModal}>
+                      My Account
+                    </MetaAnchor>
+                  : <MetaAnchor pro onClick={this.showUpgradeModal}>
+                      Upgrade to Pro
+                    </MetaAnchor>}
+              </P>
+            </MetaWrapper>
+          </Header>}
         <FreqList>
           {user.uid &&
             <div>

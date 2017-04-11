@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import MediumSpinner from 'react-medium-spinner';
 
 const LoadingIndicator = props => (
-  <MediumSpinner speed={10} color="#3818E5" active={props.active} />
+  <MediumSpinner
+    speed={10}
+    color="rgba(255,255,255,0.5)"
+    active={props.active}
+  />
 );
 
 const mapStateToProps = state => ({

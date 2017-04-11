@@ -14,7 +14,7 @@ export const Header = ({ recipient }: Object) => {
   const username = recipient.username;
 
   return (
-    <StyledHeader wash>
+    <StyledHeader fill>
       <PhotosContainer><Photo src={photo} /></PhotosContainer>
       <Names>{name}</Names>
       <Username>{`@${username}`}</Username>

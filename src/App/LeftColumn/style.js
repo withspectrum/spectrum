@@ -19,6 +19,10 @@ export const Header = styled.div`
   padding: ${props => props.login ? '18px 16px' : '16px'};
   align-items: ${props => props.login ? `flex-start` : `center`};
   flex-direction: ${props => props.login ? `column` : `row`};
+
+  @media (min-width: 768px) {
+    display: none;
+  }
 `;
 
 export const HeaderLogo = styled.img`

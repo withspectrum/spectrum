@@ -14,7 +14,7 @@ class DirectMessageComposer extends Component {
     const recipient = state.messageComposer.recipient;
 
     return (
-      <Container ref={'container'}>
+      <Container ref={'container'} fill>
         <Header recipient={recipient} />
         <ChatInput />
       </Container>

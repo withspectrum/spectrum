@@ -10,7 +10,6 @@ export const StoryContainer = styled.div`
 
 	@media (max-width: 768px) {
 		padding: 16px;
-		padding-top: 68px;
 	}
 `;
 

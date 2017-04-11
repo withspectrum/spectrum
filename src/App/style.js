@@ -19,6 +19,7 @@ export const Body = styled.div`
 export const AppContainer = styled.div`
   display: flex;
   flex-direction: row;
+  height: 100%;
 `;
 
 export const VerticalSpacer = styled.div`
@@ -60,8 +61,6 @@ export const MiddleColumnContainer = styled(ScrollBody)`
     position: ${props => props.absolute ? 'absolute' : 'relative'};
     border-right: 0;
     transform: translateX( -100% );
-    pointer-events: ${props =>
-  props.active || props.viewing === 'detail' ? 'none' : 'auto'};
   }
 `;
 
@@ -72,8 +71,11 @@ export const RightColumnContainer = styled(ScrollBody)`
   overflow: hidden;
 
   @media (max-width: 768px) {
-    transform: translateX( ${props =>
-  props.active || props.viewing === 'detail' ? '-200%' : '-100%'} )
+    transform: translateX(
+      ${props =>
+  props.active || props.viewing === 'detail'
+    ? '-200%'
+    : `${props.viewing === 'messageGroup'}` ? '-100%' : '-100%'});
     overflow-y: hidden;
   }
 `;

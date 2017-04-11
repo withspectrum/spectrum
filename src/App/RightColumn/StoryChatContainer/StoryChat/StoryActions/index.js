@@ -31,7 +31,6 @@ class StoryActions extends Component {
   initDeleteStory = () => {
     track('story', 'delete inited', null);
     const state = !this.state.deleteInited;
-    console.log(state);
     this.setState({
       deleteInited: state,
     });
@@ -60,8 +59,9 @@ class StoryActions extends Component {
       frequency,
       community,
     } = this.props;
-    const canEdit = story.creator === currentUser.uid;
-    const canDelete = story.creator === currentUser.uid ||
+
+    const canEdit = story.creator.uid === currentUser.uid;
+    const canDelete = story.creator.uid === currentUser.uid ||
       communityRole === 'owner';
     const canFreeze = communityRole === 'owner';
     const shareUrl = `https://spectrum.chat/${community.slug}/~${frequency.slug}/${story.id}`;

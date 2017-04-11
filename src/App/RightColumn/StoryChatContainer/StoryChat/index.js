@@ -44,10 +44,9 @@ class StoryChat extends Component {
   };
 
   render = () => {
-    const state = this.context.store.getState();
-    const { community, frequency, story, messages } = this.props;
-    const usersList = state.user.list;
-    const currentUser = state.user;
+    const { community, frequency, story, messages, user } = this.props;
+    const usersList = user.list;
+    const currentUser = user;
 
     const frequencyRole = currentUser.uid &&
       frequency &&
@@ -127,8 +126,8 @@ class StoryChat extends Component {
   };
 }
 
-StoryChat.contextTypes = {
-  store: React.PropTypes.object.isRequired,
-};
+const mapStateToProps = (state: Object) => ({
+  user: state.user,
+});
 
-export default connect()(StoryChat);
+export default connect(mapStateToProps)(StoryChat);

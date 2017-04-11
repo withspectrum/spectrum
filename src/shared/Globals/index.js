@@ -45,10 +45,12 @@ export const Spinner = styled.span`
     margin-top: -10px;
     margin-left: -10px;
     border-radius: 50%;
-    border: 1px solid ${props => props.theme.brand.default};
-    border-top-color: #fff;
-    border-right-color: ${props => props.theme.brand.alt};
-    border-bottom-color: #fff;
+    border: 1px solid ${props =>
+  props.white ? '#fff' : props.theme.brand.default};
+    border-top-color: transparent;
+    border-right-color: ${props =>
+  props.white ? '#fff' : props.theme.brand.alt};
+    border-bottom-color: transparent;
     animation: ${spin} .6s linear infinite;
   }
 `;

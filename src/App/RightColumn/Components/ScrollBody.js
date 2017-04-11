@@ -14,7 +14,6 @@ export class ScrollBody extends Component {
 
   componentDidUpdate(prevProps) {
     // force scroll to bottom when thread is changed
-    console.log(this.props.messages);
     if (
       prevProps.active !== this.props.active && this.props.forceScrollToBottom
     ) {
