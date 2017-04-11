@@ -127,7 +127,7 @@
             ".write": "$userId === auth.uid || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner'",
             // Make sure the permissions being set is "subscriber" except when it's done by an owner
             "permission": {
-              ".validate": "newData.val() === 'subscriber' || root.child('users/' + $userId + '/frequencies/' + $id + '/permission').val() === 'owner' && newData.exists()"
+              ".validate": "newData.val() === 'subscriber' || data.parent().child('users/' + auth.uid + '/permission').val() === 'owner' && newData.exists()"
             },
             "joined": {
               ".validate": "newData.val() <= now"
@@ -147,6 +147,9 @@
             },
             "deleted": {
               ".validate": "newData.isBoolean()"
+            },
+            "last_activity": {
+              ".validate": "newData.val() <= now"
             },
             "$other": {
               ".validate": false
@@ -195,6 +198,77 @@
           "type": {
             ".validate": "newData.val() === 'text' || newData.val() === 'media' || newData.val() === 'draft-js'"
           }
+        }
+      }
+    },
+    "messages_private": {
+      ".indexOn": ["messageGroupId"],
+      "$messageId": {
+        // Only members of the message group can read the messages
+        ".read": "root.child('/message_groups/' + data.child('messageGroupId').val() + '/users').hasChild(auth.uid)",
+        // Only let members of the frequency write messages
+        ".write": "root.child('/message_groups/' + newData.child('messageGroupId').val() + '/users').hasChild(auth.uid)",
+        // Make sure all the necessary fields exists
+        ".validate": "newData.hasChildren(['id', 'messageGroupId', 'timestamp', 'userId', 'message'])",
+        // Make sure the id field matches the path
+        "id": {
+          ".validate": "newData.val() === $messageId"
+        },
+        // Make sure the messageGroupId field matches the path
+        "messageGroupId": {
+          ".validate": "root.child('message_groups/' + newData.val()).exists()"
+        },
+        // Make sure the timestamp is any value before now
+        "timestamp": {
+          ".validate": "newData.val() <= now"
+        },
+        // Make sure this is a valid user, and the one of the logged-in user
+        "userId": {
+          ".validate": "auth.uid === newData.val() && root.child('users/' + newData.val()).exists()"
+        },
+        "message": {
+          // Make sure both type and content exist
+          ".validate": "newData.hasChildren(['type', 'content'])",
+          // Make sure the type is text
+          "type": {
+            ".validate": "newData.val() === 'text' || newData.val() === 'media' || newData.val() === 'draft-js'"
+          }
+        }
+      }
+    },
+    "message_groups": {
+      ".indexOn": ["id"],
+      "$messageGroup": {
+        // only participants of the message group can read from its data
+        ".read": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
+        "creator": {
+          // creator can only be written if it's a new message group and data doesn't exist yet
+          ".write": "!data.exists()",
+          // it must equal the user id of the person creating the message group
+          ".validate": "newData.val() === auth.uid"
+        },
+        "id": {
+          ".write": "!data.exists()",
+          ".validate": "newData.val() === $messageGroup"
+        },
+        "last_activity": {
+          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
+          ".validate": "newData.val() <= now"
+        },
+        "media": {
+          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
+        },
+        "messages": {
+          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
+        },
+        "snippet": {
+          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
+        },
+        "users": {
+          ".write": "root.child('users/' + auth.uid + '/messageGroups/').hasChild($messageGroup)",
+        },
+        "$other": {
+          ".write": true
         }
       }
     },
@@ -329,6 +403,11 @@
         },
         "subscriptions": {
           ".write": "auth.uid === $user",
+          ".validate": "newData.exists()"
+        },
+        "messageGroups": {
+          ".write": true,
+          ".read": "auth.uid === $user",
           ".validate": "newData.exists()"
         },
         "communities": {

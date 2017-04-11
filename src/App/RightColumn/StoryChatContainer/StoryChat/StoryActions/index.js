@@ -1,12 +1,16 @@
+//@flow
 import React, { Component } from 'react';
+//$FlowFixMe
+import deepEqual from 'deep-eql';
+//$FlowFixMe
 import { connect } from 'react-redux';
-import Icon from '../../../../shared/Icons';
+import Icon from '../../../../../shared/Icons';
 import {
   toggleLockedStory,
   deleteStory,
   initEditStory,
-} from '../../../../actions/stories';
-import { track } from '../../../../EventTracker';
+} from '../../../../../actions/stories';
+import { track } from '../../../../../EventTracker';
 
 import {
   ActionBarContainer,
@@ -15,16 +19,20 @@ import {
   HiddenButton,
 } from './style';
 
-class ActionBar extends Component {
+class StoryActions extends Component {
   state = {
     deleteInited: false,
   };
 
+  shouldComponentUpdate(nextProps: Object, nextState: Object) {
+    return !deepEqual(nextProps, this.props) || nextState !== this.state;
+  }
+
   initDeleteStory = () => {
     track('story', 'delete inited', null);
-
+    const state = !this.state.deleteInited;
     this.setState({
-      deleteInited: !this.state.deleteInited,
+      deleteInited: state,
     });
   };
 
@@ -45,19 +53,25 @@ class ActionBar extends Component {
 
   render() {
     let {
-      creator,
-      moderator,
-      locked,
+      communityRole,
       story,
+      currentUser,
+      frequency,
+      community,
     } = this.props;
 
+    const canEdit = story.creator.uid === currentUser.uid;
+    const canDelete = story.creator.uid === currentUser.uid ||
+      communityRole === 'owner';
+    const canFreeze = communityRole === 'owner';
+    const shareUrl = `https://spectrum.chat/${community.slug}/~${frequency.slug}/${story.id}`;
     return (
       <ActionBarContainer>
         <a
           href={
             `https://twitter.com/intent/tweet/?text=${encodeURIComponent(
               story.content.title.substr(0, 85),
-            )}&amp;url=${this.props.shareUrl}`
+            )}&amp;url=${shareUrl}`
           }
           target="_blank"
           style={{ display: 'inline-block' }}
@@ -70,8 +84,8 @@ class ActionBar extends Component {
           />
         </a>
 
-        {(creator || moderator === 'owner') &&
-          <div>
+        <div>
+          {canEdit &&
             <span onClick={this.initEditStory}>
               <Icon
                 tipText={'Edit Story'}
@@ -80,8 +94,9 @@ class ActionBar extends Component {
                 color={'warn.default'}
                 subtle={true}
               />
-            </span>
+            </span>}
 
+          {canDelete &&
             <HiddenButton
               onClick={this.initDeleteStory}
               visible={this.state.deleteInited}
@@ -100,32 +115,29 @@ class ActionBar extends Component {
               >
                 Confirm
               </DeleteConfirm>
-            </HiddenButton>
+            </HiddenButton>}
 
+          {canFreeze &&
             <label>
               <Icon
-                tipText={locked ? 'Unfreeze Chat' : 'Freeze Chat'}
+                tipText={story.locked ? 'Unfreeze Chat' : 'Freeze Chat'}
                 tipLocation="top-left"
                 icon="freeze"
-                color={locked ? 'brand.default' : 'success.alt'}
-                subtle={locked ? false : true}
+                color={story.locked ? 'brand.default' : 'success.alt'}
+                subtle={story.locked ? false : true}
               />
 
               <HiddenInput
                 type="checkbox"
                 onChange={this.toggleLockedStory}
-                checked={locked}
+                checked={story.locked}
               />
-            </label>
-          </div>}
+            </label>}
 
+        </div>
       </ActionBarContainer>
     );
   }
 }
 
-const mapStateToProps = state => ({
-  frequencies: state.frequencies,
-});
-
-export default connect(mapStateToProps)(ActionBar);
+export default connect()(StoryActions);

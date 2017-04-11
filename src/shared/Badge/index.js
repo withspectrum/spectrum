@@ -26,6 +26,7 @@ const Badge = props => {
       type={props.type}
       tipText={props.tipText}
       tipLocation={props.tipLocation}
+      onClick={props.onClick}
     >
       {props.type}
     </Span>

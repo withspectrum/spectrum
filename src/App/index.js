@@ -7,15 +7,19 @@ import {
   LeftColumnContainer,
   MiddleColumnContainer,
   RightColumnContainer,
+  AppContainer,
+  VerticalSpacer,
 } from './style';
+import Navbar from './NavBar';
 import MiddleColumn from './MiddleColumn';
 import RightColumn from './RightColumn';
 import LoadingIndicator from '../shared/loading';
 import ModalRoot from '../shared/modals/ModalRoot';
 import SelectUsernameModal from '../shared/modals/SelectUsernameModal';
 import GalleryRoot from '../shared/gallery/GalleryRoot';
-import LoginCard from './MiddleColumn/LoginCard';
 import ReportBugCard from './MiddleColumn/ReportBugCard';
+import NewMessageCard from './MiddleColumn/NewMessageCard';
+import FrequencyHeaderCard from './MiddleColumn/FrequencyHeaderCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
 import { sortArrayByKey, getParameterByName, truncate } from '../helpers/utils';
 import { ACTIVITY_TYPES } from '../db/types';
@@ -47,6 +51,8 @@ class App extends Component {
       user,
       ui,
       notifications,
+      messageGroups,
+      messageComposer,
       communities,
     } = this.props;
 
@@ -54,10 +60,17 @@ class App extends Component {
     const isEverything = communitySlug === 'everything';
     const isNotifications = communitySlug === 'notifications';
     const isExplore = communitySlug === 'explore';
+    const isMessages = communitySlug === 'messages';
     const community = communities.communities.find(
       community => community.slug === communitySlug,
     );
-    if (!community && !isEverything && !isNotifications && !isExplore)
+    if (
+      !community &&
+      !isEverything &&
+      !isNotifications &&
+      !isExplore &&
+      !isMessages
+    )
       return <Body />;
     const frequency = community &&
       getCurrentFrequency(
@@ -79,6 +92,12 @@ class App extends Component {
         return story.frequencyId === frequency.id && story.published;
       });
     }
+
+    let sortedMessageGroups = sortArrayByKey(
+      messageGroups.messageGroups.slice(),
+      'last_activity',
+      null,
+    ).reverse();
 
     const titleParam = getParameterByName('t', this.props.location.search);
     const descriptionParam = getParameterByName(
@@ -127,16 +146,18 @@ class App extends Component {
 
     if (unread > 0) title = `(${unread}) ${title}`;
 
-    // if (isEverything) {
-    //  sortedStories.unshift(<OnboardingCard />);
-    // }
-
-    if (!user.uid) {
-      sortedStories.unshift(<LoginCard />);
+    if (frequency && communitySlug !== 'everything') {
+      sortedStories.unshift(<FrequencyHeaderCard />);
     }
 
     if (user.uid && frequencies.active === 'hugs-n-bugs') {
-      sortedStories.unshift(<ReportBugCard />);
+      sortedStories.splice(1, 0, <ReportBugCard />);
+    }
+
+    if (user.uid && messageGroups.active === 'new' || messageComposer.isOpen) {
+      sortedMessageGroups.unshift(
+        <NewMessageCard active={messageComposer.isOpen} />,
+      );
     }
 
     return (
@@ -201,43 +222,55 @@ class App extends Component {
             },
           ]}
         />
+
         <ModalRoot />
         <GalleryRoot />
         <LoadingIndicator />
 
-        <LeftColumnContainer viewing={ui.viewing}>
-          <LeftColumn unread={unread} />
-        </LeftColumnContainer>
+        <Navbar />
+        <VerticalSpacer />{/* used because NavBar is fixed position */}
 
-        {/* If the user is logged in, but hasn't selected a username yet prompt them to */
-        }
-        {!!user.uid &&
-          (!user.username || !user.email) &&
-          <SelectUsernameModal
-            isOpen={this.state.selectModalOpen}
-            promptEmail={!user.email}
-            onClose={this.closeSelectModal}
-          />}
-        {!isExplore &&
-          <MiddleColumnContainer active={stories.active} viewing={ui.viewing}>
-            <MiddleColumn
-              loggedIn={!!user.uid}
-              role={
-                user &&
-                  frequency &&
-                  frequency.users[user.uid] &&
-                  frequency.users[user.uid].permission
-              }
-              activeFrequency={frequencies.active}
-              isPrivate={frequency && frequency.settings.private}
-              stories={sortedStories}
-              frequency={frequency}
-            />
-          </MiddleColumnContainer>}
+        <AppContainer>
+          <LeftColumnContainer viewing={ui.viewing}>
+            <LeftColumn unread={unread} />
+          </LeftColumnContainer>
 
-        <RightColumnContainer active={stories.active} viewing={ui.viewing}>
-          <RightColumn />
-        </RightColumnContainer>
+          {/* If the user is logged in, but hasn't selected a username yet prompt them to */
+          }
+          {!!user.uid &&
+            (!user.username || !user.email) &&
+            <SelectUsernameModal
+              isOpen={this.state.selectModalOpen}
+              promptEmail={!user.email}
+              onClose={this.closeSelectModal}
+            />}
+
+          {!isExplore &&
+            <MiddleColumnContainer
+              active={stories.active || messageGroups.active}
+              viewing={ui.viewing}
+              absolute={messageGroups.active}
+            >
+              <MiddleColumn
+                loggedIn={!!user.uid}
+                role={
+                  user &&
+                    frequency &&
+                    frequency.users[user.uid] &&
+                    frequency.users[user.uid].permission
+                }
+                activeFrequency={frequencies.active}
+                isPrivate={frequency && frequency.settings.private}
+                stories={sortedStories}
+                frequency={frequency}
+                messageGroups={sortedMessageGroups}
+              />
+            </MiddleColumnContainer>}
+
+          <RightColumnContainer active={stories.active} viewing={ui.viewing}>
+            <RightColumn />
+          </RightColumnContainer>
+        </AppContainer>
       </Body>
     );
   }
@@ -245,9 +278,11 @@ class App extends Component {
 
 export default connect(state => ({
   stories: state.stories,
+  messageGroups: state.messageGroups,
   frequencies: state.frequencies,
   communities: state.communities,
   user: state.user,
   ui: state.ui,
   notifications: state.notifications,
+  messageComposer: state.messageComposer,
 }))(App);

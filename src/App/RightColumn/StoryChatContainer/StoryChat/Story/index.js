@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Markdown from '../../../shared/Markdown';
-import LinkPreview from '../../../shared/LinkPreview';
-import { openGallery } from '../../../actions/gallery';
-import { track } from '../../../EventTracker';
-import { timeDifference } from '../../../helpers/utils';
+import Markdown from '../../../../../shared/Markdown';
+import LinkPreview from '../../../../../shared/LinkPreview';
+import { openGallery } from '../../../../../actions/gallery';
+import { openModal } from '../../../../../actions/modals';
+import { track } from '../../../../../EventTracker';
+import { timeDifference } from '../../../../../helpers/utils';
 
 import {
   StoryContainer,
@@ -49,12 +50,15 @@ class Story extends Component {
     track('link preview', 'clicked', url);
   };
 
-  render() {
-    const { story, frequency, communities } = this.props;
-    const timestamp = timeDifference(Date.now(), story.timestamp);
+  openUserProfileModal = e => {
+    const user = e.target.id;
 
-    const community = frequency &&
-      communities.find(community => community.id === frequency.communityId);
+    this.props.dispatch(openModal('USER_PROFILE_MODAL', { user: user }));
+  };
+
+  render() {
+    const { story, community, frequency } = this.props;
+    const timestamp = timeDifference(Date.now(), story.timestamp);
 
     const editDate = story.edited
       ? timeDifference(Date.now(), story.edited)
@@ -66,11 +70,18 @@ class Story extends Component {
           {!frequency
             ? // this is required to account for async loading of the frequency data if a user hits a url like /~everything/{storyId}
               <Byline>
-                {story.creator.displayName} · Posted {timestamp}
+                <b id={story.creator.uid} onClick={this.openUserProfileModal}>
+                  {story.creator.displayName}
+                </b>
+                {' '}· Posted{' '}
+                {timestamp}
+                {' '}
                 {story.edited && <span> (edited {editDate})</span>}
               </Byline>
             : <Byline>
-                {story.creator.displayName}
+                <b id={story.creator.uid} onClick={this.openUserProfileModal}>
+                  {story.creator.displayName}
+                </b>
                 {' '}· Posted in{' '}
                 <Link to={`/${community.slug}/~${frequency.slug}`}>
                   ~{frequency.slug}

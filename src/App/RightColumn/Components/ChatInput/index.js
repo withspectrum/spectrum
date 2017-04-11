@@ -1,13 +1,15 @@
+//@flow
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import { sendMessage } from '../../../actions/messages';
-import { throwError } from '../../../actions/errors';
-import { uploadMediaToStory } from '../../../db/stories';
-import { isMobile } from '../../../helpers/utils';
-import EmojiPicker from '../../../shared/EmojiPicker';
-import Icon from '../../../shared/Icons';
+//$FlowFixMe
 import { connect } from 'react-redux';
-import { track } from '../../../EventTracker';
+import ReactDOM from 'react-dom';
+import { sendMessage } from '../../../../actions/messages';
+import { throwError } from '../../../../actions/errors';
+import { uploadMediaToLocation } from '../../../../db/media';
+import { isMobile } from '../../../../helpers/utils';
+import EmojiPicker from '../../../../shared/EmojiPicker';
+import Icon from '../../../../shared/Icons';
+import { track } from '../../../../EventTracker';
 import {
   Input,
   Form,
@@ -28,6 +30,7 @@ class ChatInput extends Component {
       file: '',
       emojiPickerOpen: false,
       mediaUploading: false,
+      autofocus: false,
     };
   }
 
@@ -56,6 +59,31 @@ class ChatInput extends Component {
     this.setState({
       emojiPickerOpen: !this.state.emojiPickerOpen,
     });
+  };
+
+  componentDidMount() {
+    const {
+      messageGroups: { active },
+      messageComposer: { isOpen },
+    } = this.props;
+    // if user changes a message group, autofocus the input
+    if (active || isOpen) {
+      this.setState({
+        autofocus: true,
+      });
+    }
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    const {
+      messageGroups: { active },
+      messageComposer: { isOpen },
+    } = this.props;
+    // if user changes a message group, autofocus the input
+    if (active || isOpen) {
+      let textInput = ReactDOM.findDOMNode(this.refs.textInput);
+      textInput.focus();
+    }
   };
 
   appendEmoji = emoji => {
@@ -98,10 +126,16 @@ class ChatInput extends Component {
   };
 
   sendMediaMessage = e => {
-    let user = this.props.user;
-    let uid = user.uid;
-    let file = e.target.files[0];
-    let activeStory = this.props.stories.active;
+    const user = this.props.user;
+    const activeStory = this.props.stories.active;
+    const activeMessageGroup = this.props.messageGroups.active;
+
+    const file = e.target.files[0];
+    const location = activeStory
+      ? 'stories'
+      : activeMessageGroup ? 'message_groups' : null;
+    const key = activeStory || activeMessageGroup;
+    const userId = user.uid;
 
     this.setState({
       mediaUploading: true,
@@ -111,7 +145,7 @@ class ChatInput extends Component {
       type: 'LOADING',
     });
 
-    uploadMediaToStory(file, activeStory, uid)
+    uploadMediaToLocation(file, location, key, userId)
       .then(file => {
         track('media', 'uploaded', null);
         let messageObj = {
@@ -144,11 +178,13 @@ class ChatInput extends Component {
     // on the next tick, after the message has rendered
     setTimeout(() => {
       this.props.forceScrollToBottom();
+      this.props.setLastSeen ? this.props.setLastSeen() : '';
     });
   };
 
   render() {
     let mobile = isMobile();
+    const autofocus = !mobile || this.state.autofocus;
 
     return (
       <Wrapper>
@@ -194,9 +230,7 @@ class ChatInput extends Component {
               value={this.state.message}
               onChange={this.updateMessageState}
               onKeyUp={this.handleKeyPress}
-              autoFocus={
-                !mobile /* autofocus on desktop, don’t autofocus on mobile */
-              }
+              autoFocus={autofocus}
             />
             <SendButton onClick={this.sendMessage}>
               <Icon
@@ -216,6 +250,8 @@ class ChatInput extends Component {
 const mapStateToProps = state => ({
   user: state.user,
   stories: state.stories,
+  messageGroups: state.messageGroups,
+  messageComposer: state.messageComposer,
 });
 
 export default connect(mapStateToProps)(ChatInput);

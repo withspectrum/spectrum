@@ -17,25 +17,6 @@ export const ViewContainer = styled.div`
 	}
 `;
 
-export const StoryChatContainer = styled.div`
-  overflow-y: scroll;
-	display: flex;
-	flex: 1 1 auto;
-	flex-direction: column;
-	max-height: ${props => props.locked ? '100%' : 'calc(100% - 60px)'};
-	overflow-x: hidden;
-`;
-
-export const NullContainer = styled.div`
-	width: 110%;
-	height: 110%;
-	position: relative;
-	background: ${({ theme }) =>
-  theme.bg.default} url('/img/empty.svg') no-repeat center left;
-	background-size: cover;
-	opacity: 0.2;
-`;
-
 export const Footer = styled.div`
 	display: flex;
 	width: 100%;
@@ -67,9 +48,35 @@ export const LoginWrapper = styled(FlexRow)`
 	}
 `;
 
+export const SubText = styled.h5`
+	font-size: 12px;
+	font-weight: 500;
+	color: ${({ theme }) => theme.text.alt};
+`;
+
+export const Name = styled.h3`
+	font-weight: 800;
+	font-size: 16px;
+	position: relative;
+	text-transform: capitalize;
+	margin-top: -8px;
+`;
+
+export const Heading = styled.div`
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	flex: 1;
+`;
+
+export const Spacer = styled.div`
+	width: 48px;
+`;
+
 export const BackArrow = styled.span`
 	margin-bottom: 16px;
-	width: 100%;
+	display: flex;
+	justify-content: space-between;
 	background: #fff;
 	box-shadow: ${Shadow.low};
 	height: 48px;

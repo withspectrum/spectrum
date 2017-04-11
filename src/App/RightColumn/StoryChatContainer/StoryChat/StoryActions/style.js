@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Tooltip } from '../../../../shared/Globals';
+import { Tooltip } from '../../../../../shared/Globals';
 
 export const ActionBarContainer = styled.div`
 	display: flex;
@@ -8,6 +8,8 @@ export const ActionBarContainer = styled.div`
 	padding: 16px 32px;
 	padding-top: 0;
 	border-bottom: 1px solid ${({ theme }) => theme.border.default};
+	background: #fff;
+	position: relative;
 
 	@media (max-width: 768px) {
 		padding: 16px;
@@ -23,6 +25,7 @@ export const HiddenLabel = styled.span`
 	width: 32px;
 	height: 32px;
 	${props => props.tipText ? Tooltip(props) : ''};
+	position: relative;
 `;
 
 export const HiddenButton = styled.button`

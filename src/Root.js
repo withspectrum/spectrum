@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { setActiveFrequency } from './actions/frequencies';
+import { setActiveMessageGroup } from './actions/messageGroups';
 import { setActiveStory } from './actions/stories';
 import { setActiveCommunity } from './actions/communities';
 import { asyncComponent } from './helpers/utils';
@@ -27,7 +28,8 @@ class Root extends Component {
       !params.frequency &&
       params.community &&
       params.community !== 'everything' &&
-      params.community !== 'explore'
+      params.community !== 'explore' &&
+      params.community !== 'messages'
     ) {
       history.push(`/${params.community}/~general`);
       return;
@@ -37,6 +39,8 @@ class Root extends Component {
 
     if (params.community === 'everything') {
       dispatch(setActiveStory(params.frequency));
+    } else if (params.community === 'messages') {
+      dispatch(setActiveMessageGroup(params.frequency));
     } else {
       dispatch(setActiveFrequency(params.frequency));
       dispatch(setActiveStory(params.story));
@@ -45,6 +49,14 @@ class Root extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { dispatch } = nextProps;
+
+    if (nextProps.match.params.community === 'messages') {
+      if (
+        this.props.match.params.frequency !== nextProps.match.params.frequency
+      ) {
+        dispatch(setActiveMessageGroup(nextProps.match.params.frequency));
+      }
+    }
 
     if (
       this.props.match.params.community !== nextProps.match.params.community ||

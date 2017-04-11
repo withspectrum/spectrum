@@ -16,6 +16,7 @@ export const setActiveCommunity = slug => (dispatch, getState) => {
     lowerCaseSlug !== 'notifications' &&
     lowerCaseSlug !== 'everything' &&
     lowerCaseSlug !== 'explore' &&
+    lowerCaseSlug !== 'messages' &&
     !communities.find(community => community.slug === lowerCaseSlug)
   ) {
     getCommunity({ slug: lowerCaseSlug }).then(community => {

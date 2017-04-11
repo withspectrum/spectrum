@@ -62,6 +62,7 @@ export default function root(state = initialState, action) {
       });
       return Object.assign({}, state, { stories });
     }
+    case 'SET_ACTIVE_MESSAGE_GROUP':
     case 'CLEAR_ACTIVE_STORY':
       return Object.assign({}, state, {
         active: null,

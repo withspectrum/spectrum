@@ -45,8 +45,8 @@ export const Header = styled.div`
 	width: 100%;
 	background-color: ${({ theme }) => theme.bg.default};
 	align-self: flex-start;
-	align-items: center;
-	justify-content: space-between;
+	align-items: flex-start;
+	justify-content: flex-start;
 	z-index: 1;
 	box-shadow: ${Shadow.low};
 	position: relative;
@@ -163,6 +163,10 @@ export const FlexRow = styled.div`
 	align-items: center;
 `;
 
+export const Dingus = styled.div`
+
+`;
+
 export const Spread = styled(FlexRow)`
 	justify-content: space-between;
 	margin: 0 8px;
@@ -172,7 +176,7 @@ export const Actions = styled(FlexRow)`
 	display: ${props => props.visible ? 'flex' : 'none'};
 	flex: 0 0 48px;
 	justify-content: space-between;
-	align-items: center;
+	align-items: flex-start;
 `;
 
 export const Count = styled(H4)`

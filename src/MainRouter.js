@@ -13,6 +13,8 @@ import { listenToAuth } from './db/auth';
 import { getFrequency } from './db/frequencies';
 import { getCommunity } from './db/communities';
 import { listenToNewNotifications } from './db/notifications';
+import { listenToNewMessages } from './db/messageGroups';
+import { addMessageGroup } from './actions/messageGroups';
 
 class MainRouter extends React.Component {
   // INITIAL LOAD OF THE APP
@@ -38,6 +40,10 @@ class MainRouter extends React.Component {
 
       listenToNewNotifications(user.uid, notification => {
         dispatch(addNotification(notification));
+      });
+
+      listenToNewMessages(user.uid, group => {
+        dispatch(addMessageGroup(group));
       });
 
       // Get the public userdata

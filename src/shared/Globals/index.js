@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { Link as RouterLink } from 'react-router-dom';
 
 export const Gradient = (g1, g2) => {
@@ -29,6 +29,32 @@ export const fontStack = css`
 	font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe', sans-serif
 `;
 
+const spin = keyframes`
+  to {transform: rotate(360deg);}
+`;
+
+export const Spinner = styled.span`
+  &:before {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -10px;
+    margin-left: -10px;
+    border-radius: 50%;
+    border: 1px solid ${props =>
+  props.white ? '#fff' : props.theme.brand.default};
+    border-top-color: transparent;
+    border-right-color: ${props =>
+  props.white ? '#fff' : props.theme.brand.alt};
+    border-bottom-color: transparent;
+    animation: ${spin} .6s linear infinite;
+  }
+`;
+
 const buttonStyles = css`
   background-color: ${props =>
   props.disabled ? props.theme.inactive : props.theme.brand.default};
@@ -38,7 +64,7 @@ const buttonStyles = css`
     : Gradient(props.theme.brand.alt, props.theme.brand.default)};
   border-radius: 8px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: ${({ theme }) => theme.text.reverse};
   transition: ${Transition.hover.off};
   padding: 12px 16px;

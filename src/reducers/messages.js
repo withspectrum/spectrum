@@ -19,6 +19,7 @@ export default function root(state = initialState, action) {
             storedMessage => message.id === storedMessage.id,
           ),
       );
+
       return Object.assign({}, state, {
         messages: storedMessages.concat(messages),
       });

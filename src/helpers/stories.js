@@ -1,4 +1,5 @@
-export const isStoryCreator = (story, user) => {
+//@flow
+export const isStoryCreator = (story: Object, user: Object) => {
   if (!user || !story) {
     return;
   }
@@ -13,14 +14,11 @@ export const isStoryCreator = (story, user) => {
   }
 };
 
-export const getStoryPermission = (story, user, frequencies) => {
+export const getStoryPermission = (
+  story: Object,
+  user: Object,
+  frequency: Object,
+) => {
   if (!user.uid || !story) return;
-
-  let uid = user.uid;
-  let frequency = frequencies &&
-    frequencies.find(freq => freq.id === story.frequencyId);
-
-  if (!frequency) return;
-
-  return frequency.users[uid] && frequency.users[uid].permission;
+  return frequency.users[user.uid] && frequency.users[user.uid].permission;
 };

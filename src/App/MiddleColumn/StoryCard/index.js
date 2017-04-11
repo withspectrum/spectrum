@@ -20,6 +20,7 @@ import {
   StatusText,
 } from './style';
 import { openGallery } from '../../../actions/gallery';
+import { openModal } from '../../../actions/modals';
 import { timeDifference, hashToArray } from '../../../helpers/utils';
 import Card from '../../../shared/Card';
 import ParticipantHeads from './ParticipantHeads';
@@ -45,6 +46,7 @@ class StoryCard extends Component {
     person: PropTypes.shape({
       name: PropTypes.string.isRequired,
       photo: PropTypes.string.isRequired,
+      uid: PropTypes.string.isRequired,
     }),
     timestamp: PropTypes.number,
     title: PropTypes.string.isRequired,
@@ -91,6 +93,12 @@ class StoryCard extends Component {
     window.open(url, '_blank');
   };
 
+  openUserProfileModal = e => {
+    const user = e.target.id;
+
+    this.props.dispatch(openModal('USER_PROFILE_MODAL', { user: user }));
+  };
+
   render() {
     const {
       isActive,
@@ -129,6 +137,7 @@ class StoryCard extends Component {
             unread={unreadMessages}
             participants={participants}
             list={user.list}
+            openUserProfileModal={e => this.openUserProfileModal(e)}
           />
         );
       }
@@ -201,7 +210,9 @@ class StoryCard extends Component {
               </Link>
             </FreqTag>}
           <Title>{title}</Title>
-          <Name>{person.name}</Name>
+          <Name id={person.uid} onClick={this.openUserProfileModal}>
+            {person.name}
+          </Name>
 
           {hasMetadata &&
             hasLinkPreview &&

@@ -3,6 +3,7 @@ import { H1, H4 } from '../../../shared/Globals';
 
 export const Body = styled.div`
 	width: 100%;
+	min-height: 282px;
 	padding: 24px 16px 16px;
 	text-align: center;
 	overflow: hidden;

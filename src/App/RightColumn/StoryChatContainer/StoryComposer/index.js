@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { findDOMNode } from 'react-dom';
-import { track } from '../../../EventTracker';
+import { track } from '../../../../EventTracker';
 import {
   updateTitle,
   updateBody,
@@ -9,23 +9,23 @@ import {
   removeLinkPreview,
   addMediaList,
   removeImageFromComposer,
-} from '../../../actions/composer';
+} from '../../../../actions/composer';
 import {
   publishStory,
   initStory,
   cancelEditStory,
   saveEditStory,
-} from '../../../actions/stories';
-import { stopLoading } from '../../../actions/loading';
+} from '../../../../actions/stories';
+import { stopLoading } from '../../../../actions/loading';
 import {
   getCurrentFrequency,
   linkFreqsInMd,
-} from '../../../helpers/frequencies';
-import { uploadMultipleMediaToStory } from '../../../db/stories';
+} from '../../../../helpers/frequencies';
+import { uploadMultipleMediaToLocation } from '../../../../db/media';
 import Textarea from 'react-textarea-autosize';
-import Markdown from '../../../shared/Markdown';
-import LinkPreview from '../../../shared/LinkPreview';
-import { getLinkPreviewFromUrl } from '../../../helpers/utils';
+import Markdown from '../../../../shared/Markdown';
+import LinkPreview from '../../../../shared/LinkPreview';
+import { getLinkPreviewFromUrl } from '../../../../helpers/utils';
 
 import {
   ScrollBody,
@@ -63,7 +63,7 @@ import {
 
 const URLS = /(^|\s)(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
 
-class Composer extends Component {
+class StoryComposer extends Component {
   constructor(props) {
     super(props);
 
@@ -121,16 +121,18 @@ class Composer extends Component {
   };
 
   uploadMedia = e => {
-    let user = this.props.user;
-    let uid = user.uid;
-    let files = e.target.files;
+    const user = this.props.user;
     let body = this.props.composer.body;
-    let story = this.props.composer.newStoryKey;
+
+    const files = e.target.files;
+    const location = 'stories';
+    const key = this.props.composer.newStoryKey;
+    const userId = user.uid;
 
     // disable the submit button until uploads are done
     this.setState({ loading: true });
 
-    uploadMultipleMediaToStory(files, story, uid)
+    uploadMultipleMediaToLocation(files, location, key, userId)
       .then(filesArr => {
         track('media', 'multiple uploaded', null);
         for (let file of filesArr) {
@@ -172,11 +174,15 @@ class Composer extends Component {
       community => community.slug === this.props.activeCommunity,
     );
 
-    const frequencyId = getCurrentFrequency(
-      frequency,
-      this.props.frequencies.frequencies,
-      community.id,
-    ).id;
+    // ignore the frequency id if we are editing a story while in /everything
+    let frequencyId;
+    if (!isEditing) {
+      frequencyId = getCurrentFrequency(
+        frequency,
+        this.props.frequencies.frequencies,
+        community.id,
+      ).id;
+    }
 
     if (frequency && title && !isEditing) {
       // if everything is filled out
@@ -425,8 +431,6 @@ class Composer extends Component {
 
     return (
       <ScrollBody>
-        <BackArrow onClick={this.closeComposer}>←</BackArrow>
-
         <ContentView>
           <Header>
             <FlexColumn>
@@ -577,4 +581,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Composer);
+export default connect(mapStateToProps)(StoryComposer);

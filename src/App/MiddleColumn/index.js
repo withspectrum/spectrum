@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import InfiniteList from '../../shared/InfiniteList';
 import LoadingIndicator from '../../shared/loading/global';
-import { Button, TextButton, IconButton } from '../../shared/Globals';
+import { Button, TextButton, IconButton, Spinner } from '../../shared/Globals';
 import {
   Column,
   Header,
@@ -20,6 +21,7 @@ import {
   NewIndicator,
 } from './style';
 import { toggleComposer } from '../../actions/composer';
+import { toggleMessageComposer } from '../../actions/messageComposer';
 import {
   unsubscribeFrequency,
   subscribeFrequency,
@@ -29,8 +31,10 @@ import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
 import StoryCard from './StoryCard';
 import Notification from './Notification';
+import MessageGroup from './MessageGroup';
 import { ACTIVITY_TYPES } from '../../db/types';
 import { getCurrentFrequency } from '../../helpers/frequencies';
+import { listenForMessageGroups } from '../../db/users';
 import { formatSenders } from '../../helpers/notifications';
 
 class MiddleColumn extends Component {
@@ -63,6 +67,10 @@ class MiddleColumn extends Component {
     this.props.dispatch(toggleComposer());
   };
 
+  toggleMessageComposer = () => {
+    this.props.dispatch(toggleMessageComposer());
+  };
+
   unsubscribeFrequency = () => {
     this.props.dispatch(unsubscribeFrequency(this.props.activeFrequency));
   };
@@ -86,6 +94,29 @@ class MiddleColumn extends Component {
     this.props.dispatch({
       type: 'SHOW_FREQUENCY_NAV',
     });
+  };
+
+  renderMessageGroup = ({ index, key }) => {
+    const {
+      notifications,
+      messageGroups,
+      activeMessageGroup,
+      messageComposer,
+    } = this.props;
+
+    const messageGroup = messageGroups[index];
+    const active = messageGroup.id === activeMessageGroup &&
+      !messageComposer.isOpen;
+
+    return React.isValidElement(messageGroup)
+      ? messageGroup
+      : <MessageGroup
+          link={`/messages/${messageGroup.id}`}
+          messageGroup={messageGroup}
+          active={
+            messageGroup.id === activeMessageGroup && !messageComposer.isOpen
+          }
+        />;
   };
 
   renderNotification = ({ index, key }) => {
@@ -170,6 +201,7 @@ class MiddleColumn extends Component {
         person={{
           photo: story.creator.photoURL,
           name: story.creator.displayName,
+          uid: story.creator.uid,
         }}
         timestamp={story.last_activity || story.timestamp}
         title={story.content.title}
@@ -188,30 +220,36 @@ class MiddleColumn extends Component {
     }
   };
 
+  openMessageGroup = e => {
+    let messageGroupId = e.target.id;
+  };
+
   render() {
     const {
       frequency,
       activeFrequency,
       communities: { active },
-      // allStories,
       stories,
       isPrivate,
       role,
       loggedIn,
       composer,
+      messageComposer,
       notifications,
       user,
-      // storiesLoaded,
+      messageGroups,
+      activeMessageGroup,
     } = this.props;
 
     const isEverything = active === 'everything';
     const isNotifications = active === 'notifications';
+    const isMessages = active === 'messages';
     const hidden = !role && isPrivate;
 
     if (!isEverything && hidden)
       return <LoadingBlock><Icon icon="lock" /></LoadingBlock>;
-    if (!frequency && !isEverything && !isNotifications)
-      return <LoadingBlock><LoadingIndicator /></LoadingBlock>;
+    if (!frequency && !isEverything && !isNotifications && !isMessages)
+      return <LoadingBlock><Spinner /></LoadingBlock>;
 
     let storyText = 'No stories yet 😢';
     if (frequency && frequency.stories) {
@@ -238,98 +276,16 @@ class MiddleColumn extends Component {
       }
     }
 
-    // If we have a notification for a story but not loaded the story yet
-    // show the New Stories! indicator
     const canLoadNewStories = false;
-
-    // storiesLoaded &&
-    //   notifications.some(notification => {
-    //     if (notification.activityType !== ACTIVITY_TYPES.NEW_STORY)
-    //       return false;
-    //     if (!isEverything && notification.ids.frequency !== frequency.id)
-    //       return false;
-    //
-    //     const result = allStories.find(
-    //       story => story.id === notification.ids.story,
-    //     );
-    //     if (!result) return true;
-    //     return false;
-    //   });
 
     return (
       <Column>
-        <Header>
-          {!isEverything &&
-            !isNotifications &&
-            <FlexCol>
-              <FlexRow>
-                <MenuButton onClick={this.showFrequenciesNav}>
-                  <Icon icon="menu" />
-                </MenuButton>
-                <FreqTitle onClick={this.jumpToTop}>
-                  ~ {frequency.name}
-                </FreqTitle>
-              </FlexRow>
-              <Spread>
-                {user.uid && <Count>{membersText}</Count>}
-
-                {user.uid && <Count>{storyText}</Count>}
-              </Spread>
-              {frequency.description
-                ? <Description>{frequency.description}</Description>
-                : <span />}
-            </FlexCol>}
-          <Actions visible={loggedIn}>
-            {!(isEverything || role === 'owner' || hidden || isNotifications) &&
-              (role
-                ? <TextButton member={role} onClick={this.unsubscribeFrequency}>
-                    Leave {activeFrequency}
-                  </TextButton>
-                : <Button onClick={this.subscribeFrequency}>
-                    Join {activeFrequency}
-                  </Button>)}
-
-            {role === 'owner' &&
-              <IconButton onClick={this.editFrequency}>
-                <Icon
-                  icon="settings"
-                  subtle
-                  tipText="Frequency Settings"
-                  tipLocation="right"
-                />
-              </IconButton>}
-
-            {(isEverything || isNotifications) &&
-              <MenuButton onClick={this.showFrequenciesNav}>
-                <Icon icon="menu" />
-              </MenuButton>}
-
-            {isEverything &&
-              <FreqTitle onClick={this.jumpToTop}>Home</FreqTitle>}
-
-            {isNotifications &&
-              <FreqTitle onClick={this.jumpToTop}>Notifications</FreqTitle>}
-
-            {isNotifications &&
-              <IconButton>
-                <Icon subtle />
-              </IconButton>}
-
-            {!isNotifications &&
-              !isEverything &&
-              <IconButton onClick={this.toggleComposer}>
-                <Icon
-                  icon={composer.isOpen ? 'write-cancel' : 'write'}
-                  tipLocation="left"
-                  tipText="New Story"
-                  color={composer.isOpen ? 'warn.alt' : 'brand.default'}
-                />
-              </IconButton>}
-          </Actions>
-        </Header>
-
         <StoryList innerRef={comp => this.storyList = comp}>
           <Overlay active={composer.isOpen} onClick={this.toggleComposer} />
+          <Overlay
+            active={messageComposer.isOpen}
+            onClick={this.toggleMessageComposer}
+          />
 
           {canLoadNewStories &&
             <NewIndicator onClick={this.loadStoriesAgain}>
@@ -349,6 +305,15 @@ class MiddleColumn extends Component {
               keyMapper={index => notifications[index].id}
             />}
 
+          {isMessages &&
+            <InfiniteList
+              height={window.innerHeight - 50}
+              width={window.innerWidth > 768 ? 511 : window.innerWidth}
+              elementCount={messageGroups.length}
+              elementRenderer={this.renderMessageGroup}
+              keyMapper={index => messageGroups[index].id}
+            />}
+
           {(isEverything || frequency) &&
             <InfiniteList
               height={window.innerHeight - 50}
@@ -366,6 +331,7 @@ class MiddleColumn extends Component {
 const mapStateToProps = state => {
   return {
     composer: state.composer,
+    messageComposer: state.messageComposer,
     communities: state.communities,
     ui: state.ui,
     activeStory: state.stories.active,
@@ -375,6 +341,7 @@ const mapStateToProps = state => {
     allStories: state.stories.stories,
     storiesLoaded: state.stories.loaded,
     loading: state.loading,
+    activeMessageGroup: state.messageGroups.active,
   };
 };
 

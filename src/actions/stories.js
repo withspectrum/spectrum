@@ -1,3 +1,4 @@
+//@flow
 import history from '../helpers/history';
 import { track } from '../EventTracker';
 import {
@@ -11,7 +12,7 @@ import {
   editStory,
 } from '../db/stories';
 import { getUserInfo } from '../db/users';
-import { getMessages, getMessage } from '../db/messages';
+import { getMessagesFromLocation, getMessage } from '../db/messages';
 import { getCurrentFrequency, linkFreqsInMd } from '../helpers/frequencies';
 import { arrayToHash } from '../helpers/utils';
 import { markStoryRead } from '../db/notifications';
@@ -128,7 +129,7 @@ export const setActiveStory = story => (dispatch, getState) => {
       });
   }
   promise
-    .then(getMessages(story))
+    .then(getMessagesFromLocation('stories', story))
     .then(messages => {
       if (!messages) {
         dispatch({ type: 'STOP_LOADING' });
@@ -143,6 +144,7 @@ export const setActiveStory = story => (dispatch, getState) => {
     .then(data => {
       if (!data) return;
       const [messages, users] = data;
+
       dispatch({
         type: 'ADD_MESSAGES',
         messages,
@@ -166,7 +168,7 @@ export const setActiveStory = story => (dispatch, getState) => {
     // Get all messages that aren't in the store yet
     const messages = Object.keys(story.messages);
 
-    Promise.all(messages.map(message => getMessage(message)))
+    Promise.all(messages.map(message => getMessage('messages', message)))
       .then(messages => {
         if (!messages) {
           return;

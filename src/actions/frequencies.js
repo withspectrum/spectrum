@@ -27,7 +27,12 @@ export const setActiveFrequency = frequency => (dispatch, getState) => {
   dispatch({ type: 'LOADING' });
   const { communities: { active } } = getState();
 
-  if (!active || active === 'everything' || active === 'explore') {
+  if (
+    !active ||
+    active === 'everything' ||
+    active === 'explore' ||
+    active === 'messages'
+  ) {
     dispatch({ type: 'STOP_LOADING' });
     return;
   }

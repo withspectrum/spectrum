@@ -3,10 +3,11 @@ import { Shadow, Transition } from '../Globals';
 
 export const Wrapper = styled.div`
 	display: inline-block;
-	width: calc(100% - 16px);
-	margin: 8px;
+	width: ${props => props.nomargin ? 'calc(100% - 32px)' : 'calc(100% - 16px)'};
+	margin: ${props => props.nomargin ? '0' : '8px'};
+	margin-bottom: 0;
 	flex: 0 0 auto;
-	border-radius: 16px;
+	border-radius: ${props => props.nomargin ? '0' : '12px'};
 	overflow: ${props => props.overflow === 'visible' ? 'visible' : 'visible'};
 	background-color: ${({ theme }) => theme.bg.default};
 	transition: ${Transition.hover.off};
@@ -14,10 +15,14 @@ export const Wrapper = styled.div`
 	box-shadow: ${Shadow.low};
 
 	@media (max-width: 768px) {
-		width: calc(100% - 16px);
-		margin: 8px;
-		margin-bottom: 0;
-		border-radius: 16px;
+		width: ${props => props.nomargin ? '100%' : 'calc(100% - 16px)'};
+		margin: ${props => props.nomargin ? '0' : '8px'};
+		margin-bottom: ${props => props.nomargin ? '0' : '4px'};
+		border-radius: ${props => props.nomargin ? '0' : '12px'};
+
+		&:first-of-type {
+			margin-top: ${props => props.nomargin ? '0' : '8px'};
+		}
 	}
 
 	${props => !props.still &&

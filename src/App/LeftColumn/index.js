@@ -86,42 +86,50 @@ class NavigationMaster extends Component {
     const {
       notifications,
       user,
+      messageGroups: { messageGroups },
       frequencies,
       communities: { communities, active },
       activeFrequency,
       loaded,
     } = this.props;
-    // const myFrequencies = helpers.getMyFrequencies(frequencies, user)
-    // const publicFrequencies = helpers.getPublicFrequencies(frequencies, user)
 
     const isEverything = active === 'everything';
+    const isMessages = active === 'messages';
+    const isExplore = active === 'explore';
+
+    // if any of the messageGroups have activity that is greater than last_seen, return
+    // true and show a dirty dot in the ui
+    const unreadMessageGroups = messageGroups.some(group => {
+      const me = group.users[user.uid];
+      if (
+        group.id !== this.props.messageGroups.active &&
+        group.last_activity > me.last_seen
+      ) {
+        return true;
+      }
+    });
 
     return (
       <Column>
-        {user.uid
-          ? <Header>
-              <Avatar src={user.photoURL} title={user.displayName} />
-              <MetaWrapper>
-                <Name>
-                  {user.displayName}
-                  {user.subscriptions && <ProBadge>PRO</ProBadge>}
-                </Name>
-                <P>
-                  {user.subscriptions
-                    ? <MetaAnchor onClick={this.showEditAccountModal}>
-                        My Account
-                      </MetaAnchor>
-                    : <MetaAnchor pro onClick={this.showUpgradeModal}>
-                        Upgrade to Pro
-                      </MetaAnchor>}
-                </P>
-              </MetaWrapper>
-            </Header>
-          : <Header login>
-              <Link to="/">
-                <HeaderLogo src="/img/logo.png" role="presentation" />
-              </Link>
-            </Header>}
+        {user.uid &&
+          <Header>
+            <Avatar src={user.photoURL} title={user.displayName} />
+            <MetaWrapper>
+              <Name>
+                {user.displayName}
+                {user.subscriptions && <ProBadge>PRO</ProBadge>}
+              </Name>
+              <P>
+                {user.subscriptions
+                  ? <MetaAnchor onClick={this.showEditAccountModal}>
+                      My Account
+                    </MetaAnchor>
+                  : <MetaAnchor pro onClick={this.showUpgradeModal}>
+                      Upgrade to Pro
+                    </MetaAnchor>}
+              </P>
+            </MetaWrapper>
+          </Header>}
         <FreqList>
           {user.uid &&
             <div>
@@ -133,24 +141,21 @@ class NavigationMaster extends Component {
                   </FreqText>
                 </Freq>
               </Link>
-              {/*<Link to={`/notifications`}>
-                <Freq
-                  active={active === 'notifications'}
-                  onClick={this.showStoriesNav}
-                >
-                  <FlexRow center>
-                    <Icon reverse static icon="notification" />
-                    <FreqLabel>Notifications</FreqLabel>
-                  </FlexRow>
-                  {unread > 0 && <DirtyDot>{unread}</DirtyDot>}
-                </Freq>
-              </Link>*/
-              }
+
+              {messageGroups.length > 0 && // only show messages in sidebar if user has existing messageGroups
+                <Link to={`/messages`}>
+                  <Freq active={isMessages} onClick={this.showStoriesNav}>
+                    <FlexRow center>
+                      <Icon reverse static icon="messages" />
+                      <FreqLabel ml>Messages</FreqLabel>
+                    </FlexRow>
+
+                    {unreadMessageGroups && <DirtyDot />}
+                  </Freq>
+                </Link>}
+
               <Link to="/explore">
-                <Freq
-                  active={active === 'explore'}
-                  onClick={this.showStoriesNav}
-                >
+                <Freq active={isExplore} onClick={this.showStoriesNav}>
                   <FreqText>
                     <Icon icon="explore" reverse static />
                     <FreqLabel ml>{'Explore'}</FreqLabel>
@@ -264,6 +269,7 @@ const mapStateToProps = state => ({
   loaded: state.frequencies.loaded,
   ui: state.ui,
   notifications: state.notifications.notifications,
+  messageGroups: state.messageGroups,
 });
 
 export default connect(mapStateToProps)(NavigationMaster);
