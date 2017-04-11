@@ -87,7 +87,7 @@ class UserProfileModal extends React.Component {
     const messageId = this.state.messageId;
     const recipient = this.state.recipient;
 
-    if (messageId !== (null || undefined)) {
+    if (messageId !== null && messageId !== undefined) {
       this.props.dispatch({
         type: 'CLEAR_ACTIVE_STORY',
       });
