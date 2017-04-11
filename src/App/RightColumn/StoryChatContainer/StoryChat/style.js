@@ -7,6 +7,7 @@ export const Container = styled.div`
   overflow-y: hidden;
   ${props =>
   props.loading ? 'justify-content: center; align-items: center;' : ''};
+  max-width: 100%;
 `;
 
 export const Footer = styled.div`

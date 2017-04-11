@@ -43,7 +43,9 @@ export const Byline = styled.span`
 `;
 
 export const Name = styled.span`
-
+  &:hover {
+    color: ${({ theme }) => theme.brand.default};
+  }
 `;
 
 export const BubbleGroupContainer = styled.div`

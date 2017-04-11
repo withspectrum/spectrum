@@ -17,9 +17,9 @@ import LoadingIndicator from '../shared/loading';
 import ModalRoot from '../shared/modals/ModalRoot';
 import SelectUsernameModal from '../shared/modals/SelectUsernameModal';
 import GalleryRoot from '../shared/gallery/GalleryRoot';
-import LoginCard from './MiddleColumn/LoginCard';
 import ReportBugCard from './MiddleColumn/ReportBugCard';
 import NewMessageCard from './MiddleColumn/NewMessageCard';
+import FrequencyHeaderCard from './MiddleColumn/FrequencyHeaderCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
 import { sortArrayByKey, getParameterByName, truncate } from '../helpers/utils';
 import { ACTIVITY_TYPES } from '../db/types';
@@ -146,16 +146,12 @@ class App extends Component {
 
     if (unread > 0) title = `(${unread}) ${title}`;
 
-    // if (isEverything) {
-    //  sortedStories.unshift(<OnboardingCard />);
-    // }
-
-    if (!user.uid) {
-      sortedStories.unshift(<LoginCard />);
+    if (frequency && communitySlug !== 'everything') {
+      sortedStories.unshift(<FrequencyHeaderCard />);
     }
 
     if (user.uid && frequencies.active === 'hugs-n-bugs') {
-      sortedStories.unshift(<ReportBugCard />);
+      sortedStories.splice(1, 0, <ReportBugCard />);
     }
 
     if (user.uid && messageGroups.active === 'new' || messageComposer.isOpen) {

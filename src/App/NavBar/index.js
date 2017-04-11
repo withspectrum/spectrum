@@ -15,13 +15,11 @@ import {
   Avatar,
   Photo,
   Menu,
-  SignIn,
 } from './style';
 import Icon from '../../shared/Icons';
 import { Spinner, Button } from '../../shared/Globals';
 import { openModal } from '../../actions/modals';
 import { toggleComposer } from '../../actions/composer';
-import { login } from '../../actions/user';
 
 class NavBar extends Component {
   state = {
@@ -31,11 +29,6 @@ class NavBar extends Component {
     activeCommunity: null,
     activeMessageGroup: null,
     viewing: 'stories',
-  };
-
-  login = e => {
-    e.preventDefault();
-    this.props.dispatch(login());
   };
 
   // used on mobile when closing the story view
@@ -279,14 +272,6 @@ class NavBar extends Component {
       );
     }
 
-    if (width > 768 && !user.uid) {
-      return (
-        <SignIn onClick={this.login}>
-          Sign in with Twitter
-        </SignIn>
-      );
-    }
-
     if (
       !activeStory &&
       !activeMessageGroup &&
@@ -309,7 +294,7 @@ class NavBar extends Component {
     }
 
     if (!activeStory && !activeMessageGroup && !user.uid) {
-      return <Button>Join Spectrum</Button>;
+      return <div style={{ width: '44px' }} />;
     }
 
     // placeholder for flexbox
@@ -394,7 +379,7 @@ class NavBar extends Component {
         <NavBarContainer>
           {this.leftAction()}
 
-          <Spinner white />
+          {width < 768 && <Spinner white />}
 
           {width > 768 &&
             user.uid &&

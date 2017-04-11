@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import InfiniteList from '../../shared/InfiniteList';
 import LoadingIndicator from '../../shared/loading/global';
-import { Button, TextButton, IconButton } from '../../shared/Globals';
+import { Button, TextButton, IconButton, Spinner } from '../../shared/Globals';
 import {
   Column,
   Header,
@@ -249,7 +249,7 @@ class MiddleColumn extends Component {
     if (!isEverything && hidden)
       return <LoadingBlock><Icon icon="lock" /></LoadingBlock>;
     if (!frequency && !isEverything && !isNotifications && !isMessages)
-      return <LoadingBlock><LoadingIndicator /></LoadingBlock>;
+      return <LoadingBlock><Spinner /></LoadingBlock>;
 
     let storyText = 'No stories yet 😢';
     if (frequency && frequency.stories) {

@@ -272,6 +272,7 @@ export const Name = styled(StatusText)`
 	font-weight: 700;
 	margin-top: 8px;
 	color: ${props => props.theme.text.alt};
+	display: inline;
 
 	&:hover {
 		color: ${props => props.theme.brand.default};
