@@ -29,7 +29,7 @@ class NewMessageCard extends Component {
           <MessageGroupTextContainer>
             <MessageGroupByline>
               <Usernames>
-                <p>New Message to {recipient.displayName}</p>
+                <p>New message to {recipient.displayName}</p>
               </Usernames>
             </MessageGroupByline>
           </MessageGroupTextContainer>
