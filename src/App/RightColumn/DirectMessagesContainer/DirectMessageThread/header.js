@@ -38,8 +38,9 @@ export const Header = ({ users }: Object) => {
       <Names>{names}</Names>
       <Username>
         {username && `@${username}`}
-        {isAdmin && <Badge type="admin" />}
-        {isPro &&
+        {username && isAdmin && <Badge type="admin" />}
+        {username &&
+          isPro &&
           <Badge type="pro" tipText="Beta Supporter" tipLocation="top-right" />}
       </Username>
     </StyledHeader>
