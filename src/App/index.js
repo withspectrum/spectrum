@@ -150,9 +150,9 @@ class App extends Component {
       sortedStories.unshift(<FrequencyHeaderCard />);
     }
 
-    if (user.uid && frequencies.active === 'hugs-n-bugs') {
-      sortedStories.splice(1, 0, <ReportBugCard />);
-    }
+    // if (user.uid && frequencies.active === 'hugs-n-bugs') {
+    //   sortedStories.splice(1, 0, <ReportBugCard />);
+    // }
 
     if (user.uid && messageGroups.active === 'new' || messageComposer.isOpen) {
       sortedMessageGroups.unshift(

@@ -103,7 +103,8 @@ class NavigationMaster extends Component {
       const me = group.users[user.uid];
       if (
         group.id !== this.props.messageGroups.active &&
-        group.last_activity > me.last_seen
+          group.last_activity > me.last_seen ||
+        !me.last_seen
       ) {
         return true;
       }
