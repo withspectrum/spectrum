@@ -159,7 +159,7 @@ class NavBar extends Component {
 
   leftAction = () => {
     const width = window.innerWidth;
-    const { composer, communities: { active } } = this.props;
+    const { composer, communities: { active }, messageComposer } = this.props;
     const usersList = this.state.user.list;
     const activeStory = this.state.activeStory;
     const activeFrequency = this.state.activeFrequency;
@@ -186,7 +186,7 @@ class NavBar extends Component {
       return <div style={{ width: '44px' }} />;
     }
 
-    if (!activeStory && activeMessageGroup) {
+    if (!activeStory && activeMessageGroup || messageComposer.isOpen) {
       return (
         <Link to={`/messages`} onClick={this.clearActiveMessageGroup}>
           <Icon icon="back" reverse />

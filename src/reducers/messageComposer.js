@@ -11,6 +11,7 @@ export default function root(state = initialState, action) {
       });
     case 'CLOSE_MESSAGE_COMPOSER':
     case 'SET_ACTIVE_FREQUENCY':
+    case 'CLEAR_ACTIVE_MESSAGE_GROUP':
       return Object.assign({}, state, {
         isOpen: false,
       });

@@ -71,19 +71,11 @@ export const RightColumnContainer = styled(ScrollBody)`
   overflow: hidden;
 
   @media (max-width: 768px) {
-    transform: translateX(
-      ${props =>
-  props.active || props.viewing === 'detail'
-    ? '-200%'
-    : `${props.viewing === 'messageGroup'}` ? '-100%' : '-100%'});
-    overflow-y: hidden;
-    ${props => props.absolute
-  ? `position: absolute;
-        transform: translateX(0);
-        height: calc(100% - 48px);`
-  : `position: relative;
-        transform: translateX(${props =>
-      props.active || props.viewing === 'detail' ? '-200%' : '-100%'})`};
-
+    ${props =>
+  props.viewing === 'story' || props.viewing === 'composer'
+    ? 'transform: translateX( -200% );'
+    : ''}
+    ${props =>
+  props.viewing === 'messageGroup' ? 'transform: translateX( -100% );' : ''}
   }
 `;

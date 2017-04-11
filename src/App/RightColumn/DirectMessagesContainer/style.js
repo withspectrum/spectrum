@@ -40,4 +40,5 @@ export const Username = styled.h3`
   font-size: 14px;
   color: ${({ theme }) => theme.text.alt};
   margin: 0;
+  display: flex;
 `;

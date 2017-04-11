@@ -53,6 +53,7 @@ class App extends Component {
       notifications,
       messageGroups,
       messageComposer,
+      composer,
       communities,
     } = this.props;
 
@@ -158,6 +159,17 @@ class App extends Component {
       sortedMessageGroups.unshift(
         <NewMessageCard active={messageComposer.isOpen} />,
       );
+    }
+
+    let isViewing;
+    if (stories.active) {
+      isViewing = 'story';
+    } else if (messageGroups.active) {
+      isViewing = 'messageGroup';
+    } else if (messageComposer.isOpen || composer.isOpen) {
+      isViewing = 'composer';
+    } else {
+      isViewing = 'list';
     }
 
     return (
@@ -269,7 +281,7 @@ class App extends Component {
 
           <RightColumnContainer
             active={stories.active}
-            viewing={ui.viewing}
+            viewing={isViewing}
             absolute={messageGroups.active || messageComposer.isOpen}
           >
             <RightColumn />
@@ -289,4 +301,5 @@ export default connect(state => ({
   ui: state.ui,
   notifications: state.notifications,
   messageComposer: state.messageComposer,
+  composer: state.composer,
 }))(App);
