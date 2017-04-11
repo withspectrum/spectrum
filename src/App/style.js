@@ -9,7 +9,7 @@ export const Body = styled.div`
   width: 100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   height: 100%;
-	overflow-y: hidden;
+	overflow-y: auto;
 
   @media (max-width: 768px) {
     overflow-x: hidden;
@@ -47,6 +47,7 @@ export const LeftColumnContainer = styled(ScrollBody)`
   @media (max-width: 768px) {
     transform: translateX( ${props =>
   props.viewing === 'frequencies' ? '0' : '-100%'} )
+    z-index: 3;
   }
 `;
 
@@ -71,19 +72,11 @@ export const RightColumnContainer = styled(ScrollBody)`
   overflow: hidden;
 
   @media (max-width: 768px) {
-    transform: translateX(
-      ${props =>
-  props.active || props.viewing === 'detail'
-    ? '-200%'
-    : `${props.viewing === 'messageGroup'}` ? '-100%' : '-100%'});
-    overflow-y: hidden;
-    ${props => props.absolute
-  ? `position: absolute;
-        transform: translateX(0);
-        height: calc(100% - 48px);`
-  : `position: relative;
-        transform: translateX(${props =>
-      props.active || props.viewing === 'detail' ? '-200%' : '-100%'})`};
-
+    ${props =>
+  props.viewing === 'story' || props.viewing === 'composer'
+    ? 'transform: translateX( -200% );'
+    : ''}
+    ${props =>
+  props.viewing === 'messageGroup' ? 'transform: translateX( -100% );' : ''}
   }
 `;

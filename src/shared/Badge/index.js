@@ -19,6 +19,7 @@ const Span = styled.span`
   ${props => props.tipText ? 'cursor: pointer;' : ''};
   ${props => props.tipText ? Tooltip(props) : ''};
 	align-self: center;
+	line-height: 1.4;
 `;
 
 const Badge = props => {

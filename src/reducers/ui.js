@@ -14,7 +14,6 @@ export default function ui(state = initialState, action) {
     case 'CLEAR_ACTIVE_STORY':
     case 'DELETE_STORY':
     case 'CLOSE_FREQUENCY_NAV':
-    case 'ADD_STORIES':
       return {
         viewing: 'stories',
       };
