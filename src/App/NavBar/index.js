@@ -97,10 +97,6 @@ class NavBar extends Component {
     });
   };
 
-  shouldComponentUpdate = (nextProps: Object) => {
-    return !deepEqual(nextProps, this.props);
-  };
-
   componentWillUpdate = (prevProps: Object) => {
     if (prevProps !== this.props) {
       const { user } = this.props;
@@ -378,7 +374,7 @@ class NavBar extends Component {
     }
 
     if (
-      messageGroups.active && !activeMessageGroup ||
+      messageGroups.active && (!activeMessageGroup && messageComposer.isOpen) ||
       stories.active && !activeStory
     ) {
       return (
