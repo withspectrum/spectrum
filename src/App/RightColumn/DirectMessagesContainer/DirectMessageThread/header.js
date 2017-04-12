@@ -9,7 +9,7 @@ import {
   Username,
 } from '../style';
 
-export const Header = ({ users }: Object) => {
+export const Header = ({ users, openUpgradeModal }) => {
   const checkPro = (user: Object): boolean => {
     return user.subscriptions ? true : false;
   };
@@ -41,7 +41,12 @@ export const Header = ({ users }: Object) => {
         {username && isAdmin && <Badge type="admin" />}
         {username &&
           isPro &&
-          <Badge type="pro" tipText="Beta Supporter" tipLocation="top-right" />}
+          <Badge
+            type="pro"
+            tipText="Beta Supporter"
+            tipLocation="top-right"
+            onClick={openUpgradeModal}
+          />}
       </Username>
     </StyledHeader>
   );

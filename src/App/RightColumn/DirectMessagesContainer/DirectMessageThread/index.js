@@ -12,6 +12,7 @@ import Chat from '../../Components/Chat';
 import ChatInput from '../../Components/ChatInput';
 import { openModal } from '../../../../actions/modals';
 import { setMessageGroupLastSeen } from '../../../../db/messageGroups';
+import { track } from '../../../../EventTracker';
 
 class DirectMessageThread extends Component {
   static defaultProps = {
