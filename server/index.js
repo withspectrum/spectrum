@@ -38,6 +38,7 @@ app.use(
   '/graphiql',
   graphiqlExpress({
     endpointURL: '/',
+    subscriptionsEndpoint: `ws://localhost:5000`,
     query: `{\n  user(id: "58a023a4-912d-48fe-a61c-eec7274f7699") {\n    displayName\n    username\n    communities {\n      name\n      frequencies {\n        name\n        stories {\n          content {\n            title\n          }\n          messages {\n            message {\n              content\n            }\n          }\n        }\n      }\n    }\n  }\n}`,
   })
 );
@@ -101,4 +102,4 @@ const subscriptionsServer = new SubscriptionServer(
 // Start database listeners
 listeners.start();
 console.log(`GraphQL server running at http://${HOST}:${PORT}`);
-console.log(`Websocket server running at http://${HOST}:${WS_PORT}`);
+console.log(`Websocket server running at ws://${HOST}:${WS_PORT}`);

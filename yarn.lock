@@ -21,10 +21,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/graphql@^0.8.5", "@types/graphql@^0.8.6":
-  version "0.8.6"
-  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.8.6.tgz#b34fb880493ba835b0c067024ee70130d6f9bb68"
-
 "@types/graphql@^0.9.0":
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.9.0.tgz#fccf859f0d2817687f210737dc3be48a18b1d754"
@@ -3413,25 +3409,25 @@ graphql-errors@^2.1.0:
     babel-runtime "^6.6.1"
     uuid "^2.0.2"
 
-graphql-server-core@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/graphql-server-core/-/graphql-server-core-0.6.0.tgz#468625cba4a00f80275c065432faa481985f5a65"
+graphql-server-core@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/graphql-server-core/-/graphql-server-core-0.7.0.tgz#a658b3b0704f8a19b24254b64bef6b3d0ddce8ba"
   optionalDependencies:
-    "@types/graphql" "^0.8.5"
+    "@types/graphql" "^0.9.0"
 
-graphql-server-express@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/graphql-server-express/-/graphql-server-express-0.6.0.tgz#516090b4add82e6ed2c4a70dd2d925031fdcc289"
+graphql-server-express@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/graphql-server-express/-/graphql-server-express-0.7.0.tgz#23b6461d55e7369388f02063b728a8ccfd839596"
   dependencies:
-    graphql-server-core "^0.6.0"
-    graphql-server-module-graphiql "^0.6.0"
+    graphql-server-core "^0.7.0"
+    graphql-server-module-graphiql "^0.7.0"
   optionalDependencies:
     "@types/express" "^4.0.35"
-    "@types/graphql" "^0.8.6"
+    "@types/graphql" "^0.9.0"
 
-graphql-server-module-graphiql@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/graphql-server-module-graphiql/-/graphql-server-module-graphiql-0.6.0.tgz#e37634b05f000731981e8ed13103f9a5861e5da0"
+graphql-server-module-graphiql@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/graphql-server-module-graphiql/-/graphql-server-module-graphiql-0.7.0.tgz#15cb1f820d7fec38d9dc0bd414d1d8826a997c01"
 
 graphql-subscriptions@^0.3.0, graphql-subscriptions@^0.3.1:
   version "0.3.1"
