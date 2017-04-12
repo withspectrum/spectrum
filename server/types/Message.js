@@ -30,6 +30,7 @@ const Message = /* GraphQL */ `
 
 	input MessageInput {
 		story: ID!
+		sender: ID!
 		message: MessageContentInput!
 	}
 
