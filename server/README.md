@@ -2,6 +2,21 @@
 
 A Node.js server for Spectrum.chat, built with Express.js, GraphQL and RethinkDB.
 
+## Setup
+
+```sh
+# Install RethinkDB (note, you only need to do this one time)
+brew install rethinkdb
+# Start rethinkdb
+rethinkdb
+# In a separate tab, seed the db with some initial data
+yarn run db:seed
+# ⚠️ To empty the database (e.g. if there's faulty data) run yarn run db:drop
+# Start the server in development mode (restarts on any change)
+yarn run dev:server
+# To start the server in production mode do yarn run start:server
+```
+
 ## Structure
 
 This server follows a GraphQL-first philosophy. That means we design the GraphQL schema first and then start implementing business logic. This is great because it gives us a clear separation of concerns (business logic vs. schema), and it's how Facebook recommends to use GraphQL.
