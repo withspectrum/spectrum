@@ -2,7 +2,10 @@
  * Notification queries
  */
 
-const { getNotification } = require('../models/notification');
+const {
+  getNotification,
+  getNotificationsByUser,
+} = require('../models/notification');
 const { getUser } = require('../models/user');
 const { getMessage } = require('../models/message');
 const { getStory } = require('../models/story');
@@ -12,6 +15,7 @@ const { getCommunity } = require('../models/community');
 module.exports = {
   Query: {
     notification: (_, { id }) => getNotification(id),
+    notifications: (_, { uid }) => getNotificationsByUser(uid),
   },
   Notification: {
     user: ({ user }) => user && getUser(user),

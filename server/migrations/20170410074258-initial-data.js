@@ -19,6 +19,7 @@ exports.up = function(r, conn) {
         r.table('messages').insert(data.messages).run(conn),
         r.table('users').insert(data.users).run(conn),
         r.table('notifications').insert(data.notifications).run(conn),
+        r.table('notifications').indexCreate('user').run(conn),
       ]))
     .catch(err => {
       console.log(err);

@@ -21,6 +21,7 @@ const Notification = /* GraphQL */ `
 
 	extend type Query {
 		notification(id: ID!): Notification
+		notifications(uid: ID!): [Notification!]
 	}
 
 	extend type Mutation {
