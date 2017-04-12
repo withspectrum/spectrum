@@ -6,3 +6,4 @@ build
 src/config/FirebaseConfig.js
 npm-debug.log
 rethinkdb_data
+debug

@@ -12,6 +12,7 @@ import Chat from '../../Components/Chat';
 import ChatInput from '../../Components/ChatInput';
 import { openModal } from '../../../../actions/modals';
 import { setMessageGroupLastSeen } from '../../../../db/messageGroups';
+import { track } from '../../../../EventTracker';
 
 class DirectMessageThread extends Component {
   static defaultProps = {
@@ -20,7 +21,10 @@ class DirectMessageThread extends Component {
 
   openUpgradeModal = () => {
     const { user } = this.props;
-    this.props.dispatch(openModal('UPGRADE_MODAL', user));
+    if (!user.uid) return;
+    if (!user.subscriptions) {
+      this.props.dispatch(openModal('UPGRADE_MODAL', user));
+    }
   };
 
   shouldComponentUpdate(nextProps: Object) {

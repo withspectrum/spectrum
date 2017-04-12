@@ -111,7 +111,7 @@ class Chat extends Component {
           <Badge
             type="pro"
             tipText="Beta Supporter"
-            tipLocation="top-right"
+            tipLocation={me ? 'top-left' : 'top-right'}
             onClick={() => this.handleProClick()}
           />}
       </Byline>
