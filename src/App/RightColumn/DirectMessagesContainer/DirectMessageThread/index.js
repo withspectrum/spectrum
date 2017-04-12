@@ -21,7 +21,10 @@ class DirectMessageThread extends Component {
 
   openUpgradeModal = () => {
     const { user } = this.props;
-    this.props.dispatch(openModal('UPGRADE_MODAL', user));
+    if (!user.uid) return;
+    if (!user.subscriptions) {
+      this.props.dispatch(openModal('UPGRADE_MODAL', user));
+    }
   };
 
   shouldComponentUpdate(nextProps: Object) {
