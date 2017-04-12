@@ -349,10 +349,10 @@ const returnTooltip = props => {
       return `
           &:after {
             bottom: calc(100% + 5px);
-            right: 0;
+            right: -5px;
           }
           &:before {
-            right: calc(50% - 5px);
+            right: 5px;
             bottom: 100%
       	    border-bottom-width: 0;
       	    border-top-color: ${props.onboarding
@@ -364,10 +364,10 @@ const returnTooltip = props => {
       return `
           &:after {
             bottom: calc(100% + 5px);
-            left: 0;
+            left: -5px;
           }
           &:before {
-            right: calc(50% - 5px);
+            left: 5px;
             bottom: 100%;
       	    border-bottom-width: 0;
       	    border-top-color: ${props.onboarding
@@ -380,7 +380,8 @@ const returnTooltip = props => {
       return `
           &:after {
             left: calc(100% + 5px);
-            top: 2%;
+            top: 50%;
+            transform: translateY(-50%);
           }
           &:before{
             left: 100%;
@@ -425,7 +426,8 @@ const returnTooltip = props => {
       return `
           &:after {
             right: calc(100% + 5px);
-            top: 1px;
+            top: 50%;
+            transform: translateY(-50%);
           }
           &:before{
             right: 100%;

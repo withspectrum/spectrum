@@ -1,3 +1,4 @@
+//@flow
 import React from 'react';
 import LoadingIndicator from '../shared/loading/global';
 // NOTE (@mxstbr): The /dist here is a bug in a specific version of emoji-regex
@@ -74,46 +75,83 @@ export const sortAndGroupBubbles = messages => {
       masterArray.push([
         {
           userId: 'robo',
-          timestamp: messages[i].timestamp,
+          timestamp: messages[0].timestamp,
           message: {
-            content: messages[i].timestamp,
+            content: messages[0].timestamp,
             type: 'robo',
           },
         },
       ]);
     }
 
-    function checkToInjectTimestamp() {
-      if (i > 0 && messages[i].timestamp > messages[i - 1].timestamp + 900000) {
-        masterArray.push([
-          {
-            userId: 'robo',
-            timestamp: messages[i].timestamp,
-            message: {
-              content: messages[i].timestamp,
-              type: 'robo',
-            },
-          },
-        ]);
+    const robo = [
+      {
+        userId: 'robo',
+        timestamp: messages[i].timestamp,
+        message: {
+          content: messages[i].timestamp,
+          type: 'robo',
+        },
+      },
+    ];
+
+    const sameUser = messages[i].userId === checkId; //=> boolean
+    const oldMessage = (current: Object, previous: Object) => {
+      //=> boolean
+      return current.timestamp > previous.timestamp + 900000;
+    };
+
+    // if we are evaulating a bubble from the same user
+    if (sameUser) {
+      // if we are still on the first message
+      if (i === 0) {
+        // push the message to the array
+        newArray.push(messages[i]);
+      } else {
+        // if we're on to the second message, we need to evaulate the timestamp
+        // if the second message is older than the first message by our variance
+        if (oldMessage(messages[i], messages[i - 1])) {
+          // push the batch of messages to master array
+          masterArray.push(newArray);
+          // insert a new robotext timestamp
+          masterArray.push(robo);
+          // reset the batch of new messages
+          newArray = [];
+          // populate the new batch of messages with this next old message
+          newArray.push(messages[i]);
+        } else {
+          // if the message isn't older than our prefered variance,
+          // we keep populating the same batch of messages
+          newArray.push(messages[i]);
+        }
       }
-    }
-
-    if (messages[i].userId === checkId) {
-      // this message user id does match
-      newArray.push(messages[i]);
+      // and maintain the checkid
       checkId = messages[i].userId;
+      // if the next message is from a new user
     } else {
-      // this message user id doesn't match
+      // we push the previous user's messages to the masterarray
       masterArray.push(newArray);
+      // if the new users message is older than our preferred variance
+      if (i > 0 && oldMessage(messages[i], messages[i - 1])) {
+        // push a robo timestamp
+        masterArray.push(robo);
+        newArray = [];
+        newArray.push(messages[i]);
+      } else {
+        // clear the messages array from the previous user
+        newArray = [];
+        // and start a new batch of messages from the currently evaulating user
+        newArray.push(messages[i]);
+      }
 
-      checkToInjectTimestamp();
-
-      // reset
+      // set a new checkid for the next user
       checkId = messages[i].userId;
-      newArray = [];
-      newArray.push(messages[i]);
     }
   }
+
+  // when done, push the final batch of messages to masterArray
+  // masterArray.push(newArray);
+  // and return masterArray to the component
   masterArray.push(newArray);
   return masterArray;
 };
