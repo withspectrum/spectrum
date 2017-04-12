@@ -4,10 +4,17 @@
 const { db } = require('./db');
 
 const getCommunity = id => {
-  const { connection } = require('./db');
-  return db.table('communities').get(id).run(connection);
+  return db.table('communities').get(id).run();
+};
+
+const getCommunitiesByUser = uid => {
+  return db
+    .table('communities')
+    .filter(community => community('members').contains(uid))
+    .run();
 };
 
 module.exports = {
   getCommunity,
+  getCommunitiesByUser,
 };

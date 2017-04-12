@@ -4,24 +4,22 @@
 const { db } = require('./db');
 
 const getFrequenciesByCommunity = community => {
-  const { connection } = require('./db');
-  return db.table('frequencies').filter({ community }).run(connection).then(
-    cursor =>
-      new Promise(resolve => {
-        cursor.toArray((err, result) => {
-          if (err) throw err;
-          resolve(result);
-        });
-      })
-  );
+  return db.table('frequencies').filter({ community }).run();
+};
+
+const getFrequenciesByUser = uid => {
+  return db
+    .table('frequencies')
+    .filter(frequency => frequency('subscribers').contains(uid))
+    .run();
 };
 
 const getFrequency = id => {
-  const { connection } = require('./db');
-  return db.table('frequencies').get(id).run(connection);
+  return db.table('frequencies').get(id).run();
 };
 
 module.exports = {
   getFrequency,
+  getFrequenciesByUser,
   getFrequenciesByCommunity,
 };

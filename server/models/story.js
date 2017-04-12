@@ -4,25 +4,14 @@
 const { db } = require('./db');
 
 const getStory = id => {
-  const { connection } = require('./db');
-  return db.table('stories').get(id).run(connection);
+  return db.table('stories').get(id).run();
 };
 
 const getStoryByFrequency = frequency => {
-  const { connection } = require('./db');
-  return db.table('stories').filter({ frequency }).run(connection).then(
-    cursor =>
-      new Promise(resolve => {
-        cursor.toArray((err, result) => {
-          if (err) throw err;
-          resolve(result);
-        });
-      })
-  );
+  return db.table('stories').filter({ frequency }).run();
 };
 
 const addStory = story => {
-  const { connection } = require('./db');
   return db
     .table('stories')
     .insert(
@@ -38,12 +27,11 @@ const addStory = story => {
       }),
       { returnChanges: true }
     )
-    .run(connection)
+    .run()
     .then(result => result.changes[0].new_val);
 };
 
 const publishStory = id => {
-  const { connection } = require('./db');
   return db
     .table('stories')
     .get(id)
@@ -54,12 +42,11 @@ const publishStory = id => {
       },
       { returnChanges: true }
     )
-    .run(connection)
+    .run()
     .then(result => result.changes[0].new_val);
 };
 
 const setStoryLock = (id, value) => {
-  const { connection } = require('./db');
   return (
     db
       .table('stories')
@@ -72,28 +59,26 @@ const setStoryLock = (id, value) => {
         },
         { returnChanges: true }
       )
-      .run(connection)
+      .run()
       .then(
         result =>
           result.changes.length > 0
             ? result.changes[0].new_val
-            : db.table('stories').get(id).run(connection)
+            : db.table('stories').get(id).run()
       )
   );
 };
 
 const deleteStory = id => {
-  const { connection } = require('./db');
   return db
     .table('stories')
     .get(id)
     .delete()
-    .run(connection)
+    .run()
     .then(result => result.deleted === 1);
 };
 
 const editStory = (id, newContent) => {
-  const { connection } = require('./db');
   return db
     .table('stories')
     .get(id)
@@ -108,7 +93,7 @@ const editStory = (id, newContent) => {
       },
       { returnChanges: true }
     )
-    .run(connection)
+    .run()
     .then(result => result.changes[0].new_val);
 };
 

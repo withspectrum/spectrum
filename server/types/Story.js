@@ -22,6 +22,7 @@ const Story = /* GraphQL */ `
 		locked: Boolean
 		edits: [Edit!]
 		messages: [Message!]
+		author: User!
 	}
 
 	extend type Query {
