@@ -84,6 +84,8 @@ class StoryComposer extends Component {
         : null,
       linkPreviewLength: 0,
       fetchingLinkPreview: false,
+      title: '',
+      description: '',
     };
   }
 
@@ -95,11 +97,15 @@ class StoryComposer extends Component {
   }
 
   changeTitle = e => {
-    this.props.dispatch(updateTitle(e.target.value));
+    this.setState({
+      title: e.target.value,
+    });
   };
 
   changeBody = e => {
-    this.props.dispatch(updateBody(e.target.value));
+    this.setState({
+      description: e.target.value,
+    });
 
     if (!e.target.value && !this.state.linkPreview) {
       this.setState({
@@ -122,7 +128,7 @@ class StoryComposer extends Component {
 
   uploadMedia = e => {
     const user = this.props.user;
-    let body = this.props.composer.body;
+    let description = this.state.description;
 
     const files = e.target.files;
     const location = 'stories';
@@ -136,10 +142,12 @@ class StoryComposer extends Component {
       .then(filesArr => {
         track('media', 'multiple uploaded', null);
         for (let file of filesArr) {
-          body = `${body}\n![](${file.url})\n`;
+          description = `${description}\n![](${file.url})\n`;
           track('media', 'uploaded', null);
           this.props.dispatch(addMediaList(file));
-          this.props.dispatch(updateBody(body));
+          this.setState({
+            description,
+          });
         }
 
         this.setState({
@@ -160,8 +168,8 @@ class StoryComposer extends Component {
   publishStory = e => {
     e.preventDefault();
     const isEditing = this.props.composer.editing;
-    const title = this.props.composer.title;
-    const description = this.props.composer.body;
+    const title = this.state.title;
+    const description = this.state.description;
     const metadata = this.props.composer.metadata;
 
     // if we pass in a custom frequency, it means the user is in 'all' and has selected a frequency from the dropdown
@@ -230,43 +238,22 @@ class StoryComposer extends Component {
   };
 
   handleKeyPress = e => {
-    // if person taps enter, add the url in an iframe to the body
+    // if person taps enter, add the url in an iframe to the description
     if (e.keyCode === 13) {
       e.preventDefault();
       track('composer', 'embed created', null);
 
-      let body = this.props.composer.body;
-      body = `${body}\n<iframe src='${this.state.embedUrl}'></iframe>\n`;
-      this.props.dispatch(updateBody(body));
+      let description = this.state.description;
+      description = `${description}\n<iframe src='${this.state.embedUrl}'></iframe>\n`;
+      this.setState({
+        description,
+      });
 
       this.setState({
         placeholder: 'Paste another URL here...',
         embedUrl: '',
       });
     }
-  };
-
-  handleChange = e => {
-    // if there are no characters, don't attach the event listener
-    if (e.target.value.length === 0) return;
-    document.addEventListener('keydown', this.handleKeyPress, false);
-    this.setState({
-      embedUrl: e.target.value,
-    });
-  };
-
-  handleFocus = () => {
-    this.setState({
-      placeholder: 'Paste a URL here...',
-    });
-  };
-
-  handleBlur = () => {
-    document.removeEventListener('keydown', this.handleKeyPress, false);
-
-    this.setState({
-      placeholder: '+ Embed',
-    });
   };
 
   closeComposer = () => {
@@ -360,25 +347,6 @@ class StoryComposer extends Component {
     this.props.dispatch(cancelEditStory());
   };
 
-  componentWillUpdate(nextProps, nextState) {
-    // if the community dropdown is toggled, we have to manually set the state for
-    // the frequency picker based on the newly selected community
-
-    let { frequencies, communities } = this.props;
-    if (nextState.communityPicker !== this.state.communityPicker) {
-      const communitySelected = communities.find(
-        community => community.id === nextState.communityPicker,
-      );
-      const firstAvailableFreq = frequencies.frequencies.find(
-        frequency => frequency.communityId === communitySelected[0].id,
-      );
-
-      this.setState({
-        frequencyPicker: firstAvailableFreq.id,
-      });
-    }
-  }
-
   render() {
     let { frequencies, composer, activeCommunity, communities } = this.props;
     let activeFrequency = frequencies.active;
@@ -446,7 +414,8 @@ class StoryComposer extends Component {
                   onClick={this.setPreviewing}
                   active={!this.state.creating}
                   hasContent={
-                    composer.title.length > 0 && composer.body.length > 0
+                    this.state.title.length > 0 &&
+                      this.state.description.length > 0
                   }
                 >
                   Preview
@@ -457,14 +426,14 @@ class StoryComposer extends Component {
                       <Textarea
                         onChange={this.changeTitle}
                         style={StoryTitle}
-                        value={composer.title}
+                        value={this.state.title}
                         placeholder={"What's up?"}
                         autoFocus
                       />
 
                       <Textarea
                         onChange={this.changeBody}
-                        value={composer.body}
+                        value={this.state.description}
                         style={TextBody}
                         onKeyUp={this.listenForUrl}
                         ref="descriptionTextarea"
@@ -504,15 +473,8 @@ class StoryComposer extends Component {
                         multiple={true}
                         onChange={this.uploadMedia}
                       />
-                      <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
 
-                      <EmbedInput
-                        placeholder={this.state.placeholder}
-                        onFocus={this.handleFocus}
-                        onBlur={this.handleBlur}
-                        onChange={this.handleChange}
-                        value={this.state.embedUrl}
-                      />
+                      <MediaLabel htmlFor="file">+ Upload Image</MediaLabel>
 
                       <MiniGallery>
                         {media.map((file, i) => (
@@ -529,12 +491,40 @@ class StoryComposer extends Component {
                       </MiniGallery>
                     </div>
                   : <PreviewWrapper>
-                      <StoryTitlePreview>{composer.title}</StoryTitlePreview>
-                      <div className="markdown" ref="story">
+                      <StoryTitlePreview>{this.state.title}</StoryTitlePreview>
+                      <div
+                        className="markdown"
+                        ref="story"
+                        style={{ marginBottom: '32px' }}
+                      >
                         <Markdown>
-                          {linkFreqsInMd(composer.body, activeCommunity)}
+                          {linkFreqsInMd(
+                            this.state.description,
+                            activeCommunity,
+                          )}
                         </Markdown>
                       </div>
+                      {this.state.linkPreview &&
+                        <LinkPreview
+                          data={this.state.linkPreview}
+                          size={'large'}
+                          remove={this.removeLinkPreview}
+                          editable={true}
+                          trueUrl={this.state.trueUrl}
+                        />}
+
+                      {this.state.fetchingLinkPreview &&
+                        <LinkPreviewSkeleton>
+                          <AnimatedBackground />
+                          <CoverLeft />
+                          <CoverTop />
+                          <CoverMiddle />
+                          <CoverMiddleMiddle />
+                          <CoverMiddleTopRight />
+                          <CoverMiddleBottomRight />
+                          <CoverMiddleMiddleBottomRight />
+                          <CoverBottom />
+                        </LinkPreviewSkeleton>}
                     </PreviewWrapper>}
                 <SubmitContainer sticky={!this.state.creating}>
 
@@ -547,7 +537,7 @@ class StoryComposer extends Component {
 
                   <Submit
                     type="submit"
-                    disabled={this.state.loading}
+                    disabled={!this.state.title && !this.state.description}
                     value={
                       this.state.loading
                         ? 'Loading...'
@@ -555,7 +545,7 @@ class StoryComposer extends Component {
                             ? 'Update Story'
                             : 'Post Story'
                     }
-                    active={composer.title}
+                    active={this.state.title}
                   />
 
                 </SubmitContainer>

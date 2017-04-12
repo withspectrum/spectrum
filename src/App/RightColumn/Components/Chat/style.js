@@ -72,6 +72,7 @@ export const MessageWrapper = styled.span`
   justify-content: ${props => props.me ? `flex-end;` : `flex-start;`}
   padding: 1px 0;
   position: relative;
+  ${props => props.tipText ? Tooltip(props) : ''};
 `;
 
 export const Timestamp = styled.div`

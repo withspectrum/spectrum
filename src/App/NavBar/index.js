@@ -298,8 +298,6 @@ class NavBar extends Component {
         <span onClick={this.handleComposerClick}>
           <Icon
             icon={composer.isOpen ? 'close' : 'write'}
-            tipLocation="left"
-            tipText="New Story"
             color={composer.isOpen ? 'warn.alt' : 'text.reverse'}
             reverse
           />
