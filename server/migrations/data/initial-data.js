@@ -112,10 +112,25 @@ const users = [
   },
 ];
 
+const notifications = [
+  {
+    id: 'first-notification-asfd123',
+    createdAt: new Date(),
+    user: '58a023a4-912d-48fe-a61c-eec7274f7699',
+    type: 'NEW_MESSAGE',
+    message: 'second-message-asdf123',
+    story: 'second-story-asddf123',
+    sender: '58a023a4-912d-48fe-a61c-eec7274f7699',
+    read: true,
+    content: 'This is the first message!',
+  },
+];
+
 module.exports = {
   communities,
   frequencies,
   stories,
   messages,
   users,
+  notifications,
 };

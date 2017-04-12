@@ -12,15 +12,18 @@ const Frequency = require('./types/Frequency');
 const Community = require('./types/Community');
 const Message = require('./types/Message');
 const User = require('./types/User');
+const Notification = require('./types/Notification');
 
 const storyQueries = require('./queries/story');
 const frequencyQueries = require('./queries/frequency');
 const communityQueries = require('./queries/community');
 const messageQueries = require('./queries/message');
 const userQueries = require('./queries/user');
+const notificationQueries = require('./queries/notification');
 
 const messageMutations = require('./mutations/message');
 const storyMutations = require('./mutations/story');
+const notificationMutations = require('./mutations/notification');
 
 const messageSubscriptions = require('./subscriptions/message');
 
@@ -59,6 +62,7 @@ const schema = makeExecutableSchema({
     Story,
     Message,
     User,
+    Notification,
   ],
   resolvers: merge(
     {},
@@ -68,8 +72,10 @@ const schema = makeExecutableSchema({
     communityQueries,
     messageQueries,
     userQueries,
+    notificationQueries,
     messageMutations,
     storyMutations,
+    notificationMutations,
     messageSubscriptions
   ),
 });
