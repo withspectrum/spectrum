@@ -6650,7 +6650,7 @@ rethinkdb@^2.3.3:
   dependencies:
     bluebird ">= 2.3.2 < 3"
 
-rethinkdbdash@^2.3.27:
+rethinkdbdash@^2.3.27, rethinkdbdash@^2.3.28:
   version "2.3.28"
   resolved "https://registry.yarnpkg.com/rethinkdbdash/-/rethinkdbdash-2.3.28.tgz#f15fed3a2f0c178155fcadb6fc212b3df80f73df"
   dependencies:
@@ -6824,6 +6824,12 @@ serve@latest:
     path-type "2.0.0"
     send "0.14.2"
     update-notifier "2.0.0"
+
+session-rethinkdb@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/session-rethinkdb/-/session-rethinkdb-2.0.0.tgz#dd9796bced213672884006f989019c896b1222a9"
+  dependencies:
+    debug "^2.2.0"
 
 set-blocking@^2.0.0, set-blocking@~2.0.0:
   version "2.0.0"

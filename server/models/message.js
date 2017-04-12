@@ -4,25 +4,14 @@
 const { db } = require('./db');
 
 const getMessage = id => {
-  const { connection } = require('./db');
-  return db.table('messages').get(id).run(connection);
+  return db.table('messages').get(id).run();
 };
 
 const getMessagesByStory = story => {
-  const { connection } = require('./db');
-  return db.table('messages').filter({ story }).run(connection).then(
-    cursor =>
-      new Promise(resolve => {
-        cursor.toArray((err, result) => {
-          if (err) throw err;
-          resolve(result);
-        });
-      })
-  );
+  return db.table('messages').filter({ story }).run();
 };
 
 const storeMessage = message => {
-  const { connection } = require('./db');
   // Insert a message
   return db
     .table('messages')
@@ -32,12 +21,11 @@ const storeMessage = message => {
       }),
       { returnChanges: true }
     )
-    .run(connection)
+    .run()
     .then(result => result.changes[0].new_val);
 };
 
 const listenToNewMessages = cb => {
-  const { connection } = require('./db');
   return (
     db
       .table('messages')
@@ -48,7 +36,7 @@ const listenToNewMessages = cb => {
       .filter(
         db.row('old_val').eq(null).and(db.not(db.row('new_val').eq(null)))
       )
-      .run(connection, (err, cursor) => {
+      .run({ cursor: true }, (err, cursor) => {
         if (err) throw err;
         cursor.each((err, data) => {
           if (err) throw err;

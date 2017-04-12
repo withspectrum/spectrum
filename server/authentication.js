@@ -48,7 +48,6 @@ const init = ({ twitterCallbackURLBase }) => {
 
         createOrFindUser(user)
           .then(user => {
-            console.log(user);
             done(null, user);
           })
           .catch(err => {

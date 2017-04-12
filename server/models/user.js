@@ -1,31 +1,26 @@
 const { db } = require('./db');
-const { cursorToArray } = require('./utils');
 
 const getUser = id => {
-  const { connection } = require('./db');
-  return db.table('users').get(id).run(connection);
+  return db.table('users').get(id).run();
 };
 
 const getUsers = uids => {
-  const { connection } = require('./db');
-  return db.table('users').getAll(...uids).run(connection).then(cursorToArray);
+  return db.table('users').getAll(...uids).run();
 };
 
 const getUserByProviderId = providerId => {
-  const { connection } = require('./db');
   return db
     .table('users')
     .filter({ providerId })
-    .run(connection)
-    .then(cursorToArray);
+    .run()
+    .then(result => result && result.length > 0 && result[0]);
 };
 
 const storeUser = user => {
-  const { connection } = require('./db');
   return db
     .table('users')
     .insert(user, { returnChanges: true })
-    .run(connection)
+    .run()
     .then(result => result.changes[0].new_val);
 };
 

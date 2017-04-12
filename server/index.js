@@ -5,12 +5,13 @@ const { createServer } = require('http');
 const express = require('express');
 const passport = require('passport');
 const session = require('express-session');
+const SessionStore = require('session-rethinkdb')(session);
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 
-const { init: initDatabase } = require('./models/db');
+const { db } = require('./models/db');
 const listeners = require('./subscriptions');
 const subscriptionManager = require('./subscriptions/manager');
 
@@ -44,8 +45,14 @@ app.use(cookieParser());
 app.use(bodyParser());
 app.use(
   session({
+    store: new SessionStore(db, {
+      db: 'spectrum',
+      table: 'sessions',
+    }),
     // NOTE(@mxstbr): 1Password generated this, LGTM!
     secret: 't3BUqGYFHLNjb7V8xjY6QLECgWy7ByWTYjKkPtuP%R.uLfjNBQKr9pHuKuQJXNqo',
+    resave: true,
+    saveUninitialized: false,
   })
 );
 app.use(passport.initialize());
@@ -75,26 +82,23 @@ const websocketServer = createServer((req, res) => {
   res.end();
 });
 
-// Connect to the database, then start the server
-initDatabase({ host: HOST, port: DB_PORT }).then(() => {
-  // Start webserver
-  app.listen(PORT);
+// Start webserver
+app.listen(PORT);
 
-  // Start websockets server
-  websocketServer.listen(WS_PORT);
+// Start websockets server
+websocketServer.listen(WS_PORT);
 
-  // Start subscriptions server
-  const subscriptionsServer = new SubscriptionServer(
-    {
-      subscriptionManager,
-    },
-    {
-      server: websocketServer,
-    }
-  );
+// Start subscriptions server
+const subscriptionsServer = new SubscriptionServer(
+  {
+    subscriptionManager,
+  },
+  {
+    server: websocketServer,
+  }
+);
 
-  // Start database listeners
-  listeners.start();
-  console.log(`GraphQL server running at http://${HOST}:${PORT}`);
-  console.log(`Websocket server running at http://${HOST}:${WS_PORT}`);
-});
+// Start database listeners
+listeners.start();
+console.log(`GraphQL server running at http://${HOST}:${PORT}`);
+console.log(`Websocket server running at http://${HOST}:${WS_PORT}`);
