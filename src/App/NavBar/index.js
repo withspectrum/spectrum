@@ -15,11 +15,13 @@ import {
   Avatar,
   Photo,
   Menu,
+  Pro,
 } from './style';
 import Icon from '../../shared/Icons';
 import { Spinner, Button } from '../../shared/Globals';
 import { openModal } from '../../actions/modals';
 import { toggleComposer } from '../../actions/composer';
+import { track } from '../../EventTracker';
 
 class NavBar extends Component {
   state = {
@@ -29,6 +31,11 @@ class NavBar extends Component {
     activeCommunity: null,
     activeMessageGroup: null,
     viewing: 'stories',
+  };
+
+  showUpgradeModal = () => {
+    track('upgrade', 'inited', 'nav profile');
+    this.props.dispatch(openModal('UPGRADE_MODAL', this.props.user));
   };
 
   // used on mobile when closing the story view
@@ -267,12 +274,14 @@ class NavBar extends Component {
 
     if (width > 768 && user.uid) {
       return (
-        <Avatar
-          onClick={
-            isPro ? this.showEditAccountModal : this.openUserProfileModal
-          }
-        >
-          <Photo src={user.photoURL} />
+        <Avatar>
+          {!isPro && <Pro onClick={this.showUpgradeModal}>Upgrade to Pro</Pro>}
+          <Photo
+            onClick={
+              isPro ? this.showEditAccountModal : this.openUserProfileModal
+            }
+            src={user.photoURL}
+          />
         </Avatar>
       );
     }

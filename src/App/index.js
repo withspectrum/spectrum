@@ -21,7 +21,12 @@ import ReportBugCard from './MiddleColumn/ReportBugCard';
 import NewMessageCard from './MiddleColumn/NewMessageCard';
 import FrequencyHeaderCard from './MiddleColumn/FrequencyHeaderCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
-import { sortArrayByKey, getParameterByName, truncate } from '../helpers/utils';
+import {
+  sortArrayByKey,
+  getParameterByName,
+  truncate,
+  changeFavicon,
+} from '../helpers/utils';
 import { ACTIVITY_TYPES } from '../db/types';
 
 class App extends Component {
@@ -145,7 +150,23 @@ class App extends Component {
       0,
     );
 
-    if (unread > 0) title = `(${unread}) ${title}`;
+    const unreadMessages = messageGroups.messageGroups.reduce(
+      (sum, group) => {
+        if (
+          !group.users[user.uid].last_seen ||
+          group.last_activity > group.users[user.uid].last_seen &&
+            group.id !== messageGroups.active
+        ) {
+          return sum + 1;
+        }
+      },
+      0,
+    );
+
+    const totalUnread = unread + (unreadMessages || 0);
+    changeFavicon(totalUnread > 0 ? totalUnread : 0);
+
+    if (totalUnread > 0) title = `(${totalUnread}) ${title}`;
 
     if (frequency && communitySlug !== 'everything') {
       sortedStories.unshift(<FrequencyHeaderCard />);

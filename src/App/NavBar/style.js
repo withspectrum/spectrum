@@ -70,10 +70,24 @@ export const Subtitle = styled.p`
 export const Avatar = styled.div`
   padding: 8px 8px 12px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 `;
 
 export const Photo = styled.img`
   width: 28px;
   height: 28px;
   border-radius: 16px;
+`;
+
+export const Pro = styled.b`
+  color: #02AAFA;
+  background-image: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-right: 16px;
+  margin-top: 4px;
 `;

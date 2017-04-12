@@ -298,3 +298,29 @@ export const getLinkPreviewFromUrl = url => fetch(
 ).then(response => {
   return response.json();
 });
+
+document.head || (document.head = document.getElementsByTagName('head')[0]);
+
+export const changeFavicon = (count: Number) => {
+  if (count === 0) {
+    const link = document.createElement('link'),
+      oldLink = document.getElementById('dynamic-favicon');
+    link.id = 'dynamic-favicon';
+    link.rel = 'shortcut icon';
+    link.href = '/img/favicon.ico?=' + Math.random();
+    if (oldLink) {
+      document.head.removeChild(oldLink);
+    }
+    document.head.appendChild(link);
+  } else {
+    const link = document.createElement('link'),
+      oldLink = document.getElementById('dynamic-favicon');
+    link.id = 'dynamic-favicon';
+    link.rel = 'shortcut icon';
+    link.href = '/img/favicon_unread.ico?=' + Math.random();
+    if (oldLink) {
+      document.head.removeChild(oldLink);
+    }
+    document.head.appendChild(link);
+  }
+};

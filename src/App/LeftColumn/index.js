@@ -48,10 +48,6 @@ class NavigationMaster extends Component {
     this.props.dispatch(signOut());
   };
 
-  goPro = () => {
-    this.props.dispatch(openModal('PRO_MODAL'));
-  };
-
   updateFrequencyName = e => {
     this.setState({
       frequencyName: e.target.value,
