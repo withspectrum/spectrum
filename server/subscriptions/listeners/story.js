@@ -4,7 +4,6 @@ const channels = require('./channels');
 
 module.exports = () => {
   listenToNewStories(story => {
-    console.log(story);
     pubsub.publish(channels.STORY_ADDED, story);
   });
 };
