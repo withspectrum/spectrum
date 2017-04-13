@@ -2,6 +2,7 @@ const Notification = /* GraphQL */ `
 	enum NotificationType {
 		NEW_MESSAGE
 		NEW_STORY
+		NEW_MENTION
 		REACTION
 	}
 
