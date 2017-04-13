@@ -45,8 +45,6 @@ export const uploadMediaToLocation = (
       creator: userId,
     };
 
-    console.log(databaseMetadata);
-
     const updates = {};
     // update the database ref
     updates[`${location}/${key}/media/${mediaKey}`] = databaseMetadata;
