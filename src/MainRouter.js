@@ -30,9 +30,6 @@ class MainRouter extends React.Component {
         });
       }
 
-      // save provider data next to the user so we can match users during migration
-      dispatch(saveProviderData(user));
-
       monitorUser(user.uid);
 
       // set this uid in google analytics
@@ -62,6 +59,12 @@ class MainRouter extends React.Component {
             type: 'SET_USER',
             user: userData,
           });
+
+          // save provider data next to the user so we can match users during migration
+          if (!user.providerUID) {
+            dispatch(saveProviderData(user));
+          }
+
           return userData;
         })
         // Load the users frequencies and communities
