@@ -4,6 +4,7 @@
 const { getFrequency } = require('../models/frequency');
 const { getStoryByFrequency } = require('../models/story');
 const { getCommunity } = require('../models/community');
+const { getUsers } = require('../models/user');
 
 module.exports = {
   Query: {
@@ -14,5 +15,6 @@ module.exports = {
       return getStoryByFrequency(frequency.id);
     },
     community: ({ community }) => getCommunity(community),
+    subscribers: ({ subscribers }) => getUsers(subscribers),
   },
 };

@@ -16,6 +16,7 @@ const Message = /* GraphQL */ `
 		timestamp: Date!
 		story: Story!
 		message: MessageContent!
+		sender: User!
 	}
 
 	extend type Query {
@@ -29,6 +30,7 @@ const Message = /* GraphQL */ `
 
 	input MessageInput {
 		story: ID!
+		sender: ID!
 		message: MessageContentInput!
 	}
 

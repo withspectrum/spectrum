@@ -5,6 +5,7 @@ const Community = /* GraphQL */ `
 		name: String!
 		slug: String!
 		frequencies: [Frequency!]
+		members: [User!]
 	}
 
 	extend type Query {

@@ -193,7 +193,12 @@ class Chat extends Component {
                     );
                     const TextBubble = emojiOnly ? EmojiBubble : Bubble;
                     return (
-                      <MessageWrapper me={me} key={message.id}>
+                      <MessageWrapper
+                        tipText={convertTimestampToDate(message.timestamp)}
+                        tipLocation={me ? 'top-left' : 'top-right'}
+                        me={me}
+                        key={message.id}
+                      >
                         <TextBubble
                           me={me}
                           persisted={message.persisted}

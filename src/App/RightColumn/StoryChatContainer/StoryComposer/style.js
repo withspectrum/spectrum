@@ -257,39 +257,6 @@ export const Image = styled.img`
 	border-radius: 2px;
 `;
 
-export const EmbedInput = styled.input`
-	border: 1px solid transparent;
-	outline: 0;
-	font-weight: 800;
-	font-size: 0.75rem;
-	display: inline-block;
-	margin: 0.5rem 0 1rem 1rem;
-	padding: 8px;
-	box-shadow: none;
-	width: 200px;
-
-	&:hover {
-		cursor: pointer;
-	}
-
-	&:focus {
-		border-bottom: 1px solid ${props => props.theme.brand.default};
-	}
-
-	::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-	  color: ${props => props.theme.brand.default};
-	}
-	::-moz-placeholder { /* Firefox 19+ */
-	  color: ${props => props.theme.brand.default};
-	}
-	:-ms-input-placeholder { /* IE 10+ */
-	  color: ${props => props.theme.brand.default};
-	}
-	:-moz-placeholder { /* Firefox 18- */
-	  color: ${props => props.theme.brand.default};
-	}
-`;
-
 export const LinkPreviewSkeleton = styled.div`
 	display: flex;
 	flex-direction: row;

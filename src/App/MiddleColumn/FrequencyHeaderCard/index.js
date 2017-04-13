@@ -78,7 +78,9 @@ class FrequencyHeaderCard extends Component {
       );
     }
 
-    if (communityRole === 'owner' && frequencyRole) {
+    if (
+      communityRole === 'owner' && frequencyRole || frequencyRole === 'owner'
+    ) {
       return (
         <Actions>
           <IconButton onClick={this.editFrequency}>

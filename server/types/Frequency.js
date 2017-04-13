@@ -8,6 +8,7 @@ const Frequency = /* GraphQL */ `
 		slug: String!
 		community: Community!
 		stories: [Story!]
+		subscribers: [User!]
 	}
 
 	extend type Query {

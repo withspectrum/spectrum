@@ -21,6 +21,7 @@ import ReportBugCard from './MiddleColumn/ReportBugCard';
 import NewMessageCard from './MiddleColumn/NewMessageCard';
 import FrequencyHeaderCard from './MiddleColumn/FrequencyHeaderCard';
 import { getCurrentFrequency } from '../helpers/frequencies';
+import { debounce } from '../helpers/utils';
 import {
   sortArrayByKey,
   getParameterByName,
@@ -164,7 +165,8 @@ class App extends Component {
     );
 
     const totalUnread = unread + (unreadMessages || 0);
-    changeFavicon(totalUnread > 0 ? totalUnread : 0);
+    // don't call this more than once per second
+    debounce(changeFavicon(totalUnread > 0 ? totalUnread : 0), 1000);
 
     if (totalUnread > 0) title = `(${totalUnread}) ${title}`;
 

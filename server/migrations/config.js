@@ -1,6 +1,7 @@
 const path = require('path');
 
 module.exports = {
+  driver: 'rethinkdbdash',
   db: 'spectrum',
   host: 'localhost',
   port: 28015,

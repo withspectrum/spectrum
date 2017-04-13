@@ -3,6 +3,7 @@
  */
 const { getCommunity } = require('../models/community');
 const { getFrequenciesByCommunity } = require('../models/frequency');
+const { getUsers } = require('../models/user');
 
 module.exports = {
   Query: {
@@ -10,5 +11,6 @@ module.exports = {
   },
   Community: {
     frequencies: ({ id }) => getFrequenciesByCommunity(id),
+    members: ({ members }) => getUsers(members),
   },
 };
