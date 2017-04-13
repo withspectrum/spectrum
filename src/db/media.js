@@ -16,7 +16,7 @@ export const uploadMediaToLocation = (
   },
   location: LocationType,
   key: string,
-  userId: string,
+  userId: string
 ): UploadMediaReturn => {
   return new Promise((resolve, reject) => {
     if (!file || !location || !key || !userId) return;
@@ -45,6 +45,8 @@ export const uploadMediaToLocation = (
       creator: userId,
     };
 
+    console.log(databaseMetadata);
+
     const updates = {};
     // update the database ref
     updates[`${location}/${key}/media/${mediaKey}`] = databaseMetadata;
@@ -63,7 +65,7 @@ export const uploadMediaToLocation = (
       // only resolve when everything is done and storage save is complete
       resolve({
         url: snapshot.downloadURL,
-        meta: storageMetaData,
+        meta: databaseMetadata,
       });
     });
   });
@@ -74,11 +76,11 @@ export const uploadMultipleMediaToLocation = (
   files: Object,
   location: LocationType,
   key: string,
-  userId: string,
+  userId: string
 ): uploadMultipleMediaToLocationReturn => {
   let filesArr = hashToArray(files);
   return Promise.all(
-    filesArr.map(file => uploadMediaToLocation(file, location, key, userId)),
+    filesArr.map(file => uploadMediaToLocation(file, location, key, userId))
   );
 };
 
@@ -86,7 +88,7 @@ type GetFileUrlFromLocationReturn = Promise<any>;
 export const getFileUrlFromLocation = (
   fileName: string,
   location: LocationType,
-  key: string,
+  key: string
 ): GetFileUrlFromLocationReturn => {
   if (!fileName || !location || !key) {
     return new Promise.resolve('Could not get file from location.');
@@ -101,7 +103,7 @@ export const getFileUrlFromLocation = (
 type GetMediaFromLocationReturn = Promise<Object>;
 export const getMediaFromLocation = (
   location: LocationType,
-  key: string,
+  key: string
 ): GetMediaFromLocationReturn =>
   new Promise(resolve => {
     const db = database();
