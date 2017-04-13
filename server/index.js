@@ -12,7 +12,7 @@ const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 
 const { db } = require('./models/db');
-const listeners = require('./subscriptions');
+const listeners = require('./subscriptions/listeners');
 const subscriptionManager = require('./subscriptions/manager');
 
 const schema = require('./schema');
