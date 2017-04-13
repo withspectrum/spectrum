@@ -2,6 +2,7 @@
  * Storing and retrieving stories
  */
 const { db } = require('./db');
+const { listenToNewDocumentsIn } = require('./utils');
 
 const getStory = id => {
   return db.table('stories').get(id).run();
@@ -97,6 +98,10 @@ const editStory = (id, newContent) => {
     .then(result => result.changes[0].new_val);
 };
 
+const listenToNewStories = cb => {
+  return listenToNewDocumentsIn('stories', cb);
+};
+
 module.exports = {
   addStory,
   getStory,
@@ -105,4 +110,5 @@ module.exports = {
   setStoryLock,
   deleteStory,
   getStoryByFrequency,
+  listenToNewStories,
 };

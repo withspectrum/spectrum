@@ -2,12 +2,13 @@
  * Database listeners for subscriptions are initialised here
  */
 
-const message = require('./message');
-const channels = require('./channels');
+const messageListeners = require('./message');
+const storyListeners = require('./story');
 
 module.exports = {
   // Start listening to database changes
   start() {
-    message.listenToNewMessages(channels.MESSAGE_ADDED);
+    storyListeners();
+    messageListeners();
   },
 };
