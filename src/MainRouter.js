@@ -8,6 +8,7 @@ import Root from './Root';
 import { monitorUser, stopUserMonitor } from './helpers/users';
 import history from './helpers/history';
 import { addNotification } from './actions/notifications';
+import { saveProviderData } from './actions/user';
 import { getUserInfo } from './db/users';
 import { listenToAuth } from './db/auth';
 import { getFrequency } from './db/frequencies';
@@ -28,6 +29,9 @@ class MainRouter extends React.Component {
           type: 'USER_NOT_AUTHENTICATED',
         });
       }
+
+      // save provider data next to the user so we can match users during migration
+      dispatch(saveProviderData(user));
 
       monitorUser(user.uid);
 

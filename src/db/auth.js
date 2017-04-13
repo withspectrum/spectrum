@@ -1,4 +1,5 @@
 import auth from 'firebase/auth';
+import database from 'firebase/database';
 import Raven from 'raven-js';
 
 const signIn = provider => {
@@ -26,4 +27,14 @@ export const signInWithTwitter = () => {
  */
 export const listenToAuth = cb => {
   return auth().onAuthStateChanged(cb);
+};
+
+/**
+ * Store provider data next to the user object so we can migrate to rethink db
+ */
+export const saveProviderUid = (user: Object) => {
+  const db = database();
+  const updates = {};
+  updates[`users/${user.uid}/providerUID`] = user.providerData[0].uid;
+  return db.ref().update(updates).then(() => {});
 };
