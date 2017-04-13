@@ -26,10 +26,6 @@ export const Logo = styled.img`
   padding: 8px;
   width: 32px;
   height: 32px;
-
-  @media (min-width: 768px) {
-    margin-left: 8px;
-  }
 `;
 
 export const Text = styled.div`

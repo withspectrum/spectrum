@@ -40,7 +40,7 @@ export const ScrollBody = styled.div`
 `;
 
 export const LeftColumnContainer = styled(ScrollBody)`
-  background: ${({ theme }) => theme.bg.reverse};
+  background: ${({ theme }) => theme.bg.default};
   flex: 0 0 256px;
   z-index: 2;
 
@@ -52,8 +52,8 @@ export const LeftColumnContainer = styled(ScrollBody)`
 `;
 
 export const MiddleColumnContainer = styled(ScrollBody)`
-  background: ${({ theme }) => theme.bg.wash};
-  box-shadow: inset -1px 0 0 ${({ theme }) => theme.border.default};
+  background: ${({ theme }) => theme.border.default};
+  /*box-shadow: inset -1px 0 0 ${({ theme }) => theme.border.default};*/
   flex: 0 0 480px;
   z-index: 1;
   overflow-y: hidden;

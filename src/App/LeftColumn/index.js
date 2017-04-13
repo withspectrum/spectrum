@@ -18,12 +18,16 @@ import {
   P,
   Name,
   MetaLink,
+  ViewNav,
+  ViewItem,
+  ViewSelector,
+  ViewLabel,
   FreqList,
   Freq,
   FreqLabel,
   Footer,
   FooterP,
-  FreqText,
+  FreqRow,
   DirtyDot,
   ProBadge,
   CommunityHeading,
@@ -90,6 +94,7 @@ class NavigationMaster extends Component {
     } = this.props;
 
     const isEverything = active === 'everything';
+    const isNotifications = active === 'notifications';
     const isMessages = active === 'messages';
     const isExplore = active === 'explore';
 
@@ -128,43 +133,82 @@ class NavigationMaster extends Component {
           </Header>}
         <FreqList>
           {user.uid &&
-            <div>
+            <ViewNav>
               <Link to="/">
-                <Freq active={isEverything} onClick={this.showStoriesNav}>
-                  <FreqText>
-                    <Icon icon="home" reverse static />
-                    <FreqLabel ml>{'Home'}</FreqLabel>
-                  </FreqText>
-                </Freq>
+                <ViewItem>
+                  <ViewSelector
+                    active={isEverything}
+                    onClick={this.showStoriesNav}
+                  >
+                    <Icon
+                      icon="home"
+                      color={isEverything ? 'brand.default' : 'text.alt'}
+                      static
+                    />
+                    <ViewLabel ml>{'Home'}</ViewLabel>
+                  </ViewSelector>
+                </ViewItem>
               </Link>
 
-              {messageGroups.length > 0 && // only show messages in sidebar if user has existing messageGroups
+              <Link to={`/notifications`}>
+                <ViewItem>
+                  <ViewSelector
+                    active={isNotifications}
+                    onClick={this.showStoriesNav}
+                  >
+                    <Icon
+                      icon="notification"
+                      color={isNotifications ? 'brand.default' : 'text.alt'}
+                      static
+                    />
+                    <ViewLabel ml>Notifications</ViewLabel>
+                  </ViewSelector>
+                </ViewItem>
+              </Link>
+
+              {messageGroups.length > 0 &&
+                // only show messages in sidebar if user has existing messageGroups
                 <Link to={`/messages`}>
-                  <Freq active={isMessages} onClick={this.showStoriesNav}>
-                    <FlexRow center>
-                      <Icon reverse static icon="messages" />
-                      <FreqLabel ml>Messages</FreqLabel>
-                    </FlexRow>
+                  <ViewItem>
+                    <ViewSelector
+                      active={isMessages}
+                      onClick={this.showStoriesNav}
+                    >
+                      <Icon
+                        icon="messages"
+                        color={isMessages ? 'brand.default' : 'text.alt'}
+                        static
+                      />
+                      <ViewLabel ml>Messages</ViewLabel>
+                    </ViewSelector>
 
                     {unreadMessageGroups && <DirtyDot />}
-                  </Freq>
+                  </ViewItem>
                 </Link>}
 
               <Link to="/explore">
-                <Freq active={isExplore} onClick={this.showStoriesNav}>
-                  <FreqText>
-                    <Icon icon="explore" reverse static />
-                    <FreqLabel ml>{'Explore'}</FreqLabel>
-                  </FreqText>
-                </Freq>
+                <ViewItem>
+                  <ViewSelector
+                    active={isExplore}
+                    onClick={this.showStoriesNav}
+                  >
+                    <Icon
+                      icon="explore"
+                      color={isExplore ? 'brand.default' : 'text.alt'}
+                      static
+                    />
+                    <ViewLabel ml>{'Explore'}</ViewLabel>
+                  </ViewSelector>
+                </ViewItem>
               </Link>
-            </div>}
+            </ViewNav>}
+
           {!loaded &&
             <Freq>
-              <FreqText>
-                <Icon icon="everything" reverse static />
+              <FreqRow>
+                <Icon icon="everything" color="text.alt" static />
                 <FreqLabel>Loading…</FreqLabel>
-              </FreqText>
+              </FreqRow>
             </Freq>}
 
           {user.uid &&
@@ -216,9 +260,9 @@ class NavigationMaster extends Component {
                             }
                             onClick={this.showStoriesNav}
                           >
-                            <FlexRow center>
+                            <FreqRow center>
                               <FreqLabel>{frequency.name}</FreqLabel>
-                            </FlexRow>
+                            </FreqRow>
                             {notif && !notif.read && <DirtyDot />}
                           </Freq>
                         </Link>
