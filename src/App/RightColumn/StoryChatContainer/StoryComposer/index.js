@@ -48,7 +48,6 @@ import {
   MiniImageContainer,
   Image,
   Delete,
-  EmbedInput,
   LinkPreviewSkeleton,
   AnimatedBackground,
   CoverTop,
@@ -75,17 +74,18 @@ class StoryComposer extends Component {
       communityPicker: communities ? communities[0].id : '',
       frequencyPicker: userFreqs ? userFreqs[0] : '',
       loading: false,
-      placeholder: '+ Embed',
-      embedUrl: '',
       metadata: metadata,
       creating: true,
       linkPreview: metadata && metadata.linkPreview
         ? metadata.linkPreview.data
         : null,
+      trueUrl: metadata && metadata.linkPreview
+        ? metadata.linkPreview.trueUrl
+        : null,
       linkPreviewLength: 0,
       fetchingLinkPreview: false,
-      title: '',
-      description: '',
+      title: props.composer.title || '',
+      description: props.composer.body || '',
     };
   }
 
@@ -179,7 +179,7 @@ class StoryComposer extends Component {
       : this.props.frequencies.active;
 
     const community = this.props.communities.find(
-      community => community.slug === this.props.activeCommunity,
+      community => community.slug === this.props.activeCommunity
     );
 
     // ignore the frequency id if we are editing a story while in /everything
@@ -188,7 +188,7 @@ class StoryComposer extends Component {
       frequencyId = getCurrentFrequency(
         frequency,
         this.props.frequencies.frequencies,
-        community.id,
+        community.id
       ).id;
     }
 
@@ -200,7 +200,7 @@ class StoryComposer extends Component {
           title,
           description,
           metadata,
-        }),
+        })
       );
     } else if (frequency && title && isEditing) {
       this.props.dispatch(
@@ -208,7 +208,7 @@ class StoryComposer extends Component {
           title,
           description,
           metadata,
-        }),
+        })
       );
     } else if (!frequency && title) {
       // if no frequency is chosen
@@ -235,25 +235,6 @@ class StoryComposer extends Component {
     let key = e.target.id;
     let story = this.props.composer.newStoryKey;
     this.props.dispatch(removeImageFromComposer(key, story));
-  };
-
-  handleKeyPress = e => {
-    // if person taps enter, add the url in an iframe to the description
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      track('composer', 'embed created', null);
-
-      let description = this.state.description;
-      description = `${description}\n<iframe src='${this.state.embedUrl}'></iframe>\n`;
-      this.setState({
-        description,
-      });
-
-      this.setState({
-        placeholder: 'Paste another URL here...',
-        embedUrl: '',
-      });
-    }
   };
 
   closeComposer = () => {
@@ -356,7 +337,7 @@ class StoryComposer extends Component {
     let media = composer.mediaList;
 
     const communitySelected = communities.find(
-      community => community.id === this.state.communityPicker,
+      community => community.id === this.state.communityPicker
     );
     const availableFrequencies = frequencies.byCommunity[communitySelected.id];
 
@@ -500,7 +481,7 @@ class StoryComposer extends Component {
                         <Markdown>
                           {linkFreqsInMd(
                             this.state.description,
-                            activeCommunity,
+                            activeCommunity
                           )}
                         </Markdown>
                       </div>
