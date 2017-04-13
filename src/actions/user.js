@@ -3,6 +3,7 @@ import {
   createUser,
   createSubscription,
   deleteSubscription,
+  saveNewUserPhotoURL,
 } from '../db/users';
 import {
   signInWithTwitter,
@@ -189,6 +190,18 @@ export const downgradeUser = subscriptionId =>
 export const saveProviderData = (user: Object) =>
   dispatch => {
     saveProviderUid(user).then(() => {}).catch(err => {
+      dispatch(throwError(err));
+      dispatch({ type: 'STOP_LOADING' });
+    });
+  };
+
+export const updateUserPhotoURL = (user: Object) =>
+  dispatch => {
+    let newPhotoURL = user.photoURL;
+    newPhotoURL = newPhotoURL.replace('_normal', '_bigger');
+    newPhotoURL = newPhotoURL.replace('http://', 'https://');
+
+    saveNewUserPhotoURL(user, newPhotoURL).then(() => {}).catch(err => {
       dispatch(throwError(err));
       dispatch({ type: 'STOP_LOADING' });
     });
