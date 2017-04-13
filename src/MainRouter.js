@@ -74,6 +74,8 @@ class MainRouter extends React.Component {
             return false;
           };
 
+          console.log(user, userData);
+
           // if the users's photourl is broken or uses http
           if (isHttp(user.photoURL)) {
             dispatch(updateUserPhotoURL(user));
