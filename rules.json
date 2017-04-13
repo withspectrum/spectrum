@@ -410,6 +410,9 @@
           ".read": "auth.uid === $user",
           ".validate": "newData.exists()"
         },
+        "providerUID": {
+          ".write": "auth.uid === $user"
+        },
         "communities": {
           "$communityId": {
             // Let the user themselves, and the owner of a frequency edit these settings
