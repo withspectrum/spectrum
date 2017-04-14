@@ -97,6 +97,16 @@ const messages = [
     },
     sender: '58a023a4-912d-48fe-a61c-eec7274f7699',
   },
+  {
+    id: 'first-direct-message-asdf123',
+    timestamp: new Date(),
+    thread: 'first-message-group-asdf123',
+    message: {
+      type: 'text',
+      content: 'This is the first message in this direct message group!',
+    },
+    sender: '58a023a4-912d-48fe-a61c-eec7274f7699',
+  },
 ];
 
 const users = [
@@ -110,6 +120,42 @@ const users = [
     uid: '58a023a4-912d-48fe-a61c-eec7274f7699',
     username: 'mxstbr',
   },
+  {
+    createdAt: new Date(),
+    displayName: 'Brian Lovin',
+    email: null,
+    lastSeen: new Date(),
+    photoURL: 'https://pbs.twimg.com/profile_images/763033229993574400/6frGyDyA_normal.jpg',
+    providerId: '2451223458',
+    uid: '58a023a4-912d-48fe-a61c-eec7274f7698',
+    username: 'brian',
+  },
+];
+
+const directMessageGroups = [
+  {
+    id: 'first-message-group-asdf123',
+    creator: '58a023a4-912d-48fe-a61c-eec7274f7699',
+    snippet: 'test snippet',
+    lastActivity: new Date(),
+    users: [
+      {
+        id: '58a023a4-912d-48fe-a61c-eec7274f7699',
+        lastActivity: new Date(),
+        lastSeen: new Date(),
+      },
+      {
+        id: '58a023a4-912d-48fe-a61c-eec7274f7698',
+        lastActivity: new Date(),
+        lastSeen: new Date(),
+      },
+    ],
+    messages: [
+      {
+        id: 'first-direct-message-asdf123',
+      },
+    ],
+  },
 ];
 
 module.exports = {
@@ -118,4 +164,5 @@ module.exports = {
   stories,
   messages,
   users,
+  directMessageGroups,
 };
