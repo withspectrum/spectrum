@@ -70,7 +70,7 @@ const messages = [
   {
     id: 'first-message-asdf123',
     timestamp: new Date(),
-    story: 'first-story-asdf123',
+    thread: 'first-story-asdf123',
     message: {
       type: 'text',
       content: 'This is the first message!',
@@ -80,7 +80,7 @@ const messages = [
   {
     id: 'second-message-asdf123',
     timestamp: new Date(),
-    story: 'first-story-asdf123',
+    thread: 'first-story-asdf123',
     message: {
       type: 'text',
       content: 'This is the second message!',
@@ -90,7 +90,7 @@ const messages = [
   {
     id: 'first-message-asdf123',
     timestamp: new Date(),
-    story: 'second-story-asddf123',
+    thread: 'second-story-asddf123',
     message: {
       type: 'text',
       content: 'This is the first message in this story!',

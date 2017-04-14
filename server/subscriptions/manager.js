@@ -1,3 +1,5 @@
+//@flow
+
 /**
  * Create the subscription manager to be used by the subscription server
  */
@@ -9,9 +11,9 @@ module.exports = new SubscriptionManager({
   schema,
   pubsub,
   setupFunctions: {
-    messageAdded: (_, { storyId }) => ({
+    messageAdded: (_, { location, thread }) => ({
       messageAdded: {
-        filter: message => message.story === storyId,
+        filter: message => message.thread === thread,
       },
     }),
   },
