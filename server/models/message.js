@@ -1,17 +1,29 @@
+//@flow
+
 /**
  * Storing and retrieving messages
  */
 const { db } = require('./db');
 
-const getMessage = (location, id) => {
+export type LocationTypes = 'messages' | 'direct_messages';
+export type MessageTypes = 'text' | 'media';
+export type MessageProps = {
+  type: MessageTypes,
+  content: String,
+};
+
+const getMessage = (location: LocationTypes, id: String) => {
   return db.table(location).get(id).run();
 };
 
-const getMessagesByLocationAndThread = (location, thread) => {
+const getMessagesByLocationAndThread = (
+  location: LocationTypes,
+  thread: String
+) => {
   return db.table(location).filter({ thread }).run();
 };
 
-const storeMessage = (location, message) => {
+const storeMessage = (location: LocationTypes, message: MessageProps) => {
   // Insert a message
   return db
     .table(location)
@@ -25,7 +37,7 @@ const storeMessage = (location, message) => {
     .then(result => result.changes[0].new_val);
 };
 
-const listenToNewMessages = (location, cb) => {
+const listenToNewMessages = (location: LocationTypes, cb: Function): Object => {
   return (
     db
       .table(location)

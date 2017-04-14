@@ -1,3 +1,5 @@
+//@flow
+
 /**
  * Create the subscription manager to be used by the subscription server
  */

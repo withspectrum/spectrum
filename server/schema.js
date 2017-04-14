@@ -1,3 +1,4 @@
+//@flow
 /**
  * The combined schema out of types and resolvers (queries, mutations and subscriptions)
  */
