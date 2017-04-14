@@ -66,7 +66,7 @@ class NavBar extends Component {
 
   openUserProfileModal = () => {
     this.props.dispatch(
-      openModal('USER_PROFILE_MODAL', { user: this.props.user.uid }),
+      openModal('USER_PROFILE_MODAL', { user: this.props.user.uid })
     );
   };
 
@@ -160,7 +160,7 @@ class NavBar extends Component {
     if (!frequency) return;
     const { communities: { communities } } = this.props;
     return communities.find(
-      community => community.id === frequency.communityId,
+      community => community.id === frequency.communityId
     );
   };
 
@@ -202,7 +202,7 @@ class NavBar extends Component {
       return <div style={{ width: '44px' }} />;
     }
 
-    if (!activeStory && activeMessageGroup || messageComposer.isOpen) {
+    if ((!activeStory && activeMessageGroup) || messageComposer.isOpen) {
       return (
         <Link to={`/messages`} onClick={this.clearActiveMessageGroup}>
           <Icon icon="back" reverse />
@@ -355,8 +355,8 @@ class NavBar extends Component {
         communityString !== 'everything' &&
         communityString !== 'explore')
     ) {
-      subtitle = communityString.charAt(0).toUpperCase() +
-        communityString.slice(1);
+      subtitle =
+        communityString.charAt(0).toUpperCase() + communityString.slice(1);
     }
 
     let title = communityString === 'messages'
@@ -390,14 +390,15 @@ class NavBar extends Component {
     }
 
     if (
-      messageGroups.active && (!activeMessageGroup && messageComposer.isOpen) ||
-      stories.active && !activeStory
+      (messageGroups.active &&
+        (!activeMessageGroup && messageComposer.isOpen)) ||
+      (stories.active && !activeStory)
     ) {
       return (
         <NavBarContainer>
           {this.leftAction()}
 
-          {width < 768 && <Spinner white />}
+          {width < 768 && <Spinner color="text.reverse" />}
 
           {width > 768 &&
             user.uid &&
