@@ -1,4 +1,3 @@
-//@flow
 /**
  * Database listeners for subscriptions are initialised here
  */

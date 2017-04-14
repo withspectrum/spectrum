@@ -1,5 +1,3 @@
-//@flow
-
 /**
  * Story query resolvers
  */

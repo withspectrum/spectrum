@@ -1,26 +1,13 @@
-//@flow
-
 /**
  * Storing and retrieving directMessageGroups
  */
 const { db } = require('./db');
 
-export type DirectMessageGroupProps = {
-  id: String,
-  users: Array<any>,
-  messages: Array<any>,
-  creator: String,
-  lastActivity: Number,
-  snippet: String,
-};
-
-const getDirectMessageGroup = (id: String): Object => {
+const getDirectMessageGroup = id => {
   return db.table('direct_message_groups').get(id).run();
 };
 
-const addDirectMessageGroup = (
-  directMessageGroup: DirectMessageGroupProps
-): Object => {
+const addDirectMessageGroup = directMessageGroup => {
   return db
     .table('direct_message_groups')
     .insert(Object.assign({}, directMessageGroup), { returnChanges: true })
