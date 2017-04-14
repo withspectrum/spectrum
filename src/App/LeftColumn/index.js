@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { login, signOut } from '../../actions/user';
 import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
-import { FlexRow } from '../../shared/Globals';
+import { FlexRow, Spinner } from '../../shared/Globals';
 import { setActiveFrequency } from '../../actions/frequencies';
 import { track } from '../../EventTracker';
 import { ACTIVITY_TYPES } from '../../db/types';
@@ -162,7 +162,7 @@ class NavigationMaster extends Component {
           {!loaded &&
             <Freq>
               <FreqText>
-                <Icon icon="everything" reverse static />
+                <Spinner color="text.reverse" inline />
                 <FreqLabel>Loading…</FreqLabel>
               </FreqText>
             </Freq>}
@@ -191,27 +191,22 @@ class NavigationMaster extends Component {
                           return false;
                         if (!frequency.stories || !notification.ids.story)
                           return true;
-                        const storyData = frequency.stories[
-                          notification.ids.story
-                        ];
+                        const storyData =
+                          frequency.stories[notification.ids.story];
                         if (storyData && storyData.deleted) return false;
                         return true;
                       });
                       return (
                         <Link
-                          to={
-                            `/${comm
-                              ? comm.slug
-                              : community}/~${frequency.slug || frequency.id}`
-                          }
+                          to={`/${comm ? comm.slug : community}/~${frequency.slug || frequency.id}`}
                           key={`nav-frequency-${frequency.id}`}
                         >
                           <Freq
                             active={
-                              (frequency.slug &&
-                                frequency.slug === activeFrequency ||
-                                frequency.id &&
-                                  frequency.id === activeFrequency) &&
+                              ((frequency.slug &&
+                                frequency.slug === activeFrequency) ||
+                                (frequency.id &&
+                                  frequency.id === activeFrequency)) &&
                                 comm.slug === active
                             }
                             onClick={this.showStoriesNav}
@@ -232,8 +227,7 @@ class NavigationMaster extends Component {
           {/* {user.uid &&
             <Button onClick={this.createFrequency}>
               <span>~ Create Frequency</span>
-            </Button>} */
-          }
+            </Button>} */}
         </FreqList>
 
         <Footer>
