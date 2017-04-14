@@ -34,50 +34,47 @@ const spin = keyframes`
 `;
 
 export const Spinner = styled.span`
+  width: 32px;
+  height: 32px;
+
   &:before {
     content: '';
     box-sizing: border-box;
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 20px;
-    height: 20px;
-    margin-top: -10px;
-    margin-left: -10px;
+    width: 24px;
+    height: 24px;
+    margin-top: -12px;
+    margin-left: -12px;
     border-radius: 50%;
-    border: 1px solid ${props =>
-  props.white ? '#fff' : props.theme.brand.default};
+    border: 4px solid ${props => (props.white ? props.theme.text.reverse : props.theme.brand.alt)};
     border-top-color: transparent;
-    border-right-color: ${props =>
-  props.white ? '#fff' : props.theme.brand.alt};
+    border-right-color: ${props => (props.white ? props.theme.text.reverse : props.theme.brand.alt)};
     border-bottom-color: transparent;
-    animation: ${spin} .6s linear infinite;
+    animation: ${spin} 2s linear infinite;
   }
 `;
 
 const buttonStyles = css`
-  background-color: ${props =>
-  props.disabled ? props.theme.inactive : props.theme.brand.default};
-  background-image: ${props =>
-  props.disabled
-    ? 'none'
-    : Gradient(props.theme.brand.alt, props.theme.brand.default)};
+  background-color: ${props => (props.disabled ? props.theme.inactive : props.theme.brand.default)};
+  background-image: ${props => (props.disabled ? 'none' : Gradient(props.theme.brand.alt, props.theme.brand.default))};
   border-radius: 8px;
   font-size: 14px;
   font-weight: 700;
   color: ${({ theme }) => theme.text.reverse};
   transition: ${Transition.hover.off};
   padding: 12px 16px;
-  width: ${props => props.width ? props.width : ''};
+  width: ${props => (props.width ? props.width : '')};
   white-space: nowrap;
   word-break: keep-all;
 
   &:hover {
-    border-radius: ${props => props.disabled ? '8px' : '12px'};
-    opacity: ${props => props.disabled ? '0.5' : '1'};
+    border-radius: ${props => (props.disabled ? '8px' : '12px')};
+    opacity: ${props => (props.disabled ? '0.5' : '1')};
     transition: ${Transition.hover.on};
     cursor: pointer;
-    box-shadow: ${props => props.disabled ? 'none' : Shadow.high};
+    box-shadow: ${props => (props.disabled ? 'none' : Shadow.high)};
   }
 `;
 
@@ -92,20 +89,19 @@ export const Link = styled(RouterLink)`
 export const TextButton = styled(Button)`
 	background-color: transparent;
 	background-image: none;
-	border: 2px solid ${props =>
-  props.border ? props.theme.bg.wash : 'transparent'};
-	border-radius: ${props => props.border ? '8px' : '4px'};
+	border: 2px solid ${props => (props.border ? props.theme.bg.wash : 'transparent')};
+	border-radius: ${props => (props.border ? '8px' : '4px')};
 	font-size: 14px;
 	font-weight: 600;
-	color: ${props => props.color ? props.color : props.theme.text.alt};
+	color: ${props => (props.color ? props.color : props.theme.text.alt)};
 	transition: ${Transition.hover.off};
 	padding: 8px 16px;
 
 	&:hover {
     cursor: pointer;
     border: 2px solid transparent;
-		border-radius: ${props => props.border ? '12px' : '8px'};
-    color: ${props => props.color ? props.color : props.theme.warn.alt};
+		border-radius: ${props => (props.border ? '12px' : '8px')};
+    color: ${props => (props.color ? props.color : props.theme.warn.alt)};
 		background-color: ${({ theme }) => theme.bg.default};
     box-shadow: none;
     transition: ${Transition.hover.on};
@@ -121,14 +117,8 @@ export const SocialButton = styled(Button)`
 	line-height: 32px;
 	vertical-align: middle;
 	background-image: none;
-	border-color: ${props =>
-  props.type === 'facebook'
-    ? props.theme.social.facebook.default
-    : props.theme.social.twitter.default} ;
-	color: ${props =>
-  props.type === 'facebook'
-    ? props.theme.social.facebook.default
-    : props.theme.social.twitter.default} ;
+	border-color: ${props => (props.type === 'facebook' ? props.theme.social.facebook.default : props.theme.social.twitter.default)} ;
+	color: ${props => (props.type === 'facebook' ? props.theme.social.facebook.default : props.theme.social.twitter.default)} ;
 
 	> svg {
 		margin-right: 8px;
@@ -189,16 +179,14 @@ export const Input = styled.input`
   margin-top: 2px;
   box-shadow: none;
 
-  ${props => props.type === 'checkbox' &&
-css`
+  ${props => props.type === 'checkbox' && css`
     flex: initial;
     width: initial;
     margin-right: 0.5em;
   `}
 
   &::placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &::-webkit-input-placeholder { color: ${({ theme }) =>
-  theme.text.placeholder} }
+  &::-webkit-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
   &:-moz-placeholder { color: ${({ theme }) => theme.text.placeholder} }
   &:-ms-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
 
@@ -220,8 +208,7 @@ export const TextArea = styled.textarea`
   box-shadow: none;
 
   &::placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &::-webkit-input-placeholder { color: ${({ theme }) =>
-  theme.text.placeholder} }
+  &::-webkit-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
   &:-moz-placeholder { color: ${({ theme }) => theme.text.placeholder} }
   &:-ms-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
 
@@ -325,22 +312,21 @@ export const Span = styled.span`
 export const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: ${props => props.spread ? 'space-between' : 'initial'};
-  align-items: ${props => props.center ? 'center' : 'initial'};
-  padding: ${props => props.padding ? props.padding : '0'};
-  margin: ${props => props.margin ? props.margin : '0'};
+  justify-content: ${props => (props.spread ? 'space-between' : 'initial')};
+  align-items: ${props => (props.center ? 'center' : 'initial')};
+  padding: ${props => (props.padding ? props.padding : '0')};
+  margin: ${props => (props.margin ? props.margin : '0')};
 
-  ${props =>
-  props.smallCol ? `@media (max-width: 768px) { flex-direction: column }` : ''};
+  ${props => (props.smallCol ? `@media (max-width: 768px) { flex-direction: column }` : '')};
 `;
 
 export const FlexCol = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: ${props => props.spread ? 'space-between' : 'flex-start'};
-  align-items: ${props => props.center ? 'center' : 'initial'};
-  padding: ${props => props.padding ? props.padding : '0'};
-  margin: ${props => props.margin ? props.margin : '0'};
+  justify-content: ${props => (props.spread ? 'space-between' : 'flex-start')};
+  align-items: ${props => (props.center ? 'center' : 'initial')};
+  padding: ${props => (props.padding ? props.padding : '0')};
+  margin: ${props => (props.margin ? props.margin : '0')};
 `;
 
 const returnTooltip = props => {
@@ -355,9 +341,7 @@ const returnTooltip = props => {
             right: 5px;
             bottom: 100%
       	    border-bottom-width: 0;
-      	    border-top-color: ${props.onboarding
-        ? props.theme.brand.alt
-        : props.theme.bg.reverse};
+      	    border-top-color: ${props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse};
           }
       `;
     case 'top-right':
@@ -370,9 +354,7 @@ const returnTooltip = props => {
             left: 5px;
             bottom: 100%;
       	    border-bottom-width: 0;
-      	    border-top-color: ${props.onboarding
-        ? props.theme.brand.alt
-        : props.theme.bg.reverse};
+      	    border-top-color: ${props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse};
           }
       `;
     case 'right':
@@ -387,9 +369,7 @@ const returnTooltip = props => {
             left: 100%;
             top: calc(50% - 5px);
             border-left-width: 0;
-            border-right-color: ${props.onboarding
-        ? props.theme.brand.alt
-        : props.theme.bg.reverse};
+            border-right-color: ${props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse};
           }
       `;
     case 'bottom-left':
@@ -402,9 +382,7 @@ const returnTooltip = props => {
             right: calc(50% - 5px);
             top: 100%
       	    border-top-width: 0;
-      	    border-bottom-color: ${props.onboarding
-        ? props.theme.brand.alt
-        : props.theme.bg.reverse};
+      	    border-bottom-color: ${props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse};
           }
       `;
     case 'bottom-right':
@@ -417,9 +395,7 @@ const returnTooltip = props => {
             right: calc(50% - 5px);
             top: 100%;
       	    border-top-width: 0;
-      	    border-bottom-color: ${props.onboarding
-        ? props.theme.brand.alt
-        : props.theme.bg.reverse};
+      	    border-bottom-color: ${props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse};
           }
       `;
     case 'left':
@@ -433,9 +409,7 @@ const returnTooltip = props => {
             right: 100%;
             top: calc(50% - 5px);
             border-right-width: 0;
-            border-left-color: ${props.onboarding
-        ? props.theme.brand.alt
-        : props.theme.bg.reverse};
+            border-left-color: ${props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse};
           }
       `;
   }
