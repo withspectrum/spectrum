@@ -2,9 +2,10 @@ import styled from 'styled-components';
 import { Tooltip, Transition } from '../../../../shared/Globals';
 
 export const Avatar = styled.img`
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   border-radius: 100%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   align-self: flex-end;
   -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */
@@ -17,10 +18,9 @@ export const Avatar = styled.img`
 `;
 
 export const AvatarLabel = styled.span`
-  ${props => (props.tipText ? Tooltip(props) : '')};
   align-self: flex-end;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   border-radius: 100%;
   margin-right: 8px;
 `;
@@ -30,7 +30,7 @@ export const Byline = styled.span`
   font-size: 11px;
   line-height: 16px;
   font-weight: 700;
-  margin-bottom: 1px;
+  margin-bottom: 4px;
   align-self: ${props => (props.me ? 'flex-end' : 'flex-start')};
   ${props => (props.me ? 'margin-right: 16px' : 'margin-left: 16px')};
   text-align: ${props => (props.me ? 'right' : 'left')};
