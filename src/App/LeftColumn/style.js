@@ -71,10 +71,8 @@ export const NavButton = styled(FlexRow)`
   text-transform: capitalize;
   color: ${props => (props.active ? props.theme.brand.default : props.theme.text.alt)};
   font-weight: 600;
-  transition: ${Transition.hover.off};
 
   &:hover {
-    transition: ${Transition.hover.on};
     cursor: pointer;
     background-color: ${props => props.theme.border.default};
   }
