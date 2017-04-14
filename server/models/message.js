@@ -5,7 +5,7 @@
  */
 const { db } = require('./db');
 
-export type LocationTypes = 'messages' | 'direct_messages';
+export type LocationTypes = 'messages' | 'direct_message_groups';
 export type MessageTypes = 'text' | 'media';
 export type MessageProps = {
   type: MessageTypes,

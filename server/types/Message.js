@@ -7,13 +7,7 @@ const Message = /* GraphQL */ `
 	# Tables in the database
 	enum MessageLocation {
 		messages
-		direct_messages
-	}
-
-	# Thread types a message can belong to
-	enum ThreadTypes {
-		Story
-		DirectMessageGroup
+		direct_message_groups
 	}
 
 	# The content and type of a message
@@ -26,7 +20,7 @@ const Message = /* GraphQL */ `
 	type Message {
 		id: ID!
 		timestamp: Date!
-		thread: ThreadTypes!
+		thread: ID!
 		message: MessageContent!
 		sender: User!
 	}

@@ -7,7 +7,9 @@ import type { DirectMessageGroupProps } from '../models/directMessageGroup';
 
 module.exports = {
   Mutation: {
-    addDirectMessageGroup: (_, directMessageGroup: DirectMessageGroupProps) =>
-      addDirectMessageGroup(directMessageGroup),
+    addDirectMessageGroup: (
+      _: any,
+      { directMessageGroup }: { directMessageGroup: DirectMessageGroupProps }
+    ) => addDirectMessageGroup(directMessageGroup),
   },
 };

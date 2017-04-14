@@ -7,19 +7,15 @@ const { getMessagesByLocationAndThread } = require('../models/message');
 const { getUser, getUsers } = require('../models/user');
 import type { LocationTypes } from '../models/message';
 
-type GetMessageProps = {
-  location: LocationTypes,
-  id: String,
-};
-
 module.exports = {
   Query: {
-    directMessageGroup: (_, id: String) => getDirectMessageGroup(id),
+    directMessageGroup: (_: any, { id }: { id: String }) =>
+      getDirectMessageGroup(id),
   },
   DirectMessageGroup: {
-    messages: ({ location, id }: GetMessageProps) =>
-      getMessagesByLocationAndThread(location, id),
-    users: ({ users }) => getUsers(users),
-    creator: ({ creator }) => getUser(creator),
+    messages: ({ id }: { id: String }) =>
+      getMessagesByLocationAndThread('direct_message_groups', id),
+    users: ({ users }: { users: Array<String> }) => getUsers(users),
+    creator: ({ creator }: { creator: String }) => getUser(creator),
   },
 };

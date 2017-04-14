@@ -12,7 +12,7 @@ module.exports = {
       pubsub.publish('messageAdded', message);
     });
 
-    listenToNewMessages('direct_messages', message => {
+    listenToNewMessages('direct_message_groups', message => {
       pubsub.publish('messageAdded', message);
     });
   },

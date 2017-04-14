@@ -5,7 +5,6 @@ const DirectMessageGroup = /* GraphQL */ `
 		messages: [Message!]
 		creator: User!
 		lastActivity: Date!
-		snippet: String!
 	}
 
 	extend type Query {

@@ -136,24 +136,10 @@ const directMessageGroups = [
   {
     id: 'first-message-group-asdf123',
     creator: '58a023a4-912d-48fe-a61c-eec7274f7699',
-    snippet: 'test snippet',
     lastActivity: new Date(),
     users: [
-      {
-        id: '58a023a4-912d-48fe-a61c-eec7274f7699',
-        lastActivity: new Date(),
-        lastSeen: new Date(),
-      },
-      {
-        id: '58a023a4-912d-48fe-a61c-eec7274f7698',
-        lastActivity: new Date(),
-        lastSeen: new Date(),
-      },
-    ],
-    messages: [
-      {
-        id: 'first-direct-message-asdf123',
-      },
+      '58a023a4-912d-48fe-a61c-eec7274f7699',
+      '58a023a4-912d-48fe-a61c-eec7274f7698',
     ],
   },
 ];
