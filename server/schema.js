@@ -1,8 +1,12 @@
+//@flow
 /**
  * The combined schema out of types and resolvers (queries, mutations and subscriptions)
  */
+//$FlowFixMe
 const { makeExecutableSchema } = require('graphql-tools');
+//$FlowFixMe
 const { merge } = require('lodash');
+//$FlowFixMe
 const { maskErrors } = require('graphql-errors');
 
 const scalars = require('./types/scalars');
@@ -12,15 +16,18 @@ const Frequency = require('./types/Frequency');
 const Community = require('./types/Community');
 const Message = require('./types/Message');
 const User = require('./types/User');
+const DirectMessageGroup = require('./types/DirectMessageGroup');
 
 const storyQueries = require('./queries/story');
 const frequencyQueries = require('./queries/frequency');
 const communityQueries = require('./queries/community');
 const messageQueries = require('./queries/message');
 const userQueries = require('./queries/user');
+const directMessageGroupQueries = require('./queries/directMessageGroup');
 
 const messageMutations = require('./mutations/message');
 const storyMutations = require('./mutations/story');
+const directMessageGroupMutations = require('./mutations/directMessageGroup');
 
 const messageSubscriptions = require('./subscriptions/message');
 
@@ -59,6 +66,7 @@ const schema = makeExecutableSchema({
     Story,
     Message,
     User,
+    DirectMessageGroup,
   ],
   resolvers: merge(
     {},
@@ -68,9 +76,11 @@ const schema = makeExecutableSchema({
     communityQueries,
     messageQueries,
     userQueries,
+    directMessageGroupQueries,
     messageMutations,
     storyMutations,
-    messageSubscriptions
+    messageSubscriptions,
+    directMessageGroupMutations
   ),
 });
 

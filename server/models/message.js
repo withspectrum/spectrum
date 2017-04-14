@@ -16,7 +16,10 @@ const getMessage = (location: LocationTypes, id: String) => {
   return db.table(location).get(id).run();
 };
 
-const getMessagesByLocationId = (location: LocationTypes, thread: String) => {
+const getMessagesByLocationAndThread = (
+  location: LocationTypes,
+  thread: String
+) => {
   return db.table(location).filter({ thread }).run();
 };
 
@@ -58,7 +61,7 @@ const listenToNewMessages = (location: LocationTypes, cb: Function): Object => {
 
 module.exports = {
   getMessage,
-  getMessagesByLocationId,
+  getMessagesByLocationAndThread,
   storeMessage,
   listenToNewMessages,
 };
