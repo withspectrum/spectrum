@@ -3,8 +3,13 @@ import {
   createUser,
   createSubscription,
   deleteSubscription,
+  saveNewUserPhotoURL,
 } from '../db/users';
-import { signInWithTwitter, signOut as logOut } from '../db/auth';
+import {
+  signInWithTwitter,
+  signOut as logOut,
+  saveProviderUid,
+} from '../db/auth';
 import { monitorUser, stopUserMonitor } from '../helpers/users';
 import { apiURL } from '../config/api';
 import { throwError } from './errors';
@@ -61,7 +66,7 @@ export const signOut = () => dispatch => {
       // if something funky goes wrong during signout, throw an error and clear localStorage for good measure
       localStorage.removeItem('state');
       console.log(err);
-    },
+    }
   );
 };
 
@@ -176,4 +181,22 @@ export const downgradeUser = subscriptionId => (dispatch, getState) => {
     .catch(err => {
       dispatch(throwError(err, { stopLoading: true }));
     });
+};
+
+export const saveProviderData = (user: Object) => dispatch => {
+  saveProviderUid(user).then(() => {}).catch(err => {
+    dispatch(throwError(err));
+    dispatch({ type: 'STOP_LOADING' });
+  });
+};
+
+export const updateUserPhotoURL = (user: Object) => dispatch => {
+  let newPhotoURL = user.providerData[0].photoURL;
+  newPhotoURL = newPhotoURL.replace('_normal', '_bigger');
+  newPhotoURL = newPhotoURL.replace('http://', 'https://');
+
+  saveNewUserPhotoURL(user, newPhotoURL).then(() => {}).catch(err => {
+    dispatch(throwError(err));
+    dispatch({ type: 'STOP_LOADING' });
+  });
 };

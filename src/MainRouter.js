@@ -8,6 +8,7 @@ import Root from './Root';
 import { monitorUser, stopUserMonitor } from './helpers/users';
 import history from './helpers/history';
 import { addNotification } from './actions/notifications';
+import { saveProviderData, updateUserPhotoURL } from './actions/user';
 import { getUserInfo } from './db/users';
 import { listenToAuth } from './db/auth';
 import { getFrequency } from './db/frequencies';
@@ -58,6 +59,26 @@ class MainRouter extends React.Component {
             type: 'SET_USER',
             user: userData,
           });
+
+          // save provider data next to the user so we can match users during migration
+          if (!user.providerUID) {
+            dispatch(saveProviderData(user));
+          }
+
+          const isHttp = url => {
+            const HTTP = /(^http?:\/\/)/gi;
+            const http = url.match(HTTP);
+            if (http) {
+              return true;
+            }
+            return false;
+          };
+
+          // if the users's photourl is broken or uses http
+          if (isHttp(user.photoURL)) {
+            dispatch(updateUserPhotoURL(user));
+          }
+
           return userData;
         })
         // Load the users frequencies and communities

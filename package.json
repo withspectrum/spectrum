@@ -9,7 +9,7 @@
     "flow-bin": "^0.43.0",
     "lint-staged": "^3.3.0",
     "nodemon": "^1.11.0",
-    "prettier": "^0.22.0",
+    "prettier": "^1.0.0",
     "react-scripts-webpack-v2-fork-mxstbr": "^0.9.0"
   },
   "dependencies": {
@@ -66,8 +66,8 @@
     "start:server": "NODE_ENV=production node server/index.js",
     "dev:server": "nodemon server/index.js",
     "migrate": "rethinkdb-migrate -f ./server/migrations/config.js",
-    "migrate:up": "npm run migrate -- up",
-    "migrate:down": "npm run migrate -- down",
+    "db:seed": "npm run migrate -- up initial-data",
+    "db:drop": "npm run migrate -- down initial-data",
     "now-start": "serve ./build --single",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

@@ -42,20 +42,20 @@ export const createUser = user => {
     .ref()
     .update(updates)
     .then(() => db.ref().update({
-      [`communities/-Kh6RfPYjmSaIWbkck8i/users/${uid}`]: {
-        id: uid,
-        permisson: 'member',
-        joined: database.ServerValue.TIMESTAMP,
-      },
-      [`frequencies/-KenmQHXnkUDN0S9UUsn/users/${uid}`]: {
-        permission: 'subscriber',
-        joined: database.ServerValue.TIMESTAMP,
-      },
-      [`frequencies/-Kenmw8GUeJYnxXNc0WS/users/${uid}`]: {
-        permission: 'subscriber',
-        joined: database.ServerValue.TIMESTAMP,
-      },
-    }))
+        [`communities/-Kh6RfPYjmSaIWbkck8i/users/${uid}`]: {
+          id: uid,
+          permisson: 'member',
+          joined: database.ServerValue.TIMESTAMP,
+        },
+        [`frequencies/-KenmQHXnkUDN0S9UUsn/users/${uid}`]: {
+          permission: 'subscriber',
+          joined: database.ServerValue.TIMESTAMP,
+        },
+        [`frequencies/-Kenmw8GUeJYnxXNc0WS/users/${uid}`]: {
+          permission: 'subscriber',
+          joined: database.ServerValue.TIMESTAMP,
+        },
+      }))
     .then(() => db.ref(`users/${uid}`).once('value'))
     .then(snapshot => snapshot.val());
 };
@@ -181,4 +181,11 @@ export const deleteSubscription = (uid, subscriptionId) => {
     .catch(err => {
       console.log(err);
     });
+};
+
+export const saveNewUserPhotoURL = (user: Object, newPhotoURL: String) => {
+  const db = database();
+  let updates = {};
+  updates[`users/${user.uid}/photoURL`] = newPhotoURL;
+  return db.ref().update(updates).then(() => {});
 };
