@@ -76,10 +76,10 @@ export const Avatar = styled.div`
 export const Photo = styled.img`
   width: 32px;
   height: 32px;
-  padding: 1px;
+  padding: 2px;
   background-clip: content-box;
   border-radius: 16px;
-  border: 2px solid ${({ theme }) => theme.bg.default};
+  border: 2px solid ${props => (props.pro ? props.theme.space.light : props.theme.bg.default)};
 `;
 
 export const Pro = styled.b`

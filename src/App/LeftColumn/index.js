@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { login, signOut } from '../../actions/user';
 import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
+import CommunityLogo from '../../shared/Icons/communities';
 import { FlexRow, Spinner } from '../../shared/Globals';
 import { setActiveFrequency } from '../../actions/frequencies';
 import { track } from '../../EventTracker';
@@ -171,7 +172,6 @@ class NavigationMaster extends Component {
             </ListContainer>}
 
           {!loaded &&
-
             <ListContainer>
               <ListItem>
                 <NavButton>
@@ -188,12 +188,22 @@ class NavigationMaster extends Component {
               return (
                 <div key={`nav-community-${community}`}>
                   <ListHeading>
+                    <CommunityLogo
+                      icon={comm ? comm.name : 'spectrum'}
+                      color="text.placeholder"
+                    />
                     {comm ? comm.name : 'Loading...'}
                   </ListHeading>
                   <ListContainer>
                     {frequencies[community].map((frequency, i) => {
                       // If there's any unread notification for this frequency
                       // show a dirty dot
+                      const isActive =
+                        ((frequency.slug &&
+                          frequency.slug === activeFrequency) ||
+                          (frequency.id && frequency.id === activeFrequency)) &&
+                        comm.slug === active;
+                      console.log('freq: ', frequency);
                       const notif = notifications.find(notification => {
                         // Only show a dirty dot for new messages
                         if (
@@ -215,20 +225,19 @@ class NavigationMaster extends Component {
                           to={`/${comm ? comm.slug : community}/~${frequency.slug || frequency.id}`}
                           key={`nav-frequency-${frequency.id}`}
                         >
-                          <ListItem
-                            active={
-                              ((frequency.slug &&
-                                frequency.slug === activeFrequency) ||
-                                (frequency.id &&
-                                  frequency.id === activeFrequency)) &&
-                                comm.slug === active
-                            }
-                            onClick={this.showStoriesNav}
-                          >
-                            <NavButton>
+                          <ListItem onClick={this.showStoriesNav}>
+                            <NavButton active={isActive}>
                               <Icon
-                                icon="frequency"
-                                color="text.placeholder"
+                                icon={
+                                  frequency.settings.private
+                                    ? 'frequency-private'
+                                    : 'frequency'
+                                }
+                                color={
+                                  isActive
+                                    ? 'brand.default'
+                                    : 'text.placeholder'
+                                }
                                 static
                               />
                               <Label>{frequency.name}</Label>

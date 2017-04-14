@@ -42,11 +42,14 @@ export const List = styled(FlexCol)`
 `;
 
 export const ListHeading = styled(H5)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   border-top: 2px solid ${({ theme }) => theme.border.default};
   padding: 16px 0 0 8px;
   margin: 4px 8px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 900;
   color: ${({ theme }) => theme.text.placeholder};
   letter-spacing: 0.4px;
   text-transform: uppercase;
