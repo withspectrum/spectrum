@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {
   onlyContainsEmoji,
   convertTimestampToDate,
+  convertTimestampToTime,
 } from '../../../../helpers/utils';
 import { openModal } from '../../../../actions/modals';
 import { openGallery } from '../../../../actions/gallery';
@@ -121,7 +122,7 @@ class Chat extends Component {
   renderReaction = (
     message: Object,
     sender: Object,
-    me: boolean,
+    me: boolean
   ): React$Element<any> => {
     const { currentUser } = this.props;
 
@@ -129,8 +130,8 @@ class Chat extends Component {
       ? Object.keys(message.reactions)
       : null;
     let reactionCount = message.reactions ? reactionUsers.length : 0;
-    let userHasReacted = reactionUsers &&
-      reactionUsers.includes(currentUser.uid);
+    let userHasReacted =
+      reactionUsers && reactionUsers.includes(currentUser.uid);
 
     return (
       <Reaction
@@ -151,13 +152,8 @@ class Chat extends Component {
   };
 
   render() {
-    const {
-      messages,
-      usersList,
-      currentUser,
-      type,
-      activeCommunity,
-    } = this.props;
+    const { messages, usersList, currentUser, type, activeCommunity } = this
+      .props;
 
     return (
       <Container innerRef={scrollBody => this.scrollBody = scrollBody}>
@@ -189,15 +185,14 @@ class Chat extends Component {
                     message.message.type === 'emoji'
                   ) {
                     const emojiOnly = onlyContainsEmoji(
-                      message.message.content,
+                      message.message.content
                     );
                     const TextBubble = emojiOnly ? EmojiBubble : Bubble;
                     return (
                       <MessageWrapper
-                        tipText={convertTimestampToDate(message.timestamp)}
-                        tipLocation={me ? 'top-left' : 'top-right'}
                         me={me}
                         key={message.id}
+                        timestamp={convertTimestampToTime(message.timestamp)}
                       >
                         <TextBubble
                           me={me}
@@ -213,7 +208,11 @@ class Chat extends Component {
                     );
                   } else if (message.message.type === 'media') {
                     return (
-                      <MessageWrapper me={me} key={message.id}>
+                      <MessageWrapper
+                        me={me}
+                        key={message.id}
+                        timestamp={convertTimestampToTime(message.timestamp)}
+                      >
                         <ImgBubble
                           openGallery={this.openGallery}
                           me={me}

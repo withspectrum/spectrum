@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { login, signOut } from '../../actions/user';
 import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
+import { FlexRow, Spinner } from '../../shared/Globals';
 import { setActiveFrequency } from '../../actions/frequencies';
 import { track } from '../../EventTracker';
 import { ACTIVITY_TYPES } from '../../db/types';
@@ -170,10 +171,11 @@ class NavigationMaster extends Component {
             </ListContainer>}
 
           {!loaded &&
+
             <ListContainer>
               <ListItem>
                 <NavButton>
-                  <Icon icon="frequency" color="text.placeholder" static />
+                  <Spinner color="text.placeholder" inline />
                   <Label>Loading frequencies…</Label>
                 </NavButton>
               </ListItem>

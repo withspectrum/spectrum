@@ -1,10 +1,11 @@
 import styled from 'styled-components';
-import { Tooltip } from '../../../../shared/Globals';
+import { Tooltip, Transition } from '../../../../shared/Globals';
 
 export const Avatar = styled.img`
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   border-radius: 100%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   align-self: flex-end;
   -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */
@@ -17,10 +18,9 @@ export const Avatar = styled.img`
 `;
 
 export const AvatarLabel = styled.span`
-  ${props => props.tipText ? Tooltip(props) : ''};
   align-self: flex-end;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   border-radius: 100%;
   margin-right: 8px;
 `;
@@ -30,15 +30,14 @@ export const Byline = styled.span`
   font-size: 11px;
   line-height: 16px;
   font-weight: 700;
-  margin-bottom: 1px;
-  align-self: ${props => props.me ? 'flex-end' : 'flex-start'};
-  ${props => props.me ? 'margin-right: 16px' : 'margin-left: 16px'};
-  text-align: ${props => props.me ? 'right' : 'left'};
+  margin-bottom: 4px;
+  align-self: ${props => (props.me ? 'flex-end' : 'flex-start')};
+  ${props => (props.me ? 'margin-right: 16px' : 'margin-left: 16px')};
+  text-align: ${props => (props.me ? 'right' : 'left')};
   -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */
-  color: ${props =>
-  props.op ? props.theme.brand.default : props.theme.text.alt};
+  color: ${props => (props.op ? props.theme.brand.default : props.theme.text.alt)};
   cursor: pointer;
   max-width: 100%;
 `;
@@ -55,24 +54,40 @@ export const BubbleGroupContainer = styled.div`
   flex: 0 0 auto;
   margin-top: 16px;
   max-width: 70%;
-  align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
+  align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)}
   position: relative;
 `;
 
 export const MessagesWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: ${props => props.me ? `flex-end;` : `flex-start;`}
+  align-items: ${props => (props.me ? `flex-end;` : `flex-start;`)}
 `;
 
 export const MessageWrapper = styled.span`
   display: flex;
-  align-self: ${props => props.me ? `flex-end;` : `flex-start;`}
-  align-items: ${props => props.me ? `flex-end;` : `flex-start;`}
-  justify-content: ${props => props.me ? `flex-end;` : `flex-start;`}
+  align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)}
+  align-items: ${props => (props.me ? `flex-end;` : `flex-start;`)}
+  justify-content: ${props => (props.me ? `flex-end;` : `flex-start;`)};
   padding: 1px 0;
   position: relative;
-  ${props => props.tipText ? Tooltip(props) : ''};
+
+  &:after {
+    transition: ${Transition.hover.off};
+    content: ${props => (props.timestamp ? `'${props.timestamp}'` : console.log('no timestamps 4 u', props))};
+    position: absolute;
+    ${props => (props.me ? 'right: calc(100% + 8px)' : 'left: calc(100% + 8px)')};
+    top: 8px;
+    white-space: nowrap;
+    font-size: 12px;
+    color: ${({ theme }) => theme.text.alt};
+    opacity: 0;
+  }
+
+  &:hover:after {
+    opacity: 1;
+    transition: ${Transition.hover.on};
+  }
 `;
 
 export const Timestamp = styled.div`
