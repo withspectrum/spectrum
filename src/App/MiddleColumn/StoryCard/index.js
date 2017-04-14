@@ -67,8 +67,9 @@ class StoryCard extends Component {
   };
 
   shouldComponentUpdate = (nextProps, nextState) => {
-    return !deepEqual(this.props, nextProps) ||
-      !deepEqual(this.state, nextState);
+    return (
+      !deepEqual(this.props, nextProps) || !deepEqual(this.state, nextState)
+    );
   };
 
   componentWillUpdate = nextProps => {
@@ -165,9 +166,7 @@ class StoryCard extends Component {
     }
 
     if (unreadMessages > 0) {
-      statusText = `${unreadMessages} unread ${unreadMessages === 1
-        ? 'message'
-        : 'messages'}`;
+      statusText = `${unreadMessages} unread ${unreadMessages === 1 ? 'message' : 'messages'}`;
     }
 
     if (isActive && messages > 0) {
@@ -243,10 +242,7 @@ class StoryCard extends Component {
                   );
                 } else if (i === 3) {
                   return (
-                    <PhotoContainer
-                      key={photo.meta.key}
-                      size={this.state.photos.length}
-                    >
+                    <PhotoContainer key={i} size={this.state.photos.length}>
                       <PhotoPlaceholder count={this.state.photos.length - 3} />
                     </PhotoContainer>
                   );

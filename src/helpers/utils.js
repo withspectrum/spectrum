@@ -5,8 +5,9 @@ import LoadingIndicator from '../shared/loading/global';
 // Can be removed after the next release: https://github.com/mathiasbynens/emoji-regex/pull/12
 import createEmojiRegex from 'emoji-regex';
 import Raven from 'raven-js';
-Raven.config('https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812')
-  .install();
+Raven.config(
+  'https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812'
+).install();
 
 export const hashToArray = hash => {
   let array = [];
@@ -58,6 +59,21 @@ export const convertTimestampToDate = timestamp => {
   minutes = minutes >= 10 ? minutes : '0' + minutes.toString(); // turns 4 minutes into 04 minutes
   let ampm = hours >= 12 ? 'pm' : 'am'; // todo: support 24hr time
   return `${month} ${day}, ${year} · ${cleanHours}:${minutes}${ampm}`;
+};
+
+export const convertTimestampToTime = timestamp => {
+  let date = new Date(timestamp);
+  let hours = date.getHours() || 0;
+  let cleanHours;
+  if (hours === 0) {
+    cleanHours = 12; // if timestamp is between midnight and 1am, show 12:XX am
+  } else {
+    cleanHours = hours > 12 ? hours - 12 : hours; // else show proper am/pm -- todo: support 24hr time
+  }
+  let minutes = date.getMinutes();
+  minutes = minutes >= 10 ? minutes : '0' + minutes.toString(); // turns 4 minutes into 04 minutes
+  let ampm = hours >= 12 ? 'pm' : 'am'; // todo: support 24hr time
+  return `${cleanHours}:${minutes}${ampm}`;
 };
 
 export const sortAndGroupBubbles = messages => {
@@ -204,13 +220,10 @@ export const throttle = (func, threshhold, scope) => {
     if (last && now < last + threshhold) {
       // hold on to it
       clearTimeout(deferTimer);
-      deferTimer = setTimeout(
-        function() {
-          last = now;
-          func.apply(context, args);
-        },
-        threshhold,
-      );
+      deferTimer = setTimeout(function() {
+        last = now;
+        func.apply(context, args);
+      }, threshhold);
     } else {
       last = now;
       func.apply(context, args);
@@ -222,7 +235,7 @@ export const throttle = (func, threshhold, scope) => {
 const originalEmojiRegex = createEmojiRegex();
 // Make sure we match strings that only contain emojis (and whitespace)
 const regex = new RegExp(
-  `^(${originalEmojiRegex.toString().replace(/\/g$/, '')}|\\s)+$`,
+  `^(${originalEmojiRegex.toString().replace(/\/g$/, '')}|\\s)+$`
 );
 
 export const onlyContainsEmoji = text => regex.test(text);
@@ -298,7 +311,7 @@ export function isMobile() {
   if (
     /windows phone/i.test(userAgent) ||
     /android/i.test(userAgent) ||
-    /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream
+    (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream)
   ) {
     return true;
   }
@@ -310,7 +323,7 @@ export function isMobile() {
 export const flattenArray = arr =>
   arr.reduce(
     (acc, val) => acc.concat(Array.isArray(val) ? flattenArray(val) : val),
-    [],
+    []
   );
 
 export const getParameterByName = (name, url) => {
@@ -331,11 +344,12 @@ export const truncate = (str, length) => {
   return subString.substr(0, subString.lastIndexOf(' ')) + '…';
 };
 
-export const getLinkPreviewFromUrl = url => fetch(
-  `https://micro-open-graph-phbmtaqieu.now.sh/?url=${url}`,
-).then(response => {
-  return response.json();
-});
+export const getLinkPreviewFromUrl = url =>
+  fetch(
+    `https://micro-open-graph-phbmtaqieu.now.sh/?url=${url}`
+  ).then(response => {
+    return response.json();
+  });
 
 document.head || (document.head = document.getElementsByTagName('head')[0]);
 
