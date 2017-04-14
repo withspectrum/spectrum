@@ -4,33 +4,22 @@ import { Link } from 'react-router-dom';
 import { login, signOut } from '../../actions/user';
 import { openModal } from '../../actions/modals';
 import Icon from '../../shared/Icons';
-import { FlexRow } from '../../shared/Globals';
 import { setActiveFrequency } from '../../actions/frequencies';
 import { track } from '../../EventTracker';
 import { ACTIVITY_TYPES } from '../../db/types';
 import {
   Column,
-  Header,
-  HeaderLogo,
-  Avatar,
-  MetaWrapper,
   MetaAnchor,
-  P,
-  Name,
   MetaLink,
-  ViewNav,
-  ViewItem,
-  ViewSelector,
-  ViewLabel,
-  FreqList,
-  Freq,
-  FreqLabel,
+  List,
+  ListHeading,
+  ListContainer,
+  ListItem,
+  NavButton,
+  Label,
   Footer,
   FooterP,
-  FreqRow,
   DirtyDot,
-  ProBadge,
-  CommunityHeading,
 } from './style';
 
 class NavigationMaster extends Component {
@@ -112,31 +101,12 @@ class NavigationMaster extends Component {
 
     return (
       <Column>
-        {user.uid &&
-          <Header>
-            <Avatar src={user.photoURL} title={user.displayName} />
-            <MetaWrapper>
-              <Name>
-                {user.displayName}
-                {user.subscriptions && <ProBadge>PRO</ProBadge>}
-              </Name>
-              <P>
-                {user.subscriptions
-                  ? <MetaAnchor onClick={this.showEditAccountModal}>
-                      My Account
-                    </MetaAnchor>
-                  : <MetaAnchor pro onClick={this.showUpgradeModal}>
-                      Upgrade to Pro
-                    </MetaAnchor>}
-              </P>
-            </MetaWrapper>
-          </Header>}
-        <FreqList>
+        <List>
           {user.uid &&
-            <ViewNav>
+            <ListContainer>
               <Link to="/">
-                <ViewItem>
-                  <ViewSelector
+                <ListItem>
+                  <NavButton
                     active={isEverything}
                     onClick={this.showStoriesNav}
                   >
@@ -145,14 +115,14 @@ class NavigationMaster extends Component {
                       color={isEverything ? 'brand.default' : 'text.alt'}
                       static
                     />
-                    <ViewLabel ml>{'Home'}</ViewLabel>
-                  </ViewSelector>
-                </ViewItem>
+                    <Label>{'Home'}</Label>
+                  </NavButton>
+                </ListItem>
               </Link>
 
-              <Link to={`/notifications`}>
-                <ViewItem>
-                  <ViewSelector
+              {/*<Link to={`/notifications`}>
+                <ListItem>
+                  <NavButton
                     active={isNotifications}
                     onClick={this.showStoriesNav}
                   >
@@ -161,16 +131,16 @@ class NavigationMaster extends Component {
                       color={isNotifications ? 'brand.default' : 'text.alt'}
                       static
                     />
-                    <ViewLabel ml>Notifications</ViewLabel>
-                  </ViewSelector>
-                </ViewItem>
-              </Link>
+                    <Label ml>Notifications</Label>
+                  </NavButton>
+                </ListItem>
+              </Link>*/}
 
               {messageGroups.length > 0 &&
                 // only show messages in sidebar if user has existing messageGroups
                 <Link to={`/messages`}>
-                  <ViewItem>
-                    <ViewSelector
+                  <ListItem>
+                    <NavButton
                       active={isMessages}
                       onClick={this.showStoriesNav}
                     >
@@ -179,37 +149,35 @@ class NavigationMaster extends Component {
                         color={isMessages ? 'brand.default' : 'text.alt'}
                         static
                       />
-                      <ViewLabel ml>Messages</ViewLabel>
-                    </ViewSelector>
-
-                    {unreadMessageGroups && <DirtyDot />}
-                  </ViewItem>
+                      <Label>Messages</Label>
+                      {unreadMessageGroups && <DirtyDot />}
+                    </NavButton>
+                  </ListItem>
                 </Link>}
 
               <Link to="/explore">
-                <ViewItem>
-                  <ViewSelector
-                    active={isExplore}
-                    onClick={this.showStoriesNav}
-                  >
+                <ListItem>
+                  <NavButton active={isExplore} onClick={this.showStoriesNav}>
                     <Icon
                       icon="explore"
                       color={isExplore ? 'brand.default' : 'text.alt'}
                       static
                     />
-                    <ViewLabel ml>{'Explore'}</ViewLabel>
-                  </ViewSelector>
-                </ViewItem>
+                    <Label>{'Explore'}</Label>
+                  </NavButton>
+                </ListItem>
               </Link>
-            </ViewNav>}
+            </ListContainer>}
 
           {!loaded &&
-            <Freq>
-              <FreqRow>
-                <Icon icon="everything" color="text.alt" static />
-                <FreqLabel>Loading…</FreqLabel>
-              </FreqRow>
-            </Freq>}
+            <ListContainer>
+              <ListItem>
+                <NavButton>
+                  <Icon icon="frequency" color="text.placeholder" static />
+                  <Label>Loading frequencies…</Label>
+                </NavButton>
+              </ListItem>
+            </ListContainer>}
 
           {user.uid &&
             frequencies &&
@@ -217,10 +185,10 @@ class NavigationMaster extends Component {
               const comm = communities.find(comm => comm.id === community);
               return (
                 <div key={`nav-community-${community}`}>
-                  <CommunityHeading>
+                  <ListHeading>
                     {comm ? comm.name : 'Loading...'}
-                  </CommunityHeading>
-                  <div>
+                  </ListHeading>
+                  <ListContainer>
                     {frequencies[community].map((frequency, i) => {
                       // If there's any unread notification for this frequency
                       // show a dirty dot
@@ -235,40 +203,40 @@ class NavigationMaster extends Component {
                           return false;
                         if (!frequency.stories || !notification.ids.story)
                           return true;
-                        const storyData = frequency.stories[
-                          notification.ids.story
-                        ];
+                        const storyData =
+                          frequency.stories[notification.ids.story];
                         if (storyData && storyData.deleted) return false;
                         return true;
                       });
                       return (
                         <Link
-                          to={
-                            `/${comm
-                              ? comm.slug
-                              : community}/~${frequency.slug || frequency.id}`
-                          }
+                          to={`/${comm ? comm.slug : community}/~${frequency.slug || frequency.id}`}
                           key={`nav-frequency-${frequency.id}`}
                         >
-                          <Freq
+                          <ListItem
                             active={
-                              (frequency.slug &&
-                                frequency.slug === activeFrequency ||
-                                frequency.id &&
-                                  frequency.id === activeFrequency) &&
+                              ((frequency.slug &&
+                                frequency.slug === activeFrequency) ||
+                                (frequency.id &&
+                                  frequency.id === activeFrequency)) &&
                                 comm.slug === active
                             }
                             onClick={this.showStoriesNav}
                           >
-                            <FreqRow center>
-                              <FreqLabel>{frequency.name}</FreqLabel>
-                            </FreqRow>
-                            {notif && !notif.read && <DirtyDot />}
-                          </Freq>
+                            <NavButton>
+                              <Icon
+                                icon="frequency"
+                                color="text.placeholder"
+                                static
+                              />
+                              <Label>{frequency.name}</Label>
+                              {notif && !notif.read && <DirtyDot />}
+                            </NavButton>
+                          </ListItem>
                         </Link>
                       );
                     })}
-                  </div>
+                  </ListContainer>
                 </div>
               );
             })}
@@ -276,9 +244,8 @@ class NavigationMaster extends Component {
           {/* {user.uid &&
             <Button onClick={this.createFrequency}>
               <span>~ Create Frequency</span>
-            </Button>} */
-          }
-        </FreqList>
+            </Button>} */}
+        </List>
 
         <Footer>
           <FooterP onClick={this.showStoriesNav}>
