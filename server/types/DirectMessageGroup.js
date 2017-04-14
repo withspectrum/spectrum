@@ -1,7 +1,13 @@
 const DirectMessageGroup = /* GraphQL */ `
+	type DirectMessageUser {
+		user: User!
+		lastActivity: Date
+		lastSeen: Date
+	}
+
 	type DirectMessageGroup {
 		id: ID!
-		users: [User!]
+		users: [DirectMessageUser!]
 		messages: [Message!]
 		creator: User!
 		lastActivity: Date!

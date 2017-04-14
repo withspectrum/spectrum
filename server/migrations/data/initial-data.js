@@ -97,16 +97,6 @@ const messages = [
     },
     sender: '58a023a4-912d-48fe-a61c-eec7274f7699',
   },
-  {
-    id: 'first-direct-message-asdf123',
-    timestamp: new Date(),
-    thread: 'first-message-group-asdf123',
-    message: {
-      type: 'text',
-      content: 'This is the first message in this direct message group!',
-    },
-    sender: '58a023a4-912d-48fe-a61c-eec7274f7699',
-  },
 ];
 
 const users = [
@@ -132,14 +122,35 @@ const users = [
   },
 ];
 
+const directMessages = [
+  {
+    id: 'first-direct-message-asdf123',
+    timestamp: new Date(),
+    thread: 'first-message-group-asdf123',
+    message: {
+      type: 'text',
+      content: 'This is the first message in this direct message group!',
+    },
+    sender: '58a023a4-912d-48fe-a61c-eec7274f7699',
+  },
+];
+
 const directMessageGroups = [
   {
     id: 'first-message-group-asdf123',
     creator: '58a023a4-912d-48fe-a61c-eec7274f7699',
     lastActivity: new Date(),
     users: [
-      '58a023a4-912d-48fe-a61c-eec7274f7699',
-      '58a023a4-912d-48fe-a61c-eec7274f7698',
+      {
+        user: '58a023a4-912d-48fe-a61c-eec7274f7699',
+        lastActivity: new Date(),
+        lastSeen: new Date(),
+      },
+      {
+        user: '58a023a4-912d-48fe-a61c-eec7274f7698',
+        lastActivity: new Date(),
+        lastSeen: new Date(),
+      },
     ],
   },
 ];
@@ -150,5 +161,6 @@ module.exports = {
   stories,
   messages,
   users,
+  directMessages,
   directMessageGroups,
 };
