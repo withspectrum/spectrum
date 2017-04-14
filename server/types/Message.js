@@ -4,10 +4,15 @@ const Message = /* GraphQL */ `
 		media
 	}
 
+	enum ThreadTypes {
+		Story
+		DirectMessageGroup
+	}
+
 	# Tables in the database
 	enum MessageLocation {
 		messages
-		direct_message_groups
+		direct_messages
 	}
 
 	# The content and type of a message
@@ -20,7 +25,7 @@ const Message = /* GraphQL */ `
 	type Message {
 		id: ID!
 		timestamp: Date!
-		thread: ID!
+		thread: ThreadTypes!
 		message: MessageContent!
 		sender: User!
 	}

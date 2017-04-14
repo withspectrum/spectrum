@@ -70,6 +70,7 @@ const schema = makeExecutableSchema({
   ],
   resolvers: merge(
     {},
+    //queries
     scalars.resolvers,
     storyQueries,
     frequencyQueries,
@@ -77,10 +78,12 @@ const schema = makeExecutableSchema({
     messageQueries,
     userQueries,
     directMessageGroupQueries,
+    // mutations
     messageMutations,
     storyMutations,
-    messageSubscriptions,
-    directMessageGroupMutations
+    directMessageGroupMutations,
+    // subscriptions
+    messageSubscriptions
   ),
 });
 

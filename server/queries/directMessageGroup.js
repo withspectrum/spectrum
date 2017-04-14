@@ -20,7 +20,7 @@ module.exports = {
   },
   DirectMessageGroup: {
     messages: ({ id }: { id: String }) =>
-      getMessagesByLocationAndThread('direct_message_groups', id),
+      getMessagesByLocationAndThread('direct_messages', id),
     users: ({ users }: { users: Array<DirectMessageUser> }) =>
       getUsers(users.map(user => user.user)).then(dbUsers =>
         dbUsers.map((user, index) => ({
