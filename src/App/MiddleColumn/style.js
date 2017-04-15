@@ -15,7 +15,6 @@ export const Column = styled.div`
 	height: 100%;
 	width: 100%;
   overflow-x: hidden;
-  border-left: 2px solid ${({ theme }) => theme.border.default};
   border-right: 2px solid ${({ theme }) => theme.border.default};
 `;
 
