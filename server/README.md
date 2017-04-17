@@ -103,7 +103,7 @@ This query would get the first 10 (or less) messages of that story. To get the n
 }
 ```
 
-> Note: The cursor is an opaque data structure, meaning it might refer to the last ID, to the number of items, a random hash or anything else really. This not only changes between resources, but might also change on a moments notice if we need it to be something different from the backend. **Do not use the cursor for anything other than passing it to the query for the next page**.
+> Note: The cursor is an opaque data structure, meaning it might refer to something you understand or it might not. It's also not promised to be consistent, especially between sessions, resources, etc. This boils down to **do not use the cursor for anything other than passing it to the query for the next page**, no matter if you want to use it for something else.
 
 To specify how many messages you want to load use the `first` parameter:
 

@@ -9,6 +9,7 @@ const { getMessagesByLocationAndThread } = require('../models/message');
 const { getUser } = require('../models/user');
 import type { LocationTypes } from '../models/message';
 import type { PaginationOptions } from '../utils/paginate-arrays';
+import { encode, decode } from '../utils/base64';
 
 module.exports = {
   Query: {
@@ -20,21 +21,23 @@ module.exports = {
     messageConnection: (
       { id }: { id: String },
       { first = 10, after }: PaginationOptions
-    ) =>
-      getMessagesByLocationAndThread('messages', id, { first, after }).then(([
-        messages,
-        lastMessage,
-      ]) => ({
+    ) => {
+      const cursorId = decode(after);
+      return getMessagesByLocationAndThread('messages', id, {
+        first,
+        after: cursorId,
+      }).then(([messages, lastMessage]) => ({
         pageInfo: {
           hasNextPage: messages.length > 0
             ? lastMessage.id !== messages[messages.length - 1].id
-            : lastMessage.id !== after,
+            : lastMessage.id !== cursorId,
         },
         edges: messages.map(message => ({
-          cursor: message.id,
+          cursor: encode(message.id),
           node: message,
         })),
-      })),
+      }));
+    },
     author: ({ author }: { author: String }) => getUser(author),
   },
 };
