@@ -7,16 +7,34 @@ const { getStory } = require('../models/story');
 const { getFrequency } = require('../models/frequency');
 const { getMessagesByLocationAndThread } = require('../models/message');
 const { getUser } = require('../models/user');
+import type { LocationTypes } from '../models/message';
+import type { PaginationOptions } from '../utils/paginate-arrays';
 
 module.exports = {
   Query: {
-    story: (_, { id }) => getStory(id),
+    story: (_: any, { id }: { id: String }) => getStory(id),
   },
   Story: {
-    frequency: ({ frequency }) => getFrequency(story.frequency),
-    messages: ({ location, id }) =>
-      getMessagesByLocationAndThread(location, id),
-    edits: ({ edits }) => edits,
-    author: ({ author }) => getUser(author),
+    frequency: ({ frequency }: { frequency: String }) =>
+      getFrequency(frequency),
+    messageConnections: (
+      { id }: { id: String },
+      { first = 10, after }: PaginationOptions
+    ) =>
+      getMessagesByLocationAndThread('messages', id, { first, after }).then(([
+        messages,
+        lastMessage,
+      ]) => ({
+        pageInfo: {
+          hasNextPage: messages.length > 0
+            ? lastMessage.id !== messages[messages.length - 1].id
+            : lastMessage.id !== after,
+        },
+        edges: messages.map(message => ({
+          cursor: message.id,
+          node: message,
+        })),
+      })),
+    author: ({ author }: { author: String }) => getUser(author),
   },
 };
