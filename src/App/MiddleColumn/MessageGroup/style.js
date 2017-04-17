@@ -4,15 +4,11 @@ import { H5 } from '../../../shared/Globals';
 export const MessageGroupContainer = styled.div`
 	display: flex;
 	flex: 1 1 auto;
-	padding: 16px 8px 16px 16px;
+	padding: 16px 16px 16px 16px;
 	align-items: center;
 	overflow: hidden;
-	${props =>
-  props.active
-    ? `box-shadow: inset -4px 0 ${props.theme.brand.default}`
-    : `transparent`};
-	${props =>
-  props.active ? `background: ${props.theme.bg.wash}` : `background: #fff`};
+	${props => (props.active ? `box-shadow: inset -6px 0 ${props.theme.brand.default}` : `transparent`)};
+	${props => (props.active ? `background: ${props.theme.bg.wash}` : `background: #fff`)};
 	transition: all 0.15s ease-in-out;
 
 	&:after {
@@ -39,13 +35,9 @@ export const MessageGroupImage = styled.div`
 	display: flex;
 	width: 100%;
 	border-radius: 44px;
-	background: ${props =>
-  props.loading ? '#f6f7f8' : `url(${props.image}) no-repeat`};
+	background: ${props => (props.loading ? '#f6f7f8' : `url(${props.image}) no-repeat`)};
 	background-size: cover;
-	${props =>
-  props.unread
-    ? `border: 2px solid #fff; box-shadow: 0 0 0 1px ${props.theme.brand.default};`
-    : ''};
+	${props => (props.unread ? `border: 2px solid #fff; box-shadow: 0 0 0 1px ${props.theme.brand.default};` : '')};
 `;
 
 export const MessageGroupTextContainer = styled.div`
@@ -70,7 +62,7 @@ export const Usernames = styled.span`
 	white-space: nowrap;
 	overflow: hidden;
 	color: ${({ theme }) => theme.text.default};
-	font-weight: ${props => props.unread ? 800 : 600};
+	font-weight: ${props => (props.unread ? 800 : 600)};
 	line-height: 1.2;
 	margin-bottom: 2px;
 	font-size: 14px;
@@ -87,7 +79,7 @@ export const Usernames = styled.span`
 export const Timestamp = styled.span`
 	font-size: 12px;
 	text-align: right;
-	color: ${props => props.unread ? props.theme.brand.default : '#909aa7'};
+	color: ${props => (props.unread ? props.theme.brand.default : '#909aa7')};
 	padding-right: 4px;
 	display: inline-block;
 	flex: 1 0 auto;
@@ -96,9 +88,8 @@ export const Timestamp = styled.span`
 
 export const Snippet = styled.p`
 	font-size: 13px;
-	font-weight: ${props => props.unread ? 700 : 500};
-	color: ${props =>
-  props.unread ? props.theme.text.default : props.theme.text.alt};
+	font-weight: ${props => (props.unread ? 700 : 500)};
+	color: ${props => (props.unread ? props.theme.text.default : props.theme.text.alt)};
 	padding-right: 4px;
 	display: inline-block;
 	line-height: 1.3;

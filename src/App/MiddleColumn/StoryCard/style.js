@@ -54,14 +54,13 @@ export const PhotosContainer = styled.div`
 	border-radius: 4px;
 	display: flex;
 	flex-wrap: wrap;
-	min-height: ${props => props.size > 1 ? '140px' : '280px'};
+	min-height: ${props => (props.size > 1 ? '140px' : '280px')};
 `;
 
 export const PhotoContainer = styled.div`
 	position: relative;
 
-	${props => props.size === 1
-  ? `
+	${props => (props.size === 1 ? `
 		width: 100%;
 		height: 280px;
 		max-height: 280px;
@@ -69,11 +68,9 @@ export const PhotoContainer = styled.div`
 		&:first-child img {
 			border-radius: 4px;
 		}
-	`
-  : ''}
+	` : '')}
 
-	${props => props.size === 2
-  ? `
+	${props => (props.size === 2 ? `
 		width: 49.5%;
 		height: 140px;
 		max-height: 140px;
@@ -89,11 +86,9 @@ export const PhotoContainer = styled.div`
 		&:last-child img {
 			border-radius: 0 4px 4px 0;
 		}
-	`
-  : ''}
+	` : '')}
 
-	${props => props.size === 3
-  ? `
+	${props => (props.size === 3 ? `
 		width: 32.6%;
 		margin-right: 1%
 		height: 140px;
@@ -110,11 +105,9 @@ export const PhotoContainer = styled.div`
 		&:last-child img {
 			border-radius: 0 4px 4px 0;
 		}
-	`
-  : ''}
+	` : '')}
 
-	${props => props.size >= 4
-  ? `
+	${props => (props.size >= 4 ? `
 		width: 24.25%;
 		margin-right: 1%
 		min-height: 108px;
@@ -131,8 +124,7 @@ export const PhotoContainer = styled.div`
 		&:last-child img {
 			border-radius: 0 4px 4px 0;
 		}
-	`
-  : ''}
+	` : '')}
 `;
 
 export const Photo = styled.img`
@@ -190,24 +182,13 @@ export const StatusBar = styled.div`
 	justify-content: space-between;
 	align-items: center;
 	position: relative;
+	box-sizing: padding-box;
 	padding: 12px 12px 12px 16px;
 	border-radius: 12px 12px 0 0;
-	border-bottom: ${props =>
-  props.status === 'active' || props.status === 'new'
-    ? '2px solid transparent'
-    : `2px solid ${props.theme.bg.wash}`};
-	background-color: ${props =>
-  props.status === 'active'
-    ? props.theme.brand.default
-    : props.status === 'new'
-        ? props.theme.success.alt
-        : props.status === 'unread'
-            ? props.theme.warn.alt
-            : props.theme.bg.default};
-	background-image: ${props =>
-  props.status === 'active'
-    ? Gradient(props.theme.brand.alt, props.theme.brand.default)
-    : 'none'};
+	margin-bottom: ${props => (props.status === 'active' || props.status === 'new' ? '2px' : '0')};
+	border-bottom: ${props => (props.status === 'active' || props.status === 'new' ? '2px solid transparent' : `2px solid ${props.theme.bg.wash}`)};
+	background-color: ${props => (props.status === 'active' ? props.theme.brand.default : props.status === 'new' ? props.theme.success.alt : props.status === 'unread' ? props.theme.warn.alt : props.theme.bg.default)};
+	background-image: ${props => (props.status === 'active' ? Gradient(props.theme.brand.alt, props.theme.brand.default) : 'none')};
 
 	&:after {
 		content: '';
@@ -218,16 +199,14 @@ export const StatusBar = styled.div`
 		top: calc(50% - 6px);
 		border-radius: 2px;
 		border-right-width: 0;
-		border-left-color: ${props =>
-  props.status === 'active' ? props.theme.brand.default : 'transparent'};
+		border-left-color: ${props => (props.status === 'active' ? props.theme.brand.default : 'transparent')};
 	}
 `;
 
 export const StatusText = styled.p`
 	font-size: 12px;
-	font-weight: ${props => props.status !== 'default' ? '700' : '500'};
-	color: ${props =>
-  props.status !== 'default' ? props.theme.text.reverse : props.theme.text.alt};
+	font-weight: ${props => (props.status !== 'default' ? '700' : '500')};
+	color: ${props => (props.status !== 'default' ? props.theme.text.reverse : props.theme.text.alt)};
 	line-height: 1;
 	margin-top: 2px;
 `;
@@ -245,17 +224,11 @@ export const Name = styled(StatusText)`
 
 	b {
 		cursor: pointer;
-		color: ${props =>
-  props.status === 'active'
-    ? props.theme.text.reverse
-    : props.theme.text.default};
+		color: ${props => (props.status === 'active' ? props.theme.text.reverse : props.theme.text.default)};
 	}
 
 	b:hover {
-		color: ${props =>
-  props.status === 'active'
-    ? props.theme.text.reverse
-    : props.theme.brand.default};
+		color: ${props => (props.status === 'active' ? props.theme.text.reverse : props.theme.brand.default)};
 	}
 
 	a {
