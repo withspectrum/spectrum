@@ -4,7 +4,10 @@ const communities = [
     createdAt: new Date(),
     name: 'Spectrum Staging',
     slug: 'spectrum',
-    members: ['58a023a4-912d-48fe-a61c-eec7274f7699'],
+    members: [
+      '58a023a4-912d-48fe-a61c-eec7274f7699',
+      '58a023a4-912d-48fe-a61c-eec7274f7698',
+    ],
   },
 ];
 

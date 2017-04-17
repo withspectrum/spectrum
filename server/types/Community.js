@@ -14,6 +14,7 @@ const Community = /* GraphQL */ `
 	}
 
 	type CommunityMemberEdge {
+		cursor: String!
 		node: User!
 	}
 
@@ -23,7 +24,7 @@ const Community = /* GraphQL */ `
 		name: String!
 		slug: String!
 		frequencyConnections: CommunityFrequenciesConnection!
-		memberConnections: CommunityMembersConnection!
+		memberConnections(first: Int = 10, after: String): CommunityMembersConnection!
 	}
 
 	extend type Query {
