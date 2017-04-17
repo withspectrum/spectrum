@@ -1,17 +1,19 @@
 import styled from 'styled-components';
+import { Shadow, Gradient } from '../../shared/Globals';
 
 export const NavBarContainer = styled.div`
   width: 100%;
   display: flex;
-  background: #171A21;
+  background-color: ${({ theme }) => theme.bg.reverse};
   height: 48px;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 10;
-  box-shadow: 0 1px 8px rgba(0,0,0,0.25);
+  box-shadow: ${Shadow.high};
   justify-content: space-between;
+  padding: 0 4px;
 
   a, span {
     padding: 8px;
@@ -26,10 +28,6 @@ export const Logo = styled.img`
   padding: 8px;
   width: 32px;
   height: 32px;
-
-  @media (min-width: 768px) {
-    margin-left: 8px;
-  }
 `;
 
 export const Text = styled.div`
@@ -44,7 +42,7 @@ export const Text = styled.div`
 
 export const Title = styled.h3`
   color: #fff;
-  font-size: ${props => props.large ? '18px' : '14px'};
+  font-size: ${props => (props.large ? '18px' : '14px')};
   font-weight: 800;
   max-width: 100%;
   text-overflow: ellipsis;
@@ -68,16 +66,20 @@ export const Subtitle = styled.p`
 `;
 
 export const Avatar = styled.div`
-  padding: 8px 8px 12px;
+  margin: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  border-radius: 16px;
 `;
 
 export const Photo = styled.img`
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
+  padding: 2px;
+  background-clip: content-box;
   border-radius: 16px;
+  border: 2px solid ${props => (props.pro ? props.theme.space.light : props.theme.bg.default)};
 `;
 
 export const Pro = styled.b`

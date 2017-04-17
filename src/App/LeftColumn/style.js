@@ -1,69 +1,16 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Gradient, H3 } from '../../shared/Globals';
+import { H5, FlexRow, FlexCol, Transition } from '../../shared/Globals';
 
 export const Column = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: ${({ theme }) => theme.bg.reverse};
+  background-color: ${({ theme }) => theme.bg.default};
   width: 100%;
   height: 100%;
   position: relative;
   z-index: 3;
   transition: transform 0.2s ease-in-out;
-`;
-
-export const Header = styled.div`
-  display: flex;
-  flex: 0 0 auto;
-  padding: ${props => props.login ? '18px 16px' : '16px'};
-  align-items: ${props => props.login ? `flex-start` : `center`};
-  flex-direction: ${props => props.login ? `column` : `row`};
-
-  @media (min-width: 768px) {
-    display: none;
-  }
-`;
-
-export const HeaderLogo = styled.img`
-  height: 24px;
-  width: 137px;
-`;
-
-export const Avatar = styled.img`
-  height: 32px;
-  flex: 0 0 32px;
-  border-radius: 8px;
-  align-self: flex-start;
-`;
-
-export const MetaWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-left: 8px;
-`;
-
-export const Name = styled(H3)`
-  font-size: 14px;
-  line-height: 18px;
-  color: ${({ theme }) => theme.text.reverse};
-  font-weight: 500;
-  margin-top: 0;
-  margin-bottom: 2px;
-  position: relative;
-`;
-
-export const P = styled.p`
-  display: flex;
-  font-size: 12px;
-  line-height: 1.4;
-  color: ${({ theme }) => theme.text.alt};
-  font-weight: 500;
-  flex-direction: column;
-
-  + p {
-    margin-top: 8px;
-  }
 `;
 
 const linkStyles = css`
@@ -76,7 +23,7 @@ const linkStyles = css`
 
   &:hover {
     cursor: pointer;
-    color: ${({ theme }) => theme.text.reverse};
+    color: ${({ theme }) => theme.text.default};
     transition: color 0.2s ease-out;
   }
 `;
@@ -85,91 +32,87 @@ export const MetaLink = styled(Link)`${linkStyles}`;
 
 export const MetaAnchor = styled.a`
   ${linkStyles}
-  ${props =>
-  props.pro
-    ? 'color: #02AAFA; background-image: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'
-    : ''};
+  ${props => (props.pro ? 'color: #02AAFA; background-image: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;' : '')};
 `;
 
-export const Username = styled.span`
-  margin-bottom: 4px;
-`;
-
-export const FreqList = styled.div`
-  list-style: none;
+export const List = styled(FlexCol)`
   width: 100%;
-  margin-bottom: 2rem;
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 16px;
   flex: 1 0 auto;
 `;
 
-export const Freq = styled.div`
+export const ListHeading = styled(H5)`
   display: flex;
-  flex: 0 0 36px;
-  padding: 0.2rem 1rem;
+  flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  background-color: ${props =>
-  props.active ? props.theme.brand.default : props.theme.bg.reverse};
-  background-image: ${props =>
-  props.active
-    ? Gradient(props.theme.brand.alt, props.theme.brand.default)
-    : `none`};
-  color: ${({ theme }) => theme.text.alt};
+  border-top: 2px solid ${({ theme }) => theme.border.default};
+  padding: 16px 0 0 8px;
+  margin: 4px 8px;
+  font-size: 12px;
+  font-weight: 900;
+  color: ${({ theme }) => theme.text.placeholder};
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+`;
+
+export const ListContainer = styled(FlexCol)`
+  padding: 8px;
+`;
+
+export const ListItem = styled(FlexRow)`
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+`;
+
+export const NavButton = styled(FlexRow)`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 4px;
+  border-radius: 4px;
   text-transform: capitalize;
+  color: ${props => (props.active ? props.theme.brand.default : props.theme.text.alt)};
+  font-weight: 600;
 
   &:hover {
     cursor: pointer;
-    background-color: ${props =>
-  props.active ? props.theme.brand.default : '#2E313F'};
+    background-color: ${props => props.theme.border.default};
   }
 `;
 
-export const FreqText = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-export const FreqLabel = styled.span`
+export const Label = styled.div`
   font-size: 14px;
-  font-weight: 500;
   display: inline-block;
-  flex: 0 0 auto;
-  color: ${({ theme }) => theme.text.reverse};
+  flex: 1 0 auto;
   pointer-events: none;
   text-overflow: ellipsis;
   white-space: nowrap;
   word-wrap: normal;
-  padding: 4px 0;
+  padding: 0 8px;
   overflow: hidden;
-  ${props => props.ml ? 'margin-left: 8px;' : ''};
+  font-weight: inherit;
 `;
 
-export const FreqIcon = styled.img`
-  height: 32px;
-  flex: 0 0 32px;
-  pointer-events: none;
-`;
-
-export const FreqGlyph = styled.span`
-  margin-left: 8px;
+export const DirtyDot = styled.div`
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.warn.alt};
+  min-width: ${props => (props.children ? '16px' : '8px')};
+  height: ${props => (props.children ? '16px' : '8px')};
   margin-right: 8px;
-  display: inline-block;
-  font-size: 24px;
   font-weight: bold;
-  color: ${({ theme }) => theme.text.reverse}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 10px;
+  padding: 0 ${props => (props.children ? '8px' : '')};
 `;
 
 export const Footer = styled.div`
   width: 100%;
   padding: 16px;
   padding-top: 0;
-`;
-
-export const FooterLogo = styled.img`
-  height: 24px;
-  width: 24px;
 `;
 
 export const FooterP = styled.p`
@@ -181,77 +124,4 @@ export const FooterP = styled.p`
   + p {
     margin-top: 8px;
   }
-`;
-
-export const Button = styled.button`
-  margin: 1rem;
-  background-color: #0f1010;
-  box-shadow: 0 1px 0 rgba(255,255,255,0.02);
-  font-size: 12px;
-  font-weight: bold;
-  color: rgba(255,255,255,0.7);
-  padding: 8px;
-  display: inline-block;
-  text-align: center;
-  text-align: -webkit-center;
-  width: calc(100% - 2rem);
-  border-radius: 2px;
-  transition: all 0.2s;
-
-  &:hover {
-    cursor: pointer;
-    transition: all 0.2s;
-    color: rgba(255,255,255,1);
-    background-color: ${props => props.theme.brand.default};
-    background-image: ${props =>
-  Gradient(props.theme.brand.alt, props.theme.brand.default)};
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
-  }
-
-  &:active {
-    box-shadow: 0 1px 0 rgba(255,255,255,0.04);
-    background-color: #0f1010;
-    background-image: none;
-    position: relative;
-    top: 1px;
-    transition: all 0s;
-  }
-`;
-
-export const DirtyDot = styled.div`
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.warn.alt};
-  min-width: ${props => props.children ? '16px' : '8px'};
-  height: ${props => props.children ? '16px' : '8px'};
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 10px;
-  padding: 0 ${props => props.children ? '8px' : ''};
-`;
-
-export const ProBadge = styled.span`
-  background: #00C384;
-  background-image: radial-gradient(ellipse farthest-corner at top left , #00C384 0%, #02AAFA 100%);
-  position: relative;
-  margin-left: 8px;
-  top: -2px;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 2px 4px;
-  border-radius: 4px;
-  line-height: 1.5;
-`;
-
-export const CommunityHeading = styled(P)`
-  border-top: 1px solid rgba(255,255,255,0.05);
-  margin-top: 16px;
-  padding: 16px 16px 8px 16px;
-  display: block;
-  font-size: 11px;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
 `;
