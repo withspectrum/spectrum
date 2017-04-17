@@ -1,10 +1,11 @@
+// @flow
 const { db } = require('./db');
 
-const getUser = id => {
+const getUser = (id: String) => {
   return db.table('users').get(id).run();
 };
 
-const getUsers = uids => {
+const getUsers = (uids: Array<String>) => {
   return db.table('users').getAll(...uids).run();
 };
 

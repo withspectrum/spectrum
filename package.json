@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "babel-cli": "^6.24.0",
+    "babel-cli": "^6.24.1",
     "babel-preset-flow": "^6.23.0",
     "firebase-tools": "^3.5.0",
     "flow-bin": "^0.43.0",
@@ -63,8 +63,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:server": "NODE_ENV=production node server/index.js",
-    "dev:server": "nodemon server/index.js",
+    "dev:server": "NODE_ENV=development nodemon server/index.js --exec babel-node --presets react-app",
     "migrate": "rethinkdb-migrate -f ./server/migrations/config.js",
     "db:seed": "npm run migrate -- up initial-data",
     "db:drop": "npm run migrate -- down initial-data",

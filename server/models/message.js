@@ -1,20 +1,32 @@
+//@flow
+
 /**
  * Storing and retrieving messages
  */
 const { db } = require('./db');
 
-const getMessage = id => {
-  return db.table('messages').get(id).run();
+export type LocationTypes = 'messages' | 'direct_messages';
+export type MessageTypes = 'text' | 'media';
+export type MessageProps = {
+  type: MessageTypes,
+  content: String,
 };
 
-const getMessagesByStory = story => {
-  return db.table('messages').filter({ story }).run();
+const getMessage = (location: LocationTypes, id: String) => {
+  return db.table(location).get(id).run();
 };
 
-const storeMessage = message => {
+const getMessagesByLocationAndThread = (
+  location: LocationTypes,
+  thread: String
+) => {
+  return db.table(location).filter({ thread }).run();
+};
+
+const storeMessage = (location: LocationTypes, message: MessageProps) => {
   // Insert a message
   return db
-    .table('messages')
+    .table(location)
     .insert(
       Object.assign({}, message, {
         timestamp: new Date(),
@@ -25,10 +37,10 @@ const storeMessage = message => {
     .then(result => result.changes[0].new_val);
 };
 
-const listenToNewMessages = cb => {
+const listenToNewMessages = (location: LocationTypes, cb: Function): Object => {
   return (
     db
-      .table('messages')
+      .table(location)
       .changes({
         includeInitial: false,
       })
@@ -49,7 +61,7 @@ const listenToNewMessages = cb => {
 
 module.exports = {
   getMessage,
-  getMessagesByStory,
+  getMessagesByLocationAndThread,
   storeMessage,
   listenToNewMessages,
 };
