@@ -11,7 +11,6 @@ export const Column = styled.div`
   position: relative;
   z-index: 3;
   transition: transform 0.2s ease-in-out;
-  border-right: 2px solid ${({ theme }) => theme.border.default};
 `;
 
 const linkStyles = css`
