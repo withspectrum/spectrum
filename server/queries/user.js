@@ -10,7 +10,26 @@ module.exports = {
     user: (_, { id }) => getUser(id),
   },
   User: {
-    communities: user => getCommunitiesByUser(user.uid),
-    frequencies: user => getFrequenciesByUser(user.uid),
+    communityConnections: user => ({
+      // Don't paginate communities and frequencies of a user
+      pageInfo: {
+        hasNextPage: false,
+      },
+      edges: getCommunitiesByUser(user.uid).then(communities =>
+        communities.map(community => ({
+          node: community,
+        }))
+      ),
+    }),
+    frequencyConnections: user => ({
+      pageInfo: {
+        hasNextPage: false,
+      },
+      edges: getFrequenciesByUser(user.uid).then(frequencies =>
+        frequencies.map(frequency => ({
+          node: frequency,
+        }))
+      ),
+    }),
   },
 };

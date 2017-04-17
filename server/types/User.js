@@ -1,4 +1,22 @@
 const User = /* GraphQL */ `
+	type UserCommunitiesConnection {
+		pageInfo: PageInfo!
+		edges: [UserCommunityEdge!]
+	}
+
+	type UserCommunityEdge {
+		node: Community!
+	}
+
+	type UserFrequenciesConnections {
+		pageInfo: PageInfo!
+		edges: [UserFrequencyEdge!]
+	}
+
+	type UserFrequencyEdge {
+		node: Frequency!
+	}
+
 	type User {
 		uid: ID!
 		createdAt: Date!
@@ -8,8 +26,8 @@ const User = /* GraphQL */ `
 		username: String
 		email: String
 		# subscriptions: [Subscription!]
-		communities: [Community!]
-		frequencies: [Frequency!]
+		communityConnections: UserCommunitiesConnection!
+		frequencyConnections: UserFrequenciesConnections!
 	}
 
 	extend type Query {
