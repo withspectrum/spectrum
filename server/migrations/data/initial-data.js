@@ -70,7 +70,7 @@ const messages = [
   {
     id: 'first-message-asdf123',
     timestamp: new Date(),
-    story: 'first-story-asdf123',
+    thread: 'first-story-asdf123',
     message: {
       type: 'text',
       content: 'This is the first message!',
@@ -80,7 +80,7 @@ const messages = [
   {
     id: 'second-message-asdf123',
     timestamp: new Date(),
-    story: 'first-story-asdf123',
+    thread: 'first-story-asdf123',
     message: {
       type: 'text',
       content: 'This is the second message!',
@@ -90,7 +90,7 @@ const messages = [
   {
     id: 'first-message-asdf123',
     timestamp: new Date(),
-    story: 'second-story-asddf123',
+    thread: 'second-story-asddf123',
     message: {
       type: 'text',
       content: 'This is the first message in this story!',
@@ -110,6 +110,49 @@ const users = [
     uid: '58a023a4-912d-48fe-a61c-eec7274f7699',
     username: 'mxstbr',
   },
+  {
+    createdAt: new Date(),
+    displayName: 'Brian Lovin',
+    email: null,
+    lastSeen: new Date(),
+    photoURL: 'https://pbs.twimg.com/profile_images/763033229993574400/6frGyDyA_normal.jpg',
+    providerId: '2451223458',
+    uid: '58a023a4-912d-48fe-a61c-eec7274f7698',
+    username: 'brian',
+  },
+];
+
+const directMessages = [
+  {
+    id: 'first-direct-message-asdf123',
+    timestamp: new Date(),
+    thread: 'first-message-group-asdf123',
+    message: {
+      type: 'text',
+      content: 'This is the first message in this direct message group!',
+    },
+    sender: '58a023a4-912d-48fe-a61c-eec7274f7699',
+  },
+];
+
+const directMessageGroups = [
+  {
+    id: 'first-message-group-asdf123',
+    creator: '58a023a4-912d-48fe-a61c-eec7274f7699',
+    lastActivity: new Date(),
+    users: [
+      {
+        user: '58a023a4-912d-48fe-a61c-eec7274f7699',
+        lastActivity: new Date(),
+        lastSeen: new Date(),
+      },
+      {
+        user: '58a023a4-912d-48fe-a61c-eec7274f7698',
+        lastActivity: new Date(),
+        lastSeen: new Date(),
+      },
+    ],
+  },
 ];
 
 module.exports = {
@@ -118,4 +161,6 @@ module.exports = {
   stories,
   messages,
   users,
+  directMessages,
+  directMessageGroups,
 };

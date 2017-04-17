@@ -1,3 +1,4 @@
+//@flow
 /**
  * Database listeners for subscriptions are initialised here
  */
@@ -7,7 +8,11 @@ const pubsub = require('./pubsub');
 module.exports = {
   // Start listening to database changes
   start() {
-    listenToNewMessages(message => {
+    listenToNewMessages('messages', message => {
+      pubsub.publish('messageAdded', message);
+    });
+
+    listenToNewMessages('direct_messages', message => {
       pubsub.publish('messageAdded', message);
     });
   },
