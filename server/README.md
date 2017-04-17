@@ -60,27 +60,27 @@ The TL;DR of how to use it is:
 
 ```GraphQL
 {
-	story(id: "some-story-id") {
-		# Fetch the messages of a certain story
-		messageConnection {
-			pageInfo {
-				# Do we have another page to fetch after this
-				hasNextPage
-			}
-			edges {
-				# Pass the cursor of the last message to messageConnections
-				# to fetch the next page
-				cursor
-				# The actual message:
-				node {
-					id
-					message {
-						content
-					}
-				}
-			}
-		}
-	}
+  story(id: "some-story-id") {
+    # Fetch the messages of a certain story
+    messageConnection {
+      pageInfo {
+        # Do we have another page to fetch after this
+        hasNextPage
+      }
+      edges {
+        # Pass the cursor of the last message to messageConnections
+        # to fetch the next page
+        cursor
+        # The actual message:
+        node {
+          id
+          message {
+            content
+          }
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -88,18 +88,18 @@ This query would get the first 10 (or less) messages of that story. To get the n
 
 ```GraphQL
 {
-	story(id: "some-story-id") {
-		# Fetch the next messages after the last message in the story
-		messageConnection(after: $lastMessageCursor) {
-			edges {
-				node {
-					message {
-						content
-					}
-				}
-			}
-		}
-	}
+  story(id: "some-story-id") {
+    # Fetch the next messages after the last message in the story
+    messageConnection(after: $lastMessageCursor) {
+      edges {
+        node {
+          message {
+            content
+          }
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -109,18 +109,18 @@ To specify how many messages you want to load use the `first` parameter:
 
 ```GraphQL
 {
-	story(id: "some-story-id") {
-		# Fetch the first 5 messages after the last message
-		messageConnection(first: 5, after: $lastMessageCursor) {
-			edges {
-				node {
-					message {
-						content
-					}
-				}
-			}
-		}
-	}
+  story(id: "some-story-id") {
+    # Fetch the first 5 messages after the last message
+    messageConnection(first: 5, after: $lastMessageCursor) {
+      edges {
+        node {
+          message {
+            content
+          }
+        }
+      }
+    }
+  }
 }
 ```
 
@@ -133,18 +133,18 @@ Connections and edges have standard names and structures across all resources:
 ```GraphQL
 # A connection of a story to messages
 type StoryMessagesConnection {
-	pageInfo: PageInfo!
-	edges: [StoryMessageEdge!]
+  pageInfo: PageInfo!
+  edges: [StoryMessageEdge!]
 }
 
 # An edge from a story to a message
 type StoryMessageEdge {
-	cursor: String!
-	node: Message!
+  cursor: String!
+  node: Message!
 }
 
 type Story {
-	messageConnection(first: Int = 10, after: String): StoryMessagesConnection!
+  messageConnection(first: Int = 10, after: String): StoryMessagesConnection!
 }
 ```
 
