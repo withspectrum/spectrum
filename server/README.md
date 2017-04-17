@@ -62,7 +62,7 @@ The TL;DR of how to use it is:
 {
 	story(id: "some-story-id") {
 		# Fetch the messages of a certain story
-		messageConnections {
+		messageConnection {
 			pageInfo {
 				# Do we have another page to fetch after this
 				hasNextPage
@@ -90,7 +90,7 @@ This query would get the first 10 (or less) messages of that story. To get the n
 {
 	story(id: "some-story-id") {
 		# Fetch the next messages after the last message in the story
-		messageConnections(after: $lastMessageCursor) {
+		messageConnection(after: $lastMessageCursor) {
 			edges {
 				node {
 					message {
@@ -111,7 +111,7 @@ To specify how many messages you want to load use the `first` parameter:
 {
 	story(id: "some-story-id") {
 		# Fetch the first 5 messages after the last message
-		messageConnections(first: 5, after: $lastMessageCursor) {
+		messageConnection(first: 5, after: $lastMessageCursor) {
 			edges {
 				node {
 					message {
@@ -134,7 +134,7 @@ Connections and edges have standard names and structures across all resources:
 # A connection of a story to messages
 type StoryMessagesConnection {
 	pageInfo: PageInfo!
-	edges: [StoryMessagesEdge!]
+	edges: [StoryMessageEdge!]
 }
 
 # An edge from a story to a message
@@ -144,11 +144,11 @@ type StoryMessageEdge {
 }
 
 type Story {
-	messageConnections(first: Int = 10, after: String): StoryMessagesConnection!
+	messageConnection(first: Int = 10, after: String): StoryMessagesConnection!
 }
 ```
 
-> Note: This is where we diverge slightly from the article linked above, it recommends naming your edges in plural (StoryMessagesEdge) to make it consistent with the connection but we've found that the singular makes it clear only a single resource is being fetched and that's more important.
+> Note: This is where we diverge slightly from the article linked above, it recommends naming your edges in plural (`StoryMessagesEdge`) to make it consistent with the connection but we've found that the singular (`StoryMessageEdge`) makes it clear only a single resource is being fetched and think that's more important.
 
 ### Error management
 

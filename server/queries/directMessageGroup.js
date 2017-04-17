@@ -20,7 +20,7 @@ module.exports = {
       getDirectMessageGroup(id),
   },
   DirectMessageGroup: {
-    messageConnections: (
+    messageConnection: (
       { id }: { id: String },
       { first = 10, after }: PaginationOptions
     ) =>

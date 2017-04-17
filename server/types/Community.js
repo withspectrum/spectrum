@@ -23,8 +23,8 @@ const Community = /* GraphQL */ `
 		createdAt: Date!
 		name: String!
 		slug: String!
-		frequencyConnections: CommunityFrequenciesConnection!
-		memberConnections(first: Int = 10, after: String): CommunityMembersConnection!
+		frequencyConnection: CommunityFrequenciesConnection!
+		memberConnection(first: Int = 10, after: String): CommunityMembersConnection!
 	}
 
 	extend type Query {

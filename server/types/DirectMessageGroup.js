@@ -7,10 +7,10 @@ const DirectMessageGroup = /* GraphQL */ `
 
 	type DirectMessagesConnection {
 		pageInfo: PageInfo!
-		edges: [DirectMessagesEdge!]
+		edges: [DirectMessageEdge!]
 	}
 
-	type DirectMessagesEdge {
+	type DirectMessageEdge {
 		cursor: String!
 		node: Message!
 	}
@@ -18,7 +18,7 @@ const DirectMessageGroup = /* GraphQL */ `
 	type DirectMessageGroup {
 		id: ID!
 		users: [DirectMessageUser!]
-		messageConnections(first: Int = 10, after: String): DirectMessagesConnection!
+		messageConnection(first: Int = 10, after: String): DirectMessagesConnection!
 		creator: User!
 		lastActivity: Date!
 	}

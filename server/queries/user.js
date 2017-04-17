@@ -10,7 +10,7 @@ module.exports = {
     user: (_, { id }) => getUser(id),
   },
   User: {
-    communityConnections: user => ({
+    communityConnection: user => ({
       // Don't paginate communities and frequencies of a user
       pageInfo: {
         hasNextPage: false,
@@ -21,7 +21,7 @@ module.exports = {
         }))
       ),
     }),
-    frequencyConnections: user => ({
+    frequencyConnection: user => ({
       pageInfo: {
         hasNextPage: false,
       },

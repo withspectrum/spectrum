@@ -27,8 +27,8 @@ const Frequency = /* GraphQL */ `
 		description: String!
 		slug: String!
 		community: Community!
-		storyConnections(first: Int = 10, after: String): FrequencyStoriesConnection!
-		subscriberConnections(first: Int = 10, after: String): FrequencySubscribersConnection!
+		storyConnection(first: Int = 10, after: String): FrequencyStoriesConnection!
+		subscriberConnection(first: Int = 10, after: String): FrequencySubscribersConnection!
 	}
 
 	extend type Query {

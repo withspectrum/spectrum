@@ -1,10 +1,10 @@
 const Story = /* GraphQL */ `
 	type StoryMessagesConnection {
 		pageInfo: PageInfo!
-		edges: [StoryMessagesEdge!]
+		edges: [StoryMessageEdge!]
 	}
 
-	type StoryMessagesEdge {
+	type StoryMessageEdge {
 		cursor: String!
 		node: Message!
 	}
@@ -31,7 +31,7 @@ const Story = /* GraphQL */ `
 		deleted: Boolean
 		locked: Boolean
 		edits: [Edit!]
-		messageConnections(first: Int = 10, after: String): StoryMessagesConnection!
+		messageConnection(first: Int = 10, after: String): StoryMessagesConnection!
 		author: User!
 	}
 

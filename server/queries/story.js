@@ -17,7 +17,7 @@ module.exports = {
   Story: {
     frequency: ({ frequency }: { frequency: String }) =>
       getFrequency(frequency),
-    messageConnections: (
+    messageConnection: (
       { id }: { id: String },
       { first = 10, after }: PaginationOptions
     ) =>

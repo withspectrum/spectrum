@@ -14,7 +14,7 @@ module.exports = {
     frequency: (_: any, { id }: { id: String }) => getFrequency(id),
   },
   Frequency: {
-    storyConnections: (
+    storyConnection: (
       { id }: { id: String },
       { first = 10, after }: PaginationOptions
     ) =>
@@ -34,7 +34,7 @@ module.exports = {
       })),
     community: ({ community }: { community: String }) =>
       getCommunity(community),
-    subscriberConnections: (
+    subscriberConnection: (
       { subscribers }: { subscribers: Array<string> },
       { first = 10, after }: PaginationOptions
     ) => {

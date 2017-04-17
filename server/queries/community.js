@@ -13,7 +13,7 @@ module.exports = {
     community: (_, { id }) => getCommunity(id),
   },
   Community: {
-    frequencyConnections: ({ id }) => ({
+    frequencyConnection: ({ id }) => ({
       pageInfo: {
         hasNextPage: false,
       },
@@ -23,7 +23,7 @@ module.exports = {
         }))
       ),
     }),
-    memberConnections: (
+    memberConnection: (
       { members }: { members: Array<string> },
       { first = 10, after }: PaginationOptions
     ) => {
