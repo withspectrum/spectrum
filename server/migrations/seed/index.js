@@ -10,7 +10,7 @@ const {
   generateReaction,
 } = require('./generate');
 
-const userAmount = faker.random.number(100);
+const userAmount = faker.random.number(1000);
 const users = randomAmount({ max: userAmount, min: 1 }, generateUser);
 
 console.log('\nGenerating communities...');
