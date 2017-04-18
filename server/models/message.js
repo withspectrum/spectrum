@@ -13,7 +13,7 @@ export type MessageProps = {
   content: String,
 };
 
-const getMessage = (location: LocationTypes, id: String) => {
+const getMessage = (location: LocationTypes, id: string) => {
   return db.table(location).get(id).run();
 };
 
@@ -77,83 +77,9 @@ const listenToNewMessages = (location: LocationTypes, cb: Function): Object => {
   );
 };
 
-type ReactionProps = {
-  message: String,
-  user: String,
-  type: String,
-};
-
-const toggleReaction = (
-  location: LocationTypes,
-  reaction: ReactionProps
-): Object => {
-  return db.table(location).get(reaction.message).run((err, data) => {
-    const message = data;
-    if (message.reactions) {
-      // if the message has reactions
-      if (message.reactions[reaction.user]) {
-        // if the user has left a reaction, remove it
-        console.log('attempting to remove...');
-        // db.table(location)
-        //   .get(reaction.message)('reactions')
-        //   .append(reaction)
-        //   .run(result => {
-        //     console.log('here 1 ', result)
-        //   })
-        // )
-      } else {
-        // if the user hasn't left a reaction, add it
-        insertReaction(location, reaction);
-      }
-    } else {
-      // otherwise the user is adding the first reaction
-      insertFirstReaction(location, reaction);
-    }
-  });
-};
-
-const removeReaction = (location, reaction) => {
-  return db
-    .table(location)
-    .get(reaction.message)('reactions')
-    .filter({ user: reaction.user })
-    .delete()
-    .run(result => {
-      console.log('removed reaction');
-    });
-};
-
-const insertFirstReaction = (location, reaction) => {
-  return db
-    .table(location)
-    .get(reaction.message)
-    .update({
-      reactions: [{ ...reaction, timestamp: new Date() }],
-    })
-    .run(result => {
-      console.log('first add ', result);
-    });
-};
-
-const insertReaction = (location, reaction) => {
-  return db
-    .table(location)
-    .get(reaction.message)('reactions')
-    .insert(
-      Object.assign({}, reaction, {
-        timestamp: new Date(),
-      }),
-      { returnChanges: true }
-    )
-    .run(result => {
-      console.log('here 1 ', result);
-    });
-};
-
 module.exports = {
   getMessage,
   getMessagesByLocationAndThread,
   storeMessage,
   listenToNewMessages,
-  toggleReaction,
 };

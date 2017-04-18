@@ -16,6 +16,7 @@ const Story = require('./types/Story');
 const Frequency = require('./types/Frequency');
 const Community = require('./types/Community');
 const Message = require('./types/Message');
+const Reaction = require('./types/Reaction');
 const User = require('./types/User');
 const DirectMessageGroup = require('./types/DirectMessageGroup');
 
@@ -24,6 +25,7 @@ const frequencyQueries = require('./queries/frequency');
 const communityQueries = require('./queries/community');
 const messageQueries = require('./queries/message');
 const userQueries = require('./queries/user');
+const reactionQueries = require('./queries/reaction');
 const directMessageGroupQueries = require('./queries/directMessageGroup');
 
 const messageMutations = require('./mutations/message');
@@ -67,6 +69,7 @@ const schema = makeExecutableSchema({
     Frequency,
     Story,
     Message,
+    Reaction,
     User,
     DirectMessageGroup,
   ],
@@ -80,6 +83,7 @@ const schema = makeExecutableSchema({
     messageQueries,
     userQueries,
     directMessageGroupQueries,
+    reactionQueries,
     // mutations
     messageMutations,
     storyMutations,

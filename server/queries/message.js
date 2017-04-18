@@ -3,8 +3,9 @@
 /**
  * Message query resolvers
  */
-const { getMessage, getReactions } = require('../models/message');
+const { getMessage } = require('../models/message');
 const { getUser } = require('../models/user');
+import { getReactions } from '../models/reaction';
 import type { LocationTypes } from '../models/message';
 
 type GetMessageProps = {
@@ -12,11 +13,18 @@ type GetMessageProps = {
   id: String,
 };
 
+type Root = {
+  id: string,
+  sender: string,
+};
+
 module.exports = {
   Query: {
-    message: (_, { location, id }: GetMessageProps) => getMessage(location, id),
+    message: (_: Root, { location, id }: GetMessageProps) =>
+      getMessage(location, id),
   },
   Message: {
-    sender: ({ sender }: Object) => getUser(sender),
+    sender: ({ sender }: Root) => getUser(sender),
+    reactions: ({ id }: Root) => getReactions(id),
   },
 };

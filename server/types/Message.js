@@ -21,24 +21,6 @@ const Message = /* GraphQL */ `
 		content: String!
 	}
 
-	enum ReactionTypes {
-		like
-	}
-
-	type Reaction {
-		id: ID!
-		timestamp: Date!
-		message: ID!
-		user: User!
-		type: ReactionTypes!
-	}
-
-	input ReactionInput {
-		message: ID!
-		user: ID!
-		type: ReactionTypes!
-	}
-
 	# A message
 	type Message {
 		id: ID!
@@ -70,7 +52,6 @@ const Message = /* GraphQL */ `
 
 	extend type Mutation {
 		addMessage(location: MessageLocation!, message: MessageInput!): Message
-		toggleReaction(location: MessageLocation!, reaction: ReactionInput!): Message
 	}
 
 	extend type Subscription {
