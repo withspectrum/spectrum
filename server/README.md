@@ -49,6 +49,107 @@ server/
 
 What we mean by this is that resolvers should (for the most part) only be a mapping between a certain path and the model function that takes care of it. Make sure the least amount of business logic possible lives in resolvers. (these are reminiscent of Controllers in a traditional MVC setup)
 
+### Pagination
+
+We have a standard way to paginate resources based on the [Relay Connections Specification](https://facebook.github.io/relay/graphql/connections.htm). Rather than reading a spec that might not make any pratical sense we recommend reading these two article to get a grasp of the why and how:
+
+- [Understanding pagination: REST, GraphQL and Relay](https://dev-blog.apollodata.com/understanding-pagination-rest-graphql-and-relay-b10f835549e7): Get a sense of the issues we're facing with the app and how to solve them
+- [Explaining GraphQL Connections](https://dev-blog.apollodata.com/explaining-graphql-connections-c48b7c3d6976): We follow this specific structure to the dot. (with one tiny change in naming)
+
+The TL;DR of how to use it is:
+
+```GraphQL
+{
+  story(id: "some-story-id") {
+    # Fetch the messages of a certain story
+    messageConnection {
+      pageInfo {
+        # Do we have another page to fetch after this
+        hasNextPage
+      }
+      edges {
+        # Pass the cursor of the last message to messageConnections
+        # to fetch the next page
+        cursor
+        # The actual message:
+        node {
+          id
+          message {
+            content
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+This query would get the first 10 (or less) messages of that story. To get the next page you have to take the `cursor` of the last message edge and pass that to messageConnections:
+
+```GraphQL
+{
+  story(id: "some-story-id") {
+    # Fetch the next messages after the last message in the story
+    messageConnection(after: $lastMessageCursor) {
+      edges {
+        node {
+          message {
+            content
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+> Note: The cursor is an opaque data structure, meaning it might refer to something you understand or it might not. It's also not promised to be consistent, especially between sessions, resources, etc. This boils down to **do not use the cursor for anything other than passing it to the query for the next page**, no matter if you want to use it for something else.
+
+To specify how many messages you want to load use the `first` parameter:
+
+```GraphQL
+{
+  story(id: "some-story-id") {
+    # Fetch the first 5 messages after the last message
+    messageConnection(first: 5, after: $lastMessageCursor) {
+      edges {
+        node {
+          message {
+            content
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+> Note: The default for `first` is normally 10, but might be changed depending on the resource being fetched. Make sure to check GraphiQL/the types to figure out what the default is.
+
+#### Naming
+
+Connections and edges have standard names and structures across all resources:
+
+```GraphQL
+# A connection of a story to messages
+type StoryMessagesConnection {
+  pageInfo: PageInfo!
+  edges: [StoryMessageEdge!]
+}
+
+# An edge from a story to a message
+type StoryMessageEdge {
+  cursor: String!
+  node: Message!
+}
+
+type Story {
+  messageConnection(first: Int = 10, after: String): StoryMessagesConnection!
+}
+```
+
+> Note: This is where we diverge slightly from the article linked above, it recommends naming your edges in plural (`StoryMessagesEdge`) to make it consistent with the connection but we've found that the singular (`StoryMessageEdge`) makes it clear only a single resource is being fetched and think that's more important.
+
 ### Error management
 
 We use [`graphql-errors`](https://github.com/kadirahq/graphql-errors) to mask internal errors in production. (GraphQL schema errors are still visible of course) Instead of seeing "Database limit exceeded, please upgrade your account xyz.", the user only sees "Internal Error: asdf123-asdf-asdf-asdf1235" (where `"asdf123-asdf-asdf-asdf1235"` is a UUID that helps us reference that error to a stacktrace) which means no sensitive information is leaked.
