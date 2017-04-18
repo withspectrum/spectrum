@@ -16,35 +16,41 @@ const randomAmount = ({ max, min }, cb) => {
 
 const generateUser = () => {
   const createdAt = faker.date.past(2);
+  const name = faker.name.findName();
   return {
     uid: uuid(),
     createdAt,
-    displayName: faker.name.findName(),
+    displayName: name,
     // Make sure lastSeen is > createdAt
     lastSeen: faker.date.between(createdAt, new Date()),
-    photoURL: faker.image.people(),
-    username: uuid(),
+    photoURL: faker.internet.avatar(),
+    email: faker.internet.email(name),
+    username: faker.internet.userName(name),
   };
 };
 
-const generateCommunity = members => ({
-  id: uuid(),
-  createdAt: faker.date.past(2),
-  name: faker.company.companyName(),
-  slug: uuid(),
-  members,
-});
+const generateCommunity = members => {
+  const name = faker.company.companyName();
+  return {
+    id: uuid(),
+    createdAt: faker.date.past(2),
+    name,
+    slug: faker.helpers.slugify(name),
+    members,
+  };
+};
 
 const generateFrequency = (community, subscribers) => {
   const createdAt = faker.date.past(2);
+  const name = faker.commerce.department();
   return {
     id: uuid(),
     community,
     createdAt,
     modifiedAt: faker.date.between(createdAt, new Date()),
-    name: faker.commerce.department(),
-    description: faker.lorem.sentences(),
-    slug: uuid(),
+    name,
+    description: faker.random.words(faker.random.number({ min: 1, max: 20 })),
+    slug: faker.helpers.slugify(name),
     subscribers,
   };
 };
@@ -52,8 +58,8 @@ const generateFrequency = (community, subscribers) => {
 const generateStory = (frequency, author) => {
   const createdAt = faker.date.past(2);
   const content = {
-    title: faker.lorem.sentences(),
-    description: faker.lorem.lines(),
+    title: faker.random.words(faker.random.number({ min: 1, max: 10 })),
+    description: faker.random.words(faker.random.number({ min: 1, max: 100 })),
   };
   return {
     id: uuid(),
@@ -80,7 +86,7 @@ const generateMessage = (sender, thread) => {
     sender,
     message: {
       type: 'text',
-      content: faker.lorem.lines(),
+      content: faker.random.words(faker.random.number({ min: 1, max: 20 })),
     },
   };
 };

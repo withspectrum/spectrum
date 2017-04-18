@@ -1,5 +1,4 @@
 'use strict';
-const data = require('./data/initial-data');
 
 exports.up = function(r, conn) {
   return Promise.all([
