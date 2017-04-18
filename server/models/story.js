@@ -7,8 +7,24 @@ const getStory = id => {
   return db.table('stories').get(id).run();
 };
 
-const getStoryByFrequency = frequency => {
-  return db.table('stories').filter({ frequency }).run();
+const getStoriesByFrequency = (frequency, { first, after }) => {
+  const getStories = db
+    .table('stories')
+    .between(after || db.minval, db.maxval, { leftBound: 'open' })
+    .orderBy('modifiedAt')
+    .filter({ frequency })
+    .limit(first)
+    .run()
+    .then();
+
+  const getLastStory = db
+    .table('stories')
+    .orderBy('modifiedAt')
+    .filter({ frequency })
+    .max()
+    .run();
+
+  return Promise.all([getStories, getLastStory]);
 };
 
 const addStory = story => {
@@ -62,9 +78,9 @@ const setStoryLock = (id, value) => {
       .run()
       .then(
         result =>
-          result.changes.length > 0
+          (result.changes.length > 0
             ? result.changes[0].new_val
-            : db.table('stories').get(id).run()
+            : db.table('stories').get(id).run())
       )
   );
 };
@@ -104,5 +120,5 @@ module.exports = {
   editStory,
   setStoryLock,
   deleteStory,
-  getStoryByFrequency,
+  getStoriesByFrequency,
 };

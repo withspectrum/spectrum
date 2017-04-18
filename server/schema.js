@@ -10,6 +10,7 @@ const { merge } = require('lodash');
 const { maskErrors } = require('graphql-errors');
 
 const scalars = require('./types/scalars');
+const generalTypes = require('./types/general');
 
 const Story = require('./types/Story');
 const Frequency = require('./types/Frequency');
@@ -60,6 +61,7 @@ const Root = /* GraphQL */ `
 const schema = makeExecutableSchema({
   typeDefs: [
     scalars.typeDefs,
+    generalTypes,
     Root,
     Community,
     Frequency,

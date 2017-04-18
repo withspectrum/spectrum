@@ -15,6 +15,7 @@ export const Column = styled.div`
 	height: 100%;
 	width: 100%;
   overflow-x: hidden;
+  border-right: 2px solid ${({ theme }) => theme.border.default};
 `;
 
 export const StoryList = styled.div`
@@ -29,10 +30,10 @@ export const Overlay = styled.div`
 	right: 0;
 	bottom: 0;
 	background-color: #000;
-	opacity: ${props => props.active ? '0.1' : '0'};
+	opacity: ${props => (props.active ? '0.1' : '0')};
 	transition: opacity 0.1s ease-in;
 	z-index: 2;
-	pointer-events: ${props => props.active ? 'auto' : 'none'};
+	pointer-events: ${props => (props.active ? 'auto' : 'none')};
 	width: 100vw;
 	height: 100%;
 `;
@@ -121,8 +122,7 @@ export const LoginButton = styled.button`
   border-radius: 12px;
   color: ${({ theme }) => theme.text.reverse};
   background-color: ${({ theme }) => theme.brand.default};
-  background-image: ${({ theme }) =>
-  Gradient(theme.brand.alt, theme.brand.default)};
+  background-image: ${({ theme }) => Gradient(theme.brand.alt, theme.brand.default)};
   transition: all 0.2s ease-in-out;
 
   &:hover {
@@ -134,7 +134,7 @@ export const LoginButton = styled.button`
 
 export const TipButton = styled.button`
 	background-color: transparent;
-	${props => props.tipText ? Tooltip(props) : ''};
+	${props => (props.tipText ? Tooltip(props) : '')};
 `;
 
 export const MenuButton = styled(IconButton)`
@@ -174,7 +174,7 @@ export const Spread = styled(FlexRow)`
 `;
 
 export const Actions = styled(FlexRow)`
-	display: ${props => props.visible ? 'flex' : 'none'};
+	display: ${props => (props.visible ? 'flex' : 'none')};
 	flex: 0 0 48px;
 	justify-content: space-between;
 	align-items: flex-start;

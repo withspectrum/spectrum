@@ -4,6 +4,7 @@
  * Storing and retrieving messages
  */
 const { db } = require('./db');
+import type { PaginationOptions } from '../utils/paginate-arrays';
 
 export type LocationTypes = 'messages' | 'direct_messages';
 export type MessageTypes = 'text' | 'media';
@@ -18,9 +19,26 @@ const getMessage = (location: LocationTypes, id: String) => {
 
 const getMessagesByLocationAndThread = (
   location: LocationTypes,
-  thread: String
+  thread: String,
+  { after, first }: PaginationOptions
 ) => {
-  return db.table(location).filter({ thread }).run();
+  const getMessages = db
+    .table(location)
+    .between(after || db.minval, db.maxval, { leftBound: 'open' })
+    .orderBy('timestamp')
+    .filter({ thread })
+    .limit(first)
+    .run()
+    .then();
+
+  const getLastMessage = db
+    .table(location)
+    .orderBy('timestamp')
+    .filter({ thread })
+    .max()
+    .run();
+
+  return Promise.all([getMessages, getLastMessage]);
 };
 
 const storeMessage = (location: LocationTypes, message: MessageProps) => {

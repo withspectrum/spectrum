@@ -277,6 +277,7 @@ class NavBar extends Component {
         <Avatar>
           {!isPro && <Pro onClick={this.showUpgradeModal}>Upgrade to Pro</Pro>}
           <Photo
+            pro={isPro}
             onClick={
               isPro ? this.showEditAccountModal : this.openUserProfileModal
             }

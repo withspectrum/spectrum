@@ -5,10 +5,20 @@ const DirectMessageGroup = /* GraphQL */ `
 		lastSeen: Date
 	}
 
+	type DirectMessagesConnection {
+		pageInfo: PageInfo!
+		edges: [DirectMessageEdge!]
+	}
+
+	type DirectMessageEdge {
+		cursor: String!
+		node: Message!
+	}
+
 	type DirectMessageGroup {
 		id: ID!
 		users: [DirectMessageUser!]
-		messages: [Message!]
+		messageConnection(first: Int = 10, after: String): DirectMessagesConnection!
 		creator: User!
 		lastActivity: Date!
 	}
