@@ -5,12 +5,14 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-preset-flow": "^6.23.0",
+    "faker": "^4.1.0",
     "firebase-tools": "^3.5.0",
     "flow-bin": "^0.43.0",
     "lint-staged": "^3.3.0",
     "nodemon": "^1.11.0",
     "prettier": "^1.0.0",
-    "react-scripts-webpack-v2-fork-mxstbr": "^0.9.0"
+    "react-scripts-webpack-v2-fork-mxstbr": "^0.9.0",
+    "uuid": "^3.0.1"
   },
   "dependencies": {
     "autolinker": "^1.4.0",
@@ -65,8 +67,9 @@
     "start": "react-scripts start",
     "dev:server": "NODE_ENV=development nodemon server/index.js --exec babel-node --presets react-app",
     "migrate": "rethinkdb-migrate -f ./server/migrations/config.js",
-    "db:seed": "npm run migrate -- up initial-data",
+    "db:migrate": "npm run migrate -- up initial-data",
     "db:drop": "npm run migrate -- down initial-data",
+    "db:seed": "node server/migrations/seed/index.js",
     "now-start": "serve ./build --single",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

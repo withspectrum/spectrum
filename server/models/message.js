@@ -36,6 +36,7 @@ const getMessagesByLocationAndThread = (
     .orderBy('timestamp')
     .filter({ thread })
     .max()
+    .default({})
     .run();
 
   return Promise.all([getMessages, getLastMessage]);
