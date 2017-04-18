@@ -30,6 +30,7 @@ const directMessageGroupQueries = require('./queries/directMessageGroup');
 
 const messageMutations = require('./mutations/message');
 const storyMutations = require('./mutations/story');
+const reactionMutations = require('./mutations/reaction');
 const directMessageGroupMutations = require('./mutations/directMessageGroup');
 
 const messageSubscriptions = require('./subscriptions/message');
@@ -88,6 +89,7 @@ const schema = makeExecutableSchema({
     messageMutations,
     storyMutations,
     directMessageGroupMutations,
+    reactionMutations,
     // subscriptions
     messageSubscriptions
   ),
