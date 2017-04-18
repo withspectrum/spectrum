@@ -5,21 +5,26 @@
  */
 const { getMessage } = require('../models/message');
 const { getUser } = require('../models/user');
+import { getReactions } from '../models/reaction';
 import type { LocationTypes } from '../models/message';
 
 type GetMessageProps = {
   location: LocationTypes,
   id: String,
 };
-type GetUserProps = {
-  sender: Object,
+
+type Root = {
+  id: string,
+  sender: string,
 };
 
 module.exports = {
   Query: {
-    message: (_, { location, id }: GetMessageProps) => getMessage(location, id),
+    message: (_: Root, { location, id }: GetMessageProps) =>
+      getMessage(location, id),
   },
   Message: {
-    sender: ({ sender }: GetUserProps) => getUser(sender),
+    sender: ({ sender }: Root) => getUser(sender),
+    reactions: ({ id }: Root) => getReactions(id),
   },
 };

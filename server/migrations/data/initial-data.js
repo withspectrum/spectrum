@@ -94,7 +94,7 @@ const messages = [
     sender: '58a023a4-912d-48fe-a61c-eec7274f7699',
   },
   {
-    id: 'first-message-asdf123',
+    id: 'third-message-asdf123',
     timestamp: new Date(),
     thread: 'second-story-asddf123',
     message: {
@@ -161,6 +161,23 @@ const directMessageGroups = [
   },
 ];
 
+const reactions = [
+  {
+    id: 'first-reaction-asdf123',
+    user: '58a023a4-912d-48fe-a61c-eec7274f7699',
+    message: 'first-message-asdf123',
+    timestamp: new Date(),
+    type: 'like',
+  },
+  {
+    id: 'second-reaction-asdf123',
+    user: '58a023a4-912d-48fe-a61c-eec7274f7698',
+    message: 'second-message-asdf123',
+    timestamp: new Date(),
+    type: 'like',
+  },
+];
+
 module.exports = {
   communities,
   frequencies,
@@ -169,4 +186,5 @@ module.exports = {
   users,
   directMessages,
   directMessageGroups,
+  reactions,
 };

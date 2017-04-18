@@ -28,13 +28,7 @@ const Message = /* GraphQL */ `
 		thread: ThreadTypes!
 		message: MessageContent!
 		sender: User!
-	}
-
-	extend type Query {
-		message(
-			location: MessageLocation!,
-			id: ID!
-		): Message
+		reactions: [Reaction]
 	}
 
 	input MessageContentInput {
@@ -47,6 +41,14 @@ const Message = /* GraphQL */ `
 		sender: ID!
 		message: MessageContentInput!
 	}
+
+	extend type Query {
+		message(
+			location: MessageLocation!,
+			id: ID!
+		): Message
+	}
+
 
 	extend type Mutation {
 		addMessage(location: MessageLocation!, message: MessageInput!): Message

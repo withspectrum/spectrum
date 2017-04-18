@@ -13,7 +13,7 @@ export type MessageProps = {
   content: String,
 };
 
-const getMessage = (location: LocationTypes, id: String) => {
+const getMessage = (location: LocationTypes, id: string) => {
   return db.table(location).get(id).run();
 };
 
