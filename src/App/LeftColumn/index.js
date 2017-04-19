@@ -203,7 +203,6 @@ class NavigationMaster extends Component {
                           frequency.slug === activeFrequency) ||
                           (frequency.id && frequency.id === activeFrequency)) &&
                         comm.slug === active;
-                      console.log('freq: ', frequency);
                       const notif = notifications.find(notification => {
                         // Only show a dirty dot for new messages
                         if (
