@@ -23,15 +23,19 @@ export const login = () => dispatch => {
 
   signInWithTwitter()
     .then(user => {
-      // set this uid in google analytics
+      console.log('user: ', user);
       track('user', 'logged in', null);
+      console.log('1');
       set(user.uid);
+      console.log('2');
       monitorUser(user.uid);
+      console.log('3');
 
       dispatch({ type: 'STOP_LOADING' });
 
       // create the user in the db
       createUser(user);
+      console.log('4');
     })
     .catch(err => {
       dispatch(throwError(err, { stopLoading: true }));
