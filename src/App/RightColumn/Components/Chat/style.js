@@ -74,7 +74,7 @@ export const MessageWrapper = styled.span`
 
   &:after {
     transition: ${Transition.hover.off};
-    content: ${props => (props.timestamp ? `'${props.timestamp}'` : console.log('no timestamps 4 u', props))};
+    content: ${props => (props.timestamp ? `'${props.timestamp}'` : '')};
     position: absolute;
     ${props => (props.me ? 'right: calc(100% + 8px)' : 'left: calc(100% + 8px)')};
     top: 8px;
