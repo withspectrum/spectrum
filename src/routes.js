@@ -10,6 +10,8 @@ import DirectMessages from './containers/directMessages';
 import Explore from './containers/explore';
 import Story from './containers/story';
 import UserProfile from './containers/userProfile';
+import CommunityProfile from './containers/communityProfile';
+import FrequencyProfile from './containers/frequencyProfile';
 import Navbar from './containers/navbar';
 
 const Home = () => (
@@ -62,7 +64,11 @@ class Routes extends Component {
               pass. We handle null communityId values downstream by either
               redirecting to home or showing a 404
             */}
-            <Route path="/:communityId" component={About} />
+            <Route
+              path="/:communityId/:frequencyId"
+              component={FrequencyProfile}
+            />
+            <Route path="/:communityId" component={CommunityProfile} />
           </Switch>
         </Body>
       </Router>

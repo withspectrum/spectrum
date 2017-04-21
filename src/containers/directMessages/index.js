@@ -1,8 +1,25 @@
 import React, { Component } from 'react';
+import { Route, Redirect } from 'react-router';
+import styled from 'styled-components';
+
+const DirectMessagesChat = ({ match }) => <div>{match.params.threadId}</div>;
+
+const Container = styled.div`
+
+`;
 
 class DirectMessages extends Component {
   render() {
-    return <h3>Direct Messages</h3>;
+    const { match } = this.props;
+
+    return (
+      <Container>
+
+        {/* render the story chat given the url param */}
+        <Route path={`${match.url}/:threadId`} component={DirectMessagesChat} />
+
+      </Container>
+    );
   }
 }
 
