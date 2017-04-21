@@ -10,7 +10,9 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
+const env = require('node-env-file');
 
+const { returnPaymentsError } = require('./utils');
 const { db } = require('./models/db');
 const listeners = require('./subscriptions');
 const subscriptionManager = require('./subscriptions/manager');
@@ -32,8 +34,74 @@ initPassport({
     ? 'https://spectrum.chat'
     : 'http://localhost:3001',
 });
+
 // API server
 const app = express();
+
+// to use local env variables in order to not commit our stripe keys
+if (app.get('env') === 'development') {
+  env(__dirname + '/.env');
+}
+
+// set stripe key
+app.set('stripeKey', process.env.STRIPE_KEY);
+const stripeKey = app.get('stripeKey');
+const stripe = require('stripe')(stripeKey), currency = 'USD';
+
+// the token comes from the client side stripe integration, which contains
+// payment and customer information, tokenized, which can be used to create a
+// subscription.
+// the plan is a string that maps to our subscriptions created in stripe
+app.post('/payments/subscriptions/create', (req, res) => {
+  const token = JSON.parse(req.body.token);
+  const plan = req.body.plan;
+
+  if (!token) return res.json({ success: false, error: 'No token detected.' });
+  if (!plan) return res.json({ success: false, error: 'No plan detected.' });
+
+  stripe.customers.create(
+    { email: token.email, source: token.id },
+    (err, customer) => {
+      if (err) returnError(res, err);
+
+      // after the customer is created, charge them and put them on the subscription
+      stripe.subscriptions.create(
+        { plan: plan, customer: customer.id },
+        (err, subscription) => {
+          // unable to create the subscription
+          if (err) returnError(res, err);
+
+          // send back a response once we know the customer and subscription worked
+          return res.json({
+            success: true,
+            customerId: customer.id,
+            customerEmail: token.email,
+            subscriptionId: subscription.id,
+            tokenId: token.id,
+            subscriptionName: subscription.plan.name,
+            created: subscription.created,
+            amount: subscription.plan.amount,
+          });
+        }
+      );
+    }
+  );
+});
+
+app.post('/payments/subscriptions/delete', (req, res) => {
+  const subscriptionId = req.body.subscriptionId.toString();
+  if (!subscriptionId)
+    return res.json({ success: false, error: 'No subscription found' });
+
+  stripe.subscriptions.del(subscriptionId, (err, confirmation) => {
+    if (err) return res.json({ success: false, error: err });
+
+    return res.json({
+      success: true,
+    });
+  });
+});
+
 app.use(
   '/graphiql',
   graphiqlExpress({
@@ -75,6 +143,7 @@ app.get(
     failureRedirect: '/login',
   })
 );
+
 app.use('/', graphqlExpress({ schema }));
 
 // Create the websocket server, make it 404 for all requests to HTTP(S) port(s)
