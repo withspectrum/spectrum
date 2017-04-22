@@ -14,7 +14,7 @@ import {
 class Navbar extends Component {
   render() {
     const { match } = this.props;
-    console.log(match, match.url, match.params);
+
     return (
       <Container>
         <Nav>

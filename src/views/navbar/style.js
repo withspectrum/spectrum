@@ -17,12 +17,13 @@ export const Nav = styled.nav`
   height: 48px;
   padding: 0 16px;
   line-height: 1;
-  box-shadow: 0 4px 8px #C9D4E0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  z-index: 1000;
 
   @media (max-width: 768px) {
     bottom: 0;
     top: auto;
-    box-shadow: 0 -4px 8px #C9D4E0;
+    box-shadow: 0 -4px 8px rgba(0,0,0,0.15);
     padding: 0;
   }
 `;
@@ -74,7 +75,7 @@ export const IconLink = styled(Link)`
   }
 
   &[data-active~="true"] {
-    box-shadow: inset 0 -2px 0 #fff;
+    box-shadow: inset 0 -4px 0 #fff;
     opacity: 1;
   }
 

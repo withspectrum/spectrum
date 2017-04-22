@@ -13,13 +13,13 @@ export const InlineSvg = styled.svg`
   height: 100%;
   width: 100%;
   color: inherit;
-  transition: fill 0.3s ease-out;
-  fill: ${props => (props.subtle ? props.theme.text.alt : 'currentColor')};
+  transition: all 0.3s ease-out;
+  fill: ${props => eval(props.color ? `props.theme.${props.color}` : 'currentColor')};
 
   &:hover {
     transition: all 0.2s ease-in;
-    transform: ${props => (props.static ? `none` : `scale(1.05)`)};
-    fill: currentColor;
+    transform: ${props => (props.scaleOnHover ? `scale(1.05)` : `scale(1)`)};
+    fill: ${props => eval(props.hoverColor ? `props.theme.${props.hoverColor}` : `currentColor`)};
 		cursor: pointer;
 	}
 `;
@@ -32,7 +32,7 @@ export const SvgWrapper = styled.div`
   min-width: ${props => (props.size ? `${props.size}px` : '32px')};
   min-height: ${props => (props.size ? `${props.size}px` : '32px')};
   position: relative;
-  color: ${props => (props.reverse ? props.theme.text.reverse : eval(`props.theme.${props.color}`))};
+  color: ${props => (props.color ? `props.theme.${props.color}` : `currentColor`)};
   ${props => (props.tipText && !props.onboarding ? Tooltip(props) : '')};
   ${props => (props.onboarding ? Onboarding(props) : '')};
 `;
@@ -298,7 +298,7 @@ class Icon extends React.Component {
       <SvgWrapper
         size={this.props.size}
         color={this.props.color}
-        reverse={this.props.reverse}
+        hoverColor={this.props.hoverColor}
         justify={this.props.location}
         tipText={this.props.tipText}
         tipLocation={this.props.tipLocation}
@@ -314,11 +314,10 @@ class Icon extends React.Component {
           viewBox="0 0 32 32"
           preserveAspectRatio="xMidYMid meet"
           fit
-          reverse={this.props.reverse}
-          subtle={this.props.subtle}
           id={this.props.icon}
           color={this.props.color}
-          static={this.props.static}
+          hoverColor={this.props.hoverColor}
+          scaleOnHover={this.props.scaleOnHover}
         >
           <title id="title">{this.props.icon}</title>
           {this.returnPath()}
@@ -330,19 +329,17 @@ class Icon extends React.Component {
 
 Icon.defaultProps = {
   size: 32,
-  color: 'brand.default',
-  reverse: false,
-  subtle: false,
-  static: false,
+  color: 'text.alt',
+  hoverColor: 'brand.default',
+  scaleOnHover: false,
 };
 
 Icon.propTypes = {
   icon: React.PropTypes.string,
   size: React.PropTypes.number.isRequired,
-  reverse: React.PropTypes.bool.isRequired, //=> will be white by default
-  subtle: React.PropTypes.bool.isRequired, //=> will be light gray by default
-  color: React.PropTypes.string.isRequired, //=> sets hover color if ()!subtle && !reverse)
-  static: React.PropTypes.bool.isRequired, //=> doesn't scale on hover
+  color: React.PropTypes.string,
+  hoverColor: React.PropTypes.string,
+  scaleOnHover: React.PropTypes.bool,
 };
 
 export default Icon;

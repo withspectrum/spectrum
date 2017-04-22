@@ -15,6 +15,7 @@ import UserProfile from './views/userProfile';
 import CommunityProfile from './views/communityProfile';
 import FrequencyProfile from './views/frequencyProfile';
 import Navbar from './views/navbar';
+import StyleGuide from './views/pages/styleGuide';
 
 const logout = () => {
   localStorage.clear();
@@ -27,6 +28,7 @@ const Home = () => (
 
     <Link to="/story/first-story-asdf123">First Story</Link>
     <Link to="/story/second-story-asddf123">Second Story</Link>
+    <Link to="/style-guide">Style Guide</Link>
     <a onClick={logout}>logout</a>
   </div>
 );
@@ -39,7 +41,7 @@ const About = () => (
 
 const Body = styled.div`
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   background: ${props => props.theme.bg.wash};
 `;
 
@@ -63,6 +65,7 @@ class Routes extends Component {
             <Route path="/contact" component={About} />
             <Route path="/terms" component={About} />
             <Route path="/code-of-conduct" component={About} />
+            <Route path="/style-guide" component={StyleGuide} />
 
             {/* App Pages */}
             <Route path="/explore" component={Explore} />
