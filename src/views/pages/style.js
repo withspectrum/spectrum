@@ -88,7 +88,8 @@ export const ComponentContainer = styled.div`
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   flex-grow: 1;
   margin: 8px;
-  max-width: calc(${props => (props.width ? `${props.width} - 16px` : `50% - 16px`)});
+  width: calc(${props => (props.width ? `${props.width} - 16px` : `50% - 16px`)});
+  max-width: calc(50% - 16px);
 `;
 
 export const Component = styled.div`
@@ -126,7 +127,7 @@ export const Code = styled.div`
 `;
 
 export const Swatch = styled.span`
-  width: 48px;
+  width: 100%;
   height: 48px;
   border-radius: 4px;
   background-color: ${props => eval(`props.theme.${props.color}`)};

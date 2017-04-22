@@ -37,56 +37,56 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
       <Heading>Colors</Heading>
       <Subheading>Palette</Subheading>
       <Section>
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'brand.default'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.brand.default'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'brand.alt'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.brand.alt'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'space.dark'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.space.dark'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'space.light'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.space.light'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'space.soft'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.space.soft'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'warn.default'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.warn.default'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'warn.alt'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.warn.alt'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'success.default'} />
           </Component>
@@ -95,56 +95,56 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'success.alt'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.success.alt'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'bg.default'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.bg.default'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'bg.reverse'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.bg.reverse'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'bg.wash'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.bg.wash'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'text.default'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.text.default'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'text.alt'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.text.alt'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'text.reverse'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.text.reverse'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'text.placeholder'} />
           </Component>
@@ -153,7 +153,7 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'generic.default'} />
           </Component>
@@ -162,28 +162,28 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'generic.alt'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.generic.alt'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'inactive'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.inactive'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'border.default'} />
           </Component>
           <Code onClick={highlightAndCopy}>{'props.theme.border.default'}</Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'social.facebook.default'} />
           </Component>
@@ -192,7 +192,7 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Code>
         </ComponentContainer>
 
-        <ComponentContainer>
+        <ComponentContainer width={'25%'}>
           <Component>
             <Swatch color={'social.twitter.default'} />
           </Component>
