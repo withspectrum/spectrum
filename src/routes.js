@@ -3,20 +3,24 @@ import React, { Component } from 'react';
 //$FlowFixMe
 import { Router, Route, Switch } from 'react-router';
 //$FlowFixMe
+import { Link } from 'react-router-dom';
+//$FlowFixMe
 import styled from 'styled-components';
 //$FlowFixMe
 import createBrowserHistory from 'history/createBrowserHistory';
-import DirectMessages from './containers/directMessages';
-import Explore from './containers/explore';
-import Story from './containers/story';
-import UserProfile from './containers/userProfile';
-import CommunityProfile from './containers/communityProfile';
-import FrequencyProfile from './containers/frequencyProfile';
-import Navbar from './containers/navbar';
+import DirectMessages from './views/directMessages';
+import Explore from './views/explore';
+import Story from './views/story';
+import UserProfile from './views/userProfile';
+import CommunityProfile from './views/communityProfile';
+import FrequencyProfile from './views/frequencyProfile';
+import Navbar from './views/navbar';
 
 const Home = () => (
   <div>
-    <h3>Home</h3>
+    <h3>View stories</h3>
+    <Link to="/story/first-story-asdf123">First Story</Link>
+    <Link to="/story/second-story-asddf123">Second Story</Link>
   </div>
 );
 

@@ -1,4 +1,0 @@
-// storyHeader
-// storyContent
-// shareInput
-// ...

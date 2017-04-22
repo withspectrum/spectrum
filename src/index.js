@@ -8,9 +8,9 @@ import { ApolloProvider } from 'react-apollo';
 import { client } from './api';
 import { initStore } from './store';
 import { clearStorage, getItemFromStorage } from './helpers/localStorage';
-import { theme } from './containers/ui/components/theme';
+import { theme } from './views/ui/components/theme';
 import Routes from './routes';
-import Homepage from './containers/homepage';
+import Homepage from './views/homepage';
 
 const existingUser = getItemFromStorage('spectrum');
 const store = initStore({});
