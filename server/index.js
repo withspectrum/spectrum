@@ -3,6 +3,7 @@
  */
 const { createServer } = require('http');
 const express = require('express');
+const cors = require('cors');
 const passport = require('passport');
 const session = require('express-session');
 const SessionStore = require('session-rethinkdb')(session);
@@ -23,6 +24,7 @@ const WS_PORT = 5000;
 const DB_PORT = 28015;
 const HOST = 'localhost';
 const IS_PROD = process.env.NODE_ENV === 'production';
+const ORIGIN = IS_PROD ? 'https://spectrum.chat' : 'http://localhost:3000';
 
 console.log('Server starting...');
 
@@ -34,6 +36,11 @@ initPassport({
 });
 // API server
 const app = express();
+app.use(
+  cors({
+    origin: ORIGIN,
+  })
+);
 app.use(
   '/graphiql',
   graphiqlExpress({
