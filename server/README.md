@@ -9,7 +9,9 @@ A Node.js server for Spectrum.chat, built with Express.js, GraphQL and RethinkDB
 brew install rethinkdb
 # Start rethinkdb
 rethinkdb
-# In a separate tab, seed the db with some initial data
+# In a separate tab migrate the database
+yarn run db:migrate
+# Then seed it with some initial data
 yarn run db:seed
 # ⚠️ To empty the database (e.g. if there's faulty data) run yarn run db:drop
 # Start the server in development mode (restarts on any change)
