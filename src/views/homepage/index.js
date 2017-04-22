@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
-import Icon from '../ui/components/icons';
-import { FlexCol, FlexRow } from '../ui/components/globals';
+import Icon from '../../components/icons';
+import { FlexCol, FlexRow } from '../../components/globals';
 import {
   SectionOne,
   SectionTwo,

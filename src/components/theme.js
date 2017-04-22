@@ -23,7 +23,7 @@ export const theme = {
   bg: {
     default: '#FFFFFF',
     reverse: '#171A21',
-    wash: '#f6f7f8',
+    wash: '#F2F5F9',
   },
   text: {
     default: '#171A21',

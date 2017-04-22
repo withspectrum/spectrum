@@ -1,12 +1,14 @@
+// @flow
 import React from 'react';
+//$FlowFixMe
 import styled from 'styled-components';
 
 const Svg = styled.svg`
-  fill: ${props => props.theme.text.reverse};
+  fill: ${props => props.color};
   max-width: 100%;
 `;
 
-export const Logo = props => {
+export const Logo = () => {
   return (
     <Svg
       viewBox="0 0 389 62"

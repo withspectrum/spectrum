@@ -16,11 +16,18 @@ import CommunityProfile from './views/communityProfile';
 import FrequencyProfile from './views/frequencyProfile';
 import Navbar from './views/navbar';
 
+const logout = () => {
+  localStorage.clear();
+  window.location.href = '/';
+};
+
 const Home = () => (
   <div>
     <h3>View stories</h3>
+
     <Link to="/story/first-story-asdf123">First Story</Link>
     <Link to="/story/second-story-asddf123">Second Story</Link>
+    <a onClick={logout}>logout</a>
   </div>
 );
 
@@ -42,7 +49,7 @@ class Routes extends Component {
       <Router history={createBrowserHistory()}>
         <Body>
           {/* Global navigation, notifications, message notifications, etc */}
-          <Navbar />
+          <Route component={Navbar} />
 
           {/*
             Switch only renders the first match. Subrouting happens downstream

@@ -8,7 +8,7 @@ import { ApolloProvider } from 'react-apollo';
 import { client } from './api';
 import { initStore } from './store';
 import { clearStorage, getItemFromStorage } from './helpers/localStorage';
-import { theme } from './views/ui/components/theme';
+import { theme } from './components/theme';
 import Routes from './routes';
 import Homepage from './views/homepage';
 

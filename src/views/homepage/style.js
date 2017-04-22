@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Logo } from '../ui/components/logo';
+import { Logo } from '../../components/logo';
 import {
   Gradient,
   H2,
@@ -7,7 +7,7 @@ import {
   FlexRow,
   P,
   Transition,
-} from '../ui/components/globals';
+} from '../../components/globals';
 
 export const Wrapper = styled(FlexCol)`
 	flex: 1 0 auto;

@@ -1,7 +1,14 @@
+// @flow
 import React from 'react';
 import styled from 'styled-components';
 import { Spinner } from './globals';
 
+/*
+  Creates a container that fills the width and height of its parent
+  and absolutely centers a loading spinner inside.
+
+  Loading spinner takes a size and color.
+*/
 const LoadingContainer = styled.div`
   display: flex;
   flex: 1 1 auto;
@@ -10,9 +17,9 @@ const LoadingContainer = styled.div`
   position: relative;
 `;
 
-const Loading = () => (
+const Loading = ({ size, color }: { size: Number, color: String }) => (
   <LoadingContainer>
-    <Spinner />
+    <Spinner size={size} color={color} />
   </LoadingContainer>
 );
 

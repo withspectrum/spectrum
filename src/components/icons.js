@@ -339,10 +339,10 @@ Icon.defaultProps = {
 Icon.propTypes = {
   icon: React.PropTypes.string,
   size: React.PropTypes.number.isRequired,
-  reverse: React.PropTypes.bool.isRequired,
-  subtle: React.PropTypes.bool.isRequired,
-  color: React.PropTypes.string.isRequired,
-  static: React.PropTypes.bool.isRequired,
+  reverse: React.PropTypes.bool.isRequired, //=> will be white by default
+  subtle: React.PropTypes.bool.isRequired, //=> will be light gray by default
+  color: React.PropTypes.string.isRequired, //=> sets hover color if ()!subtle && !reverse)
+  static: React.PropTypes.bool.isRequired, //=> doesn't scale on hover
 };
 
 export default Icon;
