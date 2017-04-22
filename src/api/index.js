@@ -1,6 +1,10 @@
 // @flow
-import { ApolloClient } from 'react-apollo';
+import { ApolloClient, createNetworkInterface } from 'react-apollo';
 
-export const NETWORK_INTERFACE = 'http://localhost:3001/graphql';
+const networkInterface = createNetworkInterface({
+  uri: 'http://localhost:3001/',
+});
 
-export const client = new ApolloClient();
+export const client = new ApolloClient({
+  networkInterface,
+});

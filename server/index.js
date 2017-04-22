@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
+const cors = require('cors');
 
 const { db } = require('./models/db');
 const listeners = require('./subscriptions');
@@ -34,6 +35,7 @@ initPassport({
 });
 // API server
 const app = express();
+app.use(cors());
 app.use(
   '/graphiql',
   graphiqlExpress({
