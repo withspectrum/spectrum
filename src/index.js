@@ -2,22 +2,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 //$FlowFixMe
-import { Provider } from 'react-redux';
-//$FlowFixMe
 import { ThemeProvider } from 'styled-components';
+//$FlowFixMe
+import { ApolloProvider } from 'react-apollo';
+import { client } from './api';
 import { initStore } from './store';
 import { clearStorage, getItemFromStorage } from './helpers/localStorage';
 import { theme } from './containers/ui/components/theme';
 import Routes from './routes';
 import Homepage from './containers/homepage';
 
-const initialState = getItemFromStorage('spectrum');
-const store = initStore(initialState || {});
+const existingUser = getItemFromStorage('spectrum');
+const store = initStore({});
 
 function render() {
   // if user is not stored in localStorage and they visit a blacklist url
   if (
-    !initialState &&
+    !existingUser &&
     (window.location.pathname === '/' ||
       window.location.pathname === '/messages' ||
       window.location.pathname === '/notifications')
@@ -33,11 +34,11 @@ function render() {
   // otherwise load the app and we'll handle logged-out and logged-in users
   // further down the tree
   return ReactDOM.render(
-    <Provider store={store}>
+    <ApolloProvider store={store} client={client}>
       <ThemeProvider theme={theme}>
         <Routes />
       </ThemeProvider>
-    </Provider>,
+    </ApolloProvider>,
     document.querySelector('#root')
   );
 }

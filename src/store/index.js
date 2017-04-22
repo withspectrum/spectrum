@@ -3,6 +3,7 @@ import { createStore, compose, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { crashReporter } from '../helpers/events';
 import reducers from '../reducers';
+import { client } from '../api';
 
 // this enables the chrome devtools for redux only in development
 const composeEnhancers =
@@ -17,13 +18,17 @@ export const initStore = initialState => {
     return createStore(
       reducers,
       initialState,
-      composeEnhancers(applyMiddleware(thunkMiddleware, crashReporter))
+      composeEnhancers(
+        applyMiddleware(client.middleware(), thunkMiddleware, crashReporter)
+      )
     );
   } else {
     return createStore(
       reducers,
       {},
-      composeEnhancers(applyMiddleware(thunkMiddleware, crashReporter))
+      composeEnhancers(
+        applyMiddleware(client.middleware(), thunkMiddleware, crashReporter)
+      )
     );
   }
 };

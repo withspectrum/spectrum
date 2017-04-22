@@ -15,6 +15,9 @@ class Story extends Component {
     return (
       <Container>
 
+        <div>user profile</div>
+        <div>frequency profile</div>
+
         {/* render the story chat given the url param */}
         <Route path={`${match.url}/:storyId`} component={StoryChat} />
 
