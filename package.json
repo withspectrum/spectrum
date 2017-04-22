@@ -18,6 +18,7 @@
     "autolinker": "^1.4.0",
     "body-parser": "^1.17.1",
     "cookie-parser": "^1.4.3",
+    "cors": "2.8.3",
     "deep-eql": "^2.0.1",
     "emoji-regex": "^6.1.1",
     "express": "^4.15.2",
