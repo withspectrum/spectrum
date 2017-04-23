@@ -193,18 +193,18 @@ describe('queries', () => {
   it('should fetch a user', () => {
     // Write your GraphQL query how you normally would
     const query = /* GraphQL */`
-			{
-				user(id: "first-user") {
-					uid
-					createdAt
-					lastSeen
-					photoURL
-					displayName
-					username
-					email
-				}
-			}
-		`;
+      {
+        user(id: "first-user") {
+          uid
+          createdAt
+          lastSeen
+          photoURL
+          displayName
+          username
+          email
+        }
+      }
+    `;
 
     // Return your graphql() call, which goes, gets the data and returns a Promise
     return graphql(schema, query).then(result => {
