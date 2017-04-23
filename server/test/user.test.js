@@ -1,14 +1,14 @@
 import { graphql } from 'graphql';
-import { db as mockDb, setup, teardown, data } from './db';
+import { db as mockTestDb, setup, teardown, data } from './db';
 jest.mock('../models/db', () => ({
-  db: mockDb,
+  db: mockTestDb,
 }));
 
 import schema from '../schema';
 
 describe('queries', () => {
-  beforeAll(() => setup(mockDb));
-  afterAll(() => teardown(mockDb));
+  beforeAll(() => setup(mockTestDb));
+  afterAll(() => teardown(mockTestDb));
 
   it('should fetch a user', () => {
     const query = /* GraphQL */ `
@@ -26,9 +26,7 @@ describe('queries', () => {
 		`;
 
     return graphql(schema, query).then(result => {
-      expect(result.errors).toBeUndefined();
-      expect(result.data.user).toBeDefined();
-      expect(result.data.user).toMatchSnapshot();
+      expect(result).toMatchSnapshot();
     });
   });
 
@@ -42,8 +40,7 @@ describe('queries', () => {
 		`;
 
     return graphql(schema, query).then(result => {
-      expect(result.errors).toBeUndefined();
-      expect(result.data.user).toBeNull();
+      expect(result).toMatchSnapshot();
     });
   });
 

@@ -1,11 +1,23 @@
 exports[`queries should fetch a user 1`] = `
 Object {
-  "createdAt": "2017-01-01T23:00:00.000Z",
-  "displayName": "First User",
-  "email": "first.user@gmail.com",
-  "lastSeen": "2017-02-01T23:00:00.000Z",
-  "photoURL": "my-photo.jpg",
-  "uid": "first-user",
-  "username": "first",
+  "data": Object {
+    "user": Object {
+      "createdAt": "2017-01-01T23:00:00.000Z",
+      "displayName": "First User",
+      "email": "first.user@gmail.com",
+      "lastSeen": "2017-02-01T23:00:00.000Z",
+      "photoURL": "my-photo.jpg",
+      "uid": "first-user",
+      "username": "first",
+    },
+  },
+}
+`;
+
+exports[`queries should return null for a non-existant id 1`] = `
+Object {
+  "data": Object {
+    "user": null,
+  },
 }
 `;
