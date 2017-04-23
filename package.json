@@ -78,7 +78,7 @@
     "db:seed": "node server/migrations/seed/index.js",
     "now-start": "serve ./build --single",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint:staged": "lint-staged",
     "use:staging": "firebase use staging",
