@@ -16,6 +16,7 @@ import CommunityProfile from './views/communityProfile';
 import FrequencyProfile from './views/frequencyProfile';
 import Navbar from './views/navbar';
 import StyleGuide from './views/pages/styleGuide';
+import Card from './components/card';
 
 const logout = () => {
   localStorage.clear();
@@ -30,6 +31,7 @@ const Home = () => (
     <Link to="/story/second-story-asddf123">Second Story</Link>
     <Link to="/style-guide">Style Guide</Link>
     <a onClick={logout}>logout</a>
+    <Card>Foo</Card>
   </div>
 );
 
