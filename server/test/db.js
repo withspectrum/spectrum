@@ -17,6 +17,69 @@ export const data = {
       username: 'first',
     },
   ],
+  communities: [
+    {
+      id: 'first-community',
+      createdAt: new Date('January 2, 2017'),
+      name: 'First',
+      slug: 'first',
+      members: ['first-user'],
+    },
+  ],
+  frequencies: [
+    {
+      id: 'first-frequency',
+      community: 'first-community',
+      createdAt: new Date('January 3, 2017'),
+      modifiedAt: new Date('January 4, 2017'),
+      name: 'First Frequency',
+      description: 'The first!',
+      slug: 'first',
+      subscribers: ['first-user'],
+    },
+  ],
+  stories: [
+    {
+      id: 'first-story',
+      createdAt: new Date('January 4, 2017'),
+      author: 'first-user',
+      frequency: 'first-frequency',
+      modifiedAt: new Date('January 5, 2017'),
+      published: true,
+      content: {
+        title: 'First!',
+        body: 'What',
+      },
+      edits: [
+        {
+          timestamp: new Date('January 4, 2017'),
+          content: {
+            title: 'First!',
+            body: 'What',
+          },
+        },
+      ],
+    },
+    {
+      id: 'second-story',
+      createdAt: new Date('January 5, 2017'),
+      author: 'first-user',
+      frequency: 'first-frequency',
+      modifiedAt: new Date('January 6, 2017'),
+      published: true,
+      content: {
+        title: 'Second!',
+      },
+      edits: [
+        {
+          timestamp: new Date('January 5, 2017'),
+          content: {
+            title: 'First!',
+          },
+        },
+      ],
+    },
+  ],
 };
 
 export const setup = db => {
@@ -36,7 +99,14 @@ export const setup = db => {
         db.tableCreate('users', { primaryKey: 'uid' }).run(),
       ])
     )
-    .then(result => db.table('users').insert(data.users[0]).run())
+    .then(result =>
+      Promise.all([
+        db.table('users').insert(data.users).run(),
+        db.table('communities').insert(data.communities).run(),
+        db.table('frequencies').insert(data.frequencies).run(),
+        db.table('stories').insert(data.stories).run(),
+      ])
+    )
     .catch(err => {
       console.log(err);
     });
