@@ -92,6 +92,50 @@ describe('queries', () => {
         expect(result).toMatchSnapshot();
       });
     });
+
+    it('should handle first being set to 0 correctly', () => {
+      const noCursorQuery = /* GraphQL */ `
+  			{
+  				user(id: "first-user") {
+  					everything(first: 0) {
+              pageInfo {
+                hasNextPage
+              }
+              edges {
+                node {
+                  id
+                }
+              }
+            }
+  				}
+  			}
+  		`;
+      const cursorQuery = /* GraphQL */ `
+  			{
+  				user(id: "first-user") {
+  					everything(first: 0, after: "Zmlyc3Qtc3Rvcnk=") {
+              pageInfo {
+                hasNextPage
+              }
+              edges {
+                node {
+                  id
+                }
+              }
+            }
+  				}
+  			}
+  		`;
+      expect.assertions(2);
+      return graphql(schema, noCursorQuery)
+        .then(result => {
+          expect(result).toMatchSnapshot();
+          return graphql(schema, cursorQuery);
+        })
+        .then(result => {
+          expect(result).toMatchSnapshot();
+        });
+    });
   });
 
   it.skip('fetches a users communities');

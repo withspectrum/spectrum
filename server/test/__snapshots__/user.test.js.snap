@@ -1,3 +1,33 @@
+exports[`queries everything should handle first being set to 0 correctly 1`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "everything": Object {
+        "edges": Array [],
+        "pageInfo": Object {
+          "hasNextPage": true,
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`queries everything should handle first being set to 0 correctly 2`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "everything": Object {
+        "edges": Array [],
+        "pageInfo": Object {
+          "hasNextPage": false,
+        },
+      },
+    },
+  },
+}
+`;
+
 exports[`queries everything should paginate based on the after property 1`] = `
 Object {
   "data": Object {
