@@ -16,7 +16,7 @@ const users = randomAmount({ max: userAmount, min: 1 }, generateUser);
 console.log('\nGenerating communities...');
 const communities = randomAmount({ max: 10 }, () => {
   const members = randomAmount(
-    { max: userAmount - 2, min: 1 },
+    { max: users.length - 1, min: 1 },
     i => users[i].uid
   );
   return generateCommunity(members);

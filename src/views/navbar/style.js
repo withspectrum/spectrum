@@ -56,9 +56,12 @@ export const LogoLink = styled(Link)`
 `;
 
 export const Logo = styled.img`
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   align-self: center;
+  position: relative;
+  top: 1px;
+  left: 1px;
 `;
 
 export const IconLink = styled(Link)`

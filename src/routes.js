@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 //$FlowFixMe
 import { Router, Route, Switch } from 'react-router';
 //$FlowFixMe
-import { Link } from 'react-router-dom';
-//$FlowFixMe
 import styled from 'styled-components';
 //$FlowFixMe
 import createBrowserHistory from 'history/createBrowserHistory';
@@ -16,22 +14,7 @@ import CommunityProfile from './views/communityProfile';
 import FrequencyProfile from './views/frequencyProfile';
 import Navbar from './views/navbar';
 import StyleGuide from './views/pages/styleGuide';
-
-const logout = () => {
-  localStorage.clear();
-  window.location.href = '/';
-};
-
-const Home = () => (
-  <div>
-    <h3>View stories</h3>
-
-    <Link to="/story/first-story-asdf123">First Story</Link>
-    <Link to="/story/second-story-asddf123">Second Story</Link>
-    <Link to="/style-guide">Style Guide</Link>
-    <a onClick={logout}>logout</a>
-  </div>
-);
+import Dashboard from './views/dashboard';
 
 const About = () => (
   <div>
@@ -58,7 +41,7 @@ class Routes extends Component {
             https://reacttraining.com/react-router/web/api/Switch
           */}
           <Switch>
-            <Route exact path="/" component={Home} />
+            <Route exact path="/" component={Dashboard} />
 
             {/* Public Business Pages */}
             <Route path="/about" component={About} />

@@ -1,8 +1,12 @@
 //@flow
 import React from 'react';
+//$FlowFixMe
 import branch from 'recompose/branch';
+//$FlowFixMe
 import compose from 'recompose/compose';
+//$FlowFixMe
 import pure from 'recompose/pure';
+//$FlowFixMe
 import renderComponent from 'recompose/renderComponent';
 import { StoryDetail } from '../components/storyDetail';
 import { getStory } from '../queries';
