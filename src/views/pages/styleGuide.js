@@ -1,6 +1,10 @@
+// @flow
 import React from 'react';
+// $FlowFixMe
 import pure from 'recompose/pure';
+// $FlowFixMe
 import compose from 'recompose/compose';
+// $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
 import {
   PageContainer,
@@ -15,6 +19,7 @@ import {
   Spacer,
 } from './style';
 import Icon from '../../components/icons';
+import { Button, OutlineButton, LinkButton } from '../../components/buttons';
 
 const enhance = compose(
   withHandlers({
@@ -211,6 +216,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
       </Subheading>
 
       <PropsList>
+        <li>
+          <pre>icon: String</pre>
+          <p>
+            Gets passed into a switch statement which will return the proper svg path
+            ).
+          </p>
+        </li>
         <li>
           <pre>color: String</pre>
           <p>
@@ -784,6 +796,220 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
             onClick={highlightAndCopy}
           >{`<Icon icon="explore" ...props />`}</Code>
         </ComponentContainer>
+      </Section>
+    </Section>
+
+    {/* Buttons */}
+    <Section container>
+      <Heading>Buttons</Heading>
+      <Subheading>
+        Props
+      </Subheading>
+
+      <PropsList>
+        <li>
+          <pre>size: 'small' | 'large'</pre>
+          <p>
+            Adjusts padding for different contexts. Defaults to a midway size between small and large.
+          </p>
+        </li>
+        <li>
+          <pre>disabled: Boolean</pre>
+          <p>Lowers opacity and turns off interactions while disabled.</p>
+        </li>
+        <li>
+          <pre>loading: Boolean</pre>
+          <p>
+            Replaces the button label or button icon with an inline spinner.
+          </p>
+        </li>
+        <li>
+          <pre>icon: String</pre>
+          <p>Insert an icon into the button using any library icon.</p>
+        </li>
+      </PropsList>
+
+      <Subheading>All Buttons</Subheading>
+      <Section>
+        <ComponentContainer>
+          <Component>
+            <Button>Button</Button>
+          </Component>
+          <Code onClick={highlightAndCopy}>{`<Button>Button</Button>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <Button color={'warn'}>Button</Button>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<Button color={'warn'}>Button</Button>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <Button color={'pro'}>Button</Button>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<Button color={'pro'}>Button</Button>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <Button color={'success'}>Button</Button>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<Button color={'success'}>Button</Button>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <OutlineButton>Outline Button</OutlineButton>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<OutlineButton>Outline Button</OutlineButton>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <OutlineButton color={'warn'} icon={'edit'}>
+              Outline Button with Icon
+            </OutlineButton>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<OutlineButton color={'warn'} icon={'edit'}>Outline Button with Icon</OutlineButton>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <OutlineButton color={'pro'} icon={'edit'} loading={true}>
+              Loading Outline Button with Icon
+            </OutlineButton>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<OutlineButton color={'pro'} icon={'edit'} loading={true}>Loading Outline Button with Icon</OutlineButton>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <LinkButton>Button</LinkButton>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<LinkButton>Button</LinkButton>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <LinkButton icon={'messages'}>Link Button with Icon</LinkButton>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<LinkButton icon={'messages'}>Link Button with Icon</LinkButton>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <LinkButton icon={'messages'} loading={true}>
+              Loading Link Button with Icon
+            </LinkButton>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<LinkButton icon={'messages'} loading={true}>Loading Link Button with Icon</LinkButton>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <Button loading={true}>Button Loading</Button>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<Button loading={true}>Button Loading</Button>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <Button icon={'messages'}>Button with Icon</Button>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<Button icon={'messages'}>Button with Icon</Button>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <Button disabled={true}>Button Disabled</Button>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<Button disabled={true}>Button Disabled</Button>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <Button size={'small'}>Button Small</Button>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<Button size={'small'}>Button Small</Button>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <Button size={'small'} loading={true}>Button Small Loading</Button>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<Button size={'small'} loading={true}>Button Small Loading</Button>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <Button size={'small'} icon={'share'}>
+              Button Small wtih Icon
+            </Button>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<Button size={'small'} icon={'share'}>Button Small wtih Icon</Button>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <Button size={'large'}>Button Large</Button>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<Button size={'large'}>Button Large</Button>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <Button size={'large'} icon={'explore'}>
+              Button Large with Icon
+            </Button>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<Button size={'large'} icon={'explore'}>Button Large with Icon</Button>`}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer>
+          <Component>
+            <Button size={'large'} loading={true}>Button Large Loading</Button>
+          </Component>
+          <Code
+            onClick={highlightAndCopy}
+          >{`<Button size={'large'} loading={true}>Button Large Loading</Button>`}</Code>
+        </ComponentContainer>
+
       </Section>
     </Section>
   </PageContainer>

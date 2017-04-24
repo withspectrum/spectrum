@@ -15,6 +15,7 @@ import {
   Description,
   Actions,
   Action,
+  ActionOutline,
   Meta,
   MetaList,
   MetaListItem,
@@ -37,15 +38,15 @@ const ProfilePure = (props: Object): React$Element<any> => (
     </Description>
 
     <Actions>
-      <Action>Message</Action>
+      <ActionOutline>Message</ActionOutline>
       <Action>Follow</Action>
     </Actions>
 
     <Meta>
       <MetaList>
-        {props.data.meta.map(item => {
+        {props.data.meta.map((item, i) => {
           return (
-            <MetaListItem>
+            <MetaListItem key={i}>
               <Label>
                 <Icon
                   icon={item.icon}
