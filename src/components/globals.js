@@ -1,9 +1,16 @@
 import styled, { css, keyframes } from 'styled-components';
 import { Link as RouterLink } from 'react-router-dom';
 
-export const Gradient = (g1, g2) => {
-  return css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`;
-};
+export const Gradient = (
+  g1,
+  g2
+) => css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`;
+
+export const Truncate = width => css`
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  `;
 
 export const Shadow = {
   low: '0 1px 2px 0px rgba(23,26,33, 0.15)',

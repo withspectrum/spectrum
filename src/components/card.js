@@ -13,6 +13,8 @@ const StyledCard = styled(FlexContainer)`
   border-radius: 12px;
   box-shadow: 0 2px 6px #C9D4E0;
   position: relative;
+  width: 100%;
+  max-width: 100%;
 `;
 
 const CardPure = (props: Object): React$Element<any> => (

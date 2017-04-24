@@ -28,7 +28,11 @@ class Navbar extends Component {
               data-mobileWidth={'third'}
               to="/"
             >
-              <Icon icon="home" color={'bg.default'} static />
+              <Icon
+                icon="home"
+                color={'bg.default'}
+                hoverColor={'bg.default'}
+              />
               <Label>Home</Label>
             </IconLink>
 
@@ -37,7 +41,11 @@ class Navbar extends Component {
               data-mobileWidth={'third'}
               to="/messages"
             >
-              <Icon icon="messages" color={'bg.default'} static />
+              <Icon
+                icon="messages"
+                color={'bg.default'}
+                hoverColor={'bg.default'}
+              />
               <Label>Messages</Label>
             </IconLink>
 
@@ -46,7 +54,11 @@ class Navbar extends Component {
               data-mobileWidth={'third'}
               to="/explore"
             >
-              <Icon icon="explore" color={'bg.default'} static />
+              <Icon
+                icon="explore"
+                color={'bg.default'}
+                hoverColor={'bg.default'}
+              />
               <Label>Explore</Label>
             </IconLink>
           </Section>
@@ -57,7 +69,11 @@ class Navbar extends Component {
               data-mobileWidth={'half'}
               to="/notifications"
             >
-              <Icon icon="notification" color={'bg.default'} static />
+              <Icon
+                icon="notification"
+                color={'bg.default'}
+                hoverColor={'bg.default'}
+              />
               <Label>Notifications</Label>
             </IconLink>
 
@@ -67,7 +83,11 @@ class Navbar extends Component {
               data-mobileWidth={'half'}
               to="/user/me"
             >
-              <Icon icon="notification" color={'bg.default'} static />
+              <Icon
+                icon="notification"
+                color={'bg.default'}
+                hoverColor={'bg.default'}
+              />
               <Label>Profile</Label>
             </IconLink>
           </Section>
