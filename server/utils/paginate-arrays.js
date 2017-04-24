@@ -13,13 +13,16 @@ type Output = {
 };
 
 /**
- * Paginate an array of simple values
+ * Paginate an array
+ *
+ * For more complex value pass a getAfter callback to get the index of the cursor
  */
 export default (
   arr: Array<Input>,
-  { first, after }: PaginationOptions
+  { first, after }: PaginationOptions,
+  getAfter: any => mixed
 ): Output => {
-  const cursor = arr.indexOf(after);
+  const cursor = getAfter ? arr.findIndex(getAfter) : arr.indexOf(after);
   const begin = cursor > -1 ? cursor + 1 : 0;
   const end = begin + first;
   return {

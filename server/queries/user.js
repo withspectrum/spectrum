@@ -5,6 +5,7 @@ const { getUser, getAllStories } = require('../models/user');
 const { getCommunitiesByUser } = require('../models/community');
 const { getFrequenciesByUser } = require('../models/frequency');
 import paginate from '../utils/paginate-arrays';
+import { encode, decode } from '../utils/base64';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
 module.exports = {
@@ -16,24 +17,26 @@ module.exports = {
       { uid }: { uid: String },
       { first = 10, after }: PaginationOptions
     ) => {
-      // TODO: Make this more performant by doing an actual db query
+      const cursor = decode(after);
+      // TODO: Make this more performant by doing an actual db query rather than this hacking around
       return getFrequenciesByUser(uid)
         .then(frequencies =>
           getAllStories(frequencies.map(frequency => frequency.id))
         )
         .then(stories =>
-          Promise.all([
+          paginate(
             stories,
-            paginate(stories.map(story => story.id), { first, after }),
-          ])
+            { first, after: cursor },
+            story => story.id === cursor
+          )
         )
-        .then(([stories, pagination]) => ({
+        .then(result => ({
           pageInfo: {
-            hasNextPage: pagination.hasMoreItems,
+            hasNextPage: result.hasMoreItems,
           },
-          edges: pagination.list.map(id => ({
-            cursor: id,
-            node: stories.find(story => story.id === id),
+          edges: result.list.map(story => ({
+            cursor: encode(story.id),
+            node: story,
           })),
         }));
     },
