@@ -7,6 +7,7 @@ import { Gradient, Shadow, Transition } from '../globals';
 const baseStyles = css`
   display: flex;
   align-items: center;
+  justify-content: center;
   border-radius: 8px;
   font-weight: 700;
   white-space: nowrap;
