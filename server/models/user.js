@@ -36,9 +36,18 @@ const createOrFindUser = user => {
   });
 };
 
+const getAllStories = (frequencies: Array<String>) => {
+  return db
+    .table('stories')
+    .orderBy(db.desc('modifiedAt'))
+    .filter(story => db.expr(frequencies).contains(story('frequency')))
+    .run();
+};
+
 module.exports = {
   getUser,
   getUsers,
   createOrFindUser,
   storeUser,
+  getAllStories,
 };

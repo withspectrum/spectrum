@@ -21,9 +21,9 @@ export default (
 ): Output => {
   const cursor = arr.indexOf(after);
   const begin = cursor > -1 ? cursor + 1 : 0;
-  const length = cursor > -1 ? first + 1 : first;
+  const end = begin + first;
   return {
-    list: arr.slice(begin, length),
-    hasMoreItems: arr.length > begin + length ? true : false,
+    list: arr.slice(begin, end),
+    hasMoreItems: arr.length > end ? true : false,
   };
 };
