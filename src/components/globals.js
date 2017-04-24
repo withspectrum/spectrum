@@ -12,12 +12,9 @@ export const Truncate = width => css`
 `;
 
 export const Shadow = {
-  low: '0 1px 2px 0px rgba(23,26,33, 0.15)',
-  mid: '0 2px 4px 0px rgba(23,26,33, 0.2)',
-  high: '0 4px 8px 0px rgba(23,26,33, 0.25)',
-  input: 'inset 0 3px 5px rgba(23,26,33, 0.05), inset 0 0 1px rgba(23,26,33, 0.1)',
-  border: '0 0 1px rgba(23,26,33, 0.3)',
-  button: '0 2px 8px rgba(23,26,33, 0.15)',
+  low: '0 1px 2px rgba(23,26,33, 0.15)',
+  mid: '0 2px 4px rgba(23,26,33, 0.2)',
+  high: '0 4px 8px rgba(23,26,33, 0.25)',
 };
 
 export const Transition = {
@@ -40,8 +37,8 @@ const spin = keyframes`
 `;
 
 export const Spinner = styled.span`
-  width: ${props => (props.size ? `${props.size}px` : '32px')};
-  height: ${props => (props.size ? `${props.size}px` : '32px')};
+  width: ${props => (props.size ? `${props.size}px` : '2rem')};
+  height: ${props => (props.size ? `${props.size}px` : '2rem')};
 
   &:before {
     content: '';
@@ -67,14 +64,14 @@ export const Label = styled.label`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-top: 8px;
+  margin-top: 0.5rem;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 0.875rem;
   letter-spacing: -0.4px;
   color: ${({ theme }) => theme.text.default};
 
 	&:not(:first-of-type) {
-		margin-top: 24px;
+		margin-top: 1.5rem;
 	}
 
   a {
@@ -85,9 +82,9 @@ export const Label = styled.label`
 export const PrefixLabel = styled.label`
   display: flex;
   width: 100%;
-  margin-top: 4px;
-  padding-left: 14px;
-  font-size: 14px;
+  margin-top: 0.25rem;
+  padding-left: 0.875rem;
+  font-size: 0.875rem;
   font-weight: 500;
   color: ${({ theme }) => theme.text.placeholder};
 
@@ -101,17 +98,17 @@ export const Input = styled.input`
   background: ${({ theme }) => theme.bg.default};
   font-weight: 500;
   width: 100%;
-  font-size: 14px;
-  border: 2px solid ${({ theme }) => theme.inactive};
-  border-radius: 4px;
-  padding: 8px 12px;
-  margin-top: 2px;
+  font-size: 0.875rem;
+  border: 0.125rem solid ${({ theme }) => theme.inactive};
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  margin-top: 0.125rem;
   box-shadow: none;
 
   ${props => props.type === 'checkbox' && css`
     flex: initial;
     width: initial;
-    margin-right: 0.5em;
+    margin-right: 0.5rem;
   `}
 
   &::placeholder { color: ${({ theme }) => theme.text.placeholder} }
@@ -129,11 +126,11 @@ export const TextArea = styled.textarea`
 	width: 100%;
   background: ${({ theme }) => theme.bg.default};
   font-weight: 500;
-  font-size: 14px;
-  border: 2px solid ${({ theme }) => theme.inactive};
-  border-radius: 4px;
-  padding: 12px;
-  margin-top: 2px;
+  font-size: 0.875rem;
+  border: 0.125rem solid ${({ theme }) => theme.inactive};
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+  margin-top: 0.125rem;
   box-shadow: none;
 
   &::placeholder { color: ${({ theme }) => theme.text.placeholder} }
@@ -150,7 +147,7 @@ export const UnderlineInput = styled.input`
 		font-size: inherit;
 		font-weight: inherit;
 		color: ${({ theme }) => theme.text.default};
-    border-bottom: 2px solid ${({ theme }) => theme.inactive};
+    border-bottom: 0.125rem solid ${({ theme }) => theme.inactive};
 
   &:focus {
     border-color: ${({ theme }) => theme.brand.default};
@@ -160,9 +157,9 @@ export const UnderlineInput = styled.input`
 export const H1 = styled.h1`
 	${fontStack};
 	color: ${({ theme }) => theme.text.default};
-	font-weight: 800;
-	font-size: 24px;
-	line-height: 40px;
+	font-weight: 900;
+	font-size: 1.5rem;
+	line-height: 1.25;
 	margin: 0;
 	padding: 0;
 `;
@@ -171,8 +168,8 @@ export const H2 = styled.h2`
 	color: ${({ theme }) => theme.text.default};
 	${fontStack};
 	font-weight: 700;
-	font-size: 20px;
-	line-height: 32px;
+	font-size: 1.25rem;
+	line-height: 1.25;
 	margin: 0;
 	padding: 0;
 `;
@@ -181,8 +178,8 @@ export const H3 = styled.h3`
 	color: ${({ theme }) => theme.text.default};
 	${fontStack};
 	font-weight: 500;
-	font-size: 16px;
-	line-height: 24px;
+	font-size: 1rem;
+	line-height: 1.5;
 	margin: 0;
 	padding: 0;
 `;
@@ -191,8 +188,8 @@ export const H4 = styled.h4`
 	color: ${({ theme }) => theme.text.default};
 	${fontStack};
 	font-weight: 500;
-	font-size: 14px;
-	line-height: 20px;
+	font-size: 0.875rem;
+	line-height: 1.4;
 	margin: 0;
 	padding: 0;
 `;
@@ -201,8 +198,8 @@ export const H5 = styled.h5`
 	color: ${({ theme }) => theme.text.default};
 	${fontStack};
 	font-weight: 500;
-	font-size: 12px;
-	line-height: 16px;
+	font-size: 0.75rem;
+	line-height: 1.4;
 	margin: 0;
 	padding: 0;
 `;
@@ -212,8 +209,8 @@ export const H6 = styled.h6`
 	${fontStack};
 	font-weight: 600;
 	text-transform: uppercase;
-	font-size: 10px;
-	line-height: 12px;
+	font-size: 0.675rem;
+	line-height: 1.5;
 	margin: 0;
 	padding: 0;
 `;
@@ -222,8 +219,8 @@ export const P = styled.p`
 	color: ${({ theme }) => theme.text.default};
 	${fontStack};
 	font-weight: 400;
-	font-size: 14px;
-	line-height: 20px;
+	font-size: 0.875rem;
+	line-height: 1.4;
 	margin: 0;
 	padding: 0;
 `;
@@ -232,8 +229,8 @@ export const Span = styled.span`
 	color: ${({ theme }) => theme.text.default};
 	${fontStack};
 	font-weight: 400;
-	font-size: 14px;
-	line-height: 20px;
+	font-size: 0.875rem;
+	line-height: 1.4;
 	margin: 0;
 	padding: 0;
 `;

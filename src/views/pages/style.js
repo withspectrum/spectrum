@@ -14,7 +14,7 @@ export const Section = styled.section`
   padding: ${props => (props.container ? '32px' : '0')};
   width: 100%;
   flex: 0 0 auto;
-  border-bottom: 1px solid ${props => (props.container ? props.theme.border.default : 'transparent')}
+  border-bottom: 1px solid ${props => (props.container ? props.theme.border.default : 'transparent')};
   flex-wrap: wrap;
 `;
 
