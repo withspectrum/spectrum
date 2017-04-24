@@ -25,6 +25,7 @@ describe('queries', () => {
 			}
 		`;
 
+    expect.assertions(1);
     return graphql(schema, query).then(result => {
       expect(result).toMatchSnapshot();
     });
@@ -39,6 +40,7 @@ describe('queries', () => {
 			}
 		`;
 
+    expect.assertions(1);
     return graphql(schema, query).then(result => {
       expect(result).toMatchSnapshot();
     });

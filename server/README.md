@@ -206,6 +206,8 @@ describe('queries', () => {
       }
     `;
 
+    // Makes sure the test fails if the async callback below doesn't fire and expect() is never called
+    expect.assertions(1);
     // Return your graphql() call, which goes, gets the data and returns a Promise
     return graphql(schema, query).then(result => {
       // Use snapshots to verify the returned JSON response
