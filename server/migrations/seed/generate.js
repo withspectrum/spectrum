@@ -3,6 +3,8 @@
  */
 const { v4: uuid } = require('uuid');
 const faker = require('faker');
+const slugify = require('slugg');
+const casual = require('casual').functions();
 
 const randomAmount = ({ max, min }, cb) => {
   if (!max) throw new Error('randomAmount({ max }): max has to be defined!');
@@ -35,7 +37,7 @@ const generateCommunity = members => {
     id: uuid(),
     createdAt: faker.date.past(2),
     name,
-    slug: faker.helpers.slugify(name),
+    slug: slugify(name),
     members,
   };
 };
@@ -49,8 +51,8 @@ const generateFrequency = (community, subscribers) => {
     createdAt,
     modifiedAt: faker.date.between(createdAt, new Date()),
     name,
-    description: faker.random.words(faker.random.number({ min: 1, max: 20 })),
-    slug: faker.helpers.slugify(name),
+    description: casual.short_description(),
+    slug: slugify(name),
     subscribers,
   };
 };
@@ -58,8 +60,8 @@ const generateFrequency = (community, subscribers) => {
 const generateStory = (frequency, author) => {
   const createdAt = faker.date.past(2);
   const content = {
-    title: faker.random.words(faker.random.number({ min: 1, max: 10 })),
-    description: faker.random.words(faker.random.number({ min: 1, max: 100 })),
+    title: casual.title(),
+    description: casual.text(),
   };
   return {
     id: uuid(),
@@ -86,7 +88,7 @@ const generateMessage = (sender, thread) => {
     sender,
     message: {
       type: 'text',
-      content: faker.random.words(faker.random.number({ min: 1, max: 20 })),
+      content: casual.text(),
     },
   };
 };

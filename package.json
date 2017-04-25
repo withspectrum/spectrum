@@ -5,7 +5,6 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-preset-flow": "^6.23.0",
-    "faker": "^4.1.0",
     "firebase-tools": "^3.5.0",
     "flow-bin": "^0.43.0",
     "lint-staged": "^3.3.0",
@@ -17,12 +16,14 @@
   "dependencies": {
     "autolinker": "^1.4.0",
     "body-parser": "^1.17.1",
+    "casual": "^1.5.12",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.3",
     "deep-eql": "^2.0.1",
     "emoji-regex": "^6.1.1",
     "express": "^4.15.2",
     "express-session": "^1.15.2",
+    "faker": "^4.1.0",
     "firebase": "^3.7.2",
     "firebase-admin": "^4.1.4",
     "for-own": "^1.0.0",
