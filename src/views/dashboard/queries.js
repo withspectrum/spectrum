@@ -4,9 +4,12 @@ export const getEverything = graphql(
   gql`
   {
     user: currentUser {
+      uid
+      lastSeen
       photoURL
       displayName
       username
+      email
       everything(first: 10){
   			pageInfo {
   			  hasNextPage

@@ -16,11 +16,10 @@ import { getEverything } from './queries';
 import Loading from '../../components/loading';
 import StoryFeedCard from '../../components/storyFeedCard';
 import CommunityProfileCard from '../../components/communityProfileCard';
-
-const logout = () => {
-  localStorage.clear();
-  window.location.href = '/';
-};
+import {
+  logout,
+  saveUserDataToLocalStorage,
+} from '../../actions/authentication';
 
 const displayLoadingState = branch(
   props => props.data.loading,
@@ -30,6 +29,9 @@ const displayLoadingState = branch(
 const DashboardPure = ({ data: { user, error } }) => {
   if (error) return <ErrorMessage>{error.message}</ErrorMessage>;
   if (user === null) return <button onClick={logout}>Logout</button>;
+  console.log(user);
+  saveUserDataToLocalStorage(user);
+
   const stories = user.everything.edges;
   const communities = user.communityConnection.edges;
   const userData = {

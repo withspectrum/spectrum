@@ -11,3 +11,11 @@ const networkInterface = createNetworkInterface({
 export const client = new ApolloClient({
   networkInterface,
 });
+
+export const clearApolloStore = () => {
+  try {
+    client.resetStore();
+  } catch (e) {
+    console.log('error clearing store');
+  }
+};
