@@ -4,7 +4,6 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-import Card from '../../components/card';
 import { Column } from '../../components/column';
 import { Profile } from '../../components/profile';
 import { DashboardContainer } from './style';
@@ -43,6 +42,7 @@ const DashboardPure = () => (
     <Column type={'secondary'}>
       {/* User profile */}
       <Profile data={data} />
+      <button onClick={logout} />
     </Column>
 
     <Column type={'primary'} />

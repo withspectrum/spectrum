@@ -1,5 +1,4 @@
 import styled, { css, keyframes } from 'styled-components';
-import { Link as RouterLink } from 'react-router-dom';
 
 export const Gradient = (
   g1,
@@ -7,10 +6,10 @@ export const Gradient = (
 ) => css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`;
 
 export const Truncate = width => css`
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  `;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+`;
 
 // export const Shadow = {
 //   low: '0 2px 8px rgba(23,26,33, 0.15)',
@@ -56,8 +55,8 @@ const spin = keyframes`
 `;
 
 export const Spinner = styled.span`
-  width: 2rem;
-  height: 2rem;
+  width: ${props => (props.size ? `${props.size}px` : '2rem')};
+  height: ${props => (props.size ? `${props.size}px` : '2rem')};
 
   &:before {
     content: '';
@@ -66,78 +65,17 @@ export const Spinner = styled.span`
     position: ${props => (props.inline ? 'relative' : 'absolute')};
     top: ${props => (props.inline ? '0' : '50%')};
     left: ${props => (props.inline ? '0' : '50%')};
-    width: ${props => (props.inline ? '1rem' : '1.5rem')};
-    height: ${props => (props.inline ? '1rem' : '1.5rem')};
-    margin-top: ${props => (props.inline ? '0.5rem' : '-.75rem')};
-    margin-left: ${props => (props.inline ? '0.5rem' : '-.75rem')};
+    width: ${props => (props.size ? `${props.size}px` : '16px')};
+    height: ${props => (props.size ? `${props.size}px` : '16px')};
+    margin-top: ${props => `-${props.size / 2}px`};
+    margin-left: ${props => `-${props.size / 2}px`};
     border-radius: 50%;
-    border: ${props => (props.inline ? '0.125rem' : '0.25rem')} solid ${props => (props.color ? `props.theme.${props.color}` : props.theme.brand.alt)};
+    border: ${props => '2px'} solid ${props => eval(props.color ? `props.theme.${props.color}` : props.theme.brand.alt)};
     border-top-color: transparent;
     border-right-color: ${props => (props.color ? `props.theme.${props.color}` : props.theme.brand.alt)};
     border-bottom-color: transparent;
     animation: ${spin} 2s linear infinite;
   }
-`;
-
-const buttonStyles = css`
-  background-color: ${props => (props.disabled ? props.theme.inactive : props.theme.brand.default)};
-  background-image: ${props => (props.disabled ? 'none' : Gradient(props.theme.brand.alt, props.theme.brand.default))};
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: ${({ theme }) => theme.text.reverse};
-  transition: ${Transition.hover.off};
-  padding: 0.75rem 1rem;
-  width: ${props => (props.width ? props.width : '')};
-  white-space: nowrap;
-  word-break: keep-all;
-
-  &:hover {
-    border-radius: ${props => (props.disabled ? '0.5rem' : '0.75rem')};
-    opacity: ${props => (props.disabled ? '0.5' : '1')};
-    transition: ${Transition.hover.on};
-    cursor: pointer;
-    box-shadow: ${props => (props.disabled ? 'none' : Shadow.high)};
-  }
-`;
-
-export const Button = styled.button`
-  ${buttonStyles}
-`;
-
-export const Link = styled(RouterLink)`
-  ${buttonStyles}
-`;
-
-export const TextButton = styled(Button)`
-	background-color: transparent;
-	background-image: none;
-	border: 2px solid ${props => (props.border ? props.theme.bg.wash : 'transparent')};
-	border-radius: ${props => (props.border ? '0.5rem' : '0.25rem')};
-	font-size: 0.875rem;
-	font-weight: 600;
-	color: ${props => (props.color ? props.color : props.theme.text.alt)};
-	transition: ${Transition.hover.off};
-	padding: 0.5rem 1rem;
-
-	&:hover {
-    cursor: pointer;
-    border: 0.125rem solid transparent;
-		border-radius: ${props => (props.border ? '0.75rem' : '0.5rem')};
-    color: ${props => (props.color ? props.color : props.theme.warn.alt)};
-		background-color: ${({ theme }) => theme.bg.default};
-    box-shadow: none;
-    transition: ${Transition.hover.on};
-	}
-`;
-
-export const IconButton = styled.button`
-  display: inline-block;
-  appearance: none;
-  background-color: transparent;
-  flex: 0 0 2rem;
-  width: 2rem;
-  height: 2rem;
 `;
 
 export const Label = styled.label`
