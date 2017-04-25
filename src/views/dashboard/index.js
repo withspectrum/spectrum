@@ -1,6 +1,5 @@
 //@flow
 import React from 'react';
-import { connect } from 'react-redux';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
@@ -30,6 +29,7 @@ const displayLoadingState = branch(
 
 const DashboardPure = ({ data: { user, error } }) => {
   if (error) return <ErrorMessage>{error.message}</ErrorMessage>;
+  if (user === null) return <button onClick={logout}>Logout</button>;
   const stories = user.everything.edges;
   const communities = user.communityConnection.edges;
   const userData = {
@@ -70,6 +70,4 @@ const DashboardPure = ({ data: { user, error } }) => {
 export const Dashboard = compose(getEverything, displayLoadingState, pure)(
   DashboardPure
 );
-export default connect(state => ({
-  uid: state.users.currentUser.uid,
-}))(Dashboard);
+export default Dashboard;

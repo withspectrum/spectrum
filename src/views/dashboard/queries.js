@@ -2,8 +2,8 @@ import { graphql, gql } from 'react-apollo';
 
 export const getEverything = graphql(
   gql`
-  query user($uid: ID!) {
-    user(id: $uid) {
+  {
+    user: currentUser {
       photoURL
       displayName
       username
