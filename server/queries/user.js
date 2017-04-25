@@ -4,6 +4,9 @@
 const { getUser, getAllStories } = require('../models/user');
 const { getCommunitiesByUser } = require('../models/community');
 const { getFrequenciesByUser } = require('../models/frequency');
+const {
+  getDirectMessageGroupsByUser,
+} = require('../models/directMessageGroup');
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import type { PaginationOptions } from '../utils/paginate-arrays';
@@ -59,6 +62,16 @@ module.exports = {
       edges: getFrequenciesByUser(user.uid).then(frequencies =>
         frequencies.map(frequency => ({
           node: frequency,
+        }))
+      ),
+    }),
+    directMessageGroupsConnection: user => ({
+      pageInfo: {
+        hasNextPage: false,
+      },
+      edges: getDirectMessageGroupsByUser(user.uid).then(groups =>
+        groups.map(group => ({
+          node: group,
         }))
       ),
     }),

@@ -41,7 +41,6 @@ class Routes extends Component {
             Switch only renders the first match. Subrouting happens downstream
             https://reacttraining.com/react-router/web/api/Switch
           */}
-
           <Switch>
             <Route exact path="/" component={Dashboard} />
             <Route exact path="/dashboard" component={Dashboard} />
