@@ -8,6 +8,7 @@ import pure from 'recompose/pure';
 import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
+
 import { Column } from '../../components/column';
 import { Profile } from '../../components/profile';
 import { Card } from '../../components/card';
