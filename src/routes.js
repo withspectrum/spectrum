@@ -25,7 +25,7 @@ const About = () => (
 
 const Body = styled.div`
   width: 100vw;
-  height: 100%;
+  height: 100vh;
   background: ${props => props.theme.bg.wash};
 `;
 
@@ -41,6 +41,7 @@ class Routes extends Component {
             Switch only renders the first match. Subrouting happens downstream
             https://reacttraining.com/react-router/web/api/Switch
           */}
+
           <Switch>
             <Route exact path="/" component={Dashboard} />
             <Route exact path="/dashboard" component={Dashboard} />
@@ -70,6 +71,7 @@ class Routes extends Component {
             />
             <Route path="/:communityId" component={CommunityProfile} />
           </Switch>
+
         </Body>
       </Router>
     );
