@@ -8,6 +8,24 @@ const DEFAULT_USERS = [
     uid: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a190',
     providerId: '2451223458',
   },
+  {
+    createdAt: new Date(),
+    displayName: 'Brian Lovin',
+    username: 'brian',
+    lastSeen: new Date(),
+    photoURL: 'https://pbs.twimg.com/profile_images/570313913648955392/cf4tgX7M_bigger.jpeg',
+    uid: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    providerId: '465068802',
+  },
+  {
+    createdAt: new Date(),
+    displayName: 'Bryn Jackson',
+    username: 'bryn',
+    lastSeen: new Date(),
+    photoURL: 'https://pbs.twimg.com/profile_images/848823167699230721/-9CbPtto_bigger.jpg',
+    uid: 'uItS3QQiUxXH44m14uWmixTbqSc2',
+    providerId: '17106008',
+  },
 ];
 
 const DEFAULT_COMMUNITIES = [
