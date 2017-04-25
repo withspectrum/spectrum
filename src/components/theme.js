@@ -24,10 +24,6 @@ export const theme = {
     default: '#00C383',
     alt: '#00D6A9',
   },
-  pro: {
-    default: '#1CD2F2',
-    alt: '#00D6A9',
-  },
   bg: {
     default: '#FFFFFF',
     reverse: '#171A21',
