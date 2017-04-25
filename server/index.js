@@ -70,12 +70,13 @@ app.get('/auth/twitter', passport.authenticate('twitter'));
 // authentication process by attempting to obtain an access token.  If
 // access was granted, the user will be logged in.  Otherwise,
 // authentication has failed.
+const APP_URL = IS_PROD ? 'https://spectrum.chat' : 'http://localhost:3000';
 app.get(
   '/auth/twitter/callback',
   passport.authenticate('twitter', {
-    successRedirect: '/',
-    failureRedirect: '/login',
-  })
+    failureRedirect: APP_URL,
+  }),
+  (req, res) => res.redirect(`${APP_URL}/?user=${req.user.uid}`)
 );
 app.use('/', graphqlExpress({ schema }));
 

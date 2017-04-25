@@ -1,5 +1,6 @@
 //@flow
 import React from 'react';
+import { connect } from 'react-redux';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
@@ -27,44 +28,21 @@ const displayLoadingState = branch(
   renderComponent(Loading)
 );
 
-const dummyUser = {
-  photoURL: 'https://pbs.twimg.com/profile_images/570313913648955392/cf4tgX7M_bigger.jpeg',
-  title: 'Brian Lovin',
-  subtitle: '@brian',
-  description: 'Chief Nice Boy™ · Building @withspectrum, @designdetailsfm, @specfm · prev. @facebook, @buffer',
-  meta: [
-    {
-      icon: 'edit',
-      label: 'Posts',
-      count: '14',
-    },
-    {
-      icon: 'like',
-      label: 'Reputation',
-      count: '3.2k',
-    },
-    {
-      icon: 'emoji',
-      label: 'Friends',
-      count: '86',
-    },
-  ],
-};
-
 const DashboardPure = ({ data: { user } }) => {
   const stories = user.everything.edges;
   const communities = user.communityConnection.edges;
   const userData = {
     photoURL: user.photoURL,
-    displayName: user.displayName,
-    username: user.username,
+    title: user.displayName,
+    subtitle: user.username,
+    meta: [], // { icon: 'edit', label: 'Posts', count: '14' }
   };
 
   return (
     <DashboardContainer justifyContent={'center'} alignContent={'flex-start'}>
       <Column type={'secondary'}>
         {/* User profile */}
-        <Profile data={dummyUser} />
+        <Profile data={userData} />
 
         {communities.map(community => {
           return (
@@ -91,4 +69,6 @@ const DashboardPure = ({ data: { user } }) => {
 export const Dashboard = compose(getEverything, displayLoadingState, pure)(
   DashboardPure
 );
-export default Dashboard;
+export default connect(state => ({
+  uid: state.users.currentUser.uid,
+}))(Dashboard);

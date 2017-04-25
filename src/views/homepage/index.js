@@ -18,6 +18,7 @@ import {
   Wrapper,
   Tagline,
   Button,
+  LinkButton,
   LogoContainer,
   LogoWhite,
   SectionContent,
@@ -28,12 +29,6 @@ import {
 // import { login } from '../actions/user';
 
 class Homepage extends Component {
-  login = e => {
-    e.preventDefault();
-    localStorage.setItem('spectrum', JSON.stringify({ user: true }));
-    window.location.href = '/';
-  };
-
   render() {
     return (
       <Wrapper>
@@ -42,11 +37,11 @@ class Homepage extends Component {
             <FlexCol>
               <LogoContainer><LogoWhite /></LogoContainer>
               <Tagline>Where communities are built.</Tagline>
-              <Button onClick={this.login}>
+              <LinkButton href="http://localhost:3001/auth/twitter">
                 <Icon icon="twitter" reverse static />
                 {' '}
                 <span>Sign in with Twitter</span>
-              </Button>
+              </LinkButton>
             </FlexCol>
             <img src="/img/login.svg" role="presentation" />
           </SectionContent>
@@ -98,11 +93,11 @@ class Homepage extends Component {
               <Copy>
                 Spectrum is free for everyone, so hop on in!
               </Copy>
-              <Button onClick={this.login}>
+              <LinkButton href="http://localhost:3001/auth/twitter">
                 <Icon icon="twitter" color="brand.default" static />
                 {' '}
                 <span>Sign in with Twitter</span>
-              </Button>
+              </LinkButton>
             </FlexCol>
           </SectionContent>
           <GoopyFour />
