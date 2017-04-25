@@ -21,17 +21,17 @@ import {
 const data = [
   {
     activityType: 'new-story',
-    content: 'New features: Highlight new stories, fix scroll...',
+    content: 'New features: Highlight new stories, fix scrolling position, and more!',
     community: 'Spectrum',
     frequency: 'General',
-    story: 'New features: Highlight new stories, fix scroll...',
+    story: 'New features: Highlight new stories, fix scrolling position, and more!',
     read: false,
     sender: 'Max Stoiber',
     timestamp: 1489352567485,
   },
   {
     activityType: 'new-message',
-    content: "I've had like 2 drops in ~50 hours. Not perfect...",
+    content: "I've had like 2 drops in ~50 hours. Not perfect by any means 😭",
     community: 'Spectrum',
     frequency: 'General',
     story: 'How bout dat Zelda tho?',
@@ -41,10 +41,10 @@ const data = [
   },
   {
     activityType: 'new-story',
-    content: 'New features: Highlight new stories, fix scroll...',
+    content: 'New features: Highlight new stories, fix scrolling position, and more!',
     community: 'Spectrum',
     frequency: 'General',
-    story: 'New features: Highlight new stories, fix scroll...',
+    story: 'New features: Highlight new stories, fix scrolling position, and more!',
     read: true,
     sender: 'Brian Lovin',
     timestamp: 1489352567484,
