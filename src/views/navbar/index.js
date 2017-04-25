@@ -9,6 +9,7 @@ import {
   Logo,
   IconLink,
   Label,
+  LabelForTab,
 } from './style';
 
 class Navbar extends Component {
@@ -74,7 +75,7 @@ class Navbar extends Component {
                 color={'bg.default'}
                 hoverColor={'bg.default'}
               />
-              <Label>Notifications</Label>
+              <LabelForTab>Notifications</LabelForTab>
             </IconLink>
 
             {/* TODO: Make this active only when viewing current logged in user profile */}
@@ -84,11 +85,11 @@ class Navbar extends Component {
               to="/user/me"
             >
               <Icon
-                icon="notification"
+                icon="emoji"
                 color={'bg.default'}
                 hoverColor={'bg.default'}
               />
-              <Label>Profile</Label>
+              <LabelForTab>Profile</LabelForTab>
             </IconLink>
           </Section>
 

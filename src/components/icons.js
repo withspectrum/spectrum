@@ -14,12 +14,12 @@ export const InlineSvg = styled.svg`
   width: 100%;
   color: inherit;
   transition: all 0.3s ease-out;
-  fill: ${props => eval(props.color ? `props.theme.${props.color}` : 'currentColor')};
+  fill: ${props => (props.color ? eval(`props.theme.${props.color}`) : 'currentColor')};
 
   &:hover {
     transition: all 0.2s ease-in;
     transform: ${props => (props.scaleOnHover ? `scale(1.05)` : `scale(1)`)};
-    fill: ${props => eval(props.hoverColor ? `props.theme.${props.hoverColor}` : `currentColor`)};
+    fill: ${props => (props.hoverColor ? eval(`props.theme.${props.hoverColor}`) : `currentColor`)};
 		cursor: pointer;
 	}
 `;
@@ -32,7 +32,7 @@ export const SvgWrapper = styled.div`
   min-width: ${props => (props.size ? `${props.size}px` : '32px')};
   min-height: ${props => (props.size ? `${props.size}px` : '32px')};
   position: relative;
-  color: ${props => (props.color ? `props.theme.${props.color}` : `currentColor`)};
+  color: ${props => (props.color ? eval(`props.theme.${props.color}`) : `currentColor`)};
   ${props => (props.tipText && !props.onboarding ? Tooltip(props) : '')};
   ${props => (props.onboarding ? Onboarding(props) : '')};
 `;

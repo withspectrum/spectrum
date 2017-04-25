@@ -124,3 +124,10 @@ export const Label = styled.span`
     margin-left: 0;
   }
 `;
+
+export const LabelForTab = styled(Label)`
+  display: none;
+  @media (max-width: 768px) {
+    display: inline;
+  }
+`;
