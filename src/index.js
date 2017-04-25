@@ -17,7 +17,7 @@ import Routes from './routes';
 import Homepage from './views/homepage';
 
 const MATCH_UID = /\?user=(.+)/g;
-if (window.location.search) {
+if (window.location.search && MATCH_UID.test(window.location.search)) {
   const uid = MATCH_UID.exec(window.location.search)[1];
   if (uid) {
     storeItem('spectrum', { uid });

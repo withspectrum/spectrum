@@ -12,7 +12,7 @@ import branch from 'recompose/branch';
 
 import { Column } from '../../components/column';
 import { Profile } from '../../components/profile';
-import { DashboardContainer } from './style';
+import { DashboardContainer, ErrorMessage } from './style';
 import { getEverything } from './queries';
 import Loading from '../../components/loading';
 import StoryFeedCard from '../../components/storyFeedCard';
@@ -28,7 +28,8 @@ const displayLoadingState = branch(
   renderComponent(Loading)
 );
 
-const DashboardPure = ({ data: { user } }) => {
+const DashboardPure = ({ data: { user, error } }) => {
+  if (error) return <ErrorMessage>{error.message}</ErrorMessage>;
   const stories = user.everything.edges;
   const communities = user.communityConnection.edges;
   const userData = {
