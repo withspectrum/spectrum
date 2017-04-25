@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Logo } from '../../components/logo';
 import {
   Gradient,
@@ -258,53 +258,61 @@ export const Tagline = styled(H2)`
 	color: inherit;
 `;
 
+const buttonStyles = css`
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: flex-row;
+  align-self: flex-start;
+  align-items: center;
+  background: transparent;
+  border: 2px solid currentColor;
+  border-radius: 8px;
+  padding: 8px;
+  padding-right: 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: currentColor;
+
+  span {
+    display: inline-block;
+    flex: 0 0 auto;
+    margin-top: -1px;
+    margin-left: 8px;
+    line-height: 2.45;
+    word-break: keep-all;
+    white-space: nowrap;
+    color: currentColor;
+  }
+
+  svg {
+    fill: currentColor !important;
+  }
+
+  transition: all 0.3s ease-out;
+
+  &:hover {
+    border-radius: 16px;
+    border: 2px solid transparent;
+    background-color: ${({ theme }) => theme.bg.default};
+    transition: all 0.2s ease-in;
+    cursor: pointer;
+
+    span {
+      color: ${({ theme }) => theme.brand.default};
+    }
+
+    svg {
+      fill: ${({ theme }) => theme.brand.default} !important;
+    }
+  }
+`;
+
 export const Button = styled.button`
-	display: flex;
-	flex: 0 0 auto;
-	flex-direction: flex-row;
-	align-self: flex-start;
-	align-items: center;
-	background: transparent;
-	border: 2px solid currentColor;
-	border-radius: 8px;
-	padding: 8px;
-	padding-right: 16px;
-	font-size: 14px;
-	font-weight: 700;
-	color: currentColor;
+	${buttonStyles}
+`;
 
-	span {
-		display: inline-block;
-		flex: 0 0 auto;
-		margin-top: -1px;
-		margin-left: 8px;
-		line-height: 2.45;
-		word-break: keep-all;
-		white-space: nowrap;
-		color: currentColor;
-	}
-
-	svg {
-		fill: currentColor !important;
-	}
-
-	transition: all 0.3s ease-out;
-
-	&:hover {
-		border-radius: 16px;
-		border: 2px solid transparent;
-		background-color: ${({ theme }) => theme.bg.default};
-		transition: all 0.2s ease-in;
-		cursor: pointer;
-
-		span {
-			color: ${({ theme }) => theme.brand.default};
-		}
-
-		svg {
-			fill: ${({ theme }) => theme.brand.default} !important;
-		}
-	}
+export const LinkButton = styled.a`
+  ${buttonStyles}
 `;
 
 export const LogoWhite = styled(Logo)`

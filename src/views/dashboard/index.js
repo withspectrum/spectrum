@@ -11,60 +11,41 @@ import branch from 'recompose/branch';
 
 import { Column } from '../../components/column';
 import { Profile } from '../../components/profile';
-import { DashboardContainer } from './style';
+import { DashboardContainer, ErrorMessage } from './style';
 import { getEverything } from './queries';
 import Loading from '../../components/loading';
 import StoryFeedCard from '../../components/storyFeedCard';
 import CommunityProfileCard from '../../components/communityProfileCard';
-
-const logout = () => {
-  localStorage.clear();
-  window.location.href = '/';
-};
+import {
+  logout,
+  saveUserDataToLocalStorage,
+} from '../../actions/authentication';
 
 const displayLoadingState = branch(
   props => props.data.loading,
   renderComponent(Loading)
 );
 
-const dummyUser = {
-  photoURL: 'https://pbs.twimg.com/profile_images/570313913648955392/cf4tgX7M_bigger.jpeg',
-  title: 'Brian Lovin',
-  subtitle: '@brian',
-  description: 'Chief Nice Boy™ · Building @withspectrum, @designdetailsfm, @specfm · prev. @facebook, @buffer',
-  meta: [
-    {
-      icon: 'edit',
-      label: 'Posts',
-      count: '14',
-    },
-    {
-      icon: 'like',
-      label: 'Reputation',
-      count: '3.2k',
-    },
-    {
-      icon: 'emoji',
-      label: 'Friends',
-      count: '86',
-    },
-  ],
-};
+const DashboardPure = ({ data: { user, error } }) => {
+  if (error) return <ErrorMessage>{error.message}</ErrorMessage>;
+  if (user === null) return <button onClick={logout}>Logout</button>;
+  console.log(user);
+  saveUserDataToLocalStorage(user);
 
-const DashboardPure = ({ data: { user } }) => {
   const stories = user.everything.edges;
   const communities = user.communityConnection.edges;
   const userData = {
     photoURL: user.photoURL,
-    displayName: user.displayName,
-    username: user.username,
+    title: user.displayName,
+    subtitle: user.username,
+    meta: [], // { icon: 'edit', label: 'Posts', count: '14' }
   };
 
   return (
     <DashboardContainer justifyContent={'center'} alignContent={'flex-start'}>
       <Column type={'secondary'}>
         {/* User profile */}
-        <Profile data={dummyUser} />
+        <Profile data={userData} />
 
         {communities.map(community => {
           return (

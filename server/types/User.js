@@ -43,6 +43,7 @@ const User = /* GraphQL */ `
 
 	extend type Query {
 		user(id: ID!): User
+		currentUser: User
 	}
 `;
 

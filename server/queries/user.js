@@ -11,6 +11,7 @@ import type { PaginationOptions } from '../utils/paginate-arrays';
 module.exports = {
   Query: {
     user: (_, { id }) => getUser(id),
+    currentUser: (_, __, { user }) => user,
   },
   User: {
     everything: (

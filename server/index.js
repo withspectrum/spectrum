@@ -24,6 +24,7 @@ const WS_PORT = 5000;
 const DB_PORT = 28015;
 const HOST = 'localhost';
 const IS_PROD = process.env.NODE_ENV === 'production';
+const APP_URL = IS_PROD ? 'https://spectrum.chat' : 'http://localhost:3000';
 
 console.log('Server starting...');
 
@@ -35,7 +36,12 @@ initPassport({
 });
 // API server
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: APP_URL,
+    credentials: true,
+  })
+);
 app.use(
   '/graphiql',
   graphiqlExpress({
@@ -45,7 +51,7 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(bodyParser());
+app.use(bodyParser.json());
 app.use(
   session({
     store: new SessionStore(db, {
@@ -55,7 +61,7 @@ app.use(
     // NOTE(@mxstbr): 1Password generated this, LGTM!
     secret: 't3BUqGYFHLNjb7V8xjY6QLECgWy7ByWTYjKkPtuP%R.uLfjNBQKr9pHuKuQJXNqo',
     resave: true,
-    saveUninitialized: false,
+    saveUninitialized: true,
   })
 );
 app.use(passport.initialize());
@@ -73,11 +79,19 @@ app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get(
   '/auth/twitter/callback',
   passport.authenticate('twitter', {
-    successRedirect: '/',
-    failureRedirect: '/login',
+    failureRedirect: APP_URL,
+    successRedirect: `${APP_URL}/dashboard`,
   })
 );
-app.use('/', graphqlExpress({ schema }));
+app.use(
+  '/',
+  graphqlExpress(req => ({
+    schema,
+    context: {
+      user: req.user,
+    },
+  }))
+);
 
 // Create the websocket server, make it 404 for all requests to HTTP(S) port(s)
 const websocketServer = createServer((req, res) => {

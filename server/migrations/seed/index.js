@@ -1,4 +1,10 @@
 const faker = require('faker');
+const {
+  DEFAULT_COMMUNITIES,
+  DEFAULT_USERS,
+  DEFAULT_FREQUENCIES,
+  DEFAULT_STORIES,
+} = require('./default');
 
 const {
   randomAmount,
@@ -11,19 +17,25 @@ const {
 } = require('./generate');
 
 const userAmount = faker.random.number(1000);
-const users = randomAmount({ max: userAmount, min: 1 }, generateUser);
+const users = [
+  ...DEFAULT_USERS,
+  ...randomAmount({ max: userAmount, min: 1 }, generateUser),
+];
 
 console.log('\nGenerating communities...');
-const communities = randomAmount({ max: 10 }, () => {
-  const members = randomAmount(
-    { max: users.length - 1, min: 1 },
-    i => users[i].uid
-  );
-  return generateCommunity(members);
-});
+const communities = [
+  ...DEFAULT_COMMUNITIES,
+  ...randomAmount({ max: 10 }, () => {
+    const members = randomAmount(
+      { max: users.length - 1, min: 1 },
+      i => users[i].uid
+    );
+    return generateCommunity(members);
+  }),
+];
 
 console.log('Generating frequencies...');
-let frequencies = [];
+let frequencies = DEFAULT_FREQUENCIES;
 communities.forEach(community => {
   randomAmount({ max: 10 }, () => {
     const subscribers = randomAmount(
@@ -35,7 +47,7 @@ communities.forEach(community => {
 });
 
 console.log('Generating stories...');
-let stories = [];
+let stories = DEFAULT_STORIES;
 frequencies.forEach(frequency => {
   randomAmount({ max: 10 }, () => {
     const author = faker.random.arrayElement(frequency.subscribers);
