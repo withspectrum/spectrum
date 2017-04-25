@@ -11,7 +11,6 @@ import branch from 'recompose/branch';
 
 import { Column } from '../../components/column';
 import { Profile } from '../../components/profile';
-import { Card } from '../../components/card';
 import { DashboardContainer } from './style';
 import { getEverything } from './queries';
 import Loading from '../../components/loading';
@@ -75,6 +74,8 @@ const DashboardPure = ({ data: { user } }) => {
             />
           );
         })}
+
+        <button onClick={logout}>Logout</button>
       </Column>
 
       <Column type={'primary'}>
@@ -82,6 +83,7 @@ const DashboardPure = ({ data: { user } }) => {
           return <StoryFeedCard key={story.node.id} data={story.node} />;
         })}
       </Column>
+
     </DashboardContainer>
   );
 };

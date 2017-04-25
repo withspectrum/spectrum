@@ -57,7 +57,6 @@ const spin = keyframes`
 export const Spinner = styled.span`
   width: ${props => (props.size ? `${props.size}px` : '2rem')};
   height: ${props => (props.size ? `${props.size}px` : '2rem')};
-
   &:before {
     content: '';
     box-sizing: border-box;
@@ -70,7 +69,7 @@ export const Spinner = styled.span`
     margin-top: ${props => `-${props.size / 2}px`};
     margin-left: ${props => `-${props.size / 2}px`};
     border-radius: 50%;
-    border: ${props => '2px'} solid ${props => eval(props.color ? `props.theme.${props.color}` : props.theme.brand.alt)};
+    border: ${props => '2px'} solid ${props => (props.color ? eval(`props.theme.${props.color}`) : props.theme.brand.alt)};
     border-top-color: transparent;
     border-right-color: ${props => (props.color ? `props.theme.${props.color}` : props.theme.brand.alt)};
     border-bottom-color: transparent;
