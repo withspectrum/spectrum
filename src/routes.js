@@ -15,6 +15,7 @@ import FrequencyProfile from './views/frequencyProfile';
 import Navbar from './views/navbar';
 import StyleGuide from './views/pages/styleGuide';
 import Dashboard from './views/dashboard';
+import Notifications from './views/notifications';
 
 const About = () => (
   <div>
@@ -55,6 +56,7 @@ class Routes extends Component {
             <Route path="/messages" component={DirectMessages} />
             <Route path="/story" component={Story} />
             <Route path="/users" component={UserProfile} />
+            <Route path="/notifications" component={Notifications} />
 
             {/*
               We check communityId last to ensure none of the above routes

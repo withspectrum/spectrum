@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Svg = styled.svg`
-  fill: ${props => props.color};
+  fill: ${props => (props.color ? props.color : props.theme.text.reverse)};
   max-width: 100%;
 `;
 
