@@ -22,21 +22,6 @@ const communities = randomAmount({ max: 10 }, () => {
   return generateCommunity(members);
 });
 
-// const addCommunityToUser = (uid, community) => {
-//   const userToUpdate = users.find(user => user.uid === uid)
-//   console.log('before', userToUpdate, community)
-//   userToUpdate.communities.push(community)
-//   console.log('after', userToUpdate, community)
-// }
-//
-// console.log('\nAdding communities back onto its users...')
-// communities.forEach(community => {
-//   community.members.forEach(member => {
-//     const user = users.find(user => user.uid === member)
-//     addCommunityToUser(user.uid, community.id)
-//   })
-// })
-
 console.log('Generating frequencies...');
 let frequencies = [];
 communities.forEach(community => {
