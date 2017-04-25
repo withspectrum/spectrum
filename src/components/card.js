@@ -24,5 +24,5 @@ const CardPure = (props: Object): React$Element<any> => (
   </StyledCard>
 );
 
-const Card = compose(pure)(CardPure);
+export const Card = compose(pure)(CardPure);
 export default Card;
