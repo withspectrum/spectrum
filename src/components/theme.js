@@ -12,16 +12,16 @@ export const theme = {
     light: '#1CD2F2',
     soft: '#ACC7FF',
   },
+  pro: {
+    default: '#1CD2F2',
+    alt: '#00D6A9',
+  },
   warn: {
     default: '#E3353C',
     alt: '#E2197A',
   },
   success: {
     default: '#00C383',
-    alt: '#00D6A9',
-  },
-  pro: {
-    default: '#1CD2F2',
     alt: '#00D6A9',
   },
   bg: {

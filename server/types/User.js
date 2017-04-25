@@ -17,6 +17,16 @@ const User = /* GraphQL */ `
 		node: Frequency!
 	}
 
+	type EverythingStoriesConnection {
+		pageInfo: PageInfo!
+		edges: [EverythingStoryEdge!]
+	}
+
+	type EverythingStoryEdge {
+		cursor: String!
+		node: Story!
+	}
+
 	type User {
 		uid: ID!
 		createdAt: Date!
@@ -28,6 +38,7 @@ const User = /* GraphQL */ `
 		# subscriptions: [Subscription!]
 		communityConnection: UserCommunitiesConnection!
 		frequencyConnection: UserFrequenciesConnection!
+		everything(first: Int = 10, after: String): EverythingStoriesConnection!
 	}
 
 	extend type Query {

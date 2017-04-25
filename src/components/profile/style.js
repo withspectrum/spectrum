@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { FlexContainer } from '../flexbox';
-import { Truncate, Button } from '../globals';
+import { Truncate } from '../globals';
+import { Button } from '../buttons';
 
 export const ProfileHeader = styled(FlexContainer)`
   padding: 16px;
@@ -42,6 +43,14 @@ export const Actions = styled(FlexContainer)`
 `;
 
 export const Action = styled(Button)`
+  flex-grow: 1;
+
+  &:last-of-type:not(:first-of-type) {
+    margin-left: 8px;
+  }
+`;
+
+export const ActionOutline = styled(Button)`
   flex-grow: 1;
 
   &:last-of-type:not(:first-of-type) {

@@ -6,7 +6,6 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
-import { FlexContainer } from './flexbox';
 
 const StyledAvatar = styled.img`
   border-radius: ${props => `${props.radius}px`};
