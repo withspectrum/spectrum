@@ -38,5 +38,9 @@ export const Content = styled.p`
 `;
 
 export const Message = styled(Content)`
-  font-weight: 700;
+  font-weight: 500;
+  
+  a {
+    font-weight: 700;
+  }
 `;

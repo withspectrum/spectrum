@@ -26,7 +26,7 @@ const data = [
     content: 'New features: Highlight new stories, fix scrolling position, and more!',
     community: 'Spectrum',
     frequency: 'General',
-    thread: 'New features: Highlight new stories, fix scrolling position, and more!',
+    threadName: 'New features: Highlight new stories, fix scrolling position, and more!',
     read: false,
     sender: 'Max Stoiber',
     timestamp: 1489352567485,
@@ -37,7 +37,7 @@ const data = [
     content: "I've had like 2 drops in ~50 hours. Not perfect by any means 😭",
     community: 'Spectrum',
     frequency: 'General',
-    thread: 'How bout dat Zelda tho?',
+    threadName: 'How bout dat Zelda tho?',
     read: false,
     sender: 'Bryn Jackson',
     timestamp: 1490994669642,
@@ -48,7 +48,7 @@ const data = [
     content: 'New features: Highlight new stories, fix scrolling position, and more!',
     community: 'Spectrum',
     frequency: 'General',
-    thread: 'New features: Highlight new stories, fix scrolling position, and more!',
+    threadName: 'New features: Highlight new stories, fix scrolling position, and more!',
     read: true,
     sender: 'Brian Lovin',
     timestamp: 1489352567484,
@@ -102,7 +102,9 @@ const constructMessage = notification => {
       return (
         <span>
           <Link to={`/@${sender}`}>{sender}</Link>
+          {' '}
           replied to your thread
+          {' '}
           <Link to={`/thread/${threadID}`}>{threadName}</Link>!
         </span>
       );
