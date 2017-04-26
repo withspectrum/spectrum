@@ -1,5 +1,6 @@
 //@flow
 import React from 'react';
+import { Link } from 'react-router-dom';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
@@ -20,31 +21,34 @@ import {
 
 const data = [
   {
+    threadID: 'asdflkjasdflkjadflkj',
     activityType: 'new-story',
     content: 'New features: Highlight new stories, fix scrolling position, and more!',
     community: 'Spectrum',
     frequency: 'General',
-    story: 'New features: Highlight new stories, fix scrolling position, and more!',
+    thread: 'New features: Highlight new stories, fix scrolling position, and more!',
     read: false,
     sender: 'Max Stoiber',
     timestamp: 1489352567485,
   },
   {
+    threadID: 'asdflkjasdflkjadflk',
     activityType: 'new-message',
     content: "I've had like 2 drops in ~50 hours. Not perfect by any means 😭",
     community: 'Spectrum',
     frequency: 'General',
-    story: 'How bout dat Zelda tho?',
+    thread: 'How bout dat Zelda tho?',
     read: false,
     sender: 'Bryn Jackson',
     timestamp: 1490994669642,
   },
   {
+    threadID: 'asdflkjasdflkjadfl',
     activityType: 'new-story',
     content: 'New features: Highlight new stories, fix scrolling position, and more!',
     community: 'Spectrum',
     frequency: 'General',
-    story: 'New features: Highlight new stories, fix scrolling position, and more!',
+    thread: 'New features: Highlight new stories, fix scrolling position, and more!',
     read: true,
     sender: 'Brian Lovin',
     timestamp: 1489352567484,
@@ -74,11 +78,35 @@ const getStatusByType = notification => {
 };
 
 const constructMessage = notification => {
-  switch (notification.activityType) {
+  const {
+    activityType,
+    sender,
+    community,
+    frequency,
+    threadID,
+    threadName,
+  } = notification;
+  switch (activityType) {
     case 'new-story':
-      return `${notification.sender} posted a new story in ${notification.frequency}!`;
+      return (
+        <span>
+          <Link to={`/@${sender}`}>{sender}</Link>
+          {' '}
+          posted a new thread in
+          {' '}
+          <Link to={`/${community}/${frequency}`}>{frequency}</Link>
+          !
+        </span>
+      );
     case 'new-message':
-      return `${notification.sender} replied to your story "${notification.story}"`;
+      return (
+        <span>
+          <Link to={`/@${sender}`}>{sender}</Link>
+          replied to your thread
+          <Link to={`/thread/${threadID}`}>{threadName}</Link>!
+        </span>
+      );
+      `${sender} replied to your thread "${threadName}"`;
     default:
       return;
   }
