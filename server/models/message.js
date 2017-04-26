@@ -78,9 +78,14 @@ const listenToNewMessages = (location: LocationTypes, cb: Function): Object => {
   );
 };
 
+const getMessageCount = (location: string, thread: string) => {
+  return db.table(location).filter({ thread }).count().run();
+};
+
 module.exports = {
   getMessage,
   getMessagesByLocationAndThread,
   storeMessage,
   listenToNewMessages,
+  getMessageCount,
 };

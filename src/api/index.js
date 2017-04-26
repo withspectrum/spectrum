@@ -1,5 +1,12 @@
 // @flow
 import { ApolloClient, createNetworkInterface } from 'react-apollo';
+import {
+  SubscriptionClient,
+  addGraphQLSubscriptions,
+} from 'subscriptions-transport-ws';
+
+// TODO Fix for production
+const wsClient = new SubscriptionClient('ws://localhost:5000');
 
 const networkInterface = createNetworkInterface({
   opts: {
@@ -8,8 +15,13 @@ const networkInterface = createNetworkInterface({
   uri: 'http://localhost:3001/',
 });
 
-export const client = new ApolloClient({
+const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   networkInterface,
+  wsClient
+);
+
+export const client = new ApolloClient({
+  networkInterface: networkInterfaceWithSubscriptions,
 });
 
 export const clearApolloStore = () => {
