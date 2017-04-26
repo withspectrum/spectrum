@@ -4,9 +4,7 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-import Card from '../../components/card';
 import Icon from '../../components/icons';
-import { FlexCol, FlexRow } from '../../components/globals';
 import { Column } from '../../components/column';
 import {
   DashboardContainer,
@@ -83,8 +81,6 @@ const constructMessage = notification => {
       return;
   }
 };
-
-data.map(notification => console.log('notification: ', notification));
 
 const NotificationsPure = () => (
   <DashboardContainer justifyContent={'center'} alignContent={'flex-start'}>

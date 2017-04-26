@@ -28,10 +28,13 @@ const displayLoadingState = branch(
   renderComponent(Loading)
 );
 
-const DashboardPure = ({ data: { user, error, fetchMore }, location }) => {
+const DashboardPure = ({
+  data: { user, error, fetchMore },
+  data,
+  location,
+}) => {
   if (error) return <ErrorMessage>{error.message}</ErrorMessage>;
   if (user === null) return <button onClick={logout}>Logout</button>;
-  console.log('user', user);
   saveUserDataToLocalStorage(user);
 
   const stories = user.everything.edges;

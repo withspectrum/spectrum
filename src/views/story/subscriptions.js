@@ -1,4 +1,4 @@
-import { graphql, gql } from 'react-apollo';
+import { gql } from 'react-apollo';
 
 export const subscribeToNewMessages = gql`
 	subscription subscribeToNewMessages($thread: ID!) {
