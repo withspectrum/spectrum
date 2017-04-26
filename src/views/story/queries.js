@@ -54,7 +54,8 @@ export const getStory = graphql(
 
               const newMessage = subscriptionData.data.messageAdded;
 
-              const newData = {
+              // Add the new message to the data
+              return {
                 ...prev,
                 story: {
                   ...prev.story,
@@ -62,20 +63,12 @@ export const getStory = graphql(
                     ...prev.story.messageConnection,
                     edges: [
                       ...prev.story.messageConnection.edges,
-                      { node: newMessage },
+                      // NOTE(@mxstbr): The __typename hack is to work around react-apollo/issues/658
+                      { node: newMessage, __typename: 'StoryMessageEdge' },
                     ],
                   },
                 },
               };
-
-              console.log('\n\n');
-              console.log('Prev');
-              console.log(prev);
-              console.log('newData');
-              console.log(newData);
-              console.log('\n\n');
-
-              return newData;
             },
           });
         },

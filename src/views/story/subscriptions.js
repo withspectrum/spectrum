@@ -5,8 +5,8 @@ export const subscribeToNewMessages = gql`
 		messageAdded(location: messages, thread: $thread) {
 			id
 			message {
-				content
 				type
+				content
 			}
 		}
 	}

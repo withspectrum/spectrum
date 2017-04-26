@@ -41,7 +41,6 @@ const displayLoadingState = branch(
 );
 
 const StoryContainerPure = ({ data: { story }, data }) => {
-  console.log(data);
   const userData = {
     photoURL: story.author.photoURL,
     title: story.author.displayName,
