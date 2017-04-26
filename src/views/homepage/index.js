@@ -17,7 +17,6 @@ import {
   GoopyFour,
   Wrapper,
   Tagline,
-  Button,
   LinkButton,
   LogoContainer,
   LogoWhite,

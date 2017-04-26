@@ -7,7 +7,7 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
 import { FlexContainer } from './flexbox';
-import { Shadow, hexa } from './globals';
+import { Shadow } from './globals';
 
 const StyledCard = styled(FlexContainer)`
   background: ${({ theme }) => theme.bg.default};
