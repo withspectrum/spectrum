@@ -8,8 +8,6 @@ import pure from 'recompose/pure';
 import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
-// $FlowFixMe
-import withHandlers from 'recompose/withHandlers';
 
 import { Column } from '../../components/column';
 import { Button } from '../../components/buttons';
