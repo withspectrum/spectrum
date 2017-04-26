@@ -16,6 +16,7 @@ import { getEverything } from './queries';
 import Loading from '../../components/loading';
 import StoryFeedCard from '../../components/storyFeedCard';
 import CommunityProfileCard from '../../components/communityProfileCard';
+import WithTransition from '../../components/routeTransition';
 import {
   logout,
   saveUserDataToLocalStorage,
@@ -26,10 +27,10 @@ const displayLoadingState = branch(
   renderComponent(Loading)
 );
 
-const DashboardPure = ({ data: { user, error } }) => {
+const DashboardPure = ({ data: { user, error }, location }) => {
   if (error) return <ErrorMessage>{error.message}</ErrorMessage>;
   if (user === null) return <button onClick={logout}>Logout</button>;
-  console.log(user);
+
   saveUserDataToLocalStorage(user);
 
   const stories = user.everything.edges;
@@ -42,30 +43,32 @@ const DashboardPure = ({ data: { user, error } }) => {
   };
 
   return (
-    <DashboardContainer justifyContent={'center'} alignContent={'flex-start'}>
-      <Column type={'secondary'}>
-        {/* User profile */}
-        <Profile data={userData} />
+    <WithTransition location={location}>
+      <DashboardContainer justifyContent={'center'} alignContent={'flex-start'}>
+        <Column type={'secondary'}>
+          {/* User profile */}
+          <Profile data={userData} />
 
-        {communities.map(community => {
-          return (
-            <CommunityProfileCard
-              key={community.node.id}
-              data={community.node}
-            />
-          );
-        })}
+          {communities.map(community => {
+            return (
+              <CommunityProfileCard
+                key={community.node.id}
+                data={community.node}
+              />
+            );
+          })}
 
-        <button onClick={logout}>Logout</button>
-      </Column>
+          <button onClick={logout}>Logout</button>
+        </Column>
 
-      <Column type={'primary'}>
-        {stories.map(story => {
-          return <StoryFeedCard key={story.node.id} data={story.node} />;
-        })}
-      </Column>
+        <Column type={'primary'}>
+          {stories.map(story => {
+            return <StoryFeedCard key={story.node.id} data={story.node} />;
+          })}
+        </Column>
 
-    </DashboardContainer>
+      </DashboardContainer>
+    </WithTransition>
   );
 };
 
