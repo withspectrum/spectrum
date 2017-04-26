@@ -25,7 +25,7 @@ const About = () => (
 
 const Body = styled.div`
   width: 100vw;
-  height: 100%;
+  height: 100vh;
   background: ${props => props.theme.bg.wash};
 `;
 
@@ -70,6 +70,7 @@ class Routes extends Component {
             />
             <Route path="/:communityId" component={CommunityProfile} />
           </Switch>
+
         </Body>
       </Router>
     );

@@ -1,4 +1,4 @@
-/**
+``; /**
  * Seed the database with some randomly generated data
  */
 const { v4: uuid } = require('uuid');

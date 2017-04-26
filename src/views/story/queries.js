@@ -12,6 +12,8 @@ export const getStory = graphql(
       }
       author {
         displayName
+        username
+        photoURL
       }
       frequency {
         id

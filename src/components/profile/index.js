@@ -4,66 +4,42 @@ import React from 'react';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
-import Card from '../card';
-import Icon from '../icons';
-import { Avatar } from '../avatar';
-import {
-  ProfileHeader,
-  ProfileHeaderMeta,
-  Title,
-  Subtitle,
-  Description,
-  Actions,
-  Action,
-  ActionOutline,
-  Meta,
-  MetaList,
-  MetaListItem,
-  Label,
-  Count,
-} from './style';
+import User from './user';
+import Frequency from './frequency';
+import Community from './community';
 
-const ProfilePure = (props: Object): React$Element<any> => (
-  <Card {...props}>
-    <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-      <Avatar size={40} radius={4} src={props.data.photoURL} />
-      <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-        <Title>{props.data.title}</Title>
-        <Subtitle>{props.data.subtitle}</Subtitle>
-      </ProfileHeaderMeta>
-    </ProfileHeader>
+const ProfilePure = (props: Object): React$Element<any> => {
+  const { type } = props;
+  switch (type) {
+    case 'user': {
+      return <User {...props} />;
+    }
+    case 'frequency': {
+      return <Frequency {...props} />;
+    }
+    case 'community': {
+      return <Community {...props} />;
+    }
+    default: {
+      return <User {...props} />;
+    }
+  }
+};
 
-    <Description>
-      {props.data.description}
-    </Description>
-
-    <Actions>
-      <ActionOutline>Message</ActionOutline>
-      <Action>Follow</Action>
-    </Actions>
-
-    <Meta>
-      <MetaList>
-        {props.data.meta.map((item, i) => {
-          return (
-            <MetaListItem key={i}>
-              <Label>
-                <Icon
-                  icon={item.icon}
-                  color={'text.alt'}
-                  hoverColor={'text.alt'}
-                  scaleOnHover={false}
-                  size={24}
-                />
-                {item.label}
-              </Label>
-              <Count>{item.count}</Count>
-            </MetaListItem>
-          );
-        })}
-      </MetaList>
-    </Meta>
-  </Card>
-);
+type ProfileProps = {
+  title: String,
+  subtitle: String,
+  photoURL: ?String,
+  meta: ?Array<any>,
+};
 
 export const Profile = compose(pure)(ProfilePure);
+export const UserProfile = (props: ProfileProps) => (
+  <Profile type="user" {...props} />
+);
+export const FrequencyProfile = (props: ProfileProps) => (
+  <Profile type="frequency" {...props} />
+);
+export const CommunityProfile = (props: ProfileProps) => (
+  <Profile type="community" {...props} />
+);

@@ -7,7 +7,7 @@ const getFrequenciesByCommunity = community => {
   return db.table('frequencies').filter({ community }).run();
 };
 
-const getFrequenciesByUser = uid => {
+const getFrequenciesByUser = (uid: String) => {
   return db
     .table('frequencies')
     .filter(frequency => frequency('subscribers').contains(uid))

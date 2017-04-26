@@ -17,6 +17,16 @@ const User = /* GraphQL */ `
 		node: Frequency!
 	}
 
+	type UserDirectMessageGroupsConnection {
+		pageInfo: PageInfo!
+		edges: [DirectMessageGroupEdge]
+	}
+
+	type DirectMessageGroupEdge {
+		cursor: String!
+		node: DirectMessageGroup!
+	}
+
 	type EverythingStoriesConnection {
 		pageInfo: PageInfo!
 		edges: [EverythingStoryEdge!]
@@ -38,6 +48,7 @@ const User = /* GraphQL */ `
 		# subscriptions: [Subscription!]
 		communityConnection: UserCommunitiesConnection!
 		frequencyConnection: UserFrequenciesConnection!
+		directMessageGroupsConnection: UserDirectMessageGroupsConnection!
 		everything(first: Int = 10, after: String): EverythingStoriesConnection!
 	}
 
