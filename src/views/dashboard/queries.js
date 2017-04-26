@@ -16,6 +16,7 @@ export const getEverything = graphql(
   			  hasPreviousPage
   			}
         edges {
+          cursor
           node {
             id
             createdAt
@@ -60,5 +61,55 @@ export const getEverything = graphql(
     options: props => ({
       variables: { uid: props.uid },
     }),
+    props: ({ data: { loading, user, fetchMore } }) => ({
+      data: {
+        loading,
+        user,
+        fetchMore: () =>
+          fetchMore({
+            query: MoreStoriesQuery,
+            variables: {
+              after: user.everything.edges[user.everything.edges.length - 1]
+                .cursor,
+            },
+            updateQuery: (prev, { fetchMoreResult }) => {
+              console.log('prev', prev, 'result', fetchMoreResult);
+              if (!fetchMoreResult.user) {
+                return prev;
+              }
+              return Object.assign({}, prev, {
+                data: fetchMoreResult.user.everything.edges,
+              });
+            },
+          }),
+      },
+    }),
   }
 );
+
+const MoreStoriesQuery = gql`
+  query everything($after: String) {
+    user: currentUser {
+      everything(after: $after) {
+        pageInfo {
+  			  hasNextPage
+  			  hasPreviousPage
+  			}
+        edges {
+          cursor
+          node {
+            id
+            createdAt
+            content {
+              title
+              description
+            }
+            author {
+              displayName
+            }
+          }
+        }
+      }
+    }
+  }
+`;

@@ -8,8 +8,11 @@ import pure from 'recompose/pure';
 import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
+// $FlowFixMe
+import withHandlers from 'recompose/withHandlers';
 
 import { Column } from '../../components/column';
+import { Button } from '../../components/buttons';
 import { Profile } from '../../components/profile';
 import { DashboardContainer, ErrorMessage } from './style';
 import { getEverything } from './queries';
@@ -27,10 +30,10 @@ const displayLoadingState = branch(
   renderComponent(Loading)
 );
 
-const DashboardPure = ({ data: { user, error }, location }) => {
+const DashboardPure = ({ data: { user, error, fetchMore }, location }) => {
   if (error) return <ErrorMessage>{error.message}</ErrorMessage>;
   if (user === null) return <button onClick={logout}>Logout</button>;
-
+  console.log('user', user);
   saveUserDataToLocalStorage(user);
 
   const stories = user.everything.edges;
@@ -65,6 +68,8 @@ const DashboardPure = ({ data: { user, error }, location }) => {
           {stories.map(story => {
             return <StoryFeedCard key={story.node.id} data={story.node} />;
           })}
+
+          <Button onClick={fetchMore}>Fetch More</Button>
         </Column>
 
       </DashboardContainer>
