@@ -12,7 +12,7 @@ import { StoryDetail } from '../components/storyDetail';
 import { Column } from '../../../components/column';
 import { FlexContainer } from '../../../components/flexbox';
 import { Card } from '../../../components/card';
-import { Profile } from '../../../components/profile';
+import { UserProfile, FrequencyProfile } from '../../../components/profile';
 import { getStory } from '../queries';
 import Loading from '../../../components/loading';
 
@@ -42,8 +42,8 @@ const StoryContainerPure = ({ data: { story } }) => {
     <FlexContainer justifyContent="center">
 
       <Column type="secondary">
-        <Profile data={userData} type="user" />
-        <Profile data={frequencyData} type="frequency" />
+        <UserProfile data={userData} />
+        <FrequencyProfile data={frequencyData} />
       </Column>
 
       <Column type="primary">
