@@ -16,23 +16,16 @@ import WithTransition from '../../components/routeTransition';
 
 const StoryPure = ({ match, location }) => (
   <WithTransition location={location}>
-    <FlexContainer justifyContent="center">
-      <Column type="primary">
-        <Link to="/">Close</Link>
-        <Card>
-          {/* story content */}
-          <Route
-            location={location}
-            key={location.key}
-            path={`${match.url}/:storyId`}
-            component={StoryContainer}
-          />
+    {/* story content */}
+    <Route
+      location={location}
+      key={location.key}
+      path={`${match.url}/:storyId`}
+      component={StoryContainer}
+    />
 
-          {/* if no storyId is provided, redirect to homepage */}
-          <Route exact path={match.url} render={() => <Redirect to="/" />} />
-        </Card>
-      </Column>
-    </FlexContainer>
+    {/* if no storyId is provided, redirect to homepage */}
+    <Route exact path={match.url} render={() => <Redirect to="/" />} />
   </WithTransition>
 );
 
