@@ -26,6 +26,7 @@ export const getEverything = graphql(
             author {
               displayName
             }
+            messageCount
           }
         }
       }

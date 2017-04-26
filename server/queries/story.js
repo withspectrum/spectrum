@@ -5,7 +5,10 @@
  */
 const { getStory } = require('../models/story');
 const { getFrequency } = require('../models/frequency');
-const { getMessagesByLocationAndThread } = require('../models/message');
+const {
+  getMessagesByLocationAndThread,
+  getMessageCount,
+} = require('../models/message');
 const { getUser } = require('../models/user');
 import type { LocationTypes } from '../models/message';
 import type { PaginationOptions } from '../utils/paginate-arrays';
@@ -39,5 +42,6 @@ module.exports = {
       }));
     },
     author: ({ author }: { author: String }) => getUser(author),
+    messageCount: ({ id }: { id: string }) => getMessageCount('messages', id),
   },
 };

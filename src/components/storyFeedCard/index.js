@@ -6,7 +6,7 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { StyledStoryFeedCard, Title, Description } from './style';
+import { StyledStoryFeedCard, Title, Description, Meta } from './style';
 
 const StoryFeedCardPure = (props: Object): React$Element<any> => (
   <StyledStoryFeedCard>
@@ -14,6 +14,7 @@ const StoryFeedCardPure = (props: Object): React$Element<any> => (
       <Link to={`/story/${props.data.id}`}>{props.data.content.title}</Link>
     </Title>
     <Description>{props.data.content.description}</Description>
+    <Meta>{props.data.messageCount} messages</Meta>
   </StyledStoryFeedCard>
 );
 
