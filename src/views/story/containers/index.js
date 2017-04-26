@@ -7,8 +7,12 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 //$FlowFixMe
+import lifecycle from 'recompose/lifecycle';
+//$FlowFixMe
 import renderComponent from 'recompose/renderComponent';
 import { StoryDetail } from '../components/storyDetail';
+import Messages from '../components/messages';
+import ChatInput from '../components/chatInput';
 import { Column } from '../../../components/column';
 import { FlexContainer } from '../../../components/flexbox';
 import { Card } from '../../../components/card';
@@ -16,14 +20,27 @@ import { UserProfile, FrequencyProfile } from '../../../components/profile';
 import { getStory } from '../queries';
 import Loading from '../../../components/loading';
 
+const lifecycles = lifecycle({
+  state: {
+    subscribed: false,
+  },
+  componentDidUpdate() {
+    if (!this.props.loading && !this.state.subscribed) {
+      this.setState({
+        subscribed: true,
+      });
+      this.props.subscribeToNewMessages();
+    }
+  },
+});
+
 // TODO: Brian - figure out how to abstract this out to be used anywhere
 const displayLoadingState = branch(
-  props => props.data.loading,
+  props => !props.data || props.data.loading,
   renderComponent(Loading)
 );
 
-const StoryContainerPure = ({ data: { story } }) => {
-  console.log(story);
+const StoryContainerPure = ({ data: { story }, data }) => {
   const userData = {
     photoURL: story.author.photoURL,
     title: story.author.displayName,
@@ -40,7 +57,6 @@ const StoryContainerPure = ({ data: { story } }) => {
 
   return (
     <FlexContainer justifyContent="center">
-
       <Column type="secondary">
         <UserProfile data={userData} />
         <FrequencyProfile data={frequencyData} />
@@ -52,17 +68,20 @@ const StoryContainerPure = ({ data: { story } }) => {
         </Card>
 
         <Card>
-          Chat goes here
+          <Messages messages={story.messageConnection.edges} />
         </Card>
 
         <Card>
-          Chat input goes here
+          <ChatInput thread={story.id} />
         </Card>
       </Column>
     </FlexContainer>
   );
 };
 
-export const StoryContainer = compose(getStory, displayLoadingState, pure)(
-  StoryContainerPure
-);
+export const StoryContainer = compose(
+  getStory,
+  lifecycles,
+  displayLoadingState,
+  pure
+)(StoryContainerPure);

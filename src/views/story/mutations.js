@@ -11,3 +11,17 @@ export const setStoryLock = graphql(
     }
   `
 );
+
+export const sendMessage = graphql(
+  gql`
+    mutation sendMessage($message: MessageInput!) {
+      addMessage(location: messages, message: $message) {
+        id
+        message {
+          content
+          type
+        }
+      }
+    }
+  `
+);
