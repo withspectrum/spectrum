@@ -38,6 +38,7 @@
     "graphql-tools": "^0.11.0",
     "highlight.js": "^9.10.0",
     "history": "^4.6.1",
+    "lodash.debounce": "^4.0.8",
     "passport": "^0.3.2",
     "passport-twitter": "^1.0.4",
     "pre-commit": "^1.2.2",

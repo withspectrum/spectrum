@@ -8,7 +8,8 @@ import pure from 'recompose/pure';
 import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
-
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 import { Column } from '../../components/column';
 import { Button } from '../../components/buttons';
 import { Profile } from '../../components/profile';
@@ -16,6 +17,7 @@ import { DashboardContainer, ErrorMessage } from './style';
 import { getEverything } from './queries';
 import Loading from '../../components/loading';
 import StoryFeedCard from '../../components/storyFeedCard';
+import StoryComposer from '../../components/storyComposer';
 import CommunityProfileCard from '../../components/communityProfileCard';
 import WithTransition from '../../components/routeTransition';
 import {
@@ -65,7 +67,9 @@ const DashboardPure = ({
           <button onClick={logout}>Logout</button>
         </Column>
 
-        <Column type={'primary'}>
+        <Column type={'primary'} alignItems={'center'}>
+          <StoryComposer />
+
           {stories.map(story => {
             return <StoryFeedCard key={story.node.id} data={story.node} />;
           })}
