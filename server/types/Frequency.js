@@ -32,7 +32,7 @@ const Frequency = /* GraphQL */ `
 	}
 
 	extend type Query {
-		frequency(id: ID!): Frequency
+		frequency(id: ID, slug: String, community: String): Frequency
 	}
 `;
 
