@@ -49,8 +49,38 @@ const getFrequency = ({ id, slug, community }: GetFrequencyArgs) => {
   );
 };
 
+type CreateFrequencyType = {
+  creatorId: string,
+  communityId: string,
+  name: string,
+  description: string,
+  slug: string,
+};
+
+const createFrequency = ({
+  creatorId,
+  communityId,
+  name,
+  description,
+  slug,
+}: CreateFrequencyType) => {
+  return db
+    .table('frequencies')
+    .insert({
+      name,
+      description,
+      slug,
+      createdAt: new Date(),
+      modifiedAt: new Date(),
+      community: communityId,
+      subscribers: [creatorId],
+    })
+    .run();
+};
+
 module.exports = {
   getFrequency,
   getFrequenciesByUser,
   getFrequenciesByCommunity,
+  createFrequency,
 };

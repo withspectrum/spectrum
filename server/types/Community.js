@@ -30,6 +30,10 @@ const Community = /* GraphQL */ `
 	extend type Query {
 		community(id: ID, slug: String): Community
 	}
+
+	extend type Mutation {
+		createCommunity(name: String!, slug: String!): Community
+	}
 `;
 
 module.exports = Community;
