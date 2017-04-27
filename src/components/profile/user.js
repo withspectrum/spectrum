@@ -12,54 +12,54 @@ import {
   Actions,
   Action,
   ActionOutline,
-  Meta,
-  MetaList,
-  MetaListItem,
-  Label,
-  Count,
 } from './style';
+import { UserMetaData } from './metaData';
 
-const User = (props: Object): React$Element<any> => (
-  <Card {...props}>
-    <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-      <Avatar size={40} radius={4} src={props.data.photoURL} />
-      <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-        <Title>{props.data.title}</Title>
-        <Subtitle>{props.data.subtitle}</Subtitle>
-      </ProfileHeaderMeta>
-    </ProfileHeader>
+type UserProfileProps = {
+  size?: 'mini' | 'small' | 'medium' | 'large' | 'full',
+  data: {
+    title: string,
+    subtitle: string,
+    photoURL: string,
+    description?: string,
+    id?: string,
+  },
+  meta: Array<any>,
+};
 
-    <Description>
-      {props.data.description}
-    </Description>
+const User = (props: UserProfileProps): React$Element<any> => {
+  const size = props.size || 'mini';
+  return (
+    <Card {...props}>
+      <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
+        <Avatar
+          margin={'0 12px 0 0'}
+          size={40}
+          radius={4}
+          src={props.data.photoURL}
+        />
+        <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+          <Title>{props.data.title}</Title>
+          <Subtitle>{props.data.subtitle}</Subtitle>
+        </ProfileHeaderMeta>
+      </ProfileHeader>
 
-    <Actions>
-      <ActionOutline>Message</ActionOutline>
-      <Action>Follow</Action>
-    </Actions>
+      {size !== 'mini' &&
+        size !== 'small' &&
+        <Description>
+          {props.data.description}
+        </Description>}
 
-    <Meta>
-      <MetaList>
-        {props.data.meta.map((item, i) => {
-          return (
-            <MetaListItem key={i}>
-              <Label>
-                <Icon
-                  icon={item.icon}
-                  color={'text.alt'}
-                  hoverColor={'text.alt'}
-                  scaleOnHover={false}
-                  size={24}
-                />
-                {item.label}
-              </Label>
-              <Count>{item.count}</Count>
-            </MetaListItem>
-          );
-        })}
-      </MetaList>
-    </Meta>
-  </Card>
-);
+      {size !== 'mini' &&
+        <Actions>
+          <ActionOutline>Message</ActionOutline>
+          {size === 'full' && <Action>Follow</Action>}
+        </Actions>}
+
+      {(size === 'large' || size === 'full') &&
+        <UserMetaData type="user" id={props.data.id} />}
+    </Card>
+  );
+};
 
 export default User;

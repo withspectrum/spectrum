@@ -2,7 +2,7 @@
 /**
  * Community query resolvers
  */
-const { getCommunity } = require('../models/community');
+const { getCommunity, getCommunityMetaData } = require('../models/community');
 const { getFrequenciesByCommunity } = require('../models/frequency');
 const { getUsers } = require('../models/user');
 import paginate from '../utils/paginate-arrays';
@@ -41,6 +41,14 @@ module.exports = {
           node: user,
         })),
       }));
+    },
+    metaData: ({ id }: { id: String }) => {
+      return getCommunityMetaData(id).then(data => {
+        return {
+          frequencies: data[0],
+          members: data[1],
+        };
+      });
     },
   },
 };

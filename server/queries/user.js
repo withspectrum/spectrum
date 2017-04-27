@@ -1,7 +1,7 @@
 /**
  * Story query resolvers
  */
-const { getUser, getAllStories } = require('../models/user');
+const { getUser, getUserMetaData, getAllStories } = require('../models/user');
 const { getCommunitiesByUser } = require('../models/community');
 const { getFrequenciesByUser } = require('../models/frequency');
 const {
@@ -75,5 +75,12 @@ module.exports = {
         }))
       ),
     }),
+    metaData: ({ uid }: { uid: String }) => {
+      return getUserMetaData(uid).then(data => {
+        return {
+          stories: data[0],
+        };
+      });
+    },
   },
 };

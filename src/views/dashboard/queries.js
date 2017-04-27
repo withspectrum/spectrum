@@ -59,42 +59,6 @@ const MoreStoriesQuery = gql`
 `;
 
 const queryOptions = {
-  // props: ({ data: { loading, user, fetchMore } }) => ({
-  //   data: {
-  //     loading,
-  //     user,
-  //     fetchMore: () =>
-  //       fetchMore({
-  //         query: MoreStoriesQuery,
-  //         variables: {
-  //           after: user.everything.edges[user.everything.edges.length - 1]
-  //             .cursor,
-  //         },
-  //         updateQuery: (prev, { fetchMoreResult }) => {
-  //           console.log('prev', prev, 'result', fetchMoreResult);
-  //
-  //           if (!fetchMoreResult.user) {
-  //             return prev;
-  //           }
-  //
-  //           // Add the new stories to the list
-  //           return {
-  //             user: {
-  //               ...prev.user,
-  //               everything: {
-  //                 ...prev.user.everything,
-  //                 edges: [
-  //                   ...prev.user.everything.edges,
-  //                   // NOTE(@mxstbr): The __typename hack is to work around react-apollo/issues/658
-  //                   fetchMoreResult.user.everything.edges,
-  //                 ],
-  //               },
-  //             },
-  //           };
-  //         },
-  //       }),
-  //   },
-  // }),
   props: ({ data: { fetchMore, loading, user } }) => ({
     data: {
       loading,
@@ -107,8 +71,6 @@ const queryOptions = {
               .cursor,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
-            console.log('prev', prev, 'result', fetchMoreResult);
-
             if (!fetchMoreResult.user) {
               return prev;
             }
