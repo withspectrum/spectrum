@@ -13,20 +13,22 @@ import {
   DashboardContainer,
   NotificationCard,
   NotificationBody,
-  StatusBar,
   Content,
+  ContentHeading,
   Message,
-  Status,
+  HorizontalRuleWithIcon,
+  ChatMessage,
 } from './style';
 
 const data = [
   {
     threadID: 'asdflkjasdflkjadflkj',
     activityType: 'new-story',
-    content: 'New features: Highlight new stories, fix scrolling position, and more!',
     community: 'Spectrum',
     frequency: 'General',
-    threadName: 'New features: Highlight new stories, fix scrolling position, and more!',
+    threadName: '📍 New features: Highlight new stories, fix scrolling position, and more!',
+    threadContent: "Today we shipped a bunch of new features for y'all! The first is highlighting stories. We think the most valuable piece of data is that there is...",
+    triggerMessage: '',
     read: false,
     sender: 'Max Stoiber',
     timestamp: 1489352567485,
@@ -38,6 +40,8 @@ const data = [
     community: 'Spectrum',
     frequency: 'General',
     threadName: 'How bout dat Zelda tho?',
+    threadContent: 'some content',
+    triggerMessage: "OMG. It's so tough to get Dinayru's horn!",
     read: false,
     sender: 'Bryn Jackson',
     timestamp: 1490994669642,
@@ -45,10 +49,11 @@ const data = [
   {
     threadID: 'asdflkjasdflkjadfl',
     activityType: 'new-story',
-    content: 'New features: Highlight new stories, fix scrolling position, and more!',
     community: 'Spectrum',
     frequency: 'General',
-    threadName: 'New features: Highlight new stories, fix scrolling position, and more!',
+    threadName: '📍 New features: Highlight new stories, fix scrolling position, and more!',
+    threadContent: "Today we shipped a bunch of new features for y'all!",
+    triggerMessage: '',
     read: true,
     sender: 'Brian Lovin',
     timestamp: 1489352567484,
@@ -60,18 +65,18 @@ const getIconByType = notification => {
     case 'new-story':
       return 'write';
     case 'new-message':
-      return 'send';
+      return 'messages';
     default:
-      return;
+      return 'notification';
   }
 };
 
-const getStatusByType = notification => {
+const getColorByType = notification => {
   switch (notification.activityType) {
     case 'new-story':
-      return `New Story!`;
+      return 'success.default';
     case 'new-message':
-      return `New Message!`;
+      return 'warn.alt';
     default:
       return;
   }
@@ -94,8 +99,8 @@ const constructMessage = notification => {
           {' '}
           posted a new thread in
           {' '}
-          <Link to={`/${community}/${frequency}`}>{frequency}</Link>
-          !
+          <Link to={`/${community}/${frequency}`}>{community}/{frequency}</Link>
+          :
         </span>
       );
     case 'new-message':
@@ -103,18 +108,52 @@ const constructMessage = notification => {
         <span>
           <Link to={`/@${sender}`}>{sender}</Link>
           {' '}
-          replied to your thread
+          replied to your
           {' '}
-          <Link to={`/thread/${threadID}`}>{threadName}</Link>!
+          <Link to={`/thread/${threadID}`}>thread</Link>
+          :
         </span>
       );
-      `${sender} replied to your thread "${threadName}"`;
     default:
       return;
   }
 };
 
-data.map(notification => console.log('notification: ', notification));
+const constructContent = notification => {
+  const {
+    activityType,
+    sender,
+    community,
+    frequency,
+    threadID,
+    threadName,
+    threadContent,
+    triggerMessage,
+  } = notification;
+  switch (activityType) {
+    case 'new-story':
+      return <p>{threadContent}</p>;
+    case 'new-message':
+      return (
+        <div>
+          <HorizontalRuleWithIcon>
+            <hr />
+            <Icon
+              icon={'messages'}
+              color="border.default"
+              hoverColor="border.default"
+            />
+            <hr />
+          </HorizontalRuleWithIcon>
+          <ChatMessage data-from={sender}>
+            {triggerMessage}
+          </ChatMessage>
+        </div>
+      );
+    default:
+      return;
+  }
+};
 
 const NotificationsPure = () => (
   <DashboardContainer justifyContent={'center'} alignContent={'flex-start'}>
@@ -122,19 +161,18 @@ const NotificationsPure = () => (
     <Column type={'primary'}>
       {data.map(notification => (
         <NotificationCard key={notification.timestamp.toString()}>
-          <StatusBar>
+          <FlexRow center>
             <Icon
               icon={getIconByType(notification)}
-              color={'text.reverse'}
-              hoverColor={'text.reverse'}
+              color={getColorByType(notification)}
+              hoverColor={getColorByType(notification)}
             />
-            <span />
-            <Status>{getStatusByType(notification)}</Status>
-          </StatusBar>
-          <NotificationBody>
             <Message>{constructMessage(notification)}</Message>
-            <Content>{notification.content}</Content>
-          </NotificationBody>
+          </FlexRow>
+          <Content>
+            <ContentHeading>{notification.threadName}</ContentHeading>
+            {constructContent(notification)}
+          </Content>
         </NotificationCard>
       ))}
     </Column>
