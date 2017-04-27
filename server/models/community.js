@@ -14,7 +14,24 @@ const getCommunitiesByUser = uid => {
     .run();
 };
 
+const getCommunityMetaData = (id: String) => {
+  const getFrequencyCount = db
+    .table('frequencies')
+    .filter({ community: id })
+    .count()
+    .run();
+  const getMemberCount = db
+    .table('communities')
+    .get(id)
+    .getField('members')
+    .count()
+    .run();
+
+  return Promise.all([getFrequencyCount, getMemberCount]);
+};
+
 module.exports = {
   getCommunity,
+  getCommunityMetaData,
   getCommunitiesByUser,
 };

@@ -2,7 +2,11 @@
 /**
  * Frequency query resolvers
  */
-const { getFrequency } = require('../models/frequency');
+const {
+  getFrequency,
+  getFrequencyMetaData,
+  getFrequencySubscriberCount,
+} = require('../models/frequency');
 const { getStoriesByFrequency } = require('../models/story');
 const { getCommunity } = require('../models/community');
 const { getUsers } = require('../models/user');
@@ -54,6 +58,14 @@ module.exports = {
           node: user,
         })),
       }));
+    },
+    metaData: ({ id }: { id: String }) => {
+      return getFrequencyMetaData(id).then(data => {
+        return {
+          stories: data[0],
+          subscribers: data[1],
+        };
+      });
     },
   },
 };

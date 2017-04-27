@@ -37,8 +37,8 @@ const User = /* GraphQL */ `
 		node: Story!
 	}
 
-	type MetaData {
-		storiesCount: Int
+	type UserMetaData {
+		stories: Int
 	}
 
 	type User {
@@ -54,7 +54,7 @@ const User = /* GraphQL */ `
 		frequencyConnection: UserFrequenciesConnection!
 		directMessageGroupsConnection: UserDirectMessageGroupsConnection!
 		everything(first: Int = 10, after: String): EverythingStoriesConnection!
-		metaData: MetaData!
+		metaData: UserMetaData!
 	}
 
 	extend type Query {

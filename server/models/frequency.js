@@ -18,8 +18,25 @@ const getFrequency = id => {
   return db.table('frequencies').get(id).run();
 };
 
+const getFrequencyMetaData = (id: String) => {
+  const getStoryCount = db
+    .table('stories')
+    .filter({ frequency: id })
+    .count()
+    .run();
+  const getSubscriberCount = db
+    .table('frequencies')
+    .get(id)
+    .getField('subscribers')
+    .count()
+    .run();
+
+  return Promise.all([getStoryCount, getSubscriberCount]);
+};
+
 module.exports = {
   getFrequency,
+  getFrequencyMetaData,
   getFrequenciesByUser,
   getFrequenciesByCommunity,
 };

@@ -17,12 +17,6 @@ module.exports = {
     currentUser: (_, __, { user }) => user,
   },
   User: {
-    metaData: ({ uid }: { uid: String }) => {
-      console.log('in ser ver ', uid);
-      return {
-        storiesCount: getUserMetaData(uid),
-      };
-    },
     everything: (
       { uid }: { uid: String },
       { first = 10, after }: PaginationOptions
@@ -81,5 +75,12 @@ module.exports = {
         }))
       ),
     }),
+    metaData: ({ uid }: { uid: String }) => {
+      return getUserMetaData(uid).then(data => {
+        return {
+          stories: data[0],
+        };
+      });
+    },
   },
 };

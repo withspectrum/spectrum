@@ -9,7 +9,6 @@ export const ProfileHeader = styled(FlexContainer)`
 `;
 
 export const ProfileHeaderMeta = styled(FlexContainer)`
-  margin-left: 12px;
   width: calc(100% - 52px);
 `;
 
@@ -25,7 +24,7 @@ export const Title = styled.h3`
 export const Subtitle = styled.h4`
   font-size: 14px;
   color: ${props => props.theme.text.alt};
-  line-height: 1.2;
+  line-height: 1.3;
   width: 100%;
   ${Truncate}
 `;

@@ -13,7 +13,7 @@ import {
   Action,
   ActionOutline,
 } from './style';
-import MetaData from './metaData';
+import { UserMetaData } from './metaData';
 
 const User = (props: Object): React$Element<any> => {
   switch (props.size) {
@@ -21,7 +21,12 @@ const User = (props: Object): React$Element<any> => {
       return (
         <Card {...props}>
           <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <Avatar size={40} radius={4} src={props.data.photoURL} />
+            <Avatar
+              margin={'0 12px 0 0'}
+              size={40}
+              radius={4}
+              src={props.data.photoURL}
+            />
             <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
               <Title>{props.data.title}</Title>
               <Subtitle>{props.data.subtitle}</Subtitle>
@@ -34,7 +39,12 @@ const User = (props: Object): React$Element<any> => {
       return (
         <Card {...props}>
           <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <Avatar size={40} radius={4} src={props.data.photoURL} />
+            <Avatar
+              margin={'0 12px 0 0'}
+              size={40}
+              radius={4}
+              src={props.data.photoURL}
+            />
             <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
               <Title>{props.data.title}</Title>
               <Subtitle>{props.data.subtitle}</Subtitle>
@@ -51,7 +61,12 @@ const User = (props: Object): React$Element<any> => {
       return (
         <Card {...props}>
           <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <Avatar size={40} radius={4} src={props.data.photoURL} />
+            <Avatar
+              margin={'0 12px 0 0'}
+              size={40}
+              radius={4}
+              src={props.data.photoURL}
+            />
             <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
               <Title>{props.data.title}</Title>
               <Subtitle>{props.data.subtitle}</Subtitle>
@@ -72,7 +87,12 @@ const User = (props: Object): React$Element<any> => {
       return (
         <Card {...props}>
           <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <Avatar size={40} radius={4} src={props.data.photoURL} />
+            <Avatar
+              margin={'0 12px 0 0'}
+              size={40}
+              radius={4}
+              src={props.data.photoURL}
+            />
             <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
               <Title>{props.data.title}</Title>
               <Subtitle>{props.data.subtitle}</Subtitle>
@@ -87,7 +107,7 @@ const User = (props: Object): React$Element<any> => {
             <ActionOutline>Message</ActionOutline>
           </Actions>
 
-          <MetaData id={props.data.id} />
+          <UserMetaData type="user" id={props.data.id} />
         </Card>
       );
     }
@@ -95,7 +115,12 @@ const User = (props: Object): React$Element<any> => {
       return (
         <Card {...props}>
           <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <Avatar size={40} radius={4} src={props.data.photoURL} />
+            <Avatar
+              margin={'0 12px 0 0'}
+              size={40}
+              radius={4}
+              src={props.data.photoURL}
+            />
             <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
               <Title>{props.data.title}</Title>
               <Subtitle>{props.data.subtitle}</Subtitle>
@@ -111,7 +136,7 @@ const User = (props: Object): React$Element<any> => {
             <Action>Follow</Action>
           </Actions>
 
-          <MetaData id={props.data.id} />
+          <UserMetaData type="user" id={props.data.id} />
         </Card>
       );
     }
@@ -119,7 +144,12 @@ const User = (props: Object): React$Element<any> => {
       return (
         <Card {...props}>
           <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <Avatar size={40} radius={4} src={props.data.photoURL} />
+            <Avatar
+              margin={'0 12px 0 0'}
+              size={40}
+              radius={4}
+              src={props.data.photoURL}
+            />
             <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
               <Title>{props.data.title}</Title>
               <Subtitle>{props.data.subtitle}</Subtitle>

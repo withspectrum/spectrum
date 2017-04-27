@@ -51,7 +51,7 @@ const dummyData = {
   },
 
   frequency: {
-    id: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    id: '1c246adb-10a1-40a0-af39-1b7b3278199a',
     title: 'Design Details',
     subtitle: 'SpecFM',
     description: 'A show about the people who design our favorite products.',
@@ -59,7 +59,7 @@ const dummyData = {
   },
 
   community: {
-    id: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    id: 'ae390edd-667f-42e4-bf0b-10371665c742',
     title: 'SpecFM',
     subtitle: '8,918 members',
     photoURL: 'https://pbs.twimg.com/profile_images/766307796132343808/OtMSJrFo_400x400.jpg',
@@ -75,32 +75,32 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
       <Heading>Profiles</Heading>
       <Subheading>User</Subheading>
       <Section>
-        <ComponentContainer width={'25%'}>
-          <Component>
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
             <UserProfile size="mini" data={dummyData.user} />
           </Component>
         </ComponentContainer>
 
-        <ComponentContainer width={'25%'}>
-          <Component>
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
             <UserProfile size="small" data={dummyData.user} />
           </Component>
         </ComponentContainer>
 
-        <ComponentContainer width={'25%'}>
-          <Component>
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
             <UserProfile size="medium" data={dummyData.user} />
           </Component>
         </ComponentContainer>
 
-        <ComponentContainer width={'25%'}>
-          <Component>
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
             <UserProfile size="large" data={dummyData.user} />
           </Component>
         </ComponentContainer>
 
-        <ComponentContainer width={'25%'}>
-          <Component>
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
             <UserProfile size="full" data={dummyData.user} />
           </Component>
         </ComponentContainer>
@@ -109,9 +109,37 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
       <Spacer height="32px" />
       <Subheading>Community</Subheading>
       <Section>
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <UserProfile data={dummyData.user} />
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
+            <CommunityProfile size="mini" data={dummyData.community} />
+          </Component>
+          <Code onClick={highlightAndCopy}>{''}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
+            <CommunityProfile size="small" data={dummyData.community} />
+          </Component>
+          <Code onClick={highlightAndCopy}>{''}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
+            <CommunityProfile size="medium" data={dummyData.community} />
+          </Component>
+          <Code onClick={highlightAndCopy}>{''}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
+            <CommunityProfile size="large" data={dummyData.community} />
+          </Component>
+          <Code onClick={highlightAndCopy}>{''}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
+            <CommunityProfile size="full" data={dummyData.community} />
           </Component>
           <Code onClick={highlightAndCopy}>{''}</Code>
         </ComponentContainer>
@@ -120,11 +148,34 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
       <Spacer height="32px" />
       <Subheading>Frequency</Subheading>
       <Section>
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <UserProfile data={dummyData.user} />
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
+            <FrequencyProfile size="mini" data={dummyData.frequency} />
           </Component>
-          <Code onClick={highlightAndCopy}>{''}</Code>
+        </ComponentContainer>
+
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
+            <FrequencyProfile size="small" data={dummyData.frequency} />
+          </Component>
+        </ComponentContainer>
+
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
+            <FrequencyProfile size="medium" data={dummyData.frequency} />
+          </Component>
+        </ComponentContainer>
+
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
+            <FrequencyProfile size="large" data={dummyData.frequency} />
+          </Component>
+        </ComponentContainer>
+
+        <ComponentContainer width={'50%'}>
+          <Component transparent>
+            <FrequencyProfile size="full" data={dummyData.frequency} />
+          </Component>
         </ComponentContainer>
       </Section>
     </Section>
