@@ -34,7 +34,7 @@ const Community = /* GraphQL */ `
 	}
 
 	extend type Query {
-		community(id: ID!): Community
+		community(id: ID, slug: String): Community
 	}
 
 	extend type Mutation {
