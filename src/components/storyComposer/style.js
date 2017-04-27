@@ -12,9 +12,10 @@ export const Composer = styled(Card)`
   position: relative;
   z-index: ${props => (props.isOpen ? '11' : '10')};
   width: ${props => (props.isOpen ? '100%' : 'calc(100% - 32px)')};
-  padding: ${props => (props.isOpen ? '32px' : '16px')};
   display: block;
-  transition: all 0.15s ease-in;
+  min-height: 64px;
+  cursor: pointer;
+  border-radius: 12px;
 `;
 
 export const Overlay = styled.div`
@@ -30,10 +31,8 @@ export const Overlay = styled.div`
       background: #000;
       pointer-events: auto;
       opacity: 0.4;
-      transition: all 0.2s ease-in-out;
     ` : `
       opacity: 0;
-      transition: all 0.2s ease-in-out;
       pointer-events: none;
     `)}
 `;
@@ -43,6 +42,7 @@ export const Placeholder = styled.div`
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
+  padding: 16px;
   color: ${props => props.theme.text.alt};color: ${props => props.theme.text.alt};
   position: ${props => (props.isOpen ? 'absolute' : 'relative')};
   opacity: ${props => (props.isOpen ? '0' : '1')};
@@ -69,11 +69,21 @@ export const ContentContainer = styled.div`
   opacity: ${props => (props.isOpen ? '1' : '0')};
 `;
 
+export const Actions = styled.div`
+  background: #F8FBFE;
+  border-top: 2px solid ${props => props.theme.border.default};
+  padding: 8px;
+  border-radius: 0 0 12px 12px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
+
 // these are style objects because i'm custom styling another react component to handle autoresizign
 
 export const StoryTitle = {
   fontSize: '20px',
-  padding: '0',
+  padding: '32px 32px 0 32px',
   outline: 'none',
   border: '0',
   lineHeight: '1.4',
@@ -82,6 +92,7 @@ export const StoryTitle = {
   width: '100%',
   color: '#171A21',
   whiteSpace: 'pre-wrap',
+  borderRadius: '12px 12px 0 0',
 };
 
 export const StoryDescription = {
@@ -89,9 +100,8 @@ export const StoryDescription = {
   fontSize: '14px',
   width: '100%',
   display: 'inline-block',
-  marginBottom: '16px',
   lineHeight: '1.5',
-  padding: '0',
+  padding: '0 32px 32px 32px',
   outline: 'none',
   border: '0',
   boxShadow: 'none',

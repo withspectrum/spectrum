@@ -1,6 +1,18 @@
 // @flow
 import React, { Component } from 'react';
+//$FlowFixMe
+import compose from 'recompose/compose';
+//$FlowFixMe
+import pure from 'recompose/pure';
+//$FlowFixMe
+import renderComponent from 'recompose/renderComponent';
+//$FlowFixMe
+import branch from 'recompose/branch';
 import Textarea from 'react-textarea-autosize';
+import { LinkButton } from '../buttons';
+import Icon from '../icons';
+import Loading from '../loading';
+import { getComposerCommunitiesAndFrequencies } from './queries';
 import {
   Container,
   Composer,
@@ -10,12 +22,29 @@ import {
   StoryDescription,
   StoryTitle,
   ContentContainer,
+  Actions,
 } from './style';
-import Icon from '../icons';
 
-class StoryComposer extends Component {
+const displayLoadingState = branch(
+  props => props.data.loading,
+  renderComponent(Loading)
+);
+
+class StoryComposerWithData extends Component {
   constructor(props) {
     super(props);
+
+    const communities = props.data.user.communityConnection.edges.map(edge => {
+      return edge.node;
+    });
+
+    const frequencies = communities.map(community => {
+      if (community.frequencyConnection.edges.length === 0) return;
+
+      return community.frequencyConnection.edges.map(edge => {
+        return edge.node;
+      });
+    });
 
     this.state = {
       isOpen: false,
@@ -51,7 +80,7 @@ class StoryComposer extends Component {
   };
 
   render() {
-    const { isOpen } = this.state;
+    const { isOpen, title, description } = this.state;
 
     return (
       <Container isOpen={isOpen}>
@@ -75,7 +104,7 @@ class StoryComposer extends Component {
               onChange={this.changeTitle}
               style={StoryTitle}
               value={this.state.title}
-              placeholder={'Start a new thread with your friends...'}
+              placeholder={"What's this thread about?"}
               ref="titleTextarea"
               autoFocus
             />
@@ -89,6 +118,13 @@ class StoryComposer extends Component {
                 'Write more thoughts here, add photos, and anything else!'
               }
             />
+
+            <Actions>
+              <div />
+              <div>
+                <LinkButton disabled={!title}>Publish</LinkButton>
+              </div>
+            </Actions>
           </ContentContainer>
 
         </Composer>
@@ -97,4 +133,9 @@ class StoryComposer extends Component {
   }
 }
 
+export const StoryComposer = compose(
+  getComposerCommunitiesAndFrequencies,
+  displayLoadingState,
+  pure
+)(StoryComposerWithData);
 export default StoryComposer;
