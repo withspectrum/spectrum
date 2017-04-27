@@ -96,7 +96,6 @@ export const StoryTitle = {
 };
 
 export const StoryDescription = {
-  marginTop: '8px',
   fontSize: '14px',
   width: '100%',
   display: 'inline-block',

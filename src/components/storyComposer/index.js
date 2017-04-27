@@ -34,22 +34,28 @@ class StoryComposerWithData extends Component {
   constructor(props) {
     super(props);
 
-    const communities = props.data.user.communityConnection.edges.map(edge => {
-      return edge.node;
+    const availableCommunities = props.data.user.communityConnection.edges
+      .map(edge => edge.node)
+      .filter(community => community.frequencyConnection.edges.length > 0);
+    // filter to exclude communities with no frequencies
+
+    const availableFrequencies = availableCommunities.map(community => {
+      return community.frequencyConnection.edges.map(edge => edge.node);
     });
 
-    const frequencies = communities.map(community => {
-      if (community.frequencyConnection.edges.length === 0) return;
-
-      return community.frequencyConnection.edges.map(edge => {
-        return edge.node;
-      });
-    });
+    const activeCommunity = availableCommunities[0].id;
+    const activeFrequency = availableFrequencies.filter(
+      frequency => frequency[0].community.id === activeCommunity
+    )[0][0].id;
 
     this.state = {
       isOpen: false,
       title: '',
       description: '',
+      availableCommunities,
+      availableFrequencies,
+      activeCommunity,
+      activeFrequency,
     };
   }
 
@@ -79,8 +85,34 @@ class StoryComposerWithData extends Component {
     });
   };
 
+  setActiveCommunity = e => {
+    const newActiveCommunity = e.target.value;
+    const newActiveFrequency = this.state.availableFrequencies.filter(
+      frequency => frequency[0].community.id === newActiveCommunity
+    )[0][0].id;
+
+    this.setState({
+      activeCommunity: newActiveCommunity,
+      activeFrequency: newActiveFrequency,
+    });
+  };
+
+  setActiveFrequency = e => {
+    this.setState({
+      activeFrequency: e.target.value,
+    });
+  };
+
   render() {
-    const { isOpen, title, description } = this.state;
+    const {
+      isOpen,
+      title,
+      description,
+      availableFrequencies,
+      availableCommunities,
+      activeCommunity,
+      activeFrequency,
+    } = this.state;
 
     return (
       <Container isOpen={isOpen}>
@@ -120,7 +152,38 @@ class StoryComposerWithData extends Component {
             />
 
             <Actions>
-              <div />
+              <div>
+                <select
+                  onChange={this.setActiveCommunity}
+                  defaultValue={activeCommunity}
+                >
+                  {availableCommunities.map(community => {
+                    return (
+                      <option key={community.id} value={community.id}>
+                        {community.name}
+                      </option>
+                    );
+                  })}
+                </select>
+
+                <select
+                  onChange={this.setActiveFrequency}
+                  defaultValue={activeFrequency}
+                >
+                  {availableFrequencies
+                    .filter(
+                      frequency => frequency[0].community.id === activeCommunity
+                    )
+                    .map((frequency, i) => {
+                      return frequency.map(e => {
+                        return (
+                          <option key={e.id} value={e.id}>{e.name}</option>
+                        );
+                      });
+                    })}
+                </select>
+              </div>
+
               <div>
                 <LinkButton disabled={!title}>Publish</LinkButton>
               </div>

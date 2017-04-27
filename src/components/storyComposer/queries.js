@@ -16,6 +16,9 @@ export const getComposerCommunitiesAndFrequencies = graphql(
                   id
                   name
                   slug
+                  community {
+                    id
+                  }
                 }
               }
             }
