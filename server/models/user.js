@@ -44,8 +44,13 @@ const getAllStories = (frequencies: Array<String>) => {
     .run();
 };
 
+const getUserMetaData = (id: String) => {
+  return db.table('stories').filter({ author: id }).count().run();
+};
+
 module.exports = {
   getUser,
+  getUserMetaData,
   getUsers,
   createOrFindUser,
   storeUser,

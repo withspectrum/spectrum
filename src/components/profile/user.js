@@ -12,54 +12,123 @@ import {
   Actions,
   Action,
   ActionOutline,
-  Meta,
-  MetaList,
-  MetaListItem,
-  Label,
-  Count,
 } from './style';
+import MetaData from './metaData';
 
-const User = (props: Object): React$Element<any> => (
-  <Card {...props}>
-    <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-      <Avatar size={40} radius={4} src={props.data.photoURL} />
-      <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-        <Title>{props.data.title}</Title>
-        <Subtitle>{props.data.subtitle}</Subtitle>
-      </ProfileHeaderMeta>
-    </ProfileHeader>
+const User = (props: Object): React$Element<any> => {
+  switch (props.size) {
+    case 'mini': {
+      return (
+        <Card {...props}>
+          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
+            <Avatar size={40} radius={4} src={props.data.photoURL} />
+            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+              <Title>{props.data.title}</Title>
+              <Subtitle>{props.data.subtitle}</Subtitle>
+            </ProfileHeaderMeta>
+          </ProfileHeader>
+        </Card>
+      );
+    }
+    case 'small': {
+      return (
+        <Card {...props}>
+          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
+            <Avatar size={40} radius={4} src={props.data.photoURL} />
+            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+              <Title>{props.data.title}</Title>
+              <Subtitle>{props.data.subtitle}</Subtitle>
+            </ProfileHeaderMeta>
+          </ProfileHeader>
 
-    <Description>
-      {props.data.description}
-    </Description>
+          <Actions>
+            <ActionOutline>Message</ActionOutline>
+          </Actions>
+        </Card>
+      );
+    }
+    case 'medium': {
+      return (
+        <Card {...props}>
+          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
+            <Avatar size={40} radius={4} src={props.data.photoURL} />
+            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+              <Title>{props.data.title}</Title>
+              <Subtitle>{props.data.subtitle}</Subtitle>
+            </ProfileHeaderMeta>
+          </ProfileHeader>
 
-    <Actions>
-      <ActionOutline>Message</ActionOutline>
-      <Action>Follow</Action>
-    </Actions>
+          <Description>
+            {props.data.description}
+          </Description>
 
-    <Meta>
-      <MetaList>
-        {props.data.meta.map((item, i) => {
-          return (
-            <MetaListItem key={i}>
-              <Label>
-                <Icon
-                  icon={item.icon}
-                  color={'text.alt'}
-                  hoverColor={'text.alt'}
-                  scaleOnHover={false}
-                  size={24}
-                />
-                {item.label}
-              </Label>
-              <Count>{item.count}</Count>
-            </MetaListItem>
-          );
-        })}
-      </MetaList>
-    </Meta>
-  </Card>
-);
+          <Actions>
+            <ActionOutline>Message</ActionOutline>
+          </Actions>
+        </Card>
+      );
+    }
+    case 'large': {
+      return (
+        <Card {...props}>
+          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
+            <Avatar size={40} radius={4} src={props.data.photoURL} />
+            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+              <Title>{props.data.title}</Title>
+              <Subtitle>{props.data.subtitle}</Subtitle>
+            </ProfileHeaderMeta>
+          </ProfileHeader>
+
+          <Description>
+            {props.data.description}
+          </Description>
+
+          <Actions>
+            <ActionOutline>Message</ActionOutline>
+          </Actions>
+
+          <MetaData id={props.data.id} />
+        </Card>
+      );
+    }
+    case 'full': {
+      return (
+        <Card {...props}>
+          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
+            <Avatar size={40} radius={4} src={props.data.photoURL} />
+            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+              <Title>{props.data.title}</Title>
+              <Subtitle>{props.data.subtitle}</Subtitle>
+            </ProfileHeaderMeta>
+          </ProfileHeader>
+
+          <Description>
+            {props.data.description}
+          </Description>
+
+          <Actions>
+            <ActionOutline>Message</ActionOutline>
+            <Action>Follow</Action>
+          </Actions>
+
+          <MetaData id={props.data.id} />
+        </Card>
+      );
+    }
+    default: {
+      return (
+        <Card {...props}>
+          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
+            <Avatar size={40} radius={4} src={props.data.photoURL} />
+            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+              <Title>{props.data.title}</Title>
+              <Subtitle>{props.data.subtitle}</Subtitle>
+            </ProfileHeaderMeta>
+          </ProfileHeader>
+        </Card>
+      );
+    }
+  }
+};
 
 export default User;

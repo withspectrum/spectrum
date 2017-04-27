@@ -1,7 +1,7 @@
 /**
  * Story query resolvers
  */
-const { getUser, getAllStories } = require('../models/user');
+const { getUser, getUserMetaData, getAllStories } = require('../models/user');
 const { getCommunitiesByUser } = require('../models/community');
 const { getFrequenciesByUser } = require('../models/frequency');
 const {
@@ -17,6 +17,12 @@ module.exports = {
     currentUser: (_, __, { user }) => user,
   },
   User: {
+    metaData: ({ uid }: { uid: String }) => {
+      console.log('in ser ver ', uid);
+      return {
+        storiesCount: getUserMetaData(uid),
+      };
+    },
     everything: (
       { uid }: { uid: String },
       { first = 10, after }: PaginationOptions

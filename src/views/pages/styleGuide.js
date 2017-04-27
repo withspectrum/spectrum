@@ -20,6 +20,11 @@ import {
 } from './style';
 import Icon from '../../components/icons';
 import { Button, OutlineButton, LinkButton } from '../../components/buttons';
+import {
+  UserProfile,
+  FrequencyProfile,
+  CommunityProfile,
+} from '../../components/profile';
 
 const enhance = compose(
   withHandlers({
@@ -35,8 +40,95 @@ const enhance = compose(
   })
 );
 
+const dummyData = {
+  user: {
+    id: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    title: 'Brian Lovin',
+    subtitle: '@brian',
+    photoURL: 'https://pbs.twimg.com/profile_images/570313913648955392/cf4tgX7M_bigger.jpeg',
+    description: 'Chief Nice Boy™ · Building @withspectrum, @designdetailsfm, @specfm · prev. @facebook, @buffer',
+    meta: [],
+  },
+
+  frequency: {
+    id: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    title: 'Design Details',
+    subtitle: 'SpecFM',
+    description: 'A show about the people who design our favorite products.',
+    meta: [],
+  },
+
+  community: {
+    id: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    title: 'SpecFM',
+    subtitle: '8,918 members',
+    photoURL: 'https://pbs.twimg.com/profile_images/766307796132343808/OtMSJrFo_400x400.jpg',
+    description: 'The best podcasts, blogs, and resources for designers and developers.',
+    meta: [],
+  },
+};
+
 const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
   <PageContainer>
+    {/* Profiles */}
+    <Section container>
+      <Heading>Profiles</Heading>
+      <Subheading>User</Subheading>
+      <Section>
+        <ComponentContainer width={'25%'}>
+          <Component>
+            <UserProfile size="mini" data={dummyData.user} />
+          </Component>
+        </ComponentContainer>
+
+        <ComponentContainer width={'25%'}>
+          <Component>
+            <UserProfile size="small" data={dummyData.user} />
+          </Component>
+        </ComponentContainer>
+
+        <ComponentContainer width={'25%'}>
+          <Component>
+            <UserProfile size="medium" data={dummyData.user} />
+          </Component>
+        </ComponentContainer>
+
+        <ComponentContainer width={'25%'}>
+          <Component>
+            <UserProfile size="large" data={dummyData.user} />
+          </Component>
+        </ComponentContainer>
+
+        <ComponentContainer width={'25%'}>
+          <Component>
+            <UserProfile size="full" data={dummyData.user} />
+          </Component>
+        </ComponentContainer>
+      </Section>
+
+      <Spacer height="32px" />
+      <Subheading>Community</Subheading>
+      <Section>
+        <ComponentContainer width={'25%'}>
+          <Component>
+            <UserProfile data={dummyData.user} />
+          </Component>
+          <Code onClick={highlightAndCopy}>{''}</Code>
+        </ComponentContainer>
+      </Section>
+
+      <Spacer height="32px" />
+      <Subheading>Frequency</Subheading>
+      <Section>
+        <ComponentContainer width={'25%'}>
+          <Component>
+            <UserProfile data={dummyData.user} />
+          </Component>
+          <Code onClick={highlightAndCopy}>{''}</Code>
+        </ComponentContainer>
+      </Section>
+    </Section>
+
     {/* Colors */}
     <Section container>
       <Heading>Colors</Heading>

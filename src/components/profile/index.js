@@ -30,7 +30,9 @@ type ProfileProps = {
   title: String,
   subtitle: String,
   photoURL: ?String,
-  meta: ?Array<any>,
+  meta: Array<any>,
+  size: 'mini' | 'small' | 'medium' | 'large' | 'full',
+  id: String,
 };
 
 export const Profile = compose(pure)(ProfilePure);
