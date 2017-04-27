@@ -14,6 +14,13 @@ const getDirectMessageGroup = (id: String): Object => {
   return db.table('direct_message_groups').get(id).run();
 };
 
+const getDirectMessageGroupsByUser = (uid: String) => {
+  return db
+    .table('direct_message_groups')
+    .filter(group => group('users').contains(uid))
+    .run();
+};
+
 const addDirectMessageGroup = (
   directMessageGroup: DirectMessageGroupProps
 ): Object => {
@@ -33,4 +40,5 @@ const addDirectMessageGroup = (
 module.exports = {
   addDirectMessageGroup,
   getDirectMessageGroup,
+  getDirectMessageGroupsByUser,
 };
