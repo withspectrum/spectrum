@@ -44,10 +44,12 @@ class StoryComposerWithData extends Component {
       return community.frequencyConnection.edges.map(edge => edge.node);
     });
 
-    const activeCommunity = availableCommunities[0].id;
-    const activeFrequency = availableFrequencies.filter(
-      frequency => frequency[0].community.id === activeCommunity
-    )[0][0].id;
+    const activeCommunity = props.activeCommunity || availableCommunities[0].id;
+    const activeFrequency =
+      props.activeFrequency ||
+      availableFrequencies.filter(
+        frequency => frequency[0].community.id === activeCommunity
+      )[0][0].id;
 
     this.state = {
       isOpen: false,

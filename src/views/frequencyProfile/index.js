@@ -6,7 +6,7 @@ import compose from 'recompose/compose';
 import branch from 'recompose/branch';
 //$FlowFixMe
 import renderComponent from 'recompose/renderComponent';
-
+import StoryComposer from '../../components/storyComposer';
 import Loading from '../../components/loading';
 import { getFrequency } from './queries';
 
@@ -21,6 +21,10 @@ class FrequencyProfile extends Component {
   render() {
     return (
       <Container>
+        <StoryComposer
+          activeCommunity={this.props.data.frequency.community.id}
+          activeFrequency={this.props.data.frequency.id}
+        />
         <h3>
           {this.props.data.frequency.community.name}
           {' '}
