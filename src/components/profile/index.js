@@ -27,12 +27,14 @@ const ProfilePure = (props: Object): React$Element<any> => {
 };
 
 type ProfileProps = {
-  title: String,
-  subtitle: String,
-  photoURL: ?String,
-  meta: Array<any>,
-  size: 'mini' | 'small' | 'medium' | 'large' | 'full',
-  id: String,
+  data: {
+    title: string,
+    subtitle: string,
+    photoURL?: string,
+    id?: string,
+  },
+  meta?: Array<any>,
+  size?: 'mini' | 'small' | 'medium' | 'large' | 'full',
 };
 
 export const Profile = compose(pure)(ProfilePure);

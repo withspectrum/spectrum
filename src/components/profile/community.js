@@ -13,113 +13,45 @@ import {
 } from './style';
 import { CommunityMetaData } from './metaData';
 
-const Frequency = (props: Object): React$Element<any> => {
-  switch (props.size) {
-    case 'mini': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
-        </Card>
-      );
-    }
-    case 'small': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
-
-          <Actions>
-            <ActionOutline>Follow</ActionOutline>
-          </Actions>
-        </Card>
-      );
-    }
-    case 'medium': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
-
-          <Description>
-            {props.data.description}
-          </Description>
-
-          <Actions>
-            <ActionOutline>Follow</ActionOutline>
-          </Actions>
-        </Card>
-      );
-    }
-    case 'large': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
-
-          <Description>
-            {props.data.description}
-          </Description>
-
-          <Actions>
-            <ActionOutline>Follow</ActionOutline>
-          </Actions>
-
-          <CommunityMetaData type="community" id={props.data.id} />
-        </Card>
-      );
-    }
-    case 'full': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
-
-          <Description>
-            {props.data.description}
-          </Description>
-
-          <Actions>
-            <ActionOutline>Follow</ActionOutline>
-          </Actions>
-
-          <CommunityMetaData type="community" id={props.data.id} />
-        </Card>
-      );
-    }
-    default: {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
-        </Card>
-      );
-    }
-  }
+type CommunityProps = {
+  size?: 'mini' | 'small' | 'medium' | 'large' | 'full',
+  data: {
+    title: string,
+    subtitle: string,
+    description?: string,
+    id?: string,
+  },
+  meta: Array<any>,
 };
 
-export default Frequency;
+const Community = (props: CommunityProps): React$Element<any> => {
+  const size = props.size || 'mini';
+  return (
+    <Card {...props}>
+      <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
+        <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+          <Title>{props.data.title}</Title>
+          <Subtitle>{props.data.subtitle}</Subtitle>
+        </ProfileHeaderMeta>
+      </ProfileHeader>
+
+      {size !== 'mini' &&
+        size !== 'small' &&
+        <Description>
+          {props.data.description}
+        </Description>}
+
+      {size !== 'mini' &&
+        <Actions>
+          <ActionOutline>Follow</ActionOutline>
+        </Actions>}
+
+      {size !== 'mini' &&
+        size !== 'small' &&
+        size !== 'medium' &&
+        <CommunityMetaData type="community" id={props.data.id} />}
+    </Card>
+  );
+};
+
+export default Community;
