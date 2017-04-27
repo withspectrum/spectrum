@@ -7,10 +7,10 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 import Icon from '../../components/icons';
 import { Column } from '../../components/column';
+import { FlexRow } from '../../components/globals';
 import {
   DashboardContainer,
   NotificationCard,
-  NotificationBody,
   Content,
   ContentHeading,
   Message,
@@ -81,22 +81,13 @@ const getColorByType = notification => {
 };
 
 const constructMessage = notification => {
-  const {
-    activityType,
-    sender,
-    community,
-    frequency,
-    threadID,
-    threadName,
-  } = notification;
+  const { activityType, sender, community, frequency, threadID } = notification;
   switch (activityType) {
     case 'new-story':
       return (
         <span>
           <Link to={`/@${sender}`}>{sender}</Link>
-          {' '}
-          posted a new thread in
-          {' '}
+          {' '}posted a new thread in{' '}
           <Link to={`/${community}/${frequency}`}>{community}/{frequency}</Link>
           :
         </span>
@@ -105,11 +96,8 @@ const constructMessage = notification => {
       return (
         <span>
           <Link to={`/@${sender}`}>{sender}</Link>
-          {' '}
-          replied to your
-          {' '}
-          <Link to={`/thread/${threadID}`}>thread</Link>
-          :
+          {' '}replied to your{' '}
+          <Link to={`/thread/${threadID}`}>thread</Link>:
         </span>
       );
     default:
@@ -118,16 +106,7 @@ const constructMessage = notification => {
 };
 
 const constructContent = notification => {
-  const {
-    activityType,
-    sender,
-    community,
-    frequency,
-    threadID,
-    threadName,
-    threadContent,
-    triggerMessage,
-  } = notification;
+  const { activityType, sender, threadContent, triggerMessage } = notification;
   switch (activityType) {
     case 'new-story':
       return <p>{threadContent}</p>;

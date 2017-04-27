@@ -1,11 +1,6 @@
 import styled from 'styled-components';
 import { FlexContainer } from '../../components/flexbox';
-import {
-  FlexCol,
-  FlexRow,
-  Gradient,
-  Transition,
-} from '../../components/globals';
+import { FlexRow, Gradient, Transition } from '../../components/globals';
 import Card from '../../components/card';
 
 export const DashboardContainer = styled(FlexContainer)`
