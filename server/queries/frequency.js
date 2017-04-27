@@ -37,7 +37,7 @@ module.exports = {
       }));
     },
     community: ({ community }: { community: String }) =>
-      getCommunity(community),
+      getCommunity({ id: community }),
     subscriberConnection: (
       { subscribers }: { subscribers: Array<string> },
       { first = 10, after }: PaginationOptions
