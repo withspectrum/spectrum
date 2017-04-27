@@ -1,48 +1,57 @@
 //@flow
 import React from 'react';
+import { Link } from 'react-router-dom';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 import Icon from '../../components/icons';
 import { Column } from '../../components/column';
+import { FlexRow } from '../../components/globals';
 import {
   DashboardContainer,
   NotificationCard,
-  NotificationBody,
-  StatusBar,
   Content,
+  ContentHeading,
   Message,
-  Status,
+  HorizontalRuleWithIcon,
+  ChatMessage,
 } from './style';
 
 const data = [
   {
+    threadID: 'asdflkjasdflkjadflkj',
     activityType: 'new-story',
-    content: 'New features: Highlight new stories, fix scrolling position, and more!',
     community: 'Spectrum',
     frequency: 'General',
-    story: 'New features: Highlight new stories, fix scrolling position, and more!',
+    threadName: '📍 New features: Highlight new stories, fix scrolling position, and more!',
+    threadContent: "Today we shipped a bunch of new features for y'all! The first is highlighting stories. We think the most valuable piece of data is that there is...",
+    triggerMessage: '',
     read: false,
     sender: 'Max Stoiber',
     timestamp: 1489352567485,
   },
   {
+    threadID: 'asdflkjasdflkjadflk',
     activityType: 'new-message',
     content: "I've had like 2 drops in ~50 hours. Not perfect by any means 😭",
     community: 'Spectrum',
     frequency: 'General',
-    story: 'How bout dat Zelda tho?',
+    threadName: 'How bout dat Zelda tho?',
+    threadContent: 'some content',
+    triggerMessage: "OMG. It's so tough to get Dinayru's horn!",
     read: false,
     sender: 'Bryn Jackson',
     timestamp: 1490994669642,
   },
   {
+    threadID: 'asdflkjasdflkjadfl',
     activityType: 'new-story',
-    content: 'New features: Highlight new stories, fix scrolling position, and more!',
     community: 'Spectrum',
     frequency: 'General',
-    story: 'New features: Highlight new stories, fix scrolling position, and more!',
+    threadName: '📍 New features: Highlight new stories, fix scrolling position, and more!',
+    threadContent: "Today we shipped a bunch of new features for y'all!",
+    triggerMessage: '',
     read: true,
     sender: 'Brian Lovin',
     timestamp: 1489352567484,
@@ -54,29 +63,70 @@ const getIconByType = notification => {
     case 'new-story':
       return 'write';
     case 'new-message':
-      return 'send';
+      return 'messages';
     default:
-      return;
+      return 'notification';
   }
 };
 
-const getStatusByType = notification => {
+const getColorByType = notification => {
   switch (notification.activityType) {
     case 'new-story':
-      return `New Story!`;
+      return 'success.default';
     case 'new-message':
-      return `New Message!`;
+      return 'warn.alt';
     default:
       return;
   }
 };
 
 const constructMessage = notification => {
-  switch (notification.activityType) {
+  const { activityType, sender, community, frequency, threadID } = notification;
+  switch (activityType) {
     case 'new-story':
-      return `${notification.sender} posted a new story in ${notification.frequency}!`;
+      return (
+        <span>
+          <Link to={`/@${sender}`}>{sender}</Link>
+          {' '}posted a new thread in{' '}
+          <Link to={`/${community}/${frequency}`}>{community}/{frequency}</Link>
+          :
+        </span>
+      );
     case 'new-message':
-      return `${notification.sender} replied to your story "${notification.story}"`;
+      return (
+        <span>
+          <Link to={`/@${sender}`}>{sender}</Link>
+          {' '}replied to your{' '}
+          <Link to={`/thread/${threadID}`}>thread</Link>:
+        </span>
+      );
+    default:
+      return;
+  }
+};
+
+const constructContent = notification => {
+  const { activityType, sender, threadContent, triggerMessage } = notification;
+  switch (activityType) {
+    case 'new-story':
+      return <p>{threadContent}</p>;
+    case 'new-message':
+      return (
+        <div>
+          <HorizontalRuleWithIcon>
+            <hr />
+            <Icon
+              icon={'messages'}
+              color="border.default"
+              hoverColor="border.default"
+            />
+            <hr />
+          </HorizontalRuleWithIcon>
+          <ChatMessage data-from={sender}>
+            {triggerMessage}
+          </ChatMessage>
+        </div>
+      );
     default:
       return;
   }
@@ -88,19 +138,18 @@ const NotificationsPure = () => (
     <Column type={'primary'}>
       {data.map(notification => (
         <NotificationCard key={notification.timestamp.toString()}>
-          <StatusBar>
+          <FlexRow center>
             <Icon
               icon={getIconByType(notification)}
-              color={'text.reverse'}
-              hoverColor={'text.reverse'}
+              color={getColorByType(notification)}
+              hoverColor={getColorByType(notification)}
             />
-            <span />
-            <Status>{getStatusByType(notification)}</Status>
-          </StatusBar>
-          <NotificationBody>
             <Message>{constructMessage(notification)}</Message>
-            <Content>{notification.content}</Content>
-          </NotificationBody>
+          </FlexRow>
+          <Content>
+            <ContentHeading>{notification.threadName}</ContentHeading>
+            {constructContent(notification)}
+          </Content>
         </NotificationCard>
       ))}
     </Column>

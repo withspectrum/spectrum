@@ -9,8 +9,8 @@ import styled from 'styled-components';
 import { FlexContainer } from './flexbox';
 
 const StyledColumn = styled(FlexContainer)`
-  margin: 0 8px;
-  ${props => (props.type === 'primary' ? 'width: 512px;' : 'width: 256px;')}
+  margin: 0 16px;
+  ${props => (props.type === 'primary' ? 'width: 560px;' : 'width: 320px;')}
 `;
 
 const ColumnPure = (props: Object): React$Element<any> => (
