@@ -21,6 +21,7 @@ type FrequencyProps = {
     description?: string,
     id?: string,
   },
+  meta: Array<any>,
 };
 
 const Frequency = (props: FrequencyProps): React$Element<any> => {

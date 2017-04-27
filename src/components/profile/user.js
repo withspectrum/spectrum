@@ -24,152 +24,42 @@ type UserProfileProps = {
     description?: string,
     id?: string,
   },
+  meta: Array<any>,
 };
 
 const User = (props: UserProfileProps): React$Element<any> => {
-  switch (props.size) {
-    case 'mini': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <Avatar
-              margin={'0 12px 0 0'}
-              size={40}
-              radius={4}
-              src={props.data.photoURL}
-            />
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
-        </Card>
-      );
-    }
-    case 'small': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <Avatar
-              margin={'0 12px 0 0'}
-              size={40}
-              radius={4}
-              src={props.data.photoURL}
-            />
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
+  const size = props.size || 'mini';
+  return (
+    <Card {...props}>
+      <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
+        <Avatar
+          margin={'0 12px 0 0'}
+          size={40}
+          radius={4}
+          src={props.data.photoURL}
+        />
+        <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+          <Title>{props.data.title}</Title>
+          <Subtitle>{props.data.subtitle}</Subtitle>
+        </ProfileHeaderMeta>
+      </ProfileHeader>
 
-          <Actions>
-            <ActionOutline>Message</ActionOutline>
-          </Actions>
-        </Card>
-      );
-    }
-    case 'medium': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <Avatar
-              margin={'0 12px 0 0'}
-              size={40}
-              radius={4}
-              src={props.data.photoURL}
-            />
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
+      {size !== 'mini' &&
+        size !== 'small' &&
+        <Description>
+          {props.data.description}
+        </Description>}
 
-          <Description>
-            {props.data.description}
-          </Description>
+      {size !== 'mini' &&
+        <Actions>
+          <ActionOutline>Message</ActionOutline>
+          {size === 'full' && <Action>Follow</Action>}
+        </Actions>}
 
-          <Actions>
-            <ActionOutline>Message</ActionOutline>
-          </Actions>
-        </Card>
-      );
-    }
-    case 'large': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <Avatar
-              margin={'0 12px 0 0'}
-              size={40}
-              radius={4}
-              src={props.data.photoURL}
-            />
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
-
-          <Description>
-            {props.data.description}
-          </Description>
-
-          <Actions>
-            <ActionOutline>Message</ActionOutline>
-          </Actions>
-
-          <UserMetaData type="user" id={props.data.id} />
-        </Card>
-      );
-    }
-    case 'full': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <Avatar
-              margin={'0 12px 0 0'}
-              size={40}
-              radius={4}
-              src={props.data.photoURL}
-            />
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
-
-          <Description>
-            {props.data.description}
-          </Description>
-
-          <Actions>
-            <ActionOutline>Message</ActionOutline>
-            <Action>Follow</Action>
-          </Actions>
-
-          <UserMetaData type="user" id={props.data.id} />
-        </Card>
-      );
-    }
-    default: {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <Avatar
-              margin={'0 12px 0 0'}
-              size={40}
-              radius={4}
-              src={props.data.photoURL}
-            />
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
-        </Card>
-      );
-    }
-  }
+      {(size === 'large' || size === 'full') &&
+        <UserMetaData type="user" id={props.data.id} />}
+    </Card>
+  );
 };
 
 export default User;

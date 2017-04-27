@@ -21,6 +21,7 @@ type CommunityProps = {
     description?: string,
     id?: string,
   },
+  meta: Array<any>,
 };
 
 const Community = (props: CommunityProps): React$Element<any> => {
