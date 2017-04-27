@@ -60,15 +60,15 @@ class Routes extends Component {
             <Route path="/notifications" component={Notifications} />
 
             {/*
-              We check communityId last to ensure none of the above routes
-              pass. We handle null communityId values downstream by either
+              We check communitySlug last to ensure none of the above routes
+              pass. We handle null communitySlug values downstream by either
               redirecting to home or showing a 404
             */}
             <Route
-              path="/:communityId/:frequencyId"
+              path="/:communitySlug/:frequencySlug"
               component={FrequencyProfile}
             />
-            <Route path="/:communityId" component={CommunityProfile} />
+            <Route path="/:communitySlug" component={CommunityProfile} />
           </Switch>
 
         </Body>

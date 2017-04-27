@@ -11,12 +11,13 @@ const { getStoriesByFrequency } = require('../models/story');
 const { getCommunity } = require('../models/community');
 const { getUsers } = require('../models/user');
 import paginate from '../utils/paginate-arrays';
-import type { PaginationOptions } from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
+import type { PaginationOptions } from '../utils/paginate-arrays';
+import type { GetFrequencyArgs } from '../models/frequency';
 
 module.exports = {
   Query: {
-    frequency: (_: any, { id }: { id: String }) => getFrequency(id),
+    frequency: (_: any, args: GetFrequencyArgs) => getFrequency(args),
   },
   Frequency: {
     storyConnection: (
@@ -40,7 +41,7 @@ module.exports = {
       }));
     },
     community: ({ community }: { community: String }) =>
-      getCommunity(community),
+      getCommunity({ id: community }),
     subscriberConnection: (
       { subscribers }: { subscribers: Array<string> },
       { first = 10, after }: PaginationOptions
