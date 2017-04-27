@@ -23,6 +23,7 @@ import {
   StoryTitle,
   ContentContainer,
   Actions,
+  Dropdowns,
 } from './style';
 
 const displayLoadingState = branch(
@@ -136,7 +137,7 @@ class StoryComposerWithData extends Component {
               onChange={this.changeTitle}
               style={StoryTitle}
               value={this.state.title}
-              placeholder={"What's this thread about?"}
+              placeholder={'A title for your thread...'}
               ref="titleTextarea"
               autoFocus
             />
@@ -152,7 +153,7 @@ class StoryComposerWithData extends Component {
             />
 
             <Actions>
-              <div>
+              <Dropdowns>
                 <select
                   onChange={this.setActiveCommunity}
                   defaultValue={activeCommunity}
@@ -182,7 +183,7 @@ class StoryComposerWithData extends Component {
                       });
                     })}
                 </select>
-              </div>
+              </Dropdowns>
 
               <div>
                 <LinkButton disabled={!title}>Publish</LinkButton>

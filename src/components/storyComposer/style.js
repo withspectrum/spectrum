@@ -77,6 +77,35 @@ export const Actions = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+`;
+
+export const Dropdowns = styled.div`
+  display: flex;
+  align-items: center;
+
+  select {
+    max-width: 224px;
+    display: block;
+    padding: 8px 12px;
+    border: none;
+    border: 2px solid ${props => props.theme.border.default};
+    border-radius: 8px;
+    box-shadow: none;
+    color: ${props => props.theme.text.default};
+    font-weight: 600;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: #fff;
+    background-image: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  select + select {
+    margin-left: 8px;
+  }
 `;
 
 // these are style objects because i'm custom styling another react component to handle autoresizign
