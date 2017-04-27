@@ -15,7 +15,18 @@ import {
 } from './style';
 import { UserMetaData } from './metaData';
 
-const User = (props: Object): React$Element<any> => {
+type UserProfileProps = {
+  size?: 'mini' | 'small' | 'medium' | 'large' | 'full',
+  data: {
+    title: string,
+    subtitle: string,
+    photoURL: string,
+    description?: string,
+    id?: string,
+  },
+};
+
+const User = (props: UserProfileProps): React$Element<any> => {
   switch (props.size) {
     case 'mini': {
       return (
