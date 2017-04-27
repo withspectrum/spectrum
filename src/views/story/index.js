@@ -6,12 +6,7 @@ import { Route, Redirect } from 'react-router';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import { Link } from 'react-router-dom';
-import Card from '../../components/card';
 import { StoryContainer } from './containers';
-import { Column } from '../../components/column';
-import { FlexContainer } from '../../components/flexbox';
 import WithTransition from '../../components/routeTransition';
 
 const StoryPure = ({ match, location }) => (

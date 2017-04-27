@@ -5,9 +5,7 @@ import { Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-import Card from '../../components/card';
 import Icon from '../../components/icons';
-import { FlexCol, FlexRow } from '../../components/globals';
 import { Column } from '../../components/column';
 import {
   DashboardContainer,

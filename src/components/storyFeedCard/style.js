@@ -20,3 +20,7 @@ export const Description = styled.p`
   line-height: 1.4;
   color: ${props => props.theme.text.default};
 `;
+
+export const Meta = styled.span`
+  
+`;
