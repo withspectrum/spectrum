@@ -7,14 +7,15 @@ const { getFrequenciesByCommunity } = require('../models/frequency');
 const { getUsers } = require('../models/user');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
+import type { GetCommunityArgs } from '../models/community';
 import { encode, decode } from '../utils/base64';
 
 module.exports = {
   Query: {
-    community: (_, { id }) => getCommunity(id),
+    community: (_: any, args: GetCommunityArgs) => getCommunity(args),
   },
   Community: {
-    frequencyConnection: ({ id }) => ({
+    frequencyConnection: ({ id }: { id: String }) => ({
       pageInfo: {
         hasNextPage: false,
       },
