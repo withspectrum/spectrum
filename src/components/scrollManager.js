@@ -1,13 +1,11 @@
-//@flow
+// @flow
 import React from 'react';
 // $FlowFixMe
-import { func, node, object, shape, string } from 'prop-types';
+import { func, node, number, object, shape, string } from 'prop-types';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-
-const listenWaitTime = 50;
-const syncAttemptWaitTime = 100;
-const syncMaxWaitTime = 1000;
+// $FlowFixMe
+import debounceFn from 'lodash/debounce';
 
 class ScrollManager extends React.Component {
   static propTypes = {
@@ -17,108 +15,136 @@ class ScrollManager extends React.Component {
       push: func.isRequired,
       replace: func.isRequired,
     }).isRequired,
+    location: object,
+    onLocationChange: func,
+    scrollCaptureDebounce: number,
+    scrollSyncDebounce: number,
+    scrollSyncAttemptLimit: number,
   };
 
-  scrollListenInterval = null;
-  scrollSyncInterval = null;
-  resetScroll = false;
-  hasScrolledA = false;
-  hasScrolledB = false;
+  static defaultProps = {
+    scrollCaptureDebounce: 50,
+    scrollSyncDebounce: 100,
+    scrollSyncAttemptLimit: 5,
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.scrollSyncData = {
+      x: 0,
+      y: 0,
+      attemptsRemaining: props.scrollSyncAttemptLimit,
+    };
+
+    const scrollCapture = () => {
+      requestAnimationFrame(() => {
+        const { pageXOffset: x, pageYOffset: y } = window;
+        const { pathname } = this.props.location;
+
+        // use browser history instead of router history
+        // to avoid infinite history.replace loop
+        const historyState = window.history.state || {};
+        const { state = {} } = historyState;
+        if (
+          !state.scroll ||
+          state.scroll.x !== pageXOffset ||
+          state.scroll.y !== pageYOffset
+        ) {
+          window.history.replaceState(
+            {
+              ...historyState,
+              state: { ...state, scroll: { x, y } },
+            },
+            null,
+            pathname
+          );
+        }
+      });
+    };
+
+    const _scrollSync = () => {
+      requestAnimationFrame(() => {
+        const { x, y, attemptsRemaining } = this.scrollSyncData;
+
+        if (attemptsRemaining < 1) {
+          return;
+        }
+
+        const { pageXOffset, pageYOffset } = window;
+        if (
+          y < window.document.body.scrollHeight &&
+          (x !== pageXOffset || y !== pageYOffset)
+        ) {
+          window.scrollTo(x, y);
+          this.scrollSyncData.attemptsRemaining = attemptsRemaining - 1;
+          _scrollSync();
+        }
+      });
+    };
+
+    const scrollSync = (x = 0, y = 0) => {
+      this.scrollSyncData = {
+        x,
+        y,
+        attemptsRemaining: this.props.scrollSyncAttemptLimit,
+      };
+      _scrollSync();
+    };
+
+    this.debouncedScroll = debounceFn(
+      scrollCapture,
+      props.scrollCaptureDebounce
+    );
+    this.debouncedScrollSync = debounceFn(scrollSync, props.scrollSyncDebounce);
+  }
 
   componentWillMount() {
-    const { history } = this.props;
-    window.addEventListener('scroll', this.setScrollHappened, {
-      passive: true,
-    });
-    this.scrollListenInterval = setInterval(this.onScroll, listenWaitTime);
+    const { location, onLocationChange } = this.props;
+    if (onLocationChange) {
+      onLocationChange(location);
+    }
   }
 
   componentDidMount() {
     this.onPop(this.props);
+    window.addEventListener('scroll', this.debouncedScroll, { passive: true });
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.setScrollHappened, {
+    this.scrollSyncPending = false;
+    window.removeEventListener('scroll', this.debouncedScroll, {
       passive: true,
     });
-    clearInterval(this.scrollListenInterval);
   }
 
   componentWillReceiveProps(nextProps) {
     switch (nextProps.history.action) {
       case 'PUSH':
+      case 'REPLACE':
         this.onPush();
         break;
       case 'POP':
         this.onPop(nextProps);
         break;
-      case 'REPLACE':
-        return;
       default:
         console.warn(
           `Unrecognized location change action! "${nextProps.history.action}"`
         );
     }
+    if (nextProps.onLocationChange) {
+      nextProps.onLocationChange(nextProps.location);
+    }
   }
 
-  setScrollHappened = () => {
-    this.hasScrolledA = true;
-    this.hasScrolledB = true;
-  };
-
-  onScroll = () => {
-    if (this.resetScroll) {
-      this.resetScroll = false;
-      window.scrollTo(0, 0);
-      return;
-    }
-    if (!this.hasScrolledB) return;
-    if (this.hasScrolledA) {
-      this.hasScrolledA = false;
-      return;
-    }
-    this.hasScrolledB = false;
-
-    // record and store location
-    const { pageXOffset: x, pageYOffset: y } = window;
-    const { location, history } = this.props;
-    const { pathname, state = {} } = location;
-    if (
-      !state.scroll ||
-      state.scroll.x !== pageXOffset ||
-      state.scroll.y !== pageYOffset
-    ) {
-      history.replace(pathname, { ...state, scroll: { x, y } });
-    }
-  };
-
   onPush() {
-    // reset scroll
-    this.resetScroll = true;
+    this.debouncedScrollSync(0, 0);
   }
 
   onPop({ location: { state = {} } }) {
     // attempt location restore
-    const { x, y } = state.scroll || {};
-
-    if (this.scrollSyncInterval != null) clearInterval(this.scrollSyncInterval);
-
-    this.scrollSyncInterval = setInterval(() => {
-      const { pageXOffset, pageYOffset } = window;
-      if (x !== pageXOffset || y !== pageYOffset) {
-        window.scrollTo(x, y);
-      } else {
-        clearInterval(this.scrollSyncInterval);
-        this.scrollSyncInterval = null;
-      }
-    }, syncAttemptWaitTime);
-
-    setTimeout(() => {
-      if (this.scrollSyncInterval != null) {
-        clearInterval(this.scrollSyncInterval);
-        this.scrollSyncInterval = null;
-      }
-    }, syncMaxWaitTime);
+    const { x = 0, y = 0 } = state.scroll || {};
+    this.debouncedScrollSync(x, y);
   }
 
   render() {

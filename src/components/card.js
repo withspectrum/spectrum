@@ -12,7 +12,7 @@ import { Shadow } from './globals';
 const StyledCard = styled(FlexContainer)`
   background: ${({ theme }) => theme.bg.default};
   border-radius: 12px;
-  box-shadow: ${Shadow.low} ${({ theme }) => theme.inactive};
+  box-shadow: ${Shadow.low} rgba(52,113,197, 0.1);
   position: relative;
   width: 100%;
   max-width: 100%;

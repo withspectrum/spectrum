@@ -8,6 +8,7 @@ export const getFrequency = graphql(
 				name
 				community {
 					name
+          id
 				}
 			}
 		}
