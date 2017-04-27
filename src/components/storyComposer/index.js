@@ -9,17 +9,18 @@ import {
   PlaceholderLabel,
   StoryDescription,
   StoryTitle,
+  ContentContainer,
 } from './style';
 import Icon from '../icons';
 
 class StoryComposer extends Component {
-  constructor({ location }) {
-    super({ location });
+  constructor(props) {
+    super(props);
 
     this.state = {
       isOpen: false,
-      title: null,
-      description: null,
+      title: '',
+      description: '',
     };
   }
 
@@ -37,7 +38,10 @@ class StoryComposer extends Component {
 
   handleOpenComposer = () => {
     const isOpen = this.state.isOpen;
-    isOpen ? '' : this.setState({ isOpen: true });
+    if (!isOpen) {
+      this.setState({ isOpen: true });
+      this.refs.titleTextarea.focus();
+    }
   };
 
   closeComposer = () => {
@@ -54,39 +58,38 @@ class StoryComposer extends Component {
         <Overlay isOpen={isOpen} onClick={this.closeComposer} />
         <Composer isOpen={isOpen} onClick={this.handleOpenComposer}>
 
-          {!isOpen &&
-            <Placeholder>
-              <Icon
-                icon={'edit'}
-                color={'text.alt'}
-                hoverColor={'brand.default'}
-                scaleOnHover={false}
-              />
-              <PlaceholderLabel>
-                Start a new thread with your friends...
-              </PlaceholderLabel>
-            </Placeholder>}
+          <Placeholder isOpen={isOpen}>
+            <Icon
+              icon={'edit'}
+              color={'text.alt'}
+              hoverColor={'brand.default'}
+              scaleOnHover={false}
+            />
+            <PlaceholderLabel>
+              Start a new thread with your friends...
+            </PlaceholderLabel>
+          </Placeholder>
 
-          {isOpen &&
-            <div>
-              <Textarea
-                onChange={this.changeTitle}
-                style={StoryTitle}
-                value={this.state.title}
-                placeholder={'Start a new thread with your friends...'}
-                autoFocus
-              />
+          <ContentContainer isOpen={isOpen}>
+            <Textarea
+              onChange={this.changeTitle}
+              style={StoryTitle}
+              value={this.state.title}
+              placeholder={'Start a new thread with your friends...'}
+              ref="titleTextarea"
+              autoFocus
+            />
 
-              <Textarea
-                onChange={this.changeDescription}
-                value={this.state.description}
-                style={StoryDescription}
-                ref="descriptionTextarea"
-                placeholder={
-                  'Write more thoughts here, add photos, and anything else!'
-                }
-              />
-            </div>}
+            <Textarea
+              onChange={this.changeDescription}
+              value={this.state.description}
+              style={StoryDescription}
+              ref="descriptionTextarea"
+              placeholder={
+                'Write more thoughts here, add photos, and anything else!'
+              }
+            />
+          </ContentContainer>
 
         </Composer>
       </Container>

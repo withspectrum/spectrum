@@ -44,6 +44,8 @@ export const Placeholder = styled.div`
   align-items: center;
   cursor: pointer;
   color: ${props => props.theme.text.alt};color: ${props => props.theme.text.alt};
+  position: ${props => (props.isOpen ? 'absolute' : 'relative')};
+  opacity: ${props => (props.isOpen ? '0' : '1')};
 
   &:hover {
     color: ${props => props.theme.text.default};
@@ -60,6 +62,11 @@ export const PlaceholderLabel = styled.h3`
   font-size: 16px;
   font-weight: 500;
   margin-left: 8px;
+`;
+
+export const ContentContainer = styled.div`
+  position: ${props => (props.isOpen ? 'relative' : 'absolute')};
+  opacity: ${props => (props.isOpen ? '1' : '0')};
 `;
 
 // these are style objects because i'm custom styling another react component to handle autoresizign
