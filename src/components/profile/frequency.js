@@ -13,113 +13,44 @@ import {
 } from './style';
 import { FrequencyMetaData } from './metaData';
 
-const Frequency = (props: Object): React$Element<any> => {
-  switch (props.size) {
-    case 'mini': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
-        </Card>
-      );
-    }
-    case 'small': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
+type FrequencyProps = {
+  size?: 'mini' | 'small' | 'medium' | 'large' | 'full',
+  data: {
+    title: string,
+    subtitle: string,
+    description?: string,
+    id?: string,
+  },
+};
 
-          <Actions>
-            <ActionOutline>Follow</ActionOutline>
-          </Actions>
-        </Card>
-      );
-    }
-    case 'medium': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
+const Frequency = (props: FrequencyProps): React$Element<any> => {
+  const size = props.size || 'mini';
+  return (
+    <Card {...props}>
+      <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
+        <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+          <Title>{props.data.title}</Title>
+          <Subtitle>{props.data.subtitle}</Subtitle>
+        </ProfileHeaderMeta>
+      </ProfileHeader>
 
-          <Description>
-            {props.data.description}
-          </Description>
+      {size !== 'mini' &&
+        size !== 'small' &&
+        <Description>
+          {props.data.description}
+        </Description>}
 
-          <Actions>
-            <ActionOutline>Follow</ActionOutline>
-          </Actions>
-        </Card>
-      );
-    }
-    case 'large': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
+      {size !== 'mini' &&
+        <Actions>
+          <ActionOutline>Follow</ActionOutline>
+        </Actions>}
 
-          <Description>
-            {props.data.description}
-          </Description>
-
-          <Actions>
-            <ActionOutline>Follow</ActionOutline>
-          </Actions>
-
-          <FrequencyMetaData type="frequency" id={props.data.id} />
-        </Card>
-      );
-    }
-    case 'full': {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
-
-          <Description>
-            {props.data.description}
-          </Description>
-
-          <Actions>
-            <ActionOutline>Follow</ActionOutline>
-          </Actions>
-
-          <FrequencyMetaData type="frequency" id={props.data.id} />
-        </Card>
-      );
-    }
-    default: {
-      return (
-        <Card {...props}>
-          <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-            <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-              <Title>{props.data.title}</Title>
-              <Subtitle>{props.data.subtitle}</Subtitle>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
-        </Card>
-      );
-    }
-  }
+      {size !== 'mini' &&
+        size !== 'small' &&
+        size !== 'medium' &&
+        <FrequencyMetaData type="frequency" id={props.data.id} />}
+    </Card>
+  );
 };
 
 export default Frequency;
