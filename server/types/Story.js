@@ -36,8 +36,16 @@ const Story = /* GraphQL */ `
 		author: User!
 	}
 
+	enum StoryByTypes {
+		everything
+		frequency
+		community
+		user
+	}
+
 	extend type Query {
 		story(id: ID!): Story
+		storiesByType(id: ID!, type: StoryByTypes!): [Story]
 	}
 
 	input StoryContentInput {

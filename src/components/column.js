@@ -20,3 +20,4 @@ const ColumnPure = (props: Object): React$Element<any> => (
 );
 
 export const Column = compose(pure)(ColumnPure);
+export default Column;

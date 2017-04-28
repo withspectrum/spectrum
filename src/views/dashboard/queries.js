@@ -59,10 +59,12 @@ const MoreStoriesQuery = gql`
 `;
 
 const queryOptions = {
-  props: ({ data: { fetchMore, loading, user } }) => ({
+  props: ({ data: { fetchMore, error, loading, user } }) => ({
     data: {
+      error,
       loading,
       user,
+      stories: user ? user.everything.edges : '',
       fetchMore: () =>
         fetchMore({
           query: MoreStoriesQuery,

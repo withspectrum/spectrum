@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 //$FlowFixMe
-import { Router, Route, Switch } from 'react-router';
+import { Router, Route, Switch, Redirect } from 'react-router';
 //$FlowFixMe
 import styled from 'styled-components';
 //$FlowFixMe
@@ -58,7 +58,8 @@ class Routes extends Component {
               <Route path="/explore" component={Explore} />
               <Route path="/messages" component={DirectMessages} />
               <Route path="/story" component={Story} />
-              <Route path="/users" component={UserProfile} />
+              <Route exact path="/users" render={() => <Redirect to="/" />} />
+              <Route exact path="/users/:userId" component={UserProfile} />
               <Route path="/notifications" component={Notifications} />
 
               {/*

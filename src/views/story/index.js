@@ -7,10 +7,10 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 import { StoryContainer } from './containers';
-import WithTransition from '../../components/routeTransition';
+import AppViewWrapper from '../../components/appViewWrapper';
 
 const StoryPure = ({ match, location }) => (
-  <WithTransition location={location}>
+  <AppViewWrapper>
     {/* story content */}
     <Route
       location={location}
@@ -21,7 +21,7 @@ const StoryPure = ({ match, location }) => (
 
     {/* if no storyId is provided, redirect to homepage */}
     <Route exact path={match.url} render={() => <Redirect to="/" />} />
-  </WithTransition>
+  </AppViewWrapper>
 );
 
 const Story = compose(pure)(StoryPure);

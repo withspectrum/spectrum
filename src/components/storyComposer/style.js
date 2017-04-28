@@ -67,6 +67,7 @@ export const PlaceholderLabel = styled.h3`
 export const ContentContainer = styled.div`
   position: ${props => (props.isOpen ? 'relative' : 'absolute')};
   opacity: ${props => (props.isOpen ? '1' : '0')};
+  pointer-events: ${props => (props.isOpen ? 'auto' : 'none')};
 `;
 
 export const Actions = styled.div`

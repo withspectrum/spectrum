@@ -110,7 +110,6 @@ class StoryComposerWithData extends Component {
     const {
       isOpen,
       title,
-      description,
       availableFrequencies,
       availableCommunities,
       activeCommunity,

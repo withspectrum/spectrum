@@ -80,9 +80,9 @@ class Navbar extends Component {
 
             {/* TODO: Make this active only when viewing current logged in user profile */}
             <IconLink
-              data-active={match.url === '/user/me'}
+              data-active={match.url === '/users/me'}
               data-mobileWidth={'half'}
-              to="/user/me"
+              to="/users/me"
             >
               <Icon
                 icon="emoji"

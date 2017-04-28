@@ -1,32 +1,28 @@
-import React, { Component } from 'react';
-import { Route, Redirect } from 'react-router';
-import styled from 'styled-components';
+import React from 'react';
+//$FlowFixMe
+import compose from 'recompose/compose';
+//$FlowFixMe
+import pure from 'recompose/pure';
+//$FlowFixMe
+import withProps from 'recompose/withProps';
+import AppViewWrapper from '../../components/appViewWrapper';
+import Loading from '../../components/loading';
+import Column from '../../components/column';
+import StoryFeed from '../../components/storyFeed';
+import { getUser } from './queries';
 
-const UserProfileContainer = ({ match }) => <div>{match.params.userId}</div>;
+const UserProfilePure = ({ match }) => {
+  const enhance = compose(withProps({ match }), getUser);
+  const StoryFeedWithData = enhance(StoryFeed);
 
-const Container = styled.div`
+  return (
+    <AppViewWrapper>
+      <Column type="primary" alignItems="center">
+        <StoryFeedWithData />
+      </Column>
+    </AppViewWrapper>
+  );
+};
 
-`;
-
-class UserProfile extends Component {
-  render() {
-    const { match } = this.props;
-
-    return (
-      <Container>
-
-        {/* render the story chat given the url param */}
-        <Route path={`${match.url}/:userId`} component={UserProfileContainer} />
-
-        {/*
-          if a user lands directly on /story there will be nothing to load
-          so redirect them back to home.
-        */}
-        <Route exact path={match.url} render={() => <Redirect to="/" />} />
-
-      </Container>
-    );
-  }
-}
-
+export const UserProfile = pure(UserProfilePure);
 export default UserProfile;
