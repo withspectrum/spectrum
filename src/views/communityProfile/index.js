@@ -2,11 +2,7 @@ import React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import branch from 'recompose/branch';
-//$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import withProps from 'recompose/withProps';
 import StoryComposer from '../../components/storyComposer';
