@@ -37,6 +37,16 @@ const User = /* GraphQL */ `
 		node: Story!
 	}
 
+	type UserNotificationsConnection {
+		pageInfo: PageInfo!
+		edges: [UserNotificationEdge!]
+	}
+
+	type UserNotificationEdge {
+		cursor: String!
+		node: Notification!
+	}
+
 	type UserMetaData {
 		stories: Int
 	}
@@ -55,7 +65,7 @@ const User = /* GraphQL */ `
 		directMessageGroupsConnection: UserDirectMessageGroupsConnection!
 		everything(first: Int = 10, after: String): EverythingStoriesConnection!
 		metaData: UserMetaData!
-		notifications: [Notification!]
+		notificationConnection(first: Int = 10, after: String): UserNotificationsConnection!
 	}
 
 	extend type Query {

@@ -4,32 +4,36 @@ export const getNotifications = graphql(
   gql`
 	{
 		notifications {
-			id
-			type
-			frequency {
-				name
-				slug
-			}
-			community {
-				name
-				slug
-			}
-			story {
-				id
-			}
-			message {
-				id
-			}
-			content {
-				title
-				excerpt
-			}
-			read
-			createdAt
-			sender {
-				displayName
-				username
-			}
+      edges {
+        node {
+          id
+    			type
+    			frequency {
+    				name
+    				slug
+    			}
+    			community {
+    				name
+    				slug
+    			}
+    			story {
+    				id
+    			}
+    			message {
+    				id
+    			}
+    			content {
+    				title
+    				excerpt
+    			}
+    			read
+    			createdAt
+    			sender {
+    				displayName
+    				username
+    			}
+        }
+      }
 		}
 	}`
 );

@@ -103,11 +103,11 @@ const constructContent = notification => {
 };
 
 const NotificationsPure = props => {
-  const { data: { notifications } } = props;
+  const { data: { notifications: { edges } } } = props;
   return (
     <DashboardContainer justifyContent={'center'} alignContent={'flex-start'}>
       <Column type={'primary'}>
-        {notifications.map(notification => (
+        {edges.map(({ node: notification }) => (
           <NotificationCard key={notification.id}>
             <FlexRow center>
               <Icon

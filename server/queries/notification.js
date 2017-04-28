@@ -15,7 +15,11 @@ const { getCommunity } = require('../models/community');
 module.exports = {
   Query: {
     notification: (_, { id }) => getNotification(id),
-    notifications: (_, __, { user: { uid } }) => getNotificationsByUser(uid),
+    notifications: (
+      _,
+      { first = 10, after }: PaginationOptions,
+      { user: { uid } }
+    ) => getNotificationsByUser(uid, { first, after }),
   },
   Notification: {
     isMine: ({ users }, _, { user }) =>

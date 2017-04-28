@@ -18,13 +18,13 @@ module.exports = {
     currentUser: (_, __, { user }) => user,
   },
   User: {
-    notifications: (
+    notificationConnection: (
       { uid }: { uid: String },
-      _: any,
+      { first = 10, after }: PaginationOptions,
       { user }: { user: Object }
     ) => {
-      if (user.uid !== uid) return null;
-      return getNotificationsByUser(uid);
+      if (!user || user.uid !== uid) return null;
+      return getNotificationsByUser(uid, { first, after });
     },
     everything: (
       { uid }: { uid: String },
