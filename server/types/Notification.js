@@ -6,6 +6,11 @@ const Notification = /* GraphQL */ `
 		REACTION
 	}
 
+	type NotificationContent {
+		title: String!
+		excerpt: String
+	}
+
 	type Notification {
 		id: ID!
 		user: User!
@@ -16,7 +21,7 @@ const Notification = /* GraphQL */ `
 		frequency: Frequency
 		community: Community
 		sender: User!
-		content: String
+		content: NotificationContent
 		read: Boolean
 	}
 

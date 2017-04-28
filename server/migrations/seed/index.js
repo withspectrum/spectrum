@@ -4,6 +4,7 @@ const {
   DEFAULT_USERS,
   DEFAULT_FREQUENCIES,
   DEFAULT_STORIES,
+  DEFAULT_NOTIFICATIONS,
 } = require('./default');
 
 const {
@@ -14,8 +15,10 @@ const {
   generateStory,
   generateMessage,
   generateReaction,
+  generateStoryNotifications,
 } = require('./generate');
 
+const notifications = DEFAULT_NOTIFICATIONS;
 const userAmount = faker.random.number(1000);
 const users = [
   ...DEFAULT_USERS,
@@ -51,7 +54,16 @@ let stories = DEFAULT_STORIES;
 frequencies.forEach(frequency => {
   randomAmount({ max: 10 }, () => {
     const author = faker.random.arrayElement(frequency.subscribers);
-    stories.push(generateStory(frequency.id, author));
+    const story = generateStory(frequency.id, author);
+    stories.push(story);
+    generateStoryNotifications(
+      story,
+      frequency,
+      frequency.community,
+      notification => {
+        notifications.push(notification);
+      }
+    );
   });
 });
 
@@ -82,7 +94,7 @@ const db = require('rethinkdbdash')({
 });
 
 console.log(
-  `Inserting ${users.length} users, ${communities.length} communities, ${frequencies.length} frequencies, ${stories.length} stories, ${messages.length} messages and ${reactions.length} reactions into the database... (this might take a while!)`
+  `Inserting ${users.length} users, ${communities.length} communities, ${frequencies.length} frequencies, ${stories.length} stories, ${messages.length} messages, ${reactions.length} reactions and ${notifications.length} notifications into the database... (this might take a while!)`
 );
 Promise.all([
   db.table('communities').insert(communities).run(),
@@ -91,6 +103,7 @@ Promise.all([
   db.table('messages').insert(messages).run(),
   db.table('users').insert(users).run(),
   db.table('reactions').insert(reactions).run(),
+  db.table('notifications').insert(notifications).run(),
 ])
   .then(() => {
     console.log('Finished seeding database! 🎉');

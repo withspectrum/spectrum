@@ -55,7 +55,7 @@ const DEFAULT_STORIES = [
   {
     id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
     createdAt: new Date(),
-    author: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a190',
+    author: 'uItS3QQiUxXH44m14uWmixTbqSc2',
     frequency: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
     modifiedAt: new Date(),
     published: true,
@@ -75,18 +75,21 @@ const DEFAULT_STORIES = [
   },
 ];
 
-// TODO
 const DEFAULT_NOTIFICATIONS = [
   {
     id: 'first-notification-asfd123',
     createdAt: new Date(),
-    user: '58a023a4-912d-48fe-a61c-eec7274f7699',
-    type: 'NEW_MESSAGE',
-    message: 'second-message-asdf123',
-    story: 'second-story-asddf123',
-    sender: '58a023a4-912d-48fe-a61c-eec7274f7699',
-    read: true,
-    content: 'This is the first message!',
+    user: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a190',
+    type: 'NEW_STORY',
+    story: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+    frequency: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
+    community: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    sender: 'uItS3QQiUxXH44m14uWmixTbqSc2',
+    read: false,
+    content: {
+      title: 'The first story! 🎉',
+      excerpt: 'This is it, we got a story here',
+    },
   },
 ];
 
@@ -95,4 +98,5 @@ module.exports = {
   DEFAULT_COMMUNITIES,
   DEFAULT_FREQUENCIES,
   DEFAULT_STORIES,
+  DEFAULT_NOTIFICATIONS,
 };

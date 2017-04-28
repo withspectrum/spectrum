@@ -21,8 +21,8 @@ module.exports = {
     user: ({ user }) => user && getUser(user),
     message: ({ message }) => message && getMessage(message),
     story: ({ story }) => story && getStory(story),
-    frequency: ({ frequency }) => frequency && getFrequency(frequency),
-    community: ({ community }) => community && getCommunity(community),
+    frequency: ({ frequency }) => frequency && getFrequency({ id: frequency }),
+    community: ({ community }) => community && getCommunity({ id: community }),
     sender: ({ sender }) => sender && getUser(sender),
   },
 };
