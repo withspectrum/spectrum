@@ -10,6 +10,7 @@ import renderComponent from 'recompose/renderComponent';
 import branch from 'recompose/branch';
 import StoryFeedCard from '../storyFeedCard';
 import Loading from '../loading';
+import InfiniteList from '../infiniteList';
 import { Button } from '../buttons';
 
 const displayLoadingState = branch(
@@ -17,22 +18,33 @@ const displayLoadingState = branch(
   renderComponent(Loading)
 );
 
-const StoryFeedPure = ({
-  data: { stories, loading, fetchMore, error },
-  data,
-}) => {
-  console.log('story feed', stories);
+const StoryFeedPure = ({ data: { stories, loading, fetchMore, error } }) => {
   if (error) {
     return <div>Oops, something went wrong</div>;
   }
 
+  const renderStory = ({ index, key }) => {
+    const node = stories[index].node;
+
+    return <StoryFeedCard key={key} data={node} />;
+  };
+
   return (
     <div>
-      {stories.map(story => {
+
+      <InfiniteList
+        height={window.innerHeight - 50}
+        width={window.innerWidth > 768 ? 480 : window.innerWidth}
+        elementCount={stories.length}
+        elementRenderer={renderStory}
+        keyMapper={index => stories[index].node.id}
+      />
+
+      {/* {stories.map(story => {
         return <StoryFeedCard key={story.node.id} data={story.node} />;
       })}
 
-      <Button onClick={fetchMore}>Fetch More</Button>
+      <Button onClick={fetchMore}>Fetch More</Button> */}
     </div>
   );
 };
