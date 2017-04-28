@@ -103,37 +103,41 @@ const generateReaction = (user, message) => {
   };
 };
 
-const generateStoryNotifications = (
-  story,
-  frequency,
-  communityId,
-  callback
-) => {
-  frequency.subscribers.forEach(subscriber => {
-    callback(
-      generateNotification(
-        subscriber,
-        story.author,
-        story.id,
-        frequency.id,
-        communityId,
-        story.content.title,
-        // TODO: Add a maximum length to this
-        story.content.description
-      )
-    );
-  });
+const generateStoryNotification = (story, frequency, communityId, callback) => {
+  return generateNotification(
+    frequency.subscribers,
+    story.author,
+    story.id,
+    frequency.id,
+    communityId,
+    story.content.title,
+    // TODO: Add a maximum length to this
+    story.content.description
+  );
 };
 
-const generateMessageNotifications = (
+const generateMessageNotification = (
+  users,
   message,
   story,
   frequencyId,
   communityId
-) => {};
+) => {
+  return generateNotification(
+    users,
+    message.sender,
+    story.id,
+    frequencyId,
+    communityId,
+    story.content.title,
+    // TODO: Add a maximum length to this
+    message.message.content,
+    message.id
+  );
+};
 
 const generateNotification = (
-  user,
+  users,
   sender,
   story,
   frequency,
@@ -145,14 +149,16 @@ const generateNotification = (
   return {
     id: uuid(),
     createdAt: faker.date.past(2),
-    user,
+    users: users.map(uid => ({
+      uid,
+      read: faker.random.boolean(),
+    })),
     type: message ? 'NEW_MESSAGE' : 'NEW_STORY',
     message,
     story,
     frequency,
     community,
     sender,
-    read: faker.random.boolean(),
     content: {
       title,
       excerpt,
@@ -168,6 +174,6 @@ module.exports = {
   generateStory,
   generateMessage,
   generateReaction,
-  generateStoryNotifications,
-  generateNotification,
+  generateStoryNotification,
+  generateMessageNotification,
 };

@@ -55,6 +55,7 @@ const User = /* GraphQL */ `
 		directMessageGroupsConnection: UserDirectMessageGroupsConnection!
 		everything(first: Int = 10, after: String): EverythingStoriesConnection!
 		metaData: UserMetaData!
+		notifications: [Notification!]
 	}
 
 	extend type Query {

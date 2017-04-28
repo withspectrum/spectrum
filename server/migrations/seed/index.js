@@ -15,7 +15,8 @@ const {
   generateStory,
   generateMessage,
   generateReaction,
-  generateStoryNotifications,
+  generateStoryNotification,
+  generateMessageNotification,
 } = require('./generate');
 
 const notifications = DEFAULT_NOTIFICATIONS;
@@ -42,7 +43,7 @@ let frequencies = DEFAULT_FREQUENCIES;
 communities.forEach(community => {
   randomAmount({ max: 10 }, () => {
     const subscribers = randomAmount(
-      { max: community.members.length },
+      { max: community.members.length, min: 1 },
       i => community.members[i]
     );
     frequencies.push(generateFrequency(community.id, subscribers));
@@ -52,17 +53,13 @@ communities.forEach(community => {
 console.log('Generating stories...');
 let stories = DEFAULT_STORIES;
 frequencies.forEach(frequency => {
+  if (!frequency.subscribers || frequency.subscribers.length === 0) return;
   randomAmount({ max: 10 }, () => {
     const author = faker.random.arrayElement(frequency.subscribers);
     const story = generateStory(frequency.id, author);
     stories.push(story);
-    generateStoryNotifications(
-      story,
-      frequency,
-      frequency.community,
-      notification => {
-        notifications.push(notification);
-      }
+    notifications.push(
+      generateStoryNotification(story, frequency, frequency.community)
     );
   });
 });
@@ -73,9 +70,24 @@ stories.forEach(story => {
   const frequency = frequencies.find(
     frequency => frequency.id === story.frequency
   );
+  const storyMessages = [];
   randomAmount({ max: 10 }, () => {
     const sender = faker.random.arrayElement(frequency.subscribers);
-    messages.push(generateMessage(sender, story.id));
+    const message = generateMessage(sender, story.id);
+    messages.push(message);
+    storyMessages.push(message);
+  });
+  // New message notifications
+  storyMessages.forEach((message, index) => {
+    notifications.push(
+      generateMessageNotification(
+        storyMessages.slice(0, index).map(message => message.sender),
+        message,
+        story,
+        frequency.id,
+        frequency.community
+      )
+    );
   });
 });
 

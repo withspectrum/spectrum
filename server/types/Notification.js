@@ -13,7 +13,7 @@ const Notification = /* GraphQL */ `
 
 	type Notification {
 		id: ID!
-		user: User!
+		isMine: Boolean
 		createdAt: Date!
 		type: NotificationType!
 		message: Message
@@ -27,7 +27,6 @@ const Notification = /* GraphQL */ `
 
 	extend type Query {
 		notification(id: ID!): Notification
-		notifications(uid: ID!): [Notification!]
 	}
 
 	extend type Mutation {

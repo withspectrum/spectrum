@@ -18,10 +18,6 @@ const markNotificationsRead = story => {
     .run();
 };
 
-const getNotificationsByUser = uid => {
-  return db.table('notifications').getAll(uid, { index: 'user' }).run();
-};
-
 const storeNotification = notification => {
   return db
     .table('notifications')
@@ -33,6 +29,10 @@ const storeNotification = notification => {
     )
     .run()
     .then(result => result.changes[0].new_val);
+};
+
+const getNotificationsByUser = uid => {
+  return db.table('notifications').getAll(uid, { index: 'user' }).run();
 };
 
 module.exports = {
