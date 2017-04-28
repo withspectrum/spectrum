@@ -1,21 +1,52 @@
+//@flow
+
 /**
  * Storing and retrieving messages
  */
 const { db } = require('./db');
 const { listenToNewDocumentsIn } = require('./utils');
+import type { PaginationOptions } from '../utils/paginate-arrays';
 
-const getMessage = id => {
-  return db.table('messages').get(id).run();
+export type LocationTypes = 'messages' | 'direct_messages';
+export type MessageTypes = 'text' | 'media';
+export type MessageProps = {
+  type: MessageTypes,
+  content: String,
 };
 
-const getMessagesByStory = story => {
-  return db.table('messages').filter({ story }).run();
+const getMessage = (location: LocationTypes, id: string) => {
+  return db.table(location).get(id).run();
 };
 
-const storeMessage = message => {
+const getMessagesByLocationAndThread = (
+  location: LocationTypes,
+  thread: String,
+  { after, first }: PaginationOptions
+) => {
+  const getMessages = db
+    .table(location)
+    .between(after || db.minval, db.maxval, { leftBound: 'open' })
+    .orderBy('timestamp')
+    .filter({ thread })
+    .limit(first)
+    .run()
+    .then();
+
+  const getLastMessage = db
+    .table(location)
+    .orderBy('timestamp')
+    .filter({ thread })
+    .max()
+    .default({})
+    .run();
+
+  return Promise.all([getMessages, getLastMessage]);
+};
+
+const storeMessage = (location: LocationTypes, message: MessageProps) => {
   // Insert a message
   return db
-    .table('messages')
+    .table(location)
     .insert(
       Object.assign({}, message, {
         timestamp: new Date(),
@@ -26,13 +57,18 @@ const storeMessage = message => {
     .then(result => result.changes[0].new_val);
 };
 
-const listenToNewMessages = cb => {
-  return listenToNewDocumentsIn('messages', cb);
+const listenToNewMessages = (location: LocationTypes, cb: Function) => {
+  return listenToNewDocumentsIn(location, cb);
+};
+
+const getMessageCount = (location: string, thread: string) => {
+  return db.table(location).filter({ thread }).count().run();
 };
 
 module.exports = {
   getMessage,
-  getMessagesByStory,
+  getMessagesByLocationAndThread,
   storeMessage,
   listenToNewMessages,
+  getMessageCount,
 };

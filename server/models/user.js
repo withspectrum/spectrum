@@ -1,10 +1,11 @@
+// @flow
 const { db } = require('./db');
 
-const getUser = id => {
+const getUser = (id: String) => {
   return db.table('users').get(id).run();
 };
 
-const getUsers = uids => {
+const getUsers = (uids: Array<String>) => {
   return db.table('users').getAll(...uids).run();
 };
 
@@ -35,9 +36,29 @@ const createOrFindUser = user => {
   });
 };
 
+const getAllStories = (frequencies: Array<String>) => {
+  return db
+    .table('stories')
+    .orderBy(db.desc('modifiedAt'))
+    .filter(story => db.expr(frequencies).contains(story('frequency')))
+    .run();
+};
+
+const getUserMetaData = (id: String) => {
+  const getStoryCount = db
+    .table('stories')
+    .filter({ author: id })
+    .count()
+    .run();
+
+  return Promise.all([getStoryCount]);
+};
+
 module.exports = {
   getUser,
+  getUserMetaData,
   getUsers,
   createOrFindUser,
   storeUser,
+  getAllStories,
 };

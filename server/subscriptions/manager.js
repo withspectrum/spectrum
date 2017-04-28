@@ -1,3 +1,5 @@
+//@flow
+
 /**
  * Create the subscription manager to be used by the subscription server
  */
@@ -13,9 +15,9 @@ module.exports = new SubscriptionManager({
   // schema (e.g. messageAdded) to certain channels (e.g. MESSAGE_ADDED)
   // Subscriptions can also listen to multiple channels
   setupFunctions: {
-    messageAdded: (_, { storyId }) => ({
+    messageAdded: (_, { thread }) => ({
       [channels.MESSAGE_ADDED]: {
-        filter: message => message.story === storyId,
+        filter: message => message.thread === thread,
       },
     }),
   },

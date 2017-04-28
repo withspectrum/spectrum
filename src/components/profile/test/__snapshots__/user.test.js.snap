@@ -1,0 +1,240 @@
+exports[`test should render with a full size 1`] = `
+<pure(CardPure)
+  data={
+    Object {
+      "description": "Testing the user profile",
+      "id": "asdf-123",
+      "photoURL": "img.com/asdf.jpg",
+      "subtitle": "Whats up",
+      "title": "Test user",
+    }
+  }
+  size="full">
+  <Styled()
+    alignItems="center"
+    justifyContent="flex-start">
+    <pure(AvatarPure)
+      margin="0 12px 0 0"
+      radius={4}
+      size={40}
+      src="img.com/asdf.jpg" />
+    <Styled()
+      direction="column"
+      justifyContent="center">
+      <styled.h3>
+        Test user
+      </styled.h3>
+      <styled.h4>
+        Whats up
+      </styled.h4>
+    </Styled()>
+  </Styled()>
+  <styled.p>
+    Testing the user profile
+  </styled.p>
+  <Styled()>
+    <Styled()>
+      Message
+    </Styled()>
+    <Styled(pure(ButtonPure))>
+      Follow
+    </Styled(pure(ButtonPure))>
+  </Styled()>
+  <Apollo(branch(pure(MetaDataPure)))
+    id="asdf-123"
+    type="user" />
+</pure(CardPure)>
+`;
+
+exports[`test should render with a large size 1`] = `
+<pure(CardPure)
+  data={
+    Object {
+      "description": "Testing the user profile",
+      "id": "asdf-123",
+      "photoURL": "img.com/asdf.jpg",
+      "subtitle": "Whats up",
+      "title": "Test user",
+    }
+  }
+  size="large">
+  <Styled()
+    alignItems="center"
+    justifyContent="flex-start">
+    <pure(AvatarPure)
+      margin="0 12px 0 0"
+      radius={4}
+      size={40}
+      src="img.com/asdf.jpg" />
+    <Styled()
+      direction="column"
+      justifyContent="center">
+      <styled.h3>
+        Test user
+      </styled.h3>
+      <styled.h4>
+        Whats up
+      </styled.h4>
+    </Styled()>
+  </Styled()>
+  <styled.p>
+    Testing the user profile
+  </styled.p>
+  <Styled()>
+    <Styled()>
+      Message
+    </Styled()>
+  </Styled()>
+  <Apollo(branch(pure(MetaDataPure)))
+    id="asdf-123"
+    type="user" />
+</pure(CardPure)>
+`;
+
+exports[`test should render with a medium size 1`] = `
+<pure(CardPure)
+  data={
+    Object {
+      "description": "Testing the user profile",
+      "id": "asdf-123",
+      "photoURL": "img.com/asdf.jpg",
+      "subtitle": "Whats up",
+      "title": "Test user",
+    }
+  }
+  size="medium">
+  <Styled()
+    alignItems="center"
+    justifyContent="flex-start">
+    <pure(AvatarPure)
+      margin="0 12px 0 0"
+      radius={4}
+      size={40}
+      src="img.com/asdf.jpg" />
+    <Styled()
+      direction="column"
+      justifyContent="center">
+      <styled.h3>
+        Test user
+      </styled.h3>
+      <styled.h4>
+        Whats up
+      </styled.h4>
+    </Styled()>
+  </Styled()>
+  <styled.p>
+    Testing the user profile
+  </styled.p>
+  <Styled()>
+    <Styled()>
+      Message
+    </Styled()>
+  </Styled()>
+</pure(CardPure)>
+`;
+
+exports[`test should render with a mini size 1`] = `
+<pure(CardPure)
+  data={
+    Object {
+      "description": "Testing the user profile",
+      "id": "asdf-123",
+      "photoURL": "img.com/asdf.jpg",
+      "subtitle": "Whats up",
+      "title": "Test user",
+    }
+  }
+  size="mini">
+  <Styled()
+    alignItems="center"
+    justifyContent="flex-start">
+    <pure(AvatarPure)
+      margin="0 12px 0 0"
+      radius={4}
+      size={40}
+      src="img.com/asdf.jpg" />
+    <Styled()
+      direction="column"
+      justifyContent="center">
+      <styled.h3>
+        Test user
+      </styled.h3>
+      <styled.h4>
+        Whats up
+      </styled.h4>
+    </Styled()>
+  </Styled()>
+</pure(CardPure)>
+`;
+
+exports[`test should render with a small size 1`] = `
+<pure(CardPure)
+  data={
+    Object {
+      "description": "Testing the user profile",
+      "id": "asdf-123",
+      "photoURL": "img.com/asdf.jpg",
+      "subtitle": "Whats up",
+      "title": "Test user",
+    }
+  }
+  size="small">
+  <Styled()
+    alignItems="center"
+    justifyContent="flex-start">
+    <pure(AvatarPure)
+      margin="0 12px 0 0"
+      radius={4}
+      size={40}
+      src="img.com/asdf.jpg" />
+    <Styled()
+      direction="column"
+      justifyContent="center">
+      <styled.h3>
+        Test user
+      </styled.h3>
+      <styled.h4>
+        Whats up
+      </styled.h4>
+    </Styled()>
+  </Styled()>
+  <Styled()>
+    <Styled()>
+      Message
+    </Styled()>
+  </Styled()>
+</pure(CardPure)>
+`;
+
+exports[`test should render with no size 1`] = `
+<pure(CardPure)
+  data={
+    Object {
+      "description": "Testing the user profile",
+      "id": "asdf-123",
+      "photoURL": "img.com/asdf.jpg",
+      "subtitle": "Whats up",
+      "title": "Test user",
+    }
+  }>
+  <Styled()
+    alignItems="center"
+    justifyContent="flex-start">
+    <pure(AvatarPure)
+      margin="0 12px 0 0"
+      radius={4}
+      size={40}
+      src="img.com/asdf.jpg" />
+    <Styled()
+      direction="column"
+      justifyContent="center">
+      <styled.h3>
+        Test user
+      </styled.h3>
+      <styled.h4>
+        Whats up
+      </styled.h4>
+    </Styled()>
+  </Styled()>
+</pure(CardPure)>
+`;
