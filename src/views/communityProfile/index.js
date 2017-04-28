@@ -7,6 +7,7 @@ import branch from 'recompose/branch';
 //$FlowFixMe
 import renderComponent from 'recompose/renderComponent';
 import StoryComposer from '../../components/storyComposer';
+import AppViewWrapper from '../../components/appViewWrapper';
 import Loading from '../../components/loading';
 import { getCommunity } from './queries';
 
@@ -15,19 +16,16 @@ const displayLoadingState = branch(
   renderComponent(Loading)
 );
 
-const Container = styled.div``;
+const CommunityProfilePure = ({ data: { community } }) => (
+  <AppViewWrapper>
+    <StoryComposer activeCommunity={community.id} />
+    <h3>
+      {community.name}
+    </h3>
+  </AppViewWrapper>
+);
 
-class CommunityProfile extends Component {
-  render() {
-    return (
-      <Container>
-        <StoryComposer activeCommunity={this.props.data.community.id} />
-        <h3>
-          {this.props.data.community.name}
-        </h3>
-      </Container>
-    );
-  }
-}
-
-export default compose(getCommunity, displayLoadingState)(CommunityProfile);
+const CommunityProfile = compose(getCommunity, displayLoadingState)(
+  CommunityProfilePure
+);
+export default CommunityProfile;

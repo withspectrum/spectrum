@@ -3,10 +3,6 @@ import { FlexContainer } from '../../components/flexbox';
 import { FlexRow, Gradient, Transition } from '../../components/globals';
 import Card from '../../components/card';
 
-export const DashboardContainer = styled(FlexContainer)`
-  margin-top: 32px;
-`;
-
 export const NotificationCard = styled(Card)`
   margin-bottom: 16px;
   padding: 16px 24px 24px 16px;

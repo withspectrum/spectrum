@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
+import AppViewWrapper from '../../components/appViewWrapper';
 import Icon from '../../components/icons';
 import { Column } from '../../components/column';
 import { FlexRow } from '../../components/globals';
 import {
-  DashboardContainer,
   NotificationCard,
   Content,
   ContentHeading,
@@ -133,8 +133,7 @@ const constructContent = notification => {
 };
 
 const NotificationsPure = () => (
-  <DashboardContainer justifyContent={'center'} alignContent={'flex-start'}>
-
+  <AppViewWrapper>
     <Column type={'primary'}>
       {data.map(notification => (
         <NotificationCard key={notification.timestamp.toString()}>
@@ -153,7 +152,7 @@ const NotificationsPure = () => (
         </NotificationCard>
       ))}
     </Column>
-  </DashboardContainer>
+  </AppViewWrapper>
 );
 
 const Notifications = compose(pure)(NotificationsPure);

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
@@ -7,6 +6,7 @@ import branch from 'recompose/branch';
 //$FlowFixMe
 import renderComponent from 'recompose/renderComponent';
 import StoryComposer from '../../components/storyComposer';
+import AppViewWrapper from '../../components/appViewWrapper';
 import Loading from '../../components/loading';
 import { getFrequency } from './queries';
 
@@ -15,12 +15,10 @@ const displayLoadingState = branch(
   renderComponent(Loading)
 );
 
-const Container = styled.div``;
-
 class FrequencyProfile extends Component {
   render() {
     return (
-      <Container>
+      <AppViewWrapper>
         <StoryComposer
           activeCommunity={this.props.data.frequency.community.id}
           activeFrequency={this.props.data.frequency.id}
@@ -32,7 +30,7 @@ class FrequencyProfile extends Component {
           {' '}
           {this.props.data.frequency.name}
         </h3>
-      </Container>
+      </AppViewWrapper>
     );
   }
 }
