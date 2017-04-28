@@ -46,7 +46,6 @@ function render() {
 try {
   render();
 } catch (err) {
-  // clearStorage();
-  // render();
-  console.log(err);
+  clearStorage();
+  render();
 }

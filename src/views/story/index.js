@@ -8,7 +8,6 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 import { StoryContainer } from './containers';
 import AppViewWrapper from '../../components/appViewWrapper';
-import WithTransition from '../../components/routeTransition';
 
 const StoryPure = ({ match, location }) => (
   <AppViewWrapper>

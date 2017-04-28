@@ -17,8 +17,10 @@ const displayLoadingState = branch(
   renderComponent(Loading)
 );
 
-const StoryFeedPure = ({ data: { user, loading, fetchMore }, data }) => {
-  const stories = user.everything.edges;
+const StoryFeedPure = ({ data: { stories, loading, fetchMore, error } }) => {
+  if (error) {
+    return <div>Oops, something went wrong</div>;
+  }
 
   return (
     <div>

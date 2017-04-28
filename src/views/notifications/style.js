@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { FlexContainer } from '../../components/flexbox';
 import { FlexRow, Gradient, Transition } from '../../components/globals';
 import Card from '../../components/card';
 
