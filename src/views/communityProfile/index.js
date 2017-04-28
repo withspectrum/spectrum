@@ -12,8 +12,6 @@ import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
 import { getCommunity } from './queries';
 
-// const StoryFeedWithData = compose(getCommunity)(StoryFeed);
-
 const CommunityProfilePure = ({ match }) => {
   const enhance = compose(withProps({ match }), getCommunity);
   const StoryFeedWithData = enhance(StoryFeed);

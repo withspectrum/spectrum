@@ -21,6 +21,7 @@ const StoryFeedPure = ({
   data: { stories, loading, fetchMore, error },
   data,
 }) => {
+  console.log('story feed', stories);
   if (error) {
     return <div>Oops, something went wrong</div>;
   }

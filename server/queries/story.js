@@ -9,7 +9,7 @@ const {
   getMessagesByLocationAndThread,
   getMessageCount,
 } = require('../models/message');
-const { getUser } = require('../models/user');
+const { getUserByUid } = require('../models/user');
 import type { LocationTypes } from '../models/message';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
@@ -41,7 +41,7 @@ module.exports = {
         })),
       }));
     },
-    author: ({ author }: { author: String }) => getUser(author),
+    author: ({ author }: { author: String }) => getUserByUid(author),
     messageCount: ({ id }: { id: string }) => getMessageCount('messages', id),
   },
 };
