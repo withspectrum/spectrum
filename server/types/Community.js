@@ -18,6 +18,16 @@ const Community = /* GraphQL */ `
 		node: User!
 	}
 
+	type CommunityStoriesConnection {
+		pageInfo: PageInfo!
+		edges: [CommunityStoryEdge!]
+	}
+
+	type CommunityStoryEdge {
+		cursor: String!
+		node: Story!
+	}
+
 	type CommunityMetaData {
 		members: Int
 		frequencies: Int
@@ -30,6 +40,7 @@ const Community = /* GraphQL */ `
 		slug: String!
 		frequencyConnection: CommunityFrequenciesConnection!
 		memberConnection(first: Int = 10, after: String): CommunityMembersConnection!
+		storyConnection(first: Int = 10, after: String): CommunityStoriesConnection!
 		metaData: CommunityMetaData
 	}
 
