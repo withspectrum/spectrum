@@ -32,7 +32,11 @@ const storeNotification = notification => {
 };
 
 const getNotificationsByUser = uid => {
-  return db.table('notifications').getAll(uid, { index: 'user' }).run();
+  return db
+    .table('notifications')
+    .getAll(uid, { index: 'user' })
+    .distinct()
+    .run();
 };
 
 module.exports = {

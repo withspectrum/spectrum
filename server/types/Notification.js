@@ -27,6 +27,7 @@ const Notification = /* GraphQL */ `
 
 	extend type Query {
 		notification(id: ID!): Notification
+		notifications: [Notification!]
 	}
 
 	extend type Mutation {

@@ -2,7 +2,10 @@
  * Notification queries
  */
 
-const { getNotification } = require('../models/notification');
+const {
+  getNotification,
+  getNotificationsByUser,
+} = require('../models/notification');
 const { getUser, getUsers } = require('../models/user');
 const { getMessage } = require('../models/message');
 const { getStory } = require('../models/story');
@@ -12,6 +15,7 @@ const { getCommunity } = require('../models/community');
 module.exports = {
   Query: {
     notification: (_, { id }) => getNotification(id),
+    notifications: (_, __, { user: { uid } }) => getNotificationsByUser(uid),
   },
   Notification: {
     isMine: ({ users }, _, { user }) =>
@@ -22,7 +26,7 @@ module.exports = {
       if (!result) return null;
       return result.read;
     },
-    message: ({ message }) => message && getMessage(message),
+    message: ({ message }) => message && getMessage('messages', message),
     story: ({ story }) => story && getStory(story),
     frequency: ({ frequency }) => frequency && getFrequency({ id: frequency }),
     community: ({ community }) => community && getCommunity({ id: community }),
