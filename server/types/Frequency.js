@@ -19,6 +19,11 @@ const Frequency = /* GraphQL */ `
 		node: Story!
 	}
 
+	type FrequencyMetaData {
+		stories: Int
+		subscribers: Int
+	}
+
 	type Frequency {
 		id: ID!
 		createdAt: Date!
@@ -29,10 +34,11 @@ const Frequency = /* GraphQL */ `
 		community: Community!
 		storyConnection(first: Int = 10, after: String): FrequencyStoriesConnection!
 		subscriberConnection(first: Int = 10, after: String): FrequencySubscribersConnection!
+		metaData: FrequencyMetaData
 	}
 
 	extend type Query {
-		frequency(id: ID!): Frequency
+		frequency(id: ID, slug: String, community: String): Frequency
 	}
 `;
 

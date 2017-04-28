@@ -1,5 +1,4 @@
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
+import { graphql, gql } from 'react-apollo';
 
 export const setStoryLock = graphql(
   gql`

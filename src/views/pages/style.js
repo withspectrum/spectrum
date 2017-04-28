@@ -93,7 +93,7 @@ export const ComponentContainer = styled.div`
 `;
 
 export const Component = styled.div`
-  background: ${props => (props.reverse ? props.theme.text.default : '#fff')};
+  background: ${props => (props.reverse ? props.theme.text.default : props.transparent ? 'transparent' : '#fff')};
   padding: 16px;
   border-bottom: 1px solid ${props => (props.reverse ? 'none' : props.theme.border.default)};
   display: flex;

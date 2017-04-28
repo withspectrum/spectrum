@@ -20,7 +20,7 @@ type Output = {
 export default (
   arr: Array<Input>,
   { first, after }: PaginationOptions,
-  getAfter: any => mixed
+  getAfter?: any => mixed
 ): Output => {
   const cursor = getAfter ? arr.findIndex(getAfter) : arr.indexOf(after);
   const begin = cursor > -1 ? cursor + 1 : 0;

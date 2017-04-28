@@ -20,7 +20,7 @@ module.exports = {
   },
   Story: {
     frequency: ({ frequency }: { frequency: String }) =>
-      getFrequency(frequency),
+      getFrequency({ id: frequency }),
     messageConnection: (
       { id }: { id: String },
       { first = 10, after }: PaginationOptions

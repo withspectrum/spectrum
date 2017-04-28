@@ -1,0 +1,201 @@
+exports[`test should render with a full size 1`] = `
+<pure(CardPure)
+  data={
+    Object {
+      "description": "Testing the community profile",
+      "id": "asdf-123",
+      "subtitle": "Whats up",
+      "title": "Test community",
+    }
+  }
+  size="full">
+  <Styled()
+    alignItems="center"
+    justifyContent="flex-start">
+    <Styled()
+      direction="column"
+      justifyContent="center">
+      <styled.h3>
+        Test community
+      </styled.h3>
+      <styled.h4>
+        Whats up
+      </styled.h4>
+    </Styled()>
+  </Styled()>
+  <styled.p>
+    Testing the community profile
+  </styled.p>
+  <Styled()>
+    <Styled()>
+      Follow
+    </Styled()>
+  </Styled()>
+  <Apollo(branch(pure(MetaDataPure)))
+    id="asdf-123"
+    type="community" />
+</pure(CardPure)>
+`;
+
+exports[`test should render with a large size 1`] = `
+<pure(CardPure)
+  data={
+    Object {
+      "description": "Testing the community profile",
+      "id": "asdf-123",
+      "subtitle": "Whats up",
+      "title": "Test community",
+    }
+  }
+  size="large">
+  <Styled()
+    alignItems="center"
+    justifyContent="flex-start">
+    <Styled()
+      direction="column"
+      justifyContent="center">
+      <styled.h3>
+        Test community
+      </styled.h3>
+      <styled.h4>
+        Whats up
+      </styled.h4>
+    </Styled()>
+  </Styled()>
+  <styled.p>
+    Testing the community profile
+  </styled.p>
+  <Styled()>
+    <Styled()>
+      Follow
+    </Styled()>
+  </Styled()>
+  <Apollo(branch(pure(MetaDataPure)))
+    id="asdf-123"
+    type="community" />
+</pure(CardPure)>
+`;
+
+exports[`test should render with a medium size 1`] = `
+<pure(CardPure)
+  data={
+    Object {
+      "description": "Testing the community profile",
+      "id": "asdf-123",
+      "subtitle": "Whats up",
+      "title": "Test community",
+    }
+  }
+  size="medium">
+  <Styled()
+    alignItems="center"
+    justifyContent="flex-start">
+    <Styled()
+      direction="column"
+      justifyContent="center">
+      <styled.h3>
+        Test community
+      </styled.h3>
+      <styled.h4>
+        Whats up
+      </styled.h4>
+    </Styled()>
+  </Styled()>
+  <styled.p>
+    Testing the community profile
+  </styled.p>
+  <Styled()>
+    <Styled()>
+      Follow
+    </Styled()>
+  </Styled()>
+</pure(CardPure)>
+`;
+
+exports[`test should render with a mini size 1`] = `
+<pure(CardPure)
+  data={
+    Object {
+      "description": "Testing the community profile",
+      "id": "asdf-123",
+      "subtitle": "Whats up",
+      "title": "Test community",
+    }
+  }
+  size="mini">
+  <Styled()
+    alignItems="center"
+    justifyContent="flex-start">
+    <Styled()
+      direction="column"
+      justifyContent="center">
+      <styled.h3>
+        Test community
+      </styled.h3>
+      <styled.h4>
+        Whats up
+      </styled.h4>
+    </Styled()>
+  </Styled()>
+</pure(CardPure)>
+`;
+
+exports[`test should render with a small size 1`] = `
+<pure(CardPure)
+  data={
+    Object {
+      "description": "Testing the community profile",
+      "id": "asdf-123",
+      "subtitle": "Whats up",
+      "title": "Test community",
+    }
+  }
+  size="small">
+  <Styled()
+    alignItems="center"
+    justifyContent="flex-start">
+    <Styled()
+      direction="column"
+      justifyContent="center">
+      <styled.h3>
+        Test community
+      </styled.h3>
+      <styled.h4>
+        Whats up
+      </styled.h4>
+    </Styled()>
+  </Styled()>
+  <Styled()>
+    <Styled()>
+      Follow
+    </Styled()>
+  </Styled()>
+</pure(CardPure)>
+`;
+
+exports[`test should render with no size 1`] = `
+<pure(CardPure)
+  data={
+    Object {
+      "description": "Testing the community profile",
+      "id": "asdf-123",
+      "subtitle": "Whats up",
+      "title": "Test community",
+    }
+  }>
+  <Styled()
+    alignItems="center"
+    justifyContent="flex-start">
+    <Styled()
+      direction="column"
+      justifyContent="center">
+      <styled.h3>
+        Test community
+      </styled.h3>
+      <styled.h4>
+        Whats up
+      </styled.h4>
+    </Styled()>
+  </Styled()>
+</pure(CardPure)>
+`;

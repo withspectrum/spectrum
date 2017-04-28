@@ -18,6 +18,11 @@ const Community = /* GraphQL */ `
 		node: User!
 	}
 
+	type CommunityMetaData {
+		members: Int
+		frequencies: Int
+	}
+
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -25,10 +30,11 @@ const Community = /* GraphQL */ `
 		slug: String!
 		frequencyConnection: CommunityFrequenciesConnection!
 		memberConnection(first: Int = 10, after: String): CommunityMembersConnection!
+		metaData: CommunityMetaData
 	}
 
 	extend type Query {
-		community(id: ID!): Community
+		community(id: ID, slug: String): Community
 	}
 
 	extend type Mutation {

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { FlexContainer } from '../flexbox';
 import { Truncate } from '../globals';
-import { Button } from '../buttons';
+import { Button, OutlineButton } from '../buttons';
 
 export const ProfileHeader = styled(FlexContainer)`
   padding: 16px;
@@ -9,7 +9,6 @@ export const ProfileHeader = styled(FlexContainer)`
 `;
 
 export const ProfileHeaderMeta = styled(FlexContainer)`
-  margin-left: 12px;
   width: calc(100% - 52px);
 `;
 
@@ -25,7 +24,7 @@ export const Title = styled.h3`
 export const Subtitle = styled.h4`
   font-size: 14px;
   color: ${props => props.theme.text.alt};
-  line-height: 1.2;
+  line-height: 1.3;
   width: 100%;
   ${Truncate}
 `;
@@ -33,12 +32,13 @@ export const Subtitle = styled.h4`
 export const Description = styled.p`
   font-size: 14px;
   color: ${props => props.theme.text.default};
-  padding: 0 16px;
+  padding: 0 16px 16px;
   line-height: 1.4;
 `;
 
 export const Actions = styled(FlexContainer)`
   padding: 16px;
+  padding-top: 0;
   flex: 1 0 100%;
 `;
 
@@ -50,7 +50,7 @@ export const Action = styled(Button)`
   }
 `;
 
-export const ActionOutline = styled(Button)`
+export const ActionOutline = styled(OutlineButton)`
   flex-grow: 1;
 
   &:last-of-type:not(:first-of-type) {
