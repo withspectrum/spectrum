@@ -9,9 +9,10 @@ import {
   P,
   Transition,
   Gradient,
-  Button,
   Shadow,
 } from '../../components/globals';
+
+import { Button } from '../../components/buttons';
 // import ScrollRow from '../../../shared/ScrollRow';
 
 export const ViewContainer = styled(FlexCol)`

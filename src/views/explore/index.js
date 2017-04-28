@@ -7,7 +7,7 @@ import Icon from '../../components/icons';
 //   unsubscribeFrequency,
 //   subscribeFrequency,
 // } from '../../../actions/frequencies';
-import { GoopyThree } from '../homepage/style';
+// import { GoopyThree } from '../homepage/style';
 import {
   ViewContainer,
   ViewTitle,
@@ -45,8 +45,6 @@ class Explore extends Component {
             <ViewSubtitle>
               Discover more of what Spectrum has to offer!
             </ViewSubtitle>
-            <Constellations />
-            <GoopyThree />
           </ViewHeader>
           <Section>
             <SectionTitle>
