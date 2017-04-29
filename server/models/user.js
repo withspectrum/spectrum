@@ -1,8 +1,31 @@
 // @flow
 const { db } = require('./db');
+import { UserError } from 'graphql-errors';
 
-const getUser = (id: String) => {
-  return db.table('users').get(id).run();
+export type GetUserArgs = {
+  uid?: string,
+  username?: string,
+};
+
+const getUser = ({ uid, username }: GetUserArgs) => {
+  if (uid) return getUserById(id);
+  if (username) return getUserByUsername(username);
+
+  throw new UserError(
+    'Please provide either id or username to your user() query.'
+  );
+};
+
+const getUserByUid = (uid: String) => {
+  return db.table('users').get(uid).run();
+};
+
+const getUserByUsername = (username: string) => {
+  return db
+    .table('users')
+    .filter({ username })
+    .run()
+    .then(result => result && result[0]);
 };
 
 const getUsers = (uids: Array<String>) => {
@@ -56,6 +79,7 @@ const getUserMetaData = (id: String) => {
 
 module.exports = {
   getUser,
+  getUserByUid,
   getUserMetaData,
   getUsers,
   createOrFindUser,

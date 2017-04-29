@@ -1,40 +1,33 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import branch from 'recompose/branch';
+import pure from 'recompose/pure';
 //$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
+import withProps from 'recompose/withProps';
 import StoryComposer from '../../components/storyComposer';
+import AppViewWrapper from '../../components/appViewWrapper';
 import Loading from '../../components/loading';
+import Column from '../../components/column';
+import StoryFeed from '../../components/storyFeed';
 import { getFrequency } from './queries';
 
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(Loading)
-);
+const FrequencyProfilePure = ({ match }) => {
+  const enhance = compose(withProps({ match }), getFrequency);
+  const StoryFeedWithData = enhance(StoryFeed);
 
-const Container = styled.div``;
-
-class FrequencyProfile extends Component {
-  render() {
-    return (
-      <Container>
+  return (
+    <AppViewWrapper>
+      <Column type="primary" alignItems="center">
         <StoryComposer
-          activeCommunity={this.props.data.frequency.community.id}
-          activeFrequency={this.props.data.frequency.id}
+          activeCommunity={match.params.communityId}
+          activeFrequency={match.params.frequencyId}
         />
-        <h3>
-          {this.props.data.frequency.community.name}
-          {' '}
-          -
-          {' '}
-          {this.props.data.frequency.name}
-        </h3>
-      </Container>
-    );
-  }
-}
+        <StoryFeedWithData />
+      </Column>
+    </AppViewWrapper>
+  );
+};
 
-export default compose(getFrequency, displayLoadingState)(FrequencyProfile);
+export const FrequencyProfile = pure(FrequencyProfilePure);
+export default FrequencyProfile;

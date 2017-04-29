@@ -71,23 +71,25 @@ const MetaDataPure = ({ data, id, type }) => {
 
   return (
     <Meta>
-      {arr.map((item, i) => {
-        return (
-          <MetaListItem key={i}>
-            <Label>
-              <Icon
-                icon={item.icon}
-                color={'text.alt'}
-                hoverColor={'text.alt'}
-                scaleOnHover={false}
-                size={24}
-              />
-              {item.label}
-            </Label>
-            <Count>{item.count}</Count>
-          </MetaListItem>
-        );
-      })}
+      <MetaList>
+        {arr.map((item, i) => {
+          return (
+            <MetaListItem key={i}>
+              <Label>
+                <Icon
+                  icon={item.icon}
+                  color={'text.alt'}
+                  hoverColor={'text.alt'}
+                  scaleOnHover={false}
+                  size={24}
+                />
+                {item.label}
+              </Label>
+              <Count>{item.count}</Count>
+            </MetaListItem>
+          );
+        })}
+      </MetaList>
     </Meta>
   );
 };

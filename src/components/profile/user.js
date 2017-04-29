@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import Card from '../card';
-import Icon from '../icons';
 import { Avatar } from '../avatar';
 import {
   ProfileHeader,

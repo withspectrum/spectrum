@@ -4,7 +4,7 @@
  */
 const { getDirectMessageGroup } = require('../models/directMessageGroup');
 const { getMessagesByLocationAndThread } = require('../models/message');
-const { getUser, getUsers } = require('../models/user');
+const { getUserByUid, getUsers } = require('../models/user');
 import type { LocationTypes } from '../models/message';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
@@ -49,6 +49,6 @@ module.exports = {
           lastActivity: users[index].lastActivity,
         }))
       ),
-    creator: ({ creator }: { creator: String }) => getUser(creator),
+    creator: ({ creator }: { creator: String }) => getUserByUid(creator),
   },
 };

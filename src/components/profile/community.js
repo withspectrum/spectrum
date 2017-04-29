@@ -8,7 +8,6 @@ import {
   Subtitle,
   Description,
   Actions,
-  Action,
   ActionOutline,
 } from './style';
 import { CommunityMetaData } from './metaData';

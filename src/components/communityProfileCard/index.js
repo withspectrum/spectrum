@@ -4,11 +4,13 @@ import React from 'react';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 import { StyledCommunityProfileCard, Title, Description } from './style';
 
 const CommunityProfileCardPure = (props: Object): React$Element<any> => (
   <StyledCommunityProfileCard>
-    <Title>{props.data.name}</Title>
+    <Link to={`/${props.data.slug}`}><Title>{props.data.name}</Title></Link>
     <Description>
       {props.data.frequencyConnection.edges.length}
       {props.data.frequencyConnection.edges.length > 1 ||

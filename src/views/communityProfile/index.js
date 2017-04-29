@@ -1,33 +1,30 @@
-import React, { Component } from 'react';
-import styled from 'styled-components';
+import React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
-import branch from 'recompose/branch';
+import pure from 'recompose/pure';
 //$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
+import withProps from 'recompose/withProps';
 import StoryComposer from '../../components/storyComposer';
+import AppViewWrapper from '../../components/appViewWrapper';
 import Loading from '../../components/loading';
+import Column from '../../components/column';
+import StoryFeed from '../../components/storyFeed';
 import { getCommunity } from './queries';
 
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(Loading)
-);
+const CommunityProfilePure = ({ match }) => {
+  const enhance = compose(withProps({ match }), getCommunity);
+  const StoryFeedWithData = enhance(StoryFeed);
 
-const Container = styled.div``;
+  return (
+    <AppViewWrapper>
+      <Column type="primary" alignItems="center">
+        <StoryComposer activeCommunity={match.params.communityId} />
+        <StoryFeedWithData />
+      </Column>
+    </AppViewWrapper>
+  );
+};
 
-class CommunityProfile extends Component {
-  render() {
-    return (
-      <Container>
-        <StoryComposer activeCommunity={this.props.data.community.id} />
-        <h3>
-          {this.props.data.community.name}
-        </h3>
-      </Container>
-    );
-  }
-}
-
-export default compose(getCommunity, displayLoadingState)(CommunityProfile);
+export const CommunityProfile = pure(CommunityProfilePure);
+export default CommunityProfile;

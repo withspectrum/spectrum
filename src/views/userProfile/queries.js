@@ -36,55 +36,53 @@ const MoreStoriesQuery = gql`
 const queryOptions = {
   options: ({ match }) => ({
     variables: {
-      slug: match.params.frequencySlug,
-      community: match.params.communitySlug,
+      username: match.params.userId,
     },
   }),
-  props: ({ data: { fetchMore, error, loading, frequency } }) => ({
+  props: ({ data: { fetchMore, error, loading, user } }) => ({
     data: {
       error,
       loading,
-      frequency,
-      stories: frequency ? frequency.storyConnection.edges : '',
-      fetchMore: () =>
-        fetchMore({
-          query: MoreStoriesQuery,
-          variables: {
-            after: frequency.storyConnection.edges[
-              frequency.storyConnection.edges.length - 1
-            ].cursor,
-            id: frequency.id,
-          },
-          updateQuery: (prev, { fetchMoreResult }) => {
-            if (!fetchMoreResult.frequency) {
-              return prev;
-            }
-            return {
-              ...prev,
-              frequency: {
-                ...prev.frequency,
-                storyConnection: {
-                  ...prev.frequency.storyConnection,
-                  edges: [
-                    ...prev.frequency.storyConnection.edges,
-                    ...fetchMoreResult.frequency.storyConnection.edges,
-                  ],
-                },
-              },
-            };
-          },
-        }),
+      user,
+      stories: user ? user.storyConnection.edges : '',
+      // fetchMore: () =>
+      //   fetchMore({
+      //     query: MoreStoriesQuery,
+      //     variables: {
+      //       after: frequency.storyConnection.edges[
+      //         frequency.storyConnection.edges.length - 1
+      //       ].cursor,
+      //       id: frequency.id,
+      //     },
+      //     updateQuery: (prev, { fetchMoreResult }) => {
+      //       if (!fetchMoreResult.frequency) {
+      //         return prev;
+      //       }
+      //       return {
+      //         ...prev,
+      //         frequency: {
+      //           ...prev.frequency,
+      //           storyConnection: {
+      //             ...prev.frequency.storyConnection,
+      //             edges: [
+      //               ...prev.frequency.storyConnection.edges,
+      //               ...fetchMoreResult.frequency.storyConnection.edges,
+      //             ],
+      //           },
+      //         },
+      //       };
+      //     },
+      //   }),
     },
   }),
 };
 
-export const getFrequency = graphql(
+export const getUser = graphql(
   gql`
-		query getFrequency($slug: String, $community: String) {
-			frequency(slug: $slug, community: $community) {
-        id
-        name
-        slug
+		query getUser($username: String) {
+			user(username: $username) {
+        uid
+        username
         storyConnection(first: 10) {
           pageInfo {
             hasNextPage
