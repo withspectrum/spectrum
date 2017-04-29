@@ -18,7 +18,9 @@ const displayLoadingState = branch(
   renderComponent(Loading)
 );
 
-const StoryFeedPure = ({ data: { stories, loading, fetchMore, error } }) => {
+const StoryFeedPure = ({
+  data: { stories, loading, fetchMore, error, hasNextPage },
+}) => {
   if (error) {
     return <div>Oops, something went wrong</div>;
   }
@@ -30,7 +32,7 @@ const StoryFeedPure = ({ data: { stories, loading, fetchMore, error } }) => {
   };
 
   return (
-    <div>
+    <div style={{ height: '300px', width: '100%' }}>
 
       <InfiniteList
         height={window.innerHeight - 50}
@@ -38,6 +40,9 @@ const StoryFeedPure = ({ data: { stories, loading, fetchMore, error } }) => {
         elementCount={stories.length}
         elementRenderer={renderStory}
         keyMapper={index => stories[index].node.id}
+        loadNextPage={fetchMore}
+        hasNextPage={hasNextPage}
+        isNextPageLoading={loading}
       />
 
       {/* {stories.map(story => {

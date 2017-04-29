@@ -66,7 +66,7 @@ class InfiniteList extends React.Component {
   // Wraps every element in a CellMeasurer, which allows us to
   // render elements with dynamic heights
   renderElement = ({ index, key, style, parent }) => {
-    const Loading = this.props.loading || <div><Loading /></div>;
+    const LoadingIndicator = this.props.loading || <div><Loading /></div>;
     return (
       <CellMeasurer
         cache={this.state.cache}
@@ -77,7 +77,7 @@ class InfiniteList extends React.Component {
       >
         <div style={style}>
           {this.props.hasNextPage && index >= this.props.elementCount
-            ? Loading
+            ? LoadingIndicator
             : this.props.elementRenderer({ index, key })}
         </div>
       </CellMeasurer>
