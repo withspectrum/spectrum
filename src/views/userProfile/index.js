@@ -6,7 +6,6 @@ import pure from 'recompose/pure';
 //$FlowFixMe
 import withProps from 'recompose/withProps';
 import AppViewWrapper from '../../components/appViewWrapper';
-import Loading from '../../components/loading';
 import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
 import { getUser } from './queries';

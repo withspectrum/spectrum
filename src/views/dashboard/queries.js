@@ -64,6 +64,7 @@ const queryOptions = {
       error,
       loading,
       user,
+      hasNextPage: user ? user.everything.pageInfo.hasNextPage : null,
       stories: user ? user.everything.edges : '',
       fetchMore: () =>
         fetchMore({
