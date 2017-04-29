@@ -1,11 +1,10 @@
 import { graphql, gql } from 'react-apollo';
 
 const MoreStoriesQuery = gql`
-  query frequency($id: ID, $after: String) {
-    frequency(id: $id) {
-      id
-      name
-      slug
+  query user($username: String, $after: String) {
+    user(username: $username) {
+      uid
+      username
       storyConnection(first: 10, after: $after) {
         pageInfo {
           hasNextPage
@@ -45,34 +44,34 @@ const queryOptions = {
       loading,
       user,
       stories: user ? user.storyConnection.edges : '',
-      // fetchMore: () =>
-      //   fetchMore({
-      //     query: MoreStoriesQuery,
-      //     variables: {
-      //       after: frequency.storyConnection.edges[
-      //         frequency.storyConnection.edges.length - 1
-      //       ].cursor,
-      //       id: frequency.id,
-      //     },
-      //     updateQuery: (prev, { fetchMoreResult }) => {
-      //       if (!fetchMoreResult.frequency) {
-      //         return prev;
-      //       }
-      //       return {
-      //         ...prev,
-      //         frequency: {
-      //           ...prev.frequency,
-      //           storyConnection: {
-      //             ...prev.frequency.storyConnection,
-      //             edges: [
-      //               ...prev.frequency.storyConnection.edges,
-      //               ...fetchMoreResult.frequency.storyConnection.edges,
-      //             ],
-      //           },
-      //         },
-      //       };
-      //     },
-      //   }),
+      fetchMore: () =>
+        fetchMore({
+          query: MoreStoriesQuery,
+          variables: {
+            after: user.storyConnection.edges[
+              user.storyConnection.edges.length - 1
+            ].cursor,
+            username: user.username,
+          },
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult.user) {
+              return prev;
+            }
+            return {
+              ...prev,
+              user: {
+                ...prev.user,
+                storyConnection: {
+                  ...prev.user.storyConnection,
+                  edges: [
+                    ...prev.user.storyConnection.edges,
+                    ...fetchMoreResult.user.storyConnection.edges,
+                  ],
+                },
+              },
+            };
+          },
+        }),
     },
   }),
 };
@@ -110,4 +109,30 @@ export const getUser = graphql(
 		}
 	`,
   queryOptions
+);
+
+const queryOptionsUserProfile = {
+  options: ({ match }) => ({
+    variables: {
+      username: match.params.userId,
+    },
+  }),
+};
+
+export const getUserProfile = graphql(
+  gql`
+		query getUserProfile($username: String) {
+			user(username: $username) {
+        uid
+        username
+        photoURL
+        displayName
+        email
+        metaData {
+          stories
+        }
+      }
+		}
+	`,
+  queryOptionsUserProfile
 );

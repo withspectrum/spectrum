@@ -9,14 +9,21 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Loading from '../../components/loading';
 import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
-import { getUser } from './queries';
+import { UserProfile } from '../../components/profile';
+import { getUser, getUserProfile } from './queries';
 
-const UserProfilePure = ({ match }) => {
-  const enhance = compose(withProps({ match }), getUser);
-  const StoryFeedWithData = enhance(StoryFeed);
+const UserProfileViewPure = ({ match }) => {
+  const enhanceStoryFeed = compose(withProps({ match }), getUser);
+  const StoryFeedWithData = enhanceStoryFeed(StoryFeed);
+
+  const enhanceProfile = compose(withProps({ match }), getUserProfile);
+  const UserProfileWithData = enhanceProfile(UserProfile);
 
   return (
     <AppViewWrapper>
+      <Column type="secondary">
+        <UserProfileWithData size="full" />
+      </Column>
       <Column type="primary" alignItems="center">
         <StoryFeedWithData />
       </Column>
@@ -24,5 +31,5 @@ const UserProfilePure = ({ match }) => {
   );
 };
 
-export const UserProfile = pure(UserProfilePure);
-export default UserProfile;
+export const UserProfileView = pure(UserProfileViewPure);
+export default UserProfileView;

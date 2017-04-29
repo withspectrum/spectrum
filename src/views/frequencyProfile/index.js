@@ -10,14 +10,21 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Loading from '../../components/loading';
 import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
-import { getFrequency } from './queries';
+import { FrequencyProfile } from '../../components/profile';
+import { getFrequency, getFrequencyProfile } from './queries';
 
-const FrequencyProfilePure = ({ match }) => {
+const FrequencyProfileViewPure = ({ match }) => {
   const enhance = compose(withProps({ match }), getFrequency);
   const StoryFeedWithData = enhance(StoryFeed);
 
+  const enhanceProfile = compose(withProps({ match }), getFrequencyProfile);
+  const FrequencyProfileWithData = enhanceProfile(FrequencyProfile);
+
   return (
     <AppViewWrapper>
+      <Column type="secondary">
+        <FrequencyProfileWithData size="full" type="frequency" />
+      </Column>
       <Column type="primary" alignItems="center">
         <StoryComposer
           activeCommunity={match.params.communityId}
@@ -29,5 +36,5 @@ const FrequencyProfilePure = ({ match }) => {
   );
 };
 
-export const FrequencyProfile = pure(FrequencyProfilePure);
-export default FrequencyProfile;
+export const FrequencyProfileView = pure(FrequencyProfileViewPure);
+export default FrequencyProfileView;

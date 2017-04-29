@@ -112,3 +112,28 @@ export const getCommunity = graphql(
 	`,
   queryOptions
 );
+
+const queryOptionsCommunityProfile = {
+  options: ({ match }) => ({
+    variables: {
+      slug: match.params.communitySlug,
+    },
+  }),
+};
+
+export const getCommunityProfile = graphql(
+  gql`
+		query getCommunityProfile($slug: String) {
+			community(slug: $slug) {
+        id
+        name
+        slug
+        metaData {
+          frequencies
+          members
+        }
+      }
+		}
+	`,
+  queryOptionsCommunityProfile
+);

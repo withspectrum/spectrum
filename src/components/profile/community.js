@@ -1,6 +1,17 @@
 // @flow
 import React from 'react';
 import Card from '../card';
+//$FlowFixMe
+import compose from 'recompose/compose';
+//$FlowFixMe
+import pure from 'recompose/pure';
+//$FlowFixMe
+import renderComponent from 'recompose/renderComponent';
+//$FlowFixMe
+import branch from 'recompose/branch';
+//$FlowFixMe
+import { Link } from 'react-router-dom';
+import Loading from '../loading';
 import {
   ProfileHeader,
   ProfileHeaderMeta,
@@ -8,49 +19,45 @@ import {
   Subtitle,
   Description,
   Actions,
+  Action,
   ActionOutline,
 } from './style';
-import { CommunityMetaData } from './metaData';
+import { MetaData } from './metaData';
 
-type CommunityProps = {
-  size?: 'mini' | 'small' | 'medium' | 'large' | 'full',
-  data: {
-    title: string,
-    subtitle: string,
-    description?: string,
-    id?: string,
-  },
-  meta: Array<any>,
-};
+const displayLoadingState = branch(
+  props => props.data.loading,
+  renderComponent(Loading)
+);
 
-const Community = (props: CommunityProps): React$Element<any> => {
-  const size = props.size || 'mini';
+const CommunityWithData = ({ data, size }): React$Element<any> => {
+  const componentSize = size || 'mini';
+
   return (
-    <Card {...props}>
+    <Card>
       <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
         <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-          <Title>{props.data.title}</Title>
-          <Subtitle>{props.data.subtitle}</Subtitle>
+          <Link to={`/${data.community.slug}`}>
+            <Title>{data.community.name}</Title>
+          </Link>
         </ProfileHeaderMeta>
       </ProfileHeader>
 
-      {size !== 'mini' &&
-        size !== 'small' &&
+      {componentSize !== 'mini' &&
+        componentSize !== 'small' &&
         <Description>
-          {props.data.description}
+          {data.community.description}
         </Description>}
 
-      {size !== 'mini' &&
+      {componentSize !== 'mini' &&
         <Actions>
-          <ActionOutline>Follow</ActionOutline>
+          <ActionOutline>Join</ActionOutline>
         </Actions>}
 
-      {size !== 'mini' &&
-        size !== 'small' &&
-        size !== 'medium' &&
-        <CommunityMetaData type="community" id={props.data.id} />}
+      {(componentSize === 'large' || componentSize === 'full') &&
+        <MetaData data={data} type="community" />}
     </Card>
   );
 };
 
+const Community = compose(displayLoadingState)(CommunityWithData);
 export default Community;

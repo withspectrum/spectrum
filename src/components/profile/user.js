@@ -1,7 +1,16 @@
 // @flow
 import React from 'react';
 import Card from '../card';
+//$FlowFixMe
+import compose from 'recompose/compose';
+//$FlowFixMe
+import pure from 'recompose/pure';
+//$FlowFixMe
+import renderComponent from 'recompose/renderComponent';
+//$FlowFixMe
+import branch from 'recompose/branch';
 import { Avatar } from '../avatar';
+import Loading from '../loading';
 import {
   ProfileHeader,
   ProfileHeaderMeta,
@@ -12,7 +21,12 @@ import {
   Action,
   ActionOutline,
 } from './style';
-import { UserMetaData } from './metaData';
+import { MetaData } from './metaData';
+
+const displayLoadingState = branch(
+  props => props.data.loading,
+  renderComponent(Loading)
+);
 
 type UserProfileProps = {
   size?: 'mini' | 'small' | 'medium' | 'large' | 'full',
@@ -26,39 +40,39 @@ type UserProfileProps = {
   meta: Array<any>,
 };
 
-const User = (props: UserProfileProps): React$Element<any> => {
-  const size = props.size || 'mini';
+const UserWithData = ({ data, size }): React$Element<any> => {
+  const componentSize = size || 'mini';
   return (
-    <Card {...props}>
+    <Card>
       <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
         <Avatar
           margin={'0 12px 0 0'}
           size={40}
           radius={4}
-          src={props.data.photoURL}
+          src={data.user.photoURL}
         />
         <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-          <Title>{props.data.title}</Title>
-          <Subtitle>{props.data.subtitle}</Subtitle>
+          <Title>{data.user.displayName}</Title>
+          <Subtitle>{data.user.username}</Subtitle>
         </ProfileHeaderMeta>
       </ProfileHeader>
 
-      {size !== 'mini' &&
-        size !== 'small' &&
+      {/* {componentSize !== 'mini' &&
+        componentSize !== 'small' &&
         <Description>
-          {props.data.description}
-        </Description>}
+          {data.description}
+        </Description>} */}
 
-      {size !== 'mini' &&
+      {componentSize !== 'mini' &&
         <Actions>
-          <ActionOutline>Message</ActionOutline>
-          {size === 'full' && <Action>Follow</Action>}
+          <Action>Message</Action>
         </Actions>}
 
-      {(size === 'large' || size === 'full') &&
-        <UserMetaData type="user" id={props.data.id} />}
+      {(componentSize === 'large' || componentSize === 'full') &&
+        <MetaData data={data} type="user" />}
     </Card>
   );
 };
 
+const User = compose(displayLoadingState)(UserWithData);
 export default User;

@@ -10,9 +10,9 @@ import ScrollManager from './components/scrollManager';
 import DirectMessages from './views/directMessages';
 import Explore from './views/explore';
 import Story from './views/story';
-import UserProfile from './views/userProfile';
-import CommunityProfile from './views/communityProfile';
-import FrequencyProfile from './views/frequencyProfile';
+import UserProfileView from './views/userProfile';
+import CommunityProfileView from './views/communityProfile';
+import FrequencyProfileView from './views/frequencyProfile';
 import Navbar from './views/navbar';
 import StyleGuide from './views/pages/styleGuide';
 import Dashboard from './views/dashboard';
@@ -59,7 +59,7 @@ class Routes extends Component {
               <Route path="/messages" component={DirectMessages} />
               <Route path="/story" component={Story} />
               <Route exact path="/users" render={() => <Redirect to="/" />} />
-              <Route exact path="/users/:userId" component={UserProfile} />
+              <Route exact path="/users/:userId" component={UserProfileView} />
               <Route path="/notifications" component={Notifications} />
 
               {/*
@@ -69,9 +69,9 @@ class Routes extends Component {
             */}
               <Route
                 path="/:communitySlug/:frequencySlug"
-                component={FrequencyProfile}
+                component={FrequencyProfileView}
               />
-              <Route path="/:communitySlug" component={CommunityProfile} />
+              <Route path="/:communitySlug" component={CommunityProfileView} />
             </Switch>
 
           </Body>

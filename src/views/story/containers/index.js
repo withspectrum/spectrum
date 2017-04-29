@@ -40,26 +40,13 @@ const displayLoadingState = branch(
   renderComponent(Loading)
 );
 
-const StoryContainerPure = ({ data: { story }, data }) => {
-  const userData = {
-    photoURL: story.author.photoURL,
-    title: story.author.displayName,
-    subtitle: story.author.username,
-    meta: [], // { icon: 'edit', label: 'Posts', count: '14' }
-  };
-
-  const frequencyData = {
-    photoURL: story.author.photoURL,
-    title: story.frequency.name,
-    subtitle: story.frequency.id,
-    meta: [],
-  };
-
+const StoryContainerPure = ({ data: { story } }) => {
+  console.log(story);
   return (
     <FlexContainer justifyContent="center">
       <Column type="secondary">
-        <UserProfile data={userData} />
-        <FrequencyProfile data={frequencyData} />
+        <UserProfile data={{ user: story.author }} size="medium" />
+        <FrequencyProfile data={{ frequency: story.frequency }} size="medium" />
       </Column>
 
       <Column type="primary">
