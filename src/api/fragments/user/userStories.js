@@ -1,14 +1,15 @@
 import { gql } from 'react-apollo';
 import { storyInfoFragment } from '../story/storyInfo';
 
-export const userStoryFragment = gql`
+export const userStoriesFragment = gql`
   fragment userStories on User {
-    storyConnection {
+    storyConnection(first: 10, after: $after) {
       pageInfo {
         hasNextPage
         hasPreviousPage
       }
       edges {
+        cursor
         node {
           ...storyInfo
         }

@@ -1,38 +1,22 @@
+// @flow
+// $FlowFixMe
 import { graphql, gql } from 'react-apollo';
+import { userInfoFragment } from '../../api/fragments/user/userInfo';
+import { userStoriesFragment } from '../../api/fragments/user/userStories';
+import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
 
-const MoreStoriesQuery = gql`
-  query user($username: String, $after: String) {
+const LoadMoreStories = gql`
+  query loadMoreUserStories($username: String, $after: String) {
     user(username: $username) {
-      uid
-      username
-      storyConnection(first: 10, after: $after) {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          cursor
-          node {
-            id
-            messageCount
-            author {
-              uid
-              photoURL
-              displayName
-              username
-            }
-            content {
-              title
-              description
-            }
-          }
-        }
-      }
+      ...userInfo
+      ...userStories
     }
   }
+  ${userInfoFragment}
+  ${userStoriesFragment}
 `;
 
-const queryOptions = {
+const storiesQueryOptions = {
   options: ({ username }) => ({
     variables: {
       username: username,
@@ -46,7 +30,7 @@ const queryOptions = {
       stories: user ? user.storyConnection.edges : '',
       fetchMore: () =>
         fetchMore({
-          query: MoreStoriesQuery,
+          query: LoadMoreStories,
           variables: {
             after: user.storyConnection.edges[
               user.storyConnection.edges.length - 1
@@ -76,42 +60,27 @@ const queryOptions = {
   }),
 };
 
-export const getUser = graphql(
+export const getUserStories = graphql(
   gql`
-		query getUser($username: String) {
+		query getUserStories($username: String, $after: String) {
 			user(username: $username) {
-        uid
-        username
-        storyConnection(first: 10) {
-          pageInfo {
-            hasNextPage
-            hasPreviousPage
-          }
-          edges {
-            cursor
-            node {
-              id
-              messageCount
-              author {
-                uid
-                photoURL
-                displayName
-                username
-              }
-              content {
-                title
-                description
-              }
-            }
-          }
-        }
+        ...userInfo
+        ...userStories
       }
 		}
+    ${userInfoFragment}
+    ${userStoriesFragment}
 	`,
-  queryOptions
+  storiesQueryOptions
 );
 
-const queryOptionsUserProfile = {
+/*
+  Loads the sidebar profile component widget independent of the story feed.
+  In the future we can compose these queries together since they are fetching
+  such similar data, but for now we're making a decision to keep the data
+  queries specific to each component.
+*/
+const profileQueryOptions = {
   options: ({ username }) => ({
     variables: {
       username: username,
@@ -123,16 +92,12 @@ export const getUserProfile = graphql(
   gql`
 		query getUserProfile($username: String) {
 			user(username: $username) {
-        uid
-        username
-        photoURL
-        displayName
-        email
-        metaData {
-          stories
-        }
+        ...userInfo
+        ...userMetaData
       }
 		}
+    ${userInfoFragment}
+    ${userMetaDataFragment}
 	`,
-  queryOptionsUserProfile
+  profileQueryOptions
 );

@@ -1,4 +1,4 @@
-//@flow
+// @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import {
@@ -12,7 +12,7 @@ import {
 } from '../../api/fragments/community/communityMetaData';
 
 const LoadMoreStories = gql`
-  query community($slug: String, $after: String) {
+  query loadMoreCommunityStories($slug: String, $after: String) {
     community(slug: $slug) {
       ...communityInfo
       ...communityStories
@@ -22,7 +22,7 @@ const LoadMoreStories = gql`
   ${communityStoriesFragment}
 `;
 
-const queryOptions = {
+const storiesQueryOptions = {
   options: ({ slug }) => ({
     variables: {
       slug: slug,
@@ -66,9 +66,9 @@ const queryOptions = {
   }),
 };
 
-export const getCommunity = graphql(
+export const getCommunityStories = graphql(
   gql`
-		query community($slug: String, $after: String) {
+		query getCommunityStories($slug: String, $after: String) {
 			community(slug: $slug) {
         ...communityInfo
         ...communityStories
@@ -77,10 +77,16 @@ export const getCommunity = graphql(
     ${communityStoriesFragment}
     ${communityInfoFragment}
 	`,
-  queryOptions
+  storiesQueryOptions
 );
 
-const queryOptionsCommunityProfile = {
+/*
+  Loads the sidebar profile component widget independent of the story feed.
+  In the future we can compose these queries together since they are fetching
+  such similar data, but for now we're making a decision to keep the data
+  queries specific to each component.
+*/
+const profileQueryOptions = {
   options: ({ slug }) => ({
     variables: {
       slug: slug,
@@ -99,5 +105,5 @@ export const getCommunityProfile = graphql(
     ${communityInfoFragment}
     ${communityMetaDataFragment}
 	`,
-  queryOptionsCommunityProfile
+  profileQueryOptions
 );

@@ -9,9 +9,9 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
 import { FrequencyProfile } from '../../components/profile';
-import { getFrequency, getFrequencyProfile } from './queries';
+import { getFrequencyStories, getFrequencyProfile } from './queries';
 
-const enhance = compose(getFrequency);
+const enhance = compose(getFrequencyStories);
 const StoryFeedWithData = enhance(StoryFeed);
 
 const enhanceProfile = compose(getFrequencyProfile);

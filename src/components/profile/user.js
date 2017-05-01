@@ -27,12 +27,6 @@ const displayLoadingState = branch(
   renderComponent(LoadingCard)
 );
 
-type Props = {
-  user: UserDataProps,
-  loading: Boolean,
-  error: Boolean,
-};
-
 type UserProps = {
   uid: String,
   photoURL: String,

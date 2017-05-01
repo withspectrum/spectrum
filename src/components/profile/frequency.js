@@ -29,12 +29,6 @@ const displayLoadingState = branch(
   renderComponent(LoadingCard)
 );
 
-type Props = {
-  frequency: FrequencyProps,
-  loading: Boolean,
-  error: Boolean,
-};
-
 type FrequencyProps = {
   id: String,
   name: String,

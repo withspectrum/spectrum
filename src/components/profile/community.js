@@ -28,12 +28,6 @@ const displayLoadingState = branch(
   renderComponent(LoadingCard)
 );
 
-type Props = {
-  community: CommunityProps,
-  loading: Boolean,
-  error: Boolean,
-};
-
 type CommunityProps = {
   id: String,
   name: String,
@@ -47,6 +41,7 @@ type CommunityProps = {
 const CommunityWithData = ({
   data: { community },
   profileSize,
+  data,
 }: {
   data: { community: CommunityProps },
   profileSize: ProfileSizeProps,

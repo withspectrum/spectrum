@@ -1,42 +1,34 @@
+// @flow
+// $FlowFixMe
 import { graphql, gql } from 'react-apollo';
+import {
+  frequencyInfoFragment,
+} from '../../api/fragments/frequency/frequencyInfo';
+import {
+  frequencyStoriesFragment,
+} from '../../api/fragments/frequency/frequencyStories';
+import {
+  frequencyMetaDataFragment,
+} from '../../api/fragments/frequency/frequencyMetaData';
+import {
+  communityInfoFragment,
+} from '../../api/fragments/community/communityInfo';
 
-const MoreStoriesQuery = gql`
-  query frequency($id: ID, $after: String) {
+const LoadMoreStories = gql`
+  query loadMoreFrequencyStories($id: ID, $after: String) {
     frequency(id: $id) {
-      id
-      name
-      slug
-      storyConnection(first: 10, after: $after) {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          cursor
-          node {
-            id
-            messageCount
-            author {
-              uid
-              photoURL
-              displayName
-              username
-            }
-            content {
-              title
-              description
-            }
-          }
-        }
-      }
+      ...frequencyInfo
+      ...frequencyStories
     }
   }
+  ${frequencyInfoFragment}
+  ${frequencyStoriesFragment}
 `;
 
-const queryOptions = {
+const storiesQueryOptions = {
   options: ({ slug, community }) => ({
     variables: {
-      slug: console.log(slug, community) || slug,
+      slug: slug,
       community: community,
     },
   }),
@@ -48,7 +40,7 @@ const queryOptions = {
       stories: frequency ? frequency.storyConnection.edges : '',
       fetchMore: () =>
         fetchMore({
-          query: MoreStoriesQuery,
+          query: LoadMoreStories,
           variables: {
             after: frequency.storyConnection.edges[
               frequency.storyConnection.edges.length - 1
@@ -78,46 +70,30 @@ const queryOptions = {
   }),
 };
 
-export const getFrequency = graphql(
+export const getFrequencyStories = graphql(
   gql`
-		query getFrequency($slug: String, $community: String) {
+    query getFrequencyStories($slug: String, $community: String, $after: String) {
 			frequency(slug: $slug, community: $community) {
-        id
-        name
-        slug
-        storyConnection(first: 10) {
-          pageInfo {
-            hasNextPage
-            hasPreviousPage
-          }
-          edges {
-            cursor
-            node {
-              id
-              messageCount
-              author {
-                uid
-                photoURL
-                displayName
-                username
-              }
-              content {
-                title
-                description
-              }
-            }
-          }
-        }
+        ...frequencyInfo
+        ...frequencyStories
       }
-		}
+    }
+    ${frequencyInfoFragment}
+    ${frequencyStoriesFragment}
 	`,
-  queryOptions
+  storiesQueryOptions
 );
 
-const queryOptionsFrequencyProfile = {
+/*
+  Loads the sidebar profile component widget independent of the story feed.
+  In the future we can compose these queries together since they are fetching
+  such similar data, but for now we're making a decision to keep the data
+  queries specific to each component.
+*/
+const profileQueryOptions = {
   options: ({ slug, community }) => ({
     variables: {
-      slug: console.log(slug, community) || slug,
+      slug: slug,
       community: community,
     },
   }),
@@ -127,20 +103,16 @@ export const getFrequencyProfile = graphql(
   gql`
 		query getFrequencyProfile($slug: String, $community: String) {
 			frequency(slug: $slug, community: $community) {
-        id
-        name
-        slug
+        ...frequencyInfo
         community {
-          id
-          name
-          slug
+          ...communityInfo
         }
-        metaData {
-          stories
-          subscribers
-        }
+        ...frequencyMetaData
       }
 		}
+    ${frequencyInfoFragment}
+    ${communityInfoFragment}
+    ${frequencyMetaDataFragment}
 	`,
-  queryOptionsFrequencyProfile
+  profileQueryOptions
 );

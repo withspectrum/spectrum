@@ -8,9 +8,9 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
 import { UserProfile } from '../../components/profile';
-import { getUser, getUserProfile } from './queries';
+import { getUserStories, getUserProfile } from './queries';
 
-const enhanceStoryFeed = compose(getUser);
+const enhanceStoryFeed = compose(getUserStories);
 const StoryFeedWithData = enhanceStoryFeed(StoryFeed);
 
 const enhanceProfile = compose(getUserProfile);
