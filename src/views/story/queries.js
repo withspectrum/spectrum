@@ -15,10 +15,25 @@ export const getStory = graphql(
         displayName
         username
         photoURL
+        uid
+        email
+        metaData {
+          stories
+        }
       }
       frequency {
         id
         name
+        slug
+        description
+        community {
+          name
+          slug
+        }
+        metaData {
+          stories
+          subscribers
+        }
       }
       messageConnection(first: 100) {
         edges {

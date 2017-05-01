@@ -9,7 +9,7 @@ import pure from 'recompose/pure';
 //$FlowFixMe
 import renderComponent from 'recompose/renderComponent';
 import { getEverything } from '../queries';
-import Loading from '../../../components/loading';
+import { Loading } from '../../../components/loading';
 
 // TODO: Brian - figure out how to abstract this out to be used anywhere
 const displayLoadingState = branch(

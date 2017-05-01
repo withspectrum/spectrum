@@ -1,6 +1,17 @@
 // @flow
 import React from 'react';
 import Card from '../card';
+//$FlowFixMe
+import compose from 'recompose/compose';
+//$FlowFixMe
+import pure from 'recompose/pure';
+//$FlowFixMe
+import renderComponent from 'recompose/renderComponent';
+//$FlowFixMe
+import branch from 'recompose/branch';
+//$FlowFixMe
+import { Link } from 'react-router-dom';
+import { LoadingCard } from '../loading';
 import {
   ProfileHeader,
   ProfileHeaderMeta,
@@ -10,47 +21,66 @@ import {
   Actions,
   ActionOutline,
 } from './style';
-import { FrequencyMetaData } from './metaData';
+import { MetaData } from './metaData';
+import type { ProfileSizeProps } from './index';
+
+const displayLoadingState = branch(
+  props => props.data.loading,
+  renderComponent(LoadingCard)
+);
 
 type FrequencyProps = {
-  size?: 'mini' | 'small' | 'medium' | 'large' | 'full',
-  data: {
-    title: string,
-    subtitle: string,
-    description?: string,
-    id?: string,
+  id: String,
+  name: String,
+  slug: String,
+  description: String,
+  community: {
+    slug: String,
+    name: String,
   },
-  meta: Array<any>,
+  metaData: {
+    stories: Number,
+    subscribers: Number,
+  },
 };
 
-const Frequency = (props: FrequencyProps): React$Element<any> => {
-  const size = props.size || 'mini';
+const FrequencyWithData = ({
+  data: { frequency },
+  profileSize,
+}: {
+  data: { frequency: FrequencyProps },
+  profileSize: ProfileSizeProps,
+}): React$Element<any> => {
+  const componentSize = profileSize || 'mini';
   return (
-    <Card {...props}>
+    <Card>
       <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
         <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-          <Title>{props.data.title}</Title>
-          <Subtitle>{props.data.subtitle}</Subtitle>
+          <Link to={`/${frequency.community.slug}/${frequency.slug}`}>
+            <Title>{frequency.name}</Title>
+          </Link>
+          <Link to={`/${frequency.community.slug}`}>
+            <Subtitle>{frequency.community.name}</Subtitle>
+          </Link>
         </ProfileHeaderMeta>
       </ProfileHeader>
 
-      {size !== 'mini' &&
-        size !== 'small' &&
+      {componentSize !== 'mini' &&
+        componentSize !== 'small' &&
         <Description>
-          {props.data.description}
+          {frequency.description}
         </Description>}
 
-      {size !== 'mini' &&
+      {componentSize !== 'mini' &&
         <Actions>
           <ActionOutline>Follow</ActionOutline>
         </Actions>}
 
-      {size !== 'mini' &&
-        size !== 'small' &&
-        size !== 'medium' &&
-        <FrequencyMetaData type="frequency" id={props.data.id} />}
+      {(componentSize === 'large' || componentSize === 'full') &&
+        <MetaData data={frequency.metaData} />}
     </Card>
   );
 };
 
+const Frequency = compose(displayLoadingState, pure)(FrequencyWithData);
 export default Frequency;
