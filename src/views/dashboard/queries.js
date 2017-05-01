@@ -1,14 +1,16 @@
+// @flow
+// $FlowFixMe
 import { graphql, gql } from 'react-apollo';
+import { userInfoFragment } from '../../api/fragments/user/userInfo';
+import {
+  userCommunitiesFragment,
+} from '../../api/fragments/user/userCommunities';
+import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
 
-const MoreStoriesQuery = gql`
-  query everything($after: String) {
+const LoadMoreStories = gql`
+  query loadMoreEverythingStories($after: String) {
     user: currentUser {
-      uid
-      lastSeen
-      photoURL
-      displayName
-      username
-      email
+      ...userInfo
       everything(first: 10, after: $after){
   			pageInfo {
   			  hasNextPage
@@ -30,35 +32,14 @@ const MoreStoriesQuery = gql`
           }
         }
       }
-      communityConnection {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          node {
-            id
-            name
-            slug
-            frequencyConnection {
-              pageInfo {
-                hasNextPage
-                hasPreviousPage
-              }
-              edges {
-                node {
-                  id
-                }
-              }
-            }
-          }
-        }
-      }
+      ...userCommunities
     }
   }
+  ${userInfoFragment}
+  ${userCommunitiesFragment}
 `;
 
-const queryOptions = {
+const storiesQueryOptions = {
   props: ({ data: { fetchMore, error, loading, user } }) => ({
     data: {
       error,
@@ -67,7 +48,7 @@ const queryOptions = {
       stories: user ? user.everything.edges : '',
       fetchMore: () =>
         fetchMore({
-          query: MoreStoriesQuery,
+          query: LoadMoreStories,
           variables: {
             after: user.everything.edges[user.everything.edges.length - 1]
               .cursor,
@@ -95,16 +76,11 @@ const queryOptions = {
   }),
 };
 
-export const getEverything = graphql(
+export const getEverythingStories = graphql(
   gql`
   {
     user: currentUser {
-      uid
-      lastSeen
-      photoURL
-      displayName
-      username
-      email
+      ...userInfo
       everything(first: 10){
   			pageInfo {
   			  hasNextPage
@@ -126,32 +102,30 @@ export const getEverything = graphql(
           }
         }
       }
-      communityConnection {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          node {
-            id
-            name
-            slug
-            frequencyConnection {
-              pageInfo {
-                hasNextPage
-                hasPreviousPage
-              }
-              edges {
-                node {
-                  id
-                }
-              }
-            }
-          }
-        }
-      }
+      ...userCommunities
     }
   }
+  ${userInfoFragment}
+  ${userCommunitiesFragment}
 `,
-  queryOptions
+  storiesQueryOptions
+);
+
+/*
+  Loads the sidebar profile component widget independent of the story feed.
+  In the future we can compose these queries together since they are fetching
+  such similar data, but for now we're making a decision to keep the data
+  queries specific to each component.
+*/
+export const getCurrentUserProfile = graphql(
+  gql`
+    {
+			user: currentUser {
+        ...userInfo
+        ...userMetaData
+      }
+		}
+    ${userInfoFragment}
+    ${userMetaDataFragment}
+	`
 );
