@@ -1,21 +1,131 @@
 import { graphql, gql, createFragment } from 'react-apollo';
 
+const userFragments = {
+  userInfo: gql`
+    fragment userInfo on User {
+      uid
+      photoURL
+      displayName
+      username
+    }
+  `,
+  userMetaData: gql`
+    fragment userMetaData on User {
+      stories
+    }
+  `,
+  userCommunities: gql`
+    fragment userCommunities on User {
+      communityConnection {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+        edges {
+          node {
+            ...communityInfo
+          }
+        }
+      }
+    }
+    ${communityFragments.communityInfo}
+  `,
+  userFrequencies: gql`
+    fragment userFrequencies on User {
+      frequencyConnection {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+        edges {
+          node {
+            ...frequencyInfo
+          }
+        }
+      }
+    }
+    ${frequencyFragments.frequencyInfo}
+  `,
+  userStories: gql`
+    fragment userStories on User {
+      storyConnection {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+        edges {
+          node {
+            ...storyInfo
+          }
+        }
+      }
+    }
+    ${storyFragments.storyInfo}
+  `,
+};
+
 const storyFragments = {
   storyInfo: gql`
     fragment storyInfo on Story {
       id
       messageCount
       author {
-        uid
-        photoURL
-        displayName
-        username
+        ...userInfo
       }
       content {
         title
         description
       }
     }
+    ${userFragments.userInfo}
+  `,
+};
+
+const frequencyFragments = {
+  frequencyInfo: gql`
+    fragment frequencyInfo on Frequency {
+      id
+      name
+      slug
+      description
+      community {
+        ...communityInfo
+      }
+    }
+    ${communityFragments.communityInfo}
+  `,
+  frequencySubscribers: gql`
+    fragment frequencySubscribers on Frequency {
+      subscriberConnection {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+        edges {
+          node {
+            ...userInfo
+          }
+        }
+      }
+    }
+    ${userFragments.userInfo}
+  `,
+  frequencyStories: gql`
+    fragment frequencyStories on Frequency {
+      storyConnection(first: 10, after: $after) {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+        edges {
+          cursor
+          node {
+            ...storyInfo
+          }
+        }
+      }
+    }
+    ${storyFragments.storyInfo}
   `,
 };
 
