@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
@@ -17,18 +18,16 @@ const enhanceProfile = compose(getCommunityProfile);
 const CommunityProfileWithData = enhanceProfile(CommunityProfile);
 
 const CommunityViewPure = ({ match }) => {
+  const communitySlug = match.params.communitySlug;
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <CommunityProfileWithData
-          slug={match.params.communitySlug}
-          profileSize="full"
-        />
+        <CommunityProfileWithData slug={communitySlug} profileSize="full" />
       </Column>
 
       <Column type="primary" alignItems="center">
         <StoryComposer activeCommunity={match.params.communityId} />
-        <StoryFeedWithData slug={match.params.communitySlug} />
+        <StoryFeedWithData slug={communitySlug} />
       </Column>
     </AppViewWrapper>
   );

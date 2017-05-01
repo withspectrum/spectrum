@@ -1,30 +1,32 @@
+// @flow
 import React from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import withProps from 'recompose/withProps';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
 import { UserProfile } from '../../components/profile';
 import { getUser, getUserProfile } from './queries';
 
-const UserViewPure = ({ match }) => {
-  const enhanceStoryFeed = compose(withProps({ match }), getUser);
-  const StoryFeedWithData = enhanceStoryFeed(StoryFeed);
+const enhanceStoryFeed = compose(getUser);
+const StoryFeedWithData = enhanceStoryFeed(StoryFeed);
 
-  const enhanceProfile = compose(withProps({ match }), getUserProfile);
-  const UserProfileWithData = enhanceProfile(UserProfile);
+const enhanceProfile = compose(getUserProfile);
+const UserProfileWithData = enhanceProfile(UserProfile);
+
+const UserViewPure = ({ match }) => {
+  const username = match.params.username;
 
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <UserProfileWithData profileSize="full" />
+        <UserProfileWithData username={username} profileSize="full" />
       </Column>
+
       <Column type="primary" alignItems="center">
-        <StoryFeedWithData />
+        <StoryFeedWithData username={username} />
       </Column>
     </AppViewWrapper>
   );

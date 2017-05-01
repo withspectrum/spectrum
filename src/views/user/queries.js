@@ -33,9 +33,9 @@ const MoreStoriesQuery = gql`
 `;
 
 const queryOptions = {
-  options: ({ match }) => ({
+  options: ({ username }) => ({
     variables: {
-      username: match.params.userId,
+      username: username,
     },
   }),
   props: ({ data: { fetchMore, error, loading, user } }) => ({
@@ -112,9 +112,9 @@ export const getUser = graphql(
 );
 
 const queryOptionsUserProfile = {
-  options: ({ match }) => ({
+  options: ({ username }) => ({
     variables: {
-      username: match.params.userId,
+      username: username,
     },
   }),
 };

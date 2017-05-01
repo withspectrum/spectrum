@@ -29,39 +29,44 @@ const displayLoadingState = branch(
   renderComponent(LoadingCard)
 );
 
-type FrequencyDataProps = {
-  data: {
-    frequency: {
-      id: String,
-      name: String,
-      slug: String,
-      description: String,
-      metaData: {
-        stories: Number,
-        subscribers: Number,
-      },
-    },
-    loading: Boolean,
-    error: Boolean,
+type Props = {
+  frequency: FrequencyProps,
+  loading: Boolean,
+  error: Boolean,
+};
+
+type FrequencyProps = {
+  id: String,
+  name: String,
+  slug: String,
+  description: String,
+  community: {
+    slug: String,
+    name: String,
+  },
+  metaData: {
+    stories: Number,
+    subscribers: Number,
   },
 };
 
 const FrequencyWithData = ({
-  data,
+  data: { frequency },
   profileSize,
-}: { data: FrequencyDataProps, profileSize: ProfileSizeProps }): React$Element<
-  any
-> => {
+}: {
+  data: { frequency: FrequencyProps },
+  profileSize: ProfileSizeProps,
+}): React$Element<any> => {
   const componentSize = profileSize || 'mini';
   return (
     <Card>
       <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
         <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-          <Link to={`/${data.frequency.community.slug}/${data.frequency.slug}`}>
-            <Title>{data.frequency.name}</Title>
+          <Link to={`/${frequency.community.slug}/${frequency.slug}`}>
+            <Title>{frequency.name}</Title>
           </Link>
-          <Link to={`/${data.frequency.community.slug}`}>
-            <Subtitle>{data.frequency.community.name}</Subtitle>
+          <Link to={`/${frequency.community.slug}`}>
+            <Subtitle>{frequency.community.name}</Subtitle>
           </Link>
         </ProfileHeaderMeta>
       </ProfileHeader>
@@ -69,7 +74,7 @@ const FrequencyWithData = ({
       {componentSize !== 'mini' &&
         componentSize !== 'small' &&
         <Description>
-          {data.frequency.description}
+          {frequency.description}
         </Description>}
 
       {componentSize !== 'mini' &&
@@ -78,7 +83,7 @@ const FrequencyWithData = ({
         </Actions>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
-        <MetaData data={data} type="frequency" />}
+        <MetaData data={frequency.metaData} />}
     </Card>
   );
 };

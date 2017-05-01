@@ -59,7 +59,7 @@ class Routes extends Component {
               <Route path="/messages" component={DirectMessages} />
               <Route path="/story" component={Story} />
               <Route exact path="/users" render={() => <Redirect to="/" />} />
-              <Route exact path="/users/:userId" component={UserView} />
+              <Route exact path="/users/:username" component={UserView} />
               <Route path="/notifications" component={Notifications} />
 
               {/*

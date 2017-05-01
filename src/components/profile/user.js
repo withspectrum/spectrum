@@ -27,26 +27,26 @@ const displayLoadingState = branch(
   renderComponent(LoadingCard)
 );
 
-type UserDataProps = {
-  data: {
-    user: {
-      uid: String,
-      photoURL: String,
-      displayName: String,
-      username: String,
-      metaData: {
-        stories: Number,
-      },
-    },
-    loading: Boolean,
-    error: Boolean,
+type Props = {
+  user: UserDataProps,
+  loading: Boolean,
+  error: Boolean,
+};
+
+type UserProps = {
+  uid: String,
+  photoURL: String,
+  displayName: String,
+  username: String,
+  metaData: {
+    stories: Number,
   },
 };
 
 const UserWithData = ({
-  data,
+  data: { user },
   profileSize,
-}: { data: UserDataProps, profileSize: ProfileSizeProps }): React$Element<
+}: { data: { user: UserProps }, profileSize: ProfileSizeProps }): React$Element<
   any
 > => {
   const componentSize = profileSize || 'mini';
@@ -57,11 +57,11 @@ const UserWithData = ({
           margin={'0 12px 0 0'}
           size={40}
           radius={4}
-          src={data.user.photoURL}
+          src={user.photoURL}
         />
         <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-          <Title>{data.user.displayName}</Title>
-          <Subtitle>{data.user.username}</Subtitle>
+          <Title>{user.displayName}</Title>
+          <Subtitle>{user.username}</Subtitle>
         </ProfileHeaderMeta>
       </ProfileHeader>
 
@@ -71,7 +71,7 @@ const UserWithData = ({
         </Actions>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
-        <MetaData data={data} type="user" />}
+        <MetaData data={user.metaData} />}
     </Card>
   );
 };

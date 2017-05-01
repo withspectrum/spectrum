@@ -12,6 +12,7 @@ import { Meta, MetaList, MetaListItem, Label, Count } from './style';
   easy to extend or modify as needed
 */
 const buildArray = (meta: Object): Array<any> => {
+  // Apollo returns a __typename field in the data object; filter it out
   return Object.keys(meta).filter(item => item !== '__typename').map(item => {
     if (item === 'stories') {
       return Object.assign(
@@ -59,10 +60,8 @@ const buildArray = (meta: Object): Array<any> => {
   });
 };
 
-const MetaDataPure = ({ data, type }) => {
-  // determines if we are looking at a frequency, user, or community
-  const meta = data[type].metaData;
-  const arr = buildArray(meta);
+const MetaDataPure = ({ data }) => {
+  const arr = buildArray(data);
 
   return (
     <Meta>

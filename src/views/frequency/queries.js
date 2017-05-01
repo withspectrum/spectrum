@@ -34,10 +34,10 @@ const MoreStoriesQuery = gql`
 `;
 
 const queryOptions = {
-  options: ({ match }) => ({
+  options: ({ slug, community }) => ({
     variables: {
-      slug: match.params.frequencySlug,
-      community: match.params.communitySlug,
+      slug: console.log(slug, community) || slug,
+      community: community,
     },
   }),
   props: ({ data: { fetchMore, error, loading, frequency } }) => ({
@@ -115,10 +115,10 @@ export const getFrequency = graphql(
 );
 
 const queryOptionsFrequencyProfile = {
-  options: ({ match }) => ({
+  options: ({ slug, community }) => ({
     variables: {
-      slug: match.params.frequencySlug,
-      community: match.params.communitySlug,
+      slug: console.log(slug, community) || slug,
+      community: community,
     },
   }),
 };

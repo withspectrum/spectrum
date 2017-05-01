@@ -8,6 +8,7 @@ import pure from 'recompose/pure';
 import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
+//$FlowFixMe
 import Textarea from 'react-textarea-autosize';
 import { LinkButton } from '../buttons';
 import Icon from '../icons';

@@ -28,36 +28,37 @@ const displayLoadingState = branch(
   renderComponent(LoadingCard)
 );
 
-type CommunityDataProps = {
-  data: {
-    community: {
-      id: String,
-      name: String,
-      slug: String,
-      metaData: {
-        frequencies: Number,
-        members: Number,
-      },
-    },
-    loading: Boolean,
-    error: Boolean,
+type Props = {
+  community: CommunityProps,
+  loading: Boolean,
+  error: Boolean,
+};
+
+type CommunityProps = {
+  id: String,
+  name: String,
+  slug: String,
+  metaData: {
+    frequencies: Number,
+    members: Number,
   },
 };
 
 const CommunityWithData = ({
-  data,
+  data: { community },
   profileSize,
-}: { data: CommunityDataProps, profileSize: ProfileSizeProps }): React$Element<
-  any
-> => {
+}: {
+  data: { community: CommunityProps },
+  profileSize: ProfileSizeProps,
+}): React$Element<any> => {
   const componentSize = profileSize || 'mini';
 
   return (
     <Card>
       <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
         <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-          <Link to={`/${data.community.slug}`}>
-            <Title>{data.community.name}</Title>
+          <Link to={`/${community.slug}`}>
+            <Title>{community.name}</Title>
           </Link>
         </ProfileHeaderMeta>
       </ProfileHeader>
@@ -65,7 +66,7 @@ const CommunityWithData = ({
       {componentSize !== 'mini' &&
         componentSize !== 'small' &&
         <Description>
-          {data.community.description}
+          {community.description}
         </Description>}
 
       {componentSize !== 'mini' &&
@@ -74,7 +75,7 @@ const CommunityWithData = ({
         </Actions>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
-        <MetaData data={data} type="community" />}
+        <MetaData data={community.metaData} />}
     </Card>
   );
 };
