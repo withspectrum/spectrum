@@ -9,19 +9,18 @@ import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
 import StoryFeedCard from '../storyFeedCard';
-import Loading from '../loading';
+import { LoadingCard } from '../loading';
 import { Button } from '../buttons';
 
 const displayLoadingState = branch(
   props => props.data.loading,
-  renderComponent(Loading)
+  renderComponent(LoadingCard)
 );
 
 const StoryFeedPure = ({
   data: { stories, loading, fetchMore, error },
   data,
 }) => {
-  console.log('story feed', stories);
   if (error) {
     return <div>Oops, something went wrong</div>;
   }

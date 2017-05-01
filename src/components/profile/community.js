@@ -11,22 +11,21 @@ import renderComponent from 'recompose/renderComponent';
 import branch from 'recompose/branch';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
-import Loading from '../loading';
+import { LoadingCard } from '../loading';
 import {
   ProfileHeader,
   ProfileHeaderMeta,
   Title,
-  Subtitle,
   Description,
   Actions,
-  Action,
   ActionOutline,
 } from './style';
 import { MetaData } from './metaData';
+import type { ProfileSizeProps } from './index';
 
 const displayLoadingState = branch(
   props => props.data.loading,
-  renderComponent(Loading)
+  renderComponent(LoadingCard)
 );
 
 type CommunityDataProps = {
@@ -45,18 +44,13 @@ type CommunityDataProps = {
   },
 };
 
-type ProfileSizeProps = {
-  size: 'mini' | 'small' | 'medium' | 'large' | 'full',
-};
-
 const CommunityWithData = ({
   data,
-  size,
-}: { data: CommunityDataProps, size: ProfileSizeProps }): React$Element<
+  profileSize,
+}: { data: CommunityDataProps, profileSize: ProfileSizeProps }): React$Element<
   any
 > => {
-  console.log('here ', data, size);
-  const componentSize = size || 'mini';
+  const componentSize = profileSize || 'mini';
 
   return (
     <Card>
@@ -85,5 +79,5 @@ const CommunityWithData = ({
   );
 };
 
-const Community = compose(displayLoadingState)(CommunityWithData);
+const Community = compose(displayLoadingState, pure)(CommunityWithData);
 export default Community;

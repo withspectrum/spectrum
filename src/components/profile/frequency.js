@@ -11,7 +11,7 @@ import renderComponent from 'recompose/renderComponent';
 import branch from 'recompose/branch';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
-import Loading from '../loading';
+import { LoadingCard } from '../loading';
 import {
   ProfileHeader,
   ProfileHeaderMeta,
@@ -19,30 +19,40 @@ import {
   Subtitle,
   Description,
   Actions,
-  Action,
   ActionOutline,
 } from './style';
 import { MetaData } from './metaData';
+import type { ProfileSizeProps } from './index';
 
 const displayLoadingState = branch(
   props => props.data.loading,
-  renderComponent(Loading)
+  renderComponent(LoadingCard)
 );
 
-type FrequencyProfileProps = {
-  size?: 'mini' | 'small' | 'medium' | 'large' | 'full',
+type FrequencyDataProps = {
   data: {
-    title: string,
-    subtitle: string,
-    photoURL: string,
-    description?: string,
-    id?: string,
+    frequency: {
+      id: String,
+      name: String,
+      slug: String,
+      description: String,
+      metaData: {
+        stories: Number,
+        subscribers: Number,
+      },
+    },
+    loading: Boolean,
+    error: Boolean,
   },
-  meta: Array<any>,
 };
 
-const FrequencyWithData = ({ data, size }): React$Element<any> => {
-  const componentSize = size || 'mini';
+const FrequencyWithData = ({
+  data,
+  profileSize,
+}: { data: FrequencyDataProps, profileSize: ProfileSizeProps }): React$Element<
+  any
+> => {
+  const componentSize = profileSize || 'mini';
   return (
     <Card>
       <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
@@ -73,5 +83,5 @@ const FrequencyWithData = ({ data, size }): React$Element<any> => {
   );
 };
 
-const Frequency = compose(displayLoadingState)(FrequencyWithData);
+const Frequency = compose(displayLoadingState, pure)(FrequencyWithData);
 export default Frequency;

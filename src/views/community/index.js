@@ -3,11 +3,8 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import withProps from 'recompose/withProps';
 import StoryComposer from '../../components/storyComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
-import Loading from '../../components/loading';
 import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
 import { CommunityProfile } from '../../components/profile';
@@ -25,7 +22,7 @@ const CommunityViewPure = ({ match }) => {
       <Column type="secondary">
         <CommunityProfileWithData
           slug={match.params.communitySlug}
-          size="full"
+          profileSize="full"
         />
       </Column>
 

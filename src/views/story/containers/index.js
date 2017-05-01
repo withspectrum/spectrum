@@ -18,7 +18,7 @@ import { FlexContainer } from '../../../components/flexbox';
 import { Card } from '../../../components/card';
 import { UserProfile, FrequencyProfile } from '../../../components/profile';
 import { getStory } from '../queries';
-import Loading from '../../../components/loading';
+import { LoadingCard } from '../../../components/loading';
 
 const lifecycles = lifecycle({
   state: {
@@ -37,7 +37,7 @@ const lifecycles = lifecycle({
 // TODO: Brian - figure out how to abstract this out to be used anywhere
 const displayLoadingState = branch(
   props => !props.data || props.data.loading,
-  renderComponent(Loading)
+  renderComponent(LoadingCard)
 );
 
 const StoryContainerPure = ({ data: { story } }) => {

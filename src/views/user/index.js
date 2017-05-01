@@ -6,7 +6,6 @@ import pure from 'recompose/pure';
 //$FlowFixMe
 import withProps from 'recompose/withProps';
 import AppViewWrapper from '../../components/appViewWrapper';
-import Loading from '../../components/loading';
 import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
 import { UserProfile } from '../../components/profile';
@@ -22,7 +21,7 @@ const UserViewPure = ({ match }) => {
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <UserProfileWithData size="full" />
+        <UserProfileWithData profileSize="full" />
       </Column>
       <Column type="primary" alignItems="center">
         <StoryFeedWithData />

@@ -11,7 +11,7 @@ import branch from 'recompose/branch';
 import Textarea from 'react-textarea-autosize';
 import { LinkButton } from '../buttons';
 import Icon from '../icons';
-import Loading from '../loading';
+import { LoadingCard } from '../loading';
 import { getComposerCommunitiesAndFrequencies } from './queries';
 import {
   Container,
@@ -28,7 +28,7 @@ import {
 
 const displayLoadingState = branch(
   props => props.data.loading,
-  renderComponent(Loading)
+  renderComponent(LoadingCard)
 );
 
 class StoryComposerWithData extends Component {

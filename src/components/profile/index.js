@@ -26,15 +26,13 @@ const ProfilePure = (props: Object): React$Element<any> => {
   }
 };
 
+export type ProfileSizeProps = {
+  profileSize: 'mini' | 'small' | 'medium' | 'large' | 'full',
+};
+
 type ProfileProps = {
-  data: {
-    title: string,
-    subtitle: string,
-    photoURL?: string,
-    id?: string,
-  },
-  meta?: Array<any>,
-  size?: 'mini' | 'small' | 'medium' | 'large' | 'full',
+  data: Object,
+  profileSize: ProfileSizeProps,
 };
 
 export const Profile = compose(pure)(ProfilePure);

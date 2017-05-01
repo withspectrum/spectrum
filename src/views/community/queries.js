@@ -10,7 +10,6 @@ import {
 import {
   communityMetaDataFragment,
 } from '../../api/fragments/community/communityMetaData';
-import { userInfoFragment } from '../../api/fragments/user/userInfo';
 
 const LoadMoreStories = gql`
   query community($slug: String, $after: String) {

@@ -7,7 +7,6 @@ import pure from 'recompose/pure';
 import withProps from 'recompose/withProps';
 import StoryComposer from '../../components/storyComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
-import Loading from '../../components/loading';
 import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
 import { FrequencyProfile } from '../../components/profile';
@@ -23,7 +22,7 @@ const FrequencyViewPure = ({ match }) => {
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <FrequencyProfileWithData size="full" type="frequency" />
+        <FrequencyProfileWithData profileSize="full" type="frequency" />
       </Column>
       <Column type="primary" alignItems="center">
         <StoryComposer
