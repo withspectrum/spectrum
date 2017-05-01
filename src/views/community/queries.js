@@ -1,168 +1,16 @@
-import { graphql, gql, createFragment } from 'react-apollo';
-
-const userFragments = {
-  userInfo: gql`
-    fragment userInfo on User {
-      uid
-      photoURL
-      displayName
-      username
-    }
-  `,
-  userMetaData: gql`
-    fragment userMetaData on User {
-      stories
-    }
-  `,
-  userCommunities: gql`
-    fragment userCommunities on User {
-      communityConnection {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          node {
-            ...communityInfo
-          }
-        }
-      }
-    }
-    ${communityFragments.communityInfo}
-  `,
-  userFrequencies: gql`
-    fragment userFrequencies on User {
-      frequencyConnection {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          node {
-            ...frequencyInfo
-          }
-        }
-      }
-    }
-    ${frequencyFragments.frequencyInfo}
-  `,
-  userStories: gql`
-    fragment userStories on User {
-      storyConnection {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          node {
-            ...storyInfo
-          }
-        }
-      }
-    }
-    ${storyFragments.storyInfo}
-  `,
-};
-
-const storyFragments = {
-  storyInfo: gql`
-    fragment storyInfo on Story {
-      id
-      messageCount
-      author {
-        ...userInfo
-      }
-      content {
-        title
-        description
-      }
-    }
-    ${userFragments.userInfo}
-  `,
-};
-
-const frequencyFragments = {
-  frequencyInfo: gql`
-    fragment frequencyInfo on Frequency {
-      id
-      name
-      slug
-      description
-      community {
-        ...communityInfo
-      }
-    }
-    ${communityFragments.communityInfo}
-  `,
-  frequencySubscribers: gql`
-    fragment frequencySubscribers on Frequency {
-      subscriberConnection {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          node {
-            ...userInfo
-          }
-        }
-      }
-    }
-    ${userFragments.userInfo}
-  `,
-  frequencyStories: gql`
-    fragment frequencyStories on Frequency {
-      storyConnection(first: 10, after: $after) {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          cursor
-          node {
-            ...storyInfo
-          }
-        }
-      }
-    }
-    ${storyFragments.storyInfo}
-  `,
-};
-
-const communityFragments = {
-  communityStories: gql`
-    fragment communityStories on Community {
-      storyConnection(first: 10, after: $after) {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          cursor
-          node {
-            ...storyInfo
-          }
-        }
-      }
-    }
-    ${storyFragments.storyInfo}
-  `,
-  communityInfo: gql`
-    fragment communityInfo on Community {
-      id
-      name
-      slug
-    }
-  `,
-  communityMetaData: gql`
-    fragment communityMetaData on Community {
-      metaData {
-        frequencies
-        members
-      }
-    }
-  `,
-};
+//@flow
+// $FlowFixMe
+import { graphql, gql } from 'react-apollo';
+import {
+  communityInfoFragment,
+} from '../../api/fragments/community/communityInfo';
+import {
+  communityStoriesFragment,
+} from '../../api/fragments/community/communityStories';
+import {
+  communityMetaDataFragment,
+} from '../../api/fragments/community/communityMetaData';
+import { userInfoFragment } from '../../api/fragments/user/userInfo';
 
 const LoadMoreStories = gql`
   query community($slug: String, $after: String) {
@@ -171,14 +19,14 @@ const LoadMoreStories = gql`
       ...communityStories
     }
   }
-  ${communityFragments.communityInfo}
-  ${communityFragments.communityStories}
+  ${communityInfoFragment}
+  ${communityStoriesFragment}
 `;
 
 const queryOptions = {
-  options: ({ match }) => ({
+  options: ({ slug }) => ({
     variables: {
-      slug: match.params.communitySlug,
+      slug: slug,
     },
   }),
   props: ({ data: { fetchMore, error, loading, community } }) => ({
@@ -227,16 +75,16 @@ export const getCommunity = graphql(
         ...communityStories
       }
 		}
-    ${communityFragments.communityStories}
-    ${communityFragments.communityInfo}
+    ${communityStoriesFragment}
+    ${communityInfoFragment}
 	`,
   queryOptions
 );
 
 const queryOptionsCommunityProfile = {
-  options: ({ match }) => ({
+  options: ({ slug }) => ({
     variables: {
-      slug: match.params.communitySlug,
+      slug: slug,
     },
   }),
 };
@@ -249,8 +97,8 @@ export const getCommunityProfile = graphql(
         ...communityMetaData
       }
 		}
-    ${communityFragments.communityInfo}
-    ${communityFragments.communityMetaData}
+    ${communityInfoFragment}
+    ${communityMetaDataFragment}
 	`,
   queryOptionsCommunityProfile
 );

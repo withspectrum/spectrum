@@ -13,22 +13,25 @@ import StoryFeed from '../../components/storyFeed';
 import { CommunityProfile } from '../../components/profile';
 import { getCommunity, getCommunityProfile } from './queries';
 
+const enhanceStoryFeed = compose(getCommunity);
+const StoryFeedWithData = enhanceStoryFeed(StoryFeed);
+
+const enhanceProfile = compose(getCommunityProfile);
+const CommunityProfileWithData = enhanceProfile(CommunityProfile);
+
 const CommunityViewPure = ({ match }) => {
-  const enhanceStoryFeed = compose(withProps({ match }), getCommunity);
-  const StoryFeedWithData = enhanceStoryFeed(StoryFeed);
-
-  const enhanceProfile = compose(withProps({ match }), getCommunityProfile);
-  const CommunityProfileWithData = enhanceProfile(CommunityProfile);
-
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <CommunityProfileWithData size="full" />
+        <CommunityProfileWithData
+          slug={match.params.communitySlug}
+          size="full"
+        />
       </Column>
 
       <Column type="primary" alignItems="center">
         <StoryComposer activeCommunity={match.params.communityId} />
-        <StoryFeedWithData />
+        <StoryFeedWithData slug={match.params.communitySlug} />
       </Column>
     </AppViewWrapper>
   );

@@ -17,7 +17,6 @@ import { getEverything } from './queries';
 import Loading from '../../components/loading';
 import StoryFeed from '../../components/storyFeed';
 import StoryComposer from '../../components/storyComposer';
-import CommunityProfileCard from '../../components/communityProfileCard';
 import AppViewWrapper from '../../components/appViewWrapper';
 import {
   logout,

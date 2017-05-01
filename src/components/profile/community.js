@@ -29,7 +29,33 @@ const displayLoadingState = branch(
   renderComponent(Loading)
 );
 
-const CommunityWithData = ({ data, size }): React$Element<any> => {
+type CommunityDataProps = {
+  data: {
+    community: {
+      id: String,
+      name: String,
+      slug: String,
+      metaData: {
+        frequencies: Number,
+        members: Number,
+      },
+    },
+    loading: Boolean,
+    error: Boolean,
+  },
+};
+
+type ProfileSizeProps = {
+  size: 'mini' | 'small' | 'medium' | 'large' | 'full',
+};
+
+const CommunityWithData = ({
+  data,
+  size,
+}: { data: CommunityDataProps, size: ProfileSizeProps }): React$Element<
+  any
+> => {
+  console.log('here ', data, size);
   const componentSize = size || 'mini';
 
   return (
