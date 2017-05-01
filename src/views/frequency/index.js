@@ -13,7 +13,7 @@ import StoryFeed from '../../components/storyFeed';
 import { FrequencyProfile } from '../../components/profile';
 import { getFrequency, getFrequencyProfile } from './queries';
 
-const FrequencyProfileViewPure = ({ match }) => {
+const FrequencyViewPure = ({ match }) => {
   const enhance = compose(withProps({ match }), getFrequency);
   const StoryFeedWithData = enhance(StoryFeed);
 
@@ -36,5 +36,5 @@ const FrequencyProfileViewPure = ({ match }) => {
   );
 };
 
-export const FrequencyProfileView = pure(FrequencyProfileViewPure);
-export default FrequencyProfileView;
+export const FrequencyView = pure(FrequencyViewPure);
+export default FrequencyView;

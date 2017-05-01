@@ -1,11 +1,27 @@
-import { graphql, gql } from 'react-apollo';
+import { graphql, gql, createFragment } from 'react-apollo';
 
-const MoreStoriesQuery = gql`
-  query community($slug: String, $after: String) {
-    community(slug: $slug) {
+const storyFragments = {
+  storyInfo: gql`
+    fragment storyInfo on Story {
       id
-      name
-      slug
+      messageCount
+      author {
+        uid
+        photoURL
+        displayName
+        username
+      }
+      content {
+        title
+        description
+      }
+    }
+  `,
+};
+
+const communityFragments = {
+  communityStories: gql`
+    fragment communityStories on Community {
       storyConnection(first: 10, after: $after) {
         pageInfo {
           hasNextPage
@@ -14,23 +30,39 @@ const MoreStoriesQuery = gql`
         edges {
           cursor
           node {
-            id
-            messageCount
-            author {
-              uid
-              photoURL
-              displayName
-              username
-            }
-            content {
-              title
-              description
-            }
+            ...storyInfo
           }
         }
       }
     }
+    ${storyFragments.storyInfo}
+  `,
+  communityInfo: gql`
+    fragment communityInfo on Community {
+      id
+      name
+      slug
+    }
+  `,
+  communityMetaData: gql`
+    fragment communityMetaData on Community {
+      metaData {
+        frequencies
+        members
+      }
+    }
+  `,
+};
+
+const LoadMoreStories = gql`
+  query community($slug: String, $after: String) {
+    community(slug: $slug) {
+      ...communityInfo
+      ...communityStories
+    }
   }
+  ${communityFragments.communityInfo}
+  ${communityFragments.communityStories}
 `;
 
 const queryOptions = {
@@ -47,7 +79,7 @@ const queryOptions = {
       stories: community ? community.storyConnection.edges : '',
       fetchMore: () =>
         fetchMore({
-          query: MoreStoriesQuery,
+          query: LoadMoreStories,
           variables: {
             after: community.storyConnection.edges[
               community.storyConnection.edges.length - 1
@@ -79,36 +111,14 @@ const queryOptions = {
 
 export const getCommunity = graphql(
   gql`
-		query getCommunity($slug: String) {
+		query community($slug: String, $after: String) {
 			community(slug: $slug) {
-        id
-        name
-        slug
-        storyConnection(first: 10) {
-          pageInfo {
-            hasNextPage
-            hasPreviousPage
-          }
-          edges {
-            cursor
-            node {
-              id
-              messageCount
-              author {
-                uid
-                photoURL
-                displayName
-                username
-              }
-              content {
-                title
-                description
-              }
-            }
-          }
-        }
+        ...communityInfo
+        ...communityStories
       }
 		}
+    ${communityFragments.communityStories}
+    ${communityFragments.communityInfo}
 	`,
   queryOptions
 );
@@ -125,15 +135,12 @@ export const getCommunityProfile = graphql(
   gql`
 		query getCommunityProfile($slug: String) {
 			community(slug: $slug) {
-        id
-        name
-        slug
-        metaData {
-          frequencies
-          members
-        }
+        ...communityInfo
+        ...communityMetaData
       }
 		}
+    ${communityFragments.communityInfo}
+    ${communityFragments.communityMetaData}
 	`,
   queryOptionsCommunityProfile
 );

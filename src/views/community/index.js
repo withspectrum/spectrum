@@ -13,7 +13,7 @@ import StoryFeed from '../../components/storyFeed';
 import { CommunityProfile } from '../../components/profile';
 import { getCommunity, getCommunityProfile } from './queries';
 
-const CommunityProfileViewPure = ({ match }) => {
+const CommunityViewPure = ({ match }) => {
   const enhanceStoryFeed = compose(withProps({ match }), getCommunity);
   const StoryFeedWithData = enhanceStoryFeed(StoryFeed);
 
@@ -25,6 +25,7 @@ const CommunityProfileViewPure = ({ match }) => {
       <Column type="secondary">
         <CommunityProfileWithData size="full" />
       </Column>
+
       <Column type="primary" alignItems="center">
         <StoryComposer activeCommunity={match.params.communityId} />
         <StoryFeedWithData />
@@ -33,5 +34,5 @@ const CommunityProfileViewPure = ({ match }) => {
   );
 };
 
-export const CommunityProfileView = pure(CommunityProfileViewPure);
-export default CommunityProfileView;
+export const CommunityView = pure(CommunityViewPure);
+export default CommunityView;

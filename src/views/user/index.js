@@ -12,7 +12,7 @@ import StoryFeed from '../../components/storyFeed';
 import { UserProfile } from '../../components/profile';
 import { getUser, getUserProfile } from './queries';
 
-const UserProfileViewPure = ({ match }) => {
+const UserViewPure = ({ match }) => {
   const enhanceStoryFeed = compose(withProps({ match }), getUser);
   const StoryFeedWithData = enhanceStoryFeed(StoryFeed);
 
@@ -31,5 +31,5 @@ const UserProfileViewPure = ({ match }) => {
   );
 };
 
-export const UserProfileView = pure(UserProfileViewPure);
-export default UserProfileView;
+export const UserView = pure(UserViewPure);
+export default UserView;
