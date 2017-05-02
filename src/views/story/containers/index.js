@@ -25,6 +25,7 @@ const lifecycles = lifecycle({
     subscribed: false,
   },
   componentDidUpdate() {
+    console.log('cdu', this.props);
     if (!this.props.data.loading && !this.state.subscribed) {
       this.setState({
         subscribed: true,
@@ -40,25 +41,32 @@ const displayLoadingState = branch(
   renderComponent(Loading)
 );
 
-const StoryContainerPure = ({ data: { story } }) => {
+const StoryContainerPure = ({ data }) => {
+  console.log('component ', data);
   return (
     <FlexContainer justifyContent="center">
       <Column type="secondary">
-        <UserProfile data={{ user: story.author }} profileSize={'medium'} />
-        <FrequencyProfile data={{ frequency: story.frequency }} size="medium" />
+        <UserProfile
+          data={{ user: data.story.author }}
+          profileSize={'medium'}
+        />
+        <FrequencyProfile
+          data={{ frequency: data.story.frequency }}
+          size="medium"
+        />
       </Column>
 
       <Column type="primary">
         <Card>
-          <StoryDetail story={story} />
+          <StoryDetail story={data.story} />
         </Card>
 
         <Card>
-          <Messages messages={story.messageConnection.edges} />
+          <Messages messages={data.story.messageConnection.edges} />
         </Card>
 
         <Card>
-          <ChatInput thread={story.id} />
+          <ChatInput thread={data.story.id} />
         </Card>
       </Column>
     </FlexContainer>

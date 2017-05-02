@@ -23,8 +23,8 @@ const getStoryQueryOptions = {
       error,
       loading,
       story,
-      subscribeToNewMessages: () =>
-        subscribeToMore({
+      subscribeToNewMessages: () => {
+        return subscribeToMore({
           document: subscribeToNewMessages,
           variables: {
             thread: ownProps.match.params.storyId,
@@ -35,6 +35,8 @@ const getStoryQueryOptions = {
             }
 
             const newMessage = subscriptionData.data.messageAdded;
+            console.log('newdata', subscriptionData);
+            console.log('prevdata', prev);
 
             // Add the new message to the data
             return {
@@ -52,7 +54,8 @@ const getStoryQueryOptions = {
               },
             };
           },
-        }),
+        });
+      },
     },
   }),
 };
