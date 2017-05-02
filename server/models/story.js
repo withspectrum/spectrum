@@ -4,6 +4,7 @@
  */
 const { db } = require('./db');
 const { listenToNewDocumentsIn } = require('./utils');
+const { storeStoryNotification } = require('./notification');
 
 const getStory = id => {
   return db.table('stories').get(id).run();
@@ -46,7 +47,20 @@ const addStory = story => {
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => result.changes[0].new_val)
+    .then(story => {
+      storeStoryNotification({
+        story: story.id,
+        frequency: story.frequency,
+        sender: story.author,
+        content: {
+          title: story.content.title,
+          // TODO Limit to max characters
+          excerpt: story.content.description,
+        },
+      });
+      return story;
+    });
 };
 
 const publishStory = id => {
@@ -119,15 +133,6 @@ const listenToNewStories = cb => {
   return listenToNewDocumentsIn('stories', cb);
 };
 
-const getParticipants = (story: string): Array<string> => {
-  return db
-    .table('messages')
-    .filter({ thread: story })
-    .withFields('sender')
-    .run()
-    .then(messages => messages.map(message => message.sender));
-};
-
 module.exports = {
   addStory,
   getStory,
@@ -135,7 +140,6 @@ module.exports = {
   editStory,
   setStoryLock,
   deleteStory,
-  getParticipants,
   listenToNewStories,
   getStoriesByFrequency,
 };

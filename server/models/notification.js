@@ -4,12 +4,20 @@
  */
 
 const { db } = require('./db');
-const { getParticipants } = require('./story');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 
 const UNIQUE = (v, i, a) => a.indexOf(v) === i;
+
+const getParticipants = (story: string): Array<string> => {
+  return db
+    .table('messages')
+    .filter({ thread: story })
+    .withFields('sender')
+    .run()
+    .then(messages => messages.map(message => message.sender));
+};
 
 const getNotification = (id: string) => {
   return db.table('notifications').get(id).run();
@@ -63,6 +71,30 @@ const storeMessageNotification = (data: MessageNotificationInput) => {
         },
       })
     );
+};
+
+type StoryNotificationInput = {
+  story: string,
+  frequency: string,
+  sender: string,
+  content: {
+    title?: string,
+    excerpt?: string,
+  },
+};
+
+const storeStoryNotification = (data: StoryNotificationInput) => {
+  return db.table('frequencies').get(data.frequency).run().then(frequency =>
+    storeNotification({
+      ...data,
+      users: frequency.subscribers
+        .filter(uid => uid !== data.sender)
+        .filter(UNIQUE),
+      type: 'NEW_STORY',
+      community: frequency.community,
+      frequency: data.frequency,
+    })
+  );
 };
 
 type NotificationInput = {
@@ -134,4 +166,5 @@ module.exports = {
   markNotificationsRead,
   getNotificationsByUser,
   storeNotification,
+  storeStoryNotification,
 };
