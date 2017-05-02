@@ -17,6 +17,40 @@ const User = /* GraphQL */ `
 		node: Frequency!
 	}
 
+	type UserDirectMessageGroupsConnection {
+		pageInfo: PageInfo!
+		edges: [DirectMessageGroupEdge]
+	}
+
+	type DirectMessageGroupEdge {
+		cursor: String!
+		node: DirectMessageGroup!
+	}
+
+	type UserStoriesConnection {
+		pageInfo: PageInfo!
+		edges: [UserStoryEdge!]
+	}
+
+	type UserStoryEdge {
+		cursor: String!
+		node: Story!
+	}
+
+	type EverythingStoriesConnection {
+		pageInfo: PageInfo!
+		edges: [EverythingStoryEdge!]
+	}
+
+	type EverythingStoryEdge {
+		cursor: String!
+		node: Story!
+	}
+
+	type UserMetaData {
+		stories: Int
+	}
+
 	type User {
 		uid: ID!
 		createdAt: Date!
@@ -28,10 +62,15 @@ const User = /* GraphQL */ `
 		# subscriptions: [Subscription!]
 		communityConnection: UserCommunitiesConnection!
 		frequencyConnection: UserFrequenciesConnection!
+		directMessageGroupsConnection: UserDirectMessageGroupsConnection!
+		storyConnection(first: Int = 10, after: String): UserStoriesConnection!
+		everything(first: Int = 10, after: String): EverythingStoriesConnection!
+		metaData: UserMetaData!
 	}
 
 	extend type Query {
-		user(id: ID!): User
+		user(uid: ID, username: String): User
+		currentUser: User
 	}
 `;
 

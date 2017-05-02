@@ -2,19 +2,20 @@
 /**
  * Community query resolvers
  */
-const { getCommunity } = require('../models/community');
+const { getCommunity, getCommunityMetaData } = require('../models/community');
 const { getFrequenciesByCommunity } = require('../models/frequency');
-const { getUsers } = require('../models/user');
+const { getUsers, getAllStories } = require('../models/user');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
+import type { GetCommunityArgs } from '../models/community';
 import { encode, decode } from '../utils/base64';
 
 module.exports = {
   Query: {
-    community: (_, { id }) => getCommunity(id),
+    community: (_: any, args: GetCommunityArgs) => getCommunity(args),
   },
   Community: {
-    frequencyConnection: ({ id }) => ({
+    frequencyConnection: ({ id }: { id: String }) => ({
       pageInfo: {
         hasNextPage: false,
       },
@@ -41,6 +42,41 @@ module.exports = {
           node: user,
         })),
       }));
+    },
+    storyConnection: (
+      { id }: { id: String },
+      { first = 10, after }: PaginationOptions
+    ) => {
+      const cursor = decode(after);
+      // TODO: Make this more performant by doing an actual db query rather than this hacking around
+      return getFrequenciesByCommunity(id)
+        .then(frequencies =>
+          getAllStories(frequencies.map(frequency => frequency.id))
+        )
+        .then(stories =>
+          paginate(
+            stories,
+            { first, after: cursor },
+            story => story.id === cursor
+          )
+        )
+        .then(result => ({
+          pageInfo: {
+            hasNextPage: result.hasMoreItems,
+          },
+          edges: result.list.map(story => ({
+            cursor: encode(story.id),
+            node: story,
+          })),
+        }));
+    },
+    metaData: ({ id }: { id: String }) => {
+      return getCommunityMetaData(id).then(data => {
+        return {
+          frequencies: data[0],
+          members: data[1],
+        };
+      });
     },
   },
 };

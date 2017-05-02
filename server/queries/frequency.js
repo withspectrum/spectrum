@@ -2,21 +2,31 @@
 /**
  * Frequency query resolvers
  */
-const { getFrequency } = require('../models/frequency');
+const {
+  getFrequency,
+  getFrequencyMetaData,
+  getFrequencySubscriberCount,
+  getTop30Frequencies,
+} = require('../models/frequency');
 const { getStoriesByFrequency } = require('../models/story');
 const { getCommunity } = require('../models/community');
 const { getUsers } = require('../models/user');
 import paginate from '../utils/paginate-arrays';
-import type { PaginationOptions } from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
+import type { PaginationOptions } from '../utils/paginate-arrays';
+import type { GetFrequencyArgs } from '../models/frequency';
 
 module.exports = {
   Query: {
-    frequency: (_: any, { id }: { id: String }) => getFrequency(id),
+    frequency: (_: any, args: GetFrequencyArgs) => getFrequency(args),
+    topFrequencies: (_: any, { amount = 30 }: { amount: number }) =>
+      getTop30Frequencies(amount),
   },
   Frequency: {
+    subscriberCount: ({ id }: { id: string }) =>
+      getFrequencySubscriberCount(id),
     storyConnection: (
-      { id }: { id: String },
+      { id }: { id: string },
       { first = 10, after }: PaginationOptions
     ) => {
       const cursorId = decode(after);
@@ -36,7 +46,7 @@ module.exports = {
       }));
     },
     community: ({ community }: { community: String }) =>
-      getCommunity(community),
+      getCommunity({ id: community }),
     subscriberConnection: (
       { subscribers }: { subscribers: Array<string> },
       { first = 10, after }: PaginationOptions
@@ -54,6 +64,14 @@ module.exports = {
           node: user,
         })),
       }));
+    },
+    metaData: ({ id }: { id: String }) => {
+      return getFrequencyMetaData(id).then(data => {
+        return {
+          stories: data[0],
+          subscribers: data[1],
+        };
+      });
     },
   },
 };

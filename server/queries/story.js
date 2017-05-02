@@ -5,8 +5,11 @@
  */
 const { getStory } = require('../models/story');
 const { getFrequency } = require('../models/frequency');
-const { getMessagesByLocationAndThread } = require('../models/message');
-const { getUser } = require('../models/user');
+const {
+  getMessagesByLocationAndThread,
+  getMessageCount,
+} = require('../models/message');
+const { getUserByUid } = require('../models/user');
 import type { LocationTypes } from '../models/message';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
@@ -17,7 +20,7 @@ module.exports = {
   },
   Story: {
     frequency: ({ frequency }: { frequency: String }) =>
-      getFrequency(frequency),
+      getFrequency({ id: frequency }),
     messageConnection: (
       { id }: { id: String },
       { first = 10, after }: PaginationOptions
@@ -38,6 +41,7 @@ module.exports = {
         })),
       }));
     },
-    author: ({ author }: { author: String }) => getUser(author),
+    author: ({ author }: { author: String }) => getUserByUid(author),
+    messageCount: ({ id }: { id: string }) => getMessageCount('messages', id),
   },
 };

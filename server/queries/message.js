@@ -4,7 +4,7 @@
  * Message query resolvers
  */
 const { getMessage } = require('../models/message');
-const { getUser } = require('../models/user');
+const { getUserByUid } = require('../models/user');
 import { getReactions } from '../models/reaction';
 import type { LocationTypes } from '../models/message';
 
@@ -24,7 +24,7 @@ module.exports = {
       getMessage(location, id),
   },
   Message: {
-    sender: ({ sender }: Root) => getUser(sender),
+    sender: ({ sender }: Root) => getUserByUid(sender),
     reactions: ({ id }: Root) => getReactions(id),
   },
 };

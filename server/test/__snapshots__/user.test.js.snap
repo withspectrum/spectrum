@@ -1,0 +1,95 @@
+exports[`queries everything should handle first being set to 0 correctly 1`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "everything": Object {
+        "edges": Array [],
+        "pageInfo": Object {
+          "hasNextPage": true,
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`queries everything should handle first being set to 0 correctly 2`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "everything": Object {
+        "edges": Array [],
+        "pageInfo": Object {
+          "hasNextPage": false,
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`queries everything should paginate based on the after property 1`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "everything": Object {
+        "edges": Array [
+          Object {
+            "node": Object {
+              "id": "first-story",
+            },
+          },
+        ],
+        "pageInfo": Object {
+          "hasNextPage": false,
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`queries everything should return the latest story 1`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "everything": Object {
+        "edges": Array [
+          Object {
+            "node": Object {
+              "id": "second-story",
+            },
+          },
+        ],
+        "pageInfo": Object {
+          "hasNextPage": true,
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`queries should fetch a user 1`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "createdAt": "2017-01-01T23:00:00.000Z",
+      "displayName": "First User",
+      "email": "first.user@gmail.com",
+      "lastSeen": "2017-02-01T23:00:00.000Z",
+      "photoURL": "my-photo.jpg",
+      "uid": "first-user",
+      "username": "first",
+    },
+  },
+}
+`;
+
+exports[`queries should return null for a non-existant id 1`] = `
+Object {
+  "data": Object {
+    "user": null,
+  },
+}
+`;

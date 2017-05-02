@@ -1,8 +1,31 @@
 // @flow
 const { db } = require('./db');
+import { UserError } from 'graphql-errors';
 
-const getUser = (id: String) => {
-  return db.table('users').get(id).run();
+export type GetUserArgs = {
+  uid?: string,
+  username?: string,
+};
+
+const getUser = ({ uid, username }: GetUserArgs) => {
+  if (uid) return getUserByUid(uid);
+  if (username) return getUserByUsername(username);
+
+  throw new UserError(
+    'Please provide either id or username to your user() query.'
+  );
+};
+
+const getUserByUid = (uid: String) => {
+  return db.table('users').get(uid).run();
+};
+
+const getUserByUsername = (username: string) => {
+  return db
+    .table('users')
+    .filter({ username })
+    .run()
+    .then(result => result && result[0]);
 };
 
 const getUsers = (uids: Array<String>) => {
@@ -36,9 +59,30 @@ const createOrFindUser = user => {
   });
 };
 
+const getAllStories = (frequencies: Array<String>) => {
+  return db
+    .table('stories')
+    .orderBy(db.desc('modifiedAt'))
+    .filter(story => db.expr(frequencies).contains(story('frequency')))
+    .run();
+};
+
+const getUserMetaData = (id: String) => {
+  const getStoryCount = db
+    .table('stories')
+    .filter({ author: id })
+    .count()
+    .run();
+
+  return Promise.all([getStoryCount]);
+};
+
 module.exports = {
   getUser,
+  getUserByUid,
+  getUserMetaData,
   getUsers,
   createOrFindUser,
   storeUser,
+  getAllStories,
 };

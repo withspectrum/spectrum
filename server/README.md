@@ -164,3 +164,55 @@ const { UserError } = require('graphql-errors');
 // The user will see this full error message
 throw new UserError('You do not have permission to access field xyz!')
 ```
+
+### Testing
+
+We use [Jest](https://facebook.github.io/jest/) for testing. (we recommend reading through the documentation, since it has a lot of great features you might not expect) Most of our tests are "e2e". That's in quotes because with GraphQL "e2e" tests don't do any network request, they still hit our database though and all that. (which is awesome since it's much faster!)
+
+We create a separate database for testing (called `"testing"`, surprisingly) that gets populated with some test data that we then verify against. A typical test suite for a certain type might look like this:
+
+```JS
+import { graphql } from 'graphql';
+import { db as mockTestDb, setup, teardown, data } from './db';
+
+// Mock the database to refer to our testing database
+// Note: The variable we mock it with has to have the mock- prefix,
+// otherwise Jest compains.
+jest.mock('../models/db', () => ({
+  db: mockTestDb,
+}));
+
+import schema from '../schema';
+
+describe('queries', () => {
+  // Before all tests create the database and tables and insert the test data
+  beforeAll(() => setup(mockTestDb));
+  // After the tests are finished drop the database to restore a clean state
+  afterAll(() => teardown(mockTestDb));
+
+  it('should fetch a user', () => {
+    // Write your GraphQL query how you normally would
+    const query = /* GraphQL */`
+      {
+        user(id: "first-user") {
+          uid
+          createdAt
+          lastSeen
+          photoURL
+          displayName
+          username
+          email
+        }
+      }
+    `;
+
+    // Makes sure the test fails if the async callback below doesn't fire and expect() is never called
+    expect.assertions(1);
+    // Return your graphql() call, which goes, gets the data and returns a Promise
+    return graphql(schema, query).then(result => {
+      // Use snapshots to verify the returned JSON response
+      expect(result.data.user).toMatchSnapshot();
+    });
+  });
+});
+```
