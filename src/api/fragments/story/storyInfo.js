@@ -1,6 +1,5 @@
 import { gql } from 'react-apollo';
 import { userInfoFragment } from '../user/userInfo';
-import { frequencyInfoFragment } from '../frequency/frequencyInfo';
 
 export const storyInfoFragment = gql`
   fragment storyInfo on Story {

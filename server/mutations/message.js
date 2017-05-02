@@ -12,7 +12,7 @@ type AddMessageProps = {
 };
 module.exports = {
   Mutation: {
-    addMessage: (_, { location, message }: AddMessageProps) =>
-      storeMessage(location, message),
+    addMessage: (_, { location, message }: AddMessageProps, { user }) =>
+      storeMessage(location, message, user),
   },
 };
