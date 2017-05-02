@@ -3,7 +3,7 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 import { Label } from './style';
 import { Spinner } from '../globals';
-import Loading from '../loading';
+import { Loading } from '../loading';
 import { getSpinnerColor, getButtonType } from './helpers';
 import Icon from '../icons';
 

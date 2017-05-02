@@ -34,11 +34,13 @@ const Frequency = /* GraphQL */ `
 		community: Community!
 		storyConnection(first: Int = 10, after: String): FrequencyStoriesConnection!
 		subscriberConnection(first: Int = 10, after: String): FrequencySubscribersConnection!
+		subscriberCount: Int!
 		metaData: FrequencyMetaData
 	}
 
 	extend type Query {
 		frequency(id: ID, slug: String, community: String): Frequency
+		topFrequencies(amount: Int = 30): [Frequency!]
 	}
 `;
 

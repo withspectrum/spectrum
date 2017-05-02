@@ -8,7 +8,7 @@ export type GetUserArgs = {
 };
 
 const getUser = ({ uid, username }: GetUserArgs) => {
-  if (uid) return getUserById(id);
+  if (uid) return getUserByUid(uid);
   if (username) return getUserByUsername(username);
 
   throw new UserError(
