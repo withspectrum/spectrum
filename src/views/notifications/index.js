@@ -13,7 +13,8 @@ import renderComponent from 'recompose/renderComponent';
 import Icon from '../../components/icons';
 import { Column } from '../../components/column';
 import { FlexRow } from '../../components/globals';
-import Loading from '../../components/loading';
+import { LoadingCard } from '../../components/loading';
+import AppViewWrapper from '../../components/appViewWrapper';
 import {
   NotificationCard,
   Content,
@@ -26,7 +27,7 @@ import { getNotifications } from './queries';
 
 const displayLoadingState = branch(
   props => props.data.loading,
-  renderComponent(Loading)
+  renderComponent(LoadingCard)
 );
 
 const icons = {
@@ -105,7 +106,7 @@ const constructContent = notification => {
 const NotificationsPure = props => {
   const { data: { notifications: { edges } } } = props;
   return (
-    <DashboardContainer justifyContent={'center'} alignContent={'flex-start'}>
+    <AppViewWrapper>
       <Column type={'primary'}>
         {edges.map(({ node: notification }) => (
           <NotificationCard key={notification.id}>
@@ -124,7 +125,7 @@ const NotificationsPure = props => {
           </NotificationCard>
         ))}
       </Column>
-    </DashboardContainer>
+    </AppViewWrapper>
   );
 };
 
