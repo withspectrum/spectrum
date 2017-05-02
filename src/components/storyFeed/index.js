@@ -25,6 +25,10 @@ const StoryFeedPure = ({
     return <div>Oops, something went wrong</div>;
   }
 
+  if (!stories) {
+    return <div>No stories to be found</div>;
+  }
+
   return (
     <div>
       {stories.map(story => {

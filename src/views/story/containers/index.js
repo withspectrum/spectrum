@@ -18,18 +18,18 @@ import { FlexContainer } from '../../../components/flexbox';
 import { Card } from '../../../components/card';
 import { UserProfile, FrequencyProfile } from '../../../components/profile';
 import { getStory } from '../queries';
-import { LoadingCard } from '../../../components/loading';
+import { Loading } from '../../../components/loading';
 
 const lifecycles = lifecycle({
   state: {
     subscribed: false,
   },
   componentDidUpdate() {
-    if (!this.props.loading && !this.state.subscribed) {
+    if (!this.props.data.loading && !this.state.subscribed) {
       this.setState({
         subscribed: true,
       });
-      this.props.subscribeToNewMessages();
+      this.props.data.subscribeToNewMessages();
     }
   },
 });
@@ -37,15 +37,14 @@ const lifecycles = lifecycle({
 // TODO: Brian - figure out how to abstract this out to be used anywhere
 const displayLoadingState = branch(
   props => !props.data || props.data.loading,
-  renderComponent(LoadingCard)
+  renderComponent(Loading)
 );
 
 const StoryContainerPure = ({ data: { story } }) => {
-  console.log(story);
   return (
     <FlexContainer justifyContent="center">
       <Column type="secondary">
-        <UserProfile data={{ user: story.author }} size="medium" />
+        <UserProfile data={{ user: story.author }} profileSize={'medium'} />
         <FrequencyProfile data={{ frequency: story.frequency }} size="medium" />
       </Column>
 
