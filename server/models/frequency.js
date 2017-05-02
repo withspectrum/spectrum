@@ -94,10 +94,24 @@ const createFrequency = ({
     .run();
 };
 
+const getTop30Frequencies = (amount: number) => {
+  return db
+    .table('frequencies')
+    .orderBy(db.desc('subscribers'))
+    .limit(amount)
+    .run();
+};
+
+const getFrequencySubscriberCount = (id: string) => {
+  return db.table('frequencies').get(id)('subscribers').count().run();
+};
+
 module.exports = {
   getFrequency,
   getFrequencyMetaData,
   getFrequenciesByUser,
   getFrequenciesByCommunity,
   createFrequency,
+  getTop30Frequencies,
+  getFrequencySubscriberCount,
 };

@@ -6,6 +6,7 @@ const {
   getFrequency,
   getFrequencyMetaData,
   getFrequencySubscriberCount,
+  getTop30Frequencies,
 } = require('../models/frequency');
 const { getStoriesByFrequency } = require('../models/story');
 const { getCommunity } = require('../models/community');
@@ -18,10 +19,14 @@ import type { GetFrequencyArgs } from '../models/frequency';
 module.exports = {
   Query: {
     frequency: (_: any, args: GetFrequencyArgs) => getFrequency(args),
+    topFrequencies: (_: any, { amount = 30 }: { amount: number }) =>
+      getTop30Frequencies(amount),
   },
   Frequency: {
+    subscriberCount: ({ id }: { id: string }) =>
+      getFrequencySubscriberCount(id),
     storyConnection: (
-      { id }: { id: String },
+      { id }: { id: string },
       { first = 10, after }: PaginationOptions
     ) => {
       const cursorId = decode(after);
