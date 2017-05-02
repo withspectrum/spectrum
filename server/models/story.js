@@ -1,3 +1,4 @@
+// @flow
 /**
  * Storing and retrieving stories
  */
@@ -118,6 +119,15 @@ const listenToNewStories = cb => {
   return listenToNewDocumentsIn('stories', cb);
 };
 
+const getParticipants = (story: string): Array<string> => {
+  return db
+    .table('messages')
+    .filter({ thread: story })
+    .withFields('sender')
+    .run()
+    .then(messages => messages.map(message => message.sender));
+};
+
 module.exports = {
   addStory,
   getStory,
@@ -125,6 +135,7 @@ module.exports = {
   editStory,
   setStoryLock,
   deleteStory,
+  getParticipants,
   listenToNewStories,
   getStoriesByFrequency,
 };

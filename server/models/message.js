@@ -5,6 +5,7 @@
  */
 const { db } = require('./db');
 const { listenToNewDocumentsIn } = require('./utils');
+const { storeMessageNotification } = require('./notification');
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
 export type LocationTypes = 'messages' | 'direct_messages';
@@ -29,8 +30,7 @@ const getMessagesByLocationAndThread = (
     .orderBy('timestamp')
     .filter({ thread })
     .limit(first)
-    .run()
-    .then();
+    .run();
 
   const getLastMessage = db
     .table(location)
@@ -54,7 +54,18 @@ const storeMessage = (location: LocationTypes, message: MessageProps) => {
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => result.changes[0].new_val)
+    .then(message => {
+      storeMessageNotification({
+        message: message.id,
+        story: message.thread,
+        sender: message.sender,
+        content: {
+          excerpt: message.message.content,
+        },
+      });
+      return message;
+    });
 };
 
 const listenToNewMessages = (location: LocationTypes, cb: Function) => {

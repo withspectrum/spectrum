@@ -4,9 +4,12 @@
  */
 
 const { db } = require('./db');
+const { getParticipants } = require('./story');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
+
+const UNIQUE = (v, i, a) => a.indexOf(v) === i;
 
 const getNotification = (id: string) => {
   return db.table('notifications').get(id).run();
@@ -22,13 +25,70 @@ const markNotificationsRead = (story: string) => {
     .run();
 };
 
-// TODO: figure out what the notification input should look like
-const storeNotification = (notification: any) => {
+type MessageNotificationInput = {
+  story: string,
+  message: string,
+  sender: string,
+  content: {
+    title?: string,
+    excerpt?: string,
+  },
+};
+
+const storeMessageNotification = (data: MessageNotificationInput) => {
+  return db
+    .table('stories')
+    .get(data.story)
+    .run()
+    .then(story =>
+      Promise.all([
+        story,
+        db.table('frequencies').get(story.frequency).run(),
+        getParticipants(story.id),
+      ])
+    )
+    .then(([story, frequency, participants]) =>
+      storeNotification({
+        ...data,
+        users: participants
+          .concat([story.author])
+          .filter(uid => uid !== data.sender)
+          .filter(UNIQUE),
+        type: 'NEW_MESSAGE',
+        community: frequency.community,
+        frequency: story.frequency,
+        content: {
+          ...data.content,
+          title: story.content.title,
+        },
+      })
+    );
+};
+
+type NotificationInput = {
+  users: Array<string>,
+  type: 'NEW_STORY' | 'NEW_MESSAGE' | 'REACTION',
+  frequency: string,
+  community: string,
+  story: string,
+  message?: string,
+  sender: string,
+  content: {
+    title?: string,
+    excerpt?: string,
+  },
+};
+
+const storeNotification = (notification: NotificationInput) => {
   return db
     .table('notifications')
     .insert(
       Object.assign({}, notification, {
         createdAt: new Date(),
+        users: notification.users.map(uid => ({
+          uid,
+          read: false,
+        })),
       }),
       { returnChanges: true }
     )
@@ -70,6 +130,7 @@ const getNotificationsByUser = (
 
 module.exports = {
   getNotification,
+  storeMessageNotification,
   markNotificationsRead,
   getNotificationsByUser,
   storeNotification,
