@@ -6,7 +6,7 @@ const {
   getFrequency,
   getFrequencyMetaData,
   getFrequencySubscriberCount,
-  getTop30Frequencies,
+  getTopFrequencies,
 } = require('../models/frequency');
 const { getStoriesByFrequency } = require('../models/story');
 const { getCommunity } = require('../models/community');
@@ -20,7 +20,7 @@ module.exports = {
   Query: {
     frequency: (_: any, args: GetFrequencyArgs) => getFrequency(args),
     topFrequencies: (_: any, { amount = 30 }: { amount: number }) =>
-      getTop30Frequencies(amount),
+      getTopFrequencies(amount),
   },
   Frequency: {
     subscriberCount: ({ id }: { id: string }) =>
