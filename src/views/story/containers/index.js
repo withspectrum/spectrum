@@ -7,8 +7,6 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 //$FlowFixMe
-import lifecycle from 'recompose/lifecycle';
-//$FlowFixMe
 import renderComponent from 'recompose/renderComponent';
 import { StoryDetail } from '../components/storyDetail';
 import Messages from '../components/messages';
@@ -19,20 +17,6 @@ import { Card } from '../../../components/card';
 import { UserProfile, FrequencyProfile } from '../../../components/profile';
 import { getStory } from '../queries';
 import { Loading } from '../../../components/loading';
-
-const lifecycles = lifecycle({
-  state: {
-    subscribed: false,
-  },
-  componentDidUpdate() {
-    if (!this.props.loading && !this.state.subscribed) {
-      this.setState({
-        subscribed: true,
-      });
-      this.props.subscribeToNewMessages();
-    }
-  },
-});
 
 // TODO: Brian - figure out how to abstract this out to be used anywhere
 const displayLoadingState = branch(
@@ -56,7 +40,7 @@ const StoryContainerPure = ({
         </Card>
 
         <Card>
-          <Messages messages={story.messageConnection.edges} />
+          <Messages id={story.id} />
         </Card>
 
         <Card>
@@ -67,9 +51,6 @@ const StoryContainerPure = ({
   );
 };
 
-export const StoryContainer = compose(
-  getStory,
-  lifecycles,
-  displayLoadingState,
-  pure
-)(StoryContainerPure);
+export const StoryContainer = compose(getStory, displayLoadingState, pure)(
+  StoryContainerPure
+);

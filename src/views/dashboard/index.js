@@ -4,18 +4,11 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
-import branch from 'recompose/branch';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Column } from '../../components/column';
 import { UserProfile } from '../../components/profile';
-import { ErrorMessage } from './style';
 import { getEverythingStories, getCurrentUserProfile } from './queries';
-import { Loading } from '../../components/loading';
 import StoryFeed from '../../components/storyFeed';
 import StoryComposer from '../../components/storyComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
