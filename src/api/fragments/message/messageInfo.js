@@ -5,12 +5,16 @@ export const messageInfoFragment = gql`
   fragment messageInfo on Message {
     id
     timestamp
-    message {
-      content
-      type
-    }
     sender {
       ...userInfo
+    }
+    reactions {
+      id
+      type
+    }
+    message {
+      type
+      content
     }
   }
   ${userInfoFragment}

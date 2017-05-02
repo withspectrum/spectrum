@@ -5,13 +5,12 @@ import { messageInfoFragment } from '../message/messageInfo';
 
 export const storyMessagesFragment = gql`
   fragment storyMessages on Story {
-    messageConnection(first: 100) {
+    messageConnection(first: 100, after: $after) {
       pageInfo {
         hasNextPage
         hasPreviousPage
       }
       edges {
-        cursor
         node {
           ...messageInfo
         }
