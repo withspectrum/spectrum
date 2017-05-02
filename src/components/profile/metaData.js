@@ -1,23 +1,18 @@
+//@flow
 import React from 'react';
+// $FlowFixMe
 import pure from 'recompose/pure';
-import branch from 'recompose/branch';
-import renderComponent from 'recompose/renderComponent';
-import compose from 'recompose/compose';
 import Icon from '../icons';
-import Loading from '../loading';
-import {
-  getUserMetaData,
-  getFrequencyMetaData,
-  getCommunityMetaData,
-} from './queries';
 import { Meta, MetaList, MetaListItem, Label, Count } from './style';
 
-const displayLoadingState = branch(
-  props => !props.data || props.data.loading,
-  renderComponent(Loading)
-);
-
+/*
+  Brian:
+  Given the type of metadata we want to render, we need to hardcode a label and
+  icon for the UI. A big if-return function like this feels messy, but is relatively
+  easy to extend or modify as needed
+*/
 const buildArray = (meta: Object): Array<any> => {
+  // Apollo returns a __typename field in the data object; filter it out
   return Object.keys(meta).filter(item => item !== '__typename').map(item => {
     if (item === 'stories') {
       return Object.assign(
@@ -65,45 +60,32 @@ const buildArray = (meta: Object): Array<any> => {
   });
 };
 
-const MetaDataPure = ({ data, id, type }) => {
-  const meta = data[type].metaData;
-  const arr = buildArray(meta);
+const MetaDataPure = ({ data }) => {
+  const arr = buildArray(data);
 
   return (
     <Meta>
-      {arr.map((item, i) => {
-        return (
-          <MetaListItem key={i}>
-            <Label>
-              <Icon
-                icon={item.icon}
-                color={'text.alt'}
-                hoverColor={'text.alt'}
-                scaleOnHover={false}
-                size={24}
-              />
-              {item.label}
-            </Label>
-            <Count>{item.count}</Count>
-          </MetaListItem>
-        );
-      })}
+      <MetaList>
+        {arr.map((item, i) => {
+          return (
+            <MetaListItem key={i}>
+              <Label>
+                <Icon
+                  icon={item.icon}
+                  color={'text.alt'}
+                  hoverColor={'text.alt'}
+                  scaleOnHover={false}
+                  size={24}
+                />
+                {item.label}
+              </Label>
+              <Count>{item.count}</Count>
+            </MetaListItem>
+          );
+        })}
+      </MetaList>
     </Meta>
   );
 };
 
-export const UserMetaData = compose(getUserMetaData, displayLoadingState, pure)(
-  MetaDataPure
-);
-
-export const FrequencyMetaData = compose(
-  getFrequencyMetaData,
-  displayLoadingState,
-  pure
-)(MetaDataPure);
-
-export const CommunityMetaData = compose(
-  getCommunityMetaData,
-  displayLoadingState,
-  pure
-)(MetaDataPure);
+export const MetaData = pure(MetaDataPure);

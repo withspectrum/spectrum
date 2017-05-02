@@ -55,8 +55,8 @@ const spin = keyframes`
 `;
 
 export const Spinner = styled.span`
-  width: ${props => (props.size ? `${props.size}px` : '2rem')};
-  height: ${props => (props.size ? `${props.size}px` : '2rem')};
+  width: ${props => (props.size ? `${props.size}px` : '32px')};
+  height: ${props => (props.size ? `${props.size}px` : '32px')};
   &:before {
     content: '';
     box-sizing: border-box;
@@ -64,10 +64,10 @@ export const Spinner = styled.span`
     position: ${props => (props.inline ? 'relative' : 'absolute')};
     top: ${props => (props.inline ? '0' : '50%')};
     left: ${props => (props.inline ? '0' : '50%')};
-    width: ${props => (props.size ? `${props.size}px` : '16px')};
-    height: ${props => (props.size ? `${props.size}px` : '16px')};
-    margin-top: ${props => `-${props.size / 2}px`};
-    margin-left: ${props => `-${props.size / 2}px`};
+    width: ${props => (props.size !== undefined ? `${props.size}px` : '16px')};
+    height: ${props => (props.size !== undefined ? `${props.size}px` : '16px')};
+    margin-top: ${props => (props.size !== undefined ? `-${props.size / 2}px` : '-8px')};
+    margin-left: ${props => (props.size !== undefined ? `-${props.size / 2}px` : '-8px')};
     border-radius: 50%;
     border: ${props => '2px'} solid ${props => (props.color ? eval(`props.theme.${props.color}`) : props.theme.brand.alt)};
     border-top-color: transparent;

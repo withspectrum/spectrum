@@ -30,6 +30,26 @@ const getStoriesByFrequency = (frequency, { first, after }) => {
   return Promise.all([getStories, getLastStory]);
 };
 
+const getStoriesByUser = (uid, { first, after }) => {
+  const getStories = db
+    .table('stories')
+    .between(after || db.minval, db.maxval, { leftBound: 'open' })
+    .orderBy('modifiedAt')
+    .filter({ author: uid })
+    .limit(first)
+    .run()
+    .then();
+
+  const getLastStory = db
+    .table('stories')
+    .orderBy('modifiedAt')
+    .filter({ author: uid })
+    .max()
+    .run();
+
+  return Promise.all([getStories, getLastStory]);
+};
+
 const addStory = story => {
   return db
     .table('stories')
@@ -142,4 +162,5 @@ module.exports = {
   deleteStory,
   listenToNewStories,
   getStoriesByFrequency,
+  getStoriesByUser,
 };

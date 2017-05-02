@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 //$FlowFixMe
-import { Router, Route, Switch } from 'react-router';
+import { Router, Route, Switch, Redirect } from 'react-router';
 //$FlowFixMe
 import styled from 'styled-components';
 //$FlowFixMe
@@ -10,9 +10,9 @@ import ScrollManager from './components/scrollManager';
 import DirectMessages from './views/directMessages';
 import Explore from './views/explore';
 import Story from './views/story';
-import UserProfile from './views/userProfile';
-import CommunityProfile from './views/communityProfile';
-import FrequencyProfile from './views/frequencyProfile';
+import UserView from './views/user';
+import CommunityView from './views/community';
+import FrequencyView from './views/frequency';
 import Navbar from './views/navbar';
 import StyleGuide from './views/pages/styleGuide';
 import Dashboard from './views/dashboard';
@@ -58,7 +58,8 @@ class Routes extends Component {
               <Route path="/explore" component={Explore} />
               <Route path="/messages" component={DirectMessages} />
               <Route path="/story" component={Story} />
-              <Route path="/users" component={UserProfile} />
+              <Route exact path="/users" render={() => <Redirect to="/" />} />
+              <Route exact path="/users/:username" component={UserView} />
               <Route path="/notifications" component={Notifications} />
 
               {/*
@@ -68,9 +69,9 @@ class Routes extends Component {
             */}
               <Route
                 path="/:communitySlug/:frequencySlug"
-                component={FrequencyProfile}
+                component={FrequencyView}
               />
-              <Route path="/:communitySlug" component={CommunityProfile} />
+              <Route path="/:communitySlug" component={CommunityView} />
             </Switch>
 
           </Body>

@@ -9,12 +9,12 @@ import pure from 'recompose/pure';
 import branch from 'recompose/branch';
 //$FlowFixMe
 import renderComponent from 'recompose/renderComponent';
+
 import Icon from '../../components/icons';
 import { Column } from '../../components/column';
 import { FlexRow } from '../../components/globals';
 import Loading from '../../components/loading';
 import {
-  DashboardContainer,
   NotificationCard,
   Content,
   ContentHeading,

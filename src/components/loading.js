@@ -3,6 +3,7 @@ import React from 'react';
 // $FlowFixMe
 import styled from 'styled-components';
 import { Spinner } from './globals';
+import { Card } from './card';
 
 /*
   Creates a container that fills the width and height of its parent
@@ -18,10 +19,38 @@ const LoadingContainer = styled.div`
   position: relative;
 `;
 
-const Loading = ({ size, color }: { size: Number, color: String }) => (
+const LoadingCardContainer = styled(Card)`
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 1rem;
+`;
+
+/*
+  Outputs a spinner only with a transparent background that will fill to the width
+  and height of its parent. Useful for inline spinners.
+*/
+export const Loading = ({
+  size,
+  color,
+}: { size: Number, color: String }): React$Element<any> => (
   <LoadingContainer>
     <Spinner size={size} color={color} />
   </LoadingContainer>
 );
 
-export default Loading;
+/*
+  Outputs a spinner on top of a card. The card will fill the size of its parent.
+  Useful for adding loading states to stories, profile components, the composer,
+  etc
+*/
+export const LoadingCard = ({
+  size,
+  color,
+}: { size: Number, color: String }): React$Element<any> => (
+  <LoadingCardContainer>
+    <Spinner size={size} color={color} />
+  </LoadingCardContainer>
+);
