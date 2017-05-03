@@ -96,6 +96,7 @@ const getEntitiesFromList = list => {
         getFrequency,
         displayLoadingState
       )(Frequency);
+
       return EntityWithData();
     } else if (entity.type === 'community') {
       const EntityWithData = compose(
@@ -103,6 +104,7 @@ const getEntitiesFromList = list => {
         getCommunity,
         displayLoadingState
       )(Community);
+
       return EntityWithData();
     } else {
       return;
@@ -113,7 +115,7 @@ const getEntitiesFromList = list => {
 const TopThirtyPure = ({ data: { topFrequencies } }) => {
   return (
     <Row>
-      {topFrequencies.map((frequency, i) => {
+      {topFrequencies.map(frequency => {
         return Frequency({ data: { frequency: frequency } });
       })}
     </Row>
