@@ -1,6 +1,6 @@
 import { graphql, gql } from 'react-apollo';
 
-const queryOptions = {
+const queryOptionsForGetFrequency = {
   options: ({ id }) => ({
     variables: {
       id,
@@ -11,7 +11,6 @@ const queryOptions = {
       error,
       loading,
       frequency,
-      fuckboi: frequency ? frequency : '',
     },
   }),
 };
@@ -23,31 +22,70 @@ export const getFrequency = graphql(
         id
         name
         slug
+        description
+        metaData {
+          subscribers
+        }
       }
     }
 	`,
-  queryOptions
+  queryOptionsForGetFrequency
 );
 
-const queryOptionsForTopThirty = {
-  props: ({ data: { fetchMore, error, loading, frequencies } }) => ({
+const queryOptionsForGetCommunity = {
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+  }),
+  props: ({ data: { fetchMore, error, loading, community } }) => ({
     data: {
       error,
       loading,
-      frequencies,
+      community,
     },
   }),
 };
 
-export const getTopThirtyFrequencies = graphql(
+export const getCommunity = graphql(
   gql`
-		{
-		  topThirtyFrequencies {
+		query community($id: ID!) {
+			community(id: $id) {
         id
         name
         slug
+        metaData {
+          members
+        }
       }
     }
 	`,
-  queryOptionsForTopThirty
+  queryOptionsForGetCommunity
+);
+
+const queryOptionsForTopFrequencies = {
+  props: ({ data: { error, loading, topFrequencies } }) => ({
+    data: {
+      error,
+      loading,
+      topFrequencies,
+    },
+  }),
+};
+
+export const getTopFrequencies = graphql(
+  gql`
+		{
+		  topFrequencies {
+        id
+        name
+        slug
+        description
+        metaData {
+          subscribers
+        }
+      }
+    }
+	`,
+  queryOptionsForTopFrequencies
 );

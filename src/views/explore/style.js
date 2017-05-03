@@ -10,6 +10,7 @@ import {
   Transition,
   Gradient,
   Shadow,
+  hexa,
 } from '../../components/globals';
 
 import { Button } from '../../components/buttons';
@@ -23,12 +24,12 @@ export const ViewContainer = styled(FlexCol)`
 `;
 
 export const ScrollBody = styled(FlexCol)`
-  flex: 0 0 auto;
+  width: 100%;
   overflow-x: hidden;
   overflow-y: scroll;
   position: relative;
   z-index: 1;
-  background-color: ${({ theme }) => theme.generic.default};
+  background-color: ${({ theme }) => theme.bg.wash};
 `;
 
 export const ViewTitle = styled(H1)`
@@ -68,7 +69,7 @@ export const Section = styled(FlexCol)`
 
   &:nth-of-type(2) {
     background-color: ${({ theme }) => theme.space.dark};
-    background-image: ${({ theme }) => `linear-gradient( ${theme.bg.default}, ${theme.generic.default} )`};
+    background-image: ${({ theme }) => `linear-gradient( ${theme.bg.default}, ${theme.bg.wash} )`};
   }
 `;
 
@@ -110,6 +111,7 @@ export const Row = styled(FlexRow)`
   width: 100%;
   flex: 0 0 320px;
   padding: 8px 16px 32px 16px;
+  overflow-x: scroll;
 
   &:after, &:before{
     content: '';
@@ -131,11 +133,11 @@ export const Item = styled(FlexCol)`
   justify-content: space-between;
   position: relative;
   opacity: ${props => (props.active ? '0.85' : '1')};
-  box-shadow: ${props => (props.active ? Shadow.low : Shadow.high)};
+  box-shadow: ${Shadow.low} ${props => hexa(props.theme.text.placeholder, 1)};
   transition: ${Transition.hover.off};
 
   &:hover {
-    box-shadow: ${Shadow.high};
+    box-shadow: ${Shadow.high} ${props => hexa(props.theme.text.placeholder, 1)};
     transition: ${Transition.hover.on};
     opacity: 1;
   }
