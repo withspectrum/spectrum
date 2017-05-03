@@ -1,15 +1,17 @@
 // @flow
 import React, { Component } from 'react';
-//$FlowFixMe
+// $FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
+// $FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
+// $FlowFixMe
 import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
+// $FlowFixMe
 import branch from 'recompose/branch';
-//$FlowFixMe
+// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
+// $FlowFixMe
+import { withRouter } from 'react-router';
 import { LinkButton } from '../buttons';
 import Icon from '../icons';
 import { LoadingCard } from '../loading';
@@ -36,6 +38,7 @@ const displayLoadingState = branch(
 class StoryComposerWithData extends Component {
   constructor(props) {
     super(props);
+
     const availableCommunities = props.data.user.communityConnection.edges
       .map(edge => edge.node)
       .filter(community => community.frequencyConnection.edges.length > 0);
@@ -60,6 +63,7 @@ class StoryComposerWithData extends Component {
       availableFrequencies,
       activeCommunity,
       activeFrequency,
+      isPublishing: false,
     };
   }
 
@@ -112,6 +116,10 @@ class StoryComposerWithData extends Component {
       return;
     }
 
+    this.setState({
+      isPublishing: true,
+    });
+
     const frequency = this.state.activeFrequency;
     const content = {
       title: this.state.title,
@@ -128,7 +136,13 @@ class StoryComposerWithData extends Component {
         },
       })
       .then(({ data }) => {
-        console.log('new story', data);
+        const id = data.publishStory.id;
+        this.setState({
+          isPublishing: false,
+          isOpen: false,
+        });
+
+        this.props.history.push(`/story/${id}`);
       })
       .catch(error => {
         console.log('error publishing story', error);
@@ -143,9 +157,9 @@ class StoryComposerWithData extends Component {
       availableCommunities,
       activeCommunity,
       activeFrequency,
+      isPublishing,
     } = this.state;
 
-    console.log(this.state);
     return (
       <Container isOpen={isOpen}>
         <Overlay isOpen={isOpen} onClick={this.closeComposer} />
@@ -216,11 +230,13 @@ class StoryComposerWithData extends Component {
                 </select>
               </Dropdowns>
 
-              <div>
-                <LinkButton onClick={this.publishStory} disabled={!title}>
-                  Publish
-                </LinkButton>
-              </div>
+              <LinkButton
+                onClick={this.publishStory}
+                loading={isPublishing}
+                disabled={!title || isPublishing}
+              >
+                Publish
+              </LinkButton>
             </Actions>
           </ContentContainer>
 
@@ -234,6 +250,7 @@ export const StoryComposer = compose(
   getComposerCommunitiesAndFrequencies,
   publishStory,
   displayLoadingState,
+  withRouter,
   pure
 )(StoryComposerWithData);
 
