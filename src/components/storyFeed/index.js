@@ -30,7 +30,7 @@ const StoryFeedPure = ({
   }
 
   return (
-    <div>
+    <div style={{ minWidth: '100%' }}>
       {stories.map(story => {
         return <StoryFeedCard key={story.node.id} data={story.node} />;
       })}

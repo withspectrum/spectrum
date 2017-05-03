@@ -139,7 +139,6 @@ class StoryComposerWithData extends Component {
         const id = data.publishStory.id;
         this.setState({
           isPublishing: false,
-          isOpen: false,
         });
 
         this.props.history.push(`/story/${id}`);

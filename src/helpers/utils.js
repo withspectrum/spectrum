@@ -57,3 +57,13 @@ const regex = new RegExp(
   `^(${originalEmojiRegex.toString().replace(/\/g$/, '')}|\\s)+$`
 );
 export const onlyContainsEmoji = text => regex.test(text);
+
+// @flow
+
+/**
+ * Encode a string to base64 (using the Node built-in Buffer)
+ *
+ * Stolen from http://stackoverflow.com/a/38237610/2115623
+ */
+export const encode = (string: string) =>
+  Buffer.from(string).toString('base64');

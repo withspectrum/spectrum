@@ -57,16 +57,16 @@ const getStoryQueryOptions = {
     return {
       data: props.data,
       subscribeToNewMessages: () => {
+        if (!props.data.story) {
+          return;
+        }
+        console.log(props);
         return props.data.subscribeToMore({
           document: subscribeToNewMessages,
           variables: {
-            thread: props.data.story.id,
+            thread: props.ownProps.id,
           },
           updateQuery: (prev, { subscriptionData }) => {
-            if (!subscriptionData.data) {
-              return prev;
-            }
-
             const newMessage = subscriptionData.data.messageAdded;
             // Add the new message to the data
             return {
