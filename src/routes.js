@@ -6,6 +6,7 @@ import { Router, Route, Switch, Redirect } from 'react-router';
 import styled from 'styled-components';
 //$FlowFixMe
 import createBrowserHistory from 'history/createBrowserHistory';
+import Editor from './components/editor';
 import ScrollManager from './components/scrollManager';
 import DirectMessages from './views/directMessages';
 import Explore from './views/explore';
@@ -32,6 +33,7 @@ const Body = styled.div`
 
 class Routes extends Component {
   render() {
+    return <Editor />;
     return (
       <Router history={createBrowserHistory()}>
         <ScrollManager>

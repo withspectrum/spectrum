@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Editor as SlateEditor, Raw } from 'slate';
 
-import type { SlatePlugin } from './plugins/mentions';
+import type { SlatePlugin } from './plugins/mentions/types';
 import MentionsPlugin from './plugins/mentions';
 
 const initialState = Raw.deserialize(
@@ -41,7 +41,20 @@ class Editor extends Component {
     super(props);
     this.state = {
       state: initialState,
-      plugins: [props.mentions !== false && MentionsPlugin()],
+      plugins: [
+        props.mentions !== false &&
+          MentionsPlugin({
+            Mention: props => (
+              <span
+                {...props.attributes}
+                style={{ background: 'red', color: 'white' }}
+              >
+                {props.children}
+              </span>
+            ),
+            Suggestions: props => <span>{props.mention}</span>,
+          }),
+      ],
     };
   }
 
