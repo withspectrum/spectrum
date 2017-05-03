@@ -1,8 +1,11 @@
+// @flow
+
 // NOTE (@mxstbr): The /dist here is a bug in a specific version of emoji-regex
 // Can be removed after the next release: https://github.com/mathiasbynens/emoji-regex/pull/12
+// $FlowFixMe
 import createEmojiRegex from 'emoji-regex';
 
-export const convertTimestampToDate = timestamp => {
+export const convertTimestampToDate = (timestamp: Date) => {
   let monthNames = [
     'January',
     'February',
@@ -35,7 +38,7 @@ export const convertTimestampToDate = timestamp => {
   return `${month} ${day}, ${year} · ${cleanHours}:${minutes}${ampm}`;
 };
 
-export const convertTimestampToTime = timestamp => {
+export const convertTimestampToTime = (timestamp: Date) => {
   let date = new Date(timestamp);
   let hours = date.getHours() || 0;
   let cleanHours;
@@ -56,9 +59,7 @@ const originalEmojiRegex = createEmojiRegex();
 const regex = new RegExp(
   `^(${originalEmojiRegex.toString().replace(/\/g$/, '')}|\\s)+$`
 );
-export const onlyContainsEmoji = text => regex.test(text);
-
-// @flow
+export const onlyContainsEmoji = (text: string) => regex.test(text);
 
 /**
  * Encode a string to base64 (using the Node built-in Buffer)

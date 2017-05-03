@@ -3,7 +3,6 @@ import { subscribeToNewMessages } from './subscriptions';
 import { storyInfoFragment } from '../../api/fragments/story/storyInfo';
 import { storyMessagesFragment } from '../../api/fragments/story/storyMessages';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
-import { messageInfoFragment } from '../../api/fragments/message/messageInfo';
 import {
   communityInfoFragment,
 } from '../../api/fragments/community/communityInfo';
@@ -60,7 +59,6 @@ const getStoryQueryOptions = {
         if (!props.data.story) {
           return;
         }
-        console.log(props);
         return props.data.subscribeToMore({
           document: subscribeToNewMessages,
           variables: {

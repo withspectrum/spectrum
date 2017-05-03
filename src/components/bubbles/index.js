@@ -5,7 +5,6 @@ import sanitizeHtml from 'sanitize-html';
 //$FlowFixMe
 import * as Autolinker from 'autolinker';
 import { TextBubble, Emoji, ImageBubble } from './style';
-import { FREQUENCY_ANCHORS, FREQUENCIES } from '../../helpers/regexps';
 
 type BubbleProps = {
   me: boolean,
@@ -14,11 +13,10 @@ type BubbleProps = {
   message: Object,
   imgSrc: ?string,
   type: ?'story' | 'messageGroup',
-  activeCommunity: ?string,
 };
 
 export const Bubble = (props: BubbleProps) => {
-  const { me, persisted, message, type, activeCommunity } = props;
+  const { me, persisted, message, type } = props;
 
   const formatMessageForFrequencyLinks = (message: string): string => {
     if (!message) {

@@ -27,7 +27,6 @@ const displayLoadingState = branch(
 const StoryContainerPure = ({
   data: { story, subscribeToNewMessages, error, loading },
 }) => {
-  console.log(story);
   return (
     <FlexContainer justifyContent="center">
       <Column type="secondary">

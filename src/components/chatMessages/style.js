@@ -1,7 +1,7 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
-import { Tooltip, Transition } from '../globals';
+import { Transition } from '../globals';
 
 export const Avatar = styled.img`
   width: 24px;

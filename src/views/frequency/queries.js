@@ -1,6 +1,9 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
+// $FlowFixMe
+import update from 'immutability-helper';
+import { encode } from '../../helpers/utils';
 import {
   frequencyInfoFragment,
 } from '../../api/fragments/frequency/frequencyInfo';
@@ -26,12 +29,6 @@ const LoadMoreStories = gql`
 `;
 
 const storiesQueryOptions = {
-  options: ({ slug, community }) => ({
-    variables: {
-      slug: slug,
-      community: community,
-    },
-  }),
   props: ({ data: { fetchMore, error, loading, frequency } }) => ({
     data: {
       error,
@@ -66,6 +63,43 @@ const storiesQueryOptions = {
             };
           },
         }),
+    },
+  }),
+  options: ({ slug, community }) => ({
+    variables: {
+      slug: slug,
+      community: community,
+    },
+    reducer: (prev, action, variables) => {
+      if (
+        action.type === 'APOLLO_MUTATION_RESULT' &&
+        action.operationName === 'publishStory'
+      ) {
+        const newStory = action.result.data.publishStory;
+
+        if (newStory.frequency.slug === slug) {
+          // if the new story was published in a frequency that is currently
+          // being viewed, or in a frequency that has already been fetched
+          // and cached by apollo, insert the new story into the array of edges
+          const cursor = encode(newStory.id);
+          const newEdge = {
+            cursor,
+            node: {
+              ...newStory,
+            },
+          };
+          return update(prev, {
+            frequency: {
+              storyConnection: {
+                edges: {
+                  $unshift: [newEdge],
+                },
+              },
+            },
+          });
+        }
+      }
+      return prev;
     },
   }),
 };
