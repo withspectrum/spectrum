@@ -4,6 +4,7 @@ import { Editor as SlateEditor, Raw } from 'slate';
 
 import type { SlatePlugin } from './plugins/mentions/types';
 import MentionsPlugin from './plugins/mentions';
+import MarkdownPlugin from './plugins/markdown';
 
 const initialState = Raw.deserialize(
   {
@@ -24,9 +25,10 @@ const initialState = Raw.deserialize(
 );
 
 type EditorProps = {
-  mentions: boolean,
-  state: Object,
-  onChange: Function,
+  mentions?: boolean,
+  markdown?: boolean,
+  state?: Object,
+  onChange?: Function,
 };
 
 class Editor extends Component {
@@ -54,6 +56,7 @@ class Editor extends Component {
             ),
             Suggestions: props => <span>{props.mention}</span>,
           }),
+        props.markdown !== false && MarkdownPlugin(),
       ],
     };
   }
