@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import Portal from './lib/Portal';
 
@@ -6,10 +7,10 @@ const ENTER = 13;
 const SPACE = 32;
 const FIRST_MENTION = /@([^\s]+)/;
 
-const currentlyInMention = state =>
+const currentlyInMention = (state: Object) =>
   state.marks.some(mark => mark.type === 'mention');
 
-const findNearestMention = (text, end) => {
+const findNearestMention = (text: string, end: number) => {
   // Find the index of the nearest "@" going backwards in text from end index
   // -> "Test @mxstbr| @brian" -> 5 (| = cursor)
   // -> "Test @mxstbr @brian|" -> 13
@@ -26,12 +27,48 @@ const findNearestMention = (text, end) => {
   return !!name && name[1];
 };
 
-const MentionsPlugin = options => {
+type MentionComponentProps = {
+  attributes: Object,
+  children: any,
+};
+
+type SuggestionsComponentProps = {
+  mention: string,
+};
+
+type Options = {
+  Mention?: React$Element<any, MentionComponentProps, any>,
+  Suggestions?: React$Element<any, SuggestionsComponentProps, any>,
+};
+
+type SlateSchema = {
+  nodes?: Object,
+  marks?: Object,
+  rules?: Array<any>,
+};
+
+export type SlatePlugin = {
+  onBeforeInput?: Function,
+  onBlur?: Function,
+  onFocus?: Function,
+  onCopy?: Function,
+  onCut?: Function,
+  onDrop?: Function,
+  onKeyDown?: Function,
+  onPaste?: Function,
+  onSelect?: Function,
+  onChange?: Function,
+  onBeforeChange?: Function,
+  render?: Function,
+  schema?: SlateSchema,
+};
+
+const MentionsPlugin = (options?: Options): SlatePlugin => {
   return {
     schema: {
       marks: {
         // Render a mention
-        mention: props => (
+        mention: (props: MentionComponentProps) => (
           <span
             style={{ background: '#E2197A', color: 'white' }}
             {...props.attributes}
@@ -41,7 +78,7 @@ const MentionsPlugin = options => {
         ),
       },
     },
-    render(props, state, editor) {
+    render(props: Object, state: Object, editor: Object) {
       let portal = null;
       if (currentlyInMention(state)) {
         const mention = findNearestMention(
@@ -63,7 +100,7 @@ const MentionsPlugin = options => {
         </div>
       );
     },
-    onKeyDown(event, data, state) {
+    onKeyDown(event: KeyboardEvent, data: any, state: Object) {
       switch (event.which) {
         // If the user types an @ we add a mark if we're not already in one
         case AT_SIGN: {

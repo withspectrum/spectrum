@@ -1,6 +1,8 @@
+// @flow
 import React, { Component } from 'react';
 import { Editor as SlateEditor, Raw } from 'slate';
 
+import type { SlatePlugin } from './plugins/mentions';
 import MentionsPlugin from './plugins/mentions';
 
 const initialState = Raw.deserialize(
@@ -21,13 +23,29 @@ const initialState = Raw.deserialize(
   { terse: true, normalize: false }
 );
 
+type EditorProps = {
+  mentions: boolean,
+  state: Object,
+  onChange: Function,
+};
+
 class Editor extends Component {
-  state = {
-    state: initialState,
-    plugins: [MentionsPlugin()],
+  props: EditorProps;
+
+  state: {
+    state: Object,
+    plugins: Array<SlatePlugin | false>,
   };
 
-  onChange = state => {
+  constructor(props: EditorProps) {
+    super(props);
+    this.state = {
+      state: initialState,
+      plugins: [props.mentions !== false && MentionsPlugin()],
+    };
+  }
+
+  onChange = (state: Object) => {
     this.setState({ state });
   };
 
@@ -41,8 +59,6 @@ class Editor extends Component {
         onChange={onChange}
         readOnly={false}
         plugins={this.state.plugins}
-        schema={this.state.schema}
-        onKeyDown={this.onKeyDown}
       />
     );
   }
