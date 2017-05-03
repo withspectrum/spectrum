@@ -47,35 +47,16 @@ const getStoriesByUser = (uid, { first, after }) => {
   return Promise.all([getStories, getLastStory]);
 };
 
-const addStory = story => {
+const publishStory = (story, user) => {
   return db
     .table('stories')
     .insert(
       Object.assign({}, story, {
+        author: user.uid,
         createdAt: new Date(),
         modifiedAt: new Date(),
-        edits: [
-          {
-            timestamp: new Date(),
-            content: story.content,
-          },
-        ],
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val);
-};
-
-const publishStory = id => {
-  return db
-    .table('stories')
-    .get(id)
-    .update(
-      {
         published: true,
-        modifiedAt: new Date(),
-      },
+      }),
       { returnChanges: true }
     )
     .run()
@@ -134,7 +115,6 @@ const editStory = (id, newContent) => {
 };
 
 module.exports = {
-  addStory,
   getStory,
   publishStory,
   editStory,

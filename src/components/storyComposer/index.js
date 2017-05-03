@@ -14,6 +14,7 @@ import { LinkButton } from '../buttons';
 import Icon from '../icons';
 import { LoadingCard } from '../loading';
 import { getComposerCommunitiesAndFrequencies } from './queries';
+import { publishStory } from './mutations';
 import {
   Container,
   Composer,
@@ -35,7 +36,6 @@ const displayLoadingState = branch(
 class StoryComposerWithData extends Component {
   constructor(props) {
     super(props);
-
     const availableCommunities = props.data.user.communityConnection.edges
       .map(edge => edge.node)
       .filter(community => community.frequencyConnection.edges.length > 0);
@@ -107,6 +107,34 @@ class StoryComposerWithData extends Component {
     });
   };
 
+  publishStory = () => {
+    if (!this.state.title || !this.state.activeFrequency) {
+      return;
+    }
+
+    const frequency = this.state.activeFrequency;
+    const content = {
+      title: this.state.title,
+      description: this.state.description,
+    };
+
+    this.props
+      .mutate({
+        variables: {
+          story: {
+            frequency,
+            content,
+          },
+        },
+      })
+      .then(({ data }) => {
+        console.log('new story', data);
+      })
+      .catch(error => {
+        console.log('error publishing story', error);
+      });
+  };
+
   render() {
     const {
       isOpen,
@@ -117,6 +145,7 @@ class StoryComposerWithData extends Component {
       activeFrequency,
     } = this.state;
 
+    console.log(this.state);
     return (
       <Container isOpen={isOpen}>
         <Overlay isOpen={isOpen} onClick={this.closeComposer} />
@@ -188,7 +217,9 @@ class StoryComposerWithData extends Component {
               </Dropdowns>
 
               <div>
-                <LinkButton disabled={!title}>Publish</LinkButton>
+                <LinkButton onClick={this.publishStory} disabled={!title}>
+                  Publish
+                </LinkButton>
               </div>
             </Actions>
           </ContentContainer>
@@ -201,7 +232,9 @@ class StoryComposerWithData extends Component {
 
 export const StoryComposer = compose(
   getComposerCommunitiesAndFrequencies,
+  publishStory,
   displayLoadingState,
   pure
 )(StoryComposerWithData);
+
 export default StoryComposer;

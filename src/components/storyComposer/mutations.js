@@ -1,14 +1,15 @@
+// @flow
+// $FlowFixMe
 import { graphql, gql } from 'react-apollo';
+import { storyInfoFragment } from '../../api/fragments/story/storyInfo';
 
 export const publishStory = graphql(
   gql`
-    mutation addStory($story: StoryContentInput!) {
-      addStory(story: $story) {
-        id
-        author {
-          name
-        }
+    mutation publishStory($story: StoryInput!) {
+      publishStory(story: $story) {
+        ...storyInfo
       }
     }
+    ${storyInfoFragment}
   `
 );
