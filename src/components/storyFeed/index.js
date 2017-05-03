@@ -25,8 +25,12 @@ const StoryFeedPure = ({
     return <div>Oops, something went wrong</div>;
   }
 
+  if (!stories) {
+    return <div>No stories to be found</div>;
+  }
+
   return (
-    <div>
+    <div style={{ minWidth: '100%' }}>
       {stories.map(story => {
         return <StoryFeedCard key={story.node.id} data={story.node} />;
       })}

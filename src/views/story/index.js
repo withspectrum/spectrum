@@ -11,7 +11,8 @@ import AppViewWrapper from '../../components/appViewWrapper';
 
 const StoryPure = ({ match, location }) => (
   <AppViewWrapper>
-    {/* story content */}
+
+    {/* if a storyId is provided in the url */}
     <Route
       location={location}
       key={location.key}

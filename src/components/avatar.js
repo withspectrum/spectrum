@@ -12,6 +12,7 @@ const StyledAvatar = styled.img`
   width: ${props => (props.size ? `${props.size}px` : '100%')};
   height: ${props => (props.size ? `${props.size}px` : '100%')};
   margin: ${props => (props.margin ? `${props.margin}` : '0')};
+  object-fit: cover;
 `;
 
 const AvatarPure = (props: Object): React$Element<any> => (

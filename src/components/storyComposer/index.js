@@ -1,19 +1,22 @@
 // @flow
 import React, { Component } from 'react';
-//$FlowFixMe
+// $FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
+// $FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
+// $FlowFixMe
 import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
+// $FlowFixMe
 import branch from 'recompose/branch';
-//$FlowFixMe
+// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
+// $FlowFixMe
+import { withRouter } from 'react-router';
 import { LinkButton } from '../buttons';
 import Icon from '../icons';
 import { LoadingCard } from '../loading';
 import { getComposerCommunitiesAndFrequencies } from './queries';
+import { publishStory } from './mutations';
 import {
   Container,
   Composer,
@@ -60,6 +63,7 @@ class StoryComposerWithData extends Component {
       availableFrequencies,
       activeCommunity,
       activeFrequency,
+      isPublishing: false,
     };
   }
 
@@ -107,6 +111,43 @@ class StoryComposerWithData extends Component {
     });
   };
 
+  publishStory = () => {
+    if (!this.state.title || !this.state.activeFrequency) {
+      return;
+    }
+
+    this.setState({
+      isPublishing: true,
+    });
+
+    const frequency = this.state.activeFrequency;
+    const content = {
+      title: this.state.title,
+      description: this.state.description,
+    };
+
+    this.props
+      .mutate({
+        variables: {
+          story: {
+            frequency,
+            content,
+          },
+        },
+      })
+      .then(({ data }) => {
+        const id = data.publishStory.id;
+        this.setState({
+          isPublishing: false,
+        });
+
+        this.props.history.push(`/story/${id}`);
+      })
+      .catch(error => {
+        console.log('error publishing story', error);
+      });
+  };
+
   render() {
     const {
       isOpen,
@@ -115,6 +156,7 @@ class StoryComposerWithData extends Component {
       availableCommunities,
       activeCommunity,
       activeFrequency,
+      isPublishing,
     } = this.state;
 
     return (
@@ -187,9 +229,13 @@ class StoryComposerWithData extends Component {
                 </select>
               </Dropdowns>
 
-              <div>
-                <LinkButton disabled={!title}>Publish</LinkButton>
-              </div>
+              <LinkButton
+                onClick={this.publishStory}
+                loading={isPublishing}
+                disabled={!title || isPublishing}
+              >
+                Publish
+              </LinkButton>
             </Actions>
           </ContentContainer>
 
@@ -201,7 +247,10 @@ class StoryComposerWithData extends Component {
 
 export const StoryComposer = compose(
   getComposerCommunitiesAndFrequencies,
+  publishStory,
   displayLoadingState,
+  withRouter,
   pure
 )(StoryComposerWithData);
+
 export default StoryComposer;

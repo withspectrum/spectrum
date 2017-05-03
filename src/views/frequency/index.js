@@ -36,7 +36,7 @@ const FrequencyViewPure = ({ match }) => {
       <Column type="primary" alignItems="center">
         <StoryComposer
           activeCommunity={communityId}
-          activeFrequency={frequencySlug}
+          activeFrequency={match.params.frequencyId}
         />
         <StoryFeedWithData slug={frequencySlug} community={communitySlug} />
       </Column>
