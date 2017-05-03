@@ -22,6 +22,9 @@ export const getFrequency = graphql(
         id
         name
         slug
+        community {
+          name
+        }
         description
         metaData {
           subscribers
@@ -80,6 +83,9 @@ export const getTopFrequencies = graphql(
         id
         name
         slug
+        community {
+          name
+        }
         description
         metaData {
           subscribers
