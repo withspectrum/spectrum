@@ -13,7 +13,7 @@ const { SubscriptionServer } = require('subscriptions-transport-ws');
 const cors = require('cors');
 
 const { db } = require('./models/db');
-const listeners = require('./subscriptions');
+const listeners = require('./subscriptions/listeners');
 const subscriptionManager = require('./subscriptions/manager');
 
 const schema = require('./schema');

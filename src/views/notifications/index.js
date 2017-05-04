@@ -5,10 +5,16 @@ import { Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-import AppViewWrapper from '../../components/appViewWrapper';
+//$FlowFixMe
+import branch from 'recompose/branch';
+//$FlowFixMe
+import renderComponent from 'recompose/renderComponent';
+
 import Icon from '../../components/icons';
 import { Column } from '../../components/column';
 import { FlexRow } from '../../components/globals';
+import { LoadingCard } from '../../components/loading';
+import AppViewWrapper from '../../components/appViewWrapper';
 import {
   NotificationCard,
   Content,
@@ -17,87 +23,52 @@ import {
   HorizontalRuleWithIcon,
   ChatMessage,
 } from './style';
+import { getNotifications } from './queries';
 
-const data = [
-  {
-    threadID: 'asdflkjasdflkjadflkj',
-    activityType: 'new-story',
-    community: 'Spectrum',
-    frequency: 'General',
-    threadName: '📍 New features: Highlight new stories, fix scrolling position, and more!',
-    threadContent: "Today we shipped a bunch of new features for y'all! The first is highlighting stories. We think the most valuable piece of data is that there is...",
-    triggerMessage: '',
-    read: false,
-    sender: 'Max Stoiber',
-    timestamp: 1489352567485,
-  },
-  {
-    threadID: 'asdflkjasdflkjadflk',
-    activityType: 'new-message',
-    content: "I've had like 2 drops in ~50 hours. Not perfect by any means 😭",
-    community: 'Spectrum',
-    frequency: 'General',
-    threadName: 'How bout dat Zelda tho?',
-    threadContent: 'some content',
-    triggerMessage: "OMG. It's so tough to get Dinayru's horn!",
-    read: false,
-    sender: 'Bryn Jackson',
-    timestamp: 1490994669642,
-  },
-  {
-    threadID: 'asdflkjasdflkjadfl',
-    activityType: 'new-story',
-    community: 'Spectrum',
-    frequency: 'General',
-    threadName: '📍 New features: Highlight new stories, fix scrolling position, and more!',
-    threadContent: "Today we shipped a bunch of new features for y'all!",
-    triggerMessage: '',
-    read: true,
-    sender: 'Brian Lovin',
-    timestamp: 1489352567484,
-  },
-];
+const displayLoadingState = branch(
+  props => props.data.loading,
+  renderComponent(LoadingCard)
+);
 
-const getIconByType = notification => {
-  switch (notification.activityType) {
-    case 'new-story':
-      return 'write';
-    case 'new-message':
-      return 'messages';
-    default:
-      return 'notification';
-  }
+const icons = {
+  NEW_STORY: 'write',
+  NEW_MESSAGE: 'messages',
+  default: 'notification',
 };
 
-const getColorByType = notification => {
-  switch (notification.activityType) {
-    case 'new-story':
-      return 'success.default';
-    case 'new-message':
-      return 'warn.alt';
-    default:
-      return;
-  }
+const colors = {
+  NEW_STORY: 'success.default',
+  NEW_MESSAGE: 'warn.alt',
+};
+
+const getIconByType = type => {
+  return icons[type] || icons.default;
+};
+
+const getColorByType = type => {
+  return colors[type];
 };
 
 const constructMessage = notification => {
-  const { activityType, sender, community, frequency, threadID } = notification;
-  switch (activityType) {
-    case 'new-story':
+  const { type, sender, community, frequency, story } = notification;
+  switch (type) {
+    case 'NEW_STORY':
       return (
         <span>
-          <Link to={`/@${sender}`}>{sender}</Link>
+          <Link to={`/@${sender.username}`}>{sender.displayName}</Link>
           {' '}posted a new thread in{' '}
-          <Link to={`/${community}/${frequency}`}>{community}/{frequency}</Link>
+          <Link to={`/${community.slug}/${frequency.slug}`}>
+            {community.name}/{frequency.name}
+          </Link>
           :
         </span>
       );
-    case 'new-message':
+    case 'NEW_MESSAGE':
       return (
         <span>
-          <Link to={`/@${sender}`}>{sender}</Link>
+          <Link to={`/@${sender.username}`}>{sender.displayName}</Link>
           {' '}replied to your{' '}
-          <Link to={`/thread/${threadID}`}>thread</Link>:
+          <Link to={`/story/${story.id}`}>thread</Link>:
         </span>
       );
     default:
@@ -106,11 +77,11 @@ const constructMessage = notification => {
 };
 
 const constructContent = notification => {
-  const { activityType, sender, threadContent, triggerMessage } = notification;
-  switch (activityType) {
-    case 'new-story':
-      return <p>{threadContent}</p>;
-    case 'new-message':
+  const { type, sender, content } = notification;
+  switch (type) {
+    case 'NEW_STORY':
+      return <p>{content.excerpt}</p>;
+    case 'NEW_MESSAGE':
       return (
         <div>
           <HorizontalRuleWithIcon>
@@ -122,8 +93,8 @@ const constructContent = notification => {
             />
             <hr />
           </HorizontalRuleWithIcon>
-          <ChatMessage data-from={sender}>
-            {triggerMessage}
+          <ChatMessage data-from={sender.displayName}>
+            {content.excerpt}
           </ChatMessage>
         </div>
       );
@@ -132,29 +103,34 @@ const constructContent = notification => {
   }
 };
 
-const NotificationsPure = () => (
-  <AppViewWrapper>
-    <Column type={'primary'}>
-      {data.map(notification => (
-        <NotificationCard key={notification.timestamp.toString()}>
-          <FlexRow center>
-            <Icon
-              icon={getIconByType(notification)}
-              color={getColorByType(notification)}
-              hoverColor={getColorByType(notification)}
-            />
-            <Message>{constructMessage(notification)}</Message>
-          </FlexRow>
-          <Content>
-            <ContentHeading>{notification.threadName}</ContentHeading>
-            {constructContent(notification)}
-          </Content>
-        </NotificationCard>
-      ))}
-    </Column>
-  </AppViewWrapper>
-);
+const NotificationsPure = props => {
+  const { data: { notifications: { edges } } } = props;
+  return (
+    <AppViewWrapper>
+      <Column type={'primary'}>
+        {edges.map(({ node: notification }) => (
+          <NotificationCard key={notification.id}>
+            <FlexRow center>
+              <Icon
+                icon={getIconByType(notification.type)}
+                color={getColorByType(notification.type)}
+                hoverColor={getColorByType(notification.type)}
+              />
+              <Message>{constructMessage(notification)}</Message>
+            </FlexRow>
+            <Content>
+              <ContentHeading>{notification.content.title}</ContentHeading>
+              {constructContent(notification)}
+            </Content>
+          </NotificationCard>
+        ))}
+      </Column>
+    </AppViewWrapper>
+  );
+};
 
-const Notifications = compose(pure)(NotificationsPure);
+const Notifications = compose(getNotifications, displayLoadingState, pure)(
+  NotificationsPure
+);
 
 export default Notifications;

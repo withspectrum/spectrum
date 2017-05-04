@@ -19,6 +19,7 @@ const Message = require('./types/Message');
 const Reaction = require('./types/Reaction');
 const User = require('./types/User');
 const DirectMessageGroup = require('./types/DirectMessageGroup');
+const Notification = require('./types/Notification');
 
 const storyQueries = require('./queries/story');
 const frequencyQueries = require('./queries/frequency');
@@ -27,12 +28,14 @@ const messageQueries = require('./queries/message');
 const userQueries = require('./queries/user');
 const reactionQueries = require('./queries/reaction');
 const directMessageGroupQueries = require('./queries/directMessageGroup');
+const notificationQueries = require('./queries/notification');
 
 const messageMutations = require('./mutations/message');
 const storyMutations = require('./mutations/story');
 const reactionMutations = require('./mutations/reaction');
 const communityMutations = require('./mutations/community');
 const directMessageGroupMutations = require('./mutations/directMessageGroup');
+const notificationMutations = require('./mutations/notification');
 
 const messageSubscriptions = require('./subscriptions/message');
 
@@ -74,6 +77,7 @@ const schema = makeExecutableSchema({
     Reaction,
     User,
     DirectMessageGroup,
+    Notification,
   ],
   resolvers: merge(
     {},
@@ -86,12 +90,14 @@ const schema = makeExecutableSchema({
     userQueries,
     directMessageGroupQueries,
     reactionQueries,
+    notificationQueries,
     // mutations
     messageMutations,
     storyMutations,
     directMessageGroupMutations,
     reactionMutations,
     communityMutations,
+    notificationMutations,
     // subscriptions
     messageSubscriptions
   ),

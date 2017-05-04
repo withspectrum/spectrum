@@ -8,6 +8,7 @@ const { getStoriesByUser } = require('../models/story');
 const {
   getDirectMessageGroupsByUser,
 } = require('../models/directMessageGroup');
+const { getNotificationsByUser } = require('../models/notification');
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import type { PaginationOptions } from '../utils/paginate-arrays';
@@ -19,6 +20,14 @@ module.exports = {
     currentUser: (_, __, { user }) => user,
   },
   User: {
+    notificationConnection: (
+      { uid }: { uid: String },
+      { first = 10, after }: PaginationOptions,
+      { user }: { user: Object }
+    ) => {
+      if (!user || user.uid !== uid) return null;
+      return getNotificationsByUser(uid, { first, after });
+    },
     everything: (
       { uid }: { uid: String },
       { first = 10, after }: PaginationOptions

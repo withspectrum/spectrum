@@ -45,7 +45,7 @@ class ScrollRow extends Component {
     return (
       <ScrollableFlexRow
         className={this.props.className}
-        innerRef={comp => (this.hscroll = comp)}
+        innerRef={comp => this.hscroll = comp}
       >
         {this.props.children}
       </ScrollableFlexRow>

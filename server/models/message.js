@@ -4,6 +4,8 @@
  * Storing and retrieving messages
  */
 const { db } = require('./db');
+const { listenToNewDocumentsIn } = require('./utils');
+const { storeMessageNotification } = require('./notification');
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
 export type LocationTypes = 'messages' | 'direct_messages';
@@ -28,8 +30,7 @@ const getMessagesByLocationAndThread = (
     .orderBy('timestamp')
     .filter({ thread })
     .limit(first)
-    .run()
-    .then();
+    .run();
 
   const getLastMessage = db
     .table(location)
@@ -54,29 +55,22 @@ const storeMessage = (location: LocationTypes, message: MessageProps, user) => {
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => result.changes[0].new_val)
+    .then(message => {
+      storeMessageNotification({
+        message: message.id,
+        story: message.thread,
+        sender: message.sender,
+        content: {
+          excerpt: message.message.content,
+        },
+      });
+      return message;
+    });
 };
 
-const listenToNewMessages = (location: LocationTypes, cb: Function): Object => {
-  return (
-    db
-      .table(location)
-      .changes({
-        includeInitial: false,
-      })
-      // Filter to only include newly inserted messages in the changefeed
-      .filter(
-        db.row('old_val').eq(null).and(db.not(db.row('new_val').eq(null)))
-      )
-      .run({ cursor: true }, (err, cursor) => {
-        if (err) throw err;
-        cursor.each((err, data) => {
-          if (err) throw err;
-          // Call the passed callback with the message directly
-          cb(data.new_val);
-        });
-      })
-  );
+const listenToNewMessages = (location: LocationTypes, cb: Function) => {
+  return listenToNewDocumentsIn(location, cb);
 };
 
 const getMessageCount = (location: string, thread: string) => {

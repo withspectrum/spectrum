@@ -1,7 +1,10 @@
+// @flow
 /**
  * Storing and retrieving stories
  */
 const { db } = require('./db');
+const { listenToNewDocumentsIn } = require('./utils');
+const { storeStoryNotification } = require('./notification');
 
 const getStory = id => {
   return db.table('stories').get(id).run();
@@ -60,7 +63,20 @@ const publishStory = (story, user) => {
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => result.changes[0].new_val)
+    .then(story => {
+      storeStoryNotification({
+        story: story.id,
+        frequency: story.frequency,
+        sender: story.author,
+        content: {
+          title: story.content.title,
+          // TODO Limit to max characters
+          excerpt: story.content.description,
+        },
+      });
+      return story;
+    });
 };
 
 const setStoryLock = (id, value) => {
@@ -114,12 +130,17 @@ const editStory = (id, newContent) => {
     .then(result => result.changes[0].new_val);
 };
 
+const listenToNewStories = cb => {
+  return listenToNewDocumentsIn('stories', cb);
+};
+
 module.exports = {
   getStory,
   publishStory,
   editStory,
   setStoryLock,
   deleteStory,
+  listenToNewStories,
   getStoriesByFrequency,
   getStoriesByUser,
 };
