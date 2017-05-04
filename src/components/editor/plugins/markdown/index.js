@@ -21,12 +21,20 @@ const MarkdownPlugin = (options?: Options) => {
       switch (event.which) {
         case HASHTAG: {
           if (!isAtBeginning(state)) return;
-          return state.transform().addMark('h1').apply();
+          // TODO: Figure out how to apply to whole line
+          return state.transform().toggleMark('h1').apply();
         }
         case BACKSPACE: {
           const heading = isHeading(state);
-          if (state.selection.startOffset === 1) {
-            return state.transform().removeMark('h1').apply();
+          if (state.selection.startOffset === 1 && heading) {
+            return state
+              .transform()
+              .extendToEndOf(state.startBlock)
+              .removeMark(heading)
+              .collapseToStartOf(state.startBlock)
+              .move(1)
+              .deleteBackward()
+              .apply();
           }
         }
       }
