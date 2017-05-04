@@ -1,5 +1,6 @@
 //@flow
 import React from 'react';
+import { Link } from 'react-router-dom';
 //$FlowFixMe
 import branch from 'recompose/branch';
 //$FlowFixMe
@@ -33,13 +34,18 @@ import {
   ErrorState,
 } from './style';
 
-import { getFrequency, getCommunity, getTopFrequencies } from './queries';
+import {
+  getFrequency,
+  getCommunity,
+  getTopFrequencies,
+  getUserSubscriptions,
+} from './queries';
 
 const CURATED_FREQUENCIES = {
   title: '5 cool ways to use frequencies',
   subtitle: 'News, journaling, communities, show and tell, and recommendations...',
   items: [
-    { id: '0304595c-afbe-4b7c-8335-082971838097', type: 'frequency' },
+    { id: '32ebce3d-0c9b-4b94-9ddf-e7cd40ec6ffb', type: 'frequency' },
     { id: '06c877e9-b872-42ef-9416-aa1d465888df', type: 'frequency' },
     { id: '0352f4f5-8e12-4de8-8299-9a6664f77ee0', type: 'frequency' },
     { id: '16bf0f80-0335-4fbb-8d4d-ccfe5c8c8162', type: 'frequency' },
@@ -51,7 +57,7 @@ const CURATED_COMMUNITIES = {
   title: 'Community Center',
   subtitle: 'Join some new communities and discover new things!',
   items: [
-    { id: '402f0610-b28f-4ada-b59c-f5e5b67aca59', type: 'community' },
+    { id: '0af28a04-f4ef-4294-b617-da9b37a88d3a', type: 'community' },
     { id: 'e44b03c9-be93-463b-ae5b-08173cb4010c', type: 'community' },
     { id: 'fbb87abe-2735-4630-92f5-674b6f5dcbb9', type: 'community' },
     { id: '77f5720c-cc39-4486-9766-ac0f1c8c1334', type: 'community' },
@@ -59,7 +65,12 @@ const CURATED_COMMUNITIES = {
   ],
 };
 
-const ErrorItem = i => {
+const displayLoadingState = branch(
+  props => !props.data || props.data.loading,
+  renderComponent(Loading)
+);
+
+const ErrorItem = () => {
   return (
     <ErrorState>
       <FlexCol>
@@ -67,13 +78,13 @@ const ErrorItem = i => {
         <ItemCopy>The server disconnected. Please refresh the page.</ItemCopy>
       </FlexCol>
       <ButtonContainer center>
-        <ItemButton>Refresh</ItemButton>
+        <ItemButton onClick={location.reload()}>Refresh</ItemButton>
       </ButtonContainer>
     </ErrorState>
   );
 };
 
-const Frequency = ({ data: { frequency } }, i) => {
+const Frequency = ({ data: { frequency, ids } }) => {
   if (!frequency) {
     return <div />;
   }
@@ -85,16 +96,21 @@ const Frequency = ({ data: { frequency } }, i) => {
         <ItemCopy>{frequency.description}</ItemCopy>
       </FlexCol>
       <ButtonContainer>
-        <ItemButton>Join</ItemButton>
+        {ids && ids.indexOf(frequency.id) > -1
+          ? <Link to={`/${frequency.slug}`}>
+              <ItemButton joined>{`Go to ~${frequency.name}`}</ItemButton>
+            </Link>
+          : <ItemButton>Join</ItemButton>}
       </ButtonContainer>
     </Item>
   );
 };
 
-const Community = ({ data: { community } }, i) => {
+const Community = ({ data: { community, ids } }) => {
   if (!community) {
     return <div />;
   }
+
   return (
     <Item key={community.id}>
       <FlexCol>
@@ -102,18 +118,17 @@ const Community = ({ data: { community } }, i) => {
         <ItemMeta>{community.metaData.members} members</ItemMeta>
       </FlexCol>
       <ButtonContainer>
-        <ItemButton>Join</ItemButton>
+        {ids && ids.indexOf(community.id) > -1
+          ? <Link to={`/${community.slug}`}>
+              <ItemButton joined>{`Go to ${community.name}`}</ItemButton>
+            </Link>
+          : <ItemButton>Join</ItemButton>}
       </ButtonContainer>
     </Item>
   );
 };
 
-const displayLoadingState = branch(
-  props => !props.data || props.data.loading,
-  renderComponent(Loading)
-);
-
-const composeSectionFromList = list => {
+const composeSectionFromList = (list, ids) => {
   return (
     <Section>
       <SectionTitle>{list.title}</SectionTitle>
@@ -122,7 +137,7 @@ const composeSectionFromList = list => {
         {list.items.map(entity => {
           if (entity.type === 'frequency') {
             const EntityWithData = compose(
-              withProps({ id: entity.id, key: entity.id }),
+              withProps({ id: entity.id, key: entity.id, ids }),
               getFrequency,
               displayLoadingState
             )(Frequency);
@@ -130,7 +145,7 @@ const composeSectionFromList = list => {
             return EntityWithData();
           } else if (entity.type === 'community') {
             const EntityWithData = compose(
-              withProps({ id: entity.id, key: entity.id }),
+              withProps({ id: entity.id, key: entity.id, ids }),
               getCommunity,
               displayLoadingState
             )(Community);
@@ -172,7 +187,34 @@ const TopThirty = compose(getTopFrequencies, displayLoadingState)(
   TopThirtyPure
 );
 
-const ExplorePure = ({ match }) => {
+const ExplorePure = ({ data }) => {
+  if (data.loading) {
+    return (
+      <ScrollBody>
+        <ViewHeader>
+          <ViewTitle>Explore</ViewTitle>
+          <ViewSubtitle>
+            Discover more of what Spectrum has to offer!
+          </ViewSubtitle>
+          <Constellations />
+          <GoopyThree />
+        </ViewHeader>
+      </ScrollBody>
+    );
+  }
+
+  if (data.error) {
+    return <div>error</div>;
+  }
+
+  const communityIds = data.user.communityConnection.edges.map(community => {
+    return community.node.id;
+  });
+
+  const frequencyIds = data.user.frequencyConnection.edges.map(frequency => {
+    return frequency.node.id;
+  });
+
   return (
     <ScrollBody>
       <ViewHeader>
@@ -184,11 +226,11 @@ const ExplorePure = ({ match }) => {
         <GoopyThree />
       </ViewHeader>
       <TopThirty />
-      {composeSectionFromList(CURATED_FREQUENCIES)}
-      {composeSectionFromList(CURATED_COMMUNITIES)}
+      {composeSectionFromList(CURATED_FREQUENCIES, frequencyIds)}
+      {composeSectionFromList(CURATED_COMMUNITIES, communityIds)}
     </ScrollBody>
   );
 };
 
-const Explore = pure(ExplorePure);
+const Explore = compose(getUserSubscriptions, pure)(ExplorePure);
 export default Explore;

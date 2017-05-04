@@ -172,8 +172,8 @@ export const ButtonContainer = styled(FlexRow)`
 export const ItemButton = styled(Button)`
   font-weight: 700;
   color: ${({ theme }) => theme.text.reverse};
-  background-color: ${props => (props.active ? props.theme.inactive : props.theme.brand.default)};
-  background-image: ${props => (props.active ? 'none' : Gradient(props.theme.brand.alt, props.theme.brand.default))};
+  background-color: ${props => (props.joined ? props.theme.inactive : props.theme.brand.default)};
+  background-image: ${props => (props.joined ? 'none' : Gradient(props.theme.brand.alt, props.theme.brand.default))};
   box-shadow: none;
   transition: ${Transition.hover.on};
 
