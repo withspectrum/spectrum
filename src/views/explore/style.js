@@ -13,6 +13,8 @@ import {
   hexa,
 } from '../../components/globals';
 
+import ScrollRow from '../../components/scrollRow';
+
 import { Button } from '../../components/buttons';
 // import ScrollRow from '../../../shared/ScrollRow';
 
@@ -106,7 +108,7 @@ export const SectionSubtitle = styled(H3)`
   }
 `;
 
-export const Row = styled(FlexRow)`
+export const Row = styled(ScrollRow)`
   max-width: 100%;
   width: 100%;
   flex: 0 0 320px;
@@ -159,7 +161,7 @@ export const ItemMeta = styled(ItemCopy)`
 `;
 
 export const ButtonContainer = styled(FlexRow)`
-  justify-content: flex-end;
+  justify-content: ${props => (props.center ? 'center' : 'flex-end')};
   align-items: center;
 
   > div {
@@ -170,8 +172,8 @@ export const ButtonContainer = styled(FlexRow)`
 export const ItemButton = styled(Button)`
   font-weight: 700;
   color: ${({ theme }) => theme.text.reverse};
-  background-color: ${props => (props.active ? props.theme.inactive : props.theme.brand.default)};
-  background-image: ${props => (props.active ? 'none' : Gradient(props.theme.brand.alt, props.theme.brand.default))};
+  background-color: ${props => (props.joined ? props.theme.inactive : props.theme.brand.default)};
+  background-image: ${props => (props.joined ? 'none' : Gradient(props.theme.brand.alt, props.theme.brand.default))};
   box-shadow: none;
   transition: ${Transition.hover.on};
 
@@ -192,4 +194,21 @@ export const Constellations = styled.div`
 	bottom: 0;
 	left: 0;
 	right: 0;
+`;
+
+export const ErrorState = styled(FlexCol)`
+  width: 100%;
+  margin-top: 32px;
+  h2 {
+    text-align: center;
+    opacity: 0.5;
+  }
+
+  p {
+    text-align: center;
+    opacity: 0.5;
+  }
+  &:not(:first-of-type) {
+    display: none;
+  }
 `;
