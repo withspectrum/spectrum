@@ -1,5 +1,7 @@
 // @flow
+// $FlowFixMe
 import { ApolloClient, createNetworkInterface } from 'react-apollo';
+// $FlowFixMe
 import {
   SubscriptionClient,
   addGraphQLSubscriptions,

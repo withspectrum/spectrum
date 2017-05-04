@@ -12,7 +12,7 @@ const getStoriesByFrequency = (frequency, { first, after }) => {
     .table('stories')
     .between(after || db.minval, db.maxval, { leftBound: 'open' })
     .orderBy(db.desc('modifiedAt'))
-    .filter({ frequency })
+    .filter({ frequency, published: true })
     .limit(first)
     .run()
     .then();
@@ -20,7 +20,7 @@ const getStoriesByFrequency = (frequency, { first, after }) => {
   const getLastStory = db
     .table('stories')
     .orderBy('modifiedAt')
-    .filter({ frequency })
+    .filter({ frequency, published: true })
     .max()
     .run();
 
@@ -32,7 +32,7 @@ const getStoriesByUser = (uid, { first, after }) => {
     .table('stories')
     .between(after || db.minval, db.maxval, { leftBound: 'open' })
     .orderBy(db.desc('modifiedAt'))
-    .filter({ author: uid })
+    .filter({ author: uid, published: true })
     .limit(first)
     .run()
     .then();
@@ -40,7 +40,7 @@ const getStoriesByUser = (uid, { first, after }) => {
   const getLastStory = db
     .table('stories')
     .orderBy('modifiedAt')
-    .filter({ author: uid })
+    .filter({ author: uid, published: true })
     .max()
     .run();
 

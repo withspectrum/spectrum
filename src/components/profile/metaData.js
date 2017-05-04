@@ -57,6 +57,8 @@ const buildArray = (meta: Object): Array<any> => {
         }
       );
     }
+
+    return {};
   });
 };
 
