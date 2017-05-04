@@ -83,7 +83,7 @@ const ChatMessages = ({ messages, currentUser }) => {
             : () => this.toggleReaction(message.id, userHasReacted)
         }
       >
-        <Icon icon={'like-active'} reverse size={16} static />
+        <Icon icon={'like-active'} size={16} color={'text.reverse'} />
         <Count>{reactionCount}</Count>
       </Reaction>
     );
@@ -155,7 +155,7 @@ const ChatMessages = ({ messages, currentUser }) => {
                     </MessageWrapper>
                   );
                 } else {
-                  return <div />;
+                  return <div key={i} />;
                 }
               })}
             </MessagesWrapper>

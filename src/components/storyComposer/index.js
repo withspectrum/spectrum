@@ -36,18 +36,48 @@ const displayLoadingState = branch(
 );
 
 class StoryComposerWithData extends Component {
+  // prop types
+  state: {
+    isOpen: boolean,
+    title: string,
+    description: string,
+    availableCommunities: Array<any>,
+    availableFrequencies: Array<any>,
+    activeCommunity: string,
+    activeFrequency: string,
+    isPublishing: boolean,
+  };
+
   constructor(props) {
     super(props);
 
+    /*
+      Create a new array of communities only containing the `node` data from
+      graphQL. Then filter the resulting frequency to remove any communities
+      that don't have any frequencies yet
+
+      TODO: Ideally we don't have any communities with no frequency. If we
+      can guarantee this, we can remove the extra filter here
+    */
     const availableCommunities = props.data.user.communityConnection.edges
       .map(edge => edge.node)
       .filter(community => community.frequencyConnection.edges.length > 0);
-    // filter to exclude communities with no frequencies
 
+    /*
+      Iterate through each of our community nodes to construct a new array
+      of possible frequencies
+    */
     const availableFrequencies = availableCommunities.map(community => {
       return community.frequencyConnection.edges.map(edge => edge.node);
     });
 
+    /*
+      If a user is viewing a communit or frequency, we use the url as a prop
+      to set a default activeCommunity and activeFrequency
+
+      If no defaults are set, we use the first available community, and then
+      find the first available frequency within that available community
+    */
     const activeCommunity = props.activeCommunity || availableCommunities[0].id;
     const activeFrequency =
       props.activeFrequency ||
@@ -68,18 +98,22 @@ class StoryComposerWithData extends Component {
   }
 
   changeTitle = e => {
+    const title = e.target.value;
     this.setState({
-      title: e.target.value,
+      title,
     });
   };
 
   changeDescription = e => {
+    const description = e.target.value;
     this.setState({
-      description: e.target.value,
+      description,
     });
   };
 
   handleOpenComposer = () => {
+    // strange construction here in order to guarantee that we focus the title
+    // input whenever the composer is opened
     const isOpen = this.state.isOpen;
     if (!isOpen) {
       this.setState({ isOpen: true });
@@ -106,26 +140,35 @@ class StoryComposerWithData extends Component {
   };
 
   setActiveFrequency = e => {
+    const activeFrequency = e.target.value;
+
     this.setState({
-      activeFrequency: e.target.value,
+      activeFrequency,
     });
   };
 
   publishStory = () => {
+    // if no title and no frequency is set, don't allow a story to be published
     if (!this.state.title || !this.state.activeFrequency) {
       return;
     }
 
+    // isPublishing will change the publish button to a loading spinner
     this.setState({
       isPublishing: true,
     });
 
-    const frequency = this.state.activeFrequency;
+    // define new constants in order to construct the proper shape of the
+    // input for the publishStory mutation
+    const { activeFrequency, title, description } = this.state;
+    const frequency = activeFrequency;
     const content = {
-      title: this.state.title,
-      description: this.state.description,
+      title,
+      description,
     };
 
+    // this.props.mutate comes from a higher order component defined at the
+    // bottom of this file
     this.props
       .mutate({
         variables: {
@@ -135,15 +178,22 @@ class StoryComposerWithData extends Component {
           },
         },
       })
+      // after the mutation occurs, it will either return an error or the new
+      // story that was published
       .then(({ data }) => {
+        // get the story id to redirect the user
         const id = data.publishStory.id;
+
+        // stop the loading spinner on the publish button
         this.setState({
           isPublishing: false,
         });
 
+        // redirect the user to the story
         this.props.history.push(`/story/${id}`);
       })
       .catch(error => {
+        // TODO add some kind of dispatch here to show an error to the user
         console.log('error publishing story', error);
       });
   };
@@ -246,10 +296,10 @@ class StoryComposerWithData extends Component {
 }
 
 export const StoryComposer = compose(
-  getComposerCommunitiesAndFrequencies,
-  publishStory,
-  displayLoadingState,
-  withRouter,
+  getComposerCommunitiesAndFrequencies, // query to get data
+  publishStory, // mutation to publish a story
+  displayLoadingState, // handle loading state while query is fetching
+  withRouter, // needed to use history.push() as a post-publish action
   pure
 )(StoryComposerWithData);
 

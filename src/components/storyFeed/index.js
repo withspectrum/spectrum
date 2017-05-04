@@ -17,14 +17,23 @@ const displayLoadingState = branch(
   renderComponent(LoadingCard)
 );
 
+/*
+  The story feed always expects a prop of 'stories' - this means that in
+  the Apollo query contructor, you will need to map a new prop called 'stories'
+  to return whatever stories we're fetching (community -> storiesConnection)
+
+  See 'views/community/queries.js' for an example of the prop mapping in action
+*/
 const StoryFeedPure = ({
   data: { stories, loading, fetchMore, error },
   data,
 }) => {
+  // TODO: Better error state
   if (error) {
     return <div>Oops, something went wrong</div>;
   }
 
+  // TODO: better loading state
   if (!stories) {
     return <div>No stories to be found</div>;
   }
