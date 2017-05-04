@@ -154,6 +154,8 @@ const ChatMessages = ({ messages, currentUser }) => {
                       {renderReaction(message, sender, me)}
                     </MessageWrapper>
                   );
+                } else {
+                  return <div />;
                 }
               })}
             </MessagesWrapper>

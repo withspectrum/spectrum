@@ -1,3 +1,4 @@
+/* eslint no-eval: 0 */
 import styled, { css, keyframes } from 'styled-components';
 
 export const Gradient = (

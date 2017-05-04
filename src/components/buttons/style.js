@@ -1,4 +1,5 @@
 // @flow
+/* eslint no-eval: 0 */
 // $FlowFixMe
 import styled, { css } from 'styled-components';
 import { Gradient, Shadow, Transition } from '../globals';
