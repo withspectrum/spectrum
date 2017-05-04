@@ -64,6 +64,7 @@ const getAllStories = (frequencies: Array<String>) => {
     .table('stories')
     .orderBy(db.desc('modifiedAt'))
     .filter(story => db.expr(frequencies).contains(story('frequency')))
+    .filter({ published: true })
     .run();
 };
 
