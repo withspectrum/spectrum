@@ -71,7 +71,7 @@ const getAllStories = (frequencies: Array<String>) => {
 const getUserMetaData = (id: String) => {
   const getStoryCount = db
     .table('stories')
-    .filter({ author: id })
+    .filter({ author: id, published: true })
     .count()
     .run();
 
