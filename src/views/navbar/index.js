@@ -1,4 +1,7 @@
+// @flow
 import React, { Component } from 'react';
+// $FlowFixMe
+import { connect } from 'react-redux';
 import Icon from '../../components/icons';
 import {
   Container,
@@ -14,7 +17,7 @@ import {
 
 class Navbar extends Component {
   render() {
-    const { match } = this.props;
+    const { match, currentUser } = this.props;
 
     return (
       <Container>
@@ -80,9 +83,9 @@ class Navbar extends Component {
 
             {/* TODO: Make this active only when viewing current logged in user profile */}
             <IconLink
-              data-active={match.url === '/users/me'}
+              data-active={match.url === `/users/${currentUser.username}`}
               data-mobileWidth={'half'}
-              to="/users/me"
+              to={`/users/${currentUser.username}`}
             >
               <Icon
                 icon="emoji"
@@ -105,4 +108,7 @@ class Navbar extends Component {
   }
 }
 
-export default Navbar;
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+export default connect(mapStateToProps)(Navbar);

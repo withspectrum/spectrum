@@ -1,3 +1,4 @@
+/* eslint no-eval: 0 */
 import styled from 'styled-components';
 
 export const PageContainer = styled.div`

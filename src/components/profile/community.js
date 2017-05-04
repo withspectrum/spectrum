@@ -48,6 +48,10 @@ const CommunityWithData = ({
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
 
+  if (!community) {
+    return <div>No community to be found</div>;
+  }
+
   return (
     <Card>
       <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>

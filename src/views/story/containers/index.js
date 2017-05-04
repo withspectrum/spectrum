@@ -7,8 +7,6 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 //$FlowFixMe
-import lifecycle from 'recompose/lifecycle';
-//$FlowFixMe
 import renderComponent from 'recompose/renderComponent';
 import { StoryDetail } from '../components/storyDetail';
 import Messages from '../components/messages';
@@ -18,34 +16,21 @@ import { FlexContainer } from '../../../components/flexbox';
 import { Card } from '../../../components/card';
 import { UserProfile, FrequencyProfile } from '../../../components/profile';
 import { getStory } from '../queries';
-import { LoadingCard } from '../../../components/loading';
-
-const lifecycles = lifecycle({
-  state: {
-    subscribed: false,
-  },
-  componentDidUpdate() {
-    if (!this.props.loading && !this.state.subscribed) {
-      this.setState({
-        subscribed: true,
-      });
-      this.props.subscribeToNewMessages();
-    }
-  },
-});
+import { Loading } from '../../../components/loading';
 
 // TODO: Brian - figure out how to abstract this out to be used anywhere
 const displayLoadingState = branch(
   props => !props.data || props.data.loading,
-  renderComponent(LoadingCard)
+  renderComponent(Loading)
 );
 
-const StoryContainerPure = ({ data: { story } }) => {
-  console.log(story);
+const StoryContainerPure = ({
+  data: { story, subscribeToNewMessages, error, loading },
+}) => {
   return (
     <FlexContainer justifyContent="center">
       <Column type="secondary">
-        <UserProfile data={{ user: story.author }} size="medium" />
+        <UserProfile data={{ user: story.author }} profileSize={'medium'} />
         <FrequencyProfile data={{ frequency: story.frequency }} size="medium" />
       </Column>
 
@@ -55,7 +40,7 @@ const StoryContainerPure = ({ data: { story } }) => {
         </Card>
 
         <Card>
-          <Messages messages={story.messageConnection.edges} />
+          <Messages id={story.id} />
         </Card>
 
         <Card>
@@ -66,9 +51,6 @@ const StoryContainerPure = ({ data: { story } }) => {
   );
 };
 
-export const StoryContainer = compose(
-  getStory,
-  lifecycles,
-  displayLoadingState,
-  pure
-)(StoryContainerPure);
+export const StoryContainer = compose(getStory, displayLoadingState, pure)(
+  StoryContainerPure
+);

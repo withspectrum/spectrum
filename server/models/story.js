@@ -11,8 +11,8 @@ const getStoriesByFrequency = (frequency, { first, after }) => {
   const getStories = db
     .table('stories')
     .between(after || db.minval, db.maxval, { leftBound: 'open' })
-    .orderBy('modifiedAt')
-    .filter({ frequency })
+    .orderBy(db.desc('modifiedAt'))
+    .filter({ frequency, published: true })
     .limit(first)
     .run()
     .then();
@@ -20,7 +20,7 @@ const getStoriesByFrequency = (frequency, { first, after }) => {
   const getLastStory = db
     .table('stories')
     .orderBy('modifiedAt')
-    .filter({ frequency })
+    .filter({ frequency, published: true })
     .max()
     .run();
 
@@ -31,8 +31,8 @@ const getStoriesByUser = (uid, { first, after }) => {
   const getStories = db
     .table('stories')
     .between(after || db.minval, db.maxval, { leftBound: 'open' })
-    .orderBy('modifiedAt')
-    .filter({ author: uid })
+    .orderBy(db.desc('modifiedAt'))
+    .filter({ author: uid, published: true })
     .limit(first)
     .run()
     .then();
@@ -40,42 +40,23 @@ const getStoriesByUser = (uid, { first, after }) => {
   const getLastStory = db
     .table('stories')
     .orderBy('modifiedAt')
-    .filter({ author: uid })
+    .filter({ author: uid, published: true })
     .max()
     .run();
 
   return Promise.all([getStories, getLastStory]);
 };
 
-const addStory = story => {
+const publishStory = (story, user) => {
   return db
     .table('stories')
     .insert(
       Object.assign({}, story, {
+        author: user.uid,
         createdAt: new Date(),
         modifiedAt: new Date(),
-        edits: [
-          {
-            timestamp: new Date(),
-            content: story.content,
-          },
-        ],
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val);
-};
-
-const publishStory = id => {
-  return db
-    .table('stories')
-    .get(id)
-    .update(
-      {
         published: true,
-        modifiedAt: new Date(),
-      },
+      }),
       { returnChanges: true }
     )
     .run()
@@ -134,7 +115,6 @@ const editStory = (id, newContent) => {
 };
 
 module.exports = {
-  addStory,
   getStory,
   publishStory,
   editStory,

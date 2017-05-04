@@ -64,13 +64,14 @@ const getAllStories = (frequencies: Array<String>) => {
     .table('stories')
     .orderBy(db.desc('modifiedAt'))
     .filter(story => db.expr(frequencies).contains(story('frequency')))
+    .filter({ published: true })
     .run();
 };
 
 const getUserMetaData = (id: String) => {
   const getStoryCount = db
     .table('stories')
-    .filter({ author: id })
+    .filter({ author: id, published: true })
     .count()
     .run();
 

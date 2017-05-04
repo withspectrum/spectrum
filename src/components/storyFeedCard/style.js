@@ -22,5 +22,5 @@ export const Description = styled.p`
 `;
 
 export const Meta = styled.span`
-  
+
 `;

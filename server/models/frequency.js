@@ -52,7 +52,7 @@ const getFrequency = ({ id, slug, community }: GetFrequencyArgs) => {
 const getFrequencyMetaData = (id: String) => {
   const getStoryCount = db
     .table('stories')
-    .filter({ frequency: id })
+    .filter({ frequency: id, published: true })
     .count()
     .run();
   const getSubscriberCount = db
