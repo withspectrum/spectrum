@@ -5,6 +5,11 @@ export const storyInfoFragment = gql`
   fragment storyInfo on Story {
     id
     messageCount
+    createdAt
+    modifiedAt
+    published
+    deleted
+    locked
     content {
       title
       description

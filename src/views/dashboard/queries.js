@@ -1,6 +1,9 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
+// $FlowFixMe
+import update from 'immutability-helper';
+import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import {
   userCommunitiesFragment,
@@ -74,11 +77,38 @@ const storiesQueryOptions = {
         }),
     },
   }),
+  options: ({ params }) => ({
+    reducer: (prev, action, variables) => {
+      if (
+        action.type === 'APOLLO_MUTATION_RESULT' &&
+        action.operationName === 'publishStory'
+      ) {
+        const newStory = action.result.data.publishStory;
+        const cursor = encode(newStory.id);
+        const newEdge = {
+          cursor,
+          node: {
+            ...newStory,
+          },
+        };
+        return update(prev, {
+          user: {
+            everything: {
+              edges: {
+                $unshift: [newEdge],
+              },
+            },
+          },
+        });
+      }
+      return prev;
+    },
+  }),
 };
 
 export const getEverythingStories = graphql(
   gql`
-  {
+  query getEverythingStories {
     user: currentUser {
       ...userInfo
       everything(first: 10){
@@ -119,7 +149,7 @@ export const getEverythingStories = graphql(
 */
 export const getCurrentUserProfile = graphql(
   gql`
-    {
+    query getCurrentUserProfile {
 			user: currentUser {
         ...userInfo
         ...userMetaData

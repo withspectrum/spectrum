@@ -7,13 +7,22 @@ import { ThemeProvider } from 'styled-components';
 import { ApolloProvider } from 'react-apollo';
 import { client } from './api';
 import { initStore } from './store';
-import { clearStorage, getItemFromStorage } from './helpers/localStorage';
+import { getItemFromStorage } from './helpers/localStorage';
 import { theme } from './components/theme';
 import Routes from './routes';
 import Homepage from './views/homepage';
 
 const existingUser = getItemFromStorage('spectrum');
-const store = initStore({});
+let store;
+if (existingUser) {
+  store = initStore({
+    users: {
+      currentUser: existingUser.currentUser,
+    },
+  });
+} else {
+  store = initStore({});
+}
 
 function render() {
   // if user is not stored in localStorage and they visit a blacklist url
@@ -46,6 +55,6 @@ function render() {
 try {
   render();
 } catch (err) {
-  clearStorage();
+  console.log('error rendering', err);
   render();
 }

@@ -38,7 +38,6 @@ const Message = /* GraphQL */ `
 
 	input MessageInput {
 		thread: ID!
-		sender: ID!
 		message: MessageContentInput!
 	}
 

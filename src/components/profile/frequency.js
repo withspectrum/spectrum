@@ -52,6 +52,11 @@ const FrequencyWithData = ({
   profileSize: ProfileSizeProps,
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
+
+  if (!frequency) {
+    return <div>No frequency to be found!</div>;
+  }
+
   return (
     <Card>
       <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>

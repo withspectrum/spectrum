@@ -52,7 +52,7 @@ const getFrequency = ({ id, slug, community }: GetFrequencyArgs) => {
 const getFrequencyMetaData = (id: String) => {
   const getStoryCount = db
     .table('stories')
-    .filter({ frequency: id })
+    .filter({ frequency: id, published: true })
     .count()
     .run();
   const getSubscriberCount = db
@@ -94,10 +94,24 @@ const createFrequency = ({
     .run();
 };
 
+const getTopFrequencies = (amount: number) => {
+  return db
+    .table('frequencies')
+    .orderBy(db.desc('subscribers'))
+    .limit(amount)
+    .run();
+};
+
+const getFrequencySubscriberCount = (id: string) => {
+  return db.table('frequencies').get(id)('subscribers').count().run();
+};
+
 module.exports = {
   getFrequency,
   getFrequencyMetaData,
   getFrequenciesByUser,
   getFrequenciesByCommunity,
   createFrequency,
+  getTopFrequencies,
+  getFrequencySubscriberCount,
 };

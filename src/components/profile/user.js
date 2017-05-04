@@ -44,6 +44,11 @@ const UserWithData = ({
   any
 > => {
   const componentSize = profileSize || 'mini';
+
+  if (!user) {
+    return <div>No user to be found!</div>;
+  }
+
   return (
     <Card>
       <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>

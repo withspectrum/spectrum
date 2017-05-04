@@ -43,13 +43,14 @@ const getMessagesByLocationAndThread = (
   return Promise.all([getMessages, getLastMessage]);
 };
 
-const storeMessage = (location: LocationTypes, message: MessageProps) => {
+const storeMessage = (location: LocationTypes, message: MessageProps, user) => {
   // Insert a message
   return db
     .table(location)
     .insert(
       Object.assign({}, message, {
         timestamp: new Date(),
+        sender: user.uid,
       }),
       { returnChanges: true }
     )

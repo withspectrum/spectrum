@@ -1,4 +1,5 @@
 // @flow
+/* eslint no-eval: 0 */
 // $FlowFixMe
 import styled, { css } from 'styled-components';
 import { Gradient, Shadow, Transition } from '../globals';
@@ -19,19 +20,15 @@ const baseStyles = css`
   opacity: ${props => (props.disabled ? '0.4' : '1')};
 
   ${props => (props.size === 'small' ? `
-        font-size: 11px;
-        padding: 0 10px;
-        height: 28px;
-        line-height: 0.2;
+        font-size: 12px;
+        padding: 8px 12px;
       ` : props.size === 'large' ? `
-          font-size: 16px;
-          padding: 0 24px;
-          height: 48px;
-        ` : `
-          font-size: 14px;
-          padding: 0 16px;
-          height: 40px;
-        `)}
+        font-size: 16px;
+        padding: 16px 24px;
+      ` : `
+        font-size: 14px;
+        padding: 12px 16px;
+      `)}
 
   /* if an icon is present in the icon, add separation from the label */
   div + span {
@@ -48,11 +45,11 @@ const buttonStyles = css`
   &:hover {'
     border-radius: ${props => (props.disabled ? '8px' : '12px')};
     transition: ${props => (props.disabled ? 'none' : Transition.hover.on)};
-    box-shadow: ${props => (props.disabled ? 'none' : Shadow.high)};
+    box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.high} ${props.theme.text.placeholder}`)};
   }
 
   &:active {
-    box-shadow: ${props => Shadow.low};
+    box-shadow: ${props => `${Shadow.low} ${props.theme.text.placeholder}`};
   }
 `;
 

@@ -48,13 +48,11 @@ const Story = /* GraphQL */ `
 
 	input StoryInput {
 		frequency: ID!
-		published: Boolean!
 		content: StoryContentInput!
 	}
 
 	extend type Mutation {
-		addStory(story: StoryInput!): Story
-		publishStory(id: ID!): Story
+		publishStory(story: StoryInput!): Story
 		editStory(id: ID!, newContent: StoryContentInput!): Story
 		setStoryLock(id: ID!, value: Boolean!): Story
 		deleteStory(id: ID!): Boolean

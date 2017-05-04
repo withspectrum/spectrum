@@ -25,9 +25,6 @@ export default compose(
         variables: {
           message: {
             thread,
-            // TODO Make this the current user on the backend
-            // rather than sending a hardcoded ID through
-            sender: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a190',
             message: {
               type: 'text',
               content: value,
