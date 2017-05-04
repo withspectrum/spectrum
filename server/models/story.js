@@ -10,10 +10,9 @@ const getStory = id => {
 const getStoriesByFrequency = (frequency, { first, after }) => {
   const getStories = db
     .table('stories')
-    .filter({ published: true })
     .between(after || db.minval, db.maxval, { leftBound: 'open' })
     .orderBy(db.desc('modifiedAt'))
-    .filter({ frequency })
+    .filter({ frequency, published: true })
     .limit(first)
     .run()
     .then();

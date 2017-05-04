@@ -108,7 +108,7 @@ const storiesQueryOptions = {
 
 export const getEverythingStories = graphql(
   gql`
-  {
+  query getEverythingStories {
     user: currentUser {
       ...userInfo
       everything(first: 10){
@@ -149,7 +149,7 @@ export const getEverythingStories = graphql(
 */
 export const getCurrentUserProfile = graphql(
   gql`
-    {
+    query getCurrentUserProfile {
 			user: currentUser {
         ...userInfo
         ...userMetaData

@@ -2,7 +2,7 @@ import { graphql, gql } from 'react-apollo';
 
 export const getComposerCommunitiesAndFrequencies = graphql(
   gql`
-  {
+  query getComposerCommunitiesAndFrequencies {
     user: currentUser {
       communityConnection {
         edges {
