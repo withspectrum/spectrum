@@ -1,6 +1,9 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
+// $FlowFixMe
+import update from 'immutability-helper';
+import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { userStoriesFragment } from '../../api/fragments/user/userStories';
 import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
@@ -17,11 +20,6 @@ const LoadMoreStories = gql`
 `;
 
 const storiesQueryOptions = {
-  options: ({ username }) => ({
-    variables: {
-      username: username,
-    },
-  }),
   props: ({ data: { fetchMore, error, loading, user } }) => ({
     data: {
       error,
@@ -56,6 +54,42 @@ const storiesQueryOptions = {
             };
           },
         }),
+    },
+  }),
+  options: ({ username }) => ({
+    variables: {
+      username: username,
+    },
+    reducer: (prev, action, variables) => {
+      if (
+        action.type === 'APOLLO_MUTATION_RESULT' &&
+        action.operationName === 'publishStory'
+      ) {
+        const newStory = action.result.data.publishStory;
+
+        if (newStory.author.username === username) {
+          // if the new story was published by a user that is currently
+          // being viewed, or by a user that has already been fetched
+          // and cached by apollo, insert the new story into the array of edges
+          const cursor = encode(newStory.id);
+          const newEdge = {
+            cursor,
+            node: {
+              ...newStory,
+            },
+          };
+          return update(prev, {
+            user: {
+              storyConnection: {
+                edges: {
+                  $unshift: [newEdge],
+                },
+              },
+            },
+          });
+        }
+      }
+      return prev;
     },
   }),
 };
