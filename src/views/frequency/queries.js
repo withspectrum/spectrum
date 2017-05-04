@@ -35,6 +35,9 @@ const storiesQueryOptions = {
       loading,
       frequency,
       stories: frequency ? frequency.storyConnection.edges : '',
+      hasNextPage: frequency
+        ? frequency.storyConnection.pageInfo.hasNextPage
+        : false,
       fetchMore: () =>
         fetchMore({
           query: LoadMoreStories,
@@ -54,6 +57,10 @@ const storiesQueryOptions = {
                 ...prev.frequency,
                 storyConnection: {
                   ...prev.frequency.storyConnection,
+                  pageInfo: {
+                    ...prev.frequency.storyConnection.pageInfo,
+                    ...fetchMoreResult.frequency.storyConnection.pageInfo,
+                  },
                   edges: [
                     ...prev.frequency.storyConnection.edges,
                     ...fetchMoreResult.frequency.storyConnection.edges,

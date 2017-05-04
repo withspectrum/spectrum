@@ -49,6 +49,7 @@ const storiesQueryOptions = {
       loading,
       user,
       stories: user ? user.everything.edges : '',
+      hasNextPage: user ? user.everything.pageInfo.hasNextPage : false,
       fetchMore: () =>
         fetchMore({
           query: LoadMoreStories,
@@ -66,6 +67,10 @@ const storiesQueryOptions = {
                 ...prev.user,
                 everything: {
                   ...prev.user.everything,
+                  pageInfo: {
+                    ...prev.user.everything.pageInfo,
+                    ...fetchMoreResult.user.everything.pageInfo,
+                  },
                   edges: [
                     ...prev.user.everything.edges,
                     ...fetchMoreResult.user.everything.edges,
