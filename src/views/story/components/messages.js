@@ -24,7 +24,7 @@ const lifecycles = lifecycle({
   },
 });
 
-const MessagesWithData = ({ data, toggleReactionMutation }) => {
+const MessagesWithData = ({ data, toggleReaction }) => {
   if (data.error) {
     return <div>Error!</div>;
   }
@@ -37,10 +37,7 @@ const MessagesWithData = ({ data, toggleReactionMutation }) => {
     data.story.messageConnection.edges
   );
   return (
-    <ChatMessages
-      toggleReaction={toggleReactionMutation}
-      messages={sortedMessages}
-    />
+    <ChatMessages toggleReaction={toggleReaction} messages={sortedMessages} />
   );
 };
 
