@@ -6,7 +6,7 @@ import compose from 'recompose/compose';
 import lifecycle from 'recompose/lifecycle';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
-import { displayLoadingStateAsCard } from '../../../components/loading';
+import { displayLoadingCard } from '../../../components/loading';
 import { getStoryMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 
@@ -48,7 +48,7 @@ const Messages = compose(
   toggleReactionMutation,
   getStoryMessages,
   lifecycles,
-  displayLoadingStateAsCard
+  displayLoadingCard
 )(MessagesWithData);
 
 export default Messages;

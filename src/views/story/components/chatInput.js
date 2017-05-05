@@ -6,7 +6,6 @@ import compose from 'recompose/compose';
 import withState from 'recompose/withState';
 // // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
-import { displayLoadingStateAsCard } from '../../../components/loading';
 import { Card } from '../../../components/card';
 import { sendMessageMutation } from '../mutations';
 
