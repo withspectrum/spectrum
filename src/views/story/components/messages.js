@@ -33,10 +33,18 @@ const lifecycles = lifecycle({
   },
 });
 
-const MessagesWithData = ({
-  data: { story: { messageConnection: { edges } } },
-}) => {
-  const sortedMessages = sortAndGroupMessages(edges);
+const MessagesWithData = ({ data }) => {
+  if (data.error) {
+    return <div>Error!</div>;
+  }
+
+  if (!data.story && !data.story.messageConnection) {
+    return <div>No messages yet!</div>;
+  }
+
+  const sortedMessages = sortAndGroupMessages(
+    data.story.messageConnection.edges
+  );
   return (
     <MessagesContainer>
       <ChatMessages messages={sortedMessages} />

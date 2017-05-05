@@ -9,7 +9,7 @@ export type ReactionInput = {
 };
 
 export const getReactions = (message: string) => {
-  return db.table('reactions').filter({ message }).run();
+  return db.table('reactions').getAll(message, { index: 'message' }).run();
 };
 
 export const getReaction = (id: string) => {
