@@ -1,13 +1,9 @@
 //@flow
 import React from 'react';
 //$FlowFixMe
-import branch from 'recompose/branch';
-//$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
 import { StoryDetail } from '../components/storyDetail';
 import Messages from '../components/messages';
 import ChatInput from '../components/chatInput';
@@ -15,17 +11,19 @@ import { Column } from '../../../components/column';
 import { FlexContainer } from '../../../components/flexbox';
 import { UserProfile, FrequencyProfile } from '../../../components/profile';
 import { getStory } from '../queries';
-import { Loading } from '../../../components/loading';
-
-// TODO: Brian - figure out how to abstract this out to be used anywhere
-const displayLoadingState = branch(
-  props => !props.data || props.data.loading,
-  renderComponent(Loading)
-);
+import { displayLoadingState } from '../../../components/loading';
 
 const StoryContainerPure = ({
   data: { story, subscribeToNewMessages, error, loading },
 }) => {
+  if (error) {
+    return <div>Error getting this story</div>;
+  }
+
+  if (!story) {
+    return <div>This story doesn't exist</div>;
+  }
+
   return (
     <FlexContainer justifyContent="center">
       <Column type="secondary">

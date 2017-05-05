@@ -3,7 +3,7 @@ import { messageInfoFragment } from '../../api/fragments/message/messageInfo';
 import {
   reactionInfoFragment,
 } from '../../api/fragments/reaction/reactionInfo';
-import { getStoryMessagesQuery } from './queries';
+import { GET_STORY_MESSAGES_QUERY } from './queries';
 
 /*
   Send an id and boolean value to set a story to be locked or unlocked.
@@ -30,7 +30,7 @@ const SET_STORY_LOCK_OPTIONS = {
       }),
   }),
 };
-export const setStoryLock = graphql(
+export const setStoryLockMutation = graphql(
   SET_STORY_LOCK_MUTATION,
   SET_STORY_LOCK_OPTIONS
 );
@@ -49,7 +49,20 @@ const SEND_MESSAGE_MUTATION = gql`
   }
   ${messageInfoFragment}
 `;
-export const sendMessage = graphql(SEND_MESSAGE_MUTATION);
+const SEND_MESSAGE_OPTIONS = {
+  props: ({ ownProps, mutate }) => ({
+    sendMessage: message =>
+      mutate({
+        variables: {
+          message,
+        },
+      }),
+  }),
+};
+export const sendMessageMutation = graphql(
+  SEND_MESSAGE_MUTATION,
+  SEND_MESSAGE_OPTIONS
+);
 
 /*
   Toggles a reaction on a specific message. The reaction object is created
@@ -84,14 +97,14 @@ const TOGGLE_REACTION_OPTIONS = {
         // there won't any lag between the user reacting and the UI updating
         refetchQueries: [
           {
-            query: getStoryMessagesQuery,
+            query: GET_STORY_MESSAGES_QUERY,
             variables: { id: ownProps.id },
           },
         ],
       }),
   }),
 };
-export const toggleReaction = graphql(
+export const toggleReactionMutation = graphql(
   TOGGLE_REACTION_MUTATION,
   TOGGLE_REACTION_OPTIONS
 );
