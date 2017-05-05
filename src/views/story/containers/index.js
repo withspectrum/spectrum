@@ -13,7 +13,6 @@ import Messages from '../components/messages';
 import ChatInput from '../components/chatInput';
 import { Column } from '../../../components/column';
 import { FlexContainer } from '../../../components/flexbox';
-import { Card } from '../../../components/card';
 import { UserProfile, FrequencyProfile } from '../../../components/profile';
 import { getStory } from '../queries';
 import { Loading } from '../../../components/loading';

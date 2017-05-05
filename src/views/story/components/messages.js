@@ -13,7 +13,6 @@ import ChatMessages from '../../../components/chatMessages';
 import { LoadingCard } from '../../../components/loading';
 import { getStoryMessages } from '../queries';
 import { toggleReaction } from '../mutations';
-import { MessagesContainer } from '../style';
 
 const displayLoadingState = branch(
   props => props.data.loading,
