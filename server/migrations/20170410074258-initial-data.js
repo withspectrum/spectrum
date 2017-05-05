@@ -28,6 +28,14 @@ exports.up = function(r, conn) {
             )
             .run(conn),
           r.table('stories').indexCreate('author', r.row('author')).run(conn),
+          r
+            .table('stories')
+            .indexCreate('frequency', r.row('frequency'))
+            .run(conn),
+          r
+            .table('reactions')
+            .indexCreate('message', r.row('message'))
+            .run(conn),
         ])
       )
       .catch(err => {

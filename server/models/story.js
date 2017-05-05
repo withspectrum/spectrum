@@ -13,8 +13,8 @@ const getStory = id => {
 const getStoriesByFrequency = (frequency, { first, after }) => {
   return db
     .table('stories')
+    .getAll(frequency, { index: 'frequency' })
     .orderBy(db.desc('createdAt'))
-    .filter({ frequency })
     .run();
 };
 
