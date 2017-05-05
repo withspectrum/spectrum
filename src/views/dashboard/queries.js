@@ -159,3 +159,23 @@ export const getCurrentUserProfile = graphql(
     ${userMetaDataFragment}
 	`
 );
+
+export const getCurrentUserCommunities = graphql(
+  gql`
+    query currentUserCommunities {
+      user: currentUser {
+        ...userCommunities
+      }
+    }
+    ${userCommunitiesFragment}
+  `,
+  {
+    props: ({ data: { error, loading, user } }) => ({
+      data: {
+        error,
+        loading,
+        communities: user ? user.communityConnection.edges : '',
+      },
+    }),
+  }
+);

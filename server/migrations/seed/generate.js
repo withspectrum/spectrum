@@ -39,6 +39,7 @@ const generateCommunity = members => {
     name,
     slug: slugify(name),
     members,
+    description: casual.short_description(),
   };
 };
 

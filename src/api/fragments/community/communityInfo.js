@@ -5,5 +5,10 @@ export const communityInfoFragment = gql`
     id
     name
     slug
+    description
+    metaData {
+      members
+      frequencies
+    }
   }
 `;

@@ -30,9 +30,9 @@ const ButtonPure = (props: ButtonProps) => {
   */
   const spinnerSize = props.size === 'large' ? 24 : 16;
   const spinnerColor = getSpinnerColor(props.color, props.type || 'button');
-  const iconSize = props.size === 'small'
+  const iconSize = props.size === 'xsmall'
     ? 16
-    : props.size === 'large' ? 32 : 24;
+    : props.size === 'small' ? 24 : 32;
 
   /*
     the type gets passed in automatically when you write <OutlineButton .../> or
@@ -54,9 +54,9 @@ const ButtonPure = (props: ButtonProps) => {
             : <Icon
                 icon={props.icon}
                 size={iconSize}
-                color={spinnerColor}
-                scaleOnHover={false}
-                hoverColor={spinnerColor}
+                color={props.iconColor}
+                scaleOnHover={props.scaleOnHover}
+                hoverColor={props.iconHoverColor}
               />
         : ''}
 
