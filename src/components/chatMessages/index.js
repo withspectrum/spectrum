@@ -2,6 +2,8 @@
 import React from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
+import compose from 'recompose/compose';
 import {
   convertTimestampToDate,
   convertTimestampToTime,
@@ -22,6 +24,8 @@ import {
 import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
 import Icon from '../icons';
 import { Reaction, Count } from '../bubbles/style';
+import { toggleReaction } from './mutations';
+import { getStoryMessages } from '../../views/story/queries';
 
 /*
   ChatMessages expects to receive sorted and grouped messages.
@@ -31,7 +35,7 @@ import { Reaction, Count } from '../bubbles/style';
   This means we will need a nested map in order to get each group, and then within
   each group render each bubble.
 */
-const ChatMessages = ({ messages, currentUser }) => {
+const ChatMessages = ({ messages, currentUser, mutate }) => {
   if (!messages) {
     return <div>No messages</div>;
   }
@@ -64,12 +68,35 @@ const ChatMessages = ({ messages, currentUser }) => {
     sender: Object,
     me: boolean
   ): React$Element<any> => {
-    let reactionUsers = message.reactions
-      ? Object.keys(message.reactions)
+    const reactionUsers = message.reactions
+      ? message.reactions.map(reaction => reaction.user.uid)
       : null;
     let reactionCount = message.reactions ? reactionUsers.length : 0;
     let userHasReacted =
       reactionUsers && reactionUsers.includes(currentUser.uid);
+    // probably a better way to do this
+    const doNothing = () => '';
+    const triggerMutation = () => {
+      return (
+        mutate({
+          variables: {
+            reaction: {
+              message: message.id,
+              type: 'like',
+            },
+          },
+        })
+          // after the mutation occurs, it will either return an error or the new
+          // story that was published
+          .then(({ data }) => {
+            console.log('reaction', data);
+          })
+          .catch(error => {
+            // TODO add some kind of dispatch here to show an error to the user
+            console.log('error toggling reaction', error);
+          })
+      );
+    };
 
     return (
       <Reaction
@@ -78,9 +105,8 @@ const ChatMessages = ({ messages, currentUser }) => {
         me={me}
         hide={(me || currentUser.uid === null) && reactionCount === 0}
         onClick={
-          me
-            ? () => this.doNothing
-            : () => this.toggleReaction(message.id, userHasReacted)
+          me ? doNothing : triggerMutation
+          // : () => toggleReaction(message.id, userHasReacted)
         }
       >
         <Icon icon={'like-active'} size={16} color={'text.reverse'} />
@@ -168,4 +194,9 @@ const ChatMessages = ({ messages, currentUser }) => {
 
 // get the current user from the store for evaulation of message bubbles
 const mapStateToProps = state => ({ currentUser: state.users.currentUser });
-export default connect(mapStateToProps)(ChatMessages);
+const ConnectedChatMessages = connect(mapStateToProps)(ChatMessages);
+// wrap the component in our mutations file which will handle reactions for now
+const ChatMessagesWithMutations = compose(toggleReaction)(
+  ConnectedChatMessages
+);
+export default ChatMessagesWithMutations;

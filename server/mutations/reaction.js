@@ -8,7 +8,7 @@ type ToggleReactionType = {
 
 module.exports = {
   Mutation: {
-    toggleReaction: (_: any, { reaction }: ToggleReactionType) =>
-      toggleReaction(reaction),
+    toggleReaction: (_: any, { reaction }: ToggleReactionType, { user }) =>
+      toggleReaction(reaction, user.uid),
   },
 };
