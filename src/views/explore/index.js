@@ -152,7 +152,7 @@ const composeSectionFromList = (list, ids) => {
 
             return EntityWithData();
           } else {
-            return;
+            return <div />;
           }
         })}
       </Row>

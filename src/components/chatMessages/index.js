@@ -25,6 +25,7 @@ import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
 import Icon from '../icons';
 import { Reaction, Count } from '../bubbles/style';
 import { toggleReaction } from './mutations';
+import { getStoryMessages } from '../../views/story/queries';
 
 /*
   ChatMessages expects to receive sorted and grouped messages.
