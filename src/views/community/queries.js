@@ -32,6 +32,9 @@ const storiesQueryOptions = {
       loading,
       community,
       stories: community ? community.storyConnection.edges : '',
+      hasNextPage: community
+        ? community.storyConnection.pageInfo.hasNextPage
+        : false,
       fetchMore: () =>
         fetchMore({
           query: LoadMoreStories,
@@ -51,6 +54,10 @@ const storiesQueryOptions = {
                 ...prev.community,
                 storyConnection: {
                   ...prev.community.storyConnection,
+                  pageInfo: {
+                    ...prev.community.storyConnection.pageInfo,
+                    ...fetchMoreResult.community.storyConnection.pageInfo,
+                  },
                   edges: [
                     ...prev.community.storyConnection.edges,
                     ...fetchMoreResult.community.storyConnection.edges,

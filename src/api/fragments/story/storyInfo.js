@@ -8,7 +8,6 @@ export const storyInfoFragment = gql`
     createdAt
     modifiedAt
     published
-    deleted
     locked
     content {
       title

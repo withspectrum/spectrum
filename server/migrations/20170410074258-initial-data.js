@@ -27,6 +27,7 @@ exports.up = function(r, conn) {
               { multi: true }
             )
             .run(conn),
+          r.table('stories').indexCreate('author', r.row('author')).run(conn),
         ])
       )
       .catch(err => {

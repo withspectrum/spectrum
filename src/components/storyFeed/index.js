@@ -25,12 +25,16 @@ const displayLoadingState = branch(
   See 'views/community/queries.js' for an example of the prop mapping in action
 */
 const StoryFeedPure = ({
-  data: { stories, loading, fetchMore, error },
+  data: { stories, loading, fetchMore, error, hasNextPage },
   data,
 }) => {
   // TODO: Better error state
-  if (error) {
+  if (error && stories) {
     return <div>Oops, something went wrong</div>;
+  }
+
+  if (error && !stories) {
+    return <div>No stories have been posted yet</div>;
   }
 
   // TODO: better loading state
@@ -44,7 +48,7 @@ const StoryFeedPure = ({
         return <StoryFeedCard key={story.node.id} data={story.node} />;
       })}
 
-      <Button onClick={fetchMore}>Fetch More</Button>
+      {hasNextPage && <Button onClick={fetchMore}>Fetch More</Button>}
     </div>
   );
 };

@@ -11,43 +11,19 @@ const getStory = id => {
 };
 
 const getStoriesByFrequency = (frequency, { first, after }) => {
-  const getStories = db
+  return db
     .table('stories')
-    .between(after || db.minval, db.maxval, { leftBound: 'open' })
-    .orderBy(db.desc('modifiedAt'))
-    .filter({ frequency, published: true })
-    .limit(first)
-    .run()
-    .then();
-
-  const getLastStory = db
-    .table('stories')
-    .orderBy('modifiedAt')
-    .filter({ frequency, published: true })
-    .max()
+    .orderBy(db.desc('createdAt'))
+    .filter({ frequency })
     .run();
-
-  return Promise.all([getStories, getLastStory]);
 };
 
 const getStoriesByUser = (uid, { first, after }) => {
-  const getStories = db
+  return db
     .table('stories')
-    .between(after || db.minval, db.maxval, { leftBound: 'open' })
-    .orderBy(db.desc('modifiedAt'))
-    .filter({ author: uid, published: true })
-    .limit(first)
-    .run()
-    .then();
-
-  const getLastStory = db
-    .table('stories')
-    .orderBy('modifiedAt')
-    .filter({ author: uid, published: true })
-    .max()
+    .getAll(uid, { index: 'author' })
+    .orderBy(db.desc('createdAt'))
     .run();
-
-  return Promise.all([getStories, getLastStory]);
 };
 
 const publishStory = (story, user) => {

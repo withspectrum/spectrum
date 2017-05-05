@@ -90,21 +90,24 @@ module.exports = {
       { uid }: { uid: String },
       { first = 10, after }: PaginationOptions
     ) => {
-      const cursorId = decode(after);
-      return getStoriesByUser(uid, { first, after: cursorId }).then(([
-        stories,
-        lastStory,
-      ]) => ({
-        pageInfo: {
-          hasNextPage: stories.length > 0
-            ? lastStory.id === stories[stories.length - 1].id
-            : lastStory.id === cursorId,
-        },
-        edges: stories.map(story => ({
-          cursor: encode(story.id),
-          node: story,
-        })),
-      }));
+      const cursor = decode(after);
+      return getStoriesByUser(uid, { first, after: cursor })
+        .then(stories =>
+          paginate(
+            stories,
+            { first, after: cursor },
+            story => story.id === cursor
+          )
+        )
+        .then(result => ({
+          pageInfo: {
+            hasNextPage: result.hasMoreItems,
+          },
+          edges: result.list.map(story => ({
+            cursor: encode(story.id),
+            node: story,
+          })),
+        }));
     },
     metaData: ({ uid }: { uid: String }) => {
       return getUserMetaData(uid).then(data => {

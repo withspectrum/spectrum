@@ -28,7 +28,6 @@ const Story = /* GraphQL */ `
 		frequency: Frequency!
 		published: Boolean!
 		content: StoryContent!
-		deleted: Boolean
 		locked: Boolean
 		edits: [Edit!]
 		messageConnection(first: Int = 10, after: String): StoryMessagesConnection!

@@ -29,21 +29,24 @@ module.exports = {
       { id }: { id: string },
       { first = 10, after }: PaginationOptions
     ) => {
-      const cursorId = decode(after);
-      return getStoriesByFrequency(id, { first, after: cursorId }).then(([
-        stories,
-        lastStory,
-      ]) => ({
-        pageInfo: {
-          hasNextPage: stories.length > 0
-            ? lastStory.id === stories[stories.length - 1].id
-            : lastStory.id === cursorId,
-        },
-        edges: stories.map(story => ({
-          cursor: encode(story.id),
-          node: story,
-        })),
-      }));
+      const cursor = decode(after);
+      return getStoriesByFrequency(id, { first, after: cursor })
+        .then(stories =>
+          paginate(
+            stories,
+            { first, after: cursor },
+            story => story.id === cursor
+          )
+        )
+        .then(result => ({
+          pageInfo: {
+            hasNextPage: result.hasMoreItems,
+          },
+          edges: result.list.map(story => ({
+            cursor: encode(story.id),
+            node: story,
+          })),
+        }));
     },
     community: ({ community }: { community: String }) =>
       getCommunity({ id: community }),
