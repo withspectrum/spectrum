@@ -7,11 +7,14 @@ import withState from 'recompose/withState';
 // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
 import { sendMessage } from '../mutations';
+import { Card } from '../../../components/card';
 
 const ChatInput = (props: Object) => (
-  <form onSubmit={props.sendMessage}>
-    <input type="text" value={props.value} onChange={props.onChange} />
-  </form>
+  <Card>
+    <form onSubmit={props.sendMessage}>
+      <input type="text" value={props.value} onChange={props.onChange} />
+    </form>
+  </Card>
 );
 
 export default compose(

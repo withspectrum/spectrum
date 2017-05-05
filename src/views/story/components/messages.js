@@ -12,6 +12,7 @@ import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
 import { LoadingCard } from '../../../components/loading';
 import { getStoryMessages } from '../queries';
+import { toggleReaction } from '../mutations';
 import { MessagesContainer } from '../style';
 
 const displayLoadingState = branch(
@@ -33,7 +34,7 @@ const lifecycles = lifecycle({
   },
 });
 
-const MessagesWithData = ({ data }) => {
+const MessagesWithData = ({ data, toggleReaction }) => {
   if (data.error) {
     return <div>Error!</div>;
   }
@@ -46,14 +47,15 @@ const MessagesWithData = ({ data }) => {
     data.story.messageConnection.edges
   );
   return (
-    <MessagesContainer>
-      <ChatMessages messages={sortedMessages} />
-    </MessagesContainer>
+    <ChatMessages toggleReaction={toggleReaction} messages={sortedMessages} />
   );
 };
 
-const Messages = compose(getStoryMessages, lifecycles, displayLoadingState)(
-  MessagesWithData
-);
+const Messages = compose(
+  toggleReaction,
+  getStoryMessages,
+  lifecycles,
+  displayLoadingState
+)(MessagesWithData);
 
 export default Messages;

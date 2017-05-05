@@ -48,7 +48,7 @@ export const getStory = graphql(
   }
 );
 
-const getStoryQueryOptions = {
+const getStoryMessagesOptions = {
   options: props => ({
     variables: { id: props.id },
   }),
@@ -88,8 +88,7 @@ const getStoryQueryOptions = {
   },
 };
 
-export const getStoryMessages = graphql(
-  gql`
+export const getStoryMessagesQuery = gql`
   query story($id: ID!, $after: String) {
     story(id: $id) {
       id
@@ -97,6 +96,9 @@ export const getStoryMessages = graphql(
     }
   }
   ${storyMessagesFragment}
-`,
-  getStoryQueryOptions
+`;
+
+export const getStoryMessages = graphql(
+  getStoryMessagesQuery,
+  getStoryMessagesOptions
 );

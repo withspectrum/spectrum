@@ -30,22 +30,14 @@ const StoryContainerPure = ({
   return (
     <FlexContainer justifyContent="center">
       <Column type="secondary">
-        <UserProfile data={{ user: story.author }} profileSize={'medium'} />
+        <UserProfile data={{ user: story.author }} profileSize={'full'} />
         <FrequencyProfile data={{ frequency: story.frequency }} size="medium" />
       </Column>
 
       <Column type="primary">
-        <Card>
-          <StoryDetail story={story} />
-        </Card>
-
-        <Card>
-          <Messages id={story.id} />
-        </Card>
-
-        <Card>
-          <ChatInput thread={story.id} />
-        </Card>
+        <StoryDetail story={story} />
+        <Messages id={story.id} />
+        <ChatInput thread={story.id} />
       </Column>
     </FlexContainer>
   );
