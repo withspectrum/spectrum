@@ -1,43 +1,53 @@
 // @flow
+/**
+ * Most of this was stolen from https://github.com/ianstormtaylor/slate/blob/460498b5ddfcecee7439eafe4f4d31cacde69f41/examples/markdown-preview/index.js
+ */
 import React from 'react';
+import decorator from './decorator';
 
 type Options = {};
-
-const isAtBeginning = state => state.selection.startOffset === 0;
-const isHeading = state => state.marks.find(mark => mark.type === 'h1');
-
-const HASHTAG = 51;
-const BACKSPACE = 8;
 
 const MarkdownPlugin = (options?: Options) => {
   return {
     schema: {
       marks: {
-        h1: props => <h1 {...props.attributes}>{props.children}</h1>,
+        title: {
+          fontWeight: 'bold',
+          fontSize: '20px',
+          margin: '20px 0 10px 0',
+          display: 'inline-block',
+        },
+        bold: {
+          fontWeight: 'bold',
+        },
+        italic: {
+          fontStyle: 'italic',
+        },
+        punctuation: {
+          opacity: 0.2,
+        },
+        code: {
+          fontFamily: 'monospace',
+          display: 'inline-block',
+          padding: '2px 1px',
+        },
+        list: {
+          paddingLeft: '10px',
+          lineHeight: '10px',
+          fontSize: '20px',
+        },
+        hr: {
+          borderBottom: '2px solid #000',
+          display: 'block',
+          opacity: 0.2,
+        },
       },
-    },
-    onKeyDown(event: KeyboardEvent, data: any, state: Object) {
-      console.log(event.which);
-      switch (event.which) {
-        case HASHTAG: {
-          if (!isAtBeginning(state)) return;
-          // TODO: Figure out how to apply to whole line
-          return state.transform().toggleMark('h1').apply();
-        }
-        case BACKSPACE: {
-          const heading = isHeading(state);
-          if (state.selection.startOffset === 1 && heading) {
-            return state
-              .transform()
-              .extendToEndOf(state.startBlock)
-              .removeMark(heading)
-              .collapseToStartOf(state.startBlock)
-              .move(1)
-              .deleteBackward()
-              .apply();
-          }
-        }
-      }
+      rules: [
+        {
+          match: () => true,
+          decorator,
+        },
+      ],
     },
   };
 };

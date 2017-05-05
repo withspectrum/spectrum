@@ -73,7 +73,6 @@ class Editor extends Component {
       <SlateEditor
         state={state}
         onChange={onChange}
-        readOnly={false}
         plugins={this.state.plugins}
       />
     );
