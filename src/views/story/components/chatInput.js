@@ -2,36 +2,53 @@
 import React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
+// // $FlowFixMe
 import withState from 'recompose/withState';
-// $FlowFixMe
+// // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
-import { sendMessage } from '../mutations';
+import { Card } from '../../../components/card';
+import { sendMessageMutation } from '../mutations';
 
-const ChatInput = (props: Object) => (
-  <form onSubmit={props.sendMessage}>
-    <input type="text" value={props.value} onChange={props.onChange} />
-  </form>
-);
-
-export default compose(
+const ChatInputWithMutation = ({
+  thread,
   sendMessage,
+  value,
+  onChange,
+  clear,
+}) => {
+  const submit = e => {
+    e.preventDefault();
+    sendMessage({
+      thread,
+      message: {
+        type: 'text',
+        content: value,
+      },
+    })
+      .then(() => {
+        clear();
+      })
+      .catch(error => {
+        console.log('Error sending message: ', error);
+      });
+  };
+
+  return (
+    <Card>
+      <form onSubmit={submit}>
+        <input type="text" value={value} onChange={onChange} />
+      </form>
+    </Card>
+  );
+};
+
+const ChatInput = compose(
+  sendMessageMutation,
   withState('value', 'changeValue', ''),
   withHandlers({
     onChange: ({ changeValue }) => e => changeValue(e.target.value),
-    sendMessage: ({ mutate, value, thread }) => e => {
-      e.preventDefault();
-      return mutate({
-        variables: {
-          message: {
-            thread,
-            message: {
-              type: 'text',
-              content: value,
-            },
-          },
-        },
-      });
-    },
+    clear: ({ changeValue }) => () => changeValue(''),
   })
-)(ChatInput);
+)(ChatInputWithMutation);
+
+export default ChatInput;

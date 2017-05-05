@@ -7,8 +7,3 @@ export const Container = styled(Card)`
   display: block;
   padding: 32px;
 `;
-
-export const MessagesContainer = styled.div`
-  max-width: 100%;
-  width: 100%;
-`;
