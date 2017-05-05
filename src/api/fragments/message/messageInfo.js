@@ -1,5 +1,8 @@
+// @flow
+// $FlowFixMe
 import { gql } from 'react-apollo';
 import { userInfoFragment } from '../user/userInfo';
+import { reactionInfoFragment } from '../reaction/reactionInfo';
 
 export const messageInfoFragment = gql`
   fragment messageInfo on Message {
@@ -9,8 +12,7 @@ export const messageInfoFragment = gql`
       ...userInfo
     }
     reactions {
-      id
-      type
+      ...reactionInfo
     }
     message {
       type
@@ -18,4 +20,5 @@ export const messageInfoFragment = gql`
     }
   }
   ${userInfoFragment}
+  ${reactionInfoFragment}
 `;

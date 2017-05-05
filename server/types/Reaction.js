@@ -13,7 +13,6 @@ const Reaction = /* GraphQL */ `
 
 	input ReactionInput {
 		message: ID!
-		user: ID!
 		type: ReactionTypes!
 	}
 
@@ -23,7 +22,7 @@ const Reaction = /* GraphQL */ `
 
 	extend type Mutation {
 		# Returns true if toggling completed successfully
-		toggleReaction(reaction: ReactionInput!): Boolean
+		toggleReaction(reaction: ReactionInput!): Reaction
 	}
 `;
 
