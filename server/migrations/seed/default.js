@@ -34,6 +34,7 @@ const DEFAULT_COMMUNITIES = [
     createdAt: new Date(),
     name: 'Spectrum',
     slug: 'spectrum',
+    default: 'The future of community.',
     members: [DEFAULT_USERS.map(({ uid }) => uid)],
   },
 ];

@@ -64,7 +64,7 @@ export const displayLoadingState = branch(
   renderComponent(Loading)
 );
 
-export const displayLoadingStateAsCard = branch(
+export const displayLoadingCard = branch(
   props => !props.data || props.data.loading,
   renderComponent(LoadingCard)
 );
