@@ -85,6 +85,7 @@
     "db:migrate": "npm run migrate -- up initial-data",
     "db:drop": "npm run migrate -- down initial-data",
     "db:seed": "node server/migrations/seed/index.js",
+    "dev:rebuild": "yarn run db:drop && yarn run db:migrate && yarn run db:seed && yarn run dev:server",
     "now-start": "serve ./build --single",
     "build": "react-scripts build",
     "test": "react-scripts test",
