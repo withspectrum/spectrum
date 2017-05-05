@@ -42,4 +42,5 @@ export const getButtonType = (type: String) => {
   // otherwise return the properly styled button
   if (type === 'outline') return OutlineStyledButton;
   if (type === 'link') return LinkStyledButton;
+  if (type === 'icon') return LinkStyledButton;
 };

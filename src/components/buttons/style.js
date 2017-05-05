@@ -30,6 +30,7 @@ const baseStyles = css`
         padding: 12px 16px;
       `)}
 
+  ${props => (props.icon && !props.label ? 'padding: 0; span { display: none;}' : '')}
   /* if an icon is present in the icon, add separation from the label */
   div + span {
     margin-left: 8px;

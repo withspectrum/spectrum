@@ -1,5 +1,9 @@
 // @flow
 import React from 'react';
+//$FlowFixMe
+import branch from 'recompose/branch';
+//$FlowFixMe
+import renderComponent from 'recompose/renderComponent';
 // $FlowFixMe
 import styled from 'styled-components';
 import { Spinner } from './globals';
@@ -53,4 +57,9 @@ export const LoadingCard = ({
   <LoadingCardContainer>
     <Spinner size={size} color={color} />
   </LoadingCardContainer>
+);
+
+export const displayLoadingState = branch(
+  props => !props.data || props.data.loading,
+  renderComponent(Loading)
 );

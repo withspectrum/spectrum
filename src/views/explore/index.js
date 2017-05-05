@@ -78,7 +78,7 @@ const ErrorItem = () => {
         <ItemCopy>The server disconnected. Please refresh the page.</ItemCopy>
       </FlexCol>
       <ButtonContainer center>
-        <ItemButton onClick={location.reload()}>Refresh</ItemButton>
+        <ItemButton onClick={() => location.reload()}>Refresh</ItemButton>
       </ButtonContainer>
     </ErrorState>
   );
