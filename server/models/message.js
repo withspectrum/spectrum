@@ -21,26 +21,13 @@ const getMessage = (location: LocationTypes, id: string) => {
 
 const getMessagesByLocationAndThread = (
   location: LocationTypes,
-  thread: String,
-  { after, first }: PaginationOptions
+  thread: String
 ) => {
-  const getMessages = db
+  return db
     .table(location)
-    .between(after || db.minval, db.maxval, { leftBound: 'open' })
+    .getAll(thread, { index: 'thread' })
     .orderBy('timestamp')
-    .filter({ thread })
-    .limit(first)
     .run();
-
-  const getLastMessage = db
-    .table(location)
-    .orderBy('timestamp')
-    .filter({ thread })
-    .max()
-    .default({})
-    .run();
-
-  return Promise.all([getMessages, getLastMessage]);
 };
 
 const storeMessage = (location: LocationTypes, message: MessageProps, user) => {
@@ -74,7 +61,7 @@ const listenToNewMessages = (location: LocationTypes, cb: Function) => {
 };
 
 const getMessageCount = (location: string, thread: string) => {
-  return db.table(location).filter({ thread }).count().run();
+  return db.table(location).getAll(thread, { index: 'thread' }).count().run();
 };
 
 module.exports = {
