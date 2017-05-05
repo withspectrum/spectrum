@@ -132,8 +132,24 @@ export const getEverythingStories = graphql(
             }
             author {
               displayName
+              photoURL
+            }
+            messageConnection {
+              edges {
+                node {
+                  sender {
+                    photoURL
+                  }
+                }
+              }
             }
             messageCount
+            frequency {
+              name
+              community {
+                name
+              }
+            }
           }
         }
       }
