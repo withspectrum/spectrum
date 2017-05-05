@@ -26,6 +26,7 @@ const ChatInputWithMutation = ({
       },
     })
       .then(() => {
+        // clear the input
         clear();
       })
       .catch(error => {
