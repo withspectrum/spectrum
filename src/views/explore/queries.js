@@ -1,5 +1,12 @@
 //@flow
+// $FlowFixMe
 import { graphql, gql } from 'react-apollo';
+import {
+  frequencyInfoFragment,
+} from '../../api/fragments/frequency/frequencyInfo';
+import {
+  communityInfoFragment,
+} from '../../api/fragments/community/communityInfo';
 
 export const getUserSubscriptions = graphql(
   gql`
@@ -12,7 +19,7 @@ export const getUserSubscriptions = graphql(
           }
           edges {
             node {
-              id
+              ...communityInfo
             }
           }
         }
@@ -23,12 +30,14 @@ export const getUserSubscriptions = graphql(
           }
           edges {
             node {
-              id
+              ...frequencyInfo
             }
           }
         }
       }
 		}
+    ${frequencyInfoFragment}
+    ${communityInfoFragment}
 	`
 );
 
@@ -36,20 +45,17 @@ export const getFrequency = graphql(
   gql`
 		query frequency($id: ID!) {
 			frequency(id: $id) {
-        id
-        name
-        slug
+        ...frequencyInfo
         community {
-          id
-          name
-          slug
+          ...communityInfo
         }
-        description
         metaData {
           subscribers
         }
       }
     }
+    ${frequencyInfoFragment}
+    ${communityInfoFragment}
 	`,
   {
     options: ({ id }) => ({
@@ -75,14 +81,13 @@ export const getCommunity = graphql(
   gql`
 		query community($id: ID!) {
 			community(id: $id) {
-        id
-        name
-        slug
+        ...communityInfo
         metaData {
           members
         }
       }
     }
+    ${communityInfoFragment}
 	`,
   {
     options: ({ id }) => ({
@@ -108,18 +113,17 @@ export const getTopFrequencies = graphql(
   gql`
 		{
 		  topFrequencies {
-        id
-        name
-        slug
+        ...frequencyInfo
         community {
-          name
+          ...communityInfo
         }
-        description
         metaData {
           subscribers
         }
       }
     }
+    ${frequencyInfoFragment}
+    ${communityInfoFragment}
 	`,
   {
     props: ({ data: { error, loading, topFrequencies } }) => ({

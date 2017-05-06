@@ -6,6 +6,9 @@ import update from 'immutability-helper';
 import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import {
+  userEverythingFragment,
+} from '../../api/fragments/user/userEverything';
+import {
   userCommunitiesFragment,
 } from '../../api/fragments/user/userCommunities';
 import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
@@ -14,31 +17,12 @@ const LoadMoreStories = gql`
   query loadMoreEverythingStories($after: String) {
     user: currentUser {
       ...userInfo
-      everything(first: 10, after: $after){
-  			pageInfo {
-  			  hasNextPage
-  			  hasPreviousPage
-  			}
-        edges {
-          cursor
-          node {
-            id
-            createdAt
-            content {
-              title
-              description
-            }
-            author {
-              displayName
-            }
-            messageCount
-          }
-        }
-      }
       ...userCommunities
+      ...userEverything
     }
   }
   ${userInfoFragment}
+  ${userEverythingFragment}
   ${userCommunitiesFragment}
 `;
 
@@ -113,50 +97,15 @@ const storiesQueryOptions = {
 
 export const getEverythingStories = graphql(
   gql`
-  query getEverythingStories {
+  query getEverythingStories($after: String) {
     user: currentUser {
       ...userInfo
-      everything(first: 10){
-  			pageInfo {
-  			  hasNextPage
-  			  hasPreviousPage
-  			}
-        edges {
-          cursor
-          node {
-            id
-            createdAt
-            content {
-              title
-              description
-            }
-            author {
-              displayName
-              photoURL
-            }
-            messageConnection {
-              edges {
-                node {
-                  sender {
-                    photoURL
-                  }
-                }
-              }
-            }
-            messageCount
-            frequency {
-              name
-              community {
-                name
-              }
-            }
-          }
-        }
-      }
       ...userCommunities
+      ...userEverything
     }
   }
   ${userInfoFragment}
+  ${userEverythingFragment}
   ${userCommunitiesFragment}
 `,
   storiesQueryOptions
