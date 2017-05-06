@@ -17,7 +17,7 @@ import {
 
 class Navbar extends Component {
   render() {
-    const { match, currentUser } = this.props;
+    const { match } = this.props;
 
     return (
       <Container>
