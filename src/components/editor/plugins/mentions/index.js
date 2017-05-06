@@ -21,6 +21,8 @@ const MentionsPlugin = (options?: Options): SlatePlugin => {
   }
   const { Mention, Suggestions } = options;
 
+  let search;
+
   return {
     schema: {
       marks: {
@@ -31,20 +33,6 @@ const MentionsPlugin = (options?: Options): SlatePlugin => {
     render(props: Object, state: Object, editor: Object) {
       let portal = null;
       if (currentlyInMention(state)) {
-        const select = text => {
-          const at = nearestAt(state.endText.text, state.selection.startOffset);
-          const mentionLength = state.selection.startOffset - at - 1;
-          const newState = state
-            .transform()
-            .deleteBackward(mentionLength)
-            .insertText(text)
-            .removeMark('mention')
-            .insertText(' ')
-            .focus()
-            .apply();
-
-          editor.onChange(newState);
-        };
         const mention = findNearestMention(
           state.endText.text,
           state.selection.startOffset
@@ -53,8 +41,13 @@ const MentionsPlugin = (options?: Options): SlatePlugin => {
           portal = (
             <Portal node={state.endText}>
               <Suggestions
-                selected={editor.state[SELECTED_MENTION_INDEX_KEY] || 0}
-                select={select}
+                selected={
+                  (editor.props.suggestions &&
+                    Math.abs(editor.state[SELECTED_MENTION_INDEX_KEY]) %
+                      editor.props.suggestions.length) ||
+                    0
+                }
+                suggestions={editor.props.suggestions}
                 mention={mention}
               />
             </Portal>
@@ -82,10 +75,24 @@ const MentionsPlugin = (options?: Options): SlatePlugin => {
           if (currentlyInMention(state)) event.preventDefault();
         case ENTER: {
           if (currentlyInMention(state)) {
+            const { suggestions } = editor.props;
+            if (suggestions === null) break;
+
+            const selected = Math.abs(editor.state[SELECTED_MENTION_INDEX_KEY]);
+            const text = suggestions[selected % suggestions.length || 0];
+            const at = nearestAt(
+              state.endText.text,
+              state.selection.startOffset
+            );
+            const mentionLength = state.selection.startOffset - at - 1;
+
             return state
               .transform()
+              .deleteBackward(mentionLength)
+              .insertText(text)
               .removeMark('mention')
               .insertText(' ')
+              .focus()
               .apply();
           }
         }
@@ -116,6 +123,16 @@ const MentionsPlugin = (options?: Options): SlatePlugin => {
             editor.setState({
               [SELECTED_MENTION_INDEX_KEY]: 0,
             });
+          } else {
+            // keycode 48 = "0", keycode 90 = "z", covers all characters
+            const currentInput = data.code >= 48 && data.code <= 90
+              ? data.key
+              : '';
+            const mention = findNearestMention(
+              `${state.endText.text}${currentInput}`,
+              state.selection.startOffset
+            );
+            editor.props.onMentionSearch(mention);
           }
         }
       }

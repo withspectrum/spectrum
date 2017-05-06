@@ -33,18 +33,22 @@ type EditorProps = {
   onChange?: Function,
 };
 
+const suggestions = ['max', 'brian', 'bryn'];
+
 class Editor extends Component {
   props: EditorProps;
 
   state: {
     state: Object,
     plugins: Array<SlatePlugin | false>,
+    suggestions: ?Array<string>,
   };
 
   constructor(props: EditorProps) {
     super(props);
     this.state = {
       state: initialState,
+      suggestions,
       plugins: [
         props.mentions !== false &&
           MentionsPlugin({
@@ -67,6 +71,17 @@ class Editor extends Component {
     this.setState({ state });
   };
 
+  updateSuggestions = (value: string) => {
+    this.setState({
+      suggestions: null,
+    });
+    setTimeout(() => {
+      this.setState({
+        suggestions: suggestions.filter(text => text.indexOf(value) > -1),
+      });
+    }, 1000);
+  };
+
   render() {
     const state = this.props.state || this.state.state;
     const onChange = this.props.onChange || this.onChange;
@@ -74,6 +89,8 @@ class Editor extends Component {
     return (
       <SlateEditor
         state={state}
+        suggestions={this.state.suggestions}
+        onMentionSearch={this.updateSuggestions}
         onChange={onChange}
         plugins={this.state.plugins}
       />

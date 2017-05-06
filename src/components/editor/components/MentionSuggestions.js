@@ -5,14 +5,23 @@ class Suggestions extends React.Component {
     suggestions: [],
   };
 
-  select = () => {
-    this.props.select(this.props.mention);
-  };
-
   render() {
+    const { suggestions, selected } = this.props;
+    if (suggestions === null) return <div>Loading...</div>;
+
     return (
       <div>
-        <button onClick={this.select}>{this.props.mention}</button>
+        {suggestions.map((text, index) => (
+          <button
+            key={text}
+            onClick={() => this.props.select(text)}
+            style={{
+              background: index === selected ? 'red' : 'grey',
+            }}
+          >
+            {text}
+          </button>
+        ))}
       </div>
     );
   }
