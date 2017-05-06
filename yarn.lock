@@ -6613,7 +6613,7 @@ react-motion@^0.4.2, react-motion@^0.4.8:
     prop-types "^15.5.8"
     raf "^3.1.0"
 
-react-portal@^3.0.0, react-portal@^3.1.0:
+react-portal@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/react-portal/-/react-portal-3.1.0.tgz#865c44fb72a1da106c649206936559ce891ee899"
   dependencies:
@@ -7343,9 +7343,9 @@ slash@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-1.0.0.tgz#c41f2f6c39fc16d1cd17ad4b5d896114ae470d55"
 
-slate@^0.19.22:
-  version "0.19.22"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.19.22.tgz#87f272f68b0e592e80926e96298963540e87d1f3"
+slate@^0.19.29:
+  version "0.19.29"
+  resolved "https://registry.yarnpkg.com/slate/-/slate-0.19.29.tgz#6e9db79ccaa1a380e48b6be44b932bd1d5d98400"
   dependencies:
     cheerio "^0.22.0"
     debug "^2.3.2"
@@ -7359,7 +7359,7 @@ slate@^0.19.22:
     is-window "^1.0.2"
     keycode "^2.1.2"
     prop-types "^15.5.8"
-    react-portal "^3.0.0"
+    react-portal "^3.1.0"
     selection-is-backward "^1.0.0"
     type-of "^2.0.1"
 
