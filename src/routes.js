@@ -45,7 +45,7 @@ class Routes extends Component {
             */}
             <Switch>
               <Route exact path="/" component={Dashboard} />
-              <Route exact path="/dashboard" component={Dashboard} />
+              <Route exact path="/home" component={Dashboard} />
 
               {/* Public Business Pages */}
               <Route path="/about" component={About} />

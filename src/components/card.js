@@ -16,6 +16,10 @@ const StyledCard = styled(FlexContainer)`
   position: relative;
   width: 100%;
   max-width: 100%;
+
+  + div {
+    margin-top: 16px;
+  }
 `;
 
 const CardPure = (props: Object): React$Element<any> => (

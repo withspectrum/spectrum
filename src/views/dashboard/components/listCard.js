@@ -7,7 +7,7 @@ import compose from 'recompose/compose';
 
 import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCardItem';
-import { FlexCol, FlexRow } from '../../../components/globals';
+import { FlexRow } from '../../../components/globals';
 import Icon from '../../../components/icons';
 
 import { StyledCard, ListHeading, ListContainer, MoreLink } from '../style';

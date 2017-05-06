@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Card from '../../components/card';
 import { Link } from 'react-router-dom';
-import { FlexCol, FlexRow, H3, H4, P } from '../../components/globals';
+import { FlexCol, H3 } from '../../components/globals';
 
 export const StyledCard = styled(Card)`
   margin-top: 16px;

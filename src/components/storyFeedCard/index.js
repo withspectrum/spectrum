@@ -31,7 +31,7 @@ const StoryFeedCardPure = (props: Object): React$Element<any> => {
     ) {
       return <Location>{`~/${props.data.frequency.name}`}</Location>;
     } else {
-      ('');
+      return;
     }
   };
 
@@ -52,7 +52,6 @@ const StoryFeedCardPure = (props: Object): React$Element<any> => {
   const messageAvatars = list => {
     return list.map((edge, i) => {
       const participant = edge.node.sender;
-      console.log('participant: ', participant);
       return (
         <Participant src={participant.photoURL} role="presentation" key={i} />
       );
