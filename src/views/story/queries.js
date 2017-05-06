@@ -15,7 +15,7 @@ import {
 } from '../../api/fragments/frequency/frequencyMetaData';
 
 export const GET_STORY_QUERY = gql`
-  query story($id: ID!) {
+  query getStory($id: ID!) {
     story(id: $id) {
       ...storyInfo
       author {
@@ -48,7 +48,7 @@ export const GET_STORY_OPTIONS = {
 export const getStory = graphql(GET_STORY_QUERY, GET_STORY_OPTIONS);
 
 export const GET_STORY_MESSAGES_QUERY = gql`
-  query story($id: ID!, $after: String) {
+  query getStoryMessages($id: ID!, $after: String) {
     story(id: $id) {
       id
       ...storyMessages

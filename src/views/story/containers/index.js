@@ -1,9 +1,11 @@
-//@flow
+// @flow
 import React from 'react';
-//$FlowFixMe
+// $FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
+// $FlowFixMe
 import pure from 'recompose/pure';
+// $FlowFixMe
+import { connect } from 'react-redux';
 import { StoryDetail } from '../components/storyDetail';
 import Messages from '../components/messages';
 import ChatInput from '../components/chatInput';
@@ -12,6 +14,11 @@ import { FlexContainer } from '../../../components/flexbox';
 import { UserProfile, FrequencyProfile } from '../../../components/profile';
 import { getStory } from '../queries';
 import { displayLoadingState } from '../../../components/loading';
+
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+const MessagesWithCurrentUser = connect(mapStateToProps)(Messages);
 
 const StoryContainerPure = ({
   data: { story, subscribeToNewMessages, error, loading },
@@ -33,7 +40,7 @@ const StoryContainerPure = ({
 
       <Column type="primary">
         <StoryDetail story={story} />
-        <Messages id={story.id} />
+        <MessagesWithCurrentUser id={story.id} />
         <ChatInput thread={story.id} />
       </Column>
     </FlexContainer>

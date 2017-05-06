@@ -1,4 +1,8 @@
+// @flow
+// $FlowFixMe
 import { graphql, gql } from 'react-apollo';
+// $FlowFixMe
+import update from 'immutability-helper';
 import { messageInfoFragment } from '../../api/fragments/message/messageInfo';
 import {
   reactionInfoFragment,
@@ -77,6 +81,7 @@ const TOGGLE_REACTION_MUTATION = gql`
   mutation toggleReaction($reaction: ReactionInput!) {
     toggleReaction(reaction: $reaction) {
       ...reactionInfo
+      __typename
     }
   }
   ${reactionInfoFragment}
@@ -91,16 +96,76 @@ const TOGGLE_REACTION_OPTIONS = {
         variables: {
           reaction,
         },
-        // listens for a reaction to change and refetches the query to get all
-        // the story messages
-        // in the future we should do better optimistic UI transformations so that
-        // there won't any lag between the user reacting and the UI updating
-        refetchQueries: [
-          {
-            query: GET_STORY_MESSAGES_QUERY,
-            variables: { id: ownProps.id },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          toggleReaction: {
+            id: Math.random() * -10000,
+            type: 'like',
+            user: {
+              uid: ownProps.currentUser.uid,
+              __typename: 'User',
+            },
+            __typename: 'Reaction',
           },
-        ],
+        },
+        updateQueries: {
+          getStoryMessages: (prev, { mutationResult }) => {
+            const newReaction = mutationResult.data.toggleReaction;
+
+            return Object.assign({}, prev, {
+              ...prev,
+              story: {
+                ...prev.story,
+                messageConnection: {
+                  ...prev.story.messageConnection,
+                  edges: prev.story.messageConnection.edges.map(edge => {
+                    // make sure we're modifying the correct message
+                    if (edge.node.id !== reaction.message) return edge;
+
+                    // if no reactions exist yet, add one immediately for the
+                    // current user
+                    if (edge.node.reactions.length === 0) {
+                      return {
+                        ...edge,
+                        node: {
+                          ...edge.node,
+                          reactions: [...edge.node.reactions, newReaction],
+                        },
+                      };
+                    }
+
+                    // if the current user has already reacted, remove their
+                    // reaction from the array
+                    if (
+                      edge.node.reactions.find(r => {
+                        return r.user.uid === newReaction.user.uid;
+                      })
+                    ) {
+                      return {
+                        ...edge,
+                        node: {
+                          ...edge.node,
+                          reactions: edge.node.reactions.filter(r => {
+                            return r.user.uid !== newReaction.user.uid;
+                          }),
+                        },
+                      };
+                    }
+
+                    // otherwise add the reaction
+                    return {
+                      ...edge,
+                      node: {
+                        ...edge.node,
+                        reactions: [...edge.node.reactions, newReaction],
+                      },
+                    };
+                  }),
+                },
+              },
+            });
+          },
+        },
       }),
   }),
 };
