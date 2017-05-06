@@ -95,7 +95,7 @@ class SlateNodePortal extends React.Component {
     menuEl.style.position = 'absolute';
 
     const nodeEl = findDOMNode(node);
-    const offset = getOffsets(menuEl, menuAnchor, nodeEl, nodeAnchor);
+    const offset = getOffsets(menuEl, 'bottom center', nodeEl, 'bottom center');
     menuEl.style.top = `${offset.top + 16}px`;
     menuEl.style.left = `${offset.left}px`;
   };

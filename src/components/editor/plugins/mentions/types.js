@@ -5,6 +5,8 @@ export type MentionComponentProps = {
 
 export type SuggestionsComponentProps = {
   mention: string,
+  select: Function,
+  selected: number,
 };
 
 export type Options = {

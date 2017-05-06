@@ -6,6 +6,8 @@ import type { SlatePlugin } from './plugins/mentions/types';
 import MentionsPlugin from './plugins/mentions';
 import MarkdownPlugin from './plugins/markdown';
 
+import Suggestions from './components/MentionSuggestions';
+
 const initialState = Raw.deserialize(
   {
     nodes: [
@@ -54,7 +56,7 @@ class Editor extends Component {
                 {props.children}
               </span>
             ),
-            Suggestions: props => <span>{props.mention}</span>,
+            Suggestions,
           }),
         props.markdown !== false && MarkdownPlugin(),
       ],
