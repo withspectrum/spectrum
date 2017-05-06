@@ -27,11 +27,21 @@ const CurrentUserProfile = compose(getCurrentUserProfile)(UserProfile);
 
 const CommunitiesListCard = compose(getCurrentUserCommunities)(ListCard);
 
-const DashboardPure = ({ data: { user }, dispatch }) => {
+const DashboardPure = ({ data: { user, error }, data, dispatch }) => {
   // save user data to localstorage, which will also dispatch an action to put
   // the user into the redux store
   if (user) {
     dispatch(saveUserDataToLocalStorage(user));
+  }
+
+  if (error) {
+    return (
+      <AppViewWrapper>
+        <Column type="primary" alignItems="center">
+          Error loading home page
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   return (
