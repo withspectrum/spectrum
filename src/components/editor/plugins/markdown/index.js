@@ -3,7 +3,7 @@
  * Most of this was stolen from https://github.com/ianstormtaylor/slate/blob/460498b5ddfcecee7439eafe4f4d31cacde69f41/examples/markdown-preview/index.js
  */
 import React from 'react';
-import decorator from './decorator';
+import decorate from './decorator';
 
 type Options = {};
 
@@ -45,7 +45,7 @@ const MarkdownPlugin = (options?: Options) => {
       rules: [
         {
           match: () => true,
-          decorator,
+          decorate,
         },
       ],
     },
