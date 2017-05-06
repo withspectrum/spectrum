@@ -14,8 +14,7 @@ import {
   frequencyMetaDataFragment,
 } from '../../api/fragments/frequency/frequencyMetaData';
 
-export const getStory = graphql(
-  gql`
+export const GET_STORY_QUERY = gql`
   query story($id: ID!) {
     story(id: $id) {
       ...storyInfo
@@ -38,58 +37,17 @@ export const getStory = graphql(
   ${frequencyMetaDataFragment}
   ${frequencyInfoFragment}
   ${communityInfoFragment}
-`,
-  {
-    options: props => ({
-      variables: {
-        id: props.match.params.storyId,
-      },
-    }),
-  }
-);
-
-const getStoryQueryOptions = {
+`;
+export const GET_STORY_OPTIONS = {
   options: props => ({
-    variables: { id: props.id },
+    variables: {
+      id: props.match.params.storyId,
+    },
   }),
-  props: props => {
-    return {
-      data: props.data,
-      subscribeToNewMessages: () => {
-        if (!props.data.story) {
-          return;
-        }
-        return props.data.subscribeToMore({
-          document: subscribeToNewMessages,
-          variables: {
-            thread: props.ownProps.id,
-          },
-          updateQuery: (prev, { subscriptionData }) => {
-            const newMessage = subscriptionData.data.messageAdded;
-            // Add the new message to the data
-            return {
-              ...prev,
-              story: {
-                ...prev.story,
-                messageConnection: {
-                  ...prev.story.messageConnection,
-                  edges: [
-                    ...prev.story.messageConnection.edges,
-                    // NOTE(@mxstbr): The __typename hack is to work around react-apollo/issues/658
-                    { node: newMessage, __typename: 'StoryMessageEdge' },
-                  ],
-                },
-              },
-            };
-          },
-        });
-      },
-    };
-  },
 };
+export const getStory = graphql(GET_STORY_QUERY, GET_STORY_OPTIONS);
 
-export const getStoryMessages = graphql(
-  gql`
+export const GET_STORY_MESSAGES_QUERY = gql`
   query story($id: ID!, $after: String) {
     story(id: $id) {
       id
@@ -97,6 +55,46 @@ export const getStoryMessages = graphql(
     }
   }
   ${storyMessagesFragment}
-`,
-  getStoryQueryOptions
+`;
+export const GET_STORY_MESSAGES_OPTIONS = {
+  options: props => ({
+    variables: { id: props.id },
+  }),
+  props: props => ({
+    data: props.data,
+    subscribeToNewMessages: () => {
+      if (!props.data.story) {
+        return;
+      }
+      return props.data.subscribeToMore({
+        document: subscribeToNewMessages,
+        variables: {
+          thread: props.ownProps.id,
+        },
+        updateQuery: (prev, { subscriptionData }) => {
+          const newMessage = subscriptionData.data.messageAdded;
+          // Add the new message to the data
+          return {
+            ...prev,
+            story: {
+              ...prev.story,
+              messageConnection: {
+                ...prev.story.messageConnection,
+                edges: [
+                  ...prev.story.messageConnection.edges,
+                  // NOTE(@mxstbr): The __typename hack is to work around react-apollo/issues/658
+                  { node: newMessage, __typename: 'StoryMessageEdge' },
+                ],
+              },
+            },
+          };
+        },
+      });
+    },
+  }),
+};
+
+export const getStoryMessages = graphql(
+  GET_STORY_MESSAGES_QUERY,
+  GET_STORY_MESSAGES_OPTIONS
 );

@@ -2,8 +2,6 @@
 import React from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
-// $FlowFixMe
-import compose from 'recompose/compose';
 import {
   convertTimestampToDate,
   convertTimestampToTime,
@@ -24,7 +22,6 @@ import {
 import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
 import Icon from '../icons';
 import { Reaction, Count } from '../bubbles/style';
-import { toggleReaction } from './mutations';
 
 /*
   ChatMessages expects to receive sorted and grouped messages.
@@ -34,7 +31,7 @@ import { toggleReaction } from './mutations';
   This means we will need a nested map in order to get each group, and then within
   each group render each bubble.
 */
-const ChatMessages = ({ messages, currentUser, mutate }) => {
+const ChatMessages = ({ messages, currentUser, toggleReaction }) => {
   if (!messages) {
     return <div>No messages</div>;
   }
@@ -77,18 +74,14 @@ const ChatMessages = ({ messages, currentUser, mutate }) => {
     const doNothing = () => '';
     const triggerMutation = () => {
       return (
-        mutate({
-          variables: {
-            reaction: {
-              message: message.id,
-              type: 'like',
-            },
-          },
+        toggleReaction({
+          message: message.id,
+          type: 'like',
         })
           // after the mutation occurs, it will either return an error or the new
           // story that was published
           .then(({ data }) => {
-            console.log('reaction', data);
+            // can do something with the returned reaction here
           })
           .catch(error => {
             // TODO add some kind of dispatch here to show an error to the user
@@ -194,8 +187,5 @@ const ChatMessages = ({ messages, currentUser, mutate }) => {
 // get the current user from the store for evaulation of message bubbles
 const mapStateToProps = state => ({ currentUser: state.users.currentUser });
 const ConnectedChatMessages = connect(mapStateToProps)(ChatMessages);
-// wrap the component in our mutations file which will handle reactions for now
-const ChatMessagesWithMutations = compose(toggleReaction)(
-  ConnectedChatMessages
-);
-export default ChatMessagesWithMutations;
+
+export default ConnectedChatMessages;

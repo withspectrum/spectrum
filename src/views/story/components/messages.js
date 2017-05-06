@@ -2,22 +2,13 @@
 import React from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import branch from 'recompose/branch';
-// $FlowFixMe
-import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import lifecycle from 'recompose/lifecycle';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
-import { LoadingCard } from '../../../components/loading';
+import { displayLoadingCard } from '../../../components/loading';
 import { getStoryMessages } from '../queries';
-import { MessagesContainer } from '../style';
-
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingCard)
-);
+import { toggleReactionMutation } from '../mutations';
 
 const lifecycles = lifecycle({
   state: {
@@ -33,7 +24,7 @@ const lifecycles = lifecycle({
   },
 });
 
-const MessagesWithData = ({ data }) => {
+const MessagesWithData = ({ data, toggleReaction }) => {
   if (data.error) {
     return <div>Error!</div>;
   }
@@ -46,14 +37,15 @@ const MessagesWithData = ({ data }) => {
     data.story.messageConnection.edges
   );
   return (
-    <MessagesContainer>
-      <ChatMessages messages={sortedMessages} />
-    </MessagesContainer>
+    <ChatMessages toggleReaction={toggleReaction} messages={sortedMessages} />
   );
 };
 
-const Messages = compose(getStoryMessages, lifecycles, displayLoadingState)(
-  MessagesWithData
-);
+const Messages = compose(
+  toggleReactionMutation,
+  getStoryMessages,
+  lifecycles,
+  displayLoadingCard
+)(MessagesWithData);
 
 export default Messages;
