@@ -1,13 +1,10 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-// $FlowFixMe
-import update from 'immutability-helper';
 import { messageInfoFragment } from '../../api/fragments/message/messageInfo';
 import {
   reactionInfoFragment,
 } from '../../api/fragments/reaction/reactionInfo';
-import { GET_STORY_MESSAGES_QUERY } from './queries';
 
 /*
   Send an id and boolean value to set a story to be locked or unlocked.
