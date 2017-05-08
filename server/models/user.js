@@ -16,7 +16,7 @@ const getUser = ({ uid, username }: GetUserArgs) => {
   );
 };
 
-const getUserByUid = (uid: String) => {
+const getUserByUid = (uid: string) => {
   return db.table('users').get(uid).run();
 };
 
@@ -28,7 +28,7 @@ const getUserByUsername = (username: string) => {
     .then(result => result && result[0]);
 };
 
-const getUsers = (uids: Array<String>) => {
+const getUsers = (uids: Array<string>) => {
   return db.table('users').getAll(...uids).run();
 };
 
@@ -50,7 +50,7 @@ const storeUser = user => {
 
 const createOrFindUser = user => {
   const promise = user.uid
-    ? getUser(user.uid)
+    ? getUser({ uid: user.uid })
     : getUserByProviderId(user.providerId);
   return promise.then(storedUser => {
     if (storedUser) return Promise.resolve(storedUser);
@@ -59,7 +59,7 @@ const createOrFindUser = user => {
   });
 };
 
-const getAllStories = (frequencies: Array<String>) => {
+const getAllStories = (frequencies: Array<string>) => {
   return db
     .table('stories')
     .orderBy(db.desc('modifiedAt'))
@@ -67,7 +67,7 @@ const getAllStories = (frequencies: Array<String>) => {
     .run();
 };
 
-const getUserMetaData = (id: String) => {
+const getUserMetaData = (id: string) => {
   const getStoryCount = db
     .table('stories')
     .filter({ author: id })
@@ -79,7 +79,6 @@ const getUserMetaData = (id: String) => {
 
 module.exports = {
   getUser,
-  getUserByUid,
   getUserMetaData,
   getUsers,
   createOrFindUser,

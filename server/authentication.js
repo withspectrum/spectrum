@@ -1,6 +1,6 @@
 const passport = require('passport');
 const { Strategy: TwitterStrategy } = require('passport-twitter');
-const { getUserByUid, createOrFindUser } = require('./models/user');
+const { getUser, createOrFindUser } = require('./models/user');
 
 const init = ({ twitterCallbackURLBase }) => {
   // Setup use serialization
@@ -9,7 +9,7 @@ const init = ({ twitterCallbackURLBase }) => {
   });
 
   passport.deserializeUser((uid, done) => {
-    getUserByUid(uid)
+    getUser({ uid })
       .then(user => {
         done(null, user);
       })

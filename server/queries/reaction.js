@@ -1,6 +1,6 @@
 // @flow
 
-import { getUserByUid } from '../models/user';
+import { getUser } from '../models/user';
 import { getReaction } from '../models/reaction';
 import { getMessage } from '../models/message';
 import type { LocationTypes } from '../models/message';
@@ -24,7 +24,7 @@ const reaction = {
     reaction: (_: Root, { id }: QueryArgs) => getReaction(id),
   },
   Reaction: {
-    user: ({ user }: Root) => getUserByUid(user),
+    user: ({ user }: Root) => getUser({ uid: user }),
     message: ({ message }: Root, { location }: MessageArgs) =>
       getMessage(location, message),
   },
