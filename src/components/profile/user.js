@@ -2,6 +2,8 @@
 import React from 'react';
 import Card from '../card';
 //$FlowFixMe
+import { connect } from 'react-redux';
+//$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
@@ -9,6 +11,7 @@ import pure from 'recompose/pure';
 import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
+import { openModal } from '../../actions/modals';
 import { Avatar } from '../avatar';
 import { LoadingCard } from '../loading';
 import {
@@ -37,12 +40,23 @@ type UserProps = {
   },
 };
 
+type CurrentUserProps = {
+  uid: String,
+  photoURL: String,
+  displayName: String,
+  username: String,
+};
+
 const UserWithData = ({
   data: { user },
   profileSize,
-}: { data: { user: UserProps }, profileSize: ProfileSizeProps }): React$Element<
-  any
-> => {
+  currentUser,
+  dispatch,
+}: {
+  data: { user: UserProps },
+  profileSize: ProfileSizeProps,
+  currentUser: CurrentUserProps,
+}): React$Element<any> => {
   const componentSize = profileSize || 'mini';
 
   if (!user) {
@@ -66,7 +80,14 @@ const UserWithData = ({
 
       {componentSize !== 'mini' &&
         <Actions>
-          <Action>Message</Action>
+          {currentUser
+            ? <Action
+                onClick={() =>
+                  dispatch(openModal('USER_PROFILE_MODAL', currentUser))}
+              >
+                Settings
+              </Action>
+            : <Action>Message</Action>}
         </Actions>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
@@ -76,4 +97,7 @@ const UserWithData = ({
 };
 
 const User = compose(displayLoadingState, pure)(UserWithData);
-export default User;
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+export default connect(mapStateToProps)(User);
