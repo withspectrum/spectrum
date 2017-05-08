@@ -18,7 +18,8 @@ import type { GraphQLContext } from '../';
 
 module.exports = {
   Query: {
-    user: (_: any, args: GetUserArgs) => getUser(args),
+    user: (_: any, args: { uid: string }, { loaders }: GraphQLContext) =>
+      loaders.user.load(args.uid),
     currentUser: (_: any, __: any, { user }: GraphQLContext) => user,
   },
   User: {

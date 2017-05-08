@@ -2,14 +2,19 @@
 const { db } = require('./db');
 import { UserError } from 'graphql-errors';
 
-export type GetUserArgs = {
-  uid?: string,
-  username?: string,
+type UidInput = {
+  uid: string,
 };
 
-const getUser = ({ uid, username }: GetUserArgs) => {
-  if (uid) return getUserByUid(uid);
-  if (username) return getUserByUsername(username);
+type UsernameInput = {
+  username: string,
+};
+
+export type GetUserArgs = UidInput | UsernameInput;
+
+const getUser = (input: GetUserArgs) => {
+  if (input.uid) return getUserByUid(input.uid);
+  if (input.username) return getUserByUsername(input.username);
 
   throw new UserError(
     'Please provide either id or username to your user() query.'
