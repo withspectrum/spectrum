@@ -2,7 +2,7 @@
 /**
  * Story query resolvers
  */
-const { getUserMetaData, getAllStories } = require('../models/user');
+const { getAllStories } = require('../models/user');
 const { getCommunitiesByUser } = require('../models/community');
 const { getFrequenciesByUser } = require('../models/frequency');
 const { getStoriesByUser } = require('../models/story');
@@ -90,7 +90,7 @@ module.exports = {
       ),
     }),
     storyConnection: (
-      { uid }: { uid: String },
+      { uid }: { uid: string },
       { first = 10, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
@@ -112,12 +112,12 @@ module.exports = {
           })),
         }));
     },
-    metaData: ({ uid }: { uid: String }) => {
-      return getUserMetaData(uid).then(data => {
-        return {
-          stories: data[0],
-        };
-      });
+    storyCount: (
+      { uid }: { uid: string },
+      _: any,
+      { loaders }: GraphQLContext
+    ) => {
+      return loaders.userStoryCount.load(uid).then(data => data.count);
     },
   },
 };

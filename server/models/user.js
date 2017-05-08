@@ -72,19 +72,22 @@ const getAllStories = (frequencies: Array<string>) => {
     .run();
 };
 
-const getUserMetaData = (id: string) => {
-  const getStoryCount = db
-    .table('stories')
-    .filter({ author: id })
-    .count()
-    .run();
+const getUsersStoryCount = (ids: Array<string>) => {
+  const getStoryCounts = ids.map(id =>
+    db.table('stories').filter({ author: id }).count().run()
+  );
 
-  return Promise.all([getStoryCount]);
+  return Promise.all(getStoryCounts).then(result => {
+    return result.map((storyCount, index) => ({
+      uid: ids[index],
+      count: storyCount,
+    }));
+  });
 };
 
 module.exports = {
   getUser,
-  getUserMetaData,
+  getUsersStoryCount,
   getUsers,
   createOrFindUser,
   storeUser,
