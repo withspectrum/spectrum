@@ -1,3 +1,4 @@
+// @flow
 /**
  * Story query resolvers
  */
@@ -13,23 +14,24 @@ import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetUserArgs } from '../models/frequency';
+import type { GraphQLContext } from '../';
 
 module.exports = {
   Query: {
-    user: (_, args: GetUserArgs) => getUser(args),
-    currentUser: (_, __, { user }) => user,
+    user: (_: any, args: GetUserArgs) => getUser(args),
+    currentUser: (_: any, __: any, { user }: GraphQLContext) => user,
   },
   User: {
     notificationConnection: (
-      { uid }: { uid: String },
+      { uid }: { uid: string },
       { first = 10, after }: PaginationOptions,
-      { user }: { user: Object }
+      { user }: GraphQLContext
     ) => {
       if (!user || user.uid !== uid) return null;
       return getNotificationsByUser(uid, { first, after });
     },
     everything: (
-      { uid }: { uid: String },
+      { uid }: { uid: string },
       { first = 10, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
@@ -55,7 +57,7 @@ module.exports = {
           })),
         }));
     },
-    communityConnection: user => ({
+    communityConnection: (user: Object) => ({
       // Don't paginate communities and frequencies of a user
       pageInfo: {
         hasNextPage: false,
@@ -66,7 +68,7 @@ module.exports = {
         }))
       ),
     }),
-    frequencyConnection: user => ({
+    frequencyConnection: (user: Object) => ({
       pageInfo: {
         hasNextPage: false,
       },
@@ -76,7 +78,7 @@ module.exports = {
         }))
       ),
     }),
-    directMessageGroupsConnection: user => ({
+    directMessageGroupsConnection: (user: Object) => ({
       pageInfo: {
         hasNextPage: false,
       },

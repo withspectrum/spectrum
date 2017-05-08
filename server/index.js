@@ -93,6 +93,10 @@ app.use(
   }))
 );
 
+export type GraphQLContext = {
+  user: Object,
+};
+
 // Create the websocket server, make it 404 for all requests to HTTP(S) port(s)
 const websocketServer = createServer((req, res) => {
   res.writeHead(404);
