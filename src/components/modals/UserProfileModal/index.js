@@ -4,43 +4,44 @@ import React from 'react';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import Modal from 'react-modal';
+// $FlowFixMe
+import branch from 'recompose/branch';
+// $FlowFixMe
+import renderComponent from 'recompose/renderComponent';
 import ModalContainer from '../modalContainer';
+import { LoadingCard } from '../../loading';
 import { modalStyles } from '../styles';
 import { closeModal } from '../../../actions/modals';
 
-class UserProfileModal extends React.Component {
-  closeModal = () => {
-    this.props.dispatch(closeModal());
+const UserProfileModal = ({ user, dispatch, isOpen }) => {
+  const styles = modalStyles();
+  const close = () => {
+    dispatch(closeModal());
   };
 
-  render() {
-    // invoke the modalStyles function to return an object
-    const styles = modalStyles();
-
-    return (
-      <Modal
-        isOpen={this.props.isOpen}
-        contentLabel={'modal!'}
-        onRequestClose={this.closeModal}
-        shouldCloseOnOverlayClick={true}
-        style={styles}
-        closeTimeoutMS={330}
-      >
-        {/*
-          We pass the closeModal dispatch into the container to attach
-          the action to the 'close' icon in the top right corner of all modals
-        */}
-        <ModalContainer closeModal={'foo'}>
-          Made it in!
-        </ModalContainer>
-      </Modal>
-    );
-  }
-}
+  return (
+    <Modal
+      isOpen={isOpen}
+      contentLabel={user.displayName}
+      onRequestClose={close}
+      shouldCloseOnOverlayClick={true}
+      style={styles}
+      closeTimeoutMS={330}
+    >
+      {/*
+        We pass the closeModal dispatch into the container to attach
+        the action to the 'close' icon in the top right corner of all modals
+      */}
+      <ModalContainer title={user.displayName} closeModal={'foo'}>
+        <img src={user.photoURL} width="40" height="40" />
+        <span>{user.username}</span>
+      </ModalContainer>
+    </Modal>
+  );
+};
 
 const mapStateToProps = state => ({
   isOpen: state.modals.isOpen,
   modalProps: state.modals.modalProps,
 });
-
 export default connect(mapStateToProps)(UserProfileModal);

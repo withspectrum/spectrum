@@ -1,7 +1,14 @@
 // @flow
 import React from 'react';
 import Icon from '../icons';
-import { ModalBody, ModalContent, Title, Footer, CloseButton } from './styles';
+import {
+  ModalBody,
+  Header,
+  ModalContent,
+  Title,
+  Footer,
+  CloseButton,
+} from './styles';
 
 /*
   ModalContainer is included around all modal components in order to have a
@@ -9,12 +16,17 @@ import { ModalBody, ModalContent, Title, Footer, CloseButton } from './styles';
   accept any arbitrary content via `props.children`
 */
 
-const ModalContainer = ({ closeModal, children }): React$Element<any> => {
+const ModalContainer = ({ closeModal, children, title }): React$Element<
+  any
+> => {
   return (
     <ModalBody>
-      <CloseButton>
-        <Icon icon="close" color={'text.alt'} hoverColor={'text.default'} />
-      </CloseButton>
+      <Header>
+        <Title>{title}</Title>
+        <CloseButton onClick={() => closeModal()}>
+          <Icon icon="close" color={'text.alt'} hoverColor={'text.default'} />
+        </CloseButton>
+      </Header>
 
       <ModalContent>
         {children}

@@ -2,6 +2,7 @@
 import React from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import { openModal } from '../../actions/modals';
 import {
   convertTimestampToDate,
   convertTimestampToTime,
@@ -31,17 +32,24 @@ import { Reaction, Count } from '../bubbles/style';
   This means we will need a nested map in order to get each group, and then within
   each group render each bubble.
 */
-const ChatMessages = ({ messages, currentUser, toggleReaction }) => {
+const ChatMessages = ({ messages, currentUser, toggleReaction, dispatch }) => {
   if (!messages) {
     return <div>No messages</div>;
   }
+
+  const openUserProfileModal = (user: Object) => {
+    return dispatch(openModal('USER_PROFILE_MODAL', { user }));
+  };
 
   const renderAvatar = (sender: Object, me: boolean) => {
     if (me) return;
 
     return (
       <AvatarLabel tipText={sender.displayName} tipLocation="right">
-        <Avatar src={sender.photoURL} />
+        <Avatar
+          onClick={() => openUserProfileModal(sender)}
+          src={sender.photoURL}
+        />
       </AvatarLabel>
     );
   };
@@ -52,7 +60,7 @@ const ChatMessages = ({ messages, currentUser, toggleReaction }) => {
     // if type !== 'story' we don't show admin or pro badges because it clutters group messages
     return (
       <Byline me={me}>
-        <Name>
+        <Name onClick={() => openUserProfileModal(user)}>
           {me ? 'You' : user.displayName}
         </Name>
       </Byline>
