@@ -1,10 +1,9 @@
 // @flow
 import React, { Component } from 'react';
 import { Editor as SlateEditor, Raw } from 'slate';
-
-import type { SlatePlugin } from './plugins/mentions/types';
-import MentionsPlugin from './plugins/mentions';
-import MarkdownPlugin from './plugins/markdown';
+import MentionsPlugin from 'slate-mentions';
+import type { SlatePlugin } from 'slate-mentions/src/types';
+import MarkdownPlugin from 'slate-markdown';
 
 import Suggestions from './components/MentionSuggestions';
 
