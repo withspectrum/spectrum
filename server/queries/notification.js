@@ -6,7 +6,6 @@ const {
   getNotification,
   getNotificationsByUser,
 } = require('../models/notification');
-const { getUser, getUsers } = require('../models/user');
 const { getMessage } = require('../models/message');
 const { getStory } = require('../models/story');
 const { getFrequency } = require('../models/frequency');
@@ -34,6 +33,6 @@ module.exports = {
     story: ({ story }) => story && getStory(story),
     frequency: ({ frequency }) => frequency && getFrequency({ id: frequency }),
     community: ({ community }) => community && getCommunity({ id: community }),
-    sender: ({ sender }) => sender && getUser({ uid: sender }),
+    sender: ({ sender }, _, { loaders }) => sender && loaders.user.load(sender),
   },
 };

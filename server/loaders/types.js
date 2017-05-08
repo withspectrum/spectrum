@@ -1,5 +1,6 @@
 // @flow
 
 export type Loader = {
-  load: (...args: any) => any,
+  load: (key: string) => Promise<any>,
+  loadMany: (keys: Array<string>) => Promise<any>,
 };

@@ -2,7 +2,7 @@
 /**
  * Story query resolvers
  */
-const { getUser, getUserMetaData, getAllStories } = require('../models/user');
+const { getUserMetaData, getAllStories } = require('../models/user');
 const { getCommunitiesByUser } = require('../models/community');
 const { getFrequenciesByUser } = require('../models/frequency');
 const { getStoriesByUser } = require('../models/story');

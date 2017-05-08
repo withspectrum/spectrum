@@ -9,10 +9,10 @@ const {
   getMessagesByLocationAndThread,
   getMessageCount,
 } = require('../models/message');
-const { getUser } = require('../models/user');
 import paginate from '../utils/paginate-arrays';
 import type { LocationTypes } from '../models/message';
 import type { PaginationOptions } from '../utils/paginate-arrays';
+import type { GraphQLContext } from '../';
 import { encode, decode } from '../utils/base64';
 
 module.exports = {
@@ -48,7 +48,11 @@ module.exports = {
           })),
         }));
     },
-    author: ({ author }: { author: String }) => getUser({ uid: author }),
+    author: (
+      { author }: { author: String },
+      _: any,
+      { loaders }: GraphQLContext
+    ) => loaders.user.load(author),
     messageCount: ({ id }: { id: string }) => getMessageCount('messages', id),
   },
 };

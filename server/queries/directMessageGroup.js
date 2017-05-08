@@ -4,9 +4,9 @@
  */
 const { getDirectMessageGroup } = require('../models/directMessageGroup');
 const { getMessagesByLocationAndThread } = require('../models/message');
-const { getUser, getUsers } = require('../models/user');
 import type { LocationTypes } from '../models/message';
 import type { PaginationOptions } from '../utils/paginate-arrays';
+import type { GraphQLContext } from '../';
 import { encode, decode } from '../utils/base64';
 
 type DirectMessageUser = {
@@ -41,14 +41,22 @@ module.exports = {
         })),
       }));
     },
-    users: ({ users }: { users: Array<DirectMessageUser> }) =>
-      getUsers(users.map(user => user.user)).then(dbUsers =>
+    users: (
+      { users }: { users: Array<DirectMessageUser> },
+      _: any,
+      { loaders }: GraphQLContext
+    ) =>
+      loaders.user.loadMany(users.map(user => user.user)).then(dbUsers =>
         dbUsers.map((user, index) => ({
           user,
           lastSeen: users[index].lastSeen,
           lastActivity: users[index].lastActivity,
         }))
       ),
-    creator: ({ creator }: { creator: String }) => getUser({ uid: creator }),
+    creator: (
+      { creator }: { creator: string },
+      _: any,
+      { loaders }: GraphQLContext
+    ) => loaders.user.load(creator),
   },
 };

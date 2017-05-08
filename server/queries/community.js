@@ -4,11 +4,12 @@
  */
 const { getCommunity, getCommunityMetaData } = require('../models/community');
 const { getFrequenciesByCommunity } = require('../models/frequency');
-const { getUsers, getAllStories } = require('../models/user');
+const { getAllStories } = require('../models/user');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetCommunityArgs } from '../models/community';
 import { encode, decode } from '../utils/base64';
+import type { GraphQLContext } from '../';
 
 module.exports = {
   Query: {
@@ -27,13 +28,14 @@ module.exports = {
     }),
     memberConnection: (
       { members }: { members: Array<string> },
-      { first = 10, after }: PaginationOptions
+      { first = 10, after }: PaginationOptions,
+      { loaders }: GraphQLContext
     ) => {
       const { list, hasMoreItems } = paginate(members, {
         first,
         after: decode(after),
       });
-      return getUsers(list).then(users => ({
+      return loaders.user.loadMany(list).then(users => ({
         pageInfo: {
           hasNextPage: hasMoreItems,
         },
