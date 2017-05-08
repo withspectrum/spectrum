@@ -21,6 +21,7 @@ import {
   Subtitle,
   Actions,
   Action,
+  ActionOutline,
 } from './style';
 import { MetaData } from './metaData';
 import type { ProfileSizeProps } from './index';
@@ -81,12 +82,14 @@ const UserWithData = ({
       {componentSize !== 'mini' &&
         <Actions>
           {currentUser
-            ? <Action
+            ? <ActionOutline
                 onClick={() =>
-                  dispatch(openModal('USER_PROFILE_MODAL', currentUser))}
+                  dispatch(
+                    openModal('USER_PROFILE_MODAL', { user: currentUser })
+                  )}
               >
                 Settings
-              </Action>
+              </ActionOutline>
             : <Action>Message</Action>}
         </Actions>}
 

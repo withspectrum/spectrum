@@ -29,10 +29,11 @@ export const modalStyles = (maxWidth: number = 360) => {
       left: 0,
       right: 0,
       bottom: 0,
-      overflowY: 'auto',
+      overflowY: 'visible',
       overflowX: 'hidden',
       zIndex: 200,
       padding: '1.2rem',
+      borderRadius: '1rem',
     },
     // modal root
     content: {
@@ -69,12 +70,12 @@ export const ModalBody = styled.div`
 export const Title = styled.div`
   font-weight: 800;
   font-size: 24px;
-  padding-bottom: 24px;
   line-height: 28px;
-  margin-top: 16px;
 `;
 
-export const Header = styled.div``;
+export const Header = styled.div`
+  padding: 16px 24px 24px;
+`;
 
 export const ModalContent = styled.div``;
 
@@ -82,7 +83,7 @@ export const Footer = styled.div``;
 
 export const CloseButton = styled(IconButton)`
   position: absolute;
-  top: 8px;
-  right: 8px;
+  right: 0;
+  top: 0;
   z-index: 2;
 `;
