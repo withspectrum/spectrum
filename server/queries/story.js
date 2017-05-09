@@ -3,7 +3,6 @@
 /**
  * Story query resolvers
  */
-const { getStory } = require('../models/story');
 const { getFrequency } = require('../models/frequency');
 const {
   getMessagesByLocationAndThread,
@@ -17,10 +16,11 @@ import { encode, decode } from '../utils/base64';
 
 module.exports = {
   Query: {
-    story: (_: any, { id }: { id: String }) => getStory(id),
+    story: (_: any, { id }: { id: string }, { loaders }: GraphQLContext) =>
+      loaders.story.load(id),
   },
   Story: {
-    frequency: ({ frequency }: { frequency: String }) =>
+    frequency: ({ frequency }: { frequency: string }) =>
       getFrequency({ id: frequency }),
     messageConnection: (
       { id }: { id: String },

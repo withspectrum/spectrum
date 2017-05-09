@@ -6,8 +6,8 @@ const { db } = require('./db');
 const { listenToNewDocumentsIn } = require('./utils');
 const { storeStoryNotification } = require('./notification');
 
-const getStory = id => {
-  return db.table('stories').get(id).run();
+const getStories = (ids: Array<string>) => {
+  return db.table('stories').getAll(...ids).run();
 };
 
 const getStoriesByFrequency = (frequency, { first, after }) => {
@@ -111,7 +111,7 @@ const listenToNewStories = cb => {
 };
 
 module.exports = {
-  getStory,
+  getStories,
   publishStory,
   editStory,
   setStoryLock,
