@@ -13,9 +13,15 @@ import {
 import {
   communityMetaDataFragment,
 } from '../../api/fragments/community/communityMetaData';
+import {
+  frequencyInfoFragment,
+} from '../../api/fragments/frequency/frequencyInfo';
+import {
+  frequencyMetaDataFragment,
+} from '../../api/fragments/frequency/frequencyMetaData';
 
 const LoadMoreStories = gql`
-  query loadMoreCommunityStories($slug: String, $after: String) {
+  query communityStories($slug: String, $after: String) {
     community(slug: $slug) {
       ...communityInfo
       ...communityStories
@@ -142,7 +148,7 @@ const storiesQueryOptions = {
 
 export const getCommunityStories = graphql(
   gql`
-		query getCommunityStories($slug: String, $after: String) {
+		query communityStories($slug: String, $after: String) {
 			community(slug: $slug) {
         ...communityInfo
         ...communityStories
@@ -170,7 +176,7 @@ const profileQueryOptions = {
 
 export const getCommunityProfile = graphql(
   gql`
-		query getCommunityProfile($slug: String) {
+		query communityProfile($slug: String) {
 			community(slug: $slug) {
         ...communityInfo
         ...communityMetaData
@@ -180,4 +186,24 @@ export const getCommunityProfile = graphql(
     ${communityMetaDataFragment}
 	`,
   profileQueryOptions
+);
+
+export const getFrequencyInfo = graphql(
+  gql`
+		query frequencyInfo($slug: String) {
+			community(slug: $slug) {
+        id
+        frequencyConnection {
+          edges {
+            node {
+              ...frequencyInfo
+              ...frequencyMetaData
+            }
+          }
+        }
+      }
+		}
+    ${frequencyInfoFragment}
+    ${frequencyMetaDataFragment}
+	`
 );

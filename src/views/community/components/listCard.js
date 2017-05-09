@@ -12,19 +12,23 @@ import Icon from '../../../components/icons';
 
 import { StyledCard, ListHeading, ListContainer, MoreLink } from '../style';
 
-const ListCardPure = ({ data: { communities } }) => {
-  if (!!communities) {
+const ListCardPure = ({ data }) => {
+  const frequencies = data.community.frequencyConnection.edges;
+  if (!!frequencies) {
     return (
       <StyledCard>
-        <ListHeading>My Communities</ListHeading>
+        <ListHeading>Frequencies</ListHeading>
         <ListContainer>
-          {communities.map(item => {
+          {frequencies.map(item => {
             return (
-              <Link key={item.node.id} to={`/${item.node.slug}`}>
+              <Link
+                key={item.node.id}
+                to={`/${data.variables.slug}/${item.node.slug}`}
+              >
                 <ListCardItem
                   contents={item.node}
                   withDescription={false}
-                  meta={`${item.node.metaData.members} members · ${item.node.metaData.frequencies} frequencies`}
+                  meta={`${item.node.metaData.subscribers} members`}
                 >
                   <Icon
                     icon="forward"

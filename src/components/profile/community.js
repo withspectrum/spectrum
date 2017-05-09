@@ -49,7 +49,19 @@ const CommunityWithData = ({
   const componentSize = profileSize || 'mini';
 
   if (!community) {
-    return <div>No community to be found</div>;
+    return (
+      <Card>
+        <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
+          <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+            <Title>This community doesn't exist yet.</Title>
+          </ProfileHeaderMeta>
+        </ProfileHeader>
+        <Description>Want to make it?</Description>
+        <Actions>
+          <ActionOutline>Create</ActionOutline>
+        </Actions>
+      </Card>
+    );
   }
 
   return (

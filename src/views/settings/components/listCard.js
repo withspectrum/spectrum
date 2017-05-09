@@ -7,27 +7,32 @@ import compose from 'recompose/compose';
 
 import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCardItem';
-import { FlexRow } from '../../../components/globals';
+import { FlexRow, FlexCol } from '../../../components/globals';
+import Card from '../../../components/card';
 import Icon from '../../../components/icons';
 
 import { StyledCard, ListHeading, ListContainer, MoreLink } from '../style';
 
-const ListCardPure = ({ data: { communities } }) => {
-  if (!!communities) {
+const ListCardPure = ({ data }) => {
+  const frequencies = data.community.frequencyConnection.edges;
+  if (!!frequencies) {
     return (
       <StyledCard>
-        <ListHeading>My Communities</ListHeading>
+        <ListHeading>Manage Frequencies</ListHeading>
         <ListContainer>
-          {communities.map(item => {
+          {frequencies.map(item => {
             return (
-              <Link key={item.node.id} to={`/${item.node.slug}`}>
+              <Link
+                key={item.node.id}
+                to={`/${data.variables.slug}/${item.node.slug}/settings`}
+              >
                 <ListCardItem
                   contents={item.node}
                   withDescription={false}
-                  meta={`${item.node.metaData.members} members · ${item.node.metaData.frequencies} frequencies`}
+                  meta={`${item.node.metaData.subscribers} members`}
                 >
                   <Icon
-                    icon="forward"
+                    icon="settings"
                     color={'text.alt'}
                     hoverColor={'brand.alt'}
                     scaleOnHover={false}
@@ -37,9 +42,6 @@ const ListCardPure = ({ data: { communities } }) => {
             );
           })}
         </ListContainer>
-        <FlexRow>
-          <MoreLink to={`/explore`}>Find more...</MoreLink>
-        </FlexRow>
       </StyledCard>
     );
   } else {
