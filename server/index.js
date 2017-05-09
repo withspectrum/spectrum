@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
+const { apolloUploadExpress } = require('apollo-upload-server');
 const cors = require('cors');
 
 const { db } = require('./models/db');
@@ -52,6 +53,7 @@ app.use(
 );
 app.use(cookieParser());
 app.use(bodyParser.json());
+app.use(apolloUploadExpress());
 app.use(
   session({
     store: new SessionStore(db, {

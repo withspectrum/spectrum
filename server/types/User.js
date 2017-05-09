@@ -61,6 +61,13 @@ const User = /* GraphQL */ `
 		stories: Int
 	}
 
+	input File {
+    name: String!
+    type: String!
+    size: Int!
+    path: String!
+  }
+
 	type User {
 		uid: ID!
 		createdAt: Date!
@@ -82,6 +89,10 @@ const User = /* GraphQL */ `
 	extend type Query {
 		user(uid: ID, username: String): User
 		currentUser: User
+	}
+
+	extend type Mutation {
+		uploadProfilePhoto(file: File!): User
 	}
 `;
 

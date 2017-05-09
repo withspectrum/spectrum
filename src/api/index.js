@@ -1,6 +1,8 @@
 // @flow
 // $FlowFixMe
-import { ApolloClient, createNetworkInterface } from 'react-apollo';
+import { ApolloClient } from 'react-apollo';
+// $FlowFixMe
+import { createNetworkInterface } from 'apollo-upload-client';
 // $FlowFixMe
 import {
   SubscriptionClient,
@@ -11,10 +13,10 @@ import {
 const wsClient = new SubscriptionClient('ws://localhost:5000');
 
 const networkInterface = createNetworkInterface({
+  uri: 'http://localhost:3001/',
   opts: {
     credentials: 'include',
   },
-  uri: 'http://localhost:3001/',
 });
 
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(

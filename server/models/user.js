@@ -1,6 +1,7 @@
 // @flow
 const { db } = require('./db');
 import { UserError } from 'graphql-errors';
+import photoToS3 from '../utils/s3';
 
 export type GetUserArgs = {
   uid?: string,
@@ -77,6 +78,40 @@ const getUserMetaData = (id: String) => {
   return Promise.all([getStoryCount]);
 };
 
+const uploadPhoto = (file: Object, user: Object) => {
+  // upload logic here with `file`
+  return photoToS3(file, user, data => {
+    let path = data.path;
+    // remove the bucket name from the url
+    path = path.replace('/spectrum-chat', '');
+
+    // this is the default source for our imgix account, which starts
+    // at the bucket root, thus we remove the bucket from the path
+    let imgixBase = 'https://spectrum.imgix.net';
+
+    // return a new url to update the user object
+    let photoURL = imgixBase + path;
+
+    // update the user object and return the updated user
+    return db
+      .table('users')
+      .get(user.uid)
+      .update(
+        {
+          photoURL,
+        },
+        { returnChanges: true }
+      )
+      .run()
+      .then(
+        result =>
+          (result.changes.length > 0
+            ? result.changes[0].new_val
+            : db.table('users').get(user.uid).run())
+      );
+  });
+};
+
 module.exports = {
   getUser,
   getUserByUid,
@@ -85,4 +120,5 @@ module.exports = {
   createOrFindUser,
   storeUser,
   getAllStories,
+  uploadPhoto,
 };
