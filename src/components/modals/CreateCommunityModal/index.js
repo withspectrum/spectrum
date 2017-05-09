@@ -8,6 +8,8 @@ import Modal from 'react-modal';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import renderComponent from 'recompose/renderComponent';
+// $FlowFixMe
+import { withRouter } from 'react-router';
 import ModalContainer from '../modalContainer';
 import { LoadingCard } from '../../loading';
 import { LinkButton, Button } from '../../buttons';
@@ -57,7 +59,16 @@ class CreateCommunityModal extends Component {
       slug,
       description,
     };
-    this.props.createCommunity(input);
+    this.props
+      .createCommunity(input)
+      .then(community => {
+        this.props.history.push(`/${community.slug}`);
+        this.close();
+      })
+      .catch(err => {
+        //TODO: Add dispatch for global error events
+        console.log('err in createCommunity', err);
+      });
   };
 
   render() {
@@ -107,9 +118,10 @@ class CreateCommunityModal extends Component {
   }
 }
 
-const CreateCommunityModalWithMutation = compose(createCommunityMutation)(
-  CreateCommunityModal
-);
+const CreateCommunityModalWithMutation = compose(
+  createCommunityMutation,
+  withRouter
+)(CreateCommunityModal);
 
 const mapStateToProps = state => ({
   isOpen: state.modals.isOpen,

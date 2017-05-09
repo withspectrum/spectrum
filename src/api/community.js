@@ -24,7 +24,8 @@ const CREATE_COMMUNITY_OPTIONS = {
         },
       })
         .then(({ data }) => {
-          console.log('mutation complete ', data);
+          console.log(data);
+          return data.createCommunity;
         })
         .catch(error => {
           console.log('error creating community', error);
@@ -35,4 +36,35 @@ const CREATE_COMMUNITY_OPTIONS = {
 export const createCommunityMutation = graphql(
   CREATE_COMMUNITY_MUTATION,
   CREATE_COMMUNITY_OPTIONS
+);
+
+/*
+  Delete a community
+*/
+const DELETE_COMMUNITY_MUTATION = gql`
+  mutation deleteCommunity($id: ID!) {
+    deleteCommunity (id: $id)
+  }
+`;
+
+const DELETE_COMMUNITY_OPTIONS = {
+  props: ({ id, mutate }) => ({
+    deleteCommunity: id =>
+      mutate({
+        variables: {
+          id,
+        },
+      })
+        .then(({ data }) => {
+          console.log('mutation complete ', data);
+        })
+        .catch(error => {
+          console.log('error deleting community', error);
+        }),
+  }),
+};
+
+export const deleteCommunityMutation = graphql(
+  DELETE_COMMUNITY_MUTATION,
+  DELETE_COMMUNITY_OPTIONS
 );

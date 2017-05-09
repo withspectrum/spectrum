@@ -93,6 +93,21 @@ const createCommunity = (
     .then(([community]) => community);
 };
 
+const deleteCommunity = id => {
+  return db
+    .table('communities')
+    .get(id)
+    .delete({ returnChanges: true })
+    .run()
+    .then(({ deleted, changes }) => {
+      if (deleted > 0) {
+        // community was successfully deleted, now delete all frequencies
+        const community = changes[0].old_val.id;
+        return db.table('frequencies').filter({ community }).delete().run();
+      }
+    });
+};
+
 const getAllCommunityStories = (id: string): Promise<Array<any>> => {
   return (
     db
@@ -117,5 +132,6 @@ module.exports = {
   getCommunityMetaData,
   getCommunitiesByUser,
   createCommunity,
+  deleteCommunity,
   getAllCommunityStories,
 };

@@ -82,7 +82,10 @@ const CommunityWithData = ({
 
       {componentSize !== 'mini' &&
         <Actions>
-          {community.isOwner && <ActionOutline>Settings</ActionOutline>}
+          {community.isOwner &&
+            <ActionOutline>
+              <Link to={`/${community.slug}/settings`}>Settings</Link>
+            </ActionOutline>}
           <ActionOutline>Join</ActionOutline>
         </Actions>}
 

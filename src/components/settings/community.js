@@ -10,10 +10,13 @@ import renderComponent from 'recompose/renderComponent';
 import branch from 'recompose/branch';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
+// $FlowFixMe
+import { withRouter } from 'react-router';
 import { Button, LinkButton } from '../buttons';
 import { LoadingCard } from '../loading';
 import { Input, UnderlineInput, TextArea } from '../formElements';
 import { StyledCard, Form, FormTitle, Description, Actions } from './style';
+import { deleteCommunityMutation } from '../../api/community';
 
 const displayLoadingState = branch(
   props => props.data.loading,
@@ -34,9 +37,18 @@ type CommunityProps = {
 const CommunityWithData = ({
   data: { community },
   data,
+  deleteCommunity,
+  history,
 }: {
   data: { community: CommunityProps },
 }): React$Element<any> => {
+  const triggerDeleteCommunity = e => {
+    e.preventDefault();
+    deleteCommunity(community.id).then(() => {
+      history.push(`/`);
+    });
+  };
+
   if (!community) {
     return (
       <StyledCard>
@@ -60,10 +72,21 @@ const CommunityWithData = ({
           <LinkButton color={'warn.alt'}>Cancel</LinkButton>
           <Button>Save</Button>
         </Actions>
+
+        <Actions>
+          <LinkButton color={'warn.alt'} onClick={triggerDeleteCommunity}>
+            Delete Community
+          </LinkButton>
+        </Actions>
       </Form>
     </StyledCard>
   );
 };
 
-const Community = compose(displayLoadingState, pure)(CommunityWithData);
+const Community = compose(
+  deleteCommunityMutation,
+  displayLoadingState,
+  withRouter,
+  pure
+)(CommunityWithData);
 export default Community;

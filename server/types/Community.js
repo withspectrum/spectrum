@@ -58,6 +58,7 @@ const Community = /* GraphQL */ `
 
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
+		deleteCommunity(id: ID!): Boolean
 	}
 `;
 
