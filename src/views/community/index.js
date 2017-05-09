@@ -4,30 +4,38 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
+
 import StoryComposer from '../../components/storyComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
+import ListCard from './components/listCard';
 import { CommunityProfile } from '../../components/profile';
-import { getCommunityStories, getCommunityProfile } from './queries';
 
-const enhanceStoryFeed = compose(getCommunityStories);
-const StoryFeedWithData = enhanceStoryFeed(StoryFeed);
+import {
+  getCommunityStories,
+  getCommunityProfile,
+  getFrequencyInfo,
+} from './queries';
 
-const enhanceProfile = compose(getCommunityProfile);
-const CommunityProfileWithData = enhanceProfile(CommunityProfile);
+const ActiveCommunityProfile = compose(getCommunityProfile)(CommunityProfile);
+
+const CommunityStoryFeed = compose(getCommunityStories)(StoryFeed);
+
+const FrequencyListCard = compose(getFrequencyInfo)(ListCard);
 
 const CommunityViewPure = ({ match }) => {
   const communitySlug = match.params.communitySlug;
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <CommunityProfileWithData slug={communitySlug} profileSize="full" />
+        <ActiveCommunityProfile slug={communitySlug} profileSize="full" />
+        <FrequencyListCard slug={communitySlug} />
       </Column>
 
       <Column type="primary" alignItems="center">
         <StoryComposer activeCommunity={match.params.communityId} />
-        <StoryFeedWithData slug={communitySlug} />
+        <CommunityStoryFeed slug={communitySlug} />
       </Column>
     </AppViewWrapper>
   );

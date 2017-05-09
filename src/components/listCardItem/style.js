@@ -4,7 +4,7 @@ import { FlexCol, FlexRow, H3, H4, P } from '../../components/globals';
 export const Wrapper = styled(FlexCol)`
   flex: 0 0 auto;
   padding: 8px 0;
-  border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
+  justify-content: center;
 
   &:hover h3 {
     color: ${({ theme }) => theme.brand.alt};

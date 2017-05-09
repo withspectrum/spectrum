@@ -22,6 +22,7 @@
     "casual": "^1.5.12",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.3",
+    "dataloader": "^1.3.0",
     "deep-eql": "^2.0.1",
     "emoji-regex": "^6.1.1",
     "enzyme": "^2.8.2",

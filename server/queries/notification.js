@@ -2,19 +2,15 @@
  * Notification queries
  */
 
-const {
-  getNotification,
-  getNotificationsByUser,
-} = require('../models/notification');
-const { getUser, getUsers } = require('../models/user');
+const { getNotificationsByUser } = require('../models/notification');
 const { getMessage } = require('../models/message');
-const { getStory } = require('../models/story');
 const { getFrequency } = require('../models/frequency');
-const { getCommunity } = require('../models/community');
+import type { GraphQLContext } from '../';
 
 module.exports = {
   Query: {
-    notification: (_, { id }) => getNotification(id),
+    notification: (_, { id }, { loaders }: GraphQLContext) =>
+      loaders.notification.load(id),
     notifications: (
       _,
       { first = 10, after }: PaginationOptions,
@@ -31,9 +27,12 @@ module.exports = {
       return result.read;
     },
     message: ({ message }) => message && getMessage('messages', message),
-    story: ({ story }) => story && getStory(story),
-    frequency: ({ frequency }) => frequency && getFrequency({ id: frequency }),
-    community: ({ community }) => community && getCommunity({ id: community }),
-    sender: ({ sender }) => sender && getUser(sender),
+    story: ({ story }, _: any, { loaders }: GraphQLContext) =>
+      story && loaders.story.load(story),
+    frequency: ({ frequency }, _: any, { loaders }: GraphQLContext) =>
+      frequency && loaders.frequency.load(frequency),
+    community: ({ community }, _: any, { loaders }: GraphQLContext) =>
+      community && loaders.community.load(community),
+    sender: ({ sender }, _, { loaders }) => sender && loaders.user.load(sender),
   },
 };

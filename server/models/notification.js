@@ -19,8 +19,8 @@ const getParticipants = (story: string): Array<string> => {
     .then(messages => messages.map(message => message.sender));
 };
 
-const getNotification = (id: string) => {
-  return db.table('notifications').get(id).run();
+const getNotifications = (ids: Array<string>) => {
+  return db.table('notifications').getAll(...ids).run();
 };
 
 const markNotificationsRead = (story: string) => {
@@ -161,7 +161,7 @@ const getNotificationsByUser = (
 };
 
 module.exports = {
-  getNotification,
+  getNotifications,
   storeMessageNotification,
   markNotificationsRead,
   getNotificationsByUser,

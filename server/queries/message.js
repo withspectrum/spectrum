@@ -4,9 +4,9 @@
  * Message query resolvers
  */
 const { getMessage } = require('../models/message');
-const { getUserByUid } = require('../models/user');
 import { getReactions } from '../models/reaction';
 import type { LocationTypes } from '../models/message';
+import type { GraphQLContext } from '../';
 
 type GetMessageProps = {
   location: LocationTypes,
@@ -24,7 +24,8 @@ module.exports = {
       getMessage(location, id),
   },
   Message: {
-    sender: ({ sender }: Root) => getUserByUid(sender),
+    sender: ({ sender }: Root, _: any, { loaders }: GraphQLContext) =>
+      loaders.user.load(sender),
     reactions: ({ id }: Root) => getReactions(id),
   },
 };

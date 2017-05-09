@@ -5,18 +5,16 @@
 const { db } = require('./db');
 import { UserError } from 'graphql-errors';
 
-const getFrequenciesByCommunity = community => {
+const getFrequenciesByCommunity = (community: string) => {
   return db.table('frequencies').filter({ community }).run();
 };
 
-const getFrequenciesByUser = (uid: String) => {
+const getFrequenciesByUser = (uid: string) => {
   return db
     .table('frequencies')
     .filter(frequency => frequency('subscribers').contains(uid))
     .run();
 };
-
-const getFrequencyById = (id: string) => db.table('frequencies').get(id).run();
 
 const getFrequencyBySlug = (slug: string, community: string) => {
   return db
@@ -34,22 +32,22 @@ const getFrequencyBySlug = (slug: string, community: string) => {
     .then(result => result && result[0].left);
 };
 
-export type GetFrequencyArgs = {
-  id?: string,
-  slug?: string,
-  community?: string,
+type GetFrequencyByIdArgs = {
+  id: string,
 };
 
-const getFrequency = ({ id, slug, community }: GetFrequencyArgs) => {
-  if (id) return getFrequencyById(id);
-  if (slug && community) return getFrequencyBySlug(slug, community);
-
-  throw new UserError(
-    'Please provide either id or slug and community to your frequency() query.'
-  );
+type GetFrequencyBySlugArgs = {
+  slug: string,
+  community: string,
 };
 
-const getFrequencyMetaData = (id: String) => {
+export type GetFrequencyArgs = GetFrequencyByIdArgs | GetFrequencyBySlugArgs;
+
+const getFrequencies = (ids: Array<string>) => {
+  return db.table('frequencies').getAll(...ids).run();
+};
+
+const getFrequencyMetaData = (id: string) => {
   const getStoryCount = db
     .table('stories')
     .filter({ frequency: id })
@@ -107,11 +105,12 @@ const getFrequencySubscriberCount = (id: string) => {
 };
 
 module.exports = {
-  getFrequency,
+  getFrequencyBySlug,
   getFrequencyMetaData,
   getFrequenciesByUser,
   getFrequenciesByCommunity,
   createFrequency,
   getTopFrequencies,
   getFrequencySubscriberCount,
+  getFrequencies,
 };

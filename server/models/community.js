@@ -6,28 +6,25 @@ const { db } = require('./db');
 import { UserError } from 'graphql-errors';
 import { createFrequency } from './frequency';
 
-export type GetCommunityArgs = {
-  id?: string,
-  slug?: string,
+type GetCommunityByIdArgs = {
+  id: string,
 };
 
-const getCommunity = ({ id, slug }: GetCommunityArgs) => {
-  if (id) return getCommunityById(id);
-  if (slug) return getCommunityBySlug(slug);
-
-  throw new UserError(
-    'Please provide either id or slug to the communities() query.'
-  );
+type GetCommunityBySlugArgs = {
+  slug: string,
 };
 
-const getCommunityById = (id: string) => db.table('communities').get(id).run();
+export type GetCommunityArgs = GetCommunityByIdArgs | GetCommunityBySlugArgs;
 
-const getCommunityBySlug = (slug: string) => {
+const getCommunities = (ids: Array<string>) => {
+  return db.table('communities').getAll(...ids).run();
+};
+
+const getCommunitiesBySlug = (slugs: Array<string>) => {
   return db
     .table('communities')
-    .filter({ slug })
-    .run()
-    .then(result => result && result[0]);
+    .filter(community => db.expr(slugs).contains(community('slug')))
+    .run();
 };
 
 const getCommunitiesByUser = (uid: string) => {
@@ -90,9 +87,29 @@ const createCommunity = (
     .then(([community]) => community);
 };
 
+const getAllCommunityStories = (id: string): Promise<Array<any>> => {
+  return (
+    db
+      .table('stories')
+      .orderBy(db.desc('modifiedAt'))
+      // Add the frequency object to each story
+      .eqJoin('frequency', db.table('frequencies'))
+      // Only take the community of a frequency
+      .pluck({ left: true, right: { community: true } })
+      .zip()
+      // Filter by the community
+      .filter({ community: id })
+      // Don't send the community back
+      .without('community')
+      .run()
+  );
+};
+
 module.exports = {
-  getCommunity,
+  getCommunities,
+  getCommunitiesBySlug,
   getCommunityMetaData,
   getCommunitiesByUser,
   createCommunity,
+  getAllCommunityStories,
 };

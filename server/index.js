@@ -1,3 +1,4 @@
+// @flow
 /**
  * The entry point for the server, this is where everything starts
  */
@@ -19,6 +20,7 @@ const subscriptionManager = require('./subscriptions/manager');
 
 const schema = require('./schema');
 const { init: initPassport } = require('./authentication.js');
+import createLoaders from './loaders';
 
 const PORT = 3001;
 const WS_PORT = 5000;
@@ -82,7 +84,7 @@ app.get(
   '/auth/twitter/callback',
   passport.authenticate('twitter', {
     failureRedirect: APP_URL,
-    successRedirect: `${APP_URL}/dashboard`,
+    successRedirect: `${APP_URL}/home`,
   })
 );
 app.use(
@@ -91,9 +93,18 @@ app.use(
     schema,
     context: {
       user: req.user,
+      loaders: createLoaders(),
     },
   }))
 );
+
+import type { Loader } from './loaders/types';
+export type GraphQLContext = {
+  user: Object,
+  loaders: {
+    [key: string]: Loader,
+  },
+};
 
 // Create the websocket server, make it 404 for all requests to HTTP(S) port(s)
 const websocketServer = createServer((req, res) => {

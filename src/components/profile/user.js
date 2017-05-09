@@ -32,13 +32,11 @@ const displayLoadingState = branch(
 );
 
 type UserProps = {
-  uid: String,
-  photoURL: String,
-  displayName: String,
-  username: String,
-  metaData: {
-    stories: Number,
-  },
+  uid: string,
+  photoURL: string,
+  displayName: string,
+  username: string,
+  storyCount: number,
 };
 
 type CurrentUserProps = {
@@ -94,7 +92,7 @@ const UserWithData = ({
         </Actions>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
-        <MetaData data={user.metaData} />}
+        <MetaData data={{ stories: user.storyCount }} />}
     </Card>
   );
 };

@@ -2,7 +2,7 @@
 /* eslint no-eval: 0 */
 // $FlowFixMe
 import styled, { css } from 'styled-components';
-import { Gradient, Shadow, Transition } from '../globals';
+import { Gradient, Shadow, Transition, hexa } from '../globals';
 
 // impacts every button
 const baseStyles = css`
@@ -46,7 +46,7 @@ const buttonStyles = css`
   &:hover {'
     border-radius: ${props => (props.disabled ? '8px' : '12px')};
     transition: ${props => (props.disabled ? 'none' : Transition.hover.on)};
-    box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.high} ${props.theme.text.placeholder}`)};
+    box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.high} ${hexa(props.theme.text.placeholder, 0.25)}`)};
   }
 
   &:active {
@@ -63,12 +63,12 @@ export const OutlineStyledButton = styled.button`
   ${baseStyles}
   background: transparent;
   background-image: none;
-  box-shadow: inset 0 0 0 2px ${props => eval(`props.theme.${props.color ? props.color : 'brand'}.default`)};
-  color: ${props => eval(`props.theme.${props.color ? props.color : 'brand'}.default`)};
+  box-shadow: inset 0 0 0 2px ${props => eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
+  color: ${props => eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
 
   &:hover {
     border-radius: 12px;
-    box-shadow: inset 0 0 0 2px ${props => eval(`props.theme.${props.color ? props.color : 'brand'}.default`)};
+    box-shadow: inset 0 0 0 2px ${props => eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
   }
 `;
 
@@ -77,10 +77,14 @@ export const LinkStyledButton = styled.button`
   background: transparent;
   background-image: none;
   box-shadow: none;
-  color: ${props => eval(`props.theme.${props.color ? props.color : 'brand'}.default`)};
+  font-weight: 500;
+  color: ${props => props.theme.text.alt};
+  transition: ${Transition.hover.off};
 
   &:hover {'
-    box-shadow: none;
+    color: ${props => eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
+    box-shadow: ${Shadow.mid} ${props => hexa(props.theme.text.alt, 0.25)};
+    transition: ${Transition.hover.on};
   }
 `;
 
