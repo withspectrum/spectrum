@@ -2,21 +2,26 @@
 const { db } = require('./db');
 import { UserError } from 'graphql-errors';
 
-export type GetUserArgs = {
-  uid?: string,
-  username?: string,
+type UidInput = {
+  uid: string,
 };
 
-const getUser = ({ uid, username }: GetUserArgs) => {
-  if (uid) return getUserByUid(uid);
-  if (username) return getUserByUsername(username);
+type UsernameInput = {
+  username: string,
+};
+
+export type GetUserArgs = UidInput | UsernameInput;
+
+const getUser = (input: GetUserArgs) => {
+  if (input.uid) return getUserByUid(input.uid);
+  if (input.username) return getUserByUsername(input.username);
 
   throw new UserError(
     'Please provide either id or username to your user() query.'
   );
 };
 
-const getUserByUid = (uid: String) => {
+const getUserByUid = (uid: string) => {
   return db.table('users').get(uid).run();
 };
 
@@ -28,7 +33,7 @@ const getUserByUsername = (username: string) => {
     .then(result => result && result[0]);
 };
 
-const getUsers = (uids: Array<String>) => {
+const getUsers = (uids: Array<string>) => {
   return db.table('users').getAll(...uids).run();
 };
 
@@ -50,7 +55,7 @@ const storeUser = user => {
 
 const createOrFindUser = user => {
   const promise = user.uid
-    ? getUser(user.uid)
+    ? getUser({ uid: user.uid })
     : getUserByProviderId(user.providerId);
   return promise.then(storedUser => {
     if (storedUser) return Promise.resolve(storedUser);
@@ -59,30 +64,42 @@ const createOrFindUser = user => {
   });
 };
 
-const getAllStories = (frequencies: Array<String>) => {
-  return db
-    .table('stories')
-    .orderBy(db.desc('modifiedAt'))
-    .filter(story => db.expr(frequencies).contains(story('frequency')))
-    .run();
+const getEverything = (uid: string): Promise<Array<any>> => {
+  return (
+    db
+      .table('stories')
+      .orderBy(db.desc('modifiedAt'))
+      // Add the frequency object to each story
+      .eqJoin('frequency', db.table('frequencies'))
+      // Only take the subscribers of a frequency
+      .pluck({ left: true, right: { subscribers: true } })
+      .zip()
+      // Filter by the user being a subscriber to the frequency of the story
+      .filter(story => story('subscribers').contains(uid))
+      // Don't send the subscribers back
+      .without('subscribers')
+      .run()
+  );
 };
 
-const getUserMetaData = (id: String) => {
-  const getStoryCount = db
-    .table('stories')
-    .filter({ author: id })
-    .count()
-    .run();
+const getUsersStoryCount = (ids: Array<string>) => {
+  const getStoryCounts = ids.map(id =>
+    db.table('stories').filter({ author: id }).count().run()
+  );
 
-  return Promise.all([getStoryCount]);
+  return Promise.all(getStoryCounts).then(result => {
+    return result.map((storyCount, index) => ({
+      uid: ids[index],
+      count: storyCount,
+    }));
+  });
 };
 
 module.exports = {
   getUser,
-  getUserByUid,
-  getUserMetaData,
+  getUsersStoryCount,
   getUsers,
   createOrFindUser,
   storeUser,
-  getAllStories,
+  getEverything,
 };

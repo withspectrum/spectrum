@@ -3,25 +3,28 @@
 /**
  * Story query resolvers
  */
-const { getStory } = require('../models/story');
 const { getFrequency } = require('../models/frequency');
 const {
   getMessagesByLocationAndThread,
   getMessageCount,
 } = require('../models/message');
-const { getUserByUid } = require('../models/user');
 import paginate from '../utils/paginate-arrays';
 import type { LocationTypes } from '../models/message';
 import type { PaginationOptions } from '../utils/paginate-arrays';
+import type { GraphQLContext } from '../';
 import { encode, decode } from '../utils/base64';
 
 module.exports = {
   Query: {
-    story: (_: any, { id }: { id: String }) => getStory(id),
+    story: (_: any, { id }: { id: string }, { loaders }: GraphQLContext) =>
+      loaders.story.load(id),
   },
   Story: {
-    frequency: ({ frequency }: { frequency: String }) =>
-      getFrequency({ id: frequency }),
+    frequency: (
+      { frequency }: { frequency: string },
+      _: any,
+      { loaders }: GraphQLContext
+    ) => loaders.frequency.load(frequency),
     messageConnection: (
       { id }: { id: String },
       { first = 100, after }: PaginationOptions
@@ -48,7 +51,11 @@ module.exports = {
           })),
         }));
     },
-    author: ({ author }: { author: String }) => getUserByUid(author),
+    author: (
+      { author }: { author: String },
+      _: any,
+      { loaders }: GraphQLContext
+    ) => loaders.user.load(author),
     messageCount: ({ id }: { id: string }) => getMessageCount('messages', id),
   },
 };

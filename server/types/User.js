@@ -57,10 +57,6 @@ const User = /* GraphQL */ `
 		node: Notification!
 	}
 
-	type UserMetaData {
-		stories: Int
-	}
-
 	type User {
 		uid: ID!
 		createdAt: Date!
@@ -69,13 +65,13 @@ const User = /* GraphQL */ `
 		displayName: String
 		username: String
 		email: String
+		storyCount: Int
 		# subscriptions: [Subscription!]
 		communityConnection: UserCommunitiesConnection!
 		frequencyConnection: UserFrequenciesConnection!
 		directMessageGroupsConnection: UserDirectMessageGroupsConnection!
 		storyConnection(first: Int = 10, after: String): UserStoriesConnection!
 		everything(first: Int = 10, after: String): EverythingStoriesConnection!
-		metaData: UserMetaData!
 		notificationConnection(first: Int = 10, after: String): UserNotificationsConnection!
 	}
 
