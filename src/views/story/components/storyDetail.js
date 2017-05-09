@@ -11,9 +11,9 @@ import { setStoryLockMutation } from '../mutations';
 import { Card } from '../../../components/card';
 import { Button } from '../../../components/buttons';
 
-const StoryDetailPure = ({ story, setStoryLockMutation, dispatch }) => {
-  const setStoryLock = (id, value) =>
-    setStoryLockMutation({
+const StoryDetailPure = ({ story, setStoryLock, dispatch }) => {
+  const storyLock = (id, value) =>
+    setStoryLock({
       id,
       value,
     }).catch(error => {
@@ -37,7 +37,7 @@ const StoryDetailPure = ({ story, setStoryLockMutation, dispatch }) => {
       </h3>
       <p>{story.content.description}</p>
 
-      <Button onClick={() => setStoryLock(story.id, !story.locked)}>
+      <Button onClick={() => storyLock(story.id, !story.locked)}>
         {story.locked ? 'Unlock' : 'Lock'}
       </Button>
     </Card>

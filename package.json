@@ -45,6 +45,7 @@
     "immutability-helper": "^2.2.0",
     "install": "^0.10.0",
     "lodash.debounce": "^4.0.8",
+    "node-env-file": "^0.1.8",
     "npm": "^4.5.0",
     "passport": "^0.3.2",
     "passport-twitter": "^1.0.4",
