@@ -20,8 +20,11 @@ module.exports = {
       loaders.story.load(id),
   },
   Story: {
-    frequency: ({ frequency }: { frequency: string }) =>
-      getFrequency({ id: frequency }),
+    frequency: (
+      { frequency }: { frequency: string },
+      _: any,
+      { loaders }: GraphQLContext
+    ) => loaders.frequency.load(frequency),
     messageConnection: (
       { id }: { id: String },
       { first = 100, after }: PaginationOptions

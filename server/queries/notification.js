@@ -30,7 +30,8 @@ module.exports = {
     message: ({ message }) => message && getMessage('messages', message),
     story: ({ story }, _: any, { loaders }: GraphQLContext) =>
       story && loaders.story.load(story),
-    frequency: ({ frequency }) => frequency && getFrequency({ id: frequency }),
+    frequency: ({ frequency }, _: any, { loaders }: GraphQLContext) =>
+      frequency && loaders.frequency.load(frequency),
     community: ({ community }) => community && getCommunity({ id: community }),
     sender: ({ sender }, _, { loaders }) => sender && loaders.user.load(sender),
   },

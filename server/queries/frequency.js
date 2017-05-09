@@ -3,7 +3,7 @@
  * Frequency query resolvers
  */
 const {
-  getFrequency,
+  getFrequencyBySlug,
   getFrequencyMetaData,
   getFrequencySubscriberCount,
   getTopFrequencies,
@@ -18,7 +18,16 @@ import type { GraphQLContext } from '../';
 
 module.exports = {
   Query: {
-    frequency: (_: any, args: GetFrequencyArgs) => getFrequency(args),
+    frequency: (
+      _: any,
+      args: GetFrequencyArgs,
+      { loaders }: GraphQLContext
+    ) => {
+      if (args.id) return loaders.frequency.load(args.id);
+      if (args.slug && args.community)
+        return getFrequencyBySlug(args.slug, args.community);
+      return null;
+    },
     topFrequencies: (_: any, { amount = 30 }: { amount: number }) =>
       getTopFrequencies(amount),
   },
