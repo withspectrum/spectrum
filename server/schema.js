@@ -36,6 +36,7 @@ const reactionMutations = require('./mutations/reaction');
 const communityMutations = require('./mutations/community');
 const directMessageGroupMutations = require('./mutations/directMessageGroup');
 const notificationMutations = require('./mutations/notification');
+const userMutations = require('./mutations/user');
 
 const messageSubscriptions = require('./subscriptions/message');
 
@@ -98,6 +99,7 @@ const schema = makeExecutableSchema({
     reactionMutations,
     communityMutations,
     notificationMutations,
+    userMutations,
     // subscriptions
     messageSubscriptions
   ),

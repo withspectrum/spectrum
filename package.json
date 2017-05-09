@@ -14,6 +14,9 @@
     "uuid": "^3.0.1"
   },
   "dependencies": {
+    "apollo-upload-client": "^4.0.3",
+    "apollo-upload-network-interface": "^1.0.4",
+    "apollo-upload-server": "^2.0.1",
     "autolinker": "^1.4.0",
     "body-parser": "^1.17.1",
     "casual": "^1.5.12",
@@ -40,7 +43,9 @@
     "highlight.js": "^9.10.0",
     "history": "^4.6.1",
     "immutability-helper": "^2.2.0",
+    "install": "^0.10.0",
     "lodash.debounce": "^4.0.8",
+    "npm": "^4.5.0",
     "passport": "^0.3.2",
     "passport-twitter": "^1.0.4",
     "pre-commit": "^1.2.2",
@@ -69,6 +74,7 @@
     "request": "^2.79.0",
     "rethinkdb-migrate": "^1.1.0",
     "rethinkdbdash": "^2.3.28",
+    "s3-image-uploader": "^1.0.7",
     "sanitize-html": "^1.14.1",
     "serve": "latest",
     "session-rethinkdb": "^2.0.0",

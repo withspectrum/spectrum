@@ -79,7 +79,7 @@ const UserWithData = ({
 
       {componentSize !== 'mini' &&
         <Actions>
-          {currentUser
+          {currentUser.uid === user.uid
             ? <ActionOutline
                 onClick={() =>
                   dispatch(
