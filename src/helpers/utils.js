@@ -68,3 +68,22 @@ export const onlyContainsEmoji = (text: string) => regex.test(text);
  */
 export const encode = (string: string) =>
   Buffer.from(string).toString('base64');
+
+/*
+  Best guess at if user is on a mobile device. Used in the modal components
+  to determine where the modal should be positioned, how it should close and
+  scroll, etc
+*/
+export function isMobile() {
+  let userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+  if (
+    /windows phone/i.test(userAgent) ||
+    /android/i.test(userAgent) ||
+    (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream)
+  ) {
+    return true;
+  }
+
+  return false;
+}

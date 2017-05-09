@@ -7,6 +7,7 @@ import styled from 'styled-components';
 //$FlowFixMe
 import createBrowserHistory from 'history/createBrowserHistory';
 import ScrollManager from './components/scrollManager';
+import ModalRoot from './components/modals/modalRoot';
 import DirectMessages from './views/directMessages';
 import Explore from './views/explore';
 import Story from './views/story';
@@ -35,10 +36,12 @@ class Routes extends Component {
   render() {
     return (
       <Router history={createBrowserHistory()}>
+
         <ScrollManager>
           <Body>
             {/* Global navigation, notifications, message notifications, etc */}
             <Route component={Navbar} />
+            <Route component={ModalRoot} />
 
             {/*
               Switch only renders the first match. Subrouting happens downstream

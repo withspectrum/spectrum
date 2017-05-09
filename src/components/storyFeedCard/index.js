@@ -6,6 +6,9 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+// $FlowFixMe
+import { connect } from 'react-redux';
+import { openModal } from '../../actions/modals';
 import {
   StyledStoryFeedCard,
   CardContent,
@@ -35,6 +38,10 @@ const StoryFeedCardPure = (props: Object): React$Element<any> => {
     }
   };
 
+  const openUserProfileModal = (user: Object) => {
+    return props.dispatch(openModal('USER_PROFILE_MODAL', { user }));
+  };
+
   const formatStoryPreview = () => {
     if (props.data.content.description.length > 150) {
       return (
@@ -53,7 +60,12 @@ const StoryFeedCardPure = (props: Object): React$Element<any> => {
     return list.map((edge, i) => {
       const participant = edge.node.sender;
       return (
-        <Participant src={participant.photoURL} role="presentation" key={i} />
+        <Participant
+          onClick={() => openUserProfileModal(participant)}
+          src={participant.photoURL}
+          role="presentation"
+          key={i}
+        />
       );
     });
   };
@@ -69,7 +81,10 @@ const StoryFeedCardPure = (props: Object): React$Element<any> => {
         <MetaRow>
           <ParticipantHeads>
             <Author role="presentation">
-              <Participant src={props.data.author.photoURL} />
+              <Participant
+                onClick={() => openUserProfileModal(props.data.author)}
+                src={props.data.author.photoURL}
+              />
             </Author>
             {messageAvatars(participantList)}
           </ParticipantHeads>
@@ -81,4 +96,4 @@ const StoryFeedCardPure = (props: Object): React$Element<any> => {
 };
 
 const StoryFeedCard = compose(pure)(StoryFeedCardPure);
-export default StoryFeedCard;
+export default connect()(StoryFeedCard);

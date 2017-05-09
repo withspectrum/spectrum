@@ -6,7 +6,7 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { StoryDetail } from '../components/storyDetail';
+import StoryDetail from '../components/storyDetail';
 import Messages from '../components/messages';
 import ChatInput from '../components/chatInput';
 import { Column } from '../../../components/column';
