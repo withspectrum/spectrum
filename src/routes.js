@@ -18,6 +18,7 @@ import Navbar from './views/navbar';
 import StyleGuide from './views/pages/styleGuide';
 import Dashboard from './views/dashboard';
 import Notifications from './views/notifications';
+import Settings from './views/settings';
 
 const About = () => (
   <div>
@@ -70,6 +71,11 @@ class Routes extends Component {
               pass. We handle null communitySlug values downstream by either
               redirecting to home or showing a 404
             */}
+              <Route
+                path="/:communitySlug/:frequencySlug/settings"
+                component={Settings}
+              />
+              <Route path="/:communitySlug/settings" component={Settings} />
               <Route
                 path="/:communitySlug/:frequencySlug"
                 component={FrequencyView}

@@ -9,7 +9,7 @@ export const ProfileHeader = styled(FlexContainer)`
 `;
 
 export const ProfileHeaderMeta = styled(FlexContainer)`
-  width: calc(100% - 52px);
+  /*width: calc(100% - 52px);*/
 `;
 
 export const Title = styled.h3`
