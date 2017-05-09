@@ -3,7 +3,6 @@
  * Community query resolvers
  */
 const {
-  getCommunity,
   getCommunityMetaData,
   getAllCommunityStories,
 } = require('../models/community');
@@ -16,10 +15,19 @@ import type { GraphQLContext } from '../';
 
 module.exports = {
   Query: {
-    community: (_: any, args: GetCommunityArgs) => getCommunity(args),
+    community: (
+      _: any,
+      args: GetCommunityArgs,
+      { loaders }: GraphQLContext
+    ) => {
+      if (args.id) return loaders.community.load(args.id);
+      if (args.slug) return loaders.communityBySlug.load(args.slug);
+
+      return null;
+    },
   },
   Community: {
-    frequencyConnection: ({ id }: { id: String }) => ({
+    frequencyConnection: ({ id }: { id: string }) => ({
       pageInfo: {
         hasNextPage: false,
       },

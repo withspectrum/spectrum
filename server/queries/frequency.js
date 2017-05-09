@@ -9,7 +9,6 @@ const {
   getTopFrequencies,
 } = require('../models/frequency');
 const { getStoriesByFrequency } = require('../models/story');
-const { getCommunity } = require('../models/community');
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import type { PaginationOptions } from '../utils/paginate-arrays';
@@ -57,8 +56,11 @@ module.exports = {
           })),
         }));
     },
-    community: ({ community }: { community: string }) =>
-      getCommunity({ id: community }),
+    community: (
+      { community }: { community: string },
+      _: any,
+      { loaders }: GraphQLContext
+    ) => loaders.community.load(community),
     subscriberConnection: (
       { subscribers }: { subscribers: Array<string> },
       { first = 10, after }: PaginationOptions,

@@ -6,28 +6,25 @@ const { db } = require('./db');
 import { UserError } from 'graphql-errors';
 import { createFrequency } from './frequency';
 
-export type GetCommunityArgs = {
-  id?: string,
-  slug?: string,
+type GetCommunityByIdArgs = {
+  id: string,
 };
 
-const getCommunity = ({ id, slug }: GetCommunityArgs) => {
-  if (id) return getCommunityById(id);
-  if (slug) return getCommunityBySlug(slug);
-
-  throw new UserError(
-    'Please provide either id or slug to the communities() query.'
-  );
+type GetCommunityBySlugArgs = {
+  slug: string,
 };
 
-const getCommunityById = (id: string) => db.table('communities').get(id).run();
+export type GetCommunityArgs = GetCommunityByIdArgs | GetCommunityBySlugArgs;
 
-const getCommunityBySlug = (slug: string) => {
+const getCommunities = (ids: Array<string>) => {
+  return db.table('communities').getAll(...ids).run();
+};
+
+const getCommunitiesBySlug = (slugs: Array<string>) => {
   return db
     .table('communities')
-    .filter({ slug })
-    .run()
-    .then(result => result && result[0]);
+    .filter(community => db.expr(slugs).contains(community('slug')))
+    .run();
 };
 
 const getCommunitiesByUser = (uid: string) => {
@@ -109,7 +106,8 @@ const getAllCommunityStories = (id: string): Promise<Array<any>> => {
 };
 
 module.exports = {
-  getCommunity,
+  getCommunities,
+  getCommunitiesBySlug,
   getCommunityMetaData,
   getCommunitiesByUser,
   createCommunity,

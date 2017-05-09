@@ -5,7 +5,6 @@
 const { getNotificationsByUser } = require('../models/notification');
 const { getMessage } = require('../models/message');
 const { getFrequency } = require('../models/frequency');
-const { getCommunity } = require('../models/community');
 import type { GraphQLContext } from '../';
 
 module.exports = {
@@ -32,7 +31,8 @@ module.exports = {
       story && loaders.story.load(story),
     frequency: ({ frequency }, _: any, { loaders }: GraphQLContext) =>
       frequency && loaders.frequency.load(frequency),
-    community: ({ community }) => community && getCommunity({ id: community }),
+    community: ({ community }, _: any, { loaders }: GraphQLContext) =>
+      community && loaders.community.load(community),
     sender: ({ sender }, _, { loaders }) => sender && loaders.user.load(sender),
   },
 };
