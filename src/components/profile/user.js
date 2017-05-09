@@ -73,7 +73,10 @@ const UserWithData = ({
         />
         <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
           <Title>{user.displayName}</Title>
-          <Subtitle>@{user.username}</Subtitle>
+          <Subtitle>
+            @{user.username}
+            {user.isAdmin && <span> Admin</span>}
+          </Subtitle>
         </ProfileHeaderMeta>
       </ProfileHeader>
 

@@ -77,6 +77,7 @@ const User = /* GraphQL */ `
 		username: String
 		email: String
 		storyCount: Int
+		isAdmin: Boolean!
 		# subscriptions: [Subscription!]
 		communityConnection: UserCommunitiesConnection!
 		frequencyConnection: UserFrequenciesConnection!

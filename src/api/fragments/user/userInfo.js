@@ -6,5 +6,6 @@ export const userInfoFragment = gql`
     photoURL
     displayName
     username
+    isAdmin
   }
 `;
