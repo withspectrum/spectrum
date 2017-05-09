@@ -2,6 +2,13 @@
 /**
  * The entry point for the server, this is where everything starts
  */
+const PORT = 3001;
+const WS_PORT = 5000;
+const DB_PORT = 28015;
+const HOST = 'localhost';
+const IS_PROD = process.env.NODE_ENV === 'production';
+const APP_URL = IS_PROD ? 'https://spectrum.chat' : 'http://localhost:3000';
+
 const { createServer } = require('http');
 const express = require('express');
 const passport = require('passport');
@@ -22,13 +29,6 @@ const schema = require('./schema');
 const { init: initPassport } = require('./authentication.js');
 import createLoaders from './loaders';
 
-const PORT = 3001;
-const WS_PORT = 5000;
-const DB_PORT = 28015;
-const HOST = 'localhost';
-const IS_PROD = process.env.NODE_ENV === 'production';
-const APP_URL = IS_PROD ? 'https://spectrum.chat' : 'http://localhost:3000';
-
 console.log('Server starting...');
 
 // Initialize authentication
@@ -39,6 +39,7 @@ initPassport({
 });
 // API server
 const app = express();
+
 app.use(
   cors({
     origin: APP_URL,

@@ -1,8 +1,15 @@
-var Uploader = require('s3-image-uploader');
-var uploader = new Uploader({
+const Uploader = require('s3-image-uploader');
+const env = require('node-env-file');
+const IS_PROD = process.env.NODE_ENV === 'production';
+const path = require('path');
+if (!IS_PROD) {
+  env(path.resolve(__dirname, '../.env'));
+}
+
+const uploader = new Uploader({
   aws: {
-    key: 'foo',
-    secret: 'bar',
+    key: process.env.S3_TOKEN,
+    secret: process.env.S3_SECRET,
   },
   websockets: false,
 });
@@ -19,12 +26,12 @@ const photoToS3 = (file, user, cb) => {
       source: file.path,
       name: fileName,
     },
-    function(data) {
+    data => {
       // success
       console.log('upload success:', data);
       cb(data);
     },
-    function(errMsg, errObject) {
+    (errMsg, errObject) => {
       //error
       console.error('unable to upload: ' + errMsg + ':', errObject);
       // execute error code
