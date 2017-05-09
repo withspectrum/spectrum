@@ -13,15 +13,7 @@ import { Link } from 'react-router-dom';
 import { Button, LinkButton } from '../buttons';
 import { LoadingCard } from '../loading';
 import { Input, UnderlineInput, TextArea } from '../formElements';
-import {
-  StyledCard,
-  Form,
-  FormTitle,
-  Description,
-  Actions,
-  Action,
-  ActionOutline,
-} from './style';
+import { StyledCard, Form, FormTitle, Description, Actions } from './style';
 
 const displayLoadingState = branch(
   props => props.data.loading,

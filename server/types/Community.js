@@ -33,6 +33,12 @@ const Community = /* GraphQL */ `
 		frequencies: Int
 	}
 
+	input CreateCommunityInput {
+		name: String!
+		slug: String!
+		description: String!
+	}
+
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -50,7 +56,7 @@ const Community = /* GraphQL */ `
 	}
 
 	extend type Mutation {
-		createCommunity(name: String!, slug: String!): Community
+		createCommunity(input: CreateCommunityInput!): Community
 	}
 `;
 

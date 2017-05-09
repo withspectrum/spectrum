@@ -51,12 +51,15 @@ const getCommunityMetaData = (id: String) => {
 };
 
 export type CreateCommunityArguments = {
-  name: string,
-  slug: string,
+  input: {
+    name: string,
+    slug: string,
+    description: string,
+  },
 };
 
 const createCommunity = (
-  { name, slug }: CreateCommunityArguments,
+  { input: { name, slug, description } }: CreateCommunityArguments,
   creatorId: string
 ) => {
   return db
@@ -66,6 +69,7 @@ const createCommunity = (
         createdAt: new Date(),
         slug,
         name,
+        description,
         members: [creatorId],
       },
       { returnChanges: true }
