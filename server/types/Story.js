@@ -26,6 +26,7 @@ const Story = /* GraphQL */ `
 		createdAt: Date!
 		modifiedAt: Date!
 		frequency: Frequency!
+		community: Community!
 		published: Boolean!
 		content: StoryContent!
 		locked: Boolean
@@ -47,6 +48,7 @@ const Story = /* GraphQL */ `
 
 	input StoryInput {
 		frequency: ID!
+		community: ID!
 		content: StoryContentInput!
 	}
 

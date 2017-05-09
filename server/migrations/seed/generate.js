@@ -58,7 +58,7 @@ const generateFrequency = (community, subscribers) => {
   };
 };
 
-const generateStory = (frequency, author) => {
+const generateStory = (community, frequency, author) => {
   const createdAt = faker.date.past(2);
   const content = {
     title: casual.title(),
@@ -69,6 +69,7 @@ const generateStory = (frequency, author) => {
     createdAt,
     author,
     frequency,
+    community,
     modifiedAt: faker.date.between(createdAt, new Date()),
     published: faker.random.boolean(),
     content,
