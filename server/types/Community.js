@@ -45,6 +45,7 @@ const Community = /* GraphQL */ `
 		name: String!
 		slug: String!
 		description: String!
+		isOwner: Boolean
 		frequencyConnection: CommunityFrequenciesConnection!
 		memberConnection(first: Int = 10, after: String): CommunityMembersConnection!
 		storyConnection(first: Int = 10, after: String): CommunityStoriesConnection!

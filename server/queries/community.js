@@ -18,7 +18,7 @@ module.exports = {
     community: (
       _: any,
       args: GetCommunityArgs,
-      { loaders }: GraphQLContext
+      { loaders, user }: GraphQLContext
     ) => {
       if (args.id) return loaders.community.load(args.id);
       if (args.slug) return loaders.communityBySlug.load(args.slug);
@@ -37,6 +37,9 @@ module.exports = {
         }))
       ),
     }),
+    isOwner: ({ owners }, _, { user }) => {
+      return owners.indexOf(user.uid) > -1;
+    },
     memberConnection: (
       { members }: { members: Array<string> },
       { first = 10, after }: PaginationOptions,

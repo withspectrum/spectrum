@@ -40,6 +40,7 @@ const generateCommunity = members => {
     slug: slugify(name),
     members,
     description: casual.short_description(),
+    owners: [members[0]],
   };
 };
 
@@ -55,6 +56,7 @@ const generateFrequency = (community, subscribers) => {
     description: casual.short_description(),
     slug: slugify(name),
     subscribers,
+    owners: [subscribers[0]],
   };
 };
 

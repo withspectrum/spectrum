@@ -66,7 +66,10 @@ module.exports = {
       },
       edges: getCommunitiesByUser(user.uid).then(communities =>
         communities.map(community => ({
-          node: community,
+          node: {
+            ...community,
+            isOwner: community.owners.indexOf(user.uid) > -1,
+          },
         }))
       ),
     }),

@@ -160,8 +160,9 @@ class StoryComposerWithData extends Component {
 
     // define new constants in order to construct the proper shape of the
     // input for the publishStory mutation
-    const { activeFrequency, title, description } = this.state;
+    const { activeFrequency, activeCommunity, title, description } = this.state;
     const frequency = activeFrequency;
+    const community = activeCommunity;
     const content = {
       title,
       description,
@@ -174,6 +175,7 @@ class StoryComposerWithData extends Component {
         variables: {
           story: {
             frequency,
+            community,
             content,
           },
         },

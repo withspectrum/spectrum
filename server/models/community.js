@@ -71,6 +71,7 @@ const createCommunity = (
         name,
         description,
         members: [creatorId],
+        owners: [creatorId],
       },
       { returnChanges: true }
     )
@@ -85,6 +86,7 @@ const createCommunity = (
           description: 'General Chatter',
           creatorId,
           communityId: community.id,
+          owners: [creatorId],
         }),
       ])
     )
