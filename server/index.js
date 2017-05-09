@@ -129,8 +129,6 @@ const subscriptionsServer = new SubscriptionServer(
   }
 );
 
-module.exports = app;
-
 // Start database listeners
 listeners.start();
 console.log(`GraphQL server running at http://${HOST}:${PORT}`);
