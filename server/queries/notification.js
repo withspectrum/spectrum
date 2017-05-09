@@ -2,10 +2,7 @@
  * Notification queries
  */
 
-const {
-  getNotification,
-  getNotificationsByUser,
-} = require('../models/notification');
+const { getNotificationsByUser } = require('../models/notification');
 const { getMessage } = require('../models/message');
 const { getFrequency } = require('../models/frequency');
 const { getCommunity } = require('../models/community');
@@ -13,7 +10,8 @@ import type { GraphQLContext } from '../';
 
 module.exports = {
   Query: {
-    notification: (_, { id }) => getNotification(id),
+    notification: (_, { id }, { loaders }: GraphQLContext) =>
+      loaders.notification.load(id),
     notifications: (
       _,
       { first = 10, after }: PaginationOptions,
