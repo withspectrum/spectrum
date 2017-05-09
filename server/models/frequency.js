@@ -5,11 +5,11 @@
 const { db } = require('./db');
 import { UserError } from 'graphql-errors';
 
-const getFrequenciesByCommunity = community => {
+const getFrequenciesByCommunity = (community: string) => {
   return db.table('frequencies').filter({ community }).run();
 };
 
-const getFrequenciesByUser = (uid: String) => {
+const getFrequenciesByUser = (uid: string) => {
   return db
     .table('frequencies')
     .filter(frequency => frequency('subscribers').contains(uid))

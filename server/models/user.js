@@ -64,12 +64,22 @@ const createOrFindUser = user => {
   });
 };
 
-const getAllStories = (frequencies: Array<string>) => {
-  return db
-    .table('stories')
-    .orderBy(db.desc('modifiedAt'))
-    .filter(story => db.expr(frequencies).contains(story('frequency')))
-    .run();
+const getEverything = (uid: string): Promise<Array<any>> => {
+  return (
+    db
+      .table('stories')
+      .orderBy(db.desc('modifiedAt'))
+      // Add the frequency object to each story
+      .eqJoin('frequency', db.table('frequencies'))
+      // Only take the subscribers of a frequency
+      .pluck({ left: true, right: { subscribers: true } })
+      .zip()
+      // Filter by the user being a subscriber to the frequency of the story
+      .filter(story => story('subscribers').contains(uid))
+      // Don't send the subscribers back
+      .without('subscribers')
+      .run()
+  );
 };
 
 const getUsersStoryCount = (ids: Array<string>) => {
@@ -91,5 +101,5 @@ module.exports = {
   getUsers,
   createOrFindUser,
   storeUser,
-  getAllStories,
+  getEverything,
 };

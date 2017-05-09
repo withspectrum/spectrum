@@ -2,7 +2,7 @@
 /**
  * Story query resolvers
  */
-const { getAllStories } = require('../models/user');
+const { getEverything } = require('../models/user');
 const { getCommunitiesByUser } = require('../models/community');
 const { getFrequenciesByUser } = require('../models/frequency');
 const { getStoriesByUser } = require('../models/story');
@@ -37,10 +37,7 @@ module.exports = {
     ) => {
       const cursor = decode(after);
       // TODO: Make this more performant by doing an actual db query rather than this hacking around
-      return getFrequenciesByUser(uid)
-        .then(frequencies =>
-          getAllStories(frequencies.map(frequency => frequency.id))
-        )
+      return getEverything(uid)
         .then(stories =>
           paginate(
             stories,

@@ -2,9 +2,12 @@
 /**
  * Community query resolvers
  */
-const { getCommunity, getCommunityMetaData } = require('../models/community');
+const {
+  getCommunity,
+  getCommunityMetaData,
+  getAllCommunityStories,
+} = require('../models/community');
 const { getFrequenciesByCommunity } = require('../models/frequency');
-const { getAllStories } = require('../models/user');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetCommunityArgs } from '../models/community';
@@ -46,15 +49,12 @@ module.exports = {
       }));
     },
     storyConnection: (
-      { id }: { id: String },
+      { id }: { id: string },
       { first = 10, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
       // TODO: Make this more performant by doing an actual db query rather than this hacking around
-      return getFrequenciesByCommunity(id)
-        .then(frequencies =>
-          getAllStories(frequencies.map(frequency => frequency.id))
-        )
+      return getAllCommunityStories(id)
         .then(stories =>
           paginate(
             stories,

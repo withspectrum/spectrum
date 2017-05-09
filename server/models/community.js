@@ -90,9 +90,28 @@ const createCommunity = (
     .then(([community]) => community);
 };
 
+const getAllCommunityStories = (id: string): Promise<Array<any>> => {
+  return (
+    db
+      .table('stories')
+      .orderBy(db.desc('modifiedAt'))
+      // Add the frequency object to each story
+      .eqJoin('frequency', db.table('frequencies'))
+      // Only take the community of a frequency
+      .pluck({ left: true, right: { community: true } })
+      .zip()
+      // Filter by the community
+      .filter({ community: id })
+      // Don't send the community back
+      .without('community')
+      .run()
+  );
+};
+
 module.exports = {
   getCommunity,
   getCommunityMetaData,
   getCommunitiesByUser,
   createCommunity,
+  getAllCommunityStories,
 };
