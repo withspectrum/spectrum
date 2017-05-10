@@ -36,7 +36,7 @@ class Homepage extends Component {
             <FlexCol>
               <LogoContainer><LogoWhite /></LogoContainer>
               <Tagline>Where communities are built.</Tagline>
-              <LinkButton href="http://localhost:3001/auth/twitter">
+              <LinkButton href={`https://${window.location.host}/auth/twitter`}>
                 <Icon icon="twitter" reverse static />
                 {' '}
                 <span>Sign in with Twitter</span>
@@ -92,7 +92,7 @@ class Homepage extends Component {
               <Copy>
                 Spectrum is free for everyone, so hop on in!
               </Copy>
-              <LinkButton href="http://localhost:3001/auth/twitter">
+              <LinkButton href={`https://${window.location.host}/auth/twitter`}>
                 <Icon icon="twitter" color="brand.default" static />
                 {' '}
                 <span>Sign in with Twitter</span>
