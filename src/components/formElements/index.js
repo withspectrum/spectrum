@@ -9,7 +9,7 @@ import {
   StyledTextArea,
   StyledUnderlineInput,
   StyledHiddenInput,
-  CheckboxWrapper,
+  StyledCheckboxWrapper,
 } from './style';
 
 type InputProps = {
@@ -19,6 +19,7 @@ type InputProps = {
   placeholder?: String,
   onChange?: Function,
   autofocus?: Boolean,
+  checked?: Boolean,
 };
 
 export const Input = (props: InputProps) => {
@@ -36,16 +37,21 @@ export const Input = (props: InputProps) => {
   );
 };
 
-export const CheckBox = (props: InputProps) => {
+export const Checkbox = (props: InputProps) => {
   return (
     <StyledLabel>
-      <CheckboxWrapper>
+      <StyledCheckboxWrapper>
         {props.checked
-          ? <Icon icon="checked" color="text.alt" hoverColor="brand.alt" />
-          : <Icon
-              icon="unchecked"
+          ? <Icon
+              icon="checked"
               color="success.default"
               hoverColor="success.default"
+              scaleOnHover={true}
+            />
+          : <Icon
+              icon="unchecked"
+              color="text.alt"
+              hoverColor="brand.alt"
               scaleOnHover={true}
             />}
         <StyledHiddenInput
@@ -54,7 +60,7 @@ export const CheckBox = (props: InputProps) => {
           onChange={props.onChange}
         />
         {props.children}
-      </CheckboxWrapper>
+      </StyledCheckboxWrapper>
     </StyledLabel>
   );
 };

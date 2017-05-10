@@ -8,7 +8,7 @@ import User from './user';
 import Frequency from './frequency';
 import Community from './community';
 
-const SettingsPure = (props: Object): React$Element<any> => {
+const EditFormPure = (props: Object): React$Element<any> => {
   const { type } = props;
   switch (type) {
     case 'user': {
@@ -26,17 +26,17 @@ const SettingsPure = (props: Object): React$Element<any> => {
   }
 };
 
-type SettingsProps = {
+type FormProps = {
   data: Object,
 };
 
-export const Settings = compose(pure)(SettingsPure);
-export const UserSettings = (props: SettingsProps) => (
-  <Settings type="user" {...props} />
+export const EditForm = compose(pure)(EditFormPure);
+export const UserEditForm = (props: FormProps) => (
+  <EditForm type="user" {...props} />
 );
-export const FrequencySettings = (props: SettingsProps) => (
-  <Settings type="frequency" {...props} />
+export const FrequencyEditForm = (props: FormProps) => (
+  <EditForm type="frequency" {...props} />
 );
-export const CommunitySettings = (props: SettingsProps) => (
-  <Settings type="community" {...props} />
+export const CommunityEditForm = (props: FormProps) => (
+  <EditForm type="community" {...props} />
 );

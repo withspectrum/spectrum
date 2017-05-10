@@ -18,7 +18,8 @@ import Navbar from './views/navbar';
 import StyleGuide from './views/pages/styleGuide';
 import Dashboard from './views/dashboard';
 import Notifications from './views/notifications';
-import Settings from './views/settings';
+import communitySettings from './views/communitySettings';
+import frequencySettings from './views/frequencySettings';
 
 const About = () => (
   <div>
@@ -73,9 +74,12 @@ class Routes extends Component {
             */}
               <Route
                 path="/:communitySlug/:frequencySlug/settings"
-                component={Settings}
+                component={frequencySettings}
               />
-              <Route path="/:communitySlug/settings" component={Settings} />
+              <Route
+                path="/:communitySlug/settings"
+                component={communitySettings}
+              />
               <Route
                 path="/:communitySlug/:frequencySlug"
                 component={FrequencyView}

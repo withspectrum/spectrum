@@ -11,9 +11,9 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ListCard from './components/listCard';
 
-import { CommunitySettings } from '../../components/settings';
+import { CommunityEditForm } from '../../components/editForm';
 
-const ThisCommunitySettings = compose(getThisCommunity)(CommunitySettings);
+const ThisCommunityEditForm = compose(getThisCommunity)(CommunityEditForm);
 const FrequencyListCard = compose(getFrequenciesByCommunity)(ListCard);
 
 const SettingsPure = ({ match }) => {
@@ -21,7 +21,7 @@ const SettingsPure = ({ match }) => {
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <ThisCommunitySettings slug={communitySlug} />
+        <ThisCommunityEditForm slug={communitySlug} />
       </Column>
       <Column type="primary">
         <FrequencyListCard slug={communitySlug} />
@@ -30,5 +30,5 @@ const SettingsPure = ({ match }) => {
   );
 };
 
-const Settings = compose(pure)(SettingsPure);
-export default Settings;
+const communitySettings = compose(pure)(SettingsPure);
+export default communitySettings;

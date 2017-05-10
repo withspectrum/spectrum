@@ -12,13 +12,15 @@ import branch from 'recompose/branch';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
 import { LoadingCard } from '../loading';
+import { Button, LinkButton } from '../buttons';
+import { Input, UnderlineInput, TextArea, Checkbox } from '../formElements';
 import {
-  ProfileHeader,
-  ProfileHeaderMeta,
-  Title,
-  Subtitle,
+  StyledCard,
+  Form,
+  FormTitle,
   Description,
   Actions,
+  Action,
   ActionOutline,
 } from './style';
 
@@ -32,10 +34,6 @@ type FrequencyProps = {
   name: String,
   slug: String,
   description: String,
-  community: {
-    slug: String,
-    name: String,
-  },
   metaData: {
     stories: Number,
     subscribers: Number,
@@ -44,18 +42,36 @@ type FrequencyProps = {
 
 const FrequencyWithData = ({
   data: { frequency },
-  profileSize,
+  data,
 }: {
   data: { frequency: FrequencyProps },
 }): React$Element<any> => {
   if (!frequency) {
-    return <div>No frequency to be found!</div>;
+    return (
+      <StyledCard>
+        <FormTitle>This frequency doesn't exist yet.</FormTitle>
+        <Description>Want to make it?</Description>
+        <Actions>
+          <Button>Create</Button>
+        </Actions>
+      </StyledCard>
+    );
   }
 
   return (
-    <Card>
-      <ProfileHeader justifyContent={'flex-start'} alignItems={'center'} />
-    </Card>
+    <StyledCard>
+      <FormTitle>Frequency Settings</FormTitle>
+      <Form>
+        <Input defaultValue={frequency.name}>Name</Input>
+        <UnderlineInput defaultValue={frequency.slug}>sp.chat/</UnderlineInput>
+        <TextArea defaultValue={frequency.description}>Description</TextArea>
+        <Checkbox>Private?</Checkbox>
+        <Actions>
+          <LinkButton color={'warn.alt'}>Cancel</LinkButton>
+          <Button>Save</Button>
+        </Actions>
+      </Form>
+    </StyledCard>
   );
 };
 

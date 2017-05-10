@@ -11,11 +11,9 @@ import StoryFeed from '../../components/storyFeed';
 import { FrequencyProfile } from '../../components/profile';
 import { getFrequencyStories, getFrequencyProfile } from './queries';
 
-const enhance = compose(getFrequencyStories);
-const StoryFeedWithData = enhance(StoryFeed);
+const StoryFeedWithData = compose(getFrequencyStories)(StoryFeed);
 
-const enhanceProfile = compose(getFrequencyProfile);
-const FrequencyProfileWithData = enhanceProfile(FrequencyProfile);
+const FrequencyProfileWithData = compose(getFrequencyProfile)(FrequencyProfile);
 
 const FrequencyViewPure = ({ match }) => {
   const communitySlug = match.params.communitySlug;
