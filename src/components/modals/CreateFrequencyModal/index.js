@@ -7,11 +7,8 @@ import Modal from 'react-modal';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-// $FlowFixMe
 import { withRouter } from 'react-router';
 import ModalContainer from '../modalContainer';
-import { LoadingCard } from '../../loading';
 import { LinkButton, Button } from '../../buttons';
 import { modalStyles } from '../styles';
 import { closeModal } from '../../../actions/modals';
@@ -76,7 +73,7 @@ class CreateFrequencyModal extends Component {
   };
 
   render() {
-    const { user, isOpen, modalProps } = this.props;
+    const { isOpen, modalProps } = this.props;
     const { name, slug, description } = this.state;
     const styles = modalStyles();
 

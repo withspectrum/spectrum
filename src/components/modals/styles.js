@@ -2,7 +2,6 @@
 // $FlowFixMe
 import styled from 'styled-components';
 import { isMobile } from '../../helpers/utils';
-import { Gradient } from '../globals';
 import { IconButton } from '../buttons';
 
 /*

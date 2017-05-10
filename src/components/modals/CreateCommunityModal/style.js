@@ -1,8 +1,7 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
-import Card from '../../card';
-import { FlexRow, FlexCol, Truncate } from '../../globals';
+import { FlexRow } from '../../globals';
 
 export const Form = styled.form`
   display: flex;

@@ -1,14 +1,7 @@
 // @flow
 import React from 'react';
 import Icon from '../icons';
-import {
-  ModalBody,
-  Header,
-  ModalContent,
-  Title,
-  Footer,
-  CloseButton,
-} from './styles';
+import { ModalBody, Header, ModalContent, Title, CloseButton } from './styles';
 
 /*
   ModalContainer is included around all modal components in order to have a
