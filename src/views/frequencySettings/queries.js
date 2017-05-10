@@ -15,9 +15,13 @@ export const getThisFrequency = graphql(
 			frequency(slug: $slug, community: $community) {
         ...frequencyInfo
         ...frequencyMetaData
+        community {
+          ...communityInfo
+        }
       }
 		}
     ${frequencyInfoFragment}
+    ${communityInfoFragment}
     ${frequencyMetaDataFragment}
 	`
 );

@@ -72,6 +72,15 @@ export type CreateFrequencyArguments = {
   },
 };
 
+export type EditFrequencyArguments = {
+  input: {
+    id: string,
+    name: string,
+    description: string,
+    slug: string,
+  },
+};
+
 const createFrequency = (
   { input: { community, name, slug, description } }: CreateFrequencyArguments,
   creatorId: string
@@ -93,6 +102,32 @@ const createFrequency = (
     )
     .run()
     .then(result => result.changes[0].new_val);
+};
+
+const editFrequency = ({
+  input: { name, slug, description, id },
+}: EditCommunityArguments) => {
+  return db
+    .table('frequencies')
+    .get(id)
+    .run()
+    .then(result => {
+      return Object.assign({}, result, {
+        name,
+        slug,
+        description,
+      });
+    })
+    .then(obj => {
+      return db
+        .table('frequencies')
+        .get(id)
+        .update({ ...obj }, { returnChanges: true })
+        .run()
+        .then(result => {
+          return result.changes[0].new_val;
+        });
+    });
 };
 
 const deleteFrequency = id => {
@@ -127,6 +162,7 @@ module.exports = {
   getFrequenciesByUser,
   getFrequenciesByCommunity,
   createFrequency,
+  editFrequency,
   deleteFrequency,
   getTopFrequencies,
   getFrequencySubscriberCount,

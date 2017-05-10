@@ -56,10 +56,11 @@ const DELETE_COMMUNITY_OPTIONS = {
         },
       })
         .then(({ data }) => {
-          console.log('mutation complete ', data);
+          return data.deleteCommunity;
         })
         .catch(error => {
-          console.log('error deleting community', error);
+          // TODO: Add dispatch for global errors
+          console.log('error editing community', error);
         }),
   }),
 };
@@ -94,7 +95,7 @@ const EDIT_COMMUNITY_OPTIONS = {
         })
         .catch(error => {
           // TODO: Add dispatch for global errors
-          console.log('error creating community', error);
+          console.log('error editing community', error);
         }),
   }),
 };

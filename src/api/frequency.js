@@ -56,9 +56,10 @@ const DELETE_FREQUENCY_OPTIONS = {
         },
       })
         .then(({ data }) => {
-          console.log('mutation complete ', data);
+          return data.deleteFrequency;
         })
         .catch(error => {
+          // TODO: Add dispatch for global errors
           console.log('error deleting frequency', error);
         }),
   }),
@@ -67,4 +68,39 @@ const DELETE_FREQUENCY_OPTIONS = {
 export const deleteFrequencyMutation = graphql(
   DELETE_FREQUENCY_MUTATION,
   DELETE_FREQUENCY_OPTIONS
+);
+
+/*
+  Edit a new community
+*/
+const EDIT_FREQUENCY_MUTATION = gql`
+  mutation editFrequency($input: EditFrequencyInput!) {
+    editFrequency (input: $input) {
+      ...frequencyInfo
+    }
+  }
+  ${frequencyInfoFragment}
+`;
+
+const EDIT_FREQUENCY_OPTIONS = {
+  props: ({ input, mutate }) => ({
+    editFrequency: input =>
+      mutate({
+        variables: {
+          input,
+        },
+      })
+        .then(({ data }) => {
+          return data.editFrequency;
+        })
+        .catch(error => {
+          // TODO: Add dispatch for global errors
+          console.log('error editing frequency', error);
+        }),
+  }),
+};
+
+export const editFrequencyMutation = graphql(
+  EDIT_FREQUENCY_MUTATION,
+  EDIT_FREQUENCY_OPTIONS
 );

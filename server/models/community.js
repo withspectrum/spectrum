@@ -125,7 +125,9 @@ const editCommunity = ({
         .get(id)
         .update({ ...obj }, { returnChanges: true })
         .run()
-        .then(result => result.changes[0].new_val);
+        .then(result => {
+          return result.changes[0].new_val;
+        });
     });
 };
 

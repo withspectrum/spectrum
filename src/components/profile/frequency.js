@@ -78,6 +78,14 @@ const FrequencyWithData = ({
 
       {componentSize !== 'mini' &&
         <Actions>
+          {frequency.isOwner &&
+            <ActionOutline>
+              <Link
+                to={`/${frequency.community.slug}/${frequency.slug}/settings`}
+              >
+                Settings
+              </Link>
+            </ActionOutline>}
           <ActionOutline>Follow</ActionOutline>
         </Actions>}
 

@@ -17,7 +17,6 @@ import { StyledCard, ListHeading, ListContainer, MoreLink } from '../style';
 
 const ListCardPure = ({ data, dispatch }) => {
   const frequencies = data.community.frequencyConnection.edges;
-  console.log('data', data);
   if (!!frequencies) {
     return (
       <StyledCard>
