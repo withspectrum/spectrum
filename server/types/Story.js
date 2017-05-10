@@ -31,6 +31,7 @@ const Story = /* GraphQL */ `
 		content: StoryContent!
 		locked: Boolean
 		edits: [Edit!]
+		participants: [User]
 		messageConnection(first: Int = 10, after: String): StoryMessagesConnection!
 		messageCount: Int
 		author: User!

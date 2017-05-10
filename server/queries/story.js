@@ -4,6 +4,7 @@
  * Story query resolvers
  */
 const { getFrequency } = require('../models/frequency');
+const { getUsers } = require('../models/user');
 const {
   getMessagesByLocationAndThread,
   getMessageCount,
@@ -30,6 +31,26 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.community.load(community),
+    participants: ({ id, author }: { id: String, author: string }) => {
+      return getMessagesByLocationAndThread('messages', id)
+        .then(messages =>
+          messages
+            .map(
+              // create an array of user ids
+              message => message.sender
+            )
+            .filter(
+              // remove the author from the list
+              message => message !== author
+            )
+            .filter(
+              (id, index, self) =>
+                // get distinct ids in the array
+                self.indexOf(id) === index
+            )
+        )
+        .then(users => getUsers(users));
+    },
     messageConnection: (
       { id }: { id: String },
       { first = 100, after }: PaginationOptions

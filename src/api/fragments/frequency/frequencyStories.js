@@ -1,6 +1,5 @@
 import { gql } from 'react-apollo';
 import { storyInfoFragment } from '../story/storyInfo';
-import { storyMessagesFragment } from '../story/storyMessages';
 
 export const frequencyStoriesFragment = gql`
   fragment frequencyStories on Frequency {
@@ -13,11 +12,9 @@ export const frequencyStoriesFragment = gql`
         cursor
         node {
           ...storyInfo
-          ...storyMessages
         }
       }
     }
   }
   ${storyInfoFragment}
-  ${storyMessagesFragment}
 `;
