@@ -228,6 +228,44 @@ const deleteCommunity = id => {
     });
 };
 
+const leaveCommunity = (id, uid) => {
+  return db
+    .table('communities')
+    .get(id)
+    .update(
+      row => ({
+        members: row('members').filter(item => item.ne(uid)),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        (changes.length > 0
+          ? changes[0].new_val
+          : db.table('communities').get(id).run())
+    );
+};
+
+const joinCommunity = (id, uid) => {
+  return db
+    .table('communities')
+    .get(id)
+    .update(
+      row => ({
+        members: row('members').append(uid),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        (changes.length > 0
+          ? changes[0].new_val
+          : db.table('communities').get(id).run())
+    );
+};
+
 const getAllCommunityStories = (id: string): Promise<Array<any>> => {
   return (
     db
@@ -254,5 +292,7 @@ module.exports = {
   createCommunity,
   editCommunity,
   deleteCommunity,
+  leaveCommunity,
+  joinCommunity,
   getAllCommunityStories,
 };

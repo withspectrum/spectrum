@@ -18,6 +18,11 @@ const baseStyles = css`
   line-height: 1;
   position: relative;
   opacity: ${props => (props.disabled ? '0.4' : '1')};
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    transition: all 0.2s ease-in-out;
+  }
 
   ${props => (props.size === 'small' ? `
         font-size: 12px;
@@ -68,7 +73,8 @@ export const OutlineStyledButton = styled.button`
 
   &:hover {
     border-radius: 12px;
-    box-shadow: inset 0 0 0 2px ${props => eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
+    color: ${props => eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.default'}`)};
+    box-shadow: inset 0 0 0 2px ${props => eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.default'}`)};
   }
 `;
 
@@ -82,7 +88,7 @@ export const LinkStyledButton = styled.button`
   transition: ${Transition.hover.off};
 
   &:hover {'
-    color: ${props => eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
+    color: ${props => eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.default'}`)};
     box-shadow: ${Shadow.mid} ${props => hexa(props.theme.text.alt, 0.25)};
     transition: ${Transition.hover.on};
   }

@@ -9,6 +9,7 @@ export const communityInfoFragment = gql`
     website
     photoURL
     isOwner
+    isMember
     metaData {
       members
       frequencies

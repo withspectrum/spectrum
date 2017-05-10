@@ -83,3 +83,37 @@ export const editCommunityMutation = graphql(
   EDIT_COMMUNITY_MUTATION,
   EDIT_COMMUNITY_OPTIONS
 );
+
+/*
+  Join or leave a community
+*/
+const TOGGLE_COMMUNITY_MEMBERSHIP_MUTATION = gql`
+  mutation toggleCommunityMembership($id: ID!) {
+    toggleCommunityMembership (id: $id) {
+      ...communityInfo
+    }
+  }
+  ${communityInfoFragment}
+`;
+
+const TOGGLE_COMMUNITY_MEMBERSHIP_OPTIONS = {
+  props: ({ id, mutate }) => ({
+    toggleCommunityMembership: ({ id }) =>
+      mutate({
+        variables: {
+          id,
+        },
+      })
+        .then(({ data }) => {
+          console.log('success ', data);
+        })
+        .catch(err => {
+          console.log('error joining or leaving community ', err);
+        }),
+  }),
+};
+
+export const toggleCommunityMembershipMutation = graphql(
+  TOGGLE_COMMUNITY_MEMBERSHIP_MUTATION,
+  TOGGLE_COMMUNITY_MEMBERSHIP_OPTIONS
+);
