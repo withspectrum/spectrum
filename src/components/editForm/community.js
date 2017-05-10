@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 import { Button, LinkButton } from '../buttons';
+import { addToastWithTimeout } from '../../actions/toasts';
 import { LoadingCard } from '../loading';
 import { Input, UnderlineInput, TextArea } from '../formElements';
 import { StyledCard, Form, FormTitle, Description, Actions } from './style';
@@ -78,8 +79,7 @@ class CommunityWithData extends Component {
         }
       })
       .catch(err => {
-        //TODO: Add dispatch for global error events
-        console.log('err in editCommunity', err);
+        this.props.dispatch(addToastWithTimeout('error', "You can't do that!"));
       });
   };
 
@@ -96,8 +96,7 @@ class CommunityWithData extends Component {
         }
       })
       .catch(err => {
-        // TODO: Throw a global dispatch for error message
-        console.log('err in deleteCommunity', err);
+        this.props.dispatch(addToastWithTimeout('error', "You can't do that!"));
       });
   };
 

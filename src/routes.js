@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import createBrowserHistory from 'history/createBrowserHistory';
 import ScrollManager from './components/scrollManager';
 import ModalRoot from './components/modals/modalRoot';
+import Toasts from './components/toasts';
 import DirectMessages from './views/directMessages';
 import Explore from './views/explore';
 import Story from './views/story';
@@ -43,6 +44,7 @@ class Routes extends Component {
             {/* Global navigation, notifications, message notifications, etc */}
             <Route component={Navbar} />
             <Route component={ModalRoot} />
+            <Route component={Toasts} />
 
             {/*
               Switch only renders the first match. Subrouting happens downstream
