@@ -15,7 +15,14 @@ import { withRouter } from 'react-router';
 import { Button, LinkButton } from '../buttons';
 import { LoadingCard } from '../loading';
 import { Input, UnderlineInput, TextArea } from '../formElements';
-import { StyledCard, Form, FormTitle, Description, Actions } from './style';
+import {
+  StyledCard,
+  Form,
+  FormTitle,
+  Description,
+  Actions,
+  Notice,
+} from './style';
 import {
   editFrequencyMutation,
   deleteFrequencyMutation,
@@ -127,9 +134,14 @@ class FrequencyWithData extends Component {
         <FormTitle>Frequency Settings</FormTitle>
         <Form>
           <Input defaultValue={name} onChange={this.changeName}>Name</Input>
-          <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
-            {`sp.chat/${frequency.community.slug}/`}
-          </UnderlineInput>
+          {// general slug can't be edited
+          slug === 'general'
+            ? <UnderlineInput defaultValue={slug} disabled>
+                {`sp.chat/${frequency.community.slug}/`}
+              </UnderlineInput>
+            : <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
+                {`sp.chat/${frequency.community.slug}/`}
+              </UnderlineInput>}
           <TextArea
             defaultValue={description}
             onChange={this.changeDescription}
@@ -141,14 +153,19 @@ class FrequencyWithData extends Component {
             <Button onClick={this.save}>Save</Button>
           </Actions>
 
-          <Actions>
-            <LinkButton
-              color={'warn.alt'}
-              onClick={this.triggerDeleteFrequency}
-            >
-              Delete Frequency
-            </LinkButton>
-          </Actions>
+          {// general can't be deleted
+          slug !== 'general'
+            ? <Actions>
+                <LinkButton
+                  color={'warn.alt'}
+                  onClick={this.triggerDeleteFrequency}
+                >
+                  Delete Frequency
+                </LinkButton>
+              </Actions>
+            : <Notice>
+                The General frequency is the default frequency for your community. It can't be deleted, but you can still change the name and description.
+              </Notice>}
         </Form>
       </StyledCard>
     );
