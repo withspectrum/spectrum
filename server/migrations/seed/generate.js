@@ -40,6 +40,7 @@ const generateCommunity = members => {
     slug: slugify(name),
     members,
     description: casual.short_description(),
+    owners: [members[0]],
   };
 };
 
@@ -55,10 +56,11 @@ const generateFrequency = (community, subscribers) => {
     description: casual.short_description(),
     slug: slugify(name),
     subscribers,
+    owners: [subscribers[0]],
   };
 };
 
-const generateStory = (frequency, author) => {
+const generateStory = (community, frequency, author) => {
   const createdAt = faker.date.past(2);
   const content = {
     title: casual.title(),
@@ -69,6 +71,7 @@ const generateStory = (frequency, author) => {
     createdAt,
     author,
     frequency,
+    community,
     modifiedAt: faker.date.between(createdAt, new Date()),
     published: faker.random.boolean(),
     content,

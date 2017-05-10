@@ -192,7 +192,7 @@ export const getFrequencyInfo = graphql(
   gql`
 		query frequencyInfo($slug: String) {
 			community(slug: $slug) {
-        id
+        ...communityInfo
         frequencyConnection {
           edges {
             node {
@@ -204,6 +204,7 @@ export const getFrequencyInfo = graphql(
       }
 		}
     ${frequencyInfoFragment}
+    ${communityInfoFragment}
     ${frequencyMetaDataFragment}
 	`
 );

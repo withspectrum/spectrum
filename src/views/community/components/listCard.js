@@ -4,15 +4,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import compose from 'recompose/compose';
-
+//$FlowFixMe
+import { connect } from 'react-redux';
 import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCardItem';
 import { FlexRow } from '../../../components/globals';
+import { LinkButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
+import { openModal } from '../../../actions/modals';
 
 import { StyledCard, ListHeading, ListContainer, MoreLink } from '../style';
 
-const ListCardPure = ({ data }) => {
+const ListCardPure = ({ data, dispatch }) => {
   const frequencies = data.community.frequencyConnection.edges;
   if (!!frequencies) {
     return (
@@ -44,6 +47,15 @@ const ListCardPure = ({ data }) => {
         <FlexRow>
           <MoreLink to={`/explore`}>Find more...</MoreLink>
         </FlexRow>
+        <FlexRow>
+          {data.community.isOwner &&
+            <LinkButton
+              onClick={() =>
+                dispatch(openModal('CREATE_FREQUENCY_MODAL', data.community))}
+            >
+              Create a Frequency
+            </LinkButton>}
+        </FlexRow>
       </StyledCard>
     );
   } else {
@@ -53,4 +65,4 @@ const ListCardPure = ({ data }) => {
 
 const ListCard = compose(displayLoadingCard)(ListCardPure);
 
-export default ListCard;
+export default connect()(ListCard);

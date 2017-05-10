@@ -56,6 +56,9 @@ module.exports = {
           })),
         }));
     },
+    isOwner: ({ owners }, _, { user }) => {
+      return owners.indexOf(user.uid) > -1;
+    },
     community: (
       { community }: { community: string },
       _: any,

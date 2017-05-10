@@ -36,6 +36,7 @@ const DEFAULT_COMMUNITIES = [
     slug: 'spectrum',
     description: 'The future of community.',
     members: [DEFAULT_USERS.map(({ uid }) => uid)],
+    owners: [DEFAULT_USERS.map(({ uid }) => uid)],
   },
 ];
 
@@ -49,6 +50,7 @@ const DEFAULT_FREQUENCIES = [
     description: 'General chatter',
     slug: 'general',
     subscribers: DEFAULT_USERS.map(({ uid }) => uid),
+    owners: DEFAULT_USERS.map(({ uid }) => uid),
   },
 ];
 
@@ -58,6 +60,7 @@ const DEFAULT_STORIES = [
     createdAt: new Date(),
     author: 'uItS3QQiUxXH44m14uWmixTbqSc2',
     frequency: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
+    community: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     modifiedAt: new Date(),
     published: true,
     content: {

@@ -33,12 +33,26 @@ const Community = /* GraphQL */ `
 		frequencies: Int
 	}
 
+	input CreateCommunityInput {
+		name: String!
+		slug: String!
+		description: String!
+	}
+
+	input EditCommunityInput {
+		name: String
+		slug: String
+		description: String
+		id: ID!
+	}
+
 	type Community {
 		id: ID!
 		createdAt: Date!
 		name: String!
 		slug: String!
 		description: String!
+		isOwner: Boolean
 		frequencyConnection: CommunityFrequenciesConnection!
 		memberConnection(first: Int = 10, after: String): CommunityMembersConnection!
 		storyConnection(first: Int = 10, after: String): CommunityStoriesConnection!
@@ -50,7 +64,11 @@ const Community = /* GraphQL */ `
 	}
 
 	extend type Mutation {
-		createCommunity(name: String!, slug: String!): Community
+		createCommunity(input: CreateCommunityInput!): Community
+		# todo return the community + frequency objects to update the store
+		editCommunity(input: EditCommunityInput!): Community
+		# todo return the community + frequency objects to clear the store
+		deleteCommunity(id: ID!): Boolean
 	}
 `;
 

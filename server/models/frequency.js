@@ -63,33 +63,85 @@ const getFrequencyMetaData = (id: string) => {
   return Promise.all([getStoryCount, getSubscriberCount]);
 };
 
-type CreateFrequencyType = {
-  creatorId: string,
-  communityId: string,
-  name: string,
-  description: string,
-  slug: string,
+export type CreateFrequencyArguments = {
+  input: {
+    community: string,
+    name: string,
+    description: string,
+    slug: string,
+  },
 };
 
-const createFrequency = ({
-  creatorId,
-  communityId,
-  name,
-  description,
-  slug,
-}: CreateFrequencyType) => {
+export type EditFrequencyArguments = {
+  input: {
+    id: string,
+    name: string,
+    description: string,
+    slug: string,
+  },
+};
+
+const createFrequency = (
+  { input: { community, name, slug, description } }: CreateFrequencyArguments,
+  creatorId: string
+) => {
   return db
     .table('frequencies')
-    .insert({
-      name,
-      description,
-      slug,
-      createdAt: new Date(),
-      modifiedAt: new Date(),
-      community: communityId,
-      subscribers: [creatorId],
+    .insert(
+      {
+        name,
+        description,
+        slug,
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        community: community,
+        subscribers: [creatorId],
+        owners: [creatorId],
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val);
+};
+
+const editFrequency = ({
+  input: { name, slug, description, id },
+}: EditCommunityArguments) => {
+  return db
+    .table('frequencies')
+    .get(id)
+    .run()
+    .then(result => {
+      return Object.assign({}, result, {
+        name,
+        slug,
+        description,
+      });
     })
-    .run();
+    .then(obj => {
+      return db
+        .table('frequencies')
+        .get(id)
+        .update({ ...obj }, { returnChanges: true })
+        .run()
+        .then(result => {
+          return result.changes[0].new_val;
+        });
+    });
+};
+
+const deleteFrequency = id => {
+  return db
+    .table('frequencies')
+    .get(id)
+    .delete({ returnChanges: true })
+    .run()
+    .then(({ deleted, changes }) => {
+      if (deleted > 0) {
+        // frequency was deleted, return the object to clear the client store
+        return changes[0].old_val.id;
+      }
+    });
 };
 
 const getTopFrequencies = (amount: number) => {
@@ -110,6 +162,8 @@ module.exports = {
   getFrequenciesByUser,
   getFrequenciesByCommunity,
   createFrequency,
+  editFrequency,
+  deleteFrequency,
   getTopFrequencies,
   getFrequencySubscriberCount,
   getFrequencies,

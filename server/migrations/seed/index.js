@@ -56,7 +56,7 @@ frequencies.forEach(frequency => {
   if (!frequency.subscribers || frequency.subscribers.length === 0) return;
   randomAmount({ max: 10 }, () => {
     const author = faker.random.arrayElement(frequency.subscribers);
-    const story = generateStory(frequency.id, author);
+    const story = generateStory(frequency.community, frequency.id, author);
     stories.push(story);
     notifications.push(
       generateStoryNotification(story, frequency, frequency.community)

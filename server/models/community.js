@@ -51,12 +51,24 @@ const getCommunityMetaData = (id: String) => {
 };
 
 export type CreateCommunityArguments = {
-  name: string,
-  slug: string,
+  input: {
+    name: string,
+    slug: string,
+    description: string,
+  },
+};
+
+export type EditCommunityArguments = {
+  input: {
+    name: string,
+    slug: string,
+    description: string,
+    id: string,
+  },
 };
 
 const createCommunity = (
-  { name, slug }: CreateCommunityArguments,
+  { input: { name, slug, description } }: CreateCommunityArguments,
   creatorId: string
 ) => {
   return db
@@ -66,7 +78,9 @@ const createCommunity = (
         createdAt: new Date(),
         slug,
         name,
+        description,
         members: [creatorId],
+        owners: [creatorId],
       },
       { returnChanges: true }
     )
@@ -75,16 +89,63 @@ const createCommunity = (
     .then(community =>
       Promise.all([
         community,
-        createFrequency({
-          name: 'General',
-          slug: 'general',
-          description: 'General Chatter',
-          creatorId,
-          communityId: community.id,
-        }),
+        createFrequency(
+          {
+            input: {
+              name: 'General',
+              slug: 'general',
+              description: 'General Chatter',
+              community: community.id,
+            },
+          },
+          creatorId
+        ),
       ])
     )
     .then(([community]) => community);
+};
+
+const editCommunity = ({
+  input: { name, slug, description, id },
+}: EditCommunityArguments) => {
+  return db
+    .table('communities')
+    .get(id)
+    .run()
+    .then(result => {
+      return Object.assign({}, result, {
+        name,
+        slug,
+        description,
+      });
+    })
+    .then(obj => {
+      return db
+        .table('communities')
+        .get(id)
+        .update({ ...obj }, { returnChanges: true })
+        .run()
+        .then(result => {
+          return result.changes[0].new_val;
+        });
+    });
+};
+
+const deleteCommunity = id => {
+  return db
+    .table('communities')
+    .get(id)
+    .delete({ returnChanges: true })
+    .run()
+    .then(({ deleted, changes }) => {
+      if (deleted > 0) {
+        // community was successfully deleted, now delete all frequencies
+        // TODO: Return community object and frequencies objects to remove
+        // them from the client store
+        const community = changes[0].old_val.id;
+        return db.table('frequencies').filter({ community }).delete().run();
+      }
+    });
 };
 
 const getAllCommunityStories = (id: string): Promise<Array<any>> => {
@@ -111,5 +172,7 @@ module.exports = {
   getCommunityMetaData,
   getCommunitiesByUser,
   createCommunity,
+  editCommunity,
+  deleteCommunity,
   getAllCommunityStories,
 };

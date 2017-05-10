@@ -25,6 +25,11 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.frequency.load(frequency),
+    community: (
+      { community }: { community: string },
+      _: any,
+      { loaders }: GraphQLContext
+    ) => loaders.community.load(community),
     messageConnection: (
       { id }: { id: String },
       { first = 100, after }: PaginationOptions

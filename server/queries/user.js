@@ -12,6 +12,7 @@ const {
 const { getNotificationsByUser } = require('../models/notification');
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
+import { isAdmin } from '../utils/permissions';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetUserArgs } from '../models/frequency';
 import type { GraphQLContext } from '../';
@@ -30,6 +31,9 @@ module.exports = {
     ) => {
       if (!user || user.uid !== uid) return null;
       return getNotificationsByUser(uid, { first, after });
+    },
+    isAdmin: ({ uid }: { uid: string }) => {
+      return isAdmin(uid);
     },
     everything: (
       { uid }: { uid: string },
@@ -62,7 +66,10 @@ module.exports = {
       },
       edges: getCommunitiesByUser(user.uid).then(communities =>
         communities.map(community => ({
-          node: community,
+          node: {
+            ...community,
+            isOwner: community.owners.indexOf(user.uid) > -1,
+          },
         }))
       ),
     }),

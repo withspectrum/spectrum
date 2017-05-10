@@ -24,6 +24,20 @@ const Frequency = /* GraphQL */ `
 		subscribers: Int
 	}
 
+	input CreateFrequencyInput {
+		name: String!
+		slug: String!
+		description: String
+		community: ID!
+	}
+
+	input EditFrequencyInput {
+		name: String
+		slug: String
+		description: String
+		id: ID!
+	}
+
 	type Frequency {
 		id: ID!
 		createdAt: Date!
@@ -32,6 +46,7 @@ const Frequency = /* GraphQL */ `
 		description: String!
 		slug: String!
 		community: Community!
+		isOwner: Boolean
 		storyConnection(first: Int = 10, after: String): FrequencyStoriesConnection!
 		subscriberConnection(first: Int = 10, after: String): FrequencySubscribersConnection!
 		subscriberCount: Int!
@@ -41,6 +56,12 @@ const Frequency = /* GraphQL */ `
 	extend type Query {
 		frequency(id: ID, slug: String, community: String): Frequency
 		topFrequencies(amount: Int = 30): [Frequency!]
+	}
+
+	extend type Mutation {
+		createFrequency(input: CreateFrequencyInput!): Frequency
+		editFrequency(input: EditFrequencyInput!): Frequency
+		deleteFrequency(id: ID!): Boolean
 	}
 `;
 
