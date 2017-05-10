@@ -10,7 +10,7 @@ import {
 } from 'subscriptions-transport-ws';
 
 // TODO Fix for production
-const wsClient = new SubscriptionClient('ws://localhost:5000');
+const wsClient = new SubscriptionClient(`wss://${window.location.host}`);
 
 const networkInterface = createNetworkInterface({
   uri: '/api',

@@ -3,8 +3,6 @@
  * The entry point for the server, this is where everything starts
  */
 const PORT = 3001;
-const WS_PORT = 5000;
-const DB_PORT = 28015;
 const HOST = 'localhost';
 const IS_PROD = process.env.NODE_ENV === 'production';
 
@@ -108,18 +106,8 @@ export type GraphQLContext = {
     [key: string]: Loader,
   },
 };
-
-// Create the websocket server, make it 404 for all requests to HTTP(S) port(s)
-const websocketServer = createServer((req, res) => {
-  res.writeHead(404);
-  res.end();
-});
-
 // Start webserver
 app.listen(PORT);
-
-// Start websockets server
-websocketServer.listen(WS_PORT);
 
 // Start subscriptions server
 const subscriptionsServer = new SubscriptionServer(
@@ -127,11 +115,11 @@ const subscriptionsServer = new SubscriptionServer(
     subscriptionManager,
   },
   {
-    server: websocketServer,
+    server: app,
   }
 );
 
 // Start database listeners
 listeners.start();
 console.log(`GraphQL server running at http://${HOST}:${PORT}`);
-console.log(`Websocket server running at ws://${HOST}:${WS_PORT}`);
+console.log(`Websocket server running at ws://${HOST}:${PORT}`);
