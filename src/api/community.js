@@ -22,14 +22,7 @@ const CREATE_COMMUNITY_OPTIONS = {
         variables: {
           input,
         },
-      })
-        .then(({ data }) => {
-          return data.createCommunity;
-        })
-        .catch(error => {
-          // TODO: Add dispatch for global errors
-          console.log('error creating community', error);
-        }),
+      }),
   }),
 };
 
@@ -54,14 +47,7 @@ const DELETE_COMMUNITY_OPTIONS = {
         variables: {
           id,
         },
-      })
-        .then(({ data }) => {
-          return data.deleteCommunity;
-        })
-        .catch(error => {
-          // TODO: Add dispatch for global errors
-          console.log('error editing community', error);
-        }),
+      }),
   }),
 };
 
@@ -89,14 +75,7 @@ const EDIT_COMMUNITY_OPTIONS = {
         variables: {
           input,
         },
-      })
-        .then(({ data }) => {
-          return data.editCommunity;
-        })
-        .catch(error => {
-          // TODO: Add dispatch for global errors
-          console.log('error editing community', error);
-        }),
+      }),
   }),
 };
 
