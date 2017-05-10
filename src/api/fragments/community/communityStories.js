@@ -1,6 +1,5 @@
 import { gql } from 'react-apollo';
 import { storyInfoFragment } from '../story/storyInfo';
-import { messageInfoFragment } from '../message/messageInfo';
 import { frequencyInfoFragment } from '../frequency/frequencyInfo';
 import { communityInfoFragment } from '../community/communityInfo';
 
@@ -26,7 +25,6 @@ export const communityStoriesFragment = gql`
     }
   }
   ${storyInfoFragment}
-  ${messageInfoFragment}
   ${frequencyInfoFragment}
   ${communityInfoFragment}
 `;
