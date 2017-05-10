@@ -2,7 +2,7 @@ const passport = require('passport');
 const { Strategy: TwitterStrategy } = require('passport-twitter');
 const { getUser, createOrFindUser } = require('./models/user');
 
-const init = ({ twitterCallbackURLBase }) => {
+const init = () => {
   // Setup use serialization
   passport.serializeUser((user, done) => {
     done(null, user.uid);
@@ -24,7 +24,7 @@ const init = ({ twitterCallbackURLBase }) => {
       {
         consumerKey: 'vxmsICGyIIoT5NEYi1I8baPrf',
         consumerSecret: 'uH7CqsEWPTgMHu7rp8UhiaoS7bzgN53h3od95BEJBFEgUQzMOq',
-        callbackURL: `${twitterCallbackURLBase}/auth/twitter/callback`,
+        callbackURL: `/auth/twitter/callback`,
       },
       (token, tokenSecret, profile, done) => {
         const user = {

@@ -13,7 +13,7 @@ import {
 const wsClient = new SubscriptionClient('ws://localhost:5000');
 
 const networkInterface = createNetworkInterface({
-  uri: 'http://localhost:3001/',
+  uri: '/api',
   opts: {
     credentials: 'include',
   },

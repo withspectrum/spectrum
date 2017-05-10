@@ -7,8 +7,8 @@ const WS_PORT = 5000;
 const DB_PORT = 28015;
 const HOST = 'localhost';
 const IS_PROD = process.env.NODE_ENV === 'production';
-const APP_URL = IS_PROD ? 'https://spectrum.chat' : 'http://localhost:3000';
 
+const path = require('path');
 const { createServer } = require('http');
 const express = require('express');
 const passport = require('passport');
@@ -32,28 +32,26 @@ import createLoaders from './loaders';
 console.log('Server starting...');
 
 // Initialize authentication
-initPassport({
-  twitterCallbackURLBase: IS_PROD
-    ? 'https://spectrum.chat'
-    : 'http://localhost:3001',
-});
+initPassport();
 // API server
 const app = express();
 
 app.use(
   cors({
-    origin: APP_URL,
+    origin: '/',
     credentials: true,
   })
 );
-app.use(
-  '/graphiql',
-  graphiqlExpress({
-    endpointURL: '/',
-    subscriptionsEndpoint: `ws://localhost:5000`,
-    query: `{\n  user(id: "58a023a4-912d-48fe-a61c-eec7274f7699") {\n    displayName\n    username\n    communities {\n      name\n      frequencies {\n        name\n        stories {\n          content {\n            title\n          }\n          messages {\n            message {\n              content\n            }\n          }\n        }\n      }\n    }\n  }\n}`,
-  })
-);
+if (!IS_PROD) {
+  app.use(
+    '/graphiql',
+    graphiqlExpress({
+      endpointURL: '/',
+      subscriptionsEndpoint: `ws://localhost:5000`,
+      query: `{\n  user(id: "58a023a4-912d-48fe-a61c-eec7274f7699") {\n    displayName\n    username\n    communities {\n      name\n      frequencies {\n        name\n        stories {\n          content {\n            title\n          }\n          messages {\n            message {\n              content\n            }\n          }\n        }\n      }\n    }\n  }\n}`,
+    })
+  );
+}
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(apolloUploadExpress());
@@ -84,12 +82,12 @@ app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get(
   '/auth/twitter/callback',
   passport.authenticate('twitter', {
-    failureRedirect: APP_URL,
-    successRedirect: `${APP_URL}/home`,
+    failureRedirect: '/',
+    successRedirect: `/home`,
   })
 );
 app.use(
-  '/',
+  '/api',
   graphqlExpress(req => ({
     schema,
     context: {
@@ -98,6 +96,10 @@ app.use(
     },
   }))
 );
+app.use(express.static(path.resolve(__dirname, '..', 'build')));
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
+});
 
 import type { Loader } from './loaders/types';
 export type GraphQLContext = {
