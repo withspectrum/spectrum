@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { Transition, FlexRow } from '../../components/globals';
 
 export const Container = styled.section`
   width: 100%;
@@ -64,6 +65,39 @@ export const Logo = styled.img`
   left: 1px;
 `;
 
+export const IconDrop = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  position: relative;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  .dropdown {
+    opacity: 0;
+    pointer-events: none;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  &:hover .dropdown,
+  .dropdown:hover {
+    opacity: 1;
+    pointer-events: auto;
+    transition: ${Transition.hover.on};
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+`;
+
 export const IconLink = styled(Link)`
   display: flex;
   flex-direction: row;
@@ -72,6 +106,7 @@ export const IconLink = styled(Link)`
   padding: 0 8px;
   height: 100%;
   opacity: 0.8;
+  position: relative;
 
   &:hover {
     opacity: 1;
@@ -129,5 +164,30 @@ export const LabelForTab = styled(Label)`
   display: none;
   @media (max-width: 768px) {
     display: inline;
+  }
+`;
+
+export const DropdownHeader = styled(FlexRow)`
+  border-bottom: 2px solid ${({ theme }) => theme.border.default};
+  flex: 0 0 auto;
+  align-self: stretch;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 16px;
+  font-weight: 800;
+  font-size: 14px;
+  color: ${({ theme }) => theme.text.placeholder};
+`;
+
+export const DropdownFooter = styled(FlexRow)`
+  border-top: 2px solid ${({ theme }) => theme.border.default};
+  flex: 0 0 auto;
+  align-self: stretch;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+
+  button {
+    width: 100%;
   }
 `;
