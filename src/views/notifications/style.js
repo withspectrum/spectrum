@@ -48,12 +48,13 @@ export const NotificationListContent = styled(Content)`
   padding-left: 8px;
 `;
 
-export const Message = styled(Content)`
+export const Message = styled.p`
   font-weight: 400;
-  color: ${({ theme }) => theme.text.alt};
-  margin-left: 8px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: inherit;
+  margin-left: 16px;
   position: relative;
-  top: -1px;
 
   a {
     font-weight: 700;
@@ -61,7 +62,7 @@ export const Message = styled(Content)`
     position: relative;
 
     &:hover{
-      color: ${({ theme }) => theme.brand.alt};
+      color: inherit;
       transition: ${Transition.hover.on};
     }
   }
@@ -106,15 +107,25 @@ export const ChatMessage = styled.p`
 `;
 
 export const NotificationListRow = styled(FlexRow)`
-  padding: 8px 16px;
+  padding: 16px;
   border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
-  align-items: flex-start;
+  align-items: center;
+  color: ${({ theme }) => theme.text.default};
 
   b {
     font-weight: 700;
   }
 
+  div {
+    color: ${({ theme }) => theme.success.default};
+  }
+
   &:hover {
-    background-color: ${({ theme }) => theme.bg.wash};
+    background-color: ${({ theme }) => theme.brand.alt};
+    color: ${({ theme }) => theme.text.reverse};
+
+    div {
+      color: inherit;
+    }
   }
 `;

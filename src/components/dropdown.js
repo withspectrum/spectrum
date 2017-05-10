@@ -12,7 +12,7 @@ import Card from './card';
 const StyledDropdown = styled(FlexCol)`
   background-color: transparent;
   position: absolute;
-  width: 400px;
+  width: ${props => (props.width ? props.width : '400px')};
   top: 100%;
   right: 0px;
   z-index: 5;
@@ -24,10 +24,10 @@ const StyledDropdown = styled(FlexCol)`
 const StyledCard = styled(Card)`
   display: flex;
   flex-direction: column;
-  padding: 16px 0 8px 0;
   box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
   max-height: 640px;
   overflow-y: hidden;
+  align-items: stretch;
 `;
 
 const DropdownPure = (props: Object): React$Element<any> => (

@@ -57,7 +57,7 @@ export const constructMessage = notification => {
 };
 
 export const constructLinklessMessage = notification => {
-  const { type, sender, community, frequency, story } = notification;
+  const { type, sender, community, frequency } = notification;
   switch (type) {
     case 'NEW_STORY':
       return (

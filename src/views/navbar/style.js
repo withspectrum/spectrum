@@ -173,7 +173,7 @@ export const DropdownHeader = styled(FlexRow)`
   align-self: stretch;
   justify-content: flex-start;
   align-items: center;
-  padding: 0 16px 16px 16px;
+  padding: 16px;
   font-weight: 800;
   font-size: 14px;
   color: ${({ theme }) => theme.text.placeholder};
@@ -185,5 +185,9 @@ export const DropdownFooter = styled(FlexRow)`
   align-self: stretch;
   justify-content: center;
   align-items: center;
-  padding-top: 8px;
+  padding: 8px;
+
+  button {
+    width: 100%;
+  }
 `;

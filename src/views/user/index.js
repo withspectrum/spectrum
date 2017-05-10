@@ -10,11 +10,9 @@ import StoryFeed from '../../components/storyFeed';
 import { UserProfile } from '../../components/profile';
 import { getUserStories, getUserProfile } from './queries';
 
-const enhanceStoryFeed = compose(getUserStories);
-const StoryFeedWithData = enhanceStoryFeed(StoryFeed);
+const StoryFeedWithData = compose(getUserStories)(StoryFeed);
 
-const enhanceProfile = compose(getUserProfile);
-const UserProfileWithData = enhanceProfile(UserProfile);
+const UserProfileWithData = compose(getUserProfile)(UserProfile);
 
 const UserViewPure = ({ match }) => {
   const username = match.params.username;
