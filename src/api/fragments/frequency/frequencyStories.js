@@ -13,7 +13,6 @@ export const frequencyStoriesFragment = gql`
         cursor
         node {
           ...storyInfo
-          ...storyMessages
         }
       }
     }

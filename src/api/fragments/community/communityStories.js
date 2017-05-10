@@ -21,13 +21,6 @@ export const communityStoriesFragment = gql`
               ...communityInfo
             }
           }
-          messageConnection {
-            edges {
-              node {
-                ...messageInfo
-              }
-            }
-          }
         }
       }
     }
