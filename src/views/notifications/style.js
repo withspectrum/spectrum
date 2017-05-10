@@ -1,9 +1,13 @@
 import styled from 'styled-components';
-import { FlexRow, Gradient, Transition } from '../../components/globals';
+import {
+  FlexRow,
+  FlexCol,
+  Gradient,
+  Transition,
+} from '../../components/globals';
 import Card from '../../components/card';
 
 export const NotificationCard = styled(Card)`
-  margin-bottom: 16px;
   padding: 16px 24px 24px 16px;
 `;
 
@@ -12,6 +16,10 @@ export const ContentHeading = styled.h2`
   font-weight: 700;
   color: ${({ theme }) => theme.text.default};
   margin: 8px 0;
+`;
+
+export const NotificationListContentHeading = styled(ContentHeading)`
+  font-size: 16px;
 `;
 
 export const StatusBar = styled(FlexRow)`
@@ -28,6 +36,16 @@ export const Content = styled.div`
   line-height: 1.4;
   margin-left: 40px;
   width: 100%;
+`;
+
+export const NotificationListContainer = styled(FlexCol)`
+  flex: 0 1 480px;
+  overflow-y: scroll;
+`;
+
+export const NotificationListContent = styled(Content)`
+  margin-left: 0;
+  padding-left: 8px;
 `;
 
 export const Message = styled(Content)`
@@ -84,5 +102,19 @@ export const ChatMessage = styled.p`
     font-size: 11px;
     color: ${({ theme }) => theme.text.alt};
     font-weight: 600;
+  }
+`;
+
+export const NotificationListRow = styled(FlexRow)`
+  padding: 8px 16px;
+  border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
+  align-items: flex-start;
+
+  b {
+    font-weight: 700;
+  }
+
+  &:hover {
+    background-color: ${({ theme }) => theme.bg.wash};
   }
 `;

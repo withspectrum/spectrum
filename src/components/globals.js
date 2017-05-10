@@ -45,6 +45,9 @@ export const Transition = {
     on: 'all 0.15s ease-in',
     off: 'all 0.1s ease-out',
   },
+  dropdown: {
+    off: 'all 0.35s ease-out',
+  },
 };
 
 export const fontStack = css`

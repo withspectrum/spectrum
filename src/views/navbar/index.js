@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import Icon from '../../components/icons';
+import { LinkButton } from '../../components/buttons';
+import Dropdown from '../../components/dropdown';
 import {
   Container,
   Section,
@@ -10,10 +12,15 @@ import {
   Spacer,
   LogoLink,
   Logo,
+  IconDrop,
   IconLink,
   Label,
   LabelForTab,
+  DropdownFooter,
+  DropdownHeader,
 } from './style';
+
+import NotificationList from '../notifications/components/notificationList';
 
 class Navbar extends Component {
   render() {
@@ -68,18 +75,29 @@ class Navbar extends Component {
           </Section>
 
           <Section right>
-            <IconLink
-              data-active={match.url === '/notifications'}
-              data-mobileWidth={'half'}
-              to="/notifications"
-            >
-              <Icon
-                icon="notification"
-                color={'bg.default'}
-                hoverColor={'bg.default'}
-              />
-              <LabelForTab>Notifications</LabelForTab>
-            </IconLink>
+            <IconDrop>
+              <IconLink
+                data-active={match.url === '/notifications'}
+                data-mobileWidth={'half'}
+                to="/notifications"
+              >
+                <Icon
+                  icon="notification"
+                  color={'bg.default'}
+                  hoverColor={'bg.default'}
+                />
+                <LabelForTab>Notifications</LabelForTab>
+              </IconLink>
+              <Dropdown>
+                <DropdownHeader>
+                  My Notifications
+                </DropdownHeader>
+                <NotificationList />
+                <DropdownFooter>
+                  <LinkButton to={'/notifications'}>View all</LinkButton>
+                </DropdownFooter>
+              </Dropdown>
+            </IconDrop>
 
             {/* TODO: Make this active only when viewing current logged in user profile */}
             <IconLink
