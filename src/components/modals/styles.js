@@ -68,12 +68,12 @@ export const ModalBody = styled.div`
 
 export const Title = styled.div`
   font-weight: 800;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 28px;
 `;
 
 export const Header = styled.div`
-  padding: 16px 24px 24px;
+  padding: 20px 24px 0;
 `;
 
 export const ModalContent = styled.div``;

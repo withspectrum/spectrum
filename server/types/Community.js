@@ -33,16 +33,27 @@ const Community = /* GraphQL */ `
 		frequencies: Int
 	}
 
+	input File {
+    name: String!
+    type: String!
+    size: Int!
+    path: String!
+  }
+
 	input CreateCommunityInput {
 		name: String!
 		slug: String!
 		description: String!
+		website: String,
+		file: File
 	}
 
 	input EditCommunityInput {
 		name: String
 		slug: String
 		description: String
+		website: String
+		file: File
 		id: ID!
 	}
 
@@ -52,6 +63,8 @@ const Community = /* GraphQL */ `
 		name: String!
 		slug: String!
 		description: String!
+		website: String
+		photoURL: String
 		isOwner: Boolean
 		frequencyConnection: CommunityFrequenciesConnection!
 		memberConnection(first: Int = 10, after: String): CommunityMembersConnection!

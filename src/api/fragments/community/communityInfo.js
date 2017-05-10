@@ -6,6 +6,8 @@ export const communityInfoFragment = gql`
     name
     slug
     description
+    website
+    photoURL
     isOwner
     metaData {
       members
