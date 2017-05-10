@@ -16,7 +16,14 @@ import { Button, LinkButton } from '../buttons';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { LoadingCard } from '../loading';
 import { Input, UnderlineInput, TextArea } from '../formElements';
-import { StyledCard, Form, FormTitle, Description, Actions } from './style';
+import {
+  StyledCard,
+  Form,
+  FormTitle,
+  Description,
+  Actions,
+  ImgPreview,
+} from './style';
 import {
   editCommunityMutation,
   deleteCommunityMutation,
@@ -37,6 +44,9 @@ class CommunityWithData extends Component {
       slug: community.slug,
       description: community.description,
       id: community.id,
+      website: community.website,
+      image: community.photoURL,
+      file: null,
     };
   }
 
@@ -61,18 +71,42 @@ class CommunityWithData extends Component {
     });
   };
 
+  changeWebsite = e => {
+    const website = e.target.value;
+    this.setState({
+      website,
+    });
+  };
+
+  setCommunityPhoto = e => {
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        image: reader.result,
+      });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   save = e => {
     e.preventDefault();
-    const { name, slug, description, id } = this.state;
+    const { name, slug, description, website, file, id } = this.state;
     const input = {
       name,
       slug,
       description,
+      website,
+      file,
       id,
     };
     this.props
       .editCommunity(input)
-      .then(community => {
+      .then(data => {
+        const community = data.editCommunity;
         if (community !== undefined) {
           // community was successfully edited
           this.props.history.push(`/${community.slug}`);
@@ -101,7 +135,7 @@ class CommunityWithData extends Component {
   };
 
   render() {
-    const { name, slug, description } = this.state;
+    const { name, slug, description, image, website } = this.state;
     const { data: { community } } = this.props;
 
     if (!community) {
@@ -130,6 +164,27 @@ class CommunityWithData extends Component {
           >
             Description
           </TextArea>
+
+          <Input
+            inputType="file"
+            accept=".png, .jpg, .jpeg, .gif"
+            defaultValue={name}
+            onChange={this.setCommunityPhoto}
+            multiple={false}
+          >
+            Add a logo or photo
+
+            {!image ? <span>add</span> : <ImgPreview src={image} />}
+          </Input>
+
+          <Input
+            defaultValue={website}
+            onChange={this.changeWebsite}
+            autoFocus={true}
+          >
+            Optional: Add your community's website
+          </Input>
+
           <Actions>
             <LinkButton color={'warn.alt'}>Cancel</LinkButton>
             <Button onClick={this.save}>Save</Button>

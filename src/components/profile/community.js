@@ -12,6 +12,7 @@ import branch from 'recompose/branch';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
 import { LoadingCard } from '../loading';
+import { Avatar } from '../avatar';
 import {
   ProfileHeader,
   ProfileHeaderMeta,
@@ -67,6 +68,12 @@ const CommunityWithData = ({
   return (
     <Card>
       <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
+        <Avatar
+          margin={'0 12px 0 0'}
+          size={40}
+          radius={4}
+          src={community.photoURL}
+        />
         <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
           <Link to={`/${community.slug}`}>
             <Title>{community.name}</Title>
@@ -78,6 +85,13 @@ const CommunityWithData = ({
         componentSize !== 'small' &&
         <Description>
           {community.description}
+        </Description>}
+
+      {componentSize !== 'mini' &&
+        componentSize !== 'small' &&
+        community.website &&
+        <Description>
+          {community.website}
         </Description>}
 
       {componentSize !== 'mini' &&

@@ -45,3 +45,10 @@ export const Actions = styled(FlexRow)`
     margin-left: 8px;
   }
 `;
+
+export const ImgPreview = styled.img`
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 4px;
+`;

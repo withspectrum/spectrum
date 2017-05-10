@@ -70,6 +70,13 @@ export const StyledInput = styled.input`
     border-color: ${({ theme }) => theme.brand.default};
     transition: ${Transition.hover.on};
   }
+
+  &[type="file"] {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    visibility: hidden;
+  }
 `;
 
 export const StyledTextArea = styled.textarea`
