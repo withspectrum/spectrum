@@ -256,21 +256,15 @@ export const Span = styled.span`
 export const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: ${props => (props.spread ? 'space-between' : 'initial')};
-  align-items: ${props => (props.center ? 'center' : 'initial')};
-  padding: ${props => (props.padding ? props.padding : '0')};
-  margin: ${props => (props.margin ? props.margin : '0')};
-
-  ${props => (props.smallCol ? `@media (max-width: 768px) { flex-direction: column }` : '')};
+  justify-content: flex-start;
+  align-items: center
 `;
 
 export const FlexCol = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: ${props => (props.spread ? 'space-between' : 'flex-start')};
-  align-items: ${props => (props.center ? 'center' : 'initial')};
-  padding: ${props => (props.padding ? props.padding : '0')};
-  margin: ${props => (props.margin ? props.margin : '0')};
+  justify-content: flex-start;
+  align-items: stretch;
 `;
 
 const returnTooltip = props => {

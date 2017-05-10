@@ -24,18 +24,25 @@ import {
 
 const StoryFeedCardPure = (props: Object): React$Element<any> => {
   const formatLocation = () => {
-    if (props.data.frequency.name && props.data.frequency.community.name) {
-      return (
-        <Location
-        >{`${props.data.frequency.community.name} / ${props.data.frequency.name}`}</Location>
-      );
-    } else if (
-      props.data.frequency.name && !props.data.frequency.community.name
-    ) {
-      return <Location>{`~/${props.data.frequency.name}`}</Location>;
-    } else {
+    if (!props.data.frequency) {
       return;
     }
+    if (props.data.frequency.name && props.data.frequency.community.name) {
+      return (
+        <Location>
+          {`${props.data.frequency.community.name} / ${props.data.frequency.name}`}
+        </Location>
+      );
+    }
+    if (props.data.frequency.name && !props.data.frequency.community.name) {
+      return (
+        <Location>
+          {`~/${props.data.frequency.name}`}
+        </Location>
+      );
+    }
+
+    return;
   };
 
   const openUserProfileModal = (user: Object) => {
