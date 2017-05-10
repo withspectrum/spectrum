@@ -39,6 +39,13 @@ const Community = /* GraphQL */ `
 		description: String!
 	}
 
+	input EditCommunityInput {
+		name: String
+		slug: String
+		description: String
+		id: ID!
+	}
+
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -58,6 +65,8 @@ const Community = /* GraphQL */ `
 
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
+		# todo return the community + frequency objects to update the store
+		editCommunity(input: EditCommunityInput!): Community
 		# todo return the community + frequency objects to clear the store
 		deleteCommunity(id: ID!): Boolean
 	}

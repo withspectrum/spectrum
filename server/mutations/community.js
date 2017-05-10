@@ -1,5 +1,9 @@
 // @flow
-import { createCommunity, deleteCommunity } from '../models/community';
+import {
+  createCommunity,
+  editCommunity,
+  deleteCommunity,
+} from '../models/community';
 import type { CreateCommunityArguments } from '../models/community';
 
 type Context = {
@@ -14,5 +18,10 @@ module.exports = {
       { user }: Context
     ) => createCommunity(args, user.uid),
     deleteCommunity: (_: any, { id }) => deleteCommunity(id), //TODO: Add permission checks here
+    editCommunity: (
+      _: any,
+      args: CreateCommunityArguments,
+      { user }: Context
+    ) => editCommunity(args, user.uid),
   },
 };

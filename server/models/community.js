@@ -58,6 +58,15 @@ export type CreateCommunityArguments = {
   },
 };
 
+export type CreateCommunityArguments = {
+  input: {
+    name: string,
+    slug: string,
+    description: string,
+    id: string,
+  },
+};
+
 const createCommunity = (
   { input: { name, slug, description } }: CreateCommunityArguments,
   creatorId: string
@@ -96,10 +105,35 @@ const createCommunity = (
     .then(([community]) => community);
 };
 
-const deleteCommunity = id => {
+const editCommunity = (
+  { input: { name, slug, description, id } }: EditCommunityArguments,
+  creatorId: string
+) => {
   return db
     .table('communities')
     .get(id)
+    .run()
+    .then(result => {
+      return Object.assign({}, result, {
+        name,
+        slug,
+        description,
+      });
+    })
+    .then(obj => {
+      return db
+        .table('communities')
+        .get(id)
+        .update({ ...obj }, { returnChanges: true })
+        .run()
+        .then(result => result.changes[0].new_val);
+    });
+};
+
+const deleteCommunity = id => {
+  return db
+    .table('communities')
+    .get({ id })
     .delete({ returnChanges: true })
     .run()
     .then(({ deleted, changes }) => {
@@ -137,6 +171,7 @@ module.exports = {
   getCommunityMetaData,
   getCommunitiesByUser,
   createCommunity,
+  editCommunity,
   deleteCommunity,
   getAllCommunityStories,
 };
