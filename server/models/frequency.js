@@ -144,6 +144,44 @@ const deleteFrequency = id => {
     });
 };
 
+const unsubscribeFrequency = (id, uid) => {
+  return db
+    .table('frequencies')
+    .get(id)
+    .update(
+      row => ({
+        subscribers: row('subscribers').filter(item => item.ne(uid)),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        (changes.length > 0
+          ? changes[0].new_val
+          : db.table('frequencies').get(id).run())
+    );
+};
+
+const subscribeFrequency = (id, uid) => {
+  return db
+    .table('frequencies')
+    .get(id)
+    .update(
+      row => ({
+        subscribers: row('subscribers').append(uid),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        (changes.length > 0
+          ? changes[0].new_val
+          : db.table('frequencies').get(id).run())
+    );
+};
+
 const getTopFrequencies = (amount: number) => {
   return db
     .table('frequencies')
@@ -164,6 +202,8 @@ module.exports = {
   createFrequency,
   editFrequency,
   deleteFrequency,
+  unsubscribeFrequency,
+  subscribeFrequency,
   getTopFrequencies,
   getFrequencySubscriberCount,
   getFrequencies,

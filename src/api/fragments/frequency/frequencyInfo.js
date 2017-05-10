@@ -7,5 +7,6 @@ export const frequencyInfoFragment = gql`
     slug
     description
     isOwner
+    isSubscriber
   }
 `;

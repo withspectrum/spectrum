@@ -4,6 +4,8 @@ import {
   editCommunity,
   deleteCommunity,
   getCommunities,
+  joinCommunity,
+  leaveCommunity,
 } from '../models/community';
 import type {
   CreateCommunityArguments,
@@ -41,6 +43,20 @@ module.exports = {
         }
 
         return new Error('Not allowed to do that!');
+      });
+    },
+    toggleCommunityMembership: (_: any, { id }: string, { user }: Context) => {
+      return getCommunities([id]).then(communities => {
+        if (!communities[0]) {
+          // todo handle error if community doesn't exist
+          return;
+        }
+
+        if (communities[0].members.indexOf(user.uid) > -1) {
+          return leaveCommunity(id, user.uid);
+        } else {
+          return joinCommunity(id, user.uid);
+        }
       });
     },
   },

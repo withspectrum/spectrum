@@ -11,6 +11,7 @@ import renderComponent from 'recompose/renderComponent';
 import branch from 'recompose/branch';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
+import { toggleCommunityMembershipMutation } from '../../api/community';
 import { LoadingCard } from '../loading';
 import { Avatar } from '../avatar';
 import {
@@ -19,6 +20,7 @@ import {
   Title,
   Description,
   Actions,
+  Action,
   ActionOutline,
 } from './style';
 import { MetaData } from './metaData';
@@ -33,6 +35,7 @@ type CommunityProps = {
   id: String,
   name: String,
   slug: String,
+  isMember: Boolean,
   metaData: {
     frequencies: Number,
     members: Number,
@@ -42,6 +45,7 @@ type CommunityProps = {
 const CommunityWithData = ({
   data: { community },
   profileSize,
+  toggleCommunityMembership,
   data,
 }: {
   data: { community: CommunityProps },
@@ -96,11 +100,33 @@ const CommunityWithData = ({
 
       {componentSize !== 'mini' &&
         <Actions>
-          {community.isOwner &&
+
+          {// user owns the community, assumed member
+          community.isOwner &&
             <ActionOutline>
               <Link to={`/${community.slug}/settings`}>Settings</Link>
             </ActionOutline>}
-          <ActionOutline>Join</ActionOutline>
+
+          {// user is a member and doesn't own the community
+          community.isMember &&
+            !community.isOwner &&
+            <ActionOutline
+              color={'text.alt'}
+              hoverColor={'warn.default'}
+              onClick={() => toggleCommunityMembership({ id: community.id })}
+            >
+              Leave Community
+            </ActionOutline>}
+
+          {// user is not a member and doesn't own the community
+          !community.isMember &&
+            !community.isOwner &&
+            <Action
+              onClick={() => toggleCommunityMembership({ id: community.id })}
+            >
+              Join {community.name}
+            </Action>}
+
         </Actions>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
@@ -109,5 +135,9 @@ const CommunityWithData = ({
   );
 };
 
-const Community = compose(displayLoadingState, pure)(CommunityWithData);
+const Community = compose(
+  toggleCommunityMembershipMutation,
+  displayLoadingState,
+  pure
+)(CommunityWithData);
 export default Community;

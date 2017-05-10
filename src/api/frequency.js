@@ -104,3 +104,37 @@ export const editFrequencyMutation = graphql(
   EDIT_FREQUENCY_MUTATION,
   EDIT_FREQUENCY_OPTIONS
 );
+
+/*
+  Join or leave a frequency
+*/
+const TOGGLE_FREQUENCY_SUBSCRIPTION_MUTATION = gql`
+  mutation toggleFrequencySubscription($id: ID!) {
+    toggleFrequencySubscription (id: $id) {
+      ...frequencyInfo
+    }
+  }
+  ${frequencyInfoFragment}
+`;
+
+const TOGGLE_FREQUENCY_SUBSCRIPTION_OPTIONS = {
+  props: ({ id, mutate }) => ({
+    toggleFrequencySubscription: ({ id }) =>
+      mutate({
+        variables: {
+          id,
+        },
+      })
+        .then(({ data }) => {
+          console.log('success ', data);
+        })
+        .catch(err => {
+          console.log('error joining or leaving frequency ', err);
+        }),
+  }),
+};
+
+export const toggleFrequencySubscriptionMutation = graphql(
+  TOGGLE_FREQUENCY_SUBSCRIPTION_MUTATION,
+  TOGGLE_FREQUENCY_SUBSCRIPTION_OPTIONS
+);

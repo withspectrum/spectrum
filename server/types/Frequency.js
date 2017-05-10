@@ -47,6 +47,7 @@ const Frequency = /* GraphQL */ `
 		slug: String!
 		community: Community!
 		isOwner: Boolean
+		isSubscriber: Boolean
 		storyConnection(first: Int = 10, after: String): FrequencyStoriesConnection!
 		subscriberConnection(first: Int = 10, after: String): FrequencySubscribersConnection!
 		subscriberCount: Int!
@@ -62,6 +63,7 @@ const Frequency = /* GraphQL */ `
 		createFrequency(input: CreateFrequencyInput!): Frequency
 		editFrequency(input: EditFrequencyInput!): Frequency
 		deleteFrequency(id: ID!): Boolean
+		toggleFrequencySubscription(id: ID!): Frequency
 	}
 `;
 

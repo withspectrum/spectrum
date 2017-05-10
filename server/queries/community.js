@@ -40,6 +40,9 @@ module.exports = {
     isOwner: ({ owners }, _, { user }) => {
       return owners.indexOf(user.uid) > -1;
     },
+    isMember: ({ members }, _, { user }) => {
+      return members.indexOf(user.uid) > -1;
+    },
     memberConnection: (
       { members }: { members: Array<string> },
       { first = 10, after }: PaginationOptions,
