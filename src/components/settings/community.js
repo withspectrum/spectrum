@@ -85,8 +85,10 @@ class CommunityWithData extends Component {
     this.props
       .editCommunity(input)
       .then(community => {
-        console.log('community saved', community);
-        this.props.history.push(`/${community.slug}`);
+        if (community !== undefined) {
+          // community was successfully edited
+          this.props.history.push(`/${community.slug}`);
+        }
       })
       .catch(err => {
         //TODO: Add dispatch for global error events
@@ -99,9 +101,17 @@ class CommunityWithData extends Component {
 
     const { data: { community }, deleteCommunity, history } = this.props;
 
-    deleteCommunity(community.id).then(() => {
-      history.push(`/`);
-    });
+    deleteCommunity(community.id)
+      .then(community => {
+        if (community !== undefined) {
+          // community was successfully deleted
+          history.push(`/`);
+        }
+      })
+      .catch(err => {
+        // TODO: Throw a global dispatch for error message
+        console.log('err in deleteCommunity', err);
+      });
   };
 
   render() {

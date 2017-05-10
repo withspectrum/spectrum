@@ -3,8 +3,12 @@ import {
   createCommunity,
   editCommunity,
   deleteCommunity,
+  getCommunities,
 } from '../models/community';
-import type { CreateCommunityArguments } from '../models/community';
+import type {
+  CreateCommunityArguments,
+  EditCommunityArguments,
+} from '../models/community';
 
 type Context = {
   user: Object,
@@ -17,11 +21,27 @@ module.exports = {
       args: CreateCommunityArguments,
       { user }: Context
     ) => createCommunity(args, user.uid),
-    deleteCommunity: (_: any, { id }) => deleteCommunity(id), //TODO: Add permission checks here
+    deleteCommunity: (_: any, { id }, { user }: Context) => {
+      return getCommunities([id]).then(communities => {
+        if (communities[0].owners.indexOf(user.uid) > -1) {
+          return deleteCommunity(id);
+        }
+
+        return new Error('Not allowed to do that!');
+      });
+    },
     editCommunity: (
       _: any,
-      args: CreateCommunityArguments,
+      args: EditCommunityArguments,
       { user }: Context
-    ) => editCommunity(args, user.uid),
+    ) => {
+      return getCommunities([args.input.id]).then(communities => {
+        if (communities[0].owners.indexOf(user.uid) > -1) {
+          return editCommunity(args);
+        }
+
+        return new Error('Not allowed to do that!');
+      });
+    },
   },
 };

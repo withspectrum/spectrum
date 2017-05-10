@@ -58,7 +58,7 @@ export type CreateCommunityArguments = {
   },
 };
 
-export type CreateCommunityArguments = {
+export type EditCommunityArguments = {
   input: {
     name: string,
     slug: string,
@@ -105,10 +105,9 @@ const createCommunity = (
     .then(([community]) => community);
 };
 
-const editCommunity = (
-  { input: { name, slug, description, id } }: EditCommunityArguments,
-  creatorId: string
-) => {
+const editCommunity = ({
+  input: { name, slug, description, id },
+}: EditCommunityArguments) => {
   return db
     .table('communities')
     .get(id)
@@ -133,7 +132,7 @@ const editCommunity = (
 const deleteCommunity = id => {
   return db
     .table('communities')
-    .get({ id })
+    .get(id)
     .delete({ returnChanges: true })
     .run()
     .then(({ deleted, changes }) => {
