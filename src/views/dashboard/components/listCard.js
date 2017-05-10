@@ -47,7 +47,7 @@ const ListCardPure = ({ data: { communities }, dispatch }) => {
           <LinkButton
             onClick={() => dispatch(openModal('CREATE_COMMUNITY_MODAL'))}
           >
-            Create a Frequency
+            Create a Community
           </LinkButton>
         </FlexRow>
       </StyledCard>

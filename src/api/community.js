@@ -24,10 +24,10 @@ const CREATE_COMMUNITY_OPTIONS = {
         },
       })
         .then(({ data }) => {
-          console.log(data);
           return data.createCommunity;
         })
         .catch(error => {
+          // TODO: Add dispatch for global errors
           console.log('error creating community', error);
         }),
   }),

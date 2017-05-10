@@ -58,6 +58,7 @@ const Community = /* GraphQL */ `
 
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
+		# todo return the community + frequency objects to clear the store
 		deleteCommunity(id: ID!): Boolean
 	}
 `;

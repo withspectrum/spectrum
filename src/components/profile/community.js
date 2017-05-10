@@ -47,7 +47,7 @@ const CommunityWithData = ({
   profileSize: ProfileSizeProps,
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
-  console.log('community', community);
+
   if (!community) {
     return (
       <Card>

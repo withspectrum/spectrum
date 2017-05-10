@@ -80,14 +80,17 @@ const createCommunity = (
     .then(community =>
       Promise.all([
         community,
-        createFrequency({
-          name: 'General',
-          slug: 'general',
-          description: 'General Chatter',
-          creatorId,
-          communityId: community.id,
-          owners: [creatorId],
-        }),
+        createFrequency(
+          {
+            input: {
+              name: 'General',
+              slug: 'general',
+              description: 'General Chatter',
+              community: community.id,
+            },
+          },
+          creatorId
+        ),
       ])
     )
     .then(([community]) => community);
@@ -102,6 +105,8 @@ const deleteCommunity = id => {
     .then(({ deleted, changes }) => {
       if (deleted > 0) {
         // community was successfully deleted, now delete all frequencies
+        // TODO: Return community object and frequencies objects to remove
+        // them from the client store
         const community = changes[0].old_val.id;
         return db.table('frequencies').filter({ community }).delete().run();
       }
