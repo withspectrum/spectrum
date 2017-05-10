@@ -9,8 +9,6 @@ import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
 //$FlowFixMe
-import { Link } from 'react-router-dom';
-//$FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
@@ -27,13 +25,6 @@ const displayLoadingState = branch(
   props => props.data.loading,
   renderComponent(LoadingCard)
 );
-
-type FrequencyProps = {
-  id: String,
-  name: String,
-  slug: String,
-  description: String,
-};
 
 class FrequencyWithData extends Component {
   constructor(props) {

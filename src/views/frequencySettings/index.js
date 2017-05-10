@@ -9,7 +9,6 @@ import { getThisFrequency } from './queries';
 
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
-import ListCard from './components/listCard';
 
 import { FrequencyEditForm } from '../../components/editForm';
 

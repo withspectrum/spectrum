@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Card from '../card';
-import { FlexRow, FlexCol, Truncate } from '../globals';
+import { FlexRow, Truncate } from '../globals';
 
 export const StyledCard = styled(Card)`
   padding: 16px;

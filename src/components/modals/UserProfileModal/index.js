@@ -6,10 +6,7 @@ import { connect } from 'react-redux';
 import Modal from 'react-modal';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import renderComponent from 'recompose/renderComponent';
 import ModalContainer from '../modalContainer';
-import { LoadingCard } from '../../loading';
 import { modalStyles } from '../styles';
 import { closeModal } from '../../../actions/modals';
 import { uploadProfilePhotoMutation } from '../../../api/user';
@@ -60,7 +57,7 @@ class UserProfileModal extends Component {
           the action to the 'close' icon in the top right corner of all modals
         */}
         <ModalContainer title={user.displayName} closeModal={this.close}>
-          <img src={user.photoURL} width="40" height="40" />
+          <img src={user.photoURL} width="40" height="40" role="presentation" />
           <span>{user.username}</span>
 
           {currentUser.uid === user.uid &&
