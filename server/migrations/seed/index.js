@@ -1,4 +1,5 @@
 const faker = require('faker');
+const { v4: uuid } = require('uuid');
 const {
   DEFAULT_COMMUNITIES,
   DEFAULT_USERS,
@@ -47,6 +48,24 @@ communities.forEach(community => {
       i => community.members[i]
     );
     frequencies.push(generateFrequency(community.id, subscribers));
+  });
+});
+
+communities.forEach(community => {
+  const subscribers = randomAmount(
+    { max: community.members.length, min: 1 },
+    i => community.members[i]
+  );
+  frequencies.push({
+    id: uuid(),
+    community: community.id,
+    createdAt: new Date(),
+    modifiedAt: new Date(),
+    name: 'General',
+    description: 'General chatter',
+    slug: 'general',
+    subscribers,
+    owners: [subscribers[0]],
   });
 });
 

@@ -5,7 +5,7 @@
 const { db } = require('./db');
 // $FlowFixMe
 import { UserError } from 'graphql-errors';
-import { createFrequency } from './frequency';
+import { createFrequency, unsubscribeFrequency } from './frequency';
 import { uploadCommunityPhoto, generateImageUrl } from '../utils/s3';
 
 type GetCommunityByIdArgs = {
@@ -284,6 +284,61 @@ const getAllCommunityStories = (id: string): Promise<Array<any>> => {
   );
 };
 
+const subscribeToDefaultFrequencies = (id: string, uid: string) => {
+  // TODO: Handle default frequencies as set by the community owner. For now
+  // we treat the 'general' frequency as default
+  return db
+    .table('frequencies')
+    .filter({ community: id, slug: 'general' })
+    .update(
+      row => ({
+        subscribers: row('subscribers').append(uid),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        (changes.length > 0
+          ? changes[0].new_val
+          : db
+              .table('frequencies')
+              .filter({ community: id, slug: 'general' })
+              .run())
+    );
+};
+
+const unsubscribeFromAllFrequenciesInCommunity = (id: string, uid: string) => {
+  return db
+    .table('frequencies')
+    .filter({ community: id })
+    .run()
+    .then(frequencies => {
+      return frequencies.map(frequency =>
+        unsubscribeFrequency(frequency.id, uid)
+      );
+    });
+};
+
+const userIsMemberOfCommunity = (id: string, uid: string) => {
+  return db.table('communities').get(id).run().then(community => {
+    return community.members.indexOf(uid) > -1;
+  });
+};
+
+const userIsMemberOfAnyFrequencyInCommunity = (id: string, uid: string) => {
+  return db
+    .table('frequencies')
+    .filter({ community: id })
+    .run()
+    .then(frequencies => {
+      return frequencies.some(frequency => {
+        console.log(frequency, uid);
+        return frequency.subscribers.indexOf(uid) > -1;
+      });
+    });
+};
+
 module.exports = {
   getCommunities,
   getCommunitiesBySlug,
@@ -294,5 +349,9 @@ module.exports = {
   deleteCommunity,
   leaveCommunity,
   joinCommunity,
+  subscribeToDefaultFrequencies,
+  unsubscribeFromAllFrequenciesInCommunity,
   getAllCommunityStories,
+  userIsMemberOfCommunity,
+  userIsMemberOfAnyFrequencyInCommunity,
 };
