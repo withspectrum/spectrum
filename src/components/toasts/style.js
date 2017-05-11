@@ -12,6 +12,7 @@ export const Container = styled.div`
   max-width: 256px;
   background: transparent;
   pointer-events: none;
+  z-index: 1000;
 `;
 
 const toastFade = keyframes`

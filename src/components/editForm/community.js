@@ -5,16 +5,11 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 //$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
-import branch from 'recompose/branch';
-//$FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 import { Button, LinkButton } from '../buttons';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { LoadingCard } from '../loading';
 import { Input, UnderlineInput, TextArea } from '../formElements';
 import {
   StyledCard,
@@ -29,16 +24,11 @@ import {
   deleteCommunityMutation,
 } from '../../api/community';
 
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingCard)
-);
-
 class CommunityWithData extends Component {
   constructor(props) {
     super(props);
 
-    const { data: { community } } = this.props;
+    const { community } = this.props;
     this.state = {
       name: community.name,
       slug: community.slug,
@@ -120,7 +110,7 @@ class CommunityWithData extends Component {
   triggerDeleteCommunity = e => {
     e.preventDefault();
 
-    const { data: { community }, deleteCommunity, history } = this.props;
+    const { community, deleteCommunity, history } = this.props;
 
     deleteCommunity(community.id)
       .then(community => {
@@ -136,7 +126,7 @@ class CommunityWithData extends Component {
 
   render() {
     const { name, slug, description, image, website } = this.state;
-    const { data: { community } } = this.props;
+    const { community } = this.props;
 
     if (!community) {
       return (
@@ -207,7 +197,6 @@ class CommunityWithData extends Component {
 const Community = compose(
   deleteCommunityMutation,
   editCommunityMutation,
-  displayLoadingState,
   withRouter,
   pure
 )(CommunityWithData);
