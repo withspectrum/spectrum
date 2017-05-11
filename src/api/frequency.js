@@ -26,14 +26,7 @@ const CREATE_FREQUENCY_OPTIONS = {
         variables: {
           input,
         },
-      })
-        .then(({ data }) => {
-          return data.createFrequency;
-        })
-        .catch(error => {
-          // TODO: Add dispatch for global errors
-          console.log('error creating frequency', error);
-        }),
+      }),
   }),
 };
 
@@ -58,14 +51,7 @@ const DELETE_FREQUENCY_OPTIONS = {
         variables: {
           id,
         },
-      })
-        .then(({ data }) => {
-          return data.deleteFrequency;
-        })
-        .catch(error => {
-          // TODO: Add dispatch for global errors
-          console.log('error deleting frequency', error);
-        }),
+      }),
   }),
 };
 
@@ -93,14 +79,7 @@ const EDIT_FREQUENCY_OPTIONS = {
         variables: {
           input,
         },
-      })
-        .then(({ data }) => {
-          return data.editFrequency;
-        })
-        .catch(error => {
-          // TODO: Add dispatch for global errors
-          console.log('error editing frequency', error);
-        }),
+      }),
   }),
 };
 
@@ -128,13 +107,7 @@ const TOGGLE_FREQUENCY_SUBSCRIPTION_OPTIONS = {
         variables: {
           id,
         },
-      })
-        .then(({ data }) => {
-          console.log('success ', data);
-        })
-        .catch(err => {
-          console.log('error joining or leaving frequency ', err);
-        }),
+      }),
   }),
 };
 

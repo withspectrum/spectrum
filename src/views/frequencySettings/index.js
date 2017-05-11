@@ -21,7 +21,12 @@ const SettingsPure = ({ match, data, dispatch, history }) => {
 
   if (!data.frequency.isOwner && !data.frequency.community.isOwner) {
     history.push('/');
-    dispatch(addToastWithTimeout('error', "You can't do that!"));
+    dispatch(
+      addToastWithTimeout(
+        'error',
+        "You don't have permission to view these settings."
+      )
+    );
   }
 
   return (

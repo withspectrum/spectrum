@@ -51,8 +51,6 @@ class StoryComposerWithData extends Component {
   constructor(props) {
     super(props);
 
-    console.log(props);
-
     /*
       Create a new array of communities only containing the `node` data from
       graphQL. Then filter the resulting frequency to remove any communities

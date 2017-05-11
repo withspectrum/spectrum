@@ -167,16 +167,16 @@ export const getCommunityStories = graphql(
   queries specific to each component.
 */
 const profileQueryOptions = {
-  options: ({ slug }) => ({
+  options: ({ match: { params: { communitySlug } } }) => ({
     variables: {
-      slug: slug,
+      slug: communitySlug,
     },
   }),
 };
 
-export const getCommunityProfile = graphql(
+export const getCommunity = graphql(
   gql`
-		query communityProfile($slug: String) {
+		query getCommunity($slug: String) {
 			community(slug: $slug) {
         ...communityInfo
         ...communityMetaData

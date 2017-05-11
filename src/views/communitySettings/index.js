@@ -21,7 +21,12 @@ const SettingsPure = ({ match, data, history, dispatch }) => {
 
   if (!data.community.isOwner) {
     history.push('/');
-    dispatch(addToastWithTimeout('error', "You can't do that!"));
+    dispatch(
+      addToastWithTimeout(
+        'error',
+        "You don't have permission to view these settings."
+      )
+    );
   }
 
   if (data.error) {

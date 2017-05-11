@@ -120,13 +120,7 @@ const TOGGLE_COMMUNITY_MEMBERSHIP_OPTIONS = {
         variables: {
           id,
         },
-      })
-        .then(({ data }) => {
-          console.log('success ', data);
-        })
-        .catch(err => {
-          console.log('error joining or leaving community ', err);
-        }),
+      }),
   }),
 };
 

@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Button, LinkButton } from '../buttons';
 import { Input, UnderlineInput, TextArea } from '../formElements';
+import { addToastWithTimeout } from '../../actions/toasts';
 import {
   StyledCard,
   Form,
@@ -71,13 +72,19 @@ class FrequencyWithData extends Component {
       .editFrequency(input)
       .then(frequency => {
         if (frequency !== undefined) {
-          // community was successfully edited
           this.props.history.push(`/${community.slug}/${frequency.slug}`);
+          this.props.dispatch(
+            addToastWithTimeout('success', 'Frequency saved!')
+          );
         }
       })
       .catch(err => {
-        //TODO: Add dispatch for global error events
-        console.log('err in editCommunity', err);
+        this.props.dispatch(
+          addToastWithTimeout(
+            'success',
+            "Something went wrong and we weren't able to save these changes."
+          )
+        );
       });
   };
 
@@ -96,11 +103,18 @@ class FrequencyWithData extends Component {
         if (frequency !== undefined) {
           // community was successfully deleted
           history.push(`/${community.slug}`);
+          this.props.dispatch(
+            addToastWithTimeout('success', 'Frequency successfully deleted.')
+          );
         }
       })
       .catch(err => {
-        // TODO: Throw a global dispatch for error message
-        console.log('err in deleteFrequency', err);
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            "Something went wrong and we weren't able to delete this frequency."
+          )
+        );
       });
   };
 

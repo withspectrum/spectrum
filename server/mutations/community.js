@@ -31,7 +31,7 @@ module.exports = {
           return deleteCommunity(id);
         }
 
-        return new Error('Not allowed to do that!');
+        return new Error("You don't have permission to delete this community.");
       });
     },
     editCommunity: (
@@ -44,23 +44,25 @@ module.exports = {
           return editCommunity(args);
         }
 
-        return new Error('Not allowed to do that!');
+        return new Error("You don't have permission to edit this community.");
       });
     },
     toggleCommunityMembership: (_: any, { id }: string, { user }: Context) => {
       return getCommunities([id]).then(communities => {
-        if (!communities[0]) {
-          // todo handle error if community doesn't exist
-          return;
+        const community = communities[0];
+        if (!community) {
+          return new Error("This community doesn't exist.");
         }
 
         // if the person owns the community, they have accidentally triggered
         // a join or leave action, which isn't allowed
         if (community.owners.indexOf(user.uid) > -1) {
-          return new Error("Owners of a community can't join or leave");
+          return new Error(
+            "Owners of a community can't join or leave their own community."
+          );
         }
 
-        if (communities[0].members.indexOf(user.uid) > -1) {
+        if (community.members.indexOf(user.uid) > -1) {
           return leaveCommunity(id, user.uid)
             .then(community => {
               return Promise.all([
