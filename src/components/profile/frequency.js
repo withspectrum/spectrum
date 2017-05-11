@@ -82,18 +82,20 @@ const FrequencyWithData = ({
       {componentSize !== 'mini' &&
         <Actions>
           {// user owns the community, assumed member
-          frequency.isOwner &&
-            <ActionOutline>
-              <Link
-                to={`/${frequency.community.slug}/${frequency.slug}/settings`}
-              >
-                Settings
-              </Link>
-            </ActionOutline>}
+          frequency.isOwner || frequency.community.isOwner
+            ? <ActionOutline>
+                <Link
+                  to={`/${frequency.community.slug}/${frequency.slug}/settings`}
+                >
+                  Settings
+                </Link>
+              </ActionOutline>
+            : <span />}
 
           {// user is a member and doesn't own the community
           frequency.isSubscriber &&
             !frequency.isOwner &&
+            !frequency.community.isOwner &&
             <ActionOutline
               color={'text.alt'}
               hoverColor={'warn.default'}
@@ -105,6 +107,7 @@ const FrequencyWithData = ({
           {// user is not a member and doesn't own the frequency
           !frequency.isSubscriber &&
             !frequency.isOwner &&
+            !frequency.community.isOwner &&
             <Action
               onClick={() => toggleFrequencySubscription({ id: frequency.id })}
             >

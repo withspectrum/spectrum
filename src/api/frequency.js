@@ -2,6 +2,10 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { frequencyInfoFragment } from './fragments/frequency/frequencyInfo';
+import { GET_COMMUNITY_FREQUENCIES_QUERY } from '../views/community/queries';
+import {
+  GET_COMPOSER_COMMUNITIES_AND_FREQUENCIES_QUERY,
+} from '../components/storyComposer/queries';
 
 /*
   Create a new frequency

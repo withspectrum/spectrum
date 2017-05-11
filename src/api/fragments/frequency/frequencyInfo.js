@@ -8,5 +8,8 @@ export const frequencyInfoFragment = gql`
     description
     isOwner
     isSubscriber
+    community {
+      id
+    }
   }
 `;

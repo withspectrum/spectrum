@@ -17,7 +17,6 @@ const FrequencyProfileWithData = compose(getFrequencyProfile)(FrequencyProfile);
 
 const FrequencyViewPure = ({ match }) => {
   const communitySlug = match.params.communitySlug;
-  const communityId = match.params.communityId;
   const frequencySlug = match.params.frequencySlug;
 
   return (
@@ -33,8 +32,8 @@ const FrequencyViewPure = ({ match }) => {
 
       <Column type="primary" alignItems="center">
         <StoryComposer
-          activeCommunity={communityId}
-          activeFrequency={match.params.frequencyId}
+          activeCommunity={communitySlug}
+          activeFrequency={match.params.frequencySlug}
         />
         <StoryFeedWithData slug={frequencySlug} community={communitySlug} />
       </Column>

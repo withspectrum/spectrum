@@ -8,6 +8,7 @@ import {
   subscribeFrequency,
 } from '../models/frequency';
 import {
+  getCommunities,
   joinCommunity,
   leaveCommunity,
   userIsMemberOfCommunity,
@@ -30,13 +31,30 @@ module.exports = {
       { user }: Context
     ) => createFrequency(args, user.uid),
     deleteFrequency: (_: any, { id }, { user }: Context) => {
-      return getFrequencies([id]).then(frequencies => {
-        if (frequencies[0].owners.indexOf(user.uid) > -1) {
-          return deleteFrequency(id);
-        }
+      return getFrequencies([id])
+        .then(frequencies => {
+          const frequency = frequencies[0];
+          const communities = getCommunities([frequency.community]);
 
-        return new Error('Not allowed to do that!');
-      });
+          return Promise.all([frequency, communities]);
+        })
+        .then(([frequency, communities]) => {
+          const community = communities[0];
+
+          if (!frequency) {
+            return new Error("Frequency doesn't exist");
+          }
+
+          // if user is owner of the frequency or community
+          if (
+            frequency.owners.indexOf(user.uid) > -1 ||
+            community.owners.indexOf(user.uid) > -1
+          ) {
+            return deleteFrequency(id);
+          }
+
+          return new Error('Not allowed to do that!');
+        });
     },
     editFrequency: (
       _: any,

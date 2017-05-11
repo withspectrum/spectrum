@@ -15,14 +15,14 @@ import { CommunityProfile } from '../../components/profile';
 import {
   getCommunityStories,
   getCommunityProfile,
-  getFrequencyInfo,
+  getCommunityFrequencies,
 } from './queries';
 
 const ActiveCommunityProfile = compose(getCommunityProfile)(CommunityProfile);
 
 const CommunityStoryFeed = compose(getCommunityStories)(StoryFeed);
 
-const FrequencyListCard = compose(getFrequencyInfo)(ListCard);
+const FrequencyListCard = compose(getCommunityFrequencies)(ListCard);
 
 const CommunityViewPure = ({ match }) => {
   const communitySlug = match.params.communitySlug;
@@ -34,7 +34,7 @@ const CommunityViewPure = ({ match }) => {
       </Column>
 
       <Column type="primary" alignItems="center">
-        <StoryComposer activeCommunity={match.params.communityId} />
+        <StoryComposer activeCommunity={communitySlug} />
         <CommunityStoryFeed slug={communitySlug} />
       </Column>
     </AppViewWrapper>

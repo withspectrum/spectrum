@@ -188,23 +188,23 @@ export const getCommunityProfile = graphql(
   profileQueryOptions
 );
 
-export const getFrequencyInfo = graphql(
-  gql`
-		query frequencyInfo($slug: String) {
-			community(slug: $slug) {
-        ...communityInfo
-        frequencyConnection {
-          edges {
-            node {
-              ...frequencyInfo
-              ...frequencyMetaData
-            }
+export const GET_COMMUNITY_FREQUENCIES_QUERY = gql`
+  query getCommunityFrequencies($slug: String) {
+    community(slug: $slug) {
+      ...communityInfo
+      frequencyConnection {
+        edges {
+          node {
+            ...frequencyInfo
+            ...frequencyMetaData
           }
         }
       }
-		}
-    ${frequencyInfoFragment}
-    ${communityInfoFragment}
-    ${frequencyMetaDataFragment}
-	`
-);
+    }
+  }
+  ${frequencyInfoFragment}
+  ${communityInfoFragment}
+  ${frequencyMetaDataFragment}
+`;
+
+export const getCommunityFrequencies = graphql(GET_COMMUNITY_FREQUENCIES_QUERY);

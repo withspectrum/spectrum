@@ -59,7 +59,6 @@ class CreateFrequencyModal extends Component {
       description,
     };
 
-    console.log('creating frequency with ', input);
     this.props
       .createFrequency(input)
       .then(frequency => {
