@@ -33,6 +33,7 @@ const getCommunitiesByUser = (uid: string) => {
   return db
     .table('communities')
     .filter(community => community('members').contains(uid))
+    .orderBy('createdAt')
     .run();
 };
 
@@ -281,7 +282,7 @@ const getAllCommunityStories = (id: string): Promise<Array<any>> => {
       .pluck({ left: true, right: { community: true } })
       .zip()
       // Filter by the community
-      .getAll(id, { index: 'community' })
+      .filter({ community: id })
       // Don't send the community back
       .without('community')
       .run()
