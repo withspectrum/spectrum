@@ -54,6 +54,12 @@ module.exports = {
           return;
         }
 
+        // if the person owns the community, they have accidentally triggered
+        // a join or leave action, which isn't allowed
+        if (community.owners.indexOf(user.uid) > -1) {
+          return new Error("Owners of a community can't join or leave");
+        }
+
         if (communities[0].members.indexOf(user.uid) > -1) {
           return leaveCommunity(id, user.uid)
             .then(community => {

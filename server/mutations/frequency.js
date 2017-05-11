@@ -69,6 +69,12 @@ module.exports = {
           return;
         }
 
+        // if the person owns the frequency, they have accidentally triggered
+        // a join or leave action, which isn't allowed
+        if (frequency.owners.indexOf(user.uid) > -1) {
+          return new Error("Owners of a frequency can't join or leave");
+        }
+
         if (frequency.subscribers.indexOf(user.uid) > -1) {
           return unsubscribeFrequency(id, user.uid)
             .then(frequency => {
