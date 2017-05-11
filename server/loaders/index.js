@@ -1,5 +1,8 @@
 // @flow
-import { __createUserLoader, __createUserStoryCountLoader } from './user';
+import {
+  __createUserLoader,
+  __createUserStoryCountLoader,
+} from './user-loader';
 import { __createStoryLoader } from './story';
 import { __createNotificationLoader } from './notification';
 import { __createFrequencyLoader } from './frequency';
