@@ -4,6 +4,10 @@ import {
   editCommunity,
   deleteCommunity,
   getCommunities,
+  joinCommunity,
+  leaveCommunity,
+  subscribeToDefaultFrequencies,
+  unsubscribeFromAllFrequenciesInCommunity,
 } from '../models/community';
 import type {
   CreateCommunityArguments,
@@ -41,6 +45,38 @@ module.exports = {
         }
 
         return new Error('Not allowed to do that!');
+      });
+    },
+    toggleCommunityMembership: (_: any, { id }: string, { user }: Context) => {
+      return getCommunities([id]).then(communities => {
+        if (!communities[0]) {
+          // todo handle error if community doesn't exist
+          return;
+        }
+
+        if (communities[0].members.indexOf(user.uid) > -1) {
+          return leaveCommunity(id, user.uid)
+            .then(community => {
+              return Promise.all([
+                community,
+                unsubscribeFromAllFrequenciesInCommunity(id, user.uid),
+              ]);
+            })
+            .then(data => data[0]);
+        } else {
+          return (
+            joinCommunity(id, user.uid)
+              .then(community => {
+                return Promise.all([
+                  community,
+                  subscribeToDefaultFrequencies(id, user.uid),
+                ]);
+              })
+              //return only the community
+              //TODO: also return the frequency for the client side store update
+              .then(data => data[0])
+          );
+        }
       });
     },
   },

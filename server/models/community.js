@@ -3,8 +3,10 @@
  * Storing and retrieving communities
  */
 const { db } = require('./db');
+// $FlowFixMe
 import { UserError } from 'graphql-errors';
-import { createFrequency } from './frequency';
+import { createFrequency, unsubscribeFrequency } from './frequency';
+import { uploadCommunityPhoto, generateImageUrl } from '../utils/s3';
 
 type GetCommunityByIdArgs = {
   id: string,
@@ -55,6 +57,8 @@ export type CreateCommunityArguments = {
     name: string,
     slug: string,
     description: string,
+    website: string,
+    file: Object,
   },
 };
 
@@ -63,12 +67,16 @@ export type EditCommunityArguments = {
     name: string,
     slug: string,
     description: string,
+    website: string,
+    file: Object,
     id: string,
   },
 };
 
 const createCommunity = (
-  { input: { name, slug, description } }: CreateCommunityArguments,
+  {
+    input: { name, slug, description, website, file },
+  }: CreateCommunityArguments,
   creatorId: string
 ) => {
   return db
@@ -79,6 +87,7 @@ const createCommunity = (
         slug,
         name,
         description,
+        website,
         members: [creatorId],
         owners: [creatorId],
       },
@@ -86,8 +95,44 @@ const createCommunity = (
     )
     .run()
     .then(result => result.changes[0].new_val)
-    .then(community =>
-      Promise.all([
+    .then(community => {
+      // if no file was uploaded, skip this step
+      if (!file) return Promise.all([community]);
+
+      // if a file was uploaded, upload it to s3
+      if (file) {
+        return Promise.all([
+          community,
+          uploadCommunityPhoto(file, community, data => {
+            // returns the imgix path for the final image
+            const photoURL = generateImageUrl(data.path);
+            // update the community with the photoURL
+            return (
+              db
+                .table('communities')
+                .get(community.id)
+                .update(
+                  {
+                    photoURL,
+                  },
+                  { returnChanges: true }
+                )
+                .run()
+                // return the resulting community with the photoURL set
+                .then(
+                  result =>
+                    (result.changes.length > 0
+                      ? result.changes[0].new_val
+                      : db.table('communities').get(community.id).run())
+                )
+            );
+          }),
+        ]);
+      }
+    })
+    .then(([community]) => {
+      // create a default 'general' frequency in the newly created community
+      return Promise.all([
         community,
         createFrequency(
           {
@@ -98,15 +143,15 @@ const createCommunity = (
               community: community.id,
             },
           },
-          creatorId
+          creatorId // community owner owns the frequency by default
         ),
-      ])
-    )
-    .then(([community]) => community);
+      ]);
+    })
+    .then(data => data[0]); // return community object
 };
 
 const editCommunity = ({
-  input: { name, slug, description, id },
+  input: { name, slug, description, website, file, id },
 }: EditCommunityArguments) => {
   return db
     .table('communities')
@@ -117,18 +162,53 @@ const editCommunity = ({
         name,
         slug,
         description,
+        website,
       });
     })
-    .then(obj => {
-      return db
-        .table('communities')
-        .get(id)
-        .update({ ...obj }, { returnChanges: true })
-        .run()
-        .then(result => {
-          return result.changes[0].new_val;
-        });
-    });
+    .then(community => {
+      // if no file was uploaded, update the community with new string values
+      if (!file) {
+        return Promise.all([
+          db
+            .table('communities')
+            .get(id)
+            .update({ ...community }, { returnChanges: true })
+            .run()
+            .then(result => result.changes[0].new_val),
+        ]);
+      }
+
+      if (file) {
+        return Promise.all([
+          uploadCommunityPhoto(file, community, data => {
+            // returns the imgix path for the final image
+            const photoURL = generateImageUrl(data.path);
+            // update the community with the photoURL
+            return (
+              db
+                .table('communities')
+                .get(community.id)
+                .update(
+                  {
+                    ...community,
+                    photoURL,
+                  },
+                  { returnChanges: true }
+                )
+                .run()
+                // return the resulting community with the photoURL set
+                .then(
+                  result =>
+                    (result.changes.length > 0
+                      ? result.changes[0].new_val
+                      : db.table('communities').get(community.id).run())
+                )
+            );
+          }),
+        ]);
+      }
+    })
+    .then(data => data[0]);
 };
 
 const deleteCommunity = id => {
@@ -146,6 +226,44 @@ const deleteCommunity = id => {
         return db.table('frequencies').filter({ community }).delete().run();
       }
     });
+};
+
+const leaveCommunity = (id, uid) => {
+  return db
+    .table('communities')
+    .get(id)
+    .update(
+      row => ({
+        members: row('members').filter(item => item.ne(uid)),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        (changes.length > 0
+          ? changes[0].new_val
+          : db.table('communities').get(id).run())
+    );
+};
+
+const joinCommunity = (id, uid) => {
+  return db
+    .table('communities')
+    .get(id)
+    .update(
+      row => ({
+        members: row('members').append(uid),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        (changes.length > 0
+          ? changes[0].new_val
+          : db.table('communities').get(id).run())
+    );
 };
 
 const getAllCommunityStories = (id: string): Promise<Array<any>> => {
@@ -166,6 +284,60 @@ const getAllCommunityStories = (id: string): Promise<Array<any>> => {
   );
 };
 
+const subscribeToDefaultFrequencies = (id: string, uid: string) => {
+  // TODO: Handle default frequencies as set by the community owner. For now
+  // we treat the 'general' frequency as default
+  return db
+    .table('frequencies')
+    .filter({ community: id, slug: 'general' })
+    .update(
+      row => ({
+        subscribers: row('subscribers').append(uid),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        (changes.length > 0
+          ? changes[0].new_val
+          : db
+              .table('frequencies')
+              .filter({ community: id, slug: 'general' })
+              .run())
+    );
+};
+
+const unsubscribeFromAllFrequenciesInCommunity = (id: string, uid: string) => {
+  return db
+    .table('frequencies')
+    .filter({ community: id })
+    .run()
+    .then(frequencies => {
+      return frequencies.map(frequency =>
+        unsubscribeFrequency(frequency.id, uid)
+      );
+    });
+};
+
+const userIsMemberOfCommunity = (id: string, uid: string) => {
+  return db.table('communities').get(id).run().then(community => {
+    return community.members.indexOf(uid) > -1;
+  });
+};
+
+const userIsMemberOfAnyFrequencyInCommunity = (id: string, uid: string) => {
+  return db
+    .table('frequencies')
+    .filter({ community: id })
+    .run()
+    .then(frequencies => {
+      return frequencies.some(
+        frequency => frequency.subscribers.indexOf(uid) > -1
+      );
+    });
+};
+
 module.exports = {
   getCommunities,
   getCommunitiesBySlug,
@@ -174,5 +346,11 @@ module.exports = {
   createCommunity,
   editCommunity,
   deleteCommunity,
+  leaveCommunity,
+  joinCommunity,
+  subscribeToDefaultFrequencies,
+  unsubscribeFromAllFrequenciesInCommunity,
   getAllCommunityStories,
+  userIsMemberOfCommunity,
+  userIsMemberOfAnyFrequencyInCommunity,
 };

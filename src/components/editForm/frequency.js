@@ -5,32 +5,29 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 //$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
-import branch from 'recompose/branch';
-//$FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 import { Button, LinkButton } from '../buttons';
-import { LoadingCard } from '../loading';
 import { Input, UnderlineInput, TextArea } from '../formElements';
-import { StyledCard, Form, FormTitle, Description, Actions } from './style';
+import {
+  StyledCard,
+  Form,
+  FormTitle,
+  Description,
+  Actions,
+  Notice,
+} from './style';
 import {
   editFrequencyMutation,
   deleteFrequencyMutation,
 } from '../../api/frequency';
 
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingCard)
-);
-
 class FrequencyWithData extends Component {
   constructor(props) {
     super(props);
 
-    const { data: { frequency } } = this.props;
+    const { frequency } = this.props;
     this.state = {
       name: frequency.name,
       slug: frequency.slug,
@@ -63,7 +60,7 @@ class FrequencyWithData extends Component {
   save = e => {
     e.preventDefault();
     const { name, slug, description, id } = this.state;
-    const { data: { frequency: { community } } } = this.props;
+    const { frequency: { community } } = this.props;
     const input = {
       name,
       slug,
@@ -88,7 +85,8 @@ class FrequencyWithData extends Component {
     e.preventDefault();
 
     const {
-      data: { frequency, frequency: { community } },
+      frequency,
+      frequency: { community },
       deleteFrequency,
       history,
     } = this.props;
@@ -108,7 +106,7 @@ class FrequencyWithData extends Component {
 
   render() {
     const { name, slug, description } = this.state;
-    const { data: { frequency } } = this.props;
+    const { frequency } = this.props;
 
     if (!frequency) {
       return (
@@ -127,9 +125,14 @@ class FrequencyWithData extends Component {
         <FormTitle>Frequency Settings</FormTitle>
         <Form>
           <Input defaultValue={name} onChange={this.changeName}>Name</Input>
-          <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
-            {`sp.chat/${frequency.community.slug}/`}
-          </UnderlineInput>
+          {// general slug can't be edited
+          slug === 'general'
+            ? <UnderlineInput defaultValue={slug} disabled>
+                {`sp.chat/${frequency.community.slug}/`}
+              </UnderlineInput>
+            : <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
+                {`sp.chat/${frequency.community.slug}/`}
+              </UnderlineInput>}
           <TextArea
             defaultValue={description}
             onChange={this.changeDescription}
@@ -141,14 +144,19 @@ class FrequencyWithData extends Component {
             <Button onClick={this.save}>Save</Button>
           </Actions>
 
-          <Actions>
-            <LinkButton
-              color={'warn.alt'}
-              onClick={this.triggerDeleteFrequency}
-            >
-              Delete Frequency
-            </LinkButton>
-          </Actions>
+          {// general can't be deleted
+          slug !== 'general'
+            ? <Actions>
+                <LinkButton
+                  color={'warn.alt'}
+                  onClick={this.triggerDeleteFrequency}
+                >
+                  Delete Frequency
+                </LinkButton>
+              </Actions>
+            : <Notice>
+                The General frequency is the default frequency for your community. It can't be deleted, but you can still change the name and description.
+              </Notice>}
         </Form>
       </StyledCard>
     );
@@ -158,7 +166,6 @@ class FrequencyWithData extends Component {
 const Frequency = compose(
   deleteFrequencyMutation,
   editFrequencyMutation,
-  displayLoadingState,
   withRouter,
   pure
 )(FrequencyWithData);

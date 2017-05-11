@@ -12,8 +12,9 @@ import ModalContainer from '../modalContainer';
 import { LinkButton, Button } from '../../buttons';
 import { modalStyles } from '../styles';
 import { closeModal } from '../../../actions/modals';
+import { addToastWithTimeout } from '../../../actions/toasts';
 import { createCommunityMutation } from '../../../api/community';
-import { Form, Actions } from './style';
+import { Form, Actions, ImgPreview } from './style';
 import { Input, UnderlineInput, TextArea } from '../../formElements';
 
 class CreateCommunityModal extends Component {
@@ -21,6 +22,9 @@ class CreateCommunityModal extends Component {
     name: '',
     slug: '',
     description: '',
+    website: '',
+    image: '',
+    file: null,
   };
 
   close = () => {
@@ -48,35 +52,60 @@ class CreateCommunityModal extends Component {
     });
   };
 
+  changeWebsite = e => {
+    const website = e.target.value;
+    this.setState({
+      website,
+    });
+  };
+
+  setCommunityPhoto = e => {
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        image: reader.result,
+      });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   create = e => {
     e.preventDefault();
-    const { name, slug, description } = this.state;
+    const { name, slug, description, website, file } = this.state;
     const input = {
       name,
       slug,
       description,
+      website,
+      file,
     };
     this.props
       .createCommunity(input)
       .then(community => {
-        this.props.history.push(`/${community.slug}`);
+        this.props.history.push(`/${slug}`);
         this.close();
+        this.props.dispatch(
+          addToastWithTimeout('success', 'Community created!')
+        );
       })
       .catch(err => {
-        //TODO: Add dispatch for global error events
-        console.log('err in createCommunity', err);
+        this.props.dispatch(addToastWithTimeout('error', "You can't do that!"));
       });
   };
 
   render() {
     const { isOpen } = this.props;
-    const { name, slug, description } = this.state;
+    const { name, slug, description, image, website } = this.state;
     const styles = modalStyles();
 
     return (
       <Modal
         isOpen={isOpen}
-        contentLabel={'Create a Community'}
+        contentLabel={'Create a new community'}
         onRequestClose={this.close}
         shouldCloseOnOverlayClick={true}
         style={styles}
@@ -86,14 +115,17 @@ class CreateCommunityModal extends Component {
           We pass the closeModal dispatch into the container to attach
           the action to the 'close' icon in the top right corner of all modals
         */}
-        <ModalContainer title={'Create a Community'} closeModal={this.close}>
+        <ModalContainer
+          title={'Create a new community'}
+          closeModal={this.close}
+        >
           <Form>
             <Input
               defaultValue={name}
               onChange={this.changeName}
               autoFocus={true}
             >
-              Community Name
+              What is your community called?
             </Input>
             <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
               sp.chat/
@@ -102,8 +134,29 @@ class CreateCommunityModal extends Component {
               defaultValue={description}
               onChange={this.changeDescription}
             >
-              Description
+              Describe it in 140 characters or less
             </TextArea>
+
+            <Input
+              inputType="file"
+              accept=".png, .jpg, .jpeg, .gif"
+              defaultValue={name}
+              onChange={this.setCommunityPhoto}
+              multiple={false}
+            >
+              Add a logo or photo
+
+              {!image ? <span>add</span> : <ImgPreview src={image} />}
+            </Input>
+
+            <Input
+              defaultValue={website}
+              onChange={this.changeWebsite}
+              autoFocus={true}
+            >
+              Optional: Add your community's website
+            </Input>
+
             <Actions>
               <LinkButton color={'warn.alt'}>Cancel</LinkButton>
               <Button onClick={this.create}>Save</Button>

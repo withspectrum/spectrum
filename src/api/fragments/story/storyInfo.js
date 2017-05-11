@@ -9,6 +9,12 @@ export const storyInfoFragment = gql`
     modifiedAt
     published
     locked
+    isCreator
+    isFrequencyOwner
+    isCommunityOwner
+    participants {
+      ...userInfo
+    }
     content {
       title
       description

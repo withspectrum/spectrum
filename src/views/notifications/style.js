@@ -1,9 +1,13 @@
 import styled from 'styled-components';
-import { FlexRow, Gradient, Transition } from '../../components/globals';
+import {
+  FlexRow,
+  FlexCol,
+  Gradient,
+  Transition,
+} from '../../components/globals';
 import Card from '../../components/card';
 
 export const NotificationCard = styled(Card)`
-  margin-bottom: 16px;
   padding: 16px 24px 24px 16px;
 `;
 
@@ -12,6 +16,10 @@ export const ContentHeading = styled.h2`
   font-weight: 700;
   color: ${({ theme }) => theme.text.default};
   margin: 8px 0;
+`;
+
+export const NotificationListContentHeading = styled(ContentHeading)`
+  font-size: 16px;
 `;
 
 export const StatusBar = styled(FlexRow)`
@@ -30,12 +38,23 @@ export const Content = styled.div`
   width: 100%;
 `;
 
-export const Message = styled(Content)`
+export const NotificationListContainer = styled(FlexCol)`
+  flex: 0 1 480px;
+  overflow-y: scroll;
+`;
+
+export const NotificationListContent = styled(Content)`
+  margin-left: 0;
+  padding-left: 8px;
+`;
+
+export const Message = styled.p`
   font-weight: 400;
-  color: ${({ theme }) => theme.text.alt};
-  margin-left: 8px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: inherit;
+  margin-left: 16px;
   position: relative;
-  top: -1px;
 
   a {
     font-weight: 700;
@@ -43,7 +62,7 @@ export const Message = styled(Content)`
     position: relative;
 
     &:hover{
-      color: ${({ theme }) => theme.brand.alt};
+      color: inherit;
       transition: ${Transition.hover.on};
     }
   }
@@ -84,5 +103,29 @@ export const ChatMessage = styled.p`
     font-size: 11px;
     color: ${({ theme }) => theme.text.alt};
     font-weight: 600;
+  }
+`;
+
+export const NotificationListRow = styled(FlexRow)`
+  padding: 16px;
+  border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
+  align-items: center;
+  color: ${({ theme }) => theme.text.default};
+
+  b {
+    font-weight: 700;
+  }
+
+  div {
+    color: ${({ theme }) => theme.success.default};
+  }
+
+  &:hover {
+    background-color: ${({ theme }) => theme.brand.alt};
+    color: ${({ theme }) => theme.text.reverse};
+
+    div {
+      color: inherit;
+    }
   }
 `;

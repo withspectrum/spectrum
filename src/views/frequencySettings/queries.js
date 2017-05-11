@@ -23,5 +23,13 @@ export const getThisFrequency = graphql(
     ${frequencyInfoFragment}
     ${communityInfoFragment}
     ${frequencyMetaDataFragment}
-	`
+	`,
+  {
+    options: ({ match }) => ({
+      variables: {
+        slug: match.params.frequencySlug,
+        community: match.params.communitySlug,
+      },
+    }),
+  }
 );

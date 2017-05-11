@@ -17,7 +17,14 @@ export const getThisCommunity = graphql(
       }
 		}
     ${communityInfoFragment}
-	`
+	`,
+  {
+    options: props => ({
+      variables: {
+        slug: props.match.params.communitySlug,
+      },
+    }),
+  }
 );
 
 export const getFrequenciesByCommunity = graphql(

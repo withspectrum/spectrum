@@ -11,6 +11,7 @@ import renderComponent from 'recompose/renderComponent';
 import branch from 'recompose/branch';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
+import { toggleFrequencySubscriptionMutation } from '../../api/frequency';
 import { LoadingCard } from '../loading';
 import {
   ProfileHeader,
@@ -19,6 +20,7 @@ import {
   Subtitle,
   Description,
   Actions,
+  Action,
   ActionOutline,
 } from './style';
 import { MetaData } from './metaData';
@@ -47,6 +49,7 @@ type FrequencyProps = {
 const FrequencyWithData = ({
   data: { frequency },
   profileSize,
+  toggleFrequencySubscription,
 }: {
   data: { frequency: FrequencyProps },
   profileSize: ProfileSizeProps,
@@ -78,7 +81,8 @@ const FrequencyWithData = ({
 
       {componentSize !== 'mini' &&
         <Actions>
-          {frequency.isOwner &&
+          {// user owns the community, assumed member
+          frequency.isOwner &&
             <ActionOutline>
               <Link
                 to={`/${frequency.community.slug}/${frequency.slug}/settings`}
@@ -86,7 +90,26 @@ const FrequencyWithData = ({
                 Settings
               </Link>
             </ActionOutline>}
-          <ActionOutline>Follow</ActionOutline>
+
+          {// user is a member and doesn't own the community
+          frequency.isSubscriber &&
+            !frequency.isOwner &&
+            <ActionOutline
+              color={'text.alt'}
+              hoverColor={'warn.default'}
+              onClick={() => toggleFrequencySubscription({ id: frequency.id })}
+            >
+              Unfollow {frequency.name}
+            </ActionOutline>}
+
+          {// user is not a member and doesn't own the frequency
+          !frequency.isSubscriber &&
+            !frequency.isOwner &&
+            <Action
+              onClick={() => toggleFrequencySubscription({ id: frequency.id })}
+            >
+              Join {frequency.name}
+            </Action>}
         </Actions>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
@@ -95,5 +118,9 @@ const FrequencyWithData = ({
   );
 };
 
-const Frequency = compose(displayLoadingState, pure)(FrequencyWithData);
+const Frequency = compose(
+  toggleFrequencySubscriptionMutation,
+  displayLoadingState,
+  pure
+)(FrequencyWithData);
 export default Frequency;

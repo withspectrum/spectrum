@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Tooltip, Onboarding } from './globals';
+import { Tooltip } from './globals';
 
 /* eslint no-eval: 0 */
 
@@ -13,14 +13,10 @@ export const InlineSvg = styled.svg`
   height: 100%;
   width: 100%;
   color: inherit;
-  transition: all 0.3s ease-out;
   fill: ${props => (props.color ? eval(`props.theme.${props.color}`) : 'currentColor')};
 
   &:hover {
-    transition: all 0.2s ease-in;
-    transform: ${props => (props.scaleOnHover ? `scale(1.05)` : `scale(1)`)};
     fill: ${props => (props.hoverColor ? eval(`props.theme.${props.hoverColor}`) : `currentColor`)};
-		cursor: pointer;
 	}
 `;
 
@@ -32,9 +28,8 @@ export const SvgWrapper = styled.div`
   min-width: ${props => (props.size ? `${props.size}px` : '32px')};
   min-height: ${props => (props.size ? `${props.size}px` : '32px')};
   position: relative;
-  color: ${props => (props.color ? eval(`props.theme.${props.color}`) : `currentColor`)};
+  color: ${props => (props.color ? eval(`props.theme.${props.color}`) : `inherit`)};
   ${props => (props.tipText && !props.onboarding ? Tooltip(props) : '')};
-  ${props => (props.onboarding ? Onboarding(props) : '')};
 `;
 
 class Icon extends React.Component {
@@ -298,6 +293,16 @@ class Icon extends React.Component {
             <path d="M11.822,26.258c-0.117,0.438 -0.514,0.742 -0.966,0.742c-0.658,0 -1.136,-0.624 -0.966,-1.259l0.475,-1.775c0.143,-0.534 0.692,-0.851 1.225,-0.708c0.534,0.143 0.85,0.692 0.707,1.225l-0.475,1.775Z" />
           </g>
         );
+      case 'profile':
+        return (
+          <g>
+            <path d="M19,14c0,1.657 -1.343,3 -3,3c-1.657,0 -3,-1.343 -3,-3c0,-1.657 1.343,-3 3,-3c1.657,0 3,1.343 3,3Zm0.334,3.726c1.022,-0.916 1.666,-2.246 1.666,-3.726c0,-2.761 -2.239,-5 -5,-5c-2.762,0 -5,2.239 -5,5c0,1.48 0.643,2.81 1.665,3.726c-2.063,0.947 -3.654,2.747 -4.322,4.948c0.201,0.712 0.673,0.939 1.307,1.065c0.26,0.052 0.505,-0.128 0.578,-0.383c0.714,-2.514 3.028,-4.356 5.772,-4.356c2.743,0 5.057,1.842 5.772,4.356c0.072,0.255 0.317,0.435 0.577,0.383c0.634,-0.126 1.106,-0.353 1.307,-1.065c-0.667,-2.201 -2.258,-4.001 -4.322,-4.948Z" />
+            <path
+              id="path1_fill"
+              d="M25.698,22.196c0.248,-1.511 0.302,-3.475 0.302,-6.196c0,-2.721 -0.053,-4.685 -0.302,-6.196c-0.235,-1.45 -0.6,-2.127 -0.987,-2.515c-0.388,-0.387 -1.065,-0.752 -2.515,-0.987c-1.511,-0.249 -3.475,-0.302 -6.196,-0.302c-2.721,0 -4.685,0.053 -6.196,0.302c-1.45,0.235 -2.127,0.6 -2.515,0.987c-0.387,0.388 -0.752,1.065 -0.987,2.515c-0.249,1.511 -0.302,3.475 -0.302,6.196c0,2.721 0.053,4.685 0.302,6.196c0.235,1.45 0.6,2.127 0.987,2.515c0.388,0.387 1.065,0.752 2.515,0.987c1.511,0.249 3.475,0.302 6.196,0.302c2.721,0 4.685,-0.053 6.196,-0.302c1.45,-0.235 2.127,-0.6 2.515,-0.987c0.387,-0.388 0.752,-1.065 0.987,-2.515Zm-9.698,5.804c11,0 12,-1 12,-12c0,-11 -1,-12 -12,-12c-11,0 -12,1 -12,12c0,11 1,12 12,12Z"
+            />
+          </g>
+        );
       default:
         return;
     }
@@ -338,9 +343,6 @@ class Icon extends React.Component {
 
 Icon.defaultProps = {
   size: 32,
-  color: 'text.alt',
-  hoverColor: 'brand.default',
-  scaleOnHover: false,
 };
 
 Icon.propTypes = {
@@ -348,7 +350,6 @@ Icon.propTypes = {
   size: React.PropTypes.number.isRequired,
   color: React.PropTypes.string,
   hoverColor: React.PropTypes.string,
-  scaleOnHover: React.PropTypes.bool,
 };
 
 export default Icon;

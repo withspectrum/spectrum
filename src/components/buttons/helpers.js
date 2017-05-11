@@ -17,13 +17,13 @@ export const getSpinnerColor = (color: String, type: String): String => {
         return 'text.alt';
       }
       case 'brand': {
-        return 'brand.default';
+        return 'brand.alt';
       }
       case 'pro': {
         return 'space.light';
       }
       case 'warn': {
-        return 'warn.default';
+        return 'warn.alt';
       }
       case 'success': {
         return 'success.default';

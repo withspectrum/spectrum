@@ -1,6 +1,5 @@
 //@flow
 import React from 'react';
-import { Link } from 'react-router-dom';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
@@ -15,93 +14,19 @@ import { Column } from '../../components/column';
 import { FlexRow } from '../../components/globals';
 import { LoadingCard } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
+import { NotificationCard, Content, ContentHeading, Message } from './style';
 import {
-  NotificationCard,
-  Content,
-  ContentHeading,
-  Message,
-  HorizontalRuleWithIcon,
-  ChatMessage,
-} from './style';
+  constructMessage,
+  constructContent,
+  getIconByType,
+  getColorByType,
+} from '../../helpers/notifications';
 import { getNotifications } from './queries';
 
 const displayLoadingState = branch(
   props => props.data.loading,
   renderComponent(LoadingCard)
 );
-
-const icons = {
-  NEW_STORY: 'write',
-  NEW_MESSAGE: 'messages',
-  default: 'notification',
-};
-
-const colors = {
-  NEW_STORY: 'success.default',
-  NEW_MESSAGE: 'warn.alt',
-};
-
-const getIconByType = type => {
-  return icons[type] || icons.default;
-};
-
-const getColorByType = type => {
-  return colors[type];
-};
-
-const constructMessage = notification => {
-  const { type, sender, community, frequency, story } = notification;
-  switch (type) {
-    case 'NEW_STORY':
-      return (
-        <span>
-          <Link to={`/@${sender.username}`}>{sender.displayName}</Link>
-          {' '}posted a new thread in{' '}
-          <Link to={`/${community.slug}/${frequency.slug}`}>
-            {community.name}/{frequency.name}
-          </Link>
-          :
-        </span>
-      );
-    case 'NEW_MESSAGE':
-      return (
-        <span>
-          <Link to={`/@${sender.username}`}>{sender.displayName}</Link>
-          {' '}replied to your{' '}
-          <Link to={`/story/${story.id}`}>thread</Link>:
-        </span>
-      );
-    default:
-      return;
-  }
-};
-
-const constructContent = notification => {
-  const { type, sender, content } = notification;
-  switch (type) {
-    case 'NEW_STORY':
-      return <p>{content.excerpt}</p>;
-    case 'NEW_MESSAGE':
-      return (
-        <div>
-          <HorizontalRuleWithIcon>
-            <hr />
-            <Icon
-              icon={'messages'}
-              color="border.default"
-              hoverColor="border.default"
-            />
-            <hr />
-          </HorizontalRuleWithIcon>
-          <ChatMessage data-from={sender.displayName}>
-            {content.excerpt}
-          </ChatMessage>
-        </div>
-      );
-    default:
-      return;
-  }
-};
 
 const NotificationsPure = props => {
   const { data: { notifications: { edges } } } = props;

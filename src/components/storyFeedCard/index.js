@@ -61,17 +61,16 @@ const StoryFeedCardPure = (props: Object): React$Element<any> => {
     }
   };
 
-  const participantList = props.data.messageConnection.edges;
+  const participantList = props.data.participants;
 
   const messageAvatars = list => {
-    return list.map((edge, i) => {
-      const participant = edge.node.sender;
+    return list.map(participant => {
       return (
         <Participant
           onClick={() => openUserProfileModal(participant)}
           src={participant.photoURL}
           role="presentation"
-          key={i}
+          key={participant.uid}
         />
       );
     });

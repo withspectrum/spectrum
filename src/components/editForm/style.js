@@ -10,7 +10,8 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-self: stretch;
-  flex: 1 0 auto;
+  flex: 1 0 100%;
+  max-width: 100%;
 `;
 
 export const FormTitle = styled.h1`
@@ -44,4 +45,22 @@ export const Actions = styled(FlexRow)`
   button + button {
     margin-left: 8px;
   }
+`;
+
+export const ImgPreview = styled.img`
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 4px;
+`;
+
+export const Notice = styled.span`
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: ${props => props.theme.text.alt};
+  background: ${props => props.theme.bg.wash};
+  border-radius: 4px;
+  margin-top: 24px;
+  line-height: 1.4;
 `;

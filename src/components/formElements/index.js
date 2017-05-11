@@ -20,6 +20,7 @@ type InputProps = {
   onChange?: Function,
   autofocus?: Boolean,
   checked?: Boolean,
+  disabled: ?Boolean,
 };
 
 export const Input = (props: InputProps) => {
@@ -81,7 +82,7 @@ export const TextArea = (props: InputProps) => {
 
 export const UnderlineInput = (props: InputProps) => {
   return (
-    <StyledPrefixLabel>
+    <StyledPrefixLabel disabled={props.disabled}>
       {props.children}
       <StyledUnderlineInput
         type="text"
@@ -89,6 +90,7 @@ export const UnderlineInput = (props: InputProps) => {
         defaultValue={props.defaultValue}
         onChange={props.onChange}
         autofocus={props.autofocus}
+        disabled={props.disabled}
       />
     </StyledPrefixLabel>
   );

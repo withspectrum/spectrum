@@ -22,14 +22,7 @@ const CREATE_COMMUNITY_OPTIONS = {
         variables: {
           input,
         },
-      })
-        .then(({ data }) => {
-          return data.createCommunity;
-        })
-        .catch(error => {
-          // TODO: Add dispatch for global errors
-          console.log('error creating community', error);
-        }),
+      }),
   }),
 };
 
@@ -54,14 +47,7 @@ const DELETE_COMMUNITY_OPTIONS = {
         variables: {
           id,
         },
-      })
-        .then(({ data }) => {
-          return data.deleteCommunity;
-        })
-        .catch(error => {
-          // TODO: Add dispatch for global errors
-          console.log('error editing community', error);
-        }),
+      }),
   }),
 };
 
@@ -89,18 +75,45 @@ const EDIT_COMMUNITY_OPTIONS = {
         variables: {
           input,
         },
-      })
-        .then(({ data }) => {
-          return data.editCommunity;
-        })
-        .catch(error => {
-          // TODO: Add dispatch for global errors
-          console.log('error editing community', error);
-        }),
+      }),
   }),
 };
 
 export const editCommunityMutation = graphql(
   EDIT_COMMUNITY_MUTATION,
   EDIT_COMMUNITY_OPTIONS
+);
+
+/*
+  Join or leave a community
+*/
+const TOGGLE_COMMUNITY_MEMBERSHIP_MUTATION = gql`
+  mutation toggleCommunityMembership($id: ID!) {
+    toggleCommunityMembership (id: $id) {
+      ...communityInfo
+    }
+  }
+  ${communityInfoFragment}
+`;
+
+const TOGGLE_COMMUNITY_MEMBERSHIP_OPTIONS = {
+  props: ({ id, mutate }) => ({
+    toggleCommunityMembership: ({ id }) =>
+      mutate({
+        variables: {
+          id,
+        },
+      })
+        .then(({ data }) => {
+          console.log('success ', data);
+        })
+        .catch(err => {
+          console.log('error joining or leaving community ', err);
+        }),
+  }),
+};
+
+export const toggleCommunityMembershipMutation = graphql(
+  TOGGLE_COMMUNITY_MEMBERSHIP_MUTATION,
+  TOGGLE_COMMUNITY_MEMBERSHIP_OPTIONS
 );

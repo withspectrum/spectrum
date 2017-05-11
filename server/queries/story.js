@@ -3,7 +3,9 @@
 /**
  * Story query resolvers
  */
-const { getFrequency } = require('../models/frequency');
+const { getFrequencies } = require('../models/frequency');
+const { getCommunities } = require('../models/community');
+const { getUsers } = require('../models/user');
 const {
   getMessagesByLocationAndThread,
   getMessageCount,
@@ -30,6 +32,50 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.community.load(community),
+    participants: ({ id, author }: { id: String, author: string }) => {
+      return getMessagesByLocationAndThread('messages', id)
+        .then(messages =>
+          messages
+            .map(
+              // create an array of user ids
+              message => message.sender
+            )
+            .filter(
+              // remove the author from the list
+              message => message !== author
+            )
+            .filter(
+              (id, index, self) =>
+                // get distinct ids in the array
+                self.indexOf(id) === index
+            )
+        )
+        .then(users => getUsers(users));
+    },
+    isCreator: ({ author }: { author: String }, _: any, { user }: Context) => {
+      if (!author) return false;
+      return user.uid === author;
+    },
+    isFrequencyOwner: (
+      { frequency }: { frequency: String },
+      _: any,
+      { user }: Context
+    ) => {
+      if (!frequency) return false;
+      return getFrequencies([frequency]).then(
+        data => data[0].subscribers.indexOf(user.uid) > -1
+      );
+    },
+    isCommunityOwner: (
+      { community }: { community: String },
+      _: any,
+      { user }: Context
+    ) => {
+      if (!community) return false;
+      return getCommunities([community]).then(
+        data => data[0].members.indexOf(user.uid) > -1
+      );
+    },
     messageConnection: (
       { id }: { id: String },
       { first = 100, after }: PaginationOptions
