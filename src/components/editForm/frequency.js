@@ -5,15 +5,10 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 //$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
-import branch from 'recompose/branch';
-//$FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 import { Button, LinkButton } from '../buttons';
-import { LoadingCard } from '../loading';
 import { Input, UnderlineInput, TextArea } from '../formElements';
 import {
   StyledCard,
@@ -28,16 +23,11 @@ import {
   deleteFrequencyMutation,
 } from '../../api/frequency';
 
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingCard)
-);
-
 class FrequencyWithData extends Component {
   constructor(props) {
     super(props);
 
-    const { data: { frequency } } = this.props;
+    const { frequency } = this.props;
     this.state = {
       name: frequency.name,
       slug: frequency.slug,
@@ -70,7 +60,7 @@ class FrequencyWithData extends Component {
   save = e => {
     e.preventDefault();
     const { name, slug, description, id } = this.state;
-    const { data: { frequency: { community } } } = this.props;
+    const { frequency: { community } } = this.props;
     const input = {
       name,
       slug,
@@ -95,7 +85,8 @@ class FrequencyWithData extends Component {
     e.preventDefault();
 
     const {
-      data: { frequency, frequency: { community } },
+      frequency,
+      frequency: { community },
       deleteFrequency,
       history,
     } = this.props;
@@ -115,7 +106,7 @@ class FrequencyWithData extends Component {
 
   render() {
     const { name, slug, description } = this.state;
-    const { data: { frequency } } = this.props;
+    const { frequency } = this.props;
 
     if (!frequency) {
       return (
@@ -175,7 +166,6 @@ class FrequencyWithData extends Component {
 const Frequency = compose(
   deleteFrequencyMutation,
   editFrequencyMutation,
-  displayLoadingState,
   withRouter,
   pure
 )(FrequencyWithData);

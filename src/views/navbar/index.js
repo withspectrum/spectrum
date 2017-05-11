@@ -24,8 +24,6 @@ import NotificationList from '../notifications/components/notificationList';
 
 import UserAvatar from '../user/components/userAvatar';
 
-import ProfileMenu from '../user/components/profileMenu';
-
 class Navbar extends Component {
   render() {
     const { match, currentUser } = this.props;
@@ -110,11 +108,11 @@ class Navbar extends Component {
                 data-mobileWidth={'half'}
                 to={`/users/me`}
               >
-                <UserAvatar user={currentUser} />
+
                 <LabelForTab>Profile</LabelForTab>
               </IconLink>
               <Dropdown width={'240px'}>
-                <ProfileMenu user={currentUser} />
+
                 <DropdownFooter>
                   <Button color={'warn'}>Log Out</Button>
                 </DropdownFooter>

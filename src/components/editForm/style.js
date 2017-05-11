@@ -11,6 +11,7 @@ export const Form = styled.form`
   flex-direction: column;
   align-self: stretch;
   flex: 1 0 100%;
+  max-width: 100%;
 `;
 
 export const FormTitle = styled.h1`
