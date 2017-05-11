@@ -6,7 +6,10 @@ const { db } = require('./db');
 import { UserError } from 'graphql-errors';
 
 const getFrequenciesByCommunity = (community: string) => {
-  return db.table('frequencies').filter({ community }).run();
+  return db
+    .table('frequencies')
+    .getAll(community, { index: 'community ' })
+    .run();
 };
 
 const getFrequenciesByUser = (uid: string) => {
@@ -50,7 +53,7 @@ const getFrequencies = (ids: Array<string>) => {
 const getFrequencyMetaData = (id: string) => {
   const getStoryCount = db
     .table('stories')
-    .filter({ frequency: id })
+    .getAll(id, { index: 'frequency' })
     .count()
     .run();
   const getSubscriberCount = db

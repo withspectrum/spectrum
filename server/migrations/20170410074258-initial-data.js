@@ -17,6 +17,8 @@ exports.up = function(r, conn) {
       // Create secondary indexes
       .then(() =>
         Promise.all([
+          // index user by username
+          r.table('user').indexCreate('username', r.row('username')).run(conn),
           r
             .table('notifications')
             .indexCreate(
@@ -27,6 +29,12 @@ exports.up = function(r, conn) {
               { multi: true }
             )
             .run(conn),
+          // index notifications by story
+          r
+            .table('notifications')
+            .indexCreate('story', r.row('story'))
+            .run(conn),
+          // index stories by author
           r.table('stories').indexCreate('author', r.row('author')).run(conn),
           // index stories by frequency
           r
@@ -37,6 +45,11 @@ exports.up = function(r, conn) {
           r
             .table('reactions')
             .indexCreate('message', r.row('message'))
+            .run(conn),
+          // index frequencies by community
+          r
+            .table('frequencies')
+            .indexCreate('community', r.row('community'))
             .run(conn),
           // index messages by thread
           r.table('messages').indexCreate('thread', r.row('thread')).run(conn),

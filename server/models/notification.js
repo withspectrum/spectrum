@@ -13,7 +13,7 @@ const UNIQUE = (v, i, a) => a.indexOf(v) === i;
 const getParticipants = (story: string): Array<string> => {
   return db
     .table('messages')
-    .filter({ thread: story })
+    .getAll(story, { index: 'thread' })
     .withFields('sender')
     .run()
     .then(messages => messages.map(message => message.sender));
@@ -26,7 +26,7 @@ const getNotifications = (ids: Array<string>) => {
 const markNotificationsRead = (story: string) => {
   return db
     .table('notifications')
-    .filter({ story })
+    .getAll(story, { index: 'story' })
     .update({
       read: true,
     })
