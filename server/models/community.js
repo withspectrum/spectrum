@@ -332,10 +332,9 @@ const userIsMemberOfAnyFrequencyInCommunity = (id: string, uid: string) => {
     .filter({ community: id })
     .run()
     .then(frequencies => {
-      return frequencies.some(frequency => {
-        console.log(frequency, uid);
-        return frequency.subscribers.indexOf(uid) > -1;
-      });
+      return frequencies.some(
+        frequency => frequency.subscribers.indexOf(uid) > -1
+      );
     });
 };
 
