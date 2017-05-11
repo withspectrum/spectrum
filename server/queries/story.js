@@ -3,7 +3,8 @@
 /**
  * Story query resolvers
  */
-const { getFrequency } = require('../models/frequency');
+const { getFrequencies } = require('../models/frequency');
+const { getCommunities } = require('../models/community');
 const { getUsers } = require('../models/user');
 const {
   getMessagesByLocationAndThread,
@@ -50,6 +51,27 @@ module.exports = {
             )
         )
         .then(users => getUsers(users));
+    },
+    isCreator: ({ author }: { author: String }, _: any, { user }: Context) => {
+      return user.uid === author;
+    },
+    isFrequencyOwner: (
+      { frequency }: { frequency: String },
+      _: any,
+      { user }: Context
+    ) => {
+      return getFrequencies([frequency]).then(
+        data => data[0].subscribers.indexOf(user.uid) > -1
+      );
+    },
+    isCommunityOwner: (
+      { community }: { community: String },
+      _: any,
+      { user }: Context
+    ) => {
+      return getCommunities([community]).then(
+        data => data[0].members.indexOf(user.uid) > -1
+      );
     },
     messageConnection: (
       { id }: { id: String },
