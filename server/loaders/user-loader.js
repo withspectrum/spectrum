@@ -6,7 +6,7 @@ import type { Loader } from './types';
 export const __createUserLoader = () =>
   createLoader(users => getUsers(users), 'uid');
 
-export const __createUserStoryCountLoader = () =>
+export const __createStoryCountLoader = () =>
   createLoader(users => getUsersStoryCount(users), 'uid');
 
 export default () => {
