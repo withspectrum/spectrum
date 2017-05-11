@@ -8,7 +8,7 @@ import { UserError } from 'graphql-errors';
 const getFrequenciesByCommunity = (community: string) => {
   return db
     .table('frequencies')
-    .getAll(community, { index: 'community ' })
+    .getAll(community, { index: 'community' })
     .run();
 };
 

@@ -39,7 +39,7 @@ const getCommunitiesByUser = (uid: string) => {
 const getCommunityMetaData = (id: String) => {
   const getFrequencyCount = db
     .table('frequencies')
-    .getAll(id, { index: 'community ' })
+    .getAll(id, { index: 'community' })
     .count()
     .run();
   const getMemberCount = db
@@ -225,7 +225,7 @@ const deleteCommunity = id => {
         const community = changes[0].old_val.id;
         return db
           .table('frequencies')
-          .getAll(community, { index: 'community ' })
+          .getAll(community, { index: 'community' })
           .delete()
           .run();
       }
@@ -281,7 +281,7 @@ const getAllCommunityStories = (id: string): Promise<Array<any>> => {
       .pluck({ left: true, right: { community: true } })
       .zip()
       // Filter by the community
-      .getAll(id, { index: 'community ' })
+      .getAll(id, { index: 'community' })
       // Don't send the community back
       .without('community')
       .run()
@@ -315,7 +315,7 @@ const subscribeToDefaultFrequencies = (id: string, uid: string) => {
 const unsubscribeFromAllFrequenciesInCommunity = (id: string, uid: string) => {
   return db
     .table('frequencies')
-    .getAll(id, { index: 'community ' })
+    .getAll(id, { index: 'community' })
     .run()
     .then(frequencies => {
       return frequencies.map(frequency =>
@@ -333,7 +333,7 @@ const userIsMemberOfCommunity = (id: string, uid: string) => {
 const userIsMemberOfAnyFrequencyInCommunity = (id: string, uid: string) => {
   return db
     .table('frequencies')
-    .getAll(id, { index: 'community ' })
+    .getAll(id, { index: 'community' })
     .run()
     .then(frequencies => {
       return frequencies.some(
