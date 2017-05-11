@@ -31,6 +31,8 @@ export const getNotifications = graphql(
     			sender {
     				displayName
     				username
+            photoURL
+            uid
     			}
         }
       }
