@@ -7,6 +7,12 @@ import {
   unsubscribeFrequency,
   subscribeFrequency,
 } from '../models/frequency';
+import {
+  joinCommunity,
+  leaveCommunity,
+  userIsMemberOfCommunity,
+  userIsMemberOfAnyFrequencyInCommunity,
+} from '../models/community';
 import type {
   CreateFrequencyArguments,
   EditFrequencyArguments,
@@ -38,7 +44,13 @@ module.exports = {
       { user }: Context
     ) => {
       return getFrequencies([args.input.id]).then(frequencies => {
-        if (frequencies[0].owners.indexOf(user.uid) > -1) {
+        const frequency = frequencies[0];
+        if (!frequency) {
+          // todo handle error if frequency doesn't exist
+          return;
+        }
+
+        if (frequency.owners.indexOf(user.uid) > -1) {
           return editFrequency(args);
         }
 
@@ -51,15 +63,57 @@ module.exports = {
       { user }: Context
     ) => {
       return getFrequencies([id]).then(frequencies => {
-        if (!frequencies[0]) {
-          // todo handle error if community doesn't exist
+        const frequency = frequencies[0];
+        if (!frequency) {
+          // todo handle error if frequency doesn't exist
           return;
         }
 
-        if (frequencies[0].subscribers.indexOf(user.uid) > -1) {
-          return unsubscribeFrequency(id, user.uid);
+        if (frequency.subscribers.indexOf(user.uid) > -1) {
+          return unsubscribeFrequency(id, user.uid)
+            .then(frequency => {
+              return Promise.all([
+                frequency,
+                userIsMemberOfAnyFrequencyInCommunity(
+                  frequency.community,
+                  user.uid
+                ),
+              ]);
+            })
+            .then(([frequency, isMemberOfAnotherFrequency]) => {
+              if (isMemberOfAnotherFrequency) {
+                return Promise.all([frequency]);
+              }
+
+              if (!isMemberOfAnotherFrequency) {
+                return Promise.all([
+                  frequency,
+                  leaveCommunity(frequency.community, user.uid),
+                ]);
+              }
+            })
+            .then(data => data[0]); // return the frequency
         } else {
-          return subscribeFrequency(id, user.uid);
+          return subscribeFrequency(id, user.uid)
+            .then(frequency => {
+              return Promise.all([
+                frequency,
+                userIsMemberOfCommunity(frequency.community, user.uid),
+              ]);
+            })
+            .then(([frequency, isMember]) => {
+              if (isMember) {
+                return Promise.all([frequency]);
+              }
+
+              if (!isMember) {
+                return Promise.all([
+                  frequency,
+                  joinCommunity(frequency.community, user.uid),
+                ]);
+              }
+            })
+            .then(data => data[0]); // return the frequency
         }
       });
     },

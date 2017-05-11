@@ -6,6 +6,8 @@ import {
   getCommunities,
   joinCommunity,
   leaveCommunity,
+  subscribeToDefaultFrequencies,
+  unsubscribeFromAllFrequenciesInCommunity,
 } from '../models/community';
 import type {
   CreateCommunityArguments,
@@ -53,9 +55,27 @@ module.exports = {
         }
 
         if (communities[0].members.indexOf(user.uid) > -1) {
-          return leaveCommunity(id, user.uid);
+          return leaveCommunity(id, user.uid)
+            .then(community => {
+              return Promise.all([
+                community,
+                unsubscribeFromAllFrequenciesInCommunity(id, user.uid),
+              ]);
+            })
+            .then(data => data[0]);
         } else {
-          return joinCommunity(id, user.uid);
+          return (
+            joinCommunity(id, user.uid)
+              .then(community => {
+                return Promise.all([
+                  community,
+                  subscribeToDefaultFrequencies(id, user.uid),
+                ]);
+              })
+              //return only the community
+              //TODO: also return the frequency for the client side store update
+              .then(data => data[0])
+          );
         }
       });
     },

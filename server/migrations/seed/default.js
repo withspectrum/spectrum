@@ -35,8 +35,8 @@ const DEFAULT_COMMUNITIES = [
     name: 'Spectrum',
     slug: 'spectrum',
     description: 'The future of community.',
-    members: [DEFAULT_USERS.map(({ uid }) => uid)],
-    owners: [DEFAULT_USERS.map(({ uid }) => uid)],
+    members: DEFAULT_USERS.map(({ uid }) => uid),
+    owners: DEFAULT_USERS.map(({ uid }) => uid),
   },
 ];
 
