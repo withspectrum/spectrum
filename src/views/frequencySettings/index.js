@@ -19,7 +19,7 @@ const SettingsPure = ({ match, data, dispatch, history }) => {
     return <div>error</div>;
   }
 
-  if (!data.frequency.isOwner) {
+  if (!data.frequency.isOwner && !data.frequency.community.isOwner) {
     history.push('/');
     dispatch(addToastWithTimeout('error', "You can't do that!"));
   }
