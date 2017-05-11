@@ -86,7 +86,7 @@ class CreateCommunityModal extends Component {
     this.props
       .createCommunity(input)
       .then(community => {
-        this.props.history.push(`/${community.slug}`);
+        this.props.history.push(`/${slug}`);
         this.close();
         this.props.dispatch(
           addToastWithTimeout('success', 'Community created!')
