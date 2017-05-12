@@ -13,7 +13,7 @@ import Textarea from 'react-textarea-autosize';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 import { LinkButton } from '../buttons';
-import Editor, { Plain, Raw } from '../editor';
+import Editor, { fromPlainText, toJSON } from '../editor';
 import Icon from '../icons';
 import { LoadingCard } from '../loading';
 import { getComposerCommunitiesAndFrequencies } from './queries';
@@ -110,7 +110,7 @@ class StoryComposerWithData extends Component {
     this.state = {
       isOpen: false,
       title: '',
-      description: Plain.deserialize(''),
+      description: fromPlainText(''),
       availableCommunities,
       availableFrequencies,
       activeCommunity,
@@ -186,7 +186,7 @@ class StoryComposerWithData extends Component {
     const community = activeCommunity;
     const content = {
       title,
-      description: JSON.stringify(Raw.serialize(description, { terse: true })),
+      description: JSON.stringify(toJSON(description)),
       type: 'SLATE',
     };
 

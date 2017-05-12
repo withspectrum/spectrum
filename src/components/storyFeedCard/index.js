@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import sanitize from 'sanitize-html';
 import Remarkable from 'remarkable';
-import { Raw, Plain } from '../editor';
+import { toPlainText, toState } from '../editor';
 import { openModal } from '../../actions/modals';
 import {
   StyledStoryFeedCard,
@@ -59,7 +59,7 @@ const StoryFeedCardPure = (props: Object): React$Element<any> => {
     let md = props.data.content.description;
     if (props.data.content.type === 'SLATE') {
       // Convert Slate state to markdown string
-      md = Plain.serialize(Raw.deserialize(JSON.parse(md), { terse: true }));
+      md = toPlainText(toState(JSON.parse(md)));
     }
     // Render the markdown to HTML, then get rid of the HTML
     // TODO: There's hopefully a better way to do this

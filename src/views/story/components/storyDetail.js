@@ -11,7 +11,7 @@ import { setStoryLockMutation } from '../mutations';
 import { Card } from '../../../components/card';
 import { Button } from '../../../components/buttons';
 import Markdown from '../../../components/markdown';
-import { Raw, Plain } from '../../../components/editor';
+import { toPlainText, toState } from '../../../components/editor';
 
 const StoryDetailPure = ({ story, setStoryLock, dispatch, currentUser }) => {
   const storyLock = (id, value) =>
@@ -28,9 +28,7 @@ const StoryDetailPure = ({ story, setStoryLock, dispatch, currentUser }) => {
 
   let description = story.content.description;
   if (story.content.type === 'SLATE') {
-    description = Plain.serialize(
-      Raw.deserialize(JSON.parse(description), { terse: true })
-    );
+    description = toPlainText(toState(JSON.parse(description)));
   }
 
   return (

@@ -68,6 +68,12 @@ class Editor extends Component {
   }
 }
 
-export { Plain, Raw };
+const toJSON = (state: Object) => Raw.serialize(state, { terse: true });
+const toState = (json: Object) => Raw.deserialize(json, { terse: true });
+
+const toPlainText = (state: Object) => Plain.serialize(state);
+const fromPlainText = (string: string) => Plain.deserialize(string);
+
+export { toJSON, toState, toPlainText, fromPlainText };
 
 export default Editor;
