@@ -15,13 +15,9 @@ import { UserProfile, FrequencyProfile } from '../../../components/profile';
 import { getStory } from '../queries';
 import { displayLoadingState } from '../../../components/loading';
 
-const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
-});
-const MessagesWithCurrentUser = connect(mapStateToProps)(Messages);
-
 const StoryContainerPure = ({
   data: { story, subscribeToNewMessages, error, loading },
+  currentUser,
 }) => {
   if (error) {
     return <div>Error getting this story</div>;
@@ -40,13 +36,24 @@ const StoryContainerPure = ({
 
       <Column type="primary">
         <StoryDetail story={story} />
-        <MessagesWithCurrentUser id={story.id} />
-        <ChatInput thread={story.id} />
+        <Messages id={story.id} currentUser={currentUser} />
+        {// if user exists, and is either the story creator or a subscriber
+        // of the frequency the story was posted in, the user can see the
+        // chat input
+        currentUser &&
+          (story.isCreator || story.frequency.isSubscriber) &&
+          <ChatInput thread={story.id} />}
       </Column>
     </FlexContainer>
   );
 };
 
-export const StoryContainer = compose(getStory, displayLoadingState, pure)(
+const StoryContainer = compose(getStory, displayLoadingState, pure)(
   StoryContainerPure
 );
+
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+
+export default connect(mapStateToProps)(StoryContainer);

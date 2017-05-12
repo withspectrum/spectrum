@@ -114,6 +114,7 @@ export const Row = styled(ScrollRow)`
   flex: 0 0 320px;
   padding: 8px 16px 32px 16px;
   overflow-x: scroll;
+  align-items: flex-start;
 
   &:after, &:before{
     content: '';

@@ -54,6 +54,7 @@ const FrequencyWithData = ({
   profileSize,
   toggleFrequencySubscription,
   dispatch,
+  currentUser,
 }: {
   data: { frequency: FrequencyProps },
   profileSize: ProfileSizeProps,
@@ -101,6 +102,7 @@ const FrequencyWithData = ({
         </Description>}
 
       {componentSize !== 'mini' &&
+        currentUser &&
         <Actions>
           {// user owns the community, assumed member
           frequency.isOwner || frequency.community.isOwner
@@ -145,4 +147,9 @@ const Frequency = compose(
   displayLoadingState,
   pure
 )(FrequencyWithData);
-export default connect()(Frequency);
+
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+
+export default connect(mapStateToProps)(Frequency);

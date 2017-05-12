@@ -57,9 +57,11 @@ module.exports = {
         }));
     },
     isOwner: ({ owners }, _, { user }) => {
+      if (!user) return false;
       return owners.indexOf(user.uid) > -1;
     },
     isSubscriber: ({ subscribers }, _, { user }) => {
+      if (!user) return false;
       return subscribers.indexOf(user.uid) > -1;
     },
     community: (
