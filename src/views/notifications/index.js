@@ -4,16 +4,11 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import branch from 'recompose/branch';
-//$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import Icon from '../../components/icons';
 import { Column } from '../../components/column';
 import { FlexRow } from '../../components/globals';
-import { LoadingCard } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import { displayLoadingScreen } from '../../components/loading';
 import { NotificationCard, Content, ContentHeading, Message } from './style';

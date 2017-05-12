@@ -61,7 +61,6 @@ class FrequencyWithData extends Component {
   save = e => {
     e.preventDefault();
     const { name, slug, description, id } = this.state;
-    const { frequency: { community } } = this.props;
     const input = {
       name,
       slug,

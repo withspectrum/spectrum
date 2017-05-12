@@ -14,6 +14,7 @@ import { FlexContainer } from '../../../components/flexbox';
 import { UserProfile, FrequencyProfile } from '../../../components/profile';
 import { getStory } from '../queries';
 import { displayLoadingScreen } from '../../../components/loading';
+import { UpsellSignIn } from '../../../components/upsell';
 
 const StoryContainerPure = ({
   data: { story, subscribeToNewMessages, error, loading },
@@ -35,6 +36,7 @@ const StoryContainerPure = ({
       </Column>
 
       <Column type="primary">
+        {!currentUser && <UpsellSignIn />}
         <StoryDetail story={story} />
         <Messages id={story.id} currentUser={currentUser} />
         {// if user exists, and is either the story creator or a subscriber
