@@ -12,8 +12,12 @@ import {
 // TODO Fix for production
 const wsClient = new SubscriptionClient(`wss://${window.location.host}`);
 
+// In production the API is at the same URL, in development it's at a different port
+const API_URI = process.env.NODE_ENV === 'production'
+  ? '/api'
+  : 'http://localhost:3001/api';
 const networkInterface = createNetworkInterface({
-  uri: '/api',
+  uri: API_URI,
   opts: {
     credentials: 'include',
   },

@@ -89,6 +89,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=production node build-server/index.js",
+    "dev:client": "react-scripts start",
     "dev:server": "NODE_ENV=development nodemon server/index.js --watch server --exec babel-node --presets react-app",
     "build": "npm run build:server && react-scripts build",
     "prebuild:server": "rimraf build-server",

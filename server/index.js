@@ -2,9 +2,8 @@
 /**
  * The entry point for the server, this is where everything starts
  */
-const PORT = 3001;
-const HOST = 'localhost';
 const IS_PROD = process.env.NODE_ENV === 'production';
+const PORT = 3001;
 
 const path = require('path');
 const { createServer } = require('http');
@@ -36,7 +35,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: '/',
+    origin: IS_PROD ? '/' : 'http://localhost:3000',
     credentials: true,
   })
 );
@@ -73,6 +72,7 @@ app.use(passport.session());
 //   /auth/twitter/callback
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
+const LOGIN_REDIRECT = IS_PROD ? '/' : 'http://localhost:3000';
 // Twitter will redirect the user to this URL after approval.  Finish the
 // authentication process by attempting to obtain an access token.  If
 // access was granted, the user will be logged in.  Otherwise,
@@ -80,8 +80,8 @@ app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get(
   '/auth/twitter/callback',
   passport.authenticate('twitter', {
-    failureRedirect: '/',
-    successRedirect: '/',
+    failureRedirect: LOGIN_REDIRECT,
+    successRedirect: LOGIN_REDIRECT,
   })
 );
 app.use(
@@ -94,10 +94,14 @@ app.use(
     },
   }))
 );
-app.use(express.static(path.resolve(__dirname, '..', 'build')));
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
-});
+// In production use express to serve the React app
+// In development this is done by react-scripts, which starts its own server
+if (IS_PROD) {
+  app.use(express.static(path.resolve(__dirname, '..', 'build')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
+  });
+}
 
 import type { Loader } from './loaders/types';
 export type GraphQLContext = {
@@ -121,5 +125,4 @@ const subscriptionsServer = new SubscriptionServer(
 
 // Start database listeners
 listeners.start();
-console.log(`GraphQL server running at http://${HOST}:${PORT}`);
-console.log(`Websocket server running at ws://${HOST}:${PORT}`);
+console.log('GraphQL server running!');
