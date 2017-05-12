@@ -11,6 +11,14 @@ export const UpsellSignInContainer = styled(Card)`
   align-items: center;
 `;
 
+export const UpsellJoinContainer = styled(Card)`
+  padding: 16px 16px 28px;
+  margin-top: 16px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const Title = styled.h1`
   color: ${props => props.theme.text.default};
   font-weight: 700;
