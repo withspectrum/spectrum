@@ -11,7 +11,7 @@ import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
 import ListCard from './components/listCard';
 import { CommunityProfile } from '../../components/profile';
-import { displayLoadingCard } from '../../components/loading';
+import { displayLoadingScreen } from '../../components/loading';
 
 import {
   getCommunityStories,
@@ -57,7 +57,7 @@ const CommunityViewPure = ({ match, data: { community, error } }) => {
   );
 };
 
-export const CommunityView = compose(getCommunity, displayLoadingCard, pure)(
+export const CommunityView = compose(getCommunity, displayLoadingScreen, pure)(
   CommunityViewPure
 );
 export default CommunityView;
