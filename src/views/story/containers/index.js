@@ -16,7 +16,11 @@ import { FlexContainer } from '../../../components/flexbox';
 import { UserProfile, FrequencyProfile } from '../../../components/profile';
 import { getStory } from '../queries';
 import { displayLoadingScreen } from '../../../components/loading';
-import { UpsellSignIn, UpsellJoinFrequency } from '../../../components/upsell';
+import {
+  UpsellSignIn,
+  UpsellJoinFrequency,
+  Upsell404Story,
+} from '../../../components/upsell';
 
 const StoryContainerPure = ({
   data: { story, subscribeToNewMessages, error, loading },
@@ -25,11 +29,11 @@ const StoryContainerPure = ({
   toggleFrequencySubscription,
 }) => {
   if (error) {
-    return <div>Error getting this story</div>;
+    return <Upsell404Story />;
   }
 
   if (!story) {
-    return <div>This story doesn't exist</div>;
+    return <Upsell404Story />;
   }
 
   // show a full size profile for the frequency if the user hasn't joined it
