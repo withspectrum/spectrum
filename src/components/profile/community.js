@@ -51,6 +51,7 @@ const CommunityWithData = ({
   toggleCommunityMembership,
   data,
   dispatch,
+  currentUser,
 }: {
   data: { community: CommunityProps },
   profileSize: ProfileSizeProps,
@@ -118,6 +119,7 @@ const CommunityWithData = ({
         </Description>}
 
       {componentSize !== 'mini' &&
+        currentUser &&
         <Actions>
 
           {// user owns the community, assumed member
@@ -157,4 +159,8 @@ const Community = compose(
   displayLoadingState,
   pure
 )(CommunityWithData);
-export default connect()(Community);
+
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+export default connect(mapStateToProps)(Community);

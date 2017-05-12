@@ -8,7 +8,8 @@ import pure from 'recompose/pure';
 import branch from 'recompose/branch';
 //$FlowFixMe
 import renderComponent from 'recompose/renderComponent';
-
+// $FlowFixMe
+import { connect } from 'react-redux';
 import Icon from '../../components/icons';
 import { Column } from '../../components/column';
 import { FlexRow } from '../../components/globals';
@@ -28,8 +29,14 @@ const displayLoadingState = branch(
   renderComponent(LoadingCard)
 );
 
-const NotificationsPure = props => {
-  const { data: { notifications: { edges } } } = props;
+const NotificationsPure = ({ data, currentUser }) => {
+  if (!currentUser) {
+    window.location.href = '/';
+    return null;
+  }
+
+  const { notifications: { edges } } = data;
+
   return (
     <AppViewWrapper>
       <Column type={'primary'}>
@@ -58,4 +65,7 @@ const Notifications = compose(getNotifications, displayLoadingState, pure)(
   NotificationsPure
 );
 
-export default Notifications;
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+export default connect(mapStateToProps)(Notifications);
