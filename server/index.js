@@ -72,7 +72,6 @@ app.use(passport.session());
 //   /auth/twitter/callback
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
-const LOGIN_REDIRECT = IS_PROD ? '/' : 'http://localhost:3000/home';
 // Twitter will redirect the user to this URL after approval.  Finish the
 // authentication process by attempting to obtain an access token.  If
 // access was granted, the user will be logged in.  Otherwise,
@@ -80,8 +79,8 @@ const LOGIN_REDIRECT = IS_PROD ? '/' : 'http://localhost:3000/home';
 app.get(
   '/auth/twitter/callback',
   passport.authenticate('twitter', {
-    failureRedirect: LOGIN_REDIRECT,
-    successRedirect: LOGIN_REDIRECT,
+    failureRedirect: IS_PROD ? '/' : 'http://localhost:3000/',
+    successRedirect: IS_PROD ? '/home' : 'http://localhost:3000/home',
   })
 );
 app.use(
