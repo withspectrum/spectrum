@@ -97,7 +97,7 @@ const createFrequency = (
         slug,
         createdAt: new Date(),
         modifiedAt: new Date(),
-        community: community,
+        community,
         subscribers: [creatorId],
         owners: [creatorId],
       },
@@ -168,9 +168,9 @@ const unsubscribeFrequency = (id, uid) => {
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
-          : db.table('frequencies').get(id).run())
+          : db.table('frequencies').get(id).run()
     );
 };
 
@@ -187,9 +187,9 @@ const subscribeFrequency = (id, uid) => {
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
-          : db.table('frequencies').get(id).run())
+          : db.table('frequencies').get(id).run()
     );
 };
 
