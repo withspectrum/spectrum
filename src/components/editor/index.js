@@ -4,28 +4,15 @@ import { Editor as SlateEditor, Raw, Plain } from 'slate';
 import type { SlatePlugin } from 'slate-mentions/src/types';
 import MarkdownPlugin from 'slate-markdown';
 
-const initialState = Raw.deserialize(
-  {
-    nodes: [
-      {
-        kind: 'block',
-        type: 'paragraph',
-        nodes: [
-          {
-            kind: 'text',
-            text: '',
-          },
-        ],
-      },
-    ],
-  },
-  { terse: true, normalize: false }
-);
+const ENTER = 13;
+
+const initialState = Plain.deserialize('');
 
 type EditorProps = {
   markdown?: boolean,
   state?: Object,
   onChange?: Function,
+  onEnter?: Function,
 };
 
 class Editor extends Component {
@@ -48,10 +35,17 @@ class Editor extends Component {
     this.setState({ state });
   };
 
+  onKeyDown = e => {
+    if (e.which === ENTER) {
+      this.props.onEnter && this.props.onEnter(e);
+    }
+  };
+
   render() {
     const {
       state = this.state.state,
       onChange = this.onChange,
+      onEnter,
       // Don't pass these two down to the SlateEditor
       markdown,
       ...rest
@@ -61,6 +55,7 @@ class Editor extends Component {
       <SlateEditor
         state={state}
         onChange={onChange}
+        onKeyDown={onEnter && this.onKeyDown}
         plugins={this.state.plugins}
         {...rest}
       />
