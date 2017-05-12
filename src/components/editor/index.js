@@ -1,11 +1,8 @@
 // @flow
 import React, { Component } from 'react';
 import { Editor as SlateEditor, Raw } from 'slate';
-import MentionsPlugin from 'slate-mentions';
 import type { SlatePlugin } from 'slate-mentions/src/types';
 import MarkdownPlugin from 'slate-markdown';
-
-import Suggestions from './components/MentionSuggestions';
 
 const initialState = Raw.deserialize(
   {
@@ -32,53 +29,24 @@ type EditorProps = {
   onChange?: Function,
 };
 
-const suggestions = ['max', 'brian', 'bryn'];
-
 class Editor extends Component {
   props: EditorProps;
 
   state: {
     state: Object,
     plugins: Array<SlatePlugin | false>,
-    suggestions: ?Array<string>,
   };
 
   constructor(props: EditorProps) {
     super(props);
     this.state = {
       state: initialState,
-      suggestions,
-      plugins: [
-        props.mentions !== false &&
-          MentionsPlugin({
-            Mention: props => (
-              <span
-                {...props.attributes}
-                style={{ background: 'red', color: 'white' }}
-              >
-                {props.children}
-              </span>
-            ),
-            Suggestions,
-          }),
-        props.markdown !== false && MarkdownPlugin(),
-      ],
+      plugins: [props.markdown !== false && MarkdownPlugin()],
     };
   }
 
   onChange = (state: Object) => {
     this.setState({ state });
-  };
-
-  updateSuggestions = (value: string) => {
-    this.setState({
-      suggestions: null,
-    });
-    setTimeout(() => {
-      this.setState({
-        suggestions: suggestions.filter(text => text.indexOf(value) > -1),
-      });
-    }, 1000);
   };
 
   render() {
@@ -88,8 +56,6 @@ class Editor extends Component {
     return (
       <SlateEditor
         state={state}
-        suggestions={this.state.suggestions}
-        onMentionSearch={this.updateSuggestions}
         onChange={onChange}
         plugins={this.state.plugins}
       />
