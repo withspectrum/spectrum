@@ -44,7 +44,7 @@ if (!IS_PROD) {
     '/graphiql',
     graphiqlExpress({
       endpointURL: '/',
-      subscriptionsEndpoint: `ws://localhost:5000`,
+      subscriptionsEndpoint: `wss://localhost:3000`,
       query: `{\n  user(id: "58a023a4-912d-48fe-a61c-eec7274f7699") {\n    displayName\n    username\n    communities {\n      name\n      frequencies {\n        name\n        stories {\n          content {\n            title\n          }\n          messages {\n            message {\n              content\n            }\n          }\n        }\n      }\n    }\n  }\n}`,
     })
   );
@@ -72,7 +72,7 @@ app.use(passport.session());
 //   /auth/twitter/callback
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
-const LOGIN_REDIRECT = IS_PROD ? '/' : 'http://localhost:3000';
+const LOGIN_REDIRECT = IS_PROD ? '/' : 'http://localhost:3000/home';
 // Twitter will redirect the user to this URL after approval.  Finish the
 // authentication process by attempting to obtain an access token.  If
 // access was granted, the user will be logged in.  Otherwise,
