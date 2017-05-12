@@ -8,19 +8,27 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
 import { UserProfile } from '../../components/profile';
-import { getUserStories, getUserProfile } from './queries';
+import { displayLoadingScreen } from '../../components/loading';
+import { Upsell404User } from '../../components/upsell';
+import { getUserStories, getUser } from './queries';
 
 const StoryFeedWithData = compose(getUserStories)(StoryFeed);
 
-const UserProfileWithData = compose(getUserProfile)(UserProfile);
-
-const UserViewPure = ({ match }) => {
+const UserViewPure = ({ match, data: { user, error } }) => {
   const username = match.params.username;
+
+  if (error) {
+    return <Upsell404User username={username} />;
+  }
+
+  if (!user) {
+    return <Upsell404User username={username} />;
+  }
 
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <UserProfileWithData username={username} profileSize="full" />
+        <UserProfile data={{ user }} username={username} profileSize="full" />
       </Column>
 
       <Column type="primary" alignItems="center">
@@ -30,5 +38,7 @@ const UserViewPure = ({ match }) => {
   );
 };
 
-export const UserView = pure(UserViewPure);
+export const UserView = compose(getUser, displayLoadingScreen, pure)(
+  UserViewPure
+);
 export default UserView;

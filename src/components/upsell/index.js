@@ -122,3 +122,23 @@ export const Upsell404Community = ({ community, noPermission, create }) => {
     </UpsellFourOhFourContainer>
   );
 };
+
+export const Upsell404User = ({ username }) => {
+  const returnUrl = `/`;
+
+  const title = 'Oops, someone got lost!';
+
+  const subtitle = `We can't find anyone who answers to the name ${username}. Maybe they don't want to be found...`;
+
+  return (
+    <UpsellFourOhFourContainer>
+      <FourOhFourImage src="/img/login.svg" role="presentation" />
+      <Title>{title}</Title>
+      <Subtitle>{subtitle}</Subtitle>
+
+      <Button onClick={() => (window.location.href = returnUrl)}>
+        Take Me Home
+      </Button>
+    </UpsellFourOhFourContainer>
+  );
+};

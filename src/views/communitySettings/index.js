@@ -7,7 +7,6 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { getThisCommunity, getFrequenciesByCommunity } from './queries';
-import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
 import { displayLoadingScreen } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
