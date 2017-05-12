@@ -24,8 +24,6 @@ import NotificationList from '../notifications/components/notificationList';
 
 import UserAvatar from '../user/components/userAvatar';
 
-import ProfileMenu from '../user/components/profileMenu';
-
 class Navbar extends Component {
   render() {
     const { match, currentUser } = this.props;
@@ -51,18 +49,19 @@ class Navbar extends Component {
               <Label>Home</Label>
             </IconLink>
 
-            <IconLink
-              data-active={match.url.includes('/messages')}
-              data-mobileWidth={'third'}
-              to="/messages"
-            >
-              <Icon
-                icon="messages"
-                color={'bg.default'}
-                hoverColor={'bg.default'}
-              />
-              <Label>Messages</Label>
-            </IconLink>
+            {currentUser &&
+              <IconLink
+                data-active={match.url.includes('/messages')}
+                data-mobileWidth={'third'}
+                to="/messages"
+              >
+                <Icon
+                  icon="messages"
+                  color={'bg.default'}
+                  hoverColor={'bg.default'}
+                />
+                <Label>Messages</Label>
+              </IconLink>}
 
             <IconLink
               data-active={match.url === '/explore'}
@@ -78,49 +77,50 @@ class Navbar extends Component {
             </IconLink>
           </Section>
 
-          <Section right>
-            <IconDrop>
-              <IconLink
-                data-active={match.url === '/notifications'}
-                data-mobileWidth={'half'}
-                to="/notifications"
-              >
-                <Icon
-                  icon="notification"
-                  color={'bg.default'}
-                  hoverColor={'bg.default'}
-                />
-                <LabelForTab>Notifications</LabelForTab>
-              </IconLink>
-              <Dropdown>
-                <DropdownHeader>
-                  My Notifications
-                </DropdownHeader>
-                <NotificationList />
-                <DropdownFooter>
-                  <LinkButton to={'/notifications'}>View all</LinkButton>
-                </DropdownFooter>
-              </Dropdown>
-            </IconDrop>
+          {currentUser &&
+            <Section right>
+              <IconDrop>
+                <IconLink
+                  data-active={match.url === '/notifications'}
+                  data-mobileWidth={'half'}
+                  to="/notifications"
+                >
+                  <Icon
+                    icon="notification"
+                    color={'bg.default'}
+                    hoverColor={'bg.default'}
+                  />
+                  <LabelForTab>Notifications</LabelForTab>
+                </IconLink>
+                <Dropdown>
+                  <DropdownHeader>
+                    My Notifications
+                  </DropdownHeader>
 
-            {/* TODO: Make this active only when viewing current logged in user profile */}
-            <IconDrop>
-              <IconLink
-                data-active={match.url === `/users/me`}
-                data-mobileWidth={'half'}
-                to={`/users/me`}
-              >
-                <UserAvatar user={currentUser} />
-                <LabelForTab>Profile</LabelForTab>
-              </IconLink>
-              <Dropdown width={'240px'}>
-                <ProfileMenu user={currentUser} />
-                <DropdownFooter>
-                  <Button color={'warn'}>Log Out</Button>
-                </DropdownFooter>
-              </Dropdown>
-            </IconDrop>
-          </Section>
+                  <DropdownFooter>
+                    <LinkButton to={'/notifications'}>View all</LinkButton>
+                  </DropdownFooter>
+                </Dropdown>
+              </IconDrop>
+
+              {/* TODO: Make this active only when viewing current logged in user profile */}
+              <IconDrop>
+                <IconLink
+                  data-active={match.url === `/users/me`}
+                  data-mobileWidth={'half'}
+                  to={`/users/me`}
+                >
+
+                  <LabelForTab>Profile</LabelForTab>
+                </IconLink>
+                <Dropdown width={'240px'}>
+
+                  <DropdownFooter>
+                    <Button color={'warn'}>Log Out</Button>
+                  </DropdownFooter>
+                </Dropdown>
+              </IconDrop>
+            </Section>}
 
         </Nav>
 

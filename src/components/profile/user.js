@@ -81,8 +81,9 @@ const UserWithData = ({
       </ProfileHeader>
 
       {componentSize !== 'mini' &&
+        currentUser &&
         <Actions>
-          {currentUser.uid === user.uid
+          {currentUser && currentUser.uid === user.uid
             ? <ActionOutline
                 onClick={() =>
                   dispatch(

@@ -66,9 +66,15 @@ class StoryComposerWithData extends Component {
     /*
       Iterate through each of our community nodes to construct a new array
       of possible frequencies
+
+      returns an array of array, where each parent array represents a community
+      and each child array represents the frequencies within that parent
+      community
     */
     const availableFrequencies = availableCommunities.map(community => {
-      return community.frequencyConnection.edges.map(edge => edge.node);
+      const arr = [];
+      community.frequencyConnection.edges.map(edge => arr.push(edge.node));
+      return arr;
     });
 
     /*
@@ -78,12 +84,27 @@ class StoryComposerWithData extends Component {
       If no defaults are set, we use the first available community, and then
       find the first available frequency within that available community
     */
-    const activeCommunity = props.activeCommunity || availableCommunities[0].id;
-    const activeFrequency =
-      props.activeFrequency ||
-      availableFrequencies.filter(
-        frequency => frequency[0].community.id === activeCommunity
-      )[0][0].id;
+    const activeCommunity = props.activeCommunity
+      ? availableCommunities.filter(community => {
+          return community.slug === props.activeCommunity;
+        })[0].id
+      : availableCommunities[0].id;
+    const activeFrequency = props.activeFrequency
+      ? availableFrequencies
+          .filter(
+            // get the frequencies for the proper community
+            frequencies => frequencies[0].community.id === activeCommunity
+          )
+          .map(frequencies =>
+            // get the correct frequency based on the slug
+            frequencies.find(
+              frequency => frequency.slug === props.activeFrequency
+            )
+          )[0].id
+      : availableFrequencies.filter(
+          // get the frequencies for the proper community
+          frequencies => frequencies[0].community.id === activeCommunity
+        )[0].id; // and select the first one in the list
 
     this.state = {
       isOpen: false,

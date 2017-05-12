@@ -53,7 +53,7 @@ module.exports = {
         .then(users => getUsers(users));
     },
     isCreator: ({ author }: { author: String }, _: any, { user }: Context) => {
-      if (!author) return false;
+      if (!author || !user) return false;
       return user.uid === author;
     },
     isFrequencyOwner: (
@@ -61,7 +61,7 @@ module.exports = {
       _: any,
       { user }: Context
     ) => {
-      if (!frequency) return false;
+      if (!frequency || !user) return false;
       return getFrequencies([frequency]).then(
         data => data[0].subscribers.indexOf(user.uid) > -1
       );
@@ -71,7 +71,7 @@ module.exports = {
       _: any,
       { user }: Context
     ) => {
-      if (!community) return false;
+      if (!community || !user) return false;
       return getCommunities([community]).then(
         data => data[0].members.indexOf(user.uid) > -1
       );

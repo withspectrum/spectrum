@@ -165,17 +165,17 @@ export const getFrequencyStories = graphql(
   queries specific to each component.
 */
 const profileQueryOptions = {
-  options: ({ slug, community }) => ({
+  options: ({ match: { params: { frequencySlug, communitySlug } } }) => ({
     variables: {
-      slug: slug,
-      community: community,
+      slug: frequencySlug,
+      community: communitySlug,
     },
   }),
 };
 
-export const getFrequencyProfile = graphql(
+export const getFrequency = graphql(
   gql`
-		query getFrequencyProfile($slug: String, $community: String) {
+		query getFrequency($slug: String, $community: String) {
 			frequency(slug: $slug, community: $community) {
         ...frequencyInfo
         community {

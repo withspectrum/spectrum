@@ -2,6 +2,7 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { communityInfoFragment } from './fragments/community/communityInfo';
+import { GET_CURRENT_USER_COMMUNITIES_QUERY } from '../views/dashboard/queries';
 
 /*
   Create a new community
@@ -21,6 +22,22 @@ const CREATE_COMMUNITY_OPTIONS = {
       mutate({
         variables: {
           input,
+        },
+        update: (proxy, { data: { createCommunity } }) => {
+          // read the data from the cache for the queries this affects
+          const data = proxy.readQuery({
+            query: GET_CURRENT_USER_COMMUNITIES_QUERY,
+          });
+
+          // insert the new community
+          data.user.communityConnection.edges.push({
+            node: {
+              ...createCommunity,
+            },
+          });
+
+          // write the new data back to the cache
+          proxy.writeQuery({ query: GET_CURRENT_USER_COMMUNITIES_QUERY, data });
         },
       }),
   }),
@@ -103,13 +120,7 @@ const TOGGLE_COMMUNITY_MEMBERSHIP_OPTIONS = {
         variables: {
           id,
         },
-      })
-        .then(({ data }) => {
-          console.log('success ', data);
-        })
-        .catch(err => {
-          console.log('error joining or leaving community ', err);
-        }),
+      }),
   }),
 };
 

@@ -9,38 +9,49 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
 import { FrequencyProfile } from '../../components/profile';
-import { getFrequencyStories, getFrequencyProfile } from './queries';
+import { getFrequencyStories, getFrequency } from './queries';
+import { displayLoadingCard } from '../../components/loading';
 
 const StoryFeedWithData = compose(getFrequencyStories)(StoryFeed);
 
-const FrequencyProfileWithData = compose(getFrequencyProfile)(FrequencyProfile);
-
-const FrequencyViewPure = ({ match }) => {
+const FrequencyViewPure = ({ match, data: { error, frequency } }) => {
   const communitySlug = match.params.communitySlug;
-  const communityId = match.params.communityId;
   const frequencySlug = match.params.frequencySlug;
+
+  if (error) {
+    return <div>error</div>;
+  }
+
+  if (!frequency) {
+    return <div>frequency not found</div>;
+  }
+
+  /*
+    In the future we can check isPrivate && !isMember to handle private
+    frequencies with request-to-join flows or redirects if the frequency
+    shouldn't be viewable at all
+  */
 
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <FrequencyProfileWithData
-          slug={frequencySlug}
-          community={communitySlug}
-          profileSize="full"
-          type="frequency"
-        />
+        <FrequencyProfile data={{ frequency }} profileSize="full" />
       </Column>
 
       <Column type="primary" alignItems="center">
-        <StoryComposer
-          activeCommunity={communityId}
-          activeFrequency={match.params.frequencyId}
-        />
+        {frequency.isSubscriber
+          ? <StoryComposer
+              activeCommunity={communitySlug}
+              activeFrequency={match.params.frequencySlug}
+            />
+          : <span />}
         <StoryFeedWithData slug={frequencySlug} community={communitySlug} />
       </Column>
     </AppViewWrapper>
   );
 };
 
-export const FrequencyView = pure(FrequencyViewPure);
+export const FrequencyView = compose(getFrequency, displayLoadingCard, pure)(
+  FrequencyViewPure
+);
 export default FrequencyView;

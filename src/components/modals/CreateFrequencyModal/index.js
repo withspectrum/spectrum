@@ -12,6 +12,7 @@ import ModalContainer from '../modalContainer';
 import { LinkButton, Button } from '../../buttons';
 import { modalStyles } from '../styles';
 import { closeModal } from '../../../actions/modals';
+import { addToastWithTimeout } from '../../../actions/toasts';
 import { createFrequencyMutation } from '../../../api/frequency';
 import { Form, Actions } from './style';
 import { Input, UnderlineInput, TextArea } from '../../formElements';
@@ -59,16 +60,22 @@ class CreateFrequencyModal extends Component {
       description,
     };
 
-    console.log('creating frequency with ', input);
     this.props
       .createFrequency(input)
       .then(frequency => {
         this.props.history.push(`/${modalProps.slug}/${frequency.slug}`);
         this.close();
+        this.props.dispatch(
+          addToastWithTimeout('success', 'Frequency successfully created!')
+        );
       })
       .catch(err => {
-        //TODO: Add dispatch for global error events
-        console.log('err in createFrequency', err);
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            'Oops, we ran into a problem creating a frequency.'
+          )
+        );
       });
   };
 

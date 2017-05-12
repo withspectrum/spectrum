@@ -1,6 +1,9 @@
 //@flow
 import React from 'react';
+// $FlowFixMe
 import { Link } from 'react-router-dom';
+// $FlowFixMe
+import { connect } from 'react-redux';
 //$FlowFixMe
 import branch from 'recompose/branch';
 //$FlowFixMe
@@ -187,7 +190,7 @@ const TopThirty = compose(getTopFrequencies, displayLoadingState)(
   TopThirtyPure
 );
 
-const ExplorePure = ({ data }) => {
+const ExplorePure = ({ data, currentUser }) => {
   if (data.loading) {
     return (
       <ScrollBody>
@@ -207,13 +210,17 @@ const ExplorePure = ({ data }) => {
     return <div>error</div>;
   }
 
-  const communityIds = data.user.communityConnection.edges.map(community => {
-    return community.node.id;
-  });
+  const communityIds = currentUser
+    ? data.user.communityConnection.edges.map(community => {
+        return community.node.id;
+      })
+    : [];
 
-  const frequencyIds = data.user.frequencyConnection.edges.map(frequency => {
-    return frequency.node.id;
-  });
+  const frequencyIds = currentUser
+    ? data.user.frequencyConnection.edges.map(frequency => {
+        return frequency.node.id;
+      })
+    : [];
 
   return (
     <ScrollBody>
@@ -233,4 +240,7 @@ const ExplorePure = ({ data }) => {
 };
 
 const Explore = compose(getUserSubscriptions, pure)(ExplorePure);
-export default Explore;
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+export default connect(mapStateToProps)(Explore);

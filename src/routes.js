@@ -4,8 +4,7 @@ import React, { Component } from 'react';
 import { Router, Route, Switch, Redirect } from 'react-router';
 //$FlowFixMe
 import styled from 'styled-components';
-//$FlowFixMe
-import createBrowserHistory from 'history/createBrowserHistory';
+import { history } from './helpers/history';
 import ScrollManager from './components/scrollManager';
 import ModalRoot from './components/modals/modalRoot';
 import Toasts from './components/toasts';
@@ -37,7 +36,7 @@ const Body = styled.div`
 class Routes extends Component {
   render() {
     return (
-      <Router history={createBrowserHistory()}>
+      <Router history={history}>
 
         <ScrollManager>
           <Body>

@@ -1,5 +1,5 @@
 // @flow
-type Toasts = 'success' | 'error';
+type Toasts = 'success' | 'error' | 'neutral';
 
 const addToast = (id: number, kind: Toasts, message: string) => {
   return {
@@ -26,5 +26,5 @@ export const addToastWithTimeout = (
 
   setTimeout(() => {
     dispatch(removeToast(id));
-  }, 3000);
+  }, kind === 'success' ? 2000 : 4000);
 };

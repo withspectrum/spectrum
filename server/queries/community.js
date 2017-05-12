@@ -38,9 +38,11 @@ module.exports = {
       ),
     }),
     isOwner: ({ owners }, _, { user }) => {
+      if (!user) return false;
       return owners.indexOf(user.uid) > -1;
     },
     isMember: ({ members }, _, { user }) => {
+      if (!user) return false;
       return members.indexOf(user.uid) > -1;
     },
     memberConnection: (

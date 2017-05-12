@@ -19,9 +19,27 @@ const FrequencyListCard = compose(getFrequenciesByCommunity)(ListCard);
 const SettingsPure = ({ match, data, history, dispatch }) => {
   const communitySlug = match.params.communitySlug;
 
+  if (data.error) {
+    return <div>Error loading settings for this settings.</div>;
+  }
+
+  if (!data.community) {
+    history.push('/');
+    dispatch(addToastWithTimeout('error', "This community doesn't exist."));
+
+    return null;
+  }
+
   if (!data.community.isOwner) {
     history.push('/');
-    dispatch(addToastWithTimeout('error', "You can't do that!"));
+    dispatch(
+      addToastWithTimeout(
+        'error',
+        "You don't have permission to view these settings."
+      )
+    );
+
+    return null;
   }
 
   if (data.error) {
