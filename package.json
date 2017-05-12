@@ -99,7 +99,7 @@
     "db:migrate": "npm run rethinkdb:migrate -- up",
     "db:drop": "npm run rethinkdb:migrate -- down",
     "db:seed": "node server/migrations/seed/index.js",
-    "db:reset": "yarn run db:drop && yarn run db:migrate && yarn run db:seed && yarn run dev:server",
+    "db:reset": "yarn run db:drop && yarn run db:migrate && yarn run db:seed",
     "rethinkdb:migrate": "rethinkdb-migrate -f ./server/migrations/config.js",
     "eject": "react-scripts eject",
     "lint:staged": "lint-staged"
