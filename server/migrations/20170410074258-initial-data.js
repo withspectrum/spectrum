@@ -18,6 +18,11 @@ exports.up = function(r, conn) {
         Promise.all([
           // index user by username
           r.table('users').indexCreate('username', r.row('username')).run(conn),
+          // index direct message groups by the users
+          r
+            .table('direct_message_groups')
+            .indexCreate('users', { multi: true })
+            .run(conn),
           r
             .table('notifications')
             .indexCreate(

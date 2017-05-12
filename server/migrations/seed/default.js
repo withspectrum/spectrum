@@ -108,7 +108,8 @@ const DEFAULT_NOTIFICATIONS = [
 const DEFAULT_DIRECT_MESSAGE_GROUPS = [
   {
     id: 'first-dm-group-asfd123',
-    users: DEFAULT_USERS.map(user => {
+    users: DEFAULT_USERS.map(user => user.uid),
+    status: DEFAULT_USERS.map(user => {
       return {
         uid: user.uid,
         lastActivity: new Date(),

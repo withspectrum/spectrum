@@ -92,7 +92,8 @@ const generateDirectMessageGroup = users => {
     id: uuid(),
     createdAt,
     creator: users[0].uid,
-    users: users.map(user => {
+    users: users.map(user => user.uid),
+    status: users.map(user => {
       return {
         uid: user.uid,
         lastActivity,
