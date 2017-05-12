@@ -153,16 +153,16 @@ export const getUserStories = graphql(
   queries specific to each component.
 */
 const profileQueryOptions = {
-  options: ({ username }) => ({
+  options: ({ match: { params: { username } } }) => ({
     variables: {
       username: username,
     },
   }),
 };
 
-export const getUserProfile = graphql(
+export const getUser = graphql(
   gql`
-		query getUserProfile($username: String) {
+		query getUser($username: String) {
 			user(username: $username) {
         ...userInfo
         ...userMetaData

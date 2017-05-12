@@ -1,22 +1,32 @@
 // @flow
 // $FlowFixMe
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Card } from '../card';
 
-export const UpsellSignInContainer = styled(Card)`
-  padding: 16px 16px 28px;
-  margin-bottom: 16px;
+const containerBase = css`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
+export const UpsellSignInContainer = styled(Card)`
+  padding: 16px 16px 28px;
+  margin-bottom: 16px;
+  ${containerBase}
 `;
 
 export const UpsellJoinContainer = styled(Card)`
   padding: 16px 16px 28px;
   margin-top: 16px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  ${containerBase}
+`;
+
+export const UpsellFourOhFourContainer = styled(Card)`
+  padding: 32px;
+  margin: 32px auto;
+  width: 100%;
+  max-width: 560px;
+  overflow: hidden;
+  ${containerBase}
 `;
 
 export const Title = styled.h1`
@@ -46,6 +56,16 @@ font-weight: 500;
 text-align: center;
 `;
 
+export const Actions = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    margin: 0 8px;
+  }
+`;
+
 export const BGOne = styled.img`
   position: absolute;
   z-index: 1;
@@ -62,4 +82,13 @@ export const BGTwo = styled.img`
   left: 0;
   top: 0;
   width: 80px;
+`;
+
+export const FourOhFourImage = styled.img`
+  position: absolute;
+  z-index: 1;
+  opacity: 0.2;
+  right: -32px;
+  bottom: -96px;
+  width: 200px;
 `;

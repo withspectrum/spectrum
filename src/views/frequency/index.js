@@ -13,7 +13,7 @@ import StoryFeed from '../../components/storyFeed';
 import { FrequencyProfile } from '../../components/profile';
 import { getFrequencyStories, getFrequency } from './queries';
 import { displayLoadingScreen } from '../../components/loading';
-import { UpsellSignIn } from '../../components/upsell';
+import { UpsellSignIn, Upsell404Frequency } from '../../components/upsell';
 
 const StoryFeedWithData = compose(getFrequencyStories)(StoryFeed);
 
@@ -26,11 +26,21 @@ const FrequencyViewPure = ({
   const frequencySlug = match.params.frequencySlug;
 
   if (error) {
-    return <div>error</div>;
+    return (
+      <Upsell404Frequency
+        frequency={match.params.frequencySlug}
+        community={match.params.communitySlug}
+      />
+    );
   }
 
   if (!frequency) {
-    return <div>frequency not found</div>;
+    return (
+      <Upsell404Frequency
+        frequency={match.params.frequencySlug}
+        community={match.params.communitySlug}
+      />
+    );
   }
 
   /*

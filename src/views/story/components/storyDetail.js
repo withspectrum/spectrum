@@ -38,9 +38,21 @@ const StoryDetailPure = ({ story, setStoryLock, dispatch, currentUser }) => {
       <p>{story.content.description}</p>
 
       {currentUser &&
-        (story.isCreator || story.isFrequencyOwner || story.isCommunityOwner) &&
+        (story.isFrequencyOwner || story.isCommunityOwner) &&
         <Button onClick={() => storyLock(story.id, !story.locked)}>
           {story.locked ? 'Unlock' : 'Lock'}
+        </Button>}
+
+      {currentUser &&
+        (story.isCreator || story.isFrequencyOwner || story.isCommunityOwner) &&
+        <Button>
+          Delete
+        </Button>}
+
+      {currentUser &&
+        story.isCreator &&
+        <Button>
+          Edit
         </Button>}
     </Card>
   );

@@ -19,11 +19,12 @@ import {
   getColorByType,
 } from '../../helpers/notifications';
 import { getNotifications } from './queries';
+import { UpsellSignIn } from '../../components/upsell';
 
 const NotificationsPure = ({ data, currentUser }) => {
+  // our router should prevent this from happening, but just in case
   if (!currentUser) {
-    window.location.href = '/';
-    return null;
+    return <UpsellSignIn />;
   }
 
   const { notifications: { edges } } = data;

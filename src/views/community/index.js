@@ -6,6 +6,7 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import { openModal } from '../../actions/modals';
 import StoryComposer from '../../components/storyComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
@@ -13,7 +14,7 @@ import StoryFeed from '../../components/storyFeed';
 import ListCard from './components/listCard';
 import { CommunityProfile } from '../../components/profile';
 import { displayLoadingScreen } from '../../components/loading';
-import { UpsellSignIn } from '../../components/upsell';
+import { UpsellSignIn, Upsell404Community } from '../../components/upsell';
 
 import {
   getCommunityStories,
@@ -29,15 +30,22 @@ const CommunityViewPure = ({
   match,
   data: { community, error },
   currentUser,
+  dispatch,
 }) => {
   const communitySlug = match.params.communitySlug;
 
+  const create = () => {
+    return dispatch(
+      openModal('CREATE_COMMUNITY_MODAL', { name: communitySlug })
+    );
+  };
+
   if (error) {
-    return <div>error</div>;
+    return <Upsell404Community community={communitySlug} />;
   }
 
   if (!community) {
-    return <div>community not found</div>;
+    return <Upsell404Community community={communitySlug} create={create} />;
   }
 
   /*
