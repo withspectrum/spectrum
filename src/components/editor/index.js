@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { Editor as SlateEditor, Raw } from 'slate';
+import { Editor as SlateEditor, Raw, Plain } from 'slate';
 import type { SlatePlugin } from 'slate-mentions/src/types';
 import MarkdownPlugin from 'slate-markdown';
 
@@ -23,7 +23,6 @@ const initialState = Raw.deserialize(
 );
 
 type EditorProps = {
-  mentions?: boolean,
   markdown?: boolean,
   state?: Object,
   onChange?: Function,
@@ -50,17 +49,25 @@ class Editor extends Component {
   };
 
   render() {
-    const state = this.props.state || this.state.state;
-    const onChange = this.props.onChange || this.onChange;
+    const {
+      state = this.state.state,
+      onChange = this.onChange,
+      // Don't pass these two down to the SlateEditor
+      markdown,
+      ...rest
+    } = this.props;
 
     return (
       <SlateEditor
         state={state}
         onChange={onChange}
         plugins={this.state.plugins}
+        {...rest}
       />
     );
   }
 }
+
+export { Plain, Raw };
 
 export default Editor;
