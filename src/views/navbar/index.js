@@ -20,10 +20,6 @@ import {
   DropdownHeader,
 } from './style';
 
-import NotificationList from '../notifications/components/notificationList';
-
-import UserAvatar from '../user/components/userAvatar';
-
 class Navbar extends Component {
   render() {
     const { match, currentUser } = this.props;

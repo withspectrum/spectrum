@@ -4,7 +4,8 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-
+// $FlowFixMe
+import { connect } from 'react-redux';
 import StoryComposer from '../../components/storyComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
@@ -12,6 +13,7 @@ import StoryFeed from '../../components/storyFeed';
 import ListCard from './components/listCard';
 import { CommunityProfile } from '../../components/profile';
 import { displayLoadingScreen } from '../../components/loading';
+import { UpsellSignIn } from '../../components/upsell';
 
 import {
   getCommunityStories,
@@ -23,7 +25,11 @@ const CommunityStoryFeed = compose(getCommunityStories)(StoryFeed);
 
 const FrequencyListCard = compose(getCommunityFrequencies)(ListCard);
 
-const CommunityViewPure = ({ match, data: { community, error } }) => {
+const CommunityViewPure = ({
+  match,
+  data: { community, error },
+  currentUser,
+}) => {
   const communitySlug = match.params.communitySlug;
 
   if (error) {
@@ -48,7 +54,9 @@ const CommunityViewPure = ({ match, data: { community, error } }) => {
       </Column>
 
       <Column type="primary" alignItems="center">
-        {community.isMember
+        {!currentUser && <UpsellSignIn entity={community} />}
+
+        {community.isMember && currentUser
           ? <StoryComposer activeCommunity={communitySlug} />
           : <span />}
         <CommunityStoryFeed slug={communitySlug} />
@@ -60,4 +68,8 @@ const CommunityViewPure = ({ match, data: { community, error } }) => {
 export const CommunityView = compose(getCommunity, displayLoadingScreen, pure)(
   CommunityViewPure
 );
-export default CommunityView;
+
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+export default connect(mapStateToProps)(CommunityView);

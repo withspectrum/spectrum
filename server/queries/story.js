@@ -63,7 +63,7 @@ module.exports = {
     ) => {
       if (!frequency || !user) return false;
       return getFrequencies([frequency]).then(
-        data => data[0].subscribers.indexOf(user.uid) > -1
+        data => data[0].owners.indexOf(user.uid) > -1
       );
     },
     isCommunityOwner: (
@@ -73,7 +73,7 @@ module.exports = {
     ) => {
       if (!community || !user) return false;
       return getCommunities([community]).then(
-        data => data[0].members.indexOf(user.uid) > -1
+        data => data[0].owners.indexOf(user.uid) > -1
       );
     },
     messageConnection: (
