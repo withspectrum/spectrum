@@ -8,6 +8,9 @@ import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import sanitize from 'sanitize-html';
+import Remarkable from 'remarkable';
+import { toPlainText, toState } from '../editor';
 import { openModal } from '../../actions/modals';
 import {
   StyledStoryFeedCard,
@@ -21,6 +24,8 @@ import {
   ParticipantHeads,
   Location,
 } from './style';
+
+const MD = new Remarkable('full');
 
 const StoryFeedCardPure = (props: Object): React$Element<any> => {
   const formatLocation = () => {
@@ -50,14 +55,26 @@ const StoryFeedCardPure = (props: Object): React$Element<any> => {
   };
 
   const formatStoryPreview = () => {
-    if (props.data.content.description.length > 150) {
+    // Convert description to plain text
+    let md = props.data.content.description;
+    if (props.data.content.type === 'SLATE') {
+      // Convert Slate state to markdown string
+      md = toPlainText(toState(JSON.parse(md)));
+    }
+    // Render the markdown to HTML, then get rid of the HTML
+    // TODO: There's hopefully a better way to do this
+    const description = sanitize(MD.render(md), {
+      allowedTags: [],
+      allowedAttributes: [],
+    });
+    if (description.length > 150) {
       return (
         <Description>
-          {props.data.content.description.substring(1, 140)}...
+          {description.substring(1, 140)}...
         </Description>
       );
     } else {
-      return <Description>{props.data.content.description}</Description>;
+      return <Description>{description}</Description>;
     }
   };
 

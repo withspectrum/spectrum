@@ -13,6 +13,7 @@ import Textarea from 'react-textarea-autosize';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 import { LinkButton } from '../buttons';
+import Editor, { fromPlainText, toJSON } from '../editor';
 import Icon from '../icons';
 import { LoadingCard } from '../loading';
 import { getComposerCommunitiesAndFrequencies } from './queries';
@@ -109,7 +110,7 @@ class StoryComposerWithData extends Component {
     this.state = {
       isOpen: false,
       title: '',
-      description: '',
+      description: fromPlainText(''),
       availableCommunities,
       availableFrequencies,
       activeCommunity,
@@ -125,10 +126,9 @@ class StoryComposerWithData extends Component {
     });
   };
 
-  changeDescription = e => {
-    const description = e.target.value;
+  changeDescription = state => {
     this.setState({
-      description,
+      description: state,
     });
   };
 
@@ -186,7 +186,8 @@ class StoryComposerWithData extends Component {
     const community = activeCommunity;
     const content = {
       title,
-      description,
+      description: JSON.stringify(toJSON(description)),
+      type: 'SLATE',
     };
 
     // this.props.mutate comes from a higher order component defined at the
@@ -259,14 +260,12 @@ class StoryComposerWithData extends Component {
               autoFocus
             />
 
-            <Textarea
+            <Editor
               onChange={this.changeDescription}
-              value={this.state.description}
-              style={StoryDescription}
+              state={this.state.description}
               ref="descriptionTextarea"
-              placeholder={
-                'Write more thoughts here, add photos, and anything else!'
-              }
+              style={StoryDescription}
+              placeholder="Write more thoughts here, add photos, and anything else!"
             />
 
             <Actions>

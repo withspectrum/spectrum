@@ -10,6 +10,8 @@ import { openModal } from '../../../actions/modals';
 import { setStoryLockMutation } from '../mutations';
 import { Card } from '../../../components/card';
 import { Button } from '../../../components/buttons';
+import Markdown from '../../../components/markdown';
+import { toPlainText, toState } from '../../../components/editor';
 
 const StoryDetailPure = ({ story, setStoryLock, dispatch, currentUser }) => {
   const storyLock = (id, value) =>
@@ -24,6 +26,11 @@ const StoryDetailPure = ({ story, setStoryLock, dispatch, currentUser }) => {
     return dispatch(openModal('USER_PROFILE_MODAL', { user }));
   };
 
+  let description = story.content.description;
+  if (story.content.type === 'SLATE') {
+    description = toPlainText(toState(JSON.parse(description)));
+  }
+
   return (
     <Card>
       <h3>
@@ -35,7 +42,7 @@ const StoryDetailPure = ({ story, setStoryLock, dispatch, currentUser }) => {
           {story.author.displayName}
         </span>
       </h3>
-      <p>{story.content.description}</p>
+      <Markdown>{description}</Markdown>
 
       {currentUser &&
         (story.isCreator || story.isFrequencyOwner || story.isCommunityOwner) &&

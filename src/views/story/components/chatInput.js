@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import styled from 'styled-components';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // // $FlowFixMe
@@ -7,12 +8,18 @@ import withState from 'recompose/withState';
 // // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
 import { Card } from '../../../components/card';
+import Editor, { toPlainText, fromPlainText } from '../../../components/editor';
 import { sendMessageMutation } from '../mutations';
+
+const InputEditor = styled(Editor)`
+  width: 100%;
+  height: 100%;
+`;
 
 const ChatInputWithMutation = ({
   thread,
   sendMessage,
-  value,
+  state,
   onChange,
   clear,
 }) => {
@@ -22,7 +29,7 @@ const ChatInputWithMutation = ({
       thread,
       message: {
         type: 'text',
-        content: value,
+        content: toPlainText(state),
       },
     })
       .then(() => {
@@ -36,19 +43,22 @@ const ChatInputWithMutation = ({
 
   return (
     <Card>
-      <form onSubmit={submit}>
-        <input type="text" value={value} onChange={onChange} />
-      </form>
+      <InputEditor
+        state={state}
+        onChange={onChange}
+        markdown={false}
+        onEnter={submit}
+      />
     </Card>
   );
 };
 
 const ChatInput = compose(
   sendMessageMutation,
-  withState('value', 'changeValue', ''),
+  withState('state', 'changeState', fromPlainText('')),
   withHandlers({
-    onChange: ({ changeValue }) => e => changeValue(e.target.value),
-    clear: ({ changeValue }) => () => changeValue(''),
+    onChange: ({ changeState }) => state => changeState(state),
+    clear: ({ changeState }) => () => changeState(fromPlainText('')),
   })
 )(ChatInputWithMutation);
 

@@ -122,9 +122,9 @@ const createCommunity = (
                 // return the resulting community with the photoURL set
                 .then(
                   result =>
-                    (result.changes.length > 0
+                    result.changes.length > 0
                       ? result.changes[0].new_val
-                      : db.table('communities').get(community.id).run())
+                      : db.table('communities').get(community.id).run()
                 )
             );
           }),
@@ -261,9 +261,9 @@ const leaveCommunity = (id, uid) => {
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
-          : db.table('communities').get(id).run())
+          : db.table('communities').get(id).run()
     );
 };
 
@@ -280,9 +280,9 @@ const joinCommunity = (id, uid) => {
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
-          : db.table('communities').get(id).run())
+          : db.table('communities').get(id).run()
     );
 };
 
@@ -319,12 +319,12 @@ const subscribeToDefaultFrequencies = (id: string, uid: string) => {
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
           : db
               .table('frequencies')
               .filter({ community: id, slug: 'general' })
-              .run())
+              .run()
     );
 };
 

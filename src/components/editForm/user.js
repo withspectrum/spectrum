@@ -29,7 +29,9 @@ type UserProps = {
 const UserWithData = ({
   data: { user },
   profileSize,
-}: { data: { user: UserProps } }): React$Element<any> => {
+}: {
+  data: { user: UserProps },
+}): React$Element<any> => {
   if (!user) {
     return <div>No user to be found!</div>;
   }
