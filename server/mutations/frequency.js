@@ -65,7 +65,7 @@ module.exports = {
         const frequency = frequencies[0];
         if (!frequency) {
           // todo handle error if frequency doesn't exist
-          return;
+          return new Error("This frequency doesn't exist");
         }
 
         if (frequency.owners.indexOf(user.uid) > -1) {

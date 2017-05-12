@@ -70,21 +70,18 @@ class FrequencyWithData extends Component {
     };
     this.props
       .editFrequency(input)
-      .then(frequency => {
+      .then(({ data: { editFrequency } }) => {
+        const frequency = editFrequency;
+
+        // the mutation returns a frequency object. if it exists,
         if (frequency !== undefined) {
-          this.props.history.push(`/${community.slug}/${frequency.slug}`);
           this.props.dispatch(
             addToastWithTimeout('success', 'Frequency saved!')
           );
         }
       })
       .catch(err => {
-        this.props.dispatch(
-          addToastWithTimeout(
-            'success',
-            "Something went wrong and we weren't able to save these changes."
-          )
-        );
+        this.props.dispatch(addToastWithTimeout('error', err));
       });
   };
 
@@ -109,12 +106,7 @@ class FrequencyWithData extends Component {
         }
       })
       .catch(err => {
-        this.props.dispatch(
-          addToastWithTimeout(
-            'error',
-            "Something went wrong and we weren't able to delete this frequency."
-          )
-        );
+        this.props.dispatch(addToastWithTimeout('error', err));
       });
   };
 

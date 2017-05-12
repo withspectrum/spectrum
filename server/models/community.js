@@ -173,9 +173,19 @@ const editCommunity = ({
           db
             .table('communities')
             .get(id)
-            .update({ ...community }, { returnChanges: true })
+            .update({ ...community }, { returnChanges: 'always' })
             .run()
-            .then(result => result.changes[0].new_val),
+            .then(result => {
+              // if an update happened
+              if (result.replaced === 1) {
+                return result.changes[0].new_val;
+              }
+
+              // an update was triggered from the client, but no data was changed
+              if (result.unchanged === 1) {
+                return result.changes[0].old_val;
+              }
+            }),
         ]);
       }
 
@@ -194,16 +204,21 @@ const editCommunity = ({
                     ...community,
                     photoURL,
                   },
-                  { returnChanges: true }
+                  { returnChanges: 'always' }
                 )
                 .run()
                 // return the resulting community with the photoURL set
-                .then(
-                  result =>
-                    (result.changes.length > 0
-                      ? result.changes[0].new_val
-                      : db.table('communities').get(community.id).run())
-                )
+                .then(result => {
+                  // if an update happened
+                  if (result.replaced === 1) {
+                    return result.changes[0].new_val;
+                  }
+
+                  // an update was triggered from the client, but no data was changed
+                  if (result.unchanged === 1) {
+                    return result.changes[0].old_val;
+                  }
+                })
             );
           }),
         ]);
@@ -212,7 +227,7 @@ const editCommunity = ({
     .then(data => data[0]);
 };
 
-const deleteCommunity = id => {
+const deleteCommunity = (id: string) => {
   return db
     .table('communities')
     .get(id)

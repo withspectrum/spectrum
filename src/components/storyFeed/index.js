@@ -28,18 +28,16 @@ const StoryFeedPure = ({
   data: { stories, loading, fetchMore, error, hasNextPage },
   data,
 }) => {
-  // TODO: Better error state
-  if (error && stories) {
+  if (error && stories.length > 0) {
     return <div>Oops, something went wrong</div>;
   }
 
-  if (error && !stories) {
+  if (error && stories.length === 0) {
     return <div>No stories have been posted yet</div>;
   }
 
-  // TODO: better loading state
-  if (!stories) {
-    return <div>No stories to be found</div>;
+  if (stories.length === 0) {
+    return <div>No stories have been posted yet</div>;
   }
 
   return (

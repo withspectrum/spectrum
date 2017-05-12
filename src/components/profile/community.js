@@ -59,20 +59,16 @@ const CommunityWithData = ({
 
   const toggleMembership = id => {
     toggleCommunityMembership({ id })
-      .then(({ data }) => {
-        const str = data.toggleCommunityMembership.isMember
-          ? `Joined ${data.toggleCommunityMembership.name}!`
-          : `Left ${data.toggleCommunityMembership.name}.`;
+      .then(({ data: { toggleCommunityMembership } }) => {
+        const str = toggleCommunityMembership.isMember
+          ? `Joined ${toggleCommunityMembership.name}!`
+          : `Left ${toggleCommunityMembership.name}.`;
 
-        const type = data.toggleCommunityMembership.isMember
-          ? 'success'
-          : 'neutral';
+        const type = toggleCommunityMembership.isMember ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
-        dispatch(
-          addToastWithTimeout('error', `Oops, something went wrong. ${err}`)
-        );
+        dispatch(addToastWithTimeout('error', err));
       });
   };
 

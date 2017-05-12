@@ -27,7 +27,13 @@ module.exports = {
     ) => createCommunity(args, user.uid),
     deleteCommunity: (_: any, { id }, { user }: Context) => {
       return getCommunities([id]).then(communities => {
-        if (communities[0].owners.indexOf(user.uid) > -1) {
+        const community = communities[0];
+
+        if (!community) {
+          return new Error("This community doesn't exist.");
+        }
+
+        if (community.owners.indexOf(user.uid) > -1) {
           return deleteCommunity(id);
         }
 
@@ -40,7 +46,12 @@ module.exports = {
       { user }: Context
     ) => {
       return getCommunities([args.input.id]).then(communities => {
-        if (communities[0].owners.indexOf(user.uid) > -1) {
+        const community = communities[0];
+        if (!community) {
+          return new Error("This community doesn't exist.");
+        }
+
+        if (community.owners.indexOf(user.uid) > -1) {
           return editCommunity(args);
         }
 
@@ -50,6 +61,7 @@ module.exports = {
     toggleCommunityMembership: (_: any, { id }: string, { user }: Context) => {
       return getCommunities([id]).then(communities => {
         const community = communities[0];
+
         if (!community) {
           return new Error("This community doesn't exist.");
         }

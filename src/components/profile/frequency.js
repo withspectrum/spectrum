@@ -66,20 +66,18 @@ const FrequencyWithData = ({
 
   const toggleSubscription = id => {
     toggleFrequencySubscription({ id })
-      .then(({ data }) => {
-        const str = data.toggleFrequencySubscription.isSubscriber
-          ? `Joined ${data.toggleFrequencySubscription.name} in ${data.toggleFrequencySubscription.community.name}!`
-          : `Left the frequency ${data.toggleFrequencySubscription.name} in ${data.toggleFrequencySubscription.community.name}.`;
+      .then(({ data: { toggleFrequencySubscription } }) => {
+        const str = toggleFrequencySubscription.isSubscriber
+          ? `Joined ${toggleFrequencySubscription.name} in ${toggleFrequencySubscription.community.name}!`
+          : `Left the frequency ${toggleFrequencySubscription.name} in ${toggleFrequencySubscription.community.name}.`;
 
-        const type = data.toggleFrequencySubscription.isSubscriber
+        const type = toggleFrequencySubscription.isSubscriber
           ? 'success'
           : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
-        dispatch(
-          addToastWithTimeout('error', `Oops, something went wrong. ${err}`)
-        );
+        dispatch(addToastWithTimeout('error', err));
       });
   };
 

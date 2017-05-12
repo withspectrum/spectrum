@@ -18,7 +18,7 @@ exports.up = function(r, conn) {
       .then(() =>
         Promise.all([
           // index user by username
-          r.table('user').indexCreate('username', r.row('username')).run(conn),
+          r.table('users').indexCreate('username', r.row('username')).run(conn),
           r
             .table('notifications')
             .indexCreate(
