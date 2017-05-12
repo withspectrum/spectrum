@@ -11,6 +11,10 @@ import renderComponent from 'recompose/renderComponent';
 import branch from 'recompose/branch';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
+//$FlowFixMe
+import { connect } from 'react-redux';
+import { toggleFrequencySubscriptionMutation } from '../../api/frequency';
+import { addToastWithTimeout } from '../../actions/toasts';
 import { LoadingCard } from '../loading';
 import {
   ProfileHeader,
@@ -19,6 +23,7 @@ import {
   Subtitle,
   Description,
   Actions,
+  Action,
   ActionOutline,
 } from './style';
 import { MetaData } from './metaData';
@@ -47,11 +52,36 @@ type FrequencyProps = {
 const FrequencyWithData = ({
   data: { frequency },
   profileSize,
+  toggleFrequencySubscription,
+  dispatch,
+  currentUser,
 }: {
   data: { frequency: FrequencyProps },
   profileSize: ProfileSizeProps,
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
+
+  if (!frequency) {
+    return <div>No frequency to be found!</div>;
+  }
+
+  const toggleSubscription = id => {
+    toggleFrequencySubscription({ id })
+      .then(({ data: { toggleFrequencySubscription } }) => {
+        const str = toggleFrequencySubscription.isSubscriber
+          ? `Joined ${toggleFrequencySubscription.name} in ${toggleFrequencySubscription.community.name}!`
+          : `Left the frequency ${toggleFrequencySubscription.name} in ${toggleFrequencySubscription.community.name}.`;
+
+        const type = toggleFrequencySubscription.isSubscriber
+          ? 'success'
+          : 'neutral';
+        dispatch(addToastWithTimeout(type, str));
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err));
+      });
+  };
+
   return (
     <Card>
       <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
@@ -72,8 +102,38 @@ const FrequencyWithData = ({
         </Description>}
 
       {componentSize !== 'mini' &&
+        currentUser &&
         <Actions>
-          <ActionOutline>Follow</ActionOutline>
+          {// user owns the community, assumed member
+          frequency.isOwner || frequency.community.isOwner
+            ? <ActionOutline>
+                <Link
+                  to={`/${frequency.community.slug}/${frequency.slug}/settings`}
+                >
+                  Settings
+                </Link>
+              </ActionOutline>
+            : <span />}
+
+          {// user is a member and doesn't own the community
+          frequency.isSubscriber &&
+            !frequency.isOwner &&
+            !frequency.community.isOwner &&
+            <ActionOutline
+              color={'text.alt'}
+              hoverColor={'warn.default'}
+              onClick={() => toggleSubscription(frequency.id)}
+            >
+              Unfollow {frequency.name}
+            </ActionOutline>}
+
+          {// user is not a member and doesn't own the frequency
+          !frequency.isSubscriber &&
+            !frequency.isOwner &&
+            !frequency.community.isOwner &&
+            <Action onClick={() => toggleSubscription(frequency.id)}>
+              Join {frequency.name}
+            </Action>}
         </Actions>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
@@ -82,5 +142,14 @@ const FrequencyWithData = ({
   );
 };
 
-const Frequency = compose(displayLoadingState, pure)(FrequencyWithData);
-export default Frequency;
+const Frequency = compose(
+  toggleFrequencySubscriptionMutation,
+  displayLoadingState,
+  pure
+)(FrequencyWithData);
+
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+
+export default connect(mapStateToProps)(Frequency);

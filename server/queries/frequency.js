@@ -3,22 +3,30 @@
  * Frequency query resolvers
  */
 const {
-  getFrequency,
+  getFrequencyBySlug,
   getFrequencyMetaData,
   getFrequencySubscriberCount,
   getTopFrequencies,
 } = require('../models/frequency');
 const { getStoriesByFrequency } = require('../models/story');
-const { getCommunity } = require('../models/community');
-const { getUsers } = require('../models/user');
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetFrequencyArgs } from '../models/frequency';
+import type { GraphQLContext } from '../';
 
 module.exports = {
   Query: {
-    frequency: (_: any, args: GetFrequencyArgs) => getFrequency(args),
+    frequency: (
+      _: any,
+      args: GetFrequencyArgs,
+      { loaders }: GraphQLContext
+    ) => {
+      if (args.id) return loaders.frequency.load(args.id);
+      if (args.slug && args.community)
+        return getFrequencyBySlug(args.slug, args.community);
+      return null;
+    },
     topFrequencies: (_: any, { amount = 30 }: { amount: number }) =>
       getTopFrequencies(amount),
   },
@@ -29,33 +37,48 @@ module.exports = {
       { id }: { id: string },
       { first = 10, after }: PaginationOptions
     ) => {
-      const cursorId = decode(after);
-      return getStoriesByFrequency(id, { first, after: cursorId }).then(([
-        stories,
-        lastStory,
-      ]) => ({
-        pageInfo: {
-          hasNextPage: stories.length > 0
-            ? lastStory.id === stories[stories.length - 1].id
-            : lastStory.id === cursorId,
-        },
-        edges: stories.map(story => ({
-          cursor: encode(story.id),
-          node: story,
-        })),
-      }));
+      const cursor = decode(after);
+      return getStoriesByFrequency(id, { first, after: cursor })
+        .then(stories =>
+          paginate(
+            stories,
+            { first, after: cursor },
+            story => story.id === cursor
+          )
+        )
+        .then(result => ({
+          pageInfo: {
+            hasNextPage: result.hasMoreItems,
+          },
+          edges: result.list.map(story => ({
+            cursor: encode(story.id),
+            node: story,
+          })),
+        }));
     },
-    community: ({ community }: { community: String }) =>
-      getCommunity({ id: community }),
+    isOwner: ({ owners }, _, { user }) => {
+      if (!user) return false;
+      return owners.indexOf(user.uid) > -1;
+    },
+    isSubscriber: ({ subscribers }, _, { user }) => {
+      if (!user) return false;
+      return subscribers.indexOf(user.uid) > -1;
+    },
+    community: (
+      { community }: { community: string },
+      _: any,
+      { loaders }: GraphQLContext
+    ) => loaders.community.load(community),
     subscriberConnection: (
       { subscribers }: { subscribers: Array<string> },
-      { first = 10, after }: PaginationOptions
+      { first = 10, after }: PaginationOptions,
+      { loaders }: GraphQLContext
     ) => {
       const { list, hasMoreItems } = paginate(subscribers, {
         first,
         after: decode(after),
       });
-      return getUsers(list).then(users => ({
+      return loaders.user.loadMany(list).then(users => ({
         pageInfo: {
           hasNextPage: hasMoreItems,
         },
@@ -65,7 +88,7 @@ module.exports = {
         })),
       }));
     },
-    metaData: ({ id }: { id: String }) => {
+    metaData: ({ id }: { id: string }) => {
       return getFrequencyMetaData(id).then(data => {
         return {
           stories: data[0],

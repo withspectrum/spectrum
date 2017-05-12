@@ -1,5 +1,9 @@
 // @flow
 import React from 'react';
+//$FlowFixMe
+import branch from 'recompose/branch';
+//$FlowFixMe
+import renderComponent from 'recompose/renderComponent';
 // $FlowFixMe
 import styled from 'styled-components';
 import { Spinner } from './globals';
@@ -35,7 +39,10 @@ const LoadingCardContainer = styled(Card)`
 export const Loading = ({
   size,
   color,
-}: { size: Number, color: String }): React$Element<any> => (
+}: {
+  size: Number,
+  color: String,
+}): React$Element<any> => (
   <LoadingContainer>
     <Spinner size={size} color={color} />
   </LoadingContainer>
@@ -49,8 +56,21 @@ export const Loading = ({
 export const LoadingCard = ({
   size,
   color,
-}: { size: Number, color: String }): React$Element<any> => (
+}: {
+  size: Number,
+  color: String,
+}): React$Element<any> => (
   <LoadingCardContainer>
     <Spinner size={size} color={color} />
   </LoadingCardContainer>
+);
+
+export const displayLoadingState = branch(
+  props => !props.data || props.data.loading,
+  renderComponent(Loading)
+);
+
+export const displayLoadingCard = branch(
+  props => !props.data || props.data.loading,
+  renderComponent(LoadingCard)
 );

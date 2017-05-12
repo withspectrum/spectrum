@@ -1,6 +1,14 @@
+// @flow
 /**
  * The entry point for the server, this is where everything starts
  */
+const PORT = 3001;
+const WS_PORT = 5000;
+const DB_PORT = 28015;
+const HOST = 'localhost';
+const IS_PROD = process.env.NODE_ENV === 'production';
+const APP_URL = IS_PROD ? 'https://spectrum.chat' : 'http://localhost:3000';
+
 const { createServer } = require('http');
 const express = require('express');
 const passport = require('passport');
@@ -10,21 +18,16 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
+const { apolloUploadExpress } = require('apollo-upload-server');
 const cors = require('cors');
 
 const { db } = require('./models/db');
-const listeners = require('./subscriptions');
+const listeners = require('./subscriptions/listeners');
 const subscriptionManager = require('./subscriptions/manager');
 
 const schema = require('./schema');
 const { init: initPassport } = require('./authentication.js');
-
-const PORT = 3001;
-const WS_PORT = 5000;
-const DB_PORT = 28015;
-const HOST = 'localhost';
-const IS_PROD = process.env.NODE_ENV === 'production';
-const APP_URL = IS_PROD ? 'https://spectrum.chat' : 'http://localhost:3000';
+import createLoaders from './loaders';
 
 console.log('Server starting...');
 
@@ -36,6 +39,7 @@ initPassport({
 });
 // API server
 const app = express();
+
 app.use(
   cors({
     origin: APP_URL,
@@ -52,6 +56,7 @@ app.use(
 );
 app.use(cookieParser());
 app.use(bodyParser.json());
+app.use(apolloUploadExpress());
 app.use(
   session({
     store: new SessionStore(db, {
@@ -80,7 +85,7 @@ app.get(
   '/auth/twitter/callback',
   passport.authenticate('twitter', {
     failureRedirect: APP_URL,
-    successRedirect: `${APP_URL}/dashboard`,
+    successRedirect: APP_URL,
   })
 );
 app.use(
@@ -89,9 +94,18 @@ app.use(
     schema,
     context: {
       user: req.user,
+      loaders: createLoaders(),
     },
   }))
 );
+
+import type { Loader } from './loaders/types';
+export type GraphQLContext = {
+  user: Object,
+  loaders: {
+    [key: string]: Loader,
+  },
+};
 
 // Create the websocket server, make it 404 for all requests to HTTP(S) port(s)
 const websocketServer = createServer((req, res) => {

@@ -4,9 +4,10 @@ import React, { Component } from 'react';
 import { Router, Route, Switch, Redirect } from 'react-router';
 //$FlowFixMe
 import styled from 'styled-components';
-//$FlowFixMe
-import createBrowserHistory from 'history/createBrowserHistory';
+import { history } from './helpers/history';
 import ScrollManager from './components/scrollManager';
+import ModalRoot from './components/modals/modalRoot';
+import Toasts from './components/toasts';
 import DirectMessages from './views/directMessages';
 import Explore from './views/explore';
 import Story from './views/story';
@@ -17,6 +18,8 @@ import Navbar from './views/navbar';
 import StyleGuide from './views/pages/styleGuide';
 import Dashboard from './views/dashboard';
 import Notifications from './views/notifications';
+import communitySettings from './views/communitySettings';
+import frequencySettings from './views/frequencySettings';
 
 const About = () => (
   <div>
@@ -33,11 +36,14 @@ const Body = styled.div`
 class Routes extends Component {
   render() {
     return (
-      <Router history={createBrowserHistory()}>
+      <Router history={history}>
+
         <ScrollManager>
           <Body>
             {/* Global navigation, notifications, message notifications, etc */}
             <Route component={Navbar} />
+            <Route component={ModalRoot} />
+            <Route component={Toasts} />
 
             {/*
               Switch only renders the first match. Subrouting happens downstream
@@ -45,7 +51,7 @@ class Routes extends Component {
             */}
             <Switch>
               <Route exact path="/" component={Dashboard} />
-              <Route exact path="/dashboard" component={Dashboard} />
+              <Route exact path="/home" component={Dashboard} />
 
               {/* Public Business Pages */}
               <Route path="/about" component={About} />
@@ -67,6 +73,14 @@ class Routes extends Component {
               pass. We handle null communitySlug values downstream by either
               redirecting to home or showing a 404
             */}
+              <Route
+                path="/:communitySlug/:frequencySlug/settings"
+                component={frequencySettings}
+              />
+              <Route
+                path="/:communitySlug/settings"
+                component={communitySettings}
+              />
               <Route
                 path="/:communitySlug/:frequencySlug"
                 component={FrequencyView}

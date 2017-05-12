@@ -2,20 +2,32 @@
 /**
  * Community query resolvers
  */
-const { getCommunity, getCommunityMetaData } = require('../models/community');
+const {
+  getCommunityMetaData,
+  getAllCommunityStories,
+} = require('../models/community');
 const { getFrequenciesByCommunity } = require('../models/frequency');
-const { getUsers, getAllStories } = require('../models/user');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetCommunityArgs } from '../models/community';
 import { encode, decode } from '../utils/base64';
+import type { GraphQLContext } from '../';
 
 module.exports = {
   Query: {
-    community: (_: any, args: GetCommunityArgs) => getCommunity(args),
+    community: (
+      _: any,
+      args: GetCommunityArgs,
+      { loaders, user }: GraphQLContext
+    ) => {
+      if (args.id) return loaders.community.load(args.id);
+      if (args.slug) return loaders.communityBySlug.load(args.slug);
+
+      return null;
+    },
   },
   Community: {
-    frequencyConnection: ({ id }: { id: String }) => ({
+    frequencyConnection: ({ id }: { id: string }) => ({
       pageInfo: {
         hasNextPage: false,
       },
@@ -25,15 +37,24 @@ module.exports = {
         }))
       ),
     }),
+    isOwner: ({ owners }, _, { user }) => {
+      if (!user) return false;
+      return owners.indexOf(user.uid) > -1;
+    },
+    isMember: ({ members }, _, { user }) => {
+      if (!user) return false;
+      return members.indexOf(user.uid) > -1;
+    },
     memberConnection: (
       { members }: { members: Array<string> },
-      { first = 10, after }: PaginationOptions
+      { first = 10, after }: PaginationOptions,
+      { loaders }: GraphQLContext
     ) => {
       const { list, hasMoreItems } = paginate(members, {
         first,
         after: decode(after),
       });
-      return getUsers(list).then(users => ({
+      return loaders.user.loadMany(list).then(users => ({
         pageInfo: {
           hasNextPage: hasMoreItems,
         },
@@ -44,15 +65,12 @@ module.exports = {
       }));
     },
     storyConnection: (
-      { id }: { id: String },
+      { id }: { id: string },
       { first = 10, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
       // TODO: Make this more performant by doing an actual db query rather than this hacking around
-      return getFrequenciesByCommunity(id)
-        .then(frequencies =>
-          getAllStories(frequencies.map(frequency => frequency.id))
-        )
+      return getAllCommunityStories(id)
         .then(stories =>
           paginate(
             stories,

@@ -39,6 +39,8 @@ const generateCommunity = members => {
     name,
     slug: slugify(name),
     members,
+    description: casual.short_description(),
+    owners: [members[0]],
   };
 };
 
@@ -54,10 +56,11 @@ const generateFrequency = (community, subscribers) => {
     description: casual.short_description(),
     slug: slugify(name),
     subscribers,
+    owners: [subscribers[0]],
   };
 };
 
-const generateStory = (frequency, author) => {
+const generateStory = (community, frequency, author) => {
   const createdAt = faker.date.past(2);
   const content = {
     title: casual.title(),
@@ -68,6 +71,7 @@ const generateStory = (frequency, author) => {
     createdAt,
     author,
     frequency,
+    community,
     modifiedAt: faker.date.between(createdAt, new Date()),
     published: faker.random.boolean(),
     content,
@@ -103,6 +107,69 @@ const generateReaction = (user, message) => {
   };
 };
 
+const generateStoryNotification = (story, frequency, communityId, callback) => {
+  return generateNotification(
+    frequency.subscribers,
+    story.author,
+    story.id,
+    frequency.id,
+    communityId,
+    story.content.title,
+    // TODO: Add a maximum length to this
+    story.content.description
+  );
+};
+
+const generateMessageNotification = (
+  users,
+  message,
+  story,
+  frequencyId,
+  communityId
+) => {
+  return generateNotification(
+    users,
+    message.sender,
+    story.id,
+    frequencyId,
+    communityId,
+    story.content.title,
+    // TODO: Add a maximum length to this
+    message.message.content,
+    message.id
+  );
+};
+
+const generateNotification = (
+  users,
+  sender,
+  story,
+  frequency,
+  community,
+  title,
+  excerpt,
+  message
+) => {
+  return {
+    id: uuid(),
+    createdAt: faker.date.past(2),
+    users: users.map(uid => ({
+      uid,
+      read: faker.random.boolean(),
+    })),
+    type: message ? 'NEW_MESSAGE' : 'NEW_STORY',
+    message,
+    story,
+    frequency,
+    community,
+    sender,
+    content: {
+      title,
+      excerpt,
+    },
+  };
+};
+
 module.exports = {
   randomAmount,
   generateUser,
@@ -111,4 +178,6 @@ module.exports = {
   generateStory,
   generateMessage,
   generateReaction,
+  generateStoryNotification,
+  generateMessageNotification,
 };

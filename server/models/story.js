@@ -1,85 +1,58 @@
+// @flow
 /**
  * Storing and retrieving stories
  */
 const { db } = require('./db');
+const { listenToNewDocumentsIn } = require('./utils');
+const { storeStoryNotification } = require('./notification');
 
-const getStory = id => {
-  return db.table('stories').get(id).run();
+const getStories = (ids: Array<string>) => {
+  return db.table('stories').getAll(...ids).run();
 };
 
 const getStoriesByFrequency = (frequency, { first, after }) => {
-  const getStories = db
+  return db
     .table('stories')
-    .between(after || db.minval, db.maxval, { leftBound: 'open' })
-    .orderBy('modifiedAt')
-    .filter({ frequency })
-    .limit(first)
-    .run()
-    .then();
-
-  const getLastStory = db
-    .table('stories')
-    .orderBy('modifiedAt')
-    .filter({ frequency })
-    .max()
+    .getAll(frequency, { index: 'frequency' })
+    .orderBy(db.desc('createdAt'))
     .run();
-
-  return Promise.all([getStories, getLastStory]);
 };
 
 const getStoriesByUser = (uid, { first, after }) => {
-  const getStories = db
+  return db
     .table('stories')
-    .between(after || db.minval, db.maxval, { leftBound: 'open' })
-    .orderBy('modifiedAt')
-    .filter({ author: uid })
-    .limit(first)
-    .run()
-    .then();
-
-  const getLastStory = db
-    .table('stories')
-    .orderBy('modifiedAt')
-    .filter({ author: uid })
-    .max()
+    .getAll(uid, { index: 'author' })
+    .orderBy(db.desc('createdAt'))
     .run();
-
-  return Promise.all([getStories, getLastStory]);
 };
 
-const addStory = story => {
+const publishStory = (story, user) => {
   return db
     .table('stories')
     .insert(
       Object.assign({}, story, {
+        author: user.uid,
         createdAt: new Date(),
         modifiedAt: new Date(),
-        edits: [
-          {
-            timestamp: new Date(),
-            content: story.content,
-          },
-        ],
+        published: true,
       }),
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
-};
-
-const publishStory = id => {
-  return db
-    .table('stories')
-    .get(id)
-    .update(
-      {
-        published: true,
-        modifiedAt: new Date(),
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => result.changes[0].new_val)
+    .then(story => {
+      storeStoryNotification({
+        story: story.id,
+        frequency: story.frequency,
+        sender: story.author,
+        content: {
+          title: story.content.title,
+          // TODO Limit to max characters
+          excerpt: story.content.description,
+        },
+      });
+      return story;
+    });
 };
 
 const setStoryLock = (id, value) => {
@@ -98,9 +71,9 @@ const setStoryLock = (id, value) => {
       .run()
       .then(
         result =>
-          (result.changes.length > 0
+          result.changes.length > 0
             ? result.changes[0].new_val
-            : db.table('stories').get(id).run())
+            : db.table('stories').get(id).run()
       )
   );
 };
@@ -133,13 +106,17 @@ const editStory = (id, newContent) => {
     .then(result => result.changes[0].new_val);
 };
 
+const listenToNewStories = cb => {
+  return listenToNewDocumentsIn('stories', cb);
+};
+
 module.exports = {
-  addStory,
-  getStory,
+  getStories,
   publishStory,
   editStory,
   setStoryLock,
   deleteStory,
+  listenToNewStories,
   getStoriesByFrequency,
   getStoriesByUser,
 };

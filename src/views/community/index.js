@@ -4,34 +4,60 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
+
 import StoryComposer from '../../components/storyComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
+import ListCard from './components/listCard';
 import { CommunityProfile } from '../../components/profile';
-import { getCommunityStories, getCommunityProfile } from './queries';
+import { displayLoadingCard } from '../../components/loading';
 
-const enhanceStoryFeed = compose(getCommunityStories);
-const StoryFeedWithData = enhanceStoryFeed(StoryFeed);
+import {
+  getCommunityStories,
+  getCommunity,
+  getCommunityFrequencies,
+} from './queries';
 
-const enhanceProfile = compose(getCommunityProfile);
-const CommunityProfileWithData = enhanceProfile(CommunityProfile);
+const CommunityStoryFeed = compose(getCommunityStories)(StoryFeed);
 
-const CommunityViewPure = ({ match }) => {
+const FrequencyListCard = compose(getCommunityFrequencies)(ListCard);
+
+const CommunityViewPure = ({ match, data: { community, error } }) => {
   const communitySlug = match.params.communitySlug;
+
+  if (error) {
+    return <div>error</div>;
+  }
+
+  if (!community) {
+    return <div>community not found</div>;
+  }
+
+  /*
+    In the future we can check isPrivate && !isMember to handle private
+    communities with request-to-join flows or redirects if the community
+    shouldn't be viewable at all
+  */
+
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <CommunityProfileWithData slug={communitySlug} profileSize="full" />
+        <CommunityProfile data={{ community }} profileSize="full" />
+        <FrequencyListCard slug={communitySlug} />
       </Column>
 
       <Column type="primary" alignItems="center">
-        <StoryComposer activeCommunity={match.params.communityId} />
-        <StoryFeedWithData slug={communitySlug} />
+        {community.isMember
+          ? <StoryComposer activeCommunity={communitySlug} />
+          : <span />}
+        <CommunityStoryFeed slug={communitySlug} />
       </Column>
     </AppViewWrapper>
   );
 };
 
-export const CommunityView = pure(CommunityViewPure);
+export const CommunityView = compose(getCommunity, displayLoadingCard, pure)(
+  CommunityViewPure
+);
 export default CommunityView;

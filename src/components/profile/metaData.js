@@ -57,6 +57,8 @@ const buildArray = (meta: Object): Array<any> => {
         }
       );
     }
+
+    return {};
   });
 };
 
@@ -75,9 +77,9 @@ const MetaDataPure = ({ data }) => {
                   color={'text.alt'}
                   hoverColor={'text.alt'}
                   scaleOnHover={false}
-                  size={24}
+                  size={32}
                 />
-                {item.label}
+                <span>{item.label}</span>
               </Label>
               <Count>{item.count}</Count>
             </MetaListItem>

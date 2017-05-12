@@ -1,7 +1,8 @@
 // @flow
+/* eslint no-eval: 0 */
 // $FlowFixMe
 import styled, { css } from 'styled-components';
-import { Gradient, Shadow, Transition } from '../globals';
+import { Gradient, Shadow, Transition, hexa } from '../globals';
 
 // impacts every button
 const baseStyles = css`
@@ -17,22 +18,24 @@ const baseStyles = css`
   line-height: 1;
   position: relative;
   opacity: ${props => (props.disabled ? '0.4' : '1')};
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    transition: all 0.2s ease-in-out;
+  }
 
   ${props => (props.size === 'small' ? `
-        font-size: 11px;
-        padding: 0 10px;
-        height: 28px;
-        line-height: 0.2;
+        font-size: 12px;
+        padding: 8px 12px;
       ` : props.size === 'large' ? `
-          font-size: 16px;
-          padding: 0 24px;
-          height: 48px;
-        ` : `
-          font-size: 14px;
-          padding: 0 16px;
-          height: 40px;
-        `)}
+        font-size: 16px;
+        padding: 16px 24px;
+      ` : `
+        font-size: 14px;
+        padding: 12px 16px;
+      `)}
 
+  ${props => (props.icon && !props.label ? 'padding: 0; span { display: none;}' : '')}
   /* if an icon is present in the icon, add separation from the label */
   div + span {
     margin-left: 8px;
@@ -48,11 +51,11 @@ const buttonStyles = css`
   &:hover {'
     border-radius: ${props => (props.disabled ? '8px' : '12px')};
     transition: ${props => (props.disabled ? 'none' : Transition.hover.on)};
-    box-shadow: ${props => (props.disabled ? 'none' : Shadow.high)};
+    box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.high} ${hexa(props.theme.text.placeholder, 0.25)}`)};
   }
 
   &:active {
-    box-shadow: ${props => Shadow.low};
+    box-shadow: ${props => `${Shadow.low} ${props.theme.text.placeholder}`};
   }
 `;
 
@@ -65,12 +68,13 @@ export const OutlineStyledButton = styled.button`
   ${baseStyles}
   background: transparent;
   background-image: none;
-  box-shadow: inset 0 0 0 2px ${props => eval(`props.theme.${props.color ? props.color : 'brand'}.default`)};
-  color: ${props => eval(`props.theme.${props.color ? props.color : 'brand'}.default`)};
+  box-shadow: inset 0 0 0 2px ${props => eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
+  color: ${props => eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
 
   &:hover {
     border-radius: 12px;
-    box-shadow: inset 0 0 0 2px ${props => eval(`props.theme.${props.color ? props.color : 'brand'}.default`)};
+    color: ${props => eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.default'}`)};
+    box-shadow: inset 0 0 0 2px ${props => eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.default'}`)};
   }
 `;
 
@@ -79,10 +83,14 @@ export const LinkStyledButton = styled.button`
   background: transparent;
   background-image: none;
   box-shadow: none;
-  color: ${props => eval(`props.theme.${props.color ? props.color : 'brand'}.default`)};
+  font-weight: 500;
+  color: ${props => props.theme.text.alt};
+  transition: ${Transition.hover.off};
 
   &:hover {'
-    box-shadow: none;
+    color: ${props => eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.default'}`)};
+    box-shadow: ${Shadow.mid} ${props => hexa(props.theme.text.alt, 0.25)};
+    transition: ${Transition.hover.on};
   }
 `;
 

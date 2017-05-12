@@ -26,11 +26,15 @@ const Story = /* GraphQL */ `
 		createdAt: Date!
 		modifiedAt: Date!
 		frequency: Frequency!
+		community: Community!
 		published: Boolean!
 		content: StoryContent!
-		deleted: Boolean
 		locked: Boolean
+		isCreator: Boolean
+    isFrequencyOwner: Boolean
+    isCommunityOwner: Boolean
 		edits: [Edit!]
+		participants: [User]
 		messageConnection(first: Int = 10, after: String): StoryMessagesConnection!
 		messageCount: Int
 		author: User!
@@ -48,13 +52,12 @@ const Story = /* GraphQL */ `
 
 	input StoryInput {
 		frequency: ID!
-		published: Boolean!
+		community: ID!
 		content: StoryContentInput!
 	}
 
 	extend type Mutation {
-		addStory(story: StoryInput!): Story
-		publishStory(id: ID!): Story
+		publishStory(story: StoryInput!): Story
 		editStory(id: ID!, newContent: StoryContentInput!): Story
 		setStoryLock(id: ID!, value: Boolean!): Story
 		deleteStory(id: ID!): Boolean

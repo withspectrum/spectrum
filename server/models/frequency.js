@@ -5,18 +5,19 @@
 const { db } = require('./db');
 import { UserError } from 'graphql-errors';
 
-const getFrequenciesByCommunity = community => {
-  return db.table('frequencies').filter({ community }).run();
+const getFrequenciesByCommunity = (community: string) => {
+  return db
+    .table('frequencies')
+    .getAll(community, { index: 'community' })
+    .run();
 };
 
-const getFrequenciesByUser = (uid: String) => {
+const getFrequenciesByUser = (uid: string) => {
   return db
     .table('frequencies')
     .filter(frequency => frequency('subscribers').contains(uid))
     .run();
 };
-
-const getFrequencyById = (id: string) => db.table('frequencies').get(id).run();
 
 const getFrequencyBySlug = (slug: string, community: string) => {
   return db
@@ -34,25 +35,25 @@ const getFrequencyBySlug = (slug: string, community: string) => {
     .then(result => result && result[0].left);
 };
 
-export type GetFrequencyArgs = {
-  id?: string,
-  slug?: string,
-  community?: string,
+type GetFrequencyByIdArgs = {
+  id: string,
 };
 
-const getFrequency = ({ id, slug, community }: GetFrequencyArgs) => {
-  if (id) return getFrequencyById(id);
-  if (slug && community) return getFrequencyBySlug(slug, community);
-
-  throw new UserError(
-    'Please provide either id or slug and community to your frequency() query.'
-  );
+type GetFrequencyBySlugArgs = {
+  slug: string,
+  community: string,
 };
 
-const getFrequencyMetaData = (id: String) => {
+export type GetFrequencyArgs = GetFrequencyByIdArgs | GetFrequencyBySlugArgs;
+
+const getFrequencies = (ids: Array<string>) => {
+  return db.table('frequencies').getAll(...ids).run();
+};
+
+const getFrequencyMetaData = (id: string) => {
   const getStoryCount = db
     .table('stories')
-    .filter({ frequency: id })
+    .getAll(id, { index: 'frequency' })
     .count()
     .run();
   const getSubscriberCount = db
@@ -65,33 +66,131 @@ const getFrequencyMetaData = (id: String) => {
   return Promise.all([getStoryCount, getSubscriberCount]);
 };
 
-type CreateFrequencyType = {
-  creatorId: string,
-  communityId: string,
-  name: string,
-  description: string,
-  slug: string,
+export type CreateFrequencyArguments = {
+  input: {
+    community: string,
+    name: string,
+    description: string,
+    slug: string,
+  },
 };
 
-const createFrequency = ({
-  creatorId,
-  communityId,
-  name,
-  description,
-  slug,
-}: CreateFrequencyType) => {
+export type EditFrequencyArguments = {
+  input: {
+    id: string,
+    name: string,
+    description: string,
+    slug: string,
+  },
+};
+
+const createFrequency = (
+  { input: { community, name, slug, description } }: CreateFrequencyArguments,
+  creatorId: string
+) => {
   return db
     .table('frequencies')
-    .insert({
-      name,
-      description,
-      slug,
-      createdAt: new Date(),
-      modifiedAt: new Date(),
-      community: communityId,
-      subscribers: [creatorId],
+    .insert(
+      {
+        name,
+        description,
+        slug,
+        createdAt: new Date(),
+        modifiedAt: new Date(),
+        community: community,
+        subscribers: [creatorId],
+        owners: [creatorId],
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val);
+};
+
+const editFrequency = ({
+  input: { name, slug, description, id },
+}: EditFrequencyArguments) => {
+  return db
+    .table('frequencies')
+    .get(id)
+    .run()
+    .then(result => {
+      return Object.assign({}, result, {
+        name,
+        slug,
+        description,
+      });
     })
-    .run();
+    .then(obj => {
+      return db
+        .table('frequencies')
+        .get(id)
+        .update({ ...obj }, { returnChanges: 'always' })
+        .run()
+        .then(result => {
+          // if an update happened
+          if (result.replaced === 1) {
+            return result.changes[0].new_val;
+          }
+
+          // an update was triggered from the client, but no data was changed
+          if (result.unchanged === 1) {
+            return result.changes[0].old_val;
+          }
+        });
+    });
+};
+
+const deleteFrequency = id => {
+  return db
+    .table('frequencies')
+    .get(id)
+    .delete({ returnChanges: true })
+    .run()
+    .then(({ deleted, changes }) => {
+      if (deleted > 0) {
+        // frequency was deleted, return the object to clear the client store
+        return changes[0].old_val.id;
+      }
+    });
+};
+
+const unsubscribeFrequency = (id, uid) => {
+  return db
+    .table('frequencies')
+    .get(id)
+    .update(
+      row => ({
+        subscribers: row('subscribers').filter(item => item.ne(uid)),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        changes.length > 0
+          ? changes[0].new_val
+          : db.table('frequencies').get(id).run()
+    );
+};
+
+const subscribeFrequency = (id, uid) => {
+  return db
+    .table('frequencies')
+    .get(id)
+    .update(
+      row => ({
+        subscribers: row('subscribers').append(uid),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        changes.length > 0
+          ? changes[0].new_val
+          : db.table('frequencies').get(id).run()
+    );
 };
 
 const getTopFrequencies = (amount: number) => {
@@ -107,11 +206,16 @@ const getFrequencySubscriberCount = (id: string) => {
 };
 
 module.exports = {
-  getFrequency,
+  getFrequencyBySlug,
   getFrequencyMetaData,
   getFrequenciesByUser,
   getFrequenciesByCommunity,
   createFrequency,
+  editFrequency,
+  deleteFrequency,
+  unsubscribeFrequency,
+  subscribeFrequency,
   getTopFrequencies,
   getFrequencySubscriberCount,
+  getFrequencies,
 };

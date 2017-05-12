@@ -4,45 +4,65 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
-import branch from 'recompose/branch';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import {
+  getEverythingStories,
+  getCurrentUserProfile,
+  getCurrentUserCommunities,
+} from './queries';
+import { saveUserDataToLocalStorage } from '../../actions/authentication';
+
 import { Column } from '../../components/column';
 import { UserProfile } from '../../components/profile';
-import { ErrorMessage } from './style';
-import { getEverythingStories, getCurrentUserProfile } from './queries';
-import { Loading } from '../../components/loading';
 import StoryFeed from '../../components/storyFeed';
 import StoryComposer from '../../components/storyComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
-import {
-  logout,
-  saveUserDataToLocalStorage,
-} from '../../actions/authentication';
+import ListCard from './components/listCard';
 
-const enhanceStoryFeed = compose(getEverythingStories);
-const StoryFeedWithData = enhanceStoryFeed(StoryFeed);
+const EverythingStoryFeed = compose(getEverythingStories)(StoryFeed);
 
-const enhanceProfile = compose(getCurrentUserProfile);
-const UserProfileWithData = enhanceProfile(UserProfile);
+const CurrentUserProfile = compose(getCurrentUserProfile)(UserProfile);
 
-const DashboardPure = () => {
+const CommunitiesListCard = compose(getCurrentUserCommunities)(ListCard);
+
+const DashboardPure = ({ data: { user, error }, data, dispatch }) => {
+  // save user data to localstorage, which will also dispatch an action to put
+  // the user into the redux store
+  if (user) {
+    dispatch(saveUserDataToLocalStorage(user));
+  }
+
+  if (error) {
+    return (
+      <AppViewWrapper>
+        <Column type="primary" alignItems="center">
+          Error loading home page
+        </Column>
+      </AppViewWrapper>
+    );
+  }
+
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <UserProfileWithData profileSize="full" />
+        <CurrentUserProfile profileSize="full" />
+        <CommunitiesListCard />
       </Column>
 
       <Column type="primary" alignItems="center">
         <StoryComposer />
-        <StoryFeedWithData />
+        <EverythingStoryFeed />
       </Column>
     </AppViewWrapper>
   );
 };
 
-export const Dashboard = pure(DashboardPure);
-export default Dashboard;
+/*
+  This is bad, but necessary for now!
+  I'm wrapping DashboardPure in a query for getCurrentUserProfile so that I
+  can store the user in localStorage and redux for any downstream actions
+*/
+const Dashboard = compose(getCurrentUserProfile, pure)(DashboardPure);
+export default connect()(Dashboard);

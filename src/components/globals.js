@@ -1,9 +1,8 @@
+/* eslint no-eval: 0 */
 import styled, { css, keyframes } from 'styled-components';
 
-export const Gradient = (
-  g1,
-  g2
-) => css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`;
+export const Gradient = (g1, g2) =>
+  css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`;
 
 export const Truncate = width => css`
   text-overflow: ellipsis;
@@ -43,6 +42,9 @@ export const Transition = {
   reaction: {
     on: 'all 0.15s ease-in',
     off: 'all 0.1s ease-out',
+  },
+  dropdown: {
+    off: 'all 0.35s ease-out',
   },
 };
 
@@ -255,21 +257,15 @@ export const Span = styled.span`
 export const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: ${props => (props.spread ? 'space-between' : 'initial')};
-  align-items: ${props => (props.center ? 'center' : 'initial')};
-  padding: ${props => (props.padding ? props.padding : '0')};
-  margin: ${props => (props.margin ? props.margin : '0')};
-
-  ${props => (props.smallCol ? `@media (max-width: 768px) { flex-direction: column }` : '')};
+  justify-content: flex-start;
+  align-items: center
 `;
 
 export const FlexCol = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: ${props => (props.spread ? 'space-between' : 'flex-start')};
-  align-items: ${props => (props.center ? 'center' : 'initial')};
-  padding: ${props => (props.padding ? props.padding : '0')};
-  margin: ${props => (props.margin ? props.margin : '0')};
+  justify-content: flex-start;
+  align-items: stretch;
 `;
 
 const returnTooltip = props => {

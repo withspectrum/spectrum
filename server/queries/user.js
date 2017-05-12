@@ -1,34 +1,54 @@
+// @flow
 /**
  * Story query resolvers
  */
-const { getUser, getUserMetaData, getAllStories } = require('../models/user');
+const { getEverything, getUser } = require('../models/user');
 const { getCommunitiesByUser } = require('../models/community');
 const { getFrequenciesByUser } = require('../models/frequency');
 const { getStoriesByUser } = require('../models/story');
 const {
   getDirectMessageGroupsByUser,
 } = require('../models/directMessageGroup');
+const { getNotificationsByUser } = require('../models/notification');
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
+import { isAdmin } from '../utils/permissions';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetUserArgs } from '../models/frequency';
+import type { GraphQLContext } from '../';
 
 module.exports = {
   Query: {
-    user: (_, args: GetUserArgs) => getUser(args),
-    currentUser: (_, __, { user }) => user,
+    user: (
+      _: any,
+      args: { uid: string, username: string },
+      { loaders }: GraphQLContext
+    ) => {
+      if (args.uid) return loaders.user.load(args.uid);
+      if (args.username) return getUser({ username: args.username });
+      return null;
+    },
+    currentUser: (_: any, __: any, { user }: GraphQLContext) => user,
   },
   User: {
+    notificationConnection: (
+      { uid }: { uid: string },
+      { first = 10, after }: PaginationOptions,
+      { user }: GraphQLContext
+    ) => {
+      if (!user || user.uid !== uid) return null;
+      return getNotificationsByUser(uid, { first, after });
+    },
+    isAdmin: ({ uid }: { uid: string }) => {
+      return isAdmin(uid);
+    },
     everything: (
-      { uid }: { uid: String },
+      { uid }: { uid: string },
       { first = 10, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
       // TODO: Make this more performant by doing an actual db query rather than this hacking around
-      return getFrequenciesByUser(uid)
-        .then(frequencies =>
-          getAllStories(frequencies.map(frequency => frequency.id))
-        )
+      return getEverything(uid)
         .then(stories =>
           paginate(
             stories,
@@ -46,18 +66,21 @@ module.exports = {
           })),
         }));
     },
-    communityConnection: user => ({
+    communityConnection: (user: Object) => ({
       // Don't paginate communities and frequencies of a user
       pageInfo: {
         hasNextPage: false,
       },
       edges: getCommunitiesByUser(user.uid).then(communities =>
         communities.map(community => ({
-          node: community,
+          node: {
+            ...community,
+            isOwner: community.owners.indexOf(user.uid) > -1,
+          },
         }))
       ),
     }),
-    frequencyConnection: user => ({
+    frequencyConnection: (user: Object) => ({
       pageInfo: {
         hasNextPage: false,
       },
@@ -67,7 +90,7 @@ module.exports = {
         }))
       ),
     }),
-    directMessageGroupsConnection: user => ({
+    directMessageGroupsConnection: (user: Object) => ({
       pageInfo: {
         hasNextPage: false,
       },
@@ -78,31 +101,34 @@ module.exports = {
       ),
     }),
     storyConnection: (
-      { uid }: { uid: String },
+      { uid }: { uid: string },
       { first = 10, after }: PaginationOptions
     ) => {
-      const cursorId = decode(after);
-      return getStoriesByUser(uid, { first, after: cursorId }).then(([
-        stories,
-        lastStory,
-      ]) => ({
-        pageInfo: {
-          hasNextPage: stories.length > 0
-            ? lastStory.id === stories[stories.length - 1].id
-            : lastStory.id === cursorId,
-        },
-        edges: stories.map(story => ({
-          cursor: encode(story.id),
-          node: story,
-        })),
-      }));
+      const cursor = decode(after);
+      return getStoriesByUser(uid, { first, after: cursor })
+        .then(stories =>
+          paginate(
+            stories,
+            { first, after: cursor },
+            story => story.id === cursor
+          )
+        )
+        .then(result => ({
+          pageInfo: {
+            hasNextPage: result.hasMoreItems,
+          },
+          edges: result.list.map(story => ({
+            cursor: encode(story.id),
+            node: story,
+          })),
+        }));
     },
-    metaData: ({ uid }: { uid: String }) => {
-      return getUserMetaData(uid).then(data => {
-        return {
-          stories: data[0],
-        };
-      });
+    storyCount: (
+      { uid }: { uid: string },
+      _: any,
+      { loaders }: GraphQLContext
+    ) => {
+      return loaders.userStoryCount.load(uid).then(data => data.count);
     },
   },
 };

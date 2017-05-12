@@ -34,7 +34,9 @@ const DEFAULT_COMMUNITIES = [
     createdAt: new Date(),
     name: 'Spectrum',
     slug: 'spectrum',
-    members: [DEFAULT_USERS.map(({ uid }) => uid)],
+    description: 'The future of community.',
+    members: DEFAULT_USERS.map(({ uid }) => uid),
+    owners: DEFAULT_USERS.map(({ uid }) => uid),
   },
 ];
 
@@ -47,7 +49,8 @@ const DEFAULT_FREQUENCIES = [
     name: 'General',
     description: 'General chatter',
     slug: 'general',
-    subscribers: [DEFAULT_USERS.map(({ uid }) => uid)],
+    subscribers: DEFAULT_USERS.map(({ uid }) => uid),
+    owners: DEFAULT_USERS.map(({ uid }) => uid),
   },
 ];
 
@@ -55,8 +58,9 @@ const DEFAULT_STORIES = [
   {
     id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
     createdAt: new Date(),
-    author: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a190',
+    author: 'uItS3QQiUxXH44m14uWmixTbqSc2',
     frequency: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
+    community: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     modifiedAt: new Date(),
     published: true,
     content: {
@@ -75,9 +79,36 @@ const DEFAULT_STORIES = [
   },
 ];
 
+const DEFAULT_NOTIFICATIONS = [
+  {
+    id: 'first-notification-asfd123',
+    createdAt: new Date(),
+    users: [
+      {
+        uid: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a190',
+        read: false,
+      },
+      {
+        uid: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+        read: false,
+      },
+    ],
+    type: 'NEW_STORY',
+    story: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
+    frequency: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
+    community: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    sender: 'uItS3QQiUxXH44m14uWmixTbqSc2',
+    content: {
+      title: 'The first story! 🎉',
+      excerpt: 'This is it, we got a story here',
+    },
+  },
+];
+
 module.exports = {
   DEFAULT_USERS,
   DEFAULT_COMMUNITIES,
   DEFAULT_FREQUENCIES,
   DEFAULT_STORIES,
+  DEFAULT_NOTIFICATIONS,
 };

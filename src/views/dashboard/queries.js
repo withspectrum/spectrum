@@ -1,7 +1,13 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
+// $FlowFixMe
+import update from 'immutability-helper';
+import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
+import {
+  userEverythingFragment,
+} from '../../api/fragments/user/userEverything';
 import {
   userCommunitiesFragment,
 } from '../../api/fragments/user/userCommunities';
@@ -11,31 +17,12 @@ const LoadMoreStories = gql`
   query loadMoreEverythingStories($after: String) {
     user: currentUser {
       ...userInfo
-      everything(first: 10, after: $after){
-  			pageInfo {
-  			  hasNextPage
-  			  hasPreviousPage
-  			}
-        edges {
-          cursor
-          node {
-            id
-            createdAt
-            content {
-              title
-              description
-            }
-            author {
-              displayName
-            }
-            messageCount
-          }
-        }
-      }
       ...userCommunities
+      ...userEverything
     }
   }
   ${userInfoFragment}
+  ${userEverythingFragment}
   ${userCommunitiesFragment}
 `;
 
@@ -46,6 +33,7 @@ const storiesQueryOptions = {
       loading,
       user,
       stories: user ? user.everything.edges : '',
+      hasNextPage: user ? user.everything.pageInfo.hasNextPage : false,
       fetchMore: () =>
         fetchMore({
           query: LoadMoreStories,
@@ -63,6 +51,10 @@ const storiesQueryOptions = {
                 ...prev.user,
                 everything: {
                   ...prev.user.everything,
+                  pageInfo: {
+                    ...prev.user.everything.pageInfo,
+                    ...fetchMoreResult.user.everything.pageInfo,
+                  },
                   edges: [
                     ...prev.user.everything.edges,
                     ...fetchMoreResult.user.everything.edges,
@@ -74,38 +66,46 @@ const storiesQueryOptions = {
         }),
     },
   }),
+  options: ({ params }) => ({
+    reducer: (prev, action, variables) => {
+      if (
+        action.type === 'APOLLO_MUTATION_RESULT' &&
+        action.operationName === 'publishStory'
+      ) {
+        const newStory = action.result.data.publishStory;
+        const cursor = encode(newStory.id);
+        const newEdge = {
+          cursor,
+          node: {
+            ...newStory,
+          },
+        };
+        return update(prev, {
+          user: {
+            everything: {
+              edges: {
+                $unshift: [newEdge],
+              },
+            },
+          },
+        });
+      }
+      return prev;
+    },
+  }),
 };
 
 export const getEverythingStories = graphql(
   gql`
-  {
+  query getEverythingStories($after: String) {
     user: currentUser {
       ...userInfo
-      everything(first: 10){
-  			pageInfo {
-  			  hasNextPage
-  			  hasPreviousPage
-  			}
-        edges {
-          cursor
-          node {
-            id
-            createdAt
-            content {
-              title
-              description
-            }
-            author {
-              displayName
-            }
-            messageCount
-          }
-        }
-      }
       ...userCommunities
+      ...userEverything
     }
   }
   ${userInfoFragment}
+  ${userEverythingFragment}
   ${userCommunitiesFragment}
 `,
   storiesQueryOptions
@@ -119,7 +119,7 @@ export const getEverythingStories = graphql(
 */
 export const getCurrentUserProfile = graphql(
   gql`
-    {
+    query getCurrentUserProfile {
 			user: currentUser {
         ...userInfo
         ...userMetaData
@@ -128,4 +128,28 @@ export const getCurrentUserProfile = graphql(
     ${userInfoFragment}
     ${userMetaDataFragment}
 	`
+);
+
+export const GET_CURRENT_USER_COMMUNITIES_QUERY = gql`
+  query currentUserCommunities {
+    user: currentUser {
+      ...userCommunities
+    }
+  }
+  ${userCommunitiesFragment}
+`;
+
+export const GET_CURRENT_USER_COMMUNITIES_OPTIONS = {
+  props: ({ data: { error, loading, user } }) => ({
+    data: {
+      error,
+      loading,
+      communities: user ? user.communityConnection.edges : '',
+    },
+  }),
+};
+
+export const getCurrentUserCommunities = graphql(
+  GET_CURRENT_USER_COMMUNITIES_QUERY,
+  GET_CURRENT_USER_COMMUNITIES_OPTIONS
 );
