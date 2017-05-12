@@ -18,6 +18,7 @@ export const storyInfoFragment = gql`
     content {
       title
       description
+      type
     }
     author {
       ...userInfo

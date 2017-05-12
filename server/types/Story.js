@@ -9,11 +9,16 @@ const Story = /* GraphQL */ `
 		node: Message!
 	}
 
+	enum StoryContentType {
+		SLATE
+	}
+
 	# The contents of a story
 	type StoryContent {
 		title: String!
 		description: String
 		media: String
+		type: StoryContentType
 	}
 
 	type Edit {
@@ -48,6 +53,7 @@ const Story = /* GraphQL */ `
 		title: String!
 		description: String
 		media: String
+		type: StoryContentType
 	}
 
 	input StoryInput {
