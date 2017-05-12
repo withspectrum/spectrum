@@ -6,12 +6,8 @@
 const { getFrequencies } = require('../models/frequency');
 const { getCommunities } = require('../models/community');
 const { getUsers } = require('../models/user');
-const {
-  getMessagesByLocationAndThread,
-  getMessageCount,
-} = require('../models/message');
+const { getMessages, getMessageCount } = require('../models/message');
 import paginate from '../utils/paginate-arrays';
-import type { LocationTypes } from '../models/message';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GraphQLContext } from '../';
 import { encode, decode } from '../utils/base64';
@@ -33,7 +29,7 @@ module.exports = {
       { loaders }: GraphQLContext
     ) => loaders.community.load(community),
     participants: ({ id, author }: { id: String, author: string }) => {
-      return getMessagesByLocationAndThread('messages', id)
+      return getMessages(id)
         .then(messages =>
           messages
             .map(
@@ -81,7 +77,7 @@ module.exports = {
       { first = 100, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
-      return getMessagesByLocationAndThread('messages', id, {
+      return getMessages(id, {
         first,
         after: cursor,
       })

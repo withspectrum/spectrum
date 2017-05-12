@@ -8,32 +8,28 @@ const { listenToNewDocumentsIn } = require('./utils');
 const { storeMessageNotification } = require('./notification');
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
-export type LocationTypes = 'messages' | 'direct_messages';
 export type MessageTypes = 'text' | 'media';
 export type MessageProps = {
   type: MessageTypes,
   content: String,
 };
 
-const getMessage = (location: LocationTypes, id: string) => {
-  return db.table(location).get(id).run();
+const getMessage = (id: string) => {
+  return db.table('messages').get(id).run();
 };
 
-const getMessagesByLocationAndThread = (
-  location: LocationTypes,
-  thread: String
-) => {
+const getMessages = (thread: String) => {
   return db
-    .table(location)
+    .table('messages')
     .getAll(thread, { index: 'thread' })
     .orderBy('timestamp')
     .run();
 };
 
-const storeMessage = (location: LocationTypes, message: MessageProps, user) => {
+const storeMessage = (message: MessageProps, user) => {
   // Insert a message
   return db
-    .table(location)
+    .table('messages')
     .insert(
       Object.assign({}, message, {
         timestamp: new Date(),
@@ -56,17 +52,17 @@ const storeMessage = (location: LocationTypes, message: MessageProps, user) => {
     });
 };
 
-const listenToNewMessages = (location: LocationTypes, cb: Function) => {
-  return listenToNewDocumentsIn(location, cb);
+const listenToNewMessages = (cb: Function) => {
+  return listenToNewDocumentsIn('messages', cb);
 };
 
-const getMessageCount = (location: string, thread: string) => {
-  return db.table(location).getAll(thread, { index: 'thread' }).count().run();
+const getMessageCount = (thread: string) => {
+  return db.table('messages').getAll(thread, { index: 'thread' }).count().run();
 };
 
 module.exports = {
   getMessage,
-  getMessagesByLocationAndThread,
+  getMessages,
   storeMessage,
   listenToNewMessages,
   getMessageCount,

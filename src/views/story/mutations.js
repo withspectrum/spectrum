@@ -37,14 +37,11 @@ export const setStoryLockMutation = graphql(
 );
 
 /*
-  Sends a message to a story (location is 'messages', which means we are
-  in a story).
-
   Updates UI automatically via the containers subscribeToNewMessages helper
 */
 const SEND_MESSAGE_MUTATION = gql`
   mutation sendMessage($message: MessageInput!) {
-    addMessage(location: messages, message: $message) {
+    addMessage(message: $message) {
       ...messageInfo
     }
   }

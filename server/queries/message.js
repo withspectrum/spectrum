@@ -5,11 +5,9 @@
  */
 const { getMessage } = require('../models/message');
 import { getReactions } from '../models/reaction';
-import type { LocationTypes } from '../models/message';
 import type { GraphQLContext } from '../';
 
 type GetMessageProps = {
-  location: LocationTypes,
   id: String,
 };
 
@@ -20,8 +18,7 @@ type Root = {
 
 module.exports = {
   Query: {
-    message: (_: Root, { location, id }: GetMessageProps) =>
-      getMessage(location, id),
+    message: (_: Root, { id }: GetMessageProps) => getMessage(id),
   },
   Message: {
     sender: ({ sender }: Root, _: any, { loaders }: GraphQLContext) =>

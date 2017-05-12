@@ -28,13 +28,11 @@ const DirectMessageGroup = /* GraphQL */ `
 	}
 
 	input DirectMessageGroupInput {
-		# TODO: This should just be the currently authed user
-		creator: ID!
 		users: [ID!]
 	}
 
 	extend type Mutation {
-		addDirectMessageGroup(directMessageGroup: DirectMessageGroupInput!): DirectMessageGroup
+		addDirectMessageGroup(input: DirectMessageGroupInput!): DirectMessageGroup
 	}
 `;
 

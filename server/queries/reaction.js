@@ -2,7 +2,6 @@
 
 import { getReaction } from '../models/reaction';
 import { getMessage } from '../models/message';
-import type { LocationTypes } from '../models/message';
 import type { GraphQLContext } from '../';
 
 type Root = {
@@ -15,10 +14,6 @@ type QueryArgs = {
   id: string,
 };
 
-type MessageArgs = {
-  location: LocationTypes,
-};
-
 const reaction = {
   Query: {
     reaction: (_: Root, { id }: QueryArgs) => getReaction(id),
@@ -26,8 +21,7 @@ const reaction = {
   Reaction: {
     user: ({ user }: Root, _: any, { loaders }: GraphQLContext) =>
       loaders.user.load(user),
-    message: ({ message }: Root, { location }: MessageArgs) =>
-      getMessage(location, message),
+    message: ({ message }: Root) => getMessage(message),
   },
 };
 
