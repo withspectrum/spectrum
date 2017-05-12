@@ -84,6 +84,25 @@ const generateStory = (community, frequency, author) => {
   };
 };
 
+const generateDirectMessageGroup = users => {
+  const createdAt = faker.date.past(2);
+  const lastActivity = faker.date.between(createdAt, faker.date.recent());
+  const lastSeen = faker.date.between(createdAt, new Date());
+  return {
+    id: uuid(),
+    createdAt,
+    creator: users[0].uid,
+    users: users.map(user => {
+      return {
+        uid: user.uid,
+        lastActivity,
+        lastSeen,
+      };
+    }),
+    lastActivity: faker.date.between(lastActivity, new Date()),
+  };
+};
+
 const generateMessage = (sender, thread) => {
   return {
     id: uuid(),
@@ -180,4 +199,5 @@ module.exports = {
   generateReaction,
   generateStoryNotification,
   generateMessageNotification,
+  generateDirectMessageGroup,
 };
