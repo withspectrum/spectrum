@@ -95,32 +95,47 @@ class CommunityWithData extends Component {
     };
     this.props
       .editCommunity(input)
-      .then(data => {
-        const community = data.editCommunity;
+      .then(({ data: { editCommunity } }) => {
+        const community = editCommunity;
+
+        // community was returned
         if (community !== undefined) {
-          // community was successfully edited
-          this.props.history.push(`/${community.slug}`);
+          this.props.dispatch(
+            addToastWithTimeout('success', 'Community saved!')
+          );
         }
       })
       .catch(err => {
-        this.props.dispatch(addToastWithTimeout('error', "You can't do that!"));
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            `Something went wrong and we weren't able to save these changes. ${err}`
+          )
+        );
       });
   };
 
   triggerDeleteCommunity = e => {
     e.preventDefault();
-
     const { community, deleteCommunity, history } = this.props;
 
     deleteCommunity(community.id)
-      .then(community => {
-        if (community !== undefined) {
+      .then(({ data: { deleteCommunity } }) => {
+        if (deleteCommunity) {
           // community was successfully deleted
           history.push(`/`);
+          this.props.dispatch(
+            addToastWithTimeout('neutral', 'Community deleted.')
+          );
         }
       })
       .catch(err => {
-        this.props.dispatch(addToastWithTimeout('error', "You can't do that!"));
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            `Something went wrong and we weren't able to delete this community. ${err}`
+          )
+        );
       });
   };
 

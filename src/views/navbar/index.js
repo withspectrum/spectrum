@@ -94,7 +94,7 @@ class Navbar extends Component {
                 <DropdownHeader>
                   My Notifications
                 </DropdownHeader>
-                <NotificationList />
+
                 <DropdownFooter>
                   <LinkButton to={'/notifications'}>View all</LinkButton>
                 </DropdownFooter>

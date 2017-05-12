@@ -29,7 +29,7 @@ const getUserByUid = (uid: string) => {
 const getUserByUsername = (username: string) => {
   return db
     .table('users')
-    .filter({ username })
+    .getAll(username, { index: 'username' })
     .run()
     .then(result => result && result[0]);
 };
@@ -38,6 +38,9 @@ const getUsers = (uids: Array<string>) => {
   return db.table('users').getAll(...uids).run();
 };
 
+// leaving the filter here as an index on providerId would be a waste of
+// space. This function is only invoked for signups when checking
+// for an existing user on the previous Firebase stack.
 const getUserByProviderId = providerId => {
   return db
     .table('users')

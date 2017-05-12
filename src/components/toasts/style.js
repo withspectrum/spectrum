@@ -40,6 +40,7 @@ const Toast = styled.div`
   color: #fff;
   font-size: 14px;
   font-weight: 500;
+  line-height: 1.4;
   display: block;
   margin-bottom: 8px;
   box-shadow: 0 4px 4px rgba(0,0,0,0.1);
@@ -57,4 +58,8 @@ export const ErrorToast = styled(Toast)`
 
 export const SuccessToast = styled(Toast)`
   background: ${props => props.theme.success.default};
+`;
+
+export const NeutralToast = styled(Toast)`
+  background: ${props => props.theme.text.alt};
 `;

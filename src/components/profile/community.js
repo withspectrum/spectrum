@@ -11,7 +11,10 @@ import renderComponent from 'recompose/renderComponent';
 import branch from 'recompose/branch';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
+//$FlowFixMe
+import { connect } from 'react-redux';
 import { toggleCommunityMembershipMutation } from '../../api/community';
+import { addToastWithTimeout } from '../../actions/toasts';
 import { LoadingCard } from '../loading';
 import { Avatar } from '../avatar';
 import {
@@ -47,11 +50,27 @@ const CommunityWithData = ({
   profileSize,
   toggleCommunityMembership,
   data,
+  dispatch,
 }: {
   data: { community: CommunityProps },
   profileSize: ProfileSizeProps,
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
+
+  const toggleMembership = id => {
+    toggleCommunityMembership({ id })
+      .then(({ data: { toggleCommunityMembership } }) => {
+        const str = toggleCommunityMembership.isMember
+          ? `Joined ${toggleCommunityMembership.name}!`
+          : `Left ${toggleCommunityMembership.name}.`;
+
+        const type = toggleCommunityMembership.isMember ? 'success' : 'neutral';
+        dispatch(addToastWithTimeout(type, str));
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err));
+      });
+  };
 
   if (!community) {
     return (
@@ -113,7 +132,7 @@ const CommunityWithData = ({
             <ActionOutline
               color={'text.alt'}
               hoverColor={'warn.default'}
-              onClick={() => toggleCommunityMembership({ id: community.id })}
+              onClick={() => toggleMembership(community.id)}
             >
               Leave Community
             </ActionOutline>}
@@ -121,9 +140,7 @@ const CommunityWithData = ({
           {// user is not a member and doesn't own the community
           !community.isMember &&
             !community.isOwner &&
-            <Action
-              onClick={() => toggleCommunityMembership({ id: community.id })}
-            >
+            <Action onClick={() => toggleMembership(community.id)}>
               Join {community.name}
             </Action>}
 
@@ -140,4 +157,4 @@ const Community = compose(
   displayLoadingState,
   pure
 )(CommunityWithData);
-export default Community;
+export default connect()(Community);

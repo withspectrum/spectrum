@@ -33,13 +33,14 @@ const getCommunitiesByUser = (uid: string) => {
   return db
     .table('communities')
     .filter(community => community('members').contains(uid))
+    .orderBy('createdAt')
     .run();
 };
 
 const getCommunityMetaData = (id: String) => {
   const getFrequencyCount = db
     .table('frequencies')
-    .filter({ community: id })
+    .getAll(id, { index: 'community' })
     .count()
     .run();
   const getMemberCount = db
@@ -172,9 +173,19 @@ const editCommunity = ({
           db
             .table('communities')
             .get(id)
-            .update({ ...community }, { returnChanges: true })
+            .update({ ...community }, { returnChanges: 'always' })
             .run()
-            .then(result => result.changes[0].new_val),
+            .then(result => {
+              // if an update happened
+              if (result.replaced === 1) {
+                return result.changes[0].new_val;
+              }
+
+              // an update was triggered from the client, but no data was changed
+              if (result.unchanged === 1) {
+                return result.changes[0].old_val;
+              }
+            }),
         ]);
       }
 
@@ -193,16 +204,21 @@ const editCommunity = ({
                     ...community,
                     photoURL,
                   },
-                  { returnChanges: true }
+                  { returnChanges: 'always' }
                 )
                 .run()
                 // return the resulting community with the photoURL set
-                .then(
-                  result =>
-                    (result.changes.length > 0
-                      ? result.changes[0].new_val
-                      : db.table('communities').get(community.id).run())
-                )
+                .then(result => {
+                  // if an update happened
+                  if (result.replaced === 1) {
+                    return result.changes[0].new_val;
+                  }
+
+                  // an update was triggered from the client, but no data was changed
+                  if (result.unchanged === 1) {
+                    return result.changes[0].old_val;
+                  }
+                })
             );
           }),
         ]);
@@ -211,7 +227,7 @@ const editCommunity = ({
     .then(data => data[0]);
 };
 
-const deleteCommunity = id => {
+const deleteCommunity = (id: string) => {
   return db
     .table('communities')
     .get(id)
@@ -223,7 +239,11 @@ const deleteCommunity = id => {
         // TODO: Return community object and frequencies objects to remove
         // them from the client store
         const community = changes[0].old_val.id;
-        return db.table('frequencies').filter({ community }).delete().run();
+        return db
+          .table('frequencies')
+          .getAll(community, { index: 'community' })
+          .delete()
+          .run();
       }
     });
 };
@@ -284,9 +304,9 @@ const getAllCommunityStories = (id: string): Promise<Array<any>> => {
   );
 };
 
+// TODO: Handle default frequencies as set by the community owner. For now
+// we treat the 'general' frequency as default.
 const subscribeToDefaultFrequencies = (id: string, uid: string) => {
-  // TODO: Handle default frequencies as set by the community owner. For now
-  // we treat the 'general' frequency as default
   return db
     .table('frequencies')
     .filter({ community: id, slug: 'general' })
@@ -311,7 +331,7 @@ const subscribeToDefaultFrequencies = (id: string, uid: string) => {
 const unsubscribeFromAllFrequenciesInCommunity = (id: string, uid: string) => {
   return db
     .table('frequencies')
-    .filter({ community: id })
+    .getAll(id, { index: 'community' })
     .run()
     .then(frequencies => {
       return frequencies.map(frequency =>
@@ -329,7 +349,7 @@ const userIsMemberOfCommunity = (id: string, uid: string) => {
 const userIsMemberOfAnyFrequencyInCommunity = (id: string, uid: string) => {
   return db
     .table('frequencies')
-    .filter({ community: id })
+    .getAll(id, { index: 'community' })
     .run()
     .then(frequencies => {
       return frequencies.some(

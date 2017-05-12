@@ -6,7 +6,10 @@ const { db } = require('./db');
 import { UserError } from 'graphql-errors';
 
 const getFrequenciesByCommunity = (community: string) => {
-  return db.table('frequencies').filter({ community }).run();
+  return db
+    .table('frequencies')
+    .getAll(community, { index: 'community' })
+    .run();
 };
 
 const getFrequenciesByUser = (uid: string) => {
@@ -50,7 +53,7 @@ const getFrequencies = (ids: Array<string>) => {
 const getFrequencyMetaData = (id: string) => {
   const getStoryCount = db
     .table('stories')
-    .filter({ frequency: id })
+    .getAll(id, { index: 'frequency' })
     .count()
     .run();
   const getSubscriberCount = db
@@ -106,7 +109,7 @@ const createFrequency = (
 
 const editFrequency = ({
   input: { name, slug, description, id },
-}: EditCommunityArguments) => {
+}: EditFrequencyArguments) => {
   return db
     .table('frequencies')
     .get(id)
@@ -122,10 +125,18 @@ const editFrequency = ({
       return db
         .table('frequencies')
         .get(id)
-        .update({ ...obj }, { returnChanges: true })
+        .update({ ...obj }, { returnChanges: 'always' })
         .run()
         .then(result => {
-          return result.changes[0].new_val;
+          // if an update happened
+          if (result.replaced === 1) {
+            return result.changes[0].new_val;
+          }
+
+          // an update was triggered from the client, but no data was changed
+          if (result.unchanged === 1) {
+            return result.changes[0].old_val;
+          }
         });
     });
 };
