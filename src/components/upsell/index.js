@@ -1,13 +1,16 @@
 // @flow
 import React from 'react';
-import { Button } from '../buttons';
+import { Button, OutlineButton } from '../buttons';
 import {
   UpsellSignInContainer,
+  UpsellFourOhFourContainer,
   UpsellJoinContainer,
   Title,
   Subtitle,
   BGOne,
   BGTwo,
+  FourOhFourImage,
+  Actions,
 } from './style';
 
 export const UpsellSignIn = ({ entity }) => {
@@ -44,5 +47,78 @@ export const UpsellJoinFrequency = ({ frequency, subscribe }) => {
         Follow {frequency.name} in {frequency.community.name}
       </Button>
     </UpsellJoinContainer>
+  );
+};
+
+export const Upsell404Frequency = ({ frequency, community, noPermission }) => {
+  // if a user doesn't have permission, it means they likely tried to view
+  // the settings page for a frequency. In this case, we will return
+  // them to the frequency view.
+  // if the user does have permission, but this component gets rendered, it means
+  // something went wrong - most likely the frequency doesn't exists (404) so
+  // we should return the user back to the community url
+  const returnUrl = noPermission
+    ? `/${community}/${frequency}`
+    : `/${community}`;
+
+  const title = noPermission
+    ? "I see you sneakin' around here..."
+    : 'Oops, something got lost!';
+
+  const subtitle = noPermission
+    ? 'This is a no-fly-zone for you, sorry! Head on back out now, hear?'
+    : `We can't find a frequency by the name of ${frequency}.`;
+
+  return (
+    <UpsellFourOhFourContainer>
+      <FourOhFourImage src="/img/login.svg" role="presentation" />
+      <Title>{title}</Title>
+      <Subtitle>{subtitle}</Subtitle>
+      <Button onClick={() => (window.location.href = returnUrl)}>
+        Take Me Back
+      </Button>
+    </UpsellFourOhFourContainer>
+  );
+};
+
+export const Upsell404Community = ({ community, noPermission, create }) => {
+  // if a user doesn't have permission, it means they likely tried to view
+  // the settings page for a community. In this case, we will return
+  // them to the community view.
+  // if the user does have permission, but this component gets rendered, it means
+  // something went wrong - most likely the community doesn't exists (404) so
+  // we should return the user back to homepage
+  const returnUrl = noPermission ? `/${community}` : `/`;
+
+  const title = noPermission
+    ? "I see you sneakin' around here..."
+    : 'Oops, something got lost!';
+
+  const subtitle = noPermission
+    ? 'This is a no-fly-zone for you, sorry! Head on back out now, hear?'
+    : `We can't find a community by the name of ${community}. Want to make one?`;
+
+  return (
+    <UpsellFourOhFourContainer>
+      <FourOhFourImage src="/img/login.svg" role="presentation" />
+      <Title>{title}</Title>
+      <Subtitle>{subtitle}</Subtitle>
+
+      <Actions>
+        {// de-emphasizes the 'take me home' button if a create prompt is shown
+        create
+          ? <OutlineButton onClick={() => (window.location.href = returnUrl)}>
+              Take Me Home
+            </OutlineButton>
+          : <Button onClick={() => (window.location.href = returnUrl)}>
+              Take Me Home
+            </Button>}
+
+        {create &&
+          <Button onClick={create}>
+            Create this Community
+          </Button>}
+      </Actions>
+    </UpsellFourOhFourContainer>
   );
 };
