@@ -15,6 +15,7 @@ import { Column } from '../../components/column';
 import { FlexRow } from '../../components/globals';
 import { LoadingCard } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
+import { displayLoadingScreen } from '../../components/loading';
 import { NotificationCard, Content, ContentHeading, Message } from './style';
 import {
   constructMessage,
@@ -23,11 +24,6 @@ import {
   getColorByType,
 } from '../../helpers/notifications';
 import { getNotifications } from './queries';
-
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingCard)
-);
 
 const NotificationsPure = ({ data, currentUser }) => {
   if (!currentUser) {
@@ -61,7 +57,7 @@ const NotificationsPure = ({ data, currentUser }) => {
   );
 };
 
-const Notifications = compose(getNotifications, displayLoadingState, pure)(
+const Notifications = compose(getNotifications, displayLoadingScreen, pure)(
   NotificationsPure
 );
 

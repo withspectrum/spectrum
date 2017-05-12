@@ -14,6 +14,7 @@ import {
 } from './queries';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
 
+import { displayLoadingScreen } from '../../components/loading';
 import { Column } from '../../components/column';
 import { UserProfile } from '../../components/profile';
 import StoryFeed from '../../components/storyFeed';
@@ -64,5 +65,7 @@ const DashboardPure = ({ data: { user, error }, data, dispatch }) => {
   I'm wrapping DashboardPure in a query for getCurrentUserProfile so that I
   can store the user in localStorage and redux for any downstream actions
 */
-const Dashboard = compose(getCurrentUserProfile, pure)(DashboardPure);
+const Dashboard = compose(getCurrentUserProfile, displayLoadingScreen, pure)(
+  DashboardPure
+);
 export default connect()(Dashboard);

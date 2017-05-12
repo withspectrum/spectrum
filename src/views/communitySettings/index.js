@@ -8,7 +8,7 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 import { getThisCommunity, getFrequenciesByCommunity } from './queries';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { displayLoadingCard } from '../../components/loading';
+import { displayLoadingScreen } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ListCard from './components/listCard';
@@ -58,7 +58,7 @@ const SettingsPure = ({ match, data, history, dispatch }) => {
   );
 };
 
-const CommunitySettings = compose(getThisCommunity, displayLoadingCard, pure)(
+const CommunitySettings = compose(getThisCommunity, displayLoadingScreen, pure)(
   SettingsPure
 );
 export default connect()(CommunitySettings);

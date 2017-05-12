@@ -13,7 +13,7 @@ import { Column } from '../../../components/column';
 import { FlexContainer } from '../../../components/flexbox';
 import { UserProfile, FrequencyProfile } from '../../../components/profile';
 import { getStory } from '../queries';
-import { displayLoadingState } from '../../../components/loading';
+import { displayLoadingScreen } from '../../../components/loading';
 
 const StoryContainerPure = ({
   data: { story, subscribeToNewMessages, error, loading },
@@ -48,7 +48,7 @@ const StoryContainerPure = ({
   );
 };
 
-const StoryContainer = compose(getStory, displayLoadingState, pure)(
+const StoryContainer = compose(getStory, displayLoadingScreen, pure)(
   StoryContainerPure
 );
 

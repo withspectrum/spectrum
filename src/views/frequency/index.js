@@ -10,7 +10,7 @@ import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
 import { FrequencyProfile } from '../../components/profile';
 import { getFrequencyStories, getFrequency } from './queries';
-import { displayLoadingCard } from '../../components/loading';
+import { displayLoadingScreen } from '../../components/loading';
 
 const StoryFeedWithData = compose(getFrequencyStories)(StoryFeed);
 
@@ -51,7 +51,7 @@ const FrequencyViewPure = ({ match, data: { error, frequency } }) => {
   );
 };
 
-export const FrequencyView = compose(getFrequency, displayLoadingCard, pure)(
+export const FrequencyView = compose(getFrequency, displayLoadingScreen, pure)(
   FrequencyViewPure
 );
 export default FrequencyView;

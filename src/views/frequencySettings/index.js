@@ -10,7 +10,7 @@ import { getThisFrequency } from './queries';
 import { addToastWithTimeout } from '../../actions/toasts';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
-import { displayLoadingCard } from '../../components/loading';
+import { displayLoadingScreen } from '../../components/loading';
 import { FrequencyEditForm } from '../../components/editForm';
 
 const SettingsPure = ({ match, data, dispatch, history }) => {
@@ -49,7 +49,7 @@ const SettingsPure = ({ match, data, dispatch, history }) => {
   );
 };
 
-const FrequencySettings = compose(getThisFrequency, displayLoadingCard, pure)(
+const FrequencySettings = compose(getThisFrequency, displayLoadingScreen, pure)(
   SettingsPure
 );
 export default connect()(FrequencySettings);
