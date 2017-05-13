@@ -62,8 +62,8 @@ class CreateFrequencyModal extends Component {
 
     this.props
       .createFrequency(input)
-      .then(frequency => {
-        this.props.history.push(`/${modalProps.slug}/${frequency.slug}`);
+      .then(({ data: { createFrequency } }) => {
+        this.props.history.push(`/${modalProps.slug}/${createFrequency.slug}`);
         this.close();
         this.props.dispatch(
           addToastWithTimeout('success', 'Frequency successfully created!')

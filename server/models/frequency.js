@@ -9,6 +9,7 @@ const getFrequenciesByCommunity = (community: string) => {
   return db
     .table('frequencies')
     .getAll(community, { index: 'community' })
+    .filter(frequency => db.not(frequency.hasFields('deleted')))
     .run();
 };
 
@@ -16,6 +17,7 @@ const getFrequenciesByUser = (uid: string) => {
   return db
     .table('frequencies')
     .filter(frequency => frequency('subscribers').contains(uid))
+    .filter(frequency => db.not(frequency.hasFields('deleted')))
     .run();
 };
 
@@ -31,6 +33,7 @@ const getFrequencyBySlug = (slug: string, community: string) => {
         slug: community,
       },
     })
+    .filter(frequency => db.not(frequency.hasFields('deleted')))
     .run()
     .then(result => result && result[0].left);
 };
@@ -47,7 +50,11 @@ type GetFrequencyBySlugArgs = {
 export type GetFrequencyArgs = GetFrequencyByIdArgs | GetFrequencyBySlugArgs;
 
 const getFrequencies = (ids: Array<string>) => {
-  return db.table('frequencies').getAll(...ids).run();
+  return db
+    .table('frequencies')
+    .getAll(...ids)
+    .filter(frequency => db.not(frequency.hasFields('deleted')))
+    .run();
 };
 
 const getFrequencyMetaData = (id: string) => {
@@ -141,17 +148,42 @@ const editFrequency = ({
     });
 };
 
+/*
+  We delete data non-destructively, meaning the record does not get cleared
+  from the db. Instead, we set a 'deleted' field on the object with a value
+  of the current time on the db.
+
+  We set the value as a timestamp so that in the future we have option value
+  to perform actions like:
+  - permanantely delete records that were deleted > X days ago
+  - run logs for deletions over time
+  - etc
+*/
 const deleteFrequency = id => {
   return db
     .table('frequencies')
     .get(id)
-    .delete({ returnChanges: true })
-    .run()
-    .then(({ deleted, changes }) => {
-      if (deleted > 0) {
-        // frequency was deleted, return the object to clear the client store
-        return changes[0].old_val.id;
+    .update(
+      {
+        deleted: db.now(),
+        slug: db.uuid(),
+      },
+      {
+        returnChanges: true,
+        nonAtomic: true,
       }
+    )
+    .run()
+    .then(result => {
+      // update was successful
+      if (result.replaced >= 1) {
+        return true;
+      }
+
+      // update failed
+      return new Error(
+        "Something went wrong and we weren't able to delete this frequency."
+      );
     });
 };
 

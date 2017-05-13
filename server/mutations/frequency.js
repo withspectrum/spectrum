@@ -37,7 +37,7 @@ module.exports = {
 
       // get the community the frequency is being created under
       return (
-        getCommunities([args.community])
+        getCommunities([args.input.community])
           // return the communities
           .then(communities => {
             // select the community where the frequency is being created
@@ -70,8 +70,8 @@ module.exports = {
             // select the frequency being deleted
             const frequency = frequencies[0];
 
-            // if frequency wasn't found
-            if (!frequency) {
+            // if frequency wasn't found or was previously deleted
+            if (!frequency || frequency.deleted) {
               return new Error("Frequency doesn't exist");
             }
 
@@ -127,8 +127,8 @@ module.exports = {
             // select the frequency
             const frequency = frequencies[0];
 
-            // if frequency wasn't found
-            if (!frequency) {
+            // if frequency wasn't found or was deleted
+            if (!frequency || frequency.deleted) {
               return new Error("This frequency doesn't exist");
             }
 
@@ -179,8 +179,8 @@ module.exports = {
         // select the frequency
         const frequency = frequencies[0];
 
-        // if frequency wasn't found
-        if (!frequency) {
+        // if frequency wasn't found or was deleted
+        if (!frequency || frequency.deleted) {
           return new Error("This frequency doesn't exist");
         }
 
