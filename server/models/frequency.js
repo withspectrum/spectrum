@@ -185,7 +185,7 @@ const deleteFrequency = id => {
       }
 
       // update failed
-      return new Error(
+      return new UserError(
         "Something went wrong and we weren't able to delete this frequency."
       );
     });
@@ -204,9 +204,9 @@ const unsubscribeFrequency = (id, uid) => {
     .run()
     .then(
       ({ changes }) =>
-        changes.length > 0
+        (changes.length > 0
           ? changes[0].new_val
-          : db.table('frequencies').get(id).run()
+          : db.table('frequencies').get(id).run())
     );
 };
 
@@ -223,9 +223,9 @@ const subscribeFrequency = (id, uid) => {
     .run()
     .then(
       ({ changes }) =>
-        changes.length > 0
+        (changes.length > 0
           ? changes[0].new_val
-          : db.table('frequencies').get(id).run()
+          : db.table('frequencies').get(id).run())
     );
 };
 
