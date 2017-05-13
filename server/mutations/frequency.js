@@ -1,4 +1,6 @@
 // @flow
+// $FlowFixMe
+const { UserError } = require('graphql-errors');
 import {
   getFrequencies,
   editFrequency,
@@ -33,7 +35,9 @@ module.exports = {
     ) => {
       // user must be authed to create a frequency
       if (!user)
-        return new Error('You must be signed in to create a new community.');
+        return new UserError(
+          'You must be signed in to create a new community.'
+        );
 
       // get the community the frequency is being created under
       return (
@@ -45,7 +49,7 @@ module.exports = {
 
             // if the user does not own the community
             if (!(community.owners.indexOf(user.uid) > -1)) {
-              return new Error(
+              return new UserError(
                 "You don't have permission to create a frequency in this community."
               );
             }
@@ -58,7 +62,7 @@ module.exports = {
     deleteFrequency: (_: any, { id }, { user }: Context) => {
       // user must be authed to delete a frequency
       if (!user)
-        return new Error(
+        return new UserError(
           'You must be signed in to make changes to this frequency.'
         );
 
@@ -72,7 +76,7 @@ module.exports = {
 
             // if frequency wasn't found or was previously deleted
             if (!frequency || frequency.deleted) {
-              return new Error("Frequency doesn't exist");
+              return new UserError("Frequency doesn't exist");
             }
 
             // get the community parent of the frequency being deleted
@@ -96,7 +100,7 @@ module.exports = {
               // all checks passed
               return deleteFrequency(id);
             } else {
-              return new Error(
+              return new UserError(
                 "You don't have permission to make changes to this frequency"
               );
             }
@@ -110,7 +114,7 @@ module.exports = {
     ) => {
       // user must be authed to edit a frequency
       if (!user)
-        return new Error(
+        return new UserError(
           'You must be signed in to make changes to this frequency.'
         );
 
@@ -124,12 +128,12 @@ module.exports = {
 
             // if frequency wasn't found or was deleted
             if (!frequency || frequency.deleted) {
-              return new Error("This frequency doesn't exist");
+              return new UserError("This frequency doesn't exist");
             }
 
             // if user doesn't own the frequency
             if (!(frequency.owners.indexOf(user.uid) > -1)) {
-              return new Error(
+              return new UserError(
                 "You don't have permission to make changes to this frequency."
               );
             }
@@ -150,7 +154,7 @@ module.exports = {
             // listed as an owner of the frequency. In today's code we mirror
             // the owners at time of frequency creation
             if (!(community.owners.indexOf(user.uid) > -1)) {
-              return new Error(
+              return new UserError(
                 "You don't have permission to make changes to this frequency."
               );
             }
@@ -167,7 +171,7 @@ module.exports = {
     ) => {
       // user must be authed to join a frequency
       if (!user)
-        return new Error('You must be signed in to follow this frequency.');
+        return new UserError('You must be signed in to follow this frequency.');
 
       // get the frequency being edited
       return getFrequencies([id]).then(frequencies => {
@@ -176,13 +180,13 @@ module.exports = {
 
         // if frequency wasn't found or was deleted
         if (!frequency || frequency.deleted) {
-          return new Error("This frequency doesn't exist");
+          return new UserError("This frequency doesn't exist");
         }
 
         // if the person owns the frequency, they have accidentally triggered
         // a join or leave action, which isn't allowed
         if (frequency.owners.indexOf(user.uid) > -1) {
-          return new Error(
+          return new UserError(
             "Owners of a community can't join or leave their own frequency."
           );
         }

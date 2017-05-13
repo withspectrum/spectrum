@@ -1,4 +1,6 @@
 // @flow
+// $FlowFixMe
+const { UserError } = require('graphql-errors');
 import {
   createCommunity,
   editCommunity,
@@ -27,7 +29,9 @@ module.exports = {
     ) => {
       // user must be authed to create a community
       if (!user)
-        return new Error('You must be signed in to create a new community.');
+        return new UserError(
+          'You must be signed in to create a new community.'
+        );
 
       // all checks passed
       return createCommunity(args, user.uid);
@@ -35,7 +39,7 @@ module.exports = {
     deleteCommunity: (_: any, { id }, { user }: Context) => {
       // user must be authed to delete a community
       if (!user)
-        return new Error(
+        return new UserError(
           'You must be signed in to make changes to this community.'
         );
 
@@ -46,12 +50,12 @@ module.exports = {
 
         // if no community was found or was deleted
         if (!community || community.deleted) {
-          return new Error("This community doesn't exist.");
+          return new UserError("This community doesn't exist.");
         }
 
         // user must own the community to delete the community
         if (!(community.owners.indexOf(user.uid) > -1)) {
-          return new Error(
+          return new UserError(
             "You don't have permission to make changes to this community."
           );
         }
@@ -67,7 +71,7 @@ module.exports = {
     ) => {
       // user must be authed to edit a community
       if (!user)
-        return new Error(
+        return new UserError(
           'You must be signed in to make changes to this community.'
         );
 
@@ -78,12 +82,12 @@ module.exports = {
 
         // if no community was found or was deleted
         if (!community || community.deleted) {
-          return new Error("This community doesn't exist.");
+          return new UserError("This community doesn't exist.");
         }
 
         // user must own the community to edit the community
         if (!(community.owners.indexOf(user.uid) > -1)) {
-          return new Error(
+          return new UserError(
             "You don't have permission to make changes to this community."
           );
         }
@@ -95,7 +99,7 @@ module.exports = {
     toggleCommunityMembership: (_: any, { id }: string, { user }: Context) => {
       // user must be authed to join a community
       if (!user)
-        return new Error('You must be signed in to join this community.');
+        return new UserError('You must be signed in to join this community.');
 
       // get the community
       return getCommunities([id]).then(communities => {
@@ -104,13 +108,13 @@ module.exports = {
 
         // if no community was found or was deleted
         if (!community || community.deleted) {
-          return new Error("This community doesn't exist.");
+          return new UserError("This community doesn't exist.");
         }
 
         // if the person owns the community, they have accidentally triggered
         // a join or leave action, which isn't allowed
         if (community.owners.indexOf(user.uid) > -1) {
-          return new Error(
+          return new UserError(
             "Owners of a community can't join or leave their own community."
           );
         }
