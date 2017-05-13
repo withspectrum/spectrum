@@ -35,7 +35,11 @@ const getFrequencyBySlug = (slug: string, community: string) => {
     })
     .filter(frequency => db.not(frequency.hasFields('deleted')))
     .run()
-    .then(result => result && result[0].left);
+    .then(result => {
+      if (result && result[0]) {
+        return result[0].left;
+      }
+    });
 };
 
 type GetFrequencyByIdArgs = {

@@ -37,29 +37,6 @@ export const setStoryLockMutation = graphql(
 );
 
 /*
-  Delete a story
-*/
-const DELETE_STORY_MUTATION = gql`
-  mutation deleteStory($id: ID!) {
-    deleteStory(id: $id)
-  }
-`;
-const DELETE_STORY_OPTIONS = {
-  props: ({ mutate }) => ({
-    deleteStory: ({ id }) =>
-      mutate({
-        variables: {
-          id,
-        },
-      }),
-  }),
-};
-export const deleteStoryMutation = graphql(
-  DELETE_STORY_MUTATION,
-  DELETE_STORY_OPTIONS
-);
-
-/*
   Sends a message to a story (location is 'messages', which means we are
   in a story).
 

@@ -75,13 +75,6 @@ module.exports = {
               return new Error("Frequency doesn't exist");
             }
 
-            // if the user doesn't own the frequency
-            if (!(frequency.owners.indexOf(user.uid) > -1)) {
-              return new Error(
-                "You don't have permission to make changes to this frequency"
-              );
-            }
-
             // get the community parent of the frequency being deleted
             const communities = getCommunities([frequency.community]);
 
@@ -91,20 +84,22 @@ module.exports = {
             // select the community
             const community = communities[0];
 
-            // if user is doesn't own the community
+            // determine the role in the frequency and community
+            const isCommunityOwner = community.owners.indexOf(user.uid) > -1;
+            const isFrequencyOwner = frequency.owners.indexOf(user.uid) > -1;
 
             // NOTE: This will need to change in the future if we have the concept
             // of moderator-owner frequencies where the community owner is not
             // listed as an owner of the frequency. In today's code we mirror
             // the owners at time of frequency creation
-            if (!(community.owners.indexOf(user.uid) > -1)) {
+            if (isCommunityOwner || isFrequencyOwner) {
+              // all checks passed
+              return deleteFrequency(id);
+            } else {
               return new Error(
                 "You don't have permission to make changes to this frequency"
               );
             }
-
-            // all checks passed
-            return deleteFrequency(id);
           })
       );
     },

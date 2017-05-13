@@ -21,8 +21,6 @@ class CreateCommunityModal extends Component {
   constructor(props) {
     super(props);
 
-    console.log(props);
-
     this.state = {
       name: props.modalProps.name || '',
       slug: '',
