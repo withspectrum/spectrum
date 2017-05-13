@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Button, LinkButton } from '../buttons';
 import { openModal } from '../../actions/modals';
-import { Input, UnderlineInput, TextArea } from '../formElements';
+import { Input, UnderlineInput, TextArea, Checkbox } from '../formElements';
 import { addToastWithTimeout } from '../../actions/toasts';
 import {
   StyledCard,
@@ -162,6 +162,9 @@ class FrequencyWithData extends Component {
           >
             Description
           </TextArea>
+
+          <Checkbox>Private?</Checkbox>
+
           <Actions>
             <LinkButton color={'warn.alt'}>Cancel</LinkButton>
             <Button onClick={this.save}>Save</Button>

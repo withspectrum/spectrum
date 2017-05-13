@@ -52,7 +52,7 @@ module.exports = {
         )
         .then(users => getUsers(users));
     },
-    isCreator: ({ author }: { author: String }, _: any, { user }: Context) => {
+    isAuthor: ({ author }: { author: String }, _: any, { user }: Context) => {
       if (!author || !user) return false;
       return user.uid === author;
     },
