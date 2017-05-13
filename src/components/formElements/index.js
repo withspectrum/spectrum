@@ -28,6 +28,7 @@ export const Input = (props: InputProps) => {
     <StyledLabel>
       {props.children}
       <StyledInput
+        id={props.id}
         type={props.inputType}
         defaultValue={props.defaultValue}
         placeholder={props.placeholder}
@@ -57,6 +58,7 @@ export const Checkbox = (props: InputProps) => {
             />}
         <StyledHiddenInput
           type="checkbox"
+          id={props.id}
           checked={props.checked}
           onChange={props.onChange}
         />
@@ -71,6 +73,7 @@ export const TextArea = (props: InputProps) => {
     <StyledLabel>
       {props.children}
       <StyledTextArea
+        id={props.id}
         placeholder={props.placeholder}
         defaultValue={props.defaultValue}
         onChange={props.onChange}
@@ -86,6 +89,7 @@ export const UnderlineInput = (props: InputProps) => {
       {props.children}
       <StyledUnderlineInput
         type="text"
+        id={props.id}
         placeholder={props.placeholder}
         defaultValue={props.defaultValue}
         onChange={props.onChange}

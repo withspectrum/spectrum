@@ -43,17 +43,25 @@ export const Title = styled.h1`
 `;
 
 export const Subtitle = styled.h2`
-color: ${props => props.theme.text.default};
-font-weight: 400;
-font-size: 0.875rem;
-line-height: 1.4;
-margin-bottom: 24px;
-padding: 0 24px;
-font-size: 18px;
-line-height: 24px;
-color: inherit;
-font-weight: 500;
-text-align: center;
+  color: ${props => props.theme.text.default};
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin-bottom: 24px;
+  padding: 0 24px;
+  font-size: 18px;
+  line-height: 24px;
+  color: inherit;
+  font-weight: 500;
+  text-align: center;
+
+  b {
+    font-weight: 600
+  }
+
+  a {
+    color: ${props => props.theme.brand.default}
+  }
 `;
 
 export const Actions = styled.div`

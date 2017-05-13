@@ -1,5 +1,8 @@
 //@flow
 import React from 'react';
+import { Avatar } from '../avatar';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 import {
   Wrapper,
   Col,
@@ -32,6 +35,32 @@ export const ListCardItem = (props: CardProps): React$Element<any> => {
       {!!props.contents.description && props.withDescription
         ? <Description>{props.contents.description}</Description>
         : ''}
+    </Wrapper>
+  );
+};
+
+export const ListCardItemUser = ({ user, children }): React$Element<any> => {
+  return (
+    <Wrapper>
+      <Row>
+        <Link to={`/users/${user.username}`}>
+          <Avatar
+            radius={40}
+            src={user.photoURL}
+            size={40}
+            style={{ marginRight: '16px' }}
+          />
+        </Link>
+        <Col>
+          <Heading>
+            <Link to={`/users/${user.username}`}>{user.displayName}</Link>
+          </Heading>
+          <Meta>
+            <Link to={`/users/${user.username}`}>@{user.username}</Link>
+          </Meta>
+        </Col>
+        <ActionContainer>{children}</ActionContainer>
+      </Row>
     </Wrapper>
   );
 };

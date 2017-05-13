@@ -10,54 +10,54 @@ import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import ModalContainer from '../modalContainer';
 import { LinkButton, Button } from '../../buttons';
-import { modalStyles } from '../styles';
+import { modalStyles, Description } from '../styles';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { createFrequencyMutation } from '../../../api/frequency';
 import { Form, Actions } from './style';
-import { Input, UnderlineInput, TextArea } from '../../formElements';
+import { Input, UnderlineInput, TextArea, Checkbox } from '../../formElements';
 
 class CreateFrequencyModal extends Component {
   state = {
     name: '',
     slug: '',
     description: '',
+    isPrivate: false,
   };
 
   close = () => {
     this.props.dispatch(closeModal());
   };
 
-  changeName = e => {
-    const name = e.target.value;
-    this.setState({
-      name,
-    });
-  };
+  handleChange = e => {
+    const key = e.target.id;
+    const value = e.target.value;
+    const newState = {};
 
-  changeDescription = e => {
-    const description = e.target.value;
-    this.setState({
-      description,
-    });
-  };
-
-  changeSlug = e => {
-    const slug = e.target.value;
-    this.setState({
-      slug,
+    // checkboxes should reverse the value
+    if (key === 'isPrivate') {
+      newState[key] = value === 'on' ? 'off' : 'on';
+    } else {
+      newState[key] = value;
+    }
+    console.log(newState, key, value);
+    this.setState(prevState => {
+      return Object.assign({}, prevState, {
+        ...newState,
+      });
     });
   };
 
   create = e => {
     e.preventDefault();
-    const { name, slug, description } = this.state;
+    const { name, slug, description, isPrivate } = this.state;
     const { modalProps: { id }, modalProps } = this.props;
     const input = {
       community: id,
       name,
       slug,
       description,
+      isPrivate,
     };
 
     this.props
@@ -81,7 +81,7 @@ class CreateFrequencyModal extends Component {
 
   render() {
     const { isOpen, modalProps } = this.props;
-    const { name, slug, description } = this.state;
+    const { name, slug, description, isPrivate } = this.state;
     const styles = modalStyles();
 
     return (
@@ -100,8 +100,9 @@ class CreateFrequencyModal extends Component {
         <ModalContainer title={'Create a Frequency'} closeModal={this.close}>
           <Form>
             <Input
+              id="name"
               defaultValue={name}
-              onChange={this.changeName}
+              onChange={this.handleChange}
               autoFocus={true}
             >
               Frequency Name
@@ -110,11 +111,28 @@ class CreateFrequencyModal extends Component {
               {`sp.chat/${modalProps.slug}/`}
             </UnderlineInput>
             <TextArea
+              id="slug"
               defaultValue={description}
-              onChange={this.changeDescription}
+              onChange={this.handleChange}
             >
               Description
             </TextArea>
+
+            <Checkbox
+              id="isPrivate"
+              checked={isPrivate}
+              onChange={this.handleChange}
+            >
+              Private channel
+            </Checkbox>
+            {isPrivate
+              ? <Description>
+                  Only approved people on Spectrum can see the stories, messages, and members in this channel. You can manually approve users who request to join this channel.
+                </Description>
+              : <Description>
+                  Anyone on Spectrum can join this channel, post stories and messages, and will be able to see other members.
+                </Description>}
+
             <Actions>
               <LinkButton color={'warn.alt'}>Cancel</LinkButton>
               <Button onClick={this.create}>Save</Button>

@@ -13,7 +13,7 @@ export const ListContainer = styled(FlexCol)`
   margin: 8px 0 0 0;
   width: 100%;
 
-  a + a {
+  section + section {
     border-top: 2px solid ${({ theme }) => theme.bg.wash};
   }
 `;
@@ -26,4 +26,20 @@ export const MoreLink = styled(Link)`
 
 export const StyledCard = styled(Card)`
   padding: 16px 16px 16px 20px;
+`;
+
+export const Description = styled.p`
+  margin-top: 8px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.4;
+  color: ${({ theme }) => theme.text.alt};
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+
+  &:last-of-type {
+    margin-bottom: 16px;
+  }
 `;

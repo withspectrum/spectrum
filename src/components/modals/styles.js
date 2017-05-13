@@ -86,3 +86,10 @@ export const CloseButton = styled(IconButton)`
   top: 0;
   z-index: 2;
 `;
+
+export const Description = styled.p`
+  font-size: 14px;
+  color: ${props => props.theme.text.default};
+  padding: 8px 0 16px;
+  line-height: 1.4;
+`;
