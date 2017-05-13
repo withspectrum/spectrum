@@ -42,4 +42,17 @@ export const Description = styled.p`
   &:last-of-type {
     margin-bottom: 16px;
   }
+
+  &:only-of-type {
+    margin-bottom: 0;
+  }
+`;
+
+export const Notice = styled(Description)`
+  padding: 8px 12px;
+  margin: 16px 0;
+  border-radius: 4px;
+  background: #FFF1CC;
+  border: 1px solid #ffd566;
+  color: #715818;
 `;

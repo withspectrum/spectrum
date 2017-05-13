@@ -143,29 +143,27 @@ export const togglePendingUserInFrequencyMutation = graphql(
 /*
   Join or leave a frequency
 */
-const TOGGLE_BLOCKED_USER_MUTATION = gql`
-  mutation toggleBlockedUser($id: ID!, $uid: ID!, $action: String!) {
-    toggleBlockedUser(id: $id, uid: $uid, action: $action) {
+const UNBLOCK_USER_MUTATION = gql`
+  mutation unblockUser($input: UnblockUserInput!) {
+    unblockUser(input: $input) {
       ...frequencyInfo
     }
   }
   ${frequencyInfoFragment}
 `;
 
-const TOGGLE_BLOCKED_USER_OPTIONS = {
-  props: ({ id, mutate }) => ({
-    toggleBlockedUser: ({ id, uid, action }) =>
+const UNBLOCK_USER_OPTIONS = {
+  props: ({ input, mutate }) => ({
+    unblockUser: input =>
       mutate({
         variables: {
-          id,
-          uid,
-          action,
+          input,
         },
       }),
   }),
 };
 
-export const toggleBlockedUserInFrequencyMutation = graphql(
-  TOGGLE_BLOCKED_USER_MUTATION,
-  TOGGLE_BLOCKED_USER_OPTIONS
+export const unblockUserInFrequencyMutation = graphql(
+  UNBLOCK_USER_MUTATION,
+  UNBLOCK_USER_OPTIONS
 );

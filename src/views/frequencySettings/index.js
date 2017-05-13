@@ -53,7 +53,7 @@ const SettingsPure = ({
       </Column>
       <Column type="primary">
         <PendingUsers users={frequency.pendingUsers} frequency={frequency} />
-        {frequency.blockedUsers &&
+        {frequency.blockedUsers.length > 0 &&
           <BlockedUsers users={frequency.blockedUsers} frequency={frequency} />}
       </Column>
     </AppViewWrapper>

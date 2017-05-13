@@ -30,6 +30,7 @@ class FrequencyWithData extends Component {
     super(props);
 
     const { frequency } = this.props;
+
     this.state = {
       name: frequency.name,
       slug: frequency.slug,
@@ -43,8 +44,14 @@ class FrequencyWithData extends Component {
   handleChange = e => {
     const key = e.target.id;
     const value = e.target.value;
+
     const newState = {};
-    newState[key] = value;
+    // checkboxes should reverse the value
+    if (key === 'isPrivate') {
+      newState[key] = value === 'on' ? false : true;
+    } else {
+      newState[key] = value;
+    }
 
     this.setState(prevState => {
       return Object.assign({}, prevState, {

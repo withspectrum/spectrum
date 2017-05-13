@@ -51,6 +51,11 @@ const Frequency = /* GraphQL */ `
 		action: PendingActionType!
 	}
 
+	input UnblockUserInput {
+		id: ID!
+		uid: ID!
+	}
+
 	type Frequency {
 		id: ID!
 		createdAt: Date!
@@ -85,6 +90,7 @@ const Frequency = /* GraphQL */ `
 		deleteFrequency(id: ID!): Boolean
 		toggleFrequencySubscription(id: ID!): Frequency
 		togglePendingUser(input: TogglePendingUserInput!): Frequency
+		unblockUser(input: UnblockUserInput!): Frequency
 	}
 `;
 

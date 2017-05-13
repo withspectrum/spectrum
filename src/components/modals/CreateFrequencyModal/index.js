@@ -40,7 +40,7 @@ class CreateFrequencyModal extends Component {
     } else {
       newState[key] = value;
     }
-    console.log(newState, key, value);
+
     this.setState(prevState => {
       return Object.assign({}, prevState, {
         ...newState,

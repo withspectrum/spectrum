@@ -11,6 +11,7 @@ import {
   addRequestToJoinFrequency,
   removeRequestToJoinFrequency,
   addBlockedUser,
+  removeBlockedUser,
 } from '../models/frequency';
 import {
   getCommunities,
@@ -393,6 +394,68 @@ module.exports = {
 
             // invalid action type
             return new UserError('Unknown action request on a pending user.');
+          })
+      );
+    },
+    unblockUser: (_: any, { input }, { user }: Context) => {
+      // user must be authed to edit a frequency
+      if (!user)
+        return new UserError(
+          'You must be signed in to make changes to this frequency.'
+        );
+
+      // get the frequency being edited
+      return (
+        getFrequencies([input.id])
+          // return the frequencies
+          .then(frequencies => {
+            // select the frequency
+            const frequency = frequencies[0];
+
+            // if frequency wasn't found or was deleted
+            if (!frequency || frequency.deleted) {
+              return new UserError("This frequency doesn't exist");
+            }
+
+            // if user doesn't own the frequency
+            if (!(frequency.owners.indexOf(user.uid) > -1)) {
+              return new UserError(
+                "You don't have permission to make changes to this frequency."
+              );
+            }
+
+            // get the community parent of the frequency being edited
+            const communities = getCommunities([frequency.community]);
+
+            return Promise.all([frequency, communities]);
+          })
+          .then(([frequency, communities]) => {
+            // select the community
+            const community = communities[0];
+
+            // if user is doesn't own the community
+
+            // NOTE: This will need to change in the future if we have the concept
+            // of moderator-owner frequencies where the community owner is not
+            // listed as an owner of the frequency. In today's code we mirror
+            // the owners at time of frequency creation
+            if (!(community.owners.indexOf(user.uid) > -1)) {
+              return new UserError(
+                "You don't have permission to make changes to this frequency."
+              );
+            }
+
+            const { id, uid } = input;
+
+            // if the user isn't on the pending list
+            if (!(frequency.blockedUsers.indexOf(uid) > -1)) {
+              return new UserError(
+                'This user is not currently blocked in this channel.'
+              );
+            }
+
+            // all checks passed
+            return removeBlockedUser(id, uid);
           })
       );
     },

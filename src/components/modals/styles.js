@@ -93,3 +93,12 @@ export const Description = styled.p`
   padding: 8px 0 16px;
   line-height: 1.4;
 `;
+
+export const Notice = styled(Description)`
+  padding: 8px 16px;
+  margin: 8px 0;
+  border-radius: 4px;
+  background: #FFF1CC;
+  border: 1px solid #ffd566;
+  color: #715818;
+`;
