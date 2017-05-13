@@ -5,7 +5,11 @@
 const { db } = require('./db');
 // $FlowFixMe
 import { UserError } from 'graphql-errors';
-import { createFrequency, unsubscribeFrequency } from './frequency';
+import {
+  createFrequency,
+  deleteFrequency,
+  unsubscribeFrequency,
+} from './frequency';
 import { uploadCommunityPhoto, generateImageUrl } from '../utils/s3';
 
 type GetCommunityByIdArgs = {
@@ -19,13 +23,18 @@ type GetCommunityBySlugArgs = {
 export type GetCommunityArgs = GetCommunityByIdArgs | GetCommunityBySlugArgs;
 
 const getCommunities = (ids: Array<string>) => {
-  return db.table('communities').getAll(...ids).run();
+  return db
+    .table('communities')
+    .getAll(...ids)
+    .filter(community => db.not(community.hasFields('deleted')))
+    .run();
 };
 
 const getCommunitiesBySlug = (slugs: Array<string>) => {
   return db
     .table('communities')
     .filter(community => db.expr(slugs).contains(community('slug')))
+    .filter(community => db.not(community.hasFields('deleted')))
     .run();
 };
 
@@ -33,6 +42,7 @@ const getCommunitiesByUser = (uid: string) => {
   return db
     .table('communities')
     .filter(community => community('members').contains(uid))
+    .filter(community => db.not(community.hasFields('deleted')))
     .orderBy('createdAt')
     .run();
 };
@@ -122,9 +132,9 @@ const createCommunity = (
                 // return the resulting community with the photoURL set
                 .then(
                   result =>
-                    (result.changes.length > 0
+                    result.changes.length > 0
                       ? result.changes[0].new_val
-                      : db.table('communities').get(community.id).run())
+                      : db.table('communities').get(community.id).run()
                 )
             );
           }),
@@ -227,24 +237,50 @@ const editCommunity = ({
     .then(data => data[0]);
 };
 
+/*
+  We delete data non-destructively, meaning the record does not get cleared
+  from the db. Instead, we set a 'deleted' field on the object with a value
+  of the current time on the db.
+
+  We set the value as a timestamp so that in the future we have option value
+  to perform actions like:
+  - permanantely delete records that were deleted > X days ago
+  - run logs for deletions over time
+  - etc
+*/
 const deleteCommunity = (id: string) => {
   return db
     .table('communities')
     .get(id)
-    .delete({ returnChanges: true })
+    .update(
+      {
+        deleted: db.now(),
+        slug: db.uuid(),
+      },
+      {
+        returnChanges: 'always',
+        nonAtomic: true,
+      }
+    )
     .run()
-    .then(({ deleted, changes }) => {
-      if (deleted > 0) {
-        // community was successfully deleted, now delete all frequencies
-        // TODO: Return community object and frequencies objects to remove
-        // them from the client store
-        const community = changes[0].old_val.id;
+    .then(result => {
+      // community was successfully deleted, now delete all frequencies
+      if (result.replaced >= 1) {
+        const community = result.changes[0].old_val.id;
         return db
           .table('frequencies')
           .getAll(community, { index: 'community' })
-          .delete()
-          .run();
+          .run()
+          .then(frequencies =>
+            frequencies.map(frequency => deleteFrequency(frequency.id))
+          )
+          .then(data => data);
       }
+
+      // update failed
+      return new Error(
+        "Something went wrong and we weren't able to delete this community"
+      );
     });
 };
 
@@ -261,9 +297,9 @@ const leaveCommunity = (id, uid) => {
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
-          : db.table('communities').get(id).run())
+          : db.table('communities').get(id).run()
     );
 };
 
@@ -280,9 +316,9 @@ const joinCommunity = (id, uid) => {
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
-          : db.table('communities').get(id).run())
+          : db.table('communities').get(id).run()
     );
 };
 
@@ -319,12 +355,12 @@ const subscribeToDefaultFrequencies = (id: string, uid: string) => {
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
           : db
               .table('frequencies')
               .filter({ community: id, slug: 'general' })
-              .run())
+              .run()
     );
 };
 

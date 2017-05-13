@@ -44,8 +44,8 @@ module.exports = {
         // select the community returned
         const community = communities[0];
 
-        // if no community was found
-        if (!community) {
+        // if no community was found or was deleted
+        if (!community || community.deleted) {
           return new Error("This community doesn't exist.");
         }
 
@@ -76,8 +76,8 @@ module.exports = {
         // select the community returned
         const community = communities[0];
 
-        // if no community was found
-        if (!community) {
+        // if no community was found or was deleted
+        if (!community || community.deleted) {
           return new Error("This community doesn't exist.");
         }
 
@@ -102,8 +102,8 @@ module.exports = {
         // select the community returned
         const community = communities[0];
 
-        // if no community was found
-        if (!community) {
+        // if no community was found or was deleted
+        if (!community || community.deleted) {
           return new Error("This community doesn't exist.");
         }
 
