@@ -37,10 +37,7 @@ export const setStoryLockMutation = graphql(
 );
 
 /*
-  Send an id and boolean value to set a story to be locked or unlocked.
-  Returns the story ID and locked value.
-
-  Updates UI automatically via the Apollo ObjectID cache
+  Delete a story
 */
 const DELETE_STORY_MUTATION = gql`
   mutation deleteStory($id: ID!) {
