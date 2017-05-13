@@ -80,7 +80,7 @@ module.exports = {
           const story = stories[0];
 
           // if the story doesn't exist
-          if (!story) {
+          if (!story || story.deleted) {
             return new Error("This story doesn't exist");
           }
 

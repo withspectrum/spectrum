@@ -32,7 +32,7 @@ const StoryContainerPure = ({
     return <Upsell404Story />;
   }
 
-  if (!story) {
+  if (!story || story.deleted) {
     return <Upsell404Story />;
   }
 

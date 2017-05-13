@@ -28,7 +28,7 @@ const SettingsPure = ({
     );
   }
 
-  if (!frequency) {
+  if (!frequency || frequency.deleted) {
     return (
       <Upsell404Frequency frequency={frequencySlug} community={communitySlug} />
     );

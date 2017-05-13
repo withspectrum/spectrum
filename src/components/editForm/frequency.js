@@ -95,9 +95,9 @@ class FrequencyWithData extends Component {
     } = this.props;
 
     deleteFrequency(frequency.id)
-      .then(frequency => {
-        if (frequency !== undefined) {
-          // community was successfully deleted
+      .then(({ data: { deleteFrequency } }) => {
+        if (deleteFrequency === true) {
+          // frequency was successfully deleted
           history.push(`/${community.slug}`);
           this.props.dispatch(
             addToastWithTimeout('success', 'Frequency successfully deleted.')

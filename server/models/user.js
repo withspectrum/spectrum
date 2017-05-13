@@ -80,6 +80,7 @@ const getEverything = (uid: string): Promise<Array<any>> => {
       .zip()
       // Filter by the user being a subscriber to the frequency of the story
       .filter(story => story('subscribers').contains(uid))
+      .filter(story => db.not(story.hasFields('deleted')))
       // Don't send the subscribers back
       .without('subscribers')
       .run()
@@ -126,9 +127,9 @@ const uploadPhoto = (file: Object, user: Object) => {
       .run()
       .then(
         result =>
-          (result.changes.length > 0
+          result.changes.length > 0
             ? result.changes[0].new_val
-            : db.table('users').get(user.uid).run())
+            : db.table('users').get(user.uid).run()
       );
   });
 };

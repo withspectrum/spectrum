@@ -34,7 +34,7 @@ const FrequencyViewPure = ({
     );
   }
 
-  if (!frequency) {
+  if (!frequency || frequency.deleted) {
     return (
       <Upsell404Frequency
         frequency={match.params.frequencySlug}
