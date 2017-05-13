@@ -6,19 +6,56 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
+import { withRouter } from 'react-router';
 import { openModal } from '../../../actions/modals';
-import { setStoryLockMutation } from '../mutations';
+import { addToastWithTimeout } from '../../../actions/toasts';
+import { setStoryLockMutation, deleteStoryMutation } from '../mutations';
 import { Card } from '../../../components/card';
 import { Button } from '../../../components/buttons';
 
-const StoryDetailPure = ({ story, setStoryLock, dispatch, currentUser }) => {
+const StoryDetailPure = ({
+  story,
+  setStoryLock,
+  deleteStory,
+  dispatch,
+  currentUser,
+  history,
+}) => {
   const storyLock = (id, value) =>
     setStoryLock({
       id,
       value,
-    }).catch(error => {
-      console.log('Error locking story: ', error);
-    });
+    })
+      .then(({ data: { setStoryLock } }) => {
+        if (setStoryLock) {
+          dispatch(addToastWithTimeout('neutral', 'Story locked.'));
+        } else {
+          dispatch(addToastWithTimeout('success', 'Story unlocked!'));
+        }
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err));
+      });
+
+  const triggerDelete = id =>
+    deleteStory({
+      id,
+    })
+      .then(({ data: { deleteStory } }) => {
+        if (deleteStory) {
+          history.push(`/`);
+          dispatch(addToastWithTimeout('neutral', 'Story deleted.'));
+        }
+      })
+      .catch(err => {
+        dispatch(
+          addToastWithTimeout(
+            'error',
+            `Something went wrong and we weren't able to delete this story. ${err}`
+          )
+        );
+      });
 
   const openUserProfileModal = (user: Object) => {
     return dispatch(openModal('USER_PROFILE_MODAL', { user }));
@@ -45,7 +82,7 @@ const StoryDetailPure = ({ story, setStoryLock, dispatch, currentUser }) => {
 
       {currentUser &&
         (story.isCreator || story.isFrequencyOwner || story.isCommunityOwner) &&
-        <Button>
+        <Button onClick={() => triggerDelete(story.id)}>
           Delete
         </Button>}
 
@@ -58,7 +95,12 @@ const StoryDetailPure = ({ story, setStoryLock, dispatch, currentUser }) => {
   );
 };
 
-const StoryDetail = compose(setStoryLockMutation, pure)(StoryDetailPure);
+const StoryDetail = compose(
+  setStoryLockMutation,
+  deleteStoryMutation,
+  withRouter,
+  pure
+)(StoryDetailPure);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
 });

@@ -34,7 +34,7 @@ const SettingsPure = ({
     return <Upsell404Community community={communitySlug} />;
   }
 
-  if (!community) {
+  if (!community || community.deleted) {
     return <Upsell404Community community={communitySlug} create={create} />;
   }
 
