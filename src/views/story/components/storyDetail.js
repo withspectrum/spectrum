@@ -10,7 +10,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { setStoryLockMutation, deleteStoryMutation } from '../mutations';
+import { setStoryLockMutation } from '../mutations';
+import { deleteStoryMutation } from '../../../api/story';
 import { Card } from '../../../components/card';
 import { Button } from '../../../components/buttons';
 
@@ -38,26 +39,32 @@ const StoryDetailPure = ({
         dispatch(addToastWithTimeout('error', err));
       });
 
-  const triggerDelete = id =>
-    deleteStory({
-      id,
-    })
-      .then(({ data: { deleteStory } }) => {
-        if (deleteStory) {
-          history.push(`/`);
-          dispatch(addToastWithTimeout('neutral', 'Story deleted.'));
-        }
-      })
-      .catch(err => {
-        dispatch(
-          addToastWithTimeout(
-            'error',
-            `Something went wrong and we weren't able to delete this story. ${err}`
-          )
-        );
-      });
+  const triggerDelete = (e, id) => {
+    e.preventDefault();
 
-  const openUserProfileModal = (user: Object) => {
+    let message;
+
+    if (story.isCommunityOwner && !story.isCreator) {
+      message = `You are about to delete another person's story. As the owner of the ${story.frequency.community.name} community, you have permission to do this. The story creator will be notified that this story was deleted.`;
+    } else if (story.isFrequencyOwner && !story.isCreator) {
+      message = `You are about to delete another person's story. As the owner of the ${story.frequency} frequency, you have permission to do this. The story creator will be notified that this story was deleted.`;
+    } else if (story.isCreator) {
+      message = 'Are you sure you want to delete this story?';
+    } else {
+      message = 'Are you sure you want to delete this story?';
+    }
+
+    return dispatch(
+      openModal('DELETE_DOUBLE_CHECK_MODAL', {
+        id,
+        entity: 'story',
+        message,
+      })
+    );
+  };
+
+  const openUserProfileModal = (e, user: Object) => {
+    e.preventDefault();
     return dispatch(openModal('USER_PROFILE_MODAL', { user }));
   };
 
@@ -68,7 +75,7 @@ const StoryDetailPure = ({
         {' '}
         by
         {' '}
-        <span onClick={() => openUserProfileModal(story.author)}>
+        <span onClick={e => openUserProfileModal(e, story.author)}>
           {story.author.displayName}
         </span>
       </h3>
@@ -82,7 +89,7 @@ const StoryDetailPure = ({
 
       {currentUser &&
         (story.isCreator || story.isFrequencyOwner || story.isCommunityOwner) &&
-        <Button onClick={() => triggerDelete(story.id)}>
+        <Button onClick={e => triggerDelete(e, story.id)}>
           Delete
         </Button>}
 

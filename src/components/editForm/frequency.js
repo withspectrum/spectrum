@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 import { Button, LinkButton } from '../buttons';
+import { openModal } from '../../actions/modals';
 import { Input, UnderlineInput, TextArea } from '../formElements';
 import { addToastWithTimeout } from '../../actions/toasts';
 import {
@@ -34,6 +35,7 @@ class FrequencyWithData extends Component {
       slug: frequency.slug,
       description: frequency.description,
       id: frequency.id,
+      frequencyData: frequency,
     };
   }
 
@@ -84,29 +86,45 @@ class FrequencyWithData extends Component {
       });
   };
 
-  triggerDeleteFrequency = e => {
+  triggerDeleteFrequency = (e, id) => {
     e.preventDefault();
+    const { name, frequencyData } = this.state;
+    const message = (
+      <div>
+        <p>
+          Are you sure you want to delete your frequency,
+          {' '}
+          <b>{name}</b>
+          {' '}
+          (in the
+          {' '}
+          <b>{frequencyData.community.name}</b>
+          {' '}
+          community)?
+        </p>
+        {' '}
+        <p>
+          The
+          {' '}
+          <b>{frequencyData.metaData.stories} stories</b>
+          {' '}
+          posted in this frequency will be deleted.
+        </p>
+        <p>
+          All messages, reactions, and media shared in this frequency will be deleted.
+        </p>
+        <p>This cannot be undone.</p>
+      </div>
+    );
 
-    const {
-      frequency,
-      frequency: { community },
-      deleteFrequency,
-      history,
-    } = this.props;
-
-    deleteFrequency(frequency.id)
-      .then(({ data: { deleteFrequency } }) => {
-        if (deleteFrequency === true) {
-          // frequency was successfully deleted
-          history.push(`/${community.slug}`);
-          this.props.dispatch(
-            addToastWithTimeout('success', 'Frequency successfully deleted.')
-          );
-        }
+    return this.props.dispatch(
+      openModal('DELETE_DOUBLE_CHECK_MODAL', {
+        id,
+        entity: 'frequency',
+        message,
+        redirect: `/${frequencyData.community.slug}`,
       })
-      .catch(err => {
-        this.props.dispatch(addToastWithTimeout('error', err));
-      });
+    );
   };
 
   render() {
@@ -154,7 +172,7 @@ class FrequencyWithData extends Component {
             ? <Actions>
                 <LinkButton
                   color={'warn.alt'}
-                  onClick={this.triggerDeleteFrequency}
+                  onClick={e => this.triggerDeleteFrequency(e, frequency.id)}
                 >
                   Delete Frequency
                 </LinkButton>
