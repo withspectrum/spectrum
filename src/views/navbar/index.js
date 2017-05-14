@@ -20,10 +20,6 @@ import {
   DropdownHeader,
 } from './style';
 
-import NotificationList from '../notifications/components/notificationList';
-
-import UserAvatar from '../user/components/userAvatar';
-
 class Navbar extends Component {
   render() {
     const { match, currentUser } = this.props;
@@ -49,18 +45,19 @@ class Navbar extends Component {
               <Label>Home</Label>
             </IconLink>
 
-            <IconLink
-              data-active={match.url.includes('/messages')}
-              data-mobileWidth={'third'}
-              to="/messages"
-            >
-              <Icon
-                icon="messages"
-                color={'bg.default'}
-                hoverColor={'bg.default'}
-              />
-              <Label>Messages</Label>
-            </IconLink>
+            {currentUser &&
+              <IconLink
+                data-active={match.url.includes('/messages')}
+                data-mobileWidth={'third'}
+                to="/messages"
+              >
+                <Icon
+                  icon="messages"
+                  color={'bg.default'}
+                  hoverColor={'bg.default'}
+                />
+                <Label>Messages</Label>
+              </IconLink>}
 
             <IconLink
               data-active={match.url === '/explore'}
@@ -76,49 +73,50 @@ class Navbar extends Component {
             </IconLink>
           </Section>
 
-          <Section right>
-            <IconDrop>
-              <IconLink
-                data-active={match.url === '/notifications'}
-                data-mobileWidth={'half'}
-                to="/notifications"
-              >
-                <Icon
-                  icon="notification"
-                  color={'bg.default'}
-                  hoverColor={'bg.default'}
-                />
-                <LabelForTab>Notifications</LabelForTab>
-              </IconLink>
-              <Dropdown>
-                <DropdownHeader>
-                  My Notifications
-                </DropdownHeader>
+          {currentUser &&
+            <Section right>
+              <IconDrop>
+                <IconLink
+                  data-active={match.url === '/notifications'}
+                  data-mobileWidth={'half'}
+                  to="/notifications"
+                >
+                  <Icon
+                    icon="notification"
+                    color={'bg.default'}
+                    hoverColor={'bg.default'}
+                  />
+                  <LabelForTab>Notifications</LabelForTab>
+                </IconLink>
+                <Dropdown>
+                  <DropdownHeader>
+                    My Notifications
+                  </DropdownHeader>
 
-                <DropdownFooter>
-                  <LinkButton to={'/notifications'}>View all</LinkButton>
-                </DropdownFooter>
-              </Dropdown>
-            </IconDrop>
+                  <DropdownFooter>
+                    <LinkButton to={'/notifications'}>View all</LinkButton>
+                  </DropdownFooter>
+                </Dropdown>
+              </IconDrop>
 
-            {/* TODO: Make this active only when viewing current logged in user profile */}
-            <IconDrop>
-              <IconLink
-                data-active={match.url === `/users/me`}
-                data-mobileWidth={'half'}
-                to={`/users/me`}
-              >
+              {/* TODO: Make this active only when viewing current logged in user profile */}
+              <IconDrop>
+                <IconLink
+                  data-active={match.url === `/users/me`}
+                  data-mobileWidth={'half'}
+                  to={`/users/me`}
+                >
 
-                <LabelForTab>Profile</LabelForTab>
-              </IconLink>
-              <Dropdown width={'240px'}>
+                  <LabelForTab>Profile</LabelForTab>
+                </IconLink>
+                <Dropdown width={'240px'}>
 
-                <DropdownFooter>
-                  <Button color={'warn'}>Log Out</Button>
-                </DropdownFooter>
-              </Dropdown>
-            </IconDrop>
-          </Section>
+                  <DropdownFooter>
+                    <Button color={'warn'}>Log Out</Button>
+                  </DropdownFooter>
+                </Dropdown>
+              </IconDrop>
+            </Section>}
 
         </Nav>
 

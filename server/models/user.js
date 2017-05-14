@@ -80,6 +80,7 @@ const getEverything = (uid: string): Promise<Array<any>> => {
       .zip()
       // Filter by the user being a subscriber to the frequency of the story
       .filter(story => story('subscribers').contains(uid))
+      .filter(story => db.not(story.hasFields('deleted')))
       // Don't send the subscribers back
       .without('subscribers')
       .run()

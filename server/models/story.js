@@ -7,13 +7,18 @@ const { listenToNewDocumentsIn } = require('./utils');
 const { storeStoryNotification } = require('./notification');
 
 const getStories = (ids: Array<string>) => {
-  return db.table('stories').getAll(...ids).run();
+  return db
+    .table('stories')
+    .getAll(...ids)
+    .filter(story => db.not(story.hasFields('deleted')))
+    .run();
 };
 
 const getStoriesByFrequency = (frequency, { first, after }) => {
   return db
     .table('stories')
     .getAll(frequency, { index: 'frequency' })
+    .filter(story => db.not(story.hasFields('deleted')))
     .orderBy(db.desc('createdAt'))
     .run();
 };
@@ -22,6 +27,7 @@ const getStoriesByUser = (uid, { first, after }) => {
   return db
     .table('stories')
     .getAll(uid, { index: 'author' })
+    .filter(story => db.not(story.hasFields('deleted')))
     .orderBy(db.desc('createdAt'))
     .run();
 };
@@ -82,9 +88,22 @@ const deleteStory = id => {
   return db
     .table('stories')
     .get(id)
-    .delete()
+    .update(
+      {
+        deleted: db.now(),
+      },
+      {
+        returnChanges: true,
+        nonAtomic: true,
+      }
+    )
     .run()
-    .then(result => result.deleted === 1);
+    .then(result => {
+      // update was successful
+      if (result.replaced >= 1) {
+        return true;
+      }
+    });
 };
 
 const editStory = (id, newContent) => {

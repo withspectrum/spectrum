@@ -1,4 +1,6 @@
 // @flow
+// $FlowFixMe
+const { UserError } = require('graphql-errors');
 import {
   getFrequencies,
   editFrequency,
@@ -13,6 +15,7 @@ import {
   leaveCommunity,
   userIsMemberOfCommunity,
   userIsMemberOfAnyFrequencyInCommunity,
+  subscribeToDefaultFrequencies,
 } from '../models/community';
 import type {
   CreateFrequencyArguments,
@@ -29,115 +32,238 @@ module.exports = {
       _: any,
       args: CreateFrequencyArguments,
       { user }: Context
-    ) => createFrequency(args, user.uid),
+    ) => {
+      // user must be authed to create a frequency
+      if (!user)
+        return new UserError(
+          'You must be signed in to create a new community.'
+        );
+
+      // get the community the frequency is being created under
+      return (
+        getCommunities([args.input.community])
+          // return the communities
+          .then(communities => {
+            // select the community where the frequency is being created
+            const community = communities[0];
+
+            // if the user does not own the community
+            if (!(community.owners.indexOf(user.uid) > -1)) {
+              return new UserError(
+                "You don't have permission to create a frequency in this community."
+              );
+            }
+
+            // all checks passed
+            return createFrequency(args, user.uid);
+          })
+      );
+    },
     deleteFrequency: (_: any, { id }, { user }: Context) => {
-      return getFrequencies([id])
-        .then(frequencies => {
-          const frequency = frequencies[0];
-          const communities = getCommunities([frequency.community]);
+      // user must be authed to delete a frequency
+      if (!user)
+        return new UserError(
+          'You must be signed in to make changes to this frequency.'
+        );
 
-          return Promise.all([frequency, communities]);
-        })
-        .then(([frequency, communities]) => {
-          const community = communities[0];
+      // get the frequency being deleted
+      return (
+        getFrequencies([id])
+          // return frequencies
+          .then(frequencies => {
+            // select the frequency being deleted
+            const frequency = frequencies[0];
 
-          if (!frequency) {
-            return new Error("Frequency doesn't exist");
-          }
+            // if frequency wasn't found or was previously deleted
+            if (!frequency || frequency.deleted) {
+              return new UserError("Frequency doesn't exist");
+            }
 
-          // if user is owner of the frequency or community
-          if (
-            frequency.owners.indexOf(user.uid) > -1 ||
-            community.owners.indexOf(user.uid) > -1
-          ) {
-            return deleteFrequency(id);
-          }
+            // get the community parent of the frequency being deleted
+            const communities = getCommunities([frequency.community]);
 
-          return new Error('Not allowed to do that!');
-        });
+            return Promise.all([frequency, communities]);
+          })
+          .then(([frequency, communities]) => {
+            // select the community
+            const community = communities[0];
+
+            // determine the role in the frequency and community
+            const isCommunityOwner = community.owners.indexOf(user.uid) > -1;
+            const isFrequencyOwner = frequency.owners.indexOf(user.uid) > -1;
+
+            // NOTE: This will need to change in the future if we have the concept
+            // of moderator-owner frequencies where the community owner is not
+            // listed as an owner of the frequency. In today's code we mirror
+            // the owners at time of frequency creation
+            if (isCommunityOwner || isFrequencyOwner) {
+              // all checks passed
+              return deleteFrequency(id);
+            } else {
+              return new UserError(
+                "You don't have permission to make changes to this frequency"
+              );
+            }
+          })
+      );
     },
     editFrequency: (
       _: any,
       args: EditFrequencyArguments,
       { user }: Context
     ) => {
-      return getFrequencies([args.input.id]).then(frequencies => {
-        const frequency = frequencies[0];
-        if (!frequency) {
-          // todo handle error if frequency doesn't exist
-          return new Error("This frequency doesn't exist");
-        }
+      // user must be authed to edit a frequency
+      if (!user)
+        return new UserError(
+          'You must be signed in to make changes to this frequency.'
+        );
 
-        if (frequency.owners.indexOf(user.uid) > -1) {
-          return editFrequency(args);
-        }
+      // get the frequency being edited
+      return (
+        getFrequencies([args.input.id])
+          // return the frequencies
+          .then(frequencies => {
+            // select the frequency
+            const frequency = frequencies[0];
 
-        return new Error('Not allowed to do that!');
-      });
+            // if frequency wasn't found or was deleted
+            if (!frequency || frequency.deleted) {
+              return new UserError("This frequency doesn't exist");
+            }
+
+            // if user doesn't own the frequency
+            if (!(frequency.owners.indexOf(user.uid) > -1)) {
+              return new UserError(
+                "You don't have permission to make changes to this frequency."
+              );
+            }
+
+            // get the community parent of the frequency being edited
+            const communities = getCommunities([frequency.community]);
+
+            return Promise.all([frequency, communities]);
+          })
+          .then(([frequency, communities]) => {
+            // select the community
+            const community = communities[0];
+
+            // if user is doesn't own the community
+
+            // NOTE: This will need to change in the future if we have the concept
+            // of moderator-owner frequencies where the community owner is not
+            // listed as an owner of the frequency. In today's code we mirror
+            // the owners at time of frequency creation
+            if (!(community.owners.indexOf(user.uid) > -1)) {
+              return new UserError(
+                "You don't have permission to make changes to this frequency."
+              );
+            }
+
+            // all checks passed
+            return editFrequency(args);
+          })
+      );
     },
     toggleFrequencySubscription: (
       _: any,
       { id }: string,
       { user }: Context
     ) => {
+      // user must be authed to join a frequency
+      if (!user)
+        return new UserError('You must be signed in to follow this frequency.');
+
+      // get the frequency being edited
       return getFrequencies([id]).then(frequencies => {
+        // select the frequency
         const frequency = frequencies[0];
-        if (!frequency) {
-          // todo handle error if frequency doesn't exist
-          return;
+
+        // if frequency wasn't found or was deleted
+        if (!frequency || frequency.deleted) {
+          return new UserError("This frequency doesn't exist");
         }
 
         // if the person owns the frequency, they have accidentally triggered
         // a join or leave action, which isn't allowed
         if (frequency.owners.indexOf(user.uid) > -1) {
-          return new Error("Owners of a frequency can't join or leave");
+          return new UserError(
+            "Owners of a community can't join or leave their own frequency."
+          );
         }
 
+        // if the user is current following the frequency
         if (frequency.subscribers.indexOf(user.uid) > -1) {
-          return unsubscribeFrequency(id, user.uid)
-            .then(frequency => {
-              return Promise.all([
-                frequency,
-                userIsMemberOfAnyFrequencyInCommunity(
-                  frequency.community,
-                  user.uid
-                ),
-              ]);
-            })
-            .then(([frequency, isMemberOfAnotherFrequency]) => {
-              if (isMemberOfAnotherFrequency) {
-                return Promise.all([frequency]);
-              }
-
-              if (!isMemberOfAnotherFrequency) {
+          // unsubscribe them to the frequency
+          return (
+            unsubscribeFrequency(id, user.uid)
+              .then(frequency => {
                 return Promise.all([
                   frequency,
-                  leaveCommunity(frequency.community, user.uid),
+
+                  // we check to see if the user is part of any other frequencies
+                  // in the community - returns a boolean
+                  userIsMemberOfAnyFrequencyInCommunity(
+                    frequency.community,
+                    user.uid
+                  ),
                 ]);
-              }
-            })
-            .then(data => data[0]); // return the frequency
+              })
+              .then(([frequency, isMemberOfAnotherFrequency]) => {
+                // if user is a member of another frequency in the community,
+                // continue
+                if (isMemberOfAnotherFrequency) {
+                  return Promise.all([frequency]);
+                }
+
+                // if user is not a member of any other frequencies in the community,
+                // we can assume that they no longer want to be part of the community
+                if (!isMemberOfAnotherFrequency) {
+                  // leave the community
+                  return Promise.all([
+                    frequency,
+                    leaveCommunity(frequency.community, user.uid),
+                  ]);
+                }
+              })
+              // return the frequency
+              .then(data => data[0])
+          );
         } else {
-          return subscribeFrequency(id, user.uid)
-            .then(frequency => {
-              return Promise.all([
-                frequency,
-                userIsMemberOfCommunity(frequency.community, user.uid),
-              ]);
-            })
-            .then(([frequency, isMember]) => {
-              if (isMember) {
-                return Promise.all([frequency]);
-              }
-
-              if (!isMember) {
+          // if the user is not currently following the frequency, subscribe
+          // them to the frequency
+          return (
+            subscribeFrequency(id, user.uid)
+              .then(frequency => {
+                // check to see if the user is a member of the parent community
+                // returns a boolean
                 return Promise.all([
                   frequency,
-                  joinCommunity(frequency.community, user.uid),
+                  userIsMemberOfCommunity(frequency.community, user.uid),
                 ]);
-              }
-            })
-            .then(data => data[0]); // return the frequency
+              })
+              .then(([frequency, isMember]) => {
+                // if the user is a member of the parent community, continue
+                if (isMember) {
+                  return Promise.all([frequency]);
+                }
+
+                // if the user is not a member of the parent community,
+                // join the community and the community's defualt frequencies
+                // (currently just 'general')
+                if (!isMember) {
+                  return Promise.all([
+                    frequency,
+                    joinCommunity(frequency.community, user.uid),
+                    subscribeToDefaultFrequencies(
+                      frequency.community,
+                      user.uid
+                    ),
+                  ]);
+                }
+              })
+              // return the frequency
+              .then(data => data[0])
+          );
         }
       });
     },

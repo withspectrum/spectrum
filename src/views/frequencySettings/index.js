@@ -7,49 +7,54 @@ import pure from 'recompose/pure';
 //$FlowFixMe
 import { connect } from 'react-redux';
 import { getThisFrequency } from './queries';
-import { addToastWithTimeout } from '../../actions/toasts';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
-import { displayLoadingCard } from '../../components/loading';
+import { displayLoadingScreen } from '../../components/loading';
 import { FrequencyEditForm } from '../../components/editForm';
+import { Upsell404Frequency } from '../../components/upsell';
 
-const SettingsPure = ({ match, data, dispatch, history }) => {
-  if (data.error) {
-    return <div>Error loading settings for this frequency.</div>;
-  }
+const SettingsPure = ({
+  match,
+  data: { error, frequency },
+  dispatch,
+  history,
+}) => {
+  const communitySlug = match.params.communitySlug;
+  const frequencySlug = match.params.frequencySlug;
 
-  if (!data.frequency) {
-    history.push('/');
-    dispatch(addToastWithTimeout('error', "This frequency doesn't exist."));
-
-    // react elements must return a valid element or null
-    return null;
-  }
-
-  if (!data.frequency.isOwner && !data.frequency.community.isOwner) {
-    history.push('/');
-    dispatch(
-      addToastWithTimeout(
-        'error',
-        "You don't have permission to view these settings."
-      )
+  if (error) {
+    return (
+      <Upsell404Frequency frequency={frequencySlug} community={communitySlug} />
     );
+  }
 
-    // react elements must return a valid element or null
-    return null;
+  if (!frequency || frequency.deleted) {
+    return (
+      <Upsell404Frequency frequency={frequencySlug} community={communitySlug} />
+    );
+  }
+
+  if (!frequency.isOwner && !frequency.community.isOwner) {
+    return (
+      <Upsell404Frequency
+        frequency={frequencySlug}
+        community={communitySlug}
+        noPermission
+      />
+    );
   }
 
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <FrequencyEditForm frequency={data.frequency} />
+        <FrequencyEditForm frequency={frequency} />
       </Column>
       <Column type="primary" />
     </AppViewWrapper>
   );
 };
 
-const FrequencySettings = compose(getThisFrequency, displayLoadingCard, pure)(
+const FrequencySettings = compose(getThisFrequency, displayLoadingScreen, pure)(
   SettingsPure
 );
 export default connect()(FrequencySettings);

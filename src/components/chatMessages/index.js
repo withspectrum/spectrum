@@ -76,8 +76,9 @@ const ChatMessages = ({ messages, currentUser, toggleReaction, dispatch }) => {
       ? message.reactions.map(reaction => reaction.user.uid)
       : null;
     let reactionCount = message.reactions ? reactionUsers.length : 0;
-    let userHasReacted =
-      reactionUsers && reactionUsers.includes(currentUser.uid);
+    let userHasReacted = currentUser
+      ? reactionUsers && reactionUsers.includes(currentUser)
+      : false;
     // probably a better way to do this
     const doNothing = () => '';
     const triggerMutation = () => {
@@ -103,7 +104,7 @@ const ChatMessages = ({ messages, currentUser, toggleReaction, dispatch }) => {
         hasCount={reactionCount}
         active={userHasReacted}
         me={me}
-        hide={(me || currentUser.uid === null) && reactionCount === 0}
+        hide={(me || !currentUser) && reactionCount === 0}
         onClick={
           me ? doNothing : triggerMutation
           // : () => toggleReaction(message.id, userHasReacted)
@@ -131,7 +132,7 @@ const ChatMessages = ({ messages, currentUser, toggleReaction, dispatch }) => {
         }
 
         const sender = evaluating.sender;
-        const me = sender.uid === currentUser.uid;
+        const me = currentUser ? sender.uid === currentUser.uid : false;
 
         return (
           <BubbleGroupContainer me={me} key={i}>

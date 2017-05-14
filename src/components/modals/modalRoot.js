@@ -5,11 +5,13 @@ import { connect } from 'react-redux';
 import UserProfileModal from './UserProfileModal';
 import CreateCommunityModal from './CreateCommunityModal';
 import CreateFrequencyModal from './CreateFrequencyModal';
+import DeleteDoubleCheckModal from './DeleteDoubleCheckModal';
 
 const MODAL_COMPONENTS = {
   USER_PROFILE_MODAL: UserProfileModal,
   CREATE_COMMUNITY_MODAL: CreateCommunityModal,
   CREATE_FREQUENCY_MODAL: CreateFrequencyModal,
+  DELETE_DOUBLE_CHECK_MODAL: DeleteDoubleCheckModal,
 };
 
 /*

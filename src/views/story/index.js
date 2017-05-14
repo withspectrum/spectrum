@@ -6,7 +6,7 @@ import { Route, Redirect } from 'react-router';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-import { StoryContainer } from './containers';
+import StoryContainer from './containers';
 import AppViewWrapper from '../../components/appViewWrapper';
 
 const StoryPure = ({ match, location }) => (

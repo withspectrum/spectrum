@@ -4,26 +4,43 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
+// $FlowFixMe
+import { connect } from 'react-redux';
 import StoryComposer from '../../components/storyComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import StoryFeed from '../../components/storyFeed';
 import { FrequencyProfile } from '../../components/profile';
 import { getFrequencyStories, getFrequency } from './queries';
-import { displayLoadingCard } from '../../components/loading';
+import { displayLoadingScreen } from '../../components/loading';
+import { UpsellSignIn, Upsell404Frequency } from '../../components/upsell';
 
 const StoryFeedWithData = compose(getFrequencyStories)(StoryFeed);
 
-const FrequencyViewPure = ({ match, data: { error, frequency } }) => {
+const FrequencyViewPure = ({
+  match,
+  data: { error, frequency },
+  currentUser,
+}) => {
   const communitySlug = match.params.communitySlug;
   const frequencySlug = match.params.frequencySlug;
 
   if (error) {
-    return <div>error</div>;
+    return (
+      <Upsell404Frequency
+        frequency={match.params.frequencySlug}
+        community={match.params.communitySlug}
+      />
+    );
   }
 
-  if (!frequency) {
-    return <div>frequency not found</div>;
+  if (!frequency || frequency.deleted) {
+    return (
+      <Upsell404Frequency
+        frequency={match.params.frequencySlug}
+        community={match.params.communitySlug}
+      />
+    );
   }
 
   /*
@@ -39,7 +56,9 @@ const FrequencyViewPure = ({ match, data: { error, frequency } }) => {
       </Column>
 
       <Column type="primary" alignItems="center">
-        {frequency.isSubscriber
+        {!currentUser && <UpsellSignIn entity={frequency} />}
+
+        {frequency.isSubscriber && currentUser
           ? <StoryComposer
               activeCommunity={communitySlug}
               activeFrequency={match.params.frequencySlug}
@@ -51,7 +70,10 @@ const FrequencyViewPure = ({ match, data: { error, frequency } }) => {
   );
 };
 
-export const FrequencyView = compose(getFrequency, displayLoadingCard, pure)(
+export const FrequencyView = compose(getFrequency, displayLoadingScreen, pure)(
   FrequencyViewPure
 );
-export default FrequencyView;
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+export default connect(mapStateToProps)(FrequencyView);

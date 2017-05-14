@@ -2,7 +2,7 @@
 /**
  * Story query resolvers
  */
-const { getEverything } = require('../models/user');
+const { getEverything, getUser } = require('../models/user');
 const { getCommunitiesByUser } = require('../models/community');
 const { getFrequenciesByUser } = require('../models/frequency');
 const { getStoriesByUser } = require('../models/story');
@@ -19,8 +19,15 @@ import type { GraphQLContext } from '../';
 
 module.exports = {
   Query: {
-    user: (_: any, args: { uid: string }, { loaders }: GraphQLContext) =>
-      loaders.user.load(args.uid),
+    user: (
+      _: any,
+      args: { uid: string, username: string },
+      { loaders }: GraphQLContext
+    ) => {
+      if (args.uid) return loaders.user.load(args.uid);
+      if (args.username) return getUser({ username: args.username });
+      return null;
+    },
     currentUser: (_: any, __: any, { user }: GraphQLContext) => user,
   },
   User: {

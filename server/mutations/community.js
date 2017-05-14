@@ -1,4 +1,6 @@
 // @flow
+// $FlowFixMe
+const { UserError } = require('graphql-errors');
 import {
   createCommunity,
   editCommunity,
@@ -24,20 +26,42 @@ module.exports = {
       _: any,
       args: CreateCommunityArguments,
       { user }: Context
-    ) => createCommunity(args, user.uid),
+    ) => {
+      // user must be authed to create a community
+      if (!user)
+        return new UserError(
+          'You must be signed in to create a new community.'
+        );
+
+      // all checks passed
+      return createCommunity(args, user.uid);
+    },
     deleteCommunity: (_: any, { id }, { user }: Context) => {
+      // user must be authed to delete a community
+      if (!user)
+        return new UserError(
+          'You must be signed in to make changes to this community.'
+        );
+
+      // get the community being deleted
       return getCommunities([id]).then(communities => {
+        // select the community returned
         const community = communities[0];
 
-        if (!community) {
-          return new Error("This community doesn't exist.");
+        // if no community was found or was deleted
+        if (!community || community.deleted) {
+          return new UserError("This community doesn't exist.");
         }
 
-        if (community.owners.indexOf(user.uid) > -1) {
-          return deleteCommunity(id);
+        // user must own the community to delete the community
+        if (!(community.owners.indexOf(user.uid) > -1)) {
+          return new UserError(
+            "You don't have permission to make changes to this community."
+          );
         }
 
-        return new Error("You don't have permission to delete this community.");
+        // all checks passed
+        return deleteCommunity(id);
       });
     },
     editCommunity: (
@@ -45,55 +69,86 @@ module.exports = {
       args: EditCommunityArguments,
       { user }: Context
     ) => {
+      // user must be authed to edit a community
+      if (!user)
+        return new UserError(
+          'You must be signed in to make changes to this community.'
+        );
+
+      // get the community being modified
       return getCommunities([args.input.id]).then(communities => {
+        // select the community returned
         const community = communities[0];
-        if (!community) {
-          return new Error("This community doesn't exist.");
+
+        // if no community was found or was deleted
+        if (!community || community.deleted) {
+          return new UserError("This community doesn't exist.");
         }
 
-        if (community.owners.indexOf(user.uid) > -1) {
-          return editCommunity(args);
+        // user must own the community to edit the community
+        if (!(community.owners.indexOf(user.uid) > -1)) {
+          return new UserError(
+            "You don't have permission to make changes to this community."
+          );
         }
 
-        return new Error("You don't have permission to edit this community.");
+        // all checks passed
+        return editCommunity(args);
       });
     },
     toggleCommunityMembership: (_: any, { id }: string, { user }: Context) => {
+      // user must be authed to join a community
+      if (!user)
+        return new UserError('You must be signed in to join this community.');
+
+      // get the community
       return getCommunities([id]).then(communities => {
+        // select the community returned
         const community = communities[0];
 
-        if (!community) {
-          return new Error("This community doesn't exist.");
+        // if no community was found or was deleted
+        if (!community || community.deleted) {
+          return new UserError("This community doesn't exist.");
         }
 
         // if the person owns the community, they have accidentally triggered
         // a join or leave action, which isn't allowed
         if (community.owners.indexOf(user.uid) > -1) {
-          return new Error(
+          return new UserError(
             "Owners of a community can't join or leave their own community."
           );
         }
 
+        // if the user is a member of the community
         if (community.members.indexOf(user.uid) > -1) {
-          return leaveCommunity(id, user.uid)
-            .then(community => {
-              return Promise.all([
-                community,
-                unsubscribeFromAllFrequenciesInCommunity(id, user.uid),
-              ]);
-            })
-            .then(data => data[0]);
-        } else {
+          // leave the community
           return (
-            joinCommunity(id, user.uid)
+            leaveCommunity(id, user.uid)
+              // then pass the community downstream
               .then(community => {
                 return Promise.all([
                   community,
+                  // selects all frequencies in the community and leaves them
+                  unsubscribeFromAllFrequenciesInCommunity(id, user.uid),
+                ]);
+              })
+              // return the community to the client
+              .then(data => data[0])
+          );
+        } else {
+          // if the user is not a member of the community
+          return (
+            // join the community
+            joinCommunity(id, user.uid)
+              // then pass the community downstream
+              .then(community => {
+                return Promise.all([
+                  community,
+                  // currently subscribes the user to the 'general' frequency
                   subscribeToDefaultFrequencies(id, user.uid),
                 ]);
               })
-              //return only the community
-              //TODO: also return the frequency for the client side store update
+              // return the community to the client
               .then(data => data[0])
           );
         }

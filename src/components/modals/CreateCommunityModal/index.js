@@ -18,14 +18,18 @@ import { Form, Actions, ImgPreview } from './style';
 import { Input, UnderlineInput, TextArea } from '../../formElements';
 
 class CreateCommunityModal extends Component {
-  state = {
-    name: '',
-    slug: '',
-    description: '',
-    website: '',
-    image: '',
-    file: null,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      name: props.modalProps.name || '',
+      slug: '',
+      description: '',
+      website: '',
+      image: '',
+      file: null,
+    };
+  }
 
   close = () => {
     this.props.dispatch(closeModal());
