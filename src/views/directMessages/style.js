@@ -18,10 +18,11 @@ export const MessagesList = styled.div`
   box-shadow: 2px 0 0 ${props => props.theme.border.default}
 `;
 
-export const Messages = styled.div`
+export const MessagesContainer = styled.div`
   position: absolute;
-  width: calc(100% - 320px);
-  left: 320px;
+  /* 322px to account for 2px box shadow on the sidebar */
+  width: calc(100% - 322px);
+  left: 322px;
   height: calc(100% - 48px);
   overflow-x: hidden;
   overflow-y: scroll;

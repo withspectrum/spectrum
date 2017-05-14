@@ -18,6 +18,7 @@ const getDirectMessageGroupsByUser = (uid: String) => {
   return db
     .table('direct_message_groups')
     .getAll(uid, { index: 'users' })
+    .orderBy(db.desc('lastActivity'))
     .run()
     .then(result => result);
 };
