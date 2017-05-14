@@ -4,10 +4,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import Icon from '../components/icons';
-import {
-  HorizontalRuleWithIcon,
-  ChatMessage,
-} from '../views/notifications/style';
+import { HorizontalRuleWithIcon } from '../components/globals';
+import { ChatMessage } from '../views/notifications/style';
 
 const icons = {
   NEW_STORY: 'write',

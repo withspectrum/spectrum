@@ -41,10 +41,10 @@ export const UpsellJoinFrequency = ({ frequency, subscribe }) => {
       <BGTwo src="/img/cluster-1.svg" role="presentation" />
       <Title>Ready to join the conversation?</Title>
       <Subtitle>
-        Join {frequency.name} to start chatting with friends in this community!
+        Follow ~{frequency.name} to get involved!
       </Subtitle>
       <Button onClick={() => subscribe(frequency.id)} icon="subscribe" label>
-        Follow {frequency.name} in {frequency.community.name}
+        Follow
       </Button>
     </UpsellJoinContainer>
   );
@@ -74,8 +74,8 @@ export const Upsell404Frequency = ({ frequency, community, noPermission }) => {
       <FourOhFourImage src="/img/login.svg" role="presentation" />
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
-      <Button onClick={() => (window.location.href = returnUrl)}>
-        Take Me Back
+      <Button onClick={() => window.location.href = returnUrl}>
+        Take me back
       </Button>
     </UpsellFourOhFourContainer>
   );
@@ -107,10 +107,10 @@ export const Upsell404Community = ({ community, noPermission, create }) => {
       <Actions>
         {// de-emphasizes the 'take me home' button if a create prompt is shown
         create
-          ? <OutlineButton onClick={() => (window.location.href = returnUrl)}>
+          ? <OutlineButton onClick={() => window.location.href = returnUrl}>
               Take Me Home
             </OutlineButton>
-          : <Button onClick={() => (window.location.href = returnUrl)}>
+          : <Button onClick={() => window.location.href = returnUrl}>
               Take Me Home
             </Button>}
 
@@ -134,8 +134,8 @@ export const Upsell404User = ({ username }) => {
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
 
-      <Button onClick={() => (window.location.href = returnUrl)}>
-        Take Me Home
+      <Button onClick={() => window.location.href = returnUrl}>
+        Take me home
       </Button>
     </UpsellFourOhFourContainer>
   );
@@ -144,7 +144,7 @@ export const Upsell404User = ({ username }) => {
 export const Upsell404Story = () => {
   const returnUrl = `/`;
   const title = 'Oops, something got lost!';
-  const subtitle = `We can't find this story of which you query. Perhaps it floated off into space...`;
+  const subtitle = `We can't find that thread. Maybe it floated off into space...`;
 
   return (
     <UpsellFourOhFourContainer>
@@ -152,8 +152,8 @@ export const Upsell404Story = () => {
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
 
-      <Button onClick={() => (window.location.href = returnUrl)}>
-        Take Me Home
+      <Button onClick={() => window.location.href = returnUrl}>
+        Take me home
       </Button>
     </UpsellFourOhFourContainer>
   );

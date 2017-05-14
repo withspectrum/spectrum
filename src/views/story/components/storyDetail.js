@@ -12,8 +12,8 @@ import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { setStoryLockMutation } from '../mutations';
 import { deleteStoryMutation } from '../../../api/story';
-import { Card } from '../../../components/card';
 import { Button } from '../../../components/buttons';
+import { StoryWrapper, StoryHeading, Byline, StoryContent } from '../style';
 
 const StoryDetailPure = ({
   story,
@@ -69,18 +69,15 @@ const StoryDetailPure = ({
   };
 
   return (
-    <Card>
-      <h3>
+    <StoryWrapper>
+      <Byline onClick={e => openUserProfileModal(e, story.author)}>
+        {story.author.displayName}
+      </Byline>
+      <StoryHeading>
         {story.content.title}
-        {' '}
-        by
-        {' '}
-        <span onClick={e => openUserProfileModal(e, story.author)}>
-          {story.author.displayName}
-        </span>
-      </h3>
-      <p>{story.content.description}</p>
-
+      </StoryHeading>
+      {!!story.content.description &&
+        <StoryContent>{story.content.description}</StoryContent>}
       {currentUser &&
         (story.isFrequencyOwner || story.isCommunityOwner) &&
         <Button onClick={() => storyLock(story.id, !story.locked)}>
@@ -98,7 +95,7 @@ const StoryDetailPure = ({
         <Button>
           Edit
         </Button>}
-    </Card>
+    </StoryWrapper>
   );
 };
 

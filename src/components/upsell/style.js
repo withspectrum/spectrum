@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 import { Card } from '../card';
 
 const containerBase = css`
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -31,18 +32,19 @@ export const UpsellFourOhFourContainer = styled(Card)`
 
 export const Title = styled.h1`
   color: ${props => props.theme.text.default};
+  width: 100%;
   font-weight: 700;
   font-size: 1.25rem;
   line-height: 1.25;
-  margin: 0;
+  margin: 8px 0;
   padding: 0;
   font-weight: 700;
   font-size: 24px;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  text-align: center;
 `;
 
 export const Subtitle = styled.h2`
+width: 100%;
 color: ${props => props.theme.text.default};
 font-weight: 400;
 font-size: 0.875rem;

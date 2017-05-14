@@ -1,13 +1,12 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
-import { Transition } from '../globals';
+import { Transition, HorizontalRule } from '../globals';
 
 export const Avatar = styled.img`
   width: 24px;
   height: 24px;
   border-radius: 100%;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   align-self: flex-end;
   -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */
@@ -19,12 +18,25 @@ export const Avatar = styled.img`
   cursor: pointer;
 `;
 
-export const AvatarLabel = styled.span`
+export const AvatarLabel = styled.div`
+  display: inline-block;
   align-self: flex-end;
   width: 24px;
   height: 24px;
   border-radius: 100%;
   margin-right: 8px;
+  margin-bottom: 1px;
+  position: relative;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    border-radius: 100%;
+    height: 100%;
+    width: 100%;
+    box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.15);
+  }
 `;
 
 export const Byline = styled.span`
@@ -56,7 +68,7 @@ export const BubbleGroupContainer = styled.div`
   flex: 0 0 auto;
   margin-top: 16px;
   max-width: 70%;
-  align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)}
+  align-self: ${props => (props.me ? 'flex-end' : 'flex-start')};
   position: relative;
 `;
 
@@ -68,9 +80,9 @@ export const MessagesWrapper = styled.div`
 
 export const MessageWrapper = styled.span`
   display: flex;
-  align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)}
-  align-items: ${props => (props.me ? `flex-end;` : `flex-start;`)}
-  justify-content: ${props => (props.me ? `flex-end;` : `flex-start;`)};
+  align-self: ${props => (props.me ? `flex-end` : `flex-start`)};
+  align-items: ${props => (props.me ? `flex-end` : `flex-start`)};
+  justify-content: ${props => (props.me ? `flex-end` : `flex-start`)};
   padding: 1px 0;
   position: relative;
 
@@ -92,15 +104,9 @@ export const MessageWrapper = styled.span`
   }
 `;
 
-export const Timestamp = styled.div`
-	width: 100%;
-	margin: 32px 0 16px;
-	display: block;
+export const Timestamp = styled(HorizontalRule)`
+	margin: 8px 32px;
 	text-align: center;
-	font-size: 12px;
-	color: ${({ theme }) => theme.text.alt};
-	position: relative;
-	z-index: 0;
 	-webkit-user-select: none; /* Chrome/Safari */
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+ */
@@ -108,26 +114,20 @@ export const Timestamp = styled.div`
 	/* Rules below not implemented in browsers yet */
 	-o-user-select: none;
 	user-select: none;
-
-	&:after {
-		position: absolute;
-		width: 100%;
-		top: 16px;
-		left: 0;
-		right: 0;
-		z-index: 4;
-		content: '';
-		border-bottom: 1px solid #f6f7f8;
-	}
 `;
 
 export const Time = styled.span`
-  margin: 0 auto;
-  display: inline-block;
-  padding: 4px 32px;
-  background: #fff;
-  position: relative;
-  z-index: 5;
+  text-align: center;
+  color: ${({ theme }) => theme.text.placeholder};
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0 16px;
+  transition: ${Transition.hover.off};
+
+  &:hover {
+    color: ${({ theme }) => theme.text.alt};
+    transiton: ${Transition.hover.on};
+  }
 `;
 
 export const Container = styled.div`

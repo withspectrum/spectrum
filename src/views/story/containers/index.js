@@ -16,6 +16,7 @@ import { FlexContainer } from '../../../components/flexbox';
 import { UserProfile, FrequencyProfile } from '../../../components/profile';
 import { getStory } from '../queries';
 import { displayLoadingScreen } from '../../../components/loading';
+import { Container } from '../style';
 import {
   UpsellSignIn,
   UpsellJoinFrequency,
@@ -72,24 +73,26 @@ const StoryContainerPure = ({
       </Column>
 
       <Column type="primary">
-        {!currentUser && <UpsellSignIn />}
-        <StoryDetail story={story} />
-        <Messages id={story.id} currentUser={currentUser} />
-        {// if user exists, and is either the story creator or a subscriber
-        // of the frequency the story was posted in, the user can see the
-        // chat input
-        currentUser &&
-          (story.isCreator || story.frequency.isSubscriber) &&
-          <ChatInput thread={story.id} />}
+        <Container>
+          {!currentUser && <UpsellSignIn />}
+          <StoryDetail story={story} />
+          <Messages id={story.id} currentUser={currentUser} />
+          {// if user exists, and is either the story creator or a subscriber
+          // of the frequency the story was posted in, the user can see the
+          // chat input
+          currentUser &&
+            (story.isCreator || story.frequency.isSubscriber) &&
+            <ChatInput thread={story.id} />}
 
-        {// if the user exists but isn't a subscriber to the frequency,
-        // show an upsell to join the frequency
-        currentUser &&
-          !story.frequency.isSubscriber &&
-          <UpsellJoinFrequency
-            frequency={story.frequency}
-            subscribe={toggleSubscription}
-          />}
+          {// if the user exists but isn't a subscriber to the frequency,
+          // show an upsell to join the frequency
+          currentUser &&
+            !story.frequency.isSubscriber &&
+            <UpsellJoinFrequency
+              frequency={story.frequency}
+              subscribe={toggleSubscription}
+            />}
+        </Container>
       </Column>
     </FlexContainer>
   );

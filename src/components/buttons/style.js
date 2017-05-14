@@ -7,6 +7,7 @@ import { Gradient, Shadow, Transition, hexa } from '../globals';
 // impacts every button
 const baseStyles = css`
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
@@ -19,6 +20,7 @@ const baseStyles = css`
   position: relative;
   opacity: ${props => (props.disabled ? '0.4' : '1')};
   transition: all 0.2s ease-in-out;
+  text-align: center;
 
   &:hover {
     transition: all 0.2s ease-in-out;
@@ -34,11 +36,11 @@ const baseStyles = css`
         font-size: 14px;
         padding: 12px 16px;
       `)}
-
+  ${props => (props.icon ? 'padding: 8px 12px;' : '')};
   ${props => (props.icon && !props.label ? 'padding: 0; span { display: none;}' : '')}
   /* if an icon is present in the icon, add separation from the label */
   div + span {
-    margin-left: 8px;
+    margin: 0 8px;
   }
 `;
 
@@ -95,8 +97,11 @@ export const LinkStyledButton = styled.button`
 `;
 
 export const Label = styled.span`
-  display: inline-block;
+  display: block;
+  flex: 1 0 auto;
   line-height: inherit;
   ${props => (props.loading && !props.hasIcon ? 'opacity: 0;' : 'opacity: 1;')};
   transition: all 0.2s ease-in-out;
+  align-self: center;
+  margin: auto;
 `;

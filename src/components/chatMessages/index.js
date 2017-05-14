@@ -42,7 +42,8 @@ const ChatMessages = ({ messages, currentUser, toggleReaction, dispatch }) => {
   };
 
   const renderAvatar = (sender: Object, me: boolean) => {
-    if (me) return;
+    const robo = sender.uid === 'robo';
+    if (me || robo) return;
 
     return (
       <AvatarLabel tipText={sender.displayName} tipLocation="right">
@@ -120,13 +121,15 @@ const ChatMessages = ({ messages, currentUser, toggleReaction, dispatch }) => {
     <Container>
       {messages.map((group, i) => {
         const evaluating = group[0];
-        const roboText = evaluating.userId === 'robo';
-
+        const roboText = evaluating.sender.uid === 'robo';
+        console.log('robo?: ', roboText);
         if (roboText) {
           const time = convertTimestampToDate(evaluating.message.content);
           return (
-            <Timestamp key={i}>
+            <Timestamp border={'2px solid'} color={'bg.wash'} key={i}>
+              <hr />
               <Time>{time}</Time>
+              <hr />
             </Timestamp>
           );
         }
