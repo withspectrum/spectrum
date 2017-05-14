@@ -69,10 +69,14 @@ export const renderAvatars = users => {
               />
             );
           }
+
+          return null;
         })}
 
         <Remainder><span>+{remainder}</span></Remainder>
       </ThreeAvatarContainer>
     );
   }
+
+  return null;
 };

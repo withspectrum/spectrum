@@ -7,32 +7,6 @@ import {
 } from '../../api/fragments/reaction/reactionInfo';
 
 /*
-  Updates UI automatically via the containers subscribeToNewMessages helper
-*/
-const SEND_MESSAGE_MUTATION = gql`
-  mutation sendMessage($message: MessageInput!) {
-    addMessage(message: $message) {
-      ...messageInfo
-    }
-  }
-  ${messageInfoFragment}
-`;
-const SEND_MESSAGE_OPTIONS = {
-  props: ({ ownProps, mutate }) => ({
-    sendMessage: message =>
-      mutate({
-        variables: {
-          message,
-        },
-      }),
-  }),
-};
-export const sendMessageMutation = graphql(
-  SEND_MESSAGE_MUTATION,
-  SEND_MESSAGE_OPTIONS
-);
-
-/*
   Toggles a reaction on a specific message. The reaction object is created
   in /components/chatMessages because that is a dumb component which might
   be rendering messages from a story or direct message thread. The reaction

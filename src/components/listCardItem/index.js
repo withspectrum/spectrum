@@ -3,7 +3,6 @@ import React from 'react';
 import { Avatar } from '../avatar';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { timeDifference } from '../../helpers/utils';
 import {
   Wrapper,
   Col,
@@ -12,10 +11,6 @@ import {
   Meta,
   Description,
   ActionContainer,
-  MessageGroupTextContainer,
-  MessageGroupByline,
-  Usernames,
-  Timestamp,
 } from './style';
 
 type CardProps = {

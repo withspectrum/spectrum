@@ -1,17 +1,13 @@
 //@flow
 import React from 'react';
-import { Avatar } from '../../../components/avatar';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 import { timeDifference } from '../../../helpers/utils';
 import { renderAvatars } from './avatars';
 import {
   Wrapper,
-  Col,
   Row,
-  Heading,
   Meta,
-  Description,
   MessageGroupTextContainer,
   MessageGroupByline,
   Usernames,

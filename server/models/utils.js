@@ -17,6 +17,7 @@ const listenToNewDocumentsIn = (table, cb) => {
       .run({ cursor: true }, (err, cursor) => {
         if (err) throw err;
         cursor.each((err, data) => {
+          console.log('here w data', data);
           if (err) throw err;
           // Call the passed callback with the message directly
           cb(data.new_val);

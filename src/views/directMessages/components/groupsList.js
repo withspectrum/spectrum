@@ -2,12 +2,11 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import pure from 'recompose/pure';
-import { Card } from '../../../components/card';
 import { ListCardItemDirectMessageGroup } from './messageGroupListItem';
 
 class GroupsList extends Component {
   render() {
-    const { groups, active, currentUser } = this.props;
+    const { groups, currentUser } = this.props;
 
     return (
       <div>

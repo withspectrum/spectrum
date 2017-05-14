@@ -22,7 +22,7 @@ const getMessages = (thread: String) => {
   return db
     .table('messages')
     .getAll(thread, { index: 'thread' })
-    .orderBy('timestamp')
+    .orderBy(db.asc('timestamp'))
     .run();
 };
 
@@ -48,6 +48,7 @@ const storeMessage = (message: MessageProps, user) => {
           excerpt: message.message.content,
         },
       });
+      console.log('made it here with ', message);
       return message;
     });
 };

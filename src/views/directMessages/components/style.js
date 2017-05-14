@@ -136,6 +136,8 @@ export const Snippet = styled.p`
 
 export const AvatarContainer = styled.div`
   margin-right: 16px;
+  width: 44px;
+  height: 44px;
 
   img {
     box-shadow: 0 0 0 2px #fff;
@@ -153,14 +155,14 @@ export const TwoAvatarContainer = styled(AvatarContainer)`
     &:first-child {
       position: absolute;
       z-index: 2;
-      top: 4px;
+      top: 8px;
       left: 0;
     }
 
     &:last-child {
       position: absolute;
       z-index: 3;
-      bottom: 4px;
+      bottom: 0;
       right: 0;
     }
   }

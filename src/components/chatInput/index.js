@@ -6,8 +6,8 @@ import compose from 'recompose/compose';
 import withState from 'recompose/withState';
 // // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
-import { Card } from '../../../components/card';
-import { sendMessageMutation } from '../mutations';
+import { Card } from '../card';
+import { sendMessageMutation } from '../../api/message';
 
 const ChatInputWithMutation = ({
   thread,

@@ -29,23 +29,19 @@ module.exports = {
       return getMessages(id, {
         first,
         after: cursor,
-      })
-        .then(messages =>
-          paginate(
-            messages,
-            { first, after: cursor },
-            message => message.id === cursor
-          )
-        )
-        .then(result => ({
+      }).then(messages => {
+        // Don't paginate messages for now...
+        return {
           pageInfo: {
-            hasNextPage: result.hasMoreItems,
+            hasNextPage: false,
           },
-          edges: result.list.map(message => ({
-            cursor: encode(message.id),
-            node: message,
+          edges: messages.map(message => ({
+            node: {
+              ...message,
+            },
           })),
-        }));
+        };
+      });
     },
     users: (
       { users }: { users: Array<DirectMessageUser> },

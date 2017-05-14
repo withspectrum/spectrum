@@ -17,6 +17,4 @@ module.exports = () => {
     timestamp: 2017-04-29T16:44:50.749Z }
    */
   listenToNewMessages('messages', newMessage);
-
-  listenToNewMessages('direct_messages', newMessage);
 };

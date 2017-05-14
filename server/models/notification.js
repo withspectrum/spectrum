@@ -44,33 +44,38 @@ type MessageNotificationInput = {
 };
 
 const storeMessageNotification = (data: MessageNotificationInput) => {
-  return db
-    .table('stories')
-    .get(data.story)
-    .run()
-    .then(story =>
-      Promise.all([
-        story,
-        db.table('frequencies').get(story.frequency).run(),
-        getParticipants(story.id),
-      ])
-    )
-    .then(([story, frequency, participants]) =>
-      storeNotification({
-        ...data,
-        users: participants
-          .concat([story.author])
-          .filter(uid => uid !== data.sender)
-          .filter(UNIQUE),
-        type: 'NEW_MESSAGE',
-        community: frequency.community,
-        frequency: story.frequency,
-        content: {
-          ...data.content,
-          title: story.content.title,
-        },
-      })
-    );
+  return db.table('stories').get(data.story).run().then(story => {
+    // if there's no story, break out of the stack
+    if (story === null) {
+      return;
+    } else {
+      return breakOutOfChain(data, story);
+    }
+  });
+};
+
+const breakOutOfChain = (data, story) => {
+  return Promise.all([
+    data,
+    story,
+    db.table('frequencies').get(story.frequency).run(),
+    getParticipants(story.id),
+  ]).then(([data, story, frequency, participants]) =>
+    storeNotification({
+      ...data,
+      users: participants
+        .concat([story.author])
+        .filter(uid => uid !== data.sender)
+        .filter(UNIQUE),
+      type: 'NEW_MESSAGE',
+      community: frequency.community,
+      frequency: story.frequency,
+      content: {
+        ...data.content,
+        title: story.content.title,
+      },
+    })
+  );
 };
 
 type StoryNotificationInput = {
