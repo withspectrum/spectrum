@@ -78,7 +78,7 @@ const ChatMessages = ({ messages, currentUser, toggleReaction, dispatch }) => {
       : null;
     let reactionCount = message.reactions ? reactionUsers.length : 0;
     let userHasReacted = currentUser
-      ? reactionUsers && reactionUsers.includes(currentUser)
+      ? reactionUsers && reactionUsers.includes(currentUser.uid)
       : false;
     // probably a better way to do this
     const doNothing = () => '';

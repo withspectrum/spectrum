@@ -39,7 +39,7 @@ const StoryContainerPure = ({
 
   // show a full size profile for the frequency if the user hasn't joined it
   let size;
-  if (!currentUser || (currentUser && story.frequency.is`Subscriber`)) {
+  if (!currentUser || (currentUser && story.frequency.isSubscriber)) {
     size = 'mini';
   } else {
     size = 'full';

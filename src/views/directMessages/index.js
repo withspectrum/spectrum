@@ -18,6 +18,10 @@ import Messages from './components/messages';
 import ChatInput from '../../components/chatInput';
 import { View, MessagesList, MessagesContainer } from './style';
 
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+
 const DirectMessagesChat = ({ match, currentUser }) => {
   if (match.params.threadId !== 'new') {
     return (
@@ -30,6 +34,10 @@ const DirectMessagesChat = ({ match, currentUser }) => {
     return <div />;
   }
 };
+
+const DirectMessageChatWithCurrentUser = connect(mapStateToProps)(
+  DirectMessagesChat
+);
 
 const DirectMessageComposer = ({ currentUser }) => <div>New Message!</div>;
 
@@ -54,7 +62,7 @@ class DirectMessages extends Component {
 
           <Route
             path={`${match.url}/:threadId`}
-            component={DirectMessagesChat}
+            component={DirectMessageChatWithCurrentUser}
             currentUser={currentUser}
           />
         </MessagesContainer>
@@ -68,9 +76,5 @@ const DirectMessagesWithQuery = compose(
   displayLoadingScreen,
   pure
 )(DirectMessages);
-
-const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
-});
 
 export default connect(mapStateToProps)(DirectMessagesWithQuery);

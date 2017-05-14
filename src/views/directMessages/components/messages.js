@@ -7,8 +7,10 @@ import lifecycle from 'recompose/lifecycle';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
 import { displayLoadingCard } from '../../../components/loading';
+import Icon from '../../../components/icons';
+import { HorizontalRule } from '../../../components/globals';
 import { getDirectMessageGroupMessages } from '../queries';
-// import { toggleReactionMutation } from '../mutations';
+import { toggleReactionMutation } from '../mutations';
 
 const lifecycles = lifecycle({
   state: {
@@ -24,7 +26,7 @@ const lifecycles = lifecycle({
   },
 });
 
-const MessagesWithData = ({ data: { error, messages } }) => {
+const MessagesWithData = ({ data: { error, messages }, toggleReaction }) => {
   if (error) {
     return <div>Error!</div>;
   }
@@ -34,10 +36,20 @@ const MessagesWithData = ({ data: { error, messages } }) => {
   }
 
   const sortedMessages = sortAndGroupMessages(messages);
-  return <ChatMessages messages={sortedMessages} />;
+  return (
+    <div>
+      <HorizontalRule>
+        <hr />
+        <Icon icon={'messages'} color="border.default" />
+        <hr />
+      </HorizontalRule>
+      <ChatMessages toggleReaction={toggleReaction} messages={sortedMessages} />
+    </div>
+  );
 };
 
 const Messages = compose(
+  toggleReactionMutation,
   getDirectMessageGroupMessages,
   lifecycles,
   displayLoadingCard
