@@ -20,6 +20,11 @@ const StyledCard = styled(FlexContainer)`
   + div {
     margin-top: 16px;
   }
+
+  @media(max-width: 768px) {
+    border-radius: 0;
+    box-shadow: none;
+  }
 `;
 
 const CardPure = (props: Object): React$Element<any> => (

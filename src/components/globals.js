@@ -451,3 +451,24 @@ export const Onboarding = props => css`
     transition: all 0.1s ease-in 0.1s;
   }
 `;
+
+export const HorizontalRule = styled(FlexRow)`
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+  margin: 0 16px;
+  color: ${props => props.theme.border.default};
+
+  hr {
+    display: inline-block;
+    flex: 1 0 auto;
+    border-top: ${props => (props.border ? props.border : `2px solid`)};
+    border-color: ${props => (props.color ? eval(`props.theme.${props.color}`) : 'currentColor')};
+  }
+
+  div {
+    margin: 0 16px;
+  }
+
+`;

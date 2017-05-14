@@ -6,6 +6,8 @@ import compose from 'recompose/compose';
 import lifecycle from 'recompose/lifecycle';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
+import Icon from '../../../components/icons';
+import { HorizontalRule } from '../../../components/globals';
 import { displayLoadingCard } from '../../../components/loading';
 import { getStoryMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
@@ -37,7 +39,14 @@ const MessagesWithData = ({ data, toggleReaction }) => {
     data.story.messageConnection.edges
   );
   return (
-    <ChatMessages toggleReaction={toggleReaction} messages={sortedMessages} />
+    <div>
+      <HorizontalRule>
+        <hr />
+        <Icon icon={'messages'} color="border.default" />
+        <hr />
+      </HorizontalRule>
+      <ChatMessages toggleReaction={toggleReaction} messages={sortedMessages} />
+    </div>
   );
 };
 
