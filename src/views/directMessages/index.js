@@ -32,7 +32,7 @@ class DirectMessages extends Component {
     return (
       <View>
         <MessagesList>
-          <GroupsList groups={groups} />
+          <GroupsList groups={groups} currentUser={currentUser} />
         </MessagesList>
 
         <MessagesContainer>

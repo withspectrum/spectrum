@@ -133,3 +133,65 @@ export const Snippet = styled.p`
 	text-overflow: ellipsis;
 	white-space: nowrap;
 `;
+
+export const AvatarContainer = styled.div`
+  margin-right: 16px;
+
+  img {
+    box-shadow: 0 0 0 2px #fff;
+  }
+`;
+
+export const TwoAvatarContainer = styled(AvatarContainer)`
+  width: 60px;
+  height: 60px;
+  position: relative;
+
+  img {
+    margin: 1px;
+
+    &:first-child {
+      position: absolute;
+      z-index: 2;
+      top: 4px;
+      left: 0;
+    }
+
+    &:last-child {
+      position: absolute;
+      z-index: 3;
+      bottom: 4px;
+      right: 0;
+    }
+  }
+`;
+
+export const ThreeAvatarContainer = styled(AvatarContainer)`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  img {
+    margin: 1px;
+
+    &:last-child {
+      margin-top: 0;
+    }
+  }
+`;
+
+export const Remainder = styled.span`
+  border-radius: 19px;
+  width: 19px;
+  height: 19px;
+  padding: 0 2px;
+  font-size: 9px;
+  font-weight: 700;
+  color: ${props => props.theme.text.alt};
+  background: ${props => props.theme.bg.wash};
+  margin: 2px 1px 1px 2px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

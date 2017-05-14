@@ -4,6 +4,7 @@ import { Avatar } from '../../../components/avatar';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 import { timeDifference } from '../../../helpers/utils';
+import { renderAvatars } from './avatars';
 import {
   Wrapper,
   Col,
@@ -20,26 +21,32 @@ import {
 export const ListCardItemDirectMessageGroup = ({
   group,
   children,
-}): React$Element<any> => {
+  currentUser,
+}) => {
+  // convert the server time to an iso timestamp
   let timestamp = new Date(group.lastActivity).getTime();
+  // get the difference in a readable format (e.g 'a week ago')
   timestamp = timeDifference(Date.now(), timestamp);
-  let usersArray = group.users.length > 1
-    ? group.users
+
+  // filter currentUser out
+  const users = group.users.filter(user => user.uid !== currentUser.uid);
+
+  // concat a string of usernames for group messages
+  let usersArray = users.length > 1
+    ? users
         .map(user => user.displayName)
         .join(', ')
         .replace(/,(?!.*,)/gmi, ' and')
-    : group.users[0].displayName;
+    : users[0].displayName;
+
+  // pass users to a helper function to generate the avatar displays
+  const avatars = renderAvatars(users);
 
   return (
     <Wrapper>
       <Link to={`/messages/${group.id}`}>
         <Row>
-          {/* <Avatar
-            radius={40}
-            src={group.users[0].photoURL}
-            size={40}
-            style={{ marginRight: '16px' }}
-          /> */}
+          {avatars}
           <MessageGroupTextContainer>
             <MessageGroupByline>
               <Usernames>

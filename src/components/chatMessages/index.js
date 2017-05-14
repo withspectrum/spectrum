@@ -122,7 +122,6 @@ const ChatMessages = ({ messages, currentUser, toggleReaction, dispatch }) => {
       {messages.map((group, i) => {
         const evaluating = group[0];
         const roboText = evaluating.sender.uid === 'robo';
-        console.log('robo?: ', roboText);
         if (roboText) {
           const time = convertTimestampToDate(evaluating.message.content);
           return (
