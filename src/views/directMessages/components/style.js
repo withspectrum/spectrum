@@ -6,16 +6,43 @@ import {
   H3,
   H4,
   P,
-} from '../../components/globals';
+} from '../../../components/globals';
 
 export const Wrapper = styled(FlexCol)`
   flex: 0 0 auto;
-  padding: 8px 0;
   justify-content: center;
   max-width: 100%;
+  position: relative;
+  background: ${props => (props.active ? props.theme.bg.wash : '#fff')};
 
-  &:hover h3 {
-    color: ${({ theme }) => theme.brand.alt};
+  a {
+    padding: 16px;
+  }
+
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 16px;
+    width: calc(100% - 16px);
+    border-bottom: 1px solid ${props => props.theme.bg.wash};
+  }
+
+  &:first-of-type a {
+    padding-top: 16px;
+  }
+
+  &:last-of-type a {
+    padding-bottom: 16px;
+
+    &:after {
+      display: none;
+    }
+  }
+
+  &:hover {
+    cursor: pointer;
+    background: ${props => props.theme.bg.wash};
   }
 `;
 
@@ -50,12 +77,6 @@ export const Description = styled(P)`
   color: ${({ theme }) => theme.text.default};
 `;
 
-export const ActionContainer = styled.div`
-  flex: 0 0 auto;
-  flex-direction: row;
-  align-items: center;
-`;
-
 export const MessageGroupTextContainer = styled.div`
 	display: flex;
 	flex-direction: column;
@@ -85,10 +106,7 @@ export const Usernames = styled.span`
 	flex: 1 1 100%;
 
 	p {
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		overflow: hidden;
-		max-width: 100%;
+		${Truncate()}
 	}
 `;
 

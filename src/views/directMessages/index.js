@@ -4,28 +4,34 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
+// $FlowFixMe
 import { Route } from 'react-router';
-import styled from 'styled-components';
 import { getCurrentUserDirectMessageGroups } from './queries';
+import AppViewWrapper from '../../components/appViewWrapper';
 import { displayLoadingScreen } from '../../components/loading';
+import GroupsList from './components/groupsList';
+import { ScrollContainer, View, MessagesList, Messages } from './style';
 
 const DirectMessagesChat = ({ match }) => <div>{match.params.threadId}</div>;
 
-const Container = styled.div`
-
-`;
-
 class DirectMessages extends Component {
   render() {
-    const { match, data: { directMessages } } = this.props;
-    console.log(directMessages);
+    const { match, location, data: { directMessages, error } } = this.props;
+    const groups = directMessages.map(group => group.node);
+
     return (
-      <Container>
+      <View>
+        <MessagesList>
+          <GroupsList groups={groups} />
+        </MessagesList>
 
-        {/* render the story chat given the url param */}
-        <Route path={`${match.url}/:threadId`} component={DirectMessagesChat} />
-
-      </Container>
+        <Messages>
+          <Route
+            path={`${match.url}/:threadId`}
+            component={DirectMessagesChat}
+          />
+        </Messages>
+      </View>
     );
   }
 }
