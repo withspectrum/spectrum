@@ -96,7 +96,9 @@ export type EditFrequencyArguments = {
 };
 
 const createFrequency = (
-  { input: { community, name, slug, description } }: CreateFrequencyArguments,
+  {
+    input: { community, name, slug, description, isPrivate },
+  }: CreateFrequencyArguments,
   creatorId: string
 ) => {
   return db
@@ -109,8 +111,11 @@ const createFrequency = (
         createdAt: new Date(),
         modifiedAt: new Date(),
         community,
+        isPrivate,
         subscribers: [creatorId],
         owners: [creatorId],
+        pendingUsers: [],
+        blockedUsers: [],
       },
       { returnChanges: true }
     )
@@ -119,7 +124,7 @@ const createFrequency = (
 };
 
 const editFrequency = ({
-  input: { name, slug, description, id },
+  input: { name, slug, description, isPrivate, id },
 }: EditFrequencyArguments) => {
   return db
     .table('frequencies')
@@ -130,6 +135,7 @@ const editFrequency = ({
         name,
         slug,
         description,
+        isPrivate,
       });
     })
     .then(obj => {
@@ -185,7 +191,7 @@ const deleteFrequency = id => {
       }
 
       // update failed
-      return new Error(
+      return new UserError(
         "Something went wrong and we weren't able to delete this frequency."
       );
     });
@@ -204,9 +210,9 @@ const unsubscribeFrequency = (id, uid) => {
     .run()
     .then(
       ({ changes }) =>
-        changes.length > 0
+        (changes.length > 0
           ? changes[0].new_val
-          : db.table('frequencies').get(id).run()
+          : db.table('frequencies').get(id).run())
     );
 };
 
@@ -223,9 +229,85 @@ const subscribeFrequency = (id, uid) => {
     .run()
     .then(
       ({ changes }) =>
-        changes.length > 0
+        (changes.length > 0
           ? changes[0].new_val
-          : db.table('frequencies').get(id).run()
+          : db.table('frequencies').get(id).run())
+    );
+};
+
+const removeRequestToJoinFrequency = (id, uid) => {
+  return db
+    .table('frequencies')
+    .get(id)
+    .update(
+      row => ({
+        pendingUsers: row('pendingUsers').filter(item => item.ne(uid)),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        (changes.length > 0
+          ? changes[0].new_val
+          : db.table('frequencies').get(id).run())
+    );
+};
+
+const addRequestToJoinFrequency = (id, uid) => {
+  return db
+    .table('frequencies')
+    .get(id)
+    .update(
+      row => ({
+        pendingUsers: row('pendingUsers').append(uid),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        (changes.length > 0
+          ? changes[0].new_val
+          : db.table('frequencies').get(id).run())
+    );
+};
+
+const removeBlockedUser = (id, uid) => {
+  return db
+    .table('frequencies')
+    .get(id)
+    .update(
+      row => ({
+        blockedUsers: row('blockedUsers').filter(item => item.ne(uid)),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        (changes.length > 0
+          ? changes[0].new_val
+          : db.table('frequencies').get(id).run())
+    );
+};
+
+const addBlockedUser = (id, uid) => {
+  return db
+    .table('frequencies')
+    .get(id)
+    .update(
+      row => ({
+        blockedUsers: row('blockedUsers').append(uid),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        (changes.length > 0
+          ? changes[0].new_val
+          : db.table('frequencies').get(id).run())
     );
 };
 
@@ -254,4 +336,8 @@ module.exports = {
   getTopFrequencies,
   getFrequencySubscriberCount,
   getFrequencies,
+  addRequestToJoinFrequency,
+  removeRequestToJoinFrequency,
+  addBlockedUser,
+  removeBlockedUser,
 };

@@ -44,11 +44,11 @@ const StoryDetailPure = ({
 
     let message;
 
-    if (story.isCommunityOwner && !story.isCreator) {
+    if (story.isCommunityOwner && !story.isAuthor) {
       message = `You are about to delete another person's story. As the owner of the ${story.frequency.community.name} community, you have permission to do this. The story creator will be notified that this story was deleted.`;
-    } else if (story.isFrequencyOwner && !story.isCreator) {
+    } else if (story.isFrequencyOwner && !story.isAuthor) {
       message = `You are about to delete another person's story. As the owner of the ${story.frequency} frequency, you have permission to do this. The story creator will be notified that this story was deleted.`;
-    } else if (story.isCreator) {
+    } else if (story.isAuthor) {
       message = 'Are you sure you want to delete this story?';
     } else {
       message = 'Are you sure you want to delete this story?';
@@ -85,13 +85,13 @@ const StoryDetailPure = ({
         </Button>}
 
       {currentUser &&
-        (story.isCreator || story.isFrequencyOwner || story.isCommunityOwner) &&
+        (story.isAuthor || story.isFrequencyOwner || story.isCommunityOwner) &&
         <Button onClick={e => triggerDelete(e, story.id)}>
           Delete
         </Button>}
 
       {currentUser &&
-        story.isCreator &&
+        story.isAuthor &&
         <Button>
           Edit
         </Button>}

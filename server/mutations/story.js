@@ -1,4 +1,6 @@
 // @flow
+// $FlowFixMe
+const { UserError } = require('graphql-errors');
 import { getFrequencies } from '../models/frequency';
 import { getCommunities } from '../models/community';
 const {
@@ -14,7 +16,7 @@ module.exports = {
     publishStory: (_, { story }, { user }) => {
       // user must be authed to publish a story
       if (!user)
-        return new Error('You must be signed in to publish a new story.');
+        return new UserError('You must be signed in to publish a new story.');
 
       return (
         getFrequencies([story.frequency])
@@ -25,12 +27,12 @@ module.exports = {
 
             // if frequency wasn't found
             if (!frequency) {
-              return new Error("This frequency doesn't exist");
+              return new UserError("This frequency doesn't exist");
             }
 
             // if user isn't a frequency subscriber
             if (!(frequency.subscribers.indexOf(user.uid) > -1)) {
-              return new Error(
+              return new UserError(
                 "You don't have permission to post stories in this frequency."
               );
             }
@@ -43,7 +45,7 @@ module.exports = {
     editStory: (_, { id, newContent }, { user }) => {
       // user must be authed to edit a story
       if (!user)
-        return new Error(
+        return new UserError(
           'You must be signed in to make changes to this story.'
         );
       return getStories([id]).then(stories => {
@@ -52,12 +54,12 @@ module.exports = {
 
         // if the story doesn't exist
         if (!story) {
-          return new Error("This story doesn't exist");
+          return new UserError("This story doesn't exist");
         }
 
         // only the story author can edit the story
         if (story.author !== user.uid) {
-          return new Error(
+          return new UserError(
             "You don't have permission to make changes to this story."
           );
         }
@@ -69,7 +71,7 @@ module.exports = {
     deleteStory: (_, { id }, { user }) => {
       // user must be authed to delete a story
       if (!user)
-        return new Error(
+        return new UserError(
           'You must be signed in to make changes to this story.'
         );
 
@@ -81,7 +83,7 @@ module.exports = {
 
           // if the story doesn't exist
           if (!story || story.deleted) {
-            return new Error("This story doesn't exist");
+            return new UserError("This story doesn't exist");
           }
 
           // get the frequency the story was posted in
@@ -107,7 +109,7 @@ module.exports = {
 
           // if the story author does not match the currentUser
           if (story.author !== user.uid) {
-            return new Error(
+            return new UserError(
               "You don't have permission to make changes to this story."
             );
           }
@@ -119,7 +121,7 @@ module.exports = {
     setStoryLock: (_, { id, value }, { user }) => {
       // user must be authed to edit a story
       if (!user)
-        return new Error(
+        return new UserError(
           'You must be signed in to make changes to this story.'
         );
 
@@ -131,7 +133,7 @@ module.exports = {
 
           // if the story doesn't exist
           if (!story) {
-            return new Error("This story doesn't exist");
+            return new UserError("This story doesn't exist");
           }
 
           // get the frequency the story was posted in
@@ -156,7 +158,7 @@ module.exports = {
           }
 
           // if the user is not a frequency or community owner, the story can't be locked
-          return new Error(
+          return new UserError(
             "You don't have permission to make changes to this story."
           );
         });

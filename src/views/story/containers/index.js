@@ -81,7 +81,7 @@ const StoryContainerPure = ({
           // of the frequency the story was posted in, the user can see the
           // chat input
           currentUser &&
-            (story.isCreator || story.frequency.isSubscriber) &&
+            (story.isAuthor || story.frequency.isSubscriber) &&
             <ChatInput thread={story.id} />}
 
           {// if the user exists but isn't a subscriber to the frequency,

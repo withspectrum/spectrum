@@ -1,5 +1,7 @@
 // @flow
 import React from 'react';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 import { Button, OutlineButton } from '../buttons';
 import {
   UpsellSignInContainer,
@@ -47,6 +49,48 @@ export const UpsellJoinFrequency = ({ frequency, subscribe }) => {
         Follow
       </Button>
     </UpsellJoinContainer>
+  );
+};
+
+export const UpsellRequestToJoinFrequency = ({
+  frequency,
+  community,
+  isPending,
+  subscribe,
+}) => {
+  return (
+    <UpsellFourOhFourContainer>
+      <BGOne src="/img/cluster-2.svg" role="presentation" />
+      <BGTwo src="/img/cluster-1.svg" role="presentation" />
+      <Title>Top secret!</Title>
+      <Subtitle>
+        This is a private channel - you may request to join
+        {' '}
+        <b>{frequency.name}</b>
+        {' '}
+        or
+        {' '}
+        <Link to={`/${community}`}>go back</Link>
+        .
+      </Subtitle>
+
+      {// has user already requested to join?
+      isPending
+        ? <OutlineButton
+            onClick={() => subscribe(frequency.id)}
+            icon="unsubscribe"
+            label
+          >
+            Cancel request
+          </OutlineButton>
+        : <Button
+            onClick={() => subscribe(frequency.id)}
+            icon="subscribe"
+            label
+          >
+            Request to join {frequency.name}
+          </Button>}
+    </UpsellFourOhFourContainer>
   );
 };
 

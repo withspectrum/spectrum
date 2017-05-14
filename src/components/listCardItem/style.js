@@ -18,6 +18,11 @@ export const Col = styled(FlexCol)`
 export const Row = styled(FlexRow)`
   flex: 0 0 auto;
   align-items: center;
+
+  a {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 export const Heading = styled(H3)`
@@ -37,4 +42,6 @@ export const Description = styled(P)`
 
 export const ActionContainer = styled.div`
   flex: 0 0 auto;
+  flex-direction: row;
+  align-items: center;
 `;

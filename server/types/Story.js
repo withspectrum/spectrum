@@ -30,7 +30,7 @@ const Story = /* GraphQL */ `
 		published: Boolean!
 		content: StoryContent!
 		locked: Boolean
-		isCreator: Boolean
+		isAuthor: Boolean
     isFrequencyOwner: Boolean
     isCommunityOwner: Boolean
 		edits: [Edit!]

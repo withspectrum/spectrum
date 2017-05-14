@@ -44,6 +44,7 @@ export const Title = styled.h1`
 `;
 
 export const Subtitle = styled.h2`
+
 width: 100%;
 color: ${props => props.theme.text.default};
 font-weight: 400;
@@ -56,6 +57,14 @@ line-height: 24px;
 color: inherit;
 font-weight: 500;
 text-align: center;
+
+  b {
+    font-weight: 600
+  }
+
+  a {
+    color: ${props => props.theme.brand.default}
+  }
 `;
 
 export const Actions = styled.div`

@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Button, LinkButton } from '../buttons';
 import { openModal } from '../../actions/modals';
-import { Input, UnderlineInput, TextArea } from '../formElements';
+import { Input, UnderlineInput, TextArea, Checkbox } from '../formElements';
 import { addToastWithTimeout } from '../../actions/toasts';
 import {
   StyledCard,
@@ -30,45 +30,47 @@ class FrequencyWithData extends Component {
     super(props);
 
     const { frequency } = this.props;
+
     this.state = {
       name: frequency.name,
       slug: frequency.slug,
       description: frequency.description,
+      isPrivate: frequency.isPrivate || false,
       id: frequency.id,
       frequencyData: frequency,
     };
   }
 
-  changeName = e => {
-    const name = e.target.value;
-    this.setState({
-      name,
-    });
-  };
+  handleChange = e => {
+    const key = e.target.id;
+    const value = e.target.value;
 
-  changeDescription = e => {
-    const description = e.target.value;
-    this.setState({
-      description,
-    });
-  };
+    const newState = {};
+    // checkboxes should reverse the value
+    if (key === 'isPrivate') {
+      newState[key] = value === 'on' ? false : true;
+    } else {
+      newState[key] = value;
+    }
 
-  changeSlug = e => {
-    const slug = e.target.value;
-    this.setState({
-      slug,
+    this.setState(prevState => {
+      return Object.assign({}, prevState, {
+        ...newState,
+      });
     });
   };
 
   save = e => {
     e.preventDefault();
-    const { name, slug, description, id } = this.state;
+    const { name, slug, description, isPrivate, id } = this.state;
     const input = {
       name,
       slug,
       description,
+      isPrivate,
       id,
     };
+
     this.props
       .editFrequency(input)
       .then(({ data: { editFrequency } }) => {
@@ -128,7 +130,7 @@ class FrequencyWithData extends Component {
   };
 
   render() {
-    const { name, slug, description } = this.state;
+    const { name, slug, description, isPrivate } = this.state;
     const { frequency } = this.props;
 
     if (!frequency) {
@@ -147,21 +149,44 @@ class FrequencyWithData extends Component {
       <StyledCard>
         <FormTitle>Frequency Settings</FormTitle>
         <Form>
-          <Input defaultValue={name} onChange={this.changeName}>Name</Input>
+          <Input defaultValue={name} id="name" onChange={this.handleChange}>
+            Name
+          </Input>
           {// general slug can't be edited
           slug === 'general'
             ? <UnderlineInput defaultValue={slug} disabled>
                 {`sp.chat/${frequency.community.slug}/`}
               </UnderlineInput>
-            : <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
+            : <UnderlineInput
+                defaultValue={slug}
+                id="slug"
+                onChange={this.handleChange}
+              >
                 {`sp.chat/${frequency.community.slug}/`}
               </UnderlineInput>}
           <TextArea
+            id="description"
             defaultValue={description}
-            onChange={this.changeDescription}
+            onChange={this.handleChange}
           >
             Description
           </TextArea>
+
+          <Checkbox
+            id="isPrivate"
+            checked={isPrivate}
+            onChange={this.handleChange}
+          >
+            Private channel
+          </Checkbox>
+          {isPrivate
+            ? <Description>
+                Only approved people on Spectrum can see the stories, messages, and members in this channel. You can manually approve users who request to join this channel.
+              </Description>
+            : <Description>
+                Anyone on Spectrum can join this channel, post stories and messages, and will be able to see other members.
+              </Description>}
+
           <Actions>
             <LinkButton color={'warn.alt'}>Cancel</LinkButton>
             <Button onClick={this.save}>Save</Button>
