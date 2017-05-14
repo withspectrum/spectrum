@@ -51,6 +51,9 @@ const DEFAULT_FREQUENCIES = [
     slug: 'general',
     subscribers: DEFAULT_USERS.map(({ uid }) => uid),
     owners: DEFAULT_USERS.map(({ uid }) => uid),
+    isPrivate: false,
+    pendingUsers: [],
+    blockedUsers: [],
   },
 ];
 

@@ -11,6 +11,8 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import { displayLoadingScreen } from '../../components/loading';
 import { FrequencyEditForm } from '../../components/editForm';
+import PendingUsers from './components/pendingUsers';
+import BlockedUsers from './components/blockedUsers';
 import { Upsell404Frequency } from '../../components/upsell';
 
 const SettingsPure = ({
@@ -49,7 +51,11 @@ const SettingsPure = ({
       <Column type="secondary">
         <FrequencyEditForm frequency={frequency} />
       </Column>
-      <Column type="primary" />
+      <Column type="primary">
+        <PendingUsers users={frequency.pendingUsers} frequency={frequency} />
+        {frequency.blockedUsers.length > 0 &&
+          <BlockedUsers users={frequency.blockedUsers} frequency={frequency} />}
+      </Column>
     </AppViewWrapper>
   );
 };

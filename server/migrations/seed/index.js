@@ -68,6 +68,9 @@ communities.forEach(community => {
     slug: 'general',
     subscribers,
     owners: [subscribers[0]],
+    isPrivate: false,
+    pendingUsers: [],
+    blockedUsers: [],
   });
 });
 
