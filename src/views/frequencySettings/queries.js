@@ -5,6 +5,7 @@ import {
 import {
   frequencyInfoFragment,
 } from '../../api/fragments/frequency/frequencyInfo';
+import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import {
   frequencyMetaDataFragment,
 } from '../../api/fragments/frequency/frequencyMetaData';
@@ -14,6 +15,12 @@ export const getThisFrequency = graphql(
     query thisFrequency($slug: String, $community: String) {
 			frequency(slug: $slug, community: $community) {
         ...frequencyInfo
+        pendingUsers {
+          ...userInfo
+        }
+        blockedUsers {
+          ...userInfo
+        }
         ...frequencyMetaData
         community {
           ...communityInfo
@@ -21,6 +28,7 @@ export const getThisFrequency = graphql(
       }
 		}
     ${frequencyInfoFragment}
+    ${userInfoFragment}
     ${communityInfoFragment}
     ${frequencyMetaDataFragment}
 	`,

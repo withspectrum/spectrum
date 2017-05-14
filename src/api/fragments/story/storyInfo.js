@@ -9,7 +9,7 @@ export const storyInfoFragment = gql`
     modifiedAt
     published
     locked
-    isCreator
+    isAuthor
     isFrequencyOwner
     isCommunityOwner
     participants {

@@ -47,16 +47,20 @@ const generateCommunity = members => {
 const generateFrequency = (community, subscribers) => {
   const createdAt = faker.date.past(2);
   const name = faker.commerce.department();
+  const isPrivate = Math.random();
   return {
     id: uuid(),
     community,
     createdAt,
+    isPrivate: isPrivate >= 0.5,
     modifiedAt: faker.date.between(createdAt, new Date()),
     name,
     description: casual.short_description(),
     slug: slugify(name),
     subscribers,
     owners: [subscribers[0]],
+    pendingUsers: [],
+    blockedUsers: [],
   };
 };
 

@@ -56,6 +56,12 @@ module.exports = {
           })),
         }));
     },
+    blockedUsers: ({ blockedUsers }, _, { loaders }: GraphQLContext) => {
+      return loaders.user.loadMany(blockedUsers).then(users => users);
+    },
+    pendingUsers: ({ pendingUsers }, _, { loaders }: GraphQLContext) => {
+      return loaders.user.loadMany(pendingUsers).then(users => users);
+    },
     isOwner: ({ owners }, _, { user }) => {
       if (!user) return false;
       return owners.indexOf(user.uid) > -1;
@@ -63,6 +69,14 @@ module.exports = {
     isSubscriber: ({ subscribers }, _, { user }) => {
       if (!user) return false;
       return subscribers.indexOf(user.uid) > -1;
+    },
+    isPending: ({ pendingUsers }, _, { user }) => {
+      if (!user) return false;
+      return pendingUsers.indexOf(user.uid) > -1;
+    },
+    isBlocked: ({ blockedUsers }, _, { user }) => {
+      if (!user) return false;
+      return blockedUsers.indexOf(user.uid) > -1;
     },
     community: (
       { community }: { community: string },

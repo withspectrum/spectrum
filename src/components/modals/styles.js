@@ -86,3 +86,19 @@ export const CloseButton = styled(IconButton)`
   top: 0;
   z-index: 2;
 `;
+
+export const Description = styled.p`
+  font-size: 14px;
+  color: ${props => props.theme.text.default};
+  padding: 8px 0 16px;
+  line-height: 1.4;
+`;
+
+export const Notice = styled(Description)`
+  padding: 8px 16px;
+  margin: 8px 0;
+  border-radius: 4px;
+  background: #FFF1CC;
+  border: 1px solid #ffd566;
+  color: #715818;
+`;

@@ -1,5 +1,7 @@
 // @flow
 import React from 'react';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 import { Button, OutlineButton } from '../buttons';
 import {
   UpsellSignInContainer,
@@ -50,6 +52,48 @@ export const UpsellJoinFrequency = ({ frequency, subscribe }) => {
   );
 };
 
+export const UpsellRequestToJoinFrequency = ({
+  frequency,
+  community,
+  isPending,
+  subscribe,
+}) => {
+  return (
+    <UpsellFourOhFourContainer>
+      <BGOne src="/img/cluster-2.svg" role="presentation" />
+      <BGTwo src="/img/cluster-1.svg" role="presentation" />
+      <Title>Top secret!</Title>
+      <Subtitle>
+        This is a private channel - you may request to join
+        {' '}
+        <b>{frequency.name}</b>
+        {' '}
+        or
+        {' '}
+        <Link to={`/${community}`}>go back</Link>
+        .
+      </Subtitle>
+
+      {// has user already requested to join?
+      isPending
+        ? <OutlineButton
+            onClick={() => subscribe(frequency.id)}
+            icon="unsubscribe"
+            label
+          >
+            Cancel request
+          </OutlineButton>
+        : <Button
+            onClick={() => subscribe(frequency.id)}
+            icon="subscribe"
+            label
+          >
+            Request to join {frequency.name}
+          </Button>}
+    </UpsellFourOhFourContainer>
+  );
+};
+
 export const Upsell404Frequency = ({ frequency, community, noPermission }) => {
   // if a user doesn't have permission, it means they likely tried to view
   // the settings page for a frequency. In this case, we will return
@@ -74,7 +118,7 @@ export const Upsell404Frequency = ({ frequency, community, noPermission }) => {
       <FourOhFourImage src="/img/login.svg" role="presentation" />
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
-      <Button onClick={() => (window.location.href = returnUrl)}>
+      <Button onClick={() => window.location.href = returnUrl}>
         Take Me Back
       </Button>
     </UpsellFourOhFourContainer>
@@ -107,10 +151,10 @@ export const Upsell404Community = ({ community, noPermission, create }) => {
       <Actions>
         {// de-emphasizes the 'take me home' button if a create prompt is shown
         create
-          ? <OutlineButton onClick={() => (window.location.href = returnUrl)}>
+          ? <OutlineButton onClick={() => window.location.href = returnUrl}>
               Take Me Home
             </OutlineButton>
-          : <Button onClick={() => (window.location.href = returnUrl)}>
+          : <Button onClick={() => window.location.href = returnUrl}>
               Take Me Home
             </Button>}
 
@@ -134,7 +178,7 @@ export const Upsell404User = ({ username }) => {
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
 
-      <Button onClick={() => (window.location.href = returnUrl)}>
+      <Button onClick={() => window.location.href = returnUrl}>
         Take Me Home
       </Button>
     </UpsellFourOhFourContainer>
@@ -152,7 +196,7 @@ export const Upsell404Story = () => {
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
 
-      <Button onClick={() => (window.location.href = returnUrl)}>
+      <Button onClick={() => window.location.href = returnUrl}>
         Take Me Home
       </Button>
     </UpsellFourOhFourContainer>

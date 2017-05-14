@@ -7,8 +7,11 @@ export const frequencyInfoFragment = gql`
     name
     slug
     description
+    isPrivate
     isOwner
     isSubscriber
+    isPending
+    isBlocked
     community {
       ...communityInfo
     }

@@ -84,12 +84,12 @@ export const LinkStyledButton = styled.button`
   background-image: none;
   box-shadow: none;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  color: ${props => eval(`props.theme.${props.color ? props.color : 'text.alt'}`)};
   transition: ${Transition.hover.off};
 
   &:hover {'
     color: ${props => eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.default'}`)};
-    box-shadow: ${Shadow.mid} ${props => hexa(props.theme.text.alt, 0.25)};
+    box-shadow: none;
     transition: ${Transition.hover.on};
   }
 `;
@@ -98,5 +98,4 @@ export const Label = styled.span`
   display: inline-block;
   line-height: inherit;
   ${props => (props.loading && !props.hasIcon ? 'opacity: 0;' : 'opacity: 1;')};
-  transition: all 0.2s ease-in-out;
 `;

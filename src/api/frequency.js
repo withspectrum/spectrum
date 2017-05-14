@@ -111,3 +111,59 @@ export const toggleFrequencySubscriptionMutation = graphql(
   TOGGLE_FREQUENCY_SUBSCRIPTION_MUTATION,
   TOGGLE_FREQUENCY_SUBSCRIPTION_OPTIONS
 );
+
+/*
+  Approve or block a user in a private frequency
+*/
+const TOGGLE_PENDING_USER_MUTATION = gql`
+  mutation togglePendingUser($input: TogglePendingUserInput!) {
+    togglePendingUser(input: $input) {
+      ...frequencyInfo
+    }
+  }
+  ${frequencyInfoFragment}
+`;
+
+const TOGGLE_PENDING_USER_OPTIONS = {
+  props: ({ input, mutate }) => ({
+    togglePendingUser: input =>
+      mutate({
+        variables: {
+          input,
+        },
+      }),
+  }),
+};
+
+export const togglePendingUserInFrequencyMutation = graphql(
+  TOGGLE_PENDING_USER_MUTATION,
+  TOGGLE_PENDING_USER_OPTIONS
+);
+
+/*
+  Join or leave a frequency
+*/
+const UNBLOCK_USER_MUTATION = gql`
+  mutation unblockUser($input: UnblockUserInput!) {
+    unblockUser(input: $input) {
+      ...frequencyInfo
+    }
+  }
+  ${frequencyInfoFragment}
+`;
+
+const UNBLOCK_USER_OPTIONS = {
+  props: ({ input, mutate }) => ({
+    unblockUser: input =>
+      mutate({
+        variables: {
+          input,
+        },
+      }),
+  }),
+};
+
+export const unblockUserInFrequencyMutation = graphql(
+  UNBLOCK_USER_MUTATION,
+  UNBLOCK_USER_OPTIONS
+);
