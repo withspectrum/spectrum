@@ -19,10 +19,7 @@ const getDirectMessageGroupsByUser = (uid: String) => {
     .table('direct_message_groups')
     .getAll(uid, { index: 'users' })
     .run()
-    .then(result => {
-      console.log('dm groups ', result);
-      return result;
-    });
+    .then(result => result);
 };
 
 const addDirectMessageGroup = (

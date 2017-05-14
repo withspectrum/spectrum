@@ -23,9 +23,9 @@ module.exports = {
   DirectMessageGroup: {
     messageConnection: (
       { id }: { id: String },
-      { first = 10, after }: PaginationOptions
+      { first = 100, after }: PaginationOptions
     ) => {
-      const cursorId = decode(after);
+      const cursor = decode(after);
       return getMessages(id, {
         first,
         after: cursor,
@@ -51,14 +51,7 @@ module.exports = {
       { users }: { users: Array<DirectMessageUser> },
       _: any,
       { loaders }: GraphQLContext
-    ) =>
-      loaders.user.loadMany(users.map(user => user.user)).then(dbUsers =>
-        dbUsers.map((user, index) => ({
-          user,
-          lastSeen: users[index].lastSeen,
-          lastActivity: users[index].lastActivity,
-        }))
-      ),
+    ) => loaders.user.loadMany(users),
     creator: (
       { creator }: { creator: string },
       _: any,

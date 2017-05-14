@@ -87,7 +87,7 @@ frequencies.forEach(frequency => {
 
 console.log('Generating direct message groups...');
 let direct_message_groups = DEFAULT_DIRECT_MESSAGE_GROUPS;
-randomAmount({ max: 200 }, () => {
+randomAmount({ max: 100 }, () => {
   const group_users = randomAmount({ max: 5, min: 2 }, i => users[i]);
   direct_message_groups.push(generateDirectMessageGroup(group_users));
 });
@@ -125,7 +125,7 @@ direct_message_groups.forEach(group => {
   const groupMessages = [];
   const users = group.users;
   randomAmount({ max: 100 }, () => {
-    const sender = faker.random.arrayElement(users.uid);
+    const sender = faker.random.arrayElement(users);
     const message = generateMessage(sender, group.id);
     direct_messages.push(message);
     groupMessages.push(message);

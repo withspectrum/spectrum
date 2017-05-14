@@ -116,7 +116,7 @@ const DEFAULT_DIRECT_MESSAGE_GROUPS = [
         lastSeen: new Date(),
       };
     }),
-    creator: DEFAULT_USERS[0],
+    creator: DEFAULT_USERS[0].uid,
     lastActivity: new Date(),
   },
 ];
