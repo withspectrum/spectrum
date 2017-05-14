@@ -57,5 +57,13 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.user.load(creator),
+    snippet: ({ id }, _: any, { loader }: GraphQLContext) =>
+      getMessages(id).then(messages => {
+        // if there are messages in the group
+        return messages.length > 0
+          ? // return the last message's content as the snippet, or a placeholder
+            messages[messages.length - 1].message.content
+          : 'No messages yet...';
+      }),
   },
 };

@@ -22,6 +22,7 @@ const DirectMessageGroup = /* GraphQL */ `
 		messageConnection(first: Int = 10, after: String): DirectMessagesConnection!
 		creator: User!
 		lastActivity: Date!
+		snippet: String
 	}
 
 	extend type Query {
