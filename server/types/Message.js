@@ -9,12 +9,6 @@ const Message = /* GraphQL */ `
 		DirectMessageGroup
 	}
 
-	# Tables in the database
-	enum MessageLocation {
-		messages
-		direct_messages
-	}
-
 	# The content and type of a message
 	type MessageContent {
 		type: MessageType!
@@ -43,18 +37,17 @@ const Message = /* GraphQL */ `
 
 	extend type Query {
 		message(
-			location: MessageLocation!,
 			id: ID!
 		): Message
 	}
 
 
 	extend type Mutation {
-		addMessage(location: MessageLocation!, message: MessageInput!): Message
+		addMessage(message: MessageInput!): Message
 	}
 
 	extend type Subscription {
-		messageAdded(location: MessageLocation!, thread: ID!): Message
+		messageAdded(thread: ID!): Message
 	}
 `;
 

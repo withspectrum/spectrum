@@ -1,6 +1,6 @@
 const DirectMessageGroup = /* GraphQL */ `
-	type DirectMessageUser {
-		user: User!
+	type DirectMessageUserStatus {
+		uid: ID!
 		lastActivity: Date
 		lastSeen: Date
 	}
@@ -17,10 +17,12 @@ const DirectMessageGroup = /* GraphQL */ `
 
 	type DirectMessageGroup {
 		id: ID!
-		users: [DirectMessageUser!]
+		users: [User!]
+		status: [DirectMessageUserStatus!]
 		messageConnection(first: Int = 10, after: String): DirectMessagesConnection!
 		creator: User!
 		lastActivity: Date!
+		snippet: String
 	}
 
 	extend type Query {
@@ -28,13 +30,11 @@ const DirectMessageGroup = /* GraphQL */ `
 	}
 
 	input DirectMessageGroupInput {
-		# TODO: This should just be the currently authed user
-		creator: ID!
 		users: [ID!]
 	}
 
 	extend type Mutation {
-		addDirectMessageGroup(directMessageGroup: DirectMessageGroupInput!): DirectMessageGroup
+		addDirectMessageGroup(input: DirectMessageGroupInput!): DirectMessageGroup
 	}
 `;
 

@@ -78,7 +78,7 @@ const ChatMessages = ({ messages, currentUser, toggleReaction, dispatch }) => {
       : null;
     let reactionCount = message.reactions ? reactionUsers.length : 0;
     let userHasReacted = currentUser
-      ? reactionUsers && reactionUsers.includes(currentUser)
+      ? reactionUsers && reactionUsers.includes(currentUser.uid)
       : false;
     // probably a better way to do this
     const doNothing = () => '';
@@ -122,7 +122,6 @@ const ChatMessages = ({ messages, currentUser, toggleReaction, dispatch }) => {
       {messages.map((group, i) => {
         const evaluating = group[0];
         const roboText = evaluating.sender.uid === 'robo';
-        console.log('robo?: ', roboText);
         if (roboText) {
           const time = convertTimestampToDate(evaluating.message.content);
           return (

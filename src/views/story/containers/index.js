@@ -10,7 +10,7 @@ import { toggleFrequencySubscriptionMutation } from '../../../api/frequency';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import StoryDetail from '../components/storyDetail';
 import Messages from '../components/messages';
-import ChatInput from '../components/chatInput';
+import ChatInput from '../../../components/chatInput';
 import { Column } from '../../../components/column';
 import { FlexContainer } from '../../../components/flexbox';
 import { UserProfile, FrequencyProfile } from '../../../components/profile';
@@ -24,7 +24,7 @@ import {
 } from '../../../components/upsell';
 
 const StoryContainerPure = ({
-  data: { story, subscribeToNewMessages, error, loading },
+  data: { story, error, loading },
   currentUser,
   dispatch,
   toggleFrequencySubscription,

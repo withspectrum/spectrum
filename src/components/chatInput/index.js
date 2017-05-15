@@ -6,7 +6,7 @@ import compose from 'recompose/compose';
 import withState from 'recompose/withState';
 // // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
-import Icon from '../../../components/icons';
+import Icon from '../icons';
 import {
   Form,
   Input,
@@ -15,8 +15,8 @@ import {
   MediaLabel,
   EmojiToggle,
   SendButton,
-} from '../style';
-import { sendMessageMutation } from '../mutations';
+} from './style';
+import { sendMessageMutation } from '../../api/message';
 
 const ChatInputWithMutation = ({
   thread,

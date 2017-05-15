@@ -28,11 +28,23 @@ const CurrentUserProfile = compose(getCurrentUserProfile)(UserProfile);
 
 const CommunitiesListCard = compose(getCurrentUserCommunities)(ListCard);
 
-const DashboardPure = ({ data: { user, error }, data, dispatch }) => {
+const DashboardPure = ({
+  data: { user, error },
+  data,
+  dispatch,
+  match,
+  history,
+}) => {
   // save user data to localstorage, which will also dispatch an action to put
   // the user into the redux store
-  if (user) {
+  if (user !== null) {
     dispatch(saveUserDataToLocalStorage(user));
+    // if the user lands on /home, it means they just logged in. If this code
+    // runs, we know a user was returned successfully and set to localStorage,
+    // so we can redirect to the root url
+    if (match.url === '/home') {
+      history.push('/');
+    }
   }
 
   if (error) {
@@ -45,6 +57,10 @@ const DashboardPure = ({ data: { user, error }, data, dispatch }) => {
     );
   }
 
+  if (!user || user === null) {
+    window.location.href = '/';
+  }
+
   return (
     <AppViewWrapper>
       <Column type="secondary">
@@ -53,7 +69,8 @@ const DashboardPure = ({ data: { user, error }, data, dispatch }) => {
       </Column>
 
       <Column type="primary" alignItems="center">
-        <StoryComposer />
+        {// composer should only appear if a user is part of a community
+        user && user.communityConnection && <StoryComposer />}
         <EverythingStoryFeed />
       </Column>
     </AppViewWrapper>

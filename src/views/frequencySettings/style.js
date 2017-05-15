@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import Card from '../../components/card';
-import { Link } from 'react-router-dom';
 import { FlexCol, H3 } from '../../components/globals';
 
 export const ListHeading = styled(H3)`
@@ -16,12 +15,6 @@ export const ListContainer = styled(FlexCol)`
   section + section {
     border-top: 2px solid ${({ theme }) => theme.bg.wash};
   }
-`;
-
-export const MoreLink = styled(Link)`
-  font-size: 14px;
-  font-weight: 700;
-  color: ${({ theme }) => theme.brand.alt};
 `;
 
 export const StyledCard = styled(Card)`

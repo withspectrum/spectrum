@@ -108,10 +108,27 @@ const DEFAULT_NOTIFICATIONS = [
   },
 ];
 
+const DEFAULT_DIRECT_MESSAGE_GROUPS = [
+  {
+    id: 'first-dm-group-asfd123',
+    users: DEFAULT_USERS.map(user => user.uid),
+    status: DEFAULT_USERS.map(user => {
+      return {
+        uid: user.uid,
+        lastActivity: new Date(),
+        lastSeen: new Date(),
+      };
+    }),
+    creator: DEFAULT_USERS[0].uid,
+    lastActivity: new Date(),
+  },
+];
+
 module.exports = {
   DEFAULT_USERS,
   DEFAULT_COMMUNITIES,
   DEFAULT_FREQUENCIES,
   DEFAULT_STORIES,
   DEFAULT_NOTIFICATIONS,
+  DEFAULT_DIRECT_MESSAGE_GROUPS,
 };

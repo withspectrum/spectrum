@@ -27,6 +27,8 @@ const NotificationsPure = ({ data, currentUser }) => {
     return <UpsellSignIn />;
   }
 
+  console.log(data);
+
   const { notifications: { edges } } = data;
 
   return (

@@ -1,7 +1,6 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { messageInfoFragment } from '../../api/fragments/message/messageInfo';
 import {
   reactionInfoFragment,
 } from '../../api/fragments/reaction/reactionInfo';
@@ -34,35 +33,6 @@ const SET_STORY_LOCK_OPTIONS = {
 export const setStoryLockMutation = graphql(
   SET_STORY_LOCK_MUTATION,
   SET_STORY_LOCK_OPTIONS
-);
-
-/*
-  Sends a message to a story (location is 'messages', which means we are
-  in a story).
-
-  Updates UI automatically via the containers subscribeToNewMessages helper
-*/
-const SEND_MESSAGE_MUTATION = gql`
-  mutation sendMessage($message: MessageInput!) {
-    addMessage(location: messages, message: $message) {
-      ...messageInfo
-    }
-  }
-  ${messageInfoFragment}
-`;
-const SEND_MESSAGE_OPTIONS = {
-  props: ({ ownProps, mutate }) => ({
-    sendMessage: message =>
-      mutate({
-        variables: {
-          message,
-        },
-      }),
-  }),
-};
-export const sendMessageMutation = graphql(
-  SEND_MESSAGE_MUTATION,
-  SEND_MESSAGE_OPTIONS
 );
 
 /*
