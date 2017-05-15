@@ -8,12 +8,18 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCardItem';
-import { LinkButton } from '../../../components/buttons';
+import { TextButton } from '../../../components/buttons';
 import { FlexRow } from '../../../components/globals';
 import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 
-import { StyledCard, ListHeading, ListContainer, MoreLink } from '../style';
+import {
+  StyledCard,
+  ListHeading,
+  ListContainer,
+  ListFooter,
+  MoreLink,
+} from '../style';
 
 const ListCardPure = ({ data: { communities }, dispatch }) => {
   if (!!communities) {
@@ -29,27 +35,21 @@ const ListCardPure = ({ data: { communities }, dispatch }) => {
                   withDescription={false}
                   meta={`${item.node.metaData.members} members · ${item.node.metaData.frequencies} frequencies`}
                 >
-                  <Icon
-                    icon="forward"
-                    color={'text.alt'}
-                    hoverColor={'brand.alt'}
-                    scaleOnHover={false}
-                  />
+                  <Icon glyph="forward" />
                 </ListCardItem>
               </Link>
             );
           })}
         </ListContainer>
-        <FlexRow>
+        <ListFooter>
           <MoreLink to={`/explore`}>Find more...</MoreLink>
-        </FlexRow>
-        <FlexRow>
-          <LinkButton
+          <TextButton
+            color="text.placeholder"
             onClick={() => dispatch(openModal('CREATE_COMMUNITY_MODAL'))}
           >
-            Create a Community
-          </LinkButton>
-        </FlexRow>
+            New community
+          </TextButton>
+        </ListFooter>
       </StyledCard>
     );
   } else {

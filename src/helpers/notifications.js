@@ -88,11 +88,7 @@ export const constructContent = notification => {
         <div>
           <HorizontalRuleWithIcon>
             <hr />
-            <Icon
-              icon={'messages'}
-              color="border.default"
-              hoverColor="border.default"
-            />
+            <Icon glyph={'messages'} />
             <hr />
           </HorizontalRuleWithIcon>
           <ChatMessage data-from={sender.displayName}>

@@ -13,7 +13,7 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 import { setStoryLockMutation } from '../mutations';
 import { deleteStoryMutation } from '../../../api/story';
 import Icon from '../../../components/icons';
-import Dropdown from '../../../components/dropdown';
+import Flyout from '../../../components/flyout';
 import { IconButton } from '../../../components/buttons';
 import {
   StoryWrapper,
@@ -89,29 +89,37 @@ const StoryDetailPure = ({
             story.isFrequencyOwner ||
             story.isCommunityOwner) &&
           <DropWrap>
-            <Icon icon="settings" />
-            <Dropdown width={'48px'}>
+            <Icon glyph="settings" />
+            <Flyout>
               {(story.isFrequencyOwner || story.isCommunityOwner) &&
                 <FlyoutRow>
                   <IconButton
-                    icon="freeze"
+                    glyph="freeze"
                     onClick={() => storyLock(story.id, !story.locked)}
                   />
                 </FlyoutRow>}
               {story.isAuthor &&
                 <FlyoutRow>
-                  <IconButton icon="lock" />
+                  <IconButton
+                    glyph="freeze"
+                    hoverColor="space.light"
+                    tipText="Freeze Chat"
+                    tipLocation="bottom-right"
+                  />
                 </FlyoutRow>}
               {(story.isAuthor ||
                 story.isFrequencyOwner ||
                 story.isCommunityOwner) &&
                 <FlyoutRow>
                   <IconButton
-                    icon="delete"
+                    glyph="delete"
+                    hoverColor="warn.alt"
+                    tipText="Delete Thread"
+                    tipLocation="bottom-right"
                     onClick={e => triggerDelete(e, story.id)}
                   />
                 </FlyoutRow>}
-            </Dropdown>
+            </Flyout>
           </DropWrap>}
       </ContextRow>
       <StoryHeading>

@@ -13,11 +13,7 @@ export const InlineSvg = styled.svg`
   height: 100%;
   width: 100%;
   color: inherit;
-  fill: ${props => (props.color ? eval(`props.theme.${props.color}`) : 'currentColor')};
-
-  &:hover {
-    fill: ${props => (props.hoverColor ? eval(`props.theme.${props.hoverColor}`) : `currentColor`)};
-	}
+  fill: currentColor;
 `;
 
 export const SvgWrapper = styled.div`
@@ -28,13 +24,13 @@ export const SvgWrapper = styled.div`
   min-width: ${props => (props.size ? `${props.size}px` : '32px')};
   min-height: ${props => (props.size ? `${props.size}px` : '32px')};
   position: relative;
-  color: ${props => (props.color ? eval(`props.theme.${props.color}`) : `inherit`)};
+  color: inherit;
   ${props => (props.tipText && !props.onboarding ? Tooltip(props) : '')};
 `;
 
 class Icon extends React.Component {
-  returnPath() {
-    switch (this.props.icon) {
+  returnGlyph() {
+    switch (this.props.glyph) {
       case 'messages':
         return (
           <g>
@@ -95,6 +91,7 @@ class Icon extends React.Component {
             <path d="M10.953 5.034a1 1 0 0 0-1.225.707L4.034 26.992a1 1 0 1 0 1.932.517l5.694-21.25a1 1 0 0 0-.707-1.225zm2.107 9.005c.425-1.703.798-3.036 1.225-4.079.429-1.058.766-1.43.912-1.532a.216.216 0 0 0 .022-.023l.017.003c.131-.022.133-.021.353.073l.065.028c.584.23 1.492.826 2.826 2.076 1.584 1.462 3.173 2.338 4.36 2.738a9.906 9.906 0 0 0 2.045.4c-.312 1.161-.627 2.297-1.028 3.334-.405 1.061-.756 1.774-1.284 2.307-.385.41-.719.542-1.131.527-.519-.018-1.447-.289-2.901-1.37-1.746-1.291-3.25-2.073-4.327-2.514a17.61 17.61 0 0 0-1.498-.524c.08-.375.193-.838.344-1.444zm12.104-1.615a.522.522 0 0 1 0 0zm-13.21 2.816l.017.008a.08.08 0 0 1-.017-.008zm-.834-1.685c1.727-6.93 3.174-9.634 8.727-4.43 2.833 2.655 4.933 2.646 6.14 2.641 1.16-.005 1.494-.007.86 2.359-1.294 4.83-3.053 10.796-9.5 6-2.638-1.962-4.392-2.486-5.449-2.801-1.526-.456-1.599-.478-.778-3.769z" />
           </g>
         );
+      default:
       case 'freeze':
         return (
           <g>
@@ -303,17 +300,12 @@ class Icon extends React.Component {
             />
           </g>
         );
-      default:
-        return;
     }
   }
   render() {
     return (
       <SvgWrapper
         size={this.props.size}
-        color={this.props.color}
-        hoverColor={this.props.hoverColor}
-        justify={this.props.location}
         tipText={this.props.tipText}
         tipLocation={this.props.tipLocation}
         onboarding={this.props.onboarding}
@@ -328,13 +320,10 @@ class Icon extends React.Component {
           viewBox="0 0 32 32"
           preserveAspectRatio="xMidYMid meet"
           fit
-          id={this.props.icon}
-          color={this.props.color}
-          hoverColor={this.props.hoverColor}
-          scaleOnHover={this.props.scaleOnHover}
+          id={this.props.glyph}
         >
-          <title id="title">{this.props.icon}</title>
-          {this.returnPath()}
+          <title id="title">{this.props.glyph}</title>
+          {this.returnGlyph()}
         </InlineSvg>
       </SvgWrapper>
     );
@@ -346,10 +335,8 @@ Icon.defaultProps = {
 };
 
 Icon.propTypes = {
-  icon: React.PropTypes.string,
+  glyph: React.PropTypes.string,
   size: React.PropTypes.number.isRequired,
-  color: React.PropTypes.string,
-  hoverColor: React.PropTypes.string,
 };
 
 export default Icon;

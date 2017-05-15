@@ -31,12 +31,7 @@ const ListCardPure = ({ data }) => {
                   withDescription={false}
                   meta={`${item.node.metaData.subscribers} members`}
                 >
-                  <Icon
-                    icon="settings"
-                    color={'text.alt'}
-                    hoverColor={'brand.alt'}
-                    scaleOnHover={false}
-                  />
+                  <Icon glyph="settings" />
                 </ListCardItem>
               </Link>
             );

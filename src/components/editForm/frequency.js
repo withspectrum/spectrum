@@ -8,7 +8,7 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-import { Button, LinkButton } from '../buttons';
+import { Button, TextButton } from '../buttons';
 import { openModal } from '../../actions/modals';
 import { Input, UnderlineInput, TextArea, Checkbox } from '../formElements';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -188,19 +188,19 @@ class FrequencyWithData extends Component {
               </Description>}
 
           <Actions>
-            <LinkButton color={'warn.alt'}>Cancel</LinkButton>
+            <TextButton color={'warn.alt'}>Cancel</TextButton>
             <Button onClick={this.save}>Save</Button>
           </Actions>
 
           {// general can't be deleted
           slug !== 'general'
             ? <Actions>
-                <LinkButton
+                <TextButton
                   color={'warn.alt'}
                   onClick={e => this.triggerDeleteFrequency(e, frequency.id)}
                 >
                   Delete Frequency
-                </LinkButton>
+                </TextButton>
               </Actions>
             : <Notice>
                 The General frequency is the default frequency for your community. It can't be deleted, but you can still change the name and description.

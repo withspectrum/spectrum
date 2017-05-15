@@ -6,6 +6,7 @@ import {
   H3,
   H4,
   P,
+  Transition,
 } from '../../components/globals';
 
 export const Wrapper = styled(FlexCol)`
@@ -14,7 +15,7 @@ export const Wrapper = styled(FlexCol)`
   justify-content: center;
   max-width: 100%;
 
-  &:hover h3 {
+  &:hover h3, &:hover .action {
     color: ${({ theme }) => theme.brand.alt};
   }
 `;
@@ -35,6 +36,7 @@ export const Row = styled(FlexRow)`
 
 export const Heading = styled(H3)`
   font-weight: 700;
+  transition: ${Transition.hover.off};
 `;
 
 export const Meta = styled(H4)`
@@ -48,10 +50,13 @@ export const Description = styled(P)`
   margin-top: 8px;
   font-weight: 400;
   color: ${({ theme }) => theme.text.default};
+
 `;
 
 export const ActionContainer = styled.div`
   flex: 0 0 auto;
   flex-direction: row;
   align-items: center;
+  color: ${({ theme }) => theme.text.placeholder};
+  transition: ${Transition.hover.off};
 `;

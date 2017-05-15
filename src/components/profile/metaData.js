@@ -72,13 +72,7 @@ const MetaDataPure = ({ data }) => {
           return (
             <MetaListItem key={i}>
               <Label>
-                <Icon
-                  icon={item.icon}
-                  color={'text.alt'}
-                  hoverColor={'text.alt'}
-                  scaleOnHover={false}
-                  size={32}
-                />
+                <Icon glyph={item.icon} />
                 <span>{item.label}</span>
               </Label>
               <Count>{item.count}</Count>
