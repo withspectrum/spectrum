@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import Icon from '../icons';
 import { ModalBody, Header, ModalContent, Title, CloseButton } from './styles';
 
 /*
@@ -16,9 +15,7 @@ const ModalContainer = ({ closeModal, children, title }): React$Element<
     <ModalBody>
       <Header>
         <Title>{title}</Title>
-        <CloseButton onClick={() => closeModal()}>
-          <Icon icon="close" color={'text.alt'} hoverColor={'text.default'} />
-        </CloseButton>
+        <CloseButton onClick={() => closeModal()} glyph="close" />
       </Header>
 
       <ModalContent>

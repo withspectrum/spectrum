@@ -89,25 +89,25 @@ const StoryDetailPure = ({
             story.isFrequencyOwner ||
             story.isCommunityOwner) &&
           <DropWrap>
-            <Icon icon="settings" />
+            <Icon glyph="settings" />
             <Dropdown width={'48px'}>
               {(story.isFrequencyOwner || story.isCommunityOwner) &&
                 <FlyoutRow>
                   <IconButton
-                    icon="freeze"
+                    glyph="freeze"
                     onClick={() => storyLock(story.id, !story.locked)}
                   />
                 </FlyoutRow>}
               {story.isAuthor &&
                 <FlyoutRow>
-                  <IconButton icon="lock" />
+                  <IconButton glyph="lock" />
                 </FlyoutRow>}
               {(story.isAuthor ||
                 story.isFrequencyOwner ||
                 story.isCommunityOwner) &&
                 <FlyoutRow>
                   <IconButton
-                    icon="delete"
+                    glyph="delete"
                     onClick={e => triggerDelete(e, story.id)}
                   />
                 </FlyoutRow>}

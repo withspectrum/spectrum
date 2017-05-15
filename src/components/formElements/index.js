@@ -1,7 +1,7 @@
 //@flow
 import React from 'react';
 
-import Icon from '../icons';
+import { IconButton } from '../buttons';
 import {
   StyledLabel,
   StyledPrefixLabel,
@@ -44,18 +44,8 @@ export const Checkbox = (props: InputProps) => {
     <StyledLabel>
       <StyledCheckboxWrapper>
         {props.checked
-          ? <Icon
-              icon="checked"
-              color="success.default"
-              hoverColor="success.default"
-              scaleOnHover={true}
-            />
-          : <Icon
-              icon="unchecked"
-              color="text.alt"
-              hoverColor="brand.alt"
-              scaleOnHover={true}
-            />}
+          ? <IconButton glyph="checked" color="success.default" />
+          : <IconButton glyph="unchecked" />}
         <StyledHiddenInput
           type="checkbox"
           id={props.id}

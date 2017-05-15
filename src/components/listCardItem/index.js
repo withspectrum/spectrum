@@ -30,7 +30,7 @@ export const ListCardItem = (props: CardProps): React$Element<any> => {
           <Heading>{props.contents.name}</Heading>
           <Meta>{props.meta}</Meta>
         </Col>
-        <ActionContainer>{props.children}</ActionContainer>
+        <ActionContainer className={'action'}>{props.children}</ActionContainer>
       </Row>
       {!!props.contents.description && props.withDescription
         ? <Description>{props.contents.description}</Description>
@@ -59,7 +59,7 @@ export const ListCardItemUser = ({ user, children }): React$Element<any> => {
             <Link to={`/users/${user.username}`}>@{user.username}</Link>
           </Meta>
         </Col>
-        <ActionContainer>{children}</ActionContainer>
+        <ActionContainer className={'action'}>{children}</ActionContainer>
       </Row>
     </Wrapper>
   );

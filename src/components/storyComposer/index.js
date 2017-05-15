@@ -12,7 +12,7 @@ import branch from 'recompose/branch';
 import Textarea from 'react-textarea-autosize';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-import { LinkButton } from '../buttons';
+import { TextButton } from '../buttons';
 import Icon from '../icons';
 import { LoadingCard } from '../loading';
 import { getComposerCommunitiesAndFrequencies } from './queries';
@@ -238,12 +238,7 @@ class StoryComposerWithData extends Component {
         <Composer isOpen={isOpen} onClick={this.handleOpenComposer}>
 
           <Placeholder isOpen={isOpen}>
-            <Icon
-              icon={'edit'}
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-              scaleOnHover={false}
-            />
+            <Icon glyph="edit" />
             <PlaceholderLabel>
               Start a new thread with your friends...
             </PlaceholderLabel>
@@ -302,13 +297,13 @@ class StoryComposerWithData extends Component {
                 </select>
               </Dropdowns>
 
-              <LinkButton
+              <TextButton
                 onClick={this.publishStory}
                 loading={isPublishing}
                 disabled={!title || isPublishing}
               >
                 Publish
-              </LinkButton>
+              </TextButton>
             </Actions>
           </ContentContainer>
 

@@ -9,7 +9,7 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 import ModalContainer from '../modalContainer';
-import { LinkButton, Button } from '../../buttons';
+import { TextButton, Button } from '../../buttons';
 import { modalStyles, Description } from '../styles';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -134,7 +134,7 @@ class CreateFrequencyModal extends Component {
                 </Description>}
 
             <Actions>
-              <LinkButton color={'warn.alt'}>Cancel</LinkButton>
+              <TextButton color={'warn.alt'}>Cancel</TextButton>
               <Button onClick={this.create}>Save</Button>
             </Actions>
           </Form>

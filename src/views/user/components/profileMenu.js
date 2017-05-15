@@ -16,13 +16,13 @@ const ProfileMenuPure = props => {
     <Col>
       <Link to={`/user/${user.uid}`}>
         <Row>
-          <Icon icon="profile" />
+          <Icon glyph="profile" />
           <RowLabel>My Profile</RowLabel>
         </Row>
       </Link>
       <Link to={`/user/${user.uid}/settings`}>
         <Row>
-          <Icon icon="settings" />
+          <Icon glyph="settings" />
           <RowLabel>Settings</RowLabel>
         </Row>
       </Link>

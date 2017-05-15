@@ -33,7 +33,7 @@ export const hexa = (hex, alpha) => {
 export const Shadow = {
   low: '0 2px 8px',
   mid: '0 4px 12px',
-  high: '0 8px 16px',
+  high: '0 6px 16px',
 };
 
 export const Transition = {

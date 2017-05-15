@@ -16,7 +16,6 @@ import {
   constructMessage,
   constructContent,
   getIconByType,
-  getColorByType,
 } from '../../helpers/notifications';
 import { getNotifications } from './queries';
 import { UpsellSignIn } from '../../components/upsell';
@@ -37,11 +36,7 @@ const NotificationsPure = ({ data, currentUser }) => {
         {edges.map(({ node: notification }) => (
           <NotificationCard key={notification.id}>
             <FlexRow center>
-              <Icon
-                icon={getIconByType(notification.type)}
-                color={getColorByType(notification.type)}
-                hoverColor={getColorByType(notification.type)}
-              />
+              <Icon glyph={getIconByType(notification.type)} />
               <Message>{constructMessage(notification)}</Message>
             </FlexRow>
             <Content>

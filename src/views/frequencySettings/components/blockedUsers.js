@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { ListCardItemUser } from '../../../components/listCardItem';
-import { LinkButton } from '../../../components/buttons';
+import { TextButton } from '../../../components/buttons';
 import { unblockUserInFrequencyMutation } from '../../../api/frequency';
 import {
   StyledCard,
@@ -88,13 +88,13 @@ class BlockedUsersWithMutation extends Component {
               return (
                 <section key={user.uid}>
                   <ListCardItemUser user={user}>
-                    <LinkButton
+                    <TextButton
                       onClick={() => this.unblock(user.uid)}
                       label
                       hoverColor={'warn.alt'}
                     >
                       Unblock
-                    </LinkButton>
+                    </TextButton>
                   </ListCardItemUser>
                 </section>
               );
