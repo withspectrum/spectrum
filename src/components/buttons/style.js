@@ -105,3 +105,17 @@ export const Label = styled.span`
   align-self: center;
   margin: auto;
 `;
+
+export const iconButton = styled.button`
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  color: ${({ theme }) => theme.text.alt};
+  transition: ${Transition.hover.off};
+
+  &:hover {
+    color: ${({ theme }) => theme.brand.default};
+    transform: scale(1.05);
+    transition: ${Transition.hover.on};
+  }
+`;

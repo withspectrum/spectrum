@@ -1,7 +1,7 @@
 import React from 'react';
 import pure from 'recompose/pure';
 import compose from 'recompose/compose';
-import { Label } from './style';
+import { Label, iconButton } from './style';
 import { Spinner } from '../globals';
 import { Loading } from '../loading';
 import { getSpinnerColor, getButtonType } from './helpers';
@@ -87,6 +87,13 @@ export const OutlineButton = (props: ButtonProps) => (
 export const LinkButton = (props: ButtonProps) => (
   <Button type="link" {...props} />
 );
-export const IconButton = (props: ButtonProps) => (
-  <Button type="icon" {...props} />
-);
+
+export const IconButton = props => {
+  <iconButton hoverColor={props.hoverColor} hoverScale={props.hoverScale}>
+    <Icon
+      icon={props.icon}
+      tipText={props.tipText}
+      tipLocation={props.tipLocation}
+    />
+  </iconButton>;
+};
