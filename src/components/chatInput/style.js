@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Textarea from 'react-textarea-autosize';
 import { IconButton } from '../buttons';
-import { FlexCol, FlexRow, H1, Transition } from '../globals';
+import { FlexRow, Transition } from '../globals';
 
 export const ChatInputWrapper = styled(FlexRow)`
   display: flex;

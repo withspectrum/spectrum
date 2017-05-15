@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import Card from '../../components/card';
-import { IconButton } from '../../components/buttons';
 import { FlexCol, FlexRow, H1, Transition } from '../../components/globals';
 
 export const Container = styled(Card)`

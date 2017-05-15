@@ -14,7 +14,7 @@ import { setStoryLockMutation } from '../mutations';
 import { deleteStoryMutation } from '../../../api/story';
 import Icon from '../../../components/icons';
 import Dropdown from '../../../components/dropdown';
-import { Button, IconButton } from '../../../components/buttons';
+import { IconButton } from '../../../components/buttons';
 import {
   StoryWrapper,
   StoryHeading,
