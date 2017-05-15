@@ -11,12 +11,12 @@ export type DirectMessageGroupProps = {
 };
 
 const getDirectMessageGroup = (id: String): Object => {
-  return db.table('direct_message_groups').get(id).run();
+  return db.table('directMessageGroups').get(id).run();
 };
 
 const getDirectMessageGroupsByUser = (uid: String) => {
   return db
-    .table('direct_message_groups')
+    .table('directMessageGroups')
     .getAll(uid, { index: 'users' })
     .orderBy(db.desc('lastActivity'))
     .run()
@@ -27,7 +27,7 @@ const addDirectMessageGroup = (
   directMessageGroup: DirectMessageGroupProps
 ): Object => {
   return db
-    .table('direct_message_groups')
+    .table('directMessageGroups')
     .insert(
       Object.assign({}, directMessageGroup, {
         lastActivity: new Date(),

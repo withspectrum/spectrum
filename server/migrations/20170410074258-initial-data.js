@@ -9,7 +9,7 @@ exports.up = function(r, conn) {
       r.tableCreate('messages').run(conn),
       r.tableCreate('sessions').run(conn),
       r.tableCreate('reactions').run(conn),
-      r.tableCreate('direct_message_groups').run(conn),
+      r.tableCreate('directMessageGroups').run(conn),
       r.tableCreate('users', { primaryKey: 'uid' }).run(conn),
       r.tableCreate('notifications').run(conn),
     ])
@@ -20,7 +20,7 @@ exports.up = function(r, conn) {
           r.table('users').indexCreate('username', r.row('username')).run(conn),
           // index direct message groups by the users
           r
-            .table('direct_message_groups')
+            .table('directMessageGroups')
             .indexCreate('users', { multi: true })
             .run(conn),
           r
@@ -73,7 +73,7 @@ exports.down = function(r, conn) {
     r.tableDrop('messages').run(conn),
     r.tableDrop('sessions').run(conn),
     r.tableDrop('users').run(conn),
-    r.tableDrop('direct_message_groups').run(conn),
+    r.tableDrop('directMessageGroups').run(conn),
     r.tableDrop('reactions').run(conn),
     r.tableDrop('notifications').run(conn),
   ]).catch(err => {
