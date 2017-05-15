@@ -37,6 +37,7 @@ class CreateCommunityModal extends Component {
       image: '',
       file: null,
       slugTaken: false,
+      slugError: false,
       descriptionError: false,
       nameError: false,
       createError: false,
@@ -77,10 +78,17 @@ class CreateCommunityModal extends Component {
     let lowercaseSlug = slug.toLowerCase().trim();
     slug = slugg(lowercaseSlug);
 
-    console.log('updating slug state with ', slug);
+    if (slug.length >= 24) {
+      this.setState({
+        slugError: true,
+      });
+
+      return;
+    }
 
     this.setState({
       slug,
+      slugError: false,
     });
 
     this.checkSlug(slug);
@@ -154,12 +162,13 @@ class CreateCommunityModal extends Component {
       website,
       file,
       slugTaken,
+      slugError,
       nameError,
       descriptionError,
     } = this.state;
 
     // if an error is present, ensure the client cant submit the form
-    if (slugTaken || nameError || descriptionError) {
+    if (slugTaken || nameError || descriptionError || slugError) {
       this.setState({
         createError: true,
       });
@@ -193,7 +202,7 @@ class CreateCommunityModal extends Component {
         );
       })
       .catch(err => {
-        this.props.dispatch(addToastWithTimeout('error', err));
+        this.props.dispatch(addToastWithTimeout('error', err.toString()));
       });
   };
 
@@ -206,6 +215,7 @@ class CreateCommunityModal extends Component {
       image,
       website,
       slugTaken,
+      slugError,
       nameError,
       descriptionError,
       createError,
@@ -250,6 +260,11 @@ class CreateCommunityModal extends Component {
               <Error>
                 This url is already taken - feel free to change it if
                 you're set on the name {name}!
+              </Error>}
+
+            {slugError &&
+              <Error>
+                Slugs can be up to 24 characters long.
               </Error>}
 
             <TextArea

@@ -167,3 +167,12 @@ export const unblockUserInFrequencyMutation = graphql(
   UNBLOCK_USER_MUTATION,
   UNBLOCK_USER_OPTIONS
 );
+
+export const CHECK_UNIQUE_FREQUENCY_SLUG_QUERY = gql`
+  query getFrequency($slug: String, $community: String) {
+    frequency(slug: $slug, community: $community) {
+      ...frequencyInfo
+    }
+  }
+  ${frequencyInfoFragment}
+`;

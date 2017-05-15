@@ -178,9 +178,6 @@ export const getFrequency = graphql(
 		query getFrequency($slug: String, $community: String) {
 			frequency(slug: $slug, community: $community) {
         ...frequencyInfo
-        community {
-          ...communityInfo
-        }
         ...frequencyMetaData
       }
 		}

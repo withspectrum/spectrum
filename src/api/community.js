@@ -141,23 +141,3 @@ export const CHECK_UNIQUE_COMMUNITY_SLUG_QUERY = gql`
   }
   ${communityInfoFragment}
 `;
-
-export const CHECK_UNIQUE_COMMUNITY_SLUG_OPTIONS = {
-  options: ({ slug }) => ({
-    variables: {
-      slug,
-    },
-  }),
-  props: ({ data: { error, loading, community } }) => ({
-    data: {
-      error,
-      loading,
-      community: community ? community : null,
-    },
-  }),
-};
-
-export const checkUniqueCommunitySlug = graphql(
-  CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,
-  CHECK_UNIQUE_COMMUNITY_SLUG_OPTIONS
-);
