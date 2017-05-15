@@ -54,16 +54,11 @@ class DirectMessages extends Component {
         </MessagesList>
 
         <MessagesContainer>
-          <Route
-            path={`${match.url}/new`}
-            component={DirectMessageComposer}
-            currentUser={currentUser}
-          />
+          <Route path={`${match.url}/new`} component={DirectMessageComposer} />
 
           <Route
             path={`${match.url}/:threadId`}
             component={DirectMessageChatWithCurrentUser}
-            currentUser={currentUser}
           />
         </MessagesContainer>
       </View>
