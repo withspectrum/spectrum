@@ -8,14 +8,22 @@ import Modal from 'react-modal';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { withRouter } from 'react-router';
+// $FlowFixMe
+import slugg from 'slugg';
+// $FlowFixMe
+import { withApollo } from 'react-apollo';
 import ModalContainer from '../modalContainer';
 import { LinkButton, Button } from '../../buttons';
 import { modalStyles } from '../styles';
 import { closeModal } from '../../../actions/modals';
+import { throttle } from '../../../helpers/utils';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { createCommunityMutation } from '../../../api/community';
+import {
+  createCommunityMutation,
+  CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,
+} from '../../../api/community';
 import { Form, Actions, ImgPreview } from './style';
-import { Input, UnderlineInput, TextArea } from '../../formElements';
+import { Input, UnderlineInput, TextArea, Error } from '../../formElements';
 
 class CreateCommunityModal extends Component {
   constructor(props) {
@@ -28,7 +36,14 @@ class CreateCommunityModal extends Component {
       website: '',
       image: '',
       file: null,
+      slugTaken: false,
+      descriptionError: false,
+      nameError: false,
+      createError: false,
+      loading: false,
     };
+
+    this.checkSlug = throttle(this.checkSlug, 500);
   }
 
   close = () => {
@@ -37,22 +52,75 @@ class CreateCommunityModal extends Component {
 
   changeName = e => {
     const name = e.target.value;
+    let lowercaseName = name.toLowerCase().trim();
+    let slug = slugg(lowercaseName);
+
+    if (name.length >= 20) {
+      this.setState({
+        nameError: true,
+      });
+
+      return;
+    }
+
     this.setState({
       name,
+      slug,
+      nameError: false,
     });
+
+    this.checkSlug(slug);
+  };
+
+  changeSlug = e => {
+    let slug = e.target.value;
+    let lowercaseSlug = slug.toLowerCase().trim();
+    slug = slugg(lowercaseSlug);
+
+    console.log('updating slug state with ', slug);
+
+    this.setState({
+      slug,
+    });
+
+    this.checkSlug(slug);
+  };
+
+  checkSlug = slug => {
+    // check the db to see if this frequency slug exists
+    this.props.client
+      .query({
+        query: CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,
+        variables: {
+          slug,
+        },
+      })
+      .then(({ data }) => {
+        // if the community exists
+        if (!data.loading && data && data.community && data.community.id) {
+          this.setState({
+            slugTaken: true,
+          });
+        } else {
+          this.setState({
+            slugTaken: false,
+          });
+        }
+      });
   };
 
   changeDescription = e => {
     const description = e.target.value;
+    if (description.length >= 140) {
+      this.setState({
+        descriptionError: true,
+      });
+      return;
+    }
+
     this.setState({
       description,
-    });
-  };
-
-  changeSlug = e => {
-    const slug = e.target.value;
-    this.setState({
-      slug,
+      descriptionError: false,
     });
   };
 
@@ -79,7 +147,33 @@ class CreateCommunityModal extends Component {
 
   create = e => {
     e.preventDefault();
-    const { name, slug, description, website, file } = this.state;
+    const {
+      name,
+      slug,
+      description,
+      website,
+      file,
+      slugTaken,
+      nameError,
+      descriptionError,
+    } = this.state;
+
+    // if an error is present, ensure the client cant submit the form
+    if (slugTaken || nameError || descriptionError) {
+      this.setState({
+        createError: true,
+      });
+
+      return;
+    }
+
+    // clientside checks have passed
+    this.setState({
+      createError: false,
+      loading: true,
+    });
+
+    // create the mutation input
     const input = {
       name,
       slug,
@@ -87,6 +181,8 @@ class CreateCommunityModal extends Component {
       website,
       file,
     };
+
+    // create the community
     this.props
       .createCommunity(input)
       .then(community => {
@@ -97,13 +193,24 @@ class CreateCommunityModal extends Component {
         );
       })
       .catch(err => {
-        this.props.dispatch(addToastWithTimeout('error', "You can't do that!"));
+        this.props.dispatch(addToastWithTimeout('error', err));
       });
   };
 
   render() {
     const { isOpen } = this.props;
-    const { name, slug, description, image, website } = this.state;
+    const {
+      name,
+      slug,
+      description,
+      image,
+      website,
+      slugTaken,
+      nameError,
+      descriptionError,
+      createError,
+      loading,
+    } = this.state;
     const styles = modalStyles();
 
     return (
@@ -131,15 +238,31 @@ class CreateCommunityModal extends Component {
             >
               What is your community called?
             </Input>
+
+            {nameError &&
+              <Error>Community names can be up to 20 characters long.</Error>}
+
             <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
               sp.chat/
             </UnderlineInput>
+
+            {slugTaken &&
+              <Error>
+                This url is already taken - feel free to change it if
+                you're set on the name {name}!
+              </Error>}
+
             <TextArea
               defaultValue={description}
               onChange={this.changeDescription}
             >
               Describe it in 140 characters or less
             </TextArea>
+
+            {descriptionError &&
+              <Error>
+                Oop, that's more than 140 characters - try trimming that up.
+              </Error>}
 
             <Input
               inputType="file"
@@ -163,8 +286,19 @@ class CreateCommunityModal extends Component {
 
             <Actions>
               <LinkButton color={'warn.alt'}>Cancel</LinkButton>
-              <Button onClick={this.create}>Save</Button>
+              <Button
+                disabled={!name || !slug || slugTaken || !description}
+                loading={loading}
+                onClick={this.create}
+              >
+                Save
+              </Button>
             </Actions>
+
+            {createError &&
+              <Error>
+                Please fix any errors above before creating this community.
+              </Error>}
           </Form>
         </ModalContainer>
       </Modal>
@@ -181,4 +315,9 @@ const mapStateToProps = state => ({
   isOpen: state.modals.isOpen,
   modalProps: state.modals.modalProps,
 });
-export default connect(mapStateToProps)(CreateCommunityModalWithMutation);
+
+const CreateCommunityModalWithState = connect(mapStateToProps)(
+  CreateCommunityModalWithMutation
+);
+const CreateCommunityModalWithQuery = withApollo(CreateCommunityModalWithState);
+export default CreateCommunityModalWithQuery;

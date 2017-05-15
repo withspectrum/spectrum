@@ -1,5 +1,5 @@
 //@flow
-import React from 'react';
+import React, { Component } from 'react';
 
 import Icon from '../icons';
 import {
@@ -10,6 +10,7 @@ import {
   StyledUnderlineInput,
   StyledHiddenInput,
   StyledCheckboxWrapper,
+  StyledError,
 } from './style';
 
 type InputProps = {
@@ -83,19 +84,25 @@ export const TextArea = (props: InputProps) => {
   );
 };
 
-export const UnderlineInput = (props: InputProps) => {
-  return (
-    <StyledPrefixLabel disabled={props.disabled}>
-      {props.children}
-      <StyledUnderlineInput
-        type="text"
-        id={props.id}
-        placeholder={props.placeholder}
-        defaultValue={props.defaultValue}
-        onChange={props.onChange}
-        autofocus={props.autofocus}
-        disabled={props.disabled}
-      />
-    </StyledPrefixLabel>
-  );
+export class UnderlineInput extends Component {
+  render() {
+    return (
+      <StyledPrefixLabel disabled={this.props.disabled}>
+        {this.props.children}
+        <StyledUnderlineInput
+          type="text"
+          id={this.props.id}
+          placeholder={this.props.placeholder}
+          value={this.props.value || this.props.defaultValue}
+          onChange={this.props.onChange}
+          autofocus={this.props.autofocus}
+          disabled={this.props.disabled}
+        />
+      </StyledPrefixLabel>
+    );
+  }
+}
+
+export const Error = props => {
+  return <StyledError>{props.children}</StyledError>;
 };
