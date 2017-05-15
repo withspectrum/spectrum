@@ -3,6 +3,7 @@
 const { UserError } = require('graphql-errors');
 import {
   getFrequencies,
+  getFrequencyBySlug,
   editFrequency,
   createFrequency,
   deleteFrequency,
@@ -55,6 +56,19 @@ module.exports = {
             if (!(community.owners.indexOf(user.uid) > -1)) {
               return new UserError(
                 "You don't have permission to create a frequency in this community."
+              );
+            }
+
+            return community;
+          })
+          .then(community =>
+            getFrequencyBySlug(args.input.slug, community.slug)
+          )
+          .then(frequency => {
+            // a frequency with the slug sent from the client already exists
+            if (frequency) {
+              return new UserError(
+                'A frequency with this slug already exists.'
               );
             }
 

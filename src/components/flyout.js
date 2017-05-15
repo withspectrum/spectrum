@@ -6,8 +6,7 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
-import { Shadow, FlexRow, hexa, Transition } from './globals';
-import Card from './card';
+import { FlexRow, Transition } from './globals';
 
 const StyledFlyout = styled(FlexRow)`
   background-color: transparent;

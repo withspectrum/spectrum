@@ -13,7 +13,13 @@ import { FlexRow } from '../../../components/globals';
 import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 
-import { StyledCard, ListHeading, ListContainer, MoreLink } from '../style';
+import {
+  StyledCard,
+  ListHeading,
+  ListContainer,
+  ListFooter,
+  MoreLink,
+} from '../style';
 
 const ListCardPure = ({ data: { communities }, dispatch }) => {
   if (!!communities) {
@@ -35,14 +41,15 @@ const ListCardPure = ({ data: { communities }, dispatch }) => {
             );
           })}
         </ListContainer>
-        <FlexRow>
+        <ListFooter>
           <MoreLink to={`/explore`}>Find more...</MoreLink>
           <TextButton
+            color="text.placeholder"
             onClick={() => dispatch(openModal('CREATE_COMMUNITY_MODAL'))}
           >
-            Start community
+            New community
           </TextButton>
-        </FlexRow>
+        </ListFooter>
       </StyledCard>
     );
   } else {

@@ -128,3 +128,16 @@ export const toggleCommunityMembershipMutation = graphql(
   TOGGLE_COMMUNITY_MEMBERSHIP_MUTATION,
   TOGGLE_COMMUNITY_MEMBERSHIP_OPTIONS
 );
+
+/*
+  Checks a slug against the db to make sure a community with that slug
+  doesn't already exist
+*/
+export const CHECK_UNIQUE_COMMUNITY_SLUG_QUERY = gql`
+  query community($slug: String) {
+    community(slug: $slug) {
+      ...communityInfo
+    }
+  }
+  ${communityInfoFragment}
+`;
