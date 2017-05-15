@@ -15,6 +15,7 @@ import { Button } from '../../components/buttons';
 import { displayLoadingScreen } from '../../components/loading';
 import GroupsList from './components/groupsList';
 import Messages from './components/messages';
+import Composer from './components/composer';
 import ChatInput from '../../components/chatInput';
 import { View, MessagesList, MessagesContainer } from './style';
 
@@ -39,8 +40,6 @@ const DirectMessageChatWithCurrentUser = connect(mapStateToProps)(
   DirectMessagesChat
 );
 
-const DirectMessageComposer = ({ currentUser }) => <div>New Message!</div>;
-
 class DirectMessages extends Component {
   render() {
     const { match, currentUser, data: { directMessages } } = this.props;
@@ -54,7 +53,15 @@ class DirectMessages extends Component {
         </MessagesList>
 
         <MessagesContainer>
-          <Route path={`${match.url}/new`} component={DirectMessageComposer} />
+          {/*
+            pass the user's existing DM groups into the composer so that we can more quickly
+            determine if the user is creating a new group or has typed the names that map
+            to an existing DM thread
+           */}
+          <Route
+            path={`${match.url}/new`}
+            render={props => <Composer {...props} groups={groups} />}
+          />
 
           <Route
             path={`${match.url}/:threadId`}

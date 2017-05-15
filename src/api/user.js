@@ -36,3 +36,12 @@ export const uploadProfilePhotoMutation = graphql(
   UPLOAD_PROFILE_PHOTO_MUTATION,
   UPLOAD_PROFILE_PHOTO_OPTIONS
 );
+
+export const SEARCH_USERS_QUERY = gql`
+  query searchUsers($string: String) {
+    searchUsers(string: $string) {
+      ...userInfo
+    }
+  }
+  ${userInfoFragment}
+`;
