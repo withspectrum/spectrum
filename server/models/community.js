@@ -152,6 +152,7 @@ const createCommunity = (
               slug: 'general',
               description: 'General Chatter',
               community: community.id,
+              isPrivate: false,
             },
           },
           creatorId // community owner owns the frequency by default

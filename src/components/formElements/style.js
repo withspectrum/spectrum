@@ -150,3 +150,10 @@ export const StyledCheckboxWrapper = styled.span`
     }
   }
 `;
+
+export const StyledError = styled.p`
+  font-size: 14px;
+  color: ${props => props.theme.warn.default};
+  padding: 8px 0 16px;
+  line-height: 1.4;
+`;

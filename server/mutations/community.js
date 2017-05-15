@@ -6,6 +6,7 @@ import {
   editCommunity,
   deleteCommunity,
   getCommunities,
+  getCommunitiesBySlug,
   joinCommunity,
   leaveCommunity,
   subscribeToDefaultFrequencies,
@@ -33,8 +34,15 @@ module.exports = {
           'You must be signed in to create a new community.'
         );
 
-      // all checks passed
-      return createCommunity(args, user.uid);
+      return getCommunitiesBySlug([args.input.slug]).then(communities => {
+        // if a community with this slug already exists
+        if (communities.length > 0) {
+          return new UserError('A community with this slug already exists.');
+        }
+
+        // all checks passed
+        return createCommunity(args, user.uid);
+      });
     },
     deleteCommunity: (_: any, { id }, { user }: Context) => {
       // user must be authed to delete a community
