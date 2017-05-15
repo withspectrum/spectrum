@@ -6,7 +6,16 @@ import compose from 'recompose/compose';
 import withState from 'recompose/withState';
 // // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
-import { Card } from '../card';
+import Icon from '../icons';
+import {
+  Form,
+  Input,
+  ChatInputWrapper,
+  MediaInput,
+  MediaLabel,
+  EmojiToggle,
+  SendButton,
+} from './style';
 import { sendMessageMutation } from '../../api/message';
 
 const ChatInputWithMutation = ({
@@ -35,11 +44,39 @@ const ChatInputWithMutation = ({
   };
 
   return (
-    <Card>
-      <form onSubmit={submit}>
-        <input type="text" value={value} onChange={onChange} />
-      </form>
-    </Card>
+    <ChatInputWrapper>
+      <MediaInput
+        ref="media"
+        type="file"
+        id="file"
+        name="file"
+        accept=".png, .jpg, .jpeg, .gif, .mp4"
+      />
+
+      <MediaLabel htmlFor="file">
+        <Icon
+          icon="photo"
+          tipLocation="top-right"
+          tipText="Upload Photo"
+          subtle
+        />
+      </MediaLabel>
+      <EmojiToggle
+        icon={'emoji'}
+        tipText="Insert Emoji"
+        tipLocation="top-right"
+      />
+      <Form onSubmit={submit}>
+        <Input
+          ref="textInput"
+          placeholder="Your message here..."
+          type="text"
+          value={value}
+          onChange={onChange}
+        />
+        <SendButton icon="send" onClick={submit} />
+      </Form>
+    </ChatInputWrapper>
   );
 };
 
