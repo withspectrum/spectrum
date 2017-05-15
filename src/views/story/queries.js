@@ -1,5 +1,5 @@
 import { graphql, gql } from 'react-apollo';
-import { subscribeToNewMessages } from './subscriptions';
+import { subscribeToNewMessages } from '../../api/subscriptions';
 import { storyInfoFragment } from '../../api/fragments/story/storyInfo';
 import { storyMessagesFragment } from '../../api/fragments/story/storyMessages';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';

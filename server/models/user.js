@@ -127,9 +127,9 @@ const uploadPhoto = (file: Object, user: Object) => {
       .run()
       .then(
         result =>
-          result.changes.length > 0
+          (result.changes.length > 0
             ? result.changes[0].new_val
-            : db.table('users').get(user.uid).run()
+            : db.table('users').get(user.uid).run())
       );
   });
 };

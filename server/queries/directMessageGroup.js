@@ -3,8 +3,8 @@
  * Story query resolvers
  */
 const { getDirectMessageGroup } = require('../models/directMessageGroup');
-const { getMessagesByLocationAndThread } = require('../models/message');
-import type { LocationTypes } from '../models/message';
+const { getMessages } = require('../models/message');
+import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GraphQLContext } from '../';
 import { encode, decode } from '../utils/base64';
@@ -23,40 +23,43 @@ module.exports = {
   DirectMessageGroup: {
     messageConnection: (
       { id }: { id: String },
-      { first = 10, after }: PaginationOptions
+      { first = 100, after }: PaginationOptions
     ) => {
-      const cursorId = decode(after);
-      return getMessagesByLocationAndThread('direct_messages', id, {
+      const cursor = decode(after);
+      return getMessages(id, {
         first,
-        after: cursorId,
-      }).then(([messages, lastMessage]) => ({
-        pageInfo: {
-          hasNextPage: messages.length > 0
-            ? lastMessage.id !== messages[messages.length - 1].id
-            : lastMessage.id !== cursorId,
-        },
-        edges: messages.map(message => ({
-          cursor: encode(message.id),
-          node: message,
-        })),
-      }));
+        after: cursor,
+      }).then(messages => {
+        // Don't paginate messages for now...
+        return {
+          pageInfo: {
+            hasNextPage: false,
+          },
+          edges: messages.map(message => ({
+            node: {
+              ...message,
+            },
+          })),
+        };
+      });
     },
     users: (
       { users }: { users: Array<DirectMessageUser> },
       _: any,
       { loaders }: GraphQLContext
-    ) =>
-      loaders.user.loadMany(users.map(user => user.user)).then(dbUsers =>
-        dbUsers.map((user, index) => ({
-          user,
-          lastSeen: users[index].lastSeen,
-          lastActivity: users[index].lastActivity,
-        }))
-      ),
+    ) => loaders.user.loadMany(users),
     creator: (
       { creator }: { creator: string },
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.user.load(creator),
+    snippet: ({ id }, _: any, { loader }: GraphQLContext) =>
+      getMessages(id).then(messages => {
+        // if there are messages in the group
+        return messages.length > 0
+          ? // return the last message's content as the snippet, or a placeholder
+            messages[messages.length - 1].message.content
+          : 'No messages yet...';
+      }),
   },
 };

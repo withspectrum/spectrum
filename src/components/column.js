@@ -3,8 +3,6 @@ import React from 'react';
 // $FlowFixMe
 import pure from 'recompose/pure';
 // $FlowFixMe
-import compose from 'recompose/compose';
-// $FlowFixMe
 import styled from 'styled-components';
 import { FlexContainer } from './flexbox';
 
@@ -26,5 +24,5 @@ const ColumnPure = (props: Object): React$Element<any> => (
   </StyledColumn>
 );
 
-export const Column = compose(pure)(ColumnPure);
+export const Column = pure(ColumnPure);
 export default Column;

@@ -70,11 +70,13 @@ const FrequencyViewPure = ({
 
   // user has been blocked by the owners
   if (frequency && frequency.isBlocked) {
-    <Upsell404Frequency
-      frequency={match.params.frequencySlug}
-      community={match.params.communitySlug}
-      noPermission
-    />;
+    return (
+      <Upsell404Frequency
+        frequency={match.params.frequencySlug}
+        community={match.params.communitySlug}
+        noPermission
+      />
+    );
   }
 
   // frequency exists and the user is not a subscriber (accounts for signed-

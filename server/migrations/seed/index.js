@@ -6,6 +6,7 @@ const {
   DEFAULT_FREQUENCIES,
   DEFAULT_STORIES,
   DEFAULT_NOTIFICATIONS,
+  DEFAULT_DIRECT_MESSAGE_GROUPS,
 } = require('./default');
 
 const {
@@ -14,6 +15,7 @@ const {
   generateCommunity,
   generateFrequency,
   generateStory,
+  generateDirectMessageGroup,
   generateMessage,
   generateReaction,
   generateStoryNotification,
@@ -86,6 +88,13 @@ frequencies.forEach(frequency => {
   });
 });
 
+console.log('Generating direct message groups...');
+let direct_message_groups = DEFAULT_DIRECT_MESSAGE_GROUPS;
+randomAmount({ max: 100 }, () => {
+  const group_users = randomAmount({ max: 5, min: 2 }, i => users[i]);
+  direct_message_groups.push(generateDirectMessageGroup(group_users));
+});
+
 console.log('Generating messages...');
 let messages = [];
 stories.forEach(story => {
@@ -113,6 +122,19 @@ stories.forEach(story => {
   });
 });
 
+console.log('Generating direct messages...');
+let direct_messages = [];
+direct_message_groups.forEach(group => {
+  const groupMessages = [];
+  const users = group.users;
+  randomAmount({ max: 100 }, () => {
+    const sender = faker.random.arrayElement(users);
+    const message = generateMessage(sender, group.id);
+    direct_messages.push(message);
+    groupMessages.push(message);
+  });
+});
+
 console.log('Generating reactions...');
 let reactions = [];
 messages.map(message => {
@@ -128,7 +150,7 @@ const db = require('rethinkdbdash')({
 });
 
 console.log(
-  `Inserting ${users.length} users, ${communities.length} communities, ${frequencies.length} frequencies, ${stories.length} stories, ${messages.length} messages, ${reactions.length} reactions and ${notifications.length} notifications into the database... (this might take a while!)`
+  `Inserting ${users.length} users, ${communities.length} communities, ${frequencies.length} frequencies, ${stories.length} stories, ${messages.length + direct_messages.length} messages, ${reactions.length} reactions, ${direct_message_groups.length} direct message groups, and ${notifications.length} notifications into the database... (this might take a while!)`
 );
 Promise.all([
   db.table('communities').insert(communities).run(),
@@ -138,6 +160,8 @@ Promise.all([
   db.table('users').insert(users).run(),
   db.table('reactions').insert(reactions).run(),
   db.table('notifications').insert(notifications).run(),
+  db.table('direct_message_groups').insert(direct_message_groups).run(),
+  db.table('messages').insert(direct_messages).run(),
 ])
   .then(() => {
     console.log('Finished seeding database! 🎉');

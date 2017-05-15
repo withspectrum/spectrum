@@ -1,26 +1,75 @@
+// @flow
 import React, { Component } from 'react';
+// $FlowFixMe
+import compose from 'recompose/compose';
+// $FlowFixMe
+import pure from 'recompose/pure';
+// $FlowFixMe
 import { Route } from 'react-router';
-import styled from 'styled-components';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
+// $FlowFixMe
+import { connect } from 'react-redux';
+import { getCurrentUserDirectMessageGroups } from './queries';
+import { Button } from '../../components/buttons';
+import { displayLoadingScreen } from '../../components/loading';
+import GroupsList from './components/groupsList';
+import Messages from './components/messages';
+import ChatInput from '../../components/chatInput';
+import { View, MessagesList, MessagesContainer } from './style';
 
-const DirectMessagesChat = ({ match }) => <div>{match.params.threadId}</div>;
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
 
-const Container = styled.div`
+const DirectMessagesChat = ({ match, currentUser }) => {
+  if (match.params.threadId !== 'new') {
+    return (
+      <div>
+        <Messages id={match.params.threadId} currentUser={currentUser} />
+        <ChatInput thread={match.params.threadId} />
+      </div>
+    );
+  } else {
+    return <div />;
+  }
+};
 
-`;
+const DirectMessageChatWithCurrentUser = connect(mapStateToProps)(
+  DirectMessagesChat
+);
+
+const DirectMessageComposer = ({ currentUser }) => <div>New Message!</div>;
 
 class DirectMessages extends Component {
   render() {
-    const { match } = this.props;
+    const { match, currentUser, data: { directMessages } } = this.props;
+    const groups = directMessages.map(group => group.node);
 
     return (
-      <Container>
+      <View>
+        <MessagesList>
+          <Link to="/messages/new"><Button>New Message</Button></Link>
+          <GroupsList groups={groups} currentUser={currentUser} />
+        </MessagesList>
 
-        {/* render the story chat given the url param */}
-        <Route path={`${match.url}/:threadId`} component={DirectMessagesChat} />
+        <MessagesContainer>
+          <Route path={`${match.url}/new`} component={DirectMessageComposer} />
 
-      </Container>
+          <Route
+            path={`${match.url}/:threadId`}
+            component={DirectMessageChatWithCurrentUser}
+          />
+        </MessagesContainer>
+      </View>
     );
   }
 }
 
-export default DirectMessages;
+const DirectMessagesWithQuery = compose(
+  getCurrentUserDirectMessageGroups,
+  displayLoadingScreen,
+  pure
+)(DirectMessages);
+
+export default connect(mapStateToProps)(DirectMessagesWithQuery);

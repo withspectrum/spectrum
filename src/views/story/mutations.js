@@ -37,35 +37,6 @@ export const setStoryLockMutation = graphql(
 );
 
 /*
-  Sends a message to a story (location is 'messages', which means we are
-  in a story).
-
-  Updates UI automatically via the containers subscribeToNewMessages helper
-*/
-const SEND_MESSAGE_MUTATION = gql`
-  mutation sendMessage($message: MessageInput!) {
-    addMessage(location: messages, message: $message) {
-      ...messageInfo
-    }
-  }
-  ${messageInfoFragment}
-`;
-const SEND_MESSAGE_OPTIONS = {
-  props: ({ ownProps, mutate }) => ({
-    sendMessage: message =>
-      mutate({
-        variables: {
-          message,
-        },
-      }),
-  }),
-};
-export const sendMessageMutation = graphql(
-  SEND_MESSAGE_MUTATION,
-  SEND_MESSAGE_OPTIONS
-);
-
-/*
   Toggles a reaction on a specific message. The reaction object is created
   in /components/chatMessages because that is a dumb component which might
   be rendering messages from a story or direct message thread. The reaction

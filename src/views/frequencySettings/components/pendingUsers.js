@@ -1,25 +1,14 @@
 //@flow
 import React, { Component } from 'react';
 //$FlowFixMe
-import { Link } from 'react-router-dom';
-//$FlowFixMe
 import { connect } from 'react-redux';
 //$FlowFixMe
 import compose from 'recompose/compose';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItemUser } from '../../../components/listCardItem';
-import { FlexRow, FlexCol } from '../../../components/globals';
 import { LinkButton } from '../../../components/buttons';
-import Icon from '../../../components/icons';
 import { togglePendingUserInFrequencyMutation } from '../../../api/frequency';
-import {
-  StyledCard,
-  ListHeading,
-  ListContainer,
-  MoreLink,
-  Description,
-} from '../style';
+import { StyledCard, ListHeading, ListContainer, Description } from '../style';
 
 class PendingUsersWithMutation extends Component {
   constructor(props) {
@@ -68,7 +57,6 @@ class PendingUsersWithMutation extends Component {
 
   render() {
     const { users } = this.state;
-    const { frequency } = this.props;
 
     return (
       <StyledCard>

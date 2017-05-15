@@ -1,10 +1,18 @@
 import styled from 'styled-components';
-import { FlexCol, FlexRow, H3, H4, P } from '../../components/globals';
+import {
+  Truncate,
+  FlexCol,
+  FlexRow,
+  H3,
+  H4,
+  P,
+} from '../../components/globals';
 
 export const Wrapper = styled(FlexCol)`
   flex: 0 0 auto;
   padding: 8px 0;
   justify-content: center;
+  max-width: 100%;
 
   &:hover h3 {
     color: ${({ theme }) => theme.brand.alt};
@@ -32,6 +40,8 @@ export const Heading = styled(H3)`
 export const Meta = styled(H4)`
   font-weight: 400;
   color: ${({ theme }) => theme.text.alt};
+
+  ${props => (props.nowrap ? Truncate() : '')}
 `;
 
 export const Description = styled(P)`

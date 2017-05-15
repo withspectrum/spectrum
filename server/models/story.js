@@ -77,9 +77,9 @@ const setStoryLock = (id, value) => {
       .run()
       .then(
         result =>
-          result.changes.length > 0
+          (result.changes.length > 0
             ? result.changes[0].new_val
-            : db.table('stories').get(id).run()
+            : db.table('stories').get(id).run())
       )
   );
 };

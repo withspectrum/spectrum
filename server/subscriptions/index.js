@@ -11,9 +11,5 @@ module.exports = {
     listenToNewMessages('messages', message => {
       pubsub.publish('messageAdded', message);
     });
-
-    listenToNewMessages('direct_messages', message => {
-      pubsub.publish('messageAdded', message);
-    });
   },
 };

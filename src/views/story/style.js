@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Card from '../../components/card';
-import { FlexCol, FlexRow, H1 } from '../../components/globals';
+import { FlexCol, H1 } from '../../components/globals';
 
 export const Container = styled(Card)`
   width: 100%;
