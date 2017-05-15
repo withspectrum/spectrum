@@ -202,6 +202,9 @@ class CreateCommunityModal extends Component {
         );
       })
       .catch(err => {
+        this.setState({
+          loading: false,
+        });
         this.props.dispatch(addToastWithTimeout('error', err.toString()));
       });
   };
