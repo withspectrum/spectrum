@@ -12,8 +12,18 @@ import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { setStoryLockMutation } from '../mutations';
 import { deleteStoryMutation } from '../../../api/story';
-import { Button } from '../../../components/buttons';
-import { StoryWrapper, StoryHeading, Byline, StoryContent } from '../style';
+import Icon from '../../../components/icons';
+import Dropdown from '../../../components/dropdown';
+import { IconButton } from '../../../components/buttons';
+import {
+  StoryWrapper,
+  StoryHeading,
+  Byline,
+  StoryContent,
+  ContextRow,
+  DropWrap,
+  FlyoutRow,
+} from '../style';
 
 const StoryDetailPure = ({
   story,
@@ -70,31 +80,45 @@ const StoryDetailPure = ({
 
   return (
     <StoryWrapper>
-      <Byline onClick={e => openUserProfileModal(e, story.author)}>
-        {story.author.displayName}
-      </Byline>
+      <ContextRow>
+        <Byline onClick={e => openUserProfileModal(e, story.author)}>
+          {story.author.displayName}
+        </Byline>
+        {currentUser &&
+          (story.isAuthor ||
+            story.isFrequencyOwner ||
+            story.isCommunityOwner) &&
+          <DropWrap>
+            <Icon icon="settings" />
+            <Dropdown width={'48px'}>
+              {(story.isFrequencyOwner || story.isCommunityOwner) &&
+                <FlyoutRow>
+                  <IconButton
+                    icon="freeze"
+                    onClick={() => storyLock(story.id, !story.locked)}
+                  />
+                </FlyoutRow>}
+              {story.isAuthor &&
+                <FlyoutRow>
+                  <IconButton icon="lock" />
+                </FlyoutRow>}
+              {(story.isAuthor ||
+                story.isFrequencyOwner ||
+                story.isCommunityOwner) &&
+                <FlyoutRow>
+                  <IconButton
+                    icon="delete"
+                    onClick={e => triggerDelete(e, story.id)}
+                  />
+                </FlyoutRow>}
+            </Dropdown>
+          </DropWrap>}
+      </ContextRow>
       <StoryHeading>
         {story.content.title}
       </StoryHeading>
       {!!story.content.description &&
         <StoryContent>{story.content.description}</StoryContent>}
-      {currentUser &&
-        (story.isFrequencyOwner || story.isCommunityOwner) &&
-        <Button onClick={() => storyLock(story.id, !story.locked)}>
-          {story.locked ? 'Unlock' : 'Lock'}
-        </Button>}
-
-      {currentUser &&
-        (story.isAuthor || story.isFrequencyOwner || story.isCommunityOwner) &&
-        <Button onClick={e => triggerDelete(e, story.id)}>
-          Delete
-        </Button>}
-
-      {currentUser &&
-        story.isAuthor &&
-        <Button>
-          Edit
-        </Button>}
     </StoryWrapper>
   );
 };

@@ -9,6 +9,7 @@ import ChatMessages from '../../../components/chatMessages';
 import Icon from '../../../components/icons';
 import { HorizontalRule } from '../../../components/globals';
 import { displayLoadingCard } from '../../../components/loading';
+import { ChatWrapper } from '../style';
 import { getStoryMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 
@@ -38,15 +39,16 @@ const MessagesWithData = ({ data, toggleReaction }) => {
   const sortedMessages = sortAndGroupMessages(
     data.story.messageConnection.edges
   );
+
   return (
-    <div>
+    <ChatWrapper>
       <HorizontalRule>
         <hr />
         <Icon icon={'messages'} color="border.default" />
         <hr />
       </HorizontalRule>
       <ChatMessages toggleReaction={toggleReaction} messages={sortedMessages} />
-    </div>
+    </ChatWrapper>
   );
 };
 

@@ -457,7 +457,7 @@ export const HorizontalRule = styled(FlexRow)`
   justify-content: center;
   align-items: center;
   align-self: stretch;
-  margin: 0 16px;
+  margin: 0 32px;
   color: ${props => props.theme.border.default};
 
   hr {
