@@ -276,10 +276,10 @@ const returnTooltip = props => {
       return `
           &:after {
             bottom: calc(100% + 5px);
-            right: -5px;
+            right: 0;
           }
           &:before {
-            right: 5px;
+            right: calc(50% - 5px);
             bottom: 100%
       	    border-bottom-width: 0;
       	    border-top-color: ${props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse};
@@ -289,10 +289,10 @@ const returnTooltip = props => {
       return `
           &:after {
             bottom: calc(100% + 5px);
-            left: -5px;
+            left: 0;
           }
           &:before {
-            left: 5px;
+            left: calc(50% - 5px);
             bottom: 100%;
       	    border-bottom-width: 0;
       	    border-top-color: ${props.onboarding ? props.theme.brand.alt : props.theme.bg.reverse};
@@ -378,7 +378,7 @@ export const Tooltip = props => css`
 
 	&:after {
 		content: ${props.tipText && !props.onboarding ? `'${props.tipText}'` : `''`};
-    z-index: 1001;
+    z-index: 999;
     ${fontStack};
     font-size: 14px;
     font-weight: 500;
@@ -389,7 +389,7 @@ export const Tooltip = props => css`
     text-overflow: ellipsis;
     padding: 8px 12px;
     border-radius: 8px;
-    box-shadow: ${Shadow.mid};
+    box-shadow: ${Shadow.mid} ${hexa(props.theme.text.placeholder, 0.5)};
     background: ${props.theme.bg.reverse};
     color: ${props.theme.text.reverse};
 	}
