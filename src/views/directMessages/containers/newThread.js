@@ -348,6 +348,8 @@ class NewThread extends Component {
       searchString: '',
       focusedSearchResult: '',
       searchIsLoading: false,
+      existingThreadBasedOnSelectedUsers: '',
+      existingThreadWithMessages: {},
     });
 
     // trigger a new search for an existing thread
@@ -481,9 +483,9 @@ class NewThread extends Component {
           });
 
           // if messages were found
-          if (directMessageGroup) {
+          if (directMessageGroup.id) {
             this.setState({
-              existingThreadWithMessages: directMessageGroup[0],
+              existingThreadWithMessages: directMessageGroup,
             });
             // if no messages were found
           } else {
@@ -516,6 +518,7 @@ class NewThread extends Component {
       focusedSearchResult,
       existingThreadBasedOnSelectedUsers,
       loadingExistingThreadMessages,
+      existingThreadWithMessages,
     } = this.state;
     const { currentUser } = this.props;
 
@@ -596,6 +599,13 @@ class NewThread extends Component {
           moved={selectedUsersForNewThread.length > 0}
           innerRef={scrollBody => this.scrollBody = scrollBody}
         >
+          {existingThreadWithMessages &&
+            existingThreadWithMessages.id &&
+            <Header
+              group={existingThreadWithMessages}
+              currentUser={currentUser}
+            />}
+
           {existingThreadBasedOnSelectedUsers &&
             <Messages
               id={existingThreadBasedOnSelectedUsers}
