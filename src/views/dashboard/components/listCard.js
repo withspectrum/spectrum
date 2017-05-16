@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCardItem';
 import { TextButton } from '../../../components/buttons';
-import { FlexRow } from '../../../components/globals';
 import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 

@@ -13,6 +13,7 @@ import renderComponent from 'recompose/renderComponent';
 import branch from 'recompose/branch';
 import { openModal } from '../../actions/modals';
 import { Avatar } from '../avatar';
+import Badge from '../badges';
 import { LoadingCard } from '../loading';
 import {
   ProfileHeader,
@@ -75,7 +76,8 @@ const UserWithData = ({
           <Title>{user.displayName}</Title>
           <Subtitle>
             @{user.username}
-            {user.isAdmin && <span> Admin</span>}
+            {user.isAdmin && <Badge type="admin" />}
+            {/* user.isPro && <Badge type='pro' /> */}
           </Subtitle>
         </ProfileHeaderMeta>
       </ProfileHeader>

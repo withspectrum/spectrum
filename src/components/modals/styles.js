@@ -39,7 +39,7 @@ export const modalStyles = (maxWidth: number = 360) => {
       position: 'relative',
       background: '#ffffff',
       backgroundClip: 'padding-box',
-      borderRadius: '8px',
+      borderRadius: '12px',
       border: '0',
       padding: '0',
       zIndex: 201,
@@ -64,6 +64,7 @@ export const ModalBody = styled.div`
   justify-content: space-between;
   height: 100%;
   background-color: ${({ theme }) => theme.bg.default};
+  overflow: visible;
 `;
 
 export const Title = styled.div`
@@ -82,13 +83,13 @@ export const Footer = styled.div``;
 
 export const CloseButton = styled(IconButton)`
   position: absolute;
-  right: 0;
-  top: 0;
+  right: 8px;
+  top: 8px;
   z-index: 2;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${({ theme }) => theme.text.placeholder};
 
   &:hover {
-    color: ${({ theme }) => theme.text.default};
+    color: ${({ theme }) => theme.warn.alt};
   }
 `;
 
