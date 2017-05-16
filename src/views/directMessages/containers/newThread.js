@@ -105,6 +105,7 @@ class NewThread extends Component {
   search = (string: string) => {
     const { selectedUsersForNewThread } = this.state;
     const { currentUser, client } = this.props;
+
     // start the input loading spinner
     this.setState({
       searchIsLoading: true,
@@ -128,12 +129,14 @@ class NewThread extends Component {
           const selectedUsersIds =
             selectedUsersForNewThread &&
             selectedUsersForNewThread.map(user => user.uid);
+
           // filter the search results to only show users who aren't already selected
-          const searchResults =
-            selectedUsersForNewThread &&
-            searchUsers.filter(user => selectedUsersIds.indexOf(user.uid) < 0);
-          // filter the search results to not show the current user
-          searchResults.filter(user => user.uid !== currentUser.uid);
+          // then filter that list to remove the currentUser so you can't message yourself
+          let searchResults = selectedUsersForNewThread
+            ? searchUsers
+                .filter(user => selectedUsersIds.indexOf(user.uid) < 0)
+                .filter(user => user.uid !== currentUser.uid)
+            : searchUsers.filter(user => user.uid !== currentUser.uid);
 
           this.setState({
             // if the search results are totally filtered out of the selectedUsers,
@@ -236,6 +239,10 @@ class NewThread extends Component {
       //    Note: If the user presses backspace again it will trigger step #1
       //    above
       if (selectedUsersForNewThread.length > 0 && !focusedSelectedUser) {
+        // recheck for an existing thread if the user stops searching but
+        // still has selected users for the new thread
+        this.getMessagesForExistingDirectMessageThread();
+
         const focused =
           selectedUsersForNewThread[selectedUsersForNewThread.length - 1].uid;
 
@@ -314,11 +321,6 @@ class NewThread extends Component {
     */
     if (e.keyCode === 13) {
       // 1
-      console.log(
-        'pressing enter with',
-        searchResults,
-        indexOfFocusedSearchResult
-      );
       this.addUserToSelectedUsersList(
         searchResults[indexOfFocusedSearchResult]
       );
@@ -355,11 +357,15 @@ class NewThread extends Component {
   handleChange = (e: any) => {
     const { existingThreadBasedOnSelectedUsers } = this.state;
 
+    // unfocus any selected user pills
+    this.setState({
+      focusedSelectedUser: '',
+    });
+
     // if a user keeps typing, assume they aren't trying to message a different
     // set of people
     if (existingThreadBasedOnSelectedUsers) {
       this.setState({
-        existingThreadBasedOnSelectedUsers: '',
         loadingExistingThreadMessages: false,
       });
     }
@@ -436,32 +442,22 @@ class NewThread extends Component {
       };
     });
 
-    console.log('cleanedExistingThreads', cleanedExistingThreads);
-
     // 2. Sort both arrays of user IDs and look for a match
     const sortedSelectedUsersForNewThread = selectedUsersForNewThread
       .map(user => user.uid)
       .sort()
       .join('');
 
-    console.log(
-      'sortedSelectedUsersForNewThread',
-      sortedSelectedUsersForNewThread
-    );
-
     // will return null or an object
     const existingThread = cleanedExistingThreads.filter(group => {
       const sortedUsers = group.users.sort().join('');
 
-      console.log('in loop ', sortedUsers, sortedSelectedUsersForNewThread);
       if (sortedUsers === sortedSelectedUsersForNewThread) {
         return group;
       } else {
         return null;
       }
     });
-
-    console.log('existingThread', existingThread);
 
     // if an existing thread was found, set it to the state and get the messages
     // from the server
@@ -512,7 +508,7 @@ class NewThread extends Component {
       loadingExistingThreadMessages,
     } = this.state;
     const { currentUser } = this.props;
-    console.log(this.state);
+
     return (
       <MessagesContainer>
         <ComposerInputWrapper>
@@ -568,7 +564,7 @@ class NewThread extends Component {
                           {user.displayName}
                         </SearchResultDisplayName>
                         <SearchResultUsername>
-                          {user.username}
+                          @{user.username}
                         </SearchResultUsername>
                       </SearchResultTextContainer>
                     </SearchResult>

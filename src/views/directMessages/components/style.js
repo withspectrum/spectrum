@@ -210,6 +210,8 @@ export const Grow = styled.div`
   justify-content: center;
   align-items: stretch;
   background: ${props => props.theme.bg.wash};
+  width: 100%;
+  height: 100%;
 `;
 
 export const ComposerInput = styled.input`
