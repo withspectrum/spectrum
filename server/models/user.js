@@ -43,11 +43,7 @@ const getUsersBySearchString = string => {
     db
       .table('users')
       // get users whose username or displayname matches a case insensitive string
-      .filter(
-        user =>
-          user('username').match(`(?i)${string}`) ||
-          user('displayName').match(`(?i)${string}`)
-      )
+      .filter(user => user.coerceTo('string').match(`(?i)${string}`))
       // only return the 20 users who match to avoid overloading the dom and sending
       // down too much data at once
       .limit(20)
