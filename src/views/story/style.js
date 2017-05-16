@@ -31,11 +31,11 @@ export const DropWrap = styled.div`
   transition: ${Transition.hover.off};
 
   &:hover {
-    color: ${({ theme }) => theme.brand.default};
+    color: ${({ theme }) => theme.border.default};
     transition: ${Transition.hover.on};
   }
 
-  .dropdown {
+  .flyout {
     opacity: 0;
     pointer-events: none;
     transition: ${Transition.hover.off};
@@ -45,8 +45,9 @@ export const DropWrap = styled.div`
     }
   }
 
-  &:hover .dropdown,
-  .dropdown:hover {
+  &:hover .flyout,
+  .flyout:hover,
+  &:active .flyout {
     opacity: 1;
     pointer-events: auto;
     transition: ${Transition.hover.on};

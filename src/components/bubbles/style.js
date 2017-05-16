@@ -87,6 +87,7 @@ export const Reaction = styled.b`
   min-width: ${props => (props.hasCount ? '44px' : 'auto')};
 	max-width: ${props => (props.hasCount ? '100%' : '12px')};
 	max-height: ${props => (props.hasCount ? '24px' : '12px')};
+  color: ${props => props.theme.text.reverse};
 	border: 2px solid #fff;
 	border-radius: ${props => (props.hasCount ? '24px' : '8px')};
 

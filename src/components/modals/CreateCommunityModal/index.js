@@ -13,7 +13,7 @@ import slugg from 'slugg';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
 import ModalContainer from '../modalContainer';
-import { LinkButton, Button } from '../../buttons';
+import { TextButton, Button } from '../../buttons';
 import { modalStyles } from '../styles';
 import { closeModal } from '../../../actions/modals';
 import { throttle } from '../../../helpers/utils';
@@ -303,7 +303,7 @@ class CreateCommunityModal extends Component {
             </Input>
 
             <Actions>
-              <LinkButton color={'warn.alt'}>Cancel</LinkButton>
+              <TextButton color={'warn.alt'}>Cancel</TextButton>
               <Button
                 disabled={!name || !slug || slugTaken || !description}
                 loading={loading}

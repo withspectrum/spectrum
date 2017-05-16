@@ -55,14 +55,14 @@ const ChatInputWithMutation = ({
 
       <MediaLabel htmlFor="file">
         <Icon
-          icon="photo"
+          glyph="photo"
           tipLocation="top-right"
           tipText="Upload Photo"
           subtle
         />
       </MediaLabel>
       <EmojiToggle
-        icon={'emoji'}
+        glyph="emoji"
         tipText="Insert Emoji"
         tipLocation="top-right"
       />
@@ -74,7 +74,7 @@ const ChatInputWithMutation = ({
           value={value}
           onChange={onChange}
         />
-        <SendButton icon="send" onClick={submit} />
+        <SendButton glyph="send" onClick={submit} />
       </Form>
     </ChatInputWrapper>
   );

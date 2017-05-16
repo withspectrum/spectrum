@@ -85,6 +85,11 @@ export const CloseButton = styled(IconButton)`
   right: 0;
   top: 0;
   z-index: 2;
+  color: ${({ theme }) => theme.text.alt};
+
+  &:hover {
+    color: ${({ theme }) => theme.text.default};
+  }
 `;
 
 export const Description = styled.p`

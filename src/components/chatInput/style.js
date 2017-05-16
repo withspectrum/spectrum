@@ -71,7 +71,6 @@ export const SendButton = styled(IconButton)`
 	background-color: transparent;
 	transition: ${Transition.hover.off};
 	top: calc(50% - 16px);
-
 `;
 
 export const MediaInput = styled.input`

@@ -7,7 +7,7 @@ import compose from 'recompose/compose';
 
 import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCardItem';
-import Icon from '../../../components/icons';
+import IconButton from '../../../components/buttons';
 
 import { StyledCard, ListHeading, ListContainer } from '../style';
 
@@ -29,12 +29,7 @@ const ListCardPure = ({ data }) => {
                   withDescription={false}
                   meta={`${item.node.metaData.subscribers} members`}
                 >
-                  <Icon
-                    icon="settings"
-                    color={'text.alt'}
-                    hoverColor={'brand.alt'}
-                    scaleOnHover={false}
-                  />
+                  <IconButton glyph="settings" />
                 </ListCardItem>
               </Link>
             );

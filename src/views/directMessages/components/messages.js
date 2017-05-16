@@ -50,7 +50,7 @@ const MessagesWithData = ({
     >
       <HorizontalRule>
         <hr />
-        <Icon icon={'messages'} color="border.default" />
+        <Icon glyph="messages" />
         <hr />
       </HorizontalRule>
       <ChatMessages toggleReaction={toggleReaction} messages={sortedMessages} />

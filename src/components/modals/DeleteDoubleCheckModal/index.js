@@ -9,7 +9,7 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 import ModalContainer from '../modalContainer';
-import { LinkButton, Button } from '../../buttons';
+import { TextButton, Button } from '../../buttons';
 import { modalStyles } from '../styles';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -134,9 +134,9 @@ class DeleteDoubleCheckModal extends Component {
           <Message>{message ? message : 'Are you sure?'}</Message>
 
           <Actions>
-            <LinkButton onClick={this.close} color={'warn.alt'}>
+            <TextButton onClick={this.close} color={'warn.alt'}>
               Cancel
-            </LinkButton>
+            </TextButton>
             <Button color="warn" onClick={this.triggerDelete}>Delete</Button>
           </Actions>
         </ModalContainer>

@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCardItem';
 import { FlexRow } from '../../../components/globals';
-import { LinkButton } from '../../../components/buttons';
+import { TextButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 
@@ -33,12 +33,7 @@ const ListCardPure = ({ data, dispatch }) => {
                   withDescription={false}
                   meta={`${item.node.metaData.subscribers} members`}
                 >
-                  <Icon
-                    icon="forward"
-                    color={'text.alt'}
-                    hoverColor={'brand.alt'}
-                    scaleOnHover={false}
-                  />
+                  <Icon glyph="forward" />
                 </ListCardItem>
               </Link>
             );
@@ -49,12 +44,12 @@ const ListCardPure = ({ data, dispatch }) => {
         </FlexRow>
         <FlexRow>
           {data.community.isOwner &&
-            <LinkButton
+            <TextButton
               onClick={() =>
                 dispatch(openModal('CREATE_FREQUENCY_MODAL', data.community))}
             >
               Create a Frequency
-            </LinkButton>}
+            </TextButton>}
         </FlexRow>
       </StyledCard>
     );

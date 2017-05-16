@@ -8,7 +8,7 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-import { Button, LinkButton } from '../buttons';
+import { Button, TextButton } from '../buttons';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
 import { Input, UnderlineInput, TextArea } from '../formElements';
@@ -201,17 +201,17 @@ class CommunityWithData extends Component {
           </Input>
 
           <Actions>
-            <LinkButton color={'warn.alt'}>Cancel</LinkButton>
+            <TextButton color={'warn.alt'}>Cancel</TextButton>
             <Button onClick={this.save}>Save</Button>
           </Actions>
 
           <Actions>
-            <LinkButton
+            <TextButton
               color={'warn.alt'}
               onClick={e => this.triggerDeleteCommunity(e, community.id)}
             >
               Delete Community
-            </LinkButton>
+            </TextButton>
           </Actions>
         </Form>
       </StyledCard>

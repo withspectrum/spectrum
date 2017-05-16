@@ -37,7 +37,7 @@ const NotificationListPure = props => {
         return (
           <Link key={i} to={`/story/${notification.node.story.id}`}>
             <NotificationListRow>
-              <Icon icon={getIconByType(notification.node.type)} />
+              <Icon glyph={getIconByType(notification.node.type)} />
               <Message>{constructLinklessMessage(notification.node)}</Message>
             </NotificationListRow>
           </Link>

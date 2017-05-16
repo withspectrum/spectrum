@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { ListCardItemUser } from '../../../components/listCardItem';
-import { LinkButton } from '../../../components/buttons';
+import { TextButton } from '../../../components/buttons';
 import { togglePendingUserInFrequencyMutation } from '../../../api/frequency';
 import { StyledCard, ListHeading, ListContainer, Description } from '../style';
 
@@ -73,23 +73,23 @@ class PendingUsersWithMutation extends Component {
                 <section key={user.uid}>
                   <ListCardItemUser user={user}>
                     <div style={{ display: 'flex' }}>
-                      <LinkButton
+                      <TextButton
                         onClick={() => this.togglePending(user.uid, 'block')}
                         label
                         hoverColor={'warn.alt'}
                         icon="unsubscribe"
                       >
                         Block
-                      </LinkButton>
+                      </TextButton>
 
-                      <LinkButton
+                      <TextButton
                         onClick={() => this.togglePending(user.uid, 'approve')}
                         label
                         hoverColor={'brand.default'}
                         icon="subscribe"
                       >
                         Approve
-                      </LinkButton>
+                      </TextButton>
                     </div>
                   </ListCardItemUser>
                 </section>

@@ -13,7 +13,7 @@ import slugg from 'slugg';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
 import ModalContainer from '../modalContainer';
-import { LinkButton, Button } from '../../buttons';
+import { TextButton, Button } from '../../buttons';
 import { modalStyles, Description } from '../styles';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -289,7 +289,7 @@ class CreateFrequencyModal extends Component {
                 </Description>}
 
             <Actions>
-              <LinkButton color={'warn.alt'}>Cancel</LinkButton>
+              <TextButton color={'warn.alt'}>Cancel</TextButton>
               <Button
                 disabled={!name || !slug || slugTaken || !description}
                 loading={loading}
