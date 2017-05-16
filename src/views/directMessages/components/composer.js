@@ -77,16 +77,18 @@ class Composer extends Component {
     if (e.keyCode === 8) {
       // if searchinput is empty and a user has already selected some people
       if (selectedPill) {
-        const userIds = finalUserListObjects.map(user => user.uid);
-        const index = userIds.indexOf(selectedPill);
-        const list = finalUserListObjects.slice(index, 1);
+        const list = finalUserListObjects.filter(
+          user => user.uid !== selectedPill
+        );
+
         this.setState({
-          finalUserListObjects: [...list],
+          finalUserListObjects: list,
           selectedPill: '',
           loadingExistingGroup: false,
         });
         input.focus();
         this.getMessagesForExistingDirectMessageThread();
+        return;
       }
 
       if (searchInput.length === 0 && finalUserListObjects.length > 0) {
