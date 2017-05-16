@@ -16,7 +16,7 @@ export const Wrapper = styled(FlexCol)`
   background: ${props => (props.active ? props.theme.bg.wash : '#fff')};
 
   a {
-    padding: 16px;
+    padding: 8px 16px;
   }
 
   &:after {
@@ -203,6 +203,7 @@ export const ComposerInputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  display: block;
 `;
 
 export const Grow = styled.div`

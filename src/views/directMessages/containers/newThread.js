@@ -496,6 +496,16 @@ class NewThread extends Component {
     }
   };
 
+  componentDidUpdate() {
+    this.forceScrollToBottom();
+  }
+
+  forceScrollToBottom = () => {
+    if (!this.scrollBody) return;
+    let node = this.scrollBody;
+    node.scrollTop = node.scrollHeight - node.clientHeight;
+  };
+
   render() {
     const {
       searchString,
@@ -582,7 +592,10 @@ class NewThread extends Component {
             </SearchResultsDropdown>}
         </ComposerInputWrapper>
 
-        <ViewContent>
+        <ViewContent
+          moved={selectedUsersForNewThread.length > 0}
+          innerRef={scrollBody => this.scrollBody = scrollBody}
+        >
           {existingThreadBasedOnSelectedUsers &&
             <Messages
               id={existingThreadBasedOnSelectedUsers}

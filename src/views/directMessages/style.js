@@ -12,7 +12,7 @@ export const ViewContent = styled.div`
   flex-direction: column;
   flex: 1 0 auto;
   overflow-y: scroll;
-  max-height: calc(100% - 60px);
+  max-height: ${props => (props.moved ? 'calc(100% - 160px)' : 'calc(100% - 60px)')};
   align-items: center;
   align-content: flex-start;
 `;

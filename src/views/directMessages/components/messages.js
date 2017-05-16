@@ -29,6 +29,7 @@ const lifecycles = lifecycle({
 const MessagesWithData = ({
   data: { error, loading, messages },
   toggleReaction,
+  forceScrollToBottom,
 }) => {
   if (error) {
     return <div>Error!</div>;
@@ -48,7 +49,11 @@ const MessagesWithData = ({
           <hr />
         </HorizontalRule>
       </div>
-      <ChatMessages toggleReaction={toggleReaction} messages={sortedMessages} />
+      <ChatMessages
+        toggleReaction={toggleReaction}
+        messages={sortedMessages}
+        forceScrollToBottom={forceScrollToBottom}
+      />
     </div>
   );
 };
