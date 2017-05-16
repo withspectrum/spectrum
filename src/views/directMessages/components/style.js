@@ -200,23 +200,25 @@ export const Remainder = styled.span`
 
 export const ComposerContainer = styled.div`
   position: relative;
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
+  flex: 1 0 auto;
+  height: 100%;
+  max-height: 100%;
 `;
 
 export const Grow = styled.div`
   flex: 1 1 auto;
   justify-content: center;
   align-items: stretch;
+  background: ${props => props.theme.bg.wash};
 `;
 
 export const ComposerInput = styled.input`
   font-size: 16px;
-  padding: 16px;
+  padding: 15px 16px;
   width: 100%;
-  border-bottom: 1px solid ${props => props.theme.border.default};
+  border-bottom: 2px solid ${props => props.theme.border.default};
   position: relative;
   z-index: 2;
 `;
@@ -226,7 +228,7 @@ export const SearchResultsDropdown = styled.ul`
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   position: absolute;
-  top: ${props => (props.moved ? '100px' : '56px')};
+  top: ${props => (props.moved ? '104px' : '60px')};
   left: 8px;
   display: inline-block;
   width: 320px;
@@ -312,4 +314,50 @@ export const SearchResultPill = styled.li`
   border-radius: 4px;
   padding: 2px 12px;
   margin-right: 4px;
+`;
+
+export const StyledHeader = styled.div`
+  display: flex;
+  flex: ${props => (props.fill ? '1 0 auto' : '0 0 auto')};
+  justify-content: center;
+  align-items: center;
+  align-self: ${props => (props.fill ? 'center' : 'flex-start')};
+  flex-direction: column;
+  width: 100%;
+  background: ${props => (props.wash ? props.theme.bg.wash : '#fff')};
+  padding: 32px;
+  padding-bottom: 0;
+`;
+
+export const PhotosContainer = styled.div`
+  display: block;
+  padding: 8px 0;
+`;
+
+export const Photo = styled.img`
+  border-radius: 44px;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  border: 1px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
+  margin: 0 4px;
+`;
+
+export const Names = styled.h2`
+  display: block;
+  font-weight: 800;
+  font-size: 24px;
+  color: ${({ theme }) => theme.text.default};
+  text-align: center;
+  line-height: 1.4;
+`;
+
+export const Username = styled.h3`
+  display: block;
+  font-weight: 500;
+  font-size: 14px;
+  color: ${({ theme }) => theme.text.alt};
+  margin: 0;
+  display: flex;
 `;

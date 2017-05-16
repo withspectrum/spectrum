@@ -43,16 +43,17 @@ const MessagesWithData = ({
     <div
       style={{
         display: 'flex',
-        overflowY: 'scroll',
         flexDirection: 'column',
-        flex: '1',
+        overflowY: 'scroll',
       }}
     >
-      <HorizontalRule>
-        <hr />
-        <Icon glyph="messages" />
-        <hr />
-      </HorizontalRule>
+      <div style={{ padding: '24px 0', background: '#fff' }}>
+        <HorizontalRule>
+          <hr />
+          <Icon glyph="messages" />
+          <hr />
+        </HorizontalRule>
+      </div>
       <ChatMessages toggleReaction={toggleReaction} messages={sortedMessages} />
     </div>
   );

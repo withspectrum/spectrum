@@ -4,6 +4,7 @@ export const View = styled.div`
   display: flex;
   height: 100%;
   overflow-y: hidden;
+  background: #fff;
 `;
 
 export const MessagesList = styled.div`
@@ -26,4 +27,14 @@ export const MessagesContainer = styled.div`
   height: calc(100% - 48px);
   overflow-x: hidden;
   overflow-y: scroll;
+  background: #fff;
+`;
+
+export const ComposeHeader = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 2px solid ${props => props.theme.border.default};
+  color: ${props => props.theme.brand.default};
 `;

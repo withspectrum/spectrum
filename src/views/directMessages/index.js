@@ -11,20 +11,25 @@ import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { getCurrentUserDirectMessageGroups } from './queries';
-import { Button } from '../../components/buttons';
+import Icon from '../../components/icons';
 import { displayLoadingScreen } from '../../components/loading';
 import GroupsList from './components/groupsList';
 import Messages from './components/messages';
 import Composer from './components/composer';
+import Header from './components/header';
 import ChatInput from '../../components/chatInput';
-import { View, MessagesList, MessagesContainer } from './style';
+import { View, MessagesList, MessagesContainer, ComposeHeader } from './style';
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
 });
 
-const DirectMessagesChat = ({ match, currentUser }) => {
+const DirectMessagesChat = ({ match, currentUser, groups }) => {
   if (match.params.threadId !== 'new') {
+    const group = groups.filter(
+      group => group.node.id === match.params.threadId
+    )[0].node;
+
     return (
       <div
         style={{
@@ -34,7 +39,17 @@ const DirectMessagesChat = ({ match, currentUser }) => {
           minHeight: '100%',
         }}
       >
-        <Messages id={match.params.threadId} currentUser={currentUser} />
+        <div
+          style={{
+            display: 'flex',
+            overflowY: 'scroll',
+            flexDirection: 'column',
+            flex: '1',
+          }}
+        >
+          <Header group={group} currentUser={currentUser} />
+          <Messages id={match.params.threadId} currentUser={currentUser} />
+        </div>
         <ChatInput thread={match.params.threadId} />
       </div>
     );
@@ -55,7 +70,11 @@ class DirectMessages extends Component {
     return (
       <View>
         <MessagesList>
-          <Link to="/messages/new"><Button>New Message</Button></Link>
+          <Link to="/messages/new">
+            <ComposeHeader>
+              <Icon color={'brand.default'} glyph="write" size={32} />
+            </ComposeHeader>
+          </Link>
           <GroupsList groups={groups} currentUser={currentUser} />
         </MessagesList>
 
@@ -78,7 +97,12 @@ class DirectMessages extends Component {
 
           <Route
             path={`${match.url}/:threadId`}
-            component={DirectMessageChatWithCurrentUser}
+            render={props => (
+              <DirectMessageChatWithCurrentUser
+                {...props}
+                groups={directMessages}
+              />
+            )}
           />
         </MessagesContainer>
       </View>
