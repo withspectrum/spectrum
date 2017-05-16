@@ -7,6 +7,16 @@ export const View = styled.div`
   background: #fff;
 `;
 
+export const ViewContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  overflow-y: scroll;
+  max-height: calc(100% - 60px);
+  align-items: center;
+  align-content: flex-start;
+`;
+
 export const MessagesList = styled.div`
   overflow-y: scroll;
   overflow-x: hidden;
@@ -28,6 +38,10 @@ export const MessagesContainer = styled.div`
   overflow-x: hidden;
   overflow-y: scroll;
   background: #fff;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  justify-content: space-between;
 `;
 
 export const ComposeHeader = styled.div`

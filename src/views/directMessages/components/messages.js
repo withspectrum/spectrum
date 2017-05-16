@@ -40,13 +40,7 @@ const MessagesWithData = ({
 
   const sortedMessages = sortAndGroupMessages(messages);
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        overflowY: 'scroll',
-      }}
-    >
+    <div>
       <div style={{ padding: '24px 0', background: '#fff' }}>
         <HorizontalRule>
           <hr />

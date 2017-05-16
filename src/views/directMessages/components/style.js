@@ -198,13 +198,11 @@ export const Remainder = styled.span`
   align-items: center;
 `;
 
-export const ComposerContainer = styled.div`
+export const ComposerInputWrapper = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  flex: 1 0 auto;
-  height: 100%;
-  max-height: 100%;
+  width: 100%;
 `;
 
 export const Grow = styled.div`
@@ -221,6 +219,15 @@ export const ComposerInput = styled.input`
   border-bottom: 2px solid ${props => props.theme.border.default};
   position: relative;
   z-index: 2;
+`;
+
+export const SearchSpinnerContainer = styled.span`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  z-index: 5;
 `;
 
 export const SearchResultsDropdown = styled.ul`
@@ -294,7 +301,7 @@ export const SearchResultNull = styled.p`
   color: ${props => props.theme.text.alt};
 `;
 
-export const SearchResultsPills = styled.ul`
+export const SelectedUsersPills = styled.ul`
   position: relative;
   width: 100%;
   font-size: 16px;
@@ -304,7 +311,7 @@ export const SearchResultsPills = styled.ul`
   background: #fff;
 `;
 
-export const SearchResultPill = styled.li`
+export const Pill = styled.li`
   list-style-type: none;
   display: inline-block;
   font-size: 14px;

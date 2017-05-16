@@ -15,52 +15,10 @@ import Icon from '../../components/icons';
 import { displayLoadingScreen } from '../../components/loading';
 import GroupsList from './components/groupsList';
 import Messages from './components/messages';
-import Composer from './components/composer';
 import Header from './components/header';
-import ChatInput from '../../components/chatInput';
-import { View, MessagesList, MessagesContainer, ComposeHeader } from './style';
-
-const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
-});
-
-const DirectMessagesChat = ({ match, currentUser, groups }) => {
-  if (match.params.threadId !== 'new') {
-    const group = groups.filter(
-      group => group.node.id === match.params.threadId
-    )[0].node;
-
-    return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          maxHeight: '100%',
-          minHeight: '100%',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            overflowY: 'scroll',
-            flexDirection: 'column',
-            flex: '1',
-          }}
-        >
-          <Header group={group} currentUser={currentUser} />
-          <Messages id={match.params.threadId} currentUser={currentUser} />
-        </div>
-        <ChatInput thread={match.params.threadId} />
-      </div>
-    );
-  } else {
-    return <div />;
-  }
-};
-
-const DirectMessageChatWithCurrentUser = connect(mapStateToProps)(
-  DirectMessagesChat
-);
+import NewThread from './containers/newThread';
+import { ExistingThread } from './containers/existingThread';
+import { View, ViewContent, MessagesList, ComposeHeader } from './style';
 
 class DirectMessages extends Component {
   render() {
@@ -78,33 +36,39 @@ class DirectMessages extends Component {
           <GroupsList groups={groups} currentUser={currentUser} />
         </MessagesList>
 
-        <MessagesContainer>
-          {/* if no storyId is provided, redirect to homepage */}
-          <Route
-            exact
-            path={match.url}
-            render={() => <Redirect to="/messages/new" />}
-          />
-          {/*
-            pass the user's existing DM groups into the composer so that we can more quickly
-            determine if the user is creating a new group or has typed the names that map
-            to an existing DM thread
-           */}
-          <Route
-            path={`${match.url}/new`}
-            render={props => <Composer {...props} groups={groups} />}
-          />
+        {/* if no storyId is provided, redirect to homepage */}
+        <Route
+          exact
+          path={match.url}
+          render={() => <Redirect to="/messages/new" />}
+        />
 
-          <Route
-            path={`${match.url}/:threadId`}
-            render={props => (
-              <DirectMessageChatWithCurrentUser
-                {...props}
-                groups={directMessages}
-              />
-            )}
-          />
-        </MessagesContainer>
+        {/*
+          pass the user's existing DM groups into the composer so that we can more quickly
+          determine if the user is creating a new group or has typed the names that map
+          to an existing DM thread
+         */}
+        <Route
+          path={`${match.url}/new`}
+          render={props => (
+            <NewThread {...props} groups={groups} currentUser={currentUser} />
+          )}
+        />
+
+        {/*
+          if a thread is being viewed and the threadId !== 'new', pass the
+          groups down the tree to fetch the messages for the urls threadId
+         */}
+        <Route
+          path={`${match.url}/:threadId`}
+          render={props => (
+            <ExistingThread
+              {...props}
+              groups={directMessages}
+              currentUser={currentUser}
+            />
+          )}
+        />
       </View>
     );
   }
@@ -115,5 +79,9 @@ const DirectMessagesWithQuery = compose(
   displayLoadingScreen,
   pure
 )(DirectMessages);
+
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
 
 export default connect(mapStateToProps)(DirectMessagesWithQuery);
