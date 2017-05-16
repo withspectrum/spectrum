@@ -6,7 +6,7 @@ import compose from 'recompose/compose';
 import lifecycle from 'recompose/lifecycle';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
-import { displayLoadingCard } from '../../../components/loading';
+import { displayLoadingState } from '../../../components/loading';
 import Icon from '../../../components/icons';
 import { HorizontalRule } from '../../../components/globals';
 import { getDirectMessageGroupMessages } from '../queries';
@@ -26,7 +26,10 @@ const lifecycles = lifecycle({
   },
 });
 
-const MessagesWithData = ({ data: { error, messages }, toggleReaction }) => {
+const MessagesWithData = ({
+  data: { error, loading, messages },
+  toggleReaction,
+}) => {
   if (error) {
     return <div>Error!</div>;
   }
@@ -37,7 +40,14 @@ const MessagesWithData = ({ data: { error, messages }, toggleReaction }) => {
 
   const sortedMessages = sortAndGroupMessages(messages);
   return (
-    <div>
+    <div
+      style={{
+        display: 'flex',
+        overflowY: 'scroll',
+        flexDirection: 'column',
+        flex: '1',
+      }}
+    >
       <HorizontalRule>
         <hr />
         <Icon icon={'messages'} color="border.default" />
@@ -52,7 +62,7 @@ const Messages = compose(
   toggleReactionMutation,
   getDirectMessageGroupMessages,
   lifecycles,
-  displayLoadingCard
+  displayLoadingState
 )(MessagesWithData);
 
 export default Messages;

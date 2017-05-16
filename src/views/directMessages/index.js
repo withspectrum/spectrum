@@ -5,7 +5,7 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
 // $FlowFixMe
-import { Route } from 'react-router';
+import { Route, Redirect } from 'react-router';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 // $FlowFixMe
@@ -26,7 +26,14 @@ const mapStateToProps = state => ({
 const DirectMessagesChat = ({ match, currentUser }) => {
   if (match.params.threadId !== 'new') {
     return (
-      <div>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          maxHeight: '100%',
+          minHeight: '100%',
+        }}
+      >
         <Messages id={match.params.threadId} currentUser={currentUser} />
         <ChatInput thread={match.params.threadId} />
       </div>
@@ -53,6 +60,12 @@ class DirectMessages extends Component {
         </MessagesList>
 
         <MessagesContainer>
+          {/* if no storyId is provided, redirect to homepage */}
+          <Route
+            exact
+            path={match.url}
+            render={() => <Redirect to="/messages/new" />}
+          />
           {/*
             pass the user's existing DM groups into the composer so that we can more quickly
             determine if the user is creating a new group or has typed the names that map

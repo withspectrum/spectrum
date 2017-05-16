@@ -9,10 +9,12 @@ import { GET_DIRECT_MESSAGE_GROUP_QUERY } from '../queries';
 import { throttle } from '../../../helpers/utils';
 import { SEARCH_USERS_QUERY } from '../../../api/user';
 import { Spinner } from '../../../components/globals';
+import { Loading } from '../../../components/loading';
 import Messages from './messages';
 import ChatInput from '../../../components/chatInput';
 import {
   ComposerContainer,
+  Grow,
   ComposerInput,
   SearchResultsDropdown,
   SearchResult,
@@ -38,6 +40,7 @@ class Composer extends Component {
       focused: '', // active listener for up/down/enter/esc, uid,
       selectedPill: '',
       existingDmGroup: null,
+      loadingExistingGroup: false,
     };
 
     this.search = throttle(this.search, 500);
@@ -80,8 +83,10 @@ class Composer extends Component {
         this.setState({
           finalUserListObjects: [...list],
           selectedPill: '',
+          loadingExistingGroup: false,
         });
         input.focus();
+        this.getMessagesForExistingDirectMessageThread();
       }
 
       if (searchInput.length === 0 && finalUserListObjects.length > 0) {
@@ -90,15 +95,19 @@ class Composer extends Component {
         const ids = trimmedUserListObjects.map(user => user.uid);
         this.setState({
           finalUserListObjects: [...trimmedUserListObjects],
+          loadingExistingGroup: false,
         });
         input.focus();
       }
+
+      this.getMessagesForExistingDirectMessageThread();
     }
 
     // if person presses esc, clear the results
     if (e.keyCode === 27) {
       this.setState({
         searchResults: [],
+        loadingExistingGroup: false,
       });
     }
 
@@ -215,6 +224,16 @@ class Composer extends Component {
       return false;
     }
 
+    this.setState({
+      loadingExistingGroup: true,
+    });
+
+    if (finalUserListObjects.length === 0) {
+      this.setState({
+        existingDmGroup: null,
+      });
+    }
+
     const finalUserIds = finalUserListObjects.map(user => user.uid);
     const groupsCleaned = groups.map(group => {
       return {
@@ -227,6 +246,9 @@ class Composer extends Component {
 
     // if user hasn't typed in anyone yet, it's false
     if (finalUserIds.length === 0) {
+      this.setState({
+        loadingExistingGroup: false,
+      });
       return false;
     }
 
@@ -248,11 +270,27 @@ class Composer extends Component {
           },
         })
         .then(({ data: { directMessageGroup } }) => {
+          console.log('should be stopping loading');
+          if (directMessageGroup) {
+            this.setState({
+              existingDmGroup: directMessageGroup,
+              loadingExistingGroup: false,
+            });
+          } else {
+            this.setState({
+              existingDmGroup: null,
+            });
+          }
+
           this.setState({
-            existingDmGroup: directMessageGroup,
+            loadingExistingGroup: false,
           });
         });
     }
+
+    this.setState({
+      loadingExistingGroup: false,
+    });
   };
 
   render() {
@@ -261,6 +299,7 @@ class Composer extends Component {
       searchInput,
       searchResults,
       loading,
+      loadingExistingGroup,
       finalUserListObjects,
       focused,
       selectedPill,
@@ -276,7 +315,19 @@ class Composer extends Component {
 
     return (
       <ComposerContainer>
-        {loading && <Spinner size={16} color={'brand.default'} />}
+        {loading &&
+          <span
+            style={{
+              position: 'absolute',
+              top: '8px',
+              right: '8px',
+              width: '32px',
+              height: '32px',
+              zIndex: '5',
+            }}
+          >
+            <Spinner size={16} color={'brand.default'} />
+          </span>}
 
         {finalUserListObjects.length > 0 &&
           <SearchResultsPills>
@@ -299,6 +350,7 @@ class Composer extends Component {
           value={searchInput}
           placeholder="Search for users..."
           onChange={this.handleChange}
+          autoFocus={true}
         />
 
         {// search found people
@@ -336,14 +388,17 @@ class Composer extends Component {
             </SearchResult>
           </SearchResultsDropdown>}
 
-        {existingDmGroup
-          ? <div>
-              <Messages id={existingDmGroup.id} currentUser={currentUser} />
-              <ChatInput thread={existingDmGroup} />
-            </div>
-          : <div>
-              <ChatInput thread="new" />
-            </div>}
+        {existingDmGroup &&
+          finalUserListObjects.length > 0 &&
+          <Messages id={existingDmGroup.id} currentUser={currentUser} />}
+
+        {!existingDmGroup &&
+          <Grow>
+            {loadingExistingGroup &&
+              <Spinner size={16} color={'brand.default'} />}
+          </Grow>}
+
+        <ChatInput thread={existingDmGroup || 'new'} />
       </ComposerContainer>
     );
   }

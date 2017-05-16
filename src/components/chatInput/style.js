@@ -9,10 +9,11 @@ export const ChatInputWrapper = styled(FlexRow)`
   align-items: center;
   z-index: 200;
   position: relative;
-  margin: 0 8px;
-  padding: 8px 0;
+  margin: 0;
+  padding: 8px;
   border-top: 2px solid ${({ theme }) => theme.border.default};
   background-color: ${({ theme }) => theme.bg.default};
+  border-radius: 0 0 12px 12px;
 `;
 
 export const Form = styled.form`
@@ -64,7 +65,7 @@ export const Input = styled(Textarea)`
 
 export const SendButton = styled(IconButton)`
 	position: absolute;
-	right: 4px;
+	right: 12px;
   height: 32px;
   width: 32px;
 	background-color: transparent;
@@ -102,7 +103,7 @@ export const MediaLabel = styled.label`
 
 export const EmojiToggle = styled(IconButton)`
 	position: absolute;
-	left: 48px;
+	left: 56px;
 	background-color: transparent;
 	top: calc(50% - 16px);
 

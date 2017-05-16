@@ -202,6 +202,14 @@ export const ComposerContainer = styled.div`
   position: relative;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+export const Grow = styled.div`
+  flex: 1 1 auto;
+  justify-content: center;
+  align-items: stretch;
 `;
 
 export const ComposerInput = styled.input`
@@ -224,6 +232,7 @@ export const SearchResultsDropdown = styled.ul`
   width: 320px;
   max-height: 420px;
   overflow-y: scroll;
+  z-index: 1000;
 `;
 
 export const SearchResult = styled.li`
