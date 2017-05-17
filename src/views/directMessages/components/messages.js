@@ -41,7 +41,7 @@ const MessagesWithData = ({
 
   const sortedMessages = sortAndGroupMessages(messages);
   return (
-    <div>
+    <div style={{ width: '100%' }}>
       <div style={{ padding: '24px 0', background: '#fff' }}>
         <HorizontalRule>
           <hr />

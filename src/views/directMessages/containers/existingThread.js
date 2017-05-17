@@ -21,7 +21,7 @@ class ExistingThread extends Component {
     const { groups, currentUser } = this.props;
 
     if (id !== 'new') {
-      const group = groups.filter(group => group.node.id === id)[0].node;
+      const group = groups.filter(group => group.id === id)[0];
 
       return (
         <MessagesContainer>

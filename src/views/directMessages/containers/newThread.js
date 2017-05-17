@@ -2,6 +2,10 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
+// $FlowFixMe
+import { withRouter } from 'react-router';
+// $FlowFixMe
+import compose from 'recompose/compose';
 import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
@@ -12,6 +16,9 @@ import { throttle } from '../../../helpers/utils';
 import { SEARCH_USERS_QUERY } from '../../../api/user';
 import { Spinner } from '../../../components/globals';
 import { Loading } from '../../../components/loading';
+import {
+  createDirectMessageGroupMutation,
+} from '../../../api/directMessageGroup';
 import {
   ComposerInputWrapper,
   Grow,
@@ -508,6 +515,23 @@ class NewThread extends Component {
     node.scrollTop = node.scrollHeight - node.clientHeight;
   };
 
+  createThread = message => {
+    const { selectedUsersForNewThread } = this.state;
+    const input = {
+      users: selectedUsersForNewThread.map(user => user.uid),
+      message,
+    };
+
+    this.props.createDirectMessageGroup(input).then(({
+      data: { createDirectMessageGroup },
+    }) => {
+      // NOTE: I cannot get the Apollo store to update properly with the
+      // new group. Forcing a refresh works, although it's a less ideal UX
+      window.location.href = `/messages/${createDirectMessageGroup.id}`;
+      // this.props.history.push(`/messages/${createDirectMessageGroup.id}`)
+    });
+  };
+
   render() {
     const {
       searchString,
@@ -620,10 +644,19 @@ class NewThread extends Component {
 
         </ViewContent>
 
-        <ChatInput thread={'new'} />
+        <ChatInput
+          thread={
+            existingThreadBasedOnSelectedUsers || 'newDirectMessageThread'
+          }
+          createThread={this.createThread}
+        />
       </MessagesContainer>
     );
   }
 }
 
-export default withApollo(NewThread);
+export default compose(
+  withApollo,
+  withRouter,
+  createDirectMessageGroupMutation
+)(NewThread);

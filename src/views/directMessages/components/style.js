@@ -16,7 +16,7 @@ export const Wrapper = styled(FlexCol)`
   background: ${props => (props.active ? props.theme.bg.wash : '#fff')};
 
   a {
-    padding: 8px 16px;
+    padding: 8px 12px;
   }
 
   &:after {
@@ -29,7 +29,7 @@ export const Wrapper = styled(FlexCol)`
   }
 
   &:first-of-type a {
-    padding-top: 16px;
+    padding-top: 8px;
   }
 
   &:last-of-type a {
@@ -155,14 +155,14 @@ export const TwoAvatarContainer = styled(AvatarContainer)`
     &:first-child {
       position: absolute;
       z-index: 2;
-      top: 8px;
+      top: 4px;
       left: 0;
     }
 
     &:last-child {
       position: absolute;
       z-index: 3;
-      bottom: 0;
+      bottom: 4px;
       right: 0;
     }
   }

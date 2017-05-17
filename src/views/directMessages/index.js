@@ -10,7 +10,9 @@ import { Route, Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { getCurrentUserDirectMessageGroups } from './queries';
+import {
+  getCurrentUserDirectMessageGroups,
+} from '../../api/directMessageGroup';
 import Icon from '../../components/icons';
 import { displayLoadingScreen } from '../../components/loading';
 import GroupsList from './components/groupsList';
@@ -22,8 +24,10 @@ import { View, ViewContent, MessagesList, ComposeHeader } from './style';
 
 class DirectMessages extends Component {
   render() {
-    const { match, currentUser, data: { directMessages } } = this.props;
-    const groups = directMessages.map(group => group.node);
+    const { match, currentUser, data } = this.props;
+    const groups = data.user.directMessageGroupsConnection.edges.map(
+      group => group.node
+    );
 
     return (
       <View>
@@ -64,7 +68,7 @@ class DirectMessages extends Component {
           render={props => (
             <ExistingThread
               {...props}
-              groups={directMessages}
+              groups={groups}
               currentUser={currentUser}
             />
           )}
