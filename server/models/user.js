@@ -38,6 +38,20 @@ const getUsers = (uids: Array<string>) => {
   return db.table('users').getAll(...uids).run();
 };
 
+const getUsersBySearchString = string => {
+  return (
+    db
+      .table('users')
+      // get users whose username or displayname matches a case insensitive string
+      .filter(user => user.coerceTo('string').match(`(?i)${string}`))
+      // only return the 20 users who match to avoid overloading the dom and sending
+      // down too much data at once
+      .limit(20)
+      .run()
+      .then(result => result)
+  );
+};
+
 // leaving the filter here as an index on providerId would be a waste of
 // space. This function is only invoked for signups when checking
 // for an existing user on the previous Firebase stack.
@@ -138,6 +152,7 @@ module.exports = {
   getUser,
   getUsersStoryCount,
   getUsers,
+  getUsersBySearchString,
   createOrFindUser,
   storeUser,
   uploadPhoto,

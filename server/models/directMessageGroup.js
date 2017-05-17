@@ -7,32 +7,39 @@ const { db } = require('./db');
 
 export type DirectMessageGroupProps = {
   users: Array<any>,
-  creator: String,
+  message: Object,
 };
 
 const getDirectMessageGroup = (id: String): Object => {
-  return db.table('direct_message_groups').get(id).run();
+  return db.table('directMessageGroups').get(id).run();
 };
 
 const getDirectMessageGroupsByUser = (uid: String) => {
   return db
-    .table('direct_message_groups')
+    .table('directMessageGroups')
     .getAll(uid, { index: 'users' })
     .orderBy(db.desc('lastActivity'))
     .run()
     .then(result => result);
 };
 
-const addDirectMessageGroup = (
-  directMessageGroup: DirectMessageGroupProps
-): Object => {
+const createDirectMessageGroup = (users, user) => {
   return db
-    .table('direct_message_groups')
+    .table('directMessageGroups')
     .insert(
-      Object.assign({}, directMessageGroup, {
+      {
+        creator: user.uid,
+        users: [...users],
+        createdAt: new Date(),
         lastActivity: new Date(),
-        messages: [],
-      }),
+        status: users.map(user => {
+          return {
+            uid: user,
+            lastActivity: null,
+            lastSeen: null,
+          };
+        }),
+      },
       { returnChanges: true }
     )
     .run()
@@ -40,7 +47,7 @@ const addDirectMessageGroup = (
 };
 
 module.exports = {
-  addDirectMessageGroup,
+  createDirectMessageGroup,
   getDirectMessageGroup,
   getDirectMessageGroupsByUser,
 };

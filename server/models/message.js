@@ -48,7 +48,6 @@ const storeMessage = (message: MessageProps, user) => {
           excerpt: message.message.content,
         },
       });
-      console.log('made it here with ', message);
       return message;
     });
 };

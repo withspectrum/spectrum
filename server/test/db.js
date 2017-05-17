@@ -95,7 +95,7 @@ export const setup = db => {
         db.tableCreate('direct_messages').run(),
         db.tableCreate('sessions').run(),
         db.tableCreate('reactions').run(),
-        db.tableCreate('direct_message_groups').run(),
+        db.tableCreate('directMessageGroups').run(),
         db.tableCreate('users', { primaryKey: 'uid' }).run(),
       ])
     )

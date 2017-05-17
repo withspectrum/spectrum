@@ -29,12 +29,23 @@ const DirectMessageGroup = /* GraphQL */ `
 		directMessageGroup(id: ID!): DirectMessageGroup
 	}
 
+	enum MessageType {
+		text
+		media
+	}
+
+	input MessageContentInput {
+		type: MessageType!
+		content: String!
+	}
+
 	input DirectMessageGroupInput {
 		users: [ID!]
+		message: MessageContentInput!
 	}
 
 	extend type Mutation {
-		addDirectMessageGroup(input: DirectMessageGroupInput!): DirectMessageGroup
+		createDirectMessageGroup(input: DirectMessageGroupInput!): DirectMessageGroup
 	}
 `;
 

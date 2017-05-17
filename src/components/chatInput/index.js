@@ -24,9 +24,20 @@ const ChatInputWithMutation = ({
   value,
   onChange,
   clear,
+  createThread,
 }) => {
   const submit = e => {
     e.preventDefault();
+
+    // user is creating a new directMessageThread, break the chain
+    // and initiate a new group creation with the message being sent
+    // in views/directMessages/containers/newThread.js
+    if (thread === 'newDirectMessageThread') {
+      return createThread({ type: 'text', content: value });
+    }
+
+    // user is sending a message to an existing thread id - either a story
+    // or direct message thread
     sendMessage({
       thread,
       message: {
