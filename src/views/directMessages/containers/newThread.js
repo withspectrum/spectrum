@@ -6,6 +6,8 @@ import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
+// $FlowFixMe
+import { connect } from 'react-redux';
 import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
@@ -15,7 +17,7 @@ import { GET_DIRECT_MESSAGE_GROUP_QUERY } from '../queries';
 import { throttle } from '../../../helpers/utils';
 import { SEARCH_USERS_QUERY } from '../../../api/user';
 import { Spinner } from '../../../components/globals';
-import { Loading } from '../../../components/loading';
+import { addToastWithTimeout } from '../../../actions/toasts';
 import {
   createDirectMessageGroupMutation,
 } from '../../../api/directMessageGroup';
@@ -46,6 +48,7 @@ class NewThread extends Component {
     existingThreadBasedOnSelectedUsers: string, // id
     existingThreadWithMessages: Object,
     loadingExistingThreadMessages: boolean,
+    chatInputIsFocused: false,
   };
 
   constructor() {
@@ -171,12 +174,10 @@ class NewThread extends Component {
     const {
       searchString,
       searchResults,
-      searchIsLoading,
       selectedUsersForNewThread,
       focusedSearchResult,
       focusedSelectedUser,
-      existingThreadBasedOnSelectedUsers,
-      loadingExistingThreadMessages,
+      chatInputIsFocused,
     } = this.state;
 
     // create a reference to the input - we will use this to call .focus()
@@ -187,9 +188,6 @@ class NewThread extends Component {
     // to more easily manipulate the ids
     const searchResultIds =
       searchResults && searchResults.map(user => user.uid);
-    const selectedUsersIds =
-      selectedUsersForNewThread &&
-      selectedUsersForNewThread.map(user => user.uid);
 
     const indexOfFocusedSearchResult = searchResultIds.indexOf(
       focusedSearchResult
@@ -215,9 +213,13 @@ class NewThread extends Component {
          to check if the user has already selected people to message. If so,
          we remove the last one in the array
       4. If no more characters are in the search query, and no users are
-         selected to be messaged, we can just return
+         selected to be messaged, we can just return and clear out unneeded
+         state
     */
     if (e.keyCode === 8) {
+      // 0. if the chat input is focused, don't do anything
+      if (chatInputIsFocused) return;
+
       // 1. If there is a selectedUser that has been focused, delete it
       if (focusedSelectedUser) {
         const newSelectedUsers = selectedUsersForNewThread.filter(
@@ -227,6 +229,8 @@ class NewThread extends Component {
         this.setState({
           selectedUsersForNewThread: newSelectedUsers,
           focusedSelectedUser: '',
+          existingThreadBasedOnSelectedUsers: '',
+          existingThreadWithMessages: {},
         });
 
         // recheckfor an existing direct message thread on the server
@@ -271,6 +275,9 @@ class NewThread extends Component {
       2. If there are search results, clear them to hide the dropdown
     */
     if (e.keyCode === 27) {
+      // 0. if the chat input is focused, don't do anything
+      if (chatInputIsFocused) return;
+
       this.setState({
         searchResults: [],
         searchIsLoading: false,
@@ -289,6 +296,9 @@ class NewThread extends Component {
       2. Focus the next user in the search results
     */
     if (e.keyCode === 40) {
+      // 0. if the chat input is focused, don't do anything
+      if (chatInputIsFocused) return;
+
       // 1
       if (indexOfFocusedSearchResult === searchResults.length - 1) return;
 
@@ -307,6 +317,9 @@ class NewThread extends Component {
       2. Focus the previous user in the search results
     */
     if (e.keyCode === 38) {
+      // 0. if the chat input is focused, don't do anything
+      if (chatInputIsFocused) return;
+
       // 1
       if (indexOfFocusedSearchResult === 0) return;
 
@@ -327,6 +340,9 @@ class NewThread extends Component {
       2. Otherwise do nothing
     */
     if (e.keyCode === 13) {
+      // 0. if the chat input is focused, don't do anything
+      if (chatInputIsFocused) return;
+
       // 1
       this.addUserToSelectedUsersList(
         searchResults[indexOfFocusedSearchResult]
@@ -517,6 +533,19 @@ class NewThread extends Component {
 
   createThread = message => {
     const { selectedUsersForNewThread } = this.state;
+
+    // if no users have been selected, break out of this function and throw
+    // an error
+    if (selectedUsersForNewThread.length < 1) {
+      this.props.dispatch(
+        addToastWithTimeout(
+          'error',
+          'Choose some people to send this message to first!'
+        )
+      );
+      return;
+    }
+
     const input = {
       users: selectedUsersForNewThread.map(user => user.uid),
       message,
@@ -529,6 +558,18 @@ class NewThread extends Component {
       // new group. Forcing a refresh works, although it's a less ideal UX
       window.location.href = `/messages/${createDirectMessageGroup.id}`;
       // this.props.history.push(`/messages/${createDirectMessageGroup.id}`)
+    });
+  };
+
+  onChatInputFocus = () => {
+    this.setState({
+      chatInputIsFocused: true,
+    });
+  };
+
+  onChatInputBlur = () => {
+    this.setState({
+      chatInputIsFocused: false,
     });
   };
 
@@ -576,7 +617,7 @@ class NewThread extends Component {
             ref="input"
             type="text"
             value={searchString}
-            placeholder="Search for users..."
+            placeholder="Search for people..."
             onChange={this.handleChange}
             autoFocus={true}
           />
@@ -649,6 +690,8 @@ class NewThread extends Component {
             existingThreadBasedOnSelectedUsers || 'newDirectMessageThread'
           }
           createThread={this.createThread}
+          onFocus={this.onChatInputFocus}
+          onBlur={this.onChatInputBlur}
         />
       </MessagesContainer>
     );
@@ -658,5 +701,6 @@ class NewThread extends Component {
 export default compose(
   withApollo,
   withRouter,
-  createDirectMessageGroupMutation
+  createDirectMessageGroupMutation,
+  connect()
 )(NewThread);

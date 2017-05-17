@@ -16,11 +16,9 @@ import {
 import Icon from '../../components/icons';
 import { displayLoadingScreen } from '../../components/loading';
 import GroupsList from './components/groupsList';
-import Messages from './components/messages';
-import Header from './components/header';
 import NewThread from './containers/newThread';
 import ExistingThread from './containers/existingThread';
-import { View, ViewContent, MessagesList, ComposeHeader } from './style';
+import { View, MessagesList, ComposeHeader } from './style';
 
 class DirectMessages extends Component {
   render() {

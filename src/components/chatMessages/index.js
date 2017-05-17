@@ -33,20 +33,8 @@ import { Reaction, Count } from '../bubbles/style';
   each group render each bubble.
 */
 class ChatMessages extends Component {
-  componentDidMount() {
-    if (this.props.forceScrollToBottom) {
-      this.props.forceScrollToBottom();
-    }
-  }
-
   render() {
-    const {
-      messages,
-      currentUser,
-      toggleReaction,
-      dispatch,
-      forceScrollToBottom,
-    } = this.props;
+    const { messages, currentUser, toggleReaction, dispatch } = this.props;
 
     if (!messages) {
       return <div>No messages</div>;
