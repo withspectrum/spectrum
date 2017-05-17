@@ -2,9 +2,6 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { subscribeToNewMessages } from '../../api/subscriptions';
-import {
-  userDirectMessageGroupsFragment,
-} from '../../api/fragments/user/userDirectMessageGroups';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { messageInfoFragment } from '../../api/fragments/message/messageInfo';
 import {

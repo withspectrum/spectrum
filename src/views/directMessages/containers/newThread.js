@@ -15,7 +15,6 @@ import { GET_DIRECT_MESSAGE_GROUP_QUERY } from '../queries';
 import { throttle } from '../../../helpers/utils';
 import { SEARCH_USERS_QUERY } from '../../../api/user';
 import { Spinner } from '../../../components/globals';
-import { Loading } from '../../../components/loading';
 import {
   createDirectMessageGroupMutation,
 } from '../../../api/directMessageGroup';
@@ -171,12 +170,9 @@ class NewThread extends Component {
     const {
       searchString,
       searchResults,
-      searchIsLoading,
       selectedUsersForNewThread,
       focusedSearchResult,
       focusedSelectedUser,
-      existingThreadBasedOnSelectedUsers,
-      loadingExistingThreadMessages,
     } = this.state;
 
     // create a reference to the input - we will use this to call .focus()
@@ -187,9 +183,6 @@ class NewThread extends Component {
     // to more easily manipulate the ids
     const searchResultIds =
       searchResults && searchResults.map(user => user.uid);
-    const selectedUsersIds =
-      selectedUsersForNewThread &&
-      selectedUsersForNewThread.map(user => user.uid);
 
     const indexOfFocusedSearchResult = searchResultIds.indexOf(
       focusedSearchResult
