@@ -18,6 +18,7 @@ export const ListCardItemDirectMessageGroup = ({
   group,
   children,
   currentUser,
+  active,
 }) => {
   // convert the server time to an iso timestamp
   let timestamp = new Date(group.lastActivity).getTime();
@@ -39,7 +40,7 @@ export const ListCardItemDirectMessageGroup = ({
   const avatars = renderAvatars(users);
 
   return (
-    <Wrapper>
+    <Wrapper active={active}>
       <Link to={`/messages/${group.id}`}>
         <Row>
           {avatars}

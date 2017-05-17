@@ -21,8 +21,27 @@ import ExistingThread from './containers/existingThread';
 import { View, MessagesList, ComposeHeader } from './style';
 
 class DirectMessages extends Component {
+  state: {
+    activeThread: string,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      activeThread: '',
+    };
+  }
+
+  setActiveThread = id => {
+    this.setState({
+      activeThread: id,
+    });
+  };
+
   render() {
     const { match, currentUser, data } = this.props;
+    const { activeThread } = this.state;
     const groups = data.user.directMessageGroupsConnection.edges.map(
       group => group.node
     );
@@ -35,7 +54,11 @@ class DirectMessages extends Component {
               <Icon color={'brand.default'} glyph="write" size={32} />
             </ComposeHeader>
           </Link>
-          <GroupsList groups={groups} currentUser={currentUser} />
+          <GroupsList
+            active={activeThread}
+            groups={groups}
+            currentUser={currentUser}
+          />
         </MessagesList>
 
         {/* if no storyId is provided, redirect to homepage */}
@@ -68,6 +91,7 @@ class DirectMessages extends Component {
               {...props}
               groups={groups}
               currentUser={currentUser}
+              setActiveThread={this.setActiveThread}
             />
           )}
         />
