@@ -25,6 +25,8 @@ const ChatInputWithMutation = ({
   onChange,
   clear,
   createThread,
+  onFocus,
+  onBlur,
 }) => {
   const submit = e => {
     e.preventDefault();
@@ -33,6 +35,7 @@ const ChatInputWithMutation = ({
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
     if (thread === 'newDirectMessageThread') {
+      console.log('attempting to create a new thread');
       return createThread({ type: 'text', content: value });
     }
 
@@ -52,6 +55,14 @@ const ChatInputWithMutation = ({
       .catch(error => {
         console.log('Error sending message: ', error);
       });
+  };
+
+  const handleKeyPress = e => {
+    if (e.keyCode === 13) {
+      //=> make the enter key send a message, not create a new line in the next autoexpanding textarea
+      e.preventDefault(); //=> prevent linebreak
+      submit(e); //=> send the message instead
+    }
   };
 
   return (
@@ -77,13 +88,16 @@ const ChatInputWithMutation = ({
         tipText="Insert Emoji"
         tipLocation="top-right"
       />
-      <Form onSubmit={submit}>
+      <Form>
         <Input
           ref="textInput"
           placeholder="Your message here..."
           type="text"
           value={value}
           onChange={onChange}
+          onKeyUp={handleKeyPress}
+          onFocus={onFocus}
+          onBlur={onBlur}
         />
         <SendButton glyph="send" onClick={submit} />
       </Form>
