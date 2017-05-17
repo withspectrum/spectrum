@@ -6,8 +6,20 @@ import ChatInput from '../../../components/chatInput';
 import { MessagesContainer, ViewContent } from '../style';
 
 class ExistingThread extends Component {
-  componentDidUpdate() {
+  componentDidMount() {
+    const threadId = this.props.match.params.threadId;
+    this.props.setActiveThread(threadId);
     this.forceScrollToBottom();
+  }
+
+  componentDidUpdate(prevProps) {
+    this.forceScrollToBottom();
+
+    if (prevProps.match.params.threadId !== this.props.match.params.threadId) {
+      const threadId = this.props.match.params.threadId;
+      this.props.setActiveThread(threadId);
+      this.forceScrollToBottom();
+    }
   }
 
   forceScrollToBottom = () => {

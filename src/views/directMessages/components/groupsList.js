@@ -6,7 +6,7 @@ import { ListCardItemDirectMessageGroup } from './messageGroupListItem';
 
 class GroupsList extends Component {
   render() {
-    const { groups, currentUser } = this.props;
+    const { groups, currentUser, active } = this.props;
 
     return (
       <div>
@@ -16,6 +16,7 @@ class GroupsList extends Component {
               group={group}
               key={group.id}
               currentUser={currentUser}
+              active={active === group.id}
             />
           );
         })}

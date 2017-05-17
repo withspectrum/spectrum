@@ -23,6 +23,10 @@ class MessagesWithData extends Component {
     };
   }
 
+  componentDidMount() {
+    this.props.forceScrollToBottom();
+  }
+
   componentDidUpdate() {
     if (!this.props.loading && !this.state.subscribed) {
       this.setState({
