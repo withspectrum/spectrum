@@ -10,6 +10,13 @@ import {
 
 /*
   Create a new direct message group
+  Input is:
+  - an array of user ids
+  - a thread-less "message" object
+
+  Because we are creating a DM group for the first time, we need to send the
+  message data to the backend to store it after the DM group is created
+  and we have a threadID
 */
 const CREATE_DIRECT_MESSAGE_GROUP_MUTATION = gql`
   mutation createDirectMessageGroup($input: DirectMessageGroupInput!) {

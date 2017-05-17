@@ -23,21 +23,34 @@ const getDirectMessageGroupsByUser = (uid: String) => {
     .then(result => result);
 };
 
-const createDirectMessageGroup = (users, user) => {
+const createDirectMessageGroup = (
+  usersArray: Array<string>,
+  currentUser: Object
+) => {
   return db
     .table('directMessageGroups')
     .insert(
       {
-        creator: user.uid,
-        users: [...users],
+        creator: currentUser.uid,
+        users: [...usersArray],
         createdAt: new Date(),
         lastActivity: new Date(),
-        status: users.map(user => {
-          return {
-            uid: user,
-            lastActivity: null,
-            lastSeen: null,
-          };
+        status: usersArray.map(user => {
+          // when we are inserting the current user, we
+          // can know that they are currently active and viewing the thread
+          if (currentUser.uid === user) {
+            return {
+              uid: user,
+              lastActivity: new Date(),
+              lastSeen: new Date(),
+            };
+          } else {
+            return {
+              uid: user,
+              lastActivity: null,
+              lastSeen: null,
+            };
+          }
         }),
       },
       { returnChanges: true }
