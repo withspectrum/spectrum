@@ -215,7 +215,8 @@ class NewThread extends Component {
          to check if the user has already selected people to message. If so,
          we remove the last one in the array
       4. If no more characters are in the search query, and no users are
-         selected to be messaged, we can just return
+         selected to be messaged, we can just return and clear out unneeded
+         state
     */
     if (e.keyCode === 8) {
       // 1. If there is a selectedUser that has been focused, delete it
@@ -227,6 +228,8 @@ class NewThread extends Component {
         this.setState({
           selectedUsersForNewThread: newSelectedUsers,
           focusedSelectedUser: '',
+          existingThreadBasedOnSelectedUsers: '',
+          existingThreadWithMessages: {},
         });
 
         // recheckfor an existing direct message thread on the server
