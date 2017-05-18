@@ -7,32 +7,52 @@ const { db } = require('./db');
 
 export type DirectMessageGroupProps = {
   users: Array<any>,
-  creator: String,
+  message: Object,
 };
 
 const getDirectMessageGroup = (id: String): Object => {
-  return db.table('direct_message_groups').get(id).run();
+  return db.table('directMessageGroups').get(id).run();
 };
 
 const getDirectMessageGroupsByUser = (uid: String) => {
   return db
-    .table('direct_message_groups')
+    .table('directMessageGroups')
     .getAll(uid, { index: 'users' })
     .orderBy(db.desc('lastActivity'))
     .run()
     .then(result => result);
 };
 
-const addDirectMessageGroup = (
-  directMessageGroup: DirectMessageGroupProps
-): Object => {
+const createDirectMessageGroup = (
+  usersArray: Array<string>,
+  currentUser: Object
+) => {
   return db
-    .table('direct_message_groups')
+    .table('directMessageGroups')
     .insert(
-      Object.assign({}, directMessageGroup, {
+      {
+        creator: currentUser.uid,
+        users: [...usersArray],
+        createdAt: new Date(),
         lastActivity: new Date(),
-        messages: [],
-      }),
+        status: usersArray.map(user => {
+          // when we are inserting the current user, we
+          // can know that they are currently active and viewing the thread
+          if (currentUser.uid === user) {
+            return {
+              uid: user,
+              lastActivity: new Date(),
+              lastSeen: new Date(),
+            };
+          } else {
+            return {
+              uid: user,
+              lastActivity: null,
+              lastSeen: null,
+            };
+          }
+        }),
+      },
       { returnChanges: true }
     )
     .run()
@@ -40,7 +60,7 @@ const addDirectMessageGroup = (
 };
 
 module.exports = {
-  addDirectMessageGroup,
+  createDirectMessageGroup,
   getDirectMessageGroup,
   getDirectMessageGroupsByUser,
 };

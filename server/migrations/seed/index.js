@@ -89,10 +89,10 @@ frequencies.forEach(frequency => {
 });
 
 console.log('Generating direct message groups...');
-let direct_message_groups = DEFAULT_DIRECT_MESSAGE_GROUPS;
+let directMessageGroups = DEFAULT_DIRECT_MESSAGE_GROUPS;
 randomAmount({ max: 100 }, () => {
   const group_users = randomAmount({ max: 5, min: 2 }, i => users[i]);
-  direct_message_groups.push(generateDirectMessageGroup(group_users));
+  directMessageGroups.push(generateDirectMessageGroup(group_users));
 });
 
 console.log('Generating messages...');
@@ -124,7 +124,7 @@ stories.forEach(story => {
 
 console.log('Generating direct messages...');
 let direct_messages = [];
-direct_message_groups.forEach(group => {
+directMessageGroups.forEach(group => {
   const groupMessages = [];
   const users = group.users;
   randomAmount({ max: 100 }, () => {
@@ -150,7 +150,7 @@ const db = require('rethinkdbdash')({
 });
 
 console.log(
-  `Inserting ${users.length} users, ${communities.length} communities, ${frequencies.length} frequencies, ${stories.length} stories, ${messages.length + direct_messages.length} messages, ${reactions.length} reactions, ${direct_message_groups.length} direct message groups, and ${notifications.length} notifications into the database... (this might take a while!)`
+  `Inserting ${users.length} users, ${communities.length} communities, ${frequencies.length} frequencies, ${stories.length} stories, ${messages.length + direct_messages.length} messages, ${reactions.length} reactions, ${directMessageGroups.length} direct message groups, and ${notifications.length} notifications into the database... (this might take a while!)`
 );
 Promise.all([
   db.table('communities').insert(communities).run(),
@@ -160,7 +160,7 @@ Promise.all([
   db.table('users').insert(users).run(),
   db.table('reactions').insert(reactions).run(),
   db.table('notifications').insert(notifications).run(),
-  db.table('direct_message_groups').insert(direct_message_groups).run(),
+  db.table('directMessageGroups').insert(directMessageGroups).run(),
   db.table('messages').insert(direct_messages).run(),
 ])
   .then(() => {

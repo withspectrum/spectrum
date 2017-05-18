@@ -5,62 +5,96 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
 // $FlowFixMe
-import { Route } from 'react-router';
+import { Route, Redirect } from 'react-router';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { getCurrentUserDirectMessageGroups } from './queries';
-import { Button } from '../../components/buttons';
+import {
+  getCurrentUserDirectMessageGroups,
+} from '../../api/directMessageGroup';
+import Icon from '../../components/icons';
 import { displayLoadingScreen } from '../../components/loading';
 import GroupsList from './components/groupsList';
-import Messages from './components/messages';
-import ChatInput from '../../components/chatInput';
-import { View, MessagesList, MessagesContainer } from './style';
-
-const mapStateToProps = state => ({
-  currentUser: state.users.currentUser,
-});
-
-const DirectMessagesChat = ({ match, currentUser }) => {
-  if (match.params.threadId !== 'new') {
-    return (
-      <div>
-        <Messages id={match.params.threadId} currentUser={currentUser} />
-        <ChatInput thread={match.params.threadId} />
-      </div>
-    );
-  } else {
-    return <div />;
-  }
-};
-
-const DirectMessageChatWithCurrentUser = connect(mapStateToProps)(
-  DirectMessagesChat
-);
-
-const DirectMessageComposer = ({ currentUser }) => <div>New Message!</div>;
+import NewThread from './containers/newThread';
+import ExistingThread from './containers/existingThread';
+import { View, MessagesList, ComposeHeader } from './style';
 
 class DirectMessages extends Component {
+  state: {
+    activeThread: string,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      activeThread: '',
+    };
+  }
+
+  setActiveThread = id => {
+    this.setState({
+      activeThread: id,
+    });
+  };
+
   render() {
-    const { match, currentUser, data: { directMessages } } = this.props;
-    const groups = directMessages.map(group => group.node);
+    const { match, currentUser, data } = this.props;
+    const { activeThread } = this.state;
+    const groups = data.user.directMessageGroupsConnection.edges.map(
+      group => group.node
+    );
 
     return (
       <View>
         <MessagesList>
-          <Link to="/messages/new"><Button>New Message</Button></Link>
-          <GroupsList groups={groups} currentUser={currentUser} />
+          <Link to="/messages/new">
+            <ComposeHeader>
+              <Icon color={'brand.default'} glyph="write" size={32} />
+            </ComposeHeader>
+          </Link>
+          <GroupsList
+            active={activeThread}
+            groups={groups}
+            currentUser={currentUser}
+          />
         </MessagesList>
 
-        <MessagesContainer>
-          <Route path={`${match.url}/new`} component={DirectMessageComposer} />
+        {/* if no storyId is provided, redirect to homepage */}
+        <Route
+          exact
+          path={match.url}
+          render={() => <Redirect to="/messages/new" />}
+        />
 
-          <Route
-            path={`${match.url}/:threadId`}
-            component={DirectMessageChatWithCurrentUser}
-          />
-        </MessagesContainer>
+        {/*
+          pass the user's existing DM groups into the composer so that we can more quickly
+          determine if the user is creating a new group or has typed the names that map
+          to an existing DM thread
+         */}
+        <Route
+          path={`${match.url}/new`}
+          render={props => (
+            <NewThread {...props} groups={groups} currentUser={currentUser} />
+          )}
+        />
+
+        {/*
+          if a thread is being viewed and the threadId !== 'new', pass the
+          groups down the tree to fetch the messages for the urls threadId
+         */}
+        <Route
+          path={`${match.url}/:threadId`}
+          render={props => (
+            <ExistingThread
+              {...props}
+              groups={groups}
+              currentUser={currentUser}
+              setActiveThread={this.setActiveThread}
+            />
+          )}
+        />
       </View>
     );
   }
@@ -71,5 +105,9 @@ const DirectMessagesWithQuery = compose(
   displayLoadingScreen,
   pure
 )(DirectMessages);
+
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
 
 export default connect(mapStateToProps)(DirectMessagesWithQuery);

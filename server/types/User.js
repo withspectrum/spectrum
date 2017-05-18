@@ -90,6 +90,7 @@ const User = /* GraphQL */ `
 	extend type Query {
 		user(uid: ID, username: String): User
 		currentUser: User
+		searchUsers(string: String): [User]
 	}
 
 	extend type Mutation {

@@ -2,7 +2,11 @@
 /**
  * Story query resolvers
  */
-const { getEverything, getUser } = require('../models/user');
+const {
+  getEverything,
+  getUser,
+  getUsersBySearchString,
+} = require('../models/user');
 const { getCommunitiesByUser } = require('../models/community');
 const { getFrequenciesByUser } = require('../models/frequency');
 const { getStoriesByUser } = require('../models/story');
@@ -29,6 +33,7 @@ module.exports = {
       return null;
     },
     currentUser: (_: any, __: any, { user }: GraphQLContext) => user,
+    searchUsers: (_, { string }, { user }) => getUsersBySearchString(string),
   },
   User: {
     notificationConnection: (

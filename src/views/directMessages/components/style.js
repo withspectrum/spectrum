@@ -16,7 +16,7 @@ export const Wrapper = styled(FlexCol)`
   background: ${props => (props.active ? props.theme.bg.wash : '#fff')};
 
   a {
-    padding: 16px;
+    padding: 8px 12px;
   }
 
   &:after {
@@ -29,7 +29,7 @@ export const Wrapper = styled(FlexCol)`
   }
 
   &:first-of-type a {
-    padding-top: 16px;
+    padding-top: 8px;
   }
 
   &:last-of-type a {
@@ -155,14 +155,14 @@ export const TwoAvatarContainer = styled(AvatarContainer)`
     &:first-child {
       position: absolute;
       z-index: 2;
-      top: 8px;
+      top: 4px;
       left: 0;
     }
 
     &:last-child {
       position: absolute;
       z-index: 3;
-      bottom: 0;
+      bottom: 4px;
       right: 0;
     }
   }
@@ -196,4 +196,178 @@ export const Remainder = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+export const ComposerInputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  display: block;
+`;
+
+export const Grow = styled.div`
+  flex: 1 1 auto;
+  justify-content: center;
+  align-items: stretch;
+  background: ${props => props.theme.bg.wash};
+  width: 100%;
+  height: 100%;
+`;
+
+export const ComposerInput = styled.input`
+  font-size: 16px;
+  padding: 15px 16px;
+  width: 100%;
+  border-bottom: 2px solid ${props => props.theme.border.default};
+  position: relative;
+  z-index: 2;
+`;
+
+export const SearchSpinnerContainer = styled.span`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  z-index: 5;
+`;
+
+export const SearchResultsDropdown = styled.ul`
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: absolute;
+  top: ${props => (props.moved ? '104px' : '60px')};
+  left: 8px;
+  display: inline-block;
+  width: 320px;
+  max-height: 420px;
+  overflow-y: scroll;
+  z-index: 1000;
+`;
+
+export const SearchResult = styled.li`
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid ${props => props.theme.border.default};
+  background: ${props => (props.focused ? props.theme.bg.wash : '#fff')};
+  width: 100%;
+  ${Truncate()}
+  padding: 8px 16px 8px 8px;
+
+  &:only-child {
+    border-bottom: none;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: ${props => props.theme.bg.wash};
+    cursor: pointer;
+  }
+`;
+
+export const SearchResultImage = styled.img`
+  border-radius: 40px;
+  margin-right: 8px;
+  width: 32px;
+  height: 32px;
+`;
+
+export const SearchResultTextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+`;
+
+export const SearchResultDisplayName = styled.p`
+  font-size: 14px;
+  font-weight: 600;
+  color: ${props => props.theme.text.default};
+  line-height: 1.4;
+`;
+
+export const SearchResultUsername = styled.p`
+  font-size: 12px;
+  font-weight: 500;
+  color: ${props => props.theme.text.alt};
+  line-height: 1.4;
+`;
+
+export const SearchResultNull = styled.p`
+  text-align: center;
+  font-size: 14px;
+  font-weight: 400;
+  color: ${props => props.theme.text.alt};
+`;
+
+export const SelectedUsersPills = styled.ul`
+  position: relative;
+  width: 100%;
+  font-size: 16px;
+  padding: 9px 12px;
+  width: 100%;
+  z-index: 3;
+  background: #fff;
+`;
+
+export const Pill = styled.li`
+  list-style-type: none;
+  display: inline-block;
+  font-size: 14px;
+  background: ${props => (props.selected ? props.theme.brand.default : 'rgba(123,22,255,0.1)')};
+  box-shadow: inset 0 0 1px rgba(123,22,255,0.15);
+  color: ${props => (props.selected ? '#fff' : props.theme.brand.default)}
+  border-radius: 4px;
+  padding: 2px 12px;
+  margin-right: 4px;
+`;
+
+export const StyledHeader = styled.div`
+  display: flex;
+  flex: ${props => (props.fill ? '1 0 auto' : '0 0 auto')};
+  justify-content: center;
+  align-items: center;
+  align-self: ${props => (props.fill ? 'center' : 'flex-start')};
+  flex-direction: column;
+  width: 100%;
+  background: ${props => (props.wash ? props.theme.bg.wash : '#fff')};
+  padding: 32px;
+  padding-bottom: 0;
+`;
+
+export const PhotosContainer = styled.div`
+  display: block;
+  padding: 8px 0;
+`;
+
+export const Photo = styled.img`
+  border-radius: 44px;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  border: 1px solid #fff;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
+  margin: 0 4px;
+`;
+
+export const Names = styled.h2`
+  display: block;
+  font-weight: 800;
+  font-size: 24px;
+  color: ${({ theme }) => theme.text.default};
+  text-align: center;
+  line-height: 1.4;
+`;
+
+export const Username = styled.h3`
+  display: block;
+  font-weight: 500;
+  font-size: 14px;
+  color: ${({ theme }) => theme.text.alt};
+  margin: 0;
+  display: flex;
 `;

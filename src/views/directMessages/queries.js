@@ -2,38 +2,11 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { subscribeToNewMessages } from '../../api/subscriptions';
-import {
-  userDirectMessageGroupsFragment,
-} from '../../api/fragments/user/userDirectMessageGroups';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { messageInfoFragment } from '../../api/fragments/message/messageInfo';
 import {
   directMessageGroupInfoFragment,
 } from '../../api/fragments/directMessageGroup/directMessageGroupInfo';
-
-export const GET_CURRENT_USER_DIRECT_MESSAGE_GROUPS_QUERY = gql`
-  query currentUserDirectMessageGroups {
-    user: currentUser {
-      ...userDirectMessageGroups
-    }
-  }
-  ${userDirectMessageGroupsFragment}
-`;
-
-export const GET_CURRENT_USER_DIRECT_MESSAGE_GROUPS_OPTIONS = {
-  props: ({ data: { error, loading, user } }) => ({
-    data: {
-      error,
-      loading,
-      directMessages: user ? user.directMessageGroupsConnection.edges : '',
-    },
-  }),
-};
-
-export const getCurrentUserDirectMessageGroups = graphql(
-  GET_CURRENT_USER_DIRECT_MESSAGE_GROUPS_QUERY,
-  GET_CURRENT_USER_DIRECT_MESSAGE_GROUPS_OPTIONS
-);
 
 export const GET_DIRECT_MESSAGE_GROUP_QUERY = gql`
   query getDirectMessageGroupMessages($id: ID!) {

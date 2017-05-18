@@ -1,21 +1,32 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import lifecycle from 'recompose/lifecycle';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
-import { displayLoadingCard } from '../../../components/loading';
+import { displayLoadingState } from '../../../components/loading';
 import Icon from '../../../components/icons';
 import { HorizontalRule } from '../../../components/globals';
 import { getDirectMessageGroupMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 
-const lifecycles = lifecycle({
+class MessagesWithData extends Component {
   state: {
-    subscribed: false,
-  },
+    subscribed: boolean,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      subscribed: false,
+    };
+  }
+
+  componentDidMount() {
+    this.props.forceScrollToBottom();
+  }
+
   componentDidUpdate() {
     if (!this.props.loading && !this.state.subscribed) {
       this.setState({
@@ -23,36 +34,44 @@ const lifecycles = lifecycle({
       });
       this.props.subscribeToNewMessages();
     }
-  },
-});
-
-const MessagesWithData = ({ data: { error, messages }, toggleReaction }) => {
-  if (error) {
-    return <div>Error!</div>;
   }
 
-  if (!messages) {
-    return <div>No messages yet!</div>;
-  }
+  render() {
+    const { data: { error, messages } } = this.props;
 
-  const sortedMessages = sortAndGroupMessages(messages);
-  return (
-    <div>
-      <HorizontalRule>
-        <hr />
-        <Icon glyph="messages" />
-        <hr />
-      </HorizontalRule>
-      <ChatMessages toggleReaction={toggleReaction} messages={sortedMessages} />
-    </div>
-  );
-};
+    if (error) {
+      return <div>Error!</div>;
+    }
+
+    if (!messages) {
+      return <div>No messages yet!</div>;
+    }
+
+    const sortedMessages = sortAndGroupMessages(messages);
+
+    return (
+      <div style={{ width: '100%' }}>
+        <div style={{ padding: '24px 0', background: '#fff' }}>
+          <HorizontalRule>
+            <hr />
+            <Icon glyph="messages" />
+            <hr />
+          </HorizontalRule>
+        </div>
+        <ChatMessages
+          toggleReaction={this.props.toggleReaction}
+          messages={sortedMessages}
+          forceScrollToBottom={this.props.forceScrollToBottom}
+        />
+      </div>
+    );
+  }
+}
 
 const Messages = compose(
   toggleReactionMutation,
   getDirectMessageGroupMessages,
-  lifecycles,
-  displayLoadingCard
+  displayLoadingState
 )(MessagesWithData);
 
 export default Messages;
