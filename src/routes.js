@@ -18,6 +18,7 @@ import Navbar from './views/navbar';
 import StyleGuide from './views/pages/styleGuide';
 import Dashboard from './views/dashboard';
 import Notifications from './views/notifications';
+import UserSettings from './views/userSettings';
 import communitySettings from './views/communitySettings';
 import frequencySettings from './views/frequencySettings';
 
@@ -66,6 +67,11 @@ class Routes extends Component {
               <Route path="/story" component={Story} />
               <Route exact path="/users" render={() => <Redirect to="/" />} />
               <Route exact path="/users/:username" component={UserView} />
+              <Route
+                exact
+                path="/users/:username/settings"
+                component={UserSettings}
+              />
               <Route path="/notifications" component={Notifications} />
 
               {/*

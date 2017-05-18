@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Card from '../card';
 //$FlowFixMe
 import { connect } from 'react-redux';
@@ -18,6 +19,7 @@ import { LoadingCard } from '../loading';
 import {
   ProfileHeader,
   ProfileHeaderMeta,
+  ProfileHeaderAction,
   Title,
   Subtitle,
   Actions,
@@ -80,6 +82,9 @@ const UserWithData = ({
             {/* user.isPro && <Badge type='pro' /> */}
           </Subtitle>
         </ProfileHeaderMeta>
+        <Link to={`users/${currentUser.username}/settings`}>
+          <ProfileHeaderAction glyph="settings" />
+        </Link>
       </ProfileHeader>
 
       {componentSize !== 'mini' &&

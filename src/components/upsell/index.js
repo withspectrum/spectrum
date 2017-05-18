@@ -45,7 +45,7 @@ export const UpsellJoinFrequency = ({ frequency, subscribe }) => {
       <Subtitle>
         Follow ~{frequency.name} to get involved!
       </Subtitle>
-      <Button onClick={() => subscribe(frequency.id)} icon="subscribe" label>
+      <Button onClick={() => subscribe(frequency.id)} icon="plus" label>
         Follow
       </Button>
     </UpsellJoinContainer>
@@ -83,11 +83,7 @@ export const UpsellRequestToJoinFrequency = ({
           >
             Cancel request
           </OutlineButton>
-        : <Button
-            onClick={() => subscribe(frequency.id)}
-            icon="subscribe"
-            label
-          >
+        : <Button onClick={() => subscribe(frequency.id)} icon="plus" label>
             Request to join {frequency.name}
           </Button>}
     </UpsellFourOhFourContainer>

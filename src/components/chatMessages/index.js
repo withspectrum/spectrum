@@ -111,7 +111,7 @@ const ChatMessages = ({ messages, currentUser, toggleReaction, dispatch }) => {
           // : () => toggleReaction(message.id, userHasReacted)
         }
       >
-        <Icon glyph="like-active" size={16} color={'text.reverse'} />
+        <Icon glyph="like" size={16} color={'text.reverse'} />
         <Count>{reactionCount}</Count>
       </Reaction>
     );

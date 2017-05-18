@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 
 import { IconButton } from '../buttons';
+import Icon from '../icons';
 import {
   StyledLabel,
   StyledPrefixLabel,
@@ -11,6 +12,10 @@ import {
   StyledHiddenInput,
   StyledCheckboxWrapper,
   StyledError,
+  ImageInputLabel,
+  InputOverlay,
+  ProfileImage,
+  HiddenInput,
 } from './style';
 
 type InputProps = {
@@ -40,13 +45,33 @@ export const Input = (props: InputProps) => {
   );
 };
 
+// export const ImageInput = (props) => {
+//   return(
+//     <ImageInputLabel>
+//       <InputOverlay>
+//         <Icon glyph="photo" />
+//       </InputOverlay>
+//       {user.photoURL &&
+//         <ProfileImage src={user.photoURL} role="presentation" />}
+//       <HiddenInput
+//         type="file"
+//         id="file"
+//         name="file"
+//         accept=".png, .jpg, .jpeg, .gif, .mp4"
+//         multiple={false}
+//         onChange={this.stageProfilePhotoForUpload}
+//       />
+//     </ImageInputLabel>
+//   )
+// }
+
 export const Checkbox = (props: InputProps) => {
   return (
     <StyledLabel>
       <StyledCheckboxWrapper>
         {props.checked
-          ? <IconButton glyph="checked" color="success.default" />
-          : <IconButton glyph="unchecked" />}
+          ? <IconButton glyph="checkmark" color="success.default" />
+          : <IconButton glyph="checkbox" />}
         <StyledHiddenInput
           type="checkbox"
           id={props.id}
