@@ -68,7 +68,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
       return (
         <Participant
           onClick={() => openUserProfileModal(participant)}
-          src={participant.photoURL}
+          src={participant.profilePhoto}
           role="presentation"
           key={participant.id}
         />
@@ -91,7 +91,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
             <Creator role="presentation">
               <Participant
                 onClick={() => openUserProfileModal(props.data.creator)}
-                src={props.data.creator.photoURL}
+                src={props.data.creator.profilePhoto}
               />
             </Creator>
             {messageAvatars(participantList)}

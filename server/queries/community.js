@@ -39,11 +39,11 @@ module.exports = {
     }),
     isOwner: ({ owners }, _, { user }) => {
       if (!user) return false;
-      return owners.indexOf(user.uid) > -1;
+      return owners.indexOf(user.id) > -1;
     },
     isMember: ({ members }, _, { user }) => {
       if (!user) return false;
-      return members.indexOf(user.uid) > -1;
+      return members.indexOf(user.id) > -1;
     },
     memberConnection: (
       { members }: { members: Array<string> },
@@ -59,7 +59,7 @@ module.exports = {
           hasNextPage: hasMoreItems,
         },
         edges: users.map(user => ({
-          cursor: encode(user.uid),
+          cursor: encode(user.id),
           node: user,
         })),
       }));

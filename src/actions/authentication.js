@@ -18,7 +18,7 @@ export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
     id: user.id,
     displayName: user.displayName,
     username: user.username,
-    photoURL: user.photoURL,
+    profilePhoto: user.profilePhoto,
   };
 
   // save this object to localstorage. This will be used in the future to hydrate

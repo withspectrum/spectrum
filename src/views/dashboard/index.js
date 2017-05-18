@@ -56,10 +56,12 @@ const DashboardPure = ({
       </AppViewWrapper>
     );
   }
-  console.log(user);
+
   if (!user || user === null) {
-    throw new Error('fuck');
+    window.location.href = '/';
   }
+
+  console.log(data);
 
   return (
     <AppViewWrapper>

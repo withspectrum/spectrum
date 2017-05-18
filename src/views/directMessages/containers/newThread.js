@@ -635,7 +635,7 @@ class NewThread extends Component {
                       key={user.id}
                       onClick={() => this.addUserToSelectedUsersList(user)}
                     >
-                      <SearchResultImage src={user.photoURL} />
+                      <SearchResultImage src={user.profilePhoto} />
                       <SearchResultTextContainer>
                         <SearchResultDisplayName>
                           {user.displayName}

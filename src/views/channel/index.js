@@ -81,7 +81,7 @@ const ChannelViewPure = ({
 
   // channel exists and the user is not a subscriber (accounts for signed-
   // out users as well)
-  if (channel && channel.isPrivate && !channel.isSubscriber) {
+  if (channel && channel.isPrivate && !channel.isMember) {
     return (
       <UpsellRequestToJoinChannel
         channel={channel}
@@ -96,8 +96,7 @@ const ChannelViewPure = ({
   // the channel is private + user is a subscriber
   // or channel is not private
   if (
-    channel &&
-    ((channel.isPrivate && channel.isSubscriber) || !channel.isPrivate)
+    channel && ((channel.isPrivate && channel.isMember) || !channel.isPrivate)
   ) {
     return (
       <AppViewWrapper>
@@ -108,7 +107,7 @@ const ChannelViewPure = ({
         <Column type="primary" alignItems="center">
           {!currentUser && <UpsellSignIn entity={channel} />}
 
-          {channel.isSubscriber && currentUser
+          {channel.isMember && currentUser
             ? <ThreadComposer
                 activeCommunity={communitySlug}
                 activeChannel={match.params.channelSlug}

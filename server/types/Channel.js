@@ -52,8 +52,8 @@ const Channel = /* GraphQL */ `
 	}
 
 	input UnblockUserInput {
-		id: ID!
-		uid: ID!
+		channelId: ID!
+		userId: ID!
 	}
 
 	type Channel {

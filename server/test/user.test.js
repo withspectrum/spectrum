@@ -14,10 +14,10 @@ describe('queries', () => {
     const query = /* GraphQL */ `
 			{
 				user(id: "first-user") {
-					uid
+					id
 					createdAt
 					lastSeen
-					photoURL
+					profilePhoto
 					displayName
 					username
 					email
@@ -35,7 +35,7 @@ describe('queries', () => {
     const query = /* GraphQL */ `
 			{
 				user(id: "non-existant") {
-					uid
+					id
 				}
 			}
 		`;

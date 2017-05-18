@@ -38,7 +38,7 @@ const init = ({ twitterCallbackURLBase }) => {
             profile.emails.length > 0 &&
             profile.emails[0].value) ||
             null,
-          photoURL: (profile.photos &&
+          profilePhoto: (profile.photos &&
             profile.photos.length > 0 &&
             profile.photos[0].value) ||
             null,

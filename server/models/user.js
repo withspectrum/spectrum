@@ -127,7 +127,7 @@ const uploadPhoto = (file: Object, currentUser: Object): Promise<Object> => {
     let imgixBase = 'https://spectrum.imgix.net';
 
     // return a new url to update the currentUser object
-    let photoURL = imgixBase + path;
+    let profilePhoto = imgixBase + path;
 
     // update the currentUser object and return the updated currentUser
     return db
@@ -135,7 +135,7 @@ const uploadPhoto = (file: Object, currentUser: Object): Promise<Object> => {
       .get(currentUser.id)
       .update(
         {
-          photoURL,
+          profilePhoto,
         },
         { returnChanges: true }
       )

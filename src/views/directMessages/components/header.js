@@ -6,7 +6,7 @@ const Header = ({ group, currentUser }) => {
   const trimmedUsers = group.users.filter(user => user.id !== currentUser.id);
 
   const photos = trimmedUsers.map(user => (
-    <Photo key={user.id} src={user.photoURL} />
+    <Photo key={user.id} src={user.profilePhoto} />
   ));
 
   const names = trimmedUsers.map(user => user.displayName).join(', ');

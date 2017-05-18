@@ -1,6 +1,6 @@
 const DirectMessageThread = /* GraphQL */ `
 	type DirectMessageUserStatus {
-		uid: ID!
+		id: ID!
 		lastActivity: Date
 		lastSeen: Date
 	}

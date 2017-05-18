@@ -20,7 +20,8 @@ import {
   MoreLink,
 } from '../style';
 
-const ListCardPure = ({ data: { communities }, dispatch }) => {
+const ListCardPure = ({ data: { communities }, data, dispatch }) => {
+  console.log('communities card', data);
   if (!!communities) {
     return (
       <StyledCard>

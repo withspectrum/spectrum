@@ -52,7 +52,7 @@ class ChatMessages extends Component {
         <AvatarLabel tipText={sender.displayName} tipLocation="right">
           <Avatar
             onClick={() => openUserProfileModal(sender)}
-            src={sender.photoURL}
+            src={sender.profilePhoto}
           />
         </AvatarLabel>
       );

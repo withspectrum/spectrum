@@ -37,7 +37,7 @@ const displayLoadingState = branch(
 
 type UserProps = {
   id: string,
-  photoURL: string,
+  profilePhoto: string,
   displayName: string,
   username: string,
   threadCount: number,
@@ -45,7 +45,7 @@ type UserProps = {
 
 type CurrentUserProps = {
   id: String,
-  photoURL: String,
+  profilePhoto: String,
   displayName: String,
   username: String,
 };
@@ -73,7 +73,7 @@ const UserWithData = ({
           margin={'0 12px 0 0'}
           size={40}
           radius={4}
-          src={user.photoURL}
+          src={user.profilePhoto}
         />
         <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
           <Title>{user.displayName}</Title>

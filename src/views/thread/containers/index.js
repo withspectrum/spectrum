@@ -39,7 +39,7 @@ const ThreadContainerPure = ({
 
   // show a full size profile for the channel if the user hasn't joined it
   let size;
-  if (!currentUser || (currentUser && thread.channel.isSubscriber)) {
+  if (!currentUser || (currentUser && thread.channel.isMember)) {
     size = 'mini';
   } else {
     size = 'full';
@@ -48,13 +48,11 @@ const ThreadContainerPure = ({
   const toggleSubscription = id => {
     toggleChannelSubscription({ id })
       .then(({ data: { toggleChannelSubscription } }) => {
-        const str = toggleChannelSubscription.isSubscriber
+        const str = toggleChannelSubscription.isMember
           ? `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
           : `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
 
-        const type = toggleChannelSubscription.isSubscriber
-          ? 'success'
-          : 'neutral';
+        const type = toggleChannelSubscription.isMember ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
@@ -78,13 +76,13 @@ const ThreadContainerPure = ({
           // of the channel the thread was posted in, the user can see the
           // chat input
           currentUser &&
-            (thread.isCreator || thread.channel.isSubscriber) &&
+            (thread.isCreator || thread.channel.isMember) &&
             <ChatInput thread={thread.id} />}
 
           {// if the user exists but isn't a subscriber to the channel,
           // show an upsell to join the channel
           currentUser &&
-            !thread.channel.isSubscriber &&
+            !thread.channel.isMember &&
             <UpsellJoinChannel
               channel={thread.channel}
               subscribe={toggleSubscription}

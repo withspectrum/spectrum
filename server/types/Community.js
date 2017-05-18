@@ -54,7 +54,7 @@ const Community = /* GraphQL */ `
 		description: String
 		website: String
 		file: File
-		id: ID!
+		communityId: ID!
 	}
 
 	type Community {
@@ -64,7 +64,7 @@ const Community = /* GraphQL */ `
 		slug: String!
 		description: String!
 		website: String
-		photoURL: String
+		profilePhoto: String
 		isOwner: Boolean
 		isMember: Boolean
 		channelConnection: CommunityChannelsConnection!
@@ -82,9 +82,9 @@ const Community = /* GraphQL */ `
 		# todo return the community + channel objects to update the store
 		editCommunity(input: EditCommunityInput!): Community
 		# todo return the community + channel objects to clear the store
-		deleteCommunity(id: ID!): Boolean
+		deleteCommunity(communityId: ID!): Boolean
 		# todo return the community object to update the store on client
-		toggleCommunityMembership(id: ID!): Community
+		toggleCommunityMembership(communityId: ID!): Community
 	}
 `;
 

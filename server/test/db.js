@@ -8,11 +8,11 @@ export const db = require('rethinkdbdash')({
 export const data = {
   users: [
     {
-      uid: 'first-user',
+      id: 'first-user',
       createdAt: new Date('January 2, 2017'),
       displayName: 'First User',
       lastSeen: new Date('February 2, 2017'),
-      photoURL: 'my-photo.jpg',
+      profilePhoto: 'my-photo.jpg',
       email: 'first.user@gmail.com',
       username: 'first',
     },

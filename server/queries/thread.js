@@ -50,7 +50,7 @@ module.exports = {
       { user }: Context
     ) => {
       if (!creatorId || !user) return false;
-      return user.uid === creatorId;
+      return user.id === creatorId;
     },
     isChannelOwner: (
       { channeId }: { channelId: String },
@@ -59,7 +59,7 @@ module.exports = {
     ) => {
       if (!channel || !user) return false;
       return getChannels([channelId]).then(
-        data => data[0].owners.indexOf(user.uid) > -1
+        data => data[0].owners.indexOf(user.id) > -1
       );
     },
     isCommunityOwner: (
@@ -69,7 +69,7 @@ module.exports = {
     ) => {
       if (!community || !user) return false;
       return getCommunities([communityId]).then(
-        data => data[0].owners.indexOf(user.uid) > -1
+        data => data[0].owners.indexOf(user.id) > -1
       );
     },
     messageConnection: (

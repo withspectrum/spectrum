@@ -31,7 +31,7 @@ export const getNotifications = graphql(
     			sender {
     				displayName
     				username
-            photoURL
+            profilePhoto
             id
     			}
         }

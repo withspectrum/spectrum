@@ -9,7 +9,7 @@ export const channelInfoFragment = gql`
     description
     isPrivate
     isOwner
-    isSubscriber
+    isMember
     isPending
     isBlocked
     community {

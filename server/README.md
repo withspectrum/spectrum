@@ -195,10 +195,10 @@ describe('queries', () => {
     const query = /* GraphQL */`
       {
         user(id: "first-user") {
-          uid
+          id
           createdAt
           lastSeen
-          photoURL
+          profilePhoto
           displayName
           username
           email

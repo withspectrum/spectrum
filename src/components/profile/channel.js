@@ -68,13 +68,11 @@ const ChannelWithData = ({
   const toggleSubscription = id => {
     toggleChannelSubscription({ id })
       .then(({ data: { toggleChannelSubscription } }) => {
-        const str = toggleChannelSubscription.isSubscriber
+        const str = toggleChannelSubscription.isMember
           ? `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
           : `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
 
-        const type = toggleChannelSubscription.isSubscriber
-          ? 'success'
-          : 'neutral';
+        const type = toggleChannelSubscription.isMember ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
@@ -116,7 +114,7 @@ const ChannelWithData = ({
             : <span />}
 
           {// user is a member and doesn't own the community
-          channel.isSubscriber &&
+          channel.isMember &&
             !channel.isOwner &&
             !channel.community.isOwner &&
             <ActionOutline
@@ -128,7 +126,7 @@ const ChannelWithData = ({
             </ActionOutline>}
 
           {// user is not a member and doesn't own the channel
-          !channel.isSubscriber &&
+          !channel.isMember &&
             !channel.isOwner &&
             !channel.community.isOwner &&
             <Action onClick={() => toggleSubscription(channel.id)}>

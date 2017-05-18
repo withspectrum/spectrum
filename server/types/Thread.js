@@ -12,7 +12,7 @@ const Thread = /* GraphQL */ `
 	# The contents of a thread
 	type ThreadContent {
 		title: String!
-		description: String
+		body: String
 		media: String
 	}
 
@@ -27,9 +27,9 @@ const Thread = /* GraphQL */ `
 		modifiedAt: Date!
 		channel: Channel!
 		community: Community!
-		published: Boolean!
+		isPublished: Boolean!
 		content: ThreadContent!
-		locked: Boolean
+		isLocked: Boolean
 		isCreator: Boolean
     isChannelOwner: Boolean
     isCommunityOwner: Boolean
@@ -46,7 +46,7 @@ const Thread = /* GraphQL */ `
 
 	input ThreadContentInput {
 		title: String!
-		description: String
+		body: String
 		media: String
 	}
 

@@ -8,7 +8,7 @@ const data = {
   title: 'Test user',
   subtitle: 'Whats up',
   description: 'Testing the user profile',
-  photoURL: 'img.com/asdf.jpg',
+  profilePhoto: 'img.com/asdf.jpg',
   id: 'asdf-123',
 };
 

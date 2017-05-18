@@ -36,7 +36,7 @@ class CommunityWithData extends Component {
       description: community.description,
       id: community.id,
       website: community.website,
-      image: community.photoURL,
+      image: community.profilePhoto,
       file: null,
       communityData: community,
     };

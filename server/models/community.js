@@ -128,7 +128,7 @@ const createCommunity = (
                   { returnChanges: true }
                 )
                 .run()
-                // return the resulting community with the photoURL set
+                // return the resulting community with the profilePhoto set
                 .then(
                   result =>
                     (result.changes.length > 0
@@ -217,7 +217,7 @@ const editCommunity = ({
                   { returnChanges: 'always' }
                 )
                 .run()
-                // return the resulting community with the photoURL set
+                // return the resulting community with the profilePhoto set
                 .then(result => {
                   // if an update happened
                   if (result.replaced === 1) {

@@ -4,7 +4,7 @@ import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from './fragments/user/userInfo';
 
 /*
-  Upload a new photoURL for the given currentUser
+  Upload a new profilePhoto for the given currentUser
 */
 const UPLOAD_PROFILE_PHOTO_MUTATION = gql`
   mutation uploadProfilePhoto($file: File!) {
