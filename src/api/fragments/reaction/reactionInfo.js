@@ -8,7 +8,7 @@ export const reactionInfoFragment = gql`
     type
     user {
       # used to determine how the reaction is styled in the ui
-      uid
+      id
     }
   }
 `;

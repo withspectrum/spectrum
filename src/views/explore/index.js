@@ -38,21 +38,21 @@ import {
 } from './style';
 
 import {
-  getFrequency,
+  getChannel,
   getCommunity,
-  getTopFrequencies,
+  getTopChannels,
   getUserSubscriptions,
 } from './queries';
 
-const CURATED_FREQUENCIES = {
-  title: '5 cool ways to use frequencies',
+const CURATED_CHANNELS = {
+  title: '5 cool ways to use channels',
   subtitle: 'News, journaling, communities, show and tell, and recommendations...',
   items: [
-    { id: '32ebce3d-0c9b-4b94-9ddf-e7cd40ec6ffb', type: 'frequency' },
-    { id: '06c877e9-b872-42ef-9416-aa1d465888df', type: 'frequency' },
-    { id: '0352f4f5-8e12-4de8-8299-9a6664f77ee0', type: 'frequency' },
-    { id: '16bf0f80-0335-4fbb-8d4d-ccfe5c8c8162', type: 'frequency' },
-    { id: '03426243-2c9c-4f99-bc77-867e37f8e4e3', type: 'frequency' },
+    { id: '32ebce3d-0c9b-4b94-9ddf-e7cd40ec6ffb', type: 'channel' },
+    { id: '06c877e9-b872-42ef-9416-aa1d465888df', type: 'channel' },
+    { id: '0352f4f5-8e12-4de8-8299-9a6664f77ee0', type: 'channel' },
+    { id: '16bf0f80-0335-4fbb-8d4d-ccfe5c8c8162', type: 'channel' },
+    { id: '03426243-2c9c-4f99-bc77-867e37f8e4e3', type: 'channel' },
   ],
 };
 
@@ -87,21 +87,21 @@ const ErrorItem = () => {
   );
 };
 
-const Frequency = ({ data: { frequency, ids } }) => {
-  if (!frequency) {
+const Channel = ({ data: { channel, ids } }) => {
+  if (!channel) {
     return <div />;
   }
   return (
-    <Item key={frequency.id}>
+    <Item key={channel.id}>
       <FlexCol>
-        <ItemTitle>~ {frequency.name}</ItemTitle>
-        <ItemMeta>{frequency.community.name}</ItemMeta>
-        <ItemCopy>{frequency.description}</ItemCopy>
+        <ItemTitle>~ {channel.name}</ItemTitle>
+        <ItemMeta>{channel.community.name}</ItemMeta>
+        <ItemCopy>{channel.description}</ItemCopy>
       </FlexCol>
       <ButtonContainer>
-        {ids && ids.indexOf(frequency.id) > -1
-          ? <Link to={`/${frequency.slug}`}>
-              <ItemButton joined>{`Go to ~${frequency.name}`}</ItemButton>
+        {ids && ids.indexOf(channel.id) > -1
+          ? <Link to={`/${channel.slug}`}>
+              <ItemButton joined>{`Go to ~${channel.name}`}</ItemButton>
             </Link>
           : <ItemButton>Join</ItemButton>}
       </ButtonContainer>
@@ -138,12 +138,12 @@ const composeSectionFromList = (list, ids) => {
       <SectionSubtitle>{list.subtitle}</SectionSubtitle>
       <Row>
         {list.items.map(entity => {
-          if (entity.type === 'frequency') {
+          if (entity.type === 'channel') {
             const EntityWithData = compose(
               withProps({ id: entity.id, key: entity.id, ids }),
-              getFrequency,
+              getChannel,
               displayLoadingState
-            )(Frequency);
+            )(Channel);
 
             return EntityWithData();
           } else if (entity.type === 'community') {
@@ -163,7 +163,7 @@ const composeSectionFromList = (list, ids) => {
   );
 };
 
-const TopThirtyPure = ({ data: { topFrequencies, error } }, i) => {
+const TopThirtyPure = ({ data: { topChannels, error } }, i) => {
   if (error) {
     return (
       <Section>
@@ -175,20 +175,18 @@ const TopThirtyPure = ({ data: { topFrequencies, error } }, i) => {
     <Section>
       <SectionTitle>Best of Beta</SectionTitle>
       <SectionSubtitle>
-        The 30 most-popular pre-launch frequencies
+        The 30 most-popular pre-launch channels
       </SectionSubtitle>
       <Row>
-        {topFrequencies.map(frequency => {
-          return Frequency({ data: { frequency: frequency } });
+        {topChannels.map(channel => {
+          return Channel({ data: { channel: channel } });
         })}
       </Row>
     </Section>
   );
 };
 
-const TopThirty = compose(getTopFrequencies, displayLoadingState)(
-  TopThirtyPure
-);
+const TopThirty = compose(getTopChannels, displayLoadingState)(TopThirtyPure);
 
 const ExplorePure = ({ data, currentUser }) => {
   if (data.loading) {
@@ -216,9 +214,9 @@ const ExplorePure = ({ data, currentUser }) => {
       })
     : [];
 
-  const frequencyIds = currentUser
-    ? data.user.frequencyConnection.edges.map(frequency => {
-        return frequency.node.id;
+  const channelIds = currentUser
+    ? data.user.channelConnection.edges.map(channel => {
+        return channel.node.id;
       })
     : [];
 
@@ -233,7 +231,7 @@ const ExplorePure = ({ data, currentUser }) => {
         <GoopyThree />
       </ViewHeader>
       <TopThirty />
-      {composeSectionFromList(CURATED_FREQUENCIES, frequencyIds)}
+      {composeSectionFromList(CURATED_CHANNELS, channelIds)}
       {composeSectionFromList(CURATED_COMMUNITIES, communityIds)}
     </ScrollBody>
   );

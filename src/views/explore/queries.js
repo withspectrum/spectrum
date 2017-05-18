@@ -1,9 +1,7 @@
 //@flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import {
-  frequencyInfoFragment,
-} from '../../api/fragments/frequency/frequencyInfo';
+import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import {
   communityInfoFragment,
 } from '../../api/fragments/community/communityInfo';
@@ -23,38 +21,38 @@ export const getUserSubscriptions = graphql(
             }
           }
         }
-        frequencyConnection {
+        channelConnection {
           pageInfo {
             hasNextPage
             hasPreviousPage
           }
           edges {
             node {
-              ...frequencyInfo
+              ...channelInfo
             }
           }
         }
       }
 		}
-    ${frequencyInfoFragment}
+    ${channelInfoFragment}
     ${communityInfoFragment}
 	`
 );
 
-export const getFrequency = graphql(
+export const getChannel = graphql(
   gql`
-		query frequency($id: ID!) {
-			frequency(id: $id) {
-        ...frequencyInfo
+		query channel($id: ID!) {
+			channel(id: $id) {
+        ...channelInfo
         community {
           ...communityInfo
         }
         metaData {
-          subscribers
+          members
         }
       }
     }
-    ${frequencyInfoFragment}
+    ${channelInfoFragment}
     ${communityInfoFragment}
 	`,
   {
@@ -64,13 +62,13 @@ export const getFrequency = graphql(
       },
     }),
     props: ({
-      data: { fetchMore, error, loading, frequency },
+      data: { fetchMore, error, loading, channel },
       ownProps: { ids },
     }) => ({
       data: {
         error,
         loading,
-        frequency,
+        channel,
         ids,
       },
     }),
@@ -109,28 +107,28 @@ export const getCommunity = graphql(
   }
 );
 
-export const getTopFrequencies = graphql(
+export const getTopChannels = graphql(
   gql`
 		{
-		  topFrequencies {
-        ...frequencyInfo
+		  topChannels {
+        ...channelInfo
         community {
           ...communityInfo
         }
         metaData {
-          subscribers
+          members
         }
       }
     }
-    ${frequencyInfoFragment}
+    ${channelInfoFragment}
     ${communityInfoFragment}
 	`,
   {
-    props: ({ data: { error, loading, topFrequencies } }) => ({
+    props: ({ data: { error, loading, topChannels } }) => ({
       data: {
         error,
         loading,
-        topFrequencies,
+        topChannels,
       },
     }),
   }

@@ -2,12 +2,10 @@ import { graphql, gql } from 'react-apollo';
 import {
   communityInfoFragment,
 } from '../../api/fragments/community/communityInfo';
+import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import {
-  frequencyInfoFragment,
-} from '../../api/fragments/frequency/frequencyInfo';
-import {
-  frequencyMetaDataFragment,
-} from '../../api/fragments/frequency/frequencyMetaData';
+  channelMetaDataFragment,
+} from '../../api/fragments/channel/channelMetaData';
 
 export const getThisCommunity = graphql(
   gql`
@@ -27,23 +25,23 @@ export const getThisCommunity = graphql(
   }
 );
 
-export const getFrequenciesByCommunity = graphql(
+export const getChannelsByCommunity = graphql(
   gql`
-    query frequenciesByCommunity($slug: String) {
+    query channelsByCommunity($slug: String) {
 			community(slug: $slug) {
         ...communityInfo
-        frequencyConnection {
+        channelConnection {
           edges {
             node {
-              ...frequencyInfo
-              ...frequencyMetaData
+              ...channelInfo
+              ...channelMetaData
             }
           }
         }
       }
 		}
     ${communityInfoFragment}
-    ${frequencyInfoFragment}
-    ${frequencyMetaDataFragment}
+    ${channelInfoFragment}
+    ${channelMetaDataFragment}
 	`
 );

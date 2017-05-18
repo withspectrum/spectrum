@@ -95,7 +95,7 @@ class CreateCommunityModal extends Component {
   };
 
   checkSlug = slug => {
-    // check the db to see if this frequency slug exists
+    // check the db to see if this channel slug exists
     this.props.client
       .query({
         query: CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,

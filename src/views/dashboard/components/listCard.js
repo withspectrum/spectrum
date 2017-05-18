@@ -32,7 +32,7 @@ const ListCardPure = ({ data: { communities }, dispatch }) => {
                 <ListCardItem
                   contents={item.node}
                   withDescription={false}
-                  meta={`${item.node.metaData.members} members · ${item.node.metaData.frequencies} frequencies`}
+                  meta={`${item.node.metaData.members} members · ${item.node.metaData.channels} channels`}
                 >
                   <Icon glyph="view-forward" />
                 </ListCardItem>

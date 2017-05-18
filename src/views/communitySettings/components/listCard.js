@@ -12,13 +12,13 @@ import IconButton from '../../../components/buttons';
 import { StyledCard, ListHeading, ListContainer } from '../style';
 
 const ListCardPure = ({ data }) => {
-  const frequencies = data.community.frequencyConnection.edges;
-  if (!!frequencies) {
+  const channels = data.community.channelConnection.edges;
+  if (!!channels) {
     return (
       <StyledCard>
-        <ListHeading>Manage Frequencies</ListHeading>
+        <ListHeading>Manage Channels</ListHeading>
         <ListContainer>
-          {frequencies.map(item => {
+          {channels.map(item => {
             return (
               <Link
                 key={item.node.id}

@@ -6,7 +6,7 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { getThisCommunity, getFrequenciesByCommunity } from './queries';
+import { getThisCommunity, getChannelsByCommunity } from './queries';
 import { openModal } from '../../actions/modals';
 import { displayLoadingScreen } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
@@ -14,7 +14,7 @@ import Column from '../../components/column';
 import ListCard from './components/listCard';
 import { CommunityEditForm } from '../../components/editForm';
 import { Upsell404Community } from '../../components/upsell';
-const FrequencyListCard = compose(getFrequenciesByCommunity)(ListCard);
+const ChannelListCard = compose(getChannelsByCommunity)(ListCard);
 
 const SettingsPure = ({
   match,
@@ -48,7 +48,7 @@ const SettingsPure = ({
         <CommunityEditForm community={community} />
       </Column>
       <Column type="primary">
-        <FrequencyListCard slug={communitySlug} />
+        <ChannelListCard slug={communitySlug} />
       </Column>
     </AppViewWrapper>
   );

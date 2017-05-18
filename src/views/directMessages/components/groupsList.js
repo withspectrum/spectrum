@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import pure from 'recompose/pure';
-import { ListCardItemDirectMessageGroup } from './messageGroupListItem';
+import { ListCardItemDirectMessageThread } from './messageThreadListItem';
 
-class GroupsList extends Component {
+class ThreadsList extends Component {
   render() {
     const { groups, currentUser, active } = this.props;
 
@@ -12,7 +12,7 @@ class GroupsList extends Component {
       <div>
         {groups.map(group => {
           return (
-            <ListCardItemDirectMessageGroup
+            <ListCardItemDirectMessageThread
               group={group}
               key={group.id}
               currentUser={currentUser}
@@ -25,4 +25,4 @@ class GroupsList extends Component {
   }
 }
 
-export default pure(GroupsList);
+export default pure(ThreadsList);

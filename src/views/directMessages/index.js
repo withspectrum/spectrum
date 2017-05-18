@@ -11,11 +11,11 @@ import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import {
-  getCurrentUserDirectMessageGroups,
-} from '../../api/directMessageGroup';
+  getCurrentUserDirectMessageThreads,
+} from '../../api/directMessageThread';
 import Icon from '../../components/icons';
 import { displayLoadingScreen } from '../../components/loading';
-import GroupsList from './components/groupsList';
+import ThreadsList from './components/groupsList';
 import NewThread from './containers/newThread';
 import ExistingThread from './containers/existingThread';
 import { View, MessagesList, ComposeHeader } from './style';
@@ -42,7 +42,7 @@ class DirectMessages extends Component {
   render() {
     const { match, currentUser, data } = this.props;
     const { activeThread } = this.state;
-    const groups = data.user.directMessageGroupsConnection.edges.map(
+    const groups = data.user.directMessageThreadsConnection.edges.map(
       group => group.node
     );
 
@@ -54,14 +54,14 @@ class DirectMessages extends Component {
               <Icon color={'brand.default'} glyph="write" size={32} />
             </ComposeHeader>
           </Link>
-          <GroupsList
+          <ThreadsList
             active={activeThread}
             groups={groups}
             currentUser={currentUser}
           />
         </MessagesList>
 
-        {/* if no storyId is provided, redirect to homepage */}
+        {/* if no threadId is provided, redirect to homepage */}
         <Route
           exact
           path={match.url}
@@ -101,7 +101,7 @@ class DirectMessages extends Component {
 }
 
 const DirectMessagesWithQuery = compose(
-  getCurrentUserDirectMessageGroups,
+  getCurrentUserDirectMessageThreads,
   displayLoadingScreen,
   pure
 )(DirectMessages);

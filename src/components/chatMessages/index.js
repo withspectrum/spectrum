@@ -45,7 +45,7 @@ class ChatMessages extends Component {
     };
 
     const renderAvatar = (sender: Object, me: boolean) => {
-      const robo = sender.uid === 'robo';
+      const robo = sender.id === 'robo';
       if (me || robo) return;
 
       return (
@@ -61,7 +61,7 @@ class ChatMessages extends Component {
     const renderBubbleHeader = (group: Object, me: boolean) => {
       const user = group.sender;
 
-      // if type !== 'story' we don't show admin or pro badges because it clutters group messages
+      // if type !== 'thread' we don't show admin or pro badges because it clutters group messages
       return (
         <Byline me={me}>
           <Name onClick={() => openUserProfileModal(user)}>
@@ -77,11 +77,11 @@ class ChatMessages extends Component {
       me: boolean
     ): React$Element<any> => {
       const reactionUsers = message.reactions
-        ? message.reactions.map(reaction => reaction.user.uid)
+        ? message.reactions.map(reaction => reaction.user.id)
         : null;
       let reactionCount = message.reactions ? reactionUsers.length : 0;
       let userHasReacted = currentUser
-        ? reactionUsers && reactionUsers.includes(currentUser.uid)
+        ? reactionUsers && reactionUsers.includes(currentUser.id)
         : false;
       // probably a better way to do this
       const doNothing = () => '';
@@ -92,7 +92,7 @@ class ChatMessages extends Component {
             type: 'like',
           })
             // after the mutation occurs, it will either return an error or the new
-            // story that was published
+            // thread that was published
             .then(({ data }) => {
               // can do something with the returned reaction here
             })
@@ -124,7 +124,7 @@ class ChatMessages extends Component {
       <Container>
         {messages.map((group, i) => {
           const evaluating = group[0];
-          const roboText = evaluating.sender.uid === 'robo';
+          const roboText = evaluating.sender.id === 'robo';
           if (roboText) {
             const time = convertTimestampToDate(evaluating.message.content);
             return (
@@ -137,7 +137,7 @@ class ChatMessages extends Component {
           }
 
           const sender = evaluating.sender;
-          const me = currentUser ? sender.uid === currentUser.uid : false;
+          const me = currentUser ? sender.id === currentUser.id : false;
 
           return (
             <BubbleGroupContainer me={me} key={i}>

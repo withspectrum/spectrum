@@ -2,12 +2,12 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-import { sortAndGroupMessages } from '../../../helpers/messages';
+import { sortAndThreadMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
 import { displayLoadingState } from '../../../components/loading';
 import Icon from '../../../components/icons';
 import { HorizontalRule } from '../../../components/globals';
-import { getDirectMessageGroupMessages } from '../queries';
+import { getDirectMessageThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 
 class MessagesWithData extends Component {
@@ -47,7 +47,7 @@ class MessagesWithData extends Component {
       return <div>No messages yet!</div>;
     }
 
-    const sortedMessages = sortAndGroupMessages(messages);
+    const sortedMessages = sortAndThreadMessages(messages);
 
     return (
       <div style={{ width: '100%' }}>
@@ -70,7 +70,7 @@ class MessagesWithData extends Component {
 
 const Messages = compose(
   toggleReactionMutation,
-  getDirectMessageGroupMessages,
+  getDirectMessageThreadMessages,
   displayLoadingState
 )(MessagesWithData);
 

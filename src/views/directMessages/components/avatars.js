@@ -22,7 +22,7 @@ export const renderAvatars = users => {
       <TwoAvatarContainer>
         {users.map(user => {
           return (
-            <Avatar key={user.uid} size={34} radius={34} src={user.photoURL} />
+            <Avatar key={user.id} size={34} radius={34} src={user.photoURL} />
           );
         })}
       </TwoAvatarContainer>
@@ -34,7 +34,7 @@ export const renderAvatars = users => {
       <ThreeAvatarContainer>
         {users.map(user => {
           return (
-            <Avatar key={user.uid} size={20} radius={20} src={user.photoURL} />
+            <Avatar key={user.id} size={20} radius={20} src={user.photoURL} />
           );
         })}
       </ThreeAvatarContainer>
@@ -46,7 +46,7 @@ export const renderAvatars = users => {
       <ThreeAvatarContainer>
         {users.map(user => {
           return (
-            <Avatar key={user.uid} size={19} radius={19} src={user.photoURL} />
+            <Avatar key={user.id} size={19} radius={19} src={user.photoURL} />
           );
         })}
       </ThreeAvatarContainer>
@@ -61,12 +61,7 @@ export const renderAvatars = users => {
         {users.map((user, i) => {
           while (i < 3) {
             return (
-              <Avatar
-                key={user.uid}
-                size={19}
-                radius={19}
-                src={user.photoURL}
-              />
+              <Avatar key={user.id} size={19} radius={19} src={user.photoURL} />
             );
           }
 

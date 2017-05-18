@@ -12,13 +12,13 @@ type BubbleProps = {
   sender: Object,
   message: Object,
   imgSrc: ?string,
-  type: ?'story' | 'messageGroup',
+  type: ?'thread' | 'messageGroup',
 };
 
 export const Bubble = (props: BubbleProps) => {
   const { me, persisted, message, type } = props;
 
-  const formatMessageForFrequencyLinks = (message: string): string => {
+  const formatMessageForChannelLinks = (message: string): string => {
     if (!message) {
       return '';
     }
@@ -27,13 +27,13 @@ export const Bubble = (props: BubbleProps) => {
     return cleanMessage;
     // const linkedMessage = Autolinker.link(
     //   cleanMessage.replace(
-    //     FREQUENCIES,
+    //     CHANNELS,
     //     `$1https://spectrum.chat/${activeCommunity}/$2`
     //   )
     // );
     // // Remove the "spectrum.chat" part from the link text so in the message
-    // // you just see "~frequency", but it's linked to the frequency
-    // return linkedMessage.replace(FREQUENCY_ANCHORS, '>$1</a>');
+    // // you just see "~channel", but it's linked to the channel
+    // return linkedMessage.replace(CHANNEL_ANCHORS, '>$1</a>');
   };
 
   const formatMessageForLinks = (message: string): string => {
@@ -52,10 +52,10 @@ export const Bubble = (props: BubbleProps) => {
       me={me}
       persisted={persisted}
       dangerouslySetInnerHTML={{
-        // if in a story, we convert `~frequency` into a link.
+        // if in a thread, we convert `~channel` into a link.
         // if in a groupMessage, don't regex links
-        __html: type === 'story'
-          ? formatMessageForFrequencyLinks(message.content)
+        __html: type === 'thread'
+          ? formatMessageForChannelLinks(message.content)
           : formatMessageForLinks(message.content),
       }}
     />

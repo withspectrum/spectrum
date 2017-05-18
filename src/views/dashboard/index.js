@@ -8,7 +8,7 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 
 import {
-  getEverythingStories,
+  getEverythingThreads,
   getCurrentUserProfile,
   getCurrentUserCommunities,
 } from './queries';
@@ -17,12 +17,12 @@ import { saveUserDataToLocalStorage } from '../../actions/authentication';
 import { displayLoadingScreen } from '../../components/loading';
 import { Column } from '../../components/column';
 import { UserProfile } from '../../components/profile';
-import StoryFeed from '../../components/storyFeed';
-import StoryComposer from '../../components/storyComposer';
+import ThreadFeed from '../../components/threadFeed';
+import ThreadComposer from '../../components/threadComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import ListCard from './components/listCard';
 
-const EverythingStoryFeed = compose(getEverythingStories)(StoryFeed);
+const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 
 const CurrentUserProfile = compose(getCurrentUserProfile)(UserProfile);
 
@@ -56,9 +56,9 @@ const DashboardPure = ({
       </AppViewWrapper>
     );
   }
-
+  console.log(user);
   if (!user || user === null) {
-    window.location.href = '/';
+    throw new Error('fuck');
   }
 
   return (
@@ -70,8 +70,8 @@ const DashboardPure = ({
 
       <Column type="primary" alignItems="center">
         {// composer should only appear if a user is part of a community
-        user && user.communityConnection && <StoryComposer />}
-        <EverythingStoryFeed />
+        user && user.communityConnection && <ThreadComposer />}
+        <EverythingThreadFeed />
       </Column>
     </AppViewWrapper>
   );

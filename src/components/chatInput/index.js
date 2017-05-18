@@ -39,7 +39,7 @@ const ChatInputWithMutation = ({
       return createThread({ type: 'text', content: value });
     }
 
-    // user is sending a message to an existing thread id - either a story
+    // user is sending a message to an existing thread id - either a thread
     // or direct message thread
     sendMessage({
       thread,

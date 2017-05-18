@@ -66,7 +66,7 @@ class UserProfileModal extends Component {
         */}
         <ModalContainer title={'Edit profile'} closeModal={this.close}>
 
-          {currentUser.uid === user.uid &&
+          {currentUser.id === user.id &&
             <Row>
               <ImageInputLabel>
                 <InputOverlay>

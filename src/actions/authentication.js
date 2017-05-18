@@ -15,7 +15,7 @@ export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
   // construct a clean object that doesn't include any metadata from apollo
   // like __typename
   obj['currentUser'] = {
-    uid: user.uid,
+    id: user.id,
     displayName: user.displayName,
     username: user.username,
     photoURL: user.photoURL,

@@ -40,7 +40,7 @@ type CommunityProps = {
   slug: String,
   isMember: Boolean,
   metaData: {
-    frequencies: Number,
+    channels: Number,
     members: Number,
   },
 };

@@ -4,8 +4,7 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-
-import { GetCurrentUserStories } from './queries';
+import { GetCurrentUserThreads } from './queries';
 
 const UserSettings = props => {
   return <div>{console.log(props)}</div>;

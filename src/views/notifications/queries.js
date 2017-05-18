@@ -8,7 +8,7 @@ export const getNotifications = graphql(
         node {
           id
     			type
-    			frequency {
+    			channel {
     				name
     				slug
     			}
@@ -16,7 +16,7 @@ export const getNotifications = graphql(
     				name
     				slug
     			}
-    			story {
+    			thread {
     				id
     			}
     			message {
@@ -32,7 +32,7 @@ export const getNotifications = graphql(
     				displayName
     				username
             photoURL
-            uid
+            id
     			}
         }
       }

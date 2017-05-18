@@ -14,8 +14,8 @@ import { modalStyles } from '../styles';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { deleteCommunityMutation } from '../../../api/community';
-import { deleteFrequencyMutation } from '../../../api/frequency';
-import { deleteStoryMutation } from '../../../api/story';
+import { deleteChannelMutation } from '../../../api/channel';
+import { deleteThreadMutation } from '../../../api/thread';
 import { Actions, Message } from './style';
 
 /*
@@ -23,7 +23,7 @@ import { Actions, Message } from './style';
   Takes modalProps as an object with four fields:
 
   entity => represents the table for lookup in the backend. Currently can
-  be either 'story', 'frequency', or 'community'
+  be either 'thread', 'channel', or 'community'
 
   id => id of the entity to be deleted
 
@@ -41,19 +41,19 @@ class DeleteDoubleCheckModal extends Component {
     const {
       modalProps: { id, entity, redirect },
       deleteCommunity,
-      deleteStory,
-      deleteFrequency,
+      deleteThread,
+      deleteChannel,
       dispatch,
       history,
     } = this.props;
 
     switch (entity) {
-      case 'story': {
-        return deleteStory(id)
-          .then(({ data: { deleteStory } }) => {
-            if (deleteStory) {
+      case 'thread': {
+        return deleteThread(id)
+          .then(({ data: { deleteThread } }) => {
+            if (deleteThread) {
               history.push(redirect ? redirect : '/');
-              dispatch(addToastWithTimeout('neutral', 'Story deleted.'));
+              dispatch(addToastWithTimeout('neutral', 'Thread deleted.'));
               this.close();
             }
           })
@@ -61,17 +61,17 @@ class DeleteDoubleCheckModal extends Component {
             dispatch(
               addToastWithTimeout(
                 'error',
-                `Something went wrong and we weren't able to delete this story. ${err}`
+                `Something went wrong and we weren't able to delete this thread. ${err}`
               )
             );
           });
       }
-      case 'frequency': {
-        return deleteFrequency(id)
-          .then(({ data: { deleteFrequency } }) => {
-            if (deleteFrequency) {
+      case 'channel': {
+        return deleteChannel(id)
+          .then(({ data: { deleteChannel } }) => {
+            if (deleteChannel) {
               history.push(redirect ? redirect : '/');
-              dispatch(addToastWithTimeout('neutral', 'Frequency deleted.'));
+              dispatch(addToastWithTimeout('neutral', 'Channel deleted.'));
               this.close();
             }
           })
@@ -79,7 +79,7 @@ class DeleteDoubleCheckModal extends Component {
             dispatch(
               addToastWithTimeout(
                 'error',
-                `Something went wrong and we weren't able to delete this frequency. ${err}`
+                `Something went wrong and we weren't able to delete this channel. ${err}`
               )
             );
           });
@@ -147,8 +147,8 @@ class DeleteDoubleCheckModal extends Component {
 
 const DeleteDoubleCheckModalWithMutations = compose(
   deleteCommunityMutation,
-  deleteFrequencyMutation,
-  deleteStoryMutation,
+  deleteChannelMutation,
+  deleteThreadMutation,
   withRouter
 )(DeleteDoubleCheckModal);
 

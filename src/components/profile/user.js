@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+// $FlowFixMe
 import { Link } from 'react-router-dom';
 import Card from '../card';
 //$FlowFixMe
@@ -35,15 +36,15 @@ const displayLoadingState = branch(
 );
 
 type UserProps = {
-  uid: string,
+  id: string,
   photoURL: string,
   displayName: string,
   username: string,
-  storyCount: number,
+  threadCount: number,
 };
 
 type CurrentUserProps = {
-  uid: String,
+  id: String,
   photoURL: String,
   displayName: String,
   username: String,
@@ -90,7 +91,7 @@ const UserWithData = ({
       {componentSize !== 'mini' &&
         currentUser &&
         <Actions>
-          {currentUser && currentUser.uid === user.uid
+          {currentUser && currentUser.id === user.id
             ? <ActionOutline
                 onClick={() =>
                   dispatch(
@@ -103,7 +104,7 @@ const UserWithData = ({
         </Actions>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
-        <MetaData data={{ stories: user.storyCount }} />}
+        <MetaData data={{ threads: user.threadCount }} />}
     </Card>
   );
 };

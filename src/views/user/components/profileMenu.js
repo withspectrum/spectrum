@@ -14,13 +14,13 @@ const ProfileMenuPure = props => {
   const { user } = props;
   return (
     <Col>
-      <Link to={`/user/${user.uid}`}>
+      <Link to={`/user/${user.id}`}>
         <Row>
           <Icon glyph="profile" />
           <RowLabel>My Profile</RowLabel>
         </Row>
       </Link>
-      <Link to={`/user/${user.uid}/settings`}>
+      <Link to={`/user/${user.id}/settings`}>
         <Row>
           <Icon glyph="settings" />
           <RowLabel>Settings</RowLabel>

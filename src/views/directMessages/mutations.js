@@ -8,10 +8,10 @@ import {
 /*
   Toggles a reaction on a specific message. The reaction object is created
   in /components/chatMessages because that is a dumb component which might
-  be rendering messages from a directMessageGroup or direct message thread. The reaction
+  be rendering messages from a directMessageThread or direct message thread. The reaction
   object takes a 'type' and a 'message' id.
 
-  We run 'refetchQueries' on the current story query in order to update
+  We run 'refetchQueries' on the current thread query in order to update
   the UI to reflect the new reaction.
 */
 const TOGGLE_REACTION_MUTATION = gql`
@@ -39,23 +39,23 @@ const TOGGLE_REACTION_OPTIONS = {
             id: Math.random() * -10000,
             type: 'like',
             user: {
-              uid: ownProps.currentUser.uid,
+              id: ownProps.currentUser.id,
               __typename: 'User',
             },
             __typename: 'Reaction',
           },
         },
         updateQueries: {
-          getDirectMessageGroupMessages: (prev, { mutationResult }) => {
+          getDirectMessageThreadMessages: (prev, { mutationResult }) => {
             const newReaction = mutationResult.data.toggleReaction;
 
             return Object.assign({}, prev, {
               ...prev,
-              directMessageGroup: {
-                ...prev.directMessageGroup,
+              directMessageThread: {
+                ...prev.directMessageThread,
                 messageConnection: {
-                  ...prev.directMessageGroup.messageConnection,
-                  edges: prev.directMessageGroup.messageConnection.edges.map(
+                  ...prev.directMessageThread.messageConnection,
+                  edges: prev.directMessageThread.messageConnection.edges.map(
                     edge => {
                       // make sure we're modifying the correct message
                       if (edge.node.id !== reaction.message) return edge;
@@ -76,7 +76,7 @@ const TOGGLE_REACTION_OPTIONS = {
                       // reaction from the array
                       if (
                         edge.node.reactions.find(r => {
-                          return r.user.uid === newReaction.user.uid;
+                          return r.user.id === newReaction.user.id;
                         })
                       ) {
                         return {
@@ -84,7 +84,7 @@ const TOGGLE_REACTION_OPTIONS = {
                           node: {
                             ...edge.node,
                             reactions: edge.node.reactions.filter(r => {
-                              return r.user.uid !== newReaction.user.uid;
+                              return r.user.id !== newReaction.user.id;
                             }),
                           },
                         };

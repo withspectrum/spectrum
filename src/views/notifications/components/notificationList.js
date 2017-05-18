@@ -35,7 +35,7 @@ const NotificationListPure = props => {
     <NotificationListContainer>
       {edges.map((notification, i) => {
         return (
-          <Link key={i} to={`/story/${notification.node.story.id}`}>
+          <Link key={i} to={`/thread/${notification.node.thread.id}`}>
             <NotificationListRow>
               <Icon glyph={getIconByType(notification.node.type)} />
               <Message>{constructLinklessMessage(notification.node)}</Message>

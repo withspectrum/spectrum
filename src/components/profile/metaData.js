@@ -14,7 +14,7 @@ import { Meta, MetaList, MetaListItem, Label, Count } from './style';
 const buildArray = (meta: Object): Array<any> => {
   // Apollo returns a __typename field in the data object; filter it out
   return Object.keys(meta).filter(item => item !== '__typename').map(item => {
-    if (item === 'stories') {
+    if (item === 'threads') {
       return Object.assign(
         {},
         {
@@ -25,12 +25,12 @@ const buildArray = (meta: Object): Array<any> => {
       );
     }
 
-    if (item === 'frequencies') {
+    if (item === 'channels') {
       return Object.assign(
         {},
         {
-          icon: 'frequency',
-          label: 'Frequencies',
+          icon: 'channel',
+          label: 'Channels',
           count: meta[item],
         }
       );

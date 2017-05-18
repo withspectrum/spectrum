@@ -13,14 +13,14 @@ import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
 import { MessagesContainer, ViewContent } from '../style';
 import { findDOMNode } from 'react-dom';
-import { GET_DIRECT_MESSAGE_GROUP_QUERY } from '../queries';
+import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../queries';
 import { throttle } from '../../../helpers/utils';
 import { SEARCH_USERS_QUERY } from '../../../api/user';
 import { Spinner } from '../../../components/globals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import {
-  createDirectMessageGroupMutation,
-} from '../../../api/directMessageGroup';
+  createDirectMessageThreadMutation,
+} from '../../../api/directMessageThread';
 import {
   ComposerInputWrapper,
   Grow,
@@ -83,7 +83,7 @@ class NewThread extends Component {
       // if an existing thread is found based on the selected users, we will
       // kick off a query to get that thread's messages and load it inline
       // we will also use this object to make sure the chat input sends messages
-      // to the existing group and doesn't create a new one
+      // to the existing thread and doesn't create a new one
       existingThreadBasedOnSelectedUsers: '',
       // after we get the messages from the server, we'll store the full object
       existingThreadWithMessages: {},
@@ -138,15 +138,15 @@ class NewThread extends Component {
           // for the thread
           const selectedUsersIds =
             selectedUsersForNewThread &&
-            selectedUsersForNewThread.map(user => user.uid);
+            selectedUsersForNewThread.map(user => user.id);
 
           // filter the search results to only show users who aren't already selected
           // then filter that list to remove the currentUser so you can't message yourself
           let searchResults = selectedUsersForNewThread
             ? searchUsers
-                .filter(user => selectedUsersIds.indexOf(user.uid) < 0)
-                .filter(user => user.uid !== currentUser.uid)
-            : searchUsers.filter(user => user.uid !== currentUser.uid);
+                .filter(user => selectedUsersIds.indexOf(user.id) < 0)
+                .filter(user => user.id !== currentUser.id)
+            : searchUsers.filter(user => user.id !== currentUser.id);
 
           this.setState({
             // if the search results are totally filtered out of the selectedUsers,
@@ -155,7 +155,7 @@ class NewThread extends Component {
             searchIsLoading: false,
             // if all results are filtered, clear the focused search result
             focusedSearchResult: searchResults.length > 0
-              ? searchResults[0].uid
+              ? searchResults[0].id
               : '',
           });
           // otherwise if no results are found, clear the above
@@ -186,8 +186,7 @@ class NewThread extends Component {
 
     // create temporary arrays of IDs from the searchResults and selectedUsers
     // to more easily manipulate the ids
-    const searchResultIds =
-      searchResults && searchResults.map(user => user.uid);
+    const searchResultIds = searchResults && searchResults.map(user => user.id);
 
     const indexOfFocusedSearchResult = searchResultIds.indexOf(
       focusedSearchResult
@@ -223,7 +222,7 @@ class NewThread extends Component {
       // 1. If there is a selectedUser that has been focused, delete it
       if (focusedSelectedUser) {
         const newSelectedUsers = selectedUsersForNewThread.filter(
-          user => user.uid !== focusedSelectedUser
+          user => user.id !== focusedSelectedUser
         );
 
         this.setState({
@@ -255,7 +254,7 @@ class NewThread extends Component {
         this.getMessagesForExistingDirectMessageThread();
 
         const focused =
-          selectedUsersForNewThread[selectedUsersForNewThread.length - 1].uid;
+          selectedUsersForNewThread[selectedUsersForNewThread.length - 1].id;
 
         this.setState({
           focusedSelectedUser: focused,
@@ -304,7 +303,7 @@ class NewThread extends Component {
 
       // 2
       this.setState({
-        focusedSearchResult: searchResults[indexOfFocusedSearchResult + 1].uid,
+        focusedSearchResult: searchResults[indexOfFocusedSearchResult + 1].id,
       });
 
       return;
@@ -325,7 +324,7 @@ class NewThread extends Component {
 
       // 2
       this.setState({
-        focusedSearchResult: searchResults[indexOfFocusedSearchResult - 1].uid,
+        focusedSearchResult: searchResults[indexOfFocusedSearchResult - 1].id,
       });
 
       return;
@@ -417,11 +416,11 @@ class NewThread extends Component {
     array of selectedUsers in the state
   */
   getMessagesForExistingDirectMessageThread = () => {
-    const { groups, currentUser, client } = this.props;
+    const { threads, currentUser, client } = this.props;
     const { selectedUsersForNewThread } = this.state;
 
     // user hasn't created any dm threads yet,
-    if (groups.length === 0) {
+    if (threads.length === 0) {
       return;
     }
 
@@ -447,38 +446,38 @@ class NewThread extends Component {
       following shape:
         {
           id
-          users: [ uid ]
+          users: [ id ]
         }
-      where the users array does *not* contain the currentUser uid. It has
+      where the users array does *not* contain the currentUser id. It has
       to be cleared becaues the composer input does *not* contain the current
       user.
 
-      2. For each of these groups, we'll sort the users, sort the composer's
+      2. For each of these threads, we'll sort the users, sort the composer's
       selected users and look for a match.
     */
 
-    // 1. Create a new array of cleaned up groups objects
-    const cleanedExistingThreads = groups.map(group => {
+    // 1. Create a new array of cleaned up threads objects
+    const cleanedExistingThreads = threads.map(thread => {
       return {
-        id: group.id,
-        users: group.users
-          .filter(user => user.uid !== currentUser.uid)
-          .map(user => user.uid),
+        id: thread.id,
+        users: thread.users
+          .filter(user => user.id !== currentUser.id)
+          .map(user => user.id),
       };
     });
 
     // 2. Sort both arrays of user IDs and look for a match
     const sortedSelectedUsersForNewThread = selectedUsersForNewThread
-      .map(user => user.uid)
+      .map(user => user.id)
       .sort()
       .join('');
 
     // will return null or an object
-    const existingThread = cleanedExistingThreads.filter(group => {
-      const sortedUsers = group.users.sort().join('');
+    const existingThread = cleanedExistingThreads.filter(thread => {
+      const sortedUsers = thread.users.sort().join('');
 
       if (sortedUsers === sortedSelectedUsersForNewThread) {
-        return group;
+        return thread;
       } else {
         return null;
       }
@@ -494,21 +493,21 @@ class NewThread extends Component {
 
       client
         .query({
-          query: GET_DIRECT_MESSAGE_GROUP_QUERY,
+          query: GET_DIRECT_MESSAGE_THREAD_QUERY,
           variables: {
             id: existingThread[0].id,
           },
         })
-        .then(({ data: { directMessageGroup } }) => {
+        .then(({ data: { directMessageTHread } }) => {
           // stop loading
           this.setState({
             loadingExistingThreadMessages: false,
           });
 
           // if messages were found
-          if (directMessageGroup.id) {
+          if (directMessageTHread.id) {
             this.setState({
-              existingThreadWithMessages: directMessageGroup,
+              existingThreadWithMessages: directMessageTHread,
             });
             // if no messages were found
           } else {
@@ -547,17 +546,17 @@ class NewThread extends Component {
     }
 
     const input = {
-      users: selectedUsersForNewThread.map(user => user.uid),
+      users: selectedUsersForNewThread.map(user => user.id),
       message,
     };
 
-    this.props.createDirectMessageGroup(input).then(({
-      data: { createDirectMessageGroup },
+    this.props.createDirectMessageThread(input).then(({
+      data: { createDirectMessageThread },
     }) => {
       // NOTE: I cannot get the Apollo store to update properly with the
-      // new group. Forcing a refresh works, although it's a less ideal UX
-      window.location.href = `/messages/${createDirectMessageGroup.id}`;
-      // this.props.history.push(`/messages/${createDirectMessageGroup.id}`)
+      // new thread. Forcing a refresh works, although it's a less ideal UX
+      window.location.href = `/messages/${createDirectMessageThread.id}`;
+      // this.props.history.push(`/messages/${createDirectMessageThread.id}`)
     });
   };
 
@@ -597,9 +596,9 @@ class NewThread extends Component {
               {selectedUsersForNewThread.map(user => {
                 return (
                   <Pill
-                    selected={focusedSelectedUser === user.uid}
-                    onClick={() => this.setFocusedSelectedUser(user.uid)}
-                    key={user.uid}
+                    selected={focusedSelectedUser === user.id}
+                    onClick={() => this.setFocusedSelectedUser(user.id)}
+                    key={user.id}
                   >
                     {user.displayName}
                   </Pill>
@@ -632,8 +631,8 @@ class NewThread extends Component {
                 searchResults.map(user => {
                   return (
                     <SearchResult
-                      focused={focusedSearchResult === user.uid}
-                      key={user.uid}
+                      focused={focusedSearchResult === user.id}
+                      key={user.id}
                       onClick={() => this.addUserToSelectedUsersList(user)}
                     >
                       <SearchResultImage src={user.photoURL} />
@@ -667,7 +666,7 @@ class NewThread extends Component {
           {existingThreadWithMessages &&
             existingThreadWithMessages.id &&
             <Header
-              group={existingThreadWithMessages}
+              thread={existingThreadWithMessages}
               currentUser={currentUser}
             />}
 
@@ -701,6 +700,6 @@ class NewThread extends Component {
 export default compose(
   withApollo,
   withRouter,
-  createDirectMessageGroupMutation,
+  createDirectMessageThreadMutation,
   connect()
 )(NewThread);

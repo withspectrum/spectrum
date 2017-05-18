@@ -2,15 +2,15 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
-import { userStoriesFragment } from '../../api/fragments/user/userStories';
+import { userThreadsFragment } from '../../api/fragments/user/userThreads';
 
-export const GetCurrentUserStories = gql`
-  query currentUserStories($after: String) {
+export const GetCurrentUserThreads = gql`
+  query currentUserThreads($after: String) {
     currentUser {
       ...userInfo
-      ...userStories
+      ...userThreads
     }
   }
   ${userInfoFragment}
-  ${userStoriesFragment}
+  ${userThreadsFragment}
 `;
