@@ -1,11 +1,11 @@
 const Community = /* GraphQL */ `
-	type CommunityFrequenciesConnection {
+	type CommunityChannelsConnection {
 		pageInfo: PageInfo!
-		edges: [CommunityFrequencyEdge!]
+		edges: [CommunityChannelEdge!]
 	}
 
-	type CommunityFrequencyEdge {
-		node: Frequency!
+	type CommunityChannelEdge {
+		node: Channel!
 	}
 
 	type CommunityMembersConnection {
@@ -18,19 +18,19 @@ const Community = /* GraphQL */ `
 		node: User!
 	}
 
-	type CommunityStoriesConnection {
+	type CommunityThreadsConnection {
 		pageInfo: PageInfo!
-		edges: [CommunityStoryEdge!]
+		edges: [CommunityThreadEdge!]
 	}
 
-	type CommunityStoryEdge {
+	type CommunityThreadEdge {
 		cursor: String!
-		node: Story!
+		node: Thread!
 	}
 
 	type CommunityMetaData {
 		members: Int
-		frequencies: Int
+		channels: Int
 	}
 
 	input File {
@@ -67,9 +67,9 @@ const Community = /* GraphQL */ `
 		photoURL: String
 		isOwner: Boolean
 		isMember: Boolean
-		frequencyConnection: CommunityFrequenciesConnection!
+		channelConnection: CommunityChannelsConnection!
 		memberConnection(first: Int = 10, after: String): CommunityMembersConnection!
-		storyConnection(first: Int = 10, after: String): CommunityStoriesConnection!
+		threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!
 		metaData: CommunityMetaData
 	}
 
@@ -79,9 +79,9 @@ const Community = /* GraphQL */ `
 
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
-		# todo return the community + frequency objects to update the store
+		# todo return the community + channel objects to update the store
 		editCommunity(input: EditCommunityInput!): Community
-		# todo return the community + frequency objects to clear the store
+		# todo return the community + channel objects to clear the store
 		deleteCommunity(id: ID!): Boolean
 		# todo return the community object to update the store on client
 		toggleCommunityMembership(id: ID!): Community

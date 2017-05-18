@@ -60,7 +60,7 @@ const photoToS3 = (file, user, cb) => {
   return uploader.upload(
     {
       fileId: fileName,
-      bucket: `spectrum-chat/users/${user.uid}`,
+      bucket: `spectrum-chat/users/${user.id}`,
       source: file.path,
       name: fileName,
     },

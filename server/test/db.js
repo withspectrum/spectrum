@@ -26,24 +26,24 @@ export const data = {
       members: ['first-user'],
     },
   ],
-  frequencies: [
+  channels: [
     {
-      id: 'first-frequency',
+      id: 'first-channel',
       community: 'first-community',
       createdAt: new Date('January 3, 2017'),
       modifiedAt: new Date('January 4, 2017'),
-      name: 'First Frequency',
+      name: 'First Channel',
       description: 'The first!',
       slug: 'first',
-      subscribers: ['first-user'],
+      members: ['first-user'],
     },
   ],
-  stories: [
+  threads: [
     {
-      id: 'first-story',
+      id: 'first-thread',
       createdAt: new Date('January 4, 2017'),
-      author: 'first-user',
-      frequency: 'first-frequency',
+      creatorId: 'first-user',
+      channel: 'first-channel',
       modifiedAt: new Date('January 5, 2017'),
       published: true,
       content: {
@@ -61,10 +61,10 @@ export const data = {
       ],
     },
     {
-      id: 'second-story',
+      id: 'second-thread',
       createdAt: new Date('January 5, 2017'),
-      author: 'first-user',
-      frequency: 'first-frequency',
+      creatorId: 'first-user',
+      channel: 'first-channel',
       modifiedAt: new Date('January 6, 2017'),
       published: true,
       content: {
@@ -88,23 +88,22 @@ export const setup = db => {
     .run()
     .then(() =>
       Promise.all([
-        db.tableCreate('stories').run(),
-        db.tableCreate('frequencies').run(),
+        db.tableCreate('threads').run(),
+        db.tableCreate('channels').run(),
         db.tableCreate('communities').run(),
         db.tableCreate('messages').run(),
-        db.tableCreate('direct_messages').run(),
         db.tableCreate('sessions').run(),
         db.tableCreate('reactions').run(),
-        db.tableCreate('directMessageGroups').run(),
-        db.tableCreate('users', { primaryKey: 'uid' }).run(),
+        db.tableCreate('directMessageThreads').run(),
+        db.tableCreate('users', { primaryKey: 'id' }).run(),
       ])
     )
     .then(result =>
       Promise.all([
         db.table('users').insert(data.users).run(),
         db.table('communities').insert(data.communities).run(),
-        db.table('frequencies').insert(data.frequencies).run(),
-        db.table('stories').insert(data.stories).run(),
+        db.table('channels').insert(data.channels).run(),
+        db.table('threads').insert(data.threads).run(),
       ])
     )
     .catch(err => {

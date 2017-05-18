@@ -5,8 +5,8 @@ const Message = /* GraphQL */ `
 	}
 
 	enum ThreadTypes {
-		Story
-		DirectMessageGroup
+		Thread
+		DirectMessageThread
 	}
 
 	# The content and type of a message

@@ -6,7 +6,7 @@ import type { Loader } from './types';
  * Create a dataloader instance for a request and type
  *
  * Usage:
- * createUserLoader = () => createLoader(users => getUsers(users), 'uid');
+ * createUserLoader = () => createLoader(users => getUsers(users), 'id');
  */
 const createLoader = (
   batchFn: Function,

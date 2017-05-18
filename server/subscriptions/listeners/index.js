@@ -3,12 +3,12 @@
  */
 
 const messageListeners = require('./message');
-const storyListeners = require('./story');
+const threadListeners = require('./thread');
 
 module.exports = {
   // Start listening to database changes
   start() {
-    storyListeners();
+    threadListeners();
     messageListeners();
   },
 };

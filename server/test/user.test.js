@@ -47,7 +47,7 @@ describe('queries', () => {
   });
 
   describe('everything', () => {
-    it('should return the latest story', () => {
+    it('should return the latest thread', () => {
       const query = /* GraphQL */ `
   			{
   				user(id: "first-user") {
@@ -139,5 +139,5 @@ describe('queries', () => {
   });
 
   it.skip('fetches a users communities');
-  it.skip('fetches a users frequencies');
+  it.skip("fetches a user's channels");
 });

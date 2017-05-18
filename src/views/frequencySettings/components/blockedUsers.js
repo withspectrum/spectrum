@@ -36,12 +36,12 @@ class BlockedUsersWithMutation extends Component {
     });
   };
 
-  unblock = uid => {
+  unblock = userId => {
     const { frequency: { id } } = this.props;
 
     const input = {
-      id,
-      uid,
+      frequencyId: id,
+      userId,
     };
 
     this.props

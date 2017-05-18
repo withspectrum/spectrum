@@ -1,10 +1,10 @@
 // @flow
-import { getFrequencies } from '../models/frequency';
+import { getThreads } from '../models/thread';
 import createLoader from './create-loader';
 import type { Loader } from './types';
 
-export const __createFrequencyLoader = () =>
-  createLoader(frequencies => getFrequencies(frequencies));
+export const __createThreadLoader = () =>
+  createLoader(threads => getThreads(threads));
 
 export default () => {
   throw new Error(

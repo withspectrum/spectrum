@@ -30,12 +30,12 @@ class PendingUsersWithMutation extends Component {
     });
   };
 
-  togglePending = (uid, action) => {
+  togglePending = (userId, action) => {
     const { frequency: { id } } = this.props;
 
     const input = {
-      id,
-      uid,
+      frequencyId: id,
+      userId,
       action,
     };
 
@@ -74,7 +74,7 @@ class PendingUsersWithMutation extends Component {
                   <ListCardItemUser user={user}>
                     <div style={{ display: 'flex' }}>
                       <TextButton
-                        onClick={() => this.togglePending(user.uid, 'block')}
+                        onClick={() => this.togglePending(user.id, 'block')}
                         label
                         hoverColor={'warn.alt'}
                         icon="minus"
@@ -83,7 +83,7 @@ class PendingUsersWithMutation extends Component {
                       </TextButton>
 
                       <TextButton
-                        onClick={() => this.togglePending(user.uid, 'approve')}
+                        onClick={() => this.togglePending(user.id, 'approve')}
                         label
                         hoverColor={'brand.default'}
                         icon="plus"

@@ -6,8 +6,8 @@ import type { GraphQLContext } from '../';
 
 type Root = {
   id: string,
-  user: string,
-  message: string,
+  userId: string,
+  messageId: string,
 };
 
 type QueryArgs = {
@@ -19,9 +19,9 @@ const reaction = {
     reaction: (_: Root, { id }: QueryArgs) => getReaction(id),
   },
   Reaction: {
-    user: ({ user }: Root, _: any, { loaders }: GraphQLContext) =>
-      loaders.user.load(user),
-    message: ({ message }: Root) => getMessage(message),
+    user: ({ userId }: Root, _: any, { loaders }: GraphQLContext) =>
+      loaders.user.load(userId),
+    message: ({ messageId }: Root) => getMessage(messageId),
   },
 };
 

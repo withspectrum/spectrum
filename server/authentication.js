@@ -5,11 +5,11 @@ const { getUser, createOrFindUser } = require('./models/user');
 const init = ({ twitterCallbackURLBase }) => {
   // Setup use serialization
   passport.serializeUser((user, done) => {
-    done(null, user.uid);
+    done(null, user.id);
   });
 
-  passport.deserializeUser((uid, done) => {
-    getUser({ uid })
+  passport.deserializeUser((id, done) => {
+    getUser({ id })
       .then(user => {
         done(null, user);
       })

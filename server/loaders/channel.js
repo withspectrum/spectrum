@@ -1,10 +1,10 @@
 // @flow
-import { getStories } from '../models/story';
+import { getChannels } from '../models/channel';
 import createLoader from './create-loader';
 import type { Loader } from './types';
 
-export const __createStoryLoader = () =>
-  createLoader(stories => getStories(stories));
+export const __createChannelLoader = () =>
+  createLoader(channels => getChannels(channels));
 
 export default () => {
   throw new Error(

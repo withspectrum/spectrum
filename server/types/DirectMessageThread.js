@@ -1,4 +1,4 @@
-const DirectMessageGroup = /* GraphQL */ `
+const DirectMessageThread = /* GraphQL */ `
 	type DirectMessageUserStatus {
 		uid: ID!
 		lastActivity: Date
@@ -15,9 +15,9 @@ const DirectMessageGroup = /* GraphQL */ `
 		node: Message!
 	}
 
-	type DirectMessageGroup {
+	type DirectMessageThread {
 		id: ID!
-		users: [User!]
+		participants: [User!]
 		status: [DirectMessageUserStatus!]
 		messageConnection(first: Int = 10, after: String): DirectMessagesConnection!
 		creator: User!
@@ -26,7 +26,7 @@ const DirectMessageGroup = /* GraphQL */ `
 	}
 
 	extend type Query {
-		directMessageGroup(id: ID!): DirectMessageGroup
+		directMessageThread(id: ID!): DirectMessageThread
 	}
 
 	enum MessageType {
@@ -39,14 +39,14 @@ const DirectMessageGroup = /* GraphQL */ `
 		content: String!
 	}
 
-	input DirectMessageGroupInput {
+	input DirectMessageThreadInput {
 		users: [ID!]
 		message: MessageContentInput!
 	}
 
 	extend type Mutation {
-		createDirectMessageGroup(input: DirectMessageGroupInput!): DirectMessageGroup
+		createDirectMessageThread(input: DirectMessageThreadInput!): DirectMessageThread
 	}
 `;
 
-module.exports = DirectMessageGroup;
+module.exports = DirectMessageThread;

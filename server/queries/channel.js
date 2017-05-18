@@ -1,58 +1,50 @@
 // @flow
-/**
- * Frequency query resolvers
- */
 const {
-  getFrequencyBySlug,
-  getFrequencyMetaData,
-  getFrequencySubscriberCount,
-  getTopFrequencies,
-} = require('../models/frequency');
-const { getStoriesByFrequency } = require('../models/story');
+  getChannelBySlug,
+  getChannelMetaData,
+  getChannelMemberCount,
+  getTopChannels,
+} = require('../models/channel');
+const { getThreadsByChannel } = require('../models/thread');
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import type { PaginationOptions } from '../utils/paginate-arrays';
-import type { GetFrequencyArgs } from '../models/frequency';
+import type { GetChannelArgs } from '../models/channel';
 import type { GraphQLContext } from '../';
 
 module.exports = {
   Query: {
-    frequency: (
-      _: any,
-      args: GetFrequencyArgs,
-      { loaders }: GraphQLContext
-    ) => {
-      if (args.id) return loaders.frequency.load(args.id);
-      if (args.slug && args.community)
-        return getFrequencyBySlug(args.slug, args.community);
+    channel: (_: any, args: GetChannelArgs, { loaders }: GraphQLContext) => {
+      if (args.id) return loaders.channel.load(args.id);
+      if (args.slug && args.communitySlug)
+        return getChannelBySlug(args.slug, args.communitySlug);
       return null;
     },
-    topFrequencies: (_: any, { amount = 30 }: { amount: number }) =>
-      getTopFrequencies(amount),
+    topChannels: (_: any, { amount = 30 }: { amount: number }) =>
+      getTopChannels(amount),
   },
-  Frequency: {
-    subscriberCount: ({ id }: { id: string }) =>
-      getFrequencySubscriberCount(id),
-    storyConnection: (
+  Channel: {
+    memberCount: ({ id }: { id: string }) => getChannelMemberCount(id),
+    threadConnection: (
       { id }: { id: string },
       { first = 10, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
-      return getStoriesByFrequency(id, { first, after: cursor })
-        .then(stories =>
+      return getThreadsByChannel(id, { first, after: cursor })
+        .then(threads =>
           paginate(
-            stories,
+            threads,
             { first, after: cursor },
-            story => story.id === cursor
+            thread => thread.id === cursor
           )
         )
         .then(result => ({
           pageInfo: {
             hasNextPage: result.hasMoreItems,
           },
-          edges: result.list.map(story => ({
-            cursor: encode(story.id),
-            node: story,
+          edges: result.list.map(thread => ({
+            cursor: encode(thread.id),
+            node: thread,
           })),
         }));
     },
@@ -64,31 +56,31 @@ module.exports = {
     },
     isOwner: ({ owners }, _, { user }) => {
       if (!user) return false;
-      return owners.indexOf(user.uid) > -1;
+      return owners.indexOf(user.id) > -1;
     },
-    isSubscriber: ({ subscribers }, _, { user }) => {
+    isMember: ({ members }, _, { user }) => {
       if (!user) return false;
-      return subscribers.indexOf(user.uid) > -1;
+      return members.indexOf(user.id) > -1;
     },
     isPending: ({ pendingUsers }, _, { user }) => {
       if (!user) return false;
-      return pendingUsers.indexOf(user.uid) > -1;
+      return pendingUsers.indexOf(user.id) > -1;
     },
     isBlocked: ({ blockedUsers }, _, { user }) => {
       if (!user) return false;
-      return blockedUsers.indexOf(user.uid) > -1;
+      return blockedUsers.indexOf(user.id) > -1;
     },
     community: (
-      { community }: { community: string },
+      { communityId }: { communityId: string },
       _: any,
       { loaders }: GraphQLContext
-    ) => loaders.community.load(community),
-    subscriberConnection: (
-      { subscribers }: { subscribers: Array<string> },
+    ) => loaders.community.load(communityId),
+    memberConnection: (
+      { members }: { members: Array<string> },
       { first = 10, after }: PaginationOptions,
       { loaders }: GraphQLContext
     ) => {
-      const { list, hasMoreItems } = paginate(subscribers, {
+      const { list, hasMoreItems } = paginate(members, {
         first,
         after: decode(after),
       });
@@ -97,16 +89,16 @@ module.exports = {
           hasNextPage: hasMoreItems,
         },
         edges: users.map(user => ({
-          cursor: encode(user.uid),
+          cursor: encode(user.id),
           node: user,
         })),
       }));
     },
     metaData: ({ id }: { id: string }) => {
-      return getFrequencyMetaData(id).then(data => {
+      return getChannelMetaData(id).then(data => {
         return {
-          stories: data[0],
-          subscribers: data[1],
+          threads: data[0],
+          members: data[1],
         };
       });
     },

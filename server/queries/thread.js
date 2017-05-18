@@ -1,9 +1,5 @@
 //@flow
-
-/**
- * Story query resolvers
- */
-const { getFrequencies } = require('../models/frequency');
+const { getChannels } = require('../models/channel');
 const { getCommunities } = require('../models/community');
 const { getUsers } = require('../models/user');
 const { getMessages, getMessageCount } = require('../models/message');
@@ -14,21 +10,21 @@ import { encode, decode } from '../utils/base64';
 
 module.exports = {
   Query: {
-    story: (_: any, { id }: { id: string }, { loaders }: GraphQLContext) =>
-      loaders.story.load(id),
+    thread: (_: any, { id }: { id: string }, { loaders }: GraphQLContext) =>
+      loaders.thread.load(id),
   },
-  Story: {
-    frequency: (
-      { frequency }: { frequency: string },
+  Thread: {
+    channel: (
+      { channelId }: { channelId: string },
       _: any,
       { loaders }: GraphQLContext
-    ) => loaders.frequency.load(frequency),
+    ) => loaders.channel.load(channelId),
     community: (
-      { community }: { community: string },
+      { communityId }: { communityId: string },
       _: any,
       { loaders }: GraphQLContext
-    ) => loaders.community.load(community),
-    participants: ({ id, author }: { id: String, author: string }) => {
+    ) => loaders.community.load(communityId),
+    participants: ({ id, creatorId }: { id: String, creatorId: string }) => {
       return getMessages(id)
         .then(messages =>
           messages
@@ -37,8 +33,8 @@ module.exports = {
               message => message.sender
             )
             .filter(
-              // remove the author from the list
-              message => message !== author
+              // remove the creatorId from the list
+              message => message !== creatorId
             )
             .filter(
               (id, index, self) =>
@@ -48,27 +44,31 @@ module.exports = {
         )
         .then(users => getUsers(users));
     },
-    isAuthor: ({ author }: { author: String }, _: any, { user }: Context) => {
-      if (!author || !user) return false;
-      return user.uid === author;
-    },
-    isFrequencyOwner: (
-      { frequency }: { frequency: String },
+    isCreator: (
+      { creatorId }: { creatorId: String },
       _: any,
       { user }: Context
     ) => {
-      if (!frequency || !user) return false;
-      return getFrequencies([frequency]).then(
+      if (!creatorId || !user) return false;
+      return user.uid === creatorId;
+    },
+    isChannelOwner: (
+      { channeId }: { channelId: String },
+      _: any,
+      { user }: Context
+    ) => {
+      if (!channel || !user) return false;
+      return getChannels([channelId]).then(
         data => data[0].owners.indexOf(user.uid) > -1
       );
     },
     isCommunityOwner: (
-      { community }: { community: String },
+      { communityId }: { communityId: String },
       _: any,
       { user }: Context
     ) => {
       if (!community || !user) return false;
-      return getCommunities([community]).then(
+      return getCommunities([communityId]).then(
         data => data[0].owners.indexOf(user.uid) > -1
       );
     },
@@ -98,11 +98,11 @@ module.exports = {
           })),
         }));
     },
-    author: (
-      { author }: { author: String },
+    creator: (
+      { creatorId }: { creatorId: String },
       _: any,
       { loaders }: GraphQLContext
-    ) => loaders.user.load(author),
+    ) => loaders.user.load(creatorId),
     messageCount: ({ id }: { id: string }) => getMessageCount('messages', id),
   },
 };

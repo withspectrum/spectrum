@@ -1,0 +1,67 @@
+const Thread = /* GraphQL */ `
+	type ThreadMessagesConnection {
+		pageInfo: PageInfo!
+		edges: [ThreadMessageEdge!]
+	}
+
+	type ThreadMessageEdge {
+		cursor: String!
+		node: Message!
+	}
+
+	# The contents of a thread
+	type ThreadContent {
+		title: String!
+		description: String
+		media: String
+	}
+
+	type Edit {
+		timestamp: Date!
+		content: ThreadContent!
+	}
+
+	type Thread {
+		id: ID!
+		createdAt: Date!
+		modifiedAt: Date!
+		channel: Channel!
+		community: Community!
+		published: Boolean!
+		content: ThreadContent!
+		locked: Boolean
+		isCreator: Boolean
+    isChannelOwner: Boolean
+    isCommunityOwner: Boolean
+		edits: [Edit!]
+		participants: [User]
+		messageConnection(first: Int = 10, after: String): ThreadMessagesConnection!
+		messageCount: Int
+		creator: User!
+	}
+
+	extend type Query {
+		thread(id: ID!): Thread
+	}
+
+	input ThreadContentInput {
+		title: String!
+		description: String
+		media: String
+	}
+
+	input ThreadInput {
+		channel: ID!
+		community: ID!
+		content: ThreadContentInput!
+	}
+
+	extend type Mutation {
+		publishThread(thread: ThreadInput!): Thread
+		editThread(id: ID!, newContent: ThreadContentInput!): Thread
+		setThreadLock(id: ID!, value: Boolean!): Thread
+		deleteThread(id: ID!): Boolean
+	}
+`;
+
+module.exports = Thread;

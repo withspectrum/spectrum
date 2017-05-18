@@ -8,43 +8,43 @@ const User = /* GraphQL */ `
 		node: Community!
 	}
 
-	type UserFrequenciesConnection {
+	type UserChannelsConnection {
 		pageInfo: PageInfo!
-		edges: [UserFrequencyEdge!]
+		edges: [UserChannelEdge!]
 	}
 
-	type UserFrequencyEdge {
-		node: Frequency!
+	type UserChannelEdge {
+		node: Channel!
 	}
 
-	type UserDirectMessageGroupsConnection {
+	type UserDirectMessageThreadsConnection {
 		pageInfo: PageInfo!
-		edges: [DirectMessageGroupEdge]
+		edges: [DirectMessageThreadEdge]
 	}
 
-	type DirectMessageGroupEdge {
+	type DirectMessageThreadEdge {
 		cursor: String!
-		node: DirectMessageGroup!
+		node: DirectMessageThread!
 	}
 
-	type UserStoriesConnection {
+	type UserThreadsConnection {
 		pageInfo: PageInfo!
-		edges: [UserStoryEdge!]
+		edges: [UserThreadEdge!]
 	}
 
-	type UserStoryEdge {
+	type UserThreadEdge {
 		cursor: String!
-		node: Story!
+		node: Thread!
 	}
 
-	type EverythingStoriesConnection {
+	type EverythingThreadsConnection {
 		pageInfo: PageInfo!
-		edges: [EverythingStoryEdge!]
+		edges: [EverythingThreadEdge!]
 	}
 
-	type EverythingStoryEdge {
+	type EverythingThreadEdge {
 		cursor: String!
-		node: Story!
+		node: Thread!
 	}
 
 	type UserNotificationsConnection {
@@ -58,7 +58,7 @@ const User = /* GraphQL */ `
 	}
 
 	type UserMetaData {
-		stories: Int
+		threads: Int
 	}
 
 	input File {
@@ -69,26 +69,32 @@ const User = /* GraphQL */ `
   }
 
 	type User {
-		uid: ID!
+		id: ID!
+		name: String
+		description: String
+		website: String
+		username: String
+		profilePhoto: String
+		coverPhoto: String
+		email: String
+		providerId: String
+		# subscriptions: [Subscription!]
 		createdAt: Date!
 		lastSeen: Date!
-		photoURL: String
-		displayName: String
-		username: String
-		email: String
-		storyCount: Int
+
+		# non-schema fields
+		threadCount: Int
 		isAdmin: Boolean!
-		# subscriptions: [Subscription!]
 		communityConnection: UserCommunitiesConnection!
-		frequencyConnection: UserFrequenciesConnection!
-		directMessageGroupsConnection: UserDirectMessageGroupsConnection!
-		storyConnection(first: Int = 10, after: String): UserStoriesConnection!
-		everything(first: Int = 10, after: String): EverythingStoriesConnection!
+		channelConnection: UserChannelsConnection!
+		directMessageThreadsConnection: UserDirectMessageThreadsConnection!
+		threadConnection(first: Int = 10, after: String): UserThreadsConnection!
+		everything(first: Int = 10, after: String): EverythingThreadsConnection!
 		notificationConnection(first: Int = 10, after: String): UserNotificationsConnection!
 	}
 
 	extend type Query {
-		user(uid: ID, username: String): User
+		user(id: ID, username: String): User
 		currentUser: User
 		searchUsers(string: String): [User]
 	}
