@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 
 import { IconButton } from '../buttons';
-import Icon from '../icons';
+// import Icon from '../icons';
 import {
   StyledLabel,
   StyledPrefixLabel,
@@ -12,10 +12,10 @@ import {
   StyledHiddenInput,
   StyledCheckboxWrapper,
   StyledError,
-  ImageInputLabel,
-  InputOverlay,
-  ProfileImage,
-  HiddenInput,
+  // ImageInputLabel,
+  // InputOverlay,
+  // ProfileImage,
+  // HiddenInput,
 } from './style';
 
 type InputProps = {
