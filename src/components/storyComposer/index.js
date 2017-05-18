@@ -238,7 +238,7 @@ class StoryComposerWithData extends Component {
         <Composer isOpen={isOpen} onClick={this.handleOpenComposer}>
 
           <Placeholder isOpen={isOpen}>
-            <Icon glyph="edit" />
+            <Icon glyph="post" />
             <PlaceholderLabel>
               Start a new thread with your friends...
             </PlaceholderLabel>

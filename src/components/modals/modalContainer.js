@@ -15,7 +15,7 @@ const ModalContainer = ({ closeModal, children, title }): React$Element<
     <ModalBody>
       <Header>
         <Title>{title}</Title>
-        <CloseButton onClick={() => closeModal()} glyph="close" />
+        <CloseButton onClick={() => closeModal()} glyph="view-close" />
       </Header>
 
       <ModalContent>

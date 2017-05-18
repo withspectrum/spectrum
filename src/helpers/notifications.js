@@ -8,7 +8,7 @@ import { HorizontalRuleWithIcon } from '../components/globals';
 import { ChatMessage } from '../views/notifications/style';
 
 const icons = {
-  NEW_STORY: 'write',
+  NEW_STORY: 'post',
   NEW_MESSAGE: 'messages',
   default: 'notification',
 };

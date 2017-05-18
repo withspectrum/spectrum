@@ -114,7 +114,7 @@ class ChatMessages extends Component {
             // : () => toggleReaction(message.id, userHasReacted)
           }
         >
-          <Icon glyph="like-active" size={16} color={'text.reverse'} />
+          <Icon glyph="like-fill" size={16} color={'text.reverse'} />
           <Count>{reactionCount}</Count>
         </Reaction>
       );

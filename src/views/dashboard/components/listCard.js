@@ -34,7 +34,7 @@ const ListCardPure = ({ data: { communities }, dispatch }) => {
                   withDescription={false}
                   meta={`${item.node.metaData.members} members · ${item.node.metaData.frequencies} frequencies`}
                 >
-                  <Icon glyph="forward" />
+                  <Icon glyph="view-forward" />
                 </ListCardItem>
               </Link>
             );

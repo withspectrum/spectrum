@@ -18,8 +18,8 @@ const buildArray = (meta: Object): Array<any> => {
       return Object.assign(
         {},
         {
-          icon: 'edit',
-          label: 'Stories',
+          icon: 'post',
+          label: 'Threads',
           count: meta[item],
         }
       );
@@ -29,7 +29,7 @@ const buildArray = (meta: Object): Array<any> => {
       return Object.assign(
         {},
         {
-          icon: 'emoji',
+          icon: 'frequency',
           label: 'Frequencies',
           count: meta[item],
         }
@@ -40,7 +40,7 @@ const buildArray = (meta: Object): Array<any> => {
       return Object.assign(
         {},
         {
-          icon: 'emoji',
+          icon: 'person',
           label: 'Subscribers',
           count: meta[item],
         }
@@ -51,7 +51,7 @@ const buildArray = (meta: Object): Array<any> => {
       return Object.assign(
         {},
         {
-          icon: 'emoji',
+          icon: 'person',
           label: 'Members',
           count: meta[item],
         }

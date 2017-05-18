@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Card from '../card';
 //$FlowFixMe
 import { connect } from 'react-redux';
@@ -13,10 +14,12 @@ import renderComponent from 'recompose/renderComponent';
 import branch from 'recompose/branch';
 import { openModal } from '../../actions/modals';
 import { Avatar } from '../avatar';
+import Badge from '../badges';
 import { LoadingCard } from '../loading';
 import {
   ProfileHeader,
   ProfileHeaderMeta,
+  ProfileHeaderAction,
   Title,
   Subtitle,
   Actions,
@@ -75,9 +78,13 @@ const UserWithData = ({
           <Title>{user.displayName}</Title>
           <Subtitle>
             @{user.username}
-            {user.isAdmin && <span> Admin</span>}
+            {user.isAdmin && <Badge type="admin" />}
+            {/* user.isPro && <Badge type='pro' /> */}
           </Subtitle>
         </ProfileHeaderMeta>
+        <Link to={`users/${currentUser.username}/settings`}>
+          <ProfileHeaderAction glyph="settings" />
+        </Link>
       </ProfileHeader>
 
       {componentSize !== 'mini' &&

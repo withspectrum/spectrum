@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { FlexContainer } from '../flexbox';
 import { Truncate } from '../globals';
-import { Button, OutlineButton } from '../buttons';
+import { Button, OutlineButton, IconButton } from '../buttons';
 
 export const ProfileHeader = styled(FlexContainer)`
   padding: 16px;
@@ -9,7 +9,12 @@ export const ProfileHeader = styled(FlexContainer)`
 `;
 
 export const ProfileHeaderMeta = styled(FlexContainer)`
-  /*width: calc(100% - 52px);*/
+  flex: 1 0 auto;
+  max-width: 196px;
+`;
+
+export const ProfileHeaderAction = styled(IconButton)`
+  margin-left: 8px;
 `;
 
 export const Title = styled.h3`

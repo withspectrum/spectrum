@@ -64,7 +64,7 @@ const DashboardPure = ({
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <CurrentUserProfile profileSize="full" />
+        <CurrentUserProfile profileSize="mini" />
         <CommunitiesListCard />
       </Column>
 

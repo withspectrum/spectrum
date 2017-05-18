@@ -33,7 +33,7 @@ const ListCardPure = ({ data, dispatch }) => {
                   withDescription={false}
                   meta={`${item.node.metaData.subscribers} members`}
                 >
-                  <Icon glyph="forward" />
+                  <Icon glyph="view-forward" />
                 </ListCardItem>
               </Link>
             );

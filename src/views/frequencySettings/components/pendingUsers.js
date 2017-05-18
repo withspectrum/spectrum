@@ -77,7 +77,7 @@ class PendingUsersWithMutation extends Component {
                         onClick={() => this.togglePending(user.uid, 'block')}
                         label
                         hoverColor={'warn.alt'}
-                        icon="unsubscribe"
+                        icon="minus"
                       >
                         Block
                       </TextButton>
@@ -86,7 +86,7 @@ class PendingUsersWithMutation extends Component {
                         onClick={() => this.togglePending(user.uid, 'approve')}
                         label
                         hoverColor={'brand.default'}
-                        icon="subscribe"
+                        icon="plus"
                       >
                         Approve
                       </TextButton>
