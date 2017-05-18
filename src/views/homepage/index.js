@@ -17,7 +17,7 @@ import {
   GoopyFour,
   Wrapper,
   Tagline,
-  TextButton,
+  LinkButton,
   LogoContainer,
   LogoWhite,
   SectionContent,
@@ -36,11 +36,11 @@ class Homepage extends Component {
             <FlexCol>
               <LogoContainer><LogoWhite /></LogoContainer>
               <Tagline>Where communities are built.</Tagline>
-              <TextButton href="http://localhost:3001/auth/twitter">
+              <LinkButton href="http://localhost:3001/auth/twitter">
                 <Icon glyph="twitter" />
                 {' '}
                 <span>Sign in with Twitter</span>
-              </TextButton>
+              </LinkButton>
             </FlexCol>
             <img src="/img/login.svg" role="presentation" />
           </SectionContent>
@@ -92,11 +92,11 @@ class Homepage extends Component {
               <Copy>
                 Spectrum is free for everyone, so hop on in!
               </Copy>
-              <TextButton href="http://localhost:3001/auth/twitter">
+              <LinkButton href="http://localhost:3001/auth/twitter">
                 <Icon glyph="twitter" />
                 {' '}
                 <span>Sign in with Twitter</span>
-              </TextButton>
+              </LinkButton>
             </FlexCol>
           </SectionContent>
           <GoopyFour />
