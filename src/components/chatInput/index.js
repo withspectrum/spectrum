@@ -35,7 +35,6 @@ const ChatInputWithMutation = ({
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
     if (thread === 'newDirectMessageThread') {
-      console.log('attempting to create a new thread');
       return createThread({
         messageBody: value,
         messageType: 'text',

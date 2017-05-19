@@ -3,6 +3,6 @@
  */
 module.exports = {
   Subscription: {
-    messageAdded: message => console.log('sub', message) || message,
+    messageAdded: message => message,
   },
 };

@@ -208,7 +208,6 @@ class ThreadComposerWithData extends Component {
       // thread that was published
       .then(({ data }) => {
         // get the thread id to redirect the user
-        console.log('data', data);
         const id = data.publishThread.id;
 
         // stop the loading spinner on the publish button

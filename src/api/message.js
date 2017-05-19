@@ -17,7 +17,6 @@ const SEND_MESSAGE_MUTATION = gql`
 const SEND_MESSAGE_OPTIONS = {
   props: ({ ownProps, mutate }) => ({
     sendMessage: message =>
-      console.log(message) ||
       mutate({
         variables: {
           message,

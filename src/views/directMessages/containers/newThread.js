@@ -560,8 +560,6 @@ class NewThread extends Component {
       },
     };
 
-    console.log(input);
-
     this.props.createDirectMessageThread(input).then(({
       data: { createDirectMessageThread },
     }) => {
