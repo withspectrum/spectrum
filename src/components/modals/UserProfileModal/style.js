@@ -21,12 +21,9 @@ export const ImageInputLabel = styled.label`
 `;
 
 export const ProfileImage = styled.img`
-  position: absolute;
+  display: block;
+  margin: 0 auto;
   z-index: 9;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
   width: 48px;
   height: 48px;
   border-radius: 8px;

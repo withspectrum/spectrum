@@ -19,6 +19,9 @@ import { SEARCH_USERS_QUERY } from '../../../api/user';
 import { Spinner } from '../../../components/globals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import {
+  clearDirectMessagesComposer,
+} from '../../../actions/directMessageThreads';
+import {
   createDirectMessageThreadMutation,
 } from '../../../api/directMessageThread';
 import {
@@ -98,18 +101,6 @@ class NewThread extends Component {
 
     // only kick off search query every 200ms
     this.search = throttle(this.search, 200);
-  }
-
-  /*
-    Add event listeners when the component mounts - will be listening
-    for up, down, backspace, escape, and enter, to trigger different
-    functions depending on the context or state of the composer
-  */
-  componentDidMount() {
-    document.addEventListener('keydown', this.handleKeyPress, false);
-  }
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleKeyPress, false);
   }
 
   /*
@@ -524,6 +515,38 @@ class NewThread extends Component {
     }
   };
 
+  componentWillMount() {
+    // can take an optional param of an array of user objects to automatically
+    // populate the new message composer
+    const { initNewThreadWithUsers } = this.props;
+
+    // if the prop is present, add the users to the selected users state
+    if (initNewThreadWithUsers.length > 0) {
+      this.setState({
+        selectedUsersForNewThread: [...initNewThreadWithUsers],
+      });
+    }
+  }
+  /*
+    Add event listeners when the component mounts - will be listening
+    for up, down, backspace, escape, and enter, to trigger different
+    functions depending on the context or state of the composer
+  */
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyPress, false);
+    // clear the redux store of this inited user, in case the person
+    // sends more messages later in the session
+    this.props.dispatch(clearDirectMessagesComposer());
+    if (this.state.selectedUsersForNewThread.length > 0) {
+      // trigger a new search for an existing thread with these users
+      this.getMessagesForExistingDirectMessageThread();
+    }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyPress, false);
+  }
+
   componentDidUpdate() {
     this.forceScrollToBottom();
   }
@@ -565,7 +588,6 @@ class NewThread extends Component {
     }) => {
       // NOTE: I cannot get the Apollo store to update properly with the
       // new thread. Forcing a refresh works, although it's a less ideal UX
-      console.log('finished mutation with', createDirectMessageThread);
       window.location.href = `/messages/${createDirectMessageThread.id}`;
       // this.props.history.push(`/messages/${createDirectMessageThread.id}`)
     });
@@ -709,9 +731,13 @@ class NewThread extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  initNewThreadWithUsers: state.directMessageThreads.initNewThreadWithUsers,
+});
+
 export default compose(
   withApollo,
   withRouter,
   createDirectMessageThreadMutation,
-  connect()
+  connect(mapStateToProps)
 )(NewThread);
