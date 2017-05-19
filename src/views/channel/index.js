@@ -33,8 +33,8 @@ const ChannelViewPure = ({
   const communitySlug = match.params.communitySlug;
   const channelSlug = match.params.channelSlug;
 
-  const toggleRequest = id => {
-    toggleChannelSubscription({ id })
+  const toggleRequest = channelId => {
+    toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
         const str = toggleChannelSubscription.isPending
           ? `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`

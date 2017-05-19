@@ -1,5 +1,5 @@
 const Message = /* GraphQL */ `
-	enum MessageType {
+	enum MessageTypes {
 		text
 		media
 	}
@@ -18,11 +18,11 @@ const Message = /* GraphQL */ `
 	type Message {
 		id: ID!
 		timestamp: Date!
-		thread: ThreadTypes!
+		thread: ID!
 		content: MessageContent!
 		sender: User!
 		reactions: [Reaction]
-		type: MessageType!
+		messageType: MessageTypes!
 	}
 
 	input MessageContentInput {
@@ -31,8 +31,9 @@ const Message = /* GraphQL */ `
 
 	input MessageInput {
 		threadId: ID!
-		type: ThreadTypes!
-		message: MessageContentInput!
+		threadType: ThreadTypes!
+		messageType: MessageTypes!
+		content: MessageContentInput!
 	}
 
 	extend type Query {

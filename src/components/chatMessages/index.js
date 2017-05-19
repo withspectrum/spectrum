@@ -88,7 +88,7 @@ class ChatMessages extends Component {
       const triggerMutation = () => {
         return (
           toggleReaction({
-            message: message.id,
+            messageId: message.id,
             type: 'like',
           })
             // after the mutation occurs, it will either return an error or the new
@@ -146,7 +146,10 @@ class ChatMessages extends Component {
               <MessagesWrapper>
                 {renderBubbleHeader(evaluating, me)}
                 {group.map((message, i) => {
-                  if (message.type === 'text' || message.type === 'emoji') {
+                  if (
+                    message.messageType === 'text' ||
+                    message.messageType === 'emoji'
+                  ) {
                     const emojiOnly = onlyContainsEmoji(message.content.body);
                     const TextBubble = emojiOnly ? EmojiBubble : Bubble;
                     return (
@@ -160,13 +163,13 @@ class ChatMessages extends Component {
                           persisted={message.persisted}
                           sender={sender}
                           message={message.content}
-                          type={message.type}
+                          type={message.messageType}
                         />
 
                         {!emojiOnly && renderReaction(message, sender, me)}
                       </MessageWrapper>
                     );
-                  } else if (message.type === 'media') {
+                  } else if (message.messageType === 'media') {
                     return (
                       <MessageWrapper
                         me={me}

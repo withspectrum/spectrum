@@ -8,7 +8,7 @@ export const messageInfoFragment = gql`
   fragment messageInfo on Message {
     id
     timestamp
-    type
+    messageType
     sender {
       ...userInfo
     }

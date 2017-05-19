@@ -58,8 +58,8 @@ const CommunityWithData = ({
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
 
-  const toggleMembership = id => {
-    toggleCommunityMembership({ id })
+  const toggleMembership = communityId => {
+    toggleCommunityMembership({ communityId })
       .then(({ data: { toggleCommunityMembership } }) => {
         const str = toggleCommunityMembership.isMember
           ? `Joined ${toggleCommunityMembership.name}!`

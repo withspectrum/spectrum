@@ -34,7 +34,7 @@ class CommunityWithData extends Component {
       name: community.name,
       slug: community.slug,
       description: community.description,
-      id: community.id,
+      communityId: community.id,
       website: community.website,
       image: community.profilePhoto,
       file: null,
@@ -86,14 +86,14 @@ class CommunityWithData extends Component {
 
   save = e => {
     e.preventDefault();
-    const { name, slug, description, website, file, id } = this.state;
+    const { name, slug, description, website, file, communityId } = this.state;
     const input = {
       name,
       slug,
       description,
       website,
       file,
-      id,
+      communityId,
     };
     this.props
       .editCommunity(input)
@@ -117,7 +117,7 @@ class CommunityWithData extends Component {
       });
   };
 
-  triggerDeleteCommunity = (e, id) => {
+  triggerDeleteCommunity = (e, communityId) => {
     e.preventDefault();
     const { name, communityData } = this.state;
     const message = (
@@ -142,7 +142,7 @@ class CommunityWithData extends Component {
 
     return this.props.dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {
-        id,
+        id: communityId,
         entity: 'community',
         message,
       })

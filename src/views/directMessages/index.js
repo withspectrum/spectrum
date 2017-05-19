@@ -40,9 +40,14 @@ class DirectMessages extends Component {
   };
 
   render() {
-    const { match, currentUser, data } = this.props;
+    const { match, history, currentUser, data } = this.props;
+
+    if (match.isExact) {
+      history.push('/messages/new');
+    }
 
     const { activeThread } = this.state;
+
     const threads = data.user.directMessageThreadsConnection.edges.map(
       thread => thread.node
     );
@@ -52,7 +57,7 @@ class DirectMessages extends Component {
         <MessagesList>
           <Link to="/messages/new">
             <ComposeHeader>
-              <Icon color={'brand.default'} glyph="write" size={32} />
+              <Icon color={'brand.default'} glyph="post" size={32} />
             </ComposeHeader>
           </Link>
           <ThreadsList

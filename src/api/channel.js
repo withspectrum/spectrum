@@ -2,6 +2,9 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { channelInfoFragment } from './fragments/channel/channelInfo';
+import { userInfoFragment } from './fragments/user/userInfo';
+import { communityInfoFragment } from './fragments/community/communityInfo';
+import { channelMetaDataFragment } from './fragments/channel/channelMetaData';
 
 /*
   Create a new channel
@@ -35,17 +38,17 @@ export const createChannelMutation = graphql(
   Delete a channel
 */
 const DELETE_CHANNEL_MUTATION = gql`
-  mutation deleteChannel($id: ID!) {
-    deleteChannel (id: $id)
+  mutation deleteChannel($channelId: ID!) {
+    deleteChannel (channelId: $channelId)
   }
 `;
 
 const DELETE_CHANNEL_OPTIONS = {
-  props: ({ id, mutate }) => ({
-    deleteChannel: id =>
+  props: ({ channelId, mutate }) => ({
+    deleteChannel: channelId =>
       mutate({
         variables: {
-          id,
+          channelId,
         },
       }),
   }),
@@ -88,8 +91,8 @@ export const editChannelMutation = graphql(
   Join or leave a channel
 */
 const TOGGLE_CHANNEL_SUBSCRIPTION_MUTATION = gql`
-  mutation toggleChannelSubscription($id: ID!) {
-    toggleChannelSubscription (id: $id) {
+  mutation toggleChannelSubscription($channelId: ID!) {
+    toggleChannelSubscription (channelId: $channelId) {
       ...channelInfo
     }
   }
@@ -97,11 +100,11 @@ const TOGGLE_CHANNEL_SUBSCRIPTION_MUTATION = gql`
 `;
 
 const TOGGLE_CHANNEL_SUBSCRIPTION_OPTIONS = {
-  props: ({ id, mutate }) => ({
-    toggleChannelSubscription: ({ id }) =>
+  props: ({ channelId, mutate }) => ({
+    toggleChannelSubscription: ({ channelId }) =>
       mutate({
         variables: {
-          id,
+          channelId,
         },
       }),
   }),
@@ -119,9 +122,22 @@ const TOGGLE_PENDING_USER_MUTATION = gql`
   mutation togglePendingUser($input: TogglePendingUserInput!) {
     togglePendingUser(input: $input) {
       ...channelInfo
+      pendingUsers {
+        ...userInfo
+      }
+      blockedUsers {
+        ...userInfo
+      }
+      ...channelMetaData
+      community {
+        ...communityInfo
+      }
     }
   }
   ${channelInfoFragment}
+  ${userInfoFragment}
+  ${communityInfoFragment}
+  ${channelMetaDataFragment}
 `;
 
 const TOGGLE_PENDING_USER_OPTIONS = {
@@ -147,9 +163,23 @@ const UNBLOCK_USER_MUTATION = gql`
   mutation unblockUser($input: UnblockUserInput!) {
     unblockUser(input: $input) {
       ...channelInfo
+      pendingUsers {
+        ...userInfo
+      }
+      blockedUsers {
+        ...userInfo
+      }
+      ...channelMetaData
+      community {
+        ...communityInfo
+      }
     }
   }
   ${channelInfoFragment}
+  ${channelInfoFragment}
+  ${userInfoFragment}
+  ${communityInfoFragment}
+  ${channelMetaDataFragment}
 `;
 
 const UNBLOCK_USER_OPTIONS = {
@@ -169,10 +199,24 @@ export const unblockUserInChannelMutation = graphql(
 );
 
 export const CHECK_UNIQUE_CHANNEL_SLUG_QUERY = gql`
-  query getChannel($slug: String, $community: String) {
-    channel(slug: $slug, community: $community) {
+  query getChannel($channelSlug: String, $communitySlug: String) {
+    channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
       ...channelInfo
+      pendingUsers {
+        ...userInfo
+      }
+      blockedUsers {
+        ...userInfo
+      }
+      ...channelMetaData
+      community {
+        ...communityInfo
+      }
     }
   }
   ${channelInfoFragment}
+  ${channelInfoFragment}
+  ${userInfoFragment}
+  ${communityInfoFragment}
+  ${channelMetaDataFragment}
 `;

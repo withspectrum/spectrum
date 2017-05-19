@@ -99,14 +99,14 @@ class CreateChannelModal extends Component {
   };
 
   checkSlug = slug => {
-    const community = this.props.modalProps.slug;
+    const communitySlug = this.props.modalProps.slug;
     // check the db to see if this channel slug exists
     this.props.client
       .query({
         query: CHECK_UNIQUE_CHANNEL_SLUG_QUERY,
         variables: {
-          slug,
-          community,
+          channelSlug: slug,
+          communitySlug,
         },
       })
       .then(({ data }) => {
@@ -177,7 +177,7 @@ class CreateChannelModal extends Component {
 
     // create the mutation input
     const input = {
-      community: id,
+      communityId: id,
       name,
       slug,
       description,
@@ -187,7 +187,7 @@ class CreateChannelModal extends Component {
     this.props
       .createChannel(input)
       .then(({ data: { createChannel } }) => {
-        this.props.history.push(`/${modalProps.slug}/${createChannel.slug}`);
+        window.location.href = `/${modalProps.slug}/${createChannel.slug}`;
         this.close();
         this.props.dispatch(
           addToastWithTimeout('success', 'Channel successfully created!')
@@ -280,6 +280,7 @@ class CreateChannelModal extends Component {
             >
               Private channel
             </Checkbox>
+
             {isPrivate
               ? <Description>
                   Only approved people on Spectrum can see the threads, messages, and members in this channel. You can manually approve users who request to join this channel.

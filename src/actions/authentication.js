@@ -12,6 +12,10 @@ export const logout = () => {
 
 export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
   const obj = {};
+
+  if (!user) {
+    logout();
+  }
   // construct a clean object that doesn't include any metadata from apollo
   // like __typename
   obj['currentUser'] = {

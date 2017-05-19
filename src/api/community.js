@@ -23,22 +23,22 @@ const CREATE_COMMUNITY_OPTIONS = {
         variables: {
           input,
         },
-        update: (proxy, { data: { createCommunity } }) => {
-          // read the data from the cache for the queries this affects
-          const data = proxy.readQuery({
-            query: GET_CURRENT_USER_COMMUNITIES_QUERY,
-          });
-
-          // insert the new community
-          data.user.communityConnection.edges.push({
-            node: {
-              ...createCommunity,
-            },
-          });
-
-          // write the new data back to the cache
-          proxy.writeQuery({ query: GET_CURRENT_USER_COMMUNITIES_QUERY, data });
-        },
+        // update: (proxy, { data: { createCommunity } }) => {
+        //   // read the data from the cache for the queries this affects
+        //   const data = proxy.readQuery({
+        //     query: GET_CURRENT_USER_COMMUNITIES_QUERY,
+        //   });
+        //
+        //   // insert the new community
+        //   data.user.communityConnection.edges.push({
+        //     node: {
+        //       ...createCommunity,
+        //     },
+        //   });
+        //
+        //   // write the new data back to the cache
+        //   proxy.writeQuery({ query: GET_CURRENT_USER_COMMUNITIES_QUERY, data });
+        // },
       }),
   }),
 };
@@ -105,8 +105,8 @@ export const editCommunityMutation = graphql(
   Join or leave a community
 */
 const TOGGLE_COMMUNITY_MEMBERSHIP_MUTATION = gql`
-  mutation toggleCommunityMembership($id: ID!) {
-    toggleCommunityMembership (id: $id) {
+  mutation toggleCommunityMembership($communityId: ID!) {
+    toggleCommunityMembership (communityId: $communityId) {
       ...communityInfo
     }
   }
@@ -114,11 +114,11 @@ const TOGGLE_COMMUNITY_MEMBERSHIP_MUTATION = gql`
 `;
 
 const TOGGLE_COMMUNITY_MEMBERSHIP_OPTIONS = {
-  props: ({ id, mutate }) => ({
-    toggleCommunityMembership: ({ id }) =>
+  props: ({ communityId, mutate }) => ({
+    toggleCommunityMembership: ({ communityId }) =>
       mutate({
         variables: {
-          id,
+          communityId,
         },
       }),
   }),

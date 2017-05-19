@@ -12,7 +12,7 @@ import branch from 'recompose/branch';
 import Textarea from 'react-textarea-autosize';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-import { TextButton } from '../buttons';
+import { Button } from '../buttons';
 import Icon from '../icons';
 import { LoadingCard } from '../loading';
 import { getComposerCommunitiesAndChannels } from './queries';
@@ -102,7 +102,7 @@ class ThreadComposerWithData extends Component {
       : availableChannels.filter(
           // get the channels for the proper community
           channels => channels[0].community.id === activeCommunity
-        )[0].id; // and select the first one in the list
+        )[0][0].id; // and select the first one in the list
 
     this.state = {
       isOpen: false,
@@ -167,6 +167,11 @@ class ThreadComposerWithData extends Component {
   };
 
   publishThread = () => {
+    console.log(
+      'attemping to publish thread in ',
+      this.state.activeChannel,
+      this.state.activeCommunity
+    );
     // if no title and no channel is set, don't allow a thread to be published
     if (!this.state.title || !this.state.activeChannel) {
       return;
@@ -179,12 +184,12 @@ class ThreadComposerWithData extends Component {
 
     // define new constants in order to construct the proper shape of the
     // input for the publishThread mutation
-    const { activeChannel, activeCommunity, title, description } = this.state;
-    const channel = activeChannel;
-    const community = activeCommunity;
+    const { activeChannel, activeCommunity, title, body } = this.state;
+    const channelId = activeChannel;
+    const communityId = activeCommunity;
     const content = {
       title,
-      description,
+      body,
     };
 
     // this.props.mutate comes from a higher order component defined at the
@@ -193,8 +198,8 @@ class ThreadComposerWithData extends Component {
       .mutate({
         variables: {
           thread: {
-            channel,
-            community,
+            channelId,
+            communityId,
             content,
           },
         },
@@ -256,7 +261,7 @@ class ThreadComposerWithData extends Component {
               onChange={this.changeBody}
               value={this.state.body}
               style={ThreadDescription}
-              ref="descriptionTextarea"
+              ref="bodyTextarea"
               placeholder={
                 'Write more thoughts here, add photos, and anything else!'
               }
@@ -295,13 +300,14 @@ class ThreadComposerWithData extends Component {
                 </select>
               </Dropdowns>
 
-              <TextButton
+              <Button
                 onClick={this.publishThread}
                 loading={isPublishing}
                 disabled={!title || isPublishing}
+                color={'brand'}
               >
                 Publish
-              </TextButton>
+              </Button>
             </Actions>
           </ContentContainer>
 
