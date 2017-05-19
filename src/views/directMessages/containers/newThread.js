@@ -518,12 +518,12 @@ class NewThread extends Component {
   componentWillMount() {
     // can take an optional param of an array of user objects to automatically
     // populate the new message composer
-    const { initNewThreadWithUsers } = this.props;
+    const { initNewThreadWithUser } = this.props;
 
     // if the prop is present, add the users to the selected users state
-    if (initNewThreadWithUsers.length > 0) {
+    if (initNewThreadWithUser.length > 0) {
       this.setState({
-        selectedUsersForNewThread: [...initNewThreadWithUsers],
+        selectedUsersForNewThread: [...initNewThreadWithUser],
       });
     }
   }
@@ -732,7 +732,7 @@ class NewThread extends Component {
 }
 
 const mapStateToProps = state => ({
-  initNewThreadWithUsers: state.directMessageThreads.initNewThreadWithUsers,
+  initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,
 });
 
 export default compose(
