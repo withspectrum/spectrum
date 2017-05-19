@@ -109,8 +109,8 @@ export type GraphQLContext = {
     [key: string]: Loader,
   },
 };
-// Start webserver
-app.listen(PORT);
+
+const server = createServer(app);
 
 // Start subscriptions server
 const subscriptionsServer = new SubscriptionServer(
@@ -118,9 +118,13 @@ const subscriptionsServer = new SubscriptionServer(
     subscriptionManager,
   },
   {
-    server: app,
+    server,
+    path: '/websocket',
   }
 );
+
+// Start webserver
+server.listen(PORT);
 
 // Start database listeners
 listeners.start();

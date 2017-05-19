@@ -9,13 +9,13 @@ import {
   addGraphQLSubscriptions,
 } from 'subscriptions-transport-ws';
 
-// TODO Fix for production
-const wsClient = new SubscriptionClient(`wss://${window.location.host}`);
+const IS_PROD = process.env.NODE_ENV === 'production';
+const wsClient = new SubscriptionClient(
+  `ws://${IS_PROD ? window.location.host : 'localhost:3001'}/websocket`
+);
 
 // In production the API is at the same URL, in development it's at a different port
-const API_URI = process.env.NODE_ENV === 'production'
-  ? '/api'
-  : 'http://localhost:3001/api';
+const API_URI = IS_PROD ? '/api' : 'http://localhost:3001/api';
 const networkInterface = createNetworkInterface({
   uri: API_URI,
   opts: {
