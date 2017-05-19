@@ -123,33 +123,11 @@ export const getCurrentUserProfile = graphql(
 			user: currentUser {
         ...userInfo
         ...userMetaData
+        ...userCommunities
       }
 		}
     ${userInfoFragment}
     ${userMetaDataFragment}
+    ${userCommunitiesFragment}
 	`
-);
-
-export const GET_CURRENT_USER_COMMUNITIES_QUERY = gql`
-  query currentUserCommunities {
-    user: currentUser {
-      ...userCommunities
-    }
-  }
-  ${userCommunitiesFragment}
-`;
-
-export const GET_CURRENT_USER_COMMUNITIES_OPTIONS = {
-  props: ({ data: { error, loading, user } }) => ({
-    data: {
-      error,
-      loading,
-      communities: user ? user.communityConnection.edges : '',
-    },
-  }),
-};
-
-export const getCurrentUserCommunities = graphql(
-  GET_CURRENT_USER_COMMUNITIES_QUERY,
-  GET_CURRENT_USER_COMMUNITIES_OPTIONS
 );

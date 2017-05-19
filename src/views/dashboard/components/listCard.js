@@ -20,8 +20,7 @@ import {
   MoreLink,
 } from '../style';
 
-const ListCardPure = ({ data: { communities }, data, dispatch }) => {
-  console.log('communities card', data);
+const ListCard = ({ communities, dispatch }) => {
   if (!!communities) {
     return (
       <StyledCard>
@@ -56,7 +55,5 @@ const ListCardPure = ({ data: { communities }, data, dispatch }) => {
     return <div />;
   }
 };
-
-const ListCard = compose(displayLoadingCard)(ListCardPure);
 
 export default connect()(ListCard);

@@ -7,7 +7,7 @@ import { ListCardItemDirectMessageThread } from './messageThreadListItem';
 class ThreadsList extends Component {
   render() {
     const { threads, currentUser, active } = this.props;
-    console.log('threads', threads);
+
     return (
       <div>
         {threads.map(thread => {

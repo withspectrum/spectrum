@@ -87,7 +87,7 @@ const getEverything = (userId: string): Promise<Array<any>> => {
       .table('threads')
       .orderBy(db.desc('createdAt'))
       // Add the channel object to each thread
-      .eqJoin('channel', db.table('channels'))
+      .eqJoin('channelId', db.table('channels'))
       // Only take the members of a channel
       .pluck({ left: true, right: { members: true } })
       .zip()

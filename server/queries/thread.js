@@ -42,7 +42,7 @@ module.exports = {
                 self.indexOf(id) === index
             )
         )
-        .then(users => getUsers(console.log('with users', users) || users));
+        .then(users => getUsers(users));
     },
     isCreator: (
       { creatorId }: { creatorId: String },

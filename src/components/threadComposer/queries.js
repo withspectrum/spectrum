@@ -1,6 +1,7 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
+import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import {
   communityInfoFragment,
 } from '../../api/fragments/community/communityInfo';
@@ -19,6 +20,7 @@ query getComposerCommunitiesAndChannels {
   # join/leave, follow/unfollow buttons, etc. as the user browsers around
   # to different threads, channels, and users.
   user: currentUser {
+    ...userInfo
     communityConnection {
       edges {
         node {
@@ -39,6 +41,7 @@ query getComposerCommunitiesAndChannels {
   }
 }
 ${communityInfoFragment}
+${userInfoFragment}
 ${channelInfoFragment}
 `;
 

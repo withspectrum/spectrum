@@ -74,39 +74,33 @@ module.exports = {
       pageInfo: {
         hasNextPage: false,
       },
-      edges: getCommunitiesByUser(user.id).then(
-        communities =>
-          console.log(communities) ||
-          communities.map(community => ({
-            node: {
-              ...community,
-              isOwner: community.owners.indexOf(user.id) > -1,
-            },
-          }))
+      edges: getCommunitiesByUser(user.id).then(communities =>
+        communities.map(community => ({
+          node: {
+            ...community,
+            isOwner: community.owners.indexOf(user.id) > -1,
+          },
+        }))
       ),
     }),
     channelConnection: (user: Object) => ({
       pageInfo: {
         hasNextPage: false,
       },
-      edges: getChannelsByUser(user.id).then(
-        channels =>
-          console.log(channels) ||
-          channels.map(channel => ({
-            node: channel,
-          }))
+      edges: getChannelsByUser(user.id).then(channels =>
+        channels.map(channel => ({
+          node: channel,
+        }))
       ),
     }),
     directMessageThreadsConnection: (user: Object) => ({
       pageInfo: {
         hasNextPage: false,
       },
-      edges: getDirectMessageThreadsByUser(user.id).then(
-        threads =>
-          console.log('dm threads ', threads) ||
-          threads.map(thread => ({
-            node: thread,
-          }))
+      edges: getDirectMessageThreadsByUser(user.id).then(threads =>
+        threads.map(thread => ({
+          node: thread,
+        }))
       ),
     }),
     threadConnection: (

@@ -7,11 +7,7 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 
-import {
-  getEverythingThreads,
-  getCurrentUserProfile,
-  getCurrentUserCommunities,
-} from './queries';
+import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
 
 import { displayLoadingScreen } from '../../components/loading';
@@ -25,8 +21,6 @@ import ListCard from './components/listCard';
 const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 
 const CurrentUserProfile = compose(getCurrentUserProfile)(UserProfile);
-
-const CommunitiesListCard = compose(getCurrentUserCommunities)(ListCard);
 
 const DashboardPure = ({
   data: { user, error },
@@ -61,18 +55,18 @@ const DashboardPure = ({
     // window.location.href = '/';
   }
 
-  console.log(data);
+  const communities = user.communityConnection.edges;
 
   return (
     <AppViewWrapper>
       <Column type="secondary">
         <CurrentUserProfile profileSize="mini" />
-        <CommunitiesListCard />
+        <ListCard communities={communities} />
       </Column>
 
       <Column type="primary" alignItems="center">
         {// composer should only appear if a user is part of a community
-        user && user.communityConnection && <ThreadComposer />}
+        user && communities && <ThreadComposer />}
         <EverythingThreadFeed />
       </Column>
     </AppViewWrapper>

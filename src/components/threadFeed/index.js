@@ -28,7 +28,6 @@ const ThreadFeedPure = ({
   data: { threads, loading, fetchMore, error, hasNextPage },
   data,
 }) => {
-  console.log('threadfeed data', data);
   if (error && threads.length > 0) {
     return <div>Oops, something went wrong</div>;
   }

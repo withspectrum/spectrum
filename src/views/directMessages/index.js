@@ -41,7 +41,7 @@ class DirectMessages extends Component {
 
   render() {
     const { match, currentUser, data } = this.props;
-    console.log('dm thread', data);
+
     const { activeThread } = this.state;
     const threads = data.user.directMessageThreadsConnection.edges.map(
       thread => thread.node

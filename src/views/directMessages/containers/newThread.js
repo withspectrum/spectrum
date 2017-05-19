@@ -54,8 +54,6 @@ class NewThread extends Component {
   constructor(props) {
     super(props);
 
-    console.log('newthreadcomposer', props.threads);
-
     this.state = {
       // user types in a string that returns all users whose username
       // or displayName contains the string
@@ -476,7 +474,6 @@ class NewThread extends Component {
 
     // will return null or an object
     const existingThread = cleanedExistingThreads.filter(thread => {
-      console.log('foo', thread);
       const sortedUsers = thread.participants.sort().join('');
 
       if (sortedUsers === sortedSelectedUsersForNewThread) {
@@ -588,8 +585,6 @@ class NewThread extends Component {
       existingThreadWithMessages,
     } = this.state;
     const { currentUser } = this.props;
-
-    console.log(this.state);
 
     return (
       <MessagesContainer>
