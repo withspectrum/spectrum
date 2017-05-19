@@ -8,15 +8,15 @@ export const messageInfoFragment = gql`
   fragment messageInfo on Message {
     id
     timestamp
+    type
     sender {
       ...userInfo
     }
     reactions {
       ...reactionInfo
     }
-    message {
-      type
-      content
+    content {
+      body
     }
   }
   ${userInfoFragment}

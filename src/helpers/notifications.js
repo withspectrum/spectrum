@@ -33,7 +33,7 @@ export const constructMessage = notification => {
     case 'NEW_THREAD':
       return (
         <span>
-          <Link to={`/@${sender.username}`}>{sender.displayName}</Link>
+          <Link to={`/@${sender.username}`}>{sender.name}</Link>
           {' '}posted a new thread in{' '}
           <Link to={`/${community.slug}/${channel.slug}`}>
             {community.name}/{channel.name}
@@ -44,7 +44,7 @@ export const constructMessage = notification => {
     case 'NEW_MESSAGE':
       return (
         <span>
-          <Link to={`/@${sender.username}`}>{sender.displayName}</Link>
+          <Link to={`/@${sender.username}`}>{sender.name}</Link>
           {' '}replied to your{' '}
           <Link to={`/thread/${thread.id}`}>thread</Link>:
         </span>
@@ -60,7 +60,7 @@ export const constructLinklessMessage = notification => {
     case 'NEW_THREAD':
       return (
         <span>
-          <b>{sender.displayName}</b>
+          <b>{sender.name}</b>
           {' '}posted a new thread in{' '}
           <b>{community.name}/{channel.name}</b>
         </span>
@@ -68,7 +68,7 @@ export const constructLinklessMessage = notification => {
     case 'NEW_MESSAGE':
       return (
         <span>
-          <b>{sender.displayName}</b>
+          <b>{sender.name}</b>
           {' '}replied to your{' '}
           <b>thread</b>
         </span>
@@ -91,7 +91,7 @@ export const constructContent = notification => {
             <Icon glyph={'messages'} />
             <hr />
           </HorizontalRuleWithIcon>
-          <ChatMessage data-from={sender.displayName}>
+          <ChatMessage data-from={sender.name}>
             {content.excerpt}
           </ChatMessage>
         </div>

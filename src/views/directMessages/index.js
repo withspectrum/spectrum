@@ -15,7 +15,7 @@ import {
 } from '../../api/directMessageThread';
 import Icon from '../../components/icons';
 import { displayLoadingScreen } from '../../components/loading';
-import ThreadsList from './components/groupsList';
+import ThreadsList from './components/threadsList';
 import NewThread from './containers/newThread';
 import ExistingThread from './containers/existingThread';
 import { View, MessagesList, ComposeHeader } from './style';
@@ -43,8 +43,8 @@ class DirectMessages extends Component {
     const { match, currentUser, data } = this.props;
     console.log('dm thread', data);
     const { activeThread } = this.state;
-    const groups = data.user.directMessageThreadsConnection.edges.map(
-      group => group.node
+    const threads = data.user.directMessageThreadsConnection.edges.map(
+      thread => thread.node
     );
 
     return (
@@ -57,7 +57,7 @@ class DirectMessages extends Component {
           </Link>
           <ThreadsList
             active={activeThread}
-            groups={groups}
+            threads={threads}
             currentUser={currentUser}
           />
         </MessagesList>
@@ -70,27 +70,27 @@ class DirectMessages extends Component {
         />
 
         {/*
-          pass the user's existing DM groups into the composer so that we can more quickly
-          determine if the user is creating a new group or has typed the names that map
+          pass the user's existing DM threads into the composer so that we can more quickly
+          determine if the user is creating a new thread or has typed the names that map
           to an existing DM thread
          */}
         <Route
           path={`${match.url}/new`}
           render={props => (
-            <NewThread {...props} groups={groups} currentUser={currentUser} />
+            <NewThread {...props} threads={threads} currentUser={currentUser} />
           )}
         />
 
         {/*
           if a thread is being viewed and the threadId !== 'new', pass the
-          groups down the tree to fetch the messages for the urls threadId
+          threads down the tree to fetch the messages for the urls threadId
          */}
         <Route
           path={`${match.url}/:threadId`}
           render={props => (
             <ExistingThread
               {...props}
-              groups={groups}
+              threads={threads}
               currentUser={currentUser}
               setActiveThread={this.setActiveThread}
             />

@@ -125,9 +125,9 @@ console.log('Generating direct messages...');
 let direct_messages = [];
 directMessageThreads.forEach(thread => {
   const threadMessages = [];
-  const users = thread.users;
+  const participants = thread.participants;
   randomAmount({ max: 100 }, () => {
-    const sender = faker.random.arrayElement(users);
+    const sender = faker.random.arrayElement(participants);
     const message = generateMessage(sender, thread.id, 'directMessageThread');
     direct_messages.push(message);
     threadMessages.push(message);

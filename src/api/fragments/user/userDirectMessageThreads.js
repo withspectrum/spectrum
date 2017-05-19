@@ -16,7 +16,7 @@ export const userDirectMessageThreadsFragment = gql`
       edges {
         node {
           ...directMessageThreadInfo
-          users {
+          participants {
             ...userInfo
           }
         }

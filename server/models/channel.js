@@ -22,7 +22,7 @@ const getChannelsByUser = (userId: string): Promise<Array<Object>> => {
 };
 
 const getChannelBySlug = (
-  slug: string,
+  channelSlug: string,
   communitySlug: string
 ): Promise<Object> => {
   return db
@@ -30,7 +30,7 @@ const getChannelBySlug = (
     .eqJoin('communityId', db.table('communities'))
     .filter({
       left: {
-        slug: slug,
+        slug: channelSlug,
       },
       right: {
         slug: communitySlug,

@@ -29,7 +29,7 @@ const ListCardPure = ({ data }) => {
                 <ListCardItem
                   contents={item.node}
                   withDescription={false}
-                  meta={`${item.node.metaData.subscribers} members`}
+                  meta={`${item.node.metaData.members} members`}
                 >
                   <Icon glyph="settings" />
                 </ListCardItem>

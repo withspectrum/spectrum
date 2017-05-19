@@ -82,7 +82,7 @@ const ThreadDetailPure = ({
     <ThreadWrapper>
       <ContextRow>
         <Byline onClick={e => openUserProfileModal(e, thread.creator)}>
-          {thread.creator.displayName}
+          {thread.creator.name}
         </Byline>
         {currentUser &&
           (thread.isCreator ||

@@ -70,10 +70,10 @@ const threadsQueryOptions = {
         }),
     },
   }),
-  options: ({ slug, community }) => ({
+  options: ({ channelSlug, communitySlug }) => ({
     variables: {
-      slug: slug,
-      community: community,
+      channelSlug: channelSlug,
+      communitySlug: communitySlug,
     },
     reducer: (prev, action, variables) => {
       /*
@@ -98,7 +98,7 @@ const threadsQueryOptions = {
           being viewed, or in a channel that has already been fetched
           and cached by apollo, insert the new thread into the array of edges
         */
-        if (newThread.channel.slug === slug) {
+        if (newThread.channel.slug === channelSlug) {
           /*
             Not sure if this is needed right now, but I'm encoding the thread id
             and setting a new cursor so that we can always be sure that every
@@ -144,8 +144,8 @@ const threadsQueryOptions = {
 
 export const getChannelThreads = graphql(
   gql`
-    query getChannelThreads($slug: String, $community: String, $after: String) {
-			channel(slug: $slug, community: $community) {
+    query getChannelThreads($channelSlug: String, $communitySlug: String, $after: String) {
+			channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
         ...channelInfo
         ...channelThreads
       }
@@ -165,16 +165,16 @@ export const getChannelThreads = graphql(
 const profileQueryOptions = {
   options: ({ match: { params: { channelSlug, communitySlug } } }) => ({
     variables: {
-      slug: channelSlug,
-      community: communitySlug,
+      channelSlug,
+      communitySlug,
     },
   }),
 };
 
 export const getChannel = graphql(
   gql`
-		query getChannel($slug: String, $community: String) {
-			channel(slug: $slug, community: $community) {
+		query getChannel($channelSlug: String, $communitySlug: String) {
+			channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
         ...channelInfo
         ...channelMetaData
       }

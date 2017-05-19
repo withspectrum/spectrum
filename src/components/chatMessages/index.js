@@ -49,7 +49,7 @@ class ChatMessages extends Component {
       if (me || robo) return;
 
       return (
-        <AvatarLabel tipText={sender.displayName} tipLocation="right">
+        <AvatarLabel tipText={sender.name} tipLocation="right">
           <Avatar
             onClick={() => openUserProfileModal(sender)}
             src={sender.profilePhoto}
@@ -65,7 +65,7 @@ class ChatMessages extends Component {
       return (
         <Byline me={me}>
           <Name onClick={() => openUserProfileModal(user)}>
-            {me ? 'You' : user.displayName}
+            {me ? 'You' : user.name}
           </Name>
         </Byline>
       );
@@ -146,13 +146,8 @@ class ChatMessages extends Component {
               <MessagesWrapper>
                 {renderBubbleHeader(evaluating, me)}
                 {group.map((message, i) => {
-                  if (
-                    message.message.type === 'text' ||
-                    message.message.type === 'emoji'
-                  ) {
-                    const emojiOnly = onlyContainsEmoji(
-                      message.message.content
-                    );
+                  if (message.type === 'text' || message.type === 'emoji') {
+                    const emojiOnly = onlyContainsEmoji(message.content.body);
                     const TextBubble = emojiOnly ? EmojiBubble : Bubble;
                     return (
                       <MessageWrapper
@@ -164,14 +159,14 @@ class ChatMessages extends Component {
                           me={me}
                           persisted={message.persisted}
                           sender={sender}
-                          message={message.message}
+                          message={message.content}
                           type={message.type}
                         />
 
                         {!emojiOnly && renderReaction(message, sender, me)}
                       </MessageWrapper>
                     );
-                  } else if (message.message.type === 'media') {
+                  } else if (message.type === 'media') {
                     return (
                       <MessageWrapper
                         me={me}
@@ -182,8 +177,8 @@ class ChatMessages extends Component {
                           me={me}
                           persisted={message.persisted}
                           sender={sender}
-                          imgSrc={message.message.content.url}
-                          message={message.message}
+                          imgSrc={message.content.body}
+                          message={message.content}
                         />
                         {renderReaction(message, sender, me)}
                       </MessageWrapper>

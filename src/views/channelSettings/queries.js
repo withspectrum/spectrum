@@ -10,8 +10,8 @@ import {
 
 export const getThisChannel = graphql(
   gql`
-    query thisChannel($slug: String, $community: String) {
-			channel(slug: $slug, community: $community) {
+    query thisChannel($channelSlug: String, $communitySlug: String) {
+			channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
         ...channelInfo
         pendingUsers {
           ...userInfo
@@ -33,8 +33,8 @@ export const getThisChannel = graphql(
   {
     options: ({ match }) => ({
       variables: {
-        slug: match.params.channelSlug,
-        community: match.params.communitySlug,
+        channelSlug: match.params.channelSlug,
+        communitySlug: match.params.communitySlug,
       },
     }),
   }

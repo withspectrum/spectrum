@@ -54,7 +54,7 @@ class UserProfileModal extends Component {
     return (
       <Modal
         isOpen={isOpen}
-        contentLabel={user.displayName}
+        contentLabel={user.name}
         onRequestClose={this.close}
         shouldCloseOnOverlayClick={true}
         style={styles}

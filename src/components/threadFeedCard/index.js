@@ -50,14 +50,14 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
   };
 
   const formatThreadPreview = () => {
-    if (props.data.content.description.length > 150) {
+    if (props.data.content.body.length > 150) {
       return (
         <Description>
-          {props.data.content.description.substring(1, 140)}...
+          {props.data.content.body.substring(1, 140)}...
         </Description>
       );
     } else {
-      return <Description>{props.data.content.description}</Description>;
+      return <Description>{props.data.content.body}</Description>;
     }
   };
 

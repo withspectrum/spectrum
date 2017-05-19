@@ -16,8 +16,8 @@ module.exports = {
   Query: {
     channel: (_: any, args: GetChannelArgs, { loaders }: GraphQLContext) => {
       if (args.id) return loaders.channel.load(args.id);
-      if (args.slug && args.communitySlug)
-        return getChannelBySlug(args.slug, args.communitySlug);
+      if (args.channelSlug && args.communitySlug)
+        return getChannelBySlug(args.channelSlug, args.communitySlug);
       return null;
     },
     topChannels: (_: any, { amount = 30 }: { amount: number }) =>

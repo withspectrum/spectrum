@@ -58,7 +58,7 @@ const DashboardPure = ({
   }
 
   if (!user || user === null) {
-    window.location.href = '/';
+    // window.location.href = '/';
   }
 
   console.log(data);

@@ -16,7 +16,7 @@ export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
   // like __typename
   obj['currentUser'] = {
     id: user.id,
-    displayName: user.displayName,
+    name: user.name,
     username: user.username,
     profilePhoto: user.profilePhoto,
   };

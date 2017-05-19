@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-import { sortAndThreadMessages } from '../../../helpers/messages';
+import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
 import { displayLoadingState } from '../../../components/loading';
 import Icon from '../../../components/icons';
@@ -47,7 +47,7 @@ class MessagesWithData extends Component {
       return <div>No messages yet!</div>;
     }
 
-    const sortedMessages = sortAndThreadMessages(messages);
+    const sortedMessages = sortAndGroupMessages(messages);
 
     return (
       <div style={{ width: '100%' }}>

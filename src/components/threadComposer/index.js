@@ -40,7 +40,7 @@ class ThreadComposerWithData extends Component {
   state: {
     isOpen: boolean,
     title: string,
-    description: string,
+    body: string,
     availableCommunities: Array<any>,
     availableChannels: Array<any>,
     activeCommunity: string,
@@ -109,7 +109,7 @@ class ThreadComposerWithData extends Component {
     this.state = {
       isOpen: false,
       title: '',
-      description: '',
+      body: '',
       availableCommunities,
       availableChannels,
       activeCommunity,
@@ -125,10 +125,10 @@ class ThreadComposerWithData extends Component {
     });
   };
 
-  changeDescription = e => {
-    const description = e.target.value;
+  changeBody = e => {
+    const body = e.target.value;
     this.setState({
-      description,
+      body,
     });
   };
 
@@ -257,8 +257,8 @@ class ThreadComposerWithData extends Component {
             />
 
             <Textarea
-              onChange={this.changeDescription}
-              value={this.state.description}
+              onChange={this.changeBody}
+              value={this.state.body}
               style={ThreadDescription}
               ref="descriptionTextarea"
               placeholder={

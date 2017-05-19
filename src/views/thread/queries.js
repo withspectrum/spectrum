@@ -18,7 +18,7 @@ export const GET_THREAD_QUERY = gql`
   query getThread($id: ID!) {
     thread(id: $id) {
       ...threadInfo
-      author {
+      creator {
         ...userInfo
         ...userMetaData
       }

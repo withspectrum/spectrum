@@ -6,17 +6,17 @@ import { ListCardItemDirectMessageThread } from './messageThreadListItem';
 
 class ThreadsList extends Component {
   render() {
-    const { groups, currentUser, active } = this.props;
-
+    const { threads, currentUser, active } = this.props;
+    console.log('threads', threads);
     return (
       <div>
-        {groups.map(group => {
+        {threads.map(thread => {
           return (
             <ListCardItemDirectMessageThread
-              group={group}
-              key={group.id}
+              thread={thread}
+              key={thread.id}
               currentUser={currentUser}
-              active={active === group.id}
+              active={active === thread.id}
             />
           );
         })}

@@ -26,18 +26,20 @@ export const ListCardItemDirectMessageThread = ({
   timestamp = timeDifference(Date.now(), timestamp);
 
   // filter currentUser out
-  const users = thread.users.filter(user => user.id !== currentUser.id);
+  const participants = thread.participants.filter(
+    user => user.id !== currentUser.id
+  );
 
   // concat a string of usernames for thread messages
-  let usersArray = users.length > 1
-    ? users
-        .map(user => user.displayName)
+  let participantsArray = participants.length > 1
+    ? participants
+        .map(user => user.name)
         .join(', ')
         .replace(/,(?!.*,)/gmi, ' and')
-    : users[0].displayName;
+    : participants[0].name;
 
-  // pass users to a helper function to generate the avatar displays
-  const avatars = renderAvatars(users);
+  // pass participants to a helper function to generate the avatar displays
+  const avatars = renderAvatars(participants);
 
   return (
     <Wrapper active={active}>
@@ -47,7 +49,7 @@ export const ListCardItemDirectMessageThread = ({
           <MessageGroupTextContainer>
             <MessageGroupByline>
               <Usernames>
-                <p>{usersArray}</p>
+                <p>{participantsArray}</p>
               </Usernames>
               <Timestamp>{timestamp}</Timestamp>
             </MessageGroupByline>

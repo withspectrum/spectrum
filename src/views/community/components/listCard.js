@@ -31,7 +31,7 @@ const ListCardPure = ({ data, dispatch }) => {
                 <ListCardItem
                   contents={item.node}
                   withDescription={false}
-                  meta={`${item.node.metaData.subscribers} members`}
+                  meta={`${item.node.metaData.members} members`}
                 >
                   <Icon glyph="view-forward" />
                 </ListCardItem>

@@ -18,11 +18,11 @@ type BubbleProps = {
 export const Bubble = (props: BubbleProps) => {
   const { me, persisted, message, type } = props;
 
-  const formatMessageForChannelLinks = (message: string): string => {
-    if (!message) {
+  const formatMessageForChannelLinks = (body: string): string => {
+    if (!body) {
       return '';
     }
-    const cleanMessage = sanitizeHtml(message);
+    const cleanMessage = sanitizeHtml(body);
 
     return cleanMessage;
     // const linkedMessage = Autolinker.link(
@@ -36,11 +36,11 @@ export const Bubble = (props: BubbleProps) => {
     // return linkedMessage.replace(CHANNEL_ANCHORS, '>$1</a>');
   };
 
-  const formatMessageForLinks = (message: string): string => {
-    if (!message) {
+  const formatMessageForLinks = (body: string): string => {
+    if (!body) {
       return '';
     }
-    const cleanMessage = sanitizeHtml(message);
+    const cleanMessage = sanitizeHtml(body);
 
     const linkedMessage = Autolinker.link(cleanMessage);
 
@@ -55,8 +55,8 @@ export const Bubble = (props: BubbleProps) => {
         // if in a thread, we convert `~channel` into a link.
         // if in a groupMessage, don't regex links
         __html: type === 'thread'
-          ? formatMessageForChannelLinks(message.content)
-          : formatMessageForLinks(message.content),
+          ? formatMessageForChannelLinks(message.body)
+          : formatMessageForLinks(message.body),
       }}
     />
   );
@@ -69,7 +69,7 @@ export const EmojiBubble = (props: BubbleProps) => {
       me={me}
       persisted={persisted}
       dangerouslySetInnerHTML={{
-        __html: sanitizeHtml(message.content),
+        __html: sanitizeHtml(message.body),
       }}
     />
   );

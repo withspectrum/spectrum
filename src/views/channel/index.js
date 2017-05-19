@@ -113,7 +113,10 @@ const ChannelViewPure = ({
                 activeChannel={match.params.channelSlug}
               />
             : <span />}
-          <ThreadFeedWithData slug={channelSlug} community={communitySlug} />
+          <ThreadFeedWithData
+            channelSlug={channelSlug}
+            communitySlug={communitySlug}
+          />
         </Column>
       </AppViewWrapper>
     );

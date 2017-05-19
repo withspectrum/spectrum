@@ -76,7 +76,7 @@ const UserWithData = ({
           src={user.profilePhoto}
         />
         <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-          <Title>{user.displayName}</Title>
+          <Title>{user.name}</Title>
           <Subtitle>
             @{user.username}
             {user.isAdmin && <Badge type="admin" />}

@@ -30,7 +30,7 @@ module.exports = {
           messages
             .map(
               // create an array of user ids
-              message => message.sender
+              message => message.senderId
             )
             .filter(
               // remove the creatorId from the list
@@ -42,7 +42,7 @@ module.exports = {
                 self.indexOf(id) === index
             )
         )
-        .then(users => getUsers(users));
+        .then(users => getUsers(console.log('with users', users) || users));
     },
     isCreator: (
       { creatorId }: { creatorId: String },
@@ -53,11 +53,11 @@ module.exports = {
       return user.id === creatorId;
     },
     isChannelOwner: (
-      { channeId }: { channelId: String },
+      { channelId }: { channelId: String },
       _: any,
       { user }: Context
     ) => {
-      if (!channel || !user) return false;
+      if (!channelId || !user) return false;
       return getChannels([channelId]).then(
         data => data[0].owners.indexOf(user.id) > -1
       );
@@ -67,7 +67,7 @@ module.exports = {
       _: any,
       { user }: Context
     ) => {
-      if (!community || !user) return false;
+      if (!communityId || !user) return false;
       return getCommunities([communityId]).then(
         data => data[0].owners.indexOf(user.id) > -1
       );

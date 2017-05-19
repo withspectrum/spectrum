@@ -51,8 +51,10 @@ class NewThread extends Component {
     chatInputIsFocused: false,
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
+    console.log('newthreadcomposer', props.threads);
 
     this.state = {
       // user types in a string that returns all users whose username
@@ -460,7 +462,7 @@ class NewThread extends Component {
     const cleanedExistingThreads = threads.map(thread => {
       return {
         id: thread.id,
-        users: thread.users
+        participants: thread.participants
           .filter(user => user.id !== currentUser.id)
           .map(user => user.id),
       };
@@ -474,7 +476,8 @@ class NewThread extends Component {
 
     // will return null or an object
     const existingThread = cleanedExistingThreads.filter(thread => {
-      const sortedUsers = thread.users.sort().join('');
+      console.log('foo', thread);
+      const sortedUsers = thread.participants.sort().join('');
 
       if (sortedUsers === sortedSelectedUsersForNewThread) {
         return thread;
@@ -498,16 +501,16 @@ class NewThread extends Component {
             id: existingThread[0].id,
           },
         })
-        .then(({ data: { directMessageTHread } }) => {
+        .then(({ data: { directMessageThread } }) => {
           // stop loading
           this.setState({
             loadingExistingThreadMessages: false,
           });
 
           // if messages were found
-          if (directMessageTHread.id) {
+          if (directMessageThread.id) {
             this.setState({
-              existingThreadWithMessages: directMessageTHread,
+              existingThreadWithMessages: directMessageThread,
             });
             // if no messages were found
           } else {
@@ -546,7 +549,7 @@ class NewThread extends Component {
     }
 
     const input = {
-      users: selectedUsersForNewThread.map(user => user.id),
+      participants: selectedUsersForNewThread.map(user => user.id),
       message,
     };
 
@@ -586,6 +589,8 @@ class NewThread extends Component {
     } = this.state;
     const { currentUser } = this.props;
 
+    console.log(this.state);
+
     return (
       <MessagesContainer>
         <ComposerInputWrapper>
@@ -600,7 +605,7 @@ class NewThread extends Component {
                     onClick={() => this.setFocusedSelectedUser(user.id)}
                     key={user.id}
                   >
-                    {user.displayName}
+                    {user.name}
                   </Pill>
                 );
               })}
@@ -638,7 +643,7 @@ class NewThread extends Component {
                       <SearchResultImage src={user.profilePhoto} />
                       <SearchResultTextContainer>
                         <SearchResultDisplayName>
-                          {user.displayName}
+                          {user.name}
                         </SearchResultDisplayName>
                         <SearchResultUsername>
                           @{user.username}

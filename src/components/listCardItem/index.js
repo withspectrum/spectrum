@@ -53,7 +53,7 @@ export const ListCardItemUser = ({ user, children }): React$Element<any> => {
         </Link>
         <Col>
           <Heading>
-            <Link to={`/users/${user.username}`}>{user.displayName}</Link>
+            <Link to={`/users/${user.username}`}>{user.name}</Link>
           </Heading>
           <Meta>
             <Link to={`/users/${user.username}`}>@{user.username}</Link>
