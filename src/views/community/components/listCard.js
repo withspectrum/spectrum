@@ -16,13 +16,13 @@ import { openModal } from '../../../actions/modals';
 import { StyledCard, ListHeading, ListContainer, MoreLink } from '../style';
 
 const ListCardPure = ({ data, dispatch }) => {
-  const frequencies = data.community.frequencyConnection.edges;
-  if (!!frequencies) {
+  const channels = data.community.channelConnection.edges;
+  if (!!channels) {
     return (
       <StyledCard>
-        <ListHeading>Frequencies</ListHeading>
+        <ListHeading>Channels</ListHeading>
         <ListContainer>
-          {frequencies.map(item => {
+          {channels.map(item => {
             return (
               <Link
                 key={item.node.id}
@@ -31,7 +31,7 @@ const ListCardPure = ({ data, dispatch }) => {
                 <ListCardItem
                   contents={item.node}
                   withDescription={false}
-                  meta={`${item.node.metaData.subscribers} members`}
+                  meta={`${item.node.metaData.members} members`}
                 >
                   <Icon glyph="view-forward" />
                 </ListCardItem>
@@ -46,9 +46,9 @@ const ListCardPure = ({ data, dispatch }) => {
           {data.community.isOwner &&
             <TextButton
               onClick={() =>
-                dispatch(openModal('CREATE_FREQUENCY_MODAL', data.community))}
+                dispatch(openModal('CREATE_CHANNEL_MODAL', data.community))}
             >
-              Create a Frequency
+              Create a Channel
             </TextButton>}
         </FlexRow>
       </StyledCard>

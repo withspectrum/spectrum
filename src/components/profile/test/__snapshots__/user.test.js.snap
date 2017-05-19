@@ -4,7 +4,7 @@ exports[`test should render with a full size 1`] = `
     Object {
       "description": "Testing the user profile",
       "id": "asdf-123",
-      "photoURL": "img.com/asdf.jpg",
+      "profilePhoto": "img.com/asdf.jpg",
       "subtitle": "Whats up",
       "title": "Test user",
     }
@@ -52,7 +52,7 @@ exports[`test should render with a large size 1`] = `
     Object {
       "description": "Testing the user profile",
       "id": "asdf-123",
-      "photoURL": "img.com/asdf.jpg",
+      "profilePhoto": "img.com/asdf.jpg",
       "subtitle": "Whats up",
       "title": "Test user",
     }
@@ -97,7 +97,7 @@ exports[`test should render with a medium size 1`] = `
     Object {
       "description": "Testing the user profile",
       "id": "asdf-123",
-      "photoURL": "img.com/asdf.jpg",
+      "profilePhoto": "img.com/asdf.jpg",
       "subtitle": "Whats up",
       "title": "Test user",
     }
@@ -139,7 +139,7 @@ exports[`test should render with a mini size 1`] = `
     Object {
       "description": "Testing the user profile",
       "id": "asdf-123",
-      "photoURL": "img.com/asdf.jpg",
+      "profilePhoto": "img.com/asdf.jpg",
       "subtitle": "Whats up",
       "title": "Test user",
     }
@@ -173,7 +173,7 @@ exports[`test should render with a small size 1`] = `
     Object {
       "description": "Testing the user profile",
       "id": "asdf-123",
-      "photoURL": "img.com/asdf.jpg",
+      "profilePhoto": "img.com/asdf.jpg",
       "subtitle": "Whats up",
       "title": "Test user",
     }
@@ -212,7 +212,7 @@ exports[`test should render with no size 1`] = `
     Object {
       "description": "Testing the user profile",
       "id": "asdf-123",
-      "photoURL": "img.com/asdf.jpg",
+      "profilePhoto": "img.com/asdf.jpg",
       "subtitle": "Whats up",
       "title": "Test user",
     }

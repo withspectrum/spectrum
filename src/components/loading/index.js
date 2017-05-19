@@ -12,7 +12,7 @@ import { Column } from '../column';
 import {
   LoadingScreenContainer,
   ShimmerList,
-  ShimmerStory,
+  ShimmerThread,
   ShimmerProfile,
   ShimmerComposer,
   ShimmerBase,
@@ -61,7 +61,7 @@ export const Loading = ({
 
 /*
   Outputs a spinner on top of a card. The card will fill the size of its parent.
-  Useful for adding loading states to stories, profile components, the composer,
+  Useful for adding loading states to threads, profile components, the composer,
   etc
 */
 export const LoadingCard = ({
@@ -172,7 +172,7 @@ export const LoadingScreen = (): React$Element<any> => (
         </ShimmerBase>
       </ShimmerComposer>
 
-      <ShimmerStory>
+      <ShimmerThread>
         <ShimmerBase>
           <ShimmerLine />
           <Cover
@@ -203,9 +203,9 @@ export const LoadingScreen = (): React$Element<any> => (
             style={{ top: '72px', right: '0', height: '12px', width: '48px' }}
           />
         </ShimmerBase>
-      </ShimmerStory>
+      </ShimmerThread>
 
-      <ShimmerStory>
+      <ShimmerThread>
         <ShimmerBase>
           <ShimmerLine />
           <Cover
@@ -264,9 +264,9 @@ export const LoadingScreen = (): React$Element<any> => (
             style={{ top: '72px', right: '0', height: '12px', width: '156px' }}
           />
         </ShimmerBase>
-      </ShimmerStory>
+      </ShimmerThread>
 
-      <ShimmerStory>
+      <ShimmerThread>
         <ShimmerBase>
           <ShimmerLine />
           <Cover
@@ -297,7 +297,7 @@ export const LoadingScreen = (): React$Element<any> => (
             style={{ top: '72px', right: '0', height: '12px', width: '328px' }}
           />
         </ShimmerBase>
-      </ShimmerStory>
+      </ShimmerThread>
     </Column>
   </LoadingScreenContainer>
 );

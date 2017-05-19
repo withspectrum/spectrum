@@ -62,8 +62,8 @@ The TL;DR of how to use it is:
 
 ```GraphQL
 {
-  story(id: "some-story-id") {
-    # Fetch the messages of a certain story
+  thread(id: "some-thread-id") {
+    # Fetch the messages of a certain thread
     messageConnection {
       pageInfo {
         # Do we have another page to fetch after this
@@ -86,12 +86,12 @@ The TL;DR of how to use it is:
 }
 ```
 
-This query would get the first 10 (or less) messages of that story. To get the next page you have to take the `cursor` of the last message edge and pass that to messageConnections:
+This query would get the first 10 (or less) messages of that thread. To get the next page you have to take the `cursor` of the last message edge and pass that to messageConnections:
 
 ```GraphQL
 {
-  story(id: "some-story-id") {
-    # Fetch the next messages after the last message in the story
+  thread(id: "some-thread-id") {
+    # Fetch the next messages after the last message in the thread
     messageConnection(after: $lastMessageCursor) {
       edges {
         node {
@@ -111,7 +111,7 @@ To specify how many messages you want to load use the `first` parameter:
 
 ```GraphQL
 {
-  story(id: "some-story-id") {
+  thread(id: "some-thread-id") {
     # Fetch the first 5 messages after the last message
     messageConnection(first: 5, after: $lastMessageCursor) {
       edges {
@@ -133,24 +133,24 @@ To specify how many messages you want to load use the `first` parameter:
 Connections and edges have standard names and structures across all resources:
 
 ```GraphQL
-# A connection of a story to messages
-type StoryMessagesConnection {
+# A connection of a thread to messages
+type ThreadMessagesConnection {
   pageInfo: PageInfo!
-  edges: [StoryMessageEdge!]
+  edges: [ThreadMessageEdge!]
 }
 
-# An edge from a story to a message
-type StoryMessageEdge {
+# An edge from a thread to a message
+type ThreadMessageEdge {
   cursor: String!
   node: Message!
 }
 
-type Story {
-  messageConnection(first: Int = 10, after: String): StoryMessagesConnection!
+type Thread {
+  messageConnection(first: Int = 10, after: String): ThreadMessagesConnection!
 }
 ```
 
-> Note: This is where we diverge slightly from the article linked above, it recommends naming your edges in plural (`StoryMessagesEdge`) to make it consistent with the connection but we've found that the singular (`StoryMessageEdge`) makes it clear only a single resource is being fetched and think that's more important.
+> Note: This is where we diverge slightly from the article linked above, it recommends naming your edges in plural (`ThreadMessagesEdge`) to make it consistent with the connection but we've found that the singular (`ThreadMessageEdge`) makes it clear only a single resource is being fetched and think that's more important.
 
 ### Error management
 
@@ -195,10 +195,10 @@ describe('queries', () => {
     const query = /* GraphQL */`
       {
         user(id: "first-user") {
-          uid
+          id
           createdAt
           lastSeen
-          photoURL
+          profilePhoto
           displayName
           username
           email

@@ -20,7 +20,7 @@ import {
   MoreLink,
 } from '../style';
 
-const ListCardPure = ({ data: { communities }, dispatch }) => {
+const ListCard = ({ communities, dispatch }) => {
   if (!!communities) {
     return (
       <StyledCard>
@@ -32,7 +32,7 @@ const ListCardPure = ({ data: { communities }, dispatch }) => {
                 <ListCardItem
                   contents={item.node}
                   withDescription={false}
-                  meta={`${item.node.metaData.members} members · ${item.node.metaData.frequencies} frequencies`}
+                  meta={`${item.node.metaData.members} members · ${item.node.metaData.channels} channels`}
                 >
                   <Icon glyph="view-forward" />
                 </ListCardItem>
@@ -55,7 +55,5 @@ const ListCardPure = ({ data: { communities }, dispatch }) => {
     return <div />;
   }
 };
-
-const ListCard = compose(displayLoadingCard)(ListCardPure);
 
 export default connect()(ListCard);

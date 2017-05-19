@@ -8,13 +8,13 @@ export const sortAndGroupMessages = messagesToSort => {
   for (let i = 0; i < messages.length; i++) {
     // on the first message, get the user id and set it to be checked against
     if (i === 0) {
-      checkId = messages[i].sender.uid;
+      checkId = messages[i].sender.id;
 
       // show a timestamp for when the first message in the conversation was sent
       masterArray.push([
         {
           sender: {
-            uid: 'robo',
+            id: 'robo',
           },
           timestamp: messages[0].timestamp,
           message: {
@@ -28,7 +28,7 @@ export const sortAndGroupMessages = messagesToSort => {
     const robo = [
       {
         sender: {
-          uid: 'robo',
+          id: 'robo',
         },
         timestamp: messages[i].timestamp,
         message: {
@@ -39,7 +39,7 @@ export const sortAndGroupMessages = messagesToSort => {
     ];
 
     const sameUser =
-      messages[i].sender.uid !== 'robo' && messages[i].sender.uid === checkId; //=> boolean
+      messages[i].sender.id !== 'robo' && messages[i].sender.id === checkId; //=> boolean
     const oldMessage = (current: Object, previous: Object) => {
       //=> boolean
       /*
@@ -87,7 +87,7 @@ export const sortAndGroupMessages = messagesToSort => {
         }
       }
       // and maintain the checkid
-      checkId = messages[i].sender.uid;
+      checkId = messages[i].sender.id;
       // if the next message is from a new user
     } else {
       // we push the previous user's messages to the masterarray
@@ -106,7 +106,7 @@ export const sortAndGroupMessages = messagesToSort => {
       }
 
       // set a new checkid for the next user
-      checkId = messages[i].sender.uid;
+      checkId = messages[i].sender.id;
     }
   }
 

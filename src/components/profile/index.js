@@ -5,7 +5,7 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import User from './user';
-import Frequency from './frequency';
+import Channel from './channel';
 import Community from './community';
 
 const ProfilePure = (props: Object): React$Element<any> => {
@@ -14,8 +14,8 @@ const ProfilePure = (props: Object): React$Element<any> => {
     case 'user': {
       return <User {...props} />;
     }
-    case 'frequency': {
-      return <Frequency {...props} />;
+    case 'channel': {
+      return <Channel {...props} />;
     }
     case 'community': {
       return <Community {...props} />;
@@ -42,8 +42,8 @@ export const Profile = compose(pure)(ProfilePure);
 export const UserProfile = (props: ProfileProps) => (
   <Profile type="user" {...props} />
 );
-export const FrequencyProfile = (props: ProfileProps) => (
-  <Profile type="frequency" {...props} />
+export const ChannelProfile = (props: ProfileProps) => (
+  <Profile type="channel" {...props} />
 );
 export const CommunityProfile = (props: ProfileProps) => (
   <Profile type="community" {...props} />

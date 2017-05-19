@@ -6,13 +6,13 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
-import StoryFeed from '../../components/storyFeed';
+import ThreadFeed from '../../components/threadFeed';
 import { UserProfile } from '../../components/profile';
 import { displayLoadingScreen } from '../../components/loading';
 import { Upsell404User } from '../../components/upsell';
-import { getUserStories, getUser } from './queries';
+import { getUserThreads, getUser } from './queries';
 
-const StoryFeedWithData = compose(getUserStories)(StoryFeed);
+const ThreadFeedWithData = compose(getUserThreads)(ThreadFeed);
 
 const UserViewPure = ({ match, data: { user, error } }) => {
   const username = match.params.username;
@@ -32,7 +32,7 @@ const UserViewPure = ({ match, data: { user, error } }) => {
       </Column>
 
       <Column type="primary" alignItems="center">
-        <StoryFeedWithData username={username} />
+        <ThreadFeedWithData username={username} />
       </Column>
     </AppViewWrapper>
   );

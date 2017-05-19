@@ -1,7 +1,7 @@
 const Notification = /* GraphQL */ `
 	enum NotificationType {
 		NEW_MESSAGE
-		NEW_STORY
+		NEW_THREAD
 		NEW_MENTION
 		REACTION
 	}
@@ -17,8 +17,8 @@ const Notification = /* GraphQL */ `
 		createdAt: Date!
 		type: NotificationType!
 		message: Message
-		story: Story
-		frequency: Frequency
+		thread: Thread
+		channel: Channel
 		community: Community
 		sender: User!
 		content: NotificationContent
@@ -31,7 +31,7 @@ const Notification = /* GraphQL */ `
 	}
 
 	extend type Mutation {
-		markNotificationsRead(storyId: ID!): Boolean
+		markNotificationsRead(threadId: ID!): Boolean
 	}
 `;
 

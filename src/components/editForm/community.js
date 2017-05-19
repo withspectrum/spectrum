@@ -36,7 +36,7 @@ class CommunityWithData extends Component {
       description: community.description,
       id: community.id,
       website: community.website,
-      image: community.photoURL,
+      image: community.profilePhoto,
       file: null,
       communityData: community,
     };
@@ -129,12 +129,12 @@ class CommunityWithData extends Component {
           {' '}
           will be removed from the community and the
           {' '}
-          <b>{communityData.metaData.frequencies} frequencies</b>
+          <b>{communityData.metaData.channels} channels</b>
           {' '}
           you've created will be deleted.
         </p>
         <p>
-          All stories, messages, reactions, and media shared in your community will be deleted.
+          All threads, messages, reactions, and media shared in your community will be deleted.
         </p>
         <p>This cannot be undone.</p>
       </div>

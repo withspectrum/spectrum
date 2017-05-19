@@ -1,19 +1,15 @@
 //@flow
-
-/**
- * Message query resolvers
- */
 const { getMessage } = require('../models/message');
 import { getReactions } from '../models/reaction';
 import type { GraphQLContext } from '../';
 
 type GetMessageProps = {
-  id: String,
+  messageId: string,
 };
 
 type Root = {
-  id: string,
-  sender: string,
+  messageId: string,
+  senderId: string,
 };
 
 module.exports = {
@@ -21,8 +17,8 @@ module.exports = {
     message: (_: Root, { id }: GetMessageProps) => getMessage(id),
   },
   Message: {
-    sender: ({ sender }: Root, _: any, { loaders }: GraphQLContext) =>
-      loaders.user.load(sender),
+    sender: ({ senderId }: Root, _: any, { loaders }: GraphQLContext) =>
+      loaders.user.load(senderId),
     reactions: ({ id }: Root) => getReactions(id),
   },
 };

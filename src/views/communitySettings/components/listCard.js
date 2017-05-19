@@ -7,18 +7,18 @@ import compose from 'recompose/compose';
 
 import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCardItem';
-import IconButton from '../../../components/buttons';
+import { IconButton } from '../../../components/buttons';
 
 import { StyledCard, ListHeading, ListContainer } from '../style';
 
 const ListCardPure = ({ data }) => {
-  const frequencies = data.community.frequencyConnection.edges;
-  if (!!frequencies) {
+  const channels = data.community.channelConnection.edges;
+  if (!!channels) {
     return (
       <StyledCard>
-        <ListHeading>Manage Frequencies</ListHeading>
+        <ListHeading>Manage Channels</ListHeading>
         <ListContainer>
-          {frequencies.map(item => {
+          {channels.map(item => {
             return (
               <Link
                 key={item.node.id}
@@ -27,7 +27,7 @@ const ListCardPure = ({ data }) => {
                 <ListCardItem
                   contents={item.node}
                   withDescription={false}
-                  meta={`${item.node.metaData.subscribers} members`}
+                  meta={`${item.node.metaData.members} members`}
                 >
                   <IconButton glyph="settings" />
                 </ListCardItem>

@@ -52,17 +52,17 @@ export const createCommunityMutation = graphql(
   Delete a community
 */
 const DELETE_COMMUNITY_MUTATION = gql`
-  mutation deleteCommunity($id: ID!) {
-    deleteCommunity (id: $id)
+  mutation deleteCommunity($communityId: ID!) {
+    deleteCommunity (communityId: $communityId)
   }
 `;
 
 const DELETE_COMMUNITY_OPTIONS = {
-  props: ({ id, mutate }) => ({
-    deleteCommunity: id =>
+  props: ({ communityId, mutate }) => ({
+    deleteCommunity: communityId =>
       mutate({
         variables: {
-          id,
+          communityId,
         },
       }),
   }),

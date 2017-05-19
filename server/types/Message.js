@@ -5,14 +5,13 @@ const Message = /* GraphQL */ `
 	}
 
 	enum ThreadTypes {
-		Story
-		DirectMessageGroup
+		story
+		directMessageThread
 	}
 
 	# The content and type of a message
 	type MessageContent {
-		type: MessageType!
-		content: String!
+		body: String!
 	}
 
 	# A message
@@ -20,18 +19,19 @@ const Message = /* GraphQL */ `
 		id: ID!
 		timestamp: Date!
 		thread: ThreadTypes!
-		message: MessageContent!
+		content: MessageContent!
 		sender: User!
 		reactions: [Reaction]
+		type: MessageType!
 	}
 
 	input MessageContentInput {
-		type: MessageType!
-		content: String!
+		body: String!
 	}
 
 	input MessageInput {
-		thread: ID!
+		threadId: ID!
+		type: ThreadTypes!
 		message: MessageContentInput!
 	}
 

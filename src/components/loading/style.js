@@ -36,7 +36,7 @@ export const ShimmerList = styled(Card)`
   }
 `;
 
-export const ShimmerStory = styled(Card)`
+export const ShimmerThread = styled(Card)`
   padding: 16px;
 
   section {

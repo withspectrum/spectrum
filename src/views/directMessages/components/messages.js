@@ -7,7 +7,7 @@ import ChatMessages from '../../../components/chatMessages';
 import { displayLoadingState } from '../../../components/loading';
 import Icon from '../../../components/icons';
 import { HorizontalRule } from '../../../components/globals';
-import { getDirectMessageGroupMessages } from '../queries';
+import { getDirectMessageThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 
 class MessagesWithData extends Component {
@@ -70,7 +70,7 @@ class MessagesWithData extends Component {
 
 const Messages = compose(
   toggleReactionMutation,
-  getDirectMessageGroupMessages,
+  getDirectMessageThreadMessages,
   displayLoadingState
 )(MessagesWithData);
 

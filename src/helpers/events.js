@@ -5,7 +5,7 @@ Raven.config(
 
 const ga = window.ga;
 
-export const set = uid => {
+export const set = id => {
   /**
 	*
 	* This get sets on login or on authentication. This helps us track the UID in GA
@@ -14,7 +14,7 @@ export const set = uid => {
 	*/
 
   try {
-    ga('set', 'userId', uid); // Set the user ID using signed-in user_id.
+    ga('set', 'userId', id); // Set the user ID using signed-in user_id.
   } catch (err) {
     console.log(err);
   }
@@ -23,8 +23,8 @@ export const set = uid => {
 export const track = (category, action, label) => {
   /**
   *
-  *	Category: the object interacted with (user, frequency, story, message, etc)
-  * Action: the type of interaction (sign out, joined frequency, published story, sent message, etc)
+  *	Category: the object interacted with (user, channel, thread, message, etc)
+  * Action: the type of interaction (sign out, joined channel, published thread, sent message, etc)
   * Label: used to organize events (experiment variant A vs B)
 
   * Style guide:
@@ -37,8 +37,8 @@ export const track = (category, action, label) => {
 
 	* Some examples:
 	* track('user', 'signed out') => User category, sign out action
-	* track('frequency', 'created') => Frequency category, created action
-	* track('story', 'deleted') => Story category, deleted action
+	* track('channel', 'created') => Channel category, created action
+	* track('thread', 'deleted') => Thread category, deleted action
 
   */
 

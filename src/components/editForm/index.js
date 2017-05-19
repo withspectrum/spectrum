@@ -5,7 +5,7 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import User from './user';
-import Frequency from './frequency';
+import Channel from './channel';
 import Community from './community';
 
 const EditFormPure = (props: Object): React$Element<any> => {
@@ -14,8 +14,8 @@ const EditFormPure = (props: Object): React$Element<any> => {
     case 'user': {
       return <User {...props} />;
     }
-    case 'frequency': {
-      return <Frequency {...props} />;
+    case 'channel': {
+      return <Channel {...props} />;
     }
     case 'community': {
       return <Community {...props} />;
@@ -34,8 +34,8 @@ export const EditForm = compose(pure)(EditFormPure);
 export const UserEditForm = (props: FormProps) => (
   <EditForm type="user" {...props} />
 );
-export const FrequencyEditForm = (props: FormProps) => (
-  <EditForm type="frequency" {...props} />
+export const ChannelEditForm = (props: FormProps) => (
+  <EditForm type="channel" {...props} />
 );
 export const CommunityEditForm = (props: FormProps) => (
   <EditForm type="community" {...props} />

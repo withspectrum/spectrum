@@ -30,15 +30,15 @@ class ExistingThread extends Component {
 
   render() {
     const id = this.props.match.params.threadId;
-    const { groups, currentUser } = this.props;
+    const { threads, currentUser } = this.props;
 
     if (id !== 'new') {
-      const group = groups.filter(group => group.id === id)[0];
+      const thread = threads.filter(thread => thread.id === id)[0];
 
       return (
         <MessagesContainer>
           <ViewContent innerRef={scrollBody => this.scrollBody = scrollBody}>
-            <Header group={group} currentUser={currentUser} />
+            <Header thread={thread} currentUser={currentUser} />
             <Messages
               id={id}
               currentUser={currentUser}

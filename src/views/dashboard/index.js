@@ -7,26 +7,20 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 
-import {
-  getEverythingStories,
-  getCurrentUserProfile,
-  getCurrentUserCommunities,
-} from './queries';
+import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
 
 import { displayLoadingScreen } from '../../components/loading';
 import { Column } from '../../components/column';
 import { UserProfile } from '../../components/profile';
-import StoryFeed from '../../components/storyFeed';
-import StoryComposer from '../../components/storyComposer';
+import ThreadFeed from '../../components/threadFeed';
+import ThreadComposer from '../../components/threadComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import ListCard from './components/listCard';
 
-const EverythingStoryFeed = compose(getEverythingStories)(StoryFeed);
+const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 
 const CurrentUserProfile = compose(getCurrentUserProfile)(UserProfile);
-
-const CommunitiesListCard = compose(getCurrentUserCommunities)(ListCard);
 
 const DashboardPure = ({
   data: { user, error },
@@ -58,20 +52,22 @@ const DashboardPure = ({
   }
 
   if (!user || user === null) {
-    window.location.href = '/';
+    // window.location.href = '/';
   }
+
+  const communities = user.communityConnection.edges;
 
   return (
     <AppViewWrapper>
       <Column type="secondary">
         <CurrentUserProfile profileSize="mini" />
-        <CommunitiesListCard />
+        <ListCard communities={communities} />
       </Column>
 
       <Column type="primary" alignItems="center">
         {// composer should only appear if a user is part of a community
-        user && user.communityConnection && <StoryComposer />}
-        <EverythingStoryFeed />
+        user && communities && <ThreadComposer />}
+        <EverythingThreadFeed />
       </Column>
     </AppViewWrapper>
   );

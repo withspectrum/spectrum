@@ -5,14 +5,14 @@ import { subscribeToNewMessages } from '../../api/subscriptions';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { messageInfoFragment } from '../../api/fragments/message/messageInfo';
 import {
-  directMessageGroupInfoFragment,
-} from '../../api/fragments/directMessageGroup/directMessageGroupInfo';
+  directMessageThreadInfoFragment,
+} from '../../api/fragments/directMessageThread/directMessageThreadInfo';
 
-export const GET_DIRECT_MESSAGE_GROUP_QUERY = gql`
-  query getDirectMessageGroupMessages($id: ID!) {
-    directMessageGroup(id: $id) {
-      ...directMessageGroupInfo
-      users {
+export const GET_DIRECT_MESSAGE_THREAD_QUERY = gql`
+  query getDirectMessageThreadMessages($id: ID!) {
+    directMessageThread(id: $id) {
+      ...directMessageThreadInfo
+      participants {
         ...userInfo
       }
       messageConnection {
@@ -24,30 +24,30 @@ export const GET_DIRECT_MESSAGE_GROUP_QUERY = gql`
       }
     }
   }
-  ${directMessageGroupInfoFragment}
+  ${directMessageThreadInfoFragment}
   ${userInfoFragment}
   ${messageInfoFragment}
 `;
 
-export const GET_DIRECT_MESSAGE_GROUP_OPTIONS = {
+export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
   options: ({ id }) => ({
     variables: {
       id,
     },
   }),
   props: ({
-    data: { error, loading, directMessageGroup, subscribeToMore },
+    data: { error, loading, directMessageThread, subscribeToMore },
     ownProps,
   }) => ({
     data: {
       error,
       loading,
-      messages: directMessageGroup
-        ? directMessageGroup.messageConnection.edges
+      messages: directMessageThread
+        ? directMessageThread.messageConnection.edges
         : '',
     },
     subscribeToNewMessages: () => {
-      if (!directMessageGroup) {
+      if (!directMessageThread) {
         return;
       }
       return subscribeToMore({
@@ -60,16 +60,16 @@ export const GET_DIRECT_MESSAGE_GROUP_OPTIONS = {
           // Add the new message to the data
           return {
             ...prev,
-            directMessageGroup: {
-              ...prev.directMessageGroup,
+            directMessageThread: {
+              ...prev.directMessageThread,
               messageConnection: {
-                ...prev.directMessageGroup.messageConnection,
+                ...prev.directMessageThread.messageConnection,
                 edges: [
-                  ...prev.directMessageGroup.messageConnection.edges,
+                  ...prev.directMessageThread.messageConnection.edges,
                   // NOTE(@mxstbr): The __typename hack is to work around react-apollo/issues/658
                   {
                     node: newMessage,
-                    __typename: 'DirectMessageGroupMessageEdge',
+                    __typename: 'DirectMessageThreadMessageEdge',
                   },
                 ],
               },
@@ -81,7 +81,7 @@ export const GET_DIRECT_MESSAGE_GROUP_OPTIONS = {
   }),
 };
 
-export const getDirectMessageGroupMessages = graphql(
-  GET_DIRECT_MESSAGE_GROUP_QUERY,
-  GET_DIRECT_MESSAGE_GROUP_OPTIONS
+export const getDirectMessageThreadMessages = graphql(
+  GET_DIRECT_MESSAGE_THREAD_QUERY,
+  GET_DIRECT_MESSAGE_THREAD_OPTIONS
 );

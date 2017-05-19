@@ -1,6 +1,6 @@
 import { gql } from 'react-apollo';
-import { storyInfoFragment } from '../story/storyInfo';
-import { frequencyInfoFragment } from '../frequency/frequencyInfo';
+import { threadInfoFragment } from '../thread/threadInfo';
+import { channelInfoFragment } from '../channel/channelInfo';
 import { communityInfoFragment } from '../community/communityInfo';
 
 export const userEverythingFragment = gql`
@@ -13,10 +13,10 @@ export const userEverythingFragment = gql`
       edges {
         cursor
         node {
-          ...storyInfo
+          ...threadInfo
           messageCount
-          frequency {
-            ...frequencyInfo
+          channel {
+            ...channelInfo
             community {
               ...communityInfo
             }
@@ -25,7 +25,7 @@ export const userEverythingFragment = gql`
       }
     }
   }
-  ${storyInfoFragment}
-  ${frequencyInfoFragment}
+  ${threadInfoFragment}
+  ${channelInfoFragment}
   ${communityInfoFragment}
 `;

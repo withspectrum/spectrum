@@ -22,7 +22,7 @@ import Icon from '../../components/icons';
 import { Button, OutlineButton, TextButton } from '../../components/buttons';
 import {
   UserProfile,
-  FrequencyProfile,
+  ChannelProfile,
   CommunityProfile,
 } from '../../components/profile';
 
@@ -45,12 +45,12 @@ const dummyData = {
     id: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
     title: 'Brian Lovin',
     subtitle: '@brian',
-    photoURL: 'https://pbs.twimg.com/profile_images/570313913648955392/cf4tgX7M_bigger.jpeg',
+    profilePhoto: 'https://pbs.twimg.com/profile_images/570313913648955392/cf4tgX7M_bigger.jpeg',
     description: 'Chief Nice Boy™ · Building @withspectrum, @designdetailsfm, @specfm · prev. @facebook, @buffer',
     meta: [],
   },
 
-  frequency: {
+  channel: {
     id: '1c246adb-10a1-40a0-af39-1b7b3278199a',
     title: 'Design Details',
     subtitle: 'SpecFM',
@@ -62,7 +62,7 @@ const dummyData = {
     id: 'ae390edd-667f-42e4-bf0b-10371665c742',
     title: 'SpecFM',
     subtitle: '8,918 members',
-    photoURL: 'https://pbs.twimg.com/profile_images/766307796132343808/OtMSJrFo_400x400.jpg',
+    profilePhoto: 'https://pbs.twimg.com/profile_images/766307796132343808/OtMSJrFo_400x400.jpg',
     description: 'The best podcasts, blogs, and resources for designers and developers.',
     meta: [],
   },
@@ -146,35 +146,35 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
       </Section>
 
       <Spacer height="32px" />
-      <Subheading>Frequency</Subheading>
+      <Subheading>Channel</Subheading>
       <Section>
         <ComponentContainer width={'50%'}>
           <Component transparent>
-            <FrequencyProfile size="mini" data={dummyData.frequency} />
+            <ChannelProfile size="mini" data={dummyData.channel} />
           </Component>
         </ComponentContainer>
 
         <ComponentContainer width={'50%'}>
           <Component transparent>
-            <FrequencyProfile size="small" data={dummyData.frequency} />
+            <ChannelProfile size="small" data={dummyData.channel} />
           </Component>
         </ComponentContainer>
 
         <ComponentContainer width={'50%'}>
           <Component transparent>
-            <FrequencyProfile size="medium" data={dummyData.frequency} />
+            <ChannelProfile size="medium" data={dummyData.channel} />
           </Component>
         </ComponentContainer>
 
         <ComponentContainer width={'50%'}>
           <Component transparent>
-            <FrequencyProfile size="large" data={dummyData.frequency} />
+            <ChannelProfile size="large" data={dummyData.channel} />
           </Component>
         </ComponentContainer>
 
         <ComponentContainer width={'50%'}>
           <Component transparent>
-            <FrequencyProfile size="full" data={dummyData.frequency} />
+            <ChannelProfile size="full" data={dummyData.channel} />
           </Component>
         </ComponentContainer>
       </Section>
@@ -542,7 +542,7 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              glyph="frequency"
+              glyph="channel"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -550,13 +550,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon glyph="frequency" ...props />`}</Code>
+          >{`<Icon glyph="channel" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              glyph="frequency-private"
+              glyph="channel-private"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -564,7 +564,7 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon glyph="frequency-private" ...props />`}</Code>
+          >{`<Icon glyph="channel-private" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>

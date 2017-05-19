@@ -1,38 +1,33 @@
-/**
- * Notification queries
- */
-
+// @flow
 const { getNotificationsByUser } = require('../models/notification');
 const { getMessage } = require('../models/message');
-const { getFrequency } = require('../models/frequency');
+const { getChannels } = require('../models/channel');
 import type { GraphQLContext } from '../';
 
 module.exports = {
   Query: {
     notification: (_, { id }, { loaders }: GraphQLContext) =>
       loaders.notification.load(id),
-    notifications: (
-      _,
-      { first = 10, after }: PaginationOptions,
-      { user: { uid } }
-    ) => getNotificationsByUser(uid, { first, after }),
+    notifications: (_, { first = 10, after }: PaginationOptions, { user }) =>
+      getNotificationsByUser(user.id, { first, after }),
   },
   Notification: {
     isMine: ({ users }, _, { user }) =>
-      user && !!users.find(({ uid }) => uid === user.uid),
+      user && !!users.find(({ id }) => id === user.id),
     read: ({ users }, _, { user }) => {
       if (!user) return null;
-      const result = users.find(({ uid }) => uid === user.uid);
+      const result = users.find(({ id }) => id === user.id);
       if (!result) return null;
       return result.read;
     },
-    message: ({ message }) => message && getMessage('messages', message),
-    story: ({ story }, _: any, { loaders }: GraphQLContext) =>
-      story && loaders.story.load(story),
-    frequency: ({ frequency }, _: any, { loaders }: GraphQLContext) =>
-      frequency && loaders.frequency.load(frequency),
-    community: ({ community }, _: any, { loaders }: GraphQLContext) =>
-      community && loaders.community.load(community),
-    sender: ({ sender }, _, { loaders }) => sender && loaders.user.load(sender),
+    message: ({ messageId }) => messageId && getMessage('messages', messageId),
+    thread: ({ threadId }, _: any, { loaders }: GraphQLContext) =>
+      threadId && loaders.thread.load(threadId),
+    channel: ({ channelId }, _: any, { loaders }: GraphQLContext) =>
+      channelId && loaders.channel.load(channelId),
+    community: ({ communityId }, _: any, { loaders }: GraphQLContext) =>
+      communityId && loaders.community.load(communityId),
+    sender: ({ senderId }, _, { loaders }: GraphQLContext) =>
+      senderId && loaders.user.load(senderId),
   },
 };

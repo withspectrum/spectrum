@@ -45,14 +45,14 @@ class ChatMessages extends Component {
     };
 
     const renderAvatar = (sender: Object, me: boolean) => {
-      const robo = sender.uid === 'robo';
+      const robo = sender.id === 'robo';
       if (me || robo) return;
 
       return (
-        <AvatarLabel tipText={sender.displayName} tipLocation="right">
+        <AvatarLabel tipText={sender.name} tipLocation="right">
           <Avatar
             onClick={() => openUserProfileModal(sender)}
-            src={sender.photoURL}
+            src={sender.profilePhoto}
           />
         </AvatarLabel>
       );
@@ -61,11 +61,11 @@ class ChatMessages extends Component {
     const renderBubbleHeader = (group: Object, me: boolean) => {
       const user = group.sender;
 
-      // if type !== 'story' we don't show admin or pro badges because it clutters group messages
+      // if type !== 'thread' we don't show admin or pro badges because it clutters group messages
       return (
         <Byline me={me}>
           <Name onClick={() => openUserProfileModal(user)}>
-            {me ? 'You' : user.displayName}
+            {me ? 'You' : user.name}
           </Name>
         </Byline>
       );
@@ -77,11 +77,11 @@ class ChatMessages extends Component {
       me: boolean
     ): React$Element<any> => {
       const reactionUsers = message.reactions
-        ? message.reactions.map(reaction => reaction.user.uid)
+        ? message.reactions.map(reaction => reaction.user.id)
         : null;
       let reactionCount = message.reactions ? reactionUsers.length : 0;
       let userHasReacted = currentUser
-        ? reactionUsers && reactionUsers.includes(currentUser.uid)
+        ? reactionUsers && reactionUsers.includes(currentUser.id)
         : false;
       // probably a better way to do this
       const doNothing = () => '';
@@ -92,7 +92,7 @@ class ChatMessages extends Component {
             type: 'like',
           })
             // after the mutation occurs, it will either return an error or the new
-            // story that was published
+            // thread that was published
             .then(({ data }) => {
               // can do something with the returned reaction here
             })
@@ -124,7 +124,7 @@ class ChatMessages extends Component {
       <Container>
         {messages.map((group, i) => {
           const evaluating = group[0];
-          const roboText = evaluating.sender.uid === 'robo';
+          const roboText = evaluating.sender.id === 'robo';
           if (roboText) {
             const time = convertTimestampToDate(evaluating.message.content);
             return (
@@ -137,7 +137,7 @@ class ChatMessages extends Component {
           }
 
           const sender = evaluating.sender;
-          const me = currentUser ? sender.uid === currentUser.uid : false;
+          const me = currentUser ? sender.id === currentUser.id : false;
 
           return (
             <BubbleGroupContainer me={me} key={i}>
@@ -146,13 +146,8 @@ class ChatMessages extends Component {
               <MessagesWrapper>
                 {renderBubbleHeader(evaluating, me)}
                 {group.map((message, i) => {
-                  if (
-                    message.message.type === 'text' ||
-                    message.message.type === 'emoji'
-                  ) {
-                    const emojiOnly = onlyContainsEmoji(
-                      message.message.content
-                    );
+                  if (message.type === 'text' || message.type === 'emoji') {
+                    const emojiOnly = onlyContainsEmoji(message.content.body);
                     const TextBubble = emojiOnly ? EmojiBubble : Bubble;
                     return (
                       <MessageWrapper
@@ -164,14 +159,14 @@ class ChatMessages extends Component {
                           me={me}
                           persisted={message.persisted}
                           sender={sender}
-                          message={message.message}
+                          message={message.content}
                           type={message.type}
                         />
 
                         {!emojiOnly && renderReaction(message, sender, me)}
                       </MessageWrapper>
                     );
-                  } else if (message.message.type === 'media') {
+                  } else if (message.type === 'media') {
                     return (
                       <MessageWrapper
                         me={me}
@@ -182,8 +177,8 @@ class ChatMessages extends Component {
                           me={me}
                           persisted={message.persisted}
                           sender={sender}
-                          imgSrc={message.message.content.url}
-                          message={message.message}
+                          imgSrc={message.content.body}
+                          message={message.content}
                         />
                         {renderReaction(message, sender, me)}
                       </MessageWrapper>

@@ -5,11 +5,11 @@ const { getUser, createOrFindUser } = require('./models/user');
 const init = ({ twitterCallbackURLBase }) => {
   // Setup use serialization
   passport.serializeUser((user, done) => {
-    done(null, user.uid);
+    done(null, user.id);
   });
 
-  passport.deserializeUser((uid, done) => {
-    getUser({ uid })
+  passport.deserializeUser((id, done) => {
+    getUser({ id })
       .then(user => {
         done(null, user);
       })
@@ -38,7 +38,7 @@ const init = ({ twitterCallbackURLBase }) => {
             profile.emails.length > 0 &&
             profile.emails[0].value) ||
             null,
-          photoURL: (profile.photos &&
+          profilePhoto: (profile.photos &&
             profile.photos.length > 0 &&
             profile.photos[0].value) ||
             null,

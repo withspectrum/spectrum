@@ -54,7 +54,7 @@ class UserProfileModal extends Component {
     return (
       <Modal
         isOpen={isOpen}
-        contentLabel={user.displayName}
+        contentLabel={user.name}
         onRequestClose={this.close}
         shouldCloseOnOverlayClick={true}
         style={styles}
@@ -66,14 +66,14 @@ class UserProfileModal extends Component {
         */}
         <ModalContainer title={'Edit profile'} closeModal={this.close}>
 
-          {currentUser.uid === user.uid &&
+          {currentUser.id === user.id &&
             <Row>
               <ImageInputLabel>
                 <InputOverlay>
                   <Icon glyph="photo" />
                 </InputOverlay>
-                {user.photoURL &&
-                  <ProfileImage src={user.photoURL} role="presentation" />}
+                {user.profilePhoto &&
+                  <ProfileImage src={user.profilePhoto} role="presentation" />}
                 <HiddenInput
                   type="file"
                   id="file"

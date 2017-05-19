@@ -46,14 +46,14 @@ export const ListCardItemUser = ({ user, children }): React$Element<any> => {
         <Link to={`/users/${user.username}`}>
           <Avatar
             radius={40}
-            src={user.photoURL}
+            src={user.profilePhoto}
             size={40}
             style={{ marginRight: '16px' }}
           />
         </Link>
         <Col>
           <Heading>
-            <Link to={`/users/${user.username}`}>{user.displayName}</Link>
+            <Link to={`/users/${user.username}`}>{user.name}</Link>
           </Heading>
           <Meta>
             <Link to={`/users/${user.username}`}>@{user.username}</Link>

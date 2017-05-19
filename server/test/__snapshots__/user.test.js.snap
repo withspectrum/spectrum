@@ -36,7 +36,7 @@ Object {
         "edges": Array [
           Object {
             "node": Object {
-              "id": "first-story",
+              "id": "first-thread",
             },
           },
         ],
@@ -49,7 +49,7 @@ Object {
 }
 `;
 
-exports[`queries everything should return the latest story 1`] = `
+exports[`queries everything should return the latest thread 1`] = `
 Object {
   "data": Object {
     "user": Object {
@@ -57,7 +57,7 @@ Object {
         "edges": Array [
           Object {
             "node": Object {
-              "id": "second-story",
+              "id": "second-thread",
             },
           },
         ],
@@ -78,8 +78,8 @@ Object {
       "displayName": "First User",
       "email": "first.user@gmail.com",
       "lastSeen": "2017-02-01T23:00:00.000Z",
-      "photoURL": "my-photo.jpg",
-      "uid": "first-user",
+      "profilePhoto": "my-photo.jpg",
+      "id": "first-user",
       "username": "first",
     },
   },

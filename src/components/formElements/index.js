@@ -51,8 +51,8 @@ export const Input = (props: InputProps) => {
 //       <InputOverlay>
 //         <Icon glyph="photo" />
 //       </InputOverlay>
-//       {user.photoURL &&
-//         <ProfileImage src={user.photoURL} role="presentation" />}
+//       {user.profilePhoto &&
+//         <ProfileImage src={user.profilePhoto} role="presentation" />}
 //       <HiddenInput
 //         type="file"
 //         id="file"

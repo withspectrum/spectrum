@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+// $FlowFixMe
 import { Link } from 'react-router-dom';
 import Card from '../card';
 //$FlowFixMe
@@ -35,16 +36,16 @@ const displayLoadingState = branch(
 );
 
 type UserProps = {
-  uid: string,
-  photoURL: string,
+  id: string,
+  profilePhoto: string,
   displayName: string,
   username: string,
-  storyCount: number,
+  threadCount: number,
 };
 
 type CurrentUserProps = {
-  uid: String,
-  photoURL: String,
+  id: String,
+  profilePhoto: String,
   displayName: String,
   username: String,
 };
@@ -72,10 +73,10 @@ const UserWithData = ({
           margin={'0 12px 0 0'}
           size={40}
           radius={4}
-          src={user.photoURL}
+          src={user.profilePhoto}
         />
         <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-          <Title>{user.displayName}</Title>
+          <Title>{user.name}</Title>
           <Subtitle>
             @{user.username}
             {user.isAdmin && <Badge type="admin" />}
@@ -90,7 +91,7 @@ const UserWithData = ({
       {componentSize !== 'mini' &&
         currentUser &&
         <Actions>
-          {currentUser && currentUser.uid === user.uid
+          {currentUser && currentUser.id === user.id
             ? <ActionOutline
                 onClick={() =>
                   dispatch(
@@ -103,7 +104,7 @@ const UserWithData = ({
         </Actions>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
-        <MetaData data={{ stories: user.storyCount }} />}
+        <MetaData data={{ threads: user.threadCount }} />}
     </Card>
   );
 };

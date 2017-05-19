@@ -10,17 +10,17 @@ import ModalRoot from './components/modals/modalRoot';
 import Toasts from './components/toasts';
 import DirectMessages from './views/directMessages';
 import Explore from './views/explore';
-import Story from './views/story';
+import Thread from './views/thread';
 import UserView from './views/user';
 import CommunityView from './views/community';
-import FrequencyView from './views/frequency';
+import ChannelView from './views/channel';
 import Navbar from './views/navbar';
 import StyleGuide from './views/pages/styleGuide';
 import Dashboard from './views/dashboard';
 import Notifications from './views/notifications';
 // import UserSettings from './views/userSettings';
 import communitySettings from './views/communitySettings';
-import frequencySettings from './views/frequencySettings';
+import channelSettings from './views/channelSettings';
 
 const About = () => (
   <div>
@@ -64,7 +64,7 @@ class Routes extends Component {
               {/* App Pages */}
               <Route path="/explore" component={Explore} />
               <Route path="/messages" component={DirectMessages} />
-              <Route path="/story" component={Story} />
+              <Route path="/thread" component={Thread} />
               <Route exact path="/users" render={() => <Redirect to="/" />} />
               <Route exact path="/users/:username" component={UserView} />
               {/* <Route
@@ -80,16 +80,16 @@ class Routes extends Component {
               redirecting to home or showing a 404
             */}
               <Route
-                path="/:communitySlug/:frequencySlug/settings"
-                component={frequencySettings}
+                path="/:communitySlug/:channelSlug/settings"
+                component={channelSettings}
               />
               <Route
                 path="/:communitySlug/settings"
                 component={communitySettings}
               />
               <Route
-                path="/:communitySlug/:frequencySlug"
-                component={FrequencyView}
+                path="/:communitySlug/:channelSlug"
+                component={ChannelView}
               />
               <Route path="/:communitySlug" component={CommunityView} />
             </Switch>

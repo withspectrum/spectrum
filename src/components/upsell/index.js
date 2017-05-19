@@ -36,24 +36,24 @@ export const UpsellSignIn = ({ entity }) => {
   );
 };
 
-export const UpsellJoinFrequency = ({ frequency, subscribe }) => {
+export const UpsellJoinChannel = ({ channel, subscribe }) => {
   return (
     <UpsellJoinContainer>
       <BGOne src="/img/cluster-2.svg" role="presentation" />
       <BGTwo src="/img/cluster-1.svg" role="presentation" />
       <Title>Ready to join the conversation?</Title>
       <Subtitle>
-        Follow ~{frequency.name} to get involved!
+        Follow ~{channel.name} to get involved!
       </Subtitle>
-      <Button onClick={() => subscribe(frequency.id)} icon="plus" label>
+      <Button onClick={() => subscribe(channel.id)} icon="plus" label>
         Follow
       </Button>
     </UpsellJoinContainer>
   );
 };
 
-export const UpsellRequestToJoinFrequency = ({
-  frequency,
+export const UpsellRequestToJoinChannel = ({
+  channel,
   community,
   isPending,
   subscribe,
@@ -66,7 +66,7 @@ export const UpsellRequestToJoinFrequency = ({
       <Subtitle>
         This is a private channel - you may request to join
         {' '}
-        <b>{frequency.name}</b>
+        <b>{channel.name}</b>
         {' '}
         or
         {' '}
@@ -77,29 +77,27 @@ export const UpsellRequestToJoinFrequency = ({
       {// has user already requested to join?
       isPending
         ? <OutlineButton
-            onClick={() => subscribe(frequency.id)}
+            onClick={() => subscribe(channel.id)}
             icon="unsubscribe"
             label
           >
             Cancel request
           </OutlineButton>
-        : <Button onClick={() => subscribe(frequency.id)} icon="plus" label>
-            Request to join {frequency.name}
+        : <Button onClick={() => subscribe(channel.id)} icon="plus" label>
+            Request to join {channel.name}
           </Button>}
     </UpsellFourOhFourContainer>
   );
 };
 
-export const Upsell404Frequency = ({ frequency, community, noPermission }) => {
+export const Upsell404Channel = ({ channel, community, noPermission }) => {
   // if a user doesn't have permission, it means they likely tried to view
-  // the settings page for a frequency. In this case, we will return
-  // them to the frequency view.
+  // the settings page for a channel. In this case, we will return
+  // them to the channel view.
   // if the user does have permission, but this component gets rendered, it means
-  // something went wrong - most likely the frequency doesn't exists (404) so
+  // something went wrong - most likely the channel doesn't exists (404) so
   // we should return the user back to the community url
-  const returnUrl = noPermission
-    ? `/${community}/${frequency}`
-    : `/${community}`;
+  const returnUrl = noPermission ? `/${community}/${channel}` : `/${community}`;
 
   const title = noPermission
     ? "I see you sneakin' around here..."
@@ -107,7 +105,7 @@ export const Upsell404Frequency = ({ frequency, community, noPermission }) => {
 
   const subtitle = noPermission
     ? 'This is a no-fly-zone for you, sorry! Head on back out now, hear?'
-    : `We can't find a frequency by the name of ${frequency}.`;
+    : `We can't find a channel by the name of ${channel}.`;
 
   return (
     <UpsellFourOhFourContainer>
@@ -181,7 +179,7 @@ export const Upsell404User = ({ username }) => {
   );
 };
 
-export const Upsell404Story = () => {
+export const Upsell404Thread = () => {
   const returnUrl = `/`;
   const title = 'Oops, something got lost!';
   const subtitle = `We can't find that thread. Maybe it floated off into space...`;

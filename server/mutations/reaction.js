@@ -11,12 +11,13 @@ type ToggleReactionType = {
 module.exports = {
   Mutation: {
     toggleReaction: (_: any, { reaction }: ToggleReactionType, { user }) => {
+      const currentUser = user;
       // user must be authed to send a message
-      if (!user)
+      if (!currentUser)
         return new UserError('You must be signed in to add a reaction.');
 
       // all checks passed
-      return toggleReaction(reaction, user.uid);
+      return toggleReaction(reaction, currentUser.id);
     },
   },
 };

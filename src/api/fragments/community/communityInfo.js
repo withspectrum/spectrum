@@ -7,12 +7,13 @@ export const communityInfoFragment = gql`
     slug
     description
     website
-    photoURL
+    profilePhoto
     isOwner
     isMember
+    isModerator
     metaData {
       members
-      frequencies
+      channels
     }
   }
 `;
