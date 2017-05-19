@@ -96,6 +96,7 @@ const getEverything = (userId: string): Promise<Array<any>> => {
       .filter(thread => db.not(thread.hasFields('isDeleted')))
       // Don't send the members back
       .without('members')
+      .orderBy(db.desc('createdAt'))
       .run()
   );
 };

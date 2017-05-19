@@ -33,7 +33,7 @@ class ChannelWithData extends Component {
       slug: channel.slug,
       description: channel.description,
       isPrivate: channel.isPrivate || false,
-      id: channel.id,
+      channelId: channel.id,
       channelData: channel,
     };
   }
@@ -59,13 +59,13 @@ class ChannelWithData extends Component {
 
   save = e => {
     e.preventDefault();
-    const { name, slug, description, isPrivate, id } = this.state;
+    const { name, slug, description, isPrivate, channelId } = this.state;
     const input = {
       name,
       slug,
       description,
       isPrivate,
-      id,
+      channelId,
     };
 
     this.props
@@ -83,7 +83,7 @@ class ChannelWithData extends Component {
       });
   };
 
-  triggerDeleteChannel = (e, id) => {
+  triggerDeleteChannel = (e, channelId) => {
     e.preventDefault();
     const { name, channelData } = this.state;
     const message = (
@@ -116,7 +116,7 @@ class ChannelWithData extends Component {
 
     return this.props.dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {
-        id,
+        id: channelId,
         entity: 'channel',
         message,
         redirect: `/${channelData.community.slug}`,

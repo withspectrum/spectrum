@@ -34,14 +34,19 @@ const DirectMessageThread = /* GraphQL */ `
 		media
 	}
 
-	input MessageContentInput {
-		type: MessageType!
-		content: String!
+	input ContentInput {
+		body: String!
+	}
+
+	input DirectMessageContentInput {
+		messageType: MessageType!
+		threadType: String!
+		content: ContentInput!
 	}
 
 	input DirectMessageThreadInput {
-		users: [ID!]
-		message: MessageContentInput!
+		participants: [ID!]
+		message: DirectMessageContentInput!
 	}
 
 	extend type Mutation {

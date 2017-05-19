@@ -5,7 +5,8 @@ const pubsub = require('./pubsub');
 const channels = require('./channels');
 
 const newMessage = message => {
-  pubsub.publish(channels.MESSAGE_ADDED, message);
+  console.log('pubsub', message) ||
+    pubsub.publish(channels.MESSAGE_ADDED, message);
 };
 
 module.exports = () => {

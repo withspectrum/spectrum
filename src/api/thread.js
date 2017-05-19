@@ -6,16 +6,16 @@ import { graphql, gql } from 'react-apollo';
   Delete a thread
 */
 const DELETE_THREAD_MUTATION = gql`
-  mutation deleteThread($id: ID!) {
-    deleteThread(id: $id)
+  mutation deleteThread($threadId: ID!) {
+    deleteThread(threadId: $threadId)
   }
 `;
 const DELETE_THREAD_OPTIONS = {
-  props: ({ id, mutate }) => ({
-    deleteThread: id =>
+  props: ({ threadId, mutate }) => ({
+    deleteThread: threadId =>
       mutate({
         variables: {
-          id,
+          threadId,
         },
       }),
   }),

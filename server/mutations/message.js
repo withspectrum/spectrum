@@ -14,7 +14,7 @@ module.exports = {
       // user must be authed to send a message
       if (!currentUser)
         return new UserError('You must be signed in to send a message.');
-
+      console.log('db mutation', message);
       // all checks passed
       return storeMessage(message, currentUser);
     },

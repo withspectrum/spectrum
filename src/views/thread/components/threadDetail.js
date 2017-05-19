@@ -33,9 +33,9 @@ const ThreadDetailPure = ({
   currentUser,
   history,
 }) => {
-  const threadLock = (id, value) =>
+  const threadLock = (threadId, value) =>
     setThreadLock({
-      id,
+      threadId,
       value,
     })
       .then(({ data: { setThreadLock } }) => {
@@ -49,7 +49,7 @@ const ThreadDetailPure = ({
         dispatch(addToastWithTimeout('error', err));
       });
 
-  const triggerDelete = (e, id) => {
+  const triggerDelete = (e, threadId) => {
     e.preventDefault();
 
     let message;
@@ -66,7 +66,7 @@ const ThreadDetailPure = ({
 
     return dispatch(
       openModal('DELETE_DOUBLE_CHECK_MODAL', {
-        id,
+        id: threadId,
         entity: 'thread',
         message,
       })
@@ -125,8 +125,8 @@ const ThreadDetailPure = ({
       <ThreadHeading>
         {thread.content.title}
       </ThreadHeading>
-      {!!thread.content.description &&
-        <ThreadContent>{thread.content.description}</ThreadContent>}
+      {!!thread.content.body &&
+        <ThreadContent>{thread.content.body}</ThreadContent>}
     </ThreadWrapper>
   );
 };

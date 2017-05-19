@@ -45,8 +45,8 @@ const ThreadContainerPure = ({
     size = 'full';
   }
 
-  const toggleSubscription = id => {
-    toggleChannelSubscription({ id })
+  const toggleSubscription = channelId => {
+    toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
         const str = toggleChannelSubscription.isMember
           ? `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
@@ -61,7 +61,7 @@ const ThreadContainerPure = ({
   };
 
   return (
-    <FlexContainer justifyContent="center">
+    <FlexContainer justifyContent="center" style={{ flex: '1' }}>
       <Column type="secondary">
         <UserProfile data={{ user: thread.creator }} profileSize={'full'} />
         <ChannelProfile data={{ channel: thread.channel }} profileSize={size} />

@@ -16,6 +16,7 @@ import type {
   CreateCommunityArguments,
   EditCommunityArguments,
 } from '../models/community';
+import { getThreadsByCommunity, deleteThread } from '../models/thread';
 
 type Context = {
   user: Object,
@@ -72,7 +73,17 @@ module.exports = {
         }
 
         // all checks passed
-        return deleteCommunity(communityId);
+        return deleteCommunity(communityId).then(() => {
+          // once the community is deleted, we need to mark all the threads
+          // posted in that community as deleted
+          // get all the threads
+          return getThreadsByCommunity(communityId).then(threads => {
+            // if there were no threads in that community, we're done
+            if (threads.length <= 0) return;
+            // otherwise take each thread and mark as deleted
+            return threads.map(thread => deleteThread(thread.id));
+          });
+        });
       });
     },
     editCommunity: (
@@ -111,7 +122,7 @@ module.exports = {
     },
     toggleCommunityMembership: (
       _: any,
-      { communityId }: string,
+      { communityId }: { communityId: string },
       { user }: Context
     ) => {
       const currentUser = user;

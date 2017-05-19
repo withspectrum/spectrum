@@ -36,16 +36,20 @@ const ChatInputWithMutation = ({
     // in views/directMessages/containers/newThread.js
     if (thread === 'newDirectMessageThread') {
       console.log('attempting to create a new thread');
-      return createThread({ type: 'text', content: value });
+      return createThread({
+        messageBody: value,
+        messageType: 'text',
+      });
     }
 
     // user is sending a message to an existing thread id - either a thread
     // or direct message thread
     sendMessage({
-      thread,
-      message: {
-        type: 'text',
-        content: value,
+      threadId: thread,
+      messageType: 'text',
+      threadType: 'story',
+      content: {
+        body: value,
       },
     })
       .then(() => {

@@ -52,7 +52,10 @@ class DeleteDoubleCheckModal extends Component {
         return deleteThread(id)
           .then(({ data: { deleteThread } }) => {
             if (deleteThread) {
-              history.push(redirect ? redirect : '/');
+              // TODO: When we figure out the mutation reducers in apollo
+              // client we can just history push and trust the store to update
+              window.location.href = redirect ? redirect : '/';
+              // history.push(redirect ? redirect : '/');
               dispatch(addToastWithTimeout('neutral', 'Thread deleted.'));
               this.close();
             }
@@ -70,7 +73,10 @@ class DeleteDoubleCheckModal extends Component {
         return deleteChannel(id)
           .then(({ data: { deleteChannel } }) => {
             if (deleteChannel) {
-              history.push(redirect ? redirect : '/');
+              // TODO: When we figure out the mutation reducers in apollo
+              // client we can just history push and trust the store to update
+              window.location.href = redirect ? redirect : '/';
+              // history.push(redirect ? redirect : '/');
               dispatch(addToastWithTimeout('neutral', 'Channel deleted.'));
               this.close();
             }
@@ -88,7 +94,10 @@ class DeleteDoubleCheckModal extends Component {
         return deleteCommunity(id)
           .then(({ data: { deleteCommunity } }) => {
             if (deleteCommunity) {
-              history.push(redirect ? redirect : '/');
+              // TODO: When we figure out the mutation reducers in apollo
+              // client we can just history push and trust the store to update
+              window.location.href = redirect ? redirect : '/';
+              // history.push(redirect ? redirect : '/');
               dispatch(addToastWithTimeout('neutral', 'Community deleted.'));
               this.close();
             }

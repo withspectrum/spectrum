@@ -26,6 +26,7 @@ import type {
   CreateChannelArguments,
   EditChannelArguments,
 } from '../models/channel';
+import { getThreadsByChannel, deleteThread } from '../models/thread';
 
 type Context = {
   user: Object,
@@ -120,7 +121,17 @@ module.exports = {
             // the owners at time of channel creation
             if (isCommunityOwner || isChannelOwner) {
               // all checks passed
-              return deleteChannel(channelId);
+              return deleteChannel(channelId).then(() => {
+                // once the channel is deleted, we need to mark all the threads
+                // posted in that channel as deleted
+                // get all the threads
+                return getThreadsByChannel(channelId).then(threads => {
+                  // if there were no threads in that channel, we're done
+                  if (threads.length <= 0) return;
+                  // otherwise take each thread and mark as deleted
+                  return threads.map(thread => deleteThread(thread.id));
+                });
+              });
             } else {
               return new UserError(
                 "You don't have permission to make changes to this channel"
@@ -150,13 +161,6 @@ module.exports = {
               return new UserError("This channel doesn't exist");
             }
 
-            // if user doesn't own the channel
-            if (!(channel.owners.indexOf(currentUser.id) > -1)) {
-              return new UserError(
-                "You don't have permission to make changes to this channel."
-              );
-            }
-
             // get the community parent of the channel being edited
             const communities = getCommunities([channel.communityId]);
 
@@ -166,26 +170,26 @@ module.exports = {
             // select the community
             const community = communities[0];
 
-            // if user is doesn't own the community
-
-            // NOTE: This will need to change in the future if we have the concept
-            // of moderator-owner channels where the community owner is not
-            // listed as an owner of the channel. In today's code we mirror
-            // the owners at time of channel creation
-            if (!(community.owners.indexOf(currentUser.id) > -1)) {
-              return new UserError(
-                "You don't have permission to make changes to this channel."
-              );
+            // if the user owns the community or owns the frequency, they
+            // are allowed to make the changes
+            if (
+              community.owners.indexOf(currentUser.id) > -1 ||
+              channel.owners.indexOf(currentUser.id) > -1
+            ) {
+              // all checks passed
+              return editChannel(args);
             }
 
-            // all checks passed
-            return editChannel(args);
+            // otherwise the user does not have permission
+            return new UserError(
+              "You don't have permission to make changes to this channel."
+            );
           })
       );
     },
     toggleChannelSubscription: (
       _: any,
-      { channelId }: string,
+      { channelId }: { channelId: string },
       { user }: Context
     ) => {
       const currentUser = user;
@@ -329,13 +333,6 @@ module.exports = {
               return new UserError("This channel doesn't exist");
             }
 
-            // if user doesn't own the channel
-            if (!(channel.owners.indexOf(currentUser.id) > -1)) {
-              return new UserError(
-                "You don't have permission to make changes to this channel."
-              );
-            }
-
             // get the community parent of the channel being edited
             const communities = getCommunities([channel.communityId]);
 
@@ -344,18 +341,6 @@ module.exports = {
           .then(([channel, communities]) => {
             // select the community
             const community = communities[0];
-
-            // if user is doesn't own the community
-
-            // NOTE: This will need to change in the future if we have the concept
-            // of moderator-owner channels where the community owner is not
-            // listed as an owner of the channel. In today's code we mirror
-            // the owners at time of channel creation
-            if (!(community.owners.indexOf(currentUser.id) > -1)) {
-              return new UserError(
-                "You don't have permission to make changes to this channel."
-              );
-            }
 
             const { channelId, userId, action } = input;
 
@@ -366,55 +351,63 @@ module.exports = {
               );
             }
 
-            // user is in the pending list
-            // determine whether to approve or block them
-            if (action === 'block') {
-              // remove the user from the pending list
-              return removeRequestToJoinChannel(
-                channelId,
-                userId
-              ).then(channel => {
-                return addBlockedUser(channelId, userId);
-              });
+            // if a user owns the community or owns the channel, they can make this change
+            if (
+              community.owners.indexOf(currentUser.id) > -1 ||
+              channel.owners.indexOf(currentUser.id) > -1
+            ) {
+              // user is in the pending list
+              // determine whether to approve or block them
+              if (action === 'block') {
+                // remove the user from the pending list
+                return removeRequestToJoinChannel(
+                  channelId,
+                  userId
+                ).then(channel => {
+                  return addBlockedUser(channelId, userId);
+                });
+              }
+
+              if (action === 'approve') {
+                // remove the user from the pending list
+                return (
+                  removeRequestToJoinChannel(channelId, userId)
+                    // we have to determine if this is the first channel the user is
+                    // joining in a community. if so, we will add them to the community
+                    // and the community's default channels
+                    .then(channel => {
+                      // user is already in the community, and therefore is already
+                      // in the default channels (general, for now)
+                      // subscribe them to the approved channel
+                      if (community.members.indexOf(userId) > -1) {
+                        return joinChannel(channelId, userId);
+                      } else {
+                        // user is not in the community, so we need to add them to
+                        // the community and the community's default channels
+                        return (
+                          Promise.all([
+                            channel,
+                            joinChannel(channelId, userId), // approve them in the current channel
+                            joinCommunity(channel.communityId, userId), // join the parent community
+                            subscribeToDefaultChannels(
+                              // join the parent community's defaults
+                              channel.communityId,
+                              userId
+                            ),
+                          ])
+                            // return the channel
+                            .then(data => data[0])
+                        );
+                      }
+                    })
+                );
+              }
             }
 
-            if (action === 'approve') {
-              // remove the user from the pending list
-              return (
-                removeRequestToJoinChannel(channelId, userId)
-                  // we have to determine if this is the first channel the user is
-                  // joining in a community. if so, we will add them to the community
-                  // and the community's default channels
-                  .then(channel => {
-                    // user is already in the community, and therefore is already
-                    // in the default channels (general, for now)
-                    // subscribe them to the approved channel
-                    if (community.members.indexOf(userId) > -1) {
-                      return joinChannel(channelId, userId);
-                    } else {
-                      // user is not in the community, so we need to add them to
-                      // the community and the community's default channels
-                      return (
-                        Promise.all([
-                          channel,
-                          joinChannel(channelId, userId), // approve them in the current channel
-                          joinCommunity(channel.communityId, userId), // join the parent community
-                          subscribeToDefaultChannels(
-                            // join the parent community's defaults
-                            channel.communityId,
-                            userId
-                          ),
-                        ])
-                          // return the channel
-                          .then(data => data[0])
-                      );
-                    }
-                  })
-              );
-            }
-
-            // invalid action type
-            return new UserError('Unknown action request on a pending user.');
+            // user is neither a community or channel owner, they don't have permission
+            return new UserError(
+              "You don't have permission to make changes to this channel."
+            );
           })
       );
     },
@@ -439,13 +432,6 @@ module.exports = {
               return new UserError("This channel doesn't exist");
             }
 
-            // if user doesn't own the channel
-            if (!(channel.owners.indexOf(currentUser.id) > -1)) {
-              return new UserError(
-                "You don't have permission to make changes to this channel."
-              );
-            }
-
             // get the community parent of the channel being edited
             const communities = getCommunities([channel.communityId]);
 
@@ -454,18 +440,6 @@ module.exports = {
           .then(([channel, communities]) => {
             // select the community
             const community = communities[0];
-
-            // if user is doesn't own the community
-
-            // NOTE: This will need to change in the future if we have the concept
-            // of moderator-owner channels where the community owner is not
-            // listed as an owner of the channel. In today's code we mirror
-            // the owners at time of channel creation
-            if (!(community.owners.indexOf(currentUser.id) > -1)) {
-              return new UserError(
-                "You don't have permission to make changes to this channel."
-              );
-            }
 
             const { channelId, userId } = input;
 
@@ -476,8 +450,19 @@ module.exports = {
               );
             }
 
-            // all checks passed
-            return removeBlockedUser(channelId, userId);
+            // if a user owns the community or owns the channel, they can make this change
+            if (
+              community.owners.indexOf(currentUser.id) > -1 ||
+              channel.owners.indexOf(currentUser.id) > -1
+            ) {
+              // all checks passed
+              return removeBlockedUser(channelId, userId);
+            }
+
+            // user is neither a community or channel owner, they don't have permission
+            return new UserError(
+              "You don't have permission to make changes to this channel."
+            );
           })
       );
     },
