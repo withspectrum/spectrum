@@ -81,10 +81,10 @@ channels.forEach(channel => {
   if (!channel.members || channel.members.length === 0) return;
   randomAmount({ max: 10 }, () => {
     const creator = faker.random.arrayElement(channel.members);
-    const thread = generateThread(channel.community, channel.id, creator);
+    const thread = generateThread(channel.communityId, channel.id, creator);
     threads.push(thread);
     notifications.push(
-      generateThreadNotification(thread, channel, channel.community)
+      generateThreadNotification(thread, channel, channel.communityId)
     );
   });
 });
@@ -115,7 +115,7 @@ threads.forEach(thread => {
         message,
         thread,
         channel.id,
-        channel.community
+        channel.communityId
       )
     );
   });

@@ -28,7 +28,7 @@ query getComposerCommunitiesAndChannels {
               node {
                 ...channelInfo
                 community {
-                  id
+                  ...communityInfo
                 }
               }
             }

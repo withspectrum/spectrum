@@ -51,6 +51,8 @@ class ThreadComposerWithData extends Component {
   constructor(props) {
     super(props);
 
+    console.log(props.data);
+
     /*
       Create a new array of communities only containing the `node` data from
       graphQL. Then filter the resulting channel to remove any communities
@@ -229,6 +231,8 @@ class ThreadComposerWithData extends Component {
       activeChannel,
       isPublishing,
     } = this.state;
+
+    console.log('rendering');
 
     return (
       <Container isOpen={isOpen}>

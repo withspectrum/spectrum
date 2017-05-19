@@ -10,6 +10,7 @@ export const communityInfoFragment = gql`
     profilePhoto
     isOwner
     isMember
+    isModerator
     metaData {
       members
       channels

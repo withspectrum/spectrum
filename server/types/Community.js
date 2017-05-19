@@ -67,6 +67,7 @@ const Community = /* GraphQL */ `
 		profilePhoto: String
 		isOwner: Boolean
 		isMember: Boolean
+		isModerator: Boolean
 		channelConnection: CommunityChannelsConnection!
 		memberConnection(first: Int = 10, after: String): CommunityMembersConnection!
 		threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!

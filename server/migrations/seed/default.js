@@ -60,7 +60,7 @@ const DEFAULT_COMMUNITIES = [
     slug: 'spectrum',
     members: DEFAULT_USERS.map(({ id }) => id),
     owners: DEFAULT_USERS.map(({ id }) => id),
-    moderators: DEFAULT_USERS.map(({ id }) => id),
+    moderators: [],
     blockedUsers: [],
   },
 ];
@@ -76,7 +76,7 @@ const DEFAULT_CHANNELS = [
     isPrivate: false,
     members: DEFAULT_USERS.map(({ id }) => id),
     owners: DEFAULT_USERS.map(({ id }) => id),
-    moderators: DEFAULT_USERS.map(({ id }) => id),
+    moderators: [],
     pendingUsers: [],
     blockedUsers: [],
   },

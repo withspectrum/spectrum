@@ -12,7 +12,7 @@ export const GET_DIRECT_MESSAGE_THREAD_QUERY = gql`
   query getDirectMessageThreadMessages($id: ID!) {
     directMessageThread(id: $id) {
       ...directMessageThreadInfo
-      users {
+      participants {
         ...userInfo
       }
       messageConnection {
