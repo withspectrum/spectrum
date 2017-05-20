@@ -86,10 +86,9 @@ class CommunityWithData extends Component {
 
   save = e => {
     e.preventDefault();
-    const { name, slug, description, website, file, communityId } = this.state;
+    const { name, description, website, file, communityId } = this.state;
     const input = {
       name,
-      slug,
       description,
       website,
       file,
@@ -170,7 +169,7 @@ class CommunityWithData extends Component {
         <FormTitle>Community Settings</FormTitle>
         <Form>
           <Input defaultValue={name} onChange={this.changeName}>Name</Input>
-          <UnderlineInput defaultValue={slug} onChange={this.changeSlug}>
+          <UnderlineInput defaultValue={slug} disabled>
             sp.chat/
           </UnderlineInput>
           <TextArea
