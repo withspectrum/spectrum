@@ -8,7 +8,7 @@ const pubsub = require('./pubsub');
 module.exports = {
   // Start listening to database changes
   start() {
-    listenToNewMessages('messages', message => {
+    listenToNewMessages(message => {
       pubsub.publish('messageAdded', message);
     });
   },
