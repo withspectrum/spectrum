@@ -10,9 +10,9 @@ const DEFAULT_CONFIG = {
 };
 
 const PRODUCTION_CONFIG = {
-  password: 'e13386fb4f6573d38ab67c9514d6589e',
-  host: 'aws-us-east-1-portal.6.dblayer.com',
-  port: 19241,
+  password: process.env.COMPOSE_PASSWORD,
+  host: process.env.COMPOSE_URL,
+  port: process.env.COMPOSE_PORT,
   ssl: {
     ca: fs.readFileSync(path.resolve(__dirname, '../../cacert')),
   },
