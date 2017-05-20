@@ -6,59 +6,55 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { getThisCommunity, getFrequenciesByCommunity } from './queries';
-import { addToastWithTimeout } from '../../actions/toasts';
-import { displayLoadingCard } from '../../components/loading';
+import { getThisCommunity, getChannelsByCommunity } from './queries';
+import { openModal } from '../../actions/modals';
+import { displayLoadingScreen } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ListCard from './components/listCard';
-
 import { CommunityEditForm } from '../../components/editForm';
-const FrequencyListCard = compose(getFrequenciesByCommunity)(ListCard);
+import { Upsell404Community } from '../../components/upsell';
+const ChannelListCard = compose(getChannelsByCommunity)(ListCard);
 
-const SettingsPure = ({ match, data, history, dispatch }) => {
+const SettingsPure = ({
+  match,
+  data: { community, error },
+  history,
+  dispatch,
+}) => {
   const communitySlug = match.params.communitySlug;
 
-  if (data.error) {
-    return <div>Error loading settings for this settings.</div>;
-  }
-
-  if (!data.community) {
-    history.push('/');
-    dispatch(addToastWithTimeout('error', "This community doesn't exist."));
-
-    return null;
-  }
-
-  if (!data.community.isOwner) {
-    history.push('/');
-    dispatch(
-      addToastWithTimeout(
-        'error',
-        "You don't have permission to view these settings."
-      )
+  const create = () => {
+    return dispatch(
+      openModal('CREATE_COMMUNITY_MODAL', { name: communitySlug })
     );
+  };
 
-    return null;
+  if (error) {
+    return <Upsell404Community community={communitySlug} />;
   }
 
-  if (data.error) {
-    return <div>Error</div>;
+  if (!community || community.deleted) {
+    return <Upsell404Community community={communitySlug} create={create} />;
+  }
+
+  if (!community.isOwner) {
+    return <Upsell404Community community={communitySlug} noPermission />;
   }
 
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <CommunityEditForm community={data.community} />
+        <CommunityEditForm community={community} />
       </Column>
       <Column type="primary">
-        <FrequencyListCard slug={communitySlug} />
+        <ChannelListCard slug={communitySlug} />
       </Column>
     </AppViewWrapper>
   );
 };
 
-const CommunitySettings = compose(getThisCommunity, displayLoadingCard, pure)(
+const CommunitySettings = compose(getThisCommunity, displayLoadingScreen, pure)(
   SettingsPure
 );
 export default connect()(CommunitySettings);

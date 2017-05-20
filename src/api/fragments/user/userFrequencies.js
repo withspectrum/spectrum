@@ -1,19 +1,19 @@
 import { gql } from 'react-apollo';
-import { frequencyInfoFragment } from '../frequency/frequencyInfo';
+import { channelInfoFragment } from '../channel/channelInfo';
 
-export const userFrequenciesFragment = gql`
-  fragment userFrequencies on User {
-    frequencyConnection {
+export const userChannelsFragment = gql`
+  fragment userChannels on User {
+    channelConnection {
       pageInfo {
         hasNextPage
         hasPreviousPage
       }
       edges {
         node {
-          ...frequencyInfo
+          ...channelInfo
         }
       }
     }
   }
-  ${frequencyInfoFragment}
+  ${channelInfoFragment}
 `;

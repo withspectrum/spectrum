@@ -3,15 +3,14 @@
 exports.up = function(r, conn) {
   return (
     Promise.all([
-      r.tableCreate('stories').run(conn),
-      r.tableCreate('frequencies').run(conn),
+      r.tableCreate('threads').run(conn),
+      r.tableCreate('channels').run(conn),
       r.tableCreate('communities').run(conn),
       r.tableCreate('messages').run(conn),
-      r.tableCreate('direct_messages').run(conn),
       r.tableCreate('sessions').run(conn),
       r.tableCreate('reactions').run(conn),
-      r.tableCreate('direct_message_groups').run(conn),
-      r.tableCreate('users', { primaryKey: 'uid' }).run(conn),
+      r.tableCreate('directMessageThreads').run(conn),
+      r.tableCreate('users').run(conn),
       r.tableCreate('notifications').run(conn),
     ])
       // Create secondary indexes
@@ -19,40 +18,56 @@ exports.up = function(r, conn) {
         Promise.all([
           // index user by username
           r.table('users').indexCreate('username', r.row('username')).run(conn),
+          // index direct message threads by the users
+          r
+            .table('directMessageThreads')
+            .indexCreate('participants', { multi: true })
+            .run(conn),
           r
             .table('notifications')
             .indexCreate(
-              'user',
+              'userId',
               notification => {
-                return notification('users').map(user => user('uid'));
+                return notification('users').map(user => user('id'));
               },
               { multi: true }
             )
             .run(conn),
-          // index notifications by story
+          // index notifications by thread
           r
             .table('notifications')
-            .indexCreate('story', r.row('story'))
+            .indexCreate('threadId', r.row('threadId'))
             .run(conn),
-          // index stories by author
-          r.table('stories').indexCreate('author', r.row('author')).run(conn),
-          // index stories by frequency
+          // index threads by creator
           r
-            .table('stories')
-            .indexCreate('frequency', r.row('frequency'))
+            .table('threads')
+            .indexCreate('creatorId', r.row('creatorId'))
+            .run(conn),
+          // index threads by channelId
+          r
+            .table('threads')
+            .indexCreate('channelId', r.row('channelId'))
+            .run(conn),
+          // index threads by communityId
+          r
+            .table('threads')
+            .indexCreate('communityId', r.row('communityId'))
             .run(conn),
           // index reactions by message
           r
             .table('reactions')
-            .indexCreate('message', r.row('message'))
+            .indexCreate('messageId', r.row('messageId'))
             .run(conn),
-          // index frequencies by community
+          // index channels by communityId
           r
-            .table('frequencies')
-            .indexCreate('community', r.row('community'))
+            .table('channels')
+            .indexCreate('communityId', r.row('communityId'))
             .run(conn),
           // index messages by thread
-          r.table('messages').indexCreate('thread', r.row('thread')).run(conn),
+          r
+            .table('messages')
+            .indexCreate('threadId', r.row('threadId'))
+            .run(conn),
         ])
       )
       .catch(err => {
@@ -63,14 +78,13 @@ exports.up = function(r, conn) {
 
 exports.down = function(r, conn) {
   return Promise.all([
-    r.tableDrop('stories').run(conn),
-    r.tableDrop('frequencies').run(conn),
+    r.tableDrop('threads').run(conn),
+    r.tableDrop('channels').run(conn),
     r.tableDrop('communities').run(conn),
     r.tableDrop('messages').run(conn),
-    r.tableDrop('direct_messages').run(conn),
     r.tableDrop('sessions').run(conn),
     r.tableDrop('users').run(conn),
-    r.tableDrop('direct_message_groups').run(conn),
+    r.tableDrop('directMessageThreads').run(conn),
     r.tableDrop('reactions').run(conn),
     r.tableDrop('notifications').run(conn),
   ]).catch(err => {

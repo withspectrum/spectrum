@@ -4,34 +4,48 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-
-import StoryComposer from '../../components/storyComposer';
+// $FlowFixMe
+import { connect } from 'react-redux';
+import { openModal } from '../../actions/modals';
+import ThreadComposer from '../../components/threadComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
-import StoryFeed from '../../components/storyFeed';
+import ThreadFeed from '../../components/threadFeed';
 import ListCard from './components/listCard';
 import { CommunityProfile } from '../../components/profile';
-import { displayLoadingCard } from '../../components/loading';
+import { displayLoadingScreen } from '../../components/loading';
+import { UpsellSignIn, Upsell404Community } from '../../components/upsell';
 
 import {
-  getCommunityStories,
+  getCommunityThreads,
   getCommunity,
-  getCommunityFrequencies,
+  getCommunityChannels,
 } from './queries';
 
-const CommunityStoryFeed = compose(getCommunityStories)(StoryFeed);
+const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
-const FrequencyListCard = compose(getCommunityFrequencies)(ListCard);
+const ChannelListCard = compose(getCommunityChannels)(ListCard);
 
-const CommunityViewPure = ({ match, data: { community, error } }) => {
+const CommunityViewPure = ({
+  match,
+  data: { community, error },
+  currentUser,
+  dispatch,
+}) => {
   const communitySlug = match.params.communitySlug;
 
+  const create = () => {
+    return dispatch(
+      openModal('CREATE_COMMUNITY_MODAL', { name: communitySlug })
+    );
+  };
+
   if (error) {
-    return <div>error</div>;
+    return <Upsell404Community community={communitySlug} />;
   }
 
-  if (!community) {
-    return <div>community not found</div>;
+  if (!community || community.deleted) {
+    return <Upsell404Community community={communitySlug} create={create} />;
   }
 
   /*
@@ -44,20 +58,26 @@ const CommunityViewPure = ({ match, data: { community, error } }) => {
     <AppViewWrapper>
       <Column type="secondary">
         <CommunityProfile data={{ community }} profileSize="full" />
-        <FrequencyListCard slug={communitySlug} />
+        <ChannelListCard slug={communitySlug} />
       </Column>
 
       <Column type="primary" alignItems="center">
-        {community.isMember
-          ? <StoryComposer activeCommunity={communitySlug} />
+        {!currentUser && <UpsellSignIn entity={community} />}
+
+        {community.isMember && currentUser
+          ? <ThreadComposer activeCommunity={communitySlug} />
           : <span />}
-        <CommunityStoryFeed slug={communitySlug} />
+        <CommunityThreadFeed slug={communitySlug} />
       </Column>
     </AppViewWrapper>
   );
 };
 
-export const CommunityView = compose(getCommunity, displayLoadingCard, pure)(
+export const CommunityView = compose(getCommunity, displayLoadingScreen, pure)(
   CommunityViewPure
 );
-export default CommunityView;
+
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+export default connect(mapStateToProps)(CommunityView);

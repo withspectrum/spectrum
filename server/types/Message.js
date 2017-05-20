@@ -1,60 +1,54 @@
 const Message = /* GraphQL */ `
-	enum MessageType {
+	enum MessageTypes {
 		text
 		media
 	}
 
 	enum ThreadTypes {
-		Story
-		DirectMessageGroup
-	}
-
-	# Tables in the database
-	enum MessageLocation {
-		messages
-		direct_messages
+		story
+		directMessageThread
 	}
 
 	# The content and type of a message
 	type MessageContent {
-		type: MessageType!
-		content: String!
+		body: String!
 	}
 
 	# A message
 	type Message {
 		id: ID!
 		timestamp: Date!
-		thread: ThreadTypes!
-		message: MessageContent!
+		thread: ID!
+		content: MessageContent!
 		sender: User!
 		reactions: [Reaction]
+		messageType: MessageTypes!
 	}
 
 	input MessageContentInput {
-		type: MessageType!
-		content: String!
+		body: String!
 	}
 
 	input MessageInput {
-		thread: ID!
-		message: MessageContentInput!
+		threadId: ID!
+		threadType: ThreadTypes!
+		messageType: MessageTypes!
+		content: MessageContentInput!
 	}
 
 	extend type Query {
 		message(
-			location: MessageLocation!,
 			id: ID!
 		): Message
 	}
 
 
 	extend type Mutation {
-		addMessage(location: MessageLocation!, message: MessageInput!): Message
+		addMessage(message: MessageInput!): Message
 	}
 
 	extend type Subscription {
-		messageAdded(location: MessageLocation!, thread: ID!): Message
+		messageAdded(thread: ID!): Message
 	}
 `;
 

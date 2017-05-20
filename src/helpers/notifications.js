@@ -4,19 +4,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import Icon from '../components/icons';
-import {
-  HorizontalRuleWithIcon,
-  ChatMessage,
-} from '../views/notifications/style';
+import { HorizontalRuleWithIcon } from '../components/globals';
+import { ChatMessage } from '../views/notifications/style';
 
 const icons = {
-  NEW_STORY: 'write',
+  NEW_THREAD: 'post',
   NEW_MESSAGE: 'messages',
   default: 'notification',
 };
 
 const colors = {
-  NEW_STORY: 'success.default',
+  NEW_THREAD: 'success.default',
   NEW_MESSAGE: 'warn.alt',
 };
 
@@ -30,15 +28,15 @@ export const getColorByType = type => {
 };
 
 export const constructMessage = notification => {
-  const { type, sender, community, frequency, story } = notification;
+  const { type, sender, community, channel, thread } = notification;
   switch (type) {
-    case 'NEW_STORY':
+    case 'NEW_THREAD':
       return (
         <span>
-          <Link to={`/@${sender.username}`}>{sender.displayName}</Link>
+          <Link to={`/@${sender.username}`}>{sender.name}</Link>
           {' '}posted a new thread in{' '}
-          <Link to={`/${community.slug}/${frequency.slug}`}>
-            {community.name}/{frequency.name}
+          <Link to={`/${community.slug}/${channel.slug}`}>
+            {community.name}/{channel.name}
           </Link>
           :
         </span>
@@ -46,9 +44,9 @@ export const constructMessage = notification => {
     case 'NEW_MESSAGE':
       return (
         <span>
-          <Link to={`/@${sender.username}`}>{sender.displayName}</Link>
+          <Link to={`/@${sender.username}`}>{sender.name}</Link>
           {' '}replied to your{' '}
-          <Link to={`/story/${story.id}`}>thread</Link>:
+          <Link to={`/thread/${thread.id}`}>thread</Link>:
         </span>
       );
     default:
@@ -57,20 +55,20 @@ export const constructMessage = notification => {
 };
 
 export const constructLinklessMessage = notification => {
-  const { type, sender, community, frequency } = notification;
+  const { type, sender, community, channel } = notification;
   switch (type) {
-    case 'NEW_STORY':
+    case 'NEW_THREAD':
       return (
         <span>
-          <b>{sender.displayName}</b>
+          <b>{sender.name}</b>
           {' '}posted a new thread in{' '}
-          <b>{community.name}/{frequency.name}</b>
+          <b>{community.name}/{channel.name}</b>
         </span>
       );
     case 'NEW_MESSAGE':
       return (
         <span>
-          <b>{sender.displayName}</b>
+          <b>{sender.name}</b>
           {' '}replied to your{' '}
           <b>thread</b>
         </span>
@@ -83,21 +81,17 @@ export const constructLinklessMessage = notification => {
 export const constructContent = notification => {
   const { type, sender, content } = notification;
   switch (type) {
-    case 'NEW_STORY':
+    case 'NEW_THREAD':
       return <p>{content.excerpt}</p>;
     case 'NEW_MESSAGE':
       return (
         <div>
           <HorizontalRuleWithIcon>
             <hr />
-            <Icon
-              icon={'messages'}
-              color="border.default"
-              hoverColor="border.default"
-            />
+            <Icon glyph={'messages'} />
             <hr />
           </HorizontalRuleWithIcon>
-          <ChatMessage data-from={sender.displayName}>
+          <ChatMessage data-from={sender.name}>
             {content.excerpt}
           </ChatMessage>
         </div>

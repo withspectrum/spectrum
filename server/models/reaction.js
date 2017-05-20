@@ -4,24 +4,27 @@ import { db } from './db';
 type ReactionType = 'like';
 
 export type ReactionInput = {
-  message: string,
+  messageId: string,
   type: ReactionType,
 };
 
-export const getReactions = (message: string) => {
-  return db.table('reactions').getAll(message, { index: 'message' }).run();
+export const getReactions = (messageId: string): Promise<Array<Object>> => {
+  return db.table('reactions').getAll(messageId, { index: 'messageId' }).run();
 };
 
-export const getReaction = (id: string) => {
-  return db.table('reactions').get(id).run();
+export const getReaction = (reactionId: string): Promise<Object> => {
+  return db.table('reactions').get(reactionId).run();
 };
 
-export const toggleReaction = (reaction: ReactionInput, uid: string) => {
+export const toggleReaction = (
+  reaction: ReactionInput,
+  userId: string
+): Promise<Object> => {
   return db
     .table('reactions')
     .filter({
-      message: reaction.message,
-      user: uid,
+      messageId: reaction.messageId,
+      userId,
     })
     .run()
     .then(result => {
@@ -41,7 +44,7 @@ export const toggleReaction = (reaction: ReactionInput, uid: string) => {
           .insert(
             {
               ...reaction,
-              user: uid,
+              userId,
               timestamp: Date.now(),
             },
             { returnChanges: true }
@@ -49,7 +52,7 @@ export const toggleReaction = (reaction: ReactionInput, uid: string) => {
           .run()
           .then(
             ({ inserted, changes }) =>
-              (inserted > 0 ? changes[0].new_val : false)
+              inserted > 0 ? changes[0].new_val : false
           );
       }
     });

@@ -34,7 +34,7 @@ export const Subtitle = styled.h4`
 export const Description = styled.p`
   font-size: 14px;
   color: ${props => props.theme.text.default};
-  padding: 0 16px 16px;
+  padding: 8px 0 16px;
   line-height: 1.4;
 `;
 

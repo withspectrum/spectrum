@@ -4,35 +4,26 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import branch from 'recompose/branch';
-//$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import Icon from '../../components/icons';
 import { Column } from '../../components/column';
 import { FlexRow } from '../../components/globals';
-import { LoadingCard } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
+import { displayLoadingScreen } from '../../components/loading';
 import { NotificationCard, Content, ContentHeading, Message } from './style';
 import {
   constructMessage,
   constructContent,
   getIconByType,
-  getColorByType,
 } from '../../helpers/notifications';
 import { getNotifications } from './queries';
-
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingCard)
-);
+import { UpsellSignIn } from '../../components/upsell';
 
 const NotificationsPure = ({ data, currentUser }) => {
+  // our router should prevent this from happening, but just in case
   if (!currentUser) {
-    window.location.href = '/';
-    return null;
+    return <UpsellSignIn />;
   }
 
   const { notifications: { edges } } = data;
@@ -43,11 +34,7 @@ const NotificationsPure = ({ data, currentUser }) => {
         {edges.map(({ node: notification }) => (
           <NotificationCard key={notification.id}>
             <FlexRow center>
-              <Icon
-                icon={getIconByType(notification.type)}
-                color={getColorByType(notification.type)}
-                hoverColor={getColorByType(notification.type)}
-              />
+              <Icon glyph={getIconByType(notification.type)} />
               <Message>{constructMessage(notification)}</Message>
             </FlexRow>
             <Content>
@@ -61,7 +48,7 @@ const NotificationsPure = ({ data, currentUser }) => {
   );
 };
 
-const Notifications = compose(getNotifications, displayLoadingState, pure)(
+const Notifications = compose(getNotifications, displayLoadingScreen, pure)(
   NotificationsPure
 );
 

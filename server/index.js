@@ -44,7 +44,7 @@ if (!IS_PROD) {
     '/graphiql',
     graphiqlExpress({
       endpointURL: '/',
-      subscriptionsEndpoint: `wss://localhost:3000`,
+      subscriptionsEndpoint: `wss://localhost:3000/websocket`,
       query: `{\n  user(id: "58a023a4-912d-48fe-a61c-eec7274f7699") {\n    displayName\n    username\n    communities {\n      name\n      frequencies {\n        name\n        stories {\n          content {\n            title\n          }\n          messages {\n            message {\n              content\n            }\n          }\n        }\n      }\n    }\n  }\n}`,
     })
   );

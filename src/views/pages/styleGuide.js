@@ -19,10 +19,10 @@ import {
   Spacer,
 } from './style';
 import Icon from '../../components/icons';
-import { Button, OutlineButton, LinkButton } from '../../components/buttons';
+import { Button, OutlineButton, TextButton } from '../../components/buttons';
 import {
   UserProfile,
-  FrequencyProfile,
+  ChannelProfile,
   CommunityProfile,
 } from '../../components/profile';
 
@@ -45,12 +45,12 @@ const dummyData = {
     id: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
     title: 'Brian Lovin',
     subtitle: '@brian',
-    photoURL: 'https://pbs.twimg.com/profile_images/570313913648955392/cf4tgX7M_bigger.jpeg',
+    profilePhoto: 'https://pbs.twimg.com/profile_images/570313913648955392/cf4tgX7M_bigger.jpeg',
     description: 'Chief Nice Boy™ · Building @withspectrum, @designdetailsfm, @specfm · prev. @facebook, @buffer',
     meta: [],
   },
 
-  frequency: {
+  channel: {
     id: '1c246adb-10a1-40a0-af39-1b7b3278199a',
     title: 'Design Details',
     subtitle: 'SpecFM',
@@ -62,7 +62,7 @@ const dummyData = {
     id: 'ae390edd-667f-42e4-bf0b-10371665c742',
     title: 'SpecFM',
     subtitle: '8,918 members',
-    photoURL: 'https://pbs.twimg.com/profile_images/766307796132343808/OtMSJrFo_400x400.jpg',
+    profilePhoto: 'https://pbs.twimg.com/profile_images/766307796132343808/OtMSJrFo_400x400.jpg',
     description: 'The best podcasts, blogs, and resources for designers and developers.',
     meta: [],
   },
@@ -146,35 +146,35 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
       </Section>
 
       <Spacer height="32px" />
-      <Subheading>Frequency</Subheading>
+      <Subheading>Channel</Subheading>
       <Section>
         <ComponentContainer width={'50%'}>
           <Component transparent>
-            <FrequencyProfile size="mini" data={dummyData.frequency} />
+            <ChannelProfile size="mini" data={dummyData.channel} />
           </Component>
         </ComponentContainer>
 
         <ComponentContainer width={'50%'}>
           <Component transparent>
-            <FrequencyProfile size="small" data={dummyData.frequency} />
+            <ChannelProfile size="small" data={dummyData.channel} />
           </Component>
         </ComponentContainer>
 
         <ComponentContainer width={'50%'}>
           <Component transparent>
-            <FrequencyProfile size="medium" data={dummyData.frequency} />
+            <ChannelProfile size="medium" data={dummyData.channel} />
           </Component>
         </ComponentContainer>
 
         <ComponentContainer width={'50%'}>
           <Component transparent>
-            <FrequencyProfile size="large" data={dummyData.frequency} />
+            <ChannelProfile size="large" data={dummyData.channel} />
           </Component>
         </ComponentContainer>
 
         <ComponentContainer width={'50%'}>
           <Component transparent>
-            <FrequencyProfile size="full" data={dummyData.frequency} />
+            <ChannelProfile size="full" data={dummyData.channel} />
           </Component>
         </ComponentContainer>
       </Section>
@@ -393,43 +393,34 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
       <Section>
         <ComponentContainer>
           <Component>
-            <Icon icon="messages" color={'brand.default'} />
+            <Icon glyph="messages" />
           </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon icon="messages" color={'brand.default'} />`}</Code>
+          <Code onClick={highlightAndCopy}>{`<Icon glyph="messages" />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer>
           <Component>
-            <Icon icon="close" hoverColor={'warn.default'} scaleOnHover />
+            <Icon glyph="view-close" />
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="close" hoverColor={'warn.default'} scaleOnHover />`}</Code>
+          >{`<Icon glyph="view-close" />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer>
           <Component reverse>
-            <Icon
-              icon="explore"
-              color={'bg.default'}
-              hoverColor={'bg.default'}
-              scaleOnHover
-            />
+            <Icon glyph="explore" />
           </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon icon="explore" color={'bg.default'} hoverColor={'bg.default'} scaleOnHover />`}</Code>
+          <Code onClick={highlightAndCopy}>{`<Icon glyph="explore" />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer>
           <Component>
-            <Icon icon="write" hoverColor={'brand.default'} scaleOnHover />
+            <Icon glyph="post" hoverColor={'brand.default'} scaleOnHover />
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="write" hoverColor={'brand.default'} scaleOnHover />`}</Code>
+          >{`<Icon glyph="post" hoverColor={'brand.default'} scaleOnHover />`}</Code>
         </ComponentContainer>
       </Section>
 
@@ -439,7 +430,7 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="messages"
+              glyph="messages"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -447,13 +438,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="messages" ...props />`}</Code>
+          >{`<Icon glyph="messages" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="attachment"
+              glyph="attachment"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -461,13 +452,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="attachment" ...props />`}</Code>
+          >{`<Icon glyph="attachment" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="back"
+              glyph="view-back"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -475,13 +466,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="back" ...props />`}</Code>
+          >{`<Icon glyph="view-back" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="subscribe"
+              glyph="plus"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -489,13 +480,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="subscribe" ...props />`}</Code>
+          >{`<Icon glyph="plus" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="unsubscribe"
+              glyph="minus"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -503,13 +494,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="unsubscribe" ...props />`}</Code>
+          >{`<Icon glyph="minus" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="delete"
+              glyph="delete"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -517,13 +508,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="delete" ...props />`}</Code>
+          >{`<Icon glyph="delete" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="flag"
+              glyph="flag"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -531,13 +522,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="flag" ...props />`}</Code>
+          >{`<Icon glyph="flag" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="freeze"
+              glyph="freeze"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -545,13 +536,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="freeze" ...props />`}</Code>
+          >{`<Icon glyph="freeze" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="frequency"
+              glyph="channel"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -559,13 +550,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="frequency" ...props />`}</Code>
+          >{`<Icon glyph="channel" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="frequency-private"
+              glyph="channel-private"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -573,13 +564,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="frequency-private" ...props />`}</Code>
+          >{`<Icon glyph="channel-private" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="like"
+              glyph="like-fill"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -587,13 +578,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="like" ...props />`}</Code>
+          >{`<Icon glyph="like-fill" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="like-active"
+              glyph="like"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -601,13 +592,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="like-active" ...props />`}</Code>
+          >{`<Icon glyph="like" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="logo"
+              glyph="logo"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -615,13 +606,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="logo" ...props />`}</Code>
+          >{`<Icon glyph="logo" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="unlock"
+              glyph="private-unlocked"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -629,13 +620,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="unlock" ...props />`}</Code>
+          >{`<Icon glyph="private-unlocked" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="lock"
+              glyph="private"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -643,13 +634,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="lock" ...props />`}</Code>
+          >{`<Icon glyph="private" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="menu"
+              glyph="menu"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -657,13 +648,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="menu" ...props />`}</Code>
+          >{`<Icon glyph="menu" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="photo"
+              glyph="photo"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -671,13 +662,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="photo" ...props />`}</Code>
+          >{`<Icon glyph="photo" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="scroll-top"
+              glyph="scroll-top"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -685,13 +676,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="scroll-top" ...props />`}</Code>
+          >{`<Icon glyph="scroll-top" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="scroll-bottom"
+              glyph="scroll-bottom"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -699,13 +690,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="scroll-bottom" ...props />`}</Code>
+          >{`<Icon glyph="scroll-bottom" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="send"
+              glyph="send"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -713,13 +704,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="send" ...props />`}</Code>
+          >{`<Icon glyph="send" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="settings"
+              glyph="settings"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -727,13 +718,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="settings" ...props />`}</Code>
+          >{`<Icon glyph="settings" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="share"
+              glyph="share"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -741,13 +732,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="share" ...props />`}</Code>
+          >{`<Icon glyph="share" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="write"
+              glyph="post"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -755,13 +746,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="write" ...props />`}</Code>
+          >{`<Icon glyph="post" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="write-cancel"
+              glyph="post-cancel"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -769,13 +760,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="write-cancel" ...props />`}</Code>
+          >{`<Icon glyph="post-cancel" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="edit"
+              glyph="post"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -783,13 +774,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="edit" ...props />`}</Code>
+          >{`<Icon glyph="post" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="twitter"
+              glyph="twitter"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -797,13 +788,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="twitter" ...props />`}</Code>
+          >{`<Icon glyph="twitter" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="facebook"
+              glyph="facebook"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -811,13 +802,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="facebook" ...props />`}</Code>
+          >{`<Icon glyph="facebook" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="checked"
+              glyph="checkmark"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -825,13 +816,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="checked" ...props />`}</Code>
+          >{`<Icon glyph="checkmark" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="unchecked"
+              glyph="checkbox"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -839,13 +830,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="unchecked" ...props />`}</Code>
+          >{`<Icon glyph="checkbox" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="notification"
+              glyph="notification"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -853,13 +844,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="notification" ...props />`}</Code>
+          >{`<Icon glyph="notification" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="everything"
+              glyph="everything"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -867,13 +858,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="everything" ...props />`}</Code>
+          >{`<Icon glyph="everything" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="home"
+              glyph="home"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -881,13 +872,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="home" ...props />`}</Code>
+          >{`<Icon glyph="home" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="emoji"
+              glyph="emoji"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -895,13 +886,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="emoji" ...props />`}</Code>
+          >{`<Icon glyph="emoji" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="close"
+              glyph="view-close"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -909,13 +900,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="close" ...props />`}</Code>
+          >{`<Icon glyph="view-close" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="caret-gt"
+              glyph="caret-gt"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -923,13 +914,13 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="caret-gt" ...props />`}</Code>
+          >{`<Icon glyph="caret-gt" ...props />`}</Code>
         </ComponentContainer>
 
         <ComponentContainer width={'25%'}>
           <Component>
             <Icon
-              icon="explore"
+              glyph="explore"
               scaleOnHover
               color={'text.alt'}
               hoverColor={'brand.default'}
@@ -937,7 +928,7 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<Icon icon="explore" ...props />`}</Code>
+          >{`<Icon glyph="explore" ...props />`}</Code>
         </ComponentContainer>
       </Section>
     </Section>
@@ -1019,53 +1010,53 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
 
         <ComponentContainer>
           <Component>
-            <OutlineButton color={'warn'} icon={'edit'}>
+            <OutlineButton color={'warn'} icon={'post'}>
               Outline Button with Icon
             </OutlineButton>
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<OutlineButton color={'warn'} icon={'edit'}>Outline Button with Icon</OutlineButton>`}</Code>
+          >{`<OutlineButton color={'warn'} icon={'post'}>Outline Button with Icon</OutlineButton>`}</Code>
         </ComponentContainer>
 
         <ComponentContainer>
           <Component>
-            <OutlineButton color={'pro'} icon={'edit'} loading={true}>
+            <OutlineButton color={'pro'} icon={'post'} loading={true}>
               Loading Outline Button with Icon
             </OutlineButton>
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<OutlineButton color={'pro'} icon={'edit'} loading={true}>Loading Outline Button with Icon</OutlineButton>`}</Code>
+          >{`<OutlineButton color={'pro'} icon={'post'} loading={true}>Loading Outline Button with Icon</OutlineButton>`}</Code>
         </ComponentContainer>
 
         <ComponentContainer>
           <Component>
-            <LinkButton>Button</LinkButton>
+            <TextButton>Button</TextButton>
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<LinkButton>Button</LinkButton>`}</Code>
+          >{`<TextButton>Button</TextButton>`}</Code>
         </ComponentContainer>
 
         <ComponentContainer>
           <Component>
-            <LinkButton icon={'messages'}>Link Button with Icon</LinkButton>
+            <TextButton icon={'messages'}>Link Button with Icon</TextButton>
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<LinkButton icon={'messages'}>Link Button with Icon</LinkButton>`}</Code>
+          >{`<TextButton icon={'messages'}>Link Button with Icon</TextButton>`}</Code>
         </ComponentContainer>
 
         <ComponentContainer>
           <Component>
-            <LinkButton icon={'messages'} loading={true}>
+            <TextButton icon={'messages'} loading={true}>
               Loading Link Button with Icon
-            </LinkButton>
+            </TextButton>
           </Component>
           <Code
             onClick={highlightAndCopy}
-          >{`<LinkButton icon={'messages'} loading={true}>Loading Link Button with Icon</LinkButton>`}</Code>
+          >{`<TextButton icon={'messages'} loading={true}>Loading Link Button with Icon</TextButton>`}</Code>
         </ComponentContainer>
 
         <ComponentContainer>

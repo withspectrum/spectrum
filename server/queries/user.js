@@ -1,127 +1,137 @@
 // @flow
-/**
- * Story query resolvers
- */
-const { getEverything } = require('../models/user');
-const { getCommunitiesByUser } = require('../models/community');
-const { getFrequenciesByUser } = require('../models/frequency');
-const { getStoriesByUser } = require('../models/story');
 const {
-  getDirectMessageGroupsByUser,
-} = require('../models/directMessageGroup');
+  getEverything,
+  getUser,
+  getUsersBySearchString,
+} = require('../models/user');
+const { getCommunitiesByUser } = require('../models/community');
+const { getChannelsByUser } = require('../models/channel');
+const { getThreadsByUser } = require('../models/thread');
+const {
+  getDirectMessageThreadsByUser,
+} = require('../models/directMessageThread');
 const { getNotificationsByUser } = require('../models/notification');
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import { isAdmin } from '../utils/permissions';
 import type { PaginationOptions } from '../utils/paginate-arrays';
-import type { GetUserArgs } from '../models/frequency';
 import type { GraphQLContext } from '../';
 
 module.exports = {
   Query: {
-    user: (_: any, args: { uid: string }, { loaders }: GraphQLContext) =>
-      loaders.user.load(args.uid),
+    user: (
+      _: any,
+      args: { id: string, username: string },
+      { loaders }: GraphQLContext
+    ) => {
+      if (args.id) return loaders.user.load(args.id);
+      if (args.username) return getUser({ username: args.username });
+      return null;
+    },
     currentUser: (_: any, __: any, { user }: GraphQLContext) => user,
+    searchUsers: (_: any, { string }: { string: string }) =>
+      getUsersBySearchString(string),
   },
   User: {
     notificationConnection: (
-      { uid }: { uid: string },
+      { id }: { id: string },
       { first = 10, after }: PaginationOptions,
       { user }: GraphQLContext
     ) => {
-      if (!user || user.uid !== uid) return null;
-      return getNotificationsByUser(uid, { first, after });
+      const currentUser = user;
+      if (!currentUser || currentUser.id !== id) return null;
+      return getNotificationsByUser(id, { first, after });
     },
-    isAdmin: ({ uid }: { uid: string }) => {
-      return isAdmin(uid);
+    isAdmin: ({ id }: { id: string }) => {
+      return isAdmin(id);
     },
     everything: (
-      { uid }: { uid: string },
+      { id }: { id: string },
       { first = 10, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
       // TODO: Make this more performant by doing an actual db query rather than this hacking around
-      return getEverything(uid)
-        .then(stories =>
+      return getEverything(id)
+        .then(threads =>
           paginate(
-            stories,
+            threads,
             { first, after: cursor },
-            story => story.id === cursor
+            thread => thread.id === cursor
           )
         )
         .then(result => ({
           pageInfo: {
             hasNextPage: result.hasMoreItems,
           },
-          edges: result.list.map(story => ({
-            cursor: encode(story.id),
-            node: story,
+          edges: result.list.map(thread => ({
+            cursor: encode(thread.id),
+            node: thread,
           })),
         }));
     },
     communityConnection: (user: Object) => ({
-      // Don't paginate communities and frequencies of a user
+      // Don't paginate communities and channels of a user
       pageInfo: {
         hasNextPage: false,
       },
-      edges: getCommunitiesByUser(user.uid).then(communities =>
+      edges: getCommunitiesByUser(user.id).then(communities =>
         communities.map(community => ({
           node: {
             ...community,
-            isOwner: community.owners.indexOf(user.uid) > -1,
+            isOwner: community.owners.indexOf(user.id) > -1,
           },
         }))
       ),
     }),
-    frequencyConnection: (user: Object) => ({
+    channelConnection: (user: Object) => ({
       pageInfo: {
         hasNextPage: false,
       },
-      edges: getFrequenciesByUser(user.uid).then(frequencies =>
-        frequencies.map(frequency => ({
-          node: frequency,
+      edges: getChannelsByUser(user.id).then(channels =>
+        channels.map(channel => ({
+          node: channel,
         }))
       ),
     }),
-    directMessageGroupsConnection: (user: Object) => ({
+    directMessageThreadsConnection: (user: Object) => ({
       pageInfo: {
         hasNextPage: false,
       },
-      edges: getDirectMessageGroupsByUser(user.uid).then(groups =>
-        groups.map(group => ({
-          node: group,
+      edges: getDirectMessageThreadsByUser(user.id).then(threads =>
+        threads.map(thread => ({
+          node: thread,
         }))
       ),
     }),
-    storyConnection: (
-      { uid }: { uid: string },
+    threadConnection: (
+      { id }: { id: string },
       { first = 10, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
-      return getStoriesByUser(uid, { first, after: cursor })
-        .then(stories =>
+      return getThreadsByUser(id, { first, after: cursor })
+        .then(threads =>
           paginate(
-            stories,
+            threads,
             { first, after: cursor },
-            story => story.id === cursor
+            thread => thread.id === cursor
           )
         )
         .then(result => ({
           pageInfo: {
             hasNextPage: result.hasMoreItems,
           },
-          edges: result.list.map(story => ({
-            cursor: encode(story.id),
-            node: story,
+          edges: result.list.map(thread => ({
+            cursor: encode(thread.id),
+            node: thread,
           })),
         }));
     },
-    storyCount: (
-      { uid }: { uid: string },
+    threadCount: (
+      { id }: { id: string },
       _: any,
       { loaders }: GraphQLContext
     ) => {
-      return loaders.userStoryCount.load(uid).then(data => data.count);
+      return loaders.userThreadCount.load(id).then(data => data.count);
     },
   },
 };

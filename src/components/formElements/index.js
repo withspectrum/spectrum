@@ -1,7 +1,8 @@
 //@flow
-import React from 'react';
+import React, { Component } from 'react';
 
-import Icon from '../icons';
+import { IconButton } from '../buttons';
+// import Icon from '../icons';
 import {
   StyledLabel,
   StyledPrefixLabel,
@@ -10,6 +11,11 @@ import {
   StyledUnderlineInput,
   StyledHiddenInput,
   StyledCheckboxWrapper,
+  StyledError,
+  // ImageInputLabel,
+  // InputOverlay,
+  // ProfileImage,
+  // HiddenInput,
 } from './style';
 
 type InputProps = {
@@ -28,6 +34,7 @@ export const Input = (props: InputProps) => {
     <StyledLabel>
       {props.children}
       <StyledInput
+        id={props.id}
         type={props.inputType}
         defaultValue={props.defaultValue}
         placeholder={props.placeholder}
@@ -38,25 +45,36 @@ export const Input = (props: InputProps) => {
   );
 };
 
+// export const ImageInput = (props) => {
+//   return(
+//     <ImageInputLabel>
+//       <InputOverlay>
+//         <Icon glyph="photo" />
+//       </InputOverlay>
+//       {user.profilePhoto &&
+//         <ProfileImage src={user.profilePhoto} role="presentation" />}
+//       <HiddenInput
+//         type="file"
+//         id="file"
+//         name="file"
+//         accept=".png, .jpg, .jpeg, .gif, .mp4"
+//         multiple={false}
+//         onChange={this.stageProfilePhotoForUpload}
+//       />
+//     </ImageInputLabel>
+//   )
+// }
+
 export const Checkbox = (props: InputProps) => {
   return (
     <StyledLabel>
       <StyledCheckboxWrapper>
         {props.checked
-          ? <Icon
-              icon="checked"
-              color="success.default"
-              hoverColor="success.default"
-              scaleOnHover={true}
-            />
-          : <Icon
-              icon="unchecked"
-              color="text.alt"
-              hoverColor="brand.alt"
-              scaleOnHover={true}
-            />}
+          ? <IconButton glyph="checkmark" color="success.default" />
+          : <IconButton glyph="checkbox" />}
         <StyledHiddenInput
           type="checkbox"
+          id={props.id}
           checked={props.checked}
           onChange={props.onChange}
         />
@@ -71,6 +89,7 @@ export const TextArea = (props: InputProps) => {
     <StyledLabel>
       {props.children}
       <StyledTextArea
+        id={props.id}
         placeholder={props.placeholder}
         defaultValue={props.defaultValue}
         onChange={props.onChange}
@@ -80,18 +99,25 @@ export const TextArea = (props: InputProps) => {
   );
 };
 
-export const UnderlineInput = (props: InputProps) => {
-  return (
-    <StyledPrefixLabel disabled={props.disabled}>
-      {props.children}
-      <StyledUnderlineInput
-        type="text"
-        placeholder={props.placeholder}
-        defaultValue={props.defaultValue}
-        onChange={props.onChange}
-        autofocus={props.autofocus}
-        disabled={props.disabled}
-      />
-    </StyledPrefixLabel>
-  );
+export class UnderlineInput extends Component {
+  render() {
+    return (
+      <StyledPrefixLabel disabled={this.props.disabled}>
+        {this.props.children}
+        <StyledUnderlineInput
+          type="text"
+          id={this.props.id}
+          placeholder={this.props.placeholder}
+          value={this.props.value || this.props.defaultValue}
+          onChange={this.props.onChange}
+          autofocus={this.props.autofocus}
+          disabled={this.props.disabled}
+        />
+      </StyledPrefixLabel>
+    );
+  }
+}
+
+export const Error = props => {
+  return <StyledError>{props.children}</StyledError>;
 };

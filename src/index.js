@@ -30,6 +30,7 @@ function render() {
     !existingUser &&
     (window.location.pathname === '/' ||
       window.location.pathname === '/messages' ||
+      window.location.pathname === '/messages/new' ||
       window.location.pathname === '/notifications')
   ) {
     return ReactDOM.render(

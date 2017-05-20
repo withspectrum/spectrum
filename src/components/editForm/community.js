@@ -8,8 +8,9 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-import { Button, LinkButton } from '../buttons';
+import { Button, TextButton } from '../buttons';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { openModal } from '../../actions/modals';
 import { Input, UnderlineInput, TextArea } from '../formElements';
 import {
   StyledCard,
@@ -33,10 +34,11 @@ class CommunityWithData extends Component {
       name: community.name,
       slug: community.slug,
       description: community.description,
-      id: community.id,
+      communityId: community.id,
       website: community.website,
-      image: community.photoURL,
+      image: community.profilePhoto,
       file: null,
+      communityData: community,
     };
   }
 
@@ -84,14 +86,14 @@ class CommunityWithData extends Component {
 
   save = e => {
     e.preventDefault();
-    const { name, slug, description, website, file, id } = this.state;
+    const { name, slug, description, website, file, communityId } = this.state;
     const input = {
       name,
       slug,
       description,
       website,
       file,
-      id,
+      communityId,
     };
     this.props
       .editCommunity(input)
@@ -115,28 +117,36 @@ class CommunityWithData extends Component {
       });
   };
 
-  triggerDeleteCommunity = e => {
+  triggerDeleteCommunity = (e, communityId) => {
     e.preventDefault();
-    const { community, deleteCommunity, history } = this.props;
+    const { name, communityData } = this.state;
+    const message = (
+      <div>
+        <p>Are you sure you want to delete your community, <b>{name}</b>?</p>
+        {' '}
+        <p>
+          <b>{communityData.metaData.members} members</b>
+          {' '}
+          will be removed from the community and the
+          {' '}
+          <b>{communityData.metaData.channels} channels</b>
+          {' '}
+          you've created will be deleted.
+        </p>
+        <p>
+          All threads, messages, reactions, and media shared in your community will be deleted.
+        </p>
+        <p>This cannot be undone.</p>
+      </div>
+    );
 
-    deleteCommunity(community.id)
-      .then(({ data: { deleteCommunity } }) => {
-        if (deleteCommunity) {
-          // community was successfully deleted
-          history.push(`/`);
-          this.props.dispatch(
-            addToastWithTimeout('neutral', 'Community deleted.')
-          );
-        }
+    return this.props.dispatch(
+      openModal('DELETE_DOUBLE_CHECK_MODAL', {
+        id: communityId,
+        entity: 'community',
+        message,
       })
-      .catch(err => {
-        this.props.dispatch(
-          addToastWithTimeout(
-            'error',
-            `Something went wrong and we weren't able to delete this community. ${err}`
-          )
-        );
-      });
+    );
   };
 
   render() {
@@ -191,17 +201,17 @@ class CommunityWithData extends Component {
           </Input>
 
           <Actions>
-            <LinkButton color={'warn.alt'}>Cancel</LinkButton>
+            <TextButton color={'warn.alt'}>Cancel</TextButton>
             <Button onClick={this.save}>Save</Button>
           </Actions>
 
           <Actions>
-            <LinkButton
+            <TextButton
               color={'warn.alt'}
-              onClick={this.triggerDeleteCommunity}
+              onClick={e => this.triggerDeleteCommunity(e, community.id)}
             >
               Delete Community
-            </LinkButton>
+            </TextButton>
           </Actions>
         </Form>
       </StyledCard>

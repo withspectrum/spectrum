@@ -1,8 +1,8 @@
 // @flow
-import { __createUserLoader, __createUserStoryCountLoader } from './user';
-import { __createStoryLoader } from './story';
+import { __createUserLoader, __createUserThreadCountLoader } from './user';
+import { __createThreadLoader } from './thread';
 import { __createNotificationLoader } from './notification';
-import { __createFrequencyLoader } from './frequency';
+import { __createChannelLoader } from './channel';
 import {
   __createCommunityLoader,
   __createCommunityBySlugLoader,
@@ -11,10 +11,10 @@ import {
 // Create all the necessary loaders to be attached to the GraphQL context for each request
 const createLoaders = () => ({
   user: __createUserLoader(),
-  userStoryCount: __createUserStoryCountLoader(),
-  story: __createStoryLoader(),
+  userThreadCount: __createUserThreadCountLoader(),
+  thread: __createThreadLoader(),
   notification: __createNotificationLoader(),
-  frequency: __createFrequencyLoader(),
+  channel: __createChannelLoader(),
   community: __createCommunityLoader(),
   communityBySlug: __createCommunityBySlugLoader(),
 });

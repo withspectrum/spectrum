@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import Icon from '../../components/icons';
-import { Button, LinkButton } from '../../components/buttons';
+import { Button, TextButton } from '../../components/buttons';
 import Dropdown from '../../components/dropdown';
 import {
   Container,
@@ -19,10 +19,6 @@ import {
   DropdownFooter,
   DropdownHeader,
 } from './style';
-
-import NotificationList from '../notifications/components/notificationList';
-
-import UserAvatar from '../user/components/userAvatar';
 
 class Navbar extends Component {
   render() {
@@ -41,11 +37,7 @@ class Navbar extends Component {
               data-mobileWidth={'third'}
               to="/"
             >
-              <Icon
-                icon="home"
-                color={'bg.default'}
-                hoverColor={'bg.default'}
-              />
+              <Icon glyph="home" />
               <Label>Home</Label>
             </IconLink>
 
@@ -55,11 +47,7 @@ class Navbar extends Component {
                 data-mobileWidth={'third'}
                 to="/messages"
               >
-                <Icon
-                  icon="messages"
-                  color={'bg.default'}
-                  hoverColor={'bg.default'}
-                />
+                <Icon glyph="messages" />
                 <Label>Messages</Label>
               </IconLink>}
 
@@ -68,11 +56,7 @@ class Navbar extends Component {
               data-mobileWidth={'third'}
               to="/explore"
             >
-              <Icon
-                icon="explore"
-                color={'bg.default'}
-                hoverColor={'bg.default'}
-              />
+              <Icon glyph="explore" />
               <Label>Explore</Label>
             </IconLink>
           </Section>
@@ -85,11 +69,7 @@ class Navbar extends Component {
                   data-mobileWidth={'half'}
                   to="/notifications"
                 >
-                  <Icon
-                    icon="notification"
-                    color={'bg.default'}
-                    hoverColor={'bg.default'}
-                  />
+                  <Icon glyph="notification" />
                   <LabelForTab>Notifications</LabelForTab>
                 </IconLink>
                 <Dropdown>
@@ -98,7 +78,7 @@ class Navbar extends Component {
                   </DropdownHeader>
 
                   <DropdownFooter>
-                    <LinkButton to={'/notifications'}>View all</LinkButton>
+                    <TextButton to={'/notifications'}>View all</TextButton>
                   </DropdownFooter>
                 </Dropdown>
               </IconDrop>

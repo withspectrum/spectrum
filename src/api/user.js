@@ -4,7 +4,7 @@ import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from './fragments/user/userInfo';
 
 /*
-  Upload a new photoURL for the given currentUser
+  Upload a new profilePhoto for the given currentUser
 */
 const UPLOAD_PROFILE_PHOTO_MUTATION = gql`
   mutation uploadProfilePhoto($file: File!) {
@@ -36,3 +36,12 @@ export const uploadProfilePhotoMutation = graphql(
   UPLOAD_PROFILE_PHOTO_MUTATION,
   UPLOAD_PROFILE_PHOTO_OPTIONS
 );
+
+export const SEARCH_USERS_QUERY = gql`
+  query searchUsers($string: String) {
+    searchUsers(string: $string) {
+      ...userInfo
+    }
+  }
+  ${userInfoFragment}
+`;

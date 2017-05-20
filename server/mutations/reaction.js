@@ -1,4 +1,6 @@
 // @flow
+// $FlowFixMe
+const { UserError } = require('graphql-errors');
 import { toggleReaction } from '../models/reaction';
 import type { ReactionInput } from '../models/reaction';
 
@@ -8,7 +10,14 @@ type ToggleReactionType = {
 
 module.exports = {
   Mutation: {
-    toggleReaction: (_: any, { reaction }: ToggleReactionType, { user }) =>
-      toggleReaction(reaction, user.uid),
+    toggleReaction: (_: any, { reaction }: ToggleReactionType, { user }) => {
+      const currentUser = user;
+      // user must be authed to send a message
+      if (!currentUser)
+        return new UserError('You must be signed in to add a reaction.');
+
+      // all checks passed
+      return toggleReaction(reaction, currentUser.id);
+    },
   },
 };

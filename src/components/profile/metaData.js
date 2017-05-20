@@ -14,23 +14,23 @@ import { Meta, MetaList, MetaListItem, Label, Count } from './style';
 const buildArray = (meta: Object): Array<any> => {
   // Apollo returns a __typename field in the data object; filter it out
   return Object.keys(meta).filter(item => item !== '__typename').map(item => {
-    if (item === 'stories') {
+    if (item === 'threads') {
       return Object.assign(
         {},
         {
-          icon: 'edit',
-          label: 'Stories',
+          icon: 'post',
+          label: 'Threads',
           count: meta[item],
         }
       );
     }
 
-    if (item === 'frequencies') {
+    if (item === 'channels') {
       return Object.assign(
         {},
         {
-          icon: 'emoji',
-          label: 'Frequencies',
+          icon: 'channel',
+          label: 'Channels',
           count: meta[item],
         }
       );
@@ -40,7 +40,7 @@ const buildArray = (meta: Object): Array<any> => {
       return Object.assign(
         {},
         {
-          icon: 'emoji',
+          icon: 'person',
           label: 'Subscribers',
           count: meta[item],
         }
@@ -51,7 +51,7 @@ const buildArray = (meta: Object): Array<any> => {
       return Object.assign(
         {},
         {
-          icon: 'emoji',
+          icon: 'person',
           label: 'Members',
           count: meta[item],
         }
@@ -72,13 +72,7 @@ const MetaDataPure = ({ data }) => {
           return (
             <MetaListItem key={i}>
               <Label>
-                <Icon
-                  icon={item.icon}
-                  color={'text.alt'}
-                  hoverColor={'text.alt'}
-                  scaleOnHover={false}
-                  size={32}
-                />
+                <Icon glyph={item.icon} />
                 <span>{item.label}</span>
               </Label>
               <Count>{item.count}</Count>

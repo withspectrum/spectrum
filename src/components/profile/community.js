@@ -40,7 +40,7 @@ type CommunityProps = {
   slug: String,
   isMember: Boolean,
   metaData: {
-    frequencies: Number,
+    channels: Number,
     members: Number,
   },
 };
@@ -58,8 +58,8 @@ const CommunityWithData = ({
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
 
-  const toggleMembership = id => {
-    toggleCommunityMembership({ id })
+  const toggleMembership = communityId => {
+    toggleCommunityMembership({ communityId })
       .then(({ data: { toggleCommunityMembership } }) => {
         const str = toggleCommunityMembership.isMember
           ? `Joined ${toggleCommunityMembership.name}!`
@@ -96,7 +96,7 @@ const CommunityWithData = ({
           margin={'0 12px 0 0'}
           size={40}
           radius={4}
-          src={community.photoURL}
+          src={community.profilePhoto}
         />
         <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
           <Link to={`/${community.slug}`}>

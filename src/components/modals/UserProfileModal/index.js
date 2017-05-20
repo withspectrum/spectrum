@@ -8,6 +8,14 @@ import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import ModalContainer from '../modalContainer';
 import { modalStyles } from '../styles';
+import {
+  HiddenInput,
+  Row,
+  ImageInputLabel,
+  ProfileImage,
+  InputOverlay,
+} from './style';
+import Icon from '../../../components/icons';
 import { closeModal } from '../../../actions/modals';
 import { uploadProfilePhotoMutation } from '../../../api/user';
 
@@ -46,7 +54,7 @@ class UserProfileModal extends Component {
     return (
       <Modal
         isOpen={isOpen}
-        contentLabel={user.displayName}
+        contentLabel={user.name}
         onRequestClose={this.close}
         shouldCloseOnOverlayClick={true}
         style={styles}
@@ -56,19 +64,26 @@ class UserProfileModal extends Component {
           We pass the closeModal dispatch into the container to attach
           the action to the 'close' icon in the top right corner of all modals
         */}
-        <ModalContainer title={user.displayName} closeModal={this.close}>
-          <img src={user.photoURL} width="40" height="40" role="presentation" />
-          <span>{user.username}</span>
+        <ModalContainer title={'Edit profile'} closeModal={this.close}>
 
-          {currentUser.uid === user.uid &&
-            <input
-              type="file"
-              id="file"
-              name="file"
-              accept=".png, .jpg, .jpeg, .gif, .mp4"
-              multiple={false}
-              onChange={this.stageProfilePhotoForUpload}
-            />}
+          {currentUser.id === user.id &&
+            <Row>
+              <ImageInputLabel>
+                <InputOverlay>
+                  <Icon glyph="photo" />
+                </InputOverlay>
+                {user.profilePhoto &&
+                  <ProfileImage src={user.profilePhoto} role="presentation" />}
+                <HiddenInput
+                  type="file"
+                  id="file"
+                  name="file"
+                  accept=".png, .jpg, .jpeg, .gif, .mp4"
+                  multiple={false}
+                  onChange={this.stageProfilePhotoForUpload}
+                />
+              </ImageInputLabel>
+            </Row>}
         </ModalContainer>
       </Modal>
     );

@@ -8,45 +8,43 @@ import {
   communityInfoFragment,
 } from '../../api/fragments/community/communityInfo';
 import {
-  communityStoriesFragment,
-} from '../../api/fragments/community/communityStories';
+  communityThreadsFragment,
+} from '../../api/fragments/community/communityThreads';
 import {
   communityMetaDataFragment,
 } from '../../api/fragments/community/communityMetaData';
+import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import {
-  frequencyInfoFragment,
-} from '../../api/fragments/frequency/frequencyInfo';
-import {
-  frequencyMetaDataFragment,
-} from '../../api/fragments/frequency/frequencyMetaData';
+  channelMetaDataFragment,
+} from '../../api/fragments/channel/channelMetaData';
 
-const LoadMoreStories = gql`
-  query communityStories($slug: String, $after: String) {
+const LoadMoreThreads = gql`
+  query communityThreads($slug: String, $after: String) {
     community(slug: $slug) {
       ...communityInfo
-      ...communityStories
+      ...communityThreads
     }
   }
   ${communityInfoFragment}
-  ${communityStoriesFragment}
+  ${communityThreadsFragment}
 `;
 
-const storiesQueryOptions = {
+const threadsQueryOptions = {
   props: ({ data: { fetchMore, error, loading, community } }) => ({
     data: {
       error,
       loading,
       community,
-      stories: community ? community.storyConnection.edges : '',
+      threads: community ? community.threadConnection.edges : '',
       hasNextPage: community
-        ? community.storyConnection.pageInfo.hasNextPage
+        ? community.threadConnection.pageInfo.hasNextPage
         : false,
       fetchMore: () =>
         fetchMore({
-          query: LoadMoreStories,
+          query: LoadMoreThreads,
           variables: {
-            after: community.storyConnection.edges[
-              community.storyConnection.edges.length - 1
+            after: community.threadConnection.edges[
+              community.threadConnection.edges.length - 1
             ].cursor,
             slug: community.slug,
           },
@@ -58,15 +56,15 @@ const storiesQueryOptions = {
               ...prev,
               community: {
                 ...prev.community,
-                storyConnection: {
-                  ...prev.community.storyConnection,
+                threadConnection: {
+                  ...prev.community.threadConnection,
                   pageInfo: {
-                    ...prev.community.storyConnection.pageInfo,
-                    ...fetchMoreResult.community.storyConnection.pageInfo,
+                    ...prev.community.threadConnection.pageInfo,
+                    ...fetchMoreResult.community.threadConnection.pageInfo,
                   },
                   edges: [
-                    ...prev.community.storyConnection.edges,
-                    ...fetchMoreResult.community.storyConnection.edges,
+                    ...prev.community.threadConnection.edges,
+                    ...fetchMoreResult.community.threadConnection.edges,
                   ],
                 },
               },
@@ -89,43 +87,43 @@ const storiesQueryOptions = {
       */
       if (
         action.type === 'APOLLO_MUTATION_RESULT' &&
-        action.operationName === 'publishStory'
+        action.operationName === 'publishThread'
       ) {
         /*
-          publishStory returns a story object, as well as some metadata about
-          the frequency and community it was published in
+          publishThread returns a thread object, as well as some metadata about
+          the channel and community it was published in
         */
-        const newStory = action.result.data.publishStory;
+        const newThread = action.result.data.publishThread;
 
         /*
-          If the new story was published in a community that is currently
+          If the new thread was published in a community that is currently
           being viewed, or in a community that has already been fetched
-          and cached by apollo, insert the new story into the array of edges
+          and cached by apollo, insert the new thread into the array of edges
         */
-        if (newStory.frequency.community.slug === slug) {
+        if (newThread.channel.community.slug === slug) {
           /*
-            Not sure if this is needed right now, but I'm encoding the story id
+            Not sure if this is needed right now, but I'm encoding the thread id
             and setting a new cursor so that we can always be sure that every
             item in the Apollo store has the same shape
           */
-          const cursor = encode(newStory.id);
+          const cursor = encode(newThread.id);
           const newEdge = {
             cursor,
             node: {
-              ...newStory,
+              ...newThread,
             },
           };
 
           /*
             Uses immutability helpers to set the previous state and then overlay
             only the modified data
-            $unshift moves the new edge to the top of the stories array
+            $unshift moves the new edge to the top of the threads array
 
             Reference: https://facebook.github.io/react/docs/update.html
           */
           return update(prev, {
             community: {
-              storyConnection: {
+              threadConnection: {
                 edges: {
                   $unshift: [newEdge],
                 },
@@ -146,22 +144,22 @@ const storiesQueryOptions = {
   }),
 };
 
-export const getCommunityStories = graphql(
+export const getCommunityThreads = graphql(
   gql`
-		query communityStories($slug: String, $after: String) {
+		query communityThreads($slug: String, $after: String) {
 			community(slug: $slug) {
         ...communityInfo
-        ...communityStories
+        ...communityThreads
       }
 		}
-    ${communityStoriesFragment}
+    ${communityThreadsFragment}
     ${communityInfoFragment}
 	`,
-  storiesQueryOptions
+  threadsQueryOptions
 );
 
 /*
-  Loads the sidebar profile component widget independent of the story feed.
+  Loads the sidebar profile component widget independent of the thread feed.
   In the future we can compose these queries together since they are fetching
   such similar data, but for now we're making a decision to keep the data
   queries specific to each component.
@@ -188,23 +186,23 @@ export const getCommunity = graphql(
   profileQueryOptions
 );
 
-export const GET_COMMUNITY_FREQUENCIES_QUERY = gql`
-  query getCommunityFrequencies($slug: String) {
+export const GET_COMMUNITY_CHANNELS_QUERY = gql`
+  query getCommunityChannels($slug: String) {
     community(slug: $slug) {
       ...communityInfo
-      frequencyConnection {
+      channelConnection {
         edges {
           node {
-            ...frequencyInfo
-            ...frequencyMetaData
+            ...channelInfo
+            ...channelMetaData
           }
         }
       }
     }
   }
-  ${frequencyInfoFragment}
+  ${channelInfoFragment}
   ${communityInfoFragment}
-  ${frequencyMetaDataFragment}
+  ${channelMetaDataFragment}
 `;
 
-export const getCommunityFrequencies = graphql(GET_COMMUNITY_FREQUENCIES_QUERY);
+export const getCommunityChannels = graphql(GET_COMMUNITY_CHANNELS_QUERY);

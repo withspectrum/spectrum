@@ -5,34 +5,34 @@ import { graphql, gql } from 'react-apollo';
 import update from 'immutability-helper';
 import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
-import { userStoriesFragment } from '../../api/fragments/user/userStories';
+import { userThreadsFragment } from '../../api/fragments/user/userThreads';
 import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
 
-const LoadMoreStories = gql`
-  query loadMoreUserStories($username: String, $after: String) {
+const LoadMoreThreads = gql`
+  query loadMoreUserThreads($username: String, $after: String) {
     user(username: $username) {
       ...userInfo
-      ...userStories
+      ...userThreads
     }
   }
   ${userInfoFragment}
-  ${userStoriesFragment}
+  ${userThreadsFragment}
 `;
 
-const storiesQueryOptions = {
+const threadsQueryOptions = {
   props: ({ data: { fetchMore, error, loading, user } }) => ({
     data: {
       error,
       loading,
       user,
-      stories: user ? user.storyConnection.edges : '',
-      hasNextPage: user ? user.storyConnection.pageInfo.hasNextPage : false,
+      threads: user ? user.threadConnection.edges : '',
+      hasNextPage: user ? user.threadConnection.pageInfo.hasNextPage : false,
       fetchMore: () =>
         fetchMore({
-          query: LoadMoreStories,
+          query: LoadMoreThreads,
           variables: {
-            after: user.storyConnection.edges[
-              user.storyConnection.edges.length - 1
+            after: user.threadConnection.edges[
+              user.threadConnection.edges.length - 1
             ].cursor,
             username: user.username,
           },
@@ -44,15 +44,15 @@ const storiesQueryOptions = {
               ...prev,
               user: {
                 ...prev.user,
-                storyConnection: {
-                  ...prev.user.storyConnection,
+                threadConnection: {
+                  ...prev.user.threadConnection,
                   pageInfo: {
-                    ...prev.user.storyConnection.pageInfo,
-                    ...fetchMoreResult.user.storyConnection.pageInfo,
+                    ...prev.user.threadConnection.pageInfo,
+                    ...fetchMoreResult.user.threadConnection.pageInfo,
                   },
                   edges: [
-                    ...prev.user.storyConnection.edges,
-                    ...fetchMoreResult.user.storyConnection.edges,
+                    ...prev.user.threadConnection.edges,
+                    ...fetchMoreResult.user.threadConnection.edges,
                   ],
                 },
               },
@@ -75,43 +75,43 @@ const storiesQueryOptions = {
       */
       if (
         action.type === 'APOLLO_MUTATION_RESULT' &&
-        action.operationName === 'publishStory'
+        action.operationName === 'publishThread'
       ) {
         /*
-          publishStory returns a story object, as well as some metadata about
-          the frequency and community it was published in
+          publishThread returns a thread object, as well as some metadata about
+          the channel and community it was published in
         */
-        const newStory = action.result.data.publishStory;
+        const newThread = action.result.data.publishThread;
 
         /*
-          If the new story was published by a user that is currently
+          If the new thread was published by a user that is currently
           being viewed, or by a user that has already been fetched
-          and cached by apollo, insert the new story into the array of edges
+          and cached by apollo, insert the new thread into the array of edges
         */
-        if (newStory.author.username === username) {
+        if (newThread.creator.username === username) {
           /*
-            Not sure if this is needed right now, but I'm encoding the story id
+            Not sure if this is needed right now, but I'm encoding the thread id
             and setting a new cursor so that we can always be sure that every
             item in the Apollo store has the same shape
           */
-          const cursor = encode(newStory.id);
+          const cursor = encode(newThread.id);
           const newEdge = {
             cursor,
             node: {
-              ...newStory,
+              ...newThread,
             },
           };
 
           /*
             Uses immutability helpers to set the previous state and then overlay
             only the modified data
-            $unshift moves the new edge to the top of the stories array
+            $unshift moves the new edge to the top of the threads array
 
             Reference: https://facebook.github.io/react/docs/update.html
           */
           return update(prev, {
             user: {
-              storyConnection: {
+              threadConnection: {
                 edges: {
                   $unshift: [newEdge],
                 },
@@ -132,37 +132,37 @@ const storiesQueryOptions = {
   }),
 };
 
-export const getUserStories = graphql(
+export const getUserThreads = graphql(
   gql`
-		query getUserStories($username: String, $after: String) {
+		query getUserThreads($username: String, $after: String) {
 			user(username: $username) {
         ...userInfo
-        ...userStories
+        ...userThreads
       }
 		}
     ${userInfoFragment}
-    ${userStoriesFragment}
+    ${userThreadsFragment}
 	`,
-  storiesQueryOptions
+  threadsQueryOptions
 );
 
 /*
-  Loads the sidebar profile component widget independent of the story feed.
+  Loads the sidebar profile component widget independent of the thread feed.
   In the future we can compose these queries together since they are fetching
   such similar data, but for now we're making a decision to keep the data
   queries specific to each component.
 */
 const profileQueryOptions = {
-  options: ({ username }) => ({
+  options: ({ match: { params: { username } } }) => ({
     variables: {
       username: username,
     },
   }),
 };
 
-export const getUserProfile = graphql(
+export const getUser = graphql(
   gql`
-		query getUserProfile($username: String) {
+		query getUser($username: String) {
 			user(username: $username) {
         ...userInfo
         ...userMetaData

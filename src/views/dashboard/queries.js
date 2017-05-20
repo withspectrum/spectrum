@@ -13,8 +13,8 @@ import {
 } from '../../api/fragments/user/userCommunities';
 import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
 
-const LoadMoreStories = gql`
-  query loadMoreEverythingStories($after: String) {
+const LoadMoreThreads = gql`
+  query loadMoreEverythingThreads($after: String) {
     user: currentUser {
       ...userInfo
       ...userCommunities
@@ -26,17 +26,17 @@ const LoadMoreStories = gql`
   ${userCommunitiesFragment}
 `;
 
-const storiesQueryOptions = {
+const threadsQueryOptions = {
   props: ({ data: { fetchMore, error, loading, user } }) => ({
     data: {
       error,
       loading,
       user,
-      stories: user ? user.everything.edges : '',
+      threads: user ? user.everything.edges : '',
       hasNextPage: user ? user.everything.pageInfo.hasNextPage : false,
       fetchMore: () =>
         fetchMore({
-          query: LoadMoreStories,
+          query: LoadMoreThreads,
           variables: {
             after: user.everything.edges[user.everything.edges.length - 1]
               .cursor,
@@ -70,14 +70,14 @@ const storiesQueryOptions = {
     reducer: (prev, action, variables) => {
       if (
         action.type === 'APOLLO_MUTATION_RESULT' &&
-        action.operationName === 'publishStory'
+        action.operationName === 'publishThread'
       ) {
-        const newStory = action.result.data.publishStory;
-        const cursor = encode(newStory.id);
+        const newThread = action.result.data.publishThread;
+        const cursor = encode(newThread.id);
         const newEdge = {
           cursor,
           node: {
-            ...newStory,
+            ...newThread,
           },
         };
         return update(prev, {
@@ -95,9 +95,9 @@ const storiesQueryOptions = {
   }),
 };
 
-export const getEverythingStories = graphql(
+export const getEverythingThreads = graphql(
   gql`
-  query getEverythingStories($after: String) {
+  query getEverythingThreads($after: String) {
     user: currentUser {
       ...userInfo
       ...userCommunities
@@ -108,11 +108,11 @@ export const getEverythingStories = graphql(
   ${userEverythingFragment}
   ${userCommunitiesFragment}
 `,
-  storiesQueryOptions
+  threadsQueryOptions
 );
 
 /*
-  Loads the sidebar profile component widget independent of the story feed.
+  Loads the sidebar profile component widget independent of the thread feed.
   In the future we can compose these queries together since they are fetching
   such similar data, but for now we're making a decision to keep the data
   queries specific to each component.
@@ -123,33 +123,11 @@ export const getCurrentUserProfile = graphql(
 			user: currentUser {
         ...userInfo
         ...userMetaData
+        ...userCommunities
       }
 		}
     ${userInfoFragment}
     ${userMetaDataFragment}
+    ${userCommunitiesFragment}
 	`
-);
-
-export const GET_CURRENT_USER_COMMUNITIES_QUERY = gql`
-  query currentUserCommunities {
-    user: currentUser {
-      ...userCommunities
-    }
-  }
-  ${userCommunitiesFragment}
-`;
-
-export const GET_CURRENT_USER_COMMUNITIES_OPTIONS = {
-  props: ({ data: { error, loading, user } }) => ({
-    data: {
-      error,
-      loading,
-      communities: user ? user.communityConnection.edges : '',
-    },
-  }),
-};
-
-export const getCurrentUserCommunities = graphql(
-  GET_CURRENT_USER_COMMUNITIES_QUERY,
-  GET_CURRENT_USER_COMMUNITIES_OPTIONS
 );

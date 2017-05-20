@@ -6,13 +6,13 @@ const Reaction = /* GraphQL */ `
 	type Reaction {
 		id: ID!
 		timestamp: Date!
-		message(location: MessageLocation): Message!
+		message: Message!
 		user: User!
 		type: ReactionTypes!
 	}
 
 	input ReactionInput {
-		message: ID!
+		messageId: ID!
 		type: ReactionTypes!
 	}
 

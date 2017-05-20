@@ -9,20 +9,20 @@ import { connect } from 'react-redux';
 import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCardItem';
 import { FlexRow } from '../../../components/globals';
-import { LinkButton } from '../../../components/buttons';
+import { TextButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 
 import { StyledCard, ListHeading, ListContainer, MoreLink } from '../style';
 
 const ListCardPure = ({ data, dispatch }) => {
-  const frequencies = data.community.frequencyConnection.edges;
-  if (!!frequencies) {
+  const channels = data.community.channelConnection.edges;
+  if (!!channels) {
     return (
       <StyledCard>
-        <ListHeading>Frequencies</ListHeading>
+        <ListHeading>Channels</ListHeading>
         <ListContainer>
-          {frequencies.map(item => {
+          {channels.map(item => {
             return (
               <Link
                 key={item.node.id}
@@ -31,14 +31,9 @@ const ListCardPure = ({ data, dispatch }) => {
                 <ListCardItem
                   contents={item.node}
                   withDescription={false}
-                  meta={`${item.node.metaData.subscribers} members`}
+                  meta={`${item.node.metaData.members} members`}
                 >
-                  <Icon
-                    icon="forward"
-                    color={'text.alt'}
-                    hoverColor={'brand.alt'}
-                    scaleOnHover={false}
-                  />
+                  <Icon glyph="view-forward" />
                 </ListCardItem>
               </Link>
             );
@@ -49,12 +44,12 @@ const ListCardPure = ({ data, dispatch }) => {
         </FlexRow>
         <FlexRow>
           {data.community.isOwner &&
-            <LinkButton
+            <TextButton
               onClick={() =>
-                dispatch(openModal('CREATE_FREQUENCY_MODAL', data.community))}
+                dispatch(openModal('CREATE_CHANNEL_MODAL', data.community))}
             >
-              Create a Frequency
-            </LinkButton>}
+              Create a Channel
+            </TextButton>}
         </FlexRow>
       </StyledCard>
     );

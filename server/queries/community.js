@@ -2,11 +2,9 @@
 /**
  * Community query resolvers
  */
-const {
-  getCommunityMetaData,
-  getAllCommunityStories,
-} = require('../models/community');
-const { getFrequenciesByCommunity } = require('../models/frequency');
+const { getCommunityMetaData } = require('../models/community');
+const { getThreadsByCommunity } = require('../models/thread');
+const { getChannelsByCommunity } = require('../models/channel');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetCommunityArgs } from '../models/community';
@@ -27,23 +25,27 @@ module.exports = {
     },
   },
   Community: {
-    frequencyConnection: ({ id }: { id: string }) => ({
+    channelConnection: ({ id }: { id: string }) => ({
       pageInfo: {
         hasNextPage: false,
       },
-      edges: getFrequenciesByCommunity(id).then(frequencies =>
-        frequencies.map(frequency => ({
-          node: frequency,
+      edges: getChannelsByCommunity(id).then(channels =>
+        channels.map(channel => ({
+          node: channel,
         }))
       ),
     }),
     isOwner: ({ owners }, _, { user }) => {
       if (!user) return false;
-      return owners.indexOf(user.uid) > -1;
+      return owners.indexOf(user.id) > -1;
     },
     isMember: ({ members }, _, { user }) => {
       if (!user) return false;
-      return members.indexOf(user.uid) > -1;
+      return members.indexOf(user.id) > -1;
+    },
+    isModerator: ({ moderators }, _, { user }) => {
+      if (!user) return false;
+      return moderators.indexOf(user.id) > -1;
     },
     memberConnection: (
       { members }: { members: Array<string> },
@@ -59,39 +61,39 @@ module.exports = {
           hasNextPage: hasMoreItems,
         },
         edges: users.map(user => ({
-          cursor: encode(user.uid),
+          cursor: encode(user.id),
           node: user,
         })),
       }));
     },
-    storyConnection: (
+    threadConnection: (
       { id }: { id: string },
       { first = 10, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
       // TODO: Make this more performant by doing an actual db query rather than this hacking around
-      return getAllCommunityStories(id)
-        .then(stories =>
+      return getThreadsByCommunity(id)
+        .then(threads =>
           paginate(
-            stories,
+            threads,
             { first, after: cursor },
-            story => story.id === cursor
+            thread => thread.id === cursor
           )
         )
         .then(result => ({
           pageInfo: {
             hasNextPage: result.hasMoreItems,
           },
-          edges: result.list.map(story => ({
-            cursor: encode(story.id),
-            node: story,
+          edges: result.list.map(thread => ({
+            cursor: encode(thread.id),
+            node: thread,
           })),
         }));
     },
-    metaData: ({ id }: { id: String }) => {
+    metaData: ({ id }: { id: string }) => {
       return getCommunityMetaData(id).then(data => {
         return {
-          frequencies: data[0],
+          channels: data[0],
           members: data[1],
         };
       });

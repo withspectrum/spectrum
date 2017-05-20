@@ -7,31 +7,38 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 
-import {
-  getEverythingStories,
-  getCurrentUserProfile,
-  getCurrentUserCommunities,
-} from './queries';
+import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
 
+import { displayLoadingScreen } from '../../components/loading';
 import { Column } from '../../components/column';
 import { UserProfile } from '../../components/profile';
-import StoryFeed from '../../components/storyFeed';
-import StoryComposer from '../../components/storyComposer';
+import ThreadFeed from '../../components/threadFeed';
+import ThreadComposer from '../../components/threadComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import ListCard from './components/listCard';
 
-const EverythingStoryFeed = compose(getEverythingStories)(StoryFeed);
+const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 
 const CurrentUserProfile = compose(getCurrentUserProfile)(UserProfile);
 
-const CommunitiesListCard = compose(getCurrentUserCommunities)(ListCard);
-
-const DashboardPure = ({ data: { user, error }, data, dispatch }) => {
+const DashboardPure = ({
+  data: { user, error },
+  data,
+  dispatch,
+  match,
+  history,
+}) => {
   // save user data to localstorage, which will also dispatch an action to put
   // the user into the redux store
-  if (user) {
+  if (user !== null) {
     dispatch(saveUserDataToLocalStorage(user));
+    // if the user lands on /home, it means they just logged in. If this code
+    // runs, we know a user was returned successfully and set to localStorage,
+    // so we can redirect to the root url
+    if (match.url === '/home') {
+      history.push('/');
+    }
   }
 
   if (error) {
@@ -44,16 +51,23 @@ const DashboardPure = ({ data: { user, error }, data, dispatch }) => {
     );
   }
 
+  if (!user || user === null) {
+    // window.location.href = '/';
+  }
+
+  const communities = user.communityConnection.edges;
+
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <CurrentUserProfile profileSize="full" />
-        <CommunitiesListCard />
+        <CurrentUserProfile profileSize="mini" />
+        <ListCard communities={communities} />
       </Column>
 
       <Column type="primary" alignItems="center">
-        <StoryComposer />
-        <EverythingStoryFeed />
+        {// composer should only appear if a user is part of a community
+        user && communities && <ThreadComposer />}
+        <EverythingThreadFeed />
       </Column>
     </AppViewWrapper>
   );
@@ -64,5 +78,7 @@ const DashboardPure = ({ data: { user, error }, data, dispatch }) => {
   I'm wrapping DashboardPure in a query for getCurrentUserProfile so that I
   can store the user in localStorage and redux for any downstream actions
 */
-const Dashboard = compose(getCurrentUserProfile, pure)(DashboardPure);
+const Dashboard = compose(getCurrentUserProfile, displayLoadingScreen, pure)(
+  DashboardPure
+);
 export default connect()(Dashboard);

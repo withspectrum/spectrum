@@ -23,22 +23,22 @@ const CREATE_COMMUNITY_OPTIONS = {
         variables: {
           input,
         },
-        update: (proxy, { data: { createCommunity } }) => {
-          // read the data from the cache for the queries this affects
-          const data = proxy.readQuery({
-            query: GET_CURRENT_USER_COMMUNITIES_QUERY,
-          });
-
-          // insert the new community
-          data.user.communityConnection.edges.push({
-            node: {
-              ...createCommunity,
-            },
-          });
-
-          // write the new data back to the cache
-          proxy.writeQuery({ query: GET_CURRENT_USER_COMMUNITIES_QUERY, data });
-        },
+        // update: (proxy, { data: { createCommunity } }) => {
+        //   // read the data from the cache for the queries this affects
+        //   const data = proxy.readQuery({
+        //     query: GET_CURRENT_USER_COMMUNITIES_QUERY,
+        //   });
+        //
+        //   // insert the new community
+        //   data.user.communityConnection.edges.push({
+        //     node: {
+        //       ...createCommunity,
+        //     },
+        //   });
+        //
+        //   // write the new data back to the cache
+        //   proxy.writeQuery({ query: GET_CURRENT_USER_COMMUNITIES_QUERY, data });
+        // },
       }),
   }),
 };
@@ -52,17 +52,17 @@ export const createCommunityMutation = graphql(
   Delete a community
 */
 const DELETE_COMMUNITY_MUTATION = gql`
-  mutation deleteCommunity($id: ID!) {
-    deleteCommunity (id: $id)
+  mutation deleteCommunity($communityId: ID!) {
+    deleteCommunity (communityId: $communityId)
   }
 `;
 
 const DELETE_COMMUNITY_OPTIONS = {
-  props: ({ id, mutate }) => ({
-    deleteCommunity: id =>
+  props: ({ communityId, mutate }) => ({
+    deleteCommunity: communityId =>
       mutate({
         variables: {
-          id,
+          communityId,
         },
       }),
   }),
@@ -105,8 +105,8 @@ export const editCommunityMutation = graphql(
   Join or leave a community
 */
 const TOGGLE_COMMUNITY_MEMBERSHIP_MUTATION = gql`
-  mutation toggleCommunityMembership($id: ID!) {
-    toggleCommunityMembership (id: $id) {
+  mutation toggleCommunityMembership($communityId: ID!) {
+    toggleCommunityMembership (communityId: $communityId) {
       ...communityInfo
     }
   }
@@ -114,11 +114,11 @@ const TOGGLE_COMMUNITY_MEMBERSHIP_MUTATION = gql`
 `;
 
 const TOGGLE_COMMUNITY_MEMBERSHIP_OPTIONS = {
-  props: ({ id, mutate }) => ({
-    toggleCommunityMembership: ({ id }) =>
+  props: ({ communityId, mutate }) => ({
+    toggleCommunityMembership: ({ communityId }) =>
       mutate({
         variables: {
-          id,
+          communityId,
         },
       }),
   }),
@@ -128,3 +128,16 @@ export const toggleCommunityMembershipMutation = graphql(
   TOGGLE_COMMUNITY_MEMBERSHIP_MUTATION,
   TOGGLE_COMMUNITY_MEMBERSHIP_OPTIONS
 );
+
+/*
+  Checks a slug against the db to make sure a community with that slug
+  doesn't already exist
+*/
+export const CHECK_UNIQUE_COMMUNITY_SLUG_QUERY = gql`
+  query community($slug: String) {
+    community(slug: $slug) {
+      ...communityInfo
+    }
+  }
+  ${communityInfoFragment}
+`;

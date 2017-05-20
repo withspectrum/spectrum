@@ -1,9 +1,11 @@
-``; /**
- * Seed the database with some randomly generated data
- */
+// @flow
+// $FlowFixMe
 const { v4: uuid } = require('uuid');
+// $FlowFixMe
 const faker = require('faker');
+// $FlowFixMe
 const slugify = require('slugg');
+// $FlowFixMe
 const casual = require('casual').functions();
 
 const randomAmount = ({ max, min }, cb) => {
@@ -20,14 +22,19 @@ const generateUser = () => {
   const createdAt = faker.date.past(2);
   const name = faker.name.findName();
   return {
-    uid: uuid(),
+    id: uuid(),
+    name,
+    description: casual.short_description(),
+    website: faker.internet.url(),
+    username: faker.internet.userName(name),
+    profilePhoto: faker.internet.avatar(),
+    coverPhoto: faker.image.image(),
+    email: faker.internet.email(name),
+    providerId: uuid(),
+    subscriptions: [],
     createdAt,
-    displayName: name,
     // Make sure lastSeen is > createdAt
     lastSeen: faker.date.between(createdAt, new Date()),
-    photoURL: faker.internet.avatar(),
-    email: faker.internet.email(name),
-    username: faker.internet.userName(name),
   };
 };
 
@@ -37,115 +44,151 @@ const generateCommunity = members => {
     id: uuid(),
     createdAt: faker.date.past(2),
     name,
+    description: casual.short_description(),
+    website: faker.internet.url(),
+    profilePhoto: faker.image.business(),
+    coverPhoto: faker.image.image(),
     slug: slugify(name),
     members,
-    description: casual.short_description(),
     owners: [members[0]],
+    moderators: [],
+    blockedUsers: [],
   };
 };
 
-const generateFrequency = (community, subscribers) => {
-  const createdAt = faker.date.past(2);
+const generateChannel = (communityId, members) => {
   const name = faker.commerce.department();
+
   return {
     id: uuid(),
-    community,
-    createdAt,
-    modifiedAt: faker.date.between(createdAt, new Date()),
+    communityId,
+    createdAt: faker.date.past(2),
     name,
     description: casual.short_description(),
     slug: slugify(name),
-    subscribers,
-    owners: [subscribers[0]],
+    isPrivate: faker.random.boolean(),
+    members,
+    owners: [members[0]],
+    moderators: [],
+    pendingUsers: [],
+    blockedUsers: [],
   };
 };
 
-const generateStory = (community, frequency, author) => {
-  const createdAt = faker.date.past(2);
+const generateThread = (communityId, channelId, creatorId) => {
   const content = {
     title: casual.title(),
-    description: casual.text(),
+    body: casual.text(),
   };
+
+  const createdAt = faker.date.past(2);
+
   return {
     id: uuid(),
     createdAt,
-    author,
-    frequency,
-    community,
-    modifiedAt: faker.date.between(createdAt, new Date()),
-    published: faker.random.boolean(),
+    creatorId,
+    channelId,
+    communityId,
+    isPublished: faker.random.boolean(),
     content,
+    attachments: [],
     edits: [
       {
         timestamp: createdAt,
         content,
       },
     ],
+    modifiedAt: faker.date.between(createdAt, new Date()),
   };
 };
 
-const generateMessage = (sender, thread) => {
+const generateDirectMessageThread = users => {
+  const createdAt = faker.date.past(2);
+  const lastActivity = faker.date.between(createdAt, faker.date.recent());
+  const lastSeen = faker.date.between(createdAt, new Date());
+
   return {
     id: uuid(),
-    timestamp: faker.date.past(2),
-    thread,
-    sender,
-    message: {
-      type: 'text',
-      content: casual.text(),
+    creatorId: users[0].id,
+    name: null,
+    createdAt,
+    lastActivity: faker.date.between(lastActivity, new Date()),
+    participants: users.map(user => user.id),
+    status: users.map(user => {
+      return {
+        userId: user.id,
+        lastActivity,
+        lastSeen,
+      };
+    }),
+  };
+};
+
+const generateMessage = (senderId, threadId, threadType) => {
+  return {
+    id: uuid(),
+    threadType,
+    threadId,
+    senderId,
+    content: {
+      body: casual.text(),
     },
+    attachments: [],
+    messageType: 'text',
+    timestamp: faker.date.past(2),
   };
 };
 
-const generateReaction = (user, message) => {
+const generateReaction = (userId, messageId) => {
   return {
     id: uuid(),
-    user,
-    message,
+    messageId,
+    userId,
     timestamp: faker.date.past(2),
     type: 'like',
   };
 };
 
-const generateStoryNotification = (story, frequency, communityId, callback) => {
+const generateThreadNotification = (thread, channel, communityId, callback) => {
   return generateNotification(
-    frequency.subscribers,
-    story.author,
-    story.id,
-    frequency.id,
+    channel.members,
+    thread.creatorId,
+    thread.id,
+    channel.id,
     communityId,
-    story.content.title,
+    thread.content.title,
     // TODO: Add a maximum length to this
-    story.content.description
+    thread.content.body
   );
 };
 
 const generateMessageNotification = (
   users,
   message,
-  story,
-  frequencyId,
+  thread,
+  channelId,
   communityId
 ) => {
   return generateNotification(
     users,
-    message.sender,
-    story.id,
-    frequencyId,
+    message.senderId,
+    thread.id,
+    channelId,
     communityId,
-    story.content.title,
+    thread.content.title,
     // TODO: Add a maximum length to this
-    message.message.content,
+    message.content.body,
     message.id
   );
 };
 
+// SCHEMA:TODO
 const generateNotification = (
   users,
-  sender,
-  story,
-  frequency,
-  community,
+  senderId,
+  threadId,
+  channelId,
+  communityId,
   title,
   excerpt,
   message
@@ -153,16 +196,16 @@ const generateNotification = (
   return {
     id: uuid(),
     createdAt: faker.date.past(2),
-    users: users.map(uid => ({
-      uid,
+    users: users.map(id => ({
+      id,
       read: faker.random.boolean(),
     })),
-    type: message ? 'NEW_MESSAGE' : 'NEW_STORY',
+    type: message ? 'NEW_MESSAGE' : 'NEW_THREAD',
     message,
-    story,
-    frequency,
-    community,
-    sender,
+    threadId,
+    channelId,
+    communityId,
+    senderId,
     content: {
       title,
       excerpt,
@@ -174,10 +217,11 @@ module.exports = {
   randomAmount,
   generateUser,
   generateCommunity,
-  generateFrequency,
-  generateStory,
+  generateChannel,
+  generateThread,
   generateMessage,
   generateReaction,
-  generateStoryNotification,
+  generateThreadNotification,
   generateMessageNotification,
+  generateDirectMessageThread,
 };

@@ -1,43 +1,31 @@
 //@flow
-
-/**
- * Storing and retrieving messages
- */
 const { db } = require('./db');
 const { listenToNewDocumentsIn } = require('./utils');
 const { storeMessageNotification } = require('./notification');
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
-export type LocationTypes = 'messages' | 'direct_messages';
 export type MessageTypes = 'text' | 'media';
-export type MessageProps = {
-  type: MessageTypes,
-  content: String,
+
+const getMessage = (messageId: string): Promise<Object> => {
+  return db.table('messages').get(messageId).run();
 };
 
-const getMessage = (location: LocationTypes, id: string) => {
-  return db.table(location).get(id).run();
-};
-
-const getMessagesByLocationAndThread = (
-  location: LocationTypes,
-  thread: String
-) => {
+const getMessages = (threadId: String): Promise<Array<Object>> => {
   return db
-    .table(location)
-    .getAll(thread, { index: 'thread' })
-    .orderBy('timestamp')
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .orderBy(db.asc('timestamp'))
     .run();
 };
 
-const storeMessage = (location: LocationTypes, message: MessageProps, user) => {
+const storeMessage = (message, user: Object): Promise<Object> => {
   // Insert a message
   return db
-    .table(location)
+    .table('messages')
     .insert(
       Object.assign({}, message, {
         timestamp: new Date(),
-        sender: user.uid,
+        senderId: user.id,
       }),
       { returnChanges: true }
     )
@@ -46,27 +34,31 @@ const storeMessage = (location: LocationTypes, message: MessageProps, user) => {
     .then(message => {
       storeMessageNotification({
         message: message.id,
-        story: message.thread,
-        sender: message.sender,
+        threadId: message.threadId,
+        senderId: message.senderId,
         content: {
-          excerpt: message.message.content,
+          excerpt: message.content.body,
         },
       });
       return message;
     });
 };
 
-const listenToNewMessages = (location: LocationTypes, cb: Function) => {
-  return listenToNewDocumentsIn(location, cb);
+const listenToNewMessages = (cb: Function): Function => {
+  return listenToNewDocumentsIn('messages', cb);
 };
 
-const getMessageCount = (location: string, thread: string) => {
-  return db.table(location).getAll(thread, { index: 'thread' }).count().run();
+const getMessageCount = (threadId: string): Promise<number> => {
+  return db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .count()
+    .run();
 };
 
 module.exports = {
   getMessage,
-  getMessagesByLocationAndThread,
+  getMessages,
   storeMessage,
   listenToNewMessages,
   getMessageCount,

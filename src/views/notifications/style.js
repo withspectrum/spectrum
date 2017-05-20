@@ -68,22 +68,6 @@ export const Message = styled.p`
   }
 `;
 
-export const HorizontalRuleWithIcon = styled(FlexRow)`
-  position: relative;
-  align-items: center;
-
-  hr {
-    display: inline-block;
-    width: 50%;
-    border-top: 2px solid ${props => props.theme.border.default};
-  }
-
-  div {
-    margin: 0 16px;
-  }
-
-`;
-
 export const ChatMessage = styled.p`
   position: relative;
   padding: 8px 16px;

@@ -1,11 +1,8 @@
 // @flow
-/**
- * Storing and retrieving communities
- */
 const { db } = require('./db');
 // $FlowFixMe
 import { UserError } from 'graphql-errors';
-import { createFrequency, unsubscribeFrequency } from './frequency';
+import { createChannel, deleteChannel, leaveChannel } from './channel';
 import { uploadCommunityPhoto, generateImageUrl } from '../utils/s3';
 
 type GetCommunityByIdArgs = {
@@ -18,39 +15,47 @@ type GetCommunityBySlugArgs = {
 
 export type GetCommunityArgs = GetCommunityByIdArgs | GetCommunityBySlugArgs;
 
-const getCommunities = (ids: Array<string>) => {
-  return db.table('communities').getAll(...ids).run();
-};
-
-const getCommunitiesBySlug = (slugs: Array<string>) => {
+const getCommunities = (
+  communityIds: Array<string>
+): Promise<Array<Object>> => {
   return db
     .table('communities')
-    .filter(community => db.expr(slugs).contains(community('slug')))
+    .getAll(...communityIds)
+    .filter(community => db.not(community.hasFields('isDeleted')))
     .run();
 };
 
-const getCommunitiesByUser = (uid: string) => {
+const getCommunitiesBySlug = (slugs: Array<string>): Promise<Array<Object>> => {
   return db
     .table('communities')
-    .filter(community => community('members').contains(uid))
+    .filter(community => db.expr(slugs).contains(community('slug')))
+    .filter(community => db.not(community.hasFields('isDeleted')))
+    .run();
+};
+
+const getCommunitiesByUser = (userId: string): Promise<Array<Object>> => {
+  return db
+    .table('communities')
+    .filter(community => community('members').contains(userId))
+    .filter(community => db.not(community.hasFields('isDeleted')))
     .orderBy('createdAt')
     .run();
 };
 
-const getCommunityMetaData = (id: String) => {
-  const getFrequencyCount = db
-    .table('frequencies')
-    .getAll(id, { index: 'community' })
+const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
+  const getChannelCount = db
+    .table('channels')
+    .getAll(communityId, { index: 'communityId' })
     .count()
     .run();
   const getMemberCount = db
     .table('communities')
-    .get(id)
+    .get(communityId)
     .getField('members')
     .count()
     .run();
 
-  return Promise.all([getFrequencyCount, getMemberCount]);
+  return Promise.all([getChannelCount, getMemberCount]);
 };
 
 export type CreateCommunityArguments = {
@@ -70,7 +75,7 @@ export type EditCommunityArguments = {
     description: string,
     website: string,
     file: Object,
-    id: string,
+    communityId: string,
   },
 };
 
@@ -79,18 +84,22 @@ const createCommunity = (
     input: { name, slug, description, website, file },
   }: CreateCommunityArguments,
   creatorId: string
-) => {
+): Promise<Object> => {
   return db
     .table('communities')
     .insert(
       {
         createdAt: new Date(),
-        slug,
         name,
         description,
         website,
+        profilePhoto: null,
+        coverPhoto: null,
+        slug,
         members: [creatorId],
         owners: [creatorId],
+        moderators: [],
+        blockedUsers: [],
       },
       { returnChanges: true }
     )
@@ -106,25 +115,25 @@ const createCommunity = (
           community,
           uploadCommunityPhoto(file, community, data => {
             // returns the imgix path for the final image
-            const photoURL = generateImageUrl(data.path);
-            // update the community with the photoURL
+            const profilePhoto = generateImageUrl(data.path);
+            // update the community with the profilePhoto
             return (
               db
                 .table('communities')
                 .get(community.id)
                 .update(
                   {
-                    photoURL,
+                    profilePhoto,
                   },
                   { returnChanges: true }
                 )
                 .run()
-                // return the resulting community with the photoURL set
+                // return the resulting community with the profilePhoto set
                 .then(
                   result =>
-                    (result.changes.length > 0
+                    result.changes.length > 0
                       ? result.changes[0].new_val
-                      : db.table('communities').get(community.id).run())
+                      : db.table('communities').get(community.id).run()
                 )
             );
           }),
@@ -132,19 +141,20 @@ const createCommunity = (
       }
     })
     .then(([community]) => {
-      // create a default 'general' frequency in the newly created community
+      // create a default 'general' channel in the newly created community
       return Promise.all([
         community,
-        createFrequency(
+        createChannel(
           {
             input: {
               name: 'General',
               slug: 'general',
               description: 'General Chatter',
-              community: community.id,
+              communityId: community.id,
+              isPrivate: false,
             },
           },
-          creatorId // community owner owns the frequency by default
+          creatorId // community owner owns the channel by default
         ),
       ]);
     })
@@ -152,11 +162,11 @@ const createCommunity = (
 };
 
 const editCommunity = ({
-  input: { name, slug, description, website, file, id },
-}: EditCommunityArguments) => {
+  input: { name, slug, description, website, file, communityId },
+}: EditCommunityArguments): Promise<Object> => {
   return db
     .table('communities')
-    .get(id)
+    .get(communityId)
     .run()
     .then(result => {
       return Object.assign({}, result, {
@@ -172,7 +182,7 @@ const editCommunity = ({
         return Promise.all([
           db
             .table('communities')
-            .get(id)
+            .get(communityId)
             .update({ ...community }, { returnChanges: 'always' })
             .run()
             .then(result => {
@@ -193,8 +203,8 @@ const editCommunity = ({
         return Promise.all([
           uploadCommunityPhoto(file, community, data => {
             // returns the imgix path for the final image
-            const photoURL = generateImageUrl(data.path);
-            // update the community with the photoURL
+            const profilePhoto = generateImageUrl(data.path);
+            // update the community with the profilePhoto
             return (
               db
                 .table('communities')
@@ -202,12 +212,12 @@ const editCommunity = ({
                 .update(
                   {
                     ...community,
-                    photoURL,
+                    profilePhoto,
                   },
                   { returnChanges: 'always' }
                 )
                 .run()
-                // return the resulting community with the photoURL set
+                // return the resulting community with the profilePhoto set
                 .then(result => {
                   // if an update happened
                   if (result.replaced === 1) {
@@ -227,134 +237,154 @@ const editCommunity = ({
     .then(data => data[0]);
 };
 
-const deleteCommunity = (id: string) => {
+/*
+  We delete data non-destructively, meaning the record does not get cleared
+  from the db. Instead, we set a 'deleted' field on the object with a value
+  of the current time on the db.
+
+  We set the value as a timestamp so that in the future we have option value
+  to perform actions like:
+  - permanantely delete records that were deleted > X days ago
+  - run logs for deletions over time
+  - etc
+*/
+const deleteCommunity = (communityId: string): Promise<Object> => {
   return db
     .table('communities')
-    .get(id)
-    .delete({ returnChanges: true })
-    .run()
-    .then(({ deleted, changes }) => {
-      if (deleted > 0) {
-        // community was successfully deleted, now delete all frequencies
-        // TODO: Return community object and frequencies objects to remove
-        // them from the client store
-        const community = changes[0].old_val.id;
-        return db
-          .table('frequencies')
-          .getAll(community, { index: 'community' })
-          .delete()
-          .run();
+    .get(communityId)
+    .update(
+      {
+        isDeleted: true,
+        slug: db.uuid(),
+      },
+      {
+        returnChanges: 'always',
+        nonAtomic: true,
       }
-    });
-};
-
-const leaveCommunity = (id, uid) => {
-  return db
-    .table('communities')
-    .get(id)
-    .update(
-      row => ({
-        members: row('members').filter(item => item.ne(uid)),
-      }),
-      { returnChanges: true }
     )
     .run()
-    .then(
-      ({ changes }) =>
-        (changes.length > 0
-          ? changes[0].new_val
-          : db.table('communities').get(id).run())
-    );
-};
+    .then(result => {
+      // community was successfully deleted, now delete all channels
+      if (result.replaced >= 1) {
+        const communityId = result.changes[0].old_val.id;
+        return db
+          .table('channels')
+          .getAll(communityId, { index: 'communityId' })
+          .run()
+          .then(channels => channels.map(channel => deleteChannel(channel.id)))
+          .then(() => result);
+      }
 
-const joinCommunity = (id, uid) => {
-  return db
-    .table('communities')
-    .get(id)
-    .update(
-      row => ({
-        members: row('members').append(uid),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        (changes.length > 0
-          ? changes[0].new_val
-          : db.table('communities').get(id).run())
-    );
-};
-
-const getAllCommunityStories = (id: string): Promise<Array<any>> => {
-  return (
-    db
-      .table('stories')
-      .orderBy(db.desc('modifiedAt'))
-      // Add the frequency object to each story
-      .eqJoin('frequency', db.table('frequencies'))
-      // Only take the community of a frequency
-      .pluck({ left: true, right: { community: true } })
-      .zip()
-      // Filter by the community
-      .filter({ community: id })
-      // Don't send the community back
-      .without('community')
-      .run()
-  );
-};
-
-// TODO: Handle default frequencies as set by the community owner. For now
-// we treat the 'general' frequency as default.
-const subscribeToDefaultFrequencies = (id: string, uid: string) => {
-  return db
-    .table('frequencies')
-    .filter({ community: id, slug: 'general' })
-    .update(
-      row => ({
-        subscribers: row('subscribers').append(uid),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        (changes.length > 0
-          ? changes[0].new_val
-          : db
-              .table('frequencies')
-              .filter({ community: id, slug: 'general' })
-              .run())
-    );
-};
-
-const unsubscribeFromAllFrequenciesInCommunity = (id: string, uid: string) => {
-  return db
-    .table('frequencies')
-    .getAll(id, { index: 'community' })
-    .run()
-    .then(frequencies => {
-      return frequencies.map(frequency =>
-        unsubscribeFrequency(frequency.id, uid)
+      // update failed
+      return new UserError(
+        "Something went wrong and we weren't able to delete this community"
       );
     });
 };
 
-const userIsMemberOfCommunity = (id: string, uid: string) => {
-  return db.table('communities').get(id).run().then(community => {
-    return community.members.indexOf(uid) > -1;
+const leaveCommunity = (
+  communityId: string,
+  userId: string
+): Promise<Object> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(
+      row => ({
+        members: row('members').filter(item => item.ne(userId)),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        changes.length > 0
+          ? changes[0].new_val
+          : db.table('communities').get(communityId).run()
+    );
+};
+
+const joinCommunity = (
+  communityId: string,
+  userId: string
+): Promise<Object> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(
+      row => ({
+        members: row('members').append(userId),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        changes.length > 0
+          ? changes[0].new_val
+          : db.table('communities').get(communityId).run()
+    );
+};
+
+// TODO: Handle default channels as set by the community owner. For now
+// we treat the 'general' channel as default.
+const subscribeToDefaultChannels = (
+  communityId: string,
+  userId: string
+): Promise<Array<Object>> => {
+  return db
+    .table('channels')
+    .filter({ communityId: communityId, slug: 'general' })
+    .update(
+      row => ({
+        members: row('members').append(userId),
+      }),
+      { returnChanges: true }
+    )
+    .run()
+    .then(
+      ({ changes }) =>
+        changes.length > 0
+          ? changes[0].new_val
+          : db
+              .table('channels')
+              .filter({ communityId: communityId, slug: 'general' })
+              .run()
+    );
+};
+
+const unsubscribeFromAllChannelsInCommunity = (
+  communityId: string,
+  userId: string
+): Promise<Array<Object>> => {
+  return db
+    .table('channels')
+    .getAll(communityId, { index: 'communityId' })
+    .run()
+    .then(channels => {
+      return channels.map(channel => leaveChannel(channel.id, userId));
+    });
+};
+
+const userIsMemberOfCommunity = (
+  communityId: string,
+  userId: string
+): Promise<Boolean> => {
+  return db.table('communities').get(communityId).run().then(community => {
+    return community.members.indexOf(userId) > -1;
   });
 };
 
-const userIsMemberOfAnyFrequencyInCommunity = (id: string, uid: string) => {
+const userIsMemberOfAnyChannelInCommunity = (
+  communityId: string,
+  userId: string
+): Promise<Boolean> => {
   return db
-    .table('frequencies')
-    .getAll(id, { index: 'community' })
+    .table('channels')
+    .getAll(communityId, { index: 'communityId' })
     .run()
-    .then(frequencies => {
-      return frequencies.some(
-        frequency => frequency.subscribers.indexOf(uid) > -1
-      );
+    .then(channels => {
+      return channels.some(channel => channel.members.indexOf(userId) > -1);
     });
 };
 
@@ -368,9 +398,8 @@ module.exports = {
   deleteCommunity,
   leaveCommunity,
   joinCommunity,
-  subscribeToDefaultFrequencies,
-  unsubscribeFromAllFrequenciesInCommunity,
-  getAllCommunityStories,
+  subscribeToDefaultChannels,
+  unsubscribeFromAllChannelsInCommunity,
   userIsMemberOfCommunity,
-  userIsMemberOfAnyFrequencyInCommunity,
+  userIsMemberOfAnyChannelInCommunity,
 };

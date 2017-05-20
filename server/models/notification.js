@@ -1,8 +1,4 @@
 // @flow
-/**
- * Getting notifications from the database
- */
-
 const { db } = require('./db');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
@@ -10,23 +6,25 @@ import { encode, decode } from '../utils/base64';
 
 const UNIQUE = (v, i, a) => a.indexOf(v) === i;
 
-const getParticipants = (story: string): Array<string> => {
+const getParticipants = (threadId: string): Promise<Array<string>> => {
   return db
     .table('messages')
-    .getAll(story, { index: 'thread' })
-    .withFields('sender')
+    .getAll(threadId, { index: 'threadId' })
+    .withFields('senderId')
     .run()
-    .then(messages => messages.map(message => message.sender));
+    .then(messages => messages.map(message => message.senderId));
 };
 
-const getNotifications = (ids: Array<string>) => {
-  return db.table('notifications').getAll(...ids).run();
+const getNotifications = (
+  notificationIds: Array<string>
+): Promise<Array<Object>> => {
+  return db.table('notifications').getAll(...notificationIds).run();
 };
 
-const markNotificationsRead = (story: string) => {
+const markNotificationsRead = (threadId: string) => {
   return db
     .table('notifications')
-    .getAll(story, { index: 'story' })
+    .getAll(threadId, { index: 'threadId' })
     .update({
       read: true,
     })
@@ -34,9 +32,9 @@ const markNotificationsRead = (story: string) => {
 };
 
 type MessageNotificationInput = {
-  story: string,
+  threadId: string,
   message: string,
-  sender: string,
+  senderId: string,
   content: {
     title?: string,
     excerpt?: string,
@@ -44,65 +42,68 @@ type MessageNotificationInput = {
 };
 
 const storeMessageNotification = (data: MessageNotificationInput) => {
-  return db
-    .table('stories')
-    .get(data.story)
-    .run()
-    .then(story =>
-      Promise.all([
-        story,
-        db.table('frequencies').get(story.frequency).run(),
-        getParticipants(story.id),
-      ])
-    )
-    .then(([story, frequency, participants]) =>
-      storeNotification({
-        ...data,
-        users: participants
-          .concat([story.author])
-          .filter(uid => uid !== data.sender)
-          .filter(UNIQUE),
-        type: 'NEW_MESSAGE',
-        community: frequency.community,
-        frequency: story.frequency,
-        content: {
-          ...data.content,
-          title: story.content.title,
-        },
-      })
-    );
+  return db.table('threads').get(data.threadId).run().then(thread => {
+    // if there's no thread, break out of the stack
+    if (thread === null) {
+      return;
+    } else {
+      return breakOutOfChain(data, thread);
+    }
+  });
 };
 
-type StoryNotificationInput = {
-  story: string,
-  frequency: string,
-  sender: string,
+const breakOutOfChain = (data, thread) => {
+  return Promise.all([
+    data,
+    thread,
+    db.table('channels').get(thread.channelId).run(),
+    getParticipants(thread.id),
+  ]).then(([data, thread, channel, participants]) =>
+    storeNotification({
+      ...data,
+      users: participants
+        .concat([thread.creatorId])
+        .filter(id => id !== data.senderId)
+        .filter(UNIQUE),
+      type: 'NEW_MESSAGE',
+      communityId: channel.communityId,
+      channelId: thread.channelId,
+      content: {
+        ...data.content,
+        title: thread.content.title,
+      },
+    })
+  );
+};
+
+type ThreadNotificationInput = {
+  threadId: string,
+  channelId: string,
+  senderId: string,
   content: {
     title?: string,
     excerpt?: string,
   },
 };
 
-const storeStoryNotification = (data: StoryNotificationInput) => {
-  return db.table('frequencies').get(data.frequency).run().then(frequency =>
+const storeThreadNotification = (data: ThreadNotificationInput) => {
+  return db.table('channels').get(data.channelId).run().then(channel =>
     storeNotification({
       ...data,
-      users: frequency.subscribers
-        .filter(uid => uid !== data.sender)
-        .filter(UNIQUE),
-      type: 'NEW_STORY',
-      community: frequency.community,
-      frequency: data.frequency,
+      users: channel.members.filter(id => id !== data.sender).filter(UNIQUE),
+      type: 'NEW_THREAD',
+      communityId: channel.communityId,
+      channelId: data.channelId,
     })
   );
 };
 
 type NotificationInput = {
   users: Array<string>,
-  type: 'NEW_STORY' | 'NEW_MESSAGE' | 'REACTION',
-  frequency: string,
-  community: string,
-  story: string,
+  type: 'NEW_THREAD' | 'NEW_MESSAGE' | 'REACTION',
+  channelId: string,
+  communityId: string,
+  threadId: string,
   message?: string,
   sender: string,
   content: {
@@ -117,8 +118,8 @@ const storeNotification = (notification: NotificationInput) => {
     .insert(
       Object.assign({}, notification, {
         createdAt: new Date(),
-        users: notification.users.map(uid => ({
-          uid,
+        users: notification.users.map(id => ({
+          id,
           read: false,
         })),
       }),
@@ -129,14 +130,14 @@ const storeNotification = (notification: NotificationInput) => {
 };
 
 const getNotificationsByUser = (
-  uid: string,
+  userId: string,
   { first, after }: PaginationOptions
 ) => {
   const cursor = decode(after);
   return (
     db
       .table('notifications')
-      .getAll(uid, { index: 'user' })
+      .getAll(userId, { index: 'userId' })
       .orderBy('createdAt')
       .distinct()
       .run()
@@ -166,5 +167,5 @@ module.exports = {
   markNotificationsRead,
   getNotificationsByUser,
   storeNotification,
-  storeStoryNotification,
+  storeThreadNotification,
 };

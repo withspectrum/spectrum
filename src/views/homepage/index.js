@@ -41,7 +41,7 @@ class Homepage extends Component {
               <LogoContainer><LogoWhite /></LogoContainer>
               <Tagline>Where communities are built.</Tagline>
               <LinkButton href={`${SERVER_URL}/auth/twitter`}>
-                <Icon icon="twitter" reverse static />
+                <Icon glyph="twitter" />
                 {' '}
                 <span>Sign in with Twitter</span>
               </LinkButton>
@@ -97,7 +97,7 @@ class Homepage extends Component {
                 Spectrum is free for everyone, so hop on in!
               </Copy>
               <LinkButton href={`${SERVER_URL}/auth/twitter`}>
-                <Icon icon="twitter" color="brand.default" static />
+                <Icon glyph="twitter" />
                 {' '}
                 <span>Sign in with Twitter</span>
               </LinkButton>
@@ -108,7 +108,7 @@ class Homepage extends Component {
         <Footer>
           <FlexRow>
             <a href="https://spectrum.chat/spectrum/~general">
-              <Icon icon="logo" reverse size={48} />
+              <Icon glyph="logo" size={48} />
             </a>
           </FlexRow>
           <FlexRow smallCol center>

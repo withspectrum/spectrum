@@ -12,13 +12,17 @@ export const logout = () => {
 
 export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
   const obj = {};
+
+  if (!user) {
+    logout();
+  }
   // construct a clean object that doesn't include any metadata from apollo
   // like __typename
   obj['currentUser'] = {
-    uid: user.uid,
-    displayName: user.displayName,
+    id: user.id,
+    name: user.name,
     username: user.username,
-    photoURL: user.photoURL,
+    profilePhoto: user.profilePhoto,
   };
 
   // save this object to localstorage. This will be used in the future to hydrate

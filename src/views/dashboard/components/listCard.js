@@ -8,14 +8,19 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCardItem';
-import { LinkButton } from '../../../components/buttons';
-import { FlexRow } from '../../../components/globals';
+import { TextButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { openModal } from '../../../actions/modals';
 
-import { StyledCard, ListHeading, ListContainer, MoreLink } from '../style';
+import {
+  StyledCard,
+  ListHeading,
+  ListContainer,
+  ListFooter,
+  MoreLink,
+} from '../style';
 
-const ListCardPure = ({ data: { communities }, dispatch }) => {
+const ListCard = ({ communities, dispatch }) => {
   if (!!communities) {
     return (
       <StyledCard>
@@ -27,36 +32,28 @@ const ListCardPure = ({ data: { communities }, dispatch }) => {
                 <ListCardItem
                   contents={item.node}
                   withDescription={false}
-                  meta={`${item.node.metaData.members} members · ${item.node.metaData.frequencies} frequencies`}
+                  meta={`${item.node.metaData.members} members · ${item.node.metaData.channels} channels`}
                 >
-                  <Icon
-                    icon="forward"
-                    color={'text.alt'}
-                    hoverColor={'brand.alt'}
-                    scaleOnHover={false}
-                  />
+                  <Icon glyph="view-forward" />
                 </ListCardItem>
               </Link>
             );
           })}
         </ListContainer>
-        <FlexRow>
+        <ListFooter>
           <MoreLink to={`/explore`}>Find more...</MoreLink>
-        </FlexRow>
-        <FlexRow>
-          <LinkButton
+          <TextButton
+            color="text.placeholder"
             onClick={() => dispatch(openModal('CREATE_COMMUNITY_MODAL'))}
           >
-            Create a Community
-          </LinkButton>
-        </FlexRow>
+            New community
+          </TextButton>
+        </ListFooter>
       </StyledCard>
     );
   } else {
     return <div />;
   }
 };
-
-const ListCard = compose(displayLoadingCard)(ListCardPure);
 
 export default connect()(ListCard);
