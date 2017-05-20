@@ -72,10 +72,12 @@ export const StyledTextButton = styled(StyledSolidButton)`
 export const StyledOutlineButton = styled(StyledTextButton)`
   box-shadow: inset 0 0 0 2px ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.color ? props.color : 'brand.default'}`))};
   color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.color ? props.color : 'brand.default'}`))};
+  transition: ${Transition.hover.on};
 
   &:hover {
     color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`))};
     box-shadow: inset 0 0 0 2px ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`))};
+    transition: ${Transition.hover.on};
   }
 `;
 

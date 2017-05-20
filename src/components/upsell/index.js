@@ -112,9 +112,14 @@ export const Upsell404Channel = ({ channel, community, noPermission }) => {
       <FourOhFourImage src="/img/login.svg" role="presentation" />
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
-      <Button onClick={() => window.location.href = returnUrl}>
-        Take me back
-      </Button>
+      <Actions>
+        <OutlineButton onClick={() => window.location.href = returnUrl}>
+          Take me back
+        </OutlineButton>
+        <Button onClick={() => window.location.href = '/explore'}>
+          Explore Channels on Spectrum
+        </Button>
+      </Actions>
     </UpsellFourOhFourContainer>
   );
 };
@@ -145,11 +150,11 @@ export const Upsell404Community = ({ community, noPermission, create }) => {
       <Actions>
         {// de-emphasizes the 'take me home' button if a create prompt is shown
         create
-          ? <OutlineButton onClick={() => window.location.href = returnUrl}>
-              Take Me Home
+          ? <OutlineButton onClick={() => window.location.href = '/explore'}>
+              Explore Communities
             </OutlineButton>
-          : <Button onClick={() => window.location.href = returnUrl}>
-              Take Me Home
+          : <Button onClick={() => window.location.href = '/explore'}>
+              Explore Communities
             </Button>}
 
         {create &&
