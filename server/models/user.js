@@ -23,9 +23,9 @@ const getUserByUsername = (username: string): Promise<Object> => {
     .run()
     .then(
       result =>
-        result
+        (result
           ? result[0]
-          : new UserError(`No user found with the username ${username}`)
+          : new UserError(`No user found with the username ${username}`))
     );
 };
 
@@ -56,9 +56,9 @@ const getUserByProviderId = (providerId: string): Promise<Object> => {
     .run()
     .then(
       result =>
-        result && result.length > 0
+        (result && result.length > 0
           ? result[0]
-          : new UserError('No user found with this providerId')
+          : new UserError('No user found with this providerId'))
     );
 };
 
@@ -74,11 +74,15 @@ const createOrFindUser = (user: Object): Promise<Object> => {
   const promise = user.id
     ? getUser({ id: user.id })
     : getUserByProviderId(user.providerId);
-  return promise.then(storedUser => {
-    if (storedUser) return Promise.resolve(storedUser);
+  return promise
+    .then(storedUser => {
+      if (storedUser) return Promise.resolve(storedUser);
 
-    return storeUser(user);
-  });
+      return storeUser(user);
+    })
+    .catch(err => {
+      return storeUser(user);
+    });
 };
 
 const getEverything = (userId: string): Promise<Array<any>> => {
@@ -143,9 +147,9 @@ const uploadPhoto = (file: Object, currentUser: Object): Promise<Object> => {
       .run()
       .then(
         result =>
-          result.changes.length > 0
+          (result.changes.length > 0
             ? result.changes[0].new_val
-            : db.table('users').get(currentUser.id).run()
+            : db.table('users').get(currentUser.id).run())
       );
   });
 };

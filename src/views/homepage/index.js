@@ -28,7 +28,7 @@ import {
 // import { login } from '../actions/user';
 
 const SERVER_URL = process.env.NODE_ENV === 'production'
-  ? `https://${window.location.host}`
+  ? `${window.location.protocol}//${window.location.host}`
   : 'http://localhost:3001';
 
 class Homepage extends Component {

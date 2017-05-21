@@ -62,6 +62,10 @@ app.use(
     secret: 't3BUqGYFHLNjb7V8xjY6QLECgWy7ByWTYjKkPtuP%R.uLfjNBQKr9pHuKuQJXNqo',
     resave: true,
     saveUninitialized: true,
+    cookie: {
+      httpOnly: true,
+      secure: IS_PROD ? true : false,
+    },
   })
 );
 app.use(passport.initialize());
