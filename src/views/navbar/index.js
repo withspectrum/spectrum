@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Icon from '../../components/icons';
 import { Button, TextButton } from '../../components/buttons';
 import Dropdown from '../../components/dropdown';
+import { NullNotifications } from '../../components/upsell';
 import {
   Container,
   Section,
@@ -31,15 +32,15 @@ class Navbar extends Component {
             <LogoLink to="/">
               <Logo src="/img/mark-white.png" role="presentation" />
             </LogoLink>
-
-            <IconLink
-              data-active={match.url === '/'}
-              data-mobileWidth={'third'}
-              to="/"
-            >
-              <Icon glyph="home" />
-              <Label>Home</Label>
-            </IconLink>
+            {currentUser &&
+              <IconLink
+                data-active={match.url === '/'}
+                data-mobileWidth={'third'}
+                to="/"
+              >
+                <Icon glyph="home" />
+                <Label>Home</Label>
+              </IconLink>}
 
             {currentUser &&
               <IconLink
@@ -76,7 +77,7 @@ class Navbar extends Component {
                   <DropdownHeader>
                     My Notifications
                   </DropdownHeader>
-
+                  <NullNotifications />
                   <DropdownFooter>
                     <TextButton to={'/notifications'}>View all</TextButton>
                   </DropdownFooter>
