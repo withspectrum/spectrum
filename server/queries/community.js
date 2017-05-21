@@ -35,18 +35,6 @@ module.exports = {
         }))
       ),
     }),
-    isOwner: ({ owners }, _, { user }) => {
-      if (!user) return false;
-      return owners.indexOf(user.id) > -1;
-    },
-    isMember: ({ members }, _, { user }) => {
-      if (!user) return false;
-      return members.indexOf(user.id) > -1;
-    },
-    isModerator: ({ moderators }, _, { user }) => {
-      if (!user) return false;
-      return moderators.indexOf(user.id) > -1;
-    },
     memberConnection: (
       { members }: { members: Array<string> },
       { first = 10, after }: PaginationOptions,

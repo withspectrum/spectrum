@@ -36,7 +36,8 @@ const getCommunitiesBySlug = (slugs: Array<string>): Promise<Array<Object>> => {
 const getCommunitiesByUser = (userId: string): Promise<Array<Object>> => {
   return db
     .table('communities')
-    .filter(community => community('members').contains(userId))
+    .eqJoin('communityId', db.table('usersCommunities'))
+    .getAll(userId)
     .filter(community => db.not(community.hasFields('isDeleted')))
     .orderBy('createdAt')
     .run();
