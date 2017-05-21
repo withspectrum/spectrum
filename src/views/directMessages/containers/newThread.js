@@ -90,6 +90,10 @@ class NewThread extends Component {
       // if the query is loading, we show a centered spinner in the middle of
       // the page where the messages will appear
       loadingExistingThreadMessages: false,
+      // if the user is focused on the chat input, we want 'enter' to send
+      // a message and create the dm group, and ignore other logic around
+      // pressing the 'enter' key
+      chatInputIsFocused: false,
     };
 
     // only kick off search query every 200ms
@@ -398,7 +402,7 @@ class NewThread extends Component {
 
     // set the searchstring to state
     this.setState({
-      searchString: string,
+      searchString: e.target.value,
     });
 
     // trigger a new search based on the search input
@@ -530,7 +534,7 @@ class NewThread extends Component {
     node.scrollTop = node.scrollHeight - node.clientHeight;
   };
 
-  createThread = message => {
+  createThread = ({ messageBody, messageType }) => {
     const { selectedUsersForNewThread } = this.state;
 
     // if no users have been selected, break out of this function and throw
@@ -547,7 +551,13 @@ class NewThread extends Component {
 
     const input = {
       participants: selectedUsersForNewThread.map(user => user.id),
-      message,
+      message: {
+        messageType: messageType,
+        threadType: 'directMessageThread',
+        content: {
+          body: messageBody,
+        },
+      },
     };
 
     this.props.createDirectMessageThread(input).then(({
@@ -555,6 +565,7 @@ class NewThread extends Component {
     }) => {
       // NOTE: I cannot get the Apollo store to update properly with the
       // new thread. Forcing a refresh works, although it's a less ideal UX
+      console.log('finished mutation with', createDirectMessageThread);
       window.location.href = `/messages/${createDirectMessageThread.id}`;
       // this.props.history.push(`/messages/${createDirectMessageThread.id}`)
     });
@@ -674,6 +685,7 @@ class NewThread extends Component {
             <Messages
               id={existingThreadBasedOnSelectedUsers}
               currentUser={currentUser}
+              forceScrollToBottom={this.forceScrollToBottom}
             />}
 
           {!existingThreadBasedOnSelectedUsers &&

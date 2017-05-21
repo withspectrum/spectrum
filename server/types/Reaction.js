@@ -12,7 +12,7 @@ const Reaction = /* GraphQL */ `
 	}
 
 	input ReactionInput {
-		message: ID!
+		messageId: ID!
 		type: ReactionTypes!
 	}
 

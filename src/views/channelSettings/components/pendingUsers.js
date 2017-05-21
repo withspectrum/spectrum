@@ -46,8 +46,8 @@ class PendingUsersWithMutation extends Component {
 
         // the mutation returns a channel object. if it exists,
         if (channel !== undefined) {
-          this.props.dispatch(addToastWithTimeout('success', 'User saved.'));
-          this.updateUsersList(id);
+          this.props.dispatch(addToastWithTimeout('success', 'Saved!'));
+          this.updateUsersList(userId);
         }
       })
       .catch(err => {

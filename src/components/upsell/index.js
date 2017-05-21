@@ -84,7 +84,7 @@ export const UpsellRequestToJoinChannel = ({
       isPending
         ? <OutlineButton
             onClick={() => subscribe(channel.id)}
-            icon="minus-fill"
+            icon="minus"
             label
           >
             Cancel request

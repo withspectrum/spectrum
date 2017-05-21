@@ -134,7 +134,7 @@ const generateMessage = (senderId, threadId, threadType) => {
       body: casual.text(),
     },
     attachments: [],
-    type: 'text',
+    messageType: 'text',
     timestamp: faker.date.past(2),
   };
 };

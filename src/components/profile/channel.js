@@ -65,8 +65,8 @@ const ChannelWithData = ({
     return <div>No channel to be found!</div>;
   }
 
-  const toggleSubscription = id => {
-    toggleChannelSubscription({ id })
+  const toggleSubscription = channelId => {
+    toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
         const str = toggleChannelSubscription.isMember
           ? `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`

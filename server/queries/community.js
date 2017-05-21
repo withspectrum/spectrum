@@ -2,10 +2,8 @@
 /**
  * Community query resolvers
  */
-const {
-  getCommunityMetaData,
-  getAllCommunityThreads,
-} = require('../models/community');
+const { getCommunityMetaData } = require('../models/community');
+const { getThreadsByCommunity } = require('../models/thread');
 const { getChannelsByCommunity } = require('../models/channel');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
@@ -74,7 +72,7 @@ module.exports = {
     ) => {
       const cursor = decode(after);
       // TODO: Make this more performant by doing an actual db query rather than this hacking around
-      return getAllCommunityThreads(id)
+      return getThreadsByCommunity(id)
         .then(threads =>
           paginate(
             threads,

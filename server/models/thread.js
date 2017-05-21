@@ -20,6 +20,15 @@ const getThreadsByChannel = (channelId: string): Promise<Array<Object>> => {
     .run();
 };
 
+const getThreadsByCommunity = (communityId: string): Promise<Array<Object>> => {
+  return db
+    .table('threads')
+    .getAll(communityId, { index: 'communityId' })
+    .filter(thread => db.not(thread.hasFields('isDeleted')))
+    .orderBy(db.desc('createdAt'))
+    .run();
+};
+
 const getThreadsByUser = (userId: string): Promise<Array<Object>> => {
   return db
     .table('threads')
@@ -37,7 +46,8 @@ const publishThread = (thread: Object, userId: string): Promise<Object> => {
         creatorId: userId,
         createdAt: new Date(),
         modifiedAt: new Date(),
-        published: true,
+        isPublished: true,
+        isLocked: false,
       }),
       { returnChanges: true }
     )
@@ -132,5 +142,6 @@ module.exports = {
   deleteThread,
   listenToNewThreads,
   getThreadsByChannel,
+  getThreadsByCommunity,
   getThreadsByUser,
 };

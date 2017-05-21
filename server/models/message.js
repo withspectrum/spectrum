@@ -5,10 +5,6 @@ const { storeMessageNotification } = require('./notification');
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
 export type MessageTypes = 'text' | 'media';
-export type MessageProps = {
-  type: MessageTypes,
-  content: string,
-};
 
 const getMessage = (messageId: string): Promise<Object> => {
   return db.table('messages').get(messageId).run();
@@ -22,7 +18,7 @@ const getMessages = (threadId: String): Promise<Array<Object>> => {
     .run();
 };
 
-const storeMessage = (message: MessageProps, user: Object): Promise<Object> => {
+const storeMessage = (message, user: Object): Promise<Object> => {
   // Insert a message
   return db
     .table('messages')

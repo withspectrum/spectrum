@@ -51,16 +51,16 @@ const Thread = /* GraphQL */ `
 	}
 
 	input ThreadInput {
-		channel: ID!
-		community: ID!
+		channelId: ID!
+		communityId: ID!
 		content: ThreadContentInput!
 	}
 
 	extend type Mutation {
 		publishThread(thread: ThreadInput!): Thread
-		editThread(id: ID!, newContent: ThreadContentInput!): Thread
-		setThreadLock(id: ID!, value: Boolean!): Thread
-		deleteThread(id: ID!): Boolean
+		editThread(threadId: ID!, newContent: ThreadContentInput!): Thread
+		setThreadLock(threadId: ID!, value: Boolean!): Thread
+		deleteThread(threadId: ID!): Boolean
 	}
 `;
 

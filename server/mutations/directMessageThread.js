@@ -28,7 +28,9 @@ module.exports = {
 
       if (!input.participants)
         return new UserError('Nobody was selected to create a thread.');
-      if (!input.message)
+      if (
+        !input.message || !input.message.content || !input.message.content.body
+      )
         return new UserError(
           'Be sure to add a message when creating a new thread!'
         );
@@ -52,12 +54,14 @@ module.exports = {
             // sort the users sent from the client
             const sortedInputParticipants = participants.sort().join('');
             // sort the users of the directMessageThread being evaluated
-            const sortedThreadUsers = directMessageThread.users.sort().join('');
+            const sortedThreadParticipants = directMessageThread.participants
+              .sort()
+              .join('');
 
             // if there is a users match, we have found a duplicate! pass along
             // the directMessageThread that was matched, and downstream we will simply
             // post the message using that thread's id
-            if (sortedInputParticipants === sortedThreadUsers) {
+            if (sortedInputParticipants === sortedThreadParticipants) {
               return directMessageThread;
             } else {
               return null;
@@ -97,7 +101,7 @@ module.exports = {
           // message thread. we can now compose a proper messages object
           // and store the message with our new thread id
           const messageWithThread = {
-            message,
+            ...message,
             threadId: directMessageThread.id,
           };
 
@@ -109,7 +113,7 @@ module.exports = {
             storeMessage(messageWithThread, currentUser),
           ]);
         })
-        .then(([directMessageTHread]) => directMessageTHread);
+        .then(([directMessageThread]) => directMessageThread);
     },
   },
 };

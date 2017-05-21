@@ -326,26 +326,6 @@ const joinCommunity = (
     );
 };
 
-const getAllCommunityThreads = (
-  communityId: string
-): Promise<Array<Object>> => {
-  return (
-    db
-      .table('threads')
-      .orderBy(db.desc('createdAt'))
-      // Add the channel object to each thread
-      .eqJoin('channelId', db.table('channels'))
-      // Only take the community of a channel
-      .pluck({ left: true, right: { communityId: true } })
-      .zip()
-      // Filter by the community
-      .filter({ communityId: communityId })
-      // Don't send the community back
-      .without('communityId')
-      .run()
-  );
-};
-
 // TODO: Handle default channels as set by the community owner. For now
 // we treat the 'general' channel as default.
 const subscribeToDefaultChannels = (
@@ -420,7 +400,6 @@ module.exports = {
   joinCommunity,
   subscribeToDefaultChannels,
   unsubscribeFromAllChannelsInCommunity,
-  getAllCommunityThreads,
   userIsMemberOfCommunity,
   userIsMemberOfAnyChannelInCommunity,
 };

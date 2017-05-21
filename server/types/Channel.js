@@ -28,7 +28,7 @@ const Channel = /* GraphQL */ `
 		name: String!
 		slug: String!
 		description: String
-		community: ID!
+		communityId: ID!
 		isPrivate: Boolean
 	}
 
@@ -37,7 +37,7 @@ const Channel = /* GraphQL */ `
 		slug: String
 		description: String
 		isPrivate: Boolean
-		id: ID!
+		channelId: ID!
 	}
 
 	enum PendingActionType {
@@ -87,8 +87,8 @@ const Channel = /* GraphQL */ `
 	extend type Mutation {
 		createChannel(input: CreateChannelInput!): Channel
 		editChannel(input: EditChannelInput!): Channel
-		deleteChannel(id: ID!): Boolean
-		toggleChannelSubscription(id: ID!): Channel
+		deleteChannel(channelId: ID!): Boolean
+		toggleChannelSubscription(channelId: ID!): Channel
 		togglePendingUser(input: TogglePendingUserInput!): Channel
 		unblockUser(input: UnblockUserInput!): Channel
 	}

@@ -7,6 +7,7 @@ import {
 import {
   userDirectMessageThreadsFragment,
 } from './fragments/user/userDirectMessageThreads';
+import { userInfoFragment } from './fragments/user/userInfo';
 
 /*
   Create a new direct message group
@@ -83,9 +84,11 @@ export const createDirectMessageThreadMutation = graphql(
 export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY = gql`
   query currentUserDirectMessageThreads {
     user: currentUser {
+      ...userInfo
       ...userDirectMessageThreads
     }
   }
+  ${userInfoFragment}
   ${userDirectMessageThreadsFragment}
 `;
 

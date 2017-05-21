@@ -48,6 +48,11 @@ exports.up = function(r, conn) {
             .table('threads')
             .indexCreate('channelId', r.row('channelId'))
             .run(conn),
+          // index threads by communityId
+          r
+            .table('threads')
+            .indexCreate('communityId', r.row('communityId'))
+            .run(conn),
           // index reactions by message
           r
             .table('reactions')

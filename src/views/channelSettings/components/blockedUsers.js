@@ -54,7 +54,7 @@ class BlockedUsersWithMutation extends Component {
           this.props.dispatch(
             addToastWithTimeout('success', 'User was un-blocked.')
           );
-          this.updateUsersList(id);
+          this.updateUsersList(userId);
         }
       })
       .catch(err => {
