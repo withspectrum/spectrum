@@ -23,6 +23,7 @@ export const NullState = props => (
 );
 
 export const NullTitle = props => <Title>{props.children}</Title>;
+
 export const NullSubtitle = props => <Subtitle>{props.children}</Subtitle>;
 
 export const NullNotifications = () => {

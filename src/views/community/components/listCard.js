@@ -9,11 +9,12 @@ import { connect } from 'react-redux';
 import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCardItem';
 import { FlexRow } from '../../../components/globals';
-import { TextButton } from '../../../components/buttons';
+import { Button, TextButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
+import { NullCard, NullTitle, NullSubtitle } from '../../../components/upsell';
 import { openModal } from '../../../actions/modals';
 
-import { StyledCard, ListHeading, ListContainer, MoreLink } from '../style';
+import { StyledCard, ListHeading, ListContainer, ListFooter } from '../style';
 
 const ListCardPure = ({ data, dispatch }) => {
   const channels = data.community.channelConnection.edges;
@@ -39,22 +40,31 @@ const ListCardPure = ({ data, dispatch }) => {
             );
           })}
         </ListContainer>
-        <FlexRow>
-          <MoreLink to={`/explore`}>Find more...</MoreLink>
-        </FlexRow>
-        <FlexRow>
-          {data.community.isOwner &&
+        {data.community.isOwner &&
+          <ListFooter>
             <TextButton
               onClick={() =>
                 dispatch(openModal('CREATE_CHANNEL_MODAL', data.community))}
             >
               Create a Channel
-            </TextButton>}
-        </FlexRow>
+            </TextButton>
+          </ListFooter>}
       </StyledCard>
     );
   } else {
-    return <div />;
+    return (
+      <NullCard bg="community">
+        <NullTitle>
+          There are no channels here...
+        </NullTitle>
+        <NullSubtitle>
+          Which really shouldn't be possible. Mind reloading?
+        </NullSubtitle>
+        <Button icon="reload">
+          Reload
+        </Button>
+      </NullCard>
+    );
   }
 };
 

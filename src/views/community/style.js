@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Card from '../../components/card';
 import { Link } from 'react-router-dom';
-import { FlexCol, H3 } from '../../components/globals';
+import { FlexCol, FlexRow, H3 } from '../../components/globals';
 
 export const ListHeading = styled(H3)`
   font-weight: 900;
@@ -10,9 +10,8 @@ export const ListHeading = styled(H3)`
 `;
 
 export const ListContainer = styled(FlexCol)`
-  margin: 8px 0 16px 0;
+  margin: 8px 0 0 0;
   width: 100%;
-  border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
   align-items: stretch;
 
   a + a {
@@ -29,4 +28,11 @@ export const MoreLink = styled(Link)`
 export const StyledCard = styled(Card)`
   margin-top: 16px;
   padding: 16px 16px 16px 20px;
+`;
+
+export const ListFooter = styled(FlexRow)`
+  padding-top: 16px;
+  border-top: 2px solid ${({ theme }) => theme.bg.wash};
+  justify-content: space-between;
+  width: 100%;
 `;

@@ -15,8 +15,7 @@ export const ListHeading = styled(H3)`
 `;
 
 export const ListContainer = styled(FlexCol)`
-  margin: 8px 0 16px 0;
-  border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
+  margin-top: 8px;
   align-items: stretch;
   width: 100%;
 
@@ -38,6 +37,7 @@ export const MoreLink = styled(Link)`
 `;
 
 export const ListFooter = styled(FlexRow)`
+  border-top: 2px solid ${({ theme }) => theme.bg.wash};
   justify-content: space-between;
   width: 100%;
 `;

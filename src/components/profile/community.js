@@ -132,11 +132,11 @@ const CommunityWithData = ({
           community.isMember &&
             !community.isOwner &&
             <ActionOutline
-              color={'text.alt'}
+              color={'text.placeholder'}
               hoverColor={'warn.default'}
               onClick={() => toggleMembership(community.id)}
             >
-              Leave Community
+              Leave {community.name}
             </ActionOutline>}
 
           {// user is not a member and doesn't own the community
