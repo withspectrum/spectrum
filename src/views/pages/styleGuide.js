@@ -40,6 +40,66 @@ const enhance = compose(
   })
 );
 
+const glyphList = [
+  'attachment',
+  'channel',
+  'channel-private',
+  'checkbox',
+  'checkmark',
+  'community',
+  'delete',
+  'door-enter',
+  'door-leave',
+  'down',
+  'down-fill',
+  'edit',
+  'emoji',
+  'everything',
+  'explore',
+  'facebook',
+  'flag',
+  'flag-fill',
+  'freeze',
+  'home',
+  'like',
+  'like-fill',
+  'link',
+  'logo',
+  'menu',
+  'message',
+  'message-fill',
+  'message-new',
+  'minus',
+  'minus-fill',
+  'notification',
+  'notification-fill',
+  'payment',
+  'person',
+  'photo',
+  'photo-fill',
+  'plus',
+  'plus-fill',
+  'post',
+  'post-cancel',
+  'post-fill',
+  'private',
+  'private-unlocked',
+  'profile',
+  'profile-fill',
+  'search',
+  'send',
+  'send-fill',
+  'settings',
+  'share',
+  'twitter',
+  'up',
+  'up-fill',
+  'view-back',
+  'view-close',
+  'view-forward',
+  'view-reload',
+];
+
 const dummyData = {
   user: {
     id: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
@@ -360,576 +420,38 @@ const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
 
       <PropsList>
         <li>
-          <pre>icon: String</pre>
+          <pre>glyph: String</pre>
           <p>
             Gets passed into a switch statement which will return the proper svg path
-            ).
+            .
           </p>
         </li>
         <li>
-          <pre>color: String</pre>
+          <pre>size: Int</pre>
           <p>
-            Describes the color of the icon in its inactive state. The string is composed into a
+            Describes the size (in px) that an icon should be rendered at. Use only with
             {' '}
-            <code>props.theme</code>
+            <pre>-fill</pre>
             {' '}
-            evaulation, therefore you must pass the color as defined in the app theme (e.g.
-            {' '}
-            <code>"brand.default"</code>
-            ).
+            variants - stroked icons are drawn at specific sizes to maintain consistent stroke width and level of detail.
           </p>
-        </li>
-        <li>
-          <pre>hoverColor: String</pre>
-          <p>Describes the color of the icon in its active state</p>
-        </li>
-        <li>
-          <pre>scaleOnHover: Boolean</pre>
-          <p>Determines if the icon should scale on user hover</p>
         </li>
       </PropsList>
 
       <Subheading>Examples</Subheading>
       <Section>
-        <ComponentContainer>
-          <Component>
-            <Icon glyph="messages" />
-          </Component>
-          <Code onClick={highlightAndCopy}>{`<Icon glyph="messages" />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer>
-          <Component>
-            <Icon glyph="view-close" />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="view-close" />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer>
-          <Component reverse>
-            <Icon glyph="explore" />
-          </Component>
-          <Code onClick={highlightAndCopy}>{`<Icon glyph="explore" />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer>
-          <Component>
-            <Icon glyph="post" hoverColor={'brand.default'} scaleOnHover />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="post" hoverColor={'brand.default'} scaleOnHover />`}</Code>
-        </ComponentContainer>
-      </Section>
-
-      <Spacer height="32px" />
-      <Subheading>All Icons</Subheading>
-      <Section>
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="messages"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="messages" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="attachment"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="attachment" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="view-back"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="view-back" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="plus"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="plus" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="minus"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="minus" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="delete"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="delete" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="flag"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="flag" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="freeze"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="freeze" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="channel"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="channel" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="channel-private"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="channel-private" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="like-fill"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="like-fill" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="like"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="like" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="logo"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="logo" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="private-unlocked"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="private-unlocked" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="private"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="private" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="menu"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="menu" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="photo"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="photo" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="scroll-top"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="scroll-top" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="scroll-bottom"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="scroll-bottom" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="send"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="send" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="settings"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="settings" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="share"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="share" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="post"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="post" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="post-cancel"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="post-cancel" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="post"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="post" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="twitter"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="twitter" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="facebook"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="facebook" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="checkmark"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="checkmark" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="checkbox"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="checkbox" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="notification"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="notification" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="everything"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="everything" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="home"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="home" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="emoji"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="emoji" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="view-close"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="view-close" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="caret-gt"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="caret-gt" ...props />`}</Code>
-        </ComponentContainer>
-
-        <ComponentContainer width={'25%'}>
-          <Component>
-            <Icon
-              glyph="explore"
-              scaleOnHover
-              color={'text.alt'}
-              hoverColor={'brand.default'}
-            />
-          </Component>
-          <Code
-            onClick={highlightAndCopy}
-          >{`<Icon glyph="explore" ...props />`}</Code>
-        </ComponentContainer>
+        {glyphList.map((glyph, i) => {
+          return (
+            <ComponentContainer key={i} width={'25%'}>
+              <Component>
+                <Icon glyph={glyph} />
+              </Component>
+              <Code
+                onClick={highlightAndCopy}
+              >{`<Icon glyph='${glyph}' />`}</Code>
+            </ComponentContainer>
+          );
+        })}
       </Section>
     </Section>
 

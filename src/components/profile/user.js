@@ -84,7 +84,7 @@ const UserWithData = ({
               <ProfileHeaderAction glyph="settings" />
             </Link>
           : <Link to={`messages/${user.name}`}>
-              <ProfileHeaderAction glyph="messages-new" />
+              <ProfileHeaderAction glyph="message-new" />
             </Link>}
       </ProfileHeader>
 

@@ -48,7 +48,7 @@ class Navbar extends Component {
                 data-mobileWidth={'third'}
                 to="/messages"
               >
-                <Icon glyph="messages" />
+                <Icon glyph="message" />
                 <Label>Messages</Label>
               </IconLink>}
 
