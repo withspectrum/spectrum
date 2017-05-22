@@ -35,7 +35,9 @@ const app = express();
 
 app.use(
   cors({
-    origin: IS_PROD ? '/' : 'http://localhost:3000',
+    origin: IS_PROD
+      ? ['https://spectrum.chat', /spectrum-(\w|-)+\.now\.sh/]
+      : 'http://localhost:3000',
     credentials: true,
   })
 );
