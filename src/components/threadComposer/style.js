@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import { Card } from '../../components/card';
+import { Card } from '../card';
+import { Transition } from '../globals';
 
 export const Container = styled.div`
-  width: calc(100% + 32px);
+  align-self: stretch;
   display: flex;
   justify-content: center;
 `;
@@ -10,8 +11,8 @@ export const Container = styled.div`
 export const Composer = styled(Card)`
   margin-bottom: 16px;
   position: relative;
-  z-index: ${props => (props.isOpen ? '11' : '10')};
-  width: ${props => (props.isOpen ? '100%' : 'calc(100% - 32px)')};
+  z-index: 11;
+  width: 100%;
   display: block;
   min-height: 64px;
   cursor: pointer;
@@ -38,24 +39,20 @@ export const Overlay = styled.div`
 `;
 
 export const Placeholder = styled.div`
-  display: flex;
+  ${/* either the placeholder *or* the content container shows at a time. */ ''}
+  display: ${props => (props.isOpen ? 'none' : 'flex')};
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
   padding: 16px;
-  color: ${props => props.theme.text.alt};color: ${props => props.theme.text.alt};
-  position: ${props => (props.isOpen ? 'absolute' : 'relative')};
-  opacity: ${props => (props.isOpen ? '0' : '1')};
+  color: ${props => props.theme.text.alt};
+  transition: ${Transition.hover.off};
 
   &:hover {
-    color: ${props => props.theme.text.default};
+    transition: ${Transition.hover.on};
+    color: ${props => props.theme.brand.alt};
   }
 
-  /* manually position the edit icon */
-  div {
-    position: relative;
-    top: -2px;
-  }
 `;
 
 export const PlaceholderLabel = styled.h3`
@@ -65,9 +62,7 @@ export const PlaceholderLabel = styled.h3`
 `;
 
 export const ContentContainer = styled.div`
-  position: ${props => (props.isOpen ? 'relative' : 'absolute')};
-  opacity: ${props => (props.isOpen ? '1' : '0')};
-  pointer-events: ${props => (props.isOpen ? 'auto' : 'none')};
+  display: ${props => (props.isOpen ? 'block' : 'none')};
 `;
 
 export const Actions = styled.div`
@@ -109,7 +104,7 @@ export const Dropdowns = styled.div`
   }
 `;
 
-// these are style objects because i'm custom styling another react component to handle autoresizign
+// these are style objects because i'm custom styling another react component to handle autoresizing
 
 export const ThreadTitle = {
   fontSize: '20px',

@@ -243,7 +243,7 @@ class ThreadComposerWithData extends Component {
           <Placeholder isOpen={isOpen}>
             <Icon glyph="post" />
             <PlaceholderLabel>
-              Start a new thread with your friends...
+              Start a new thread...
             </PlaceholderLabel>
           </Placeholder>
 

@@ -60,7 +60,7 @@ const DashboardPure = ({
           <ListCard communities={communities} />
         </Column>
 
-        <Column type="primary" alignItems="center">
+        <Column type="primary" alignItems="stretch">
           {// composer should only appear if a user is part of a community
           user && communities && <ThreadComposer />}
           <EverythingThreadFeed />
