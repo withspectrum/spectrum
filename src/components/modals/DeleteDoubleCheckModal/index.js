@@ -44,7 +44,7 @@ class DeleteDoubleCheckModal extends Component {
       deleteThread,
       deleteChannel,
       dispatch,
-      history,
+      // history,
     } = this.props;
 
     switch (entity) {

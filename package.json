@@ -47,6 +47,7 @@
     "lodash.debounce": "^4.0.8",
     "node-env-file": "^0.1.8",
     "npm": "^4.5.0",
+    "optics-agent": "^1.1.2",
     "passport": "^0.3.2",
     "passport-twitter": "^1.0.4",
     "pre-commit": "^1.2.2",

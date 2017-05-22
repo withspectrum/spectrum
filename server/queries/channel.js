@@ -4,7 +4,9 @@ const {
   getChannelMetaData,
   getChannelMemberCount,
   getTopChannels,
+  getChannelPermissions,
 } = require('../models/channel');
+const { getCommunityPermissions } = require('../models/community');
 const { getThreadsByChannel } = require('../models/thread');
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
@@ -53,6 +55,20 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.community.load(communityId),
+    channelPermissions: ({ id }: { id: String }, _: any, { user }: Context) => {
+      if (!id || !user) return false;
+      return getChannelPermissions(id, user.id).then(data => data[0]);
+    },
+    communityPermissions: (
+      { communityId }: { communityId: String },
+      _: any,
+      { user }: Context
+    ) => {
+      if (!communityId || !user) return false;
+      return getCommunityPermissions(communityId, user.id).then(
+        data => data[0]
+      );
+    },
     memberConnection: (
       { members }: { members: Array<string> },
       { first = 10, after }: PaginationOptions,

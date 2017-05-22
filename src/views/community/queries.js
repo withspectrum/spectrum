@@ -177,11 +177,9 @@ export const getCommunity = graphql(
 		query getCommunity($slug: String) {
 			community(slug: $slug) {
         ...communityInfo
-        ...communityMetaData
       }
 		}
     ${communityInfoFragment}
-    ${communityMetaDataFragment}
 	`,
   profileQueryOptions
 );

@@ -64,11 +64,11 @@ const Channel = /* GraphQL */ `
 		description: String!
 		slug: String!
 		isPrivate: Boolean!
+		channelPermissions: ChannelPermissions!
+		communityPermissions: CommunityPermissions!
 		community: Community!
 		threadConnection(first: Int = 10, after: String): ChannelThreadsConnection!
 		memberConnection(first: Int = 10, after: String): ChannelMembersConnection!
-		pendingUsers: [User]
-		blockedUsers: [User]
 		memberCount: Int!
 		metaData: ChannelMetaData
 

@@ -14,17 +14,9 @@ export const communityThreadsFragment = gql`
         cursor
         node {
           ...threadInfo
-          channel {
-            ...channelInfo
-            community {
-              ...communityInfo
-            }
-          }
         }
       }
     }
   }
   ${threadInfoFragment}
-  ${channelInfoFragment}
-  ${communityInfoFragment}
 `;

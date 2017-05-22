@@ -3,10 +3,7 @@ import React from 'react';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
 //$FlowFixMe
-import compose from 'recompose/compose';
-//$FlowFixMe
 import { connect } from 'react-redux';
-import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCardItem';
 import { TextButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';

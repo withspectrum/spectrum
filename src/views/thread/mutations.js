@@ -4,7 +4,6 @@ import { graphql, gql } from 'react-apollo';
 import {
   reactionInfoFragment,
 } from '../../api/fragments/reaction/reactionInfo';
-import { GET_THREAD_MESSAGES_QUERY } from './queries';
 
 /*
   Send an id and boolean value to set a thread to be locked or unlocked.

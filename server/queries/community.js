@@ -2,7 +2,10 @@
 /**
  * Community query resolvers
  */
-const { getCommunityMetaData } = require('../models/community');
+const {
+  getCommunityMetaData,
+  getCommunityPermissions,
+} = require('../models/community');
 const { getThreadsByCommunity } = require('../models/thread');
 const { getChannelsByCommunity } = require('../models/channel');
 import paginate from '../utils/paginate-arrays';
@@ -25,6 +28,14 @@ module.exports = {
     },
   },
   Community: {
+    communityPermissions: (
+      { id }: { id: String },
+      _: any,
+      { user }: Context
+    ) => {
+      if (!id || !user) return false;
+      return getCommunityPermissions(id, user.id).then(data => data[0]);
+    },
     channelConnection: ({ id }: { id: string }) => ({
       pageInfo: {
         hasNextPage: false,

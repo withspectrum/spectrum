@@ -13,10 +13,12 @@ export const communityInfoFragment = gql`
     profilePhoto
     coverPhoto
     # roles
-    isOwner
-    isMember
-    isModerator
-    isBlocked
+    communityPermissions {
+      isMember
+      isBlocked
+      isOwner
+      isModerator
+    }
     # counts
     metaData {
       members

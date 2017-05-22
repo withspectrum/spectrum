@@ -20,8 +20,6 @@ import ListCard from './components/listCard';
 
 const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 
-const CurrentUserProfile = compose(getCurrentUserProfile)(UserProfile);
-
 const DashboardPure = ({
   data: { user, error },
   data,
@@ -60,13 +58,13 @@ const DashboardPure = ({
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <CurrentUserProfile profileSize="mini" />
+        <UserProfile profileSize="mini" data={{ user: user }} />
         <ListCard communities={communities} />
       </Column>
 
       <Column type="primary" alignItems="center">
-        {/* {// composer should only appear if a user is part of a community
-        user && communities && <ThreadComposer />} */}
+        {// composer should only appear if a user is part of a community
+        user && communities && <ThreadComposer />}
         <EverythingThreadFeed />
       </Column>
     </AppViewWrapper>

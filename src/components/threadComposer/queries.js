@@ -25,16 +25,13 @@ query getComposerCommunitiesAndChannels {
       edges {
         node {
           ...communityInfo
-          channelConnection {
-            edges {
-              node {
-                ...channelInfo
-                community {
-                  ...communityInfo
-                }
-              }
-            }
-          }
+        }
+      }
+    }
+    channelConnection {
+      edges {
+        node {
+          ...channelInfo
         }
       }
     }

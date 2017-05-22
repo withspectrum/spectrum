@@ -11,19 +11,16 @@ import {
 import {
   userCommunitiesFragment,
 } from '../../api/fragments/user/userCommunities';
-import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
+// import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
 
 const LoadMoreThreads = gql`
   query loadMoreEverythingThreads($after: String) {
     user: currentUser {
-      ...userInfo
-      ...userCommunities
+      id
       ...userEverything
     }
   }
-  ${userInfoFragment}
   ${userEverythingFragment}
-  ${userCommunitiesFragment}
 `;
 
 const threadsQueryOptions = {
@@ -99,14 +96,11 @@ export const getEverythingThreads = graphql(
   gql`
   query getEverythingThreads($after: String) {
     user: currentUser {
-      ...userInfo
-      ...userCommunities
+      id
       ...userEverything
     }
   }
-  ${userInfoFragment}
   ${userEverythingFragment}
-  ${userCommunitiesFragment}
 `,
   threadsQueryOptions
 );

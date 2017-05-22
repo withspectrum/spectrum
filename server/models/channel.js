@@ -14,11 +14,23 @@ const getChannelsByCommunity = (
 };
 
 const getChannelsByUser = (userId: string): Promise<Array<Object>> => {
-  return db
-    .table('channels')
-    .filter(channel => channel('members').contains(userId))
-    .filter(channel => db.not(channel.hasFields('isDeleted')))
-    .run();
+  return (
+    db
+      .table('usersChannels')
+      // get all the user's channels
+      .getAll(userId, { index: 'userId' })
+      // get the channel objects for each channel
+      .eqJoin('channelId', db.table('channels'))
+      // get rid of unnecessary info from the usersChannels object on the left
+      .without({ left: ['id', 'channelId', 'userId', 'createdAt'] })
+      // zip the tables
+      .zip()
+      // ensure we don't return any deleted channels
+      .filter(channel => db.not(channel.hasFields('isDeleted')))
+      // sort by channel creation date
+      .orderBy('createdAt')
+      .run()
+  );
 };
 
 const getChannelBySlug = (
@@ -71,11 +83,11 @@ const getChannelMetaData = (channelId: string): Promise<Array<number>> => {
     .count()
     .run();
   const getMemberCount = db
-    .table('channels')
-    .get(channelId)
-    .getField('members')
-    .count()
-    .run();
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ isBlocked: false, isPending: false })
+    .run()
+    .then(data => data.length);
 
   return Promise.all([getThreadCount, getMemberCount]);
 };
