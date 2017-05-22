@@ -6,7 +6,6 @@ import { Button, OutlineButton, IconButton } from '../buttons';
 export const ProfileHeader = styled(FlexContainer)`
   padding: 16px;
   width: 100%;
-  justify-content: space-between;
 `;
 
 export const ProfileHeaderMeta = styled(FlexContainer)`
