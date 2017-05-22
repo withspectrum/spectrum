@@ -69,6 +69,17 @@ const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
   return Promise.all([getChannelCount, getMemberCount]);
 };
 
+const getCommunityPermissions = (
+  communityId: string,
+  userId: string
+): Promise<Array<Object>> => {
+  return db
+    .table('usersCommunities')
+    .getAll(userId, { index: 'userId' })
+    .filter({ communityId })
+    .run();
+};
+
 export type CreateCommunityArguments = {
   input: {
     name: string,
@@ -403,6 +414,7 @@ module.exports = {
   getCommunities,
   getCommunitiesBySlug,
   getCommunityMetaData,
+  getCommunityPermissions,
   getCommunitiesByUser,
   createCommunity,
   editCommunity,

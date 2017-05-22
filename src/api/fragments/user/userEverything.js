@@ -19,6 +19,4 @@ export const userEverythingFragment = gql`
     }
   }
   ${threadInfoFragment}
-  ${channelInfoFragment}
-  ${communityInfoFragment}
 `;

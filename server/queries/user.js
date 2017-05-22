@@ -52,14 +52,12 @@ module.exports = {
       const cursor = decode(after);
       // TODO: Make this more performant by doing an actual db query rather than this hacking around
       return getEverything(id)
-        .then(
-          threads =>
-            console.log('threads', threads) ||
-            paginate(
-              threads,
-              { first, after: cursor },
-              thread => thread.id === cursor
-            )
+        .then(threads =>
+          paginate(
+            threads,
+            { first, after: cursor },
+            thread => thread.id === cursor
+          )
         )
         .then(result => ({
           pageInfo: {

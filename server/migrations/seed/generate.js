@@ -140,7 +140,7 @@ const generateUsersChannels = (channels, usersCommunities, userId) => {
   return foo;
 };
 
-const generateThread = (channelId, creatorId) => {
+const generateThread = (communityId, channelId, creatorId) => {
   const content = {
     title: casual.title(),
     body: casual.text(),
@@ -153,6 +153,7 @@ const generateThread = (channelId, creatorId) => {
     createdAt,
     creatorId,
     channelId,
+    communityId,
     isPublished: faker.random.boolean(),
     content,
     attachments: [],

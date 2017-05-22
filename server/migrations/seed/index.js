@@ -84,12 +84,9 @@ generatedUsersChannels.map(elem => {
 console.log('Generating threads...');
 let threads = DEFAULT_THREADS;
 channels.forEach(channel => {
-  randomAmount({ max: 10 }, () => {
-    const members = usersChannels.filter(
-      channel => channel.channelId === channel.id
-    );
-    const creator = faker.random.arrayElement(members);
-    const thread = generateThread(channel.id, creator);
+  randomAmount({ max: 100 }, () => {
+    const creator = faker.random.arrayElement(users);
+    const thread = generateThread(channel.communityId, channel.id, creator.id);
     threads.push(thread);
     // notifications.push(
     //   generateThreadNotification(thread, channel)
@@ -110,8 +107,8 @@ threads.forEach(thread => {
   const channel = channels.find(channel => channel.id === thread.channelId);
   const threadMessages = [];
   randomAmount({ max: 10 }, () => {
-    const sender = faker.random.arrayElement(channel.members);
-    const message = generateMessage(sender, thread.id, 'story');
+    const sender = faker.random.arrayElement(users);
+    const message = generateMessage(sender.id, thread.id, 'story');
     messages.push(message);
     threadMessages.push(message);
   });

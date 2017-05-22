@@ -10,8 +10,19 @@ export const threadInfoFragment = gql`
     isPublished
     isLocked
     isCreator
-    isChannelOwner
-    isCommunityOwner
+    channelPermissions {
+      isMember
+      isPending
+      isBlocked
+      isOwner
+      isModerator
+    }
+    communityPermissions {
+      isMember
+      isBlocked
+      isOwner
+      isModerator
+    }
     participants {
       ...userInfo
     }

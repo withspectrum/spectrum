@@ -82,35 +82,25 @@ const createOrFindUser = (user: Object): Promise<Object> => {
 };
 
 const getEverything = (userId: string): Promise<Array<any>> => {
-  console.log('user', userId);
-  return (
-    db
-      .table('usersChannels')
-      // get the user's channels
-      .getAll(userId, { index: 'userId' })
-      // get all the threads in the channels
-      .eqJoin('channelId', db.table('threads'), { index: 'channelId' })
-      // remove the channel permissions - this gets handled elsewhere
-      .without({
-        left: [
-          'id',
-          'channelId',
-          'createdAt',
-          'userId',
-          'isMember',
-          'isModerator',
-          'isOwner',
-        ],
-      })
-      // zip the data
-      .zip()
-      // remove threads where the user is blocked, pending, or the thread is deleted
-      .filter({ isBlocked: false, isPending: false })
-      .filter(thread => db.not(thread.hasFields('isDeleted')))
-      // remove the fields for isblocked and ispending from the return object
-      .without('isBlocked', 'isPending')
-      .run()
-  );
+  return db
+    .table('usersChannels')
+    .getAll(userId, { index: 'userId' })
+    .eqJoin('channelId', db('spectrum').table('threads'), {
+      index: 'channelId',
+    })
+    .without({
+      left: [
+        'id',
+        'channelId',
+        'createdAt',
+        'isMember',
+        'isModerator',
+        'isOwner',
+      ],
+    })
+    .zip()
+    .filter({ isBlocked: false, isPending: false })
+    .without('isBlocked', 'isPending');
 };
 
 const getUsersThreadCount = (

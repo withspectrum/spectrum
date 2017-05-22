@@ -80,6 +80,17 @@ const getChannelMetaData = (channelId: string): Promise<Array<number>> => {
   return Promise.all([getThreadCount, getMemberCount]);
 };
 
+const getChannelPermissions = (
+  channelId: string,
+  userId: string
+): Promise<Array<Object>> => {
+  return db
+    .table('usersChannels')
+    .getAll(userId, { index: 'userId' })
+    .filter({ channelId })
+    .run();
+};
+
 export type CreateChannelArguments = {
   input: {
     communityId: string,
@@ -323,6 +334,7 @@ const getChannelMemberCount = (channelId: string): number => {
 module.exports = {
   getChannelBySlug,
   getChannelMetaData,
+  getChannelPermissions,
   getChannelsByUser,
   getChannelsByCommunity,
   createChannel,
