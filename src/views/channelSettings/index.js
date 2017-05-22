@@ -23,16 +23,19 @@ const SettingsPure = ({
 }) => {
   const communitySlug = match.params.communitySlug;
   const channelSlug = match.params.channelSlug;
-
+  console.log(channel);
   if (error) {
     return <Upsell404Channel channel={channelSlug} community={communitySlug} />;
   }
 
-  if (!channel || channel.deleted) {
+  if (!channel || channel.isDeleted) {
     return <Upsell404Channel channel={channelSlug} community={communitySlug} />;
   }
 
-  if (!channel.isOwner && !channel.community.isOwner) {
+  if (
+    !channel.channelPermissions.isOwner &&
+    !channel.community.communityPermissions.isOwner
+  ) {
     return (
       <Upsell404Channel
         channel={channelSlug}

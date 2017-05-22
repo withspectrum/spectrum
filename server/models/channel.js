@@ -9,7 +9,7 @@ const getChannelsByCommunity = (
   return db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
-    .filter(channel => db.not(channel.hasFields('isDeleted')))
+    .filter(channel => db.not(channel.hasFields('deletedAt')))
     .run();
 };
 
@@ -26,7 +26,7 @@ const getChannelsByUser = (userId: string): Promise<Array<Object>> => {
       // zip the tables
       .zip()
       // ensure we don't return any deleted channels
-      .filter(channel => db.not(channel.hasFields('isDeleted')))
+      .filter(channel => db.not(channel.hasFields('deletedAt')))
       // sort by channel creation date
       .orderBy('createdAt')
       .run()
@@ -48,7 +48,7 @@ const getChannelBySlug = (
         slug: communitySlug,
       },
     })
-    .filter(channel => db.not(channel.hasFields('isDeleted')))
+    .filter(channel => db.not(channel.hasFields('deletedAt')))
     .run()
     .then(result => {
       if (result && result[0]) {
@@ -72,7 +72,7 @@ const getChannels = (channelIds: Array<string>): Promise<Array<Object>> => {
   return db
     .table('channels')
     .getAll(...channelIds)
-    .filter(channel => db.not(channel.hasFields('isDeleted')))
+    .filter(channel => db.not(channel.hasFields('deletedAt')))
     .run();
 };
 
@@ -100,7 +100,56 @@ const getChannelPermissions = (
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
     .filter({ channelId })
-    .run();
+    .run()
+    .then(data => {
+      if (!data || data.length === 0) {
+        // if a document wasn't returned, it means that user has no relationship
+        // with this channel, so return all falsey values
+        return {
+          isMember: false,
+          isOwner: false,
+          isPending: false,
+          isBlocked: false,
+          isModerator: false,
+        };
+      }
+
+      // otherwise return the first child
+      return data[0];
+    });
+};
+
+const getPendingChannelUsers = (channelId: string) => {
+  return db
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ isPending: true })
+    .run()
+    .then(users => users.map(user => user.userId));
+};
+const getBlockedChannelUsers = (channelId: string) => {
+  return db
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ isBlocked: true })
+    .run()
+    .then(users => users.map(user => user.userId));
+};
+const getChannelModerators = (channelId: string) => {
+  return db
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ isModerator: true })
+    .run()
+    .then(users => users.map(user => user.userId));
+};
+const getChannelOwners = (channelId: string) => {
+  return db
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ isOwner: true })
+    .run()
+    .then(users => users.map(user => user.userId));
 };
 
 export type CreateChannelArguments = {
@@ -139,16 +188,45 @@ const createChannel = (
         description,
         slug,
         isPrivate,
-        members: [creatorId],
-        owners: [creatorId],
-        moderators: [],
-        pendingUsers: [],
-        blockedUsers: [],
       },
       { returnChanges: true }
     )
     .run()
     .then(result => result.changes[0].new_val);
+};
+
+const createUsersChannels = (channelId: string, userId: string) => {
+  return db
+    .table('usersChannels')
+    .insert(
+      {
+        channelId,
+        userId,
+        createdAt: new Date(),
+        isOwner: true,
+        isModerator: false,
+        isMember: true,
+        isBlocked: false,
+        isPending: false,
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => console.log('result', result) || result.changes[0].new_val);
+};
+
+/*
+  Takes a channelId and removes all the usersChannels documents that match.
+  This will result in all users who try to access the channel in the future
+  seeing a default `channelPermissions` return value of `false` for all
+  permissions.
+*/
+const deleteUsersChannels = (channelId: string, userId: string) => {
+  return db
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .delete()
+    .run();
 };
 
 const editChannel = ({
@@ -196,7 +274,7 @@ const deleteChannel = (channelId: string): Promise<Boolean> => {
     .get(channelId)
     .update(
       {
-        isDeleted: true,
+        deletedAt: new Date(),
         slug: db.uuid(),
       },
       {
@@ -347,9 +425,15 @@ module.exports = {
   getChannelBySlug,
   getChannelMetaData,
   getChannelPermissions,
+  getPendingChannelUsers,
+  getBlockedChannelUsers,
+  getChannelModerators,
+  getChannelOwners,
   getChannelsByUser,
   getChannelsByCommunity,
   createChannel,
+  createUsersChannels,
+  deleteUsersChannels,
   editChannel,
   deleteChannel,
   leaveChannel,

@@ -21,7 +21,7 @@ const getCommunities = (
   return db
     .table('communities')
     .getAll(...communityIds)
-    .filter(community => db.not(community.hasFields('isDeleted')))
+    .filter(community => db.not(community.hasFields('deletedAt')))
     .run();
 };
 
@@ -29,7 +29,7 @@ const getCommunitiesBySlug = (slugs: Array<string>): Promise<Array<Object>> => {
   return db
     .table('communities')
     .filter(community => db.expr(slugs).contains(community('slug')))
-    .filter(community => db.not(community.hasFields('isDeleted')))
+    .filter(community => db.not(community.hasFields('deletedAt')))
     .run();
 };
 
@@ -46,7 +46,7 @@ const getCommunitiesByUser = (userId: string): Promise<Array<Object>> => {
       // zip the tables
       .zip()
       // ensure we don't return any deleted communities
-      .filter(community => db.not(community.hasFields('isDeleted')))
+      .filter(community => db.not(community.hasFields('deletedAt')))
       // sort by community creation date
       .orderBy('createdAt')
       .run()
@@ -73,12 +73,27 @@ const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
 const getCommunityPermissions = (
   communityId: string,
   userId: string
-): Promise<Array<Object>> => {
+): Object => {
   return db
     .table('usersCommunities')
     .getAll(userId, { index: 'userId' })
     .filter({ communityId })
-    .run();
+    .run()
+    .then(data => {
+      if (!data || data.length === 0) {
+        // if a document wasn't returned, it means that user has no relationship
+        // with this channel, so return all falsey values
+        return {
+          isMember: false,
+          isOwner: false,
+          isBlocked: false,
+          isModerator: false,
+        };
+      }
+
+      // otherwise return the first child
+      return data[0];
+    });
 };
 
 export type CreateCommunityArguments = {
@@ -277,7 +292,7 @@ const deleteCommunity = (communityId: string): Promise<Object> => {
     .get(communityId)
     .update(
       {
-        isDeleted: true,
+        deletedAt: new Date(),
         slug: db.uuid(),
       },
       {

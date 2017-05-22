@@ -56,7 +56,7 @@ const ThreadContainerPure = ({
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
-        dispatch(addToastWithTimeout('error', err));
+        dispatch(addToastWithTimeout('error', err.message));
       });
   };
 

@@ -63,8 +63,8 @@ const DashboardPure = ({
       </Column>
 
       <Column type="primary" alignItems="center">
-        {// composer should only appear if a user is part of a community
-        user && communities && <ThreadComposer />}
+        {/* {// composer should only appear if a user is part of a community
+        user && communities && <ThreadComposer />} */}
         <EverythingThreadFeed />
       </Column>
     </AppViewWrapper>

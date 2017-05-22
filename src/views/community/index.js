@@ -44,6 +44,8 @@ const CommunityViewPure = ({
     return <Upsell404Community community={communitySlug} />;
   }
 
+  console.log('community', community);
+
   if (!community || community.deleted) {
     return <Upsell404Community community={communitySlug} create={create} />;
   }

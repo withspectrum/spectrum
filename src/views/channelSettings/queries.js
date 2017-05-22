@@ -13,22 +13,18 @@ export const getThisChannel = graphql(
     query thisChannel($channelSlug: String, $communitySlug: String) {
 			channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
         ...channelInfo
+        ...channelMetaData
         pendingUsers {
           ...userInfo
         }
         blockedUsers {
           ...userInfo
         }
-        ...channelMetaData
-        community {
-          ...communityInfo
-        }
       }
 		}
     ${channelInfoFragment}
-    ${userInfoFragment}
-    ${communityInfoFragment}
     ${channelMetaDataFragment}
+    ${userInfoFragment}
 	`,
   {
     options: ({ match }) => ({

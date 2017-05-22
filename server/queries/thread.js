@@ -69,9 +69,7 @@ module.exports = {
       { user }: Context
     ) => {
       if (!communityId || !user) return false;
-      return getCommunityPermissions(communityId, user.id).then(
-        data => data[0]
-      );
+      return getCommunityPermissions(communityId, user.id);
     },
     messageConnection: (
       { id }: { id: String },

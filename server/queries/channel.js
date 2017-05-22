@@ -5,6 +5,10 @@ const {
   getChannelMemberCount,
   getTopChannels,
   getChannelPermissions,
+  getPendingChannelUsers,
+  getBlockedChannelUsers,
+  getChannelModerators,
+  getChannelOwners,
 } = require('../models/channel');
 const { getCommunityPermissions } = require('../models/community');
 const { getThreadsByChannel } = require('../models/thread');
@@ -55,19 +59,15 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.community.load(communityId),
-    channelPermissions: ({ id }: { id: String }, _: any, { user }: Context) => {
-      if (!id || !user) return false;
-      return getChannelPermissions(id, user.id).then(data => data[0]);
+    channelPermissions: (args, _: any, { user }: Context) => {
+      const channelId = args.id || args.channelId;
+      if (!channelId || !user) return false;
+      return getChannelPermissions(channelId, user.id);
     },
-    communityPermissions: (
-      { communityId }: { communityId: String },
-      _: any,
-      { user }: Context
-    ) => {
+    communityPermissions: (args, _: any, { user }: Context) => {
+      const communityId = args.id || args.communityId;
       if (!communityId || !user) return false;
-      return getCommunityPermissions(communityId, user.id).then(
-        data => data[0]
-      );
+      return getCommunityPermissions(communityId, user.id);
     },
     memberConnection: (
       { members }: { members: Array<string> },
@@ -95,6 +95,26 @@ module.exports = {
           members: data[1],
         };
       });
+    },
+    pendingUsers: ({ id }: { id: string }, _, { loaders }) => {
+      return getPendingChannelUsers(id)
+        .then(users => loaders.user.loadMany(users))
+        .then(users => users);
+    },
+    blockedUsers: ({ id }: { id: string }, _, { loaders }) => {
+      return getBlockedChannelUsers(id)
+        .then(users => loaders.user.loadMany(users))
+        .then(users => users);
+    },
+    moderators: ({ id }: { id: string }, _, { loaders }) => {
+      return getChannelModerators(id)
+        .then(users => loaders.user.loadMany(users))
+        .then(users => users);
+    },
+    owners: ({ id }: { id: string }, _, { loaders }) => {
+      return getChannelOwners(id)
+        .then(users => loaders.user.loadMany(users))
+        .then(users => users);
     },
   },
 };

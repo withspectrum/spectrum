@@ -180,7 +180,6 @@ export const getChannel = graphql(
       }
 		}
     ${channelInfoFragment}
-    ${communityInfoFragment}
     ${channelMetaDataFragment}
 	`,
   profileQueryOptions

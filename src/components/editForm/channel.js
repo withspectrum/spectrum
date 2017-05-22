@@ -100,13 +100,14 @@ class ChannelWithData extends Component {
           community)?
         </p>
         {' '}
-        <p>
-          The
-          {' '}
-          <b>{channelData.metaData.threads} threads</b>
-          {' '}
-          posted in this channel will be deleted.
-        </p>
+        {channelData.metaData.threads > 0 &&
+          <p>
+            The
+            {' '}
+            <b>{channelData.metaData.threads} threads</b>
+            {' '}
+            posted in this channel will be deleted.
+          </p>}
         <p>
           All messages, reactions, and media shared in this channel will be deleted.
         </p>

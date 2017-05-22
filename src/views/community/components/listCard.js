@@ -43,7 +43,7 @@ const ListCardPure = ({ data, dispatch }) => {
           <MoreLink to={`/explore`}>Find more...</MoreLink>
         </FlexRow>
         <FlexRow>
-          {data.community.isOwner &&
+          {data.community.communityPermissions.isOwner &&
             <TextButton
               onClick={() =>
                 dispatch(openModal('CREATE_CHANNEL_MODAL', data.community))}

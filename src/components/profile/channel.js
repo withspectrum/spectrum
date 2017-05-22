@@ -103,7 +103,8 @@ const ChannelWithData = ({
         currentUser &&
         <Actions>
           {// user owns the community, assumed member
-          channel.isOwner || channel.community.isOwner
+          channel.channelPermissions.isOwner ||
+            channel.community.communityPermissions.isOwner
             ? <ActionOutline>
                 <Link
                   to={`/${channel.community.slug}/${channel.slug}/settings`}
@@ -114,9 +115,9 @@ const ChannelWithData = ({
             : <span />}
 
           {// user is a member and doesn't own the community
-          channel.isMember &&
-            !channel.isOwner &&
-            !channel.community.isOwner &&
+          channel.channelPermissions.isMember &&
+            !channel.channelPermissions.isOwner &&
+            !channel.community.communityPermissions.isOwner &&
             <ActionOutline
               color={'text.alt'}
               hoverColor={'warn.default'}
@@ -126,9 +127,9 @@ const ChannelWithData = ({
             </ActionOutline>}
 
           {// user is not a member and doesn't own the channel
-          !channel.isMember &&
-            !channel.isOwner &&
-            !channel.community.isOwner &&
+          !channel.channelPermissions.isMember &&
+            !channel.channelPermissions.isOwner &&
+            !channel.community.communityPermissions.isOwner &&
             <Action onClick={() => toggleSubscription(channel.id)}>
               Join {channel.name}
             </Action>}

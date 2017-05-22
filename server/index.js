@@ -21,6 +21,7 @@ const { SubscriptionServer } = require('subscriptions-transport-ws');
 const { apolloUploadExpress } = require('apollo-upload-server');
 const cors = require('cors');
 const OpticsAgent = require('optics-agent');
+const { maskErrors } = require('graphql-errors');
 
 const { db } = require('./models/db');
 const listeners = require('./subscriptions/listeners');
@@ -44,6 +45,7 @@ initPassport({
 const app = express();
 
 app.use(OpticsAgent.middleware());
+maskErrors(schema);
 
 app.use(
   cors({

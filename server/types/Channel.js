@@ -71,12 +71,10 @@ const Channel = /* GraphQL */ `
 		memberConnection(first: Int = 10, after: String): ChannelMembersConnection!
 		memberCount: Int!
 		metaData: ChannelMetaData
-
-		# checks against the user requesting the entity data
-		isOwner: Boolean
-		isMember: Boolean
-		isPending: Boolean
-		isBlocked: Boolean
+		pendingUsers: [User]
+		blockedUsers: [User]
+		moderators: [User]
+		owners: [User]
 	}
 
 	extend type Query {

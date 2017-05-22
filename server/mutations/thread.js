@@ -87,7 +87,7 @@ module.exports = {
           const thread = threads[0];
 
           // if the thread doesn't exist
-          if (!thread || thread.isDeleted) {
+          if (!thread || thread.deletedAt) {
             return new UserError("This thread doesn't exist");
           }
 

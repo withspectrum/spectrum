@@ -123,14 +123,14 @@ const CommunityWithData = ({
         <Actions>
 
           {// user owns the community, assumed member
-          community.isOwner &&
+          community.communityPermissions.isOwner &&
             <ActionOutline>
               <Link to={`/${community.slug}/settings`}>Settings</Link>
             </ActionOutline>}
 
           {// user is a member and doesn't own the community
-          community.isMember &&
-            !community.isOwner &&
+          community.communityPermissions.isMember &&
+            !community.communityPermissions.isOwner &&
             <ActionOutline
               color={'text.alt'}
               hoverColor={'warn.default'}
@@ -140,8 +140,8 @@ const CommunityWithData = ({
             </ActionOutline>}
 
           {// user is not a member and doesn't own the community
-          !community.isMember &&
-            !community.isOwner &&
+          !community.communityPermissions.isMember &&
+            !community.communityPermissions.isOwner &&
             <Action onClick={() => toggleMembership(community.id)}>
               Join {community.name}
             </Action>}

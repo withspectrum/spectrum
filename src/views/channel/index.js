@@ -59,7 +59,7 @@ const ChannelViewPure = ({
     );
   }
 
-  if (!channel || channel.deleted) {
+  if (!channel || channel.isDeleted) {
     return (
       <Upsell404Channel
         channel={match.params.channelSlug}
@@ -69,7 +69,7 @@ const ChannelViewPure = ({
   }
 
   // user has been blocked by the owners
-  if (channel && channel.isBlocked) {
+  if (channel && channel.channelPermissions.isBlocked) {
     return (
       <Upsell404Channel
         channel={match.params.channelSlug}
@@ -78,10 +78,20 @@ const ChannelViewPure = ({
       />
     );
   }
-
+  console.log(
+    'channel',
+    channel,
+    ' is owner, ',
+    channel.community.communityPermissions.isOwner
+  );
   // channel exists and the user is not a subscriber (accounts for signed-
   // out users as well)
-  if (channel && channel.isPrivate && !channel.isMember) {
+  if (
+    channel &&
+    channel.isPrivate &&
+    (!channel.channelPermissions.isMember &&
+      !channel.community.communityPermissions.isOwner)
+  ) {
     return (
       <UpsellRequestToJoinChannel
         channel={channel}
@@ -96,7 +106,10 @@ const ChannelViewPure = ({
   // the channel is private + user is a subscriber
   // or channel is not private
   if (
-    channel && ((channel.isPrivate && channel.isMember) || !channel.isPrivate)
+    channel &&
+    ((channel.isPrivate && channel.channelPermissions.isMember) ||
+      channel.community.communityPermissions.isOwner ||
+      !channel.isPrivate)
   ) {
     return (
       <AppViewWrapper>

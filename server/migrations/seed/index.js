@@ -84,7 +84,7 @@ generatedUsersChannels.map(elem => {
 console.log('Generating threads...');
 let threads = DEFAULT_THREADS;
 channels.forEach(channel => {
-  randomAmount({ max: 100 }, () => {
+  randomAmount({ max: 10 }, () => {
     const creator = faker.random.arrayElement(users);
     const thread = generateThread(channel.communityId, channel.id, creator.id);
     threads.push(thread);

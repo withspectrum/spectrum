@@ -34,7 +34,7 @@ module.exports = {
       { user }: Context
     ) => {
       if (!id || !user) return false;
-      return getCommunityPermissions(id, user.id).then(data => data[0]);
+      return getCommunityPermissions(id, user.id);
     },
     channelConnection: ({ id }: { id: string }) => ({
       pageInfo: {
