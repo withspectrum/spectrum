@@ -66,7 +66,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       httpOnly: true,
-      secure: IS_PROD ? true : false,
+      secure: false,
     },
   })
 );
