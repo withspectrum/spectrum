@@ -108,6 +108,7 @@ exports.down = function(r, conn) {
     r.tableDrop('reactions').run(conn),
     r.tableDrop('notifications').run(conn),
     r.tableDrop('usersCommunities').run(conn),
+    r.tableDrop('usersChannels').run(conn),
     r.tableDrop('direct_message_groups').run(conn),
     r.tableDrop('directMessageGroups').run(conn),
     r.tableDrop('frequencies').run(conn),

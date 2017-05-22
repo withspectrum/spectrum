@@ -48,28 +48,6 @@ module.exports = {
           })),
         }));
     },
-    blockedUsers: ({ blockedUsers }, _, { loaders }: GraphQLContext) => {
-      return loaders.user.loadMany(blockedUsers).then(users => users);
-    },
-    pendingUsers: ({ pendingUsers }, _, { loaders }: GraphQLContext) => {
-      return loaders.user.loadMany(pendingUsers).then(users => users);
-    },
-    isOwner: ({ owners }, _, { user }) => {
-      if (!user) return false;
-      return owners.indexOf(user.id) > -1;
-    },
-    isMember: ({ members }, _, { user }) => {
-      if (!user) return false;
-      return members.indexOf(user.id) > -1;
-    },
-    isPending: ({ pendingUsers }, _, { user }) => {
-      if (!user) return false;
-      return pendingUsers.indexOf(user.id) > -1;
-    },
-    isBlocked: ({ blockedUsers }, _, { user }) => {
-      if (!user) return false;
-      return blockedUsers.indexOf(user.id) > -1;
-    },
     community: (
       { communityId }: { communityId: string },
       _: any,

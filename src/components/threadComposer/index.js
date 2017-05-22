@@ -59,6 +59,7 @@ class ThreadComposerWithData extends Component {
       TODO: Ideally we don't have any communities with no channel. If we
       can guarantee this, we can remove the extra filter here
     */
+
     const availableCommunities = props.data.user.communityConnection.edges
       .map(edge => edge.node)
       .filter(community => community.channelConnection.edges.length > 0);

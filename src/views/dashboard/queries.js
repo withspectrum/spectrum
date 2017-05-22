@@ -122,12 +122,10 @@ export const getCurrentUserProfile = graphql(
     query getCurrentUserProfile {
 			user: currentUser {
         ...userInfo
-        ...userMetaData
         ...userCommunities
       }
 		}
     ${userInfoFragment}
-    ${userMetaDataFragment}
     ${userCommunitiesFragment}
 	`
 );

@@ -34,13 +34,23 @@ const getCommunitiesBySlug = (slugs: Array<string>): Promise<Array<Object>> => {
 };
 
 const getCommunitiesByUser = (userId: string): Promise<Array<Object>> => {
-  return db
-    .table('communities')
-    .eqJoin('communityId', db.table('usersCommunities'))
-    .getAll(userId)
-    .filter(community => db.not(community.hasFields('isDeleted')))
-    .orderBy('createdAt')
-    .run();
+  return (
+    db
+      .table('usersCommunities')
+      // get all the user's communities
+      .getAll(userId, { index: 'userId' })
+      // get the community objects for each community
+      .eqJoin('communityId', db.table('communities'))
+      // get rid of unnecessary info from the usersCommunities object on the left
+      .without({ left: ['id', 'communityId', 'userId', 'createdAt'] })
+      // zip the tables
+      .zip()
+      // ensure we don't return any deleted communities
+      .filter(community => db.not(community.hasFields('isDeleted')))
+      // sort by community creation date
+      .orderBy('createdAt')
+      .run()
+  );
 };
 
 const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
@@ -50,9 +60,9 @@ const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
     .count()
     .run();
   const getMemberCount = db
-    .table('communities')
-    .get(communityId)
-    .getField('members')
+    .table('usersCommunities')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ isMember: true } || { isAdmin: true } || { isModerator: true })
     .count()
     .run();
 

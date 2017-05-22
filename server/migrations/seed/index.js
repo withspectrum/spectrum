@@ -43,7 +43,7 @@ const communities = [
 ];
 
 console.log('\nGenerating usersCommunities...');
-let usersCommunities = DEFAULT_USERS_COMMUNITIES;
+let usersCommunities = [];
 users.forEach(user => {
   communities.forEach(community => {
     usersCommunities.push(generateUsersCommunities(community.id, user.id));
@@ -84,14 +84,16 @@ generatedUsersChannels.map(elem => {
 console.log('Generating threads...');
 let threads = DEFAULT_THREADS;
 channels.forEach(channel => {
-  if (!channel.members || channel.members.length === 0) return;
   randomAmount({ max: 10 }, () => {
-    const creator = faker.random.arrayElement(channel.members);
-    const thread = generateThread(channel.communityId, channel.id, creator);
-    threads.push(thread);
-    notifications.push(
-      generateThreadNotification(thread, channel, channel.communityId)
+    const members = usersChannels.filter(
+      channel => channel.channelId === channel.id
     );
+    const creator = faker.random.arrayElement(members);
+    const thread = generateThread(channel.id, creator);
+    threads.push(thread);
+    // notifications.push(
+    //   generateThreadNotification(thread, channel)
+    // );
   });
 });
 
@@ -156,7 +158,7 @@ const db = require('rethinkdbdash')({
 });
 
 console.log(
-  `Inserting ${users.length} users, ${communities.length} communities, ${channels.length} channels, ${threads.length} threads, ${messages.length + direct_messages.length} messages, ${reactions.length} reactions, ${directMessageThreads.length} direct message threads, and ${notifications.length} notifications into the database... (this might take a while!)`
+  `Inserting ${users.length} users, ${communities.length} communities, ${channels.length} channels, ${threads.length} threads, ${messages.length + direct_messages.length} messages, ${reactions.length} reactions, ${directMessageThreads.length} direct message threads, ${usersCommunities.length} usersCommunities objects, ${usersChannels.length} usersChannels objects, and ${notifications.length} notifications into the database... (this might take a while!)`
 );
 Promise.all([
   db.table('communities').insert(communities).run(),
@@ -168,8 +170,8 @@ Promise.all([
   db.table('notifications').insert(notifications).run(),
   db.table('directMessageThreads').insert(directMessageThreads).run(),
   db.table('messages').insert(direct_messages).run(),
-  db.table('usersCommunities').insert(DEFAULT_USERS_COMMUNITIES).run(),
-  db.table('usersChannels').insert(DEFAULT_USERS_CHANNELS).run(),
+  db.table('usersCommunities').insert(usersCommunities).run(),
+  db.table('usersChannels').insert(usersChannels).run(),
 ])
   .then(() => {
     console.log('Finished seeding database! 🎉');

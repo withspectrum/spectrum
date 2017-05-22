@@ -82,21 +82,33 @@ const createOrFindUser = (user: Object): Promise<Object> => {
 };
 
 const getEverything = (userId: string): Promise<Array<any>> => {
+  console.log('user', userId);
   return (
     db
-      .table('threads')
-      .orderBy(db.desc('createdAt'))
-      // Add the channel object to each thread
-      .eqJoin('channelId', db.table('channels'))
-      // Only take the members of a channel
-      .pluck({ left: true, right: { members: true } })
+      .table('usersChannels')
+      // get the user's channels
+      .getAll(userId, { index: 'userId' })
+      // get all the threads in the channels
+      .eqJoin('channelId', db.table('threads'), { index: 'channelId' })
+      // remove the channel permissions - this gets handled elsewhere
+      .without({
+        left: [
+          'id',
+          'channelId',
+          'createdAt',
+          'userId',
+          'isMember',
+          'isModerator',
+          'isOwner',
+        ],
+      })
+      // zip the data
       .zip()
-      // Filter by the user being a member to the channel of the thread
-      .filter(thread => thread('members').contains(userId))
+      // remove threads where the user is blocked, pending, or the thread is deleted
+      .filter({ isBlocked: false, isPending: false })
       .filter(thread => db.not(thread.hasFields('isDeleted')))
-      // Don't send the members back
-      .without('members')
-      .orderBy(db.desc('createdAt'))
+      // remove the fields for isblocked and ispending from the return object
+      .without('isBlocked', 'isPending')
       .run()
   );
 };

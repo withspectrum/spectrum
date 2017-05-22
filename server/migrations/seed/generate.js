@@ -68,14 +68,14 @@ const generateChannel = communityId => {
 };
 
 const generateUsersCommunities = (communityId, userId) => {
-  const isAdmin = faker.random.boolean();
+  const isOwner = faker.random.boolean();
   // for ease of use, set to false
   const isModerator = false;
   // if user is either an admin or moderator, they have to be a member
   // otherwise random chance
-  const isMember = isAdmin || isModerator ? true : faker.random.boolean();
+  const isMember = isOwner || isModerator ? true : faker.random.boolean();
   // might be blocked as long as they aren't an admin, mod, or member
-  const isBlocked = isAdmin || isModerator || isMember
+  const isBlocked = isOwner || isModerator || isMember
     ? false
     : faker.random.boolean();
 
@@ -84,7 +84,7 @@ const generateUsersCommunities = (communityId, userId) => {
     createdAt: faker.date.past(2),
     communityId,
     userId,
-    isAdmin,
+    isOwner,
     isModerator,
     isMember,
     isBlocked,
@@ -98,7 +98,7 @@ const generateUsersChannels = (channels, usersCommunities, userId) => {
   );
   // make sure they are a member of the community
   possibleCommunities = possibleCommunities
-    .filter(elem => elem.isMember || elem.isAdmin || elem.isModerator)
+    .filter(elem => elem.isMember || elem.isOwner || elem.isModerator)
     .map(elem => elem.communityId);
   let possibleChannels = channels.filter(
     channel => possibleCommunities.indexOf(channel.communityId) > -1
@@ -110,18 +110,18 @@ const generateUsersChannels = (channels, usersCommunities, userId) => {
 
   // for each of hte possible channels, generate a new usersChannels object
   const foo = possibleChannels.map(channel => {
-    const isAdmin = faker.random.boolean();
+    const isOwner = faker.random.boolean();
     // for ease of use, set to false
     const isModerator = false;
     // if user is either an admin or moderator, they have to be a member
     // otherwise random chance
-    const isMember = isAdmin || isModerator ? true : faker.random.boolean();
+    const isMember = isOwner || isModerator ? true : faker.random.boolean();
     // if a user is admin, mod, or member, they can't be pending, otherwise random
-    const isPending = isAdmin || isModerator || isMember
+    const isPending = isOwner || isModerator || isMember
       ? false
       : faker.random.boolean();
     // might be blocked as long as they aren't an admin, mod, pending, or member
-    const isBlocked = isAdmin || isModerator || isMember || isPending
+    const isBlocked = isOwner || isModerator || isMember || isPending
       ? false
       : faker.random.boolean();
 
@@ -130,7 +130,7 @@ const generateUsersChannels = (channels, usersCommunities, userId) => {
       createdAt: new Date(),
       channelId: channel.id,
       userId,
-      isAdmin,
+      isOwner,
       isModerator,
       isMember,
       isBlocked,
@@ -140,7 +140,7 @@ const generateUsersChannels = (channels, usersCommunities, userId) => {
   return foo;
 };
 
-const generateThread = (communityId, channelId, creatorId) => {
+const generateThread = (channelId, creatorId) => {
   const content = {
     title: casual.title(),
     body: casual.text(),
@@ -153,7 +153,6 @@ const generateThread = (communityId, channelId, creatorId) => {
     createdAt,
     creatorId,
     channelId,
-    communityId,
     isPublished: faker.random.boolean(),
     content,
     attachments: [],

@@ -14,13 +14,6 @@ export const userEverythingFragment = gql`
         cursor
         node {
           ...threadInfo
-          messageCount
-          channel {
-            ...channelInfo
-            community {
-              ...communityInfo
-            }
-          }
         }
       }
     }
