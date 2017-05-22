@@ -53,6 +53,22 @@ export const ShimmerProfile = styled(Card)`
   }
 `;
 
+export const ShimmerDM = styled(ShimmerProfile)`
+	padding: 16px;
+	margin: 0;
+	box-shadow: none;
+	border-radius: 0;
+	border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
+
+	section {
+		min-height: 40px;
+	}
+
+	+ div {
+		margin: 0;
+	}
+`;
+
 export const ShimmerComposer = styled(Card)`
   padding: 16px;
 

@@ -44,7 +44,7 @@ class MessagesWithData extends Component {
     }
 
     if (!messages) {
-      return <div>No messages yet!</div>;
+      return <div />;
     }
 
     const sortedMessages = sortAndGroupMessages(messages);

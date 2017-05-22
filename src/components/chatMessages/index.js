@@ -37,7 +37,7 @@ class ChatMessages extends Component {
   render() {
     const { messages, currentUser, toggleReaction, dispatch } = this.props;
 
-    if (messages) {
+    if (!messages) {
       return (
         <NullState bg="chat">
           <NullTitle>

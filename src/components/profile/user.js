@@ -13,7 +13,6 @@ import pure from 'recompose/pure';
 import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
-import { openModal } from '../../actions/modals';
 import { Avatar } from '../avatar';
 import Badge from '../badges';
 import { LoadingCard } from '../loading';
@@ -23,9 +22,6 @@ import {
   ProfileHeaderAction,
   Title,
   Subtitle,
-  Actions,
-  Action,
-  ActionOutline,
 } from './style';
 import { MetaData } from './metaData';
 import type { ProfileSizeProps } from './index';

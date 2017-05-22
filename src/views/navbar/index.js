@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import Icon from '../../components/icons';
-import { Button, TextButton } from '../../components/buttons';
+import { Button } from '../../components/buttons';
 import Dropdown from '../../components/dropdown';
 import { NullNotifications } from '../../components/upsell';
 import {

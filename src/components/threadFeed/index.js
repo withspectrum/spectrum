@@ -54,11 +54,11 @@ const ThreadFeedPure = ({
   data,
 }) => {
   if (error && threads.length > 0) {
-    return <div>Oops, something went wrong</div>;
+    return <ErrorState />;
   }
 
   if (error && threads.length === 0) {
-    return <div>No threads have been posted yet</div>;
+    return <NullState />;
   }
 
   if (threads.length === 0) {

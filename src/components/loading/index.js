@@ -14,6 +14,7 @@ import {
   ShimmerList,
   ShimmerThread,
   ShimmerProfile,
+  ShimmerDM,
   ShimmerComposer,
   ShimmerBase,
   ShimmerLine,
@@ -154,6 +155,70 @@ export const LoadingThread = () => (
       />
     </ShimmerBase>
   </ShimmerThread>
+);
+
+export const LoadingDM = () => (
+  <ShimmerDM>
+    <ShimmerBase>
+      <ShimmerLine />
+      <Cover
+        style={{
+          top: '0',
+          left: '40px',
+          height: '4px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '20px',
+          left: '40px',
+          height: '12px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          left: '40px',
+          height: '40px',
+          width: '16px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '40px',
+          left: '0',
+          height: '16px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          right: '64px',
+          height: '20px',
+          width: '8px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          right: '0px',
+          height: '8px',
+          width: '64px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          right: '0px',
+          height: '20px',
+          width: '16px',
+        }}
+      />
+    </ShimmerBase>
+  </ShimmerDM>
 );
 
 export const LoadingComposer = () => (

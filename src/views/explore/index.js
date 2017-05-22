@@ -205,7 +205,7 @@ const ExplorePure = ({ data, currentUser }) => {
   }
 
   if (data.error) {
-    return <div>error</div>;
+    return <ErrorItem />;
   }
 
   const communityIds = currentUser
