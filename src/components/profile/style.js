@@ -6,15 +6,16 @@ import { Button, OutlineButton, IconButton } from '../buttons';
 export const ProfileHeader = styled(FlexContainer)`
   padding: 16px;
   width: 100%;
+  justify-content: space-between;
 `;
 
 export const ProfileHeaderMeta = styled(FlexContainer)`
   flex: 1 0 auto;
-  max-width: 196px;
+  max-width: 180px;
 `;
 
 export const ProfileHeaderAction = styled(IconButton)`
-  margin-left: 8px;
+  margin-left: 16px;
 `;
 
 export const Title = styled.h3`

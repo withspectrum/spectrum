@@ -11,7 +11,7 @@ import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
 
 import { UpsellSignIn } from '../../components/upsell';
-import { displayLoadingScreen } from '../../components/loading';
+import { displayLoadingScreen, loadingThread } from '../../components/loading';
 import { Column } from '../../components/column';
 import { UserProfile } from '../../components/profile';
 import ThreadFeed from '../../components/threadFeed';

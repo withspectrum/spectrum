@@ -14,7 +14,7 @@ import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
 import { Button } from '../buttons';
 import Icon from '../icons';
-import { LoadingCard } from '../loading';
+import { LoadingComposer } from '../loading';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
 import {
@@ -32,7 +32,7 @@ import {
 
 const displayLoadingState = branch(
   props => props.data.loading,
-  renderComponent(LoadingCard)
+  renderComponent(LoadingComposer)
 );
 
 class ThreadComposerWithData extends Component {

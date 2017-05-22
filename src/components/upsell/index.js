@@ -16,6 +16,15 @@ export const NullCard = props => {
   );
 };
 
+export const NullState = props => (
+  <NullCol bg={props.bg}>
+    {props.children}
+  </NullCol>
+);
+
+export const NullTitle = props => <Title>{props.children}</Title>;
+export const NullSubtitle = props => <Subtitle>{props.children}</Subtitle>;
+
 export const NullNotifications = () => {
   return (
     <NullCol bg="notification">

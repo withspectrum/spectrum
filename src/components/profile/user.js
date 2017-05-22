@@ -83,25 +83,14 @@ const UserWithData = ({
             {/* user.isPro && <Badge type='pro' /> */}
           </Subtitle>
         </ProfileHeaderMeta>
-        <Link to={`users/${currentUser.username}/settings`}>
-          <ProfileHeaderAction glyph="settings" />
-        </Link>
+        {currentUser && currentUser.id === user.id
+          ? <Link to={`users/${currentUser.username}/settings`}>
+              <ProfileHeaderAction glyph="settings" />
+            </Link>
+          : <Link to={`messages/${user.name}`}>
+              <ProfileHeaderAction glyph="messages-new" />
+            </Link>}
       </ProfileHeader>
-
-      {componentSize !== 'mini' &&
-        currentUser &&
-        <Actions>
-          {currentUser && currentUser.id === user.id
-            ? <ActionOutline
-                onClick={() =>
-                  dispatch(
-                    openModal('USER_PROFILE_MODAL', { user: currentUser })
-                  )}
-              >
-                Settings
-              </ActionOutline>
-            : <Action>Message</Action>}
-        </Actions>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
         <MetaData data={{ threads: user.threadCount }} />}

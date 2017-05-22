@@ -102,7 +102,7 @@ const ChatInputWithMutation = ({
           onFocus={onFocus}
           onBlur={onBlur}
         />
-        <SendButton glyph="send" onClick={submit} />
+        <SendButton glyph="send-fill" onClick={submit} />
       </Form>
     </ChatInputWrapper>
   );

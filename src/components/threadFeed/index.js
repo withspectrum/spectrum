@@ -9,12 +9,37 @@ import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
 import ThreadFeedCard from '../threadFeedCard';
-import { LoadingCard } from '../loading';
+import { NullCard, NullTitle, NullSubtitle } from '../upsell';
+import { LoadingThread } from '../loading';
 import { Button } from '../buttons';
 
 const displayLoadingState = branch(
   props => props.data.loading,
-  renderComponent(LoadingCard)
+  renderComponent(LoadingThread)
+);
+
+const NullState = () => (
+  <NullCard bg="post">
+    <NullTitle>
+      Sorry, no threads here yet...
+    </NullTitle>
+    <NullSubtitle>
+      But you could start one!
+    </NullSubtitle>
+    <Button icon="post">Start a thread</Button>
+  </NullCard>
+);
+
+const ErrorState = () => (
+  <NullCard bg="post">
+    <NullTitle>
+      Whoops!
+    </NullTitle>
+    <NullSubtitle>
+      Something went wrong on our end... Mind reloading?
+    </NullSubtitle>
+    <Button icon="post">Reload</Button>
+  </NullCard>
 );
 
 /*
@@ -37,7 +62,7 @@ const ThreadFeedPure = ({
   }
 
   if (threads.length === 0) {
-    return <div>No threads have been posted yet</div>;
+    return <NullState />;
   }
 
   return (

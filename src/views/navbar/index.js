@@ -79,7 +79,7 @@ class Navbar extends Component {
                   </DropdownHeader>
                   <NullNotifications />
                   <DropdownFooter>
-                    <TextButton to={'/notifications'}>View all</TextButton>
+                    <Button to={'/notifications'}>View all</Button>
                   </DropdownFooter>
                 </Dropdown>
               </IconDrop>
