@@ -6,6 +6,8 @@ import Card from '../card';
 //$FlowFixMe
 import { connect } from 'react-redux';
 //$FlowFixMe
+import { withRouter } from 'react-router';
+//$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
@@ -13,6 +15,8 @@ import pure from 'recompose/pure';
 import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
+import { openModal } from '../../actions/modals';
+import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import { Avatar } from '../avatar';
 import Badge from '../badges';
 import { LoadingCard } from '../loading';
@@ -51,6 +55,7 @@ const UserWithData = ({
   profileSize,
   currentUser,
   dispatch,
+  history,
 }: {
   data: { user: UserProps },
   profileSize: ProfileSizeProps,
@@ -61,6 +66,11 @@ const UserWithData = ({
   if (!user) {
     return <div>No user to be found!</div>;
   }
+
+  const initMessage = () => {
+    dispatch(initNewThreadWithUser(user));
+    history.push('/messages/new');
+  };
 
   return (
     <Card>
@@ -88,14 +98,28 @@ const UserWithData = ({
             </Link>}
       </ProfileHeader>
 
+
+      {componentSize !== 'mini' &&
+        currentUser &&
+        <Actions>
+          {currentUser && currentUser.id === user.id
+            ? <ActionOutline>
+                Settings
+              </ActionOutline>
+            : <Action onClick={() => initMessage()}>
+                Message
+              </Action>}
+        </Actions>}
+
       {(componentSize === 'large' || componentSize === 'full') &&
         <MetaData data={{ threads: user.threadCount }} />}
     </Card>
   );
 };
 
-const User = compose(displayLoadingState, pure)(UserWithData);
+const User = compose(displayLoadingState, withRouter, pure)(UserWithData);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
+  initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,
 });
 export default connect(mapStateToProps)(User);

@@ -50,7 +50,6 @@ const Community = /* GraphQL */ `
 
 	input EditCommunityInput {
 		name: String
-		slug: String
 		description: String
 		website: String
 		file: File
