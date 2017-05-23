@@ -131,9 +131,9 @@ const createCommunity = (
                 // return the resulting community with the profilePhoto set
                 .then(
                   result =>
-                    (result.changes.length > 0
+                    result.changes.length > 0
                       ? result.changes[0].new_val
-                      : db.table('communities').get(community.id).run())
+                      : db.table('communities').get(community.id).run()
                 )
             );
           }),
@@ -298,9 +298,9 @@ const leaveCommunity = (
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
-          : db.table('communities').get(communityId).run())
+          : db.table('communities').get(communityId).run()
     );
 };
 
@@ -320,9 +320,9 @@ const joinCommunity = (
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
-          : db.table('communities').get(communityId).run())
+          : db.table('communities').get(communityId).run()
     );
 };
 
@@ -344,12 +344,12 @@ const subscribeToDefaultChannels = (
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
           : db
               .table('channels')
               .filter({ communityId: communityId, slug: 'general' })
-              .run())
+              .run()
     );
 };
 

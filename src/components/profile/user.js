@@ -98,7 +98,6 @@ const UserWithData = ({
             </Link>}
       </ProfileHeader>
 
-
       {componentSize !== 'mini' &&
         currentUser &&
         <Actions>

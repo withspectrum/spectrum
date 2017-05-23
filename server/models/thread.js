@@ -84,9 +84,9 @@ const setThreadLock = (threadId: string, value: Boolean): Promise<Object> => {
       .run()
       .then(
         result =>
-          (result.changes.length > 0
+          result.changes.length > 0
             ? result.changes[0].new_val
-            : db.table('threads').get(threadId).run())
+            : db.table('threads').get(threadId).run()
       )
   );
 };
