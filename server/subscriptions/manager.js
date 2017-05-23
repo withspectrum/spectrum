@@ -17,7 +17,7 @@ module.exports = new SubscriptionManager({
   setupFunctions: {
     messageAdded: (_, { thread }) => ({
       [channels.MESSAGE_ADDED]: {
-        filter: message => message.thread === thread,
+        filter: message => message.threadId === thread,
       },
     }),
   },
