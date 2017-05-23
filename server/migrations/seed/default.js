@@ -70,6 +70,7 @@ const DEFAULT_CHANNELS = [
     description: 'General chatter',
     slug: 'general',
     isPrivate: false,
+    isDefault: true,
   },
 ];
 

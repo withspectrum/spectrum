@@ -64,6 +64,7 @@ const generateChannel = communityId => {
     description: casual.short_description(),
     slug: slugify(name),
     isPrivate: faker.random.boolean(),
+    isDefault: false,
   };
 };
 

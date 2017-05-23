@@ -85,7 +85,7 @@ const getEverything = (userId: string): Promise<Array<any>> => {
   return db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
-    .eqJoin('channelId', db('spectrum').table('threads'), {
+    .eqJoin('channelId', db.table('threads'), {
       index: 'channelId',
     })
     .without({

@@ -260,7 +260,22 @@ const getUserPermissionsInCommunity = (
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
     .filter({ userId })
-    .run();
+    .run()
+    .then(data => {
+      // if a record exists
+      if (data.length > 0) {
+        return data[0];
+      } else {
+        // if a record doesn't exist, we're creating a new relationship
+        // so default to false for everything
+        return {
+          isOwner: false,
+          isMember: false,
+          isModerator: false,
+          isBlocked: false,
+        };
+      }
+    });
 };
 
 module.exports = {

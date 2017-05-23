@@ -68,15 +68,18 @@ const ChannelWithData = ({
   const toggleSubscription = channelId => {
     toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
-        const str = toggleChannelSubscription.isMember
+        console.log('toggleChannelSubscription', toggleChannelSubscription);
+        const str = toggleChannelSubscription.channelPermissions.isMember
           ? `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
           : `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
 
-        const type = toggleChannelSubscription.isMember ? 'success' : 'neutral';
+        const type = toggleChannelSubscription.channelPermissions.isMember
+          ? 'success'
+          : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
-        dispatch(addToastWithTimeout('error', err));
+        dispatch(addToastWithTimeout('error', err.message));
       });
   };
 

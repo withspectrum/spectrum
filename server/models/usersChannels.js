@@ -69,7 +69,7 @@ const removeMemberInChannel = (
 ): Promise<Object> => {
   return db
     .table('usersChannels')
-    .getAll(communityId, { index: 'communityId' })
+    .getAll(channelId, { index: 'channelId' })
     .filter({ userId })
     .delete()
     .run();
@@ -254,6 +254,50 @@ const removeModeratorInChannel = (
     .then(result => result.changes[0].new_val);
 };
 
+// creates a new relationship between the user and all of a community's
+// default channels, skipping over any relationships that already exist
+const createMemberInDefaultChannels = (
+  communityId: string,
+  userId: string
+): Promise<Array<Object>> => {
+  // get the default channels for the community being joined
+  const defaultChannels = db
+    .table('channels')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ isDefault: true })
+    .run();
+
+  // get the current user's relationships to all channels
+  const usersChannels = db
+    .table('usersChannels')
+    .getAll(userId, { index: 'userId' })
+    .run();
+
+  return Promise.all([defaultChannels, usersChannels]).then(([
+    defaultChannels,
+    usersChannels,
+  ]) => {
+    // convert default channels and users channels to arrays of ids
+    // to efficiently filter down to find the default channels that exist
+    // which a user has not joined
+    const defaultChannelIds = defaultChannels.map(channel => channel.id);
+    const usersChannelIds = usersChannels.map(e => e.channelId);
+
+    // returns a list of Ids that represent channels which are defaults
+    // in the community but the user has no relationship with yet
+    const defaultChannelsTheUserHasNotJoined = defaultChannelIds.filter(
+      channelId => usersChannelIds.indexOf(channelId) >= -1
+    );
+
+    // create all the necessary relationships
+    return Promise.all(
+      defaultChannelsTheUserHasNotJoined.map(channel =>
+        createMemberInChannel(channel, userId)
+      )
+    );
+  });
+};
+
 /*
 ===========================================================
 
@@ -334,7 +378,23 @@ const getUserPermissionsInChannel = (
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
     .filter({ userId })
-    .run();
+    .run()
+    .then(data => {
+      // if a record exists
+      if (data.length > 0) {
+        return data[0];
+      } else {
+        // if a record doesn't exist, we're creating a new relationship
+        // so default to false for everything
+        return {
+          isOwner: false,
+          isMember: false,
+          isModerator: false,
+          isBlocked: false,
+          isPending: false,
+        };
+      }
+    });
 };
 
 module.exports = {
@@ -351,6 +411,7 @@ module.exports = {
   createModeratorInChannel,
   makeMemberModeratorInChannel,
   removeModeratorInChannel,
+  createMemberInDefaultChannels,
   // get
   getMembersInChannel,
   getPendingUsersInChannel,

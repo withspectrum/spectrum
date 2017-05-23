@@ -69,6 +69,7 @@ communities.forEach(community => {
     description: 'General chatter',
     slug: 'general',
     isPrivate: false,
+    isDefault: true,
   });
 });
 

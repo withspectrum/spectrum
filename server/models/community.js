@@ -70,32 +70,6 @@ const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
   return Promise.all([getChannelCount, getMemberCount]);
 };
 
-const getCommunityPermissions = (
-  communityId: string,
-  userId: string
-): Object => {
-  return db
-    .table('usersCommunities')
-    .getAll(userId, { index: 'userId' })
-    .filter({ communityId })
-    .run()
-    .then(data => {
-      if (!data || data.length === 0) {
-        // if a document wasn't returned, it means that user has no relationship
-        // with this channel, so return all falsey values
-        return {
-          isMember: false,
-          isOwner: false,
-          isBlocked: false,
-          isModerator: false,
-        };
-      }
-
-      // otherwise return the first child
-      return data[0];
-    });
-};
-
 export type CreateCommunityArguments = {
   input: {
     name: string,
@@ -364,33 +338,6 @@ const joinCommunity = (
     );
 };
 
-// TODO: Handle default channels as set by the community owner. For now
-// we treat the 'general' channel as default.
-const subscribeToDefaultChannels = (
-  communityId: string,
-  userId: string
-): Promise<Array<Object>> => {
-  return db
-    .table('channels')
-    .filter({ communityId: communityId, slug: 'general' })
-    .update(
-      row => ({
-        members: row('members').append(userId),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        (changes.length > 0
-          ? changes[0].new_val
-          : db
-              .table('channels')
-              .filter({ communityId: communityId, slug: 'general' })
-              .run())
-    );
-};
-
 const unsubscribeFromAllChannelsInCommunity = (
   communityId: string,
   userId: string
@@ -417,12 +364,19 @@ const userIsMemberOfAnyChannelInCommunity = (
   communityId: string,
   userId: string
 ): Promise<Boolean> => {
-  return db
+  return db('spectrum')
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
+    .eqJoin('id', db.table('usersChannels'), { index: 'channelId' })
+    .zip()
+    .filter({ userId })
+    .pluck('isMember')
     .run()
     .then(channels => {
-      return channels.some(channel => channel.members.indexOf(userId) > -1);
+      // if the user is not a member of any other channels in the community
+      if (channels.length > 0) return false;
+      // if any of the channels return true for isMember, we return true
+      return channels.some(channel => channel.isMember);
     });
 };
 
@@ -430,14 +384,12 @@ module.exports = {
   getCommunities,
   getCommunitiesBySlug,
   getCommunityMetaData,
-  getCommunityPermissions,
   getCommunitiesByUser,
   createCommunity,
   editCommunity,
   deleteCommunity,
   leaveCommunity,
   joinCommunity,
-  subscribeToDefaultChannels,
   unsubscribeFromAllChannelsInCommunity,
   userIsMemberOfCommunity,
   userIsMemberOfAnyChannelInCommunity,

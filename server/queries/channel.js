@@ -4,13 +4,15 @@ const {
   getChannelMetaData,
   getChannelMemberCount,
   getTopChannels,
-  getChannelPermissions,
-  getPendingChannelUsers,
-  getBlockedChannelUsers,
-  getChannelModerators,
-  getChannelOwners,
 } = require('../models/channel');
-const { getCommunityPermissions } = require('../models/community');
+const {
+  getUserPermissionsInChannel,
+  getPendingUsersInChannel,
+  getBlockedUsersInChannel,
+  getModeratorsInChannel,
+  getOwnersInChannel,
+} = require('../models/usersChannels');
+const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
 const { getThreadsByChannel } = require('../models/thread');
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
@@ -62,12 +64,12 @@ module.exports = {
     channelPermissions: (args, _: any, { user }: Context) => {
       const channelId = args.id || args.channelId;
       if (!channelId || !user) return false;
-      return getChannelPermissions(channelId, user.id);
+      return getUserPermissionsInChannel(channelId, user.id);
     },
     communityPermissions: (args, _: any, { user }: Context) => {
       const communityId = args.id || args.communityId;
       if (!communityId || !user) return false;
-      return getCommunityPermissions(communityId, user.id);
+      return getUserPermissionsInCommunity(communityId, user.id);
     },
     memberConnection: (
       { members }: { members: Array<string> },
@@ -97,22 +99,22 @@ module.exports = {
       });
     },
     pendingUsers: ({ id }: { id: string }, _, { loaders }) => {
-      return getPendingChannelUsers(id).then(users =>
+      return getPendingUsersInChannel(id).then(users =>
         loaders.user.loadMany(users)
       );
     },
     blockedUsers: ({ id }: { id: string }, _, { loaders }) => {
-      return getBlockedChannelUsers(id).then(users =>
+      return getBlockedUsersInChannel(id).then(users =>
         loaders.user.loadMany(users)
       );
     },
     moderators: ({ id }: { id: string }, _, { loaders }) => {
-      return getChannelModerators(id).then(users =>
+      return getModeratorsInChannel(id).then(users =>
         loaders.user.loadMany(users)
       );
     },
     owners: ({ id }: { id: string }, _, { loaders }) => {
-      return getChannelOwners(id).then(users => loaders.user.loadMany(users));
+      return getOwnersInChannel(id).then(users => loaders.user.loadMany(users));
     },
   },
 };

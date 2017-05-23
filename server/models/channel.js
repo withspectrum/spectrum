@@ -92,66 +92,6 @@ const getChannelMetaData = (channelId: string): Promise<Array<number>> => {
   return Promise.all([getThreadCount, getMemberCount]);
 };
 
-const getChannelPermissions = (
-  channelId: string,
-  userId: string
-): Promise<Array<Object>> => {
-  return db
-    .table('usersChannels')
-    .getAll(userId, { index: 'userId' })
-    .filter({ channelId })
-    .run()
-    .then(data => {
-      if (!data || data.length === 0) {
-        // if a document wasn't returned, it means that user has no relationship
-        // with this channel, so return all falsey values
-        return {
-          isMember: false,
-          isOwner: false,
-          isPending: false,
-          isBlocked: false,
-          isModerator: false,
-        };
-      }
-
-      // otherwise return the first child
-      return data[0];
-    });
-};
-
-const getPendingChannelUsers = (channelId: string) => {
-  return db
-    .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isPending: true })
-    .run()
-    .then(users => users.map(user => user.userId));
-};
-const getBlockedChannelUsers = (channelId: string) => {
-  return db
-    .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isBlocked: true })
-    .run()
-    .then(users => users.map(user => user.userId));
-};
-const getChannelModerators = (channelId: string) => {
-  return db
-    .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isModerator: true })
-    .run()
-    .then(users => users.map(user => user.userId));
-};
-const getChannelOwners = (channelId: string) => {
-  return db
-    .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .filter({ isOwner: true })
-    .run()
-    .then(users => users.map(user => user.userId));
-};
-
 export type CreateChannelArguments = {
   input: {
     communityId: string,
@@ -260,25 +200,6 @@ const deleteChannel = (channelId: string): Promise<Boolean> => {
         "Something went wrong and we weren't able to delete this channel."
       );
     });
-};
-
-const leaveChannel = (channelId: string, userId: string): Promise<Object> => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      row => ({
-        members: row('members').filter(item => item.ne(userId)),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        (changes.length > 0
-          ? changes[0].new_val
-          : db.table('channels').get(channelId).run())
-    );
 };
 
 const joinChannel = (channelId: string, userId: string): Promise<Object> => {
@@ -406,17 +327,11 @@ const getChannelMemberCount = (channelId: string): number => {
 module.exports = {
   getChannelBySlug,
   getChannelMetaData,
-  getChannelPermissions,
-  getPendingChannelUsers,
-  getBlockedChannelUsers,
-  getChannelModerators,
-  getChannelOwners,
   getChannelsByUser,
   getChannelsByCommunity,
   createChannel,
   editChannel,
   deleteChannel,
-  leaveChannel,
   joinChannel,
   getTopChannels,
   getChannelMemberCount,
