@@ -112,12 +112,9 @@ export type EditChannelArguments = {
   },
 };
 
-const createChannel = (
-  {
-    input: { communityId, name, slug, description, isPrivate },
-  }: CreateChannelArguments,
-  creatorId: string
-): Promise<Object> => {
+const createChannel = ({
+  input: { communityId, name, slug, description, isPrivate },
+}: CreateChannelArguments): Promise<Object> => {
   return db
     .table('channels')
     .insert(
@@ -133,6 +130,19 @@ const createChannel = (
     )
     .run()
     .then(result => result.changes[0].new_val);
+};
+
+const createGeneralChannel = (communityId: string): Promise<Object> => {
+  return createChannel({
+    input: {
+      name: 'General',
+      slug: 'general',
+      description: 'General Chatter',
+      communityId,
+      isPrivate: false,
+      isDefault: true,
+    },
+  });
 };
 
 const editChannel = ({
@@ -216,6 +226,7 @@ module.exports = {
   getChannelsByUser,
   getChannelsByCommunity,
   createChannel,
+  createGeneralChannel,
   editChannel,
   deleteChannel,
   getTopChannels,

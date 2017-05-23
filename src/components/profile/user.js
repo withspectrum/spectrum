@@ -21,9 +21,6 @@ import { Avatar } from '../avatar';
 import Badge from '../badges';
 import { LoadingCard } from '../loading';
 import {
-  Action,
-  ActionOutline,
-  Actions,
   ProfileHeader,
   ProfileHeaderMeta,
   ProfileHeaderAction,

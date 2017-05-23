@@ -7,84 +7,167 @@ import {
   deleteCommunity,
   getCommunities,
   getCommunitiesBySlug,
-  joinCommunity,
-  leaveCommunity,
-  subscribeToDefaultChannels,
   unsubscribeFromAllChannelsInCommunity,
 } from '../models/community';
+import {
+  createGeneralChannel,
+  getChannelsByCommunity,
+  deleteChannel,
+} from '../models/channel';
+import {
+  createMemberInDefaultChannels,
+  createOwnerInChannel,
+  removeMembersInChannel,
+} from '../models/usersChannels';
+import {
+  createOwnerInCommunity,
+  removeMembersInCommunity,
+  getUserPermissionsInCommunity,
+} from '../models/usersCommunities';
 import type {
   CreateCommunityArguments,
   EditCommunityArguments,
 } from '../models/community';
 import { getThreadsByCommunity, deleteThread } from '../models/thread';
 
-type Context = {
-  user: Object,
-};
-
 module.exports = {
   Mutation: {
-    createCommunity: (
-      _: any,
-      args: CreateCommunityArguments,
-      { user }: Context
-    ) => {
+    createCommunity: (_, args: CreateCommunityArguments, { user }) => {
       const currentUser = user;
       // user must be authed to create a community
-      if (!currentUser)
+      if (!currentUser) {
         return new UserError(
           'You must be signed in to create a new community.'
         );
+      }
 
-      return getCommunitiesBySlug([args.input.slug]).then(communities => {
-        // if a community with this slug already exists
-        if (communities.length > 0) {
-          return new UserError('A community with this slug already exists.');
-        }
+      // get communities with the input slug to check for duplicates
+      return (
+        getCommunitiesBySlug([args.input.slug])
+          .then(communities => {
+            // if a community with this slug already exists
+            if (communities.length > 0) {
+              return new UserError(
+                'A community with this slug already exists.'
+              );
+            }
+            // all checks passed
+            return createCommunity(args, currentUser.id);
+          })
+          .then(community => {
+            // create a new relationship with the community
+            const communityRelationship = createOwnerInCommunity(
+              community.id,
+              currentUser.id
+            );
 
-        // all checks passed
-        return createCommunity(args, currentUser.id);
-      });
+            // create a default 'general' channel
+            const generalChannel = createGeneralChannel(community.id);
+
+            return Promise.all([
+              community,
+              communityRelationship,
+              generalChannel,
+            ]);
+          })
+          .then(([community, communityRelationship, generalChannel]) => {
+            // create a new relationship with the general channel
+            const generalChannelRelationship = createOwnerInChannel(
+              generalChannel.id,
+              currentUser.id
+            );
+
+            return Promise.all([community, generalChannelRelationship]);
+          })
+          // return only the newly created community
+          .then(data => data[0])
+      );
     },
-    deleteCommunity: (_: any, { communityId }, { user }: Context) => {
+    deleteCommunity: (_, { communityId }, { user }) => {
       const currentUser = user;
 
       // user must be authed to delete a community
-      if (!currentUser)
+      if (!currentUser) {
         return new UserError(
           'You must be signed in to make changes to this community.'
         );
+      }
 
-      // get the community being deleted
-      return getCommunities([communityId]).then(communities => {
-        // select the community returned
-        const community = communities[0];
+      const currentUserCommunityPermissions = getUserPermissionsInCommunity(
+        communityId,
+        currentUser.id
+      );
+      const communities = getCommunities([communityId]);
 
-        // if no community was found or was deleted
-        if (!community || community.deletedAt) {
-          return new UserError("This community doesn't exist.");
-        }
+      return (
+        Promise.all([currentUserCommunityPermissions, communities])
+          .then(([currentUserCommunityPermissions, communities]) => {
+            const communityToEvaluate = communities[0];
 
-        // user must own the community to delete the community
-        if (!(community.owners.indexOf(currentUser.id) > -1)) {
-          return new UserError(
-            "You don't have permission to make changes to this community."
-          );
-        }
+            // if no community was found or was deleted
+            if (!communityToEvaluate || communityToEvaluate.deletedAt) {
+              return new UserError("This community doesn't exist.");
+            }
 
-        // all checks passed
-        return deleteCommunity(communityId).then(() => {
-          // once the community is deleted, we need to mark all the threads
-          // posted in that community as deleted
-          // get all the threads
-          return getThreadsByCommunity(communityId).then(threads => {
-            // if there were no threads in that community, we're done
-            if (threads.length <= 0) return;
-            // otherwise take each thread and mark as deleted
-            return threads.map(thread => deleteThread(thread.id));
-          });
-        });
-      });
+            // user must own the community to delete the community
+            if (!currentUserCommunityPermissions.isOwner) {
+              return new UserError(
+                "You don't have permission to make changes to this community."
+              );
+            }
+
+            // delete the community requested from the client
+            const deleteTheInputCommunity = deleteCommunity(communityId);
+            // get all the threads in the community to prepare for deletion
+            const getAllThreadsInCommunity = getThreadsByCommunity(communityId);
+            // remove all the UsersCommunities objects in the db
+            const removeRelationshipsToCommunity = removeMembersInCommunity(
+              communityId
+            );
+            // get all the channels in the community
+            const getAllChannelsInCommunity = getChannelsByCommunity(
+              communityId
+            );
+
+            return Promise.all([
+              communityToEvaluate,
+              deleteTheInputCommunity,
+              getAllThreadsInCommunity,
+              removeRelationshipsToCommunity,
+              getAllChannelsInCommunity,
+            ]);
+          })
+          .then(([
+            communityToEvaluate,
+            deletedCommunity,
+            allThreadsInCommunity,
+            relationshipsToCommunity,
+            allChannelsInCommunity,
+          ]) => {
+            // after a community has been deleted, we need to mark all the channels
+            // as deleted
+            const removeAllChannels = allChannelsInCommunity.map(channel =>
+              deleteChannel(channel.id)
+            );
+            // and remove all relationships to the deleted channels
+            const removeAllRelationshipsToChannels = allChannelsInCommunity.map(
+              channel => removeMembersInChannel(channel.id)
+            );
+            // and mark all the threads in that community as deleted
+            const removeAllThreadsInCommunity = allThreadsInCommunity.map(
+              thread => deleteThread(thread.id)
+            );
+
+            return Promise.all([
+              communityToEvaluate,
+              removeAllChannels,
+              removeAllRelationshipsToChannels,
+              removeAllThreadsInCommunity,
+            ]);
+          })
+          // return only the community that was being evaluated
+          .then(data => data[0])
+      );
     },
     editCommunity: (
       _: any,

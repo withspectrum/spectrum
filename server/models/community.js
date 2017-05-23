@@ -108,10 +108,6 @@ const createCommunity = (
         profilePhoto: null,
         coverPhoto: null,
         slug,
-        members: [creatorId],
-        owners: [creatorId],
-        moderators: [],
-        blockedUsers: [],
       },
       { returnChanges: true }
     )
@@ -151,24 +147,6 @@ const createCommunity = (
           }),
         ]);
       }
-    })
-    .then(([community]) => {
-      // create a default 'general' channel in the newly created community
-      return Promise.all([
-        community,
-        createChannel(
-          {
-            input: {
-              name: 'General',
-              slug: 'general',
-              description: 'General Chatter',
-              communityId: community.id,
-              isPrivate: false,
-            },
-          },
-          creatorId // community owner owns the channel by default
-        ),
-      ]);
     })
     .then(data => data[0]); // return community object
 };
@@ -294,50 +272,6 @@ const deleteCommunity = (communityId: string): Promise<Object> => {
     });
 };
 
-const leaveCommunity = (
-  communityId: string,
-  userId: string
-): Promise<Object> => {
-  return db
-    .table('communities')
-    .get(communityId)
-    .update(
-      row => ({
-        members: row('members').filter(item => item.ne(userId)),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        (changes.length > 0
-          ? changes[0].new_val
-          : db.table('communities').get(communityId).run())
-    );
-};
-
-const joinCommunity = (
-  communityId: string,
-  userId: string
-): Promise<Object> => {
-  return db
-    .table('communities')
-    .get(communityId)
-    .update(
-      row => ({
-        members: row('members').append(userId),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        (changes.length > 0
-          ? changes[0].new_val
-          : db.table('communities').get(communityId).run())
-    );
-};
-
 const unsubscribeFromAllChannelsInCommunity = (
   communityId: string,
   userId: string
@@ -388,8 +322,6 @@ module.exports = {
   createCommunity,
   editCommunity,
   deleteCommunity,
-  leaveCommunity,
-  joinCommunity,
   unsubscribeFromAllChannelsInCommunity,
   userIsMemberOfCommunity,
   userIsMemberOfAnyChannelInCommunity,
