@@ -156,11 +156,17 @@ module.exports = {
           'You must be signed in to make changes to this channel.'
         );
 
-      // get the channel being edited
+      // get the channel's permissions and the channel object itself
+      const channelPermission = getChannelPermissions(
+        args.input.channelId,
+        currentUser.id
+      );
+      const channels = getChannels([args.input.channelId]);
+
       return (
-        getChannels([args.input.channelId])
+        Promise.all([channelPermission, channels])
           // return the channels
-          .then(channels => {
+          .then(([channelPermission, channels]) => {
             // select the channel
             const channel = channels[0];
 
@@ -169,21 +175,17 @@ module.exports = {
               return new UserError("This channel doesn't exist");
             }
 
-            // get the community parent of the channel being edited
-            const communities = getCommunities([channel.communityId]);
-
-            return Promise.all([channel, communities]);
+            // get the community parent of the channel being deleted
+            const communityPermission = getCommunityPermissions(
+              channel.communityId,
+              currentUser.id
+            );
+            return Promise.all([channelPermission, communityPermission]);
           })
-          .then(([channel, communities]) => {
-            // select the community
-            const community = communities[0];
-
+          .then(([channelPermission, communityPermission]) => {
             // if the user owns the community or owns the frequency, they
             // are allowed to make the changes
-            if (
-              community.owners.indexOf(currentUser.id) > -1 ||
-              channel.owners.indexOf(currentUser.id) > -1
-            ) {
+            if (communityPermission.isOwner || channelPermission.isOwner) {
               // all checks passed
               return editChannel(args);
             }

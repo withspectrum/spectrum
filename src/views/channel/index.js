@@ -50,6 +50,8 @@ const ChannelViewPure = ({
       });
   };
 
+  console.log('channel', channel);
+
   if (error) {
     return (
       <Upsell404Channel
