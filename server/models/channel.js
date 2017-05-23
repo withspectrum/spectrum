@@ -334,6 +334,22 @@ const joinChannel = (channelId: string, userId: string): Promise<Object> => {
     );
 };
 
+const movePendingUserToMember = (channelId: string, userId: string): Object => {
+  return db
+    .table('usersChannels')
+    .getAll(userId, { index: 'userId' })
+    .filter({ channelId })
+    .update(
+      {
+        isPending: false,
+        isMember: true,
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(({ changes }) => changes.length > 0 && changes[0].new_val);
+};
+
 const removeRequestToJoinChannel = (
   channelId: string,
   userId: string

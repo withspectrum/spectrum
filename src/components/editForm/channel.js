@@ -148,18 +148,9 @@ class ChannelWithData extends Component {
           <Input defaultValue={name} id="name" onChange={this.handleChange}>
             Name
           </Input>
-          {// general slug can't be edited
-          slug === 'general'
-            ? <UnderlineInput defaultValue={slug} disabled>
-                {`sp.chat/${channel.community.slug}/`}
-              </UnderlineInput>
-            : <UnderlineInput
-                defaultValue={slug}
-                id="slug"
-                onChange={this.handleChange}
-              >
-                {`sp.chat/${channel.community.slug}/`}
-              </UnderlineInput>}
+          <UnderlineInput defaultValue={slug} disabled>
+            {`sp.chat/${channel.community.slug}/`}
+          </UnderlineInput>
           <TextArea
             id="description"
             defaultValue={description}

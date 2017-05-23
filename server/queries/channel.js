@@ -97,24 +97,22 @@ module.exports = {
       });
     },
     pendingUsers: ({ id }: { id: string }, _, { loaders }) => {
-      return getPendingChannelUsers(id)
-        .then(users => loaders.user.loadMany(users))
-        .then(users => users);
+      return getPendingChannelUsers(id).then(users =>
+        loaders.user.loadMany(users)
+      );
     },
     blockedUsers: ({ id }: { id: string }, _, { loaders }) => {
-      return getBlockedChannelUsers(id)
-        .then(users => loaders.user.loadMany(users))
-        .then(users => users);
+      return getBlockedChannelUsers(id).then(users =>
+        loaders.user.loadMany(users)
+      );
     },
     moderators: ({ id }: { id: string }, _, { loaders }) => {
-      return getChannelModerators(id)
-        .then(users => loaders.user.loadMany(users))
-        .then(users => users);
+      return getChannelModerators(id).then(users =>
+        loaders.user.loadMany(users)
+      );
     },
     owners: ({ id }: { id: string }, _, { loaders }) => {
-      return getChannelOwners(id)
-        .then(users => loaders.user.loadMany(users))
-        .then(users => users);
+      return getChannelOwners(id).then(users => loaders.user.loadMany(users));
     },
   },
 };
