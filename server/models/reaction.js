@@ -52,7 +52,7 @@ export const toggleReaction = (
           .run()
           .then(
             ({ inserted, changes }) =>
-              (inserted > 0 ? changes[0].new_val : false)
+              inserted > 0 ? changes[0].new_val : false
           );
       }
     });

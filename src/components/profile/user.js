@@ -21,6 +21,9 @@ import { Avatar } from '../avatar';
 import Badge from '../badges';
 import { LoadingCard } from '../loading';
 import {
+  Action,
+  ActionOutline,
+  Actions,
   ProfileHeader,
   ProfileHeaderMeta,
   ProfileHeaderAction,
@@ -97,7 +100,6 @@ const UserWithData = ({
               <ProfileHeaderAction glyph="message-new" />
             </Link>}
       </ProfileHeader>
-
 
       {componentSize !== 'mini' &&
         currentUser &&

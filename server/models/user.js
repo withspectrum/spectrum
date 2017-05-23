@@ -74,11 +74,15 @@ const createOrFindUser = (user: Object): Promise<Object> => {
   const promise = user.id
     ? getUser({ id: user.id })
     : getUserByProviderId(user.providerId);
-  return promise.then(storedUser => {
-    if (storedUser) return Promise.resolve(storedUser);
+  return promise
+    .then(storedUser => {
+      if (storedUser) return Promise.resolve(storedUser);
 
-    return storeUser(user);
-  });
+      return storeUser(user);
+    })
+    .catch(err => {
+      return storeUser(user);
+    });
 };
 
 const getEverything = (userId: string): Promise<Array<any>> => {

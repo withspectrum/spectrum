@@ -96,7 +96,8 @@ const ChannelViewPure = ({
   // the channel is private + user is a subscriber
   // or channel is not private
   if (
-    channel && ((channel.isPrivate && channel.isMember) || !channel.isPrivate)
+    channel &&
+    ((channel.isPrivate && channel.isMember) || !channel.isPrivate)
   ) {
     return (
       <AppViewWrapper>

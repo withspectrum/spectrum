@@ -208,9 +208,9 @@ const leaveChannel = (channelId: string, userId: string): Promise<Object> => {
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
-          : db.table('channels').get(channelId).run())
+          : db.table('channels').get(channelId).run()
     );
 };
 
@@ -227,9 +227,9 @@ const joinChannel = (channelId: string, userId: string): Promise<Object> => {
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
-          : db.table('channels').get(channelId).run())
+          : db.table('channels').get(channelId).run()
     );
 };
 
@@ -249,9 +249,9 @@ const removeRequestToJoinChannel = (
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
-          : db.table('channels').get(channelId).run())
+          : db.table('channels').get(channelId).run()
     );
 };
 
@@ -268,9 +268,9 @@ const addRequestToJoinChannel = (channelId: string, userId: string): Object => {
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
-          : db.table('channels').get(channelId).run())
+          : db.table('channels').get(channelId).run()
     );
 };
 
@@ -287,9 +287,9 @@ const removeBlockedUser = (channelId: string, userId: string): Object => {
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
-          : db.table('channels').get(channelId).run())
+          : db.table('channels').get(channelId).run()
     );
 };
 
@@ -306,9 +306,9 @@ const addBlockedUser = (channelId: string, userId: string): Object => {
     .run()
     .then(
       ({ changes }) =>
-        (changes.length > 0
+        changes.length > 0
           ? changes[0].new_val
-          : db.table('channels').get(channelId).run())
+          : db.table('channels').get(channelId).run()
     );
 };
 
