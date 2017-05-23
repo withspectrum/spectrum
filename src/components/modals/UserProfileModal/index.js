@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
+import { withRouter } from 'react-router';
+// $FlowFixMe
 import Modal from 'react-modal';
 // $FlowFixMe
 import compose from 'recompose/compose';
@@ -16,7 +18,9 @@ import {
   InputOverlay,
 } from './style';
 import Icon from '../../../components/icons';
+import { Button } from '../../../components/buttons';
 import { closeModal } from '../../../actions/modals';
+import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
 import { uploadProfilePhotoMutation } from '../../../api/user';
 
 class UserProfileModal extends Component {
@@ -40,11 +44,17 @@ class UserProfileModal extends Component {
     const file = e.target.files[0];
 
     if (file.size > 3000000) {
-      console.log('too big of a file');
       return;
     }
-    console.log('file', file);
+
     this.props.uploadProfilePhoto(file);
+  };
+
+  initMessage = () => {
+    const userToSend = this.props.user;
+    this.props.dispatch(initNewThreadWithUser(userToSend));
+    this.props.history.push('/messages/new');
+    this.props.dispatch(closeModal());
   };
 
   render() {
@@ -66,24 +76,36 @@ class UserProfileModal extends Component {
         */}
         <ModalContainer title={'Edit profile'} closeModal={this.close}>
 
-          {currentUser.id === user.id &&
-            <Row>
-              <ImageInputLabel>
-                <InputOverlay>
-                  <Icon glyph="photo" />
-                </InputOverlay>
+          {/*
+            if the current user is viewing their own profile, show an
+            editable state, otherwise we will just show a normal user profile
+             */}
+          {currentUser.id === user.id
+            ? <Row>
+                <ImageInputLabel>
+                  <InputOverlay>
+                    <Icon glyph="photo" />
+                  </InputOverlay>
+                  {user.profilePhoto &&
+                    <ProfileImage
+                      src={user.profilePhoto}
+                      role="presentation"
+                    />}
+                  <HiddenInput
+                    type="file"
+                    id="file"
+                    name="file"
+                    accept=".png, .jpg, .jpeg, .gif, .mp4"
+                    multiple={false}
+                    onChange={this.stageProfilePhotoForUpload}
+                  />
+                </ImageInputLabel>
+              </Row>
+            : <Row>
                 {user.profilePhoto &&
                   <ProfileImage src={user.profilePhoto} role="presentation" />}
-                <HiddenInput
-                  type="file"
-                  id="file"
-                  name="file"
-                  accept=".png, .jpg, .jpeg, .gif, .mp4"
-                  multiple={false}
-                  onChange={this.stageProfilePhotoForUpload}
-                />
-              </ImageInputLabel>
-            </Row>}
+                <Button onClick={this.initMessage}>Message</Button>
+              </Row>}
         </ModalContainer>
       </Modal>
     );
@@ -99,4 +121,6 @@ const mapStateToProps = state => ({
   modalProps: state.modals.modalProps,
   currentUser: state.users.currentUser,
 });
-export default connect(mapStateToProps)(UserProfileModalWithMutation);
+export default compose(connect(mapStateToProps), withRouter)(
+  UserProfileModalWithMutation
+);

@@ -8,6 +8,7 @@ import {
   convertTimestampToTime,
   onlyContainsEmoji,
 } from '../../helpers/utils';
+import { NullState, NullTitle, NullSubtitle } from '../upsell';
 import {
   Avatar,
   AvatarLabel,
@@ -37,7 +38,16 @@ class ChatMessages extends Component {
     const { messages, currentUser, toggleReaction, dispatch } = this.props;
 
     if (!messages) {
-      return <div>No messages</div>;
+      return (
+        <NullState bg="chat">
+          <NullTitle>
+            🔥 This thread is hot off the presses...
+          </NullTitle>
+          <NullSubtitle>
+            Why don't you kick off the conversation?
+          </NullSubtitle>
+        </NullState>
+      );
     }
 
     const openUserProfileModal = (user: Object) => {

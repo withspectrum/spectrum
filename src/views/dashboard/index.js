@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
 
+import { UpsellSignIn } from '../../components/upsell';
 import { displayLoadingScreen } from '../../components/loading';
 import { Column } from '../../components/column';
 import { UserProfile } from '../../components/profile';
@@ -47,28 +48,32 @@ const DashboardPure = ({
         </Column>
       </AppViewWrapper>
     );
+  } else if (user && user !== null) {
+    const communities = user.communityConnection.edges;
+    return (
+      <AppViewWrapper>
+        <Column type="secondary">
+          <UserProfile profileSize="mini" data={{ user: user }} />
+          <ListCard communities={communities} />
+        </Column>
+
+        <Column type="primary" alignItems="stretch">
+          {// composer should only appear if a user is part of a community
+          user && communities && <ThreadComposer />}
+          <EverythingThreadFeed />
+        </Column>
+      </AppViewWrapper>
+    );
+  } else {
+    window.location.href = '/';
+    return (
+      <AppViewWrapper>
+        <Column type="primary" alignItems="center">
+          <UpsellSignIn />
+        </Column>
+      </AppViewWrapper>
+    );
   }
-
-  if (!user || user === null) {
-    // window.location.href = '/';
-  }
-
-  const communities = user.communityConnection.edges;
-
-  return (
-    <AppViewWrapper>
-      <Column type="secondary">
-        <UserProfile profileSize="mini" data={{ user: user }} />
-        <ListCard communities={communities} />
-      </Column>
-
-      <Column type="primary" alignItems="center">
-        {/* {// composer should only appear if a user is part of a community
-        user && communities && <ThreadComposer />} */}
-        <EverythingThreadFeed />
-      </Column>
-    </AppViewWrapper>
-  );
 };
 
 /*

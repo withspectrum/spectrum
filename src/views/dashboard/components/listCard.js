@@ -4,24 +4,34 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
-import { ListCardItem } from '../../../components/listCardItem';
-import { TextButton } from '../../../components/buttons';
+import { ListCardItem } from '../../../components/listCard';
+import { IconButton, TextButton, Button } from '../../../components/buttons';
 import Icon from '../../../components/icons';
+import { NullCard, NullTitle, NullSubtitle } from '../../../components/upsell';
 import { openModal } from '../../../actions/modals';
 
 import {
   StyledCard,
   ListHeading,
+  ListHeader,
   ListContainer,
   ListFooter,
   MoreLink,
-} from '../style';
+} from '../../../components/listCard/style';
 
 const ListCard = ({ communities, dispatch }) => {
-  if (!!communities) {
+  if (communities && (communities !== 0 && communities !== null)) {
     return (
       <StyledCard>
-        <ListHeading>My Communities</ListHeading>
+        <ListHeader>
+          <ListHeading>My Communities</ListHeading>
+          <IconButton
+            glyph="plus"
+            color="text.placeholder"
+            hoverColor="brand.alt"
+            onClick={() => dispatch(openModal('CREATE_COMMUNITY_MODAL'))}
+          />
+        </ListHeader>
         <ListContainer>
           {communities.map(item => {
             return (
@@ -38,18 +48,28 @@ const ListCard = ({ communities, dispatch }) => {
           })}
         </ListContainer>
         <ListFooter>
-          <MoreLink to={`/explore`}>Find more...</MoreLink>
-          <TextButton
-            color="text.placeholder"
-            onClick={() => dispatch(openModal('CREATE_COMMUNITY_MODAL'))}
-          >
-            New community
-          </TextButton>
+          <MoreLink to={`/explore`}>
+            <TextButton>
+              Find more...
+            </TextButton>
+          </MoreLink>
         </ListFooter>
       </StyledCard>
     );
   } else {
-    return <div />;
+    return (
+      <NullCard bg="community">
+        <NullTitle>
+          You're fresh out of communities!
+        </NullTitle>
+        <NullSubtitle>
+          Let's find you something worth joining...
+        </NullSubtitle>
+        <Button icon="explore" color="text.alt" gradientTheme="">
+          Browse communities
+        </Button>
+      </NullCard>
+    );
   }
 };
 
