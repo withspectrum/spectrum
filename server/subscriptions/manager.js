@@ -20,5 +20,8 @@ module.exports = new SubscriptionManager({
         filter: message => message.threadId === thread,
       },
     }),
+    notificationAdded: (_, __, { user }) => ({
+      [channels.NOTIFICATION_ADDED]: {},
+    }),
   },
 });

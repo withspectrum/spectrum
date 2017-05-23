@@ -40,6 +40,7 @@ const notificationMutations = require('./mutations/notification');
 const userMutations = require('./mutations/user');
 
 const messageSubscriptions = require('./subscriptions/message');
+const notificationSubscriptions = require('./subscriptions/notification');
 
 const Root = /* GraphQL */ `
 	# The dummy queries and mutations are necessary because
@@ -103,7 +104,8 @@ const schema = makeExecutableSchema({
     notificationMutations,
     userMutations,
     // subscriptions
-    messageSubscriptions
+    messageSubscriptions,
+    notificationSubscriptions
   ),
 });
 
