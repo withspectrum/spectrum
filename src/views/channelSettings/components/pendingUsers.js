@@ -5,10 +5,15 @@ import { connect } from 'react-redux';
 //$FlowFixMe
 import compose from 'recompose/compose';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { ListCardItemUser } from '../../../components/listCardItem';
+import { ListCardItemUser } from '../../../components/listCard';
 import { TextButton } from '../../../components/buttons';
 import { togglePendingUserInChannelMutation } from '../../../api/channel';
-import { StyledCard, ListHeading, ListContainer, Description } from '../style';
+import {
+  StyledCard,
+  LargeListHeading,
+  ListContainer,
+  Description,
+} from '../../../components/listCard/style';
 
 class PendingUsersWithMutation extends Component {
   constructor(props) {
@@ -60,7 +65,9 @@ class PendingUsersWithMutation extends Component {
 
     return (
       <StyledCard>
-        <ListHeading>Pending Users</ListHeading>
+        <LargeListHeading>
+          Pending Users
+        </LargeListHeading>
         {users.length > 0 &&
           <Description>
             Approving requests will allow a person to view all threads and messages in this channel, as well as allow them to post their own threads.

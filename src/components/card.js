@@ -16,8 +16,11 @@ const StyledCard = styled(FlexContainer)`
   position: relative;
   width: 100%;
   max-width: 100%;
+  background-clip: padding-box;
+  overflow: hidden;
 
-  + div {
+  + div,
+  + span {
     margin-top: 16px;
   }
 

@@ -5,16 +5,16 @@ import { connect } from 'react-redux';
 //$FlowFixMe
 import compose from 'recompose/compose';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { ListCardItemUser } from '../../../components/listCardItem';
+import { ListCardItemUser } from '../../../components/listCard';
 import { TextButton } from '../../../components/buttons';
 import { unblockUserInChannelMutation } from '../../../api/channel';
 import {
   StyledCard,
-  ListHeading,
+  LargeListHeading,
   ListContainer,
   Description,
   Notice,
-} from '../style';
+} from '../../../components/listCard/style';
 
 class BlockedUsersWithMutation extends Component {
   constructor(props) {
@@ -67,7 +67,7 @@ class BlockedUsersWithMutation extends Component {
 
     return (
       <StyledCard>
-        <ListHeading>Blocked Users</ListHeading>
+        <LargeListHeading>Blocked Users</LargeListHeading>
         {users.length > 0 &&
           <Description>
             Blocked users can not see threads or messages posted in this channel. They will still be able to join any other public channels in the Spectrum community and request access to other private channels.

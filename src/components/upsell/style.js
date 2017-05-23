@@ -2,6 +2,7 @@
 // $FlowFixMe
 import styled, { css } from 'styled-components';
 import { Card } from '../card';
+import { FlexRow, FlexCol } from '../globals';
 
 const containerBase = css`
   display: flex;
@@ -48,18 +49,16 @@ export const Subtitle = styled.h2`
 width: 100%;
 color: ${props => props.theme.text.default};
 font-weight: 400;
-font-size: 0.875rem;
+font-size: 1rem;
 line-height: 1.4;
 margin-bottom: 24px;
 padding: 0 24px;
-font-size: 18px;
-line-height: 24px;
 color: inherit;
 font-weight: 500;
 text-align: center;
 
   b {
-    font-weight: 600
+    font-weight: 700
   }
 
   a {
@@ -102,4 +101,29 @@ export const FourOhFourImage = styled.img`
   right: -32px;
   bottom: -96px;
   width: 200px;
+`;
+
+export const NullCol = styled(FlexCol)`
+  background-image: url('/img/fills/${props => (props.bg ? `${props.bg}` : 'locked')}.svg');
+  background-color: transparent;
+  background-size: 110% auto;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 100%;
+  height: auto;
+  padding: 1rem 2rem;
+  align-items: center;
+  position: relative;
+  align-self: center;
+`;
+
+export const NullRow = styled(FlexRow)`
+  background-image: url('/img/fills/${props => (props.bg ? `${props.bg}` : 'locked')}.svg');
+  background-color: transparent;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-attachment: center;
+  width: 100%;
+  height: auto;
+  padding: 1rem 15%;
 `;
