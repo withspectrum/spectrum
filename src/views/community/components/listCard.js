@@ -7,21 +7,35 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
 import { displayLoadingCard } from '../../../components/loading';
-import { ListCardItem } from '../../../components/listCardItem';
-import { FlexRow } from '../../../components/globals';
-import { Button, TextButton } from '../../../components/buttons';
+import { ListCardItem } from '../../../components/listCard';
+import { Button, TextButton, IconButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { NullCard, NullTitle, NullSubtitle } from '../../../components/upsell';
 import { openModal } from '../../../actions/modals';
 
-import { StyledCard, ListHeading, ListContainer, ListFooter } from '../style';
+import {
+  StyledCard,
+  ListHeader,
+  ListHeading,
+  ListContainer,
+  ListFooter,
+} from '../../../components/listCard/style';
 
 const ListCardPure = ({ data, dispatch }) => {
   const channels = data.community.channelConnection.edges;
   if (!!channels) {
     return (
       <StyledCard>
-        <ListHeading>Channels</ListHeading>
+        <ListHeader>
+          <ListHeading>Channels</ListHeading>
+          {data.community.isOwner &&
+            <IconButton
+              glyph="plus"
+              color="text.placeholder"
+              onClick={() =>
+                dispatch(openModal('CREATE_CHANNEL_MODAL', data.community))}
+            />}
+        </ListHeader>
         <ListContainer>
           {channels.map(item => {
             return (

@@ -15,7 +15,7 @@ type ButtonProps = {
   loading?: Boolean,
   disabled?: Boolean,
   color?: String,
-  gradientTheme?: 'default' | 'brand' | 'pro' | 'warn' | 'success',
+  gradientTheme?: 'default' | 'brand' | 'pro' | 'warn' | 'success' | 'none',
   icon?: String,
   children?: React$Element<any>,
 };

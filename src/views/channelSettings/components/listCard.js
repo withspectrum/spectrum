@@ -6,20 +6,25 @@ import { Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 
 import { displayLoadingCard } from '../../../components/loading';
-import { ListCardItem } from '../../../components/listCardItem';
+import { ListCardItem } from '../../../components/listCard';
 import { FlexRow, FlexCol } from '../../../components/globals';
 import Card from '../../../components/card';
 import Icon from '../../../components/icons';
 
-import { StyledCard, ListHeading, ListContainer, MoreLink } from '../style';
+import {
+  StyledCard,
+  LargeListHeading,
+  LargeListContainer,
+  MoreLink,
+} from '../../../components/listCard/style';
 
 const ListCardPure = ({ data }) => {
   const channels = data.community.channelConnection.edges;
   if (!!channels) {
     return (
       <StyledCard>
-        <ListHeading>Manage Channels</ListHeading>
-        <ListContainer>
+        <LargeListHeading>Manage Channels</LargeListHeading>
+        <LargeListContainer>
           {channels.map(item => {
             return (
               <Link
@@ -36,7 +41,7 @@ const ListCardPure = ({ data }) => {
               </Link>
             );
           })}
-        </ListContainer>
+        </LargeListContainer>
       </StyledCard>
     );
   } else {

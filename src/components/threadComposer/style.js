@@ -56,8 +56,8 @@ export const Placeholder = styled.div`
 `;
 
 export const PlaceholderLabel = styled.h3`
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 20px;
+  font-weight: 800;
   margin-left: 8px;
 `;
 
@@ -108,7 +108,7 @@ export const Dropdowns = styled.div`
 
 export const ThreadTitle = {
   fontSize: '20px',
-  padding: '32px 32px 0 32px',
+  padding: '16px 24px 0 24px',
   outline: 'none',
   border: '0',
   lineHeight: '1.4',
@@ -121,11 +121,12 @@ export const ThreadTitle = {
 };
 
 export const ThreadDescription = {
-  fontSize: '14px',
+  fontSize: '16px',
+  fontWeight: '500',
   width: '100%',
   display: 'inline-block',
   lineHeight: '1.5',
-  padding: '0 32px 32px 32px',
+  padding: '0 24px 24px 24px',
   outline: 'none',
   border: '0',
   boxShadow: 'none',

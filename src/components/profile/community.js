@@ -16,15 +16,17 @@ import { connect } from 'react-redux';
 import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { LoadingCard } from '../loading';
+import Icon from '../icons';
 import { Avatar } from '../avatar';
 import {
   ProfileHeader,
   ProfileHeaderMeta,
+  ProfileHeaderAction,
   Title,
   Description,
   Actions,
-  Action,
   ActionOutline,
+  ExtLink,
 } from './style';
 import { MetaData } from './metaData';
 import type { ProfileSizeProps } from './index';
@@ -103,50 +105,40 @@ const CommunityWithData = ({
             <Title>{community.name}</Title>
           </Link>
         </ProfileHeaderMeta>
+        {currentUser &&
+          !community.isOwner &&
+          <ProfileHeaderAction
+            glyph={community.isMember ? 'door-leave' : 'door-enter'}
+            color={community.isMember ? 'brand.alt' : 'text.placeholder'}
+            hoverColor={community.isMember ? 'brand.alt' : 'warn.default'}
+            tipText={community.isMember ? `Leave community` : 'Join community'}
+            tipLocation="bottom-left"
+            onClick={() => toggleMembership(community.id)}
+          />}
+        {currentUser &&
+          community.isOwner &&
+          <Link to={`/${community.slug}/settings`}>
+            <ProfileHeaderAction
+              glyph="settings"
+              tipText="Edit community"
+              tipLocation="bottom-left"
+            />
+          </Link>}
+
       </ProfileHeader>
 
       {componentSize !== 'mini' &&
         componentSize !== 'small' &&
         <Description>
-          {community.description}
+          <p>{community.description}</p>
+          {community.website &&
+            <ExtLink>
+              <Icon glyph="link" size={24} />
+              <a href={community.website}>
+                {community.website}
+              </a>
+            </ExtLink>}
         </Description>}
-
-      {componentSize !== 'mini' &&
-        componentSize !== 'small' &&
-        community.website &&
-        <Description>
-          {community.website}
-        </Description>}
-
-      {componentSize !== 'mini' &&
-        currentUser &&
-        <Actions>
-
-          {// user owns the community, assumed member
-          community.isOwner &&
-            <ActionOutline>
-              <Link to={`/${community.slug}/settings`}>Settings</Link>
-            </ActionOutline>}
-
-          {// user is a member and doesn't own the community
-          community.isMember &&
-            !community.isOwner &&
-            <ActionOutline
-              color={'text.placeholder'}
-              hoverColor={'warn.default'}
-              onClick={() => toggleMembership(community.id)}
-            >
-              Leave {community.name}
-            </ActionOutline>}
-
-          {// user is not a member and doesn't own the community
-          !community.isMember &&
-            !community.isOwner &&
-            <Action onClick={() => toggleMembership(community.id)}>
-              Join {community.name}
-            </Action>}
-
-        </Actions>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
         <MetaData data={community.metaData} />}

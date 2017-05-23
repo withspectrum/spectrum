@@ -48,8 +48,12 @@ export const Label = styled.span`
 export const StyledSolidButton = styled.button`
   ${baseButton}
   background-color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.color ? props.color : 'brand.alt'}`))};
-  background-image: ${props => (props.disabled ? 'none' : props.gradientTheme ? Gradient(eval(`props.theme.${props.gradientTheme}.alt`), eval(`props.theme.${props.gradientTheme}.default`)) : Gradient(props.theme.brand.alt, props.theme.brand.default))};
+  background-image: ${props => (props.disabled || props.gradientTheme === 'none' ? 'none' : props.gradientTheme ? Gradient(eval(`props.theme.${props.gradientTheme}.alt`), eval(`props.theme.${props.gradientTheme}.default`)) : Gradient(props.theme.brand.alt, props.theme.brand.default))};
   color: ${props => props.theme.text.reverse};
+
+  &:hover {
+    background-color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`))};
+  }
 
   &:active {
     box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.low} ${props.theme.text.placeholder}`)};
