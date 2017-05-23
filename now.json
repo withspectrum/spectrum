@@ -1,0 +1,9 @@
+{
+	"env": {
+		"S3_TOKEN": "@s3-token",
+		"S3_SECRET": "@s3-secret",
+		"COMPOSE_PASSWORD": "@compose-password",
+		"COMPOSE_URL": "@compose-url",
+		"COMPOSE_PORT": "@compose-port"
+	}
+}

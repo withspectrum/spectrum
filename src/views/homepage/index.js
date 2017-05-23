@@ -27,6 +27,10 @@ import {
 } from './style';
 // import { login } from '../actions/user';
 
+const SERVER_URL = process.env.NODE_ENV === 'production'
+  ? `${window.location.protocol}//${window.location.host}`
+  : 'http://localhost:3001';
+
 class Homepage extends Component {
   render() {
     return (
@@ -36,7 +40,7 @@ class Homepage extends Component {
             <FlexCol>
               <LogoContainer><LogoWhite /></LogoContainer>
               <Tagline>Where communities are built.</Tagline>
-              <LinkButton href="http://localhost:3001/auth/twitter">
+              <LinkButton href={`${SERVER_URL}/auth/twitter`}>
                 <Icon glyph="twitter" />
                 {' '}
                 <span>Sign in with Twitter</span>
@@ -92,7 +96,7 @@ class Homepage extends Component {
               <Copy>
                 Spectrum is free for everyone, so hop on in!
               </Copy>
-              <LinkButton href="http://localhost:3001/auth/twitter">
+              <LinkButton href={`${SERVER_URL}/auth/twitter`}>
                 <Icon glyph="twitter" />
                 {' '}
                 <span>Sign in with Twitter</span>

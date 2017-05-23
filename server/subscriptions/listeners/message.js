@@ -16,5 +16,5 @@ module.exports = () => {
     thread: 'c13853ee-9c2f-4547-832c-cf4483647bd2',
     timestamp: 2017-04-29T16:44:50.749Z }
    */
-  listenToNewMessages('messages', newMessage);
+  listenToNewMessages(newMessage);
 };

@@ -35,7 +35,7 @@ export const ListCardItemDirectMessageThread = ({
     ? participants
         .map(user => user.name)
         .join(', ')
-        .replace(/,(?!.*,)/gmi, ' and')
+        .replace(/,(?!.*,)/gim, ' and')
     : participants[0].name;
 
   // pass participants to a helper function to generate the avatar displays

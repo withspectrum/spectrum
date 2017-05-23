@@ -8,3 +8,4 @@ npm-debug.log
 rethinkdb_data
 debug
 server/.env
+build-server

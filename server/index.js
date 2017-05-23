@@ -2,13 +2,10 @@
 /**
  * The entry point for the server, this is where everything starts
  */
-const PORT = 3001;
-const WS_PORT = 5000;
-const DB_PORT = 28015;
-const HOST = 'localhost';
 const IS_PROD = process.env.NODE_ENV === 'production';
-const APP_URL = IS_PROD ? 'https://spectrum.chat' : 'http://localhost:3000';
+const PORT = 3001;
 
+const path = require('path');
 const { createServer } = require('http');
 const express = require('express');
 const passport = require('passport');
@@ -36,11 +33,7 @@ OpticsAgent.instrumentSchema(schema);
 console.log('Server starting...');
 
 // Initialize authentication
-initPassport({
-  twitterCallbackURLBase: IS_PROD
-    ? 'https://spectrum.chat'
-    : 'http://localhost:3001',
-});
+initPassport();
 // API server
 const app = express();
 
@@ -49,18 +42,22 @@ maskErrors(schema);
 
 app.use(
   cors({
-    origin: APP_URL,
+    origin: IS_PROD
+      ? ['https://spectrum.chat', /spectrum-(\w|-)+\.now\.sh/]
+      : 'http://localhost:3000',
     credentials: true,
   })
 );
-app.use(
-  '/graphiql',
-  graphiqlExpress({
-    endpointURL: '/',
-    subscriptionsEndpoint: `ws://localhost:5000`,
-    query: `{\n  user(id: "58a023a4-912d-48fe-a61c-eec7274f7699") {\n    displayName\n    username\n    communities {\n      name\n      channels {\n        name\n        threads {\n          content {\n            title\n          }\n          messages {\n            message {\n              content\n            }\n          }\n        }\n      }\n    }\n  }\n}`,
-  })
-);
+if (!IS_PROD) {
+  app.use(
+    '/graphiql',
+    graphiqlExpress({
+      endpointURL: '/api',
+      subscriptionsEndpoint: `ws://localhost:3001/websocket`,
+      query: `{\n  user(id: "58a023a4-912d-48fe-a61c-eec7274f7699") {\n    displayName\n    username\n    communities {\n      name\n      frequencies {\n        name\n        stories {\n          content {\n            title\n          }\n          messages {\n            message {\n              content\n            }\n          }\n        }\n      }\n    }\n  }\n}`,
+    })
+  );
+}
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(apolloUploadExpress());
@@ -74,6 +71,10 @@ app.use(
     secret: 't3BUqGYFHLNjb7V8xjY6QLECgWy7ByWTYjKkPtuP%R.uLfjNBQKr9pHuKuQJXNqo',
     resave: true,
     saveUninitialized: true,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+    },
   })
 );
 app.use(passport.initialize());
@@ -91,12 +92,12 @@ app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get(
   '/auth/twitter/callback',
   passport.authenticate('twitter', {
-    failureRedirect: APP_URL,
-    successRedirect: APP_URL + '/home',
+    failureRedirect: IS_PROD ? '/' : 'http://localhost:3000/',
+    successRedirect: IS_PROD ? '/home' : 'http://localhost:3000/home',
   })
 );
 app.use(
-  '/',
+  '/api',
   graphqlExpress(req => ({
     schema,
     context: {
@@ -106,6 +107,14 @@ app.use(
     },
   }))
 );
+// In production use express to serve the React app
+// In development this is done by react-scripts, which starts its own server
+if (IS_PROD) {
+  app.use(express.static(path.resolve(__dirname, '..', 'build')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
+  });
+}
 
 import type { Loader } from './loaders/types';
 export type GraphQLContext = {
@@ -115,17 +124,7 @@ export type GraphQLContext = {
   },
 };
 
-// Create the websocket server, make it 404 for all requests to HTTP(S) port(s)
-const websocketServer = createServer((req, res) => {
-  res.writeHead(404);
-  res.end();
-});
-
-// Start webserver
-app.listen(PORT);
-
-// Start websockets server
-websocketServer.listen(WS_PORT);
+const server = createServer(app);
 
 // Start subscriptions server
 const subscriptionsServer = new SubscriptionServer(
@@ -133,11 +132,14 @@ const subscriptionsServer = new SubscriptionServer(
     subscriptionManager,
   },
   {
-    server: websocketServer,
+    server,
+    path: '/websocket',
   }
 );
 
+// Start webserver
+server.listen(PORT);
+
 // Start database listeners
 listeners.start();
-console.log(`GraphQL server running at http://${HOST}:${PORT}`);
-console.log(`Websocket server running at ws://${HOST}:${WS_PORT}`);
+console.log('GraphQL server running!');

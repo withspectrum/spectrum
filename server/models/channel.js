@@ -202,120 +202,6 @@ const deleteChannel = (channelId: string): Promise<Boolean> => {
     });
 };
 
-const joinChannel = (channelId: string, userId: string): Promise<Object> => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      row => ({
-        members: row('members').append(userId),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        (changes.length > 0
-          ? changes[0].new_val
-          : db.table('channels').get(channelId).run())
-    );
-};
-
-const movePendingUserToMember = (channelId: string, userId: string): Object => {
-  return db
-    .table('usersChannels')
-    .getAll(userId, { index: 'userId' })
-    .filter({ channelId })
-    .update(
-      {
-        isPending: false,
-        isMember: true,
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(({ changes }) => changes.length > 0 && changes[0].new_val);
-};
-
-const removeRequestToJoinChannel = (
-  channelId: string,
-  userId: string
-): Object => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      row => ({
-        pendingUsers: row('pendingUsers').filter(item => item.ne(userId)),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        (changes.length > 0
-          ? changes[0].new_val
-          : db.table('channels').get(channelId).run())
-    );
-};
-
-const addRequestToJoinChannel = (channelId: string, userId: string): Object => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      row => ({
-        pendingUsers: row('pendingUsers').append(userId),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        (changes.length > 0
-          ? changes[0].new_val
-          : db.table('channels').get(channelId).run())
-    );
-};
-
-const removeBlockedUser = (channelId: string, userId: string): Object => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      row => ({
-        blockedUsers: row('blockedUsers').filter(item => item.ne(userId)),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        (changes.length > 0
-          ? changes[0].new_val
-          : db.table('channels').get(channelId).run())
-    );
-};
-
-const addBlockedUser = (channelId: string, userId: string): Object => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      row => ({
-        blockedUsers: row('blockedUsers').append(userId),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        (changes.length > 0
-          ? changes[0].new_val
-          : db.table('channels').get(channelId).run())
-    );
-};
-
 const getTopChannels = (amount: number): Array<Object> => {
   return db.table('channels').orderBy(db.desc('members')).limit(amount).run();
 };
@@ -332,12 +218,7 @@ module.exports = {
   createChannel,
   editChannel,
   deleteChannel,
-  joinChannel,
   getTopChannels,
   getChannelMemberCount,
   getChannels,
-  addRequestToJoinChannel,
-  removeRequestToJoinChannel,
-  addBlockedUser,
-  removeBlockedUser,
 };
