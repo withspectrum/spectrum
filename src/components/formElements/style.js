@@ -129,6 +129,12 @@ export const StyledHiddenInput = styled.input`
 `;
 
 export const StyledCheckboxWrapper = styled.span`
+  color: ${({ theme }) => theme.text.alt};
+
+  &:hover {
+    color: ${({ theme }) => theme.brand.alt};
+  }
+
   > div {
     vertical-align: middle;
     margin-left: -6px;

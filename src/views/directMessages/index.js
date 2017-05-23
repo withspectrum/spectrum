@@ -14,7 +14,7 @@ import {
   getCurrentUserDirectMessageThreads,
 } from '../../api/directMessageThread';
 import Icon from '../../components/icons';
-import { displayLoadingScreen } from '../../components/loading';
+import { displayLoadingState } from './components/loading';
 import ThreadsList from './components/threadsList';
 import NewThread from './containers/newThread';
 import ExistingThread from './containers/existingThread';
@@ -57,7 +57,7 @@ class DirectMessages extends Component {
         <MessagesList>
           <Link to="/messages/new">
             <ComposeHeader>
-              <Icon color={'brand.default'} glyph="post" size={32} />
+              <Icon glyph="post" />
             </ComposeHeader>
           </Link>
           <ThreadsList
@@ -108,7 +108,7 @@ class DirectMessages extends Component {
 
 const DirectMessagesWithQuery = compose(
   getCurrentUserDirectMessageThreads,
-  displayLoadingScreen,
+  displayLoadingState,
   pure
 )(DirectMessages);
 

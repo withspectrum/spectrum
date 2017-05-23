@@ -12,7 +12,7 @@ export const CardContent = styled(FlexCol)`
 `;
 
 export const Title = styled.h2`
-  font-weight: 700;
+  font-weight: 800;
   font-size: 20px;
   line-height: 1.4;
   color: ${({ theme }) => theme.text.default};

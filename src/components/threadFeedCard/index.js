@@ -13,7 +13,6 @@ import {
   StyledThreadFeedCard,
   CardContent,
   Title,
-  Description,
   Meta,
   MetaRow,
   Participant,
@@ -49,18 +48,6 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
     return props.dispatch(openModal('USER_PROFILE_MODAL', { user }));
   };
 
-  const formatThreadPreview = () => {
-    if (props.data.content.body.length > 150) {
-      return (
-        <Description>
-          {props.data.content.body.substring(1, 140)}...
-        </Description>
-      );
-    } else {
-      return <Description>{props.data.content.body}</Description>;
-    }
-  };
-
   const participantList = props.data.participants;
 
   const messageAvatars = list => {
@@ -85,7 +72,6 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
             {props.data.content.title}
           </Link>
         </Title>
-        {formatThreadPreview()}
         <MetaRow>
           <ParticipantHeads>
             <Creator role="presentation">

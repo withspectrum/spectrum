@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { FlexContainer } from '../flexbox';
-import { Truncate } from '../globals';
+import { FlexRow, Truncate, Transition } from '../globals';
 import { Button, OutlineButton, IconButton } from '../buttons';
 
 export const ProfileHeader = styled(FlexContainer)`
@@ -10,11 +10,11 @@ export const ProfileHeader = styled(FlexContainer)`
 
 export const ProfileHeaderMeta = styled(FlexContainer)`
   flex: 1 0 auto;
-  max-width: 196px;
+  flex-wrap: nowrap;
 `;
 
 export const ProfileHeaderAction = styled(IconButton)`
-  margin-left: 8px;
+  margin-left: 16px;
 `;
 
 export const Title = styled.h3`
@@ -34,21 +34,41 @@ export const Subtitle = styled.h4`
   ${Truncate}
 `;
 
-export const Description = styled.p`
+export const Description = styled.div`
   font-size: 14px;
-  color: ${props => props.theme.text.default};
+  color: ${props => props.theme.text.alt};
   padding: 0 16px 16px;
   line-height: 1.4;
+`;
+
+export const ExtLink = styled(FlexRow)`
+  margin-top: 8px;
+  align-items: center;
+  color: ${({ theme }) => theme.brand.alt};
+  font-weight: 600;
+  transition: ${Transition.hover.off};
+
+  > a:hover {
+    text-decoration: underline;
+    transition: ${Transition.hover.on};
+  }
+
+  > div {
+    color: ${({ theme }) => theme.text.placeholder};
+    margin-right: 4px;
+    margin-left: -4px;
+    margin-top: 1px;
+  }
 `;
 
 export const Actions = styled(FlexContainer)`
   padding: 16px;
   padding-top: 0;
   flex: 1 0 100%;
+  justify-content: flex-end;
 `;
 
 export const Action = styled(Button)`
-  flex-grow: 1;
 
   &:last-of-type:not(:first-of-type) {
     margin-left: 8px;
