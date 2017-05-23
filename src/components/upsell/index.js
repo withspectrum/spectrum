@@ -2,18 +2,40 @@
 import React from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
-import {
-  UpsellSignInContainer,
-  UpsellFourOhFourContainer,
-  UpsellJoinContainer,
-  Title,
-  Subtitle,
-  BGOne,
-  BGTwo,
-  FourOhFourImage,
-  Actions,
-} from './style';
+import { Title, Subtitle, Actions, NullCol } from './style';
+
+export const NullCard = props => {
+  return (
+    <Card>
+      <NullCol bg={props.bg}>
+        {props.children}
+      </NullCol>
+    </Card>
+  );
+};
+
+export const NullState = props => (
+  <NullCol bg={props.bg}>
+    {props.children}
+  </NullCol>
+);
+
+export const NullTitle = props => <Title>{props.children}</Title>;
+
+export const NullSubtitle = props => <Subtitle>{props.children}</Subtitle>;
+
+export const NullNotifications = () => {
+  return (
+    <NullCol bg="notification">
+      <Title>No notifications</Title>
+      <Subtitle>
+        You're all good! 🎉
+      </Subtitle>
+    </NullCol>
+  );
+};
 
 export const UpsellSignIn = ({ entity }) => {
   const login = () => {
@@ -22,25 +44,21 @@ export const UpsellSignIn = ({ entity }) => {
   };
 
   const subtitle = entity
-    ? `Ready to join the conversation in ${entity.name}? Sign in to get started!`
-    : 'Ready to join the conversation? Sign in to get started!';
+    ? `Ready to join the conversation in ${entity.name}?`
+    : 'Ready to join the conversation? ';
 
   return (
-    <UpsellSignInContainer>
-      <BGOne src="/img/cluster-2.svg" role="presentation" />
-      <BGTwo src="/img/cluster-1.svg" role="presentation" />
+    <NullCard bg="chat">
       <Title>Come on in, the chatter's fine.</Title>
       <Subtitle>{subtitle}</Subtitle>
       <Button onClick={login} icon="twitter" label>Sign in with Twitter</Button>
-    </UpsellSignInContainer>
+    </NullCard>
   );
 };
 
 export const UpsellJoinChannel = ({ channel, subscribe }) => {
   return (
-    <UpsellJoinContainer>
-      <BGOne src="/img/cluster-2.svg" role="presentation" />
-      <BGTwo src="/img/cluster-1.svg" role="presentation" />
+    <NullCard bg="channel">
       <Title>Ready to join the conversation?</Title>
       <Subtitle>
         Follow ~{channel.name} to get involved!
@@ -48,7 +66,7 @@ export const UpsellJoinChannel = ({ channel, subscribe }) => {
       <Button onClick={() => subscribe(channel.id)} icon="plus" label>
         Follow
       </Button>
-    </UpsellJoinContainer>
+    </NullCard>
   );
 };
 
@@ -59,18 +77,16 @@ export const UpsellRequestToJoinChannel = ({
   subscribe,
 }) => {
   return (
-    <UpsellFourOhFourContainer>
-      <BGOne src="/img/cluster-2.svg" role="presentation" />
-      <BGTwo src="/img/cluster-1.svg" role="presentation" />
+    <NullCard bg="locked">
       <Title>Top secret!</Title>
       <Subtitle>
-        This is a private channel - you may request to join
+        This channel is private - you may request to join
         {' '}
         <b>{channel.name}</b>
         {' '}
         or
         {' '}
-        <Link to={`/${community}`}>go back</Link>
+        <Link to={`/${community}`}>Go back</Link>
         .
       </Subtitle>
 
@@ -83,33 +99,38 @@ export const UpsellRequestToJoinChannel = ({
           >
             Cancel request
           </OutlineButton>
-        : <Button onClick={() => subscribe(channel.id)} icon="plus" label>
+        : <Button
+            onClick={() => subscribe(channel.id)}
+            icon="private-unlocked"
+            label
+          >
             Request to join {channel.name}
           </Button>}
-    </UpsellFourOhFourContainer>
+    </NullCard>
   );
 };
 
-export const Upsell404Channel = ({ channel, community, noPermission }) => {
+export const Upsell404Channel = ({ channel, noPermission }) => {
   // if a user doesn't have permission, it means they likely tried to view
   // the settings page for a channel. In this case, we will return
   // them to the channel view.
   // if the user does have permission, but this component gets rendered, it means
   // something went wrong - most likely the channel doesn't exists (404) so
   // we should return the user back to the community url
-  const returnUrl = noPermission ? `/${community}/${channel}` : `/${community}`;
+  const returnUrl = noPermission
+    ? `/${channel.community}/${channel.slug}`
+    : `/${channel.community}`;
 
   const title = noPermission
     ? "I see you sneakin' around here..."
     : 'Oops, something got lost!';
 
   const subtitle = noPermission
-    ? 'This is a no-fly-zone for you, sorry! Head on back out now, hear?'
-    : `We can't find a channel by the name of ${channel}.`;
+    ? "You'll have to get permission (or be 1337) to get access."
+    : `We can't find a channel by the name of ${channel.name}.`;
 
   return (
-    <UpsellFourOhFourContainer>
-      <FourOhFourImage src="/img/login.svg" role="presentation" />
+    <NullCard bg={noPermission ? 'locked' : 'channel'}>
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
       <Actions>
@@ -120,7 +141,7 @@ export const Upsell404Channel = ({ channel, community, noPermission }) => {
           Explore Channels on Spectrum
         </Button>
       </Actions>
-    </UpsellFourOhFourContainer>
+    </NullCard>
   );
 };
 
@@ -138,12 +159,11 @@ export const Upsell404Community = ({ community, noPermission, create }) => {
     : 'Oops, something got lost!';
 
   const subtitle = noPermission
-    ? 'This is a no-fly-zone for you, sorry! Head on back out now, hear?'
+    ? "You'll have to get permission (or be 1337) to get access."
     : `We can't find a community by the name of ${community}. Want to make one?`;
 
   return (
-    <UpsellFourOhFourContainer>
-      <FourOhFourImage src="/img/login.svg" role="presentation" />
+    <NullCard bg={noPermission ? 'locked' : 'channel'}>
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
 
@@ -162,7 +182,7 @@ export const Upsell404Community = ({ community, noPermission, create }) => {
             Create this Community
           </Button>}
       </Actions>
-    </UpsellFourOhFourContainer>
+    </NullCard>
   );
 };
 
@@ -172,15 +192,14 @@ export const Upsell404User = ({ username }) => {
   const subtitle = `We can't find anyone who answers to the name ${username}. Maybe they don't want to be found...`;
 
   return (
-    <UpsellFourOhFourContainer>
-      <FourOhFourImage src="/img/login.svg" role="presentation" />
+    <NullCard bg="user">
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
 
       <Button onClick={() => window.location.href = returnUrl}>
         Take me home
       </Button>
-    </UpsellFourOhFourContainer>
+    </NullCard>
   );
 };
 
@@ -190,14 +209,13 @@ export const Upsell404Thread = () => {
   const subtitle = `We can't find that thread. Maybe it floated off into space...`;
 
   return (
-    <UpsellFourOhFourContainer>
-      <FourOhFourImage src="/img/login.svg" role="presentation" />
+    <NullCard bg="post">
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
 
       <Button onClick={() => window.location.href = returnUrl}>
         Take me home
       </Button>
-    </UpsellFourOhFourContainer>
+    </NullCard>
   );
 };

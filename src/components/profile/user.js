@@ -26,9 +26,6 @@ import {
   ProfileHeaderAction,
   Title,
   Subtitle,
-  Actions,
-  Action,
-  ActionOutline,
 } from './style';
 import { MetaData } from './metaData';
 import type { ProfileSizeProps } from './index';
@@ -92,10 +89,15 @@ const UserWithData = ({
             {/* user.isPro && <Badge type='pro' /> */}
           </Subtitle>
         </ProfileHeaderMeta>
-        <Link to={`users/${currentUser.username}/settings`}>
-          <ProfileHeaderAction glyph="settings" />
-        </Link>
+        {currentUser && currentUser.id === user.id
+          ? <Link to={`users/${currentUser.username}/settings`}>
+              <ProfileHeaderAction glyph="settings" />
+            </Link>
+          : <Link to={`messages/${user.name}`}>
+              <ProfileHeaderAction glyph="message-new" />
+            </Link>}
       </ProfileHeader>
+
 
       {componentSize !== 'mini' &&
         currentUser &&

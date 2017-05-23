@@ -168,7 +168,7 @@ export const LabelForTab = styled(Label)`
 `;
 
 export const DropdownHeader = styled(FlexRow)`
-  border-bottom: 2px solid ${({ theme }) => theme.border.default};
+  border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
   flex: 0 0 auto;
   align-self: stretch;
   justify-content: flex-start;
@@ -176,18 +176,14 @@ export const DropdownHeader = styled(FlexRow)`
   padding: 16px;
   font-weight: 800;
   font-size: 14px;
-  color: ${({ theme }) => theme.text.placeholder};
+  color: ${({ theme }) => theme.text.alt};
 `;
 
 export const DropdownFooter = styled(FlexRow)`
-  border-top: 2px solid ${({ theme }) => theme.border.default};
+  border-top: 2px solid ${({ theme }) => theme.bg.wash};
   flex: 0 0 auto;
   align-self: stretch;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   padding: 8px;
-
-  button {
-    width: 100%;
-  }
 `;

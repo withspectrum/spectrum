@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 
 import { displayLoadingCard } from '../../../components/loading';
-import { ListCardItem } from '../../../components/listCardItem';
+import { ListCardItem } from '../../../components/listCard';
 import { IconButton } from '../../../components/buttons';
 
 import { StyledCard, ListHeading, ListContainer } from '../style';

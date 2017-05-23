@@ -2,6 +2,7 @@
 // $FlowFixMe
 import styled, { keyframes } from 'styled-components';
 import { Card } from '../card';
+import { hexa } from '../globals';
 
 const containerFadeIn = keyframes`
 	0%{
@@ -24,7 +25,7 @@ export const LoadingScreenContainer = styled.div`
   animation-duration: 1s;
   animation-fill-mode: forwards;
   animation-iteration-count: 1;
-  animation-timing-function: linear;
+  animation-timing-function: ease-out;
   animation-name: ${containerFadeIn};
 `;
 
@@ -48,15 +49,31 @@ export const ShimmerProfile = styled(Card)`
   padding: 16px;
 
   section {
-    min-height: 80px;
+    min-height: 96px;
   }
+`;
+
+export const ShimmerDM = styled(ShimmerProfile)`
+	padding: 16px;
+	margin: 0;
+	box-shadow: none;
+	border-radius: 0;
+	border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
+
+	section {
+		min-height: 40px;
+	}
+
+	+ div {
+		margin: 0;
+	}
 `;
 
 export const ShimmerComposer = styled(Card)`
   padding: 16px;
 
   section {
-    min-height: 12px;
+    min-height: 24px;
   }
 `;
 
@@ -74,7 +91,7 @@ export const ShimmerBase = styled.section`
   height: 100%;
   position: relative;
   z-index: 3;
-  background: #f6f7f8;
+  background: ${({ theme }) => theme.bg.wash};
   overflow: hidden;
 `;
 
@@ -86,14 +103,17 @@ export const ShimmerLine = styled.span`
   animation-duration: 2s;
   animation-fill-mode: forwards;
   animation-iteration-count: infinite;
-  animation-timing-function: linear;
-  background: linear-gradient(to right, #f6f7f8 8%, #F0F1F3 18%, #f6f7f8 33%);
+  animation-timing-function: ease-out;
+  background: linear-gradient(to right,
+		${({ theme }) => theme.bg.wash} 8%,
+		${({ theme }) => hexa(theme.generic.default, 0.9)} 18%,
+		${({ theme }) => theme.bg.wash} 33%);
   background-size: 100% 140px;
   animation-name: ${placeHolderShimmer};
 `;
 
 export const Cover = styled.span`
   position: absolute;
-  background: #fff;
+  background: ${({ theme }) => theme.bg.default};
   z-index: 5;
 `;

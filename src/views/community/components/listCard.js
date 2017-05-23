@@ -7,20 +7,35 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
 import { displayLoadingCard } from '../../../components/loading';
-import { ListCardItem } from '../../../components/listCardItem';
-import { FlexRow } from '../../../components/globals';
-import { TextButton } from '../../../components/buttons';
+import { ListCardItem } from '../../../components/listCard';
+import { Button, TextButton, IconButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
+import { NullCard, NullTitle, NullSubtitle } from '../../../components/upsell';
 import { openModal } from '../../../actions/modals';
 
-import { StyledCard, ListHeading, ListContainer, MoreLink } from '../style';
+import {
+  StyledCard,
+  ListHeader,
+  ListHeading,
+  ListContainer,
+  ListFooter,
+} from '../../../components/listCard/style';
 
 const ListCardPure = ({ data, dispatch }) => {
   const channels = data.community.channelConnection.edges;
   if (!!channels) {
     return (
       <StyledCard>
-        <ListHeading>Channels</ListHeading>
+        <ListHeader>
+          <ListHeading>Channels</ListHeading>
+          {data.community.isOwner &&
+            <IconButton
+              glyph="plus"
+              color="text.placeholder"
+              onClick={() =>
+                dispatch(openModal('CREATE_CHANNEL_MODAL', data.community))}
+            />}
+        </ListHeader>
         <ListContainer>
           {channels.map(item => {
             return (
@@ -39,22 +54,31 @@ const ListCardPure = ({ data, dispatch }) => {
             );
           })}
         </ListContainer>
-        <FlexRow>
-          <MoreLink to={`/explore`}>Find more...</MoreLink>
-        </FlexRow>
-        <FlexRow>
-          {data.community.isOwner &&
+        {data.community.isOwner &&
+          <ListFooter>
             <TextButton
               onClick={() =>
                 dispatch(openModal('CREATE_CHANNEL_MODAL', data.community))}
             >
               Create a Channel
-            </TextButton>}
-        </FlexRow>
+            </TextButton>
+          </ListFooter>}
       </StyledCard>
     );
   } else {
-    return <div />;
+    return (
+      <NullCard bg="community">
+        <NullTitle>
+          There are no channels here...
+        </NullTitle>
+        <NullSubtitle>
+          Which really shouldn't be possible. Mind reloading?
+        </NullSubtitle>
+        <Button icon="reload">
+          Reload
+        </Button>
+      </NullCard>
+    );
   }
 };
 
