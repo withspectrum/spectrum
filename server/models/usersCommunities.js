@@ -252,6 +252,17 @@ const getOwnersInCommunity = (communityId: string): Promise<Array<string>> => {
   );
 };
 
+const getUserPermissionsInCommunity = (
+  communityId: string,
+  userId: string
+): Promise<Object> => {
+  return db
+    .table('usersCommunities')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ userId })
+    .run();
+};
+
 module.exports = {
   // modify and create
   createOwnerInCommunity,
@@ -267,4 +278,5 @@ module.exports = {
   getBlockedUsersInCommunity,
   getModeratorsInCommunity,
   getOwnersInCommunity,
+  getUserPermissionsInCommunity,
 };

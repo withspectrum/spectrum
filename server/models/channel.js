@@ -195,40 +195,6 @@ const createChannel = (
     .then(result => result.changes[0].new_val);
 };
 
-const createUsersChannels = (channelId: string, userId: string) => {
-  return db
-    .table('usersChannels')
-    .insert(
-      {
-        channelId,
-        userId,
-        createdAt: new Date(),
-        isOwner: true,
-        isModerator: false,
-        isMember: true,
-        isBlocked: false,
-        isPending: false,
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => console.log('result', result) || result.changes[0].new_val);
-};
-
-/*
-  Takes a channelId and removes all the usersChannels documents that match.
-  This will result in all users who try to access the channel in the future
-  seeing a default `channelPermissions` return value of `false` for all
-  permissions.
-*/
-const deleteUsersChannels = (channelId: string, userId: string) => {
-  return db
-    .table('usersChannels')
-    .getAll(channelId, { index: 'channelId' })
-    .delete()
-    .run();
-};
-
 const editChannel = ({
   input: { name, slug, description, isPrivate, channelId },
 }: EditChannelArguments): Object => {
@@ -448,8 +414,6 @@ module.exports = {
   getChannelsByUser,
   getChannelsByCommunity,
   createChannel,
-  createUsersChannels,
-  deleteUsersChannels,
   editChannel,
   deleteChannel,
   leaveChannel,

@@ -15,7 +15,6 @@ import {
   removeRequestToJoinChannel,
   addBlockedUser,
   removeBlockedUser,
-  getChannelPermissions,
 } from '../models/channel';
 import {
   getCommunities,
@@ -24,8 +23,13 @@ import {
   userIsMemberOfCommunity,
   userIsMemberOfAnyChannelInCommunity,
   subscribeToDefaultChannels,
-  getCommunityPermissions,
 } from '../models/community';
+import { getUserPermissionsInCommunity } from '../models/usersCommunities';
+import {
+  getUserPermissionsInChannel,
+  removeUsersInChannel,
+  createOwnerInChannel,
+} from '../models/usersChannels';
 import type {
   CreateChannelArguments,
   EditChannelArguments,
@@ -50,10 +54,10 @@ module.exports = {
           'You must be signed in to create a new community.'
         );
 
-      // get the community the channel is being created under
+      // get the permissions object for the current user + community
       return (
-        getCommunityPermissions(args.input.communityId, currentUser.id)
-          // return the communities
+        getUserPermissionsInCommunity(args.input.communityId, currentUser.id)
+          // return the permissions object
           .then(community => {
             // if no community is returned the user doesn't have a relationship
             // with that community yet, which means they can't create a channel
@@ -83,7 +87,7 @@ module.exports = {
             return createChannel(args, currentUser.id);
           })
           // create the entry in the usersChannels join table
-          .then(channel => createUsersChannels(channel.id, currentUser.id))
+          .then(channel => createOwnerInChannel(channel.id, currentUser.id))
       );
     },
     deleteChannel: (
@@ -99,45 +103,60 @@ module.exports = {
         );
 
       // get the channel's permissions and the channel object itself
-      const channelPermission = getChannelPermissions(
+      const currentUserChannelPermissions = getUserPermissionsInChannel(
         channelId,
         currentUser.id
       );
       const channels = getChannels([channelId]);
       // get the channel being deleted
       return (
-        Promise.all([channelPermission, channels])
+        Promise.all([currentUserChannelPermissions, channels])
           // return channels
           .then(([channelPermission, channels]) => {
             // we are evaluation the only element in the channels array
-            const channel = channels[0];
+            const channelToEvaluate = channels[0];
 
             // if channel wasn't found or was previously deleted, this user
             // does not have a relati
-            if (!channel || channel.deletedAt) {
+            if (!channelToEvaluate || channelToEvaluate.deletedAt) {
               return new UserError("Channel doesn't exist");
             }
 
             // get the community parent of the channel being deleted
-            const communityPermission = getCommunityPermissions(
-              channel.communityId,
+            const currentUserCommunityPermissions = getUserPermissionsInCommunity(
+              channelToEvaluate.communityId,
               currentUser.id
             );
-            return Promise.all([channelPermission, communityPermission]);
+            return Promise.all([
+              currentUserChannelPermissions,
+              currentUserCommunityPermissions,
+            ]);
           })
-          .then(([channelPermission, communityPermission]) => {
-            if (communityPermission.isOwner || channelPermission.isOwner) {
+          .then(([
+            currentUserChannelPermissions,
+            currentUserCommunityPermissions,
+          ]) => {
+            if (
+              currentUserCommunityPermissions.isOwner ||
+              currentUserChannelPermissions.isOwner
+            ) {
               // all checks passed
-              return deleteChannel(channelId).then(() => {
+              // delete the channel requested from the client side user
+              const deleteTheInboundChannel = deleteChannel(channelId);
+              // get all the threads in the channel to prepare for deletion
+              const getAllThreadsInChannel = getThreadsByChannel(channelId);
+              // remove all the UsersChannels objects in the db
+              const removeUsersChannels = removeMembersInChannel(channelId);
+
+              return Promise.all([
+                deleteTheInboundChannel,
+                getAllThreadsInChannel,
+                removeUsersChannels,
+              ]).then(([deletedChannel, allThreads, deletedUsersChannels]) => {
                 // once the channel is deleted, we need to mark all the threads
                 // posted in that channel as deleted
-                // get all the threads
-                return getThreadsByChannel(channelId).then(threads => {
-                  // if there were no threads in that channel, we're done
-                  if (threads.length <= 0) return;
-                  // otherwise take each thread and mark as deleted
-                  return threads.map(thread => deleteThread(thread.id));
-                });
+                if (!allThreads.length > 0) return;
+                return allThreads.map(thread => deleteThread(thread.id));
               });
             } else {
               return new UserError(
@@ -145,7 +164,6 @@ module.exports = {
               );
             }
           })
-          .then(() => deleteUsersChannels(channelId, currentUser.id))
       );
     },
     editChannel: (_: any, args: EditChannelArguments, { user }: Context) => {
@@ -341,11 +359,22 @@ module.exports = {
           'You must be signed in to make changes to this channel.'
         );
 
+      // get the channel's permissions and the channel object itself
+      const channelPermission = getChannelPermissions(
+        input.channelId,
+        currentUser.id
+      );
+      const evaluatedUserPermission = getChannelPermissions(
+        input.channelId,
+        input.userId
+      );
+      const channels = getChannels([input.channelId]);
+
       // get the channel being edited
       return (
-        getChannels([input.channelId])
+        Promise.all([channelPermission, evaluatedUserPermission, channels])
           // return the channels
-          .then(channels => {
+          .then(([channelPermission, evaluatedUserPermission, channels]) => {
             // select the channel
             const channel = channels[0];
 
@@ -354,29 +383,29 @@ module.exports = {
               return new UserError("This channel doesn't exist");
             }
 
-            // get the community parent of the channel being edited
-            const communities = getCommunities([channel.communityId]);
-
-            return Promise.all([channel, communities]);
+            // get the community parent of the channel being deleted
+            const communityPermission = getCommunityPermissions(
+              channel.communityId,
+              currentUser.id
+            );
+            return Promise.all([
+              channelPermission,
+              evaluatedUserPermission,
+              communityPermission,
+            ]);
           })
-          .then(([channel, communities]) => {
-            // select the community
-            const community = communities[0];
-
+          .then(([channelPermission, communityPermission]) => {
             const { channelId, userId, action } = input;
 
             // if the user isn't on the pending list
-            if (!(channel.pendingUsers.indexOf(userId) > -1)) {
+            if (!evaluatedUserPermission.isPending) {
               return new UserError(
                 'This user is not currently pending access to this channel.'
               );
             }
 
             // if a user owns the community or owns the channel, they can make this change
-            if (
-              community.owners.indexOf(currentUser.id) > -1 ||
-              channel.owners.indexOf(currentUser.id) > -1
-            ) {
+            if (channelPermission.isOwner || communityPermission.isOwner) {
               // user is in the pending list
               // determine whether to approve or block them
               if (action === 'block') {
@@ -392,7 +421,7 @@ module.exports = {
               if (action === 'approve') {
                 // remove the user from the pending list
                 return (
-                  removeRequestToJoinChannel(channelId, userId)
+                  movePendingUserToMember(channelId, userId)
                     // we have to determine if this is the first channel the user is
                     // joining in a community. if so, we will add them to the community
                     // and the community's default channels
@@ -400,7 +429,7 @@ module.exports = {
                       // user is already in the community, and therefore is already
                       // in the default channels (general, for now)
                       // subscribe them to the approved channel
-                      if (community.members.indexOf(userId) > -1) {
+                      if (communityPermission.isMember) {
                         return joinChannel(channelId, userId);
                       } else {
                         // user is not in the community, so we need to add them to

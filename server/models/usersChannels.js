@@ -326,6 +326,17 @@ const getOwnersInChannel = (channelId: string): Promise<Array<string>> => {
   );
 };
 
+const getUserPermissionsInChannel = (
+  channelId: string,
+  userId: string
+): Promise<Object> => {
+  return db
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ userId })
+    .run();
+};
+
 module.exports = {
   // modify and create
   createOwnerInChannel,
@@ -346,4 +357,5 @@ module.exports = {
   getBlockedUsersInChannel,
   getModeratorsInChannel,
   getOwnersInChannel,
+  getUserPermissionsInChannel,
 };
