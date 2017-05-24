@@ -10,7 +10,7 @@ import renderComponent from 'recompose/renderComponent';
 import branch from 'recompose/branch';
 import { Button, TextButton } from '../buttons';
 import { LoadingCard } from '../loading';
-import { Input } from '../formElements';
+import { Input, TextArea, ImageInput } from '../formElements';
 import {
   StyledCard,
   Form,
@@ -22,25 +22,34 @@ import {
 
 class UserWithData extends Component {
   render() {
+    const { user: { user } } = this.props;
     return (
       <StyledCard>
-        {console.log(this.props)}
         <FormTitle>Profile Settings</FormTitle>
         <Form>
-          <Input
-            inputType="file"
-            accept=".png, .jpg, .jpeg, .gif"
-            multiple={false}
-          >
+          <ImageInput defaultValue={user.profilePhoto}>
             Add a logo or photo
-          </Input>
-
-          <Input type={'text'} placeholder={"What's your name?"}>
+          </ImageInput>
+          <Input
+            type="text"
+            defaultValue={user.name}
+            placeholder={"What's your name?"}
+          >
             Name
           </Input>
-          <Input type={'text'} placeholder={'Pick a cool username...'}>
+          <Input
+            type={'text'}
+            defaultValue={user.username}
+            placeholder={'Pick a cool username...'}
+          >
             Username
           </Input>
+          <TextArea
+            defaultValue={user.description}
+            placeholder={'Introduce yourself to the class...'}
+          >
+            Bio
+          </TextArea>
 
           <Actions>
             <TextButton hoverColor={'warn.alt'}>Cancel</TextButton>

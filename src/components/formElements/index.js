@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 
 import Icon from '../icons';
-// import Icon from '../icons';
 import {
   StyledLabel,
   StyledPrefixLabel,
@@ -12,10 +11,10 @@ import {
   StyledHiddenInput,
   StyledCheckboxWrapper,
   StyledError,
-  // ImageInputLabel,
-  // InputOverlay,
-  // ProfileImage,
-  // HiddenInput,
+  ImageInputLabel,
+  InputOverlay,
+  ProfileImage,
+  HiddenInput,
 } from './style';
 
 type InputProps = {
@@ -45,25 +44,23 @@ export const Input = (props: InputProps) => {
   );
 };
 
-// export const ImageInput = (props) => {
-//   return(
-//     <ImageInputLabel>
-//       <InputOverlay>
-//         <Icon glyph="photo" />
-//       </InputOverlay>
-//       {user.profilePhoto &&
-//         <ProfileImage src={user.profilePhoto} role="presentation" />}
-//       <HiddenInput
-//         type="file"
-//         id="file"
-//         name="file"
-//         accept=".png, .jpg, .jpeg, .gif, .mp4"
-//         multiple={false}
-//         onChange={this.stageProfilePhotoForUpload}
-//       />
-//     </ImageInputLabel>
-//   )
-// }
+export const ImageInput = props => {
+  return (
+    <ImageInputLabel>
+      <InputOverlay>
+        <Icon glyph="photo" />
+      </InputOverlay>
+      <ProfileImage src={props.defaultValue} role="presentation" />
+      <StyledHiddenInput
+        type="file"
+        id="file"
+        name="file"
+        accept=".png, .jpg, .jpeg, .gif, .mp4"
+        multiple={false}
+      />
+    </ImageInputLabel>
+  );
+};
 
 export const Checkbox = (props: InputProps) => {
   return (

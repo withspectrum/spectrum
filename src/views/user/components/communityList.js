@@ -19,18 +19,29 @@ import {
   MoreLink,
 } from '../../../components/listCard/style';
 
-const ListCard = ({ communities, dispatch }) => {
+const CommunityList = props => {
+  const {
+    communities,
+    dispatch,
+    currentUser,
+    user,
+    withDescription,
+    withMeta,
+  } = props;
+
   if (communities && (communities !== 0 && communities !== null)) {
     return (
       <StyledCard>
         <ListHeader>
-          <ListHeading>My Communities</ListHeading>
-          <IconButton
-            glyph="plus"
-            color="text.placeholder"
-            hoverColor="brand.alt"
-            onClick={() => dispatch(openModal('CREATE_COMMUNITY_MODAL'))}
-          />
+          <ListHeading>Member of</ListHeading>
+          {currentUser &&
+            currentUser.id === user.id &&
+            <IconButton
+              glyph="plus"
+              color="text.placeholder"
+              hoverColor="brand.alt"
+              onClick={() => dispatch(openModal('CREATE_COMMUNITY_MODAL'))}
+            />}
         </ListHeader>
         <ListContainer>
           {communities.map(item => {
@@ -38,7 +49,8 @@ const ListCard = ({ communities, dispatch }) => {
               <Link key={item.node.id} to={`/${item.node.slug}`}>
                 <ListCardItem
                   contents={item.node}
-                  withDescription={false}
+                  withDescription={withDescription}
+                  withMeta={withMeta}
                   meta={`${item.node.metaData.members} members · ${item.node.metaData.channels} channels`}
                 >
                   <Icon glyph="view-forward" />
@@ -47,13 +59,15 @@ const ListCard = ({ communities, dispatch }) => {
             );
           })}
         </ListContainer>
-        <ListFooter>
-          <MoreLink to={`/explore`}>
-            <TextButton>
-              Find more...
-            </TextButton>
-          </MoreLink>
-        </ListFooter>
+        {currentUser &&
+          currentUser.id === user.id &&
+          <ListFooter>
+            <MoreLink to={`/explore`}>
+              <TextButton>
+                Find more...
+              </TextButton>
+            </MoreLink>
+          </ListFooter>}
       </StyledCard>
     );
   } else {
@@ -71,4 +85,4 @@ const ListCard = ({ communities, dispatch }) => {
   }
 };
 
-export default connect()(ListCard);
+export default connect()(CommunityList);

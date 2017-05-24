@@ -102,6 +102,7 @@ const UserWithData = ({
           : <Link to={`/messages/${user.username}`}>
               <ProfileHeaderAction
                 glyph="message-new"
+                color="brand.alt"
                 tipText={`Message ${user.name}`}
                 tipLocation={'top-left'}
               />

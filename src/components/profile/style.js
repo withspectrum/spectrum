@@ -7,6 +7,8 @@ import { Button, OutlineButton, IconButton } from '../buttons';
 export const ProfileHeader = styled(FlexContainer)`
   padding: 16px;
   width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
 `;
 
 export const ProfileHeaderLink = styled(Link)`
@@ -15,6 +17,7 @@ export const ProfileHeaderLink = styled(Link)`
   justify-content: flex-start;
   flex-wrap: nowrap;
   flex-grow: 1;
+  max-width: calc(100% - 48px);
 
   &:hover h3 {
     transition: ${Transition.hover.on};
@@ -37,7 +40,8 @@ export const Title = styled.h3`
   color: ${props => props.theme.text.default};
   font-weight: 700;
   line-height: 1.2;
-  width: 100%;
+  max-width: 100%;
+  flex: 0 0 auto;
   ${Truncate}
   transition: ${Transition.hover.off};
 `;
@@ -46,7 +50,8 @@ export const Subtitle = styled.h4`
   font-size: 14px;
   color: ${props => props.theme.text.alt};
   line-height: 1.3;
-  width: 100%;
+  flex: 0 0 auto;
+  max-width: 100%;
   ${Truncate}
 `;
 

@@ -23,25 +23,24 @@ import {
 
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
   const formatLocation = () => {
-    if (!props.viewContext || props.viewContext === 'channel') {
-      return;
+    switch (props.viewContext) {
+      case 'dashboard':
+      case 'profile':
+        return (
+          <Location>
+            {`${props.data.community.name} / ${props.data.channel.name}`}
+          </Location>
+        );
+      case 'community':
+        return (
+          <Location>
+            {`~${props.data.channel.name}`}
+          </Location>
+        );
+      case 'channel':
+      default:
+        return;
     }
-    if (props.viewContext === 'dashboard' || props.viewContext === 'profile') {
-      return (
-        <Location>
-          {`${props.data.community.name} / ${props.data.channel.name}`}
-        </Location>
-      );
-    }
-    if (props.viewContext === 'community') {
-      return (
-        <Location>
-          {`~${props.data.channel.name}`}
-        </Location>
-      );
-    }
-
-    return;
   };
 
   const openUserProfileModal = (user: Object) => {

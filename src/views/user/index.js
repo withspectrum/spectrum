@@ -4,6 +4,8 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
+//$FlowFixMe
+import { connect } from 'react-redux';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
@@ -11,11 +13,17 @@ import { UserProfile } from '../../components/profile';
 import { displayLoadingScreen } from '../../components/loading';
 import { Button } from '../../components/buttons';
 import { NullCard, Upsell404User } from '../../components/upsell';
+import CommunityList from './components/communityList';
 import { getUserThreads, getUser } from './queries';
 
 const ThreadFeedWithData = compose(getUserThreads)(ThreadFeed);
 
-const UserViewPure = ({ match, data: { user, error, channel, community } }) => {
+const UserViewPure = ({
+  match,
+  data: { user, error, channel, community },
+  data,
+  currentUser,
+}) => {
   const username = match.params.username;
 
   if (error) {
@@ -30,6 +38,13 @@ const UserViewPure = ({ match, data: { user, error, channel, community } }) => {
     <AppViewWrapper>
       <Column type="secondary">
         <UserProfile data={{ user }} username={username} profileSize="full" />
+        <CommunityList
+          withMeta={false}
+          withDescription={true}
+          currentUser={currentUser}
+          user={user}
+          communities={user.communityConnection.edges}
+        />
       </Column>
 
       <Column type="primary" alignItems="center">
@@ -48,7 +63,11 @@ const UserViewPure = ({ match, data: { user, error, channel, community } }) => {
   );
 };
 
+const mapStateToProps = state => ({ currentUser: state.users.currentUser });
+const ConnectedUserView = connect(mapStateToProps)(UserViewPure);
+
 export const UserView = compose(getUser, displayLoadingScreen, pure)(
-  UserViewPure
+  ConnectedUserView
 );
+
 export default UserView;

@@ -118,10 +118,6 @@ export const Description = styled.p`
   line-height: 1.4;
   color: ${({ theme }) => theme.text.alt};
 
-  &:first-of-type {
-    margin-top: 0;
-  }
-
   &:last-of-type {
     margin-bottom: 16px;
   }
