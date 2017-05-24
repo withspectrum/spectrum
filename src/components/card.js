@@ -17,7 +17,7 @@ const StyledCard = styled(FlexContainer)`
   width: 100%;
   max-width: 100%;
   background-clip: padding-box;
-  overflow: hidden;
+  overflow: visible;
 
   + div,
   + span {

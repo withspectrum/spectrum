@@ -13,10 +13,10 @@ import { NullCard } from '../upsell';
 import { LoadingThread } from '../loading';
 import { Button } from '../buttons';
 
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingThread)
-);
+// const displayLoadingState = branch(
+//   props => props.data.loading,
+//   renderComponent(LoadingThread)
+// );
 
 const NullState = () => (
   <NullCard
@@ -45,10 +45,25 @@ const ErrorState = () => (
 
   See 'views/community/queries.js' for an example of the prop mapping in action
 */
-const ThreadFeedPure = ({
-  data: { threads, loading, fetchMore, error, hasNextPage },
-  data,
-}) => {
+const ThreadFeedPure = props => {
+  const {
+    data: { threads, loading, fetchMore, error, hasNextPage },
+    data,
+  } = props;
+
+  if (loading) {
+    return (
+      <div style={{ minWidth: '100%' }}>
+        <LoadingThread />
+        <LoadingThread />
+        <LoadingThread />
+        <LoadingThread />
+        <LoadingThread />
+        <LoadingThread />
+      </div>
+    );
+  }
+
   if (error && threads.length > 0) {
     return <ErrorState />;
   }
@@ -64,13 +79,20 @@ const ThreadFeedPure = ({
   return (
     <div style={{ minWidth: '100%' }}>
       {threads.map(thread => {
-        return <ThreadFeedCard key={thread.node.id} data={thread.node} />;
+        return (
+          <ThreadFeedCard
+            key={thread.node.id}
+            data={thread.node}
+            viewContext={props.viewContext}
+          />
+        );
       })}
 
-      {hasNextPage && <Button onClick={fetchMore}>Fetch More</Button>}
+      {hasNextPage && <Button onClick={fetchMore}>Load more threads</Button>}
     </div>
   );
 };
 
-const ThreadFeed = compose(displayLoadingState, pure)(ThreadFeedPure);
+const ThreadFeed = compose(pure)(ThreadFeedPure);
+
 export default ThreadFeed;

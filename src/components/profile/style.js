@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import { FlexContainer } from '../flexbox';
 import { FlexRow, Truncate, Transition } from '../globals';
 import { Button, OutlineButton, IconButton } from '../buttons';
@@ -8,6 +9,19 @@ export const ProfileHeader = styled(FlexContainer)`
   width: 100%;
 `;
 
+export const ProfileHeaderLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+
+  &:hover h3 {
+    transition: ${Transition.hover.on};
+    color: ${props => props.theme.brand.alt};
+  }
+`;
+
 export const ProfileHeaderMeta = styled(FlexContainer)`
   flex: 1 0 auto;
   flex-wrap: nowrap;
@@ -15,6 +29,7 @@ export const ProfileHeaderMeta = styled(FlexContainer)`
 
 export const ProfileHeaderAction = styled(IconButton)`
   margin-left: 16px;
+  flex: 0 0 auto;
 `;
 
 export const Title = styled.h3`
@@ -24,6 +39,7 @@ export const Title = styled.h3`
   line-height: 1.2;
   width: 100%;
   ${Truncate}
+  transition: ${Transition.hover.off};
 `;
 
 export const Subtitle = styled.h4`

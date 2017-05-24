@@ -20,6 +20,7 @@ import Icon from '../icons';
 import { Avatar } from '../avatar';
 import {
   ProfileHeader,
+  ProfileHeaderLink,
   ProfileHeaderMeta,
   ProfileHeaderAction,
   Title,
@@ -100,19 +101,19 @@ const CommunityWithData = ({
           radius={4}
           src={community.profilePhoto}
         />
-        <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-          <Link to={`/${community.slug}`}>
+        <ProfileHeaderLink to={`/${community.slug}`}>
+          <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
             <Title>{community.name}</Title>
-          </Link>
-        </ProfileHeaderMeta>
+          </ProfileHeaderMeta>
+        </ProfileHeaderLink>
         {currentUser &&
           !community.isOwner &&
           <ProfileHeaderAction
-            glyph={community.isMember ? 'door-leave' : 'door-enter'}
-            color={community.isMember ? 'brand.alt' : 'text.placeholder'}
-            hoverColor={community.isMember ? 'brand.alt' : 'warn.default'}
+            glyph={community.isMember ? 'minus' : 'plus-fill'}
+            color={community.isMember ? 'text.placeholder' : 'brand.alt'}
+            hoverColor={community.isMember ? 'warn.default' : 'brand.alt'}
             tipText={community.isMember ? `Leave community` : 'Join community'}
-            tipLocation="bottom-left"
+            tipLocation="top-left"
             onClick={() => toggleMembership(community.id)}
           />}
         {currentUser &&
@@ -121,7 +122,7 @@ const CommunityWithData = ({
             <ProfileHeaderAction
               glyph="settings"
               tipText="Edit community"
-              tipLocation="bottom-left"
+              tipLocation="top-left"
             />
           </Link>}
 

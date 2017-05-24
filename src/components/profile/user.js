@@ -15,16 +15,13 @@ import pure from 'recompose/pure';
 import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
-import { openModal } from '../../actions/modals';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import { Avatar } from '../avatar';
 import Badge from '../badges';
 import { LoadingCard } from '../loading';
 import {
-  Action,
-  ActionOutline,
-  Actions,
   ProfileHeader,
+  ProfileHeaderLink,
   ProfileHeaderMeta,
   ProfileHeaderAction,
   Title,
@@ -78,33 +75,35 @@ const UserWithData = ({
   return (
     <Card>
       <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-        <Avatar
-          margin={'0 12px 0 0'}
-          size={40}
-          radius={4}
-          src={user.profilePhoto}
-        />
-        <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-          <Title>{user.name}</Title>
-          <Subtitle>
-            @{user.username}
-            {user.isAdmin && <Badge type="admin" />}
-            {/* user.isPro && <Badge type='pro' /> */}
-          </Subtitle>
-        </ProfileHeaderMeta>
+        <ProfileHeaderLink to={`../users/${currentUser.username}`}>
+          <Avatar
+            margin={'0 12px 0 0'}
+            size={40}
+            radius={4}
+            src={user.profilePhoto}
+          />
+          <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+            <Title>{user.name}</Title>
+            <Subtitle>
+              @{user.username}
+              {user.isAdmin && <Badge type="admin" />}
+              {/* user.isPro && <Badge type='pro' /> */}
+            </Subtitle>
+          </ProfileHeaderMeta>
+        </ProfileHeaderLink>
         {currentUser && currentUser.id === user.id
           ? <Link to={`../users/${currentUser.username}/settings`}>
               <ProfileHeaderAction
                 glyph="settings"
                 tipText={`Edit profile`}
-                tipLocation={'bottom-left'}
+                tipLocation={'top-left'}
               />
             </Link>
           : <Link to={`/messages/${user.username}`}>
               <ProfileHeaderAction
                 glyph="message-new"
                 tipText={`Message ${user.name}`}
-                tipLocation={'bottom-left'}
+                tipLocation={'top-left'}
               />
             </Link>}
       </ProfileHeader>

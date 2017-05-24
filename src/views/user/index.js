@@ -32,7 +32,7 @@ const UserViewPure = ({ match, data: { user, error, channel, community } }) => {
       </Column>
 
       <Column type="primary" alignItems="center">
-        <ThreadFeedWithData username={username} />
+        <ThreadFeedWithData username={username} viewContext="profile" />
       </Column>
     </AppViewWrapper>
   );

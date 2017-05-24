@@ -23,21 +23,20 @@ import {
 
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
   const formatLocation = () => {
-    if (!props.data.channel) {
-      console.log(props);
+    if (!props.viewContext || props.viewContext === 'channel') {
       return;
     }
-    if (props.data.channel.name && props.data.channel.community.name) {
+    if (props.viewContext === 'dashboard' || props.viewContext === 'profile') {
       return (
         <Location>
-          {`${props.data.channel.community.name} / ${props.data.channel.name}`}
+          {`${props.data.community.name} / ${props.data.channel.name}`}
         </Location>
       );
     }
-    if (props.data.channel.name && !props.data.channel.community.name) {
+    if (props.viewContext === 'community') {
       return (
         <Location>
-          {`~/${props.data.channel.name}`}
+          {`~${props.data.channel.name}`}
         </Location>
       );
     }

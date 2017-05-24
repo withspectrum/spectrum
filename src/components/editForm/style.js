@@ -38,6 +38,11 @@ export const Description = styled.p`
   line-height: 1.4;
 `;
 
+export const TertiaryActionContainer = styled(FlexRow)`
+  justify-content: flex-start;
+  flex-grow: 1;
+`;
+
 export const Actions = styled(FlexRow)`
   margin-top: 24px;
   justify-content: flex-end;

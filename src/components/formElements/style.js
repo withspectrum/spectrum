@@ -21,6 +21,11 @@ export const StyledLabel = styled.label`
     border-color: ${props => (props.disabled ? props.theme.inactive : props.theme.text.alt)};
     transition: ${Transition.hover.on};
   }
+
+  &:hover > input:focus,
+  &:hover > textarea:focus {
+    border-color: ${props => (props.disabled ? props.theme.inactive : props.theme.brand.alt)};
+  }
 `;
 
 export const StyledPrefixLabel = styled.label`

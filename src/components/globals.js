@@ -1,8 +1,10 @@
 /* eslint no-eval: 0 */
 import styled, { css, keyframes } from 'styled-components';
 
-export const Gradient = (g1, g2) =>
-  css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`;
+export const Gradient = (
+  g1,
+  g2
+) => css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`;
 
 export const Truncate = width => css`
   text-overflow: ellipsis;
@@ -370,13 +372,13 @@ export const Tooltip = props => css`
 
 	&:before {
 		content: '';
-    z-index: 1000;
+    z-index: 9999;
     border: 5px solid transparent;
   }
 
 	&:after {
 		content: ${props.tipText && !props.onboarding ? `'${props.tipText}'` : `''`};
-    z-index: 999;
+    z-index: 9998;
     ${fontStack};
     font-size: 14px;
     font-weight: 500;

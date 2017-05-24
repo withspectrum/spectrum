@@ -18,13 +18,14 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import { LoadingCard } from '../loading';
 import {
   ProfileHeader,
+  ProfileHeaderLink,
   ProfileHeaderMeta,
+  ProfileHeaderAction,
   Title,
   Subtitle,
   Description,
   Actions,
   Action,
-  ActionOutline,
 } from './style';
 import { MetaData } from './metaData';
 import type { ProfileSizeProps } from './index';
@@ -84,51 +85,44 @@ const ChannelWithData = ({
     <Card>
       <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
         <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-          <Link to={`/${channel.community.slug}/${channel.slug}`}>
+          <ProfileHeaderLink to={`/${channel.community.slug}/${channel.slug}`}>
             <Title>{channel.name}</Title>
-          </Link>
+          </ProfileHeaderLink>
           <Link to={`/${channel.community.slug}`}>
             <Subtitle>{channel.community.name}</Subtitle>
           </Link>
         </ProfileHeaderMeta>
+
+        {componentSize !== 'mini' &&
+          (currentUser && channel.isMember) &&
+          <ProfileHeaderAction
+            glyph="minus"
+            color="text.placeholder"
+            hoverColor="warn.default"
+            tipText={`Leave ~${channel.name}`}
+            tipLocation="top-left"
+          />}
+
+        {componentSize !== 'mini' &&
+          (currentUser && (channel.isOwner || channel.community.isOwner)) &&
+          <ProfileHeaderAction
+            glyph="settings"
+            tipText={`Channel settings`}
+            tipLocation="top-left"
+          />}
+
       </ProfileHeader>
 
       {componentSize !== 'mini' &&
         componentSize !== 'small' &&
-        <Description>
-          {channel.description}
-        </Description>}
+        <Description>{channel.description}</Description>}
 
       {componentSize !== 'mini' &&
         currentUser &&
         <Actions>
-          {// user owns the community, assumed member
-          channel.isOwner || channel.community.isOwner
-            ? <ActionOutline>
-                <Link
-                  to={`/${channel.community.slug}/${channel.slug}/settings`}
-                >
-                  Settings
-                </Link>
-              </ActionOutline>
-            : <span />}
-
-          {// user is a member and doesn't own the community
-          channel.isMember &&
-            !channel.isOwner &&
-            !channel.community.isOwner &&
-            <ActionOutline
-              color={'text.alt'}
-              hoverColor={'warn.default'}
-              onClick={() => toggleSubscription(channel.id)}
-            >
-              Unfollow {channel.name}
-            </ActionOutline>}
-
           {// user is not a member and doesn't own the channel
           !channel.isMember &&
-            !channel.isOwner &&
-            !channel.community.isOwner &&
+            (!channel.isOwner && !channel.community.isOwner) &&
             <Action onClick={() => toggleSubscription(channel.id)}>
               Join {channel.name}
             </Action>}
