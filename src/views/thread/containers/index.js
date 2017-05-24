@@ -76,13 +76,15 @@ const ThreadContainerPure = ({
           // of the channel the thread was posted in, the user can see the
           // chat input
           currentUser &&
-            (thread.isCreator || thread.channel.isMember) &&
+            !thread.isLocked &&
+            (thread.isCreator || thread.channel.channelPermissions.isMember) &&
             <ChatInput thread={thread.id} />}
 
           {// if the user exists but isn't a subscriber to the channel,
           // show an upsell to join the channel
           currentUser &&
-            !thread.channel.isMember &&
+            !thread.isLocked &&
+            !thread.channel.channelPermissions.isMember &&
             <UpsellJoinChannel
               channel={thread.channel}
               subscribe={toggleSubscription}

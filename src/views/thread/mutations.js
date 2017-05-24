@@ -12,19 +12,19 @@ import {
   Updates UI automatically via the Apollo ObjectID cache
 */
 const SET_THREAD_LOCK_MUTATION = gql`
-  mutation setThreadLock($id: ID!, $value: Boolean!) {
-    setThreadLock(id: $id, value: $value) {
+  mutation setThreadLock($threadId: ID!, $value: Boolean!) {
+    setThreadLock(threadId: $threadId, value: $value) {
       id
-      locked
+      isLocked
     }
   }
 `;
 const SET_THREAD_LOCK_OPTIONS = {
   props: ({ mutate }) => ({
-    setThreadLock: ({ id, value }) =>
+    setThreadLock: ({ threadId, value }) =>
       mutate({
         variables: {
-          id,
+          threadId,
           value,
         },
       }),

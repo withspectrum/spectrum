@@ -2,10 +2,6 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
-import {
-  communityInfoFragment,
-} from '../../api/fragments/community/communityInfo';
-import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 
 export const GET_COMPOSER_COMMUNITIES_AND_CHANNELS_QUERY = gql`
 query getComposerCommunitiesAndChannels {
@@ -24,22 +20,25 @@ query getComposerCommunitiesAndChannels {
     communityConnection {
       edges {
         node {
-          ...communityInfo
+          id
+          name
         }
       }
     }
     channelConnection {
       edges {
         node {
-          ...channelInfo
+          id
+          name
+          community {
+            id
+          }
         }
       }
     }
   }
 }
-${communityInfoFragment}
 ${userInfoFragment}
-${channelInfoFragment}
 `;
 
 export const getComposerCommunitiesAndChannels = graphql(

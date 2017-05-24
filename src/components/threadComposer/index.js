@@ -12,7 +12,10 @@ import branch from 'recompose/branch';
 import Textarea from 'react-textarea-autosize';
 // $FlowFixMe
 import { withRouter } from 'react-router';
+// $FlowFixMe
+import { connect } from 'react-redux';
 import { Button } from '../buttons';
+import { addToastWithTimeout } from '../../actions/toasts';
 import Icon from '../icons';
 import { LoadingComposer } from '../loading';
 import { getComposerCommunitiesAndChannels } from './queries';
@@ -55,14 +58,11 @@ class ThreadComposerWithData extends Component {
       Create a new array of communities only containing the `node` data from
       graphQL. Then filter the resulting channel to remove any communities
       that don't have any channels yet
-
-      TODO: Ideally we don't have any communities with no channel. If we
-      can guarantee this, we can remove the extra filter here
     */
 
-    const availableCommunities = props.data.user.communityConnection.edges
-      .map(edge => edge.node)
-      .filter(community => community.channelConnection.edges.length > 0);
+    const availableCommunities = props.data.user.communityConnection.edges.map(
+      edge => edge.node
+    );
 
     /*
       Iterate through each of our community nodes to construct a new array
@@ -72,11 +72,9 @@ class ThreadComposerWithData extends Component {
       and each child array represents the channels within that parent
       community
     */
-    const availableChannels = availableCommunities.map(community => {
-      const arr = [];
-      community.channelConnection.edges.map(edge => arr.push(edge.node));
-      return arr;
-    });
+    const availableChannels = props.data.user.channelConnection.edges.map(
+      edge => edge.node
+    );
 
     /*
       If a user is viewing a communit or channel, we use the url as a prop
@@ -94,16 +92,17 @@ class ThreadComposerWithData extends Component {
       ? availableChannels
           .filter(
             // get the channels for the proper community
-            channels => channels[0].community.id === activeCommunity
+            channel => channel.community.id === activeCommunity
           )
-          .map(channels =>
-            // get the correct channel based on the slug
-            channels.find(channel => channel.slug === props.activeChannel)
-          )[0].id
+          .map(
+            channel =>
+              // get the correct channel based on the slug
+              channel.slug === props.activeChannel
+          ).id
       : availableChannels.filter(
           // get the channels for the proper community
-          channels => channels[0].community.id === activeCommunity
-        )[0][0].id; // and select the first one in the list
+          channel => channel.community.id === activeCommunity
+        )[0].id; // and select the first one in the list
 
     this.state = {
       isOpen: false,
@@ -150,8 +149,8 @@ class ThreadComposerWithData extends Component {
   setActiveCommunity = e => {
     const newActiveCommunity = e.target.value;
     const newActiveChannel = this.state.availableChannels.filter(
-      channel => channel[0].community.id === newActiveCommunity
-    )[0][0].id;
+      channel => channel.community.id === newActiveCommunity
+    )[0].id;
 
     this.setState({
       activeCommunity: newActiveCommunity,
@@ -168,11 +167,6 @@ class ThreadComposerWithData extends Component {
   };
 
   publishThread = () => {
-    console.log(
-      'attemping to publish thread in ',
-      this.state.activeChannel,
-      this.state.activeCommunity
-    );
     // if no title and no channel is set, don't allow a thread to be published
     if (!this.state.title || !this.state.activeChannel) {
       return;
@@ -218,10 +212,15 @@ class ThreadComposerWithData extends Component {
 
         // redirect the user to the thread
         this.props.history.push(`/thread/${id}`);
+        this.props.dispatch(
+          addToastWithTimeout('success', 'Thread published!')
+        );
       })
-      .catch(error => {
-        // TODO add some kind of dispatch here to show an error to the user
-        console.log('error publishing thread', error);
+      .catch(err => {
+        this.setState({
+          isPublishing: false,
+        });
+        this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
@@ -288,15 +287,13 @@ class ThreadComposerWithData extends Component {
                   defaultValue={activeChannel}
                 >
                   {availableChannels
-                    .filter(
-                      channel => channel[0].community.id === activeCommunity
-                    )
+                    .filter(channel => channel.community.id === activeCommunity)
                     .map((channel, i) => {
-                      return channel.map(e => {
-                        return (
-                          <option key={e.id} value={e.id}>{e.name}</option>
-                        );
-                      });
+                      return (
+                        <option key={channel.id} value={channel.id}>
+                          {channel.name}
+                        </option>
+                      );
                     })}
                 </select>
               </Dropdowns>
@@ -326,4 +323,4 @@ export const ThreadComposer = compose(
   pure
 )(ThreadComposerWithData);
 
-export default ThreadComposer;
+export default connect()(ThreadComposer);
