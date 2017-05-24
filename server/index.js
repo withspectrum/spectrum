@@ -130,6 +130,11 @@ const server = createServer(app);
 const subscriptionsServer = new SubscriptionServer(
   {
     subscriptionManager,
+    onConnect: connectionParams => {
+      return {
+        loaders: createLoaders(),
+      };
+    },
   },
   {
     server,

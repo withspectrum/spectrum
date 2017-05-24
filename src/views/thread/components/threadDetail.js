@@ -15,6 +15,7 @@ import { deleteThreadMutation } from '../../../api/thread';
 import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
 import { IconButton } from '../../../components/buttons';
+import { toPlainText, toState } from '../../../components/editor';
 import {
   ThreadWrapper,
   ThreadHeading,
@@ -85,6 +86,11 @@ const ThreadDetailPure = ({
     return dispatch(openModal('USER_PROFILE_MODAL', { user }));
   };
 
+  let body = thread.content.body;
+  if (thread.type === 'SLATE') {
+    body = toPlainText(toState(JSON.parse(body)));
+  }
+
   return (
     <ThreadWrapper>
       <ContextRow>
@@ -119,8 +125,7 @@ const ThreadDetailPure = ({
       <ThreadHeading>
         {thread.content.title}
       </ThreadHeading>
-      {!!thread.content.body &&
-        <ThreadContent>{thread.content.body}</ThreadContent>}
+      {!!thread.content.body && <ThreadContent>{body}</ThreadContent>}
     </ThreadWrapper>
   );
 };

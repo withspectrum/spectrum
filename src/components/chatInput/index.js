@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import styled from 'styled-components';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // // $FlowFixMe
@@ -7,6 +8,7 @@ import withState from 'recompose/withState';
 // // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
 import Icon from '../icons';
+import Editor, { toPlainText, fromPlainText } from '../../components/editor';
 import {
   Form,
   Input,
@@ -18,10 +20,15 @@ import {
 } from './style';
 import { sendMessageMutation } from '../../api/message';
 
+const InputEditor = styled(Editor)`
+  width: 100%;
+  height: 100%;
+`;
+
 const ChatInputWithMutation = ({
   thread,
   sendMessage,
-  value,
+  state,
   onChange,
   clear,
   createThread,
@@ -36,7 +43,7 @@ const ChatInputWithMutation = ({
     // in views/directMessages/containers/newThread.js
     if (thread === 'newDirectMessageThread') {
       return createThread({
-        messageBody: value,
+        messageBody: toPlainText(state),
         messageType: 'text',
       });
     }
@@ -48,7 +55,7 @@ const ChatInputWithMutation = ({
       messageType: 'text',
       threadType: 'story',
       content: {
-        body: value,
+        body: toPlainText(state),
       },
     })
       .then(() => {
@@ -92,13 +99,12 @@ const ChatInputWithMutation = ({
         tipLocation="top-right"
       />
       <Form>
-        <Input
+        <InputEditor
           ref="textInput"
           placeholder="Your message here..."
-          type="text"
-          value={value}
+          state={state}
           onChange={onChange}
-          onKeyUp={handleKeyPress}
+          markdown={false}
           onFocus={onFocus}
           onBlur={onBlur}
         />
@@ -110,10 +116,10 @@ const ChatInputWithMutation = ({
 
 const ChatInput = compose(
   sendMessageMutation,
-  withState('value', 'changeValue', ''),
+  withState('state', 'changeState', fromPlainText('')),
   withHandlers({
-    onChange: ({ changeValue }) => e => changeValue(e.target.value),
-    clear: ({ changeValue }) => () => changeValue(''),
+    onChange: ({ changeState }) => state => changeState(state),
+    clear: ({ changeState }) => () => changeState(fromPlainText('')),
   })
 )(ChatInputWithMutation);
 
