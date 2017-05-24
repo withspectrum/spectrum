@@ -93,25 +93,21 @@ const UserWithData = ({
           </Subtitle>
         </ProfileHeaderMeta>
         {currentUser && currentUser.id === user.id
-          ? <Link to={`users/${currentUser.username}/settings`}>
-              <ProfileHeaderAction glyph="settings" />
+          ? <Link to={`../users/${currentUser.username}/settings`}>
+              <ProfileHeaderAction
+                glyph="settings"
+                tipText={`Edit profile`}
+                tipLocation={'bottom-left'}
+              />
             </Link>
-          : <Link to={`messages/${user.name}`}>
-              <ProfileHeaderAction glyph="message-new" />
+          : <Link to={`/messages/${user.username}`}>
+              <ProfileHeaderAction
+                glyph="message-new"
+                tipText={`Message ${user.name}`}
+                tipLocation={'bottom-left'}
+              />
             </Link>}
       </ProfileHeader>
-
-      {componentSize !== 'mini' &&
-        currentUser &&
-        <Actions>
-          {currentUser && currentUser.id === user.id
-            ? <ActionOutline>
-                Settings
-              </ActionOutline>
-            : <Action onClick={() => initMessage()}>
-                Message
-              </Action>}
-        </Actions>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
         <MetaData data={{ threads: user.threadCount }} />}

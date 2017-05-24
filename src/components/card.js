@@ -7,12 +7,12 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
 import { FlexContainer } from './flexbox';
-import { Shadow } from './globals';
+import { Shadow, hexa } from './globals';
 
 const StyledCard = styled(FlexContainer)`
   background: ${({ theme }) => theme.bg.default};
   border-radius: 12px;
-  box-shadow: ${Shadow.low} rgba(52,113,197, 0.1);
+  box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.placeholder, 0.25)};
   position: relative;
   width: 100%;
   max-width: 100%;

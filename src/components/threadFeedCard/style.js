@@ -1,10 +1,16 @@
 import styled from 'styled-components';
-import { FlexCol, FlexRow } from '../globals';
+import { FlexCol, FlexRow, Transition, Shadow, hexa } from '../globals';
 import Card from '../card';
 
 export const StyledThreadFeedCard = styled(Card)`
-  padding: 16px 20px 12px 20px;
+  padding: 16px 20px 16px 20px;
   margin-bottom: 16px;
+  transition: ${Transition.hover.off};
+
+  &:hover {
+    transition: ${Transition.hover.on};
+    box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
+  }
 `;
 
 export const CardContent = styled(FlexCol)`
@@ -36,6 +42,11 @@ export const MetaRow = styled(FlexRow)`
 
 export const ParticipantHeads = styled(FlexRow)`
   align-items: center;
+
+  > a {
+    margin-left: 4px;
+    margin-top: 4px;
+  }
 `;
 
 export const Participant = styled.img`
@@ -43,10 +54,6 @@ export const Participant = styled.img`
   width: 1.5rem;
   border-radius: 100%;
   background-size: cover;
-
-  + img {
-    margin-left: 0.25rem;
-  }
 `;
 
 export const Creator = styled.div`
@@ -54,7 +61,6 @@ export const Creator = styled.div`
   width: 2rem;
   padding: 0.125rem;
   border-radius: 100%;
-  margin-right: 0.25rem;
   border: 2px solid ${({ theme }) => theme.brand.alt};
 `;
 

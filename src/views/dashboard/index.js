@@ -68,7 +68,6 @@ const DashboardPure = ({
       </AppViewWrapper>
     );
   } else {
-    window.location.href = '/';
     return (
       <AppViewWrapper>
         <Column type="primary" alignItems="center">

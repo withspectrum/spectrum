@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { ListCardItem } from '../../../components/listCard';
 import { IconButton, TextButton, Button } from '../../../components/buttons';
 import Icon from '../../../components/icons';
-import { NullCard, NullTitle, NullSubtitle } from '../../../components/upsell';
+import { NullCard } from '../../../components/upsell';
 import { openModal } from '../../../actions/modals';
 
 import {
@@ -59,13 +59,11 @@ const ListCard = ({ communities, dispatch }) => {
     );
   } else {
     return (
-      <NullCard bg="community">
-        <NullTitle>
-          You're fresh out of communities!
-        </NullTitle>
-        <NullSubtitle>
-          Let's find you something worth joining...
-        </NullSubtitle>
+      <NullCard
+        bg="community"
+        heading={`You're fresh out of communities!`}
+        copy={`Let's find you something worth joining...`}
+      >
         <Button icon="explore" color="text.alt" gradientTheme="">
           Browse communities
         </Button>

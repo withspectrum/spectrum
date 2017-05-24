@@ -24,6 +24,7 @@ import {
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
   const formatLocation = () => {
     if (!props.data.channel) {
+      console.log(props);
       return;
     }
     if (props.data.channel.name && props.data.channel.community.name) {
@@ -51,20 +52,15 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
   const participantList = props.data.participants;
 
   const messageAvatars = list => {
-    return list.map(participant => {
-      return (
-        <Participant
-          onClick={() => openUserProfileModal(participant)}
-          src={participant.profilePhoto}
-          role="presentation"
-          key={participant.id}
-        />
-      );
-    });
+    return list.map(participant => (
+      <Link key={participant.id} to={`/users/${participant.username}`}>
+        <Participant src={participant.profilePhoto} role="presentation" />
+      </Link>
+    ));
   };
 
   return (
-    <StyledThreadFeedCard>
+    <StyledThreadFeedCard hoverable>
       <CardContent>
         {formatLocation()}
         <Title>
@@ -82,7 +78,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
             </Creator>
             {messageAvatars(participantList)}
           </ParticipantHeads>
-          <Meta>{props.data.messageCount} messages</Meta>
+          {/* <Meta>{props.data.messageCount} messages</Meta> */}
         </MetaRow>
       </CardContent>
     </StyledThreadFeedCard>

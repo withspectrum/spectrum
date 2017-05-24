@@ -14,7 +14,7 @@ import { getUserThreads, getUser } from './queries';
 
 const ThreadFeedWithData = compose(getUserThreads)(ThreadFeed);
 
-const UserViewPure = ({ match, data: { user, error } }) => {
+const UserViewPure = ({ match, data: { user, error, channel, community } }) => {
   const username = match.params.username;
 
   if (error) {

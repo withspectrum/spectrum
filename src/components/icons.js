@@ -25,7 +25,7 @@ export const SvgWrapper = styled.div`
   min-height: ${props => (props.size ? `${props.size}px` : '32px')};
   position: relative;
   color: inherit;
-  ${props => (props.tipText && !props.onboarding ? Tooltip(props) : '')};
+  ${props => (props.tipText ? Tooltip(props) : '')};
 `;
 
 class Icon extends React.Component {

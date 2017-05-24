@@ -9,7 +9,7 @@ import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
 import ThreadFeedCard from '../threadFeedCard';
-import { NullCard, NullTitle, NullSubtitle } from '../upsell';
+import { NullCard } from '../upsell';
 import { LoadingThread } from '../loading';
 import { Button } from '../buttons';
 
@@ -19,26 +19,22 @@ const displayLoadingState = branch(
 );
 
 const NullState = () => (
-  <NullCard bg="post">
-    <NullTitle>
-      Sorry, no threads here yet...
-    </NullTitle>
-    <NullSubtitle>
-      But you could start one!
-    </NullSubtitle>
+  <NullCard
+    bg="post"
+    heading={`Sorry, no threads here yet...`}
+    copy={`But you could start one!`}
+  >
     <Button icon="post">Start a thread</Button>
   </NullCard>
 );
 
 const ErrorState = () => (
-  <NullCard bg="post">
-    <NullTitle>
-      Whoops!
-    </NullTitle>
-    <NullSubtitle>
-      Something went wrong on our end... Mind reloading?
-    </NullSubtitle>
-    <Button icon="post">Reload</Button>
+  <NullCard
+    bg="error"
+    heading={`Whoops!`}
+    copy={`Something went wrong on our end... Mind reloading?`}
+  >
+    <Button icon="reload">Reload</Button>
   </NullCard>
 );
 
@@ -58,7 +54,7 @@ const ThreadFeedPure = ({
   }
 
   if (error && threads.length === 0) {
-    return <NullState />;
+    return <ErrorState />;
   }
 
   if (threads.length === 0) {

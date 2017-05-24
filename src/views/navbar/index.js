@@ -3,9 +3,8 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import Icon from '../../components/icons';
-import { Button } from '../../components/buttons';
-import Dropdown from '../../components/dropdown';
-import { NullNotifications } from '../../components/upsell';
+import { NotificationDropdown } from './components/notificationDropdown';
+import { ProfileDropdown } from './components/profileDropdown';
 import {
   Container,
   Section,
@@ -17,8 +16,6 @@ import {
   IconLink,
   Label,
   LabelForTab,
-  DropdownFooter,
-  DropdownHeader,
 } from './style';
 
 class Navbar extends Component {
@@ -73,15 +70,7 @@ class Navbar extends Component {
                   <Icon glyph="notification" />
                   <LabelForTab>Notifications</LabelForTab>
                 </IconLink>
-                <Dropdown>
-                  <DropdownHeader>
-                    My Notifications
-                  </DropdownHeader>
-                  <NullNotifications />
-                  <DropdownFooter>
-                    <Button to={'/notifications'}>View all</Button>
-                  </DropdownFooter>
-                </Dropdown>
+                <NotificationDropdown />
               </IconDrop>
 
               {/* TODO: Make this active only when viewing current logged in user profile */}
@@ -94,12 +83,7 @@ class Navbar extends Component {
 
                   <LabelForTab>Profile</LabelForTab>
                 </IconLink>
-                <Dropdown width={'240px'}>
-
-                  <DropdownFooter>
-                    <Button color={'warn'}>Log Out</Button>
-                  </DropdownFooter>
-                </Dropdown>
+                <ProfileDropdown />
               </IconDrop>
             </Section>}
 
