@@ -75,5 +75,5 @@ export const Meta = styled.span`
 export const Location = styled.span`
   font-size: 12px;
   font-weight: 500;
-  color: ${({ theme }) => theme.text.placeholder};
+  color: ${({ theme }) => theme.text.alt};
 `;
