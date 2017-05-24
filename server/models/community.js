@@ -57,15 +57,15 @@ const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
   const getChannelCount = db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
-    .run()
-    .then(data => data.length);
+    .count()
+    .run();
 
   const getMemberCount = db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
     .filter({ isBlocked: false })
-    .run()
-    .then(data => data.length);
+    .count()
+    .run();
 
   return Promise.all([getChannelCount, getMemberCount]);
 };

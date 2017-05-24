@@ -82,12 +82,13 @@ const getChannelMetaData = (channelId: string): Promise<Array<number>> => {
     .getAll(channelId, { index: 'channelId' })
     .count()
     .run();
+
   const getMemberCount = db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
     .filter({ isBlocked: false, isPending: false })
-    .run()
-    .then(data => data.length);
+    .count()
+    .run();
 
   return Promise.all([getThreadCount, getMemberCount]);
 };
