@@ -21,6 +21,10 @@ const Thread = /* GraphQL */ `
 		content: ThreadContent!
 	}
 
+	enum ThreadType {
+		SLATE
+	}
+
 	type Thread {
 		id: ID!
 		createdAt: Date!
@@ -33,6 +37,7 @@ const Thread = /* GraphQL */ `
 		content: ThreadContent!
 		isLocked: Boolean
 		isCreator: Boolean
+		type: ThreadType
 		edits: [Edit!]
 		participants: [User]
 		messageConnection(first: Int = 10, after: String): ThreadMessagesConnection!
@@ -53,6 +58,7 @@ const Thread = /* GraphQL */ `
 	input ThreadInput {
 		channelId: ID!
 		communityId: ID!
+		type: ThreadType
 		content: ThreadContentInput!
 	}
 
