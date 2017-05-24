@@ -51,7 +51,9 @@ const CommunityList = props => {
                   contents={item.node}
                   withDescription={withDescription}
                   withMeta={withMeta}
-                  meta={`${item.node.metaData.members} members · ${item.node.metaData.channels} channels`}
+                  meta={`${item.node.metaData.members > 1 ? `${item.node.metaData.members} members` : `${item.node.metaData.members} member`}
+                     ·
+                    ${item.node.metaData.channels > 1 ? `${item.node.metaData.channels} channels` : `${item.node.metaData.channels} channel`}`}
                 >
                   <Icon glyph="view-forward" />
                 </ListCardItem>

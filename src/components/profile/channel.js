@@ -95,8 +95,8 @@ const ChannelWithData = ({
           </Link>
         </ProfileHeaderMeta>
 
-        {componentSize !== 'mini' &&
-          (currentUser && channel.isMember) &&
+        {currentUser &&
+          channel.isMember &&
           <ProfileHeaderAction
             glyph="minus"
             color="text.placeholder"
@@ -105,8 +105,9 @@ const ChannelWithData = ({
             tipLocation="top-left"
           />}
 
-        {componentSize !== 'mini' &&
-          (currentUser && (channel.isOwner || channel.community.isOwner)) &&
+        {currentUser &&
+          (channel.channelPermissions.isOwner ||
+            channel.community.communityPermissions.isOwner) &&
           <ProfileHeaderAction
             glyph="settings"
             tipText={`Channel settings`}
