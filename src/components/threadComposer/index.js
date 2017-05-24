@@ -54,7 +54,6 @@ class ThreadComposerWithData extends Component {
 
   constructor(props) {
     super(props);
-
     /*
       Create a new array of communities only containing the `node` data from
       graphQL. Then filter the resulting channel to remove any communities
