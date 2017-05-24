@@ -45,6 +45,12 @@ type CommunityProps = {
     channels: Number,
     members: Number,
   },
+  communityPermissions: {
+    isOwner: Boolean,
+    isMember: Boolean,
+    isModerator: Boolean,
+    isBlocked: Boolean,
+  },
 };
 
 const CommunityWithData = ({
@@ -63,15 +69,17 @@ const CommunityWithData = ({
   const toggleMembership = communityId => {
     toggleCommunityMembership({ communityId })
       .then(({ data: { toggleCommunityMembership } }) => {
-        const str = toggleCommunityMembership.isMember
+        const str = toggleCommunityMembership.communityPermissions.isMember
           ? `Joined ${toggleCommunityMembership.name}!`
           : `Left ${toggleCommunityMembership.name}.`;
 
-        const type = toggleCommunityMembership.isMember ? 'success' : 'neutral';
+        const type = toggleCommunityMembership.communityPermissions.isMember
+          ? 'success'
+          : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
-        dispatch(addToastWithTimeout('error', err));
+        dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
