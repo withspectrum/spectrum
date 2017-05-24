@@ -170,23 +170,36 @@ const generateThread = (communityId, channelId, creatorId) => {
 
 const generateDirectMessageThread = users => {
   const createdAt = faker.date.past(2);
-  const lastActivity = faker.date.between(createdAt, faker.date.recent());
+
+  return {
+    id: uuid(),
+    name: null,
+    createdAt,
+  };
+};
+
+const generateUsersDirectMessageThreads = (threadId, userId) => {
+  const isOwner = faker.random.boolean();
+  // if user is either an admin or moderator, they have to be a member
+  // otherwise random chance
+  const isMember = true;
+  // might be blocked as long as they aren't an admin, mod, or member
+  const isBlocked = isOwner || isMember ? false : faker.random.boolean();
+
+  const createdAt = faker.date.past(2);
+  const lastActive = faker.date.between(createdAt, faker.date.recent());
   const lastSeen = faker.date.between(createdAt, new Date());
 
   return {
     id: uuid(),
-    creatorId: users[0].id,
-    name: null,
     createdAt,
-    lastActivity: faker.date.between(lastActivity, new Date()),
-    participants: users.map(user => user.id),
-    status: users.map(user => {
-      return {
-        userId: user.id,
-        lastActivity,
-        lastSeen,
-      };
-    }),
+    threadId,
+    userId,
+    isOwner,
+    isMember,
+    isBlocked,
+    lastActive,
+    lastSeen,
   };
 };
 
@@ -286,6 +299,7 @@ module.exports = {
   generateChannel,
   generateUsersCommunities,
   generateUsersChannels,
+  generateUsersDirectMessageThreads,
   generateThread,
   generateMessage,
   generateReaction,

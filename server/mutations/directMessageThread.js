@@ -5,7 +5,6 @@ const {
   createDirectMessageThread,
   getDirectMessageThreadsByUser,
 } = require('../models/directMessageThread');
-import type { DirectMessageThreadProps } from '../models/directMessageThread';
 const { storeMessage } = require('../models/message');
 
 module.exports = {

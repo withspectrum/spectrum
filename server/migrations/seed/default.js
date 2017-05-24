@@ -131,18 +131,19 @@ const DEFAULT_NOTIFICATIONS = [
 const DEFAULT_DIRECT_MESSAGE_THREADS = [
   {
     id: 'first-dm-thread-asfd123',
-    creatorId: DEFAULT_USERS[0].id,
     createdAt: new Date(),
     name: null,
-    lastActivity: new Date(),
-    participants: DEFAULT_USERS.map(user => user.id),
-    status: DEFAULT_USERS.map(user => {
-      return {
-        userId: user.id,
-        lastActivity: new Date(),
-        lastSeen: new Date(),
-      };
-    }),
+  },
+];
+
+const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
+  {
+    createdAt: new Date(),
+    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    isOwner: false,
+    isMember: true,
+    isBlocked: false,
   },
 ];
 
@@ -178,6 +179,7 @@ module.exports = {
   DEFAULT_THREADS,
   DEFAULT_NOTIFICATIONS,
   DEFAULT_DIRECT_MESSAGE_THREADS,
+  DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_COMMUNITIES,
   DEFAULT_USERS_CHANNELS,
 };
