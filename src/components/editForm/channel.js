@@ -100,13 +100,14 @@ class ChannelWithData extends Component {
           community)?
         </p>
         {' '}
-        <p>
-          The
-          {' '}
-          <b>{channelData.metaData.threads} threads</b>
-          {' '}
-          posted in this channel will be deleted.
-        </p>
+        {channelData.metaData.threads > 0 &&
+          <p>
+            The
+            {' '}
+            <b>{channelData.metaData.threads} threads</b>
+            {' '}
+            posted in this channel will be deleted.
+          </p>}
         <p>
           All messages, reactions, and media shared in this channel will be deleted.
         </p>
@@ -147,18 +148,9 @@ class ChannelWithData extends Component {
           <Input defaultValue={name} id="name" onChange={this.handleChange}>
             Name
           </Input>
-          {// general slug can't be edited
-          slug === 'general'
-            ? <UnderlineInput defaultValue={slug} disabled>
-                {`sp.chat/${channel.community.slug}/`}
-              </UnderlineInput>
-            : <UnderlineInput
-                defaultValue={slug}
-                id="slug"
-                onChange={this.handleChange}
-              >
-                {`sp.chat/${channel.community.slug}/`}
-              </UnderlineInput>}
+          <UnderlineInput defaultValue={slug} disabled>
+            {`sp.chat/${channel.community.slug}/`}
+          </UnderlineInput>
           <TextArea
             id="description"
             defaultValue={description}

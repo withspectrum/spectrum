@@ -38,7 +38,7 @@ const SettingsPure = ({
     return <Upsell404Community community={communitySlug} create={create} />;
   }
 
-  if (!community.isOwner) {
+  if (!community.communityPermissions.isOwner) {
     return <Upsell404Community community={communitySlug} noPermission />;
   }
 

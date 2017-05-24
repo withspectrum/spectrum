@@ -33,20 +33,27 @@ const ThreadDetailPure = ({
   currentUser,
   history,
 }) => {
+  const isChannelOwner = thread.channel.channelPermissions.isOwner;
+  const isCommunityOwner =
+    thread.channel.community.communityPermissions.isOwner;
+  const isChannelModerator = thread.channel.channelPermissions.isModerator;
+  const isCommunityModerator =
+    thread.channel.community.communityPermissions.isModerator;
+
   const threadLock = (threadId, value) =>
     setThreadLock({
       threadId,
       value,
     })
       .then(({ data: { setThreadLock } }) => {
-        if (setThreadLock) {
+        if (setThreadLock.isLocked) {
           dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
         } else {
           dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
         }
       })
       .catch(err => {
-        dispatch(addToastWithTimeout('error', err));
+        dispatch(addToastWithTimeout('error', err.message));
       });
 
   const triggerDelete = (e, threadId) => {
@@ -54,9 +61,9 @@ const ThreadDetailPure = ({
 
     let message;
 
-    if (thread.isCommunityOwner && !thread.isCreator) {
+    if (isCommunityOwner && !thread.isCreator) {
       message = `You are about to delete another person's thread. As the owner of the ${thread.channel.community.name} community, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
-    } else if (thread.isChannelOwner && !thread.isCreator) {
+    } else if (isChannelOwner && !thread.isCreator) {
       message = `You are about to delete another person's thread. As the owner of the ${thread.channel} channel, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
     } else if (thread.isCreator) {
       message = 'Are you sure you want to delete this thread?';
@@ -85,31 +92,18 @@ const ThreadDetailPure = ({
           {thread.creator.name}
         </Byline>
         {currentUser &&
-          (thread.isCreator ||
-            thread.isChannelOwner ||
-            thread.isCommunityOwner) &&
+          (thread.isCreator || isChannelOwner || isCommunityOwner) &&
           <DropWrap>
             <Icon glyph="settings" />
             <Flyout>
-              {(thread.isChannelOwner || thread.isCommunityOwner) &&
+              {(isChannelOwner || isCommunityOwner) &&
                 <FlyoutRow>
                   <IconButton
                     glyph="freeze"
-                    onClick={() => threadLock(thread.id, !thread.locked)}
+                    onClick={() => threadLock(thread.id, !thread.isLocked)}
                   />
                 </FlyoutRow>}
-              {thread.isCreator &&
-                <FlyoutRow>
-                  <IconButton
-                    glyph="freeze"
-                    hoverColor="space.light"
-                    tipText="Freeze Chat"
-                    tipLocation="bottom-right"
-                  />
-                </FlyoutRow>}
-              {(thread.isCreator ||
-                thread.isChannelOwner ||
-                thread.isCommunityOwner) &&
+              {(thread.isCreator || isChannelOwner || isCommunityOwner) &&
                 <FlyoutRow>
                   <IconButton
                     glyph="delete"

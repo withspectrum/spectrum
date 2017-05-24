@@ -17,6 +17,8 @@ const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 const { apolloUploadExpress } = require('apollo-upload-server');
 const cors = require('cors');
+const OpticsAgent = require('optics-agent');
+const { maskErrors } = require('graphql-errors');
 
 const { db } = require('./models/db');
 const listeners = require('./subscriptions/listeners');
@@ -26,12 +28,17 @@ const schema = require('./schema');
 const { init: initPassport } = require('./authentication.js');
 import createLoaders from './loaders';
 
+OpticsAgent.instrumentSchema(schema);
+
 console.log('Server starting...');
 
 // Initialize authentication
 initPassport();
 // API server
 const app = express();
+
+app.use(OpticsAgent.middleware());
+maskErrors(schema);
 
 app.use(
   cors({
@@ -96,6 +103,7 @@ app.use(
     context: {
       user: req.user,
       loaders: createLoaders(),
+      opticsContext: OpticsAgent.context(req),
     },
   }))
 );

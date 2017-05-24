@@ -2,7 +2,7 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { communityInfoFragment } from './fragments/community/communityInfo';
-import { GET_CURRENT_USER_COMMUNITIES_QUERY } from '../views/dashboard/queries';
+// import { GET_CURRENT_USER_COMMUNITIES_QUERY } from '../views/dashboard/queries';
 
 /*
   Create a new community

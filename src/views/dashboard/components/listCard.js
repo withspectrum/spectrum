@@ -4,7 +4,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
-// import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCard';
 import { IconButton, TextButton, Button } from '../../../components/buttons';
 import Icon from '../../../components/icons';

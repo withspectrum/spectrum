@@ -78,7 +78,6 @@ module.exports = {
         communities.map(community => ({
           node: {
             ...community,
-            isOwner: community.owners.indexOf(user.id) > -1,
           },
         }))
       ),

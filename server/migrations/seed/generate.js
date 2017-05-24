@@ -38,8 +38,9 @@ const generateUser = () => {
   };
 };
 
-const generateCommunity = members => {
+const generateCommunity = () => {
   const name = faker.company.companyName();
+
   return {
     id: uuid(),
     createdAt: faker.date.past(2),
@@ -49,14 +50,10 @@ const generateCommunity = members => {
     profilePhoto: faker.image.business(),
     coverPhoto: faker.image.image(),
     slug: slugify(name),
-    members,
-    owners: [members[0]],
-    moderators: [],
-    blockedUsers: [],
   };
 };
 
-const generateChannel = (communityId, members) => {
+const generateChannel = communityId => {
   const name = faker.commerce.department();
 
   return {
@@ -67,12 +64,81 @@ const generateChannel = (communityId, members) => {
     description: casual.short_description(),
     slug: slugify(name),
     isPrivate: faker.random.boolean(),
-    members,
-    owners: [members[0]],
-    moderators: [],
-    pendingUsers: [],
-    blockedUsers: [],
+    isDefault: false,
   };
+};
+
+const generateUsersCommunities = (communityId, userId) => {
+  const isOwner = faker.random.boolean();
+  // for ease of use, set to false
+  const isModerator = false;
+  // if user is either an admin or moderator, they have to be a member
+  // otherwise random chance
+  const isMember = isOwner || isModerator ? true : faker.random.boolean();
+  // might be blocked as long as they aren't an admin, mod, or member
+  const isBlocked = isOwner || isModerator || isMember
+    ? false
+    : faker.random.boolean();
+
+  return {
+    id: uuid(),
+    createdAt: faker.date.past(2),
+    communityId,
+    userId,
+    isOwner,
+    isModerator,
+    isMember,
+    isBlocked,
+  };
+};
+
+const generateUsersChannels = (channels, usersCommunities, userId) => {
+  // figure out which communities the user being evaulated is a member of
+  let possibleCommunities = usersCommunities.filter(
+    elem => elem.userId === userId
+  );
+  // make sure they are a member of the community
+  possibleCommunities = possibleCommunities
+    .filter(elem => elem.isMember || elem.isOwner || elem.isModerator)
+    .map(elem => elem.communityId);
+  let possibleChannels = channels.filter(
+    channel => possibleCommunities.indexOf(channel.communityId) > -1
+  );
+
+  // for each of those communities, construct an array of channels that are in
+  // that community
+  // const possibleChannels = possibleCommunities.map(community => channels.filter(channel => channel.communityId === community.id))
+
+  // for each of hte possible channels, generate a new usersChannels object
+  const foo = possibleChannels.map(channel => {
+    const isOwner = faker.random.boolean();
+    // for ease of use, set to false
+    const isModerator = false;
+    // if user is either an admin or moderator, they have to be a member
+    // otherwise random chance
+    const isMember = isOwner || isModerator ? true : faker.random.boolean();
+    // if a user is admin, mod, or member, they can't be pending, otherwise random
+    const isPending = isOwner || isModerator || isMember
+      ? false
+      : faker.random.boolean();
+    // might be blocked as long as they aren't an admin, mod, pending, or member
+    const isBlocked = isOwner || isModerator || isMember || isPending
+      ? false
+      : faker.random.boolean();
+
+    return {
+      id: uuid(),
+      createdAt: new Date(),
+      channelId: channel.id,
+      userId,
+      isOwner,
+      isModerator,
+      isMember,
+      isBlocked,
+      isPending,
+    };
+  });
+  return foo;
 };
 
 const generateThread = (communityId, channelId, creatorId) => {
@@ -218,6 +284,8 @@ module.exports = {
   generateUser,
   generateCommunity,
   generateChannel,
+  generateUsersCommunities,
+  generateUsersChannels,
   generateThread,
   generateMessage,
   generateReaction,

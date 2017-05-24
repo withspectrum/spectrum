@@ -10,9 +10,6 @@ import {
 import {
   communityThreadsFragment,
 } from '../../api/fragments/community/communityThreads';
-import {
-  communityMetaDataFragment,
-} from '../../api/fragments/community/communityMetaData';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import {
   channelMetaDataFragment,
@@ -177,11 +174,9 @@ export const getCommunity = graphql(
 		query getCommunity($slug: String) {
 			community(slug: $slug) {
         ...communityInfo
-        ...communityMetaData
       }
 		}
     ${communityInfoFragment}
-    ${communityMetaDataFragment}
 	`,
   profileQueryOptions
 );

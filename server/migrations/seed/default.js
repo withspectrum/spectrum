@@ -58,10 +58,6 @@ const DEFAULT_COMMUNITIES = [
     profilePhoto: faker.image.business(),
     coverPhoto: faker.image.image(),
     slug: 'spectrum',
-    members: DEFAULT_USERS.map(({ id }) => id),
-    owners: DEFAULT_USERS.map(({ id }) => id),
-    moderators: [],
-    blockedUsers: [],
   },
 ];
 
@@ -74,11 +70,7 @@ const DEFAULT_CHANNELS = [
     description: 'General chatter',
     slug: 'general',
     isPrivate: false,
-    members: DEFAULT_USERS.map(({ id }) => id),
-    owners: DEFAULT_USERS.map(({ id }) => id),
-    moderators: [],
-    pendingUsers: [],
-    blockedUsers: [],
+    isDefault: true,
   },
 ];
 
@@ -154,6 +146,31 @@ const DEFAULT_DIRECT_MESSAGE_THREADS = [
   },
 ];
 
+const DEFAULT_USERS_COMMUNITIES = [
+  {
+    createdAt: new Date(),
+    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    isOwner: true,
+    isModerator: false,
+    isMember: true,
+    isBlocked: false,
+  },
+];
+
+const DEFAULT_USERS_CHANNELS = [
+  {
+    createdAt: new Date(),
+    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    isOwner: true,
+    isModerator: false,
+    isMember: true,
+    isBlocked: false,
+    isPending: false,
+  },
+];
+
 module.exports = {
   DEFAULT_USERS,
   DEFAULT_COMMUNITIES,
@@ -161,4 +178,6 @@ module.exports = {
   DEFAULT_THREADS,
   DEFAULT_NOTIFICATIONS,
   DEFAULT_DIRECT_MESSAGE_THREADS,
+  DEFAULT_USERS_COMMUNITIES,
+  DEFAULT_USERS_CHANNELS,
 };

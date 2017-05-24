@@ -24,10 +24,10 @@ const UPLOAD_PROFILE_PHOTO_OPTIONS = {
         },
       })
         .then(({ data }) => {
-          console.log('mutation complete ', data);
+          return;
         })
         .catch(error => {
-          console.log('error uploading profile photo', error);
+          return;
         }),
   }),
 };

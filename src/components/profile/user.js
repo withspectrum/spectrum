@@ -26,6 +26,9 @@ import {
   ProfileHeaderAction,
   Title,
   Subtitle,
+  Actions,
+  ActionOutline,
+  Action,
 } from './style';
 import { MetaData } from './metaData';
 import type { ProfileSizeProps } from './index';

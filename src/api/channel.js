@@ -202,21 +202,7 @@ export const CHECK_UNIQUE_CHANNEL_SLUG_QUERY = gql`
   query getChannel($channelSlug: String, $communitySlug: String) {
     channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
       ...channelInfo
-      pendingUsers {
-        ...userInfo
-      }
-      blockedUsers {
-        ...userInfo
-      }
-      ...channelMetaData
-      community {
-        ...communityInfo
-      }
     }
   }
   ${channelInfoFragment}
-  ${channelInfoFragment}
-  ${userInfoFragment}
-  ${communityInfoFragment}
-  ${channelMetaDataFragment}
 `;

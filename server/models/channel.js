@@ -9,16 +9,28 @@ const getChannelsByCommunity = (
   return db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
-    .filter(channel => db.not(channel.hasFields('isDeleted')))
+    .filter(channel => db.not(channel.hasFields('deletedAt')))
     .run();
 };
 
 const getChannelsByUser = (userId: string): Promise<Array<Object>> => {
-  return db
-    .table('channels')
-    .filter(channel => channel('members').contains(userId))
-    .filter(channel => db.not(channel.hasFields('isDeleted')))
-    .run();
+  return (
+    db
+      .table('usersChannels')
+      // get all the user's channels
+      .getAll(userId, { index: 'userId' })
+      // get the channel objects for each channel
+      .eqJoin('channelId', db.table('channels'))
+      // get rid of unnecessary info from the usersChannels object on the left
+      .without({ left: ['id', 'channelId', 'userId', 'createdAt'] })
+      // zip the tables
+      .zip()
+      // ensure we don't return any deleted channels
+      .filter(channel => db.not(channel.hasFields('deletedAt')))
+      // sort by channel creation date
+      .orderBy('createdAt')
+      .run()
+  );
 };
 
 const getChannelBySlug = (
@@ -36,7 +48,7 @@ const getChannelBySlug = (
         slug: communitySlug,
       },
     })
-    .filter(channel => db.not(channel.hasFields('isDeleted')))
+    .filter(channel => db.not(channel.hasFields('deletedAt')))
     .run()
     .then(result => {
       if (result && result[0]) {
@@ -60,7 +72,7 @@ const getChannels = (channelIds: Array<string>): Promise<Array<Object>> => {
   return db
     .table('channels')
     .getAll(...channelIds)
-    .filter(channel => db.not(channel.hasFields('isDeleted')))
+    .filter(channel => db.not(channel.hasFields('deletedAt')))
     .run();
 };
 
@@ -70,10 +82,11 @@ const getChannelMetaData = (channelId: string): Promise<Array<number>> => {
     .getAll(channelId, { index: 'channelId' })
     .count()
     .run();
+
   const getMemberCount = db
-    .table('channels')
-    .get(channelId)
-    .getField('members')
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ isBlocked: false, isPending: false })
     .count()
     .run();
 
@@ -100,12 +113,9 @@ export type EditChannelArguments = {
   },
 };
 
-const createChannel = (
-  {
-    input: { communityId, name, slug, description, isPrivate },
-  }: CreateChannelArguments,
-  creatorId: string
-): Promise<Object> => {
+const createChannel = ({
+  input: { communityId, name, slug, description, isPrivate },
+}: CreateChannelArguments): Promise<Object> => {
   return db
     .table('channels')
     .insert(
@@ -116,16 +126,24 @@ const createChannel = (
         description,
         slug,
         isPrivate,
-        members: [creatorId],
-        owners: [creatorId],
-        moderators: [],
-        pendingUsers: [],
-        blockedUsers: [],
       },
       { returnChanges: true }
     )
     .run()
     .then(result => result.changes[0].new_val);
+};
+
+const createGeneralChannel = (communityId: string): Promise<Object> => {
+  return createChannel({
+    input: {
+      name: 'General',
+      slug: 'general',
+      description: 'General Chatter',
+      communityId,
+      isPrivate: false,
+      isDefault: true,
+    },
+  });
 };
 
 const editChannel = ({
@@ -173,7 +191,7 @@ const deleteChannel = (channelId: string): Promise<Boolean> => {
     .get(channelId)
     .update(
       {
-        isDeleted: true,
+        deletedAt: new Date(),
         slug: db.uuid(),
       },
       {
@@ -195,123 +213,6 @@ const deleteChannel = (channelId: string): Promise<Boolean> => {
     });
 };
 
-const leaveChannel = (channelId: string, userId: string): Promise<Object> => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      row => ({
-        members: row('members').filter(item => item.ne(userId)),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        changes.length > 0
-          ? changes[0].new_val
-          : db.table('channels').get(channelId).run()
-    );
-};
-
-const joinChannel = (channelId: string, userId: string): Promise<Object> => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      row => ({
-        members: row('members').append(userId),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        changes.length > 0
-          ? changes[0].new_val
-          : db.table('channels').get(channelId).run()
-    );
-};
-
-const removeRequestToJoinChannel = (
-  channelId: string,
-  userId: string
-): Object => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      row => ({
-        pendingUsers: row('pendingUsers').filter(item => item.ne(userId)),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        changes.length > 0
-          ? changes[0].new_val
-          : db.table('channels').get(channelId).run()
-    );
-};
-
-const addRequestToJoinChannel = (channelId: string, userId: string): Object => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      row => ({
-        pendingUsers: row('pendingUsers').append(userId),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        changes.length > 0
-          ? changes[0].new_val
-          : db.table('channels').get(channelId).run()
-    );
-};
-
-const removeBlockedUser = (channelId: string, userId: string): Object => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      row => ({
-        blockedUsers: row('blockedUsers').filter(item => item.ne(userId)),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        changes.length > 0
-          ? changes[0].new_val
-          : db.table('channels').get(channelId).run()
-    );
-};
-
-const addBlockedUser = (channelId: string, userId: string): Object => {
-  return db
-    .table('channels')
-    .get(channelId)
-    .update(
-      row => ({
-        blockedUsers: row('blockedUsers').append(userId),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        changes.length > 0
-          ? changes[0].new_val
-          : db.table('channels').get(channelId).run()
-    );
-};
-
 const getTopChannels = (amount: number): Array<Object> => {
   return db.table('channels').orderBy(db.desc('members')).limit(amount).run();
 };
@@ -326,15 +227,10 @@ module.exports = {
   getChannelsByUser,
   getChannelsByCommunity,
   createChannel,
+  createGeneralChannel,
   editChannel,
   deleteChannel,
-  leaveChannel,
-  joinChannel,
   getTopChannels,
   getChannelMemberCount,
   getChannels,
-  addRequestToJoinChannel,
-  removeRequestToJoinChannel,
-  addBlockedUser,
-  removeBlockedUser,
 };
