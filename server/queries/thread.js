@@ -27,7 +27,7 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.community.load(communityId),
-    participants: ({ id, creatorId }: { id: String, creatorId: string }) => {
+    participants: ({ id, creatorId }, _, { loaders }) => {
       return getMessages(id)
         .then(messages =>
           messages
@@ -45,7 +45,7 @@ module.exports = {
                 self.indexOf(id) === index
             )
         )
-        .then(users => getUsers(users));
+        .then(users => loaders.user.loadMany(users));
     },
     isCreator: (
       { creatorId }: { creatorId: String },
