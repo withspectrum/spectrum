@@ -86,23 +86,25 @@ const createOrFindUser = (user: Object): Promise<Object> => {
 };
 
 const getEverything = (userId: string): Promise<Array<any>> => {
-  return (
-    db
-      .table('threads')
-      .orderBy(db.desc('createdAt'))
-      // Add the channel object to each thread
-      .eqJoin('channelId', db.table('channels'))
-      // Only take the members of a channel
-      .pluck({ left: true, right: { members: true } })
-      .zip()
-      // Filter by the user being a member to the channel of the thread
-      .filter(thread => thread('members').contains(userId))
-      .filter(thread => db.not(thread.hasFields('isDeleted')))
-      // Don't send the members back
-      .without('members')
-      .orderBy(db.desc('createdAt'))
-      .run()
-  );
+  return db
+    .table('usersChannels')
+    .getAll(userId, { index: 'userId' })
+    .eqJoin('channelId', db.table('threads'), {
+      index: 'channelId',
+    })
+    .without({
+      left: [
+        'id',
+        'channelId',
+        'createdAt',
+        'isMember',
+        'isModerator',
+        'isOwner',
+      ],
+    })
+    .zip()
+    .filter({ isBlocked: false, isPending: false })
+    .without('isBlocked', 'isPending');
 };
 
 const getUsersThreadCount = (

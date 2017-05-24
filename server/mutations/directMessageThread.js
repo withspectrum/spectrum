@@ -29,9 +29,7 @@ module.exports = {
       if (!input.participants)
         return new UserError('Nobody was selected to create a thread.');
       if (
-        !input.message ||
-        !input.message.content ||
-        !input.message.content.body
+        !input.message || !input.message.content || !input.message.content.body
       )
         return new UserError(
           'Be sure to add a message when creating a new thread!'

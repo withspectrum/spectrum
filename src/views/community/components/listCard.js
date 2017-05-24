@@ -28,7 +28,7 @@ const ListCardPure = ({ data, dispatch }) => {
       <StyledCard>
         <ListHeader>
           <ListHeading>Channels</ListHeading>
-          {data.community.isOwner &&
+          {data.community.communityPermissions.isOwner &&
             <IconButton
               glyph="plus"
               color="text.placeholder"

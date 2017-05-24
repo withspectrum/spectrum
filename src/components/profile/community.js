@@ -45,6 +45,12 @@ type CommunityProps = {
     channels: Number,
     members: Number,
   },
+  communityPermissions: {
+    isOwner: Boolean,
+    isMember: Boolean,
+    isModerator: Boolean,
+    isBlocked: Boolean,
+  },
 };
 
 const CommunityWithData = ({
@@ -63,15 +69,17 @@ const CommunityWithData = ({
   const toggleMembership = communityId => {
     toggleCommunityMembership({ communityId })
       .then(({ data: { toggleCommunityMembership } }) => {
-        const str = toggleCommunityMembership.isMember
+        const str = toggleCommunityMembership.communityPermissions.isMember
           ? `Joined ${toggleCommunityMembership.name}!`
           : `Left ${toggleCommunityMembership.name}.`;
 
-        const type = toggleCommunityMembership.isMember ? 'success' : 'neutral';
+        const type = toggleCommunityMembership.communityPermissions.isMember
+          ? 'success'
+          : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
-        dispatch(addToastWithTimeout('error', err));
+        dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
@@ -106,17 +114,33 @@ const CommunityWithData = ({
           </Link>
         </ProfileHeaderMeta>
         {currentUser &&
-          !community.isOwner &&
+          !community.communityPermissions.isOwner &&
           <ProfileHeaderAction
-            glyph={community.isMember ? 'door-leave' : 'door-enter'}
-            color={community.isMember ? 'brand.alt' : 'text.placeholder'}
-            hoverColor={community.isMember ? 'brand.alt' : 'warn.default'}
-            tipText={community.isMember ? `Leave community` : 'Join community'}
+            glyph={
+              community.communityPermissions.isMember
+                ? 'door-leave'
+                : 'door-enter'
+            }
+            color={
+              community.communityPermissions.isMember
+                ? 'brand.alt'
+                : 'text.placeholder'
+            }
+            hoverColor={
+              community.communityPermissions.isMember
+                ? 'brand.alt'
+                : 'warn.default'
+            }
+            tipText={
+              community.communityPermissions.isMember
+                ? `Leave community`
+                : 'Join community'
+            }
             tipLocation="bottom-left"
             onClick={() => toggleMembership(community.id)}
           />}
         {currentUser &&
-          community.isOwner &&
+          community.communityPermissions.isOwner &&
           <Link to={`/${community.slug}/settings`}>
             <ProfileHeaderAction
               glyph="settings"

@@ -27,12 +27,12 @@ const Thread = /* GraphQL */ `
 		modifiedAt: Date!
 		channel: Channel!
 		community: Community!
+		channelPermissions: ChannelPermissions!
+		communityPermissions: CommunityPermissions!
 		isPublished: Boolean!
 		content: ThreadContent!
 		isLocked: Boolean
 		isCreator: Boolean
-    isChannelOwner: Boolean
-    isCommunityOwner: Boolean
 		edits: [Edit!]
 		participants: [User]
 		messageConnection(first: Int = 10, after: String): ThreadMessagesConnection!

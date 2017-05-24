@@ -21,7 +21,7 @@ const getCommunities = (
   return db
     .table('communities')
     .getAll(...communityIds)
-    .filter(community => db.not(community.hasFields('isDeleted')))
+    .filter(community => db.not(community.hasFields('deletedAt')))
     .run();
 };
 
@@ -29,31 +29,43 @@ const getCommunitiesBySlug = (slugs: Array<string>): Promise<Array<Object>> => {
   return db
     .table('communities')
     .filter(community => db.expr(slugs).contains(community('slug')))
-    .filter(community => db.not(community.hasFields('isDeleted')))
+    .filter(community => db.not(community.hasFields('deletedAt')))
     .run();
 };
 
 const getCommunitiesByUser = (userId: string): Promise<Array<Object>> => {
-  return db
-    .table('communities')
-    .filter(community => community('members').contains(userId))
-    .filter(community => db.not(community.hasFields('isDeleted')))
-    .orderBy('createdAt')
-    .run();
+  return (
+    db
+      .table('usersCommunities')
+      // get all the user's communities
+      .getAll(userId, { index: 'userId' })
+      // get the community objects for each community
+      .eqJoin('communityId', db.table('communities'))
+      // get rid of unnecessary info from the usersCommunities object on the left
+      .without({ left: ['id', 'communityId', 'userId', 'createdAt'] })
+      // zip the tables
+      .zip()
+      // ensure we don't return any deleted communities
+      .filter(community => db.not(community.hasFields('deletedAt')))
+      // sort by community creation date
+      .orderBy('createdAt')
+      .run()
+  );
 };
 
 const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
   const getChannelCount = db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
-    .count()
-    .run();
+    .run()
+    .then(data => data.length);
+
   const getMemberCount = db
-    .table('communities')
-    .get(communityId)
-    .getField('members')
-    .count()
-    .run();
+    .table('usersCommunities')
+    .getAll(communityId, { index: 'communityId' })
+    .filter({ isBlocked: false })
+    .run()
+    .then(data => data.length);
 
   return Promise.all([getChannelCount, getMemberCount]);
 };
@@ -96,10 +108,6 @@ const createCommunity = (
         profilePhoto: null,
         coverPhoto: null,
         slug,
-        members: [creatorId],
-        owners: [creatorId],
-        moderators: [],
-        blockedUsers: [],
       },
       { returnChanges: true }
     )
@@ -131,32 +139,14 @@ const createCommunity = (
                 // return the resulting community with the profilePhoto set
                 .then(
                   result =>
-                    result.changes.length > 0
+                    (result.changes.length > 0
                       ? result.changes[0].new_val
-                      : db.table('communities').get(community.id).run()
+                      : db.table('communities').get(community.id).run())
                 )
             );
           }),
         ]);
       }
-    })
-    .then(([community]) => {
-      // create a default 'general' channel in the newly created community
-      return Promise.all([
-        community,
-        createChannel(
-          {
-            input: {
-              name: 'General',
-              slug: 'general',
-              description: 'General Chatter',
-              communityId: community.id,
-              isPrivate: false,
-            },
-          },
-          creatorId // community owner owns the channel by default
-        ),
-      ]);
     })
     .then(data => data[0]); // return community object
 };
@@ -254,7 +244,7 @@ const deleteCommunity = (communityId: string): Promise<Object> => {
     .get(communityId)
     .update(
       {
-        isDeleted: true,
+        deletedAt: new Date(),
         slug: db.uuid(),
       },
       {
@@ -280,77 +270,6 @@ const deleteCommunity = (communityId: string): Promise<Object> => {
         "Something went wrong and we weren't able to delete this community"
       );
     });
-};
-
-const leaveCommunity = (
-  communityId: string,
-  userId: string
-): Promise<Object> => {
-  return db
-    .table('communities')
-    .get(communityId)
-    .update(
-      row => ({
-        members: row('members').filter(item => item.ne(userId)),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        changes.length > 0
-          ? changes[0].new_val
-          : db.table('communities').get(communityId).run()
-    );
-};
-
-const joinCommunity = (
-  communityId: string,
-  userId: string
-): Promise<Object> => {
-  return db
-    .table('communities')
-    .get(communityId)
-    .update(
-      row => ({
-        members: row('members').append(userId),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        changes.length > 0
-          ? changes[0].new_val
-          : db.table('communities').get(communityId).run()
-    );
-};
-
-// TODO: Handle default channels as set by the community owner. For now
-// we treat the 'general' channel as default.
-const subscribeToDefaultChannels = (
-  communityId: string,
-  userId: string
-): Promise<Array<Object>> => {
-  return db
-    .table('channels')
-    .filter({ communityId: communityId, slug: 'general' })
-    .update(
-      row => ({
-        members: row('members').append(userId),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(
-      ({ changes }) =>
-        changes.length > 0
-          ? changes[0].new_val
-          : db
-              .table('channels')
-              .filter({ communityId: communityId, slug: 'general' })
-              .run()
-    );
 };
 
 const unsubscribeFromAllChannelsInCommunity = (
@@ -379,12 +298,19 @@ const userIsMemberOfAnyChannelInCommunity = (
   communityId: string,
   userId: string
 ): Promise<Boolean> => {
-  return db
+  return db('spectrum')
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
+    .eqJoin('id', db.table('usersChannels'), { index: 'channelId' })
+    .zip()
+    .filter({ userId })
+    .pluck('isMember')
     .run()
     .then(channels => {
-      return channels.some(channel => channel.members.indexOf(userId) > -1);
+      // if the user is not a member of any other channels in the community
+      if (channels.length > 0) return false;
+      // if any of the channels return true for isMember, we return true
+      return channels.some(channel => channel.isMember);
     });
 };
 
@@ -396,9 +322,6 @@ module.exports = {
   createCommunity,
   editCommunity,
   deleteCommunity,
-  leaveCommunity,
-  joinCommunity,
-  subscribeToDefaultChannels,
   unsubscribeFromAllChannelsInCommunity,
   userIsMemberOfCommunity,
   userIsMemberOfAnyChannelInCommunity,

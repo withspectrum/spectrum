@@ -21,8 +21,6 @@ import ListCard from './components/listCard';
 
 const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 
-const CurrentUserProfile = compose(getCurrentUserProfile)(UserProfile);
-
 const DashboardPure = ({
   data: { user, error },
   data,
@@ -52,11 +50,10 @@ const DashboardPure = ({
     );
   } else if (user && user !== null) {
     const communities = user.communityConnection.edges;
-
     return (
       <AppViewWrapper>
         <Column type="secondary">
-          <CurrentUserProfile profileSize="mini" />
+          <UserProfile profileSize="mini" data={{ user: user }} />
           <ListCard communities={communities} />
         </Column>
 
@@ -68,7 +65,7 @@ const DashboardPure = ({
       </AppViewWrapper>
     );
   } else {
-    window.location.href = '/';
+    // window.location.href = '/';
     return (
       <AppViewWrapper>
         <Column type="primary" alignItems="center">

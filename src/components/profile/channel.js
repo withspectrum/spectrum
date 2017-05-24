@@ -68,15 +68,17 @@ const ChannelWithData = ({
   const toggleSubscription = channelId => {
     toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
-        const str = toggleChannelSubscription.isMember
+        const str = toggleChannelSubscription.channelPermissions.isMember
           ? `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
           : `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
 
-        const type = toggleChannelSubscription.isMember ? 'success' : 'neutral';
+        const type = toggleChannelSubscription.channelPermissions.isMember
+          ? 'success'
+          : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
-        dispatch(addToastWithTimeout('error', err));
+        dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
@@ -103,7 +105,8 @@ const ChannelWithData = ({
         currentUser &&
         <Actions>
           {// user owns the community, assumed member
-          channel.isOwner || channel.community.isOwner
+          channel.channelPermissions.isOwner ||
+            channel.community.communityPermissions.isOwner
             ? <ActionOutline>
                 <Link
                   to={`/${channel.community.slug}/${channel.slug}/settings`}
@@ -114,9 +117,9 @@ const ChannelWithData = ({
             : <span />}
 
           {// user is a member and doesn't own the community
-          channel.isMember &&
-            !channel.isOwner &&
-            !channel.community.isOwner &&
+          channel.channelPermissions.isMember &&
+            !channel.channelPermissions.isOwner &&
+            !channel.community.communityPermissions.isOwner &&
             <ActionOutline
               color={'text.alt'}
               hoverColor={'warn.default'}
@@ -126,9 +129,9 @@ const ChannelWithData = ({
             </ActionOutline>}
 
           {// user is not a member and doesn't own the channel
-          !channel.isMember &&
-            !channel.isOwner &&
-            !channel.community.isOwner &&
+          !channel.channelPermissions.isMember &&
+            !channel.channelPermissions.isOwner &&
+            !channel.community.communityPermissions.isOwner &&
             <Action onClick={() => toggleSubscription(channel.id)}>
               Join {channel.name}
             </Action>}
