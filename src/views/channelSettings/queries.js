@@ -1,7 +1,4 @@
 import { graphql, gql } from 'react-apollo';
-import {
-  communityInfoFragment,
-} from '../../api/fragments/community/communityInfo';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import {

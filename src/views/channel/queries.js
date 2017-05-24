@@ -11,9 +11,6 @@ import {
 import {
   channelMetaDataFragment,
 } from '../../api/fragments/channel/channelMetaData';
-import {
-  communityInfoFragment,
-} from '../../api/fragments/community/communityInfo';
 
 const LoadMoreThreads = gql`
   query loadMoreChannelThreads($id: ID, $after: String) {

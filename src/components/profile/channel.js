@@ -68,7 +68,6 @@ const ChannelWithData = ({
   const toggleSubscription = channelId => {
     toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
-        console.log('toggleChannelSubscription', toggleChannelSubscription);
         const str = toggleChannelSubscription.channelPermissions.isMember
           ? `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
           : `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;

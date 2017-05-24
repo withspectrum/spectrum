@@ -50,8 +50,6 @@ const ChannelViewPure = ({
       });
   };
 
-  console.log('channel', channel);
-
   if (error) {
     return (
       <Upsell404Channel
@@ -80,12 +78,6 @@ const ChannelViewPure = ({
       />
     );
   }
-  console.log(
-    'channel',
-    channel,
-    ' is owner, ',
-    channel.community.communityPermissions.isOwner
-  );
   // channel exists and the user is not a subscriber (accounts for signed-
   // out users as well)
   if (

@@ -152,7 +152,6 @@ export const Upsell404Community = ({ community, noPermission, create }) => {
   // if the user does have permission, but this component gets rendered, it means
   // something went wrong - most likely the community doesn't exists (404) so
   // we should return the user back to homepage
-  const returnUrl = noPermission ? `/${community}` : `/`;
 
   const title = noPermission
     ? "I see you sneakin' around here..."

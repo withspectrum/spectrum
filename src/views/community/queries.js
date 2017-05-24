@@ -10,9 +10,6 @@ import {
 import {
   communityThreadsFragment,
 } from '../../api/fragments/community/communityThreads';
-import {
-  communityMetaDataFragment,
-} from '../../api/fragments/community/communityMetaData';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import {
   channelMetaDataFragment,

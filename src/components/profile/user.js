@@ -15,7 +15,6 @@ import pure from 'recompose/pure';
 import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
-import { openModal } from '../../actions/modals';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import { Avatar } from '../avatar';
 import Badge from '../badges';
