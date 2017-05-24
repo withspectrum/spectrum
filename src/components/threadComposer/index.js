@@ -16,6 +16,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { Button } from '../buttons';
 import { addToastWithTimeout } from '../../actions/toasts';
+import Editor, { fromPlainText, toJSON } from '../editor';
 import Icon from '../icons';
 import { LoadingComposer } from '../loading';
 import { getComposerCommunitiesAndChannels } from './queries';
@@ -107,7 +108,7 @@ class ThreadComposerWithData extends Component {
     this.state = {
       isOpen: false,
       title: '',
-      body: '',
+      body: fromPlainText(''),
       availableCommunities,
       availableChannels,
       activeCommunity,
@@ -123,10 +124,9 @@ class ThreadComposerWithData extends Component {
     });
   };
 
-  changeBody = e => {
-    const body = e.target.value;
+  changeBody = state => {
     this.setState({
-      body,
+      body: state,
     });
   };
 
@@ -184,7 +184,7 @@ class ThreadComposerWithData extends Component {
     const communityId = activeCommunity;
     const content = {
       title,
-      body,
+      body: JSON.stringify(toJSON(body)),
     };
 
     // this.props.mutate comes from a higher order component defined at the
@@ -195,6 +195,7 @@ class ThreadComposerWithData extends Component {
           thread: {
             channelId,
             communityId,
+            type: 'SLATE',
             content,
           },
         },
@@ -257,14 +258,12 @@ class ThreadComposerWithData extends Component {
               autoFocus
             />
 
-            <Textarea
+            <Editor
               onChange={this.changeBody}
-              value={this.state.body}
+              state={this.state.body}
               style={ThreadDescription}
               ref="bodyTextarea"
-              placeholder={
-                'Write more thoughts here, add photos, and anything else!'
-              }
+              placeholder="Write more thoughts here, add photos, and anything else!"
             />
 
             <Actions>
