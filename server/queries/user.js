@@ -92,11 +92,11 @@ module.exports = {
         }))
       ),
     }),
-    directMessageThreadsConnection: (user: Object) => ({
+    directMessageThreadsConnection: ({ id }) => ({
       pageInfo: {
         hasNextPage: false,
       },
-      edges: getDirectMessageThreadsByUser(user.id).then(threads =>
+      edges: getDirectMessageThreadsByUser(id).then(threads =>
         threads.map(thread => ({
           node: thread,
         }))

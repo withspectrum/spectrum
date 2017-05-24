@@ -14,6 +14,7 @@ exports.up = function(r, conn) {
       r.tableCreate('notifications').run(conn),
       r.tableCreate('usersCommunities').run(conn),
       r.tableCreate('usersChannels').run(conn),
+      r.tableCreate('usersDirectMessageThreads').run(conn),
     ])
       // Create secondary indexes
       .then(() =>
@@ -37,6 +38,15 @@ exports.up = function(r, conn) {
           r
             .table('usersChannels')
             .indexCreate('channelId', r.row('channelId'))
+            .run(conn),
+          // indexes on usersDirectMessageThreads join table
+          r
+            .table('usersDirectMessageThreads')
+            .indexCreate('userId', r.row('userId'))
+            .run(conn),
+          r
+            .table('usersDirectMessageThreads')
+            .indexCreate('threadId', r.row('threadId'))
             .run(conn),
           // index direct message threads by the users
           r
@@ -109,6 +119,7 @@ exports.down = function(r, conn) {
     r.tableDrop('notifications').run(conn),
     r.tableDrop('usersCommunities').run(conn),
     r.tableDrop('usersChannels').run(conn),
+    r.tableDrop('usersDirectMessageThreads').run(conn),
   ]).catch(err => {
     console.log(err);
   });

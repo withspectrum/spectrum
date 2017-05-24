@@ -4,11 +4,16 @@ export const directMessageThreadInfoFragment = gql`
   fragment directMessageThreadInfo on DirectMessageThread {
     id
     snippet
-    lastActivity
-    status {
-      userId
-      lastActivity
+    participants {
+      id
+      name
+      profilePhoto
+      username
       lastSeen
+      lastActive
+      isMember
+      isBlocked
+      isOwner
     }
   }
 `;
