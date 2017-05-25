@@ -4,8 +4,12 @@
  */
 const { getCommunityMetaData } = require('../models/community');
 const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
-const { getThreadsByCommunity } = require('../models/thread');
-const { getChannelsByCommunity } = require('../models/channel');
+const { getThreadsByChannels } = require('../models/thread');
+const {
+  getChannelsByCommunity,
+  getChannelsByUserAndCommunity,
+  getPublicChannelsByCommunity,
+} = require('../models/channel');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetCommunityArgs } from '../models/community';
@@ -65,11 +69,31 @@ module.exports = {
     },
     threadConnection: (
       { id }: { id: string },
-      { first = 10, after }: PaginationOptions
+      { first = 10, after }: PaginationOptions,
+      { user }
     ) => {
       const cursor = decode(after);
+      const currentUser = user;
+
+      // if the user is signed in, only return stories for the channels
+      // the user is a member of -> this will ensure that they don't see
+      // stories in private channels that they aren't a member of.
+      // if the user is *not* signed in, only get threads from public channels
+      // within the community
+      let channelsToGetThreadsFor;
+      if (user) {
+        channelsToGetThreadsFor = getChannelsByUserAndCommunity(
+          id,
+          currentUser.id
+        );
+      } else {
+        channelsToGetThreadsFor = getPublicChannelsByCommunity(id);
+      }
+
       // TODO: Make this more performant by doing an actual db query rather than this hacking around
-      return getThreadsByCommunity(id)
+      return channelsToGetThreadsFor
+        .then(channels => channels.map(channel => channel.id))
+        .then(channels => getThreadsByChannels(channels))
         .then(threads =>
           paginate(
             threads,
