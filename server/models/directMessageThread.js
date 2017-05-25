@@ -20,13 +20,14 @@ const getDirectMessageThreadsByUser = (
     .run();
 };
 
-const createDirectMessageThread = (): Object => {
+const createDirectMessageThread = (isGroup: Boolean): Object => {
   return db
     .table('directMessageThreads')
     .insert(
       {
         createdAt: new Date(),
         name: null,
+        isGroup,
       },
       { returnChanges: true }
     )
