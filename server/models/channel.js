@@ -42,16 +42,24 @@ const getChannelsByUserAndCommunity = (
   communityId: string,
   userId: string
 ): Promise<Array<Object>> => {
-  return db
-    .table('channels')
-    .getAll(communityId, { index: 'communityId' })
-    .eqJoin('id', db.table('usersChannels'), { index: 'channelId' })
-    .filter({ right: { isMember: true, userId } })
-    .without({ right: 'id' })
-    .zip()
-    .pluck('id')
-    .distinct()
-    .run();
+  return (
+    db
+      .table('channels')
+      .getAll(communityId, { index: 'communityId' })
+      .eqJoin('id', db.table('usersChannels'), { index: 'channelId' })
+      // get channels where the user is a member OR the channel is public
+      .filter(row =>
+        row('right')('isMember')
+          .eq(true)
+          .and(row('right')('userId').eq(userId))
+          .or(row('left')('isPrivate').eq(false))
+      )
+      .without({ right: 'id' })
+      .zip()
+      .pluck('id')
+      .distinct()
+      .run()
+  );
 };
 
 const getChannelsByUser = (userId: string): Promise<Array<Object>> => {
