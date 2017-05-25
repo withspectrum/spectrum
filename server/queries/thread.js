@@ -102,6 +102,6 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.user.load(creatorId),
-    messageCount: ({ id }: { id: string }) => getMessageCount('messages', id),
+    messageCount: ({ id }: { id: string }) => getMessageCount(id),
   },
 };
