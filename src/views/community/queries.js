@@ -4,6 +4,7 @@ import { graphql, gql } from 'react-apollo';
 // $FlowFixMe
 import update from 'immutability-helper';
 import { encode } from '../../helpers/utils';
+import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import {
   communityInfoFragment,
 } from '../../api/fragments/community/communityInfo';
@@ -190,11 +191,15 @@ export const GET_COMMUNITY_CHANNELS_QUERY = gql`
           node {
             ...channelInfo
             ...channelMetaData
+            pendingUsers {
+              ...userInfo
+            }
           }
         }
       }
     }
   }
+  ${userInfoFragment}
   ${channelInfoFragment}
   ${communityInfoFragment}
   ${channelMetaDataFragment}

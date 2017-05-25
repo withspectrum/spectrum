@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { openModal } from '../../actions/modals';
+import { LinkPreview } from '../../components/linkPreview';
 import {
   StyledThreadFeedCard,
   CardContent,
@@ -72,6 +73,18 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
             {props.data.content.title}
           </Title>
         </Link>
+        <MetaRow>
+          {// for now we know this means there is a link attachment
+          props.data.attachments &&
+            props.data.attachments.length > 0 &&
+            <LinkPreview
+              trueUrl={props.data.attachments[0].data.trueUrl}
+              data={JSON.parse(props.data.attachments[0].data)}
+              size={'small'}
+              editable={false}
+              margin={'8px 0 12px'}
+            />}
+        </MetaRow>
         <MetaRow>
           <ParticipantHeads>
             {/* TODO: Creator/participants should all be links, not fire modals. */}

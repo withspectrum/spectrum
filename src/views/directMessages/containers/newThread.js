@@ -583,14 +583,17 @@ class NewThread extends Component {
       },
     };
 
-    this.props.createDirectMessageThread(input).then(({
-      data: { createDirectMessageThread },
-    }) => {
-      // NOTE: I cannot get the Apollo store to update properly with the
-      // new thread. Forcing a refresh works, although it's a less ideal UX
-      window.location.href = `/messages/${createDirectMessageThread.id}`;
-      // this.props.history.push(`/messages/${createDirectMessageThread.id}`)
-    });
+    this.props
+      .createDirectMessageThread(input)
+      .then(({ data: { createDirectMessageThread } }) => {
+        // NOTE: I cannot get the Apollo store to update properly with the
+        // new thread. Forcing a refresh works, although it's a less ideal UX
+        window.location.href = `/messages/${createDirectMessageThread.id}`;
+        // this.props.history.push(`/messages/${createDirectMessageThread.id}`)
+      })
+      .catch(err => {
+        this.props.dispatch(addToastWithTimeout('error', err.message));
+      });
   };
 
   onChatInputFocus = () => {

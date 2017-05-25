@@ -6,7 +6,6 @@ const {
   getDirectMessageThreadsByUser,
 } = require('../models/directMessageThread');
 const {
-  createOwnerInDirectMessageThread,
   createMemberInDirectMessageThread,
 } = require('../models/usersDirectMessageThreads');
 const { storeMessage } = require('../models/message');
@@ -44,10 +43,17 @@ module.exports = {
 
       // if users and messages exist, continue
       const { participants, message } = input;
-      console.log('participants', participants);
+
+      // if the group being created has more than one participant, a group
+      // thread is being created - this means that people can be added
+      // and removed from the thread in the future. we *don't* want this
+      // behavior for 1:1 threads to preserve privacy, so we store an `isGroup`
+      // boolean on the dmThread object itself which will be used in other
+      // mutations to add or remove members
+      const isGroup = participants.length > 1;
 
       // create a direct message thread object in order to generate an id
-      return createDirectMessageThread()
+      return createDirectMessageThread(isGroup)
         .then(thread => {
           // once we have an ide we can generate a proper message object
           const messageWithThread = {
@@ -60,8 +66,8 @@ module.exports = {
           // with each particpant
           return Promise.all([
             thread,
-            // create owner relationship
-            createOwnerInDirectMessageThread(thread.id, currentUser.id),
+            // create member relationship with the current user
+            createMemberInDirectMessageThread(thread.id, currentUser.id),
             // create member relationships
             participants.map(participant =>
               createMemberInDirectMessageThread(thread.id, participant)

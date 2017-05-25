@@ -39,3 +39,7 @@ export const clearApolloStore = () => {
     console.log('error clearing store');
   }
 };
+
+export const SERVER_URL = process.env.NODE_ENV === 'production'
+  ? `${window.location.protocol}//${window.location.host}`
+  : 'http://localhost:3001';

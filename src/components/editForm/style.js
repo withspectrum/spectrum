@@ -59,7 +59,7 @@ export const ImgPreview = styled.img`
   border-radius: 4px;
 `;
 
-export const Notice = styled.span`
+export const GeneralNotice = styled.span`
   padding: 8px 12px;
   font-size: 12px;
   font-weight: 500;

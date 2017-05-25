@@ -5,6 +5,7 @@ import { graphql, gql } from 'react-apollo';
 import update from 'immutability-helper';
 import { encode } from '../../helpers/utils';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
+import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import {
   channelThreadsFragment,
 } from '../../api/fragments/channel/channelThreads';
@@ -174,8 +175,12 @@ export const getChannel = graphql(
 			channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
         ...channelInfo
         ...channelMetaData
+        pendingUsers {
+          ...userInfo
+        }
       }
 		}
+    ${userInfoFragment}
     ${channelInfoFragment}
     ${channelMetaDataFragment}
 	`,

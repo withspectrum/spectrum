@@ -178,3 +178,19 @@ export const throttle = (func, threshhold, scope) => {
     }
   };
 };
+
+export const getLinkPreviewFromUrl = url =>
+  fetch(
+    `https://micro-open-graph-phbmtaqieu.now.sh/?url=${url}`
+  ).then(response => {
+    return response.json();
+  });
+
+// Truncate a string nicely to a certain length
+export const truncate = (str, length) => {
+  if (str.length <= length) {
+    return str;
+  }
+  const subString = str.substr(0, length);
+  return subString.substr(0, subString.lastIndexOf(' ')) + '…';
+};

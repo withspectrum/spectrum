@@ -36,7 +36,7 @@ const users = [
   ...randomAmount({ max: userAmount, min: 1 }, generateUser),
 ];
 
-console.log('\nGenerating communities...');
+console.log('Generating communities...');
 const communities = [
   ...DEFAULT_COMMUNITIES,
   ...randomAmount({ max: 10 }, () => {
@@ -44,7 +44,7 @@ const communities = [
   }),
 ];
 
-console.log('\nGenerating usersCommunities...');
+console.log('Generating usersCommunities...');
 let usersCommunities = [];
 users.forEach(user => {
   communities.forEach(community => {
@@ -52,7 +52,7 @@ users.forEach(user => {
   });
 });
 
-console.log('\nGenerating channels...');
+console.log('Generating channels...');
 let channels = DEFAULT_CHANNELS;
 communities.forEach(community => {
   randomAmount({ max: 10 }, () => {
@@ -60,7 +60,7 @@ communities.forEach(community => {
   });
 });
 
-console.log('\nGenerating default general channels...');
+console.log('Generating default general channels...');
 communities.forEach(community => {
   channels.push({
     id: uuid(),
@@ -75,7 +75,7 @@ communities.forEach(community => {
   });
 });
 
-console.log('\nGenerating usersChannels...');
+console.log('Generating usersChannels...');
 let usersChannels = DEFAULT_USERS_CHANNELS;
 const generatedUsersChannels = users.map(user => {
   return generateUsersChannels(channels, usersCommunities, user.id);
@@ -84,7 +84,7 @@ generatedUsersChannels.map(elem => {
   usersChannels.push(...elem);
 });
 
-console.log('\nGenerating threads...');
+console.log('Generating threads...');
 let threads = DEFAULT_THREADS;
 channels.forEach(channel => {
   randomAmount({ max: 10 }, () => {
@@ -97,13 +97,13 @@ channels.forEach(channel => {
   });
 });
 
-console.log('\nGenerating direct message threads...');
+console.log('Generating direct message threads...');
 let directMessageThreads = DEFAULT_DIRECT_MESSAGE_THREADS;
 randomAmount({ max: 100 }, () => {
   directMessageThreads.push(generateDirectMessageThread());
 });
 
-console.log('\nGenerating usersDirectMessageThreads...');
+console.log('Generating usersDirectMessageThreads...');
 let usersDirectMessageThreads = DEFAULT_USERS_DIRECT_MESSAGE_THREADS;
 directMessageThreads.forEach(thread => {
   const thread_users = randomAmount({ max: 5, min: 2 }, i => users[i]);
@@ -115,7 +115,7 @@ directMessageThreads.forEach(thread => {
   });
 });
 
-console.log('\nGenerating messages...');
+console.log('Generating messages...');
 let messages = [];
 threads.forEach(thread => {
   const channel = channels.find(channel => channel.id === thread.channelId);
@@ -140,7 +140,7 @@ threads.forEach(thread => {
   });
 });
 
-console.log('\nGenerating direct messages...');
+console.log('Generating direct messages...');
 let direct_messages = [];
 usersDirectMessageThreads.forEach(thread => {
   const threadMessages = [];
@@ -156,7 +156,7 @@ usersDirectMessageThreads.forEach(thread => {
   });
 });
 
-console.log('\nGenerating reactions...');
+console.log('Generating reactions...');
 let reactions = [];
 messages.map(message => {
   randomAmount({ max: 5 }, () => {
@@ -165,14 +165,14 @@ messages.map(message => {
   });
 });
 
-console.log('\nConnecting to db...');
+console.log('Connecting to db...');
 // $FlowFixMe
 const db = require('rethinkdbdash')({
   db: 'spectrum',
 });
 
 console.log(
-  `\nInserting ${users.length} users,
+  `Inserting ${users.length} users,
   ${communities.length} communities, ${channels.length} channels, ${threads.length} threads, ${messages.length + direct_messages.length} messages, ${reactions.length} reactions, ${directMessageThreads.length} direct message threads, ${usersCommunities.length} usersCommunities objects, ${usersChannels.length} usersChannels objects, ${usersDirectMessageThreads.length} usersDirectMessageThreads objects, and ${notifications.length} notifications into the database... (this might take a while!)`
 );
 Promise.all([
@@ -190,7 +190,7 @@ Promise.all([
   db.table('usersDirectMessageThreads').insert(usersDirectMessageThreads).run(),
 ])
   .then(() => {
-    console.log('\nFinished seeding database! 🎉');
+    console.log('Finished seeding database! 🎉');
     process.exit();
   })
   .catch(err => {

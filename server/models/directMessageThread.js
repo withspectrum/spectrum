@@ -14,20 +14,20 @@ const getDirectMessageThreadsByUser = (
     .table('usersDirectMessageThreads')
     .getAll(userId, { index: 'userId' })
     .orderBy(db.desc('lastActive'))
-    .filter({ isBlocked: false })
     .eqJoin('threadId', db.table('directMessageThreads'))
     .without({ left: ['id', 'createdAt', 'threadId', 'userId'] })
     .zip()
     .run();
 };
 
-const createDirectMessageThread = (): Object => {
+const createDirectMessageThread = (isGroup: boolean): Object => {
   return db
     .table('directMessageThreads')
     .insert(
       {
         createdAt: new Date(),
         name: null,
+        isGroup,
       },
       { returnChanges: true }
     )

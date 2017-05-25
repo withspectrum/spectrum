@@ -168,6 +168,25 @@ const approvePendingUserInChannel = (
     .then(result => result.changes[0].new_val);
 };
 
+// toggles all pending users to make them a member in a channel. invoked by a
+// channel or community owner when turning a private channel into a public
+// channel
+const approvePendingUsersInChannel = (channelId: string): Promise<Object> => {
+  return db
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ isPending: true })
+    .update(
+      {
+        isMember: true,
+        isPending: false,
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val);
+};
+
 // unblocks a blocked user in a channel. invoked by a channel or community
 // owner when managing a private channel. this *does* add the user
 // as a member
@@ -407,6 +426,7 @@ module.exports = {
   removePendingUsersInChannel,
   blockUserInChannel,
   approvePendingUserInChannel,
+  approvePendingUsersInChannel,
   approveBlockedUserInChannel,
   createModeratorInChannel,
   makeMemberModeratorInChannel,

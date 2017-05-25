@@ -70,6 +70,10 @@ const UserWithData = ({
     history.push('/messages/new');
   };
 
+  {
+    /* TODO: sort out this flow error */
+  }
+
   return (
     <Card>
       <ProfileHeader>
@@ -97,16 +101,13 @@ const UserWithData = ({
                 tipLocation={'top-left'}
               />
             </Link>
-          : <Link to={`/messages/${user.username}`}>
-              {/* TODO: sort out this flow error */}
-              <ProfileHeaderAction
-                glyph="message-new"
-                color="brand.alt"
-                onClick={() => initMessage()}
-                tipText={`Message ${user.name}`}
-                tipLocation={'top-left'}
-              />
-            </Link>}
+          : <ProfileHeaderAction
+              glyph="message-new"
+              color="brand.alt"
+              onClick={() => initMessage()}
+              tipText={`Message ${user.name}`}
+              tipLocation={'top-left'}
+            />}
       </ProfileHeader>
 
       {componentSize !== 'mini' &&
