@@ -15,7 +15,6 @@ import {
   ImageInputLabel,
   InputOverlay,
   ProfileImage,
-  HiddenInput,
 } from './style';
 
 type InputProps = {

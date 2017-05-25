@@ -4,21 +4,11 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
-import branch from 'recompose/branch';
+
 import { Button, TextButton } from '../buttons';
-import { LoadingCard } from '../loading';
+import { displayLoadingCard } from '../loading';
 import { Input, TextArea, ImageInput } from '../formElements';
-import {
-  StyledCard,
-  Form,
-  FormTitle,
-  Description,
-  Actions,
-  ImgPreview,
-} from './style';
+import { StyledCard, Form, FormTitle, Actions } from './style';
 
 class UserWithData extends Component {
   save = e => {
@@ -68,5 +58,5 @@ class UserWithData extends Component {
   }
 }
 
-const UserSettings = compose(pure)(UserWithData);
+const UserSettings = compose(displayLoadingCard, pure)(UserWithData);
 export default UserSettings;

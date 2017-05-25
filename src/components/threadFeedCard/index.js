@@ -87,7 +87,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
             </Creator>
             {messageAvatars(participantList)}
           </ParticipantHeads>
-          {/* <Meta>{props.data.messageCount} messages</Meta> */}
+          <Meta>{props.data.messageCount} messages</Meta>
         </MetaRow>
       </CardContent>
     </StyledThreadFeedCard>

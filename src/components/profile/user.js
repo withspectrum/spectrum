@@ -11,10 +11,6 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
-import branch from 'recompose/branch';
 
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 
@@ -76,7 +72,7 @@ const UserWithData = ({
 
   return (
     <Card>
-      <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
+      <ProfileHeader>
         <ProfileHeaderLink to={`../users/${currentUser.username}`}>
           <Avatar
             margin={'0 12px 0 0'}
@@ -84,7 +80,7 @@ const UserWithData = ({
             radius={4}
             src={user.profilePhoto}
           />
-          <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+          <ProfileHeaderMeta>
             <Title>{user.name}</Title>
             <Subtitle>
               @{user.username}
@@ -106,6 +102,7 @@ const UserWithData = ({
               <ProfileHeaderAction
                 glyph="message-new"
                 color="brand.alt"
+                onClick={() => initMessage()}
                 tipText={`Message ${user.name}`}
                 tipLocation={'top-left'}
               />

@@ -6,10 +6,6 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 //$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
-import branch from 'recompose/branch';
-//$FlowFixMe
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';

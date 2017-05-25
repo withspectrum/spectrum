@@ -4,10 +4,6 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
-import branch from 'recompose/branch';
 
 import ThreadFeedCard from '../threadFeedCard';
 import { NullCard } from '../upsell';

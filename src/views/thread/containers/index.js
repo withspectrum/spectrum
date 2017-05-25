@@ -37,14 +37,6 @@ const ThreadContainerPure = ({
     return <Upsell404Thread />;
   }
 
-  // show a full size profile for the channel if the user hasn't joined it
-  let size;
-  if (!currentUser || (currentUser && thread.channel.isMember)) {
-    size = 'mini';
-  } else {
-    size = 'full';
-  }
-
   const toggleSubscription = channelId => {
     toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {

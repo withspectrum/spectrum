@@ -37,9 +37,9 @@ const ThreadDetailPure = ({
   const isChannelOwner = thread.channel.channelPermissions.isOwner;
   const isCommunityOwner =
     thread.channel.community.communityPermissions.isOwner;
-  const isChannelModerator = thread.channel.channelPermissions.isModerator;
-  const isCommunityModerator =
-    thread.channel.community.communityPermissions.isModerator;
+  // const isChannelModerator = thread.channel.channelPermissions.isModerator;
+  // const isCommunityModerator =
+  //   thread.channel.community.communityPermissions.isModerator;
 
   const threadLock = (threadId, value) =>
     setThreadLock({
@@ -79,11 +79,6 @@ const ThreadDetailPure = ({
         message,
       })
     );
-  };
-
-  const openUserProfileModal = (e, user: Object) => {
-    e.preventDefault();
-    return dispatch(openModal('USER_PROFILE_MODAL', { user }));
   };
 
   let body = thread.content.body;
