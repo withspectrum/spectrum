@@ -6,10 +6,9 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
-import { FlexContainer } from './flexbox';
-import { Shadow, hexa } from './globals';
+import { FlexCol, Shadow, hexa } from './globals';
 
-const StyledCard = styled(FlexContainer)`
+const StyledCard = styled(FlexCol)`
   background: ${({ theme }) => theme.bg.default};
   border-radius: 12px;
   box-shadow: ${Shadow.low} ${({ theme }) => hexa(theme.text.placeholder, 0.25)};

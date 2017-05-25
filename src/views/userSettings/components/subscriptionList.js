@@ -1,27 +1,27 @@
 //@flow
 import React from 'react';
 //$FlowFixMe
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 //$FlowFixMe
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 //$FlowFixMe
-import compose from 'recompose/compose';
+// import compose from 'recompose/compose';
 //$FlowFixMe
-import pure from 'recompose/pure';
-import { ListCardItem } from '../../../components/listCard';
-import { IconButton, TextButton, Button } from '../../../components/buttons';
+// import pure from 'recompose/pure';
+// import { ListCardItem } from '../../../components/listCard';
+// import { IconButton, TextButton, Button } from '../../../components/buttons';
 
 import {
   StyledCard,
   ListHeading,
   ListHeader,
   ListContainer,
-  ListFooter,
-  MoreLink,
+  // ListFooter,
+  // MoreLink,
 } from '../../../components/listCard/style';
 
-export const SubscriptionList = props => {
-  const { data } = props;
+export const SubscriptionList = (props: Object) => {
+  // const { data } = props;
   return (
     <StyledCard>
       <ListHeader>

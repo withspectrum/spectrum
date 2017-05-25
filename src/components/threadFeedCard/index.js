@@ -78,6 +78,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
         </Link>
         <MetaRow>
           <ParticipantHeads>
+            {/* TODO: Creator/participants should all be links, not fire modals. */}
             <Creator role="presentation">
               <Participant
                 onClick={() => openUserProfileModal(props.data.creator)}
@@ -86,7 +87,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
             </Creator>
             {messageAvatars(participantList)}
           </ParticipantHeads>
-          {/* <Meta>{props.data.messageCount} messages</Meta> */}
+          <Meta>{props.data.messageCount} messages</Meta>
         </MetaRow>
       </CardContent>
     </StyledThreadFeedCard>

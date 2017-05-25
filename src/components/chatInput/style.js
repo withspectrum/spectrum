@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Textarea from 'react-textarea-autosize';
 import { IconButton } from '../buttons';
 import { FlexRow, Transition } from '../globals';
 import Editor from '../../components/editor';

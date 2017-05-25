@@ -4,29 +4,20 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
-import branch from 'recompose/branch';
+
 import { Button, TextButton } from '../buttons';
-import { LoadingCard } from '../loading';
+import { displayLoadingCard } from '../loading';
 import { Input, TextArea, ImageInput } from '../formElements';
-import {
-  StyledCard,
-  Form,
-  FormTitle,
-  Description,
-  Actions,
-  ImgPreview,
-} from './style';
+import { StyledCard, Form, FormTitle, Actions } from './style';
 
 class UserWithData extends Component {
   save = e => {
     e.preventDefault;
     //TODO mutation goes here...
     this.props.history.push('/');
+    //TODO make sure all forms redirect to the non-settings version of the page on save
   };
-
+  //TODO wire up form...
   render() {
     const { user: { user } } = this.props;
     return (
@@ -67,5 +58,5 @@ class UserWithData extends Component {
   }
 }
 
-const UserSettings = compose(pure)(UserWithData);
+const UserSettings = compose(displayLoadingCard, pure)(UserWithData);
 export default UserSettings;

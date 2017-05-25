@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 
 import Icon from '../icons';
+
 import {
   StyledLabel,
   StyledPrefixLabel,
@@ -14,18 +15,18 @@ import {
   ImageInputLabel,
   InputOverlay,
   ProfileImage,
-  HiddenInput,
 } from './style';
 
 type InputProps = {
   children?: React$Element<any>,
-  inputType?: String,
-  defaultValue?: String,
-  placeholder?: String,
+  inputType?: string,
+  defaultValue?: ?string,
+  placeholder?: string,
   onChange?: Function,
-  autofocus?: Boolean,
-  checked?: Boolean,
-  disabled: ?Boolean,
+  autofocus?: boolean,
+  checked?: boolean,
+  disabled?: boolean,
+  id?: string,
 };
 
 export const Input = (props: InputProps) => {
@@ -44,7 +45,7 @@ export const Input = (props: InputProps) => {
   );
 };
 
-export const ImageInput = props => {
+export const ImageInput = (props: InputProps) => {
   return (
     <ImageInputLabel>
       <InputOverlay>
@@ -113,6 +114,6 @@ export class UnderlineInput extends Component {
   }
 }
 
-export const Error = props => {
+export const Error = (props: Object) => {
   return <StyledError>{props.children}</StyledError>;
 };

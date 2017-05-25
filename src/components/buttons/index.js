@@ -12,20 +12,20 @@ import { Loading } from '../loading';
 import Icon from '../icons';
 
 type ButtonProps = {
-  loading?: Boolean,
-  disabled?: Boolean,
-  color?: String,
-  gradientTheme?: 'default' | 'brand' | 'pro' | 'warn' | 'success' | 'none',
-  icon?: String,
+  loading?: boolean,
+  disabled?: boolean,
+  color?: string,
+  gradientTheme?: string,
+  icon?: string,
   children?: React$Element<any>,
 };
 
 type IconProps = {
-  glyph: String,
-  color?: String,
-  hoverColor?: String,
-  disabled?: Boolean,
-  tipText?: String,
+  glyph: string,
+  color?: string,
+  hoverColor?: string,
+  disabled?: boolean,
+  tipText?: string,
   tipLocation?:
     | 'top'
     | 'top-left'

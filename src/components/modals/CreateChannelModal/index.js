@@ -12,17 +12,18 @@ import { withRouter } from 'react-router';
 import slugg from 'slugg';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
-import ModalContainer from '../modalContainer';
-import { TextButton, Button } from '../../buttons';
-import { modalStyles, Description } from '../styles';
+
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
+import { throttle } from '../../../helpers/utils';
 import {
   CHECK_UNIQUE_CHANNEL_SLUG_QUERY,
   createChannelMutation,
 } from '../../../api/channel';
-import { Form, Actions } from './style';
-import { throttle } from '../../../helpers/utils';
+
+import ModalContainer from '../modalContainer';
+import { TextButton, Button } from '../../buttons';
+import { modalStyles, Description } from '../styles';
 import {
   Input,
   UnderlineInput,
@@ -30,8 +31,22 @@ import {
   Checkbox,
   Error,
 } from '../../formElements';
+import { Form, Actions } from './style';
 
 class CreateChannelModal extends Component {
+  state: {
+    name: string,
+    slug: string,
+    description: string,
+    isPrivate: boolean,
+    slugTaken: boolean,
+    slugError: boolean,
+    descriptionError: boolean,
+    nameError: boolean,
+    createError: boolean,
+    loading: boolean,
+  };
+
   constructor() {
     super();
 

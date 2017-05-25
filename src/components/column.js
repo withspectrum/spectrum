@@ -4,9 +4,9 @@ import React from 'react';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import styled from 'styled-components';
-import { FlexContainer } from './flexbox';
+import { FlexCol } from './globals';
 
-const StyledColumn = styled(FlexContainer)`
+const StyledColumn = styled(FlexCol)`
   margin: 0 16px;
   min-width: ${props => (props.type === 'primary' ? '360px' : '240px')};
   flex: ${props => (props.type === 'primary' ? '2 1 60%' : '1 1 30%')};
@@ -19,7 +19,7 @@ const StyledColumn = styled(FlexContainer)`
 `;
 
 const ColumnPure = (props: Object): React$Element<any> => (
-  <StyledColumn {...props} direction={'column'}>
+  <StyledColumn {...props}>
     {props.children}
   </StyledColumn>
 );

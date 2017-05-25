@@ -45,7 +45,10 @@ export const UpsellSignIn = ({ entity }) => {
   );
 };
 
-export const UpsellJoinChannel = ({ channel, subscribe }) => {
+export const UpsellJoinChannel = ({
+  channel,
+  subscribe,
+}: { channel: Object, subscribe: Function }) => {
   return (
     <NullCard bg="channel">
       <Title>Ready to join the conversation?</Title>
@@ -64,6 +67,11 @@ export const UpsellRequestToJoinChannel = ({
   community,
   isPending,
   subscribe,
+}: {
+  channel: Object,
+  community: string,
+  isPending: boolean,
+  subscribe: Function,
 }) => {
   return (
     <NullCard bg="locked">
@@ -99,7 +107,10 @@ export const UpsellRequestToJoinChannel = ({
   );
 };
 
-export const Upsell404Channel = ({ channel, noPermission }) => {
+export const Upsell404Channel = ({
+  channel,
+  noPermission,
+}: { channel: Object, noPermission: boolean }) => {
   // if a user doesn't have permission, it means they likely tried to view
   // the settings page for a channel. In this case, we will return
   // them to the channel view.
@@ -134,7 +145,11 @@ export const Upsell404Channel = ({ channel, noPermission }) => {
   );
 };
 
-export const Upsell404Community = ({ community, noPermission, create }) => {
+export const Upsell404Community = ({
+  community,
+  noPermission,
+  create,
+}: { community: string, noPermission: boolean, create: Function }) => {
   // if a user doesn't have permission, it means they likely tried to view
   // the settings page for a community. In this case, we will return
   // them to the community view.
@@ -174,7 +189,7 @@ export const Upsell404Community = ({ community, noPermission, create }) => {
   );
 };
 
-export const Upsell404User = ({ username }) => {
+export const Upsell404User = ({ username }: { username: string }) => {
   const returnUrl = `/`;
   const title = 'Oops, someone got lost!';
   const subtitle = `We can't find anyone who answers to the name ${username}. Maybe they don't want to be found...`;

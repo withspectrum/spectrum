@@ -58,7 +58,8 @@ export const ListCardItemDirectMessageThread = ({
   const currentUserLastSeen = clonedParticipants.filter(
     user => user.id === currentUser.id
   )[0].lastSeen;
-  const isUnread = timestamp > new Date(currentUserLastSeen).getTime();
+  //TODO: handle unread state
+  //const isUnread = timestamp > new Date(currentUserLastSeen).getTime();
 
   return (
     <Wrapper active={active}>

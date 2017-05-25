@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import styled from 'styled-components';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // // $FlowFixMe
@@ -8,7 +7,7 @@ import withState from 'recompose/withState';
 // // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
 import Icon from '../icons';
-import Editor, { toPlainText, fromPlainText } from '../../components/editor';
+import { toPlainText, fromPlainText } from '../../components/editor';
 import {
   Form,
   Input,

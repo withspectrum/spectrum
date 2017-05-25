@@ -12,7 +12,7 @@ import ThreadDetail from '../components/threadDetail';
 import Messages from '../components/messages';
 import ChatInput from '../../../components/chatInput';
 import { Column } from '../../../components/column';
-import { FlexContainer } from '../../../components/flexbox';
+import AppViewWrapper from '../../../components/appViewWrapper';
 import { UserProfile, ChannelProfile } from '../../../components/profile';
 import { getThread } from '../queries';
 import { displayLoadingScreen } from '../../../components/loading';
@@ -37,14 +37,6 @@ const ThreadContainerPure = ({
     return <Upsell404Thread />;
   }
 
-  // show a full size profile for the channel if the user hasn't joined it
-  let size;
-  if (!currentUser || (currentUser && thread.channel.isMember)) {
-    size = 'mini';
-  } else {
-    size = 'full';
-  }
-
   const toggleSubscription = channelId => {
     toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
@@ -61,7 +53,7 @@ const ThreadContainerPure = ({
   };
 
   return (
-    <FlexContainer justifyContent="center" style={{ flex: '1' }}>
+    <AppViewWrapper>
       <Column type="secondary">
         <UserProfile data={{ user: thread.creator }} profileSize={'full'} />
         <ChannelProfile
@@ -94,7 +86,7 @@ const ThreadContainerPure = ({
             />}
         </Container>
       </Column>
-    </FlexContainer>
+    </AppViewWrapper>
   );
 };
 

@@ -8,8 +8,15 @@ import { withRouter } from 'react-router';
 import Modal from 'react-modal';
 // $FlowFixMe
 import compose from 'recompose/compose';
+
+import { closeModal } from '../../../actions/modals';
+import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
+import { uploadProfilePhotoMutation } from '../../../api/user';
+
 import ModalContainer from '../modalContainer';
 import { modalStyles } from '../styles';
+import Icon from '../../../components/icons';
+import { Button } from '../../../components/buttons';
 import {
   HiddenInput,
   Row,
@@ -17,11 +24,6 @@ import {
   ProfileImage,
   InputOverlay,
 } from './style';
-import Icon from '../../../components/icons';
-import { Button } from '../../../components/buttons';
-import { closeModal } from '../../../actions/modals';
-import { initNewThreadWithUser } from '../../../actions/directMessageThreads';
-import { uploadProfilePhotoMutation } from '../../../api/user';
 
 class UserProfileModal extends Component {
   state = {

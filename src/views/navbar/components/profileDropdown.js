@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React from 'react';
 import Dropdown from '../../../components/dropdown';
 import { Button } from '../../../components/buttons';
 import { DropdownFooter } from '../style';

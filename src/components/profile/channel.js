@@ -6,16 +6,17 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 //$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
-import branch from 'recompose/branch';
-//$FlowFixMe
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
+
 import { toggleChannelSubscriptionMutation } from '../../api/channel';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { LoadingCard } from '../loading';
+
+import { displayLoadingCard } from '../loading';
+import { MetaData } from './metaData';
+import type { ProfileSizeProps } from './index';
+
 import {
   ProfileHeader,
   ProfileHeaderLink,
@@ -27,26 +28,21 @@ import {
   Actions,
   Action,
 } from './style';
-import { MetaData } from './metaData';
-import type { ProfileSizeProps } from './index';
-
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingCard)
-);
 
 type ChannelProps = {
-  id: String,
-  name: String,
-  slug: String,
-  description: String,
+  id: string,
+  name: string,
+  slug: string,
+  description: string,
+  channelPermissions: Object,
   community: {
-    slug: String,
-    name: String,
+    slug: string,
+    name: string,
+    communityPermissions: Object,
   },
   metaData: {
-    threads: Number,
-    subscribers: Number,
+    threads: number,
+    subscribers: number,
   },
 };
 
@@ -59,6 +55,9 @@ const ChannelWithData = ({
 }: {
   data: { channel: ChannelProps },
   profileSize: ProfileSizeProps,
+  toggleChannelSubscription: Function,
+  dispatch: Function,
+  currentUser: Object,
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
 
@@ -151,7 +150,7 @@ const ChannelWithData = ({
 
 const Channel = compose(
   toggleChannelSubscriptionMutation,
-  displayLoadingState,
+  displayLoadingCard,
   pure
 )(ChannelWithData);
 

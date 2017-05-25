@@ -51,10 +51,7 @@ const LoadingCardContainer = styled(Card)`
 export const Loading = ({
   size,
   color,
-}: {
-  size: Number,
-  color: String,
-}): React$Element<any> => (
+}: { size?: Number, color?: String }): React$Element<any> => (
   <LoadingContainer>
     <Spinner size={size} color={color} />
   </LoadingContainer>
@@ -68,10 +65,7 @@ export const Loading = ({
 export const LoadingCard = ({
   size,
   color,
-}: {
-  size: Number,
-  color: String,
-}): React$Element<any> => (
+}: { size?: Number, color?: String }): React$Element<any> => (
   <LoadingCardContainer>
     <Spinner size={size} color={color} />
   </LoadingCardContainer>
@@ -570,4 +564,9 @@ export const displayLoadingCard = branch(
 export const displayLoadingScreen = branch(
   props => !props.data || props.data.loading,
   renderComponent(LoadingScreen)
+);
+
+export const displayLoadingComposer = branch(
+  props => props.data.loading,
+  renderComponent(LoadingComposer)
 );
