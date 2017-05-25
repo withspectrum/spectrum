@@ -8,9 +8,15 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-import { Button, TextButton } from '../buttons';
-import { addToastWithTimeout } from '../../actions/toasts';
+
+import {
+  editCommunityMutation,
+  deleteCommunityMutation,
+} from '../../api/community';
 import { openModal } from '../../actions/modals';
+import { addToastWithTimeout } from '../../actions/toasts';
+
+import { Button, TextButton, IconButton } from '../buttons';
 import { Input, UnderlineInput, TextArea } from '../formElements';
 import {
   StyledCard,
@@ -19,13 +25,20 @@ import {
   Description,
   Actions,
   ImgPreview,
+  TertiaryActionContainer,
 } from './style';
-import {
-  editCommunityMutation,
-  deleteCommunityMutation,
-} from '../../api/community';
 
 class CommunityWithData extends Component {
+  state: {
+    name: string,
+    slug: string,
+    description: string,
+    communityId: string,
+    website: string,
+    image: string,
+    file: ?string,
+    communityData: Object,
+  };
   constructor(props) {
     super(props);
 
@@ -200,17 +213,18 @@ class CommunityWithData extends Component {
           </Input>
 
           <Actions>
-            <TextButton color={'warn.alt'}>Cancel</TextButton>
+            <TertiaryActionContainer>
+              <IconButton
+                glyph="delete"
+                tipText={`Delete ${name}`}
+                tipLocation="top-right"
+                color="text.placeholder"
+                hoverColor={'warn.alt'}
+                onClick={e => this.triggerDeleteCommunity(e, community.id)}
+              />
+            </TertiaryActionContainer>
+            <TextButton hoverColor={'warn.alt'}>Cancel</TextButton>
             <Button onClick={this.save}>Save</Button>
-          </Actions>
-
-          <Actions>
-            <TextButton
-              color={'warn.alt'}
-              onClick={e => this.triggerDeleteCommunity(e, community.id)}
-            >
-              Delete Community
-            </TextButton>
           </Actions>
         </Form>
       </StyledCard>

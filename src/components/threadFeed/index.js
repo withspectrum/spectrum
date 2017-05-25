@@ -4,41 +4,34 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
-import branch from 'recompose/branch';
+
 import ThreadFeedCard from '../threadFeedCard';
-import { NullCard, NullTitle, NullSubtitle } from '../upsell';
+import { NullCard } from '../upsell';
 import { LoadingThread } from '../loading';
 import { Button } from '../buttons';
 
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingThread)
-);
+// const displayLoadingState = branch(
+//   props => props.data.loading,
+//   renderComponent(LoadingThread)
+// );
 
 const NullState = () => (
-  <NullCard bg="post">
-    <NullTitle>
-      Sorry, no threads here yet...
-    </NullTitle>
-    <NullSubtitle>
-      But you could start one!
-    </NullSubtitle>
+  <NullCard
+    bg="post"
+    heading={`Sorry, no threads here yet...`}
+    copy={`But you could start one!`}
+  >
     <Button icon="post">Start a thread</Button>
   </NullCard>
 );
 
 const ErrorState = () => (
-  <NullCard bg="post">
-    <NullTitle>
-      Whoops!
-    </NullTitle>
-    <NullSubtitle>
-      Something went wrong on our end... Mind reloading?
-    </NullSubtitle>
-    <Button icon="post">Reload</Button>
+  <NullCard
+    bg="error"
+    heading={`Whoops!`}
+    copy={`Something went wrong on our end... Mind reloading?`}
+  >
+    <Button icon="reload">Reload</Button>
   </NullCard>
 );
 
@@ -49,32 +42,46 @@ const ErrorState = () => (
 
   See 'views/community/queries.js' for an example of the prop mapping in action
 */
-const ThreadFeedPure = ({
-  data: { threads, loading, fetchMore, error, hasNextPage },
-  data,
-}) => {
-  if (error && threads.length > 0) {
+const ThreadFeedPure = props => {
+  const {
+    data: { threads, loading, fetchMore, error, hasNextPage },
+    data,
+  } = props;
+
+  if (loading) {
+    return (
+      <div style={{ minWidth: '100%' }}>
+        <LoadingThread />
+        <LoadingThread />
+        <LoadingThread />
+        <LoadingThread />
+        <LoadingThread />
+        <LoadingThread />
+      </div>
+    );
+  } else if ((error && threads.length > 0) || (error && threads.length === 0)) {
     return <ErrorState />;
-  }
-
-  if (error && threads.length === 0) {
+  } else if (threads.length === 0) {
     return <NullState />;
+  } else {
+    return (
+      <div style={{ minWidth: '100%' }}>
+        {threads.map(thread => {
+          return (
+            <ThreadFeedCard
+              key={thread.node.id}
+              data={thread.node}
+              viewContext={props.viewContext}
+            />
+          );
+        })}
+
+        {hasNextPage && <Button onClick={fetchMore}>Load more threads</Button>}
+      </div>
+    );
   }
-
-  if (threads.length === 0) {
-    return <NullState />;
-  }
-
-  return (
-    <div style={{ minWidth: '100%' }}>
-      {threads.map(thread => {
-        return <ThreadFeedCard key={thread.node.id} data={thread.node} />;
-      })}
-
-      {hasNextPage && <Button onClick={fetchMore}>Fetch More</Button>}
-    </div>
-  );
 };
 
-const ThreadFeed = compose(displayLoadingState, pure)(ThreadFeedPure);
+const ThreadFeed = compose(pure)(ThreadFeedPure);
+
 export default ThreadFeed;

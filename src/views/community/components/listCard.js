@@ -10,7 +10,7 @@ import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCard';
 import { Button, TextButton, IconButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
-import { NullCard, NullTitle, NullSubtitle } from '../../../components/upsell';
+import { NullCard } from '../../../components/upsell';
 import { openModal } from '../../../actions/modals';
 
 import {
@@ -47,9 +47,11 @@ const ListCardPure = ({ data, dispatch }) => {
                 <ListCardItem
                   contents={channel}
                   withDescription={false}
-                  meta={`
-                    ${channel.metaData.members} members
-                    ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `· ${channel.pendingUsers.length} pending members` : ``}`}
+                  meta={
+                    item.node.metaData.members > 1
+                      ? `${item.node.metaData.members} members ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `· ${channel.pendingUsers.length} pending members` : ``}`
+                      : `${item.node.metaData.members} member ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `· ${channel.pendingUsers.length} pending members` : ``}`
+                  }
                 >
                   <Icon glyph="view-forward" />
                 </ListCardItem>
@@ -70,16 +72,12 @@ const ListCardPure = ({ data, dispatch }) => {
     );
   } else {
     return (
-      <NullCard bg="community">
-        <NullTitle>
-          There are no channels here...
-        </NullTitle>
-        <NullSubtitle>
-          Which really shouldn't be possible. Mind reloading?
-        </NullSubtitle>
-        <Button icon="reload">
-          Reload
-        </Button>
+      <NullCard
+        bg="community"
+        heading={`There are no channels here...`}
+        copy={`Which really shouldn't be possible. Mind reloading?`}
+      >
+        <Button icon="reload">Reload</Button>
       </NullCard>
     );
   }

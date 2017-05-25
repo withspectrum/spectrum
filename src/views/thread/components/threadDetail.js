@@ -37,9 +37,9 @@ const ThreadDetailPure = ({
   const isChannelOwner = thread.channel.channelPermissions.isOwner;
   const isCommunityOwner =
     thread.channel.community.communityPermissions.isOwner;
-  const isChannelModerator = thread.channel.channelPermissions.isModerator;
-  const isCommunityModerator =
-    thread.channel.community.communityPermissions.isModerator;
+  // const isChannelModerator = thread.channel.channelPermissions.isModerator;
+  // const isCommunityModerator =
+  //   thread.channel.community.communityPermissions.isModerator;
 
   const threadLock = (threadId, value) =>
     setThreadLock({
@@ -81,11 +81,6 @@ const ThreadDetailPure = ({
     );
   };
 
-  const openUserProfileModal = (e, user: Object) => {
-    e.preventDefault();
-    return dispatch(openModal('USER_PROFILE_MODAL', { user }));
-  };
-
   let body = thread.content.body;
   if (thread.type === 'SLATE') {
     body = toPlainText(toState(JSON.parse(body)));
@@ -94,7 +89,7 @@ const ThreadDetailPure = ({
   return (
     <ThreadWrapper>
       <ContextRow>
-        <Byline onClick={e => openUserProfileModal(e, thread.creator)}>
+        <Byline to={`/users/${thread.creator.username}`}>
           {thread.creator.name}
         </Byline>
         {currentUser &&
@@ -106,6 +101,9 @@ const ThreadDetailPure = ({
                 <FlyoutRow>
                   <IconButton
                     glyph="freeze"
+                    hoverColor="space.light"
+                    tipText={thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'}
+                    tipLocation="top-left"
                     onClick={() => threadLock(thread.id, !thread.isLocked)}
                   />
                 </FlyoutRow>}
@@ -114,8 +112,8 @@ const ThreadDetailPure = ({
                   <IconButton
                     glyph="delete"
                     hoverColor="warn.alt"
-                    tipText="Delete Thread"
-                    tipLocation="bottom-right"
+                    tipText="Delete thread"
+                    tipLocation="top-left"
                     onClick={e => triggerDelete(e, thread.id)}
                   />
                 </FlyoutRow>}

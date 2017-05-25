@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import styled from 'styled-components';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // // $FlowFixMe
@@ -8,7 +7,7 @@ import withState from 'recompose/withState';
 // // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
 import Icon from '../icons';
-import Editor, { toPlainText, fromPlainText } from '../../components/editor';
+import { toPlainText, fromPlainText } from '../../components/editor';
 import {
   Form,
   Input,
@@ -20,10 +19,10 @@ import {
 } from './style';
 import { sendMessageMutation } from '../../api/message';
 
-const InputEditor = styled(Editor)`
-  width: 100%;
-  height: 100%;
-`;
+// const InputEditor = styled(Editor)`
+//   width: 100%;
+//   height: 100%;
+// `;
 
 const ChatInputWithMutation = ({
   thread,
@@ -68,8 +67,9 @@ const ChatInputWithMutation = ({
   };
 
   const handleKeyPress = e => {
-    if (e.keyCode === 13) {
-      //=> make the enter key send a message, not create a new line in the next autoexpanding textarea
+    if (e.keyCode === 13 && !e.shiftKey) {
+      //=> make the enter key send a message, not create a new line in the next autoexpanding textarea unless shift is pressed.
+      console.log('submit!');
       e.preventDefault(); //=> prevent linebreak
       submit(e); //=> send the message instead
     }
@@ -99,10 +99,11 @@ const ChatInputWithMutation = ({
         tipLocation="top-right"
       />
       <Form>
-        <InputEditor
+        <Input
           ref="textInput"
           placeholder="Your message here..."
           state={state}
+          onKeyPress={handleKeyPress}
           onChange={onChange}
           markdown={false}
           onFocus={onFocus}

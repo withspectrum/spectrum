@@ -8,14 +8,16 @@ import Modal from 'react-modal';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-import ModalContainer from '../modalContainer';
-import { TextButton, Button } from '../../buttons';
-import { modalStyles } from '../styles';
+
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { deleteCommunityMutation } from '../../../api/community';
 import { deleteChannelMutation } from '../../../api/channel';
 import { deleteThreadMutation } from '../../../api/thread';
+
+import ModalContainer from '../modalContainer';
+import { TextButton, Button } from '../../buttons';
+import { modalStyles } from '../styles';
 import { Actions, Message } from './style';
 
 /*

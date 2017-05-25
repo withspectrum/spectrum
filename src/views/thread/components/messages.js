@@ -44,7 +44,7 @@ const MessagesWithData = ({ data, toggleReaction }) => {
     <ChatWrapper>
       <HorizontalRule>
         <hr />
-        <Icon glyph={'messages'} />
+        <Icon glyph={'message'} />
         <hr />
       </HorizontalRule>
       <ChatMessages toggleReaction={toggleReaction} messages={sortedMessages} />

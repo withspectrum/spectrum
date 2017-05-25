@@ -41,7 +41,7 @@ export const ShimmerThread = styled(Card)`
   padding: 16px;
 
   section {
-    min-height: 84px;
+    min-height: 96px;
   }
 `;
 

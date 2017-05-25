@@ -372,13 +372,13 @@ export const Tooltip = props => css`
 
 	&:before {
 		content: '';
-    z-index: 1000;
+    z-index: 9999;
     border: 5px solid transparent;
   }
 
 	&:after {
 		content: ${props.tipText && !props.onboarding ? `'${props.tipText}'` : `''`};
-    z-index: 999;
+    z-index: 9998;
     ${fontStack};
     font-size: 14px;
     font-weight: 500;

@@ -12,9 +12,7 @@ import { withRouter } from 'react-router';
 import slugg from 'slugg';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
-import ModalContainer from '../modalContainer';
-import { TextButton, Button } from '../../buttons';
-import { modalStyles } from '../styles';
+
 import { closeModal } from '../../../actions/modals';
 import { throttle } from '../../../helpers/utils';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -23,10 +21,29 @@ import {
   createCommunityMutation,
   CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,
 } from '../../../api/community';
-import { Form, Actions, ImgPreview } from './style';
+
+import ModalContainer from '../modalContainer';
+import { TextButton, Button } from '../../buttons';
 import { Input, UnderlineInput, TextArea, Error } from '../../formElements';
+import { modalStyles } from '../styles';
+
+import { Form, Actions, ImgPreview } from './style';
 
 class CreateCommunityModal extends Component {
+  state: {
+    name: ?string,
+    slug: string,
+    description: string,
+    website: string,
+    image: string,
+    file: ?string,
+    slugTaken: boolean,
+    slugError: boolean,
+    descriptionError: boolean,
+    nameError: boolean,
+    createError: boolean,
+    loading: boolean,
+  };
   constructor(props) {
     super(props);
 

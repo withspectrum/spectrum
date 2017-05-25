@@ -8,11 +8,13 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-import { Button, TextButton } from '../buttons';
+import { editChannelMutation, deleteChannelMutation } from '../../api/channel';
 import { openModal } from '../../actions/modals';
-import { Input, UnderlineInput, TextArea, Checkbox } from '../formElements';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { Notice } from '../../components/listCard/style';
+import { Notice } from '../listCard/style';
+import { Button, TextButton } from '../buttons';
+import { NullCard } from '../upsell';
+import { Input, UnderlineInput, TextArea, Checkbox } from '../formElements';
 import {
   StyledCard,
   Form,
@@ -21,18 +23,16 @@ import {
   Actions,
   GeneralNotice,
 } from './style';
-import { editChannelMutation, deleteChannelMutation } from '../../api/channel';
 
 class ChannelWithData extends Component {
-  state = {
-    name: String,
-    slug: String,
-    description: String,
-    isPrivate: Boolean,
-    channelId: String,
+  state: {
+    name: string,
+    slug: string,
+    description: string,
+    isPrivate: boolean,
+    channelId: string,
     channelData: Object,
   };
-
   constructor(props) {
     super(props);
 
@@ -90,7 +90,7 @@ class ChannelWithData extends Component {
         }
       })
       .catch(err => {
-        this.props.dispatch(addToastWithTimeout('error', err));
+        this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
@@ -100,17 +100,11 @@ class ChannelWithData extends Component {
     const message = (
       <div>
         <p>
-          Are you sure you want to delete your channel,
+          Are you sure you want to delete
           {' '}
-          <b>{name}</b>
-          {' '}
-          (in the
-          {' '}
-          <b>{channelData.community.name}</b>
-          {' '}
-          community)?
+          <b>{channelData.community.name}/{name}</b>
+          ?
         </p>
-        {' '}
         {channelData.metaData.threads > 0 &&
           <p>
             The
@@ -122,7 +116,7 @@ class ChannelWithData extends Component {
         <p>
           All messages, reactions, and media shared in this channel will be deleted.
         </p>
-        <p>This cannot be undone.</p>
+        <p><b>This cannot be undone.</b></p>
       </div>
     );
 
@@ -142,77 +136,78 @@ class ChannelWithData extends Component {
 
     if (!channel) {
       return (
+        <NullCard
+          bg="channel"
+          heading={`This channel doesn't exist yet.`}
+          copy={`Want to make it?`}
+        >
+          {/* TODO: wire up button */}
+          <Button>Create</Button>
+        </NullCard>
+      );
+    } else {
+      return (
         <StyledCard>
-          <FormTitle>This channel doesn't exist yet.</FormTitle>
-          <Description>Want to make it?</Description>
-          <Actions>
-            <Button>Create</Button>
-          </Actions>
+          <FormTitle>Channel Settings</FormTitle>
+          <Form>
+            <Input defaultValue={name} id="name" onChange={this.handleChange}>
+              Name
+            </Input>
+            <UnderlineInput defaultValue={slug} disabled>
+              {`sp.chat/${channel.community.slug}/`}
+            </UnderlineInput>
+            <TextArea
+              id="description"
+              defaultValue={description}
+              onChange={this.handleChange}
+            >
+              Description
+            </TextArea>
+
+            <Checkbox
+              id="isPrivate"
+              checked={isPrivate}
+              onChange={this.handleChange}
+            >
+              Private channel
+            </Checkbox>
+            {isPrivate
+              ? <Description>
+                  Only approved people on Spectrum can see the threads, messages, and members in this channel. You can manually approve users who request to join this channel.
+                </Description>
+              : <Description>
+                  Anyone on Spectrum can join this channel, post threads and messages, and will be able to see other members.
+                </Description>}
+
+            {// if the user is moving from private to public
+            this.props.channel.isPrivate &&
+              !isPrivate &&
+              <Notice>
+                When a private channel is made public all pending users will be added as members of the channel. Blocked users will remain blocked from viewing all content in this channel but in the future any new person will be able to join.
+              </Notice>}
+
+            <Actions>
+              <TextButton color={'warn.alt'}>Cancel</TextButton>
+              <Button onClick={this.save}>Save</Button>
+            </Actions>
+
+            {// general can't be deleted
+            slug !== 'general'
+              ? <Actions>
+                  <TextButton
+                    color={'warn.alt'}
+                    onClick={e => this.triggerDeleteChannel(e, channel.id)}
+                  >
+                    Delete Channel
+                  </TextButton>
+                </Actions>
+              : <GeneralNotice>
+                  The General channel is the default channel for your community. It can't be deleted, but you can still change the name and description.
+                </GeneralNotice>}
+          </Form>
         </StyledCard>
       );
     }
-
-    return (
-      <StyledCard>
-        <FormTitle>Channel Settings</FormTitle>
-        <Form>
-          <Input defaultValue={name} id="name" onChange={this.handleChange}>
-            Name
-          </Input>
-          <UnderlineInput defaultValue={slug} disabled>
-            {`sp.chat/${channel.community.slug}/`}
-          </UnderlineInput>
-          <TextArea
-            id="description"
-            defaultValue={description}
-            onChange={this.handleChange}
-          >
-            Description
-          </TextArea>
-
-          <Checkbox
-            id="isPrivate"
-            checked={isPrivate}
-            onChange={this.handleChange}
-          >
-            Private channel
-          </Checkbox>
-          {isPrivate
-            ? <Description>
-                Only approved people on Spectrum can see the threads, messages, and members in this channel. You can manually approve users who request to join this channel.
-              </Description>
-            : <Description>
-                Anyone on Spectrum can join this channel, post threads and messages, and will be able to see other members.
-              </Description>}
-
-          {// if the user is moving from private to public
-          this.props.channel.isPrivate &&
-            !isPrivate &&
-            <Notice>
-              When a private channel is made public all pending users will be added as members of the channel. Blocked users will remain blocked from viewing all content in this channel but in the future any new person will be able to join.
-            </Notice>}
-
-          <Actions>
-            <TextButton color={'warn.alt'}>Cancel</TextButton>
-            <Button onClick={this.save}>Save</Button>
-          </Actions>
-
-          {// general can't be deleted
-          slug !== 'general'
-            ? <Actions>
-                <TextButton
-                  color={'warn.alt'}
-                  onClick={e => this.triggerDeleteChannel(e, channel.id)}
-                >
-                  Delete Channel
-                </TextButton>
-              </Actions>
-            : <GeneralNotice>
-                The General channel is the default channel for your community. It can't be deleted, but you can still change the name and description.
-              </GeneralNotice>}
-        </Form>
-      </StyledCard>
-    );
   }
 }
 

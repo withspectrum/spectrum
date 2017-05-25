@@ -240,6 +240,7 @@ module.exports = {
           );
 
           return Promise.all([
+            channelToEvaluate,
             currentUserChannelPermissions,
             currentUserCommunityPermissions,
           ]);

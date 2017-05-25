@@ -10,14 +10,15 @@ import { connect } from 'react-redux';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
 
-import { UpsellSignIn } from '../../components/upsell';
+import { UpsellSignIn, NullCard } from '../../components/upsell';
+import { Button } from '../../components/buttons';
 import { displayLoadingScreen } from '../../components/loading';
 import { Column } from '../../components/column';
 import { UserProfile } from '../../components/profile';
 import ThreadFeed from '../../components/threadFeed';
 import ThreadComposer from '../../components/threadComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
-import ListCard from './components/listCard';
+import CommunityList from '../user/components/communityList';
 
 const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 
@@ -44,28 +45,39 @@ const DashboardPure = ({
     return (
       <AppViewWrapper>
         <Column type="primary" alignItems="center">
-          Error loading home page
+          <NullCard
+            bg="error"
+            heading="Whoops! Something broke the home page."
+            copy="Mind reloading?"
+          >
+            <Button icon="reload">Reload</Button>
+          </NullCard>
         </Column>
       </AppViewWrapper>
     );
   } else if (user && user !== null) {
+    const currentUser = user;
     const communities = user.communityConnection.edges;
     return (
       <AppViewWrapper>
         <Column type="secondary">
           <UserProfile profileSize="mini" data={{ user: user }} />
-          <ListCard communities={communities} />
+          <CommunityList
+            withDescription={false}
+            currentUser={currentUser}
+            user={user}
+            communities={communities}
+          />
         </Column>
 
         <Column type="primary" alignItems="stretch">
           {// composer should only appear if a user is part of a community
           user && communities && <ThreadComposer />}
-          <EverythingThreadFeed />
+          <EverythingThreadFeed viewContext="dashboard" />
         </Column>
       </AppViewWrapper>
     );
   } else {
-    // window.location.href = '/';
     return (
       <AppViewWrapper>
         <Column type="primary" alignItems="center">

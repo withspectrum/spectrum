@@ -11,7 +11,7 @@ type BubbleProps = {
   persisted: boolean,
   sender: Object,
   message: Object,
-  imgSrc: ?string,
+  imgSrc?: String,
   type: ?'thread' | 'messageGroup',
 };
 
@@ -21,30 +21,32 @@ export const Bubble = (props: BubbleProps) => {
   const formatMessageForChannelLinks = (body: string): string => {
     if (!body) {
       return '';
-    }
-    const cleanMessage = sanitizeHtml(body);
+    } else {
+      const cleanMessage = sanitizeHtml(body);
 
-    return cleanMessage;
-    // const linkedMessage = Autolinker.link(
-    //   cleanMessage.replace(
-    //     CHANNELS,
-    //     `$1https://spectrum.chat/${activeCommunity}/$2`
-    //   )
-    // );
-    // // Remove the "spectrum.chat" part from the link text so in the message
-    // // you just see "~channel", but it's linked to the channel
-    // return linkedMessage.replace(CHANNEL_ANCHORS, '>$1</a>');
+      return cleanMessage;
+      // const linkedMessage = Autolinker.link(
+      //   cleanMessage.replace(
+      //     CHANNELS,
+      //     `$1https://spectrum.chat/${activeCommunity}/$2`
+      //   )
+      // );
+      // // Remove the "spectrum.chat" part from the link text so in the message
+      // // you just see "~channel", but it's linked to the channel
+      // return linkedMessage.replace(CHANNEL_ANCHORS, '>$1</a>');
+    }
   };
 
   const formatMessageForLinks = (body: string): string => {
     if (!body) {
       return '';
+    } else {
+      const cleanMessage = sanitizeHtml(body);
+
+      const linkedMessage = Autolinker.link(cleanMessage);
+
+      return linkedMessage;
     }
-    const cleanMessage = sanitizeHtml(body);
-
-    const linkedMessage = Autolinker.link(cleanMessage);
-
-    return linkedMessage;
   };
 
   return (

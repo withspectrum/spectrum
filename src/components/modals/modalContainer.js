@@ -8,7 +8,11 @@ import { ModalBody, Header, ModalContent, Title, CloseButton } from './styles';
   accept any arbitrary content via `props.children`
 */
 
-const ModalContainer = ({ closeModal, children, title }): React$Element<
+const ModalContainer = ({
+  closeModal,
+  children,
+  title,
+}: { closeModal: Function, children?: Object, title: string }): React$Element<
   any
 > => {
   return (

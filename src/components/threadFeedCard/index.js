@@ -12,6 +12,7 @@ import { openModal } from '../../actions/modals';
 import {
   StyledThreadFeedCard,
   CardContent,
+  CardLink,
   Title,
   Meta,
   MetaRow,
@@ -23,25 +24,32 @@ import {
 
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
   const formatLocation = () => {
-    if (!props.data.channel) {
-      return;
+    switch (props.viewContext) {
+      case 'dashboard':
+      case 'profile':
+        return (
+          <Location>
+            <Link to={`/${props.data.community.slug}`}>
+              {props.data.community.name}
+            </Link>
+            {' '}/{' '}
+            <Link
+              to={`/${props.data.community.slug}/${props.data.channel.slug}`}
+            >
+              {props.data.channel.name}
+            </Link>
+          </Location>
+        );
+      case 'community':
+        return (
+          <Location>
+            {`~${props.data.channel.name}`}
+          </Location>
+        );
+      case 'channel':
+      default:
+        return;
     }
-    if (props.data.channel.name && props.data.channel.community.name) {
-      return (
-        <Location>
-          {`${props.data.channel.community.name} / ${props.data.channel.name}`}
-        </Location>
-      );
-    }
-    if (props.data.channel.name && !props.data.channel.community.name) {
-      return (
-        <Location>
-          {`~/${props.data.channel.name}`}
-        </Location>
-      );
-    }
-
-    return;
   };
 
   const openUserProfileModal = (user: Object) => {
@@ -51,29 +59,26 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
   const participantList = props.data.participants;
 
   const messageAvatars = list => {
-    return list.map(participant => {
-      return (
-        <Participant
-          onClick={() => openUserProfileModal(participant)}
-          src={participant.profilePhoto}
-          role="presentation"
-          key={participant.id}
-        />
-      );
-    });
+    return list.map(participant => (
+      <Link key={participant.id} to={`/users/${participant.username}`}>
+        <Participant src={participant.profilePhoto} role="presentation" />
+      </Link>
+    ));
   };
 
   return (
-    <StyledThreadFeedCard>
+    <StyledThreadFeedCard hoverable>
+      <CardLink to={`/thread/${props.data.id}`} />
       <CardContent>
         {formatLocation()}
-        <Title>
-          <Link to={`/thread/${props.data.id}`}>
+        <Link to={`/thread/${props.data.id}`}>
+          <Title>
             {props.data.content.title}
-          </Link>
-        </Title>
+          </Title>
+        </Link>
         <MetaRow>
           <ParticipantHeads>
+            {/* TODO: Creator/participants should all be links, not fire modals. */}
             <Creator role="presentation">
               <Participant
                 onClick={() => openUserProfileModal(props.data.creator)}

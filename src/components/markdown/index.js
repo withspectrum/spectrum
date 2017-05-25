@@ -1,9 +1,15 @@
+//@flow
 import React from 'react';
+//$FlowFixMe
 import { injectGlobal } from 'styled-components';
+//$FlowFixMe
 import MD from 'react-remarkable';
 
 let injected = false;
 class Markdown extends React.Component {
+  state: {
+    hljs: boolean,
+  };
   state = {
     hljs: false,
   };
