@@ -17,6 +17,12 @@ module.exports = {
       loaders.thread.load(id),
   },
   Thread: {
+    attachments: ({ attachments }) =>
+      attachments.map(attachment => {
+        return Object.assign({}, ...attachment, {
+          data: JSON.stringify(attachment.data),
+        });
+      }),
     channel: (
       { channelId }: { channelId: string },
       _: any,

@@ -1,7 +1,7 @@
-export const initNewThreadWithUser = (users: Object) => {
+export const initNewThreadWithUser = (user: Object) => {
   return {
     type: 'ADD_USERS_DIRECT_MESSAGES_COMPOSER',
-    payload: users,
+    payload: user,
   };
 };
 

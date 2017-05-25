@@ -31,6 +31,10 @@ export const threadInfoFragment = gql`
     creator {
       ...userInfo
     }
+    attachments {
+      attachmentType
+      data
+    }
   }
   ${userInfoFragment}
 `;
