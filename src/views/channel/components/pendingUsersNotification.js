@@ -1,13 +1,10 @@
 // @flow
 import React from 'react';
 import { Link } from 'react-router-dom';
-import compose from 'recompose/compose';
 import pure from 'recompose/pure';
-import { displayLoadingCard } from '../../../components/loading';
-import { getPendingChannelUsers } from '../queries';
 import { PendingUserNotificationContainer, PendingUserCount } from './style';
 
-const PendingUsersNotificationPure = ({ data: { channel } }) => {
+const PendingUsersNotificationPure = ({ channel }) => {
   if (!channel.pendingUsers || channel.pendingUsers.length === 0)
     return <span />;
   return (
@@ -20,10 +17,6 @@ const PendingUsersNotificationPure = ({ data: { channel } }) => {
   );
 };
 
-export const PendingUsersNotification = compose(
-  getPendingChannelUsers,
-  displayLoadingCard,
-  pure
-)(PendingUsersNotificationPure);
+export const PendingUsersNotification = pure(PendingUsersNotificationPure);
 
 export default PendingUsersNotification;

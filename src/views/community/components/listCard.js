@@ -38,15 +38,18 @@ const ListCardPure = ({ data, dispatch }) => {
         </ListHeader>
         <ListContainer>
           {channels.map(item => {
+            const channel = item.node;
             return (
               <Link
-                key={item.node.id}
-                to={`/${data.variables.slug}/${item.node.slug}`}
+                key={channel.id}
+                to={`/${data.variables.slug}/${channel.slug}`}
               >
                 <ListCardItem
-                  contents={item.node}
+                  contents={channel}
                   withDescription={false}
-                  meta={`${item.node.metaData.members} members`}
+                  meta={`
+                    ${channel.metaData.members} members
+                    ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `· ${channel.pendingUsers.length} pending members` : ``}`}
                 >
                   <Icon glyph="view-forward" />
                 </ListCardItem>

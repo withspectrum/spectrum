@@ -114,7 +114,7 @@ const ChannelViewPure = ({
           {channel.isPrivate &&
             (channel.channelPermissions.isOwner ||
               channel.community.communityPermissions.isOwner) &&
-            <PendingUsersNotification id={channel.id} />}
+            <PendingUsersNotification channel={channel} />}
         </Column>
 
         <Column type="primary" alignItems="center">
