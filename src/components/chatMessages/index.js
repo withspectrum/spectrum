@@ -8,7 +8,7 @@ import {
   convertTimestampToTime,
   onlyContainsEmoji,
 } from '../../helpers/utils';
-import { NullState, NullTitle, NullSubtitle } from '../upsell';
+import { NullState } from '../upsell';
 import {
   Avatar,
   AvatarLabel,
@@ -39,14 +39,11 @@ class ChatMessages extends Component {
 
     if (!messages) {
       return (
-        <NullState bg="chat">
-          <NullTitle>
-            🔥 This thread is hot off the presses...
-          </NullTitle>
-          <NullSubtitle>
-            Why don't you kick off the conversation?
-          </NullSubtitle>
-        </NullState>
+        <NullState
+          bg="chat"
+          heading={`🔥 This thread is hot off the presses...`}
+          copy={`Why don't you kick off the conversation?`}
+        />
       );
     }
 

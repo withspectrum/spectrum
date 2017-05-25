@@ -7,6 +7,16 @@ export const threadInfoFragment = gql`
     messageCount
     createdAt
     modifiedAt
+    channel {
+      id
+      name
+      slug
+    }
+    community {
+      id
+      name
+      slug
+    }
     isPublished
     isLocked
     isCreator

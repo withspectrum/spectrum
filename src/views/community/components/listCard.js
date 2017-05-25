@@ -10,7 +10,7 @@ import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCard';
 import { Button, TextButton, IconButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
-import { NullCard, NullTitle, NullSubtitle } from '../../../components/upsell';
+import { NullCard } from '../../../components/upsell';
 import { openModal } from '../../../actions/modals';
 
 import {
@@ -46,7 +46,11 @@ const ListCardPure = ({ data, dispatch }) => {
                 <ListCardItem
                   contents={item.node}
                   withDescription={false}
-                  meta={`${item.node.metaData.members} members`}
+                  meta={
+                    item.node.metaData.members > 1
+                      ? `${item.node.metaData.members} members`
+                      : `${item.node.metaData.members} member`
+                  }
                 >
                   <Icon glyph="view-forward" />
                 </ListCardItem>
@@ -67,16 +71,12 @@ const ListCardPure = ({ data, dispatch }) => {
     );
   } else {
     return (
-      <NullCard bg="community">
-        <NullTitle>
-          There are no channels here...
-        </NullTitle>
-        <NullSubtitle>
-          Which really shouldn't be possible. Mind reloading?
-        </NullSubtitle>
-        <Button icon="reload">
-          Reload
-        </Button>
+      <NullCard
+        bg="community"
+        heading={`There are no channels here...`}
+        copy={`Which really shouldn't be possible. Mind reloading?`}
+      >
+        <Button icon="reload">Reload</Button>
       </NullCard>
     );
   }

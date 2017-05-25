@@ -17,9 +17,11 @@ import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { LoadingCard } from '../loading';
 import Icon from '../icons';
-import { Avatar } from '../avatar';
+// import { Avatar } from '../avatar';
 import {
   ProfileHeader,
+  ProfileAvatar,
+  ProfileHeaderLink,
   ProfileHeaderMeta,
   ProfileHeaderAction,
   Title,
@@ -101,42 +103,35 @@ const CommunityWithData = ({
 
   return (
     <Card>
-      <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-        <Avatar
-          margin={'0 12px 0 0'}
-          size={40}
-          radius={4}
-          src={community.profilePhoto}
-        />
-        <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-          <Link to={`/${community.slug}`}>
+      <ProfileHeader>
+        <ProfileAvatar src={community.profilePhoto} />
+        <ProfileHeaderLink to={`/${community.slug}`}>
+          <ProfileHeaderMeta>
             <Title>{community.name}</Title>
-          </Link>
-        </ProfileHeaderMeta>
+          </ProfileHeaderMeta>
+        </ProfileHeaderLink>
         {currentUser &&
           !community.communityPermissions.isOwner &&
           <ProfileHeaderAction
             glyph={
-              community.communityPermissions.isMember
-                ? 'door-leave'
-                : 'door-enter'
+              community.communityPermissions.isMember ? 'minus' : 'plus-fill'
             }
             color={
               community.communityPermissions.isMember
-                ? 'brand.alt'
-                : 'text.placeholder'
+                ? 'text.placeholder'
+                : 'brand.alt'
             }
             hoverColor={
               community.communityPermissions.isMember
-                ? 'brand.alt'
-                : 'warn.default'
+                ? 'warn.default'
+                : 'brand.alt'
             }
             tipText={
               community.communityPermissions.isMember
                 ? `Leave community`
                 : 'Join community'
             }
-            tipLocation="bottom-left"
+            tipLocation="top-left"
             onClick={() => toggleMembership(community.id)}
           />}
         {currentUser &&
@@ -145,7 +140,7 @@ const CommunityWithData = ({
             <ProfileHeaderAction
               glyph="settings"
               tipText="Edit community"
-              tipLocation="bottom-left"
+              tipLocation="top-left"
             />
           </Link>}
 

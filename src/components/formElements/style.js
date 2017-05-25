@@ -5,7 +5,7 @@ export const StyledLabel = styled.label`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-top: 16px;
+  margin-top: 12px;
   font-weight: 500;
   font-size: 14px;
   letter-spacing: -0.4px;
@@ -20,6 +20,11 @@ export const StyledLabel = styled.label`
   &:hover > textarea {
     border-color: ${props => (props.disabled ? props.theme.inactive : props.theme.text.alt)};
     transition: ${Transition.hover.on};
+  }
+
+  &:hover > input:focus,
+  &:hover > textarea:focus {
+    border-color: ${props => (props.disabled ? props.theme.inactive : props.theme.brand.alt)};
   }
 `;
 
@@ -169,6 +174,7 @@ export const ImageInputLabel = styled.label`
   height: 48px;
   width: 48px;
   border-radius: 8px;
+  margin-top: 8px;
 `;
 
 export const ProfileImage = styled.img`

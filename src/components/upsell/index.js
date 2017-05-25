@@ -10,6 +10,8 @@ export const NullCard = props => {
   return (
     <Card>
       <NullCol bg={props.bg}>
+        {props.heading && <Title>{props.heading}</Title>}
+        {props.copy && <Subtitle>{props.copy}</Subtitle>}
         {props.children}
       </NullCol>
     </Card>
@@ -18,24 +20,11 @@ export const NullCard = props => {
 
 export const NullState = props => (
   <NullCol bg={props.bg}>
+    {props.heading && <Title>{props.heading}</Title>}
+    {props.copy && <Subtitle>{props.copy}</Subtitle>}
     {props.children}
   </NullCol>
 );
-
-export const NullTitle = props => <Title>{props.children}</Title>;
-
-export const NullSubtitle = props => <Subtitle>{props.children}</Subtitle>;
-
-export const NullNotifications = () => {
-  return (
-    <NullCol bg="notification">
-      <Title>No notifications</Title>
-      <Subtitle>
-        You're all good! 🎉
-      </Subtitle>
-    </NullCol>
-  );
-};
 
 export const UpsellSignIn = ({ entity }) => {
   const login = () => {

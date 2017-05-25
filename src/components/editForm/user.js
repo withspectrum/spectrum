@@ -8,27 +8,64 @@ import pure from 'recompose/pure';
 import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
+import { Button, TextButton } from '../buttons';
 import { LoadingCard } from '../loading';
-// import { Input, UnderlineInput, TextArea } from '../formElements';
+import { Input, TextArea, ImageInput } from '../formElements';
 import {
   StyledCard,
-  // Form,
-  // FormTitle,
-  // Description,
-  // Actions,
-  // ImgPreview,
+  Form,
+  FormTitle,
+  Description,
+  Actions,
+  ImgPreview,
 } from './style';
 
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingCard)
-);
-
 class UserWithData extends Component {
+  save = e => {
+    e.preventDefault;
+    //TODO mutation goes here...
+    this.props.history.push('/');
+  };
+
   render() {
-    return <StyledCard />;
+    const { user: { user } } = this.props;
+    return (
+      <StyledCard>
+        <FormTitle>Profile Settings</FormTitle>
+        <Form>
+          <ImageInput defaultValue={user.profilePhoto}>
+            Add a logo or photo
+          </ImageInput>
+          <Input
+            type="text"
+            defaultValue={user.name}
+            placeholder={"What's your name?"}
+          >
+            Name
+          </Input>
+          <Input
+            type={'text'}
+            defaultValue={user.username}
+            placeholder={'Pick a cool username...'}
+          >
+            Username
+          </Input>
+          <TextArea
+            defaultValue={user.description}
+            placeholder={'Introduce yourself to the class...'}
+          >
+            Bio
+          </TextArea>
+
+          <Actions>
+            <TextButton hoverColor={'warn.alt'}>Cancel</TextButton>
+            <Button onClick={this.save}>Save</Button>
+          </Actions>
+        </Form>
+      </StyledCard>
+    );
   }
 }
 
-const UserSettings = compose(displayLoadingState, pure)(UserWithData);
+const UserSettings = compose(pure)(UserWithData);
 export default UserSettings;

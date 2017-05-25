@@ -29,7 +29,6 @@ export const getNotifications = graphql(
     			read
     			createdAt
     			sender {
-    				displayName
     				username
             profilePhoto
             id

@@ -121,6 +121,7 @@ const ChannelViewPure = ({
               />
             : <span />}
           <ThreadFeedWithData
+            viewContext="channel"
             channelSlug={channelSlug}
             communitySlug={communitySlug}
           />

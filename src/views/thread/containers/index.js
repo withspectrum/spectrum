@@ -64,7 +64,10 @@ const ThreadContainerPure = ({
     <FlexContainer justifyContent="center" style={{ flex: '1' }}>
       <Column type="secondary">
         <UserProfile data={{ user: thread.creator }} profileSize={'full'} />
-        <ChannelProfile data={{ channel: thread.channel }} profileSize={size} />
+        <ChannelProfile
+          data={{ channel: thread.channel }}
+          profileSize={'small'}
+        />
       </Column>
 
       <Column type="primary">
