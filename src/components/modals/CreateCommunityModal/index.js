@@ -18,6 +18,7 @@ import { modalStyles } from '../styles';
 import { closeModal } from '../../../actions/modals';
 import { throttle } from '../../../helpers/utils';
 import { addToastWithTimeout } from '../../../actions/toasts';
+import { COMMUNITY_SLUG_BLACKLIST } from '../../../helpers/regexps';
 import {
   createCommunityMutation,
   CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,
@@ -64,13 +65,22 @@ class CreateCommunityModal extends Component {
       return;
     }
 
-    this.setState({
-      name,
-      slug,
-      nameError: false,
-    });
+    if (COMMUNITY_SLUG_BLACKLIST.indexOf(slug) > -1) {
+      this.setState({
+        name,
+        slug,
+        slugTaken: true,
+      });
+    } else {
+      this.setState({
+        name,
+        slug,
+        nameError: false,
+        slugTaken: false,
+      });
 
-    this.checkSlug(slug);
+      this.checkSlug(slug);
+    }
   };
 
   changeSlug = e => {
@@ -80,18 +90,27 @@ class CreateCommunityModal extends Component {
 
     if (slug.length >= 24) {
       this.setState({
+        slug,
         slugError: true,
       });
 
       return;
     }
 
-    this.setState({
-      slug,
-      slugError: false,
-    });
+    if (COMMUNITY_SLUG_BLACKLIST.indexOf(slug) > -1) {
+      this.setState({
+        slug,
+        slugTaken: true,
+      });
+    } else {
+      this.setState({
+        slug,
+        slugError: false,
+        slugTaken: false,
+      });
 
-    this.checkSlug(slug);
+      this.checkSlug(slug);
+    }
   };
 
   checkSlug = slug => {
@@ -104,13 +123,18 @@ class CreateCommunityModal extends Component {
         },
       })
       .then(({ data }) => {
+        if (COMMUNITY_SLUG_BLACKLIST.indexOf(this.state.slug) > -1) {
+          return this.setState({
+            slugTaken: true,
+          });
+        }
         // if the community exists
         if (!data.loading && data && data.community && data.community.id) {
-          this.setState({
+          return this.setState({
             slugTaken: true,
           });
         } else {
-          this.setState({
+          return this.setState({
             slugTaken: false,
           });
         }
@@ -205,7 +229,7 @@ class CreateCommunityModal extends Component {
         this.setState({
           loading: false,
         });
-        this.props.dispatch(addToastWithTimeout('error', err.toString()));
+        this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
