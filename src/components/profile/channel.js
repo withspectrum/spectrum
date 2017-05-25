@@ -88,7 +88,7 @@ const ChannelWithData = ({
       <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
         <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
           <ProfileHeaderLink to={`/${channel.community.slug}/${channel.slug}`}>
-            <Title>{channel.name}</Title>
+            <Title>~ {channel.name}</Title>
           </ProfileHeaderLink>
           <Link to={`/${channel.community.slug}`}>
             <Subtitle>{channel.community.name}</Subtitle>
@@ -96,13 +96,24 @@ const ChannelWithData = ({
         </ProfileHeaderMeta>
 
         {currentUser &&
-          channel.isMember &&
+          !channel.community.communityPermissions.isOwner &&
           <ProfileHeaderAction
-            glyph="minus"
-            color="text.placeholder"
-            hoverColor="warn.default"
-            tipText={`Leave ~${channel.name}`}
+            glyph={channel.channelPermissions.isMember ? 'minus' : 'plus-fill'}
+            color={
+              channel.channelPermissions.isMember
+                ? 'text.placeholder'
+                : 'brand.alt'
+            }
+            hoverColor={
+              channel.channelPermissions.isMember ? 'warn.default' : 'brand.alt'
+            }
+            tipText={
+              channel.channelPermissions.isMember
+                ? `Leave channel`
+                : 'Join channel'
+            }
             tipLocation="top-left"
+            onClick={() => toggleSubscription(channel.id)}
           />}
 
         {currentUser &&
@@ -121,15 +132,15 @@ const ChannelWithData = ({
         <Description>{channel.description}</Description>}
 
       {componentSize !== 'mini' &&
-        currentUser &&
-        <Actions>
-          {// user is not a member and doesn't own the channel
+        componentSize !== 'small' &&
+        (currentUser &&
           !channel.channelPermissions.isMember &&
-            (!channel.channelPermissions.isOwner &&
-              !channel.community.communityPermissions.isOwner) &&
-            <Action onClick={() => toggleSubscription(channel.id)}>
-              Join {channel.name}
-            </Action>}
+          (!channel.channelPermissions.isOwner &&
+            !channel.community.communityPermissions.isOwner)) &&
+        <Actions>
+          <Action onClick={() => toggleSubscription(channel.id)}>
+            Join {channel.name}
+          </Action>
         </Actions>}
 
       {(componentSize === 'large' || componentSize === 'full') &&

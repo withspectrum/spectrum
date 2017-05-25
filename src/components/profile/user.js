@@ -26,6 +26,7 @@ import {
   ProfileHeaderAction,
   Title,
   Subtitle,
+  Description,
 } from './style';
 import { MetaData } from './metaData';
 import type { ProfileSizeProps } from './index';
@@ -108,6 +109,11 @@ const UserWithData = ({
               />
             </Link>}
       </ProfileHeader>
+
+      {componentSize !== 'mini' &&
+        componentSize !== 'small' &&
+        (user.description && user.description !== null) &&
+        <Description>{user.description}</Description>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
         <MetaData data={{ threads: user.threadCount }} />}

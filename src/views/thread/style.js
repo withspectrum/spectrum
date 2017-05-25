@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import Card from '../../components/card';
 import Markdown from '../../components/markdown';
 import { FlexCol, FlexRow, H1, Transition } from '../../components/globals';
@@ -63,9 +64,13 @@ export const FlyoutRow = styled(FlexRow)`
   padding: 8px;
 `;
 
-export const Byline = styled.span`
+export const Byline = styled(Link)`
   font-weight: 500;
   color: ${({ theme }) => theme.brand.alt};
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 export const ThreadContent = styled(Markdown)`

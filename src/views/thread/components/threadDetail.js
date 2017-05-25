@@ -94,7 +94,7 @@ const ThreadDetailPure = ({
   return (
     <ThreadWrapper>
       <ContextRow>
-        <Byline onClick={e => openUserProfileModal(e, thread.creator)}>
+        <Byline to={`/users/${thread.creator.username}`}>
           {thread.creator.name}
         </Byline>
         {currentUser &&
@@ -106,6 +106,9 @@ const ThreadDetailPure = ({
                 <FlyoutRow>
                   <IconButton
                     glyph="freeze"
+                    hoverColor="space.light"
+                    tipText={thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'}
+                    tipLocation="top-left"
                     onClick={() => threadLock(thread.id, !thread.isLocked)}
                   />
                 </FlyoutRow>}
@@ -114,8 +117,8 @@ const ThreadDetailPure = ({
                   <IconButton
                     glyph="delete"
                     hoverColor="warn.alt"
-                    tipText="Delete Thread"
-                    tipLocation="bottom-right"
+                    tipText="Delete thread"
+                    tipLocation="top-left"
                     onClick={e => triggerDelete(e, thread.id)}
                   />
                 </FlyoutRow>}

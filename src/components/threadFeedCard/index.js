@@ -12,6 +12,7 @@ import { openModal } from '../../actions/modals';
 import {
   StyledThreadFeedCard,
   CardContent,
+  CardLink,
   Title,
   Meta,
   MetaRow,
@@ -28,7 +29,15 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
       case 'profile':
         return (
           <Location>
-            {`${props.data.community.name} / ${props.data.channel.name}`}
+            <Link to={`/${props.data.community.slug}`}>
+              {props.data.community.name}
+            </Link>
+            {' '}/{' '}
+            <Link
+              to={`/${props.data.community.slug}/${props.data.channel.slug}`}
+            >
+              {props.data.channel.name}
+            </Link>
           </Location>
         );
       case 'community':
@@ -59,13 +68,14 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
 
   return (
     <StyledThreadFeedCard hoverable>
+      <CardLink to={`/thread/${props.data.id}`} />
       <CardContent>
         {formatLocation()}
-        <Title>
-          <Link to={`/thread/${props.data.id}`}>
+        <Link to={`/thread/${props.data.id}`}>
+          <Title>
             {props.data.content.title}
-          </Link>
-        </Title>
+          </Title>
+        </Link>
         <MetaRow>
           <ParticipantHeads>
             <Creator role="presentation">

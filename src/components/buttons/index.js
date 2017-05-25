@@ -42,7 +42,7 @@ export const Button = (props: ButtonProps) => (
     {props.icon
       ? props.loading ? <Loading /> : <Icon glyph={props.icon} />
       : ''}
-    {props.loading && !props.icon && <Spinner />}
+    {props.loading && !props.icon && <Spinner color="text.reverse" size="16" />}
     <Label loading={props.loading} hasIcon={props.icon}>{props.children}</Label>
   </StyledSolidButton>
 );

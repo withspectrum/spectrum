@@ -42,6 +42,7 @@ const UserViewPure = ({
           withMeta={false}
           withDescription={true}
           currentUser={currentUser}
+          profileSize="small"
           user={user}
           communities={user.communityConnection.edges}
         />

@@ -91,7 +91,7 @@ export const MessageWrapper = styled.span`
     content: ${props => (props.timestamp ? `'${props.timestamp}'` : '')};
     position: absolute;
     ${props => (props.me ? 'right: calc(100% + 8px)' : 'left: calc(100% + 8px)')};
-    top: 8px;
+    top: -4px;
     white-space: nowrap;
     font-size: 12px;
     color: ${({ theme }) => theme.text.alt};

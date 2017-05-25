@@ -17,9 +17,10 @@ import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { LoadingCard } from '../loading';
 import Icon from '../icons';
-import { Avatar } from '../avatar';
+// import { Avatar } from '../avatar';
 import {
   ProfileHeader,
+  ProfileAvatar,
   ProfileHeaderLink,
   ProfileHeaderMeta,
   ProfileHeaderAction,
@@ -102,15 +103,10 @@ const CommunityWithData = ({
 
   return (
     <Card>
-      <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-        <Avatar
-          margin={'0 12px 0 0'}
-          size={40}
-          radius={4}
-          src={community.profilePhoto}
-        />
+      <ProfileHeader>
+        <ProfileAvatar src={community.profilePhoto} />
         <ProfileHeaderLink to={`/${community.slug}`}>
-          <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+          <ProfileHeaderMeta>
             <Title>{community.name}</Title>
           </ProfileHeaderMeta>
         </ProfileHeaderLink>

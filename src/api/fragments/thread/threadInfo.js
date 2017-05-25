@@ -10,10 +10,12 @@ export const threadInfoFragment = gql`
     channel {
       id
       name
+      slug
     }
     community {
       id
       name
+      slug
     }
     isPublished
     isLocked

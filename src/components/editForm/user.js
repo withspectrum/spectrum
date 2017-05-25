@@ -21,6 +21,12 @@ import {
 } from './style';
 
 class UserWithData extends Component {
+  save = e => {
+    e.preventDefault;
+    //TODO mutation goes here...
+    this.props.history.push('/');
+  };
+
   render() {
     const { user: { user } } = this.props;
     return (
