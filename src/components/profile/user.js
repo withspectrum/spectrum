@@ -15,10 +15,14 @@ import pure from 'recompose/pure';
 import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
+
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
+
+import { MetaData } from './metaData';
+import type { ProfileSizeProps } from './index';
 import { Avatar } from '../avatar';
 import Badge from '../badges';
-import { LoadingCard } from '../loading';
+import { displayLoadingCard } from '../loading';
 import {
   ProfileHeader,
   ProfileHeaderLink,
@@ -28,27 +32,22 @@ import {
   Subtitle,
   Description,
 } from './style';
-import { MetaData } from './metaData';
-import type { ProfileSizeProps } from './index';
-
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingCard)
-);
 
 type UserProps = {
   id: string,
   profilePhoto: string,
   displayName: string,
+  name: ?string,
   username: string,
   threadCount: number,
 };
 
 type CurrentUserProps = {
-  id: String,
-  profilePhoto: String,
-  displayName: String,
-  username: String,
+  id: string,
+  profilePhoto: string,
+  displayName: string,
+  username: string,
+  name: ?string,
 };
 
 const UserWithData = ({
@@ -61,11 +60,13 @@ const UserWithData = ({
   data: { user: UserProps },
   profileSize: ProfileSizeProps,
   currentUser: CurrentUserProps,
+  dispatch: Function,
+  history: Object,
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
 
   if (!user) {
-    return <div>No user to be found!</div>;
+    return <div />;
   }
 
   const initMessage = () => {
@@ -101,6 +102,7 @@ const UserWithData = ({
               />
             </Link>
           : <Link to={`/messages/${user.username}`}>
+              {/* TODO: sort out this flow error */}
               <ProfileHeaderAction
                 glyph="message-new"
                 color="brand.alt"
@@ -121,7 +123,7 @@ const UserWithData = ({
   );
 };
 
-const User = compose(displayLoadingState, withRouter, pure)(UserWithData);
+const User = compose(displayLoadingCard, withRouter, pure)(UserWithData);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
   initNewThreadWithUser: state.directMessageThreads.initNewThreadWithUser,

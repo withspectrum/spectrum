@@ -1,7 +1,10 @@
 // @flow
 import React, { Component } from 'react';
+//$FlowFixMe
 import { Editor as SlateEditor, Raw, Plain } from 'slate';
+//$FlowFixMe
 import type { SlatePlugin } from 'slate-mentions/src/types';
+//$FlowFixMe
 import MarkdownPlugin from 'slate-markdown';
 
 const ENTER = 13;
@@ -35,7 +38,7 @@ class Editor extends Component {
     this.setState({ state });
   };
 
-  onKeyDown = e => {
+  onKeyDown = (e: Object) => {
     if (e.which === ENTER) {
       this.props.onEnter && this.props.onEnter(e);
     }

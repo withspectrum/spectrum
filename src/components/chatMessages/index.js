@@ -2,13 +2,19 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
+
 import { openModal } from '../../actions/modals';
 import {
   convertTimestampToDate,
   convertTimestampToTime,
   onlyContainsEmoji,
 } from '../../helpers/utils';
+
 import { NullState } from '../upsell';
+import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
+import Icon from '../icons';
+import { Reaction, Count } from '../bubbles/style';
+
 import {
   Avatar,
   AvatarLabel,
@@ -21,9 +27,6 @@ import {
   MessagesWrapper,
   MessageWrapper,
 } from './style';
-import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
-import Icon from '../icons';
-import { Reaction, Count } from '../bubbles/style';
 
 /*
   ChatMessages expects to receive sorted and grouped messages.
@@ -45,164 +48,167 @@ class ChatMessages extends Component {
           copy={`Why don't you kick off the conversation?`}
         />
       );
-    }
+    } else {
+      const openUserProfileModal = (user: Object) => {
+        return dispatch(openModal('USER_PROFILE_MODAL', { user }));
+      };
 
-    const openUserProfileModal = (user: Object) => {
-      return dispatch(openModal('USER_PROFILE_MODAL', { user }));
-    };
+      const renderAvatar = (sender: Object, me: boolean) => {
+        const robo = sender.id === 'robo';
+        if (me || robo) return;
 
-    const renderAvatar = (sender: Object, me: boolean) => {
-      const robo = sender.id === 'robo';
-      if (me || robo) return;
-
-      return (
-        <AvatarLabel tipText={sender.name} tipLocation="right">
-          <Avatar
-            onClick={() => openUserProfileModal(sender)}
-            src={sender.profilePhoto}
-          />
-        </AvatarLabel>
-      );
-    };
-
-    const renderBubbleHeader = (group: Object, me: boolean) => {
-      const user = group.sender;
-
-      // if type !== 'thread' we don't show admin or pro badges because it clutters group messages
-      return (
-        <Byline me={me}>
-          <Name onClick={() => openUserProfileModal(user)}>
-            {me ? 'You' : user.name}
-          </Name>
-        </Byline>
-      );
-    };
-
-    const renderReaction = (
-      message: Object,
-      sender: Object,
-      me: boolean
-    ): React$Element<any> => {
-      const reactionUsers = message.reactions
-        ? message.reactions.map(reaction => reaction.user.id)
-        : null;
-      let reactionCount = message.reactions ? reactionUsers.length : 0;
-      let userHasReacted = currentUser
-        ? reactionUsers && reactionUsers.includes(currentUser.id)
-        : false;
-      // probably a better way to do this
-      const doNothing = () => '';
-      const triggerMutation = () => {
         return (
-          toggleReaction({
-            messageId: message.id,
-            type: 'like',
-          })
-            // after the mutation occurs, it will either return an error or the new
-            // thread that was published
-            .then(({ data }) => {
-              // can do something with the returned reaction here
+          <AvatarLabel tipText={sender.name} tipLocation="right">
+            <Avatar
+              onClick={() => openUserProfileModal(sender)}
+              src={sender.profilePhoto}
+            />
+          </AvatarLabel>
+        );
+      };
+
+      const renderBubbleHeader = (group: Object, me: boolean) => {
+        const user = group.sender;
+
+        // if type !== 'thread' we don't show admin or pro badges because it clutters group messages
+        //TODO "Pro badges appear anywhere your name does...". We need to reconsider one of these two statements.
+        return (
+          <Byline me={me}>
+            <Name onClick={() => openUserProfileModal(user)}>
+              {me ? 'You' : user.name}
+            </Name>
+          </Byline>
+        );
+      };
+
+      const renderReaction = (
+        message: Object,
+        sender: Object,
+        me: boolean
+      ): React$Element<any> => {
+        const reactionUsers = message.reactions
+          ? message.reactions.map(reaction => reaction.user.id)
+          : null;
+        let reactionCount = message.reactions && reactionUsers
+          ? reactionUsers.length
+          : 0;
+        let userHasReacted = currentUser
+          ? reactionUsers && reactionUsers.includes(currentUser.id)
+          : false;
+        // probably a better way to do this
+        const doNothing = () => '';
+        const triggerMutation = () => {
+          return (
+            toggleReaction({
+              messageId: message.id,
+              type: 'like',
             })
-            .catch(error => {
-              // TODO add some kind of dispatch here to show an error to the user
-              console.log('error toggling reaction', error);
-            })
+              // after the mutation occurs, it will either return an error or the new
+              // thread that was published
+              .then(({ data }) => {
+                // can do something with the returned reaction here
+              })
+              .catch(error => {
+                // TODO add some kind of dispatch here to show an error to the user
+                console.log('error toggling reaction', error);
+              })
+          );
+        };
+
+        return (
+          <Reaction
+            hasCount={reactionCount}
+            active={userHasReacted}
+            me={me}
+            hide={(me || !currentUser) && reactionCount === 0}
+            onClick={
+              me ? doNothing : triggerMutation
+              // : () => toggleReaction(message.id, userHasReacted)
+            }
+          >
+            <Icon glyph="like-fill" size={16} color={'text.reverse'} />
+            <Count>{reactionCount}</Count>
+          </Reaction>
         );
       };
 
       return (
-        <Reaction
-          hasCount={reactionCount}
-          active={userHasReacted}
-          me={me}
-          hide={(me || !currentUser) && reactionCount === 0}
-          onClick={
-            me ? doNothing : triggerMutation
-            // : () => toggleReaction(message.id, userHasReacted)
-          }
-        >
-          <Icon glyph="like-fill" size={16} color={'text.reverse'} />
-          <Count>{reactionCount}</Count>
-        </Reaction>
-      );
-    };
+        <Container>
+          {messages.map((group, i) => {
+            const evaluating = group[0];
+            const roboText = evaluating.sender.id === 'robo';
+            if (roboText) {
+              const time = convertTimestampToDate(evaluating.message.content);
+              return (
+                <Timestamp border={'2px solid'} color={'bg.wash'} key={i}>
+                  <hr />
+                  <Time>{time}</Time>
+                  <hr />
+                </Timestamp>
+              );
+            }
 
-    return (
-      <Container>
-        {messages.map((group, i) => {
-          const evaluating = group[0];
-          const roboText = evaluating.sender.id === 'robo';
-          if (roboText) {
-            const time = convertTimestampToDate(evaluating.message.content);
+            const sender = evaluating.sender;
+            const me = currentUser ? sender.id === currentUser.id : false;
+
             return (
-              <Timestamp border={'2px solid'} color={'bg.wash'} key={i}>
-                <hr />
-                <Time>{time}</Time>
-                <hr />
-              </Timestamp>
+              <BubbleGroupContainer me={me} key={i}>
+                {renderAvatar(sender, me)}
+
+                <MessagesWrapper>
+                  {renderBubbleHeader(evaluating, me)}
+                  {group.map((message, i) => {
+                    if (
+                      message.messageType === 'text' ||
+                      message.messageType === 'emoji'
+                    ) {
+                      const emojiOnly = onlyContainsEmoji(message.content.body);
+                      const TextBubble = emojiOnly ? EmojiBubble : Bubble;
+                      return (
+                        <MessageWrapper
+                          me={me}
+                          key={message.id}
+                          timestamp={convertTimestampToTime(message.timestamp)}
+                        >
+                          <TextBubble
+                            me={me}
+                            persisted={message.persisted}
+                            sender={sender}
+                            message={message.content}
+                            type={message.messageType}
+                          />
+
+                          {!emojiOnly && renderReaction(message, sender, me)}
+                        </MessageWrapper>
+                      );
+                    } else if (message.messageType === 'media') {
+                      return (
+                        <MessageWrapper
+                          me={me}
+                          key={message.id}
+                          timestamp={convertTimestampToTime(message.timestamp)}
+                        >
+                          <ImgBubble
+                            me={me}
+                            persisted={message.persisted}
+                            sender={sender}
+                            imgSrc={message.content.body}
+                            message={message.content}
+                          />
+                          {renderReaction(message, sender, me)}
+                        </MessageWrapper>
+                      );
+                    } else {
+                      return <div key={i} />;
+                    }
+                  })}
+                </MessagesWrapper>
+              </BubbleGroupContainer>
             );
-          }
-
-          const sender = evaluating.sender;
-          const me = currentUser ? sender.id === currentUser.id : false;
-
-          return (
-            <BubbleGroupContainer me={me} key={i}>
-              {renderAvatar(sender, me)}
-
-              <MessagesWrapper>
-                {renderBubbleHeader(evaluating, me)}
-                {group.map((message, i) => {
-                  if (
-                    message.messageType === 'text' ||
-                    message.messageType === 'emoji'
-                  ) {
-                    const emojiOnly = onlyContainsEmoji(message.content.body);
-                    const TextBubble = emojiOnly ? EmojiBubble : Bubble;
-                    return (
-                      <MessageWrapper
-                        me={me}
-                        key={message.id}
-                        timestamp={convertTimestampToTime(message.timestamp)}
-                      >
-                        <TextBubble
-                          me={me}
-                          persisted={message.persisted}
-                          sender={sender}
-                          message={message.content}
-                          type={message.messageType}
-                        />
-
-                        {!emojiOnly && renderReaction(message, sender, me)}
-                      </MessageWrapper>
-                    );
-                  } else if (message.messageType === 'media') {
-                    return (
-                      <MessageWrapper
-                        me={me}
-                        key={message.id}
-                        timestamp={convertTimestampToTime(message.timestamp)}
-                      >
-                        <ImgBubble
-                          me={me}
-                          persisted={message.persisted}
-                          sender={sender}
-                          imgSrc={message.content.body}
-                          message={message.content}
-                        />
-                        {renderReaction(message, sender, me)}
-                      </MessageWrapper>
-                    );
-                  } else {
-                    return <div key={i} />;
-                  }
-                })}
-              </MessagesWrapper>
-            </BubbleGroupContainer>
-          );
-        })}
-      </Container>
-    );
+          })}
+        </Container>
+      );
+    }
   }
 }
 

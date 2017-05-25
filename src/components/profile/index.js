@@ -30,7 +30,7 @@ export type ProfileSizeProps = 'mini' | 'small' | 'medium' | 'large' | 'full';
 
 type ProfileProps = {
   data: Object,
-  profileSize: ProfileSizeProps,
+  profileSize?: ProfileSizeProps,
 };
 
 /*

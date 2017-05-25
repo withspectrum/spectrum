@@ -78,6 +78,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
         </Link>
         <MetaRow>
           <ParticipantHeads>
+            {/* TODO: Creator/participants should all be links, not fire modals. */}
             <Creator role="presentation">
               <Participant
                 onClick={() => openUserProfileModal(props.data.creator)}

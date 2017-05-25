@@ -25,8 +25,9 @@ class UserWithData extends Component {
     e.preventDefault;
     //TODO mutation goes here...
     this.props.history.push('/');
+    //TODO make sure all forms redirect to the non-settings version of the page on save
   };
-
+  //TODO wire up form...
   render() {
     const { user: { user } } = this.props;
     return (

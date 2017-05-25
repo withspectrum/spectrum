@@ -14,13 +14,15 @@ import Textarea from 'react-textarea-autosize';
 import { withRouter } from 'react-router';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { Button } from '../buttons';
+
 import { addToastWithTimeout } from '../../actions/toasts';
 import Editor, { fromPlainText, toJSON } from '../editor';
-import Icon from '../icons';
-import { LoadingComposer } from '../loading';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
+
+import { Button } from '../buttons';
+import Icon from '../icons';
+import { displayLoadingComposer } from '../loading';
 import {
   Container,
   Composer,
@@ -33,11 +35,6 @@ import {
   Actions,
   Dropdowns,
 } from './style';
-
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingComposer)
-);
 
 class ThreadComposerWithData extends Component {
   // prop types
@@ -316,7 +313,7 @@ class ThreadComposerWithData extends Component {
 export const ThreadComposer = compose(
   getComposerCommunitiesAndChannels, // query to get data
   publishThread, // mutation to publish a thread
-  displayLoadingState, // handle loading state while query is fetching
+  displayLoadingComposer, // handle loading state while query is fetching
   withRouter, // needed to use history.push() as a post-publish action
   pure
 )(ThreadComposerWithData);

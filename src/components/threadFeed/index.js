@@ -8,6 +8,7 @@ import pure from 'recompose/pure';
 import renderComponent from 'recompose/renderComponent';
 //$FlowFixMe
 import branch from 'recompose/branch';
+
 import ThreadFeedCard from '../threadFeedCard';
 import { NullCard } from '../upsell';
 import { LoadingThread } from '../loading';
@@ -62,35 +63,27 @@ const ThreadFeedPure = props => {
         <LoadingThread />
       </div>
     );
-  }
-
-  if (error && threads.length > 0) {
+  } else if ((error && threads.length > 0) || (error && threads.length === 0)) {
     return <ErrorState />;
-  }
-
-  if (error && threads.length === 0) {
-    return <ErrorState />;
-  }
-
-  if (threads.length === 0) {
+  } else if (threads.length === 0) {
     return <NullState />;
+  } else {
+    return (
+      <div style={{ minWidth: '100%' }}>
+        {threads.map(thread => {
+          return (
+            <ThreadFeedCard
+              key={thread.node.id}
+              data={thread.node}
+              viewContext={props.viewContext}
+            />
+          );
+        })}
+
+        {hasNextPage && <Button onClick={fetchMore}>Load more threads</Button>}
+      </div>
+    );
   }
-
-  return (
-    <div style={{ minWidth: '100%' }}>
-      {threads.map(thread => {
-        return (
-          <ThreadFeedCard
-            key={thread.node.id}
-            data={thread.node}
-            viewContext={props.viewContext}
-          />
-        );
-      })}
-
-      {hasNextPage && <Button onClick={fetchMore}>Load more threads</Button>}
-    </div>
-  );
 };
 
 const ThreadFeed = compose(pure)(ThreadFeedPure);

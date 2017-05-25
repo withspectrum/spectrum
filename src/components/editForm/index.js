@@ -20,6 +20,7 @@ const EditFormPure = (props: Object): React$Element<any> => {
     case 'community': {
       return <Community {...props} />;
     }
+    case 'user':
     default: {
       return <User {...props} />;
     }
@@ -27,7 +28,7 @@ const EditFormPure = (props: Object): React$Element<any> => {
 };
 
 type FormProps = {
-  data: Object,
+  data?: Object,
 };
 
 export const EditForm = compose(pure)(EditFormPure);

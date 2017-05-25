@@ -13,11 +13,14 @@ import branch from 'recompose/branch';
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
+
 import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { LoadingCard } from '../loading';
+
+import type { ProfileSizeProps } from './index';
+import { MetaData } from './metaData';
+import { displayLoadingCard } from '../loading';
 import Icon from '../icons';
-// import { Avatar } from '../avatar';
 import {
   ProfileHeader,
   ProfileAvatar,
@@ -30,28 +33,21 @@ import {
   ActionOutline,
   ExtLink,
 } from './style';
-import { MetaData } from './metaData';
-import type { ProfileSizeProps } from './index';
-
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingCard)
-);
 
 type CommunityProps = {
-  id: String,
-  name: String,
-  slug: String,
-  isMember: Boolean,
+  id: string,
+  name: string,
+  slug: string,
+  isMember: boolean,
   metaData: {
-    channels: Number,
-    members: Number,
+    channels: number,
+    members: number,
   },
   communityPermissions: {
-    isOwner: Boolean,
-    isMember: Boolean,
-    isModerator: Boolean,
-    isBlocked: Boolean,
+    isOwner: boolean,
+    isMember: boolean,
+    isModerator: boolean,
+    isBlocked: boolean,
   },
 };
 
@@ -65,6 +61,9 @@ const CommunityWithData = ({
 }: {
   data: { community: CommunityProps },
   profileSize: ProfileSizeProps,
+  toggleCommunityMembership: Function,
+  dispatch: Function,
+  currentUser: Object,
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
 
@@ -167,7 +166,7 @@ const CommunityWithData = ({
 
 const Community = compose(
   toggleCommunityMembershipMutation,
-  displayLoadingState,
+  displayLoadingCard,
   pure
 )(CommunityWithData);
 

@@ -11,7 +11,7 @@ import { Wrapper } from './style';
 
 const AppViewWrapperPure = (props: Object): React$Element<any> => (
   <WithTransition location={props.location}>
-    <Wrapper justifyContent="center" alignContent="flex-start">
+    <Wrapper>
       {props.children}
     </Wrapper>
   </WithTransition>
