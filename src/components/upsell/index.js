@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
 import { Title, Subtitle, Actions, NullCol } from './style';
+import { SERVER_URL } from '../../api';
 
 export const NullCard = props => {
   return (
@@ -75,6 +76,7 @@ export const UpsellRequestToJoinChannel = ({
   community,
   isPending,
   subscribe,
+  currentUser,
 }) => {
   return (
     <NullCard bg="locked">
@@ -90,8 +92,17 @@ export const UpsellRequestToJoinChannel = ({
         .
       </Subtitle>
 
+      {// user is not logged in
+      !currentUser &&
+        <Button
+          icon="twitter"
+          onClick={() => window.location.href = `${SERVER_URL}/auth/twitter`}
+        >
+          Sign in with Twitter
+        </Button>}
+
       {// has user already requested to join?
-      isPending
+      currentUser && isPending
         ? <OutlineButton
             onClick={() => subscribe(channel.id)}
             icon="minus"
@@ -99,13 +110,14 @@ export const UpsellRequestToJoinChannel = ({
           >
             Cancel request
           </OutlineButton>
-        : <Button
-            onClick={() => subscribe(channel.id)}
-            icon="private-unlocked"
-            label
-          >
-            Request to join {channel.name}
-          </Button>}
+        : currentUser &&
+            <Button
+              onClick={() => subscribe(channel.id)}
+              icon="private-unlocked"
+              label
+            >
+              Request to join {channel.name}
+            </Button>}
     </NullCard>
   );
 };

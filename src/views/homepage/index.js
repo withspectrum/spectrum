@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import Icon from '../../components/icons';
 import { FlexCol, FlexRow } from '../../components/globals';
+import { SERVER_URL } from '../../api';
 import {
   SectionOne,
   SectionTwo,
@@ -25,11 +26,6 @@ import {
   Footer,
   LinkBlock,
 } from './style';
-// import { login } from '../actions/user';
-
-const SERVER_URL = process.env.NODE_ENV === 'production'
-  ? `${window.location.protocol}//${window.location.host}`
-  : 'http://localhost:3001';
 
 class Homepage extends Component {
   render() {

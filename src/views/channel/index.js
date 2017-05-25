@@ -93,6 +93,7 @@ const ChannelViewPure = ({
         community={match.params.communitySlug}
         isPending={channel.isPending}
         subscribe={toggleRequest}
+        currentUser={currentUser}
       />
     );
   }
