@@ -20,7 +20,7 @@ const getDirectMessageThreadsByUser = (
     .run();
 };
 
-const createDirectMessageThread = (isGroup: Boolean): Object => {
+const createDirectMessageThread = (isGroup: boolean): Object => {
   return db
     .table('directMessageThreads')
     .insert(

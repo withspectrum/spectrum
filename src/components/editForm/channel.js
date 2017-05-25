@@ -12,17 +12,27 @@ import { Button, TextButton } from '../buttons';
 import { openModal } from '../../actions/modals';
 import { Input, UnderlineInput, TextArea, Checkbox } from '../formElements';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { Notice } from '../../components/listCard/style';
 import {
   StyledCard,
   Form,
   FormTitle,
   Description,
   Actions,
-  Notice,
+  GeneralNotice,
 } from './style';
 import { editChannelMutation, deleteChannelMutation } from '../../api/channel';
 
 class ChannelWithData extends Component {
+  state = {
+    name: String,
+    slug: String,
+    description: String,
+    isPrivate: Boolean,
+    channelId: String,
+    channelData: Object,
+  };
+
   constructor(props) {
     super(props);
 
@@ -41,11 +51,12 @@ class ChannelWithData extends Component {
   handleChange = e => {
     const key = e.target.id;
     const value = e.target.value;
+    const { isPrivate } = this.state;
 
     const newState = {};
     // checkboxes should reverse the value
     if (key === 'isPrivate') {
-      newState[key] = value === 'on' ? false : true;
+      newState[key] = !isPrivate;
     } else {
       newState[key] = value;
     }
@@ -174,6 +185,13 @@ class ChannelWithData extends Component {
                 Anyone on Spectrum can join this channel, post threads and messages, and will be able to see other members.
               </Description>}
 
+          {// if the user is moving from private to public
+          this.props.channel.isPrivate &&
+            !isPrivate &&
+            <Notice>
+              When a private channel is made public all pending users will be added as members of the channel. Blocked users will remain blocked from viewing all content in this channel but in the future any new person will be able to join.
+            </Notice>}
+
           <Actions>
             <TextButton color={'warn.alt'}>Cancel</TextButton>
             <Button onClick={this.save}>Save</Button>
@@ -189,9 +207,9 @@ class ChannelWithData extends Component {
                   Delete Channel
                 </TextButton>
               </Actions>
-            : <Notice>
+            : <GeneralNotice>
                 The General channel is the default channel for your community. It can't be deleted, but you can still change the name and description.
-              </Notice>}
+              </GeneralNotice>}
         </Form>
       </StyledCard>
     );

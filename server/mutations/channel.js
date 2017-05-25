@@ -35,6 +35,7 @@ import {
   createMemberInDefaultChannels,
   blockUserInChannel,
   approvePendingUserInChannel,
+  approvePendingUsersInChannel,
 } from '../models/usersChannels';
 import type {
   CreateChannelArguments,
@@ -244,6 +245,7 @@ module.exports = {
           ]);
         })
         .then(([
+          channelToEvaluate,
           currentUserChannelPermissions,
           currentUserCommunityPermissions,
         ]) => {
@@ -254,6 +256,12 @@ module.exports = {
             currentUserChannelPermissions.isOwner
           ) {
             // all checks passed
+            // if a channel is being converted from private to public, make
+            // all the pending users members in the channel
+            if (channelToEvaluate.isPrivate && !args.input.isPrivate) {
+              approvePendingUsersInChannel(args.input.channelId);
+            }
+
             return editChannel(args);
           }
 
