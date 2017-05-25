@@ -13,6 +13,7 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import { ChannelProfile } from '../../components/profile';
+import PendingUsersNotification from './components/pendingUsersNotification';
 import { getChannelThreads, getChannel } from './queries';
 import { displayLoadingScreen } from '../../components/loading';
 import {
@@ -109,6 +110,11 @@ const ChannelViewPure = ({
       <AppViewWrapper>
         <Column type="secondary">
           <ChannelProfile data={{ channel }} profileSize="full" />
+
+          {channel.isPrivate &&
+            (channel.channelPermissions.isOwner ||
+              channel.community.communityPermissions.isOwner) &&
+            <PendingUsersNotification id={channel.id} />}
         </Column>
 
         <Column type="primary" alignItems="center">

@@ -5,6 +5,7 @@ import { graphql, gql } from 'react-apollo';
 import update from 'immutability-helper';
 import { encode } from '../../helpers/utils';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
+import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import {
   channelThreadsFragment,
 } from '../../api/fragments/channel/channelThreads';
@@ -180,4 +181,40 @@ export const getChannel = graphql(
     ${channelMetaDataFragment}
 	`,
   profileQueryOptions
+);
+
+/*
+  Loads the sidebar profile component widget independent of the thread feed.
+  In the future we can compose these queries together since they are fetching
+  such similar data, but for now we're making a decision to keep the data
+  queries specific to each component.
+*/
+const GET_PENDING_CHANNEL_USERS_OPTIONS = {
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+  }),
+};
+
+const GET_PENDING_CHANNEL_USERS_QUERY = gql`
+  query getChannel($id: ID) {
+    channel(id: $id) {
+      id
+      slug
+      pendingUsers {
+        ...userInfo
+      }
+      community {
+        id
+        slug
+      }
+    }
+  }
+  ${userInfoFragment}
+`;
+
+export const getPendingChannelUsers = graphql(
+  GET_PENDING_CHANNEL_USERS_QUERY,
+  GET_PENDING_CHANNEL_USERS_OPTIONS
 );
