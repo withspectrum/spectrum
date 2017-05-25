@@ -6,6 +6,8 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
@@ -22,15 +24,12 @@ import CommunityList from '../user/components/communityList';
 
 const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 
-const DashboardPure = ({
-  data: { user, error },
-  data,
-  dispatch,
-  match,
-  history,
-}) => {
+const DashboardPure = props => {
+  const { data: { user, error }, data, dispatch, match, history } = props;
+
   // save user data to localstorage, which will also dispatch an action to put
   // the user into the redux store
+
   if (user !== null) {
     dispatch(saveUserDataToLocalStorage(user));
     // if the user lands on /home, it means they just logged in. If this code
@@ -62,19 +61,35 @@ const DashboardPure = ({
       <AppViewWrapper>
         <Column type="secondary">
           <UserProfile profileSize="mini" data={{ user: user }} />
-          <CommunityList
-            withDescription={false}
-            currentUser={currentUser}
-            user={user}
-            communities={communities}
-          />
+          {user &&
+            communities &&
+            <CommunityList
+              withDescription={false}
+              currentUser={currentUser}
+              user={user}
+              communities={communities}
+            />}
         </Column>
 
-        <Column type="primary" alignItems="stretch">
-          {// composer should only appear if a user is part of a community
-          user && communities && <ThreadComposer />}
-          <EverythingThreadFeed viewContext="dashboard" />
-        </Column>
+        {user &&
+          communities &&
+          <Column type="primary">
+            <ThreadComposer />
+            <EverythingThreadFeed viewContext="dashboard" />
+          </Column>}
+        {user &&
+          !communities &&
+          <Column type="primary">
+            <NullCard
+              bg="chat"
+              heading={`It's dangerous to go alone...`}
+              copy={`So let's find you some communities to join!`}
+            >
+              <Link to={`/explore`}>
+                <Button icon="explore">Browse communities</Button>
+              </Link>
+            </NullCard>
+          </Column>}
       </AppViewWrapper>
     );
   } else {

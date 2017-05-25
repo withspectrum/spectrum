@@ -52,10 +52,6 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
     }
   };
 
-  const openUserProfileModal = (user: Object) => {
-    return props.dispatch(openModal('USER_PROFILE_MODAL', { user }));
-  };
-
   const participantList = props.data.participants;
 
   const messageAvatars = list => {
@@ -80,10 +76,12 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
           <ParticipantHeads>
             {/* TODO: Creator/participants should all be links, not fire modals. */}
             <Creator role="presentation">
-              <Participant
-                onClick={() => openUserProfileModal(props.data.creator)}
-                src={props.data.creator.profilePhoto}
-              />
+              <Link
+                key={props.data.creator.id}
+                to={`/users/${props.data.creator.username}`}
+              >
+                <Participant src={props.data.creator.profilePhoto} />
+              </Link>
             </Creator>
             {messageAvatars(participantList)}
           </ParticipantHeads>

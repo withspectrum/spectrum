@@ -39,6 +39,7 @@ export const CardContent = styled(FlexCol)`
   z-index: 2;
   align-items: flex-start;
   pointer-events: none;
+  width: 100%;
 `;
 
 export const Title = styled.h2`
@@ -61,7 +62,7 @@ export const MetaRow = styled(FlexRow)`
 export const ParticipantHeads = styled(FlexRow)`
   align-items: center;
 
-  a {
+  > a {
     margin-left: 4px;
     margin-top: 4px;
     pointer-events: all;
@@ -75,6 +76,12 @@ export const Participant = styled.img`
   object-fit: cover;
   background-color: ${({ theme }) => theme.generic.default};
   background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
+  transition: ${Transition.hover.off};
+
+  &:hover{
+    transform: scale(1.1);
+    transition: ${Transition.hover.on};
+  }
 `;
 
 export const Creator = styled.div`
