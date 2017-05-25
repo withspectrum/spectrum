@@ -11,9 +11,6 @@ export const directMessageThreadInfoFragment = gql`
       username
       lastSeen
       lastActive
-      isMember
-      isBlocked
-      isOwner
     }
   }
 `;

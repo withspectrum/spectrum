@@ -33,8 +33,6 @@ module.exports = {
         currentUserChannelPermissions,
         channels,
       ]) => {
-        console.log(currentUserChannelPermissions);
-        console.log(channels);
         // select the channel to evaluate
         const channelToEvaluate = channels[0];
 

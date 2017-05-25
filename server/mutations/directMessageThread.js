@@ -6,7 +6,6 @@ const {
   getDirectMessageThreadsByUser,
 } = require('../models/directMessageThread');
 const {
-  createOwnerInDirectMessageThread,
   createMemberInDirectMessageThread,
 } = require('../models/usersDirectMessageThreads');
 const { storeMessage } = require('../models/message');
@@ -44,7 +43,6 @@ module.exports = {
 
       // if users and messages exist, continue
       const { participants, message } = input;
-      console.log('participants', participants);
 
       // create a direct message thread object in order to generate an id
       return createDirectMessageThread()
@@ -60,8 +58,8 @@ module.exports = {
           // with each particpant
           return Promise.all([
             thread,
-            // create owner relationship
-            createOwnerInDirectMessageThread(thread.id, currentUser.id),
+            // create member relationship with the current user
+            createMemberInDirectMessageThread(thread.id, currentUser.id),
             // create member relationships
             participants.map(participant =>
               createMemberInDirectMessageThread(thread.id, participant)
