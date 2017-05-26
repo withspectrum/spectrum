@@ -45,3 +45,41 @@ export const SEARCH_USERS_QUERY = gql`
   }
   ${userInfoFragment}
 `;
+
+/*
+  Edit a user
+*/
+const EDIT_USER_MUTATION = gql`
+  mutation editUser($input: EditUserInput!) {
+    editUser (input: $input) {
+      ...userInfo
+    }
+  }
+  ${userInfoFragment}
+`;
+
+const EDIT_USER_OPTIONS = {
+  props: ({ input, mutate }) => ({
+    editUser: input =>
+      mutate({
+        variables: {
+          input,
+        },
+      }),
+  }),
+};
+
+export const editUserMutation = graphql(EDIT_USER_MUTATION, EDIT_USER_OPTIONS);
+
+/*
+  Checks a slug against the db to make sure a community with that slug
+  doesn't already exist
+*/
+export const CHECK_UNIQUE_USERNAME_QUERY = gql`
+  query user($username: String) {
+    user(username: $username) {
+      ...userInfo
+    }
+  }
+  ${userInfoFragment}
+`;

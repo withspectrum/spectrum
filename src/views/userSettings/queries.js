@@ -2,31 +2,25 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
-import { userThreadsFragment } from '../../api/fragments/user/userThreads';
-import {
-  userCommunitiesFragment,
-} from '../../api/fragments/user/userCommunities';
 
-export const GetCurrentUserProfile = graphql(
-  gql`
-    query currentUserProfile {
-			user: currentUser {
-        ...userInfo
-        ...userCommunities
-      }
-		}
-    ${userInfoFragment}
-    ${userCommunitiesFragment}
-	`
-);
-
-export const GetCurrentUserThreads = gql`
-  query currentUserThreads($after: String) {
-    currentUser {
+export const GET_USER_PROFILE_QUERY = gql`
+  query getUserSettings($username: String) {
+    user(username: $username) {
       ...userInfo
-      ...userThreads
     }
   }
   ${userInfoFragment}
-  ${userThreadsFragment}
 `;
+
+export const GET_USER_PROFILE_OPTIONS = {
+  options: ({ match }) => ({
+    variables: {
+      username: match.params.username,
+    },
+  }),
+};
+
+export const GetUserProfile = graphql(
+  GET_USER_PROFILE_QUERY,
+  GET_USER_PROFILE_OPTIONS
+);

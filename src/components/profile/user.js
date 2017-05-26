@@ -11,9 +11,9 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-
+import { addProtocolToString } from '../../helpers/utils';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
-
+import Icon from '../icons';
 import { MetaData } from './metaData';
 import type { ProfileSizeProps } from './index';
 import { Avatar } from '../avatar';
@@ -27,6 +27,7 @@ import {
   Title,
   Subtitle,
   Description,
+  ExtLink,
 } from './style';
 
 type UserProps = {
@@ -36,6 +37,7 @@ type UserProps = {
   name: ?string,
   username: string,
   threadCount: number,
+  website: string,
 };
 
 type CurrentUserProps = {
@@ -44,6 +46,7 @@ type CurrentUserProps = {
   displayName: string,
   username: string,
   name: ?string,
+  website: string,
 };
 
 const UserWithData = ({
@@ -60,6 +63,7 @@ const UserWithData = ({
   history: Object,
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
+  const websiteUrl = addProtocolToString(user.website);
 
   if (!user) {
     return <div />;
@@ -70,10 +74,7 @@ const UserWithData = ({
     history.push('/messages/new');
   };
 
-  {
-    /* TODO: sort out this flow error */
-  }
-
+  // TODO: sort out this flow error */
   return (
     <Card>
       <ProfileHeader>
@@ -113,7 +114,16 @@ const UserWithData = ({
       {componentSize !== 'mini' &&
         componentSize !== 'small' &&
         (user.description && user.description !== null) &&
-        <Description>{user.description}</Description>}
+        <Description>
+          <p>{user.description}</p>
+          {user.website &&
+            <ExtLink>
+              <Icon glyph="link" size={24} />
+              <a href={websiteUrl}>
+                {user.website}
+              </a>
+            </ExtLink>}
+        </Description>}
 
       {(componentSize === 'large' || componentSize === 'full') &&
         <MetaData data={{ threads: user.threadCount }} />}

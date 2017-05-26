@@ -7,10 +7,9 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 import ThreadContainer from './containers';
-import AppViewWrapper from '../../components/appViewWrapper';
 
 const ThreadPure = ({ match, location }) => (
-  <AppViewWrapper>
+  <div>
 
     {/* if a threadId is provided in the url */}
     <Route
@@ -22,7 +21,7 @@ const ThreadPure = ({ match, location }) => (
 
     {/* if no threadId is provided, redirect to homepage */}
     <Route exact path={match.url} render={() => <Redirect to="/" />} />
-  </AppViewWrapper>
+  </div>
 );
 
 const Thread = compose(pure)(ThreadPure);

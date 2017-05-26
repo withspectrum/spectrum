@@ -33,7 +33,10 @@ const createOwnerInChannel = (
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => {
+      const join = result.changes[0].new_val;
+      return db.table('channels').get(join.channelId);
+    });
 };
 
 // creates a single member in a channel. invoked when a user joins a public
@@ -58,7 +61,10 @@ const createMemberInChannel = (
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => {
+      const join = result.changes[0].new_val;
+      return db.table('channels').get(join.channelId);
+    });
 };
 
 // removes a single member from a channel. will be invoked if a user leaves
@@ -71,8 +77,12 @@ const removeMemberInChannel = (
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
     .filter({ userId })
-    .delete()
-    .run();
+    .delete({ returnChanges: true })
+    .run()
+    .then(result => {
+      const join = result.changes[0].old_val;
+      return db.table('channels').get(join.channelId);
+    });
 };
 
 // removes all the user relationships to a channel. will be invoked when a
@@ -83,7 +93,11 @@ const removeMembersInChannel = (channelId: string): Promise<Object> => {
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
     .delete()
-    .run();
+    .run()
+    .then(result => {
+      const join = result.changes[0].new_val;
+      return db.table('channels').get(join.channelId);
+    });
 };
 
 // creates a single pending user in channel. invoked only when a user is requesting
@@ -108,7 +122,10 @@ const createPendingUserInChannel = (
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => {
+      const join = result.changes[0].new_val;
+      return db.table('channels').get(join.channelId);
+    });
 };
 
 // removes a collection of pending users from a channel. invoked only when a private
@@ -121,7 +138,11 @@ const removePendingUsersInChannel = (channelId: string): Promise<Object> => {
     .getAll(channelId, { index: 'channelId' })
     .filter({ isPending: true })
     .delete()
-    .run();
+    .run()
+    .then(result => {
+      const join = result.changes[0].new_val;
+      return db.table('channels').get(join.channelId);
+    });
 };
 
 // toggles user to blocked in a channel. invoked by a channel or community

@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 
 import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
-
+import { addProtocolToString } from '../../helpers/utils';
 import type { ProfileSizeProps } from './index';
 import { MetaData } from './metaData';
 import { displayLoadingCard } from '../loading';
@@ -35,6 +35,8 @@ type CommunityProps = {
   name: string,
   slug: string,
   isMember: boolean,
+  website: string,
+  profilePhoto: string,
   metaData: {
     channels: number,
     members: number,
@@ -62,6 +64,7 @@ const CommunityWithData = ({
   currentUser: Object,
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
+  const websiteUrl = addProtocolToString(community.website);
 
   const toggleMembership = communityId => {
     toggleCommunityMembership({ communityId })
@@ -148,7 +151,7 @@ const CommunityWithData = ({
           {community.website &&
             <ExtLink>
               <Icon glyph="link" size={24} />
-              <a href={community.website}>
+              <a href={websiteUrl}>
                 {community.website}
               </a>
             </ExtLink>}

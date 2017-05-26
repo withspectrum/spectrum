@@ -18,7 +18,7 @@ export const StyledLabel = styled.label`
 
   &:hover > input,
   &:hover > textarea {
-    border-color: ${props => (props.disabled ? props.theme.inactive : props.theme.text.alt)};
+    border-color: ${props => (props.disabled ? props.theme.border.default : props.theme.text.alt)};
     transition: ${Transition.hover.on};
   }
 
@@ -49,11 +49,11 @@ export const StyledPrefixLabel = styled.label`
 
 export const StyledInput = styled.input`
   flex: 1 0 auto;
-  background: ${({ theme }) => theme.bg.default};
+  background: ${props => (props.disabled ? props.theme.bg.wash : props.theme.bg.default)};
   font-weight: 500;
   width: 100%;
   font-size: 14px;
-  border: 2px solid ${({ theme }) => theme.inactive};
+  border: 2px solid ${props => (props.disabled ? props.theme.border.default : props.theme.inactive)};
   border-radius: 4px;
   padding: 8px 12px;
   margin-top: 2px;

@@ -96,6 +96,7 @@ const ChannelWithData = ({
 
         {currentUser &&
           !channel.community.communityPermissions.isOwner &&
+          !channel.channelPermissions.isOwner &&
           <ProfileHeaderAction
             glyph={channel.channelPermissions.isMember ? 'minus' : 'plus-fill'}
             color={

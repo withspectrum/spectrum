@@ -28,7 +28,7 @@ export const ListCardItemDirectMessageThread = ({
   const participantsSortedByActivity = clonedParticipants.sort((x, y) => {
     const xTimestamp = new Date(x.lastActive).getTime();
     const yTimestamp = new Date(y.lastActive).getTime();
-    return xTimestamp - y.Timestamp;
+    return xTimestamp - yTimestamp;
   });
 
   // select the latest active participant's time
@@ -55,9 +55,9 @@ export const ListCardItemDirectMessageThread = ({
   // pass participants to a helper function to generate the avatar displays
   const avatars = renderAvatars(participants);
 
-  const currentUserLastSeen = clonedParticipants.filter(
-    user => user.id === currentUser.id
-  )[0].lastSeen;
+  // const currentUserLastSeen = clonedParticipants.filter(
+  //   user => user.id === currentUser.id
+  // )[0].lastSeen;
   //TODO: handle unread state
   //const isUnread = timestamp > new Date(currentUserLastSeen).getTime();
 
