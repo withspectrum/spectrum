@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Logo } from '../../components/logo';
 import {
   Gradient,
@@ -7,6 +7,7 @@ import {
   FlexRow,
   P,
   Transition,
+  Shadow,
 } from '../../components/globals';
 
 export const Wrapper = styled(FlexCol)`
@@ -258,20 +259,22 @@ export const Tagline = styled(H2)`
 	color: inherit;
 `;
 
-const buttonStyles = css`
+export const Button = styled.a`
   display: flex;
   flex: 0 0 auto;
+  z-index: 2;
   flex-direction: flex-row;
   align-self: flex-start;
   align-items: center;
-  background: transparent;
+  color: ${({ theme }) => theme.text.reverse};
+  background-color: transparent;
   border: 2px solid currentColor;
   border-radius: 8px;
   padding: 8px;
   padding-right: 16px;
   font-size: 14px;
   font-weight: 700;
-  color: currentColor;
+  transition: ${Transition.hover.off};
 
   span {
     display: inline-block;
@@ -288,13 +291,11 @@ const buttonStyles = css`
     fill: currentColor !important;
   }
 
-  transition: all 0.3s ease-out;
-
   &:hover {
     border-radius: 16px;
     border: 2px solid transparent;
     background-color: ${({ theme }) => theme.bg.default};
-    transition: all 0.2s ease-in;
+    transition: ${Transition.hover.on};
     cursor: pointer;
 
     span {
@@ -307,12 +308,14 @@ const buttonStyles = css`
   }
 `;
 
-export const Button = styled.button`
-	${buttonStyles}
-`;
+export const LinkButton = styled(Button)`
+  margin-top: 24px;
+  color: ${({ theme }) => theme.brand.default};
+  background: ${({ theme }) => theme.bg.default};
 
-export const LinkButton = styled.a`
-  ${buttonStyles}
+  &:hover {
+    box-shadow: ${Shadow.high} ${({ theme }) => theme.space.soft};
+  }
 `;
 
 export const LogoWhite = styled(Logo)`
