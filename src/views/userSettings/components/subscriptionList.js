@@ -8,9 +8,8 @@ import React from 'react';
 // import compose from 'recompose/compose';
 //$FlowFixMe
 // import pure from 'recompose/pure';
-import { PlanSelector } from '../../../components/billing';
 import { ListCardItem } from '../../../components/listCard';
-import { IconButton, TextButton, Button } from '../../../components/buttons';
+import { IconButton } from '../../../components/buttons';
 
 import {
   StyledCard,
@@ -42,6 +41,15 @@ export const SubscriptionList = (props: Object) => {
           contents={ProSubscriptionContent}
           withDescription={false}
           meta={ProSubscriptionMeta}
+          // TODO: onClick={() => openModal(proModal)}
+        >
+          <IconButton glyph="settings" />
+        </ListCardItem>
+
+        <ListCardItem
+          contents={PaidCommunityContent}
+          withDescription={false}
+          meta={PaidCommunityMeta}
           // TODO: onClick={() => openModal(proModal)}
         >
           <IconButton glyph="settings" />
