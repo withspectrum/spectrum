@@ -8,30 +8,34 @@ import React from 'react';
 // import compose from 'recompose/compose';
 //$FlowFixMe
 // import pure from 'recompose/pure';
+import { PlanSelector } from '../../../components/billing';
 import { ListCardItem } from '../../../components/listCard';
 import { IconButton, TextButton, Button } from '../../../components/buttons';
 
 import {
   StyledCard,
-  ListHeading,
+  LargeListHeading,
   ListHeader,
   ListContainer,
   // ListFooter,
   // MoreLink,
 } from '../../../components/listCard/style';
 
-const ProSubscriptionContent = {
-  name: 'Pro Account',
-};
-
-const ProSubscriptionMeta = '$5 / month · Since March 2017';
-
 export const SubscriptionList = (props: Object) => {
+  const ProSubscriptionContent = {
+    name: 'Pro Account',
+  };
+  const ProSubscriptionMeta = '$5 / month · Since March 2017';
+
+  const PaidCommunityContent = {
+    name: 'Spectrum',
+  };
+  const PaidCommunityMeta = 'Cultivate · $800/month · 8,000 users';
   // const { data } = props;
   return (
     <StyledCard>
       <ListHeader>
-        <ListHeading>Billing</ListHeading>
+        <LargeListHeading>Billing</LargeListHeading>
       </ListHeader>
       <ListContainer>
         <ListCardItem
@@ -42,6 +46,15 @@ export const SubscriptionList = (props: Object) => {
         >
           <IconButton glyph="settings" />
         </ListCardItem>
+        <ListCardItem
+          contents={PaidCommunityContent}
+          withDescription={false}
+          meta={PaidCommunityMeta}
+          // TODO: onClick={() => expandPlanSelector}
+        >
+          <IconButton glyph="settings" />
+        </ListCardItem>
+        <PlanSelector />
         {/* TODO: {communities.map(item => {
             return (
               <Link
