@@ -2,8 +2,8 @@
 const { db } = require('./db');
 // $FlowFixMe
 import { UserError } from 'graphql-errors';
-import { createChannel, deleteChannel, leaveChannel } from './channel';
-import { uploadCommunityPhoto, generateImageUrl } from '../utils/s3';
+import { createChannel, deleteChannel } from './channel';
+import { uploadImage } from '../utils/s3';
 
 type GetCommunityByIdArgs = {
   id: string,
@@ -121,10 +121,7 @@ const createCommunity = (
       if (file) {
         return Promise.all([
           community,
-          uploadCommunityPhoto(file, community, data => {
-            // returns the imgix path for the final image
-            const profilePhoto = generateImageUrl(data.path);
-            // update the community with the profilePhoto
+          uploadImage(file, 'communities', community, data => {
             return (
               db
                 .table('communities')
@@ -169,62 +166,55 @@ const editCommunity = ({
     .then(community => {
       // if no file was uploaded, update the community with new string values
       if (!file) {
-        return Promise.all([
-          db
-            .table('communities')
-            .get(communityId)
-            .update({ ...community }, { returnChanges: 'always' })
-            .run()
-            .then(result => {
-              // if an update happened
-              if (result.replaced === 1) {
-                return result.changes[0].new_val;
-              }
+        return db
+          .table('communities')
+          .get(communityId)
+          .update({ ...community }, { returnChanges: 'always' })
+          .run()
+          .then(result => {
+            // if an update happened
+            if (result.replaced === 1) {
+              return result.changes[0].new_val;
+            }
 
-              // an update was triggered from the client, but no data was changed
-              if (result.unchanged === 1) {
-                return result.changes[0].old_val;
-              }
-            }),
-        ]);
+            // an update was triggered from the client, but no data was changed
+            if (result.unchanged === 1) {
+              return result.changes[0].old_val;
+            }
+          });
       }
 
       if (file) {
-        return Promise.all([
-          uploadCommunityPhoto(file, community, data => {
-            // returns the imgix path for the final image
-            const profilePhoto = generateImageUrl(data.path);
-            // update the community with the profilePhoto
-            return (
-              db
-                .table('communities')
-                .get(community.id)
-                .update(
-                  {
-                    ...community,
-                    profilePhoto,
-                  },
-                  { returnChanges: 'always' }
-                )
-                .run()
-                // return the resulting community with the profilePhoto set
-                .then(result => {
-                  // if an update happened
-                  if (result.replaced === 1) {
-                    return result.changes[0].new_val;
-                  }
+        return uploadImage(file, 'communities', community, profilePhoto => {
+          // update the community with the profilePhoto
+          return (
+            db
+              .table('communities')
+              .get(community.id)
+              .update(
+                {
+                  ...community,
+                  profilePhoto,
+                },
+                { returnChanges: 'always' }
+              )
+              .run()
+              // return the resulting community with the profilePhoto set
+              .then(result => {
+                // if an update happened
+                if (result.replaced === 1) {
+                  return result.changes[0].new_val;
+                }
 
-                  // an update was triggered from the client, but no data was changed
-                  if (result.unchanged === 1) {
-                    return result.changes[0].old_val;
-                  }
-                })
-            );
-          }),
-        ]);
+                // an update was triggered from the client, but no data was changed
+                if (result.unchanged === 1) {
+                  return result.changes[0].old_val;
+                }
+              })
+          );
+        });
       }
-    })
-    .then(data => data[0]);
+    });
 };
 
 /*

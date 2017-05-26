@@ -7,16 +7,9 @@ import {
   editChannel,
   createChannel,
   deleteChannel,
-  joinChannel,
-  addRequestToJoinChannel,
-  removeRequestToJoinChannel,
-  addBlockedUser,
-  removeBlockedUser,
 } from '../models/channel';
 import {
   getCommunities,
-  joinCommunity,
-  leaveCommunity,
   userIsMemberOfCommunity,
   userIsMemberOfAnyChannelInCommunity,
 } from '../models/community';

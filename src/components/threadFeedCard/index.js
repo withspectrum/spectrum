@@ -8,7 +8,6 @@ import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { openModal } from '../../actions/modals';
 import { LinkPreview } from '../../components/linkPreview';
 import {
   StyledThreadFeedCard,

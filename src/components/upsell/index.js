@@ -204,10 +204,17 @@ export const Upsell404Community = ({
   );
 };
 
-export const Upsell404User = ({ username }: { username: string }) => {
+export const Upsell404User = ({
+  username,
+  noPermission,
+}: { username: string, noPermission: boolean }) => {
   const returnUrl = `/`;
-  const title = 'Oops, someone got lost!';
-  const subtitle = `We can't find anyone who answers to the name ${username}. Maybe they don't want to be found...`;
+  const title = noPermission
+    ? "I see you sneakin' around here..."
+    : 'Oops, someone got lost!';
+  const subtitle = noPermission
+    ? 'No hackzxing allowed.'
+    : `We can't find anyone who answers to the name ${username}. Maybe they don't want to be found...`;
 
   return (
     <NullCard bg="user">

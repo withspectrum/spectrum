@@ -31,7 +31,7 @@ type InputProps = {
 
 export const Input = (props: InputProps) => {
   return (
-    <StyledLabel>
+    <StyledLabel {...props}>
       {props.children}
       <StyledInput
         id={props.id}
@@ -40,6 +40,7 @@ export const Input = (props: InputProps) => {
         placeholder={props.placeholder}
         onChange={props.onChange}
         autofocus={props.autofocus}
+        disabled={props.disabled}
       />
     </StyledLabel>
   );
