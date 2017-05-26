@@ -10,7 +10,7 @@ import { displayLoadingState } from '../../components/loading';
 import { UserEditForm } from '../../components/editForm';
 
 import { SubscriptionList } from './components/subscriptionList';
-import { GetCurrentUserProfile, GetCurrentUserThreads } from './queries';
+import { GetCurrentUserProfile } from './queries';
 
 const UserSettings = props => {
   const { data } = props;
@@ -18,10 +18,11 @@ const UserSettings = props => {
     <AppViewWrapper>
       <Column type="secondary">
         <UserEditForm user={data} />
-        <SubscriptionList data={data} />
       </Column>
 
-      <Column type="primary" />
+      <Column type="primary">
+        <SubscriptionList data={data} />
+      </Column>
     </AppViewWrapper>
   );
 };

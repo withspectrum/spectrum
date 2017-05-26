@@ -58,5 +58,5 @@ class UserWithData extends Component {
   }
 }
 
-const UserSettings = compose(displayLoadingCard, pure)(UserWithData);
+const UserSettings = compose(pure)(UserWithData);
 export default UserSettings;

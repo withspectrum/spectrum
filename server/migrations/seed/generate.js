@@ -8,10 +8,7 @@ const slugify = require('slugg');
 // $FlowFixMe
 const casual = require('casual').functions();
 
-const randomAmount = (
-  { max, min }: { max: number, min?: number },
-  cb: Function
-) => {
+const randomAmount = ({ max, min }, cb) => {
   if (!max) throw new Error('randomAmount({ max }): max has to be defined!');
   const n = faker.random.number({ min: min || 0, max });
   let result = [];
@@ -56,7 +53,7 @@ const generateCommunity = () => {
   };
 };
 
-const generateChannel = (communityId: string) => {
+const generateChannel = communityId => {
   const name = faker.commerce.department();
 
   return {
@@ -71,7 +68,7 @@ const generateChannel = (communityId: string) => {
   };
 };
 
-const generateUsersCommunities = (communityId: string, userId: string) => {
+const generateUsersCommunities = (communityId, userId) => {
   const isOwner = faker.random.boolean();
   // for ease of use, set to false
   const isModerator = false;
@@ -95,11 +92,7 @@ const generateUsersCommunities = (communityId: string, userId: string) => {
   };
 };
 
-const generateUsersChannels = (
-  channels: Array<string>,
-  usersCommunities: Array<string>,
-  userId: string
-) => {
+const generateUsersChannels = (channels, usersCommunities, userId) => {
   // figure out which communities the user being evaulated is a member of
   let possibleCommunities = usersCommunities.filter(
     elem => elem.userId === userId
@@ -148,11 +141,7 @@ const generateUsersChannels = (
   return foo;
 };
 
-const generateThread = (
-  communityId: string,
-  channelId: string,
-  creatorId: string
-) => {
+const generateThread = (communityId, channelId, creatorId) => {
   const content = {
     title: casual.title(),
     body: casual.text(),
@@ -179,7 +168,7 @@ const generateThread = (
   };
 };
 
-const generateDirectMessageThread = (users?: Object) => {
+const generateDirectMessageThread = users => {
   const createdAt = faker.date.past(2);
 
   return {
@@ -189,10 +178,7 @@ const generateDirectMessageThread = (users?: Object) => {
   };
 };
 
-const generateUsersDirectMessageThreads = (
-  threadId: string,
-  userId: string
-) => {
+const generateUsersDirectMessageThreads = (threadId, userId) => {
   const createdAt = faker.date.past(2);
   const lastActive = faker.date.between(createdAt, faker.date.recent());
   const lastSeen = faker.date.between(createdAt, new Date());
@@ -207,11 +193,7 @@ const generateUsersDirectMessageThreads = (
   };
 };
 
-const generateMessage = (
-  senderId: string,
-  threadId: string,
-  threadType: string
-) => {
+const generateMessage = (senderId, threadId, threadType) => {
   return {
     id: uuid(),
     threadType,
@@ -226,7 +208,7 @@ const generateMessage = (
   };
 };
 
-const generateReaction = (userId: string, messageId: string) => {
+const generateReaction = (userId, messageId) => {
   return {
     id: uuid(),
     messageId,
@@ -236,12 +218,7 @@ const generateReaction = (userId: string, messageId: string) => {
   };
 };
 
-const generateThreadNotification = (
-  thread: Object,
-  channel: Object,
-  communityId: string,
-  callback: Function
-) => {
+const generateThreadNotification = (thread, channel, communityId, callback) => {
   return generateNotification(
     channel.members,
     thread.creatorId,
@@ -255,11 +232,11 @@ const generateThreadNotification = (
 };
 
 const generateMessageNotification = (
-  users: Array<string>,
-  message: Object,
-  thread: Object,
-  channelId: string,
-  communityId: string
+  users,
+  message,
+  thread,
+  channelId,
+  communityId
 ) => {
   return generateNotification(
     users,

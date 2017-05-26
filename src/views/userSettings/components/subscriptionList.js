@@ -8,8 +8,8 @@ import React from 'react';
 // import compose from 'recompose/compose';
 //$FlowFixMe
 // import pure from 'recompose/pure';
-// import { ListCardItem } from '../../../components/listCard';
-// import { IconButton, TextButton, Button } from '../../../components/buttons';
+import { ListCardItem } from '../../../components/listCard';
+import { IconButton, TextButton, Button } from '../../../components/buttons';
 
 import {
   StyledCard,
@@ -20,6 +20,12 @@ import {
   // MoreLink,
 } from '../../../components/listCard/style';
 
+const ProSubscriptionContent = {
+  name: 'Pro Account',
+};
+
+const ProSubscriptionMeta = '$5 / month · Since March 2017';
+
 export const SubscriptionList = (props: Object) => {
   // const { data } = props;
   return (
@@ -28,16 +34,24 @@ export const SubscriptionList = (props: Object) => {
         <ListHeading>Billing</ListHeading>
       </ListHeader>
       <ListContainer>
-        {/* {channels.map(item => {
+        <ListCardItem
+          contents={ProSubscriptionContent}
+          withDescription={false}
+          meta={ProSubscriptionMeta}
+          // TODO: onClick={() => openModal(proModal)}
+        >
+          <IconButton glyph="settings" />
+        </ListCardItem>
+        {/* TODO: {communities.map(item => {
             return (
               <Link
                 key={item.node.id}
-                to={`/${data.variables.slug}/${item.node.slug}/settings`}
+                to={`/${item.node.slug}/settings`}
               >
                 <ListCardItem
                   contents={item.node}
                   withDescription={false}
-                  meta={`${item.node.metaData.members} members`}
+                  meta={`${item.node.plan.name} · ${item.node.plan.cost}· ${item.node.metaData.members} members`}
                 >
                   <IconButton glyph="settings" />
                 </ListCardItem>
