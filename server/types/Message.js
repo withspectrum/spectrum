@@ -48,6 +48,7 @@ const Message = /* GraphQL */ `
 		message(
 			id: ID!
 		): Message
+		getMediaMessagesForThread(threadId: ID!): [Message]
 	}
 
 

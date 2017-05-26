@@ -19,6 +19,7 @@ import {
   ShimmerBase,
   ShimmerLine,
   Cover,
+  LoadingOverlay,
 } from './style';
 
 /*
@@ -69,6 +70,12 @@ export const LoadingCard = ({
   <LoadingCardContainer>
     <Spinner size={size} color={color} />
   </LoadingCardContainer>
+);
+
+export const LoadingGallery = (): React$Element<any> => (
+  <LoadingOverlay>
+    <Spinner size={'32'} color={'bg.default'} />
+  </LoadingOverlay>
 );
 
 export const LoadingThread = () => (
@@ -554,6 +561,11 @@ export const LoadingScreen = (): React$Element<any> => (
 export const displayLoadingState = branch(
   props => !props.data || props.data.loading,
   renderComponent(Loading)
+);
+
+export const displayLoadingGallery = branch(
+  props => !props.data || props.data.loading,
+  renderComponent(LoadingGallery)
 );
 
 export const displayLoadingCard = branch(

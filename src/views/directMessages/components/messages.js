@@ -62,6 +62,7 @@ class MessagesWithData extends Component {
           toggleReaction={this.props.toggleReaction}
           messages={sortedMessages}
           forceScrollToBottom={this.props.forceScrollToBottom}
+          threadId={this.props.id}
         />
       </div>
     );

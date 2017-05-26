@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { history } from './helpers/history';
 import ScrollManager from './components/scrollManager';
 import ModalRoot from './components/modals/modalRoot';
+import Gallery from './components/gallery';
 import Toasts from './components/toasts';
 import DirectMessages from './views/directMessages';
 import Explore from './views/explore';
@@ -45,6 +46,7 @@ class Routes extends Component {
             <Route component={Navbar} />
             <Route component={ModalRoot} />
             <Route component={Toasts} />
+            <Route component={Gallery} />
 
             {/*
               Switch only renders the first match. Subrouting happens downstream

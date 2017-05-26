@@ -4,6 +4,7 @@ import users from './users';
 import modals from './modals';
 import toasts from './toasts';
 import directMessageThreads from './directMessageThreads';
+import gallery from './gallery';
 
 const apollo = client.reducer();
 
@@ -12,5 +13,6 @@ export default combineReducers({
   modals,
   toasts,
   directMessageThreads,
+  gallery,
   apollo,
 });
