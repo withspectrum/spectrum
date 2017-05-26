@@ -9,13 +9,10 @@ const popConfig = { stiffness: 120, damping: 16 };
 const WithTransition = ({ location: { pathname }, children }) => (
   <RouteTransition
     pathname={pathname}
-    atEnter={{ scale: 0.98, translateY: 20, opacity: 0 }}
-    atLeave={{ scale: 0.98, translateY: 20, opacity: spring(0, popConfig) }}
-    atActive={{ scale: 1, translateY: 0, opacity: 1 }}
-    mapStyles={styles => ({
-      transform: `scale(${styles.scale}) translateY(${styles.translateY}px)`,
-      opacity: styles.opacity,
-    })}
+    atEnter={{}}
+    atLeave={{}}
+    atActive={{}}
+    mapStyles={styles => ({})}
   >
     {children}
   </RouteTransition>
