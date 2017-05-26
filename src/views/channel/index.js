@@ -37,17 +37,17 @@ const ChannelViewPure = ({
   const toggleRequest = channelId => {
     toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
-        const str = toggleChannelSubscription.isPending
+        const str = toggleChannelSubscription.channelPermissions.isPending
           ? `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
           : `Canceled request to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
 
-        const type = toggleChannelSubscription.isPending
+        const type = toggleChannelSubscription.channelPermissions.isPending
           ? 'success'
           : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
-        dispatch(addToastWithTimeout('error', err));
+        dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
@@ -91,7 +91,7 @@ const ChannelViewPure = ({
       <UpsellRequestToJoinChannel
         channel={channel}
         community={match.params.communitySlug}
-        isPending={channel.isPending}
+        isPending={channel.channelPermissions.isPending}
         subscribe={toggleRequest}
         currentUser={currentUser}
       />
