@@ -1,5 +1,6 @@
 // @flow
 const { db } = require('./db');
+//$FlowFixMe
 import { UserError } from 'graphql-errors';
 import photoToS3 from '../utils/s3';
 

@@ -1,5 +1,7 @@
 // @flow
+//$FlowFixMe
 const faker = require('faker');
+//$FlowFixMe
 const { v4: uuid } = require('uuid');
 const {
   DEFAULT_COMMUNITIES,
