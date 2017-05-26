@@ -28,9 +28,7 @@ const NotificationListPure = () => {
   );
 };
 
-const NotificationList = compose(getNotifications, displayLoadingState)(
-  NotificationListPure
-);
+const NotificationList = compose(displayLoadingState)(NotificationListPure);
 
 const NotificationDropdownPure = ({ data }) => {
   const { notifications } = data;
@@ -48,6 +46,4 @@ const NotificationDropdownPure = ({ data }) => {
   );
 };
 
-export const NotificationDropdown = compose(getNotifications, pure)(
-  NotificationDropdownPure
-);
+export const NotificationDropdown = compose(pure)(NotificationDropdownPure);

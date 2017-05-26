@@ -25,6 +25,11 @@ const Thread = /* GraphQL */ `
 		SLATE
 	}
 
+	type Attachment {
+		attachmentType: String
+		data: String
+	}
+
 	type Thread {
 		id: ID!
 		createdAt: Date!
@@ -43,10 +48,16 @@ const Thread = /* GraphQL */ `
 		messageConnection(first: Int = 10, after: String): ThreadMessagesConnection!
 		messageCount: Int
 		creator: User!
+		attachments: [Attachment]
 	}
 
 	extend type Query {
 		thread(id: ID!): Thread
+	}
+
+	input AttachmentInput {
+		attachmentType: String
+		data: String
 	}
 
 	input ThreadContentInput {
@@ -60,6 +71,7 @@ const Thread = /* GraphQL */ `
 		communityId: ID!
 		type: ThreadType
 		content: ThreadContentInput!
+		attachments: [AttachmentInput]
 	}
 
 	extend type Mutation {

@@ -31,6 +31,7 @@ import type {
   EditCommunityArguments,
 } from '../models/community';
 import { getThreadsByCommunity, deleteThread } from '../models/thread';
+import { slugIsBlacklisted } from '../utils/permissions';
 
 module.exports = {
   Mutation: {
@@ -40,6 +41,13 @@ module.exports = {
       if (!currentUser) {
         return new UserError(
           'You must be signed in to create a new community.'
+        );
+      }
+
+      if (slugIsBlacklisted(args.input.slug)) {
+        return new UserError(
+          `This url is already taken - feel free to change it if
+          you're set on the name ${args.input.name}!`
         );
       }
 

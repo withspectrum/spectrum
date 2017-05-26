@@ -13,6 +13,55 @@ const getChannelsByCommunity = (
     .run();
 };
 
+/*
+  If a non-user is viewing a community page, they should only see threads
+  from public channels. We use this function to return an array of channelIds
+  that are public, and pass them into a getThreads function
+*/
+const getPublicChannelsByCommunity = (
+  communityId: string
+): Promise<Array<Object>> => {
+  return db
+    .table('channels')
+    .getAll(communityId, { index: 'communityId' })
+    .filter(channel => db.not(channel.hasFields('deletedAt')))
+    .filter({ isPrivate: false })
+    .run();
+};
+
+/*
+  If a user is viewing a community, they should only see threads from the
+  channels they are members of in order to avoid accidentally seeing threads
+  from a private channel.
+
+  This function returns an array of objects with the field 'id' that corresponds
+  to a channelId. This array of IDs will be passed into a threads method which
+  will only return threads in those channels
+*/
+const getChannelsByUserAndCommunity = (
+  communityId: string,
+  userId: string
+): Promise<Array<Object>> => {
+  return (
+    db
+      .table('channels')
+      .getAll(communityId, { index: 'communityId' })
+      .eqJoin('id', db.table('usersChannels'), { index: 'channelId' })
+      // get channels where the user is a member OR the channel is public
+      .filter(row =>
+        row('right')('isMember')
+          .eq(true)
+          .and(row('right')('userId').eq(userId))
+          .or(row('left')('isPrivate').eq(false))
+      )
+      .without({ right: 'id' })
+      .zip()
+      .pluck('id')
+      .distinct()
+      .run()
+  );
+};
+
 const getChannelsByUser = (userId: string): Promise<Array<Object>> => {
   return (
     db
@@ -226,6 +275,8 @@ module.exports = {
   getChannelMetaData,
   getChannelsByUser,
   getChannelsByCommunity,
+  getPublicChannelsByCommunity,
+  getChannelsByUserAndCommunity,
   createChannel,
   createGeneralChannel,
   editChannel,

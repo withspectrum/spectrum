@@ -8,22 +8,20 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-
 import { editChannelMutation, deleteChannelMutation } from '../../api/channel';
 import { openModal } from '../../actions/modals';
 import { addToastWithTimeout } from '../../actions/toasts';
-
+import { Notice } from '../listCard/style';
 import { Button, TextButton } from '../buttons';
 import { NullCard } from '../upsell';
 import { Input, UnderlineInput, TextArea, Checkbox } from '../formElements';
-
 import {
   StyledCard,
   Form,
   FormTitle,
   Description,
   Actions,
-  Notice,
+  GeneralNotice,
 } from './style';
 
 class ChannelWithData extends Component {
@@ -53,11 +51,12 @@ class ChannelWithData extends Component {
   handleChange = e => {
     const key = e.target.id;
     const value = e.target.value;
+    const { isPrivate } = this.state;
 
     const newState = {};
     // checkboxes should reverse the value
     if (key === 'isPrivate') {
-      newState[key] = value === 'on' ? false : true;
+      newState[key] = !isPrivate;
     } else {
       newState[key] = value;
     }
@@ -91,7 +90,7 @@ class ChannelWithData extends Component {
         }
       })
       .catch(err => {
-        this.props.dispatch(addToastWithTimeout('error', err));
+        this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
@@ -180,6 +179,13 @@ class ChannelWithData extends Component {
                   Anyone on Spectrum can join this channel, post threads and messages, and will be able to see other members.
                 </Description>}
 
+            {// if the user is moving from private to public
+            this.props.channel.isPrivate &&
+              !isPrivate &&
+              <Notice>
+                When a private channel is made public all pending users will be added as members of the channel. Blocked users will remain blocked from viewing all content in this channel but in the future any new person will be able to join.
+              </Notice>}
+
             <Actions>
               <TextButton color={'warn.alt'}>Cancel</TextButton>
               <Button onClick={this.save}>Save</Button>
@@ -189,15 +195,15 @@ class ChannelWithData extends Component {
             slug !== 'general'
               ? <Actions>
                   <TextButton
-                    color="warn.alt"
+                    color={'warn.alt'}
                     onClick={e => this.triggerDeleteChannel(e, channel.id)}
                   >
                     Delete Channel
                   </TextButton>
                 </Actions>
-              : <Notice>
+              : <GeneralNotice>
                   The General channel is the default channel for your community. It can't be deleted, but you can still change the name and description.
-                </Notice>}
+                </GeneralNotice>}
           </Form>
         </StyledCard>
       );

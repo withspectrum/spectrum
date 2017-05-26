@@ -43,10 +43,7 @@ const ErrorState = () => (
   See 'views/community/queries.js' for an example of the prop mapping in action
 */
 const ThreadFeedPure = props => {
-  const {
-    data: { threads, loading, fetchMore, error, hasNextPage },
-    data,
-  } = props;
+  const { data: { threads, loading, fetchMore, error, hasNextPage } } = props;
 
   if (loading) {
     return (

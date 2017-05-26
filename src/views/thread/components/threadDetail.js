@@ -16,6 +16,7 @@ import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
 import { IconButton } from '../../../components/buttons';
 import { toPlainText, toState } from '../../../components/editor';
+import { LinkPreview } from '../../../components/linkPreview';
 import {
   ThreadWrapper,
   ThreadHeading,
@@ -37,9 +38,6 @@ const ThreadDetailPure = ({
   const isChannelOwner = thread.channel.channelPermissions.isOwner;
   const isCommunityOwner =
     thread.channel.community.communityPermissions.isOwner;
-  // const isChannelModerator = thread.channel.channelPermissions.isModerator;
-  // const isCommunityModerator =
-  //   thread.channel.community.communityPermissions.isModerator;
 
   const threadLock = (threadId, value) =>
     setThreadLock({
@@ -124,6 +122,16 @@ const ThreadDetailPure = ({
         {thread.content.title}
       </ThreadHeading>
       {!!thread.content.body && <ThreadContent>{body}</ThreadContent>}
+      {// for now we know this means there is a link attachment
+      thread.attachments &&
+        thread.attachments.length > 0 &&
+        <LinkPreview
+          trueUrl={thread.attachments[0].data.trueUrl}
+          data={JSON.parse(thread.attachments[0].data)}
+          size={'small'}
+          editable={false}
+          margin={'16px 0 0 0'}
+        />}
     </ThreadWrapper>
   );
 };

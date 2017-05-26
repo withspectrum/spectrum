@@ -70,7 +70,7 @@ class Navbar extends Component {
                   <Icon glyph="notification" />
                   <LabelForTab>Notifications</LabelForTab>
                 </IconLink>
-                <NotificationDropdown />
+                {/* <NotificationDropdown /> */}
               </IconDrop>
 
               {/* TODO: Make this active only when viewing current logged in user profile */}

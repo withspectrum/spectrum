@@ -20,6 +20,17 @@ const getThreadsByChannel = (channelId: string): Promise<Array<Object>> => {
     .run();
 };
 
+const getThreadsByChannels = (
+  channelIds: Array<string>
+): Promise<Array<Object>> => {
+  return db
+    .table('threads')
+    .getAll(...channelIds, { index: 'channelId' })
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .orderBy(db.desc('createdAt'))
+    .run();
+};
+
 const getThreadsByCommunity = (communityId: string): Promise<Array<Object>> => {
   return db
     .table('threads')
@@ -142,6 +153,7 @@ module.exports = {
   deleteThread,
   listenToNewThreads,
   getThreadsByChannel,
+  getThreadsByChannels,
   getThreadsByCommunity,
   getThreadsByUser,
 };

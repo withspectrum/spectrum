@@ -15,7 +15,9 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import Editor, { fromPlainText, toJSON } from '../editor';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
-
+import { LinkPreview, LinkPreviewLoading } from '../../components/linkPreview';
+import { getLinkPreviewFromUrl } from '../../helpers/utils';
+import { URLS } from '../../helpers/regexps';
 import { Button } from '../buttons';
 import Icon from '../icons';
 import { displayLoadingComposer } from '../loading';
@@ -43,6 +45,10 @@ class ThreadComposerWithData extends Component {
     activeCommunity: string,
     activeChannel: string,
     isPublishing: boolean,
+    linkPreview: Object,
+    linkPreviewTrueUrl: string,
+    linkPreviewLength: number,
+    fetchingLinkPreview: boolean,
   };
 
   constructor(props) {
@@ -106,6 +112,10 @@ class ThreadComposerWithData extends Component {
       activeCommunity,
       activeChannel,
       isPublishing: false,
+      linkPreview: null,
+      linkPreviewTrueUrl: null,
+      linkPreviewLength: 0,
+      fetchingLinkPreview: false,
     };
   }
 
@@ -171,13 +181,33 @@ class ThreadComposerWithData extends Component {
 
     // define new constants in order to construct the proper shape of the
     // input for the publishThread mutation
-    const { activeChannel, activeCommunity, title, body } = this.state;
+    const {
+      activeChannel,
+      activeCommunity,
+      title,
+      body,
+      linkPreview,
+      linkPreviewTrueUrl,
+    } = this.state;
     const channelId = activeChannel;
     const communityId = activeCommunity;
+
     const content = {
       title,
       body: JSON.stringify(toJSON(body)),
     };
+
+    const attachments = [];
+    if (linkPreview) {
+      const attachmentData = JSON.stringify({
+        ...linkPreview,
+        trueUrl: linkPreviewTrueUrl,
+      });
+      attachments.push({
+        attachmentType: 'linkPreview',
+        data: attachmentData,
+      });
+    }
 
     // this.props.mutate comes from a higher order component defined at the
     // bottom of this file
@@ -189,6 +219,7 @@ class ThreadComposerWithData extends Component {
             communityId,
             type: 'SLATE',
             content,
+            attachments,
           },
         },
       })
@@ -217,6 +248,73 @@ class ThreadComposerWithData extends Component {
       });
   };
 
+  listenForUrl = (e, data, state) => {
+    const text = state.document.text;
+
+    if (
+      e.keyCode !== 8 &&
+      e.keyCode !== 9 &&
+      e.keyCode !== 13 &&
+      e.keyCode !== 32 &&
+      e.keyCode !== 46
+    ) {
+      // Return if backspace, tab, enter, space or delete was not pressed.
+      return;
+    }
+
+    const { linkPreview, linkPreviewLength } = this.state;
+
+    // also don't check if we already have a url in the linkPreview state
+    if (linkPreview !== null) return;
+
+    const toCheck = text.match(URLS);
+
+    if (toCheck) {
+      const len = toCheck.length;
+      if (linkPreviewLength === len) return; // no new links, don't recheck
+
+      let urlToCheck = toCheck[len - 1].trim();
+
+      this.setState({ fetchingLinkPreview: true });
+
+      if (!/^https?:\/\//i.test(urlToCheck)) {
+        urlToCheck = 'https://' + urlToCheck;
+      }
+
+      getLinkPreviewFromUrl(urlToCheck)
+        .then(data => {
+          // this.props.dispatch(stopLoading());
+
+          this.setState(prevState => ({
+            linkPreview: data,
+            linkPreviewTrueUrl: urlToCheck,
+            linkPreviewLength: prevState.linkPreviewLength + 1,
+            fetchingLinkPreview: false,
+            error: null,
+          }));
+
+          const linkPreview = {};
+          linkPreview['data'] = data;
+          linkPreview['trueUrl'] = urlToCheck;
+
+          // this.props.dispatch(addLinkPreview(linkPreview));
+        })
+        .catch(err => {
+          this.setState({
+            error: "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
+            fetchingLinkPreview: false,
+          });
+        });
+    }
+  };
+
+  removeLinkPreview = () => {
+    this.setState({
+      linkPreview: null,
+      trueUrl: null,
+    });
+  };
+
   render() {
     const {
       isOpen,
@@ -226,6 +324,9 @@ class ThreadComposerWithData extends Component {
       activeCommunity,
       activeChannel,
       isPublishing,
+      linkPreview,
+      linkPreviewTrueUrl,
+      fetchingLinkPreview,
     } = this.state;
 
     return (
@@ -252,11 +353,23 @@ class ThreadComposerWithData extends Component {
 
             <Editor
               onChange={this.changeBody}
+              onKeyDown={this.listenForUrl}
               state={this.state.body}
               style={ThreadDescription}
               ref="bodyTextarea"
               placeholder="Write more thoughts here, add photos, and anything else!"
             />
+
+            {linkPreview &&
+              <LinkPreview
+                data={linkPreview}
+                size={'large'}
+                remove={this.removeLinkPreview}
+                editable={true}
+                trueUrl={linkPreviewTrueUrl}
+              />}
+
+            {fetchingLinkPreview && <LinkPreviewLoading />}
 
             <Actions>
               <Dropdowns>

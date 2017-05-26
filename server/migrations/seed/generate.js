@@ -193,13 +193,6 @@ const generateUsersDirectMessageThreads = (
   threadId: string,
   userId: string
 ) => {
-  const isOwner = faker.random.boolean();
-  // if user is either an admin or moderator, they have to be a member
-  // otherwise random chance
-  const isMember = true;
-  // might be blocked as long as they aren't an admin, mod, or member
-  const isBlocked = isOwner || isMember ? false : faker.random.boolean();
-
   const createdAt = faker.date.past(2);
   const lastActive = faker.date.between(createdAt, faker.date.recent());
   const lastSeen = faker.date.between(createdAt, new Date());
@@ -209,9 +202,6 @@ const generateUsersDirectMessageThreads = (
     createdAt,
     threadId,
     userId,
-    isOwner,
-    isMember,
-    isBlocked,
     lastActive,
     lastSeen,
   };

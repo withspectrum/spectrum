@@ -16,9 +16,6 @@ const DirectMessageThread = /* GraphQL */ `
 		profilePhoto: String!
 		lastActive: Date
 		lastSeen: Date
-		isMember: Boolean!
-		isOwner: Boolean!
-		isBlocked: Boolean!
 	}
 
 	type DirectMessageThread {

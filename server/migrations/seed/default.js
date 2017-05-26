@@ -141,9 +141,8 @@ const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
     createdAt: new Date(),
     userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
     threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
-    isOwner: false,
-    isMember: true,
-    isBlocked: false,
+    lastActive: new Date(),
+    lastSeen: new Date(),
   },
 ];
 
