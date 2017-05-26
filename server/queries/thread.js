@@ -18,6 +18,7 @@ module.exports = {
   },
   Thread: {
     attachments: ({ attachments }) =>
+      attachments &&
       attachments.map(attachment => {
         return Object.assign({}, ...attachment, {
           data: JSON.stringify(attachment.data),
