@@ -26,7 +26,7 @@ const Span = styled.span`
 
 const ProBadge = styled(Span)`
   background-color: ${props => props.theme.success.alt};
-  background-image: ${props => Gradient(props.theme.success.alt, props.theme.success.default)}
+  background-image: ${props => Gradient(props.theme.space.light, props.theme.success.default)}
 `;
 
 const Badge = props => {

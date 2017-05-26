@@ -46,15 +46,6 @@ export const SubscriptionList = (props: Object) => {
         >
           <IconButton glyph="settings" />
         </ListCardItem>
-        <ListCardItem
-          contents={PaidCommunityContent}
-          withDescription={false}
-          meta={PaidCommunityMeta}
-          // TODO: onClick={() => expandPlanSelector}
-        >
-          <IconButton glyph="settings" />
-        </ListCardItem>
-        <PlanSelector />
         {/* TODO: {communities.map(item => {
             return (
               <Link
