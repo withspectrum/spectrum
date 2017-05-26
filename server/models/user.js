@@ -50,16 +50,10 @@ const getUsersBySearchString = (string: string): Promise<Array<Object>> => {
 // space. This function is only invoked for signups when checking
 // for an existing user on the previous Firebase stack.
 const getUserByProviderId = (providerId: string): Promise<Object> => {
-  return db
-    .table('users')
-    .filter({ providerId })
-    .run()
-    .then(
-      result =>
-        (result && result.length > 0
-          ? result[0]
-          : new UserError('No user found with this providerId'))
-    );
+  return db.table('users').filter({ providerId }).run().then(result => {
+    if (result && result.length > 0) return result[0];
+    throw new new UserError('No user found with this providerId')();
+  });
 };
 
 const storeUser = (user: Object): Promise<Object> => {
@@ -81,6 +75,9 @@ const createOrFindUser = (user: Object): Promise<Object> => {
       return storeUser(user);
     })
     .catch(err => {
+      if (user.id) {
+        throw new UserError(`No user found for id ${user.id}.`);
+      }
       return storeUser(user);
     });
 };
