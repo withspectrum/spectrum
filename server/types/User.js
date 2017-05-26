@@ -99,7 +99,15 @@ const User = /* GraphQL */ `
 		searchUsers(string: String): [User]
 	}
 
+	input EditUserInput {
+		file: File
+		name: String!
+		description: String!
+		website: String
+	}
+
 	extend type Mutation {
+		editUser(input: EditUserInput!): User
 		uploadProfilePhoto(file: File!): User
 	}
 `;

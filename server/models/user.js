@@ -122,6 +122,94 @@ const getUsersThreadCount = (
   });
 };
 
+export type EditUserArguments = {
+  input: {
+    file: any,
+    name: string,
+    description: string,
+    website: string,
+  },
+};
+
+const editUser = (
+  input: EditUserArguments,
+  userId: string
+): Promise<Object> => {
+  const { input: { name, description, website, file } } = input;
+
+  return db
+    .table('users')
+    .get(userId)
+    .run()
+    .then(result => {
+      return Object.assign({}, result, {
+        name,
+        description,
+        website,
+      });
+    })
+    .then(user => {
+      // if no file was uploaded, update the community with new string values
+      if (!file || file === null) {
+        return Promise.all([
+          db
+            .table('users')
+            .get(userId)
+            .update({ ...user }, { returnChanges: 'always' })
+            .run()
+            .then(result => {
+              // if an update happened
+              if (result.replaced === 1) {
+                return result.changes[0].new_val;
+              }
+
+              // an update was triggered from the client, but no data was changed
+              if (result.unchanged === 1) {
+                return result.changes[0].old_val;
+              }
+            }),
+        ]);
+      }
+
+      if (file) {
+        return;
+        // return Promise.all([
+        //   uploadCommunityPhoto(file, community, data => {
+        //     // returns the imgix path for the final image
+        //     const profilePhoto = generateImageUrl(data.path);
+        //     // update the community with the profilePhoto
+        //     return (
+        //       db
+        //         .table('communities')
+        //         .get(community.id)
+        //         .update(
+        //           {
+        //             ...community,
+        //             profilePhoto,
+        //           },
+        //           { returnChanges: 'always' }
+        //         )
+        //         .run()
+        //         // return the resulting community with the profilePhoto set
+        //         .then(result => {
+        //           // if an update happened
+        //           if (result.replaced === 1) {
+        //             return result.changes[0].new_val;
+        //           }
+        //
+        //           // an update was triggered from the client, but no data was changed
+        //           if (result.unchanged === 1) {
+        //             return result.changes[0].old_val;
+        //           }
+        //         })
+        //     );
+        //   }),
+        // ]);
+      }
+    })
+    .then(data => data[0]);
+};
+
 const uploadPhoto = (file: Object, currentUser: Object): Promise<Object> => {
   // upload logic here with `file`
   return photoToS3(file, currentUser, data => {
@@ -164,5 +252,6 @@ module.exports = {
   createOrFindUser,
   storeUser,
   uploadPhoto,
+  editUser,
   getEverything,
 };
