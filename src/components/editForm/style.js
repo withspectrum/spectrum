@@ -38,6 +38,11 @@ export const Description = styled.p`
   line-height: 1.4;
 `;
 
+export const TertiaryActionContainer = styled(FlexRow)`
+  justify-content: flex-start;
+  flex-grow: 1;
+`;
+
 export const Actions = styled(FlexRow)`
   margin-top: 24px;
   justify-content: flex-end;
@@ -54,7 +59,7 @@ export const ImgPreview = styled.img`
   border-radius: 4px;
 `;
 
-export const Notice = styled.span`
+export const GeneralNotice = styled.span`
   padding: 8px 12px;
   font-size: 12px;
   font-weight: 500;

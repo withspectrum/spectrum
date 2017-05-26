@@ -8,10 +8,13 @@ export const channelInfoFragment = gql`
     slug
     description
     isPrivate
-    isOwner
-    isMember
-    isPending
-    isBlocked
+    channelPermissions {
+      isMember
+      isPending
+      isBlocked
+      isOwner
+      isModerator
+    }
     community {
       ...communityInfo
     }

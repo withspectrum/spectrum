@@ -15,6 +15,8 @@ import { deleteThreadMutation } from '../../../api/thread';
 import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
 import { IconButton } from '../../../components/buttons';
+import { toPlainText, toState } from '../../../components/editor';
+import { LinkPreview } from '../../../components/linkPreview';
 import {
   ThreadWrapper,
   ThreadHeading,
@@ -33,20 +35,24 @@ const ThreadDetailPure = ({
   currentUser,
   history,
 }) => {
+  const isChannelOwner = thread.channel.channelPermissions.isOwner;
+  const isCommunityOwner =
+    thread.channel.community.communityPermissions.isOwner;
+
   const threadLock = (threadId, value) =>
     setThreadLock({
       threadId,
       value,
     })
       .then(({ data: { setThreadLock } }) => {
-        if (setThreadLock) {
+        if (setThreadLock.isLocked) {
           dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
         } else {
           dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
         }
       })
       .catch(err => {
-        dispatch(addToastWithTimeout('error', err));
+        dispatch(addToastWithTimeout('error', err.message));
       });
 
   const triggerDelete = (e, threadId) => {
@@ -54,9 +60,9 @@ const ThreadDetailPure = ({
 
     let message;
 
-    if (thread.isCommunityOwner && !thread.isCreator) {
+    if (isCommunityOwner && !thread.isCreator) {
       message = `You are about to delete another person's thread. As the owner of the ${thread.channel.community.name} community, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
-    } else if (thread.isChannelOwner && !thread.isCreator) {
+    } else if (isChannelOwner && !thread.isCreator) {
       message = `You are about to delete another person's thread. As the owner of the ${thread.channel} channel, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
     } else if (thread.isCreator) {
       message = 'Are you sure you want to delete this thread?';
@@ -73,49 +79,39 @@ const ThreadDetailPure = ({
     );
   };
 
-  const openUserProfileModal = (e, user: Object) => {
-    e.preventDefault();
-    return dispatch(openModal('USER_PROFILE_MODAL', { user }));
-  };
+  let body = thread.content.body;
+  if (thread.type === 'SLATE') {
+    body = toPlainText(toState(JSON.parse(body)));
+  }
 
   return (
     <ThreadWrapper>
       <ContextRow>
-        <Byline onClick={e => openUserProfileModal(e, thread.creator)}>
+        <Byline to={`/users/${thread.creator.username}`}>
           {thread.creator.name}
         </Byline>
         {currentUser &&
-          (thread.isCreator ||
-            thread.isChannelOwner ||
-            thread.isCommunityOwner) &&
+          (thread.isCreator || isChannelOwner || isCommunityOwner) &&
           <DropWrap>
             <Icon glyph="settings" />
             <Flyout>
-              {(thread.isChannelOwner || thread.isCommunityOwner) &&
-                <FlyoutRow>
-                  <IconButton
-                    glyph="freeze"
-                    onClick={() => threadLock(thread.id, !thread.locked)}
-                  />
-                </FlyoutRow>}
-              {thread.isCreator &&
+              {(isChannelOwner || isCommunityOwner) &&
                 <FlyoutRow>
                   <IconButton
                     glyph="freeze"
                     hoverColor="space.light"
-                    tipText="Freeze Chat"
-                    tipLocation="bottom-right"
+                    tipText={thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'}
+                    tipLocation="top-left"
+                    onClick={() => threadLock(thread.id, !thread.isLocked)}
                   />
                 </FlyoutRow>}
-              {(thread.isCreator ||
-                thread.isChannelOwner ||
-                thread.isCommunityOwner) &&
+              {(thread.isCreator || isChannelOwner || isCommunityOwner) &&
                 <FlyoutRow>
                   <IconButton
                     glyph="delete"
                     hoverColor="warn.alt"
-                    tipText="Delete Thread"
-                    tipLocation="bottom-right"
+                    tipText="Delete thread"
+                    tipLocation="top-left"
                     onClick={e => triggerDelete(e, thread.id)}
                   />
                 </FlyoutRow>}
@@ -125,8 +121,17 @@ const ThreadDetailPure = ({
       <ThreadHeading>
         {thread.content.title}
       </ThreadHeading>
-      {!!thread.content.body &&
-        <ThreadContent>{thread.content.body}</ThreadContent>}
+      {!!thread.content.body && <ThreadContent>{body}</ThreadContent>}
+      {// for now we know this means there is a link attachment
+      thread.attachments &&
+        thread.attachments.length > 0 &&
+        <LinkPreview
+          trueUrl={thread.attachments[0].data.trueUrl}
+          data={JSON.parse(thread.attachments[0].data)}
+          size={'small'}
+          editable={false}
+          margin={'16px 0 0 0'}
+        />}
     </ThreadWrapper>
   );
 };

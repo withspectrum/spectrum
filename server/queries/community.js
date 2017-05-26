@@ -3,8 +3,13 @@
  * Community query resolvers
  */
 const { getCommunityMetaData } = require('../models/community');
-const { getThreadsByCommunity } = require('../models/thread');
-const { getChannelsByCommunity } = require('../models/channel');
+const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
+const { getThreadsByChannels } = require('../models/thread');
+const {
+  getChannelsByCommunity,
+  getChannelsByUserAndCommunity,
+  getPublicChannelsByCommunity,
+} = require('../models/channel');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetCommunityArgs } from '../models/community';
@@ -25,6 +30,14 @@ module.exports = {
     },
   },
   Community: {
+    communityPermissions: (
+      { id }: { id: String },
+      _: any,
+      { user }: Context
+    ) => {
+      if (!id || !user) return false;
+      return getUserPermissionsInCommunity(id, user.id);
+    },
     channelConnection: ({ id }: { id: string }) => ({
       pageInfo: {
         hasNextPage: false,
@@ -35,18 +48,6 @@ module.exports = {
         }))
       ),
     }),
-    isOwner: ({ owners }, _, { user }) => {
-      if (!user) return false;
-      return owners.indexOf(user.id) > -1;
-    },
-    isMember: ({ members }, _, { user }) => {
-      if (!user) return false;
-      return members.indexOf(user.id) > -1;
-    },
-    isModerator: ({ moderators }, _, { user }) => {
-      if (!user) return false;
-      return moderators.indexOf(user.id) > -1;
-    },
     memberConnection: (
       { members }: { members: Array<string> },
       { first = 10, after }: PaginationOptions,
@@ -68,11 +69,31 @@ module.exports = {
     },
     threadConnection: (
       { id }: { id: string },
-      { first = 10, after }: PaginationOptions
+      { first = 10, after }: PaginationOptions,
+      { user }
     ) => {
       const cursor = decode(after);
+      const currentUser = user;
+
+      // if the user is signed in, only return stories for the channels
+      // the user is a member of -> this will ensure that they don't see
+      // stories in private channels that they aren't a member of.
+      // if the user is *not* signed in, only get threads from public channels
+      // within the community
+      let channelsToGetThreadsFor;
+      if (user) {
+        channelsToGetThreadsFor = getChannelsByUserAndCommunity(
+          id,
+          currentUser.id
+        );
+      } else {
+        channelsToGetThreadsFor = getPublicChannelsByCommunity(id);
+      }
+
       // TODO: Make this more performant by doing an actual db query rather than this hacking around
-      return getThreadsByCommunity(id)
+      return channelsToGetThreadsFor
+        .then(channels => channels.map(channel => channel.id))
+        .then(channels => getThreadsByChannels(channels))
         .then(threads =>
           paginate(
             threads,

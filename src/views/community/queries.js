@@ -4,15 +4,13 @@ import { graphql, gql } from 'react-apollo';
 // $FlowFixMe
 import update from 'immutability-helper';
 import { encode } from '../../helpers/utils';
+import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import {
   communityInfoFragment,
 } from '../../api/fragments/community/communityInfo';
 import {
   communityThreadsFragment,
 } from '../../api/fragments/community/communityThreads';
-import {
-  communityMetaDataFragment,
-} from '../../api/fragments/community/communityMetaData';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import {
   channelMetaDataFragment,
@@ -177,11 +175,9 @@ export const getCommunity = graphql(
 		query getCommunity($slug: String) {
 			community(slug: $slug) {
         ...communityInfo
-        ...communityMetaData
       }
 		}
     ${communityInfoFragment}
-    ${communityMetaDataFragment}
 	`,
   profileQueryOptions
 );
@@ -195,11 +191,15 @@ export const GET_COMMUNITY_CHANNELS_QUERY = gql`
           node {
             ...channelInfo
             ...channelMetaData
+            pendingUsers {
+              ...userInfo
+            }
           }
         }
       }
     }
   }
+  ${userInfoFragment}
   ${channelInfoFragment}
   ${communityInfoFragment}
   ${channelMetaDataFragment}

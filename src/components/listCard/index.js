@@ -1,8 +1,10 @@
 //@flow
 import React from 'react';
-import { Avatar } from '../avatar';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+
+import { Avatar } from '../avatar';
+
 import {
   Wrapper,
   Col,
@@ -39,7 +41,9 @@ export const ListCardItem = (props: CardProps): React$Element<any> => {
   );
 };
 
-export const ListCardItemUser = ({ user, children }): React$Element<any> => {
+export const ListCardItemUser = ({ user, children }: Object): React$Element<
+  any
+> => {
   return (
     <Wrapper>
       <Row>

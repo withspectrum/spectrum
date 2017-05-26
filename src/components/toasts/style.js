@@ -34,6 +34,8 @@ const toastFade = keyframes`
   }
 `;
 
+// TODO: refine toast styling
+
 const Toast = styled.div`
   border-radius: 8px;
   padding: 8px 12px;

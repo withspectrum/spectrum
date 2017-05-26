@@ -1,6 +1,9 @@
 //@flow
-const { getChannels } = require('../models/channel');
-const { getCommunities } = require('../models/community');
+const { getChannels, getChannelPermissions } = require('../models/channel');
+const {
+  getCommunities,
+  getCommunityPermissions,
+} = require('../models/community');
 const { getUsers } = require('../models/user');
 const { getMessages, getMessageCount } = require('../models/message');
 import paginate from '../utils/paginate-arrays';
@@ -14,6 +17,13 @@ module.exports = {
       loaders.thread.load(id),
   },
   Thread: {
+    attachments: ({ attachments }) =>
+      attachments &&
+      attachments.map(attachment => {
+        return Object.assign({}, ...attachment, {
+          data: JSON.stringify(attachment.data),
+        });
+      }),
     channel: (
       { channelId }: { channelId: string },
       _: any,
@@ -24,7 +34,7 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.community.load(communityId),
-    participants: ({ id, creatorId }: { id: String, creatorId: string }) => {
+    participants: ({ id, creatorId }, _, { loaders }) => {
       return getMessages(id)
         .then(messages =>
           messages
@@ -42,7 +52,7 @@ module.exports = {
                 self.indexOf(id) === index
             )
         )
-        .then(users => getUsers(users));
+        .then(users => loaders.user.loadMany(users));
     },
     isCreator: (
       { creatorId }: { creatorId: String },
@@ -52,25 +62,21 @@ module.exports = {
       if (!creatorId || !user) return false;
       return user.id === creatorId;
     },
-    isChannelOwner: (
+    channelPermissions: (
       { channelId }: { channelId: String },
       _: any,
       { user }: Context
     ) => {
       if (!channelId || !user) return false;
-      return getChannels([channelId]).then(
-        data => data[0].owners.indexOf(user.id) > -1
-      );
+      return getChannelPermissions(channelId, user.id).then(data => data[0]);
     },
-    isCommunityOwner: (
+    communityPermissions: (
       { communityId }: { communityId: String },
       _: any,
       { user }: Context
     ) => {
       if (!communityId || !user) return false;
-      return getCommunities([communityId]).then(
-        data => data[0].owners.indexOf(user.id) > -1
-      );
+      return getCommunityPermissions(communityId, user.id);
     },
     messageConnection: (
       { id }: { id: String },
@@ -103,6 +109,6 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.user.load(creatorId),
-    messageCount: ({ id }: { id: string }) => getMessageCount('messages', id),
+    messageCount: ({ id }: { id: string }) => getMessageCount(id),
   },
 };

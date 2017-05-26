@@ -6,20 +6,21 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 //$FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-//$FlowFixMe
-import branch from 'recompose/branch';
-//$FlowFixMe
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
+
 import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { LoadingCard } from '../loading';
+
+import type { ProfileSizeProps } from './index';
+import { MetaData } from './metaData';
+import { displayLoadingCard } from '../loading';
 import Icon from '../icons';
-import { Avatar } from '../avatar';
 import {
   ProfileHeader,
+  ProfileAvatar,
+  ProfileHeaderLink,
   ProfileHeaderMeta,
   ProfileHeaderAction,
   Title,
@@ -28,22 +29,21 @@ import {
   ActionOutline,
   ExtLink,
 } from './style';
-import { MetaData } from './metaData';
-import type { ProfileSizeProps } from './index';
-
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingCard)
-);
 
 type CommunityProps = {
-  id: String,
-  name: String,
-  slug: String,
-  isMember: Boolean,
+  id: string,
+  name: string,
+  slug: string,
+  isMember: boolean,
   metaData: {
-    channels: Number,
-    members: Number,
+    channels: number,
+    members: number,
+  },
+  communityPermissions: {
+    isOwner: boolean,
+    isMember: boolean,
+    isModerator: boolean,
+    isBlocked: boolean,
   },
 };
 
@@ -57,21 +57,26 @@ const CommunityWithData = ({
 }: {
   data: { community: CommunityProps },
   profileSize: ProfileSizeProps,
+  toggleCommunityMembership: Function,
+  dispatch: Function,
+  currentUser: Object,
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
 
   const toggleMembership = communityId => {
     toggleCommunityMembership({ communityId })
       .then(({ data: { toggleCommunityMembership } }) => {
-        const str = toggleCommunityMembership.isMember
+        const str = toggleCommunityMembership.communityPermissions.isMember
           ? `Joined ${toggleCommunityMembership.name}!`
           : `Left ${toggleCommunityMembership.name}.`;
 
-        const type = toggleCommunityMembership.isMember ? 'success' : 'neutral';
+        const type = toggleCommunityMembership.communityPermissions.isMember
+          ? 'success'
+          : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
-        dispatch(addToastWithTimeout('error', err));
+        dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
@@ -93,35 +98,44 @@ const CommunityWithData = ({
 
   return (
     <Card>
-      <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-        <Avatar
-          margin={'0 12px 0 0'}
-          size={40}
-          radius={4}
-          src={community.profilePhoto}
-        />
-        <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
-          <Link to={`/${community.slug}`}>
+      <ProfileHeader>
+        <ProfileAvatar src={community.profilePhoto} />
+        <ProfileHeaderLink to={`/${community.slug}`}>
+          <ProfileHeaderMeta>
             <Title>{community.name}</Title>
-          </Link>
-        </ProfileHeaderMeta>
+          </ProfileHeaderMeta>
+        </ProfileHeaderLink>
         {currentUser &&
-          !community.isOwner &&
+          !community.communityPermissions.isOwner &&
           <ProfileHeaderAction
-            glyph={community.isMember ? 'door-leave' : 'door-enter'}
-            color={community.isMember ? 'brand.alt' : 'text.placeholder'}
-            hoverColor={community.isMember ? 'brand.alt' : 'warn.default'}
-            tipText={community.isMember ? `Leave community` : 'Join community'}
-            tipLocation="bottom-left"
+            glyph={
+              community.communityPermissions.isMember ? 'minus' : 'plus-fill'
+            }
+            color={
+              community.communityPermissions.isMember
+                ? 'text.placeholder'
+                : 'brand.alt'
+            }
+            hoverColor={
+              community.communityPermissions.isMember
+                ? 'warn.default'
+                : 'brand.alt'
+            }
+            tipText={
+              community.communityPermissions.isMember
+                ? `Leave community`
+                : 'Join community'
+            }
+            tipLocation="top-left"
             onClick={() => toggleMembership(community.id)}
           />}
         {currentUser &&
-          community.isOwner &&
+          community.communityPermissions.isOwner &&
           <Link to={`/${community.slug}/settings`}>
             <ProfileHeaderAction
               glyph="settings"
               tipText="Edit community"
-              tipLocation="bottom-left"
+              tipLocation="top-left"
             />
           </Link>}
 
@@ -148,7 +162,7 @@ const CommunityWithData = ({
 
 const Community = compose(
   toggleCommunityMembershipMutation,
-  displayLoadingState,
+  displayLoadingCard,
   pure
 )(CommunityWithData);
 

@@ -10,7 +10,7 @@ import { displayLoadingCard } from '../../../components/loading';
 import { ListCardItem } from '../../../components/listCard';
 import { Button, TextButton, IconButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
-import { NullCard, NullTitle, NullSubtitle } from '../../../components/upsell';
+import { NullCard } from '../../../components/upsell';
 import { openModal } from '../../../actions/modals';
 
 import {
@@ -28,7 +28,7 @@ const ListCardPure = ({ data, dispatch }) => {
       <StyledCard>
         <ListHeader>
           <ListHeading>Channels</ListHeading>
-          {data.community.isOwner &&
+          {data.community.communityPermissions.isOwner &&
             <IconButton
               glyph="plus"
               color="text.placeholder"
@@ -38,15 +38,20 @@ const ListCardPure = ({ data, dispatch }) => {
         </ListHeader>
         <ListContainer>
           {channels.map(item => {
+            const channel = item.node;
             return (
               <Link
-                key={item.node.id}
-                to={`/${data.variables.slug}/${item.node.slug}`}
+                key={channel.id}
+                to={`/${data.variables.slug}/${channel.slug}`}
               >
                 <ListCardItem
-                  contents={item.node}
+                  contents={channel}
                   withDescription={false}
-                  meta={`${item.node.metaData.members} members`}
+                  meta={
+                    item.node.metaData.members > 1
+                      ? `${item.node.metaData.members} members ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `· ${channel.pendingUsers.length} pending members` : ``}`
+                      : `${item.node.metaData.members} member ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `· ${channel.pendingUsers.length} pending members` : ``}`
+                  }
                 >
                   <Icon glyph="view-forward" />
                 </ListCardItem>
@@ -67,16 +72,12 @@ const ListCardPure = ({ data, dispatch }) => {
     );
   } else {
     return (
-      <NullCard bg="community">
-        <NullTitle>
-          There are no channels here...
-        </NullTitle>
-        <NullSubtitle>
-          Which really shouldn't be possible. Mind reloading?
-        </NullSubtitle>
-        <Button icon="reload">
-          Reload
-        </Button>
+      <NullCard
+        bg="community"
+        heading={`There are no channels here...`}
+        copy={`Which really shouldn't be possible. Mind reloading?`}
+      >
+        <Button icon="reload">Reload</Button>
       </NullCard>
     );
   }

@@ -56,6 +56,5 @@ function render() {
 try {
   render();
 } catch (err) {
-  console.log('error rendering', err);
   render();
 }

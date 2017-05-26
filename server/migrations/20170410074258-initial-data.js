@@ -12,12 +12,42 @@ exports.up = function(r, conn) {
       r.tableCreate('directMessageThreads').run(conn),
       r.tableCreate('users').run(conn),
       r.tableCreate('notifications').run(conn),
+      r.tableCreate('usersCommunities').run(conn),
+      r.tableCreate('usersChannels').run(conn),
+      r.tableCreate('usersDirectMessageThreads').run(conn),
     ])
       // Create secondary indexes
       .then(() =>
         Promise.all([
           // index user by username
           r.table('users').indexCreate('username', r.row('username')).run(conn),
+          // indexes on usersCommunities join table
+          r
+            .table('usersCommunities')
+            .indexCreate('userId', r.row('userId'))
+            .run(conn),
+          r
+            .table('usersCommunities')
+            .indexCreate('communityId', r.row('communityId'))
+            .run(conn),
+          // indexes on usersChannesl join table
+          r
+            .table('usersChannels')
+            .indexCreate('userId', r.row('userId'))
+            .run(conn),
+          r
+            .table('usersChannels')
+            .indexCreate('channelId', r.row('channelId'))
+            .run(conn),
+          // indexes on usersDirectMessageThreads join table
+          r
+            .table('usersDirectMessageThreads')
+            .indexCreate('userId', r.row('userId'))
+            .run(conn),
+          r
+            .table('usersDirectMessageThreads')
+            .indexCreate('threadId', r.row('threadId'))
+            .run(conn),
           // index direct message threads by the users
           r
             .table('directMessageThreads')
@@ -87,6 +117,9 @@ exports.down = function(r, conn) {
     r.tableDrop('directMessageThreads').run(conn),
     r.tableDrop('reactions').run(conn),
     r.tableDrop('notifications').run(conn),
+    r.tableDrop('usersCommunities').run(conn),
+    r.tableDrop('usersChannels').run(conn),
+    r.tableDrop('usersDirectMessageThreads').run(conn),
   ]).catch(err => {
     console.log(err);
   });

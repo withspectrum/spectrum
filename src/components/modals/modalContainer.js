@@ -12,7 +12,9 @@ const ModalContainer = ({
   closeModal,
   children,
   title,
-}): React$Element<any> => {
+}: { closeModal: Function, children?: Object, title: string }): React$Element<
+  any
+> => {
   return (
     <ModalBody>
       <Header>

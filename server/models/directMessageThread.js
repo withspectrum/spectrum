@@ -1,11 +1,6 @@
 //@flow
 const { db } = require('./db');
 
-export type DirectMessageThreadProps = {
-  participants: Array<any>,
-  message: Object,
-};
-
 const getDirectMessageThread = (
   directMessageThreadId: String
 ): Promise<Object> => {
@@ -16,42 +11,23 @@ const getDirectMessageThreadsByUser = (
   userId: String
 ): Promise<Array<Object>> => {
   return db
-    .table('directMessageThreads')
-    .getAll(userId, { index: 'participants' })
-    .orderBy(db.desc('lastActivity'))
-    .run()
-    .then(result => result);
+    .table('usersDirectMessageThreads')
+    .getAll(userId, { index: 'userId' })
+    .orderBy(db.desc('lastActive'))
+    .eqJoin('threadId', db.table('directMessageThreads'))
+    .without({ left: ['id', 'createdAt', 'threadId', 'userId'] })
+    .zip()
+    .run();
 };
 
-const createDirectMessageThread = (
-  participantsIdsArray: Array<string>,
-  currentUserId: Object
-): Object => {
+const createDirectMessageThread = (isGroup: boolean): Object => {
   return db
     .table('directMessageThreads')
     .insert(
       {
-        creatorId: currentUserId,
-        participants: [...participantsIdsArray],
         createdAt: new Date(),
-        lastActivity: new Date(),
-        status: participantsIdsArray.map(userId => {
-          // when we are inserting the current user, we
-          // can know that they are currently active and viewing the thread
-          if (currentUserId === userId) {
-            return {
-              userId,
-              lastActivity: new Date(),
-              lastSeen: new Date(),
-            };
-          } else {
-            return {
-              userId,
-              lastActivity: null,
-              lastSeen: null,
-            };
-          }
-        }),
+        name: null,
+        isGroup,
       },
       { returnChanges: true }
     )

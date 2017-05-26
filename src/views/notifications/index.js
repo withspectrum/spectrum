@@ -26,12 +26,12 @@ const NotificationsPure = ({ data, currentUser }) => {
     return <UpsellSignIn />;
   }
 
-  const { notifications: { edges } } = data;
+  // const { notifications: { edges } } = data;
 
   return (
     <AppViewWrapper>
       <Column type={'primary'}>
-        {edges.map(({ node: notification }) => (
+        {/* {edges.map(({ node: notification }) => (
           <NotificationCard key={notification.id}>
             <FlexRow center>
               <Icon glyph={getIconByType(notification.type)} />
@@ -42,15 +42,13 @@ const NotificationsPure = ({ data, currentUser }) => {
               {constructContent(notification)}
             </Content>
           </NotificationCard>
-        ))}
+        ))} */}
       </Column>
     </AppViewWrapper>
   );
 };
 
-const Notifications = compose(getNotifications, displayLoadingScreen, pure)(
-  NotificationsPure
-);
+const Notifications = compose(pure)(NotificationsPure);
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,

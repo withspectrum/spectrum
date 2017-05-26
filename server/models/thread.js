@@ -7,7 +7,7 @@ const getThreads = (threadIds: Array<string>): Promise<Array<Object>> => {
   return db
     .table('threads')
     .getAll(...threadIds)
-    .filter(thread => db.not(thread.hasFields('isDeleted')))
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
     .run();
 };
 
@@ -15,7 +15,18 @@ const getThreadsByChannel = (channelId: string): Promise<Array<Object>> => {
   return db
     .table('threads')
     .getAll(channelId, { index: 'channelId' })
-    .filter(thread => db.not(thread.hasFields('isDeleted')))
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .orderBy(db.desc('createdAt'))
+    .run();
+};
+
+const getThreadsByChannels = (
+  channelIds: Array<string>
+): Promise<Array<Object>> => {
+  return db
+    .table('threads')
+    .getAll(...channelIds, { index: 'channelId' })
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
     .orderBy(db.desc('createdAt'))
     .run();
 };
@@ -24,7 +35,7 @@ const getThreadsByCommunity = (communityId: string): Promise<Array<Object>> => {
   return db
     .table('threads')
     .getAll(communityId, { index: 'communityId' })
-    .filter(thread => db.not(thread.hasFields('isDeleted')))
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
     .orderBy(db.desc('createdAt'))
     .run();
 };
@@ -33,7 +44,7 @@ const getThreadsByUser = (userId: string): Promise<Array<Object>> => {
   return db
     .table('threads')
     .getAll(userId, { index: 'creatorId' })
-    .filter(thread => db.not(thread.hasFields('isDeleted')))
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
     .orderBy(db.desc('createdAt'))
     .run();
 };
@@ -84,9 +95,9 @@ const setThreadLock = (threadId: string, value: Boolean): Promise<Object> => {
       .run()
       .then(
         result =>
-          result.changes.length > 0
+          (result.changes.length > 0
             ? result.changes[0].new_val
-            : db.table('threads').get(threadId).run()
+            : db.table('threads').get(threadId).run())
       )
   );
 };
@@ -97,7 +108,7 @@ const deleteThread = (threadId: string): Promise<Boolean> => {
     .get(threadId)
     .update(
       {
-        isDeleted: true,
+        deletedAt: new Date(),
       },
       {
         returnChanges: true,
@@ -142,6 +153,7 @@ module.exports = {
   deleteThread,
   listenToNewThreads,
   getThreadsByChannel,
+  getThreadsByChannels,
   getThreadsByCommunity,
   getThreadsByUser,
 };

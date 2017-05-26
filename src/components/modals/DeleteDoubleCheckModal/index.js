@@ -8,14 +8,16 @@ import Modal from 'react-modal';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-import ModalContainer from '../modalContainer';
-import { TextButton, Button } from '../../buttons';
-import { modalStyles } from '../styles';
+
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { deleteCommunityMutation } from '../../../api/community';
 import { deleteChannelMutation } from '../../../api/channel';
 import { deleteThreadMutation } from '../../../api/thread';
+
+import ModalContainer from '../modalContainer';
+import { TextButton, Button } from '../../buttons';
+import { modalStyles } from '../styles';
 import { Actions, Message } from './style';
 
 /*
@@ -44,7 +46,7 @@ class DeleteDoubleCheckModal extends Component {
       deleteThread,
       deleteChannel,
       dispatch,
-      history,
+      // history,
     } = this.props;
 
     switch (entity) {
@@ -64,7 +66,7 @@ class DeleteDoubleCheckModal extends Component {
             dispatch(
               addToastWithTimeout(
                 'error',
-                `Something went wrong and we weren't able to delete this thread. ${err}`
+                `Something went wrong and we weren't able to delete this thread. ${err.message}`
               )
             );
           });
@@ -85,7 +87,7 @@ class DeleteDoubleCheckModal extends Component {
             dispatch(
               addToastWithTimeout(
                 'error',
-                `Something went wrong and we weren't able to delete this channel. ${err}`
+                `Something went wrong and we weren't able to delete this channel. ${err.message}`
               )
             );
           });
@@ -106,7 +108,7 @@ class DeleteDoubleCheckModal extends Component {
             dispatch(
               addToastWithTimeout(
                 'error',
-                `Something went wrong and we weren't able to delete this community. ${err}`
+                `Something went wrong and we weren't able to delete this community. ${err.message}`
               )
             );
           });

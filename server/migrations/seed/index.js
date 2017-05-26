@@ -8,6 +8,9 @@ const {
   DEFAULT_THREADS,
   DEFAULT_NOTIFICATIONS,
   DEFAULT_DIRECT_MESSAGE_THREADS,
+  DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
+  DEFAULT_USERS_COMMUNITIES,
+  DEFAULT_USERS_CHANNELS,
 } = require('./default');
 
 const {
@@ -15,8 +18,11 @@ const {
   generateUser,
   generateCommunity,
   generateChannel,
+  generateUsersCommunities,
+  generateUsersChannels,
   generateThread,
   generateDirectMessageThread,
+  generateUsersDirectMessageThreads,
   generateMessage,
   generateReaction,
   generateThreadNotification,
@@ -30,35 +36,32 @@ const users = [
   ...randomAmount({ max: userAmount, min: 1 }, generateUser),
 ];
 
-console.log('\nGenerating communities...');
+console.log('Generating communities...');
 const communities = [
   ...DEFAULT_COMMUNITIES,
   ...randomAmount({ max: 10 }, () => {
-    const members = randomAmount(
-      { max: users.length - 1, min: 1 },
-      i => users[i].id
-    );
-    return generateCommunity(members);
+    return generateCommunity();
   }),
 ];
+
+console.log('Generating usersCommunities...');
+let usersCommunities = [];
+users.forEach(user => {
+  communities.forEach(community => {
+    usersCommunities.push(generateUsersCommunities(community.id, user.id));
+  });
+});
 
 console.log('Generating channels...');
 let channels = DEFAULT_CHANNELS;
 communities.forEach(community => {
   randomAmount({ max: 10 }, () => {
-    const members = randomAmount(
-      { max: community.members.length, min: 1 },
-      i => community.members[i]
-    );
-    channels.push(generateChannel(community.id, members));
+    channels.push(generateChannel(community.id));
   });
 });
 
+console.log('Generating default general channels...');
 communities.forEach(community => {
-  const members = randomAmount(
-    { max: community.members.length, min: 1 },
-    i => community.members[i]
-  );
   channels.push({
     id: uuid(),
     communityId: community.id,
@@ -67,33 +70,49 @@ communities.forEach(community => {
     name: 'General',
     description: 'General chatter',
     slug: 'general',
-    members,
-    owners: [members[0]],
     isPrivate: false,
-    pendingUsers: [],
-    blockedUsers: [],
+    isDefault: true,
   });
+});
+
+console.log('Generating usersChannels...');
+let usersChannels = DEFAULT_USERS_CHANNELS;
+const generatedUsersChannels = users.map(user => {
+  return generateUsersChannels(channels, usersCommunities, user.id);
+});
+generatedUsersChannels.map(elem => {
+  usersChannels.push(...elem);
 });
 
 console.log('Generating threads...');
 let threads = DEFAULT_THREADS;
 channels.forEach(channel => {
-  if (!channel.members || channel.members.length === 0) return;
-  randomAmount({ max: 100 }, () => {
-    const creator = faker.random.arrayElement(channel.members);
-    const thread = generateThread(channel.communityId, channel.id, creator);
+  randomAmount({ max: 10 }, () => {
+    const creator = faker.random.arrayElement(users);
+    const thread = generateThread(channel.communityId, channel.id, creator.id);
     threads.push(thread);
-    notifications.push(
-      generateThreadNotification(thread, channel, channel.communityId)
-    );
+    // notifications.push(
+    //   generateThreadNotification(thread, channel)
+    // );
   });
 });
 
 console.log('Generating direct message threads...');
 let directMessageThreads = DEFAULT_DIRECT_MESSAGE_THREADS;
 randomAmount({ max: 100 }, () => {
+  directMessageThreads.push(generateDirectMessageThread());
+});
+
+console.log('Generating usersDirectMessageThreads...');
+let usersDirectMessageThreads = DEFAULT_USERS_DIRECT_MESSAGE_THREADS;
+directMessageThreads.forEach(thread => {
   const thread_users = randomAmount({ max: 5, min: 2 }, i => users[i]);
-  directMessageThreads.push(generateDirectMessageThread(thread_users));
+
+  thread_users.forEach(user => {
+    usersDirectMessageThreads.push(
+      generateUsersDirectMessageThreads(thread.id, user.id)
+    );
+  });
 });
 
 console.log('Generating messages...');
@@ -102,8 +121,8 @@ threads.forEach(thread => {
   const channel = channels.find(channel => channel.id === thread.channelId);
   const threadMessages = [];
   randomAmount({ max: 10 }, () => {
-    const sender = faker.random.arrayElement(channel.members);
-    const message = generateMessage(sender, thread.id, 'story');
+    const sender = faker.random.arrayElement(users);
+    const message = generateMessage(sender.id, thread.id, 'story');
     messages.push(message);
     threadMessages.push(message);
   });
@@ -123,12 +142,15 @@ threads.forEach(thread => {
 
 console.log('Generating direct messages...');
 let direct_messages = [];
-directMessageThreads.forEach(thread => {
+usersDirectMessageThreads.forEach(thread => {
   const threadMessages = [];
-  const participants = thread.participants;
+  const sender = thread.userId;
   randomAmount({ max: 100 }, () => {
-    const sender = faker.random.arrayElement(participants);
-    const message = generateMessage(sender, thread.id, 'directMessageThread');
+    const message = generateMessage(
+      sender,
+      thread.threadId,
+      'directMessageThread'
+    );
     direct_messages.push(message);
     threadMessages.push(message);
   });
@@ -150,7 +172,8 @@ const db = require('rethinkdbdash')({
 });
 
 console.log(
-  `Inserting ${users.length} users, ${communities.length} communities, ${channels.length} channels, ${threads.length} threads, ${messages.length + direct_messages.length} messages, ${reactions.length} reactions, ${directMessageThreads.length} direct message threads, and ${notifications.length} notifications into the database... (this might take a while!)`
+  `Inserting ${users.length} users,
+  ${communities.length} communities, ${channels.length} channels, ${threads.length} threads, ${messages.length + direct_messages.length} messages, ${reactions.length} reactions, ${directMessageThreads.length} direct message threads, ${usersCommunities.length} usersCommunities objects, ${usersChannels.length} usersChannels objects, ${usersDirectMessageThreads.length} usersDirectMessageThreads objects, and ${notifications.length} notifications into the database... (this might take a while!)`
 );
 Promise.all([
   db.table('communities').insert(communities).run(),
@@ -162,6 +185,9 @@ Promise.all([
   db.table('notifications').insert(notifications).run(),
   db.table('directMessageThreads').insert(directMessageThreads).run(),
   db.table('messages').insert(direct_messages).run(),
+  db.table('usersCommunities').insert(usersCommunities).run(),
+  db.table('usersChannels').insert(usersChannels).run(),
+  db.table('usersDirectMessageThreads').insert(usersDirectMessageThreads).run(),
 ])
   .then(() => {
     console.log('Finished seeding database! 🎉');

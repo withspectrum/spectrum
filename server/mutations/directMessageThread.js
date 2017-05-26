@@ -5,7 +5,9 @@ const {
   createDirectMessageThread,
   getDirectMessageThreadsByUser,
 } = require('../models/directMessageThread');
-import type { DirectMessageThreadProps } from '../models/directMessageThread';
+const {
+  createMemberInDirectMessageThread,
+} = require('../models/usersDirectMessageThreads');
 const { storeMessage } = require('../models/message');
 
 module.exports = {
@@ -21,17 +23,19 @@ module.exports = {
 
         participants: [ids],
         message: {
-          type: 'text' | 'media',
-          content: string
+          messageType: 'text' | 'media',
+          threadType: 'directMessageThread',
+          content: {
+            body: string
+          }
         }
       */
 
       if (!input.participants)
         return new UserError('Nobody was selected to create a thread.');
+
       if (
-        !input.message ||
-        !input.message.content ||
-        !input.message.content.body
+        !input.message || !input.message.content || !input.message.content.body
       )
         return new UserError(
           'Be sure to add a message when creating a new thread!'
@@ -40,82 +44,39 @@ module.exports = {
       // if users and messages exist, continue
       const { participants, message } = input;
 
-      // get all the currentUser's direct messages and check for an existing thread
-      // to ensure we're not creating a duplicate, in the event that the
-      // client side composer broke
-      return getDirectMessageThreadsByUser(currentUser.id)
-        .then(directMessageThreads => {
-          // if no directMessageThreads exist, we can safely assume the person is creating
-          // a new thread and continue down the promise chain
-          if (directMessageThreads.length === 0 || !directMessageThreads) {
-            return null;
-          }
+      // if the group being created has more than one participant, a group
+      // thread is being created - this means that people can be added
+      // and removed from the thread in the future. we *don't* want this
+      // behavior for 1:1 threads to preserve privacy, so we store an `isGroup`
+      // boolean on the dmThread object itself which will be used in other
+      // mutations to add or remove members
+      const isGroup = participants.length > 1;
 
-          // otherwise, filter all the user's direct message directMessageThreads
-          return directMessageThreads.filter(directMessageThread => {
-            // sort the users sent from the client
-            const sortedInputParticipants = participants.sort().join('');
-            // sort the users of the directMessageThread being evaluated
-            const sortedThreadParticipants = directMessageThread.participants
-              .sort()
-              .join('');
-
-            // if there is a users match, we have found a duplicate! pass along
-            // the directMessageThread that was matched, and downstream we will simply
-            // post the message using that thread's id
-            if (sortedInputParticipants === sortedThreadParticipants) {
-              return directMessageThread;
-            } else {
-              return null;
-            }
-          });
-        })
-        .then(directMessageThreads => {
-          // a directMessageThread with this exact set of users already exists. we can
-          // just send the message now using this directMessageThread id as the thread id
-          if (directMessageThreads && directMessageThreads.length > 0) {
-            // pass the first (and hopefully only) match down the promise chain
-            return directMessageThreads[0];
-          }
-
-          // if no directMessageThreads were passed down from the previous promise, we know
-          // we are creating a new direct message directMessageThread
-          if (!directMessageThreads || directMessageThreads.length === 0) {
-            // trigger the database function to create a new direct message
-            // directMessageThread. takes users from the client + the current user in order
-            // to populate the users list, and then we send the currentUser
-            // as a second argument to set the creator id
-            return createDirectMessageThread(
-              [...participants, currentUser.id],
-              currentUser.id
-            );
-          }
-        })
-        .then(directMessageThread => {
-          // if the direct message thread couldn't be created
-          if (!directMessageThread) {
-            return new UserError(
-              'We ran into trouble creating this thread - try again?'
-            );
-          }
-
-          // we have now either found a duplicate directMessageThread or created a new direct
-          // message thread. we can now compose a proper messages object
-          // and store the message with our new thread id
+      // create a direct message thread object in order to generate an id
+      return createDirectMessageThread(isGroup)
+        .then(thread => {
+          // once we have an ide we can generate a proper message object
           const messageWithThread = {
             ...message,
-            threadId: directMessageThread.id,
+            threadId: thread.id,
           };
 
-          // pass along the directMessageThread and newly created message down the promise
-          // chain. we'll only end up returning the newly created directMessageThread, but
-          // we wait until the message is stored before doing so
+          // when we have a thread id, we can create the thread owner
+          // relationship with the current user and a member relationship
+          // with each particpant
           return Promise.all([
-            directMessageThread,
+            thread,
+            // create member relationship with the current user
+            createMemberInDirectMessageThread(thread.id, currentUser.id),
+            // create member relationships
+            participants.map(participant =>
+              createMemberInDirectMessageThread(thread.id, participant)
+            ),
+            // create message
             storeMessage(messageWithThread, currentUser),
           ]);
         })
-        .then(([directMessageThread]) => directMessageThread);
+        .then(thread => thread[0]);
     },
   },
 };

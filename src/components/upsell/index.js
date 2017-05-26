@@ -5,11 +5,14 @@ import { Link } from 'react-router-dom';
 import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
 import { Title, Subtitle, Actions, NullCol } from './style';
+import { SERVER_URL } from '../../api';
 
 export const NullCard = props => {
   return (
     <Card>
       <NullCol bg={props.bg}>
+        {props.heading && <Title>{props.heading}</Title>}
+        {props.copy && <Subtitle>{props.copy}</Subtitle>}
         {props.children}
       </NullCol>
     </Card>
@@ -18,24 +21,11 @@ export const NullCard = props => {
 
 export const NullState = props => (
   <NullCol bg={props.bg}>
+    {props.heading && <Title>{props.heading}</Title>}
+    {props.copy && <Subtitle>{props.copy}</Subtitle>}
     {props.children}
   </NullCol>
 );
-
-export const NullTitle = props => <Title>{props.children}</Title>;
-
-export const NullSubtitle = props => <Subtitle>{props.children}</Subtitle>;
-
-export const NullNotifications = () => {
-  return (
-    <NullCol bg="notification">
-      <Title>No notifications</Title>
-      <Subtitle>
-        You're all good! 🎉
-      </Subtitle>
-    </NullCol>
-  );
-};
 
 export const UpsellSignIn = ({ entity }) => {
   const login = () => {
@@ -56,7 +46,10 @@ export const UpsellSignIn = ({ entity }) => {
   );
 };
 
-export const UpsellJoinChannel = ({ channel, subscribe }) => {
+export const UpsellJoinChannel = ({
+  channel,
+  subscribe,
+}: { channel: Object, subscribe: Function }) => {
   return (
     <NullCard bg="channel">
       <Title>Ready to join the conversation?</Title>
@@ -75,6 +68,13 @@ export const UpsellRequestToJoinChannel = ({
   community,
   isPending,
   subscribe,
+  currentUser,
+}: {
+  channel: Object,
+  community: string,
+  isPending: boolean,
+  subscribe: Function,
+  currentUser: Object,
 }) => {
   return (
     <NullCard bg="locked">
@@ -90,8 +90,17 @@ export const UpsellRequestToJoinChannel = ({
         .
       </Subtitle>
 
+      {// user is not logged in
+      !currentUser &&
+        <Button
+          icon="twitter"
+          onClick={() => window.location.href = `${SERVER_URL}/auth/twitter`}
+        >
+          Sign in with Twitter
+        </Button>}
+
       {// has user already requested to join?
-      isPending
+      currentUser && isPending
         ? <OutlineButton
             onClick={() => subscribe(channel.id)}
             icon="minus"
@@ -99,18 +108,22 @@ export const UpsellRequestToJoinChannel = ({
           >
             Cancel request
           </OutlineButton>
-        : <Button
-            onClick={() => subscribe(channel.id)}
-            icon="private-unlocked"
-            label
-          >
-            Request to join {channel.name}
-          </Button>}
+        : currentUser &&
+            <Button
+              onClick={() => subscribe(channel.id)}
+              icon="private-unlocked"
+              label
+            >
+              Request to join {channel.name}
+            </Button>}
     </NullCard>
   );
 };
 
-export const Upsell404Channel = ({ channel, noPermission }) => {
+export const Upsell404Channel = ({
+  channel,
+  noPermission,
+}: { channel: Object, noPermission: boolean }) => {
   // if a user doesn't have permission, it means they likely tried to view
   // the settings page for a channel. In this case, we will return
   // them to the channel view.
@@ -145,14 +158,17 @@ export const Upsell404Channel = ({ channel, noPermission }) => {
   );
 };
 
-export const Upsell404Community = ({ community, noPermission, create }) => {
+export const Upsell404Community = ({
+  community,
+  noPermission,
+  create,
+}: { community: string, noPermission: boolean, create: Function }) => {
   // if a user doesn't have permission, it means they likely tried to view
   // the settings page for a community. In this case, we will return
   // them to the community view.
   // if the user does have permission, but this component gets rendered, it means
   // something went wrong - most likely the community doesn't exists (404) so
   // we should return the user back to homepage
-  const returnUrl = noPermission ? `/${community}` : `/`;
 
   const title = noPermission
     ? "I see you sneakin' around here..."
@@ -186,7 +202,7 @@ export const Upsell404Community = ({ community, noPermission, create }) => {
   );
 };
 
-export const Upsell404User = ({ username }) => {
+export const Upsell404User = ({ username }: { username: string }) => {
   const returnUrl = `/`;
   const title = 'Oops, someone got lost!';
   const subtitle = `We can't find anyone who answers to the name ${username}. Maybe they don't want to be found...`;

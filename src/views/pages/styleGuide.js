@@ -34,9 +34,7 @@ const enhance = compose(
       window.getSelection().addRange(range);
       document.execCommand('copy');
     },
-    toString: props => e => {
-      console.log(props, e);
-    },
+    toString: props => e => {},
   })
 );
 

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 
 import Icon from '../icons';
-// import Icon from '../icons';
+
 import {
   StyledLabel,
   StyledPrefixLabel,
@@ -12,21 +12,21 @@ import {
   StyledHiddenInput,
   StyledCheckboxWrapper,
   StyledError,
-  // ImageInputLabel,
-  // InputOverlay,
-  // ProfileImage,
-  // HiddenInput,
+  ImageInputLabel,
+  InputOverlay,
+  ProfileImage,
 } from './style';
 
 type InputProps = {
   children?: React$Element<any>,
-  inputType?: String,
-  defaultValue?: String,
-  placeholder?: String,
+  inputType?: string,
+  defaultValue?: ?string,
+  placeholder?: string,
   onChange?: Function,
-  autofocus?: Boolean,
-  checked?: Boolean,
-  disabled: ?Boolean,
+  autofocus?: boolean,
+  checked?: boolean,
+  disabled?: boolean,
+  id?: string,
 };
 
 export const Input = (props: InputProps) => {
@@ -45,25 +45,23 @@ export const Input = (props: InputProps) => {
   );
 };
 
-// export const ImageInput = (props) => {
-//   return(
-//     <ImageInputLabel>
-//       <InputOverlay>
-//         <Icon glyph="photo" />
-//       </InputOverlay>
-//       {user.profilePhoto &&
-//         <ProfileImage src={user.profilePhoto} role="presentation" />}
-//       <HiddenInput
-//         type="file"
-//         id="file"
-//         name="file"
-//         accept=".png, .jpg, .jpeg, .gif, .mp4"
-//         multiple={false}
-//         onChange={this.stageProfilePhotoForUpload}
-//       />
-//     </ImageInputLabel>
-//   )
-// }
+export const ImageInput = (props: InputProps) => {
+  return (
+    <ImageInputLabel>
+      <InputOverlay>
+        <Icon glyph="photo" />
+      </InputOverlay>
+      <ProfileImage src={props.defaultValue} role="presentation" />
+      <StyledHiddenInput
+        type="file"
+        id="file"
+        name="file"
+        accept=".png, .jpg, .jpeg, .gif, .mp4"
+        multiple={false}
+      />
+    </ImageInputLabel>
+  );
+};
 
 export const Checkbox = (props: InputProps) => {
   return (
@@ -116,6 +114,6 @@ export class UnderlineInput extends Component {
   }
 }
 
-export const Error = props => {
+export const Error = (props: Object) => {
   return <StyledError>{props.children}</StyledError>;
 };

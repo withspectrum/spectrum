@@ -58,10 +58,6 @@ const DEFAULT_COMMUNITIES = [
     profilePhoto: faker.image.business(),
     coverPhoto: faker.image.image(),
     slug: 'spectrum',
-    members: DEFAULT_USERS.map(({ id }) => id),
-    owners: DEFAULT_USERS.map(({ id }) => id),
-    moderators: [],
-    blockedUsers: [],
   },
 ];
 
@@ -74,11 +70,7 @@ const DEFAULT_CHANNELS = [
     description: 'General chatter',
     slug: 'general',
     isPrivate: false,
-    members: DEFAULT_USERS.map(({ id }) => id),
-    owners: DEFAULT_USERS.map(({ id }) => id),
-    moderators: [],
-    pendingUsers: [],
-    blockedUsers: [],
+    isDefault: true,
   },
 ];
 
@@ -139,18 +131,43 @@ const DEFAULT_NOTIFICATIONS = [
 const DEFAULT_DIRECT_MESSAGE_THREADS = [
   {
     id: 'first-dm-thread-asfd123',
-    creatorId: DEFAULT_USERS[0].id,
     createdAt: new Date(),
     name: null,
-    lastActivity: new Date(),
-    participants: DEFAULT_USERS.map(user => user.id),
-    status: DEFAULT_USERS.map(user => {
-      return {
-        userId: user.id,
-        lastActivity: new Date(),
-        lastSeen: new Date(),
-      };
-    }),
+  },
+];
+
+const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
+  {
+    createdAt: new Date(),
+    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    lastActive: new Date(),
+    lastSeen: new Date(),
+  },
+];
+
+const DEFAULT_USERS_COMMUNITIES = [
+  {
+    createdAt: new Date(),
+    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    isOwner: true,
+    isModerator: false,
+    isMember: true,
+    isBlocked: false,
+  },
+];
+
+const DEFAULT_USERS_CHANNELS = [
+  {
+    createdAt: new Date(),
+    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
+    isOwner: true,
+    isModerator: false,
+    isMember: true,
+    isBlocked: false,
+    isPending: false,
   },
 ];
 
@@ -161,4 +178,7 @@ module.exports = {
   DEFAULT_THREADS,
   DEFAULT_NOTIFICATIONS,
   DEFAULT_DIRECT_MESSAGE_THREADS,
+  DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
+  DEFAULT_USERS_COMMUNITIES,
+  DEFAULT_USERS_CHANNELS,
 };

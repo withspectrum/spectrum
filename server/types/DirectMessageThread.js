@@ -1,10 +1,4 @@
 const DirectMessageThread = /* GraphQL */ `
-	type DirectMessageUserStatus {
-		userId: ID!
-		lastActivity: Date
-		lastSeen: Date
-	}
-
 	type DirectMessagesConnection {
 		pageInfo: PageInfo!
 		edges: [DirectMessageEdge!]
@@ -15,13 +9,19 @@ const DirectMessageThread = /* GraphQL */ `
 		node: Message!
 	}
 
+	type ParticipantInfo {
+		id: ID!
+		name: String!
+		username: String!
+		profilePhoto: String!
+		lastActive: Date
+		lastSeen: Date
+	}
+
 	type DirectMessageThread {
 		id: ID!
-		participants: [User!]
-		status: [DirectMessageUserStatus!]
 		messageConnection(first: Int = 10, after: String): DirectMessagesConnection!
-		creator: User!
-		lastActivity: Date!
+		participants: [ParticipantInfo]
 		snippet: String
 	}
 

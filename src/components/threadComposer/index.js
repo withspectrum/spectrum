@@ -5,18 +5,22 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
 // $FlowFixMe
-import renderComponent from 'recompose/renderComponent';
-// $FlowFixMe
-import branch from 'recompose/branch';
-// $FlowFixMe
 import Textarea from 'react-textarea-autosize';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-import { Button } from '../buttons';
-import Icon from '../icons';
-import { LoadingComposer } from '../loading';
+// $FlowFixMe
+import { connect } from 'react-redux';
+
+import { addToastWithTimeout } from '../../actions/toasts';
+import Editor, { fromPlainText, toJSON } from '../editor';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
+import { LinkPreview, LinkPreviewLoading } from '../../components/linkPreview';
+import { getLinkPreviewFromUrl } from '../../helpers/utils';
+import { URLS } from '../../helpers/regexps';
+import { Button } from '../buttons';
+import Icon from '../icons';
+import { displayLoadingComposer } from '../loading';
 import {
   Container,
   Composer,
@@ -30,11 +34,6 @@ import {
   Dropdowns,
 } from './style';
 
-const displayLoadingState = branch(
-  props => props.data.loading,
-  renderComponent(LoadingComposer)
-);
-
 class ThreadComposerWithData extends Component {
   // prop types
   state: {
@@ -46,22 +45,23 @@ class ThreadComposerWithData extends Component {
     activeCommunity: string,
     activeChannel: string,
     isPublishing: boolean,
+    linkPreview: Object,
+    linkPreviewTrueUrl: string,
+    linkPreviewLength: number,
+    fetchingLinkPreview: boolean,
   };
 
   constructor(props) {
     super(props);
-
     /*
       Create a new array of communities only containing the `node` data from
       graphQL. Then filter the resulting channel to remove any communities
       that don't have any channels yet
-
-      TODO: Ideally we don't have any communities with no channel. If we
-      can guarantee this, we can remove the extra filter here
     */
-    const availableCommunities = props.data.user.communityConnection.edges
-      .map(edge => edge.node)
-      .filter(community => community.channelConnection.edges.length > 0);
+
+    const availableCommunities = props.data.user.communityConnection.edges.map(
+      edge => edge.node
+    );
 
     /*
       Iterate through each of our community nodes to construct a new array
@@ -71,11 +71,9 @@ class ThreadComposerWithData extends Component {
       and each child array represents the channels within that parent
       community
     */
-    const availableChannels = availableCommunities.map(community => {
-      const arr = [];
-      community.channelConnection.edges.map(edge => arr.push(edge.node));
-      return arr;
-    });
+    const availableChannels = props.data.user.channelConnection.edges.map(
+      edge => edge.node
+    );
 
     /*
       If a user is viewing a communit or channel, we use the url as a prop
@@ -93,26 +91,31 @@ class ThreadComposerWithData extends Component {
       ? availableChannels
           .filter(
             // get the channels for the proper community
-            channels => channels[0].community.id === activeCommunity
+            channel => channel.community.id === activeCommunity
           )
-          .map(channels =>
-            // get the correct channel based on the slug
-            channels.find(channel => channel.slug === props.activeChannel)
-          )[0].id
+          .map(
+            channel =>
+              // get the correct channel based on the slug
+              channel.slug === props.activeChannel
+          ).id
       : availableChannels.filter(
           // get the channels for the proper community
-          channels => channels[0].community.id === activeCommunity
-        )[0][0].id; // and select the first one in the list
+          channel => channel.community.id === activeCommunity
+        )[0].id; // and select the first one in the list
 
     this.state = {
       isOpen: false,
       title: '',
-      body: '',
+      body: fromPlainText(''),
       availableCommunities,
       availableChannels,
       activeCommunity,
       activeChannel,
       isPublishing: false,
+      linkPreview: null,
+      linkPreviewTrueUrl: null,
+      linkPreviewLength: 0,
+      fetchingLinkPreview: false,
     };
   }
 
@@ -123,10 +126,9 @@ class ThreadComposerWithData extends Component {
     });
   };
 
-  changeBody = e => {
-    const body = e.target.value;
+  changeBody = state => {
     this.setState({
-      body,
+      body: state,
     });
   };
 
@@ -149,8 +151,8 @@ class ThreadComposerWithData extends Component {
   setActiveCommunity = e => {
     const newActiveCommunity = e.target.value;
     const newActiveChannel = this.state.availableChannels.filter(
-      channel => channel[0].community.id === newActiveCommunity
-    )[0][0].id;
+      channel => channel.community.id === newActiveCommunity
+    )[0].id;
 
     this.setState({
       activeCommunity: newActiveCommunity,
@@ -167,11 +169,6 @@ class ThreadComposerWithData extends Component {
   };
 
   publishThread = () => {
-    console.log(
-      'attemping to publish thread in ',
-      this.state.activeChannel,
-      this.state.activeCommunity
-    );
     // if no title and no channel is set, don't allow a thread to be published
     if (!this.state.title || !this.state.activeChannel) {
       return;
@@ -184,13 +181,33 @@ class ThreadComposerWithData extends Component {
 
     // define new constants in order to construct the proper shape of the
     // input for the publishThread mutation
-    const { activeChannel, activeCommunity, title, body } = this.state;
-    const channelId = activeChannel;
-    const communityId = activeCommunity;
-    const content = {
+    const {
+      activeChannel,
+      activeCommunity,
       title,
       body,
+      linkPreview,
+      linkPreviewTrueUrl,
+    } = this.state;
+    const channelId = activeChannel;
+    const communityId = activeCommunity;
+
+    const content = {
+      title,
+      body: JSON.stringify(toJSON(body)),
     };
+
+    const attachments = [];
+    if (linkPreview) {
+      const attachmentData = JSON.stringify({
+        ...linkPreview,
+        trueUrl: linkPreviewTrueUrl,
+      });
+      attachments.push({
+        attachmentType: 'linkPreview',
+        data: attachmentData,
+      });
+    }
 
     // this.props.mutate comes from a higher order component defined at the
     // bottom of this file
@@ -200,7 +217,9 @@ class ThreadComposerWithData extends Component {
           thread: {
             channelId,
             communityId,
+            type: 'SLATE',
             content,
+            attachments,
           },
         },
       })
@@ -217,11 +236,83 @@ class ThreadComposerWithData extends Component {
 
         // redirect the user to the thread
         this.props.history.push(`/thread/${id}`);
+        this.props.dispatch(
+          addToastWithTimeout('success', 'Thread published!')
+        );
       })
-      .catch(error => {
-        // TODO add some kind of dispatch here to show an error to the user
-        console.log('error publishing thread', error);
+      .catch(err => {
+        this.setState({
+          isPublishing: false,
+        });
+        this.props.dispatch(addToastWithTimeout('error', err.message));
       });
+  };
+
+  listenForUrl = (e, data, state) => {
+    const text = state.document.text;
+
+    if (
+      e.keyCode !== 8 &&
+      e.keyCode !== 9 &&
+      e.keyCode !== 13 &&
+      e.keyCode !== 32 &&
+      e.keyCode !== 46
+    ) {
+      // Return if backspace, tab, enter, space or delete was not pressed.
+      return;
+    }
+
+    const { linkPreview, linkPreviewLength } = this.state;
+
+    // also don't check if we already have a url in the linkPreview state
+    if (linkPreview !== null) return;
+
+    const toCheck = text.match(URLS);
+
+    if (toCheck) {
+      const len = toCheck.length;
+      if (linkPreviewLength === len) return; // no new links, don't recheck
+
+      let urlToCheck = toCheck[len - 1].trim();
+
+      this.setState({ fetchingLinkPreview: true });
+
+      if (!/^https?:\/\//i.test(urlToCheck)) {
+        urlToCheck = 'https://' + urlToCheck;
+      }
+
+      getLinkPreviewFromUrl(urlToCheck)
+        .then(data => {
+          // this.props.dispatch(stopLoading());
+
+          this.setState(prevState => ({
+            linkPreview: data,
+            linkPreviewTrueUrl: urlToCheck,
+            linkPreviewLength: prevState.linkPreviewLength + 1,
+            fetchingLinkPreview: false,
+            error: null,
+          }));
+
+          const linkPreview = {};
+          linkPreview['data'] = data;
+          linkPreview['trueUrl'] = urlToCheck;
+
+          // this.props.dispatch(addLinkPreview(linkPreview));
+        })
+        .catch(err => {
+          this.setState({
+            error: "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
+            fetchingLinkPreview: false,
+          });
+        });
+    }
+  };
+
+  removeLinkPreview = () => {
+    this.setState({
+      linkPreview: null,
+      trueUrl: null,
+    });
   };
 
   render() {
@@ -233,6 +324,9 @@ class ThreadComposerWithData extends Component {
       activeCommunity,
       activeChannel,
       isPublishing,
+      linkPreview,
+      linkPreviewTrueUrl,
+      fetchingLinkPreview,
     } = this.state;
 
     return (
@@ -257,15 +351,25 @@ class ThreadComposerWithData extends Component {
               autoFocus
             />
 
-            <Textarea
+            <Editor
               onChange={this.changeBody}
-              value={this.state.body}
+              onKeyDown={this.listenForUrl}
+              state={this.state.body}
               style={ThreadDescription}
               ref="bodyTextarea"
-              placeholder={
-                'Write more thoughts here, add photos, and anything else!'
-              }
+              placeholder="Write more thoughts here, add photos, and anything else!"
             />
+
+            {linkPreview &&
+              <LinkPreview
+                data={linkPreview}
+                size={'large'}
+                remove={this.removeLinkPreview}
+                editable={true}
+                trueUrl={linkPreviewTrueUrl}
+              />}
+
+            {fetchingLinkPreview && <LinkPreviewLoading />}
 
             <Actions>
               <Dropdowns>
@@ -287,15 +391,13 @@ class ThreadComposerWithData extends Component {
                   defaultValue={activeChannel}
                 >
                   {availableChannels
-                    .filter(
-                      channel => channel[0].community.id === activeCommunity
-                    )
+                    .filter(channel => channel.community.id === activeCommunity)
                     .map((channel, i) => {
-                      return channel.map(e => {
-                        return (
-                          <option key={e.id} value={e.id}>{e.name}</option>
-                        );
-                      });
+                      return (
+                        <option key={channel.id} value={channel.id}>
+                          {channel.name}
+                        </option>
+                      );
                     })}
                 </select>
               </Dropdowns>
@@ -320,9 +422,9 @@ class ThreadComposerWithData extends Component {
 export const ThreadComposer = compose(
   getComposerCommunitiesAndChannels, // query to get data
   publishThread, // mutation to publish a thread
-  displayLoadingState, // handle loading state while query is fetching
+  displayLoadingComposer, // handle loading state while query is fetching
   withRouter, // needed to use history.push() as a post-publish action
   pure
 )(ThreadComposerWithData);
 
-export default ThreadComposer;
+export default connect()(ThreadComposer);

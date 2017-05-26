@@ -13,6 +13,7 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import { ChannelProfile } from '../../components/profile';
+import PendingUsersNotification from './components/pendingUsersNotification';
 import { getChannelThreads, getChannel } from './queries';
 import { displayLoadingScreen } from '../../components/loading';
 import {
@@ -59,7 +60,7 @@ const ChannelViewPure = ({
     );
   }
 
-  if (!channel || channel.deleted) {
+  if (!channel || channel.isDeleted) {
     return (
       <Upsell404Channel
         channel={match.params.channelSlug}
@@ -69,7 +70,7 @@ const ChannelViewPure = ({
   }
 
   // user has been blocked by the owners
-  if (channel && channel.isBlocked) {
+  if (channel && channel.channelPermissions.isBlocked) {
     return (
       <Upsell404Channel
         channel={match.params.channelSlug}
@@ -78,16 +79,21 @@ const ChannelViewPure = ({
       />
     );
   }
-
   // channel exists and the user is not a subscriber (accounts for signed-
   // out users as well)
-  if (channel && channel.isPrivate && !channel.isMember) {
+  if (
+    channel &&
+    channel.isPrivate &&
+    (!channel.channelPermissions.isMember &&
+      !channel.community.communityPermissions.isOwner)
+  ) {
     return (
       <UpsellRequestToJoinChannel
         channel={channel}
         community={match.params.communitySlug}
         isPending={channel.isPending}
         subscribe={toggleRequest}
+        currentUser={currentUser}
       />
     );
   }
@@ -97,12 +103,19 @@ const ChannelViewPure = ({
   // or channel is not private
   if (
     channel &&
-    ((channel.isPrivate && channel.isMember) || !channel.isPrivate)
+    ((channel.isPrivate && channel.channelPermissions.isMember) ||
+      channel.community.communityPermissions.isOwner ||
+      !channel.isPrivate)
   ) {
     return (
       <AppViewWrapper>
         <Column type="secondary">
           <ChannelProfile data={{ channel }} profileSize="full" />
+
+          {channel.isPrivate &&
+            (channel.channelPermissions.isOwner ||
+              channel.community.communityPermissions.isOwner) &&
+            <PendingUsersNotification channel={channel} />}
         </Column>
 
         <Column type="primary" alignItems="center">
@@ -115,6 +128,7 @@ const ChannelViewPure = ({
               />
             : <span />}
           <ThreadFeedWithData
+            viewContext="channel"
             channelSlug={channelSlug}
             communitySlug={communitySlug}
           />

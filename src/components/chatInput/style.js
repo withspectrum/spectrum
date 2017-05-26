@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import Textarea from 'react-textarea-autosize';
 import { IconButton } from '../buttons';
 import { FlexRow, Transition } from '../globals';
+import Editor from '../../components/editor';
 
 export const ChatInputWrapper = styled(FlexRow)`
   display: flex;
@@ -25,7 +25,7 @@ export const Form = styled.form`
 	background-color: transparent;
 `;
 
-export const Input = styled(Textarea)`
+export const Input = styled(Editor)`
 	flex: 1 0 auto;
 	font-size: 14px;
 	font-weight: 500;
@@ -37,6 +37,7 @@ export const Input = styled(Textarea)`
 	border: 2px solid ${props => props.theme.text.placeholder};
 	transition: border 0.3s ease-out;
 	color: ${props => props.theme.text.default};
+  overflow-y: scroll;
 
 	@media (max-width: 768px) {
     font-size: 16px;
