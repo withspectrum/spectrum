@@ -2,10 +2,12 @@
 import React from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+
+import { SERVER_URL } from '../../api';
+
 import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
 import { Title, Subtitle, Actions, NullCol } from './style';
-import { SERVER_URL } from '../../api';
 
 export const NullCard = props => {
   return (

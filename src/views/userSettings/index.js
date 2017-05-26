@@ -27,10 +27,11 @@ const UserSettings = ({ data, currentUser, match }) => {
     <AppViewWrapper>
       <Column type="secondary">
         <UserEditForm user={data} />
-        <SubscriptionList data={data} />
       </Column>
 
-      <Column type="primary" />
+      <Column type="primary">
+        <SubscriptionList data={data} />
+      </Column>
     </AppViewWrapper>
   );
 };
