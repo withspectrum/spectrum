@@ -194,3 +194,22 @@ export const truncate = (str, length) => {
   const subString = str.substr(0, length);
   return subString.substr(0, subString.lastIndexOf(' ')) + '…';
 };
+
+export const hasProtocol = url => {
+  const PROTOCOL = /(http(s?))\:\/\//gi;
+  const hasProtocol = url.match(PROTOCOL);
+  if (hasProtocol) {
+    return true;
+  }
+  return false;
+};
+
+export const addProtocolToString = string => {
+  // if the string starts with http or https, we are good
+  if (hasProtocol(string)) {
+    return string;
+  } else {
+    // otherwise it doesn't start with a protocol, prepend http
+    return `http://${string}`;
+  }
+};
