@@ -26,7 +26,14 @@ const Message = /* GraphQL */ `
 	}
 
 	input MessageContentInput {
-		body: String!
+		body: String
+	}
+
+	input File {
+		name: String!
+		type: String!
+		size: Int!
+		path: String!
 	}
 
 	input MessageInput {
@@ -34,6 +41,7 @@ const Message = /* GraphQL */ `
 		threadType: ThreadTypes!
 		messageType: MessageTypes!
 		content: MessageContentInput!
+		file: File
 	}
 
 	extend type Query {
