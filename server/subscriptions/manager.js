@@ -21,7 +21,9 @@ module.exports = new SubscriptionManager({
       },
     }),
     notificationAdded: (_, __, { user }) => ({
-      [channels.NOTIFICATION_ADDED]: {},
+      [channels.NOTIFICATION_ADDED]: {
+        filter: notification => notification,
+      },
     }),
   },
 });
