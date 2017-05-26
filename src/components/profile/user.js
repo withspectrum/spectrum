@@ -74,10 +74,7 @@ const UserWithData = ({
     history.push('/messages/new');
   };
 
-  {
-    /* TODO: sort out this flow error */
-  }
-
+  // TODO: sort out this flow error */
   return (
     <Card>
       <ProfileHeader>

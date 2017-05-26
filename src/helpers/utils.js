@@ -196,7 +196,7 @@ export const truncate = (str, length) => {
 };
 
 export const hasProtocol = url => {
-  const PROTOCOL = /(http(s?))\:\/\//gi;
+  const PROTOCOL = /(http(s?)):\/\//gi;
   const hasProtocol = url.match(PROTOCOL);
   if (hasProtocol) {
     return true;

@@ -25,7 +25,7 @@ import CommunityList from '../user/components/communityList';
 const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 
 const DashboardPure = props => {
-  const { data: { user, error }, data, dispatch, match, history } = props;
+  const { data: { user, error }, dispatch, match, history } = props;
 
   // save user data to localstorage, which will also dispatch an action to put
   // the user into the redux store

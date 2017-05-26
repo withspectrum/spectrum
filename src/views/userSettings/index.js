@@ -12,7 +12,7 @@ import { displayLoadingState } from '../../components/loading';
 import { UserEditForm } from '../../components/editForm';
 import { Upsell404User } from '../../components/upsell';
 import { SubscriptionList } from './components/subscriptionList';
-import { GetUserProfile, GetCurrentUserThreads } from './queries';
+import { GetUserProfile } from './queries';
 
 const UserSettings = ({ data, currentUser, match }) => {
   if (!data.user) {

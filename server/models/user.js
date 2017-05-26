@@ -1,7 +1,8 @@
 // @flow
 const { db } = require('./db');
+// $FlowFixMe
 import { UserError } from 'graphql-errors';
-import photoToS3 from '../utils/s3';
+import { uploadImage } from '../utils/s3';
 
 const getUser = (input: Object): Promise<Object> => {
   if (input.id) return getUserById(input.id);
@@ -151,97 +152,49 @@ const editUser = (
     .then(user => {
       // if no file was uploaded, update the community with new string values
       if (!file || file === null) {
-        return Promise.all([
-          db
-            .table('users')
-            .get(userId)
-            .update({ ...user }, { returnChanges: 'always' })
-            .run()
-            .then(result => {
-              // if an update happened
-              if (result.replaced === 1) {
-                return result.changes[0].new_val;
-              }
+        return db
+          .table('users')
+          .get(userId)
+          .update({ ...user }, { returnChanges: 'always' })
+          .run()
+          .then(result => {
+            // if an update happened
+            if (result.replaced === 1) {
+              return result.changes[0].new_val;
+            }
 
-              // an update was triggered from the client, but no data was changed
-              if (result.unchanged === 1) {
-                return result.changes[0].old_val;
-              }
-            }),
-        ]);
+            // an update was triggered from the client, but no data was changed
+            if (result.unchanged === 1) {
+              return result.changes[0].old_val;
+            }
+          });
       }
 
       if (file) {
-        return;
-        // return Promise.all([
-        //   uploadCommunityPhoto(file, community, data => {
-        //     // returns the imgix path for the final image
-        //     const profilePhoto = generateImageUrl(data.path);
-        //     // update the community with the profilePhoto
-        //     return (
-        //       db
-        //         .table('communities')
-        //         .get(community.id)
-        //         .update(
-        //           {
-        //             ...community,
-        //             profilePhoto,
-        //           },
-        //           { returnChanges: 'always' }
-        //         )
-        //         .run()
-        //         // return the resulting community with the profilePhoto set
-        //         .then(result => {
-        //           // if an update happened
-        //           if (result.replaced === 1) {
-        //             return result.changes[0].new_val;
-        //           }
-        //
-        //           // an update was triggered from the client, but no data was changed
-        //           if (result.unchanged === 1) {
-        //             return result.changes[0].old_val;
-        //           }
-        //         })
-        //     );
-        //   }),
-        // ]);
+        return uploadImage(file, 'users', userId, profilePhoto => {
+          return (
+            db
+              .table('users')
+              .get(userId)
+              .update(
+                {
+                  ...user,
+                  profilePhoto,
+                },
+                { returnChanges: true }
+              )
+              .run()
+              // return the resulting community with the profilePhoto set
+              .then(
+                result =>
+                  (result.changes.length > 0
+                    ? result.changes[0].new_val
+                    : db.table('users').get(userId).run())
+              )
+          );
+        });
       }
-    })
-    .then(data => data[0]);
-};
-
-const uploadPhoto = (file: Object, currentUser: Object): Promise<Object> => {
-  // upload logic here with `file`
-  return photoToS3(file, currentUser, data => {
-    let path = data.path;
-    // remove the bucket name from the url
-    path = path.replace('/spectrum-chat', '');
-
-    // this is the default source for our imgix account, which starts
-    // at the bucket root, thus we remove the bucket from the path
-    let imgixBase = 'https://spectrum.imgix.net';
-
-    // return a new url to update the currentUser object
-    let profilePhoto = imgixBase + path;
-
-    // update the currentUser object and return the updated currentUser
-    return db
-      .table('users')
-      .get(currentUser.id)
-      .update(
-        {
-          profilePhoto,
-        },
-        { returnChanges: true }
-      )
-      .run()
-      .then(
-        result =>
-          (result.changes.length > 0
-            ? result.changes[0].new_val
-            : db.table('users').get(currentUser.id).run())
-      );
-  });
+    });
 };
 
 module.exports = {
@@ -251,7 +204,6 @@ module.exports = {
   getUsersBySearchString,
   createOrFindUser,
   storeUser,
-  uploadPhoto,
   editUser,
   getEverything,
 };

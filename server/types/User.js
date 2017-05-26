@@ -108,7 +108,6 @@ const User = /* GraphQL */ `
 
 	extend type Mutation {
 		editUser(input: EditUserInput!): User
-		uploadProfilePhoto(file: File!): User
 	}
 `;
 

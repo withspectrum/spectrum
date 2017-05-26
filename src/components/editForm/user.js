@@ -7,8 +7,7 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
 import { Button, TextButton } from '../buttons';
-import { displayLoadingCard } from '../loading';
-import { Input, TextArea, ImageInput, Error } from '../formElements';
+import { Input, TextArea, Error } from '../formElements';
 import { StyledCard, Form, FormTitle, Actions, ImgPreview } from './style';
 import { editUserMutation } from '../../api/user';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -159,6 +158,9 @@ class UserWithData extends Component {
         // the mutation returns a user object. if it exists,
         if (user !== undefined) {
           this.props.dispatch(addToastWithTimeout('success', 'Changes saved!'));
+          this.setState({
+            file: null,
+          });
         }
       })
       .catch(err => {

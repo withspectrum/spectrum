@@ -7,7 +7,6 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 import ThreadContainer from './containers';
-import AppViewWrapper from '../../components/appViewWrapper';
 
 const ThreadPure = ({ match, location }) => (
   <div>
