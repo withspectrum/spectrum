@@ -18,6 +18,17 @@ const getMessages = (threadId: String): Promise<Array<Object>> => {
     .run();
 };
 
+const getMediaMessagesForThread = (
+  threadId: String
+): Promise<Array<Object>> => {
+  return db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .filter({ messageType: 'media' })
+    .orderBy(db.asc('timestamp'))
+    .run();
+};
+
 const storeMessage = (message, user: Object): Promise<Object> => {
   // Insert a message
   return db
@@ -59,6 +70,7 @@ const getMessageCount = (threadId: string): Promise<number> => {
 module.exports = {
   getMessage,
   getMessages,
+  getMediaMessagesForThread,
   storeMessage,
   listenToNewMessages,
   getMessageCount,

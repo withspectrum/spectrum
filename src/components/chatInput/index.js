@@ -6,8 +6,11 @@ import compose from 'recompose/compose';
 import withState from 'recompose/withState';
 // // $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
+// // $FlowFixMe
+import { connect } from 'react-redux';
 import Icon from '../icons';
 import { toPlainText, fromPlainText } from '../../components/editor';
+import { addToastWithTimeout } from '../../actions/toasts';
 import {
   Form,
   Input,
@@ -33,6 +36,7 @@ const ChatInputWithMutation = ({
   createThread,
   onFocus,
   onBlur,
+  dispatch,
 }) => {
   const submit = e => {
     e.preventDefault();
@@ -61,28 +65,55 @@ const ChatInputWithMutation = ({
         // clear the input
         clear();
       })
-      .catch(error => {
-        console.log('Error sending message: ', error);
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
   const handleKeyPress = e => {
     if (e.keyCode === 13 && !e.shiftKey) {
       //=> make the enter key send a message, not create a new line in the next autoexpanding textarea unless shift is pressed.
-      console.log('submit!');
       e.preventDefault(); //=> prevent linebreak
       submit(e); //=> send the message instead
     }
   };
 
+  const sendMediaMessage = e => {
+    const file = e.target.files[0];
+
+    if (thread === 'newDirectMessageThread') {
+      return createThread({
+        messageType: 'media',
+        file,
+      });
+    }
+
+    sendMessage({
+      threadId: thread,
+      messageType: 'media',
+      threadType: 'story',
+      content: {
+        body: '',
+      },
+      file,
+    })
+      .then(({ sendMessage }) => {
+        clear();
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
   return (
     <ChatInputWrapper>
       <MediaInput
-        ref="media"
         type="file"
         id="file"
         name="file"
         accept=".png, .jpg, .jpeg, .gif, .mp4"
+        multiple={false}
+        onChange={sendMediaMessage}
       />
 
       <MediaLabel htmlFor="file">
@@ -100,7 +131,6 @@ const ChatInputWithMutation = ({
       />
       <Form>
         <Input
-          ref="textInput"
           placeholder="Your message here..."
           state={state}
           onKeyPress={handleKeyPress}
@@ -121,7 +151,8 @@ const ChatInput = compose(
   withHandlers({
     onChange: ({ changeState }) => state => changeState(state),
     clear: ({ changeState }) => () => changeState(fromPlainText('')),
-  })
+  }),
+  connect()
 )(ChatInputWithMutation);
 
 export default ChatInput;

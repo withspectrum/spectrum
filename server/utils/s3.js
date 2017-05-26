@@ -1,3 +1,4 @@
+// @flow
 const Uploader = require('s3-image-uploader');
 const env = require('node-env-file');
 const IS_PROD = process.env.NODE_ENV === 'production';
