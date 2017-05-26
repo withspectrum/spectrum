@@ -31,7 +31,7 @@ const ErrorState = () => (
     heading={`Whoops!`}
     copy={`Something went wrong on our end... Mind reloading?`}
   >
-    <Button icon="reload">Reload</Button>
+    <Button icon="view-reload">Reload</Button>
   </NullCard>
 );
 

@@ -49,7 +49,7 @@ const DashboardPure = props => {
             heading="Whoops! Something broke the home page."
             copy="Mind reloading?"
           >
-            <Button icon="reload">Reload</Button>
+            <Button icon="view-reload">Reload</Button>
           </NullCard>
         </Column>
       </AppViewWrapper>
