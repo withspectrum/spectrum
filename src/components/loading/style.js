@@ -117,3 +117,16 @@ export const Cover = styled.span`
   background: ${({ theme }) => theme.bg.default};
   z-index: 5;
 `;
+
+export const LoadingOverlay = styled.div`
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: ${({ theme }) => theme.bg.reverse};
+	opacity: 0.95;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+`;

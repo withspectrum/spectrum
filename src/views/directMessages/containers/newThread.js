@@ -557,7 +557,7 @@ class NewThread extends Component {
     node.scrollTop = node.scrollHeight - node.clientHeight;
   };
 
-  createThread = ({ messageBody, messageType }) => {
+  createThread = ({ messageBody, messageType, file }) => {
     const { selectedUsersForNewThread } = this.state;
 
     // if no users have been selected, break out of this function and throw
@@ -578,8 +578,9 @@ class NewThread extends Component {
         messageType: messageType,
         threadType: 'directMessageThread',
         content: {
-          body: messageBody,
+          body: messageBody ? messageBody : '',
         },
+        file: file ? file : null,
       },
     };
 
