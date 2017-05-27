@@ -113,7 +113,7 @@ class ThreadComposerWithData extends Component {
       activeChannel,
       isPublishing: false,
       linkPreview: null,
-      linkPreviewTrueUrl: null,
+      linkPreviewTrueUrl: '',
       linkPreviewLength: 0,
       fetchingLinkPreview: false,
     };
@@ -311,7 +311,7 @@ class ThreadComposerWithData extends Component {
   removeLinkPreview = () => {
     this.setState({
       linkPreview: null,
-      trueUrl: null,
+      linkPreviewTrueUrl: null,
     });
   };
 

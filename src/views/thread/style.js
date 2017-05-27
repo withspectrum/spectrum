@@ -25,6 +25,10 @@ export const ContextRow = styled(FlexRow)`
   align-items: center;
 `;
 
+export const EditDone = styled.div`
+  position: relative;
+`;
+
 export const DropWrap = styled.div`
   width: 32px;
   height: 32px;
@@ -81,3 +85,31 @@ export const ThreadContent = styled(Markdown)`
 export const ChatWrapper = styled.div`
   width: 100%;
 `;
+
+export const ThreadTitle = {
+  fontSize: '20px',
+  padding: '0',
+  outline: 'none',
+  border: '0',
+  lineHeight: '1.4',
+  fontWeight: '800',
+  boxShadow: 'none',
+  width: '100%',
+  color: '#171A21',
+  whiteSpace: 'pre-wrap',
+  borderRadius: '12px 12px 0 0',
+};
+
+export const ThreadDescription = {
+  fontSize: '16px',
+  fontWeight: '500',
+  width: '100%',
+  display: 'inline-block',
+  lineHeight: '1.5',
+  padding: '0',
+  outline: 'none',
+  border: '0',
+  boxShadow: 'none',
+  color: '#171A21',
+  whiteSpace: 'pre-wrap',
+};

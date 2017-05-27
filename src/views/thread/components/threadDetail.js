@@ -14,9 +14,17 @@ import { setThreadLockMutation } from '../mutations';
 import { deleteThreadMutation } from '../../../api/thread';
 import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
-import { IconButton } from '../../../components/buttons';
-import { toPlainText, toState } from '../../../components/editor';
+import { IconButton, Button } from '../../../components/buttons';
+import Editor, {
+  fromPlainText,
+  toJSON,
+  toPlainText,
+  toState,
+} from '../../../components/editor';
 import { LinkPreview } from '../../../components/linkPreview';
+import { ThreadTitle, ThreadDescription } from '../style';
+// $FlowFixMe
+import Textarea from 'react-textarea-autosize';
 import {
   ThreadWrapper,
   ThreadHeading,
@@ -25,11 +33,44 @@ import {
   ContextRow,
   DropWrap,
   FlyoutRow,
+  EditDone,
 } from '../style';
 
 class ThreadDetailPure extends Component {
-  threadLock = (threadId, value) => {
-    const { setThreadLock, dispatch } = this.props;
+  state: {
+    isEditing: boolean,
+    body: string,
+    title: string,
+    linkPreview: Object,
+    linkPreviewTrueUrl: string,
+    linkPreviewLength: number,
+    fetchingLinkPreview: boolean,
+  };
+
+  constructor(props) {
+    super(props);
+
+    const { thread } = props;
+
+    this.state = {
+      isEditing: false,
+      body: fromPlainText(thread.content.body),
+      title: thread.content.title,
+      linkPreview: thread.attachments.length > 0 ? thread.attachments[0] : null,
+      linkPreviewTrueUrl: thread.attachments.length > 0
+        ? thread.attachments[0].trueUrl
+        : '',
+      linkPreviewLength: thread.attachments.length > 0 ? 1 : 0,
+      fetchingLinkPreview: false,
+    };
+
+    console.log(this.state);
+  }
+
+  threadLock = () => {
+    const { setThreadLock, dispatch, thread } = this.props;
+    const value = !thread.isLocked;
+    const threadId = thread.id;
 
     setThreadLock({
       threadId,
@@ -47,10 +88,11 @@ class ThreadDetailPure extends Component {
       });
   };
 
-  triggerDelete = (e, threadId) => {
+  triggerDelete = e => {
     e.preventDefault();
     const { thread, dispatch } = this.props;
 
+    const threadId = thread.id;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner =
       thread.channel.community.communityPermissions.isOwner;
@@ -76,10 +118,36 @@ class ThreadDetailPure extends Component {
     );
   };
 
-  triggerEdit = () => {};
+  toggleEdit = () => {
+    const { isEditing } = this.state;
+    this.setState({
+      isEditing: !isEditing,
+    });
+  };
+
+  changeTitle = e => {
+    const title = e.target.value;
+    this.setState({
+      title,
+    });
+  };
+
+  changeBody = state => {
+    this.setState({
+      body: state,
+    });
+  };
+
+  removeLinkPreview = () => {
+    this.setState({
+      linkPreview: null,
+      linkPreviewTrueUrl: '',
+    });
+  };
 
   render() {
     const { currentUser, thread } = this.props;
+    const { isEditing, linkPreview, linkPreviewTrueUrl } = this.state;
 
     let body = thread.content.body;
     if (thread.type === 'SLATE') {
@@ -98,6 +166,7 @@ class ThreadDetailPure extends Component {
           </Byline>
           {currentUser &&
             (thread.isCreator || isChannelOwner || isCommunityOwner) &&
+            !isEditing &&
             <DropWrap>
               <Icon glyph="settings" />
               <Flyout>
@@ -110,8 +179,7 @@ class ThreadDetailPure extends Component {
                         thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
                       }
                       tipLocation="top-left"
-                      onClick={() =>
-                        this.threadLock(thread.id, !thread.isLocked)}
+                      onClick={this.threadLock}
                     />
                   </FlyoutRow>}
                 {(thread.isCreator || isChannelOwner || isCommunityOwner) &&
@@ -121,7 +189,7 @@ class ThreadDetailPure extends Component {
                       hoverColor="warn.alt"
                       tipText="Delete thread"
                       tipLocation="top-left"
-                      onClick={e => this.triggerDelete(e, thread.id)}
+                      onClick={this.triggerDelete}
                     />
                   </FlyoutRow>}
                 {thread.isCreator &&
@@ -131,26 +199,65 @@ class ThreadDetailPure extends Component {
                       hoverColor="text.alt"
                       tipText="Edit"
                       tipLocation="top-left"
-                      onClick={() => this.triggerEdit()}
+                      onClick={this.toggleEdit}
                     />
                   </FlyoutRow>}
               </Flyout>
             </DropWrap>}
+
+          {isEditing &&
+            <EditDone>
+              <Button onClick={this.toggleEdit}>Save</Button>
+            </EditDone>}
         </ContextRow>
-        <ThreadHeading>
-          {thread.content.title}
-        </ThreadHeading>
-        {!!thread.content.body && <ThreadContent>{body}</ThreadContent>}
-        {// for now we know this means there is a link attachment
-        thread.attachments &&
-          thread.attachments.length > 0 &&
-          <LinkPreview
-            trueUrl={thread.attachments[0].data.trueUrl}
-            data={JSON.parse(thread.attachments[0].data)}
-            size={'small'}
-            editable={false}
-            margin={'16px 0 0 0'}
-          />}
+
+        {!isEditing &&
+          <span>
+            <ThreadHeading>
+              {thread.content.title}
+            </ThreadHeading>
+            <ThreadContent>{body}</ThreadContent>
+
+            {thread.attachments &&
+              thread.attachments.length > 0 &&
+              <LinkPreview
+                trueUrl={thread.attachments[0].data.trueUrl}
+                data={JSON.parse(thread.attachments[0].data)}
+                size={'small'}
+                editable={false}
+                margin={'16px 0 0 0'}
+              />}
+          </span>}
+
+        {isEditing &&
+          <span>
+            <Textarea
+              onChange={this.changeTitle}
+              style={ThreadTitle}
+              value={this.state.title}
+              placeholder={'A title for your thread...'}
+              ref="titleTextarea"
+              autoFocus
+            />
+
+            <Editor
+              onChange={this.changeBody}
+              onKeyDown={this.listenForUrl}
+              state={this.state.body}
+              style={ThreadDescription}
+              ref="bodyTextarea"
+              placeholder="Write more thoughts here, add photos, and anything else!"
+            />
+
+            {linkPreview &&
+              <LinkPreview
+                data={linkPreview}
+                size={'large'}
+                remove={this.removeLinkPreview}
+                editable={true}
+                trueUrl={linkPreviewTrueUrl}
+              />}
+          </span>}
       </ThreadWrapper>
     );
   }
