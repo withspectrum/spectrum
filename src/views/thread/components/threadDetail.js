@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 // $FlowFixMe
 import pure from 'recompose/pure';
 // $FlowFixMe
@@ -27,19 +27,10 @@ import {
   FlyoutRow,
 } from '../style';
 
-const ThreadDetailPure = ({
-  thread,
-  setThreadLock,
-  deleteThread,
-  dispatch,
-  currentUser,
-  history,
-}) => {
-  const isChannelOwner = thread.channel.channelPermissions.isOwner;
-  const isCommunityOwner =
-    thread.channel.community.communityPermissions.isOwner;
+class ThreadDetailPure extends Component {
+  threadLock = (threadId, value) => {
+    const { setThreadLock, dispatch } = this.props;
 
-  const threadLock = (threadId, value) =>
     setThreadLock({
       threadId,
       value,
@@ -54,9 +45,15 @@ const ThreadDetailPure = ({
       .catch(err => {
         dispatch(addToastWithTimeout('error', err.message));
       });
+  };
 
-  const triggerDelete = (e, threadId) => {
+  triggerDelete = (e, threadId) => {
     e.preventDefault();
+    const { thread, dispatch } = this.props;
+
+    const isChannelOwner = thread.channel.channelPermissions.isOwner;
+    const isCommunityOwner =
+      thread.channel.community.communityPermissions.isOwner;
 
     let message;
 
@@ -79,62 +76,85 @@ const ThreadDetailPure = ({
     );
   };
 
-  let body = thread.content.body;
-  if (thread.type === 'SLATE') {
-    body = toPlainText(toState(JSON.parse(body)));
-  }
+  triggerEdit = () => {};
 
-  return (
-    <ThreadWrapper>
-      <ContextRow>
-        <Byline to={`/users/${thread.creator.username}`}>
-          {thread.creator.name}
-        </Byline>
-        {currentUser &&
-          (thread.isCreator || isChannelOwner || isCommunityOwner) &&
-          <DropWrap>
-            <Icon glyph="settings" />
-            <Flyout>
-              {(isChannelOwner || isCommunityOwner) &&
-                <FlyoutRow>
-                  <IconButton
-                    glyph="freeze"
-                    hoverColor="space.light"
-                    tipText={thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'}
-                    tipLocation="top-left"
-                    onClick={() => threadLock(thread.id, !thread.isLocked)}
-                  />
-                </FlyoutRow>}
-              {(thread.isCreator || isChannelOwner || isCommunityOwner) &&
-                <FlyoutRow>
-                  <IconButton
-                    glyph="delete"
-                    hoverColor="warn.alt"
-                    tipText="Delete thread"
-                    tipLocation="top-left"
-                    onClick={e => triggerDelete(e, thread.id)}
-                  />
-                </FlyoutRow>}
-            </Flyout>
-          </DropWrap>}
-      </ContextRow>
-      <ThreadHeading>
-        {thread.content.title}
-      </ThreadHeading>
-      {!!thread.content.body && <ThreadContent>{body}</ThreadContent>}
-      {// for now we know this means there is a link attachment
-      thread.attachments &&
-        thread.attachments.length > 0 &&
-        <LinkPreview
-          trueUrl={thread.attachments[0].data.trueUrl}
-          data={JSON.parse(thread.attachments[0].data)}
-          size={'small'}
-          editable={false}
-          margin={'16px 0 0 0'}
-        />}
-    </ThreadWrapper>
-  );
-};
+  render() {
+    const { currentUser, thread } = this.props;
+
+    let body = thread.content.body;
+    if (thread.type === 'SLATE') {
+      body = toPlainText(toState(JSON.parse(body)));
+    }
+
+    const isChannelOwner = thread.channel.channelPermissions.isOwner;
+    const isCommunityOwner =
+      thread.channel.community.communityPermissions.isOwner;
+
+    return (
+      <ThreadWrapper>
+        <ContextRow>
+          <Byline to={`/users/${thread.creator.username}`}>
+            {thread.creator.name}
+          </Byline>
+          {currentUser &&
+            (thread.isCreator || isChannelOwner || isCommunityOwner) &&
+            <DropWrap>
+              <Icon glyph="settings" />
+              <Flyout>
+                {(isChannelOwner || isCommunityOwner) &&
+                  <FlyoutRow>
+                    <IconButton
+                      glyph="freeze"
+                      hoverColor="space.light"
+                      tipText={
+                        thread.isLocked ? 'Unfreeze chat' : 'Freeze chat'
+                      }
+                      tipLocation="top-left"
+                      onClick={() =>
+                        this.threadLock(thread.id, !thread.isLocked)}
+                    />
+                  </FlyoutRow>}
+                {(thread.isCreator || isChannelOwner || isCommunityOwner) &&
+                  <FlyoutRow>
+                    <IconButton
+                      glyph="delete"
+                      hoverColor="warn.alt"
+                      tipText="Delete thread"
+                      tipLocation="top-left"
+                      onClick={e => this.triggerDelete(e, thread.id)}
+                    />
+                  </FlyoutRow>}
+                {thread.isCreator &&
+                  <FlyoutRow>
+                    <IconButton
+                      glyph="edit"
+                      hoverColor="text.alt"
+                      tipText="Edit"
+                      tipLocation="top-left"
+                      onClick={() => this.triggerEdit()}
+                    />
+                  </FlyoutRow>}
+              </Flyout>
+            </DropWrap>}
+        </ContextRow>
+        <ThreadHeading>
+          {thread.content.title}
+        </ThreadHeading>
+        {!!thread.content.body && <ThreadContent>{body}</ThreadContent>}
+        {// for now we know this means there is a link attachment
+        thread.attachments &&
+          thread.attachments.length > 0 &&
+          <LinkPreview
+            trueUrl={thread.attachments[0].data.trueUrl}
+            data={JSON.parse(thread.attachments[0].data)}
+            size={'small'}
+            editable={false}
+            margin={'16px 0 0 0'}
+          />}
+      </ThreadWrapper>
+    );
+  }
+}
 
 const ThreadDetail = compose(
   setThreadLockMutation,
