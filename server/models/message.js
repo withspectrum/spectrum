@@ -22,8 +22,7 @@ const getLastMessage = (threadId: string): Promise<Object> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })
-    .orderBy(db.asc('timestamp'))
-    .nth(-1)
+    .max('timestamp')
     .run();
 };
 
