@@ -14,6 +14,7 @@ const SessionStore = require('session-rethinkdb')(session);
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
+const { execute, subscribe } = require('graphql');
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 const { apolloUploadExpress } = require('apollo-upload-server');
 const cors = require('cors');
@@ -22,7 +23,6 @@ const { maskErrors } = require('graphql-errors');
 
 const { db } = require('./models/db');
 const listeners = require('./subscriptions/listeners');
-const subscriptionManager = require('./subscriptions/manager');
 
 const schema = require('./schema');
 const { init: initPassport } = require('./authentication.js');
@@ -127,13 +127,13 @@ export type GraphQLContext = {
 const server = createServer(app);
 
 // Start subscriptions server
-const subscriptionsServer = new SubscriptionServer(
+const subscriptionsServer = SubscriptionServer.create(
   {
-    subscriptionManager,
+    execute,
+    subscribe,
+    schema,
     onConnect: connectionParams => {
-      return {
-        loaders: createLoaders(),
-      };
+      console.log('CONNECT');
     },
   },
   {
