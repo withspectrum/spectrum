@@ -1,6 +1,8 @@
 export const sortAndGroupMessages = messagesToSort => {
   if (!messagesToSort.length > 0) return [];
-  let messages = messagesToSort.map(message => message.node);
+  let messages = messagesToSort
+    .map(message => message.node)
+    .filter(message => message);
   let masterArray = [];
   let newArray = [];
   let checkId;

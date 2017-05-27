@@ -11,7 +11,8 @@ import {
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const wsClient = new SubscriptionClient(
-  `${IS_PROD ? `wss://${window.location.host}` : 'ws://localhost:3001'}/websocket`
+  `${IS_PROD ? `wss://${window.location.host}` : 'ws://localhost:3001'}/websocket`,
+  { reconnect: true }
 );
 
 // In production the API is at the same URL, in development it's at a different port
