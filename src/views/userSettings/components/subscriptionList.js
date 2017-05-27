@@ -3,13 +3,14 @@ import React from 'react';
 //$FlowFixMe
 // import { Link } from 'react-router-dom';
 //$FlowFixMe
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 //$FlowFixMe
 // import compose from 'recompose/compose';
 //$FlowFixMe
 // import pure from 'recompose/pure';
 import { ListCardItem } from '../../../components/listCard';
 import { IconButton } from '../../../components/buttons';
+import { openModal } from '../../../actions/modals';
 
 import {
   StyledCard,
@@ -20,7 +21,7 @@ import {
   // MoreLink,
 } from '../../../components/listCard/style';
 
-export const SubscriptionList = (props: Object) => {
+const SubscriptionList = ({ data, dispatch }) => {
   const ProSubscriptionContent = {
     name: 'Pro Account',
   };
@@ -30,6 +31,11 @@ export const SubscriptionList = (props: Object) => {
     name: 'Spectrum',
   };
   const PaidCommunityMeta = 'Cultivate · $800/month · 8,000 users';
+
+  const openProModal = () => {
+    console.log('opening modal');
+    dispatch(openModal('UPGRADE_MODAL'));
+  };
   // const { data } = props;
   return (
     <StyledCard>
@@ -43,7 +49,7 @@ export const SubscriptionList = (props: Object) => {
           meta={ProSubscriptionMeta}
           // TODO: onClick={() => openModal(proModal)}
         >
-          <IconButton glyph="settings" />
+          <IconButton glyph="settings" onClick={openProModal} />
         </ListCardItem>
 
         <ListCardItem
@@ -52,7 +58,7 @@ export const SubscriptionList = (props: Object) => {
           meta={PaidCommunityMeta}
           // TODO: onClick={() => openModal(proModal)}
         >
-          <IconButton glyph="settings" />
+          <IconButton glyph="settings" onClick={openProModal} />
         </ListCardItem>
         {/* TODO: {communities.map(item => {
             return (
@@ -74,3 +80,5 @@ export const SubscriptionList = (props: Object) => {
     </StyledCard>
   );
 };
+
+export default connect()(SubscriptionList);
