@@ -67,7 +67,11 @@ const CommunityViewPure = ({
         {community.isMember && currentUser
           ? <ThreadComposer activeCommunity={communitySlug} />
           : <span />}
-        <CommunityThreadFeed viewContext="community" slug={communitySlug} />
+        <CommunityThreadFeed
+          viewContext="community"
+          slug={communitySlug}
+          currentUser={currentUser}
+        />
       </Column>
     </AppViewWrapper>
   );
