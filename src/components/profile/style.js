@@ -157,3 +157,38 @@ export const Label = styled.span`
 export const Count = styled.span`
   font-weight: 700;
 `;
+
+export const CoverLink = styled(ProfileHeaderLink)`
+  position: absolute;
+  bottom: -56px;
+  left: 16px;
+  flex-direction: column;
+  align-items: center;
+  width: calc(100% - 32px);
+`;
+
+export const CoverAvatar = styled(ProfileAvatar)`
+  border: 2px solid ${({ theme }) => theme.text.reverse};
+  width: 64px;
+  flex: 0 0 64px;
+  margin-right: 8px;
+`;
+
+export const CoverTitle = styled(Title)`
+  font-size: 20px;
+  margin-top: 8px;
+`;
+
+export const CoverSubtitle = styled(Subtitle)`
+  text-align: center;
+  margin-top: 56px;
+`;
+
+export const CoverDescription = styled(Description)`
+  margin-top: 12px;
+  text-align: center;
+
+  p {
+    margin-bottom: 16px;
+  }
+`;
