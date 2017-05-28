@@ -1,10 +1,15 @@
 import { graphql } from 'graphql';
 import { db as mockTestDb, setup, teardown, data } from './db';
+import createLoaders from '../loaders';
 jest.mock('../models/db', () => ({
   db: mockTestDb,
 }));
 
 import schema from '../schema';
+
+// Nice little helper function for tests
+const request = query =>
+  graphql(schema, query, undefined, { loaders: createLoaders() });
 
 describe('queries', () => {
   beforeAll(() => setup(mockTestDb));
@@ -13,20 +18,24 @@ describe('queries', () => {
   it('should fetch a user', () => {
     const query = /* GraphQL */ `
 			{
-				user(id: "first-user") {
-					id
-					createdAt
-					lastSeen
-					profilePhoto
-					displayName
-					username
-					email
+				user(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a190") {
+          id
+          name
+          description
+          website
+          username
+          profilePhoto
+          coverPhoto
+          email
+          providerId
+          createdAt
+          lastSeen
 				}
 			}
 		`;
 
     expect.assertions(1);
-    return graphql(schema, query).then(result => {
+    return request(query).then(result => {
       expect(result).toMatchSnapshot();
     });
   });
@@ -41,16 +50,16 @@ describe('queries', () => {
 		`;
 
     expect.assertions(1);
-    return graphql(schema, query).then(result => {
+    return request(query).then(result => {
       expect(result).toMatchSnapshot();
     });
   });
 
-  describe('everything', () => {
+  describe.skip('everything', () => {
     it('should return the latest thread', () => {
       const query = /* GraphQL */ `
   			{
-  				user(id: "first-user") {
+  				user(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a190") {
   					everything(first: 1) {
               pageInfo {
                 hasNextPage
@@ -73,7 +82,7 @@ describe('queries', () => {
     it('should paginate based on the after property', () => {
       const query = /* GraphQL */ `
   			{
-  				user(id: "first-user") {
+  				user(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a190") {
   					everything(first: 1, after: "c2Vjb25kLXN0b3J5") {
               pageInfo {
                 hasNextPage
@@ -96,7 +105,7 @@ describe('queries', () => {
     it('should handle first being set to 0 correctly', () => {
       const noCursorQuery = /* GraphQL */ `
   			{
-  				user(id: "first-user") {
+  				user(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a190") {
   					everything(first: 0) {
               pageInfo {
                 hasNextPage
@@ -112,7 +121,7 @@ describe('queries', () => {
   		`;
       const cursorQuery = /* GraphQL */ `
   			{
-  				user(id: "first-user") {
+  				user(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a190") {
   					everything(first: 0, after: "Zmlyc3Qtc3Rvcnk=") {
               pageInfo {
                 hasNextPage
@@ -137,7 +146,4 @@ describe('queries', () => {
         });
     });
   });
-
-  it.skip('fetches a users communities');
-  it.skip("fetches a user's channels");
 });

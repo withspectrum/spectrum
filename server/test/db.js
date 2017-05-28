@@ -5,81 +5,28 @@ export const db = require('rethinkdbdash')({
   db: 'testing',
 });
 
+const {
+  DEFAULT_USERS,
+  DEFAULT_COMMUNITIES,
+  DEFAULT_CHANNELS,
+  DEFAULT_THREADS,
+  DEFAULT_NOTIFICATIONS,
+  DEFAULT_DIRECT_MESSAGE_THREADS,
+  DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
+  DEFAULT_USERS_COMMUNITIES,
+  DEFAULT_USERS_CHANNELS,
+} = require('../migrations/seed/default');
+
 export const data = {
-  users: [
-    {
-      id: 'first-user',
-      createdAt: new Date('January 2, 2017'),
-      displayName: 'First User',
-      lastSeen: new Date('February 2, 2017'),
-      profilePhoto: 'my-photo.jpg',
-      email: 'first.user@gmail.com',
-      username: 'first',
-    },
-  ],
-  communities: [
-    {
-      id: 'first-community',
-      createdAt: new Date('January 2, 2017'),
-      name: 'First',
-      slug: 'first',
-      members: ['first-user'],
-    },
-  ],
-  channels: [
-    {
-      id: 'first-channel',
-      community: 'first-community',
-      createdAt: new Date('January 3, 2017'),
-      modifiedAt: new Date('January 4, 2017'),
-      name: 'First Channel',
-      description: 'The first!',
-      slug: 'first',
-      members: ['first-user'],
-    },
-  ],
-  threads: [
-    {
-      id: 'first-thread',
-      createdAt: new Date('January 4, 2017'),
-      creatorId: 'first-user',
-      channel: 'first-channel',
-      modifiedAt: new Date('January 5, 2017'),
-      published: true,
-      content: {
-        title: 'First!',
-        body: 'What',
-      },
-      edits: [
-        {
-          timestamp: new Date('January 4, 2017'),
-          content: {
-            title: 'First!',
-            body: 'What',
-          },
-        },
-      ],
-    },
-    {
-      id: 'second-thread',
-      createdAt: new Date('January 5, 2017'),
-      creatorId: 'first-user',
-      channel: 'first-channel',
-      modifiedAt: new Date('January 6, 2017'),
-      published: true,
-      content: {
-        title: 'Second!',
-      },
-      edits: [
-        {
-          timestamp: new Date('January 5, 2017'),
-          content: {
-            title: 'First!',
-          },
-        },
-      ],
-    },
-  ],
+  users: DEFAULT_USERS,
+  communities: DEFAULT_COMMUNITIES,
+  channels: DEFAULT_CHANNELS,
+  threads: DEFAULT_THREADS,
+  notifications: DEFAULT_NOTIFICATIONS,
+  directMessageThreads: DEFAULT_DIRECT_MESSAGE_THREADS,
+  usersDirectMessageThreads: DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
+  usersCommunities: DEFAULT_USERS_COMMUNITIES,
+  usersChannels: DEFAULT_USERS_CHANNELS,
 };
 
 export const setup = db => {
@@ -88,22 +35,38 @@ export const setup = db => {
     .run()
     .then(() =>
       Promise.all([
-        db.tableCreate('threads').run(),
-        db.tableCreate('channels').run(),
         db.tableCreate('communities').run(),
-        db.tableCreate('messages').run(),
-        db.tableCreate('sessions').run(),
-        db.tableCreate('reactions').run(),
+        db.tableCreate('channels').run(),
+        db.tableCreate('threads').run(),
+        // db.tableCreate('messages').run(),
+        db.tableCreate('users').run(),
+        // db.tableCreate('reactions').run(),
+        db.tableCreate('notifications').run(),
         db.tableCreate('directMessageThreads').run(),
-        db.tableCreate('users', { primaryKey: 'id' }).run(),
+        db.tableCreate('usersCommunities').run(),
+        db.tableCreate('usersChannels').run(),
+        db.tableCreate('usersDirectMessageThreads').run(),
       ])
     )
     .then(result =>
       Promise.all([
-        db.table('users').insert(data.users).run(),
-        db.table('communities').insert(data.communities).run(),
-        db.table('channels').insert(data.channels).run(),
-        db.table('threads').insert(data.threads).run(),
+        db.table('communities').insert(DEFAULT_COMMUNITIES).run(),
+        db.table('channels').insert(DEFAULT_CHANNELS).run(),
+        db.table('threads').insert(DEFAULT_THREADS).run(),
+        // db.table('messages').insert(DEFAULT_MESSAGES).run(),
+        db.table('users').insert(DEFAULT_USERS).run(),
+        // db.table('reactions').insert(DEFAULT_REACTIONS).run(),
+        db.table('notifications').insert(DEFAULT_NOTIFICATIONS).run(),
+        db
+          .table('directMessageThreads')
+          .insert(DEFAULT_DIRECT_MESSAGE_THREADS)
+          .run(),
+        db.table('usersCommunities').insert(DEFAULT_USERS_COMMUNITIES).run(),
+        db.table('usersChannels').insert(DEFAULT_USERS_CHANNELS).run(),
+        db
+          .table('usersDirectMessageThreads')
+          .insert(DEFAULT_USERS_DIRECT_MESSAGE_THREADS)
+          .run(),
       ])
     )
     .catch(err => {

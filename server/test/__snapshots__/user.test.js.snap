@@ -1,86 +1,18 @@
-exports[`queries everything should handle first being set to 0 correctly 1`] = `
-Object {
-  "data": Object {
-    "user": Object {
-      "everything": Object {
-        "edges": Array [],
-        "pageInfo": Object {
-          "hasNextPage": true,
-        },
-      },
-    },
-  },
-}
-`;
-
-exports[`queries everything should handle first being set to 0 correctly 2`] = `
-Object {
-  "data": Object {
-    "user": Object {
-      "everything": Object {
-        "edges": Array [],
-        "pageInfo": Object {
-          "hasNextPage": false,
-        },
-      },
-    },
-  },
-}
-`;
-
-exports[`queries everything should paginate based on the after property 1`] = `
-Object {
-  "data": Object {
-    "user": Object {
-      "everything": Object {
-        "edges": Array [
-          Object {
-            "node": Object {
-              "id": "first-thread",
-            },
-          },
-        ],
-        "pageInfo": Object {
-          "hasNextPage": false,
-        },
-      },
-    },
-  },
-}
-`;
-
-exports[`queries everything should return the latest thread 1`] = `
-Object {
-  "data": Object {
-    "user": Object {
-      "everything": Object {
-        "edges": Array [
-          Object {
-            "node": Object {
-              "id": "second-thread",
-            },
-          },
-        ],
-        "pageInfo": Object {
-          "hasNextPage": true,
-        },
-      },
-    },
-  },
-}
-`;
-
 exports[`queries should fetch a user 1`] = `
 Object {
   "data": Object {
     "user": Object {
-      "createdAt": "2017-01-01T23:00:00.000Z",
-      "displayName": "First User",
-      "email": "first.user@gmail.com",
-      "lastSeen": "2017-02-01T23:00:00.000Z",
-      "profilePhoto": "my-photo.jpg",
-      "id": "first-user",
-      "username": "first",
+      "coverPhoto": "https://pbs.twimg.com/profile_banners/2451223458/1479507323/1500x500",
+      "createdAt": "2016-12-31T23:00:00.000Z",
+      "description": "Makes styled-components, react-boilerplate and micro-analytics 💅 Speciality coffee geek, skier, traveller ☕",
+      "email": "hi@mxstbr.com",
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a190",
+      "lastSeen": "2016-12-31T23:00:00.000Z",
+      "name": "Max Stoiber",
+      "profilePhoto": "https://img.gs/jztmrqvgzv/500/mxstbr.com/headshot.jpeg",
+      "providerId": "2451223458",
+      "username": "mxstbr",
+      "website": "https://mxstbr.com",
     },
   },
 }
