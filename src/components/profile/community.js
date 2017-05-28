@@ -64,7 +64,6 @@ const CommunityWithData = ({
   currentUser: Object,
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
-  const websiteUrl = addProtocolToString(community.website);
 
   const toggleMembership = communityId => {
     toggleCommunityMembership({ communityId })
@@ -151,7 +150,7 @@ const CommunityWithData = ({
           {community.website &&
             <ExtLink>
               <Icon glyph="link" size={24} />
-              <a href={websiteUrl}>
+              <a href={addProtocolToString(community.website)}>
                 {community.website}
               </a>
             </ExtLink>}

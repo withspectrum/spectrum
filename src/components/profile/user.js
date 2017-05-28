@@ -69,7 +69,6 @@ const UserWithData = ({
   history: Object,
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
-  const websiteUrl = addProtocolToString(user.website);
 
   if (!user) {
     return <div />;
@@ -105,7 +104,7 @@ const UserWithData = ({
           {user.website &&
             <ExtLink>
               <Icon glyph="link" size={24} />
-              <a href={websiteUrl}>
+              <a href={addProtocolToString(user.website)}>
                 {user.website}
               </a>
             </ExtLink>}
