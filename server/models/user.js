@@ -102,7 +102,9 @@ const getEverything = (userId: string): Promise<Array<any>> => {
     })
     .zip()
     .filter({ isBlocked: false, isPending: false })
-    .without('isBlocked', 'isPending');
+    .without('isBlocked', 'isPending')
+    .orderBy(db.desc('createdAt'))
+    .run();
 };
 
 const getUsersThreadCount = (
