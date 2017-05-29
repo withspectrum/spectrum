@@ -74,52 +74,53 @@ export default (
         });
       });
     }
-  }
-
-  if (second) {
-    /**
-     * Channel
-     */
-    promise = request(
-      /* GraphQL */ `
-      {
-        channel(channelSlug: "${second}", communitySlug: "${first}") {
-          name
-          description
-          community {
-            name
+    default: {
+      if (second) {
+        /**
+         * Channel
+         */
+        promise = request(
+          /* GraphQL */ `
+          {
+            channel(channelSlug: "${second}", communitySlug: "${first}") {
+              name
+              description
+              community {
+                name
+              }
+            }
           }
-        }
+        `
+        ).then(res => {
+          const { channel, channel: { community } } = res.data;
+          return setDefault({
+            title: `${channel.name} | ${community.name}`,
+            description: channel.description,
+          });
+        });
+        // TODO: Longer blacklist here
+      } else if (first !== 'home' && first !== 'robots.txt') {
+        /**
+         * Community
+         */
+        promise = request(
+          /* GraphQL */ `
+          {
+            community(slug: "${first}") {
+              name
+              description
+            }
+          }
+        `
+        ).then(res => {
+          const { community } = res.data;
+          return setDefault({
+            title: `${community.name} on Spectrum`,
+            description: community.description,
+          });
+        });
       }
-    `
-    ).then(res => {
-      const { channel, channel: { community } } = res.data;
-      return setDefault({
-        title: `${channel.name} | ${community.name}`,
-        description: channel.description,
-      });
-    });
-    // TODO: Longer blacklist here
-  } else if (first !== 'home') {
-    /**
-     * Community
-     */
-    promise = request(
-      /* GraphQL */ `
-      {
-        community(slug: "${first}") {
-          name
-          description
-        }
-      }
-    `
-    ).then(res => {
-      const { community } = res.data;
-      return setDefault({
-        title: `${community.name} on Spectrum`,
-        description: community.description,
-      });
-    });
+    }
   }
 
   if (!promise) return Promise.resolve(DEFAULT_META);
