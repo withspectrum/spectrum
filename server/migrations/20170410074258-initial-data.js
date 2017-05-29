@@ -13,6 +13,7 @@ exports.up = function(r, conn) {
       r.tableCreate('users').run(conn),
       r.tableCreate('notifications').run(conn),
       r.tableCreate('subscriptions').run(conn),
+      r.tableCreate('invoices').run(conn),
       r.tableCreate('usersCommunities').run(conn),
       r.tableCreate('usersChannels').run(conn),
       r.tableCreate('usersDirectMessageThreads').run(conn),
