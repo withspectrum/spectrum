@@ -76,27 +76,7 @@ export default (
     }
   }
 
-  if (!second) {
-    /**
-     * Community
-     */
-    promise = request(
-      /* GraphQL */ `
-      {
-        community(slug: "${first}") {
-          name
-          description
-        }
-      }
-    `
-    ).then(res => {
-      const { community } = res.data;
-      return setDefault({
-        title: `${community.name} on Spectrum`,
-        description: community.description,
-      });
-    });
-  } else {
+  if (second) {
     /**
      * Channel
      */
@@ -119,7 +99,30 @@ export default (
         description: channel.description,
       });
     });
+    // TODO: Longer blacklist here
+  } else if (first !== 'home') {
+    /**
+     * Community
+     */
+    promise = request(
+      /* GraphQL */ `
+      {
+        community(slug: "${first}") {
+          name
+          description
+        }
+      }
+    `
+    ).then(res => {
+      const { community } = res.data;
+      return setDefault({
+        title: `${community.name} on Spectrum`,
+        description: community.description,
+      });
+    });
   }
+
+  if (!promise) return Promise.resolve(DEFAULT_META);
 
   return promise.catch(err => {
     console.log(`⚠️ Failed to load metadata for ${url}! ⚠️`);
