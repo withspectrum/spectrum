@@ -113,7 +113,7 @@ export default (
       }
     `
     ).then(res => {
-      const { channel, community } = res.data;
+      const { channel, channel: { community } } = res.data;
       return setDefault({
         title: `${channel.name} | ${community.name}`,
         description: channel.description,
