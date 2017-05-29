@@ -17,7 +17,13 @@ import { openModal } from '../../actions/modals';
 import { addToastWithTimeout } from '../../actions/toasts';
 
 import { Button, TextButton, IconButton } from '../buttons';
-import { Input, UnderlineInput, TextArea } from '../formElements';
+import {
+  Input,
+  UnderlineInput,
+  TextArea,
+  PhotoInput,
+  CoverInput,
+} from '../formElements';
 import {
   StyledCard,
   Form,
@@ -26,6 +32,7 @@ import {
   Actions,
   ImgPreview,
   TertiaryActionContainer,
+  ImageInputWrapper,
 } from './style';
 
 class CommunityWithData extends Component {
@@ -36,7 +43,9 @@ class CommunityWithData extends Component {
     communityId: string,
     website: string,
     image: string,
-    file: ?string,
+    coverPhoto: string,
+    file: ?Object,
+    coverFile: ?Object,
     communityData: Object,
   };
   constructor(props) {
@@ -50,7 +59,9 @@ class CommunityWithData extends Component {
       communityId: community.id,
       website: community.website,
       image: community.profilePhoto,
+      coverPhoto: community.coverPhoto,
       file: null,
+      coverFile: null,
       communityData: community,
     };
   }
@@ -97,14 +108,36 @@ class CommunityWithData extends Component {
     reader.readAsDataURL(file);
   };
 
+  setCommunityCover = e => {
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        coverFile: file,
+        coverPhoto: reader.result,
+      });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   save = e => {
     e.preventDefault();
-    const { name, description, website, file, communityId } = this.state;
+    const {
+      name,
+      description,
+      website,
+      file,
+      coverFile,
+      communityId,
+    } = this.state;
     const input = {
       name,
       description,
       website,
       file,
+      coverFile,
       communityId,
     };
     this.props
@@ -162,7 +195,7 @@ class CommunityWithData extends Component {
   };
 
   render() {
-    const { name, slug, description, image, website } = this.state;
+    const { name, slug, description, image, coverPhoto, website } = this.state;
     const { community } = this.props;
 
     if (!community) {
@@ -181,6 +214,18 @@ class CommunityWithData extends Component {
       <StyledCard>
         <FormTitle>Community Settings</FormTitle>
         <Form>
+          <ImageInputWrapper>
+            <CoverInput
+              onChange={this.setCommunityCover}
+              defaultValue={coverPhoto}
+            />
+
+            <PhotoInput
+              onChange={this.setCommunityPhoto}
+              defaultValue={image}
+            />
+          </ImageInputWrapper>
+
           <Input defaultValue={name} onChange={this.changeName}>Name</Input>
           <UnderlineInput defaultValue={slug} disabled>
             sp.chat/
@@ -191,18 +236,6 @@ class CommunityWithData extends Component {
           >
             Description
           </TextArea>
-
-          <Input
-            inputType="file"
-            accept=".png, .jpg, .jpeg, .gif"
-            defaultValue={name}
-            onChange={this.setCommunityPhoto}
-            multiple={false}
-          >
-            Add a logo or photo
-
-            {!image ? <span>add</span> : <ImgPreview src={image} />}
-          </Input>
 
           <Input
             defaultValue={website}

@@ -15,6 +15,7 @@ import { addProtocolToString } from '../../helpers/utils';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import Icon from '../icons';
 import { MetaData } from './metaData';
+import { CoverPhoto } from './coverPhoto';
 import type { ProfileSizeProps } from './index';
 import { Avatar } from '../avatar';
 import Badge from '../badges';
@@ -24,6 +25,11 @@ import {
   ProfileHeaderLink,
   ProfileHeaderMeta,
   ProfileHeaderAction,
+  CoverLink,
+  CoverAvatar,
+  CoverTitle,
+  CoverSubtitle,
+  CoverDescription,
   Title,
   Subtitle,
   Description,
@@ -73,61 +79,87 @@ const UserWithData = ({
     history.push('/messages/new');
   };
 
-  // TODO: sort out this flow error */
-  return (
-    <Card>
-      <ProfileHeader>
-        <ProfileHeaderLink to={`../users/${currentUser.username}`}>
-          <Avatar
-            margin={'0 12px 0 0'}
-            size={40}
-            radius={4}
-            src={user.profilePhoto}
-          />
-          <ProfileHeaderMeta>
-            <Title>{user.name}</Title>
-            <Subtitle>
-              @{user.username}
-              {user.isAdmin && <Badge type="admin" />}
-              {/* user.isPro && <Badge type='pro' /> */}
-            </Subtitle>
-          </ProfileHeaderMeta>
-        </ProfileHeaderLink>
-        {currentUser && currentUser.id === user.id
-          ? <Link to={`../users/${currentUser.username}/settings`}>
-              <ProfileHeaderAction
-                glyph="settings"
-                tipText={`Edit profile`}
+  if (componentSize === 'full') {
+    return (
+      <Card>
+        <CoverPhoto user={user} currentUser={currentUser}>
+          <CoverLink to={`../users/${currentUser.username}`}>
+            <CoverAvatar src={user.profilePhoto} />
+            <CoverTitle>{user.name}</CoverTitle>
+          </CoverLink>
+        </CoverPhoto>
+        <CoverSubtitle>
+          @{user.username}
+          {user.isAdmin && <Badge type="admin" />}
+          {user.isPro && <Badge type="pro" />}
+        </CoverSubtitle>
+
+        {(user.description || user.website) &&
+          <CoverDescription>
+            {user.description && <p>{user.description}</p>}
+            {user.website &&
+              <ExtLink>
+                <Icon glyph="link" size={24} />
+                <a href={addProtocolToString(user.website)}>
+                  {user.website}
+                </a>
+              </ExtLink>}
+          </CoverDescription>}
+      </Card>
+    );
+  } else {
+    return (
+      <Card>
+        <ProfileHeader>
+          <ProfileHeaderLink to={`../users/${currentUser.username}`}>
+            <Avatar
+              margin={'0 12px 0 0'}
+              size={40}
+              radius={20}
+              src={user.profilePhoto}
+            />
+            <ProfileHeaderMeta>
+              <Title>{user.name}</Title>
+              <Subtitle>
+                @{user.username}
+                {user.isAdmin && <Badge type="admin" />}
+                {user.isPro && <Badge type="pro" />}
+              </Subtitle>
+            </ProfileHeaderMeta>
+          </ProfileHeaderLink>
+          {currentUser && currentUser.id === user.id
+            ? <Link to={`../users/${currentUser.username}/settings`}>
+                <ProfileHeaderAction
+                  glyph="settings"
+                  tipText={`Edit profile`}
+                  tipLocation={'top-left'}
+                />
+              </Link>
+            : <ProfileHeaderAction
+                glyph="message-fill"
+                color="brand.alt"
+                onClick={() => initMessage()}
+                tipText={`Message ${user.name}`}
                 tipLocation={'top-left'}
-              />
-            </Link>
-          : <ProfileHeaderAction
-              glyph="message-new"
-              color="brand.alt"
-              onClick={() => initMessage()}
-              tipText={`Message ${user.name}`}
-              tipLocation={'top-left'}
-            />}
-      </ProfileHeader>
+              />}
+        </ProfileHeader>
 
-      {componentSize !== 'mini' &&
-        componentSize !== 'small' &&
-        (user.description && user.description !== null) &&
-        <Description>
-          <p>{user.description}</p>
-          {user.website &&
-            <ExtLink>
-              <Icon glyph="link" size={24} />
-              <a href={addProtocolToString(user.website)}>
-                {user.website}
-              </a>
-            </ExtLink>}
-        </Description>}
-
-      {(componentSize === 'large' || componentSize === 'full') &&
-        <MetaData data={{ threads: user.threadCount }} />}
-    </Card>
-  );
+        {componentSize !== 'mini' &&
+          componentSize !== 'small' &&
+          (user.description && user.description !== null) &&
+          <Description>
+            <p>{user.description}</p>
+            {user.website &&
+              <ExtLink>
+                <Icon glyph="link" size={24} />
+                <a href={user.website}>
+                  {user.website}
+                </a>
+              </ExtLink>}
+          </Description>}
+      </Card>
+    );
+  }
 };
 
 const User = compose(displayLoadingCard, withRouter, pure)(UserWithData);
