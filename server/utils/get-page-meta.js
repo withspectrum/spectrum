@@ -11,6 +11,10 @@ const DEFAULT_META = {
   description: 'Where communities live.',
 };
 
+// Don't even try if the path is /<value> any of these
+// TODO: Longer, more complete blacklist here
+const PATH_BLACKLIST = ['robots.txt', 'home', 'messages'];
+
 const setDefault = (input: Meta): Meta => {
   return Object.assign({}, DEFAULT_META, input);
 };
@@ -25,6 +29,13 @@ export default (
   let promise;
 
   switch (first) {
+    case 'explore': {
+      promise = Promise.resolve({
+        title: 'Explore | Spectrum',
+        description: 'Explore some of the communities on Spectrum',
+      });
+      break;
+    }
     case 'thread': {
       /**
        * Thread
@@ -77,7 +88,8 @@ export default (
       break;
     }
     default: {
-      if (second) {
+      const isBlacklisted = PATH_BLACKLIST.includes(first);
+      if (second && !isBlacklisted) {
         /**
          * Channel
          */
@@ -100,8 +112,7 @@ export default (
             description: channel.description,
           });
         });
-        // TODO: Longer blacklist here
-      } else if (first !== 'home' && first !== 'robots.txt') {
+      } else if (!isBlacklisted) {
         /**
          * Community
          */
