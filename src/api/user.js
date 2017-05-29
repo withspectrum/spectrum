@@ -83,3 +83,31 @@ export const CHECK_UNIQUE_USERNAME_QUERY = gql`
   }
   ${userInfoFragment}
 `;
+
+/*
+  Upload a new profilePhoto for the given currentUser
+*/
+const UPGRADE_TO_PRO_MUTATION = gql`
+  mutation upgradeToPro($input: UpgradeToProInput!) {
+    upgradeToPro(input: $input) {
+      ...userInfo
+    }
+  }
+  ${userInfoFragment}
+`;
+
+const UPGRADE_TO_PRO_OPTIONS = {
+  props: ({ input, mutate }) => ({
+    upgradeToPro: input =>
+      mutate({
+        variables: {
+          input,
+        },
+      }),
+  }),
+};
+
+export const upgradeToProMutation = graphql(
+  UPGRADE_TO_PRO_MUTATION,
+  UPGRADE_TO_PRO_OPTIONS
+);

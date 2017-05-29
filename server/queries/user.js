@@ -7,6 +7,7 @@ const {
 const { getCommunitiesByUser } = require('../models/community');
 const { getChannelsByUser } = require('../models/channel');
 const { getThreadsByUser } = require('../models/thread');
+const { getUserSubscriptions } = require('../models/subscription');
 const {
   getDirectMessageThreadsByUser,
 } = require('../models/directMessageThread');
@@ -44,6 +45,12 @@ module.exports = {
     },
     isAdmin: ({ id }: { id: string }) => {
       return isAdmin(id);
+    },
+    isPro: ({ id }: { id: string }) => {
+      return getUserSubscriptions(id).then(
+        sub =>
+          (sub !== null && sub.stripeData.status === 'active' ? true : false)
+      );
     },
     everything: (
       { id }: { id: string },

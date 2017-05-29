@@ -21,7 +21,7 @@ import {
   // MoreLink,
 } from '../../../components/listCard/style';
 
-const SubscriptionList = ({ data, dispatch }) => {
+const SubscriptionList = ({ data, currentUser, dispatch }) => {
   const ProSubscriptionContent = {
     name: 'Pro Account',
   };
@@ -33,8 +33,7 @@ const SubscriptionList = ({ data, dispatch }) => {
   const PaidCommunityMeta = 'Cultivate · $800/month · 8,000 users';
 
   const openProModal = () => {
-    console.log('opening modal');
-    dispatch(openModal('UPGRADE_MODAL'));
+    dispatch(openModal('UPGRADE_MODAL', { user: currentUser }));
   };
   // const { data } = props;
   return (

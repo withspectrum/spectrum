@@ -13,7 +13,6 @@ exports.up = function(r, conn) {
       r.tableCreate('users').run(conn),
       r.tableCreate('notifications').run(conn),
       r.tableCreate('subscriptions').run(conn),
-      r.tableCreate('invoices').run(conn),
       r.tableCreate('usersCommunities').run(conn),
       r.tableCreate('usersChannels').run(conn),
       r.tableCreate('usersDirectMessageThreads').run(conn),
@@ -28,8 +27,6 @@ exports.up = function(r, conn) {
             .table('subscriptions')
             .indexCreate('userId', r.row('userId'))
             .run(conn),
-          // index invoices by userId
-          r.table('invoices').indexCreate('userId', r.row('userId')).run(conn),
           // index invoices by communityId
           r
             .table('invoices')
@@ -131,8 +128,8 @@ exports.down = function(r, conn) {
     r.tableDrop('directMessageThreads').run(conn),
     r.tableDrop('reactions').run(conn),
     r.tableDrop('notifications').run(conn),
-    r.tableCreate('subscriptions').run(conn),
-    r.tableCreate('invoices').run(conn),
+    r.tableDrop('subscriptions').run(conn),
+    r.tableDrop('invoices').run(conn),
     r.tableDrop('usersCommunities').run(conn),
     r.tableDrop('usersChannels').run(conn),
     r.tableDrop('usersDirectMessageThreads').run(conn),

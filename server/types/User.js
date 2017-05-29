@@ -85,6 +85,7 @@ const User = /* GraphQL */ `
 		# non-schema fields
 		threadCount: Int
 		isAdmin: Boolean!
+		isPro: Boolean!
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
 		directMessageThreadsConnection: UserDirectMessageThreadsConnection!
@@ -106,8 +107,15 @@ const User = /* GraphQL */ `
 		website: String
 	}
 
+	input UpgradeToProInput {
+		plan: String!
+		token: String!
+	}
+
 	extend type Mutation {
 		editUser(input: EditUserInput!): User
+		upgradeToPro(input: UpgradeToProInput!): User
+		downgradeFromPro: User
 	}
 `;
 
