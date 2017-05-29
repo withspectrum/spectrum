@@ -10,7 +10,14 @@ import { SERVER_URL } from '../../api';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
-import { Title, Subtitle, Actions, NullCol, UpgradeError } from './style';
+import {
+  Title,
+  Subtitle,
+  Actions,
+  NullCol,
+  UpgradeError,
+  Profile,
+} from './style';
 // $FlowFixMe
 import StripeCheckout from 'react-stripe-checkout';
 import { upgradeToProMutation } from '../../api/user';
@@ -298,9 +305,14 @@ class UpsellUpgradeToProPure extends Component {
     const title = 'Upgrade to Pro';
     const subtitle = `We're hard at work building features for Spectrum Pros. Your early support helps us get there faster – thank you!`;
     const { upgradeError, isLoading } = this.state;
+    const { currentUser } = this.props;
 
     return (
-      <NullCard>
+      <NullCard bg="pro">
+        <Profile>
+          <img alt={currentUser.name} src={currentUser.profilePhoto} />
+          <span>PRO</span>
+        </Profile>
         <Title>{title}</Title>
         <Subtitle>{subtitle}</Subtitle>
 
@@ -324,6 +336,10 @@ class UpsellUpgradeToProPure extends Component {
   }
 }
 
-export const UpsellUpgradeToPro = compose(upgradeToProMutation, connect())(
-  UpsellUpgradeToProPure
-);
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+export const UpsellUpgradeToPro = compose(
+  upgradeToProMutation,
+  connect(mapStateToProps)
+)(UpsellUpgradeToProPure);

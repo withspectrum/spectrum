@@ -1,7 +1,7 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
-import { FlexRow, FlexCol } from '../globals';
+import { FlexRow, FlexCol, Gradient } from '../globals';
 
 export const Title = styled.h1`
   color: ${props => props.theme.text.default};
@@ -80,4 +80,30 @@ export const UpgradeError = styled.p`
   font-size: 14px;
   text-align: center;
   margin: 16px 0 0;
+`;
+
+export const Profile = styled.div`
+  position: relative;
+  padding: 16px 0;
+
+  img {
+    border-radius: 48px;
+    width: 48px;
+    height: 48px;
+  }
+
+  span {
+    background-color: ${({ theme }) => theme.success.default};
+    background-image: ${({ theme }) => Gradient(theme.space.light, theme.success.default)};
+    position: absolute;
+    left: 75%;
+    top: 48px;
+    color: ${({ theme }) => theme.text.reverse};
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 4px;
+    border-radius: 8px;
+    line-height: 1.5;
+    border: 2px solid #fff;
+  }
 `;

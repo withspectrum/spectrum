@@ -74,6 +74,7 @@ export const Title = styled.div`
 
 export const Header = styled.div`
   padding: 20px 24px 0;
+  display: ${props => (props.noHeader ? 'none' : 'flex')};
 `;
 
 export const ModalContent = styled.div``;
