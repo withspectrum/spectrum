@@ -16,7 +16,10 @@ const DEFAULT_META = {
 const PATH_BLACKLIST = ['robots.txt', 'home', 'messages'];
 
 const setDefault = (input: Meta): Meta => {
-  return Object.assign({}, DEFAULT_META, input);
+  return {
+    title: input.title || DEFAULT_META.title,
+    description: input.description || DEFAULT_META.description,
+  };
 };
 
 export default (
