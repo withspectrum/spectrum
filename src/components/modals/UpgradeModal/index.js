@@ -88,7 +88,6 @@ class UpgradeModal extends React.Component {
     this.props
       .downgradeFromPro()
       .then(({ data: { downgradeFromPro } }) => {
-        console.log('returned from mutation with ', downgradeFromPro);
         this.props.dispatch(
           addToastWithTimeout(
             'neutral',

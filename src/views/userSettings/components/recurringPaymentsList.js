@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { ListCardItem } from '../../../components/listCard';
 import { IconButton, Button } from '../../../components/buttons';
-import { NullCard } from '../../../components/upsell';
+import { UpsellUpgradeToPro } from '../../../components/upsell';
 import { openModal } from '../../../actions/modals';
 import { convertTimestampToDate } from '../../../helpers/utils';
 import { getCurrentUserRecurringPayments } from '../../../api/user';
@@ -56,11 +56,7 @@ const RecurringPaymentsList = ({ data: { user }, currentUser, dispatch }) => {
       </StyledCard>
     );
   } else {
-    return (
-      <NullCard heading={'Upgrade to Pro'} copy={'Foo'}>
-        <Button onClick={openProModal}>Upgrade to Pro</Button>
-      </NullCard>
-    );
+    return <UpsellUpgradeToPro />;
   }
 };
 

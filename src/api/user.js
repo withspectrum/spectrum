@@ -91,6 +91,12 @@ const UPGRADE_TO_PRO_MUTATION = gql`
   mutation upgradeToPro($input: UpgradeToProInput!) {
     upgradeToPro(input: $input) {
       ...userInfo
+      recurringPayments {
+        plan
+        amount
+        created
+        status
+      }
     }
   }
   ${userInfoFragment}
@@ -119,6 +125,12 @@ const DOWNGRADE_FROM_PRO_MUTATION = gql`
   mutation downgradeFromPro {
     downgradeFromPro {
       ...userInfo
+      recurringPayments {
+        plan
+        amount
+        created
+        status
+      }
     }
   }
   ${userInfoFragment}

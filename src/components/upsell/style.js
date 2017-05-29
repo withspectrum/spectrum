@@ -16,6 +16,16 @@ export const Title = styled.h1`
   text-align: center;
 `;
 
+export const Actions = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    margin: 0 8px;
+  }
+`;
+
 export const Subtitle = styled.h2`
 
 width: 100%;
@@ -63,4 +73,11 @@ export const NullRow = styled(FlexRow)`
   width: 100%;
   height: auto;
   padding: 1rem 15%;
+`;
+
+export const UpgradeError = styled.p`
+  color: ${props => props.theme.warn.default};
+  font-size: 14px;
+  text-align: center;
+  margin: 16px 0 0;
 `;

@@ -129,25 +129,27 @@ module.exports = {
 
               // update the customer, keeping the email up to date and adding
               // a newly updated source
-              stripe.customers
-                .update(recurringPaymentToEvaluate.stripeData.customer, {
-                  email: currentUser.email,
-                  source: token.id,
-                })
-                // then create a new recurringPayment
-                .then(customer =>
-                  stripe.subscriptions.create({
-                    plan,
-                    customer: customer.id,
+              return (
+                stripe.customers
+                  .update(recurringPaymentToEvaluate.stripeData.customer, {
+                    email: currentUser.email,
+                    source: token.id,
                   })
-                )
-                // update the record in the database
-                .then(recurringPayment =>
-                  updateRecurringPayment(
-                    recurringPaymentToEvaluate.id,
-                    recurringPayment
+                  // then create a new recurringPayment
+                  .then(customer =>
+                    stripe.subscriptions.create({
+                      plan,
+                      customer: customer.id,
+                    })
                   )
-                );
+                  // update the record in the database
+                  .then(recurringPayment =>
+                    updateRecurringPayment(
+                      recurringPaymentToEvaluate.id,
+                      recurringPayment
+                    )
+                  )
+              );
             }
           }
         })
