@@ -175,6 +175,7 @@ export const PhotoInputLabel = styled.label`
   width: 48px;
   border-radius: 8px;
   margin-top: 8px;
+  background-color: ${({ theme }) => theme.brand.alt};
 `;
 
 export const CoverInputLabel = styled.label`
@@ -183,11 +184,12 @@ export const CoverInputLabel = styled.label`
   width: 100%;
   margin-top: 8px;
   border-radius: 8px;
-  background-color: ${({ theme }) => theme.brand.alt};
+  background-color: ${({ theme }) => theme.bg.reverse};
 `;
 
 export const ProfileImage = styled.img`
   position: absolute;
+  object-fit: cover;
   z-index: 9;
   top: 0;
   right: 0;
@@ -200,7 +202,9 @@ export const ProfileImage = styled.img`
 `;
 
 export const CoverImage = styled.div`
-  background-image: ${props => props.src};
+  background-image: url('${props => props.src}');
+  background-position: center;
+  background-size: cover;
   position: absolute;
   z-index: 9;
   top: 0;
@@ -210,6 +214,10 @@ export const CoverImage = styled.div`
   width: 100%;
   height: 96px;
   border-radius: 8px;
+
+  &:hover {
+    opacity: 0.25;
+  }
 `;
 
 export const InputOverlay = styled.div`

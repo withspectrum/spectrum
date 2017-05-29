@@ -61,6 +61,7 @@ export const PhotoInput = (props: InputProps) => {
         name="file"
         accept=".png, .jpg, .jpeg, .gif, .mp4"
         multiple={false}
+        onChange={props.onChange}
       />
     </PhotoInputLabel>
   );
@@ -79,6 +80,7 @@ export const CoverInput = (props: InputProps) => {
         name="file"
         accept=".png, .jpg, .jpeg, .gif, .mp4"
         multiple={false}
+        onChange={props.onChange}
       />
     </CoverInputLabel>
   );

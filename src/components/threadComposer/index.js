@@ -75,6 +75,7 @@ class ThreadComposerWithData extends Component {
       edge => edge.node
     );
 
+    console.log(availableCommunities, availableChannels);
     /*
       If a user is viewing a communit or channel, we use the url as a prop
       to set a default activeCommunity and activeChannel
@@ -85,7 +86,7 @@ class ThreadComposerWithData extends Component {
     const activeCommunity = props.activeCommunity
       ? availableCommunities.filter(community => {
           return community.slug === props.activeCommunity;
-        }).id
+        })[0].id
       : availableCommunities[0].id;
     const activeChannel = props.activeChannel
       ? availableChannels

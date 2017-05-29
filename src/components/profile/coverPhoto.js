@@ -20,8 +20,8 @@ const PhotoContainer = styled.div`
 
 const CoverAction = styled(ProfileHeaderAction)`
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 12px;
+  right: 12px;
 `;
 
 export const CoverPhoto = (props: Object) => {
@@ -35,16 +35,16 @@ export const CoverPhoto = (props: Object) => {
                 color="space.soft"
                 hoverColor="text.reverse"
                 tipText={`Edit profile`}
-                tipLocation={'top-left'}
+                tipLocation={'left'}
               />
             </Link>
           : <CoverAction
-              glyph="message-new"
+              glyph="message-fill"
               color="text.reverse"
               hoverColor="text.reverse"
               // onClick={() => props.initMessage()}
               tipText={`Message ${props.user.name}`}
-              tipLocation={'top-left'}
+              tipLocation={'left'}
             />}
         {props.children}
       </PhotoContainer>

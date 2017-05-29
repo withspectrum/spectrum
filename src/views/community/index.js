@@ -16,11 +16,7 @@ import ListCard from './components/listCard';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import { CommunityProfile } from '../../components/profile';
 import { displayLoadingScreen } from '../../components/loading';
-import {
-  UpsellSignIn,
-  Upsell404Community,
-  UpsellJoin,
-} from '../../components/upsell';
+import { UpsellSignIn, Upsell404Community } from '../../components/upsell';
 import { CoverRow, CoverColumn } from './style';
 
 import {
@@ -73,11 +69,12 @@ const CommunityViewPure = ({
 
           <Column type="primary">
             {!currentUser && <UpsellSignIn entity={community} />}
-            {currentUser &&
+            {/* {currentUser &&
               !community.communityPermissions.isMember &&
-              <UpsellJoin activeCommunity={communitySlug} />}
+              <UpsellJoin activeCommunity={communitySlug} />} */}
             {currentUser &&
-              community.communityPermissions.isMember &&
+              (community.communityPermissions.isMember ||
+                community.communityPermissions.isOwner) &&
               <ThreadComposer activeCommunity={communitySlug} />}
             <CommunityThreadFeed viewContext="community" slug={communitySlug} />
           </Column>

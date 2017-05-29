@@ -115,7 +115,7 @@ const UserWithData = ({
             <Avatar
               margin={'0 12px 0 0'}
               size={40}
-              radius={4}
+              radius={20}
               src={user.profilePhoto}
             />
             <ProfileHeaderMeta>
@@ -136,7 +136,7 @@ const UserWithData = ({
                 />
               </Link>
             : <ProfileHeaderAction
-                glyph="message-new"
+                glyph="message-fill"
                 color="brand.alt"
                 onClick={() => initMessage()}
                 tipText={`Message ${user.name}`}

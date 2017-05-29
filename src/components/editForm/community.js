@@ -43,7 +43,9 @@ class CommunityWithData extends Component {
     communityId: string,
     website: string,
     image: string,
-    file: ?string,
+    coverPhoto: string,
+    file: ?Object,
+    coverFile: ?Object,
     communityData: Object,
   };
   constructor(props) {
@@ -57,7 +59,9 @@ class CommunityWithData extends Component {
       communityId: community.id,
       website: community.website,
       image: community.profilePhoto,
+      coverPhoto: community.coverPhoto,
       file: null,
+      coverFile: null,
       communityData: community,
     };
   }
@@ -110,7 +114,7 @@ class CommunityWithData extends Component {
 
     reader.onloadend = () => {
       this.setState({
-        file: file,
+        coverFile: file,
         coverPhoto: reader.result,
       });
     };
@@ -120,12 +124,20 @@ class CommunityWithData extends Component {
 
   save = e => {
     e.preventDefault();
-    const { name, description, website, file, communityId } = this.state;
+    const {
+      name,
+      description,
+      website,
+      file,
+      coverFile,
+      communityId,
+    } = this.state;
     const input = {
       name,
       description,
       website,
       file,
+      coverFile,
       communityId,
     };
     this.props
@@ -183,7 +195,7 @@ class CommunityWithData extends Component {
   };
 
   render() {
-    const { name, slug, description, image, website } = this.state;
+    const { name, slug, description, image, coverPhoto, website } = this.state;
     const { community } = this.props;
 
     if (!community) {
@@ -205,11 +217,12 @@ class CommunityWithData extends Component {
           <ImageInputWrapper>
             <CoverInput
               onChange={this.setCommunityCover}
-              defaultValue={community.coverPhoto}
+              defaultValue={coverPhoto}
             />
+
             <PhotoInput
               onChange={this.setCommunityPhoto}
-              defaultValue={community.profilePhoto}
+              defaultValue={image}
             />
           </ImageInputWrapper>
 

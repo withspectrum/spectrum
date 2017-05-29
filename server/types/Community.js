@@ -53,6 +53,7 @@ const Community = /* GraphQL */ `
 		description: String
 		website: String
 		file: File
+		coverFile: File
 		communityId: ID!
 	}
 

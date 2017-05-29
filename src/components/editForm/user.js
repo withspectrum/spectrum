@@ -30,8 +30,10 @@ class UserWithData extends Component {
     name: string,
     username: string,
     description: string,
-    profilePhoto: string,
-    file: any,
+    image: string,
+    coverPhoto: string,
+    file: ?Object,
+    coverFile: ?Object,
     descriptionError: boolean,
     nameError: boolean,
     createError: boolean,
@@ -48,8 +50,10 @@ class UserWithData extends Component {
       name: user.name ? user.name : '',
       username: user.username ? user.username : '',
       description: user.description ? user.description : '',
+      image: user.profilePhoto,
+      coverPhoto: user.coverPhoto,
       file: null,
-      profilePhoto: user.profilePhoto ? user.profilePhoto : '',
+      coverFile: null,
       descriptionError: false,
       nameError: false,
       createError: false,
@@ -145,7 +149,7 @@ class UserWithData extends Component {
     reader.onloadend = () => {
       this.setState({
         file: file,
-        profilePhoto: reader.result,
+        image: reader.result,
       });
     };
 
@@ -158,7 +162,7 @@ class UserWithData extends Component {
 
     reader.onloadend = () => {
       this.setState({
-        file: file,
+        coverFile: file,
         coverPhoto: reader.result,
       });
     };
@@ -168,13 +172,14 @@ class UserWithData extends Component {
 
   save = e => {
     e.preventDefault();
-    const { name, description, website, file } = this.state;
+    const { name, description, website, file, coverFile } = this.state;
 
     const input = {
       name,
       description,
       website,
       file,
+      coverFile,
     };
 
     this.props
@@ -200,7 +205,7 @@ class UserWithData extends Component {
       username,
       description,
       website,
-      profilePhoto,
+      image,
       coverPhoto,
       descriptionError,
       createError,
@@ -216,10 +221,7 @@ class UserWithData extends Component {
               onChange={this.setCoverPhoto}
               defaultValue={coverPhoto}
             />
-            <PhotoInput
-              onChange={this.setProfilePhoto}
-              defaultValue={profilePhoto}
-            />
+            <PhotoInput onChange={this.setProfilePhoto} defaultValue={image} />
           </ImageInputWrapper>
 
           <Input
