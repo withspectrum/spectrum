@@ -50,6 +50,7 @@ export default (
           description: content.body,
         });
       });
+      break;
     }
     case 'users': {
       /**
@@ -73,6 +74,7 @@ export default (
           description: user.description,
         });
       });
+      break;
     }
     default: {
       if (second) {
@@ -120,6 +122,7 @@ export default (
           });
         });
       }
+      break;
     }
   }
 
