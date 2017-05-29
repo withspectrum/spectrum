@@ -6,6 +6,7 @@ const IS_PROD = process.env.NODE_ENV === 'production';
 const PORT = 3001;
 
 const path = require('path');
+const fs = require('fs');
 const { createServer } = require('http');
 //$FlowFixMe
 const express = require('express');
@@ -122,9 +123,20 @@ app.use(
 // In production use express to serve the React app
 // In development this is done by react-scripts, which starts its own server
 if (IS_PROD) {
-  app.use(express.static(path.resolve(__dirname, '..', 'build')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
+  // Load index.html into memory
+  var index = fs
+    .readFileSync(path.resolve(__dirname, '..', 'build', 'index.html'))
+    .toString();
+  app.use(
+    express.static(path.resolve(__dirname, '..', 'build'), { index: false })
+  );
+  app.get('*', function(req, res) {
+    // In production inject the meta title and description
+    res.send(
+      index
+        .replace(/%OG_TITLE%/g, 'Spectrum')
+        .replace(/%OG_DESCRIPTION%/g, 'Where communities live.')
+    );
   });
 }
 
