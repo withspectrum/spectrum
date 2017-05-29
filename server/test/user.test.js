@@ -45,6 +45,7 @@ describe('queries', () => {
 			{
 				user(id: "non-existant") {
 					id
+          username
 				}
 			}
 		`;
