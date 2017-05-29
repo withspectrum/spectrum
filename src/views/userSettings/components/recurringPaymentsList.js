@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 //$FlowFixMe
 import compose from 'recompose/compose';
 import { ListCardItem } from '../../../components/listCard';
-import { IconButton } from '../../../components/buttons';
+import { IconButton, Button } from '../../../components/buttons';
+import { NullCard } from '../../../components/upsell';
 import { openModal } from '../../../actions/modals';
 import { convertTimestampToDate } from '../../../helpers/utils';
 import { getCurrentUserRecurringPayments } from '../../../api/user';
@@ -28,22 +29,14 @@ const RecurringPaymentsList = ({ data: { user }, currentUser, dispatch }) => {
     ? user.recurringPayments.filter(sub => sub.status === 'active')
     : [];
 
-  return (
-    <StyledCard>
-      <ListHeader>
-        <LargeListHeading>Billing</LargeListHeading>
-      </ListHeader>
-      <ListContainer>
-        {filteredRecurringPayments.length === 0 &&
-          <ListCardItem
-            contents={{ name: 'Upgrade to Pro' }}
-            withDescription={false}
-            meta={'sub'}
-          >
-            <IconButton glyph="settings" onClick={openProModal} />
-          </ListCardItem>}
-        {filteredRecurringPayments.length > 0 &&
-          filteredRecurringPayments.map(payment => {
+  if (filteredRecurringPayments.length > 0) {
+    return (
+      <StyledCard>
+        <ListHeader>
+          <LargeListHeading>Billing</LargeListHeading>
+        </ListHeader>
+        <ListContainer>
+          {filteredRecurringPayments.map(payment => {
             const amount = payment.amount / 100;
             const timestamp = new Date(payment.created * 1000).getTime();
             const created = convertTimestampToDate(timestamp);
@@ -59,9 +52,16 @@ const RecurringPaymentsList = ({ data: { user }, currentUser, dispatch }) => {
               </ListCardItem>
             );
           })}
-      </ListContainer>
-    </StyledCard>
-  );
+        </ListContainer>
+      </StyledCard>
+    );
+  } else {
+    return (
+      <NullCard heading={'Upgrade to Pro'} copy={'Foo'}>
+        <Button onClick={openProModal}>Upgrade to Pro</Button>
+      </NullCard>
+    );
+  }
 };
 
 export default compose(
