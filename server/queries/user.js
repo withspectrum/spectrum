@@ -49,7 +49,11 @@ module.exports = {
     isPro: ({ id }: { id: string }) => {
       return getUserSubscriptions(id).then(
         sub =>
-          (sub !== null && sub[0].stripeData.status === 'active' ? true : false)
+          (sub !== null &&
+            sub[0].stripeData &&
+            sub[0].stripeData.status === 'active'
+            ? true
+            : false)
       );
     },
     everything: (
