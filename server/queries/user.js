@@ -7,6 +7,7 @@ const {
 const { getCommunitiesByUser } = require('../models/community');
 const { getChannelsByUser } = require('../models/channel');
 const { getThreadsByUser } = require('../models/thread');
+const { getUserSubscriptions } = require('../models/subscription');
 const {
   getDirectMessageThreadsByUser,
 } = require('../models/directMessageThread');
@@ -44,6 +45,12 @@ module.exports = {
     },
     isAdmin: ({ id }: { id: string }) => {
       return isAdmin(id);
+    },
+    isPro: ({ id }: { id: string }) => {
+      return getUserSubscriptions(id).then(
+        sub =>
+          (sub !== null && sub[0].stripeData.status === 'active' ? true : false)
+      );
     },
     everything: (
       { id }: { id: string },
@@ -132,5 +139,20 @@ module.exports = {
     ) => {
       return loaders.userThreadCount.load(id).then(data => data.count);
     },
+    subscriptions: (_, __, { user }) =>
+      getUserSubscriptions(user.id).then(subs => {
+        if (!subs || subs.length === 0) {
+          return [];
+        } else {
+          return subs.map(sub => {
+            return {
+              amount: subs[0].stripeData.plan.amount,
+              created: subs[0].stripeData.created,
+              plan: subs[0].stripeData.plan.name,
+              status: subs[0].stripeData.status,
+            };
+          });
+        }
+      }),
   },
 };
