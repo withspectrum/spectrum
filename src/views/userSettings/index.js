@@ -30,7 +30,7 @@ const UserSettings = ({ data, currentUser, match }) => {
       </Column>
 
       <Column type="primary">
-        <SubscriptionList data={data} currentUser={currentUser} />
+        <SubscriptionList data={data} currentUser={data.user} />
       </Column>
     </AppViewWrapper>
   );

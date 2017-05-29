@@ -46,5 +46,5 @@ export const getUserSubscriptions = (userId: string): Promise<Object> => {
     .table('subscriptions')
     .getAll(userId, { index: 'userId' })
     .run()
-    .then(result => (result && result.length > 0 ? result[0] : null));
+    .then(result => (result && result.length > 0 ? result : null));
 };

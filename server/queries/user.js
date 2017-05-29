@@ -49,7 +49,7 @@ module.exports = {
     isPro: ({ id }: { id: string }) => {
       return getUserSubscriptions(id).then(
         sub =>
-          (sub !== null && sub.stripeData.status === 'active' ? true : false)
+          (sub !== null && sub[0].stripeData.status === 'active' ? true : false)
       );
     },
     everything: (
@@ -139,5 +139,20 @@ module.exports = {
     ) => {
       return loaders.userThreadCount.load(id).then(data => data.count);
     },
+    subscriptions: (_, __, { user }) =>
+      getUserSubscriptions(user.id).then(subs => {
+        if (!subs || subs.length === 0) {
+          return [];
+        } else {
+          return subs.map(sub => {
+            return {
+              amount: subs[0].stripeData.plan.amount,
+              created: subs[0].stripeData.created,
+              plan: subs[0].stripeData.plan.name,
+              status: subs[0].stripeData.status,
+            };
+          });
+        }
+      }),
   },
 };

@@ -90,10 +90,13 @@ module.exports = {
       // they have a subscription recrod in the db
       return getUserSubscriptions(currentUser.id)
         .then(result => {
+          const subscriptionToEvaluate = result && result.length > 0
+            ? result[0]
+            : null;
           // if the result is null, the user has never been a pro user
           // which means we need to create a stripe customer and then
           // create the subscription
-          if (result === null) {
+          if (subscriptionToEvaluate === null) {
             // create a customer in stripe
             return (
               stripe.customers
@@ -116,7 +119,7 @@ module.exports = {
           } else {
             // if a result is returned, lets make sure that they don't
             // already have an active subscription
-            if (result.stripeData.status === 'active') {
+            if (subscriptionToEvaluate.stripeData.status === 'active') {
               return new UserError("You're already a Pro member - thanks!");
             } else {
               // if a result exists, and it is not active, it means
@@ -127,7 +130,7 @@ module.exports = {
               // update the customer, keeping the email up to date and adding
               // a newly updated source
               stripe.customers
-                .update(result.stripeData.customer, {
+                .update(subscriptionToEvaluate.stripeData.customer, {
                   email: currentUser.email,
                   source: token.id,
                 })
@@ -140,7 +143,7 @@ module.exports = {
                 )
                 // update the record in the database
                 .then(subscription =>
-                  createSubscription(currentUser.id, subscription)
+                  updateSubscription(subscriptionToEvaluate.id, subscription)
                 );
             }
           }
@@ -149,6 +152,7 @@ module.exports = {
     },
     downgradeFromPro: (_, __, { user }) => {
       const currentUser = user;
+
       // user must be authed to create a community
       if (!currentUser) {
         return new UserError(
@@ -160,22 +164,25 @@ module.exports = {
       // they have a subscription recrod in the db
       return getUserSubscriptions(currentUser.id)
         .then(result => {
+          const subscriptionToEvaluate = result && result.length > 0
+            ? result[0]
+            : null;
+
           // if the result is null, we don't have a record of the subscription
-          if (result === null) {
+          if (subscriptionToEvaluate === null) {
             return new UserError(
               'We couldn\t find a record of a Pro subscription.'
             );
           }
 
-          const subscriptionId = result.stripeData.id;
-
+          const subscriptionId = subscriptionToEvaluate.stripeData.id;
           // delete the subscription
           return (
             stripe.subscriptions
               .del(subscriptionId)
               // update the record in the database
               .then(subscription =>
-                updateSubscription(currentUser.id, subscription)
+                updateSubscription(subscriptionToEvaluate.id, subscription)
               )
           );
         })

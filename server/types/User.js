@@ -61,6 +61,13 @@ const User = /* GraphQL */ `
 		threads: Int
 	}
 
+	type Subscription {
+		plan: String
+		amount: String
+		created: String
+		status: String
+	}
+
 	input File {
     name: String!
     type: String!
@@ -78,7 +85,6 @@ const User = /* GraphQL */ `
 		coverPhoto: String
 		email: String
 		providerId: String
-		# subscriptions: [Subscription!]
 		createdAt: Date!
 		lastSeen: Date!
 
@@ -92,6 +98,7 @@ const User = /* GraphQL */ `
 		threadConnection(first: Int = 10, after: String): UserThreadsConnection!
 		everything(first: Int = 10, after: String): EverythingThreadsConnection!
 		notificationConnection(first: Int = 10, after: String): UserNotificationsConnection!
+		subscriptions: [Subscription]
 	}
 
 	extend type Query {

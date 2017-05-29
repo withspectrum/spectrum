@@ -85,7 +85,7 @@ export const CHECK_UNIQUE_USERNAME_QUERY = gql`
 `;
 
 /*
-  Upload a new profilePhoto for the given currentUser
+  Upgrade a user to Pro
 */
 const UPGRADE_TO_PRO_MUTATION = gql`
   mutation upgradeToPro($input: UpgradeToProInput!) {
@@ -110,4 +110,49 @@ const UPGRADE_TO_PRO_OPTIONS = {
 export const upgradeToProMutation = graphql(
   UPGRADE_TO_PRO_MUTATION,
   UPGRADE_TO_PRO_OPTIONS
+);
+
+/*
+  Downgrade from pro
+*/
+const DOWNGRADE_FROM_PRO_MUTATION = gql`
+  mutation downgradeFromPro {
+    downgradeFromPro {
+      ...userInfo
+    }
+  }
+  ${userInfoFragment}
+`;
+
+const DOWNGRADE_FROM_PRO_OPTIONS = {
+  props: ({ input, mutate }) => ({
+    downgradeFromPro: () => mutate(),
+  }),
+};
+
+export const downgradeFromProMutation = graphql(
+  DOWNGRADE_FROM_PRO_MUTATION,
+  DOWNGRADE_FROM_PRO_OPTIONS
+);
+
+/*
+  Get a current user's subscriptions
+*/
+const GET_CURRENT_USER_SUBSCRIPTIONS_QUERY = gql`
+  query getCurrentUserSubscriptions {
+    user: currentUser {
+      ...userInfo
+      subscriptions {
+        plan
+        amount
+        created
+        status
+      }
+    }
+  }
+  ${userInfoFragment}
+`;
+
+export const getCurrentUserSubscriptions = graphql(
+  GET_CURRENT_USER_SUBSCRIPTIONS_QUERY
 );
