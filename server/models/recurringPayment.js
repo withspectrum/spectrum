@@ -1,18 +1,21 @@
 // @flow
 import { db } from './db';
 
-export const createSubscription = (
+export const createRecurringPayment = (
   userId: string,
   stripeData: Object
 ): Promise<Object> => {
-  return db
-    .table('subscriptions')
-    .insert({
-      userId,
-      stripeData,
-    })
-    .run()
-    .then(() => db.table('users').get(userId).run());
+  return (
+    db
+      .table('recurringPayments')
+      .insert({
+        userId,
+        stripeData,
+      })
+      .run()
+      // return the user object to update the clientside cache
+      .then(() => db.table('users').get(userId).run())
+  );
 };
 
 /*
@@ -21,12 +24,12 @@ export const createSubscription = (
   false, without having to do anything destructive or complicated with the
   subscription record itself in the db
 */
-export const updateSubscription = (
+export const updateRecurringPayment = (
   id: string,
   stripeData: Object
 ): Promise<Object> => {
   return db
-    .table('subscriptions')
+    .table('recurringPayments')
     .get(id)
     .update(
       {
@@ -41,9 +44,9 @@ export const updateSubscription = (
     });
 };
 
-export const getUserSubscriptions = (userId: string): Promise<Object> => {
+export const getUserRecurringPayments = (userId: string): Promise<Object> => {
   return db
-    .table('subscriptions')
+    .table('recurringPayments')
     .getAll(userId, { index: 'userId' })
     .run()
     .then(result => (result && result.length > 0 ? result : null));

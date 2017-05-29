@@ -15,10 +15,10 @@ const STRIPE_TOKEN = process.env.STRIPE_TOKEN;
 const stripe = require('stripe')(STRIPE_TOKEN), currency = 'USD';
 
 import {
-  createSubscription,
-  updateSubscription,
-  getUserSubscriptions,
-} from '../models/subscription';
+  createRecurringPayment,
+  updateRecurringPayment,
+  getUserRecurringPayments,
+} from '../models/recurringPayment';
 
 type UpgradeToProArguments = {
   input: {
@@ -87,16 +87,16 @@ module.exports = {
       const { input: { plan } } = args;
 
       // determine if this user has been a pro member before by seeing if
-      // they have a subscription recrod in the db
-      return getUserSubscriptions(currentUser.id)
+      // they have a recurringPayment recrod in the db
+      return getUserRecurringPayments(currentUser.id)
         .then(result => {
-          const subscriptionToEvaluate = result && result.length > 0
+          const recurringPaymentToEvaluate = result && result.length > 0
             ? result[0]
             : null;
           // if the result is null, the user has never been a pro user
           // which means we need to create a stripe customer and then
-          // create the subscription
-          if (subscriptionToEvaluate === null) {
+          // create the recurringPayment
+          if (recurringPaymentToEvaluate === null) {
             // create a customer in stripe
             return (
               stripe.customers
@@ -104,37 +104,37 @@ module.exports = {
                   email: currentUser.email,
                   source: token.id,
                 })
-                // creat the subscription object
+                // creat the recurringPayment object
                 .then(customer =>
                   stripe.subscriptions.create({
                     plan,
                     customer: customer.id,
                   })
                 )
-                // store a new record in the subscriptions table
-                .then(subscription =>
-                  createSubscription(currentUser.id, subscription)
+                // store a new record in the recurringPayments table
+                .then(recurringPayment =>
+                  createRecurringPayment(currentUser.id, recurringPayment)
                 )
             );
           } else {
             // if a result is returned, lets make sure that they don't
-            // already have an active subscription
-            if (subscriptionToEvaluate.stripeData.status === 'active') {
+            // already have an active recurringPayment
+            if (recurringPaymentToEvaluate.stripeData.status === 'active') {
               return new UserError("You're already a Pro member - thanks!");
             } else {
               // if a result exists, and it is not active, it means
               // the user was previously pro and is upgrading again. this means
               // we can just update their stripe customer with the new
-              // payment method and renew the subscription
+              // payment method and renew the recurringPayment
 
               // update the customer, keeping the email up to date and adding
               // a newly updated source
               stripe.customers
-                .update(subscriptionToEvaluate.stripeData.customer, {
+                .update(recurringPaymentToEvaluate.stripeData.customer, {
                   email: currentUser.email,
                   source: token.id,
                 })
-                // then create a new subscription
+                // then create a new recurringPayment
                 .then(customer =>
                   stripe.subscriptions.create({
                     plan,
@@ -142,8 +142,11 @@ module.exports = {
                   })
                 )
                 // update the record in the database
-                .then(subscription =>
-                  updateSubscription(subscriptionToEvaluate.id, subscription)
+                .then(recurringPayment =>
+                  updateRecurringPayment(
+                    recurringPaymentToEvaluate.id,
+                    recurringPayment
+                  )
                 );
             }
           }
@@ -156,33 +159,36 @@ module.exports = {
       // user must be authed to create a community
       if (!currentUser) {
         return new UserError(
-          'You must be signed in to cancel your Pro subscription.'
+          'You must be signed in to cancel your Pro recurringPayment.'
         );
       }
 
       // determine if this user has been a pro member before by seeing if
-      // they have a subscription recrod in the db
-      return getUserSubscriptions(currentUser.id)
+      // they have a recurringPayment record in the db
+      return getUserRecurringPayments(currentUser.id)
         .then(result => {
-          const subscriptionToEvaluate = result && result.length > 0
+          const recurringPaymentToEvaluate = result && result.length > 0
             ? result[0]
             : null;
 
-          // if the result is null, we don't have a record of the subscription
-          if (subscriptionToEvaluate === null) {
+          // if the result is null, we don't have a record of the recurringPayment
+          if (recurringPaymentToEvaluate === null) {
             return new UserError(
-              'We couldn\t find a record of a Pro subscription.'
+              'We couldn\t find a record of a Pro recurringPayment.'
             );
           }
 
-          const subscriptionId = subscriptionToEvaluate.stripeData.id;
-          // delete the subscription
+          const recurringPaymentId = recurringPaymentToEvaluate.stripeData.id;
+          // delete the recurringPayment
           return (
             stripe.subscriptions
-              .del(subscriptionId)
+              .del(recurringPaymentId)
               // update the record in the database
-              .then(subscription =>
-                updateSubscription(subscriptionToEvaluate.id, subscription)
+              .then(recurringPayment =>
+                updateRecurringPayment(
+                  recurringPaymentToEvaluate.id,
+                  recurringPayment
+                )
               )
           );
         })

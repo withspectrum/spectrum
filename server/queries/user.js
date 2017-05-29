@@ -7,7 +7,7 @@ const {
 const { getCommunitiesByUser } = require('../models/community');
 const { getChannelsByUser } = require('../models/channel');
 const { getThreadsByUser } = require('../models/thread');
-const { getUserSubscriptions } = require('../models/subscription');
+const { getUserRecurringPayments } = require('../models/recurringPayment');
 const {
   getDirectMessageThreadsByUser,
 } = require('../models/directMessageThread');
@@ -47,7 +47,7 @@ module.exports = {
       return isAdmin(id);
     },
     isPro: ({ id }: { id: string }) => {
-      return getUserSubscriptions(id).then(
+      return getUserRecurringPayments(id).then(
         sub =>
           (sub !== null &&
             sub[0].stripeData &&
@@ -143,8 +143,8 @@ module.exports = {
     ) => {
       return loaders.userThreadCount.load(id).then(data => data.count);
     },
-    subscriptions: (_, __, { user }) =>
-      getUserSubscriptions(user.id).then(subs => {
+    recurringPayments: (_, __, { user }) =>
+      getUserRecurringPayments(user.id).then(subs => {
         if (!subs || subs.length === 0) {
           return [];
         } else {

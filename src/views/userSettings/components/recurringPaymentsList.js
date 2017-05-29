@@ -8,7 +8,7 @@ import { ListCardItem } from '../../../components/listCard';
 import { IconButton } from '../../../components/buttons';
 import { openModal } from '../../../actions/modals';
 import { convertTimestampToDate } from '../../../helpers/utils';
-import { getCurrentUserSubscriptions } from '../../../api/user';
+import { getCurrentUserRecurringPayments } from '../../../api/user';
 import { displayLoadingCard } from '../../../components/loading';
 import {
   StyledCard,
@@ -17,16 +17,16 @@ import {
   ListContainer,
 } from '../../../components/listCard/style';
 
-const SubscriptionList = ({ data: { user }, currentUser, dispatch }) => {
+const RecurringPaymentsList = ({ data: { user }, currentUser, dispatch }) => {
   const openProModal = () => {
     dispatch(openModal('UPGRADE_MODAL', { user: currentUser }));
   };
 
   // make sure to only display active subs for now
-  const filteredSubs =
-    user.subscriptions &&
-    user.subscriptions.length > 0 &&
-    user.subscriptions.filter(sub => sub.status === 'active');
+  const filteredRecurringPayments = user.recurringPayments &&
+    user.recurringPayments.length > 0
+    ? user.recurringPayments.filter(sub => sub.status === 'active')
+    : [];
 
   return (
     <StyledCard>
@@ -34,7 +34,7 @@ const SubscriptionList = ({ data: { user }, currentUser, dispatch }) => {
         <LargeListHeading>Billing</LargeListHeading>
       </ListHeader>
       <ListContainer>
-        {filteredSubs.length === 0 &&
+        {filteredRecurringPayments.length === 0 &&
           <ListCardItem
             contents={{ name: 'Upgrade to Pro' }}
             withDescription={false}
@@ -42,16 +42,16 @@ const SubscriptionList = ({ data: { user }, currentUser, dispatch }) => {
           >
             <IconButton glyph="settings" onClick={openProModal} />
           </ListCardItem>}
-        {filteredSubs.length > 0 &&
-          filteredSubs.map(subscription => {
-            const amount = subscription.amount / 100;
-            const timestamp = new Date(subscription.created * 1000).getTime();
+        {filteredRecurringPayments.length > 0 &&
+          filteredRecurringPayments.map(payment => {
+            const amount = payment.amount / 100;
+            const timestamp = new Date(payment.created * 1000).getTime();
             const created = convertTimestampToDate(timestamp);
             const meta = `$${amount}/month · Upgraded on ${created}`;
             return (
               <ListCardItem
-                key={subscription.created}
-                contents={{ name: subscription.plan }}
+                key={payment.created}
+                contents={{ name: payment.plan }}
                 withDescription={false}
                 meta={meta}
               >
@@ -65,7 +65,7 @@ const SubscriptionList = ({ data: { user }, currentUser, dispatch }) => {
 };
 
 export default compose(
-  getCurrentUserSubscriptions,
+  getCurrentUserRecurringPayments,
   displayLoadingCard,
   connect()
-)(SubscriptionList);
+)(RecurringPaymentsList);
