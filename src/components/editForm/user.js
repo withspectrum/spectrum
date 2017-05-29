@@ -7,8 +7,20 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
 import { Button, TextButton } from '../buttons';
-import { Input, TextArea, Error } from '../formElements';
-import { StyledCard, Form, FormTitle, Actions, ImgPreview } from './style';
+import {
+  Input,
+  TextArea,
+  Error,
+  PhotoInput,
+  CoverInput,
+} from '../formElements';
+import {
+  StyledCard,
+  Form,
+  FormTitle,
+  Actions,
+  ImageInputWrapper,
+} from './style';
 import { editUserMutation } from '../../api/user';
 import { addToastWithTimeout } from '../../actions/toasts';
 
@@ -18,8 +30,10 @@ class UserWithData extends Component {
     name: string,
     username: string,
     description: string,
-    profilePhoto: string,
-    file: any,
+    image: string,
+    coverPhoto: string,
+    file: ?Object,
+    coverFile: ?Object,
     descriptionError: boolean,
     nameError: boolean,
     createError: boolean,
@@ -36,8 +50,10 @@ class UserWithData extends Component {
       name: user.name ? user.name : '',
       username: user.username ? user.username : '',
       description: user.description ? user.description : '',
+      image: user.profilePhoto,
+      coverPhoto: user.coverPhoto,
       file: null,
-      profilePhoto: user.profilePhoto ? user.profilePhoto : '',
+      coverFile: null,
       descriptionError: false,
       nameError: false,
       createError: false,
@@ -133,7 +149,21 @@ class UserWithData extends Component {
     reader.onloadend = () => {
       this.setState({
         file: file,
-        profilePhoto: reader.result,
+        image: reader.result,
+      });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  setCoverPhoto = e => {
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        coverFile: file,
+        coverPhoto: reader.result,
       });
     };
 
@@ -142,13 +172,14 @@ class UserWithData extends Component {
 
   save = e => {
     e.preventDefault();
-    const { name, description, website, file } = this.state;
+    const { name, description, website, file, coverFile } = this.state;
 
     const input = {
       name,
       description,
       website,
       file,
+      coverFile,
     };
 
     this.props
@@ -174,7 +205,8 @@ class UserWithData extends Component {
       username,
       description,
       website,
-      profilePhoto,
+      image,
+      coverPhoto,
       descriptionError,
       createError,
       loading,
@@ -184,19 +216,13 @@ class UserWithData extends Component {
       <StyledCard>
         <FormTitle>Profile Settings</FormTitle>
         <Form>
-          <Input
-            inputType="file"
-            accept=".png, .jpg, .jpeg, .gif"
-            defaultValue={profilePhoto}
-            onChange={this.setProfilePhoto}
-            multiple={false}
-          >
-            Update your profile photo
-
-            {!profilePhoto
-              ? <span>add</span>
-              : <ImgPreview src={profilePhoto} />}
-          </Input>
+          <ImageInputWrapper>
+            <CoverInput
+              onChange={this.setCoverPhoto}
+              defaultValue={coverPhoto}
+            />
+            <PhotoInput onChange={this.setProfilePhoto} defaultValue={image} />
+          </ImageInputWrapper>
 
           <Input
             type="text"

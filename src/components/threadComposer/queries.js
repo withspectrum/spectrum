@@ -22,6 +22,7 @@ query getComposerCommunitiesAndChannels {
         node {
           id
           name
+          slug
         }
       }
     }

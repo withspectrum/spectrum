@@ -9,12 +9,15 @@ import { connect } from 'react-redux';
 import { openModal } from '../../actions/modals';
 import ThreadComposer from '../../components/threadComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
+import { FlexCol, FlexRow } from '../../components/globals';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import ListCard from './components/listCard';
+import { CoverPhoto } from '../../components/profile/coverPhoto';
 import { CommunityProfile } from '../../components/profile';
 import { displayLoadingScreen } from '../../components/loading';
 import { UpsellSignIn, Upsell404Community } from '../../components/upsell';
+import { CoverRow, CoverColumn } from './style';
 
 import {
   getCommunityThreads,
@@ -56,19 +59,27 @@ const CommunityViewPure = ({
 
   return (
     <AppViewWrapper>
-      <Column type="secondary">
-        <CommunityProfile data={{ community }} profileSize="full" />
-        <ChannelListCard slug={communitySlug} />
-      </Column>
+      <CoverColumn>
+        <CoverPhoto />
+        <CoverRow>
+          <Column type="secondary" className={'inset'}>
+            <CommunityProfile data={{ community }} profileSize="full" />
+            <ChannelListCard slug={communitySlug} />
+          </Column>
 
-      <Column type="primary" alignItems="center">
-        {!currentUser && <UpsellSignIn entity={community} />}
-
-        {community.isMember && currentUser
-          ? <ThreadComposer activeCommunity={communitySlug} />
-          : <span />}
-        <CommunityThreadFeed viewContext="community" slug={communitySlug} />
-      </Column>
+          <Column type="primary">
+            {!currentUser && <UpsellSignIn entity={community} />}
+            {/* {currentUser &&
+              !community.communityPermissions.isMember &&
+              <UpsellJoin activeCommunity={communitySlug} />} */}
+            {currentUser &&
+              (community.communityPermissions.isMember ||
+                community.communityPermissions.isOwner) &&
+              <ThreadComposer activeCommunity={communitySlug} />}
+            <CommunityThreadFeed viewContext="community" slug={communitySlug} />
+          </Column>
+        </CoverRow>
+      </CoverColumn>
     </AppViewWrapper>
   );
 };
