@@ -160,7 +160,7 @@ export const Count = styled.span`
 
 export const CoverLink = styled(ProfileHeaderLink)`
   position: absolute;
-  bottom: -56px;
+  bottom: -64px;
   left: 16px;
   flex-direction: column;
   align-items: center;
@@ -171,7 +171,8 @@ export const CoverAvatar = styled(ProfileAvatar)`
   border: 2px solid ${({ theme }) => theme.text.reverse};
   width: 64px;
   flex: 0 0 64px;
-  margin-right: 8px;
+  margin-right: 0;
+  border-radius: 100%;
 `;
 
 export const CoverTitle = styled(Title)`
@@ -181,11 +182,11 @@ export const CoverTitle = styled(Title)`
 
 export const CoverSubtitle = styled(Subtitle)`
   text-align: center;
-  margin-top: 56px;
+  margin-top: 64px;
+  margin-bottom: 16px;
 `;
 
 export const CoverDescription = styled(Description)`
-  margin-top: 12px;
   text-align: center;
 
   p {

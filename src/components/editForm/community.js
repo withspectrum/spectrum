@@ -17,7 +17,13 @@ import { openModal } from '../../actions/modals';
 import { addToastWithTimeout } from '../../actions/toasts';
 
 import { Button, TextButton, IconButton } from '../buttons';
-import { Input, UnderlineInput, TextArea } from '../formElements';
+import {
+  Input,
+  UnderlineInput,
+  TextArea,
+  PhotoInput,
+  CoverInput,
+} from '../formElements';
 import {
   StyledCard,
   Form,
@@ -26,6 +32,7 @@ import {
   Actions,
   ImgPreview,
   TertiaryActionContainer,
+  ImageInputWrapper,
 } from './style';
 
 class CommunityWithData extends Component {
@@ -91,6 +98,20 @@ class CommunityWithData extends Component {
       this.setState({
         file: file,
         image: reader.result,
+      });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  setCommunityCover = e => {
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        coverPhoto: reader.result,
       });
     };
 
@@ -181,6 +202,17 @@ class CommunityWithData extends Component {
       <StyledCard>
         <FormTitle>Community Settings</FormTitle>
         <Form>
+          <ImageInputWrapper>
+            <CoverInput
+              onChange={this.setCommunityCover}
+              defaultValue={community.coverPhoto}
+            />
+            <PhotoInput
+              onChange={this.setCommunityPhoto}
+              defaultValue={community.profilePhoto}
+            />
+          </ImageInputWrapper>
+
           <Input defaultValue={name} onChange={this.changeName}>Name</Input>
           <UnderlineInput defaultValue={slug} disabled>
             sp.chat/
@@ -191,18 +223,6 @@ class CommunityWithData extends Component {
           >
             Description
           </TextArea>
-
-          <Input
-            inputType="file"
-            accept=".png, .jpg, .jpeg, .gif"
-            defaultValue={name}
-            onChange={this.setCommunityPhoto}
-            multiple={false}
-          >
-            Add a logo or photo
-
-            {!image ? <span>add</span> : <ImgPreview src={image} />}
-          </Input>
 
           <Input
             defaultValue={website}

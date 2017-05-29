@@ -12,3 +12,8 @@ export const CoverRow = styled(FlexRow)`
     margin-top: -36px;
   }
 `;
+
+export const CoverColumn = styled(FlexCol)`
+  width: 90%;
+  max-width: 1024px;
+`;

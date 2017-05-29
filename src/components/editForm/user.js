@@ -7,8 +7,20 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
 import { Button, TextButton } from '../buttons';
-import { Input, TextArea, Error } from '../formElements';
-import { StyledCard, Form, FormTitle, Actions, ImgPreview } from './style';
+import {
+  Input,
+  TextArea,
+  Error,
+  PhotoInput,
+  CoverInput,
+} from '../formElements';
+import {
+  StyledCard,
+  Form,
+  FormTitle,
+  Actions,
+  ImageInputWrapper,
+} from './style';
 import { editUserMutation } from '../../api/user';
 import { addToastWithTimeout } from '../../actions/toasts';
 
@@ -140,6 +152,20 @@ class UserWithData extends Component {
     reader.readAsDataURL(file);
   };
 
+  setCoverPhoto = e => {
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        coverPhoto: reader.result,
+      });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   save = e => {
     e.preventDefault();
     const { name, description, website, file } = this.state;
@@ -175,6 +201,7 @@ class UserWithData extends Component {
       description,
       website,
       profilePhoto,
+      coverPhoto,
       descriptionError,
       createError,
       loading,
@@ -184,19 +211,16 @@ class UserWithData extends Component {
       <StyledCard>
         <FormTitle>Profile Settings</FormTitle>
         <Form>
-          <Input
-            inputType="file"
-            accept=".png, .jpg, .jpeg, .gif"
-            defaultValue={profilePhoto}
-            onChange={this.setProfilePhoto}
-            multiple={false}
-          >
-            Update your profile photo
-
-            {!profilePhoto
-              ? <span>add</span>
-              : <ImgPreview src={profilePhoto} />}
-          </Input>
+          <ImageInputWrapper>
+            <CoverInput
+              onChange={this.setCoverPhoto}
+              defaultValue={coverPhoto}
+            />
+            <PhotoInput
+              onChange={this.setProfilePhoto}
+              defaultValue={profilePhoto}
+            />
+          </ImageInputWrapper>
 
           <Input
             type="text"

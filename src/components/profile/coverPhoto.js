@@ -11,7 +11,7 @@ import { ProfileHeaderAction } from './style';
 const PhotoContainer = styled.div`
   position: relative;
   width: 100%;
-  height: ${props => (props.large ? '240px' : '96px')};
+  height: ${props => (props.large ? '256px' : '96px')};
   background-color: ${({ theme }) => theme.brand.default};
   background-image: url(${props => props.coverURL});
   background-size: cover;
@@ -27,7 +27,7 @@ const CoverAction = styled(ProfileHeaderAction)`
 export const CoverPhoto = (props: Object) => {
   if (props.user) {
     return (
-      <PhotoContainer coverURL="">
+      <PhotoContainer coverURL={props.user.coverPhoto}>
         {props.currentUser && props.currentUser.id === props.user.id
           ? <Link to={`../users/${props.currentUser.username}/settings`}>
               <CoverAction

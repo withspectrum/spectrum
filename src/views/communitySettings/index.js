@@ -31,15 +31,33 @@ const SettingsPure = ({
   };
 
   if (error) {
-    return <Upsell404Community community={communitySlug} />;
+    return (
+      <AppViewWrapper>
+        <Column type="primary">
+          <Upsell404Community community={communitySlug} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (!community || community.deleted) {
-    return <Upsell404Community community={communitySlug} create={create} />;
+    return (
+      <AppViewWrapper>
+        <Column type="primary">
+          <Upsell404Community community={communitySlug} create={create} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (!community.communityPermissions.isOwner) {
-    return <Upsell404Community community={communitySlug} noPermission />;
+    return (
+      <AppViewWrapper>
+        <Column type="primary">
+          <Upsell404Community community={communitySlug} noPermission />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   return (

@@ -85,7 +85,7 @@ class ThreadComposerWithData extends Component {
     const activeCommunity = props.activeCommunity
       ? availableCommunities.filter(community => {
           return community.slug === props.activeCommunity;
-        })[0].id
+        }).id
       : availableCommunities[0].id;
     const activeChannel = props.activeChannel
       ? availableChannels

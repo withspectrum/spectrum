@@ -84,12 +84,7 @@ const UserWithData = ({
       <Card>
         <CoverPhoto user={user} currentUser={currentUser}>
           <CoverLink to={`../users/${currentUser.username}`}>
-            <CoverAvatar
-              margin={'0 12px 0 0'}
-              size={40}
-              radius={4}
-              src={user.profilePhoto}
-            />
+            <CoverAvatar src={user.profilePhoto} />
             <CoverTitle>{user.name}</CoverTitle>
           </CoverLink>
         </CoverPhoto>
@@ -99,16 +94,17 @@ const UserWithData = ({
           {user.isPro && <Badge type="pro" />}
         </CoverSubtitle>
 
-        <CoverDescription>
-          <p>{user.description}</p>
-          {user.website &&
-            <ExtLink>
-              <Icon glyph="link" size={24} />
-              <a href={addProtocolToString(user.website)}>
-                {user.website}
-              </a>
-            </ExtLink>}
-        </CoverDescription>
+        {(user.description || user.website) &&
+          <CoverDescription>
+            {user.description && <p>{user.description}</p>}
+            {user.website &&
+              <ExtLink>
+                <Icon glyph="link" size={24} />
+                <a href={addProtocolToString(user.website)}>
+                  {user.website}
+                </a>
+              </ExtLink>}
+          </CoverDescription>}
       </Card>
     );
   } else {
@@ -127,7 +123,7 @@ const UserWithData = ({
               <Subtitle>
                 @{user.username}
                 {user.isAdmin && <Badge type="admin" />}
-                {/* user.isPro && <Badge type='pro' /> */}
+                {user.isPro && <Badge type="pro" />}
               </Subtitle>
             </ProfileHeaderMeta>
           </ProfileHeaderLink>
@@ -156,7 +152,7 @@ const UserWithData = ({
             {user.website &&
               <ExtLink>
                 <Icon glyph="link" size={24} />
-                <a href={websiteUrl}>
+                <a href={user.website}>
                   {user.website}
                 </a>
               </ExtLink>}

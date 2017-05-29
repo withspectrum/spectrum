@@ -16,8 +16,12 @@ import ListCard from './components/listCard';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import { CommunityProfile } from '../../components/profile';
 import { displayLoadingScreen } from '../../components/loading';
-import { UpsellSignIn, Upsell404Community } from '../../components/upsell';
-import { CoverRow } from './style';
+import {
+  UpsellSignIn,
+  Upsell404Community,
+  UpsellJoin,
+} from '../../components/upsell';
+import { CoverRow, CoverColumn } from './style';
 
 import {
   getCommunityThreads,
@@ -59,7 +63,7 @@ const CommunityViewPure = ({
 
   return (
     <AppViewWrapper>
-      <FlexCol>
+      <CoverColumn>
         <CoverPhoto />
         <CoverRow>
           <Column type="secondary" className={'inset'}>
@@ -67,16 +71,18 @@ const CommunityViewPure = ({
             <ChannelListCard slug={communitySlug} />
           </Column>
 
-          <Column type="primary" alignItems="center">
+          <Column type="primary">
             {!currentUser && <UpsellSignIn entity={community} />}
-
-            {community.isMember && currentUser
-              ? <ThreadComposer activeCommunity={communitySlug} />
-              : <span />}
+            {currentUser &&
+              !community.communityPermissions.isMember &&
+              <UpsellJoin activeCommunity={communitySlug} />}
+            {currentUser &&
+              community.communityPermissions.isMember &&
+              <ThreadComposer activeCommunity={communitySlug} />}
             <CommunityThreadFeed viewContext="community" slug={communitySlug} />
           </Column>
         </CoverRow>
-      </FlexCol>
+      </CoverColumn>
     </AppViewWrapper>
   );
 };

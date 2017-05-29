@@ -55,7 +55,7 @@ const ThreadContainerPure = ({
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <UserProfile data={{ user: thread.creator }} profileSize={'full'} />
+        <UserProfile data={{ user: thread.creator }} />
         <ChannelProfile
           data={{ channel: thread.channel }}
           profileSize={'small'}

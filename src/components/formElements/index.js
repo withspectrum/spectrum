@@ -12,9 +12,11 @@ import {
   StyledHiddenInput,
   StyledCheckboxWrapper,
   StyledError,
-  ImageInputLabel,
+  PhotoInputLabel,
+  CoverInputLabel,
   InputOverlay,
   ProfileImage,
+  CoverImage,
 } from './style';
 
 type InputProps = {
@@ -46,9 +48,9 @@ export const Input = (props: InputProps) => {
   );
 };
 
-export const ImageInput = (props: InputProps) => {
+export const PhotoInput = (props: InputProps) => {
   return (
-    <ImageInputLabel>
+    <PhotoInputLabel>
       <InputOverlay>
         <Icon glyph="photo" />
       </InputOverlay>
@@ -60,7 +62,25 @@ export const ImageInput = (props: InputProps) => {
         accept=".png, .jpg, .jpeg, .gif, .mp4"
         multiple={false}
       />
-    </ImageInputLabel>
+    </PhotoInputLabel>
+  );
+};
+
+export const CoverInput = (props: InputProps) => {
+  return (
+    <CoverInputLabel>
+      <InputOverlay>
+        <Icon glyph="photo" />
+      </InputOverlay>
+      <CoverImage src={props.defaultValue} role="presentation" />
+      <StyledHiddenInput
+        type="file"
+        id="file"
+        name="file"
+        accept=".png, .jpg, .jpeg, .gif, .mp4"
+        multiple={false}
+      />
+    </CoverInputLabel>
   );
 };
 
