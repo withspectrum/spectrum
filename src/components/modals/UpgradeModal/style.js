@@ -50,6 +50,15 @@ export const Section = styled.section`
   }
 `;
 
+export const SectionActions = styled(Section)`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 16px;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const SectionAlert = styled(Section)`
   background-color: ${({ theme }) => theme.success.default};
   background-image: ${({ theme }) => Gradient(theme.space.light, theme.success.default)};

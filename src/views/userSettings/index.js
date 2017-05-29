@@ -11,7 +11,7 @@ import Column from '../../components/column';
 import { displayLoadingState } from '../../components/loading';
 import { UserEditForm } from '../../components/editForm';
 import { Upsell404User } from '../../components/upsell';
-import { SubscriptionList } from './components/subscriptionList';
+import SubscriptionList from './components/subscriptionList';
 import { GetUserProfile } from './queries';
 
 const UserSettings = ({ data, currentUser, match }) => {
@@ -30,7 +30,7 @@ const UserSettings = ({ data, currentUser, match }) => {
       </Column>
 
       <Column type="primary">
-        <SubscriptionList data={data} />
+        <SubscriptionList data={data} currentUser={data.user} />
       </Column>
     </AppViewWrapper>
   );
