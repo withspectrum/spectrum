@@ -36,9 +36,9 @@ export default (
             content {
               title
               body
-              channel {
-                name
-              }
+            }
+            channel {
+              name
             }
           }
         }
@@ -59,7 +59,7 @@ export default (
       promise = request(
         /* GraphQL */ `
         {
-          user(id: "${second}") {
+          user(username: "${second}") {
             name
             username
             description
