@@ -13,18 +13,34 @@ import { UserEditForm } from '../../components/editForm';
 import { Upsell404User } from '../../components/upsell';
 import RecurringPaymentsList from './components/recurringPaymentsList';
 import { GetUserProfile } from './queries';
+import Titlebar from '../titlebar';
 
 const UserSettings = ({ data, currentUser, match }) => {
   if (!data.user) {
-    return <Upsell404User username={match.params.username} />;
+    return (
+      <AppViewWrapper>
+        <Titlebar title={'No User Found'} />
+        <Column type="primary">
+          <Upsell404User username={match.params.username} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (data.user.id !== currentUser.id) {
-    return <Upsell404User username={match.params.username} noPermission />;
+    return (
+      <AppViewWrapper>
+        <Titlebar title={"I See You Sneakin'"} />
+        <Column type="primary">
+          <Upsell404User username={match.params.username} noPermission />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   return (
     <AppViewWrapper>
+      <Titlebar title={data.user.name} subtitle={'Settings'} />
       <Column type="secondary">
         <UserEditForm user={data} />
       </Column>

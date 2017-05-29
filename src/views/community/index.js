@@ -14,6 +14,7 @@ import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import ListCard from './components/listCard';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
+import Titlebar from '../titlebar';
 import { CommunityProfile } from '../../components/profile';
 import { displayLoadingScreen } from '../../components/loading';
 import { UpsellSignIn, Upsell404Community } from '../../components/upsell';
@@ -59,6 +60,7 @@ const CommunityViewPure = ({
 
   return (
     <AppViewWrapper>
+      <Titlebar title={community.name} />
       <CoverColumn>
         <CoverPhoto />
         <CoverRow>

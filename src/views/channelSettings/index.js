@@ -19,6 +19,7 @@ import {
   togglePendingUserInChannelMutation,
   unblockUserInChannelMutation,
 } from '../../api/channel';
+import Titlebar from '../titlebar';
 
 const SettingsPure = ({
   match,
@@ -91,6 +92,10 @@ const SettingsPure = ({
 
   return (
     <AppViewWrapper>
+      <Titlebar
+        title={`${channel.name} · ${channel.community.name}`}
+        subtitle={'Settings'}
+      />
       <Column type="secondary">
         <ChannelEditForm channel={channel} />
       </Column>
