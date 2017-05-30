@@ -61,7 +61,7 @@ const CommunityList = props => {
             );
           })}
         </ListContainer>
-        {currentUser &&
+        {/* {currentUser &&
           currentUser.id === user.id &&
           <ListFooter>
             <MoreLink to={`/explore`}>
@@ -69,21 +69,20 @@ const CommunityList = props => {
                 Find more...
               </TextButton>
             </MoreLink>
-          </ListFooter>}
+          </ListFooter>} */}
       </StyledCard>
     );
   } else {
-    return (
-      <NullCard
-        bg="community"
-        heading={`You're fresh out of communities!`}
-        copy={`Let's find you something worth joining...`}
-      >
-        <Button icon="explore" color="text.alt" gradientTheme="">
-          Browse communities
-        </Button>
-      </NullCard>
-    );
+    return <div />;
+    // <NullCard
+    //   bg="community"
+    //   heading={`You're fresh out of communities!`}
+    //   copy={`Let's find you something worth joining...`}
+    // >
+    //   <Button icon="explore" color="text.alt" gradientTheme="">
+    //     Browse communities
+    //   </Button>
+    // </NullCard>
   }
 };
 

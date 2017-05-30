@@ -162,11 +162,8 @@ export const Upsell404Channel = ({
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
       <Actions>
-        <OutlineButton onClick={() => window.location.href = returnUrl}>
+        <Button onClick={() => window.location.href = returnUrl}>
           Take me back
-        </OutlineButton>
-        <Button onClick={() => window.location.href = '/explore'}>
-          Explore Channels on Spectrum
         </Button>
       </Actions>
     </NullCard>
@@ -201,12 +198,16 @@ export const Upsell404Community = ({
       <Actions>
         {// de-emphasizes the 'take me home' button if a create prompt is shown
         create
-          ? <OutlineButton onClick={() => window.location.href = '/explore'}>
-              Explore Communities
-            </OutlineButton>
-          : <Button onClick={() => window.location.href = '/explore'}>
-              Explore Communities
-            </Button>}
+          ? <Link to={`/home`}>
+              <OutlineButton>
+                Take me home
+              </OutlineButton>
+            </Link>
+          : <Link to={`/home`}>
+              <Button>
+                Take me home
+              </Button>
+            </Link>}
 
         {create &&
           <Button onClick={create}>
