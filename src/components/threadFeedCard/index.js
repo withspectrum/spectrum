@@ -85,9 +85,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
           props.data.attachments &&
             props.data.attachments.length > 0 &&
             props.data.attachments.map(attachment => {
-              if (attachment.attachmentType !== 'linkPreview') {
-                return <span />;
-              } else {
+              if (attachment.attachmentType === 'linkPreview') {
                 return (
                   <LinkPreview
                     trueUrl={attachment.data.trueUrl}
@@ -97,6 +95,8 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
                     margin={'8px 0 12px'}
                   />
                 );
+              } else {
+                return <span />;
               }
             })}
         </MetaRow>
