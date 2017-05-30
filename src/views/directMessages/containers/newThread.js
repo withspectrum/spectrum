@@ -626,7 +626,11 @@ class NewThread extends Component {
 
     return (
       <MessagesContainer>
-        <Titlebar title={'New Message'} />
+        <Titlebar
+          title={'New Message'}
+          provideBack={true}
+          backRoute={`/messages`}
+        />
         <ComposerInputWrapper>
           {// if users have been selected, show them as pills
           selectedUsersForNewThread.length > 0 &&
