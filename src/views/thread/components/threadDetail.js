@@ -57,7 +57,7 @@ class ThreadDetailPure extends Component {
 
     this.state = {
       isEditing: false,
-      body: fromPlainText(thread.content.body),
+      body: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
       linkPreview: thread.attachments.length > 0 ? thread.attachments[0] : null,
       linkPreviewTrueUrl: thread.attachments.length > 0
@@ -255,13 +255,15 @@ class ThreadDetailPure extends Component {
 
   render() {
     const { currentUser, thread } = this.props;
-    const { isEditing, linkPreview, linkPreviewTrueUrl } = this.state;
+    const { isEditing, linkPreview, linkPreviewTrueUrl, body } = this.state;
     console.log('state: ', this.state);
 
-    let body = thread.content.body;
+    let viewBody = thread.content.body;
     if (thread.type === 'SLATE') {
-      body = toPlainText(toState(JSON.parse(body)));
+      viewBody = toPlainText(toState(JSON.parse(viewBody)));
     }
+
+    // let editBody = toState(JSON.parse(thread.content.body))
 
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner =
@@ -332,7 +334,7 @@ class ThreadDetailPure extends Component {
             <ThreadHeading>
               {thread.content.title}
             </ThreadHeading>
-            <ThreadContent>{body}</ThreadContent>
+            <ThreadContent>{viewBody}</ThreadContent>
 
             {thread.attachments &&
               thread.attachments.length > 0 &&
