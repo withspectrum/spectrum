@@ -56,3 +56,8 @@ export const Subtitle = styled.p`
   word-break: break-word;
   white-space: nowrap;
 `;
+
+export const Spacer = styled.span`
+  width: 32px;
+  height: 32px;
+`;

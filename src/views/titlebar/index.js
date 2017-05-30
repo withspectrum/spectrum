@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import { IconButton } from '../../components/buttons';
-import { TitleBar, Text, Subtitle, Title } from './style';
+import { TitleBar, Text, Subtitle, Title, Spacer } from './style';
 
 class Titlebar extends Component {
   handleBack = () => {
@@ -46,14 +46,14 @@ class Titlebar extends Component {
               color="bg.default"
               onClick={this.handleBack}
             />
-          : <span />}
+          : <Spacer />}
         <Text>
           <Subtitle>{subtitle ? subtitle : ''}</Subtitle>
           <Title large={subtitle ? false : true}>
             {title ? title : 'Spectrum'}
           </Title>
         </Text>
-        <span />
+        <Spacer />
       </TitleBar>
     );
   }

@@ -7,8 +7,10 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import { getCurrentUserProfile } from '../../api/user';
+import { SERVER_URL } from '../../api';
 import Icon from '../../components/icons';
-import { displayLoadingCard } from '../../components/loading';
+import { displayLoadingNavbar } from '../../components/loading';
+import { TextButton } from '../../components/buttons';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
@@ -21,6 +23,7 @@ import {
   Logo,
   IconDrop,
   IconLink,
+  SigninLink,
   Label,
   LabelForTab,
   UserProfileAvatar,
@@ -54,18 +57,21 @@ class Navbar extends Component {
             profile, home, explore, etc.
           */}
           <Nav>
-            <Section left>
+            <Section left hideOnMobile>
               <LogoLink to="/">
                 <Logo src="/img/mark-white.png" role="presentation" />
               </LogoLink>
-              {/* <IconLink
-                data-active={match.url === '/explore'}
-                data-mobileWidth={'third'}
-                to="/explore"
-              >
-                <Icon glyph="explore" />
-                <Label>Explore</Label>
-              </IconLink> */}
+            </Section>
+            <Section>
+              <SigninLink to={`${SERVER_URL}/auth/twitter`}>
+                <TextButton
+                  icon="twitter"
+                  color={'social.twitter.default'}
+                  hoverColor={'bg.default'}
+                >
+                  Sign in with Twitter
+                </TextButton>
+              </SigninLink>
             </Section>
           </Nav>
 
@@ -169,6 +175,6 @@ const mapStateToProps = state => ({
 export default compose(
   getCurrentUserProfile,
   withRouter,
-  displayLoadingCard,
+  displayLoadingNavbar,
   connect(mapStateToProps)
 )(Navbar);
