@@ -189,3 +189,37 @@ export const DropdownFooter = styled(FlexRow)`
   align-items: center;
   padding: 8px;
 `;
+
+export const UserProfileDropdownList = styled.ul`
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+`;
+
+export const UserProfileDropdownListItem = styled.li`
+  font-size: 14px;
+  padding: 16px;
+  text-align: center;
+  display: flex;
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: ${props => props.theme.text.alt};
+  border-bottom: 2px solid ${props => props.theme.border.default};
+  background: #fff;
+  justify-content: center;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+    color: ${props => props.theme.text.default};
+    background: ${props => props.theme.bg.wash};
+  }
+`;

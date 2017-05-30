@@ -105,12 +105,11 @@ class Navbar extends Component {
                   {/* <NotificationDropdown /> */}
                 </IconDrop>
 
-                {/* TODO: Make this active only when viewing current logged in user profile */}
                 <IconDrop>
                   <IconLink
-                    data-active={match.url === `/users/me`}
+                    data-active={match.url === `/users/${currentUser.username}`}
                     data-mobileWidth={'half'}
-                    to={`/users/me`}
+                    to={`/users/${currentUser.username}`}
                   >
                     <UserProfileAvatar
                       src={currentUser.profilePhoto}
@@ -120,7 +119,7 @@ class Navbar extends Component {
                     />
                     <LabelForTab>Profile</LabelForTab>
                   </IconLink>
-                  <ProfileDropdown />
+                  <ProfileDropdown history={history} user={currentUser} />
                 </IconDrop>
               </Section>}
 
