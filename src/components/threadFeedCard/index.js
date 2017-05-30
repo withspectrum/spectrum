@@ -84,13 +84,21 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
           {// for now we know this means there is a link attachment
           props.data.attachments &&
             props.data.attachments.length > 0 &&
-            <LinkPreview
-              trueUrl={props.data.attachments[0].data.trueUrl}
-              data={JSON.parse(props.data.attachments[0].data)}
-              size={'small'}
-              editable={false}
-              margin={'8px 0 12px'}
-            />}
+            props.data.attachments.map(attachment => {
+              if (attachment.attachmentType === 'linkPreview') {
+                return (
+                  <LinkPreview
+                    trueUrl={attachment.data.trueUrl}
+                    data={JSON.parse(attachment.data)}
+                    size={'small'}
+                    editable={false}
+                    margin={'8px 0 12px'}
+                  />
+                );
+              } else {
+                return <span />;
+              }
+            })}
         </MetaRow>
         <MetaRow>
           <ParticipantHeads>
