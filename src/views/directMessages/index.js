@@ -44,10 +44,8 @@ class DirectMessages extends Component {
     const { match, history, currentUser, data } = this.props;
     const width = window.innerWidth;
     const isMobile = width < 768;
-    console.log(width, isMobile);
 
     if (match.isExact && !isMobile) {
-      console.log('redirection');
       history.push('/messages/new');
     }
 
