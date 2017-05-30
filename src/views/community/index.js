@@ -45,11 +45,33 @@ const CommunityViewPure = ({
   };
 
   if (error) {
-    return <Upsell404Community community={communitySlug} />;
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={`Community Not Found`}
+          provideBack={true}
+          backRoute={`/`}
+        />
+        <Column type="primary">
+          <Upsell404Community community={communitySlug} />;
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (!community || community.deleted) {
-    return <Upsell404Community community={communitySlug} create={create} />;
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={'Community Not Found'}
+          provideBack={true}
+          backRoute={`/`}
+        />
+        <Column type="primary">
+          <Upsell404Community community={communitySlug} create={create} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   /*
@@ -60,7 +82,8 @@ const CommunityViewPure = ({
 
   return (
     <AppViewWrapper>
-      <Titlebar title={community.name} />
+      <Titlebar title={community.name} provideBack={true} backRoute={`/`} />
+
       <CoverColumn>
         <CoverPhoto />
         <CoverRow>

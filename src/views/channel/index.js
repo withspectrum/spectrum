@@ -55,7 +55,11 @@ const ChannelViewPure = ({
   if (error) {
     return (
       <AppViewWrapper>
-        <Titlebar title={'Channel Not Found'} />
+        <Titlebar
+          title={'Channel Not Found'}
+          provideBack={true}
+          backRoute={`/`}
+        />
         <Column type="primary" alignItems="center">
           <Upsell404Channel
             channel={match.params.channelSlug}
@@ -69,7 +73,11 @@ const ChannelViewPure = ({
   if (!channel || channel.isDeleted) {
     return (
       <AppViewWrapper>
-        <Titlebar title={'Channel Not Found'} />
+        <Titlebar
+          title={'Channel Not Found'}
+          provideBack={true}
+          backRoute={`/`}
+        />
         <Column type="primary" alignItems="center">
           <Upsell404Channel
             channel={match.params.channelSlug}
@@ -84,7 +92,11 @@ const ChannelViewPure = ({
   if (channel && channel.channelPermissions.isBlocked) {
     return (
       <AppViewWrapper>
-        <Titlebar title={'Private Channel'} />
+        <Titlebar
+          title={'Private Channel'}
+          provideBack={true}
+          backRoute={`/${match.params.communitySlug}`}
+        />
         <Column type="primary" alignItems="center">
           <Upsell404Channel
             channel={match.params.channelSlug}
@@ -105,7 +117,12 @@ const ChannelViewPure = ({
   ) {
     return (
       <AppViewWrapper>
-        <Titlebar title={channel.name} />
+        <Titlebar
+          title={channel.name}
+          subtitle={channel.community.name}
+          provideBack={true}
+          backRoute={`/${channel.community.slug}`}
+        />
         <Column type="primary" alignItems="center">
           <UpsellRequestToJoinChannel
             channel={channel}
@@ -130,7 +147,12 @@ const ChannelViewPure = ({
   ) {
     return (
       <AppViewWrapper>
-        <Titlebar title={channel.name} />
+        <Titlebar
+          title={channel.name}
+          subtitle={channel.community.name}
+          provideBack={true}
+          backRoute={`/${channel.community.slug}`}
+        />
         <Column type="secondary">
           <ChannelProfile data={{ channel }} profileSize="full" />
 

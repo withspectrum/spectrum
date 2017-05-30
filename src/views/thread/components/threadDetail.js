@@ -89,7 +89,9 @@ const ThreadDetailPure = ({
     <ThreadWrapper>
       <Titlebar
         title={thread.content.title}
-        subtitle={`Thread by ${thread.creator.name}`}
+        subtitle={`${thread.channel.name} · ${thread.channel.community.name}`}
+        provideBack={true}
+        backRoute={`/${thread.channel.community.slug}/${thread.channel.slug}`}
       />
 
       <ContextRow>

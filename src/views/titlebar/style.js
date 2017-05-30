@@ -14,6 +14,7 @@ export const TitleBar = styled.section`
   z-index: 10;
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
   justify-content: space-between;
+  align-items: center;
   padding: 0 4px;
 
   @media (min-width: 768px) {

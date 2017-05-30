@@ -30,8 +30,9 @@ const UserViewPure = ({
   if (error) {
     return (
       <AppViewWrapper>
+        <Titlebar title={`No User Found`} provideBack={true} backRoute={`/`} />
+
         <Column type="primary" alignItems="center">
-          <Titlebar title={'No User Found'} />
           <Upsell404User username={username} />
         </Column>
       </AppViewWrapper>
@@ -41,8 +42,8 @@ const UserViewPure = ({
   if (!user) {
     return (
       <AppViewWrapper>
+        <Titlebar title={`No User Found`} provideBack={true} backRoute={`/`} />
         <Column type="primary" alignItems="center">
-          <Titlebar title={'No User Found'} />
           <Upsell404User username={username} />
         </Column>
       </AppViewWrapper>
@@ -51,7 +52,12 @@ const UserViewPure = ({
 
   return (
     <AppViewWrapper>
-      <Titlebar title={user.name} subtitle={user.username} />
+      <Titlebar
+        title={user.name}
+        subtitle={user.username}
+        provideBack={true}
+        backRoute={`/`}
+      />
       <Column type="secondary">
         <UserProfile data={{ user }} username={username} profileSize="full" />
         <CommunityList

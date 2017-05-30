@@ -19,7 +19,7 @@ const UserSettings = ({ data, currentUser, match }) => {
   if (!data.user) {
     return (
       <AppViewWrapper>
-        <Titlebar title={'No User Found'} />
+        <Titlebar title={`No User Found`} provideBack={true} backRoute={`/`} />
         <Column type="primary">
           <Upsell404User username={match.params.username} />
         </Column>
@@ -30,7 +30,7 @@ const UserSettings = ({ data, currentUser, match }) => {
   if (data.user.id !== currentUser.id) {
     return (
       <AppViewWrapper>
-        <Titlebar title={"I See You Sneakin'"} />
+        <Titlebar title={`No Permission`} provideBack={true} backRoute={`/`} />
         <Column type="primary">
           <Upsell404User username={match.params.username} noPermission />
         </Column>
@@ -40,6 +40,12 @@ const UserSettings = ({ data, currentUser, match }) => {
 
   return (
     <AppViewWrapper>
+      <Titlebar
+        title={data.user.name}
+        subtitle={'Settings'}
+        provideBack={true}
+        backRoute={`/${data.user.username}`}
+      />
       <Titlebar title={data.user.name} subtitle={'Settings'} />
       <Column type="secondary">
         <UserEditForm user={data} />
