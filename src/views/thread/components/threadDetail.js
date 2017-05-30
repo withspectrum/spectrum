@@ -128,13 +128,7 @@ class ThreadDetailPure extends Component {
 
   saveEdit = () => {
     const { dispatch, editThread, thread } = this.props;
-    const {
-      isEditing,
-      linkPreview,
-      linkPreviewTrueUrl,
-      title,
-      body,
-    } = this.state;
+    const { linkPreview, linkPreviewTrueUrl, title, body } = this.state;
     const threadId = thread.id;
 
     const attachments = [];

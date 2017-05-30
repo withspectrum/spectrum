@@ -5,8 +5,6 @@ import Modal from 'react-modal';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import ModalContainer from '../modalContainer';
-// $FlowFixMe
-import StripeCheckout from 'react-stripe-checkout';
 import { closeModal } from '../../../actions/modals';
 import {
   upgradeToProMutation,
@@ -22,12 +20,8 @@ import {
   Section,
   SectionActions,
   SectionError,
-  Heading,
   Subheading,
-  Flex,
   Padding,
-  Spinner,
-  Profile,
 } from './style';
 
 class UpgradeModal extends React.Component {
@@ -110,7 +104,7 @@ class UpgradeModal extends React.Component {
   };
 
   render() {
-    const { user, loading } = this.props;
+    const { user } = this.props;
     const { upgradeError, isOpen, isLoading } = this.state;
 
     return (

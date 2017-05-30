@@ -9,7 +9,6 @@ import compose from 'recompose/compose';
 import { getCurrentUserProfile } from '../../api/user';
 import Icon from '../../components/icons';
 import { displayLoadingCard } from '../../components/loading';
-import { Avatar } from '../../components/avatar';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';

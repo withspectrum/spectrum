@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 //$FlowFixMe
 import compose from 'recompose/compose';
 import { ListCardItem } from '../../../components/listCard';
-import { IconButton, Button } from '../../../components/buttons';
+import { IconButton } from '../../../components/buttons';
 import { UpsellUpgradeToPro } from '../../../components/upsell';
 import { openModal } from '../../../actions/modals';
 import { convertTimestampToDate } from '../../../helpers/utils';

@@ -50,11 +50,9 @@ class Browser extends Component {
   };
 
   handleKeyPress = e => {
-    const { images, index } = this.state;
+    const { images } = this.state;
     // if no media, skip on outta here
     if (!images) return;
-
-    let length = images.length;
 
     // if person taps esc, close the dialog
     if (e.keyCode === 27) {
