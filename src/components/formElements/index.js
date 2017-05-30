@@ -50,11 +50,15 @@ export const Input = (props: InputProps) => {
 
 export const PhotoInput = (props: InputProps) => {
   return (
-    <PhotoInputLabel>
-      <InputOverlay>
+    <PhotoInputLabel user={props.user}>
+      <InputOverlay user={props.user}>
         <Icon glyph="photo" />
       </InputOverlay>
-      <ProfileImage src={props.defaultValue} role="presentation" />
+      <ProfileImage
+        src={props.defaultValue}
+        user={props.user}
+        role="presentation"
+      />
       <StyledHiddenInput
         type="file"
         id="file"

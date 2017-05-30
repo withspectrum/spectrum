@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { logout } from '../../../actions/authentication';
 import Dropdown from '../../../components/dropdown';
 import { Button } from '../../../components/buttons';
 import { DropdownFooter } from '../style';
@@ -9,7 +10,7 @@ export const ProfileDropdown = () => {
     <Dropdown width={'240px'}>
 
       <DropdownFooter>
-        <Button color={'warn'}>Log Out</Button>
+        <Button color={'warn'} onClick={() => logout()}>Log Out</Button>
       </DropdownFooter>
     </Dropdown>
   );

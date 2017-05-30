@@ -119,11 +119,13 @@ const ChannelWithData = ({
         {currentUser &&
           (channel.channelPermissions.isOwner ||
             channel.community.communityPermissions.isOwner) &&
-          <ProfileHeaderAction
-            glyph="settings"
-            tipText={`Channel settings`}
-            tipLocation="top-left"
-          />}
+          <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
+            <ProfileHeaderAction
+              glyph="settings"
+              tipText={`Channel settings`}
+              tipLocation="top-left"
+            />
+          </Link>}
 
       </ProfileHeader>
 

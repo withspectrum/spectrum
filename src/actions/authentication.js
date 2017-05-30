@@ -1,7 +1,6 @@
 import { clearApolloStore } from '../api';
 import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
 
-//TODO hook up to logout button in profile modal
 export const logout = () => {
   // clear localStorage
   removeItemFromStorage('spectrum');

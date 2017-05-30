@@ -224,7 +224,11 @@ class UserWithData extends Component {
               onChange={this.setCoverPhoto}
               defaultValue={coverPhoto}
             />
-            <PhotoInput onChange={this.setProfilePhoto} defaultValue={image} />
+            <PhotoInput
+              onChange={this.setProfilePhoto}
+              defaultValue={image}
+              user
+            />
           </ImageInputWrapper>
 
           <Input
