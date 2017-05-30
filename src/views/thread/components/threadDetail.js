@@ -46,7 +46,8 @@ import {
 class ThreadDetailPure extends Component {
   state: {
     isEditing: boolean,
-    body: string,
+    viewBody: string,
+    editBody: string,
     title: string,
     linkPreview: Object,
     linkPreviewTrueUrl: string,
@@ -72,7 +73,10 @@ class ThreadDetailPure extends Component {
 
     this.state = {
       isEditing: false,
-      body: thread.content.body,
+      viewBody: thread.type === 'SLATE'
+        ? toPlainText(toState(JSON.parse(thread.content.body)))
+        : thread.content.body,
+      editBody: thread.content.body,
       title: thread.content.title,
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl: thread.attachments.length > 0
@@ -143,7 +147,7 @@ class ThreadDetailPure extends Component {
 
   saveEdit = () => {
     const { dispatch, editThread, thread } = this.props;
-    const { linkPreview, linkPreviewTrueUrl, title, body } = this.state;
+    const { linkPreview, linkPreviewTrueUrl, title, editBody } = this.state;
     const threadId = thread.id;
 
     const attachments = [];
@@ -158,15 +162,18 @@ class ThreadDetailPure extends Component {
       });
     }
 
-    let bodyToSave = body;
+    let bodyToSave = editBody;
     if (thread.type === 'SLATE') {
-      bodyToSave = JSON.stringify(toJSON(body));
+      bodyToSave = toPlainText(toState(JSON.parse(bodyToSave)));
     }
 
     const content = {
       title,
-      body: JSON.stringify(toJSON(body)),
+      body: bodyToSave,
     };
+
+    console.log('this.state.body', this.state.body);
+    console.log('bodyToSave', bodyToSave);
 
     const input = {
       threadId,
@@ -201,8 +208,13 @@ class ThreadDetailPure extends Component {
   };
 
   changeBody = state => {
+    console.log('state', state);
+    let foo = toJSON(state);
+    console.log('foo 1', foo);
+    foo = JSON.stringify(foo);
+    console.log('foo 2', foo);
     this.setState({
-      body: state,
+      editBody: foo,
     });
   };
 
@@ -279,21 +291,15 @@ class ThreadDetailPure extends Component {
       isEditing,
       linkPreview,
       linkPreviewTrueUrl,
-      body,
+      viewBody,
+      editBody,
       fetchingLinkPreview,
     } = this.state;
 
-    let viewBody = thread.content.body;
-    if (thread.type === 'SLATE') {
-      viewBody = toPlainText(toState(JSON.parse(viewBody)));
-    }
+    console.log('rendering viewBody', viewBody);
+    console.log('rendering editBody', editBody);
 
-    let editBody = this.state.body;
-    if (thread.type === 'SLATE') {
-      editBody = toState(JSON.parse(this.state.body));
-    }
-
-    // let editBody = toState(JSON.parse(thread.content.body))
+    let f = toState(JSON.parse(this.state.editBody));
 
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner =
@@ -402,7 +408,7 @@ class ThreadDetailPure extends Component {
             <Editor
               onChange={this.changeBody}
               onKeyDown={this.listenForUrl}
-              state={editBody}
+              state={f}
               style={ThreadDescription}
               ref="bodyTextarea"
               placeholder="Write more thoughts here, add photos, and anything else!"
