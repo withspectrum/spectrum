@@ -10,7 +10,7 @@ import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
 import DirectMessages from './views/directMessages';
-import Explore from './views/explore';
+// import Explore from './views/explore';
 import Thread from './views/thread';
 import UserView from './views/user';
 import CommunityView from './views/community';
@@ -64,7 +64,7 @@ class Routes extends Component {
               <Route path="/style-guide" component={StyleGuide} />
 
               {/* App Pages */}
-              <Route path="/explore" component={Explore} />
+              {/* <Route path="/explore" component={Explore} /> */}
               <Route path="/messages" component={DirectMessages} />
               <Route path="/thread" component={Thread} />
               <Route exact path="/users" render={() => <Redirect to="/" />} />
