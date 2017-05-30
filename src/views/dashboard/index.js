@@ -34,7 +34,9 @@ const DashboardPure = props => {
             heading="Whoops! Something broke the home page."
             copy="Mind reloading?"
           >
-            <Button icon="view-reload">Reload</Button>
+            <Button icon="view-reload" onClick={() => location.reload(true)}>
+              Reload
+            </Button>
           </NullCard>
         </Column>
       </AppViewWrapper>

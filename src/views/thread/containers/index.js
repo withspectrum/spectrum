@@ -30,11 +30,23 @@ const ThreadContainerPure = ({
   toggleChannelSubscription,
 }) => {
   if (error) {
-    return <Upsell404Thread />;
+    return (
+      <AppViewWrapper>
+        <Column type="primary">
+          <Upsell404Thread />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (!thread || thread.deleted) {
-    return <Upsell404Thread />;
+    return (
+      <AppViewWrapper>
+        <Column type="primary">
+          <Upsell404Thread />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   const toggleSubscription = channelId => {
