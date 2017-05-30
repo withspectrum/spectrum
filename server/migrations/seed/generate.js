@@ -31,7 +31,6 @@ const generateUser = () => {
     coverPhoto: faker.image.image(),
     email: faker.internet.email(name),
     providerId: uuid(),
-    subscriptions: [],
     createdAt,
     // Make sure lastSeen is > createdAt
     lastSeen: faker.date.between(createdAt, new Date()),

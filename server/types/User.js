@@ -61,7 +61,7 @@ const User = /* GraphQL */ `
 		threads: Int
 	}
 
-	type Subscription {
+	type RecurringPayment {
 		plan: String
 		amount: String
 		created: String
@@ -98,7 +98,7 @@ const User = /* GraphQL */ `
 		threadConnection(first: Int = 10, after: String): UserThreadsConnection!
 		everything(first: Int = 10, after: String): EverythingThreadsConnection!
 		notificationConnection(first: Int = 10, after: String): UserNotificationsConnection!
-		subscriptions: [Subscription]
+		recurringPayments: [RecurringPayment]
 	}
 
 	extend type Query {

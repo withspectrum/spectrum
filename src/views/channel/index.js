@@ -21,6 +21,7 @@ import {
   Upsell404Channel,
   UpsellRequestToJoinChannel,
 } from '../../components/upsell';
+import Titlebar from '../titlebar';
 
 const ThreadFeedWithData = compose(getChannelThreads)(ThreadFeed);
 
@@ -54,10 +55,17 @@ const ChannelViewPure = ({
   if (error) {
     return (
       <AppViewWrapper>
-        <Upsell404Channel
-          channel={match.params.channelSlug}
-          community={match.params.communitySlug}
+        <Titlebar
+          title={'Channel Not Found'}
+          provideBack={true}
+          backRoute={`/`}
         />
+        <Column type="primary" alignItems="center">
+          <Upsell404Channel
+            channel={match.params.channelSlug}
+            community={match.params.communitySlug}
+          />
+        </Column>
       </AppViewWrapper>
     );
   }
@@ -65,10 +73,17 @@ const ChannelViewPure = ({
   if (!channel || channel.isDeleted) {
     return (
       <AppViewWrapper>
-        <Upsell404Channel
-          channel={match.params.channelSlug}
-          community={match.params.communitySlug}
+        <Titlebar
+          title={'Channel Not Found'}
+          provideBack={true}
+          backRoute={`/`}
         />
+        <Column type="primary" alignItems="center">
+          <Upsell404Channel
+            channel={match.params.channelSlug}
+            community={match.params.communitySlug}
+          />
+        </Column>
       </AppViewWrapper>
     );
   }
@@ -77,11 +92,18 @@ const ChannelViewPure = ({
   if (channel && channel.channelPermissions.isBlocked) {
     return (
       <AppViewWrapper>
-        <Upsell404Channel
-          channel={match.params.channelSlug}
-          community={match.params.communitySlug}
-          noPermission
+        <Titlebar
+          title={'Private Channel'}
+          provideBack={true}
+          backRoute={`/${match.params.communitySlug}`}
         />
+        <Column type="primary" alignItems="center">
+          <Upsell404Channel
+            channel={match.params.channelSlug}
+            community={match.params.communitySlug}
+            noPermission
+          />
+        </Column>
       </AppViewWrapper>
     );
   }
@@ -95,13 +117,21 @@ const ChannelViewPure = ({
   ) {
     return (
       <AppViewWrapper>
-        <UpsellRequestToJoinChannel
-          channel={channel}
-          community={match.params.communitySlug}
-          isPending={channel.channelPermissions.isPending}
-          subscribe={toggleRequest}
-          currentUser={currentUser}
+        <Titlebar
+          title={channel.name}
+          subtitle={channel.community.name}
+          provideBack={true}
+          backRoute={`/${channel.community.slug}`}
         />
+        <Column type="primary" alignItems="center">
+          <UpsellRequestToJoinChannel
+            channel={channel}
+            community={match.params.communitySlug}
+            isPending={channel.channelPermissions.isPending}
+            subscribe={toggleRequest}
+            currentUser={currentUser}
+          />
+        </Column>
       </AppViewWrapper>
     );
   }
@@ -117,6 +147,12 @@ const ChannelViewPure = ({
   ) {
     return (
       <AppViewWrapper>
+        <Titlebar
+          title={channel.name}
+          subtitle={channel.community.name}
+          provideBack={true}
+          backRoute={`/${channel.community.slug}`}
+        />
         <Column type="secondary">
           <ChannelProfile data={{ channel }} profileSize="full" />
 

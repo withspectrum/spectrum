@@ -14,7 +14,7 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 //$FlowFixMe
 import withProps from 'recompose/withProps';
-
+import Titlebar from '../titlebar';
 import { Loading } from '../../components/loading';
 import { GoopyThree } from '../../views/homepage/style';
 import { FlexCol } from '../../components/globals';
@@ -192,6 +192,7 @@ const ExplorePure = ({ data, currentUser }) => {
   if (data.loading) {
     return (
       <ScrollBody>
+        <Titlebar title={'Explore'} />
         <ViewHeader>
           <ViewTitle>Explore</ViewTitle>
           <ViewSubtitle>
@@ -222,6 +223,7 @@ const ExplorePure = ({ data, currentUser }) => {
 
   return (
     <ScrollBody>
+      <Titlebar title={'Explore'} />
       <ViewHeader>
         <ViewTitle>Explore</ViewTitle>
         <ViewSubtitle>

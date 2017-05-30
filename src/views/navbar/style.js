@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Transition, FlexRow } from '../../components/globals';
+import { Transition, FlexRow, Shadow } from '../../components/globals';
 
 export const Container = styled.section`
   width: 100%;
@@ -42,10 +42,6 @@ export const Section = styled.span`
 
 export const Spacer = styled.div`
   height: 48px;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
 `;
 
 export const LogoLink = styled(Link)`

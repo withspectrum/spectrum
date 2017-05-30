@@ -19,6 +19,7 @@ import ThreadsList from './components/threadsList';
 import NewThread from './containers/newThread';
 import ExistingThread from './containers/existingThread';
 import { View, MessagesList, ComposeHeader } from './style';
+import Titlebar from '../titlebar';
 
 class DirectMessages extends Component {
   state: {
@@ -41,8 +42,10 @@ class DirectMessages extends Component {
 
   render() {
     const { match, history, currentUser, data } = this.props;
+    const width = window.innerWidth;
+    const isMobile = width < 768;
 
-    if (match.isExact) {
+    if (match.isExact && !isMobile) {
       history.push('/messages/new');
     }
 
@@ -54,6 +57,8 @@ class DirectMessages extends Component {
 
     return (
       <View>
+        {isMobile && <Titlebar title={'Messages'} provideBack={false} />}
+
         <MessagesList>
           <Link to="/messages/new">
             <ComposeHeader>
@@ -66,13 +71,6 @@ class DirectMessages extends Component {
             currentUser={currentUser}
           />
         </MessagesList>
-
-        {/* if no threadId is provided, redirect to homepage */}
-        <Route
-          exact
-          path={match.url}
-          render={() => <Redirect to="/messages/new" />}
-        />
 
         {/*
           pass the user's existing DM threads into the composer so that we can more quickly

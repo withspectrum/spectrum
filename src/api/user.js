@@ -91,6 +91,12 @@ const UPGRADE_TO_PRO_MUTATION = gql`
   mutation upgradeToPro($input: UpgradeToProInput!) {
     upgradeToPro(input: $input) {
       ...userInfo
+      recurringPayments {
+        plan
+        amount
+        created
+        status
+      }
     }
   }
   ${userInfoFragment}
@@ -119,6 +125,12 @@ const DOWNGRADE_FROM_PRO_MUTATION = gql`
   mutation downgradeFromPro {
     downgradeFromPro {
       ...userInfo
+      recurringPayments {
+        plan
+        amount
+        created
+        status
+      }
     }
   }
   ${userInfoFragment}
@@ -136,13 +148,13 @@ export const downgradeFromProMutation = graphql(
 );
 
 /*
-  Get a current user's subscriptions
+  Get a current user's recurring payments
 */
-const GET_CURRENT_USER_SUBSCRIPTIONS_QUERY = gql`
-  query getCurrentUserSubscriptions {
+const GET_CURRENT_USER_RECURRING_PAYMENTS_QUERY = gql`
+  query getCurrentUserRecurringPayments {
     user: currentUser {
       ...userInfo
-      subscriptions {
+      recurringPayments {
         plan
         amount
         created
@@ -153,6 +165,6 @@ const GET_CURRENT_USER_SUBSCRIPTIONS_QUERY = gql`
   ${userInfoFragment}
 `;
 
-export const getCurrentUserSubscriptions = graphql(
-  GET_CURRENT_USER_SUBSCRIPTIONS_QUERY
+export const getCurrentUserRecurringPayments = graphql(
+  GET_CURRENT_USER_RECURRING_PAYMENTS_QUERY
 );

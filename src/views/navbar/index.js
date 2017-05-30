@@ -24,6 +24,10 @@ class Navbar extends Component {
 
     return (
       <Container>
+        {/*
+          Nav contains global navigation elements like getting to messages,
+          profile, home, explore, etc.
+        */}
         <Nav>
           <Section left>
             <LogoLink to="/">

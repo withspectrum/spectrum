@@ -111,7 +111,7 @@ const UserWithData = ({
     return (
       <Card>
         <ProfileHeader>
-          <ProfileHeaderLink to={`../users/${currentUser.username}`}>
+          <ProfileHeaderLink to={`../users/${user.username}`}>
             <Avatar
               margin={'0 12px 0 0'}
               size={40}

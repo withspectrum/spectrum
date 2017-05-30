@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
-
+import Titlebar from '../../views/titlebar';
 import { UpsellSignIn, NullCard } from '../../components/upsell';
 import { Button } from '../../components/buttons';
 import { displayLoadingScreen } from '../../components/loading';
@@ -43,6 +43,7 @@ const DashboardPure = props => {
   if (error) {
     return (
       <AppViewWrapper>
+        <Titlebar />
         <Column type="primary" alignItems="center">
           <NullCard
             bg="error"
@@ -59,6 +60,8 @@ const DashboardPure = props => {
     const communities = user.communityConnection.edges;
     return (
       <AppViewWrapper>
+        <Titlebar />
+
         <Column type="secondary">
           <UserProfile profileSize="mini" data={{ user: user }} />
           {user &&
@@ -95,6 +98,7 @@ const DashboardPure = props => {
   } else {
     return (
       <AppViewWrapper>
+        <Titlebar />
         <Column type="primary" alignItems="center">
           <UpsellSignIn />
         </Column>

@@ -19,6 +19,7 @@ import {
   togglePendingUserInChannelMutation,
   unblockUserInChannelMutation,
 } from '../../api/channel';
+import Titlebar from '../titlebar';
 
 const SettingsPure = ({
   match,
@@ -32,11 +33,33 @@ const SettingsPure = ({
   const channelSlug = match.params.channelSlug;
 
   if (error) {
-    return <Upsell404Channel channel={channelSlug} community={communitySlug} />;
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={'Channel Not Found'}
+          provideBack={true}
+          backRoute={`/`}
+        />
+        <Column type="primary">
+          <Upsell404Channel channel={channelSlug} community={communitySlug} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (!channel || channel.isDeleted) {
-    return <Upsell404Channel channel={channelSlug} community={communitySlug} />;
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={'Channel Not Found'}
+          provideBack={true}
+          backRoute={`/`}
+        />
+        <Column type="primary">
+          <Upsell404Channel channel={channelSlug} community={communitySlug} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (
@@ -44,11 +67,21 @@ const SettingsPure = ({
     !channel.community.communityPermissions.isOwner
   ) {
     return (
-      <Upsell404Channel
-        channel={channelSlug}
-        community={communitySlug}
-        noPermission
-      />
+      <AppViewWrapper>
+        <Titlebar
+          title={'No Permission'}
+          provideBack={true}
+          backRoute={`/${communitySlug}`}
+        />
+
+        <Column type="primary">
+          <Upsell404Channel
+            channel={channelSlug}
+            community={communitySlug}
+            noPermission
+          />
+        </Column>
+      </AppViewWrapper>
     );
   }
 
@@ -91,6 +124,12 @@ const SettingsPure = ({
 
   return (
     <AppViewWrapper>
+      <Titlebar
+        title={`${channel.name} · ${channel.community.name}`}
+        subtitle={'Settings'}
+        provideBack={true}
+        backRoute={`/${channel.community.slug}/${channel.slug}`}
+      />
       <Column type="secondary">
         <ChannelEditForm channel={channel} />
       </Column>

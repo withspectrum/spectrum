@@ -14,6 +14,7 @@ import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import ListCard from './components/listCard';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
+import Titlebar from '../titlebar';
 import { CommunityProfile } from '../../components/profile';
 import { displayLoadingScreen } from '../../components/loading';
 import { UpsellSignIn, Upsell404Community } from '../../components/upsell';
@@ -44,11 +45,33 @@ const CommunityViewPure = ({
   };
 
   if (error) {
-    return <Upsell404Community community={communitySlug} />;
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={`Community Not Found`}
+          provideBack={true}
+          backRoute={`/`}
+        />
+        <Column type="primary">
+          <Upsell404Community community={communitySlug} />;
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (!community || community.deleted) {
-    return <Upsell404Community community={communitySlug} create={create} />;
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={'Community Not Found'}
+          provideBack={true}
+          backRoute={`/`}
+        />
+        <Column type="primary">
+          <Upsell404Community community={communitySlug} create={create} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   /*
@@ -59,6 +82,8 @@ const CommunityViewPure = ({
 
   return (
     <AppViewWrapper>
+      <Titlebar title={community.name} provideBack={true} backRoute={`/`} />
+
       <CoverColumn>
         <CoverPhoto />
         <CoverRow>
@@ -76,7 +101,11 @@ const CommunityViewPure = ({
               (community.communityPermissions.isMember ||
                 community.communityPermissions.isOwner) &&
               <ThreadComposer activeCommunity={communitySlug} />}
-            <CommunityThreadFeed viewContext="community" slug={communitySlug} />
+            <CommunityThreadFeed
+              viewContext="community"
+              slug={communitySlug}
+              currentUser={currentUser}
+            />
           </Column>
         </CoverRow>
       </CoverColumn>
