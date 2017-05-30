@@ -1,26 +1,10 @@
 // @flow
 const { parse } = require('url');
-
-type Meta = {
-  title: string,
-  description: string,
-};
-
-const DEFAULT_META = {
-  title: 'Spectrum',
-  description: 'Where communities live.',
-};
+const generateMetaInfo = require('../shared/generate-meta-info');
 
 // Don't even try if the path is /<value> any of these
 // TODO: Longer, more complete blacklist here
 const PATH_BLACKLIST = ['robots.txt', 'home', 'messages'];
-
-const setDefault = (input: Meta): Meta => {
-  return {
-    title: input.title || DEFAULT_META.title,
-    description: input.description || DEFAULT_META.description,
-  };
-};
 
 export default (
   url: string,
@@ -28,15 +12,12 @@ export default (
 ): Promise<Meta> => {
   const { pathname = '' } = parse(url);
   const [, first, second, third] = pathname.split('/');
-  if (third || first.length === 0) return Promise.resolve(DEFAULT_META);
+  if (third || first.length === 0) return Promise.resolve(generateMetaInfo());
   let promise;
 
   switch (first) {
     case 'explore': {
-      promise = Promise.resolve({
-        title: 'Explore | Spectrum',
-        description: 'Explore some of the communities on Spectrum',
-      });
+      promise = Promise.resolve(generateMetaInfo({ type: 'explore' }));
       break;
     }
     case 'thread': {
@@ -59,9 +40,13 @@ export default (
       `
       ).then(res => {
         const { thread: { content, channel } } = res.data;
-        return setDefault({
-          title: `${content.title} | ${channel.name}`,
-          description: content.body,
+        return generateMetaInfo({
+          type: 'thread',
+          data: {
+            title: content.title,
+            body: content.body,
+            channelName: channel.name,
+          },
         });
       });
       break;
@@ -83,9 +68,13 @@ export default (
       `
       ).then(res => {
         const { user } = res.data;
-        return setDefault({
-          title: `${user.name} (${user.username})`,
-          description: user.description,
+        return generateMetaInfo({
+          type: 'user',
+          data: {
+            username: user.username,
+            description: user.description,
+            name: user.name,
+          },
         });
       });
       break;
@@ -110,9 +99,13 @@ export default (
         `
         ).then(res => {
           const { channel, channel: { community } } = res.data;
-          return setDefault({
-            title: `${channel.name} | ${community.name}`,
-            description: channel.description,
+          return generateMetaInfo({
+            type: 'channel',
+            data: {
+              name: channel.name,
+              description: channel.description,
+              communityName: community.name,
+            },
           });
         });
       } else if (!isBlacklisted) {
@@ -130,9 +123,12 @@ export default (
         `
         ).then(res => {
           const { community } = res.data;
-          return setDefault({
-            title: `${community.name} on Spectrum`,
-            description: community.description,
+          return generateMetaInfo({
+            type: 'community',
+            data: {
+              name: community.name,
+              description: community.description,
+            },
           });
         });
       }
@@ -140,11 +136,11 @@ export default (
     }
   }
 
-  if (!promise) return Promise.resolve(DEFAULT_META);
+  if (!promise) return Promise.resolve(generateMetaInfo());
 
   return promise.catch(err => {
     console.log(`⚠️ Failed to load metadata for ${url}! ⚠️`);
     console.log(err);
-    return DEFAULT_META;
+    return generateMetaInfo();
   });
 };
