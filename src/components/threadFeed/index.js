@@ -49,6 +49,7 @@ const ThreadFeedPure = props => {
   const {
     data: { threads, loading, fetchMore, error, hasNextPage },
     currentUser,
+    data,
   } = props;
 
   if (loading) {
