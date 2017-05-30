@@ -66,7 +66,7 @@ const DashboardPure = props => {
             <ThreadComposer />
             <EverythingThreadFeed viewContext="dashboard" />
           </Column>}
-        {user &&
+        {/* {user &&
           !communities &&
           <Column type="primary">
             <NullCard
@@ -78,7 +78,7 @@ const DashboardPure = props => {
                 <Button icon="explore">Browse communities</Button>
               </Link>
             </NullCard>
-          </Column>}
+          </Column>} */}
       </AppViewWrapper>
     );
   } else {
