@@ -6,17 +6,8 @@ import { connect } from 'react-redux';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
-import {
-  Overlay,
-  ActiveImage,
-  Minigallery,
-  MiniImg,
-  MiniContainer,
-  CloseButton,
-} from './style';
 import { getMediaMessagesForThread } from '../../api/message';
 import { displayLoadingGallery } from '../../components/loading';
-import { closeGallery } from '../../actions/gallery';
 import Browser from './browser';
 
 const GalleryWithMedia = compose(

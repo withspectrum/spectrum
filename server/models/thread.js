@@ -140,6 +140,7 @@ const publishThread = (thread: Object, userId: string): Promise<Object> => {
         modifiedAt: new Date(),
         isPublished: true,
         isLocked: false,
+        edits: [],
       }),
       { returnChanges: true }
     )
@@ -203,23 +204,44 @@ const deleteThread = (threadId: string): Promise<Boolean> => {
     });
 };
 
-const editThread = (threadId: string, newContent: Object): Promise<Object> => {
+type EditThreadInput = {
+  threadId: string,
+  content: {
+    title: string,
+    body: string,
+  },
+  attachments: Array<Object>,
+};
+const editThread = (input: EditThreadInput): Promise<Object> => {
   return db
     .table('threads')
-    .get(threadId)
+    .get(input.threadId)
     .update(
       {
-        content: newContent,
+        content: input.content,
+        attachments: input.attachments,
         modifiedAt: new Date(),
         edits: db.row('edits').append({
-          content: newContent,
+          content: db.row('content'),
+          attachments: db.row('attachments'),
           timestamp: new Date(),
         }),
       },
-      { returnChanges: true }
+      { returnChanges: 'always' }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => {
+      console.log('result', result);
+      // if an update happened
+      if (result.replaced === 1) {
+        return result.changes[0].new_val;
+      }
+
+      // an update was triggered from the client, but no data was changed
+      if (result.unchanged === 1) {
+        return result.changes[0].old_val;
+      }
+    });
 };
 
 const listenToNewThreads = (cb: Function): Function => {

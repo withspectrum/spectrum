@@ -68,13 +68,23 @@ const ChannelWithData = ({
   const toggleSubscription = channelId => {
     toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
-        const str = toggleChannelSubscription.channelPermissions.isMember
-          ? `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
-          : `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
+        const isMember = toggleChannelSubscription.channelPermissions.isMember;
+        const isPending =
+          toggleChannelSubscription.channelPermissions.isPending;
+        let str;
+        if (isPending) {
+          str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}`;
+        }
 
-        const type = toggleChannelSubscription.channelPermissions.isMember
-          ? 'success'
-          : 'neutral';
+        if (!isPending && isMember) {
+          str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`;
+        }
+
+        if (!isPending && !isMember) {
+          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
+        }
+
+        const type = isMember || isPending ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {

@@ -5,7 +5,7 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
 // $FlowFixMe
-import { Route, Redirect } from 'react-router';
+import { Route } from 'react-router';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 // $FlowFixMe
