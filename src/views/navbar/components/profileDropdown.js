@@ -3,6 +3,7 @@ import React from 'react';
 import { logout } from '../../../actions/authentication';
 import Dropdown from '../../../components/dropdown';
 import { TextButton } from '../../../components/buttons';
+import ProfileMenu from '../../user/components/profileMenu';
 import {
   DropdownFooter,
   UserProfileDropdownList,
@@ -11,16 +12,17 @@ import {
 
 export const ProfileDropdown = props => {
   return (
-    <Dropdown width={'240px'}>
+    <Dropdown width={'160px'}>
       <UserProfileDropdownList>
-        <UserProfileDropdownListItem
+        <ProfileMenu {...props} />
+        {/* <UserProfileDropdownListItem
           onClick={() => props.history.push(`/users/${props.user.username}`)}
         >
           Settings
         </UserProfileDropdownListItem>
         <UserProfileDropdownListItem onClick={() => logout()}>
           Log Out
-        </UserProfileDropdownListItem>
+        </UserProfileDropdownListItem> */}
       </UserProfileDropdownList>
     </Dropdown>
   );
