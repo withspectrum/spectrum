@@ -15,6 +15,7 @@ import { Button } from '../buttons';
 //   renderComponent(LoadingThread)
 // );
 
+//TODO: wire up buttons...
 const NullState = () => (
   <NullCard
     bg="post"
@@ -44,7 +45,9 @@ const ErrorState = () => (
 */
 const ThreadFeedPure = props => {
   const { data: { threads, loading, fetchMore, error, hasNextPage } } = props;
-
+  {
+    console.log(props);
+  }
   if (loading) {
     return (
       <div style={{ minWidth: '100%' }}>

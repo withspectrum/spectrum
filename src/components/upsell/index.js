@@ -204,6 +204,23 @@ export const Upsell404Community = ({
   );
 };
 
+export const UpsellJoinCommunity = ({
+  community,
+  join,
+}: { community: Object, join: Function }) => {
+  return (
+    <NullCard bg="community">
+      <Title>Ready to join the conversation?</Title>
+      <Subtitle>
+        Join {community.name} to get involved!
+      </Subtitle>
+      <Button onClick={() => join(community.id)} icon="plus">
+        Join
+      </Button>
+    </NullCard>
+  );
+};
+
 export const Upsell404User = ({
   username,
   noPermission,

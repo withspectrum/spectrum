@@ -12,11 +12,17 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import ListCard from './components/listCard';
+import { toggleCommunityMembershipMutation } from '../../api/community';
+import { addToastWithTimeout } from '../../actions/toasts';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import { CommunityProfile } from '../../components/profile';
 import { displayLoadingScreen } from '../../components/loading';
-import { UpsellSignIn, Upsell404Community } from '../../components/upsell';
-import { CoverRow, CoverColumn } from './style';
+import {
+  UpsellSignIn,
+  UpsellJoinCommunity,
+  Upsell404Community,
+} from '../../components/upsell';
+import { CoverRow, CoverColumn, CoverButton } from './style';
 
 import {
   getCommunityThreads,
@@ -29,8 +35,31 @@ const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 const ChannelListCard = compose(getCommunityChannels)(ListCard);
 
 const CommunityViewPure = props => {
-  const { match, data: { community, error }, currentUser, dispatch } = props;
+  const {
+    match,
+    data: { community, error },
+    currentUser,
+    dispatch,
+    toggleCommunityMembership,
+  } = props;
   const communitySlug = match.params.communitySlug;
+
+  const toggleMembership = communityId => {
+    toggleCommunityMembership({ communityId })
+      .then(({ data: { toggleCommunityMembership } }) => {
+        const str = toggleCommunityMembership.communityPermissions.isMember
+          ? `Joined ${toggleCommunityMembership.name}!`
+          : `Left ${toggleCommunityMembership.name}.`;
+
+        const type = toggleCommunityMembership.communityPermissions.isMember
+          ? 'success'
+          : 'neutral';
+        dispatch(addToastWithTimeout(type, str));
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
 
   const create = () => {
     return dispatch(
@@ -39,24 +68,42 @@ const CommunityViewPure = props => {
   };
 
   if (error) {
-    return <Upsell404Community community={communitySlug} />;
+    return (
+      <AppViewWrapper>
+        <Column type="primary">
+          <Upsell404Community community={communitySlug} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (!community || community.deleted) {
-    return <Upsell404Community community={communitySlug} create={create} />;
+    return (
+      <AppViewWrapper>
+        <Column type="primary">
+          <Upsell404Community community={communitySlug} create={create} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
-
-  /*
-    In the future we can check isPrivate && !isMember to handle private
-    communities with request-to-join flows or redirects if the community
-    shouldn't be viewable at all
-  */
 
   return (
     <AppViewWrapper>
       <CoverColumn>
-        {console.log(community)}
-        <CoverPhoto src={community.coverPhoto} />
+        <CoverPhoto src={community.coverPhoto}>
+          {currentUser &&
+            (!community.communityPermissions.isOwner &&
+              community.communityPermissions.isMember) &&
+            <CoverButton
+              glyph="minus-fill"
+              color="bg.default"
+              hoverColor="bg.default"
+              opacity="0.5"
+              tipText="Leave community"
+              tipLocation="left"
+              onClick={() => toggleMembership(community.id)}
+            />}
+        </CoverPhoto>
         <CoverRow>
           <Column type="secondary" className={'inset'}>
             <CommunityProfile data={{ community }} profileSize="full" />
@@ -65,9 +112,12 @@ const CommunityViewPure = props => {
 
           <Column type="primary">
             {!currentUser && <UpsellSignIn entity={community} />}
-            {/* {currentUser &&
+            {currentUser &&
               !community.communityPermissions.isMember &&
-              <UpsellJoin activeCommunity={communitySlug} />} */}
+              <UpsellJoinCommunity
+                community={community}
+                join={toggleMembership}
+              />}
             {currentUser &&
               (community.communityPermissions.isMember ||
                 community.communityPermissions.isOwner) &&
@@ -80,9 +130,12 @@ const CommunityViewPure = props => {
   );
 };
 
-export const CommunityView = compose(getCommunity, displayLoadingScreen, pure)(
-  CommunityViewPure
-);
+export const CommunityView = compose(
+  toggleCommunityMembershipMutation,
+  getCommunity,
+  displayLoadingScreen,
+  pure
+)(CommunityViewPure);
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
