@@ -1,13 +1,26 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-
+// $FlowFixMe
+import { connect } from 'react-redux';
+// $FlowFixMe
+import compose from 'recompose/compose';
 import { SERVER_URL } from '../../api';
-
+import { addToastWithTimeout } from '../../actions/toasts';
 import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
-import { Title, Subtitle, Actions, NullCol } from './style';
+import {
+  Title,
+  Subtitle,
+  Actions,
+  NullCol,
+  UpgradeError,
+  Profile,
+} from './style';
+// $FlowFixMe
+import StripeCheckout from 'react-stripe-checkout';
+import { upgradeToProMutation } from '../../api/user';
 
 export const NullCard = props => {
   return (
@@ -261,3 +274,89 @@ export const Upsell404Thread = () => {
     </NullCard>
   );
 };
+
+class UpsellUpgradeToProPure extends Component {
+  state: {
+    upgradeError: string,
+    isLoading: boolean,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      upgradeError: '',
+      isLoading: false,
+    };
+  }
+
+  upgradeToPro = token => {
+    this.setState({
+      isLoading: true,
+    });
+
+    const input = {
+      plan: 'beta-pro',
+      token: JSON.stringify(token),
+    };
+
+    this.props
+      .upgradeToPro(input)
+      .then(({ data: { upgradeToPro }, data }) => {
+        this.props.dispatch(addToastWithTimeout('success', 'Upgraded to Pro!'));
+        this.setState({
+          isLoading: false,
+          upgradeError: '',
+        });
+      })
+      .catch(err => {
+        this.setState({
+          isLoading: false,
+          upgradeError: err.message,
+        });
+        this.props.dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
+  render() {
+    const title = 'Upgrade to Pro';
+    const subtitle = `We're hard at work building features for Spectrum Pros. Your early support helps us get there faster – thank you!`;
+    const { upgradeError, isLoading } = this.state;
+    const { currentUser } = this.props;
+
+    return (
+      <NullCard bg="pro">
+        <Profile>
+          <img alt={currentUser.name} src={currentUser.profilePhoto} />
+          <span>PRO</span>
+        </Profile>
+        <Title>{title}</Title>
+        <Subtitle>{subtitle}</Subtitle>
+
+        <StripeCheckout
+          token={this.upgradeToPro}
+          stripeKey={'pk_test_A6pKi4xXOdgg9FrZJ84NW9mP'}
+          name="🔐   Pay Securely"
+          description="Secured and Encrypted by Stripe"
+          panelLabel="Subscribe for "
+          amount={500}
+          currency="USD"
+        >
+          <Button disabled={isLoading} loading={isLoading}>
+            Upgrade to Pro · $5 per Month
+          </Button>
+        </StripeCheckout>
+
+        {!upgradeError && <UpgradeError>{upgradeError}</UpgradeError>}
+      </NullCard>
+    );
+  }
+}
+
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+export const UpsellUpgradeToPro = compose(
+  upgradeToProMutation,
+  connect(mapStateToProps)
+)(UpsellUpgradeToProPure);

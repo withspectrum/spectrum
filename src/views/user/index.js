@@ -15,6 +15,7 @@ import { Button } from '../../components/buttons';
 import { NullCard, Upsell404User } from '../../components/upsell';
 import CommunityList from './components/communityList';
 import { getUserThreads, getUser } from './queries';
+import Titlebar from '../titlebar';
 
 const ThreadFeedWithData = compose(getUserThreads)(ThreadFeed);
 
@@ -27,15 +28,36 @@ const UserViewPure = ({
   const username = match.params.username;
 
   if (error) {
-    return <Upsell404User username={username} />;
+    return (
+      <AppViewWrapper>
+        <Titlebar title={`No User Found`} provideBack={true} backRoute={`/`} />
+
+        <Column type="primary" alignItems="center">
+          <Upsell404User username={username} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (!user) {
-    return <Upsell404User username={username} />;
+    return (
+      <AppViewWrapper>
+        <Titlebar title={`No User Found`} provideBack={true} backRoute={`/`} />
+        <Column type="primary" alignItems="center">
+          <Upsell404User username={username} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   return (
     <AppViewWrapper>
+      <Titlebar
+        title={user.name}
+        subtitle={user.username}
+        provideBack={true}
+        backRoute={`/`}
+      />
       <Column type="secondary">
         <UserProfile data={{ user }} username={username} profileSize="full" />
         <CommunityList

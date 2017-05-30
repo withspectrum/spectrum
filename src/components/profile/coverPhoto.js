@@ -27,7 +27,7 @@ export const CoverPhoto = (props: Object) => {
     return (
       <PhotoContainer coverURL={props.user.coverPhoto}>
         {props.currentUser && props.currentUser.id === props.user.id
-          ? <Link to={`../users/${props.currentUser.username}/settings`}>
+          ? <Link to={`../users/${props.user.username}/settings`}>
               <CoverAction
                 glyph="settings"
                 color="text.reverse"

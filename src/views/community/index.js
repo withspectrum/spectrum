@@ -15,6 +15,7 @@ import ListCard from './components/listCard';
 import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
+import Titlebar from '../titlebar';
 import { CommunityProfile } from '../../components/profile';
 import { displayLoadingScreen } from '../../components/loading';
 import {
@@ -70,8 +71,13 @@ const CommunityViewPure = props => {
   if (error) {
     return (
       <AppViewWrapper>
+        <Titlebar
+          title={`Community Not Found`}
+          provideBack={true}
+          backRoute={`/`}
+        />
         <Column type="primary">
-          <Upsell404Community community={communitySlug} />
+          <Upsell404Community community={communitySlug} />;
         </Column>
       </AppViewWrapper>
     );
@@ -80,6 +86,11 @@ const CommunityViewPure = props => {
   if (!community || community.deleted) {
     return (
       <AppViewWrapper>
+        <Titlebar
+          title={'Community Not Found'}
+          provideBack={true}
+          backRoute={`/`}
+        />
         <Column type="primary">
           <Upsell404Community community={communitySlug} create={create} />
         </Column>
@@ -89,6 +100,8 @@ const CommunityViewPure = props => {
 
   return (
     <AppViewWrapper>
+      <Titlebar title={community.name} provideBack={true} backRoute={`/`} />
+
       <CoverColumn>
         <CoverPhoto src={community.coverPhoto}>
           {currentUser &&
@@ -122,7 +135,11 @@ const CommunityViewPure = props => {
               (community.communityPermissions.isMember ||
                 community.communityPermissions.isOwner) &&
               <ThreadComposer activeCommunity={communitySlug} />}
-            <CommunityThreadFeed viewContext="community" slug={communitySlug} />
+            <CommunityThreadFeed
+              viewContext="community"
+              slug={communitySlug}
+              currentUser={currentUser}
+            />
           </Column>
         </CoverRow>
       </CoverColumn>

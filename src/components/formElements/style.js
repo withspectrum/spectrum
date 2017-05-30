@@ -135,6 +135,7 @@ export const StyledHiddenInput = styled.input`
 
 export const StyledCheckboxWrapper = styled.span`
   color: ${({ theme }) => theme.text.alt};
+  display: flex;
 
   &:hover {
     color: ${({ theme }) => theme.brand.alt};

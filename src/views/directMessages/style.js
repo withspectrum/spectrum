@@ -26,7 +26,11 @@ export const MessagesList = styled.div`
   width: 320px;
   height: calc(100% - 48px);
   background: #fff;
-  box-shadow: 2px 0 0 ${props => props.theme.border.default}
+  box-shadow: 2px 0 0 ${props => props.theme.border.default};
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const MessagesContainer = styled.div`

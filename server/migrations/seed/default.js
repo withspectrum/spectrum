@@ -45,9 +45,6 @@ const DEFAULT_USERS = [
   },
 ];
 
-// SCHEMA:TODO
-// Subscription Model
-
 const DEFAULT_COMMUNITIES = [
   {
     id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',

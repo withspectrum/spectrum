@@ -33,7 +33,7 @@ const notificationQueries = require('./queries/notification');
 const messageMutations = require('./mutations/message');
 const threadMutations = require('./mutations/thread');
 const reactionMutations = require('./mutations/reaction');
-const subscriptionMutations = require('./mutations/subscription');
+const recurringPaymentMutations = require('./mutations/recurringPayment');
 const communityMutations = require('./mutations/community');
 const channelMutations = require('./mutations/channel');
 const directMessageThreadMutations = require('./mutations/directMessageThread');
@@ -99,7 +99,7 @@ const schema = makeExecutableSchema({
     threadMutations,
     directMessageThreadMutations,
     reactionMutations,
-    subscriptionMutations,
+    recurringPaymentMutations,
     communityMutations,
     channelMutations,
     notificationMutations,

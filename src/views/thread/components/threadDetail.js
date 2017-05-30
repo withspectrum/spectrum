@@ -17,6 +17,7 @@ import Flyout from '../../../components/flyout';
 import { IconButton } from '../../../components/buttons';
 import { toPlainText, toState } from '../../../components/editor';
 import { LinkPreview } from '../../../components/linkPreview';
+import Titlebar from '../../titlebar';
 import {
   ThreadWrapper,
   ThreadHeading,
@@ -86,6 +87,13 @@ const ThreadDetailPure = ({
 
   return (
     <ThreadWrapper>
+      <Titlebar
+        title={thread.content.title}
+        subtitle={`${thread.channel.name} · ${thread.channel.community.name}`}
+        provideBack={true}
+        backRoute={`/${thread.channel.community.slug}/${thread.channel.slug}`}
+      />
+
       <ContextRow>
         <Byline to={`/users/${thread.creator.username}`}>
           {thread.creator.name}

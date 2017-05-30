@@ -11,26 +11,48 @@ import Column from '../../components/column';
 import { displayLoadingState } from '../../components/loading';
 import { UserEditForm } from '../../components/editForm';
 import { Upsell404User } from '../../components/upsell';
-import SubscriptionList from './components/subscriptionList';
+import RecurringPaymentsList from './components/recurringPaymentsList';
 import { GetUserProfile } from './queries';
+import Titlebar from '../titlebar';
 
 const UserSettings = ({ data, currentUser, match }) => {
   if (!data.user) {
-    return <Upsell404User username={match.params.username} />;
+    return (
+      <AppViewWrapper>
+        <Titlebar title={`No User Found`} provideBack={true} backRoute={`/`} />
+        <Column type="primary">
+          <Upsell404User username={match.params.username} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (data.user.id !== currentUser.id) {
-    return <Upsell404User username={match.params.username} noPermission />;
+    return (
+      <AppViewWrapper>
+        <Titlebar title={`No Permission`} provideBack={true} backRoute={`/`} />
+        <Column type="primary">
+          <Upsell404User username={match.params.username} noPermission />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   return (
     <AppViewWrapper>
+      <Titlebar
+        title={data.user.name}
+        subtitle={'Settings'}
+        provideBack={true}
+        backRoute={`/${data.user.username}`}
+      />
+      <Titlebar title={data.user.name} subtitle={'Settings'} />
       <Column type="secondary">
         <UserEditForm user={data} />
       </Column>
 
       <Column type="primary">
-        <SubscriptionList data={data} currentUser={data.user} />
+        <RecurringPaymentsList data={data} currentUser={data.user} />
       </Column>
     </AppViewWrapper>
   );

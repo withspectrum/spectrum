@@ -14,6 +14,7 @@ import Column from '../../components/column';
 import ListCard from './components/listCard';
 import { CommunityEditForm } from '../../components/editForm';
 import { Upsell404Community } from '../../components/upsell';
+import Titlebar from '../titlebar';
 const ChannelListCard = compose(getChannelsByCommunity)(ListCard);
 
 const SettingsPure = ({
@@ -33,6 +34,11 @@ const SettingsPure = ({
   if (error) {
     return (
       <AppViewWrapper>
+        <Titlebar
+          title={`No Community Found`}
+          provideBack={true}
+          backRoute={`/${communitySlug}`}
+        />
         <Column type="primary">
           <Upsell404Community community={communitySlug} />
         </Column>
@@ -43,6 +49,12 @@ const SettingsPure = ({
   if (!community || community.deleted) {
     return (
       <AppViewWrapper>
+        <Titlebar
+          title={`No Community Found`}
+          provideBack={true}
+          backRoute={`/${communitySlug}`}
+        />
+
         <Column type="primary">
           <Upsell404Community community={communitySlug} create={create} />
         </Column>
@@ -53,6 +65,12 @@ const SettingsPure = ({
   if (!community.communityPermissions.isOwner) {
     return (
       <AppViewWrapper>
+        <Titlebar
+          title={`No Permission`}
+          provideBack={true}
+          backRoute={`/${communitySlug}`}
+        />
+
         <Column type="primary">
           <Upsell404Community community={communitySlug} noPermission />
         </Column>
@@ -62,6 +80,13 @@ const SettingsPure = ({
 
   return (
     <AppViewWrapper>
+      <Titlebar
+        title={community.name}
+        subtitle={'Settings'}
+        provideBack={true}
+        backRoute={`/${communitySlug}`}
+      />
+
       <Column type="secondary">
         <CommunityEditForm community={community} />
       </Column>

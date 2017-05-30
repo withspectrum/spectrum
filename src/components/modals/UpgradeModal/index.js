@@ -15,7 +15,8 @@ import {
 import { addToastWithTimeout } from '../../../actions/toasts';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { Button } from '../../buttons';
+import { Button, OutlineButton } from '../../buttons';
+import { UpsellUpgradeToPro } from '../../upsell';
 import {
   modalStyles,
   Section,
@@ -87,7 +88,6 @@ class UpgradeModal extends React.Component {
     this.props
       .downgradeFromPro()
       .then(({ data: { downgradeFromPro } }) => {
-        console.log('returned from mutation with ', downgradeFromPro);
         this.props.dispatch(
           addToastWithTimeout(
             'neutral',
@@ -126,73 +126,32 @@ class UpgradeModal extends React.Component {
       >
 
         <ModalContainer
+          noHeader={!user.isPro}
           title={!user.isPro ? 'Upgrade to Pro' : 'Manage your Subscription'}
           closeModal={this.closeModal}
         >
           {user.isPro &&
-            <SectionActions centered={true}>
-              <Button
-                disabled={isLoading}
-                loading={isLoading}
-                onClick={this.downgradeFromPro}
-              >
-                Cancel my Pro Subscription
-              </Button>
-
-              {upgradeError &&
-                <SectionError
-                  width={'100%'}
-                  centered={true}
-                  error={upgradeError}
-                >
-                  <Padding padding={'0.5rem'}>
-                    {upgradeError}
-                  </Padding>
-                </SectionError>}
-            </SectionActions>}
-
-          {!user.isPro &&
-            <div>
-              <Flex direction={'column'}>
-                <Section width={'100%'} centered={true}>
-                  <Padding padding={'1rem'}>
-                    <Profile>
-                      <img alt={user.name} src={user.profilePhoto} />
-                      <span>PRO</span>
-                    </Profile>
-                    <Heading>Show it Off</Heading>
-                    <Subheading>
-                      A new{' '}
-                      <b>Pro</b>
-                      {' '}
-                      badge will find itself attached to your name, wherever you go on Spectrum.
-                    </Subheading>
-                  </Padding>
-                </Section>
-
-                <Section width={'100%'} centered={true}>
-                  <Padding padding={'1rem 1rem 2rem'}>
-                    <Heading>More Pro Features...</Heading>
-                    <Subheading>
-                      We're hard at work building more pro features, and your support helps us get there. Thank you!
-                    </Subheading>
-                  </Padding>
-                </Section>
-              </Flex>
+            <Section>
+              <Subheading>
+                We're sorry to see you go! If you are having trouble and want
+                to talk to a human, please get in touch. Otherwise if you're ready to go, you can
+                cancel your Pro subscription instantly below. Thanks for your support!
+              </Subheading>
               <SectionActions centered={true}>
-                <StripeCheckout
-                  token={this.upgradeToPro}
-                  stripeKey={'pk_test_A6pKi4xXOdgg9FrZJ84NW9mP'}
-                  name="🔐   Pay Securely"
-                  description="Secured and Encrypted by Stripe"
-                  panelLabel="Subscribe for "
-                  amount={500}
-                  currency="USD"
+                <OutlineButton
+                  disabled={isLoading}
+                  loading={isLoading}
+                  onClick={this.downgradeFromPro}
                 >
-                  <Button disabled={isLoading} loading={isLoading}>
-                    Upgrade to Pro · $5 per Month
-                  </Button>
-                </StripeCheckout>
+                  Cancel my Pro Subscription
+                </OutlineButton>
+
+                <Button
+                  onClick={() => window.location.href = '/spectrum/support'}
+                >
+                  Get Support
+                </Button>
+
                 {upgradeError &&
                   <SectionError
                     width={'100%'}
@@ -204,7 +163,9 @@ class UpgradeModal extends React.Component {
                     </Padding>
                   </SectionError>}
               </SectionActions>
-            </div>}
+            </Section>}
+
+          {!user.isPro && <UpsellUpgradeToPro />}
         </ModalContainer>
       </Modal>
     );
