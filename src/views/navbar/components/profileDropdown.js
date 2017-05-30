@@ -2,16 +2,27 @@
 import React from 'react';
 import { logout } from '../../../actions/authentication';
 import Dropdown from '../../../components/dropdown';
-import { Button } from '../../../components/buttons';
-import { DropdownFooter } from '../style';
+import { TextButton } from '../../../components/buttons';
+import {
+  DropdownFooter,
+  UserProfileDropdownList,
+  UserProfileDropdownListItem,
+} from '../style';
+import { logout } from '../../../actions/authentication';
 
-export const ProfileDropdown = () => {
+export const ProfileDropdown = props => {
   return (
     <Dropdown width={'240px'}>
-
-      <DropdownFooter>
-        <Button color={'warn'} onClick={() => logout()}>Log Out</Button>
-      </DropdownFooter>
+      <UserProfileDropdownList>
+        <UserProfileDropdownListItem
+          onClick={() => props.history.push(`/users/${props.user.username}`)}
+        >
+          Settings
+        </UserProfileDropdownListItem>
+        <UserProfileDropdownListItem onClick={() => logout()}>
+          Log Out
+        </UserProfileDropdownListItem>
+      </UserProfileDropdownList>
     </Dropdown>
   );
 };

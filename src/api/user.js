@@ -168,3 +168,19 @@ const GET_CURRENT_USER_RECURRING_PAYMENTS_QUERY = gql`
 export const getCurrentUserRecurringPayments = graphql(
   GET_CURRENT_USER_RECURRING_PAYMENTS_QUERY
 );
+
+/*
+  Loads the sidebar profile component widget independent of the thread feed.
+  In the future we can compose these queries together since they are fetching
+  such similar data, but for now we're making a decision to keep the data
+  queries specific to each component.
+*/
+export const GET_CURRENT_USER_PROFILE_QUERY = gql`
+  query getCurrentUserProfile {
+    user: currentUser {
+      ...userInfo
+    }
+  }
+  ${userInfoFragment}
+`;
+export const getCurrentUserProfile = graphql(GET_CURRENT_USER_PROFILE_QUERY);
