@@ -8,7 +8,6 @@ import {
   UserProfileDropdownList,
   UserProfileDropdownListItem,
 } from '../style';
-import { logout } from '../../../actions/authentication';
 
 export const ProfileDropdown = props => {
   return (
