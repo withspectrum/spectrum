@@ -78,7 +78,7 @@ const getViewableThreadsByUser = (
       .zip()
       // join these threads with the usersChannels to get the permissions of the channel
       .eqJoin('channelId', db.table('usersChannels'), { index: 'channelId' })
-      // return only objects where the thread is not in a private channel or is in a channel or the evaluating user is a member
+      // return only objects where the thread is not in a private channel or is in a channel where the current user is a member
       .filter(row =>
         row('left')('isPrivate').eq(false).or(row('right')('isMember').eq(true))
       )
@@ -122,7 +122,7 @@ const getPublicThreadsByUser = (evalUser: string): Promise<Array<Object>> => {
       })
       // zip the two together - result is a thread object with a channel `isPrivate` field
       .zip()
-      // return only objects where the thread is not in a private channel or is in a channel or the evaluating user is a member
+      // return only objects where the thread is not in a private channel
       .filter({ isPrivate: false })
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
