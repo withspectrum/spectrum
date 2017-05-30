@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { openModal } from '../../actions/modals';
 import ThreadComposer from '../../components/threadComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
-import { FlexCol, FlexRow } from '../../components/globals';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import ListCard from './components/listCard';
@@ -30,12 +29,8 @@ const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
 const ChannelListCard = compose(getCommunityChannels)(ListCard);
 
-const CommunityViewPure = ({
-  match,
-  data: { community, error },
-  currentUser,
-  dispatch,
-}) => {
+const CommunityViewPure = props => {
+  const { match, data: { community, error }, currentUser, dispatch } = props;
   const communitySlug = match.params.communitySlug;
 
   const create = () => {
@@ -85,7 +80,8 @@ const CommunityViewPure = ({
       <Titlebar title={community.name} provideBack={true} backRoute={`/`} />
 
       <CoverColumn>
-        <CoverPhoto />
+        {console.log(community)}
+        <CoverPhoto src={community.coverPhoto} />
         <CoverRow>
           <Column type="secondary" className={'inset'}>
             <CommunityProfile data={{ community }} profileSize="full" />

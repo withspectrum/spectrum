@@ -30,7 +30,6 @@ import {
   FormTitle,
   Description,
   Actions,
-  ImgPreview,
   TertiaryActionContainer,
   ImageInputWrapper,
 } from './style';
@@ -150,6 +149,7 @@ class CommunityWithData extends Component {
           this.props.dispatch(
             addToastWithTimeout('success', 'Community saved!')
           );
+          this.props.history.push(`/${this.props.community.slug}`);
         }
       })
       .catch(err => {

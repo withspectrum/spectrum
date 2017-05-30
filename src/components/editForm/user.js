@@ -1,6 +1,8 @@
 // @flow
 import React, { Component } from 'react';
 //$FlowFixMe
+import { withRouter } from 'react-router';
+//$FlowFixMe
 import pure from 'recompose/pure';
 //$FlowFixMe
 import compose from 'recompose/compose';
@@ -192,6 +194,7 @@ class UserWithData extends Component {
           this.setState({
             file: null,
           });
+          this.props.history.push(`/users/${this.props.user.user.username}`);
         }
       })
       .catch(err => {
@@ -275,5 +278,7 @@ class UserWithData extends Component {
   }
 }
 
-const UserSettings = compose(editUserMutation, connect(), pure)(UserWithData);
+const UserSettings = compose(editUserMutation, withRouter, connect(), pure)(
+  UserWithData
+);
 export default UserSettings;

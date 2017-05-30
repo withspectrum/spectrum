@@ -50,7 +50,7 @@ class Editor extends Component {
       onChange = this.onChange,
       onEnter,
       // Don't pass these two down to the SlateEditor
-      markdown,
+      // markdown,
       ...rest
     } = this.props;
 

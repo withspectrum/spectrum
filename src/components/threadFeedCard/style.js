@@ -16,7 +16,7 @@ export const StyledThreadFeedCard = styled(Card)`
   transition: ${Transition.hover.off};
 
   &:hover {
-    transition: ${Transition.hover.on};
+    transition: none;
     box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
   }
 `;
@@ -76,11 +76,9 @@ export const Participant = styled.img`
   object-fit: cover;
   background-color: ${({ theme }) => theme.generic.default};
   background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
-  transition: ${Transition.hover.off};
 
   &:hover{
     transform: scale(1.1);
-    transition: ${Transition.hover.on};
   }
 `;
 
@@ -99,6 +97,33 @@ export const Meta = styled.span`
   line-height: 1;
   vertical-align: middle;
   color: ${({ theme }) => theme.text.alt};
+  display: flex;
+  align-items: center;
+
+  div {
+    margin-right: 4px;
+  }
+
+  @media ( max-width: 480px ) {
+    display: none;
+  }
+`;
+
+export const MetaNew = styled(Meta)`
+  font-weight: 700;
+  color: ${({ theme }) => theme.success.default};
+`;
+
+export const ParticipantCount = styled.span`
+  height: 1.5rem;
+  padding: 0 8px;
+  margin-left: 4px;
+  border-radius: .75rem;
+  font-size: 11px;
+  font-weight: 700;
+  vertical-align: middle;
+  color: ${({ theme }) => theme.text.reverse};
+  background-color: ${({ theme }) => theme.brand.alt};
 `;
 
 export const Location = styled.span`
