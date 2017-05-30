@@ -626,6 +626,7 @@ class NewThread extends Component {
 
     return (
       <MessagesContainer>
+        <Titlebar title={'New Message'} />
         <ComposerInputWrapper>
           {// if users have been selected, show them as pills
           selectedUsersForNewThread.length > 0 &&
