@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { logout } from '../../../actions/authentication';
 import Dropdown from '../../../components/dropdown';
 import { TextButton } from '../../../components/buttons';
 import {
@@ -7,7 +8,6 @@ import {
   UserProfileDropdownList,
   UserProfileDropdownListItem,
 } from '../style';
-import { logout } from '../../../actions/authentication';
 
 export const ProfileDropdown = props => {
   return (

@@ -30,7 +30,8 @@ export const CoverPhoto = (props: Object) => {
           ? <Link to={`../users/${props.user.username}/settings`}>
               <CoverAction
                 glyph="settings"
-                color="space.soft"
+                color="text.reverse"
+                opacity="0.5"
                 hoverColor="text.reverse"
                 tipText={`Edit profile`}
                 tipLocation={'left'}

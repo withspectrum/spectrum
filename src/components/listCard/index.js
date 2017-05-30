@@ -30,7 +30,7 @@ export const ListCardItem = (props: CardProps): React$Element<any> => {
       <Row>
         <Avatar
           radius={4}
-          src={props.profilePhoto}
+          src={props.contents.profilePhoto}
           size={32}
           style={{ marginRight: '12px' }}
         />

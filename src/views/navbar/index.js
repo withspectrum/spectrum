@@ -48,7 +48,35 @@ class Navbar extends Component {
     const currentUser = user;
 
     if (!currentUser || currentUser === null) {
-      return <div>No user</div>;
+      return (
+        <Container>
+          {/*
+            Nav contains global navigation elements like getting to messages,
+            profile, home, explore, etc.
+          */}
+          <Nav>
+            <Section left>
+              <LogoLink to="/">
+                <Logo src="/img/mark-white.png" role="presentation" />
+              </LogoLink>
+              <IconLink
+                data-active={match.url === '/explore'}
+                data-mobileWidth={'third'}
+                to="/explore"
+              >
+                <Icon glyph="explore" />
+                <Label>Explore</Label>
+              </IconLink>
+            </Section>
+          </Nav>
+
+          {/*
+            Spacer is used to globally push all app elements below the fixed
+            position nav
+          */}
+          <Spacer />
+        </Container>
+      );
     } else {
       return (
         <Container>

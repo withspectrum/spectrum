@@ -175,7 +175,7 @@ export const PhotoInputLabel = styled.label`
   height: 48px;
   z-index: 9;
   width: 48px;
-  border-radius: 8px;
+  border-radius: ${props => (props.user ? '100%' : '8px')};
   margin-top: 8px;
   background-color: ${({ theme }) => theme.bg.reverse};
 `;
@@ -200,7 +200,7 @@ export const ProfileImage = styled.img`
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: 8px;
+  border-radius: ${props => (props.user ? '100%' : '8px')};
   border: 2px solid ${({ theme }) => theme.text.reverse};
 `;
 
@@ -234,7 +234,7 @@ export const InputOverlay = styled.div`
   color: ${({ theme }) => theme.text.reverse};
   ${/* background-color: ${({ theme }) => theme.bg.reverse}; */ ''}
   padding: 8px;
-  border-radius: 8px;
+  border-radius: ${props => (props.user ? '100%' : '8px')};
 
 
   &:hover {
