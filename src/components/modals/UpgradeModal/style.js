@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import { FlexCol, Gradient, Transition } from '../../globals';
+import { Gradient, Transition } from '../../globals';
 import { isMobile } from '../../../helpers/utils';
 
 const maxWidth = '440px';

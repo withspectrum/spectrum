@@ -4,16 +4,14 @@ import React from 'react';
 import styled from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import Icon from '../icons';
-import { IconButton } from '../buttons';
 import { ProfileHeaderAction } from './style';
 
 const PhotoContainer = styled.div`
   position: relative;
   width: 100%;
-  height: ${props => (props.large ? '256px' : '96px')};
+  height: ${props => (props.large ? '320px' : '96px')};
   background-color: ${({ theme }) => theme.brand.default};
-  background-image: url(${props => props.coverURL});
+  background-image: url('${props => props.coverURL}');
   background-size: cover;
   border-radius: ${props => (props.large ? '12px' : '12px 12px 0 0')};
 `;
@@ -51,7 +49,7 @@ export const CoverPhoto = (props: Object) => {
     );
   } else {
     return (
-      <PhotoContainer large coverURL="">
+      <PhotoContainer large coverURL={props.src}>
         {props.children}
       </PhotoContainer>
     );

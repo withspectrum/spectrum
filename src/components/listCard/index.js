@@ -28,14 +28,12 @@ export const ListCardItem = (props: CardProps): React$Element<any> => {
   return (
     <Wrapper>
       <Row>
-        <Link to={`/${props.slug}`}>
-          <Avatar
-            radius={4}
-            src={props.profilePhoto}
-            size={32}
-            style={{ marginRight: '12px' }}
-          />
-        </Link>
+        <Avatar
+          radius={4}
+          src={props.profilePhoto}
+          size={32}
+          style={{ marginRight: '12px' }}
+        />
         <Col>
           <Heading>{props.contents.name}</Heading>
           <Meta>{props.meta}</Meta>

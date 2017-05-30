@@ -14,7 +14,6 @@ import pure from 'recompose/pure';
 import { addProtocolToString } from '../../helpers/utils';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import Icon from '../icons';
-import { MetaData } from './metaData';
 import { CoverPhoto } from './coverPhoto';
 import type { ProfileSizeProps } from './index';
 import { Avatar } from '../avatar';
@@ -32,7 +31,6 @@ import {
   CoverDescription,
   Title,
   Subtitle,
-  Description,
   ExtLink,
 } from './style';
 
@@ -83,7 +81,7 @@ const UserWithData = ({
     return (
       <Card>
         <CoverPhoto user={user} currentUser={currentUser}>
-          <CoverLink to={`../users/${currentUser.username}`}>
+          <CoverLink to={`../users/${user.username}`}>
             <CoverAvatar src={user.profilePhoto} />
             <CoverTitle>{user.name}</CoverTitle>
           </CoverLink>
@@ -143,20 +141,6 @@ const UserWithData = ({
                 tipLocation={'top-left'}
               />}
         </ProfileHeader>
-
-        {componentSize !== 'mini' &&
-          componentSize !== 'small' &&
-          (user.description && user.description !== null) &&
-          <Description>
-            <p>{user.description}</p>
-            {user.website &&
-              <ExtLink>
-                <Icon glyph="link" size={24} />
-                <a href={user.website}>
-                  {user.website}
-                </a>
-              </ExtLink>}
-          </Description>}
       </Card>
     );
   }

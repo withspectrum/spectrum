@@ -172,15 +172,17 @@ export const StyledError = styled.p`
 export const PhotoInputLabel = styled.label`
   position: relative;
   height: 48px;
+  z-index: 9;
   width: 48px;
   border-radius: 8px;
   margin-top: 8px;
-  background-color: ${({ theme }) => theme.brand.alt};
+  background-color: ${({ theme }) => theme.bg.reverse};
 `;
 
 export const CoverInputLabel = styled.label`
   position: relative;
   height: 96px;
+  z-index: 8;
   width: 100%;
   margin-top: 8px;
   border-radius: 8px;
@@ -206,7 +208,7 @@ export const CoverImage = styled.div`
   background-position: center;
   background-size: cover;
   position: absolute;
-  z-index: 9;
+  z-index: 8;
   top: 0;
   right: 0;
   bottom: 0;
@@ -214,10 +216,6 @@ export const CoverImage = styled.div`
   width: 100%;
   height: 96px;
   border-radius: 8px;
-
-  &:hover {
-    opacity: 0.25;
-  }
 `;
 
 export const InputOverlay = styled.div`
@@ -233,8 +231,17 @@ export const InputOverlay = styled.div`
   width: 100%;
   height: 100%;
   color: ${({ theme }) => theme.text.reverse};
+  ${/* background-color: ${({ theme }) => theme.bg.reverse}; */ ''}
   padding: 8px;
   border-radius: 8px;
+
+
+  &:hover {
+    + img, + div {
+      transition: ${Transition.hover.on};
+      opacity: 0.25;
+    }
+  }
 
   div {
     transition: ${Transition.hover.off};

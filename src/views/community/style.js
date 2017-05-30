@@ -9,7 +9,7 @@ export const CoverRow = styled(FlexRow)`
   }
 
   > .inset {
-    margin-top: -36px;
+    margin-top: -64px;
   }
 `;
 
