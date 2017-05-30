@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 //$FlowFixMe
 import compose from 'recompose/compose';
-import { ListCardItem } from '../../../components/listCard';
+import { BillingListItem } from '../../../components/listItems';
 import { IconButton } from '../../../components/buttons';
 import { UpsellUpgradeToPro } from '../../../components/upsell';
 import { openModal } from '../../../actions/modals';
@@ -16,7 +16,7 @@ import {
   LargeListHeading,
   ListHeader,
   ListContainer,
-} from '../../../components/listCard/style';
+} from '../../../components/listItems/style';
 
 const RecurringPaymentsList = ({ data: { user }, currentUser, dispatch }) => {
   const openProModal = () => {
@@ -42,14 +42,14 @@ const RecurringPaymentsList = ({ data: { user }, currentUser, dispatch }) => {
             const created = convertTimestampToDate(timestamp);
             const meta = `$${amount}/month · Upgraded on ${created}`;
             return (
-              <ListCardItem
+              <BillingListItem
                 key={payment.created}
                 contents={{ name: payment.plan }}
                 withDescription={false}
                 meta={meta}
               >
                 <IconButton glyph="settings" onClick={openProModal} />
-              </ListCardItem>
+              </BillingListItem>
             );
           })}
         </ListContainer>
