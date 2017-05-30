@@ -1,6 +1,12 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Transition, FlexRow, Shadow } from '../../components/globals';
+import { Avatar } from '../../components/avatar';
+
+export const UserProfileAvatar = styled(Avatar)`
+border: 1px solid ${({ theme }) => theme.text.default};
+box-shadow: 0 0 0 2px ${props => (props.isPro ? props.theme.pro.default : 'rgba(255,255,255,0.9)')};
+`;
 
 export const Container = styled.section`
   width: 100%;
@@ -8,7 +14,7 @@ export const Container = styled.section`
 
 export const Nav = styled.nav`
   width: 100%;
-  background: #000;
+  background: ${({ theme }) => theme.text.default};
   position: fixed;
   top: 0;
   display: flex;
