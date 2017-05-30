@@ -59,14 +59,14 @@ class Navbar extends Component {
               <LogoLink to="/">
                 <Logo src="/img/mark-white.png" role="presentation" />
               </LogoLink>
-              <IconLink
+              {/* <IconLink
                 data-active={match.url === '/explore'}
                 data-mobileWidth={'third'}
                 to="/explore"
               >
                 <Icon glyph="explore" />
                 <Label>Explore</Label>
-              </IconLink>
+              </IconLink> */}
             </Section>
           </Nav>
 
@@ -109,14 +109,14 @@ class Navbar extends Component {
                   <Label>Messages</Label>
                 </IconLink>}
 
-              <IconLink
+              {/* <IconLink
                 data-active={match.url === '/explore'}
                 data-mobileWidth={'third'}
                 to="/explore"
               >
                 <Icon glyph="explore" />
                 <Label>Explore</Label>
-              </IconLink>
+              </IconLink> */}
             </Section>
 
             {currentUser &&

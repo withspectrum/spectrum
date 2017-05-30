@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
-import Icon from '../../components/icons';
 import { IconButton } from '../../components/buttons';
 import { TitleBar, Text, Subtitle, Title } from './style';
 
