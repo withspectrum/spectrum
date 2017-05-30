@@ -59,9 +59,9 @@ class ThreadComposerWithData extends Component {
       that don't have any channels yet
     */
 
-    const availableCommunities = props.data.user.communityConnection.edges.map(
-      edge => edge.node
-    );
+    const availableCommunities = props.data.user.communityConnection.edges
+      .map(edge => edge.node)
+      .filter(community => community.communityPermissions.isMember);
 
     /*
       Iterate through each of our community nodes to construct a new array
@@ -71,9 +71,9 @@ class ThreadComposerWithData extends Component {
       and each child array represents the channels within that parent
       community
     */
-    const availableChannels = props.data.user.channelConnection.edges.map(
-      edge => edge.node
-    );
+    const availableChannels = props.data.user.channelConnection.edges
+      .map(edge => edge.node)
+      .filter(channel => channel.channelPermissions.isMember);
 
     /*
       If a user is viewing a communit or channel, we use the url as a prop
