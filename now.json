@@ -4,6 +4,7 @@
 		"S3_SECRET": "@s3-secret",
 		"COMPOSE_PASSWORD": "@compose-password",
 		"COMPOSE_URL": "@compose-url",
-		"COMPOSE_PORT": "@compose-port"
+		"COMPOSE_PORT": "@compose-port",
+    "OPTICS_API_KEY": "@optics-api-key"
 	}
 }
