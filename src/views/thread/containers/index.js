@@ -30,11 +30,23 @@ const ThreadContainerPure = ({
   toggleChannelSubscription,
 }) => {
   if (error) {
-    return <Upsell404Thread />;
+    return (
+      <AppViewWrapper>
+        <Column type="primary">
+          <Upsell404Thread />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (!thread || thread.deleted) {
-    return <Upsell404Thread />;
+    return (
+      <AppViewWrapper>
+        <Column type="primary">
+          <Upsell404Thread />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   const toggleSubscription = channelId => {
@@ -55,7 +67,7 @@ const ThreadContainerPure = ({
   return (
     <AppViewWrapper>
       <Column type="secondary">
-        <UserProfile data={{ user: thread.creator }} profileSize={'full'} />
+        <UserProfile data={{ user: thread.creator }} />
         <ChannelProfile
           data={{ channel: thread.channel }}
           profileSize={'small'}

@@ -94,10 +94,12 @@ export const StyledIconButton = styled.button`
   height: 32px;
   background-color: transparent;
   color: ${props => (props.disabled ? props.theme.inactive : props.color ? eval(`props.theme.${props.color}`) : props.theme.text.alt)};
+  opacity: ${props => (props.opacity ? props.opacity : 1)};
 
   &:hover {
     color: ${props => (props.disabled ? props.theme.inactive : props.hoverColor ? eval(`props.theme.${props.hoverColor}`) : props.color ? eval(`props.theme.${props.color}`) : props.theme.brand.alt)};
     transform: ${props => (props.disabled ? 'none' : 'scale(1.05)')};
     box-shadow: none;
+    opacity: 1;
   }
 `;

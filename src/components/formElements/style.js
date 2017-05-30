@@ -135,6 +135,7 @@ export const StyledHiddenInput = styled.input`
 
 export const StyledCheckboxWrapper = styled.span`
   color: ${({ theme }) => theme.text.alt};
+  display: flex;
 
   &:hover {
     color: ${({ theme }) => theme.brand.alt};
@@ -169,28 +170,60 @@ export const StyledError = styled.p`
   line-height: 1.4;
 `;
 
-export const ImageInputLabel = styled.label`
+export const PhotoInputLabel = styled.label`
   position: relative;
   height: 48px;
+  z-index: 9;
   width: 48px;
-  border-radius: 8px;
+  border-radius: ${props => (props.user ? '100%' : '8px')};
   margin-top: 8px;
+  background-color: ${({ theme }) => theme.bg.reverse};
+`;
+
+export const CoverInputLabel = styled.label`
+  position: relative;
+  height: 96px;
+  z-index: 8;
+  width: 100%;
+  margin-top: 8px;
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.bg.reverse};
 `;
 
 export const ProfileImage = styled.img`
   position: absolute;
+  object-fit: cover;
   z-index: 9;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  width: 48px;
-  height: 48px;
+  width: 100%;
+  height: 100%;
+  border-radius: ${props => (props.user ? '100%' : '8px')};
+  border: 2px solid ${({ theme }) => theme.text.reverse};
+`;
+
+export const CoverImage = styled.div`
+  background-image: url('${props => props.src}');
+  background-position: center;
+  background-size: cover;
+  position: absolute;
+  z-index: 8;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 96px;
   border-radius: 8px;
 `;
 
 export const InputOverlay = styled.div`
   position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 10;
   top: 0;
   right: 0;
@@ -198,16 +231,26 @@ export const InputOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => theme.text.alt};
   color: ${({ theme }) => theme.text.reverse};
-  opacity: 0.25;
+  ${/* background-color: ${({ theme }) => theme.bg.reverse}; */ ''}
   padding: 8px;
-  border-radius: 8px;
-  transition: ${Transition.hover.off};
+  border-radius: ${props => (props.user ? '100%' : '8px')};
+
 
   &:hover {
-    background-color: ${({ theme }) => theme.brand.alt};
-    opacity: 0.85;
+    + img, + div {
+      transition: ${Transition.hover.on};
+      opacity: 0.25;
+    }
+  }
+
+  div {
+    transition: ${Transition.hover.off};
+    opacity: 0;
+  }
+
+  &:hover div {
     transition: ${Transition.hover.on};
+    opacity: 1;
   }
 `;

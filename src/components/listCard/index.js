@@ -28,6 +28,12 @@ export const ListCardItem = (props: CardProps): React$Element<any> => {
   return (
     <Wrapper>
       <Row>
+        <Avatar
+          radius={4}
+          src={props.contents.profilePhoto}
+          size={32}
+          style={{ marginRight: '12px' }}
+        />
         <Col>
           <Heading>{props.contents.name}</Heading>
           <Meta>{props.meta}</Meta>
@@ -49,7 +55,7 @@ export const ListCardItemUser = ({ user, children }: Object): React$Element<
       <Row>
         <Link to={`/users/${user.username}`}>
           <Avatar
-            radius={40}
+            radius={20}
             src={user.profilePhoto}
             size={40}
             style={{ marginRight: '16px' }}

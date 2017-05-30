@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import { FlexCol, Gradient, Transition } from '../../globals';
+import { Gradient, Transition } from '../../globals';
 import { isMobile } from '../../../helpers/utils';
 
 const maxWidth = '440px';
@@ -44,9 +44,26 @@ export const Section = styled.section`
   width: ${props => (props.width ? props.width : '100%')};
   text-align: ${props => (props.centered ? 'center' : 'auto')};
   position: relative;
+  padding: 24px;
 
   @media all and (max-width: 600px) {
     width: 100%;
+  }
+`;
+
+export const SectionActions = styled(Section)`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 16px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+
+  button {
+    margin: 0 8px;
+    display: flex;
+    flex: 1 0 auto;
   }
 `;
 

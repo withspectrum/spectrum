@@ -10,6 +10,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Messages from '../components/messages';
 import Header from '../components/header';
+import Titlebar from '../../titlebar';
 import ChatInput from '../../../components/chatInput';
 import { MessagesContainer, ViewContent } from '../style';
 import { findDOMNode } from 'react-dom';
@@ -625,6 +626,11 @@ class NewThread extends Component {
 
     return (
       <MessagesContainer>
+        <Titlebar
+          title={'New Message'}
+          provideBack={true}
+          backRoute={`/messages`}
+        />
         <ComposerInputWrapper>
           {// if users have been selected, show them as pills
           selectedUsersForNewThread.length > 0 &&

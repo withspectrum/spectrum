@@ -64,7 +64,6 @@ const CommunityWithData = ({
   currentUser: Object,
 }): React$Element<any> => {
   const componentSize = profileSize || 'mini';
-  const websiteUrl = addProtocolToString(community.website);
 
   const toggleMembership = communityId => {
     toggleCommunityMembership({ communityId })
@@ -86,8 +85,8 @@ const CommunityWithData = ({
   if (!community) {
     return (
       <Card>
-        <ProfileHeader justifyContent={'flex-start'} alignItems={'center'}>
-          <ProfileHeaderMeta direction={'column'} justifyContent={'center'}>
+        <ProfileHeader>
+          <ProfileHeaderMeta>
             <Title>This community doesn't exist yet.</Title>
           </ProfileHeaderMeta>
         </ProfileHeader>
@@ -97,70 +96,89 @@ const CommunityWithData = ({
         </Actions>
       </Card>
     );
-  }
-
-  return (
-    <Card>
-      <ProfileHeader>
-        <ProfileAvatar src={community.profilePhoto} />
-        <ProfileHeaderLink to={`/${community.slug}`}>
-          <ProfileHeaderMeta>
-            <Title>{community.name}</Title>
-          </ProfileHeaderMeta>
-        </ProfileHeaderLink>
-        {currentUser &&
-          !community.communityPermissions.isOwner &&
-          <ProfileHeaderAction
-            glyph={
-              community.communityPermissions.isMember ? 'minus' : 'plus-fill'
-            }
-            color={
-              community.communityPermissions.isMember
-                ? 'text.placeholder'
-                : 'brand.alt'
-            }
-            hoverColor={
-              community.communityPermissions.isMember
-                ? 'warn.default'
-                : 'brand.alt'
-            }
-            tipText={
-              community.communityPermissions.isMember
-                ? `Leave community`
-                : 'Join community'
-            }
-            tipLocation="top-left"
-            onClick={() => toggleMembership(community.id)}
-          />}
-        {currentUser &&
-          community.communityPermissions.isOwner &&
-          <Link to={`/${community.slug}/settings`}>
-            <ProfileHeaderAction
-              glyph="settings"
-              tipText="Edit community"
-              tipLocation="top-left"
-            />
-          </Link>}
-
-      </ProfileHeader>
-
-      {componentSize !== 'mini' &&
-        componentSize !== 'small' &&
+  } else if (componentSize === 'full') {
+    return (
+      <Card>
+        <ProfileHeader>
+          <ProfileAvatar src={community.profilePhoto} />
+          <ProfileHeaderLink to={`/${community.slug}`}>
+            <ProfileHeaderMeta>
+              <Title>{community.name}</Title>
+            </ProfileHeaderMeta>
+          </ProfileHeaderLink>
+          {currentUser &&
+            community.communityPermissions.isOwner &&
+            <Link to={`/${community.slug}/settings`}>
+              <ProfileHeaderAction
+                glyph="settings"
+                tipText="Edit community"
+                tipLocation="top-left"
+              />
+            </Link>}
+        </ProfileHeader>
         <Description>
           <p>{community.description}</p>
           {community.website &&
             <ExtLink>
               <Icon glyph="link" size={24} />
-              <a href={websiteUrl}>
+              <a href={addProtocolToString(community.website)}>
                 {community.website}
               </a>
             </ExtLink>}
-        </Description>}
+        </Description>
+        <MetaData data={community.metaData} />
+      </Card>
+    );
+  } else {
+    return (
+      <Card>
+        <ProfileHeader>
+          <ProfileAvatar src={community.profilePhoto} />
+          <ProfileHeaderLink to={`/${community.slug}`}>
+            <ProfileHeaderMeta>
+              <Title>{community.name}</Title>
+            </ProfileHeaderMeta>
+          </ProfileHeaderLink>
 
-      {(componentSize === 'large' || componentSize === 'full') &&
-        <MetaData data={community.metaData} />}
-    </Card>
-  );
+          {currentUser &&
+            !community.communityPermissions.isOwner &&
+            <ProfileHeaderAction
+              glyph={
+                community.communityPermissions.isMember ? 'minus' : 'plus-fill'
+              }
+              color={
+                community.communityPermissions.isMember
+                  ? 'text.placeholder'
+                  : 'brand.alt'
+              }
+              hoverColor={
+                community.communityPermissions.isMember
+                  ? 'warn.default'
+                  : 'brand.alt'
+              }
+              tipText={
+                community.communityPermissions.isMember
+                  ? `Leave community`
+                  : 'Join community'
+              }
+              tipLocation="top-left"
+              onClick={() => toggleMembership(community.id)}
+            />}
+
+          {currentUser &&
+            community.communityPermissions.isOwner &&
+            <Link to={`/${community.slug}/settings`}>
+              <ProfileHeaderAction
+                glyph="settings"
+                tipText="Edit community"
+                tipLocation="top-left"
+              />
+            </Link>}
+
+        </ProfileHeader>
+      </Card>
+    );
+  }
 };
 
 const Community = compose(

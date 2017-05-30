@@ -14,12 +14,13 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 //$FlowFixMe
 import withProps from 'recompose/withProps';
-
+import Titlebar from '../titlebar';
+import AppViewWrapper from '../../components/appViewWrapper';
 import { Loading } from '../../components/loading';
 import { GoopyThree } from '../../views/homepage/style';
 import { FlexCol } from '../../components/globals';
 import {
-  ScrollBody,
+  // ScrollBody,
   ViewHeader,
   ViewTitle,
   ViewSubtitle,
@@ -188,10 +189,12 @@ const TopThirtyPure = ({ data: { topChannels, error } }, i) => {
 
 const TopThirty = compose(getTopChannels, displayLoadingState)(TopThirtyPure);
 
-const ExplorePure = ({ data, currentUser }) => {
+const ExplorePure = props => {
+  const { data, currentUser } = props;
   if (data.loading) {
     return (
-      <ScrollBody>
+      <AppViewWrapper>
+        <Titlebar title={'Explore'} />
         <ViewHeader>
           <ViewTitle>Explore</ViewTitle>
           <ViewSubtitle>
@@ -200,11 +203,12 @@ const ExplorePure = ({ data, currentUser }) => {
           <Constellations />
           <GoopyThree />
         </ViewHeader>
-      </ScrollBody>
+      </AppViewWrapper>
     );
   }
 
   if (data.error) {
+    console.log(props);
     return <ErrorItem />;
   }
 
@@ -221,8 +225,10 @@ const ExplorePure = ({ data, currentUser }) => {
     : [];
 
   return (
-    <ScrollBody>
-      <ViewHeader>
+    <AppViewWrapper>
+      {console.log(props)}
+      <Titlebar title={'Explore'} />
+      {/* <ViewHeader>
         <ViewTitle>Explore</ViewTitle>
         <ViewSubtitle>
           Discover more of what Spectrum has to offer!
@@ -230,10 +236,10 @@ const ExplorePure = ({ data, currentUser }) => {
         <Constellations />
         <GoopyThree />
       </ViewHeader>
-      <TopThirty />
-      {composeSectionFromList(CURATED_CHANNELS, channelIds)}
-      {composeSectionFromList(CURATED_COMMUNITIES, communityIds)}
-    </ScrollBody>
+      <TopThirty /> */}
+      {/* {composeSectionFromList(CURATED_CHANNELS, channelIds)} */}
+      {/* {composeSectionFromList(CURATED_COMMUNITIES, communityIds)} */}
+    </AppViewWrapper>
   );
 };
 

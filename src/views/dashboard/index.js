@@ -5,13 +5,10 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 // $FlowFixMe
-import { connect } from 'react-redux';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
 
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
-import { saveUserDataToLocalStorage } from '../../actions/authentication';
-
+import Titlebar from '../../views/titlebar';
 import { UpsellSignIn, NullCard } from '../../components/upsell';
 import { Button } from '../../components/buttons';
 import { displayLoadingScreen } from '../../components/loading';
@@ -27,29 +24,19 @@ const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 const DashboardPure = props => {
   const { data: { user, error }, dispatch, match, history } = props;
 
-  // save user data to localstorage, which will also dispatch an action to put
-  // the user into the redux store
-
-  if (user !== null) {
-    dispatch(saveUserDataToLocalStorage(user));
-    // if the user lands on /home, it means they just logged in. If this code
-    // runs, we know a user was returned successfully and set to localStorage,
-    // so we can redirect to the root url
-    if (match.url === '/home') {
-      history.push('/');
-    }
-  }
-
   if (error) {
     return (
       <AppViewWrapper>
+        <Titlebar />
         <Column type="primary" alignItems="center">
           <NullCard
             bg="error"
             heading="Whoops! Something broke the home page."
             copy="Mind reloading?"
           >
-            <Button icon="view-reload">Reload</Button>
+            <Button icon="view-reload" onClick={() => location.reload(true)}>
+              Reload
+            </Button>
           </NullCard>
         </Column>
       </AppViewWrapper>
@@ -59,6 +46,8 @@ const DashboardPure = props => {
     const communities = user.communityConnection.edges;
     return (
       <AppViewWrapper>
+        <Titlebar />
+
         <Column type="secondary">
           <UserProfile profileSize="mini" data={{ user: user }} />
           {user &&
@@ -95,6 +84,7 @@ const DashboardPure = props => {
   } else {
     return (
       <AppViewWrapper>
+        <Titlebar />
         <Column type="primary" alignItems="center">
           <UpsellSignIn />
         </Column>
@@ -111,4 +101,4 @@ const DashboardPure = props => {
 const Dashboard = compose(getCurrentUserProfile, displayLoadingScreen, pure)(
   DashboardPure
 );
-export default connect()(Dashboard);
+export default Dashboard;

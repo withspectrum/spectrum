@@ -1,6 +1,12 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Transition, FlexRow } from '../../components/globals';
+import { Avatar } from '../../components/avatar';
+
+export const UserProfileAvatar = styled(Avatar)`
+border: 1px solid ${({ theme }) => theme.text.default};
+box-shadow: 0 0 0 2px ${props => (props.isPro ? props.theme.pro.default : 'rgba(255,255,255,0.9)')};
+`;
 
 export const Container = styled.section`
   width: 100%;
@@ -8,7 +14,7 @@ export const Container = styled.section`
 
 export const Nav = styled.nav`
   width: 100%;
-  background: #000;
+  background: ${({ theme }) => theme.text.default};
   position: fixed;
   top: 0;
   display: flex;
@@ -42,10 +48,6 @@ export const Section = styled.span`
 
 export const Spacer = styled.div`
   height: 48px;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
 `;
 
 export const LogoLink = styled(Link)`
@@ -186,4 +188,38 @@ export const DropdownFooter = styled(FlexRow)`
   justify-content: flex-end;
   align-items: center;
   padding: 8px;
+`;
+
+export const UserProfileDropdownList = styled.ul`
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+`;
+
+export const UserProfileDropdownListItem = styled.li`
+  font-size: 14px;
+  padding: 16px;
+  text-align: center;
+  display: flex;
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: ${props => props.theme.text.alt};
+  border-bottom: 2px solid ${props => props.theme.border.default};
+  background: #fff;
+  justify-content: center;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    cursor: pointer;
+    color: ${props => props.theme.text.default};
+    background: ${props => props.theme.bg.wash};
+  }
 `;

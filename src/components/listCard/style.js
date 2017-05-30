@@ -41,7 +41,8 @@ export const Heading = styled(H3)`
 `;
 
 export const Meta = styled(H4)`
-  font-weight: 400;
+  font-size: 12px;
+  font-weight: 500;
   color: ${({ theme }) => theme.text.alt};
 
   ${props => (props.nowrap ? Truncate() : '')}

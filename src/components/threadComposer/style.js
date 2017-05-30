@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Card } from '../card';
-import { Transition } from '../globals';
+import { Transition, hexa, Shadow } from '../globals';
 
 export const Container = styled.div`
   align-self: stretch;
@@ -17,6 +17,12 @@ export const Composer = styled(Card)`
   min-height: 64px;
   cursor: pointer;
   border-radius: 12px;
+  transition: ${Transition.hover.off};
+
+  &:hover {
+    transition: none;
+    box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
+  }
 `;
 
 export const Overlay = styled.div`

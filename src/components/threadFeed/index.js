@@ -15,6 +15,7 @@ import { Button } from '../buttons';
 //   renderComponent(LoadingThread)
 // );
 
+//TODO: wire up buttons...
 const NullState = () => (
   <NullCard
     bg="post"
@@ -31,7 +32,9 @@ const ErrorState = () => (
     heading={`Whoops!`}
     copy={`Something went wrong on our end... Mind reloading?`}
   >
-    <Button icon="view-reload">Reload</Button>
+    <Button icon="view-reload" onClick={() => location.reload(true)}>
+      Reload
+    </Button>
   </NullCard>
 );
 
@@ -43,7 +46,10 @@ const ErrorState = () => (
   See 'views/community/queries.js' for an example of the prop mapping in action
 */
 const ThreadFeedPure = props => {
-  const { data: { threads, loading, fetchMore, error, hasNextPage } } = props;
+  const {
+    data: { threads, loading, fetchMore, error, hasNextPage },
+    currentUser,
+  } = props;
 
   if (loading) {
     return (
@@ -58,7 +64,7 @@ const ThreadFeedPure = props => {
     );
   } else if ((error && threads.length > 0) || (error && threads.length === 0)) {
     return <ErrorState />;
-  } else if (threads.length === 0) {
+  } else if (threads.length === 0 && currentUser) {
     return <NullState />;
   } else {
     return (

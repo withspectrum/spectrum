@@ -61,6 +61,13 @@ const User = /* GraphQL */ `
 		threads: Int
 	}
 
+	type RecurringPayment {
+		plan: String
+		amount: String
+		created: String
+		status: String
+	}
+
 	input File {
     name: String!
     type: String!
@@ -78,19 +85,20 @@ const User = /* GraphQL */ `
 		coverPhoto: String
 		email: String
 		providerId: String
-		# subscriptions: [Subscription!]
 		createdAt: Date!
 		lastSeen: Date!
 
 		# non-schema fields
 		threadCount: Int
 		isAdmin: Boolean!
+		isPro: Boolean!
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
 		directMessageThreadsConnection: UserDirectMessageThreadsConnection!
 		threadConnection(first: Int = 10, after: String): UserThreadsConnection!
 		everything(first: Int = 10, after: String): EverythingThreadsConnection!
 		notificationConnection(first: Int = 10, after: String): UserNotificationsConnection!
+		recurringPayments: [RecurringPayment]
 	}
 
 	extend type Query {
@@ -101,13 +109,21 @@ const User = /* GraphQL */ `
 
 	input EditUserInput {
 		file: File
+		coverFile: File
 		name: String!
 		description: String!
 		website: String
 	}
 
+	input UpgradeToProInput {
+		plan: String!
+		token: String!
+	}
+
 	extend type Mutation {
 		editUser(input: EditUserInput!): User
+		upgradeToPro(input: UpgradeToProInput!): User
+		downgradeFromPro: User
 	}
 `;
 

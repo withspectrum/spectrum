@@ -77,7 +77,9 @@ const ListCardPure = ({ data, dispatch }) => {
         heading={`There are no channels here...`}
         copy={`Which really shouldn't be possible. Mind reloading?`}
       >
-        <Button icon="view-reload">Reload</Button>
+        <Button icon="view-reload" onClick={() => location.reload(true)}>
+          Reload
+        </Button>
       </NullCard>
     );
   }

@@ -8,6 +8,8 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
+import { getLinkPreviewFromUrl } from '../../../helpers/utils';
+import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { setThreadLockMutation } from '../mutations';
@@ -25,6 +27,7 @@ import { LinkPreview } from '../../../components/linkPreview';
 import { ThreadTitle, ThreadDescription } from '../style';
 // $FlowFixMe
 import Textarea from 'react-textarea-autosize';
+import Titlebar from '../../../views/titlebar';
 import {
   ThreadWrapper,
   ThreadHeading,
@@ -138,6 +141,66 @@ class ThreadDetailPure extends Component {
     });
   };
 
+  listenForUrl = (e, data, state) => {
+    const text = state.document.text;
+
+    if (
+      e.keyCode !== 8 &&
+      e.keyCode !== 9 &&
+      e.keyCode !== 13 &&
+      e.keyCode !== 32 &&
+      e.keyCode !== 46
+    ) {
+      // Return if backspace, tab, enter, space or delete was not pressed.
+      return;
+    }
+
+    const { linkPreview, linkPreviewLength } = this.state;
+
+    // also don't check if we already have a url in the linkPreview state
+    if (linkPreview !== null) return;
+
+    const toCheck = text.match(URLS);
+
+    if (toCheck) {
+      const len = toCheck.length;
+      if (linkPreviewLength === len) return; // no new links, don't recheck
+
+      let urlToCheck = toCheck[len - 1].trim();
+
+      this.setState({ fetchingLinkPreview: true });
+
+      if (!/^https?:\/\//i.test(urlToCheck)) {
+        urlToCheck = 'https://' + urlToCheck;
+      }
+
+      getLinkPreviewFromUrl(urlToCheck)
+        .then(data => {
+          // this.props.dispatch(stopLoading());
+
+          this.setState(prevState => ({
+            linkPreview: data,
+            linkPreviewTrueUrl: urlToCheck,
+            linkPreviewLength: prevState.linkPreviewLength + 1,
+            fetchingLinkPreview: false,
+            error: null,
+          }));
+
+          const linkPreview = {};
+          linkPreview['data'] = data;
+          linkPreview['trueUrl'] = urlToCheck;
+
+          // this.props.dispatch(addLinkPreview(linkPreview));
+        })
+        .catch(err => {
+          this.setState({
+            error: "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
+            fetchingLinkPreview: false,
+          });
+        });
+    }
+  };
+
   removeLinkPreview = () => {
     this.setState({
       linkPreview: null,
@@ -160,6 +223,13 @@ class ThreadDetailPure extends Component {
 
     return (
       <ThreadWrapper>
+        <Titlebar
+          title={thread.content.title}
+          subtitle={`${thread.channel.name} · ${thread.channel.community.name}`}
+          provideBack={true}
+          backRoute={`/${thread.channel.community.slug}/${thread.channel.slug}`}
+        />
+
         <ContextRow>
           <Byline to={`/users/${thread.creator.username}`}>
             {thread.creator.name}
