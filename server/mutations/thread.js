@@ -74,7 +74,7 @@ module.exports = {
         }
       });
     },
-    editThread: (_, { threadId, newContent }, { user }) => {
+    editThread: (_, { input }, { user }) => {
       const currentUser = user;
 
       // user must be authed to edit a thread
@@ -82,7 +82,7 @@ module.exports = {
         return new UserError(
           'You must be signed in to make changes to this thread.'
         );
-      return getThreads([threadId]).then(threads => {
+      return getThreads([input.threadId]).then(threads => {
         // select the thread
         const thread = threads[0];
 
@@ -99,7 +99,7 @@ module.exports = {
         }
 
         // all checks passed
-        return editThread(threadId, newContent);
+        return editThread(input);
       });
     },
     deleteThread: (_, { threadId }, { user }) => {

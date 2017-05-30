@@ -45,6 +45,7 @@ const CommunityList = props => {
         </ListHeader>
         <ListContainer>
           {communities.map(item => {
+            console.log('item id', item.node.id);
             return (
               <Link key={item.node.id} to={`/${item.node.slug}`}>
                 <ListCardItem

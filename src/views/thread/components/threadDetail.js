@@ -13,7 +13,7 @@ import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { setThreadLockMutation } from '../mutations';
-import { deleteThreadMutation } from '../../../api/thread';
+import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
 import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
 import { IconButton, Button } from '../../../components/buttons';
@@ -66,8 +66,6 @@ class ThreadDetailPure extends Component {
       linkPreviewLength: thread.attachments.length > 0 ? 1 : 0,
       fetchingLinkPreview: false,
     };
-
-    console.log(this.state);
   }
 
   threadLock = () => {
@@ -126,6 +124,59 @@ class ThreadDetailPure extends Component {
     this.setState({
       isEditing: !isEditing,
     });
+  };
+
+  saveEdit = () => {
+    const { dispatch, editThread, thread } = this.props;
+    const {
+      isEditing,
+      linkPreview,
+      linkPreviewTrueUrl,
+      title,
+      body,
+    } = this.state;
+    const threadId = thread.id;
+
+    const attachments = [];
+    if (linkPreview) {
+      const attachmentData = JSON.stringify({
+        ...linkPreview,
+        trueUrl: linkPreviewTrueUrl,
+      });
+      attachments.push({
+        attachmentType: 'linkPreview',
+        data: attachmentData,
+      });
+    }
+
+    const content = {
+      title,
+      body: JSON.stringify(toJSON(body)),
+    };
+
+    const input = {
+      threadId,
+      content,
+      attachments,
+    };
+
+    editThread(input)
+      .then(({ data: { editThread } }) => {
+        if (editThread && editThread !== null) {
+          this.toggleEdit();
+          dispatch(addToastWithTimeout('success', 'Thread saved!'));
+        } else {
+          dispatch(
+            addToastWithTimeout(
+              'error',
+              "We weren't able to save these changes. Try again?"
+            )
+          );
+        }
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err.message));
+      });
   };
 
   changeTitle = e => {
@@ -211,6 +262,7 @@ class ThreadDetailPure extends Component {
   render() {
     const { currentUser, thread } = this.props;
     const { isEditing, linkPreview, linkPreviewTrueUrl } = this.state;
+    console.log('state: ', this.state);
 
     let body = thread.content.body;
     if (thread.type === 'SLATE') {
@@ -277,7 +329,7 @@ class ThreadDetailPure extends Component {
 
           {isEditing &&
             <EditDone>
-              <Button onClick={this.toggleEdit}>Save</Button>
+              <Button onClick={this.saveEdit}>Save</Button>
             </EditDone>}
         </ContextRow>
 
@@ -326,6 +378,7 @@ class ThreadDetailPure extends Component {
                 remove={this.removeLinkPreview}
                 editable={true}
                 trueUrl={linkPreviewTrueUrl}
+                margin={'16px 0'}
               />}
           </span>}
       </ThreadWrapper>
@@ -336,6 +389,7 @@ class ThreadDetailPure extends Component {
 const ThreadDetail = compose(
   setThreadLockMutation,
   deleteThreadMutation,
+  editThreadMutation,
   withRouter,
   pure
 )(ThreadDetailPure);
