@@ -6,7 +6,9 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 //$FlowFixMe
 import { connect } from 'react-redux';
+import generateMetaInfo from '../../../server/shared/generate-meta-info';
 import AppViewWrapper from '../../components/appViewWrapper';
+import Head from '../../components/head';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import { UserProfile } from '../../components/profile';
@@ -27,7 +29,7 @@ const UserViewPure = ({
 }) => {
   const username = match.params.username;
 
-  if (error) {
+  if (error || !user) {
     return (
       <AppViewWrapper>
         <Titlebar title={`No User Found`} provideBack={true} backRoute={`/`} />
@@ -39,19 +41,18 @@ const UserViewPure = ({
     );
   }
 
-  if (!user) {
-    return (
-      <AppViewWrapper>
-        <Titlebar title={`No User Found`} provideBack={true} backRoute={`/`} />
-        <Column type="primary" alignItems="center">
-          <Upsell404User username={username} />
-        </Column>
-      </AppViewWrapper>
-    );
-  }
+  const { title, description } = generateMetaInfo({
+    type: 'user',
+    data: {
+      name: user.name,
+      username: user.username,
+      description: user.description,
+    },
+  });
 
   return (
     <AppViewWrapper>
+      <Head title={title} description={description} />
       <Titlebar
         title={user.name}
         subtitle={user.username}

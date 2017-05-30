@@ -4,8 +4,10 @@ import React, { Component } from 'react';
 import { Router, Route, Switch, Redirect } from 'react-router';
 //$FlowFixMe
 import styled from 'styled-components';
+import generateMetaInfo from '../server/shared/generate-meta-info';
 import { history } from './helpers/history';
 import ScrollManager from './components/scrollManager';
+import Head from './components/head';
 import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
@@ -37,11 +39,13 @@ const Body = styled.div`
 
 class Routes extends Component {
   render() {
+    const { title, description } = generateMetaInfo();
     return (
       <Router history={history}>
-
         <ScrollManager>
           <Body>
+            {/* Default meta tags, get overriden by anything further down the tree */}
+            <Head title={title} description={description} />
             {/* Global navigation, notifications, message notifications, etc */}
             <Route component={Navbar} />
             <Route component={ModalRoot} />

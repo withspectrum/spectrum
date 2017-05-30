@@ -2,6 +2,11 @@
 /**
  * This file is shared between server and client.
  * ⚠️ DON'T PUT ANY NODE.JS OR BROWSER-SPECIFIC CODE IN HERE ⚠️
+ *
+ * Note: This uses Flow comment syntax so this whole file is actually valid JS without any transpilation
+ * The reason I did that is because create-react-app doesn't transpile files outside the source folder,
+ * so it chokes on the Flow syntax.
+ * More info: https://flow.org/en/docs/types/comments/
  */
 
 const DEFAULT_META = {
@@ -9,12 +14,14 @@ const DEFAULT_META = {
   description: 'Where communities live.',
 };
 
+/*::
 type MaybeMeta = {
   title?: string,
   description?: string,
 };
+*/
 
-const setDefault = (input: MaybeMeta): Meta => {
+const setDefault = (input /*: MaybeMeta */ /*: Meta */) => {
   const title = input.title || DEFAULT_META.title;
   let description = input.description || DEFAULT_META.description;
   // If theres a custom title but no custom description
@@ -26,6 +33,7 @@ const setDefault = (input: MaybeMeta): Meta => {
   return { title, description };
 };
 
+/*::
 type Meta = {
   title: string,
   description: string,
@@ -57,8 +65,9 @@ type Input =
   | ChannelInput
   | CommunityInput
   | OtherInput;
+*/
 
-const generateMetaInfo = ({ type, data }: Input = {}): Meta => {
+const generateMetaInfo = ({ type, data } /*: Input */ = {} /*: Meta */) => {
   switch (type) {
     case 'explore': {
       return {

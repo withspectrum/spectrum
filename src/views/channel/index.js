@@ -6,9 +6,11 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import generateMetaInfo from '../../../server/shared/generate-meta-info';
 import { toggleChannelSubscriptionMutation } from '../../api/channel';
 import { addToastWithTimeout } from '../../actions/toasts';
 import ThreadComposer from '../../components/threadComposer';
+import Head from '../../components/head';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
@@ -145,8 +147,17 @@ const ChannelViewPure = ({
       channel.community.communityPermissions.isOwner ||
       !channel.isPrivate)
   ) {
+    const { title, description } = generateMetaInfo({
+      type: 'channel',
+      data: {
+        name: channel.name,
+        communityName: channel.community.name,
+        description: channel.description,
+      },
+    });
     return (
       <AppViewWrapper>
+        <Head title={title} description={description} />
         <Titlebar
           title={channel.name}
           subtitle={channel.community.name}
