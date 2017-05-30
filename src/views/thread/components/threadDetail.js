@@ -59,11 +59,22 @@ class ThreadDetailPure extends Component {
 
     const { thread } = props;
 
+    let rawLinkPreview = thread.attachments.length > 0
+      ? thread.attachments.filter(
+          attachment => attachment.attachmentType === 'linkPreview'
+        )[0]
+      : null;
+
+    let cleanLinkPreview = rawLinkPreview && {
+      attachmentType: rawLinkPreview.attachmentType,
+      data: JSON.parse(rawLinkPreview.data),
+    };
+
     this.state = {
       isEditing: false,
       body: thread.content.body,
       title: thread.content.title,
-      linkPreview: thread.attachments.length > 0 ? thread.attachments[0] : null,
+      linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl: thread.attachments.length > 0
         ? thread.attachments[0].trueUrl
         : '',
@@ -366,11 +377,11 @@ class ThreadDetailPure extends Component {
             </ThreadHeading>
             <ThreadContent>{viewBody}</ThreadContent>
 
-            {thread.attachments &&
-              thread.attachments.length > 0 &&
+            {linkPreview &&
+              !fetchingLinkPreview &&
               <LinkPreview
-                trueUrl={thread.attachments[0].data.trueUrl}
-                data={JSON.parse(thread.attachments[0].data)}
+                trueUrl={linkPreview.url}
+                data={linkPreview}
                 size={'small'}
                 editable={false}
                 margin={'16px 0 0 0'}

@@ -84,7 +84,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
           {// for now we know this means there is a link attachment
           props.data.attachments &&
             props.data.attachments.length > 0 &&
-            props.data.attachments.map(attachment => {
+            props.data.attachments.map((attachment, i) => {
               if (attachment.attachmentType === 'linkPreview') {
                 return (
                   <LinkPreview
@@ -93,10 +93,11 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
                     size={'small'}
                     editable={false}
                     margin={'8px 0 12px'}
+                    key={i}
                   />
                 );
               } else {
-                return <span />;
+                return <span key={i} />;
               }
             })}
         </MetaRow>
