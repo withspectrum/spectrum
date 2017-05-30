@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 
 import { displayLoadingCard } from '../../../components/loading';
-import { ListCardItem } from '../../../components/listCard';
+import { ChannelListItem } from '../../../components/listItems';
 import { IconButton } from '../../../components/buttons';
 
 import { StyledCard, ListHeading, ListContainer } from '../style';
@@ -24,13 +24,13 @@ const ListCardPure = ({ data }) => {
                 key={item.node.id}
                 to={`/${data.variables.slug}/${item.node.slug}/settings`}
               >
-                <ListCardItem
+                <ChannelListItem
                   contents={item.node}
                   withDescription={false}
                   meta={`${item.node.metaData.members} members`}
                 >
                   <IconButton glyph="settings" />
-                </ListCardItem>
+                </ChannelListItem>
               </Link>
             );
           })}

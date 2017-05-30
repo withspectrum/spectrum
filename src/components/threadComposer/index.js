@@ -373,6 +373,11 @@ class ThreadComposerWithData extends Component {
 
             <Actions>
               <Dropdowns>
+                <Icon
+                  glyph="community"
+                  tipText="Select a community"
+                  tipLocation="top-right"
+                />
                 <select
                   onChange={this.setActiveCommunity}
                   defaultValue={activeCommunity}
@@ -385,7 +390,11 @@ class ThreadComposerWithData extends Component {
                     );
                   })}
                 </select>
-
+                <Icon
+                  glyph="channel"
+                  tipText="Select a channel"
+                  tipLocation="top-right"
+                />
                 <select
                   onChange={this.setActiveChannel}
                   defaultValue={activeChannel}

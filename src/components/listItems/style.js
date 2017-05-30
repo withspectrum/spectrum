@@ -136,3 +136,16 @@ export const Notice = styled(Description)`
   border: 1px solid #ffd566;
   color: #715818;
 `;
+
+export const ChannelTypeIndicator = styled(FlexCol)`
+  justify-content: center;
+  color: ${({ theme }) => theme.border.default};
+  flex: 0 0 32px;
+  margin-right: 8px;
+`;
+
+export const BadgeContainer = styled(FlexCol)`
+  justify-content: center;
+  flex: 0 0 40px;
+  margin-right: 8px;
+`;

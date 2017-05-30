@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import compose from 'recompose/compose';
 
 import { displayLoadingCard } from '../../../components/loading';
-import { ListCardItem } from '../../../components/listCard';
+import { ChannelListItem } from '../../../components/listItems';
 import { FlexRow, FlexCol } from '../../../components/globals';
 import Card from '../../../components/card';
 import Icon from '../../../components/icons';
@@ -16,7 +16,7 @@ import {
   LargeListHeading,
   LargeListContainer,
   MoreLink,
-} from '../../../components/listCard/style';
+} from '../../../components/listItems/style';
 
 const ListCardPure = ({ data }) => {
   const channels = data.community.channelConnection.edges;
@@ -31,13 +31,13 @@ const ListCardPure = ({ data }) => {
                 key={item.node.id}
                 to={`/${data.variables.slug}/${item.node.slug}/settings`}
               >
-                <ListCardItem
+                <ChannelListItem
                   contents={item.node}
                   withDescription={false}
                   meta={`${item.node.metaData.members} members`}
                 >
                   <Icon glyph="settings" />
-                </ListCardItem>
+                </ChannelListItem>
               </Link>
             );
           })}
