@@ -8,7 +8,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-import { getLinkPreviewFromUrl } from '../../../helpers/utils';
+import { getLinkPreviewFromUrl, timeDifference } from '../../../helpers/utils';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -23,7 +23,10 @@ import Editor, {
   toPlainText,
   toState,
 } from '../../../components/editor';
-import { LinkPreview } from '../../../components/linkPreview';
+import {
+  LinkPreview,
+  LinkPreviewLoading,
+} from '../../../components/linkPreview';
 import { ThreadTitle, ThreadDescription } from '../style';
 // $FlowFixMe
 import Textarea from 'react-textarea-autosize';
@@ -37,6 +40,7 @@ import {
   DropWrap,
   FlyoutRow,
   EditDone,
+  Edited,
 } from '../style';
 
 class ThreadDetailPure extends Component {
@@ -57,7 +61,7 @@ class ThreadDetailPure extends Component {
 
     this.state = {
       isEditing: false,
-      body: toState(JSON.parse(thread.content.body)),
+      body: thread.content.body,
       title: thread.content.title,
       linkPreview: thread.attachments.length > 0 ? thread.attachments[0] : null,
       linkPreviewTrueUrl: thread.attachments.length > 0
@@ -141,6 +145,11 @@ class ThreadDetailPure extends Component {
         attachmentType: 'linkPreview',
         data: attachmentData,
       });
+    }
+
+    let bodyToSave = body;
+    if (thread.type === 'SLATE') {
+      bodyToSave = JSON.stringify(toJSON(body));
     }
 
     const content = {
@@ -255,12 +264,22 @@ class ThreadDetailPure extends Component {
 
   render() {
     const { currentUser, thread } = this.props;
-    const { isEditing, linkPreview, linkPreviewTrueUrl, body } = this.state;
-    console.log('state: ', this.state);
+    const {
+      isEditing,
+      linkPreview,
+      linkPreviewTrueUrl,
+      body,
+      fetchingLinkPreview,
+    } = this.state;
 
     let viewBody = thread.content.body;
     if (thread.type === 'SLATE') {
       viewBody = toPlainText(toState(JSON.parse(viewBody)));
+    }
+
+    let editBody = this.state.body;
+    if (thread.type === 'SLATE') {
+      editBody = toState(JSON.parse(this.state.body));
     }
 
     // let editBody = toState(JSON.parse(thread.content.body))
@@ -268,6 +287,11 @@ class ThreadDetailPure extends Component {
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner =
       thread.channel.community.communityPermissions.isOwner;
+
+    const isEdited = thread.modifiedAt;
+    const editedTimestamp = isEdited
+      ? new Date(thread.modifiedAt).getTime()
+      : null;
 
     return (
       <ThreadWrapper>
@@ -279,9 +303,15 @@ class ThreadDetailPure extends Component {
         />
 
         <ContextRow>
-          <Byline to={`/users/${thread.creator.username}`}>
-            {thread.creator.name}
-          </Byline>
+          <span>
+            {thread.modifiedAt &&
+              <Edited>
+                Edited {timeDifference(Date.now(), editedTimestamp)}
+              </Edited>}
+            <Byline to={`/users/${thread.creator.username}`}>
+              {thread.creator.name}
+            </Byline>
+          </span>
           {currentUser &&
             (thread.isCreator || isChannelOwner || isCommunityOwner) &&
             !isEditing &&
@@ -361,13 +391,16 @@ class ThreadDetailPure extends Component {
             <Editor
               onChange={this.changeBody}
               onKeyDown={this.listenForUrl}
-              state={this.state.body}
+              state={editBody}
               style={ThreadDescription}
               ref="bodyTextarea"
               placeholder="Write more thoughts here, add photos, and anything else!"
             />
 
+            {!linkPreview && fetchingLinkPreview && <LinkPreviewLoading />}
+
             {linkPreview &&
+              !fetchingLinkPreview &&
               <LinkPreview
                 data={linkPreview}
                 size={'large'}

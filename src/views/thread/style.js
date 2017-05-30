@@ -22,7 +22,8 @@ export const ThreadHeading = styled(H1)`
 
 export const ContextRow = styled(FlexRow)`
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  align-content: flex-start;
 `;
 
 export const EditDone = styled.div`
@@ -71,10 +72,19 @@ export const FlyoutRow = styled(FlexRow)`
 export const Byline = styled(Link)`
   font-weight: 500;
   color: ${({ theme }) => theme.brand.alt};
+  display: block;
+  margin-bottom: 16px;
 
   &:hover {
     text-decoration: underline;
   }
+`;
+
+export const Edited = styled.div`
+  display: block;
+  font-weight: 500;
+  font-size: 12px;
+  color: ${({ theme }) => theme.text.alt};
 `;
 
 export const ThreadContent = styled(Markdown)`
