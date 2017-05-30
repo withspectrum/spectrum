@@ -19,21 +19,7 @@ type MaybeMeta = {
   title?: string,
   description?: string,
 };
-*/
 
-const setDefault = (input /*: MaybeMeta */ /*: Meta */) => {
-  const title = input.title || DEFAULT_META.title;
-  let description = input.description || DEFAULT_META.description;
-  // If theres a custom title but no custom description
-  // prefix "On spectrum" to the description
-  // Otherwise you end up with "SpecFM | Where communities live"
-  if (input.title && !input.description) {
-    description = `On Spectrum, ${DEFAULT_META.description.toLowerCase()}`;
-  }
-  return { title, description };
-};
-
-/*::
 type Meta = {
   title: string,
   description: string,
@@ -45,7 +31,7 @@ type OtherInput = {
 };
 type ThreadInput = {
   type: 'thread',
-  data?: { title: string, body?: string, channelName?: string },
+  data?: { title: string, body?: ?string, channelName?: string },
 };
 type UserInput = {
   type: 'user',
@@ -67,11 +53,23 @@ type Input =
   | OtherInput;
 */
 
+const setDefault = (input /*: MaybeMeta */ /*: Meta */) => {
+  const title = input.title || DEFAULT_META.title;
+  let description = input.description || DEFAULT_META.description;
+  // If theres a custom title but no custom description
+  // prefix "On spectrum" to the description
+  // Otherwise you end up with "SpecFM | Where communities live"
+  if (input.title && !input.description) {
+    description = `on Spectrum, ${DEFAULT_META.description.toLowerCase()}`;
+  }
+  return { title, description };
+};
+
 const generateMetaInfo = ({ type, data } /*: Input */ = {} /*: Meta */) => {
   switch (type) {
     case 'explore': {
       return {
-        title: 'Explore | Spectrum',
+        title: 'Explore · Spectrum',
         description: 'Explore some of the communities on Spectrum',
       };
     }

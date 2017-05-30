@@ -18,6 +18,7 @@ import AppViewWrapper from '../../../components/appViewWrapper';
 import { UserProfile, ChannelProfile } from '../../../components/profile';
 import { getThread } from '../queries';
 import { displayLoadingScreen } from '../../../components/loading';
+import { toPlainText, toState } from '../../../components/editor';
 import { Container } from '../style';
 import {
   UpsellSignIn,
@@ -70,7 +71,9 @@ const ThreadContainerPure = ({
     type: 'thread',
     data: {
       title: thread.content.title,
-      body: thread.content.body,
+      body: thread.type === 'SLATE'
+        ? toPlainText(toState(JSON.parse(thread.content.body)))
+        : thread.content.body,
       channelName: thread.channel.name,
     },
   });

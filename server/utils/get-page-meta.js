@@ -32,6 +32,7 @@ export default (
               title
               body
             }
+            type
             channel {
               name
             }
@@ -39,12 +40,13 @@ export default (
         }
       `
       ).then(res => {
-        const { thread: { content, channel } } = res.data;
+        const { thread: { type, content, channel } } = res.data;
         return generateMetaInfo({
           type: 'thread',
           data: {
             title: content.title,
-            body: content.body,
+            // TODO: Figure out how to run Slate in Node
+            body: type !== 'SLATE' && content.body,
             channelName: channel.name,
           },
         });
