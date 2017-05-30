@@ -32,10 +32,11 @@ export const StyledPrefixLabel = styled.label`
   display: flex;
   width: 100%;
   margin-top: 4px;
-  padding-left: 14px;
   font-size: 14px;
   font-weight: 500;
   color: ${({ theme }) => theme.text.placeholder};
+  white-space: nowrap;
+  text-overflow: ellipsis;
 
   > input {
   	margin-left: 2px;
@@ -111,9 +112,9 @@ export const StyledTextArea = styled.textarea`
 export const StyledUnderlineInput = styled.input`
 	font-size: inherit;
 	font-weight: inherit;
-	color: ${props => (props.disabled ? props.theme.text.placeholder : props.theme.text.default)};
+	color: ${props => (props.disabled ? props.theme.text.alt : props.theme.text.default)};
   border-bottom: ${props => (props.disabled ? '2px solid transparent' : `2px solid ${props.theme.inactive}`)};
-  flex: 1 0 auto;
+  width: 50%;
   transition: ${Transition.hover.off};
 
   &:hover {

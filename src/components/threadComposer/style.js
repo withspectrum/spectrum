@@ -74,7 +74,7 @@ export const ContentContainer = styled.div`
 export const Actions = styled.div`
   background: #F8FBFE;
   border-top: 2px solid ${props => props.theme.border.default};
-  padding: 8px;
+  padding: 8px 8px 8px 0;
   border-radius: 0 0 12px 12px;
   width: 100%;
   display: flex;
@@ -105,8 +105,13 @@ export const Dropdowns = styled.div`
     appearance: none;
   }
 
-  select + select {
-    margin-left: 8px;
+  > div {
+    color: ${props => props.theme.text.placeholder};
+    margin-left: 4px;
+
+    &:nth-of-type(2) {
+      margin-left: 8px;
+    }
   }
 `;
 

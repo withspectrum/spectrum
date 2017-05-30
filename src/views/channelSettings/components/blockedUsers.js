@@ -1,6 +1,6 @@
 //@flow
 import React from 'react';
-import { ListCardItemUser } from '../../../components/listCard';
+import { UserListItem } from '../../../components/listItems';
 import { TextButton } from '../../../components/buttons';
 import {
   StyledCard,
@@ -8,7 +8,7 @@ import {
   ListContainer,
   Description,
   Notice,
-} from '../../../components/listCard/style';
+} from '../../../components/listItems/style';
 
 const BlockedUsers = ({ users, unblock }) => {
   return (
@@ -33,7 +33,7 @@ const BlockedUsers = ({ users, unblock }) => {
           users.map(user => {
             return (
               <section key={user.id}>
-                <ListCardItemUser user={user}>
+                <UserListItem user={user}>
                   <TextButton
                     onClick={() => unblock(user.id)}
                     label
@@ -41,7 +41,7 @@ const BlockedUsers = ({ users, unblock }) => {
                   >
                     Unblock
                   </TextButton>
-                </ListCardItemUser>
+                </UserListItem>
               </section>
             );
           })}
