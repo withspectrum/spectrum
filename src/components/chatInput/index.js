@@ -133,7 +133,7 @@ const ChatInputWithMutation = ({
         <Input
           placeholder="Your message here..."
           state={state}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyPress}
           onChange={onChange}
           markdown={false}
           onFocus={onFocus}
