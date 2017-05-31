@@ -22,6 +22,13 @@ query getComposerCommunitiesAndChannels {
         node {
           id
           name
+          slug
+          communityPermissions {
+            isMember
+            isBlocked
+            isOwner
+            isModerator
+          }
         }
       }
     }
@@ -32,6 +39,13 @@ query getComposerCommunitiesAndChannels {
           name
           community {
             id
+          }
+          channelPermissions {
+            isMember
+            isPending
+            isBlocked
+            isOwner
+            isModerator
           }
         }
       }

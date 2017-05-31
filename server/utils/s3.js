@@ -1,4 +1,7 @@
+// @flow
+// $FlowFixMe
 const Uploader = require('s3-image-uploader');
+// $FlowFixMe
 const env = require('node-env-file');
 const IS_PROD = process.env.NODE_ENV === 'production';
 const path = require('path');
@@ -26,24 +29,35 @@ const generateImageUrl = path => {
   return imgixBase + newPath;
 };
 
-const generateFileName = file => {
-  const timestamp = Date.now();
-  const fileName = `${file.name}.${timestamp}`;
+/*
+  Adds random number to filename to avoid conflicts
+*/
+const generateFileName = (name: string) => {
+  const num = Math.random();
+  const fileName = `${name}.${num}`;
   return fileName;
 };
 
-const uploadCommunityPhoto = (file, { id }, cb) => {
-  const fileName = generateFileName(file);
+type EntityTypes = 'communities' | 'channels' | 'users' | 'threads';
+
+const uploadImage = (
+  file: Object,
+  entity: EntityTypes,
+  id: string,
+  cb: Function
+) => {
+  const fileName = generateFileName(file.name);
 
   return uploader.upload(
     {
       fileId: fileName,
-      bucket: `spectrum-chat/communities/${id}`,
+      bucket: `spectrum-chat/${entity}/${id}`,
       source: file.path,
       name: fileName,
     },
     data => {
-      cb(data);
+      const url = generateImageUrl(data.path);
+      return cb(url);
     },
     (errMsg, errObject) => {
       // TODO: Figure out error handling in the backend if image upload fails
@@ -52,33 +66,6 @@ const uploadCommunityPhoto = (file, { id }, cb) => {
   );
 };
 
-const photoToS3 = (file, user, cb) => {
-  // handle duplicate filenames
-  const timestamp = Date.now();
-  const fileName = `${file.name}.${timestamp}`;
-
-  return uploader.upload(
-    {
-      fileId: fileName,
-      bucket: `spectrum-chat/users/${user.id}`,
-      source: file.path,
-      name: fileName,
-    },
-    data => {
-      // success
-      console.log('upload success:', data);
-      cb(data);
-    },
-    (errMsg, errObject) => {
-      //error
-      console.error('unable to upload: ' + errMsg + ':', errObject);
-      // execute error code
-    }
-  );
-};
-
 module.exports = {
-  generateImageUrl,
-  uploadCommunityPhoto,
-  photoToS3,
+  uploadImage,
 };

@@ -84,7 +84,7 @@ export const ImgBubble = (props: Object) => {
       onClick={props.openGallery}
       me={me}
       persisted={persisted}
-      src={imgSrc}
+      src={`${imgSrc}?max-w=${window.innerWidth * 0.6}`}
     />
   );
 };

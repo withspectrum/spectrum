@@ -12,9 +12,11 @@ import {
   StyledHiddenInput,
   StyledCheckboxWrapper,
   StyledError,
-  ImageInputLabel,
+  PhotoInputLabel,
+  CoverInputLabel,
   InputOverlay,
   ProfileImage,
+  CoverImage,
 } from './style';
 
 type InputProps = {
@@ -31,7 +33,7 @@ type InputProps = {
 
 export const Input = (props: InputProps) => {
   return (
-    <StyledLabel>
+    <StyledLabel {...props}>
       {props.children}
       <StyledInput
         id={props.id}
@@ -40,26 +42,54 @@ export const Input = (props: InputProps) => {
         placeholder={props.placeholder}
         onChange={props.onChange}
         autofocus={props.autofocus}
+        disabled={props.disabled}
       />
     </StyledLabel>
   );
 };
 
-export const ImageInput = (props: InputProps) => {
+export const PhotoInput = (props: InputProps) => {
   return (
-    <ImageInputLabel>
-      <InputOverlay>
+    <PhotoInputLabel user={props.user}>
+      <InputOverlay user={props.user}>
         <Icon glyph="photo" />
       </InputOverlay>
-      <ProfileImage src={props.defaultValue} role="presentation" />
+      <ProfileImage
+        src={`${props.defaultValue}?w=48&dpr=2`}
+        user={props.user}
+        role="presentation"
+      />
       <StyledHiddenInput
         type="file"
         id="file"
         name="file"
         accept=".png, .jpg, .jpeg, .gif, .mp4"
         multiple={false}
+        onChange={props.onChange}
       />
-    </ImageInputLabel>
+    </PhotoInputLabel>
+  );
+};
+
+export const CoverInput = (props: InputProps) => {
+  return (
+    <CoverInputLabel>
+      <InputOverlay>
+        <Icon glyph="photo" />
+      </InputOverlay>
+      <CoverImage
+        src={`${props.defaultValue}?max-w=${window.innerWidth}&dpr=2`}
+        role="presentation"
+      />
+      <StyledHiddenInput
+        type="file"
+        id="file"
+        name="file"
+        accept=".png, .jpg, .jpeg, .gif, .mp4"
+        multiple={false}
+        onChange={props.onChange}
+      />
+    </CoverInputLabel>
   );
 };
 

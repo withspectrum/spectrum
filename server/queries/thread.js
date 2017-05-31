@@ -20,9 +20,10 @@ module.exports = {
     attachments: ({ attachments }) =>
       attachments &&
       attachments.map(attachment => {
-        return Object.assign({}, ...attachment, {
+        return {
+          attachmentType: attachment.attachmentType,
           data: JSON.stringify(attachment.data),
-        });
+        };
       }),
     channel: (
       { channelId }: { channelId: string },

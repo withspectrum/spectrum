@@ -11,14 +11,15 @@ import { withRouter } from 'react-router';
 import { editChannelMutation, deleteChannelMutation } from '../../api/channel';
 import { openModal } from '../../actions/modals';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { Notice } from '../listCard/style';
-import { Button, TextButton } from '../buttons';
+import { Notice } from '../listItems/style';
+import { Button, TextButton, IconButton } from '../buttons';
 import { NullCard } from '../upsell';
 import { Input, UnderlineInput, TextArea, Checkbox } from '../formElements';
 import {
   StyledCard,
   Form,
   FormTitle,
+  TertiaryActionContainer,
   Description,
   Actions,
   GeneralNotice,
@@ -154,7 +155,7 @@ class ChannelWithData extends Component {
               Name
             </Input>
             <UnderlineInput defaultValue={slug} disabled>
-              {`sp.chat/${channel.community.slug}/`}
+              {`${channel.community.slug}/`}
             </UnderlineInput>
             <TextArea
               id="description"
@@ -187,23 +188,25 @@ class ChannelWithData extends Component {
               </Notice>}
 
             <Actions>
-              <TextButton color={'warn.alt'}>Cancel</TextButton>
+              {slug !== 'general' &&
+                <TertiaryActionContainer>
+                  <IconButton
+                    glyph="delete"
+                    tipText={`Delete ${name}`}
+                    tipLocation="top-right"
+                    color="text.placeholder"
+                    hoverColor="warn.alt"
+                    onClick={e => this.triggerDeleteCommunity(e, channel.id)}
+                  />
+                </TertiaryActionContainer>}
+              <TextButton color={'text.alt'}>Cancel</TextButton>
               <Button onClick={this.save}>Save</Button>
             </Actions>
 
-            {// general can't be deleted
-            slug !== 'general'
-              ? <Actions>
-                  <TextButton
-                    color={'warn.alt'}
-                    onClick={e => this.triggerDeleteChannel(e, channel.id)}
-                  >
-                    Delete Channel
-                  </TextButton>
-                </Actions>
-              : <GeneralNotice>
-                  The General channel is the default channel for your community. It can't be deleted, but you can still change the name and description.
-                </GeneralNotice>}
+            {slug === 'general' &&
+              <GeneralNotice>
+                The General channel is the default channel for your community. It can't be deleted, but you can still change the name and description.
+              </GeneralNotice>}
           </Form>
         </StyledCard>
       );

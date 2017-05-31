@@ -8,6 +8,7 @@ import { FlexCol } from './globals';
 
 const StyledColumn = styled(FlexCol)`
   margin: 0 16px;
+  align-items: stretch;
   min-width: ${props => (props.type === 'primary' ? '360px' : '240px')};
   flex: ${props => (props.type === 'primary' ? '2 1 60%' : '1 1 30%')};
   max-width: ${props => (props.type === 'primary' ? '640px' : '320px')};

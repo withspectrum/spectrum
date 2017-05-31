@@ -2,6 +2,7 @@
 // This is globally available in styled-components when interpolating a function like so:
 // ${(props) => props.theme}
 // Or using import { withTheme } from 'styled-components';
+
 export const theme = {
   brand: {
     default: '#3818E5',

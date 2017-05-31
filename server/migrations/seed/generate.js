@@ -31,7 +31,6 @@ const generateUser = () => {
     coverPhoto: faker.image.image(),
     email: faker.internet.email(name),
     providerId: uuid(),
-    subscriptions: [],
     createdAt,
     // Make sure lastSeen is > createdAt
     lastSeen: faker.date.between(createdAt, new Date()),
@@ -170,11 +169,13 @@ const generateThread = (communityId, channelId, creatorId) => {
 
 const generateDirectMessageThread = users => {
   const createdAt = faker.date.past(2);
+  const threadLastActive = faker.date.between(createdAt, faker.date.recent());
 
   return {
     id: uuid(),
     name: null,
     createdAt,
+    threadLastActive,
   };
 };
 

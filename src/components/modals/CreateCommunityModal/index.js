@@ -24,7 +24,13 @@ import {
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
-import { Input, UnderlineInput, TextArea, Error } from '../../formElements';
+import {
+  Input,
+  UnderlineInput,
+  TextArea,
+  Error,
+  Checkbox,
+} from '../../formElements';
 import { modalStyles } from '../styles';
 
 import { Form, Actions, ImgPreview } from './style';
@@ -43,6 +49,7 @@ class CreateCommunityModal extends Component {
     nameError: boolean,
     createError: boolean,
     loading: boolean,
+    agreeCoC: boolean,
   };
   constructor(props) {
     super(props);
@@ -60,6 +67,7 @@ class CreateCommunityModal extends Component {
       nameError: false,
       createError: false,
       loading: false,
+      agreeCoC: false,
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
@@ -180,6 +188,13 @@ class CreateCommunityModal extends Component {
     });
   };
 
+  changeCoC = () => {
+    const value = this.state.agreeCoC;
+    this.setState({
+      agreeCoC: !value,
+    });
+  };
+
   setCommunityPhoto = e => {
     let reader = new FileReader();
     let file = e.target.files[0];
@@ -264,6 +279,7 @@ class CreateCommunityModal extends Component {
       descriptionError,
       createError,
       loading,
+      agreeCoC,
     } = this.state;
     const styles = modalStyles();
 
@@ -332,7 +348,9 @@ class CreateCommunityModal extends Component {
             >
               Add a logo or photo
 
-              {!image ? <span>add</span> : <ImgPreview src={image} />}
+              {!image
+                ? <span>add</span>
+                : <ImgPreview src={`${image}?w=40&dpr=2`} />}
             </Input>
 
             <Input
@@ -343,10 +361,29 @@ class CreateCommunityModal extends Component {
               Optional: Add your community's website
             </Input>
 
+            <Checkbox
+              id="isPrivate"
+              checked={agreeCoC}
+              onChange={this.changeCoC}
+            >
+              <span>
+                I have read the{' '}
+                <a
+                  href="https://github.com/withspectrum/code-of-conduct"
+                  target="_blank"
+                >
+                  Spectrum Code of Conduct
+                </a>
+                {' '}and agree to enforce it in my community.
+              </span>
+            </Checkbox>
+
             <Actions>
               <TextButton color={'warn.alt'}>Cancel</TextButton>
               <Button
-                disabled={!name || !slug || slugTaken || !description}
+                disabled={
+                  !name || !slug || slugTaken || !description || !agreeCoC
+                }
                 loading={loading}
                 onClick={this.create}
               >

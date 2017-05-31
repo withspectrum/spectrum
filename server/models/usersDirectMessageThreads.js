@@ -15,8 +15,10 @@ import { UserError } from 'graphql-errors';
 // to an existing direct message thread (group thread only)
 const createMemberInDirectMessageThread = (
   threadId: string,
-  userId: string
+  userId: string,
+  setActive: boolean
 ): Promise<Object> => {
+  console.log("creating member in dm thread'", setActive);
   return db
     .table('usersDirectMessageThreads')
     .insert(
@@ -24,8 +26,8 @@ const createMemberInDirectMessageThread = (
         threadId,
         userId,
         createdAt: new Date(),
-        lastActive: null,
-        lastSeen: null,
+        lastActive: setActive ? new Date() : null,
+        lastSeen: setActive ? new Date() : null,
       },
       { returnChanges: true }
     )
@@ -60,6 +62,21 @@ const removeMembersInDirectMessageThread = (
     .run();
 };
 
+const setUserLastSeenInDirectMessageThread = (
+  threadId: string,
+  userId: string
+): Promise<Object> => {
+  return db
+    .table('usersDirectMessageThreads')
+    .getAll(userId, { index: 'userId' })
+    .filter({ threadId })
+    .update({
+      lastSeen: db.now(),
+    })
+    .run()
+    .then(() => db.table('directMessageThreads').get(threadId).run());
+};
+
 /*
 ===========================================================
 
@@ -84,6 +101,7 @@ module.exports = {
   createMemberInDirectMessageThread,
   removeMemberInDirectMessageThread,
   removeMembersInDirectMessageThread,
+  setUserLastSeenInDirectMessageThread,
   // get
   getMembersInDirectMessageThread,
 };

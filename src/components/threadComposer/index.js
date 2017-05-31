@@ -59,9 +59,9 @@ class ThreadComposerWithData extends Component {
       that don't have any channels yet
     */
 
-    const availableCommunities = props.data.user.communityConnection.edges.map(
-      edge => edge.node
-    );
+    const availableCommunities = props.data.user.communityConnection.edges
+      .map(edge => edge.node)
+      .filter(community => community.communityPermissions.isMember);
 
     /*
       Iterate through each of our community nodes to construct a new array
@@ -71,9 +71,9 @@ class ThreadComposerWithData extends Component {
       and each child array represents the channels within that parent
       community
     */
-    const availableChannels = props.data.user.channelConnection.edges.map(
-      edge => edge.node
-    );
+    const availableChannels = props.data.user.channelConnection.edges
+      .map(edge => edge.node)
+      .filter(channel => channel.channelPermissions.isMember);
 
     /*
       If a user is viewing a communit or channel, we use the url as a prop
@@ -113,7 +113,7 @@ class ThreadComposerWithData extends Component {
       activeChannel,
       isPublishing: false,
       linkPreview: null,
-      linkPreviewTrueUrl: null,
+      linkPreviewTrueUrl: '',
       linkPreviewLength: 0,
       fetchingLinkPreview: false,
     };
@@ -311,7 +311,7 @@ class ThreadComposerWithData extends Component {
   removeLinkPreview = () => {
     this.setState({
       linkPreview: null,
-      trueUrl: null,
+      linkPreviewTrueUrl: null,
     });
   };
 
@@ -373,6 +373,11 @@ class ThreadComposerWithData extends Component {
 
             <Actions>
               <Dropdowns>
+                <Icon
+                  glyph="community"
+                  tipText="Select a community"
+                  tipLocation="top-right"
+                />
                 <select
                   onChange={this.setActiveCommunity}
                   defaultValue={activeCommunity}
@@ -385,7 +390,11 @@ class ThreadComposerWithData extends Component {
                     );
                   })}
                 </select>
-
+                <Icon
+                  glyph="channel"
+                  tipText="Select a channel"
+                  tipLocation="top-right"
+                />
                 <select
                   onChange={this.setActiveChannel}
                   defaultValue={activeChannel}

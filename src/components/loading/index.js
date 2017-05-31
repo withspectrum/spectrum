@@ -14,11 +14,16 @@ import {
   ShimmerList,
   ShimmerThread,
   ShimmerProfile,
+  ShimmerListItem,
   ShimmerDM,
   ShimmerComposer,
   ShimmerBase,
   ShimmerLine,
   Cover,
+  LoadingOverlay,
+  LoadingNavbarContainer,
+  LogoLink,
+  Logo,
 } from './style';
 
 /*
@@ -69,6 +74,21 @@ export const LoadingCard = ({
   <LoadingCardContainer>
     <Spinner size={size} color={color} />
   </LoadingCardContainer>
+);
+
+export const LoadingGallery = (): React$Element<any> => (
+  <LoadingOverlay>
+    <Spinner size={'32'} color={'bg.default'} />
+  </LoadingOverlay>
+);
+
+export const LoadingNavbar = (): React$Element<any> => (
+  <LoadingNavbarContainer>
+    <LogoLink to="/">
+      <Logo src="/img/mark-white.png" role="presentation" />
+    </LogoLink>
+    <Spinner size={'20'} color={'bg.default'} />
+  </LoadingNavbarContainer>
 );
 
 export const LoadingThread = () => (
@@ -157,6 +177,62 @@ export const LoadingThread = () => (
       />
     </ShimmerBase>
   </ShimmerThread>
+);
+
+export const LoadingListItem = () => (
+  <ShimmerListItem>
+    <ShimmerBase>
+      <ShimmerLine />
+      <Cover
+        style={{
+          top: '20px',
+          left: '40px',
+          height: '8px',
+          width: 'calc(100% - 72px)',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          left: '40px',
+          height: '40px',
+          width: '12px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          right: '32px',
+          height: '20px',
+          width: '96px',
+        }}
+      />
+      <Cover
+        style={{
+          bottom: '0',
+          right: '32px',
+          height: '16px',
+          width: '64px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          right: '0',
+          height: '4px',
+          width: '32px',
+        }}
+      />
+      <Cover
+        style={{
+          bottom: '0',
+          right: '0',
+          height: '4px',
+          width: '32px',
+        }}
+      />
+    </ShimmerBase>
+  </ShimmerListItem>
 );
 
 export const LoadingDM = () => (
@@ -554,6 +630,16 @@ export const LoadingScreen = (): React$Element<any> => (
 export const displayLoadingState = branch(
   props => !props.data || props.data.loading,
   renderComponent(Loading)
+);
+
+export const displayLoadingGallery = branch(
+  props => !props.data || props.data.loading,
+  renderComponent(LoadingGallery)
+);
+
+export const displayLoadingNavbar = branch(
+  props => !props.data || props.data.loading,
+  renderComponent(LoadingNavbar)
 );
 
 export const displayLoadingCard = branch(

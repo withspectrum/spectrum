@@ -1,5 +1,12 @@
 // @flow
 import React, { Component } from 'react';
+// $FlowFixMe
+import compose from 'recompose/compose';
+import { withApollo } from 'react-apollo';
+import {
+  setLastSeenMutation,
+  GET_DIRECT_MESSAGE_THREAD_QUERY,
+} from '../../../api/directMessageThread';
 import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
@@ -18,6 +25,7 @@ class ExistingThread extends Component {
     if (prevProps.match.params.threadId !== this.props.match.params.threadId) {
       const threadId = this.props.match.params.threadId;
       this.props.setActiveThread(threadId);
+      this.props.setLastSeen(threadId);
       this.forceScrollToBottom();
     }
   }
@@ -26,6 +34,21 @@ class ExistingThread extends Component {
     if (!this.scrollBody) return;
     let node = this.scrollBody;
     node.scrollTop = node.scrollHeight - node.clientHeight;
+  };
+
+  refetchThread = () => {
+    console.log('refetching thread');
+    const id = this.props.match.params.threadId;
+    this.props.client
+      .query({
+        query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+        variables: {
+          id,
+        },
+      })
+      .then(({ data }) => {
+        console.log('found thread', data);
+      });
   };
 
   render() {
@@ -46,7 +69,11 @@ class ExistingThread extends Component {
             />
           </ViewContent>
 
-          <ChatInput thread={id} />
+          <ChatInput
+            thread={id}
+            threadType={'directMessageThread'}
+            refetchThread={this.refetchThread}
+          />
         </MessagesContainer>
       );
     }
@@ -59,4 +86,4 @@ class ExistingThread extends Component {
   }
 }
 
-export default ExistingThread;
+export default compose(setLastSeenMutation, withApollo)(ExistingThread);

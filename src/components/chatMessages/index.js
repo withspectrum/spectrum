@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { openModal } from '../../actions/modals';
+import { openGallery } from '../../actions/gallery';
 import {
   convertTimestampToDate,
   convertTimestampToTime,
@@ -37,6 +38,11 @@ import {
   each group render each bubble.
 */
 class ChatMessages extends Component {
+  openGallery = messageId => {
+    const { threadId } = this.props;
+    this.props.dispatch(openGallery(threadId, messageId));
+  };
+
   render() {
     const { messages, currentUser, toggleReaction, dispatch } = this.props;
 
@@ -194,6 +200,7 @@ class ChatMessages extends Component {
                             sender={sender}
                             imgSrc={message.content.body}
                             message={message.content}
+                            openGallery={() => this.openGallery(message.id)}
                           />
                           {renderReaction(message, sender, me)}
                         </MessageWrapper>

@@ -14,6 +14,7 @@ import Column from '../../components/column';
 import ListCard from './components/listCard';
 import { CommunityEditForm } from '../../components/editForm';
 import { Upsell404Community } from '../../components/upsell';
+import Titlebar from '../titlebar';
 const ChannelListCard = compose(getChannelsByCommunity)(ListCard);
 
 const SettingsPure = ({
@@ -31,19 +32,61 @@ const SettingsPure = ({
   };
 
   if (error) {
-    return <Upsell404Community community={communitySlug} />;
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={`No Community Found`}
+          provideBack={true}
+          backRoute={`/${communitySlug}`}
+        />
+        <Column type="primary">
+          <Upsell404Community community={communitySlug} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (!community || community.deleted) {
-    return <Upsell404Community community={communitySlug} create={create} />;
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={`No Community Found`}
+          provideBack={true}
+          backRoute={`/${communitySlug}`}
+        />
+
+        <Column type="primary">
+          <Upsell404Community community={communitySlug} create={create} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (!community.communityPermissions.isOwner) {
-    return <Upsell404Community community={communitySlug} noPermission />;
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={`No Permission`}
+          provideBack={true}
+          backRoute={`/${communitySlug}`}
+        />
+
+        <Column type="primary">
+          <Upsell404Community community={communitySlug} noPermission />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   return (
     <AppViewWrapper>
+      <Titlebar
+        title={community.name}
+        subtitle={'Settings'}
+        provideBack={true}
+        backRoute={`/${communitySlug}`}
+      />
+
       <Column type="secondary">
         <CommunityEditForm community={community} />
       </Column>

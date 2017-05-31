@@ -21,8 +21,9 @@ const DirectMessageThread = /* GraphQL */ `
 	type DirectMessageThread {
 		id: ID!
 		messageConnection(first: Int = 10, after: String): DirectMessagesConnection!
-		participants: [ParticipantInfo]
-		snippet: String
+		participants: [ParticipantInfo]!
+		snippet: String!
+		threadLastActive: Date!
 	}
 
 	extend type Query {
@@ -38,10 +39,18 @@ const DirectMessageThread = /* GraphQL */ `
 		body: String!
 	}
 
+	input File {
+		name: String!
+		type: String!
+		size: Int!
+		path: String!
+	}
+
 	input DirectMessageContentInput {
 		messageType: MessageType!
 		threadType: String!
 		content: ContentInput!
+		file: File
 	}
 
 	input DirectMessageThreadInput {
@@ -51,6 +60,7 @@ const DirectMessageThread = /* GraphQL */ `
 
 	extend type Mutation {
 		createDirectMessageThread(input: DirectMessageThreadInput!): DirectMessageThread
+		setLastSeen(id: ID!): DirectMessageThread
 	}
 `;
 

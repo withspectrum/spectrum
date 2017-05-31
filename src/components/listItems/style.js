@@ -41,15 +41,15 @@ export const Heading = styled(H3)`
 `;
 
 export const Meta = styled(H4)`
-  font-weight: 400;
+  font-size: 12px;
+  font-weight: 500;
   color: ${({ theme }) => theme.text.alt};
 
   ${props => (props.nowrap ? Truncate() : '')}
 `;
 
-export const ActionContainer = styled.div`
-  flex: 0 0 auto;
-  flex-direction: row;
+export const ActionContainer = styled(FlexCol)`
+  justify-content: center;
   align-items: center;
   color: ${({ theme }) => theme.text.placeholder};
   transition: ${Transition.hover.off};
@@ -134,4 +134,18 @@ export const Notice = styled(Description)`
   background: #FFF1CC;
   border: 1px solid #ffd566;
   color: #715818;
+`;
+
+export const ChannelTypeIndicator = styled(FlexCol)`
+  justify-content: center;
+  align-items: center;
+  color: ${({ theme }) => theme.border.default};
+  flex: 0 0 40px;
+  margin-right: 12px;
+`;
+
+export const BadgeContainer = styled(FlexCol)`
+  justify-content: center;
+  flex: 0 0 40px;
+  margin-right: 8px;
 `;

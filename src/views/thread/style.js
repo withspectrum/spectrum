@@ -22,7 +22,12 @@ export const ThreadHeading = styled(H1)`
 
 export const ContextRow = styled(FlexRow)`
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  align-content: flex-start;
+`;
+
+export const EditDone = styled.div`
+  position: relative;
 `;
 
 export const DropWrap = styled.div`
@@ -67,10 +72,19 @@ export const FlyoutRow = styled(FlexRow)`
 export const Byline = styled(Link)`
   font-weight: 500;
   color: ${({ theme }) => theme.brand.alt};
+  display: block;
+  margin-bottom: 16px;
 
   &:hover {
     text-decoration: underline;
   }
+`;
+
+export const Edited = styled.div`
+  display: block;
+  font-weight: 500;
+  font-size: 12px;
+  color: ${({ theme }) => theme.text.alt};
 `;
 
 export const ThreadContent = styled(Markdown)`
@@ -81,3 +95,31 @@ export const ThreadContent = styled(Markdown)`
 export const ChatWrapper = styled.div`
   width: 100%;
 `;
+
+export const ThreadTitle = {
+  fontSize: '20px',
+  padding: '0',
+  outline: 'none',
+  border: '0',
+  lineHeight: '1.4',
+  fontWeight: '800',
+  boxShadow: 'none',
+  width: '100%',
+  color: '#171A21',
+  whiteSpace: 'pre-wrap',
+  borderRadius: '12px 12px 0 0',
+};
+
+export const ThreadDescription = {
+  fontSize: '16px',
+  fontWeight: '500',
+  width: '100%',
+  display: 'inline-block',
+  lineHeight: '1.5',
+  padding: '0',
+  outline: 'none',
+  border: '0',
+  boxShadow: 'none',
+  color: '#171A21',
+  whiteSpace: 'pre-wrap',
+};

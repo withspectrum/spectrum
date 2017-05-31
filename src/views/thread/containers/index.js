@@ -6,19 +6,23 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import generateMetaInfo from '../../../../server/shared/generate-meta-info';
 import { toggleChannelSubscriptionMutation } from '../../../api/channel';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import ThreadDetail from '../components/threadDetail';
 import Messages from '../components/messages';
+import Head from '../../../components/head';
 import ChatInput from '../../../components/chatInput';
 import { Column } from '../../../components/column';
 import AppViewWrapper from '../../../components/appViewWrapper';
 import { UserProfile, ChannelProfile } from '../../../components/profile';
 import { getThread } from '../queries';
 import { displayLoadingScreen } from '../../../components/loading';
+import { toPlainText, toState } from '../../../components/editor';
 import { Container } from '../style';
 import {
   UpsellSignIn,
+  UpsellRequestToJoinChannel,
   UpsellJoinChannel,
   Upsell404Thread,
 } from '../../../components/upsell';
@@ -29,22 +33,26 @@ const ThreadContainerPure = ({
   dispatch,
   toggleChannelSubscription,
 }) => {
-  if (error) {
-    return <Upsell404Thread />;
-  }
-
-  if (!thread || thread.deleted) {
-    return <Upsell404Thread />;
-  }
-
   const toggleSubscription = channelId => {
     toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
-        const str = toggleChannelSubscription.isMember
-          ? `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
-          : `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
+        const isMember = toggleChannelSubscription.channelPermissions.isMember;
+        const isPending =
+          toggleChannelSubscription.channelPermissions.isPending;
+        let str;
+        if (isPending) {
+          str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}`;
+        }
 
-        const type = toggleChannelSubscription.isMember ? 'success' : 'neutral';
+        if (!isPending && isMember) {
+          str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`;
+        }
+
+        if (!isPending && !isMember) {
+          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
+        }
+
+        const type = isMember || isPending ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
@@ -52,14 +60,58 @@ const ThreadContainerPure = ({
       });
   };
 
+  if (error) {
+    return (
+      <AppViewWrapper>
+        <Column type="primary">
+          <Upsell404Thread />
+        </Column>
+      </AppViewWrapper>
+    );
+  }
+
+  if (!thread || thread.deleted) {
+    return (
+      <AppViewWrapper>
+        <Column type="primary">
+          <Upsell404Thread />
+        </Column>
+      </AppViewWrapper>
+    );
+  }
+
+  if (thread.channel.isPrivate && !thread.channel.channelPermissions.isMember) {
+    return (
+      <AppViewWrapper>
+        <Column type="primary">
+          <UpsellRequestToJoinChannel
+            channel={thread.channel}
+            community={thread.channel.community.slug}
+            isPending={thread.channel.channelPermissions.isPending}
+            subscribe={() => toggleSubscription(thread.channel.id)}
+            currentUser={currentUser}
+          />
+        </Column>
+      </AppViewWrapper>
+    );
+  }
+
+  const { title, description } = generateMetaInfo({
+    type: 'thread',
+    data: {
+      title: thread.content.title,
+      body: thread.content.body,
+      type: thread.type,
+      channelName: thread.channel.name,
+    },
+  });
+
   return (
     <AppViewWrapper>
+      <Head title={title} description={description} />
       <Column type="secondary">
-        <UserProfile data={{ user: thread.creator }} profileSize={'full'} />
-        <ChannelProfile
-          data={{ channel: thread.channel }}
-          profileSize={'small'}
-        />
+        <UserProfile data={{ user: thread.creator }} />
+        <ChannelProfile data={{ channel: thread.channel }} />
       </Column>
 
       <Column type="primary">

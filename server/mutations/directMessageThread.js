@@ -7,8 +7,10 @@ const {
 } = require('../models/directMessageThread');
 const {
   createMemberInDirectMessageThread,
+  setUserLastSeenInDirectMessageThread,
 } = require('../models/usersDirectMessageThreads');
 const { storeMessage } = require('../models/message');
+const { uploadImage } = require('../utils/s3');
 
 module.exports = {
   Mutation: {
@@ -34,13 +36,6 @@ module.exports = {
       if (!input.participants)
         return new UserError('Nobody was selected to create a thread.');
 
-      if (
-        !input.message || !input.message.content || !input.message.content.body
-      )
-        return new UserError(
-          'Be sure to add a message when creating a new thread!'
-        );
-
       // if users and messages exist, continue
       const { participants, message } = input;
 
@@ -55,28 +50,70 @@ module.exports = {
       // create a direct message thread object in order to generate an id
       return createDirectMessageThread(isGroup)
         .then(thread => {
-          // once we have an ide we can generate a proper message object
-          const messageWithThread = {
-            ...message,
-            threadId: thread.id,
-          };
+          if (message.messageType === 'text') {
+            // once we have an id we can generate a proper message object
+            const messageWithThread = {
+              ...message,
+              threadId: thread.id,
+            };
 
-          // when we have a thread id, we can create the thread owner
-          // relationship with the current user and a member relationship
-          // with each particpant
-          return Promise.all([
-            thread,
-            // create member relationship with the current user
-            createMemberInDirectMessageThread(thread.id, currentUser.id),
-            // create member relationships
-            participants.map(participant =>
-              createMemberInDirectMessageThread(thread.id, participant)
-            ),
-            // create message
-            storeMessage(messageWithThread, currentUser),
-          ]);
+            // when we have a thread id, we can create the thread owner
+            // relationship with the current user and a member relationship
+            // with each particpant
+            return Promise.all([
+              thread,
+              // create member relationship with the current user
+              createMemberInDirectMessageThread(
+                thread.id,
+                currentUser.id,
+                true
+              ),
+              // create member relationships
+              participants.map(participant =>
+                createMemberInDirectMessageThread(thread.id, participant, false)
+              ),
+              // create message
+              storeMessage(messageWithThread, currentUser),
+            ]);
+          } else if (message.messageType === 'media') {
+            // upload the photo, return the photo url, then store the message
+            return Promise.all([
+              thread,
+              // create member relationship with the current user
+              createMemberInDirectMessageThread(
+                thread.id,
+                currentUser.id,
+                true
+              ),
+              // create member relationships
+              participants.map(participant =>
+                createMemberInDirectMessageThread(thread.id, participant, false)
+              ),
+              uploadImage(message.file, 'threads', message.threadId, url => {
+                // build a new message object with a new file field with metadata
+                const newMessage = Object.assign({}, message, {
+                  ...message,
+                  threadId: thread.id,
+                  content: {
+                    body: url,
+                  },
+                  file: {
+                    name: message.file.name,
+                    size: message.file.size,
+                    type: message.file.type,
+                  },
+                });
+
+                return storeMessage(newMessage, currentUser);
+              }),
+            ]);
+          } else {
+            return new UserError('Unknown message type on this bad boy.');
+          }
         })
         .then(thread => thread[0]);
     },
+    setLastSeen: (_, { id }, { user }) =>
+      setUserLastSeenInDirectMessageThread(id, user.id),
   },
 };

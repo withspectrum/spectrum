@@ -10,6 +10,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Messages from '../components/messages';
 import Header from '../components/header';
+import Titlebar from '../../titlebar';
 import ChatInput from '../../../components/chatInput';
 import { MessagesContainer, ViewContent } from '../style';
 import { findDOMNode } from 'react-dom';
@@ -557,7 +558,7 @@ class NewThread extends Component {
     node.scrollTop = node.scrollHeight - node.clientHeight;
   };
 
-  createThread = ({ messageBody, messageType }) => {
+  createThread = ({ messageBody, messageType, file }) => {
     const { selectedUsersForNewThread } = this.state;
 
     // if no users have been selected, break out of this function and throw
@@ -578,8 +579,9 @@ class NewThread extends Component {
         messageType: messageType,
         threadType: 'directMessageThread',
         content: {
-          body: messageBody,
+          body: messageBody ? messageBody : '',
         },
+        file: file ? file : null,
       },
     };
 
@@ -624,6 +626,11 @@ class NewThread extends Component {
 
     return (
       <MessagesContainer>
+        <Titlebar
+          title={'New Message'}
+          provideBack={true}
+          backRoute={`/messages`}
+        />
         <ComposerInputWrapper>
           {// if users have been selected, show them as pills
           selectedUsersForNewThread.length > 0 &&
@@ -728,6 +735,7 @@ class NewThread extends Component {
           createThread={this.createThread}
           onFocus={this.onChatInputFocus}
           onBlur={this.onChatInputBlur}
+          threadType={'directMessageThread'}
         />
       </MessagesContainer>
     );

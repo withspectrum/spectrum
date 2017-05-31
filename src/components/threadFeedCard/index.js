@@ -8,16 +8,18 @@ import compose from 'recompose/compose';
 import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { openModal } from '../../actions/modals';
 import { LinkPreview } from '../../components/linkPreview';
+import Icon from '../../components/icons';
 import {
   StyledThreadFeedCard,
   CardContent,
   CardLink,
   Title,
   Meta,
+  MetaNew,
   MetaRow,
   Participant,
+  ParticipantCount,
   Creator,
   ParticipantHeads,
   Location,
@@ -44,7 +46,11 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
       case 'community':
         return (
           <Location>
-            {`~${props.data.channel.name}`}
+            <Link
+              to={`/${props.data.community.slug}/${props.data.channel.slug}`}
+            >
+              {`~${props.data.channel.name}`}
+            </Link>
           </Location>
         );
       case 'channel':
@@ -56,9 +62,13 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
   const participantList = props.data.participants;
 
   const messageAvatars = list => {
-    return list.map(participant => (
+    const avatarList = list.slice(0, 10);
+    return avatarList.map(participant => (
       <Link key={participant.id} to={`/users/${participant.username}`}>
-        <Participant src={participant.profilePhoto} role="presentation" />
+        <Participant
+          src={`${participant.profilePhoto}?w=24&dpr=2`}
+          role="presentation"
+        />
       </Link>
     ));
   };
@@ -77,13 +87,22 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
           {// for now we know this means there is a link attachment
           props.data.attachments &&
             props.data.attachments.length > 0 &&
-            <LinkPreview
-              trueUrl={props.data.attachments[0].data.trueUrl}
-              data={JSON.parse(props.data.attachments[0].data)}
-              size={'small'}
-              editable={false}
-              margin={'8px 0 12px'}
-            />}
+            props.data.attachments.map((attachment, i) => {
+              if (attachment.attachmentType === 'linkPreview') {
+                return (
+                  <LinkPreview
+                    trueUrl={attachment.data.trueUrl}
+                    data={JSON.parse(attachment.data)}
+                    size={'small'}
+                    editable={false}
+                    margin={'8px 0 12px'}
+                    key={i}
+                  />
+                );
+              } else {
+                return <span key={i} />;
+              }
+            })}
         </MetaRow>
         <MetaRow>
           <ParticipantHeads>
@@ -97,8 +116,22 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
               </Link>
             </Creator>
             {messageAvatars(participantList)}
+            {participantList.length > 10 &&
+              <ParticipantCount
+              >{`+${participantList.length - 10}`}</ParticipantCount>}
           </ParticipantHeads>
-          <Meta>{props.data.messageCount} messages</Meta>
+          {props.data.messageCount > 0
+            ? <Meta>
+                <Icon
+                  size={24}
+                  glyph="message-fill"
+                  color="brand.alt"
+                  tipText={`${props.data.messageCount} ${props.data.messageCount > 1 ? 'messages' : 'message'}`}
+                  tipLocation="top-left"
+                />
+                {props.data.messageCount}
+              </Meta>
+            : <MetaNew>New</MetaNew>}
         </MetaRow>
       </CardContent>
     </StyledThreadFeedCard>

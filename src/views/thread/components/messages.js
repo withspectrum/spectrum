@@ -47,7 +47,12 @@ const MessagesWithData = ({ data, toggleReaction }) => {
         <Icon glyph={'message'} />
         <hr />
       </HorizontalRule>
-      <ChatMessages toggleReaction={toggleReaction} messages={sortedMessages} />
+      <ChatMessages
+        threadId={data.thread.id}
+        toggleReaction={toggleReaction}
+        messages={sortedMessages}
+        threadType={'story'}
+      />
     </ChatWrapper>
   );
 };

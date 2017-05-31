@@ -72,7 +72,7 @@ export const ImageBubble = styled.img`
   clear: both;
   flex: 0 0 auto;
   vertical-align: middle;
-  border-radius: 16px
+  border-radius: 16px;
   max-width: 100%;
   display: flex;
   align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)};

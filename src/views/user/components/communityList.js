@@ -4,10 +4,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
-import { ListCardItem } from '../../../components/listCard';
-import { IconButton, TextButton, Button } from '../../../components/buttons';
+import { CommunityListItem } from '../../../components/listItems';
+import { IconButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
-import { NullCard } from '../../../components/upsell';
+// import { NullCard } from '../../../components/upsell';
 import { openModal } from '../../../actions/modals';
 
 import {
@@ -15,9 +15,9 @@ import {
   ListHeading,
   ListHeader,
   ListContainer,
-  ListFooter,
-  MoreLink,
-} from '../../../components/listCard/style';
+  // ListFooter,
+  // MoreLink,
+} from '../../../components/listItems/style';
 
 const CommunityList = props => {
   const {
@@ -47,7 +47,7 @@ const CommunityList = props => {
           {communities.map(item => {
             return (
               <Link key={item.node.id} to={`/${item.node.slug}`}>
-                <ListCardItem
+                <CommunityListItem
                   contents={item.node}
                   withDescription={withDescription}
                   withMeta={withMeta}
@@ -56,12 +56,12 @@ const CommunityList = props => {
                     ${item.node.metaData.channels > 1 ? `${item.node.metaData.channels} channels` : `${item.node.metaData.channels} channel`}`}
                 >
                   <Icon glyph="view-forward" />
-                </ListCardItem>
+                </CommunityListItem>
               </Link>
             );
           })}
         </ListContainer>
-        {currentUser &&
+        {/* {currentUser &&
           currentUser.id === user.id &&
           <ListFooter>
             <MoreLink to={`/explore`}>
@@ -69,21 +69,20 @@ const CommunityList = props => {
                 Find more...
               </TextButton>
             </MoreLink>
-          </ListFooter>}
+          </ListFooter>} */}
       </StyledCard>
     );
   } else {
-    return (
-      <NullCard
-        bg="community"
-        heading={`You're fresh out of communities!`}
-        copy={`Let's find you something worth joining...`}
-      >
-        <Button icon="explore" color="text.alt" gradientTheme="">
-          Browse communities
-        </Button>
-      </NullCard>
-    );
+    return <div />;
+    // <NullCard
+    //   bg="community"
+    //   heading={`You're fresh out of communities!`}
+    //   copy={`Let's find you something worth joining...`}
+    // >
+    //   <Button icon="explore" color="text.alt" gradientTheme="">
+    //     Browse communities
+    //   </Button>
+    // </NullCard>
   }
 };
 

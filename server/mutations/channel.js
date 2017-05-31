@@ -7,16 +7,9 @@ import {
   editChannel,
   createChannel,
   deleteChannel,
-  joinChannel,
-  addRequestToJoinChannel,
-  removeRequestToJoinChannel,
-  addBlockedUser,
-  removeBlockedUser,
 } from '../models/channel';
 import {
   getCommunities,
-  joinCommunity,
-  leaveCommunity,
   userIsMemberOfCommunity,
   userIsMemberOfAnyChannelInCommunity,
 } from '../models/community';
@@ -300,6 +293,9 @@ module.exports = {
         if (!channelToEvaluate || channelToEvaluate.deletedAt) {
           return new UserError("This channel doesn't exist");
         }
+
+        console.log('channelto eval', channelToEvaluate);
+        console.log('currentuserperms', currentUserChannelPermissions);
 
         // user is blocked, they can't join the channel
         if (currentUserChannelPermissions.isBlocked) {

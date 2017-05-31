@@ -6,7 +6,11 @@ const {
 } = require('../models/user');
 const { getCommunitiesByUser } = require('../models/community');
 const { getChannelsByUser } = require('../models/channel');
-const { getThreadsByUser } = require('../models/thread');
+const {
+  getViewableThreadsByUser,
+  getPublicThreadsByUser,
+} = require('../models/thread');
+const { getUserRecurringPayments } = require('../models/recurringPayment');
 const {
   getDirectMessageThreadsByUser,
 } = require('../models/directMessageThread');
@@ -44,6 +48,16 @@ module.exports = {
     },
     isAdmin: ({ id }: { id: string }) => {
       return isAdmin(id);
+    },
+    isPro: ({ id }: { id: string }) => {
+      return getUserRecurringPayments(id).then(
+        sub =>
+          (sub !== null &&
+            sub[0].stripeData &&
+            sub[0].stripeData.status === 'active'
+            ? true
+            : false)
+      );
     },
     everything: (
       { id }: { id: string },
@@ -104,10 +118,19 @@ module.exports = {
     }),
     threadConnection: (
       { id }: { id: string },
-      { first = 10, after }: PaginationOptions
+      { first = 10, after }: PaginationOptions,
+      { user }
     ) => {
+      const currentUser = user;
+
+      // if a logged in user is viewing the profile, handle logic to get viewable threads
+      const getThreads = currentUser && currentUser !== null
+        ? getViewableThreadsByUser(id, currentUser.id)
+        : // if the viewing user is logged out, only return publicly viewable threads
+          getPublicThreadsByUser(id);
+
       const cursor = decode(after);
-      return getThreadsByUser(id, { first, after: cursor })
+      return getThreads
         .then(threads =>
           paginate(
             threads,
@@ -132,5 +155,20 @@ module.exports = {
     ) => {
       return loaders.userThreadCount.load(id).then(data => data.count);
     },
+    recurringPayments: (_, __, { user }) =>
+      getUserRecurringPayments(user.id).then(subs => {
+        if (!subs || subs.length === 0) {
+          return [];
+        } else {
+          return subs.map(sub => {
+            return {
+              amount: subs[0].stripeData.plan.amount,
+              created: subs[0].stripeData.created,
+              plan: subs[0].stripeData.plan.name,
+              status: subs[0].stripeData.status,
+            };
+          });
+        }
+      }),
   },
 };

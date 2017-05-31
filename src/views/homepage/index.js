@@ -18,6 +18,7 @@ import {
   GoopyFour,
   Wrapper,
   Tagline,
+  Button,
   LinkButton,
   LogoContainer,
   LogoWhite,
@@ -36,11 +37,11 @@ class Homepage extends Component {
             <FlexCol>
               <LogoContainer><LogoWhite /></LogoContainer>
               <Tagline>Where communities are built.</Tagline>
-              <LinkButton href={`${SERVER_URL}/auth/twitter`}>
+              <Button href={`${SERVER_URL}/auth/twitter`}>
                 <Icon glyph="twitter" />
                 {' '}
                 <span>Sign in with Twitter</span>
-              </LinkButton>
+              </Button>
             </FlexCol>
             <img src="/img/login.svg" role="presentation" />
           </SectionContent>
@@ -90,7 +91,7 @@ class Homepage extends Component {
             <FlexCol>
               <Tagline>Come on in, the chatter's fine.</Tagline>
               <Copy>
-                Spectrum is free for everyone, so hop on in!
+                Spectrum is free for everyone, so dive on in!
               </Copy>
               <LinkButton href={`${SERVER_URL}/auth/twitter`}>
                 <Icon glyph="twitter" />

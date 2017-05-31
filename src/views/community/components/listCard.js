@@ -7,7 +7,7 @@ import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
 import { displayLoadingCard } from '../../../components/loading';
-import { ListCardItem } from '../../../components/listCard';
+import { ChannelListItem } from '../../../components/listItems';
 import { Button, TextButton, IconButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { NullCard } from '../../../components/upsell';
@@ -19,7 +19,7 @@ import {
   ListHeading,
   ListContainer,
   ListFooter,
-} from '../../../components/listCard/style';
+} from '../../../components/listItems/style';
 
 const ListCardPure = ({ data, dispatch }) => {
   const channels = data.community.channelConnection.edges;
@@ -44,17 +44,17 @@ const ListCardPure = ({ data, dispatch }) => {
                 key={channel.id}
                 to={`/${data.variables.slug}/${channel.slug}`}
               >
-                <ListCardItem
+                <ChannelListItem
                   contents={channel}
                   withDescription={false}
                   meta={
                     item.node.metaData.members > 1
-                      ? `${item.node.metaData.members} members ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `· ${channel.pendingUsers.length} pending members` : ``}`
-                      : `${item.node.metaData.members} member ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `· ${channel.pendingUsers.length} pending members` : ``}`
+                      ? `${item.node.metaData.members} members ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `(${channel.pendingUsers.length} pending)` : ``}`
+                      : `${item.node.metaData.members} member ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `(${channel.pendingUsers.length} pending)` : ``}`
                   }
                 >
                   <Icon glyph="view-forward" />
-                </ListCardItem>
+                </ChannelListItem>
               </Link>
             );
           })}
@@ -77,7 +77,9 @@ const ListCardPure = ({ data, dispatch }) => {
         heading={`There are no channels here...`}
         copy={`Which really shouldn't be possible. Mind reloading?`}
       >
-        <Button icon="reload">Reload</Button>
+        <Button icon="view-reload" onClick={() => location.reload(true)}>
+          Reload
+        </Button>
       </NullCard>
     );
   }

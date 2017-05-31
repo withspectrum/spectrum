@@ -95,3 +95,54 @@ export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY = gql`
 export const getCurrentUserDirectMessageThreads = graphql(
   GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY
 );
+
+/*
+  Set a user's last seen state in the db
+*/
+const SET_LAST_SEEN_MUTATION = gql`
+  mutation setLastSeen($id: ID!) {
+    setLastSeen(id: $id) {
+      ...directMessageThreadInfo
+    }
+  }
+  ${directMessageThreadInfoFragment}
+`;
+const SET_LAST_SEEN_OPTIONS = {
+  props: ({ id, mutate }) => ({
+    setLastSeen: id =>
+      mutate({
+        variables: {
+          id,
+        },
+      }),
+  }),
+};
+export const setLastSeenMutation = graphql(
+  SET_LAST_SEEN_MUTATION,
+  SET_LAST_SEEN_OPTIONS
+);
+
+/*
+  Get all media messages for a threadId to populate the gallery
+*/
+export const GET_DIRECT_MESSAGE_THREAD_QUERY = gql`
+  query getDirectMessageThread($id: ID!) {
+    directMessageThread(id: $id) {
+      ...directMessageThreadInfo
+    }
+  }
+  ${directMessageThreadInfoFragment}
+`;
+
+export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+  }),
+};
+
+export const getDirectMessageThread = graphql(
+  GET_DIRECT_MESSAGE_THREAD_QUERY,
+  GET_DIRECT_MESSAGE_THREAD_OPTIONS
+);
