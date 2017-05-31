@@ -28,6 +28,7 @@ const createDirectMessageThread = (isGroup: boolean): Object => {
         createdAt: new Date(),
         name: null,
         isGroup,
+        threadLastActive: new Date(),
       },
       { returnChanges: true }
     )
