@@ -10,7 +10,7 @@ import { getCurrentUserProfile } from '../../api/user';
 import { SERVER_URL } from '../../api';
 import Icon from '../../components/icons';
 import { displayLoadingNavbar } from '../../components/loading';
-import { TextButton } from '../../components/buttons';
+import { Button } from '../../components/buttons';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
