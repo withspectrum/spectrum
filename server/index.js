@@ -167,7 +167,12 @@ const subscriptionsServer = SubscriptionServer.create(
     subscribe,
     schema,
     onConnect: connectionParams => {
-      console.log('CONNECT');
+      return {
+        // TODO: Pass user and optics to subscriptions context
+        // user: req.user,
+        // opticsContext: OpticsAgent.context(req),
+        loaders: createLoaders(),
+      };
     },
   },
   {

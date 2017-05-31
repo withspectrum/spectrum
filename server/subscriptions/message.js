@@ -9,11 +9,11 @@ import { MESSAGE_ADDED } from './listeners/channels';
 module.exports = {
   Subscription: {
     messageAdded: {
-      subscribe: () =>
-        console.log('messageAdded.subscribe') ||
-        pubsub.asyncIterator(MESSAGE_ADDED),
+      resolve: message => message,
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(MESSAGE_ADDED),
+        (message, { thread }) => message.threadId === thread
+      ),
     },
   },
 };
-
-// withFilter(pubsub.asyncIterator(MESSAGE_ADDED), (message, { thread }) => console.log('wat', message) || message.threadId === thread)
