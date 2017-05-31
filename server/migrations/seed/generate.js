@@ -221,7 +221,6 @@ const generateReaction = (userId, messageId) => {
 
 const generateThreadNotification = (thread, channel, communityId, callback) => {
   return generateNotification(
-    channel.members,
     thread.creatorId,
     thread.id,
     channel.id,
