@@ -3864,9 +3864,9 @@ graphql-server-module-graphiql@^0.8.0:
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/graphql-server-module-graphiql/-/graphql-server-module-graphiql-0.8.0.tgz#469c2dd2a8aeb9bb50971b283a11cc0876d3d281"
 
-graphql-subscriptions@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.4.0.tgz#8b3b36606078938348d6f9a51509ec8d51f9e6ea"
+graphql-subscriptions@0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.4.2.tgz#a1a41cebdb95103be348c409d0ed6096ad858455"
   dependencies:
     "@types/graphql" "^0.9.1"
     es6-promise "^4.0.5"
