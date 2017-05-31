@@ -13,6 +13,8 @@ const PhotoContainer = styled.div`
   background-color: ${({ theme }) => theme.brand.default};
   background-image: url('${props => props.coverURL}');
   background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   border-radius: ${props => (props.large ? '12px' : '12px 12px 0 0')};
 `;
 
@@ -41,7 +43,7 @@ export const CoverPhoto = (props: Object) => {
               glyph="message-fill"
               color="text.reverse"
               hoverColor="text.reverse"
-              // onClick={() => props.initMessage()}
+              onClick={props.onClick}
               tipText={`Message ${props.user.name}`}
               tipLocation={'left'}
             />}

@@ -54,6 +54,14 @@ export const ShimmerProfile = styled(Card)`
   }
 `;
 
+export const ShimmerListItem = styled(Card)`
+  padding: 16px;
+
+  section {
+    min-height: 40px;
+  }
+`;
+
 export const ShimmerDM = styled(ShimmerProfile)`
 	padding: 16px;
 	margin: 0;

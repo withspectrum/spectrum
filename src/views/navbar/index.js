@@ -49,6 +49,11 @@ class Navbar extends Component {
     const { match, data: { user } } = this.props;
     const currentUser = user;
 
+    const login = () => {
+      // log the user in and return them to this page
+      return (window.location.href = `http://localhost:3001/auth/twitter?redirectTo=${window.location.pathname}`);
+    };
+
     if (!currentUser || currentUser === null) {
       return (
         <Container>
@@ -94,25 +99,24 @@ class Navbar extends Component {
               <LogoLink to="/">
                 <Logo src="/img/mark-white.png" role="presentation" />
               </LogoLink>
-              {currentUser &&
-                <IconLink
-                  data-active={match.url === '/'}
-                  data-mobileWidth={'third'}
-                  to="/"
-                >
-                  <Icon glyph="home" />
-                  <Label>Home</Label>
-                </IconLink>}
 
-              {currentUser &&
-                <IconLink
-                  data-active={match.url.includes('/messages')}
-                  data-mobileWidth={'third'}
-                  to="/messages"
-                >
-                  <Icon glyph="message" />
-                  <Label>Messages</Label>
-                </IconLink>}
+              <IconLink
+                data-active={match.url === '/'}
+                data-mobileWidth={'third'}
+                to="/"
+              >
+                <Icon glyph="home" />
+                <Label>Home</Label>
+              </IconLink>
+
+              <IconLink
+                data-active={match.url.includes('/messages')}
+                data-mobileWidth={'third'}
+                to="/messages"
+              >
+                <Icon glyph="message" />
+                <Label>Messages</Label>
+              </IconLink>
 
               {/* <IconLink
                 data-active={match.url === '/explore'}
@@ -124,37 +128,36 @@ class Navbar extends Component {
               </IconLink> */}
             </Section>
 
-            {currentUser &&
-              <Section right>
-                <IconDrop>
-                  <IconLink
-                    data-active={match.url === '/notifications'}
-                    data-mobileWidth={'half'}
-                    to="/notifications"
-                  >
-                    <Icon glyph="notification" />
-                    <LabelForTab>Notifications</LabelForTab>
-                  </IconLink>
-                  {/* <NotificationDropdown /> */}
-                </IconDrop>
+            <Section right>
+              <IconDrop>
+                <IconLink
+                  data-active={match.url === '/notifications'}
+                  data-mobileWidth={'half'}
+                  to="/notifications"
+                >
+                  <Icon glyph="notification" />
+                  <LabelForTab>Notifications</LabelForTab>
+                </IconLink>
+                {/* <NotificationDropdown /> */}
+              </IconDrop>
 
-                <IconDrop>
-                  <IconLink
-                    data-active={match.url === `/users/${currentUser.username}`}
-                    data-mobileWidth={'half'}
-                    to={`/users/${currentUser.username}`}
-                  >
-                    <UserProfileAvatar
-                      src={currentUser.profilePhoto}
-                      isPro={currentUser.isPro}
-                      size="24"
-                      radius="32"
-                    />
-                    <LabelForTab>Profile</LabelForTab>
-                  </IconLink>
-                  <ProfileDropdown history={history} user={currentUser} />
-                </IconDrop>
-              </Section>}
+              <IconDrop>
+                <IconLink
+                  data-active={match.url === `/users/${currentUser.username}`}
+                  data-mobileWidth={'half'}
+                  to={`/users/${currentUser.username}`}
+                >
+                  <UserProfileAvatar
+                    src={currentUser.profilePhoto}
+                    isPro={currentUser.isPro}
+                    size="24"
+                    radius="32"
+                  />
+                  <LabelForTab>Profile</LabelForTab>
+                </IconLink>
+                <ProfileDropdown user={currentUser} />
+              </IconDrop>
+            </Section>
 
           </Nav>
 

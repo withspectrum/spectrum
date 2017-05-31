@@ -128,7 +128,10 @@ class UpgradeModal extends React.Component {
             <Section>
               <Subheading>
                 We're sorry to see you go! If you are having trouble and want
-                to talk to a human, please get in touch. Otherwise if you're ready to go, you can
+                to talk to a human, please
+                {' '}
+                <a href="mailto:support@spectrum.chat">get in touch</a>
+                . Otherwise if you're ready to go, you can
                 cancel your Pro subscription instantly below. Thanks for your support!
               </Subheading>
               <SectionActions centered={true}>

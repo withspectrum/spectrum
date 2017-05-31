@@ -11,8 +11,7 @@ import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import { UserProfile } from '../../components/profile';
 import { displayLoadingScreen } from '../../components/loading';
-import { Button } from '../../components/buttons';
-import { NullCard, Upsell404User } from '../../components/upsell';
+import { NullState, Upsell404User } from '../../components/upsell';
 import CommunityList from './components/communityList';
 import { getUserThreads, getUser } from './queries';
 import Titlebar from '../titlebar';
@@ -72,13 +71,10 @@ const UserViewPure = ({
 
       <Column type="primary" alignItems="center">
         {user.threadCount === 0 &&
-          <NullCard
+          <NullState
             bg="message"
             heading={`${user.name} hasn't posted anything yet.`}
-            copy={`You could always try messaging them, though!`}
-          >
-            <Button icon="message">{`Message @${username}`}</Button>
-          </NullCard>}
+          />}
         {user.threadCount > 0 &&
           <ThreadFeedWithData username={username} viewContext="profile" />}
       </Column>
