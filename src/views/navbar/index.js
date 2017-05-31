@@ -75,7 +75,13 @@ class Navbar extends Component {
             </Section>
 
             <Section right>
-              <Button onClick={login} />
+              <Button
+                onClick={login}
+                icon="twitter"
+                style={{ padding: '2px 4px' }}
+              >
+                Sign in
+              </Button>
             </Section>
           </Nav>
 

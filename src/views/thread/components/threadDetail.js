@@ -299,7 +299,7 @@ class ThreadDetailPure extends Component {
     console.log('rendering viewBody', viewBody);
     console.log('rendering editBody', editBody);
 
-    let f = toState(JSON.parse(this.state.editBody));
+    let f = this.state.editBody;
 
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner =
@@ -381,7 +381,11 @@ class ThreadDetailPure extends Component {
             <ThreadHeading>
               {thread.content.title}
             </ThreadHeading>
-            <ThreadContent>{viewBody}</ThreadContent>
+            <div className="markdown">
+              <ThreadContent>
+                {viewBody}
+              </ThreadContent>
+            </div>
 
             {linkPreview &&
               !fetchingLinkPreview &&
