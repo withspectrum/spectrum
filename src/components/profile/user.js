@@ -80,7 +80,11 @@ const UserWithData = ({
   if (componentSize === 'full') {
     return (
       <Card>
-        <CoverPhoto user={user} currentUser={currentUser}>
+        <CoverPhoto
+          user={user}
+          onClick={() => initMessage()}
+          currentUser={currentUser}
+        >
           <CoverLink to={`../users/${user.username}`}>
             <CoverAvatar src={user.profilePhoto} />
             <CoverTitle>{user.name}</CoverTitle>

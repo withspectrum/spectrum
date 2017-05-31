@@ -1,11 +1,18 @@
 import { clearApolloStore } from '../api';
 import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
 
+const eraseCookie = name => {
+  console.log('name', name);
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+};
+
 export const logout = () => {
   // clear localStorage
   removeItemFromStorage('spectrum');
   // clear Apollo's query cache
   clearApolloStore();
+  // erase cookie
+  eraseCookie('connect.sid');
   // redirect to home page
   window.location.href = '/';
 };
