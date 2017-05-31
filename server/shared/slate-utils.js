@@ -11,15 +11,23 @@
 var Raw = require('slate/lib/serializers/raw').default;
 var Plain = require('slate/lib/serializers/plain').default;
 
-var toJSON = (state /*: Object */) => Raw.serialize(state, { terse: true });
-var toState = (json /*: Object */) => Raw.deserialize(json, { terse: true });
+function toJSON(state /*: Object */) {
+  return Raw.serialize(state, { terse: true });
+}
+function toState(json /*: Object */) {
+  return Raw.deserialize(json, { terse: true });
+}
 
-var toPlainText = (state /*: Object*/) => Plain.serialize(state);
-var fromPlainText = (string /*: string*/) => Plain.deserialize(string);
+function toPlainText(state /*: Object*/) {
+  return Plain.serialize(state);
+}
+function fromPlainText(string /*: string*/) {
+  return Plain.deserialize(string);
+}
 
 module.exports = {
-  toJSON,
-  toState,
-  toPlainText,
-  fromPlainText,
+  toJSON: toJSON,
+  toState: toState,
+  toPlainText: toPlainText,
+  fromPlainText: fromPlainText,
 };

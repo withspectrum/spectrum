@@ -8,9 +8,11 @@
  * so it chokes on the Flow syntax.
  * More info: https://flow.org/en/docs/types/comments/
  */
-const { toPlainText, toState } = require('./slate-utils');
+var slate = require('./slate-utils');
+var truncate = require('./truncate');
+var sanitize = require('sanitize-html');
 
-const DEFAULT_META = {
+var DEFAULT_META = {
   title: 'Spectrum',
   description: 'Where communities live.',
 };
@@ -54,19 +56,32 @@ type Input =
   | OtherInput;
 */
 
-const setDefault = (input /*: MaybeMeta */ /*: Meta */) => {
-  const title = input.title || DEFAULT_META.title;
-  let description = input.description || DEFAULT_META.description;
+function setDefault(input /*: MaybeMeta */) /*: Meta */ {
+  var title = input.title || DEFAULT_META.title;
+  var description = input.description || DEFAULT_META.description;
   // If theres a custom title but no custom description
   // prefix "On spectrum" to the description
   // Otherwise you end up with "SpecFM | Where communities live"
   if (input.title && !input.description) {
-    description = `on Spectrum, ${DEFAULT_META.description.toLowerCase()}`;
+    description = 'on Spectrum, ' + DEFAULT_META.description.toLowerCase();
   }
-  return { title, description };
-};
+  return { title: title, description: cleanDescription(description) };
+}
 
-const generateMetaInfo = ({ type, data } /*: Input */ = {} /*: Meta */) => {
+function cleanDescription(input /*: string */) /*: string */ {
+  return truncate(
+    sanitize(input, {
+      allowedTags: [],
+      allowedAttributes: [],
+    }),
+    160
+  );
+}
+
+function generateMetaInfo(input /*: Input */) /*: Meta */ {
+  var exists = input || {};
+  var type = exists.type;
+  var data = exists.data;
   switch (type) {
     case 'explore': {
       return {
@@ -76,21 +91,23 @@ const generateMetaInfo = ({ type, data } /*: Input */ = {} /*: Meta */) => {
     }
     case 'thread': {
       return setDefault({
-        title: data && `${data.title} | ${data.channelName}`,
-        description: data && data.type === 'SLATE'
-          ? toPlainText(toState(JSON.parse(data.body)))
-          : data.body,
+        title: data && data.title + ' · ' + data.channelName,
+        description: data &&
+          data.body &&
+          (data.type === 'SLATE'
+            ? slate.toPlainText(slate.toState(JSON.parse(data.body)))
+            : data.body),
       });
     }
     case 'user': {
       return setDefault({
-        title: data && `${data.name} (@${data.username})`,
+        title: data && data.name + ' (@' + data.username + ')',
         description: data && data.description,
       });
     }
     case 'channel': {
       return setDefault({
-        title: data && `${data.name} | ${data.communityName}`,
+        title: data && data.name + ' · ' + data.communityName,
         description: data && data.description,
       });
     }
@@ -104,6 +121,6 @@ const generateMetaInfo = ({ type, data } /*: Input */ = {} /*: Meta */) => {
       return DEFAULT_META;
     }
   }
-};
+}
 
 module.exports = generateMetaInfo;
