@@ -15,6 +15,14 @@ export const StyledThreadFeedCard = styled(Card)`
   margin-bottom: 16px;
   transition: ${Transition.hover.off};
 
+  @media (max-width: 768px) {
+    margin: 0;
+
+    &:last-of-type {
+      margin-bottom: 16px;
+    }
+  }
+
   &:hover {
     transition: none;
     box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.placeholder, 0.5)};

@@ -4,11 +4,11 @@ import { FlexRow, Transition } from '../globals';
 import Editor from '../../components/editor';
 
 export const ChatInputWrapper = styled(FlexRow)`
-  display: flex;
   flex: 0 0 auto;
   align-items: center;
   z-index: 200;
   position: relative;
+  width: 100%;
   margin: 0;
   padding: 8px;
   border-top: 2px solid ${({ theme }) => theme.border.default};
@@ -17,8 +17,10 @@ export const ChatInputWrapper = styled(FlexRow)`
 `;
 
 export const Form = styled.form`
-	flex: 1 0 auto;
+	flex: 0 0 calc(100% - 44px);
 	display: flex;
+  min-width: 1px;
+  max-width: 100%;
 	align-items: center;
 	margin-left: 4px;
 	border-radius: 24px;
@@ -32,6 +34,7 @@ export const Input = styled(Editor)`
 	line-height: 20px;
 	max-height: 120px;
 	min-height: 40px;
+  max-width: 100%;
 	padding: 8px 40px;
 	border-radius: 24px;
 	border: 2px solid ${props => props.theme.text.placeholder};
@@ -42,6 +45,7 @@ export const Input = styled(Editor)`
 	@media (max-width: 768px) {
     font-size: 16px;
 		padding-left: 16px;
+    width: calc(100% - 72px);
   }
 
 	&::placeholder { color: ${({ theme }) => theme.text.placeholder} }

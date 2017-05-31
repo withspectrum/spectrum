@@ -19,7 +19,7 @@ import { UserProfile, ChannelProfile } from '../../../components/profile';
 import { getThread } from '../queries';
 import { displayLoadingScreen } from '../../../components/loading';
 import { toPlainText, toState } from '../../../components/editor';
-import { Container } from '../style';
+import { Container, ChatInputWrapper } from '../style';
 import {
   UpsellSignIn,
   UpsellRequestToJoinChannel,
@@ -125,7 +125,9 @@ const ThreadContainerPure = ({
           currentUser &&
             !thread.isLocked &&
             (thread.isCreator || thread.channel.channelPermissions.isMember) &&
-            <ChatInput thread={thread.id} />}
+            <ChatInputWrapper>
+              <ChatInput thread={thread.id} />
+            </ChatInputWrapper>}
 
           {// if the user exists but isn't a subscriber to the channel,
           // show an upsell to join the channel

@@ -124,3 +124,15 @@ export const ThreadContent = styled(Markdown)`
   font-size: 1rem;
   line-height: 1.5rem;
 `;
+
+export const ChatInputWrapper = styled(FlexCol)`
+  width: 100%;
+  align-items: stretch;
+
+  @media (max-width: 768px) {
+    position: fixed;
+    bottom: 48px;
+    left: 0;
+    right: 0;
+  }
+`;
