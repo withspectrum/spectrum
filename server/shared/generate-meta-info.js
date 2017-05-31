@@ -8,6 +8,7 @@
  * so it chokes on the Flow syntax.
  * More info: https://flow.org/en/docs/types/comments/
  */
+const { toPlainText, toState } = require('./slate-utils');
 
 const DEFAULT_META = {
   title: 'Spectrum',
@@ -31,7 +32,7 @@ type OtherInput = {
 };
 type ThreadInput = {
   type: 'thread',
-  data?: { title: string, body?: ?string, channelName?: string },
+  data?: { title: string, body?: ?string, channelName?: string, type?: ?string },
 };
 type UserInput = {
   type: 'user',
@@ -76,7 +77,9 @@ const generateMetaInfo = ({ type, data } /*: Input */ = {} /*: Meta */) => {
     case 'thread': {
       return setDefault({
         title: data && `${data.title} | ${data.channelName}`,
-        description: data && data.body,
+        description: data && data.type === 'SLATE'
+          ? toPlainText(toState(JSON.parse(data.body)))
+          : data.body,
       });
     }
     case 'user': {

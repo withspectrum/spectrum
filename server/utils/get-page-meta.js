@@ -45,8 +45,8 @@ export default (
           type: 'thread',
           data: {
             title: content.title,
-            // TODO: Figure out how to run Slate in Node
-            body: type !== 'SLATE' && content.body,
+            type,
+            body: content.body,
             channelName: channel.name,
           },
         });

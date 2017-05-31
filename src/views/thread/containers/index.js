@@ -71,9 +71,8 @@ const ThreadContainerPure = ({
     type: 'thread',
     data: {
       title: thread.content.title,
-      body: thread.type === 'SLATE'
-        ? toPlainText(toState(JSON.parse(thread.content.body)))
-        : thread.content.body,
+      body: thread.content.body,
+      type: thread.type,
       channelName: thread.channel.name,
     },
   });
