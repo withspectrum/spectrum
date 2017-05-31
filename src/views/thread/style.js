@@ -87,11 +87,6 @@ export const Edited = styled.div`
   color: ${({ theme }) => theme.text.alt};
 `;
 
-export const ThreadContent = styled(Markdown)`
-  margin-top: 16px;
-  font-size: 16px;
-`;
-
 export const ChatWrapper = styled.div`
   width: 100%;
 `;
@@ -123,3 +118,9 @@ export const ThreadDescription = {
   color: '#171A21',
   whiteSpace: 'pre-wrap',
 };
+
+export const ThreadContent = styled(Markdown)`
+  margin-top: 1rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+`;

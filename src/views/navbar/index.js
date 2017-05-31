@@ -67,16 +67,14 @@ class Navbar extends Component {
                 <Logo src="/img/mark-white.png" role="presentation" />
               </LogoLink>
             </Section>
-            <Section>
-              <SigninLink to={`${SERVER_URL}/auth/twitter`}>
-                <TextButton
-                  icon="twitter"
-                  color={'social.twitter.default'}
-                  hoverColor={'bg.default'}
-                >
-                  Sign in with Twitter
-                </TextButton>
-              </SigninLink>
+            <Section right>
+              <Button
+                onClick={login}
+                icon="twitter"
+                style={{ padding: '2px 4px' }}
+              >
+                Sign in
+              </Button>
             </Section>
           </Nav>
 

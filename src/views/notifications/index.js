@@ -27,7 +27,7 @@ const NotificationsPure = ({ data, currentUser }) => {
   }
 
   // const { notifications: { edges } } = data;
-
+  console.log(data);
   return (
     <AppViewWrapper>
       <Column type={'primary'}>
@@ -48,7 +48,7 @@ const NotificationsPure = ({ data, currentUser }) => {
   );
 };
 
-const Notifications = compose(pure)(NotificationsPure);
+const Notifications = compose(getNotifications, pure)(NotificationsPure);
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
