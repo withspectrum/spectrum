@@ -296,11 +296,6 @@ class ThreadDetailPure extends Component {
       fetchingLinkPreview,
     } = this.state;
 
-    console.log('rendering viewBody', viewBody);
-    console.log('rendering editBody', editBody);
-
-    let f = toState(JSON.parse(this.state.editBody));
-
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner =
       thread.channel.community.communityPermissions.isOwner;
@@ -408,7 +403,7 @@ class ThreadDetailPure extends Component {
             <Editor
               onChange={this.changeBody}
               onKeyDown={this.listenForUrl}
-              state={f}
+              state={toState(JSON.parse(this.state.editBody))}
               style={ThreadDescription}
               ref="bodyTextarea"
               placeholder="Write more thoughts here, add photos, and anything else!"
