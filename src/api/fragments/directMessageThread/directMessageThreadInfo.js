@@ -4,6 +4,7 @@ export const directMessageThreadInfoFragment = gql`
   fragment directMessageThreadInfo on DirectMessageThread {
     id
     snippet
+    threadLastActive
     participants {
       id
       name

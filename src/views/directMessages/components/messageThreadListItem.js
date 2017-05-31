@@ -16,33 +16,24 @@ import {
 
 export const ListCardItemDirectMessageThread = ({
   thread,
-  children,
   currentUser,
   active,
 }) => {
-  // clone the participants array because the original array is flagged as
-  // read-only by Apollo
-  const clonedParticipants = thread.participants.slice(0);
-
-  // sort the array by latest activity
-  const participantsSortedByActivity = clonedParticipants.sort((x, y) => {
-    const xTimestamp = new Date(x.lastActive).getTime();
-    const yTimestamp = new Date(y.lastActive).getTime();
-    return xTimestamp - yTimestamp;
-  });
-
-  // select the latest active participant's time
-  const latestActivity = participantsSortedByActivity[0].lastActive;
-
   // convert the server time to an iso timestamp
-  const timestamp = new Date(latestActivity).getTime();
+  const timestamp = new Date(thread.threadLastActive).getTime();
+
   // get the difference in a readable format (e.g 'a week ago')
   const threadTimeDifference = timeDifference(Date.now(), timestamp);
+  // console.log('threadTimeDifference', threadTimeDifference)
 
   // filter currentUser out
   const participants = thread.participants.filter(
     user => user.id !== currentUser.id
   );
+
+  const currentParticipant = thread.participants.filter(
+    user => user.id === currentUser.id
+  )[0];
 
   // concat a string of usernames for thread messages
   let participantsArray = participants.length > 1
@@ -55,25 +46,24 @@ export const ListCardItemDirectMessageThread = ({
   // pass participants to a helper function to generate the avatar displays
   const avatars = renderAvatars(participants);
 
-  // const currentUserLastSeen = clonedParticipants.filter(
-  //   user => user.id === currentUser.id
-  // )[0].lastSeen;
-  //TODO: handle unread state
-  //const isUnread = timestamp > new Date(currentUserLastSeen).getTime();
+  const currentParticipantLastActiveTimestamp = new Date(
+    currentParticipant.lastSeen
+  ).getTime();
+  const isUnread = currentParticipantLastActiveTimestamp < timestamp;
 
   return (
-    <Wrapper active={active}>
+    <Wrapper active={active} isUnread={isUnread}>
       <Link to={`/messages/${thread.id}`}>
         <Row>
           {avatars}
           <MessageGroupTextContainer>
             <MessageGroupByline>
-              <Usernames>
+              <Usernames isUnread={isUnread}>
                 <p>{participantsArray}</p>
               </Usernames>
-              <Timestamp>{threadTimeDifference}</Timestamp>
+              <Timestamp isUnread={isUnread}>{threadTimeDifference}</Timestamp>
             </MessageGroupByline>
-            <Meta nowrap>{thread.snippet}</Meta>
+            <Meta isUnread={isUnread} nowrap>{thread.snippet}</Meta>
           </MessageGroupTextContainer>
         </Row>
       </Link>

@@ -3,7 +3,7 @@ const { getDirectMessageThread } = require('../models/directMessageThread');
 const {
   getMembersInDirectMessageThread,
 } = require('../models/usersDirectMessageThreads');
-const { getLastMessage } = require('../models/message');
+const { getLastMessage, getMessages } = require('../models/message');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GraphQLContext } from '../';

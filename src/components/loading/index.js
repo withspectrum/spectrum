@@ -21,6 +21,9 @@ import {
   ShimmerLine,
   Cover,
   LoadingOverlay,
+  LoadingNavbarContainer,
+  LogoLink,
+  Logo,
 } from './style';
 
 /*
@@ -77,6 +80,15 @@ export const LoadingGallery = (): React$Element<any> => (
   <LoadingOverlay>
     <Spinner size={'32'} color={'bg.default'} />
   </LoadingOverlay>
+);
+
+export const LoadingNavbar = (): React$Element<any> => (
+  <LoadingNavbarContainer>
+    <LogoLink to="/">
+      <Logo src="/img/mark-white.png" role="presentation" />
+    </LogoLink>
+    <Spinner size={'20'} color={'bg.default'} />
+  </LoadingNavbarContainer>
 );
 
 export const LoadingThread = () => (
@@ -623,6 +635,11 @@ export const displayLoadingState = branch(
 export const displayLoadingGallery = branch(
   props => !props.data || props.data.loading,
   renderComponent(LoadingGallery)
+);
+
+export const displayLoadingNavbar = branch(
+  props => !props.data || props.data.loading,
+  renderComponent(LoadingNavbar)
 );
 
 export const displayLoadingCard = branch(

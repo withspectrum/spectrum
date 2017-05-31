@@ -29,11 +29,13 @@ import { sendMessageMutation } from '../../api/message';
 
 const ChatInputWithMutation = ({
   thread,
+  threadType,
   sendMessage,
   state,
   onChange,
   clear,
   createThread,
+  refetchThread,
   onFocus,
   onBlur,
   dispatch,
@@ -51,12 +53,16 @@ const ChatInputWithMutation = ({
       });
     }
 
+    if (threadType === 'directMessageThread') {
+      refetchThread();
+    }
+
     // user is sending a message to an existing thread id - either a thread
     // or direct message thread
     sendMessage({
       threadId: thread,
       messageType: 'text',
-      threadType: 'story',
+      threadType,
       content: {
         body: toPlainText(state),
       },
@@ -133,7 +139,7 @@ const ChatInputWithMutation = ({
         <Input
           placeholder="Your message here..."
           state={state}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyPress}
           onChange={onChange}
           markdown={false}
           onFocus={onFocus}

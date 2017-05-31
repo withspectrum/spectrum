@@ -43,6 +43,7 @@ export const Section = styled.span`
   @media (max-width: 768px) {
     flex: 1 1 ${props => (props.left ? '60%' : '40%')};
     justify-content: space-around;
+    display: ${props => (props.hideOnMobile ? 'none' : 'flex')};
   }
 `;
 
@@ -56,6 +57,12 @@ export const LogoLink = styled(Link)`
   @media (max-width: 768px) {
     display: none;
   }
+`;
+
+export const SigninLink = styled(Link)`
+  width: 100%;
+  display: flex;
+  justify-content: center;
 `;
 
 export const Logo = styled.img`

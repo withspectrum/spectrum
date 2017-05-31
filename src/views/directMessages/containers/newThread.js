@@ -735,6 +735,7 @@ class NewThread extends Component {
           createThread={this.createThread}
           onFocus={this.onChatInputFocus}
           onBlur={this.onChatInputBlur}
+          threadType={'directMessageThread'}
         />
       </MessagesContainer>
     );

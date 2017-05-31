@@ -8,12 +8,22 @@ import {
   P,
 } from '../../../components/globals';
 
+export const ThreadsListScrollContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow-y: scroll;
+  max-height: 100%;
+`;
+
 export const Wrapper = styled(FlexCol)`
   flex: 0 0 auto;
   justify-content: center;
   max-width: 100%;
+  height: 64px;
   position: relative;
   background: ${props => (props.active ? props.theme.bg.wash : '#fff')};
+  box-shadow: ${props => (props.isUnread ? `inset -2px 0 0 ${props.theme.brand.default}` : 'none')};
 
   a {
     padding: 8px 12px;
@@ -65,8 +75,8 @@ export const Heading = styled(H3)`
 `;
 
 export const Meta = styled(H4)`
-  font-weight: 400;
-  color: ${({ theme }) => theme.text.alt};
+  font-weight: ${props => (props.isUnread ? 600 : 400)};
+  color: ${props => (props.isUnread ? props.theme.text.default : props.theme.text.alt)};
 
   ${props => (props.nowrap ? Truncate() : '')}
 `;
@@ -82,6 +92,8 @@ export const MessageGroupTextContainer = styled.div`
 	flex-direction: column;
 	flex: 1 0 calc(100% - 64px);
 	overflow: hidden;
+  position: relative;
+  top: -1px;
 `;
 
 export const MessageGroupByline = styled.div`
@@ -99,9 +111,9 @@ export const Usernames = styled.span`
 	white-space: nowrap;
 	overflow: hidden;
 	color: ${({ theme }) => theme.text.default};
-	font-weight: ${props => (props.unread ? 800 : 600)};
-	line-height: 1.2;
-	margin-bottom: 2px;
+	font-weight: ${props => (props.isUnread ? 800 : 600)};
+	line-height: 1.1;
+	margin-bottom: 1px;
 	font-size: 14px;
 	flex: 1 1 100%;
 
@@ -113,7 +125,7 @@ export const Usernames = styled.span`
 export const Timestamp = styled.span`
 	font-size: 12px;
 	text-align: right;
-	color: ${props => (props.unread ? props.theme.brand.default : '#909aa7')};
+	color: ${props => (props.isUnread ? props.theme.brand.default : '#909aa7')};
 	padding-right: 4px;
 	display: inline-block;
 	flex: 1 0 auto;

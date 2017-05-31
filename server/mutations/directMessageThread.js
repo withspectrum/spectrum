@@ -7,6 +7,7 @@ const {
 } = require('../models/directMessageThread');
 const {
   createMemberInDirectMessageThread,
+  setUserLastSeenInDirectMessageThread,
 } = require('../models/usersDirectMessageThreads');
 const { storeMessage } = require('../models/message');
 const { uploadImage } = require('../utils/s3');
@@ -62,10 +63,14 @@ module.exports = {
             return Promise.all([
               thread,
               // create member relationship with the current user
-              createMemberInDirectMessageThread(thread.id, currentUser.id),
+              createMemberInDirectMessageThread(
+                thread.id,
+                currentUser.id,
+                true
+              ),
               // create member relationships
               participants.map(participant =>
-                createMemberInDirectMessageThread(thread.id, participant)
+                createMemberInDirectMessageThread(thread.id, participant, false)
               ),
               // create message
               storeMessage(messageWithThread, currentUser),
@@ -75,10 +80,14 @@ module.exports = {
             return Promise.all([
               thread,
               // create member relationship with the current user
-              createMemberInDirectMessageThread(thread.id, currentUser.id),
+              createMemberInDirectMessageThread(
+                thread.id,
+                currentUser.id,
+                true
+              ),
               // create member relationships
               participants.map(participant =>
-                createMemberInDirectMessageThread(thread.id, participant)
+                createMemberInDirectMessageThread(thread.id, participant, false)
               ),
               uploadImage(message.file, 'threads', message.threadId, url => {
                 // build a new message object with a new file field with metadata
@@ -104,5 +113,7 @@ module.exports = {
         })
         .then(thread => thread[0]);
     },
+    setLastSeen: (_, { id }, { user }) =>
+      setUserLastSeenInDirectMessageThread(id, user.id),
   },
 };

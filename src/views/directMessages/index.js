@@ -5,7 +5,7 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
 // $FlowFixMe
-import { Route } from 'react-router';
+import { Route, Redirect } from 'react-router';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 // $FlowFixMe
@@ -50,6 +50,32 @@ class DirectMessages extends Component {
     }
 
     const { activeThread } = this.state;
+
+    // no user found, get them to the home page to log in
+    if (!data.user) {
+      window.location.href = '/';
+    }
+
+    // if user has no dm threads, make sure they stay on /new
+    if (
+      data.user && data.user.directMessageThreadsConnection.edges.length === 0
+    ) {
+      return (
+        <View>
+          {isMobile && <Titlebar title={'Messages'} provideBack={false} />}
+
+          <MessagesList>
+            <Link to="/messages/new">
+              <ComposeHeader>
+                <Icon glyph="post" />
+              </ComposeHeader>
+            </Link>
+          </MessagesList>
+
+          <Route render={() => <Redirect to="/messages/new" />} />
+        </View>
+      );
+    }
 
     const threads = data.user.directMessageThreadsConnection.edges.map(
       thread => thread.node
