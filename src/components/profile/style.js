@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FlexRow, FlexCol, Truncate, Transition, Gradient } from '../globals';
 import { Button, OutlineButton, IconButton } from '../buttons';
+import Card from '../card';
 
 export const ProfileHeader = styled(FlexRow)`
   padding: 16px;
@@ -191,5 +192,12 @@ export const CoverDescription = styled(Description)`
 
   p {
     margin-bottom: 16px;
+  }
+`;
+
+// had a hard time targeting the ChannelListItem component, so this is a janky way to get the overrides I needed.
+export const ProfileCard = styled(Card)`
+  > div:first-of-type, > a > div {
+    padding: 16px;
   }
 `;

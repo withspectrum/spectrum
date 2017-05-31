@@ -48,9 +48,8 @@ export const Meta = styled(H4)`
   ${props => (props.nowrap ? Truncate() : '')}
 `;
 
-export const ActionContainer = styled.div`
-  flex: 0 0 auto;
-  flex-direction: row;
+export const ActionContainer = styled(FlexCol)`
+  justify-content: center;
   align-items: center;
   color: ${({ theme }) => theme.text.placeholder};
   transition: ${Transition.hover.off};
@@ -139,9 +138,10 @@ export const Notice = styled(Description)`
 
 export const ChannelTypeIndicator = styled(FlexCol)`
   justify-content: center;
+  align-items: center;
   color: ${({ theme }) => theme.border.default};
-  flex: 0 0 32px;
-  margin-right: 8px;
+  flex: 0 0 40px;
+  margin-right: 12px;
 `;
 
 export const BadgeContainer = styled(FlexCol)`

@@ -9,7 +9,7 @@ export const Title = styled.h1`
   font-weight: 700;
   font-size: 1.25rem;
   line-height: 1.25;
-  margin: 8px 0;
+  margin-bottom: 16px;
   padding: 0;
   font-weight: 700;
   font-size: 24px;
@@ -27,17 +27,16 @@ export const Actions = styled.div`
 `;
 
 export const Subtitle = styled.h2`
-
-width: 100%;
-color: ${props => props.theme.text.default};
-font-weight: 400;
-font-size: 1rem;
-line-height: 1.4;
-margin-bottom: 24px;
-padding: 0 24px;
-color: inherit;
-font-weight: 500;
-text-align: center;
+  width: 100%;
+  color: ${props => props.theme.text.default};
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 16px;
+  padding: 0 24px;
+  color: inherit;
+  font-weight: 500;
+  text-align: center;
 
   b {
     font-weight: 700
@@ -46,6 +45,11 @@ text-align: center;
   a {
     color: ${props => props.theme.brand.default}
   }
+`;
+
+export const Cost = styled(Subtitle)`
+  margin-top: 8px;
+  font-weight: bold;
 `;
 
 export const NullCol = styled(FlexCol)`
@@ -57,7 +61,7 @@ export const NullCol = styled(FlexCol)`
   width: 100%;
   height: auto;
   min-height: 160px;
-  padding: 1rem 2rem;
+  padding: 2rem 2rem;
   justify-content: center;
   align-items: center;
   position: relative;

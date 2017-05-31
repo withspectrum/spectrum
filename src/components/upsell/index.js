@@ -17,6 +17,7 @@ import {
   NullCol,
   UpgradeError,
   Profile,
+  Cost,
 } from './style';
 // $FlowFixMe
 import StripeCheckout from 'react-stripe-checkout';
@@ -69,10 +70,10 @@ export const UpsellJoinChannel = ({
     <NullCard bg="channel">
       <Title>Ready to join the conversation?</Title>
       <Subtitle>
-        Follow ~{channel.name} to get involved!
+        Join ~{channel.name} to get involved!
       </Subtitle>
       <Button onClick={() => subscribe(channel.id)} icon="plus" label>
-        Follow
+        Join
       </Button>
     </NullCard>
   );
@@ -223,13 +224,13 @@ export const UpsellJoinCommunity = ({
   join,
 }: { community: Object, join: Function }) => {
   return (
-    <NullCard bg="community">
-      <Title>Ready to join the conversation?</Title>
-      <Subtitle>
-        Join {community.name} to get involved!
-      </Subtitle>
+    <NullCard
+      bg="chat"
+      heading="Want to be a part of the conversation?"
+      copy={`Join ${community.name} to get involved!`}
+    >
       <Button onClick={() => join(community.id)} icon="plus">
-        Join
+        Join {community.name}
       </Button>
     </NullCard>
   );
@@ -239,20 +240,16 @@ export const Upsell404User = ({
   username,
   noPermission,
 }: { username: string, noPermission: boolean }) => {
-  const returnUrl = `/`;
   const title = noPermission
     ? "I see you sneakin' around here..."
-    : 'Oops, someone got lost!';
+    : `${username}? What's a ${username}?`;
   const subtitle = noPermission
-    ? 'No hackzxing allowed.'
-    : `We can't find anyone who answers to the name ${username}. Maybe they don't want to be found...`;
+    ? `But, that's not for you...`
+    : `We don't know anyone who goes by that name. Sorry!`;
 
   return (
-    <NullCard bg="user">
-      <Title>{title}</Title>
-      <Subtitle>{subtitle}</Subtitle>
-
-      <Button onClick={() => window.location.href = returnUrl}>
+    <NullCard bg="user" heading={title} copy={subtitle}>
+      <Button onClick={() => window.location.href = '/home'}>
         Take me home
       </Button>
     </NullCard>
@@ -260,16 +257,13 @@ export const Upsell404User = ({
 };
 
 export const Upsell404Thread = () => {
-  const returnUrl = `/`;
-  const title = 'Oops, something got lost!';
-  const subtitle = `We can't find that thread. Maybe it floated off into space...`;
-
   return (
-    <NullCard bg="post">
-      <Title>{title}</Title>
-      <Subtitle>{subtitle}</Subtitle>
-
-      <Button onClick={() => window.location.href = returnUrl}>
+    <NullCard
+      bg="post"
+      heading="Oops, something got lost!"
+      copy="We can't find that thread. Maybe it floated off into space..."
+    >
+      <Button onClick={() => window.location.href = `/home`}>
         Take me home
       </Button>
     </NullCard>
@@ -320,8 +314,6 @@ class UpsellUpgradeToProPure extends Component {
   };
 
   render() {
-    const title = 'Upgrade to Pro';
-    const subtitle = `We're hard at work building features for Spectrum Pros. Your early support helps us get there faster – thank you!`;
     const { upgradeError, isLoading } = this.state;
     const { currentUser } = this.props;
 
@@ -331,9 +323,11 @@ class UpsellUpgradeToProPure extends Component {
           <img alt={currentUser.name} src={currentUser.profilePhoto} />
           <span>PRO</span>
         </Profile>
-        <Title>{title}</Title>
-        <Subtitle>{subtitle}</Subtitle>
-
+        <Title>Upgrade to Pro</Title>
+        <Subtitle>
+          We're hard at work building features for Spectrum Pro. Your early support helps us get there faster – thank you!
+        </Subtitle>
+        <Cost>Spectrum Pro costs $5/month and you can cancel at any time.</Cost>
         <StripeCheckout
           token={this.upgradeToPro}
           stripeKey={'pk_test_A6pKi4xXOdgg9FrZJ84NW9mP'}
@@ -343,8 +337,8 @@ class UpsellUpgradeToProPure extends Component {
           amount={500}
           currency="USD"
         >
-          <Button disabled={isLoading} loading={isLoading}>
-            Upgrade to Pro · $5 per Month
+          <Button disabled={isLoading} loading={isLoading} icon="payment">
+            Upgrade
           </Button>
         </StripeCheckout>
 
