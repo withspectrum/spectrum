@@ -33,13 +33,6 @@ const Community = /* GraphQL */ `
 		channels: Int
 	}
 
-	input File {
-    name: String!
-    type: String!
-    size: Int!
-    path: String!
-  }
-
 	input CreateCommunityInput {
 		name: String!
 		slug: String!
