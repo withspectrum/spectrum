@@ -29,13 +29,6 @@ const Message = /* GraphQL */ `
 		body: String
 	}
 
-	input File {
-		name: String!
-		type: String!
-		size: Int!
-		path: String!
-	}
-
 	input MessageInput {
 		threadId: ID!
 		threadType: ThreadTypes!
