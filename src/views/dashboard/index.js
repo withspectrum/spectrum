@@ -20,7 +20,7 @@ const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 
 const DashboardPure = props => {
   const { data: { user, error } } = props;
-
+  console.log(user);
   if (error) {
     return (
       <AppViewWrapper>

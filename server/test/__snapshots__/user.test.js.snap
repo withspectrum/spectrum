@@ -75,7 +75,7 @@ Object {
   "data": Object {
     "user": Object {
       "createdAt": "2017-01-01T23:00:00.000Z",
-      "displayName": "First User",
+      "name": "First User",
       "email": "first.user@gmail.com",
       "lastSeen": "2017-02-01T23:00:00.000Z",
       "profilePhoto": "my-photo.jpg",
