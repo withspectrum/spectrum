@@ -130,6 +130,7 @@ const DEFAULT_DIRECT_MESSAGE_THREADS = [
     id: 'first-dm-thread-asfd123',
     createdAt: new Date(),
     name: null,
+    threadLastActive: new Date(),
   },
 ];
 
