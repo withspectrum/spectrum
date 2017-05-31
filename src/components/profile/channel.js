@@ -18,42 +18,12 @@ import Icon from '../icons';
 import { Button } from '../buttons';
 import { LoadingListItem } from '../loading';
 import { MetaData } from './metaData';
-import type { ProfileSizeProps } from './index';
 
-import {
-  ProfileHeader,
-  ProfileHeaderLink,
-  ProfileHeaderMeta,
-  ProfileHeaderAction,
-  Title,
-  Subtitle,
-  Description,
-  Actions,
-  Action,
-  ProfileCard,
-} from './style';
-
-type ChannelProps = {
-  id: string,
-  name: string,
-  slug: string,
-  description: string,
-  channelPermissions: Object,
-  community: {
-    slug: string,
-    name: string,
-    communityPermissions: Object,
-  },
-  metaData: {
-    threads: number,
-    subscribers: number,
-  },
-};
+import { ProfileHeaderAction, ProfileCard } from './style';
 
 const ChannelWithData = props => {
   const {
     data: { channel, loading, error },
-    data,
     profileSize,
     toggleChannelSubscription,
     dispatch,

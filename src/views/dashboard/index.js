@@ -4,8 +4,6 @@ import React from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-// $FlowFixMe
-import { Link } from 'react-router-dom';
 
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
@@ -22,7 +20,7 @@ import CommunityList from '../user/components/communityList';
 const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 
 const DashboardPure = props => {
-  const { data: { user, error }, dispatch, match, history } = props;
+  const { data: { user, error } } = props;
 
   if (error) {
     return (

@@ -5,8 +5,6 @@ import Modal from 'react-modal';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import ModalContainer from '../modalContainer';
-// $FlowFixMe
-import StripeCheckout from 'react-stripe-checkout';
 import { closeModal } from '../../../actions/modals';
 import {
   upgradeToProMutation,
@@ -22,12 +20,8 @@ import {
   Section,
   SectionActions,
   SectionError,
-  Heading,
   Subheading,
-  Flex,
   Padding,
-  Spinner,
-  Profile,
 } from './style';
 
 class UpgradeModal extends React.Component {
@@ -110,7 +104,7 @@ class UpgradeModal extends React.Component {
   };
 
   render() {
-    const { user, loading } = this.props;
+    const { user } = this.props;
     const { upgradeError, isOpen, isLoading } = this.state;
 
     return (
@@ -134,7 +128,10 @@ class UpgradeModal extends React.Component {
             <Section>
               <Subheading>
                 We're sorry to see you go! If you are having trouble and want
-                to talk to a human, please get in touch. Otherwise if you're ready to go, you can
+                to talk to a human, please
+                {' '}
+                <a href="mailto:support@spectrum.chat">get in touch</a>
+                . Otherwise if you're ready to go, you can
                 cancel your Pro subscription instantly below. Thanks for your support!
               </Subheading>
               <SectionActions centered={true}>
