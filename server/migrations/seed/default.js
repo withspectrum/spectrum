@@ -98,7 +98,6 @@ const DEFAULT_THREADS = [
   },
 ];
 
-// SCHEMA:TODO
 const DEFAULT_NOTIFICATIONS = [
   {
     id: 'first-notification-asfd123',
@@ -122,6 +121,16 @@ const DEFAULT_NOTIFICATIONS = [
       title: 'The first thread! 🎉',
       excerpt: 'This is it, we got a thread here',
     },
+  },
+];
+
+const DEFAULT_USERS_NOTIFICATIONS = [
+  {
+    id: 'first-users-notification-asfd123',
+    createdAt: new Date(),
+    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    notificationId: 'first-notification-asfd123',
+    isRead: false,
   },
 ];
 

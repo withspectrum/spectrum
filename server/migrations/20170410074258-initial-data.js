@@ -17,12 +17,18 @@ exports.up = function(r, conn) {
       r.tableCreate('usersCommunities').run(conn),
       r.tableCreate('usersChannels').run(conn),
       r.tableCreate('usersDirectMessageThreads').run(conn),
+      r.tableCreate('usersNotifications').run(conn),
     ])
       // Create secondary indexes
       .then(() =>
         Promise.all([
           // index user by username
           r.table('users').indexCreate('username', r.row('username')).run(conn),
+          // index usersNotifications by userId
+          r
+            .table('usersNotifications')
+            .indexCreate('userId', r.row('userId'))
+            .run(conn),
           // index recurringPayments by userId
           r
             .table('recurringPayments')
@@ -42,7 +48,7 @@ exports.up = function(r, conn) {
             .table('usersCommunities')
             .indexCreate('communityId', r.row('communityId'))
             .run(conn),
-          // indexes on usersChannesl join table
+          // indexes on usersChannels join table
           r
             .table('usersChannels')
             .indexCreate('userId', r.row('userId'))
@@ -134,6 +140,7 @@ exports.down = function(r, conn) {
     r.tableDrop('usersCommunities').run(conn),
     r.tableDrop('usersChannels').run(conn),
     r.tableDrop('usersDirectMessageThreads').run(conn),
+    r.tableDrop('usersNotifications').run(conn),
   ]).catch(err => {
     console.log(err);
   });

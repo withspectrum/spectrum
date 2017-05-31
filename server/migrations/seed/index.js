@@ -29,6 +29,7 @@ const {
   generateReaction,
   generateThreadNotification,
   generateMessageNotification,
+  generateUsersNotifications,
 } = require('./generate');
 
 const notifications = DEFAULT_NOTIFICATIONS;
