@@ -40,7 +40,6 @@ export const Label = styled.span`
   line-height: inherit;
   color: inherit;
   ${props => (props.loading && !props.hasIcon ? 'opacity: 0;' : 'opacity: 1;')};
-  transition: ${Transition.hover.on};
   align-self: center;
   margin: auto;
 `;
@@ -61,14 +60,15 @@ export const StyledSolidButton = styled.button`
 `;
 
 export const StyledTextButton = styled(StyledSolidButton)`
-  background: ${({ theme }) => theme.bg.default};
+  background: transparent;
   background-image: none;
   font-weight: 600;
   color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.color ? props.color : 'text.alt'}`))};
   transition: color 0.1s ease-out, box-shadow 0.2s ease-out 0.1s, border-radius 0.2s ease-out;
 
   &:hover {
-    background-color: ${({ theme }) => theme.bg.default};
+    background-color: transparent;
+    box-shadow: none;
     color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`))};
     transition: color 0.1s ease-in, box-shadow 0.2s ease-in 0.1s;
   }

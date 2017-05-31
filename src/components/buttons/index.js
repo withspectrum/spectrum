@@ -59,7 +59,10 @@ export const OutlineButton = (props: ButtonProps) => (
 
 export const TextButton = (props: ButtonProps) => (
   <StyledTextButton {...props}>
-    {props.loading && <Spinner />}
+    {props.icon
+      ? props.loading ? <Loading /> : <Icon glyph={props.icon} />
+      : ''}
+    {props.loading && !props.icon && <Spinner color="text.reverse" size="16" />}
     <Label loading={props.loading}>
       {props.children}
     </Label>

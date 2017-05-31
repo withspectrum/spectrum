@@ -6,16 +6,19 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import generateMetaInfo from '../../../../server/shared/generate-meta-info';
 import { toggleChannelSubscriptionMutation } from '../../../api/channel';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import ThreadDetail from '../components/threadDetail';
 import Messages from '../components/messages';
+import Head from '../../../components/head';
 import ChatInput from '../../../components/chatInput';
 import { Column } from '../../../components/column';
 import AppViewWrapper from '../../../components/appViewWrapper';
 import { UserProfile, ChannelProfile } from '../../../components/profile';
 import { getThread } from '../queries';
 import { displayLoadingScreen } from '../../../components/loading';
+import { toPlainText, toState } from '../../../components/editor';
 import { Container } from '../style';
 import {
   UpsellSignIn,
@@ -93,8 +96,19 @@ const ThreadContainerPure = ({
     );
   }
 
+  const { title, description } = generateMetaInfo({
+    type: 'thread',
+    data: {
+      title: thread.content.title,
+      body: thread.content.body,
+      type: thread.type,
+      channelName: thread.channel.name,
+    },
+  });
+
   return (
     <AppViewWrapper>
+      <Head title={title} description={description} />
       <Column type="secondary">
         <UserProfile data={{ user: thread.creator }} />
         <ChannelProfile data={{ channel: thread.channel }} />

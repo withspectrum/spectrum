@@ -169,11 +169,13 @@ const generateThread = (communityId, channelId, creatorId) => {
 
 const generateDirectMessageThread = users => {
   const createdAt = faker.date.past(2);
+  const threadLastActive = faker.date.between(createdAt, faker.date.recent());
 
   return {
     id: uuid(),
     name: null,
     createdAt,
+    threadLastActive,
   };
 };
 

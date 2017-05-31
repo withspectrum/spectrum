@@ -51,6 +51,7 @@ const MessagesWithData = ({ data, toggleReaction }) => {
         threadId={data.thread.id}
         toggleReaction={toggleReaction}
         messages={sortedMessages}
+        threadType={'story'}
       />
     </ChatWrapper>
   );

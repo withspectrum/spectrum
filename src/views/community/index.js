@@ -8,6 +8,8 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 import { openModal } from '../../actions/modals';
 import ThreadComposer from '../../components/threadComposer';
+import Head from '../../components/head';
+import generateMetaInfo from '../../../server/shared/generate-meta-info';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
@@ -98,10 +100,18 @@ const CommunityViewPure = props => {
     );
   }
 
+  const { title, description } = generateMetaInfo({
+    type: 'community',
+    data: {
+      name: community.name,
+      description: community.description,
+    },
+  });
+
   return (
     <AppViewWrapper>
       <Titlebar title={community.name} provideBack={true} backRoute={`/`} />
-
+      <Head title={title} description={description} />
       <CoverColumn>
         <CoverPhoto src={community.coverPhoto}>
           {currentUser &&
