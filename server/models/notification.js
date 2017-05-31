@@ -163,7 +163,7 @@ const getNotificationsByUser = (
 };
 
 const listenToNewNotifications = (cb: Function): Function => {
-  return listenToNewDocumentsIn('messages', cb);
+  return listenToNewDocumentsIn('notifications', cb);
 };
 
 module.exports = {
