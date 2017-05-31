@@ -14,8 +14,10 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 //$FlowFixMe
 import withProps from 'recompose/withProps';
+import generateMetaInfo from '../../../server/shared/generate-meta-info';
 import Titlebar from '../titlebar';
 import AppViewWrapper from '../../components/appViewWrapper';
+import Head from '../../components/head';
 import { Loading } from '../../components/loading';
 import { GoopyThree } from '../../views/homepage/style';
 import { FlexCol } from '../../components/globals';
@@ -224,9 +226,13 @@ const ExplorePure = props => {
       })
     : [];
 
+  const { title, description } = generateMetaInfo({
+    type: 'explore',
+  });
+
   return (
     <AppViewWrapper>
-      {console.log(props)}
+      <Head title={title} description={description} />
       <Titlebar title={'Explore'} />
       {/* <ViewHeader>
         <ViewTitle>Explore</ViewTitle>
