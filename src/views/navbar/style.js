@@ -4,7 +4,6 @@ import { Transition, FlexRow } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
 
 export const UserProfileAvatar = styled(Avatar)`
-  margin-top: 8px;
   border: 1px solid ${({ theme }) => theme.text.default};
   box-shadow: 0 0 0 2px ${props => (props.isPro ? props.theme.pro.default : 'rgba(255,255,255,0.9)')};
 
