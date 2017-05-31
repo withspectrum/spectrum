@@ -19,6 +19,7 @@ import { displayLoadingScreen } from '../../../components/loading';
 import { Container } from '../style';
 import {
   UpsellSignIn,
+  UpsellRequestToJoinChannel,
   UpsellJoinChannel,
   Upsell404Thread,
 } from '../../../components/upsell';
@@ -29,6 +30,33 @@ const ThreadContainerPure = ({
   dispatch,
   toggleChannelSubscription,
 }) => {
+  const toggleSubscription = channelId => {
+    toggleChannelSubscription({ channelId })
+      .then(({ data: { toggleChannelSubscription } }) => {
+        const isMember = toggleChannelSubscription.channelPermissions.isMember;
+        const isPending =
+          toggleChannelSubscription.channelPermissions.isPending;
+        let str;
+        if (isPending) {
+          str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}`;
+        }
+
+        if (!isPending && isMember) {
+          str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`;
+        }
+
+        if (!isPending && !isMember) {
+          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
+        }
+
+        const type = isMember || isPending ? 'success' : 'neutral';
+        dispatch(addToastWithTimeout(type, str));
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
   if (error) {
     return (
       <AppViewWrapper>
@@ -49,20 +77,21 @@ const ThreadContainerPure = ({
     );
   }
 
-  const toggleSubscription = channelId => {
-    toggleChannelSubscription({ channelId })
-      .then(({ data: { toggleChannelSubscription } }) => {
-        const str = toggleChannelSubscription.isMember
-          ? `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
-          : `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
-
-        const type = toggleChannelSubscription.isMember ? 'success' : 'neutral';
-        dispatch(addToastWithTimeout(type, str));
-      })
-      .catch(err => {
-        dispatch(addToastWithTimeout('error', err.message));
-      });
-  };
+  if (thread.channel.isPrivate && !thread.channel.channelPermissions.isMember) {
+    return (
+      <AppViewWrapper>
+        <Column type="primary">
+          <UpsellRequestToJoinChannel
+            channel={thread.channel}
+            community={thread.channel.community.slug}
+            isPending={thread.channel.channelPermissions.isPending}
+            subscribe={() => toggleSubscription(thread.channel.id)}
+            currentUser={currentUser}
+          />
+        </Column>
+      </AppViewWrapper>
+    );
+  }
 
   return (
     <AppViewWrapper>

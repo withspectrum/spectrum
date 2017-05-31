@@ -43,7 +43,7 @@ export class LinkPreview extends Component {
         padding={image}
         target="_blank"
         rel="noopener"
-        href={trueUrl}
+        href={url || trueUrl}
         margin={margin}
       >
         {editable &&
