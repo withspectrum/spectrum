@@ -320,7 +320,10 @@ class UpsellUpgradeToProPure extends Component {
     return (
       <NullCard bg="pro">
         <Profile>
-          <img alt={currentUser.name} src={currentUser.profilePhoto} />
+          <img
+            alt={currentUser.name}
+            src={`${currentUser.profilePhoto}?w=48&dpr=2`}
+          />
           <span>PRO</span>
         </Profile>
         <Title>Upgrade to Pro</Title>

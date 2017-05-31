@@ -348,7 +348,9 @@ class CreateCommunityModal extends Component {
             >
               Add a logo or photo
 
-              {!image ? <span>add</span> : <ImgPreview src={image} />}
+              {!image
+                ? <span>add</span>
+                : <ImgPreview src={`${image}?w=40&dpr=2`} />}
             </Input>
 
             <Input
