@@ -2,7 +2,7 @@
 // $FlowFixMe
 import { ApolloClient } from 'react-apollo';
 // $FlowFixMe
-import { createNetworkInterface } from 'apollo-upload-client';
+import { createNetworkInterface } from 'apollo-upload-client-fork-mxstbr';
 // $FlowFixMe
 import {
   SubscriptionClient,
