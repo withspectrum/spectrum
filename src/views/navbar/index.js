@@ -142,14 +142,13 @@ class Navbar extends Component {
               <IconDrop>
                 <IconLink
                   data-active={match.url === `/users/${currentUser.username}`}
-                  data-mobileWidth={'half'}
                   to={`/users/${currentUser.username}`}
                 >
                   <UserProfileAvatar
                     src={`${currentUser.profilePhoto}?w=40&dpr=2`}
                     isPro={currentUser.isPro}
                     size="24"
-                    radius="32"
+                    radius="12"
                   />
                   <LabelForTab>Profile</LabelForTab>
                 </IconLink>

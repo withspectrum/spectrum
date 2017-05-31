@@ -314,7 +314,7 @@ class ThreadDetailPure extends Component {
       <ThreadWrapper>
         <Titlebar
           title={thread.content.title}
-          subtitle={`${thread.channel.name} · ${thread.channel.community.name}`}
+          subtitle={`${thread.channel.name} / ${thread.channel.community.name}`}
           provideBack={true}
           backRoute={`/${thread.channel.community.slug}/${thread.channel.slug}`}
         />

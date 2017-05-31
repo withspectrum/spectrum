@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
 //$FlowFixMe
+import styled from 'styled-components';
+//$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
@@ -10,20 +12,12 @@ import { NullCard } from '../upsell';
 import { LoadingThread } from '../loading';
 import { Button } from '../buttons';
 
-// const displayLoadingState = branch(
-//   props => props.data.loading,
-//   renderComponent(LoadingThread)
-// );
-
-//TODO: wire up buttons...
 const NullState = () => (
   <NullCard
     bg="post"
     heading={`Sorry, no threads here yet...`}
     copy={`But you could start one!`}
-  >
-    <Button icon="post">Start a thread</Button>
-  </NullCard>
+  />
 );
 
 const ErrorState = () => (
@@ -37,6 +31,19 @@ const ErrorState = () => (
     </Button>
   </NullCard>
 );
+
+const Threads = styled.div`
+  min-width: 100%;
+
+  button {
+    align-self: center;
+    margin: auto;
+  }
+
+  @media (max-width: 768px) {
+    margin-bottom: 64px;
+  }
+`;
 
 /*
   The thread feed always expects a prop of 'threads' - this means that in
@@ -53,14 +60,14 @@ const ThreadFeedPure = props => {
 
   if (loading) {
     return (
-      <div style={{ minWidth: '100%' }}>
+      <Threads>
         <LoadingThread />
         <LoadingThread />
         <LoadingThread />
         <LoadingThread />
         <LoadingThread />
         <LoadingThread />
-      </div>
+      </Threads>
     );
   } else if ((error && threads.length > 0) || (error && threads.length === 0)) {
     return <ErrorState />;
@@ -68,7 +75,7 @@ const ThreadFeedPure = props => {
     return <NullState />;
   } else {
     return (
-      <div style={{ minWidth: '100%' }}>
+      <Threads>
         {threads.map(thread => {
           return (
             <ThreadFeedCard
@@ -80,7 +87,7 @@ const ThreadFeedPure = props => {
         })}
 
         {hasNextPage && <Button onClick={fetchMore}>Load more threads</Button>}
-      </div>
+      </Threads>
     );
   }
 };
