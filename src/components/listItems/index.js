@@ -33,7 +33,7 @@ export const CommunityListItem = (props: CardProps): React$Element<any> => {
       <Row>
         <Avatar
           radius={4}
-          src={props.contents.profilePhoto}
+          src={`${props.contents.profilePhoto}?w=32&dpr=2`}
           size={32}
           style={{ marginRight: '12px' }}
         />
@@ -89,7 +89,7 @@ export const UserListItem = ({ user, children }: Object): React$Element<
         <Link to={`/users/${user.username}`}>
           <Avatar
             radius={20}
-            src={user.profilePhoto}
+            src={`${user.profilePhoto}?w=40&dpr=2`}
             size={40}
             style={{ marginRight: '16px' }}
           />

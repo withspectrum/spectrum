@@ -90,7 +90,7 @@ class UserProfileModal extends Component {
                   </InputOverlay>
                   {user.profilePhoto &&
                     <ProfileImage
-                      src={user.profilePhoto}
+                      src={`${user.profilePhoto}?w=40&dpr=2`}
                       role="presentation"
                     />}
                   <HiddenInput
@@ -105,7 +105,10 @@ class UserProfileModal extends Component {
               </Row>
             : <Row>
                 {user.profilePhoto &&
-                  <ProfileImage src={user.profilePhoto} role="presentation" />}
+                  <ProfileImage
+                    src={`${user.profilePhoto}?w=40&dpr=2`}
+                    role="presentation"
+                  />}
                 <Button onClick={this.initMessage}>Message</Button>
               </Row>}
         </ModalContainer>
