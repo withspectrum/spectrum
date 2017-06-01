@@ -298,11 +298,7 @@ class UserWithData extends Component {
 
           <Actions>
             <TextButton hoverColor={'warn.alt'}>Cancel</TextButton>
-            <Button
-              disabled={!name || !description}
-              loading={loading}
-              onClick={this.save}
-            >
+            <Button disabled={!name} loading={loading} onClick={this.save}>
               Save
             </Button>
           </Actions>
