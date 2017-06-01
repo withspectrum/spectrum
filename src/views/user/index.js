@@ -31,7 +31,12 @@ const UserViewPure = ({
   if (error || !user) {
     return (
       <AppViewWrapper>
-        <Titlebar title={`No User Found`} provideBack={true} backRoute={`/`} />
+        <Titlebar
+          title={`No User Found`}
+          provideBack={true}
+          backRoute={`/`}
+          noComposer
+        />
 
         <Column type="primary" alignItems="center">
           <Upsell404User username={username} />
@@ -54,9 +59,10 @@ const UserViewPure = ({
       <Head title={title} description={description} />
       <Titlebar
         title={user.name}
-        subtitle={user.username}
+        subtitle={'Posts By'}
         provideBack={true}
         backRoute={`/`}
+        noComposer
       />
       <Column type="secondary">
         <UserProfile data={{ user }} username={username} profileSize="full" />

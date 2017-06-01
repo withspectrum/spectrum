@@ -1,9 +1,7 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-//$FlowFixMe
-import lifecycle from 'recompose/lifecycle';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
 import Icon from '../../../components/icons';
@@ -13,54 +11,87 @@ import { ChatWrapper } from '../style';
 import { getThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 
-const lifecycles = lifecycle({
+class MessagesWithData extends Component {
   state: {
-    subscribed: false,
-  },
-  componentDidUpdate() {
+    subscribed: boolean,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      subscribed: false,
+    };
+  }
+
+  componentDidUpdate(prevProps) {
     if (!this.props.loading && !this.state.subscribed) {
       this.setState({
         subscribed: true,
       });
       this.props.subscribeToNewMessages();
     }
-  },
-});
 
-const MessagesWithData = ({ data, toggleReaction }) => {
-  if (data.error) {
-    return <div>Error!</div>;
+    // force scroll to bottom when a message is sent in the same thread
+    if (
+      prevProps.data.thread.messageConnection !==
+      this.props.data.thread.messageConnection
+    ) {
+      this.props.contextualScrollToBottom();
+    }
   }
 
-  if (!data.thread && !data.thread.messageConnection) {
-    return <div>No messages yet!</div>;
+  componentDidMount() {
+    this.props.forceScrollToBottom();
+    this.subscribe();
   }
 
-  const sortedMessages = sortAndGroupMessages(
-    data.thread.messageConnection.edges
-  );
+  subscribe = () => {
+    if (!this.props.loading && !this.state.subscribed) {
+      this.setState({
+        subscribed: true,
+      });
+      this.props.subscribeToNewMessages();
+    }
+  };
 
-  return (
-    <ChatWrapper>
-      <HorizontalRule>
-        <hr />
-        <Icon glyph={'message'} />
-        <hr />
-      </HorizontalRule>
-      <ChatMessages
-        threadId={data.thread.id}
-        toggleReaction={toggleReaction}
-        messages={sortedMessages}
-        threadType={'story'}
-      />
-    </ChatWrapper>
-  );
-};
+  render() {
+    const { data, toggleReaction, forceScrollToBottom } = this.props;
+
+    if (data.error) {
+      return <div>Error!</div>;
+    }
+
+    if (!data.thread && !data.thread.messageConnection) {
+      return <div>No messages yet!</div>;
+    }
+
+    const sortedMessages = sortAndGroupMessages(
+      data.thread.messageConnection.edges
+    );
+
+    return (
+      <ChatWrapper>
+        <HorizontalRule>
+          <hr />
+          <Icon glyph={'message'} />
+          <hr />
+        </HorizontalRule>
+        <ChatMessages
+          threadId={data.thread.id}
+          toggleReaction={toggleReaction}
+          messages={sortedMessages}
+          threadType={'story'}
+          forceScrollToBottom={forceScrollToBottom}
+        />
+      </ChatWrapper>
+    );
+  }
+}
 
 const Messages = compose(
   toggleReactionMutation,
   getThreadMessages,
-  lifecycles,
   displayLoadingCard
 )(MessagesWithData);
 

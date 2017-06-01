@@ -36,6 +36,14 @@ class ExistingThread extends Component {
     node.scrollTop = node.scrollHeight - node.clientHeight;
   };
 
+  contextualScrollToBottom = () => {
+    if (!this.scrollBody) return;
+    let node = this.scrollBody;
+    if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
+      node.scrollTop = node.scrollHeight - node.clientHeight;
+    }
+  };
+
   refetchThread = () => {
     const id = this.props.match.params.threadId;
     this.props.client
@@ -63,6 +71,7 @@ class ExistingThread extends Component {
               id={id}
               currentUser={currentUser}
               forceScrollToBottom={this.forceScrollToBottom}
+              contextualScrollToBottom={this.contextualScrollToBottom}
             />
           </ViewContent>
 

@@ -83,7 +83,8 @@ class DirectMessages extends Component {
 
     return (
       <View>
-        {isMobile && <Titlebar title={'Messages'} provideBack={false} />}
+        {isMobile &&
+          <Titlebar title={'Messages'} provideBack={false} noComposer />}
 
         <MessagesList>
           <Link to="/messages/new">

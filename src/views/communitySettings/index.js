@@ -38,6 +38,7 @@ const SettingsPure = ({
           title={`No Community Found`}
           provideBack={true}
           backRoute={`/${communitySlug}`}
+          noComposer
         />
         <Column type="primary">
           <Upsell404Community community={communitySlug} />
@@ -53,6 +54,7 @@ const SettingsPure = ({
           title={`No Community Found`}
           provideBack={true}
           backRoute={`/${communitySlug}`}
+          noComposer
         />
 
         <Column type="primary">
@@ -69,6 +71,7 @@ const SettingsPure = ({
           title={`No Permission`}
           provideBack={true}
           backRoute={`/${communitySlug}`}
+          noComposer
         />
 
         <Column type="primary">
@@ -85,6 +88,7 @@ const SettingsPure = ({
         subtitle={'Settings'}
         provideBack={true}
         backRoute={`/${communitySlug}`}
+        noComposer
       />
 
       <Column type="secondary">

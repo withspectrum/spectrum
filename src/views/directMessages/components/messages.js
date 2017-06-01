@@ -37,8 +37,13 @@ class MessagesWithData extends Component {
     }
   };
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     this.subscribe();
+
+    // force scroll to bottom when a message is sent in the same thread
+    if (prevProps.data.messages !== this.props.data.messages) {
+      this.props.contextualScrollToBottom();
+    }
   }
 
   render() {

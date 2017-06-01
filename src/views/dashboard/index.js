@@ -50,7 +50,7 @@ class DashboardPure extends Component {
     if (error) {
       return (
         <AppViewWrapper>
-          <Titlebar />
+          <Titlebar noComposer />
           <Column type="primary" alignItems="center">
             <NullCard
               bg="error"
@@ -99,7 +99,7 @@ class DashboardPure extends Component {
     } else {
       return (
         <AppViewWrapper>
-          <Titlebar />
+          <Titlebar noComposer />
           <Column type="primary" alignItems="center">
             <UpsellSignIn />
           </Column>

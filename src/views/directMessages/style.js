@@ -46,6 +46,12 @@ export const MessagesContainer = styled.div`
   flex-direction: column;
   flex: 1 0 auto;
   justify-content: space-between;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    left: 0;
+    z-index: 1000;
+  }
 `;
 
 export const ComposeHeader = styled.div`

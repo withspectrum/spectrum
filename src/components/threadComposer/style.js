@@ -36,7 +36,7 @@ export const Composer = styled(Card)`
 
   @media (max-width: 768px) {
     width: 100%;
-    height: 100%;
+    height: 90%;
     pointer-events: all;
   }
 `;
@@ -54,9 +54,6 @@ export const Overlay = styled.div`
       background: #000;
       pointer-events: auto;
       opacity: 0.4;
-      @media (max-width: 768px) {
-        opacity: 0;
-      }
     ` : `
       opacity: 0;
       pointer-events: none;

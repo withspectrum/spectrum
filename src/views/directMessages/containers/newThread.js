@@ -630,6 +630,7 @@ class NewThread extends Component {
           title={'New Message'}
           provideBack={true}
           backRoute={`/messages`}
+          noComposer
         />
         <ComposerInputWrapper>
           {// if users have been selected, show them as pills
