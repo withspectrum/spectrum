@@ -33,7 +33,7 @@ export const CommunityListItem = (props: CardProps): React$Element<any> => {
       <Row>
         <Avatar
           radius={4}
-          src={`${props.contents.profilePhoto}?w=32&dpr=2`}
+          src={`${props.contents.profilePhoto}`}
           size={32}
           style={{ marginRight: '12px' }}
         />
@@ -80,16 +80,17 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
   );
 };
 
-export const UserListItem = ({ user, children }: Object): React$Element<
-  any
-> => {
+export const UserListItem = ({
+  user,
+  children,
+}: Object): React$Element<any> => {
   return (
     <Wrapper>
       <Row>
         <Link to={`/users/${user.username}`}>
           <Avatar
             radius={20}
-            src={`${user.profilePhoto}?w=40&dpr=2`}
+            src={`${user.profilePhoto}`}
             size={40}
             style={{ marginRight: '16px' }}
           />

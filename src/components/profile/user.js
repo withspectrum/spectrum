@@ -86,7 +86,7 @@ const UserWithData = ({
           currentUser={currentUser}
         >
           <CoverLink to={`/users/${user.username}`}>
-            <CoverAvatar src={`${user.profilePhoto}?w=40&dpr=2`} />
+            <CoverAvatar src={`${user.profilePhoto}`} />
             <CoverTitle>{user.name}</CoverTitle>
           </CoverLink>
         </CoverPhoto>
@@ -113,8 +113,8 @@ const UserWithData = ({
     return (
       <Card>
         <ProfileHeader>
-          <ProfileHeaderLink to={`../users/${user.username}`}>
-            <UserAvatar src={`${user.profilePhoto}?w=40&dpr=2`} />
+          <ProfileHeaderLink to={`/users/${user.username}`}>
+            <UserAvatar src={`${user.profilePhoto}`} />
             <ProfileHeaderMeta>
               <Title>{user.name}</Title>
               <Subtitle>
@@ -134,7 +134,8 @@ const UserWithData = ({
               </Link>
             : <ProfileHeaderAction
                 glyph="message-fill"
-                color="brand.alt"
+                color="text.alt"
+                hoverColor="brand.alt"
                 onClick={() => initMessage()}
                 tipText={`Message ${user.name}`}
                 tipLocation={'top-left'}
