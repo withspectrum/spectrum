@@ -13,7 +13,7 @@ export const ProfileDropdown = props => {
         <Link to={`/users/${props.user.username}/settings`}>
           <UserProfileDropdownListItem>Settings</UserProfileDropdownListItem>
         </Link>
-        <UserProfileDropdownListItem onClick={() => logout()}>
+        <UserProfileDropdownListItem onClick={logout}>
           Log Out
         </UserProfileDropdownListItem>
       </UserProfileDropdownList>
