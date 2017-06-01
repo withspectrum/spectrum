@@ -90,7 +90,7 @@ class UpsellNewUser extends Component {
             <SectionHeaderNumber>1</SectionHeaderNumber>
           </SectionHeader>
 
-          <SmallTitle>Find Your People</SmallTitle>
+          <SmallTitle>Find your people</SmallTitle>
           <SmallSubtitle>
             Join communities that look interesting or fun, and threads posted to those communities will start showing up in your home feed!
           </SmallSubtitle>
@@ -103,7 +103,7 @@ class UpsellNewUser extends Component {
             <SectionHeaderNumber>2</SectionHeaderNumber>
           </SectionHeader>
 
-          <SmallTitle>More Fun With Friends</SmallTitle>
+          <SmallTitle>More fun with friends</SmallTitle>
           <SmallSubtitle>
             Interneting is more fun with friends - invite your favorite people to join the conversation!
           </SmallSubtitle>
@@ -141,13 +141,13 @@ class UpsellNewUser extends Component {
             <SectionHeaderNumber>3</SectionHeaderNumber>
           </SectionHeader>
 
-          <SmallTitle>Build a Community</SmallTitle>
+          <SmallTitle>Build a community</SmallTitle>
           <SmallSubtitle>
             Already run an online community? Or have you been dreaming of building a new space for people who like the same things? Create a community in less than a minute:
           </SmallSubtitle>
 
           <OutlineButton onClick={this.createCommunity} icon="plus">
-            Create a Community
+            Create a community
           </OutlineButton>
         </Section>
 
@@ -156,7 +156,7 @@ class UpsellNewUser extends Component {
             <SectionHeaderNumber>4</SectionHeaderNumber>
           </SectionHeader>
 
-          <SmallTitle>All Set?</SmallTitle>
+          <SmallTitle>All set?</SmallTitle>
           <SmallSubtitle>
             Once you've found a few communities and topics, or created your own, you're ready to go!
           </SmallSubtitle>
@@ -165,7 +165,7 @@ class UpsellNewUser extends Component {
             <FriendlyError>{this.state.error}</FriendlyError>}
 
           <Button onClick={this.graduate} icon="logo">
-            Show Me the Home Feed!
+            Cool! Take me home.
           </Button>
         </Section>
       </NullCard>
