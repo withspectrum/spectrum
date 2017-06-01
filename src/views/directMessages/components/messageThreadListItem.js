@@ -24,7 +24,6 @@ export const ListCardItemDirectMessageThread = ({
 
   // get the difference in a readable format (e.g 'a week ago')
   const threadTimeDifference = timeDifference(Date.now(), timestamp);
-  // console.log('threadTimeDifference', threadTimeDifference)
 
   // filter currentUser out
   const participants = thread.participants.filter(

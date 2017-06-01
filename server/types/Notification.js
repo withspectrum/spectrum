@@ -33,6 +33,10 @@ const Notification = /* GraphQL */ `
 	extend type Mutation {
 		markNotificationsRead(threadId: ID!): Boolean
 	}
+
+	extend type Subscription {
+		notificationAdded: Notification
+	}
 `;
 
 module.exports = Notification;

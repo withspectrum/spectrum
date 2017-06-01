@@ -23,7 +23,6 @@ import {
   Logo,
   IconDrop,
   IconLink,
-  SigninLink,
   Label,
   LabelForTab,
   UserProfileAvatar,
@@ -51,7 +50,7 @@ class Navbar extends Component {
 
     const login = () => {
       // log the user in and return them to this page
-      return (window.location.href = `http://localhost:3001/auth/twitter?redirectTo=${window.location.pathname}`);
+      return (window.location.href = `${SERVER_URL}/auth/twitter?redirectTo=${window.location.pathname}`);
     };
 
     if (!currentUser || currentUser === null) {
@@ -127,7 +126,7 @@ class Navbar extends Component {
             </Section>
 
             <Section right>
-              <IconDrop>
+              {/* <IconDrop>
                 <IconLink
                   data-active={match.url === '/notifications'}
                   data-mobileWidth={'half'}
@@ -136,8 +135,8 @@ class Navbar extends Component {
                   <Icon glyph="notification" />
                   <LabelForTab>Notifications</LabelForTab>
                 </IconLink>
-                {/* <NotificationDropdown /> */}
-              </IconDrop>
+                {/* <NotificationDropdown />
+              </IconDrop> */}
 
               <IconDrop>
                 <IconLink

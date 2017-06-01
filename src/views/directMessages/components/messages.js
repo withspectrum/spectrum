@@ -25,15 +25,20 @@ class MessagesWithData extends Component {
 
   componentDidMount() {
     this.props.forceScrollToBottom();
+    this.subscribe();
   }
 
-  componentDidUpdate() {
+  subscribe = () => {
     if (!this.props.loading && !this.state.subscribed) {
       this.setState({
         subscribed: true,
       });
       this.props.subscribeToNewMessages();
     }
+  };
+
+  componentDidUpdate() {
+    this.subscribe();
   }
 
   render() {

@@ -210,7 +210,6 @@ const ExplorePure = props => {
   }
 
   if (data.error) {
-    console.log(props);
     return <ErrorItem />;
   }
 

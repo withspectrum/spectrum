@@ -17,7 +17,7 @@ import {
 import {
   createMemberInDefaultChannels,
   createOwnerInChannel,
-  removeMembersInChannel,
+  removeMemberInChannel,
 } from '../models/usersChannels';
 import {
   createOwnerInCommunity,
@@ -282,7 +282,7 @@ module.exports = {
           ]) => {
             // remove all relationships to the community's channels
             const removeAllRelationshipsToChannels = allChannelsInCommunity.map(
-              channel => removeMembersInChannel(channel.id)
+              channel => removeMemberInChannel(channel.id, currentUser.id)
             );
 
             return (

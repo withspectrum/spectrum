@@ -221,7 +221,6 @@ const generateReaction = (userId, messageId) => {
 
 const generateThreadNotification = (thread, channel, communityId, callback) => {
   return generateNotification(
-    channel.members,
     thread.creatorId,
     thread.id,
     channel.id,
@@ -232,15 +231,23 @@ const generateThreadNotification = (thread, channel, communityId, callback) => {
   );
 };
 
+const generateUsersNotifications = (userId, notificationId) => {
+  return {
+    id: uuid(),
+    userId,
+    notificationId,
+    createdAt: faker.date.past(2),
+    isRead: faker.random.boolean(),
+  };
+};
+
 const generateMessageNotification = (
-  users,
   message,
   thread,
   channelId,
   communityId
 ) => {
   return generateNotification(
-    users,
     message.senderId,
     thread.id,
     channelId,
@@ -254,7 +261,6 @@ const generateMessageNotification = (
 
 // SCHEMA:TODO
 const generateNotification = (
-  users,
   senderId,
   threadId,
   channelId,
@@ -266,10 +272,6 @@ const generateNotification = (
   return {
     id: uuid(),
     createdAt: faker.date.past(2),
-    users: users.map(id => ({
-      id,
-      read: faker.random.boolean(),
-    })),
     type: message ? 'NEW_MESSAGE' : 'NEW_THREAD',
     message,
     threadId,
@@ -296,5 +298,6 @@ module.exports = {
   generateReaction,
   generateThreadNotification,
   generateMessageNotification,
+  generateUsersNotifications,
   generateDirectMessageThread,
 };

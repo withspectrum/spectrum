@@ -47,6 +47,7 @@ const getCommunitiesByUser = (userId: string): Promise<Array<Object>> => {
       .zip()
       // ensure we don't return any deleted communities
       .filter(community => db.not(community.hasFields('deletedAt')))
+      .filter(row => row('isMember').eq(true).or(row('isOwner').eq(true)))
       // sort by community creation date
       .orderBy('createdAt')
       .run()
@@ -185,7 +186,6 @@ const editCommunity = ({
       }
 
       if (file || coverFile) {
-        console.log(file, coverFile);
         if (file && !coverFile) {
           return uploadImage(
             file,
@@ -280,7 +280,6 @@ const editCommunity = ({
             uploadFile(file),
             uploadCoverFile(coverFile),
           ]).then(([profilePhoto, coverPhoto]) => {
-            console.log('here', profilePhoto, coverPhoto);
             return (
               db
                 .table('communities')

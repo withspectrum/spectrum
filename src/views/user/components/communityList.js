@@ -29,7 +29,16 @@ const CommunityList = props => {
     withMeta,
   } = props;
 
-  if (communities && (communities !== 0 && communities !== null)) {
+  const filteredCommunities = communities.filter(
+    community =>
+      community.node.communityPermissions.isMember ||
+      community.node.communityPermissions.isOwner
+  );
+
+  if (
+    filteredCommunities &&
+    (filteredCommunities.length !== 0 && filteredCommunities !== null)
+  ) {
     return (
       <StyledCard>
         <ListHeader>
@@ -44,7 +53,7 @@ const CommunityList = props => {
             />}
         </ListHeader>
         <ListContainer>
-          {communities.map(item => {
+          {filteredCommunities.map(item => {
             return (
               <Link key={item.node.id} to={`/${item.node.slug}`}>
                 <CommunityListItem
@@ -61,15 +70,6 @@ const CommunityList = props => {
             );
           })}
         </ListContainer>
-        {/* {currentUser &&
-          currentUser.id === user.id &&
-          <ListFooter>
-            <MoreLink to={`/explore`}>
-              <TextButton>
-                Find more...
-              </TextButton>
-            </MoreLink>
-          </ListFooter>} */}
       </StyledCard>
     );
   } else {

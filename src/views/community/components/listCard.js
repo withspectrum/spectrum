@@ -60,7 +60,7 @@ const ListCardPure = ({ data, dispatch }) => {
             );
           })}
         </ListContainer>
-        {data.community.isOwner &&
+        {data.community.communityPermissions.isOwner &&
           <ListFooter>
             <TextButton
               onClick={() =>

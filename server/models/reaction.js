@@ -22,38 +22,27 @@ export const toggleReaction = (
 ): Promise<Object> => {
   return db
     .table('reactions')
-    .filter({
-      messageId: reaction.messageId,
-      userId,
-    })
+    .getAll(reaction.messageId, { index: 'messageId' })
+    .filter({ userId })
     .run()
     .then(result => {
+      // this user has already reacted to the message, remove the reaction
       if (result.length > 0) {
         const existing = result[0];
-        return db
-          .table('reactions')
-          .get(existing.id)
-          .delete({ returnChanges: true })
-          .run()
-          .then(
-            ({ deleted, changes }) => (deleted > 0 ? changes[0].old_val : false)
-          );
+        return db.table('reactions').get(existing.id).delete().run();
       } else {
         return db
           .table('reactions')
-          .insert(
-            {
-              ...reaction,
-              userId,
-              timestamp: Date.now(),
-            },
-            { returnChanges: true }
-          )
-          .run()
-          .then(
-            ({ inserted, changes }) =>
-              (inserted > 0 ? changes[0].new_val : false)
-          );
+          .insert({
+            ...reaction,
+            userId,
+            timestamp: Date.now(),
+          })
+          .run();
       }
+    })
+    .then(() => {
+      // return the message object itself
+      return db.table('messages').get(reaction.messageId).run();
     });
 };

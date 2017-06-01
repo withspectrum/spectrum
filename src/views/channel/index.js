@@ -55,7 +55,6 @@ const ChannelViewPure = ({
   };
 
   if (error) {
-    console.log(match);
     return (
       <AppViewWrapper>
         <Titlebar
@@ -74,7 +73,6 @@ const ChannelViewPure = ({
   }
 
   if (!channel || channel.isDeleted) {
-    console.log(match);
     return (
       <AppViewWrapper>
         <Titlebar
@@ -157,6 +155,7 @@ const ChannelViewPure = ({
         description: channel.description,
       },
     });
+
     return (
       <AppViewWrapper>
         <Head title={title} description={description} />
@@ -178,7 +177,7 @@ const ChannelViewPure = ({
         <Column type="primary" alignItems="center">
           {!currentUser && <UpsellSignIn entity={channel} />}
 
-          {channel.isMember && currentUser
+          {channel.channelPermissions.isMember && currentUser
             ? <ThreadComposer
                 activeCommunity={communitySlug}
                 activeChannel={match.params.channelSlug}
@@ -188,6 +187,7 @@ const ChannelViewPure = ({
             viewContext="channel"
             channelSlug={channelSlug}
             communitySlug={communitySlug}
+            currentUser={currentUser}
           />
         </Column>
       </AppViewWrapper>
