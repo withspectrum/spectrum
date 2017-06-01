@@ -71,7 +71,14 @@ const createOrFindUser = (user: Object): Promise<Object> => {
     : getUserByProviderId(user.providerId);
   return promise
     .then(storedUser => {
-      if (storedUser) return Promise.resolve(storedUser);
+      if (storedUser) {
+        if (!storedUser.username && user.username) {
+          return setUsername(storedUser.id, user.username).then(newStoredUser =>
+            Promise.resolve(newStoredUser)
+          );
+        }
+        return Promise.resolve(storedUser);
+      }
 
       return storeUser(user);
     })
@@ -81,6 +88,20 @@ const createOrFindUser = (user: Object): Promise<Object> => {
       }
       return storeUser(user);
     });
+};
+
+const setUsername = (id: string, username: string) => {
+  return db
+    .table('users')
+    .get(id)
+    .update(
+      {
+        username,
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val);
 };
 
 const getEverything = (userId: string): Promise<Array<any>> => {
