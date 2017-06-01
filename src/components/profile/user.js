@@ -134,7 +134,8 @@ const UserWithData = ({
               </Link>
             : <ProfileHeaderAction
                 glyph="message-fill"
-                color="brand.alt"
+                color="text.alt"
+                hoverColor="brand.alt"
                 onClick={() => initMessage()}
                 tipText={`Message ${user.name}`}
                 tipLocation={'top-left'}
