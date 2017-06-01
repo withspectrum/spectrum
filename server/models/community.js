@@ -310,7 +310,6 @@ const editCommunity = ({
 
       if (file || coverFile) {
         if (file && !coverFile) {
-          const { coverPhoto } = getRandomDefaultPhoto();
           return uploadImage(
             file,
             'communities',
@@ -325,7 +324,6 @@ const editCommunity = ({
                     {
                       ...community,
                       profilePhoto,
-                      coverPhoto,
                     },
                     { returnChanges: 'always' }
                   )
@@ -346,7 +344,6 @@ const editCommunity = ({
             }
           );
         } else if (!file && coverFile) {
-          const { profilePhoto } = getRandomDefaultPhoto();
           return uploadImage(
             coverFile,
             'communities',
@@ -361,7 +358,6 @@ const editCommunity = ({
                     {
                       ...community,
                       coverPhoto,
-                      profilePhoto,
                     },
                     { returnChanges: 'always' }
                   )
