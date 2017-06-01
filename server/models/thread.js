@@ -94,6 +94,7 @@ const getViewableThreadsByUser = (
       .zip()
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
+      .orderBy(db.desc('createdAt'))
       .run()
   );
 };
@@ -126,6 +127,7 @@ const getPublicThreadsByUser = (evalUser: string): Promise<Array<Object>> => {
       .filter({ isPrivate: false })
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
+      .orderBy(db.desc('createdAt'))
       .run()
   );
 };
