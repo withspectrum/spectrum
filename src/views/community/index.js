@@ -82,6 +82,7 @@ const CommunityViewPure = props => {
           title={`Community Not Found`}
           provideBack={true}
           backRoute={`/`}
+          noComposer
         />
         <Column type="primary">
           <Upsell404Community community={communitySlug} />;
@@ -97,6 +98,7 @@ const CommunityViewPure = props => {
           title={'Community Not Found'}
           provideBack={true}
           backRoute={`/`}
+          noComposer
         />
         <Column type="primary">
           <Upsell404Community community={communitySlug} create={create} />
@@ -115,7 +117,12 @@ const CommunityViewPure = props => {
 
   return (
     <AppViewWrapper>
-      <Titlebar title={community.name} provideBack={true} backRoute={`/`} />
+      <Titlebar
+        title={community.name}
+        provideBack={true}
+        backRoute={`/`}
+        noComposer={!community.communityPermissions.isMember}
+      />
       <Head title={title} description={description} />
       <CoverColumn>
         <CoverPhoto src={community.coverPhoto}>

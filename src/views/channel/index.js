@@ -61,6 +61,7 @@ const ChannelViewPure = ({
           title={'Channel Not Found'}
           provideBack={true}
           backRoute={`/`}
+          noComposer
         />
         <Column type="primary" alignItems="center">
           <Upsell404Channel
@@ -79,6 +80,7 @@ const ChannelViewPure = ({
           title={'Channel Not Found'}
           provideBack={true}
           backRoute={`/`}
+          noComposer
         />
         <Column type="primary" alignItems="center">
           <Upsell404Channel
@@ -98,6 +100,7 @@ const ChannelViewPure = ({
           title={'Private Channel'}
           provideBack={true}
           backRoute={`/${match.params.communitySlug}`}
+          noComposer
         />
         <Column type="primary" alignItems="center">
           <Upsell404Channel
@@ -124,6 +127,7 @@ const ChannelViewPure = ({
           subtitle={channel.community.name}
           provideBack={true}
           backRoute={`/${channel.community.slug}`}
+          noComposer
         />
         <Column type="primary" alignItems="center">
           <UpsellRequestToJoinChannel
@@ -164,6 +168,7 @@ const ChannelViewPure = ({
           subtitle={channel.community.name}
           provideBack={true}
           backRoute={`/${channel.community.slug}`}
+          noComposer={!channel.channelPermissions.isMember}
         />
         <Column type="secondary">
           <ChannelProfile data={{ channel }} profileSize="full" />

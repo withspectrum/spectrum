@@ -39,6 +39,7 @@ const SettingsPure = ({
           title={'Channel Not Found'}
           provideBack={true}
           backRoute={`/`}
+          noComposer
         />
         <Column type="primary">
           <Upsell404Channel channel={channelSlug} community={communitySlug} />
@@ -54,6 +55,7 @@ const SettingsPure = ({
           title={'Channel Not Found'}
           provideBack={true}
           backRoute={`/`}
+          noComposer
         />
         <Column type="primary">
           <Upsell404Channel channel={channelSlug} community={communitySlug} />
@@ -72,6 +74,7 @@ const SettingsPure = ({
           title={'No Permission'}
           provideBack={true}
           backRoute={`/${communitySlug}`}
+          noComposer
         />
 
         <Column type="primary">
@@ -129,6 +132,7 @@ const SettingsPure = ({
         subtitle={'Settings'}
         provideBack={true}
         backRoute={`/${channel.community.slug}/${channel.slug}`}
+        noComposer
       />
       <Column type="secondary">
         <ChannelEditForm channel={channel} />

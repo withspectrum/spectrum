@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import generateMetaInfo from '../../../../server/shared/generate-meta-info';
 import { toggleChannelSubscriptionMutation } from '../../../api/channel';
 import { addToastWithTimeout } from '../../../actions/toasts';
+import Titlebar from '../../../views/titlebar';
 import ThreadDetail from '../components/threadDetail';
 import Messages from '../components/messages';
 import Head from '../../../components/head';
@@ -62,6 +63,12 @@ const ThreadContainerPure = ({
   if (error) {
     return (
       <AppViewWrapper>
+        <Titlebar
+          title={'Thread not found'}
+          provideBack={true}
+          backRoute={`/`}
+          noComposer
+        />
         <Column type="primary">
           <Upsell404Thread />
         </Column>
@@ -72,6 +79,12 @@ const ThreadContainerPure = ({
   if (!thread || thread.deleted) {
     return (
       <AppViewWrapper>
+        <Titlebar
+          title={'Thread not found'}
+          provideBack={true}
+          backRoute={`/`}
+          noComposer
+        />
         <Column type="primary">
           <Upsell404Thread />
         </Column>
@@ -82,6 +95,12 @@ const ThreadContainerPure = ({
   if (thread.channel.isPrivate && !thread.channel.channelPermissions.isMember) {
     return (
       <AppViewWrapper>
+        <Titlebar
+          title={'Private Thread'}
+          provideBack={true}
+          backRoute={`/`}
+          noComposer
+        />
         <Column type="primary">
           <UpsellRequestToJoinChannel
             channel={thread.channel}
@@ -124,11 +143,9 @@ const ThreadContainerPure = ({
           currentUser &&
             !thread.isLocked &&
             (thread.isCreator || thread.channel.channelPermissions.isMember) &&
-
             <ChatInputWrapper>
               <ChatInput threadType="story" thread={thread.id} />
-            </ChatInputWrapper>
-          }
+            </ChatInputWrapper>}
 
           {// if the user exists but isn't a subscriber to the channel,
           // show an upsell to join the channel
