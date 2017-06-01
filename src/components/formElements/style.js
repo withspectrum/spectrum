@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { Transition } from '../globals';
+import { FlexRow, Transition } from '../globals';
 
 export const StyledLabel = styled.label`
   display: flex;
@@ -134,7 +134,7 @@ export const StyledHiddenInput = styled.input`
   height: 0;
 `;
 
-export const StyledCheckboxWrapper = styled.span`
+export const StyledCheckboxWrapper = styled(FlexRow)`
   color: ${({ theme }) => theme.text.alt};
   display: flex;
 
