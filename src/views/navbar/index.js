@@ -127,7 +127,7 @@ class Navbar extends Component {
             </Section>
 
             <Section right>
-              <IconDrop>
+              {/* <IconDrop>
                 <IconLink
                   data-active={match.url === '/notifications'}
                   data-mobileWidth={'half'}
@@ -136,8 +136,8 @@ class Navbar extends Component {
                   <Icon glyph="notification" />
                   <LabelForTab>Notifications</LabelForTab>
                 </IconLink>
-                {/* <NotificationDropdown /> */}
-              </IconDrop>
+                {/* <NotificationDropdown />
+              </IconDrop> */}
 
               <IconDrop>
                 <IconLink
