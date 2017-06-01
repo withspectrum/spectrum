@@ -54,7 +54,8 @@ export const DropWrap = styled.div`
 
   &:hover .flyout,
   .flyout:hover,
-  &:active .flyout {
+  &:active .flyout,
+  &.open > .flyout {
     opacity: 1;
     pointer-events: auto;
     transition: ${Transition.hover.on};
