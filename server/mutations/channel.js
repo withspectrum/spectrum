@@ -294,9 +294,6 @@ module.exports = {
           return new UserError("This channel doesn't exist");
         }
 
-        console.log('channelto eval', channelToEvaluate);
-        console.log('currentuserperms', currentUserChannelPermissions);
-
         // user is blocked, they can't join the channel
         if (currentUserChannelPermissions.isBlocked) {
           return new UserError("You don't have permission to do that.");

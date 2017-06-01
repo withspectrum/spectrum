@@ -186,7 +186,6 @@ const editCommunity = ({
       }
 
       if (file || coverFile) {
-        console.log(file, coverFile);
         if (file && !coverFile) {
           return uploadImage(
             file,
@@ -281,7 +280,6 @@ const editCommunity = ({
             uploadFile(file),
             uploadCoverFile(coverFile),
           ]).then(([profilePhoto, coverPhoto]) => {
-            console.log('here', profilePhoto, coverPhoto);
             return (
               db
                 .table('communities')

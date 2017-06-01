@@ -231,7 +231,6 @@ const editThread = (input: EditThreadInput): Promise<Object> => {
     )
     .run()
     .then(result => {
-      console.log('result', result);
       // if an update happened
       if (result.replaced === 1) {
         return result.changes[0].new_val;
