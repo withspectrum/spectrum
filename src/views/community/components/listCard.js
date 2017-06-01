@@ -45,6 +45,7 @@ const ListCardPure = ({ data, dispatch }) => {
                 to={`/${data.variables.slug}/${channel.slug}`}
               >
                 <ChannelListItem
+                  clickable
                   contents={channel}
                   withDescription={false}
                   meta={

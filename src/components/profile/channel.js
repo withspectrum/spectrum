@@ -63,6 +63,14 @@ const ChannelWithData = props => {
       });
   };
 
+  const communityLink = () => {
+    return (
+      <Link to={`/${channel.community.slug}`}>
+        {channel.community.name}
+      </Link>
+    );
+  };
+
   const returnAction = () => {
     if (communityOwner || channelOwner) {
       return (
@@ -125,7 +133,7 @@ const ChannelWithData = props => {
         <ChannelListItem
           contents={channel}
           withDescription={true}
-          meta={`${channel.community.name} / ${channel.name}`}
+          meta={communityLink()}
         >
           {returnAction()}
         </ChannelListItem>
@@ -137,6 +145,7 @@ const ChannelWithData = props => {
       <ProfileCard>
         <Link to={`/${channel.community.slug}/${channel.slug}`}>
           <ChannelListItem
+            clickable
             contents={channel}
             withDescription={false}
             meta={`${channel.community.name} / ${channel.name}`}

@@ -28,12 +28,14 @@ import {
   Input,
   UnderlineInput,
   TextArea,
+  PhotoInput,
+  CoverInput,
   Error,
   Checkbox,
 } from '../../formElements';
 import { modalStyles } from '../styles';
 
-import { Form, Actions, ImgPreview } from './style';
+import { Form, Actions, ImgPreview, ImageInputWrapper } from './style';
 
 class CreateCommunityModal extends Component {
   state: {
@@ -42,7 +44,9 @@ class CreateCommunityModal extends Component {
     description: string,
     website: string,
     image: string,
-    file: ?string,
+    coverPhoto: string,
+    file: ?Object,
+    coverFile: ?Object,
     slugTaken: boolean,
     slugError: boolean,
     descriptionError: boolean,
@@ -60,7 +64,9 @@ class CreateCommunityModal extends Component {
       description: '',
       website: '',
       image: '',
+      coverPhoto: '',
       file: null,
+      coverFile: null,
       slugTaken: false,
       slugError: false,
       descriptionError: false,
@@ -209,6 +215,20 @@ class CreateCommunityModal extends Component {
     reader.readAsDataURL(file);
   };
 
+  setCommunityCover = e => {
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        coverFile: file,
+        coverPhoto: reader.result,
+      });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   create = e => {
     e.preventDefault();
     const {
@@ -217,6 +237,7 @@ class CreateCommunityModal extends Component {
       description,
       website,
       file,
+      coverFile,
       slugTaken,
       slugError,
       nameError,
@@ -245,6 +266,7 @@ class CreateCommunityModal extends Component {
       description,
       website,
       file,
+      coverFile,
     };
 
     // create the community
@@ -272,6 +294,7 @@ class CreateCommunityModal extends Component {
       slug,
       description,
       image,
+      coverPhoto,
       website,
       slugTaken,
       slugError,
@@ -301,6 +324,17 @@ class CreateCommunityModal extends Component {
           closeModal={this.close}
         >
           <Form>
+            <ImageInputWrapper>
+              <CoverInput
+                onChange={this.setCommunityCover}
+                defaultValue={coverPhoto}
+              />
+
+              <PhotoInput
+                onChange={this.setCommunityPhoto}
+                defaultValue={image}
+              />
+            </ImageInputWrapper>
             <Input
               defaultValue={name}
               onChange={this.changeName}
@@ -338,20 +372,6 @@ class CreateCommunityModal extends Component {
               <Error>
                 Oop, that's more than 140 characters - try trimming that up.
               </Error>}
-
-            <Input
-              inputType="file"
-              accept=".png, .jpg, .jpeg, .gif"
-              defaultValue={name}
-              onChange={this.setCommunityPhoto}
-              multiple={false}
-            >
-              Add a logo or photo
-
-              {!image
-                ? <span>add</span>
-                : <ImgPreview src={`${image}?w=40&dpr=2`} />}
-            </Input>
 
             <Input
               defaultValue={website}

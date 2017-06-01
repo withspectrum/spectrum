@@ -26,7 +26,6 @@ export const Composer = styled(Card)`
   width: 100%;
   display: block;
   min-height: 64px;
-  cursor: pointer;
   border-radius: 12px;
   transition: ${Transition.hover.off};
 
@@ -140,6 +139,7 @@ export const Dropdowns = styled(FlexRow)`
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    cursor: pointer;
   }
 
   > div {

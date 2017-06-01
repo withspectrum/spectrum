@@ -25,7 +25,7 @@ export const StyledThreadFeedCard = styled(Card)`
 
   &:hover {
     transition: none;
-    box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
+    box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.default, 0.1)};
   }
 `;
 

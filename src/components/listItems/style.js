@@ -16,8 +16,8 @@ export const Wrapper = styled(FlexCol)`
   justify-content: center;
   max-width: 100%;
 
-  &:hover h3, &:hover .action {
-    color: ${({ theme }) => theme.brand.alt};
+  &:hover > div > div h3, &:hover .action {
+    color: ${props => (props.clickable ? props.theme.brand.alt : '')};
   }
 `;
 

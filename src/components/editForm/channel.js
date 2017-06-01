@@ -95,6 +95,11 @@ class ChannelWithData extends Component {
       });
   };
 
+  cancelForm = e => {
+    e.preventDefault();
+    return (window.location.href = `/${this.props.channel.community.slug}/${this.props.channel.slug}`);
+  };
+
   triggerDeleteChannel = (e, channelId) => {
     e.preventDefault();
     const { name, channelData } = this.state;
@@ -155,7 +160,7 @@ class ChannelWithData extends Component {
               Name
             </Input>
             <UnderlineInput defaultValue={slug} disabled>
-              {`${channel.community.slug}/`}
+              {`URL: /${channel.community.slug}/`}
             </UnderlineInput>
             <TextArea
               id="description"
@@ -165,13 +170,14 @@ class ChannelWithData extends Component {
               Description
             </TextArea>
 
-            <Checkbox
-              id="isPrivate"
-              checked={isPrivate}
-              onChange={this.handleChange}
-            >
-              Private channel
-            </Checkbox>
+            {slug !== 'general' &&
+              <Checkbox
+                id="isPrivate"
+                checked={isPrivate}
+                onChange={this.handleChange}
+              >
+                Private channel
+              </Checkbox>}
             {isPrivate
               ? <Description>
                   Only approved people on Spectrum can see the threads, messages, and members in this channel. You can manually approve users who request to join this channel.
@@ -196,16 +202,18 @@ class ChannelWithData extends Component {
                     tipLocation="top-right"
                     color="text.placeholder"
                     hoverColor="warn.alt"
-                    onClick={e => this.triggerDeleteCommunity(e, channel.id)}
+                    onClick={e => this.triggerDeleteChannel(e, channel.id)}
                   />
                 </TertiaryActionContainer>}
-              <TextButton color={'text.alt'}>Cancel</TextButton>
+              <TextButton color={'text.alt'} onClick={this.cancelForm}>
+                Cancel
+              </TextButton>
               <Button onClick={this.save}>Save</Button>
             </Actions>
 
             {slug === 'general' &&
               <GeneralNotice>
-                The General channel is the default channel for your community. It can't be deleted, but you can still change the name and description.
+                The General channel is the default channel for your community. It can't be deleted or private, but you can still change the name and description.
               </GeneralNotice>}
           </Form>
         </StyledCard>
