@@ -38,14 +38,7 @@ const DirectMessageThread = /* GraphQL */ `
 	input ContentInput {
 		body: String!
 	}
-
-	input File {
-		name: String!
-		type: String!
-		size: Int!
-		path: String!
-	}
-
+	
 	input DirectMessageContentInput {
 		messageType: MessageType!
 		threadType: String!

@@ -93,11 +93,7 @@ const removeMembersInChannel = (channelId: string): Promise<Object> => {
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
     .delete()
-    .run()
-    .then(result => {
-      const join = result.changes[0].new_val;
-      return db.table('channels').get(join.channelId);
-    });
+    .run();
 };
 
 // creates a single pending user in channel. invoked only when a user is requesting

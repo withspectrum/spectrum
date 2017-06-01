@@ -68,13 +68,6 @@ const User = /* GraphQL */ `
 		status: String
 	}
 
-	input File {
-    name: String!
-    type: String!
-    size: Int!
-    path: String!
-  }
-
 	type User {
 		id: ID!
 		name: String

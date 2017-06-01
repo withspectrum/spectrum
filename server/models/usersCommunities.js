@@ -70,7 +70,8 @@ const removeMemberInCommunity = (
     .getAll(communityId, { index: 'communityId' })
     .filter({ userId })
     .delete()
-    .run();
+    .run()
+    .then(() => db.table('communities').get(communityId).run());
 };
 
 // removes all the user relationships to a community. will be invoked when a

@@ -6,6 +6,9 @@ import update from 'immutability-helper';
 import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import {
+  communityInfoFragment,
+} from '../../api/fragments/community/communityInfo';
+import {
   userEverythingFragment,
 } from '../../api/fragments/user/userEverything';
 import {
@@ -122,4 +125,30 @@ export const getCurrentUserProfile = graphql(
     ${userInfoFragment}
     ${userCommunitiesFragment}
 	`
+);
+
+/*
+  Gets top communities for the onboarding flow.
+*/
+export const getTopCommunities = graphql(
+  gql`
+		{
+		  topCommunities {
+        ...communityInfo
+        metaData {
+          members
+        }
+      }
+    }
+    ${communityInfoFragment}
+	`,
+  {
+    props: ({ data: { error, loading, topCommunities } }) => ({
+      data: {
+        error,
+        loading,
+        topCommunities,
+      },
+    }),
+  }
 );
