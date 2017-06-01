@@ -17,6 +17,7 @@ import { openModal } from '../../actions/modals';
 import { addToastWithTimeout } from '../../actions/toasts';
 
 import { Button, TextButton, IconButton } from '../buttons';
+import { Notice } from '../listItems/style';
 import {
   Input,
   UnderlineInput,
@@ -46,6 +47,7 @@ class CommunityWithData extends Component {
     file: ?Object,
     coverFile: ?Object,
     communityData: Object,
+    photoSizeError: boolean,
   };
   constructor(props) {
     super(props);
@@ -62,6 +64,7 @@ class CommunityWithData extends Component {
       file: null,
       coverFile: null,
       communityData: community,
+      photoSizeError: false,
     };
   }
 
@@ -97,10 +100,17 @@ class CommunityWithData extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (file.size > 3000000) {
+      return this.setState({
+        photoSizeError: true,
+      });
+    }
+
     reader.onloadend = () => {
       this.setState({
         file: file,
         image: reader.result,
+        photoSizeError: false,
       });
     };
 
@@ -111,10 +121,17 @@ class CommunityWithData extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (file.size > 3000000) {
+      return this.setState({
+        photoSizeError: true,
+      });
+    }
+
     reader.onloadend = () => {
       this.setState({
         coverFile: file,
         coverPhoto: reader.result,
+        photoSizeError: false,
       });
     };
 
@@ -130,6 +147,7 @@ class CommunityWithData extends Component {
       file,
       coverFile,
       communityId,
+      photoSizeError,
     } = this.state;
     const input = {
       name,
@@ -139,6 +157,11 @@ class CommunityWithData extends Component {
       coverFile,
       communityId,
     };
+
+    if (photoSizeError) {
+      return;
+    }
+
     this.props
       .editCommunity(input)
       .then(({ data: { editCommunity } }) => {
@@ -149,7 +172,7 @@ class CommunityWithData extends Component {
           this.props.dispatch(
             addToastWithTimeout('success', 'Community saved!')
           );
-          this.props.history.push(`/${this.props.community.slug}`);
+          window.location.href = `/${this.props.community.slug}`;
         }
       })
       .catch(err => {
@@ -200,7 +223,15 @@ class CommunityWithData extends Component {
   };
 
   render() {
-    const { name, slug, description, image, coverPhoto, website } = this.state;
+    const {
+      name,
+      slug,
+      description,
+      image,
+      coverPhoto,
+      website,
+      photoSizeError,
+    } = this.state;
     const { community } = this.props;
 
     if (!community) {
@@ -223,6 +254,7 @@ class CommunityWithData extends Component {
             <CoverInput
               onChange={this.setCommunityCover}
               defaultValue={coverPhoto}
+              preview={true}
             />
 
             <PhotoInput
@@ -264,8 +296,13 @@ class CommunityWithData extends Component {
             <TextButton hoverColor={'warn.alt'} onClick={this.cancelForm}>
               Cancel
             </TextButton>
-            <Button onClick={this.save}>Save</Button>
+            <Button onClick={this.save} disabled={photoSizeError}>Save</Button>
           </Actions>
+
+          {photoSizeError &&
+            <Notice style={{ marginTop: '16px' }}>
+              Photo uploads should be less than 3mb
+            </Notice>}
         </Form>
       </StyledCard>
     );

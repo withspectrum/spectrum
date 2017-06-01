@@ -78,7 +78,7 @@ export const CoverInput = (props: InputProps) => {
         <Icon glyph="photo" />
       </InputOverlay>
       <CoverImage
-        src={`${props.defaultValue}?w=290&dpr=2`}
+        src={`${props.defaultValue}${props.preview ? '' : '?w=320&dpr=2'}`}
         role="presentation"
       />
       <StyledHiddenInput

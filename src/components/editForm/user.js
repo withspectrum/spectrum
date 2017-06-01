@@ -25,6 +25,7 @@ import {
 } from './style';
 import { editUserMutation } from '../../api/user';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { Notice } from '../../components/listItems/style';
 
 class UserWithData extends Component {
   state: {
@@ -40,6 +41,7 @@ class UserWithData extends Component {
     nameError: boolean,
     createError: boolean,
     loading: boolean,
+    photoSizeError: boolean,
   };
 
   constructor(props) {
@@ -60,6 +62,7 @@ class UserWithData extends Component {
       nameError: false,
       createError: false,
       loading: false,
+      photoSizeError: false,
     };
   }
 
@@ -148,10 +151,17 @@ class UserWithData extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (file.size > 3000000) {
+      return this.setState({
+        photoSizeError: true,
+      });
+    }
+
     reader.onloadend = () => {
       this.setState({
         file: file,
         image: reader.result,
+        photoSizeError: false,
       });
     };
 
@@ -162,10 +172,17 @@ class UserWithData extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (file.size > 3000000) {
+      return this.setState({
+        photoSizeError: true,
+      });
+    }
+
     reader.onloadend = () => {
       this.setState({
         coverFile: file,
         coverPhoto: reader.result,
+        photoSizeError: false,
       });
     };
 
@@ -174,7 +191,14 @@ class UserWithData extends Component {
 
   save = e => {
     e.preventDefault();
-    const { name, description, website, file, coverFile } = this.state;
+    const {
+      name,
+      description,
+      website,
+      file,
+      coverFile,
+      photoSizeError,
+    } = this.state;
 
     const input = {
       name,
@@ -183,6 +207,10 @@ class UserWithData extends Component {
       file,
       coverFile,
     };
+
+    if (photoSizeError) {
+      return;
+    }
 
     this.props
       .editUser(input)
@@ -213,6 +241,7 @@ class UserWithData extends Component {
       descriptionError,
       createError,
       loading,
+      photoSizeError,
     } = this.state;
 
     return (
@@ -223,6 +252,7 @@ class UserWithData extends Component {
             <CoverInput
               onChange={this.setCoverPhoto}
               defaultValue={coverPhoto}
+              preview={true}
             />
             <PhotoInput
               onChange={this.setProfilePhoto}
@@ -230,6 +260,11 @@ class UserWithData extends Component {
               user
             />
           </ImageInputWrapper>
+
+          {photoSizeError &&
+            <Notice style={{ marginTop: '32px' }}>
+              Photo uploads should be less than 3mb
+            </Notice>}
 
           <Input
             type="text"
