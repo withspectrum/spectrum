@@ -44,3 +44,7 @@ export const clearApolloStore = () => {
 export const SERVER_URL = process.env.NODE_ENV === 'production'
   ? `${window.location.protocol}//${window.location.host}`
   : 'http://localhost:3001';
+
+export const PUBLIC_STRIPE_KEY = process.env.NODE_ENV === 'production'
+  ? 'pk_live_8piI030RqVnqDc8QGTUwUj0Z'
+  : 'pk_test_A6pKi4xXOdgg9FrZJ84NW9mP';
