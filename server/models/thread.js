@@ -137,7 +137,7 @@ const publishThread = (thread: Object, userId: string): Promise<Object> => {
       Object.assign({}, thread, {
         creatorId: userId,
         createdAt: new Date(),
-        modifiedAt: new Date(),
+        modifiedAt: null,
         isPublished: true,
         isLocked: false,
         edits: [],

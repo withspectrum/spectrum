@@ -19,7 +19,6 @@ import {
   SectionHeaderNumber,
   ButtonRow,
   FriendlyError,
-  Row,
 } from './newUserUpsellStyles';
 
 class UpsellNewUser extends Component {
@@ -54,6 +53,7 @@ class UpsellNewUser extends Component {
 
     this.setState({
       joinedCommunities,
+      error: '',
     });
   };
 

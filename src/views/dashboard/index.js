@@ -94,20 +94,6 @@ class DashboardPure extends Component {
             {isNewUser &&
               <UpsellNewUser user={user} graduate={this.graduate} />}
           </Column>
-
-          {/* {user &&
-            !communities &&
-            <Column type="primary">
-              <NullCard
-                bg="chat"
-                heading={`It's dangerous to go alone...`}
-                copy={`So let's find you some communities to join!`}
-              >
-                <Link to={`/explore`}>
-                  <Button icon="explore">Browse communities</Button>
-                </Link>
-              </NullCard>
-            </Column>} */}
         </AppViewWrapper>
       );
     } else {

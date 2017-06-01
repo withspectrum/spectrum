@@ -62,7 +62,11 @@ class ThreadComposerWithData extends Component {
 
     const availableCommunities = props.data.user.communityConnection.edges
       .map(edge => edge.node)
-      .filter(community => community.communityPermissions.isMember);
+      .filter(
+        community =>
+          community.communityPermissions.isMember ||
+          community.communityPermissions.isOwner
+      );
 
     /*
       Iterate through each of our community nodes to construct a new array
@@ -74,7 +78,11 @@ class ThreadComposerWithData extends Component {
     */
     const availableChannels = props.data.user.channelConnection.edges
       .map(edge => edge.node)
-      .filter(channel => channel.channelPermissions.isMember);
+      .filter(
+        channel =>
+          channel.channelPermissions.isMember ||
+          channel.channelPermissions.isOwner
+      );
 
     /*
       If a user is viewing a communit or channel, we use the url as a prop

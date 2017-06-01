@@ -37,7 +37,6 @@ class ExistingThread extends Component {
   };
 
   refetchThread = () => {
-    console.log('refetching thread');
     const id = this.props.match.params.threadId;
     this.props.client
       .query({
@@ -46,9 +45,7 @@ class ExistingThread extends Component {
           id,
         },
       })
-      .then(({ data }) => {
-        console.log('found thread', data);
-      });
+      .then(({ data }) => {});
   };
 
   render() {

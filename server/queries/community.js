@@ -92,19 +92,26 @@ module.exports = {
           currentUser.id
         );
       } else {
+        console.log('getting public channel threads');
         channelsToGetThreadsFor = getPublicChannelsByCommunity(id);
       }
 
       // TODO: Make this more performant by doing an actual db query rather than this hacking around
       return channelsToGetThreadsFor
-        .then(channels => channels.map(channel => channel.id))
+        .then(
+          channels =>
+            console.log('got channels', channels) ||
+            channels.map(channel => channel.id)
+        )
         .then(channels => getThreadsByChannels(channels))
-        .then(threads =>
-          paginate(
-            threads,
-            { first, after: cursor },
-            thread => thread.id === cursor
-          )
+        .then(
+          threads =>
+            console.log('got threads', threads) ||
+            paginate(
+              threads,
+              { first, after: cursor },
+              thread => thread.id === cursor
+            )
         )
         .then(result => ({
           pageInfo: {
