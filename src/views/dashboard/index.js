@@ -28,7 +28,8 @@ class DashboardPure extends Component {
     super(props);
 
     const user = this.props.data.user;
-    const communities = this.props.data.user.communityConnection.edges;
+    const communities =
+      this.props.data.user && this.props.data.user.communityConnection.edges;
     const isNewUser = user && communities.length <= 0;
 
     this.state = {
