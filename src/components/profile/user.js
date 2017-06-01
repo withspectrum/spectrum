@@ -86,7 +86,7 @@ const UserWithData = ({
           onClick={() => initMessage()}
           currentUser={currentUser}
         >
-          <CoverLink to={`../users/${user.username}`}>
+          <CoverLink to={`/users/${user.username}`}>
             <CoverAvatar src={`${user.profilePhoto}?w=40&dpr=2`} />
             <CoverTitle>{user.name}</CoverTitle>
           </CoverLink>

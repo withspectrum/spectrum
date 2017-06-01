@@ -22,6 +22,13 @@ const general = /* GraphQL */ `
 		isOwner: Boolean
 		isModerator: Boolean
 	}
+
+	input File {
+    name: String!
+    type: String!
+    size: Int!
+    path: String!
+  }
 `;
 
 module.exports = general;

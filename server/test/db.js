@@ -10,7 +10,7 @@ export const data = {
     {
       id: 'first-user',
       createdAt: new Date('January 2, 2017'),
-      displayName: 'First User',
+      name: 'First User',
       lastSeen: new Date('February 2, 2017'),
       profilePhoto: 'my-photo.jpg',
       email: 'first.user@gmail.com',
