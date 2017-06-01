@@ -89,6 +89,7 @@ export const Edited = styled.div`
 
 export const ChatWrapper = styled.div`
   width: 100%;
+  padding-bottom: 112px;
 `;
 
 export const ThreadTitle = {

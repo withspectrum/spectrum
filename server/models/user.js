@@ -103,6 +103,7 @@ const getEverything = (userId: string): Promise<Array<any>> => {
     .zip()
     .filter({ isBlocked: false, isPending: false })
     .without('isBlocked', 'isPending')
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
     .orderBy(db.desc('createdAt'))
     .run();
 };

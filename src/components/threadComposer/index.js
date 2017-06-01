@@ -11,6 +11,7 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import { connect } from 'react-redux';
 
+import { openComposer, closeComposer } from '../../actions/composer';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Editor, { fromPlainText, toJSON } from '../editor';
 import { getComposerCommunitiesAndChannels } from './queries';
@@ -18,8 +19,9 @@ import { publishThread } from './mutations';
 import { LinkPreview, LinkPreviewLoading } from '../../components/linkPreview';
 import { getLinkPreviewFromUrl } from '../../helpers/utils';
 import { URLS } from '../../helpers/regexps';
-import { Button } from '../buttons';
+import { TextButton, Button } from '../buttons';
 import Icon from '../icons';
+import { FlexRow } from '../globals';
 import { displayLoadingComposer } from '../loading';
 import {
   Container,
@@ -37,7 +39,6 @@ import {
 class ThreadComposerWithData extends Component {
   // prop types
   state: {
-    isOpen: boolean,
     title: string,
     body: string,
     availableCommunities: Array<any>,
@@ -104,9 +105,8 @@ class ThreadComposerWithData extends Component {
         )[0].id; // and select the first one in the list
 
     this.state = {
-      isOpen: false,
-      title: '',
-      body: fromPlainText(''),
+      title: props.title || '',
+      body: props.body || fromPlainText(''),
       availableCommunities,
       availableChannels,
       activeCommunity,
@@ -135,17 +135,16 @@ class ThreadComposerWithData extends Component {
   handleOpenComposer = () => {
     // strange construction here in order to guarantee that we focus the title
     // input whenever the composer is opened
-    const isOpen = this.state.isOpen;
+    const isOpen = this.props.isOpen;
     if (!isOpen) {
-      this.setState({ isOpen: true });
+      this.props.dispatch(openComposer());
       this.refs.titleTextarea.focus();
     }
   };
 
   closeComposer = () => {
-    this.setState({
-      isOpen: false,
-    });
+    const { title, body } = this.state;
+    this.props.dispatch(closeComposer(title, body));
   };
 
   setActiveCommunity = e => {
@@ -317,7 +316,6 @@ class ThreadComposerWithData extends Component {
 
   render() {
     const {
-      isOpen,
       title,
       availableChannels,
       availableCommunities,
@@ -328,6 +326,8 @@ class ThreadComposerWithData extends Component {
       linkPreviewTrueUrl,
       fetchingLinkPreview,
     } = this.state;
+
+    const { isOpen } = this.props;
 
     return (
       <Container isOpen={isOpen}>
@@ -410,15 +410,19 @@ class ThreadComposerWithData extends Component {
                     })}
                 </select>
               </Dropdowns>
-
-              <Button
-                onClick={this.publishThread}
-                loading={isPublishing}
-                disabled={!title || isPublishing}
-                color={'brand'}
-              >
-                Publish
-              </Button>
+              <FlexRow>
+                <TextButton hoverColor="warn.alt" onClick={this.closeComposer}>
+                  Cancel
+                </TextButton>
+                <Button
+                  onClick={this.publishThread}
+                  loading={isPublishing}
+                  disabled={!title || isPublishing}
+                  color={'brand'}
+                >
+                  Publish
+                </Button>
+              </FlexRow>
             </Actions>
           </ContentContainer>
 
@@ -436,4 +440,10 @@ export const ThreadComposer = compose(
   pure
 )(ThreadComposerWithData);
 
-export default connect()(ThreadComposer);
+const mapStateToProps = state => ({
+  isOpen: state.composer.isOpen,
+  title: state.composer.title,
+  body: state.composer.body,
+});
+
+export default connect(mapStateToProps)(ThreadComposer);

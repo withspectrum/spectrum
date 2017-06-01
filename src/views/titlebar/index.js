@@ -4,6 +4,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
+import { openComposer, closeComposer } from '../../actions/composer';
+
+import Icon from '../../components/icons';
 import { IconButton } from '../../components/buttons';
 import { TitleBar, Text, Subtitle, Title, Spacer } from './style';
 
@@ -36,24 +39,49 @@ class Titlebar extends Component {
       history.push(this.props.backRoute);
     }
   };
+
+  toggleComposer = () => {
+    const isOpen = this.props.isOpen;
+    if (!isOpen) {
+      this.props.dispatch(openComposer());
+    } else {
+      this.props.dispatch(closeComposer());
+    }
+  };
+
   render() {
-    const { title, subtitle, provideBack } = this.props;
+    const {
+      title,
+      subtitle,
+      provideBack,
+      noComposer,
+      messageComposer,
+    } = this.props;
     return (
       <TitleBar>
         {provideBack
           ? <IconButton
               glyph="view-back"
-              color="bg.default"
+              color="text.reverse"
               onClick={this.handleBack}
             />
           : <Spacer />}
         <Text>
-          <Subtitle>{subtitle ? subtitle : ''}</Subtitle>
-          <Title large={subtitle ? false : true}>
-            {title ? title : 'Spectrum'}
-          </Title>
+          {subtitle && <Subtitle>{subtitle}</Subtitle>}
+          {title
+            ? <Title large={subtitle ? false : true}>{title}</Title>
+            : <Icon glyph="logo" />}
+
         </Text>
-        <Spacer />
+        {noComposer
+          ? <Spacer />
+          : messageComposer
+              ? <IconButton glyph="message-new" color="text.reverse" />
+              : <IconButton
+                  glyph="post"
+                  color="text.reverse"
+                  onClick={this.toggleComposer}
+                />}
       </TitleBar>
     );
   }
@@ -61,5 +89,6 @@ class Titlebar extends Component {
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
+  isOpen: state.composer.isOpen,
 });
 export default compose(withRouter, connect(mapStateToProps))(Titlebar);

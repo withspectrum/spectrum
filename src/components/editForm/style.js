@@ -7,7 +7,7 @@ export const StyledCard = styled(Card)`
 `;
 
 export const Form = styled.form`
-  display: flex;
+  display: inline-block;
   flex-direction: column;
   align-self: stretch;
   flex: 1 0 100%;

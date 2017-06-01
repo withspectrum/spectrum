@@ -67,7 +67,7 @@ class DirectMessages extends Component {
           <MessagesList>
             <Link to="/messages/new">
               <ComposeHeader>
-                <Icon glyph="post" />
+                <Icon glyph="message-new" />
               </ComposeHeader>
             </Link>
           </MessagesList>
@@ -88,7 +88,7 @@ class DirectMessages extends Component {
         <MessagesList>
           <Link to="/messages/new">
             <ComposeHeader>
-              <Icon glyph="post" />
+              <Icon glyph="message-new" />
             </ComposeHeader>
           </Link>
           <ThreadsList

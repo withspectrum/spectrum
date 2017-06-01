@@ -22,6 +22,7 @@ const Header = ({ thread, currentUser }) => {
         subtitle={'Messages with'}
         provideBack={true}
         backRoute={`/messages`}
+        noComposer
       />
       <PhotosContainer>{photos}</PhotosContainer>
       <Names>{names}</Names>

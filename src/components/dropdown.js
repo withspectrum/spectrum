@@ -28,6 +28,7 @@ const StyledCard = styled(Card)`
   max-height: 640px;
   overflow-y: hidden;
   align-items: stretch;
+  display: inline-block;
 `;
 
 const DropdownPure = (props: Object): React$Element<any> => (
