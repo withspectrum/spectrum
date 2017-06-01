@@ -9,6 +9,10 @@ export const Container = styled(Card)`
   display: flex;
   flex-direction: column;
   align-items: stretch;
+
+  @media (max-width: 768px) {
+    min-height: 100vh;
+  }
 `;
 
 export const ThreadWrapper = styled(FlexCol)`
