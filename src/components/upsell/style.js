@@ -47,6 +47,14 @@ export const Subtitle = styled.h2`
   }
 `;
 
+export const SmallTitle = styled(Title)`
+  font-size: 18px;
+`;
+
+export const SmallSubtitle = styled(Subtitle)`
+  font-size: 15px;
+`;
+
 export const Cost = styled(Subtitle)`
   margin-top: 8px;
   font-weight: bold;
@@ -56,12 +64,12 @@ export const NullCol = styled(FlexCol)`
   background-image: url('/img/fills/${props => (props.bg ? `${props.bg}` : 'locked')}.svg');
   background-color: transparent;
   background-size: 110% auto;
-  background-repeat: no-repeat;
-  background-position: center center;
+  background-repeat: ${props => (props.repeat ? 'repeat-y' : 'no-repeat')};
+  background-position: ${props => (props.repeat ? 'center top' : 'center center')};
   width: 100%;
   height: auto;
   min-height: 160px;
-  padding: 2rem 2rem;
+  padding: ${props => (props.noPadding ? '0' : '2rem')};
   justify-content: center;
   align-items: center;
   position: relative;
@@ -110,4 +118,12 @@ export const Profile = styled.div`
     line-height: 1.5;
     border: 2px solid #fff;
   }
+`;
+
+export const LargeEmoji = styled.div`
+  display: flex;
+  text-align: center;
+  flex 1;
+  padding: 16px 0 32px;
+  font-size: 48px;
 `;

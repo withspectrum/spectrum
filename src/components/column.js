@@ -16,6 +16,8 @@ const StyledColumn = styled(FlexCol)`
   @media(max-width: 768px) {
     ${props => (props.type === 'primary' ? 'width: 100%;' : 'display: none;')};
     margin: 0;
+    max-width: 100%;
+    background-color: ${({ theme }) => theme.border.default};
   }
 `;
 

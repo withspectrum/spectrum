@@ -55,6 +55,7 @@ const ChannelViewPure = ({
   };
 
   if (error) {
+    console.log(match);
     return (
       <AppViewWrapper>
         <Titlebar
@@ -73,6 +74,7 @@ const ChannelViewPure = ({
   }
 
   if (!channel || channel.isDeleted) {
+    console.log(match);
     return (
       <AppViewWrapper>
         <Titlebar

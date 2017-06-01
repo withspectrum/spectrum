@@ -400,6 +400,41 @@ const userIsMemberOfAnyChannelInCommunity = (
     });
 };
 
+const getTopCommunities = (amount: number): Array<Object> => {
+  return db
+    .table('communities')
+    .pluck('id')
+    .run()
+    .then(communities => communities.map(community => community.id))
+    .then(communityIds => {
+      return Promise.all(
+        communityIds.map(community => {
+          return db
+            .table('usersCommunities')
+            .getAll(community, { index: 'communityId' })
+            .filter({ isMember: true })
+            .count()
+            .run()
+            .then(count => {
+              return {
+                id: community,
+                count,
+              };
+            });
+        })
+      );
+    })
+    .then(data => {
+      let sortedCommunities = data
+        .sort((x, y) => {
+          return y.count - x.count;
+        })
+        .map(community => community.id);
+
+      return db.table('communities').getAll(...sortedCommunities).run();
+    });
+};
+
 module.exports = {
   getCommunities,
   getCommunitiesBySlug,
@@ -411,4 +446,5 @@ module.exports = {
   unsubscribeFromAllChannelsInCommunity,
   userIsMemberOfCommunity,
   userIsMemberOfAnyChannelInCommunity,
+  getTopCommunities,
 };

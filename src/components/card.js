@@ -21,6 +21,10 @@ const StyledCard = styled(FlexCol)`
   + div,
   + span {
     margin-top: 16px;
+
+    @media(max-width: 768px) {
+      margin-top: 2px;
+    }
   }
 
   @media(max-width: 768px) {

@@ -125,13 +125,20 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
                 <Icon
                   size={24}
                   glyph="message-fill"
-                  color="brand.alt"
                   tipText={`${props.data.messageCount} ${props.data.messageCount > 1 ? 'messages' : 'message'}`}
                   tipLocation="top-left"
                 />
                 {props.data.messageCount}
               </Meta>
-            : <MetaNew>New</MetaNew>}
+            : <MetaNew>
+                <Icon
+                  size={24}
+                  glyph="notification-fill"
+                  tipText={`New thread!`}
+                  tipLocation="top-left"
+                />
+                New
+              </MetaNew>}
         </MetaRow>
       </CardContent>
     </StyledThreadFeedCard>

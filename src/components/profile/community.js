@@ -19,7 +19,7 @@ import { displayLoadingCard } from '../loading';
 import Icon from '../icons';
 import {
   ProfileHeader,
-  ProfileAvatar,
+  CommunityAvatar,
   ProfileHeaderLink,
   ProfileHeaderMeta,
   ProfileHeaderAction,
@@ -100,7 +100,7 @@ const CommunityWithData = ({
     return (
       <Card>
         <ProfileHeader>
-          <ProfileAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
+          <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
           <ProfileHeaderLink to={`/${community.slug}`}>
             <ProfileHeaderMeta>
               <Title>{community.name}</Title>
@@ -133,7 +133,7 @@ const CommunityWithData = ({
     return (
       <Card>
         <ProfileHeader>
-          <ProfileAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
+          <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
           <ProfileHeaderLink to={`/${community.slug}`}>
             <ProfileHeaderMeta>
               <Title>{community.name}</Title>

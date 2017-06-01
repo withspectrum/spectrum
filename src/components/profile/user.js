@@ -25,6 +25,7 @@ import {
   ProfileHeaderMeta,
   ProfileHeaderAction,
   CoverLink,
+  UserAvatar,
   CoverAvatar,
   CoverTitle,
   CoverSubtitle,
@@ -85,7 +86,7 @@ const UserWithData = ({
           onClick={() => initMessage()}
           currentUser={currentUser}
         >
-          <CoverLink to={`../users/${user.username}`}>
+          <CoverLink to={`/users/${user.username}`}>
             <CoverAvatar src={`${user.profilePhoto}?w=40&dpr=2`} />
             <CoverTitle>{user.name}</CoverTitle>
           </CoverLink>
@@ -114,12 +115,7 @@ const UserWithData = ({
       <Card>
         <ProfileHeader>
           <ProfileHeaderLink to={`../users/${user.username}`}>
-            <Avatar
-              margin={'0 12px 0 0'}
-              size={40}
-              radius={20}
-              src={`${user.profilePhoto}?w=40&dpr=2`}
-            />
+            <UserAvatar src={`${user.profilePhoto}?w=40&dpr=2`} />
             <ProfileHeaderMeta>
               <Title>{user.name}</Title>
               <Subtitle>

@@ -11,7 +11,7 @@ export const ProfileHeader = styled(FlexRow)`
   flex-wrap: nowrap;
 `;
 
-export const ProfileAvatar = styled.img`
+export const CommunityAvatar = styled.img`
   height: 40px;
   width: 40px;
   flex: 0 0 40px;
@@ -20,6 +20,10 @@ export const ProfileAvatar = styled.img`
   object-fit: cover;
   background-color: ${({ theme }) => theme.generic.default};
   background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
+`;
+
+export const UserAvatar = styled(CommunityAvatar)`
+  border-radius: 20px;
 `;
 
 export const ProfileHeaderLink = styled(Link)`
@@ -168,7 +172,7 @@ export const CoverLink = styled(ProfileHeaderLink)`
   width: calc(100% - 32px);
 `;
 
-export const CoverAvatar = styled(ProfileAvatar)`
+export const CoverAvatar = styled(UserAvatar)`
   border: 2px solid ${({ theme }) => theme.text.reverse};
   width: 64px;
   flex: 0 0 64px;

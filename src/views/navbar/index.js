@@ -10,7 +10,7 @@ import { getCurrentUserProfile } from '../../api/user';
 import { SERVER_URL } from '../../api';
 import Icon from '../../components/icons';
 import { displayLoadingNavbar } from '../../components/loading';
-import { TextButton } from '../../components/buttons';
+import { Button } from '../../components/buttons';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
@@ -67,16 +67,14 @@ class Navbar extends Component {
                 <Logo src="/img/mark-white.png" role="presentation" />
               </LogoLink>
             </Section>
-            <Section>
-              <SigninLink to={`${SERVER_URL}/auth/twitter`}>
-                <TextButton
-                  icon="twitter"
-                  color={'social.twitter.default'}
-                  hoverColor={'bg.default'}
-                >
-                  Sign in with Twitter
-                </TextButton>
-              </SigninLink>
+            <Section right>
+              <Button
+                onClick={login}
+                icon="twitter"
+                style={{ padding: '2px 4px' }}
+              >
+                Sign in
+              </Button>
             </Section>
           </Nav>
 
@@ -144,14 +142,13 @@ class Navbar extends Component {
               <IconDrop>
                 <IconLink
                   data-active={match.url === `/users/${currentUser.username}`}
-                  data-mobileWidth={'half'}
                   to={`/users/${currentUser.username}`}
                 >
                   <UserProfileAvatar
                     src={`${currentUser.profilePhoto}?w=40&dpr=2`}
                     isPro={currentUser.isPro}
                     size="24"
-                    radius="32"
+                    radius="12"
                   />
                   <LabelForTab>Profile</LabelForTab>
                 </IconLink>

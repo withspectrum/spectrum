@@ -1,11 +1,22 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Transition, FlexRow } from '../../components/globals';
+import { Transition, FlexRow, Gradient } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
 
 export const UserProfileAvatar = styled(Avatar)`
-border: 1px solid ${({ theme }) => theme.text.default};
-box-shadow: 0 0 0 2px ${props => (props.isPro ? props.theme.pro.default : 'rgba(255,255,255,0.9)')};
+  border: 1px solid ${({ theme }) => theme.text.default};
+  box-shadow: 0 0 0 2px ${props => (props.isPro ? props.theme.pro.default : 'rgba(255,255,255,0.9)')};
+  background-color: ${({ theme }) => theme.generic.default};
+  background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
+
+  @media (max-width: 768px) {
+    margin-top: 6px;
+    margin-bottom: 2px;
+    height: 24px;
+    width: 24px;
+    border: none;
+    box-shadow: none;
+  }
 `;
 
 export const Container = styled.section`
@@ -41,7 +52,7 @@ export const Section = styled.span`
   height: 100%;
 
   @media (max-width: 768px) {
-    flex: 1 1 ${props => (props.left ? '60%' : '40%')};
+    flex: 1 1 ${props => (props.left ? '50%' : '50%')};
     justify-content: space-around;
     display: ${props => (props.hideOnMobile ? 'none' : 'flex')};
   }
@@ -78,9 +89,10 @@ export const IconDrop = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   height: 100%;
   position: relative;
+  width: 50%;
 
   &:hover {
     opacity: 1;
@@ -89,6 +101,11 @@ export const IconDrop = styled.div`
   .dropdown {
     opacity: 0;
     pointer-events: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 160px;
+    padding: 8px;
 
     @media (max-width: 768px) {
       display: none;
@@ -116,6 +133,7 @@ export const IconLink = styled(Link)`
   height: 100%;
   opacity: 0.8;
   position: relative;
+  width: 100%;
 
   &:hover {
     opacity: 1;

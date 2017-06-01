@@ -199,7 +199,7 @@ describe('queries', () => {
           createdAt
           lastSeen
           profilePhoto
-          displayName
+          name
           username
           email
         }

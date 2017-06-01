@@ -296,6 +296,11 @@ class ThreadDetailPure extends Component {
       fetchingLinkPreview,
     } = this.state;
 
+    console.log('rendering viewBody', viewBody);
+    console.log('rendering editBody', editBody);
+
+    let f = this.state.editBody;
+
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner =
       thread.channel.community.communityPermissions.isOwner;
@@ -309,9 +314,10 @@ class ThreadDetailPure extends Component {
       <ThreadWrapper>
         <Titlebar
           title={thread.content.title}
-          subtitle={`${thread.channel.name} · ${thread.channel.community.name}`}
+          subtitle={`${thread.channel.community.name} / ${thread.channel.name}`}
           provideBack={true}
           backRoute={`/${thread.channel.community.slug}/${thread.channel.slug}`}
+          noComposer
         />
 
         <ContextRow>
@@ -376,7 +382,11 @@ class ThreadDetailPure extends Component {
             <ThreadHeading>
               {thread.content.title}
             </ThreadHeading>
-            <ThreadContent>{viewBody}</ThreadContent>
+            <div className="markdown">
+              <ThreadContent>
+                {viewBody}
+              </ThreadContent>
+            </div>
 
             {linkPreview &&
               !fetchingLinkPreview &&
