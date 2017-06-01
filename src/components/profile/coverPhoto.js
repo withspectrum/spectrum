@@ -16,6 +16,11 @@ const PhotoContainer = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   border-radius: ${props => (props.large ? '12px' : '12px 12px 0 0')};
+
+  @media (max-width: 768px) {
+    height: 160px;
+    border-radius: 0;
+  }
 `;
 
 const CoverAction = styled(ProfileHeaderAction)`

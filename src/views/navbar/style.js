@@ -1,14 +1,21 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Transition, FlexRow } from '../../components/globals';
+import { Transition, FlexRow, Gradient } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
 
 export const UserProfileAvatar = styled(Avatar)`
   border: 1px solid ${({ theme }) => theme.text.default};
   box-shadow: 0 0 0 2px ${props => (props.isPro ? props.theme.pro.default : 'rgba(255,255,255,0.9)')};
+  background-color: ${({ theme }) => theme.generic.default};
+  background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
 
   @media (max-width: 768px) {
-    margin-top: 8px;
+    margin-top: 6px;
+    margin-bottom: 2px;
+    height: 24px;
+    width: 24px;
+    border: none;
+    box-shadow: none;
   }
 `;
 

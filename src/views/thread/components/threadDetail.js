@@ -317,6 +317,7 @@ class ThreadDetailPure extends Component {
           subtitle={`${thread.channel.name} / ${thread.channel.community.name}`}
           provideBack={true}
           backRoute={`/${thread.channel.community.slug}/${thread.channel.slug}`}
+          noComposer
         />
 
         <ContextRow>

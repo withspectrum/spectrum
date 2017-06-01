@@ -25,7 +25,12 @@ import {
   UpsellJoinCommunity,
   Upsell404Community,
 } from '../../components/upsell';
-import { CoverRow, CoverColumn, CoverButton } from './style';
+import {
+  CoverRow,
+  CoverColumn,
+  CoverButton,
+  MobileCommunityProfile,
+} from './style';
 
 import {
   getCommunityThreads,
@@ -127,6 +132,9 @@ const CommunityViewPure = props => {
               onClick={() => toggleMembership(community.id)}
             />}
         </CoverPhoto>
+        <MobileCommunityProfile>
+          <CommunityProfile data={{ community }} profileSize="full" />
+        </MobileCommunityProfile>
         <CoverRow>
           <Column type="secondary" className={'inset'}>
             <CommunityProfile data={{ community }} profileSize="full" />
