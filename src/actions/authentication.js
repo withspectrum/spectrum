@@ -10,10 +10,10 @@ export const logout = () => {
   removeItemFromStorage('spectrum');
   // clear Apollo's query cache
   clearApolloStore();
-  // erase cookie
-  eraseCookie('connect.sid');
   // redirect to home page
-  window.location.href = '/';
+  window.location.href = process.env.NODE_ENV === 'production'
+    ? '/auth/logout'
+    : 'http://localhost:3001/auth/logout';
 };
 
 export const saveUserDataToLocalStorage = (user: Object) => dispatch => {

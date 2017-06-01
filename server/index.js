@@ -39,6 +39,7 @@ const OpticsAgent = require('optics-agent');
 const { maskErrors } = require('graphql-errors');
 
 const { db } = require('./models/db');
+import { destroySession } from './models/session';
 const listeners = require('./subscriptions/listeners');
 
 const schema = require('./schema');
@@ -115,6 +116,27 @@ app.get(
     successRedirect: IS_PROD ? '/home' : 'http://localhost:3000/home',
   })
 );
+app.get('/auth/logout', (req, res) => {
+  var sessionCookie = req.cookies['connect.sid'];
+  const HOME = IS_PROD ? '/' : 'http://localhost:3000/';
+  if (req.isUnauthenticated() || !sessionCookie) {
+    return res.redirect(HOME);
+  }
+  var sessionId = sessionCookie.split('.')[0].replace('s:', '');
+  return destroySession(sessionId)
+    .then(() => {
+      // I should not have to do this manually
+      // but it doesn't work otherwise ¯\_(ツ)_/¯
+      res.clearCookie('connect.sid');
+      req.logout();
+      res.redirect(HOME);
+    })
+    .catch(err => {
+      res.clearCookie('connect.sid');
+      console.log(err);
+      res.redirect(HOME);
+    });
+});
 app.use(
   '/api',
   graphqlExpress(req => ({
@@ -183,7 +205,7 @@ const subscriptionsServer = SubscriptionServer.create(
             });
           const sessionId = rawSocket.upgradeReq.signedCookies['connect.sid'];
           sessionStore.get(sessionId, (err, session) => {
-            if (err)
+            if (err || !session || !session.passport)
               return res({
                 // TODO: Pass optics to subscriptions context
                 // opticsContext: OpticsAgent.context(req),
