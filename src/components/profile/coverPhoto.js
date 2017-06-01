@@ -12,7 +12,7 @@ const PhotoContainer = styled.div`
   width: 100%;
   height: ${props => (props.large ? '320px' : '96px')};
   background-color: ${({ theme }) => theme.generic.default};
-  background-image: url('${props => (props.coverURL ? props.coverURL : Gradient(props.theme.generic.alt, props.theme.generic.default))}');
+  background-image: url('${props => (props.coverURL ? props.coverURL + `?w=${props.large ? 1024 : 320}&dpr=2` : Gradient(props.theme.brand.alt, props.theme.brand.default))}');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
