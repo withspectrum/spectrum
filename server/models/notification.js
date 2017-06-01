@@ -88,15 +88,17 @@ type ThreadNotificationInput = {
 };
 
 const storeThreadNotification = (data: ThreadNotificationInput) => {
-  return db.table('channels').get(data.channelId).run().then(channel =>
-    storeNotification({
-      ...data,
-      users: channel.members.filter(id => id !== data.sender).filter(UNIQUE),
-      type: 'NEW_THREAD',
-      communityId: channel.communityId,
-      channelId: data.channelId,
-    })
-  );
+  // TODO: Reenable (the code below doesn't work anymore)
+  return Promise.resolve();
+  // return db.table('channels').get(data.channelId).run().then(channel =>
+  //   storeNotification({
+  //     ...data,
+  //     users: channel.members.filter(id => id !== data.sender).filter(UNIQUE),
+  //     type: 'NEW_THREAD',
+  //     communityId: channel.communityId,
+  //     channelId: data.channelId,
+  //   })
+  // );
 };
 
 type NotificationInput = {
@@ -114,20 +116,22 @@ type NotificationInput = {
 };
 
 const storeNotification = (notification: NotificationInput) => {
-  return db
-    .table('notifications')
-    .insert(
-      Object.assign({}, notification, {
-        createdAt: new Date(),
-        users: notification.users.map(id => ({
-          id,
-          read: false,
-        })),
-      }),
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val);
+  // TODO: Reenable
+  return Promise.resolve();
+  // return db
+  //   .table('notifications')
+  //   .insert(
+  //     Object.assign({}, notification, {
+  //       createdAt: new Date(),
+  //       users: notification.users.map(id => ({
+  //         id,
+  //         read: false,
+  //       })),
+  //     }),
+  //     { returnChanges: true }
+  //   )
+  //   .run()
+  //   .then(result => result.changes[0].new_val);
 };
 
 const getNotificationsByUser = (
