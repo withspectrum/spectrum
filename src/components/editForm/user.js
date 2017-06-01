@@ -194,7 +194,7 @@ class UserWithData extends Component {
           this.setState({
             file: null,
           });
-          this.props.history.push(`/users/${this.props.user.user.username}`);
+          window.location.href = `/users/${this.props.user.user.username}`;
         }
       })
       .catch(err => {
