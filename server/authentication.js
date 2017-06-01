@@ -27,7 +27,6 @@ const init = () => {
         callbackURL: `/auth/twitter/callback`,
       },
       (token, tokenSecret, profile, done) => {
-        console.log('profile of user', profile);
         const user = {
           providerId: profile.id,
           username: profile.username,

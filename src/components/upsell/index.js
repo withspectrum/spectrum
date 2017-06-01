@@ -18,6 +18,7 @@ import {
   UpgradeError,
   Profile,
   Cost,
+  LargeEmoji,
 } from './style';
 // $FlowFixMe
 import StripeCheckout from 'react-stripe-checkout';
@@ -26,7 +27,7 @@ import { upgradeToProMutation } from '../../api/user';
 export const NullCard = props => {
   return (
     <Card>
-      <NullCol bg={props.bg}>
+      <NullCol bg={props.bg} repeat={props.repeat}>
         {props.heading && <Title>{props.heading}</Title>}
         {props.copy && <Subtitle>{props.copy}</Subtitle>}
         {props.children}
@@ -255,6 +256,24 @@ export const Upsell404User = ({
     </NullCard>
   );
 };
+
+export class UpsellNewUser extends Component {
+  render() {
+    const { user } = this.props;
+
+    return (
+      <NullCard bg="pro">
+        <LargeEmoji>
+          👋
+        </LargeEmoji>
+        <Title>Howdy, {user.name}!</Title>
+        <Subtitle>
+          Spectrum is a place where communities live. It's easy to follow the things that you care about most, or even create your own community to share with the world.
+        </Subtitle>
+      </NullCard>
+    );
+  }
+}
 
 export const Upsell404Thread = () => {
   return (

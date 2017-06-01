@@ -1,5 +1,5 @@
 //@flow
-import React from 'react';
+import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
@@ -7,6 +7,7 @@ import pure from 'recompose/pure';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
 import { UpsellSignIn, NullCard } from '../../components/upsell';
+import UpsellNewUser from '../../components/upsell/newUserUpsell';
 import { Button } from '../../components/buttons';
 import { displayLoadingScreen } from '../../components/loading';
 import { Column } from '../../components/column';
@@ -18,83 +19,101 @@ import CommunityList from '../user/components/communityList';
 
 const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 
-const DashboardPure = props => {
-  const { data: { user, error } } = props;
-  console.log(user);
-  if (error) {
-    return (
-      <AppViewWrapper>
-        <Titlebar />
-        <Column type="primary" alignItems="center">
-          <NullCard
-            bg="error"
-            heading="Whoops! Something broke the home page."
-            copy="Mind reloading?"
-          >
-            <Button icon="view-reload" onClick={() => location.reload(true)}>
-              Reload
-            </Button>
-          </NullCard>
-        </Column>
-      </AppViewWrapper>
-    );
-  } else if (user && user !== null) {
-    const currentUser = user;
-    const communities = user.communityConnection.edges;
-    return (
-      <AppViewWrapper>
-        <Titlebar />
+class DashboardPure extends Component {
+  state: {
+    isNewUser: boolean,
+  };
 
-        <Column type="secondary">
-          <UserProfile profileSize="mini" data={{ user: user }} />
-          {user &&
-            communities &&
-            <CommunityList
-              withDescription={false}
-              currentUser={currentUser}
-              user={user}
-              communities={communities}
-            />}
-        </Column>
+  constructor(props) {
+    super(props);
 
-        {user &&
-          communities &&
-          <Column type="primary">
-            <ThreadComposer />
-            <EverythingThreadFeed viewContext="dashboard" />
-          </Column>}
-        {/* {user &&
-          !communities &&
-          <Column type="primary">
-            <NullCard
-              bg="chat"
-              heading={`It's dangerous to go alone...`}
-              copy={`So let's find you some communities to join!`}
-            >
-              <Link to={`/explore`}>
-                <Button icon="explore">Browse communities</Button>
-              </Link>
-            </NullCard>
-          </Column>} */}
-      </AppViewWrapper>
-    );
-  } else {
-    return (
-      <AppViewWrapper>
-        <Titlebar />
-        <Column type="primary" alignItems="center">
-          <UpsellSignIn />
-        </Column>
-      </AppViewWrapper>
-    );
+    const user = this.props.data.user;
+    const communities = this.props.data.user.communityConnection.edges;
+    const isNewUser = user && communities.length <= 0;
+
+    this.state = {
+      isNewUser,
+    };
   }
-};
 
-/*
-  This is bad, but necessary for now!
-  I'm wrapping DashboardPure in a query for getCurrentUserProfile so that I
-  can store the user in localStorage and redux for any downstream actions
-*/
+  render() {
+    const { data: { user, error } } = this.props;
+    const { isNewUser } = this.state;
+
+    if (error) {
+      return (
+        <AppViewWrapper>
+          <Titlebar />
+          <Column type="primary" alignItems="center">
+            <NullCard
+              bg="error"
+              heading="Whoops! Something broke the home page."
+              copy="Mind reloading?"
+            >
+              <Button icon="view-reload" onClick={() => location.reload(true)}>
+                Reload
+              </Button>
+            </NullCard>
+          </Column>
+        </AppViewWrapper>
+      );
+    } else if (user && user !== null) {
+      const currentUser = user;
+      const communities = user.communityConnection.edges;
+
+      return (
+        <AppViewWrapper>
+          <Titlebar />
+
+          <Column type="secondary">
+            <UserProfile profileSize="mini" data={{ user: user }} />
+            {!isNewUser &&
+              <CommunityList
+                withDescription={false}
+                currentUser={currentUser}
+                user={user}
+                communities={communities}
+              />}
+          </Column>
+
+          <Column type="primary">
+            {!isNewUser &&
+              <span>
+                <ThreadComposer />
+                <EverythingThreadFeed viewContext="dashboard" />
+              </span>}
+
+            {isNewUser && <UpsellNewUser user={user} />}
+          </Column>
+
+          {/* {user &&
+            !communities &&
+            <Column type="primary">
+              <NullCard
+                bg="chat"
+                heading={`It's dangerous to go alone...`}
+                copy={`So let's find you some communities to join!`}
+              >
+                <Link to={`/explore`}>
+                  <Button icon="explore">Browse communities</Button>
+                </Link>
+              </NullCard>
+            </Column>} */}
+        </AppViewWrapper>
+      );
+    } else {
+      return (
+        <AppViewWrapper>
+          <Titlebar />
+          <Column type="primary" alignItems="center">
+            <UpsellSignIn />
+          </Column>
+        </AppViewWrapper>
+      );
+    }
+  }
+}
+
 const Dashboard = compose(getCurrentUserProfile, displayLoadingScreen, pure)(
   DashboardPure
 );
