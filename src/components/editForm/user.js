@@ -40,7 +40,7 @@ class UserWithData extends Component {
     descriptionError: boolean,
     nameError: boolean,
     createError: boolean,
-    loading: boolean,
+    isLoading: boolean,
     photoSizeError: boolean,
   };
 
@@ -61,7 +61,7 @@ class UserWithData extends Component {
       descriptionError: false,
       nameError: false,
       createError: false,
-      loading: false,
+      isLoading: false,
       photoSizeError: false,
     };
   }
@@ -73,57 +73,6 @@ class UserWithData extends Component {
       nameError: false,
     });
   };
-
-  // changeUsername = e => {
-  //   let username = e.target.value;
-  //   username = username.toLowerCase().trim();
-  //
-  //   if (username.length >= 24) {
-  //     this.setState({
-  //       username,
-  //       usernameError: true,
-  //     });
-  //
-  //     return;
-  //   }
-  //
-  //   if (username.length === 0) {
-  //     this.setState({
-  //       usernameError: true,
-  //     })
-  //   }
-  //
-  //   this.setState({
-  //     username,
-  //     usernameError: false,
-  //     usernameTaken: false,
-  //   });
-  //
-  //   this.checkUsername(username)
-  // };
-  //
-  // checkUsername = username => {
-  //   // check the db to see if this channel slug exists
-  //   this.props.client
-  //     .query({
-  //       query: CHECK_UNIQUE_USERNAME_QUERY,
-  //       variables: {
-  //         username,
-  //       },
-  //     })
-  //     .then(({ data }) => {
-  //       // if a user exists with this username
-  //       if (!data.loading && data && data.user && data.user.username) {
-  //         return this.setState({
-  //           usernameTaken: true,
-  //         });
-  //       } else {
-  //         return this.setState({
-  //           usernameTaken: false,
-  //         });
-  //       }
-  //     });
-  // };
 
   changeDescription = e => {
     const description = e.target.value;
@@ -151,9 +100,14 @@ class UserWithData extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    this.setState({
+      isLoading: true,
+    });
+
     if (file.size > 3000000) {
       return this.setState({
         photoSizeError: true,
+        isLoading: false,
       });
     }
 
@@ -162,6 +116,7 @@ class UserWithData extends Component {
         file: file,
         image: reader.result,
         photoSizeError: false,
+        isLoading: false,
       });
     };
 
@@ -172,9 +127,14 @@ class UserWithData extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    this.setState({
+      isLoading: true,
+    });
+
     if (file.size > 3000000) {
       return this.setState({
         photoSizeError: true,
+        isLoading: false,
       });
     }
 
@@ -183,6 +143,7 @@ class UserWithData extends Component {
         coverFile: file,
         coverPhoto: reader.result,
         photoSizeError: false,
+        isLoading: false,
       });
     };
 
@@ -212,10 +173,19 @@ class UserWithData extends Component {
       return;
     }
 
+    this.setState({
+      isLoading: true,
+    });
+
     this.props
       .editUser(input)
       .then(({ data: { editUser } }) => {
         const user = editUser;
+
+        this.setState({
+          isLoading: false,
+        });
+
         // the mutation returns a user object. if it exists,
         if (user !== undefined) {
           this.props.dispatch(addToastWithTimeout('success', 'Changes saved!'));
@@ -226,6 +196,10 @@ class UserWithData extends Component {
         }
       })
       .catch(err => {
+        this.setState({
+          isLoading: false,
+        });
+
         this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
@@ -240,7 +214,7 @@ class UserWithData extends Component {
       coverPhoto,
       descriptionError,
       createError,
-      loading,
+      isLoading,
       photoSizeError,
     } = this.state;
 
@@ -298,7 +272,7 @@ class UserWithData extends Component {
 
           <Actions>
             <TextButton hoverColor={'warn.alt'}>Cancel</TextButton>
-            <Button disabled={!name} loading={loading} onClick={this.save}>
+            <Button disabled={!name} loading={isLoading} onClick={this.save}>
               Save
             </Button>
           </Actions>

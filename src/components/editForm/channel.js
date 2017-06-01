@@ -33,6 +33,7 @@ class ChannelWithData extends Component {
     isPrivate: boolean,
     channelId: string,
     channelData: Object,
+    isLoading: boolean,
   };
   constructor(props) {
     super(props);
@@ -46,6 +47,7 @@ class ChannelWithData extends Component {
       isPrivate: channel.isPrivate || false,
       channelId: channel.id,
       channelData: channel,
+      isLoading: false,
     };
   }
 
@@ -80,10 +82,18 @@ class ChannelWithData extends Component {
       channelId,
     };
 
+    this.setState({
+      isLoading: true,
+    });
+
     this.props
       .editChannel(input)
       .then(({ data: { editChannel } }) => {
         const channel = editChannel;
+
+        this.setState({
+          isLoading: false,
+        });
 
         // the mutation returns a channel object. if it exists,
         if (channel !== undefined) {
@@ -91,6 +101,10 @@ class ChannelWithData extends Component {
         }
       })
       .catch(err => {
+        this.setState({
+          isLoading: false,
+        });
+
         this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
@@ -137,7 +151,7 @@ class ChannelWithData extends Component {
   };
 
   render() {
-    const { name, slug, description, isPrivate } = this.state;
+    const { name, slug, description, isPrivate, isLoading } = this.state;
     const { channel } = this.props;
 
     if (!channel) {
@@ -208,7 +222,7 @@ class ChannelWithData extends Component {
               <TextButton color={'text.alt'} onClick={this.cancelForm}>
                 Cancel
               </TextButton>
-              <Button onClick={this.save}>Save</Button>
+              <Button onClick={this.save} loading={isLoading}>Save</Button>
             </Actions>
 
             {slug === 'general' &&

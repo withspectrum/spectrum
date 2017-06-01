@@ -35,6 +35,18 @@ import { Actions, Message } from './style';
   too after deleting a thing (e.g. '/foo/bar')
 */
 class DeleteDoubleCheckModal extends Component {
+  state: {
+    isLoading: boolean,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      isLoading: false,
+    };
+  }
+
   close = () => {
     this.props.dispatch(closeModal());
   };
@@ -49,6 +61,10 @@ class DeleteDoubleCheckModal extends Component {
       // history,
     } = this.props;
 
+    this.setState({
+      isLoading: true,
+    });
+
     switch (entity) {
       case 'thread': {
         return deleteThread(id)
@@ -59,6 +75,9 @@ class DeleteDoubleCheckModal extends Component {
               window.location.href = redirect ? redirect : '/';
               // history.push(redirect ? redirect : '/');
               dispatch(addToastWithTimeout('neutral', 'Thread deleted.'));
+              this.setState({
+                isLoading: false,
+              });
               this.close();
             }
           })
@@ -80,6 +99,9 @@ class DeleteDoubleCheckModal extends Component {
               window.location.href = redirect ? redirect : '/';
               // history.push(redirect ? redirect : '/');
               dispatch(addToastWithTimeout('neutral', 'Channel deleted.'));
+              this.setState({
+                isLoading: false,
+              });
               this.close();
             }
           })
@@ -101,6 +123,9 @@ class DeleteDoubleCheckModal extends Component {
               window.location.href = redirect ? redirect : '/';
               // history.push(redirect ? redirect : '/');
               dispatch(addToastWithTimeout('neutral', 'Community deleted.'));
+              this.setState({
+                isLoading: false,
+              });
               this.close();
             }
           })
@@ -111,9 +136,16 @@ class DeleteDoubleCheckModal extends Component {
                 `Something went wrong and we weren't able to delete this community. ${err.message}`
               )
             );
+            this.setState({
+              isLoading: false,
+            });
           });
       }
       default: {
+        this.setState({
+          isLoading: false,
+        });
+
         return dispatch(
           addToastWithTimeout(
             'error',
@@ -148,7 +180,13 @@ class DeleteDoubleCheckModal extends Component {
             <TextButton onClick={this.close} color={'warn.alt'}>
               Cancel
             </TextButton>
-            <Button color="warn" onClick={this.triggerDelete}>Delete</Button>
+            <Button
+              loading={this.state.isLoading}
+              color="warn"
+              onClick={this.triggerDelete}
+            >
+              Delete
+            </Button>
           </Actions>
         </ModalContainer>
       </Modal>
