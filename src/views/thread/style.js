@@ -46,10 +46,6 @@ export const DropWrap = styled.div`
     opacity: 0;
     pointer-events: none;
     transition: ${Transition.hover.off};
-
-    @media (max-width: 768px) {
-      display: none;
-    }
   }
 
   &:hover .flyout,
@@ -58,10 +54,6 @@ export const DropWrap = styled.div`
     opacity: 1;
     pointer-events: auto;
     transition: ${Transition.hover.on};
-
-    @media (max-width: 768px) {
-      display: none;
-    }
   }
 `;
 
