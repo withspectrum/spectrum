@@ -27,7 +27,7 @@ if (existingUser) {
 function render() {
   // if user is not stored in localStorage and they visit a blacklist url
   if (
-    !existingUser &&
+    (!existingUser || existingUser === null) &&
     (window.location.pathname === '/' ||
       window.location.pathname === '/messages' ||
       window.location.pathname === '/messages/new' ||
@@ -39,18 +39,19 @@ function render() {
       </ThemeProvider>,
       document.querySelector('#root')
     );
+  } else {
+    // otherwise load the app and we'll handle logged-out and logged-in users
+    // further down the tree
+    console.log(existingUser);
+    return ReactDOM.render(
+      <ApolloProvider store={store} client={client}>
+        <ThemeProvider theme={theme}>
+          <Routes />
+        </ThemeProvider>
+      </ApolloProvider>,
+      document.querySelector('#root')
+    );
   }
-
-  // otherwise load the app and we'll handle logged-out and logged-in users
-  // further down the tree
-  return ReactDOM.render(
-    <ApolloProvider store={store} client={client}>
-      <ThemeProvider theme={theme}>
-        <Routes />
-      </ThemeProvider>
-    </ApolloProvider>,
-    document.querySelector('#root')
-  );
 }
 
 try {

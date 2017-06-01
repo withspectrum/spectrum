@@ -101,6 +101,11 @@ export const IconDrop = styled.div`
   .dropdown {
     opacity: 0;
     pointer-events: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 160px;
+    padding: 8px;
 
     @media (max-width: 768px) {
       display: none;

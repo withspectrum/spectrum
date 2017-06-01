@@ -46,8 +46,7 @@ export const Title = styled.h3`
 
 export const Subtitle = styled.p`
   color: ${({ theme }) => hexa(theme.text.reverse, 0.75)};
-  font-size: 10px;
-  text-transform: uppercase;
+  font-size: 12px;
   letter-spacing: 0.2px;
   font-weight: 600;
   line-height: 1.4;
