@@ -42,7 +42,6 @@ class MessagesWithData extends Component {
 
     // force scroll to bottom when a message is sent in the same thread
     if (prevProps.data.messages !== this.props.data.messages) {
-      console.log('attempting force scroll');
       this.props.contextualScrollToBottom();
     }
   }
