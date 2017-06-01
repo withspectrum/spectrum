@@ -6,8 +6,26 @@ import { Editor as SlateEditor, Raw, Plain } from 'slate';
 import type { SlatePlugin } from 'slate-mentions/src/types';
 //$FlowFixMe
 import MarkdownPlugin from 'slate-markdown';
+import { CustomPlaceholder, Wrapper } from './style';
 
 const ENTER = 13;
+
+// Taken from https://github.com/ianstormtaylor/slate/issues/419
+// TODO: Make separate package
+const SingleLinePlugin = {
+  schema: {
+    rules: [
+      {
+        match: node => node.kind === 'document',
+        validate: node => (node.nodes.size > 1 ? true : null),
+        normalize: (transform, node, value) => {
+          const toRemove = node.nodes.slice(1);
+          toRemove.forEach(child => transform.removeNodeByKey(child.key));
+        },
+      },
+    ],
+  },
+};
 
 const initialState = Plain.deserialize('');
 
@@ -16,6 +34,8 @@ type EditorProps = {
   state?: Object,
   onChange?: Function,
   onEnter?: Function,
+  placeholder?: string,
+  singleLine?: boolean,
 };
 
 class Editor extends Component {
@@ -30,7 +50,10 @@ class Editor extends Component {
     super(props);
     this.state = {
       state: initialState,
-      plugins: [props.markdown !== false && MarkdownPlugin()],
+      plugins: [
+        props.markdown !== false && MarkdownPlugin(),
+        props.singleLine === true && SingleLinePlugin,
+      ],
     };
   }
 
@@ -44,24 +67,41 @@ class Editor extends Component {
     }
   };
 
+  focus = () => {
+    this.editor.focus();
+  };
+
   render() {
     const {
       state = this.state.state,
       onChange = this.onChange,
       onEnter,
-      // Don't pass these two down to the SlateEditor
-      // markdown,
+      placeholder,
+      className,
+      style,
       ...rest
     } = this.props;
 
+    {
+      /* The custom placeholder stuff is a workaround for ianstormtaylor/slate#860 */
+    }
+    const isEmpty = toPlainText(state) === '';
+
     return (
-      <SlateEditor
-        state={state}
-        onChange={onChange}
-        onKeyDown={onEnter && this.onKeyDown}
-        plugins={this.state.plugins}
-        {...rest}
-      />
+      <Wrapper className={className} style={style}>
+        <SlateEditor
+          state={state}
+          onChange={onChange}
+          onKeyDown={onEnter && this.onKeyDown}
+          plugins={this.state.plugins}
+          ref={editor => this.editor = editor}
+          {...rest}
+        />
+        {isEmpty &&
+          <CustomPlaceholder onClick={this.focus}>
+            {placeholder}
+          </CustomPlaceholder>}
+      </Wrapper>
     );
   }
 }
