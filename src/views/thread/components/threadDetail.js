@@ -347,7 +347,7 @@ class ThreadDetailPure extends Component {
                       onClick={this.triggerDelete}
                     />
                   </FlyoutRow>}
-                {thread.isCreator &&
+                {/* {thread.isCreator &&
                   <FlyoutRow>
                     <IconButton
                       glyph="edit"
@@ -356,7 +356,7 @@ class ThreadDetailPure extends Component {
                       tipLocation="top-left"
                       onClick={this.toggleEdit}
                     />
-                  </FlyoutRow>}
+                  </FlyoutRow>} */}
               </Flyout>
             </DropWrap>}
 
