@@ -83,8 +83,17 @@ class ThreadDetailPure extends Component {
         : '',
       linkPreviewLength: thread.attachments.length > 0 ? 1 : 0,
       fetchingLinkPreview: false,
+      flyoutOpen: false,
     };
   }
+
+  toggleFlyout = () => {
+    if (this.state.flyoutOpen === false) {
+      this.setState({ flyoutOpen: true });
+    } else {
+      this.setState({ flyoutOpen: false });
+    }
+  };
 
   threadLock = () => {
     const { setThreadLock, dispatch, thread } = this.props;
@@ -286,6 +295,7 @@ class ThreadDetailPure extends Component {
       linkPreviewTrueUrl,
       viewBody,
       fetchingLinkPreview,
+      flyoutOpen,
     } = this.state;
 
     let f = this.state.editBody;
@@ -322,8 +332,8 @@ class ThreadDetailPure extends Component {
           {currentUser &&
             (thread.isCreator || isChannelOwner || isCommunityOwner) &&
             !isEditing &&
-            <DropWrap>
-              <Icon glyph="settings" />
+            <DropWrap className={flyoutOpen ? 'open' : ''}>
+              <IconButton glyph="settings" onClick={this.toggleFlyout} />
               <Flyout>
                 {(isChannelOwner || isCommunityOwner) &&
                   <FlyoutRow>
@@ -435,5 +445,6 @@ const ThreadDetail = compose(
 )(ThreadDetailPure);
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
+  flyoutOpen: state.flyoutOpen,
 });
 export default connect(mapStateToProps)(ThreadDetail);
