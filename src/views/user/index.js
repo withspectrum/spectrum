@@ -54,7 +54,7 @@ const UserViewPure = ({
       <Head title={title} description={description} />
       <Titlebar
         title={user.name}
-        subtitle={user.username}
+        subtitle={'Posts By'}
         provideBack={true}
         backRoute={`/`}
       />
