@@ -36,6 +36,12 @@ class DashboardPure extends Component {
     };
   }
 
+  graduate = () => {
+    this.setState({
+      isNewUser: false,
+    });
+  };
+
   render() {
     const { data: { user, error } } = this.props;
     const { isNewUser } = this.state;
@@ -65,16 +71,17 @@ class DashboardPure extends Component {
         <AppViewWrapper>
           <Titlebar />
 
-          <Column type="secondary">
-            <UserProfile profileSize="mini" data={{ user: user }} />
-            {!isNewUser &&
-              <CommunityList
-                withDescription={false}
-                currentUser={currentUser}
-                user={user}
-                communities={communities}
-              />}
-          </Column>
+          {!isNewUser &&
+            <Column type="secondary">
+              <UserProfile profileSize="mini" data={{ user: user }} />
+              {!isNewUser &&
+                <CommunityList
+                  withDescription={false}
+                  currentUser={currentUser}
+                  user={user}
+                  communities={communities}
+                />}
+            </Column>}
 
           <Column type="primary">
             {!isNewUser &&
@@ -83,7 +90,8 @@ class DashboardPure extends Component {
                 <EverythingThreadFeed viewContext="dashboard" />
               </span>}
 
-            {isNewUser && <UpsellNewUser user={user} />}
+            {isNewUser &&
+              <UpsellNewUser user={user} graduate={this.graduate} />}
           </Column>
 
           {/* {user &&

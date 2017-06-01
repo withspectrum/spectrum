@@ -52,7 +52,7 @@ export const SmallTitle = styled(Title)`
 `;
 
 export const SmallSubtitle = styled(Subtitle)`
-  font-size: 14px;
+  font-size: 15px;
 `;
 
 export const Cost = styled(Subtitle)`
@@ -69,7 +69,7 @@ export const NullCol = styled(FlexCol)`
   width: 100%;
   height: auto;
   min-height: 160px;
-  padding: 2rem 2rem;
+  padding: ${props => (props.noPadding ? '0' : '2rem')};
   justify-content: center;
   align-items: center;
   position: relative;

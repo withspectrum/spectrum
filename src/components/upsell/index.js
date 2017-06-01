@@ -27,7 +27,7 @@ import { upgradeToProMutation } from '../../api/user';
 export const NullCard = props => {
   return (
     <Card>
-      <NullCol bg={props.bg} repeat={props.repeat}>
+      <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
         {props.heading && <Title>{props.heading}</Title>}
         {props.copy && <Subtitle>{props.copy}</Subtitle>}
         {props.children}
