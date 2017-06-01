@@ -65,10 +65,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
     const avatarList = list.slice(0, 10);
     return avatarList.map(participant => (
       <Link key={participant.id} to={`/users/${participant.username}`}>
-        <Participant
-          src={`${participant.profilePhoto}?w=24&dpr=2`}
-          role="presentation"
-        />
+        <Participant src={`${participant.profilePhoto}`} role="presentation" />
       </Link>
     ));
   };

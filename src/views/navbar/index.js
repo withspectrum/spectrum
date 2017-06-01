@@ -144,7 +144,7 @@ class Navbar extends Component {
                   to={`/users/${currentUser.username}`}
                 >
                   <UserProfileAvatar
-                    src={`${currentUser.profilePhoto}?w=40&dpr=2`}
+                    src={`${currentUser.profilePhoto}`}
                     isPro={currentUser.isPro}
                     size="24"
                     radius="12"

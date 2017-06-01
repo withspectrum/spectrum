@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Transition, FlexRow, Gradient } from '../../components/globals';
+import { Transition, FlexRow, Gradient, hexa } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
 
 export const UserProfileAvatar = styled(Avatar)`
+  flex: 0 0 24px;
   border: 1px solid ${({ theme }) => theme.text.default};
   box-shadow: 0 0 0 2px ${props => (props.isPro ? props.theme.pro.default : 'rgba(255,255,255,0.9)')};
   background-color: ${({ theme }) => theme.generic.default};
@@ -30,35 +31,35 @@ export const Nav = styled.nav`
   top: 0;
   display: flex;
   align-items: center;
-  color: #fff;
+  color: ${({ theme }) => theme.text.reverse};
   justify-content: space-between;
   height: 48px;
   padding: 0 16px;
   line-height: 1;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   z-index: 1000;
 
   @media (max-width: 768px) {
     bottom: 0;
     top: auto;
-    box-shadow: 0 -4px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 -4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
     padding: 0;
   }
 `;
 
-export const Section = styled.span`
+export const Section = styled(FlexRow)`
   display: flex;
   align-items: center;
   height: 100%;
 
   @media (max-width: 768px) {
-    flex: 1 1 ${props => (props.left ? '50%' : '50%')};
+    flex: 1 1 ${props => (props.left ? '66%' : '33%')};
     justify-content: space-around;
     display: ${props => (props.hideOnMobile ? 'none' : 'flex')};
   }
 `;
 
-export const Spacer = styled.div`
+export const Spacer = styled(FlexRow)`
   height: 48px;
 `;
 
@@ -85,14 +86,14 @@ export const Logo = styled.img`
   left: 1px;
 `;
 
-export const IconDrop = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
+export const IconDrop = styled(FlexRow)`
+  ${/* display: flex;
+  flex-direction: row; */ ''}
+  ${/* justify-content: center; */ ''}
   align-items: stretch;
-  height: 100%;
+  align-self: stretch;
   position: relative;
-  width: 50%;
+  flex: 0 0 auto;
 
   &:hover {
     opacity: 1;
@@ -140,7 +141,7 @@ export const IconLink = styled(Link)`
   }
 
   &[data-active~="true"] {
-    box-shadow: inset 0 -4px 0 #fff;
+    box-shadow: inset 0 -4px 0 ${({ theme }) => theme.bg.default};
     opacity: 1;
   }
 
@@ -149,16 +150,16 @@ export const IconLink = styled(Link)`
     opacity: 0.7;
     margin: 0;
 
-    &[data-mobileWidth~="third"] {
+    ${/* &[data-mobileWidth~="third"] {
       width: 33%;
     }
 
     &[data-mobileWidth~="half"] {
       width: 50%;
-    }
+    } */ ''}
 
     &[data-active~="true"] {
-      box-shadow: inset 0 0 0 #fff;
+      box-shadow: inset 0 0 0 ${({ theme }) => theme.bg.default};
       opacity: 1;
     }
 
