@@ -6,6 +6,7 @@ import { Editor as SlateEditor, Raw, Plain } from 'slate';
 import type { SlatePlugin } from 'slate-mentions/src/types';
 //$FlowFixMe
 import MarkdownPlugin from 'slate-markdown';
+import { CustomPlaceholder, Wrapper } from './style';
 
 const ENTER = 13;
 
@@ -16,6 +17,7 @@ type EditorProps = {
   state?: Object,
   onChange?: Function,
   onEnter?: Function,
+  placeholder?: string,
 };
 
 class Editor extends Component {
@@ -49,19 +51,26 @@ class Editor extends Component {
       state = this.state.state,
       onChange = this.onChange,
       onEnter,
-      // Don't pass these two down to the SlateEditor
-      // markdown,
+      placeholder,
       ...rest
     } = this.props;
 
+    {
+      /* The custom placeholder stuff is a workaround for ianstormtaylor/slate#860 */
+    }
+    const isEmpty = toPlainText(state) === '';
+
     return (
-      <SlateEditor
-        state={state}
-        onChange={onChange}
-        onKeyDown={onEnter && this.onKeyDown}
-        plugins={this.state.plugins}
-        {...rest}
-      />
+      <Wrapper>
+        <SlateEditor
+          state={state}
+          onChange={onChange}
+          onKeyDown={onEnter && this.onKeyDown}
+          plugins={this.state.plugins}
+          {...rest}
+        />
+        {isEmpty && <CustomPlaceholder>{placeholder}</CustomPlaceholder>}
+      </Wrapper>
     );
   }
 }
