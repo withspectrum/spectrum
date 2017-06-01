@@ -23,7 +23,7 @@ const general = /* GraphQL */ `
 		isModerator: Boolean
 	}
 
-	input File {
+  input File {
     name: String!
     type: String!
     size: Int!

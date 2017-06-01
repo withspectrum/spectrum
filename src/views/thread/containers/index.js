@@ -125,9 +125,11 @@ const ThreadContainerPure = ({
           currentUser &&
             !thread.isLocked &&
             (thread.isCreator || thread.channel.channelPermissions.isMember) &&
+
             <ChatInputWrapper>
-              <ChatInput thread={thread.id} />
-            </ChatInputWrapper>}
+              <ChatInput threadType="story" thread={thread.id} />
+            </ChatInputWrapper>
+          }
 
           {// if the user exists but isn't a subscriber to the channel,
           // show an upsell to join the channel

@@ -4,6 +4,9 @@
  */
 const IS_PROD = process.env.NODE_ENV === 'production';
 const PORT = 3001;
+// NOTE(@mxstbr): 1Password generated this, LGTM!
+const COOKIE_SECRET =
+  't3BUqGYFHLNjb7V8xjY6QLECgWy7ByWTYjKkPtuP%R.uLfjNBQKr9pHuKuQJXNqo';
 
 const path = require('path');
 const fs = require('fs');
@@ -23,6 +26,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 //$FlowFixMe
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
+const { execute, subscribe } = require('graphql');
 //$FlowFixMe
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 //$FlowFixMe
@@ -36,7 +40,6 @@ const { maskErrors } = require('graphql-errors');
 
 const { db } = require('./models/db');
 const listeners = require('./subscriptions/listeners');
-const subscriptionManager = require('./subscriptions/manager');
 
 const schema = require('./schema');
 const { init: initPassport } = require('./authentication.js');
@@ -51,6 +54,11 @@ console.log('Server starting...');
 initPassport();
 // API server
 const app = express();
+
+const sessionStore = new SessionStore(db, {
+  db: 'spectrum',
+  table: 'sessions',
+});
 
 app.use(OpticsAgent.middleware());
 maskErrors(schema);
@@ -78,12 +86,8 @@ app.use(bodyParser.json());
 app.use(apolloUploadExpress());
 app.use(
   session({
-    store: new SessionStore(db, {
-      db: 'spectrum',
-      table: 'sessions',
-    }),
-    // NOTE(@mxstbr): 1Password generated this, LGTM!
-    secret: 't3BUqGYFHLNjb7V8xjY6QLECgWy7ByWTYjKkPtuP%R.uLfjNBQKr9pHuKuQJXNqo',
+    store: sessionStore,
+    secret: COOKIE_SECRET,
     resave: true,
     saveUninitialized: true,
     cookie: {
@@ -159,16 +163,51 @@ export type GraphQLContext = {
 };
 
 const server = createServer(app);
-
+const sessionCookieParser = cookieParser(COOKIE_SECRET);
+const { getUser } = require('./models/user');
 // Start subscriptions server
-const subscriptionsServer = new SubscriptionServer(
+const subscriptionsServer = SubscriptionServer.create(
   {
-    subscriptionManager,
-    onConnect: connectionParams => {
-      return {
-        loaders: createLoaders(),
-      };
-    },
+    execute,
+    subscribe,
+    schema,
+    onConnect: (connectionParams, rawSocket) =>
+      new Promise((res, rej) => {
+        // Authenticate the connecting user
+        sessionCookieParser(rawSocket.upgradeReq, null, err => {
+          if (err)
+            return res({
+              // TODO: Pass optics to subscriptions context
+              // opticsContext: OpticsAgent.context(req),
+              loaders: createLoaders(),
+            });
+          const sessionId = rawSocket.upgradeReq.signedCookies['connect.sid'];
+          sessionStore.get(sessionId, (err, session) => {
+            if (err)
+              return res({
+                // TODO: Pass optics to subscriptions context
+                // opticsContext: OpticsAgent.context(req),
+                loaders: createLoaders(),
+              });
+            getUser({ id: session.passport.user })
+              .then(user => {
+                return res({
+                  user,
+                  // TODO: Pass optics to subscriptions context
+                  // opticsContext: OpticsAgent.context(req),
+                  loaders: createLoaders(),
+                });
+              })
+              .catch(err => {
+                return res({
+                  // TODO: Pass optics to subscriptions context
+                  // opticsContext: OpticsAgent.context(req),
+                  loaders: createLoaders(),
+                });
+              });
+          });
+        });
+      }),
   },
   {
     server,

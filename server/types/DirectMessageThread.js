@@ -38,7 +38,7 @@ const DirectMessageThread = /* GraphQL */ `
 	input ContentInput {
 		body: String!
 	}
-	
+
 	input DirectMessageContentInput {
 		messageType: MessageType!
 		threadType: String!
