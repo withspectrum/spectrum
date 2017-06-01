@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
-import { SERVER_URL } from '../../api';
+import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../api';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
@@ -339,10 +339,7 @@ class UpsellUpgradeToProPure extends Component {
     return (
       <NullCard bg="pro">
         <Profile>
-          <img
-            alt={currentUser.name}
-            src={`${currentUser.profilePhoto}?w=48&dpr=2`}
-          />
+          <img alt={currentUser.name} src={`${currentUser.profilePhoto}`} />
           <span>PRO</span>
         </Profile>
         <Title>Upgrade to Pro</Title>
@@ -352,7 +349,7 @@ class UpsellUpgradeToProPure extends Component {
         <Cost>Spectrum Pro costs $5/month and you can cancel at any time.</Cost>
         <StripeCheckout
           token={this.upgradeToPro}
-          stripeKey={'pk_test_A6pKi4xXOdgg9FrZJ84NW9mP'}
+          stripeKey={PUBLIC_STRIPE_KEY}
           name="🔐   Pay Securely"
           description="Secured and Encrypted by Stripe"
           panelLabel="Subscribe for "
