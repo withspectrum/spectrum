@@ -10,7 +10,7 @@ import {
 import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
-import { MessagesContainer, ViewContent } from '../style';
+import { MessagesContainer, ViewContent, FlexChatInput } from '../style';
 
 class ExistingThread extends Component {
   componentDidMount() {
@@ -65,7 +65,7 @@ class ExistingThread extends Component {
 
       return (
         <MessagesContainer>
-          <ViewContent innerRef={scrollBody => this.scrollBody = scrollBody}>
+          <ViewContent innerRef={scrollBody => (this.scrollBody = scrollBody)}>
             <Header thread={thread} currentUser={currentUser} />
             <Messages
               id={id}
@@ -75,7 +75,7 @@ class ExistingThread extends Component {
             />
           </ViewContent>
 
-          <ChatInput
+          <FlexChatInput
             thread={id}
             threadType={'directMessageThread'}
             refetchThread={this.refetchThread}
