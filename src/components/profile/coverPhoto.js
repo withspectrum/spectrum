@@ -4,14 +4,15 @@ import React from 'react';
 import styled from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+import { Gradient } from '../globals';
 import { ProfileHeaderAction } from './style';
 
 const PhotoContainer = styled.div`
   position: relative;
   width: 100%;
   height: ${props => (props.large ? '320px' : '96px')};
-  background-color: ${({ theme }) => theme.brand.default};
-  background-image: url('${props => props.coverURL}');
+  background-color: ${({ theme }) => theme.generic.default};
+  background-image: url('${props => (props.coverURL ? props.coverURL : Gradient(props.theme.generic.alt, props.theme.generic.default))}');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
