@@ -1,4 +1,4 @@
-import { clearApolloStore } from '../api';
+import { clearApolloStore, SERVER_URL } from '../api';
 import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
 
 const eraseCookie = name => {
@@ -13,7 +13,7 @@ export const logout = () => {
   // redirect to home page
   window.location.href = process.env.NODE_ENV === 'production'
     ? '/auth/logout'
-    : 'http://localhost:3001/auth/logout';
+    : `${SERVER_URL}/auth/logout`;
 };
 
 export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
