@@ -33,7 +33,7 @@ const Thread = /* GraphQL */ `
 	type Thread {
 		id: ID!
 		createdAt: Date!
-		modifiedAt: Date!
+		modifiedAt: Date
 		channel: Channel!
 		community: Community!
 		channelPermissions: ChannelPermissions!
