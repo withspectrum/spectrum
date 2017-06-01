@@ -18,7 +18,6 @@ import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
 import { IconButton, Button } from '../../../components/buttons';
 import Editor, {
-  fromPlainText,
   toJSON,
   toPlainText,
   toState,
@@ -172,9 +171,6 @@ class ThreadDetailPure extends Component {
       body: bodyToSave,
     };
 
-    console.log('this.state.body', this.state.body);
-    console.log('bodyToSave', bodyToSave);
-
     const input = {
       threadId,
       content,
@@ -208,11 +204,8 @@ class ThreadDetailPure extends Component {
   };
 
   changeBody = state => {
-    console.log('state', state);
     let foo = toJSON(state);
-    console.log('foo 1', foo);
     foo = JSON.stringify(foo);
-    console.log('foo 2', foo);
     this.setState({
       editBody: foo,
     });
@@ -292,12 +285,8 @@ class ThreadDetailPure extends Component {
       linkPreview,
       linkPreviewTrueUrl,
       viewBody,
-      editBody,
       fetchingLinkPreview,
     } = this.state;
-
-    console.log('rendering viewBody', viewBody);
-    console.log('rendering editBody', editBody);
 
     let f = this.state.editBody;
 

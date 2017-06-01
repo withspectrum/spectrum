@@ -1,9 +1,6 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import {
-  reactionInfoFragment,
-} from '../../api/fragments/reaction/reactionInfo';
 import { messageInfoFragment } from '../../api/fragments/message/messageInfo';
 
 /*

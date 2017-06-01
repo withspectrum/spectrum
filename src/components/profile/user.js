@@ -16,7 +16,6 @@ import { initNewThreadWithUser } from '../../actions/directMessageThreads';
 import Icon from '../icons';
 import { CoverPhoto } from './coverPhoto';
 import type { ProfileSizeProps } from './index';
-import { Avatar } from '../avatar';
 import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
 import {

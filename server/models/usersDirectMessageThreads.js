@@ -18,7 +18,6 @@ const createMemberInDirectMessageThread = (
   userId: string,
   setActive: boolean
 ): Promise<Object> => {
-  console.log("creating member in dm thread'", setActive);
   return db
     .table('usersDirectMessageThreads')
     .insert(

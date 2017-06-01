@@ -137,7 +137,7 @@ const publishThread = (thread: Object, userId: string): Promise<Object> => {
       Object.assign({}, thread, {
         creatorId: userId,
         createdAt: new Date(),
-        modifiedAt: new Date(),
+        modifiedAt: null,
         isPublished: true,
         isLocked: false,
         edits: [],
@@ -231,7 +231,6 @@ const editThread = (input: EditThreadInput): Promise<Object> => {
     )
     .run()
     .then(result => {
-      console.log('result', result);
       // if an update happened
       if (result.replaced === 1) {
         return result.changes[0].new_val;
