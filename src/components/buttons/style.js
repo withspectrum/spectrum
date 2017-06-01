@@ -24,7 +24,7 @@ const baseButton = css`
   &:hover {
     border-radius: ${props => (props.disabled ? '8px' : '12px')};
     transition: ${Transition.hover.on};
-    box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.high} ${hexa(props.theme.text.placeholder, 0.5)}`)};
+    box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.high} ${hexa(props.theme.text.default, 0.15)}`)};
     opacity: ${props => (props.disabled ? '0.5' : '1')};
   }
 

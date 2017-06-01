@@ -162,6 +162,11 @@ class CommunityWithData extends Component {
       });
   };
 
+  cancelForm = e => {
+    e.preventDefault();
+    return (window.location.href = `/${this.props.community.slug}`);
+  };
+
   triggerDeleteCommunity = (e, communityId) => {
     e.preventDefault();
     const { name, communityData } = this.state;
@@ -256,7 +261,9 @@ class CommunityWithData extends Component {
                 onClick={e => this.triggerDeleteCommunity(e, community.id)}
               />
             </TertiaryActionContainer>
-            <TextButton hoverColor={'warn.alt'}>Cancel</TextButton>
+            <TextButton hoverColor={'warn.alt'} onClick={this.cancelForm}>
+              Cancel
+            </TextButton>
             <Button onClick={this.save}>Save</Button>
           </Actions>
         </Form>

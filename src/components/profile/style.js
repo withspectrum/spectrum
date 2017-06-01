@@ -34,7 +34,7 @@ export const ProfileHeaderLink = styled(Link)`
   flex: 1 1 auto;
   min-width: 0;
 
-  &:hover h3 {
+  &:hover h3{
     transition: ${Transition.hover.on};
     color: ${props => props.theme.brand.alt};
   }
@@ -203,5 +203,10 @@ export const CoverDescription = styled(Description)`
 export const ProfileCard = styled(Card)`
   > div:first-of-type, > a > div {
     padding: 16px;
+
+    h4 > a:hover {
+      color: ${({ theme }) => theme.brand.alt};
+      text-decoration: underline;
+    }
   }
 `;

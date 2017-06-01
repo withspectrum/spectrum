@@ -148,18 +148,17 @@ class UpgradeModal extends React.Component {
                 >
                   Get Support
                 </Button>
-
-                {upgradeError &&
-                  <SectionError
-                    width={'100%'}
-                    centered={true}
-                    error={upgradeError}
-                  >
-                    <Padding padding={'0.5rem'}>
-                      {upgradeError}
-                    </Padding>
-                  </SectionError>}
               </SectionActions>
+              {upgradeError &&
+                <SectionError
+                  width={'100%'}
+                  centered={true}
+                  error={upgradeError}
+                >
+                  <Padding padding={'0.5rem'}>
+                    {upgradeError}
+                  </Padding>
+                </SectionError>}
             </Section>}
 
           {!user.isPro && <UpsellUpgradeToPro />}

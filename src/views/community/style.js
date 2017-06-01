@@ -11,7 +11,8 @@ ${/* See class .flexy below - there's a hack on this element bc reasons 🙄 */ 
   }
 
   > .inset {
-    margin-top: -64px;
+    position: relative;
+    top: -64px;
   }
 
   @media (max-width: 768px) {

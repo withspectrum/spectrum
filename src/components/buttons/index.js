@@ -40,7 +40,9 @@ type IconProps = {
 export const Button = (props: ButtonProps) => (
   <StyledSolidButton {...props}>
     {props.icon
-      ? props.loading ? <Loading /> : <Icon glyph={props.icon} />
+      ? props.loading
+          ? <Spinner color="text.reverse" size="16" />
+          : <Icon glyph={props.icon} />
       : ''}
     {props.loading && !props.icon && <Spinner color="text.reverse" size="16" />}
     <Label loading={props.loading} hasIcon={props.icon}>{props.children}</Label>
@@ -50,9 +52,11 @@ export const Button = (props: ButtonProps) => (
 export const OutlineButton = (props: ButtonProps) => (
   <StyledOutlineButton {...props}>
     {props.icon
-      ? props.loading ? <Loading /> : <Icon glyph={props.icon} />
+      ? props.loading
+          ? <Spinner color="brand.alt" size="16" />
+          : <Icon glyph={props.icon} />
       : ''}
-    {props.loading && !props.icon && <Spinner />}
+    {props.loading && !props.icon && <Spinner color="brand.alt" size="16" />}
     <Label loading={props.loading} hasIcon={props.icon}>{props.children}</Label>
   </StyledOutlineButton>
 );
@@ -60,9 +64,11 @@ export const OutlineButton = (props: ButtonProps) => (
 export const TextButton = (props: ButtonProps) => (
   <StyledTextButton {...props}>
     {props.icon
-      ? props.loading ? <Loading /> : <Icon glyph={props.icon} />
+      ? props.loading
+          ? <Spinner color="text.alt" size="16" />
+          : <Icon glyph={props.icon} />
       : ''}
-    {props.loading && !props.icon && <Spinner color="text.reverse" size="16" />}
+    {props.loading && !props.icon && <Spinner color="text.alt" size="16" />}
     <Label loading={props.loading}>
       {props.children}
     </Label>

@@ -52,7 +52,7 @@ export const CommunityListItem = (props: CardProps): React$Element<any> => {
 
 export const ChannelListItem = (props: CardProps): React$Element<any> => {
   return (
-    <Wrapper>
+    <Wrapper clickable={props.clickable}>
       <Row>
         <ChannelTypeIndicator>
           {props.contents.isPrivate

@@ -70,6 +70,7 @@ export const GeneralNotice = styled.span`
   border-radius: 4px;
   margin-top: 24px;
   line-height: 1.4;
+  display: inline-block;
 `;
 
 export const ImageInputWrapper = styled(FlexCol)`
