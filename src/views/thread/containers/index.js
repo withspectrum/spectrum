@@ -35,15 +35,8 @@ class ThreadContainerPure extends Component {
   };
 
   contextualScrollToBottom = () => {
-    console.log('container scroll');
     if (!this.scrollBody) return;
     let node = this.scrollBody;
-    console.log(
-      'scrollbody ',
-      node.scrollHeight,
-      node.clientHeight,
-      node.scrollTop
-    );
     if (node.scrollHeight - node.clientHeight < node.scrollTop + 140) {
       node.scrollTop = node.scrollHeight - node.clientHeight;
     }
