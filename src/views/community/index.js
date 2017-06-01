@@ -135,7 +135,7 @@ const CommunityViewPure = props => {
         <MobileCommunityProfile>
           <CommunityProfile data={{ community }} profileSize="full" />
         </MobileCommunityProfile>
-        <CoverRow>
+        <CoverRow className={'flexy'}>
           <Column type="secondary" className={'inset'}>
             <CommunityProfile data={{ community }} profileSize="full" />
             <ChannelListCard slug={communitySlug} />
