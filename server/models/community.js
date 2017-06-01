@@ -4,6 +4,7 @@ const { db } = require('./db');
 import { UserError } from 'graphql-errors';
 import { createChannel, deleteChannel } from './channel';
 import { uploadImage } from '../utils/s3';
+import getRandomDefaultPhoto from '../utils/get-random-default-photo';
 
 type GetCommunityByIdArgs = {
   id: string,
@@ -118,10 +119,14 @@ const createCommunity = (
     .then(community => {
       // if no file was uploaded, update the community with new string values
       if (!file && !coverFile) {
+        const { coverPhoto, profilePhoto } = getRandomDefaultPhoto();
         return db
           .table('communities')
-          .get(communityId)
-          .update({ ...community }, { returnChanges: 'always' })
+          .get(community.id)
+          .update(
+            { ...community, profilePhoto, coverPhoto },
+            { returnChanges: 'always' }
+          )
           .run()
           .then(result => {
             // if an update happened
@@ -138,6 +143,7 @@ const createCommunity = (
 
       if (file || coverFile) {
         if (file && !coverFile) {
+          const { coverPhoto } = getRandomDefaultPhoto();
           return uploadImage(
             file,
             'communities',
@@ -152,6 +158,7 @@ const createCommunity = (
                     {
                       ...community,
                       profilePhoto,
+                      coverPhoto,
                     },
                     { returnChanges: 'always' }
                   )
@@ -172,6 +179,7 @@ const createCommunity = (
             }
           );
         } else if (!file && coverFile) {
+          const { profilePhoto } = getRandomDefaultPhoto();
           return uploadImage(
             coverFile,
             'communities',
@@ -186,6 +194,7 @@ const createCommunity = (
                     {
                       ...community,
                       coverPhoto,
+                      profilePhoto,
                     },
                     { returnChanges: 'always' }
                   )
@@ -301,6 +310,7 @@ const editCommunity = ({
 
       if (file || coverFile) {
         if (file && !coverFile) {
+          const { coverPhoto } = getRandomDefaultPhoto();
           return uploadImage(
             file,
             'communities',
@@ -315,6 +325,7 @@ const editCommunity = ({
                     {
                       ...community,
                       profilePhoto,
+                      coverPhoto,
                     },
                     { returnChanges: 'always' }
                   )
@@ -335,6 +346,7 @@ const editCommunity = ({
             }
           );
         } else if (!file && coverFile) {
+          const { profilePhoto } = getRandomDefaultPhoto();
           return uploadImage(
             coverFile,
             'communities',
@@ -349,6 +361,7 @@ const editCommunity = ({
                     {
                       ...community,
                       coverPhoto,
+                      profilePhoto,
                     },
                     { returnChanges: 'always' }
                   )
