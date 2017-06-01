@@ -174,7 +174,7 @@ const editUser = (
 
       if (file || coverFile) {
         if (file && !coverFile) {
-          return uploadImage(file, 'users', user, profilePhoto => {
+          return uploadImage(file, 'users', user.id, profilePhoto => {
             // update the user with the profilePhoto
             return (
               db
@@ -280,6 +280,28 @@ const editUser = (
             );
           });
         }
+      } else {
+        return db
+          .table('users')
+          .get(user.id)
+          .update(
+            {
+              ...user,
+            },
+            { returnChanges: 'always' }
+          )
+          .run()
+          .then(result => {
+            // if an update happened
+            if (result.replaced === 1) {
+              return result.changes[0].new_val;
+            }
+
+            // an update was triggered from the client, but no data was changed
+            if (result.unchanged === 1) {
+              return result.changes[0].old_val;
+            }
+          });
       }
     });
 };

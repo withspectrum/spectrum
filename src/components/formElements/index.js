@@ -77,7 +77,10 @@ export const CoverInput = (props: InputProps) => {
       <InputOverlay>
         <Icon glyph="photo" />
       </InputOverlay>
-      <CoverImage src={`${props.defaultValue}`} role="presentation" />
+      <CoverImage
+        src={`${props.defaultValue}?w=290&dpr=2`}
+        role="presentation"
+      />
       <StyledHiddenInput
         type="file"
         id="file"
