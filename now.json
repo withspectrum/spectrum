@@ -5,6 +5,7 @@
 		"COMPOSE_PASSWORD": "@compose-password",
 		"COMPOSE_URL": "@compose-url",
 		"COMPOSE_PORT": "@compose-port",
-    "OPTICS_API_KEY": "@optics-api-key"
+    "OPTICS_API_KEY": "@optics-api-key",
+		"STRIPE_TOKEN": "@stripe-token"
 	}
 }
