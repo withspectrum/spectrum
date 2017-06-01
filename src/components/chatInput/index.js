@@ -43,6 +43,9 @@ const ChatInputWithMutation = ({
   const submit = e => {
     e.preventDefault();
 
+    // If the input is empty don't do anything
+    if (toPlainText(state).trim() === '') return;
+
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
     // in views/directMessages/containers/newThread.js
@@ -76,12 +79,10 @@ const ChatInputWithMutation = ({
       });
   };
 
-  const handleKeyPress = e => {
-    if (e.keyCode === 13 && !e.shiftKey) {
-      //=> make the enter key send a message, not create a new line in the next autoexpanding textarea unless shift is pressed.
-      e.preventDefault(); //=> prevent linebreak
-      submit(e); //=> send the message instead
-    }
+  const handleEnter = e => {
+    //=> make the enter key send a message, not create a new line in the next autoexpanding textarea unless shift is pressed.
+    e.preventDefault(); //=> prevent linebreak
+    submit(e); //=> send the message instead
   };
 
   const sendMediaMessage = e => {
@@ -139,11 +140,12 @@ const ChatInputWithMutation = ({
         <Input
           placeholder="Your message here..."
           state={state}
-          onKeyDown={handleKeyPress}
+          onEnter={handleEnter}
           onChange={onChange}
           markdown={false}
           onFocus={onFocus}
           onBlur={onBlur}
+          singleLine
         />
         <SendButton glyph="send-fill" onClick={submit} />
       </Form>

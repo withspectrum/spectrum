@@ -10,6 +10,23 @@ import { CustomPlaceholder, Wrapper } from './style';
 
 const ENTER = 13;
 
+// Taken from https://github.com/ianstormtaylor/slate/issues/419
+// TODO: Make separate package
+const SingleLinePlugin = {
+  schema: {
+    rules: [
+      {
+        match: node => node.kind === 'document',
+        validate: node => (node.nodes.size > 1 ? true : null),
+        normalize: (transform, node, value) => {
+          const toRemove = node.nodes.slice(1);
+          toRemove.forEach(child => transform.removeNodeByKey(child.key));
+        },
+      },
+    ],
+  },
+};
+
 const initialState = Plain.deserialize('');
 
 type EditorProps = {
@@ -18,6 +35,7 @@ type EditorProps = {
   onChange?: Function,
   onEnter?: Function,
   placeholder?: string,
+  singleLine?: boolean,
 };
 
 class Editor extends Component {
@@ -32,7 +50,10 @@ class Editor extends Component {
     super(props);
     this.state = {
       state: initialState,
-      plugins: [props.markdown !== false && MarkdownPlugin()],
+      plugins: [
+        props.markdown !== false && MarkdownPlugin(),
+        props.singleLine === true && SingleLinePlugin,
+      ],
     };
   }
 
