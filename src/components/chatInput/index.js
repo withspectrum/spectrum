@@ -131,11 +131,11 @@ const ChatInputWithMutation = ({
           subtle
         />
       </MediaLabel>
-      <EmojiToggle
+      {/* <EmojiToggle
         glyph="emoji"
         tipText="Insert Emoji"
         tipLocation="top-right"
-      />
+      /> */}
       <Form>
         <Input
           placeholder="Your message here..."

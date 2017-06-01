@@ -35,7 +35,7 @@ export const Input = styled(Editor)`
 	max-height: 120px;
 	min-height: 40px;
   max-width: 100%;
-	padding: 8px 40px;
+	padding: 8px 40px 8px 16px;
 	border-radius: 24px;
 	border: 2px solid ${props => props.theme.text.placeholder};
 	transition: border 0.3s ease-out;
