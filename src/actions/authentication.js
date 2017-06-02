@@ -2,6 +2,7 @@
 import { track } from '../helpers/events';
 import { clearApolloStore } from '../api';
 import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
+import Raven from 'raven-js';
 
 const eraseCookie = name => {
   document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
@@ -33,6 +34,9 @@ export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
     username: user.username,
     profilePhoto: user.profilePhoto,
   };
+
+  // logs the user uid to sentry errors
+  Raven.setUserContext({ id: user.id });
 
   // save this object to localstorage. This will be used in the future to hydrate
   // the store when users visit the homepage
