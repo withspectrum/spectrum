@@ -92,26 +92,36 @@ class ThreadComposerWithData extends Component {
       If no defaults are set, we use the first available community, and then
       find the first available channel within that available community
     */
-    const activeCommunity = props.activeCommunity
+    let activeCommunity = props.activeCommunity
       ? availableCommunities.filter(community => {
           return community.slug === props.activeCommunity;
         })[0].id
       : availableCommunities[0].id;
-    const activeChannel = props.activeChannel
+
+    let activeChannel = props.activeChannel
       ? availableChannels
           .filter(
             // get the channels for the proper community
             channel => channel.community.id === activeCommunity
           )
-          .map(
-            channel =>
-              // get the correct channel based on the slug
-              channel.slug === props.activeChannel
-          ).id
+          .filter(channel => {
+            // get the correct channel based on the slug
+            if (channel.slug === props.activeChannel) {
+              return channel;
+            }
+          })
       : availableChannels.filter(
           // get the channels for the proper community
-          channel => channel.community.id === activeCommunity
-        )[0].id; // and select the first one in the list
+          channel => {
+            if (channel.community.id === activeCommunity) {
+              return channel;
+            }
+          }
+        ); // and select the first one in the list
+
+    // ensure that if no items were found for some reason, we don't crash the app
+    // and instead just set null values on the composer
+    activeChannel = activeChannel.length > 0 ? activeChannel[0].id : null;
 
     this.state = {
       title: props.title || '',
@@ -140,6 +150,44 @@ class ThreadComposerWithData extends Component {
       body: state,
     });
   };
+
+  componentDidUpdate(prevProps) {
+    const { availableCommunities, availableChannels } = this.state;
+
+    if (prevProps.activeCommunity !== this.props.activeCommunity) {
+      const activeCommunity = this.props.activeCommunity
+        ? availableCommunities.filter(community => {
+            return community.slug === this.props.activeCommunity;
+          })[0].id
+        : availableCommunities[0].id;
+
+      this.setState({
+        activeCommunity,
+      });
+    }
+
+    if (prevProps.activeChannel !== this.props.activeChannel) {
+      const activeChannel = this.props.activeChannel
+        ? availableChannels
+            .filter(
+              // get the channels for the proper community
+              channel => channel.community.id === this.props.activeCommunity
+            )
+            .map(
+              channel =>
+                // get the correct channel based on the slug
+                channel.slug === this.props.activeChannel
+            ).id
+        : availableChannels.filter(
+            // get the channels for the proper community
+            channel => channel.community.id === this.props.activeCommunity
+          )[0].id; // and select the first one in the list
+
+      this.setState({
+        activeChannel,
+      });
+    }
+  }
 
   handleOpenComposer = () => {
     // strange construction here in order to guarantee that we focus the title
