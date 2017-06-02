@@ -2,21 +2,18 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
 import { Link } from 'react-router-dom';
-
-import { openModal } from '../../actions/modals';
 import { openGallery } from '../../actions/gallery';
 import {
   convertTimestampToDate,
   convertTimestampToTime,
   onlyContainsEmoji,
 } from '../../helpers/utils';
-import { track } from '../../helpers/events';
 import { NullState } from '../upsell';
 import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
 import Badge from '../badges';
-import Icon from '../icons';
-import { Reaction, Count } from '../bubbles/style';
+import Reaction from '../reaction';
 
 import {
   Avatar,
@@ -46,7 +43,7 @@ class ChatMessages extends Component {
   };
 
   render() {
-    const { messages, currentUser, toggleReaction, dispatch } = this.props;
+    const { messages, currentUser, toggleReaction } = this.props;
 
     if (!messages) {
       return (
@@ -57,10 +54,6 @@ class ChatMessages extends Component {
         />
       );
     } else {
-      const openUserProfileModal = (user: Object) => {
-        return dispatch(openModal('USER_PROFILE_MODAL', { user }));
-      };
-
       const renderAvatar = (sender: Object, me: boolean) => {
         const robo = sender.id === 'robo';
         if (me || robo) return;
@@ -90,60 +83,6 @@ class ChatMessages extends Component {
               {user.isPro && <Badge type="pro" />}
             </Link>
           </Byline>
-        );
-      };
-
-      const renderReaction = (
-        message: Object,
-        sender: Object,
-        me: boolean
-      ): React$Element<any> => {
-        const reactionUsers = message.reactions
-          ? message.reactions.map(reaction => reaction.user.id)
-          : null;
-        let reactionCount = message.reactions && reactionUsers
-          ? reactionUsers.length
-          : 0;
-        let userHasReacted = currentUser
-          ? reactionUsers && reactionUsers.includes(currentUser.id)
-          : false;
-        // probably a better way to do this
-
-        const doNothing = () => '';
-        const triggerMutation = () => {
-          track('reaction', userHasReacted ? 'removed' : 'created', null);
-
-          return (
-            toggleReaction({
-              messageId: message.id,
-              type: 'like',
-            })
-              // after the mutation occurs, it will either return an error or the new
-              // thread that was published
-              .then(({ data }) => {
-                // can do something with the returned reaction here
-              })
-              .catch(error => {
-                // TODO add some kind of dispatch here to show an error to the user
-                console.log('error toggling reaction', error);
-              })
-          );
-        };
-
-        return (
-          <Reaction
-            hasCount={reactionCount}
-            active={userHasReacted}
-            me={me}
-            hide={(me || !currentUser) && reactionCount === 0}
-            onClick={
-              me ? doNothing : triggerMutation
-              // : () => toggleReaction(message.id, userHasReacted)
-            }
-          >
-            <Icon glyph="like-fill" size={16} color={'text.reverse'} />
-            <Count>{reactionCount}</Count>
-          </Reaction>
         );
       };
 
@@ -198,7 +137,13 @@ class ChatMessages extends Component {
                             }
                           />
 
-                          {!emojiOnly && renderReaction(message, sender, me)}
+                          {!emojiOnly &&
+                            <Reaction
+                              message={message}
+                              toggleReaction={toggleReaction}
+                              me={me}
+                              currentUser={currentUser}
+                            />}
                         </MessageWrapper>
                       );
                     } else if (message.messageType === 'media') {
@@ -221,7 +166,12 @@ class ChatMessages extends Component {
                                 : false
                             }
                           />
-                          {renderReaction(message, sender, me)}
+                          <Reaction
+                            message={message}
+                            toggleReaction={toggleReaction}
+                            me={me}
+                            currentUser={currentUser}
+                          />
                         </MessageWrapper>
                       );
                     } else {

@@ -21,6 +21,12 @@ module.exports = {
   Message: {
     sender: ({ senderId }: Root, _: any, { loaders }: GraphQLContext) =>
       loaders.user.load(senderId),
-    reactions: ({ id }: Root) => getReactions(id),
+    reactions: ({ id }: Root, _, { user }) =>
+      getReactions(id).then(reactions => {
+        return {
+          count: reactions.length,
+          hasReacted: reactions.some(reaction => reaction.userId === user.id),
+        };
+      }),
   },
 };

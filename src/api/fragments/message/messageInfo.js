@@ -13,12 +13,12 @@ export const messageInfoFragment = gql`
       ...userInfo
     }
     reactions {
-      ...reactionInfo
+      count
+      hasReacted
     }
     content {
       body
     }
   }
   ${userInfoFragment}
-  ${reactionInfoFragment}
 `;

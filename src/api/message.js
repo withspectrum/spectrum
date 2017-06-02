@@ -50,12 +50,14 @@ const SEND_MESSAGE_OPTIONS = {
               },
             });
 
+            console.log('add message ', addMessage);
+
             // Add our comment from the mutation to the end.
             data.thread.messageConnection.edges.push({
               node: addMessage,
               __typename: 'ThreadMessageEdge',
             });
-            console.log('data updated', data);
+
             // Write our data back to the cache.
             store.writeQuery({
               query: GET_THREAD_MESSAGES_QUERY,

@@ -8,7 +8,7 @@ import { TextBubble, Emoji, ImageBubble } from './style';
 
 type BubbleProps = {
   me: boolean,
-  persisted: boolean,
+  pending: boolean,
   sender: Object,
   message: Object,
   imgSrc?: String,
@@ -16,7 +16,7 @@ type BubbleProps = {
 };
 
 export const Bubble = (props: BubbleProps) => {
-  const { me, persisted, message, type } = props;
+  const { me, pending, message, type } = props;
 
   const formatMessageForChannelLinks = (body: string): string => {
     if (!body) {
@@ -52,7 +52,7 @@ export const Bubble = (props: BubbleProps) => {
   return (
     <TextBubble
       me={me}
-      persisted={persisted}
+      pending={pending}
       dangerouslySetInnerHTML={{
         // if in a thread, we convert `~channel` into a link.
         // if in a groupMessage, don't regex links
@@ -65,11 +65,11 @@ export const Bubble = (props: BubbleProps) => {
 };
 
 export const EmojiBubble = (props: BubbleProps) => {
-  const { me, persisted, message } = props;
+  const { me, pending, message } = props;
   return (
     <Emoji
       me={me}
-      persisted={persisted}
+      pending={pending}
       dangerouslySetInnerHTML={{
         __html: sanitizeHtml(message.body),
       }}
@@ -78,12 +78,12 @@ export const EmojiBubble = (props: BubbleProps) => {
 };
 
 export const ImgBubble = (props: Object) => {
-  const { me, persisted, imgSrc } = props;
+  const { me, pending, imgSrc } = props;
   return (
     <ImageBubble
       onClick={props.openGallery}
       me={me}
-      persisted={persisted}
+      pending={pending}
       src={`${imgSrc}?max-w=${window.innerWidth * 0.6}`}
     />
   );
