@@ -553,7 +553,12 @@ const getTopCommunities = (amount: number): Array<Object> => {
         })
         .map(community => community.id);
 
-      return db.table('communities').getAll(...sortedCommunities).run();
+      return db
+        .table('communities')
+        .getAll(...sortedCommunities)
+        .filter(community => db.not(community.hasFields('deletedAt')))
+        .limit(10)
+        .run();
     });
 };
 
