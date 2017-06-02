@@ -19,7 +19,7 @@ export const StyledThreadFeedCard = styled(Card)`
     margin: 0;
 
     &:last-of-type {
-      margin-bottom: 16px;
+      margin-bottom: 0;
     }
   }
 

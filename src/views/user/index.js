@@ -11,6 +11,7 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
+import { track } from '../../helpers/events';
 import { UserProfile } from '../../components/profile';
 import { displayLoadingScreen } from '../../components/loading';
 import { NullState, Upsell404User } from '../../components/upsell';
@@ -26,6 +27,8 @@ const UserViewPure = ({
   data,
   currentUser,
 }) => {
+  track('user', 'profile viewed', null);
+
   const username = match.params.username;
 
   if (error || !user) {

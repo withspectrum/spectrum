@@ -6,6 +6,7 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import { track } from '../../../helpers/events';
 import generateMetaInfo from '../../../../server/shared/generate-meta-info';
 import { toggleChannelSubscriptionMutation } from '../../../api/channel';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -28,6 +29,10 @@ import {
 } from '../../../components/upsell';
 
 class ThreadContainerPure extends Component {
+  componentDidMount() {
+    track('thread', 'viewed', null);
+  }
+
   forceScrollToBottom = () => {
     if (!this.scrollBody) return;
     let node = this.scrollBody;
@@ -51,14 +56,17 @@ class ThreadContainerPure extends Component {
           toggleChannelSubscription.channelPermissions.isPending;
         let str;
         if (isPending) {
+          track('channel', 'requested to join', null);
           str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}`;
         }
 
         if (!isPending && isMember) {
+          track('channel', 'joined', null);
           str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`;
         }
 
         if (!isPending && !isMember) {
+          track('channel', 'unjoined', null);
           str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
         }
 

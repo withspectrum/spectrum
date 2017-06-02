@@ -8,7 +8,7 @@ import Modal from 'react-modal';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-
+import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { deleteCommunityMutation } from '../../../api/community';
@@ -35,6 +35,18 @@ import { Actions, Message } from './style';
   too after deleting a thing (e.g. '/foo/bar')
 */
 class DeleteDoubleCheckModal extends Component {
+  state: {
+    isLoading: boolean,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      isLoading: false,
+    };
+  }
+
   close = () => {
     this.props.dispatch(closeModal());
   };
@@ -49,16 +61,24 @@ class DeleteDoubleCheckModal extends Component {
       // history,
     } = this.props;
 
+    this.setState({
+      isLoading: true,
+    });
+
     switch (entity) {
       case 'thread': {
         return deleteThread(id)
           .then(({ data: { deleteThread } }) => {
             if (deleteThread) {
+              track('thread', 'deleted', null);
               // TODO: When we figure out the mutation reducers in apollo
               // client we can just history push and trust the store to update
               window.location.href = redirect ? redirect : '/';
               // history.push(redirect ? redirect : '/');
               dispatch(addToastWithTimeout('neutral', 'Thread deleted.'));
+              this.setState({
+                isLoading: false,
+              });
               this.close();
             }
           })
@@ -74,14 +94,16 @@ class DeleteDoubleCheckModal extends Component {
       case 'channel': {
         return deleteChannel(id)
           .then(({ data: { deleteChannel } }) => {
-            if (deleteChannel) {
-              // TODO: When we figure out the mutation reducers in apollo
-              // client we can just history push and trust the store to update
-              window.location.href = redirect ? redirect : '/';
-              // history.push(redirect ? redirect : '/');
-              dispatch(addToastWithTimeout('neutral', 'Channel deleted.'));
-              this.close();
-            }
+            track('channel', 'deleted', null);
+            // TODO: When we figure out the mutation reducers in apollo
+            // client we can just history push and trust the store to update
+            window.location.href = redirect ? redirect : '/';
+            // history.push(redirect ? redirect : '/');
+            dispatch(addToastWithTimeout('neutral', 'Channel deleted.'));
+            this.setState({
+              isLoading: false,
+            });
+            this.close();
           })
           .catch(err => {
             dispatch(
@@ -96,11 +118,15 @@ class DeleteDoubleCheckModal extends Component {
         return deleteCommunity(id)
           .then(({ data: { deleteCommunity } }) => {
             if (deleteCommunity) {
+              track('community', 'deleted', null);
               // TODO: When we figure out the mutation reducers in apollo
               // client we can just history push and trust the store to update
               window.location.href = redirect ? redirect : '/';
               // history.push(redirect ? redirect : '/');
               dispatch(addToastWithTimeout('neutral', 'Community deleted.'));
+              this.setState({
+                isLoading: false,
+              });
               this.close();
             }
           })
@@ -111,9 +137,16 @@ class DeleteDoubleCheckModal extends Component {
                 `Something went wrong and we weren't able to delete this community. ${err.message}`
               )
             );
+            this.setState({
+              isLoading: false,
+            });
           });
       }
       default: {
+        this.setState({
+          isLoading: false,
+        });
+
         return dispatch(
           addToastWithTimeout(
             'error',
@@ -148,7 +181,13 @@ class DeleteDoubleCheckModal extends Component {
             <TextButton onClick={this.close} color={'warn.alt'}>
               Cancel
             </TextButton>
-            <Button color="warn" onClick={this.triggerDelete}>Delete</Button>
+            <Button
+              loading={this.state.isLoading}
+              color="warn"
+              onClick={this.triggerDelete}
+            >
+              Delete
+            </Button>
           </Actions>
         </ModalContainer>
       </Modal>

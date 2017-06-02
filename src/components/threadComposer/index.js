@@ -11,6 +11,7 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import { connect } from 'react-redux';
 
+import { track } from '../../helpers/events';
 import { openComposer, closeComposer } from '../../actions/composer';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Editor, { fromPlainText, toJSON } from '../editor';
@@ -235,6 +236,8 @@ class ThreadComposerWithData extends Component {
       .then(({ data }) => {
         // get the thread id to redirect the user
         const id = data.publishThread.id;
+
+        track('thread', 'published', null);
 
         // stop the loading spinner on the publish button
         this.setState({

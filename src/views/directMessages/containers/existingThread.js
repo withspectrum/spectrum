@@ -2,7 +2,9 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
+// $FlowFixMe
 import { withApollo } from 'react-apollo';
+import { track } from '../../../helpers/events';
 import {
   setLastSeenMutation,
   GET_DIRECT_MESSAGE_THREAD_QUERY,
@@ -17,6 +19,7 @@ class ExistingThread extends Component {
     const threadId = this.props.match.params.threadId;
     this.props.setActiveThread(threadId);
     this.forceScrollToBottom();
+    track('direct message thread', 'viewed', null);
   }
 
   componentDidUpdate(prevProps) {

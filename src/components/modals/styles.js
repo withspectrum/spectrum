@@ -98,6 +98,10 @@ export const Description = styled.p`
   color: ${props => props.theme.text.default};
   padding: 8px 0 16px;
   line-height: 1.4;
+
+  a {
+    color: ${props => props.theme.brand.default};
+  }
 `;
 
 export const Notice = styled(Description)`

@@ -8,7 +8,7 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-
+import { track } from '../../helpers/events';
 import {
   editCommunityMutation,
   deleteCommunityMutation,
@@ -48,6 +48,7 @@ class CommunityWithData extends Component {
     coverFile: ?Object,
     communityData: Object,
     photoSizeError: boolean,
+    isLoading: boolean,
   };
   constructor(props) {
     super(props);
@@ -65,6 +66,7 @@ class CommunityWithData extends Component {
       coverFile: null,
       communityData: community,
       photoSizeError: false,
+      isLoading: false,
     };
   }
 
@@ -100,17 +102,25 @@ class CommunityWithData extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    this.setState({
+      isLoading: true,
+    });
+
     if (file.size > 3000000) {
       return this.setState({
         photoSizeError: true,
+        isLoading: false,
       });
     }
 
     reader.onloadend = () => {
+      track('community', 'profile photo uploaded', null);
+
       this.setState({
         file: file,
         image: reader.result,
         photoSizeError: false,
+        isLoading: false,
       });
     };
 
@@ -121,17 +131,25 @@ class CommunityWithData extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    this.setState({
+      isLoading: true,
+    });
+
     if (file.size > 3000000) {
       return this.setState({
         photoSizeError: true,
+        isLoading: false,
       });
     }
 
     reader.onloadend = () => {
+      track('community', 'cover photo uploaded', null);
+
       this.setState({
         coverFile: file,
         coverPhoto: reader.result,
         photoSizeError: false,
+        isLoading: false,
       });
     };
 
@@ -162,13 +180,23 @@ class CommunityWithData extends Component {
       return;
     }
 
+    this.setState({
+      isLoading: true,
+    });
+
     this.props
       .editCommunity(input)
       .then(({ data: { editCommunity } }) => {
         const community = editCommunity;
 
+        this.setState({
+          isLoading: false,
+        });
+
         // community was returned
         if (community !== undefined) {
+          track('community', 'edited', null);
+
           this.props.dispatch(
             addToastWithTimeout('success', 'Community saved!')
           );
@@ -176,6 +204,10 @@ class CommunityWithData extends Component {
         }
       })
       .catch(err => {
+        this.setState({
+          isLoading: false,
+        });
+
         this.props.dispatch(
           addToastWithTimeout(
             'error',
@@ -192,6 +224,7 @@ class CommunityWithData extends Component {
 
   triggerDeleteCommunity = (e, communityId) => {
     e.preventDefault();
+    track('community', 'delete inited', null);
     const { name, communityData } = this.state;
     const message = (
       <div>
@@ -231,6 +264,7 @@ class CommunityWithData extends Component {
       coverPhoto,
       website,
       photoSizeError,
+      isLoading,
     } = this.state;
     const { community } = this.props;
 
@@ -296,7 +330,13 @@ class CommunityWithData extends Component {
             <TextButton hoverColor={'warn.alt'} onClick={this.cancelForm}>
               Cancel
             </TextButton>
-            <Button onClick={this.save} disabled={photoSizeError}>Save</Button>
+            <Button
+              loading={isLoading}
+              onClick={this.save}
+              disabled={photoSizeError}
+            >
+              Save
+            </Button>
           </Actions>
 
           {photoSizeError &&

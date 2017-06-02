@@ -7,6 +7,7 @@ import pure from 'recompose/pure';
 //$FlowFixMe
 import { connect } from 'react-redux';
 import { getThisChannel } from './queries';
+import { track } from '../../helpers/events';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import { displayLoadingScreen } from '../../components/loading';
@@ -99,6 +100,14 @@ const SettingsPure = ({
       .then(({ data: { togglePendingUser } }) => {
         // the mutation returns a channel object. if it exists,
         if (togglePendingUser !== undefined) {
+          if (action === 'block') {
+            track('channel', 'blocked pending user', null);
+          }
+
+          if (action === 'approve') {
+            track('channel', 'approved pending user', null);
+          }
+
           dispatch(addToastWithTimeout('success', 'Saved!'));
         }
       })
@@ -117,6 +126,7 @@ const SettingsPure = ({
       .then(({ data: { unblockUser } }) => {
         // the mutation returns a channel object. if it exists,
         if (unblockUser !== undefined) {
+          track('channel', 'unblocked user', null);
           dispatch(addToastWithTimeout('success', 'User was un-blocked.'));
         }
       })
@@ -124,6 +134,8 @@ const SettingsPure = ({
         dispatch(addToastWithTimeout('error', err.message));
       });
   };
+
+  track('channel', 'settings viewed', null);
 
   return (
     <AppViewWrapper>

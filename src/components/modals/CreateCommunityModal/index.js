@@ -12,6 +12,7 @@ import { withRouter } from 'react-router';
 import slugg from 'slugg';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
+import { track } from '../../../helpers/events';
 import { Notice } from '../../../components/listItems/style';
 import { closeModal } from '../../../actions/modals';
 import { throttle } from '../../../helpers/utils';
@@ -79,6 +80,10 @@ class CreateCommunityModal extends Component {
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
+  }
+
+  componentDidMount() {
+    track('community', 'create inited', null);
   }
 
   close = () => {
@@ -214,6 +219,7 @@ class CreateCommunityModal extends Component {
     }
 
     reader.onloadend = () => {
+      track('community', 'profile photo uploaded', null);
       this.setState({
         file: file,
         image: reader.result,
@@ -235,6 +241,7 @@ class CreateCommunityModal extends Component {
     }
 
     reader.onloadend = () => {
+      track('community', 'cover photo uploaded', null);
       this.setState({
         coverFile: file,
         coverPhoto: reader.result,
@@ -292,6 +299,7 @@ class CreateCommunityModal extends Component {
     this.props
       .createCommunity(input)
       .then(community => {
+        track('community', 'created', null);
         window.location.href = `/${slug}`;
         this.close();
         this.props.dispatch(

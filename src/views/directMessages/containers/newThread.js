@@ -16,6 +16,7 @@ import { MessagesContainer, ViewContent } from '../style';
 import { findDOMNode } from 'react-dom';
 import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../queries';
 import { throttle } from '../../../helpers/utils';
+import { track } from '../../../helpers/events';
 import { SEARCH_USERS_QUERY } from '../../../api/user';
 import { Spinner } from '../../../components/globals';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -585,9 +586,16 @@ class NewThread extends Component {
       },
     };
 
+    const isPrivate = selectedUsersForNewThread.length > 1 ? true : false;
+
     this.props
       .createDirectMessageThread(input)
       .then(({ data: { createDirectMessageThread } }) => {
+        track(
+          'direct message thread',
+          `${isPrivate ? 'private thread' : 'group thread'} created`,
+          null
+        );
         // NOTE: I cannot get the Apollo store to update properly with the
         // new thread. Forcing a refresh works, although it's a less ideal UX
         window.location.href = `/messages/${createDirectMessageThread.id}`;

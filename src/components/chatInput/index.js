@@ -10,6 +10,7 @@ import withHandlers from 'recompose/withHandlers';
 // // $FlowFixMe
 import { connect } from 'react-redux';
 import Icon from '../icons';
+import { track } from '../../helpers/events';
 import { toPlainText, fromPlainText } from '../../components/editor';
 import { addToastWithTimeout } from '../../actions/toasts';
 import {
@@ -74,6 +75,8 @@ class ChatInputWithMutation extends Component {
         clear();
         // refocus the input
         input.focus();
+
+        track(`${threadType} message`, 'text message created', null);
       })
       .catch(err => {
         dispatch(addToastWithTimeout('error', err.message));
@@ -88,7 +91,7 @@ class ChatInputWithMutation extends Component {
 
   sendMediaMessage = e => {
     const file = e.target.files[0];
-    const { thread, createThread, clear, dispatch } = this.props;
+    const { thread, threadType, createThread, clear, dispatch } = this.props;
 
     if (thread === 'newDirectMessageThread') {
       return createThread({
@@ -101,7 +104,7 @@ class ChatInputWithMutation extends Component {
       .sendMessage({
         threadId: thread,
         messageType: 'media',
-        threadType: 'story',
+        threadType,
         content: {
           body: '',
         },
@@ -109,6 +112,7 @@ class ChatInputWithMutation extends Component {
       })
       .then(({ sendMessage }) => {
         clear();
+        track(`${threadType} message`, 'media message created', null);
       })
       .catch(err => {
         dispatch(addToastWithTimeout('error', err.message));

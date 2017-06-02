@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import { track } from '../../helpers/events';
 import { openModal } from '../../actions/modals';
 import { Button, OutlineButton } from '../../components/buttons';
 import TopCommunities from '../../views/dashboard/components/topCommunities';
@@ -36,9 +37,14 @@ class UpsellNewUser extends Component {
     };
   }
 
+  componentDidMount() {
+    track('onboarding', 'viewed', null);
+  }
+
   graduate = () => {
     const { joinedCommunities } = this.state;
     if (joinedCommunities > 0) {
+      track('onboarding', 'graduated', null);
       this.props.graduate();
     } else {
       this.setState({
@@ -67,7 +73,12 @@ class UpsellNewUser extends Component {
   };
 
   createCommunity = () => {
+    track('onboarding', 'community create inited', null);
     this.props.dispatch(openModal('CREATE_COMMUNITY_MODAL'));
+  };
+
+  clickShareLink = value => {
+    track('onboarding', 'share link clicked', value);
   };
 
   render() {
@@ -117,6 +128,7 @@ class UpsellNewUser extends Component {
                 icon="facebook"
                 gradientTheme={'none'}
                 color={'social.facebook.default'}
+                onClick={() => this.clickShareLink('twitter')}
               >
                 Share on Facebook
               </Button>
@@ -129,6 +141,7 @@ class UpsellNewUser extends Component {
                 icon="twitter"
                 gradientTheme={'none'}
                 color={'social.twitter.default'}
+                onClick={() => this.clickShareLink('twitter')}
               >
                 Share on Twitter
               </Button>

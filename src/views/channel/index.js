@@ -6,6 +6,7 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import { track } from '../../helpers/events';
 import generateMetaInfo from '../../../server/shared/generate-meta-info';
 import { toggleChannelSubscriptionMutation } from '../../api/channel';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -40,13 +41,20 @@ const ChannelViewPure = ({
   const toggleRequest = channelId => {
     toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
-        const str = toggleChannelSubscription.channelPermissions.isPending
+        const isPending =
+          toggleChannelSubscription.channelPermissions.isPending;
+
+        if (isPending) {
+          track('channel', 'requested to join', null);
+        } else {
+          track('channel', 'cancelled request to join', null);
+        }
+
+        const str = isPending
           ? `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
           : `Canceled request to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
 
-        const type = toggleChannelSubscription.channelPermissions.isPending
-          ? 'success'
-          : 'neutral';
+        const type = isPending ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
@@ -159,6 +167,8 @@ const ChannelViewPure = ({
         description: channel.description,
       },
     });
+
+    track('channel', 'profile viewed', null);
 
     return (
       <AppViewWrapper>

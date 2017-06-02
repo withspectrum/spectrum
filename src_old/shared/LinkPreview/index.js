@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Icon from '../Icons';
 import { truncate } from '../../helpers/utils';
+import { track } from '../../helpers/events';
 import {
   LinkPreviewContainer,
   LinkPreviewImage,
@@ -15,6 +16,10 @@ class LinkPreview extends Component {
   remove = e => {
     e.preventDefault();
     this.props.remove();
+  };
+
+  trackClick = () => {
+    track('link preview', 'clicked', null);
   };
 
   render() {
@@ -33,6 +38,7 @@ class LinkPreview extends Component {
         target="_blank"
         rel="noopener"
         href={trueUrl}
+        onClick={this.trackClick}
       >
         {editable &&
           <Close onClick={this.remove}>

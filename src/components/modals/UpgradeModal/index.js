@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import compose from 'recompose/compose';
 import ModalContainer from '../modalContainer';
 import { closeModal } from '../../../actions/modals';
+import { track } from '../../../helpers/events';
 import {
   upgradeToProMutation,
   downgradeFromProMutation,
@@ -41,6 +42,15 @@ class UpgradeModal extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const { user } = this.props;
+    if (user.isPro) {
+      track('pro', 'downgrade inited', null);
+    } else {
+      track('pro', 'upgrade inited', null);
+    }
+  }
+
   closeModal = () => {
     this.props.dispatch(closeModal());
   };
@@ -58,6 +68,8 @@ class UpgradeModal extends React.Component {
     this.props
       .upgradeToPro(input)
       .then(({ data: { upgradeToPro } }) => {
+        track('pro', 'upgraded', null);
+
         this.props.dispatch(addToastWithTimeout('success', 'Upgraded to Pro!'));
         this.setState({
           isLoading: false,
@@ -82,6 +94,8 @@ class UpgradeModal extends React.Component {
     this.props
       .downgradeFromPro()
       .then(({ data: { downgradeFromPro } }) => {
+        track('pro', 'downgraded', null);
+
         this.props.dispatch(
           addToastWithTimeout(
             'neutral',

@@ -6,6 +6,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import pure from 'recompose/pure';
+import { track } from '../../../helpers/events';
 import { getTopCommunities } from '../queries';
 import { toggleCommunityMembershipMutation } from '../../../api/community';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -28,6 +29,13 @@ class TopCommunitiesPure extends Component {
       .then(({ data: { toggleCommunityMembership } }) => {
         const isMember =
           toggleCommunityMembership.communityPermissions.isMember;
+
+        track('community', isMember ? 'joined' : 'unjoined', null);
+        track(
+          'onboarding',
+          isMember ? 'community joined' : 'community unjoined',
+          null
+        );
 
         const action = isMember ? this.props.join() : this.props.leave();
 
