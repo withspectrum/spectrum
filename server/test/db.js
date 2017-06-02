@@ -3,7 +3,6 @@
  */
 export const db = require('rethinkdbdash')({
   db: 'testing',
-  timeout: 1,
 });
 
 const {
@@ -76,10 +75,6 @@ export const setup = db => {
 };
 
 export const teardown = db =>
-  db
-    .dbDrop('testing')
-    .run()
-    .then(() => db.getPoolMaster().drain())
-    .catch(err => {
-      console.log(err);
-    });
+  db.dbDrop('testing').run().catch(err => {
+    console.log(err);
+  });
