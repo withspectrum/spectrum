@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Transition, FlexRow, Gradient, hexa } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
@@ -26,7 +26,7 @@ export const Container = styled.section`
 
 export const Nav = styled.nav`
   width: 100%;
-  background: ${({ theme }) => theme.text.default};
+  background: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
   position: fixed;
   top: 0;
   display: flex;
@@ -69,6 +69,13 @@ export const LogoLink = styled(Link)`
   @media (max-width: 768px) {
     display: none;
   }
+
+  ${() => process.env.NODE_ENV !== 'production' && css`
+    &:after {
+      content: "Dev";
+      font-size: 0.75em;
+    }
+  `}
 `;
 
 export const SigninLink = styled(Link)`
