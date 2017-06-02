@@ -9,7 +9,9 @@ const getChannelsByCommunity = (
   return db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
-    .filter(channel => db.not(channel.hasFields('deletedAt')))
+    .filter(channel =>
+      db.not(channel.hasFields('deletedAt')).and(db.not(channel('isPrivate')))
+    )
     .run();
 };
 
