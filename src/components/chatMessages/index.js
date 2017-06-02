@@ -66,7 +66,10 @@ class ChatMessages extends Component {
         if (me || robo) return;
 
         return (
-          <Link to={`/users/${sender.username}`}>
+          <Link
+            to={`/users/${sender.username}`}
+            style={{ alignSelf: 'flex-end' }}
+          >
             <AvatarLabel tipText={sender.name} tipLocation="right">
               <Avatar src={sender.profilePhoto} />
             </AvatarLabel>
