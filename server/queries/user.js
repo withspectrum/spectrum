@@ -25,7 +25,7 @@ module.exports = {
   Query: {
     user: (
       _: any,
-      args: { id: string, username: string },
+      args: { id: string, username: string } = {},
       { loaders }: GraphQLContext
     ) => {
       if (args.id) return loaders.user.load(args.id);

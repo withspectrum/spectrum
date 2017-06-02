@@ -6,13 +6,23 @@ const env = require('node-env-file');
 const IS_PROD = process.env.NODE_ENV === 'production';
 const path = require('path');
 if (!IS_PROD) {
-  env(path.resolve(__dirname, '../.env'));
+  env(path.resolve(__dirname, '../.env'), { raise: false });
+}
+
+let S3_TOKEN = process.env.S3_TOKEN;
+let S3_SECRET = process.env.S3_SECRET;
+
+if (!IS_PROD) {
+  // In development or testing default the tokens to some garbage
+  // so that the s3-image-uploader doesn't throw an error
+  S3_TOKEN = S3_TOKEN || 'asdf123';
+  S3_SECRET = S3_SECRET || 'asdf123';
 }
 
 const uploader = new Uploader({
   aws: {
-    key: process.env.S3_TOKEN,
-    secret: process.env.S3_SECRET,
+    key: S3_TOKEN,
+    secret: S3_SECRET,
   },
   websockets: false,
 });
