@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { openModal } from '../../actions/modals';
 import { openGallery } from '../../actions/gallery';
@@ -64,12 +65,11 @@ class ChatMessages extends Component {
         if (me || robo) return;
 
         return (
-          <AvatarLabel tipText={sender.name} tipLocation="right">
-            <Avatar
-              onClick={() => openUserProfileModal(sender)}
-              src={sender.profilePhoto}
-            />
-          </AvatarLabel>
+          <Link to={`/users/${sender.username}`}>
+            <AvatarLabel tipText={sender.name} tipLocation="right">
+              <Avatar src={sender.profilePhoto} />
+            </AvatarLabel>
+          </Link>
         );
       };
 
@@ -80,9 +80,11 @@ class ChatMessages extends Component {
         //TODO "Pro badges appear anywhere your name does...". We need to reconsider one of these two statements.
         return (
           <Byline me={me}>
-            <Name onClick={() => openUserProfileModal(user)}>
-              {me ? 'You' : user.name}
-            </Name>
+            <Link to={`/users/${user.username}`}>
+              <Name>
+                {me ? 'You' : user.name}
+              </Name>
+            </Link>
           </Byline>
         );
       };
