@@ -8,7 +8,7 @@ import Modal from 'react-modal';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-
+import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { deleteCommunityMutation } from '../../../api/community';
@@ -70,6 +70,7 @@ class DeleteDoubleCheckModal extends Component {
         return deleteThread(id)
           .then(({ data: { deleteThread } }) => {
             if (deleteThread) {
+              track('thread', 'deleted', null);
               // TODO: When we figure out the mutation reducers in apollo
               // client we can just history push and trust the store to update
               window.location.href = redirect ? redirect : '/';
@@ -94,6 +95,7 @@ class DeleteDoubleCheckModal extends Component {
         return deleteChannel(id)
           .then(({ data: { deleteChannel } }) => {
             if (deleteChannel) {
+              track('channel', 'deleted', null);
               // TODO: When we figure out the mutation reducers in apollo
               // client we can just history push and trust the store to update
               window.location.href = redirect ? redirect : '/';
@@ -118,6 +120,7 @@ class DeleteDoubleCheckModal extends Component {
         return deleteCommunity(id)
           .then(({ data: { deleteCommunity } }) => {
             if (deleteCommunity) {
+              track('community', 'deleted', null);
               // TODO: When we figure out the mutation reducers in apollo
               // client we can just history push and trust the store to update
               window.location.href = redirect ? redirect : '/';

@@ -8,7 +8,7 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-
+import { track } from '../../helpers/events';
 import {
   editCommunityMutation,
   deleteCommunityMutation,
@@ -114,6 +114,8 @@ class CommunityWithData extends Component {
     }
 
     reader.onloadend = () => {
+      track('community', 'profile photo uploaded', null);
+
       this.setState({
         file: file,
         image: reader.result,
@@ -141,6 +143,8 @@ class CommunityWithData extends Component {
     }
 
     reader.onloadend = () => {
+      track('community', 'cover photo uploaded', null);
+
       this.setState({
         coverFile: file,
         coverPhoto: reader.result,
@@ -191,6 +195,8 @@ class CommunityWithData extends Component {
 
         // community was returned
         if (community !== undefined) {
+          track('community', 'edited', null);
+
           this.props.dispatch(
             addToastWithTimeout('success', 'Community saved!')
           );
@@ -218,6 +224,7 @@ class CommunityWithData extends Component {
 
   triggerDeleteCommunity = (e, communityId) => {
     e.preventDefault();
+    track('community', 'delete inited', null);
     const { name, communityData } = this.state;
     const message = (
       <div>

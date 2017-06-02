@@ -8,6 +8,7 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
+import { track } from '../../helpers/events';
 import { Button, TextButton } from '../buttons';
 import {
   Input,
@@ -112,6 +113,8 @@ class UserWithData extends Component {
     }
 
     reader.onloadend = () => {
+      track('user', 'profile photo uploaded', null);
+
       this.setState({
         file: file,
         image: reader.result,
@@ -139,6 +142,8 @@ class UserWithData extends Component {
     }
 
     reader.onloadend = () => {
+      track('user', 'cover photo uploaded', null);
+
       this.setState({
         coverFile: file,
         coverPhoto: reader.result,
@@ -152,6 +157,9 @@ class UserWithData extends Component {
 
   save = e => {
     e.preventDefault();
+
+    track('user', 'edited', null);
+
     const {
       name,
       description,

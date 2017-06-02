@@ -7,6 +7,7 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { openModal } from '../../actions/modals';
+import { track } from '../../helpers/events';
 import ThreadComposer from '../../components/threadComposer';
 import Head from '../../components/head';
 import generateMetaInfo from '../../../server/shared/generate-meta-info';
@@ -43,6 +44,8 @@ const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 const ChannelListCard = compose(getCommunityChannels)(ListCard);
 
 const CommunityViewPure = props => {
+  track('community', 'viewed', null);
+
   const {
     match,
     data: { community, error },
@@ -55,13 +58,16 @@ const CommunityViewPure = props => {
   const toggleMembership = communityId => {
     toggleCommunityMembership({ communityId })
       .then(({ data: { toggleCommunityMembership } }) => {
-        const str = toggleCommunityMembership.communityPermissions.isMember
+        const isMember =
+          toggleCommunityMembership.communityPermissions.isMember;
+
+        track('community', isMember ? 'joined' : 'unjoined', null);
+
+        const str = isMember
           ? `Joined ${toggleCommunityMembership.name}!`
           : `Left ${toggleCommunityMembership.name}.`;
 
-        const type = toggleCommunityMembership.communityPermissions.isMember
-          ? 'success'
-          : 'neutral';
+        const type = isMember ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {

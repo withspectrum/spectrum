@@ -10,6 +10,7 @@ import withHandlers from 'recompose/withHandlers';
 // // $FlowFixMe
 import { connect } from 'react-redux';
 import Icon from '../icons';
+import { track } from '../../helpers/events';
 import { toPlainText, fromPlainText } from '../../components/editor';
 import { addToastWithTimeout } from '../../actions/toasts';
 import {
@@ -74,6 +75,8 @@ class ChatInputWithMutation extends Component {
         clear();
         // refocus the input
         input.focus();
+
+        track(`${threadType} message`, 'text message created', null);
       })
       .catch(err => {
         dispatch(addToastWithTimeout('error', err.message));
@@ -109,6 +112,7 @@ class ChatInputWithMutation extends Component {
       })
       .then(({ sendMessage }) => {
         clear();
+        track('message', 'media message created', null);
       })
       .catch(err => {
         dispatch(addToastWithTimeout('error', err.message));

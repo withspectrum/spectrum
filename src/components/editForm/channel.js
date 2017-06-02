@@ -8,6 +8,7 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
+import { track } from '../../helpers/events';
 import { editChannelMutation, deleteChannelMutation } from '../../api/channel';
 import { openModal } from '../../actions/modals';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -86,10 +87,17 @@ class ChannelWithData extends Component {
       isLoading: true,
     });
 
+    // if privacy changed in this edit
+    if (this.props.channel.isPrivate !== isPrivate) {
+      track('channel', `privacy changed to ${isPrivate}`, null);
+    }
+
     this.props
       .editChannel(input)
       .then(({ data: { editChannel } }) => {
         const channel = editChannel;
+
+        track('channel', 'edited', null);
 
         this.setState({
           isLoading: false,
@@ -116,6 +124,7 @@ class ChannelWithData extends Component {
 
   triggerDeleteChannel = (e, channelId) => {
     e.preventDefault();
+    track('channel', 'delete inited', null);
     const { name, channelData } = this.state;
     const message = (
       <div>

@@ -12,7 +12,7 @@ import { withRouter } from 'react-router';
 import slugg from 'slugg';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
-
+import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import { throttle } from '../../../helpers/utils';
@@ -202,6 +202,7 @@ class CreateChannelModal extends Component {
     this.props
       .createChannel(input)
       .then(({ data: { createChannel } }) => {
+        track('channel', 'created', null);
         window.location.href = `/${modalProps.slug}/${createChannel.slug}`;
         this.close();
         this.props.dispatch(

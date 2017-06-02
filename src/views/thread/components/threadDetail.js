@@ -17,6 +17,7 @@ import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
 import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
 import { IconButton, Button } from '../../../components/buttons';
+import { track } from '../../../helpers/events';
 import Editor, {
   toJSON,
   toPlainText,
@@ -106,8 +107,10 @@ class ThreadDetailPure extends Component {
     })
       .then(({ data: { setThreadLock } }) => {
         if (setThreadLock.isLocked) {
+          track('thread', 'locked', null);
           dispatch(addToastWithTimeout('neutral', 'Thread locked.'));
         } else {
+          track('thread', 'unlocked', null);
           dispatch(addToastWithTimeout('success', 'Thread unlocked!'));
         }
       })
@@ -119,6 +122,8 @@ class ThreadDetailPure extends Component {
   triggerDelete = e => {
     e.preventDefault();
     const { thread, dispatch } = this.props;
+
+    track('thread', 'delete inited', null);
 
     const threadId = thread.id;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;

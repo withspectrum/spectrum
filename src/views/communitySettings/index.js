@@ -6,6 +6,7 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import { track } from '../../helpers/events';
 import { getThisCommunity, getChannelsByCommunity } from './queries';
 import { openModal } from '../../actions/modals';
 import { displayLoadingScreen } from '../../components/loading';
@@ -23,6 +24,8 @@ const SettingsPure = ({
   history,
   dispatch,
 }) => {
+  track('community', 'settings viewed', null);
+
   const communitySlug = match.params.communitySlug;
 
   const create = () => {
