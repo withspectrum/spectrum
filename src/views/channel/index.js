@@ -128,8 +128,6 @@ const ChannelViewPure = ({
     (!channel.channelPermissions.isMember &&
       !channel.community.communityPermissions.isOwner)
   ) {
-    track('channel', 'profile viewed', null);
-
     return (
       <AppViewWrapper>
         <Titlebar
@@ -169,6 +167,8 @@ const ChannelViewPure = ({
         description: channel.description,
       },
     });
+
+    track('channel', 'profile viewed', null);
 
     return (
       <AppViewWrapper>

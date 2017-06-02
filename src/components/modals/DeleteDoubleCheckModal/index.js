@@ -94,18 +94,16 @@ class DeleteDoubleCheckModal extends Component {
       case 'channel': {
         return deleteChannel(id)
           .then(({ data: { deleteChannel } }) => {
-            if (deleteChannel) {
-              track('channel', 'deleted', null);
-              // TODO: When we figure out the mutation reducers in apollo
-              // client we can just history push and trust the store to update
-              window.location.href = redirect ? redirect : '/';
-              // history.push(redirect ? redirect : '/');
-              dispatch(addToastWithTimeout('neutral', 'Channel deleted.'));
-              this.setState({
-                isLoading: false,
-              });
-              this.close();
-            }
+            track('channel', 'deleted', null);
+            // TODO: When we figure out the mutation reducers in apollo
+            // client we can just history push and trust the store to update
+            window.location.href = redirect ? redirect : '/';
+            // history.push(redirect ? redirect : '/');
+            dispatch(addToastWithTimeout('neutral', 'Channel deleted.'));
+            this.setState({
+              isLoading: false,
+            });
+            this.close();
           })
           .catch(err => {
             dispatch(

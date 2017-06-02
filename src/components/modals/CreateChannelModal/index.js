@@ -289,20 +289,23 @@ class CreateChannelModal extends Component {
                 Oop, that's more than 140 characters - try trimming that up.
               </Error>}
 
-            <Checkbox
+            {/* <Checkbox
               id="isPrivate"
               checked={isPrivate}
               onChange={this.changePrivate}
             >
               Private channel
-            </Checkbox>
+            </Checkbox> */}
 
             {isPrivate
               ? <Description>
                   Only approved people on Spectrum can see the threads, messages, and members in this channel. You can manually approve users who request to join this channel.
                 </Description>
               : <Description>
-                  Anyone on Spectrum can join this channel, post threads and messages, and will be able to see other members.
+                  Anyone on Spectrum can join this channel, post threads and messages, and will be able to see other members. If you want to create private channels,
+                  {' '}
+                  <a href="mailto:hi@spectrum.chat">get in touch</a>
+                  .
                 </Description>}
 
             <Actions>
