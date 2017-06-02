@@ -6,15 +6,18 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 //$FlowFixMe
 import { connect } from 'react-redux';
+import generateMetaInfo from '../../../server/shared/generate-meta-info';
 import AppViewWrapper from '../../components/appViewWrapper';
+import Head from '../../components/head';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
+import { track } from '../../helpers/events';
 import { UserProfile } from '../../components/profile';
 import { displayLoadingScreen } from '../../components/loading';
-import { Button } from '../../components/buttons';
-import { NullCard, Upsell404User } from '../../components/upsell';
+import { NullState, Upsell404User } from '../../components/upsell';
 import CommunityList from './components/communityList';
 import { getUserThreads, getUser } from './queries';
+import Titlebar from '../titlebar';
 
 const ThreadFeedWithData = compose(getUserThreads)(ThreadFeed);
 
@@ -24,18 +27,46 @@ const UserViewPure = ({
   data,
   currentUser,
 }) => {
+  track('user', 'profile viewed', null);
+
   const username = match.params.username;
 
-  if (error) {
-    return <Upsell404User username={username} />;
+  if (error || !user) {
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={`No User Found`}
+          provideBack={true}
+          backRoute={`/`}
+          noComposer
+        />
+
+        <Column type="primary" alignItems="center">
+          <Upsell404User username={username} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
-  if (!user) {
-    return <Upsell404User username={username} />;
-  }
+  const { title, description } = generateMetaInfo({
+    type: 'user',
+    data: {
+      name: user.name,
+      username: user.username,
+      description: user.description,
+    },
+  });
 
   return (
     <AppViewWrapper>
+      <Head title={title} description={description} />
+      <Titlebar
+        title={user.name}
+        subtitle={'Posts By'}
+        provideBack={true}
+        backRoute={`/`}
+        noComposer
+      />
       <Column type="secondary">
         <UserProfile data={{ user }} username={username} profileSize="full" />
         <CommunityList
@@ -50,13 +81,10 @@ const UserViewPure = ({
 
       <Column type="primary" alignItems="center">
         {user.threadCount === 0 &&
-          <NullCard
+          <NullState
             bg="message"
             heading={`${user.name} hasn't posted anything yet.`}
-            copy={`You could always try messaging them, though!`}
-          >
-            <Button icon="message">{`Message @${username}`}</Button>
-          </NullCard>}
+          />}
         {user.threadCount > 0 &&
           <ThreadFeedWithData username={username} viewContext="profile" />}
       </Column>

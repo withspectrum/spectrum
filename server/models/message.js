@@ -18,6 +18,14 @@ const getMessages = (threadId: String): Promise<Array<Object>> => {
     .run();
 };
 
+const getLastMessage = (threadId: string): Promise<Object> => {
+  return db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .max('timestamp')
+    .run();
+};
+
 const getMediaMessagesForThread = (
   threadId: String
 ): Promise<Array<Object>> => {
@@ -70,6 +78,7 @@ const getMessageCount = (threadId: string): Promise<number> => {
 module.exports = {
   getMessage,
   getMessages,
+  getLastMessage,
   getMediaMessagesForThread,
   storeMessage,
   listenToNewMessages,

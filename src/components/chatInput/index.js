@@ -1,5 +1,6 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
+import { findDOMNode } from 'react-dom';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // // $FlowFixMe
@@ -9,6 +10,7 @@ import withHandlers from 'recompose/withHandlers';
 // // $FlowFixMe
 import { connect } from 'react-redux';
 import Icon from '../icons';
+import { track } from '../../helpers/events';
 import { toPlainText, fromPlainText } from '../../components/editor';
 import { addToastWithTimeout } from '../../actions/toasts';
 import {
@@ -27,19 +29,22 @@ import { sendMessageMutation } from '../../api/message';
 //   height: 100%;
 // `;
 
-const ChatInputWithMutation = ({
-  thread,
-  sendMessage,
-  state,
-  onChange,
-  clear,
-  createThread,
-  onFocus,
-  onBlur,
-  dispatch,
-}) => {
-  const submit = e => {
+class ChatInputWithMutation extends Component {
+  submit = e => {
     e.preventDefault();
+    const {
+      state,
+      thread,
+      threadType,
+      createThread,
+      refetchThread,
+      clear,
+      dispatch,
+      sendMessage,
+    } = this.props;
+    const input = findDOMNode(this.refs.chatInput);
+    // If the input is empty don't do anything
+    if (toPlainText(state).trim() === '') return;
 
     // user is creating a new directMessageThread, break the chain
     // and initiate a new group creation with the message being sent
@@ -51,12 +56,16 @@ const ChatInputWithMutation = ({
       });
     }
 
+    if (threadType === 'directMessageThread') {
+      refetchThread();
+    }
+
     // user is sending a message to an existing thread id - either a thread
     // or direct message thread
     sendMessage({
       threadId: thread,
       messageType: 'text',
-      threadType: 'story',
+      threadType,
       content: {
         body: toPlainText(state),
       },
@@ -64,22 +73,25 @@ const ChatInputWithMutation = ({
       .then(() => {
         // clear the input
         clear();
+        // refocus the input
+        input.focus();
+
+        track(`${threadType} message`, 'text message created', null);
       })
       .catch(err => {
         dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
-  const handleKeyPress = e => {
-    if (e.keyCode === 13 && !e.shiftKey) {
-      //=> make the enter key send a message, not create a new line in the next autoexpanding textarea unless shift is pressed.
-      e.preventDefault(); //=> prevent linebreak
-      submit(e); //=> send the message instead
-    }
+  handleEnter = e => {
+    //=> make the enter key send a message, not create a new line in the next autoexpanding textarea unless shift is pressed.
+    e.preventDefault(); //=> prevent linebreak
+    this.submit(e); //=> send the message instead
   };
 
-  const sendMediaMessage = e => {
+  sendMediaMessage = e => {
     const file = e.target.files[0];
+    const { thread, threadType, createThread, clear, dispatch } = this.props;
 
     if (thread === 'newDirectMessageThread') {
       return createThread({
@@ -88,62 +100,69 @@ const ChatInputWithMutation = ({
       });
     }
 
-    sendMessage({
-      threadId: thread,
-      messageType: 'media',
-      threadType: 'story',
-      content: {
-        body: '',
-      },
-      file,
-    })
+    this.props
+      .sendMessage({
+        threadId: thread,
+        messageType: 'media',
+        threadType,
+        content: {
+          body: '',
+        },
+        file,
+      })
       .then(({ sendMessage }) => {
         clear();
+        track(`${threadType} message`, 'media message created', null);
       })
       .catch(err => {
         dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
-  return (
-    <ChatInputWrapper>
-      <MediaInput
-        type="file"
-        id="file"
-        name="file"
-        accept=".png, .jpg, .jpeg, .gif, .mp4"
-        multiple={false}
-        onChange={sendMediaMessage}
-      />
+  render() {
+    const { state, onFocus, onBlur, onChange } = this.props;
+    return (
+      <ChatInputWrapper>
+        <MediaInput
+          type="file"
+          id="file"
+          name="file"
+          accept=".png, .jpg, .jpeg, .gif, .mp4"
+          multiple={false}
+          onChange={this.sendMediaMessage}
+        />
 
-      <MediaLabel htmlFor="file">
-        <Icon
-          glyph="photo"
+        <MediaLabel htmlFor="file">
+          <Icon
+            glyph="photo"
+            tipLocation="top-right"
+            tipText="Upload Photo"
+            subtle
+          />
+        </MediaLabel>
+        {/* <EmojiToggle
+          glyph="emoji"
+          tipText="Insert Emoji"
           tipLocation="top-right"
-          tipText="Upload Photo"
-          subtle
-        />
-      </MediaLabel>
-      <EmojiToggle
-        glyph="emoji"
-        tipText="Insert Emoji"
-        tipLocation="top-right"
-      />
-      <Form>
-        <Input
-          placeholder="Your message here..."
-          state={state}
-          onKeyPress={handleKeyPress}
-          onChange={onChange}
-          markdown={false}
-          onFocus={onFocus}
-          onBlur={onBlur}
-        />
-        <SendButton glyph="send-fill" onClick={submit} />
-      </Form>
-    </ChatInputWrapper>
-  );
-};
+        /> */}
+        <Form>
+          <Input
+            placeholder="Your message here..."
+            state={state}
+            onEnter={this.handleEnter}
+            onChange={onChange}
+            markdown={false}
+            onFocus={onFocus}
+            onBlur={onBlur}
+            singleLine
+            ref={'chatInput'}
+          />
+          <SendButton glyph="send-fill" onClick={this.submit} />
+        </Form>
+      </ChatInputWrapper>
+    );
+  }
+}
 
 const ChatInput = compose(
   sendMessageMutation,

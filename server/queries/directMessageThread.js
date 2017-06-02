@@ -3,7 +3,7 @@ const { getDirectMessageThread } = require('../models/directMessageThread');
 const {
   getMembersInDirectMessageThread,
 } = require('../models/usersDirectMessageThreads');
-const { getMessages } = require('../models/message');
+const { getLastMessage, getMessages } = require('../models/message');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GraphQLContext } from '../';
@@ -46,13 +46,13 @@ module.exports = {
     participants: ({ id }, _, { loaders }) => {
       return getMembersInDirectMessageThread(id).then(users => users);
     },
-    snippet: ({ id }, _: any, { loader }) => {
-      return getMessages(id).then(messages => {
-        // if there are messages in the thread
-        return messages.length > 0
-          ? // return the last message's content as the snippet, or a placeholder
-            messages[messages.length - 1].content.body
-          : 'No messages yet...';
+    snippet: ({ id }) => {
+      return getLastMessage(id).then(message => {
+        if (message) {
+          return message.content.body;
+        } else {
+          return 'No messages yet...';
+        }
       });
     },
   },

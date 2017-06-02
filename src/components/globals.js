@@ -389,7 +389,7 @@ export const Tooltip = props => css`
     text-overflow: ellipsis;
     padding: 8px 12px;
     border-radius: 8px;
-    box-shadow: ${Shadow.mid} ${hexa(props.theme.text.placeholder, 0.5)};
+    box-shadow: ${Shadow.mid} ${hexa(props.theme.bg.reverse, 0.25)};
     background: ${props.theme.bg.reverse};
     color: ${props.theme.text.reverse};
 	}

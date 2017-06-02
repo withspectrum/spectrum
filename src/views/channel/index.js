@@ -6,9 +6,12 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import { track } from '../../helpers/events';
+import generateMetaInfo from '../../../server/shared/generate-meta-info';
 import { toggleChannelSubscriptionMutation } from '../../api/channel';
 import { addToastWithTimeout } from '../../actions/toasts';
 import ThreadComposer from '../../components/threadComposer';
+import Head from '../../components/head';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
@@ -21,6 +24,7 @@ import {
   Upsell404Channel,
   UpsellRequestToJoinChannel,
 } from '../../components/upsell';
+import Titlebar from '../titlebar';
 
 const ThreadFeedWithData = compose(getChannelThreads)(ThreadFeed);
 
@@ -37,13 +41,20 @@ const ChannelViewPure = ({
   const toggleRequest = channelId => {
     toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
-        const str = toggleChannelSubscription.channelPermissions.isPending
+        const isPending =
+          toggleChannelSubscription.channelPermissions.isPending;
+
+        if (isPending) {
+          track('channel', 'requested to join', null);
+        } else {
+          track('channel', 'cancelled request to join', null);
+        }
+
+        const str = isPending
           ? `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
           : `Canceled request to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
 
-        const type = toggleChannelSubscription.channelPermissions.isPending
-          ? 'success'
-          : 'neutral';
+        const type = isPending ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
@@ -54,10 +65,18 @@ const ChannelViewPure = ({
   if (error) {
     return (
       <AppViewWrapper>
-        <Upsell404Channel
-          channel={match.params.channelSlug}
-          community={match.params.communitySlug}
+        <Titlebar
+          title={'Channel Not Found'}
+          provideBack={true}
+          backRoute={`/`}
+          noComposer
         />
+        <Column type="primary" alignItems="center">
+          <Upsell404Channel
+            channel={match.params.channelSlug}
+            community={match.params.communitySlug}
+          />
+        </Column>
       </AppViewWrapper>
     );
   }
@@ -65,10 +84,18 @@ const ChannelViewPure = ({
   if (!channel || channel.isDeleted) {
     return (
       <AppViewWrapper>
-        <Upsell404Channel
-          channel={match.params.channelSlug}
-          community={match.params.communitySlug}
+        <Titlebar
+          title={'Channel Not Found'}
+          provideBack={true}
+          backRoute={`/`}
+          noComposer
         />
+        <Column type="primary" alignItems="center">
+          <Upsell404Channel
+            channel={match.params.channelSlug}
+            community={match.params.communitySlug}
+          />
+        </Column>
       </AppViewWrapper>
     );
   }
@@ -77,11 +104,19 @@ const ChannelViewPure = ({
   if (channel && channel.channelPermissions.isBlocked) {
     return (
       <AppViewWrapper>
-        <Upsell404Channel
-          channel={match.params.channelSlug}
-          community={match.params.communitySlug}
-          noPermission
+        <Titlebar
+          title={'Private Channel'}
+          provideBack={true}
+          backRoute={`/${match.params.communitySlug}`}
+          noComposer
         />
+        <Column type="primary" alignItems="center">
+          <Upsell404Channel
+            channel={match.params.channelSlug}
+            community={match.params.communitySlug}
+            noPermission
+          />
+        </Column>
       </AppViewWrapper>
     );
   }
@@ -95,13 +130,22 @@ const ChannelViewPure = ({
   ) {
     return (
       <AppViewWrapper>
-        <UpsellRequestToJoinChannel
-          channel={channel}
-          community={match.params.communitySlug}
-          isPending={channel.channelPermissions.isPending}
-          subscribe={toggleRequest}
-          currentUser={currentUser}
+        <Titlebar
+          title={channel.name}
+          subtitle={channel.community.name}
+          provideBack={true}
+          backRoute={`/${channel.community.slug}`}
+          noComposer
         />
+        <Column type="primary" alignItems="center">
+          <UpsellRequestToJoinChannel
+            channel={channel}
+            community={match.params.communitySlug}
+            isPending={channel.channelPermissions.isPending}
+            subscribe={toggleRequest}
+            currentUser={currentUser}
+          />
+        </Column>
       </AppViewWrapper>
     );
   }
@@ -115,8 +159,27 @@ const ChannelViewPure = ({
       channel.community.communityPermissions.isOwner ||
       !channel.isPrivate)
   ) {
+    const { title, description } = generateMetaInfo({
+      type: 'channel',
+      data: {
+        name: channel.name,
+        communityName: channel.community.name,
+        description: channel.description,
+      },
+    });
+
+    track('channel', 'profile viewed', null);
+
     return (
       <AppViewWrapper>
+        <Head title={title} description={description} />
+        <Titlebar
+          title={channel.name}
+          subtitle={channel.community.name}
+          provideBack={true}
+          backRoute={`/${channel.community.slug}`}
+          noComposer={!channel.channelPermissions.isMember}
+        />
         <Column type="secondary">
           <ChannelProfile data={{ channel }} profileSize="full" />
 
@@ -129,7 +192,7 @@ const ChannelViewPure = ({
         <Column type="primary" alignItems="center">
           {!currentUser && <UpsellSignIn entity={channel} />}
 
-          {channel.isMember && currentUser
+          {channel.channelPermissions.isMember && currentUser
             ? <ThreadComposer
                 activeCommunity={communitySlug}
                 activeChannel={match.params.channelSlug}
@@ -139,6 +202,7 @@ const ChannelViewPure = ({
             viewContext="channel"
             channelSlug={channelSlug}
             communitySlug={communitySlug}
+            currentUser={currentUser}
           />
         </Column>
       </AppViewWrapper>

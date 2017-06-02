@@ -12,11 +12,13 @@ import {
 import {
   createGeneralChannel,
   getChannelsByCommunity,
+  getChannelsByUserAndCommunity,
   deleteChannel,
 } from '../models/channel';
 import {
   createMemberInDefaultChannels,
   createOwnerInChannel,
+  removeMemberInChannel,
   removeMembersInChannel,
 } from '../models/usersChannels';
 import {
@@ -268,8 +270,11 @@ module.exports = {
             currentUser.id
           );
 
-          // get all the channels in the community
-          const getAllChannelsInCommunity = getChannelsByCommunity(communityId);
+          // returns an array of channel ids the user is a member of and public channels as well
+          const getAllChannelsInCommunity = getChannelsByUserAndCommunity(
+            communityId,
+            currentUser.id
+          );
 
           return Promise.all([
             communityToEvaluate,
@@ -281,8 +286,10 @@ module.exports = {
             allChannelsInCommunity,
           ]) => {
             // remove all relationships to the community's channels
-            const removeAllRelationshipsToChannels = allChannelsInCommunity.map(
-              channel => removeMembersInChannel(channel.id)
+            const removeAllRelationshipsToChannels = Promise.all(
+              allChannelsInCommunity.map(channel =>
+                removeMemberInChannel(channel.id, currentUser.id)
+              )
             );
 
             return (

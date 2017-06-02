@@ -24,7 +24,7 @@ const baseButton = css`
   &:hover {
     border-radius: ${props => (props.disabled ? '8px' : '12px')};
     transition: ${Transition.hover.on};
-    box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.high} ${hexa(props.theme.text.placeholder, 0.5)}`)};
+    box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.high} ${hexa(props.theme.text.default, 0.15)}`)};
     opacity: ${props => (props.disabled ? '0.5' : '1')};
   }
 
@@ -40,14 +40,13 @@ export const Label = styled.span`
   line-height: inherit;
   color: inherit;
   ${props => (props.loading && !props.hasIcon ? 'opacity: 0;' : 'opacity: 1;')};
-  transition: ${Transition.hover.on};
   align-self: center;
   margin: auto;
 `;
 
 export const StyledSolidButton = styled.button`
   ${baseButton}
-  background-color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.color ? props.color : 'brand.alt'}`))};
+  background-color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.color ? props.color : `brand.alt`}`))};
   background-image: ${props => (props.disabled || props.gradientTheme === 'none' ? 'none' : props.gradientTheme ? Gradient(eval(`props.theme.${props.gradientTheme}.alt`), eval(`props.theme.${props.gradientTheme}.default`)) : Gradient(props.theme.brand.alt, props.theme.brand.default))};
   color: ${props => props.theme.text.reverse};
 
@@ -61,14 +60,15 @@ export const StyledSolidButton = styled.button`
 `;
 
 export const StyledTextButton = styled(StyledSolidButton)`
-  background: ${({ theme }) => theme.bg.default};
+  background: transparent;
   background-image: none;
   font-weight: 600;
   color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.color ? props.color : 'text.alt'}`))};
   transition: color 0.1s ease-out, box-shadow 0.2s ease-out 0.1s, border-radius 0.2s ease-out;
 
   &:hover {
-    background-color: ${({ theme }) => theme.bg.default};
+    background-color: transparent;
+    box-shadow: none;
     color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`))};
     transition: color 0.1s ease-in, box-shadow 0.2s ease-in 0.1s;
   }
@@ -94,10 +94,12 @@ export const StyledIconButton = styled.button`
   height: 32px;
   background-color: transparent;
   color: ${props => (props.disabled ? props.theme.inactive : props.color ? eval(`props.theme.${props.color}`) : props.theme.text.alt)};
+  opacity: ${props => (props.opacity ? props.opacity : 1)};
 
   &:hover {
     color: ${props => (props.disabled ? props.theme.inactive : props.hoverColor ? eval(`props.theme.${props.hoverColor}`) : props.color ? eval(`props.theme.${props.color}`) : props.theme.brand.alt)};
     transform: ${props => (props.disabled ? 'none' : 'scale(1.05)')};
     box-shadow: none;
+    opacity: 1;
   }
 `;

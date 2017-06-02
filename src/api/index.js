@@ -2,7 +2,7 @@
 // $FlowFixMe
 import { ApolloClient } from 'react-apollo';
 // $FlowFixMe
-import { createNetworkInterface } from 'apollo-upload-client';
+import { createNetworkInterface } from 'apollo-upload-client-fork-mxstbr';
 // $FlowFixMe
 import {
   SubscriptionClient,
@@ -11,7 +11,8 @@ import {
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const wsClient = new SubscriptionClient(
-  `${IS_PROD ? `wss://${window.location.host}` : 'ws://localhost:3001'}/websocket`
+  `${IS_PROD ? `wss://${window.location.host}` : 'ws://localhost:3001'}/websocket`,
+  { reconnect: true }
 );
 
 // In production the API is at the same URL, in development it's at a different port
@@ -43,3 +44,7 @@ export const clearApolloStore = () => {
 export const SERVER_URL = process.env.NODE_ENV === 'production'
   ? `${window.location.protocol}//${window.location.host}`
   : 'http://localhost:3001';
+
+export const PUBLIC_STRIPE_KEY = process.env.NODE_ENV === 'production'
+  ? 'pk_live_8piI030RqVnqDc8QGTUwUj0Z'
+  : 'pk_test_A6pKi4xXOdgg9FrZJ84NW9mP';

@@ -1,14 +1,22 @@
+// @flow
+import { track } from '../helpers/events';
 import { clearApolloStore } from '../api';
 import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
 
-//TODO hook up to logout button in profile modal
+const eraseCookie = name => {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+};
+
 export const logout = () => {
+  track(`user`, `sign out`, null);
   // clear localStorage
   removeItemFromStorage('spectrum');
   // clear Apollo's query cache
   clearApolloStore();
   // redirect to home page
-  window.location.href = '/';
+  window.location.href = process.env.NODE_ENV === 'production'
+    ? '/auth/logout'
+    : 'http://localhost:3001/auth/logout';
 };
 
 export const saveUserDataToLocalStorage = (user: Object) => dispatch => {

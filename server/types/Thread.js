@@ -33,7 +33,7 @@ const Thread = /* GraphQL */ `
 	type Thread {
 		id: ID!
 		createdAt: Date!
-		modifiedAt: Date!
+		modifiedAt: Date
 		channel: Channel!
 		community: Community!
 		channelPermissions: ChannelPermissions!
@@ -61,9 +61,14 @@ const Thread = /* GraphQL */ `
 	}
 
 	input ThreadContentInput {
-		title: String!
+		title: String
 		body: String
-		media: String
+	}
+
+	input EditThreadInput {
+		threadId: ID!
+		content: ThreadContentInput!
+		attachments: [AttachmentInput]
 	}
 
 	input ThreadInput {
@@ -76,7 +81,7 @@ const Thread = /* GraphQL */ `
 
 	extend type Mutation {
 		publishThread(thread: ThreadInput!): Thread
-		editThread(threadId: ID!, newContent: ThreadContentInput!): Thread
+		editThread(input: EditThreadInput!): Thread
 		setThreadLock(threadId: ID!, value: Boolean!): Thread
 		deleteThread(threadId: ID!): Boolean
 	}

@@ -12,12 +12,13 @@ const ModalContainer = ({
   closeModal,
   children,
   title,
+  noHeader,
 }: { closeModal: Function, children?: Object, title: string }): React$Element<
   any
 > => {
   return (
     <ModalBody>
-      <Header>
+      <Header noHeader={noHeader}>
         <Title>{title}</Title>
         <CloseButton onClick={() => closeModal()} glyph="view-close" />
       </Header>

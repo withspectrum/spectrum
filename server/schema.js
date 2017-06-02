@@ -33,6 +33,7 @@ const notificationQueries = require('./queries/notification');
 const messageMutations = require('./mutations/message');
 const threadMutations = require('./mutations/thread');
 const reactionMutations = require('./mutations/reaction');
+const recurringPaymentMutations = require('./mutations/recurringPayment');
 const communityMutations = require('./mutations/community');
 const channelMutations = require('./mutations/channel');
 const directMessageThreadMutations = require('./mutations/directMessageThread');
@@ -40,6 +41,7 @@ const notificationMutations = require('./mutations/notification');
 const userMutations = require('./mutations/user');
 
 const messageSubscriptions = require('./subscriptions/message');
+const notificationSubscriptions = require('./subscriptions/notification');
 
 const Root = /* GraphQL */ `
 	# The dummy queries and mutations are necessary because
@@ -98,12 +100,14 @@ const schema = makeExecutableSchema({
     threadMutations,
     directMessageThreadMutations,
     reactionMutations,
+    recurringPaymentMutations,
     communityMutations,
     channelMutations,
     notificationMutations,
     userMutations,
     // subscriptions
-    messageSubscriptions
+    messageSubscriptions,
+    notificationSubscriptions
   ),
 });
 

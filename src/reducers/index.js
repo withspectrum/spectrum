@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { client } from '../api';
 import users from './users';
+import composer from './composer';
 import modals from './modals';
 import toasts from './toasts';
 import directMessageThreads from './directMessageThreads';
@@ -15,4 +16,5 @@ export default combineReducers({
   directMessageThreads,
   gallery,
   apollo,
+  composer,
 });

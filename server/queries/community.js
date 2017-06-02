@@ -2,7 +2,10 @@
 /**
  * Community query resolvers
  */
-const { getCommunityMetaData } = require('../models/community');
+const {
+  getCommunityMetaData,
+  getTopCommunities,
+} = require('../models/community');
 const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
 const { getThreadsByChannels } = require('../models/thread');
 const {
@@ -28,6 +31,8 @@ module.exports = {
 
       return null;
     },
+    topCommunities: (_: any, { amount = 30 }: { amount: number }) =>
+      getTopCommunities(amount),
   },
   Community: {
     communityPermissions: (

@@ -4,8 +4,13 @@
  */
 const IS_PROD = process.env.NODE_ENV === 'production';
 const PORT = 3001;
+// NOTE(@mxstbr): 1Password generated this, LGTM!
+const COOKIE_SECRET =
+  't3BUqGYFHLNjb7V8xjY6QLECgWy7ByWTYjKkPtuP%R.uLfjNBQKr9pHuKuQJXNqo';
 
 const path = require('path');
+const fs = require('fs');
+const url = require('url');
 const { createServer } = require('http');
 //$FlowFixMe
 const express = require('express');
@@ -21,6 +26,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 //$FlowFixMe
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
+const { execute, subscribe } = require('graphql');
 //$FlowFixMe
 const { SubscriptionServer } = require('subscriptions-transport-ws');
 //$FlowFixMe
@@ -33,12 +39,13 @@ const OpticsAgent = require('optics-agent');
 const { maskErrors } = require('graphql-errors');
 
 const { db } = require('./models/db');
+import { destroySession } from './models/session';
 const listeners = require('./subscriptions/listeners');
-const subscriptionManager = require('./subscriptions/manager');
 
 const schema = require('./schema');
 const { init: initPassport } = require('./authentication.js');
 import createLoaders from './loaders';
+import getMeta from './utils/get-page-meta';
 
 OpticsAgent.instrumentSchema(schema);
 
@@ -48,6 +55,11 @@ console.log('Server starting...');
 initPassport();
 // API server
 const app = express();
+
+const sessionStore = new SessionStore(db, {
+  db: 'spectrum',
+  table: 'sessions',
+});
 
 app.use(OpticsAgent.middleware());
 maskErrors(schema);
@@ -66,7 +78,7 @@ if (!IS_PROD) {
     graphiqlExpress({
       endpointURL: '/api',
       subscriptionsEndpoint: `ws://localhost:3001/websocket`,
-      query: `{\n  user(id: "58a023a4-912d-48fe-a61c-eec7274f7699") {\n    displayName\n    username\n    communities {\n      name\n      frequencies {\n        name\n        stories {\n          content {\n            title\n          }\n          messages {\n            message {\n              content\n            }\n          }\n        }\n      }\n    }\n  }\n}`,
+      query: `{\n  user(id: "58a023a4-912d-48fe-a61c-eec7274f7699") {\n    name\n    username\n    communities {\n      name\n      frequencies {\n        name\n        stories {\n          content {\n            title\n          }\n          messages {\n            message {\n              content\n            }\n          }\n        }\n      }\n    }\n  }\n}`,
     })
   );
 }
@@ -75,12 +87,8 @@ app.use(bodyParser.json());
 app.use(apolloUploadExpress());
 app.use(
   session({
-    store: new SessionStore(db, {
-      db: 'spectrum',
-      table: 'sessions',
-    }),
-    // NOTE(@mxstbr): 1Password generated this, LGTM!
-    secret: 't3BUqGYFHLNjb7V8xjY6QLECgWy7ByWTYjKkPtuP%R.uLfjNBQKr9pHuKuQJXNqo',
+    store: sessionStore,
+    secret: COOKIE_SECRET,
     resave: true,
     saveUninitialized: true,
     cookie: {
@@ -108,6 +116,27 @@ app.get(
     successRedirect: IS_PROD ? '/home' : 'http://localhost:3000/home',
   })
 );
+app.get('/auth/logout', (req, res) => {
+  var sessionCookie = req.cookies['connect.sid'];
+  const HOME = IS_PROD ? '/' : 'http://localhost:3000/';
+  if (req.isUnauthenticated() || !sessionCookie) {
+    return res.redirect(HOME);
+  }
+  var sessionId = sessionCookie.split('.')[0].replace('s:', '');
+  return destroySession(sessionId)
+    .then(() => {
+      // I should not have to do this manually
+      // but it doesn't work otherwise ¯\_(ツ)_/¯
+      res.clearCookie('connect.sid');
+      req.logout();
+      res.redirect(HOME);
+    })
+    .catch(err => {
+      res.clearCookie('connect.sid');
+      console.log(err);
+      res.redirect(HOME);
+    });
+});
 app.use(
   '/api',
   graphqlExpress(req => ({
@@ -122,9 +151,28 @@ app.use(
 // In production use express to serve the React app
 // In development this is done by react-scripts, which starts its own server
 if (IS_PROD) {
-  app.use(express.static(path.resolve(__dirname, '..', 'build')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
+  const { graphql } = require('graphql');
+  // Load index.html into memory
+  var index = fs
+    .readFileSync(path.resolve(__dirname, '..', 'build', 'index.html'))
+    .toString();
+  app.use(
+    express.static(path.resolve(__dirname, '..', 'build'), { index: false })
+  );
+  app.get('*', function(req, res) {
+    getMeta(req.url, (query: string): Promise =>
+      graphql(schema, query, undefined, {
+        loaders: createLoaders(),
+        user: req.user,
+      })
+    ).then(({ title, description }) => {
+      // In production inject the meta title and description
+      res.send(
+        index
+          .replace(/%OG_TITLE%/g, title)
+          .replace(/%OG_DESCRIPTION%/g, description)
+      );
+    });
   });
 }
 
@@ -137,16 +185,51 @@ export type GraphQLContext = {
 };
 
 const server = createServer(app);
-
+const sessionCookieParser = cookieParser(COOKIE_SECRET);
+const { getUser } = require('./models/user');
 // Start subscriptions server
-const subscriptionsServer = new SubscriptionServer(
+const subscriptionsServer = SubscriptionServer.create(
   {
-    subscriptionManager,
-    onConnect: connectionParams => {
-      return {
-        loaders: createLoaders(),
-      };
-    },
+    execute,
+    subscribe,
+    schema,
+    onConnect: (connectionParams, rawSocket) =>
+      new Promise((res, rej) => {
+        // Authenticate the connecting user
+        sessionCookieParser(rawSocket.upgradeReq, null, err => {
+          if (err)
+            return res({
+              // TODO: Pass optics to subscriptions context
+              // opticsContext: OpticsAgent.context(req),
+              loaders: createLoaders(),
+            });
+          const sessionId = rawSocket.upgradeReq.signedCookies['connect.sid'];
+          sessionStore.get(sessionId, (err, session) => {
+            if (err || !session || !session.passport)
+              return res({
+                // TODO: Pass optics to subscriptions context
+                // opticsContext: OpticsAgent.context(req),
+                loaders: createLoaders(),
+              });
+            getUser({ id: session.passport.user })
+              .then(user => {
+                return res({
+                  user,
+                  // TODO: Pass optics to subscriptions context
+                  // opticsContext: OpticsAgent.context(req),
+                  loaders: createLoaders(),
+                });
+              })
+              .catch(err => {
+                return res({
+                  // TODO: Pass optics to subscriptions context
+                  // opticsContext: OpticsAgent.context(req),
+                  loaders: createLoaders(),
+                });
+              });
+          });
+        });
+      }),
   },
   {
     server,

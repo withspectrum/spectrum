@@ -30,7 +30,7 @@ const init = () => {
         const user = {
           providerId: profile.id,
           username: profile.username,
-          displayName: profile.displayName ||
+          name: profile.displayName ||
             (profile.name &&
               `${profile.name.givenName} ${profile.name.familyName}`) ||
             null,

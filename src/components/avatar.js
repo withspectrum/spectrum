@@ -19,4 +19,9 @@ const AvatarPure = (props: Object): React$Element<any> => (
   <StyledAvatar {...props} />
 );
 
+// TODO: handle fallback/loading images more gracefully, like so (make StyledAvatar an object tag)
+// <StyledAvatar {...props}>
+//   <img src={props.defaultImage ? props.defaultImage : '/public/img/default_avatar.svg'} />
+// </StyledAvatar>
+
 export const Avatar = compose(pure)(AvatarPure);

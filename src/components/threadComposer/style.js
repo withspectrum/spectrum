@@ -1,11 +1,22 @@
 import styled from 'styled-components';
 import { Card } from '../card';
-import { Transition } from '../globals';
+import { Transition, hexa, Shadow, FlexRow } from '../globals';
 
-export const Container = styled.div`
+export const Container = styled(FlexRow)`
   align-self: stretch;
   display: flex;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    display: ${props => (props.isOpen ? 'block' : 'none')};
+    position: fixed;
+    height: calc(100vh - 56px);
+    width: 100%;
+    top: 8px;
+    flex-direction: column;
+    justify-content: flex-start;
+    z-index: 11;
+  }
 `;
 
 export const Composer = styled(Card)`
@@ -15,8 +26,19 @@ export const Composer = styled(Card)`
   width: 100%;
   display: block;
   min-height: 64px;
-  cursor: pointer;
   border-radius: 12px;
+  transition: ${Transition.hover.off};
+
+  &:hover {
+    transition: none;
+    box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 90%;
+    pointer-events: all;
+  }
 `;
 
 export const Overlay = styled.div`
@@ -35,6 +57,7 @@ export const Overlay = styled.div`
     ` : `
       opacity: 0;
       pointer-events: none;
+
     `)}
 `;
 
@@ -53,6 +76,10 @@ export const Placeholder = styled.div`
     color: ${props => props.theme.brand.alt};
   }
 
+  @media (max-width: 768px) {
+    opacity: 0;
+  }
+
 `;
 
 export const PlaceholderLabel = styled.h3`
@@ -63,20 +90,32 @@ export const PlaceholderLabel = styled.h3`
 
 export const ContentContainer = styled.div`
   display: ${props => (props.isOpen ? 'block' : 'none')};
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
-export const Actions = styled.div`
+export const Actions = styled(FlexRow)`
   background: #F8FBFE;
   border-top: 2px solid ${props => props.theme.border.default};
-  padding: 8px;
+  padding: 8px 8px 8px 0;
   border-radius: 0 0 12px 12px;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 768px) {
+    position: absolute;
+    bottom: 0;
+    flex-direction: column;
+    align-items: flex-end;
+  }
 `;
 
-export const Dropdowns = styled.div`
+export const Dropdowns = styled(FlexRow)`
   display: flex;
   align-items: center;
 
@@ -97,10 +136,30 @@ export const Dropdowns = styled.div`
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    cursor: pointer;
   }
 
-  select + select {
-    margin-left: 8px;
+  > div {
+    color: ${props => props.theme.text.placeholder};
+    margin-left: 4px;
+
+    &:nth-of-type(2) {
+      margin-left: 8px;
+    }
+  }
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: flex-start;
+    margin-bottom: 8px;
+
+    div {
+      flex: 0 0 32px;
+    }
+
+    select:nth-of-type(2) {
+        flex: 1 0 auto;
+      }
+    }
   }
 `;
 
@@ -124,6 +183,7 @@ export const ThreadDescription = {
   fontSize: '16px',
   fontWeight: '500',
   width: '100%',
+  height: 'calc(100% - 132px)',
   display: 'inline-block',
   lineHeight: '1.5',
   padding: '0 24px 24px 24px',
@@ -132,4 +192,5 @@ export const ThreadDescription = {
   boxShadow: 'none',
   color: '#171A21',
   whiteSpace: 'pre-wrap',
+  overflowY: 'scroll',
 };

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FlexRow, FlexCol, Truncate, Transition, Gradient } from '../globals';
 import { Button, OutlineButton, IconButton } from '../buttons';
+import Card from '../card';
 
 export const ProfileHeader = styled(FlexRow)`
   padding: 16px;
@@ -10,7 +11,7 @@ export const ProfileHeader = styled(FlexRow)`
   flex-wrap: nowrap;
 `;
 
-export const ProfileAvatar = styled.img`
+export const CommunityAvatar = styled.img`
   height: 40px;
   width: 40px;
   flex: 0 0 40px;
@@ -21,6 +22,10 @@ export const ProfileAvatar = styled.img`
   background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
 `;
 
+export const UserAvatar = styled(CommunityAvatar)`
+  border-radius: 20px;
+`;
+
 export const ProfileHeaderLink = styled(Link)`
   display: flex;
   align-items: center;
@@ -29,7 +34,7 @@ export const ProfileHeaderLink = styled(Link)`
   flex: 1 1 auto;
   min-width: 0;
 
-  &:hover h3 {
+  &:hover h3{
     transition: ${Transition.hover.on};
     color: ${props => props.theme.brand.alt};
   }
@@ -156,4 +161,52 @@ export const Label = styled.span`
 
 export const Count = styled.span`
   font-weight: 700;
+`;
+
+export const CoverLink = styled(ProfileHeaderLink)`
+  position: absolute;
+  bottom: -64px;
+  left: 16px;
+  flex-direction: column;
+  align-items: center;
+  width: calc(100% - 32px);
+`;
+
+export const CoverAvatar = styled(UserAvatar)`
+  border: 2px solid ${({ theme }) => theme.text.reverse};
+  width: 64px;
+  flex: 0 0 64px;
+  margin-right: 0;
+  border-radius: 100%;
+`;
+
+export const CoverTitle = styled(Title)`
+  font-size: 20px;
+  margin-top: 8px;
+`;
+
+export const CoverSubtitle = styled(Subtitle)`
+  text-align: center;
+  margin-top: 64px;
+  margin-bottom: 16px;
+`;
+
+export const CoverDescription = styled(Description)`
+  text-align: center;
+
+  p {
+    margin-bottom: 16px;
+  }
+`;
+
+// had a hard time targeting the ChannelListItem component, so this is a janky way to get the overrides I needed.
+export const ProfileCard = styled(Card)`
+  > div:first-of-type, > a > div {
+    padding: 16px;
+
+    h4 > a:hover {
+      color: ${({ theme }) => theme.brand.alt};
+      text-decoration: underline;
+    }
+  }
 `;

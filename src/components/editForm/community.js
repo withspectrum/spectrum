@@ -8,7 +8,7 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-
+import { track } from '../../helpers/events';
 import {
   editCommunityMutation,
   deleteCommunityMutation,
@@ -17,15 +17,22 @@ import { openModal } from '../../actions/modals';
 import { addToastWithTimeout } from '../../actions/toasts';
 
 import { Button, TextButton, IconButton } from '../buttons';
-import { Input, UnderlineInput, TextArea } from '../formElements';
+import { Notice } from '../listItems/style';
+import {
+  Input,
+  UnderlineInput,
+  TextArea,
+  PhotoInput,
+  CoverInput,
+} from '../formElements';
 import {
   StyledCard,
   Form,
   FormTitle,
   Description,
   Actions,
-  ImgPreview,
   TertiaryActionContainer,
+  ImageInputWrapper,
 } from './style';
 
 class CommunityWithData extends Component {
@@ -36,8 +43,12 @@ class CommunityWithData extends Component {
     communityId: string,
     website: string,
     image: string,
-    file: ?string,
+    coverPhoto: string,
+    file: ?Object,
+    coverFile: ?Object,
     communityData: Object,
+    photoSizeError: boolean,
+    isLoading: boolean,
   };
   constructor(props) {
     super(props);
@@ -50,8 +61,12 @@ class CommunityWithData extends Component {
       communityId: community.id,
       website: community.website,
       image: community.profilePhoto,
+      coverPhoto: community.coverPhoto,
       file: null,
+      coverFile: null,
       communityData: community,
+      photoSizeError: false,
+      isLoading: false,
     };
   }
 
@@ -87,10 +102,54 @@ class CommunityWithData extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    this.setState({
+      isLoading: true,
+    });
+
+    if (file.size > 3000000) {
+      return this.setState({
+        photoSizeError: true,
+        isLoading: false,
+      });
+    }
+
     reader.onloadend = () => {
+      track('community', 'profile photo uploaded', null);
+
       this.setState({
         file: file,
         image: reader.result,
+        photoSizeError: false,
+        isLoading: false,
+      });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  setCommunityCover = e => {
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    this.setState({
+      isLoading: true,
+    });
+
+    if (file.size > 3000000) {
+      return this.setState({
+        photoSizeError: true,
+        isLoading: false,
+      });
+    }
+
+    reader.onloadend = () => {
+      track('community', 'cover photo uploaded', null);
+
+      this.setState({
+        coverFile: file,
+        coverPhoto: reader.result,
+        photoSizeError: false,
+        isLoading: false,
       });
     };
 
@@ -99,27 +158,56 @@ class CommunityWithData extends Component {
 
   save = e => {
     e.preventDefault();
-    const { name, description, website, file, communityId } = this.state;
+    const {
+      name,
+      description,
+      website,
+      file,
+      coverFile,
+      communityId,
+      photoSizeError,
+    } = this.state;
     const input = {
       name,
       description,
       website,
       file,
+      coverFile,
       communityId,
     };
+
+    if (photoSizeError) {
+      return;
+    }
+
+    this.setState({
+      isLoading: true,
+    });
+
     this.props
       .editCommunity(input)
       .then(({ data: { editCommunity } }) => {
         const community = editCommunity;
 
+        this.setState({
+          isLoading: false,
+        });
+
         // community was returned
         if (community !== undefined) {
+          track('community', 'edited', null);
+
           this.props.dispatch(
             addToastWithTimeout('success', 'Community saved!')
           );
+          window.location.href = `/${this.props.community.slug}`;
         }
       })
       .catch(err => {
+        this.setState({
+          isLoading: false,
+        });
+
         this.props.dispatch(
           addToastWithTimeout(
             'error',
@@ -129,8 +217,14 @@ class CommunityWithData extends Component {
       });
   };
 
+  cancelForm = e => {
+    e.preventDefault();
+    return (window.location.href = `/${this.props.community.slug}`);
+  };
+
   triggerDeleteCommunity = (e, communityId) => {
     e.preventDefault();
+    track('community', 'delete inited', null);
     const { name, communityData } = this.state;
     const message = (
       <div>
@@ -162,7 +256,16 @@ class CommunityWithData extends Component {
   };
 
   render() {
-    const { name, slug, description, image, website } = this.state;
+    const {
+      name,
+      slug,
+      description,
+      image,
+      coverPhoto,
+      website,
+      photoSizeError,
+      isLoading,
+    } = this.state;
     const { community } = this.props;
 
     if (!community) {
@@ -181,6 +284,19 @@ class CommunityWithData extends Component {
       <StyledCard>
         <FormTitle>Community Settings</FormTitle>
         <Form>
+          <ImageInputWrapper>
+            <CoverInput
+              onChange={this.setCommunityCover}
+              defaultValue={coverPhoto}
+              preview={true}
+            />
+
+            <PhotoInput
+              onChange={this.setCommunityPhoto}
+              defaultValue={image}
+            />
+          </ImageInputWrapper>
+
           <Input defaultValue={name} onChange={this.changeName}>Name</Input>
           <UnderlineInput defaultValue={slug} disabled>
             sp.chat/
@@ -191,18 +307,6 @@ class CommunityWithData extends Component {
           >
             Description
           </TextArea>
-
-          <Input
-            inputType="file"
-            accept=".png, .jpg, .jpeg, .gif"
-            defaultValue={name}
-            onChange={this.setCommunityPhoto}
-            multiple={false}
-          >
-            Add a logo or photo
-
-            {!image ? <span>add</span> : <ImgPreview src={image} />}
-          </Input>
 
           <Input
             defaultValue={website}
@@ -223,9 +327,22 @@ class CommunityWithData extends Component {
                 onClick={e => this.triggerDeleteCommunity(e, community.id)}
               />
             </TertiaryActionContainer>
-            <TextButton hoverColor={'warn.alt'}>Cancel</TextButton>
-            <Button onClick={this.save}>Save</Button>
+            <TextButton hoverColor={'warn.alt'} onClick={this.cancelForm}>
+              Cancel
+            </TextButton>
+            <Button
+              loading={isLoading}
+              onClick={this.save}
+              disabled={photoSizeError}
+            >
+              Save
+            </Button>
           </Actions>
+
+          {photoSizeError &&
+            <Notice style={{ marginTop: '16px' }}>
+              Photo uploads should be less than 3mb
+            </Notice>}
         </Form>
       </StyledCard>
     );

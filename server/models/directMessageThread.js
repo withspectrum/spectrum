@@ -13,10 +13,10 @@ const getDirectMessageThreadsByUser = (
   return db
     .table('usersDirectMessageThreads')
     .getAll(userId, { index: 'userId' })
-    .orderBy(db.desc('lastActive'))
     .eqJoin('threadId', db.table('directMessageThreads'))
     .without({ left: ['id', 'createdAt', 'threadId', 'userId'] })
     .zip()
+    .orderBy(db.desc('threadLastActive'))
     .run();
 };
 
@@ -28,6 +28,7 @@ const createDirectMessageThread = (isGroup: boolean): Object => {
         createdAt: new Date(),
         name: null,
         isGroup,
+        threadLastActive: new Date(),
       },
       { returnChanges: true }
     )
@@ -35,8 +36,19 @@ const createDirectMessageThread = (isGroup: boolean): Object => {
     .then(result => result.changes[0].new_val);
 };
 
+const setThreadLastActive = (id: string): Object => {
+  return db
+    .table('directMessageThreads')
+    .get(id)
+    .update({
+      threadLastActive: db.now(),
+    })
+    .run();
+};
+
 module.exports = {
   createDirectMessageThread,
   getDirectMessageThread,
   getDirectMessageThreadsByUser,
+  setThreadLastActive,
 };

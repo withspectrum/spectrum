@@ -11,6 +11,8 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import { connect } from 'react-redux';
 
+import { track } from '../../helpers/events';
+import { openComposer, closeComposer } from '../../actions/composer';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Editor, { fromPlainText, toJSON } from '../editor';
 import { getComposerCommunitiesAndChannels } from './queries';
@@ -18,8 +20,9 @@ import { publishThread } from './mutations';
 import { LinkPreview, LinkPreviewLoading } from '../../components/linkPreview';
 import { getLinkPreviewFromUrl } from '../../helpers/utils';
 import { URLS } from '../../helpers/regexps';
-import { Button } from '../buttons';
+import { TextButton, Button } from '../buttons';
 import Icon from '../icons';
+import { FlexRow } from '../globals';
 import { displayLoadingComposer } from '../loading';
 import {
   Container,
@@ -37,7 +40,6 @@ import {
 class ThreadComposerWithData extends Component {
   // prop types
   state: {
-    isOpen: boolean,
     title: string,
     body: string,
     availableCommunities: Array<any>,
@@ -59,9 +61,13 @@ class ThreadComposerWithData extends Component {
       that don't have any channels yet
     */
 
-    const availableCommunities = props.data.user.communityConnection.edges.map(
-      edge => edge.node
-    );
+    const availableCommunities = props.data.user.communityConnection.edges
+      .map(edge => edge.node)
+      .filter(
+        community =>
+          community.communityPermissions.isMember ||
+          community.communityPermissions.isOwner
+      );
 
     /*
       Iterate through each of our community nodes to construct a new array
@@ -71,9 +77,13 @@ class ThreadComposerWithData extends Component {
       and each child array represents the channels within that parent
       community
     */
-    const availableChannels = props.data.user.channelConnection.edges.map(
-      edge => edge.node
-    );
+    const availableChannels = props.data.user.channelConnection.edges
+      .map(edge => edge.node)
+      .filter(
+        channel =>
+          channel.channelPermissions.isMember ||
+          channel.channelPermissions.isOwner
+      );
 
     /*
       If a user is viewing a communit or channel, we use the url as a prop
@@ -104,16 +114,15 @@ class ThreadComposerWithData extends Component {
         )[0].id; // and select the first one in the list
 
     this.state = {
-      isOpen: false,
-      title: '',
-      body: fromPlainText(''),
+      title: props.title || '',
+      body: props.body || fromPlainText(''),
       availableCommunities,
       availableChannels,
       activeCommunity,
       activeChannel,
       isPublishing: false,
       linkPreview: null,
-      linkPreviewTrueUrl: null,
+      linkPreviewTrueUrl: '',
       linkPreviewLength: 0,
       fetchingLinkPreview: false,
     };
@@ -135,17 +144,16 @@ class ThreadComposerWithData extends Component {
   handleOpenComposer = () => {
     // strange construction here in order to guarantee that we focus the title
     // input whenever the composer is opened
-    const isOpen = this.state.isOpen;
+    const isOpen = this.props.isOpen;
     if (!isOpen) {
-      this.setState({ isOpen: true });
+      this.props.dispatch(openComposer());
       this.refs.titleTextarea.focus();
     }
   };
 
   closeComposer = () => {
-    this.setState({
-      isOpen: false,
-    });
+    const { title, body } = this.state;
+    this.props.dispatch(closeComposer(title, body));
   };
 
   setActiveCommunity = e => {
@@ -229,6 +237,8 @@ class ThreadComposerWithData extends Component {
         // get the thread id to redirect the user
         const id = data.publishThread.id;
 
+        track('thread', 'published', null);
+
         // stop the loading spinner on the publish button
         this.setState({
           isPublishing: false,
@@ -311,13 +321,12 @@ class ThreadComposerWithData extends Component {
   removeLinkPreview = () => {
     this.setState({
       linkPreview: null,
-      trueUrl: null,
+      linkPreviewTrueUrl: null,
     });
   };
 
   render() {
     const {
-      isOpen,
       title,
       availableChannels,
       availableCommunities,
@@ -328,6 +337,8 @@ class ThreadComposerWithData extends Component {
       linkPreviewTrueUrl,
       fetchingLinkPreview,
     } = this.state;
+
+    const { isOpen } = this.props;
 
     return (
       <Container isOpen={isOpen}>
@@ -373,6 +384,11 @@ class ThreadComposerWithData extends Component {
 
             <Actions>
               <Dropdowns>
+                <Icon
+                  glyph="community"
+                  tipText="Select a community"
+                  tipLocation="top-right"
+                />
                 <select
                   onChange={this.setActiveCommunity}
                   defaultValue={activeCommunity}
@@ -385,7 +401,11 @@ class ThreadComposerWithData extends Component {
                     );
                   })}
                 </select>
-
+                <Icon
+                  glyph="channel"
+                  tipText="Select a channel"
+                  tipLocation="top-right"
+                />
                 <select
                   onChange={this.setActiveChannel}
                   defaultValue={activeChannel}
@@ -401,15 +421,19 @@ class ThreadComposerWithData extends Component {
                     })}
                 </select>
               </Dropdowns>
-
-              <Button
-                onClick={this.publishThread}
-                loading={isPublishing}
-                disabled={!title || isPublishing}
-                color={'brand'}
-              >
-                Publish
-              </Button>
+              <FlexRow>
+                <TextButton hoverColor="warn.alt" onClick={this.closeComposer}>
+                  Cancel
+                </TextButton>
+                <Button
+                  onClick={this.publishThread}
+                  loading={isPublishing}
+                  disabled={!title || isPublishing}
+                  color={'brand'}
+                >
+                  Publish
+                </Button>
+              </FlexRow>
             </Actions>
           </ContentContainer>
 
@@ -427,4 +451,10 @@ export const ThreadComposer = compose(
   pure
 )(ThreadComposerWithData);
 
-export default connect()(ThreadComposer);
+const mapStateToProps = state => ({
+  isOpen: state.composer.isOpen,
+  title: state.composer.title,
+  body: state.composer.body,
+});
+
+export default connect(mapStateToProps)(ThreadComposer);

@@ -3,6 +3,10 @@
 const { UserError } = require('graphql-errors');
 const { storeMessage } = require('../models/message');
 import type { MessageProps } from '../models/message';
+import { setThreadLastActive } from '../models/directMessageThread';
+import {
+  setUserLastSeenInDirectMessageThread,
+} from '../models/usersDirectMessageThreads';
 import { uploadImage } from '../utils/s3';
 
 type AddMessageProps = {
@@ -15,6 +19,12 @@ module.exports = {
       // user must be authed to send a message
       if (!currentUser) {
         return new UserError('You must be signed in to send a message.');
+      }
+
+      // if the message was a dm thread, set the last seen and last active times
+      if (message.threadType === 'directMessageThread') {
+        setThreadLastActive(message.threadId);
+        setUserLastSeenInDirectMessageThread(message.threadId, currentUser.id);
       }
 
       // all checks passed

@@ -1,13 +1,13 @@
 //@flow
 import React from 'react';
-import { ListCardItemUser } from '../../../components/listCard';
+import { UserListItem } from '../../../components/listItems';
 import { TextButton } from '../../../components/buttons';
 import {
   StyledCard,
   LargeListHeading,
   ListContainer,
   Description,
-} from '../../../components/listCard/style';
+} from '../../../components/listItems/style';
 
 const PendingUsers = ({ users, togglePending }) => {
   return (
@@ -25,7 +25,7 @@ const PendingUsers = ({ users, togglePending }) => {
           users.map(user => {
             return (
               <section key={user.id}>
-                <ListCardItemUser user={user}>
+                <UserListItem user={user}>
                   <div style={{ display: 'flex' }}>
                     <TextButton
                       onClick={() => togglePending(user.id, 'block')}
@@ -45,7 +45,7 @@ const PendingUsers = ({ users, togglePending }) => {
                       Approve
                     </TextButton>
                   </div>
-                </ListCardItemUser>
+                </UserListItem>
               </section>
             );
           })}

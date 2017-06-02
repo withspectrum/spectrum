@@ -12,7 +12,8 @@ import { withRouter } from 'react-router';
 import slugg from 'slugg';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
-
+import { track } from '../../../helpers/events';
+import { Notice } from '../../../components/listItems/style';
 import { closeModal } from '../../../actions/modals';
 import { throttle } from '../../../helpers/utils';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -24,10 +25,18 @@ import {
 
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
-import { Input, UnderlineInput, TextArea, Error } from '../../formElements';
+import {
+  Input,
+  UnderlineInput,
+  TextArea,
+  PhotoInput,
+  CoverInput,
+  Error,
+  Checkbox,
+} from '../../formElements';
 import { modalStyles } from '../styles';
 
-import { Form, Actions, ImgPreview } from './style';
+import { Form, Actions, ImgPreview, ImageInputWrapper } from './style';
 
 class CreateCommunityModal extends Component {
   state: {
@@ -36,13 +45,17 @@ class CreateCommunityModal extends Component {
     description: string,
     website: string,
     image: string,
-    file: ?string,
+    coverPhoto: string,
+    file: ?Object,
+    coverFile: ?Object,
     slugTaken: boolean,
     slugError: boolean,
     descriptionError: boolean,
     nameError: boolean,
     createError: boolean,
     loading: boolean,
+    agreeCoC: boolean,
+    photoSizeError: boolean,
   };
   constructor(props) {
     super(props);
@@ -53,16 +66,24 @@ class CreateCommunityModal extends Component {
       description: '',
       website: '',
       image: '',
+      coverPhoto: '',
       file: null,
+      coverFile: null,
       slugTaken: false,
       slugError: false,
       descriptionError: false,
       nameError: false,
       createError: false,
       loading: false,
+      agreeCoC: false,
+      photoSizeError: false,
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
+  }
+
+  componentDidMount() {
+    track('community', 'create inited', null);
   }
 
   close = () => {
@@ -180,14 +201,51 @@ class CreateCommunityModal extends Component {
     });
   };
 
+  changeCoC = () => {
+    const value = this.state.agreeCoC;
+    this.setState({
+      agreeCoC: !value,
+    });
+  };
+
   setCommunityPhoto = e => {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (file.size > 3000000) {
+      return this.setState({
+        photoSizeError: true,
+      });
+    }
+
     reader.onloadend = () => {
+      track('community', 'profile photo uploaded', null);
       this.setState({
         file: file,
         image: reader.result,
+        photoSizeError: false,
+      });
+    };
+
+    reader.readAsDataURL(file);
+  };
+
+  setCommunityCover = e => {
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    if (file.size > 3000000) {
+      return this.setState({
+        photoSizeError: true,
+      });
+    }
+
+    reader.onloadend = () => {
+      track('community', 'cover photo uploaded', null);
+      this.setState({
+        coverFile: file,
+        coverPhoto: reader.result,
+        photoSizeError: false,
       });
     };
 
@@ -202,14 +260,18 @@ class CreateCommunityModal extends Component {
       description,
       website,
       file,
+      coverFile,
       slugTaken,
       slugError,
       nameError,
       descriptionError,
+      photoSizeError,
     } = this.state;
 
     // if an error is present, ensure the client cant submit the form
-    if (slugTaken || nameError || descriptionError || slugError) {
+    if (
+      slugTaken || nameError || descriptionError || slugError || photoSizeError
+    ) {
       this.setState({
         createError: true,
       });
@@ -230,12 +292,14 @@ class CreateCommunityModal extends Component {
       description,
       website,
       file,
+      coverFile,
     };
 
     // create the community
     this.props
       .createCommunity(input)
       .then(community => {
+        track('community', 'created', null);
         window.location.href = `/${slug}`;
         this.close();
         this.props.dispatch(
@@ -257,6 +321,7 @@ class CreateCommunityModal extends Component {
       slug,
       description,
       image,
+      coverPhoto,
       website,
       slugTaken,
       slugError,
@@ -264,6 +329,8 @@ class CreateCommunityModal extends Component {
       descriptionError,
       createError,
       loading,
+      agreeCoC,
+      photoSizeError,
     } = this.state;
     const styles = modalStyles();
 
@@ -285,6 +352,24 @@ class CreateCommunityModal extends Component {
           closeModal={this.close}
         >
           <Form>
+            <ImageInputWrapper>
+              <CoverInput
+                onChange={this.setCommunityCover}
+                defaultValue={coverPhoto}
+                preview={true}
+              />
+
+              <PhotoInput
+                onChange={this.setCommunityPhoto}
+                defaultValue={image}
+              />
+            </ImageInputWrapper>
+
+            {photoSizeError &&
+              <Notice style={{ marginTop: '32px' }}>
+                Photo uploads should be less than 3mb
+              </Notice>}
+
             <Input
               defaultValue={name}
               onChange={this.changeName}
@@ -324,18 +409,6 @@ class CreateCommunityModal extends Component {
               </Error>}
 
             <Input
-              inputType="file"
-              accept=".png, .jpg, .jpeg, .gif"
-              defaultValue={name}
-              onChange={this.setCommunityPhoto}
-              multiple={false}
-            >
-              Add a logo or photo
-
-              {!image ? <span>add</span> : <ImgPreview src={image} />}
-            </Input>
-
-            <Input
               defaultValue={website}
               onChange={this.changeWebsite}
               autoFocus={true}
@@ -343,10 +416,29 @@ class CreateCommunityModal extends Component {
               Optional: Add your community's website
             </Input>
 
+            <Checkbox
+              id="isPrivate"
+              checked={agreeCoC}
+              onChange={this.changeCoC}
+            >
+              <span>
+                I have read the{' '}
+                <a
+                  href="https://github.com/withspectrum/code-of-conduct"
+                  target="_blank"
+                >
+                  Spectrum Code of Conduct
+                </a>
+                {' '}and agree to enforce it in my community.
+              </span>
+            </Checkbox>
+
             <Actions>
               <TextButton color={'warn.alt'}>Cancel</TextButton>
               <Button
-                disabled={!name || !slug || slugTaken || !description}
+                disabled={
+                  !name || !slug || slugTaken || !description || !agreeCoC
+                }
                 loading={loading}
                 onClick={this.create}
               >

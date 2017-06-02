@@ -1,18 +1,33 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-
-import { SERVER_URL } from '../../api';
-
+// $FlowFixMe
+import { connect } from 'react-redux';
+// $FlowFixMe
+import compose from 'recompose/compose';
+import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../api';
+import { addToastWithTimeout } from '../../actions/toasts';
 import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
-import { Title, Subtitle, Actions, NullCol } from './style';
+import {
+  Title,
+  Subtitle,
+  Actions,
+  NullCol,
+  UpgradeError,
+  Profile,
+  Cost,
+  LargeEmoji,
+} from './style';
+// $FlowFixMe
+import StripeCheckout from 'react-stripe-checkout';
+import { upgradeToProMutation } from '../../api/user';
 
 export const NullCard = props => {
   return (
     <Card>
-      <NullCol bg={props.bg}>
+      <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
         {props.heading && <Title>{props.heading}</Title>}
         {props.copy && <Subtitle>{props.copy}</Subtitle>}
         {props.children}
@@ -32,7 +47,7 @@ export const NullState = props => (
 export const UpsellSignIn = ({ entity }) => {
   const login = () => {
     // log the user in and return them to this page
-    return (window.location.href = `http://localhost:3001/auth/twitter?redirectTo=${window.location.pathname}`);
+    return (window.location.href = `${SERVER_URL}/auth/twitter?redirectTo=${window.location.pathname}`);
   };
 
   const subtitle = entity
@@ -56,10 +71,10 @@ export const UpsellJoinChannel = ({
     <NullCard bg="channel">
       <Title>Ready to join the conversation?</Title>
       <Subtitle>
-        Follow ~{channel.name} to get involved!
+        Join ~{channel.name} to get involved!
       </Subtitle>
       <Button onClick={() => subscribe(channel.id)} icon="plus" label>
-        Follow
+        Join
       </Button>
     </NullCard>
   );
@@ -149,11 +164,8 @@ export const Upsell404Channel = ({
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
       <Actions>
-        <OutlineButton onClick={() => window.location.href = returnUrl}>
+        <Button onClick={() => window.location.href = returnUrl}>
           Take me back
-        </OutlineButton>
-        <Button onClick={() => window.location.href = '/explore'}>
-          Explore Channels on Spectrum
         </Button>
       </Actions>
     </NullCard>
@@ -188,12 +200,16 @@ export const Upsell404Community = ({
       <Actions>
         {// de-emphasizes the 'take me home' button if a create prompt is shown
         create
-          ? <OutlineButton onClick={() => window.location.href = '/explore'}>
-              Explore Communities
-            </OutlineButton>
-          : <Button onClick={() => window.location.href = '/explore'}>
-              Explore Communities
-            </Button>}
+          ? <Link to={`/home`}>
+              <OutlineButton>
+                Take me home
+              </OutlineButton>
+            </Link>
+          : <Link to={`/home`}>
+              <Button>
+                Take me home
+              </Button>
+            </Link>}
 
         {create &&
           <Button onClick={create}>
@@ -204,43 +220,157 @@ export const Upsell404Community = ({
   );
 };
 
+export const UpsellJoinCommunity = ({
+  community,
+  join,
+}: { community: Object, join: Function }) => {
+  return (
+    <NullCard
+      bg="chat"
+      heading="Want to be a part of the conversation?"
+      copy={`Join ${community.name} to get involved!`}
+    >
+      <Button onClick={() => join(community.id)} icon="plus">
+        Join {community.name}
+      </Button>
+    </NullCard>
+  );
+};
+
 export const Upsell404User = ({
   username,
   noPermission,
 }: { username: string, noPermission: boolean }) => {
-  const returnUrl = `/`;
   const title = noPermission
     ? "I see you sneakin' around here..."
-    : 'Oops, someone got lost!';
+    : `${username}? What's a ${username}?`;
   const subtitle = noPermission
-    ? 'No hackzxing allowed.'
-    : `We can't find anyone who answers to the name ${username}. Maybe they don't want to be found...`;
+    ? `But, that's not for you...`
+    : `We don't know anyone who goes by that name. Sorry!`;
 
   return (
-    <NullCard bg="user">
-      <Title>{title}</Title>
-      <Subtitle>{subtitle}</Subtitle>
-
-      <Button onClick={() => window.location.href = returnUrl}>
+    <NullCard bg="user" heading={title} copy={subtitle}>
+      <Button onClick={() => window.location.href = '/home'}>
         Take me home
       </Button>
     </NullCard>
   );
 };
+
+export class UpsellNewUser extends Component {
+  render() {
+    const { user } = this.props;
+
+    return (
+      <NullCard bg="pro">
+        <LargeEmoji>
+          👋
+        </LargeEmoji>
+        <Title>Howdy, {user.name}!</Title>
+        <Subtitle>
+          Spectrum is a place where communities live. It's easy to follow the things that you care about most, or even create your own community to share with the world.
+        </Subtitle>
+      </NullCard>
+    );
+  }
+}
 
 export const Upsell404Thread = () => {
-  const returnUrl = `/`;
-  const title = 'Oops, something got lost!';
-  const subtitle = `We can't find that thread. Maybe it floated off into space...`;
-
   return (
-    <NullCard bg="post">
-      <Title>{title}</Title>
-      <Subtitle>{subtitle}</Subtitle>
-
-      <Button onClick={() => window.location.href = returnUrl}>
+    <NullCard
+      bg="post"
+      heading="Oops, something got lost!"
+      copy="We can't find that thread. Maybe it floated off into space..."
+    >
+      <Button onClick={() => window.location.href = `/home`}>
         Take me home
       </Button>
     </NullCard>
   );
 };
+
+class UpsellUpgradeToProPure extends Component {
+  state: {
+    upgradeError: string,
+    isLoading: boolean,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      upgradeError: '',
+      isLoading: false,
+    };
+  }
+
+  upgradeToPro = token => {
+    this.setState({
+      isLoading: true,
+    });
+
+    const input = {
+      plan: 'beta-pro',
+      token: JSON.stringify(token),
+    };
+
+    this.props
+      .upgradeToPro(input)
+      .then(({ data: { upgradeToPro }, data }) => {
+        this.props.dispatch(addToastWithTimeout('success', 'Upgraded to Pro!'));
+        this.setState({
+          isLoading: false,
+          upgradeError: '',
+        });
+      })
+      .catch(err => {
+        this.setState({
+          isLoading: false,
+          upgradeError: err.message,
+        });
+        this.props.dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
+  render() {
+    const { upgradeError, isLoading } = this.state;
+    const { currentUser } = this.props;
+
+    return (
+      <NullCard bg="pro">
+        <Profile>
+          <img alt={currentUser.name} src={`${currentUser.profilePhoto}`} />
+          <span>PRO</span>
+        </Profile>
+        <Title>Upgrade to Pro</Title>
+        <Subtitle>
+          We're hard at work building features for Spectrum Pro. Your early support helps us get there faster – thank you!
+        </Subtitle>
+        <Cost>Spectrum Pro costs $5/month and you can cancel at any time.</Cost>
+        <StripeCheckout
+          token={this.upgradeToPro}
+          stripeKey={PUBLIC_STRIPE_KEY}
+          name="🔐   Pay Securely"
+          description="Secured and Encrypted by Stripe"
+          panelLabel="Subscribe for "
+          amount={500}
+          currency="USD"
+        >
+          <Button disabled={isLoading} loading={isLoading} icon="payment">
+            Upgrade
+          </Button>
+        </StripeCheckout>
+
+        {!upgradeError && <UpgradeError>{upgradeError}</UpgradeError>}
+      </NullCard>
+    );
+  }
+}
+
+const mapStateToProps = state => ({
+  currentUser: state.users.currentUser,
+});
+export const UpsellUpgradeToPro = compose(
+  upgradeToProMutation,
+  connect(mapStateToProps)
+)(UpsellUpgradeToProPure);

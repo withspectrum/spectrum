@@ -48,9 +48,6 @@ const DEFAULT_USERS = [
   },
 ];
 
-// SCHEMA:TODO
-// Subscription Model
-
 const DEFAULT_COMMUNITIES = [
   {
     id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
@@ -104,7 +101,6 @@ const DEFAULT_THREADS = [
   },
 ];
 
-// SCHEMA:TODO
 const DEFAULT_NOTIFICATIONS = [
   {
     id: 'first-notification-asfd123',
@@ -131,11 +127,22 @@ const DEFAULT_NOTIFICATIONS = [
   },
 ];
 
+const DEFAULT_USERS_NOTIFICATIONS = [
+  {
+    id: 'first-users-notification-asfd123',
+    createdAt: new Date(),
+    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    notificationId: 'first-notification-asfd123',
+    isRead: false,
+  },
+];
+
 const DEFAULT_DIRECT_MESSAGE_THREADS = [
   {
     id: 'first-dm-thread-asfd123',
     createdAt: new Date(DATE),
     name: null,
+    threadLastActive: new Date(),
   },
 ];
 
@@ -180,6 +187,7 @@ module.exports = {
   DEFAULT_CHANNELS,
   DEFAULT_THREADS,
   DEFAULT_NOTIFICATIONS,
+  DEFAULT_USERS_NOTIFICATIONS,
   DEFAULT_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_COMMUNITIES,

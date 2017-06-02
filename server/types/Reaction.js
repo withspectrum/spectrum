@@ -22,7 +22,7 @@ const Reaction = /* GraphQL */ `
 
 	extend type Mutation {
 		# Returns true if toggling completed successfully
-		toggleReaction(reaction: ReactionInput!): Reaction
+		toggleReaction(reaction: ReactionInput!): Message
 	}
 `;
 

@@ -9,6 +9,7 @@ const {
   DEFAULT_CHANNELS,
   DEFAULT_THREADS,
   DEFAULT_NOTIFICATIONS,
+  DEFAULT_USERS_NOTIFICATIONS,
   DEFAULT_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_COMMUNITIES,
@@ -29,9 +30,11 @@ const {
   generateReaction,
   generateThreadNotification,
   generateMessageNotification,
+  generateUsersNotifications,
 } = require('./generate');
 
 const notifications = DEFAULT_NOTIFICATIONS;
+const usersNotifications = DEFAULT_USERS_NOTIFICATIONS;
 const userAmount = faker.random.number(1000);
 const users = [
   ...DEFAULT_USERS,
@@ -132,7 +135,6 @@ threads.forEach(thread => {
   threadMessages.forEach((message, index) => {
     notifications.push(
       generateMessageNotification(
-        threadMessages.slice(0, index).map(message => message.sender),
         message,
         thread,
         channel.id,
@@ -190,6 +192,7 @@ Promise.all([
   db.table('usersCommunities').insert(usersCommunities).run(),
   db.table('usersChannels').insert(usersChannels).run(),
   db.table('usersDirectMessageThreads').insert(usersDirectMessageThreads).run(),
+  db.table('usersNotifications').insert(usersNotifications).run(),
 ])
   .then(() => {
     console.log('Finished seeding database! 🎉');

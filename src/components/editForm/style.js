@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 import Card from '../card';
-import { FlexRow, Truncate } from '../globals';
+import { FlexRow, FlexCol, Truncate } from '../globals';
 
 export const StyledCard = styled(Card)`
   padding: 16px;
 `;
 
 export const Form = styled.form`
-  display: flex;
+  display: inline-block;
   flex-direction: column;
   align-self: stretch;
   flex: 1 0 100%;
@@ -36,6 +36,10 @@ export const Description = styled.p`
   color: ${props => props.theme.text.default};
   padding: 8px 0 16px;
   line-height: 1.4;
+
+  a {
+    color: ${props => props.theme.brand.default};
+  }
 `;
 
 export const TertiaryActionContainer = styled(FlexRow)`
@@ -52,11 +56,13 @@ export const Actions = styled(FlexRow)`
   }
 `;
 
-export const ImgPreview = styled.img`
-  width: 32px;
-  height: 32px;
+export const PhotoPreview = styled.div`
+  position: relative;
+  width: 48px;
+  height: 48px;
   object-fit: cover;
   border-radius: 4px;
+  background-image: url('${props => props.src}')
 `;
 
 export const GeneralNotice = styled.span`
@@ -68,4 +74,18 @@ export const GeneralNotice = styled.span`
   border-radius: 4px;
   margin-top: 24px;
   line-height: 1.4;
+  display: inline-block;
+`;
+
+export const ImageInputWrapper = styled(FlexCol)`
+  position: relative;
+  flex: 0 0 auto;
+  margin-top: 8px;
+  margin-bottom: 24px;
+
+  > label:nth-of-type(2) {
+    position: absolute;
+    bottom: -24px;
+    left: 24px;
+  }
 `;

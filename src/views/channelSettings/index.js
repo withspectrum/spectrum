@@ -7,6 +7,7 @@ import pure from 'recompose/pure';
 //$FlowFixMe
 import { connect } from 'react-redux';
 import { getThisChannel } from './queries';
+import { track } from '../../helpers/events';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import { displayLoadingScreen } from '../../components/loading';
@@ -19,6 +20,7 @@ import {
   togglePendingUserInChannelMutation,
   unblockUserInChannelMutation,
 } from '../../api/channel';
+import Titlebar from '../titlebar';
 
 const SettingsPure = ({
   match,
@@ -32,11 +34,35 @@ const SettingsPure = ({
   const channelSlug = match.params.channelSlug;
 
   if (error) {
-    return <Upsell404Channel channel={channelSlug} community={communitySlug} />;
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={'Channel Not Found'}
+          provideBack={true}
+          backRoute={`/`}
+          noComposer
+        />
+        <Column type="primary">
+          <Upsell404Channel channel={channelSlug} community={communitySlug} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (!channel || channel.isDeleted) {
-    return <Upsell404Channel channel={channelSlug} community={communitySlug} />;
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={'Channel Not Found'}
+          provideBack={true}
+          backRoute={`/`}
+          noComposer
+        />
+        <Column type="primary">
+          <Upsell404Channel channel={channelSlug} community={communitySlug} />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   if (
@@ -44,11 +70,22 @@ const SettingsPure = ({
     !channel.community.communityPermissions.isOwner
   ) {
     return (
-      <Upsell404Channel
-        channel={channelSlug}
-        community={communitySlug}
-        noPermission
-      />
+      <AppViewWrapper>
+        <Titlebar
+          title={'No Permission'}
+          provideBack={true}
+          backRoute={`/${communitySlug}`}
+          noComposer
+        />
+
+        <Column type="primary">
+          <Upsell404Channel
+            channel={channelSlug}
+            community={communitySlug}
+            noPermission
+          />
+        </Column>
+      </AppViewWrapper>
     );
   }
 
@@ -63,6 +100,14 @@ const SettingsPure = ({
       .then(({ data: { togglePendingUser } }) => {
         // the mutation returns a channel object. if it exists,
         if (togglePendingUser !== undefined) {
+          if (action === 'block') {
+            track('channel', 'blocked pending user', null);
+          }
+
+          if (action === 'approve') {
+            track('channel', 'approved pending user', null);
+          }
+
           dispatch(addToastWithTimeout('success', 'Saved!'));
         }
       })
@@ -81,6 +126,7 @@ const SettingsPure = ({
       .then(({ data: { unblockUser } }) => {
         // the mutation returns a channel object. if it exists,
         if (unblockUser !== undefined) {
+          track('channel', 'unblocked user', null);
           dispatch(addToastWithTimeout('success', 'User was un-blocked.'));
         }
       })
@@ -89,8 +135,17 @@ const SettingsPure = ({
       });
   };
 
+  track('channel', 'settings viewed', null);
+
   return (
     <AppViewWrapper>
+      <Titlebar
+        title={`${channel.name} · ${channel.community.name}`}
+        subtitle={'Settings'}
+        provideBack={true}
+        backRoute={`/${channel.community.slug}/${channel.slug}`}
+        noComposer
+      />
       <Column type="secondary">
         <ChannelEditForm channel={channel} />
       </Column>

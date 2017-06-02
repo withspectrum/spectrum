@@ -3,6 +3,7 @@
 import styled, { keyframes } from 'styled-components';
 import { Card } from '../card';
 import { hexa } from '../globals';
+import { Link } from 'react-router-dom';
 
 const containerFadeIn = keyframes`
 	0%{
@@ -50,6 +51,14 @@ export const ShimmerProfile = styled(Card)`
 
   section {
     min-height: 96px;
+  }
+`;
+
+export const ShimmerListItem = styled(Card)`
+  padding: 16px;
+
+  section {
+    min-height: 40px;
   }
 `;
 
@@ -129,4 +138,48 @@ export const LoadingOverlay = styled.div`
 	width: 100%;
 	height: 100%;
 	z-index: 1000;
+`;
+
+export const LoadingNavbarContainer = styled.nav`
+	width: 100%;
+	background: ${({ theme }) => theme.text.default};
+	position: fixed;
+	top: 0;
+	display: flex;
+	align-items: center;
+	color: #fff;
+	justify-content: space-between;
+	height: 48px;
+	padding: 0 32px 0 16px;
+	line-height: 1;
+	box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+	z-index: 1000;
+
+	span {
+		position: relative;
+	}
+
+	@media (max-width: 768px) {
+		bottom: 0;
+		top: auto;
+		box-shadow: 0 -4px 8px rgba(0,0,0,0.15);
+		padding: 0;
+	}
+`;
+
+export const LogoLink = styled(Link)`
+  margin-right: 32px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const Logo = styled.img`
+  width: 16px;
+  height: 16px;
+  align-self: center;
+  position: relative;
+  top: 1px;
+  left: 1px;
 `;

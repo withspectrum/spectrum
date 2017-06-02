@@ -4,13 +4,15 @@ import React, { Component } from 'react';
 import { Router, Route, Switch, Redirect } from 'react-router';
 //$FlowFixMe
 import styled from 'styled-components';
+import generateMetaInfo from '../server/shared/generate-meta-info';
 import { history } from './helpers/history';
 import ScrollManager from './components/scrollManager';
+import Head from './components/head';
 import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
 import DirectMessages from './views/directMessages';
-import Explore from './views/explore';
+// import Explore from './views/explore';
 import Thread from './views/thread';
 import UserView from './views/user';
 import CommunityView from './views/community';
@@ -37,11 +39,13 @@ const Body = styled.div`
 
 class Routes extends Component {
   render() {
+    const { title, description } = generateMetaInfo();
     return (
       <Router history={history}>
-
         <ScrollManager>
           <Body>
+            {/* Default meta tags, get overriden by anything further down the tree */}
+            <Head title={title} description={description} />
             {/* Global navigation, notifications, message notifications, etc */}
             <Route component={Navbar} />
             <Route component={ModalRoot} />
@@ -64,7 +68,7 @@ class Routes extends Component {
               <Route path="/style-guide" component={StyleGuide} />
 
               {/* App Pages */}
-              <Route path="/explore" component={Explore} />
+              {/* <Route path="/explore" component={Explore} /> */}
               <Route path="/messages" component={DirectMessages} />
               <Route path="/thread" component={Thread} />
               <Route exact path="/users" render={() => <Redirect to="/" />} />
@@ -74,7 +78,7 @@ class Routes extends Component {
                 path="/users/:username/settings"
                 component={UserSettings}
               />
-              <Route path="/notifications" component={Notifications} />
+              {/* <Route path="/notifications" component={Notifications} /> */}
 
               {/*
               We check communitySlug last to ensure none of the above routes

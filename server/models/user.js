@@ -71,7 +71,14 @@ const createOrFindUser = (user: Object): Promise<Object> => {
     : getUserByProviderId(user.providerId);
   return promise
     .then(storedUser => {
-      if (storedUser) return Promise.resolve(storedUser);
+      if (storedUser) {
+        if (!storedUser.username && user.username) {
+          return setUsername(storedUser.id, user.username).then(newStoredUser =>
+            Promise.resolve(newStoredUser)
+          );
+        }
+        return Promise.resolve(storedUser);
+      }
 
       return storeUser(user);
     })
@@ -81,6 +88,20 @@ const createOrFindUser = (user: Object): Promise<Object> => {
       }
       return storeUser(user);
     });
+};
+
+const setUsername = (id: string, username: string) => {
+  return db
+    .table('users')
+    .get(id)
+    .update(
+      {
+        username,
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(result => result.changes[0].new_val);
 };
 
 const getEverything = (userId: string): Promise<Array<any>> => {
@@ -102,7 +123,10 @@ const getEverything = (userId: string): Promise<Array<any>> => {
     })
     .zip()
     .filter({ isBlocked: false, isPending: false })
-    .without('isBlocked', 'isPending');
+    .without('isBlocked', 'isPending')
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .orderBy(db.desc('createdAt'))
+    .run();
 };
 
 const getUsersThreadCount = (
@@ -133,8 +157,7 @@ const editUser = (
   input: EditUserArguments,
   userId: string
 ): Promise<Object> => {
-  const { input: { name, description, website, file } } = input;
-
+  const { input: { name, description, website, file, coverFile } } = input;
   return db
     .table('users')
     .get(userId)
@@ -148,11 +171,125 @@ const editUser = (
     })
     .then(user => {
       // if no file was uploaded, update the community with new string values
-      if (!file || file === null) {
+
+      if (file || coverFile) {
+        if (file && !coverFile) {
+          return uploadImage(file, 'users', user.id, profilePhoto => {
+            // update the user with the profilePhoto
+            return (
+              db
+                .table('users')
+                .get(user.id)
+                .update(
+                  {
+                    ...user,
+                    profilePhoto,
+                  },
+                  { returnChanges: 'always' }
+                )
+                .run()
+                // return the resulting user with the profilePhoto set
+                .then(result => {
+                  // if an update happened
+                  if (result.replaced === 1) {
+                    return result.changes[0].new_val;
+                  }
+
+                  // an update was triggered from the client, but no data was changed
+                  if (result.unchanged === 1) {
+                    return result.changes[0].old_val;
+                  }
+                })
+            );
+          });
+        } else if (!file && coverFile) {
+          return uploadImage(coverFile, 'users', user.id, coverPhoto => {
+            // update the user with the profilePhoto
+            return (
+              db
+                .table('users')
+                .get(user.id)
+                .update(
+                  {
+                    ...user,
+                    coverPhoto,
+                  },
+                  { returnChanges: 'always' }
+                )
+                .run()
+                // return the resulting user with the profilePhoto set
+                .then(result => {
+                  // if an update happened
+                  if (result.replaced === 1) {
+                    return result.changes[0].new_val;
+                  }
+
+                  // an update was triggered from the client, but no data was changed
+                  if (result.unchanged === 1) {
+                    return result.changes[0].old_val;
+                  }
+                })
+            );
+          });
+        } else if (file && coverFile) {
+          const uploadFile = file => {
+            return new Promise(resolve => {
+              uploadImage(file, 'users', user.id, profilePhoto => {
+                resolve(profilePhoto);
+              });
+            });
+          };
+
+          const uploadCoverFile = coverFile => {
+            return new Promise(resolve => {
+              uploadImage(coverFile, 'users', user.id, coverPhoto => {
+                resolve(coverPhoto);
+              });
+            });
+          };
+
+          return Promise.all([
+            uploadFile(file),
+            uploadCoverFile(coverFile),
+          ]).then(([profilePhoto, coverPhoto]) => {
+            return (
+              db
+                .table('users')
+                .get(user.id)
+                .update(
+                  {
+                    ...user,
+                    coverPhoto,
+                    profilePhoto,
+                  },
+                  { returnChanges: 'always' }
+                )
+                .run()
+                // return the resulting community with the profilePhoto set
+                .then(result => {
+                  // if an update happened
+                  if (result.replaced === 1) {
+                    return result.changes[0].new_val;
+                  }
+
+                  // an update was triggered from the client, but no data was changed
+                  if (result.unchanged === 1) {
+                    return result.changes[0].old_val;
+                  }
+                })
+            );
+          });
+        }
+      } else {
         return db
           .table('users')
-          .get(userId)
-          .update({ ...user }, { returnChanges: 'always' })
+          .get(user.id)
+          .update(
+            {
+              ...user,
+            },
+            { returnChanges: 'always' }
+          )
           .run()
           .then(result => {
             // if an update happened
@@ -165,31 +302,6 @@ const editUser = (
               return result.changes[0].old_val;
             }
           });
-      }
-
-      if (file) {
-        return uploadImage(file, 'users', userId, profilePhoto => {
-          return (
-            db
-              .table('users')
-              .get(userId)
-              .update(
-                {
-                  ...user,
-                  profilePhoto,
-                },
-                { returnChanges: true }
-              )
-              .run()
-              // return the resulting community with the profilePhoto set
-              .then(
-                result =>
-                  (result.changes.length > 0
-                    ? result.changes[0].new_val
-                    : db.table('users').get(userId).run())
-              )
-          );
-        });
       }
     });
 };
