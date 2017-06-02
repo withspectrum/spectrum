@@ -22,7 +22,19 @@ import {
 } from '../../../components/listItems/style';
 
 const ListCardPure = ({ data, dispatch }) => {
-  const channels = data.community.channelConnection.edges;
+  let channels = data.community.channelConnection.edges;
+  channels = channels.filter(channel => {
+    if (!channel.node.isPrivate) {
+      return channel;
+    } else if (
+      channel.node.isPrivate && !channel.node.channelPermissions.isMember
+    ) {
+      return;
+    } else {
+      return channel;
+    }
+  });
+
   if (!!channels) {
     return (
       <StyledCard>
