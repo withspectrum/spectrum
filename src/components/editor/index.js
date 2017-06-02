@@ -88,7 +88,7 @@ class Editor extends Component {
     const isEmpty = toPlainText(state) === '';
 
     return (
-      <Wrapper className={className} style={style}>
+      <Wrapper className={className} style={style} onClick={this.focus}>
         <SlateEditor
           state={state}
           onChange={onChange}
@@ -98,7 +98,7 @@ class Editor extends Component {
           {...rest}
         />
         {isEmpty &&
-          <CustomPlaceholder onClick={this.focus}>
+          <CustomPlaceholder>
             {placeholder}
           </CustomPlaceholder>}
       </Wrapper>
