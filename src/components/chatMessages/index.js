@@ -14,6 +14,7 @@ import {
 import { track } from '../../helpers/events';
 import { NullState } from '../upsell';
 import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
+import Badge from '../badges';
 import Icon from '../icons';
 import { Reaction, Count } from '../bubbles/style';
 
@@ -76,14 +77,14 @@ class ChatMessages extends Component {
       const renderBubbleHeader = (group: Object, me: boolean) => {
         const user = group.sender;
 
-        // if type !== 'thread' we don't show admin or pro badges because it clutters group messages
-        //TODO "Pro badges appear anywhere your name does...". We need to reconsider one of these two statements.
         return (
           <Byline me={me}>
             <Link to={`/users/${user.username}`}>
               <Name>
                 {me ? 'You' : user.name}
               </Name>
+              {user.isAdmin && <Badge type="admin" />}
+              {user.isPro && <Badge type="pro" />}
             </Link>
           </Byline>
         );
