@@ -191,6 +191,11 @@ class ChatMessages extends Component {
                             sender={sender}
                             message={message.content}
                             type={message.messageType}
+                            pending={
+                              message.id < 0
+                                ? console.log('foo') || true
+                                : false
+                            }
                           />
 
                           {!emojiOnly && renderReaction(message, sender, me)}
@@ -210,6 +215,11 @@ class ChatMessages extends Component {
                             imgSrc={message.content.body}
                             message={message.content}
                             openGallery={() => this.openGallery(message.id)}
+                            pending={
+                              message.id < 0
+                                ? console.log('foo') || true
+                                : false
+                            }
                           />
                           {renderReaction(message, sender, me)}
                         </MessageWrapper>

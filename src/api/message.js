@@ -2,6 +2,7 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { messageInfoFragment } from './fragments/message/messageInfo';
+import { GET_THREAD_MESSAGES_QUERY } from '../views/thread/queries';
 
 /*
   Updates UI automatically via the containers subscribeToNewMessages helper
@@ -20,6 +21,50 @@ const SEND_MESSAGE_OPTIONS = {
       mutate({
         variables: {
           message,
+        },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          addMessage: {
+            __typename: 'Message',
+            sender: {
+              ...ownProps.currentUser,
+              __typename: 'User',
+            },
+            timestamp: +new Date(),
+            content: {
+              ...message.content,
+              __typename: 'MessageContent',
+            },
+            id: Math.round(Math.random() * -1000000),
+            reactions: [],
+            messageType: message.messageType,
+          },
+        },
+        update: (store, { data: { addMessage } }) => {
+          if (ownProps.threadType === 'story') {
+            // Read the data from our cache for this query.
+            const data = store.readQuery({
+              query: GET_THREAD_MESSAGES_QUERY,
+              variables: {
+                id: ownProps.thread,
+              },
+            });
+
+            // Add our comment from the mutation to the end.
+            data.thread.messageConnection.edges.push({
+              node: addMessage,
+              __typename: 'ThreadMessageEdge',
+            });
+            console.log('data updated', data);
+            // Write our data back to the cache.
+            store.writeQuery({
+              query: GET_THREAD_MESSAGES_QUERY,
+              data,
+              variables: {
+                id: ownProps.thread,
+              },
+            });
+          }
         },
       }),
   }),

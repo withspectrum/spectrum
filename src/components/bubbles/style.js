@@ -9,7 +9,7 @@ export const TextBubble = styled.p`
   border-radius: 16px;
   font-size: 14px;
   line-height: 20px;
-  opacity: ${props => (props.persisted === false ? 0.5 : 1)};
+  opacity: ${props => (props.pending ? 0.5 : 1)};
   transition: opacity 0.2s ease-out;
   background-color: ${props => (props.me ? props.theme.brand.default : props.theme.generic.default)};
   background-image: ${props => (props.me ? Gradient(props.theme.brand.alt, props.theme.brand.default) : Gradient(props.theme.generic.alt, props.theme.generic.default))}
@@ -76,7 +76,8 @@ export const ImageBubble = styled.img`
   max-width: 100%;
   display: flex;
   align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)};
-  opacity: ${props => (props.persisted === false ? 0.5 : 1)};
+  opacity: ${props => (props.pending ? 0.5 : 1)};
+  transition: opacity 0.2s ease-out;
   border: 1px solid #f6f7f8;
 `;
 

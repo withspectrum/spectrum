@@ -70,7 +70,7 @@ class ChatInputWithMutation extends Component {
         body: toPlainText(state),
       },
     })
-      .then(() => {
+      .then(({ data: { addMessage } }) => {
         // clear the input
         clear();
         // refocus the input
