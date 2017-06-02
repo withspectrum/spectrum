@@ -8,7 +8,7 @@ import pure from 'recompose/pure';
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
-
+import { track } from '../../helpers/events';
 import { toggleChannelSubscriptionMutation } from '../../api/channel';
 import { addToastWithTimeout } from '../../actions/toasts';
 
