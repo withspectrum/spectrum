@@ -91,8 +91,8 @@ class ChatInputWithMutation extends Component {
 
   sendMediaMessage = e => {
     const file = e.target.files[0];
-    const { thread, createThread, clear, dispatch } = this.props;
-
+    const { thread, threadType, createThread, clear, dispatch } = this.props;
+    console.log(threadType);
     if (thread === 'newDirectMessageThread') {
       return createThread({
         messageType: 'media',
@@ -104,7 +104,7 @@ class ChatInputWithMutation extends Component {
       .sendMessage({
         threadId: thread,
         messageType: 'media',
-        threadType: 'story',
+        threadType,
         content: {
           body: '',
         },
@@ -112,7 +112,7 @@ class ChatInputWithMutation extends Component {
       })
       .then(({ sendMessage }) => {
         clear();
-        track('message', 'media message created', null);
+        track(`${threadType} message`, 'media message created', null);
       })
       .catch(err => {
         dispatch(addToastWithTimeout('error', err.message));
