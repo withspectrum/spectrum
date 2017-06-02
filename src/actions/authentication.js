@@ -1,3 +1,5 @@
+// @flow
+import { track } from '../helpers/events';
 import { clearApolloStore } from '../api';
 import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
 
@@ -6,6 +8,7 @@ const eraseCookie = name => {
 };
 
 export const logout = () => {
+  track(`user`, `sign out`, null);
   // clear localStorage
   removeItemFromStorage('spectrum');
   // clear Apollo's query cache

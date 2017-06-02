@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import { track } from '../../helpers/events';
 import Icon from '../../components/icons';
 import { FlexCol, FlexRow } from '../../components/globals';
 import { SERVER_URL } from '../../api';
@@ -29,6 +30,14 @@ import {
 } from './style';
 
 class Homepage extends Component {
+  componentDidMount() {
+    track('homepage', 'viewed', null);
+  }
+
+  trackSignin = type => {
+    track('homepage', 'logged in', type);
+  };
+
   render() {
     return (
       <Wrapper>
@@ -37,7 +46,10 @@ class Homepage extends Component {
             <FlexCol>
               <LogoContainer><LogoWhite /></LogoContainer>
               <Tagline>Where communities are built.</Tagline>
-              <Button href={`${SERVER_URL}/auth/twitter`}>
+              <Button
+                href={`${SERVER_URL}/auth/twitter`}
+                onClick={() => this.trackSignin('primary cta')}
+              >
                 <Icon glyph="twitter" />
                 {' '}
                 <span>Sign in with Twitter</span>
@@ -93,7 +105,10 @@ class Homepage extends Component {
               <Copy>
                 Spectrum is free for everyone, so dive on in!
               </Copy>
-              <LinkButton href={`${SERVER_URL}/auth/twitter`}>
+              <LinkButton
+                href={`${SERVER_URL}/auth/twitter`}
+                onClick={() => this.trackSignin('secondary cta')}
+              >
                 <Icon glyph="twitter" />
                 {' '}
                 <span>Sign in with Twitter</span>

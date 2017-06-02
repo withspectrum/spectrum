@@ -9,7 +9,7 @@ import pure from 'recompose/pure';
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
-
+import { track } from '../../helpers/events';
 import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { addProtocolToString } from '../../helpers/utils';
@@ -68,13 +68,16 @@ const CommunityWithData = ({
   const toggleMembership = communityId => {
     toggleCommunityMembership({ communityId })
       .then(({ data: { toggleCommunityMembership } }) => {
-        const str = toggleCommunityMembership.communityPermissions.isMember
+        const isMember =
+          toggleCommunityMembership.communityPermissions.isMember;
+
+        track('community', isMember ? 'joined' : 'unjoined', null);
+
+        const str = isMember
           ? `Joined ${toggleCommunityMembership.name}!`
           : `Left ${toggleCommunityMembership.name}.`;
 
-        const type = toggleCommunityMembership.communityPermissions.isMember
-          ? 'success'
-          : 'neutral';
+        const type = isMember ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {

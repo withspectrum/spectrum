@@ -8,7 +8,7 @@ import pure from 'recompose/pure';
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
-
+import { track } from '../../helpers/events';
 import { toggleChannelSubscriptionMutation } from '../../api/channel';
 import { addToastWithTimeout } from '../../actions/toasts';
 
@@ -44,14 +44,17 @@ const ChannelWithData = props => {
           toggleChannelSubscription.channelPermissions.isPending;
         let str;
         if (isPending) {
+          track('channel', 'requested to join', null);
           str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}`;
         }
 
         if (!isPending && isMember) {
+          track('channel', 'joined', null);
           str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`;
         }
 
         if (!isPending && !isMember) {
+          track('channel', 'unjoined', null);
           str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
         }
 

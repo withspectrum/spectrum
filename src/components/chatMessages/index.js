@@ -10,7 +10,7 @@ import {
   convertTimestampToTime,
   onlyContainsEmoji,
 } from '../../helpers/utils';
-
+import { track } from '../../helpers/events';
 import { NullState } from '../upsell';
 import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
 import Icon from '../icons';
@@ -102,8 +102,11 @@ class ChatMessages extends Component {
           ? reactionUsers && reactionUsers.includes(currentUser.id)
           : false;
         // probably a better way to do this
+
         const doNothing = () => '';
         const triggerMutation = () => {
+          track('reaction', userHasReacted ? 'removed' : 'created', null);
+
           return (
             toggleReaction({
               messageId: message.id,

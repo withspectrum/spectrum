@@ -148,7 +148,8 @@ export type CreateChannelArguments = {
     name: string,
     description: string,
     slug: string,
-    isPrivate: Boolean,
+    isPrivate: boolean,
+    isDefault: boolean,
   },
 };
 
@@ -163,7 +164,7 @@ export type EditChannelArguments = {
 };
 
 const createChannel = ({
-  input: { communityId, name, slug, description, isPrivate },
+  input: { communityId, name, slug, description, isPrivate, isDefault },
 }: CreateChannelArguments): Promise<Object> => {
   return db
     .table('channels')
@@ -175,6 +176,7 @@ const createChannel = ({
         description,
         slug,
         isPrivate,
+        isDefault: isDefault ? true : false,
       },
       { returnChanges: true }
     )

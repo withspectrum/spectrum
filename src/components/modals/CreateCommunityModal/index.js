@@ -12,7 +12,8 @@ import { withRouter } from 'react-router';
 import slugg from 'slugg';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
-
+import { track } from '../../../helpers/events';
+import { Notice } from '../../../components/listItems/style';
 import { closeModal } from '../../../actions/modals';
 import { throttle } from '../../../helpers/utils';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -54,6 +55,7 @@ class CreateCommunityModal extends Component {
     createError: boolean,
     loading: boolean,
     agreeCoC: boolean,
+    photoSizeError: boolean,
   };
   constructor(props) {
     super(props);
@@ -74,9 +76,14 @@ class CreateCommunityModal extends Component {
       createError: false,
       loading: false,
       agreeCoC: false,
+      photoSizeError: false,
     };
 
     this.checkSlug = throttle(this.checkSlug, 500);
+  }
+
+  componentDidMount() {
+    track('community', 'create inited', null);
   }
 
   close = () => {
@@ -205,10 +212,18 @@ class CreateCommunityModal extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (file.size > 3000000) {
+      return this.setState({
+        photoSizeError: true,
+      });
+    }
+
     reader.onloadend = () => {
+      track('community', 'profile photo uploaded', null);
       this.setState({
         file: file,
         image: reader.result,
+        photoSizeError: false,
       });
     };
 
@@ -219,10 +234,18 @@ class CreateCommunityModal extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    if (file.size > 3000000) {
+      return this.setState({
+        photoSizeError: true,
+      });
+    }
+
     reader.onloadend = () => {
+      track('community', 'cover photo uploaded', null);
       this.setState({
         coverFile: file,
         coverPhoto: reader.result,
+        photoSizeError: false,
       });
     };
 
@@ -242,10 +265,13 @@ class CreateCommunityModal extends Component {
       slugError,
       nameError,
       descriptionError,
+      photoSizeError,
     } = this.state;
 
     // if an error is present, ensure the client cant submit the form
-    if (slugTaken || nameError || descriptionError || slugError) {
+    if (
+      slugTaken || nameError || descriptionError || slugError || photoSizeError
+    ) {
       this.setState({
         createError: true,
       });
@@ -273,6 +299,7 @@ class CreateCommunityModal extends Component {
     this.props
       .createCommunity(input)
       .then(community => {
+        track('community', 'created', null);
         window.location.href = `/${slug}`;
         this.close();
         this.props.dispatch(
@@ -303,6 +330,7 @@ class CreateCommunityModal extends Component {
       createError,
       loading,
       agreeCoC,
+      photoSizeError,
     } = this.state;
     const styles = modalStyles();
 
@@ -328,6 +356,7 @@ class CreateCommunityModal extends Component {
               <CoverInput
                 onChange={this.setCommunityCover}
                 defaultValue={coverPhoto}
+                preview={true}
               />
 
               <PhotoInput
@@ -335,6 +364,12 @@ class CreateCommunityModal extends Component {
                 defaultValue={image}
               />
             </ImageInputWrapper>
+
+            {photoSizeError &&
+              <Notice style={{ marginTop: '32px' }}>
+                Photo uploads should be less than 3mb
+              </Notice>}
+
             <Input
               defaultValue={name}
               onChange={this.changeName}

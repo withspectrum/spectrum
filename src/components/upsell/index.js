@@ -47,7 +47,7 @@ export const NullState = props => (
 export const UpsellSignIn = ({ entity }) => {
   const login = () => {
     // log the user in and return them to this page
-    return (window.location.href = `http://localhost:3001/auth/twitter?redirectTo=${window.location.pathname}`);
+    return (window.location.href = `${SERVER_URL}/auth/twitter?redirectTo=${window.location.pathname}`);
   };
 
   const subtitle = entity

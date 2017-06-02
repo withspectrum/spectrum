@@ -8,6 +8,7 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
+import { track } from '../../helpers/events';
 import { editChannelMutation, deleteChannelMutation } from '../../api/channel';
 import { openModal } from '../../actions/modals';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -33,6 +34,7 @@ class ChannelWithData extends Component {
     isPrivate: boolean,
     channelId: string,
     channelData: Object,
+    isLoading: boolean,
   };
   constructor(props) {
     super(props);
@@ -46,6 +48,7 @@ class ChannelWithData extends Component {
       isPrivate: channel.isPrivate || false,
       channelId: channel.id,
       channelData: channel,
+      isLoading: false,
     };
   }
 
@@ -80,10 +83,25 @@ class ChannelWithData extends Component {
       channelId,
     };
 
+    this.setState({
+      isLoading: true,
+    });
+
+    // if privacy changed in this edit
+    if (this.props.channel.isPrivate !== isPrivate) {
+      track('channel', `privacy changed to ${isPrivate}`, null);
+    }
+
     this.props
       .editChannel(input)
       .then(({ data: { editChannel } }) => {
         const channel = editChannel;
+
+        track('channel', 'edited', null);
+
+        this.setState({
+          isLoading: false,
+        });
 
         // the mutation returns a channel object. if it exists,
         if (channel !== undefined) {
@@ -91,6 +109,10 @@ class ChannelWithData extends Component {
         }
       })
       .catch(err => {
+        this.setState({
+          isLoading: false,
+        });
+
         this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
@@ -102,6 +124,7 @@ class ChannelWithData extends Component {
 
   triggerDeleteChannel = (e, channelId) => {
     e.preventDefault();
+    track('channel', 'delete inited', null);
     const { name, channelData } = this.state;
     const message = (
       <div>
@@ -137,7 +160,7 @@ class ChannelWithData extends Component {
   };
 
   render() {
-    const { name, slug, description, isPrivate } = this.state;
+    const { name, slug, description, isPrivate, isLoading } = this.state;
     const { channel } = this.props;
 
     if (!channel) {
@@ -170,20 +193,23 @@ class ChannelWithData extends Component {
               Description
             </TextArea>
 
-            {slug !== 'general' &&
+            {/* {slug !== 'general' &&
               <Checkbox
                 id="isPrivate"
                 checked={isPrivate}
                 onChange={this.handleChange}
               >
                 Private channel
-              </Checkbox>}
+              </Checkbox>} */}
             {isPrivate
               ? <Description>
                   Only approved people on Spectrum can see the threads, messages, and members in this channel. You can manually approve users who request to join this channel.
                 </Description>
               : <Description>
-                  Anyone on Spectrum can join this channel, post threads and messages, and will be able to see other members.
+                  Anyone on Spectrum can join this channel, post threads and messages, and will be able to see other members. If you want to create private channels,
+                  {' '}
+                  <a href="mailto:hi@spectrum.chat">get in touch</a>
+                  .
                 </Description>}
 
             {// if the user is moving from private to public
@@ -208,7 +234,7 @@ class ChannelWithData extends Component {
               <TextButton color={'text.alt'} onClick={this.cancelForm}>
                 Cancel
               </TextButton>
-              <Button onClick={this.save}>Save</Button>
+              <Button onClick={this.save} loading={isLoading}>Save</Button>
             </Actions>
 
             {slug === 'general' &&

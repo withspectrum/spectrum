@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 //$FlowFixMe
 import styled from 'styled-components';
 //$FlowFixMe
@@ -11,6 +11,7 @@ import ThreadFeedCard from '../threadFeedCard';
 import { NullCard } from '../upsell';
 import { LoadingThread } from '../loading';
 import { Button } from '../buttons';
+import { FetchMoreButton } from './style';
 
 const NullState = () => (
   <NullCard
@@ -41,7 +42,7 @@ const Threads = styled.div`
   }
 
   @media (max-width: 768px) {
-    margin-bottom: 64px;
+    margin-bottom: 48px;
   }
 `;
 
@@ -52,45 +53,85 @@ const Threads = styled.div`
 
   See 'views/community/queries.js' for an example of the prop mapping in action
 */
-const ThreadFeedPure = props => {
-  const {
-    data: { threads, loading, fetchMore, error, hasNextPage },
-    currentUser,
-  } = props;
+class ThreadFeedPure extends Component {
+  state: {
+    isFetching: boolean,
+  };
 
-  if (loading) {
-    return (
-      <Threads>
-        <LoadingThread />
-        <LoadingThread />
-        <LoadingThread />
-        <LoadingThread />
-        <LoadingThread />
-        <LoadingThread />
-      </Threads>
-    );
-  } else if ((error && threads.length > 0) || (error && threads.length === 0)) {
-    return <ErrorState />;
-  } else if (threads.length === 0 && currentUser) {
-    return <NullState />;
-  } else {
-    return (
-      <Threads>
-        {threads.map(thread => {
-          return (
-            <ThreadFeedCard
-              key={thread.node.id}
-              data={thread.node}
-              viewContext={props.viewContext}
-            />
-          );
-        })}
+  constructor() {
+    super();
 
-        {hasNextPage && <Button onClick={fetchMore}>Load more threads</Button>}
-      </Threads>
-    );
+    this.state = {
+      isFetching: false,
+    };
   }
-};
+
+  fetchMore = () => {
+    this.setState({
+      isFetching: true,
+    });
+
+    this.props.data.fetchMore();
+  };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.setState({
+        isFetching: false,
+      });
+    }
+  }
+
+  render() {
+    const {
+      data: { threads, loading, error, hasNextPage },
+      currentUser,
+      viewContext,
+    } = this.props;
+
+    if (loading) {
+      return (
+        <Threads>
+          <LoadingThread />
+          <LoadingThread />
+          <LoadingThread />
+          <LoadingThread />
+          <LoadingThread />
+          <LoadingThread />
+        </Threads>
+      );
+    } else if (
+      (error && threads.length > 0) || (error && threads.length === 0)
+    ) {
+      return <ErrorState />;
+    } else if (threads.length === 0 && currentUser) {
+      return <NullState />;
+    } else {
+      return (
+        <Threads>
+          {threads.map(thread => {
+            return (
+              <ThreadFeedCard
+                key={thread.node.id}
+                data={thread.node}
+                viewContext={viewContext}
+              />
+            );
+          })}
+
+          {hasNextPage &&
+            <FetchMoreButton
+              color={'brand.default'}
+              loading={this.state.isFetching}
+              onClick={this.fetchMore}
+            >
+              Load more threads
+            </FetchMoreButton>}
+        </Threads>
+      );
+    }
+  }
+}
 
 const ThreadFeed = compose(pure)(ThreadFeedPure);
 

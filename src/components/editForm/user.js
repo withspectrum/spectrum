@@ -8,6 +8,7 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
+import { track } from '../../helpers/events';
 import { Button, TextButton } from '../buttons';
 import {
   Input,
@@ -25,6 +26,7 @@ import {
 } from './style';
 import { editUserMutation } from '../../api/user';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { Notice } from '../../components/listItems/style';
 
 class UserWithData extends Component {
   state: {
@@ -39,7 +41,8 @@ class UserWithData extends Component {
     descriptionError: boolean,
     nameError: boolean,
     createError: boolean,
-    loading: boolean,
+    isLoading: boolean,
+    photoSizeError: boolean,
   };
 
   constructor(props) {
@@ -59,7 +62,8 @@ class UserWithData extends Component {
       descriptionError: false,
       nameError: false,
       createError: false,
-      loading: false,
+      isLoading: false,
+      photoSizeError: false,
     };
   }
 
@@ -70,57 +74,6 @@ class UserWithData extends Component {
       nameError: false,
     });
   };
-
-  // changeUsername = e => {
-  //   let username = e.target.value;
-  //   username = username.toLowerCase().trim();
-  //
-  //   if (username.length >= 24) {
-  //     this.setState({
-  //       username,
-  //       usernameError: true,
-  //     });
-  //
-  //     return;
-  //   }
-  //
-  //   if (username.length === 0) {
-  //     this.setState({
-  //       usernameError: true,
-  //     })
-  //   }
-  //
-  //   this.setState({
-  //     username,
-  //     usernameError: false,
-  //     usernameTaken: false,
-  //   });
-  //
-  //   this.checkUsername(username)
-  // };
-  //
-  // checkUsername = username => {
-  //   // check the db to see if this channel slug exists
-  //   this.props.client
-  //     .query({
-  //       query: CHECK_UNIQUE_USERNAME_QUERY,
-  //       variables: {
-  //         username,
-  //       },
-  //     })
-  //     .then(({ data }) => {
-  //       // if a user exists with this username
-  //       if (!data.loading && data && data.user && data.user.username) {
-  //         return this.setState({
-  //           usernameTaken: true,
-  //         });
-  //       } else {
-  //         return this.setState({
-  //           usernameTaken: false,
-  //         });
-  //       }
-  //     });
-  // };
 
   changeDescription = e => {
     const description = e.target.value;
@@ -148,10 +101,25 @@ class UserWithData extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    this.setState({
+      isLoading: true,
+    });
+
+    if (file.size > 3000000) {
+      return this.setState({
+        photoSizeError: true,
+        isLoading: false,
+      });
+    }
+
     reader.onloadend = () => {
+      track('user', 'profile photo uploaded', null);
+
       this.setState({
         file: file,
         image: reader.result,
+        photoSizeError: false,
+        isLoading: false,
       });
     };
 
@@ -162,10 +130,25 @@ class UserWithData extends Component {
     let reader = new FileReader();
     let file = e.target.files[0];
 
+    this.setState({
+      isLoading: true,
+    });
+
+    if (file.size > 3000000) {
+      return this.setState({
+        photoSizeError: true,
+        isLoading: false,
+      });
+    }
+
     reader.onloadend = () => {
+      track('user', 'cover photo uploaded', null);
+
       this.setState({
         coverFile: file,
         coverPhoto: reader.result,
+        photoSizeError: false,
+        isLoading: false,
       });
     };
 
@@ -174,7 +157,17 @@ class UserWithData extends Component {
 
   save = e => {
     e.preventDefault();
-    const { name, description, website, file, coverFile } = this.state;
+
+    track('user', 'edited', null);
+
+    const {
+      name,
+      description,
+      website,
+      file,
+      coverFile,
+      photoSizeError,
+    } = this.state;
 
     const input = {
       name,
@@ -184,10 +177,23 @@ class UserWithData extends Component {
       coverFile,
     };
 
+    if (photoSizeError) {
+      return;
+    }
+
+    this.setState({
+      isLoading: true,
+    });
+
     this.props
       .editUser(input)
       .then(({ data: { editUser } }) => {
         const user = editUser;
+
+        this.setState({
+          isLoading: false,
+        });
+
         // the mutation returns a user object. if it exists,
         if (user !== undefined) {
           this.props.dispatch(addToastWithTimeout('success', 'Changes saved!'));
@@ -198,6 +204,10 @@ class UserWithData extends Component {
         }
       })
       .catch(err => {
+        this.setState({
+          isLoading: false,
+        });
+
         this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
@@ -212,7 +222,8 @@ class UserWithData extends Component {
       coverPhoto,
       descriptionError,
       createError,
-      loading,
+      isLoading,
+      photoSizeError,
     } = this.state;
 
     return (
@@ -223,6 +234,7 @@ class UserWithData extends Component {
             <CoverInput
               onChange={this.setCoverPhoto}
               defaultValue={coverPhoto}
+              preview={true}
             />
             <PhotoInput
               onChange={this.setProfilePhoto}
@@ -230,6 +242,11 @@ class UserWithData extends Component {
               user
             />
           </ImageInputWrapper>
+
+          {photoSizeError &&
+            <Notice style={{ marginTop: '32px' }}>
+              Photo uploads should be less than 3mb
+            </Notice>}
 
           <Input
             type="text"
@@ -263,11 +280,7 @@ class UserWithData extends Component {
 
           <Actions>
             <TextButton hoverColor={'warn.alt'}>Cancel</TextButton>
-            <Button
-              disabled={!name || !description}
-              loading={loading}
-              onClick={this.save}
-            >
+            <Button disabled={!name} loading={isLoading} onClick={this.save}>
               Save
             </Button>
           </Actions>

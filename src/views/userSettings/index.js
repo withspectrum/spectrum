@@ -6,6 +6,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 //$FlowFixMe
 import pure from 'recompose/pure';
+import { track } from '../../helpers/events';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import { displayLoadingState } from '../../components/loading';
@@ -16,6 +17,8 @@ import { GetUserProfile } from './queries';
 import Titlebar from '../titlebar';
 
 const UserSettings = ({ data, currentUser, match }) => {
+  track('user', 'settings viewed', null);
+
   if (!data.user) {
     return (
       <AppViewWrapper>
