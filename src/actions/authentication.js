@@ -35,7 +35,7 @@ export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
     profilePhoto: user.profilePhoto,
   };
 
-  // logs the user uid to sentry errors
+  // logs the user id to sentry errors
   Raven.setUserContext({ id: user.id });
 
   // save this object to localstorage. This will be used in the future to hydrate
