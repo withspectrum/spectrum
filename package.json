@@ -100,7 +100,7 @@
     "build:server": "NODE_ENV=production babel server --out-dir build-server --presets react-app --ignore 'test/*.js'",
     "build:client": "react-scripts build",
     "test": "react-scripts test",
-    "test:coverage": "react-scripts test --coverage",
+    "test:ci": "CI=true react-scripts test",
     "db:migrate": "npm run rethinkdb:migrate -- up",
     "db:drop": "npm run rethinkdb:migrate -- down",
     "db:seed": "node server/migrations/seed/index.js",
