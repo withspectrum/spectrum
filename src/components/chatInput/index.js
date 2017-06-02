@@ -92,7 +92,7 @@ class ChatInputWithMutation extends Component {
   sendMediaMessage = e => {
     const file = e.target.files[0];
     const { thread, threadType, createThread, clear, dispatch } = this.props;
-    console.log(threadType);
+
     if (thread === 'newDirectMessageThread') {
       return createThread({
         messageType: 'media',
