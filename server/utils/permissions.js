@@ -1,8 +1,8 @@
 const isAdmin = (id: string) => {
   const admins = [
     'gVk5mYwccUOEKiN5vtOouqroGKo1',
-    'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
-    'uItS3QQiUxXH44m14uWmixTbqSc2',
+    '01p2A7kDCWUjGj6zQLlMQUOSQL42',
+    'VToKcde16dREgDkXcDl3hhcrFN33',
   ];
   return admins.indexOf(id) > -1;
 };
