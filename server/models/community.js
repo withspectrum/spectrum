@@ -551,9 +551,14 @@ const getTopCommunities = (amount: number): Array<Object> => {
         .sort((x, y) => {
           return y.count - x.count;
         })
-        .map(community => community.id);
+        .map(community => community.id)
+        .slice(0, 11);
 
-      return db.table('communities').getAll(...sortedCommunities).run();
+      return db
+        .table('communities')
+        .getAll(...sortedCommunities)
+        .filter(community => db.not(community.hasFields('deletedAt')))
+        .run();
     });
 };
 

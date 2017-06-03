@@ -1,5 +1,8 @@
 const faker = require('faker');
 
+// 2017/01/01
+const DATE = 1483225200000;
+
 const DEFAULT_USERS = [
   {
     id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a190',
@@ -12,8 +15,8 @@ const DEFAULT_USERS = [
     email: 'hi@mxstbr.com',
     subscriptions: [],
     providerId: '2451223458',
-    createdAt: new Date(),
-    lastSeen: new Date(),
+    createdAt: new Date(DATE),
+    lastSeen: new Date(DATE),
   },
   {
     id: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
@@ -26,8 +29,8 @@ const DEFAULT_USERS = [
     email: 'briandlovin@gmail.com',
     subscriptions: [],
     providerId: '465068802',
-    createdAt: new Date(),
-    lastSeen: new Date(),
+    createdAt: new Date(DATE),
+    lastSeen: new Date(DATE),
   },
   {
     id: 'uItS3QQiUxXH44m14uWmixTbqSc2',
@@ -40,15 +43,15 @@ const DEFAULT_USERS = [
     email: 'hi@bryn.io',
     subscriptions: [],
     providerId: '17106008',
-    createdAt: new Date(),
-    lastSeen: new Date(),
+    createdAt: new Date(DATE),
+    lastSeen: new Date(DATE),
   },
 ];
 
 const DEFAULT_COMMUNITIES = [
   {
     id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
-    createdAt: new Date(),
+    createdAt: new Date(DATE),
     name: 'Spectrum',
     description: 'The future of communities',
     website: 'https://spectrum.chat',
@@ -62,7 +65,7 @@ const DEFAULT_CHANNELS = [
   {
     id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
     communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
-    createdAt: new Date(),
+    createdAt: new Date(DATE),
     name: 'General',
     description: 'General chatter',
     slug: 'general',
@@ -74,7 +77,7 @@ const DEFAULT_CHANNELS = [
 const DEFAULT_THREADS = [
   {
     id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
-    createdAt: new Date(),
+    createdAt: new Date(DATE),
     creatorId: 'uItS3QQiUxXH44m14uWmixTbqSc2',
     channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
     communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
@@ -87,21 +90,21 @@ const DEFAULT_THREADS = [
     attachments: [],
     edits: [
       {
-        timestamp: new Date(),
+        timestamp: new Date(DATE),
         content: {
           title: 'The first thread! 🎉',
           body: 'This is it, we got a thread here',
         },
       },
     ],
-    modifiedAt: new Date(),
+    modifiedAt: new Date(DATE),
   },
 ];
 
 const DEFAULT_NOTIFICATIONS = [
   {
     id: 'first-notification-asfd123',
-    createdAt: new Date(),
+    createdAt: new Date(DATE),
     users: [
       {
         id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a190',
@@ -137,7 +140,7 @@ const DEFAULT_USERS_NOTIFICATIONS = [
 const DEFAULT_DIRECT_MESSAGE_THREADS = [
   {
     id: 'first-dm-thread-asfd123',
-    createdAt: new Date(),
+    createdAt: new Date(DATE),
     name: null,
     threadLastActive: new Date(),
   },
@@ -145,17 +148,17 @@ const DEFAULT_DIRECT_MESSAGE_THREADS = [
 
 const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
   {
-    createdAt: new Date(),
+    createdAt: new Date(DATE),
     userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
     threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
-    lastActive: new Date(),
-    lastSeen: new Date(),
+    lastActive: new Date(DATE),
+    lastSeen: new Date(DATE),
   },
 ];
 
 const DEFAULT_USERS_COMMUNITIES = [
   {
-    createdAt: new Date(),
+    createdAt: new Date(DATE),
     userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
     communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     isOwner: true,
@@ -167,7 +170,7 @@ const DEFAULT_USERS_COMMUNITIES = [
 
 const DEFAULT_USERS_CHANNELS = [
   {
-    createdAt: new Date(),
+    createdAt: new Date(DATE),
     userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
     channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     isOwner: true,
