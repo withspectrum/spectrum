@@ -6,7 +6,7 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
-import { Gradient, Tooltip } from './globals';
+import { Gradient, Tooltip } from '../globals';
 
 const Span = styled.span`
   color: ${({ theme }) => theme.text.reverse};

@@ -6,8 +6,8 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
-import { Shadow, FlexCol, hexa, Transition } from './globals';
-import Card from './card';
+import { Shadow, FlexCol, hexa, Transition } from '../globals';
+import Card from '../card';
 
 const StyledDropdown = styled(FlexCol)`
   background-color: transparent;
