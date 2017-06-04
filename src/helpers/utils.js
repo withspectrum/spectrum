@@ -180,9 +180,7 @@ export const throttle = (func, threshhold, scope) => {
 };
 
 export const getLinkPreviewFromUrl = url =>
-  fetch(
-    `https://micro-open-graph-phbmtaqieu.now.sh/?url=${url}`
-  ).then(response => {
+  fetch(`https://links.spectrum.chat/?url=${url}`).then(response => {
     return response.json();
   });
 
