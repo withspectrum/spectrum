@@ -1,86 +1,86 @@
 //@flow
-
-/**
- * Storing and retrieving messages
- */
 const { db } = require('./db');
+const { listenToNewDocumentsIn } = require('./utils');
+const { storeMessageNotification } = require('./notification');
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
-export type LocationTypes = 'messages' | 'direct_messages';
 export type MessageTypes = 'text' | 'media';
-export type MessageProps = {
-  type: MessageTypes,
-  content: String,
+
+const getMessage = (messageId: string): Promise<Object> => {
+  return db.table('messages').get(messageId).run();
 };
 
-const getMessage = (location: LocationTypes, id: string) => {
-  return db.table(location).get(id).run();
-};
-
-const getMessagesByLocationAndThread = (
-  location: LocationTypes,
-  thread: String,
-  { after, first }: PaginationOptions
-) => {
-  const getMessages = db
-    .table(location)
-    .between(after || db.minval, db.maxval, { leftBound: 'open' })
-    .orderBy('timestamp')
-    .filter({ thread })
-    .limit(first)
-    .run()
-    .then();
-
-  const getLastMessage = db
-    .table(location)
-    .orderBy('timestamp')
-    .filter({ thread })
-    .max()
-    .default({})
+const getMessages = (threadId: String): Promise<Array<Object>> => {
+  return db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .orderBy(db.asc('timestamp'))
     .run();
-
-  return Promise.all([getMessages, getLastMessage]);
 };
 
-const storeMessage = (location: LocationTypes, message: MessageProps) => {
+const getLastMessage = (threadId: string): Promise<Object> => {
+  return db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .max('timestamp')
+    .run();
+};
+
+const getMediaMessagesForThread = (
+  threadId: String
+): Promise<Array<Object>> => {
+  return db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .filter({ messageType: 'media' })
+    .orderBy(db.asc('timestamp'))
+    .run();
+};
+
+const storeMessage = (message, user: Object): Promise<Object> => {
   // Insert a message
   return db
-    .table(location)
+    .table('messages')
     .insert(
       Object.assign({}, message, {
         timestamp: new Date(),
+        senderId: user.id,
       }),
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => result.changes[0].new_val)
+    .then(message => {
+      storeMessageNotification({
+        message: message.id,
+        threadId: message.threadId,
+        senderId: message.senderId,
+        content: {
+          excerpt: message.content.body,
+        },
+      });
+      return message;
+    });
 };
 
-const listenToNewMessages = (location: LocationTypes, cb: Function): Object => {
-  return (
-    db
-      .table(location)
-      .changes({
-        includeInitial: false,
-      })
-      // Filter to only include newly inserted messages in the changefeed
-      .filter(
-        db.row('old_val').eq(null).and(db.not(db.row('new_val').eq(null)))
-      )
-      .run({ cursor: true }, (err, cursor) => {
-        if (err) throw err;
-        cursor.each((err, data) => {
-          if (err) throw err;
-          // Call the passed callback with the message directly
-          cb(data.new_val);
-        });
-      })
-  );
+const listenToNewMessages = (cb: Function): Function => {
+  return listenToNewDocumentsIn('messages', cb);
+};
+
+const getMessageCount = (threadId: string): Promise<number> => {
+  return db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .count()
+    .run();
 };
 
 module.exports = {
   getMessage,
-  getMessagesByLocationAndThread,
+  getMessages,
+  getLastMessage,
+  getMediaMessagesForThread,
   storeMessage,
   listenToNewMessages,
+  getMessageCount,
 };

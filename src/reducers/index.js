@@ -1,32 +1,20 @@
 import { combineReducers } from 'redux';
-import user from './user';
-import stories from './stories';
-import frequencies from './frequencies';
-import messages from './messages';
+import { client } from '../api';
+import users from './users';
 import composer from './composer';
-import messageComposer from './messageComposer';
 import modals from './modals';
+import toasts from './toasts';
+import directMessageThreads from './directMessageThreads';
 import gallery from './gallery';
-import loading from './loading';
-import notifications from './notifications';
-import communities from './communities';
-import errors from './errors';
-import ui from './ui';
-import messageGroups from './messageGroups';
+
+const apollo = client.reducer();
 
 export default combineReducers({
-  user,
-  stories,
-  frequencies,
-  communities,
-  messages,
-  composer,
-  messageComposer,
+  users,
   modals,
+  toasts,
+  directMessageThreads,
   gallery,
-  loading,
-  ui,
-  notifications,
-  messageGroups,
-  errors,
+  apollo,
+  composer,
 });

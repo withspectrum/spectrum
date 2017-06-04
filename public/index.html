@@ -6,9 +6,23 @@
     <link rel="shortcut icon" id="dynamic-favicon" href="%PUBLIC_URL%/img/favicon.ico">
     <link rel='mask-icon' href='%PUBLIC_URL%/img/pinned-tab.svg' color='#3818e5'>
     <link rel="stylesheet" type="text/css" href="%PUBLIC_URL%/reset.css">
-    <title>Spectrum</title>
-    <meta name="description" content="Where communities are built.">
-
+    <!-- Standard -->
+    <title>%OG_TITLE%</title>
+    <meta name="description" content="%OG_DESCRIPTION%">
+    <!-- Open Graph -->
+    <meta name="og:title" content="%OG_TITLE%">
+    <meta name="og:description" content="%OG_DESCRIPTION%">
+    <meta name="og:image" content="https://spectrum.chat/img/apple-icon-144x144-precomposed.png">
+    <meta name="og:type" content="website">
+    <meta name="og:site_name" content="Spectrum">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@withspectrum">
+    <meta name="twitter:image" content="https://spectrum.chat/img/apple-icon-144x144-precomposed.png">
+    <meta name="twitter:image:alt" content="Where communities are built">
+    <meta name="twitter:title" content="%OG_TITLE%">
+    <meta name="twitter:description" content="%OG_DESCRIPTION%">
+    <!-- Favicon -->
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="%PUBLIC_URL%/img/apple-icon-57x57-precomposed.png" />
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="%PUBLIC_URL%/img/apple-icon-72x72-precomposed.png" />
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="%PUBLIC_URL%/img/apple-icon-114x114-precomposed.png" />
@@ -27,49 +41,12 @@
 
     <!-- Sentry Logging -->
     <script src="https://cdn.ravenjs.com/3.14.0/raven.min.js" crossorigin="anonymous"></script>
-    <script>Raven.config('https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812').install();</script>
+    <script>Raven.config('https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812', {
+      whitelistUrls: [/spectrum\.chat/, /www\.spectrum\.chat/]
+    }).install();</script>
 
   </head>
   <body>
-    <script>
-      (function() {
-        function param(n, u) {
-          n = n.replace(/[\[\]]/g, '\\$&');
-          var r = new RegExp('[?&]' + n + '(=([^&#]*)|&|#|$)'),
-            m = r.exec(u);
-          if (!m) return null;
-          if (!m[2]) return '';
-          return decodeURIComponent(m[2].replace(/\+/g, ' '));
-        };
-
-        var h = window.location.href;
-        var t = param('t', h);
-        var d = param('d', h);
-
-        if (t && d) {
-
-          function m(name, content) {
-            var e = document.createElement('meta');
-            e.setAttribute('name', name);
-            e.setAttribute('content', content);
-            document.getElementsByTagName('head')[0].appendChild(e);
-          }
-
-          m('description', d);
-          m('og:title', t);
-          m('og:description', d);
-          m('og:url', window.location.href);
-          m('og:type', 'website');
-          m('og:site_name', 'Spectrum');
-          m('twitter:card', 'summary');
-          m('twitter:site', '@withspectrum');
-          m('twitter:title', t);
-          m('twitter:description', d);
-          m('twitter:image', 'https://spectrum.chat/img/apple-icon-144x144-precomposed.png');
-          m('twitter:image:alt', 'Where communities are built.');
-        }
-      })()
-    </script>
     <div id="root"></div>
   </body>
 </html>

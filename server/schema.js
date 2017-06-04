@@ -12,28 +12,36 @@ const { maskErrors } = require('graphql-errors');
 const scalars = require('./types/scalars');
 const generalTypes = require('./types/general');
 
-const Story = require('./types/Story');
-const Frequency = require('./types/Frequency');
+const Thread = require('./types/Thread');
+const Channel = require('./types/Channel');
 const Community = require('./types/Community');
 const Message = require('./types/Message');
 const Reaction = require('./types/Reaction');
 const User = require('./types/User');
-const DirectMessageGroup = require('./types/DirectMessageGroup');
+const DirectMessageThread = require('./types/DirectMessageThread');
+const Notification = require('./types/Notification');
 
-const storyQueries = require('./queries/story');
-const frequencyQueries = require('./queries/frequency');
+const ThreadQueries = require('./queries/thread');
+const channelQueries = require('./queries/channel');
 const communityQueries = require('./queries/community');
 const messageQueries = require('./queries/message');
 const userQueries = require('./queries/user');
 const reactionQueries = require('./queries/reaction');
-const directMessageGroupQueries = require('./queries/directMessageGroup');
+const directMessageThreadQueries = require('./queries/directMessageThread');
+const notificationQueries = require('./queries/notification');
 
 const messageMutations = require('./mutations/message');
-const storyMutations = require('./mutations/story');
+const threadMutations = require('./mutations/thread');
 const reactionMutations = require('./mutations/reaction');
-const directMessageGroupMutations = require('./mutations/directMessageGroup');
+const recurringPaymentMutations = require('./mutations/recurringPayment');
+const communityMutations = require('./mutations/community');
+const channelMutations = require('./mutations/channel');
+const directMessageThreadMutations = require('./mutations/directMessageThread');
+const notificationMutations = require('./mutations/notification');
+const userMutations = require('./mutations/user');
 
 const messageSubscriptions = require('./subscriptions/message');
+const notificationSubscriptions = require('./subscriptions/notification');
 
 const Root = /* GraphQL */ `
 	# The dummy queries and mutations are necessary because
@@ -67,31 +75,39 @@ const schema = makeExecutableSchema({
     generalTypes,
     Root,
     Community,
-    Frequency,
-    Story,
+    Channel,
+    Thread,
     Message,
     Reaction,
     User,
-    DirectMessageGroup,
+    DirectMessageThread,
+    Notification,
   ],
   resolvers: merge(
     {},
     //queries
     scalars.resolvers,
-    storyQueries,
-    frequencyQueries,
+    ThreadQueries,
+    channelQueries,
     communityQueries,
     messageQueries,
     userQueries,
-    directMessageGroupQueries,
+    directMessageThreadQueries,
     reactionQueries,
+    notificationQueries,
     // mutations
     messageMutations,
-    storyMutations,
-    directMessageGroupMutations,
+    threadMutations,
+    directMessageThreadMutations,
     reactionMutations,
+    recurringPaymentMutations,
+    communityMutations,
+    channelMutations,
+    notificationMutations,
+    userMutations,
     // subscriptions
-    messageSubscriptions
+    messageSubscriptions,
+    notificationSubscriptions
   ),
 });
 

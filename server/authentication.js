@@ -2,14 +2,14 @@ const passport = require('passport');
 const { Strategy: TwitterStrategy } = require('passport-twitter');
 const { getUser, createOrFindUser } = require('./models/user');
 
-const init = ({ twitterCallbackURLBase }) => {
+const init = () => {
   // Setup use serialization
   passport.serializeUser((user, done) => {
-    done(null, user.uid);
+    done(null, user.id);
   });
 
-  passport.deserializeUser((uid, done) => {
-    getUser(uid)
+  passport.deserializeUser((id, done) => {
+    getUser({ id })
       .then(user => {
         done(null, user);
       })
@@ -24,13 +24,13 @@ const init = ({ twitterCallbackURLBase }) => {
       {
         consumerKey: 'vxmsICGyIIoT5NEYi1I8baPrf',
         consumerSecret: 'uH7CqsEWPTgMHu7rp8UhiaoS7bzgN53h3od95BEJBFEgUQzMOq',
-        callbackURL: `${twitterCallbackURLBase}/auth/twitter/callback`,
+        callbackURL: `/auth/twitter/callback`,
       },
       (token, tokenSecret, profile, done) => {
         const user = {
           providerId: profile.id,
           username: profile.username,
-          displayName: profile.displayName ||
+          name: profile.displayName ||
             (profile.name &&
               `${profile.name.givenName} ${profile.name.familyName}`) ||
             null,
@@ -38,7 +38,7 @@ const init = ({ twitterCallbackURLBase }) => {
             profile.emails.length > 0 &&
             profile.emails[0].value) ||
             null,
-          photoURL: (profile.photos &&
+          profilePhoto: (profile.photos &&
             profile.photos.length > 0 &&
             profile.photos[0].value) ||
             null,

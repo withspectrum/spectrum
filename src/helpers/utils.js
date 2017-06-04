@@ -1,34 +1,11 @@
-//@flow
-import React from 'react';
-import LoadingIndicator from '../shared/loading/global';
+// @flow
+
 // NOTE (@mxstbr): The /dist here is a bug in a specific version of emoji-regex
 // Can be removed after the next release: https://github.com/mathiasbynens/emoji-regex/pull/12
+// $FlowFixMe
 import createEmojiRegex from 'emoji-regex';
-import Raven from 'raven-js';
-Raven.config(
-  'https://3bd8523edd5d43d7998f9b85562d6924@sentry.io/154812'
-).install();
 
-export const hashToArray = hash => {
-  let array = [];
-  for (let key in hash) {
-    if (!hash.hasOwnProperty(key)) continue;
-    let arr = hash[key];
-    array.push(arr);
-  }
-  return array;
-};
-
-// e.g. arrayToHash(arr, 'id')
-export const arrayToHash = (array, keyBy) => {
-  let hash = {};
-  array.forEach(elem => {
-    hash[elem[keyBy]] = elem;
-  });
-  return hash;
-};
-
-export const convertTimestampToDate = timestamp => {
+export const convertTimestampToDate = (timestamp: Date) => {
   let monthNames = [
     'January',
     'February',
@@ -61,7 +38,7 @@ export const convertTimestampToDate = timestamp => {
   return `${month} ${day}, ${year} · ${cleanHours}:${minutes}${ampm}`;
 };
 
-export const convertTimestampToTime = timestamp => {
+export const convertTimestampToTime = (timestamp: Date) => {
   let date = new Date(timestamp);
   let hours = date.getHours() || 0;
   let cleanHours;
@@ -76,178 +53,40 @@ export const convertTimestampToTime = timestamp => {
   return `${cleanHours}:${minutes}${ampm}`;
 };
 
-export const sortAndGroupBubbles = messages => {
-  if (!messages.length > 0) return [];
-  let masterArray = [];
-  let newArray = [];
-  let checkId;
-
-  for (let i = 0; i < messages.length; i++) {
-    // on the first message, get the user id and set it to be checked against
-    if (i === 0) {
-      checkId = messages[i].userId;
-
-      // show a timestamp for when the first message in the conversation was sent
-      masterArray.push([
-        {
-          userId: 'robo',
-          timestamp: messages[0].timestamp,
-          message: {
-            content: messages[0].timestamp,
-            type: 'robo',
-          },
-        },
-      ]);
-    }
-
-    const robo = [
-      {
-        userId: 'robo',
-        timestamp: messages[i].timestamp,
-        message: {
-          content: messages[i].timestamp,
-          type: 'robo',
-        },
-      },
-    ];
-
-    const sameUser = messages[i].userId === checkId; //=> boolean
-    const oldMessage = (current: Object, previous: Object) => {
-      //=> boolean
-      return current.timestamp > previous.timestamp + 900000;
-    };
-
-    // if we are evaulating a bubble from the same user
-    if (sameUser) {
-      // if we are still on the first message
-      if (i === 0) {
-        // push the message to the array
-        newArray.push(messages[i]);
-      } else {
-        // if we're on to the second message, we need to evaulate the timestamp
-        // if the second message is older than the first message by our variance
-        if (oldMessage(messages[i], messages[i - 1])) {
-          // push the batch of messages to master array
-          masterArray.push(newArray);
-          // insert a new robotext timestamp
-          masterArray.push(robo);
-          // reset the batch of new messages
-          newArray = [];
-          // populate the new batch of messages with this next old message
-          newArray.push(messages[i]);
-        } else {
-          // if the message isn't older than our prefered variance,
-          // we keep populating the same batch of messages
-          newArray.push(messages[i]);
-        }
-      }
-      // and maintain the checkid
-      checkId = messages[i].userId;
-      // if the next message is from a new user
-    } else {
-      // we push the previous user's messages to the masterarray
-      masterArray.push(newArray);
-      // if the new users message is older than our preferred variance
-      if (i > 0 && oldMessage(messages[i], messages[i - 1])) {
-        // push a robo timestamp
-        masterArray.push(robo);
-        newArray = [];
-        newArray.push(messages[i]);
-      } else {
-        // clear the messages array from the previous user
-        newArray = [];
-        // and start a new batch of messages from the currently evaulating user
-        newArray.push(messages[i]);
-      }
-
-      // set a new checkid for the next user
-      checkId = messages[i].userId;
-    }
-  }
-
-  // when done, push the final batch of messages to masterArray
-  // masterArray.push(newArray);
-  // and return masterArray to the component
-  masterArray.push(newArray);
-  return masterArray;
-};
-
-export const asyncComponent = getComponent => {
-  return class AsyncComponent extends React.Component {
-    static Component = null;
-    state = { Component: AsyncComponent.Component };
-
-    componentWillMount() {
-      if (!this.state.Component) {
-        getComponent().then(Component => {
-          AsyncComponent.Component = Component;
-          this.setState({ Component });
-        });
-      }
-    }
-    render() {
-      const { Component } = this.state;
-      if (Component) {
-        return <Component {...this.props} />;
-      }
-      return <LoadingIndicator />;
-    }
-  };
-};
-
-export const debounce = (func, wait, immediate) => {
-  let timeout;
-  return () => {
-    let context = this, args = arguments;
-    let later = () => {
-      timeout = null;
-      if (!immediate) func.apply(context, args);
-    };
-    let callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
-  };
-};
-
-export const throttle = (func, threshhold, scope) => {
-  threshhold || (threshhold = 250);
-  let last, deferTimer;
-  return function() {
-    let context = scope || this;
-
-    let now = +new Date(), args = arguments;
-    if (last && now < last + threshhold) {
-      // hold on to it
-      clearTimeout(deferTimer);
-      deferTimer = setTimeout(function() {
-        last = now;
-        func.apply(context, args);
-      }, threshhold);
-    } else {
-      last = now;
-      func.apply(context, args);
-    }
-  };
-};
-
 // This regex matches every string with any emoji in it, not just strings that only have emojis
 const originalEmojiRegex = createEmojiRegex();
 // Make sure we match strings that only contain emojis (and whitespace)
 const regex = new RegExp(
   `^(${originalEmojiRegex.toString().replace(/\/g$/, '')}|\\s)+$`
 );
+export const onlyContainsEmoji = (text: string) => regex.test(text);
 
-export const onlyContainsEmoji = text => regex.test(text);
+/**
+ * Encode a string to base64 (using the Node built-in Buffer)
+ *
+ * Stolen from http://stackoverflow.com/a/38237610/2115623
+ */
+export const encode = (string: string) =>
+  Buffer.from(string).toString('base64');
 
-export const sortArrayByKey = (array, key, fallbackKey) => {
-  return array.sort((a, b) => {
-    let x = a[key] || a[fallbackKey];
-    let y = b[key] || b[fallbackKey];
+/*
+  Best guess at if user is on a mobile device. Used in the modal components
+  to determine where the modal should be positioned, how it should close and
+  scroll, etc
+*/
+export function isMobile() {
+  let userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-    return x < y ? -1 : x > y ? 1 : 0;
-  });
-};
+  if (
+    /windows phone/i.test(userAgent) ||
+    /android/i.test(userAgent) ||
+    (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream)
+  ) {
+    return true;
+  }
+
+  return false;
+}
 
 export function timeDifference(current, previous) {
   const msPerMinute = 60 * 1000;
@@ -304,36 +143,46 @@ export function timeDifference(current, previous) {
   }
 }
 
-/* eslint-disable no-mixed-operators */
-export function isMobile() {
-  let userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-  if (
-    /windows phone/i.test(userAgent) ||
-    /android/i.test(userAgent) ||
-    (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream)
-  ) {
-    return true;
-  }
-
-  return false;
-}
-/* eslint-enable no-mixed-operators */
-
-export const flattenArray = arr =>
-  arr.reduce(
-    (acc, val) => acc.concat(Array.isArray(val) ? flattenArray(val) : val),
-    []
-  );
-
-export const getParameterByName = (name, url) => {
-  name = name.replace(/[\[\]]/g, '\\$&');
-  var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-    results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return '';
-  return decodeURIComponent(results[2].replace(/\+/g, ' '));
+export const debounce = (func, wait, immediate) => {
+  let timeout;
+  return () => {
+    let context = this, args = arguments;
+    let later = () => {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    let callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
 };
+
+export const throttle = (func, threshhold, scope) => {
+  threshhold || (threshhold = 250);
+  let last, deferTimer;
+  return function() {
+    let context = scope || this;
+
+    let now = +new Date(), args = arguments;
+    if (last && now < last + threshhold) {
+      // hold on to it
+      clearTimeout(deferTimer);
+      deferTimer = setTimeout(function() {
+        last = now;
+        func.apply(context, args);
+      }, threshhold);
+    } else {
+      last = now;
+      func.apply(context, args);
+    }
+  };
+};
+
+export const getLinkPreviewFromUrl = url =>
+  fetch(`https://links.spectrum.chat/?url=${url}`).then(response => {
+    return response.json();
+  });
 
 // Truncate a string nicely to a certain length
 export const truncate = (str, length) => {
@@ -344,35 +193,21 @@ export const truncate = (str, length) => {
   return subString.substr(0, subString.lastIndexOf(' ')) + '…';
 };
 
-export const getLinkPreviewFromUrl = url =>
-  fetch(
-    `https://micro-open-graph-phbmtaqieu.now.sh/?url=${url}`
-  ).then(response => {
-    return response.json();
-  });
+export const hasProtocol = url => {
+  const PROTOCOL = /(http(s?)):\/\//gi;
+  const hasProtocol = url.match(PROTOCOL);
+  if (hasProtocol) {
+    return true;
+  }
+  return false;
+};
 
-document.head || (document.head = document.getElementsByTagName('head')[0]);
-
-export const changeFavicon = (count: Number) => {
-  if (count === 0) {
-    const link = document.createElement('link'),
-      oldLink = document.getElementById('dynamic-favicon');
-    link.id = 'dynamic-favicon';
-    link.rel = 'shortcut icon';
-    link.href = '/img/favicon.ico?=' + Math.random();
-    if (oldLink) {
-      document.head.removeChild(oldLink);
-    }
-    document.head.appendChild(link);
+export const addProtocolToString = string => {
+  // if the string starts with http or https, we are good
+  if (hasProtocol(string)) {
+    return string;
   } else {
-    const link = document.createElement('link'),
-      oldLink = document.getElementById('dynamic-favicon');
-    link.id = 'dynamic-favicon';
-    link.rel = 'shortcut icon';
-    link.href = '/img/favicon_unread.ico?=' + Math.random();
-    if (oldLink) {
-      document.head.removeChild(oldLink);
-    }
-    document.head.appendChild(link);
+    // otherwise it doesn't start with a protocol, prepend http
+    return `http://${string}`;
   }
 };

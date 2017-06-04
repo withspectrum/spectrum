@@ -2,41 +2,44 @@
 # Spectrum
 
 ## What is it?
-A single place for all the best communities.
+A single, unified place for all the best communities.
 
 
 ## Who is it for?
-Nerds, initially (Spec, TeamSketch, Designer Hangout, PixelFireplace, etc...), but expand to pop culture and beyond through that community.
+Nerds, initially (Spec, TeamSketch, Zeit, Framer, Figma, etc...), but expand to pop culture and beyond through that community.
 
 
 ## Why should communities use Spectrum over (Slack/Facebook Groups + Messenger/Twitter DMs/etc)?
 - Free public communities
-- Free private communities for 503(c) non-profits and educational groups?
-- Code of Conduct moderation
-- No ads
-- Formatted for focused conversations, not static posts or ongoing randomness.
+- Purpose-built for communities first
+- Search engine indexable communities
+- Code of Conduct + moderation tools
+- No advertising
+- Threaded Live Chat supports async + synchronous conversation easily.
 
 
 ## How does it make money?
-- Paid private communities for internal chat ($100/mo fixed pricing?)
-- Brand tools ($100/mo fixed pricing?)
-  - Custom theming
-  - Admin accounts
+- Paid communities (10¢ / member / mo)
+  They get:
+  - Unlimited private channels
+  - Unlimited moderators
+  - Slack team / FB group import
+  - Statistics
+  - Pinned posts
+  - Brand tools
+    - Subdomain
+    - Custom theming
   - Privacy controls
-  - Custom post types
-  - Sticky posts
-  - Story tags for organization
+  - Custom post types?
+  - Story tags for organization?
   - Custom emoji/stickers? (a la Twitch, YouTube, Slack)
   - Unlimited file history? (depending on our data retention policies generally)
-- Pro users ($5/mo?)
+- Pro Accounts ($5/mo)
   - Custom theming
+  - Larger file uploads
   - Unlimited file history? (depending on our data retention policies generally)
 - Patronage tools?
 - Marketplace (let users sell to each other)?
-
-## Firebase
-
-Both the realtime database security rules as well as our cloud functions live in this repository. (`rules.json` and `functions/`, respectively)
 
 ## Deployment
 

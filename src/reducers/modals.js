@@ -12,11 +12,7 @@ export default function modal(state = initialState, action) {
         modalProps: action.modalProps,
         isOpen: true,
       };
-    case 'DELETE_FREQUENCY':
-    case 'CREATE_FREQUENCY':
-    case 'EDIT_FREQUENCY':
     case 'HIDE_MODAL':
-    case 'UPGRADE_USER':
       return initialState;
     default:
       return state;

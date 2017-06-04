@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`queries should fetch a user 1`] = `
+Object {
+  "data": Object {
+    "user": Object {
+      "coverPhoto": "https://pbs.twimg.com/profile_banners/2451223458/1479507323/1500x500",
+      "createdAt": "2016-12-31T23:00:00.000Z",
+      "description": "Makes styled-components, react-boilerplate and micro-analytics 💅 Speciality coffee geek, skier, traveller ☕",
+      "email": "hi@mxstbr.com",
+      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a190",
+      "lastSeen": "2016-12-31T23:00:00.000Z",
+      "name": "Max Stoiber",
+      "profilePhoto": "https://img.gs/jztmrqvgzv/500/mxstbr.com/headshot.jpeg",
+      "providerId": "2451223458",
+      "username": "mxstbr",
+      "website": "https://mxstbr.com",
+    },
+  },
+}
+`;
+
+exports[`queries should return null for a non-existant id 1`] = `
+Object {
+  "data": Object {
+    "user": null,
+  },
+}
+`;

@@ -1,13 +1,7 @@
-import { track } from '../EventTracker';
-/*------------------------------------------------------------\*
-*
+// @flow
+import { track } from '../helpers/events';
 
-openModal
-Takes a name and shows that modal. The name gets parsed in ModalRoot.js in order to determine which component to render
-
-*
-\*------------------------------------------------------------*/
-export const openModal = (name, props) => {
+export const openModal = (name: string, props: Object) => {
   track(`modal ${name}`, 'opened', null);
 
   return {

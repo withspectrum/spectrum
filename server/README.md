@@ -62,8 +62,8 @@ The TL;DR of how to use it is:
 
 ```GraphQL
 {
-  story(id: "some-story-id") {
-    # Fetch the messages of a certain story
+  thread(id: "some-thread-id") {
+    # Fetch the messages of a certain thread
     messageConnection {
       pageInfo {
         # Do we have another page to fetch after this
@@ -86,12 +86,12 @@ The TL;DR of how to use it is:
 }
 ```
 
-This query would get the first 10 (or less) messages of that story. To get the next page you have to take the `cursor` of the last message edge and pass that to messageConnections:
+This query would get the first 10 (or less) messages of that thread. To get the next page you have to take the `cursor` of the last message edge and pass that to messageConnections:
 
 ```GraphQL
 {
-  story(id: "some-story-id") {
-    # Fetch the next messages after the last message in the story
+  thread(id: "some-thread-id") {
+    # Fetch the next messages after the last message in the thread
     messageConnection(after: $lastMessageCursor) {
       edges {
         node {
@@ -111,7 +111,7 @@ To specify how many messages you want to load use the `first` parameter:
 
 ```GraphQL
 {
-  story(id: "some-story-id") {
+  thread(id: "some-thread-id") {
     # Fetch the first 5 messages after the last message
     messageConnection(first: 5, after: $lastMessageCursor) {
       edges {
@@ -133,24 +133,24 @@ To specify how many messages you want to load use the `first` parameter:
 Connections and edges have standard names and structures across all resources:
 
 ```GraphQL
-# A connection of a story to messages
-type StoryMessagesConnection {
+# A connection of a thread to messages
+type ThreadMessagesConnection {
   pageInfo: PageInfo!
-  edges: [StoryMessageEdge!]
+  edges: [ThreadMessageEdge!]
 }
 
-# An edge from a story to a message
-type StoryMessageEdge {
+# An edge from a thread to a message
+type ThreadMessageEdge {
   cursor: String!
   node: Message!
 }
 
-type Story {
-  messageConnection(first: Int = 10, after: String): StoryMessagesConnection!
+type Thread {
+  messageConnection(first: Int = 10, after: String): ThreadMessagesConnection!
 }
 ```
 
-> Note: This is where we diverge slightly from the article linked above, it recommends naming your edges in plural (`StoryMessagesEdge`) to make it consistent with the connection but we've found that the singular (`StoryMessageEdge`) makes it clear only a single resource is being fetched and think that's more important.
+> Note: This is where we diverge slightly from the article linked above, it recommends naming your edges in plural (`ThreadMessagesEdge`) to make it consistent with the connection but we've found that the singular (`ThreadMessageEdge`) makes it clear only a single resource is being fetched and think that's more important.
 
 ### Error management
 
@@ -163,4 +163,56 @@ const { UserError } = require('graphql-errors');
 
 // The user will see this full error message
 throw new UserError('You do not have permission to access field xyz!')
+```
+
+### Testing
+
+We use [Jest](https://facebook.github.io/jest/) for testing. (we recommend reading through the documentation, since it has a lot of great features you might not expect) Most of our tests are "e2e". That's in quotes because with GraphQL "e2e" tests don't do any network request, they still hit our database though and all that. (which is awesome since it's much faster!)
+
+We create a separate database for testing (called `"testing"`, surprisingly) that gets populated with some test data that we then verify against. A typical test suite for a certain type might look like this:
+
+```JS
+import { graphql } from 'graphql';
+import { db as mockTestDb, setup, teardown, data } from './db';
+
+// Mock the database to refer to our testing database
+// Note: The variable we mock it with has to have the mock- prefix,
+// otherwise Jest compains.
+jest.mock('../models/db', () => ({
+  db: mockTestDb,
+}));
+
+import schema from '../schema';
+
+describe('queries', () => {
+  // Before all tests create the database and tables and insert the test data
+  beforeAll(() => setup(mockTestDb));
+  // After the tests are finished drop the database to restore a clean state
+  afterAll(() => teardown(mockTestDb));
+
+  it('should fetch a user', () => {
+    // Write your GraphQL query how you normally would
+    const query = /* GraphQL */`
+      {
+        user(id: "first-user") {
+          id
+          createdAt
+          lastSeen
+          profilePhoto
+          name
+          username
+          email
+        }
+      }
+    `;
+
+    // Makes sure the test fails if the async callback below doesn't fire and expect() is never called
+    expect.assertions(1);
+    // Return your graphql() call, which goes, gets the data and returns a Promise
+    return graphql(schema, query).then(result => {
+      // Use snapshots to verify the returned JSON response
+      expect(result.data.user).toMatchSnapshot();
+    });
+  });
+});
 ```

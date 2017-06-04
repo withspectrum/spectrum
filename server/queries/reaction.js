@@ -1,22 +1,17 @@
 // @flow
 
-import { getUser } from '../models/user';
 import { getReaction } from '../models/reaction';
 import { getMessage } from '../models/message';
-import type { LocationTypes } from '../models/message';
+import type { GraphQLContext } from '../';
 
 type Root = {
   id: string,
-  user: string,
-  message: string,
+  userId: string,
+  messageId: string,
 };
 
 type QueryArgs = {
   id: string,
-};
-
-type MessageArgs = {
-  location: LocationTypes,
 };
 
 const reaction = {
@@ -24,9 +19,9 @@ const reaction = {
     reaction: (_: Root, { id }: QueryArgs) => getReaction(id),
   },
   Reaction: {
-    user: ({ user }: Root) => getUser(user),
-    message: ({ message }: Root, { location }: MessageArgs) =>
-      getMessage(location, message),
+    user: ({ userId }: Root, _: any, { loaders }: GraphQLContext) =>
+      loaders.user.load(userId),
+    message: ({ messageId }: Root) => getMessage(messageId),
   },
 };
 
