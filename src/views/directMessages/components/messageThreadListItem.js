@@ -48,6 +48,7 @@ export const ListCardItemDirectMessageThread = ({
   const currentParticipantLastActiveTimestamp = new Date(
     currentParticipant.lastSeen
   ).getTime();
+
   const isUnread = currentParticipantLastActiveTimestamp < timestamp;
 
   return (

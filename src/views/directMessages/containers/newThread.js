@@ -416,8 +416,12 @@ class NewThread extends Component {
     const { threads, currentUser, client } = this.props;
     const { selectedUsersForNewThread } = this.state;
 
+    if (!threads) {
+      return;
+    }
+
     // user hasn't created any dm threads yet,
-    if (threads.length === 0) {
+    if (threads && threads.length === 0) {
       return;
     }
 
