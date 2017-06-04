@@ -1,7 +1,0 @@
-{
-  "projects": {
-    "default": "spectrum-staging",
-    "staging": "spectrum-staging",
-    "prod": "specfm-spectrum"
-  }
-}
