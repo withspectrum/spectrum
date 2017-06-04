@@ -169,8 +169,7 @@ const ChatInput = compose(
   withState('state', 'changeState', fromPlainText('')),
   withHandlers({
     onChange: ({ changeState }) => state => changeState(state),
-    clear: ({ changeState }) => () =>
-      console.log('clearing') || changeState(fromPlainText('')),
+    clear: ({ changeState }) => () => changeState(fromPlainText('')),
   }),
   connect()
 )(ChatInputWithMutation);
