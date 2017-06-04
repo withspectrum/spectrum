@@ -229,7 +229,7 @@ class UserWithData extends Component {
     return (
       <StyledCard>
         <FormTitle>Profile Settings</FormTitle>
-        <Form>
+        <Form onSubmit={this.save}>
           <ImageInputWrapper>
             <CoverInput
               onChange={this.setCoverPhoto}

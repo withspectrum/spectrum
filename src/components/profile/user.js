@@ -102,7 +102,7 @@ const UserWithData = ({
             {user.website &&
               <ExtLink>
                 <Icon glyph="link" size={24} />
-                <a href={addProtocolToString(user.website)}>
+                <a target="_blank" href={addProtocolToString(user.website)}>
                   {user.website}
                 </a>
               </ExtLink>}

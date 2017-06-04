@@ -283,7 +283,7 @@ class CommunityWithData extends Component {
     return (
       <StyledCard>
         <FormTitle>Community Settings</FormTitle>
-        <Form>
+        <Form onSubmit={this.save}>
           <ImageInputWrapper>
             <CoverInput
               onChange={this.setCommunityCover}
