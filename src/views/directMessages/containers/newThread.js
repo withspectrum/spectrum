@@ -53,7 +53,8 @@ class NewThread extends Component {
     existingThreadBasedOnSelectedUsers: string, // id
     existingThreadWithMessages: Object,
     loadingExistingThreadMessages: boolean,
-    chatInputIsFocused: false,
+    chatInputIsFocused: boolean,
+    threadIsBeingCreated: boolean,
   };
 
   constructor(props) {
@@ -99,6 +100,9 @@ class NewThread extends Component {
       // a message and create the dm group, and ignore other logic around
       // pressing the 'enter' key
       chatInputIsFocused: false,
+      // set to true while a thread is being created, to prevent a user pressing
+      // enter twice and accidentally creating two threads
+      threadIsBeingCreated: false,
     };
 
     // only kick off search query every 200ms
@@ -560,7 +564,7 @@ class NewThread extends Component {
   };
 
   createThread = ({ messageBody, messageType, file }) => {
-    const { selectedUsersForNewThread } = this.state;
+    const { selectedUsersForNewThread, threadIsBeingCreated } = this.state;
 
     // if no users have been selected, break out of this function and throw
     // an error
@@ -588,22 +592,41 @@ class NewThread extends Component {
 
     const isPrivate = selectedUsersForNewThread.length > 1 ? true : false;
 
-    this.props
-      .createDirectMessageThread(input)
-      .then(({ data: { createDirectMessageThread } }) => {
-        track(
-          'direct message thread',
-          `${isPrivate ? 'private thread' : 'group thread'} created`,
-          null
-        );
-        // NOTE: I cannot get the Apollo store to update properly with the
-        // new thread. Forcing a refresh works, although it's a less ideal UX
-        window.location.href = `/messages/${createDirectMessageThread.id}`;
-        // this.props.history.push(`/messages/${createDirectMessageThread.id}`)
-      })
-      .catch(err => {
-        this.props.dispatch(addToastWithTimeout('error', err.message));
+    if (threadIsBeingCreated) {
+      return;
+    } else {
+      this.setState({
+        threadIsBeingCreated: true,
       });
+
+      this.props
+        .createDirectMessageThread(input)
+        .then(({ data: { createDirectMessageThread } }) => {
+          track(
+            'direct message thread',
+            `${isPrivate ? 'private thread' : 'group thread'} created`,
+            null
+          );
+
+          this.setState({
+            threadIsBeingCreated: false,
+          });
+
+          // NOTE: I cannot get the Apollo store to update properly with the
+          // new thread. Forcing a refresh works, although it's a less ideal UX
+          window.location.href = `/messages/${createDirectMessageThread.id}`;
+          // this.props.history.push(`/messages/${createDirectMessageThread.id}`)
+        })
+        .catch(err => {
+          // if an error happened, the user can try to resend the message to
+          // create a new thread
+          this.setState({
+            threadIsBeingCreated: false,
+          });
+
+          this.props.dispatch(addToastWithTimeout('error', err.message));
+        });
+    }
   };
 
   onChatInputFocus = () => {

@@ -178,7 +178,7 @@ class ChannelWithData extends Component {
       return (
         <StyledCard>
           <FormTitle>Channel Settings</FormTitle>
-          <Form>
+          <Form onSubmit={this.save}>
             <Input defaultValue={name} id="name" onChange={this.handleChange}>
               Name
             </Input>

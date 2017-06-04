@@ -80,10 +80,9 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
   );
 };
 
-export const UserListItem = ({
-  user,
-  children,
-}: Object): React$Element<any> => {
+export const UserListItem = ({ user, children }: Object): React$Element<
+  any
+> => {
   return (
     <Wrapper>
       <Row>

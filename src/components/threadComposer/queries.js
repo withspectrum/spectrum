@@ -37,6 +37,7 @@ query getComposerCommunitiesAndChannels {
         node {
           id
           name
+          slug
           community {
             id
           }

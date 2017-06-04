@@ -88,17 +88,20 @@ class Editor extends Component {
     const isEmpty = toPlainText(state) === '';
 
     return (
-      <Wrapper className={className} style={style}>
+      <Wrapper className={className} style={style} onClick={this.focus}>
         <SlateEditor
           state={state}
           onChange={onChange}
           onKeyDown={onEnter && this.onKeyDown}
           plugins={this.state.plugins}
-          ref={editor => this.editor = editor}
+          ref={editor => {
+            this.editor = editor;
+            if (this.props.editorRef) this.props.editorRef(editor);
+          }}
           {...rest}
         />
         {isEmpty &&
-          <CustomPlaceholder onClick={this.focus}>
+          <CustomPlaceholder>
             {placeholder}
           </CustomPlaceholder>}
       </Wrapper>

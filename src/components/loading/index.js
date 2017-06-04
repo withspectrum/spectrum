@@ -87,7 +87,9 @@ export const LoadingNavbar = (): React$Element<any> => (
     <LogoLink to="/">
       <Logo src="/img/mark-white.png" role="presentation" />
     </LogoLink>
-    <Spinner size={'20'} color={'bg.default'} />
+    <LoadingContainer>
+      <Spinner size={'20'} color={'bg.default'} />
+    </LoadingContainer>
   </LoadingNavbarContainer>
 );
 
