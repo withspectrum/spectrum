@@ -18,17 +18,13 @@ exports.up = function(r, conn) {
       r.tableCreate('usersChannels').run(conn),
       r.tableCreate('usersDirectMessageThreads').run(conn),
       r.tableCreate('usersNotifications').run(conn),
+      r.tableCreate('usersThreads').run(conn),
     ])
       // Create secondary indexes
       .then(() =>
         Promise.all([
           // index user by username
           r.table('users').indexCreate('username', r.row('username')).run(conn),
-          // index usersNotifications by userId
-          r
-            .table('usersNotifications')
-            .indexCreate('userId', r.row('userId'))
-            .run(conn),
           // index recurringPayments by userId
           r
             .table('recurringPayments')
@@ -47,6 +43,15 @@ exports.up = function(r, conn) {
           r
             .table('usersCommunities')
             .indexCreate('communityId', r.row('communityId'))
+            .run(conn),
+          // indexes on usersThreads join table
+          r
+            .table('usersThreads')
+            .indexCreate('userId', r.row('userId'))
+            .run(conn),
+          r
+            .table('usersThreads')
+            .indexCreate('threadId', r.row('threadId'))
             .run(conn),
           // indexes on usersChannels join table
           r
@@ -73,18 +78,21 @@ exports.up = function(r, conn) {
             .run(conn),
           r
             .table('notifications')
-            .indexCreate(
-              'userId',
-              notification => {
-                return notification('users').map(user => user('id'));
-              },
-              { multi: true }
-            )
+            .indexCreate('modifiedAt', r.row('modifiedAt'))
             .run(conn),
-          // index notifications by thread
           r
             .table('notifications')
-            .indexCreate('threadId', r.row('threadId'))
+            .indexCreate('contextId', r.row('context')('id'))
+            .run(conn),
+          // index usersNotifications by userId
+          r
+            .table('usersNotifications')
+            .indexCreate('userId', r.row('userId'))
+            .run(conn),
+          // index usersNotifications by userId
+          r
+            .table('usersNotifications')
+            .indexCreate('notificationId', r.row('notificationId'))
             .run(conn),
           // index threads by creator
           r
@@ -141,6 +149,7 @@ exports.down = function(r, conn) {
     r.tableDrop('usersChannels').run(conn),
     r.tableDrop('usersDirectMessageThreads').run(conn),
     r.tableDrop('usersNotifications').run(conn),
+    r.tableDrop('usersThreads').run(conn),
   ]).catch(err => {
     console.log(err);
   });

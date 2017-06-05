@@ -167,6 +167,18 @@ const generateThread = (communityId, channelId, creatorId) => {
   };
 };
 
+const generateUsersThreads = (threadId, userId) => {
+  const createdAt = faker.date.past(2);
+
+  return {
+    id: uuid(),
+    createdAt,
+    threadId,
+    userId,
+    receiveNotifications: true,
+  };
+};
+
 const generateDirectMessageThread = users => {
   const createdAt = faker.date.past(2);
   const threadLastActive = faker.date.between(createdAt, faker.date.recent());
@@ -294,6 +306,7 @@ module.exports = {
   generateUsersChannels,
   generateUsersDirectMessageThreads,
   generateThread,
+  generateUsersThreads,
   generateMessage,
   generateReaction,
   generateThreadNotification,

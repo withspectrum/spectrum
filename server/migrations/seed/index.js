@@ -24,6 +24,7 @@ const {
   generateUsersCommunities,
   generateUsersChannels,
   generateThread,
+  generateUsersThreads,
   generateDirectMessageThread,
   generateUsersDirectMessageThreads,
   generateMessage,
@@ -100,6 +101,12 @@ channels.forEach(channel => {
     //   generateThreadNotification(thread, channel)
     // );
   });
+});
+
+let usersThreads = [];
+threads.forEach(thread => {
+  const usersThread = generateUsersThreads(thread.id, thread.creatorId);
+  usersThreads.push(usersThread);
 });
 
 console.log('Generating direct message threads...');
@@ -193,6 +200,7 @@ Promise.all([
   db.table('usersChannels').insert(usersChannels).run(),
   db.table('usersDirectMessageThreads').insert(usersDirectMessageThreads).run(),
   db.table('usersNotifications').insert(usersNotifications).run(),
+  db.table('usersThreads').insert(usersThreads).run(),
 ])
   .then(() => {
     console.log('Finished seeding database! 🎉');

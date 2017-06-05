@@ -5,6 +5,7 @@ import { getChannels } from '../models/channel';
 import { getCommunities } from '../models/community';
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
+import { createParticipantInThread } from '../models/usersThreads';
 const {
   getThreads,
   publishThread,
@@ -66,11 +67,17 @@ module.exports = {
             attachments,
           });
 
-          return publishThread(newThread, currentUser.id);
+          return publishThread(newThread, currentUser.id).then(thread => {
+            createParticipantInThread(thread.id, currentUser.id);
+            return thread;
+          });
         } else {
           // if no attachments were passed into the thread, we can just publish
           // as-is
-          return publishThread(thread, currentUser.id);
+          return publishThread(thread, currentUser.id).then(thread => {
+            createParticipantInThread(thread.id, currentUser.id);
+            return thread;
+          });
         }
       });
     },

@@ -4,6 +4,7 @@ const { UserError } = require('graphql-errors');
 const { storeMessage } = require('../models/message');
 import type { MessageProps } from '../models/message';
 import { setThreadLastActive } from '../models/directMessageThread';
+import { createParticipantInThread } from '../models/usersThreads';
 import {
   setUserLastSeenInDirectMessageThread,
 } from '../models/usersDirectMessageThreads';
@@ -25,6 +26,13 @@ module.exports = {
       if (message.threadType === 'directMessageThread') {
         setThreadLastActive(message.threadId);
         setUserLastSeenInDirectMessageThread(message.threadId, currentUser.id);
+      }
+
+      // if the message was sent in a story thread, create a new participant
+      // relationship to the thread - this will enable us to query against
+      // thread.participants as well as have per-thread notifications for a user
+      if (message.threadType === 'story') {
+        createParticipantInThread(message.threadId, currentUser.id);
       }
 
       // all checks passed
