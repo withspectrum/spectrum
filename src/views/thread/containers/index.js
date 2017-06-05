@@ -173,7 +173,11 @@ class ThreadContainerPure extends Component {
               (thread.isCreator ||
                 thread.channel.channelPermissions.isMember) &&
               <ChatInputWrapper>
-                <ChatInput threadType="story" thread={thread.id} />
+                <ChatInput
+                  threadType="story"
+                  thread={thread.id}
+                  currentUser={currentUser}
+                />
               </ChatInputWrapper>}
 
             {// if the user exists but isn't a subscriber to the channel,

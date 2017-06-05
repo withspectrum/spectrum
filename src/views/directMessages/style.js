@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import ChatInput from '../../components/chatInput';
 import { FlexCol, FlexRow } from '../../components/globals';
 
 export const View = styled(FlexRow)`
@@ -18,7 +17,7 @@ export const ViewContent = styled(FlexCol)`
   flex-direction: column;
   flex: 1 1 auto;
   overflow-y: scroll;
-  max-height: ${props => (props.moved ? 'calc(100% - 160px)' : 'calc(100% - 60px)')};
+  max-height: ${props => (props.moved ? 'calc(100% - 96px)' : 'calc(100% - 48px)')};
   align-items: center;
   align-content: flex-start;
 `;
@@ -57,8 +56,4 @@ export const ComposeHeader = styled(FlexRow)`
   @media (max-width: 768px) {
     display: none;
   }
-`;
-
-export const FlexChatInput = styled(ChatInput)`
-  flex: 0 0 auto;
 `;
