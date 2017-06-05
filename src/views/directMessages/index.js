@@ -72,7 +72,21 @@ class DirectMessages extends Component {
             </Link>
           </MessagesList>
 
-          <Route render={() => <Redirect to="/messages/new" />} />
+          {/*
+            pass the user's existing DM threads into the composer so that we can more quickly
+            determine if the user is creating a new thread or has typed the names that map
+            to an existing DM thread
+           */}
+          <Route
+            path={`${match.url}/new`}
+            render={props => (
+              <NewThread
+                {...props}
+                threads={threads}
+                currentUser={currentUser}
+              />
+            )}
+          />
         </View>
       );
     }

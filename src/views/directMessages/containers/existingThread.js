@@ -18,6 +18,7 @@ class ExistingThread extends Component {
   componentDidMount() {
     const threadId = this.props.match.params.threadId;
     this.props.setActiveThread(threadId);
+    this.props.setLastSeen(threadId);
     this.forceScrollToBottom();
     track('direct message thread', 'viewed', null);
   }
