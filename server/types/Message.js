@@ -14,7 +14,7 @@ const Message = /* GraphQL */ `
 		body: String!
 	}
 
-	type FooType {
+	type ReactionData {
 		count: Int!
 		hasReacted: Boolean
 	}
@@ -26,7 +26,7 @@ const Message = /* GraphQL */ `
 		thread: ID!
 		content: MessageContent!
 		sender: User!
-		reactions: FooType
+		reactions: ReactionData
 		messageType: MessageTypes!
 	}
 
