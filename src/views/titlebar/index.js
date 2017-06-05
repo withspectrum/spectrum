@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import { openComposer, closeComposer } from '../../actions/composer';
 
 import Icon from '../../components/icons';
@@ -76,7 +77,9 @@ class Titlebar extends Component {
         {noComposer
           ? <Spacer />
           : messageComposer
-              ? <IconButton glyph="message-new" color="text.reverse" />
+              ? <Link to={`/messages/new`}>
+                  <IconButton glyph="message-new" color="text.reverse" />
+                </Link>
               : <IconButton
                   glyph="post"
                   color="text.reverse"

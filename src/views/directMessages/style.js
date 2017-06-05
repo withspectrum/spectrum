@@ -11,7 +11,9 @@ export const View = styled(FlexRow)`
   background: #fff;
 
   @media( max-width: 768px) {
-    height: calc(100vh - 112px);
+    height: calc(100vh - 48px);
+    position: relative;
+    z-index: 1001;
   }
 `;
 
@@ -47,7 +49,6 @@ export const MessagesContainer = styled(FlexCol)`
 
   @media (max-width: 768px) {
     flex: 0 0 100%;
-    transform: translateX(100%);
   }
 `;
 
