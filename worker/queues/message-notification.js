@@ -1,6 +1,6 @@
 // @flow
 import createQueue from '../create-queue';
-import { MESSAGE_NOTIFICATION } from './contants';
+import { MESSAGE_NOTIFICATION } from './constants';
 
 export default () =>
   createQueue(MESSAGE_NOTIFICATION, job => {
