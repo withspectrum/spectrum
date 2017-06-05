@@ -154,7 +154,6 @@ class DirectMessages extends Component {
           }
           return (
             <View>
-              {console.log('DESKTOP')}
               <MessagesList>
                 <Link to="/messages/new">
                   <ComposeHeader>
