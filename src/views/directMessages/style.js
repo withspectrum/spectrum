@@ -4,16 +4,12 @@ import { FlexCol, FlexRow } from '../../components/globals';
 
 export const View = styled(FlexRow)`
   align-items: stretch;
-  ${/* height: calc(100vh - 48px); */ ''}
   flex: 0 0 auto;
   height: calc(100vh - 48px);
-  ${/* overflow-y: hidden; */ ''}
   background: #fff;
 
   @media( max-width: 768px) {
-    height: calc(100vh - 48px);
-    position: relative;
-    z-index: 1001;
+    height: calc(100vh - 96px);
   }
 `;
 

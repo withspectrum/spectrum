@@ -123,46 +123,67 @@ class DirectMessages extends Component {
         );
       } else {
         //otherwise, let the route handle which detailView to see
-        return (
-          <View>
-            {console.log('DESKTOP')}
-            <MessagesList>
-              <Link to="/messages/new">
-                <ComposeHeader>
-                  <Icon glyph="message-new" />
-                </ComposeHeader>
-              </Link>
-              <ThreadsList
-                active={activeThread}
+        if (match.params.threadId) {
+          {
+            /*
+            pass the user's existing DM threads into the composer so that we can more quickly
+            determine if the user is creating a new thread or has typed the names that map
+            to an existing DM thread
+           */
+          }
+          return (
+            <View>
+              {console.log('DESKTOP')}
+              <MessagesList>
+                <Link to="/messages/new">
+                  <ComposeHeader>
+                    <Icon glyph="message-new" />
+                  </ComposeHeader>
+                </Link>
+                <ThreadsList
+                  active={activeThread}
+                  threads={threads}
+                  currentUser={currentUser}
+                />
+              </MessagesList>
+              <ExistingThread
+                match={match}
+                threads={threads}
+                currentUser={currentUser}
+                setActiveThread={this.setActiveThread}
+              />
+            </View>
+          );
+        } else {
+          {
+            /*
+            if a thread is being viewed and the threadId !== 'new', pass the
+            threads down the tree to fetch the messages for the urls threadId
+           */
+          }
+          return (
+            <View>
+              {console.log('DESKTOP')}
+              <MessagesList>
+                <Link to="/messages/new">
+                  <ComposeHeader>
+                    <Icon glyph="message-new" />
+                  </ComposeHeader>
+                </Link>
+                <ThreadsList
+                  active={activeThread}
+                  threads={threads}
+                  currentUser={currentUser}
+                />
+              </MessagesList>
+              <NewThread
+                match={match}
                 threads={threads}
                 currentUser={currentUser}
               />
-            </MessagesList>
-
-            {/*
-              pass the user's existing DM threads into the composer so that we can more quickly
-              determine if the user is creating a new thread or has typed the names that map
-              to an existing DM thread
-             */}
-            {/* <Route
-              path={`${match.url}/new`}
-              render={props => (
-                <NewThread {...props} threads={threads} currentUser={currentUser} />
-              )}
-            /> */}
-
-            {/*
-              if a thread is being viewed and the threadId !== 'new', pass the
-              threads down the tree to fetch the messages for the urls threadId
-             */}
-            <ExistingThread
-              match={match}
-              threads={threads}
-              currentUser={currentUser}
-              setActiveThread={this.setActiveThread}
-            />
-          </View>
-        );
+            </View>
+          );
+        }
       }
     }
   }
