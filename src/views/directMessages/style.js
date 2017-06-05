@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import ChatInput from '../../components/chatInput';
 import { FlexCol, FlexRow } from '../../components/globals';
 
 export const View = styled(FlexRow)`
@@ -57,8 +56,4 @@ export const ComposeHeader = styled(FlexRow)`
   @media (max-width: 768px) {
     display: none;
   }
-`;
-
-export const FlexChatInput = styled(ChatInput)`
-  flex: 0 0 auto;
 `;

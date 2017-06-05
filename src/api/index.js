@@ -24,14 +24,6 @@ const networkInterface = createNetworkInterface({
   },
 });
 
-networkInterface.use([
-  {
-    applyMiddleware(req, next) {
-      setTimeout(next, 1000);
-    },
-  },
-]);
-
 const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   networkInterface,
   wsClient
