@@ -1,35 +1,19 @@
 import React, { Component } from 'react';
-import { graphql, gql } from 'react-apollo';
-
-const META_INFORMATION_QUERY = gql`
-  query {
-    meta {
-      userCount
-      communityCount
-      threadCount
-      channelCount
-    }
-  }
-`;
+import { Body, Navbar, Logo } from './style';
+import Overview from './components/overview';
 
 class App extends Component {
   render() {
-    const { data } = this.props;
-    if (data.loading) return <p>Loading...</p>;
-    if (data.error || data.meta === null)
-      window.location.href = 'https://spectrum.chat';
-
-    const { meta } = data;
     return (
-      <div>
-        <h1>Spectrum Admin Dashboard</h1>
-        <p>Users: {meta.userCount}</p>
-        <p>Communities: {meta.communityCount}</p>
-        <p>Channels: {meta.channelCount}</p>
-        <p>Threads: {meta.threadCount}</p>
-      </div>
+      <Body>
+        <Navbar>
+          <Logo>Spectrum Admin</Logo>
+        </Navbar>
+
+        <Overview />
+      </Body>
     );
   }
 }
 
-export default graphql(META_INFORMATION_QUERY)(App);
+export default App;
