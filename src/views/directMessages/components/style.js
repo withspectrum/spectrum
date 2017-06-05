@@ -229,11 +229,15 @@ export const Grow = styled.div`
 
 export const ComposerInput = styled.input`
   font-size: 16px;
-  padding: 20px 16px;
+  padding: 15px 16px;
   width: 100%;
   border-bottom: 2px solid ${props => props.theme.border.default};
   position: relative;
   z-index: 2;
+
+  @media (max-width: 768px) {
+    padding: 20px 16px;
+  }
 `;
 
 export const SearchSpinnerContainer = styled.span`

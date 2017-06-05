@@ -73,6 +73,7 @@ class MessagesWithData extends Component {
           messages={sortedMessages}
           forceScrollToBottom={this.props.forceScrollToBottom}
           threadId={this.props.id}
+          threadType={'directMessageThread'}
         />
       </div>
     );

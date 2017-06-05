@@ -3,6 +3,9 @@
 import { graphql, gql } from 'react-apollo';
 import { messageInfoFragment } from './fragments/message/messageInfo';
 import { GET_THREAD_MESSAGES_QUERY } from '../views/thread/queries';
+import {
+  GET_DIRECT_MESSAGE_THREAD_QUERY,
+} from '../views/directMessages/queries';
 
 /*
   Updates UI automatically via the containers subscribeToNewMessages helper
@@ -41,6 +44,9 @@ const SEND_MESSAGE_OPTIONS = {
           },
         },
         update: (store, { data: { addMessage } }) => {
+          // we have to split out the optimistic update by thread type
+          // because DMs and story threads have different queries and response
+          // shapes
           if (ownProps.threadType === 'story') {
             // Read the data from our cache for this query.
             const data = store.readQuery({
@@ -70,6 +76,39 @@ const SEND_MESSAGE_OPTIONS = {
               },
             });
           }
+
+          // if (ownProps.threadType === 'directMessageThread') {
+          //   // Read the data from our cache for this query.
+          //   const data = store.readQuery({
+          //     query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+          //     variables: {
+          //       id: ownProps.thread,
+          //     },
+          //   });
+          //
+          //   // ignore the addMessage from the server, apollo will automatically
+          //   // override the optimistic object
+          //   if (typeof addMessage.id === 'string') {
+          //     return;
+          //   }
+          //
+          //   console.log('data', data)
+          //   console.log('addMessage', addMessage)
+          //
+          //   data.directMessageThread.messageConnection.edges.push({
+          //     node: addMessage,
+          //     __typename: 'DirectMessageEdge',
+          //   });
+          //
+          //   // Write our data back to the cache.
+          //   store.writeQuery({
+          //     query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+          //     data,
+          //     variables: {
+          //       id: ownProps.thread,
+          //     },
+          //   });
+          // }
         },
       }),
   }),

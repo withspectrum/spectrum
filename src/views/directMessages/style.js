@@ -18,7 +18,7 @@ export const ViewContent = styled(FlexCol)`
   flex-direction: column;
   flex: 1 1 auto;
   overflow-y: scroll;
-  max-height: ${props => (props.moved ? 'calc(100% - 160px)' : 'calc(100% - 60px)')};
+  max-height: ${props => (props.moved ? 'calc(100% - 96px)' : 'calc(100% - 48px)')};
   align-items: center;
   align-content: flex-start;
 `;

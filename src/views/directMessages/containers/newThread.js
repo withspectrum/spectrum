@@ -139,15 +139,15 @@ class NewThread extends Component {
           // for the thread
           const selectedUsersIds =
             selectedUsersForNewThread &&
-            selectedUsersForNewThread.map(user => user.id);
+            selectedUsersForNewThread.map(user => user.userId);
 
           // filter the search results to only show users who aren't already selected
           // then filter that list to remove the currentUser so you can't message yourself
           let searchResults = selectedUsersForNewThread
             ? searchUsers
-                .filter(user => selectedUsersIds.indexOf(user.id) < 0)
-                .filter(user => user.id !== currentUser.id)
-            : searchUsers.filter(user => user.id !== currentUser.id);
+                .filter(user => selectedUsersIds.indexOf(user.userId) < 0)
+                .filter(user => user.userId !== currentUser.id)
+            : searchUsers.filter(user => user.userId !== currentUser.id);
 
           this.setState({
             // if the search results are totally filtered out of the selectedUsers,
@@ -187,7 +187,8 @@ class NewThread extends Component {
 
     // create temporary arrays of IDs from the searchResults and selectedUsers
     // to more easily manipulate the ids
-    const searchResultIds = searchResults && searchResults.map(user => user.id);
+    const searchResultIds =
+      searchResults && searchResults.map(user => user.userId);
 
     const indexOfFocusedSearchResult = searchResultIds.indexOf(
       focusedSearchResult
@@ -223,7 +224,7 @@ class NewThread extends Component {
       // 1. If there is a selectedUser that has been focused, delete it
       if (focusedSelectedUser) {
         const newSelectedUsers = selectedUsersForNewThread.filter(
-          user => user.id !== focusedSelectedUser
+          user => user.userId !== focusedSelectedUser
         );
 
         this.setState({
@@ -466,8 +467,8 @@ class NewThread extends Component {
       return {
         id: thread.id,
         participants: thread.participants
-          .filter(user => user.id !== currentUser.id)
-          .map(user => user.id),
+          .filter(user => user.userId !== currentUser.id)
+          .map(user => user.userId),
       };
     });
 
@@ -583,7 +584,7 @@ class NewThread extends Component {
     }
 
     const input = {
-      participants: selectedUsersForNewThread.map(user => user.id),
+      participants: selectedUsersForNewThread.map(user => user.userId),
       message: {
         messageType: messageType,
         threadType: 'directMessageThread',

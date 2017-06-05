@@ -133,6 +133,12 @@ class ChatMessages extends Component {
                             pending={message.id < 0}
                           />
 
+                          {/*
+                            we check if typof equals a string to determine
+                            if the message is coming from the server, or
+                            generated via an optimistic response with apollo
+                            (which has a typeof number)
+                          */}
                           {!emojiOnly &&
                             typeof message.id === 'string' &&
                             <Reaction
