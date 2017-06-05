@@ -34,7 +34,7 @@ export const EditDone = styled.div`
   position: relative;
 `;
 
-export const DropWrap = styled.div`
+export const DropWrap = styled(FlexCol)`
   width: 32px;
   height: 32px;
   position: relative;

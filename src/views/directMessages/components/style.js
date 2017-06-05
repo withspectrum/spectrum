@@ -229,7 +229,7 @@ export const Grow = styled.div`
 
 export const ComposerInput = styled.input`
   font-size: 16px;
-  padding: 15px 16px;
+  padding: 20px 16px;
   width: 100%;
   border-bottom: 2px solid ${props => props.theme.border.default};
   position: relative;
@@ -257,6 +257,12 @@ export const SearchResultsDropdown = styled.ul`
   max-height: 420px;
   overflow-y: scroll;
   z-index: 1000;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    left: 0;
+    border-radius: 0 0 8px 8px;
+  }
 `;
 
 export const SearchResult = styled.li`

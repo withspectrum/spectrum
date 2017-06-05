@@ -12,12 +12,13 @@ import {
 import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
-import { MessagesContainer, ViewContent } from '../style';
+import { MessagesContainer, ViewContent, FlexChatInput } from '../style';
 
 class ExistingThread extends Component {
   componentDidMount() {
     const threadId = this.props.match.params.threadId;
     this.props.setActiveThread(threadId);
+    this.props.setLastSeen(threadId);
     this.forceScrollToBottom();
     track('direct message thread', 'viewed', null);
   }
@@ -78,7 +79,7 @@ class ExistingThread extends Component {
             />
           </ViewContent>
 
-          <ChatInput
+          <FlexChatInput
             thread={id}
             threadType={'directMessageThread'}
             refetchThread={this.refetchThread}

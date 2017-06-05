@@ -74,8 +74,7 @@ class ChatInputWithMutation extends Component {
         // clear the input
         clear();
         // refocus the input
-        input.focus();
-
+        this.editor.focus();
         track(`${threadType} message`, 'text message created', null);
       })
       .catch(err => {
@@ -156,6 +155,7 @@ class ChatInputWithMutation extends Component {
             onBlur={onBlur}
             singleLine
             ref={'chatInput'}
+            editorRef={editor => this.editor = editor}
           />
           <SendButton glyph="send-fill" onClick={this.submit} />
         </Form>

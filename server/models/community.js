@@ -562,6 +562,10 @@ const getTopCommunities = (amount: number): Array<Object> => {
     });
 };
 
+const getCommunityCount = () => {
+  return db.table('communities').count().run();
+};
+
 module.exports = {
   getCommunities,
   getCommunitiesBySlug,
@@ -574,4 +578,5 @@ module.exports = {
   userIsMemberOfCommunity,
   userIsMemberOfAnyChannelInCommunity,
   getTopCommunities,
+  getCommunityCount,
 };

@@ -5,7 +5,7 @@ import { StyledHeader, PhotosContainer, Photo, Names, Username } from './style';
 
 const Header = ({ thread, currentUser }) => {
   const trimmedUsers = thread.participants.filter(
-    user => user.id !== currentUser.id
+    user => user.userId !== currentUser.id
   );
 
   const photos = trimmedUsers.map(user => (

@@ -94,7 +94,10 @@ class Editor extends Component {
           onChange={onChange}
           onKeyDown={onEnter && this.onKeyDown}
           plugins={this.state.plugins}
-          ref={editor => this.editor = editor}
+          ref={editor => {
+            this.editor = editor;
+            if (this.props.editorRef) this.props.editorRef(editor);
+          }}
           {...rest}
         />
         {isEmpty &&
