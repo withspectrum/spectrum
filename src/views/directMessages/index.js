@@ -45,20 +45,16 @@ class DirectMessages extends Component {
     const width = window.innerWidth;
     const isMobile = width < 768;
 
-    // if (!isMobile && match.isExact) {
-    //   history.push('/messages/new');
-    // }
-
     const { activeThread } = this.state;
-
-    const threads = data.user.directMessageThreadsConnection.edges.map(
-      thread => thread.node
-    );
 
     // no user found, get them to the home page to log in
     if (!data.user) {
       window.location.href = '/';
     }
+
+    const threads = data.user.directMessageThreadsConnection.edges.map(
+      thread => thread.node
+    );
 
     // if the user is on a phone, only render one view column at a time
     if (isMobile) {
@@ -66,7 +62,6 @@ class DirectMessages extends Component {
       if (match.params.threadId) {
         return (
           <View>
-            {console.log('EXISTING_THREAD')}
             <Titlebar title={'Messages'} provideBack={true} noComposer />
             <ExistingThread
               match={match}
@@ -80,7 +75,6 @@ class DirectMessages extends Component {
         // if they're in the newMessage flow, it should be the composer
         return (
           <View>
-            {console.log('NEW_MESSAGE')}
             <Titlebar title={'Messages'} provideBack={true} noComposer />
             <NewThread threads={threads} currentUser={currentUser} />
           </View>
@@ -89,7 +83,6 @@ class DirectMessages extends Component {
         //if it's not one of those, it should return the messages list
         return (
           <View>
-            {console.log('MESSAGES_LIST')}
             <Titlebar title={'Messages'} provideBack={false} messageComposer />
             <MessagesList>
               <ThreadsList
@@ -109,7 +102,6 @@ class DirectMessages extends Component {
       ) {
         return (
           <View>
-            {console.log('NO_THREADS')}
             <MessagesList>
               <Link to="/messages/new">
                 <ComposeHeader>
@@ -133,7 +125,6 @@ class DirectMessages extends Component {
           }
           return (
             <View>
-              {console.log('DESKTOP')}
               <MessagesList>
                 <Link to="/messages/new">
                   <ComposeHeader>
