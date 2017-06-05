@@ -12,6 +12,8 @@ export const directMessageThreadInfoFragment = gql`
       username
       lastSeen
       lastActive
+      threadId
+      userId
     }
   }
 `;

@@ -43,7 +43,7 @@ module.exports = {
         };
       });
     },
-    participants: ({ id }, _, { loaders }) => {
+    participants: ({ id }, _, { loaders, user }) => {
       return getMembersInDirectMessageThread(id);
     },
     snippet: ({ id }) => {

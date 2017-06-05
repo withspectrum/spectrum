@@ -27,11 +27,11 @@ export const ListCardItemDirectMessageThread = ({
 
   // filter currentUser out
   const participants = thread.participants.filter(
-    user => user.id !== currentUser.id
+    user => user.userId !== currentUser.id
   );
 
   const currentParticipant = thread.participants.filter(
-    user => user.id === currentUser.id
+    user => user.userId === currentUser.id
   )[0];
 
   // concat a string of usernames for thread messages
