@@ -50,9 +50,12 @@ const SEND_MESSAGE_OPTIONS = {
               },
             });
 
-            console.log('add message ', addMessage);
+            // ignore the addMessage from the server, apollo will automatically
+            // override the optimistic object
+            if (typeof addMessage.id === 'string') {
+              return;
+            }
 
-            // Add our comment from the mutation to the end.
             data.thread.messageConnection.edges.push({
               node: addMessage,
               __typename: 'ThreadMessageEdge',

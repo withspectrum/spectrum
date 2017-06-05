@@ -130,14 +130,11 @@ class ChatMessages extends Component {
                             sender={sender}
                             message={message.content}
                             type={message.messageType}
-                            pending={
-                              message.id < 0
-                                ? console.log('foo') || true
-                                : false
-                            }
+                            pending={message.id < 0}
                           />
 
                           {!emojiOnly &&
+                            typeof message.id === 'string' &&
                             <Reaction
                               message={message}
                               toggleReaction={toggleReaction}
