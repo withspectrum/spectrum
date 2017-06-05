@@ -52,7 +52,7 @@ class Navbar extends Component {
       // log the user in and return them to this page
       return (window.location.href = `${SERVER_URL}/auth/twitter?redirectTo=${window.location.pathname}`);
     };
-    console.log(this.props);
+
     if (!currentUser || currentUser === null) {
       return (
         <Container>
