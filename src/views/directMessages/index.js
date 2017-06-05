@@ -62,7 +62,12 @@ class DirectMessages extends Component {
       if (match.params.threadId) {
         return (
           <View>
-            <Titlebar title={'Messages'} provideBack={true} noComposer />
+            <Titlebar
+              title={'Messages'}
+              provideBack={true}
+              backRoute={'/messages'}
+              noComposer
+            />
             <ExistingThread
               match={match}
               threads={threads}
@@ -97,8 +102,7 @@ class DirectMessages extends Component {
     } else {
       // if there is a user, but they've never had a dmThread, send them to /messages/new
       if (
-        data.user &&
-        data.user.directMessageThreadsConnection.edges.length === 0
+        data.user && data.user.directMessageThreadsConnection.edges.length === 0
       ) {
         return (
           <View>
@@ -110,7 +114,7 @@ class DirectMessages extends Component {
               </Link>
             </MessagesList>
 
-            <Route render={() => <Redirect to="/messages/new" />} />
+            <NewThread threads={threads} currentUser={currentUser} />
           </View>
         );
       } else {

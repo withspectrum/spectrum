@@ -18,6 +18,7 @@ class ExistingThread extends Component {
   componentDidMount() {
     const threadId = this.props.match.params.threadId;
     this.props.setActiveThread(threadId);
+    this.props.setLastSeen(threadId);
     this.forceScrollToBottom();
     track('direct message thread', 'viewed', null);
   }
@@ -68,7 +69,7 @@ class ExistingThread extends Component {
 
       return (
         <MessagesContainer>
-          <ViewContent innerRef={scrollBody => (this.scrollBody = scrollBody)}>
+          <ViewContent innerRef={scrollBody => this.scrollBody = scrollBody}>
             <Header thread={thread} currentUser={currentUser} />
             <Messages
               id={id}
