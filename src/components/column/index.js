@@ -4,7 +4,7 @@ import React from 'react';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import styled from 'styled-components';
-import { FlexCol } from './globals';
+import { FlexCol } from '../globals';
 
 const StyledColumn = styled(FlexCol)`
   margin: 0 16px;

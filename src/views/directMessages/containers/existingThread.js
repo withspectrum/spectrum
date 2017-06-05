@@ -12,7 +12,7 @@ import {
 import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';
-import { MessagesContainer, ViewContent } from '../style';
+import { MessagesContainer, ViewContent, FlexChatInput } from '../style';
 
 class ExistingThread extends Component {
   componentDidMount() {
@@ -79,7 +79,7 @@ class ExistingThread extends Component {
             />
           </ViewContent>
 
-          <ChatInput
+          <FlexChatInput
             thread={id}
             threadType={'directMessageThread'}
             refetchThread={this.refetchThread}

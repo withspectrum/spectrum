@@ -69,6 +69,8 @@ class Routes extends Component {
 
               {/* App Pages */}
               {/* <Route path="/explore" component={Explore} /> */}
+              <Route path="/messages/new" component={DirectMessages} />
+              <Route path="/messages/:threadId" component={DirectMessages} />
               <Route path="/messages" component={DirectMessages} />
               <Route path="/thread" component={Thread} />
               <Route exact path="/users" render={() => <Redirect to="/" />} />

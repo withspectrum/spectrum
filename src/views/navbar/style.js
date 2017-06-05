@@ -20,11 +20,11 @@ export const UserProfileAvatar = styled(Avatar)`
   }
 `;
 
-export const Container = styled.section`
+export const Container = styled(FlexRow)`
   width: 100%;
 `;
 
-export const Nav = styled.nav`
+export const Nav = styled(FlexRow)`
   width: 100%;
   background: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
   position: fixed;
@@ -134,11 +134,12 @@ export const IconDrop = styled(FlexRow)`
 
 export const IconLink = styled(Link)`
   display: flex;
+  flex: 0 0 40px;
   flex-direction: row;
   align-items: center;
+  align-self: stretch;
   margin: 0 8px;
   padding: 0 8px;
-  height: 100%;
   opacity: 0.8;
   position: relative;
   width: 100%;

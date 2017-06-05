@@ -1,64 +1,64 @@
 import styled from 'styled-components';
+import ChatInput from '../../components/chatInput';
+import { FlexCol, FlexRow } from '../../components/globals';
 
-export const View = styled.div`
-  display: flex;
-  height: 100%;
-  overflow-y: hidden;
+export const View = styled(FlexRow)`
+  align-items: stretch;
+  flex: 0 0 auto;
+  height: calc(100vh - 48px);
   background: #fff;
+
+  @media( max-width: 768px) {
+    height: calc(100vh - 96px);
+  }
 `;
 
-export const ViewContent = styled.div`
+export const ViewContent = styled(FlexCol)`
   display: flex;
   flex-direction: column;
-  flex: 1 0 auto;
+  flex: 1 1 auto;
   overflow-y: scroll;
   max-height: ${props => (props.moved ? 'calc(100% - 160px)' : 'calc(100% - 60px)')};
   align-items: center;
   align-content: flex-start;
 `;
 
-export const MessagesList = styled.div`
+export const MessagesList = styled(FlexCol)`
   overflow-y: scroll;
   overflow-x: hidden;
-  position: absolute;
-  top: 48px;
-  left: 0;
-  width: 320px;
-  height: calc(100% - 48px);
-  background: #fff;
-  box-shadow: 2px 0 0 ${props => props.theme.border.default};
+  max-width: 400px;
+  flex: 0 0 25%;
+  min-width: 320px;
+  background: ${props => props.theme.bg.default};
+  border-right: 2px solid ${props => props.theme.border.default};
 
   @media (max-width: 768px) {
-    width: 100%;
+    flex: 0 0 100%;
+    min-width: 320px;
+    border-right: none;
+    max-width: 100%;
   }
 `;
 
-export const MessagesContainer = styled.div`
-  position: absolute;
-  /* 322px to account for 2px box shadow on the sidebar */
-  width: calc(100% - 322px);
-  left: 322px;
-  height: calc(100% - 48px);
-  overflow-x: hidden;
-  overflow-y: scroll;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 auto;
-  justify-content: space-between;
+export const MessagesContainer = styled(FlexCol)`
+  flex: 1 1 auto;
 
   @media (max-width: 768px) {
-    width: 100%;
-    left: 0;
-    z-index: 1000;
+    flex: 0 0 100%;
   }
 `;
 
-export const ComposeHeader = styled.div`
-  display: flex;
+export const ComposeHeader = styled(FlexRow)`
   justify-content: flex-end;
-  align-items: center;
   padding: 8px;
   border-bottom: 2px solid ${props => props.theme.border.default};
   color: ${props => props.theme.brand.default};
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+export const FlexChatInput = styled(ChatInput)`
+  flex: 0 0 auto;
 `;
