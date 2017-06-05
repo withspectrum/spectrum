@@ -16,7 +16,6 @@ const DirectMessageThread = /* GraphQL */ `
 		profilePhoto: String!
 		lastActive: Date
 		lastSeen: Date
-		threadId: ID!
 		userId: ID!
 	}
 
