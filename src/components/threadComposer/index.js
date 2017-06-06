@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
 import { openComposer, closeComposer } from '../../actions/composer';
 import { addToastWithTimeout } from '../../actions/toasts';
-import Editor, { fromPlainText, toJSON } from '../editor';
+import Editor, { toPlainText, fromPlainText, toJSON } from '../editor';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
 import { LinkPreview, LinkPreviewLoading } from '../../components/linkPreview';
@@ -307,7 +307,7 @@ class ThreadComposerWithData extends Component {
   };
 
   listenForUrl = (e, data, state) => {
-    const text = state.document.text;
+    const text = toPlainText(state);
 
     if (
       e.keyCode !== 8 &&
