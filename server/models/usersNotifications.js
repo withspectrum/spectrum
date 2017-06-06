@@ -2,6 +2,7 @@
 const { db } = require('./db');
 // $FlowFixMe
 import { UserError } from 'graphql-errors';
+import { getNotificationsByUser } from './notification';
 
 /*
 ===========================================================
@@ -62,6 +63,18 @@ const markAllNotificationsAsRead = (userId: string): Promise<Object> => {
     .run();
 };
 
+// marks all notifications for a user as seen
+const markAllUserNotificationsSeen = (userId: string): Promise<Object> => {
+  return db
+    .table('usersNotifications')
+    .getAll(userId, { index: 'userId' })
+    .update({
+      isSeen: true,
+    })
+    .run()
+    .then(() => getNotificationsByUser(userId));
+};
+
 /*
 ===========================================================
 
@@ -84,5 +97,6 @@ module.exports = {
   createUsersNotification,
   markNotificationAsRead,
   markAllNotificationsAsRead,
+  markAllUserNotificationsSeen,
   getUsersNotifications,
 };

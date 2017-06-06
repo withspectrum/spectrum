@@ -8,6 +8,7 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { getCurrentUserProfile } from '../../api/user';
 import { parseNotification } from '../../helpers/notification';
+import { markNotificationsAsSeenMutation } from '../../api/notification';
 import { SERVER_URL } from '../../api';
 import Icon from '../../components/icons';
 import { displayLoadingNavbar } from '../../components/loading';
@@ -31,6 +32,33 @@ import {
 } from './style';
 
 class Navbar extends Component {
+  state: {
+    unseenCount: number,
+    notifications: Array<Object>,
+  };
+
+  constructor(props) {
+    super(props);
+
+    const { data: { user } } = this.props;
+    const currentUser = user;
+    const notifications =
+      currentUser &&
+      currentUser.notificationConnection.edges.map(notification =>
+        parseNotification(notification.node)
+      );
+    const unseenCount =
+      notifications &&
+      notifications.length > 0 &&
+      notifications.filter(notification => notification.isSeen === false)
+        .length;
+
+    this.state = {
+      unseenCount,
+      notifications,
+    };
+  }
+
   componentDidMount() {
     const { data: { user }, dispatch, history, match } = this.props;
     const currentUser = user;
@@ -46,26 +74,35 @@ class Navbar extends Component {
     }
   }
 
+  markNotificationsAsSeen = () => {
+    const { unseenCount } = this.state;
+
+    if (unseenCount === 0) {
+      return null;
+    } else {
+      this.setState({
+        unseenCount: 0,
+      });
+      this.props
+        .markAllUserNotificationsSeen()
+        .then(({ data: { markAllUserNotificationsSeen } }) => {
+          // notifs were marked as seen
+        })
+        .catch(err => {
+          console.log('error marking notifs as seen', err);
+        });
+    }
+  };
+
+  login = () => {
+    // log the user in and return them to this page
+    return (window.location.href = `${SERVER_URL}/auth/twitter?redirectTo=${window.location.pathname}`);
+  };
+
   render() {
     const { match, data: { user } } = this.props;
     const currentUser = user;
-    const notifications =
-      currentUser &&
-      currentUser.notificationConnection.edges.map(notification =>
-        parseNotification(notification.node)
-      );
-    const unseenCount =
-      notifications &&
-      notifications.length > 0 &&
-      notifications.filter(notification => notification.isSeen === false)
-        .length;
-
-    console.log('unseenCount', unseenCount);
-
-    const login = () => {
-      // log the user in and return them to this page
-      return (window.location.href = `${SERVER_URL}/auth/twitter?redirectTo=${window.location.pathname}`);
-    };
+    const { unseenCount, notifications } = this.state;
 
     if (!currentUser || currentUser === null) {
       return (
@@ -82,7 +119,7 @@ class Navbar extends Component {
             </Section>
             <Section right>
               <Button
-                onClick={login}
+                onClick={this.login}
                 icon="twitter"
                 style={{ padding: '2px 4px' }}
               >
@@ -140,7 +177,7 @@ class Navbar extends Component {
             </Section>
 
             <Section right>
-              <IconDrop>
+              <IconDrop onMouseEnter={this.markNotificationsAsSeen}>
                 <IconLink
                   data-active={match.url === '/notifications'}
                   data-mobileWidth={'half'}
@@ -196,6 +233,7 @@ const mapStateToProps = state => ({
 });
 export default compose(
   getCurrentUserProfile,
+  markNotificationsAsSeenMutation,
   withRouter,
   displayLoadingNavbar,
   connect(mapStateToProps)

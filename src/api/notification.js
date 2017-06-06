@@ -33,3 +33,23 @@ export const GET_CURRENT_USER_NOTIFICATIONS_QUERY = gql`
 export const getCurrentUserNotifications = graphql(
   GET_CURRENT_USER_NOTIFICATIONS_QUERY
 );
+
+export const MARK_NOTIFICATIONS_AS_SEEN_MUTATION = gql`
+  mutation markAllUserNotificationsSeen {
+    markAllUserNotificationsSeen {
+      ...notificationInfo
+    }
+  }
+  ${notificationInfoFragment}
+`;
+
+export const MARK_NOTIFICATIONS_AS_SEEN_OPTIONS = {
+  props: ({ mutate }) => ({
+    markAllUserNotificationsSeen: () => mutate(),
+  }),
+};
+
+export const markNotificationsAsSeenMutation = graphql(
+  MARK_NOTIFICATIONS_AS_SEEN_MUTATION,
+  MARK_NOTIFICATIONS_AS_SEEN_OPTIONS
+);

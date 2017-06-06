@@ -1,7 +1,9 @@
 /**
  * Message mutation resolvers
  */
-const { markNotificationsRead } = require('../models/notification');
+const {
+  markAllUserNotificationsSeen,
+} = require('../models/usersNotifications');
 
 module.exports = {
   Mutation: {

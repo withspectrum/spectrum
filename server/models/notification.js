@@ -5,11 +5,7 @@ const { listenToNewDocumentsIn } = require('./utils');
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 
-const getNotificationsByUser = (
-  userId: string,
-  { first, after }: PaginationOptions
-) => {
-  const cursor = decode(after);
+const getNotificationsByUser = (userId: string) => {
   return db
     .table('usersNotifications')
     .getAll(userId, { index: 'userId' })
