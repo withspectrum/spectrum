@@ -50,6 +50,7 @@ class DashboardPure extends Component {
     if (error) {
       return (
         <AppViewWrapper>
+          <Titlebar noComposer />
           <Column type="primary" alignItems="center">
             <NullCard
               bg="error"
