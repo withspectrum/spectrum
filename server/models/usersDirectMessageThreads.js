@@ -27,6 +27,7 @@ const createMemberInDirectMessageThread = (
         createdAt: new Date(),
         lastActive: setActive ? new Date() : null,
         lastSeen: setActive ? new Date() : null,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )

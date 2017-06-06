@@ -28,6 +28,7 @@ const createOwnerInCommunity = (
         isMember: true,
         isModerator: false,
         isBlocked: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -52,6 +53,7 @@ const createMemberInCommunity = (
         isOwner: false,
         isModerator: false,
         isBlocked: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -101,6 +103,7 @@ const blockUserInCommunity = (
         isMember: false,
         isPending: false,
         isBlocked: true,
+        receiveNotifications: false,
       },
       { returnChanges: true }
     )
@@ -123,6 +126,7 @@ const approveBlockedUserInCommunity = (
       {
         isMember: true,
         isBlocked: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -148,6 +152,7 @@ const createModeratorInCommunity = (
         isOwner: false,
         isModerator: true,
         isBlocked: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -167,6 +172,7 @@ const makeMemberModeratorInCommunity = (
     .update(
       {
         isModerator: true,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -274,6 +280,7 @@ const getUserPermissionsInCommunity = (
           isMember: false,
           isModerator: false,
           isBlocked: false,
+          receiveNotifications: false,
         };
       }
     });

@@ -29,6 +29,7 @@ const createOwnerInChannel = (
         isModerator: false,
         isBlocked: false,
         isPending: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -57,6 +58,7 @@ const createMemberInChannel = (
         isModerator: false,
         isBlocked: false,
         isPending: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -118,6 +120,7 @@ const createPendingUserInChannel = (
         isModerator: false,
         isBlocked: false,
         isPending: true,
+        receiveNotifications: false,
       },
       { returnChanges: true }
     )
@@ -161,6 +164,7 @@ const blockUserInChannel = (
         isMember: false,
         isPending: false,
         isBlocked: true,
+        receiveNotifications: false,
       },
       { returnChanges: true }
     )
@@ -182,6 +186,7 @@ const approvePendingUserInChannel = (
       {
         isMember: true,
         isPending: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -201,6 +206,7 @@ const approvePendingUsersInChannel = (channelId: string): Promise<Object> => {
       {
         isMember: true,
         isPending: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -223,6 +229,7 @@ const approveBlockedUserInChannel = (
       {
         isMember: true,
         isBlocked: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -249,6 +256,7 @@ const createModeratorInChannel = (
         isModerator: true,
         isBlocked: false,
         isPending: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -268,6 +276,7 @@ const makeMemberModeratorInChannel = (
     .update(
       {
         isModerator: true,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -432,6 +441,7 @@ const getUserPermissionsInChannel = (
           isModerator: false,
           isBlocked: false,
           isPending: false,
+          receiveNotifications: false,
         };
       }
     });

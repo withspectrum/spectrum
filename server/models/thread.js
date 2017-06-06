@@ -1,7 +1,6 @@
 // @flow
 const { db } = require('./db');
 const { listenToNewDocumentsIn } = require('./utils');
-const { storeThreadNotification } = require('./notification');
 
 const getThreads = (threadIds: Array<string>): Promise<Array<Object>> => {
   return db
@@ -147,20 +146,7 @@ const publishThread = (thread: Object, userId: string): Promise<Object> => {
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val)
-    .then(thread => {
-      storeThreadNotification({
-        threadId: thread.id,
-        channelId: thread.channelId,
-        senderId: thread.creatorId,
-        content: {
-          title: thread.content.title,
-          // TODO Limit to max characters
-          excerpt: thread.content.body,
-        },
-      });
-      return thread;
-    });
+    .then(result => result.changes[0].new_val);
 };
 
 const setThreadLock = (threadId: string, value: Boolean): Promise<Object> => {

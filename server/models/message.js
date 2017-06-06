@@ -3,7 +3,6 @@ const { db } = require('./db');
 const Queue = require('bull');
 const messageNotificationQueue = new Queue('message notification');
 const { listenToNewDocumentsIn } = require('./utils');
-const { storeMessageNotification } = require('./notification');
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
 export type MessageTypes = 'text' | 'media';
