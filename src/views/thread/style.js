@@ -2,26 +2,64 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Card from '../../components/card';
 import Markdown from '../../components/markdown';
-import { FlexCol, FlexRow, H1, Transition } from '../../components/globals';
+import Column from '../../components/column';
+import {
+  FlexCol,
+  FlexRow,
+  H1,
+  H3,
+  H4,
+  Transition,
+  hexa,
+} from '../../components/globals';
 
-export const Container = styled(Card)`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+export const RouteWrapper = styled(FlexRow)`
+  flex: 1 1 auto;
+  align-items: flex-start;
+`;
+
+export const DetailViewWrapper = styled(FlexRow)`
+  background-color: ${({ theme }) => theme.bg.default};
+  background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 25%, ${theme.bg.default} 75%, ${theme.bg.wash})`};
+  flex: 1 1 auto;
+  justify-content: center;
+  align-items: flex-start;
 
   @media (max-width: 768px) {
-    min-height: 100vh;
+    background-image: none;
   }
 `;
 
+export const Container = styled(FlexCol)`
+  padding-top: 32px;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex: 1 1 auto;
+  overflow-y: scroll;
+
+  @media (max-width: 768px) {
+    padding-top: 16px;
+  }
+`;
+
+export const DetailColumn = styled(Column)`
+  align-self: stretch;
+  margin: 0;
+`;
+
 export const ThreadWrapper = styled(FlexCol)`
-  padding: 24px 32px 16px 32px;
+  padding: 16px 32px;
   font-size: 14px;
+  flex: 1 0 auto;
 `;
 
 export const ThreadHeading = styled(H1)`
+  font-size: 32px;
 
+  @media (max-width: 768px) {
+    margin-top: 8px;
+  }
 `;
 
 export const ContextRow = styled(FlexRow)`
@@ -69,11 +107,79 @@ export const FlyoutRow = styled(FlexRow)`
 export const Byline = styled(Link)`
   font-weight: 500;
   color: ${({ theme }) => theme.brand.alt};
-  display: block;
+  display: flex;
   margin-bottom: 16px;
+  align-items: center;
 
-  &:hover {
+  &:hover h3{
+    color: ${({ theme }) => theme.brand.alt};
+  }
+`;
+
+export const BylineMeta = styled(FlexCol)`
+  margin-left: 16px;
+
+  @media (max-width: 768px) {
+    margin-left: 8px;
+  }
+`;
+
+export const AuthorAvatar = styled.img`
+  height: 48px;
+  width: 48px;
+  border-radius: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  box-shadow: 0 0 2px 0 ${({ theme }) => hexa(theme.text.default, 0.2)};
+
+  @media (max-width: 768px) {
+    height: 40px;
+    width: 40px;
+  }
+`;
+
+export const AuthorName = styled(H3)`
+  font-weight: 700;
+  cursor: pointer;
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
+`;
+
+export const AuthorUsername = styled(H4)`
+  color: ${({ theme }) => theme.text.alt};
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+`;
+
+export const Location = styled(FlexRow)`
+  font-weight: 500;
+  color: ${({ theme }) => theme.text.alt};
+  font-size: 14px;
+  margin-top: 8px;
+
+  > div {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+
+  > span {
+    padding: 0 4px;
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+
+  > a:hover {
+    color: ${({ theme }) => theme.brand.alt};
     text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
   }
 `;
 
@@ -86,14 +192,10 @@ export const Edited = styled.div`
 
 export const ChatWrapper = styled.div`
   width: 100%;
-
-  @media (max-width: 768px) {
-    padding-bottom: 112px;
-  }
 `;
 
 export const ThreadTitle = {
-  fontSize: '20px',
+  fontSize: '32px',
   padding: '0',
   outline: 'none',
   border: '0',
@@ -129,11 +231,14 @@ export const ThreadContent = styled(Markdown)`
 export const ChatInputWrapper = styled(FlexCol)`
   width: 100%;
   align-items: stretch;
+  flex: 0 0 auto;
 
-  @media (max-width: 768px) {
-    position: fixed;
-    bottom: 48px;
-    left: 0;
-    right: 0;
+  > div {
+    background-color: ${({ theme }) => theme.bg.default};
+    background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.default}, ${hexa(theme.bg.wash, 0.25)} 2%, ${hexa(theme.bg.wash, 0.25)} 98%, ${theme.bg.default})`};
+
+    > form > div {
+      background-color: ${({ theme }) => theme.bg.default};
+    }
   }
 `;

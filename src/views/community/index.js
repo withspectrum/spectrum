@@ -145,9 +145,6 @@ const CommunityViewPure = props => {
               onClick={() => toggleMembership(community.id)}
             />}
         </CoverPhoto>
-        <MobileCommunityProfile>
-          <CommunityProfile data={{ community }} profileSize="full" />
-        </MobileCommunityProfile>
         <CoverRow className={'flexy'}>
           <Column type="secondary" className={'inset'}>
             <CommunityProfile data={{ community }} profileSize="full" />

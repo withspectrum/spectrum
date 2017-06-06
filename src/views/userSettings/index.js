@@ -49,7 +49,6 @@ const UserSettings = ({ data, currentUser, match }) => {
         provideBack={true}
         backRoute={`/${data.user.username}`}
       />
-      <Titlebar title={data.user.name} subtitle={'Settings'} />
       <Column type="secondary">
         <UserEditForm user={data} />
       </Column>

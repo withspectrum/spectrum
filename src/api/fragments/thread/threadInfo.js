@@ -11,6 +11,11 @@ export const threadInfoFragment = gql`
       id
       name
       slug
+      community {
+        id
+        name
+        slug
+      }
     }
     community {
       id

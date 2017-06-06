@@ -9,10 +9,12 @@ export const TitleBar = styled.section`
   background-color: ${({ theme }) => theme.bg.reverse};
   color: ${({ theme }) => theme.text.reverse};
   height: 48px;
-  position: fixed;
+  ${/* position: fixed;
   top: 0;
   left: 0;
-  right: 0;
+  right: 0; */ ''}
+  order: 0;
+  flex: 0 0 48px;
   z-index: 10;
   box-shadow: ${Shadow.mid} ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   justify-content: space-between;
