@@ -140,7 +140,7 @@ export default () =>
                   // don't update the notification for the current user who
                   // triggered the event
                   let filteredRecipients = recipients.filter(
-                    recipient => recipient.id !== currentUserId
+                    recipient => recipient.userId !== currentUserId
                   );
                   // for each recipient, update the record in the
                   // usersNotifications table to have isRead and isSeen be false
@@ -148,7 +148,7 @@ export default () =>
                     filteredRecipients.map(recipient =>
                       markUsersNotificationsAsNew(
                         notification.id,
-                        recipient.id
+                        recipient.userId
                       ).then(data => {
                         console.log('\n8-8', data);
                         return data;
@@ -191,14 +191,14 @@ export default () =>
                   // don't update the notification for the current user who
                   // triggered the event
                   let filteredRecipients = recipients.filter(
-                    recipient => recipient.id !== currentUserId
+                    recipient => recipient.userId !== currentUserId
                   );
 
                   return Promise.all(
                     filteredRecipients.map(recipient =>
                       storeUsersNotifications(
                         notification.id,
-                        recipient.id
+                        recipient.userId
                       ).then(data => {
                         console.log('\n9-6', data);
                         return data;
