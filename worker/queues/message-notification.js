@@ -22,18 +22,18 @@ const getDistinctActors = array => {
     }
     unique[array[i].id] = 0;
   }
-
+  console.log('\n8-4', distinct);
   return distinct;
 };
 
 export default () =>
   createQueue(MESSAGE_NOTIFICATION, job => {
-    const incomingMessage = job.data;
-    const currentUser = job.user;
+    const incomingMessage = job.data.message;
+    const currentUser = job.data.user;
 
-    console.log('1', job);
-    console.log('2', job.data);
-    console.log('3', job.user);
+    console.log('\n1', job);
+    console.log('\n2', job.data.message);
+    console.log('\n3', job.data.user);
 
     // 10 minutes buffer to determine whether or not to create a new
     // notification or update an old one
@@ -65,9 +65,10 @@ export default () =>
       'message_created',
       incomingMessage.threadId,
       TIME_BUFFER
-    ).then(notification => {
-      console.log('7', notofication);
-      /*
+    )
+      .then(notification => {
+        console.log('\n7', notification);
+        /*
           Regardless of if we find an existing notification, we will always
           need to either update or create a record with:
           - the actor of this event
@@ -77,114 +78,137 @@ export default () =>
           At this point we also need to make sure we set the context as either a story
           thread or as a direct message thread
         */
-      const contextType = incomingMessage.threadType === 'directMessageThread'
-        ? 'directMessageThread'
-        : 'thread';
-      const promises = [
-        fetchPayload('user', incomingMessage.senderId),
-        fetchPayload(contextType, incomingMessage.threadId),
-        createPayload('message', incomingMessage),
-      ];
+        const contextType = incomingMessage.threadType === 'directMessageThread'
+          ? 'directMessageThread'
+          : 'thread';
 
-      // 2. If a notification was found that met all of our criteria, we will
-      //    construct a new notification object to update the record in the db
-      if (notification && notification !== undefined) {
-        console.log('8');
-        return Promise.all([notification, ...promises]).then(([
-          notification,
-          actor,
-          context,
-          entity,
-        ]) => {
-          console.log('8-1', actor);
-          console.log('8-2', context);
-          console.log('8-3', entity);
+        console.log('\ncontextType', contextType);
+        console.log('\nactor', incomingMessage.senderId);
+        console.log('\nentity', incomingMessage);
+        const promises = [
+          fetchPayload('user', incomingMessage.senderId),
+          fetchPayload(contextType, incomingMessage.threadId),
+          createPayload('message', incomingMessage),
+        ];
 
-          // don't duplicate actors if one user sends a bunch of messages
-          // in a row
-          const distinctActors = getDistinctActors([
-            ...notification.actors,
+        // 2. If a notification was found that met all of our criteria, we will
+        //    construct a new notification object to update the record in the db
+        if (notification && notification !== undefined) {
+          console.log('\n8');
+          return Promise.all([notification, ...promises]).then(([
+            notification,
             actor,
-          ]);
-
-          // create the new notification shape, pushing the current
-          // events actor, context, and entity into each respective field
-          const newNotification = Object.assign({}, notification, {
-            actors: [...distinctActors],
             context,
-            entities: [...notification.entities, entity],
+            entity,
+          ]) => {
+            console.log('\n8-1', actor);
+            console.log('\n8-2', context);
+            console.log('\n8-3', entity);
+
+            // don't duplicate actors if one user sends a bunch of messages
+            // in a row
+            const distinctActors = getDistinctActors([
+              ...notification.actors,
+              actor,
+            ]);
+
+            // create the new notification shape, pushing the current
+            // events actor, context, and entity into each respective field
+            const newNotification = Object.assign({}, notification, {
+              actors: [...distinctActors],
+              context,
+              entities: [...notification.entities, entity],
+            });
+
+            console.log('\n8-5', newNotification);
+
+            // update the notification in the db
+            return updateNotification(newNotification)
+              .then(notification => {
+                console.log('\n8-6', notification);
+                // with the updated notification, calculate the recipients of
+                // this notification. In this case it is thread participants
+                const recipients = getThreadNotificationUsers(
+                  notification.context.id
+                );
+                return Promise.all([notification, recipients]);
+              })
+              .then(([notification, recipients]) => {
+                // ensure we have valid recipients
+                console.log('\n8-7', recipients);
+                if (recipients && recipients.length > 0) {
+                  // don't update the notification for the current user who
+                  // triggered the event
+                  let filteredRecipients = recipients.filter(
+                    recipient => recipient.id !== currentUser.id
+                  );
+                  // for each recipient, update the record in the
+                  // usersNotifications table to have isRead and isSeen be false
+                  return Promise.all(
+                    filteredRecipients.map(recipient =>
+                      markUsersNotificationsAsNew(
+                        notification.id,
+                        recipient.id
+                      ).then(data => {
+                        console.log('\n8-8', data);
+                        return data;
+                      })
+                    )
+                  );
+                }
+              });
           });
+        } else {
+          console.log('\n9');
+          // 2. If no notification was found that met all of our criteria, we will
+          //    create a new notification record in the db
+          return Promise.all(promises).then(([actor, context, entity]) => {
+            console.log('\n9-1', actor);
+            console.log('\n9-2', context);
+            console.log('\n9-3', entity);
 
-          // update the notification in the db
-          return updateNotification(newNotification)
-            .then(notification => {
-              // with the updated notification, calculate the recipients of
-              // this notification. In this case it is thread participants
-              const recipients = getThreadNotificationUsers(
-                notification.context.id
-              );
-              return Promise.all([notification, recipients]);
-            })
-            .then(([notification, recipients]) => {
-              // ensure we have valid recipients
-              if (recipients && recipients.length > 0) {
-                // don't update the notification for the current user who
-                // triggered the event
-                let filteredRecipients = recipients.filter(
-                  recipient => recipient.id !== currentUser.id
-                );
-                // for each recipient, update the record in the
-                // usersNotifications table to have isRead and isSeen be false
-                return Promise.all(
-                  filteredRecipients.map(recipient =>
-                    markUsersNotificationsAsNew(notification.id, recipient.id)
-                  )
-                );
-              }
-            });
-        });
-      } else {
-        console.log('9');
-        // 2. If no notification was found that met all of our criteria, we will
-        //    create a new notification record in the db
-        return Promise.all(promises).then(([actor, context, entity]) => {
-          console.log('9-1', actor);
-          console.log('9-2', context);
-          console.log('9-3', entity);
+            // create the notification record
+            const notification = {
+              actors: [actor],
+              event: 'message_created',
+              context,
+              entities: [entity],
+            };
 
-          // create the notification record
-          const notification = {
-            actors: [actor],
-            event: 'message_created',
-            context,
-            entities: [entity],
-          };
-
-          return storeNotification(notification)
-            .then(notification => {
-              // with the new notification, calculate the recipients of
-              // this notification. In this case it is thread participants
-              const recipients = getThreadNotificationUsers(
-                notification.context.id
-              );
-              return Promise.all([notification, recipients]);
-            })
-            .then(([notification, recipients]) => {
-              if (recipients && recipients.length > 0) {
-                // don't update the notification for the current user who
-                // triggered the event
-                let filteredRecipients = recipients.filter(
-                  recipient => recipient.id !== currentUser.id
+            return storeNotification(notification)
+              .then(notification => {
+                console.log('\n9-4', notification);
+                // with the new notification, calculate the recipients of
+                // this notification. In this case it is thread participants
+                const recipients = getThreadNotificationUsers(
+                  notification.context.id
                 );
+                return Promise.all([notification, recipients]);
+              })
+              .then(([notification, recipients]) => {
+                console.log('\n9-5', recipients);
+                if (recipients && recipients.length > 0) {
+                  // don't update the notification for the current user who
+                  // triggered the event
+                  let filteredRecipients = recipients.filter(
+                    recipient => recipient.id !== currentUser.id
+                  );
 
-                return Promise.all(
-                  filteredRecipients.map(recipient =>
-                    storeUsersNotifications(notification.id, recipient.id)
-                  )
-                );
-              }
-            });
-        });
-      }
-    });
+                  return Promise.all(
+                    filteredRecipients.map(recipient =>
+                      storeUsersNotifications(
+                        notification.id,
+                        recipient.id
+                      ).then(data => {
+                        console.log('\n9-6', data);
+                        return data;
+                      })
+                    )
+                  );
+                }
+              });
+          });
+        }
+      })
+      .catch(err => console.log('\nerror: ', err));
   });

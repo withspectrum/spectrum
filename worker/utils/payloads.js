@@ -13,49 +13,58 @@ import { getDirectMessageThreadById } from '../models/directMessageThread';
 */
 export const fetchPayload = (
   type: EntityTypes,
-  data: Object
+  id: Object
 ): Promise<Object> => {
   /*
     Function receives a type, and depending on the type we need to get a different
-    entity from the database. This switch statement determines which model
+    entity from the idbase. This switch statement determines which model
     function to use
   */
+
+  console.log('fetching payload with', type, id);
+
   let getEntityByType;
   switch (type) {
     case 'message': {
-      getEntityByType = getMessageById;
+      return getMessageById(id).then(result => {
+        return createPayload(type, result);
+      });
       break;
     }
     case 'thread': {
-      getEntityByType = getThreadById;
+      return getThreadById(id).then(result => {
+        return createPayload(type, result);
+      });
       break;
     }
     case 'channel': {
-      getEntityByType = getChannelById;
+      return getChannelById(id).then(result => {
+        return createPayload(type, result);
+      });
       break;
     }
     case 'community': {
-      getEntityByType = getCommunityById;
+      return getCommunityById(id).then(result => {
+        return createPayload(type, result);
+      });
       break;
     }
     case 'user': {
-      getEntityByType = getUserById;
+      return getUserById(id).then(result => {
+        return createPayload(type, result);
+      });
       break;
     }
     case 'directMessageThread': {
-      getEntityByType = getDirectMessageThreadById;
+      return getDirectMessageThreadById(id).then(result => {
+        return createPayload(type, result);
+      });
       break;
     }
     default: {
       console.log(`Couldn't match the type '${type}' with EntityTypes`);
     }
   }
-
-  /*
-    When we have the proper model function to use, we can get an entity by id
-    and return a consistent 'entities' object into the notification
-  */
-  return getEntityByType(data.id).then(data => createPayload(type, data));
 };
 
 /*
