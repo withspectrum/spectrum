@@ -66,14 +66,23 @@ export const UpsellSignIn = ({ entity }) => {
 export const UpsellJoinChannel = ({
   channel,
   subscribe,
-}: { channel: Object, subscribe: Function }) => {
+  loading,
+}: {
+  channel: Object,
+  subscribe: Function,
+}) => {
   return (
     <NullCard bg="channel">
       <Title>Ready to join the conversation?</Title>
       <Subtitle>
         Join ~{channel.name} to get involved!
       </Subtitle>
-      <Button onClick={() => subscribe(channel.id)} icon="plus" label>
+      <Button
+        loading={loading}
+        onClick={() => subscribe(channel.id)}
+        icon="plus"
+        label
+      >
         Join
       </Button>
     </NullCard>
@@ -86,12 +95,14 @@ export const UpsellRequestToJoinChannel = ({
   isPending,
   subscribe,
   currentUser,
+  loading,
 }: {
   channel: Object,
   community: string,
   isPending: boolean,
   subscribe: Function,
   currentUser: Object,
+  loading: boolean,
 }) => {
   return (
     <NullCard bg="locked">
@@ -111,7 +122,7 @@ export const UpsellRequestToJoinChannel = ({
       !currentUser &&
         <Button
           icon="twitter"
-          onClick={() => window.location.href = `${SERVER_URL}/auth/twitter`}
+          onClick={() => (window.location.href = `${SERVER_URL}/auth/twitter`)}
         >
           Sign in with Twitter
         </Button>}
@@ -121,6 +132,7 @@ export const UpsellRequestToJoinChannel = ({
         ? <OutlineButton
             onClick={() => subscribe(channel.id)}
             icon="minus"
+            loading={loading}
             label
           >
             Cancel request
@@ -129,6 +141,7 @@ export const UpsellRequestToJoinChannel = ({
             <Button
               onClick={() => subscribe(channel.id)}
               icon="private-unlocked"
+              loading={loading}
               label
             >
               Request to join {channel.name}
@@ -140,7 +153,10 @@ export const UpsellRequestToJoinChannel = ({
 export const Upsell404Channel = ({
   channel,
   noPermission,
-}: { channel: Object, noPermission: boolean }) => {
+}: {
+  channel: Object,
+  noPermission: boolean,
+}) => {
   // if a user doesn't have permission, it means they likely tried to view
   // the settings page for a channel. In this case, we will return
   // them to the channel view.
@@ -164,7 +180,7 @@ export const Upsell404Channel = ({
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
       <Actions>
-        <Button onClick={() => window.location.href = returnUrl}>
+        <Button onClick={() => (window.location.href = returnUrl)}>
           Take me back
         </Button>
       </Actions>
@@ -176,7 +192,11 @@ export const Upsell404Community = ({
   community,
   noPermission,
   create,
-}: { community: string, noPermission: boolean, create: Function }) => {
+}: {
+  community: string,
+  noPermission: boolean,
+  create: Function,
+}) => {
   // if a user doesn't have permission, it means they likely tried to view
   // the settings page for a community. In this case, we will return
   // them to the community view.
@@ -223,14 +243,18 @@ export const Upsell404Community = ({
 export const UpsellJoinCommunity = ({
   community,
   join,
-}: { community: Object, join: Function }) => {
+  loading,
+}: {
+  community: Object,
+  join: Function,
+}) => {
   return (
     <NullCard
       bg="chat"
       heading="Want to be a part of the conversation?"
       copy={`Join ${community.name} to get involved!`}
     >
-      <Button onClick={() => join(community.id)} icon="plus">
+      <Button loading={loading} onClick={() => join(community.id)} icon="plus">
         Join {community.name}
       </Button>
     </NullCard>
@@ -240,7 +264,10 @@ export const UpsellJoinCommunity = ({
 export const Upsell404User = ({
   username,
   noPermission,
-}: { username: string, noPermission: boolean }) => {
+}: {
+  username: string,
+  noPermission: boolean,
+}) => {
   const title = noPermission
     ? "I see you sneakin' around here..."
     : `${username}? What's a ${username}?`;
@@ -250,7 +277,7 @@ export const Upsell404User = ({
 
   return (
     <NullCard bg="user" heading={title} copy={subtitle}>
-      <Button onClick={() => window.location.href = '/home'}>
+      <Button onClick={() => (window.location.href = '/home')}>
         Take me home
       </Button>
     </NullCard>
@@ -282,7 +309,7 @@ export const Upsell404Thread = () => {
       heading="Oops, something got lost!"
       copy="We can't find that thread. Maybe it floated off into space..."
     >
-      <Button onClick={() => window.location.href = `/home`}>
+      <Button onClick={() => (window.location.href = `/home`)}>
         Take me home
       </Button>
     </NullCard>

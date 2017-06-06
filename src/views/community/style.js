@@ -34,9 +34,9 @@ export const CoverColumn = styled(FlexCol)`
   max-width: 1024px;
 
 ${/* For some goddamn reason, CoverRow will *not* take this property... ughhhhhhhhh */ ''}
-  ${/* > .flexy {
+  > .flexy {
     display: flex;
-  } */ ''}
+  }
 
   @media (max-width: 768px) {
       width: 100%;

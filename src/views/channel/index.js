@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
@@ -28,19 +28,31 @@ import Titlebar from '../titlebar';
 
 const ThreadFeedWithData = compose(getChannelThreads)(ThreadFeed);
 
-const ChannelViewPure = ({
-  match,
-  data: { error, channel },
-  currentUser,
-  toggleChannelSubscription,
-  dispatch,
-}) => {
-  const communitySlug = match.params.communitySlug;
-  const channelSlug = match.params.channelSlug;
+class ChannelViewPure extends Component {
+  state: {
+    isLoading: boolean,
+  };
 
-  const toggleRequest = channelId => {
+  constructor() {
+    super();
+
+    this.state = {
+      isLoading: false,
+    };
+  }
+
+  toggleRequest = channelId => {
+    const { toggleChannelSubscription, dispatch } = this.props;
+    this.setState({
+      isLoading: true,
+    });
+
     toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
+        this.setState({
+          isLoading: false,
+        });
+
         const isPending =
           toggleChannelSubscription.channelPermissions.isPending;
 
@@ -58,157 +70,175 @@ const ChannelViewPure = ({
         dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
+        this.setState({
+          isLoading: false,
+        });
+
         dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
-  if (error) {
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={'Channel Not Found'}
-          provideBack={true}
-          backRoute={`/`}
-          noComposer
-        />
-        <Column type="primary" alignItems="center">
-          <Upsell404Channel
-            channel={match.params.channelSlug}
-            community={match.params.communitySlug}
+  render() {
+    const {
+      match,
+      data: { error, channel },
+      currentUser,
+      toggleChannelSubscription,
+      dispatch,
+    } = this.props;
+    const { isLoading } = this.state;
+    const communitySlug = match.params.communitySlug;
+    const channelSlug = match.params.channelSlug;
+
+    if (error) {
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={'Channel Not Found'}
+            provideBack={true}
+            backRoute={`/`}
+            noComposer
           />
-        </Column>
-      </AppViewWrapper>
-    );
-  }
+          <Column type="primary" alignItems="center">
+            <Upsell404Channel
+              channel={match.params.channelSlug}
+              community={match.params.communitySlug}
+            />
+          </Column>
+        </AppViewWrapper>
+      );
+    }
 
-  if (!channel || channel.isDeleted) {
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={'Channel Not Found'}
-          provideBack={true}
-          backRoute={`/`}
-          noComposer
-        />
-        <Column type="primary" alignItems="center">
-          <Upsell404Channel
-            channel={match.params.channelSlug}
-            community={match.params.communitySlug}
+    if (!channel || channel.isDeleted) {
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={'Channel Not Found'}
+            provideBack={true}
+            backRoute={`/`}
+            noComposer
           />
-        </Column>
-      </AppViewWrapper>
-    );
-  }
+          <Column type="primary" alignItems="center">
+            <Upsell404Channel
+              channel={match.params.channelSlug}
+              community={match.params.communitySlug}
+            />
+          </Column>
+        </AppViewWrapper>
+      );
+    }
 
-  // user has been blocked by the owners
-  if (channel && channel.channelPermissions.isBlocked) {
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={'Private Channel'}
-          provideBack={true}
-          backRoute={`/${match.params.communitySlug}`}
-          noComposer
-        />
-        <Column type="primary" alignItems="center">
-          <Upsell404Channel
-            channel={match.params.channelSlug}
-            community={match.params.communitySlug}
-            noPermission
+    // user has been blocked by the owners
+    if (channel && channel.channelPermissions.isBlocked) {
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={'Private Channel'}
+            provideBack={true}
+            backRoute={`/${match.params.communitySlug}`}
+            noComposer
           />
-        </Column>
-      </AppViewWrapper>
-    );
-  }
-  // channel exists and the user is not a subscriber (accounts for signed-
-  // out users as well)
-  if (
-    channel &&
-    channel.isPrivate &&
-    (!channel.channelPermissions.isMember &&
-      !channel.community.communityPermissions.isOwner)
-  ) {
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={channel.name}
-          subtitle={channel.community.name}
-          provideBack={true}
-          backRoute={`/${channel.community.slug}`}
-          noComposer
-        />
-        <Column type="primary" alignItems="center">
-          <UpsellRequestToJoinChannel
-            channel={channel}
-            community={match.params.communitySlug}
-            isPending={channel.channelPermissions.isPending}
-            subscribe={toggleRequest}
-            currentUser={currentUser}
+          <Column type="primary" alignItems="center">
+            <Upsell404Channel
+              channel={match.params.channelSlug}
+              community={match.params.communitySlug}
+              noPermission
+            />
+          </Column>
+        </AppViewWrapper>
+      );
+    }
+    // channel exists and the user is not a subscriber (accounts for signed-
+    // out users as well)
+    if (
+      channel &&
+      channel.isPrivate &&
+      (!channel.channelPermissions.isMember &&
+        !channel.community.communityPermissions.isOwner)
+    ) {
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={channel.name}
+            subtitle={channel.community.name}
+            provideBack={true}
+            backRoute={`/${channel.community.slug}`}
+            noComposer
           />
-        </Column>
-      </AppViewWrapper>
-    );
-  }
+          <Column type="primary" alignItems="center">
+            <UpsellRequestToJoinChannel
+              channel={channel}
+              community={match.params.communitySlug}
+              isPending={channel.channelPermissions.isPending}
+              subscribe={this.toggleRequest}
+              currentUser={currentUser}
+              loading={isLoading}
+            />
+          </Column>
+        </AppViewWrapper>
+      );
+    }
 
-  // channel exists and
-  // the channel is private + user is a subscriber
-  // or channel is not private
-  if (
-    channel &&
-    ((channel.isPrivate && channel.channelPermissions.isMember) ||
-      channel.community.communityPermissions.isOwner ||
-      !channel.isPrivate)
-  ) {
-    const { title, description } = generateMetaInfo({
-      type: 'channel',
-      data: {
-        name: channel.name,
-        communityName: channel.community.name,
-        description: channel.description,
-      },
-    });
+    // channel exists and
+    // the channel is private + user is a subscriber
+    // or channel is not private
+    if (
+      channel &&
+      ((channel.isPrivate && channel.channelPermissions.isMember) ||
+        channel.community.communityPermissions.isOwner ||
+        !channel.isPrivate)
+    ) {
+      const { title, description } = generateMetaInfo({
+        type: 'channel',
+        data: {
+          name: channel.name,
+          communityName: channel.community.name,
+          description: channel.description,
+        },
+      });
 
-    track('channel', 'profile viewed', null);
+      track('channel', 'profile viewed', null);
 
-    return (
-      <AppViewWrapper>
-        <Head title={title} description={description} />
-        <Titlebar
-          title={channel.name}
-          subtitle={channel.community.name}
-          provideBack={true}
-          backRoute={`/${channel.community.slug}`}
-          noComposer={!channel.channelPermissions.isMember}
-        />
-        <Column type="secondary">
-          <ChannelProfile data={{ channel }} profileSize="full" />
-
-          {channel.isPrivate &&
-            (channel.channelPermissions.isOwner ||
-              channel.community.communityPermissions.isOwner) &&
-            <PendingUsersNotification channel={channel} />}
-        </Column>
-
-        <Column type="primary" alignItems="center">
-          {!currentUser && <UpsellSignIn entity={channel} />}
-
-          {channel.channelPermissions.isMember && currentUser
-            ? <ThreadComposer
-                activeCommunity={communitySlug}
-                activeChannel={match.params.channelSlug}
-              />
-            : <span />}
-          <ThreadFeedWithData
-            viewContext="channel"
-            channelSlug={channelSlug}
-            communitySlug={communitySlug}
-            currentUser={currentUser}
+      return (
+        <AppViewWrapper>
+          <Head title={title} description={description} />
+          <Titlebar
+            title={channel.name}
+            subtitle={channel.community.name}
+            provideBack={true}
+            backRoute={`/${channel.community.slug}`}
+            noComposer={!channel.channelPermissions.isMember}
           />
-        </Column>
-      </AppViewWrapper>
-    );
+          <Column type="secondary">
+            <ChannelProfile data={{ channel }} profileSize="full" />
+
+            {channel.isPrivate &&
+              (channel.channelPermissions.isOwner ||
+                channel.community.communityPermissions.isOwner) &&
+              <PendingUsersNotification channel={channel} />}
+          </Column>
+
+          <Column type="primary" alignItems="center">
+            {!currentUser && <UpsellSignIn entity={channel} />}
+
+            {channel.channelPermissions.isMember && currentUser
+              ? <ThreadComposer
+                  activeCommunity={communitySlug}
+                  activeChannel={match.params.channelSlug}
+                />
+              : <span />}
+            <ThreadFeedWithData
+              viewContext="channel"
+              channelSlug={channelSlug}
+              communitySlug={communitySlug}
+              currentUser={currentUser}
+            />
+          </Column>
+        </AppViewWrapper>
+      );
+    }
   }
-};
+}
 
 export const ChannelView = compose(
   getChannel,

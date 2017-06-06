@@ -59,6 +59,7 @@ const spin = keyframes`
 export const Spinner = styled.span`
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
+  
   &:before {
     content: '';
     box-sizing: border-box;
