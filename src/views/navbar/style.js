@@ -93,6 +93,19 @@ export const Logo = styled.img`
   left: 1px;
 `;
 
+export const UnseenCount = styled.span`
+  position: absolute;
+  right: ${props => (props.size === 'large' ? '-12px' : '4px')};
+  top: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #fff;
+  color: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};;
+  border-radius: 8px;
+  padding: 2px 4px;
+  border: 2px solid ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
+`;
+
 export const IconDrop = styled(FlexRow)`
   ${/* display: flex;
   flex-direction: row; */ ''}

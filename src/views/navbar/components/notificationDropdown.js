@@ -4,9 +4,6 @@ import React from 'react';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
-
-import { displayLoadingState } from '../../../components/loading';
-import { getNotifications } from '../../notifications/queries';
 import Dropdown from '../../../components/dropdown';
 import { NullState } from '../../../components/upsell';
 import { Button } from '../../../components/buttons';
@@ -20,7 +17,7 @@ const NullNotifications = () => (
   />
 );
 
-const NotificationListPure = () => {
+const NotificationList = ({ notifications }) => {
   return (
     <div>
       👍 cool. there's notifications here. maybe just, like, actually do the code for it.
@@ -28,17 +25,14 @@ const NotificationListPure = () => {
   );
 };
 
-const NotificationList = compose(displayLoadingState)(NotificationListPure);
-
-const NotificationDropdownPure = ({ data }) => {
-  const { notifications } = data;
+const NotificationDropdownPure = ({ notifications }) => {
   return (
     <Dropdown>
       <DropdownHeader>
         My Notifications
       </DropdownHeader>
-      {!notifications && !data.loading && <NullNotifications />}
-      {(notifications || data.loading) && <NotificationList />}
+      {!notifications && <NullNotifications />}
+      {notifications && <NotificationList notifications={notifications} />}
       <DropdownFooter>
         <Button to={'/notifications'}>View all</Button>
       </DropdownFooter>

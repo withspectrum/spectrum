@@ -7,6 +7,7 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import { getCurrentUserProfile } from '../../api/user';
+import { parseNotification } from '../../helpers/notification';
 import { SERVER_URL } from '../../api';
 import Icon from '../../components/icons';
 import { displayLoadingNavbar } from '../../components/loading';
@@ -26,6 +27,7 @@ import {
   Label,
   LabelForTab,
   UserProfileAvatar,
+  UnseenCount,
 } from './style';
 
 class Navbar extends Component {
@@ -47,6 +49,18 @@ class Navbar extends Component {
   render() {
     const { match, data: { user } } = this.props;
     const currentUser = user;
+    const notifications =
+      currentUser &&
+      currentUser.notificationConnection.edges.map(notification =>
+        parseNotification(notification.node)
+      );
+    const unseenCount =
+      notifications &&
+      notifications.length > 0 &&
+      notifications.filter(notification => notification.isSeen === false)
+        .length;
+
+    console.log('unseenCount', unseenCount);
 
     const login = () => {
       // log the user in and return them to this page
@@ -126,17 +140,26 @@ class Navbar extends Component {
             </Section>
 
             <Section right>
-              {/* <IconDrop>
+              <IconDrop>
                 <IconLink
                   data-active={match.url === '/notifications'}
                   data-mobileWidth={'half'}
                   to="/notifications"
                 >
-                  <Icon glyph="notification" />
+                  <Icon
+                    glyph={
+                      unseenCount > 0 ? 'notification-fill' : 'notification'
+                    }
+                  />
+                  {unseenCount > 0
+                    ? <UnseenCount size={unseenCount >= 10 ? 'large' : 'small'}>
+                        {unseenCount >= 10 ? '10+' : unseenCount}
+                      </UnseenCount>
+                    : null}
                   <LabelForTab>Notifications</LabelForTab>
                 </IconLink>
-                {/* <NotificationDropdown />
-              </IconDrop> */}
+                <NotificationDropdown notifications={notifications} />
+              </IconDrop>
 
               <IconDrop>
                 <IconLink

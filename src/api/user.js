@@ -2,6 +2,9 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from './fragments/user/userInfo';
+import {
+  notificationInfoFragment,
+} from './fragments/notification/notificationInfo';
 
 /*
   Upload a new profilePhoto for the given currentUser
@@ -179,8 +182,21 @@ export const GET_CURRENT_USER_PROFILE_QUERY = gql`
   query getCurrentUserProfile {
     user: currentUser {
       ...userInfo
+      notificationConnection {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+        edges {
+          cursor
+          node {
+            ...notificationInfo
+          }
+        }
+      }
     }
   }
   ${userInfoFragment}
+  ${notificationInfoFragment}
 `;
 export const getCurrentUserProfile = graphql(GET_CURRENT_USER_PROFILE_QUERY);
