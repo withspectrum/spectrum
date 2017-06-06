@@ -89,7 +89,7 @@ class ThreadContainerPure extends Component {
 
     if (error) {
       return (
-        <FlexCol>
+        <FlexCol style={{ flex: '1 1 auto' }}>
           <Titlebar
             title={'Thread not found'}
             provideBack={true}
@@ -107,7 +107,7 @@ class ThreadContainerPure extends Component {
 
     if (!thread || thread.deleted) {
       return (
-        <FlexCol>
+        <FlexCol style={{ flex: '1 1 auto' }}>
           <Titlebar
             title={'Thread not found'}
             provideBack={true}
@@ -128,7 +128,7 @@ class ThreadContainerPure extends Component {
       !thread.channel.channelPermissions.isMember
     ) {
       return (
-        <FlexCol>
+        <FlexCol style={{ flex: '1 1 auto' }}>
           <Titlebar
             title={'Private Thread'}
             provideBack={true}
@@ -161,7 +161,7 @@ class ThreadContainerPure extends Component {
     });
 
     return (
-      <FlexCol>
+      <FlexCol style={{ flex: '1 1 auto' }}>
         <Titlebar
           title={thread.content.title}
           subtitle={`${thread.channel.community.name} / ${thread.channel.name}`}

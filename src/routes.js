@@ -33,15 +33,14 @@ const About = () => (
 );
 
 const Body = styled(FlexCol)`
+  display: flex;
   width: 100vw;
+  flex: 0 0 100vh;
   height: 100vh;
+  min-height: 100vh;
+  max-height: 100vh;
   overflow: hidden;
   background: ${props => props.theme.bg.wash};
-`;
-
-const FlexRoute = styled(Route)`
-  display: flex;
-  flex: 1 1 auto;
 `;
 
 class Routes extends Component {

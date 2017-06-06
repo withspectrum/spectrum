@@ -1,13 +1,14 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
-import { hexa, Shadow } from '../../components/globals';
+import { hexa, Shadow, FlexRow } from '../../components/globals';
 
-export const TitleBar = styled.section`
+export const TitleBar = styled(FlexRow)`
   width: 100%;
   display: flex;
   background-color: ${({ theme }) => theme.bg.reverse};
   color: ${({ theme }) => theme.text.reverse};
+  min-height: 48px;
   height: 48px;
   ${/* position: fixed;
   top: 0;

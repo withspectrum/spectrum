@@ -39,6 +39,7 @@ export const Container = styled(FlexCol)`
   overflow-y: scroll;
 
   @media (max-width: 768px) {
+
     padding-top: 16px;
   }
 `;

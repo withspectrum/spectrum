@@ -43,6 +43,7 @@ const HalfColumn = styled(PrimaryColumn)`
   max-width: 840px;
   flex: 0 0 50%;
   @media(max-width: 768px) {
+    flex: 1;
     min-width: 100%;
     width: 100%;
   }
