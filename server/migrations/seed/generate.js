@@ -175,6 +175,7 @@ const generateUsersThreads = (threadId, userId) => {
     createdAt,
     threadId,
     userId,
+    isParticipant: true,
     receiveNotifications: true,
   };
 };

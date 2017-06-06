@@ -24,6 +24,7 @@ export const createParticipantInThread = (
           createdAt: new Date(),
           userId,
           threadId,
+          isParticipant: true,
           receiveNotifications: true,
         });
       }
@@ -36,6 +37,7 @@ export const getParticipantsInThread = (
   return db
     .table('usersThreads')
     .getAll(threadId, { index: 'threadId' })
+    .filter({ isParticipant: true })
     .eqJoin('userId', db.table('users'))
     .without({
       left: ['createdAt', 'id', 'receiveNotifications', 'threadId', 'userId'],
