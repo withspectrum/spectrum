@@ -101,42 +101,6 @@ const DEFAULT_THREADS = [
   },
 ];
 
-const DEFAULT_NOTIFICATIONS = [
-  {
-    id: 'first-notification-asfd123',
-    createdAt: new Date(DATE),
-    users: [
-      {
-        id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a190',
-        read: false,
-      },
-      {
-        id: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
-        read: false,
-      },
-    ],
-    type: 'NEW_THREAD',
-    threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
-    channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
-    communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
-    sender: 'uItS3QQiUxXH44m14uWmixTbqSc2',
-    content: {
-      title: 'The first thread! 🎉',
-      excerpt: 'This is it, we got a thread here',
-    },
-  },
-];
-
-const DEFAULT_USERS_NOTIFICATIONS = [
-  {
-    id: 'first-users-notification-asfd123',
-    createdAt: new Date(),
-    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
-    notificationId: 'first-notification-asfd123',
-    isRead: false,
-  },
-];
-
 const DEFAULT_DIRECT_MESSAGE_THREADS = [
   {
     id: 'first-dm-thread-asfd123',
@@ -186,8 +150,6 @@ module.exports = {
   DEFAULT_COMMUNITIES,
   DEFAULT_CHANNELS,
   DEFAULT_THREADS,
-  DEFAULT_NOTIFICATIONS,
-  DEFAULT_USERS_NOTIFICATIONS,
   DEFAULT_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_COMMUNITIES,

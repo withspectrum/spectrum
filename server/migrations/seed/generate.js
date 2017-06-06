@@ -231,72 +231,6 @@ const generateReaction = (userId, messageId) => {
   };
 };
 
-const generateThreadNotification = (thread, channel, communityId, callback) => {
-  return generateNotification(
-    thread.creatorId,
-    thread.id,
-    channel.id,
-    communityId,
-    thread.content.title,
-    // TODO: Add a maximum length to this
-    thread.content.body
-  );
-};
-
-const generateUsersNotifications = (userId, notificationId) => {
-  return {
-    id: uuid(),
-    userId,
-    notificationId,
-    createdAt: faker.date.past(2),
-    isRead: faker.random.boolean(),
-  };
-};
-
-const generateMessageNotification = (
-  message,
-  thread,
-  channelId,
-  communityId
-) => {
-  return generateNotification(
-    message.senderId,
-    thread.id,
-    channelId,
-    communityId,
-    thread.content.title,
-    // TODO: Add a maximum length to this
-    message.content.body,
-    message.id
-  );
-};
-
-// SCHEMA:TODO
-const generateNotification = (
-  senderId,
-  threadId,
-  channelId,
-  communityId,
-  title,
-  excerpt,
-  message
-) => {
-  return {
-    id: uuid(),
-    createdAt: faker.date.past(2),
-    type: message ? 'NEW_MESSAGE' : 'NEW_THREAD',
-    message,
-    threadId,
-    channelId,
-    communityId,
-    senderId,
-    content: {
-      title,
-      excerpt,
-    },
-  };
-};
-
 module.exports = {
   randomAmount,
   generateUser,
@@ -309,8 +243,5 @@ module.exports = {
   generateUsersThreads,
   generateMessage,
   generateReaction,
-  generateThreadNotification,
-  generateMessageNotification,
-  generateUsersNotifications,
   generateDirectMessageThread,
 };

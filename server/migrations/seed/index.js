@@ -8,8 +8,6 @@ const {
   DEFAULT_USERS,
   DEFAULT_CHANNELS,
   DEFAULT_THREADS,
-  DEFAULT_NOTIFICATIONS,
-  DEFAULT_USERS_NOTIFICATIONS,
   DEFAULT_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_COMMUNITIES,
@@ -29,13 +27,8 @@ const {
   generateUsersDirectMessageThreads,
   generateMessage,
   generateReaction,
-  generateThreadNotification,
-  generateMessageNotification,
-  generateUsersNotifications,
 } = require('./generate');
 
-const notifications = DEFAULT_NOTIFICATIONS;
-const usersNotifications = DEFAULT_USERS_NOTIFICATIONS;
 const userAmount = faker.random.number(1000);
 const users = [
   ...DEFAULT_USERS,
@@ -97,9 +90,6 @@ channels.forEach(channel => {
     const creator = faker.random.arrayElement(users);
     const thread = generateThread(channel.communityId, channel.id, creator.id);
     threads.push(thread);
-    // notifications.push(
-    //   generateThreadNotification(thread, channel)
-    // );
   });
 });
 
@@ -138,17 +128,6 @@ threads.forEach(thread => {
     messages.push(message);
     threadMessages.push(message);
   });
-  // New message notifications
-  threadMessages.forEach((message, index) => {
-    notifications.push(
-      generateMessageNotification(
-        message,
-        thread,
-        channel.id,
-        channel.communityId
-      )
-    );
-  });
 });
 
 console.log('Generating direct messages...');
@@ -184,7 +163,7 @@ const db = require('rethinkdbdash')({
 
 console.log(
   `Inserting ${users.length} users,
-  ${communities.length} communities, ${channels.length} channels, ${threads.length} threads, ${messages.length + direct_messages.length} messages, ${reactions.length} reactions, ${directMessageThreads.length} direct message threads, ${usersCommunities.length} usersCommunities objects, ${usersChannels.length} usersChannels objects, ${usersDirectMessageThreads.length} usersDirectMessageThreads objects, and ${notifications.length} notifications into the database... (this might take a while!)`
+  ${communities.length} communities, ${channels.length} channels, ${threads.length} threads, ${messages.length + direct_messages.length} messages, ${reactions.length} reactions, ${directMessageThreads.length} direct message threads, ${usersCommunities.length} usersCommunities objects, ${usersChannels.length} usersChannels objects, and ${usersDirectMessageThreads.length} usersDirectMessageThreads objects into the database... (this might take a while!)`
 );
 Promise.all([
   db.table('communities').insert(communities).run(),
@@ -193,13 +172,11 @@ Promise.all([
   db.table('messages').insert(messages).run(),
   db.table('users').insert(users).run(),
   db.table('reactions').insert(reactions).run(),
-  db.table('notifications').insert(notifications).run(),
   db.table('directMessageThreads').insert(directMessageThreads).run(),
   db.table('messages').insert(direct_messages).run(),
   db.table('usersCommunities').insert(usersCommunities).run(),
   db.table('usersChannels').insert(usersChannels).run(),
   db.table('usersDirectMessageThreads').insert(usersDirectMessageThreads).run(),
-  db.table('usersNotifications').insert(usersNotifications).run(),
   db.table('usersThreads').insert(usersThreads).run(),
 ])
   .then(() => {
