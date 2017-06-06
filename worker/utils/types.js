@@ -1,19 +1,19 @@
 // @flow
 export type EntityTypes =
-  | 'message'
-  | 'thread'
-  | 'channel'
-  | 'community'
-  | 'user'
-  | 'directMessageThread';
+  | 'MESSAGE'
+  | 'THREAD'
+  | 'CHANNEL'
+  | 'COMMUNITY'
+  | 'USER'
+  | 'DIRECT_MESSAGE_THREAD';
 
 export type EventTypes =
-  | 'message_created'
-  | 'thread_created'
-  | 'channel_created'
-  | 'direct_message_thread_created'
-  | 'user_joined_community'
-  | 'user_requested_to_join_private_channel'
-  | 'user_approved_to_join_private_channel'
-  | 'thread_locked_by_owner'
-  | 'thread_deleted_by_owner';
+  | 'MESSAGE_CREATED'
+  | 'THREAD_CREATED'
+  | 'CHANNEL_CREATED'
+  | 'DIRECT_MESSAGE_THREAD_CREATED'
+  | 'USER_JOINED_COMMUNITY'
+  | 'USER_REQUESTED_TO_JOIN_PRIVATE_CHANNEL'
+  | 'USER_APPROVED_TO_JOIN_PRIVATE_CHANNEL'
+  | 'THREAD_LOCKED_BY_OWNER'
+  | 'THREAD_DELETED_BY_OWNER';

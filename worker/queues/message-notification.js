@@ -62,7 +62,7 @@ export default () =>
     // 1. Determine if a notification exists with the same event type, context
     //    id, and falls within the declared time buffer
     return checkForExistingNotification(
-      'message_created',
+      'MESSAGE_CREATED',
       incomingMessage.threadId,
       TIME_BUFFER
     )
@@ -79,16 +79,16 @@ export default () =>
           thread or as a direct message thread
         */
         const contextType = incomingMessage.threadType === 'directMessageThread'
-          ? 'directMessageThread'
-          : 'thread';
+          ? 'DIRECT_MESSAGE_THREAD'
+          : 'THREAD';
 
         console.log('\ncontextType', contextType);
         console.log('\nactor', incomingMessage.senderId);
         console.log('\nentity', incomingMessage);
         const promises = [
-          fetchPayload('user', incomingMessage.senderId),
+          fetchPayload('USER', incomingMessage.senderId),
           fetchPayload(contextType, incomingMessage.threadId),
-          createPayload('message', incomingMessage),
+          createPayload('MESSAGE', incomingMessage),
         ];
 
         // 2. If a notification was found that met all of our criteria, we will
@@ -170,7 +170,7 @@ export default () =>
             // create the notification record
             const notification = {
               actors: [actor],
-              event: 'message_created',
+              event: 'MESSAGE_CREATED',
               context,
               entities: [entity],
             };

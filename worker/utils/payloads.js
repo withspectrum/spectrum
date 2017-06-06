@@ -25,37 +25,37 @@ export const fetchPayload = (
 
   let getEntityByType;
   switch (type) {
-    case 'message': {
+    case 'MESSAGE': {
       return getMessageById(id).then(result => {
         return createPayload(type, result);
       });
       break;
     }
-    case 'thread': {
+    case 'THREAD': {
       return getThreadById(id).then(result => {
         return createPayload(type, result);
       });
       break;
     }
-    case 'channel': {
+    case 'CHANNEL': {
       return getChannelById(id).then(result => {
         return createPayload(type, result);
       });
       break;
     }
-    case 'community': {
+    case 'COMMUNITY': {
       return getCommunityById(id).then(result => {
         return createPayload(type, result);
       });
       break;
     }
-    case 'user': {
+    case 'USER': {
       return getUserById(id).then(result => {
         return createPayload(type, result);
       });
       break;
     }
-    case 'directMessageThread': {
+    case 'DIRECT_MESSAGE_THREAD': {
       return getDirectMessageThreadById(id).then(result => {
         return createPayload(type, result);
       });
