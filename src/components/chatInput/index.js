@@ -116,7 +116,6 @@ class ChatInputWithMutation extends Component {
 
   render() {
     const { state, onFocus, onBlur, onChange } = this.props;
-    console.log('render', toPlainText(state));
     return (
       <ChatInputWrapper>
         <MediaInput
