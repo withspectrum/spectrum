@@ -140,6 +140,10 @@ class ThreadComposerWithData extends Component {
 
   changeTitle = e => {
     const title = e.target.value;
+    if (/\n$/g.test(title)) {
+      this.bodyEditor.focus();
+      return;
+    }
     this.setState({
       title,
     });
@@ -415,7 +419,7 @@ class ThreadComposerWithData extends Component {
               onKeyDown={this.listenForUrl}
               state={this.state.body}
               style={ThreadDescription}
-              ref="bodyTextarea"
+              editorRef={editor => this.bodyEditor = editor}
               placeholder="Write more thoughts here, add photos, and anything else!"
             />
 
