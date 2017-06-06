@@ -7,25 +7,9 @@ import type { SlatePlugin } from 'slate-mentions/src/types';
 //$FlowFixMe
 import MarkdownPlugin from 'slate-markdown';
 import { Wrapper } from './style';
+import SingleLinePlugin from './single-line-plugin';
 
 const ENTER = 13;
-
-// Taken from https://github.com/ianstormtaylor/slate/issues/419
-// TODO: Make separate package
-const SingleLinePlugin = {
-  schema: {
-    rules: [
-      {
-        match: node => node.kind === 'document',
-        validate: node => (node.nodes.size > 1 ? true : null),
-        normalize: (transform, node, value) => {
-          const toRemove = node.nodes.slice(1);
-          toRemove.forEach(child => transform.removeNodeByKey(child.key));
-        },
-      },
-    ],
-  },
-};
 
 const initialState = Plain.deserialize('');
 
