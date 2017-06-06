@@ -81,10 +81,11 @@ class Navbar extends Component {
             </LogoLink>
 
             <IconLink
-              data-active={match.url === '/'}
+              data-active={match.url === '/' && match.isExact}
               data-mobileWidth={'third'}
               to="/"
             >
+              {console.log(match)}
               <Icon glyph="home" />
               <Label>Home</Label>
             </IconLink>

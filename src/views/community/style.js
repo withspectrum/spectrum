@@ -32,6 +32,7 @@ ${/* See class .flexy below - there's a hack on this element bc reasons 🙄 */ 
 export const CoverColumn = styled(FlexCol)`
   width: 90%;
   max-width: 1024px;
+  padding-top: 32px;
 
 ${/* For some goddamn reason, CoverRow will *not* take this property... ughhhhhhhhh */ ''}
   > .flexy {
@@ -39,7 +40,8 @@ ${/* For some goddamn reason, CoverRow will *not* take this property... ughhhhhh
   }
 
   @media (max-width: 768px) {
-      width: 100%;
+    padding-top: 0;
+    width: 100%;
   }
 `;
 
