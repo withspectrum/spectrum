@@ -66,14 +66,17 @@ class ChatInputWithMutation extends Component {
       },
     })
       .then(({ data: { addMessage } }) => {
-        // refocus the input
-        clear();
-        this.editor.focus();
         track(`${threadType} message`, 'text message created', null);
       })
       .catch(err => {
         dispatch(addToastWithTimeout('error', err.message));
       });
+
+    // refocus the input
+    setTimeout(() => {
+      clear();
+      this.editor.focus();
+    });
   };
 
   handleEnter = e => {
