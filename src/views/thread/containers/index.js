@@ -29,6 +29,18 @@ import {
 } from '../../../components/upsell';
 
 class ThreadContainerPure extends Component {
+  state: {
+    isLoading: boolean,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      isLoading: false,
+    };
+  }
+
   componentDidMount() {
     track('thread', 'viewed', null);
   }
@@ -48,9 +60,17 @@ class ThreadContainerPure extends Component {
   };
 
   toggleSubscription = channelId => {
+    this.setState({
+      isLoading: true,
+    });
+
     this.props
       .toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
+        this.setState({
+          isLoading: false,
+        });
+
         const isMember = toggleChannelSubscription.channelPermissions.isMember;
         const isPending =
           toggleChannelSubscription.channelPermissions.isPending;
@@ -74,12 +94,17 @@ class ThreadContainerPure extends Component {
         this.props.dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
+        this.setState({
+          isLoading: false,
+        });
+
         this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
   render() {
     const { data: { thread, error, loading }, currentUser } = this.props;
+    const { isLoading } = this.state;
 
     if (error) {
       return (
@@ -131,6 +156,7 @@ class ThreadContainerPure extends Component {
               isPending={thread.channel.channelPermissions.isPending}
               subscribe={() => this.toggleSubscription(thread.channel.id)}
               currentUser={currentUser}
+              loading={isLoading}
             />
           </Column>
         </AppViewWrapper>
@@ -188,6 +214,7 @@ class ThreadContainerPure extends Component {
               <UpsellJoinChannel
                 channel={thread.channel}
                 subscribe={this.toggleSubscription}
+                loading={isLoading}
               />}
           </Container>
         </Column>
