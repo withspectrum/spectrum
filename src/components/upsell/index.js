@@ -66,6 +66,7 @@ export const UpsellSignIn = ({ entity }) => {
 export const UpsellJoinChannel = ({
   channel,
   subscribe,
+  loading,
 }: { channel: Object, subscribe: Function }) => {
   return (
     <NullCard bg="channel">
@@ -73,7 +74,12 @@ export const UpsellJoinChannel = ({
       <Subtitle>
         Join ~{channel.name} to get involved!
       </Subtitle>
-      <Button onClick={() => subscribe(channel.id)} icon="plus" label>
+      <Button
+        loading={loading}
+        onClick={() => subscribe(channel.id)}
+        icon="plus"
+        label
+      >
         Join
       </Button>
     </NullCard>
@@ -86,12 +92,14 @@ export const UpsellRequestToJoinChannel = ({
   isPending,
   subscribe,
   currentUser,
+  loading,
 }: {
   channel: Object,
   community: string,
   isPending: boolean,
   subscribe: Function,
   currentUser: Object,
+  loading: boolean,
 }) => {
   return (
     <NullCard bg="locked">
@@ -121,6 +129,7 @@ export const UpsellRequestToJoinChannel = ({
         ? <OutlineButton
             onClick={() => subscribe(channel.id)}
             icon="minus"
+            loading={loading}
             label
           >
             Cancel request
@@ -129,6 +138,7 @@ export const UpsellRequestToJoinChannel = ({
             <Button
               onClick={() => subscribe(channel.id)}
               icon="private-unlocked"
+              loading={loading}
               label
             >
               Request to join {channel.name}
@@ -223,6 +233,7 @@ export const Upsell404Community = ({
 export const UpsellJoinCommunity = ({
   community,
   join,
+  loading,
 }: { community: Object, join: Function }) => {
   return (
     <NullCard
@@ -230,7 +241,7 @@ export const UpsellJoinCommunity = ({
       heading="Want to be a part of the conversation?"
       copy={`Join ${community.name} to get involved!`}
     >
-      <Button onClick={() => join(community.id)} icon="plus">
+      <Button loading={loading} onClick={() => join(community.id)} icon="plus">
         Join {community.name}
       </Button>
     </NullCard>
