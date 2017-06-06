@@ -1,5 +1,7 @@
 //@flow
 const { db } = require('./db');
+const Queue = require('bull');
+const messageNotificationQueue = new Queue('message notification');
 const { listenToNewDocumentsIn } = require('./utils');
 const { storeMessageNotification } = require('./notification');
 import type { PaginationOptions } from '../utils/paginate-arrays';
@@ -37,28 +39,25 @@ const getMediaMessagesForThread = (
     .run();
 };
 
-const storeMessage = (message, user: Object): Promise<Object> => {
+const storeMessage = (message: Object, userId: string): Promise<Object> => {
   // Insert a message
   return db
     .table('messages')
     .insert(
       Object.assign({}, message, {
         timestamp: new Date(),
-        senderId: user.id,
+        senderId: userId,
       }),
       { returnChanges: true }
     )
     .run()
     .then(result => result.changes[0].new_val)
     .then(message => {
-      storeMessageNotification({
-        message: message.id,
-        threadId: message.threadId,
-        senderId: message.senderId,
-        content: {
-          excerpt: message.content.body,
-        },
+      messageNotificationQueue.add({
+        message,
+        userId,
       });
+
       return message;
     });
 };

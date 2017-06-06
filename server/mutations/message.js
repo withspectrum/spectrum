@@ -38,7 +38,7 @@ module.exports = {
       // all checks passed
       if (message.messageType === 'text') {
         // send a normal text message
-        return storeMessage(message, currentUser);
+        return storeMessage(message, currentUser.id);
       } else if (message.messageType === 'media') {
         // upload the photo, return the photo url, then store the message
         return uploadImage(message.file, 'threads', message.threadId, url => {
@@ -54,7 +54,7 @@ module.exports = {
             },
           });
 
-          return storeMessage(newMessage, currentUser);
+          return storeMessage(newMessage, currentUser.id);
         });
       } else {
         return new UserError('Unknown message type on this bad boy.');

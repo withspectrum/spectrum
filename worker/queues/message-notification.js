@@ -29,11 +29,11 @@ const getDistinctActors = array => {
 export default () =>
   createQueue(MESSAGE_NOTIFICATION, job => {
     const incomingMessage = job.data.message;
-    const currentUser = job.data.user;
+    const currentUserId = job.data.userId;
 
     console.log('\n1', job);
     console.log('\n2', job.data.message);
-    console.log('\n3', job.data.user);
+    console.log('\n3', job.data.userId);
 
     // 10 minutes buffer to determine whether or not to create a new
     // notification or update an old one
@@ -140,7 +140,7 @@ export default () =>
                   // don't update the notification for the current user who
                   // triggered the event
                   let filteredRecipients = recipients.filter(
-                    recipient => recipient.id !== currentUser.id
+                    recipient => recipient.id !== currentUserId
                   );
                   // for each recipient, update the record in the
                   // usersNotifications table to have isRead and isSeen be false
@@ -191,7 +191,7 @@ export default () =>
                   // don't update the notification for the current user who
                   // triggered the event
                   let filteredRecipients = recipients.filter(
-                    recipient => recipient.id !== currentUser.id
+                    recipient => recipient.id !== currentUserId
                   );
 
                   return Promise.all(

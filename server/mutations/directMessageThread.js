@@ -73,7 +73,7 @@ module.exports = {
                 createMemberInDirectMessageThread(thread.id, participant, false)
               ),
               // create message
-              storeMessage(messageWithThread, currentUser),
+              storeMessage(messageWithThread, currentUser.id),
             ]);
           } else if (message.messageType === 'media') {
             // upload the photo, return the photo url, then store the message
@@ -104,7 +104,7 @@ module.exports = {
                   },
                 });
 
-                return storeMessage(newMessage, currentUser);
+                return storeMessage(newMessage, currentUser.id);
               }),
             ]);
           } else {

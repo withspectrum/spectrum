@@ -117,6 +117,7 @@ const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
     threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     lastActive: new Date(DATE),
     lastSeen: new Date(DATE),
+    receiveNotifications: true,
   },
 ];
 
@@ -129,6 +130,7 @@ const DEFAULT_USERS_COMMUNITIES = [
     isModerator: false,
     isMember: true,
     isBlocked: false,
+    receiveNotifications: true,
   },
 ];
 
@@ -142,6 +144,7 @@ const DEFAULT_USERS_CHANNELS = [
     isMember: true,
     isBlocked: false,
     isPending: false,
+    receiveNotifications: true,
   },
 ];
 

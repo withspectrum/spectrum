@@ -88,6 +88,7 @@ const generateUsersCommunities = (communityId, userId) => {
     isModerator,
     isMember,
     isBlocked,
+    receiveNotifications: true,
   };
 };
 
@@ -135,6 +136,7 @@ const generateUsersChannels = (channels, usersCommunities, userId) => {
       isMember,
       isBlocked,
       isPending,
+      receiveNotifications: true,
     };
   });
   return foo;
@@ -204,6 +206,7 @@ const generateUsersDirectMessageThreads = (threadId, userId) => {
     userId,
     lastActive,
     lastSeen,
+    receiveNotifications: true,
   };
 };
 
