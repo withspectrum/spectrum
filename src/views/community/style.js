@@ -54,17 +54,3 @@ export const CoverButton = styled(IconButton)`
     top: auto;
   }
 `;
-
-// export const MobileCommunityProfile = styled(FlexRow)`
-//   display: none;
-//
-//   @media (max-width: 768px) {
-//       display: inline-block;
-//       width: 100%;
-//       justify-content: center;
-//
-//       > div {
-//         width: 100%;
-//       }
-//   }
-// `;

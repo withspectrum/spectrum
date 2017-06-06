@@ -26,12 +26,7 @@ import {
   UpsellJoinCommunity,
   Upsell404Community,
 } from '../../components/upsell';
-import {
-  CoverRow,
-  CoverColumn,
-  CoverButton,
-  MobileCommunityProfile,
-} from './style';
+import { CoverRow, CoverColumn, CoverButton } from './style';
 
 import {
   getCommunityThreads,
