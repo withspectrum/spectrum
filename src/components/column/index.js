@@ -41,7 +41,8 @@ const SecondaryColumn = styled(BaseColumn)`
 
 const HalfColumn = styled(PrimaryColumn)`
   max-width: 840px;
-  flex: 0 0 50%;
+  flex: 0 0 75%;
+
   @media(max-width: 768px) {
     flex: 1;
     min-width: 100%;

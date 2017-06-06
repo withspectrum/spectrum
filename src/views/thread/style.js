@@ -19,13 +19,13 @@ export const RouteWrapper = styled(FlexRow)`
 `;
 
 export const DetailViewWrapper = styled(FlexRow)`
-  background-color: ${({ theme }) => theme.bg.default};
-  background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 25%, ${theme.bg.default} 75%, ${theme.bg.wash})`};
+  background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 15%, ${theme.bg.default} 85%, ${theme.bg.wash})`};
   flex: 1 1 auto;
   justify-content: center;
   align-items: flex-start;
 
   @media (max-width: 768px) {
+    background-color: ${({ theme }) => theme.bg.default};
     background-image: none;
   }
 `;
@@ -235,8 +235,8 @@ export const ChatInputWrapper = styled(FlexCol)`
   flex: 0 0 auto;
 
   > div {
-    background-color: ${({ theme }) => theme.bg.default};
-    background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.default}, ${hexa(theme.bg.wash, 0.25)} 2%, ${hexa(theme.bg.wash, 0.25)} 98%, ${theme.bg.default})`};
+    ${/* background-color: ${({ theme }) => theme.bg.default}; */ ''}
+    background-image: ${({ theme }) => `linear-gradient(to right, ${hexa(theme.bg.wash, 0.01)}, ${hexa(theme.bg.wash, 0.25)} 2%, ${hexa(theme.bg.wash, 0.25)} 98%, ${hexa(theme.bg.wash, 0.01)})`};
 
     > form > div {
       background-color: ${({ theme }) => theme.bg.default};
