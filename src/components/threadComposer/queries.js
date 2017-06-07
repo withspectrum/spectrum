@@ -38,6 +38,7 @@ query getComposerCommunitiesAndChannels {
           id
           name
           slug
+          isDefault
           community {
             id
           }
