@@ -49,7 +49,7 @@ export const Section = styled(FlexRow)`
   align-items: stretch;
 
   @media (max-width: 768px) {
-    flex: 1 1 ${props => (props.left ? '66%' : '33%')};
+    flex: 1 1 ${props => (props.left ? '50%' : '50%')};
     justify-content: space-around;
     display: ${props => (props.hideOnMobile ? 'none' : 'flex')};
   }
@@ -104,10 +104,25 @@ export const UnseenCount = styled.span`
   border-radius: 8px;
   padding: 2px 4px;
   border: 2px solid ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
+
+  @media (max-width: 768px) {
+    width: ${props => (props.size === 'large' ? '36px' : '20px')};
+    height: 20px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    font-size: 12px;
+    border-radius: 40px;
+    right: ${props => (props.size === 'large' ? '8px' : '24px')};
+  }
 `;
 
 export const DmUnseenCount = styled(UnseenCount)`
   right: ${props => (props.size === 'large' ? '80px' : '84px')};
+
+  @media (max-width: 768px) {
+    right: ${props => (props.size === 'large' ? '-8px' : '8px')};
+  }
 `;
 
 export const IconDrop = styled(FlexRow)`

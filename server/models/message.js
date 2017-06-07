@@ -47,7 +47,7 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
     .insert(
       Object.assign({}, message, {
         timestamp: new Date(),
-        senderId: user.id,
+        senderId: userId,
         content: {
           body: sanitize(message.content.body),
         },
