@@ -301,6 +301,8 @@ class ThreadComposerWithData extends Component {
         this.props.dispatch(
           addToastWithTimeout('success', 'Thread published!')
         );
+
+        this.props.dispatch(closeComposer('', ''));
       })
       .catch(err => {
         this.setState({
@@ -419,7 +421,7 @@ class ThreadComposerWithData extends Component {
               onKeyDown={this.listenForUrl}
               state={this.state.body}
               style={ThreadDescription}
-              editorRef={editor => (this.bodyEditor = editor)}
+              editorRef={editor => this.bodyEditor = editor}
               placeholder="Write more thoughts here, add photos, and anything else!"
             />
 
