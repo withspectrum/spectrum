@@ -6,8 +6,6 @@
 const { makeExecutableSchema } = require('graphql-tools');
 //$FlowFixMe
 const { merge } = require('lodash');
-//$FlowFixMe
-const { maskErrors } = require('graphql-errors');
 
 const scalars = require('./types/scalars');
 const generalTypes = require('./types/general');
@@ -114,9 +112,5 @@ const schema = makeExecutableSchema({
     notificationSubscriptions
   ),
 });
-
-if (process.env.NODE_ENV === 'production') {
-  maskErrors(schema);
-}
 
 module.exports = schema;

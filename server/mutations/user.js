@@ -2,7 +2,7 @@
 import { editUser } from '../models/user';
 import type { EditUserArguments } from '../models/user';
 // $FlowFixMe
-import { UserError } from 'graphql-errors';
+import UserError from '../utils/UserError';
 
 module.exports = {
   Mutation: {
