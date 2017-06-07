@@ -13,15 +13,14 @@ import { LoadingThread } from '../loading';
 import { Button } from '../buttons';
 import { FetchMoreButton } from './style';
 
-const NullState = () => (
+const NullState = () =>
   <NullCard
     bg="post"
     heading={`Sorry, no threads here yet...`}
     copy={`But you could start one!`}
-  />
-);
+  />;
 
-const ErrorState = () => (
+const ErrorState = () =>
   <NullCard
     bg="error"
     heading={`Whoops!`}
@@ -30,8 +29,7 @@ const ErrorState = () => (
     <Button icon="view-reload" onClick={() => location.reload(true)}>
       Reload
     </Button>
-  </NullCard>
-);
+  </NullCard>;
 
 const Threads = styled.div`
   min-width: 100%;
@@ -42,7 +40,7 @@ const Threads = styled.div`
   }
 
   @media (max-width: 768px) {
-    margin-bottom: 48px;
+    
   }
 `;
 
@@ -101,7 +99,8 @@ class ThreadFeedPure extends Component {
         </Threads>
       );
     } else if (
-      (error && threads.length > 0) || (error && threads.length === 0)
+      (error && threads.length > 0) ||
+      (error && threads.length === 0)
     ) {
       return <ErrorState />;
     } else if (threads.length === 0 && currentUser) {

@@ -10,6 +10,7 @@ import { UpsellSignIn, NullCard } from '../../components/upsell';
 import UpsellNewUser from '../../components/upsell/newUserUpsell';
 import { Button } from '../../components/buttons';
 import { displayLoadingScreen } from '../../components/loading';
+import { FlexCol } from '../../components/globals';
 import { Column } from '../../components/column';
 import { UserProfile } from '../../components/profile';
 import ThreadFeed from '../../components/threadFeed';
@@ -46,64 +47,75 @@ class DashboardPure extends Component {
   render() {
     const { data: { user, error } } = this.props;
     const { isNewUser } = this.state;
+    const isMobile = window.innerWidth < 768;
 
     if (error) {
       return (
-        <AppViewWrapper>
+        <FlexCol style={{ flex: 'auto' }}>
           <Titlebar noComposer />
-          <Column type="primary" alignItems="center">
-            <NullCard
-              bg="error"
-              heading="Whoops! Something broke the home page."
-              copy="Mind reloading?"
-            >
-              <Button icon="view-reload" onClick={() => location.reload(true)}>
-                Reload
-              </Button>
-            </NullCard>
-          </Column>
-        </AppViewWrapper>
+          <AppViewWrapper>
+            <Column type="primary" alignItems="center">
+              <NullCard
+                bg="error"
+                heading="Whoops! Something broke the home page."
+                copy="Mind reloading?"
+              >
+                <Button
+                  icon="view-reload"
+                  onClick={() => location.reload(true)}
+                >
+                  Reload
+                </Button>
+              </NullCard>
+            </Column>
+          </AppViewWrapper>
+        </FlexCol>
       );
     } else if (user && user !== null) {
       const currentUser = user;
       const communities = user.communityConnection.edges;
 
       return (
-        <AppViewWrapper>
+        <FlexCol style={{ flex: 'auto' }}>
           <Titlebar />
+          <AppViewWrapper>
 
-          {!isNewUser &&
-            <Column type="secondary">
-              <UserProfile profileSize="mini" data={{ user: user }} />
-              {!isNewUser &&
-                <CommunityList
-                  withDescription={false}
-                  currentUser={currentUser}
-                  user={user}
-                  communities={communities}
-                />}
-            </Column>}
-
-          <Column type="primary">
             {!isNewUser &&
-              <span>
-                <ThreadComposer />
-                <EverythingThreadFeed viewContext="dashboard" />
-              </span>}
+              !isMobile &&
+              <Column type="secondary">
+                <UserProfile profileSize="mini" data={{ user: user }} />
+                {!isNewUser &&
+                  <CommunityList
+                    withDescription={false}
+                    currentUser={currentUser}
+                    user={user}
+                    communities={communities}
+                  />}
+              </Column>}
 
-            {isNewUser &&
-              <UpsellNewUser user={user} graduate={this.graduate} />}
-          </Column>
-        </AppViewWrapper>
+            <Column type="primary">
+              {!isNewUser &&
+                <span>
+                  <ThreadComposer />
+                  <EverythingThreadFeed viewContext="dashboard" />
+                </span>}
+
+              {isNewUser &&
+                <UpsellNewUser user={user} graduate={this.graduate} />}
+            </Column>
+          </AppViewWrapper>
+        </FlexCol>
       );
     } else {
       return (
-        <AppViewWrapper>
+        <FlexCol style={{ flex: 'auto' }}>
           <Titlebar noComposer />
-          <Column type="primary" alignItems="center">
-            <UpsellSignIn />
-          </Column>
-        </AppViewWrapper>
+          <AppViewWrapper>
+            <Column type="primary" alignItems="center">
+              <UpsellSignIn />
+            </Column>
+          </AppViewWrapper>
+        </FlexCol>
       );
     }
   }
