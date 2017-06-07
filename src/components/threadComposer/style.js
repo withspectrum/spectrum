@@ -37,7 +37,7 @@ export const Composer = styled(Card)`
 
   @media (max-width: 768px) {
     width: calc(100% - 16px);
-    margin: 24px 8px 0 8px;
+    margin: 56px 8px;
     height: 90%;
     pointer-events: all;
   }

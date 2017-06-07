@@ -88,4 +88,8 @@ export const ImageInputWrapper = styled(FlexCol)`
     bottom: -24px;
     left: 24px;
   }
+
+  @media (max-width: 768px) {
+    margin-top: 16px;
+  }
 `;
