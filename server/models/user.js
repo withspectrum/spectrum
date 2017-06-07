@@ -1,7 +1,7 @@
 // @flow
 const { db } = require('./db');
 // $FlowFixMe
-import { UserError } from 'graphql-errors';
+import UserError from '../utils/UserError';
 import { uploadImage } from '../utils/s3';
 
 const getUser = (input: Object): Promise<Object> => {

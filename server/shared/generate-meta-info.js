@@ -10,7 +10,7 @@
  */
 var slate = require('./slate-utils');
 var truncate = require('./truncate');
-var sanitize = require('sanitize-html');
+var sanitizer = require('sanitizer');
 
 var DEFAULT_META = {
   title: 'Spectrum',
@@ -69,13 +69,7 @@ function setDefault(input /*: MaybeMeta */) /*: Meta */ {
 }
 
 function cleanDescription(input /*: string */) /*: string */ {
-  return truncate(
-    sanitize(input, {
-      allowedTags: [],
-      allowedAttributes: [],
-    }),
-    160
-  );
+  return truncate(sanitizer.sanitize(input), 160);
 }
 
 function generateMetaInfo(input /*: Input */) /*: Meta */ {

@@ -1,6 +1,6 @@
 // @flow
 // $FlowFixMe
-const { UserError } = require('graphql-errors');
+import UserError from '../utils/UserError';
 // $FlowFixMe
 const env = require('node-env-file');
 const IS_PROD = process.env.NODE_ENV === 'production';

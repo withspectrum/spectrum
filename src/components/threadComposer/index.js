@@ -44,11 +44,11 @@ class ThreadComposerWithData extends Component {
     body: string,
     availableCommunities: Array<any>,
     availableChannels: Array<any>,
-    activeCommunity: string,
-    activeChannel: string,
+    activeCommunity: ?string,
+    activeChannel: ?string,
     isPublishing: boolean,
-    linkPreview: Object,
-    linkPreviewTrueUrl: string,
+    linkPreview: ?Object,
+    linkPreviewTrueUrl: ?string,
     linkPreviewLength: number,
     fetchingLinkPreview: boolean,
   };
@@ -92,32 +92,34 @@ class ThreadComposerWithData extends Component {
       If no defaults are set, we use the first available community, and then
       find the first available channel within that available community
     */
-    let activeCommunity = props.activeCommunity
-      ? availableCommunities.filter(community => {
-          return community.slug === props.activeCommunity;
-        })[0].id
-      : availableCommunities[0].id;
+    let activeCommunity =
+      availableCommunities &&
+      (props.activeCommunity
+        ? availableCommunities.filter(community => {
+            return community.slug === props.activeCommunity;
+          })[0].id
+        : availableCommunities[0].id);
 
-    let activeChannel = props.activeChannel
-      ? availableChannels
-          .filter(
-            // get the channels for the proper community
-            channel => channel.community.id === activeCommunity
-          )
-          .filter(channel => {
-            // get the correct channel based on the slug
-            if (channel.slug === props.activeChannel) {
-              return channel;
-            }
-          })
-      : availableChannels.filter(
-          // get the channels for the proper community
-          channel => {
-            if (channel.community.id === activeCommunity) {
-              return channel;
-            }
-          }
-        ); // and select the first one in the list
+    // get the channels for the proper community
+    const activeCommunityChannels = availableChannels.filter(
+      channel => channel.community.id === activeCommunity
+    );
+    let activeChannel = [];
+
+    // Get the active channel if there is one
+    if (props.activeChannel) {
+      activeChannel = activeCommunityChannels.filter(
+        channel => channel.slug === props.activeChannel
+      );
+    } else {
+      // Try and get the default channel for the active community
+      activeChannel = activeCommunityChannels.filter(
+        channel => channel.isDefault
+      );
+      // If there is no default channel capitulate and take the first one
+      if (activeChannel.length === 0)
+        activeChannel = activeCommunityChannels[0];
+    }
 
     // ensure that if no items were found for some reason, we don't crash the app
     // and instead just set null values on the composer
@@ -157,9 +159,10 @@ class ThreadComposerWithData extends Component {
 
   componentDidUpdate(prevProps) {
     const { availableCommunities, availableChannels } = this.state;
+    let activeCommunity;
 
     if (prevProps.activeCommunity !== this.props.activeCommunity) {
-      const activeCommunity = this.props.activeCommunity
+      activeCommunity = this.props.activeCommunity
         ? availableCommunities.filter(community => {
             return community.slug === this.props.activeCommunity;
           })[0].id
@@ -171,21 +174,28 @@ class ThreadComposerWithData extends Component {
     }
 
     if (prevProps.activeChannel !== this.props.activeChannel) {
-      const activeChannel = this.props.activeChannel
-        ? availableChannels
-            .filter(
-              // get the channels for the proper community
-              channel => channel.community.id === this.props.activeCommunity
-            )
-            .map(
-              channel =>
-                // get the correct channel based on the slug
-                channel.slug === this.props.activeChannel
-            ).id
-        : availableChannels.filter(
-            // get the channels for the proper community
-            channel => channel.community.id === this.props.activeCommunity
-          )[0].id; // and select the first one in the list
+      const activeCommunityChannels = availableChannels.filter(
+        channel => channel.community.id === activeCommunity
+      );
+      let activeChannel = [];
+
+      // Get the active channel if there is one
+      if (this.props.activeChannel) {
+        activeChannel = activeCommunityChannels.filter(
+          channel => channel.slug === this.props.activeChannel
+        );
+      } else {
+        // Try and get the default channel for the active community
+        activeChannel = activeCommunityChannels.filter(
+          channel => channel.isDefault
+        );
+        // If there is no default channel capitulate and take the first one
+        if (activeChannel.length === 0) activeChannel = activeCommunityChannels;
+      }
+
+      // ensure that if no items were found for some reason, we don't crash the app
+      // and instead just set null values on the composer
+      activeChannel = activeChannel.length > 0 ? activeChannel[0].id : null;
 
       this.setState({
         activeChannel,
@@ -210,13 +220,30 @@ class ThreadComposerWithData extends Component {
 
   setActiveCommunity = e => {
     const newActiveCommunity = e.target.value;
-    const newActiveChannel = this.state.availableChannels.filter(
+    const activeCommunityChannels = this.state.availableChannels.filter(
       channel => channel.community.id === newActiveCommunity
-    )[0].id;
+    );
+    const newActiveCommunityData = this.state.availableCommunities.find(
+      community => community.id === newActiveCommunity
+    );
+    const newActiveChannel =
+      activeCommunityChannels.find(channel => {
+        // If there is an active channel and we're switching back to the currently open community
+        // select that channel
+        if (
+          this.props.activeChannel &&
+          this.props.activeCommunity === newActiveCommunityData.slug
+        ) {
+          return channel.slug === this.props.activeChannel;
+        }
+        // Otherwise select the default one
+        return channel.isDefault;
+        // Default to the first channel if no default one can be found
+      }) || activeCommunityChannels[0];
 
     this.setState({
       activeCommunity: newActiveCommunity,
-      activeChannel: newActiveChannel,
+      activeChannel: newActiveChannel.id,
     });
   };
 
@@ -419,7 +446,7 @@ class ThreadComposerWithData extends Component {
               onKeyDown={this.listenForUrl}
               state={this.state.body}
               style={ThreadDescription}
-              editorRef={editor => (this.bodyEditor = editor)}
+              editorRef={editor => this.bodyEditor = editor}
               placeholder="Write more thoughts here, add photos, and anything else!"
             />
 
@@ -443,7 +470,7 @@ class ThreadComposerWithData extends Component {
                 />
                 <select
                   onChange={this.setActiveCommunity}
-                  defaultValue={activeCommunity}
+                  value={activeCommunity}
                 >
                   {availableCommunities.map(community => {
                     return (
@@ -458,10 +485,7 @@ class ThreadComposerWithData extends Component {
                   tipText="Select a channel"
                   tipLocation="top-right"
                 />
-                <select
-                  onChange={this.setActiveChannel}
-                  defaultValue={activeChannel}
-                >
+                <select onChange={this.setActiveChannel} value={activeChannel}>
                   {availableChannels
                     .filter(channel => channel.community.id === activeCommunity)
                     .map((channel, i) => {

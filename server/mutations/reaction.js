@@ -1,6 +1,6 @@
 // @flow
 // $FlowFixMe
-const { UserError } = require('graphql-errors');
+import UserError from '../utils/UserError';
 import { toggleReaction } from '../models/reaction';
 import type { ReactionInput } from '../models/reaction';
 
