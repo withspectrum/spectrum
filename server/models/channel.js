@@ -2,6 +2,9 @@
 const { db } = require('./db');
 // $FlowFixMe
 import { UserError } from 'graphql-errors';
+// $FlowFixMe
+const Queue = require('bull');
+const channelNotificationQueue = new Queue('channel notification');
 
 const getChannelsByCommunity = (
   communityId: string
@@ -163,9 +166,12 @@ export type EditChannelArguments = {
   },
 };
 
-const createChannel = ({
-  input: { communityId, name, slug, description, isPrivate, isDefault },
-}: CreateChannelArguments): Promise<Object> => {
+const createChannel = (
+  {
+    input: { communityId, name, slug, description, isPrivate, isDefault },
+  }: CreateChannelArguments,
+  userId: string
+): Promise<Object> => {
   return db
     .table('channels')
     .insert(
@@ -181,20 +187,34 @@ const createChannel = ({
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => result.changes[0].new_val)
+    .then(channel => {
+      channelNotificationQueue.add({
+        channel,
+        userId,
+      });
+
+      return channel;
+    });
 };
 
-const createGeneralChannel = (communityId: string): Promise<Object> => {
-  return createChannel({
-    input: {
-      name: 'General',
-      slug: 'general',
-      description: 'General Chatter',
-      communityId,
-      isPrivate: false,
-      isDefault: true,
+const createGeneralChannel = (
+  communityId: string,
+  userId: string
+): Promise<Object> => {
+  return createChannel(
+    {
+      input: {
+        name: 'General',
+        slug: 'general',
+        description: 'General Chatter',
+        communityId,
+        isPrivate: false,
+        isDefault: true,
+      },
     },
-  });
+    userId
+  );
 };
 
 const editChannel = ({

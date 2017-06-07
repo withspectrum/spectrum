@@ -2,6 +2,7 @@
 import createQueue from '../create-queue';
 import { MESSAGE_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
+import { getDistinctActors } from '../utils/actors';
 import {
   storeNotification,
   updateNotification,
@@ -15,19 +16,6 @@ import { getThreadNotificationUsers } from '../models/usersThreads';
 import {
   getDirectMessageThreadMembers,
 } from '../models/usersDirectMessageThreads';
-
-const getDistinctActors = array => {
-  let unique = {};
-  let distinct = [];
-  for (let i in array) {
-    if (typeof unique[array[i].id] == 'undefined') {
-      distinct.push(array[i]);
-    }
-    unique[array[i].id] = 0;
-  }
-  console.log('\n8-4', distinct);
-  return distinct;
-};
 
 export default () =>
   createQueue(MESSAGE_NOTIFICATION, job => {

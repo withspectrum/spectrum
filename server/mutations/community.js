@@ -74,7 +74,10 @@ module.exports = {
             );
 
             // create a default 'general' channel
-            const generalChannel = createGeneralChannel(community.id);
+            const generalChannel = createGeneralChannel(
+              community.id,
+              currentUser.id
+            );
 
             return Promise.all([
               community,

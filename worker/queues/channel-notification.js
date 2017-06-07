@@ -1,9 +1,10 @@
 // @flow
 import createQueue from '../create-queue';
-import { REACTION_NOTIFICATION } from './constants';
+import { CHANNEL_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
-import { getMessageById } from '../models/message';
+import { getCommunityById } from '../models/community';
+import { getMembersInCommunity } from '../models/usersCommunities';
 import {
   storeNotification,
   updateNotification,
@@ -15,12 +16,12 @@ import {
 } from '../models/usersNotifications';
 
 export default () =>
-  createQueue(REACTION_NOTIFICATION, job => {
-    const incomingReaction = job.data.reaction;
+  createQueue(CHANNEL_NOTIFICATION, job => {
+    const incomingChannel = job.data.channel;
     const currentUserId = job.data.userId;
 
     console.log('\n1', job);
-    console.log('\n2', job.data.message);
+    console.log('\n2', job.data.channel);
     console.log('\n3', job.data.userId);
 
     // 10 minutes buffer to determine whether or not to create a new
@@ -50,8 +51,8 @@ export default () =>
     // 1. Determine if a notification exists with the same event type, context
     //    id, and falls within the declared time buffer
     return checkForExistingNotification(
-      'REACTION_CREATED',
-      incomingReaction.messageId,
+      'CHANNEL_CREATED',
+      incomingChannel.communityId,
       TIME_BUFFER
     )
       .then(notification => {
@@ -67,12 +68,12 @@ export default () =>
           thread or as a direct message thread
         */
 
-        console.log('\nactor', incomingReaction.userId);
-        console.log('\nentity', incomingReaction);
+        console.log('\nactor', currentUserId);
+        console.log('\nentity', incomingChannel);
         const promises = [
-          fetchPayload('USER', incomingReaction.userId),
-          fetchPayload('MESSAGE', incomingReaction.messageId),
-          createPayload('REACTION', incomingReaction),
+          fetchPayload('USER', currentUserId),
+          fetchPayload('COMMUNITY', incomingChannel.communityId),
+          createPayload('CHANNEL', incomingChannel),
         ];
 
         // 2. If a notification was found that met all of our criteria, we will
@@ -115,23 +116,36 @@ export default () =>
                 // this notification. In this case it is thread participants
                 // or if the message was in a dm thread it's all the members
                 // of that dm thread
-                const recipient = getMessageById(notification.context.id);
+                const recipients = getMembersInCommunity(
+                  notification.context.id
+                );
 
-                return Promise.all([notification, recipient]);
+                return Promise.all([notification, recipients]);
               })
-              .then(([notification, recipient]) => {
+              .then(([notification, recipients]) => {
                 // ensure we have valid recipients
-                console.log('\n8-7', recipient);
-                if (recipient) {
-                  // for each recipient, update the record in the
-                  // usersNotifications table to have isRead and isSeen be false
-                  return markUsersNotificationsAsNew(
-                    notification.id,
-                    recipient.senderId
-                  ).then(data => {
-                    console.log('\n8-8', data);
-                    return data;
-                  });
+                console.log('\n8-7', recipients);
+                if (recipients && recipients.length > 0) {
+                  if (recipients && recipients.length > 0) {
+                    // don't update the notification for the current user who
+                    // triggered the event
+                    let filteredRecipients = recipients.filter(
+                      recipient => recipient !== currentUserId
+                    );
+                    // for each recipient, update the record in the
+                    // usersNotifications table to have isRead and isSeen be false
+                    return Promise.all(
+                      filteredRecipients.map(recipient =>
+                        markUsersNotificationsAsNew(
+                          notification.id,
+                          recipient
+                        ).then(data => {
+                          console.log('\n8-8', data);
+                          return data;
+                        })
+                      )
+                    );
+                  }
                 }
               });
           });
@@ -147,30 +161,49 @@ export default () =>
             // create the notification record
             const notification = {
               actors: [actor],
-              event: 'REACTION_CREATED',
+              event: 'CHANNEL_CREATED',
               context,
               entities: [entity],
             };
+
+            if (incomingChannel.slug === 'general') {
+              // if the channel is the default channel being created at community
+              // creation time, don't create a notification
+              return;
+            }
 
             return storeNotification(notification)
               .then(notification => {
                 console.log('\n9-4', notification);
                 // with the new notification, calculate the recipients of
                 // this notification. In this case it is thread participants
-                const recipient = getMessageById(notification.context.id);
+                const recipients = getMembersInCommunity(
+                  notification.context.id
+                );
 
-                return Promise.all([notification, recipient]);
+                return Promise.all([notification, recipients]);
               })
-              .then(([notification, recipient]) => {
-                console.log('\n9-5', recipient);
-                if (recipient) {
-                  return storeUsersNotifications(
-                    notification.id,
-                    recipient.senderId
-                  ).then(data => {
-                    console.log('\n9-6', data);
-                    return data;
-                  });
+              .then(([notification, recipients]) => {
+                console.log('\n9-5', recipients);
+                if (recipients && recipients.length > 0) {
+                  // don't update the notification for the current user who
+                  // triggered the event
+                  let filteredRecipients = recipients.filter(
+                    recipient => recipient !== currentUserId
+                  );
+                  // for each recipient, update the record in the
+                  // usersNotifications table to have isRead and isSeen be false
+                  return Promise.all(
+                    filteredRecipients.map(recipient =>
+                      storeUsersNotifications(
+                        notification.id,
+                        recipient
+                      ).then(data => {
+                        console.log('\n9-6', data);
+                        return data;
+                      })
+                    )
+                  );
                 }
               });
           });
