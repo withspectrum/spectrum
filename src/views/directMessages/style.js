@@ -3,13 +3,12 @@ import { FlexCol, FlexRow } from '../../components/globals';
 
 export const View = styled(FlexRow)`
   align-items: stretch;
-  flex: 0 0 auto;
   background: #fff;
   max-height: calc(100% - 48px);
 
   @media( max-width: 768px) {
     flex-direction: column;
-    flex: 1 1 auto;
+    flex: auto;
   }
 `;
 
@@ -18,7 +17,8 @@ export const ViewContent = styled(FlexCol)`
   flex-direction: column;
   flex: 1 1 auto;
   overflow-y: scroll;
-  max-height: ${props => (props.moved ? 'calc(100% - 96px)' : 'calc(100% - 48px)')};
+  max-height: ${props =>
+    props.moved ? 'calc(100% - 96px)' : 'calc(100% - 48px)'};
   align-items: center;
   align-content: flex-start;
 `;
