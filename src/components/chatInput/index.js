@@ -1,6 +1,5 @@
 // @flow
 import React, { Component } from 'react';
-import { findDOMNode } from 'react-dom';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // // $FlowFixMe
@@ -24,25 +23,25 @@ import {
 } from './style';
 import { sendMessageMutation } from '../../api/message';
 
-// const InputEditor = styled(Editor)`
-//   width: 100%;
-//   height: 100%;
-// `;
-
 class ChatInputWithMutation extends Component {
   submit = e => {
     e.preventDefault();
+
     const {
       state,
       thread,
       threadType,
       createThread,
       refetchThread,
-      clear,
       dispatch,
       sendMessage,
+      clear,
+      forceScrollToBottom,
     } = this.props;
-    const input = findDOMNode(this.refs.chatInput);
+
+    // if a user sends a message, force a scroll to bottom
+    forceScrollToBottom();
+
     // If the input is empty don't do anything
     if (toPlainText(state).trim() === '') return;
 
@@ -70,16 +69,18 @@ class ChatInputWithMutation extends Component {
         body: toPlainText(state),
       },
     })
-      .then(() => {
-        // clear the input
-        clear();
-        // refocus the input
-        this.editor.focus();
+      .then(({ data: { addMessage } }) => {
         track(`${threadType} message`, 'text message created', null);
       })
       .catch(err => {
         dispatch(addToastWithTimeout('error', err.message));
       });
+
+    // refocus the input
+    setTimeout(() => {
+      clear();
+      this.editor.focus();
+    });
   };
 
   handleEnter = e => {
@@ -90,7 +91,15 @@ class ChatInputWithMutation extends Component {
 
   sendMediaMessage = e => {
     const file = e.target.files[0];
-    const { thread, threadType, createThread, clear, dispatch } = this.props;
+    const {
+      thread,
+      threadType,
+      createThread,
+      dispatch,
+      forceScrollToBottom,
+    } = this.props;
+
+    forceScrollToBottom();
 
     if (thread === 'newDirectMessageThread') {
       return createThread({
@@ -110,7 +119,6 @@ class ChatInputWithMutation extends Component {
         file,
       })
       .then(({ sendMessage }) => {
-        clear();
         track(`${threadType} message`, 'media message created', null);
       })
       .catch(err => {
@@ -154,7 +162,6 @@ class ChatInputWithMutation extends Component {
             onFocus={onFocus}
             onBlur={onBlur}
             singleLine
-            ref={'chatInput'}
             editorRef={editor => this.editor = editor}
           />
           <SendButton glyph="send-fill" onClick={this.submit} />

@@ -1,6 +1,6 @@
 //@flow
 // $FlowFixMe
-const { UserError } = require('graphql-errors');
+import UserError from '../utils/UserError';
 const { storeMessage } = require('../models/message');
 import type { MessageProps } from '../models/message';
 import { setThreadLastActive } from '../models/directMessageThread';

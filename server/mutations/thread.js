@@ -1,6 +1,6 @@
 // @flow
 // $FlowFixMe
-const { UserError } = require('graphql-errors');
+import UserError from '../utils/UserError';
 import { getChannels } from '../models/channel';
 import { getCommunities } from '../models/community';
 import { getUserPermissionsInChannel } from '../models/usersChannels';

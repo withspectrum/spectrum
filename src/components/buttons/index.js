@@ -6,6 +6,7 @@ import {
   StyledTextButton,
   StyledIconButton,
   StyledOutlineButton,
+  SpinnerContainer,
 } from './style';
 import { Spinner } from '../globals';
 import { Loading } from '../loading';
@@ -41,7 +42,9 @@ export const Button = (props: ButtonProps) => (
   <StyledSolidButton {...props}>
     {props.icon
       ? props.loading
-          ? <Spinner color="text.reverse" size="16" />
+          ? <SpinnerContainer>
+              <Spinner color="text.reverse" size="16" />
+            </SpinnerContainer>
           : <Icon glyph={props.icon} />
       : ''}
     {props.loading && !props.icon && <Spinner color="text.reverse" size="16" />}
@@ -53,7 +56,9 @@ export const OutlineButton = (props: ButtonProps) => (
   <StyledOutlineButton {...props}>
     {props.icon
       ? props.loading
-          ? <Spinner color="brand.alt" size="16" />
+          ? <SpinnerContainer>
+              <Spinner color="brand.alt" size="16" />
+            </SpinnerContainer>
           : <Icon glyph={props.icon} />
       : ''}
     {props.loading && !props.icon && <Spinner color="brand.alt" size="16" />}
@@ -65,7 +70,9 @@ export const TextButton = (props: ButtonProps) => (
   <StyledTextButton {...props}>
     {props.icon
       ? props.loading
-          ? <Spinner color="text.alt" size="16" />
+          ? <SpinnerContainer>
+              <Spinner color="text.alt" size="16" />
+            </SpinnerContainer>
           : <Icon glyph={props.icon} />
       : ''}
     {props.loading && !props.icon && <Spinner color="text.alt" size="16" />}

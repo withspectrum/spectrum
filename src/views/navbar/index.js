@@ -160,75 +160,56 @@ class Navbar extends Component {
 
     if (!currentUser || currentUser === null) {
       return (
-        <Container>
-          {/*
-            Nav contains global navigation elements like getting to messages,
-            profile, home, explore, etc.
-          */}
-          <Nav>
-            <Section left hideOnMobile>
-              <LogoLink to="/">
-                <Logo src="/img/mark-white.png" role="presentation" />
-              </LogoLink>
-            </Section>
-            <Section right>
-              <Button
-                onClick={this.login}
-                icon="twitter"
-                style={{ padding: '2px 4px' }}
-              >
-                Sign in
-              </Button>
-            </Section>
-          </Nav>
-
-          {/*
-            Spacer is used to globally push all app elements below the fixed
-            position nav
-          */}
-          <Spacer />
-        </Container>
+        <Nav>
+          <Section left hideOnMobile>
+            <LogoLink to="/">
+              <Logo src="/img/mark-white.png" role="presentation" />
+            </LogoLink>
+          </Section>
+          <Section right>
+            <Button
+              onClick={this.login}
+              icon="twitter"
+              style={{ padding: '2px 4px' }}
+            >
+              Sign in
+            </Button>
+          </Section>
+        </Nav>
       );
     } else {
       return (
-        <Container>
-          {/*
-            Nav contains global navigation elements like getting to messages,
-            profile, home, explore, etc.
-          */}
-          <Nav>
-            <Section left>
-              <LogoLink to="/">
-                <Logo src="/img/mark-white.png" role="presentation" />
-              </LogoLink>
+        <Nav>
+          <Section left>
+            <LogoLink to="/">
+              <Logo src="/img/mark-white.png" role="presentation" />
+            </LogoLink>
 
-              <IconLink
-                data-active={match.url === '/'}
-                data-mobileWidth={'third'}
-                to="/"
-              >
-                <Icon glyph="home" />
-                <Label>Home</Label>
-              </IconLink>
+            <IconLink
+              data-active={match.url === '/' && match.isExact}
+              data-mobileWidth={'third'}
+              to="/"
+            >
+              <Icon glyph="home" />
+              <Label>Home</Label>
+            </IconLink>
 
-              <IconLink
-                data-active={match.url.includes('/messages')}
-                data-mobileWidth={'third'}
-                to="/messages"
-                onClick={this.markDmNotificationsAsSeen}
-              >
-                <Icon glyph={dmUnseenCount > 0 ? 'message-fill' : 'message'} />
-                {dmUnseenCount > 0
-                  ? <DmUnseenCount
-                      size={dmUnseenCount >= 10 ? 'large' : 'small'}
-                    >
-                      {dmUnseenCount >= 10 ? '10+' : dmUnseenCount}
-                    </DmUnseenCount>
-                  : null}
-                <Label>Messages</Label>
-              </IconLink>
+            <IconLink
+              data-active={match.url.includes('/messages')}
+              data-mobileWidth={'third'}
+              to="/messages"
+              onClick={this.markDmNotificationsAsSeen}
+            >
+              <Icon glyph={dmUnseenCount > 0 ? 'message-fill' : 'message'} />
+              {dmUnseenCount > 0
+                ? <DmUnseenCount size={dmUnseenCount >= 10 ? 'large' : 'small'}>
+                    {dmUnseenCount >= 10 ? '10+' : dmUnseenCount}
+                  </DmUnseenCount>
+                : null}
+              <Label>Messages</Label>
+            </IconLink>
 
-              {/* <IconLink
+            {/* <IconLink
                 data-active={match.url === '/explore'}
                 data-mobileWidth={'third'}
                 to="/explore"
@@ -236,60 +217,53 @@ class Navbar extends Component {
                 <Icon glyph="explore" />
                 <Label>Explore</Label>
               </IconLink> */}
-            </Section>
+          </Section>
 
-            <Section right>
-              <IconDrop onMouseLeave={this.markAllNotificationsSeen}>
-                <IconLink
-                  data-active={match.url === '/notifications'}
-                  data-mobileWidth={'half'}
-                  to="/notifications"
-                >
-                  <Icon
-                    glyph={
-                      allUnseenCount > 0 ? 'notification-fill' : 'notification'
-                    }
-                  />
-                  {allUnseenCount > 0
-                    ? <UnseenCount
-                        size={allUnseenCount >= 10 ? 'large' : 'small'}
-                      >
-                        {allUnseenCount >= 10 ? '10+' : allUnseenCount}
-                      </UnseenCount>
-                    : null}
-                  <LabelForTab>Notifications</LabelForTab>
-                </IconLink>
-                <NotificationDropdown
-                  notifications={notifications}
-                  markAllRead={this.markAllNotificationsRead}
+          <Section right>
+            <IconDrop onMouseLeave={this.markAllNotificationsSeen}>
+              <IconLink
+                data-active={match.url === '/notifications'}
+                data-mobileWidth={'half'}
+                to="/notifications"
+              >
+                <Icon
+                  glyph={
+                    allUnseenCount > 0 ? 'notification-fill' : 'notification'
+                  }
                 />
-              </IconDrop>
+                {allUnseenCount > 0
+                  ? <UnseenCount
+                      size={allUnseenCount >= 10 ? 'large' : 'small'}
+                    >
+                      {allUnseenCount >= 10 ? '10+' : allUnseenCount}
+                    </UnseenCount>
+                  : null}
+                <LabelForTab>Notifications</LabelForTab>
+              </IconLink>
+              <NotificationDropdown
+                notifications={notifications}
+                markAllRead={this.markAllNotificationsRead}
+              />
+            </IconDrop>
 
-              <IconDrop>
-                <IconLink
-                  data-active={match.url === `/users/${currentUser.username}`}
-                  to={`/users/${currentUser.username}`}
-                >
-                  <UserProfileAvatar
-                    src={`${currentUser.profilePhoto}`}
-                    isPro={currentUser.isPro}
-                    size="24"
-                    radius="12"
-                  />
-                  <LabelForTab>Profile</LabelForTab>
-                </IconLink>
-                <ProfileDropdown user={currentUser} />
-              </IconDrop>
-            </Section>
+            <IconDrop>
+              <IconLink
+                data-active={match.url === `/users/${currentUser.username}`}
+                to={`/users/${currentUser.username}`}
+              >
+                <UserProfileAvatar
+                  src={`${currentUser.profilePhoto}`}
+                  isPro={currentUser.isPro}
+                  size="24"
+                  radius="12"
+                />
+                <LabelForTab>Profile</LabelForTab>
+              </IconLink>
+              <ProfileDropdown user={currentUser} />
+            </IconDrop>
+          </Section>
 
-          </Nav>
-
-          {/*
-            Spacer is used to globally push all app elements below the fixed
-            position nav
-          */}
-          <Spacer />
-        </Container>
+        </Nav>
       );
     }
   }

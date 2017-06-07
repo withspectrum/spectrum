@@ -57,6 +57,10 @@ export const ActionContainer = styled(FlexCol)`
 
 export const StyledCard = styled(Card)`
   padding: 12px 16px 12px 20px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const ListHeading = styled(H3)`

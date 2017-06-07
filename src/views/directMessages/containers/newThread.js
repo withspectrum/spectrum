@@ -143,6 +143,7 @@ class NewThread extends Component {
 
           // filter the search results to only show users who aren't already selected
           // then filter that list to remove the currentUser so you can't message yourself
+
           let searchResults = selectedUsersForNewThread
             ? searchUsers
                 .filter(user => selectedUsersIds.indexOf(user.id) < 0)
@@ -301,6 +302,7 @@ class NewThread extends Component {
 
       // 1
       if (indexOfFocusedSearchResult === searchResults.length - 1) return;
+      if (searchResults.length === 1) return;
 
       // 2
       this.setState({
@@ -322,6 +324,7 @@ class NewThread extends Component {
 
       // 1
       if (indexOfFocusedSearchResult === 0) return;
+      if (searchResults.length === 1) return;
 
       // 2
       this.setState({
@@ -364,7 +367,6 @@ class NewThread extends Component {
 
     // add the new user to the state array
     selectedUsersForNewThread.push(user);
-
     this.setState({
       selectedUsersForNewThread,
       searchResults: [],
@@ -466,8 +468,8 @@ class NewThread extends Component {
       return {
         id: thread.id,
         participants: thread.participants
-          .filter(user => user.id !== currentUser.id)
-          .map(user => user.id),
+          .filter(user => user.userId !== currentUser.id)
+          .map(user => user.userId),
       };
     });
 

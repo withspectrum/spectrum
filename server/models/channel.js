@@ -1,10 +1,9 @@
 // @flow
 const { db } = require('./db');
 // $FlowFixMe
-import { UserError } from 'graphql-errors';
-// $FlowFixMe
 const Queue = require('bull');
 const channelNotificationQueue = new Queue('channel notification');
+import UserError from '../utils/UserError';
 
 const getChannelsByCommunity = (
   communityId: string

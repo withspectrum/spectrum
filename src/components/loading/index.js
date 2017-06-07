@@ -56,7 +56,10 @@ const LoadingCardContainer = styled(Card)`
 export const Loading = ({
   size,
   color,
-}: { size?: Number, color?: String }): React$Element<any> => (
+}: {
+  size?: Number,
+  color?: String,
+}): React$Element<any> => (
   <LoadingContainer>
     <Spinner size={size} color={color} />
   </LoadingContainer>
@@ -70,7 +73,10 @@ export const Loading = ({
 export const LoadingCard = ({
   size,
   color,
-}: { size?: Number, color?: String }): React$Element<any> => (
+}: {
+  size?: Number,
+  color?: String,
+}): React$Element<any> => (
   <LoadingCardContainer>
     <Spinner size={size} color={color} />
   </LoadingCardContainer>
@@ -347,6 +353,78 @@ export const LoadingComposer = () => (
       />
     </ShimmerBase>
   </ShimmerComposer>
+);
+
+export const LoadingProfile = () => (
+  <ShimmerProfile>
+    <ShimmerBase>
+      <ShimmerLine />
+      <Cover
+        style={{
+          top: '0',
+          left: '40px',
+          height: '10px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '24px',
+          left: '40px',
+          height: '16px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '10px',
+          left: '40px',
+          height: '18px',
+          width: '16px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '40px',
+          left: '0',
+          height: '16px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '64px',
+          left: '0',
+          height: '16px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '88px',
+          left: '0',
+          height: '16px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '48px',
+          right: '0',
+          height: '16px',
+          width: '32px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '72px',
+          right: '0',
+          height: '16px',
+          width: '64px',
+        }}
+      />
+    </ShimmerBase>
+  </ShimmerProfile>
 );
 
 /*

@@ -32,12 +32,12 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
       case 'profile':
         return (
           <Location>
-            <Link to={`/${props.data.community.slug}`}>
-              {props.data.community.name}
+            <Link to={`/${props.data.channel.community.slug}`}>
+              {props.data.channel.community.name}
             </Link>
             {' '}/{' '}
             <Link
-              to={`/${props.data.community.slug}/${props.data.channel.slug}`}
+              to={`/${props.data.channel.community.slug}/${props.data.channel.slug}`}
             >
               {props.data.channel.name}
             </Link>
@@ -47,7 +47,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
         return (
           <Location>
             <Link
-              to={`/${props.data.community.slug}/${props.data.channel.slug}`}
+              to={`/${props.data.channel.community.slug}/${props.data.channel.slug}`}
             >
               {`~${props.data.channel.name}`}
             </Link>

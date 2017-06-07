@@ -1,4 +1,5 @@
 //@flow
+import { sanitize } from 'sanitizer';
 const { db } = require('./db');
 // $FlowFixMe
 const Queue = require('bull');
@@ -46,7 +47,10 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
     .insert(
       Object.assign({}, message, {
         timestamp: new Date(),
-        senderId: userId,
+        senderId: user.id,
+        content: {
+          body: sanitize(message.content.body),
+        },
       }),
       { returnChanges: true }
     )

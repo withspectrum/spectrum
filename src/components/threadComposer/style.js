@@ -35,8 +35,10 @@ export const Composer = styled(Card)`
   }
 
   @media (max-width: 768px) {
-    width: 100%;
-    height: 90%;
+    width: calc(100% - 16px);
+    margin: 56px 8px;
+    height: calc(100% - 112px);
+    min-height: 240px;
     pointer-events: all;
   }
 `;

@@ -42,7 +42,11 @@ class MessagesWithData extends Component {
   }
 
   componentDidMount() {
-    this.props.forceScrollToBottom();
+    const { currentUser, participants } = this.props;
+    const isParticipant = participants.some(user => user === currentUser.id);
+    if (isParticipant) {
+      this.props.forceScrollToBottom();
+    }
     this.subscribe();
   }
 
@@ -57,6 +61,8 @@ class MessagesWithData extends Component {
 
   render() {
     const { data, toggleReaction, forceScrollToBottom } = this.props;
+
+    // console.log('in component with ', data);
 
     if (data.error) {
       return <div>Error!</div>;

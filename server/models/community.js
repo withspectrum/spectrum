@@ -1,7 +1,7 @@
 // @flow
 const { db } = require('./db');
 // $FlowFixMe
-import { UserError } from 'graphql-errors';
+import UserError from '../utils/UserError';
 import { createChannel, deleteChannel } from './channel';
 import { uploadImage } from '../utils/s3';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';

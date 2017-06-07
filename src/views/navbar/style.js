@@ -22,35 +22,31 @@ export const UserProfileAvatar = styled(Avatar)`
 
 export const Container = styled(FlexRow)`
   width: 100%;
+  flex: 0 0 48px;
 `;
 
 export const Nav = styled(FlexRow)`
   width: 100%;
   background: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
-  position: fixed;
-  top: 0;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   color: ${({ theme }) => theme.text.reverse};
   justify-content: space-between;
-  height: 48px;
+  flex: 0 0 48px;
   padding: 0 16px;
   line-height: 1;
   box-shadow: 0 4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   z-index: 1000;
 
   @media (max-width: 768px) {
-    bottom: 0;
-    top: auto;
+    margin-bottom: 1px;
+    order: 3;
     box-shadow: 0 -4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
-    padding: 0;
   }
 `;
 
 export const Section = styled(FlexRow)`
-  display: flex;
-  align-items: center;
-  height: 100%;
+  align-items: stretch;
 
   @media (max-width: 768px) {
     flex: 1 1 ${props => (props.left ? '66%' : '33%')};
@@ -65,6 +61,9 @@ export const Spacer = styled(FlexRow)`
 
 export const LogoLink = styled(Link)`
   margin-right: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   @media (max-width: 768px) {
     display: none;
@@ -73,6 +72,7 @@ export const LogoLink = styled(Link)`
   ${() => process.env.NODE_ENV !== 'production' && css`
     &:after {
       content: "Dev";
+      margin-top: 4px;
       font-size: 0.75em;
     }
   `}

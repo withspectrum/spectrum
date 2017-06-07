@@ -8,6 +8,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import { getLinkPreviewFromUrl, timeDifference } from '../../../helpers/utils';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
@@ -16,6 +17,7 @@ import { setThreadLockMutation } from '../mutations';
 import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
 import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
+import Badge from '../../../components/badges';
 import { IconButton, Button } from '../../../components/buttons';
 import { track } from '../../../helpers/events';
 import Editor, {
@@ -41,6 +43,11 @@ import {
   FlyoutRow,
   EditDone,
   Edited,
+  BylineMeta,
+  AuthorAvatar,
+  AuthorName,
+  AuthorUsername,
+  Location,
 } from '../style';
 
 class ThreadDetailPure extends Component {
@@ -316,24 +323,18 @@ class ThreadDetailPure extends Component {
 
     return (
       <ThreadWrapper>
-        <Titlebar
-          title={thread.content.title}
-          subtitle={`${thread.channel.community.name} / ${thread.channel.name}`}
-          provideBack={true}
-          backRoute={`/${thread.channel.community.slug}/${thread.channel.slug}`}
-          noComposer
-        />
-
         <ContextRow>
-          <span>
-            {thread.modifiedAt &&
-              <Edited>
-                Edited {timeDifference(Date.now(), editedTimestamp)}
-              </Edited>}
-            <Byline to={`/users/${thread.creator.username}`}>
-              {thread.creator.name}
-            </Byline>
-          </span>
+          <Byline to={`/users/${thread.creator.username}`}>
+            <AuthorAvatar src={thread.creator.profilePhoto} />
+            <BylineMeta>
+              <AuthorName>{thread.creator.name}</AuthorName>
+              <AuthorUsername>
+                @{thread.creator.username}
+                {thread.creator.isAdmin && <Badge type="admin" />}
+                {thread.creator.isPro && <Badge type="pro" />}
+              </AuthorUsername>
+            </BylineMeta>
+          </Byline>
           {currentUser &&
             (thread.isCreator || isChannelOwner || isCommunityOwner) &&
             !isEditing &&
@@ -383,9 +384,25 @@ class ThreadDetailPure extends Component {
 
         {!isEditing &&
           <span>
+            <Location>
+              <Icon glyph="view-back" size={16} />
+              <Link to={`/${thread.channel.community.slug}`}>
+                {thread.channel.community.name}
+              </Link>
+              <span>/</span>
+              <Link
+                to={`/${thread.channel.community.slug}/${thread.channel.slug}`}
+              >
+                {thread.channel.name}
+              </Link>
+            </Location>
             <ThreadHeading>
               {thread.content.title}
             </ThreadHeading>
+            {thread.modifiedAt &&
+              <Edited>
+                Edited {timeDifference(Date.now(), editedTimestamp)}
+              </Edited>}
             <div className="markdown">
               <ThreadContent>
                 {viewBody}
@@ -397,7 +414,7 @@ class ThreadDetailPure extends Component {
               <LinkPreview
                 trueUrl={linkPreview.url}
                 data={linkPreview}
-                size={'small'}
+                size={'large'}
                 editable={false}
                 margin={'16px 0 0 0'}
               />}

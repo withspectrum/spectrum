@@ -29,7 +29,8 @@ const baseButton = css`
   }
 
   /* if an icon and label are both present, add space around the label*/
-  div + span {
+  div + span,
+  span + span {
     margin: 0 8px;
   }
 `;
@@ -102,4 +103,10 @@ export const StyledIconButton = styled.button`
     box-shadow: none;
     opacity: 1;
   }
+`;
+
+export const SpinnerContainer = styled.div`
+  width: 32px;
+  height: 32px;
+  position: relative;
 `;

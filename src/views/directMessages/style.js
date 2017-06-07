@@ -1,15 +1,14 @@
 import styled from 'styled-components';
-import ChatInput from '../../components/chatInput';
 import { FlexCol, FlexRow } from '../../components/globals';
 
 export const View = styled(FlexRow)`
   align-items: stretch;
-  flex: 0 0 auto;
-  height: calc(100vh - 48px);
   background: #fff;
+  max-height: calc(100% - 48px);
 
   @media( max-width: 768px) {
-    height: calc(100vh - 96px);
+    flex-direction: column;
+    flex: auto;
   }
 `;
 
@@ -18,7 +17,7 @@ export const ViewContent = styled(FlexCol)`
   flex-direction: column;
   flex: 1 1 auto;
   overflow-y: scroll;
-  max-height: ${props => (props.moved ? 'calc(100% - 160px)' : 'calc(100% - 60px)')};
+  max-height: ${props => (props.moved ? 'calc(100% - 96px)' : 'calc(100% - 48px)')};
   align-items: center;
   align-content: flex-start;
 `;
@@ -33,7 +32,7 @@ export const MessagesList = styled(FlexCol)`
   border-right: 2px solid ${props => props.theme.border.default};
 
   @media (max-width: 768px) {
-    flex: 0 0 100%;
+    flex: 1 1 auto;
     min-width: 320px;
     border-right: none;
     max-width: 100%;
@@ -42,10 +41,6 @@ export const MessagesList = styled(FlexCol)`
 
 export const MessagesContainer = styled(FlexCol)`
   flex: 1 1 auto;
-
-  @media (max-width: 768px) {
-    flex: 0 0 100%;
-  }
 `;
 
 export const ComposeHeader = styled(FlexRow)`
@@ -57,8 +52,4 @@ export const ComposeHeader = styled(FlexRow)`
   @media (max-width: 768px) {
     display: none;
   }
-`;
-
-export const FlexChatInput = styled(ChatInput)`
-  flex: 0 0 auto;
 `;

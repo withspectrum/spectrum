@@ -42,7 +42,7 @@ const Threads = styled.div`
   }
 
   @media (max-width: 768px) {
-    margin-bottom: 48px;
+    
   }
 `;
 
