@@ -6,10 +6,11 @@ import { Editor as SlateEditor, Raw, Plain } from 'slate';
 import type { SlatePlugin } from 'slate-mentions/src/types';
 //$FlowFixMe
 import MarkdownPlugin from 'slate-markdown';
-import { Wrapper } from './style';
+import { Wrapper, MediaRow } from './style';
 import SingleLinePlugin from './single-line-plugin';
 import ImagePlugin from './image-plugin';
 import MediaInput from '../mediaInput';
+import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
 
 const ENTER = 13;
 
@@ -81,6 +82,8 @@ class Editor extends Component {
       style,
       markdown,
       images,
+      showLinkPreview,
+      linkPreview,
       singleLine,
       ...rest
     } = this.props;
@@ -98,8 +101,24 @@ class Editor extends Component {
           }}
           {...rest}
         />
+
+        {showLinkPreview && linkPreview && linkPreview.loading
+          ? <LinkPreviewLoading margin={'16px 0 24px 0'} />
+          : showLinkPreview && linkPreview && linkPreview.data
+              ? <LinkPreview
+                  data={linkPreview.data}
+                  size={'large'}
+                  remove={linkPreview.remove}
+                  editable={true}
+                  trueUrl={linkPreview.trueUrl}
+                  margin={'16px 0 24px 0'}
+                />
+              : null}
+
         {images !== false &&
-          <MediaInput onChange={this.addImage}>Add</MediaInput>}
+          <MediaRow>
+            <MediaInput onChange={this.addImage}>Add</MediaInput>
+          </MediaRow>}
       </Wrapper>
     );
   }

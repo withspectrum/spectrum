@@ -17,7 +17,6 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import Editor, { toPlainText, fromPlainText, toJSON } from '../editor';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
-import { LinkPreview, LinkPreviewLoading } from '../../components/linkPreview';
 import { getLinkPreviewFromUrl } from '../../helpers/utils';
 import { URLS } from '../../helpers/regexps';
 import { TextButton, Button } from '../buttons';
@@ -421,18 +420,15 @@ class ThreadComposerWithData extends Component {
               style={ThreadDescription}
               editorRef={editor => this.bodyEditor = editor}
               placeholder="Write more thoughts here, add photos, and anything else!"
+              className={'threadComposer'}
+              showLinkPreview={true}
+              linkPreview={{
+                loading: fetchingLinkPreview,
+                remove: this.removeLinkPreview,
+                trueUrl: linkPreviewTrueUrl,
+                data: linkPreview,
+              }}
             />
-
-            {linkPreview &&
-              <LinkPreview
-                data={linkPreview}
-                size={'large'}
-                remove={this.removeLinkPreview}
-                editable={true}
-                trueUrl={linkPreviewTrueUrl}
-              />}
-
-            {fetchingLinkPreview && <LinkPreviewLoading />}
 
             <Actions>
               <Dropdowns>
