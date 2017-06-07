@@ -56,7 +56,7 @@ export const Title = styled.h3`
   color: ${props => props.theme.text.default};
   font-weight: 700;
   line-height: 1.2;
-  ${Truncate}
+  text-align: center;
   transition: ${Transition.hover.off};
 `;
 

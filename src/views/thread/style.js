@@ -53,6 +53,10 @@ export const ThreadWrapper = styled(FlexCol)`
   padding: 16px 32px;
   font-size: 14px;
   flex: 1 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
 `;
 
 export const ThreadHeading = styled(H1)`
@@ -111,6 +115,7 @@ export const Byline = styled(Link)`
   display: flex;
   margin-bottom: 16px;
   align-items: center;
+  max-width: calc(100% - 32px)
 
   &:hover h3{
     color: ${({ theme }) => theme.brand.alt};
@@ -142,6 +147,7 @@ export const AuthorAvatar = styled.img`
 export const AuthorName = styled(H3)`
   font-weight: 700;
   cursor: pointer;
+  max-width: 100%;
 
   @media (max-width: 768px) {
     font-size: 14px;
