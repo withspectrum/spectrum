@@ -1,6 +1,8 @@
 // @flow
 import React from 'react';
 import { Block } from 'slate';
+import Image from './Image';
+
 const DEFAULT_BLOCK = {
   type: 'paragraph',
   isVoid: false,
@@ -18,10 +20,10 @@ const onDropNode = (e, data, state) => {
 };
 
 const onDropOrPasteFiles = (e, data, state, editor) => {
-  for (const file of data.files) {
+  data.files.forEach(file => {
     const reader = new FileReader();
     const [type] = file.type.split('/');
-    if (type != 'image') continue;
+    if (type !== 'image') return;
 
     reader.addEventListener('load', () => {
       state = editor.getState();
@@ -30,14 +32,7 @@ const onDropOrPasteFiles = (e, data, state, editor) => {
     });
 
     reader.readAsDataURL(file);
-  }
-};
-
-const onPasteText = (e, data, state) => {
-  // TODO: Figure out what to do with this logic
-  // if (!isUrl(data.text)) return
-  // if (!isImage(data.text)) return
-  // return this.insertImage(state, data.text)
+  });
 };
 
 const insertImage = (state, src) => {
@@ -51,26 +46,15 @@ const insertImage = (state, src) => {
     .apply();
 };
 
-const onClickImage = e => {
-  e.preventDefault();
-  // TODO: Figure out what to do here
-  // const src = window.prompt('Enter the URL of the image:')
-  const src = undefined;
-  if (!src) return;
-  let { state } = this.state;
-  state = insertImage(state, src);
-  // this.onChange(state)
-};
-
-const ImagePlugin = {
+const ImagePlugin = () => ({
+  insertImage: insertImage,
   schema: {
     nodes: {
       image: props => {
         const { node, state } = props;
         const active = state.isFocused && state.selection.hasEdgeIn(node);
         const src = node.data.get('src');
-        const className = active ? 'active' : null;
-        return <img src={src} className={className} {...props.attributes} />;
+        return <Image src={src} active={active} {...props.attributes} />;
       },
       paragraph: props => {
         return <p {...props.attributes}>{props.children}</p>;
@@ -119,10 +103,8 @@ const ImagePlugin = {
     switch (data.type) {
       case 'files':
         return onDropOrPasteFiles(e, data, state, editor);
-      case 'text':
-        return onPasteText(e, data, state);
     }
   },
-};
+});
 
 export default ImagePlugin;

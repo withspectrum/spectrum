@@ -9,6 +9,7 @@ import MarkdownPlugin from 'slate-markdown';
 import { Wrapper } from './style';
 import SingleLinePlugin from './single-line-plugin';
 import ImagePlugin from './image-plugin';
+import MediaInput from '../mediaInput';
 
 const ENTER = 13;
 
@@ -37,15 +38,25 @@ class Editor extends Component {
 
   constructor(props: EditorProps) {
     super(props);
+    const imagePlugin = ImagePlugin();
+    this.insertImage = imagePlugin.insertImage;
     this.state = {
       state: initialState,
       plugins: [
         props.markdown !== false && MarkdownPlugin(),
-        props.images !== false && ImagePlugin,
+        props.images !== false && imagePlugin,
         props.singleLine === true && SingleLinePlugin,
       ],
     };
   }
+
+  addImage = e => {
+    const file = e.target.files[0];
+    const onChange = this.props.onChange || this.onChange;
+    const state = this.props.state || this.state.state;
+    const newState = this.insertImage(state, window.URL.createObjectURL(file));
+    onChange(newState);
+  };
 
   onChange = (state: Object) => {
     this.setState({ state });
@@ -68,6 +79,9 @@ class Editor extends Component {
       onEnter,
       className,
       style,
+      markdown,
+      images,
+      singleLine,
       ...rest
     } = this.props;
 
@@ -84,6 +98,8 @@ class Editor extends Component {
           }}
           {...rest}
         />
+        {images !== false &&
+          <MediaInput onChange={this.addImage}>Add</MediaInput>}
       </Wrapper>
     );
   }

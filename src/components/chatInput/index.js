@@ -16,12 +16,11 @@ import {
   Form,
   Input,
   ChatInputWrapper,
-  MediaInput,
-  MediaLabel,
   EmojiToggle,
   SendButton,
 } from './style';
 import { sendMessageMutation } from '../../api/message';
+import MediaInput from '../mediaInput';
 
 class ChatInputWithMutation extends Component {
   submit = e => {
@@ -118,23 +117,7 @@ class ChatInputWithMutation extends Component {
     const { state, onFocus, onBlur, onChange } = this.props;
     return (
       <ChatInputWrapper>
-        <MediaInput
-          type="file"
-          id="file"
-          name="file"
-          accept=".png, .jpg, .jpeg, .gif, .mp4"
-          multiple={false}
-          onChange={this.sendMediaMessage}
-        />
-
-        <MediaLabel htmlFor="file">
-          <Icon
-            glyph="photo"
-            tipLocation="top-right"
-            tipText="Upload Photo"
-            subtle
-          />
-        </MediaLabel>
+        <MediaInput onChange={this.sendMediaMessage} />
         {/* <EmojiToggle
           glyph="emoji"
           tipText="Insert Emoji"
@@ -150,6 +133,7 @@ class ChatInputWithMutation extends Component {
             onFocus={onFocus}
             onBlur={onBlur}
             singleLine
+            images={false}
             editorRef={editor => this.editor = editor}
           />
           <SendButton glyph="send-fill" onClick={this.submit} />
