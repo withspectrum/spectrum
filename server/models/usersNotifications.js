@@ -52,6 +52,26 @@ const markNotificationAsRead = (
     .run();
 };
 
+// marks one notification as read
+const markNotificationAsSeen = (
+  notificationId: string,
+  userId: string
+): Promise<Object> => {
+  return db
+    .table('usersNotifications')
+    .getAll(userId, { index: 'userId' })
+    .filter({
+      notificationId,
+    })
+    .update(
+      {
+        isSeen: true,
+      },
+      { returnChanges: true }
+    )
+    .run();
+};
+
 // marks all notifiations as read
 const markAllNotificationsAsRead = (userId: string): Promise<Object> => {
   return db
@@ -68,10 +88,39 @@ const markAllUserNotificationsSeen = (userId: string): Promise<Object> => {
   return db
     .table('usersNotifications')
     .getAll(userId, { index: 'userId' })
-    .update({
-      isSeen: true,
-    })
+    .eqJoin('notificationId', db.table('notifications'))
+    .without({ left: ['createdAt', 'id'] })
+    .zip()
+    .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
     .run()
+    .then(notifications => {
+      return Promise.all(
+        notifications.map(notification => {
+          return markNotificationAsSeen(notification.notificationId, userId);
+        })
+      );
+    })
+    .then(() => getNotificationsByUser(userId));
+};
+
+const markDirectMessageNotificationsAsSeen = (
+  userId: string
+): Promise<Object> => {
+  return db
+    .table('usersNotifications')
+    .getAll(userId, { index: 'userId' })
+    .eqJoin('notificationId', db.table('notifications'))
+    .without({ left: ['createdAt', 'id'] })
+    .zip()
+    .filter(row => row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
+    .run()
+    .then(notifications => {
+      return Promise.all(
+        notifications.map(notification => {
+          return markNotificationAsSeen(notification.notificationId, userId);
+        })
+      );
+    })
     .then(() => getNotificationsByUser(userId));
 };
 
@@ -98,5 +147,6 @@ module.exports = {
   markNotificationAsRead,
   markAllNotificationsAsRead,
   markAllUserNotificationsSeen,
+  markDirectMessageNotificationsAsSeen,
   getUsersNotifications,
 };

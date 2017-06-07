@@ -45,7 +45,7 @@ const Notification = /* GraphQL */ `
 
 	extend type Mutation {
 		markAllUserNotificationsSeen: [ Notification ]
-		markAllUserDirectMessageNotificationsRead: [ Notification ]
+		markDirectMessageNotificationsAsSeen: [ Notification ]
 		toggleNotificationReadState(notificationId: ID!): Notification!
 	}
 

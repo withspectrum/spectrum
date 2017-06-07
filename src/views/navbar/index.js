@@ -56,9 +56,11 @@ class Navbar extends Component {
     const dmUnseenCount =
       notifications &&
       notifications.length > 0 &&
-      notifications.filter(
-        notification => notification.context.type === 'DIRECT_MESSAGE_THREAD'
-      ).length;
+      notifications
+        .filter(notification => notification.isSeen === false)
+        .filter(
+          notification => notification.context.type === 'DIRECT_MESSAGE_THREAD'
+        ).length;
 
     const allUnseenCount =
       notifications &&
