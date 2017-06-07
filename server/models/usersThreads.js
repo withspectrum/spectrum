@@ -1,7 +1,7 @@
 // @flow
 const { db } = require('./db');
 // $FlowFixMe
-import { UserError } from 'graphql-errors';
+import UserError from '../utils/UserError';
 
 // invoked only when a thread is created or a user leaves a message on a thread.
 // Because a user could leave multiple messages on a thread, we first check
