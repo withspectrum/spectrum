@@ -268,6 +268,15 @@ class ThreadComposerWithData extends Component {
       });
     }
 
+    console.log('attachments', attachments);
+    console.log('body', body);
+    console.log(
+      'images',
+      body.blocks.filter(block => block.type === 'image').toJS()
+    );
+
+    return;
+
     // this.props.mutate comes from a higher order component defined at the
     // bottom of this file
     this.props

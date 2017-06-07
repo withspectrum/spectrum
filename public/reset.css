@@ -296,9 +296,3 @@ body {
   text-transform: lowercase;
   font-variant: small-caps;
 }
-
-
-.threadComposer img {
-  max-width: 100%;
-  margin: 12px 0;
-}

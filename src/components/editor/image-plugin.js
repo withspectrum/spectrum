@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { Block } from 'slate';
-import Image from './Image';
+import Image, { ImageContainer, ActiveOverlay } from './Image';
 
 const DEFAULT_BLOCK = {
   type: 'paragraph',
@@ -54,7 +54,12 @@ const ImagePlugin = () => ({
         const { node, state } = props;
         const active = state.isFocused && state.selection.hasEdgeIn(node);
         const src = node.data.get('src');
-        return <Image src={src} active={active} {...props.attributes} />;
+        return (
+          <ImageContainer active={active}>
+            <ActiveOverlay active={active} />
+            <Image src={src} active={active} {...props.attributes} />
+          </ImageContainer>
+        );
       },
       paragraph: props => {
         return <p {...props.attributes}>{props.children}</p>;
