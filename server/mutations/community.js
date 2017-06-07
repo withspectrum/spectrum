@@ -1,6 +1,6 @@
 // @flow
 // $FlowFixMe
-const { UserError } = require('graphql-errors');
+import UserError from '../utils/UserError';
 import {
   createCommunity,
   editCommunity,

@@ -36,8 +36,6 @@ const { apolloUploadExpress } = require('apollo-upload-server');
 const cors = require('cors');
 //$FlowFixMe
 const OpticsAgent = require('optics-agent');
-//$FlowFixMe
-const { IsUserError } = require('graphql-errors');
 
 const { db } = require('./models/db');
 import { destroySession } from './models/session';
@@ -47,6 +45,7 @@ const schema = require('./schema');
 const { init: initPassport } = require('./authentication.js');
 import createLoaders from './loaders';
 import getMeta from './utils/get-page-meta';
+import { IsUserError } from './utils/UserError';
 
 Raven.config(
   'https://3bd8523edd5d43d7998f9b85562d6924:d391ea04b0dc45b28610e7fad735b0d0@sentry.io/154812',
