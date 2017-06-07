@@ -223,10 +223,23 @@ class ThreadComposerWithData extends Component {
     const activeCommunityChannels = this.state.availableChannels.filter(
       channel => channel.community.id === newActiveCommunity
     );
-    // Default to the first channel if no default one can be found
+    const newActiveCommunityData = this.state.availableCommunities.find(
+      community => community.id === newActiveCommunity
+    );
     const newActiveChannel =
-      activeCommunityChannels.find(channel => channel.isDefault) ||
-      activeCommunityChannels[0];
+      activeCommunityChannels.find(channel => {
+        // If there is an active channel and we're switching back to the currently open community
+        // select that channel
+        if (
+          this.props.activeChannel &&
+          this.props.activeCommunity === newActiveCommunityData.slug
+        ) {
+          return channel.slug === this.props.activeChannel;
+        }
+        // Otherwise select the default one
+        return channel.isDefault;
+        // Default to the first channel if no default one can be found
+      }) || activeCommunityChannels[0];
 
     this.setState({
       activeCommunity: newActiveCommunity,
