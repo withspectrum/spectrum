@@ -9,29 +9,31 @@ import {
 /*
   Fetches the latest 20 notifications for the current user
 */
-export const GET_CURRENT_USER_NOTIFICATIONS_QUERY = gql`
-  query getCurrentUserNotifications {
-    user: currentUser {
-      ...userInfo
-      notificationConnection {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          cursor
-          node {
-            ...notificationInfo
-          }
+export const GET_NOTIFICATIONS_QUERY = gql`
+  query getNotifications {
+    notifications {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        cursor
+        node {
+          ...notificationInfo
         }
       }
     }
   }
-  ${userInfoFragment}
   ${notificationInfoFragment}
 `;
-export const getCurrentUserNotifications = graphql(
-  GET_CURRENT_USER_NOTIFICATIONS_QUERY
+
+export const GET_NOTIFICATIONS_OPTIONS = {
+  name: 'notificationsQuery',
+};
+
+export const getNotifications = graphql(
+  GET_NOTIFICATIONS_QUERY,
+  GET_NOTIFICATIONS_OPTIONS
 );
 
 export const MARK_NOTIFICATIONS_READ_MUTATION = gql`

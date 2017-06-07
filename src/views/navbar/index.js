@@ -9,6 +9,7 @@ import compose from 'recompose/compose';
 import { getCurrentUserProfile } from '../../api/user';
 import { parseNotification } from '../../helpers/notification';
 import {
+  getNotifications,
   markNotificationsSeenMutation,
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
@@ -46,11 +47,11 @@ class Navbar extends Component {
   constructor(props) {
     super(props);
 
-    const { data: { user } } = this.props;
+    const { data: { user }, notificationsQuery } = this.props;
     const currentUser = user;
     const notifications =
       currentUser &&
-      currentUser.notificationConnection.edges.map(notification =>
+      notificationsQuery.notifications.edges.map(notification =>
         parseNotification(notification.node)
       );
 
@@ -107,6 +108,7 @@ class Navbar extends Component {
         .markAllNotificationsSeen()
         .then(({ data: { markAllNotificationsSeen } }) => {
           // notifs were marked as seen
+          console.log('markAllNotificationsSeen', markAllNotificationsSeen);
         })
         .catch(err => {
           console.log('error marking notifs as seen', err);
@@ -118,7 +120,8 @@ class Navbar extends Component {
     this.props
       .markAllNotificationsRead()
       .then(({ data: { markAllNotificationsRead } }) => {
-        // notifs were marked as seen
+        // notifs were marked as read
+        console.log('markAllNotificationsRead', markAllNotificationsRead);
       })
       .catch(err => {
         console.log('error marking notifs as read', err);
@@ -297,6 +300,7 @@ const mapStateToProps = state => ({
 });
 export default compose(
   getCurrentUserProfile,
+  getNotifications,
   markNotificationsSeenMutation,
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,

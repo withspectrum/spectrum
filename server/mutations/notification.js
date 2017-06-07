@@ -1,6 +1,4 @@
-/**
- * Message mutation resolvers
- */
+// @flow
 const {
   markAllNotificationsSeen,
   markAllNotificationsRead,
@@ -12,7 +10,9 @@ module.exports = {
     markAllNotificationsSeen: (_, __, { user }) =>
       markAllNotificationsSeen(user.id),
     markAllNotificationsRead: (_, __, { user }) =>
-      markAllNotificationsRead(user.id),
+      markAllNotificationsRead(user.id).then(
+        data => console.log('data', data) || data
+      ),
     markDirectMessageNotificationsSeen: (_, __, { user }) =>
       markDirectMessageNotificationsSeen(user.id),
     toggleNotificationReadState: (_, { id }, { user }) =>

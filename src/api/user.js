@@ -182,21 +182,8 @@ export const GET_CURRENT_USER_PROFILE_QUERY = gql`
   query getCurrentUserProfile {
     user: currentUser {
       ...userInfo
-      notificationConnection {
-        pageInfo {
-          hasNextPage
-          hasPreviousPage
-        }
-        edges {
-          cursor
-          node {
-            ...notificationInfo
-          }
-        }
-      }
     }
   }
   ${userInfoFragment}
-  ${notificationInfoFragment}
 `;
 export const getCurrentUserProfile = graphql(GET_CURRENT_USER_PROFILE_QUERY);

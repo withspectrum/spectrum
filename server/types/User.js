@@ -47,16 +47,6 @@ const User = /* GraphQL */ `
 		node: Thread!
 	}
 
-	type UserNotificationsConnection {
-		pageInfo: PageInfo!
-		edges: [UserNotificationEdge!]
-	}
-
-	type UserNotificationEdge {
-		cursor: String!
-		node: Notification!
-	}
-
 	type UserMetaData {
 		threads: Int
 	}
@@ -90,7 +80,6 @@ const User = /* GraphQL */ `
 		directMessageThreadsConnection: UserDirectMessageThreadsConnection!
 		threadConnection(first: Int = 10, after: String): UserThreadsConnection!
 		everything(first: Int = 10, after: String): EverythingThreadsConnection!
-		notificationConnection(first: Int = 10, after: String): UserNotificationsConnection!
 		recurringPayments: [RecurringPayment]
 	}
 

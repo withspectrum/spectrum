@@ -640,7 +640,11 @@ export const displayLoadingGallery = branch(
 );
 
 export const displayLoadingNavbar = branch(
-  props => !props.data || props.data.loading,
+  props =>
+    !props.data ||
+    props.data.loading ||
+    !props.notificationsQuery ||
+    props.notificationsQuery.loading,
   renderComponent(LoadingNavbar)
 );
 

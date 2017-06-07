@@ -37,32 +37,6 @@ module.exports = {
       getUsersBySearchString(string),
   },
   User: {
-    notificationConnection: (
-      { id }: { id: string },
-      { first = 10, after }: PaginationOptions,
-      { user }: GraphQLContext
-    ) => {
-      const cursor = decode(after);
-      const currentUser = user;
-      if (!currentUser || currentUser.id !== id) return null;
-      return getNotificationsByUser(user.id, { first, after })
-        .then(notifications =>
-          paginate(
-            notifications,
-            { first, after: cursor },
-            notification => notification.id === cursor
-          )
-        )
-        .then(result => ({
-          pageInfo: {
-            hasNextPage: result.hasMoreItems,
-          },
-          edges: result.list.map(notification => ({
-            cursor: encode(notification.id),
-            node: notification,
-          })),
-        }));
-    },
     isAdmin: ({ id }: { id: string }) => {
       return isAdmin(id);
     },

@@ -28,6 +28,16 @@ const Notification = /* GraphQL */ `
 		type: EntityType
 	}
 
+	type NotificationsConnection {
+		pageInfo: PageInfo!
+		edges: [NotificationEdge!]
+	}
+
+	type NotificationEdge {
+		cursor: String!
+		node: Notification!
+	}
+
 	type Notification {
 		id: ID!
 		createdAt: Date!
@@ -42,7 +52,7 @@ const Notification = /* GraphQL */ `
 
 	extend type Query {
 		notification(id: ID!): Notification
-		notifications(first: Int = 20, after: String): UserNotificationsConnection!
+		notifications(first: Int = 20, after: String): NotificationsConnection!
 	}
 
 	extend type Mutation {
