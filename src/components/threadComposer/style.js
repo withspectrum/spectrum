@@ -38,7 +38,8 @@ export const Composer = styled(Card)`
   @media (max-width: 768px) {
     width: calc(100% - 16px);
     margin: 56px 8px;
-    height: 90%;
+    height: calc(100% - 112px);
+    min-height: 240px;
     pointer-events: all;
   }
 `;
