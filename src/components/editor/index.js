@@ -8,6 +8,7 @@ import type { SlatePlugin } from 'slate-mentions/src/types';
 import MarkdownPlugin from 'slate-markdown';
 import { Wrapper } from './style';
 import SingleLinePlugin from './single-line-plugin';
+import ImagePlugin from './image-plugin';
 
 const ENTER = 13;
 
@@ -22,6 +23,7 @@ type EditorProps = {
   singleLine?: boolean,
   className?: string,
   style?: Object,
+  images?: boolean,
 };
 
 class Editor extends Component {
@@ -39,6 +41,7 @@ class Editor extends Component {
       state: initialState,
       plugins: [
         props.markdown !== false && MarkdownPlugin(),
+        props.images !== false && ImagePlugin,
         props.singleLine === true && SingleLinePlugin,
       ],
     };
