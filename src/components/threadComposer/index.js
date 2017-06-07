@@ -190,8 +190,7 @@ class ThreadComposerWithData extends Component {
           channel => channel.isDefault
         );
         // If there is no default channel capitulate and take the first one
-        if (activeChannel.length === 0)
-          activeChannel = activeCommunityChannels[0];
+        if (activeChannel.length === 0) activeChannel = activeCommunityChannels;
       }
 
       // ensure that if no items were found for some reason, we don't crash the app
@@ -458,7 +457,7 @@ class ThreadComposerWithData extends Component {
                 />
                 <select
                   onChange={this.setActiveCommunity}
-                  defaultValue={activeCommunity}
+                  value={activeCommunity}
                 >
                   {availableCommunities.map(community => {
                     return (
@@ -473,10 +472,7 @@ class ThreadComposerWithData extends Component {
                   tipText="Select a channel"
                   tipLocation="top-right"
                 />
-                <select
-                  onChange={this.setActiveChannel}
-                  defaultValue={activeChannel}
-                >
+                <select onChange={this.setActiveChannel} value={activeChannel}>
                   {availableChannels
                     .filter(channel => channel.community.id === activeCommunity)
                     .map((channel, i) => {
