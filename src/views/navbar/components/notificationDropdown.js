@@ -18,6 +18,7 @@ const NullNotifications = () => (
 );
 
 const NotificationList = ({ notifications }) => {
+  console.log('Component received notifications:', notifications);
   return (
     <div>
       👍 cool. there's notifications here. maybe just, like, actually do the code for it.

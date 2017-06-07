@@ -1,5 +1,8 @@
 // @flow
 import { db } from './db';
+// $FlowFixMe
+const Queue = require('bull');
+const reactionNotificationQueue = new Queue('reaction notification');
 
 type ReactionType = 'like';
 
@@ -33,12 +36,24 @@ export const toggleReaction = (
       } else {
         return db
           .table('reactions')
-          .insert({
-            ...reaction,
-            userId,
-            timestamp: Date.now(),
-          })
-          .run();
+          .insert(
+            {
+              ...reaction,
+              userId,
+              timestamp: Date.now(),
+            },
+            { returnChanges: true }
+          )
+          .run()
+          .then(result => result.changes[0].new_val)
+          .then(reaction => {
+            reactionNotificationQueue.add({
+              reaction,
+              userId,
+            });
+
+            return reaction;
+          });
       }
     })
     .then(() => {

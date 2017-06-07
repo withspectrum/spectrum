@@ -1,5 +1,6 @@
 //@flow
 const { db } = require('./db');
+// $FlowFixMe
 const Queue = require('bull');
 const messageNotificationQueue = new Queue('message notification');
 const { listenToNewDocumentsIn } = require('./utils');
