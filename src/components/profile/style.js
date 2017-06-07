@@ -56,7 +56,6 @@ export const Title = styled.h3`
   color: ${props => props.theme.text.default};
   font-weight: 700;
   line-height: 1.2;
-  text-align: center;
   transition: ${Transition.hover.off};
 `;
 
@@ -183,6 +182,7 @@ export const CoverAvatar = styled(UserAvatar)`
 export const CoverTitle = styled(Title)`
   font-size: 20px;
   margin-top: 8px;
+  text-align: center;
 `;
 
 export const CoverSubtitle = styled(Subtitle)`
