@@ -4,6 +4,7 @@ import { FlexCol, FlexRow } from '../../components/globals';
 export const View = styled(FlexRow)`
   align-items: stretch;
   background: #fff;
+  max-height: calc(100% - 48px);
 
   @media( max-width: 768px) {
     flex-direction: column;

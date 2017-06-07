@@ -83,6 +83,7 @@ class ExistingThread extends Component {
             thread={id}
             threadType={'directMessageThread'}
             refetchThread={this.refetchThread}
+            forceScrollToBottom={this.forceScrollToBottom}
           />
         </MessagesContainer>
       );
