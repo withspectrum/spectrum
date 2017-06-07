@@ -24,6 +24,7 @@ const PrimaryColumn = styled(BaseColumn)`
   @media(max-width: 768px) {
     width: 100%;
     margin-top: 2px;
+    flex: auto;
   }
 `;
 
