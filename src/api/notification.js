@@ -34,42 +34,62 @@ export const getCurrentUserNotifications = graphql(
   GET_CURRENT_USER_NOTIFICATIONS_QUERY
 );
 
-export const MARK_NOTIFICATIONS_AS_SEEN_MUTATION = gql`
-  mutation markAllUserNotificationsSeen {
-    markAllUserNotificationsSeen {
+export const MARK_NOTIFICATIONS_READ_MUTATION = gql`
+  mutation markAllNotificationsRead {
+    markAllNotificationsRead {
       ...notificationInfo
     }
   }
   ${notificationInfoFragment}
 `;
 
-export const MARK_NOTIFICATIONS_AS_SEEN_OPTIONS = {
+export const MARK_NOTIFICATIONS_READ_OPTIONS = {
   props: ({ mutate }) => ({
-    markAllUserNotificationsSeen: () => mutate(),
+    markAllNotificationsRead: () => mutate(),
   }),
 };
 
-export const markNotificationsAsSeenMutation = graphql(
-  MARK_NOTIFICATIONS_AS_SEEN_MUTATION,
-  MARK_NOTIFICATIONS_AS_SEEN_OPTIONS
+export const markNotificationsReadMutation = graphql(
+  MARK_NOTIFICATIONS_READ_MUTATION,
+  MARK_NOTIFICATIONS_READ_OPTIONS
 );
 
-export const MARK_DM_NOTIFICATIONS_AS_SEEN_MUTATION = gql`
-  mutation markDirectMessageNotificationsAsSeen {
-    markDirectMessageNotificationsAsSeen {
+export const MARK_NOTIFICATIONS_SEEN_MUTATION = gql`
+  mutation markAllNotificationsSeen {
+    markAllNotificationsSeen {
       ...notificationInfo
     }
   }
   ${notificationInfoFragment}
 `;
 
-export const MARK_DM_NOTIFICATIONS_AS_SEEN_OPTIONS = {
+export const MARK_NOTIFICATIONS_SEEN_OPTIONS = {
   props: ({ mutate }) => ({
-    markDirectMessageNotificationsAsSeen: () => mutate(),
+    markAllNotificationsSeen: () => mutate(),
   }),
 };
 
-export const markDirectMessageNotificationsAsSeenMutation = graphql(
-  MARK_DM_NOTIFICATIONS_AS_SEEN_MUTATION,
-  MARK_DM_NOTIFICATIONS_AS_SEEN_OPTIONS
+export const markNotificationsSeenMutation = graphql(
+  MARK_NOTIFICATIONS_SEEN_MUTATION,
+  MARK_NOTIFICATIONS_SEEN_OPTIONS
+);
+
+export const MARK_DM_NOTIFICATIONS_SEEN_MUTATION = gql`
+  mutation markDirectMessageNotificationsSeen {
+    markDirectMessageNotificationsSeen {
+      ...notificationInfo
+    }
+  }
+  ${notificationInfoFragment}
+`;
+
+export const MARK_DM_NOTIFICATIONS_SEEN_OPTIONS = {
+  props: ({ mutate }) => ({
+    markDirectMessageNotificationsSeen: () => mutate(),
+  }),
+};
+
+export const markDirectMessageNotificationsSeenMutation = graphql(
+  MARK_DM_NOTIFICATIONS_SEEN_MUTATION,
+  MARK_DM_NOTIFICATIONS_SEEN_OPTIONS
 );

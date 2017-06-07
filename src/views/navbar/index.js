@@ -9,8 +9,9 @@ import compose from 'recompose/compose';
 import { getCurrentUserProfile } from '../../api/user';
 import { parseNotification } from '../../helpers/notification';
 import {
-  markNotificationsAsSeenMutation,
-  markDirectMessageNotificationsAsSeenMutation,
+  markNotificationsSeenMutation,
+  markNotificationsReadMutation,
+  markDirectMessageNotificationsSeenMutation,
 } from '../../api/notification';
 import { SERVER_URL } from '../../api';
 import Icon from '../../components/icons';
@@ -93,7 +94,7 @@ class Navbar extends Component {
     }
   }
 
-  markAllNotificationsAsSeen = () => {
+  markAllNotificationsSeen = () => {
     const { allUnseenCount } = this.state;
 
     if (allUnseenCount === 0) {
@@ -103,14 +104,25 @@ class Navbar extends Component {
         allUnseenCount: 0,
       });
       this.props
-        .markAllUserNotificationsSeen()
-        .then(({ data: { markAllUserNotificationsSeen } }) => {
+        .markAllNotificationsSeen()
+        .then(({ data: { markAllNotificationsSeen } }) => {
           // notifs were marked as seen
         })
         .catch(err => {
           console.log('error marking notifs as seen', err);
         });
     }
+  };
+
+  markAllNotificationsRead = () => {
+    this.props
+      .markAllNotificationsRead()
+      .then(({ data: { markAllNotificationsRead } }) => {
+        // notifs were marked as seen
+      })
+      .catch(err => {
+        console.log('error marking notifs as read', err);
+      });
   };
 
   markDmNotificationsAsSeen = () => {
@@ -224,7 +236,7 @@ class Navbar extends Component {
             </Section>
 
             <Section right>
-              <IconDrop onMouseLeave={this.markAllNotificationsAsSeen}>
+              <IconDrop onMouseLeave={this.markAllNotificationsSeen}>
                 <IconLink
                   data-active={match.url === '/notifications'}
                   data-mobileWidth={'half'}
@@ -244,7 +256,10 @@ class Navbar extends Component {
                     : null}
                   <LabelForTab>Notifications</LabelForTab>
                 </IconLink>
-                <NotificationDropdown notifications={notifications} />
+                <NotificationDropdown
+                  notifications={notifications}
+                  markAllRead={this.markAllNotificationsRead}
+                />
               </IconDrop>
 
               <IconDrop>
@@ -282,8 +297,9 @@ const mapStateToProps = state => ({
 });
 export default compose(
   getCurrentUserProfile,
-  markNotificationsAsSeenMutation,
-  markDirectMessageNotificationsAsSeenMutation,
+  markNotificationsSeenMutation,
+  markNotificationsReadMutation,
+  markDirectMessageNotificationsSeenMutation,
   withRouter,
   displayLoadingNavbar,
   connect(mapStateToProps)

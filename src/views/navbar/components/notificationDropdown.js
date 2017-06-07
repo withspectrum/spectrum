@@ -6,8 +6,8 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 import Dropdown from '../../../components/dropdown';
 import { NullState } from '../../../components/upsell';
-import { Button } from '../../../components/buttons';
-import { DropdownHeader, DropdownFooter } from '../style';
+import { Button, OutlineButton } from '../../../components/buttons';
+import { DropdownHeader, DropdownFooter, Notification } from '../style';
 
 const NullNotifications = () => (
   <NullState
@@ -21,12 +21,28 @@ const NotificationList = ({ notifications }) => {
   console.log('Component received notifications:', notifications);
   return (
     <div>
-      👍 cool. there's notifications here. maybe just, like, actually do the code for it.
+      {notifications &&
+        notifications.map(notification => {
+          return (
+            <Notification key={notification.id}>
+              <div>
+                notification with seen state
+                {' '}
+                {notification.isSeen ? 'seen' : 'unseen'}
+              </div>
+              <div>
+                notification with read state
+                {' '}
+                {notification.isRead ? 'read' : 'unread'}
+              </div>
+            </Notification>
+          );
+        })}
     </div>
   );
 };
 
-const NotificationDropdownPure = ({ notifications }) => {
+const NotificationDropdownPure = ({ notifications, markAllRead }) => {
   return (
     <Dropdown>
       <DropdownHeader>
@@ -35,6 +51,9 @@ const NotificationDropdownPure = ({ notifications }) => {
       {!notifications && <NullNotifications />}
       {notifications && <NotificationList notifications={notifications} />}
       <DropdownFooter>
+        <OutlineButton onClick={() => markAllRead()}>
+          Mark All Read
+        </OutlineButton>
         <Button to={'/notifications'}>View all</Button>
       </DropdownFooter>
     </Dropdown>

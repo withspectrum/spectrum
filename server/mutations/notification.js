@@ -2,16 +2,19 @@
  * Message mutation resolvers
  */
 const {
-  markAllUserNotificationsSeen,
-  markDirectMessageNotificationsAsSeen,
+  markAllNotificationsSeen,
+  markAllNotificationsRead,
+  markDirectMessageNotificationsSeen,
 } = require('../models/usersNotifications');
 
 module.exports = {
   Mutation: {
-    markAllUserNotificationsSeen: (_, __, { user }) =>
-      markAllUserNotificationsSeen(user.id),
-    markDirectMessageNotificationsAsSeen: (_, __, { user }) =>
-      markDirectMessageNotificationsAsSeen(user.id),
+    markAllNotificationsSeen: (_, __, { user }) =>
+      markAllNotificationsSeen(user.id),
+    markAllNotificationsRead: (_, __, { user }) =>
+      markAllNotificationsRead(user.id),
+    markDirectMessageNotificationsSeen: (_, __, { user }) =>
+      markDirectMessageNotificationsSeen(user.id),
     toggleNotificationReadState: (_, { id }, { user }) =>
       toggleNotificationReadState(id, user.id),
   },

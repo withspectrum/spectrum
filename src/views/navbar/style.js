@@ -129,7 +129,7 @@ export const IconDrop = styled(FlexRow)`
     position: absolute;
     top: 100%;
     right: 0;
-    min-width: 160px;
+    min-width: 320px;
     padding: 8px;
 
     @media (max-width: 768px) {
@@ -273,4 +273,10 @@ export const UserProfileDropdownListItem = styled.li`
     color: ${props => props.theme.text.default};
     background: ${props => props.theme.bg.wash};
   }
+`;
+
+export const Notification = styled.div`
+  color: ${props => props.theme.text.default};
+  padding: 8px;
+  border-bottom: 1px solid ${props => props.theme.border.default};
 `;
