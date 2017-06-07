@@ -5,6 +5,7 @@ export const View = styled(FlexRow)`
   align-items: stretch;
   flex: 0 0 auto;
   background: #fff;
+  max-height: calc(100% - 48px);
 
   @media( max-width: 768px) {
     flex-direction: column;
