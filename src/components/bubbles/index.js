@@ -27,7 +27,7 @@ export const Bubble = (props: BubbleProps) => {
 
   return (
     <TextBubble me={me} pending={pending}>
-      {type === 'thread' ? message.body : formatMessageForLinks(message.body)}
+      {type === 'thread' && message.body}
     </TextBubble>
   );
 };
