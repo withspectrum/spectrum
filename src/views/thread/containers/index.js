@@ -53,6 +53,7 @@ class ThreadContainerPure extends Component {
 
   forceScrollToBottom = () => {
     if (!this.scrollBody) return;
+
     let node = this.scrollBody;
     node.scrollTop = node.scrollHeight - node.clientHeight;
   };
@@ -149,8 +150,7 @@ class ThreadContainerPure extends Component {
     }
 
     if (
-      thread.channel.isPrivate &&
-      !thread.channel.channelPermissions.isMember
+      thread.channel.isPrivate && !thread.channel.channelPermissions.isMember
     ) {
       return (
         <FlexCol style={{ flex: '1 1 auto' }}>
@@ -185,6 +185,19 @@ class ThreadContainerPure extends Component {
       },
     });
 
+    // create an array of participant Ids and the creator Id
+    // which gets passed into the <Messages> component - if the current
+    // user is a participant or the thread creator, we will trigger
+    // a forceScrollToBottom on mount
+    const participantIds =
+      thread.participants && thread.participants.map(user => user.id);
+    // add checks to make sure that participantIds has ids in it. if there
+    // are no participants yet, only pass the creator id to the forceScrollToBottom
+    // method
+    const participantsAndCreator = participantIds.length > 0
+      ? [...participantIds, thread.creator.id]
+      : [thread.creator.id];
+
     return (
       <FlexCol style={{ flex: '1 1 auto' }}>
         <Titlebar
@@ -198,11 +211,12 @@ class ThreadContainerPure extends Component {
           <Head title={title} description={description} />
 
           <DetailColumn type="half">
-            <Container innerRef={scrollBody => (this.scrollBody = scrollBody)}>
+            <Container innerRef={scrollBody => this.scrollBody = scrollBody}>
               {!currentUser && <UpsellSignIn />}
               <ThreadDetail thread={thread} />
               <Messages
                 id={thread.id}
+                participants={participantsAndCreator}
                 currentUser={currentUser}
                 forceScrollToBottom={this.forceScrollToBottom}
                 contextualScrollToBottom={this.contextualScrollToBottom}
@@ -231,6 +245,7 @@ class ThreadContainerPure extends Component {
                   threadType="story"
                   thread={thread.id}
                   currentUser={currentUser}
+                  forceScrollToBottom={this.forceScrollToBottom}
                 />
               </ChatInputWrapper>}
           </DetailColumn>
