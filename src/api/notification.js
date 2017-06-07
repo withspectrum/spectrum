@@ -53,3 +53,23 @@ export const markNotificationsAsSeenMutation = graphql(
   MARK_NOTIFICATIONS_AS_SEEN_MUTATION,
   MARK_NOTIFICATIONS_AS_SEEN_OPTIONS
 );
+
+export const MARK_DM_NOTIFICATIONS_AS_SEEN_MUTATION = gql`
+  mutation markDirectMessageNotificationsAsSeen {
+    markDirectMessageNotificationsAsSeen {
+      ...notificationInfo
+    }
+  }
+  ${notificationInfoFragment}
+`;
+
+export const MARK_DM_NOTIFICATIONS_AS_SEEN_OPTIONS = {
+  props: ({ mutate }) => ({
+    markDirectMessageNotificationsAsSeen: () => mutate(),
+  }),
+};
+
+export const markDirectMessageNotificationsAsSeenMutation = graphql(
+  MARK_DM_NOTIFICATIONS_AS_SEEN_MUTATION,
+  MARK_DM_NOTIFICATIONS_AS_SEEN_OPTIONS
+);

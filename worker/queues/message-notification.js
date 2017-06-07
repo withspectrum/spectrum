@@ -12,6 +12,9 @@ import {
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
 import { getThreadNotificationUsers } from '../models/usersThreads';
+import {
+  getDirectMessageThreadMembers,
+} from '../models/usersDirectMessageThreads';
 
 const getDistinctActors = array => {
   let unique = {};
@@ -126,11 +129,16 @@ export default () =>
             return updateNotification(newNotification)
               .then(notification => {
                 console.log('\n8-6', notification);
+
                 // with the updated notification, calculate the recipients of
                 // this notification. In this case it is thread participants
-                const recipients = getThreadNotificationUsers(
-                  notification.context.id
-                );
+                // or if the message was in a dm thread it's all the members
+                // of that dm thread
+                const recipients = incomingMessage.threadType ===
+                  'directMessageThread'
+                  ? getDirectMessageThreadMembers(notification.context.id)
+                  : getThreadNotificationUsers(notification.context.id);
+
                 return Promise.all([notification, recipients]);
               })
               .then(([notification, recipients]) => {
@@ -180,9 +188,11 @@ export default () =>
                 console.log('\n9-4', notification);
                 // with the new notification, calculate the recipients of
                 // this notification. In this case it is thread participants
-                const recipients = getThreadNotificationUsers(
-                  notification.context.id
-                );
+                const recipients = incomingMessage.threadType ===
+                  'directMessageThread'
+                  ? getDirectMessageThreadMembers(notification.context.id)
+                  : getThreadNotificationUsers(notification.context.id);
+
                 return Promise.all([notification, recipients]);
               })
               .then(([notification, recipients]) => {

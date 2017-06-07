@@ -8,7 +8,10 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { getCurrentUserProfile } from '../../api/user';
 import { parseNotification } from '../../helpers/notification';
-import { markNotificationsAsSeenMutation } from '../../api/notification';
+import {
+  markNotificationsAsSeenMutation,
+  markDirectMessageNotificationsAsSeenMutation,
+} from '../../api/notification';
 import { SERVER_URL } from '../../api';
 import Icon from '../../components/icons';
 import { displayLoadingNavbar } from '../../components/loading';
@@ -29,11 +32,13 @@ import {
   LabelForTab,
   UserProfileAvatar,
   UnseenCount,
+  DmUnseenCount,
 } from './style';
 
 class Navbar extends Component {
   state: {
-    unseenCount: number,
+    allUnseenCount: number,
+    dmUnseenCount: number,
     notifications: Array<Object>,
   };
 
@@ -47,14 +52,26 @@ class Navbar extends Component {
       currentUser.notificationConnection.edges.map(notification =>
         parseNotification(notification.node)
       );
-    const unseenCount =
+
+    const dmUnseenCount =
       notifications &&
       notifications.length > 0 &&
-      notifications.filter(notification => notification.isSeen === false)
-        .length;
+      notifications.filter(
+        notification => notification.context.type === 'DIRECT_MESSAGE_THREAD'
+      ).length;
+
+    const allUnseenCount =
+      notifications &&
+      notifications.length > 0 &&
+      notifications
+        .filter(notification => notification.isSeen === false)
+        .filter(
+          notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
+        ).length;
 
     this.state = {
-      unseenCount,
+      allUnseenCount,
+      dmUnseenCount,
       notifications,
     };
   }
@@ -74,14 +91,14 @@ class Navbar extends Component {
     }
   }
 
-  markNotificationsAsSeen = () => {
-    const { unseenCount } = this.state;
+  markAllNotificationsAsSeen = () => {
+    const { allUnseenCount } = this.state;
 
-    if (unseenCount === 0) {
+    if (allUnseenCount === 0) {
       return null;
     } else {
       this.setState({
-        unseenCount: 0,
+        allUnseenCount: 0,
       });
       this.props
         .markAllUserNotificationsSeen()
@@ -94,6 +111,26 @@ class Navbar extends Component {
     }
   };
 
+  markDmNotificationsAsSeen = () => {
+    const { dmUnseenCount } = this.state;
+
+    if (dmUnseenCount === 0) {
+      return null;
+    } else {
+      this.setState({
+        dmUnseenCount: 0,
+      });
+      this.props
+        .markDirectMessageNotificationsAsSeen()
+        .then(({ data: { markAllUserDirectMessageNotificationsRead } }) => {
+          // notifs were marked as seen
+        })
+        .catch(err => {
+          console.log('error marking dm notifs as seen', err);
+        });
+    }
+  };
+
   login = () => {
     // log the user in and return them to this page
     return (window.location.href = `${SERVER_URL}/auth/twitter?redirectTo=${window.location.pathname}`);
@@ -102,7 +139,7 @@ class Navbar extends Component {
   render() {
     const { match, data: { user } } = this.props;
     const currentUser = user;
-    const { unseenCount, notifications } = this.state;
+    const { allUnseenCount, dmUnseenCount, notifications } = this.state;
 
     if (!currentUser || currentUser === null) {
       return (
@@ -161,8 +198,16 @@ class Navbar extends Component {
                 data-active={match.url.includes('/messages')}
                 data-mobileWidth={'third'}
                 to="/messages"
+                onClick={this.markDmNotificationsAsSeen}
               >
-                <Icon glyph="message" />
+                <Icon glyph={dmUnseenCount > 0 ? 'message-fill' : 'message'} />
+                {dmUnseenCount > 0
+                  ? <DmUnseenCount
+                      size={dmUnseenCount >= 10 ? 'large' : 'small'}
+                    >
+                      {dmUnseenCount >= 10 ? '10+' : dmUnseenCount}
+                    </DmUnseenCount>
+                  : null}
                 <Label>Messages</Label>
               </IconLink>
 
@@ -177,7 +222,7 @@ class Navbar extends Component {
             </Section>
 
             <Section right>
-              <IconDrop onMouseEnter={this.markNotificationsAsSeen}>
+              <IconDrop onMouseLeave={this.markAllNotificationsAsSeen}>
                 <IconLink
                   data-active={match.url === '/notifications'}
                   data-mobileWidth={'half'}
@@ -185,12 +230,14 @@ class Navbar extends Component {
                 >
                   <Icon
                     glyph={
-                      unseenCount > 0 ? 'notification-fill' : 'notification'
+                      allUnseenCount > 0 ? 'notification-fill' : 'notification'
                     }
                   />
-                  {unseenCount > 0
-                    ? <UnseenCount size={unseenCount >= 10 ? 'large' : 'small'}>
-                        {unseenCount >= 10 ? '10+' : unseenCount}
+                  {allUnseenCount > 0
+                    ? <UnseenCount
+                        size={allUnseenCount >= 10 ? 'large' : 'small'}
+                      >
+                        {allUnseenCount >= 10 ? '10+' : allUnseenCount}
                       </UnseenCount>
                     : null}
                   <LabelForTab>Notifications</LabelForTab>
@@ -234,6 +281,7 @@ const mapStateToProps = state => ({
 export default compose(
   getCurrentUserProfile,
   markNotificationsAsSeenMutation,
+  markDirectMessageNotificationsAsSeenMutation,
   withRouter,
   displayLoadingNavbar,
   connect(mapStateToProps)

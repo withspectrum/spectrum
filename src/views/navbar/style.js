@@ -106,6 +106,10 @@ export const UnseenCount = styled.span`
   border: 2px solid ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
 `;
 
+export const DmUnseenCount = styled(UnseenCount)`
+  right: ${props => (props.size === 'large' ? '80px' : '84px')};
+`;
+
 export const IconDrop = styled(FlexRow)`
   ${/* display: flex;
   flex-direction: row; */ ''}
