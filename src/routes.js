@@ -5,6 +5,7 @@ import { Router, Route, Switch, Redirect } from 'react-router';
 //$FlowFixMe
 import styled from 'styled-components';
 import generateMetaInfo from '../server/shared/generate-meta-info';
+import { FlexCol } from './components/globals';
 import { history } from './helpers/history';
 import ScrollManager from './components/scrollManager';
 import Head from './components/head';
@@ -31,9 +32,14 @@ const About = () => (
   </div>
 );
 
-const Body = styled.div`
+const Body = styled(FlexCol)`
+  display: flex;
   width: 100vw;
+  flex: 0 0 100vh;
+  height: 100vh;
   min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
   background: ${props => props.theme.bg.wash};
 `;
 

@@ -10,16 +10,16 @@ import { ProfileHeaderAction } from './style';
 const PhotoContainer = styled.div`
   position: relative;
   width: 100%;
-  height: ${props => (props.large ? '320px' : '96px')};
-  background-color: ${({ theme }) => theme.generic.default};
-  background-image: url('${props => (props.coverURL ? props.coverURL + `?w=${props.large ? 1024 : 320}&dpr=2` : Gradient(props.theme.brand.alt, props.theme.brand.default))}');
+  flex: 0 0 ${props => (props.large ? '320px' : '96px')};
+  background-color: ${({ theme }) => theme.space.light};
+  background-image: ${props => (props.coverURL ? `url(${props.coverURL}?w=${props.large ? 1024 : 320}&dpr=2)` : Gradient(props.theme.space.light, props.theme.space.dark))};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   border-radius: ${props => (props.large ? '12px' : '12px 12px 0 0')};
 
   @media (max-width: 768px) {
-    height: 160px;
+    flex: 0 0 ${props => (props.large ? '160px' : '64px')};
     border-radius: 0;
   }
 `;

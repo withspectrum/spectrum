@@ -12,7 +12,7 @@ export const ChatInputWrapper = styled(FlexRow)`
   margin: 0;
   padding: 8px;
   border-top: 2px solid ${({ theme }) => theme.border.default};
-  background-color: ${({ theme }) => theme.bg.default};
+  ${/* background-color: ${({ theme }) => theme.bg.default}; */ ''}
   border-radius: 0 0 12px 12px;
 `;
 

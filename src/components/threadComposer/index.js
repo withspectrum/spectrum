@@ -419,7 +419,7 @@ class ThreadComposerWithData extends Component {
               onKeyDown={this.listenForUrl}
               state={this.state.body}
               style={ThreadDescription}
-              editorRef={editor => this.bodyEditor = editor}
+              editorRef={editor => (this.bodyEditor = editor)}
               placeholder="Write more thoughts here, add photos, and anything else!"
             />
 

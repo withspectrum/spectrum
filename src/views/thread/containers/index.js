@@ -20,7 +20,13 @@ import AppViewWrapper from '../../../components/appViewWrapper';
 import { UserProfile, ChannelProfile } from '../../../components/profile';
 import { getThread } from '../queries';
 import { displayLoadingScreen } from '../../../components/loading';
-import { Container, ChatInputWrapper } from '../style';
+import { FlexCol } from '../../../components/globals';
+import {
+  Container,
+  ChatInputWrapper,
+  DetailViewWrapper,
+  DetailColumn,
+} from '../style';
 import {
   UpsellSignIn,
   UpsellRequestToJoinChannel,
@@ -108,58 +114,64 @@ class ThreadContainerPure extends Component {
 
     if (error) {
       return (
-        <AppViewWrapper>
+        <FlexCol style={{ flex: '1 1 auto' }}>
           <Titlebar
             title={'Thread not found'}
             provideBack={true}
             backRoute={`/`}
             noComposer
           />
-          <Column type="primary">
-            <Upsell404Thread />
-          </Column>
-        </AppViewWrapper>
+          <AppViewWrapper>
+            <Column type="primary">
+              <Upsell404Thread />
+            </Column>
+          </AppViewWrapper>
+        </FlexCol>
       );
     }
 
     if (!thread || thread.deleted) {
       return (
-        <AppViewWrapper>
+        <FlexCol style={{ flex: '1 1 auto' }}>
           <Titlebar
             title={'Thread not found'}
             provideBack={true}
             backRoute={`/`}
             noComposer
           />
-          <Column type="primary">
-            <Upsell404Thread />
-          </Column>
-        </AppViewWrapper>
+          <AppViewWrapper>
+            <Column type="primary">
+              <Upsell404Thread />
+            </Column>
+          </AppViewWrapper>
+        </FlexCol>
       );
     }
 
     if (
-      thread.channel.isPrivate && !thread.channel.channelPermissions.isMember
+      thread.channel.isPrivate &&
+      !thread.channel.channelPermissions.isMember
     ) {
       return (
-        <AppViewWrapper>
+        <FlexCol style={{ flex: '1 1 auto' }}>
           <Titlebar
             title={'Private Thread'}
             provideBack={true}
             backRoute={`/`}
             noComposer
           />
-          <Column type="primary">
-            <UpsellRequestToJoinChannel
-              channel={thread.channel}
-              community={thread.channel.community.slug}
-              isPending={thread.channel.channelPermissions.isPending}
-              subscribe={() => this.toggleSubscription(thread.channel.id)}
-              currentUser={currentUser}
-              loading={isLoading}
-            />
-          </Column>
-        </AppViewWrapper>
+          <AppViewWrapper>
+            <Column type="primary">
+              <UpsellRequestToJoinChannel
+                channel={thread.channel}
+                community={thread.channel.community.slug}
+                isPending={thread.channel.channelPermissions.isPending}
+                subscribe={() => this.toggleSubscription(thread.channel.id)}
+                currentUser={currentUser}
+              />
+            </Column>
+          </AppViewWrapper>
+        </FlexCol>
       );
     }
 
@@ -174,23 +186,39 @@ class ThreadContainerPure extends Component {
     });
 
     return (
-      <AppViewWrapper>
-        <Head title={title} description={description} />
-        <Column type="secondary">
-          <UserProfile data={{ user: thread.creator }} />
-          <ChannelProfile data={{ channel: thread.channel }} />
-        </Column>
+      <FlexCol style={{ flex: '1 1 auto' }}>
+        <Titlebar
+          title={thread.content.title}
+          subtitle={`${thread.channel.community.name} / ${thread.channel.name}`}
+          provideBack={true}
+          backRoute={`/${thread.channel.community.slug}/${thread.channel.slug}`}
+          noComposer
+        />
+        <DetailViewWrapper>
+          <Head title={title} description={description} />
 
-        <Column type="primary">
-          <Container innerRef={scrollBody => this.scrollBody = scrollBody}>
-            {!currentUser && <UpsellSignIn />}
-            <ThreadDetail thread={thread} />
-            <Messages
-              id={thread.id}
-              currentUser={currentUser}
-              forceScrollToBottom={this.forceScrollToBottom}
-              contextualScrollToBottom={this.contextualScrollToBottom}
-            />
+          <DetailColumn type="half">
+            <Container innerRef={scrollBody => (this.scrollBody = scrollBody)}>
+              {!currentUser && <UpsellSignIn />}
+              <ThreadDetail thread={thread} />
+              <Messages
+                id={thread.id}
+                currentUser={currentUser}
+                forceScrollToBottom={this.forceScrollToBottom}
+                contextualScrollToBottom={this.contextualScrollToBottom}
+              />
+
+              {// if the user exists but isn't a subscriber to the channel,
+              // show an upsell to join the channel
+              currentUser &&
+                !thread.isLocked &&
+                !thread.channel.channelPermissions.isMember &&
+                <UpsellJoinChannel
+                  channel={thread.channel}
+                  subscribe={this.toggleSubscription}
+                  loading={isLoading}
+                />}
+            </Container>
             {// if user exists, and is either the thread creator or a subscriber
             // of the channel the thread was posted in, the user can see the
             // chat input
@@ -205,20 +233,9 @@ class ThreadContainerPure extends Component {
                   currentUser={currentUser}
                 />
               </ChatInputWrapper>}
-
-            {// if the user exists but isn't a subscriber to the channel,
-            // show an upsell to join the channel
-            currentUser &&
-              !thread.isLocked &&
-              !thread.channel.channelPermissions.isMember &&
-              <UpsellJoinChannel
-                channel={thread.channel}
-                subscribe={this.toggleSubscription}
-                loading={isLoading}
-              />}
-          </Container>
-        </Column>
-      </AppViewWrapper>
+          </DetailColumn>
+        </DetailViewWrapper>
+      </FlexCol>
     );
   }
 }
