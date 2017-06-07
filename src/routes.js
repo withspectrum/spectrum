@@ -83,7 +83,7 @@ class Routes extends Component {
                 path="/users/:username/settings"
                 component={UserSettings}
               />
-              {/* <Route path="/notifications" component={Notifications} /> */}
+              <Route path="/notifications" component={Notifications} />
 
               {/*
               We check communitySlug last to ensure none of the above routes

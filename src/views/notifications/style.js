@@ -8,7 +8,7 @@ import {
 import Card from '../../components/card';
 
 export const NotificationCard = styled(Card)`
-  padding: 16px 24px 24px 16px;
+  padding: 16px;
 `;
 
 export const ContentHeading = styled.h2`
@@ -112,4 +112,41 @@ export const NotificationListRow = styled(FlexRow)`
       color: inherit;
     }
   }
+`;
+
+export const ActorPhotosContainer = styled.ul`
+  list-style-type: none;
+  margin: 0;
+`;
+
+export const ActorPhotoItem = styled.li`
+  display: inline-block;
+  margin-right: 4px;
+  border: 1px solid rgba(0,0,0,0.05);
+  width: 24px;
+  height: 24px;
+  border-radius: 24px;
+  overflow: hidden;
+`;
+
+export const ActorPhoto = styled.img`
+  width: 100%;
+`;
+
+export const TextContent = styled.div`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.text.alt};
+  border-bottom: 2px solid rgba(0,0,0,0.05);
+  padding-bottom: 8px;
+
+  a {
+    font-weight: 600;
+    color: ${props => props.theme.text.default};
+  }
+`;
+
+export const BubbleContainer = styled.div`
+  display: flex;
+  justify-content: ${props => (props.me ? 'flex-end' : 'flex-start')};
 `;

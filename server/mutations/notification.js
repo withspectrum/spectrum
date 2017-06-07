@@ -10,9 +10,7 @@ module.exports = {
     markAllNotificationsSeen: (_, __, { user }) =>
       markAllNotificationsSeen(user.id),
     markAllNotificationsRead: (_, __, { user }) =>
-      markAllNotificationsRead(user.id).then(
-        data => console.log('data', data) || data
-      ),
+      markAllNotificationsRead(user.id),
     markDirectMessageNotificationsSeen: (_, __, { user }) =>
       markDirectMessageNotificationsSeen(user.id),
     toggleNotificationReadState: (_, { id }, { user }) =>

@@ -42,7 +42,7 @@ const Threads = styled.div`
   }
 
   @media (max-width: 768px) {
-    
+
   }
 `;
 
@@ -110,6 +110,7 @@ class ThreadFeedPure extends Component {
       return (
         <Threads>
           {threads.map(thread => {
+            console.log(threads);
             return (
               <ThreadFeedCard
                 key={thread.node.id}
