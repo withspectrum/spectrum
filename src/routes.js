@@ -26,20 +26,20 @@ import UserSettings from './views/userSettings';
 import communitySettings from './views/communitySettings';
 import channelSettings from './views/channelSettings';
 
-const About = () => (
+const About = () =>
   <div>
     <h3>About</h3>
-  </div>
-);
+  </div>;
 
+console.log(window.innerHeight);
 const Body = styled(FlexCol)`
   display: flex;
   width: 100vw;
-  flex: 0 0 100vh;
-  height: 100vh;
-  min-height: 100vh;
-  max-height: 100vh;
-  overflow: hidden;
+  ${'' /* flex: 0 0 100vh; */}
+  height: ${window.innerHeight}px;
+  ${'' /* min-height: 100vh; */}
+  ${'' /* max-height: 100vh; */}
+  overflow-y: scroll;
   background: ${props => props.theme.bg.wash};
 `;
 
