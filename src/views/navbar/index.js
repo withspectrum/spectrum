@@ -85,7 +85,6 @@ class Navbar extends Component {
               data-mobileWidth={'third'}
               to="/"
             >
-              {console.log(match)}
               <Icon glyph="home" />
               <Label>Home</Label>
             </IconLink>
