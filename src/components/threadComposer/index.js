@@ -296,14 +296,10 @@ class ThreadComposerWithData extends Component {
     }
 
     // Get the images
-    const imageBlocks = body.blocks.filter(block => block.type === 'image');
-
-    // Get the original file data out of the image blocks as an ImmutableJS data structure (image.getIn(['data', 'file]) is kinda like image.data.file for ImmutableJS)
-    const files = imageBlocks.map(image => image.getIn(['data', 'file']));
-    const filesToUpload = files.toArray().map(file => file);
-
-    console.log(files.toJS());
-    console.log('ftu', filesToUpload);
+    const filesToUpload = body.document.nodes
+      .filter(node => node.type === 'image')
+      .map(image => image.getIn(['data', 'file']))
+      .toJS();
 
     console.log('incoming to the server', filesToUpload);
 
@@ -318,10 +314,7 @@ class ThreadComposerWithData extends Component {
             type: 'SLATE',
             content,
             attachments,
-            filesToUpload: files
-              ? console.log('here', files.toArray().map(file => file)) ||
-                  files.toArray().map(file => file)
-              : null,
+            filesToUpload,
           },
         },
       })

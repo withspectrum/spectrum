@@ -249,11 +249,14 @@ const updateThreadBody = (id: string, newBody: string) => {
   return db
     .table('threads')
     .get(id)
-    .update({
-      content: {
-        body: newBody,
+    .update(
+      {
+        content: {
+          body: newBody,
+        },
       },
-    })
+      { returnChanges: 'always' }
+    )
     .run()
     .then(result => {
       // if an update happened

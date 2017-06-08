@@ -92,7 +92,6 @@ module.exports = {
         })
         .then(([newThread, urls]) => {
           if (!urls) return newThread;
-
           const slateState = JSON.parse(newThread.content.body);
           let fileIndex = 0;
           const newSlateState = {
@@ -101,11 +100,14 @@ module.exports = {
               if (node.type !== 'image') return node;
               fileIndex++;
               return {
-                ...node,
-                data: {
-                  ...node.data,
-                  src: urls[fileIndex - 1],
-                },
+                kind: 'block',
+                type: 'paragraph',
+                nodes: [
+                  {
+                    kind: 'text',
+                    text: `![](${encodeURI(urls[fileIndex - 1])})`,
+                  },
+                ],
               };
             }),
           };
