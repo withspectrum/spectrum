@@ -55,7 +55,11 @@ class Editor extends Component {
     const file = e.target.files[0];
     const onChange = this.props.onChange || this.onChange;
     const state = this.props.state || this.state.state;
-    const newState = this.insertImage(state, window.URL.createObjectURL(file));
+    const newState = this.insertImage(
+      state,
+      window.URL.createObjectURL(file),
+      file
+    );
     onChange(newState);
   };
 
@@ -87,6 +91,8 @@ class Editor extends Component {
       singleLine,
       ...rest
     } = this.props;
+
+    console.log(state.blocks.filter(block => block.type === 'image').toJS());
 
     return (
       <Wrapper className={className} style={style} onClick={this.focus}>

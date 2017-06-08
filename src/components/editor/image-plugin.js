@@ -27,7 +27,7 @@ const onDropOrPasteFiles = (e, data, state, editor) => {
 
     reader.addEventListener('load', () => {
       state = editor.getState();
-      state = insertImage(state, reader.result);
+      state = insertImage(state, reader.result, file);
       editor.onChange(state);
     });
 
@@ -35,13 +35,14 @@ const onDropOrPasteFiles = (e, data, state, editor) => {
   });
 };
 
-const insertImage = (state, src) => {
+const insertImage = (state, src, file) => {
+  console.log(file);
   return state
     .transform()
     .insertBlock({
       type: 'image',
       isVoid: true,
-      data: { src },
+      data: { src, original: file },
     })
     .apply();
 };
