@@ -418,7 +418,7 @@ export const UpsellToReload = () => {
 
 export const UpsellNullNotifications = () => {
   return (
-    <NullCard bg="post" heading="You don't have any notifications yet.">
+    <NullCard bg="notification" heading="You don't have any notifications yet.">
       <Link to="/">
         <Button icon="home">Take Me Home</Button>
       </Link>

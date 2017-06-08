@@ -21,6 +21,7 @@ const NotificationList = ({ notifications }) => {
   return (
     <div>
       {notifications &&
+        notifications.length > 0 &&
         notifications.map(notification => {
           return (
             <Notification key={notification.id}>
@@ -47,14 +48,18 @@ const NotificationDropdownPure = ({ notifications, markAllRead }) => {
       <DropdownHeader>
         My Notifications
       </DropdownHeader>
-      {!notifications && <NullNotifications />}
+      {!notifications || (notifications.length === 0 && <NullNotifications />)}
       {notifications && <NotificationList notifications={notifications} />}
+
       <DropdownFooter>
-        <OutlineButton onClick={() => markAllRead()}>
-          Mark All Read
-        </OutlineButton>
+        {notifications &&
+          notifications.length > 0 &&
+          <OutlineButton onClick={() => markAllRead()}>
+            Mark All Read
+          </OutlineButton>}
         <Button to={'/notifications'}>View all</Button>
       </DropdownFooter>
+
     </Dropdown>
   );
 };

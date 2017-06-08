@@ -251,9 +251,18 @@ export const DropdownFooter = styled(FlexRow)`
   border-top: 2px solid ${({ theme }) => theme.bg.wash};
   flex: 0 0 auto;
   align-self: stretch;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   padding: 8px;
+
+  button {
+    display: flex;
+    flex: 1;
+
+    &:first-of-type:not(:last-of-type) {
+      margin-right: 8px;
+    }
+  }
 `;
 
 export const UserProfileDropdownList = styled.ul`
