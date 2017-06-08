@@ -53,14 +53,16 @@ class Editor extends Component {
 
   addImage = e => {
     const file = e.target.files[0];
-    const onChange = this.props.onChange || this.onChange;
-    const state = this.props.state || this.state.state;
-    const newState = this.insertImage(
-      state,
-      window.URL.createObjectURL(file),
-      file
-    );
-    onChange(newState);
+    if (file) {
+      const onChange = this.props.onChange || this.onChange;
+      const state = this.props.state || this.state.state;
+      const newState = this.insertImage(
+        state,
+        window.URL.createObjectURL(file),
+        file
+      );
+      onChange(newState);
+    }
   };
 
   onChange = (state: Object) => {

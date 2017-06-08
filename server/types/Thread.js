@@ -77,6 +77,7 @@ const Thread = /* GraphQL */ `
 		type: ThreadType
 		content: ThreadContentInput!
 		attachments: [AttachmentInput]
+		filesToUpload: [File]
 	}
 
 	extend type Mutation {

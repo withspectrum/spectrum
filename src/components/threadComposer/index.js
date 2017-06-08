@@ -295,14 +295,17 @@ class ThreadComposerWithData extends Component {
       });
     }
 
-    console.log('attachments', attachments);
-    console.log('body', body);
-    console.log(
-      'images',
-      body.blocks.filter(block => block.type === 'image').toJS()
-    );
+    // Get the images
+    const imageBlocks = body.blocks.filter(block => block.type === 'image');
 
-    return;
+    // Get the original file data out of the image blocks as an ImmutableJS data structure (image.getIn(['data', 'file]) is kinda like image.data.file for ImmutableJS)
+    const files = imageBlocks.map(image => image.getIn(['data', 'file']));
+    const filesToUpload = files.toArray().map(file => file);
+
+    console.log(files.toJS());
+    console.log('ftu', filesToUpload);
+
+    console.log('incoming to the server', filesToUpload);
 
     // this.props.mutate comes from a higher order component defined at the
     // bottom of this file
@@ -315,6 +318,10 @@ class ThreadComposerWithData extends Component {
             type: 'SLATE',
             content,
             attachments,
+            filesToUpload: files
+              ? console.log('here', files.toArray().map(file => file)) ||
+                  files.toArray().map(file => file)
+              : null,
           },
         },
       })

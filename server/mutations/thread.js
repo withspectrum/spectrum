@@ -18,6 +18,8 @@ module.exports = {
     publishThread: (_, { thread }, { user }) => {
       const currentUser = user;
 
+      console.log('input is ', thread);
+
       // user must be authed to publish a thread
       if (!currentUser) {
         return new UserError('You must be signed in to publish a new thread.');
@@ -29,50 +31,61 @@ module.exports = {
       );
       const channels = getChannels([thread.channelId]);
 
-      return Promise.all([currentUserChannelPermissions, channels]).then(([
-        currentUserChannelPermissions,
-        channels,
-      ]) => {
-        // select the channel to evaluate
-        const channelToEvaluate = channels[0];
+      return Promise.all([currentUserChannelPermissions, channels])
+        .then(([currentUserChannelPermissions, channels]) => {
+          // select the channel to evaluate
+          const channelToEvaluate = channels[0];
 
-        // if channel wasn't found
-        if (!channelToEvaluate || channelToEvaluate.deletedAt) {
-          return new UserError("This channel doesn't exist");
-        }
+          // if channel wasn't found
+          if (!channelToEvaluate || channelToEvaluate.deletedAt) {
+            return new UserError("This channel doesn't exist");
+          }
 
-        // if user isn't a channel member
-        if (!currentUserChannelPermissions.isMember) {
-          return new UserError(
-            "You don't have permission to create threads in this channel."
-          );
-        }
+          // if user isn't a channel member
+          if (!currentUserChannelPermissions.isMember) {
+            return new UserError(
+              "You don't have permission to create threads in this channel."
+            );
+          }
 
-        // if the thread has attachments, we recreate an array with a JSON.parsed
-        // data value (comes in from the client as a string in order to have dynamic
-        // data shapes without overcomplicating the gql schema)
-        let attachments = [];
-        // if the thread came in with attachments
-        if (thread.attachments) {
-          // iterate through them and construct a new attachment object
-          thread.attachments.map(attachment => {
-            attachments.push({
-              attachmentType: attachment.attachmentType,
-              data: JSON.parse(attachment.data),
+          // if the thread has attachments, we recreate an array with a JSON.parsed
+          // data value (comes in from the client as a string in order to have dynamic
+          // data shapes without overcomplicating the gql schema)
+          let attachments = [];
+          // if the thread came in with attachments
+          if (thread.attachments) {
+            // iterate through them and construct a new attachment object
+            thread.attachments.map(attachment => {
+              attachments.push({
+                attachmentType: attachment.attachmentType,
+                data: JSON.parse(attachment.data),
+              });
             });
-          });
 
-          const newThread = Object.assign({}, thread, {
-            attachments,
-          });
+            const newThread = Object.assign({}, thread, {
+              attachments,
+            });
 
-          return publishThread(newThread, currentUser.id);
-        } else {
-          // if no attachments were passed into the thread, we can just publish
-          // as-is
-          return publishThread(thread, currentUser.id);
-        }
-      });
+            return publishThread(newThread, currentUser.id);
+          } else {
+            // if no attachments were passed into the thread, we can just publish
+            // as-is
+            return publishThread(thread, currentUser.id);
+          }
+        })
+        .then(newThread => {
+          if (thread.filesToUpload) {
+            // iterate over files and upload
+            // array of image urls
+            // update the content.body of the thread
+            console.log(newThread);
+            return newThread;
+          } else {
+            // return Promise.all([ newThread ])
+            return newThread;
+          }
+        });
+      // .then(([ newThread ]) => newThread)
     },
     editThread: (_, { input }, { user }) => {
       const currentUser = user;
