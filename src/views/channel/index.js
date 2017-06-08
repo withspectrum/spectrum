@@ -18,7 +18,7 @@ import ThreadFeed from '../../components/threadFeed';
 import { ChannelProfile } from '../../components/profile';
 import PendingUsersNotification from './components/pendingUsersNotification';
 import { getChannelThreads, getChannel } from './queries';
-import { displayLoadingScreen } from '../../components/loading';
+import { displayLoadingDashboard } from '../../components/loading';
 import {
   UpsellSignIn,
   Upsell404Channel,
@@ -243,7 +243,7 @@ class ChannelViewPure extends Component {
 export const ChannelView = compose(
   getChannel,
   toggleChannelSubscriptionMutation,
-  displayLoadingScreen,
+  displayLoadingDashboard,
   pure
 )(ChannelViewPure);
 

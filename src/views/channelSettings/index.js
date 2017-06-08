@@ -10,7 +10,7 @@ import { getThisChannel } from './queries';
 import { track } from '../../helpers/events';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
-import { displayLoadingScreen } from '../../components/loading';
+import { displayLoadingDashboard } from '../../components/loading';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { ChannelEditForm } from '../../components/editForm';
 import PendingUsers from './components/pendingUsers';
@@ -170,7 +170,7 @@ const ChannelSettings = compose(
   getThisChannel,
   togglePendingUserInChannelMutation,
   unblockUserInChannelMutation,
-  displayLoadingScreen,
+  displayLoadingDashboard,
   pure
 )(SettingsPure);
 export default connect()(ChannelSettings);

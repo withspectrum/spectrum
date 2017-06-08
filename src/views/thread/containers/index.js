@@ -19,7 +19,7 @@ import { Column } from '../../../components/column';
 import AppViewWrapper from '../../../components/appViewWrapper';
 import { UserProfile, ChannelProfile } from '../../../components/profile';
 import { getThread } from '../queries';
-import { displayLoadingScreen } from '../../../components/loading';
+import { displayLoadingDashboard } from '../../../components/loading';
 import { FlexCol } from '../../../components/globals';
 import {
   Container,
@@ -210,7 +210,7 @@ class ThreadContainerPure extends Component {
         <DetailViewWrapper>
           <Head title={title} description={description} />
 
-          <DetailColumn type="half">
+          <DetailColumn type="only">
             <Container innerRef={scrollBody => this.scrollBody = scrollBody}>
               {!currentUser && <UpsellSignIn />}
               <ThreadDetail thread={thread} />
@@ -258,7 +258,7 @@ class ThreadContainerPure extends Component {
 const ThreadContainer = compose(
   toggleChannelSubscriptionMutation,
   getThread,
-  displayLoadingScreen,
+  displayLoadingDashboard,
   pure
 )(ThreadContainerPure);
 
