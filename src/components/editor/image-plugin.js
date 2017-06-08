@@ -36,13 +36,12 @@ const onDropOrPasteFiles = (e, data, state, editor) => {
 };
 
 const insertImage = (state, src, file) => {
-  console.log(file);
   return state
     .transform()
     .insertBlock({
       type: 'image',
       isVoid: true,
-      data: { src, original: file },
+      data: { src, file },
     })
     .apply();
 };

@@ -92,8 +92,6 @@ class Editor extends Component {
       ...rest
     } = this.props;
 
-    console.log(state.blocks.filter(block => block.type === 'image').toJS());
-
     return (
       <Wrapper className={className} style={style} onClick={this.focus}>
         <SlateEditor
