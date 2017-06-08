@@ -16,15 +16,9 @@ import {
   Code,
   PropsList,
   Swatch,
-  Spacer,
 } from './style';
 import Icon from '../../components/icons';
 import { Button, OutlineButton, TextButton } from '../../components/buttons';
-import {
-  UserProfile,
-  ChannelProfile,
-  CommunityProfile,
-} from '../../components/profile';
 
 const enhance = compose(
   withHandlers({
@@ -97,34 +91,6 @@ const glyphList = [
   'view-forward',
   'view-reload',
 ];
-
-const dummyData = {
-  user: {
-    id: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
-    title: 'Brian Lovin',
-    subtitle: '@brian',
-    profilePhoto: 'https://pbs.twimg.com/profile_images/570313913648955392/cf4tgX7M_bigger.jpeg',
-    description: 'Chief Nice Boy™ · Building @withspectrum, @designdetailsfm, @specfm · prev. @facebook, @buffer',
-    meta: [],
-  },
-
-  channel: {
-    id: '1c246adb-10a1-40a0-af39-1b7b3278199a',
-    title: 'Design Details',
-    subtitle: 'SpecFM',
-    description: 'A show about the people who design our favorite products.',
-    meta: [],
-  },
-
-  community: {
-    id: 'ae390edd-667f-42e4-bf0b-10371665c742',
-    title: 'SpecFM',
-    subtitle: '8,918 members',
-    profilePhoto: 'https://pbs.twimg.com/profile_images/766307796132343808/OtMSJrFo_400x400.jpg',
-    description: 'The best podcasts, blogs, and resources for designers and developers.',
-    meta: [],
-  },
-};
 
 const StyleGuidePure = enhance(({ highlightAndCopy, toString }) => (
   <PageContainer>

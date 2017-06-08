@@ -2,9 +2,6 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from './fragments/user/userInfo';
-import {
-  notificationInfoFragment,
-} from './fragments/notification/notificationInfo';
 
 /*
   Upload a new profilePhoto for the given currentUser

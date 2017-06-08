@@ -1,7 +1,7 @@
 //@flow
 import React from 'react';
 //$FlowFixMe
-import * as Autolinker from 'autolinker';
+// import * as Autolinker from 'autolinker';
 import { TextBubble, Emoji, ImageBubble } from './style';
 
 type BubbleProps = {
@@ -10,20 +10,19 @@ type BubbleProps = {
   sender: Object,
   message: Object,
   imgSrc?: String,
-  type: ?'thread' | 'messageGroup',
 };
 
 export const Bubble = (props: BubbleProps) => {
-  const { me, pending, message, type } = props;
+  const { me, pending, message } = props;
 
-  const formatMessageForLinks = (body: string): string => {
-    if (!body) {
-      return '';
-    } else {
-      const linkedMessage = Autolinker.link(body);
-      return linkedMessage;
-    }
-  };
+  // const formatMessageForLinks = (body: string): string => {
+  //   if (!body) {
+  //     return '';
+  //   } else {
+  //     const linkedMessage = Autolinker.link(body);
+  //     return linkedMessage;
+  //   }
+  // };
 
   return (
     <TextBubble me={me} pending={pending}>

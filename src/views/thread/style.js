@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import Card from '../../components/card';
 import Markdown from '../../components/markdown';
 import Column from '../../components/column';
 import {
@@ -12,11 +11,6 @@ import {
   Transition,
   hexa,
 } from '../../components/globals';
-
-export const RouteWrapper = styled(FlexRow)`
-  flex: 1 1 auto;
-  align-items: flex-start;
-`;
 
 export const DetailViewWrapper = styled(FlexRow)`
   background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 15%, ${theme.bg.default} 85%, ${theme.bg.wash})`};

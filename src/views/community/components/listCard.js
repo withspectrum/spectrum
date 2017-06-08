@@ -29,7 +29,7 @@ const ListCardPure = ({ data, dispatch }) => {
     } else if (
       channel.node.isPrivate && !channel.node.channelPermissions.isMember
     ) {
-      return;
+      return null;
     } else {
       return channel;
     }

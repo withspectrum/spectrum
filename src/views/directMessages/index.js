@@ -5,8 +5,6 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
 // $FlowFixMe
-import { Route, Redirect } from 'react-router';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
@@ -41,7 +39,7 @@ class DirectMessages extends Component {
   };
 
   render() {
-    const { match, history, currentUser, data } = this.props;
+    const { match, currentUser, data } = this.props;
     const width = window.innerWidth;
     const isMobile = width < 768;
 
@@ -120,13 +118,11 @@ class DirectMessages extends Component {
       } else {
         //otherwise, let the route handle which detailView to see
         if (match.params.threadId) {
-          {
-            /*
-            pass the user's existing DM threads into the composer so that we can more quickly
-            determine if the user is creating a new thread or has typed the names that map
-            to an existing DM thread
-           */
-          }
+          /*
+          pass the user's existing DM threads into the composer so that we can more quickly
+          determine if the user is creating a new thread or has typed the names that map
+          to an existing DM thread
+          */
           return (
             <View>
               <MessagesList>
@@ -150,12 +146,10 @@ class DirectMessages extends Component {
             </View>
           );
         } else {
-          {
-            /*
-            if a thread is being viewed and the threadId !== 'new', pass the
-            threads down the tree to fetch the messages for the urls threadId
-           */
-          }
+          /*
+          if a thread is being viewed and the threadId !== 'new', pass the
+          threads down the tree to fetch the messages for the urls threadId
+          */
           return (
             <View>
               <MessagesList>

@@ -1,6 +1,6 @@
 // @flow
 // $FlowFixMe
-import { ApolloClient, IntrospectionFragmentMatcher } from 'react-apollo';
+import { ApolloClient } from 'react-apollo';
 // $FlowFixMe
 import { createNetworkInterface } from 'apollo-upload-client-fork-mxstbr';
 // $FlowFixMe

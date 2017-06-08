@@ -1,7 +1,8 @@
 //@flow
 import React from 'react';
-import { timeDifference } from './utils';
+// $FlowFixMe
 import { Link } from 'react-router-dom';
+import { timeDifference } from '../../helpers/utils';
 
 export const parseNotification = notification => {
   return Object.assign({}, notification, {

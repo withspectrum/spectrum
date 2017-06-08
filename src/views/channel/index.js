@@ -79,13 +79,7 @@ class ChannelViewPure extends Component {
   };
 
   render() {
-    const {
-      match,
-      data: { error, channel },
-      currentUser,
-      toggleChannelSubscription,
-      dispatch,
-    } = this.props;
+    const { match, data: { error, channel }, currentUser } = this.props;
     const { isLoading } = this.state;
     const communitySlug = match.params.communitySlug;
     const channelSlug = match.params.channelSlug;

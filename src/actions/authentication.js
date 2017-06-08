@@ -4,10 +4,6 @@ import { clearApolloStore } from '../api';
 import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
 import Raven from 'raven-js';
 
-const eraseCookie = name => {
-  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-};
-
 export const logout = () => {
   track(`user`, `sign out`, null);
   // clear localStorage

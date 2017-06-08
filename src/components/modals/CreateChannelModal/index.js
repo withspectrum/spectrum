@@ -24,13 +24,7 @@ import {
 import ModalContainer from '../modalContainer';
 import { TextButton, Button } from '../../buttons';
 import { modalStyles, Description } from '../styles';
-import {
-  Input,
-  UnderlineInput,
-  TextArea,
-  Checkbox,
-  Error,
-} from '../../formElements';
+import { Input, UnderlineInput, TextArea, Error } from '../../formElements';
 import { Form, Actions } from './style';
 
 class CreateChannelModal extends Component {

@@ -55,7 +55,7 @@ class UpsellNewUser extends Component {
 
   joined = () => {
     let { joinedCommunities } = this.state;
-    joinedCommunities = joinedCommunities + 1;
+    joinedCommunities += 1;
 
     this.setState({
       joinedCommunities,
@@ -65,7 +65,7 @@ class UpsellNewUser extends Component {
 
   left = () => {
     let { joinedCommunities } = this.state;
-    joinedCommunities = joinedCommunities - 1;
+    joinedCommunities -= 1;
 
     this.setState({
       joinedCommunities,

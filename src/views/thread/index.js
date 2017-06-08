@@ -1,12 +1,11 @@
 //@flow
 import React from 'react';
 //$FlowFixMe
-import { Route, Redirect } from 'react-router';
+import { Route } from 'react-router';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-import { RouteWrapper } from './style';
 import ThreadContainer from './containers';
 
 const ThreadPure = ({ match, location }) => (

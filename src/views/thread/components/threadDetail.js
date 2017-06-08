@@ -36,7 +36,6 @@ import {
 import { ThreadTitle, ThreadDescription } from '../style';
 // $FlowFixMe
 import Textarea from 'react-textarea-autosize';
-import Titlebar from '../../../views/titlebar';
 import {
   ThreadWrapper,
   ThreadHeading,

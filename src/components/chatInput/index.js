@@ -18,7 +18,6 @@ import {
   ChatInputWrapper,
   MediaInput,
   MediaLabel,
-  EmojiToggle,
   SendButton,
 } from './style';
 import { sendMessageMutation } from '../../api/message';
@@ -157,11 +156,7 @@ class ChatInputWithMutation extends Component {
             subtle
           />
         </MediaLabel>
-        {/* <EmojiToggle
-          glyph="emoji"
-          tipText="Insert Emoji"
-          tipLocation="top-right"
-        /> */}
+
         <Form>
           <Input
             placeholder="Your message here..."

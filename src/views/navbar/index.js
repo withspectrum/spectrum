@@ -7,7 +7,6 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import { getCurrentUserProfile } from '../../api/user';
-import { parseNotification } from '../../helpers/notification';
 import {
   getNotifications,
   markNotificationsSeenMutation,
@@ -22,10 +21,8 @@ import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
 import { saveUserDataToLocalStorage } from '../../actions/authentication';
 import {
-  Container,
   Section,
   Nav,
-  Spacer,
   LogoLink,
   Logo,
   IconDrop,
@@ -51,8 +48,8 @@ class Navbar extends Component {
     const currentUser = user;
     const notifications =
       currentUser &&
-      notificationsQuery.notifications.edges.map(notification =>
-        parseNotification(notification.node)
+      notificationsQuery.notifications.edges.map(
+        notification => notification.node
       );
 
     const dmUnseenCount =
