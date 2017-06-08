@@ -35,7 +35,14 @@ class ChatInputWithMutation extends Component {
       dispatch,
       sendMessage,
       clear,
+      forceScrollToBottom,
     } = this.props;
+
+    // This doesn't exist if this is a new conversation
+    if (forceScrollToBottom) {
+      // if a user sends a message, force a scroll to bottom
+      forceScrollToBottom();
+    }
 
     // If the input is empty don't do anything
     if (toPlainText(state).trim() === '') return;
@@ -86,8 +93,16 @@ class ChatInputWithMutation extends Component {
 
   sendMediaMessage = e => {
     const file = e.target.files[0];
-    const { thread, threadType, createThread, dispatch } = this.props;
-    console.log('file', file);
+    const {
+      thread,
+      threadType,
+      createThread,
+      dispatch,
+      forceScrollToBottom,
+    } = this.props;
+
+    forceScrollToBottom();
+
     if (thread === 'newDirectMessageThread') {
       return createThread({
         messageType: 'media',

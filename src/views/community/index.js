@@ -26,12 +26,7 @@ import {
   UpsellJoinCommunity,
   Upsell404Community,
 } from '../../components/upsell';
-import {
-  CoverRow,
-  CoverColumn,
-  CoverButton,
-  MobileCommunityProfile,
-} from './style';
+import { CoverRow, CoverColumn, CoverButton } from './style';
 
 import {
   getCommunityThreads,
@@ -180,9 +175,6 @@ class CommunityViewPure extends Component {
                 onClick={() => this.toggleMembership(community.id)}
               />}
           </CoverPhoto>
-          <MobileCommunityProfile>
-            <CommunityProfile data={{ community }} profileSize="full" />
-          </MobileCommunityProfile>
           <CoverRow className={'flexy'}>
             <Column type="secondary" className={'inset'}>
               <CommunityProfile data={{ community }} profileSize="full" />
@@ -196,7 +188,6 @@ class CommunityViewPure extends Component {
                 <UpsellJoinCommunity
                   community={community}
                   join={this.toggleMembership}
-                  loading={isLoading}
                 />}
               {currentUser &&
                 (community.communityPermissions.isMember ||

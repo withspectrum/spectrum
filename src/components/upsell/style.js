@@ -69,6 +69,7 @@ export const NullCol = styled(FlexCol)`
   width: 100%;
   height: auto;
   min-height: 160px;
+  flex: 0 0 auto;
   padding: ${props => (props.noPadding ? '0' : '2rem')};
   justify-content: center;
   align-items: center;

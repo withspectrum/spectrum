@@ -12,6 +12,7 @@ const path = require('path');
 const fs = require('fs');
 const url = require('url');
 const { createServer } = require('http');
+const Raven = require('raven');
 //$FlowFixMe
 const express = require('express');
 //$FlowFixMe
@@ -35,8 +36,6 @@ const { apolloUploadExpress } = require('apollo-upload-server');
 const cors = require('cors');
 //$FlowFixMe
 const OpticsAgent = require('optics-agent');
-//$FlowFixMe
-const { maskErrors } = require('graphql-errors');
 
 const { db } = require('./models/db');
 import { destroySession } from './models/session';
@@ -46,7 +45,14 @@ const schema = require('./schema');
 const { init: initPassport } = require('./authentication.js');
 import createLoaders from './loaders';
 import getMeta from './utils/get-page-meta';
+import { IsUserError } from './utils/UserError';
 
+Raven.config(
+  'https://3bd8523edd5d43d7998f9b85562d6924:d391ea04b0dc45b28610e7fad735b0d0@sentry.io/154812',
+  {
+    environment: process.env.NODE_ENV,
+  }
+).install();
 OpticsAgent.instrumentSchema(schema);
 
 console.log('Server starting...');
@@ -55,6 +61,7 @@ console.log('Server starting...');
 initPassport();
 // API server
 const app = express();
+app.use(Raven.requestHandler());
 
 const sessionStore = new SessionStore(db, {
   db: 'spectrum',
@@ -62,7 +69,6 @@ const sessionStore = new SessionStore(db, {
 });
 
 app.use(OpticsAgent.middleware());
-maskErrors(schema);
 
 app.use(
   cors({
@@ -141,6 +147,19 @@ app.use(
   '/api',
   graphqlExpress(req => ({
     schema,
+    formatError: error => {
+      const isUserError = error.originalError[IsUserError];
+      const sentryId = Raven.captureException(
+        error,
+        Raven.parsers.parseRequest(req)
+      );
+      return {
+        message: isUserError
+          ? error.message
+          : `Internal server error: ${sentryId}`,
+        stack: !IS_PROD ? error.stack.split('\n') : null,
+      };
+    },
     context: {
       user: req.user,
       loaders: createLoaders(),
@@ -148,6 +167,7 @@ app.use(
     },
   }))
 );
+
 // In production use express to serve the React app
 // In development this is done by react-scripts, which starts its own server
 if (IS_PROD) {
@@ -165,12 +185,13 @@ if (IS_PROD) {
         loaders: createLoaders(),
         user: req.user,
       })
-    ).then(({ title, description }) => {
+    ).then(({ title, description, extra }) => {
       // In production inject the meta title and description
       res.send(
         index
           .replace(/%OG_TITLE%/g, title)
           .replace(/%OG_DESCRIPTION%/g, description)
+          .replace(/<meta name="%OG_EXTRA%">/g, extra)
       );
     });
   });

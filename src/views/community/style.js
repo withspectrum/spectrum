@@ -13,9 +13,15 @@ ${/* See class .flexy below - there's a hack on this element bc reasons 🙄 */ 
   > .inset {
     position: relative;
     top: -64px;
+
+    @media (max-width: 768px) {
+      top: auto;
+    }
   }
 
   @media (max-width: 768px) {
+    flex-direction: column;
+
     > div {
       margin-top: 0;
       padding-top: 2px;
@@ -26,6 +32,7 @@ ${/* See class .flexy below - there's a hack on this element bc reasons 🙄 */ 
 export const CoverColumn = styled(FlexCol)`
   width: 90%;
   max-width: 1024px;
+  padding-top: 32px;
 
 ${/* For some goddamn reason, CoverRow will *not* take this property... ughhhhhhhhh */ ''}
   > .flexy {
@@ -33,7 +40,8 @@ ${/* For some goddamn reason, CoverRow will *not* take this property... ughhhhhh
   }
 
   @media (max-width: 768px) {
-      width: 100%;
+    padding-top: 0;
+    width: 100%;
   }
 `;
 
@@ -46,19 +54,5 @@ export const CoverButton = styled(IconButton)`
   @media (max-width: 768px) {
     bottom: 16px;
     top: auto;
-  }
-`;
-
-export const MobileCommunityProfile = styled(FlexRow)`
-  display: none;
-
-  @media (max-width: 768px) {
-      display: inline-block;
-      width: 100%;
-      justify-content: center;
-
-      > div {
-        width: 100%;
-      }
   }
 `;

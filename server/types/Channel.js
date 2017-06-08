@@ -64,6 +64,7 @@ const Channel = /* GraphQL */ `
 		description: String!
 		slug: String!
 		isPrivate: Boolean
+    isDefault: Boolean
 		channelPermissions: ChannelPermissions!
 		communityPermissions: CommunityPermissions!
 		community: Community!

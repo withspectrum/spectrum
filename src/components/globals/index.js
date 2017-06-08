@@ -1,10 +1,8 @@
 /* eslint no-eval: 0 */
 import styled, { css, keyframes } from 'styled-components';
 
-export const Gradient = (
-  g1,
-  g2
-) => css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`;
+export const Gradient = (g1, g2) =>
+  css`radial-gradient(ellipse farthest-corner at top left, ${g1} 0%, ${g2} 100%)`;
 
 export const Truncate = width => css`
   text-overflow: ellipsis;

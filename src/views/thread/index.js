@@ -6,22 +6,16 @@ import { Route, Redirect } from 'react-router';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
+import { RouteWrapper } from './style';
 import ThreadContainer from './containers';
 
 const ThreadPure = ({ match, location }) => (
-  <div>
-
-    {/* if a threadId is provided in the url */}
-    <Route
-      location={location}
-      key={location.key}
-      path={`${match.url}/:threadId`}
-      component={ThreadContainer}
-    />
-
-    {/* if no threadId is provided, redirect to homepage */}
-    <Route exact path={match.url} render={() => <Redirect to="/" />} />
-  </div>
+  <Route
+    location={location}
+    key={location.key}
+    path={`${match.url}/:threadId`}
+    component={ThreadContainer}
+  />
 );
 
 const Thread = compose(pure)(ThreadPure);

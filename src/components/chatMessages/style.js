@@ -136,7 +136,6 @@ export const Container = styled.div`
   padding-bottom: 8px;
   display: flex;
   flex-direction: column;
-  background: #fff;
 
   @media (max-width: 768px) {
     padding-bottom: 16px;

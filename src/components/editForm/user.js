@@ -69,6 +69,14 @@ class UserWithData extends Component {
 
   changeName = e => {
     const name = e.target.value;
+    if (name.length > 50) {
+      this.setState({
+        name,
+        nameError: true,
+      });
+
+      return;
+    }
     this.setState({
       name,
       nameError: false,
@@ -222,6 +230,7 @@ class UserWithData extends Component {
       coverPhoto,
       descriptionError,
       createError,
+      nameError,
       isLoading,
       photoSizeError,
     } = this.state;
@@ -257,6 +266,11 @@ class UserWithData extends Component {
             Name
           </Input>
 
+          {nameError &&
+            <Error>
+              Names can be up to 50 characters.
+            </Error>}
+
           <Input type={'text'} defaultValue={username} disabled={true}>
             Username - can't be changed, sorry!
           </Input>
@@ -280,7 +294,11 @@ class UserWithData extends Component {
 
           <Actions>
             <TextButton hoverColor={'warn.alt'}>Cancel</TextButton>
-            <Button disabled={!name} loading={isLoading} onClick={this.save}>
+            <Button
+              disabled={!name || nameError}
+              loading={isLoading}
+              onClick={this.save}
+            >
               Save
             </Button>
           </Actions>

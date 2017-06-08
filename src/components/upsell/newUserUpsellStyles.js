@@ -5,7 +5,7 @@ import ScrollRow from '../../components/scrollRow';
 
 export const Section = styled.section`
   display: flex;
-  flex: 1;
+  flex: 0 0 auto;
   width: 100%;
   justify-content: center;
   align-items: center;

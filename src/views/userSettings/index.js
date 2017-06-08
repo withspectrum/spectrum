@@ -14,6 +14,7 @@ import { UserEditForm } from '../../components/editForm';
 import { Upsell404User } from '../../components/upsell';
 import RecurringPaymentsList from './components/recurringPaymentsList';
 import { GetUserProfile } from './queries';
+import { FlexCol } from '../../components/globals';
 import Titlebar from '../titlebar';
 
 const UserSettings = ({ data, currentUser, match }) => {
@@ -21,43 +22,59 @@ const UserSettings = ({ data, currentUser, match }) => {
 
   if (!data.user) {
     return (
-      <AppViewWrapper>
-        <Titlebar title={`No User Found`} provideBack={true} backRoute={`/`} />
-        <Column type="primary">
-          <Upsell404User username={match.params.username} />
-        </Column>
-      </AppViewWrapper>
+      <FlexCol style={{ flex: 'auto' }}>
+        <Titlebar
+          title={`No User Found`}
+          provideBack={true}
+          backRoute={`/`}
+          noComposer
+        />
+        <AppViewWrapper>
+          <Column type="primary">
+            <Upsell404User username={match.params.username} />
+          </Column>
+        </AppViewWrapper>
+      </FlexCol>
     );
   }
 
   if (data.user.id !== currentUser.id) {
     return (
-      <AppViewWrapper>
-        <Titlebar title={`No Permission`} provideBack={true} backRoute={`/`} />
-        <Column type="primary">
-          <Upsell404User username={match.params.username} noPermission />
-        </Column>
-      </AppViewWrapper>
+      <FlexCol style={{ flex: 'auto' }}>
+        <Titlebar
+          title={`No Permission`}
+          provideBack={true}
+          backRoute={`/`}
+          noComposer
+        />
+        <AppViewWrapper>
+          <Column type="primary">
+            <Upsell404User username={match.params.username} noPermission />
+          </Column>
+        </AppViewWrapper>
+      </FlexCol>
     );
   }
 
   return (
-    <AppViewWrapper>
+    <FlexCol style={{ flex: 'auto' }}>
       <Titlebar
         title={data.user.name}
         subtitle={'Settings'}
         provideBack={true}
         backRoute={`/${data.user.username}`}
+        noComposer
       />
-      <Titlebar title={data.user.name} subtitle={'Settings'} />
-      <Column type="secondary">
-        <UserEditForm user={data} />
-      </Column>
+      <AppViewWrapper>
+        <Column type="secondary">
+          <UserEditForm user={data} />
+        </Column>
 
-      <Column type="primary">
-        <RecurringPaymentsList data={data} currentUser={data.user} />
-      </Column>
-    </AppViewWrapper>
+        <Column type="primary">
+          <RecurringPaymentsList data={data} currentUser={data.user} />
+        </Column>
+      </AppViewWrapper>
+    </FlexCol>
   );
 };
 

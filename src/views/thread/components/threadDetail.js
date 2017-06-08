@@ -8,6 +8,8 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 import { getLinkPreviewFromUrl, timeDifference } from '../../../helpers/utils';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
@@ -16,6 +18,7 @@ import { setThreadLockMutation } from '../mutations';
 import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
 import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
+import Badge from '../../../components/badges';
 import { IconButton, Button } from '../../../components/buttons';
 import { track } from '../../../helpers/events';
 import Editor, {
@@ -41,6 +44,11 @@ import {
   FlyoutRow,
   EditDone,
   Edited,
+  BylineMeta,
+  AuthorAvatar,
+  AuthorName,
+  AuthorUsername,
+  Location,
 } from '../style';
 
 class ThreadDetailPure extends Component {
@@ -53,6 +61,7 @@ class ThreadDetailPure extends Component {
     linkPreviewTrueUrl: string,
     linkPreviewLength: number,
     fetchingLinkPreview: boolean,
+    isSavingEdit: boolean,
   };
 
   constructor(props) {
@@ -76,7 +85,7 @@ class ThreadDetailPure extends Component {
       viewBody: thread.type === 'SLATE'
         ? toPlainText(toState(JSON.parse(thread.content.body)))
         : thread.content.body,
-      editBody: thread.content.body,
+      editBody: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl: thread.attachments.length > 0
@@ -85,6 +94,7 @@ class ThreadDetailPure extends Component {
       linkPreviewLength: thread.attachments.length > 0 ? 1 : 0,
       fetchingLinkPreview: false,
       flyoutOpen: false,
+      isSavingEdit: false,
     };
   }
 
@@ -163,6 +173,17 @@ class ThreadDetailPure extends Component {
     const { linkPreview, linkPreviewTrueUrl, title, editBody } = this.state;
     const threadId = thread.id;
 
+    if (!title || title.length === 0) {
+      dispatch(
+        addToastWithTimeout('error', 'Be sure to save a title for your thread!')
+      );
+      return;
+    }
+
+    this.setState({
+      isSavingEdit: true,
+    });
+
     const attachments = [];
     if (linkPreview) {
       const attachmentData = JSON.stringify({
@@ -177,7 +198,7 @@ class ThreadDetailPure extends Component {
 
     let bodyToSave = editBody;
     if (thread.type === 'SLATE') {
-      bodyToSave = toPlainText(toState(JSON.parse(bodyToSave)));
+      bodyToSave = JSON.stringify(toJSON(bodyToSave));
     }
 
     const content = {
@@ -193,9 +214,16 @@ class ThreadDetailPure extends Component {
 
     editThread(input)
       .then(({ data: { editThread } }) => {
+        this.setState({
+          isSavingEdit: false,
+        });
+
         if (editThread && editThread !== null) {
           this.toggleEdit();
           dispatch(addToastWithTimeout('success', 'Thread saved!'));
+          this.setState({
+            viewBody: toPlainText(editBody),
+          });
         } else {
           dispatch(
             addToastWithTimeout(
@@ -206,6 +234,9 @@ class ThreadDetailPure extends Component {
         }
       })
       .catch(err => {
+        this.setState({
+          isSavingEdit: false,
+        });
         dispatch(addToastWithTimeout('error', err.message));
       });
   };
@@ -218,10 +249,8 @@ class ThreadDetailPure extends Component {
   };
 
   changeBody = state => {
-    let foo = toJSON(state);
-    foo = JSON.stringify(foo);
     this.setState({
-      editBody: foo,
+      editBody: state,
     });
   };
 
@@ -301,9 +330,8 @@ class ThreadDetailPure extends Component {
       viewBody,
       fetchingLinkPreview,
       flyoutOpen,
+      isSavingEdit,
     } = this.state;
-
-    let f = this.state.editBody;
 
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner =
@@ -316,24 +344,18 @@ class ThreadDetailPure extends Component {
 
     return (
       <ThreadWrapper>
-        <Titlebar
-          title={thread.content.title}
-          subtitle={`${thread.channel.community.name} / ${thread.channel.name}`}
-          provideBack={true}
-          backRoute={`/${thread.channel.community.slug}/${thread.channel.slug}`}
-          noComposer
-        />
-
         <ContextRow>
-          <span>
-            {thread.modifiedAt &&
-              <Edited>
-                Edited {timeDifference(Date.now(), editedTimestamp)}
-              </Edited>}
-            <Byline to={`/users/${thread.creator.username}`}>
-              {thread.creator.name}
-            </Byline>
-          </span>
+          <Byline to={`/users/${thread.creator.username}`}>
+            <AuthorAvatar src={thread.creator.profilePhoto} />
+            <BylineMeta>
+              <AuthorName>{thread.creator.name}</AuthorName>
+              <AuthorUsername>
+                @{thread.creator.username}
+                {thread.creator.isAdmin && <Badge type="admin" />}
+                {thread.creator.isPro && <Badge type="pro" />}
+              </AuthorUsername>
+            </BylineMeta>
+          </Byline>
           {currentUser &&
             (thread.isCreator || isChannelOwner || isCommunityOwner) &&
             !isEditing &&
@@ -362,7 +384,7 @@ class ThreadDetailPure extends Component {
                       onClick={this.triggerDelete}
                     />
                   </FlyoutRow>}
-                {/* {thread.isCreator &&
+                {thread.isCreator &&
                   <FlyoutRow>
                     <IconButton
                       glyph="edit"
@@ -371,21 +393,39 @@ class ThreadDetailPure extends Component {
                       tipLocation="top-left"
                       onClick={this.toggleEdit}
                     />
-                  </FlyoutRow>} */}
+                  </FlyoutRow>}
               </Flyout>
             </DropWrap>}
 
           {isEditing &&
             <EditDone>
-              <Button onClick={this.saveEdit}>Save</Button>
+              <Button loading={isSavingEdit} onClick={this.saveEdit}>
+                Save
+              </Button>
             </EditDone>}
         </ContextRow>
 
         {!isEditing &&
           <span>
+            <Location>
+              <Icon glyph="view-back" size={16} />
+              <Link to={`/${thread.channel.community.slug}`}>
+                {thread.channel.community.name}
+              </Link>
+              <span>/</span>
+              <Link
+                to={`/${thread.channel.community.slug}/${thread.channel.slug}`}
+              >
+                {thread.channel.name}
+              </Link>
+            </Location>
             <ThreadHeading>
               {thread.content.title}
             </ThreadHeading>
+            {thread.modifiedAt &&
+              <Edited>
+                Edited {timeDifference(Date.now(), editedTimestamp)}
+              </Edited>}
             <div className="markdown">
               <ThreadContent>
                 {viewBody}
@@ -397,7 +437,7 @@ class ThreadDetailPure extends Component {
               <LinkPreview
                 trueUrl={linkPreview.url}
                 data={linkPreview}
-                size={'small'}
+                size={'large'}
                 editable={false}
                 margin={'16px 0 0 0'}
               />}
@@ -417,7 +457,7 @@ class ThreadDetailPure extends Component {
             <Editor
               onChange={this.changeBody}
               onKeyDown={this.listenForUrl}
-              state={toState(JSON.parse(this.state.editBody))}
+              state={this.state.editBody}
               style={ThreadDescription}
               ref="bodyTextarea"
               placeholder="Write more thoughts here, add photos, and anything else!"

@@ -1,7 +1,7 @@
 // @flow
 const { db } = require('./db');
 // $FlowFixMe
-import { UserError } from 'graphql-errors';
+import UserError from '../utils/UserError';
 
 const getChannelsByCommunity = (
   communityId: string

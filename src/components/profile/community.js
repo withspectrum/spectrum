@@ -15,7 +15,7 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import { addProtocolToString } from '../../helpers/utils';
 import type { ProfileSizeProps } from './index';
 import { MetaData } from './metaData';
-import { displayLoadingCard } from '../loading';
+import { displayLoadingCard, LoadingProfile } from '../loading';
 import Icon from '../icons';
 import {
   ProfileHeader,
@@ -50,7 +50,7 @@ type CommunityProps = {
 };
 
 const CommunityWithData = ({
-  data: { community },
+  data: { community, loading, error },
   profileSize,
   toggleCommunityMembership,
   data,
@@ -85,7 +85,9 @@ const CommunityWithData = ({
       });
   };
 
-  if (!community) {
+  if (loading) {
+    return <LoadingProfile />;
+  } else if (!community || error) {
     return (
       <Card>
         <ProfileHeader>

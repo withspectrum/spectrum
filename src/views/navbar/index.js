@@ -55,67 +55,50 @@ class Navbar extends Component {
 
     if (!currentUser || currentUser === null) {
       return (
-        <Container>
-          {/*
-            Nav contains global navigation elements like getting to messages,
-            profile, home, explore, etc.
-          */}
-          <Nav>
-            <Section left hideOnMobile>
-              <LogoLink to="/">
-                <Logo src="/img/mark-white.png" role="presentation" />
-              </LogoLink>
-            </Section>
-            <Section right>
-              <Button
-                onClick={login}
-                icon="twitter"
-                style={{ padding: '2px 4px' }}
-              >
-                Sign in
-              </Button>
-            </Section>
-          </Nav>
-
-          {/*
-            Spacer is used to globally push all app elements below the fixed
-            position nav
-          */}
-          <Spacer />
-        </Container>
+        <Nav>
+          <Section left hideOnMobile>
+            <LogoLink to="/">
+              <Logo src="/img/mark-white.png" role="presentation" />
+            </LogoLink>
+          </Section>
+          <Section right>
+            <Button
+              onClick={login}
+              icon="twitter"
+              style={{ padding: '2px 4px' }}
+            >
+              Sign in
+            </Button>
+          </Section>
+        </Nav>
       );
     } else {
       return (
-        <Container>
-          {/*
-            Nav contains global navigation elements like getting to messages,
-            profile, home, explore, etc.
-          */}
-          <Nav>
-            <Section left>
-              <LogoLink to="/">
-                <Logo src="/img/mark-white.png" role="presentation" />
-              </LogoLink>
+        <Nav>
+          <Section left>
+            <LogoLink to="/">
+              <Logo src="/img/mark-white.png" role="presentation" />
+            </LogoLink>
 
-              <IconLink
-                data-active={match.url === '/'}
-                data-mobileWidth={'third'}
-                to="/"
-              >
-                <Icon glyph="home" />
-                <Label>Home</Label>
-              </IconLink>
+            <IconLink
+              data-active={match.url === '/' && match.isExact}
+              data-mobileWidth={'third'}
+              to="/"
+            >
+              <Icon glyph="home" />
+              <Label>Home</Label>
+            </IconLink>
 
-              <IconLink
-                data-active={match.url.includes('/messages')}
-                data-mobileWidth={'third'}
-                to="/messages"
-              >
-                <Icon glyph="message" />
-                <Label>Messages</Label>
-              </IconLink>
+            <IconLink
+              data-active={match.url.includes('/messages')}
+              data-mobileWidth={'third'}
+              to="/messages"
+            >
+              <Icon glyph="message" />
+              <Label>Messages</Label>
+            </IconLink>
 
-              {/* <IconLink
+            {/* <IconLink
                 data-active={match.url === '/explore'}
                 data-mobileWidth={'third'}
                 to="/explore"
@@ -123,10 +106,10 @@ class Navbar extends Component {
                 <Icon glyph="explore" />
                 <Label>Explore</Label>
               </IconLink> */}
-            </Section>
+          </Section>
 
-            <Section right>
-              {/* <IconDrop>
+          <Section right>
+            {/* <IconDrop>
                 <IconLink
                   data-active={match.url === '/notifications'}
                   data-mobileWidth={'half'}
@@ -138,31 +121,24 @@ class Navbar extends Component {
                 {/* <NotificationDropdown />
               </IconDrop> */}
 
-              <IconDrop>
-                <IconLink
-                  data-active={match.url === `/users/${currentUser.username}`}
-                  to={`/users/${currentUser.username}`}
-                >
-                  <UserProfileAvatar
-                    src={`${currentUser.profilePhoto}`}
-                    isPro={currentUser.isPro}
-                    size="24"
-                    radius="12"
-                  />
-                  <LabelForTab>Profile</LabelForTab>
-                </IconLink>
-                <ProfileDropdown user={currentUser} />
-              </IconDrop>
-            </Section>
+            <IconDrop>
+              <IconLink
+                data-active={match.url === `/users/${currentUser.username}`}
+                to={`/users/${currentUser.username}`}
+              >
+                <UserProfileAvatar
+                  src={`${currentUser.profilePhoto}`}
+                  isPro={currentUser.isPro}
+                  size="24"
+                  radius="12"
+                />
+                <LabelForTab>Profile</LabelForTab>
+              </IconLink>
+              <ProfileDropdown user={currentUser} />
+            </IconDrop>
+          </Section>
 
-          </Nav>
-
-          {/*
-            Spacer is used to globally push all app elements below the fixed
-            position nav
-          */}
-          <Spacer />
-        </Container>
+        </Nav>
       );
     }
   }
