@@ -1,5 +1,5 @@
 //@flow
-import { sanitize } from 'sanitizer';
+import striptags from 'striptags';
 const { db } = require('./db');
 const { listenToNewDocumentsIn } = require('./utils');
 const { storeMessageNotification } = require('./notification');
@@ -47,7 +47,7 @@ const storeMessage = (message, user: Object): Promise<Object> => {
         timestamp: new Date(),
         senderId: user.id,
         content: {
-          body: sanitize(message.content.body),
+          body: striptags(message.content.body),
         },
       }),
       { returnChanges: true }
