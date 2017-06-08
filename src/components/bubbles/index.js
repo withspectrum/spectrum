@@ -27,7 +27,7 @@ export const Bubble = (props: BubbleProps) => {
 
   return (
     <TextBubble me={me} pending={pending}>
-      {type === 'thread' && message.body}
+      {message.body}
     </TextBubble>
   );
 };
