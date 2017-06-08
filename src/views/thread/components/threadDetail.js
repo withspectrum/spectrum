@@ -8,6 +8,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
+// $FlowFixMe
 import { Link } from 'react-router-dom';
 import { getLinkPreviewFromUrl, timeDifference } from '../../../helpers/utils';
 import { URLS } from '../../../helpers/regexps';
@@ -60,6 +61,7 @@ class ThreadDetailPure extends Component {
     linkPreviewTrueUrl: string,
     linkPreviewLength: number,
     fetchingLinkPreview: boolean,
+    isSavingEdit: boolean,
   };
 
   constructor(props) {
@@ -83,7 +85,7 @@ class ThreadDetailPure extends Component {
       viewBody: thread.type === 'SLATE'
         ? toPlainText(toState(JSON.parse(thread.content.body)))
         : thread.content.body,
-      editBody: thread.content.body,
+      editBody: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl: thread.attachments.length > 0
@@ -92,6 +94,7 @@ class ThreadDetailPure extends Component {
       linkPreviewLength: thread.attachments.length > 0 ? 1 : 0,
       fetchingLinkPreview: false,
       flyoutOpen: false,
+      isSavingEdit: false,
     };
   }
 
@@ -170,6 +173,17 @@ class ThreadDetailPure extends Component {
     const { linkPreview, linkPreviewTrueUrl, title, editBody } = this.state;
     const threadId = thread.id;
 
+    if (!title || title.length === 0) {
+      dispatch(
+        addToastWithTimeout('error', 'Be sure to save a title for your thread!')
+      );
+      return;
+    }
+
+    this.setState({
+      isSavingEdit: true,
+    });
+
     const attachments = [];
     if (linkPreview) {
       const attachmentData = JSON.stringify({
@@ -184,7 +198,7 @@ class ThreadDetailPure extends Component {
 
     let bodyToSave = editBody;
     if (thread.type === 'SLATE') {
-      bodyToSave = toPlainText(toState(JSON.parse(bodyToSave)));
+      bodyToSave = JSON.stringify(toJSON(bodyToSave));
     }
 
     const content = {
@@ -200,9 +214,16 @@ class ThreadDetailPure extends Component {
 
     editThread(input)
       .then(({ data: { editThread } }) => {
+        this.setState({
+          isSavingEdit: false,
+        });
+
         if (editThread && editThread !== null) {
           this.toggleEdit();
           dispatch(addToastWithTimeout('success', 'Thread saved!'));
+          this.setState({
+            viewBody: toPlainText(editBody),
+          });
         } else {
           dispatch(
             addToastWithTimeout(
@@ -213,6 +234,9 @@ class ThreadDetailPure extends Component {
         }
       })
       .catch(err => {
+        this.setState({
+          isSavingEdit: false,
+        });
         dispatch(addToastWithTimeout('error', err.message));
       });
   };
@@ -225,10 +249,8 @@ class ThreadDetailPure extends Component {
   };
 
   changeBody = state => {
-    let foo = toJSON(state);
-    foo = JSON.stringify(foo);
     this.setState({
-      editBody: foo,
+      editBody: state,
     });
   };
 
@@ -308,9 +330,8 @@ class ThreadDetailPure extends Component {
       viewBody,
       fetchingLinkPreview,
       flyoutOpen,
+      isSavingEdit,
     } = this.state;
-
-    let f = this.state.editBody;
 
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner =
@@ -363,7 +384,7 @@ class ThreadDetailPure extends Component {
                       onClick={this.triggerDelete}
                     />
                   </FlyoutRow>}
-                {/* {thread.isCreator &&
+                {thread.isCreator &&
                   <FlyoutRow>
                     <IconButton
                       glyph="edit"
@@ -372,13 +393,15 @@ class ThreadDetailPure extends Component {
                       tipLocation="top-left"
                       onClick={this.toggleEdit}
                     />
-                  </FlyoutRow>} */}
+                  </FlyoutRow>}
               </Flyout>
             </DropWrap>}
 
           {isEditing &&
             <EditDone>
-              <Button onClick={this.saveEdit}>Save</Button>
+              <Button loading={isSavingEdit} onClick={this.saveEdit}>
+                Save
+              </Button>
             </EditDone>}
         </ContextRow>
 
@@ -434,7 +457,7 @@ class ThreadDetailPure extends Component {
             <Editor
               onChange={this.changeBody}
               onKeyDown={this.listenForUrl}
-              state={toState(JSON.parse(this.state.editBody))}
+              state={this.state.editBody}
               style={ThreadDescription}
               ref="bodyTextarea"
               placeholder="Write more thoughts here, add photos, and anything else!"
