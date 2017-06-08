@@ -10,22 +10,26 @@
  */
 var slate = require('./slate-utils');
 var truncate = require('./truncate');
-var sanitizer = require('sanitizer');
+var striptags = require('striptags');
 
 var DEFAULT_META = {
   title: 'Spectrum',
   description: 'Where communities live.',
 };
 
+var HIDE_FROM_CRAWLERS = '<meta name="robots" content="noindex, nofollow">';
+
 /*::
 type MaybeMeta = {
   title?: string,
   description?: string,
+  extra?: string,
 };
 
 type Meta = {
   title: string,
   description: string,
+  extra: string,
 };
 
 type OtherInput = {
@@ -34,7 +38,7 @@ type OtherInput = {
 };
 type ThreadInput = {
   type: 'thread',
-  data?: { title: string, body?: ?string, channelName?: string, type?: ?string },
+  data?: { title: string, body?: ?string, channelName?: string, privateChannel?: ?boolean type?: ?string },
 };
 type UserInput = {
   type: 'user',
@@ -42,7 +46,7 @@ type UserInput = {
 };
 type ChannelInput = {
   type: 'channel',
-  data?: { name: string, description?: string, communityName?: string },
+  data?: { name: string, description?: string, communityName?: string, private?: ?boolean },
 };
 type CommunityInput = {
   type: 'community',
@@ -65,11 +69,15 @@ function setDefault(input /*: MaybeMeta */) /*: Meta */ {
   if (input.title && !input.description) {
     description = 'on Spectrum, ' + DEFAULT_META.description.toLowerCase();
   }
-  return { title: title, description: cleanDescription(description) };
+  return {
+    title: title,
+    description: cleanDescription(description),
+    extra: input.extra || '',
+  };
 }
 
 function cleanDescription(input /*: string */) /*: string */ {
-  return truncate(sanitizer.sanitize(input), 160);
+  return truncate(striptags(input), 160);
 }
 
 function generateMetaInfo(input /*: Input */) /*: Meta */ {
@@ -84,6 +92,10 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
       };
     }
     case 'thread': {
+      if (data.privateChannel)
+        return setDefault({
+          extra: HIDE_FROM_CRAWLERS,
+        });
       return setDefault({
         title: data && data.title + ' · ' + data.channelName,
         description: data &&
@@ -100,6 +112,10 @@ function generateMetaInfo(input /*: Input */) /*: Meta */ {
       });
     }
     case 'channel': {
+      if (data.private)
+        return setDefault({
+          extra: HIDE_FROM_CRAWLERS,
+        });
       return setDefault({
         title: data && data.name + ' · ' + data.communityName,
         description: data && data.description,

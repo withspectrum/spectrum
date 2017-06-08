@@ -27,7 +27,7 @@ export const Bubble = (props: BubbleProps) => {
 
   return (
     <TextBubble me={me} pending={pending}>
-      {type === 'thread' ? message.body : formatMessageForLinks(message.body)}
+      {message.body}
     </TextBubble>
   );
 };
@@ -48,7 +48,7 @@ export const ImgBubble = (props: Object) => {
       onClick={props.openGallery}
       me={me}
       pending={pending}
-      src={`${imgSrc}?max-w=${window.innerWidth * 0.6}`}
+      src={`${imgSrc}${pending ? '' : `?max-w=${window.innerWidth * 0.6}`}`}
     />
   );
 };

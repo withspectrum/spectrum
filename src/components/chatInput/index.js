@@ -39,8 +39,11 @@ class ChatInputWithMutation extends Component {
       forceScrollToBottom,
     } = this.props;
 
-    // if a user sends a message, force a scroll to bottom
-    forceScrollToBottom();
+    // This doesn't exist if this is a new conversation
+    if (forceScrollToBottom) {
+      // if a user sends a message, force a scroll to bottom
+      forceScrollToBottom();
+    }
 
     // If the input is empty don't do anything
     if (toPlainText(state).trim() === '') return;
@@ -90,7 +93,10 @@ class ChatInputWithMutation extends Component {
   };
 
   sendMediaMessage = e => {
+    let reader = new FileReader();
     const file = e.target.files[0];
+    reader.readAsDataURL(file);
+
     const {
       thread,
       threadType,
@@ -99,31 +105,35 @@ class ChatInputWithMutation extends Component {
       forceScrollToBottom,
     } = this.props;
 
-    forceScrollToBottom();
+    reader.onloadend = () => {
+      if (forceScrollToBottom) {
+        forceScrollToBottom();
+      }
 
-    if (thread === 'newDirectMessageThread') {
-      return createThread({
-        messageType: 'media',
-        file,
-      });
-    }
+      if (thread === 'newDirectMessageThread') {
+        return createThread({
+          messageType: 'media',
+          file,
+        });
+      }
 
-    this.props
-      .sendMessage({
-        threadId: thread,
-        messageType: 'media',
-        threadType,
-        content: {
-          body: '',
-        },
-        file,
-      })
-      .then(({ sendMessage }) => {
-        track(`${threadType} message`, 'media message created', null);
-      })
-      .catch(err => {
-        dispatch(addToastWithTimeout('error', err.message));
-      });
+      this.props
+        .sendMessage({
+          threadId: thread,
+          messageType: 'media',
+          threadType,
+          content: {
+            body: reader.result,
+          },
+          file,
+        })
+        .then(({ addMessage }) => {
+          track(`${threadType} message`, 'media message created', null);
+        })
+        .catch(err => {
+          dispatch(addToastWithTimeout('error', err.message));
+        });
+    };
   };
 
   render() {

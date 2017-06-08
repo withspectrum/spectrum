@@ -6,6 +6,12 @@ const generateMetaInfo = require('../shared/generate-meta-info');
 // TODO: Longer, more complete blacklist here
 const PATH_BLACKLIST = ['robots.txt', 'home', 'messages'];
 
+type Meta = {
+  title: string,
+  description: string,
+  extra: string,
+};
+
 export default (
   url: string,
   request: (query: string) => Promise
@@ -35,6 +41,7 @@ export default (
             type
             channel {
               name
+              isPrivate
             }
           }
         }
@@ -48,6 +55,7 @@ export default (
             type,
             body: content.body,
             channelName: channel.name,
+            privateChannel: channel.isPrivate,
           },
         });
       });
@@ -93,6 +101,7 @@ export default (
             channel(channelSlug: "${second}", communitySlug: "${first}") {
               name
               description
+              isPrivate
               community {
                 name
               }
@@ -107,6 +116,7 @@ export default (
               name: channel.name,
               description: channel.description,
               communityName: community.name,
+              private: channel.isPrivate,
             },
           });
         });

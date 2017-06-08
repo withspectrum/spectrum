@@ -174,7 +174,7 @@ const editUser = (
 
       if (file || coverFile) {
         if (file && !coverFile) {
-          return uploadImage(file, 'users', user.id, profilePhoto => {
+          return uploadImage(file, 'users', user.id).then(profilePhoto => {
             // update the user with the profilePhoto
             return (
               db
@@ -203,7 +203,7 @@ const editUser = (
             );
           });
         } else if (!file && coverFile) {
-          return uploadImage(coverFile, 'users', user.id, coverPhoto => {
+          return uploadImage(coverFile, 'users', user.id).then(coverPhoto => {
             // update the user with the profilePhoto
             return (
               db
@@ -233,19 +233,11 @@ const editUser = (
           });
         } else if (file && coverFile) {
           const uploadFile = file => {
-            return new Promise(resolve => {
-              uploadImage(file, 'users', user.id, profilePhoto => {
-                resolve(profilePhoto);
-              });
-            });
+            return uploadImage(file, 'users', user.id);
           };
 
           const uploadCoverFile = coverFile => {
-            return new Promise(resolve => {
-              uploadImage(coverFile, 'users', user.id, coverPhoto => {
-                resolve(coverPhoto);
-              });
-            });
+            return uploadImage(coverFile, 'users', user.id);
           };
 
           return Promise.all([

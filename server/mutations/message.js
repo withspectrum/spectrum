@@ -41,21 +41,23 @@ module.exports = {
         return storeMessage(message, currentUser.id);
       } else if (message.messageType === 'media') {
         // upload the photo, return the photo url, then store the message
-        return uploadImage(message.file, 'threads', message.threadId, url => {
-          // build a new message object with a new file field with metadata
-          const newMessage = Object.assign({}, message, {
-            content: {
-              body: url,
-            },
-            file: {
-              name: message.file.name,
-              size: message.file.size,
-              type: message.file.type,
-            },
-          });
 
-          return storeMessage(newMessage, currentUser.id);
-        });
+        return uploadImage(message.file, 'threads', message.threadId)
+          .then(url => {
+            // build a new message object with a new file field with metadata
+            const newMessage = Object.assign({}, message, {
+              content: {
+                body: url,
+              },
+              file: {
+                name: message.file.name,
+                size: message.file.size,
+                type: message.file.type,
+              },
+            });
+            return newMessage;
+          })
+          .then(newMessage => storeMessage(newMessage, currentUser));
       } else {
         return new UserError('Unknown message type on this bad boy.');
       }

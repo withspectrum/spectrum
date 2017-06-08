@@ -111,8 +111,30 @@ module.exports = {
           );
         }
 
-        // all checks passed
-        return editThread(input);
+        // if the thread has attachments, we recreate an array with a JSON.parsed
+        // data value (comes in from the client as a string in order to have dynamic
+        // data shapes without overcomplicating the gql schema)
+        let attachments = [];
+        // if the thread came in with attachments
+        if (input.attachments) {
+          // iterate through them and construct a new attachment object
+          input.attachments.map(attachment => {
+            attachments.push({
+              attachmentType: attachment.attachmentType,
+              data: JSON.parse(attachment.data),
+            });
+          });
+
+          const newInput = Object.assign({}, input, {
+            attachments,
+          });
+
+          return editThread(newInput);
+        } else {
+          // if no attachments were passed into the thread, we can just publish
+          // as-is
+          return editThread(input);
+        }
       });
     },
     deleteThread: (_, { threadId }, { user }) => {

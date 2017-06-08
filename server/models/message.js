@@ -1,5 +1,5 @@
 //@flow
-import { sanitize } from 'sanitizer';
+import striptags from 'striptags';
 const { db } = require('./db');
 // $FlowFixMe
 const Queue = require('bull');
@@ -49,7 +49,7 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
         timestamp: new Date(),
         senderId: userId,
         content: {
-          body: sanitize(message.content.body),
+          body: striptags(message.content.body),
         },
       }),
       { returnChanges: true }

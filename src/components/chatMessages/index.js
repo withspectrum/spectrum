@@ -163,18 +163,15 @@ class ChatMessages extends Component {
                             imgSrc={message.content.body}
                             message={message.content}
                             openGallery={() => this.openGallery(message.id)}
-                            pending={
-                              message.id < 0
-                                ? console.log('foo') || true
-                                : false
-                            }
+                            pending={message.id < 0}
                           />
-                          <Reaction
-                            message={message}
-                            toggleReaction={toggleReaction}
-                            me={me}
-                            currentUser={currentUser}
-                          />
+                          {typeof message.id === 'string' &&
+                            <Reaction
+                              message={message}
+                              toggleReaction={toggleReaction}
+                              me={me}
+                              currentUser={currentUser}
+                            />}
                         </MessageWrapper>
                       );
                     } else {

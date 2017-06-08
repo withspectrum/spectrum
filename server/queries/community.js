@@ -53,6 +53,8 @@ module.exports = {
         }))
       ),
     }),
+    coverPhoto: ({ coverPhoto }) => encodeURI(coverPhoto),
+    profilePhoto: ({ profilePhoto }) => encodeURI(profilePhoto),
     memberConnection: (
       { members }: { members: Array<string> },
       { first = 10, after }: PaginationOptions,

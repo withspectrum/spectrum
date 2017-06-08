@@ -129,15 +129,16 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
                 />
                 {props.data.messageCount}
               </Meta>
-            : <MetaNew>
-                <Icon
-                  size={24}
-                  glyph="notification-fill"
-                  tipText={`New thread!`}
-                  tipLocation="top-left"
-                />
-                New
-              </MetaNew>}
+            : !props.data.isCreator &&
+                <MetaNew>
+                  <Icon
+                    size={24}
+                    glyph="notification-fill"
+                    tipText={`New thread!`}
+                    tipLocation="top-left"
+                  />
+                  New
+                </MetaNew>}
         </MetaRow>
       </CardContent>
     </StyledThreadFeedCard>

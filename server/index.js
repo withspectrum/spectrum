@@ -185,12 +185,13 @@ if (IS_PROD) {
         loaders: createLoaders(),
         user: req.user,
       })
-    ).then(({ title, description }) => {
+    ).then(({ title, description, extra }) => {
       // In production inject the meta title and description
       res.send(
         index
           .replace(/%OG_TITLE%/g, title)
           .replace(/%OG_DESCRIPTION%/g, description)
+          .replace(/<meta name="%OG_EXTRA%">/g, extra || '')
       );
     });
   });

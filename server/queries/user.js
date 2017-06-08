@@ -37,6 +37,8 @@ module.exports = {
       getUsersBySearchString(string),
   },
   User: {
+    coverPhoto: ({ coverPhoto }) => encodeURI(coverPhoto),
+    profilePhoto: ({ profilePhoto }) => encodeURI(profilePhoto),
     isAdmin: ({ id }: { id: string }) => {
       return isAdmin(id);
     },
