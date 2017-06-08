@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
 import { getThisCommunity, getChannelsByCommunity } from './queries';
 import { openModal } from '../../actions/modals';
-import { displayLoadingScreen } from '../../components/loading';
+import { displayLoadingDashboard } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ListCard from './components/listCard';
@@ -104,7 +104,9 @@ const SettingsPure = ({
   );
 };
 
-const CommunitySettings = compose(getThisCommunity, displayLoadingScreen, pure)(
-  SettingsPure
-);
+const CommunitySettings = compose(
+  getThisCommunity,
+  displayLoadingDashboard,
+  pure
+)(SettingsPure);
 export default connect()(CommunitySettings);

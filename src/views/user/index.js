@@ -13,7 +13,7 @@ import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import { track } from '../../helpers/events';
 import { UserProfile } from '../../components/profile';
-import { displayLoadingScreen } from '../../components/loading';
+import { displayLoadingDashboard } from '../../components/loading';
 import { NullState, Upsell404User } from '../../components/upsell';
 import CommunityList from './components/communityList';
 import { getUserThreads, getUser } from './queries';
@@ -95,7 +95,7 @@ const UserViewPure = ({
 const mapStateToProps = state => ({ currentUser: state.users.currentUser });
 const ConnectedUserView = connect(mapStateToProps)(UserViewPure);
 
-export const UserView = compose(getUser, displayLoadingScreen, pure)(
+export const UserView = compose(getUser, displayLoadingDashboard, pure)(
   ConnectedUserView
 );
 
