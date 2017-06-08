@@ -6,9 +6,8 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
-import { UpsellSignIn, NullCard } from '../../components/upsell';
+import { UpsellSignIn, UpsellToReload } from '../../components/upsell';
 import UpsellNewUser from '../../components/upsell/newUserUpsell';
-import { Button } from '../../components/buttons';
 import { displayLoadingScreen } from '../../components/loading';
 import { FlexCol } from '../../components/globals';
 import { Column } from '../../components/column';
@@ -55,18 +54,7 @@ class DashboardPure extends Component {
           <Titlebar noComposer />
           <AppViewWrapper>
             <Column type="primary" alignItems="center">
-              <NullCard
-                bg="error"
-                heading="Whoops! Something broke the home page."
-                copy="Mind reloading?"
-              >
-                <Button
-                  icon="view-reload"
-                  onClick={() => location.reload(true)}
-                >
-                  Reload
-                </Button>
-              </NullCard>
+              <UpsellToReload />
             </Column>
           </AppViewWrapper>
         </FlexCol>

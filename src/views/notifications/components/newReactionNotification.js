@@ -1,16 +1,8 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
-import { Link } from 'react-router-dom';
 import { parseActors, parseEvent, parseNotificationDate } from '../utils';
-import {
-  NotificationCard,
-  ActorPhotosContainer,
-  ActorPhotoItem,
-  ActorPhoto,
-  TextContent,
-  BubbleContainer,
-} from '../style';
+import { ActorsRow } from './actorsRow';
+import { NotificationCard, TextContent, BubbleContainer } from '../style';
 import Icon from '../../../components/icons';
 import { ReactionWrapper } from '../../../components/reaction/style';
 import { convertTimestampToTime } from '../../../helpers/utils';
@@ -28,17 +20,7 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
 
   return (
     <NotificationCard key={notification.id}>
-      <ActorPhotosContainer>
-        {actors.asObjects.map(actor => {
-          return (
-            <ActorPhotoItem key={actor.id}>
-              <Link to={`/users/${actor.username}`}>
-                <ActorPhoto src={actor.profilePhoto} />
-              </Link>
-            </ActorPhotoItem>
-          );
-        })}
-      </ActorPhotosContainer>
+      <ActorsRow actors={actors.asObjects} />
       <TextContent>{actors.asString} {event} {date}</TextContent>
       <BubbleContainer me={true}>
         <BubbleGroupContainer me={true}>

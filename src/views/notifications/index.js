@@ -13,15 +13,24 @@ import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import { displayLoadingNotifications } from '../../components/loading';
 import { getNotifications } from '../../api/notification';
-import { UpsellSignIn } from '../../components/upsell';
+import {
+  UpsellSignIn,
+  UpsellToReload,
+  UpsellNullNotifications,
+} from '../../components/upsell';
 
 class NotificationsPure extends Component {
   render() {
     const { currentUser, notificationsQuery } = this.props;
 
-    // our router should prevent this from happening, but just in case
     if (!currentUser) {
-      return <UpsellSignIn />;
+      return (
+        <AppViewWrapper>
+          <Column type={'primary'}>
+            <UpsellSignIn />
+          </Column>
+        </AppViewWrapper>
+      );
     }
 
     if (
@@ -29,14 +38,28 @@ class NotificationsPure extends Component {
       notificationsQuery.error ||
       notificationsQuery.loading
     ) {
-      return <div>Error</div>;
+      return (
+        <AppViewWrapper>
+          <Column type={'primary'}>
+            <UpsellToReload />
+          </Column>
+        </AppViewWrapper>
+      );
     }
 
-    const notifications =
-      currentUser &&
-      notificationsQuery.notifications.edges.map(notification =>
-        parseNotification(notification.node)
+    const notifications = notificationsQuery.notifications.edges.map(
+      notification => parseNotification(notification.node)
+    );
+
+    if (!notifications || notifications.length === 0) {
+      return (
+        <AppViewWrapper>
+          <Column type={'primary'}>
+            <UpsellNullNotifications />
+          </Column>
+        </AppViewWrapper>
       );
+    }
 
     return (
       <AppViewWrapper>

@@ -1,7 +1,5 @@
 // @flow
 import React from 'react';
-// $FlowFixMe
-import { Link } from 'react-router-dom';
 import {
   parseActors,
   parseEvent,
@@ -9,6 +7,7 @@ import {
   parseContext,
   getLastMessageCreatedByAnotherUser,
 } from '../utils';
+import { ActorsRow } from './actorsRow';
 import { Bubble } from '../../../components/bubbles';
 import { convertTimestampToTime } from '../../../helpers/utils';
 import {
@@ -16,14 +15,7 @@ import {
   MessagesWrapper,
   MessageWrapper,
 } from '../../../components/chatMessages/style';
-import {
-  NotificationCard,
-  ActorPhotosContainer,
-  ActorPhotoItem,
-  ActorPhoto,
-  TextContent,
-  BubbleContainer,
-} from '../style';
+import { NotificationCard, TextContent, BubbleContainer } from '../style';
 
 export const NewMessageNotification = ({ notification, currentUser }) => {
   const actors = parseActors(notification.actors, currentUser);
@@ -37,17 +29,7 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
 
   return (
     <NotificationCard key={notification.id}>
-      <ActorPhotosContainer>
-        {actors.asObjects.map(actor => {
-          return (
-            <ActorPhotoItem key={actor.id}>
-              <Link to={`/users/${actor.username}`}>
-                <ActorPhoto src={actor.profilePhoto} />
-              </Link>
-            </ActorPhotoItem>
-          );
-        })}
-      </ActorPhotosContainer>
+      <ActorsRow actors={actors.asObjects} />
       <TextContent>
         {actors.asString} {event} {date} {context.asString}
       </TextContent>

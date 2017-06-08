@@ -401,3 +401,27 @@ export const UpsellUpgradeToPro = compose(
   upgradeToProMutation,
   connect(mapStateToProps)
 )(UpsellUpgradeToProPure);
+
+export const UpsellToReload = () => {
+  return (
+    <NullCard
+      bg="error"
+      heading="Whoops! Someone done goofed."
+      copy="Mind reloading?"
+    >
+      <Button icon="view-reload" onClick={() => location.reload(true)}>
+        Reload
+      </Button>
+    </NullCard>
+  );
+};
+
+export const UpsellNullNotifications = () => {
+  return (
+    <NullCard bg="post" heading="You don't have any notifications yet.">
+      <Link to="/">
+        <Button icon="home">Take Me Home</Button>
+      </Link>
+    </NullCard>
+  );
+};
