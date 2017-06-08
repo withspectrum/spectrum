@@ -53,7 +53,6 @@ module.exports = {
     receiveNotifications: ({ id }, __, { user }) => {
       const currentUser = user;
       if (!currentUser) {
-        console.log('1');
         return false;
       } else {
         return getThreadNotificationStatusForUser(

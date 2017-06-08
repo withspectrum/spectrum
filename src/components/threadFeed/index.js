@@ -110,7 +110,6 @@ class ThreadFeedPure extends Component {
       return (
         <Threads>
           {threads.map(thread => {
-            console.log(threads);
             return (
               <ThreadFeedCard
                 key={thread.node.id}

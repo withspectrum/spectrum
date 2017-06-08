@@ -34,45 +34,6 @@ const CREATE_DIRECT_MESSAGE_THREAD_OPTIONS = {
         variables: {
           input,
         },
-        // NOTE: I tried each of the three methods to update the Apollo store
-        // and couldn't get any of them to work. Very frustrating that this
-        // is so difficult.
-        // refetchQueries: [{
-        //   query: GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY
-        // }]
-        // update: (store, { data: { createDirectMessageThread } }) => {
-        //   const data = store.readQuery({ query: GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY })
-        //   console.log('data', data)
-        //   console.log('returned data', createDirectMessageThread)
-        //   data.user.directMessageThreadsConnection.edges.push({
-        //     node: createDirectMessageThread
-        //   })
-        //   console.log('post-push: ', data)
-        //   store.writeQuery({ query: GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY, data })
-        // }
-        // updateQueries: {
-        //   getCurrentUserDirectMessageThreads: (prev, { mutationResult }) => {
-        //     const newThread = mutationResult.data.createDirectMessageThread;
-        //
-        //     return Object.assign({}, prev, {
-        //       ...prev,
-        //       user: {
-        //         ...prev.user,
-        //         directMessageThreadsConnection: {
-        //           ...prev.user.directMessageThreadsConnection,
-        //           edges: [
-        //             ...prev.user.directMessageThreadsConnection.edges,
-        //             {
-        //               node: {
-        //                 ...newThread
-        //               }
-        //             }
-        //           ]
-        //         }
-        //       }
-        //     });
-        //   },
-        // },
       }),
   }),
 };

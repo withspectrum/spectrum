@@ -105,10 +105,9 @@ class Navbar extends Component {
         .markAllNotificationsSeen()
         .then(({ data: { markAllNotificationsSeen } }) => {
           // notifs were marked as seen
-          console.log('markAllNotificationsSeen', markAllNotificationsSeen);
         })
         .catch(err => {
-          console.log('error marking notifs as seen', err);
+          // error
         });
     }
   };
@@ -118,10 +117,9 @@ class Navbar extends Component {
       .markAllNotificationsRead()
       .then(({ data: { markAllNotificationsRead } }) => {
         // notifs were marked as read
-        console.log('markAllNotificationsRead', markAllNotificationsRead);
       })
       .catch(err => {
-        console.log('error marking notifs as read', err);
+        // error
       });
   };
 
@@ -140,7 +138,7 @@ class Navbar extends Component {
           // notifs were marked as seen
         })
         .catch(err => {
-          console.log('error marking dm notifs as seen', err);
+          // err
         });
     }
   };

@@ -38,8 +38,6 @@ class NotificationsPure extends Component {
         parseNotification(notification.node)
       );
 
-    console.log('notifications are', notifications);
-
     return (
       <AppViewWrapper>
         <Column type={'primary'}>
