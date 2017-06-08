@@ -5,8 +5,13 @@ import { getChannels } from '../models/channel';
 import { getCommunities } from '../models/community';
 import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
-import { createParticipantInThread } from '../models/usersThreads';
+import {
+  createParticipantInThread,
+  getThreadNotificationStatusForUser,
+  updateThreadNotifcationStatuForUser,
+} from '../models/usersThreads';
 const {
+  getThread,
   getThreads,
   publishThread,
   deleteThread,
@@ -229,6 +234,47 @@ module.exports = {
             "You don't have permission to make changes to this thread."
           );
         });
+    },
+    toggleThreadNotifications: (_, { threadId }, { user }) => {
+      const currentUser = user;
+
+      // user must be authed to edit a thread
+      if (!currentUser) {
+        return new UserError(
+          'You must be signed in to toggle notifications on this thread.'
+        );
+      }
+
+      // check to see if a relationship between this user and this thread exists
+      return getThreadNotificationStatusForUser(threadId, currentUser.id)
+        .then(thread => {
+          const threadToEvaluate = thread;
+          if (thread && thread.length > 0) {
+            // a relationship with this thread exists, we are going to update it
+            let value;
+            if (thread[0].receiveNotifications) {
+              // if they are currently receiving notifications, turn them off
+              value = false;
+              return updateThreadNotifcationStatuForUser(
+                threadId,
+                currentUser.id,
+                value
+              );
+            } else {
+              // if they aren't receiving notifications, turn them on
+              value = true;
+              return updateThreadNotifcationStatuForUser(
+                threadId,
+                currentUser.id,
+                value
+              );
+            }
+          } else {
+            // if a relationship doesn't exist, create a new one
+            return createParticipantInThread(threadId, currentUser.id);
+          }
+        })
+        .then(() => getThread(threadId));
     },
   },
 };

@@ -40,8 +40,34 @@ export const getParticipantsInThread = (
     .filter({ isParticipant: true })
     .eqJoin('userId', db.table('users'))
     .without({
-      left: ['createdAt', 'id', 'receiveNotifications', 'threadId', 'userId'],
+      left: ['createdAt', 'id', 'threadId', 'userId'],
     })
     .zip()
+    .run();
+};
+
+export const getThreadNotificationStatusForUser = (
+  threadId: string,
+  userId: string
+): Promise<Array<Object>> => {
+  return db
+    .table('usersThreads')
+    .getAll(userId, { index: 'userId' })
+    .filter({ threadId })
+    .run();
+};
+
+export const updateThreadNotifcationStatuForUser = (
+  threadId: string,
+  userId: string,
+  value: boolean
+): Promise<Object> => {
+  return db
+    .table('usersThreads')
+    .getAll(userId, { index: 'userId' })
+    .filter({ threadId })
+    .update({
+      receiveNotifications: value,
+    })
     .run();
 };

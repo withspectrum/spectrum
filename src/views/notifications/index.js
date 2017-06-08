@@ -77,6 +77,21 @@ const NewMessageNotification = ({ notification, currentUser }) => {
       <BubbleContainer me={false}>
         <BubbleGroupContainer me={false}>
           <MessagesWrapper>
+            {notification.entities.length > 1 &&
+              <MessageWrapper
+                me={false}
+                timestamp={convertTimestampToTime(message.timestamp)}
+              >
+                <Bubble
+                  me={false}
+                  pending={false}
+                  type={'thread'}
+                  message={{
+                    body: `+${notification.entities.length - 1} more...`,
+                  }}
+                />
+              </MessageWrapper>}
+
             <MessageWrapper
               me={false}
               timestamp={convertTimestampToTime(message.timestamp)}
@@ -147,6 +162,7 @@ const NewReactionNotification = ({ notification, currentUser }) => {
 };
 
 const NotificationsPure = ({ notificationsQuery, currentUser }) => {
+  console.log(notificationsQuery);
   // our router should prevent this from happening, but just in case
   if (!currentUser) {
     return <UpsellSignIn />;

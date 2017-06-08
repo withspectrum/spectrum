@@ -13,7 +13,10 @@ import { getLinkPreviewFromUrl, timeDifference } from '../../../helpers/utils';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { setThreadLockMutation } from '../mutations';
+import {
+  setThreadLockMutation,
+  toggleThreadNotificationsMutation,
+} from '../mutations';
 import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
 import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
@@ -60,12 +63,15 @@ class ThreadDetailPure extends Component {
     linkPreviewTrueUrl: string,
     linkPreviewLength: number,
     fetchingLinkPreview: boolean,
+    receiveNotifications: boolean,
   };
 
   constructor(props) {
     super(props);
 
     const { thread } = props;
+
+    console.log(thread);
 
     let rawLinkPreview = thread.attachments && thread.attachments.length > 0
       ? thread.attachments.filter(
@@ -92,6 +98,7 @@ class ThreadDetailPure extends Component {
       linkPreviewLength: thread.attachments.length > 0 ? 1 : 0,
       fetchingLinkPreview: false,
       flyoutOpen: false,
+      receiveNotifications: thread.receiveNotifications,
     };
   }
 
@@ -156,6 +163,32 @@ class ThreadDetailPure extends Component {
         message,
       })
     );
+  };
+
+  toggleNotification = () => {
+    const { receiveNotifications } = this.state;
+    const { thread, dispatch, toggleThreadNotifications } = this.props;
+    const threadId = thread.id;
+
+    this.setState({
+      receiveNotifications: !receiveNotifications,
+    });
+
+    toggleThreadNotifications({
+      threadId,
+    })
+      .then(({ data: { toggleThreadNotifications } }) => {
+        if (toggleThreadNotifications.receiveNotifications) {
+          track('thread', 'notifications turned on', null);
+          dispatch(addToastWithTimeout('success', 'Notifications activated!'));
+        } else {
+          track('thread', 'notifications turned off', null);
+          dispatch(addToastWithTimeout('neutral', 'Notifications turned off'));
+        }
+      })
+      .catch(err => {
+        dispatch(addToastWithTimeout('error', err.message));
+      });
   };
 
   toggleEdit = () => {
@@ -312,6 +345,7 @@ class ThreadDetailPure extends Component {
 
     let f = this.state.editBody;
 
+    const isChannelMember = thread.channel.channelPermissions.isMember;
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner =
       thread.channel.community.communityPermissions.isOwner;
@@ -336,8 +370,8 @@ class ThreadDetailPure extends Component {
             </BylineMeta>
           </Byline>
           {currentUser &&
-            (thread.isCreator || isChannelOwner || isCommunityOwner) &&
             !isEditing &&
+            isChannelMember &&
             <DropWrap className={flyoutOpen ? 'open' : ''}>
               <IconButton glyph="settings" onClick={this.toggleFlyout} />
               <Flyout>
@@ -361,6 +395,24 @@ class ThreadDetailPure extends Component {
                       tipText="Delete thread"
                       tipLocation="top-left"
                       onClick={this.triggerDelete}
+                    />
+                  </FlyoutRow>}
+                {isChannelMember &&
+                  <FlyoutRow>
+                    <IconButton
+                      glyph={
+                        thread.receiveNotifications
+                          ? 'notification-fill'
+                          : 'notification'
+                      }
+                      hoverColor="text.alt"
+                      tipText={
+                        thread.receiveNotifications
+                          ? 'Turn off notifications'
+                          : 'Get notifications'
+                      }
+                      tipLocation="top-left"
+                      onClick={this.toggleNotification}
                     />
                   </FlyoutRow>}
                 {/* {thread.isCreator &&
@@ -462,6 +514,7 @@ const ThreadDetail = compose(
   setThreadLockMutation,
   deleteThreadMutation,
   editThreadMutation,
+  toggleThreadNotificationsMutation,
   withRouter,
   pure
 )(ThreadDetailPure);

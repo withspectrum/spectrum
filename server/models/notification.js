@@ -14,6 +14,7 @@ const getNotificationsByUser = (userId: string) => {
       left: ['notificationId', 'userId', 'createdAt', 'id'],
     })
     .zip()
+    .orderBy(db.desc('modifiedAt'))
     .run();
 };
 

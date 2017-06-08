@@ -2,7 +2,13 @@
 const { db } = require('./db');
 const { listenToNewDocumentsIn } = require('./utils');
 
-const getThreads = (threadIds: Array<string>): Promise<Array<Object>> => {
+export const getThread = (threadId: string): Promise<Object> => {
+  return db.table('threads').get(threadId).run();
+};
+
+export const getThreads = (
+  threadIds: Array<string>
+): Promise<Array<Object>> => {
   return db
     .table('threads')
     .getAll(...threadIds)
@@ -10,7 +16,9 @@ const getThreads = (threadIds: Array<string>): Promise<Array<Object>> => {
     .run();
 };
 
-const getThreadsByChannel = (channelId: string): Promise<Array<Object>> => {
+export const getThreadsByChannel = (
+  channelId: string
+): Promise<Array<Object>> => {
   return db
     .table('threads')
     .getAll(channelId, { index: 'channelId' })
@@ -19,7 +27,7 @@ const getThreadsByChannel = (channelId: string): Promise<Array<Object>> => {
     .run();
 };
 
-const getThreadsByChannels = (
+export const getThreadsByChannels = (
   channelIds: Array<string>
 ): Promise<Array<Object>> => {
   return db
@@ -30,7 +38,9 @@ const getThreadsByChannels = (
     .run();
 };
 
-const getThreadsByCommunity = (communityId: string): Promise<Array<Object>> => {
+export const getThreadsByCommunity = (
+  communityId: string
+): Promise<Array<Object>> => {
   return db
     .table('threads')
     .getAll(communityId, { index: 'communityId' })
@@ -48,7 +58,7 @@ const getThreadsByCommunity = (communityId: string): Promise<Array<Object>> => {
   1. The thread was posted to a public channel
   2. The thread was posted to a private channel and the viewing user is a member
 */
-const getViewableThreadsByUser = (
+export const getViewableThreadsByUser = (
   evalUser: string,
   currentUser: string
 ): Promise<Array<Object>> => {
@@ -98,7 +108,9 @@ const getViewableThreadsByUser = (
   );
 };
 
-const getPublicThreadsByUser = (evalUser: string): Promise<Array<Object>> => {
+export const getPublicThreadsByUser = (
+  evalUser: string
+): Promise<Array<Object>> => {
   return (
     db
       .table('threads')
@@ -131,7 +143,10 @@ const getPublicThreadsByUser = (evalUser: string): Promise<Array<Object>> => {
   );
 };
 
-const publishThread = (thread: Object, userId: string): Promise<Object> => {
+export const publishThread = (
+  thread: Object,
+  userId: string
+): Promise<Object> => {
   return db
     .table('threads')
     .insert(
@@ -149,7 +164,10 @@ const publishThread = (thread: Object, userId: string): Promise<Object> => {
     .then(result => result.changes[0].new_val);
 };
 
-const setThreadLock = (threadId: string, value: Boolean): Promise<Object> => {
+export const setThreadLock = (
+  threadId: string,
+  value: Boolean
+): Promise<Object> => {
   return (
     db
       .table('threads')
@@ -172,7 +190,7 @@ const setThreadLock = (threadId: string, value: Boolean): Promise<Object> => {
   );
 };
 
-const deleteThread = (threadId: string): Promise<Boolean> => {
+export const deleteThread = (threadId: string): Promise<Boolean> => {
   return db
     .table('threads')
     .get(threadId)
@@ -200,7 +218,7 @@ type EditThreadInput = {
   },
   attachments: Array<Object>,
 };
-const editThread = (input: EditThreadInput): Promise<Object> => {
+export const editThread = (input: EditThreadInput): Promise<Object> => {
   return db
     .table('threads')
     .get(input.threadId)
@@ -231,25 +249,10 @@ const editThread = (input: EditThreadInput): Promise<Object> => {
     });
 };
 
-const listenToNewThreads = (cb: Function): Function => {
+export const listenToNewThreads = (cb: Function): Function => {
   return listenToNewDocumentsIn('threads', cb);
 };
 
-const getThreadCount = () => {
+export const getThreadCount = () => {
   return db.table('threads').count().run();
-};
-
-module.exports = {
-  getThreads,
-  publishThread,
-  editThread,
-  setThreadLock,
-  deleteThread,
-  listenToNewThreads,
-  getThreadsByChannel,
-  getThreadsByChannels,
-  getThreadsByCommunity,
-  getViewableThreadsByUser,
-  getPublicThreadsByUser,
-  getThreadCount,
 };

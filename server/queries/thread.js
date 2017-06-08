@@ -5,7 +5,10 @@ const {
   getCommunityPermissions,
 } = require('../models/community');
 const { getUsers } = require('../models/user');
-import { getParticipantsInThread } from '../models/usersThreads';
+import {
+  getParticipantsInThread,
+  getThreadNotificationStatusForUser,
+} from '../models/usersThreads';
 const { getMessages, getMessageCount } = require('../models/message');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
@@ -46,6 +49,20 @@ module.exports = {
     ) => {
       if (!creatorId || !user) return false;
       return user.id === creatorId;
+    },
+    receiveNotifications: ({ id }, __, { user }) => {
+      const currentUser = user;
+      if (!currentUser) {
+        console.log('1');
+        return false;
+      } else {
+        return getThreadNotificationStatusForUser(
+          id,
+          currentUser.id
+        ).then(threads => {
+          return threads.length > 0 ? threads[0].receiveNotifications : false;
+        });
+      }
     },
     messageConnection: (
       { id }: { id: String },

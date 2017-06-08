@@ -40,6 +40,7 @@ const Thread = /* GraphQL */ `
 		content: ThreadContent!
 		isLocked: Boolean
 		isCreator: Boolean
+		receiveNotifications: Boolean
 		type: ThreadType
 		edits: [Edit!]
 		participants: [User]
@@ -81,6 +82,7 @@ const Thread = /* GraphQL */ `
 		publishThread(thread: ThreadInput!): Thread
 		editThread(input: EditThreadInput!): Thread
 		setThreadLock(threadId: ID!, value: Boolean!): Thread
+		toggleThreadNotifications(threadId: ID!): Thread
 		deleteThread(threadId: ID!): Boolean
 	}
 `;
