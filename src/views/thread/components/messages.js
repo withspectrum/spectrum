@@ -13,25 +13,14 @@ import { toggleReactionMutation } from '../mutations';
 
 class MessagesWithData extends Component {
   state: {
-    subscribed: boolean,
+    subscription: ?Object,
   };
 
-  constructor() {
-    super();
-
-    this.state = {
-      subscribed: false,
-    };
-  }
+  state = {
+    subscription: null,
+  };
 
   componentDidUpdate(prevProps) {
-    if (!this.props.loading && !this.state.subscribed) {
-      this.setState({
-        subscribed: true,
-      });
-      this.props.subscribeToNewMessages();
-    }
-
     // force scroll to bottom when a message is sent in the same thread
     if (
       prevProps.data.thread.messageConnection !==
@@ -50,19 +39,28 @@ class MessagesWithData extends Component {
     this.subscribe();
   }
 
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
   subscribe = () => {
-    if (!this.props.loading && !this.state.subscribed) {
-      this.setState({
-        subscribed: true,
-      });
-      this.props.subscribeToNewMessages();
+    console.log('SUBSCRIBE');
+    this.setState({
+      subscription: this.props.subscribeToNewMessages(),
+    });
+  };
+
+  unsubscribe = () => {
+    const { subscription } = this.state;
+    if (subscription) {
+      console.log('UNSUBSCRIBE');
+      // This unsubscribes the subscription
+      subscription();
     }
   };
 
   render() {
     const { data, toggleReaction, forceScrollToBottom } = this.props;
-
-    // console.log('in component with ', data);
 
     if (data.error) {
       return <div>Error!</div>;
