@@ -191,7 +191,7 @@ if (IS_PROD) {
         index
           .replace(/%OG_TITLE%/g, title)
           .replace(/%OG_DESCRIPTION%/g, description)
-          .replace(/<meta name="%OG_EXTRA%">/g, extra)
+          .replace(/<meta name="%OG_EXTRA%">/g, extra || '')
       );
     });
   });
