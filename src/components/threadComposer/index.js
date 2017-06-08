@@ -301,8 +301,6 @@ class ThreadComposerWithData extends Component {
       .map(image => image.getIn(['data', 'file']))
       .toJS();
 
-    console.log('incoming to the server', filesToUpload);
-
     // this.props.mutate comes from a higher order component defined at the
     // bottom of this file
     this.props

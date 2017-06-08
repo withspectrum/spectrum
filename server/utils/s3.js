@@ -63,7 +63,7 @@ const uploadImage = (file: Object, entity: EntityTypes, id: string) =>
       },
       data => {
         const url = generateImageUrl(data.path);
-        return resolve(url);
+        return resolve(encodeURI(url));
       },
       (errMsg, errObject) => {
         // TODO: Figure out error handling in the backend if image upload fails

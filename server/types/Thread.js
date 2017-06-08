@@ -69,6 +69,7 @@ const Thread = /* GraphQL */ `
 		threadId: ID!
 		content: ThreadContentInput!
 		attachments: [AttachmentInput]
+		filesToUpload: [File]
 	}
 
 	input ThreadInput {

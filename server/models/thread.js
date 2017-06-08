@@ -132,7 +132,15 @@ const getPublicThreadsByUser = (evalUser: string): Promise<Array<Object>> => {
   );
 };
 
-const publishThread = (thread: Object, userId: string): Promise<Object> => {
+/*
+  A thread may receive a field 'filesToUpload' if it contains images. We destructure
+  the incoming argument in order to ignore that field and only return the rest
+  of the thread fields
+*/
+const publishThread = (
+  { filesToUpload, ...thread }: Object,
+  userId: string
+): Promise<Object> => {
   return db
     .table('threads')
     .insert(
@@ -245,14 +253,14 @@ const editThread = (input: EditThreadInput): Promise<Object> => {
     });
 };
 
-const updateThreadBody = (id: string, newBody: string) => {
+const updateThreadWithImages = (id: string, body: string) => {
   return db
     .table('threads')
     .get(id)
     .update(
       {
         content: {
-          body: newBody,
+          body,
         },
       },
       { returnChanges: 'always' }
@@ -292,5 +300,5 @@ module.exports = {
   getViewableThreadsByUser,
   getPublicThreadsByUser,
   getThreadCount,
-  updateThreadBody,
+  updateThreadWithImages,
 };
