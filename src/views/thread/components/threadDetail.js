@@ -83,7 +83,7 @@ class ThreadDetailPure extends Component {
       viewBody: thread.type === 'SLATE'
         ? toPlainText(toState(JSON.parse(thread.content.body)))
         : thread.content.body,
-      editBody: thread.content.body,
+      editBody: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl: thread.attachments.length > 0
@@ -184,7 +184,7 @@ class ThreadDetailPure extends Component {
 
     let bodyToSave = editBody;
     if (thread.type === 'SLATE') {
-      bodyToSave = toPlainText(toState(JSON.parse(bodyToSave)));
+      bodyToSave = JSON.stringify(toJSON(bodyToSave));
     }
 
     const content = {
@@ -203,6 +203,9 @@ class ThreadDetailPure extends Component {
         if (editThread && editThread !== null) {
           this.toggleEdit();
           dispatch(addToastWithTimeout('success', 'Thread saved!'));
+          this.setState({
+            viewBody: toPlainText(editBody),
+          });
         } else {
           dispatch(
             addToastWithTimeout(
@@ -225,10 +228,8 @@ class ThreadDetailPure extends Component {
   };
 
   changeBody = state => {
-    let foo = toJSON(state);
-    foo = JSON.stringify(foo);
     this.setState({
-      editBody: foo,
+      editBody: state,
     });
   };
 
@@ -310,8 +311,6 @@ class ThreadDetailPure extends Component {
       flyoutOpen,
     } = this.state;
 
-    let f = this.state.editBody;
-
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner =
       thread.channel.community.communityPermissions.isOwner;
@@ -363,7 +362,7 @@ class ThreadDetailPure extends Component {
                       onClick={this.triggerDelete}
                     />
                   </FlyoutRow>}
-                {/* {thread.isCreator &&
+                {thread.isCreator &&
                   <FlyoutRow>
                     <IconButton
                       glyph="edit"
@@ -372,7 +371,7 @@ class ThreadDetailPure extends Component {
                       tipLocation="top-left"
                       onClick={this.toggleEdit}
                     />
-                  </FlyoutRow>} */}
+                  </FlyoutRow>}
               </Flyout>
             </DropWrap>}
 
@@ -434,7 +433,7 @@ class ThreadDetailPure extends Component {
             <Editor
               onChange={this.changeBody}
               onKeyDown={this.listenForUrl}
-              state={toState(JSON.parse(this.state.editBody))}
+              state={this.state.editBody}
               style={ThreadDescription}
               ref="bodyTextarea"
               placeholder="Write more thoughts here, add photos, and anything else!"
