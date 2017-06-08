@@ -9,7 +9,7 @@ import Titlebar from '../../views/titlebar';
 import { UpsellSignIn, NullCard } from '../../components/upsell';
 import UpsellNewUser from '../../components/upsell/newUserUpsell';
 import { Button } from '../../components/buttons';
-import { displayLoadingDashboard } from '../../components/loading';
+import { displayLoadingScreen } from '../../components/loading';
 import { FlexCol } from '../../components/globals';
 import { Column } from '../../components/column';
 import { UserProfile } from '../../components/profile';
@@ -121,7 +121,7 @@ class DashboardPure extends Component {
   }
 }
 
-const Dashboard = compose(getCurrentUserProfile, displayLoadingDashboard, pure)(
+const Dashboard = compose(getCurrentUserProfile, displayLoadingScreen, pure)(
   DashboardPure
 );
 export default Dashboard;

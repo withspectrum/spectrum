@@ -58,52 +58,32 @@ class ChatMessages extends Component {
         const robo = sender.id === 'robo';
         if (me || robo) return;
 
-        if (sender.username) {
-          return (
-            <Link
-              to={`/users/${sender.username}`}
-              style={{ alignSelf: 'flex-end' }}
-            >
-              <AvatarLabel tipText={sender.name} tipLocation="right">
-                <Avatar src={sender.profilePhoto} />
-              </AvatarLabel>
-            </Link>
-          );
-        } else {
-          return (
+        return (
+          <Link
+            to={`/users/${sender.username}`}
+            style={{ alignSelf: 'flex-end' }}
+          >
             <AvatarLabel tipText={sender.name} tipLocation="right">
               <Avatar src={sender.profilePhoto} />
             </AvatarLabel>
-          );
-        }
+          </Link>
+        );
       };
 
       const renderBubbleHeader = (group: Object, me: boolean) => {
         const user = group.sender;
 
-        if (user.username) {
-          return (
-            <Byline me={me}>
-              <Link to={`/users/${user.username}`}>
-                <Name>
-                  {me ? 'You' : user.name}
-                </Name>
-                {user.isAdmin && <Badge type="admin" />}
-                {user.isPro && <Badge type="pro" />}
-              </Link>
-            </Byline>
-          );
-        } else {
-          return (
-            <Byline me={me}>
+        return (
+          <Byline me={me}>
+            <Link to={`/users/${user.username}`}>
               <Name>
                 {me ? 'You' : user.name}
               </Name>
               {user.isAdmin && <Badge type="admin" />}
               {user.isPro && <Badge type="pro" />}
-            </Byline>
-          );
-        }
+            </Link>
+          </Byline>
+        );
       };
 
       return (

@@ -10,6 +10,7 @@ import Icon from '../../components/icons';
 import { Column } from '../../components/column';
 import { FlexRow } from '../../components/globals';
 import AppViewWrapper from '../../components/appViewWrapper';
+import { displayLoadingScreen } from '../../components/loading';
 import { NotificationCard, Content, ContentHeading, Message } from './style';
 import {
   constructMessage,

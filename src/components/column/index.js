@@ -40,7 +40,7 @@ const SecondaryColumn = styled(BaseColumn)`
   }
 `;
 
-const OnlyColumn = styled(PrimaryColumn)`
+const HalfColumn = styled(PrimaryColumn)`
   max-width: 840px;
   flex: 0 0 75%;
 
@@ -64,11 +64,11 @@ const ColumnPure = (props: Object): React$Element<any> => {
         {props.children}
       </SecondaryColumn>
     );
-  } else if (props.type === 'only') {
+  } else if (props.type === 'half') {
     return (
-      <OnlyColumn {...props}>
+      <HalfColumn {...props}>
         {props.children}
-      </OnlyColumn>
+      </HalfColumn>
     );
   } else {
     return (
