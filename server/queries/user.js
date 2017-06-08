@@ -46,6 +46,8 @@ module.exports = {
       if (!currentUser || currentUser.id !== id) return null;
       return getNotificationsByUser(id, { first, after });
     },
+    coverPhoto: ({ coverPhoto }) => encodeURI(coverPhoto),
+    profilePhoto: ({ profilePhoto }) => encodeURI(profilePhoto),
     isAdmin: ({ id }: { id: string }) => {
       return isAdmin(id);
     },
