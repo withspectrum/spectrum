@@ -39,8 +39,11 @@ class ChatInputWithMutation extends Component {
       forceScrollToBottom,
     } = this.props;
 
-    // if a user sends a message, force a scroll to bottom
-    forceScrollToBottom();
+    // This doesn't exist if this is a new conversation
+    if (forceScrollToBottom) {
+      // if a user sends a message, force a scroll to bottom
+      forceScrollToBottom();
+    }
 
     // If the input is empty don't do anything
     if (toPlainText(state).trim() === '') return;
