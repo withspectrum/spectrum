@@ -11,14 +11,14 @@ const {
   deleteThread,
   setThreadLock,
   editThread,
+  updateThreadBody,
 } = require('../models/thread');
+const { uploadImage } = require('../utils/s3');
 
 module.exports = {
   Mutation: {
     publishThread: (_, { thread }, { user }) => {
       const currentUser = user;
-
-      console.log('input is ', thread);
 
       // user must be authed to publish a thread
       if (!currentUser) {
@@ -78,14 +78,39 @@ module.exports = {
             // iterate over files and upload
             // array of image urls
             // update the content.body of the thread
-            console.log(newThread);
-            return newThread;
+            return Promise.all([
+              newThread,
+              Promise.all(
+                thread.filesToUpload.map(file =>
+                  uploadImage(file, 'threads', newThread.id)
+                )
+              ),
+            ]);
           } else {
-            // return Promise.all([ newThread ])
-            return newThread;
+            return Promise.all([newThread]);
           }
+        })
+        .then(([newThread, urls]) => {
+          if (!urls) return newThread;
+
+          const slateState = JSON.parse(newThread.content.body);
+          let fileIndex = 0;
+          const newSlateState = {
+            ...slateState,
+            nodes: slateState.nodes.map(node => {
+              if (node.type !== 'image') return node;
+              fileIndex++;
+              return {
+                ...node,
+                data: {
+                  ...node.data,
+                  src: urls[fileIndex - 1],
+                },
+              };
+            }),
+          };
+          return updateThreadBody(newThread.id, JSON.stringify(newSlateState));
         });
-      // .then(([ newThread ]) => newThread)
     },
     editThread: (_, { input }, { user }) => {
       const currentUser = user;

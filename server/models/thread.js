@@ -245,6 +245,29 @@ const editThread = (input: EditThreadInput): Promise<Object> => {
     });
 };
 
+const updateThreadBody = (id: string, newBody: string) => {
+  return db
+    .table('threads')
+    .get(id)
+    .update({
+      content: {
+        body: newBody,
+      },
+    })
+    .run()
+    .then(result => {
+      // if an update happened
+      if (result.replaced === 1) {
+        return result.changes[0].new_val;
+      }
+
+      // no data was changed
+      if (result.unchanged === 1) {
+        return result.changes[0].old_val;
+      }
+    });
+};
+
 const listenToNewThreads = (cb: Function): Function => {
   return listenToNewDocumentsIn('threads', cb);
 };
@@ -266,4 +289,5 @@ module.exports = {
   getViewableThreadsByUser,
   getPublicThreadsByUser,
   getThreadCount,
+  updateThreadBody,
 };
