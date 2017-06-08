@@ -9,7 +9,7 @@ import {
   createParticipantInThread,
   createNotifiedUserInThread,
   getThreadNotificationStatusForUser,
-  updateThreadNotifcationStatuForUser,
+  updateThreadNotificationStatusForUser,
 } from '../models/usersThreads';
 const {
   getThread,
@@ -256,7 +256,7 @@ module.exports = {
             if (thread[0].receiveNotifications) {
               // if they are currently receiving notifications, turn them off
               value = false;
-              return updateThreadNotifcationStatuForUser(
+              return updateThreadNotificationStatusForUser(
                 threadId,
                 currentUser.id,
                 value
@@ -264,7 +264,7 @@ module.exports = {
             } else {
               // if they aren't receiving notifications, turn them on
               value = true;
-              return updateThreadNotifcationStatuForUser(
+              return updateThreadNotificationStatusForUser(
                 threadId,
                 currentUser.id,
                 value

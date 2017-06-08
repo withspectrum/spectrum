@@ -70,7 +70,7 @@ export const getThreadNotificationStatusForUser = (
     .run();
 };
 
-export const updateThreadNotifcationStatuForUser = (
+export const updateThreadNotificationStatusForUser = (
   threadId: string,
   userId: string,
   value: boolean
