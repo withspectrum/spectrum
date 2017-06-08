@@ -44,7 +44,6 @@ class MessagesWithData extends Component {
   }
 
   subscribe = () => {
-    console.log('SUBSCRIBE');
     this.setState({
       subscription: this.props.subscribeToNewMessages(),
     });
@@ -53,7 +52,6 @@ class MessagesWithData extends Component {
   unsubscribe = () => {
     const { subscription } = this.state;
     if (subscription) {
-      console.log('UNSUBSCRIBE');
       // This unsubscribes the subscription
       subscription();
     }
