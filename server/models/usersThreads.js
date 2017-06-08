@@ -31,6 +31,19 @@ export const createParticipantInThread = (
     });
 };
 
+export const createNotifiedUserInThread = (
+  threadId: string,
+  userId: string
+): Promise<Object> => {
+  return db.table('usersThreads').insert({
+    createdAt: new Date(),
+    userId,
+    threadId,
+    isParticipant: false,
+    receiveNotifications: true,
+  });
+};
+
 export const getParticipantsInThread = (
   threadId: string
 ): Promise<Array<Object>> => {

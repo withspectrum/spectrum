@@ -7,6 +7,7 @@ import { getUserPermissionsInChannel } from '../models/usersChannels';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import {
   createParticipantInThread,
+  createNotifiedUserInThread,
   getThreadNotificationStatusForUser,
   updateThreadNotifcationStatuForUser,
 } from '../models/usersThreads';
@@ -271,7 +272,7 @@ module.exports = {
             }
           } else {
             // if a relationship doesn't exist, create a new one
-            return createParticipantInThread(threadId, currentUser.id);
+            return createNotifiedUserInThread(threadId, currentUser.id);
           }
         })
         .then(() => getThread(threadId));
