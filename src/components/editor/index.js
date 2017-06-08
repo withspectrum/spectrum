@@ -51,14 +51,21 @@ class Editor extends Component {
     };
   }
 
+  // $FlowFixMe
   addImage = e => {
-    const file = e.target.files[0];
+    const files = e.target.files;
     const onChange = this.props.onChange || this.onChange;
     const state = this.props.state || this.state.state;
-    const newState = this.insertImage(
-      state,
-      window.URL.createObjectURL(file),
-      file
+    // files is a FileList, not an array, so it doesn't have .reduce
+    let filesArray = [];
+    for (var i = 0, f; (f = files[i]); i++) {
+      filesArray.push(f);
+    }
+    // Add all the files to the state
+    const newState = filesArray.reduce(
+      (prevState, file) =>
+        this.insertImage(prevState, window.URL.createObjectURL(file), file),
+      state
     );
     onChange(newState);
   };
@@ -121,7 +128,7 @@ class Editor extends Component {
 
         {images !== false &&
           <MediaRow>
-            <MediaInput onChange={this.addImage}>Add</MediaInput>
+            <MediaInput onChange={this.addImage} multiple>Add</MediaInput>
           </MediaRow>}
       </Wrapper>
     );
