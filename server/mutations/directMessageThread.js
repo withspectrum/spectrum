@@ -89,7 +89,11 @@ module.exports = {
               participants.map(participant =>
                 createMemberInDirectMessageThread(thread.id, participant, false)
               ),
-              uploadImage(message.file, 'threads', message.threadId, url => {
+              uploadImage(
+                message.file,
+                'threads',
+                message.threadId
+              ).then(url => {
                 // build a new message object with a new file field with metadata
                 const newMessage = Object.assign({}, message, {
                   ...message,
