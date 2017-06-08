@@ -73,7 +73,6 @@ class ChatInputWithMutation extends Component {
       },
     })
       .then(({ data: { addMessage } }) => {
-        console.log('sending text message', addMessage);
         track(`${threadType} message`, 'text message created', null);
       })
       .catch(err => {
