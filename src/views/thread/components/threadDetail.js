@@ -8,6 +8,7 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
+// $FlowFixMe
 import { Link } from 'react-router-dom';
 import { getLinkPreviewFromUrl, timeDifference } from '../../../helpers/utils';
 import { URLS } from '../../../helpers/regexps';
@@ -60,6 +61,7 @@ class ThreadDetailPure extends Component {
     linkPreviewTrueUrl: string,
     linkPreviewLength: number,
     fetchingLinkPreview: boolean,
+    isSavingEdit: boolean,
   };
 
   constructor(props) {
@@ -92,6 +94,7 @@ class ThreadDetailPure extends Component {
       linkPreviewLength: thread.attachments.length > 0 ? 1 : 0,
       fetchingLinkPreview: false,
       flyoutOpen: false,
+      isSavingEdit: false,
     };
   }
 
@@ -170,6 +173,17 @@ class ThreadDetailPure extends Component {
     const { linkPreview, linkPreviewTrueUrl, title, editBody } = this.state;
     const threadId = thread.id;
 
+    if (!title || title.length === 0) {
+      dispatch(
+        addToastWithTimeout('error', 'Be sure to save a title for your thread!')
+      );
+      return;
+    }
+
+    this.setState({
+      isSavingEdit: true,
+    });
+
     const attachments = [];
     if (linkPreview) {
       const attachmentData = JSON.stringify({
@@ -200,6 +214,10 @@ class ThreadDetailPure extends Component {
 
     editThread(input)
       .then(({ data: { editThread } }) => {
+        this.setState({
+          isSavingEdit: false,
+        });
+
         if (editThread && editThread !== null) {
           this.toggleEdit();
           dispatch(addToastWithTimeout('success', 'Thread saved!'));
@@ -216,6 +234,9 @@ class ThreadDetailPure extends Component {
         }
       })
       .catch(err => {
+        this.setState({
+          isSavingEdit: false,
+        });
         dispatch(addToastWithTimeout('error', err.message));
       });
   };
@@ -309,6 +330,7 @@ class ThreadDetailPure extends Component {
       viewBody,
       fetchingLinkPreview,
       flyoutOpen,
+      isSavingEdit,
     } = this.state;
 
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
@@ -377,7 +399,9 @@ class ThreadDetailPure extends Component {
 
           {isEditing &&
             <EditDone>
-              <Button onClick={this.saveEdit}>Save</Button>
+              <Button loading={isSavingEdit} onClick={this.saveEdit}>
+                Save
+              </Button>
             </EditDone>}
         </ContextRow>
 
