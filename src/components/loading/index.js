@@ -432,7 +432,7 @@ export const LoadingProfile = () => (
   when an entire view is wrapped in a query and we need certain data (like
   permission checks) before we render anything.
 */
-export const LoadingDashboard = (): React$Element<any> => (
+export const LoadingScreen = (): React$Element<any> => (
   <LoadingScreenContainer>
     <Column type="secondary">
       <ShimmerProfile>
@@ -727,9 +727,9 @@ export const displayLoadingCard = branch(
   renderComponent(LoadingCard)
 );
 
-export const displayLoadingDashboard = branch(
+export const displayLoadingScreen = branch(
   props => !props.data || props.data.loading,
-  renderComponent(LoadingDashboard)
+  renderComponent(LoadingScreen)
 );
 
 export const displayLoadingComposer = branch(

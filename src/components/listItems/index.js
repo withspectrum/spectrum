@@ -86,31 +86,20 @@ export const UserListItem = ({ user, children }: Object): React$Element<
   return (
     <Wrapper>
       <Row>
-        {user.username
-          ? <Link to={`/users/${user.username}`}>
-              <Avatar
-                radius={20}
-                src={`${user.profilePhoto}`}
-                size={40}
-                style={{ marginRight: '16px' }}
-              />
-            </Link>
-          : <Avatar
-              radius={20}
-              src={`${user.profilePhoto}`}
-              size={40}
-              style={{ marginRight: '16px' }}
-            />}
+        <Link to={`/users/${user.username}`}>
+          <Avatar
+            radius={20}
+            src={`${user.profilePhoto}`}
+            size={40}
+            style={{ marginRight: '16px' }}
+          />
+        </Link>
         <Col>
           <Heading>
-            {user.username
-              ? <Link to={`/users/${user.username}`}>{user.name}</Link>
-              : <span>{user.name}</span>}
+            <Link to={`/users/${user.username}`}>{user.name}</Link>
           </Heading>
           <Meta>
-            {user.username
-              ? <Link to={`/users/${user.username}`}>@{user.username}</Link>
-              : ''}
+            <Link to={`/users/${user.username}`}>@{user.username}</Link>
           </Meta>
         </Col>
         <ActionContainer className={'action'}>{children}</ActionContainer>

@@ -20,7 +20,7 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import Titlebar from '../titlebar';
 import { CommunityProfile } from '../../components/profile';
-import { displayLoadingDashboard } from '../../components/loading';
+import { displayLoadingScreen } from '../../components/loading';
 import {
   UpsellSignIn,
   UpsellJoinCommunity,
@@ -209,7 +209,7 @@ class CommunityViewPure extends Component {
 export const CommunityView = compose(
   toggleCommunityMembershipMutation,
   getCommunity,
-  displayLoadingDashboard,
+  displayLoadingScreen,
   pure
 )(CommunityViewPure);
 
