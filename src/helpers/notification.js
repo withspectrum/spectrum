@@ -182,6 +182,7 @@ const communityToString = context => {
 
 export const parseContext = context => {
   switch (context.type) {
+    case 'SLATE':
     case 'THREAD': {
       const asString = threadToString(context);
       return {

@@ -73,8 +73,6 @@ class ThreadDetailPure extends Component {
 
     const { thread } = props;
 
-    console.log(thread);
-
     let rawLinkPreview = thread.attachments && thread.attachments.length > 0
       ? thread.attachments.filter(
           attachment => attachment.attachmentType === 'linkPreview'

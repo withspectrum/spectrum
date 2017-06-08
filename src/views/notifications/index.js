@@ -1,5 +1,5 @@
 //@flow
-import React from 'react';
+import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
@@ -49,6 +49,7 @@ import {
 import { ReactionWrapper, Count } from '../../components/reaction/style';
 
 const NewMessageNotification = ({ notification, currentUser }) => {
+  console.log('new message notification', notification);
   const actors = parseActors(notification.actors, currentUser);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
@@ -161,59 +162,69 @@ const NewReactionNotification = ({ notification, currentUser }) => {
   );
 };
 
-const NotificationsPure = ({ notificationsQuery, currentUser }) => {
-  console.log(notificationsQuery);
-  // our router should prevent this from happening, but just in case
-  if (!currentUser) {
-    return <UpsellSignIn />;
-  }
+class NotificationsPure extends Component {
+  render() {
+    const { currentUser, notificationsQuery } = this.props;
 
-  const notifications =
-    currentUser &&
-    notificationsQuery.notifications.edges.map(notification =>
-      parseNotification(notification.node)
+    // our router should prevent this from happening, but just in case
+    if (!currentUser) {
+      return <UpsellSignIn />;
+    }
+
+    if (
+      !notificationsQuery ||
+      notificationsQuery.error ||
+      notificationsQuery.loading
+    ) {
+      return <div>Error</div>;
+    }
+
+    const notifications =
+      currentUser &&
+      notificationsQuery.notifications.edges.map(notification =>
+        parseNotification(notification.node)
+      );
+
+    console.log('notifications are', notifications);
+
+    return (
+      <AppViewWrapper>
+        <Column type={'primary'}>
+          {notifications.map(notification => {
+            switch (notification.event) {
+              case 'MESSAGE_CREATED': {
+                return (
+                  <NewMessageNotification
+                    key={notification.id}
+                    notification={notification}
+                    currentUser={currentUser}
+                  />
+                );
+              }
+              case 'REACTION_CREATED': {
+                return (
+                  <NewReactionNotification
+                    key={notification.id}
+                    notification={notification}
+                    currentUser={currentUser}
+                  />
+                );
+              }
+            }
+          })}
+        </Column>
+      </AppViewWrapper>
     );
-
-  console.log(notifications);
-
-  // const { notifications: { edges } } = data;
-  return (
-    <AppViewWrapper>
-      <Column type={'primary'}>
-        {notifications.map(notification => {
-          switch (notification.event) {
-            case 'MESSAGE_CREATED': {
-              return (
-                <NewMessageNotification
-                  key={notification.id}
-                  notification={notification}
-                  currentUser={currentUser}
-                />
-              );
-            }
-            case 'REACTION_CREATED': {
-              return (
-                <NewReactionNotification
-                  key={notification.id}
-                  notification={notification}
-                  currentUser={currentUser}
-                />
-              );
-            }
-          }
-        })}
-      </Column>
-    </AppViewWrapper>
-  );
-};
-
-const Notifications = compose(
-  getNotifications,
-  displayLoadingNotifications,
-  pure
-)(NotificationsPure);
+  }
+}
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
 });
-export default connect(mapStateToProps)(Notifications);
+
+export default compose(
+  getNotifications,
+  displayLoadingNotifications,
+  connect(mapStateToProps),
+  pure
+)(NotificationsPure);
