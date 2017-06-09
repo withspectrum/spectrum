@@ -20,7 +20,10 @@ import Titlebar from '../../views/titlebar';
 import { displayLoadingNotifications } from '../../components/loading';
 import { FetchMoreButton } from '../../components/threadFeed/style';
 import { FlexCol } from '../../components/globals';
-import { getNotifications } from '../../api/notification';
+import {
+  getNotifications,
+  markNotificationsSeenMutation,
+} from '../../api/notification';
 import {
   UpsellSignIn,
   UpsellToReload,
@@ -40,6 +43,17 @@ class NotificationsPure extends Component {
     };
   }
 
+  markAllNotificationsSeen = () => {
+    this.props
+      .markAllNotificationsSeen()
+      .then(({ data: { markAllNotificationsSeen } }) => {
+        // notifs were marked as seen
+      })
+      .catch(err => {
+        // error
+      });
+  };
+
   fetchMore = () => {
     this.setState({
       isFetching: true,
@@ -47,6 +61,10 @@ class NotificationsPure extends Component {
 
     this.props.data.fetchMore();
   };
+
+  componentDidMount() {
+    this.markAllNotificationsSeen();
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) {
@@ -168,6 +186,7 @@ const mapStateToProps = state => ({
 export default compose(
   getNotifications,
   displayLoadingNotifications,
+  markNotificationsSeenMutation,
   connect(mapStateToProps),
   withInfiniteScroll,
   pure

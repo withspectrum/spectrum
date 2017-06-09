@@ -133,7 +133,7 @@ class Navbar extends Component {
         dmUnseenCount: 0,
       });
       this.props
-        .markDirectMessageNotificationsAsSeen()
+        .markDirectMessageNotificationsSeen()
         .then(({ data: { markAllUserDirectMessageNotificationsRead } }) => {
           // notifs were marked as seen
         })

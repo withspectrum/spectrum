@@ -11,6 +11,9 @@ import { connect } from 'react-redux';
 import {
   getCurrentUserDirectMessageThreads,
 } from '../../api/directMessageThread';
+import {
+  markDirectMessageNotificationsSeenMutation,
+} from '../../api/notification';
 import Icon from '../../components/icons';
 import { displayLoadingState } from './components/loading';
 import ThreadsList from './components/threadsList';
@@ -30,6 +33,21 @@ class DirectMessages extends Component {
     this.state = {
       activeThread: '',
     };
+  }
+
+  markDmNotificationsSeen = () => {
+    this.props
+      .markDirectMessageNotificationsSeen()
+      .then(({ data: { markAllUserDirectMessageNotificationsRead } }) => {
+        // notifs were marked as seen
+      })
+      .catch(err => {
+        // err
+      });
+  };
+
+  componentDidMount() {
+    this.markDmNotificationsSeen();
   }
 
   setActiveThread = id => {
@@ -180,6 +198,7 @@ class DirectMessages extends Component {
 const DirectMessagesWithQuery = compose(
   getCurrentUserDirectMessageThreads,
   displayLoadingState,
+  markDirectMessageNotificationsSeenMutation,
   pure
 )(DirectMessages);
 
