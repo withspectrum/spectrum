@@ -521,7 +521,7 @@ const getTopCommunities = (amount: number): Array<Object> => {
           return y.count - x.count;
         })
         .map(community => community.id)
-        .slice(0, 11);
+        .slice(0, 31);
 
       return db
         .table('communities')
