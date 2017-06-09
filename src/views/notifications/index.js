@@ -10,6 +10,7 @@ import { withInfiniteScroll } from '../../components/infiniteScroll';
 import { parseNotification } from './utils';
 import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
+import { NewChannelNotification } from './components/newChannelNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Titlebar from '../../views/titlebar';
@@ -110,6 +111,15 @@ class NotificationsPure extends Component {
                 case 'REACTION_CREATED': {
                   return (
                     <NewReactionNotification
+                      key={notification.id}
+                      notification={notification}
+                      currentUser={currentUser}
+                    />
+                  );
+                }
+                case 'CHANNEL_CREATED': {
+                  return (
+                    <NewChannelNotification
                       key={notification.id}
                       notification={notification}
                       currentUser={currentUser}

@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
@@ -21,24 +21,31 @@ import { MetaData } from './metaData';
 
 import { ProfileHeaderAction, ProfileCard } from './style';
 
-const ChannelWithData = props => {
-  const {
-    data: { channel, loading, error },
-    profileSize,
-    toggleChannelSubscription,
-    dispatch,
-    currentUser,
-  } = props;
+class ChannelWithData extends Component {
+  state: {
+    isLoading: boolean,
+  };
 
-  const communityOwner = channel.community.communityPermissions.isOwner;
-  const channelOwner = channel.channelPermissions.isOwner;
-  const member = channel.channelPermissions.isMember;
+  constructor() {
+    super();
 
-  const componentSize = profileSize || 'mini';
+    this.state = {
+      isLoading: false,
+    };
+  }
 
-  const toggleSubscription = (channelId: string) => {
-    toggleChannelSubscription({ channelId })
+  toggleSubscription = (channelId: string) => {
+    this.setState({
+      isLoading: true,
+    });
+
+    this.props
+      .toggleChannelSubscription({ channelId })
       .then(({ data: { toggleChannelSubscription } }) => {
+        this.setState({
+          isLoading: false,
+        });
+
         const isMember = toggleChannelSubscription.channelPermissions.isMember;
         const isPending =
           toggleChannelSubscription.channelPermissions.isPending;
@@ -59,107 +66,161 @@ const ChannelWithData = props => {
         }
 
         const type = isMember || isPending ? 'success' : 'neutral';
-        dispatch(addToastWithTimeout(type, str));
+        this.props.dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
-        dispatch(addToastWithTimeout('error', err.message));
+        this.setState({
+          isLoading: false,
+        });
+        this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
-  const communityLink = () => {
-    return (
-      <Link to={`/${channel.community.slug}`}>
-        {channel.community.name}
-      </Link>
-    );
-  };
+  render() {
+    const {
+      data: { channel, loading, error },
+      profileSize,
+      toggleChannelSubscription,
+      dispatch,
+      currentUser,
+    } = this.props;
+    const { isLoading } = this.state;
 
-  const returnAction = () => {
-    if (communityOwner || channelOwner) {
+    const communityOwner = channel.community.communityPermissions.isOwner;
+    const channelOwner = channel.channelPermissions.isOwner;
+    const member = channel.channelPermissions.isMember;
+
+    const componentSize = profileSize || 'mini';
+
+    const communityLink = () => {
       return (
-        <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
+        <Link to={`/${channel.community.slug}`}>
+          {channel.community.name}
+        </Link>
+      );
+    };
+
+    const returnAction = () => {
+      if (communityOwner || channelOwner) {
+        return (
+          <Link to={`/${channel.community.slug}/${channel.slug}/settings`}>
+            <ProfileHeaderAction
+              glyph="settings"
+              tipText={`Channel settings`}
+              tipLocation="top-left"
+            />
+          </Link>
+        );
+      } else if (member) {
+        return (
           <ProfileHeaderAction
-            glyph="settings"
-            tipText={`Channel settings`}
+            glyph="minus"
+            color="text.placeholder"
+            hoverColor="warn.default"
+            tipText="Leave channel"
             tipLocation="top-left"
+            onClick={() => this.toggleSubscription(channel.id)}
           />
-        </Link>
-      );
-    } else if (member) {
-      return (
-        <ProfileHeaderAction
-          glyph="minus"
-          color="text.placeholder"
-          hoverColor="warn.default"
-          tipText="Leave channel"
-          tipLocation="top-left"
-          onClick={() => toggleSubscription(channel.id)}
-        />
-      );
-    } else if (currentUser && !member) {
-      return (
-        <ProfileHeaderAction
-          glyph="plus-fill"
-          color="brand.alt"
-          hoverColor="brand.alt"
-          tipText="Join channel"
-          tipLocation="top-left"
-          onClick={() => toggleSubscription(channel.id)}
-        />
-      );
-    } else {
-      return (
-        <Link to={`/${channel.community.slug}/${channel.slug}`}>
-          <ProfileHeaderAction glyph="view-forward" />
-        </Link>
-      );
-    }
-  };
+        );
+      } else if (currentUser && !member) {
+        return (
+          <ProfileHeaderAction
+            glyph="plus-fill"
+            color="brand.alt"
+            hoverColor="brand.alt"
+            tipText="Join channel"
+            tipLocation="top-left"
+            onClick={() => this.toggleSubscription(channel.id)}
+          />
+        );
+      } else {
+        return (
+          <Link to={`/${channel.community.slug}/${channel.slug}`}>
+            <ProfileHeaderAction glyph="view-forward" />
+          </Link>
+        );
+      }
+    };
 
-  if (loading) {
-    return <LoadingListItem />;
-  } else if (error || !channel) {
-    return (
-      <NullCard
-        bg="error"
-        heading="Whoa there!"
-        copy="This is uncharted space. Let's get you safely back home, huh?"
-      >
-        <Link to={'/home'}>
-          <Button>Take me home</Button>
-        </Link>
-      </NullCard>
-    );
-  } else if (componentSize === 'full') {
-    return (
-      <ProfileCard>
-        <ChannelListItem
-          contents={channel}
-          withDescription={true}
-          meta={communityLink()}
+    if (loading) {
+      return <LoadingListItem />;
+    } else if (error || !channel) {
+      return (
+        <NullCard
+          bg="error"
+          heading="Whoa there!"
+          copy="This is uncharted space. Let's get you safely back home, huh?"
         >
-          {returnAction()}
-        </ChannelListItem>
-        <MetaData data={channel.metaData} />
-      </ProfileCard>
-    );
-  } else if (componentSize === 'mini') {
-    return (
-      <ProfileCard>
-        <Link to={`/${channel.community.slug}/${channel.slug}`}>
+          <Link to={'/home'}>
+            <Button>Take me home</Button>
+          </Link>
+        </NullCard>
+      );
+    } else if (componentSize === 'full') {
+      return (
+        <ProfileCard>
+          <ChannelListItem
+            contents={channel}
+            withDescription={true}
+            meta={communityLink()}
+          >
+            {returnAction()}
+          </ChannelListItem>
+          <MetaData data={channel.metaData} />
+        </ProfileCard>
+      );
+    } else if (componentSize === 'mini') {
+      return (
+        <ProfileCard>
+          <Link to={`/${channel.community.slug}/${channel.slug}`}>
+            <ChannelListItem
+              clickable
+              contents={channel}
+              withDescription={false}
+              meta={`${channel.community.name} / ${channel.name}`}
+            >
+              <Icon glyph="view-forward" />
+            </ChannelListItem>
+          </Link>
+        </ProfileCard>
+      );
+    } else if (componentSize === 'miniWithAction') {
+      return (
+        <ProfileCard>
           <ChannelListItem
             clickable
             contents={channel}
             withDescription={false}
-            meta={`${channel.community.name} / ${channel.name}`}
+            meta={`${channel.community.name}`}
           >
-            <Icon glyph="view-forward" />
+            {currentUser &&
+              member &&
+              <Button
+                loading={isLoading}
+                icon="checkmark"
+                gradientTheme="none"
+                color="text.placeholder"
+                hoverColor="text.placeholder"
+                onClick={() => this.toggleSubscription(channel.id)}
+              >
+                Joined
+              </Button>}
+            {currentUser &&
+              !member &&
+              <Button
+                loading={isLoading}
+                icon="plus-fill"
+                gradientTheme="success"
+                onClick={() => this.toggleSubscription(channel.id)}
+              >
+                Join
+              </Button>}
           </ChannelListItem>
-        </Link>
-      </ProfileCard>
-    );
+        </ProfileCard>
+      );
+    }
   }
-};
+}
 
 const Channel = compose(toggleChannelSubscriptionMutation, pure)(
   ChannelWithData

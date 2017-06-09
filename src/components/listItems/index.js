@@ -68,7 +68,9 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
               />}
         </ChannelTypeIndicator>
         <Col>
-          <Heading>{props.contents.name}</Heading>
+          <Link to={`/${props.contents.community.slug}/${props.contents.slug}`}>
+            <Heading>{props.contents.name}</Heading>
+          </Link>
           <Meta>{props.meta}</Meta>
         </Col>
         <ActionContainer className={'action'}>{props.children}</ActionContainer>

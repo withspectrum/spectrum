@@ -4,6 +4,7 @@ import { NotificationListContainer } from '../style';
 import { parseNotification } from '../utils';
 import { MiniNewMessageNotification } from './newMessageNotification';
 import { MiniNewReactionNotification } from './newReactionNotification';
+import { MiniNewChannelNotification } from './newChannelNotification';
 
 export const NotificationDropdownList = ({
   rawNotifications,
@@ -34,6 +35,16 @@ export const NotificationDropdownList = ({
           case 'REACTION_CREATED': {
             return (
               <MiniNewReactionNotification
+                key={notification.id}
+                notification={notification}
+                currentUser={currentUser}
+                history={history}
+              />
+            );
+          }
+          case 'CHANNEL_CREATED': {
+            return (
+              <MiniNewChannelNotification
                 key={notification.id}
                 notification={notification}
                 currentUser={currentUser}

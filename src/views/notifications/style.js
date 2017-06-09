@@ -41,7 +41,7 @@ export const Content = styled.div`
 `;
 
 export const NotificationListContainer = styled(FlexCol)`
-  flex: 0 1 480px;
+  max-height: 480px;
   overflow-y: scroll;
 `;
 
@@ -102,6 +102,7 @@ export const NotificationListRow = styled.div`
   flex-direction: column;
   position: relative;
   z-index: 2;
+  flex: 1 0 auto;
 
   &:last-of-type {
     border-bottom: none;
@@ -156,4 +157,15 @@ export const Timestamp = styled.span`
   font-size: 12px;
   font-weight: 500;
   color: ${props => props.theme.text.alt};
+`;
+
+export const AttachmentsWash = styled.div`
+  background: ${props => props.theme.bg.wash};
+  width: calc(100% + 32px);
+  margin-top: 8px;
+  margin-left: -16px;
+  padding: 16px;
+  margin-bottom: -16px;
+  border-radius: ${props => (props.mini ? '0' : '0 0 12px 12px')};
+  border-top: 2px solid ${props => props.theme.border.default};
 `;
