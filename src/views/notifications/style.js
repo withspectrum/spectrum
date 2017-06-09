@@ -109,7 +109,7 @@ export const NotificationListRow = styled.div`
   }
 
   &:hover {
-    background-color: ${({ theme }) => theme.bg.wash};
+    background-color: #FAFCFD;
     cursor: pointer;
   }
 `;
@@ -138,7 +138,7 @@ export const TextContent = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: ${props => props.theme.text.alt};
-  padding-bottom: 8px;
+  padding-bottom: 6px;
   pointer-events: ${props => (props.pointer ? 'all' : 'none')};
   line-height: 1.4;
 
@@ -153,19 +153,27 @@ export const BubbleContainer = styled.div`
   justify-content: ${props => (props.me ? 'flex-end' : 'flex-start')};
 `;
 
+export const BubbleGroupContainer = styled.div`
+  display: flex;
+  flex: 0 0 auto;
+  max-width: 70%;
+  align-self: ${props => (props.me ? 'flex-end' : 'flex-start')};
+  position: relative;
+`;
+
 export const Timestamp = styled.span`
   font-size: 12px;
   font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  color: ${props => props.theme.text.placeholder};
 `;
 
 export const AttachmentsWash = styled.div`
-  background: ${props => props.theme.bg.wash};
+  background: #FAFCFD;
   width: calc(100% + 32px);
   margin-top: 8px;
   margin-left: -16px;
   padding: 16px;
   margin-bottom: -16px;
   border-radius: ${props => (props.mini ? '0' : '0 0 12px 12px')};
-  border-top: 2px solid ${props => props.theme.border.default};
+  border-top: 2px solid ${props => props.theme.bg.wash};
 `;

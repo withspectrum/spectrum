@@ -11,24 +11,26 @@ import { ActorsRow } from './actorsRow';
 import { Bubble } from '../../../components/bubbles';
 import { convertTimestampToTime } from '../../../helpers/utils';
 import {
+  BubbleGroupContainer,
   MessagesWrapper,
   MessageWrapper,
 } from '../../../components/chatMessages/style';
 import {
-  BubbleGroupContainer,
   NotificationCard,
   TextContent,
   BubbleContainer,
   NotificationListRow,
   Timestamp,
-  AttachmentsWash,
 } from '../style';
 import {
   CardLink,
   CardContent,
 } from '../../../components/threadFeedCard/style';
 
-export const NewMessageNotification = ({ notification, currentUser }) => {
+export const NewUserInCommunityNotification = ({
+  notification,
+  currentUser,
+}) => {
   const actors = parseActors(notification.actors, currentUser);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
@@ -47,31 +49,12 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
           {actors.asString} {event} {context.asString}.
         </TextContent>
         <Timestamp>{date}</Timestamp>
-        <AttachmentsWash>
-          <BubbleContainer me={false}>
-            <BubbleGroupContainer me={false}>
-              <MessagesWrapper>
-                <MessageWrapper
-                  me={false}
-                  timestamp={convertTimestampToTime(message.timestamp)}
-                >
-                  <Bubble
-                    me={false}
-                    pending={false}
-                    type={'thread'}
-                    message={message.content}
-                  />
-                </MessageWrapper>
-              </MessagesWrapper>
-            </BubbleGroupContainer>
-          </BubbleContainer>
-        </AttachmentsWash>
       </CardContent>
     </NotificationCard>
   );
 };
 
-export const MiniNewMessageNotification = ({
+export const MiniNewUserInCommunityNotification = ({
   notification,
   currentUser,
   history,
@@ -88,7 +71,7 @@ export const MiniNewMessageNotification = ({
       <CardLink to={`/thread/${notification.context.id}`} />
       <CardContent>
         <ActorsRow actors={actors.asObjects} />
-        <TextContent pointer={false}>
+        <TextContent pointer={true}>
           {actors.asString} {event} {context.asString}.
         </TextContent>
         <Timestamp>{date}</Timestamp>

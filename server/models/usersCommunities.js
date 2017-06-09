@@ -2,6 +2,9 @@
 const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
+// $FlowFixMe
+const Queue = require('bull');
+const communityNotificationQueue = new Queue('community notification');
 
 /*
 ===========================================================
@@ -58,7 +61,14 @@ const createMemberInCommunity = (
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => {
+      communityNotificationQueue.add({
+        communityId,
+        userId,
+      });
+
+      return result.changes[0].new_val;
+    });
 };
 
 // removes a single member from a community. will be invoked if a user leaves

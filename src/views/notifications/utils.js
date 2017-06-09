@@ -131,6 +131,9 @@ export const parseEvent = event => {
     case 'CHANNEL_CREATED': {
       return <span>created a channel</span>;
     }
+    case 'USER_JOINED_COMMUNITY': {
+      return <span>joined the</span>;
+    }
     default: {
       console.log('Not a valid event type');
     }
@@ -153,7 +156,6 @@ const threadToString = context => {
       <Link to={`/thread/${context.payload.id}`}>
         {context.payload.content.title}
       </Link>
-      .
     </span>
   );
 };
@@ -163,7 +165,6 @@ const messageToString = context => {
     <span>
       {' '}
       <Link to={`/thread/${context.payload.threadId}`}>on your message</Link>
-      .
     </span>
   );
 };
@@ -172,11 +173,9 @@ const communityToString = context => {
   return (
     <span>
       {' '}
-      in the
-      {' '}
       <Link to={`/${context.payload.slug}`}>{context.payload.name}</Link>
       {' '}
-      community.
+      community
     </span>
   );
 };

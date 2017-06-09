@@ -48,14 +48,13 @@ export const NewChannelNotification = ({ notification, currentUser }) => {
   return (
     <NotificationCard>
       <TextContent pointer={true}>
-        {newChannelCount} created {context.asString}
+        {newChannelCount} created in the {context.asString}.
       </TextContent>
+      <Timestamp>{date}</Timestamp>
       <AttachmentsWash>
         {notification.entities.map(channel => {
           return (
-            <NewChannel key={channel.payload.id} id={channel.payload.id}>
-              Join
-            </NewChannel>
+            <NewChannel key={channel.payload.id} id={channel.payload.id} />
           );
         })}
       </AttachmentsWash>
@@ -78,7 +77,7 @@ export const MiniNewChannelNotification = ({
   return (
     <NotificationListRow>
       <TextContent pointer={false}>
-        {newChannelCount} created {context.asString}
+        {newChannelCount} created in the {context.asString}
       </TextContent>
       <AttachmentsWash mini>
         {notification.entities.map(channel => {

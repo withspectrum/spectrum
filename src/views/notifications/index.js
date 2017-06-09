@@ -11,6 +11,9 @@ import { parseNotification } from './utils';
 import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
 import { NewChannelNotification } from './components/newChannelNotification';
+import {
+  NewUserInCommunityNotification,
+} from './components/newUserInCommunityNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Titlebar from '../../views/titlebar';
@@ -120,6 +123,15 @@ class NotificationsPure extends Component {
                 case 'CHANNEL_CREATED': {
                   return (
                     <NewChannelNotification
+                      key={notification.id}
+                      notification={notification}
+                      currentUser={currentUser}
+                    />
+                  );
+                }
+                case 'USER_JOINED_COMMUNITY': {
+                  return (
+                    <NewUserInCommunityNotification
                       key={notification.id}
                       notification={notification}
                       currentUser={currentUser}
