@@ -25,29 +25,51 @@ export const getCommunity = graphql(
   }
 );
 
-// export const getTopChannels = graphql(
-//   gql`
-// 		{
-// 		  topChannels {
-//         ...channelInfo
-//         community {
-//           ...communityInfo
-//         }
-//         metaData {
-//           members
-//         }
-//       }
-//     }
-//     ${channelInfoFragment}
-//     ${communityInfoFragment}
-// 	`,
-//   {
-//     props: ({ data: { error, loading, topChannels } }) => ({
-//       data: {
-//         error,
-//         loading,
-//         topChannels,
-//       },
-//     }),
-//   }
-// );
+/*
+  Gets top communities for the onboarding flow.
+*/
+export const getTopCommunities = graphql(
+  gql`
+		{
+		  topCommunities {
+        ...communityInfo
+        metaData {
+          members
+        }
+      }
+    }
+    ${communityInfoFragment}
+	`,
+  {
+    props: ({ data: { error, loading, topCommunities } }) => ({
+      data: {
+        error,
+        loading,
+        topCommunities,
+      },
+    }),
+  }
+);
+
+export const getRecentCommunities = graphql(
+  gql`
+		{
+		  recentCommunities {
+        ...communityInfo
+        metaData {
+          members
+        }
+      }
+    }
+    ${communityInfoFragment}
+	`,
+  {
+    props: ({ data: { error, loading, recentCommunities } }) => ({
+      data: {
+        error,
+        loading,
+        recentCommunities,
+      },
+    }),
+  }
+);

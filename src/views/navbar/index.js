@@ -18,7 +18,6 @@ import {
   Container,
   Section,
   Nav,
-  Spacer,
   LogoLink,
   Logo,
   IconDrop,

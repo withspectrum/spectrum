@@ -12,7 +12,7 @@ import {
   Shadow,
   hexa,
 } from '../../components/globals';
-
+import { StyledCard } from '../../components/listItems/style';
 import ScrollRow from '../../components/scrollRow';
 
 import { Button } from '../../components/buttons';
@@ -62,13 +62,34 @@ export const ViewSubtitle = styled(H2)`
   }
 `;
 
+export const ListCard = styled(StyledCard)`
+@media (max-width: 768px) {
+  display: flex;
+  margin-bottom: 32px;
+}
+`;
+
 export const Section = styled(FlexCol)`
   padding: 32px;
+  padding-top: 0;
   display: flex;
+  flex: none;
   justify-content: space-between;
   position: relative;
   z-index: 1;
   align-self: stretch;
+
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+`;
+
+export const SectionWrapper = styled(FlexRow)`
+  flex: none;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export const ViewHeader = styled(Section)`
@@ -85,15 +106,21 @@ export const ViewHeader = styled(Section)`
 
 export const SectionWithGradientTransition = styled(Section)`
   background-image: ${({ theme }) => `linear-gradient(${theme.bg.default}, ${theme.bg.wash})`};
+
+  @media (max-width: 768px) {
+    padding: 32px;
+  }
 `;
 
 export const SectionTitle = styled(H2)`
   color: ${({ theme }) => theme.text.default};
-  margin-left: 48px;
-
+  margin-left: 16px;
+  font-size: 32px;
+  margin-bottom: 16px;
+  font-weight: 800;
 
   @media (max-width: 768px) {
-    margin-left: 16px;
+    font-size: 24px;
   }
 `;
 

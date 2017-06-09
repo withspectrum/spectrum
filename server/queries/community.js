@@ -5,6 +5,7 @@
 const {
   getCommunityMetaData,
   getTopCommunities,
+  getRecentCommunities,
 } = require('../models/community');
 const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
 const { getThreadsByChannels } = require('../models/thread');
@@ -33,6 +34,8 @@ module.exports = {
     },
     topCommunities: (_: any, { amount = 30 }: { amount: number }) =>
       getTopCommunities(amount),
+    recentCommunities: (_: any, { amount = 10 }: { amount: number }) =>
+      getRecentCommunities(),
   },
   Community: {
     communityPermissions: (

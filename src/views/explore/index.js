@@ -18,10 +18,13 @@ import generateMetaInfo from '../../../server/shared/generate-meta-info';
 import Titlebar from '../titlebar';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
+import { Column } from '../../components/column';
 import { Loading } from '../../components/loading';
 import { GoopyThree } from '../../views/homepage/style';
-import { FlexCol } from '../../components/globals';
+import { FlexCol, FlexRow } from '../../components/globals';
 import { FeaturedCommunity } from '../../components/curation';
+import TopCommunityList from './components/topCommunities';
+import RecentCommunityList from './components/recentCommunities';
 import {
   // ScrollBody,
   ViewContainer,
@@ -29,6 +32,7 @@ import {
   ViewTitle,
   ViewSubtitle,
   Section,
+  SectionWrapper,
   SectionWithGradientTransition,
   SectionTitle,
   SectionSubtitle,
@@ -71,21 +75,33 @@ const ExplorePure = props => {
   const { title, description } = generateMetaInfo({
     type: 'explore',
   });
-  const featureSlug = 'ruecker-group';
+  const featureSlug = 'vectors';
   const featureNotes =
-    'Ruecker Group is p chill, generally. So we featured them...';
+    'Vectors is a project focused on exposing people to more perspectives. Although primarily tech-focused, the goals of this conference are very much inline with our goals here on Spectrum - encouraging diversity and constructive conversation in a forum where people can feel safe.';
 
   return (
     <AppViewWrapper>
       <ViewContainer>
         <Head title={title} description={description} />
-        <Titlebar title={'Explore'} />
+        <Titlebar title={'Explore'} noComposer />
         <ViewHeader>
           <Feature slug={featureSlug} notes={featureNotes} />
           <Constellations />
           <GoopyThree />
         </ViewHeader>
         <SectionWithGradientTransition />
+        <Section>
+          <SectionWrapper>
+            <Column type="primary">
+              <SectionTitle>Most popular communities</SectionTitle>
+              <TopCommunityList withMeta={true} withDescription={false} />
+            </Column>
+            <Column type="primary">
+              <SectionTitle>Most recent communities</SectionTitle>
+              <RecentCommunityList withMeta={true} withDescription={false} />
+            </Column>
+          </SectionWrapper>
+        </Section>
       </ViewContainer>
     </AppViewWrapper>
   );

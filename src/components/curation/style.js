@@ -142,16 +142,19 @@ export const FeaturePresentation = styled(FlexCol)`
 
 export const FeatureDescription = styled(FlexCol)`
   margin-left: 24px;
-  margin-top: 16px;
   align-items: flex-start;
   @media (max-width: 768px) {
     margin-left: 0;
+    margin-top: 16px;
   }
 `;
 
 export const Description = styled.p`
   max-width: 480px;
   color: ${({ theme }) => theme.text.reverse};
+  @media (max-width: 768px) {
+    margin-top: 8px;
+  }
 `;
 
 export const Tag = styled.span`
