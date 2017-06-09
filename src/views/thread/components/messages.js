@@ -32,6 +32,8 @@ class MessagesWithData extends Component {
 
   componentDidMount() {
     const { currentUser, participants } = this.props;
+    if (!currentUser || !currentUser.id) return;
+
     const isParticipant = participants.some(user => user === currentUser.id);
     if (isParticipant) {
       this.props.forceScrollToBottom();
@@ -64,7 +66,7 @@ class MessagesWithData extends Component {
       return <div>Error!</div>;
     }
 
-    if (!data.thread && !data.thread.messageConnection) {
+    if (!data.thread || !data.thread.messageConnection) {
       return <div>No messages yet!</div>;
     }
 
