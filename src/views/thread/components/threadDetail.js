@@ -80,14 +80,18 @@ class ThreadDetailPure extends Component {
       data: JSON.parse(rawLinkPreview.data),
     };
 
-    const body = thread.type === 'SLATE'
+    const viewBody = thread.type === 'SLATE'
       ? toPlainText(toState(JSON.parse(thread.content.body)))
+      : thread.content.body;
+
+    const editBody = thread.type === 'SLATE'
+      ? toState(JSON.parse(thread.content.body))
       : thread.content.body;
 
     this.state = {
       isEditing: false,
-      viewBody: body,
-      editBody: body,
+      viewBody,
+      editBody,
       title: thread.content.title,
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl: thread.attachments.length > 0
@@ -402,6 +406,7 @@ class ThreadDetailPure extends Component {
                     />
                   </FlyoutRow>}
                 {thread.isCreator &&
+                  thread.type === 'SLATE' &&
                   <FlyoutRow>
                     <IconButton
                       glyph="edit"
