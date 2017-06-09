@@ -11,7 +11,9 @@ import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
+import Titlebar from '../../views/titlebar';
 import { displayLoadingNotifications } from '../../components/loading';
+import { FlexCol } from '../../components/globals';
 import { getNotifications } from '../../api/notification';
 import {
   UpsellSignIn,
@@ -62,35 +64,38 @@ class NotificationsPure extends Component {
     }
 
     return (
-      <AppViewWrapper>
-        <Column type={'primary'}>
-          {notifications.map(notification => {
-            switch (notification.event) {
-              case 'MESSAGE_CREATED': {
-                return (
-                  <NewMessageNotification
-                    key={notification.id}
-                    notification={notification}
-                    currentUser={currentUser}
-                  />
-                );
+      <FlexCol style={{ flex: '1 1 auto' }}>
+        <Titlebar title={'Notifications'} provideBack={false} noComposer />
+        <AppViewWrapper>
+          <Column type={'primary'}>
+            {notifications.map(notification => {
+              switch (notification.event) {
+                case 'MESSAGE_CREATED': {
+                  return (
+                    <NewMessageNotification
+                      key={notification.id}
+                      notification={notification}
+                      currentUser={currentUser}
+                    />
+                  );
+                }
+                case 'REACTION_CREATED': {
+                  return (
+                    <NewReactionNotification
+                      key={notification.id}
+                      notification={notification}
+                      currentUser={currentUser}
+                    />
+                  );
+                }
+                default: {
+                  return null;
+                }
               }
-              case 'REACTION_CREATED': {
-                return (
-                  <NewReactionNotification
-                    key={notification.id}
-                    notification={notification}
-                    currentUser={currentUser}
-                  />
-                );
-              }
-              default: {
-                return null;
-              }
-            }
-          })}
-        </Column>
-      </AppViewWrapper>
+            })}
+          </Column>
+        </AppViewWrapper>
+      </FlexCol>
     );
   }
 }
