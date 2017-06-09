@@ -1,84 +1,37 @@
 //@flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import {
   communityInfoFragment,
 } from '../../api/fragments/community/communityInfo';
 
-export const getUserSubscriptions = graphql(
+export const getCommunity = graphql(
   gql`
-    query userSubscriptions{
-			user: currentUser {
-        communityConnection {
-          pageInfo {
-            hasNextPage
-            hasPreviousPage
-          }
-          edges {
-            node {
-              ...communityInfo
-            }
-          }
-        }
-        channelConnection {
-          pageInfo {
-            hasNextPage
-            hasPreviousPage
-          }
-          edges {
-            node {
-              ...channelInfo
-            }
-          }
-        }
+		query getCommunity($slug: String) {
+			community(slug: $slug) {
+        ...communityInfo
       }
 		}
-    ${channelInfoFragment}
-    ${communityInfoFragment}
-	`
-);
-
-export const getChannel = graphql(
-  gql`
-		query channel($id: ID!) {
-			channel(id: $id) {
-        ...channelInfo
-        community {
-          ...communityInfo
-        }
-        metaData {
-          members
-        }
-      }
-    }
-    ${channelInfoFragment}
     ${communityInfoFragment}
 	`,
   {
-    options: ({ id }) => ({
-      variables: {
-        id,
-      },
-    }),
-    props: ({
-      data: { fetchMore, error, loading, channel },
-      ownProps: { ids },
-    }) => ({
+    props: ({ data: { error, loading, community } }) => ({
       data: {
         error,
         loading,
-        channel,
-        ids,
+        community,
       },
     }),
   }
 );
 
-export const getCommunity = graphql(
+/*
+  Gets top communities for the onboarding flow.
+*/
+export const getTopCommunities = graphql(
   gql`
-		query community($id: ID!) {
-			community(id: $id) {
+		{
+		  topCommunities {
         ...communityInfo
         metaData {
           members
@@ -88,47 +41,34 @@ export const getCommunity = graphql(
     ${communityInfoFragment}
 	`,
   {
-    options: ({ id }) => ({
-      variables: {
-        id,
-      },
-    }),
-    props: ({
-      data: { fetchMore, error, loading, community },
-      ownProps: { ids },
-    }) => ({
+    props: ({ data: { error, loading, topCommunities } }) => ({
       data: {
         error,
         loading,
-        community,
-        ids,
+        topCommunities,
       },
     }),
   }
 );
 
-export const getTopChannels = graphql(
+export const getRecentCommunities = graphql(
   gql`
 		{
-		  topChannels {
-        ...channelInfo
-        community {
-          ...communityInfo
-        }
+		  recentCommunities {
+        ...communityInfo
         metaData {
           members
         }
       }
     }
-    ${channelInfoFragment}
     ${communityInfoFragment}
 	`,
   {
-    props: ({ data: { error, loading, topChannels } }) => ({
+    props: ({ data: { error, loading, recentCommunities } }) => ({
       data: {
         error,
         loading,
-        topChannels,
+        recentCommunities,
       },
     }),
   }

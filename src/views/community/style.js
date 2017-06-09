@@ -16,6 +16,7 @@ ${/* See class .flexy below - there's a hack on this element bc reasons 🙄 */ 
 
     @media (max-width: 768px) {
       top: auto;
+      flex: none;
     }
   }
 

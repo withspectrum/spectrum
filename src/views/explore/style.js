@@ -12,14 +12,14 @@ import {
   Shadow,
   hexa,
 } from '../../components/globals';
-
+import { StyledCard } from '../../components/listItems/style';
 import ScrollRow from '../../components/scrollRow';
 
 import { Button } from '../../components/buttons';
 // import ScrollRow from '../../../shared/ScrollRow';
 
 export const ViewContainer = styled(FlexCol)`
-  flex: 1 1 auto;
+  flex: auto;
   align-self: stretch;
   overflow: hidden;
   overflow-y: scroll;
@@ -62,39 +62,66 @@ export const ViewSubtitle = styled(H2)`
   }
 `;
 
-export const Section = styled(FlexCol)`
-  padding-top: 32px;
+export const ListCard = styled(StyledCard)`
+@media (max-width: 768px) {
   display: flex;
+  margin-bottom: 32px;
+}
+`;
+
+export const Section = styled(FlexCol)`
+  padding: 32px;
+  padding-top: 0;
+  display: flex;
+  flex: none;
   justify-content: space-between;
   position: relative;
   z-index: 1;
+  align-self: stretch;
 
-  &:nth-of-type(2) {
-    background-color: ${({ theme }) => theme.space.dark};
-    background-image: ${({ theme }) => `linear-gradient( ${theme.bg.default}, ${theme.bg.wash} )`};
+  @media (max-width: 768px) {
+    padding: 0;
+  }
+`;
+
+export const SectionWrapper = styled(FlexRow)`
+  flex: none;
+  align-items: flex-start;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
   }
 `;
 
 export const ViewHeader = styled(Section)`
-  flex: 0 0 320px;
-  padding-bottom: 120px;
+  flex: none;
+  padding: 120px 0 160px 0;
   justify-content: flex-end;
   background-color: ${({ theme }) => theme.space.dark};
-  background-image: ${({ theme }) => `linear-gradient( ${theme.space.dark}, ${theme.brand.alt} )`};
+  background-image: ${({ theme }) => `radial-gradient(farthest-corner at 50% 100%, ${hexa(theme.brand.alt, 0.75)}, ${theme.space.dark} )`};
 
   @media (max-width: 768px) {
-    flex: 0 0 240px;
-    padding-bottom: 48px;
+    padding: 48px 24px 96px 24px;
+  }
+`;
+
+export const SectionWithGradientTransition = styled(Section)`
+  background-image: ${({ theme }) => `linear-gradient(${theme.bg.default}, ${theme.bg.wash})`};
+
+  @media (max-width: 768px) {
+    padding: 32px;
   }
 `;
 
 export const SectionTitle = styled(H2)`
   color: ${({ theme }) => theme.text.default};
-  margin-left: 48px;
-
+  margin-left: 16px;
+  font-size: 32px;
+  margin-bottom: 16px;
+  font-weight: 800;
 
   @media (max-width: 768px) {
-    margin-left: 16px;
+    font-size: 24px;
   }
 `;
 
@@ -195,6 +222,7 @@ export const Constellations = styled.div`
 	bottom: 0;
 	left: 0;
 	right: 0;
+  pointer-events: none;
 `;
 
 export const ErrorState = styled(FlexCol)`

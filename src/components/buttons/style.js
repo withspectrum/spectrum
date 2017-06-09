@@ -56,7 +56,7 @@ export const StyledSolidButton = styled.button`
   }
 
   &:active {
-    box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.low} ${props.theme.text.placeholder}`)};
+    box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.low} ${hexa(props.theme.bg.reverse, 0.15)}`)};
   }
 `;
 
