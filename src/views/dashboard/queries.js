@@ -92,7 +92,6 @@ const threadsQueryOptions = {
       }
       return prev;
     },
-    fetchPolicy: 'cache-and-network',
   }),
 };
 
