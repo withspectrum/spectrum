@@ -139,6 +139,7 @@ export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
     variables: {
       id,
     },
+    fetchPolicy: 'cache-and-network',
   }),
 };
 

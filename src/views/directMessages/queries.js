@@ -31,6 +31,7 @@ export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
     variables: {
       id,
     },
+    fetchPolicy: 'cache-and-network',
   }),
   props: ({
     data: { error, loading, directMessageThread, subscribeToMore },

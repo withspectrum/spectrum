@@ -92,6 +92,7 @@ const threadsQueryOptions = {
       }
       return prev;
     },
+    fetchPolicy: 'cache-and-network',
   }),
 };
 
@@ -124,7 +125,8 @@ export const getCurrentUserProfile = graphql(
 		}
     ${userInfoFragment}
     ${userCommunitiesFragment}
-	`
+	`,
+  { options: { fetchPolicy: 'cache-and-network' } }
 );
 
 /*
@@ -150,5 +152,6 @@ export const getTopCommunities = graphql(
         topCommunities,
       },
     }),
+    options: { fetchPolicy: 'cache-and-network' },
   }
 );
