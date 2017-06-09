@@ -86,6 +86,7 @@ export const Section = styled(FlexCol)`
 
 export const SectionWrapper = styled(FlexRow)`
   flex: none;
+  align-items: flex-start;
 
   @media (max-width: 768px) {
     flex-direction: column;

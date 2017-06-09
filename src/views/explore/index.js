@@ -77,7 +77,7 @@ const ExplorePure = props => {
   });
   const featureSlug = 'vectors';
   const featureNotes =
-    'Vectors is a project focused on exposing people to more perspectives. Although primarily tech-focused, the goals of this conference are very much inline with our goals here on Spectrum - encouraging diversity and constructive conversation in a forum where people can feel safe.';
+    'Vectors is a project focused on exposing people to more perspectives. Although primarily tech-oriented, the goals of this conference are very much inline with our goals here on Spectrum - encouraging diversity and constructive conversation in a forum where people can feel safe.';
 
   return (
     <AppViewWrapper>
