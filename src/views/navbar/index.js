@@ -236,8 +236,9 @@ class Navbar extends Component {
                 <LabelForTab>Notifications</LabelForTab>
               </IconLink>
               <NotificationDropdown
-                notifications={notifications}
+                rawNotifications={notifications}
                 markAllRead={this.markAllNotificationsRead}
+                currentUser={currentUser}
               />
             </IconDrop>
 

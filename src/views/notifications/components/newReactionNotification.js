@@ -2,7 +2,13 @@
 import React from 'react';
 import { parseActors, parseEvent, parseNotificationDate } from '../utils';
 import { ActorsRow } from './actorsRow';
-import { NotificationCard, TextContent, BubbleContainer } from '../style';
+import {
+  NotificationCard,
+  TextContent,
+  BubbleContainer,
+  Timestamp,
+  NotificationListRow,
+} from '../style';
 import Icon from '../../../components/icons';
 import { ReactionWrapper } from '../../../components/reaction/style';
 import { convertTimestampToTime } from '../../../helpers/utils';
@@ -51,5 +57,28 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
         </BubbleGroupContainer>
       </BubbleContainer>
     </NotificationCard>
+  );
+};
+
+export const MiniNewReactionNotification = ({
+  notification,
+  currentUser,
+  history,
+}) => {
+  const actors = parseActors(notification.actors, currentUser);
+  const event = parseEvent(notification.event);
+  const date = parseNotificationDate(notification.modifiedAt);
+
+  return (
+    <NotificationListRow
+      onClick={() =>
+        history.push(`/thread/${notification.context.payload.threadId}`)}
+    >
+      <ActorsRow actors={actors.asObjects} />
+      <TextContent>
+        {actors.asString} {event}
+      </TextContent>
+      <Timestamp>{date}</Timestamp>
+    </NotificationListRow>
   );
 };

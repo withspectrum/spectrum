@@ -15,7 +15,13 @@ import {
   MessagesWrapper,
   MessageWrapper,
 } from '../../../components/chatMessages/style';
-import { NotificationCard, TextContent, BubbleContainer } from '../style';
+import {
+  NotificationCard,
+  TextContent,
+  BubbleContainer,
+  NotificationListRow,
+  Timestamp,
+} from '../style';
 
 export const NewMessageNotification = ({ notification, currentUser }) => {
   const actors = parseActors(notification.actors, currentUser);
@@ -28,7 +34,7 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
   );
 
   return (
-    <NotificationCard key={notification.id}>
+    <NotificationCard>
       <ActorsRow actors={actors.asObjects} />
       <TextContent>
         {actors.asString} {event} {date} {context.asString}
@@ -66,5 +72,28 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
         </BubbleGroupContainer>
       </BubbleContainer>
     </NotificationCard>
+  );
+};
+
+export const MiniNewMessageNotification = ({
+  notification,
+  currentUser,
+  history,
+}) => {
+  const actors = parseActors(notification.actors, currentUser);
+  const event = parseEvent(notification.event);
+  const date = parseNotificationDate(notification.modifiedAt);
+  const context = parseContext(notification.context);
+
+  return (
+    <NotificationListRow
+      onClick={() => history.push(`/thread/${notification.context.id}`)}
+    >
+      <ActorsRow actors={actors.asObjects} />
+      <TextContent>
+        {actors.asString} {event} {context.asString}
+      </TextContent>
+      <Timestamp>{date}</Timestamp>
+    </NotificationListRow>
   );
 };

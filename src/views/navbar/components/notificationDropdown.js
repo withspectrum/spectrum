@@ -4,10 +4,15 @@ import React from 'react';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
+// $FlowFixMe
+import { withRouter } from 'react-router';
 import Dropdown from '../../../components/dropdown';
 import { NullState } from '../../../components/upsell';
 import { Button, OutlineButton } from '../../../components/buttons';
-import { DropdownHeader, DropdownFooter, Notification } from '../style';
+import { DropdownHeader, DropdownFooter } from '../style';
+import {
+  NotificationDropdownList,
+} from '../../../views/notifications/components/notificationDropdownList';
 
 const NullNotifications = () => (
   <NullState
@@ -17,43 +22,29 @@ const NullNotifications = () => (
   />
 );
 
-const NotificationList = ({ notifications }) => {
-  return (
-    <div>
-      {notifications &&
-        notifications.length > 0 &&
-        notifications.map(notification => {
-          return (
-            <Notification key={notification.id}>
-              <div>
-                notification with seen state
-                {' '}
-                {notification.isSeen ? 'seen' : 'unseen'}
-              </div>
-              <div>
-                notification with read state
-                {' '}
-                {notification.isRead ? 'read' : 'unread'}
-              </div>
-            </Notification>
-          );
-        })}
-    </div>
-  );
-};
-
-const NotificationDropdownPure = ({ notifications, markAllRead }) => {
+const NotificationDropdownPure = ({
+  rawNotifications,
+  markAllRead,
+  currentUser,
+  history,
+}) => {
   return (
     <Dropdown>
       <DropdownHeader>
         My Notifications
       </DropdownHeader>
-      {!notifications || (notifications.length === 0 && <NullNotifications />)}
-      {notifications && <NotificationList notifications={notifications} />}
+      {!rawNotifications ||
+        (rawNotifications.length === 0 && <NullNotifications />)}
+      {rawNotifications &&
+        <NotificationDropdownList
+          rawNotifications={rawNotifications}
+          currentUser={currentUser}
+          history={history}
+        />}
 
       <DropdownFooter>
-        {notifications &&
-          notifications.length > 0 &&
+        {rawNotifications &&
+          rawNotifications.length > 0 &&
           <OutlineButton onClick={() => markAllRead()}>
             Mark All Read
           </OutlineButton>}
@@ -64,4 +55,6 @@ const NotificationDropdownPure = ({ notifications, markAllRead }) => {
   );
 };
 
-export const NotificationDropdown = compose(pure)(NotificationDropdownPure);
+export const NotificationDropdown = compose(withRouter, pure)(
+  NotificationDropdownPure
+);

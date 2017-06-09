@@ -1,4 +1,8 @@
+// @flow
+// $FlowFixMe
 import styled from 'styled-components';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 import {
   FlexRow,
   FlexCol,
@@ -90,33 +94,29 @@ export const ChatMessage = styled.p`
   }
 `;
 
-export const NotificationListRow = styled(FlexRow)`
-  padding: 16px;
+export const NotificationListRow = styled.div`
+  padding: 12px 16px 16px;
   border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
-  align-items: center;
+  justify-content: center;
+  align-items: flex-start;
   color: ${({ theme }) => theme.text.default};
+  display: flex;
+  flex-direction: column;
 
-  b {
-    font-weight: 700;
-  }
-
-  div {
-    color: ${({ theme }) => theme.success.default};
+  &:last-of-type {
+    border-bottom: none;
   }
 
   &:hover {
-    background-color: ${({ theme }) => theme.brand.alt};
-    color: ${({ theme }) => theme.text.reverse};
-
-    div {
-      color: inherit;
-    }
+    background-color: ${({ theme }) => theme.bg.wash};
+    cursor: pointer;
   }
 `;
 
 export const ActorPhotosContainer = styled.ul`
   list-style-type: none;
   margin: 0;
+  margin-bottom: 4px;
 `;
 
 export const ActorPhotoItem = styled.li`
@@ -137,7 +137,6 @@ export const TextContent = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: ${props => props.theme.text.alt};
-  border-bottom: 2px solid rgba(0,0,0,0.05);
   padding-bottom: 8px;
 
   a {
@@ -149,4 +148,10 @@ export const TextContent = styled.div`
 export const BubbleContainer = styled.div`
   display: flex;
   justify-content: ${props => (props.me ? 'flex-end' : 'flex-start')};
+`;
+
+export const Timestamp = styled.span`
+  font-size: 12px;
+  font-weight: 500;
+  color: ${props => props.theme.text.alt};
 `;
