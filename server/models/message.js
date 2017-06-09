@@ -79,6 +79,10 @@ const getMessageCount = (threadId: string): Promise<number> => {
     .run();
 };
 
+const getFullMessageCount = () => {
+  return db.table('messages').count().run();
+};
+
 module.exports = {
   getMessage,
   getMessages,
@@ -87,4 +91,5 @@ module.exports = {
   storeMessage,
   listenToNewMessages,
   getMessageCount,
+  getFullMessageCount,
 };

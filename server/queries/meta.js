@@ -4,6 +4,7 @@ import { getUserCount } from '../models/user';
 import { getCommunityCount } from '../models/community';
 import { getChannelCount } from '../models/channel';
 import { getThreadCount } from '../models/thread';
+import { getFullMessageCount } from '../models/message';
 import { isAdmin } from '../utils/permissions';
 
 module.exports = {
@@ -26,6 +27,10 @@ module.exports = {
     threadCount: (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
       return getThreadCount();
+    },
+    messageCount: (_: any, __: any, { user }: GraphQLContext) => {
+      if (!isAdmin(user.id)) return null;
+      return getFullMessageCount();
     },
   },
 };

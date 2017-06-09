@@ -4,6 +4,7 @@ const Meta = /* GraphQL */ `
     communityCount: Int
     channelCount: Int
     threadCount: Int
+    messageCount: Int
   }
 
   extend type Query {

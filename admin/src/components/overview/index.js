@@ -14,10 +14,17 @@ import {
 import { overviewQuery } from '../../api/queries';
 import { displayLoadingState } from '../loading';
 
+const IS_PROD = process.env.NODE_ENV === 'production';
+const LOGIN_URL = IS_PROD
+  ? 'https://spectrum.chat/api/auth/twitter'
+  : 'http://localhost:3001/auth/twitter';
+
 const OverviewNumbers = ({ data }) => {
   if (data.loading) return <p>Loading...</p>;
-  if (data.error || data.meta === null)
-    window.location.href = 'https://spectrum.chat';
+  if (data.error || data.meta === null || data.meta.userCount === null) {
+    if (IS_PROD) window.location.href = 'https://spectrum.chat';
+    return <a href={LOGIN_URL}>Login</a>;
+  }
 
   const numberWithCommas = num =>
     num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
