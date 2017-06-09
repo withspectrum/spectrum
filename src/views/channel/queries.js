@@ -73,6 +73,7 @@ const threadsQueryOptions = {
       channelSlug: channelSlug,
       communitySlug: communitySlug,
     },
+    fetchPolicy: 'cache-and-network',
     reducer: (prev, action, variables) => {
       /*
         Every apollo action triggers internal store updates via reducers.
@@ -166,6 +167,7 @@ const profileQueryOptions = {
       channelSlug,
       communitySlug,
     },
+    fetchPolicy: 'cache-and-network',
   }),
 };
 

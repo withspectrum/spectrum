@@ -166,7 +166,8 @@ const GET_CURRENT_USER_RECURRING_PAYMENTS_QUERY = gql`
 `;
 
 export const getCurrentUserRecurringPayments = graphql(
-  GET_CURRENT_USER_RECURRING_PAYMENTS_QUERY
+  GET_CURRENT_USER_RECURRING_PAYMENTS_QUERY,
+  { options: { fetchPolicy: 'network-only' } }
 );
 
 /*
