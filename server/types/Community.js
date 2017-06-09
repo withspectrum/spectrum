@@ -74,6 +74,7 @@ const Community = /* GraphQL */ `
 	extend type Query {
 		community(id: ID, slug: String): Community
 		topCommunities(amount: Int = 10): [Community!]
+		recentCommunities: [Community!]
 	}
 
 	extend type Mutation {

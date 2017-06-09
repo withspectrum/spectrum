@@ -49,14 +49,10 @@ export const Section = styled(FlexRow)`
   align-items: stretch;
 
   @media (max-width: 768px) {
-    flex: 1 1 ${props => (props.left ? '66%' : '33%')};
+    flex: 1 1 ${props => (props.left ? '75%' : '25%')};
     justify-content: space-around;
     display: ${props => (props.hideOnMobile ? 'none' : 'flex')};
   }
-`;
-
-export const Spacer = styled(FlexRow)`
-  height: 48px;
 `;
 
 export const LogoLink = styled(Link)`
