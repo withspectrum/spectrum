@@ -136,6 +136,7 @@ export const TextContent = styled.div`
   font-weight: 500;
   color: ${props => props.theme.text.alt};
   padding-bottom: 8px;
+  pointer-events: all;
 
   a {
     font-weight: 600;

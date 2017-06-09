@@ -22,6 +22,10 @@ import {
   NotificationListRow,
   Timestamp,
 } from '../style';
+import {
+  CardLink,
+  CardContent,
+} from '../../../components/threadFeedCard/style';
 
 export const NewMessageNotification = ({ notification, currentUser }) => {
   const actors = parseActors(notification.actors, currentUser);
@@ -35,14 +39,30 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
 
   return (
     <NotificationCard>
-      <ActorsRow actors={actors.asObjects} />
-      <TextContent>
-        {actors.asString} {event} {date} {context.asString}
-      </TextContent>
-      <BubbleContainer me={false}>
-        <BubbleGroupContainer me={false}>
-          <MessagesWrapper>
-            {notification.entities.length > 1 &&
+      <CardLink to={`/thread/${notification.context.id}`} />
+      <CardContent>
+        <ActorsRow actors={actors.asObjects} />
+        <TextContent>
+          {actors.asString} {event} {date} {context.asString}
+        </TextContent>
+        <BubbleContainer me={false}>
+          <BubbleGroupContainer me={false}>
+            <MessagesWrapper>
+              {notification.entities.length > 1 &&
+                <MessageWrapper
+                  me={false}
+                  timestamp={convertTimestampToTime(message.timestamp)}
+                >
+                  <Bubble
+                    me={false}
+                    pending={false}
+                    type={'thread'}
+                    message={{
+                      body: `+${notification.entities.length - 1} more...`,
+                    }}
+                  />
+                </MessageWrapper>}
+
               <MessageWrapper
                 me={false}
                 timestamp={convertTimestampToTime(message.timestamp)}
@@ -51,26 +71,13 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
                   me={false}
                   pending={false}
                   type={'thread'}
-                  message={{
-                    body: `+${notification.entities.length - 1} more...`,
-                  }}
+                  message={message.content}
                 />
-              </MessageWrapper>}
-
-            <MessageWrapper
-              me={false}
-              timestamp={convertTimestampToTime(message.timestamp)}
-            >
-              <Bubble
-                me={false}
-                pending={false}
-                type={'thread'}
-                message={message.content}
-              />
-            </MessageWrapper>
-          </MessagesWrapper>
-        </BubbleGroupContainer>
-      </BubbleContainer>
+              </MessageWrapper>
+            </MessagesWrapper>
+          </BubbleGroupContainer>
+        </BubbleContainer>
+      </CardContent>
     </NotificationCard>
   );
 };
