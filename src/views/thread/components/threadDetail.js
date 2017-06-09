@@ -80,12 +80,14 @@ class ThreadDetailPure extends Component {
       data: JSON.parse(rawLinkPreview.data),
     };
 
+    const body = thread.type === 'SLATE'
+      ? toPlainText(toState(JSON.parse(thread.content.body)))
+      : thread.content.body;
+
     this.state = {
       isEditing: false,
-      viewBody: thread.type === 'SLATE'
-        ? toPlainText(toState(JSON.parse(thread.content.body)))
-        : thread.content.body,
-      editBody: toState(JSON.parse(thread.content.body)),
+      viewBody: body,
+      editBody: body,
       title: thread.content.title,
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl: thread.attachments.length > 0
