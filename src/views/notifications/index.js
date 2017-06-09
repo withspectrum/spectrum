@@ -13,6 +13,7 @@ import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Titlebar from '../../views/titlebar';
 import { displayLoadingNotifications } from '../../components/loading';
+import { FetchMoreButton } from '../../components/threadFeed/style';
 import { FlexCol } from '../../components/globals';
 import { getNotifications } from '../../api/notification';
 import {
@@ -22,6 +23,34 @@ import {
 } from '../../components/upsell';
 
 class NotificationsPure extends Component {
+  state: {
+    isFetching: boolean,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      isFetching: false,
+    };
+  }
+
+  fetchMore = () => {
+    this.setState({
+      isFetching: true,
+    });
+
+    this.props.notificationsQuery.fetchMore();
+  };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.setState({
+        isFetching: false,
+      });
+    }
+  }
+
   render() {
     const { currentUser, notificationsQuery } = this.props;
 
@@ -52,6 +81,8 @@ class NotificationsPure extends Component {
     const notifications = notificationsQuery.notifications.edges.map(
       notification => parseNotification(notification.node)
     );
+
+    const { notifications: { pageInfo: { hasNextPage } } } = notificationsQuery;
 
     if (!notifications || notifications.length === 0) {
       return (
@@ -93,6 +124,17 @@ class NotificationsPure extends Component {
                 }
               }
             })}
+
+            {hasNextPage &&
+              <div>
+                <FetchMoreButton
+                  color={'brand.default'}
+                  loading={this.state.isFetching}
+                  onClick={this.fetchMore}
+                >
+                  Load more notifications
+                </FetchMoreButton>
+              </div>}
           </Column>
         </AppViewWrapper>
       </FlexCol>

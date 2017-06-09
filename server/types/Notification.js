@@ -52,7 +52,7 @@ const Notification = /* GraphQL */ `
 
 	extend type Query {
 		notification(id: ID!): Notification
-		notifications(first: Int = 20, after: String): NotificationsConnection!
+		notifications(first: Int = 10, after: String): NotificationsConnection!
 	}
 
 	extend type Mutation {

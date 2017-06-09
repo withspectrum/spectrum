@@ -5,8 +5,26 @@ import {
   notificationInfoFragment,
 } from './fragments/notification/notificationInfo';
 
+const LoadMoreNotifications = gql`
+  query loadMoreNotifications($after: String) {
+    notifications(after: $after) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+      }
+      edges {
+        cursor
+        node {
+          ...notificationInfo
+        }
+      }
+    }
+  }
+  ${notificationInfoFragment}
+`;
+
 /*
-  Fetches the latest 20 notifications for the current user
+  Fetches the latest 10 notifications for the current user
 */
 export const GET_NOTIFICATIONS_QUERY = gql`
   query getNotifications {
@@ -28,6 +46,43 @@ export const GET_NOTIFICATIONS_QUERY = gql`
 
 export const GET_NOTIFICATIONS_OPTIONS = {
   name: 'notificationsQuery',
+  props: ({
+    notificationsQuery: { fetchMore, error, loading, notifications },
+  }) => ({
+    notificationsQuery: {
+      error,
+      loading,
+      notifications,
+      hasNextPage: notifications ? notifications.pageInfo.hasNextPage : false,
+      fetchMore: () =>
+        fetchMore({
+          query: LoadMoreNotifications,
+          variables: {
+            after: notifications.edges[notifications.edges.length - 1].cursor,
+          },
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult.notifications) {
+              return prev;
+            }
+
+            return {
+              ...prev,
+              notifications: {
+                ...prev.notifications,
+                pageInfo: {
+                  ...prev.notifications.pageInfo,
+                  ...fetchMoreResult.notifications.pageInfo,
+                },
+                edges: [
+                  ...prev.notifications.edges,
+                  ...fetchMoreResult.notifications.edges,
+                ],
+              },
+            };
+          },
+        }),
+    },
+  }),
 };
 
 export const getNotifications = graphql(

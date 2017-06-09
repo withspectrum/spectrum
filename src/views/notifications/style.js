@@ -137,6 +137,7 @@ export const TextContent = styled.div`
   color: ${props => props.theme.text.alt};
   padding-bottom: 8px;
   pointer-events: all;
+  line-height: 1.4;
 
   a {
     font-weight: 600;

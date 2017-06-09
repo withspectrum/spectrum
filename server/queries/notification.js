@@ -6,6 +6,7 @@ import type { GraphQLContext } from '../';
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import type { PaginationOptions } from '../utils/paginate-arrays';
+import UserError from '../utils/UserError';
 
 module.exports = {
   Query: {
