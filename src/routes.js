@@ -13,7 +13,7 @@ import ModalRoot from './components/modals/modalRoot';
 import Gallery from './components/gallery';
 import Toasts from './components/toasts';
 import DirectMessages from './views/directMessages';
-// import Explore from './views/explore';
+import Explore from './views/explore';
 import Thread from './views/thread';
 import UserView from './views/user';
 import CommunityView from './views/community';
@@ -26,10 +26,11 @@ import UserSettings from './views/userSettings';
 import communitySettings from './views/communitySettings';
 import channelSettings from './views/channelSettings';
 
-const About = () =>
+const About = () => (
   <div>
     <h3>About</h3>
-  </div>;
+  </div>
+);
 
 const Body = styled(FlexCol)`
   display: flex;
@@ -70,7 +71,7 @@ class Routes extends Component {
               <Route path="/style-guide" component={StyleGuide} />
 
               {/* App Pages */}
-              {/* <Route path="/explore" component={Explore} /> */}
+              <Route path="/explore" component={Explore} />
               <Route path="/messages/new" component={DirectMessages} />
               <Route path="/messages/:threadId" component={DirectMessages} />
               <Route path="/messages" component={DirectMessages} />
