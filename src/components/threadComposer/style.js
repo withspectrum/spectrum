@@ -31,8 +31,7 @@ export const Composer = styled(Card)`
 
   &:hover {
     transition: none;
-    box-shadow: ${Shadow.high} ${({ theme }) =>
-  hexa(theme.text.placeholder, 0.5)};
+    box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
   }
 
   @media (max-width: 768px) {
@@ -45,9 +44,7 @@ export const Composer = styled(Card)`
 `;
 
 export const Overlay = styled.div`
-  ${props =>
-    props.isOpen
-      ? `
+  ${props => (props.isOpen ? `
       position: fixed;
       top: 0;
       left: 0;
@@ -59,12 +56,11 @@ export const Overlay = styled.div`
       background: #000;
       pointer-events: auto;
       opacity: 0.4;
-    `
-      : `
+    ` : `
       opacity: 0;
       pointer-events: none;
 
-    `}
+    `)}
 `;
 
 export const Placeholder = styled.div`
