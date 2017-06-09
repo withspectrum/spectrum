@@ -163,6 +163,7 @@ class ChannelWithData extends Component {
             contents={channel}
             withDescription={true}
             meta={communityLink()}
+            channelIcon
           >
             {returnAction()}
           </ChannelListItem>
@@ -178,6 +179,7 @@ class ChannelWithData extends Component {
               contents={channel}
               withDescription={false}
               meta={`${channel.community.name} / ${channel.name}`}
+              channelIcon
             >
               <Icon glyph="view-forward" />
             </ChannelListItem>
@@ -192,6 +194,7 @@ class ChannelWithData extends Component {
             contents={channel}
             withDescription={false}
             meta={`${channel.community.name}`}
+            channelIcon={false}
           >
             {currentUser &&
               member &&

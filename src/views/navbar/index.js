@@ -239,6 +239,7 @@ class Navbar extends Component {
                 rawNotifications={notifications}
                 markAllRead={this.markAllNotificationsRead}
                 currentUser={currentUser}
+                width={'480px'}
               />
             </IconDrop>
 
@@ -255,7 +256,7 @@ class Navbar extends Component {
                 />
                 <LabelForTab>Profile</LabelForTab>
               </IconLink>
-              <ProfileDropdown user={currentUser} />
+              <ProfileDropdown user={currentUser} width={'200px'} />
             </IconDrop>
           </Section>
 

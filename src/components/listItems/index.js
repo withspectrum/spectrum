@@ -54,19 +54,20 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
   return (
     <Wrapper clickable={props.clickable}>
       <Row>
-        <ChannelTypeIndicator>
-          {props.contents.isPrivate
-            ? <Icon
-                glyph="private"
-                tipText={'Private channel'}
-                tipLocation="top-right"
-              />
-            : <Icon
-                glyph="channel"
-                tipText={'Channel'}
-                tipLocation="top-right"
-              />}
-        </ChannelTypeIndicator>
+        {props.channelIcon &&
+          <ChannelTypeIndicator>
+            {props.contents.isPrivate
+              ? <Icon
+                  glyph="private"
+                  tipText={'Private channel'}
+                  tipLocation="top-right"
+                />
+              : <Icon
+                  glyph="channel"
+                  tipText={'Channel'}
+                  tipLocation="top-right"
+                />}
+          </ChannelTypeIndicator>}
         <Col>
           <Link to={`/${props.contents.community.slug}/${props.contents.slug}`}>
             <Heading>{props.contents.name}</Heading>

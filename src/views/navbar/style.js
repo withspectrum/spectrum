@@ -140,7 +140,7 @@ export const IconDrop = styled(FlexRow)`
     position: absolute;
     top: 100%;
     right: 0;
-    min-width: 320px;
+    min-width: ${props => props.width};
     padding: 8px;
 
     @media (max-width: 768px) {
