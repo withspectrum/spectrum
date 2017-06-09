@@ -1,6 +1,6 @@
 // @flow
 import type { GraphQLContext } from '../';
-import { getUserCount } from '../models/user';
+import { getUserCount, getUserGrowth } from '../models/user';
 import { getCommunityCount } from '../models/community';
 import { getChannelCount } from '../models/channel';
 import { getThreadCount } from '../models/thread';
@@ -31,6 +31,10 @@ module.exports = {
     messageCount: (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
       return getFullMessageCount();
+    },
+    userGrowth: (_: any, __: any, { user }: GraphQLContext) => {
+      if (!isAdmin(user.id)) return null;
+      return getUserGrowth();
     },
   },
 };

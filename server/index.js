@@ -148,6 +148,7 @@ app.use(
   graphqlExpress(req => ({
     schema,
     formatError: error => {
+      console.log(error);
       const sentryId = Raven.captureException(
         error,
         Raven.parsers.parseRequest(req)

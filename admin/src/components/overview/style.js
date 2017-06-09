@@ -7,7 +7,7 @@ export const Section = styled.section`
 
 export const OverviewRow = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   padding: 32px;
   border-bottom: 1px solid ${props => props.theme.border.default};
 
@@ -25,7 +25,6 @@ export const SectionTitle = styled.h2`
 export const Subsection = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1 0 20%;
   padding: 16px 0;
 
   @media (max-width: 768px) {

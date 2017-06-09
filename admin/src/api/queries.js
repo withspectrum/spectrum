@@ -8,6 +8,9 @@ const META_INFORMATION_QUERY = gql`
       threadCount
       channelCount
       messageCount
+      userGrowth {
+        createdAt
+      }
     }
   }
 `;

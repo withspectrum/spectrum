@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
+import Trend from 'react-trend';
 import {
   Section,
   SectionTitle,
@@ -13,6 +14,7 @@ import {
 } from './style';
 import { overviewQuery } from '../../api/queries';
 import { displayLoadingState } from '../loading';
+import getGrowthPerDay from '../../utils/get-growth-per-day';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const LOGIN_URL = IS_PROD
@@ -35,34 +37,46 @@ const OverviewNumbers = ({ data }) => {
   const channelCount = numberWithCommas(meta.channelCount);
   const threadCount = numberWithCommas(meta.threadCount);
   const messageCount = numberWithCommas(meta.messageCount);
+  const userGrowthByDay = getGrowthPerDay(meta.userGrowth);
 
   return (
-    <OverviewRow>
-      <Subsection>
-        <Subtext>Users</Subtext>
-        <Count>{userCount}</Count>
-      </Subsection>
+    <div>
+      <OverviewRow>
+        <Subsection>
+          <Subtext>Users</Subtext>
+          <Count>{userCount}</Count>
+          <div>
+            <Trend
+              data={userGrowthByDay}
+              gradient={['#1CD2F2', '#00D6A9']}
+              strokeWidth={1}
+              smooth
+              strokeLinecap="round"
+            />
+          </div>
+        </Subsection>
 
-      <Subsection>
-        <Subtext>Communities</Subtext>
-        <Count>{communityCount}</Count>
-      </Subsection>
+        <Subsection>
+          <Subtext>Communities</Subtext>
+          <Count>{communityCount}</Count>
+        </Subsection>
 
-      <Subsection>
-        <Subtext>Channels</Subtext>
-        <Count>{channelCount}</Count>
-      </Subsection>
+        <Subsection>
+          <Subtext>Channels</Subtext>
+          <Count>{channelCount}</Count>
+        </Subsection>
 
-      <Subsection>
-        <Subtext>Threads</Subtext>
-        <Count>{threadCount}</Count>
-      </Subsection>
+        <Subsection>
+          <Subtext>Threads</Subtext>
+          <Count>{threadCount}</Count>
+        </Subsection>
 
-      <Subsection>
-        <Subtext>Messages</Subtext>
-        <Count>{messageCount}</Count>
-      </Subsection>
-    </OverviewRow>
+        <Subsection>
+          <Subtext>Messages</Subtext>
+          <Count>{messageCount}</Count>
+        </Subsection>
+      </OverviewRow>
+    </div>
   );
 };
 
