@@ -95,13 +95,13 @@ export const SectionWrapper = styled(FlexRow)`
 
 export const ViewHeader = styled(Section)`
   flex: none;
-  padding: 120px 0;
+  padding: 120px 0 160px 0;
   justify-content: flex-end;
   background-color: ${({ theme }) => theme.space.dark};
   background-image: ${({ theme }) => `radial-gradient(farthest-corner at 50% 100%, ${hexa(theme.brand.alt, 0.75)}, ${theme.space.dark} )`};
 
   @media (max-width: 768px) {
-    padding: 48px 24px;
+    padding: 48px 24px 96px 24px;
   }
 `;
 

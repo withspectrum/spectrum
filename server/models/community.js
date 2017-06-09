@@ -521,7 +521,7 @@ const getTopCommunities = (amount: number): Array<Object> => {
           return y.count - x.count;
         })
         .map(community => community.id)
-        .slice(0, 31);
+        .slice(0, 10);
 
       return db
         .table('communities')
@@ -536,7 +536,7 @@ const getRecentCommunities = (amount: number): Array<Object> => {
     .table('communities')
     .orderBy(db.desc('createdAt'))
     .filter(community => db.not(community.hasFields('deletedAt')))
-    .limit(30)
+    .limit(10)
     .run();
 };
 

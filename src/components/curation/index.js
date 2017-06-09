@@ -25,6 +25,7 @@ import {
   FeaturePresentation,
   FeatureDescription,
   Description,
+  NullDescription,
   Tag,
 } from './style';
 
@@ -35,6 +36,8 @@ export const FeaturedCommunityWithData = props => {
     dispatch,
     notes,
   } = props;
+
+  const isMobile = window.innerWidth < 768;
 
   const toggleMembership = communityId => {
     toggleCommunityMembership({ communityId })
@@ -56,6 +59,26 @@ export const FeaturedCommunityWithData = props => {
       });
   };
 
+  const returnButton = () => {
+    if (!community.communityPermissions.isMember) {
+      return (
+        <JoinButton
+          icon="plus-fill"
+          gradientTheme="success"
+          onClick={() => toggleMembership(community.id)}
+        >
+          Join
+        </JoinButton>
+      );
+    } else {
+      return (
+        <MemberButton icon="checkmark" gradientTheme="none">
+          Member
+        </MemberButton>
+      );
+    }
+  };
+
   if (loading) {
     return <Loading size={48} />;
   } else if (error || !community) {
@@ -64,9 +87,9 @@ export const FeaturedCommunityWithData = props => {
         <Title>
           Explore Spectrum
         </Title>
-        <Description>
+        <NullDescription>
           Discover and join new communities!
-        </Description>
+        </NullDescription>
       </FeatureDescription>
     );
   } else {
@@ -76,17 +99,7 @@ export const FeaturedCommunityWithData = props => {
         <Feature>
           <FeaturePresentation>
             <FeaturePhoto src={`${community.profilePhoto}?w=120&dpr=2`} />
-            {!community.communityPermissions.isMember
-              ? <JoinButton
-                  icon="plus-fill"
-                  gradientTheme="success"
-                  onClick={() => toggleMembership(community.id)}
-                >
-                  Join
-                </JoinButton>
-              : <MemberButton icon="checkmark" gradientTheme="none">
-                  Member
-                </MemberButton>}
+            {returnButton()}
           </FeaturePresentation>
           <FeatureDescription>
             <ProfileLink to={`/${community.slug}`}>
@@ -98,6 +111,7 @@ export const FeaturedCommunityWithData = props => {
             <Tag>Editor's note</Tag>
             <Description>{notes}</Description>
           </FeatureDescription>
+          {returnButton()}
         </Feature>
       </FeatureWrapper>
     );

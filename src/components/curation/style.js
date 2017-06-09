@@ -14,9 +14,10 @@ export const FeaturePhoto = styled.img`
   box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.default, 0.25)};
 
   @media (max-width: 768px) {
-    height: 64px;
-    width: 64px;
-    border-radius: 12px;
+    height: 240px;
+    width: 240px;
+    border-radius: 48px;
+    align-self: center;
   }
 `;
 
@@ -28,6 +29,10 @@ export const Title = styled(H1)`
 
   @media (max-width: 768px) {
     font-size: 1.5rem;
+    align-self: stretch;
+    text-align: center;
+    display: inline-block;
+    flex: auto;
   }
 `;
 
@@ -68,6 +73,10 @@ export const ProfileLink = styled(Link)`
       }
     }
   }
+
+  @media (max-width: 768px) {
+    align-self: stretch;
+  }
 `;
 
 export const JoinButton = styled(Button)`
@@ -82,8 +91,8 @@ export const JoinButton = styled(Button)`
   }
 
   @media (max-width: 768px) {
-    margin-top: 0;
-    margin-left: 16px;
+    align-self: center;
+    margin-top: 24px;
   }
 `;
 
@@ -102,8 +111,8 @@ export const MemberButton = styled(Button)`
   }
 
   @media (max-width: 768px) {
-    margin-top: 0;
-    margin-left: 16px;
+    align-self: center;
+    margin-top: 24px;
   }
 `;
 
@@ -120,23 +129,45 @@ export const FeatureLabel = styled(H4)`
   letter-spacing: 0.5px;
   color: ${({ theme }) => theme.text.reverse};
   text-transform: uppercase;
+
+  @media (max-width: 768px) {
+    align-self: center;
+    text-align: center;
+  }
 `;
 
 export const Feature = styled(FlexRow)`
   margin-top: 16px;
   align-items: flex-start;
 
+  > button {
+    display: none;
+  }
+
   @media (max-width: 768px) {
     flex-direction: column;
+
+    > button {
+      display: flex;
+    }
   }
 `;
 
 export const FeaturePresentation = styled(FlexCol)`
   align-items: center;
 
+  > button {
+    display: flex;
+  }
+
   @media (max-width: 768px) {
+    align-self: stretch;
     flex-direction: row;
-    align-items: flex-end;
+    justify-content: center;
+
+    > button {
+      display: none;
+    }
   }
 `;
 
@@ -157,6 +188,16 @@ export const Description = styled.p`
   }
 `;
 
+export const NullDescription = styled(Description)`
+  max-width: 480px;
+  color: ${({ theme }) => theme.text.reverse};
+
+  @media (max-width: 768px) {
+    text-align: center;
+    width: 100%;
+  }
+`;
+
 export const Tag = styled.span`
   margin-top: 24px;
   margin-bottom: 8px;
@@ -169,4 +210,9 @@ export const Tag = styled.span`
   letter-spacing: 0.5px;
   text-transform: uppercase;
   color: ${({ theme }) => theme.text.reverse};
+
+  @media (max-width: 768px) {
+    align-self: center;
+    text-align: center;
+  }
 `;
