@@ -8,7 +8,7 @@ import compose from 'recompose/compose';
 import { withRouter } from 'react-router';
 import Dropdown from '../../../components/dropdown';
 import { NullState } from '../../../components/upsell';
-import { Button, OutlineButton } from '../../../components/buttons';
+import { TextButton } from '../../../components/buttons';
 import { DropdownHeader, DropdownFooter } from '../style';
 import {
   NotificationDropdownList,
@@ -42,14 +42,16 @@ const NotificationDropdownPure = ({
           history={history}
         />}
 
-      <DropdownFooter>
-        {rawNotifications &&
-          rawNotifications.length > 0 &&
-          <OutlineButton onClick={() => markAllRead()}>
-            Mark All Read
-          </OutlineButton>}
-        <Button to={'/notifications'}>View all</Button>
-      </DropdownFooter>
+      {rawNotifications &&
+        rawNotifications.length > 0 &&
+        <DropdownFooter>
+          <TextButton
+            color={'brand.default'}
+            onClick={() => history.push('/notifications')}
+          >
+            View all
+          </TextButton>
+        </DropdownFooter>}
 
     </Dropdown>
   );
