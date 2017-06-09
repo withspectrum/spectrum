@@ -112,8 +112,6 @@ class ThreadContainerPure extends Component {
     const { data: { thread, error }, data, currentUser } = this.props;
     const { isLoading } = this.state;
 
-    console.log(data);
-
     if (error) {
       return (
         <FlexCol style={{ flex: '1 1 auto' }}>

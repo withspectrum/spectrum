@@ -45,11 +45,8 @@ export const GET_NOTIFICATIONS_QUERY = gql`
 `;
 
 export const GET_NOTIFICATIONS_OPTIONS = {
-  name: 'notificationsQuery',
-  props: ({
-    notificationsQuery: { fetchMore, error, loading, notifications },
-  }) => ({
-    notificationsQuery: {
+  props: ({ data: { fetchMore, error, loading, notifications } }) => ({
+    data: {
       error,
       loading,
       notifications,
@@ -85,9 +82,18 @@ export const GET_NOTIFICATIONS_OPTIONS = {
   }),
 };
 
+export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
+  name: 'notificationsQuery',
+};
+
 export const getNotifications = graphql(
   GET_NOTIFICATIONS_QUERY,
   GET_NOTIFICATIONS_OPTIONS
+);
+
+export const getNotificationsForNavbar = graphql(
+  GET_NOTIFICATIONS_QUERY,
+  GET_NOTIFICATIONS_NAVBAR_OPTIONS
 );
 
 export const MARK_NOTIFICATIONS_READ_MUTATION = gql`

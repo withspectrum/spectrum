@@ -828,12 +828,12 @@ export const displayLoadingCard = branch(
 );
 
 export const displayLoadingScreen = branch(
-  props => console.log(props) || !props.data || props.data.loading,
+  props => !props.data || props.data.loading,
   renderComponent(LoadingScreen)
 );
 
 export const displayLoadingNotifications = branch(
-  props => !props.notificationsQuery || props.notificationsQuery.loading,
+  props => !props.data || props.data.loading,
   renderComponent(LoadingNotifications)
 );
 

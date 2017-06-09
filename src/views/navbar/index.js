@@ -8,7 +8,7 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { getCurrentUserProfile } from '../../api/user';
 import {
-  getNotifications,
+  getNotificationsForNavbar,
   markNotificationsSeenMutation,
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
@@ -270,7 +270,7 @@ const mapStateToProps = state => ({
 });
 export default compose(
   getCurrentUserProfile,
-  getNotifications,
+  getNotificationsForNavbar,
   markNotificationsSeenMutation,
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,

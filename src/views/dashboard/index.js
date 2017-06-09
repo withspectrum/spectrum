@@ -10,6 +10,7 @@ import { UpsellSignIn, UpsellToReload } from '../../components/upsell';
 import UpsellNewUser from '../../components/upsell/newUserUpsell';
 import { displayLoadingScreen } from '../../components/loading';
 import { FlexCol } from '../../components/globals';
+import { withInfiniteScroll } from '../../components/infiniteScroll';
 import { Column } from '../../components/column';
 import { UserProfile } from '../../components/profile';
 import ThreadFeed from '../../components/threadFeed';
@@ -109,7 +110,10 @@ class DashboardPure extends Component {
   }
 }
 
-const Dashboard = compose(getCurrentUserProfile, displayLoadingScreen, pure)(
-  DashboardPure
-);
+const Dashboard = compose(
+  getCurrentUserProfile,
+  displayLoadingScreen,
+  withInfiniteScroll,
+  pure
+)(DashboardPure);
 export default Dashboard;

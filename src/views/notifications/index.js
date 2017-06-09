@@ -6,6 +6,7 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import { withInfiniteScroll } from '../../components/infiniteScroll';
 import { parseNotification } from './utils';
 import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
@@ -40,7 +41,7 @@ class NotificationsPure extends Component {
       isFetching: true,
     });
 
-    this.props.notificationsQuery.fetchMore();
+    this.props.data.fetchMore();
   };
 
   componentDidUpdate(prevProps) {
@@ -52,7 +53,7 @@ class NotificationsPure extends Component {
   }
 
   render() {
-    const { currentUser, notificationsQuery } = this.props;
+    const { currentUser, data } = this.props;
 
     if (!currentUser) {
       return (
@@ -64,11 +65,7 @@ class NotificationsPure extends Component {
       );
     }
 
-    if (
-      !notificationsQuery ||
-      notificationsQuery.error ||
-      notificationsQuery.loading
-    ) {
+    if (!data || data.error || data.loading) {
       return (
         <AppViewWrapper>
           <Column type={'primary'}>
@@ -78,11 +75,11 @@ class NotificationsPure extends Component {
       );
     }
 
-    const notifications = notificationsQuery.notifications.edges.map(
-      notification => parseNotification(notification.node)
+    const notifications = data.notifications.edges.map(notification =>
+      parseNotification(notification.node)
     );
 
-    const { notifications: { pageInfo: { hasNextPage } } } = notificationsQuery;
+    const { notifications: { pageInfo: { hasNextPage } } } = data;
 
     if (!notifications || notifications.length === 0) {
       return (
@@ -150,5 +147,6 @@ export default compose(
   getNotifications,
   displayLoadingNotifications,
   connect(mapStateToProps),
+  withInfiniteScroll,
   pure
 )(NotificationsPure);
