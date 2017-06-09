@@ -69,6 +69,7 @@ const Thread = /* GraphQL */ `
 		threadId: ID!
 		content: ThreadContentInput!
 		attachments: [AttachmentInput]
+		filesToUpload: [File]
 	}
 
 	input ThreadInput {
@@ -77,6 +78,7 @@ const Thread = /* GraphQL */ `
 		type: ThreadType
 		content: ThreadContentInput!
 		attachments: [AttachmentInput]
+		filesToUpload: [File]
 	}
 
 	extend type Mutation {

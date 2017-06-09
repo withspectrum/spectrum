@@ -119,6 +119,8 @@ body {
   display: inline;
   border-radius: 4px;
   transition: all 0.2s;
+  display: block;
+  margin: 12px 0;
 }
 
 .markdown img:hover {

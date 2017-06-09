@@ -199,4 +199,6 @@ export const ThreadDescription = {
   color: '#171A21',
   whiteSpace: 'pre-wrap',
   overflowY: 'scroll',
+  position: 'relative',
+  top: '6px',
 };
