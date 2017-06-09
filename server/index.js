@@ -148,6 +148,7 @@ app.use(
   graphqlExpress(req => ({
     schema,
     formatError: error => {
+      console.log('error: ', error);
       const isUserError = error.originalError[IsUserError];
       const sentryId = Raven.captureException(
         error,

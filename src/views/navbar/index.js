@@ -204,14 +204,14 @@ class Navbar extends Component {
               <Label>Messages</Label>
             </IconLink>
 
-            {/* <IconLink
-                data-active={match.url === '/explore'}
-                data-mobileWidth={'third'}
-                to="/explore"
-              >
-                <Icon glyph="explore" />
-                <Label>Explore</Label>
-              </IconLink> */}
+            <IconLink
+              data-active={match.url === '/explore'}
+              data-mobileWidth={'third'}
+              to="/explore"
+            >
+              <Icon glyph="explore" />
+              <Label>Explore</Label>
+            </IconLink>
           </Section>
 
           <Section right>

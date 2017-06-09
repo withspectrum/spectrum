@@ -521,7 +521,7 @@ const getTopCommunities = (amount: number): Array<Object> => {
           return y.count - x.count;
         })
         .map(community => community.id)
-        .slice(0, 11);
+        .slice(0, 10);
 
       return db
         .table('communities')
@@ -529,6 +529,15 @@ const getTopCommunities = (amount: number): Array<Object> => {
         .filter(community => db.not(community.hasFields('deletedAt')))
         .run();
     });
+};
+
+const getRecentCommunities = (amount: number): Array<Object> => {
+  return db
+    .table('communities')
+    .orderBy(db.desc('createdAt'))
+    .filter(community => db.not(community.hasFields('deletedAt')))
+    .limit(10)
+    .run();
 };
 
 const getCommunityCount = () => {
@@ -547,5 +556,6 @@ module.exports = {
   userIsMemberOfCommunity,
   userIsMemberOfAnyChannelInCommunity,
   getTopCommunities,
+  getRecentCommunities,
   getCommunityCount,
 };

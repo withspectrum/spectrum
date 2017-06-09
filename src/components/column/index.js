@@ -34,7 +34,7 @@ const SecondaryColumn = styled(BaseColumn)`
   max-width: 320px;
 
   @media(max-width: 768px) {
-    flex: auto;
+    flex: none;
     align-self: stretch;
     max-width: 100%;
   }
