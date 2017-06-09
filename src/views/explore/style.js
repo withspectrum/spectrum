@@ -19,7 +19,7 @@ import { Button } from '../../components/buttons';
 // import ScrollRow from '../../../shared/ScrollRow';
 
 export const ViewContainer = styled(FlexCol)`
-  flex: 1 1 auto;
+  flex: auto;
   align-self: stretch;
   overflow: hidden;
   overflow-y: scroll;
@@ -63,29 +63,28 @@ export const ViewSubtitle = styled(H2)`
 `;
 
 export const Section = styled(FlexCol)`
-  padding-top: 32px;
+  padding: 32px;
   display: flex;
   justify-content: space-between;
   position: relative;
   z-index: 1;
-
-  &:nth-of-type(2) {
-    background-color: ${({ theme }) => theme.space.dark};
-    background-image: ${({ theme }) => `linear-gradient( ${theme.bg.default}, ${theme.bg.wash} )`};
-  }
+  align-self: stretch;
 `;
 
 export const ViewHeader = styled(Section)`
-  flex: 0 0 320px;
-  padding-bottom: 120px;
+  flex: none;
+  padding: 120px 0;
   justify-content: flex-end;
   background-color: ${({ theme }) => theme.space.dark};
-  background-image: ${({ theme }) => `linear-gradient( ${theme.space.dark}, ${theme.brand.alt} )`};
+  background-image: ${({ theme }) => `radial-gradient(farthest-corner at 50% 100%, ${hexa(theme.brand.alt, 0.75)}, ${theme.space.dark} )`};
 
   @media (max-width: 768px) {
-    flex: 0 0 240px;
-    padding-bottom: 48px;
+    padding: 48px 24px;
   }
+`;
+
+export const SectionWithGradientTransition = styled(Section)`
+  background-image: ${({ theme }) => `linear-gradient(${theme.bg.default}, ${theme.bg.wash})`};
 `;
 
 export const SectionTitle = styled(H2)`
@@ -195,6 +194,7 @@ export const Constellations = styled.div`
 	bottom: 0;
 	left: 0;
 	right: 0;
+  pointer-events: none;
 `;
 
 export const ErrorState = styled(FlexCol)`
