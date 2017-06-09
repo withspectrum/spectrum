@@ -6,6 +6,8 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 //$FlowFixMe
 import { connect } from 'react-redux';
+//$FlowFixMe
+import { Link } from 'react-router-dom';
 import { track } from '../../helpers/events';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { toggleCommunityMembershipMutation } from '../../api/community';
@@ -36,8 +38,6 @@ export const FeaturedCommunityWithData = props => {
     dispatch,
     notes,
   } = props;
-
-  const isMobile = window.innerWidth < 768;
 
   const toggleMembership = communityId => {
     toggleCommunityMembership({ communityId })
@@ -72,9 +72,11 @@ export const FeaturedCommunityWithData = props => {
       );
     } else {
       return (
-        <MemberButton icon="checkmark" gradientTheme="none">
-          Member
-        </MemberButton>
+        <Link to={`/${community.slug}`}>
+          <MemberButton icon="checkmark" gradientTheme="none">
+            Member
+          </MemberButton>
+        </Link>
       );
     }
   };
@@ -98,7 +100,9 @@ export const FeaturedCommunityWithData = props => {
         <FeatureLabel>Featured Community</FeatureLabel>
         <Feature>
           <FeaturePresentation>
-            <FeaturePhoto src={`${community.profilePhoto}?w=120&dpr=2`} />
+            <Link to={`/${community.slug}`}>
+              <FeaturePhoto src={`${community.profilePhoto}?w=120&dpr=2`} />
+            </Link>
             {returnButton()}
           </FeaturePresentation>
           <FeatureDescription>

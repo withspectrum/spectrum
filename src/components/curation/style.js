@@ -140,15 +140,16 @@ export const Feature = styled(FlexRow)`
   margin-top: 16px;
   align-items: flex-start;
 
-  > button {
+  > a {
     display: none;
   }
 
   @media (max-width: 768px) {
     flex-direction: column;
 
-    > button {
+    > a {
       display: flex;
+      align-self: center;
     }
   }
 `;
@@ -156,7 +157,7 @@ export const Feature = styled(FlexRow)`
 export const FeaturePresentation = styled(FlexCol)`
   align-items: center;
 
-  > button {
+  > a:nth-of-type(2) {
     display: flex;
   }
 
@@ -165,7 +166,7 @@ export const FeaturePresentation = styled(FlexCol)`
     flex-direction: row;
     justify-content: center;
 
-    > button {
+    > a:nth-of-type(2) {
       display: none;
     }
   }
