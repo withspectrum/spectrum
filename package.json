@@ -15,7 +15,7 @@
     "uuid": "^3.0.1"
   },
   "dependencies": {
-    "apollo-client": "1.3.0",
+    "apollo-client": "1.4.0",
     "apollo-upload-client": "^4.0.3",
     "apollo-upload-client-fork-mxstbr": "4.0.3",
     "apollo-upload-network-interface": "^1.0.4",
@@ -58,7 +58,7 @@
     "raven-js": "^3.14.0",
     "react": "^15.4.1",
     "react-addons-test-utils": "^15.5.1",
-    "react-apollo": "^1.1.0",
+    "react-apollo": "^1.2.0",
     "react-dom": "^15.4.1",
     "react-helmet": "5.x",
     "react-medium-spinner": "^1.1.0",
