@@ -6,26 +6,13 @@ import { Editor as SlateEditor, Raw, Plain } from 'slate';
 import type { SlatePlugin } from 'slate-mentions/src/types';
 //$FlowFixMe
 import MarkdownPlugin from 'slate-markdown';
-import { Wrapper } from './style';
+import { Wrapper, MediaRow } from './style';
+import SingleLinePlugin from './single-line-plugin';
+import ImagePlugin from './image-plugin';
+import MediaInput from '../mediaInput';
+import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
 
 const ENTER = 13;
-
-// Taken from https://github.com/ianstormtaylor/slate/issues/419
-// TODO: Make separate package
-const SingleLinePlugin = {
-  schema: {
-    rules: [
-      {
-        match: node => node.kind === 'document',
-        validate: node => (node.nodes.size > 1 ? true : null),
-        normalize: (transform, node, value) => {
-          const toRemove = node.nodes.slice(1);
-          toRemove.forEach(child => transform.removeNodeByKey(child.key));
-        },
-      },
-    ],
-  },
-};
 
 const initialState = Plain.deserialize('');
 
@@ -38,6 +25,7 @@ type EditorProps = {
   singleLine?: boolean,
   className?: string,
   style?: Object,
+  images?: boolean,
 };
 
 class Editor extends Component {
@@ -51,14 +39,36 @@ class Editor extends Component {
 
   constructor(props: EditorProps) {
     super(props);
+    const imagePlugin = ImagePlugin();
+    this.insertImage = imagePlugin.insertImage;
     this.state = {
       state: initialState,
       plugins: [
         props.markdown !== false && MarkdownPlugin(),
+        props.images !== false && imagePlugin,
         props.singleLine === true && SingleLinePlugin,
       ],
     };
   }
+
+  // $FlowFixMe
+  addImage = e => {
+    const files = e.target.files;
+    const onChange = this.props.onChange || this.onChange;
+    const state = this.props.state || this.state.state;
+    // files is a FileList, not an array, so it doesn't have .reduce
+    let filesArray = [];
+    for (var i = 0, f; (f = files[i]); i++) {
+      filesArray.push(f);
+    }
+    // Add all the files to the state
+    const newState = filesArray.reduce(
+      (prevState, file) =>
+        this.insertImage(prevState, window.URL.createObjectURL(file), file),
+      state
+    );
+    onChange(newState);
+  };
 
   onChange = (state: Object) => {
     this.setState({ state });
@@ -81,6 +91,11 @@ class Editor extends Component {
       onEnter,
       className,
       style,
+      markdown,
+      images,
+      showLinkPreview,
+      linkPreview,
+      singleLine,
       ...rest
     } = this.props;
 
@@ -97,6 +112,24 @@ class Editor extends Component {
           }}
           {...rest}
         />
+
+        {showLinkPreview && linkPreview && linkPreview.loading
+          ? <LinkPreviewLoading margin={'16px 0 24px 0'} />
+          : showLinkPreview && linkPreview && linkPreview.data
+              ? <LinkPreview
+                  data={linkPreview.data}
+                  size={'large'}
+                  remove={linkPreview.remove}
+                  editable={true}
+                  trueUrl={linkPreview.trueUrl}
+                  margin={'16px 0 24px 0'}
+                />
+              : null}
+
+        {images !== false &&
+          <MediaRow>
+            <MediaInput onChange={this.addImage} multiple>Add</MediaInput>
+          </MediaRow>}
       </Wrapper>
     );
   }

@@ -167,6 +167,7 @@ const profileQueryOptions = {
     variables: {
       slug: communitySlug,
     },
+    fetchPolicy: 'cache-and-network',
   }),
 };
 

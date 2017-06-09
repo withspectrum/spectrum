@@ -80,12 +80,18 @@ class ThreadDetailPure extends Component {
       data: JSON.parse(rawLinkPreview.data),
     };
 
+    const viewBody = thread.type === 'SLATE'
+      ? toPlainText(toState(JSON.parse(thread.content.body)))
+      : thread.content.body;
+
+    const editBody = thread.type === 'SLATE'
+      ? toState(JSON.parse(thread.content.body))
+      : thread.content.body;
+
     this.state = {
       isEditing: false,
-      viewBody: thread.type === 'SLATE'
-        ? toPlainText(toState(JSON.parse(thread.content.body)))
-        : thread.content.body,
-      editBody: toState(JSON.parse(thread.content.body)),
+      viewBody,
+      editBody,
       title: thread.content.title,
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl: thread.attachments.length > 0
@@ -206,10 +212,17 @@ class ThreadDetailPure extends Component {
       body: bodyToSave,
     };
 
+    // Get the images
+    const filesToUpload = editBody.document.nodes
+      .filter(node => node.type === 'image')
+      .map(image => image.getIn(['data', 'file']))
+      .toJS();
+
     const input = {
       threadId,
       content,
       attachments,
+      filesToUpload,
     };
 
     editThread(input)
@@ -221,8 +234,11 @@ class ThreadDetailPure extends Component {
         if (editThread && editThread !== null) {
           this.toggleEdit();
           dispatch(addToastWithTimeout('success', 'Thread saved!'));
+
           this.setState({
-            viewBody: toPlainText(editBody),
+            viewBody: thread.type === 'SLATE'
+              ? toPlainText(toState(JSON.parse(editThread.content.body)))
+              : editThread.content.body,
           });
         } else {
           dispatch(
@@ -243,6 +259,10 @@ class ThreadDetailPure extends Component {
 
   changeTitle = e => {
     const title = e.target.value;
+    if (/\n$/g.test(title)) {
+      this.bodyEditor.focus();
+      return;
+    }
     this.setState({
       title,
     });
@@ -255,7 +275,7 @@ class ThreadDetailPure extends Component {
   };
 
   listenForUrl = (e, data, state) => {
-    const text = state.document.text;
+    const text = toPlainText(state);
 
     if (
       e.keyCode !== 8 &&
@@ -292,7 +312,7 @@ class ThreadDetailPure extends Component {
           // this.props.dispatch(stopLoading());
 
           this.setState(prevState => ({
-            linkPreview: data,
+            linkPreview: { ...data, trueUrl: urlToCheck },
             linkPreviewTrueUrl: urlToCheck,
             linkPreviewLength: prevState.linkPreviewLength + 1,
             fetchingLinkPreview: false,
@@ -323,6 +343,7 @@ class ThreadDetailPure extends Component {
 
   render() {
     const { currentUser, thread } = this.props;
+
     const {
       isEditing,
       linkPreview,
@@ -385,6 +406,7 @@ class ThreadDetailPure extends Component {
                     />
                   </FlyoutRow>}
                 {thread.isCreator &&
+                  thread.type === 'SLATE' &&
                   <FlyoutRow>
                     <IconButton
                       glyph="edit"
@@ -460,21 +482,17 @@ class ThreadDetailPure extends Component {
               state={this.state.editBody}
               style={ThreadDescription}
               ref="bodyTextarea"
+              editorRef={editor => this.bodyEditor = editor}
               placeholder="Write more thoughts here, add photos, and anything else!"
+              showLinkPreview={true}
+              linkPreview={{
+                loading: fetchingLinkPreview,
+                remove: this.removeLinkPreview,
+                trueUrl: linkPreviewTrueUrl,
+                data: linkPreview,
+              }}
             />
 
-            {!linkPreview && fetchingLinkPreview && <LinkPreviewLoading />}
-
-            {linkPreview &&
-              !fetchingLinkPreview &&
-              <LinkPreview
-                data={linkPreview}
-                size={'large'}
-                remove={this.removeLinkPreview}
-                editable={true}
-                trueUrl={linkPreviewTrueUrl}
-                margin={'16px 0'}
-              />}
           </span>}
       </ThreadWrapper>
     );

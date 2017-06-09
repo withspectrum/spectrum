@@ -17,6 +17,7 @@ export const GET_USER_PROFILE_OPTIONS = {
     variables: {
       username: match.params.username,
     },
+    fetchPolicy: 'network-only',
   }),
 };
 

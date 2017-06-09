@@ -160,6 +160,7 @@ const profileQueryOptions = {
     variables: {
       username: username,
     },
+    fetchPolicy: 'cache-and-network',
   }),
 };
 

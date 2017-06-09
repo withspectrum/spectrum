@@ -21,6 +21,7 @@ export const getThisCommunity = graphql(
       variables: {
         slug: props.match.params.communitySlug,
       },
+      fetchPolicy: 'network-only',
     }),
   }
 );

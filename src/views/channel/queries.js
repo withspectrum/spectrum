@@ -166,6 +166,7 @@ const profileQueryOptions = {
       channelSlug,
       communitySlug,
     },
+    fetchPolicy: 'cache-and-network',
   }),
 };
 

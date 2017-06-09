@@ -43,6 +43,7 @@ export const GET_THREAD_OPTIONS = {
     variables: {
       id: props.match.params.threadId,
     },
+    fetchPolicy: 'cache-and-network',
   }),
 };
 export const getThread = graphql(GET_THREAD_QUERY, GET_THREAD_OPTIONS);
@@ -59,6 +60,7 @@ export const GET_THREAD_MESSAGES_QUERY = gql`
 export const GET_THREAD_MESSAGES_OPTIONS = {
   options: props => ({
     variables: { id: props.id },
+    fetchPolicy: 'cache-and-network',
   }),
   props: props => ({
     data: props.data,
