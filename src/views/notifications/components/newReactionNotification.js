@@ -27,7 +27,7 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
   return (
     <NotificationCard key={notification.id}>
       <ActorsRow actors={actors.asObjects} />
-      <TextContent>{actors.asString} {event} {date}</TextContent>
+      <TextContent pointer={true}>{actors.asString} {event} {date}</TextContent>
       <BubbleContainer me={true}>
         <BubbleGroupContainer me={true}>
           <MessagesWrapper>
@@ -75,7 +75,7 @@ export const MiniNewReactionNotification = ({
         history.push(`/thread/${notification.context.payload.threadId}`)}
     >
       <ActorsRow actors={actors.asObjects} />
-      <TextContent>
+      <TextContent pointer={false}>
         {actors.asString} {event}
       </TextContent>
       <Timestamp>{date}</Timestamp>

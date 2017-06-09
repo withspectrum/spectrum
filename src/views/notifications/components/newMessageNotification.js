@@ -42,7 +42,7 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
       <CardLink to={`/thread/${notification.context.id}`} />
       <CardContent>
         <ActorsRow actors={actors.asObjects} />
-        <TextContent>
+        <TextContent pointer={true}>
           {actors.asString} {event} {date} {context.asString}
         </TextContent>
         <BubbleContainer me={false}>
@@ -96,11 +96,14 @@ export const MiniNewMessageNotification = ({
     <NotificationListRow
       onClick={() => history.push(`/thread/${notification.context.id}`)}
     >
-      <ActorsRow actors={actors.asObjects} />
-      <TextContent>
-        {actors.asString} {event} {context.asString}
-      </TextContent>
-      <Timestamp>{date}</Timestamp>
+      <CardLink to={`/thread/${notification.context.id}`} />
+      <CardContent>
+        <ActorsRow actors={actors.asObjects} />
+        <TextContent pointer={false}>
+          {actors.asString} {event} {context.asString}
+        </TextContent>
+        <Timestamp>{date}</Timestamp>
+      </CardContent>
     </NotificationListRow>
   );
 };

@@ -100,6 +100,8 @@ export const NotificationListRow = styled.div`
   color: ${({ theme }) => theme.text.default};
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 2;
 
   &:last-of-type {
     border-bottom: none;
@@ -136,7 +138,7 @@ export const TextContent = styled.div`
   font-weight: 500;
   color: ${props => props.theme.text.alt};
   padding-bottom: 8px;
-  pointer-events: all;
+  pointer-events: ${props => (props.pointer ? 'all' : 'none')};
   line-height: 1.4;
 
   a {

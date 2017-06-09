@@ -828,7 +828,7 @@ export const displayLoadingCard = branch(
 );
 
 export const displayLoadingScreen = branch(
-  props => !props.data || props.data.loading,
+  props => console.log(props) || !props.data || props.data.loading,
   renderComponent(LoadingScreen)
 );
 
