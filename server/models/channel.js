@@ -188,10 +188,13 @@ const createChannel = (
     .run()
     .then(result => result.changes[0].new_val)
     .then(channel => {
-      channelNotificationQueue.add({
-        channel,
-        userId,
-      });
+      // only trigger a new channel notification is the channel is public
+      if (!channel.isPrivate) {
+        channelNotificationQueue.add({
+          channel,
+          userId,
+        });
+      }
 
       return channel;
     });

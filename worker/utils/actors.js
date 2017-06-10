@@ -1,4 +1,6 @@
 // @flow
+
+// takes an array of objects containing user data and returns an array with unique objects
 export const getDistinctActors = array => {
   let unique = {};
   let distinct = [];
@@ -8,6 +10,5 @@ export const getDistinctActors = array => {
     }
     unique[array[i].id] = 0;
   }
-  console.log('\n8-4', distinct);
   return distinct;
 };

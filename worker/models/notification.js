@@ -1,18 +1,19 @@
 // @flow
 const { db } = require('./db');
 import type { EventTypes } from '../utils/types';
+import { TIME_BUFFER } from '../queues/constants';
 
+/*
+  Given an event type, the context of that event, and a time range, see if an existing notification exists. If it does, we will bundle the new incoming notification on the server. If no existing notification is found, we create a new one
+*/
 export const checkForExistingNotification = (
   event: EventTypes,
-  contextId: string,
-  timeBuffer: number
+  contextId: string
 ) => {
   let now = new Date().getTime();
-  let then = now - timeBuffer;
+  let then = now - TIME_BUFFER;
   now = new Date(now);
   then = new Date(then);
-  console.log('4', now);
-  console.log('5', then);
 
   return db
     .table('notifications')
@@ -27,14 +28,10 @@ export const checkForExistingNotification = (
     )
     .run()
     .then(notifications => {
-      console.log('6', notifications);
-      if (notifications && notifications.length > 0) {
-        // a notification exists that meets our criteria, but we will only
-        // want to update the latest one
-        return notifications[0];
-      } else {
-        return undefined;
-      }
+      // if no matching notification exists, return
+      if (!notifications || notifications.length === 0) return null;
+      // if a match was found, only return the most recent match
+      return notifications[0];
     });
 };
 

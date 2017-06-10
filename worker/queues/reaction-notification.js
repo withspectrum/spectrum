@@ -1,9 +1,13 @@
 // @flow
 import createQueue from '../create-queue';
-import { REACTION_NOTIFICATION } from './constants';
+import { REACTION_NOTIFICATION, TIME_BUFFER } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import { getMessageById } from '../models/message';
+import { getUserNotificationPermissionsInThread } from '../models/usersThreads';
+import {
+  getUserNotificationPermissionsInDirectMessageThread,
+} from '../models/usersDirectMessageThreads';
 import {
   storeNotification,
   updateNotification,
@@ -19,131 +23,82 @@ export default () =>
     const incomingReaction = job.data.reaction;
     const currentUserId = job.data.userId;
 
-    console.log('\n1', job);
-    console.log('\n2', job.data.message);
-    console.log('\n3', job.data.userId);
-
-    // 10 minutes buffer to determine whether or not to create a new
-    // notification or update an old one
-    const TIME_BUFFER = 600000;
+    /*
+      These promises are used to create or modify a notification. The order is:
+      - actor
+      - context
+      - entity
+    */
+    const promises = [
+      // get the user who left the reaction
+      fetchPayload('USER', incomingReaction.userId),
+      // get the message the reaction was left on
+      fetchPayload('MESSAGE', incomingReaction.messageId),
+      // create an entity payload with the incoming reaction
+      createPayload('REACTION', incomingReaction),
+    ];
 
     /*
-      1. Determine if a notification for this event type and context already
-         exists. E.g. a bunch of people send messages in a thread in a short
-         period of time - it will know the 'event_type' is 'message_created'
-         and the context's id will be the same 'threadId'.
-         a. If a record is found, make sure it is within a certain reasonable
-            period of time since the notification's modifiedAt date. If it is,
-            proceed to step 2. If it is not, proceed to step 3.
-      2. If an existing notification is found that matches the event type and
-         context id and is within a certain time range of the previous upddatedAt
-         date, we can simply modify this original notification, recalcuate
-         the recipients (in case their notif preferences have changed), and
-         then update those recipients records in the usersNotifications table
-         with a new isSeen and isRead state
-      3. If an existing notification record is found but isn't recent enough, or
-         if no record was found, we will create a new notification record in the
-         db, calculate the recipients based on the notification context, and then
-         create a usersNotifications record for each recipient
+      Check to see if an existing notif exists by matching the 'event' type, with the context of the notification, within a certain time period.
     */
-
-    // 1. Determine if a notification exists with the same event type, context
-    //    id, and falls within the declared time buffer
     return checkForExistingNotification(
       'REACTION_CREATED',
-      incomingReaction.messageId,
-      TIME_BUFFER
+      incomingReaction.messageId
     )
       .then(notification => {
-        console.log('\n7', notification);
-        /*
-          Regardless of if we find an existing notification, we will always
-          need to either update or create a record with:
-          - the actor of this event
-          - the context of this event
-          - the event entity itself (in this case a new message)
-
-          At this point we also need to make sure we set the context as either a story
-          thread or as a direct message thread
-        */
-
-        console.log('\nactor', incomingReaction.userId);
-        console.log('\nentity', incomingReaction);
-        const promises = [
-          fetchPayload('USER', incomingReaction.userId),
-          fetchPayload('MESSAGE', incomingReaction.messageId),
-          createPayload('REACTION', incomingReaction),
-        ];
-
-        // 2. If a notification was found that met all of our criteria, we will
-        //    construct a new notification object to update the record in the db
-        if (notification && notification !== undefined) {
-          console.log('\n8');
+        if (notification) {
+          // if an existing notification exists, update it with the newest actor + entities
           return Promise.all([notification, ...promises]).then(([
             notification,
             actor,
             context,
             entity,
           ]) => {
-            console.log('\n8-1', actor);
-            console.log('\n8-2', context);
-            console.log('\n8-3', entity);
-
-            // don't duplicate actors if one user sends a bunch of messages
-            // in a row
+            // actors should always be distinct to make client side rendering easier
             const distinctActors = getDistinctActors([
               ...notification.actors,
               actor,
             ]);
 
-            // create the new notification shape, pushing the current
-            // events actor, context, and entity into each respective field
+            // create a new notification
             const newNotification = Object.assign({}, notification, {
               actors: [...distinctActors],
               context,
               entities: [...notification.entities, entity],
             });
 
-            console.log('\n8-5', newNotification);
-
             // update the notification in the db
             return updateNotification(newNotification)
               .then(notification => {
-                console.log('\n8-6', notification);
+                // get the original message where the reaction was left
+                const message = getMessageById(notification.context.id);
 
-                // with the updated notification, calculate the recipients of
-                // this notification. In this case it is thread participants
-                // or if the message was in a dm thread it's all the members
-                // of that dm thread
-                const recipient = getMessageById(notification.context.id);
-
-                return Promise.all([notification, recipient]);
+                return Promise.all([notification, message]);
               })
-              .then(([notification, recipient]) => {
-                // ensure we have valid recipients
-                console.log('\n8-7', recipient);
-                if (recipient) {
-                  // for each recipient, update the record in the
-                  // usersNotifications table to have isRead and isSeen be false
-                  return markUsersNotificationsAsNew(
-                    notification.id,
-                    recipient.senderId
-                  ).then(data => {
-                    console.log('\n8-8', data);
-                    return data;
-                  });
-                }
+              .then(([notification, message]) => {
+                // make sure that the person who left the original message still has notification permissions in this thread. We have to check the threadtype to determine if the reaction was left in a story thread or a direct message thread
+                // TODO: In the future we'll want reactions in direct message threads to trigger push notifications, but for now it introduces too much complexity so we just say false
+                const hasPermission = message.threadType === 'story'
+                  ? getUserNotificationPermissionsInThread(
+                      message.senderId,
+                      message.threadId
+                    )
+                  : false;
+
+                return Promise.all([notification, message, hasPermission]);
+              })
+              .then(([notification, message, hasPermission]) => {
+                if (!hasPermission) return;
+                // if the user is allowed to recieve notifications, update their notification
+                return markUsersNotificationsAsNew(
+                  notification.id,
+                  message.senderId
+                );
               });
           });
         } else {
-          console.log('\n9');
-          // 2. If no notification was found that met all of our criteria, we will
-          //    create a new notification record in the db
-          return Promise.all(promises).then(([actor, context, entity]) => {
-            console.log('\n9-1', actor);
-            console.log('\n9-2', context);
-            console.log('\n9-3', entity);
-
+          // if no notification was found that matches our bundling criteria, create a new notification
+          return Promise.all([...promises]).then(([actor, context, entity]) => {
             // create the notification record
             const notification = {
               actors: [actor],
@@ -154,27 +109,33 @@ export default () =>
 
             return storeNotification(notification)
               .then(notification => {
-                console.log('\n9-4', notification);
-                // with the new notification, calculate the recipients of
-                // this notification. In this case it is thread participants
-                const recipient = getMessageById(notification.context.id);
+                // get the original message where the reaction was left
+                const message = getMessageById(notification.context.id);
 
-                return Promise.all([notification, recipient]);
+                return Promise.all([notification, message]);
               })
-              .then(([notification, recipient]) => {
-                console.log('\n9-5', recipient);
-                if (recipient) {
-                  return storeUsersNotifications(
-                    notification.id,
-                    recipient.senderId
-                  ).then(data => {
-                    console.log('\n9-6', data);
-                    return data;
-                  });
-                }
+              .then(([notification, message]) => {
+                // make sure that the person who left the original message still has notification permissions in this thread. We have to check the threadtype to determine if the reaction was left in a story thread or a direct message thread
+                // TODO: In the future we'll want reactions in direct message threads to trigger push notifications, but for now it introduces too much complexity so we just say false
+                const hasPermission = message.threadType === 'story'
+                  ? getUserNotificationPermissionsInThread(
+                      message.senderId,
+                      message.threadId
+                    )
+                  : false;
+
+                return Promise.all([notification, message, hasPermission]);
+              })
+              .then(([notification, message, hasPermission]) => {
+                if (!hasPermission) return;
+
+                return storeUsersNotifications(
+                  notification.id,
+                  message.senderId
+                );
               });
           });
         }
       })
-      .catch(err => console.log('\nerror: ', err));
+      .catch(err => new Error(err));
   });
