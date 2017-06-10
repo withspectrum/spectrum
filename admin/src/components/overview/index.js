@@ -37,11 +37,18 @@ const OverviewNumbers = ({ data }) => {
   const channelCount = formatNumber(meta.channelGrowth.length);
   const threadCount = formatNumber(meta.threadGrowth.length);
   const messageCount = formatNumber(meta.messageGrowth.length);
+  const totalPerMonth = formatNumber(
+    meta.subscriptionGrowth.reduce((total, { amount }) => total + amount, 0) /
+      100
+  );
   const userGrowth = getGrowthPerDay(meta.userGrowth);
   const communityGrowth = getGrowthPerDay(meta.communityGrowth);
   const channelGrowth = getGrowthPerDay(meta.channelGrowth);
   const threadGrowth = getGrowthPerDay(meta.threadGrowth);
   const messageGrowth = getGrowthPerDay(meta.messageGrowth);
+  const subscriptionGrowth = getGrowthPerDay(meta.subscriptionGrowth, day =>
+    day.reduce((total, sub) => total + sub.amount, 0)
+  );
 
   return (
     <OverviewRow>
@@ -83,6 +90,14 @@ const OverviewNumbers = ({ data }) => {
           <Count>{messageCount}</Count>
         </Column>
         <Chart height={56} data={messageGrowth} />
+      </Subsection>
+
+      <Subsection>
+        <Column>
+          <Subtext>Money</Subtext>
+          <Count>${totalPerMonth}/m</Count>
+        </Column>
+        <Chart height={56} data={subscriptionGrowth} />
       </Subsection>
     </OverviewRow>
   );

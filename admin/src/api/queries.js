@@ -18,6 +18,11 @@ const META_INFORMATION_QUERY = gql`
       messageGrowth {
         createdAt
       }
+      subscriptionGrowth {
+        amount
+        createdAt
+        plan
+      }
     }
   }
 `;

@@ -30,5 +30,18 @@ module.exports = {
         messages.map(({ timestamp }) => ({ createdAt: timestamp }))
       );
     },
+    subscriptionGrowth: (_: any, __: any, { user }: GraphQLContext) => {
+      if (!isAdmin(user.id)) return null;
+      return getGrowth('subscriptions', {
+        subscription: ['amount', 'created'],
+      }).then(subscriptions =>
+        subscriptions.map(({ subscription }) => ({
+          // convert .created from seconds to ms
+          createdAt: new Date(subscription.created * 1000),
+          amount: subscription.amount,
+          plan: subscription.plan,
+        }))
+      );
+    },
   },
 };

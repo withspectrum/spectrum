@@ -3,12 +3,19 @@ const Meta = /* GraphQL */ `
     createdAt: Date
   }
 
+  type SubscriptionGrowthData {
+    amount: Int
+    createdAt: Date
+    plan: String
+  }
+
   type Meta {
     userGrowth: [GrowthData]
     communityGrowth: [GrowthData]
     channelGrowth: [GrowthData]
     threadGrowth: [GrowthData]
     messageGrowth: [GrowthData]
+    subscriptionGrowth: [SubscriptionGrowthData]
   }
 
   extend type Query {

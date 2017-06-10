@@ -73,7 +73,11 @@ app.use(OpticsAgent.middleware());
 app.use(
   cors({
     origin: IS_PROD
-      ? ['https://spectrum.chat', /spectrum-(\w|-)+\.now\.sh/]
+      ? [
+          'https://spectrum.chat',
+          /spectrum-(\w|-)+\.now\.sh/,
+          /(\w|-)+\.spectrum.chat/,
+        ]
       : 'http://localhost:3000',
     credentials: true,
   })

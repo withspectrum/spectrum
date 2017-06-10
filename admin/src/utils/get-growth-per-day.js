@@ -9,7 +9,12 @@ type Data = {
   createdAt: Date,
 };
 
-const getGrowthPerDay = (input: Array<Data>): Array<number> => {
+const getLength = (arr: Array<any>) => arr.length;
+
+const getGrowthPerDay = (
+  input: Array<Data>,
+  amountGetter?: Function = getLength
+): Array<number> => {
   const growthByDay = groupByDay(input);
   const startDay = Object.keys(growthByDay).sort(
     (a, b) => moment(a).unix() - moment(b).unix()
@@ -21,7 +26,8 @@ const getGrowthPerDay = (input: Array<Data>): Array<number> => {
     const currentDate = moment(startDay).add(i, 'days').toString();
     const currentDatesGrowth = growthByDay[currentDate];
     if (currentDatesGrowth) {
-      growthData.push(currentDatesGrowth.length);
+      const amount = amountGetter(currentDatesGrowth);
+      growthData.push(amount);
     } else {
       // M00p, didn't grow that day 😢
       growthData.push(0);
