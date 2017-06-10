@@ -111,6 +111,7 @@ app.use(passport.session());
 //   /auth/twitter/callback
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
+const IS_SPECTRUM_URL = /^(https?:\/\/)?(\w|-)*\.?spectrum.chat(\w+|\/)*$/i;
 // Twitter will redirect the user to this URL after approval.  Finish the
 // authentication process by attempting to obtain an access token.  If
 // access was granted, the user will be logged in.  Otherwise,
@@ -119,8 +120,14 @@ app.get(
   '/auth/twitter/callback',
   passport.authenticate('twitter', {
     failureRedirect: IS_PROD ? '/' : 'http://localhost:3000/',
-    successRedirect: IS_PROD ? '/home' : 'http://localhost:3000/home',
-  })
+  }),
+  (req, res) => {
+    let url = IS_PROD ? '/home' : 'http://localhost:3000/home';
+    if (req.query.r && IS_SPECTRUM_URL.test(req.query.r)) {
+      url = req.query.r;
+    }
+    res.redirect(url);
+  }
 );
 app.get('/auth/logout', (req, res) => {
   var sessionCookie = req.cookies['connect.sid'];
