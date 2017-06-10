@@ -42,7 +42,7 @@ export const NewUserInCommunityNotification = ({
 
   return (
     <NotificationCard>
-      <CardLink to={`/thread/${notification.context.id}`} />
+      <CardLink to={`/${notification.context.payload.slug}`} />
       <CardContent>
         <ActorsRow actors={actors.asObjects} />
         <TextContent pointer={true}>

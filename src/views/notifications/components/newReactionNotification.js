@@ -19,6 +19,10 @@ import {
   MessageWrapper,
 } from '../../../components/chatMessages/style';
 import { Bubble } from '../../../components/bubbles';
+import {
+  CardLink,
+  CardContent,
+} from '../../../components/threadFeedCard/style';
 
 export const NewReactionNotification = ({ notification, currentUser }) => {
   const actors = parseActors(notification.actors, currentUser);
@@ -27,39 +31,42 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
 
   return (
     <NotificationCard key={notification.id}>
-      <ActorsRow actors={actors.asObjects} />
-      <TextContent pointer={true}>{actors.asString} {event}.</TextContent>
-      <Timestamp>{date}</Timestamp>
-      <AttachmentsWash>
-        <BubbleContainer me={true}>
-          <BubbleGroupContainer me={true}>
-            <MessagesWrapper>
-              <MessageWrapper
-                me={true}
-                timestamp={convertTimestampToTime(
-                  notification.context.payload.timestamp
-                )}
-              >
-                <Bubble
+      <CardLink to={`/thread/${notification.context.payload.threadId}`} />
+      <CardContent>
+        <ActorsRow actors={actors.asObjects} />
+        <TextContent pointer={true}>{actors.asString} {event}.</TextContent>
+        <Timestamp>{date}</Timestamp>
+        <AttachmentsWash>
+          <BubbleContainer me={true}>
+            <BubbleGroupContainer me={true}>
+              <MessagesWrapper>
+                <MessageWrapper
                   me={true}
-                  pending={false}
-                  type={'thread'}
-                  message={notification.context.payload.content}
-                />
-                <ReactionWrapper
-                  hasCount={true}
-                  active={true}
-                  me={true}
-                  hide={false}
-                  dummy={true}
+                  timestamp={convertTimestampToTime(
+                    notification.context.payload.timestamp
+                  )}
                 >
-                  <Icon glyph="like-fill" size={16} color={'text.reverse'} />
-                </ReactionWrapper>
-              </MessageWrapper>
-            </MessagesWrapper>
-          </BubbleGroupContainer>
-        </BubbleContainer>
-      </AttachmentsWash>
+                  <Bubble
+                    me={true}
+                    pending={false}
+                    type={'thread'}
+                    message={notification.context.payload.content}
+                  />
+                  <ReactionWrapper
+                    hasCount={true}
+                    active={true}
+                    me={true}
+                    hide={false}
+                    dummy={true}
+                  >
+                    <Icon glyph="like-fill" size={16} color={'text.reverse'} />
+                  </ReactionWrapper>
+                </MessageWrapper>
+              </MessagesWrapper>
+            </BubbleGroupContainer>
+          </BubbleContainer>
+        </AttachmentsWash>
+      </CardContent>
     </NotificationCard>
   );
 };

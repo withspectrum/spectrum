@@ -19,6 +19,8 @@ module.exports = {
     ) => {
       const cursor = decode(after);
       const currentUser = user;
+      if (!currentUser) return;
+
       return getNotificationsByUser(currentUser.id, { first, after })
         .then(notifications =>
           paginate(
