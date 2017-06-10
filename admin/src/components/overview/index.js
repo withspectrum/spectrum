@@ -21,13 +21,13 @@ import formatNumber from '../../utils/format-number';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const LOGIN_URL = IS_PROD
-  ? 'https://spectrum.chat/api/auth/twitter'
+  ? 'https://spectrum.chat/auth/twitter'
   : 'http://localhost:3001/auth/twitter';
 
 const OverviewNumbers = ({ data }) => {
   if (data.loading) return <p>Loading...</p>;
   if (data.error || data.meta === null || data.meta.userCount === null) {
-    if (IS_PROD) window.location.href = 'https://spectrum.chat';
+    if (IS_PROD) window.location.href = LOGIN_URL;
     return <a href={LOGIN_URL}>Login</a>;
   }
 
