@@ -38,9 +38,7 @@ export default () =>
       createPayload('REACTION', incomingReaction),
     ];
 
-    /*
-      Check to see if an existing notif exists by matching the 'event' type, with the context of the notification, within a certain time period.
-    */
+    // Check to see if an existing notif exists by matching the 'event' type, with the context of the notification, within a certain time period.
     return checkForExistingNotification(
       'REACTION_CREATED',
       incomingReaction.messageId

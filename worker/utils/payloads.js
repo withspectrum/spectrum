@@ -42,7 +42,6 @@ export const fetchPayload = (
   }
 };
 
-// create a payload
 export const createPayload = (type: EntityTypes, data: Object): Object => ({
   type,
   id: data.id,
