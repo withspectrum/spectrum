@@ -298,14 +298,6 @@ const editUser = (
     });
 };
 
-const getUserCount = () => {
-  return db.table('users').count().run();
-};
-
-const getUserGrowth = () => {
-  return db.table('users').withFields('createdAt').run();
-};
-
 module.exports = {
   getUser,
   getUsersThreadCount,
@@ -315,6 +307,4 @@ module.exports = {
   storeUser,
   editUser,
   getEverything,
-  getUserCount,
-  getUserGrowth,
 };

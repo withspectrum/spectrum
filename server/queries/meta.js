@@ -1,10 +1,6 @@
 // @flow
 import type { GraphQLContext } from '../';
-import { getUserCount, getUserGrowth } from '../models/user';
-import { getCommunityCount } from '../models/community';
-import { getChannelCount } from '../models/channel';
-import { getThreadCount } from '../models/thread';
-import { getFullMessageCount } from '../models/message';
+import { getGrowth } from '../models/utils';
 import { isAdmin } from '../utils/permissions';
 
 module.exports = {
@@ -12,29 +8,27 @@ module.exports = {
     meta: () => ({}),
   },
   Meta: {
-    userCount: (_: any, __: any, { user }: GraphQLContext) => {
-      if (!isAdmin(user.id)) return null;
-      return getUserCount();
-    },
-    communityCount: (_: any, __: any, { user }: GraphQLContext) => {
-      if (!isAdmin(user.id)) return null;
-      return getCommunityCount();
-    },
-    channelCount: (_: any, __: any, { user }: GraphQLContext) => {
-      if (!isAdmin(user.id)) return null;
-      return getChannelCount();
-    },
-    threadCount: (_: any, __: any, { user }: GraphQLContext) => {
-      if (!isAdmin(user.id)) return null;
-      return getThreadCount();
-    },
-    messageCount: (_: any, __: any, { user }: GraphQLContext) => {
-      if (!isAdmin(user.id)) return null;
-      return getFullMessageCount();
-    },
     userGrowth: (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
-      return getUserGrowth();
+      return getGrowth('users');
+    },
+    communityGrowth: (_: any, __: any, { user }: GraphQLContext) => {
+      if (!isAdmin(user.id)) return null;
+      return getGrowth('communities');
+    },
+    channelGrowth: (_: any, __: any, { user }: GraphQLContext) => {
+      if (!isAdmin(user.id)) return null;
+      return getGrowth('channels');
+    },
+    threadGrowth: (_: any, __: any, { user }: GraphQLContext) => {
+      if (!isAdmin(user.id)) return null;
+      return getGrowth('threads');
+    },
+    messageGrowth: (_: any, __: any, { user }: GraphQLContext) => {
+      if (!isAdmin(user.id)) return null;
+      return getGrowth('messages', 'timestamp').then(messages =>
+        messages.map(({ timestamp }) => ({ createdAt: timestamp }))
+      );
     },
   },
 };

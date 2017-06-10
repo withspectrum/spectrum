@@ -25,7 +25,12 @@ const listenToNewDocumentsIn = (table, cb) => {
   );
 };
 
+const getGrowth = (table: string, field?: string = 'createdAt') => {
+  return db.table(table).withFields(field).run();
+};
+
 module.exports = {
   NEW_DOCUMENTS,
   listenToNewDocumentsIn,
+  getGrowth,
 };

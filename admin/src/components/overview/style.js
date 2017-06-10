@@ -10,10 +10,9 @@ export const OverviewRow = styled.div`
   flex-direction: column;
   padding: 32px;
   border-bottom: 1px solid ${props => props.theme.border.default};
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
 `;
 
 export const SectionTitle = styled.h2`
@@ -31,6 +30,7 @@ export const Subsection = styled.div`
   display: flex;
   flex-direction: row;
   padding: 16px 0;
+  justify-content: space-between;
 
   @media (max-width: 768px) {
     flex: 1 0 100%;

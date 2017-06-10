@@ -32,53 +32,59 @@ const OverviewNumbers = ({ data }) => {
   }
 
   const { meta } = data;
-  const userCount = formatNumber(meta.userCount);
-  const communityCount = formatNumber(meta.communityCount);
-  const channelCount = formatNumber(meta.channelCount);
-  const threadCount = formatNumber(meta.threadCount);
-  const messageCount = formatNumber(meta.messageCount);
-  const userGrowthByDay = getGrowthPerDay(meta.userGrowth);
+  const userCount = formatNumber(meta.userGrowth.length);
+  const communityCount = formatNumber(meta.communityGrowth.length);
+  const channelCount = formatNumber(meta.channelGrowth.length);
+  const threadCount = formatNumber(meta.threadGrowth.length);
+  const messageCount = formatNumber(meta.messageGrowth.length);
+  const userGrowth = getGrowthPerDay(meta.userGrowth);
+  const communityGrowth = getGrowthPerDay(meta.communityGrowth);
+  const channelGrowth = getGrowthPerDay(meta.channelGrowth);
+  const threadGrowth = getGrowthPerDay(meta.threadGrowth);
+  const messageGrowth = getGrowthPerDay(meta.messageGrowth);
 
   return (
-    <div>
-      <OverviewRow>
-        <Subsection>
-          <Column>
-            <Subtext>Users</Subtext>
-            <Count>{userCount}</Count>
-          </Column>
-          <Chart height={56} data={userGrowthByDay} />
-        </Subsection>
+    <OverviewRow>
+      <Subsection>
+        <Column>
+          <Subtext>Users</Subtext>
+          <Count>{userCount}</Count>
+        </Column>
+        <Chart height={56} data={userGrowth} />
+      </Subsection>
 
-        <Subsection>
-          <Column>
-            <Subtext>Communities</Subtext>
-            <Count>{communityCount}</Count>
-          </Column>
-        </Subsection>
+      <Subsection>
+        <Column>
+          <Subtext>Communities</Subtext>
+          <Count>{communityCount}</Count>
+        </Column>
+        <Chart height={56} data={communityGrowth} />
+      </Subsection>
 
-        <Subsection>
-          <Column>
-            <Subtext>Channels</Subtext>
-            <Count>{channelCount}</Count>
-          </Column>
-        </Subsection>
+      <Subsection>
+        <Column>
+          <Subtext>Channels</Subtext>
+          <Count>{channelCount}</Count>
+        </Column>
+        <Chart height={56} data={channelGrowth} />
+      </Subsection>
 
-        <Subsection>
-          <Column>
-            <Subtext>Threads</Subtext>
-            <Count>{threadCount}</Count>
-          </Column>
-        </Subsection>
+      <Subsection>
+        <Column>
+          <Subtext>Threads</Subtext>
+          <Count>{threadCount}</Count>
+        </Column>
+        <Chart height={56} data={threadGrowth} />
+      </Subsection>
 
-        <Subsection>
-          <Column>
-            <Subtext>Messages</Subtext>
-            <Count>{messageCount}</Count>
-          </Column>
-        </Subsection>
-      </OverviewRow>
-    </div>
+      <Subsection>
+        <Column>
+          <Subtext>Messages</Subtext>
+          <Count>{messageCount}</Count>
+        </Column>
+        <Chart height={56} data={messageGrowth} />
+      </Subsection>
+    </OverviewRow>
   );
 };
 

@@ -4,12 +4,11 @@ const Meta = /* GraphQL */ `
   }
 
   type Meta {
-    userCount: Int
-    communityCount: Int
-    channelCount: Int
-    threadCount: Int
-    messageCount: Int
     userGrowth: [GrowthData]
+    communityGrowth: [GrowthData]
+    channelGrowth: [GrowthData]
+    threadGrowth: [GrowthData]
+    messageGrowth: [GrowthData]
   }
 
   extend type Query {
