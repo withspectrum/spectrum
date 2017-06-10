@@ -71,7 +71,7 @@ export const MiniNewUserInCommunityNotification = ({
       <CardLink to={`/thread/${notification.context.id}`} />
       <CardContent>
         <ActorsRow actors={actors.asObjects} />
-        <TextContent pointer={true}>
+        <TextContent pointer={false}>
           {actors.asString} {event} {context.asString}.
         </TextContent>
         <Timestamp>{date}</Timestamp>
