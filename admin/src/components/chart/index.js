@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import Trend from 'react-trend';
+import relativeToAbsolute from '../../utils/relative-to-absolute';
 
 type Data = {
   createdAt: number,
@@ -15,7 +16,9 @@ type Props = {
 };
 
 const Chart = (props: Props) => {
-  const data = props.data;
+  const data = props.type !== 'absolute'
+    ? props.data
+    : relativeToAbsolute(props.data);
 
   return (
     <div>
@@ -25,6 +28,7 @@ const Chart = (props: Props) => {
         smooth
         strokeLinecap="round"
         {...props}
+        data={data}
       />
     </div>
   );

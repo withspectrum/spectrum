@@ -97,7 +97,7 @@ const OverviewNumbers = ({ data }) => {
           <Subtext>Money</Subtext>
           <Count>${totalPerMonth}/m</Count>
         </Column>
-        <Chart height={56} data={subscriptionGrowth} />
+        <Chart type="absolute" height={56} data={subscriptionGrowth} />
       </Subsection>
     </OverviewRow>
   );

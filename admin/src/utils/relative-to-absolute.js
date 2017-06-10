@@ -9,3 +9,5 @@ const relativeToAbsolute = (input: Array<number>): Array<number> =>
     },
     [input[0]]
   );
+
+export default relativeToAbsolute;
