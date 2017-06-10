@@ -23,8 +23,11 @@ class MessagesWithData extends Component {
   componentDidUpdate(prevProps) {
     // force scroll to bottom when a message is sent in the same thread
     if (
+      prevProps &&
+      prevProps.data &&
+      prevProps.data.thread &&
       prevProps.data.thread.messageConnection !==
-      this.props.data.thread.messageConnection
+        this.props.data.thread.messageConnection
     ) {
       this.props.contextualScrollToBottom();
     }
@@ -59,7 +62,7 @@ class MessagesWithData extends Component {
 
   render() {
     const { data, toggleReaction, forceScrollToBottom } = this.props;
-
+    console.log('data', data);
     if (data.error) {
       return <div>Error!</div>;
     }

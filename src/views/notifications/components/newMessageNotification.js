@@ -8,8 +8,11 @@ import {
   getLastMessageCreatedByAnotherUser,
 } from '../utils';
 import { ActorsRow } from './actorsRow';
-import { Bubble } from '../../../components/bubbles';
-import { convertTimestampToTime } from '../../../helpers/utils';
+import { Bubble, EmojiBubble, ImgBubble } from '../../../components/bubbles';
+import {
+  convertTimestampToTime,
+  onlyContainsEmoji,
+} from '../../../helpers/utils';
 import {
   MessagesWrapper,
   MessageWrapper,
@@ -37,6 +40,10 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
     notification.entities,
     currentUser
   );
+  const emojiOnly = onlyContainsEmoji(message.content.body);
+  const TextBubble = emojiOnly ? EmojiBubble : Bubble;
+
+  console.log(message.messageType);
 
   return (
     <NotificationCard>
@@ -51,17 +58,31 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
           <BubbleContainer me={false}>
             <BubbleGroupContainer me={false}>
               <MessagesWrapper>
-                <MessageWrapper
-                  me={false}
-                  timestamp={convertTimestampToTime(message.timestamp)}
-                >
-                  <Bubble
+
+                {message.messageType !== 'media' &&
+                  <MessageWrapper
                     me={false}
-                    pending={false}
-                    type={'thread'}
-                    message={message.content}
-                  />
-                </MessageWrapper>
+                    timestamp={convertTimestampToTime(message.timestamp)}
+                  >
+                    <TextBubble
+                      me={false}
+                      pending={false}
+                      message={message.content}
+                    />
+                  </MessageWrapper>}
+                {message.messageType === 'media' &&
+                  <MessageWrapper
+                    me={false}
+                    timestamp={convertTimestampToTime(message.timestamp)}
+                  >
+                    <ImgBubble
+                      me={false}
+                      pending={false}
+                      imgSrc={message.content.body}
+                      message={message.content}
+                    />
+                  </MessageWrapper>}
+
               </MessagesWrapper>
             </BubbleGroupContainer>
           </BubbleContainer>
