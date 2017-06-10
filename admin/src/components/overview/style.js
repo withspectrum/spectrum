@@ -22,9 +22,14 @@ export const SectionTitle = styled.h2`
   color: ${props => props.theme.text.default};
 `;
 
-export const Subsection = styled.div`
+export const Column = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+export const Subsection = styled.div`
+  display: flex;
+  flex-direction: row;
   padding: 16px 0;
 
   @media (max-width: 768px) {

@@ -11,10 +11,13 @@ import {
   RangePicker,
   RangeItem,
   HeaderZoneBoy,
+  Column,
 } from './style';
+import Chart from '../chart';
 import { overviewQuery } from '../../api/queries';
 import { displayLoadingState } from '../loading';
 import getGrowthPerDay from '../../utils/get-growth-per-day';
+import formatNumber from '../../utils/format-number';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const LOGIN_URL = IS_PROD
@@ -28,52 +31,51 @@ const OverviewNumbers = ({ data }) => {
     return <a href={LOGIN_URL}>Login</a>;
   }
 
-  const numberWithCommas = num =>
-    num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
   const { meta } = data;
-  const userCount = numberWithCommas(meta.userCount);
-  const communityCount = numberWithCommas(meta.communityCount);
-  const channelCount = numberWithCommas(meta.channelCount);
-  const threadCount = numberWithCommas(meta.threadCount);
-  const messageCount = numberWithCommas(meta.messageCount);
+  const userCount = formatNumber(meta.userCount);
+  const communityCount = formatNumber(meta.communityCount);
+  const channelCount = formatNumber(meta.channelCount);
+  const threadCount = formatNumber(meta.threadCount);
+  const messageCount = formatNumber(meta.messageCount);
   const userGrowthByDay = getGrowthPerDay(meta.userGrowth);
 
   return (
     <div>
       <OverviewRow>
         <Subsection>
-          <Subtext>Users</Subtext>
-          <Count>{userCount}</Count>
-          <div>
-            <Trend
-              data={userGrowthByDay}
-              gradient={['#1CD2F2', '#00D6A9']}
-              strokeWidth={1}
-              smooth
-              strokeLinecap="round"
-            />
-          </div>
+          <Column>
+            <Subtext>Users</Subtext>
+            <Count>{userCount}</Count>
+          </Column>
+          <Chart height={56} data={userGrowthByDay} />
         </Subsection>
 
         <Subsection>
-          <Subtext>Communities</Subtext>
-          <Count>{communityCount}</Count>
+          <Column>
+            <Subtext>Communities</Subtext>
+            <Count>{communityCount}</Count>
+          </Column>
         </Subsection>
 
         <Subsection>
-          <Subtext>Channels</Subtext>
-          <Count>{channelCount}</Count>
+          <Column>
+            <Subtext>Channels</Subtext>
+            <Count>{channelCount}</Count>
+          </Column>
         </Subsection>
 
         <Subsection>
-          <Subtext>Threads</Subtext>
-          <Count>{threadCount}</Count>
+          <Column>
+            <Subtext>Threads</Subtext>
+            <Count>{threadCount}</Count>
+          </Column>
         </Subsection>
 
         <Subsection>
-          <Subtext>Messages</Subtext>
-          <Count>{messageCount}</Count>
+          <Column>
+            <Subtext>Messages</Subtext>
+            <Count>{messageCount}</Count>
+          </Column>
         </Subsection>
       </OverviewRow>
     </div>
