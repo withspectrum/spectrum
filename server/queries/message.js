@@ -25,7 +25,9 @@ module.exports = {
       getReactions(id).then(reactions => {
         return {
           count: reactions.length,
-          hasReacted: reactions.some(reaction => reaction.userId === user.id),
+          hasReacted: user
+            ? reactions.some(reaction => reaction.userId === user.id)
+            : false,
         };
       }),
   },
