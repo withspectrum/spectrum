@@ -43,14 +43,14 @@ class Navbar extends Component {
     }
   }
 
+  login = () => {
+    // log the user in and return them to this page
+    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window.location.href}`);
+  };
+
   render() {
     const { match, data: { user } } = this.props;
     const currentUser = user;
-
-    const login = () => {
-      // log the user in and return them to this page
-      return (window.location.href = `${SERVER_URL}/auth/twitter?redirectTo=${window.location.pathname}`);
-    };
 
     if (!currentUser || currentUser === null) {
       return (
@@ -62,7 +62,7 @@ class Navbar extends Component {
           </Section>
           <Section right>
             <Button
-              onClick={login}
+              onClick={this.login}
               icon="twitter"
               style={{ padding: '2px 4px' }}
             >
