@@ -44,12 +44,12 @@ export const NullState = props => (
   </NullCol>
 );
 
-export const UpsellSignIn = ({ entity }) => {
-  const login = () => {
-    // log the user in and return them to this page
-    return (window.location.href = `${SERVER_URL}/auth/twitter?redirectTo=${window.location.pathname}`);
-  };
+const login = () => {
+  // log the user in and return them to this page
+  return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window.location.href}`);
+};
 
+export const UpsellSignIn = ({ entity }) => {
   const subtitle = entity
     ? `Ready to join the conversation in ${entity.name}?`
     : 'Ready to join the conversation? ';
@@ -120,10 +120,7 @@ export const UpsellRequestToJoinChannel = ({
 
       {// user is not logged in
       !currentUser &&
-        <Button
-          icon="twitter"
-          onClick={() => (window.location.href = `${SERVER_URL}/auth/twitter`)}
-        >
+        <Button icon="twitter" onClick={login}>
           Sign in with Twitter
         </Button>}
 
@@ -180,7 +177,7 @@ export const Upsell404Channel = ({
       <Title>{title}</Title>
       <Subtitle>{subtitle}</Subtitle>
       <Actions>
-        <Button onClick={() => (window.location.href = returnUrl)}>
+        <Button onClick={() => window.location.href = returnUrl}>
           Take me back
         </Button>
       </Actions>
@@ -277,7 +274,7 @@ export const Upsell404User = ({
 
   return (
     <NullCard bg="user" heading={title} copy={subtitle}>
-      <Button onClick={() => (window.location.href = '/home')}>
+      <Button onClick={() => window.location.href = '/home'}>
         Take me home
       </Button>
     </NullCard>
@@ -309,7 +306,7 @@ export const Upsell404Thread = () => {
       heading="Oops, something got lost!"
       copy="We can't find that thread. Maybe it floated off into space..."
     >
-      <Button onClick={() => (window.location.href = `/home`)}>
+      <Button onClick={() => window.location.href = `/home`}>
         Take me home
       </Button>
     </NullCard>
