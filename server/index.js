@@ -106,12 +106,20 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+const IS_SPECTRUM_URL = /^(https?:\/\/)?(\w|-)*\.?spectrum\.chat(\w+|\/)*$/i;
 // Redirect the user to Twitter for authentication.  When complete, Twitter
 // will redirect the user back to the application at
 //   /auth/twitter/callback
-app.get('/auth/twitter', passport.authenticate('twitter'));
+app.get('/auth/twitter', (req, ...rest) => {
+  let url = IS_PROD ? '/home' : 'http://localhost:3000/home';
+  if (req.query.r && IS_SPECTRUM_URL.test(req.query.r)) {
+    url = req.query.r;
+  }
+  // Attach the redirectURL to the session so we have it in the /auth/twitter/callback route
+  req.session.redirectURL = url;
+  return passport.authenticate('twitter')(req, ...rest);
+});
 
-const IS_SPECTRUM_URL = /^(https?:\/\/)?(\w|-)*\.?spectrum.chat(\w+|\/)*$/i;
 // Twitter will redirect the user to this URL after approval.  Finish the
 // authentication process by attempting to obtain an access token.  If
 // access was granted, the user will be logged in.  Otherwise,
@@ -122,11 +130,9 @@ app.get(
     failureRedirect: IS_PROD ? '/' : 'http://localhost:3000/',
   }),
   (req, res) => {
-    let url = IS_PROD ? '/home' : 'http://localhost:3000/home';
-    if (req.query.r && IS_SPECTRUM_URL.test(req.query.r)) {
-      url = req.query.r;
-    }
-    res.redirect(url);
+    // Just to make sure we don't fuck up have a fallback URL to redirect to
+    const fallbackURL = IS_PROD ? '/home' : 'http://localhost:3000/home';
+    res.redirect(req.session.redirectURL || fallbackURL);
   }
 );
 app.get('/auth/logout', (req, res) => {
