@@ -130,7 +130,12 @@ app.get('/auth/twitter', (req, ...rest) => {
   }
   // Attach the redirectURL to the session so we have it in the /auth/twitter/callback route
   req.session.redirectURL = url;
-  return passport.authenticate('twitter')(req, ...rest);
+  return new Promise(res => {
+    // Save the new session data to the database before redirecting
+    req.session.save(err => {
+      res(passport.authenticate('twitter')(req, ...rest));
+    });
+  });
 });
 
 // Twitter will redirect the user to this URL after approval.  Finish the
