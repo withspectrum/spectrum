@@ -151,7 +151,20 @@ app.get(
     // Just to make sure we don't fuck up have a fallback URL to redirect to
     const fallbackURL = IS_PROD ? '/home' : 'http://localhost:3000/home';
     // req.session.redirectURL is set in the /auth/twitter route
-    res.redirect(req.session.redirectURL || fallbackURL);
+    const redirectUrl = req.session.redirectURL || fallbackURL;
+    if (req.session.redirectURL) {
+      // Delete the redirectURL from the session again so we don't redirect
+      // to the old URL the next time around
+      req.session.redirectURL = undefined;
+      return new Promise(resolve => {
+        req.session.save(err => {
+          if (err) console.log(err);
+          resolve(res.redirect(redirectUrl));
+        });
+      });
+    } else {
+      res.redirect(redirectUrl);
+    }
   }
 );
 app.get('/auth/logout', (req, res) => {
