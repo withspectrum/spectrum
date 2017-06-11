@@ -10,7 +10,7 @@ const COOKIE_SECRET =
 
 const path = require('path');
 const fs = require('fs');
-const url = require('url');
+const { URL } = require('url');
 const { createServer } = require('http');
 const Raven = require('raven');
 //$FlowFixMe
@@ -106,14 +106,27 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-const IS_SPECTRUM_URL = /^(https?:\/\/)?(\w|-)*\.?spectrum\.chat(\w+|\/)*$/i;
 // Redirect the user to Twitter for authentication.  When complete, Twitter
 // will redirect the user back to the application at
 //   /auth/twitter/callback
 app.get('/auth/twitter', (req, ...rest) => {
   let url = IS_PROD ? '/home' : 'http://localhost:3000/home';
-  if (req.query.r && IS_SPECTRUM_URL.test(req.query.r)) {
-    url = req.query.r;
+  if (req.query.r) {
+    try {
+      const { hostname } = new URL(req.query.r);
+      const IS_SPECTRUM_URL = hostname.endsWith('spectrum.chat'); // hostname might be spectrum.chat or admin.spectrum.chat
+      const IS_LOCALHOST = hostname === 'localhost';
+      // Make sure the passed redirect URL is a spectrum.chat one
+      if (IS_SPECTRUM_URL || (!IS_PROD && IS_LOCALHOST)) {
+        url = req.query.r;
+      }
+      // Swallow URL parsing errors (when an invalid URL is passed) and redirect to the standard one
+    } catch (err) {
+      console.log(
+        `Invalid URL ("${req.query.r}") passed to /auth/twitter?r query option. Full error:`
+      );
+      console.log(err);
+    }
   }
   // Attach the redirectURL to the session so we have it in the /auth/twitter/callback route
   req.session.redirectURL = url;
@@ -132,6 +145,7 @@ app.get(
   (req, res) => {
     // Just to make sure we don't fuck up have a fallback URL to redirect to
     const fallbackURL = IS_PROD ? '/home' : 'http://localhost:3000/home';
+    // req.session.redirectURL is set in the /auth/twitter route
     res.redirect(req.session.redirectURL || fallbackURL);
   }
 );
