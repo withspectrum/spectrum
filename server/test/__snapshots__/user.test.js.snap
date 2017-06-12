@@ -1,5 +1,3 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
 exports[`queries should fetch a user 1`] = `
 Object {
   "data": Object {
@@ -8,7 +6,7 @@ Object {
       "createdAt": "2016-12-31T23:00:00.000Z",
       "description": "Makes styled-components, react-boilerplate and micro-analytics 💅 Speciality coffee geek, skier, traveller ☕",
       "email": "hi@mxstbr.com",
-      "id": "ce2b4488-4c75-47e0-8ebc-2539c1e6a190",
+      "id": "gVk5mYwccUOEKiN5vtOouqroGKo1",
       "lastSeen": "2016-12-31T23:00:00.000Z",
       "name": "Max Stoiber",
       "profilePhoto": "https://img.gs/jztmrqvgzv/500/mxstbr.com/headshot.jpeg",

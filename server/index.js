@@ -73,7 +73,11 @@ app.use(OpticsAgent.middleware());
 app.use(
   cors({
     origin: IS_PROD
-      ? ['https://spectrum.chat', /spectrum-(\w|-)+\.now\.sh/]
+      ? [
+          'https://spectrum.chat',
+          /spectrum-(\w|-)+\.now\.sh/,
+          /(\w|-)+\.spectrum.chat/,
+        ]
       : 'http://localhost:3000',
     credentials: true,
   })
@@ -193,6 +197,7 @@ app.use(
   graphqlExpress(req => ({
     schema,
     formatError: error => {
+      console.log(error);
       const sentryId = Raven.captureException(
         error,
         Raven.parsers.parseRequest(req)

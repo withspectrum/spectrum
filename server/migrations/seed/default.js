@@ -5,7 +5,7 @@ const DATE = 1483225200000;
 
 const DEFAULT_USERS = [
   {
-    id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a190',
+    id: 'gVk5mYwccUOEKiN5vtOouqroGKo1',
     name: 'Max Stoiber',
     description: 'Makes styled-components, react-boilerplate and micro-analytics 💅 Speciality coffee geek, skier, traveller ☕',
     website: 'https://mxstbr.com',
@@ -19,7 +19,7 @@ const DEFAULT_USERS = [
     lastSeen: new Date(DATE),
   },
   {
-    id: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    id: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
     name: 'Brian Lovin',
     description: 'Chief Nice Boy™',
     website: 'https://brianlovin.com',
@@ -33,7 +33,7 @@ const DEFAULT_USERS = [
     lastSeen: new Date(DATE),
   },
   {
-    id: 'uItS3QQiUxXH44m14uWmixTbqSc2',
+    id: 'VToKcde16dREgDkXcDl3hhcrFN33',
     name: 'Bryn Jackson',
     description: 'full-stack flapjack',
     website: 'https://bryn.io',

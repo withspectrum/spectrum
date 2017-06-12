@@ -540,10 +540,6 @@ const getRecentCommunities = (amount: number): Array<Object> => {
     .run();
 };
 
-const getCommunityCount = () => {
-  return db.table('communities').count().run();
-};
-
 module.exports = {
   getCommunities,
   getCommunitiesBySlug,
@@ -557,5 +553,4 @@ module.exports = {
   userIsMemberOfAnyChannelInCommunity,
   getTopCommunities,
   getRecentCommunities,
-  getCommunityCount,
 };

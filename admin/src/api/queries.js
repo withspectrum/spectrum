@@ -3,11 +3,26 @@ import { graphql, gql } from 'react-apollo';
 const META_INFORMATION_QUERY = gql`
   query {
     meta {
-      userCount
-      communityCount
-      threadCount
-      channelCount
-      messageCount
+      userGrowth {
+        createdAt
+      }
+      communityGrowth {
+        createdAt
+      }
+      channelGrowth {
+        createdAt
+      }
+      threadGrowth {
+        createdAt
+      }
+      messageGrowth {
+        createdAt
+      }
+      subscriptionGrowth {
+        amount
+        createdAt
+        plan
+      }
     }
   }
 `;
