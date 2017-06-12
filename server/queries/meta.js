@@ -1,9 +1,6 @@
 // @flow
 import type { GraphQLContext } from '../';
-import { getUserCount } from '../models/user';
-import { getCommunityCount } from '../models/community';
-import { getChannelCount } from '../models/channel';
-import { getThreadCount } from '../models/thread';
+import { getGrowth } from '../models/utils';
 import { isAdmin } from '../utils/permissions';
 
 module.exports = {
@@ -11,21 +8,40 @@ module.exports = {
     meta: () => ({}),
   },
   Meta: {
-    userCount: (_: any, __: any, { user }: GraphQLContext) => {
+    userGrowth: (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
-      return getUserCount();
+      return getGrowth('users');
     },
-    communityCount: (_: any, __: any, { user }: GraphQLContext) => {
+    communityGrowth: (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
-      return getCommunityCount();
+      return getGrowth('communities');
     },
-    channelCount: (_: any, __: any, { user }: GraphQLContext) => {
+    channelGrowth: (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
-      return getChannelCount();
+      return getGrowth('channels');
     },
-    threadCount: (_: any, __: any, { user }: GraphQLContext) => {
+    threadGrowth: (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
-      return getThreadCount();
+      return getGrowth('threads');
+    },
+    messageGrowth: (_: any, __: any, { user }: GraphQLContext) => {
+      if (!isAdmin(user.id)) return null;
+      return getGrowth('messages', 'timestamp').then(messages =>
+        messages.map(({ timestamp }) => ({ createdAt: timestamp }))
+      );
+    },
+    subscriptionGrowth: (_: any, __: any, { user }: GraphQLContext) => {
+      if (!isAdmin(user.id)) return null;
+      return getGrowth('subscriptions', {
+        subscription: ['amount', 'created'],
+      }).then(subscriptions =>
+        subscriptions.map(({ subscription }) => ({
+          // convert .created from seconds to ms
+          createdAt: new Date(subscription.created * 1000),
+          amount: subscription.amount,
+          plan: subscription.plan,
+        }))
+      );
     },
   },
 };

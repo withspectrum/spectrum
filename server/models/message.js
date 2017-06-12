@@ -3,6 +3,7 @@ import striptags from 'striptags';
 const { db } = require('./db');
 const { listenToNewDocumentsIn } = require('./utils');
 const { storeMessageNotification } = require('./notification');
+const { setThreadLastActive } = require('./thread');
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
 export type MessageTypes = 'text' | 'media';
@@ -63,6 +64,7 @@ const storeMessage = (message, user: Object): Promise<Object> => {
           excerpt: message.content.body,
         },
       });
+      setThreadLastActive(message.threadId, message.timestamp);
       return message;
     });
 };
