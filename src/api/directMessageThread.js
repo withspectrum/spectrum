@@ -28,6 +28,9 @@ const CREATE_DIRECT_MESSAGE_THREAD_MUTATION = gql`
   ${directMessageThreadInfoFragment}
 `;
 const CREATE_DIRECT_MESSAGE_THREAD_OPTIONS = {
+  options: {
+    refetchQueries: ['currentUserDirectMessageThreads'],
+  },
   props: ({ input, mutate }) => ({
     createDirectMessageThread: input =>
       mutate({
@@ -100,6 +103,7 @@ export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
     variables: {
       id,
     },
+    fetchPolicy: 'cache-and-network',
   }),
 };
 

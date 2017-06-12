@@ -44,12 +44,12 @@ export const NullState = props => (
   </NullCol>
 );
 
-export const UpsellSignIn = ({ entity }) => {
-  const login = () => {
-    // log the user in and return them to this page
-    return (window.location.href = `${SERVER_URL}/auth/twitter?redirectTo=${window.location.pathname}`);
-  };
+const login = () => {
+  // log the user in and return them to this page
+  return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window.location.href}`);
+};
 
+export const UpsellSignIn = ({ entity }) => {
   const subtitle = entity
     ? `Ready to join the conversation in ${entity.name}?`
     : 'Ready to join the conversation? ';
@@ -120,10 +120,7 @@ export const UpsellRequestToJoinChannel = ({
 
       {// user is not logged in
       !currentUser &&
-        <Button
-          icon="twitter"
-          onClick={() => window.location.href = `${SERVER_URL}/auth/twitter`}
-        >
+        <Button icon="twitter" onClick={login}>
           Sign in with Twitter
         </Button>}
 

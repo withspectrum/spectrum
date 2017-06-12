@@ -29,6 +29,7 @@ export const getThisChannel = graphql(
         channelSlug: match.params.channelSlug,
         communitySlug: match.params.communitySlug,
       },
+      fetchPolicy: 'network-only',
     }),
   }
 );

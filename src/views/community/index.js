@@ -181,6 +181,7 @@ class CommunityViewPure extends Component {
                 !community.communityPermissions.isMember &&
                 <UpsellJoinCommunity
                   community={community}
+                  loading={isLoading}
                   join={this.toggleMembership}
                   loading={isLoading}
                 />}

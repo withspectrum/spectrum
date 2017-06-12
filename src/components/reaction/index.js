@@ -23,7 +23,13 @@ class Reaction extends Component {
   doNothing = () => {};
 
   triggerMutation = () => {
-    const { toggleReaction, message, dispatch } = this.props;
+    const { toggleReaction, message, dispatch, currentUser } = this.props;
+
+    if (!currentUser) {
+      return dispatch(
+        addToastWithTimeout('error', 'Sign in first to leave a reaction!')
+      );
+    }
 
     const hasReacted = this.state.hasReacted;
     const count = this.state.count;

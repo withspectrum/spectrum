@@ -95,7 +95,7 @@ export const LinkPreviewSkeleton = styled.div`
 	position: relative;
 	height: 140px;
 	z-index: 2;
-  margin: 16px;
+  margin: ${props => (props.margin ? props.margin : '16px')};
 `;
 
 const placeHolderShimmer = keyframes`

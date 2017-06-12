@@ -106,7 +106,7 @@ class CommunityWithData extends Component {
       isLoading: true,
     });
 
-    if (file.size > 3000000) {
+    if (file && file.size > 3000000) {
       return this.setState({
         photoSizeError: true,
         isLoading: false,
@@ -135,7 +135,7 @@ class CommunityWithData extends Component {
       isLoading: true,
     });
 
-    if (file.size > 3000000) {
+    if (file && file.size > 3000000) {
       return this.setState({
         photoSizeError: true,
         isLoading: false,

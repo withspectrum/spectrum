@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import compose from 'recompose/compose';
+import Trend from 'react-trend';
 import {
   Section,
   SectionTitle,
@@ -10,50 +11,93 @@ import {
   RangePicker,
   RangeItem,
   HeaderZoneBoy,
+  Column,
 } from './style';
+import Chart from '../chart';
 import { overviewQuery } from '../../api/queries';
 import { displayLoadingState } from '../loading';
+import getGrowthPerDay from '../../utils/get-growth-per-day';
+import formatNumber from '../../utils/format-number';
+
+const IS_PROD = process.env.NODE_ENV === 'production';
+const LOGIN_URL = IS_PROD
+  ? `https://spectrum.chat/auth/twitter?r=https://${window.location.host}`
+  : 'http://localhost:3001/auth/twitter?r=http://localhost:3000';
 
 const OverviewNumbers = ({ data }) => {
   if (data.loading) return <p>Loading...</p>;
-  if (data.error || data.meta === null)
-    window.location.href = 'https://spectrum.chat';
-
-  const numberWithCommas = num =>
-    num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  if (data.error || data.meta === null || data.meta.userCount === null) {
+    if (IS_PROD) window.location.href = LOGIN_URL;
+    return <a href={LOGIN_URL}>Login</a>;
+  }
 
   const { meta } = data;
-  const userCount = numberWithCommas(meta.userCount);
-  const communityCount = numberWithCommas(meta.communityCount);
-  const channelCount = numberWithCommas(meta.channelCount);
-  const threadCount = numberWithCommas(meta.threadCount);
-  const messageCount = numberWithCommas(meta.messageCount);
+  const userCount = formatNumber(meta.userGrowth.length);
+  const communityCount = formatNumber(meta.communityGrowth.length);
+  const channelCount = formatNumber(meta.channelGrowth.length);
+  const threadCount = formatNumber(meta.threadGrowth.length);
+  const messageCount = formatNumber(meta.messageGrowth.length);
+  const totalPerMonth = formatNumber(
+    meta.subscriptionGrowth.reduce((total, { amount }) => total + amount, 0) /
+      100
+  );
+  const userGrowth = getGrowthPerDay(meta.userGrowth);
+  const communityGrowth = getGrowthPerDay(meta.communityGrowth);
+  const channelGrowth = getGrowthPerDay(meta.channelGrowth);
+  const threadGrowth = getGrowthPerDay(meta.threadGrowth);
+  const messageGrowth = getGrowthPerDay(meta.messageGrowth);
+  const subscriptionGrowth = getGrowthPerDay(meta.subscriptionGrowth, day =>
+    day.reduce((total, sub) => total + sub.amount, 0)
+  );
 
   return (
     <OverviewRow>
       <Subsection>
-        <Subtext>Users</Subtext>
-        <Count>{userCount}</Count>
+        <Column>
+          <Subtext>Users</Subtext>
+          <Count>{userCount}</Count>
+        </Column>
+        <Chart height={56} data={userGrowth} />
       </Subsection>
 
       <Subsection>
-        <Subtext>Communities</Subtext>
-        <Count>{communityCount}</Count>
+        <Column>
+          <Subtext>Communities</Subtext>
+          <Count>{communityCount}</Count>
+        </Column>
+        <Chart height={56} data={communityGrowth} />
       </Subsection>
 
       <Subsection>
-        <Subtext>Channels</Subtext>
-        <Count>{channelCount}</Count>
+        <Column>
+          <Subtext>Channels</Subtext>
+          <Count>{channelCount}</Count>
+        </Column>
+        <Chart height={56} data={channelGrowth} />
       </Subsection>
 
       <Subsection>
-        <Subtext>Threads</Subtext>
-        <Count>{threadCount}</Count>
+        <Column>
+          <Subtext>Threads</Subtext>
+          <Count>{threadCount}</Count>
+        </Column>
+        <Chart height={56} data={threadGrowth} />
       </Subsection>
 
       <Subsection>
-        <Subtext>Messages</Subtext>
-        <Count>{messageCount}</Count>
+        <Column>
+          <Subtext>Messages</Subtext>
+          <Count>{messageCount}</Count>
+        </Column>
+        <Chart height={56} data={messageGrowth} />
+      </Subsection>
+
+      <Subsection>
+        <Column>
+          <Subtext>Money</Subtext>
+          <Count>${totalPerMonth}/m</Count>
+        </Column>
+        <Chart type="absolute" height={56} data={subscriptionGrowth} />
       </Subsection>
     </OverviewRow>
   );

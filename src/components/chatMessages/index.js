@@ -43,9 +43,9 @@ class ChatMessages extends Component {
   };
 
   render() {
-    const { messages, currentUser, toggleReaction } = this.props;
+    const { messages, currentUser, toggleReaction, dispatch } = this.props;
 
-    if (!messages) {
+    if (!messages || messages.length === 0) {
       return (
         <NullState
           bg="chat"
@@ -146,6 +146,7 @@ class ChatMessages extends Component {
                               toggleReaction={toggleReaction}
                               me={me}
                               currentUser={currentUser}
+                              dispatch={dispatch}
                             />}
                         </MessageWrapper>
                       );
@@ -171,6 +172,7 @@ class ChatMessages extends Component {
                               toggleReaction={toggleReaction}
                               me={me}
                               currentUser={currentUser}
+                              dispatch={dispatch}
                             />}
                         </MessageWrapper>
                       );

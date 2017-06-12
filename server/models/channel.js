@@ -294,10 +294,6 @@ const getChannelMemberCount = (channelId: string): number => {
   return db.table('channels').get(channelId)('members').count().run();
 };
 
-const getChannelCount = () => {
-  return db.table('channels').count().run();
-};
-
 module.exports = {
   getChannelBySlug,
   getChannelMetaData,
@@ -312,5 +308,4 @@ module.exports = {
   getTopChannels,
   getChannelMemberCount,
   getChannels,
-  getChannelCount,
 };

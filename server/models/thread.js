@@ -24,7 +24,7 @@ export const getThreadsByChannel = (
     .table('threads')
     .getAll(channelId, { index: 'channelId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('createdAt'))
+    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .run();
 };
 
@@ -35,7 +35,7 @@ export const getThreadsByChannels = (
     .table('threads')
     .getAll(...channelIds, { index: 'channelId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('createdAt'))
+    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .run();
 };
 
@@ -46,7 +46,7 @@ export const getThreadsByCommunity = (
     .table('threads')
     .getAll(communityId, { index: 'communityId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('createdAt'))
+    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .run();
 };
 
@@ -104,7 +104,7 @@ export const getViewableThreadsByUser = (
       .zip()
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
-      .orderBy(db.desc('createdAt'))
+      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
       .run()
   );
 };
@@ -139,13 +139,19 @@ export const getPublicThreadsByUser = (
       .filter({ isPrivate: false })
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
-      .orderBy(db.desc('createdAt'))
+      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
       .run()
   );
 };
 
+
+/*
+  A thread may receive a field 'filesToUpload' if it contains images. We destructure
+  the incoming argument in order to ignore that field and only return the rest
+  of the thread fields
+*/
 export const publishThread = (
-  thread: Object,
+  { filesToUpload, ...thread }: Object,
   userId: string
 ): Promise<Object> => {
   return db
@@ -190,6 +196,9 @@ export const setThreadLock = (
       )
   );
 };
+
+export const setThreadLastActive = (threadId: string, value: Date) =>
+  db.table('threads').get(threadId).update({ lastActive: value }).run();
 
 export const deleteThread = (threadId: string): Promise<Boolean> => {
   return db
@@ -250,10 +259,32 @@ export const editThread = (input: EditThreadInput): Promise<Object> => {
     });
 };
 
-export const listenToNewThreads = (cb: Function): Function => {
-  return listenToNewDocumentsIn('threads', cb);
+export const updateThreadWithImages = (id: string, body: string) => {
+  return db
+    .table('threads')
+    .get(id)
+    .update(
+      {
+        content: {
+          body,
+        },
+      },
+      { returnChanges: 'always' }
+    )
+    .run()
+    .then(result => {
+      // if an update happened
+      if (result.replaced === 1) {
+        return result.changes[0].new_val;
+      }
+
+      // no data was changed
+      if (result.unchanged === 1) {
+        return result.changes[0].old_val;
+      }
+    });
 };
 
-export const getThreadCount = () => {
-  return db.table('threads').count().run();
+export const listenToNewThreads = (cb: Function): Function => {
+  return listenToNewDocumentsIn('threads', cb);
 };

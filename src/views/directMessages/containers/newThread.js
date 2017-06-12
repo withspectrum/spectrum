@@ -618,10 +618,7 @@ class NewThread extends Component {
             threadIsBeingCreated: false,
           });
 
-          // NOTE: I cannot get the Apollo store to update properly with the
-          // new thread. Forcing a refresh works, although it's a less ideal UX
-          window.location.href = `/messages/${createDirectMessageThread.id}`;
-          // this.props.history.push(`/messages/${createDirectMessageThread.id}`)
+          this.props.history.push(`/messages/${createDirectMessageThread.id}`);
         })
         .catch(err => {
           // if an error happened, the user can try to resend the message to

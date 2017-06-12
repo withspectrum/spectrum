@@ -113,7 +113,7 @@ class UserWithData extends Component {
       isLoading: true,
     });
 
-    if (file.size > 3000000) {
+    if (file && file.size > 3000000) {
       return this.setState({
         photoSizeError: true,
         isLoading: false,
@@ -142,7 +142,7 @@ class UserWithData extends Component {
       isLoading: true,
     });
 
-    if (file.size > 3000000) {
+    if (file && file.size > 3000000) {
       return this.setState({
         photoSizeError: true,
         isLoading: false,

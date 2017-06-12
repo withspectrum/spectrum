@@ -145,7 +145,7 @@ class Navbar extends Component {
 
   login = () => {
     // log the user in and return them to this page
-    return (window.location.href = `${SERVER_URL}/auth/twitter?redirectTo=${window.location.pathname}`);
+    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window.location.href}`);
   };
 
   render() {

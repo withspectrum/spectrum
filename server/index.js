@@ -7,10 +7,12 @@ const PORT = 3001;
 // NOTE(@mxstbr): 1Password generated this, LGTM!
 const COOKIE_SECRET =
   't3BUqGYFHLNjb7V8xjY6QLECgWy7ByWTYjKkPtuP%R.uLfjNBQKr9pHuKuQJXNqo';
+const ONE_YEAR = 31556952000;
+const ONE_DAY = 86400000;
 
 const path = require('path');
 const fs = require('fs');
-const url = require('url');
+const { URL } = require('url');
 const { createServer } = require('http');
 const Raven = require('raven');
 //$FlowFixMe
@@ -66,6 +68,14 @@ app.use(Raven.requestHandler());
 const sessionStore = new SessionStore(db, {
   db: 'spectrum',
   table: 'sessions',
+  // I'm a bit unclear what this does, it's set to 60 seconds by default
+  // so it might be how long after the cookie expires we clear it? Anyway, setting it to
+  // one year like the cookie can't hurt.
+  browserSessionsMaxAge: ONE_YEAR,
+  // Clear expired cookies once a day
+  // The default is 60 seconds, but that puts unnecessary load on the database. Once a day should
+  // be perfectly fine.
+  clearInterval: ONE_DAY,
 });
 
 app.use(OpticsAgent.middleware());
@@ -73,7 +83,11 @@ app.use(OpticsAgent.middleware());
 app.use(
   cors({
     origin: IS_PROD
-      ? ['https://spectrum.chat', /spectrum-(\w|-)+\.now\.sh/]
+      ? [
+          'https://spectrum.chat',
+          /spectrum-(\w|-)+\.now\.sh/,
+          /(\w|-)+\.spectrum.chat/,
+        ]
       : 'http://localhost:3000',
     credentials: true,
   })
@@ -95,11 +109,28 @@ app.use(
   session({
     store: sessionStore,
     secret: COOKIE_SECRET,
+    // Forces the session to be saved back to the session store, even if the session was never modified during the request.
+    // Necessary with the RethinkDB session store, ref: llambda/session-rethinkdb#6
     resave: true,
+    // Forces a session that is "uninitialized" to be saved to the store
+    // NOTE(@mxstbr): This might not be necessary or even useful, but the default example of
+    // session-rethinkdb uses it. Ref: llambda/session-rethinkdb#12
     saveUninitialized: true,
+    // Force a session identifier cookie to be set on every response, resets the expire date of the
+    // cookie to one year from the time of the response, meaning you'll only get logged out after a
+    // year of inactivity.
+    rolling: true,
     cookie: {
+      // Don't let the cookie be accessible via JavaScript document.cookie
       httpOnly: true,
+      // NOTE(@mxstbr): This should be set to true to prevent the cookie to be sent over HTTP. (only HTTPS)
+      // The issue is that setting this to true breaks the sessions when deploying with now.sh because
+      // they run behind some proxy.
+      // We might have to use app.set('trust proxy') or something like that to avoid this issue,
+      // but it's not super high priority since sending over HTTP doesn't hurt anybody.
       secure: false,
+      // Expire the browser cookie one year from now
+      maxAge: ONE_YEAR,
     },
   })
 );
@@ -109,7 +140,34 @@ app.use(passport.session());
 // Redirect the user to Twitter for authentication.  When complete, Twitter
 // will redirect the user back to the application at
 //   /auth/twitter/callback
-app.get('/auth/twitter', passport.authenticate('twitter'));
+app.get('/auth/twitter', (req, ...rest) => {
+  let url = IS_PROD ? '/home' : 'http://localhost:3000/home';
+  if (req.query.r) {
+    try {
+      const { hostname } = new URL(req.query.r);
+      const IS_SPECTRUM_URL = hostname.endsWith('spectrum.chat'); // hostname might be spectrum.chat or admin.spectrum.chat
+      const IS_LOCALHOST = hostname === 'localhost';
+      // Make sure the passed redirect URL is a spectrum.chat one
+      if (IS_SPECTRUM_URL || (!IS_PROD && IS_LOCALHOST)) {
+        url = req.query.r;
+      }
+      // Swallow URL parsing errors (when an invalid URL is passed) and redirect to the standard one
+    } catch (err) {
+      console.log(
+        `Invalid URL ("${req.query.r}") passed to /auth/twitter?r query option. Full error:`
+      );
+      console.log(err);
+    }
+  }
+  // Attach the redirectURL to the session so we have it in the /auth/twitter/callback route
+  req.session.redirectURL = url;
+  return new Promise(res => {
+    // Save the new session data to the database before redirecting
+    req.session.save(err => {
+      res(passport.authenticate('twitter')(req, ...rest));
+    });
+  });
+});
 
 // Twitter will redirect the user to this URL after approval.  Finish the
 // authentication process by attempting to obtain an access token.  If
@@ -119,8 +177,26 @@ app.get(
   '/auth/twitter/callback',
   passport.authenticate('twitter', {
     failureRedirect: IS_PROD ? '/' : 'http://localhost:3000/',
-    successRedirect: IS_PROD ? '/home' : 'http://localhost:3000/home',
-  })
+  }),
+  (req, res) => {
+    // Just to make sure we don't fuck up have a fallback URL to redirect to
+    const fallbackURL = IS_PROD ? '/home' : 'http://localhost:3000/home';
+    // req.session.redirectURL is set in the /auth/twitter route
+    const redirectUrl = req.session.redirectURL || fallbackURL;
+    if (req.session.redirectURL) {
+      // Delete the redirectURL from the session again so we don't redirect
+      // to the old URL the next time around
+      req.session.redirectURL = undefined;
+      return new Promise(resolve => {
+        req.session.save(err => {
+          if (err) console.log(err);
+          resolve(res.redirect(redirectUrl));
+        });
+      });
+    } else {
+      res.redirect(redirectUrl);
+    }
+  }
 );
 app.get('/auth/logout', (req, res) => {
   var sessionCookie = req.cookies['connect.sid'];
@@ -148,12 +224,14 @@ app.use(
   graphqlExpress(req => ({
     schema,
     formatError: error => {
-      console.log('error: ', error);
-      const isUserError = error.originalError[IsUserError];
+      console.log(error);
       const sentryId = Raven.captureException(
         error,
         Raven.parsers.parseRequest(req)
       );
+      const isUserError = error.originalError
+        ? error.originalError[IsUserError]
+        : false;
       return {
         message: isUserError
           ? error.message
@@ -227,7 +305,7 @@ const subscriptionsServer = SubscriptionServer.create(
             });
           const sessionId = rawSocket.upgradeReq.signedCookies['connect.sid'];
           sessionStore.get(sessionId, (err, session) => {
-            if (err || !session || !session.passport)
+            if (err || !session || !session.passport || !session.passport.user)
               return res({
                 // TODO: Pass optics to subscriptions context
                 // opticsContext: OpticsAgent.context(req),
