@@ -57,7 +57,7 @@ export const toggleReaction = (
       }
     })
     .then(() => {
-      // return the message object itself
+      // return the message object itself in order to more easily update the UI with the apollo store
       return db.table('messages').get(reaction.messageId).run();
     });
 };

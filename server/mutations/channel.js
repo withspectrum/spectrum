@@ -169,7 +169,7 @@ module.exports = {
             const deleteTheInputChannel = deleteChannel(channelId);
             // get all the threads in the channel to prepare for deletion
             const getAllThreadsInChannel = getThreadsByChannel(channelId);
-            // remove all the UsersChannels objects in the db
+            // update all the UsersChannels objects in the db to be non-members
             const removeRelationships = removeMembersInChannel(channelId);
 
             return Promise.all([
@@ -406,11 +406,9 @@ module.exports = {
                 // if the user is a member of the parent community, we can return
                 if (currentUserCommunityPermissions.isMember) {
                   return Promise.all([channelToEvaluate]);
-                }
-
-                // if the user is not a member of the parent community,
-                // join the community and the community's default channels
-                if (!currentUserCommunityPermissions.isMember) {
+                } else {
+                  // if the user is not a member of the parent community,
+                  // join the community and the community's default channels
                   return Promise.all([
                     channelToEvaluate,
                     createMemberInCommunity(
@@ -518,11 +516,9 @@ module.exports = {
                 return Promise.all([channelToEvaluate, approveUser]).then(
                   () => channelToEvaluate
                 );
-              }
-
-              // if the user is not a member of the parent community,
-              // join the community and the community's default channels
-              if (!currentUserCommunityPermissions.isMember) {
+              } else {
+                // if the user is not a member of the parent community,
+                // join the community and the community's default channels
                 return Promise.all([
                   channelToEvaluate,
                   createMemberInCommunity(

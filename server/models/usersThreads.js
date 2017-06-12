@@ -33,6 +33,9 @@ export const createParticipantInThread = (
     });
 };
 
+/*
+  Users can opt in to notifications on a thread without having to leave a message or be the thread creator. This will only activate notifications and the user will not appear as a participant in the UI
+*/
 export const createNotifiedUserInThread = (
   threadId: string,
   userId: string

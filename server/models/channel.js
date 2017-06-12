@@ -70,6 +70,8 @@ const getChannelsByUser = (userId: string): Promise<Array<Object>> => {
       .table('usersChannels')
       // get all the user's channels
       .getAll(userId, { index: 'userId' })
+      // only return channels where the user is a member
+      .filter({ isMember: true })
       // get the channel objects for each channel
       .eqJoin('channelId', db.table('channels'))
       // get rid of unnecessary info from the usersChannels object on the left

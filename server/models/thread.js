@@ -144,7 +144,6 @@ export const getPublicThreadsByUser = (
   );
 };
 
-
 /*
   A thread may receive a field 'filesToUpload' if it contains images. We destructure
   the incoming argument in order to ignore that field and only return the rest
@@ -200,6 +199,10 @@ export const setThreadLock = (
 export const setThreadLastActive = (threadId: string, value: Date) =>
   db.table('threads').get(threadId).update({ lastActive: value }).run();
 
+/*
+  Non-destructively delete a thread by setting the `deletedAt` field to a date.
+  After a thread is deleted, set `receiveNotifications` to false for all users who were participants or had subscribed to notifications.
+*/
 export const deleteThread = (threadId: string): Promise<Boolean> => {
   return db
     .table('threads')

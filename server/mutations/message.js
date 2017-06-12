@@ -3,7 +3,9 @@
 import UserError from '../utils/UserError';
 const { storeMessage } = require('../models/message');
 import type { MessageProps } from '../models/message';
-import { setThreadLastActive } from '../models/directMessageThread';
+import {
+  setDirectMessageThreadLastActive,
+} from '../models/directMessageThread';
 import { createParticipantInThread } from '../models/usersThreads';
 import {
   setUserLastSeenInDirectMessageThread,
@@ -24,7 +26,7 @@ module.exports = {
 
       // if the message was a dm thread, set the last seen and last active times
       if (message.threadType === 'directMessageThread') {
-        setThreadLastActive(message.threadId);
+        setDirectMessageThreadLastActive(message.threadId);
         setUserLastSeenInDirectMessageThread(message.threadId, currentUser.id);
       }
 

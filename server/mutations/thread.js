@@ -46,7 +46,7 @@ module.exports = {
           // select the channel to evaluate
           const channelToEvaluate = channels[0];
 
-          // if channel wasn't found
+          // if channel wasn't found or is deleted
           if (!channelToEvaluate || channelToEvaluate.deletedAt) {
             return new UserError("This channel doesn't exist");
           }
@@ -58,11 +58,18 @@ module.exports = {
             );
           }
 
-          // if the thread has attachments, we recreate an array with a JSON.parsed
-          // data value (comes in from the client as a string in order to have dynamic
-          // data shapes without overcomplicating the gql schema)
+          /*
+            If the thread has attachments, we have to iterate through each attachment and JSON.parse() the data payload. This is because we want a generic data shape in the graphQL layer like this:
+            
+            {
+              attachmentType: enum String
+              data: String
+            }
+            
+            But when we get the data onto the client we JSON.parse the `data` field so that we can have any generic shape for attachments in the future.
+          */
           let attachments = [];
-          // if the thread came in with attachments
+          // if the thread has attachments
           if (thread.attachments) {
             // iterate through them and construct a new attachment object
             thread.attachments.map(attachment => {
@@ -72,35 +79,30 @@ module.exports = {
               });
             });
 
+            // create a new thread object, overriding the attachments field with our new array
             const newThread = Object.assign({}, thread, {
               attachments,
             });
 
             // publish the thread
-            return publishThread(newThread, currentUser.id).then(thread => {
-              // create a relationship between the thread author and the thread
-              createParticipantInThread(thread.id, currentUser.id);
-              return thread;
-            });
+            return publishThread(newThread, currentUser.id);
           } else {
-            // if no attachments were passed into the thread, we can just publish
-            // as-is
-            // publish the thread
-            return publishThread(newThread, currentUser.id).then(thread => {
-              // create a relationship between the thread author and the thread
-              createParticipantInThread(thread.id, currentUser.id);
-              return thread;
-            });
+            // if there are no attachments, publish the thread
+            return publishThread(thread, currentUser.id);
           }
         })
         .then(newThread => {
+          // create a relationship between the thread and the author. this can happen in the background so we can also immediately pass the thread down the promise chain
+          createParticipantInThread(newThread.id, currentUser.id);
+          return newThread;
+        })
+        .then(newThread => {
+          // if the original mutation input contained files to upload
           if (thread.filesToUpload) {
-            // iterate over files and upload
-            // array of image urls
-            // update the content.body of the thread
             return Promise.all([
               newThread,
               Promise.all(
+                // upload each of the files to s3
                 thread.filesToUpload.map(file =>
                   uploadImage(file, 'threads', newThread.id)
                 )
@@ -111,8 +113,10 @@ module.exports = {
           }
         })
         .then(([newThread, urls]) => {
+          // if no files were uploaded, return the new thread object
           if (!urls) return newThread;
 
+          // otherwise we need to update the slate object of the thread to replace the image nodes with markdown image text
           const slateState = JSON.parse(newThread.content.body);
           let fileIndex = 0;
           const newSlateState = {
@@ -152,23 +156,20 @@ module.exports = {
       return getThreads([input.threadId])
         .then(threads => {
           // select the thread
-          const thread = threads[0];
+          const threadToEvaluate = threads[0];
 
           // if the thread doesn't exist
-          if (!thread) {
+          if (!threads || threadToEvaluate) {
             return new UserError("This thread doesn't exist");
           }
 
           // only the thread creator can edit the thread
-          if (thread.creatorId !== currentUser.id) {
+          if (threadToEvaluate.creatorId !== currentUser.id) {
             return new UserError(
               "You don't have permission to make changes to this thread."
             );
           }
 
-          // if the thread has attachments, we recreate an array with a JSON.parsed
-          // data value (comes in from the client as a string in order to have dynamic
-          // data shapes without overcomplicating the gql schema)
           let attachments = [];
           // if the thread came in with attachments
           if (input.attachments) {
@@ -194,6 +195,7 @@ module.exports = {
         .then(editedThread => {
           if (!input.filesToUpload) return Promise.all([editedThread]);
 
+          // if the edited thread has new files to upload
           return Promise.all([
             editedThread,
             Promise.all(
@@ -206,6 +208,7 @@ module.exports = {
         .then(([editedThread, urls]) => {
           if (!urls) return editedThread;
 
+          // update the slate body with markdown images instead of image nodes
           const slateState = JSON.parse(editedThread.content.body);
           let fileIndex = 0;
           const newSlateState = {
@@ -258,7 +261,7 @@ module.exports = {
             threadToEvaluate.channelId,
             currentUser.id
           );
-          // get the community permissions
+          // get the community permissions (community owners and mods can delete a thread anywhere in the community)
           const currentUserCommunityPermissions = getUserPermissionsInCommunity(
             threadToEvaluate.communityId,
             currentUser.id
@@ -276,7 +279,7 @@ module.exports = {
           currentUserChannelPermissions,
           currentUserCommunityPermissions,
         ]) => {
-          // user owns the community or the channel, they can lock the thread
+          // if the user owns the community or the channel, or they are the original creator, they can delete the thread
           if (
             currentUserChannelPermissions.isOwner ||
             currentUserChannelPermissions.isModerator ||
@@ -359,18 +362,18 @@ module.exports = {
       // user must be authed to edit a thread
       if (!currentUser) {
         return new UserError(
-          'You must be signed in to toggle notifications on this thread.'
+          'You must be signed in to get notifications for this thread.'
         );
       }
 
       // check to see if a relationship between this user and this thread exists
       return getThreadNotificationStatusForUser(threadId, currentUser.id)
-        .then(thread => {
-          const threadToEvaluate = thread;
-          if (thread && thread.length > 0) {
+        .then(threads => {
+          if (threads && threads.length > 0) {
+            const threadToEvaluate = threads[0];
             // a relationship with this thread exists, we are going to update it
             let value;
-            if (thread[0].receiveNotifications) {
+            if (threadToEvaluate.receiveNotifications) {
               // if they are currently receiving notifications, turn them off
               value = false;
               return updateThreadNotificationStatusForUser(

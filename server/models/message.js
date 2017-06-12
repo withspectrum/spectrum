@@ -63,7 +63,10 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
         userId,
       });
 
-      setThreadLastActive(message.threadId, message.timestamp);
+      if (message.threadType === 'story') {
+        setThreadLastActive(message.threadId, message.timestamp);
+      }
+
       return message;
     });
 };
