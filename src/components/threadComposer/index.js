@@ -116,8 +116,7 @@ class ThreadComposerWithData extends Component {
         channel => channel.isDefault
       );
       // If there is no default channel capitulate and take the first one
-      if (activeChannel.length === 0)
-        activeChannel = activeCommunityChannels[0];
+      if (activeChannel.length === 0) activeChannel = activeCommunityChannels;
     }
 
     // ensure that if no items were found for some reason, we don't crash the app

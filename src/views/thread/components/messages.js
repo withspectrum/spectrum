@@ -64,7 +64,6 @@ class MessagesWithData extends Component {
 
   render() {
     const { data, toggleReaction, forceScrollToBottom } = this.props;
-    console.log('data', data);
     if (data.error) {
       return <div>Error!</div>;
     }
