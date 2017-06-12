@@ -48,21 +48,44 @@ const createMemberInChannel = (
 ): Promise<Object> => {
   return db
     .table('usersChannels')
-    .insert(
-      {
-        channelId,
-        userId,
-        createdAt: new Date(),
-        isMember: true,
-        isOwner: false,
-        isModerator: false,
-        isBlocked: false,
-        isPending: false,
-        receiveNotifications: true,
-      },
-      { returnChanges: true }
-    )
+    .getAll(userId, { index: 'userId' })
+    .filter({ channelId })
     .run()
+    .then(result => {
+      if (result && result.length > 0) {
+        return db
+          .table('usersChannels')
+          .getAll(userId, { index: 'userId' })
+          .filter({ channelId })
+          .update(
+            {
+              createdAt: new Date(),
+              isMember: true,
+              receiveNotifications: true,
+            },
+            { returnChanges: 'always' }
+          )
+          .run();
+      } else {
+        return db
+          .table('usersChannels')
+          .insert(
+            {
+              channelId,
+              userId,
+              createdAt: new Date(),
+              isMember: true,
+              isOwner: false,
+              isModerator: false,
+              isBlocked: false,
+              isPending: false,
+              receiveNotifications: true,
+            },
+            { returnChanges: true }
+          )
+          .run();
+      }
+    })
     .then(result => {
       const join = result.changes[0].new_val;
       return db.table('channels').get(join.channelId);
@@ -330,9 +353,11 @@ const createMemberInDefaultChannels = (
     .run();
 
   // get the current user's relationships to all channels
+  // where the user is not blocked
   const usersChannels = db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
+    .filter({ isBlocked: false })
     .run();
 
   return Promise.all([defaultChannels, usersChannels]).then(([

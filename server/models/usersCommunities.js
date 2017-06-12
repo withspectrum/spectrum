@@ -47,20 +47,49 @@ const createMemberInCommunity = (
 ): Promise<Object> => {
   return db
     .table('usersCommunities')
-    .insert(
-      {
-        communityId,
-        userId,
-        createdAt: new Date(),
-        isMember: true,
-        isOwner: false,
-        isModerator: false,
-        isBlocked: false,
-        receiveNotifications: true,
-      },
-      { returnChanges: true }
-    )
+    .getAll(userId, { index: 'userId' })
+    .filter({ communityId })
     .run()
+    .then(result => {
+      if (result && result.length > 0) {
+        // if the result exists, it means the user has a previous relationship
+        // with this community - since we already handled 'blocked' logic
+        // in the mutation controller, we can simply update the user record
+        // to be a re-joined member with notifications turned on
+
+        return db
+          .table('usersCommunities')
+          .getAll(userId, { index: 'userId' })
+          .filter({ communityId })
+          .update(
+            {
+              createdAt: new Date(),
+              isMember: true,
+              receiveNotifications: true,
+            },
+            { returnChanges: 'always' }
+          )
+          .run();
+      } else {
+        // if no relationship exists, we can create a new one from scratch
+        return db
+          .table('usersCommunities')
+          .insert(
+            {
+              communityId,
+              userId,
+              createdAt: new Date(),
+              isMember: true,
+              isOwner: false,
+              isModerator: false,
+              isBlocked: false,
+              receiveNotifications: true,
+            },
+            { returnChanges: true }
+          )
+          .run();
+      }
+    })
     .then(result => {
       communityNotificationQueue.add({
         communityId,
