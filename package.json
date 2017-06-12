@@ -93,13 +93,13 @@
     "whatwg-fetch-importable": "^1.0.3"
   },
   "scripts": {
-    "start": "REACT_APP_CURRENT_GIT_COMMIT_HASH=\"$(eval 'git rev-parse --verify HEAD')\" NODE_ENV=production node build-server/index.js",
+    "start": "NODE_ENV=production node build-server/index.js",
     "dev:client": "react-scripts start",
     "dev:server": "NODE_ENV=development nodemon server/index.js --watch server --exec babel-node --presets react-app",
     "build": "npm run build:server && react-scripts build",
     "prebuild:server": "rimraf build-server",
     "build:server": "NODE_ENV=production babel server --out-dir build-server --presets react-app --ignore 'test/*.js'",
-    "build:client": "REACT_APP_CURRENT_GIT_COMMIT_HASH=\"$(eval 'git rev-parse --verify HEAD')\" react-scripts build",
+    "build:client": "react-scripts build",
     "test": "react-scripts test",
     "test:ci": "CI=true react-scripts test",
     "db:migrate": "npm run rethinkdb:migrate -- up",
