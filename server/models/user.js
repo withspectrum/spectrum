@@ -298,10 +298,6 @@ const editUser = (
     });
 };
 
-const getUserCount = () => {
-  return db.table('users').count().run();
-};
-
 module.exports = {
   getUser,
   getUsersThreadCount,
@@ -311,5 +307,4 @@ module.exports = {
   storeUser,
   editUser,
   getEverything,
-  getUserCount,
 };

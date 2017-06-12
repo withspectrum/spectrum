@@ -18,7 +18,7 @@ describe('queries', () => {
   it('should fetch a user', () => {
     const query = /* GraphQL */ `
 			{
-				user(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a190") {
+				user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
           id
           name
           description
@@ -60,7 +60,7 @@ describe('queries', () => {
     it('should return the latest thread', () => {
       const query = /* GraphQL */ `
   			{
-  				user(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a190") {
+  				user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
   					everything(first: 1) {
               pageInfo {
                 hasNextPage
@@ -83,7 +83,7 @@ describe('queries', () => {
     it('should paginate based on the after property', () => {
       const query = /* GraphQL */ `
   			{
-  				user(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a190") {
+  				user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
   					everything(first: 1, after: "c2Vjb25kLXN0b3J5") {
               pageInfo {
                 hasNextPage
@@ -106,7 +106,7 @@ describe('queries', () => {
     it('should handle first being set to 0 correctly', () => {
       const noCursorQuery = /* GraphQL */ `
   			{
-  				user(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a190") {
+  				user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
   					everything(first: 0) {
               pageInfo {
                 hasNextPage
@@ -122,7 +122,7 @@ describe('queries', () => {
   		`;
       const cursorQuery = /* GraphQL */ `
   			{
-  				user(id: "ce2b4488-4c75-47e0-8ebc-2539c1e6a190") {
+  				user(id: "gVk5mYwccUOEKiN5vtOouqroGKo1") {
   					everything(first: 0, after: "Zmlyc3Qtc3Rvcnk=") {
               pageInfo {
                 hasNextPage

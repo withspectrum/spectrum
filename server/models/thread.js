@@ -286,10 +286,6 @@ const listenToNewThreads = (cb: Function): Function => {
   return listenToNewDocumentsIn('threads', cb);
 };
 
-const getThreadCount = () => {
-  return db.table('threads').count().run();
-};
-
 module.exports = {
   getThreads,
   publishThread,
@@ -302,7 +298,6 @@ module.exports = {
   getThreadsByCommunity,
   getViewableThreadsByUser,
   getPublicThreadsByUser,
-  getThreadCount,
   updateThreadWithImages,
   setThreadLastActive,
 };
