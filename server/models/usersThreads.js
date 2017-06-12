@@ -84,3 +84,16 @@ export const updateThreadNotificationStatusForUser = (
     })
     .run();
 };
+
+// when a thread is deleted, we make sure all relationships to that thread have notifications turned off
+export const turnOffAllThreadNotifications = (
+  threadId: string
+): Promise<Object> => {
+  return db
+    .table('usersThreads')
+    .getAll(threadId, { index: 'threadId' })
+    .update({
+      receiveNotifications: false,
+    })
+    .run();
+};

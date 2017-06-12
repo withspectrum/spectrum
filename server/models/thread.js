@@ -1,6 +1,7 @@
 // @flow
 const { db } = require('./db');
 const { listenToNewDocumentsIn } = require('./utils');
+import { turnOffAllThreadNotifications } from '../models/usersThreads';
 
 export const getThread = (threadId: string): Promise<Object> => {
   return db.table('threads').get(threadId).run();
@@ -205,9 +206,9 @@ export const deleteThread = (threadId: string): Promise<Boolean> => {
     )
     .run()
     .then(result => {
-      // update was successful
-      return result.replaced >= 1 ? true : false;
-    });
+      return Promise.all([result, turnOffAllThreadNotifications(threadId)]);
+    })
+    .then(([result]) => (result.replaced >= 1 ? true : false));
 };
 
 type EditThreadInput = {
