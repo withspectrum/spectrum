@@ -16,7 +16,7 @@ const getThreadsByChannel = (channelId: string): Promise<Array<Object>> => {
     .table('threads')
     .getAll(channelId, { index: 'channelId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('createdAt'))
+    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .run();
 };
 
@@ -27,7 +27,7 @@ const getThreadsByChannels = (
     .table('threads')
     .getAll(...channelIds, { index: 'channelId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('createdAt'))
+    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .run();
 };
 
@@ -36,7 +36,7 @@ const getThreadsByCommunity = (communityId: string): Promise<Array<Object>> => {
     .table('threads')
     .getAll(communityId, { index: 'communityId' })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('createdAt'))
+    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .run();
 };
 
@@ -94,7 +94,7 @@ const getViewableThreadsByUser = (
       .zip()
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
-      .orderBy(db.desc('createdAt'))
+      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
       .run()
   );
 };
@@ -127,7 +127,7 @@ const getPublicThreadsByUser = (evalUser: string): Promise<Array<Object>> => {
       .filter({ isPrivate: false })
       // return the thread object as pure without the isPrivate field from the community join earlier
       .without('isPrivate')
-      .orderBy(db.desc('createdAt'))
+      .orderBy(db.desc('lastActive'), db.desc('createdAt'))
       .run()
   );
 };
@@ -193,6 +193,9 @@ const setThreadLock = (threadId: string, value: Boolean): Promise<Object> => {
       )
   );
 };
+
+const setThreadLastActive = (threadId: string, value: Date) =>
+  db.table('threads').get(threadId).update({ lastActive: value }).run();
 
 const deleteThread = (threadId: string): Promise<Boolean> => {
   return db
@@ -301,4 +304,5 @@ module.exports = {
   getPublicThreadsByUser,
   getThreadCount,
   updateThreadWithImages,
+  setThreadLastActive,
 };
