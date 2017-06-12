@@ -5,11 +5,7 @@ const { db } = require('./db');
 const Queue = require('bull');
 const messageNotificationQueue = new Queue('message notification');
 const { listenToNewDocumentsIn } = require('./utils');
-<<<<<<< HEAD
-=======
-const { storeMessageNotification } = require('./notification');
 const { setThreadLastActive } = require('./thread');
->>>>>>> master
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
 export type MessageTypes = 'text' | 'media';

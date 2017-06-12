@@ -147,6 +147,7 @@ module.exports = {
         return new UserError(
           'You must be signed in to make changes to this thread.'
         );
+      }
 
       return getThreads([input.threadId])
         .then(threads => {
