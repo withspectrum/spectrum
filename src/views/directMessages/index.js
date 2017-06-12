@@ -46,7 +46,7 @@ class DirectMessages extends Component {
 
     const { activeThread } = this.state;
 
-    console.log(data);
+    console.log(data.user);
     // no user found, get them to the home page to log in
     if (!data.user) {
       window.location.href = '/';
