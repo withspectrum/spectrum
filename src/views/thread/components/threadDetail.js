@@ -29,10 +29,7 @@ import Editor, {
   toPlainText,
   toState,
 } from '../../../components/editor';
-import {
-  LinkPreview,
-  LinkPreviewLoading,
-} from '../../../components/linkPreview';
+import { LinkPreview } from '../../../components/linkPreview';
 import { ThreadTitle, ThreadDescription } from '../style';
 // $FlowFixMe
 import Textarea from 'react-textarea-autosize';

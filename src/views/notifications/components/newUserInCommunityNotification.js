@@ -5,20 +5,11 @@ import {
   parseEvent,
   parseNotificationDate,
   parseContext,
-  getLastMessageCreatedByAnotherUser,
 } from '../utils';
 import { ActorsRow } from './actorsRow';
-import { Bubble } from '../../../components/bubbles';
-import { convertTimestampToTime } from '../../../helpers/utils';
-import {
-  BubbleGroupContainer,
-  MessagesWrapper,
-  MessageWrapper,
-} from '../../../components/chatMessages/style';
 import {
   NotificationCard,
   TextContent,
-  BubbleContainer,
   NotificationListRow,
   Timestamp,
 } from '../style';
@@ -35,10 +26,6 @@ export const NewUserInCommunityNotification = ({
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
-  const message = getLastMessageCreatedByAnotherUser(
-    notification.entities,
-    currentUser
-  );
 
   return (
     <NotificationCard>

@@ -183,7 +183,6 @@ class CommunityViewPure extends Component {
                   community={community}
                   loading={isLoading}
                   join={this.toggleMembership}
-                  loading={isLoading}
                 />}
               {currentUser &&
                 (community.communityPermissions.isMember ||

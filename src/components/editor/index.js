@@ -91,11 +91,9 @@ class Editor extends Component {
       onEnter,
       className,
       style,
-      markdown,
       images,
       showLinkPreview,
       linkPreview,
-      singleLine,
       ...rest
     } = this.props;
 

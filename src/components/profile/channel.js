@@ -80,8 +80,6 @@ class ChannelWithData extends Component {
     const {
       data: { channel, loading, error },
       profileSize,
-      toggleChannelSubscription,
-      dispatch,
       currentUser,
     } = this.props;
     const { isLoading } = this.state;

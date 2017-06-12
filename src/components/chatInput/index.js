@@ -8,17 +8,10 @@ import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
 // // $FlowFixMe
 import { connect } from 'react-redux';
-import Icon from '../icons';
 import { track } from '../../helpers/events';
 import { toPlainText, fromPlainText } from '../../components/editor';
 import { addToastWithTimeout } from '../../actions/toasts';
-import {
-  Form,
-  Input,
-  ChatInputWrapper,
-  MediaLabel,
-  SendButton,
-} from './style';
+import { Form, Input, ChatInputWrapper, SendButton } from './style';
 import { sendMessageMutation } from '../../api/message';
 import MediaInput from '../mediaInput';
 

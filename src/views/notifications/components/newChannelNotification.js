@@ -6,15 +6,7 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 import { getChannelById } from '../../../api/channel';
 import { displayLoadingCard } from '../../../components/loading';
-import {
-  parseActors,
-  parseEvent,
-  parseNotificationDate,
-  parseContext,
-  getLastMessageCreatedByAnotherUser,
-} from '../utils';
-import { ActorsRow } from './actorsRow';
-import { convertTimestampToTime } from '../../../helpers/utils';
+import { parseNotificationDate, parseContext } from '../utils';
 import {
   NotificationCard,
   TextContent,
@@ -22,11 +14,6 @@ import {
   Timestamp,
   AttachmentsWash,
 } from '../style';
-import {
-  CardLink,
-  CardContent,
-} from '../../../components/threadFeedCard/style';
-import { Button } from '../../../components/buttons';
 import { ChannelProfile } from '../../../components/profile';
 
 const NewChannelComponent = ({ data }) => {
@@ -38,7 +25,6 @@ const NewChannel = compose(getChannelById, displayLoadingCard, pure)(
 );
 
 export const NewChannelNotification = ({ notification, currentUser }) => {
-  const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
   const newChannelCount = notification.entities.length > 1
@@ -67,7 +53,6 @@ export const MiniNewChannelNotification = ({
   currentUser,
   history,
 }) => {
-  const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
   const newChannelCount = notification.entities.length > 1
@@ -79,6 +64,7 @@ export const MiniNewChannelNotification = ({
       <TextContent pointer={false}>
         {newChannelCount} created in the {context.asString}
       </TextContent>
+      <Timestamp>{date}</Timestamp>
       <AttachmentsWash mini>
         {notification.entities.map(channel => {
           return (
