@@ -18,8 +18,10 @@ export const createParticipantInThread = (
     .run()
     .then(result => {
       if (result && result.length > 0) {
+        // if the user already has a relationship with the thread we don't need to do anything, return
         return;
       } else {
+        // if there is no relationship with the thread, create one
         return db.table('usersThreads').insert({
           createdAt: new Date(),
           userId,

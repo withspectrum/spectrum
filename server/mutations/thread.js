@@ -30,10 +30,13 @@ module.exports = {
         return new UserError('You must be signed in to publish a new thread.');
       }
 
+      // get the current user's permissions in the channel where the thread is being posted
       const currentUserChannelPermissions = getUserPermissionsInChannel(
         thread.channelId,
         currentUser.id
       );
+
+      // get the channel object where the thread is being posted
       const channels = getChannels([thread.channelId]);
 
       return Promise.all([currentUserChannelPermissions, channels]).then(([
@@ -48,7 +51,7 @@ module.exports = {
           return new UserError("This channel doesn't exist");
         }
 
-        // if user isn't a channel member
+        // if user isn't a channel member, they are not allowed to post new threads
         if (!currentUserChannelPermissions.isMember) {
           return new UserError(
             "You don't have permission to create threads in this channel."
@@ -69,11 +72,14 @@ module.exports = {
             });
           });
 
+          // construct a new thread object with the udpated attachments field
           const newThread = Object.assign({}, thread, {
             attachments,
           });
 
+          // publish the thread
           return publishThread(newThread, currentUser.id).then(thread => {
+            // create a relationship between the thread author and the thread
             createParticipantInThread(thread.id, currentUser.id);
             return thread;
           });
@@ -91,21 +97,24 @@ module.exports = {
       const currentUser = user;
 
       // user must be authed to edit a thread
-      if (!currentUser)
+      if (!currentUser) {
         return new UserError(
           'You must be signed in to make changes to this thread.'
         );
-      return getThreads([input.threadId]).then(threads => {
-        // select the thread
-        const thread = threads[0];
+      }
 
+      // get the thread that is being edited
+      return getThreads([input.threadId]).then(threads => {
         // if the thread doesn't exist
-        if (!thread) {
+        if (!threads || threads.length < 0) {
           return new UserError("This thread doesn't exist");
         }
 
+        // select the thread
+        const threadToEvaluate = threads[0];
+
         // only the thread creator can edit the thread
-        if (thread.creatorId !== currentUser.id) {
+        if (threadToEvaluate.creatorId !== currentUser.id) {
           return new UserError(
             "You don't have permission to make changes to this thread."
           );
