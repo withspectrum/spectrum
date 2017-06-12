@@ -56,7 +56,7 @@ const createMemberInChannel = (
         return db
           .table('usersChannels')
           .getAll(userId, { index: 'userId' })
-          .filter({ channelId })
+          .filter({ channelId, isBlocked: false })
           .update(
             {
               createdAt: new Date(),
@@ -86,10 +86,7 @@ const createMemberInChannel = (
           .run();
       }
     })
-    .then(result => {
-      const join = result.changes[0].new_val;
-      return db.table('channels').get(join.channelId);
-    });
+    .then(() => db.table('channels').get(channelId));
 };
 
 // removes a single member from a channel. will be invoked if a user leaves
@@ -353,11 +350,10 @@ const createMemberInDefaultChannels = (
     .run();
 
   // get the current user's relationships to all channels
-  // where the user is not blocked
+
   const usersChannels = db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
-    .filter({ isBlocked: false })
     .run();
 
   return Promise.all([defaultChannels, usersChannels]).then(([
