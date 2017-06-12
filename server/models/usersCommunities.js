@@ -81,7 +81,10 @@ const removeMemberInCommunity = (
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
     .filter({ userId })
-    .delete()
+    .update({
+      isMember: false,
+      receiveNotifications: false,
+    })
     .run()
     .then(() => db.table('communities').get(communityId).run());
 };
@@ -93,7 +96,10 @@ const removeMembersInCommunity = (communityId: string): Promise<Object> => {
   return db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
-    .delete()
+    .update({
+      isMember: false,
+      receiveNotifications: false,
+    })
     .run();
 };
 

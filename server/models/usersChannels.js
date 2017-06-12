@@ -79,7 +79,14 @@ const removeMemberInChannel = (
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
     .filter({ userId })
-    .delete({ returnChanges: 'always' })
+    .update(
+      {
+        isMember: false,
+        isPending: false,
+        receiveNotifications: false,
+      },
+      { returnChanges: 'always' }
+    )
     .run()
     .then(result => {
       if (result && result.changes && result.changes.length > 0) {
@@ -98,7 +105,10 @@ const removeMembersInChannel = (channelId: string): Promise<Object> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
-    .delete()
+    .update({
+      isMember: false,
+      receiveNotifications: false,
+    })
     .run();
 };
 
@@ -140,7 +150,10 @@ const removePendingUsersInChannel = (channelId: string): Promise<Object> => {
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
     .filter({ isPending: true })
-    .delete()
+    .update({
+      isPending: false,
+      receiveNotifications: false,
+    })
     .run()
     .then(result => {
       const join = result.changes[0].new_val;
