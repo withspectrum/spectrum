@@ -17,7 +17,7 @@ export const fetchPayload = (
   type: EntityTypes,
   id: Object
 ): Promise<Object> => {
-  debug(`fetch payload for ${type}#${id}`);
+  debug(`fetch payload for ${type.toLowerCase()}#${id}`);
   switch (type) {
     case 'MESSAGE': {
       return getMessageById(id).then(data => createPayload(type, data));
@@ -46,7 +46,7 @@ export const fetchPayload = (
 };
 
 export const createPayload = (type: EntityTypes, data: Object): Object =>
-  debug(`create payload for ${type}`) || {
+  debug(`create payload for ${type.toLowerCase()}#${data.id}`) || {
     type,
     id: data.id,
     payload: JSON.stringify(data),
