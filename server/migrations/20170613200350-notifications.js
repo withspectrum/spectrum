@@ -8,34 +8,71 @@ exports.up = function(r, conn) {
         .table('usersChannels')
         .filter({ isBlocked: false })
         .update({ receiveNotifications: true })
-        .run(conn),
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
       r
         .table('usersCommunities')
         .filter({ isBlocked: false })
         .update({ receiveNotifications: true })
-        .run(conn),
-      r.tableCreate('usersThreads').run(conn),
-      r.tableCreate('usersNotifications').run(conn),
+        .run(conn)
+        .catch(err => {
+          console.log(err);
+          throw err;
+        }),
+      r.tableCreate('usersThreads').run(conn).catch(err => {
+        console.log(err);
+        throw err;
+      }),
+      r.tableCreate('usersNotifications').run(conn).catch(err => {
+        console.log(err);
+        throw err;
+      }),
     ])
       // Add secondary indexes to new tables
       .then(() =>
         Promise.all([
-          r.table('usersThreads').indexCreate('userId').run(conn),
-          r.table('usersThreads').indexCreate('threadId').run(conn),
-          r.table('usersNotifications').indexCreate('userId').run(conn),
+          r.table('usersThreads').indexCreate('userId').run(conn).catch(err => {
+            console.log(err);
+            throw err;
+          }),
+          r
+            .table('usersThreads')
+            .indexCreate('threadId')
+            .run(conn)
+            .catch(err => {
+              console.log(err);
+              throw err;
+            }),
+          r
+            .table('usersNotifications')
+            .indexCreate('userId')
+            .run(conn)
+            .catch(err => {
+              console.log(err);
+              throw err;
+            }),
+          // Need this for the data migration below
+          r.table('messages').indexCreate('senderId').run(conn).catch(err => {
+            console.log(err);
+            throw err;
+          }),
         ])
       )
+      // Since we need it down below we gotta wait until it's available
+      .then(() => r.table('messages').indexWait('senderId').run(conn))
       // Insert data into new tables that should be there
       .then(() =>
         Promise.all([
           // Thread creators -> usersThreads
-          db
+          r
             .table('threads')
             .filter(r.row.hasFields('deletedAt').not())
             .pluck(['creatorId', 'id'])
             .forEach(thread =>
               r
-                .db('spectrum')
                 .table('usersThreads')
                 .insert({
                   createdAt: r.now(),
@@ -46,34 +83,57 @@ exports.up = function(r, conn) {
                 })
                 .run(conn)
             )
-            .run(conn),
+            .run(conn)
+            .catch(err => {
+              console.log(err);
+              throw err;
+            }),
           // Thread participants -> usersThreads
-          db
+          r
             .table('threads')
-            .filter(db.row.hasFields('deletedAt').not())
+            .filter(r.row.hasFields('deletedAt').not())
             .pluck(['id'])
             .forEach(thread =>
-              db
+              r
                 .table('messages')
-                .getAll(thread('id'), { index: 'threadId' })
-                .map(message => message('senderId'))
-                .distinct()
-                .forEach(sender =>
-                  db
+                // Can't run a .distinct without an index, that's why we create it further up
+                // also can't run an indexed distinct on anything but a table, so we can't use .getAll
+                // but have to filter below
+                .distinct({ index: 'senderId' })
+                .filter({ threadId: thread('id') })
+                .forEach(message =>
+                  r
                     .table('usersThreads')
                     .insert({
-                      createdAt: db.now(),
+                      createdAt: r.now(),
                       isParticipant: true,
                       receiveNotifications: true,
-                      threadId: thread('id'),
-                      userId: sender,
+                      threadId: message('threadId'),
+                      userId: message('senderId'),
                     })
                     .run(conn)
+                    .catch(err => {
+                      console.log(err);
+                      throw err;
+                    })
                 )
+                .run(conn)
+                .catch(err => {
+                  console.log(err);
+                  throw err;
+                })
             )
-            .run(conn),
+            .run(conn)
+            .catch(err => {
+              console.log(err);
+              throw err;
+            }),
         ])
       )
+      .catch(err => {
+        console.log(err);
+        throw err;
+      })
   );
 };
 
