@@ -1,5 +1,5 @@
 // @flow
-import createQueue from '../create-queue';
+import processQueue from '../process-queue';
 import { CHANNEL_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
@@ -16,7 +16,7 @@ import {
 } from '../models/usersNotifications';
 
 export default () =>
-  createQueue(CHANNEL_NOTIFICATION, job => {
+  processQueue(CHANNEL_NOTIFICATION, job => {
     const incomingChannel = job.data.channel;
     const currentUserId = job.data.userId;
 

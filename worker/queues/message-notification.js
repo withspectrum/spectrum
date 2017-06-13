@@ -1,5 +1,5 @@
 // @flow
-import createQueue from '../create-queue';
+import processQueue from '../process-queue';
 import { MESSAGE_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
@@ -18,7 +18,7 @@ import {
 } from '../models/usersDirectMessageThreads';
 
 export default () =>
-  createQueue(MESSAGE_NOTIFICATION, job => {
+  processQueue(MESSAGE_NOTIFICATION, job => {
     const incomingMessage = job.data.message;
     const currentUserId = job.data.userId;
 

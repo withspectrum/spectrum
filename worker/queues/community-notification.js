@@ -1,5 +1,5 @@
 // @flow
-import createQueue from '../create-queue';
+import processQueue from '../process-queue';
 import { COMMUNITY_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
@@ -16,7 +16,7 @@ import {
 } from '../models/usersNotifications';
 
 export default () =>
-  createQueue(COMMUNITY_NOTIFICATION, job => {
+  processQueue(COMMUNITY_NOTIFICATION, job => {
     const incomingCommunityId = job.data.communityId;
     const currentUserId = job.data.userId;
 

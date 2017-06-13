@@ -1,5 +1,5 @@
 // @flow
-import createQueue from '../create-queue';
+import processQueue from '../process-queue';
 import { REACTION_NOTIFICATION, TIME_BUFFER } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
@@ -19,7 +19,7 @@ import {
 } from '../models/usersNotifications';
 
 export default () =>
-  createQueue(REACTION_NOTIFICATION, job => {
+  processQueue(REACTION_NOTIFICATION, job => {
     const incomingReaction = job.data.reaction;
     const currentUserId = job.data.userId;
 
