@@ -718,9 +718,10 @@ class NewThread extends Component {
                         <SearchResultDisplayName>
                           {user.name}
                         </SearchResultDisplayName>
-                        <SearchResultUsername>
-                          @{user.username}
-                        </SearchResultUsername>
+                        {user.username &&
+                          <SearchResultUsername>
+                            @{user.username}
+                          </SearchResultUsername>}
                       </SearchResultTextContainer>
                     </SearchResult>
                   );

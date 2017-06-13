@@ -13,7 +13,9 @@ const Header = ({ thread, currentUser }) => {
   ));
 
   const names = trimmedUsers.map(user => user.name).join(', ');
-  const username = trimmedUsers.length === 1 ? trimmedUsers[0].username : '';
+  const username = trimmedUsers.length === 1 && trimmedUsers[0].username
+    ? trimmedUsers[0].username
+    : '';
 
   return (
     <StyledHeader>
