@@ -8,6 +8,7 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { getCurrentUserProfile } from '../../api/user';
 import { SERVER_URL } from '../../api';
+import { setUserLastSeenMutation } from '../../api/user';
 import Icon from '../../components/icons';
 import { displayLoadingNavbar } from '../../components/loading';
 import { Button } from '../../components/buttons';
@@ -34,6 +35,13 @@ class Navbar extends Component {
 
     if (currentUser && currentUser !== null) {
       dispatch(saveUserDataToLocalStorage(user));
+
+      // set a timeout to update the user's last seen time
+      const SIXTY_SECONDS = 60000;
+      setInterval(() => {
+        this.props.setUserLastSeen(currentUser.id);
+      }, SIXTY_SECONDS);
+
       // if the user lands on /home, it means they just logged in. If this code
       // runs, we know a user was returned successfully and set to localStorage,
       // so we can redirect to the root url
@@ -148,6 +156,7 @@ const mapStateToProps = state => ({
 });
 export default compose(
   getCurrentUserProfile,
+  setUserLastSeenMutation,
   withRouter,
   displayLoadingNavbar,
   connect(mapStateToProps)

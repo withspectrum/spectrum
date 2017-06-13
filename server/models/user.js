@@ -298,6 +298,15 @@ const editUser = (
     });
 };
 
+const setUserLastSeen = (id: string) => {
+  return db
+    .table('users')
+    .get(id)
+    .update({ lastSeen: new Date() }, { returnChanges: true })
+    .run()
+    .then(result => result.changes[0].new_val);
+};
+
 module.exports = {
   getUser,
   getUsersThreadCount,
@@ -307,4 +316,5 @@ module.exports = {
   storeUser,
   editUser,
   getEverything,
+  setUserLastSeen,
 };
