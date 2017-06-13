@@ -54,15 +54,8 @@ exports.up = function(r, conn) {
               console.log(err);
               throw err;
             }),
-          // Need this for the data migration below
-          r.table('messages').indexCreate('senderId').run(conn).catch(err => {
-            console.log(err);
-            throw err;
-          }),
         ])
       )
-      // Since we need it down below we gotta wait until it's available
-      .then(() => r.table('messages').indexWait('senderId').run(conn))
       // Insert data into new tables that should be there
       .then(() =>
         Promise.all([
@@ -92,42 +85,57 @@ exports.up = function(r, conn) {
           r
             .table('threads')
             .filter(r.row.hasFields('deletedAt').not())
-            .pluck(['id'])
-            .forEach(thread =>
-              r
-                .table('messages')
-                // Can't run a .distinct without an index, that's why we create it further up
-                // also can't run an indexed distinct on anything but a table, so we can't use .getAll
-                // but have to filter below
-                .distinct({ index: 'senderId' })
-                .filter({ threadId: thread('id') })
-                .forEach(message =>
-                  r
-                    .table('usersThreads')
-                    .insert({
-                      createdAt: r.now(),
-                      isParticipant: true,
-                      receiveNotifications: true,
-                      threadId: message('threadId'),
-                      userId: message('senderId'),
-                    })
-                    .run(conn)
-                    .catch(err => {
-                      console.log(err);
-                      throw err;
-                    })
-                )
-                .run(conn)
-                .catch(err => {
-                  console.log(err);
-                  throw err;
-                })
-            )
             .run(conn)
             .catch(err => {
               console.log(err);
               throw err;
-            }),
+            })
+            .then(cursor => cursor._data[0])
+            .then(threads =>
+              Promise.all(
+                threads.map(thread => {
+                  return Promise.all([
+                    r
+                      .table('messages')
+                      .filter({ threadId: thread.id })
+                      .map(message => message('senderId'))
+                      .run(conn)
+                      .then(cursor => cursor._data[0])
+                      .catch(err => {
+                        console.log(err);
+                        throw err;
+                      }),
+                    thread,
+                  ]);
+                })
+              )
+            )
+            .then(threadsMessages =>
+              Promise.all(
+                threadsMessages.map(([threadSenders, thread]) => {
+                  if (!threadSenders) return Promise.resolve();
+
+                  return Promise.all(
+                    threadSenders.map(sender => {
+                      return r
+                        .table('usersThreads')
+                        .insert({
+                          createdAt: r.now(),
+                          isParticipant: true,
+                          receiveNotifications: true,
+                          threadId: thread.id,
+                          userId: sender,
+                        })
+                        .run(conn)
+                        .catch(err => {
+                          console.log(err);
+                          throw err;
+                        });
+                    })
+                  );
+                })
+              )
+            ),
         ])
       )
       .catch(err => {
