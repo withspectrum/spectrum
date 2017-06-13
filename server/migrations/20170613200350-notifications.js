@@ -63,20 +63,28 @@ exports.up = function(r, conn) {
           r
             .table('threads')
             .filter(r.row.hasFields('deletedAt').not())
-            .pluck(['creatorId', 'id'])
-            .forEach(thread =>
-              r
-                .table('usersThreads')
-                .insert({
-                  createdAt: r.now(),
-                  isParticipant: true,
-                  receiveNotifications: true,
-                  threadId: thread('id'),
-                  userId: thread('creatorId'),
-                })
-                .run(conn)
-            )
             .run(conn)
+            .then(cursor => cursor.toArray())
+            .then(threads =>
+              Promise.all(
+                threads.map(thread =>
+                  r
+                    .table('usersThreads')
+                    .insert({
+                      createdAt: r.now(),
+                      isParticipant: true,
+                      receiveNotifications: true,
+                      threadId: thread.id,
+                      userId: thread.creatorId,
+                    })
+                    .run(conn)
+                    .catch(err => {
+                      console.log(err);
+                      throw err;
+                    })
+                )
+              )
+            )
             .catch(err => {
               console.log(err);
               throw err;
