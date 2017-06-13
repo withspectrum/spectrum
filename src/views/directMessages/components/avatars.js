@@ -12,7 +12,13 @@ export const renderAvatars = users => {
   if (users.length === 1) {
     return (
       <AvatarContainer>
-        <Avatar size={44} radius={44} src={users[0].profilePhoto} />
+        <Avatar
+          isOnline={users[0].isOnline}
+          onlineSize={'large'}
+          size={44}
+          radius={44}
+          src={users[0].profilePhoto}
+        />
       </AvatarContainer>
     );
   }
@@ -23,6 +29,7 @@ export const renderAvatars = users => {
         {users.map(user => {
           return (
             <Avatar
+              isOnline={users.isOnline}
               key={user.id}
               size={34}
               radius={34}
@@ -40,6 +47,8 @@ export const renderAvatars = users => {
         {users.map(user => {
           return (
             <Avatar
+              isOnline={users.isOnline}
+              onlineSize={'small'}
               key={user.id}
               size={20}
               radius={20}
@@ -57,6 +66,8 @@ export const renderAvatars = users => {
         {users.map(user => {
           return (
             <Avatar
+              isOnline={users.isOnline}
+              onlineSize={'small'}
               key={user.id}
               size={19}
               radius={19}
@@ -77,6 +88,8 @@ export const renderAvatars = users => {
           while (i < 3) {
             return (
               <Avatar
+                isOnline={users.isOnline}
+                onlineSize={'small'}
                 key={user.id}
                 size={19}
                 radius={19}

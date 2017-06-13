@@ -41,6 +41,7 @@ export const ProfileHeaderMeta = styled(FlexCol)`
   flex: 1 1 auto;
   flex-wrap: nowrap;
   min-width: 0;
+  margin-left: 12px;
 `;
 
 export const ProfileHeaderAction = styled(IconButton)`

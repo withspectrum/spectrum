@@ -18,13 +18,13 @@ import { CoverPhoto } from './coverPhoto';
 import type { ProfileSizeProps } from './index';
 import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
+import { Avatar } from '../avatar';
 import {
   ProfileHeader,
   ProfileHeaderLink,
   ProfileHeaderMeta,
   ProfileHeaderAction,
   CoverLink,
-  UserAvatar,
   CoverAvatar,
   CoverTitle,
   CoverSubtitle,
@@ -89,7 +89,7 @@ const UserWithData = ({
             <CoverAvatar
               size={64}
               radius={64}
-              largeOnline={true}
+              onlineSize={'large'}
               isOnline={user.isOnline}
               src={`${user.profilePhoto}`}
             />
@@ -120,7 +120,12 @@ const UserWithData = ({
       <Card>
         <ProfileHeader>
           <ProfileHeaderLink to={`/users/${user.username}`}>
-            <UserAvatar src={`${user.profilePhoto}`} />
+            <Avatar
+              size={32}
+              radius={32}
+              isOnline={user.isOnline}
+              src={`${user.profilePhoto}`}
+            />
             <ProfileHeaderMeta>
               <Title>{user.name}</Title>
               <Subtitle>

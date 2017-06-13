@@ -17,6 +17,7 @@ const DirectMessageThread = /* GraphQL */ `
 		lastActive: Date
 		lastSeen: Date
 		userId: ID!
+		isOnline: Boolean
 	}
 
 	type DirectMessageThread {

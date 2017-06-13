@@ -23,18 +23,20 @@ const StyledAvatarContainer = styled.span`
   width: ${props => (props.size ? `${props.size}px` : '100%')};
   height: ${props => (props.size ? `${props.size}px` : '100%')};
   border-radius: ${props => `${props.radius}px`};
+  display: inline-block;
   
   &:after {
     content: '';
     position: absolute;
     display: ${props => (props.isOnline ? 'inline-block' : 'none')};
-    width: ${props => (props.largeOnline ? '10px' : '6px')};
-    height: ${props => (props.largeOnline ? '10px' : '6px')};
+    width: ${props => (props.onlineSize === 'large' ? '10px' : props.onlineSize === 'small' ? '4px' : '6px')};
+    height: ${props => (props.onlineSize === 'large' ? '10px' : props.onlineSize === 'small' ? '4px' : '6px')};
     background: ${props => props.theme.pro.alt};
-    border-radius: ${props => (props.largeOnline ? '10px' : '6px')};
+    border-radius: ${props => (props.onlineSize === 'large' ? '10px' : props.onlineSize === 'small' ? '4px' : '6px')};
     border: 2px solid #fff;
     bottom: 0;
-    right: -4px;
+    right: ${props => (props.onlineSize === 'large' ? '0' : '-4px')};
+    z-index: 100;
   }
 `;
 

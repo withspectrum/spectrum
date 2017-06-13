@@ -370,7 +370,7 @@ class ThreadDetailPure extends Component {
             <AuthorAvatar
               size={48}
               radius={48}
-              largeOnline={true}
+              onlineSize={'large'}
               isOnline={thread.creator.isOnline}
               src={thread.creator.profilePhoto}
             />

@@ -1,7 +1,14 @@
 //@flow
 import React from 'react';
 import Titlebar from '../../titlebar';
-import { StyledHeader, PhotosContainer, Photo, Names, Username } from './style';
+import {
+  StyledHeader,
+  PhotosContainer,
+  Photo,
+  Names,
+  Username,
+  PhotoWrapper,
+} from './style';
 
 const Header = ({ thread, currentUser }) => {
   const trimmedUsers = thread.participants.filter(
@@ -9,7 +16,15 @@ const Header = ({ thread, currentUser }) => {
   );
 
   const photos = trimmedUsers.map(user => (
-    <Photo key={user.id} src={user.profilePhoto} />
+    <PhotoWrapper key={user.id}>
+      <Photo
+        size={60}
+        radius={60}
+        isOnline={!user.isOnline}
+        onlineSize={'large'}
+        src={user.profilePhoto}
+      />
+    </PhotoWrapper>
   ));
 
   const names = trimmedUsers.map(user => user.name).join(', ');
