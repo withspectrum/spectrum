@@ -14,16 +14,59 @@ import {
   hexa,
 } from '../../components/globals';
 
-export const RouteWrapper = styled(FlexRow)`
-  flex: 1 1 auto;
-  align-items: flex-start;
+export const View = styled(FlexCol)`
+  background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 15%, ${theme.bg.default} 85%, ${theme.bg.wash})`};
+  flex: auto;
+  align-items: stretch;
+
+  @media (max-width: 768px) {
+    background-color: ${({ theme }) => theme.bg.default};
+    background-image: none;
+  }
 `;
 
-export const DetailViewWrapper = styled(FlexRow)`
-  background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 15%, ${theme.bg.default} 85%, ${theme.bg.wash})`};
-  flex: 1 1 auto;
+export const Content = styled(FlexRow)`
   justify-content: center;
   align-items: flex-start;
+  flex: auto;
+  overflow-y: scroll;
+  padding-top: 32px;
+
+  @media (max-width: 768px) {
+    padding-top: 16px;
+  }
+`;
+
+export const Input = styled(FlexRow)`
+  flex: none;
+  justify-content: center;
+`;
+
+export const Detail = styled(Column)`
+  flex: auto;
+  margin: 0;
+`;
+
+export const ChatInputWrapper = styled(Column)`
+  align-self: stretch;
+  align-items: stretch;
+  margin: 0;
+  flex: auto;
+
+  > div {
+    background-image: ${({ theme }) => `linear-gradient(to right, ${hexa(theme.bg.wash, 0.01)}, ${hexa(theme.bg.wash, 0.25)} 2%, ${hexa(theme.bg.wash, 0.25)} 98%, ${hexa(theme.bg.wash, 0.01)})`};
+
+    > form > div {
+      background-color: ${({ theme }) => theme.bg.default};
+    }
+  }
+`;
+
+export const DetailViewWrapper = styled(FlexCol)`
+  background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 15%, ${theme.bg.default} 85%, ${theme.bg.wash})`};
+  flex: auto;
+  justify-content: flex-start;
+  align-items: center;
 
   @media (max-width: 768px) {
     background-color: ${({ theme }) => theme.bg.default};
@@ -36,18 +79,13 @@ export const Container = styled(FlexCol)`
   width: 100%;
   justify-content: flex-start;
   align-items: stretch;
-  flex: 1 1 auto;
+  flex: auto;
   overflow-y: scroll;
 
   @media (max-width: 768px) {
 
     padding-top: 16px;
   }
-`;
-
-export const DetailColumn = styled(Column)`
-  align-self: stretch;
-  margin: 0;
 `;
 
 export const ThreadWrapper = styled(FlexCol)`
@@ -116,7 +154,7 @@ export const Byline = styled(Link)`
   display: flex;
   margin-bottom: 16px;
   align-items: center;
-  max-width: calc(100% - 32px)
+  flex: auto;
 
   &:hover h3{
     color: ${({ theme }) => theme.brand.alt};
@@ -151,6 +189,7 @@ export const AuthorUsername = styled(H4)`
   flex-direction: row;
   align-items: center;
   cursor: pointer;
+
   @media (max-width: 768px) {
     font-size: 12px;
   }
@@ -192,6 +231,12 @@ export const ChatWrapper = styled.div`
   width: 100%;
 `;
 
+export const ThreadContent = styled(Markdown)`
+  margin-top: 1rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+`;
+
 export const ThreadTitle = {
   fontSize: '32px',
   padding: '0',
@@ -219,24 +264,3 @@ export const ThreadDescription = {
   color: '#171A21',
   whiteSpace: 'pre-wrap',
 };
-
-export const ThreadContent = styled(Markdown)`
-  margin-top: 1rem;
-  font-size: 1rem;
-  line-height: 1.5rem;
-`;
-
-export const ChatInputWrapper = styled(FlexCol)`
-  width: 100%;
-  align-items: stretch;
-  flex: 0 0 auto;
-
-  > div {
-    ${/* background-color: ${({ theme }) => theme.bg.default}; */ ''}
-    background-image: ${({ theme }) => `linear-gradient(to right, ${hexa(theme.bg.wash, 0.01)}, ${hexa(theme.bg.wash, 0.25)} 2%, ${hexa(theme.bg.wash, 0.25)} 98%, ${hexa(theme.bg.wash, 0.01)})`};
-
-    > form > div {
-      background-color: ${({ theme }) => theme.bg.default};
-    }
-  }
-`;
