@@ -2,8 +2,9 @@
 // $FlowFixMe
 import styled from 'styled-components';
 import { Transition, HorizontalRule } from '../globals';
+import { Avatar } from '../avatar';
 
-export const Avatar = styled.img`
+export const UserAvatar = styled(Avatar)`
   width: 24px;
   height: 24px;
   border-radius: 100%;

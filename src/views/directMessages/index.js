@@ -57,9 +57,8 @@ class DirectMessages extends Component {
   };
 
   render() {
-    const { match, currentUser, data } = this.props;
-    const width = window.innerWidth;
-    const isMobile = width < 768;
+    const { match, history, currentUser, data } = this.props;
+    const isMobile = window.innerWidth < 768;
 
     const { activeThread } = this.state;
 
@@ -96,7 +95,6 @@ class DirectMessages extends Component {
         // if they're in the newMessage flow, it should be the composer
         return (
           <View>
-            {/* <Titlebar title={'Messages'} provideBack={true} noComposer /> */}
             <NewThread threads={threads} currentUser={currentUser} />
           </View>
         );

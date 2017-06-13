@@ -30,6 +30,7 @@ const Channel = /* GraphQL */ `
 		description: String
 		communityId: ID!
 		isPrivate: Boolean
+		isDefault: Boolean
 	}
 
 	input EditChannelInput {

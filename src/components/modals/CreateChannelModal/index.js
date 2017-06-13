@@ -184,6 +184,9 @@ class CreateChannelModal extends Component {
       loading: true,
     });
 
+    // all non-private channels should be set to default for now
+    const isDefault = !isPrivate;
+
     // create the mutation input
     const input = {
       communityId: id,
@@ -191,6 +194,7 @@ class CreateChannelModal extends Component {
       slug,
       description,
       isPrivate,
+      isDefault,
     };
 
     this.props

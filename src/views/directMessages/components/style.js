@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Avatar } from '../../../components/avatar';
 import {
   Truncate,
   FlexCol,
@@ -150,6 +151,7 @@ export const AvatarContainer = styled.div`
   margin-right: 16px;
   width: 44px;
   height: 44px;
+  position: relative;
 
   img {
     box-shadow: 0 0 0 2px #fff;
@@ -161,7 +163,7 @@ export const TwoAvatarContainer = styled(AvatarContainer)`
   height: 60px;
   position: relative;
 
-  img {
+  span {
     margin: 1px;
 
     &:first-child {
@@ -292,11 +294,8 @@ export const SearchResult = styled.li`
   }
 `;
 
-export const SearchResultImage = styled.img`
-  border-radius: 40px;
+export const SearchResultImage = styled(Avatar)`
   margin-right: 8px;
-  width: 32px;
-  height: 32px;
 `;
 
 export const SearchResultTextContainer = styled.div`
@@ -366,14 +365,13 @@ export const PhotosContainer = styled.div`
   padding: 8px 0;
 `;
 
-export const Photo = styled.img`
-  border-radius: 44px;
-  width: 44px;
-  height: 44px;
-  overflow: hidden;
+export const PhotoWrapper = styled.span`
+  margin: 0 6px;
+  display: inline-block;
+`;
+
+export const Photo = styled(Avatar)`
   border: 1px solid #fff;
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
-  margin: 0 4px;
 `;
 
 export const Names = styled.h2`

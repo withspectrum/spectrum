@@ -5,14 +5,12 @@ import { Avatar } from '../../components/avatar';
 
 export const UserProfileAvatar = styled(Avatar)`
   flex: 0 0 24px;
-  border: 1px solid ${({ theme }) => theme.text.default};
-  box-shadow: 0 0 0 2px ${props => (props.isPro ? props.theme.pro.default : 'rgba(255,255,255,0.9)')};
-  background-color: ${({ theme }) => theme.generic.default};
-  background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
+  margin-top: 0;
 
   @media (max-width: 768px) {
-    margin-top: 6px;
-    margin-bottom: 2px;
+    position: relative;
+    top: 3px;
+    margin-bottom: 8px;
     height: 24px;
     width: 24px;
     border: none;
@@ -39,7 +37,7 @@ export const Nav = styled(FlexRow)`
   z-index: 1000;
 
   @media (max-width: 768px) {
-    margin-bottom: 1px;
+    padding: 0 8px;
     order: 3;
     box-shadow: 0 -4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   }

@@ -34,7 +34,7 @@ export const ListCardItemDirectMessageThread = ({
     user => user.userId === currentUser.id
   )[0];
 
-  // concat a string of usernames for thread messages
+  // concat a string of users' names for thread messages
   let participantsArray = participants.length > 1
     ? participants
         .map(user => user.name)

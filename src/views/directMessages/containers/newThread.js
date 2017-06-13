@@ -713,14 +713,20 @@ class NewThread extends Component {
                       key={user.id}
                       onClick={() => this.addUserToSelectedUsersList(user)}
                     >
-                      <SearchResultImage src={user.profilePhoto} />
+                      <SearchResultImage
+                        isOnline={user.isOnline}
+                        size={32}
+                        radius={32}
+                        src={user.profilePhoto}
+                      />
                       <SearchResultTextContainer>
                         <SearchResultDisplayName>
                           {user.name}
                         </SearchResultDisplayName>
-                        <SearchResultUsername>
-                          @{user.username}
-                        </SearchResultUsername>
+                        {user.username &&
+                          <SearchResultUsername>
+                            @{user.username}
+                          </SearchResultUsername>}
                       </SearchResultTextContainer>
                     </SearchResult>
                   );

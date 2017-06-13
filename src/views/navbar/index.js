@@ -14,12 +14,16 @@ import {
   markDirectMessageNotificationsSeenMutation,
 } from '../../api/notification';
 import { SERVER_URL } from '../../api';
+import { setUserLastSeenMutation } from '../../api/user';
 import Icon from '../../components/icons';
 import { displayLoadingNavbar } from '../../components/loading';
 import { Button } from '../../components/buttons';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
-import { saveUserDataToLocalStorage } from '../../actions/authentication';
+import {
+  saveUserDataToLocalStorage,
+  logout,
+} from '../../actions/authentication';
 import {
   Section,
   Nav,
@@ -92,6 +96,13 @@ class Navbar extends Component {
 
     if (currentUser && currentUser !== null) {
       dispatch(saveUserDataToLocalStorage(user));
+
+      // set a timeout to update the user's last seen time
+      const FIFTY_SECONDS = 50000;
+      this.interval = setInterval(() => {
+        this.props.setUserLastSeen(currentUser.id);
+      }, FIFTY_SECONDS);
+
       // if the user lands on /home, it means they just logged in. If this code
       // runs, we know a user was returned successfully and set to localStorage,
       // so we can redirect to the root url
@@ -185,6 +196,16 @@ class Navbar extends Component {
           // err
         });
     }
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+  };
+
+  logout = () => {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+    logout();
   };
 
   login = () => {
@@ -300,7 +321,7 @@ class Navbar extends Component {
                 />
                 <LabelForTab>Profile</LabelForTab>
               </IconLink>
-              <ProfileDropdown user={currentUser} width={'200px'} />
+              <ProfileDropdown logout={this.logout} user={currentUser} />
             </IconDrop>
           </Section>
 
@@ -319,6 +340,7 @@ export default compose(
   markNotificationsSeenMutation,
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
+  setUserLastSeenMutation,
   withRouter,
   displayLoadingNavbar,
   connect(mapStateToProps)

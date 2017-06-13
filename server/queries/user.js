@@ -163,5 +163,11 @@ module.exports = {
           });
         }
       }),
+    isOnline: ({ lastSeen }) => {
+      const now = new Date().getTime();
+      const user = new Date(lastSeen).getTime();
+      // if current time minus user's last online time is less than a minute, they are active
+      return now - user < 60000;
+    },
   },
 };
