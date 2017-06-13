@@ -16,7 +16,7 @@ import Badge from '../badges';
 import Reaction from '../reaction';
 
 import {
-  Avatar,
+  UserAvatar,
   AvatarLabel,
   Byline,
   Name,
@@ -64,7 +64,10 @@ class ChatMessages extends Component {
             style={{ alignSelf: 'flex-end' }}
           >
             <AvatarLabel tipText={sender.name} tipLocation="right">
-              <Avatar src={sender.profilePhoto} />
+              <UserAvatar
+                isOnline={sender.isOnline}
+                src={sender.profilePhoto}
+              />
             </AvatarLabel>
           </Link>
         );

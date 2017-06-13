@@ -8,12 +8,16 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 import { getCurrentUserProfile } from '../../api/user';
 import { SERVER_URL } from '../../api';
+import { setUserLastSeenMutation } from '../../api/user';
 import Icon from '../../components/icons';
 import { displayLoadingNavbar } from '../../components/loading';
 import { Button } from '../../components/buttons';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
-import { saveUserDataToLocalStorage } from '../../actions/authentication';
+import {
+  saveUserDataToLocalStorage,
+  logout,
+} from '../../actions/authentication';
 import {
   Container,
   Section,
@@ -34,6 +38,13 @@ class Navbar extends Component {
 
     if (currentUser && currentUser !== null) {
       dispatch(saveUserDataToLocalStorage(user));
+
+      // set a timeout to update the user's last seen time
+      const FIFTY_SECONDS = 50000;
+      this.interval = setInterval(() => {
+        this.props.setUserLastSeen(currentUser.id);
+      }, FIFTY_SECONDS);
+
       // if the user lands on /home, it means they just logged in. If this code
       // runs, we know a user was returned successfully and set to localStorage,
       // so we can redirect to the root url
@@ -42,6 +53,19 @@ class Navbar extends Component {
       }
     }
   }
+
+  componentWillUnmount() {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+  }
+
+  logout = () => {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+    logout();
+  };
 
   login = () => {
     // log the user in and return them to this page
@@ -133,7 +157,7 @@ class Navbar extends Component {
                 />
                 <LabelForTab>Profile</LabelForTab>
               </IconLink>
-              <ProfileDropdown user={currentUser} />
+              <ProfileDropdown logout={this.logout} user={currentUser} />
             </IconDrop>
           </Section>
 
@@ -148,6 +172,7 @@ const mapStateToProps = state => ({
 });
 export default compose(
   getCurrentUserProfile,
+  setUserLastSeenMutation,
   withRouter,
   displayLoadingNavbar,
   connect(mapStateToProps)

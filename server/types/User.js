@@ -80,6 +80,7 @@ const User = /* GraphQL */ `
 		providerId: String
 		createdAt: Date!
 		lastSeen: Date!
+		isOnline: Boolean
 
 		# non-schema fields
 		threadCount: Int
@@ -117,6 +118,7 @@ const User = /* GraphQL */ `
 		editUser(input: EditUserInput!): User
 		upgradeToPro(input: UpgradeToProInput!): User
 		downgradeFromPro: User
+		setUserLastSeen(userId: ID!): User
 	}
 `;
 

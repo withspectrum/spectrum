@@ -13,6 +13,7 @@ export const directMessageThreadInfoFragment = gql`
       lastSeen
       lastActive
       userId
+      isOnline
     }
   }
 `;
