@@ -14,7 +14,10 @@ import { displayLoadingNavbar } from '../../components/loading';
 import { Button } from '../../components/buttons';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
-import { saveUserDataToLocalStorage } from '../../actions/authentication';
+import {
+  saveUserDataToLocalStorage,
+  logout,
+} from '../../actions/authentication';
 import {
   Container,
   Section,
@@ -38,7 +41,7 @@ class Navbar extends Component {
 
       // set a timeout to update the user's last seen time
       const FIFTY_SECONDS = 50000;
-      setInterval(() => {
+      this.interval = setInterval(() => {
         this.props.setUserLastSeen(currentUser.id);
       }, FIFTY_SECONDS);
 
@@ -50,6 +53,19 @@ class Navbar extends Component {
       }
     }
   }
+
+  componentWillUnmount() {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+  }
+
+  logout = () => {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+    logout();
+  };
 
   login = () => {
     // log the user in and return them to this page
@@ -141,7 +157,7 @@ class Navbar extends Component {
                 />
                 <LabelForTab>Profile</LabelForTab>
               </IconLink>
-              <ProfileDropdown user={currentUser} />
+              <ProfileDropdown logout={this.logout} user={currentUser} />
             </IconDrop>
           </Section>
 
