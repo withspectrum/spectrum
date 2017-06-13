@@ -19,7 +19,6 @@ import {
   Meta,
   MetaNew,
   MetaRow,
-  Participant,
   ParticipantCount,
   Creator,
   ParticipantHeads,

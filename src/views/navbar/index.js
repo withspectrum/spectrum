@@ -56,8 +56,6 @@ class Navbar extends Component {
 
   calculateUnseenCounts = props => {
     const { data: { user }, notificationsQuery } = props || this.props;
-    console.log('calculateUnseenCounts');
-    console.log(notificationsQuery);
     const currentUser = user;
     const notifications =
       currentUser &&

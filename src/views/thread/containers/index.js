@@ -15,11 +15,8 @@ import ThreadDetail from '../components/threadDetail';
 import Messages from '../components/messages';
 import Head from '../../../components/head';
 import ChatInput from '../../../components/chatInput';
-import { Column } from '../../../components/column';
-import AppViewWrapper from '../../../components/appViewWrapper';
 import { getThread } from '../queries';
 import { displayLoadingScreen } from '../../../components/loading';
-import { FlexCol } from '../../../components/globals';
 import { View, Content, Input, Detail, ChatInputWrapper } from '../style';
 import {
   UpsellSignIn,

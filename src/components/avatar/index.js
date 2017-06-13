@@ -5,7 +5,7 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Gradient } from '../globals';
 
 const StyledAvatar = styled.img`

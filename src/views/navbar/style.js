@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Transition, FlexRow, Gradient, hexa } from '../../components/globals';
+import { Transition, FlexRow, hexa } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
 
 export const UserProfileAvatar = styled(Avatar)`

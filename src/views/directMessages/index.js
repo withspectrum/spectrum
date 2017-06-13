@@ -57,7 +57,7 @@ class DirectMessages extends Component {
   };
 
   render() {
-    const { match, history, currentUser, data } = this.props;
+    const { match, currentUser, data } = this.props;
     const isMobile = window.innerWidth < 768;
 
     const { activeThread } = this.state;

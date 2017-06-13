@@ -32,6 +32,7 @@ import {
 } from '../../../components/threadFeedCard/style';
 
 export const NewMessageNotification = ({ notification, currentUser }) => {
+  console.log('raw notif', notification);
   const actors = parseActors(notification.actors, currentUser);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
@@ -42,8 +43,6 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
   );
   const emojiOnly = onlyContainsEmoji(message.content.body);
   const TextBubble = emojiOnly ? EmojiBubble : Bubble;
-
-  console.log(message.messageType);
 
   return (
     <NotificationCard>
