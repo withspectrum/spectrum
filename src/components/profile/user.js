@@ -86,7 +86,13 @@ const UserWithData = ({
           currentUser={currentUser}
         >
           <CoverLink to={`/users/${user.username}`}>
-            <CoverAvatar src={`${user.profilePhoto}`} />
+            <CoverAvatar
+              size={64}
+              radius={64}
+              largeOnline={true}
+              isOnline={user.isOnline}
+              src={`${user.profilePhoto}`}
+            />
             <CoverTitle>{user.name}</CoverTitle>
           </CoverLink>
         </CoverPhoto>

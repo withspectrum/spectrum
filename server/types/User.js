@@ -80,6 +80,7 @@ const User = /* GraphQL */ `
 		providerId: String
 		createdAt: Date!
 		lastSeen: Date!
+		isOnline: Boolean
 
 		# non-schema fields
 		threadCount: Int

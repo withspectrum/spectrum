@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { LinkPreview } from '../../components/linkPreview';
 import Icon from '../../components/icons';
+import { Avatar } from '../../components/avatar';
 import {
   StyledThreadFeedCard,
   CardContent,
@@ -65,7 +66,13 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
     const avatarList = list.slice(0, 10);
     return avatarList.map(participant => (
       <Link key={participant.id} to={`/users/${participant.username}`}>
-        <Participant src={`${participant.profilePhoto}`} role="presentation" />
+        <Avatar
+          size={24}
+          radius={24}
+          isOnline={participant.isOnline}
+          src={`${participant.profilePhoto}`}
+          role="presentation"
+        />
       </Link>
     ));
   };
@@ -109,7 +116,12 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
                 key={props.data.creator.id}
                 to={`/users/${props.data.creator.username}`}
               >
-                <Participant src={props.data.creator.profilePhoto} />
+                <Avatar
+                  size={24}
+                  radius={24}
+                  isOnline={props.data.creator.isOnline}
+                  src={props.data.creator.profilePhoto}
+                />
               </Link>
             </Creator>
             {messageAvatars(participantList)}

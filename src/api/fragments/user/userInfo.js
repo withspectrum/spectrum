@@ -11,5 +11,6 @@ export const userInfoFragment = gql`
     username
     isAdmin
     isPro
+    isOnline
   }
 `;

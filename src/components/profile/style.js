@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { FlexRow, FlexCol, Truncate, Transition, Gradient } from '../globals';
+import { Avatar } from '../avatar';
 import { Button, OutlineButton, IconButton } from '../buttons';
 import Card from '../card';
 
@@ -20,10 +21,6 @@ export const CommunityAvatar = styled.img`
   object-fit: cover;
   background-color: ${({ theme }) => theme.generic.default};
   background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
-`;
-
-export const UserAvatar = styled(CommunityAvatar)`
-  border-radius: 20px;
 `;
 
 export const ProfileHeaderLink = styled(Link)`
@@ -171,12 +168,10 @@ export const CoverLink = styled(ProfileHeaderLink)`
   width: calc(100% - 32px);
 `;
 
-export const CoverAvatar = styled(UserAvatar)`
-  border: 2px solid ${({ theme }) => theme.text.reverse};
-  width: 64px;
+export const CoverAvatar = styled(Avatar)`
+  box-shadow: 0 0 0 2px #fff, 0 2px 1px 2px rgba(0,0,0,0.05);
   flex: 0 0 64px;
   margin-right: 0;
-  border-radius: 100%;
 `;
 
 export const CoverTitle = styled(Title)`

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Card from '../../components/card';
+import { Avatar } from '../../components/avatar';
 import Markdown from '../../components/markdown';
 import Column from '../../components/column';
 import {
@@ -130,18 +131,8 @@ export const BylineMeta = styled(FlexCol)`
   }
 `;
 
-export const AuthorAvatar = styled.img`
-  height: 48px;
-  width: 48px;
-  border-radius: 100%;
-  object-fit: cover;
+export const AuthorAvatar = styled(Avatar)`
   cursor: pointer;
-  box-shadow: 0 0 2px 0 ${({ theme }) => hexa(theme.text.default, 0.2)};
-
-  @media (max-width: 768px) {
-    height: 40px;
-    width: 40px;
-  }
 `;
 
 export const AuthorName = styled(H3)`

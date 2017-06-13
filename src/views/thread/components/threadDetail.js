@@ -367,7 +367,13 @@ class ThreadDetailPure extends Component {
       <ThreadWrapper>
         <ContextRow>
           <Byline to={`/users/${thread.creator.username}`}>
-            <AuthorAvatar src={thread.creator.profilePhoto} />
+            <AuthorAvatar
+              size={48}
+              radius={48}
+              largeOnline={true}
+              isOnline={thread.creator.isOnline}
+              src={thread.creator.profilePhoto}
+            />
             <BylineMeta>
               <AuthorName>{thread.creator.name}</AuthorName>
               <AuthorUsername>
