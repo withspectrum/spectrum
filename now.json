@@ -2,9 +2,9 @@
 	"env": {
 		"S3_TOKEN": "@s3-token",
 		"S3_SECRET": "@s3-secret",
-		"COMPOSE_PASSWORD": "@compose-password",
-		"COMPOSE_URL": "@compose-url",
-		"COMPOSE_PORT": "@compose-port",
+		"COMPOSE_RETHINKDB_PASSWORD": "@compose-rethinkdb-password",
+		"COMPOSE_RETHINKDB_URL": "@compose-rethinkdb-url",
+		"COMPOSE_RETHINKDB_PORT": "@compose-rethinkdb-port",
     "OPTICS_API_KEY": "@optics-api-key",
 		"STRIPE_TOKEN": "@stripe-token"
 	}
