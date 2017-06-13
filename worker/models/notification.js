@@ -10,20 +10,8 @@ export const checkForExistingNotification = (
   event: EventTypes,
   contextId: string
 ) => {
-  let now = new Date();
-  let nowTime = now.getTime();
-  let then = nowTime - TIME_BUFFER;
-  then = new Date(then);
-
-  console.log('now', now, '\nthen', then);
-
-  const thenYear = then.getFullYear();
-  const thenMonth = then.getMonth() + 1;
-  const thenDay = then.getDate();
-  const thenHours = then.getHours();
-  const thenMinutes = then.getMinutes();
-  const thenSeconds = then.getSeconds();
-  const zone = 'Z';
+  const now = new Date();
+  const then = new Date(now.getTime() - TIME_BUFFER);
 
   return db
     .table('notifications')
@@ -32,26 +20,19 @@ export const checkForExistingNotification = (
       notification('event')
         .eq(event)
         .and(
-          notification('modifiedAt')
-            .date()
-            .during(
-              db.time(
-                thenYear,
-                thenMonth,
-                thenDay,
-                thenHours,
-                thenMinutes,
-                thenSeconds,
-                zone
-              ),
-              db.now()
-            )
+          notification('modifiedAt').during(
+            db.ISO8601(then.toISOString()),
+            db.now()
+          )
         )
     )
     .run()
     .then(notifications => {
       if (!notifications || notifications.length === 0) return null;
       return notifications[0];
+    })
+    .catch(err => {
+      return null;
     });
 };
 
