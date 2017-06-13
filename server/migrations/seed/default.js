@@ -78,7 +78,7 @@ const DEFAULT_THREADS = [
   {
     id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
     createdAt: new Date(DATE),
-    creatorId: 'uItS3QQiUxXH44m14uWmixTbqSc2',
+    creatorId: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
     channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
     communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     isPublished: true,
@@ -113,7 +113,7 @@ const DEFAULT_DIRECT_MESSAGE_THREADS = [
 const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
   {
     createdAt: new Date(DATE),
-    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    userId: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
     threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     lastActive: new Date(DATE),
     lastSeen: new Date(DATE),
@@ -124,7 +124,7 @@ const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
 const DEFAULT_USERS_COMMUNITIES = [
   {
     createdAt: new Date(DATE),
-    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    userId: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
     communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     isOwner: true,
     isModerator: false,
@@ -137,7 +137,7 @@ const DEFAULT_USERS_COMMUNITIES = [
 const DEFAULT_USERS_CHANNELS = [
   {
     createdAt: new Date(DATE),
-    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    userId: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
     channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     isOwner: true,
     isModerator: false,

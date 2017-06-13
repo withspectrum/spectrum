@@ -53,9 +53,9 @@ export const MiniNewUserInCommunityNotification = ({
 
   return (
     <NotificationListRow
-      onClick={() => history.push(`/thread/${notification.context.id}`)}
+      onClick={() => history.push(`/${notification.context.payload.slug}`)}
     >
-      <CardLink to={`/thread/${notification.context.id}`} />
+      <CardLink to={`/${notification.context.payload.slug}`} />
       <CardContent>
         <ActorsRow actors={actors.asObjects} />
         <TextContent pointer={false}>

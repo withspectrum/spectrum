@@ -49,6 +49,7 @@ export default () =>
     )
       .then(notification => {
         if (notification) {
+          console.log('existing notification found!!!!');
           // if an existing notification exists, update it with the newest actor + entities
           return Promise.all([notification, ...promises])
             .then(([notification, actor, context, entity]) => {
@@ -92,6 +93,7 @@ export default () =>
               );
             });
         } else {
+          console.log('creating new notification');
           // if no notification was found that matches our bundling criteria, create a new notification
           return Promise.all([...promises])
             .then(([actor, context, entity]) => {

@@ -65,7 +65,6 @@ const actorsToString = actors => {
         <Link to={`/users/${data[0].username}`}>
           {`${names[0]}`}
         </Link>
-        {' '}
         ,
         {' '}
         <Link to={`/users/${data[1].username}`}>
