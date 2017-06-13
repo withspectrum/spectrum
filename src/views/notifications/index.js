@@ -23,7 +23,13 @@ import { UpsellSignIn } from '../../components/upsell';
 const NotificationsPure = ({ data, currentUser }) => {
   // our router should prevent this from happening, but just in case
   if (!currentUser) {
-    return <UpsellSignIn />;
+    return (
+      <AppViewWrapper>
+        <Column type={'primary'}>
+          <UpsellSignIn />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 
   // const { notifications: { edges } } = data;
