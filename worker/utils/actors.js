@@ -1,7 +1,9 @@
 // @flow
+const debug = require('debug')('worker:actors');
 
 // takes an array of objects containing user data and returns an array with unique objects
 export const getDistinctActors = array => {
+  debug('get distinct actors');
   let unique = {};
   let distinct = [];
   for (let i in array) {

@@ -1,4 +1,5 @@
 // @flow
+const debug = require('debug')('worker:queue:reaction-notification');
 import processQueue from '../process-queue';
 import { REACTION_NOTIFICATION, TIME_BUFFER } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
@@ -23,6 +24,8 @@ export default () =>
     const incomingReaction = job.data.reaction;
     const currentUserId = job.data.userId;
 
+    debug(`new job for ${incomingReaction.id} by ${currentUserId}`);
+
     /*
       These promises are used to create or modify a notification. The order is:
       - actor
@@ -45,6 +48,7 @@ export default () =>
     )
       .then(notification => {
         if (notification) {
+          debug('found existing notification');
           // if an existing notification exists, update it with the newest actor + entities
           return Promise.all([notification, ...promises]).then(([
             notification,
@@ -65,11 +69,15 @@ export default () =>
               entities: [...notification.entities, entity],
             });
 
+            debug('update existing notification in database with new data');
+
             // update the notification in the db
             return updateNotification(newNotification)
               .then(notification => {
                 // get the original message where the reaction was left
                 const message = getMessageById(notification.context.id);
+
+                debug('get message');
 
                 return Promise.all([notification, message]);
               })
@@ -83,10 +91,14 @@ export default () =>
                     )
                   : false;
 
+                debug('check permission of sender');
+
                 return Promise.all([notification, message, hasPermission]);
               })
               .then(([notification, message, hasPermission]) => {
                 if (!hasPermission) return;
+
+                debug('mark notification as new for sender');
                 // if the user is allowed to recieve notifications, update their notification
                 return markUsersNotificationsAsNew(
                   notification.id,
@@ -105,10 +117,14 @@ export default () =>
               entities: [entity],
             };
 
+            debug('create notification in db');
+
             return storeNotification(notification)
               .then(notification => {
                 // get the original message where the reaction was left
                 const message = getMessageById(notification.context.id);
+
+                debug('get message');
 
                 return Promise.all([notification, message]);
               })
@@ -122,11 +138,14 @@ export default () =>
                     )
                   : false;
 
+                debug('check permission of sender');
+
                 return Promise.all([notification, message, hasPermission]);
               })
               .then(([notification, message, hasPermission]) => {
                 if (!hasPermission) return;
 
+                debug('mark notification as new for sender');
                 return storeUsersNotifications(
                   notification.id,
                   message.senderId

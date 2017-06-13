@@ -1,4 +1,5 @@
 // @flow
+const debug = require('debug')('worker:queue:message-notification');
 import processQueue from '../process-queue';
 import { MESSAGE_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
@@ -27,6 +28,10 @@ export default () =>
       ? 'DIRECT_MESSAGE_THREAD'
       : 'THREAD';
 
+    debug(
+      `new job for ${incomingMessage.id} by ${currentUserId} in ${contextType.toLowerCase()}`
+    );
+
     /*
       These promises are used to create or modify a notification. The order is:
       - actor
@@ -49,7 +54,7 @@ export default () =>
     )
       .then(notification => {
         if (notification) {
-          console.log('existing notification found!!!!');
+          debug('found existing notification');
           // if an existing notification exists, update it with the newest actor + entities
           return Promise.all([notification, ...promises])
             .then(([notification, actor, context, entity]) => {
@@ -66,16 +71,19 @@ export default () =>
                 entities: [...notification.entities, entity],
               });
 
+              debug('update existing notification in database with new data');
               return updateNotification(newNotification);
             })
             .then(notification => {
-              /* 
+              /*
             if the message was posted in a story, get all users who have notifications turned on for that story. Otherwise the message was posted in a direct message thread, in which case we will notify all participants in the thread
             */
               const recipients = incomingMessage.threadType ===
                 'directMessageThread'
                 ? getDirectMessageThreadMembers(notification.context.id)
                 : getThreadNotificationUsers(notification.context.id);
+
+              debug('find recipients of notification');
 
               return Promise.all([notification, recipients]);
             })
@@ -85,6 +93,8 @@ export default () =>
                 recipient => recipient.userId !== currentUserId
               );
 
+              debug('mark notification as new for all recipients');
+
               // for each person who should receie an updated notification, mark their notification as unseen and unread
               return Promise.all(
                 filteredRecipients.map(recipient =>
@@ -93,7 +103,6 @@ export default () =>
               );
             });
         } else {
-          console.log('creating new notification');
           // if no notification was found that matches our bundling criteria, create a new notification
           return Promise.all([...promises])
             .then(([actor, context, entity]) => {
@@ -105,10 +114,12 @@ export default () =>
                 entities: [entity],
               };
 
+              debug('create notification in db');
+
               return storeNotification(notification);
             })
             .then(notification => {
-              /* 
+              /*
             if the message was posted in a story, get all users who have notifications turned on for that story. Otherwise the message was posted in a direct message thread, in which case we will notify all participants in the thread
             */
               const recipients = incomingMessage.threadType ===
@@ -116,6 +127,7 @@ export default () =>
                 ? getDirectMessageThreadMembers(notification.context.id)
                 : getThreadNotificationUsers(notification.context.id);
 
+              debug('find recipients of notification');
               return Promise.all([notification, recipients]);
             })
             .then(([notification, recipients]) => {
@@ -124,6 +136,7 @@ export default () =>
                 recipient => recipient.userId !== currentUserId
               );
 
+              debug('create a notification for every recipients');
               return Promise.all(
                 filteredRecipients.map(recipient =>
                   storeUsersNotifications(notification.id, recipient.userId)

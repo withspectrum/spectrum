@@ -1,3 +1,4 @@
+// @flow
 import type { EntityTypes } from './types';
 import { getMessageById } from '../models/message';
 import { getThreadById } from '../models/thread';
@@ -5,6 +6,7 @@ import { getChannelById } from '../models/channel';
 import { getCommunityById } from '../models/community';
 import { getUserById } from '../models/user';
 import { getDirectMessageThreadById } from '../models/directMessageThread';
+const debug = require('debug')('worker:payloads');
 
 /*
   Fetch a payload from the database when we only have access to an id.
@@ -15,6 +17,7 @@ export const fetchPayload = (
   type: EntityTypes,
   id: Object
 ): Promise<Object> => {
+  debug(`fetch payload for ${type}#${id}`);
   switch (type) {
     case 'MESSAGE': {
       return getMessageById(id).then(data => createPayload(type, data));
@@ -42,8 +45,9 @@ export const fetchPayload = (
   }
 };
 
-export const createPayload = (type: EntityTypes, data: Object): Object => ({
-  type,
-  id: data.id,
-  payload: JSON.stringify(data),
-});
+export const createPayload = (type: EntityTypes, data: Object): Object =>
+  debug(`create payload for ${type}`) || {
+    type,
+    id: data.id,
+    payload: JSON.stringify(data),
+  };

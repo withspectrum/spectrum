@@ -1,4 +1,5 @@
 // @flow
+const debug = require('debug')('worker:queue:channel-notification');
 import processQueue from '../process-queue';
 import { CHANNEL_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
@@ -20,8 +21,11 @@ export default () =>
     const incomingChannel = job.data.channel;
     const currentUserId = job.data.userId;
 
+    debug(`new job for ${incomingChannel.id} by ${currentUserId}`);
+
     // if the channel is the default channel being created at community creation time, don't create a notification
     if (incomingChannel.slug === 'general') {
+      debug('ignored new job for default channel');
       return;
     }
 
@@ -46,6 +50,7 @@ export default () =>
     )
       .then(notification => {
         if (notification) {
+          debug('found existing channel creation notification');
           return Promise.all([notification, ...promises])
             .then(([notification, actor, context, entity]) => {
               // actors should always be distinct to make client side rendering easier
@@ -61,11 +66,14 @@ export default () =>
                 entities: [...notification.entities, entity],
               });
 
+              debug('update existing notification in database with new data');
               return updateNotification(newNotification);
             })
             .then(notification => {
               // get the recipients of the notification by finding all members in the community that have notifications turned on
               const recipients = getMembersInCommunity(notification.context.id);
+
+              debug('find recipients of notification');
 
               return Promise.all([notification, recipients]);
             })
@@ -74,6 +82,8 @@ export default () =>
               let filteredRecipients = recipients.filter(
                 recipient => recipient !== currentUserId
               );
+
+              debug('mark notification as new for all recipients');
 
               // for each person who should receie an updated notification, mark their notification as unseen and unread
               return Promise.all(
@@ -94,11 +104,15 @@ export default () =>
                 entities: [entity],
               };
 
+              debug('create notification in db');
+
               return storeNotification(notification);
             })
             .then(notification => {
               // get the recipients of the notification by finding all members in the community that have notifications turned on
               const recipients = getMembersInCommunity(notification.context.id);
+
+              debug('find recipients of notification');
 
               return Promise.all([notification, recipients]);
             })
@@ -108,6 +122,7 @@ export default () =>
                 recipient => recipient !== currentUserId
               );
 
+              debug('create a notification for every recipients');
               // for each recipient, create a notification
               return Promise.all(
                 filteredRecipients.map(recipient =>

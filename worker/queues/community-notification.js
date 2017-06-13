@@ -1,4 +1,5 @@
 // @flow
+const debug = require('debug')('worker:queue:community-notification');
 import processQueue from '../process-queue';
 import { COMMUNITY_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
@@ -20,6 +21,8 @@ export default () =>
     const incomingCommunityId = job.data.communityId;
     const currentUserId = job.data.userId;
 
+    debug(`new job for ${incomingCommunityId} by ${currentUserId}`);
+
     /*
       These promises are used to create or modify a notification. The order is:
       - actor
@@ -40,6 +43,7 @@ export default () =>
     )
       .then(notification => {
         if (notification) {
+          debug('found existing notification');
           return Promise.all([notification, ...promises])
             .then(([notification, actor, context]) => {
               // actors should always be distinct to make client side rendering easier
@@ -56,15 +60,19 @@ export default () =>
                 entities: [...distinctActors],
               });
 
+              debug('update existing notification in database with new data');
               return updateNotification(newNotification);
             })
             .then(notification => {
               // get the owners of the community
               const recipients = getOwnersInCommunity(incomingCommunityId);
 
+              debug('find recipients of notification');
+
               return Promise.all([notification, recipients]);
             })
             .then(([notification, recipients]) => {
+              debug('mark notification as new for all recipients');
               // for each owner, trigger a notification
               return Promise.all(
                 recipients.map(recipient =>
@@ -84,15 +92,20 @@ export default () =>
                 entities: [actor],
               };
 
+              debug('create notification in db');
+
               return storeNotification(notification);
             })
             .then(notification => {
               // get the owners of the community
               const recipients = getOwnersInCommunity(incomingCommunityId);
 
+              debug('find recipients of notification');
+
               return Promise.all([notification, recipients]);
             })
             .then(([notification, recipients]) => {
+              debug('create a notification for every recipients');
               return Promise.all(
                 recipients.map(recipient =>
                   storeUsersNotifications(notification.id, recipient)
