@@ -21,7 +21,10 @@ export default () =>
     const incomingChannel = job.data.channel;
     const currentUserId = job.data.userId;
 
-    debug(`new job for ${incomingChannel.id} by ${currentUserId}`);
+    debug(
+      `
+new job for ${incomingChannel.id} by ${currentUserId}`
+    );
 
     // if the channel is the default channel being created at community creation time, don't create a notification
     if (incomingChannel.slug === 'general') {
@@ -122,7 +125,7 @@ export default () =>
                 recipient => recipient !== currentUserId
               );
 
-              debug('create a notification for every recipients');
+              debug('create a notification for every recipient');
               // for each recipient, create a notification
               return Promise.all(
                 filteredRecipients.map(recipient =>

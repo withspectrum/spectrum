@@ -29,7 +29,8 @@ export default () =>
       : 'THREAD';
 
     debug(
-      `new job for ${incomingMessage.id} by ${currentUserId} in ${contextType.toLowerCase()}`
+      `
+new job for ${incomingMessage.id} by ${currentUserId} in ${contextType.toLowerCase()}`
     );
 
     /*
@@ -136,7 +137,7 @@ export default () =>
                 recipient => recipient.userId !== currentUserId
               );
 
-              debug('create a notification for every recipients');
+              debug('create a notification for every recipient');
               return Promise.all(
                 filteredRecipients.map(recipient =>
                   storeUsersNotifications(notification.id, recipient.userId)

@@ -21,7 +21,10 @@ export default () =>
     const incomingCommunityId = job.data.communityId;
     const currentUserId = job.data.userId;
 
-    debug(`new job for ${incomingCommunityId} by ${currentUserId}`);
+    debug(
+      `
+new job for ${incomingCommunityId} by ${currentUserId}`
+    );
 
     /*
       These promises are used to create or modify a notification. The order is:
@@ -105,7 +108,7 @@ export default () =>
               return Promise.all([notification, recipients]);
             })
             .then(([notification, recipients]) => {
-              debug('create a notification for every recipients');
+              debug('create a notification for every recipient');
               return Promise.all(
                 recipients.map(recipient =>
                   storeUsersNotifications(notification.id, recipient)

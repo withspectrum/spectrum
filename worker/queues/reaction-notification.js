@@ -24,7 +24,10 @@ export default () =>
     const incomingReaction = job.data.reaction;
     const currentUserId = job.data.userId;
 
-    debug(`new job for ${incomingReaction.id} by ${currentUserId}`);
+    debug(
+      `
+new job for ${incomingReaction.id} by ${currentUserId}`
+    );
 
     /*
       These promises are used to create or modify a notification. The order is:
