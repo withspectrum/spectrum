@@ -37,10 +37,10 @@ class Navbar extends Component {
       dispatch(saveUserDataToLocalStorage(user));
 
       // set a timeout to update the user's last seen time
-      const SIXTY_SECONDS = 60000;
+      const FIFTY_SECONDS = 50000;
       setInterval(() => {
         this.props.setUserLastSeen(currentUser.id);
-      }, SIXTY_SECONDS);
+      }, FIFTY_SECONDS);
 
       // if the user lands on /home, it means they just logged in. If this code
       // runs, we know a user was returned successfully and set to localStorage,
