@@ -39,12 +39,21 @@ class Navbar extends Component {
     allUnseenCount: number,
     dmUnseenCount: number,
     notifications: Array<Object>,
+    subscription: ?Function,
   };
 
   constructor(props) {
     super(props);
+    this.state = {
+      ...this.calculateUnseenCounts(),
+      subscription: null,
+    };
+  }
 
-    const { data: { user }, notificationsQuery } = this.props;
+  calculateUnseenCounts = props => {
+    const { data: { user }, notificationsQuery } = props || this.props;
+    console.log('calculateUnseenCounts');
+    console.log(notificationsQuery);
     const currentUser = user;
     const notifications =
       currentUser &&
@@ -70,12 +79,12 @@ class Navbar extends Component {
           notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
         ).length;
 
-    this.state = {
+    return {
       allUnseenCount,
       dmUnseenCount,
       notifications,
     };
-  }
+  };
 
   componentDidMount() {
     const { data: { user }, dispatch, history, match } = this.props;
@@ -89,8 +98,43 @@ class Navbar extends Component {
       if (match.url === '/home') {
         history.push('/');
       }
+      this.subscribe();
     }
   }
+
+  componentDidUpdate(prevProps) {
+    if (!this.props.data.user) return;
+    if (!this.props.notificationsQuery) return;
+    if (!prevProps.notificationsQuery) {
+      this.setState(this.calculateUnseenCounts());
+      return;
+    }
+
+    if (
+      prevProps.notificationsQuery.notifications.edges.length !==
+      this.props.notificationsQuery.notifications.edges.length
+    ) {
+      this.setState(this.calculateUnseenCounts());
+    }
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  subscribe = () => {
+    this.setState({
+      subscription: this.props.subscribeToNewNotifications(),
+    });
+  };
+
+  unsubscribe = () => {
+    const { subscription } = this.state;
+    if (subscription) {
+      // This unsubscribes the subscription
+      subscription();
+    }
+  };
 
   markAllNotificationsSeen = () => {
     const { allUnseenCount } = this.state;

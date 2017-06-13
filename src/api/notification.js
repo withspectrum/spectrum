@@ -4,6 +4,7 @@ import { graphql, gql } from 'react-apollo';
 import {
   notificationInfoFragment,
 } from './fragments/notification/notificationInfo';
+import { subscribeToNewNotifications } from './subscriptions';
 
 const LoadMoreNotifications = gql`
   query loadMoreNotifications($after: String) {
@@ -84,6 +85,58 @@ export const GET_NOTIFICATIONS_OPTIONS = {
 
 export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
   name: 'notificationsQuery',
+  options: {
+    fetchPolicy: 'network-only',
+  },
+  props: props => ({
+    ...props,
+    subscribeToNewNotifications: () => {
+      return props.notificationsQuery.subscribeToMore({
+        document: subscribeToNewNotifications,
+        updateQuery: (prev, { subscriptionData }) => {
+          const newNotification = subscriptionData.data.notificationAdded;
+          if (!newNotification) return prev;
+
+          console.log('Add new notification to the store');
+
+          if (!prev.notifications) {
+            return {
+              __typename: 'NotificationsConnection',
+              pageInfo: {
+                hasNextPage: true,
+                __typename: 'PageInfo',
+              },
+              notifications: {
+                edges: [
+                  {
+                    node: newNotification,
+                    __typename: 'NotificationEdge',
+                  },
+                ],
+              },
+              ...prev,
+            };
+          }
+
+          // Add the new notification to the data
+          return {
+            ...prev,
+            notifications: {
+              ...prev.notifications,
+              edges: [
+                {
+                  node: newNotification,
+                  cursor: '__this-is-a-bullshit-cursor__',
+                  __typename: 'NotificationEdge',
+                },
+                ...prev.notifications.edges,
+              ],
+            },
+          };
+        },
+      });
+    },
+  }),
 };
 
 export const getNotifications = graphql(
