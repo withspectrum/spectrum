@@ -172,9 +172,9 @@ module.exports = {
           });
         }
       }),
-    isOnline: ({ lastSeen }, _, __) => {
-      const now = new Date().getTime() / 1000;
-      const user = new Date(lastSeen).getTime() / 1000;
+    isOnline: ({ lastSeen }) => {
+      const now = new Date().getTime();
+      const user = new Date(lastSeen).getTime();
       // if current time minus user's last online time is less than a minute, they are active
       return now - user < 60000;
     },
