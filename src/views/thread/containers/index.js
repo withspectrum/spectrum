@@ -21,12 +21,7 @@ import { UserProfile, ChannelProfile } from '../../../components/profile';
 import { getThread } from '../queries';
 import { displayLoadingScreen } from '../../../components/loading';
 import { FlexCol } from '../../../components/globals';
-import {
-  Container,
-  ChatInputWrapper,
-  DetailViewWrapper,
-  DetailColumn,
-} from '../style';
+import { View, Content, Input, Detail, ChatInputWrapper } from '../style';
 import {
   UpsellSignIn,
   UpsellRequestToJoinChannel,
@@ -115,37 +110,37 @@ class ThreadContainerPure extends Component {
 
     if (error) {
       return (
-        <FlexCol style={{ flex: '1 1 auto' }}>
+        <View>
           <Titlebar
             title={'Thread not found'}
             provideBack={true}
             backRoute={`/`}
             noComposer
           />
-          <AppViewWrapper>
-            <Column type="primary">
+          <Content>
+            <Detail type="primary">
               <Upsell404Thread />
-            </Column>
-          </AppViewWrapper>
-        </FlexCol>
+            </Detail>
+          </Content>
+        </View>
       );
     }
 
     if (!thread || thread.deleted) {
       return (
-        <FlexCol style={{ flex: '1 1 auto' }}>
+        <View>
           <Titlebar
             title={'Thread not found'}
             provideBack={true}
             backRoute={`/`}
             noComposer
           />
-          <AppViewWrapper>
-            <Column type="primary">
+          <Content>
+            <Detail type="primary">
               <Upsell404Thread />
-            </Column>
-          </AppViewWrapper>
-        </FlexCol>
+            </Detail>
+          </Content>
+        </View>
       );
     }
 
@@ -153,15 +148,15 @@ class ThreadContainerPure extends Component {
       thread.channel.isPrivate && !thread.channel.channelPermissions.isMember
     ) {
       return (
-        <FlexCol style={{ flex: '1 1 auto' }}>
+        <View>
           <Titlebar
             title={'Private Thread'}
             provideBack={true}
             backRoute={`/`}
             noComposer
           />
-          <AppViewWrapper>
-            <Column type="primary">
+          <Content>
+            <Detail type="primary">
               <UpsellRequestToJoinChannel
                 channel={thread.channel}
                 community={thread.channel.community.slug}
@@ -169,9 +164,9 @@ class ThreadContainerPure extends Component {
                 subscribe={() => this.toggleSubscription(thread.channel.id)}
                 currentUser={currentUser}
               />
-            </Column>
-          </AppViewWrapper>
-        </FlexCol>
+            </Detail>
+          </Content>
+        </View>
       );
     }
 
@@ -199,7 +194,8 @@ class ThreadContainerPure extends Component {
       : [thread.creator.id];
 
     return (
-      <FlexCol style={{ flex: '1 1 auto' }}>
+      <View>
+        <Head title={title} description={description} />
         <Titlebar
           title={thread.content.title}
           subtitle={`${thread.channel.community.name} / ${thread.channel.name}`}
@@ -207,50 +203,44 @@ class ThreadContainerPure extends Component {
           backRoute={`/${thread.channel.community.slug}/${thread.channel.slug}`}
           noComposer
         />
-        <DetailViewWrapper>
-          <Head title={title} description={description} />
+        <Content innerRef={scrollBody => this.scrollBody = scrollBody}>
+          <Detail type="only">
+            {!currentUser && <UpsellSignIn />}
+            <ThreadDetail thread={thread} />
+            <Messages
+              id={thread.id}
+              participants={participantsAndCreator}
+              currentUser={currentUser}
+              forceScrollToBottom={this.forceScrollToBottom}
+              contextualScrollToBottom={this.contextualScrollToBottom}
+            />
 
-          <DetailColumn type="half">
-            <Container innerRef={scrollBody => this.scrollBody = scrollBody}>
-              {!currentUser && <UpsellSignIn />}
-              <ThreadDetail thread={thread} />
-              <Messages
-                id={thread.id}
-                participants={participantsAndCreator}
-                currentUser={currentUser}
-                forceScrollToBottom={this.forceScrollToBottom}
-                contextualScrollToBottom={this.contextualScrollToBottom}
-              />
-
-              {// if the user exists but isn't a subscriber to the channel,
-              // show an upsell to join the channel
-              currentUser &&
-                !thread.isLocked &&
-                !thread.channel.channelPermissions.isMember &&
-                <UpsellJoinChannel
-                  channel={thread.channel}
-                  subscribe={this.toggleSubscription}
-                  loading={isLoading}
-                />}
-            </Container>
-            {// if user exists, and is either the thread creator or a subscriber
-            // of the channel the thread was posted in, the user can see the
-            // chat input
+            {// if the user exists but isn't a subscriber to the channel,
+            // show an upsell to join the channel
             currentUser &&
               !thread.isLocked &&
-              (thread.isCreator ||
-                thread.channel.channelPermissions.isMember) &&
-              <ChatInputWrapper>
-                <ChatInput
-                  threadType="story"
-                  thread={thread.id}
-                  currentUser={currentUser}
-                  forceScrollToBottom={this.forceScrollToBottom}
-                />
-              </ChatInputWrapper>}
-          </DetailColumn>
-        </DetailViewWrapper>
-      </FlexCol>
+              !thread.channel.channelPermissions.isMember &&
+              <UpsellJoinChannel
+                channel={thread.channel}
+                subscribe={this.toggleSubscription}
+                loading={isLoading}
+              />}
+          </Detail>
+        </Content>
+        {currentUser &&
+          !thread.isLocked &&
+          (thread.isCreator || thread.channel.channelPermissions.isMember) &&
+          <Input>
+            <ChatInputWrapper type="only">
+              <ChatInput
+                threadType="story"
+                thread={thread.id}
+                currentUser={currentUser}
+                forceScrollToBottom={this.forceScrollToBottom}
+              />
+            </ChatInputWrapper>
+          </Input>}
+      </View>
     );
   }
 }

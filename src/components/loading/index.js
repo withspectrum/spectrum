@@ -35,14 +35,15 @@ import {
 const LoadingContainer = styled.div`
   display: flex;
   flex: 1 1 auto;
+  align-self: stretch;
   align-items: center;
   justify-content: center;
   position: relative;
 `;
 
 const LoadingCardContainer = styled(Card)`
-  width: 100%;
-  height: 100%;
+  flex: 1 1 auto;
+  align-self: stretch;
   align-items: center;
   justify-content: center;
   position: relative;
