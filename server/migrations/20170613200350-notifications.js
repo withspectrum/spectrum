@@ -90,7 +90,7 @@ exports.up = function(r, conn) {
               console.log(err);
               throw err;
             })
-            .then(cursor => cursor._data[0])
+            .then(cursor => cursor.toArray())
             .then(threads =>
               Promise.all(
                 threads.map(thread => {
@@ -100,7 +100,7 @@ exports.up = function(r, conn) {
                       .filter({ threadId: thread.id })
                       .map(message => message('senderId'))
                       .run(conn)
-                      .then(cursor => cursor._data[0])
+                      .then(cursor => cursor.toArray())
                       .catch(err => {
                         console.log(err);
                         throw err;
@@ -147,8 +147,8 @@ exports.up = function(r, conn) {
 
 exports.down = function(r, conn) {
   return Promise.all([
-    r.tableDrop('usersThreads'),
-    r.tableDrop('usersNotifications'),
+    r.tableDrop('usersThreads').run(conn),
+    r.tableDrop('usersNotifications').run(conn),
     r
       .table('usersCommunities')
       .update({ receiveNotifications: r.literal() })
