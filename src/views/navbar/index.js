@@ -10,6 +10,7 @@ import { getCurrentUserProfile } from '../../api/user';
 import {
   getNotificationsForNavbar,
   markNotificationsSeenMutation,
+  markSingleNotificationSeenMutation,
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
 } from '../../api/notification';
@@ -77,7 +78,13 @@ class Navbar extends Component {
       notifications.length > 0 &&
       notifications
         .filter(notification => notification.isSeen === false)
-        .filter(notification => notification.context.id !== id) // SEE NOTE
+        .filter(notification => {
+          // SEE NOTE ABOVE
+          if (notification.context.id !== id) return notification;
+          // if the notification context matches the current route, go ahead and mark it as seen
+          console.log('marking a notification as seen', notification.id);
+          this.props.markSingleNotificationSeen(notification.id);
+        })
         .filter(
           notification => notification.context.type === 'DIRECT_MESSAGE_THREAD'
         ).length;
@@ -87,7 +94,13 @@ class Navbar extends Component {
       notifications.length > 0 &&
       notifications
         .filter(notification => notification.isSeen === false)
-        .filter(notification => notification.context.id !== id) // SEE NOTE
+        .filter(notification => {
+          // SEE NOTE ABOVE
+          if (notification.context.id !== id) return notification;
+          // if the notification context matches the current route, go ahead and mark it as seen
+          console.log('marking a notification as seen', notification.id);
+          this.props.markSingleNotificationSeen(notification.id);
+        })
         .filter(
           notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
         ).length;
@@ -347,6 +360,7 @@ const mapStateToProps = state => ({
 export default compose(
   getCurrentUserProfile,
   getNotificationsForNavbar,
+  markSingleNotificationSeenMutation,
   markNotificationsSeenMutation,
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,

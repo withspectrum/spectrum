@@ -209,3 +209,28 @@ export const markDirectMessageNotificationsSeenMutation = graphql(
   MARK_DM_NOTIFICATIONS_SEEN_MUTATION,
   MARK_DM_NOTIFICATIONS_SEEN_OPTIONS
 );
+
+export const MARK_SINGLE_NOTIFICATION_SEEN_MUTATION = gql`
+  mutation markSingleNotificationSeen($id: ID!) {
+    markSingleNotificationSeen(id: $id) {
+      ...notificationInfo
+    }
+  }
+  ${notificationInfoFragment}
+`;
+
+export const MARK_SINGLE_NOTIFICATION_SEEN_OPTIONS = {
+  props: ({ mutate }) => ({
+    markSingleNotificationSeen: () => mutate(),
+  }),
+  options: id => ({
+    variables: {
+      id,
+    },
+  }),
+};
+
+export const markSingleNotificationSeenMutation = graphql(
+  MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
+  MARK_SINGLE_NOTIFICATION_SEEN_OPTIONS
+);

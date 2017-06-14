@@ -59,6 +59,7 @@ const Notification = /* GraphQL */ `
 		markAllNotificationsSeen: [ Notification ]
 		markAllNotificationsRead: [ Notification ]
 		markDirectMessageNotificationsSeen: [ Notification ]
+		markSingleNotificationSeen(id: ID!): Notification
 		toggleNotificationReadState(notificationId: ID!): Notification!
 	}
 
