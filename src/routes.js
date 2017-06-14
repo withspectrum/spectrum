@@ -32,12 +32,6 @@ const About = () => (
   </div>
 );
 
-const handleHeight = () => {
-  let h = window.innerHeight;
-  console.log(h);
-  return h;
-};
-
 const Body = styled(FlexCol)`
   display: flex;
   width: 100vw;
