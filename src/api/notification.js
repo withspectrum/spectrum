@@ -97,6 +97,11 @@ export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
           const newNotification = subscriptionData.data.notificationAdded;
           if (!newNotification) return prev;
 
+          const notificationNode = {
+            ...newNotification,
+            __typename: 'Notification',
+          };
+
           if (!prev.notifications) {
             return {
               __typename: 'NotificationsConnection',
@@ -107,7 +112,8 @@ export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
               notifications: {
                 edges: [
                   {
-                    node: newNotification,
+                    node: notificationNode,
+                    cursor: '__this-is-a-cursor__',
                     __typename: 'NotificationEdge',
                   },
                 ],
@@ -123,7 +129,7 @@ export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
               ...prev.notifications,
               edges: [
                 {
-                  node: newNotification,
+                  node: notificationNode,
                   cursor: '__this-is-a-cursor__',
                   __typename: 'NotificationEdge',
                 },
