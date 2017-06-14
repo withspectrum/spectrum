@@ -82,7 +82,6 @@ class Navbar extends Component {
           // SEE NOTE ABOVE
           if (notification.context.id !== id) return notification;
           // if the notification context matches the current route, go ahead and mark it as seen
-          console.log('marking a notification as seen', notification.id);
           this.props.markSingleNotificationSeen(notification.id);
         })
         .filter(
@@ -98,7 +97,6 @@ class Navbar extends Component {
           // SEE NOTE ABOVE
           if (notification.context.id !== id) return notification;
           // if the notification context matches the current route, go ahead and mark it as seen
-          console.log('marking a notification as seen', notification.id);
           this.props.markSingleNotificationSeen(notification.id);
         })
         .filter(

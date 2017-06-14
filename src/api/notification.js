@@ -59,7 +59,6 @@ export const GET_NOTIFICATIONS_OPTIONS = {
             after: notifications.edges[notifications.edges.length - 1].cursor,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
-            console.log('updating query', prev, fetchMoreResult);
             if (!fetchMoreResult.notifications) {
               return prev;
             }
@@ -97,8 +96,6 @@ export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
         updateQuery: (prev, { subscriptionData }) => {
           const newNotification = subscriptionData.data.notificationAdded;
           if (!newNotification) return prev;
-
-          console.log('Add new notification to the store', newNotification);
 
           if (!prev.notifications) {
             return {

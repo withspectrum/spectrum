@@ -77,7 +77,7 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
         updateQuery: (prev, { subscriptionData }) => {
           const newMessage = subscriptionData.data.messageAdded;
           // Add the new message to the data
-          return {
+          return Object.assign({}, prev, {
             ...prev,
             thread: {
               ...prev.thread,
@@ -90,7 +90,7 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
                 ],
               },
             },
-          };
+          });
         },
       });
     },

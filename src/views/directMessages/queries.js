@@ -56,7 +56,7 @@ export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
         updateQuery: (prev, { subscriptionData }) => {
           const newMessage = subscriptionData.data.messageAdded;
           // Add the new message to the data
-          return {
+          return Object.assign({}, prev, {
             ...prev,
             directMessageThread: {
               ...prev.directMessageThread,
@@ -72,7 +72,7 @@ export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
                 ],
               },
             },
-          };
+          });
         },
       });
     },
