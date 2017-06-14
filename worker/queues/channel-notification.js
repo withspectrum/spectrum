@@ -135,5 +135,6 @@ new job for ${incomingChannel.id} by ${currentUserId}`
             });
         }
       })
+      .then(() => job.remove())
       .catch(err => new Error(err));
   });
