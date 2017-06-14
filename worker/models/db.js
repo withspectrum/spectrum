@@ -14,7 +14,7 @@ const PRODUCTION_CONFIG = {
   host: process.env.COMPOSE_RETHINKDB_URL,
   port: process.env.COMPOSE_RETHINKDB_PORT,
   ssl: {
-    ca: fs.readFileSync(path.resolve(__dirname, '../../cacert')),
+    ca: fs.readFileSync(path.resolve(__dirname, '../cacert')),
   },
 };
 

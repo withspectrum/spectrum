@@ -108,7 +108,7 @@
     "build:server": "NODE_ENV=production babel server --out-dir build-server --presets react-app --ignore 'test/*.js'",
     "prebuild:worker": "rimraf build-worker",
     "build:worker": "NODE_ENV=production babel worker --out-dir build-worker --presets react-app --ignore 'test/*.js' --ignore 'node_modules/**/*'",
-    "postbuild:worker": "cp worker/package.json build-worker/package.json",
+    "postbuild:worker": "cp worker/package.json build-worker/package.json && cp ./cacert build-worker/cacert && cp now.json build-worker/now.json",
     "build:client": "react-scripts build",
     "test": "react-scripts test",
     "test:ci": "CI=true react-scripts test",
