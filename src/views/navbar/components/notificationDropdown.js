@@ -29,7 +29,7 @@ const NotificationDropdownPure = ({
   history,
 }) => {
   return (
-    <Dropdown>
+    <Dropdown style={{ width: '400px' }}>
       <DropdownHeader>
         My Notifications
       </DropdownHeader>
