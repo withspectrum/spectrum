@@ -7,12 +7,18 @@ import {
   parseContext,
   getLastMessageCreatedByAnotherUser,
 } from '../utils';
-import { ActorsRow } from './actorsRow';
-import { Bubble, EmojiBubble, ImgBubble } from '../../../components/bubbles';
 import {
   convertTimestampToTime,
   onlyContainsEmoji,
 } from '../../../helpers/utils';
+
+import { ActorsRow } from './actorsRow';
+import {
+  CardLink,
+  CardContent,
+} from '../../../components/threadFeedCard/style';
+import { Bubble, EmojiBubble, ImgBubble } from '../../../components/bubbles';
+import Icon from '../../../components/icons';
 import {
   MessagesWrapper,
   MessageWrapper,
@@ -25,11 +31,8 @@ import {
   NotificationListRow,
   Timestamp,
   AttachmentsWash,
+  ContextRow,
 } from '../style';
-import {
-  CardLink,
-  CardContent,
-} from '../../../components/threadFeedCard/style';
 
 export const NewMessageNotification = ({ notification, currentUser }) => {
   console.log('raw notif', notification);
@@ -48,11 +51,12 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
     <NotificationCard>
       <CardLink to={`/thread/${notification.context.id}`} />
       <CardContent>
-        <ActorsRow actors={actors.asObjects} />
-        <TextContent pointer={true}>
-          {actors.asString} {event} {context.asString}.
-        </TextContent>
-        <Timestamp>{date}</Timestamp>
+        <ContextRow>
+          <Icon glyph="message-fill" />
+          <TextContent pointer={true}>
+            {actors.asString} {event} {context.asString} {date}
+          </TextContent>
+        </ContextRow>
         <AttachmentsWash>
           <BubbleContainer me={false}>
             <BubbleGroupContainer me={false}>
@@ -85,6 +89,7 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
               </MessagesWrapper>
             </BubbleGroupContainer>
           </BubbleContainer>
+          <ActorsRow actors={actors.asObjects} />
         </AttachmentsWash>
       </CardContent>
     </NotificationCard>

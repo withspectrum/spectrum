@@ -41,6 +41,7 @@ export const Content = styled.div`
 `;
 
 export const NotificationListContainer = styled(FlexCol)`
+  align-self: stretch;
   max-height: 480px;
   overflow-y: scroll;
 `;
@@ -117,7 +118,6 @@ export const NotificationListRow = styled.div`
 export const ActorPhotosContainer = styled.ul`
   list-style-type: none;
   margin: 0;
-  margin-bottom: 4px;
 `;
 
 export const ActorPhotoItem = styled.li`
@@ -134,13 +134,18 @@ export const ActorPhoto = styled.img`
   width: 100%;
 `;
 
+export const ContextRow = styled(FlexRow)`
+  color: ${({ theme }) => theme.success.default};
+  align-items: center;
+`;
+
 export const TextContent = styled.div`
   font-size: 14px;
   font-weight: 500;
   color: ${props => props.theme.text.alt};
-  padding-bottom: 6px;
   pointer-events: ${props => (props.pointer ? 'all' : 'none')};
   line-height: 1.4;
+  margin-left: 8px;
 
   a {
     font-weight: 600;
@@ -162,18 +167,14 @@ export const BubbleGroupContainer = styled.div`
 `;
 
 export const Timestamp = styled.span`
-  font-size: 12px;
   font-weight: 500;
   color: ${props => props.theme.text.placeholder};
 `;
 
-export const AttachmentsWash = styled.div`
-  background: #FAFCFD;
-  width: calc(100% + 32px);
+export const AttachmentsWash = styled(FlexCol)`
+  align-self: stretch;
   margin-top: 8px;
-  margin-left: -16px;
   padding: 16px;
-  margin-bottom: -16px;
   border-radius: ${props => (props.mini ? '0' : '0 0 12px 12px')};
   border-top: 2px solid ${props => props.theme.bg.wash};
 `;

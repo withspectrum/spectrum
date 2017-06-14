@@ -2,7 +2,8 @@
 import React from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { timeDifference } from '../../helpers/utils';
+import { timeDifferenceShort } from '../../helpers/utils';
+import { Timestamp } from './style';
 
 export const parseNotification = notification => {
   return Object.assign({}, notification, {
@@ -122,16 +123,16 @@ export const parseActors = (actors, currentUser) => {
 export const parseEvent = event => {
   switch (event) {
     case 'MESSAGE_CREATED': {
-      return <span>added a message</span>;
+      return <span>replied</span>;
     }
     case 'REACTION_CREATED': {
-      return <span>reacted to your message</span>;
+      return <span>reacted</span>;
     }
     case 'CHANNEL_CREATED': {
       return <span>created a channel</span>;
     }
     case 'USER_JOINED_COMMUNITY': {
-      return <span>joined the</span>;
+      return <span>joined</span>;
     }
     default: {
       console.log('Not a valid event type');
@@ -143,14 +144,14 @@ export const parseEvent = event => {
 export const parseNotificationDate = date => {
   const now = new Date().getTime();
   const timestamp = new Date(date).getTime();
-  return <span>{timeDifference(now, timestamp).toLowerCase()}</span>;
+  return <Timestamp>· {timeDifferenceShort(now, timestamp)}</Timestamp>;
 };
 
 const threadToString = context => {
   return (
     <span>
       {' '}
-      on your thread
+      to your thread,
       {' '}
       <Link to={`/thread/${context.payload.id}`}>
         {context.payload.content.title}
@@ -163,7 +164,7 @@ const messageToString = context => {
   return (
     <span>
       {' '}
-      <Link to={`/thread/${context.payload.threadId}`}>on your message</Link>
+      <Link to={`/thread/${context.payload.threadId}`}>to your message</Link>
     </span>
   );
 };
@@ -172,9 +173,9 @@ const communityToString = context => {
   return (
     <span>
       {' '}
+      your community
+      {', '}
       <Link to={`/${context.payload.slug}`}>{context.payload.name}</Link>
-      {' '}
-      community
     </span>
   );
 };
@@ -201,7 +202,7 @@ export const parseContext = context => {
       };
     }
     default: {
-      console.log('Not a valid context type');
+      console.log('Invalid notification context type');
     }
   }
 };

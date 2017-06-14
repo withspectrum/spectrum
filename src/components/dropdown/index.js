@@ -12,7 +12,7 @@ import Card from '../card';
 const StyledDropdown = styled(FlexCol)`
   background-color: transparent;
   position: absolute;
-  width: ${props => (props.width ? props.width : '400px')};
+  width: 400px;
   top: 100%;
   right: 0px;
   z-index: 5;

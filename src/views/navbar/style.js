@@ -93,7 +93,7 @@ export const UnseenCount = styled.span`
   top: 4px;
   font-size: 14px;
   font-weight: 600;
-  background: #fff;
+  background: ${({ theme }) => theme.bg.default};
   color: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};;
   border-radius: 8px;
   padding: 2px 4px;
@@ -120,9 +120,6 @@ export const DmUnseenCount = styled(UnseenCount)`
 `;
 
 export const IconDrop = styled(FlexRow)`
-  ${/* display: flex;
-  flex-direction: row; */ ''}
-  ${/* justify-content: center; */ ''}
   align-items: stretch;
   align-self: stretch;
   position: relative;
@@ -138,7 +135,6 @@ export const IconDrop = styled(FlexRow)`
     position: absolute;
     top: 100%;
     right: 0;
-    min-width: ${props => props.width};
     padding: 8px;
 
     @media (max-width: 768px) {
@@ -183,14 +179,6 @@ export const IconLink = styled(Link)`
     flex-direction: column;
     opacity: 0.7;
     margin: 0;
-
-    ${/* &[data-mobileWidth~="third"] {
-      width: 33%;
-    }
-
-    &[data-mobileWidth~="half"] {
-      width: 50%;
-    } */ ''}
 
     &[data-active~="true"] {
       box-shadow: inset 0 0 0 ${({ theme }) => theme.bg.default};
@@ -243,7 +231,7 @@ export const DropdownHeader = styled(FlexRow)`
 
 export const DropdownFooter = styled(FlexRow)`
   border-top: 2px solid ${({ theme }) => theme.bg.wash};
-  flex: 0 0 auto;
+  flex: 0 0 32px;
   align-self: stretch;
   justify-content: center;
   align-items: center;
@@ -256,40 +244,6 @@ export const DropdownFooter = styled(FlexRow)`
     &:first-of-type:not(:last-of-type) {
       margin-right: 8px;
     }
-  }
-`;
-
-export const UserProfileDropdownList = styled.ul`
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex: 1;
-`;
-
-export const UserProfileDropdownListItem = styled.li`
-  font-size: 14px;
-  padding: 16px;
-  text-align: center;
-  display: flex;
-  flex: 1;
-  font-size: 14px;
-  font-weight: 600;
-  color: ${props => props.theme.text.alt};
-  border-bottom: 2px solid ${props => props.theme.border.default};
-  background: #fff;
-  justify-content: center;
-
-  &:last-child {
-    border-bottom: none;
-  }
-
-  &:hover {
-    cursor: pointer;
-    color: ${props => props.theme.text.default};
-    background: ${props => props.theme.bg.wash};
   }
 `;
 
