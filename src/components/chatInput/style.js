@@ -25,6 +25,7 @@ export const Form = styled.form`
 	margin-left: 4px;
 	border-radius: 24px;
 	background-color: transparent;
+  position: relative;
 `;
 
 export const Input = styled(Editor)`

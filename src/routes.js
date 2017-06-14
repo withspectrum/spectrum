@@ -32,6 +32,12 @@ const About = () => (
   </div>
 );
 
+const handleHeight = () => {
+  let h = window.innerHeight;
+  console.log(h);
+  return h;
+};
+
 const Body = styled(FlexCol)`
   display: flex;
   width: 100vw;
@@ -40,7 +46,8 @@ const Body = styled(FlexCol)`
   background: ${props => props.theme.bg.wash};
 
   @media(max-width: 768px) {
-    height: ${window.innerHeight}px;
+    height: 100vh;
+    max-height: ${window.innerHeight}px;
   }
 `;
 

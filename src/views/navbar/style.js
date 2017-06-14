@@ -5,22 +5,25 @@ import { Avatar } from '../../components/avatar';
 
 export const UserProfileAvatar = styled(Avatar)`
   flex: 0 0 24px;
+  flex: 0 0 28px;
+  height: 28px;
+  width: 28px;
   margin-top: 0;
+  border-radius: 100%;
 
   @media (max-width: 768px) {
     position: relative;
-    top: 3px;
-    margin-bottom: 8px;
-    height: 24px;
-    width: 24px;
-    border: none;
     box-shadow: none;
-  }
-`;
+    margin: 1px 0 3px 0;
 
-export const Container = styled(FlexRow)`
-  width: 100%;
-  flex: 0 0 48px;
+    > img {
+      border: 2px solid ${({ theme }) => theme.text.reverse};
+    }
+  }
+
+  @media (max-width: 360px) {
+    margin: 0;
+  }
 `;
 
 export const Nav = styled(FlexRow)`
@@ -37,17 +40,19 @@ export const Nav = styled(FlexRow)`
   z-index: 1000;
 
   @media (max-width: 768px) {
-    padding: 0 8px;
+    padding: 0;
     order: 3;
+    position: relative;
     box-shadow: 0 -4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   }
 `;
 
 export const Section = styled(FlexRow)`
   align-items: stretch;
+  display: ${props => (props.hideOnDesktop ? 'none' : 'flex')};
 
   @media (max-width: 768px) {
-    flex: 1 1 ${props => (props.left ? '75%' : '25%')};
+    flex: auto;
     justify-content: space-around;
     display: ${props => (props.hideOnMobile ? 'none' : 'flex')};
   }
@@ -58,10 +63,6 @@ export const LogoLink = styled(Link)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
 
   ${() => process.env.NODE_ENV !== 'production' && css`
     &:after {
@@ -123,7 +124,7 @@ export const IconDrop = styled(FlexRow)`
   align-items: stretch;
   align-self: stretch;
   position: relative;
-  flex: 0 0 auto;
+  flex: auto;
 
   &:hover {
     opacity: 1;
@@ -156,12 +157,12 @@ export const IconDrop = styled(FlexRow)`
 
 export const IconLink = styled(Link)`
   display: flex;
-  flex: 0 0 40px;
+  flex: auto;
   flex-direction: row;
+  justify-content: center;
   align-items: center;
   align-self: stretch;
   margin: 0 8px;
-  padding: 0 8px;
   opacity: 0.8;
   position: relative;
   width: 100%;
@@ -185,13 +186,9 @@ export const IconLink = styled(Link)`
       opacity: 1;
     }
 
-    svg {
-      width: 24px;
-      height: 24px;
-      position: relative;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%)!important;
+    div {
+      width: 32px;
+      height: 32px;
     }
   }
 `;
@@ -208,12 +205,9 @@ export const Label = styled.span`
     margin-top: 2px;
     margin-left: 0;
   }
-`;
 
-export const LabelForTab = styled(Label)`
-  display: none;
-  @media (max-width: 768px) {
-    display: inline;
+  @media (max-width: 360px) {
+    display: none;
   }
 `;
 
