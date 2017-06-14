@@ -142,6 +142,7 @@ export const ActorPhotosContainer = styled(FlexRow)`
 
 export const ActorPhotoItem = styled.div`
   display: inline-block;
+  margin: 0;
   margin-right: 4px;
   border: 1px solid rgba(0,0,0,0.05);
   width: 32px;
@@ -157,7 +158,7 @@ export const ActorPhoto = styled.img`
 export const ContextRow = styled(FlexRow)`
   align-items: center;
 
-  div + div, div + p {
+  > div + div, > div + p {
     margin-left: 8px;
   }
   margin-bottom: 8px;
