@@ -34,7 +34,6 @@ export const Subtitle = styled.h2`
   line-height: 1.4;
   margin-bottom: 16px;
   padding: 0 24px;
-  color: inherit;
   font-weight: 500;
   text-align: center;
 
