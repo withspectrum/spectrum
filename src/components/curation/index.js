@@ -31,6 +31,8 @@ import {
   Tag,
 } from './style';
 
+const isMobile = window.innerWidth < 768;
+
 export const FeaturedCommunityWithData = props => {
   const {
     data: { loading, error, community },
