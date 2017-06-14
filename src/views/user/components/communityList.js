@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
 import { CommunityListItem } from '../../../components/listItems';
-import { IconButton } from '../../../components/buttons';
+import { Button, IconButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
-// import { NullCard } from '../../../components/upsell';
+import { NullCard } from '../../../components/upsell';
 import { openModal } from '../../../actions/modals';
 
 import {
@@ -15,8 +15,8 @@ import {
   ListHeading,
   ListHeader,
   ListContainer,
-  // ListFooter,
-  // MoreLink,
+  ListFooter,
+  MoreLink,
 } from '../../../components/listItems/style';
 
 const CommunityList = props => {
@@ -70,19 +70,23 @@ const CommunityList = props => {
             );
           })}
         </ListContainer>
+        <ListFooter>
+          <MoreLink to={`/explore`}>Find more...</MoreLink>
+        </ListFooter>
       </StyledCard>
     );
   } else {
-    return <div />;
-    // <NullCard
-    //   bg="community"
-    //   heading={`You're fresh out of communities!`}
-    //   copy={`Let's find you something worth joining...`}
-    // >
-    //   <Button icon="explore" color="text.alt" gradientTheme="">
-    //     Browse communities
-    //   </Button>
-    // </NullCard>
+    return (
+      <NullCard
+        bg="community"
+        heading={`You're fresh out of communities!`}
+        copy={`Let's find you something worth joining...`}
+      >
+        <Button icon="explore" color="text.alt" gradientTheme="">
+          Browse communities
+        </Button>
+      </NullCard>
+    );
   }
 };
 
