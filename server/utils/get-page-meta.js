@@ -4,7 +4,7 @@ const generateMetaInfo = require('../shared/generate-meta-info');
 
 // Don't even try if the path is /<value> any of these
 // TODO: Longer, more complete blacklist here
-const PATH_BLACKLIST = ['robots.txt', 'home', 'messages'];
+const PATH_BLACKLIST = ['robots.txt', 'home', 'messages', 'notifications'];
 
 type Meta = {
   title: string,
