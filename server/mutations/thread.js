@@ -159,7 +159,7 @@ module.exports = {
           const threadToEvaluate = threads[0];
 
           // if the thread doesn't exist
-          if (!threads || threadToEvaluate) {
+          if (!threads || !threadToEvaluate) {
             return new UserError("This thread doesn't exist");
           }
 
