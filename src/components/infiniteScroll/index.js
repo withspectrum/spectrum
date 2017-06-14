@@ -17,9 +17,7 @@ export const withInfiniteScroll = Component => {
       // }
     }
 
-    handleScroll = () => {
-      console.log('wheee!');
-    };
+    handleScroll = () => {};
 
     fetchMore = () => {
       this.props.data.fetchMore();

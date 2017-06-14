@@ -146,5 +146,6 @@ new job for ${incomingMessage.id} by ${currentUserId} in ${contextType.toLowerCa
             });
         }
       })
+      .then(() => job.remove())
       .catch(err => new Error(err));
   });

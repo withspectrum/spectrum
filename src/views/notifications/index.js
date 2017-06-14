@@ -97,9 +97,11 @@ class NotificationsPure extends Component {
       );
     }
 
-    let notifications = data.notifications.edges.map(notification =>
-      parseNotification(notification.node)
-    );
+    let notifications = data.notifications.edges
+      .map(notification => parseNotification(notification.node))
+      .filter(
+        notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
+      );
 
     notifications = getDistinctNotifications(notifications);
 

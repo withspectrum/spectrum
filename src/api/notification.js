@@ -59,7 +59,6 @@ export const GET_NOTIFICATIONS_OPTIONS = {
             after: notifications.edges[notifications.edges.length - 1].cursor,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
-            console.log('updating query', prev, fetchMoreResult);
             if (!fetchMoreResult.notifications) {
               return prev;
             }
@@ -98,7 +97,10 @@ export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
           const newNotification = subscriptionData.data.notificationAdded;
           if (!newNotification) return prev;
 
-          console.log('Add new notification to the store', newNotification);
+          const notificationNode = {
+            ...newNotification,
+            __typename: 'Notification',
+          };
 
           if (!prev.notifications) {
             return {
@@ -110,7 +112,8 @@ export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
               notifications: {
                 edges: [
                   {
-                    node: newNotification,
+                    node: notificationNode,
+                    cursor: '__this-is-a-cursor__',
                     __typename: 'NotificationEdge',
                   },
                 ],
@@ -126,7 +129,7 @@ export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
               ...prev.notifications,
               edges: [
                 {
-                  node: newNotification,
+                  node: notificationNode,
                   cursor: '__this-is-a-cursor__',
                   __typename: 'NotificationEdge',
                 },
@@ -208,4 +211,29 @@ export const MARK_DM_NOTIFICATIONS_SEEN_OPTIONS = {
 export const markDirectMessageNotificationsSeenMutation = graphql(
   MARK_DM_NOTIFICATIONS_SEEN_MUTATION,
   MARK_DM_NOTIFICATIONS_SEEN_OPTIONS
+);
+
+export const MARK_SINGLE_NOTIFICATION_SEEN_MUTATION = gql`
+  mutation markSingleNotificationSeen($id: ID!) {
+    markSingleNotificationSeen(id: $id) {
+      ...notificationInfo
+    }
+  }
+  ${notificationInfoFragment}
+`;
+
+export const MARK_SINGLE_NOTIFICATION_SEEN_OPTIONS = {
+  props: ({ mutate }) => ({
+    markSingleNotificationSeen: () => mutate(),
+  }),
+  options: id => ({
+    variables: {
+      id,
+    },
+  }),
+};
+
+export const markSingleNotificationSeenMutation = graphql(
+  MARK_SINGLE_NOTIFICATION_SEEN_MUTATION,
+  MARK_SINGLE_NOTIFICATION_SEEN_OPTIONS
 );

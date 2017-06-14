@@ -47,13 +47,19 @@ export const markNotificationRead = (
       {
         isRead: true,
       },
-      { returnChanges: true }
+      { returnChanges: 'always' }
     )
-    .run();
+    .run()
+    .then(
+      result =>
+        (result.changes.length > 0
+          ? result.changes[0].new_val
+          : result.changes[0].old_val)
+    );
 };
 
 // marks one notification as read
-export const markNotificationSeen = (
+export const markSingleNotificationSeen = (
   notificationId: string,
   userId: string
 ): Promise<Object> => {
@@ -85,7 +91,10 @@ export const markAllNotificationsSeen = (userId: string): Promise<Object> => {
     .then(notifications => {
       return Promise.all(
         notifications.map(notification => {
-          return markNotificationSeen(notification.notificationId, userId);
+          return markSingleNotificationSeen(
+            notification.notificationId,
+            userId
+          );
         })
       );
     })
@@ -126,7 +135,10 @@ export const markDirectMessageNotificationsSeen = (
     .then(notifications => {
       return Promise.all(
         notifications.map(notification => {
-          return markNotificationSeen(notification.notificationId, userId);
+          return markSingleNotificationSeen(
+            notification.notificationId,
+            userId
+          );
         })
       );
     })

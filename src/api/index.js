@@ -1,6 +1,6 @@
 // @flow
 // $FlowFixMe
-import { ApolloClient } from 'react-apollo';
+import { ApolloClient, IntrospectionFragmentMatcher } from 'react-apollo';
 // $FlowFixMe
 import { createNetworkInterface } from 'apollo-upload-client-fork-mxstbr';
 // $FlowFixMe
@@ -8,6 +8,7 @@ import {
   SubscriptionClient,
   addGraphQLSubscriptions,
 } from 'subscriptions-transport-ws';
+import introspectionQueryResultData from './schema.json';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const wsClient = new SubscriptionClient(
@@ -29,9 +30,13 @@ const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
   wsClient
 );
 
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData,
+});
+
 export const client = new ApolloClient({
   networkInterface: networkInterfaceWithSubscriptions,
-  dataIdFromObject: o => o.id,
+  fragmentMatcher,
 });
 
 export const clearApolloStore = () => {
