@@ -159,6 +159,7 @@ export const publishThread = (
       Object.assign({}, thread, {
         creatorId: userId,
         createdAt: new Date(),
+        lastActive: new Date(),
         modifiedAt: null,
         isPublished: true,
         isLocked: false,
