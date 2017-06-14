@@ -86,6 +86,7 @@ export const MoreLink = styled(Link)`
   line-height: 1;
   color: ${({ theme }) => theme.text.alt};
   transition: ${Transition.hover.off};
+  padding: 8px 0;
 
   &:hover {
     color: ${({ theme }) => theme.brand.alt};
