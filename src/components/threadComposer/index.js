@@ -17,11 +17,11 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import Editor, { toPlainText, fromPlainText, toJSON } from '../editor';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
-import { getLinkPreviewFromUrl } from '../../helpers/utils';
+import { getLinkPreviewFromUrl, isMobile } from '../../helpers/utils';
 import { URLS } from '../../helpers/regexps';
 import { TextButton, Button } from '../buttons';
+import { FlexRow } from '../../components/globals';
 import Icon from '../icons';
-import { FlexRow } from '../globals';
 import { displayLoadingComposer } from '../loading';
 import {
   Container,
@@ -34,6 +34,7 @@ import {
   ContentContainer,
   Actions,
   Dropdowns,
+  PublishActions,
 } from './style';
 
 class ThreadComposerWithData extends Component {
