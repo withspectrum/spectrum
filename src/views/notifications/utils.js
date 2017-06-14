@@ -185,8 +185,6 @@ export const parseNotificationDate = date => {
 };
 
 const threadToString = (context, currentUser) => {
-  console.log('context', context);
-  console.log('currentUser', currentUser);
   const isCreator = context.payload.creatorId === currentUser.id;
   const str = isCreator ? 'in your thread' : 'in';
   return (
