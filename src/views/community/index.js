@@ -98,13 +98,7 @@ class CommunityViewPure extends Component {
   };
 
   render() {
-    const {
-      match,
-      data: { community, error },
-      currentUser,
-      dispatch,
-      toggleCommunityMembership,
-    } = this.props;
+    const { match, data: { community, error }, currentUser } = this.props;
     const { isLoading } = this.state;
     const communitySlug = match.params.communitySlug;
 

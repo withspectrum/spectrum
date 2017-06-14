@@ -29,6 +29,7 @@ const createOwnerInChannel = (
         isModerator: false,
         isBlocked: false,
         isPending: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -47,24 +48,45 @@ const createMemberInChannel = (
 ): Promise<Object> => {
   return db
     .table('usersChannels')
-    .insert(
-      {
-        channelId,
-        userId,
-        createdAt: new Date(),
-        isMember: true,
-        isOwner: false,
-        isModerator: false,
-        isBlocked: false,
-        isPending: false,
-      },
-      { returnChanges: true }
-    )
+    .getAll(userId, { index: 'userId' })
+    .filter({ channelId })
     .run()
     .then(result => {
-      const join = result.changes[0].new_val;
-      return db.table('channels').get(join.channelId);
-    });
+      if (result && result.length > 0) {
+        return db
+          .table('usersChannels')
+          .getAll(userId, { index: 'userId' })
+          .filter({ channelId, isBlocked: false })
+          .update(
+            {
+              createdAt: new Date(),
+              isMember: true,
+              receiveNotifications: true,
+            },
+            { returnChanges: 'always' }
+          )
+          .run();
+      } else {
+        return db
+          .table('usersChannels')
+          .insert(
+            {
+              channelId,
+              userId,
+              createdAt: new Date(),
+              isMember: true,
+              isOwner: false,
+              isModerator: false,
+              isBlocked: false,
+              isPending: false,
+              receiveNotifications: true,
+            },
+            { returnChanges: true }
+          )
+          .run();
+      }
+    })
+    .then(() => db.table('channels').get(channelId));
 };
 
 // removes a single member from a channel. will be invoked if a user leaves
@@ -77,7 +99,14 @@ const removeMemberInChannel = (
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
     .filter({ userId })
-    .delete({ returnChanges: 'always' })
+    .update(
+      {
+        isMember: false,
+        isPending: false,
+        receiveNotifications: false,
+      },
+      { returnChanges: 'always' }
+    )
     .run()
     .then(result => {
       if (result && result.changes && result.changes.length > 0) {
@@ -96,7 +125,10 @@ const removeMembersInChannel = (channelId: string): Promise<Object> => {
   return db
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
-    .delete()
+    .update({
+      isMember: false,
+      receiveNotifications: false,
+    })
     .run();
 };
 
@@ -118,6 +150,7 @@ const createPendingUserInChannel = (
         isModerator: false,
         isBlocked: false,
         isPending: true,
+        receiveNotifications: false,
       },
       { returnChanges: true }
     )
@@ -137,7 +170,10 @@ const removePendingUsersInChannel = (channelId: string): Promise<Object> => {
     .table('usersChannels')
     .getAll(channelId, { index: 'channelId' })
     .filter({ isPending: true })
-    .delete()
+    .update({
+      isPending: false,
+      receiveNotifications: false,
+    })
     .run()
     .then(result => {
       const join = result.changes[0].new_val;
@@ -161,6 +197,7 @@ const blockUserInChannel = (
         isMember: false,
         isPending: false,
         isBlocked: true,
+        receiveNotifications: false,
       },
       { returnChanges: true }
     )
@@ -182,6 +219,7 @@ const approvePendingUserInChannel = (
       {
         isMember: true,
         isPending: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -201,6 +239,7 @@ const approvePendingUsersInChannel = (channelId: string): Promise<Object> => {
       {
         isMember: true,
         isPending: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -223,6 +262,7 @@ const approveBlockedUserInChannel = (
       {
         isMember: true,
         isBlocked: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -249,6 +289,7 @@ const createModeratorInChannel = (
         isModerator: true,
         isBlocked: false,
         isPending: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -268,6 +309,7 @@ const makeMemberModeratorInChannel = (
     .update(
       {
         isModerator: true,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -308,6 +350,7 @@ const createMemberInDefaultChannels = (
     .run();
 
   // get the current user's relationships to all channels
+
   const usersChannels = db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
@@ -432,6 +475,7 @@ const getUserPermissionsInChannel = (
           isModerator: false,
           isBlocked: false,
           isPending: false,
+          receiveNotifications: false,
         };
       }
     });

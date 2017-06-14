@@ -8,11 +8,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 // $FlowFixMe
 import pure from 'recompose/pure';
-import { track } from '../../../helpers/events';
 import { timeDifference } from '../../../helpers/utils';
 import { getRecentCommunities } from '../queries';
-import { toggleCommunityMembershipMutation } from '../../../api/community';
-import { addToastWithTimeout } from '../../../actions/toasts';
 import { CommunityListItem } from '../../../components/listItems';
 import { displayLoadingState } from '../../../components/loading';
 import Icon from '../../../components/icons';

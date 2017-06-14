@@ -38,7 +38,7 @@ const createDirectMessageThread = (isGroup: boolean): Object => {
     .then(result => result.changes[0].new_val);
 };
 
-const setThreadLastActive = (id: string): Object => {
+const setDirectMessageThreadLastActive = (id: string): Object => {
   return db
     .table('directMessageThreads')
     .get(id)
@@ -52,5 +52,5 @@ module.exports = {
   createDirectMessageThread,
   getDirectMessageThread,
   getDirectMessageThreadsByUser,
-  setThreadLastActive,
+  setDirectMessageThreadLastActive,
 };

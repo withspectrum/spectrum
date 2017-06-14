@@ -19,7 +19,6 @@ import {
   Meta,
   MetaNew,
   MetaRow,
-  Participant,
   ParticipantCount,
   Creator,
   ParticipantHeads,
@@ -60,7 +59,9 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
     }
   };
 
-  const participantList = props.data.participants;
+  const participantList = props.data.participants.filter(
+    participant => participant.id !== props.data.creator.id
+  );
 
   const messageAvatars = list => {
     const avatarList = list.slice(0, 10);

@@ -36,7 +36,7 @@ import {
 } from '../../formElements';
 import { modalStyles } from '../styles';
 
-import { Form, Actions, ImgPreview, ImageInputWrapper } from './style';
+import { Form, Actions, ImageInputWrapper } from './style';
 
 class CreateCommunityModal extends Component {
   state: {

@@ -19,6 +19,10 @@ export const View = styled(FlexCol)`
   flex: auto;
   align-items: stretch;
 
+  @media (max-width: 1024px) {
+    background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 5%, ${theme.bg.default} 95%, ${theme.bg.wash})`};
+  }
+
   @media (max-width: 768px) {
     background-color: ${({ theme }) => theme.bg.default};
     background-image: none;

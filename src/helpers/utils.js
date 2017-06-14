@@ -118,7 +118,7 @@ export function timeDifference(current, previous) {
     if (now === 1) {
       return `Yesterday`;
     } else if (now >= 7 && now <= 13) {
-      return 'A week ago';
+      return '1 week ago';
     } else if (now >= 14 && now <= 20) {
       return '2 weeks ago';
     } else if (now >= 21 && now <= 28) {
@@ -129,17 +129,45 @@ export function timeDifference(current, previous) {
   } else if (elapsed < msPerYear) {
     const now = Math.round(elapsed / msPerMonth);
     if (now === 1) {
-      return `A month ago`;
+      return `1 month ago`;
     } else {
       return `${now} months ago`;
     }
   } else {
     const now = Math.round(elapsed / msPerYear);
     if (now === 1) {
-      return `A year ago`;
+      return `1 year ago`;
     } else {
       return `${now} years ago`;
     }
+  }
+}
+
+export function timeDifferenceShort(current, previous) {
+  const msPerSecond = 1000;
+  const msPerMinute = 60 * 1000;
+  const msPerHour = msPerMinute * 60;
+  const msPerDay = msPerHour * 24;
+  const msPerMonth = msPerDay * 30;
+  const msPerYear = msPerDay * 365;
+
+  let elapsed = current - previous;
+
+  if (elapsed < msPerMinute) {
+    const now = Math.round(elapsed / msPerSecond);
+    return `${now}s`;
+  } else if (elapsed < msPerHour) {
+    const now = Math.round(elapsed / msPerMinute);
+    return `${now}m`;
+  } else if (elapsed < msPerDay) {
+    const now = Math.round(elapsed / msPerHour);
+    return `${now}h`;
+  } else if (elapsed < msPerYear) {
+    const now = Math.round(elapsed / msPerDay);
+    return `${now}d`;
+  } else {
+    const now = Math.round(elapsed / msPerYear);
+    return `${now}y`;
   }
 }
 

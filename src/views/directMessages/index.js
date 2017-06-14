@@ -5,14 +5,15 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
 // $FlowFixMe
-import { Route, Redirect } from 'react-router';
-// $FlowFixMe
 import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import {
   getCurrentUserDirectMessageThreads,
 } from '../../api/directMessageThread';
+import {
+  markDirectMessageNotificationsSeenMutation,
+} from '../../api/notification';
 import Icon from '../../components/icons';
 import { displayLoadingState } from './components/loading';
 import ThreadsList from './components/threadsList';
@@ -34,6 +35,21 @@ class DirectMessages extends Component {
     };
   }
 
+  markDmNotificationsSeen = () => {
+    this.props
+      .markDirectMessageNotificationsSeen()
+      .then(({ data: { markAllUserDirectMessageNotificationsRead } }) => {
+        // notifs were marked as seen
+      })
+      .catch(err => {
+        // err
+      });
+  };
+
+  componentDidMount() {
+    this.markDmNotificationsSeen();
+  }
+
   setActiveThread = id => {
     this.setState({
       activeThread: id,
@@ -41,7 +57,7 @@ class DirectMessages extends Component {
   };
 
   render() {
-    const { match, history, currentUser, data } = this.props;
+    const { match, currentUser, data } = this.props;
     const isMobile = window.innerWidth < 768;
 
     const { activeThread } = this.state;
@@ -118,13 +134,11 @@ class DirectMessages extends Component {
       } else {
         //otherwise, let the route handle which detailView to see
         if (match.params.threadId) {
-          {
-            /*
-            pass the user's existing DM threads into the composer so that we can more quickly
-            determine if the user is creating a new thread or has typed the names that map
-            to an existing DM thread
-           */
-          }
+          /*
+          pass the user's existing DM threads into the composer so that we can more quickly
+          determine if the user is creating a new thread or has typed the names that map
+          to an existing DM thread
+          */
           return (
             <View>
               <MessagesList>
@@ -148,12 +162,10 @@ class DirectMessages extends Component {
             </View>
           );
         } else {
-          {
-            /*
-            if a thread is being viewed and the threadId !== 'new', pass the
-            threads down the tree to fetch the messages for the urls threadId
-           */
-          }
+          /*
+          if a thread is being viewed and the threadId !== 'new', pass the
+          threads down the tree to fetch the messages for the urls threadId
+          */
           return (
             <View>
               <MessagesList>
@@ -184,6 +196,7 @@ class DirectMessages extends Component {
 const DirectMessagesWithQuery = compose(
   getCurrentUserDirectMessageThreads,
   displayLoadingState,
+  markDirectMessageNotificationsSeenMutation,
   pure
 )(DirectMessages);
 

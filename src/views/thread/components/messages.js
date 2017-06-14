@@ -6,7 +6,7 @@ import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
 import Icon from '../../../components/icons';
 import { HorizontalRule } from '../../../components/globals';
-import { displayLoadingCard } from '../../../components/loading';
+import { displayLoadingState } from '../../../components/loading';
 import { ChatWrapper } from '../style';
 import { getThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
@@ -23,8 +23,11 @@ class MessagesWithData extends Component {
   componentDidUpdate(prevProps) {
     // force scroll to bottom when a message is sent in the same thread
     if (
+      prevProps &&
+      prevProps.data &&
+      prevProps.data.thread &&
       prevProps.data.thread.messageConnection !==
-      this.props.data.thread.messageConnection
+        this.props.data.thread.messageConnection
     ) {
       this.props.contextualScrollToBottom();
     }
@@ -61,7 +64,6 @@ class MessagesWithData extends Component {
 
   render() {
     const { data, toggleReaction, forceScrollToBottom } = this.props;
-
     if (data.error) {
       return <div>Error!</div>;
     }
@@ -96,7 +98,7 @@ class MessagesWithData extends Component {
 const Messages = compose(
   toggleReactionMutation,
   getThreadMessages,
-  displayLoadingCard
+  displayLoadingState
 )(MessagesWithData);
 
 export default Messages;

@@ -12,8 +12,7 @@ module.exports = {
       resolve: notification => notification,
       subscribe: withFilter(
         () => pubsub.asyncIterator(NOTIFICATION_ADDED),
-        (notification, _, { user }) =>
-          !!notification.users.find(data => data.id === user.id)
+        (notification, _, { user }) => user.id === notification.userId
       ),
     },
   },

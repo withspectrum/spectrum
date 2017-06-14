@@ -708,6 +708,102 @@ export const LoadingScreen = (): React$Element<any> => (
   </LoadingScreenContainer>
 );
 
+export const LoadingNotifications = (): React$Element<any> => (
+  <LoadingScreenContainer>
+    <Column type="primary" alignItems="center">
+      <LoadingThread />
+
+      <ShimmerThread>
+        <ShimmerBase>
+          <ShimmerLine />
+          <Cover
+            style={{
+              top: '16px',
+              left: '84px',
+              height: '16px',
+              width: '100%',
+            }}
+          />
+          <Cover
+            style={{
+              top: '24px',
+              left: '84px',
+              height: '10px',
+              width: '100%',
+            }}
+          />
+          <Cover
+            style={{
+              top: '44px',
+              left: '84px',
+              height: '10px',
+              width: '100%',
+            }}
+          />
+          <Cover
+            style={{
+              top: '64px',
+              left: '84px',
+              height: '10px',
+              width: '100%',
+            }}
+          />
+          <Cover
+            style={{
+              top: '84px',
+              left: '84px',
+              height: '10px',
+              width: '100%',
+            }}
+          />
+          <Cover
+            style={{
+              top: '0px',
+              left: '84px',
+              height: '84px',
+              width: '16px',
+            }}
+          />
+          <Cover
+            style={{
+              top: '0',
+              right: '0',
+              height: '16px',
+              width: '128px',
+            }}
+          />
+          <Cover
+            style={{
+              top: '32px',
+              right: '0',
+              height: '12px',
+              width: '32px',
+            }}
+          />
+          <Cover
+            style={{
+              top: '52px',
+              right: '0',
+              height: '12px',
+              width: '90px',
+            }}
+          />
+          <Cover
+            style={{
+              top: '72px',
+              right: '0',
+              height: '12px',
+              width: '156px',
+            }}
+          />
+        </ShimmerBase>
+      </ShimmerThread>
+
+      <LoadingThread />
+    </Column>
+  </LoadingScreenContainer>
+);
+
 export const displayLoadingState = branch(
   props => !props.data || props.data.loading,
   renderComponent(Loading)
@@ -719,7 +815,11 @@ export const displayLoadingGallery = branch(
 );
 
 export const displayLoadingNavbar = branch(
-  props => !props.data || props.data.loading,
+  props =>
+    !props.data ||
+    props.data.loading ||
+    !props.notificationsQuery ||
+    props.notificationsQuery.loading,
   renderComponent(LoadingNavbar)
 );
 
@@ -731,6 +831,11 @@ export const displayLoadingCard = branch(
 export const displayLoadingScreen = branch(
   props => !props.data || props.data.loading,
   renderComponent(LoadingScreen)
+);
+
+export const displayLoadingNotifications = branch(
+  props => !props.data || props.data.loading,
+  renderComponent(LoadingNotifications)
 );
 
 export const displayLoadingComposer = branch(

@@ -37,7 +37,7 @@ class TopCommunitiesPure extends Component {
           null
         );
 
-        const action = isMember ? this.props.join() : this.props.leave();
+        isMember ? this.props.join() : this.props.leave();
 
         const str = isMember
           ? `Joined ${toggleCommunityMembership.name}!`

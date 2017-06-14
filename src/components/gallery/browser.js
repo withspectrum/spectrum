@@ -27,6 +27,9 @@ class Browser extends Component {
     props.data.messages.map((message, i) => {
       if (message.id === props.activeMessageId) {
         index = i;
+        return message;
+      } else {
+        return message;
       }
     });
 
@@ -77,7 +80,7 @@ class Browser extends Component {
         index,
       });
     } else {
-      index = index - 1;
+      index -= 1;
 
       this.setState({
         index,
@@ -93,7 +96,7 @@ class Browser extends Component {
         index,
       });
     } else {
-      index = index + 1;
+      index += 1;
 
       this.setState({
         index,

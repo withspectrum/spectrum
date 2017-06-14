@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react';
+import React from 'react';
 // $FlowFixMe
 import pure from 'recompose/pure';
 import { ListCardItemDirectMessageThread } from './messageThreadListItem';

@@ -10,9 +10,9 @@ const DEFAULT_CONFIG = {
 };
 
 const PRODUCTION_CONFIG = {
-  password: process.env.COMPOSE_PASSWORD,
-  host: process.env.COMPOSE_URL,
-  port: process.env.COMPOSE_PORT,
+  password: process.env.COMPOSE_RETHINKDB_PASSWORD,
+  host: process.env.COMPOSE_RETHINKDB_URL,
+  port: process.env.COMPOSE_RETHINKDB_PORT,
   ssl: {
     ca: fs.readFileSync(path.resolve(__dirname, '../../cacert')),
   },

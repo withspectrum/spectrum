@@ -31,7 +31,6 @@ export class LinkPreview extends Component {
   render() {
     let {
       data: { description, image, title, url, trueUrl },
-      data,
       editable,
       margin,
     } = this.props;

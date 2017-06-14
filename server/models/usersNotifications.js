@@ -2,7 +2,7 @@
 const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
-
+import { getNotificationsByUser } from './notification';
 /*
 ===========================================================
 
@@ -12,7 +12,7 @@ import UserError from '../utils/UserError';
 */
 
 // creates a single notification in the usersNotifications join table
-const createUsersNotification = (
+export const createUsersNotification = (
   notificationId: string,
   userId: string
 ): Promise<Object> => {
@@ -24,6 +24,7 @@ const createUsersNotification = (
         userId,
         createdAt: new Date(),
         isRead: false,
+        isSeen: false,
       },
       { returnChanges: true }
     )
@@ -32,7 +33,7 @@ const createUsersNotification = (
 };
 
 // marks one notification as read
-const markNotificationAsRead = (
+export const markNotificationRead = (
   notificationId: string,
   userId: string
 ): Promise<Object> => {
@@ -46,20 +47,102 @@ const markNotificationAsRead = (
       {
         isRead: true,
       },
+      { returnChanges: 'always' }
+    )
+    .run()
+    .then(
+      result =>
+        (result.changes.length > 0
+          ? result.changes[0].new_val
+          : result.changes[0].old_val)
+    );
+};
+
+// marks one notification as read
+export const markSingleNotificationSeen = (
+  notificationId: string,
+  userId: string
+): Promise<Object> => {
+  return db
+    .table('usersNotifications')
+    .getAll(userId, { index: 'userId' })
+    .filter({
+      notificationId,
+    })
+    .update(
+      {
+        isSeen: true,
+      },
       { returnChanges: true }
     )
     .run();
 };
 
-// marks all notifiations as read
-const markAllNotificationsAsRead = (userId: string): Promise<Object> => {
+// marks all notifications for a user as seen
+export const markAllNotificationsSeen = (userId: string): Promise<Object> => {
   return db
     .table('usersNotifications')
     .getAll(userId, { index: 'userId' })
-    .update({
-      isRead: true,
+    .eqJoin('notificationId', db.table('notifications'))
+    .without({ left: ['createdAt', 'id'] })
+    .zip()
+    .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
+    .run()
+    .then(notifications => {
+      return Promise.all(
+        notifications.map(notification => {
+          return markSingleNotificationSeen(
+            notification.notificationId,
+            userId
+          );
+        })
+      );
     })
-    .run();
+    .then(() => getNotificationsByUser(userId));
+};
+
+// marks all notifications for a user as read
+export const markAllNotificationsRead = (userId: string): Promise<Object> => {
+  return db
+    .table('usersNotifications')
+    .getAll(userId, { index: 'userId' })
+    .eqJoin('notificationId', db.table('notifications'))
+    .without({ left: ['createdAt', 'id'] })
+    .zip()
+    .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
+    .run()
+    .then(notifications => {
+      return Promise.all(
+        notifications.map(notification => {
+          return markNotificationRead(notification.notificationId, userId);
+        })
+      );
+    })
+    .then(() => getNotificationsByUser(userId));
+};
+
+export const markDirectMessageNotificationsSeen = (
+  userId: string
+): Promise<Object> => {
+  return db
+    .table('usersNotifications')
+    .getAll(userId, { index: 'userId' })
+    .eqJoin('notificationId', db.table('notifications'))
+    .without({ left: ['createdAt', 'id'] })
+    .zip()
+    .filter(row => row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
+    .run()
+    .then(notifications => {
+      return Promise.all(
+        notifications.map(notification => {
+          return markSingleNotificationSeen(
+            notification.notificationId,
+            userId
+          );
+        })
+      );
+    })
+    .then(() => getNotificationsByUser(userId));
 };
 
 /*
@@ -70,7 +153,9 @@ const markAllNotificationsAsRead = (userId: string): Promise<Object> => {
 ===========================================================
 */
 
-const getUsersNotifications = (userId: string): Promise<Array<string>> => {
+export const getUsersNotifications = (
+  userId: string
+): Promise<Array<string>> => {
   return db
     .table('usersNotifications')
     .getAll(userId, { index: 'userId' })
@@ -78,11 +163,4 @@ const getUsersNotifications = (userId: string): Promise<Array<string>> => {
     .without({ left: ['createdAt', 'id'] })
     .zip()
     .run();
-};
-
-module.exports = {
-  createUsersNotification,
-  markNotificationAsRead,
-  markAllNotificationsAsRead,
-  getUsersNotifications,
 };

@@ -9,7 +9,6 @@ import {
   SpinnerContainer,
 } from './style';
 import { Spinner } from '../globals';
-import { Loading } from '../loading';
 import Icon from '../icons';
 
 type ButtonProps = {

@@ -63,20 +63,23 @@ module.exports = {
             return Promise.all([
               thread,
               // create member relationship with the current user
+              // the third 'true' argument determines whether or not to set a 'lastActive' field date
+              // since we know the user who is creating the dm thread is active right now, we set it as true
               createMemberInDirectMessageThread(
                 thread.id,
                 currentUser.id,
                 true
               ),
-              // create member relationships
+              // create member relationships - the third argument is false because at this point the other people in the dm group are not active
               participants.map(participant =>
                 createMemberInDirectMessageThread(thread.id, participant, false)
               ),
               // create message
-              storeMessage(messageWithThread, currentUser),
+              storeMessage(messageWithThread, currentUser.id),
             ]);
           } else if (message.messageType === 'media') {
-            // upload the photo, return the photo url, then store the message
+            // if the first message in a dm group is a photo, we need to handle more operations before we can return:
+            // 1. create the participants, upload the image, rebuild the message with the returned image url, and then return the final message
             return Promise.all([
               thread,
               // create member relationship with the current user
@@ -108,7 +111,7 @@ module.exports = {
                   },
                 });
 
-                return storeMessage(newMessage, currentUser);
+                return storeMessage(newMessage, currentUser.id);
               }),
             ]);
           } else {

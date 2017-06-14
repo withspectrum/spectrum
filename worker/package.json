@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "start": "NODE_ENV=production node index.js"
+  },
+  "dependencies": {
+    "bull": "^3.0.0-rc.2",
+    "rethinkdbdash": "^2.3.29"
+  }
+}

@@ -1,6 +1,8 @@
 // @flow
 const { db } = require('./db');
 // $FlowFixMe
+const Queue = require('bull');
+const channelNotificationQueue = new Queue('channel notification');
 import UserError from '../utils/UserError';
 
 const getChannelsByCommunity = (
@@ -68,6 +70,8 @@ const getChannelsByUser = (userId: string): Promise<Array<Object>> => {
       .table('usersChannels')
       // get all the user's channels
       .getAll(userId, { index: 'userId' })
+      // only return channels where the user is a member
+      .filter({ isMember: true })
       // get the channel objects for each channel
       .eqJoin('channelId', db.table('channels'))
       // get rid of unnecessary info from the usersChannels object on the left
@@ -163,9 +167,12 @@ export type EditChannelArguments = {
   },
 };
 
-const createChannel = ({
-  input: { communityId, name, slug, description, isPrivate, isDefault },
-}: CreateChannelArguments): Promise<Object> => {
+const createChannel = (
+  {
+    input: { communityId, name, slug, description, isPrivate, isDefault },
+  }: CreateChannelArguments,
+  userId: string
+): Promise<Object> => {
   return db
     .table('channels')
     .insert(
@@ -181,20 +188,37 @@ const createChannel = ({
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => result.changes[0].new_val)
+    .then(channel => {
+      // only trigger a new channel notification is the channel is public
+      if (!channel.isPrivate) {
+        channelNotificationQueue.add({
+          channel,
+          userId,
+        });
+      }
+
+      return channel;
+    });
 };
 
-const createGeneralChannel = (communityId: string): Promise<Object> => {
-  return createChannel({
-    input: {
-      name: 'General',
-      slug: 'general',
-      description: 'General Chatter',
-      communityId,
-      isPrivate: false,
-      isDefault: true,
+const createGeneralChannel = (
+  communityId: string,
+  userId: string
+): Promise<Object> => {
+  return createChannel(
+    {
+      input: {
+        name: 'General',
+        slug: 'general',
+        description: 'General Chatter',
+        communityId,
+        isPrivate: false,
+        isDefault: true,
+      },
     },
-  });
+    userId
+  );
 };
 
 const editChannel = ({

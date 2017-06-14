@@ -77,6 +77,7 @@ class Reaction extends Component {
         me={me}
         hide={(me || !currentUser) && count === 0}
         onClick={me ? this.doNothing : this.triggerMutation}
+        dummy={false}
       >
         <Icon glyph="like-fill" size={16} color={'text.reverse'} />
         <Count>{count}</Count>

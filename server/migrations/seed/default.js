@@ -78,7 +78,7 @@ const DEFAULT_THREADS = [
   {
     id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
     createdAt: new Date(DATE),
-    creatorId: 'uItS3QQiUxXH44m14uWmixTbqSc2',
+    creatorId: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
     channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
     communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     isPublished: true,
@@ -101,42 +101,6 @@ const DEFAULT_THREADS = [
   },
 ];
 
-const DEFAULT_NOTIFICATIONS = [
-  {
-    id: 'first-notification-asfd123',
-    createdAt: new Date(DATE),
-    users: [
-      {
-        id: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a190',
-        read: false,
-      },
-      {
-        id: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
-        read: false,
-      },
-    ],
-    type: 'NEW_THREAD',
-    threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a193',
-    channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a192',
-    communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
-    sender: 'uItS3QQiUxXH44m14uWmixTbqSc2',
-    content: {
-      title: 'The first thread! 🎉',
-      excerpt: 'This is it, we got a thread here',
-    },
-  },
-];
-
-const DEFAULT_USERS_NOTIFICATIONS = [
-  {
-    id: 'first-users-notification-asfd123',
-    createdAt: new Date(),
-    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
-    notificationId: 'first-notification-asfd123',
-    isRead: false,
-  },
-];
-
 const DEFAULT_DIRECT_MESSAGE_THREADS = [
   {
     id: 'first-dm-thread-asfd123',
@@ -149,35 +113,38 @@ const DEFAULT_DIRECT_MESSAGE_THREADS = [
 const DEFAULT_USERS_DIRECT_MESSAGE_THREADS = [
   {
     createdAt: new Date(DATE),
-    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    userId: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
     threadId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     lastActive: new Date(DATE),
     lastSeen: new Date(DATE),
+    receiveNotifications: true,
   },
 ];
 
 const DEFAULT_USERS_COMMUNITIES = [
   {
     createdAt: new Date(DATE),
-    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    userId: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
     communityId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     isOwner: true,
     isModerator: false,
     isMember: true,
     isBlocked: false,
+    receiveNotifications: true,
   },
 ];
 
 const DEFAULT_USERS_CHANNELS = [
   {
     createdAt: new Date(DATE),
-    userId: 'lYh3iULMUyZ7zIzmqnjdktFDZCG3',
+    userId: '01p2A7kDCWUjGj6zQLlMQUOSQL42',
     channelId: 'ce2b4488-4c75-47e0-8ebc-2539c1e6a191',
     isOwner: true,
     isModerator: false,
     isMember: true,
     isBlocked: false,
     isPending: false,
+    receiveNotifications: true,
   },
 ];
 
@@ -186,8 +153,6 @@ module.exports = {
   DEFAULT_COMMUNITIES,
   DEFAULT_CHANNELS,
   DEFAULT_THREADS,
-  DEFAULT_NOTIFICATIONS,
-  DEFAULT_USERS_NOTIFICATIONS,
   DEFAULT_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_COMMUNITIES,

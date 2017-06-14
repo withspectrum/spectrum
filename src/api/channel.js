@@ -206,3 +206,23 @@ export const CHECK_UNIQUE_CHANNEL_SLUG_QUERY = gql`
   }
   ${channelInfoFragment}
 `;
+
+const getChannelByIdOptions = {
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+  }),
+};
+
+export const getChannelById = graphql(
+  gql`
+		query getChannel($id: ID) {
+			channel(id: $id) {
+        ...channelInfo
+      }
+		}
+    ${channelInfoFragment}
+	`,
+  getChannelByIdOptions
+);

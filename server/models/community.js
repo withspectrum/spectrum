@@ -40,6 +40,8 @@ const getCommunitiesByUser = (userId: string): Promise<Array<Object>> => {
       .table('usersCommunities')
       // get all the user's communities
       .getAll(userId, { index: 'userId' })
+      // only return communities the user is a member of
+      .filter({ isMember: true })
       // get the community objects for each community
       .eqJoin('communityId', db.table('communities'))
       // get rid of unnecessary info from the usersCommunities object on the left
@@ -59,13 +61,14 @@ const getCommunityMetaData = (communityId: string): Promise<Array<number>> => {
   const getChannelCount = db
     .table('channels')
     .getAll(communityId, { index: 'communityId' })
+    .filter(channel => db.not(channel.hasFields('deletedAt')))
     .count()
     .run();
 
   const getMemberCount = db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
-    .filter({ isBlocked: false })
+    .filter({ isBlocked: false, isMember: true })
     .count()
     .run();
 
@@ -429,24 +432,7 @@ const deleteCommunity = (communityId: string): Promise<Object> => {
         nonAtomic: true,
       }
     )
-    .run()
-    .then(result => {
-      // community was successfully deleted, now delete all channels
-      if (result.replaced >= 1) {
-        const communityId = result.changes[0].old_val.id;
-        return db
-          .table('channels')
-          .getAll(communityId, { index: 'communityId' })
-          .run()
-          .then(channels => channels.map(channel => deleteChannel(channel.id)))
-          .then(() => result);
-      }
-
-      // update failed
-      return new UserError(
-        "Something went wrong and we weren't able to delete this community"
-      );
-    });
+    .run();
 };
 
 const unsubscribeFromAllChannelsInCommunity = (

@@ -1,6 +1,6 @@
 // @flow
 // $FlowFixMe
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Gradient, Transition } from '../globals';
 
 export const ReactionWrapper = styled.b`
@@ -24,6 +24,12 @@ export const ReactionWrapper = styled.b`
 	flex-direction: flex-row;
 	transition: ${Transition.reaction.on};
 	display: ${props => (props.hide ? 'none' : 'auto')};
+
+	${props => props.dummy && css`
+		height: 26px;
+    padding: 0;
+    justify-content: center;
+	`}
 
 	i { /* count */
 		position: relative;

@@ -2,6 +2,9 @@
 const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
+// $FlowFixMe
+const Queue = require('bull');
+const communityNotificationQueue = new Queue('community notification');
 
 /*
 ===========================================================
@@ -28,6 +31,7 @@ const createOwnerInCommunity = (
         isMember: true,
         isModerator: false,
         isBlocked: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -43,20 +47,57 @@ const createMemberInCommunity = (
 ): Promise<Object> => {
   return db
     .table('usersCommunities')
-    .insert(
-      {
+    .getAll(userId, { index: 'userId' })
+    .filter({ communityId })
+    .run()
+    .then(result => {
+      if (result && result.length > 0) {
+        // if the result exists, it means the user has a previous relationship
+        // with this community - since we already handled 'blocked' logic
+        // in the mutation controller, we can simply update the user record
+        // to be a re-joined member with notifications turned on
+
+        return db
+          .table('usersCommunities')
+          .getAll(userId, { index: 'userId' })
+          .filter({ communityId })
+          .update(
+            {
+              createdAt: new Date(),
+              isMember: true,
+              receiveNotifications: true,
+            },
+            { returnChanges: 'always' }
+          )
+          .run();
+      } else {
+        // if no relationship exists, we can create a new one from scratch
+        return db
+          .table('usersCommunities')
+          .insert(
+            {
+              communityId,
+              userId,
+              createdAt: new Date(),
+              isMember: true,
+              isOwner: false,
+              isModerator: false,
+              isBlocked: false,
+              receiveNotifications: true,
+            },
+            { returnChanges: true }
+          )
+          .run();
+      }
+    })
+    .then(result => {
+      communityNotificationQueue.add({
         communityId,
         userId,
-        createdAt: new Date(),
-        isMember: true,
-        isOwner: false,
-        isModerator: false,
-        isBlocked: false,
-      },
-      { returnChanges: true }
-    )
-    .run()
-    .then(result => result.changes[0].new_val);
+      });
+
+      return result.changes[0].new_val;
+    });
 };
 
 // removes a single member from a community. will be invoked if a user leaves
@@ -69,7 +110,10 @@ const removeMemberInCommunity = (
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
     .filter({ userId })
-    .delete()
+    .update({
+      isMember: false,
+      receiveNotifications: false,
+    })
     .run()
     .then(() => db.table('communities').get(communityId).run());
 };
@@ -81,7 +125,10 @@ const removeMembersInCommunity = (communityId: string): Promise<Object> => {
   return db
     .table('usersCommunities')
     .getAll(communityId, { index: 'communityId' })
-    .delete()
+    .update({
+      isMember: false,
+      receiveNotifications: false,
+    })
     .run();
 };
 
@@ -101,6 +148,7 @@ const blockUserInCommunity = (
         isMember: false,
         isPending: false,
         isBlocked: true,
+        receiveNotifications: false,
       },
       { returnChanges: true }
     )
@@ -123,6 +171,7 @@ const approveBlockedUserInCommunity = (
       {
         isMember: true,
         isBlocked: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -148,6 +197,7 @@ const createModeratorInCommunity = (
         isOwner: false,
         isModerator: true,
         isBlocked: false,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -167,6 +217,7 @@ const makeMemberModeratorInCommunity = (
     .update(
       {
         isModerator: true,
+        receiveNotifications: true,
       },
       { returnChanges: true }
     )
@@ -274,6 +325,7 @@ const getUserPermissionsInCommunity = (
           isMember: false,
           isModerator: false,
           isBlocked: false,
+          receiveNotifications: false,
         };
       }
     });

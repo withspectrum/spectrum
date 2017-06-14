@@ -7,6 +7,13 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import { getCurrentUserProfile } from '../../api/user';
+import {
+  getNotificationsForNavbar,
+  markNotificationsSeenMutation,
+  markSingleNotificationSeenMutation,
+  markNotificationsReadMutation,
+  markDirectMessageNotificationsSeenMutation,
+} from '../../api/notification';
 import { SERVER_URL } from '../../api';
 import { setUserLastSeenMutation } from '../../api/user';
 import Icon from '../../components/icons';
@@ -14,12 +21,12 @@ import { displayLoadingNavbar } from '../../components/loading';
 import { Button } from '../../components/buttons';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
+import { getDistinctNotifications } from '../../views/notifications/utils';
 import {
   saveUserDataToLocalStorage,
   logout,
 } from '../../actions/authentication';
 import {
-  Container,
   Section,
   Nav,
   LogoLink,
@@ -29,9 +36,80 @@ import {
   Label,
   LabelForTab,
   UserProfileAvatar,
+  UnseenCount,
+  DmUnseenCount,
 } from './style';
 
 class Navbar extends Component {
+  state: {
+    allUnseenCount: number,
+    dmUnseenCount: number,
+    notifications: Array<Object>,
+    subscription: ?Function,
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      ...this.calculateUnseenCounts(),
+      subscription: null,
+    };
+  }
+
+  calculateUnseenCounts = props => {
+    const { data: { user }, notificationsQuery, match } = props || this.props;
+    const currentUser = user;
+    let notifications =
+      currentUser &&
+      notificationsQuery.notifications.edges.map(
+        notification => notification.node
+      );
+
+    notifications = getDistinctNotifications(notifications);
+
+    /*
+      NOTE:
+      This is hacky, but by getting the string after the last slash in the current url, we can compare it against in the incoming notifications in order to not show a new notification bubble on views the user is already looking at. This only applies to /messages/:threadId or /thread/:id - by matching this url param with the incoming notification.context.id we can determine whether or not to increment the count.
+    */
+    const id = match.url.substr(match.url.lastIndexOf('/') + 1);
+
+    const dmUnseenCount =
+      notifications &&
+      notifications.length > 0 &&
+      notifications
+        .filter(notification => notification.isSeen === false)
+        .filter(notification => {
+          // SEE NOTE ABOVE
+          if (notification.context.id !== id) return notification;
+          // if the notification context matches the current route, go ahead and mark it as seen
+          this.props.markSingleNotificationSeen(notification.id);
+        })
+        .filter(
+          notification => notification.context.type === 'DIRECT_MESSAGE_THREAD'
+        ).length;
+
+    const allUnseenCount =
+      notifications &&
+      notifications.length > 0 &&
+      notifications
+        .filter(notification => notification.isSeen === false)
+        .filter(notification => {
+          // SEE NOTE ABOVE
+          if (notification.context.id !== id) return notification;
+          // if the notification context matches the current route, go ahead and mark it as seen
+          this.props.markSingleNotificationSeen(notification.id);
+        })
+        .filter(
+          notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
+        ).length;
+
+    return {
+      allUnseenCount,
+      dmUnseenCount,
+      notifications,
+    };
+  };
+
   componentDidMount() {
     const { data: { user }, dispatch, history, match } = this.props;
     const currentUser = user;
@@ -51,14 +129,98 @@ class Navbar extends Component {
       if (match.url === '/home') {
         history.push('/');
       }
+      this.subscribe();
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { match } = this.props;
+    if (!this.props.data.user) return;
+    if (!this.props.notificationsQuery) return;
+    if (!prevProps.notificationsQuery) {
+      this.setState(this.calculateUnseenCounts());
+      return;
+    }
+
+    if (
+      prevProps.notificationsQuery.notifications.edges.length !==
+      this.props.notificationsQuery.notifications.edges.length
+    ) {
+      this.setState(this.calculateUnseenCounts());
     }
   }
 
   componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  subscribe = () => {
+    this.setState({
+      subscription: this.props.subscribeToNewNotifications(),
+    });
+  };
+
+  unsubscribe = () => {
+    const { subscription } = this.state;
+    if (subscription) {
+      // This unsubscribes the subscription
+      subscription();
+    }
+  };
+
+  markAllNotificationsSeen = () => {
+    const { allUnseenCount } = this.state;
+
+    if (allUnseenCount === 0) {
+      return null;
+    } else {
+      this.setState({
+        allUnseenCount: 0,
+      });
+      this.props
+        .markAllNotificationsSeen()
+        .then(({ data: { markAllNotificationsSeen } }) => {
+          // notifs were marked as seen
+        })
+        .catch(err => {
+          // error
+        });
+    }
+  };
+
+  markAllNotificationsRead = () => {
+    this.props
+      .markAllNotificationsRead()
+      .then(({ data: { markAllNotificationsRead } }) => {
+        // notifs were marked as read
+      })
+      .catch(err => {
+        // error
+      });
+  };
+
+  markDmNotificationsAsSeen = () => {
+    const { dmUnseenCount } = this.state;
+
+    if (dmUnseenCount === 0) {
+      return null;
+    } else {
+      this.setState({
+        dmUnseenCount: 0,
+      });
+      this.props
+        .markDirectMessageNotificationsSeen()
+        .then(({ data: { markAllUserDirectMessageNotificationsRead } }) => {
+          // notifs were marked as seen
+        })
+        .catch(err => {
+          // err
+        });
+    }
     if (this.interval) {
       clearInterval(this.interval);
     }
-  }
+  };
 
   logout = () => {
     if (this.interval) {
@@ -75,6 +237,7 @@ class Navbar extends Component {
   render() {
     const { match, data: { user } } = this.props;
     const currentUser = user;
+    const { allUnseenCount, dmUnseenCount, notifications } = this.state;
 
     if (!currentUser || currentUser === null) {
       return (
@@ -116,8 +279,14 @@ class Navbar extends Component {
               data-active={match.url.includes('/messages')}
               data-mobileWidth={'third'}
               to="/messages"
+              onClick={this.markDmNotificationsAsSeen}
             >
-              <Icon glyph="message" />
+              <Icon glyph={dmUnseenCount > 0 ? 'message-fill' : 'message'} />
+              {dmUnseenCount > 0
+                ? <DmUnseenCount size={dmUnseenCount >= 10 ? 'large' : 'small'}>
+                    {dmUnseenCount >= 10 ? '10+' : dmUnseenCount}
+                  </DmUnseenCount>
+                : null}
               <Label>Messages</Label>
             </IconLink>
 
@@ -132,17 +301,33 @@ class Navbar extends Component {
           </Section>
 
           <Section right>
-            {/* <IconDrop>
-                <IconLink
-                  data-active={match.url === '/notifications'}
-                  data-mobileWidth={'half'}
-                  to="/notifications"
-                >
-                  <Icon glyph="notification" />
-                  <LabelForTab>Notifications</LabelForTab>
-                </IconLink>
-                {/* <NotificationDropdown />
-              </IconDrop> */}
+            <IconDrop onMouseLeave={this.markAllNotificationsSeen}>
+              <IconLink
+                data-active={match.url === '/notifications'}
+                data-mobileWidth={'half'}
+                to="/notifications"
+              >
+                <Icon
+                  glyph={
+                    allUnseenCount > 0 ? 'notification-fill' : 'notification'
+                  }
+                />
+                {allUnseenCount > 0
+                  ? <UnseenCount
+                      size={allUnseenCount >= 10 ? 'large' : 'small'}
+                    >
+                      {allUnseenCount >= 10 ? '10+' : allUnseenCount}
+                    </UnseenCount>
+                  : null}
+                <LabelForTab>Notifications</LabelForTab>
+              </IconLink>
+              <NotificationDropdown
+                rawNotifications={notifications}
+                markAllRead={this.markAllNotificationsRead}
+                currentUser={currentUser}
+                width={'480px'}
+              />
+            </IconDrop>
 
             <IconDrop>
               <IconLink
@@ -172,6 +357,11 @@ const mapStateToProps = state => ({
 });
 export default compose(
   getCurrentUserProfile,
+  getNotificationsForNavbar,
+  markSingleNotificationSeenMutation,
+  markNotificationsSeenMutation,
+  markNotificationsReadMutation,
+  markDirectMessageNotificationsSeenMutation,
   setUserLastSeenMutation,
   withRouter,
   displayLoadingNavbar,

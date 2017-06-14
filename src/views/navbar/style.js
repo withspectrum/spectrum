@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { Transition, FlexRow, Gradient, hexa } from '../../components/globals';
+import { Transition, FlexRow, hexa } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
 
 export const UserProfileAvatar = styled(Avatar)`
@@ -87,10 +87,39 @@ export const Logo = styled.img`
   left: 1px;
 `;
 
+export const UnseenCount = styled.span`
+  position: absolute;
+  right: ${props => (props.size === 'large' ? '-12px' : '4px')};
+  top: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  background: ${({ theme }) => theme.bg.default};
+  color: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};;
+  border-radius: 8px;
+  padding: 2px 4px;
+  border: 2px solid ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
+
+  @media (max-width: 768px) {
+    width: ${props => (props.size === 'large' ? '36px' : '20px')};
+    height: 20px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    font-size: 12px;
+    border-radius: 40px;
+    right: ${props => (props.size === 'large' ? '8px' : '24px')};
+  }
+`;
+
+export const DmUnseenCount = styled(UnseenCount)`
+  right: ${props => (props.size === 'large' ? '80px' : '84px')};
+
+  @media (max-width: 768px) {
+    right: ${props => (props.size === 'large' ? '-8px' : '8px')};
+  }
+`;
+
 export const IconDrop = styled(FlexRow)`
-  ${/* display: flex;
-  flex-direction: row; */ ''}
-  ${/* justify-content: center; */ ''}
   align-items: stretch;
   align-self: stretch;
   position: relative;
@@ -106,7 +135,6 @@ export const IconDrop = styled(FlexRow)`
     position: absolute;
     top: 100%;
     right: 0;
-    min-width: 160px;
     padding: 8px;
 
     @media (max-width: 768px) {
@@ -151,14 +179,6 @@ export const IconLink = styled(Link)`
     flex-direction: column;
     opacity: 0.7;
     margin: 0;
-
-    ${/* &[data-mobileWidth~="third"] {
-      width: 33%;
-    }
-
-    &[data-mobileWidth~="half"] {
-      width: 50%;
-    } */ ''}
 
     &[data-active~="true"] {
       box-shadow: inset 0 0 0 ${({ theme }) => theme.bg.default};
@@ -211,43 +231,24 @@ export const DropdownHeader = styled(FlexRow)`
 
 export const DropdownFooter = styled(FlexRow)`
   border-top: 2px solid ${({ theme }) => theme.bg.wash};
-  flex: 0 0 auto;
+  flex: 0 0 32px;
   align-self: stretch;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   padding: 8px;
+
+  button {
+    display: flex;
+    flex: 1;
+
+    &:first-of-type:not(:last-of-type) {
+      margin-right: 8px;
+    }
+  }
 `;
 
-export const UserProfileDropdownList = styled.ul`
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex: 1;
-`;
-
-export const UserProfileDropdownListItem = styled.li`
-  font-size: 14px;
-  padding: 16px;
-  text-align: center;
-  display: flex;
-  flex: 1;
-  font-size: 14px;
-  font-weight: 600;
-  color: ${props => props.theme.text.alt};
-  border-bottom: 2px solid ${props => props.theme.border.default};
-  background: #fff;
-  justify-content: center;
-
-  &:last-child {
-    border-bottom: none;
-  }
-
-  &:hover {
-    cursor: pointer;
-    color: ${props => props.theme.text.default};
-    background: ${props => props.theme.bg.wash};
-  }
+export const Notification = styled.div`
+  color: ${props => props.theme.text.default};
+  padding: 8px;
+  border-bottom: 1px solid ${props => props.theme.border.default};
 `;

@@ -4,13 +4,15 @@ import React from 'react';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import compose from 'recompose/compose';
-
-import { displayLoadingState } from '../../../components/loading';
-import { getNotifications } from '../../notifications/queries';
+// $FlowFixMe
+import { withRouter } from 'react-router';
 import Dropdown from '../../../components/dropdown';
 import { NullState } from '../../../components/upsell';
-import { Button } from '../../../components/buttons';
+import { TextButton } from '../../../components/buttons';
 import { DropdownHeader, DropdownFooter } from '../style';
+import {
+  NotificationDropdownList,
+} from '../../../views/notifications/components/notificationDropdownList';
 
 const NullNotifications = () => (
   <NullState
@@ -20,30 +22,41 @@ const NullNotifications = () => (
   />
 );
 
-const NotificationListPure = () => {
+const NotificationDropdownPure = ({
+  rawNotifications,
+  markAllRead,
+  currentUser,
+  history,
+}) => {
   return (
-    <div>
-      👍 cool. there's notifications here. maybe just, like, actually do the code for it.
-    </div>
-  );
-};
-
-const NotificationList = compose(displayLoadingState)(NotificationListPure);
-
-const NotificationDropdownPure = ({ data }) => {
-  const { notifications } = data;
-  return (
-    <Dropdown>
+    <Dropdown style={{ width: '400px' }}>
       <DropdownHeader>
         My Notifications
       </DropdownHeader>
-      {!notifications && !data.loading && <NullNotifications />}
-      {(notifications || data.loading) && <NotificationList />}
-      <DropdownFooter>
-        <Button to={'/notifications'}>View all</Button>
-      </DropdownFooter>
+      {!rawNotifications ||
+        (rawNotifications.length === 0 && <NullNotifications />)}
+      {rawNotifications &&
+        <NotificationDropdownList
+          rawNotifications={rawNotifications}
+          currentUser={currentUser}
+          history={history}
+        />}
+
+      {rawNotifications &&
+        rawNotifications.length > 0 &&
+        <DropdownFooter>
+          <TextButton
+            color={'brand.default'}
+            onClick={() => history.push('/notifications')}
+          >
+            View all
+          </TextButton>
+        </DropdownFooter>}
+
     </Dropdown>
   );
 };
 
-export const NotificationDropdown = compose(pure)(NotificationDropdownPure);
+export const NotificationDropdown = compose(withRouter, pure)(
+  NotificationDropdownPure
+);

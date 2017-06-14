@@ -29,7 +29,7 @@ const ListCardPure = ({ data, dispatch }) => {
     } else if (
       channel.node.isPrivate && !channel.node.channelPermissions.isMember
     ) {
-      return;
+      return null;
     } else {
       return channel;
     }
@@ -60,6 +60,7 @@ const ListCardPure = ({ data, dispatch }) => {
                   clickable
                   contents={channel}
                   withDescription={false}
+                  channelIcon
                   meta={
                     item.node.metaData.members > 1
                       ? `${item.node.metaData.members} members ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `(${channel.pendingUsers.length} pending)` : ``}`

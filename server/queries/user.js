@@ -37,15 +37,6 @@ module.exports = {
       getUsersBySearchString(string),
   },
   User: {
-    notificationConnection: (
-      { id }: { id: string },
-      { first = 10, after }: PaginationOptions,
-      { user }: GraphQLContext
-    ) => {
-      const currentUser = user;
-      if (!currentUser || currentUser.id !== id) return null;
-      return getNotificationsByUser(id, { first, after });
-    },
     coverPhoto: ({ coverPhoto }) => encodeURI(coverPhoto),
     profilePhoto: ({ profilePhoto }) => encodeURI(profilePhoto),
     isAdmin: ({ id }: { id: string }) => {

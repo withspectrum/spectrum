@@ -1,61 +1,197 @@
 //@flow
-import React from 'react';
+import React, { Component } from 'react';
 //$FlowFixMe
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import Icon from '../../components/icons';
-import { Column } from '../../components/column';
-import { FlexRow } from '../../components/globals';
-import AppViewWrapper from '../../components/appViewWrapper';
-import { displayLoadingScreen } from '../../components/loading';
-import { NotificationCard, Content, ContentHeading, Message } from './style';
+import { withInfiniteScroll } from '../../components/infiniteScroll';
+import { parseNotification, getDistinctNotifications } from './utils';
+import { NewMessageNotification } from './components/newMessageNotification';
+import { NewReactionNotification } from './components/newReactionNotification';
+import { NewChannelNotification } from './components/newChannelNotification';
 import {
-  constructMessage,
-  constructContent,
-  getIconByType,
-} from '../../helpers/notifications';
-import { getNotifications } from './queries';
-import { UpsellSignIn } from '../../components/upsell';
+  NewUserInCommunityNotification,
+} from './components/newUserInCommunityNotification';
+import { Column } from '../../components/column';
+import AppViewWrapper from '../../components/appViewWrapper';
+import Titlebar from '../../views/titlebar';
+import { displayLoadingNotifications } from '../../components/loading';
+import { FetchMoreButton } from '../../components/threadFeed/style';
+import { FlexCol } from '../../components/globals';
+import {
+  getNotifications,
+  markNotificationsSeenMutation,
+} from '../../api/notification';
+import {
+  UpsellSignIn,
+  UpsellToReload,
+  UpsellNullNotifications,
+} from '../../components/upsell';
 
-const NotificationsPure = ({ data, currentUser }) => {
-  // our router should prevent this from happening, but just in case
-  if (!currentUser) {
-    return (
-      <AppViewWrapper>
-        <Column type={'primary'}>
-          <UpsellSignIn />
-        </Column>
-      </AppViewWrapper>
-    );
+class NotificationsPure extends Component {
+  state: {
+    isFetching: boolean,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      isFetching: false,
+    };
   }
 
-  // const { notifications: { edges } } = data;
-  return (
-    <AppViewWrapper>
-      <Column type={'primary'}>
-        {/* {edges.map(({ node: notification }) => (
-          <NotificationCard key={notification.id}>
-            <FlexRow center>
-              <Icon glyph={getIconByType(notification.type)} />
-              <Message>{constructMessage(notification)}</Message>
-            </FlexRow>
-            <Content>
-              <ContentHeading>{notification.content.title}</ContentHeading>
-              {constructContent(notification)}
-            </Content>
-          </NotificationCard>
-        ))} */}
-      </Column>
-    </AppViewWrapper>
-  );
-};
+  markAllNotificationsSeen = () => {
+    this.props
+      .markAllNotificationsSeen()
+      .then(({ data: { markAllNotificationsSeen } }) => {
+        // notifs were marked as seen
+      })
+      .catch(err => {
+        // error
+      });
+  };
 
-const Notifications = compose(getNotifications, pure)(NotificationsPure);
+  fetchMore = () => {
+    this.setState({
+      isFetching: true,
+    });
+
+    this.props.data.fetchMore();
+  };
+
+  componentDidMount() {
+    this.markAllNotificationsSeen();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.setState({
+        isFetching: false,
+      });
+    }
+  }
+
+  render() {
+    const { currentUser, data } = this.props;
+
+    if (!currentUser) {
+      return (
+        <AppViewWrapper>
+          <Column type={'primary'}>
+            <UpsellSignIn />
+          </Column>
+        </AppViewWrapper>
+      );
+    }
+
+    if (!data || data.error || data.loading) {
+      return (
+        <AppViewWrapper>
+          <Column type={'primary'}>
+            <UpsellToReload />
+          </Column>
+        </AppViewWrapper>
+      );
+    }
+
+    let notifications = data.notifications.edges
+      .map(notification => parseNotification(notification.node))
+      .filter(
+        notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
+      );
+
+    notifications = getDistinctNotifications(notifications);
+
+    const { notifications: { pageInfo: { hasNextPage } } } = data;
+
+    if (!notifications || notifications.length === 0) {
+      return (
+        <AppViewWrapper>
+          <Column type={'primary'}>
+            <UpsellNullNotifications />
+          </Column>
+        </AppViewWrapper>
+      );
+    }
+
+    return (
+      <FlexCol style={{ flex: '1 1 auto' }}>
+        <Titlebar title={'Notifications'} provideBack={false} noComposer />
+        <AppViewWrapper>
+          <Column type={'primary'}>
+            {notifications.map(notification => {
+              switch (notification.event) {
+                case 'MESSAGE_CREATED': {
+                  return (
+                    <NewMessageNotification
+                      key={notification.id}
+                      notification={notification}
+                      currentUser={currentUser}
+                    />
+                  );
+                }
+                case 'REACTION_CREATED': {
+                  return (
+                    <NewReactionNotification
+                      key={notification.id}
+                      notification={notification}
+                      currentUser={currentUser}
+                    />
+                  );
+                }
+                case 'CHANNEL_CREATED': {
+                  return (
+                    <NewChannelNotification
+                      key={notification.id}
+                      notification={notification}
+                      currentUser={currentUser}
+                    />
+                  );
+                }
+                case 'USER_JOINED_COMMUNITY': {
+                  return (
+                    <NewUserInCommunityNotification
+                      key={notification.id}
+                      notification={notification}
+                      currentUser={currentUser}
+                    />
+                  );
+                }
+                default: {
+                  return null;
+                }
+              }
+            })}
+
+            {hasNextPage &&
+              <div>
+                <FetchMoreButton
+                  color={'brand.default'}
+                  loading={this.state.isFetching}
+                  onClick={this.fetchMore}
+                >
+                  Load more notifications
+                </FetchMoreButton>
+              </div>}
+          </Column>
+        </AppViewWrapper>
+      </FlexCol>
+    );
+  }
+}
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
 });
-export default connect(mapStateToProps)(Notifications);
+
+export default compose(
+  getNotifications,
+  displayLoadingNotifications,
+  markNotificationsSeenMutation,
+  connect(mapStateToProps),
+  withInfiniteScroll,
+  pure
+)(NotificationsPure);

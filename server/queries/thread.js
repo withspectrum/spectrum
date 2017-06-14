@@ -5,6 +5,10 @@ const {
   getCommunityPermissions,
 } = require('../models/community');
 const { getUsers } = require('../models/user');
+import {
+  getParticipantsInThread,
+  getThreadNotificationStatusForUser,
+} from '../models/usersThreads';
 const { getMessages, getMessageCount } = require('../models/message');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
@@ -36,24 +40,7 @@ module.exports = {
       { loaders }: GraphQLContext
     ) => loaders.community.load(communityId),
     participants: ({ id, creatorId }, _, { loaders }) => {
-      return getMessages(id)
-        .then(messages =>
-          messages
-            .map(
-              // create an array of user ids
-              message => message.senderId
-            )
-            .filter(
-              // remove the creatorId from the list
-              message => message !== creatorId
-            )
-            .filter(
-              (id, index, self) =>
-                // get distinct ids in the array
-                self.indexOf(id) === index
-            )
-        )
-        .then(users => loaders.user.loadMany(users));
+      return getParticipantsInThread(id);
     },
     isCreator: (
       { creatorId }: { creatorId: String },
@@ -63,21 +50,18 @@ module.exports = {
       if (!creatorId || !user) return false;
       return user.id === creatorId;
     },
-    channelPermissions: (
-      { channelId }: { channelId: String },
-      _: any,
-      { user }: Context
-    ) => {
-      if (!channelId || !user) return false;
-      return getChannelPermissions(channelId, user.id).then(data => data[0]);
-    },
-    communityPermissions: (
-      { communityId }: { communityId: String },
-      _: any,
-      { user }: Context
-    ) => {
-      if (!communityId || !user) return false;
-      return getCommunityPermissions(communityId, user.id);
+    receiveNotifications: ({ id }, __, { user }) => {
+      const currentUser = user;
+      if (!currentUser) {
+        return false;
+      } else {
+        return getThreadNotificationStatusForUser(
+          id,
+          currentUser.id
+        ).then(threads => {
+          return threads.length > 0 ? threads[0].receiveNotifications : false;
+        });
+      }
     },
     messageConnection: (
       { id }: { id: String },

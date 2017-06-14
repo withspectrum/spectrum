@@ -20,7 +20,7 @@ const Header = ({ thread, currentUser }) => {
       <Photo
         size={60}
         radius={60}
-        isOnline={!user.isOnline}
+        isOnline={user.isOnline}
         onlineSize={'large'}
         src={user.profilePhoto}
       />

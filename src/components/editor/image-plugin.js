@@ -19,6 +19,17 @@ const onDropNode = (e, data, state) => {
     .apply();
 };
 
+const insertImage = (state, src, file) => {
+  return state
+    .transform()
+    .insertBlock({
+      type: 'image',
+      isVoid: true,
+      data: { src, file },
+    })
+    .apply();
+};
+
 const onDropOrPasteFiles = (e, data, state, editor) => {
   data.files.forEach(file => {
     const reader = new FileReader();
@@ -33,17 +44,6 @@ const onDropOrPasteFiles = (e, data, state, editor) => {
 
     reader.readAsDataURL(file);
   });
-};
-
-const insertImage = (state, src, file) => {
-  return state
-    .transform()
-    .insertBlock({
-      type: 'image',
-      isVoid: true,
-      data: { src, file },
-    })
-    .apply();
 };
 
 const ImagePlugin = () => ({
@@ -69,7 +69,7 @@ const ImagePlugin = () => ({
       // Rule to insert a paragraph block if the document is empty.
       {
         match: node => {
-          return node.kind == 'document';
+          return node.kind === 'document';
         },
         validate: document => {
           return document.nodes.size ? null : true;
@@ -83,7 +83,7 @@ const ImagePlugin = () => ({
       // the last one in the document.
       {
         match: node => {
-          return node.kind == 'document';
+          return node.kind === 'document';
         },
         validate: document => {
           const lastNode = document.nodes.last();

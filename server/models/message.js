@@ -1,8 +1,10 @@
 //@flow
 import striptags from 'striptags';
 const { db } = require('./db');
+// $FlowFixMe
+const Queue = require('bull');
+const messageNotificationQueue = new Queue('message notification');
 const { listenToNewDocumentsIn } = require('./utils');
-const { storeMessageNotification } = require('./notification');
 const { setThreadLastActive } = require('./thread');
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
@@ -39,14 +41,14 @@ const getMediaMessagesForThread = (
     .run();
 };
 
-const storeMessage = (message, user: Object): Promise<Object> => {
+const storeMessage = (message: Object, userId: string): Promise<Object> => {
   // Insert a message
   return db
     .table('messages')
     .insert(
       Object.assign({}, message, {
         timestamp: new Date(),
-        senderId: user.id,
+        senderId: userId,
         content: {
           body: striptags(message.content.body),
         },
@@ -56,15 +58,15 @@ const storeMessage = (message, user: Object): Promise<Object> => {
     .run()
     .then(result => result.changes[0].new_val)
     .then(message => {
-      storeMessageNotification({
-        message: message.id,
-        threadId: message.threadId,
-        senderId: message.senderId,
-        content: {
-          excerpt: message.content.body,
-        },
+      messageNotificationQueue.add({
+        message,
+        userId,
       });
-      setThreadLastActive(message.threadId, message.timestamp);
+
+      if (message.threadType === 'story') {
+        setThreadLastActive(message.threadId, message.timestamp);
+      }
+
       return message;
     });
 };

@@ -68,3 +68,32 @@ export const toggleReactionMutation = graphql(
   TOGGLE_REACTION_MUTATION,
   TOGGLE_REACTION_OPTIONS
 );
+
+/*
+  Send an id and boolean value to set a thread to be locked or unlocked.
+  Returns the thread ID and locked value.
+
+  Updates UI automatically via the Apollo ObjectID cache
+*/
+const TOGGLE_THREAD_NOTIFICATIONS_MUTATION = gql`
+  mutation toggleThreadNotifications($threadId: ID!) {
+    toggleThreadNotifications(threadId: $threadId) {
+      id
+      receiveNotifications
+    }
+  }
+`;
+const TOGGLE_THREAD_NOTIFICATIONS_OPTIONS = {
+  props: ({ mutate }) => ({
+    toggleThreadNotifications: ({ threadId }) =>
+      mutate({
+        variables: {
+          threadId,
+        },
+      }),
+  }),
+};
+export const toggleThreadNotificationsMutation = graphql(
+  TOGGLE_THREAD_NOTIFICATIONS_MUTATION,
+  TOGGLE_THREAD_NOTIFICATIONS_OPTIONS
+);

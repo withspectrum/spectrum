@@ -15,12 +15,8 @@ import ThreadDetail from '../components/threadDetail';
 import Messages from '../components/messages';
 import Head from '../../../components/head';
 import ChatInput from '../../../components/chatInput';
-import { Column } from '../../../components/column';
-import AppViewWrapper from '../../../components/appViewWrapper';
-import { UserProfile, ChannelProfile } from '../../../components/profile';
 import { getThread } from '../queries';
 import { displayLoadingScreen } from '../../../components/loading';
-import { FlexCol } from '../../../components/globals';
 import { View, Content, Input, Detail, ChatInputWrapper } from '../style';
 import {
   UpsellSignIn,
@@ -105,7 +101,7 @@ class ThreadContainerPure extends Component {
   };
 
   render() {
-    const { data: { thread, error, loading }, currentUser } = this.props;
+    const { data: { thread, error }, currentUser } = this.props;
     const { isLoading } = this.state;
 
     if (error) {
