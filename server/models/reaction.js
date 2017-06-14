@@ -1,8 +1,8 @@
 // @flow
 import { db } from './db';
 // $FlowFixMe
-const Queue = require('bull');
-const reactionNotificationQueue = new Queue('reaction notification');
+const { createQueue } = require('./utils');
+const reactionNotificationQueue = createQueue('reaction notification');
 
 type ReactionType = 'like';
 

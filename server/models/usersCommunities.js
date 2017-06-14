@@ -3,8 +3,8 @@ const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
 // $FlowFixMe
-const Queue = require('bull');
-const communityNotificationQueue = new Queue('community notification');
+const { createQueue } = require('./utils');
+const communityNotificationQueue = createQueue('community notification');
 
 /*
 ===========================================================

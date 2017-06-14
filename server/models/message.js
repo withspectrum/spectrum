@@ -2,8 +2,8 @@
 import striptags from 'striptags';
 const { db } = require('./db');
 // $FlowFixMe
-const Queue = require('bull');
-const messageNotificationQueue = new Queue('message notification');
+const { createQueue } = require('./utils');
+const messageNotificationQueue = createQueue('message notification');
 const { listenToNewDocumentsIn } = require('./utils');
 const { setThreadLastActive } = require('./thread');
 import type { PaginationOptions } from '../utils/paginate-arrays';
