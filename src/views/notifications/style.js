@@ -200,11 +200,13 @@ export const TextContent = styled.p`
 `;
 
 export const BubbleContainer = styled(FlexRow)`
+  flex: none;
   justify-content: ${props => (props.me ? 'flex-end' : 'flex-start')};
 `;
 
 export const BubbleGroupContainer = styled(FlexCol)`
   flex: none;
+  max-width: 70%;
   position: relative;
 `;
 
