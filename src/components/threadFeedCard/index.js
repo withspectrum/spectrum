@@ -27,7 +27,6 @@ import {
 } from './style';
 
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
-  console.log('props', props);
   const formatLocation = () => {
     switch (props.viewContext) {
       case 'dashboard':
@@ -47,7 +46,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
                     glyph="private"
                     tipText={'Private channel'}
                     tipLocation="top-right"
-                    size="12"
+                    size={12}
                   />
                 </Lock>}
               {props.data.channel.name}
@@ -66,7 +65,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
                     glyph="private"
                     tipText={'Private channel'}
                     tipLocation="top-right"
-                    size="12"
+                    size={12}
                   />
                 </Lock>}
               {props.data.channel.name}

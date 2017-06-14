@@ -96,7 +96,10 @@ class ThreadComposerWithData extends Component {
       availableCommunities &&
       (props.activeCommunity
         ? availableCommunities.filter(community => {
-            return community.slug === props.activeCommunity;
+            return (
+              community.slug.toLowerCase() ===
+              props.activeCommunity.toLowerCase()
+            );
           })[0].id
         : availableCommunities[0].id);
 
@@ -109,7 +112,8 @@ class ThreadComposerWithData extends Component {
     // Get the active channel if there is one
     if (props.activeChannel) {
       activeChannel = activeCommunityChannels.filter(
-        channel => channel.slug === props.activeChannel
+        channel =>
+          channel.slug.toLowerCase() === props.activeChannel.toLowerCase()
       );
     } else {
       // Try and get the default channel for the active community

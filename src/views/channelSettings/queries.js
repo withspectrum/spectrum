@@ -26,8 +26,8 @@ export const getThisChannel = graphql(
   {
     options: ({ match }) => ({
       variables: {
-        channelSlug: match.params.channelSlug,
-        communitySlug: match.params.communitySlug,
+        channelSlug: match.params.channelSlug.toLowerCase(),
+        communitySlug: match.params.communitySlug.toLowerCase(),
       },
       fetchPolicy: 'network-only',
     }),
