@@ -39,6 +39,7 @@ export const FeaturedCommunityWithData = props => {
     toggleCommunityMembership,
     dispatch,
     notes,
+    currentUser,
   } = props;
 
   const toggleMembership = communityId => {
@@ -62,7 +63,8 @@ export const FeaturedCommunityWithData = props => {
   };
 
   const returnButton = () => {
-    if (!community.communityPermissions.isMember) {
+    console.log(props);
+    if (currentUser && !community.communityPermissions.isMember) {
       return (
         <JoinButton
           icon="plus-fill"
@@ -72,7 +74,7 @@ export const FeaturedCommunityWithData = props => {
           Join
         </JoinButton>
       );
-    } else {
+    } else if (currentUser && community.communityPermissions.isMember) {
       return (
         <Link to={`/${community.slug}`}>
           <MemberButton icon="checkmark" gradientTheme="none">
@@ -80,6 +82,8 @@ export const FeaturedCommunityWithData = props => {
           </MemberButton>
         </Link>
       );
+    } else {
+      return <div />;
     }
   };
 
@@ -124,8 +128,10 @@ export const FeaturedCommunityWithData = props => {
   }
 };
 
+const mapStateToProps = state => ({ currentUser: state.users.currentUser });
+
 export const FeaturedCommunity = compose(
   toggleCommunityMembershipMutation,
-  connect(),
+  connect(mapStateToProps),
   pure
 )(FeaturedCommunityWithData);
