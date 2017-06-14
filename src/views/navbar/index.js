@@ -56,7 +56,7 @@ class Navbar extends Component {
   }
 
   calculateUnseenCounts = props => {
-    const { data: { user }, notificationsQuery } = props || this.props;
+    const { data: { user }, notificationsQuery, match } = props || this.props;
     const currentUser = user;
     let notifications =
       currentUser &&
@@ -66,11 +66,18 @@ class Navbar extends Component {
 
     notifications = getDistinctNotifications(notifications);
 
+    /*
+      NOTE:
+      This is hacky, but by getting the string after the last slash in the current url, we can compare it against in the incoming notifications in order to not show a new notification bubble on views the user is already looking at. This only applies to /messages/:threadId or /thread/:id - by matching this url param with the incoming notification.context.id we can determine whether or not to increment the count.
+    */
+    const id = match.url.substr(match.url.lastIndexOf('/') + 1);
+
     const dmUnseenCount =
       notifications &&
       notifications.length > 0 &&
       notifications
         .filter(notification => notification.isSeen === false)
+        .filter(notification => notification.context.id !== id) // SEE NOTE
         .filter(
           notification => notification.context.type === 'DIRECT_MESSAGE_THREAD'
         ).length;
@@ -80,6 +87,7 @@ class Navbar extends Component {
       notifications.length > 0 &&
       notifications
         .filter(notification => notification.isSeen === false)
+        .filter(notification => notification.context.id !== id) // SEE NOTE
         .filter(
           notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
         ).length;
@@ -115,6 +123,7 @@ class Navbar extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { match } = this.props;
     if (!this.props.data.user) return;
     if (!this.props.notificationsQuery) return;
     if (!prevProps.notificationsQuery) {
