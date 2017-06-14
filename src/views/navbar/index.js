@@ -363,17 +363,17 @@ class Navbar extends Component {
               <Label>Notifications</Label>
             </IconLink>
 
+            <IconLink data-active={match.url === '/explore'} to="/explore">
+              <Icon glyph="explore" />
+              <Label>Explore</Label>
+            </IconLink>
+
             <IconLink
               data-active={match.url === `/users/${currentUser.username}`}
               to={`/users/${currentUser.username}`}
             >
               <Icon glyph="profile" />
               <Label>Profile</Label>
-            </IconLink>
-
-            <IconLink data-active={match.url === '/explore'} to="/explore">
-              <Icon glyph="explore" />
-              <Label>Explore</Label>
             </IconLink>
           </Section>
         </Nav>
