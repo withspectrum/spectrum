@@ -248,11 +248,7 @@ class Navbar extends Component {
             </LogoLink>
           </Section>
           <Section right>
-            <Button
-              onClick={this.login}
-              icon="twitter"
-              style={{ padding: '2px 4px' }}
-            >
+            <Button onClick={this.login} icon="twitter">
               Sign in
             </Button>
           </Section>

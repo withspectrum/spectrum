@@ -6,10 +6,11 @@ import { Gradient, Shadow, Transition, hexa } from '../globals';
 
 const baseButton = css`
   display: flex;
-  flex: 0 0 auto;
+  flex: none;
+  align-self: center;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 12px;
   font-weight: 700;
   white-space: nowrap;
   word-break: keep-all;
@@ -19,12 +20,12 @@ const baseButton = css`
   line-height: 1;
   position: relative;
   text-align: center;
-  padding: ${props => (props.icon ? '6px 8px' : '12px 16px')};
+  padding: ${props => (props.icon ? '4px' : '8px')};
 
   &:hover {
-    border-radius: ${props => (props.disabled ? '8px' : '12px')};
+    padding: ${props => (props.icon ? '4px 8px' : '8px 12px')};
     transition: ${Transition.hover.on};
-    box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.high} ${hexa(props.theme.text.default, 0.15)}`)};
+    box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.high} ${hexa(props.theme.bg.reverse, 0.25)}`)};
     opacity: ${props => (props.disabled ? '0.5' : '1')};
   }
 
