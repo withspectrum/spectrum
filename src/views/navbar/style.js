@@ -90,7 +90,7 @@ export const Logo = styled.img`
 
 export const UnseenCount = styled.span`
   position: absolute;
-  right: ${props => (props.size === 'large' ? '-12px' : '4px')};
+  right: ${props => (props.size === 'large' ? '-16px' : '-4px')};
   top: 4px;
   font-size: 14px;
   font-weight: 600;
@@ -113,7 +113,7 @@ export const UnseenCount = styled.span`
 `;
 
 export const DmUnseenCount = styled(UnseenCount)`
-  right: ${props => (props.size === 'large' ? '80px' : '84px')};
+  right: ${props => (props.size === 'large' ? '72px' : '76px')};
 
   @media (max-width: 768px) {
     right: ${props => (props.size === 'large' ? '-8px' : '8px')};

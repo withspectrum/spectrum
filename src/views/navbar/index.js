@@ -367,10 +367,7 @@ class Navbar extends Component {
               data-active={match.url === `/users/${currentUser.username}`}
               to={`/users/${currentUser.username}`}
             >
-              <UserProfileAvatar
-                src={`${currentUser.profilePhoto}`}
-                isPro={currentUser.isPro}
-              />
+              <Icon glyph="profile" />
               <Label>Profile</Label>
             </IconLink>
 
