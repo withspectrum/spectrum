@@ -110,6 +110,14 @@ class Navbar extends Component {
     };
   };
 
+  formattedCount = count => {
+    if (count > 10) {
+      return '10+';
+    } else if (count > 0) {
+      return count;
+    } else return false;
+  };
+
   componentDidMount() {
     const { data: { user }, dispatch, history, match } = this.props;
     const currentUser = user;
@@ -271,13 +279,9 @@ class Navbar extends Component {
               data-active={match.url.includes('/messages')}
               to="/messages"
               onClick={this.markDmNotificationsAsSeen}
+              withCount={this.formattedCount(dmUnseenCount)}
             >
               <Icon glyph={dmUnseenCount > 0 ? 'message-fill' : 'message'} />
-              {dmUnseenCount > 0
-                ? <DmUnseenCount size={dmUnseenCount >= 10 ? 'large' : 'small'}>
-                    {dmUnseenCount >= 10 ? '10+' : dmUnseenCount}
-                  </DmUnseenCount>
-                : null}
               <Label>Messages</Label>
             </IconLink>
 
@@ -292,19 +296,13 @@ class Navbar extends Component {
               <IconLink
                 data-active={match.url === '/notifications'}
                 to="/notifications"
+                withCount={this.formattedCount(allUnseenCount)}
               >
                 <Icon
                   glyph={
                     allUnseenCount > 0 ? 'notification-fill' : 'notification'
                   }
                 />
-                {allUnseenCount > 0
-                  ? <UnseenCount
-                      size={allUnseenCount >= 10 ? 'large' : 'small'}
-                    >
-                      {allUnseenCount >= 10 ? '10+' : allUnseenCount}
-                    </UnseenCount>
-                  : null}
               </IconLink>
               <NotificationDropdown
                 rawNotifications={notifications}
@@ -337,29 +335,22 @@ class Navbar extends Component {
               data-active={match.url.includes('/messages')}
               to="/messages"
               onClick={this.markDmNotificationsAsSeen}
+              withCount={this.formattedCount(dmUnseenCount)}
             >
               <Icon glyph={dmUnseenCount > 0 ? 'message-fill' : 'message'} />
-              {dmUnseenCount > 0
-                ? <DmUnseenCount size={dmUnseenCount >= 10 ? 'large' : 'small'}>
-                    {dmUnseenCount >= 10 ? '10+' : dmUnseenCount}
-                  </DmUnseenCount>
-                : null}
+
               <Label>Messages</Label>
             </IconLink>
             <IconLink
               data-active={match.url === '/notifications'}
               to="/notifications"
+              withCount={this.formattedCount(allUnseenCount)}
             >
               <Icon
                 glyph={
                   allUnseenCount > 0 ? 'notification-fill' : 'notification'
                 }
               />
-              {allUnseenCount > 0
-                ? <UnseenCount size={allUnseenCount >= 10 ? 'large' : 'small'}>
-                    {allUnseenCount >= 10 ? '10+' : allUnseenCount}
-                  </UnseenCount>
-                : null}
               <Label>Notifications</Label>
             </IconLink>
 

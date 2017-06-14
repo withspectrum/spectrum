@@ -88,38 +88,6 @@ export const Logo = styled.img`
   left: 1px;
 `;
 
-export const UnseenCount = styled.span`
-  position: absolute;
-  right: ${props => (props.size === 'large' ? '-16px' : '-4px')};
-  top: 4px;
-  font-size: 14px;
-  font-weight: 600;
-  background: ${({ theme }) => theme.bg.default};
-  color: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};;
-  border-radius: 8px;
-  padding: 2px 4px;
-  border: 2px solid ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
-
-  @media (max-width: 768px) {
-    width: ${props => (props.size === 'large' ? '36px' : '20px')};
-    height: 20px;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    font-size: 12px;
-    border-radius: 40px;
-    right: ${props => (props.size === 'large' ? '8px' : '24px')};
-  }
-`;
-
-export const DmUnseenCount = styled(UnseenCount)`
-  right: ${props => (props.size === 'large' ? '72px' : '76px')};
-
-  @media (max-width: 768px) {
-    right: ${props => (props.size === 'large' ? '-8px' : '8px')};
-  }
-`;
-
 export const IconDrop = styled(FlexRow)`
   align-items: stretch;
   align-self: stretch;
@@ -163,6 +131,7 @@ export const IconLink = styled(Link)`
   align-items: center;
   align-self: stretch;
   margin: 0 8px;
+  padding: 0 8px;
   opacity: 0.8;
   position: relative;
   width: 100%;
@@ -170,6 +139,23 @@ export const IconLink = styled(Link)`
   &:hover {
     opacity: 1;
   }
+
+${/* handles unseen notification counts for both DMs and Notifications */ ''}
+  ${props => props.withCount && css`
+    > .icon:after {
+      content: ${props.withCount ? `'${props.withCount}'` : `''`};
+      position: absolute;
+      left: calc(100% - 12px);
+      top: -2px;
+      font-size: 14px;
+      font-weight: 600;
+      background: ${({ theme }) => theme.bg.default};
+      color: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};;
+      border-radius: 8px;
+      padding: 2px 4px;
+      border: 2px solid ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
+    }
+  `}
 
   &[data-active~="true"] {
     box-shadow: inset 0 -4px 0 ${({ theme }) => theme.bg.default};
