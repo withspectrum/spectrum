@@ -5,8 +5,9 @@ export const Wrapper = styled(FlexRow)`
   order: 2;
   align-items: flex-start;
   justify-content: center;
+  overflow: hidden;
   overflow-y: scroll;
-  flex: 1 1 auto;
+  flex: auto;
 
   @media (max-width: 768px) {
     padding: 0;
