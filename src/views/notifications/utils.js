@@ -9,8 +9,8 @@ import {
   UserAvatar,
   Byline,
   Name,
-  Badge,
 } from '../../components/chatMessages/style';
+import Badge from '../../components/badges';
 
 export const getDistinctNotifications = array => {
   let unique = {};

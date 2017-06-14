@@ -39,7 +39,7 @@ class ScrollManager extends React.Component {
 
     const scrollCapture = () => {
       requestAnimationFrame(() => {
-        const { pageXOffset: x, pageYOffset: y } = window;
+        const { pageXOffset, pageYOffset } = window;
         const { pathname } = this.props.location;
 
         // use browser history instead of router history
@@ -54,7 +54,7 @@ class ScrollManager extends React.Component {
           window.history.replaceState(
             {
               ...historyState,
-              state: { ...state, scroll: { x, y } },
+              state: { ...state, scroll: { x: pageXOffset, y: pageYOffset } },
             },
             null,
             pathname

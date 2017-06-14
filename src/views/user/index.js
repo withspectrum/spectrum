@@ -6,7 +6,7 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 //$FlowFixMe
 import { connect } from 'react-redux';
-import generateMetaInfo from '../../../server/shared/generate-meta-info';
+import generateMetaInfo from 'server/shared/generate-meta-info';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import Column from '../../components/column';

@@ -89,7 +89,7 @@ class Markdown extends React.Component {
       injected = true;
     }
     // Load highlight.js when it's necessary, but not before
-    System.import('highlight.js').then(module => {
+    import('highlight.js').then(module => {
       this.setState({
         hljs: module,
       });
