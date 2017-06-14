@@ -20,6 +20,7 @@ import { displayLoadingNavbar } from '../../components/loading';
 import { Button } from '../../components/buttons';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
+import { getDistinctNotifications } from '../../views/notifications/utils';
 import {
   saveUserDataToLocalStorage,
   logout,
@@ -57,11 +58,13 @@ class Navbar extends Component {
   calculateUnseenCounts = props => {
     const { data: { user }, notificationsQuery } = props || this.props;
     const currentUser = user;
-    const notifications =
+    let notifications =
       currentUser &&
       notificationsQuery.notifications.edges.map(
         notification => notification.node
       );
+
+    notifications = getDistinctNotifications(notifications);
 
     const dmUnseenCount =
       notifications &&

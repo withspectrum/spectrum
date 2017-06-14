@@ -59,11 +59,12 @@ export const GET_NOTIFICATIONS_OPTIONS = {
             after: notifications.edges[notifications.edges.length - 1].cursor,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
+            console.log('updating query', prev, fetchMoreResult);
             if (!fetchMoreResult.notifications) {
               return prev;
             }
 
-            return {
+            return Object.assign({}, prev, {
               ...prev,
               notifications: {
                 ...prev.notifications,
@@ -76,7 +77,7 @@ export const GET_NOTIFICATIONS_OPTIONS = {
                   ...fetchMoreResult.notifications.edges,
                 ],
               },
-            };
+            });
           },
         }),
     },
@@ -97,7 +98,7 @@ export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
           const newNotification = subscriptionData.data.notificationAdded;
           if (!newNotification) return prev;
 
-          console.log('Add new notification to the store');
+          console.log('Add new notification to the store', newNotification);
 
           if (!prev.notifications) {
             return {
@@ -119,20 +120,20 @@ export const GET_NOTIFICATIONS_NAVBAR_OPTIONS = {
           }
 
           // Add the new notification to the data
-          return {
+          return Object.assign({}, prev, {
             ...prev,
             notifications: {
               ...prev.notifications,
               edges: [
                 {
                   node: newNotification,
-                  cursor: '__this-is-a-bullshit-cursor__',
+                  cursor: '__this-is-a-cursor__',
                   __typename: 'NotificationEdge',
                 },
                 ...prev.notifications.edges,
               ],
             },
-          };
+          });
         },
       });
     },

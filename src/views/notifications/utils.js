@@ -5,6 +5,18 @@ import { Link } from 'react-router-dom';
 import { timeDifferenceShort } from '../../helpers/utils';
 import { Timestamp } from './style';
 
+export const getDistinctNotifications = array => {
+  let unique = {};
+  let distinct = [];
+  for (let i in array) {
+    if (typeof unique[array[i].id] == 'undefined') {
+      distinct.push(array[i]);
+    }
+    unique[array[i].id] = 0;
+  }
+  return distinct;
+};
+
 export const parseNotification = notification => {
   return Object.assign({}, notification, {
     actors: notification.actors.map(actor => {
