@@ -29,16 +29,7 @@ const CommunityList = props => {
     withMeta,
   } = props;
 
-  const filteredCommunities = communities.filter(
-    community =>
-      community.node.communityPermissions.isMember ||
-      community.node.communityPermissions.isOwner
-  );
-
-  if (
-    filteredCommunities &&
-    (filteredCommunities.length !== 0 && filteredCommunities !== null)
-  ) {
+  if (communities && (communities.length !== 0 && communities !== null)) {
     return (
       <StyledCard>
         <ListHeader>
@@ -53,7 +44,7 @@ const CommunityList = props => {
             />}
         </ListHeader>
         <ListContainer>
-          {filteredCommunities.map(item => {
+          {communities.map(item => {
             return (
               <Link key={item.node.id} to={`/${item.node.slug}`}>
                 <CommunityListItem
