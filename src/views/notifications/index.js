@@ -97,15 +97,11 @@ class NotificationsPure extends Component {
       );
     }
 
-    console.log('root data in notifications', data);
-
     let notifications = data.notifications.edges.map(notification =>
       parseNotification(notification.node)
     );
 
     notifications = getDistinctNotifications(notifications);
-
-    console.log('distinct notifications', notifications);
 
     const { notifications: { pageInfo: { hasNextPage } } } = data;
 
@@ -130,10 +126,7 @@ class NotificationsPure extends Component {
                   return (
                     <NewMessageNotification
                       key={notification.id}
-                      notification={
-                        console.log('incoming to component', notification) ||
-                          notification
-                      }
+                      notification={notification}
                       currentUser={currentUser}
                     />
                   );

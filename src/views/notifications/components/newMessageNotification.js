@@ -31,11 +31,12 @@ import {
   NotificationListRow,
   Timestamp,
   AttachmentsWash,
-  ContextRow,
+  SuccessContext,
+  HzRule,
+  Content,
 } from '../style';
 
 export const NewMessageNotification = ({ notification, currentUser }) => {
-  console.log('raw notif', notification);
   const actors = parseActors(notification.actors, currentUser);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
@@ -47,53 +48,57 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
   const emojiOnly = onlyContainsEmoji(message.content.body);
   const TextBubble = emojiOnly ? EmojiBubble : Bubble;
 
-  console.log('context', context);
-  console.log('actors', actors);
-
   return (
     <NotificationCard>
       <CardLink to={`/thread/${notification.context.id}`} />
       <CardContent>
-        <ContextRow>
+        <SuccessContext>
           <Icon glyph="message-fill" />
-          <TextContent pointer={true}>
-            {actors.asString} {event} {context.asString} {date}
-          </TextContent>
-        </ContextRow>
-        <AttachmentsWash>
-          <BubbleContainer me={false}>
-            <BubbleGroupContainer me={false}>
-              <MessagesWrapper>
-
-                {message.messageType !== 'media' &&
-                  <MessageWrapper
-                    me={false}
-                    timestamp={convertTimestampToTime(message.timestamp)}
-                  >
-                    <TextBubble
-                      me={false}
-                      pending={false}
-                      message={message.content}
-                    />
-                  </MessageWrapper>}
-                {message.messageType === 'media' &&
-                  <MessageWrapper
-                    me={false}
-                    timestamp={convertTimestampToTime(message.timestamp)}
-                  >
-                    <ImgBubble
-                      me={false}
-                      pending={false}
-                      imgSrc={message.content.body}
-                      message={message.content}
-                    />
-                  </MessageWrapper>}
-
-              </MessagesWrapper>
-            </BubbleGroupContainer>
-          </BubbleContainer>
           <ActorsRow actors={actors.asObjects} />
-        </AttachmentsWash>
+        </SuccessContext>
+        <Content>
+          <TextContent pointer={true}>
+            {' '}{actors.asString} {event} {context.asString} {date}{' '}
+          </TextContent>
+          <AttachmentsWash>
+            <HzRule>
+              <hr />
+              <Icon glyph="message" />
+              <hr />
+            </HzRule>
+            <BubbleContainer me={false}>
+              <BubbleGroupContainer me={false}>
+                <MessagesWrapper>
+
+                  {message.messageType !== 'media' &&
+                    <MessageWrapper
+                      me={false}
+                      timestamp={convertTimestampToTime(message.timestamp)}
+                    >
+                      <TextBubble
+                        me={false}
+                        pending={false}
+                        message={message.content}
+                      />
+                    </MessageWrapper>}
+                  {message.messageType === 'media' &&
+                    <MessageWrapper
+                      me={false}
+                      timestamp={convertTimestampToTime(message.timestamp)}
+                    >
+                      <ImgBubble
+                        me={false}
+                        pending={false}
+                        imgSrc={message.content.body}
+                        message={message.content}
+                      />
+                    </MessageWrapper>}
+
+                </MessagesWrapper>
+              </BubbleGroupContainer>
+            </BubbleContainer>
+          </AttachmentsWash>
+        </Content>
       </CardContent>
     </NotificationCard>
   );
@@ -115,11 +120,15 @@ export const MiniNewMessageNotification = ({
     >
       <CardLink to={`/thread/${notification.context.id}`} />
       <CardContent>
-        <ActorsRow actors={actors.asObjects} />
-        <TextContent pointer={false}>
-          {actors.asString} {event} {context.asString}.
-        </TextContent>
-        <Timestamp>{date}</Timestamp>
+        <SuccessContext>
+          <Icon glyph="message-fill" />
+          <ActorsRow actors={actors.asObjects} />
+        </SuccessContext>
+        <Content>
+          <TextContent pointer={false}>
+            {actors.asString} {event} {context.asString} {date}
+          </TextContent>
+        </Content>
       </CardContent>
     </NotificationListRow>
   );

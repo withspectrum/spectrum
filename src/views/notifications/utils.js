@@ -4,6 +4,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { timeDifferenceShort } from '../../helpers/utils';
 import { Timestamp } from './style';
+import {
+  AvatarLabel,
+  UserAvatar,
+  Byline,
+  Name,
+  Badge,
+} from '../../components/chatMessages/style';
 
 export const getDistinctNotifications = array => {
   let unique = {};
@@ -40,6 +47,24 @@ export const parseNotification = notification => {
     }),
   });
 };
+
+export const renderBubbleHeader = actor => (
+  <Byline>
+    <Link to={`/users/${actor.username}`}>
+      <Name>{actor.name}</Name>
+      {actor.isAdmin && <Badge type="admin" />}
+      {actor.isPro && <Badge type="pro" />}
+    </Link>
+  </Byline>
+);
+
+export const renderAvatar = actor => (
+  <Link to={`/users/${actor.username}`} style={{ alignSelf: 'flex-end' }}>
+    <AvatarLabel tipText={actor.name} tipLocation="right">
+      <UserAvatar isOnline={actor.isOnline} src={actor.profilePhoto} />
+    </AvatarLabel>
+  </Link>
+);
 
 const actorsToString = actors => {
   // reverse to show the most recent first
@@ -138,7 +163,7 @@ export const parseEvent = event => {
       return <span>replied</span>;
     }
     case 'REACTION_CREATED': {
-      return <span>reacted</span>;
+      return <span>liked</span>;
     }
     case 'CHANNEL_CREATED': {
       return <span>created a channel</span>;
@@ -175,8 +200,7 @@ const threadToString = context => {
 const messageToString = context => {
   return (
     <span>
-      {' '}
-      <Link to={`/thread/${context.payload.threadId}`}>to your message</Link>
+      {' '}your reply
     </span>
   );
 };
@@ -185,8 +209,6 @@ const communityToString = context => {
   return (
     <span>
       {' '}
-      your community
-      {', '}
       <Link to={`/${context.payload.slug}`}>{context.payload.name}</Link>
     </span>
   );

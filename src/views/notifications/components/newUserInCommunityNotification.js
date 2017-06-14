@@ -12,7 +12,10 @@ import {
   TextContent,
   NotificationListRow,
   Timestamp,
+  JoinContext,
+  Content,
 } from '../style';
+import Icon from '../../../components/icons';
 import {
   CardLink,
   CardContent,
@@ -31,12 +34,16 @@ export const NewUserInCommunityNotification = ({
     <NotificationCard>
       <CardLink to={`/${notification.context.payload.slug}`} />
       <CardContent>
-        <ActorsRow actors={actors.asObjects} />
-        <TextContent pointer={true}>
-          {actors.asString} {event} {context.asString}.
-        </TextContent>
-        <Timestamp>{date}</Timestamp>
+        <JoinContext>
+          <Icon glyph="plus-fill" />
+          <ActorsRow actors={actors.asObjects} />
+        </JoinContext>
       </CardContent>
+      <Content>
+        <TextContent pointer={true}>
+          {' '}{actors.asString} {event} {context.asString} {date}{' '}
+        </TextContent>
+      </Content>
     </NotificationCard>
   );
 };
@@ -57,12 +64,16 @@ export const MiniNewUserInCommunityNotification = ({
     >
       <CardLink to={`/${notification.context.payload.slug}`} />
       <CardContent>
-        <ActorsRow actors={actors.asObjects} />
-        <TextContent pointer={false}>
-          {actors.asString} {event} {context.asString}.
-        </TextContent>
-        <Timestamp>{date}</Timestamp>
+        <JoinContext>
+          <Icon glyph="plus-fill" />
+          <ActorsRow actors={actors.asObjects} />
+        </JoinContext>
       </CardContent>
+      <Content>
+        <TextContent pointer={false}>
+          {' '}{actors.asString} {event} {context.asString} {date}{' '}
+        </TextContent>
+      </Content>
     </NotificationListRow>
   );
 };

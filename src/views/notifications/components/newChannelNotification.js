@@ -7,12 +7,18 @@ import pure from 'recompose/pure';
 import { getChannelById } from '../../../api/channel';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext } from '../utils';
+import Icon from '../../../components/icons';
 import {
+  SegmentedNotificationCard,
   NotificationCard,
   TextContent,
-  NotificationListRow,
+  SegmentedNotificationListRow,
   Timestamp,
   AttachmentsWash,
+  CreatedContext,
+  Content,
+  ContentWash,
+  HzRule,
 } from '../style';
 import { ChannelProfile } from '../../../components/profile';
 
@@ -32,19 +38,23 @@ export const NewChannelNotification = ({ notification, currentUser }) => {
     : 'A new channel was';
 
   return (
-    <NotificationCard>
-      <TextContent pointer={true}>
-        {newChannelCount} created in the {context.asString}.
-      </TextContent>
-      <Timestamp>{date}</Timestamp>
-      <AttachmentsWash>
-        {notification.entities.map(channel => {
-          return (
-            <NewChannel key={channel.payload.id} id={channel.payload.id} />
-          );
-        })}
-      </AttachmentsWash>
-    </NotificationCard>
+    <SegmentedNotificationCard>
+      <CreatedContext>
+        <Icon glyph="community" />
+        <TextContent pointer={true}>
+          {newChannelCount} created in {context.asString} {date}
+        </TextContent>
+      </CreatedContext>
+      <ContentWash>
+        <AttachmentsWash>
+          {notification.entities.map(channel => {
+            return (
+              <NewChannel key={channel.payload.id} id={channel.payload.id} />
+            );
+          })}
+        </AttachmentsWash>
+      </ContentWash>
+    </SegmentedNotificationCard>
   );
 };
 
@@ -60,20 +70,22 @@ export const MiniNewChannelNotification = ({
     : 'A new channel was';
 
   return (
-    <NotificationListRow>
-      <TextContent pointer={false}>
-        {newChannelCount} created in the {context.asString}
-      </TextContent>
-      <Timestamp>{date}</Timestamp>
-      <AttachmentsWash mini>
-        {notification.entities.map(channel => {
-          return (
-            <NewChannel key={channel.payload.id} id={channel.payload.id}>
-              Join
-            </NewChannel>
-          );
-        })}
-      </AttachmentsWash>
-    </NotificationListRow>
+    <SegmentedNotificationListRow>
+      <CreatedContext>
+        <Icon glyph="community" />
+        <TextContent pointer={false}>
+          {newChannelCount} created in {context.asString} {date}
+        </TextContent>
+      </CreatedContext>
+      <ContentWash mini>
+        <AttachmentsWash>
+          {notification.entities.map(channel => {
+            return (
+              <NewChannel key={channel.payload.id} id={channel.payload.id} />
+            );
+          })}
+        </AttachmentsWash>
+      </ContentWash>
+    </SegmentedNotificationListRow>
   );
 };

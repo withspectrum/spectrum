@@ -6,7 +6,7 @@ import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
 import Icon from '../../../components/icons';
 import { HorizontalRule } from '../../../components/globals';
-import { displayLoadingCard } from '../../../components/loading';
+import { displayLoadingState } from '../../../components/loading';
 import { ChatWrapper } from '../style';
 import { getThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
@@ -98,7 +98,7 @@ class MessagesWithData extends Component {
 const Messages = compose(
   toggleReactionMutation,
   getThreadMessages,
-  displayLoadingCard
+  displayLoadingState
 )(MessagesWithData);
 
 export default Messages;
