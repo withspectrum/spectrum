@@ -29,13 +29,13 @@ const Notification = /* GraphQL */ `
 	}
 
 	type NotificationsConnection {
-		pageInfo: PageInfo!
-		edges: [NotificationEdge!]
+		pageInfo: PageInfo
+		edges: [NotificationEdge]
 	}
 
 	type NotificationEdge {
-		cursor: String!
-		node: Notification!
+		cursor: String
+		node: Notification
 	}
 
 	type Notification {
@@ -52,7 +52,7 @@ const Notification = /* GraphQL */ `
 
 	extend type Query {
 		notification(id: ID!): Notification
-		notifications(first: Int = 10, after: String): NotificationsConnection!
+		notifications(first: Int = 10, after: String): NotificationsConnection
 	}
 
 	extend type Mutation {

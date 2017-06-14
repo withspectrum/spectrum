@@ -7,7 +7,7 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { withInfiniteScroll } from '../../components/infiniteScroll';
-import { parseNotification } from './utils';
+import { parseNotification, getDistinctNotifications } from './utils';
 import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
 import { NewChannelNotification } from './components/newChannelNotification';
@@ -97,9 +97,15 @@ class NotificationsPure extends Component {
       );
     }
 
-    const notifications = data.notifications.edges.map(notification =>
+    console.log('root data in notifications', data);
+
+    let notifications = data.notifications.edges.map(notification =>
       parseNotification(notification.node)
     );
+
+    notifications = getDistinctNotifications(notifications);
+
+    console.log('distinct notifications', notifications);
 
     const { notifications: { pageInfo: { hasNextPage } } } = data;
 
@@ -124,7 +130,10 @@ class NotificationsPure extends Component {
                   return (
                     <NewMessageNotification
                       key={notification.id}
-                      notification={notification}
+                      notification={
+                        console.log('incoming to component', notification) ||
+                          notification
+                      }
                       currentUser={currentUser}
                     />
                   );

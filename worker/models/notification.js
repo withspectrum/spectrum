@@ -12,7 +12,6 @@ export const checkForExistingNotification = (
 ) => {
   const now = new Date();
   const then = new Date(now.getTime() - TIME_BUFFER);
-
   return db
     .table('notifications')
     .getAll(contextId, { index: 'contextId' })

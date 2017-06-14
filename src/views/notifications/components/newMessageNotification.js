@@ -44,6 +44,9 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
   const emojiOnly = onlyContainsEmoji(message.content.body);
   const TextBubble = emojiOnly ? EmojiBubble : Bubble;
 
+  console.log('context', context);
+  console.log('actors', actors);
+
   return (
     <NotificationCard>
       <CardLink to={`/thread/${notification.context.id}`} />

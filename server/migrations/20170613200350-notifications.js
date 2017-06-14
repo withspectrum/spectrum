@@ -54,6 +54,10 @@ exports.up = function(r, conn) {
               console.log(err);
               throw err;
             }),
+          r
+            .table('notifications')
+            .indexCreate('contextId', r.row('context')('id'))
+            .run(conn),
         ])
       )
       // Insert data into new tables that should be there
@@ -122,9 +126,11 @@ exports.up = function(r, conn) {
               Promise.all(
                 threadsMessages.map(([threadSenders, thread]) => {
                   if (!threadSenders) return Promise.resolve();
-
+                  let uniqueThreadSenders = threadSenders.filter(
+                    (item, i, ar) => ar.indexOf(item) === i
+                  );
                   return Promise.all(
-                    threadSenders.map(sender => {
+                    uniqueThreadSenders.map(sender => {
                       return r
                         .table('usersThreads')
                         .insert({
