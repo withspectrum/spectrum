@@ -40,7 +40,7 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
   const actors = parseActors(notification.actors, currentUser);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
-  const context = parseContext(notification.context);
+  const context = parseContext(notification.context, currentUser);
   const message = getLastMessageCreatedByAnotherUser(
     notification.entities,
     currentUser
@@ -112,7 +112,7 @@ export const MiniNewMessageNotification = ({
   const actors = parseActors(notification.actors, currentUser);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
-  const context = parseContext(notification.context);
+  const context = parseContext(notification.context, currentUser);
 
   return (
     <NotificationListRow

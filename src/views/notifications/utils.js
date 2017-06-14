@@ -184,11 +184,15 @@ export const parseNotificationDate = date => {
   return <Timestamp>· {timeDifferenceShort(now, timestamp)}</Timestamp>;
 };
 
-const threadToString = context => {
+const threadToString = (context, currentUser) => {
+  console.log('context', context);
+  console.log('currentUser', currentUser);
+  const isCreator = context.payload.creatorId === currentUser.id;
+  const str = isCreator ? 'in your thread' : 'in';
   return (
     <span>
       {' '}
-      to your thread,
+      {str}
       {' '}
       <Link to={`/thread/${context.payload.id}`}>
         {context.payload.content.title}
@@ -214,11 +218,11 @@ const communityToString = context => {
   );
 };
 
-export const parseContext = context => {
+export const parseContext = (context, currentUser) => {
   switch (context.type) {
     case 'SLATE':
     case 'THREAD': {
-      const asString = threadToString(context);
+      const asString = threadToString(context, currentUser);
       return {
         asString,
       };
