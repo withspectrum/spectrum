@@ -19,7 +19,10 @@ export const NotificationDropdownList = ({
   */
   const notifications = rawNotifications
     .map(notification => parseNotification(notification))
-    .slice(0, 10);
+    .slice(0, 10)
+    .filter(
+      notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
+    );
 
   return (
     <NotificationListContainer>
