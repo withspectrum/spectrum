@@ -139,6 +139,30 @@ class ThreadComposerWithData extends Component {
     };
   }
 
+  componentDidMount() {
+    this.refs.titleTextarea.focus();
+  }
+
+  componentWillUpdate(nextProps) {
+    const { isOpen } = nextProps;
+    if (isOpen) {
+      document.addEventListener('keydown', this.handleKeyPress, false);
+    } else {
+      document.removeEventListener('keydown', this.handleKeyPress, false);
+    }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyPress, false);
+  }
+
+  handleKeyPress = e => {
+    // if person taps esc, close the dialog
+    if (e.keyCode === 27) {
+      this.closeComposer();
+    }
+  };
+
   changeTitle = e => {
     const title = e.target.value;
     if (/\n$/g.test(title)) {
