@@ -23,6 +23,7 @@ import {
   Creator,
   ParticipantHeads,
   Location,
+  Lock,
 } from './style';
 
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
@@ -39,6 +40,15 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
             <Link
               to={`/${props.data.channel.community.slug}/${props.data.channel.slug}`}
             >
+              {props.data.channel.isPrivate &&
+                <Lock>
+                  <Icon
+                    glyph="private"
+                    tipText={'Private channel'}
+                    tipLocation="top-right"
+                    size={12}
+                  />
+                </Lock>}
               {props.data.channel.name}
             </Link>
           </Location>
@@ -49,7 +59,16 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
             <Link
               to={`/${props.data.channel.community.slug}/${props.data.channel.slug}`}
             >
-              {`~${props.data.channel.name}`}
+              {props.data.channel.isPrivate &&
+                <Lock>
+                  <Icon
+                    glyph="private"
+                    tipText={'Private channel'}
+                    tipLocation="top-right"
+                    size={12}
+                  />
+                </Lock>}
+              {props.data.channel.name}
             </Link>
           </Location>
         );

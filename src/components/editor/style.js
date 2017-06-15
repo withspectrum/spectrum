@@ -16,4 +16,9 @@ export const MediaRow = styled.div`
   margin-bottom: -28px;
   margin-top: 16px;
   width: calc(100% + 48px);
+
+  @media (max-width: 768px) {
+    position: absolute;
+    top: calc(100% - 90px);
+  }
 `;

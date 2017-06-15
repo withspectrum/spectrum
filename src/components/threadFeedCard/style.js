@@ -150,3 +150,8 @@ export const Location = styled.span`
     text-decoration: underline;
   }
 `;
+
+export const Lock = styled.span`
+  position: relative;
+  top: 1px;
+`;

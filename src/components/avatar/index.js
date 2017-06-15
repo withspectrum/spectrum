@@ -16,6 +16,8 @@ const StyledAvatar = styled.img`
   object-fit: cover;
   background-color: ${({ theme }) => theme.generic.default};
   background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
+  position: relative;
+  z-index: 9;
 `;
 
 const StyledAvatarContainer = styled.span`
@@ -36,7 +38,7 @@ const StyledAvatarContainer = styled.span`
     border: 2px solid #fff;
     bottom: 0;
     right: ${props => (props.onlineSize === 'large' ? '0' : '-4px')};
-    z-index: 100;
+    z-index: 10;
   }
 `;
 

@@ -3,6 +3,14 @@ import Card from '../../components/card';
 import { Link } from 'react-router-dom';
 import { FlexCol, H3 } from '../../components/globals';
 
+export const ListHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid ${props => props.theme.border.default};
+  padding-bottom: 16px;
+`;
+
 export const ListHeading = styled(H3)`
   font-weight: 800;
   font-size: 20px;

@@ -17,11 +17,11 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import Editor, { toPlainText, fromPlainText, toJSON } from '../editor';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
-import { getLinkPreviewFromUrl } from '../../helpers/utils';
+import { getLinkPreviewFromUrl, isMobile } from '../../helpers/utils';
 import { URLS } from '../../helpers/regexps';
 import { TextButton, Button } from '../buttons';
+import { FlexRow } from '../../components/globals';
 import Icon from '../icons';
-import { FlexRow } from '../globals';
 import { displayLoadingComposer } from '../loading';
 import {
   Container,
@@ -34,6 +34,7 @@ import {
   ContentContainer,
   Actions,
   Dropdowns,
+  PublishActions,
 } from './style';
 
 class ThreadComposerWithData extends Component {
@@ -95,7 +96,10 @@ class ThreadComposerWithData extends Component {
       availableCommunities &&
       (props.activeCommunity
         ? availableCommunities.filter(community => {
-            return community.slug === props.activeCommunity;
+            return (
+              community.slug.toLowerCase() ===
+              props.activeCommunity.toLowerCase()
+            );
           })[0].id
         : availableCommunities[0].id);
 
@@ -108,7 +112,8 @@ class ThreadComposerWithData extends Component {
     // Get the active channel if there is one
     if (props.activeChannel) {
       activeChannel = activeCommunityChannels.filter(
-        channel => channel.slug === props.activeChannel
+        channel =>
+          channel.slug.toLowerCase() === props.activeChannel.toLowerCase()
       );
     } else {
       // Try and get the default channel for the active community
@@ -137,6 +142,30 @@ class ThreadComposerWithData extends Component {
       fetchingLinkPreview: false,
     };
   }
+
+  componentDidMount() {
+    this.refs.titleTextarea.focus();
+  }
+
+  componentWillUpdate(nextProps) {
+    const { isOpen } = nextProps;
+    if (isOpen) {
+      document.addEventListener('keydown', this.handleKeyPress, false);
+    } else {
+      document.removeEventListener('keydown', this.handleKeyPress, false);
+    }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyPress, false);
+  }
+
+  handleKeyPress = e => {
+    // if person taps esc, close the dialog
+    if (e.keyCode === 27) {
+      this.closeComposer();
+    }
+  };
 
   changeTitle = e => {
     const title = e.target.value;

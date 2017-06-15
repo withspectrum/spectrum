@@ -8,8 +8,11 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 import { track } from '../../helpers/events';
 import { Button, TextButton } from '../buttons';
+import Icon from '../../components/icons';
 import {
   Input,
   TextArea,
@@ -23,6 +26,7 @@ import {
   FormTitle,
   Actions,
   ImageInputWrapper,
+  Location,
 } from './style';
 import { editUserMutation } from '../../api/user';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -237,6 +241,12 @@ class UserWithData extends Component {
 
     return (
       <StyledCard>
+        <Location>
+          <Icon glyph="view-back" size={16} />
+          <Link to={`/users/${username}`}>
+            Return to Profile
+          </Link>
+        </Location>
         <FormTitle>Profile Settings</FormTitle>
         <Form onSubmit={this.save}>
           <ImageInputWrapper>
