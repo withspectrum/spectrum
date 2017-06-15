@@ -1,5 +1,4 @@
-const { db } = require('../server/test/db');
+const { setup, teardown } = require('../server/test/db');
 
-afterAll(() => {
-  db.getPoolMaster().drain();
-});
+beforeAll(setup);
+afterAll(teardown);
