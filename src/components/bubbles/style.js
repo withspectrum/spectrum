@@ -18,7 +18,8 @@ export const TextBubble = styled.p`
   font-weight: ${props => (props.me ? `500` : `400`)};
   clear: both;
   white-space: pre-line;
-  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 
   & + & {
     margin-top: 2px;
