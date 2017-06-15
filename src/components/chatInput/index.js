@@ -157,7 +157,7 @@ class ChatInputWithMutation extends Component {
   render() {
     const { state, onFocus, onBlur, onChange } = this.props;
     const { isFocused } = this.state;
-    console.log('editor is focused?', isFocused);
+    
     return (
       <ChatInputWrapper focus={isFocused}>
         <MediaInput onChange={this.sendMediaMessage} />
