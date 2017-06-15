@@ -1,9 +1,15 @@
 /**
  * Use a mock database
  */
-export const db = require('rethinkdbdash')({
+const mockDb = require('rethinkdbdash')({
   db: 'testing',
 });
+
+jest.mock('../models/db', () => ({
+  db: mockDb,
+}));
+
+export const db = mockDb;
 
 const {
   DEFAULT_USERS,
@@ -29,7 +35,10 @@ export const data = {
   usersChannels: DEFAULT_USERS_CHANNELS,
 };
 
-export const setup = db => {
+/**
+ * This is run before all tests in src/setupTests.js
+ */
+export const setup = () => {
   return db
     .dbCreate('testing')
     .run()
@@ -71,10 +80,26 @@ export const setup = db => {
     )
     .catch(err => {
       console.log(err);
+      throw err;
     });
 };
 
-export const teardown = db =>
-  db.dbDrop('testing').run().catch(err => {
-    console.log(err);
-  });
+/**
+ * This is run after all tests in src/setupTests.js
+ */
+export const teardown = () =>
+  db
+    .dbDrop('testing')
+    .run()
+    .then(() => db.getPool().drain())
+    .then(() => {
+      // Tests would stall on CI because for some reason Rethinkdbdash doesn't exit
+      // even after draining the connection pool, so we force it to exit.
+      if (process.env.CI) {
+        setTimeout(() => process.exit(), 1);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
