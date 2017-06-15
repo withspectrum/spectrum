@@ -7,7 +7,7 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
-import generateMetaInfo from '../../../server/shared/generate-meta-info';
+import generateMetaInfo from 'server/shared/generate-meta-info';
 import { toggleChannelSubscriptionMutation } from '../../api/channel';
 import { addToastWithTimeout } from '../../actions/toasts';
 import ThreadComposer from '../../components/threadComposer';
