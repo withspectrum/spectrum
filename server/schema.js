@@ -6,6 +6,7 @@
 const { makeExecutableSchema } = require('graphql-tools');
 //$FlowFixMe
 const { merge } = require('lodash');
+import OpticsAgent from 'optics-agent';
 
 const scalars = require('./types/scalars');
 const generalTypes = require('./types/general');
@@ -112,5 +113,8 @@ const schema = makeExecutableSchema({
     notificationSubscriptions
   ),
 });
+
+// Instrument the schema with Apollo Optics
+OpticsAgent.instrumentSchema(schema);
 
 module.exports = schema;
