@@ -84,6 +84,8 @@ class ChannelViewPure extends Component {
     const communitySlug = match.params.communitySlug;
     const channelSlug = match.params.channelSlug;
 
+    console.log('channel on view ', channel);
+
     if (error) {
       return (
         <AppViewWrapper>

@@ -333,6 +333,10 @@ module.exports = {
               isMemberOfAnotherChannel,
             ])
               .then(([channelToEvaluate, remove, isMemberOfAnotherChannel]) => {
+                console.log(
+                  'isMemberOfAnotherChannel',
+                  isMemberOfAnotherChannel
+                );
                 // if they are a member of another channel, we can continue
                 if (isMemberOfAnotherChannel) {
                   return Promise.all([channelToEvaluate]);

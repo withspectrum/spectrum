@@ -15,7 +15,7 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import { NullCard } from '../upsell';
 import { ChannelListItem } from '../listItems';
 import Icon from '../icons';
-import { Button } from '../buttons';
+import { IconButton, Button } from '../buttons';
 import { LoadingListItem } from '../loading';
 import { MetaData } from './metaData';
 
@@ -87,6 +87,8 @@ class ChannelWithData extends Component {
     const communityOwner = channel.community.communityPermissions.isOwner;
     const channelOwner = channel.channelPermissions.isOwner;
     const member = channel.channelPermissions.isMember;
+
+    console.log('incoming channel to profile ', channel);
 
     const componentSize = profileSize || 'mini';
 
@@ -218,6 +220,42 @@ class ChannelWithData extends Component {
               </Button>}
           </ChannelListItem>
         </ProfileCard>
+      );
+    } else if (componentSize === 'listItemWithAction') {
+      return (
+        <ChannelListItem
+          clickable
+          contents={channel}
+          withDescription={false}
+          meta={`${channel.metaData.members} members`}
+          channelIcon={false}
+        >
+          {currentUser &&
+            member &&
+            <Button
+              loading={isLoading}
+              icon="checkmark"
+              gradientTheme="none"
+              color="text.placeholder"
+              hoverColor="text.placeholder"
+              onClick={() => this.toggleSubscription(channel.id)}
+            >
+              Joined
+            </Button>}
+          {currentUser &&
+            !member &&
+            <Button
+              size={'small'}
+              loading={isLoading}
+              icon="plus-fill"
+              color={'success.default'}
+              gradientTheme="success"
+              loading={isLoading}
+              onClick={() => this.toggleSubscription(channel.id)}
+            >
+              Join
+            </Button>}
+        </ChannelListItem>
       );
     }
   }

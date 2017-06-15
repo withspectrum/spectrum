@@ -109,6 +109,7 @@ export const ListHeader = styled(FlexRow)`
   width: 100%;
   padding-bottom: 8px;
   border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
+  margin-top: ${props => (props.secondary ? '24px' : '0')};
 `;
 
 export const LargeListHeading = styled(H3)`
@@ -153,4 +154,12 @@ export const BadgeContainer = styled(FlexCol)`
   justify-content: center;
   flex: 0 0 40px;
   margin-right: 8px;
+`;
+
+export const Lock = styled.span`
+  color: ${props => props.theme.text.alt};
+  position: relative;
+  top: 2px;
+  margin-left: -2px;
+  margin-right: 4px;
 `;
