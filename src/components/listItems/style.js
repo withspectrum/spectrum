@@ -21,6 +21,20 @@ export const Wrapper = styled(FlexCol)`
   }
 `;
 
+export const WrapperLi = styled.li`
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  padding: 8px 0;
+  justify-content: center;
+  max-width: 100%;
+  list-style-type: none;
+
+  &:not(:first-of-type) {
+    border-top: 2px solid ${props => props.theme.bg.wash};
+  }
+`;
+
 export const Col = styled(FlexCol)`
   flex: 1;
 `;

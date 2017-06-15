@@ -470,7 +470,6 @@ const userIsMemberOfAnyChannelInCommunity = (
     .pluck('isMember')
     .run()
     .then(channels => {
-      console.log('channels being checked', channels);
       // if the channels length is one, it means we are evaulating a user who is leaving the last channel in a community. we return false to trigger a function which will also leave the community
       if (channels.length <= 1) return false;
       // if any of the channels return true for isMember, we return true

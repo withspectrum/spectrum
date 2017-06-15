@@ -13,7 +13,7 @@ import { toggleChannelSubscriptionMutation } from '../../api/channel';
 import { addToastWithTimeout } from '../../actions/toasts';
 
 import { NullCard } from '../upsell';
-import { ChannelListItem } from '../listItems';
+import { ChannelListItem, ChannelListItemLi } from '../listItems';
 import Icon from '../icons';
 import { IconButton, Button } from '../buttons';
 import { LoadingListItem } from '../loading';
@@ -88,8 +88,6 @@ class ChannelWithData extends Component {
     const channelOwner = channel.channelPermissions.isOwner;
     const member = channel.channelPermissions.isMember;
 
-    console.log('incoming channel to profile ', channel);
-
     const componentSize = profileSize || 'mini';
 
     const communityLink = () => {
@@ -134,11 +132,11 @@ class ChannelWithData extends Component {
           />
         );
       } else {
-        return (
-          <Link to={`/${channel.community.slug}/${channel.slug}`}>
-            <ProfileHeaderAction glyph="view-forward" />
-          </Link>
-        );
+        // return (
+        //   <Link to={`/${channel.community.slug}/${channel.slug}`}>
+        //     <ProfileHeaderAction glyph="view-forward" />
+        //   </Link>
+        // );
       }
     };
 
@@ -223,7 +221,7 @@ class ChannelWithData extends Component {
       );
     } else if (componentSize === 'listItemWithAction') {
       return (
-        <ChannelListItem
+        <ChannelListItemLi
           clickable
           contents={channel}
           withDescription={false}
@@ -255,7 +253,7 @@ class ChannelWithData extends Component {
             >
               Join
             </Button>}
-        </ChannelListItem>
+        </ChannelListItemLi>
       );
     }
   }

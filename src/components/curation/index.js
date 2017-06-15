@@ -63,7 +63,6 @@ export const FeaturedCommunityWithData = props => {
   };
 
   const returnButton = () => {
-    console.log(props);
     if (currentUser && !community.communityPermissions.isMember) {
       return (
         <JoinButton

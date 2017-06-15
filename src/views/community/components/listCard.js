@@ -22,7 +22,7 @@ import {
   ListFooter,
 } from '../../../components/listItems/style';
 
-const ListCardPure = ({ data, dispatch }) => {
+const ListCardPure = ({ data, dispatch, currentUser }) => {
   let channels = data.community.channelConnection.edges;
   channels = channels
     .filter(channel => {
@@ -45,9 +45,6 @@ const ListCardPure = ({ data, dispatch }) => {
     channel => !channel.channelPermissions.isMember
   );
 
-  console.log('joined', joinedChannels);
-  console.log('nonjoined', nonJoinedChannels);
-
   if (!!channels) {
     return (
       <StyledCard>
@@ -62,7 +59,34 @@ const ListCardPure = ({ data, dispatch }) => {
             />}
         </ListHeader>
 
-        {!data.community.communityPermissions.isMember &&
+        {!currentUser &&
+          <ListContainer>
+            {channels.map(channel => {
+              return (
+                <Link
+                  key={channel.id}
+                  to={`/${data.variables.slug}/${channel.slug}`}
+                >
+                  <ChannelListItem
+                    clickable
+                    contents={channel}
+                    withDescription={false}
+                    channelIcon
+                    meta={
+                      channel.metaData.members > 1
+                        ? `${channel.metaData.members} members ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `(${channel.pendingUsers.length} pending)` : ``}`
+                        : `${channel.metaData.members} member ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `(${channel.pendingUsers.length} pending)` : ``}`
+                    }
+                  >
+                    <Icon glyph="view-forward" />
+                  </ChannelListItem>
+                </Link>
+              );
+            })}
+          </ListContainer>}
+
+        {currentUser &&
+          !data.community.communityPermissions.isMember &&
           <ListContainer>
             {channels.map(channel => {
               return (
@@ -120,44 +144,20 @@ const ListCardPure = ({ data, dispatch }) => {
           <span>
             <ListHeader secondary>
               <ListHeading>Discover Channels</ListHeading>
-              {data.community.communityPermissions.isOwner &&
-                <IconButton
-                  glyph="plus"
-                  color="text.placeholder"
-                  onClick={() =>
-                    dispatch(openModal('CREATE_CHANNEL_MODAL', data.community))}
-                />}
             </ListHeader>
 
             <ListContainer>
-              {nonJoinedChannels.map(channel => {
-                console.log('channel', channel);
-                return (
-                  <ChannelProfile
-                    key={channel.id}
-                    profileSize="listItemWithAction"
-                    data={{ channel }}
-                  />
-                );
-                // <Link
-                //   key={channel.id}
-                //   to={`/${data.variables.slug}/${channel.slug}`}
-                // >
-                //   <ChannelListItem
-                //     clickable
-                //     contents={channel}
-                //     withDescription={false}
-                //     channelIcon
-                //     meta={
-                //       channel.metaData.members > 1
-                //         ? `${channel.metaData.members} members ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `(${channel.pendingUsers.length} pending)` : ``}`
-                //         : `${channel.metaData.members} member ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `(${channel.pendingUsers.length} pending)` : ``}`
-                //     }
-                //   >
-                //     <Icon glyph="view-forward" />
-                //   </ChannelListItem>
-                // </Link>
-              })}
+              <ul>
+                {nonJoinedChannels.map(channel => {
+                  return (
+                    <ChannelProfile
+                      key={channel.id}
+                      profileSize="listItemWithAction"
+                      data={{ channel }}
+                    />
+                  );
+                })}
+              </ul>
             </ListContainer>
           </span>}
 

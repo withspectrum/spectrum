@@ -8,6 +8,7 @@ import { Avatar } from '../avatar';
 
 import {
   Wrapper,
+  WrapperLi,
   Col,
   Row,
   Heading,
@@ -78,6 +79,36 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
         ? <Description>{props.contents.description}</Description>
         : ''}
     </Wrapper>
+  );
+};
+
+export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
+  return (
+    <WrapperLi clickable={props.clickable}>
+      <Row>
+        <Col>
+          <Link to={`/${props.contents.community.slug}/${props.contents.slug}`}>
+            <Heading>
+              {props.contents.isPrivate &&
+                <Lock>
+                  <Icon
+                    glyph={'private'}
+                    tipText={'Private channel'}
+                    tipLocation="top-right"
+                    size={16}
+                  />
+                </Lock>}
+              {props.contents.name}
+            </Heading>
+          </Link>
+          <Meta>{props.meta}</Meta>
+        </Col>
+        <ActionContainer className={'action'}>{props.children}</ActionContainer>
+      </Row>
+      {!!props.contents.description && props.withDescription
+        ? <Description>{props.contents.description}</Description>
+        : ''}
+    </WrapperLi>
   );
 };
 
