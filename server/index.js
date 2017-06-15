@@ -55,46 +55,11 @@ const app = express();
 import middlewares from './routes/middlewares';
 app.use(middlewares);
 
-if (!IS_PROD) {
-  app.use(
-    '/graphiql',
-    graphiqlExpress({
-      endpointURL: '/api',
-      subscriptionsEndpoint: `ws://localhost:3001/websocket`,
-      query: `{\n  user(id: "58a023a4-912d-48fe-a61c-eec7274f7699") {\n    name\n    username\n    communities {\n      name\n      frequencies {\n        name\n        stories {\n          content {\n            title\n          }\n          messages {\n            message {\n              content\n            }\n          }\n        }\n      }\n    }\n  }\n}`,
-    })
-  );
-}
-
 import authRoutes from './routes/auth';
 app.use('/auth', authRoutes);
-app.use(
-  '/api',
-  graphqlExpress(req => ({
-    schema,
-    formatError: error => {
-      console.log(error);
-      const sentryId = Raven.captureException(
-        error,
-        Raven.parsers.parseRequest(req)
-      );
-      const isUserError = error.originalError
-        ? error.originalError[IsUserError]
-        : false;
-      return {
-        message: isUserError
-          ? error.message
-          : `Internal server error: ${sentryId}`,
-        stack: !IS_PROD ? error.stack.split('\n') : null,
-      };
-    },
-    context: {
-      user: req.user,
-      loaders: createLoaders(),
-      opticsContext: OpticsAgent.context(req),
-    },
-  }))
-);
+
+import apiRoutes from './routes/api';
+app.use('/api', apiRoutes);
 
 // In production use express to serve the React app
 // In development this is done by react-scripts, which starts its own server
