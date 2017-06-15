@@ -17,8 +17,8 @@ export const TextBubble = styled.p`
   align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)}
   font-weight: ${props => (props.me ? `500` : `400`)};
   clear: both;
-  word-wrap: normal;
-  word-break: normal;
+  white-space: pre-line;
+  overflow-wrap: break-word;
 
   & + & {
     margin-top: 2px;
