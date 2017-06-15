@@ -2,50 +2,27 @@
 /**
  * The entry point for the server, this is where everything starts
  */
-const IS_PROD = process.env.NODE_ENV === 'production';
-const PORT = 3001;
-const ONE_YEAR = 31556952000;
-const ONE_DAY = 86400000;
+console.log('Server starting...');
+import path from 'path';
+import fs from 'fs';
+import { createServer } from 'http';
+//$FlowFixMe
+import express from 'express';
+//$FlowFixMe
+import cookieParser from 'cookie-parser';
+import { execute, subscribe } from 'graphql';
+//$FlowFixMe
+import { SubscriptionServer } from 'subscriptions-transport-ws';
 
-const path = require('path');
-const fs = require('fs');
-const { createServer } = require('http');
-const Raven = require('raven');
-//$FlowFixMe
-const express = require('express');
-//$FlowFixMe
-const passport = require('passport');
-//$FlowFixMe
-const session = require('express-session');
-//$FlowFixMe
-const SessionStore = require('session-rethinkdb')(session);
-//$FlowFixMe
-const bodyParser = require('body-parser');
-//$FlowFixMe
-const cookieParser = require('cookie-parser');
-//$FlowFixMe
-const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
-const { execute, subscribe } = require('graphql');
-//$FlowFixMe
-const { SubscriptionServer } = require('subscriptions-transport-ws');
-//$FlowFixMe
-const { apolloUploadExpress } = require('apollo-upload-server');
-//$FlowFixMe
-const cors = require('cors');
-//$FlowFixMe
-const OpticsAgent = require('optics-agent');
-
-const listeners = require('./subscriptions/listeners');
-
-const schema = require('./schema');
-OpticsAgent.instrumentSchema(schema);
-const { init: initPassport } = require('./authentication.js');
+import schema from './schema';
+import { init as initPassport } from './authentication.js';
 import createLoaders from './loaders';
 import getMeta from './utils/get-page-meta';
-import { IsUserError } from './utils/UserError';
 import sessionStore, { SESSION_COOKIE_SECRET } from './utils/session-store';
+import listeners from './subscriptions/listeners';
 
-console.log('Server starting...');
+const IS_PROD = process.env.NODE_ENV === 'production';
+const PORT = 3001;
 
 // Initialize authentication
 initPassport();
