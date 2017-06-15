@@ -8,17 +8,11 @@ import fs from 'fs';
 import { createServer } from 'http';
 //$FlowFixMe
 import express from 'express';
-//$FlowFixMe
-import cookieParser from 'cookie-parser';
-import { execute, subscribe } from 'graphql';
-//$FlowFixMe
-import { SubscriptionServer } from 'subscriptions-transport-ws';
 
 import schema from './schema';
 import { init as initPassport } from './authentication.js';
 import createLoaders from './loaders';
 import getMeta from './utils/get-page-meta';
-import sessionStore, { SESSION_COOKIE_SECRET } from './utils/session-store';
 import listeners from './subscriptions/listeners';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
@@ -76,61 +70,14 @@ export type GraphQLContext = {
 };
 
 const server = createServer(app);
-const sessionCookieParser = cookieParser(SESSION_COOKIE_SECRET);
-const { getUser } = require('./models/user');
-// Start subscriptions server
-const subscriptionsServer = SubscriptionServer.create(
-  {
-    execute,
-    subscribe,
-    schema,
-    onConnect: (connectionParams, rawSocket) =>
-      new Promise((res, rej) => {
-        // Authenticate the connecting user
-        sessionCookieParser(rawSocket.upgradeReq, null, err => {
-          if (err)
-            return res({
-              // TODO: Pass optics to subscriptions context
-              // opticsContext: OpticsAgent.context(req),
-              loaders: createLoaders(),
-            });
-          const sessionId = rawSocket.upgradeReq.signedCookies['connect.sid'];
-          sessionStore.get(sessionId, (err, session) => {
-            if (err || !session || !session.passport || !session.passport.user)
-              return res({
-                // TODO: Pass optics to subscriptions context
-                // opticsContext: OpticsAgent.context(req),
-                loaders: createLoaders(),
-              });
-            getUser({ id: session.passport.user })
-              .then(user => {
-                return res({
-                  user,
-                  // TODO: Pass optics to subscriptions context
-                  // opticsContext: OpticsAgent.context(req),
-                  loaders: createLoaders(),
-                });
-              })
-              .catch(err => {
-                return res({
-                  // TODO: Pass optics to subscriptions context
-                  // opticsContext: OpticsAgent.context(req),
-                  loaders: createLoaders(),
-                });
-              });
-          });
-        });
-      }),
-  },
-  {
-    server,
-    path: '/websocket',
-  }
-);
+
+// Create subscriptions server at /websocket
+import createSubscriptionsServer from './routes/create-subscription-server';
+const subscriptionsServer = createSubscriptionsServer(server, '/websocket');
 
 // Start webserver
 server.listen(PORT);
 
 // Start database listeners
 listeners.start();
-console.log('GraphQL server running!');
+console.log(`GraphQL server running at port ${PORT}!`);
