@@ -4,7 +4,7 @@ import { FlexRow, Transition } from '../globals';
 import Editor from '../../components/editor';
 
 export const ChatInputWrapper = styled(FlexRow)`
-  flex: 0 0 auto;
+  flex: none;
   align-items: center;
   z-index: 200;
   position: relative;
@@ -12,12 +12,17 @@ export const ChatInputWrapper = styled(FlexRow)`
   margin: 0;
   padding: 8px;
   border-top: 2px solid ${({ theme }) => theme.border.default};
-  ${/* background-color: ${({ theme }) => theme.bg.default}; */ ''}
-  border-radius: 0 0 12px 12px;
+
+  @media (max-width: 768px) {
+    bottom: ${props => (props.focus ? '0' : 'auto')};
+    position: ${props => (props.focus ? 'fixed' : 'relative')};
+    background-color: ${props => (props.focus ? props.theme.bg.default : 'transparent')};
+    z-index: 1001;
+  }
 `;
 
 export const Form = styled.form`
-	flex: 0 0 calc(100% - 44px);
+	flex: auto;
 	display: flex;
   min-width: 1px;
   max-width: 100%;
@@ -28,8 +33,8 @@ export const Form = styled.form`
   position: relative;
 `;
 
-export const Input = styled(Editor)`
-	flex: 1 0 auto;
+export const EditorInput = styled(Editor)`
+	flex: auto;
 	font-size: 14px;
 	font-weight: 500;
 	line-height: 20px;
@@ -39,6 +44,7 @@ export const Input = styled(Editor)`
 	padding: 8px 40px 8px 16px;
 	border-radius: 24px;
 	border: 2px solid ${props => props.theme.text.placeholder};
+  border-color: ${props => (props.focus ? props.theme.brand.default : props.theme.text.placeholder)};
 	transition: border 0.3s ease-out;
 	color: ${props => props.theme.text.default};
   overflow-y: scroll;
@@ -46,22 +52,13 @@ export const Input = styled(Editor)`
 	@media (max-width: 768px) {
     font-size: 16px;
 		padding-left: 16px;
-    width: calc(100% - 72px);
+    ${/* width: calc(100% - 72px); */ ''}
   }
 
 	&::placeholder { color: ${({ theme }) => theme.text.placeholder} }
   &::-webkit-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
   &:-moz-placeholder { color: ${({ theme }) => theme.text.placeholder} }
   &:-ms-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
-
-	&:focus {
-		border-color: ${props => props.theme.brand.default};
-		transition: border-color 0.2s ease-in;
-
-		&:hover {
-			border-color: ${props => props.theme.brand.default};
-		}
-	}
 
 	&:hover {
 		border-color: ${props => props.theme.text.alt};
