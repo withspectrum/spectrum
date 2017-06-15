@@ -2,7 +2,7 @@
 // $FlowFixMe
 import { ApolloClient, IntrospectionFragmentMatcher } from 'react-apollo';
 // $FlowFixMe
-import { createNetworkInterface } from 'apollo-upload-client-fork-mxstbr';
+import { createNetworkInterface } from 'apollo-upload-client';
 // $FlowFixMe
 import {
   SubscriptionClient,
@@ -12,7 +12,9 @@ import introspectionQueryResultData from './schema.json';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const wsClient = new SubscriptionClient(
-  `${IS_PROD ? `wss://${window.location.host}` : 'ws://localhost:3001'}/websocket`,
+  `${IS_PROD
+    ? `wss://${window.location.host}`
+    : 'ws://localhost:3001'}/websocket`,
   { reconnect: true }
 );
 

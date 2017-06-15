@@ -406,7 +406,7 @@ export const UpsellToReload = () => {
       heading="Whoops! Someone done goofed."
       copy="Mind reloading?"
     >
-      <Button icon="view-reload" onClick={() => location.reload(true)}>
+      <Button icon="view-reload" onClick={() => window.location.reload(true)}>
         Reload
       </Button>
     </NullCard>

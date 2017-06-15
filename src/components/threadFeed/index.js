@@ -27,7 +27,7 @@ const ErrorState = () => (
     heading={`Whoops!`}
     copy={`Something went wrong on our end... Mind reloading?`}
   >
-    <Button icon="view-reload" onClick={() => location.reload(true)}>
+    <Button icon="view-reload" onClick={() => window.location.reload(true)}>
       Reload
     </Button>
   </NullCard>
