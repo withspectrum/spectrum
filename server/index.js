@@ -12,7 +12,6 @@ const ONE_DAY = 86400000;
 
 const path = require('path');
 const fs = require('fs');
-const { URL } = require('url');
 const { createServer } = require('http');
 const Raven = require('raven');
 //$FlowFixMe
@@ -40,7 +39,6 @@ const cors = require('cors');
 const OpticsAgent = require('optics-agent');
 
 const { db } = require('./models/db');
-import { destroySession } from './models/session';
 const listeners = require('./subscriptions/listeners');
 
 const schema = require('./schema');
@@ -48,6 +46,8 @@ const { init: initPassport } = require('./authentication.js');
 import createLoaders from './loaders';
 import getMeta from './utils/get-page-meta';
 import { IsUserError } from './utils/UserError';
+
+import authRoutes from './routes/auth';
 
 Raven.config(
   'https://3bd8523edd5d43d7998f9b85562d6924:d391ea04b0dc45b28610e7fad735b0d0@sentry.io/154812',
@@ -137,88 +137,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Redirect the user to Twitter for authentication.  When complete, Twitter
-// will redirect the user back to the application at
-//   /auth/twitter/callback
-app.get('/auth/twitter', (req, ...rest) => {
-  let url = IS_PROD ? '/home' : 'http://localhost:3000/home';
-  if (req.query.r) {
-    try {
-      const { hostname } = new URL(req.query.r);
-      const IS_SPECTRUM_URL = hostname.endsWith('spectrum.chat'); // hostname might be spectrum.chat or admin.spectrum.chat
-      const IS_LOCALHOST = hostname === 'localhost';
-      // Make sure the passed redirect URL is a spectrum.chat one
-      if (IS_SPECTRUM_URL || (!IS_PROD && IS_LOCALHOST)) {
-        url = req.query.r;
-      }
-      // Swallow URL parsing errors (when an invalid URL is passed) and redirect to the standard one
-    } catch (err) {
-      console.log(
-        `Invalid URL ("${req.query.r}") passed to /auth/twitter?r query option. Full error:`
-      );
-      console.log(err);
-    }
-  }
-  // Attach the redirectURL to the session so we have it in the /auth/twitter/callback route
-  req.session.redirectURL = url;
-  return new Promise(res => {
-    // Save the new session data to the database before redirecting
-    req.session.save(err => {
-      res(passport.authenticate('twitter')(req, ...rest));
-    });
-  });
-});
-
-// Twitter will redirect the user to this URL after approval.  Finish the
-// authentication process by attempting to obtain an access token.  If
-// access was granted, the user will be logged in.  Otherwise,
-// authentication has failed.
-app.get(
-  '/auth/twitter/callback',
-  passport.authenticate('twitter', {
-    failureRedirect: IS_PROD ? '/' : 'http://localhost:3000/',
-  }),
-  (req, res) => {
-    // Just to make sure we don't fuck up have a fallback URL to redirect to
-    const fallbackURL = IS_PROD ? '/home' : 'http://localhost:3000/home';
-    // req.session.redirectURL is set in the /auth/twitter route
-    const redirectUrl = req.session.redirectURL || fallbackURL;
-    if (req.session.redirectURL) {
-      // Delete the redirectURL from the session again so we don't redirect
-      // to the old URL the next time around
-      req.session.redirectURL = undefined;
-      return new Promise(resolve => {
-        req.session.save(err => {
-          if (err) console.log(err);
-          resolve(res.redirect(redirectUrl));
-        });
-      });
-    } else {
-      res.redirect(redirectUrl);
-    }
-  }
-);
-app.get('/auth/logout', (req, res) => {
-  var sessionCookie = req.cookies['connect.sid'];
-  const HOME = IS_PROD ? '/' : 'http://localhost:3000/';
-  if (req.isUnauthenticated() || !sessionCookie) {
-    return res.redirect(HOME);
-  }
-  var sessionId = sessionCookie.split('.')[0].replace('s:', '');
-  return destroySession(sessionId)
-    .then(() => {
-      // I should not have to do this manually
-      // but it doesn't work otherwise ¯\_(ツ)_/¯
-      res.clearCookie('connect.sid');
-      req.logout();
-      res.redirect(HOME);
-    })
-    .catch(err => {
-      res.clearCookie('connect.sid');
-      console.log(err);
-      res.redirect(HOME);
-    });
-});
+app.use('/auth', authRoutes);
 app.use(
   '/api',
   graphqlExpress(req => ({
