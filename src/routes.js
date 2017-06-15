@@ -40,7 +40,8 @@ const Body = styled(FlexCol)`
   background: ${props => props.theme.bg.wash};
 
   @media(max-width: 768px) {
-    height: ${window.innerHeight}px;
+    height: 100vh;
+    max-height: ${window.innerHeight}px;
   }
 `;
 

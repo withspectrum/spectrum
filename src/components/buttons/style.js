@@ -6,10 +6,11 @@ import { Gradient, Shadow, Transition, hexa } from '../globals';
 
 const baseButton = css`
   display: flex;
-  flex: 0 0 auto;
+  flex: none;
+  align-self: center;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 12px;
   font-weight: 700;
   white-space: nowrap;
   word-break: keep-all;
@@ -19,12 +20,11 @@ const baseButton = css`
   line-height: 1;
   position: relative;
   text-align: center;
-  padding: ${props => (props.icon ? '6px 8px' : '12px 16px')};
+  padding: ${props => (props.icon ? '4px' : '12px 16px')};
 
   &:hover {
-    border-radius: ${props => (props.disabled ? '8px' : '12px')};
     transition: ${Transition.hover.on};
-    box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.high} ${hexa(props.theme.text.default, 0.15)}`)};
+    box-shadow: ${props => (props.disabled ? 'none' : `${Shadow.high} ${hexa(props.theme.bg.reverse, 0.15)}`)};
     opacity: ${props => (props.disabled ? '0.5' : '1')};
   }
 
@@ -53,6 +53,7 @@ export const StyledSolidButton = styled.button`
 
   &:hover {
     background-color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`))};
+    padding: ${props => (props.icon ? '4px 6px' : '12px 18px')};
   }
 
   &:active {
@@ -65,13 +66,13 @@ export const StyledTextButton = styled(StyledSolidButton)`
   background-image: none;
   font-weight: 600;
   color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.color ? props.color : 'text.alt'}`))};
-  transition: color 0.1s ease-out, box-shadow 0.2s ease-out 0.1s, border-radius 0.2s ease-out;
+  transition: color 0.1s ease-out, box-shadow 0.2s ease-out 0.1s, border-radius 0.2s ease-out, padding: 0.2s ease-out;
 
   &:hover {
     background-color: transparent;
     box-shadow: none;
     color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`))};
-    transition: color 0.1s ease-in, box-shadow 0.2s ease-in 0.1s;
+    transition: color 0.1s ease-in, box-shadow 0.2s ease-in 0.1s, padding 0.2s ease-in;
   }
 `;
 
