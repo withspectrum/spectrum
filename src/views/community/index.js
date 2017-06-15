@@ -172,7 +172,7 @@ class CommunityViewPure extends Component {
           <CoverRow className={'flexy'}>
             <Column type="secondary" className={'inset'}>
               <CommunityProfile data={{ community }} profileSize="full" />
-              <ChannelListCard slug={communitySlug} />
+              <ChannelListCard slug={communitySlug.toLowerCase()} />
             </Column>
 
             <Column type="primary">

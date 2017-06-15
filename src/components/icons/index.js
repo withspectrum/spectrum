@@ -433,6 +433,7 @@ class Icon extends React.Component {
         tipText={this.props.tipText}
         tipLocation={this.props.tipLocation}
         onboarding={this.props.onboarding}
+        className={'icon'}
       >
         <InlineSvg
           fillRule="evenodd"

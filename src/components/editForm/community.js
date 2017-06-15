@@ -8,6 +8,8 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 import { track } from '../../helpers/events';
 import {
   editCommunityMutation,
@@ -15,9 +17,9 @@ import {
 } from '../../api/community';
 import { openModal } from '../../actions/modals';
 import { addToastWithTimeout } from '../../actions/toasts';
-
 import { Button, TextButton, IconButton } from '../buttons';
 import { Notice } from '../listItems/style';
+import Icon from '../../components/icons';
 import {
   Input,
   UnderlineInput,
@@ -33,6 +35,7 @@ import {
   Actions,
   TertiaryActionContainer,
   ImageInputWrapper,
+  Location,
 } from './style';
 
 class CommunityWithData extends Component {
@@ -282,6 +285,12 @@ class CommunityWithData extends Component {
 
     return (
       <StyledCard>
+        <Location>
+          <Icon glyph="view-back" size={16} />
+          <Link to={`/${community.slug}`}>
+            Return to Community
+          </Link>
+        </Location>
         <FormTitle>Community Settings</FormTitle>
         <Form onSubmit={this.save}>
           <ImageInputWrapper>

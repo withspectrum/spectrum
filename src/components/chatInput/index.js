@@ -2,11 +2,13 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// // $FlowFixMe
+// $FlowFixMe
+import pure from 'recompose/pure';
+// $FlowFixMe
 import withState from 'recompose/withState';
-// // $FlowFixMe
+// $FlowFixMe
 import withHandlers from 'recompose/withHandlers';
-// // $FlowFixMe
+// $FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
 import { toPlainText, fromPlainText } from '../../components/editor';
@@ -160,7 +162,8 @@ const ChatInput = compose(
     onChange: ({ changeState }) => state => changeState(state),
     clear: ({ changeState }) => () => changeState(fromPlainText('')),
   }),
-  connect()
+  connect(),
+  pure
 )(ChatInputWithMutation);
 
 export default ChatInput;

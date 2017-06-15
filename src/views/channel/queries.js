@@ -70,8 +70,8 @@ const threadsQueryOptions = {
   }),
   options: ({ channelSlug, communitySlug }) => ({
     variables: {
-      channelSlug: channelSlug,
-      communitySlug: communitySlug,
+      channelSlug: channelSlug.toLowerCase(),
+      communitySlug: communitySlug.toLowerCase(),
     },
     reducer: (prev, action, variables) => {
       /*
@@ -163,8 +163,8 @@ export const getChannelThreads = graphql(
 const profileQueryOptions = {
   options: ({ match: { params: { channelSlug, communitySlug } } }) => ({
     variables: {
-      channelSlug,
-      communitySlug,
+      channelSlug: channelSlug.toLowerCase(),
+      communitySlug: communitySlug.toLowerCase(),
     },
     fetchPolicy: 'cache-and-network',
   }),

@@ -36,7 +36,7 @@ export const Composer = styled(Card)`
 
   @media (max-width: 768px) {
     width: calc(100% - 16px);
-    margin: 56px 8px;
+    margin: 48px 8px;
     height: calc(100% - 112px);
     min-height: 240px;
     pointer-events: all;
@@ -114,6 +114,7 @@ export const Actions = styled(FlexRow)`
     bottom: 0;
     flex-direction: column;
     align-items: flex-end;
+    padding: 8px;
   }
 `;
 
@@ -155,12 +156,27 @@ export const Dropdowns = styled(FlexRow)`
     margin-bottom: 8px;
 
     div {
-      flex: 0 0 32px;
+      display: none;
     }
 
     select:nth-of-type(2) {
         flex: 1 0 auto;
+        margin-left: 4px;
       }
+    }
+  }
+`;
+
+export const PublishActions = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    display: flex;
+
+    > button:nth-of-type(2) {
+      display: flex;
+      flex-grow: 1;
     }
   }
 `;

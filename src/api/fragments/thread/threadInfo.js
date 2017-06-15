@@ -11,6 +11,7 @@ export const threadInfoFragment = gql`
       id
       name
       slug
+      isPrivate
       community {
         id
         name

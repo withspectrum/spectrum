@@ -8,6 +8,8 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 import { track } from '../../helpers/events';
 import { editChannelMutation, deleteChannelMutation } from '../../api/channel';
 import { openModal } from '../../actions/modals';
@@ -16,6 +18,7 @@ import { Notice } from '../listItems/style';
 import { Button, TextButton, IconButton } from '../buttons';
 import { NullCard } from '../upsell';
 import { Input, UnderlineInput, TextArea } from '../formElements';
+import Icon from '../../components/icons';
 import {
   StyledCard,
   Form,
@@ -24,6 +27,7 @@ import {
   Description,
   Actions,
   GeneralNotice,
+  Location,
 } from './style';
 
 class ChannelWithData extends Component {
@@ -177,6 +181,12 @@ class ChannelWithData extends Component {
     } else {
       return (
         <StyledCard>
+          <Location>
+            <Icon glyph="view-back" size={16} />
+            <Link to={`/${channel.community.slug}/${channel.slug}`}>
+              Return to Channel
+            </Link>
+          </Location>
           <FormTitle>Channel Settings</FormTitle>
           <Form onSubmit={this.save}>
             <Input defaultValue={name} id="name" onChange={this.handleChange}>
