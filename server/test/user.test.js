@@ -1,9 +1,5 @@
 import { graphql } from 'graphql';
-import { db as mockTestDb, setup, teardown, data } from './db';
 import createLoaders from '../loaders';
-jest.mock('../models/db', () => ({
-  db: mockTestDb,
-}));
 
 import schema from '../schema';
 
@@ -12,9 +8,6 @@ const request = query =>
   graphql(schema, query, undefined, { loaders: createLoaders() });
 
 describe('queries', () => {
-  beforeAll(() => setup(mockTestDb));
-  afterAll(() => teardown(mockTestDb));
-
   it('should fetch a user', () => {
     const query = /* GraphQL */ `
 			{
