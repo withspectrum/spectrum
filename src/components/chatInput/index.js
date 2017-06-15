@@ -13,11 +13,23 @@ import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
 import { toPlainText, fromPlainText } from '../../components/editor';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { Form, Input, ChatInputWrapper, SendButton } from './style';
+import { Form, EditorInput, ChatInputWrapper, SendButton } from './style';
 import { sendMessageMutation } from '../../api/message';
 import MediaInput from '../mediaInput';
 
 class ChatInputWithMutation extends Component {
+  state: {
+    isFocused: boolean,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      isFocused: false,
+    };
+  }
+
   submit = e => {
     e.preventDefault();
 
@@ -130,20 +142,35 @@ class ChatInputWithMutation extends Component {
     };
   };
 
+  onFocus = () => {
+    this.setState({
+      isFocused: true,
+    });
+  };
+
+  onBlur = () => {
+    this.setState({
+      isFocused: false,
+    });
+  };
+
   render() {
     const { state, onFocus, onBlur, onChange } = this.props;
+    const { isFocused } = this.state;
+    console.log('editor is focused?', isFocused);
     return (
-      <ChatInputWrapper>
+      <ChatInputWrapper focus={isFocused}>
         <MediaInput onChange={this.sendMediaMessage} />
-        <Form>
-          <Input
+        <Form focus={isFocused}>
+          <EditorInput
+            focus={isFocused}
             placeholder="Your message here..."
             state={state}
             onEnter={this.handleEnter}
             onChange={onChange}
             markdown={false}
-            onFocus={onFocus}
-            onBlur={onBlur}
+            onFocus={this.onFocus}
+            onBlur={this.onBlur}
             singleLine
             images={false}
             editorRef={editor => this.editor = editor}

@@ -94,11 +94,17 @@ class Editor extends Component {
       images,
       showLinkPreview,
       linkPreview,
+      focus,
       ...rest
     } = this.props;
 
     return (
-      <Wrapper className={className} style={style} onClick={this.focus}>
+      <Wrapper
+        className={className}
+        style={style}
+        onClick={this.focus}
+        focus={focus}
+      >
         <SlateEditor
           state={state}
           onChange={onChange}
