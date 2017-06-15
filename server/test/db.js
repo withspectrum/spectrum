@@ -56,7 +56,7 @@ export const setup = db => {
         // db.table('messages').insert(DEFAULT_MESSAGES).run(),
         db.table('users').insert(DEFAULT_USERS).run(),
         // db.table('reactions').insert(DEFAULT_REACTIONS).run(),
-        db.table('notifications').insert(DEFAULT_NOTIFICATIONS).run(),
+        // db.table('notifications').insert(DEFAULT_NOTIFICATIONS).run(),
         db
           .table('directMessageThreads')
           .insert(DEFAULT_DIRECT_MESSAGE_THREADS)
