@@ -3,20 +3,31 @@ import React from 'react';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
 //$FlowFixMe
+import { connect } from 'react-redux';
+//$FlowFixMe
 import compose from 'recompose/compose';
-
+import { openModal } from '../../../actions/modals';
 import { displayLoadingCard } from '../../../components/loading';
 import { ChannelListItem } from '../../../components/listItems';
-import { IconButton } from '../../../components/buttons';
+import { IconButton, Button } from '../../../components/buttons';
 
-import { StyledCard, ListHeading, ListContainer } from '../style';
+import { StyledCard, ListHeading, ListContainer, ListHeader } from '../style';
 
-const ListCardPure = ({ data }) => {
+const ListCardPure = ({ data, dispatch }) => {
   const channels = data.community.channelConnection.edges;
   if (!!channels) {
     return (
       <StyledCard>
-        <ListHeading>Manage Channels</ListHeading>
+        <ListHeader>
+          <ListHeading>Manage Channels</ListHeading>
+          <Button
+            icon={'plus'}
+            onClick={() =>
+              dispatch(openModal('CREATE_CHANNEL_MODAL', data.community))}
+          >
+            Create Channel
+          </Button>
+        </ListHeader>
         <ListContainer>
           {channels.map(item => {
             return (
@@ -42,6 +53,6 @@ const ListCardPure = ({ data }) => {
   }
 };
 
-const ListCard = compose(displayLoadingCard)(ListCardPure);
+const ListCard = compose(displayLoadingCard, connect())(ListCardPure);
 
 export default ListCard;

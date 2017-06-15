@@ -470,8 +470,6 @@ const userIsMemberOfAnyChannelInCommunity = (
     .pluck('isMember')
     .run()
     .then(channels => {
-      // if the user is not a member of any other channels in the community
-      if (channels.length > 0) return false;
       // if any of the channels return true for isMember, we return true
       return channels.some(channel => channel.isMember);
     });

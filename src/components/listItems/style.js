@@ -21,6 +21,20 @@ export const Wrapper = styled(FlexCol)`
   }
 `;
 
+export const WrapperLi = styled.li`
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  padding: 8px 0;
+  justify-content: center;
+  max-width: 100%;
+  list-style-type: none;
+
+  &:not(:first-of-type) {
+    border-top: 2px solid ${props => props.theme.bg.wash};
+  }
+`;
+
 export const Col = styled(FlexCol)`
   flex: 1;
 `;
@@ -109,6 +123,7 @@ export const ListHeader = styled(FlexRow)`
   width: 100%;
   padding-bottom: 8px;
   border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
+  margin-top: ${props => (props.secondary ? '24px' : '0')};
 `;
 
 export const LargeListHeading = styled(H3)`
@@ -153,4 +168,12 @@ export const BadgeContainer = styled(FlexCol)`
   justify-content: center;
   flex: 0 0 40px;
   margin-right: 8px;
+`;
+
+export const Lock = styled.span`
+  color: ${props => props.theme.text.alt};
+  position: relative;
+  top: 2px;
+  margin-left: -2px;
+  margin-right: 4px;
 `;

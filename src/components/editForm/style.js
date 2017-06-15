@@ -89,3 +89,28 @@ export const ImageInputWrapper = styled(FlexCol)`
     left: 24px;
   }
 `;
+
+export const Location = styled(FlexRow)`
+  font-weight: 500;
+  color: ${({ theme }) => theme.text.alt};
+  font-size: 14px;
+  margin-bottom: 8px;
+
+  > div {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+
+  > span {
+    padding: 0 4px;
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+
+  > a:hover {
+    color: ${({ theme }) => theme.brand.alt};
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;

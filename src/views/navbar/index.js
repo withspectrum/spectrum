@@ -110,6 +110,14 @@ class Navbar extends Component {
     };
   };
 
+  formattedCount = count => {
+    if (count > 10) {
+      return '10+';
+    } else if (count > 0) {
+      return count;
+    } else return false;
+  };
+
   componentDidMount() {
     const { data: { user }, dispatch, history, match } = this.props;
     const currentUser = user;
@@ -248,11 +256,7 @@ class Navbar extends Component {
             </LogoLink>
           </Section>
           <Section right>
-            <Button
-              onClick={this.login}
-              icon="twitter"
-              style={{ padding: '2px 4px' }}
-            >
+            <Button onClick={this.login} icon="twitter">
               Sign in
             </Button>
           </Section>
@@ -261,65 +265,44 @@ class Navbar extends Component {
     } else {
       return (
         <Nav>
-          <Section left>
+          <Section left hideOnMobile>
             <LogoLink to="/">
               <Logo src="/img/mark-white.png" role="presentation" />
             </LogoLink>
 
-            <IconLink
-              data-active={match.url === '/' && match.isExact}
-              data-mobileWidth={'third'}
-              to="/"
-            >
+            <IconLink data-active={match.url === '/' && match.isExact} to="/">
               <Icon glyph="home" />
               <Label>Home</Label>
             </IconLink>
 
             <IconLink
               data-active={match.url.includes('/messages')}
-              data-mobileWidth={'third'}
               to="/messages"
               onClick={this.markDmNotificationsAsSeen}
+              withCount={this.formattedCount(dmUnseenCount)}
             >
               <Icon glyph={dmUnseenCount > 0 ? 'message-fill' : 'message'} />
-              {dmUnseenCount > 0
-                ? <DmUnseenCount size={dmUnseenCount >= 10 ? 'large' : 'small'}>
-                    {dmUnseenCount >= 10 ? '10+' : dmUnseenCount}
-                  </DmUnseenCount>
-                : null}
               <Label>Messages</Label>
             </IconLink>
 
-            <IconLink
-              data-active={match.url === '/explore'}
-              data-mobileWidth={'third'}
-              to="/explore"
-            >
+            <IconLink data-active={match.url === '/explore'} to="/explore">
               <Icon glyph="explore" />
               <Label>Explore</Label>
             </IconLink>
           </Section>
 
-          <Section right>
+          <Section right hideOnMobile>
             <IconDrop onMouseLeave={this.markAllNotificationsSeen}>
               <IconLink
                 data-active={match.url === '/notifications'}
-                data-mobileWidth={'half'}
                 to="/notifications"
+                withCount={this.formattedCount(allUnseenCount)}
               >
                 <Icon
                   glyph={
                     allUnseenCount > 0 ? 'notification-fill' : 'notification'
                   }
                 />
-                {allUnseenCount > 0
-                  ? <UnseenCount
-                      size={allUnseenCount >= 10 ? 'large' : 'small'}
-                    >
-                      {allUnseenCount >= 10 ? '10+' : allUnseenCount}
-                    </UnseenCount>
-                  : null}
-                <LabelForTab>Notifications</LabelForTab>
               </IconLink>
               <NotificationDropdown
                 rawNotifications={notifications}
@@ -337,15 +320,53 @@ class Navbar extends Component {
                 <UserProfileAvatar
                   src={`${currentUser.profilePhoto}`}
                   isPro={currentUser.isPro}
-                  size="24"
-                  radius="12"
                 />
-                <LabelForTab>Profile</LabelForTab>
               </IconLink>
               <ProfileDropdown logout={this.logout} user={currentUser} />
             </IconDrop>
           </Section>
+          <Section hideOnDesktop>
+            <IconLink data-active={match.url === '/' && match.isExact} to="/">
+              <Icon glyph="home" />
+              <Label>Home</Label>
+            </IconLink>
 
+            <IconLink
+              data-active={match.url.includes('/messages')}
+              to="/messages"
+              onClick={this.markDmNotificationsAsSeen}
+              withCount={this.formattedCount(dmUnseenCount)}
+            >
+              <Icon glyph={dmUnseenCount > 0 ? 'message-fill' : 'message'} />
+
+              <Label>Messages</Label>
+            </IconLink>
+            <IconLink
+              data-active={match.url === '/notifications'}
+              to="/notifications"
+              withCount={this.formattedCount(allUnseenCount)}
+            >
+              <Icon
+                glyph={
+                  allUnseenCount > 0 ? 'notification-fill' : 'notification'
+                }
+              />
+              <Label>Notifications</Label>
+            </IconLink>
+
+            <IconLink data-active={match.url === '/explore'} to="/explore">
+              <Icon glyph="explore" />
+              <Label>Explore</Label>
+            </IconLink>
+
+            <IconLink
+              data-active={match.url === `/users/${currentUser.username}`}
+              to={`/users/${currentUser.username}`}
+            >
+              <Icon glyph="profile" />
+              <Label>Profile</Label>
+            </IconLink>
+          </Section>
         </Nav>
       );
     }

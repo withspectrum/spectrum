@@ -5,7 +5,6 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-preset-flow": "^6.23.0",
-    "firebase-tools": "^3.5.0",
     "flow-bin": "^0.43.0",
     "lint-staged": "^3.3.0",
     "nodemon": "^1.11.0",
@@ -38,8 +37,6 @@
     "express-pino-logger": "^2.0.0",
     "express-session": "^1.15.2",
     "faker": "^4.1.0",
-    "firebase": "^3.7.2",
-    "firebase-admin": "^4.1.4",
     "for-own": "^1.0.0",
     "graphql-date": "^1.0.3",
     "graphql-server-express": "0.8.x",

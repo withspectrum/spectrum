@@ -8,6 +8,7 @@ import { Avatar } from '../avatar';
 
 import {
   Wrapper,
+  WrapperLi,
   Col,
   Row,
   Heading,
@@ -16,6 +17,7 @@ import {
   ActionContainer,
   BadgeContainer,
   ChannelTypeIndicator,
+  Lock,
 } from './style';
 
 type CardProps = {
@@ -54,23 +56,20 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
   return (
     <Wrapper clickable={props.clickable}>
       <Row>
-        {props.channelIcon &&
-          <ChannelTypeIndicator>
-            {props.contents.isPrivate
-              ? <Icon
-                  glyph="private"
-                  tipText={'Private channel'}
-                  tipLocation="top-right"
-                />
-              : <Icon
-                  glyph="channel"
-                  tipText={'Channel'}
-                  tipLocation="top-right"
-                />}
-          </ChannelTypeIndicator>}
         <Col>
           <Link to={`/${props.contents.community.slug}/${props.contents.slug}`}>
-            <Heading>{props.contents.name}</Heading>
+            <Heading>
+              {props.contents.isPrivate &&
+                <Lock>
+                  <Icon
+                    glyph={'private'}
+                    tipText={'Private channel'}
+                    tipLocation="top-right"
+                    size={16}
+                  />
+                </Lock>}
+              {props.contents.name}
+            </Heading>
           </Link>
           <Meta>{props.meta}</Meta>
         </Col>
@@ -80,6 +79,36 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
         ? <Description>{props.contents.description}</Description>
         : ''}
     </Wrapper>
+  );
+};
+
+export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
+  return (
+    <WrapperLi clickable={props.clickable}>
+      <Row>
+        <Col>
+          <Link to={`/${props.contents.community.slug}/${props.contents.slug}`}>
+            <Heading>
+              {props.contents.isPrivate &&
+                <Lock>
+                  <Icon
+                    glyph={'private'}
+                    tipText={'Private channel'}
+                    tipLocation="top-right"
+                    size={16}
+                  />
+                </Lock>}
+              {props.contents.name}
+            </Heading>
+          </Link>
+          <Meta>{props.meta}</Meta>
+        </Col>
+        <ActionContainer className={'action'}>{props.children}</ActionContainer>
+      </Row>
+      {!!props.contents.description && props.withDescription
+        ? <Description>{props.contents.description}</Description>
+        : ''}
+    </WrapperLi>
   );
 };
 

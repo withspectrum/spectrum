@@ -16,7 +16,7 @@ export const CommunityAvatar = styled.img`
   height: 40px;
   width: 40px;
   flex: 0 0 40px;
-  margin-right: 16px;
+  margin-right: 8px;
   border-radius: 8px;
   object-fit: cover;
   background-color: ${({ theme }) => theme.generic.default};

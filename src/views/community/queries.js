@@ -73,7 +73,7 @@ const threadsQueryOptions = {
   }),
   options: ({ slug, params }) => ({
     variables: {
-      slug: slug,
+      slug: slug.toLowerCase(),
     },
     reducer: (prev, action, variables) => {
       /*
@@ -165,7 +165,7 @@ export const getCommunityThreads = graphql(
 const profileQueryOptions = {
   options: ({ match: { params: { communitySlug } } }) => ({
     variables: {
-      slug: communitySlug,
+      slug: communitySlug.toLowerCase(),
     },
     fetchPolicy: 'cache-and-network',
   }),

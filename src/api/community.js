@@ -2,7 +2,9 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { communityInfoFragment } from './fragments/community/communityInfo';
-// import { GET_CURRENT_USER_COMMUNITIES_QUERY } from '../views/dashboard/queries';
+import { channelInfoFragment } from './fragments/channel/channelInfo';
+import { userInfoFragment } from './fragments/user/userInfo';
+import { channelMetaDataFragment } from './fragments/channel/channelMetaData';
 
 /*
   Create a new community
@@ -108,9 +110,23 @@ const TOGGLE_COMMUNITY_MEMBERSHIP_MUTATION = gql`
   mutation toggleCommunityMembership($communityId: ID!) {
     toggleCommunityMembership (communityId: $communityId) {
       ...communityInfo
+      channelConnection {
+        edges {
+          node {
+            ...channelInfo
+            ...channelMetaData
+            pendingUsers {
+              ...userInfo
+            }
+          }
+        }
+      }
     }
   }
   ${communityInfoFragment}
+  ${channelInfoFragment}
+  ${userInfoFragment}
+  ${channelMetaDataFragment}
 `;
 
 const TOGGLE_COMMUNITY_MEMBERSHIP_OPTIONS = {
