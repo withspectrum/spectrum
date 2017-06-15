@@ -316,23 +316,25 @@ module.exports = {
             currentUser.id
           );
 
-          // check to see if the user is a member of any other channels
-          // in that community. if they are, we can return. if they are
-          // not a member of any other channels in that community then we
-          // know that this is the *last* channel they are leaving and they
-          // should also be removed from the parent community itself
-          const isMemberOfAnotherChannel = userIsMemberOfAnyChannelInCommunity(
-            channelToEvaluate.communityId,
-            currentUser.id
-          );
-
           return (
-            Promise.all([
-              channelToEvaluate,
-              removeRelationship,
-              isMemberOfAnotherChannel,
-            ])
-              .then(([channelToEvaluate, remove, isMemberOfAnotherChannel]) => {
+            Promise.all([channelToEvaluate, removeRelationship])
+              .then(([channelToEvaluate, remove]) => {
+                // check to see if the user is a member of any other channels
+                // in that community. if they are, we can return. if they are
+                // not a member of any other channels in that community then we
+                // know that this is the *last* channel they are leaving and they
+                // should also be removed from the parent community itself
+                const isMemberOfAnotherChannel = userIsMemberOfAnyChannelInCommunity(
+                  channelToEvaluate.communityId,
+                  currentUser.id
+                );
+
+                return Promise.all([
+                  channelToEvaluate,
+                  isMemberOfAnotherChannel,
+                ]);
+              })
+              .then(([channelToEvaluate, isMemberOfAnotherChannel]) => {
                 // if they are a member of another channel, we can continue
                 if (isMemberOfAnotherChannel) {
                   return Promise.all([channelToEvaluate]);
