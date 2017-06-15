@@ -10,3 +10,4 @@ debug
 server/.env
 build-server
 build-worker
+package-lock.json
