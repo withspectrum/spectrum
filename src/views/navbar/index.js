@@ -15,7 +15,6 @@ import {
   markDirectMessageNotificationsSeenMutation,
 } from '../../api/notification';
 import { SERVER_URL } from '../../api';
-import { setUserLastSeenMutation } from '../../api/user';
 import Icon from '../../components/icons';
 import { displayLoadingNavbar } from '../../components/loading';
 import { Button } from '../../components/buttons';
@@ -124,12 +123,6 @@ class Navbar extends Component {
 
     if (currentUser && currentUser !== null) {
       dispatch(saveUserDataToLocalStorage(user));
-
-      // set a timeout to update the user's last seen time
-      const FIFTY_SECONDS = 50000;
-      this.interval = setInterval(() => {
-        this.props.setUserLastSeen(currentUser.id);
-      }, FIFTY_SECONDS);
 
       // if the user lands on /home, it means they just logged in. If this code
       // runs, we know a user was returned successfully and set to localStorage,
@@ -383,7 +376,6 @@ export default compose(
   markNotificationsSeenMutation,
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
-  setUserLastSeenMutation,
   withRouter,
   displayLoadingNavbar,
   connect(mapStateToProps)

@@ -13,9 +13,29 @@ export const SESSION_COOKIE_SECRET =
 // We need a custom cookie parser for session cookies to do auth in websockets
 export const sessionCookieParser = cookieParser(SESSION_COOKIE_SECRET);
 
+/**
+ * Get the sessions' users' ID of a req manually, needed for websocket authentication
+ */
+export const getUserIdFromReq = (req: any): Promise<string> =>
+  new Promise((res, rej) => {
+    sessionCookieParser(req, null, err => {
+      if (err) return rej(err);
+
+      const sessionId = req.signedCookies['connect.sid'];
+      if (!sessionId) return rej();
+      sessionStore.get(sessionId, (err, session) => {
+        if (err || !session || !session.passport || !session.passport.user) {
+          return rej(err);
+        }
+
+        return res(session.passport.user);
+      });
+    });
+  });
+
 const SessionStore = RethinkSessionStore(session);
 
-export default new SessionStore(db, {
+const sessionStore = new SessionStore(db, {
   db: 'spectrum',
   table: 'sessions',
   // I'm a bit unclear what this does, it's set to 60 seconds by default
@@ -27,3 +47,5 @@ export default new SessionStore(db, {
   // be perfectly fine.
   clearInterval: ONE_DAY,
 });
+
+export default sessionStore;
