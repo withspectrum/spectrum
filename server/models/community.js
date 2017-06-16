@@ -516,7 +516,7 @@ const getTopCommunities = (amount: number): Array<Object> => {
 const getRecentCommunities = (amount: number): Array<Object> => {
   return db
     .table('communities')
-    .orderBy(db.desc('createdAt'))
+    .orderBy({ index: db.desc('createdAt') })
     .filter(community => db.not(community.hasFields('deletedAt')))
     .limit(10)
     .run();
