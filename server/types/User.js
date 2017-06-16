@@ -107,7 +107,6 @@ const User = /* GraphQL */ `
 		editUser(input: EditUserInput!): User
 		upgradeToPro(input: UpgradeToProInput!): User
 		downgradeFromPro: User
-		setUserLastSeen(userId: ID!): User
 	}
 `;
 

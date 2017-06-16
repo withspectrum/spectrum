@@ -185,31 +185,3 @@ export const GET_CURRENT_USER_PROFILE_QUERY = gql`
   ${userInfoFragment}
 `;
 export const getCurrentUserProfile = graphql(GET_CURRENT_USER_PROFILE_QUERY);
-
-/*
-  Upgrade a user to Pro
-*/
-const SET_USER_LAST_SEEN_MUTATION = gql`
-  mutation setUserLastSeen($userId: ID!) {
-    setUserLastSeen(userId: $userId) {
-      ...userInfo
-    }
-  }
-  ${userInfoFragment}
-`;
-
-const SET_USER_LAST_SEEN_OPTIONS = {
-  props: ({ userId, mutate }) => ({
-    setUserLastSeen: userId =>
-      mutate({
-        variables: {
-          userId,
-        },
-      }),
-  }),
-};
-
-export const setUserLastSeenMutation = graphql(
-  SET_USER_LAST_SEEN_MUTATION,
-  SET_USER_LAST_SEEN_OPTIONS
-);

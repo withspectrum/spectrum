@@ -298,11 +298,19 @@ const editUser = (
     });
 };
 
-const setUserLastSeen = (id: string) => {
+const setUserOnline = (id: string, isOnline: boolean) => {
+  let data = {
+    isOnline,
+  };
+
+  // If a user is going offline, store their lastSeen
+  if (isOnline === false) {
+    data.lastSeen = new Date();
+  }
   return db
     .table('users')
     .get(id)
-    .update({ lastSeen: new Date() }, { returnChanges: true })
+    .update(data, { returnChanges: true })
     .run()
     .then(result => result.changes[0].new_val);
 };
@@ -316,5 +324,5 @@ module.exports = {
   storeUser,
   editUser,
   getEverything,
-  setUserLastSeen,
+  setUserOnline,
 };
