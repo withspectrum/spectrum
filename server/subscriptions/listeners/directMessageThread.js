@@ -1,7 +1,7 @@
 // @flow
 const {
   listenToUpdatedDirectMessageThreads,
-} = require('../../models/directMessageThreads');
+} = require('../../models/directMessageThread');
 const pubsub = require('./pubsub');
 const channels = require('./channels');
 

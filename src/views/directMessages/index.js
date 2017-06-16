@@ -86,10 +86,14 @@ class DirectMessages extends Component {
       window.location.href = '/';
     }
 
-    const threads = data.user.directMessageThreadsConnection.edges.map(
-      thread => thread.node
-    );
-
+    const threads = data.user.directMessageThreadsConnection.edges
+      .map(thread => thread.node)
+      .sort((a, b) => {
+        const x = new Date(a.threadLastActive).getTime();
+        const y = new Date(b.threadLastActive).getTime();
+        const val = y - x;
+        return val;
+      });
     // if the user is on a phone, only render one view column at a time
     if (isMobile) {
       // if there's a threadId, that column should be a threadDetail

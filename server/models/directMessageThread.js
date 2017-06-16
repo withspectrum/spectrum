@@ -19,7 +19,6 @@ const getDirectMessageThreadsByUser = (
       left: ['id', 'createdAt', 'threadId', 'userId', 'lastActive', 'lastSeen'],
     })
     .zip()
-    .orderBy(db.desc('threadLastActive'))
     .run();
 };
 
@@ -54,20 +53,22 @@ const hasChanged = (field: string) =>
 const THREAD_LAST_ACTIVE_CHANGED = hasChanged('threadLastActive');
 
 const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
+  console.log('\n 👂 Listening for new or changed direct message threads');
   return db
-    .table('usersDirectMessageThreads')
+    .table('directMessageThreads')
     .changes({
       includeInitial: false,
     })
     .filter(NEW_DOCUMENTS.or(THREAD_LAST_ACTIVE_CHANGED))('new_val')
-    .eqJoin('threadId', db.table('directMessageThreads'))
+    .eqJoin('id', db.table('usersDirectMessageThreads'), { index: 'threadId' })
     .without({
-      left: ['id', 'createdAt', 'threadId', 'userId', 'lastActive', 'lastSeen'],
+      right: ['id', 'createdAt', 'threadId', 'lastActive', 'lastSeen'],
     })
     .zip()
     .run({ cursor: true }, (err, cursor) => {
       if (err) throw err;
       cursor.each((err, data) => {
+        console.log('\n 👉 db record updated \n', data);
         if (err) throw err;
         // Call the passed callback with the notification
         cb(data);

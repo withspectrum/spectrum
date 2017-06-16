@@ -78,6 +78,22 @@ export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_OPTIONS = {
 
           console.log('prev', prev);
           console.log('subscriptionData', subscriptionData);
+
+          // Add the new notification to the data
+          return Object.assign({}, prev, {
+            ...prev,
+            directMessageThreadsConnection: {
+              ...prev.user.directMessageThreadsConnection,
+              edges: [
+                ...prev.user.directMessageThreadsConnection.edges,
+                {
+                  node: updatedDirectMessageThread,
+                  cursor: '__this-is-a-cursor__',
+                  __typename: 'DirectMessageThread',
+                },
+              ],
+            },
+          });
         },
       });
     },

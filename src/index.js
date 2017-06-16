@@ -62,15 +62,15 @@ try {
   render();
 }
 
-registerServiceWorker().then(({ newContent }: ServiceWorkerResult) => {
-  if (newContent) {
-    store.dispatch(
-      addToastWithTimeout(
-        'success',
-        'A new version of Spectrum is available, refresh the page to see it! 🚀'
-      )
-    );
-  }
-  // We don't show a message on first cache, simply because the API isn't cached offline
-  // so the app isn't offline usable, it's just cached so the first pageload is much faster
-});
+// registerServiceWorker().then(({ newContent }: ServiceWorkerResult) => {
+//   if (newContent) {
+//     store.dispatch(
+//       addToastWithTimeout(
+//         'success',
+//         'A new version of Spectrum is available, refresh the page to see it! 🚀'
+//       )
+//     );
+//   }
+//   // We don't show a message on first cache, simply because the API isn't cached offline
+//   // so the app isn't offline usable, it's just cached so the first pageload is much faster
+// });

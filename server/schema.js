@@ -43,6 +43,7 @@ const userMutations = require('./mutations/user');
 
 const messageSubscriptions = require('./subscriptions/message');
 const notificationSubscriptions = require('./subscriptions/notification');
+const directMessageThreadSubscriptions = require('./subscriptions/directMessageThread');
 
 const Root = /* GraphQL */ `
 	# The dummy queries and mutations are necessary because
@@ -110,7 +111,8 @@ const schema = makeExecutableSchema({
     userMutations,
     // subscriptions
     messageSubscriptions,
-    notificationSubscriptions
+    notificationSubscriptions,
+    directMessageThreadSubscriptions
   ),
 });
 

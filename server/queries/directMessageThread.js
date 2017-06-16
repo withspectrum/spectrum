@@ -18,7 +18,9 @@ type DirectMessageUser = {
 module.exports = {
   Query: {
     directMessageThread: (_: any, { id }: { id: String }) =>
-      getDirectMessageThread(id),
+      getDirectMessageThread(id).then(
+        data => console.log('\n\nquerying', data) || data
+      ),
   },
   DirectMessageThread: {
     messageConnection: (
