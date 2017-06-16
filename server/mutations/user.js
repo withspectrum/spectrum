@@ -1,5 +1,5 @@
 // @flow
-import { editUser, setUserLastSeen } from '../models/user';
+import { editUser } from '../models/user';
 import type { EditUserArguments } from '../models/user';
 // $FlowFixMe
 import UserError from '../utils/UserError';
@@ -17,10 +17,6 @@ module.exports = {
       }
 
       return editUser(args, currentUser.id);
-    },
-    setUserLastSeen: (_, __, { user }) => {
-      if (!user) return;
-      return setUserLastSeen(user.id);
     },
   },
 };
