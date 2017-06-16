@@ -21,6 +21,7 @@ export const getThreadsByChannel = (
   channelId: string
 ): Promise<Array<Object>> => {
   return db
+    .table('threads')
     .between([channelId, db.minval], [channelId, db.maxval], {
       index: 'channelIdAndLastActive',
       leftBound: 'open',
@@ -47,9 +48,13 @@ export const getThreadsByCommunity = (
 ): Promise<Array<Object>> => {
   return db
     .table('threads')
-    .getAll(communityId, { index: 'communityId' })
+    .between([communityId, db.minval], [communityId, db.maxval], {
+      index: 'communityIdAndLastActive',
+      leftBound: 'open',
+      rightBound: 'open',
+    })
+    .orderBy({ index: db.desc('communityIdAndLastActive') })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .run();
 };
 

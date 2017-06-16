@@ -18,6 +18,14 @@ exports.up = function(r, conn) {
         r.row('lastActive'),
       ])
       .run(conn),
+    // threads#communityIdAndLastActive
+    r
+      .table('threads')
+      .indexCreate('communityIdAndLastActive', [
+        r.row('communityId'),
+        r.row('lastActive'),
+      ])
+      .run(conn),
   ]).catch(err => {
     console.log(err);
     throw err;
