@@ -4,6 +4,7 @@ import { Avatar } from '../../../components/avatar';
 import {
   AvatarContainer,
   TwoAvatarContainer,
+  TwoAvatarWrap,
   ThreeAvatarContainer,
   Remainder,
 } from './style';
@@ -28,13 +29,15 @@ export const renderAvatars = users => {
       <TwoAvatarContainer>
         {users.map(user => {
           return (
-            <Avatar
-              isOnline={users.isOnline}
-              key={user.id}
-              size={34}
-              radius={34}
-              src={user.profilePhoto}
-            />
+            <TwoAvatarWrap>
+              <Avatar
+                isOnline={users.isOnline}
+                key={user.id}
+                size={34}
+                radius={34}
+                src={user.profilePhoto}
+              />
+            </TwoAvatarWrap>
           );
         })}
       </TwoAvatarContainer>

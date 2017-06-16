@@ -182,6 +182,27 @@ export const TwoAvatarContainer = styled(AvatarContainer)`
   }
 `;
 
+export const TwoAvatarWrap = styled(AvatarContainer)`
+  &:first-child {
+    position: absolute;
+    z-index: 2;
+    top: 4px;
+    left: 0;
+    width: 34px;
+    height: 34px;
+  }
+
+  &:last-child {
+    position: absolute;
+    z-index: 3;
+    bottom: 4px;
+    right: 0;
+    margin: 0;
+    width: 34px;
+    height: 34px;
+  }
+`;
+
 export const ThreeAvatarContainer = styled(AvatarContainer)`
   display: flex;
   flex-wrap: wrap;
