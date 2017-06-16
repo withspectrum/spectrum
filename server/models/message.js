@@ -17,8 +17,10 @@ const getMessage = (messageId: string): Promise<Object> => {
 const getMessages = (threadId: String): Promise<Array<Object>> => {
   return db
     .table('messages')
-    .getAll(threadId, { index: 'threadId' })
-    .orderBy(db.asc('timestamp'))
+    .between([threadId, db.minval], [threadId, db.maxval], {
+      index: 'threadIdAndTimestamp',
+    })
+    .orderBy({ index: 'threadIdAndTimestamp' })
     .run();
 };
 
@@ -33,12 +35,9 @@ const getLastMessage = (threadId: string): Promise<Object> => {
 const getMediaMessagesForThread = (
   threadId: String
 ): Promise<Array<Object>> => {
-  return db
-    .table('messages')
-    .getAll(threadId, { index: 'threadId' })
-    .filter({ messageType: 'media' })
-    .orderBy(db.asc('timestamp'))
-    .run();
+  return getMessages(threadId).then(messages =>
+    messages.filter(({ messageType }) => messageType === 'media')
+  );
 };
 
 const storeMessage = (message: Object, userId: string): Promise<Object> => {

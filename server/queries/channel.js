@@ -3,7 +3,6 @@ const {
   getChannelBySlug,
   getChannelMetaData,
   getChannelMemberCount,
-  getTopChannels,
 } = require('../models/channel');
 const {
   getUserPermissionsInChannel,
@@ -28,8 +27,6 @@ module.exports = {
         return getChannelBySlug(args.channelSlug, args.communitySlug);
       return null;
     },
-    topChannels: (_: any, { amount = 30 }: { amount: number }) =>
-      getTopChannels(amount),
   },
   Channel: {
     memberCount: ({ id }: { id: string }) => getChannelMemberCount(id),
