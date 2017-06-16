@@ -5,10 +5,7 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
 import { track } from '../../../helpers/events';
-import {
-  setLastSeenMutation,
-  GET_DIRECT_MESSAGE_THREAD_QUERY,
-} from '../../../api/directMessageThread';
+import { setLastSeenMutation } from '../../../api/directMessageThread';
 import Messages from '../components/messages';
 import Header from '../components/header';
 import ChatInput from '../../../components/chatInput';

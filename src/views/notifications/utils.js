@@ -16,7 +16,7 @@ export const getDistinctNotifications = array => {
   let unique = {};
   let distinct = [];
   for (let i in array) {
-    if (typeof unique[array[i].id] == 'undefined') {
+    if (typeof unique[array[i].id] === 'undefined') {
       distinct.push(array[i]);
     }
     unique[array[i].id] = 0;

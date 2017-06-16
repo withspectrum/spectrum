@@ -53,7 +53,6 @@ const hasChanged = (field: string) =>
 const THREAD_LAST_ACTIVE_CHANGED = hasChanged('threadLastActive');
 
 const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
-  console.log('\n 👂 Listening for new or changed direct message threads');
   return db
     .table('directMessageThreads')
     .changes({
@@ -68,7 +67,7 @@ const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
     .run({ cursor: true }, (err, cursor) => {
       if (err) throw err;
       cursor.each((err, data) => {
-        console.log('\n 👉 db record updated \n', data);
+        console.log('Returning new thread to client', data);
         if (err) throw err;
         // Call the passed callback with the notification
         cb(data);

@@ -148,7 +148,6 @@ export function timeDifferenceShort(current, previous) {
   const msPerMinute = 60 * 1000;
   const msPerHour = msPerMinute * 60;
   const msPerDay = msPerHour * 24;
-  const msPerMonth = msPerDay * 30;
   const msPerYear = msPerDay * 365;
 
   let elapsed = current - previous;

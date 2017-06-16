@@ -1,6 +1,5 @@
 //@flow
 import React from 'react';
-import Titlebar from '../../titlebar';
 import {
   StyledHeader,
   PhotosContainer,

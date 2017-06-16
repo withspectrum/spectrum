@@ -88,7 +88,7 @@ class UpsellNewUser extends Component {
       <NullCard bg="onboarding" repeat={true} noPadding>
         <Section>
           <LargeEmoji>
-            👋
+            <span role="img" aria-label="Howdy!">👋</span>
           </LargeEmoji>
           <Title>Howdy, {user.name}!</Title>
           <Subtitle>
@@ -123,6 +123,7 @@ class UpsellNewUser extends Component {
             <a
               href={`https://www.facebook.com/sharer/sharer.php?u=https://spectrum.chat&t=Come hang out with me on Spectrum, a new place on the internet for communities!`}
               target="_blank"
+              rel="noopener noreferrer"
             >
               <Button
                 icon="facebook"
@@ -136,6 +137,7 @@ class UpsellNewUser extends Component {
             <a
               href={`https://twitter.com/share?text=Come hang out with me on @withspectrum, a new place on the internet for communities!&url=https://spectrum.chat`}
               target="_blank"
+              rel="noopener noreferrer"
             >
               <Button
                 icon="twitter"

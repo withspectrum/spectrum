@@ -166,7 +166,7 @@ class ChatInputWithMutation extends Component {
   };
 
   render() {
-    const { state, onFocus, onBlur, onChange } = this.props;
+    const { state, onChange } = this.props;
     const { isFocused } = this.state;
 
     return (

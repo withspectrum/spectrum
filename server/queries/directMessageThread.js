@@ -18,9 +18,7 @@ type DirectMessageUser = {
 module.exports = {
   Query: {
     directMessageThread: (_: any, { id }: { id: String }) =>
-      getDirectMessageThread(id).then(
-        data => console.log('\n\nquerying', data) || data
-      ),
+      getDirectMessageThread(id),
   },
   DirectMessageThread: {
     messageConnection: (
@@ -50,11 +48,8 @@ module.exports = {
     },
     snippet: ({ id }) => {
       return getLastMessage(id).then(message => {
-        if (message) {
-          return message.content.body;
-        } else {
-          return 'No messages yet...';
-        }
+        if (!message) return 'No messages yet...';
+        return message.content.body;
       });
     },
   },

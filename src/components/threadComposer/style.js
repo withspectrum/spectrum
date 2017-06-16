@@ -167,20 +167,6 @@ export const Dropdowns = styled(FlexRow)`
   }
 `;
 
-export const PublishActions = styled.div`
-  display: none;
-
-  @media (max-width: 768px) {
-    width: 100%;
-    display: flex;
-
-    > button:nth-of-type(2) {
-      display: flex;
-      flex-grow: 1;
-    }
-  }
-`;
-
 // these are style objects because i'm custom styling another react component to handle autoresizing
 
 export const ThreadTitle = {

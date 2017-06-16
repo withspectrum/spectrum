@@ -11,7 +11,6 @@ import {
   NotificationCard,
   TextContent,
   NotificationListRow,
-  Timestamp,
   JoinContext,
   Content,
 } from '../style';

@@ -16,7 +16,6 @@ import {
   Description,
   ActionContainer,
   BadgeContainer,
-  ChannelTypeIndicator,
   Lock,
 } from './style';
 

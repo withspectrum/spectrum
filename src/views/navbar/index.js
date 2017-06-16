@@ -34,10 +34,7 @@ import {
   IconDrop,
   IconLink,
   Label,
-  LabelForTab,
   UserProfileAvatar,
-  UnseenCount,
-  DmUnseenCount,
 } from './style';
 
 class Navbar extends Component {
@@ -83,6 +80,7 @@ class Navbar extends Component {
           if (notification.context.id !== id) return notification;
           // if the notification context matches the current route, go ahead and mark it as seen
           this.props.markSingleNotificationSeen(notification.id);
+          return null;
         })
         .filter(
           notification => notification.context.type === 'DIRECT_MESSAGE_THREAD'
@@ -98,6 +96,7 @@ class Navbar extends Component {
           if (notification.context.id !== id) return notification;
           // if the notification context matches the current route, go ahead and mark it as seen
           this.props.markSingleNotificationSeen(notification.id);
+          return null;
         })
         .filter(
           notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
@@ -136,7 +135,6 @@ class Navbar extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { match } = this.props;
     if (!this.props.data.user) return;
     if (!this.props.notificationsQuery) return;
     if (!prevProps.notificationsQuery) {

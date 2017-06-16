@@ -55,7 +55,7 @@ class Homepage extends Component {
                 <span>Sign in with Twitter</span>
               </Button>
             </FlexCol>
-            <img src="/img/login.svg" role="presentation" />
+            <img src="/img/login.svg" alt="Where communities are built." />
           </SectionContent>
           <GoopyOne />
         </SectionOne>
@@ -64,7 +64,10 @@ class Homepage extends Component {
           <ClusterTwo src="/img/cluster-2.svg" role="presentation" />
           <ClusterThree src="/img/cluster-5.svg" role="presentation" />
           <SectionContent>
-            <img src="/img/connect.svg" role="presentation" />
+            <img
+              src="/img/connect.svg"
+              alt="All your favorite communities. Only one you."
+            />
             <FlexCol>
               <Tagline>All your favorite communities. Only one you.</Tagline>
 
@@ -89,7 +92,7 @@ class Homepage extends Component {
                 Spectrum keeps each conversation in its own unique and shareable place so that you can find it whenever you're ready.
               </Copy>
             </FlexCol>
-            <img src="/img/share.svg" role="presentation" />
+            <img src="/img/share.svg" alt="A better way to stay connected." />
           </SectionContent>
           <GoopyThree />
         </SectionThree>
@@ -99,7 +102,7 @@ class Homepage extends Component {
             <ClusterTwo src="/img/cluster-1.svg" role="presentation" />
             <ClusterThree src="/img/cluster-5.svg" role="presentation" />
             <ClusterFour src="/img/cluster-4.svg" role="presentation" />
-            <img src="/img/create.svg" role="presentation" />
+            <img src="/img/create.svg" alt="Come on in, the chatter's fine." />
             <FlexCol>
               <Tagline>Come on in, the chatter's fine.</Tagline>
               <Copy>

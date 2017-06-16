@@ -156,14 +156,6 @@ export const Notice = styled(Description)`
   color: #715818;
 `;
 
-export const ChannelTypeIndicator = styled(FlexCol)`
-  justify-content: center;
-  align-items: center;
-  color: ${({ theme }) => theme.border.default};
-  flex: 0 0 40px;
-  margin-right: 12px;
-`;
-
 export const BadgeContainer = styled(FlexCol)`
   justify-content: center;
   flex: 0 0 40px;

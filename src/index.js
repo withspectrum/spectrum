@@ -11,9 +11,9 @@ import { getItemFromStorage } from './helpers/localStorage';
 import { theme } from './components/theme';
 import Routes from './routes';
 import Homepage from './views/homepage';
-import { addToastWithTimeout } from './actions/toasts';
-import registerServiceWorker from './registerServiceWorker';
-import type { ServiceWorkerResult } from './registerServiceWorker';
+// import { addToastWithTimeout } from './actions/toasts';
+// import registerServiceWorker from './registerServiceWorker';
+// import type { ServiceWorkerResult } from './registerServiceWorker';
 
 const existingUser = getItemFromStorage('spectrum');
 let store;

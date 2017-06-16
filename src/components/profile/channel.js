@@ -15,7 +15,7 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import { NullCard } from '../upsell';
 import { ChannelListItem, ChannelListItemLi } from '../listItems';
 import Icon from '../icons';
-import { IconButton, Button } from '../buttons';
+import { Button } from '../buttons';
 import { LoadingListItem } from '../loading';
 import { MetaData } from './metaData';
 
@@ -248,7 +248,6 @@ class ChannelWithData extends Component {
               icon="plus-fill"
               color={'success.default'}
               gradientTheme="success"
-              loading={isLoading}
               onClick={() => this.toggleSubscription(channel.id)}
             >
               Join

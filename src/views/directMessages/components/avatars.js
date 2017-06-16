@@ -29,10 +29,9 @@ export const renderAvatars = users => {
       <TwoAvatarContainer>
         {users.map(user => {
           return (
-            <TwoAvatarWrap>
+            <TwoAvatarWrap key={user.id}>
               <Avatar
                 isOnline={users.isOnline}
-                key={user.id}
                 size={34}
                 radius={34}
                 src={user.profilePhoto}
