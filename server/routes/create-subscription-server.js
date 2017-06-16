@@ -4,7 +4,7 @@ import { execute, subscribe } from 'graphql';
 
 import schema from '../schema';
 import createLoaders from '../loaders';
-import { getUser } from '../models/user';
+import { getUser, setUserOnline } from '../models/user';
 import sessionStore, { sessionCookieParser } from '../utils/session-store';
 
 /**
@@ -17,6 +17,20 @@ const createSubscriptionsServer = (server: any, path: string) => {
       execute,
       subscribe,
       schema,
+      onDisconnect: rawSocket => {
+        sessionCookieParser(rawSocket.upgradeReq, null, err => {
+          if (err) return;
+
+          const sessionId = rawSocket.upgradeReq.signedCookies['connect.sid'];
+          sessionStore.get(sessionId, (err, session) => {
+            if (err || !session || !session.passport || !session.passport.user)
+              return;
+
+            // Set the user to offline
+            setUserOnline(session.passport.user, false);
+          });
+        });
+      },
       onConnect: (connectionParams, rawSocket) =>
         new Promise((res, rej) => {
           // Authenticate the connecting user
@@ -37,7 +51,8 @@ const createSubscriptionsServer = (server: any, path: string) => {
                   // opticsContext: OpticsAgent.context(req),
                   loaders: createLoaders(),
                 });
-              getUser({ id: session.passport.user })
+              // Set the user to "online"
+              setUserOnline(session.passport.user, true)
                 .then(user => {
                   return res({
                     user,

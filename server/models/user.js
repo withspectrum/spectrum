@@ -307,6 +307,15 @@ const setUserLastSeen = (id: string) => {
     .then(result => result.changes[0].new_val);
 };
 
+const setUserOnline = (id: string, isOnline: boolean) => {
+  return db
+    .table('users')
+    .get(id)
+    .update({ isOnline }, { returnChanges: true })
+    .run()
+    .then(result => result.changes[0].new_val);
+};
+
 module.exports = {
   getUser,
   getUsersThreadCount,
@@ -317,4 +326,5 @@ module.exports = {
   editUser,
   getEverything,
   setUserLastSeen,
+  setUserOnline,
 };
