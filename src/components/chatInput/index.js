@@ -38,7 +38,6 @@ class ChatInputWithMutation extends Component {
       thread,
       threadType,
       createThread,
-      refetchThread,
       dispatch,
       sendMessage,
       clear,
@@ -62,10 +61,6 @@ class ChatInputWithMutation extends Component {
         messageBody: toPlainText(state),
         messageType: 'text',
       });
-    }
-
-    if (threadType === 'directMessageThread') {
-      refetchThread();
     }
 
     // user is sending a message to an existing thread id - either a thread
@@ -143,12 +138,28 @@ class ChatInputWithMutation extends Component {
   };
 
   onFocus = () => {
+    /*
+      The new direct message thread component needs to know if the chat input is focused. That component passes down an onFocus prop, which should be called if it exists
+    */
+    const { onFocus } = this.props;
+    if (onFocus) {
+      onFocus();
+    }
+
     this.setState({
       isFocused: true,
     });
   };
 
   onBlur = () => {
+    /*
+      The new direct message thread component needs to know if the chat input is focused. That component passes down an onBlur prop, which should be called if it exists
+    */
+    const { onBlur } = this.props;
+    if (onBlur) {
+      onBlur();
+    }
+
     this.setState({
       isFocused: false,
     });
@@ -157,7 +168,7 @@ class ChatInputWithMutation extends Component {
   render() {
     const { state, onFocus, onBlur, onChange } = this.props;
     const { isFocused } = this.state;
-    
+
     return (
       <ChatInputWrapper focus={isFocused}>
         <MediaInput onChange={this.sendMediaMessage} />

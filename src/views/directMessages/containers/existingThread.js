@@ -48,18 +48,6 @@ class ExistingThread extends Component {
     }
   };
 
-  refetchThread = () => {
-    const id = this.props.match.params.threadId;
-    this.props.client
-      .query({
-        query: GET_DIRECT_MESSAGE_THREAD_QUERY,
-        variables: {
-          id,
-        },
-      })
-      .then(({ data }) => {});
-  };
-
   render() {
     const id = this.props.match.params.threadId;
     const { threads, currentUser } = this.props;
@@ -82,7 +70,6 @@ class ExistingThread extends Component {
           <ChatInput
             thread={id}
             threadType={'directMessageThread'}
-            refetchThread={this.refetchThread}
             forceScrollToBottom={this.forceScrollToBottom}
           />
         </MessagesContainer>
