@@ -81,7 +81,6 @@ const Channel = /* GraphQL */ `
 
 	extend type Query {
 		channel(id: ID, channelSlug: String, communitySlug: String): Channel
-		topChannels(amount: Int = 30): [Channel!]
 	}
 
 	extend type Mutation {

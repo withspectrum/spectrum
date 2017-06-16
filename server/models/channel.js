@@ -286,10 +286,6 @@ const deleteChannel = (channelId: string): Promise<Boolean> => {
     });
 };
 
-const getTopChannels = (amount: number): Array<Object> => {
-  return db.table('channels').orderBy(db.desc('members')).limit(amount).run();
-};
-
 const getChannelMemberCount = (channelId: string): number => {
   return db.table('channels').get(channelId)('members').count().run();
 };
