@@ -10,6 +10,14 @@ exports.up = function(r, conn) {
         r.row('timestamp'),
       ])
       .run(conn),
+    // threads#channelIdAndLastActive
+    r
+      .table('threads')
+      .indexCreate('channelIdAndLastActive', [
+        r.row('channelId'),
+        r.row('lastActive'),
+      ])
+      .run(conn),
   ]).catch(err => {
     console.log(err);
     throw err;

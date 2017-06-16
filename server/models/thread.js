@@ -21,10 +21,13 @@ export const getThreadsByChannel = (
   channelId: string
 ): Promise<Array<Object>> => {
   return db
-    .table('threads')
-    .getAll(channelId, { index: 'channelId' })
+    .between([channelId, db.minval], [channelId, db.maxval], {
+      index: 'channelIdAndLastActive',
+      leftBound: 'open',
+      rightBound: 'open',
+    })
+    .orderBy({ index: db.desc('channelIdAndLastActive') })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .run();
 };
 
