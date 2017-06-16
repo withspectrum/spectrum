@@ -301,7 +301,6 @@ module.exports = {
   createGeneralChannel,
   editChannel,
   deleteChannel,
-  getTopChannels,
   getChannelMemberCount,
   getChannels,
 };
