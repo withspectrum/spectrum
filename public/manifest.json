@@ -1,0 +1,30 @@
+{
+  "short_name": "Spectrum",
+  "name": "Spectrum",
+  "icons": [
+    {
+      "src": "/img/apple-icon-57x57-precomposed.png",
+      "sizes": "57x57",
+      "type": "image/png"
+    },
+    {
+      "src": "/img/apple-icon-72x72-precomposed.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/img/apple-icon-114x114-precomposed.png",
+      "sizes": "114x114",
+      "type": "image/png"
+    },
+    {
+      "src": "/img/apple-icon-144x144-precomposed.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html?utm_source=homescreen",
+  "display": "standalone",
+  "theme_color": "#171A21",
+  "background_color": "#171A21"
+}

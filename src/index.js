@@ -11,6 +11,9 @@ import { getItemFromStorage } from './helpers/localStorage';
 import { theme } from './components/theme';
 import Routes from './routes';
 import Homepage from './views/homepage';
+import { addToastWithTimeout } from './actions/toasts';
+import registerServiceWorker from './registerServiceWorker';
+import type { ServiceWorkerResult } from './registerServiceWorker';
 
 const existingUser = getItemFromStorage('spectrum');
 let store;
@@ -58,3 +61,16 @@ try {
 } catch (err) {
   render();
 }
+
+registerServiceWorker().then(({ newContent }: ServiceWorkerResult) => {
+  if (newContent) {
+    store.dispatch(
+      addToastWithTimeout(
+        'success',
+        'A new version of Spectrum is available, refresh the page to see it! 🚀'
+      )
+    );
+  }
+  // We don't show a message on first cache, simply because the API isn't cached offline
+  // so the app isn't offline usable, it's just cached so the first pageload is much faster
+});
