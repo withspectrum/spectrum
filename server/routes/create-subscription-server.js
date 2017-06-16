@@ -5,7 +5,10 @@ import { execute, subscribe } from 'graphql';
 import schema from '../schema';
 import createLoaders from '../loaders';
 import { getUser, setUserOnline } from '../models/user';
-import sessionStore, { sessionCookieParser } from '../utils/session-store';
+import sessionStore, {
+  sessionCookieParser,
+  getUserIdFromReq,
+} from '../utils/session-store';
 
 /**
  * Create a subscription server based on an exisiting express.js server
@@ -18,59 +21,32 @@ const createSubscriptionsServer = (server: any, path: string) => {
       subscribe,
       schema,
       onDisconnect: rawSocket => {
-        sessionCookieParser(rawSocket.upgradeReq, null, err => {
-          if (err) return;
-
-          const sessionId = rawSocket.upgradeReq.signedCookies['connect.sid'];
-          sessionStore.get(sessionId, (err, session) => {
-            if (err || !session || !session.passport || !session.passport.user)
-              return;
-
-            // Set the user to offline
-            setUserOnline(session.passport.user, false);
+        getUserIdFromReq(rawSocket.upgradeReq)
+          .then(id => {
+            setUserOnline(id, false);
+          })
+          .catch(err => {
+            // Ignore errors
           });
-        });
       },
       onConnect: (connectionParams, rawSocket) =>
-        new Promise((res, rej) => {
-          // Authenticate the connecting user
-          sessionCookieParser(rawSocket.upgradeReq, null, err => {
-            if (err)
-              return res({
-                // TODO: Pass optics to subscriptions context
-                // opticsContext: OpticsAgent.context(req),
-                loaders: createLoaders(),
-              });
-            const sessionId = rawSocket.upgradeReq.signedCookies['connect.sid'];
-            sessionStore.get(sessionId, (err, session) => {
-              if (
-                err || !session || !session.passport || !session.passport.user
-              )
-                return res({
-                  // TODO: Pass optics to subscriptions context
-                  // opticsContext: OpticsAgent.context(req),
-                  loaders: createLoaders(),
-                });
-              // Set the user to "online"
-              setUserOnline(session.passport.user, true)
-                .then(user => {
-                  return res({
-                    user,
-                    // TODO: Pass optics to subscriptions context
-                    // opticsContext: OpticsAgent.context(req),
-                    loaders: createLoaders(),
-                  });
-                })
-                .catch(err => {
-                  return res({
-                    // TODO: Pass optics to subscriptions context
-                    // opticsContext: OpticsAgent.context(req),
-                    loaders: createLoaders(),
-                  });
-                });
-            });
-          });
-        }),
+        getUserIdFromReq(rawSocket.upgradeReq)
+          .then(id => setUserOnline(id, true))
+          .then(user => {
+            return {
+              user,
+              // TODO: Pass optics to subscriptions context
+              // opticsContext: OpticsAgent.context(req),
+              loaders: createLoaders(),
+            };
+          })
+          .catch(err => {
+            return {
+              // TODO: Pass optics to subscriptions context
+              // opticsContext: OpticsAgent.context(req),
+              loaders: createLoaders(),
+            };
+          }),
     },
     {
       server,
