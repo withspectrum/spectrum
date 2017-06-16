@@ -26,6 +26,8 @@ exports.up = function(r, conn) {
         r.row('lastActive'),
       ])
       .run(conn),
+    // community#createdAt
+    r.table('communities').indexCreate('createdAt').run(conn),
   ]).catch(err => {
     console.log(err);
     throw err;
