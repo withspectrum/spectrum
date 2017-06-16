@@ -11,6 +11,7 @@ import { getItemFromStorage } from './helpers/localStorage';
 import { theme } from './components/theme';
 import Routes from './routes';
 import Homepage from './views/homepage';
+import registerServiceWorker from './registerServiceWorker';
 
 const existingUser = getItemFromStorage('spectrum');
 let store;
@@ -58,3 +59,4 @@ try {
 } catch (err) {
   render();
 }
+registerServiceWorker();
