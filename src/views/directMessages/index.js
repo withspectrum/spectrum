@@ -46,8 +46,27 @@ class DirectMessages extends Component {
       });
   };
 
+  subscribe = () => {
+    this.setState({
+      subscription: this.props.subscribeToUpdatedDirectMessageThreads(),
+    });
+  };
+
+  unsubscribe = () => {
+    const { subscription } = this.state;
+    if (subscription) {
+      // This unsubscribes the subscription
+      subscription();
+    }
+  };
+
   componentDidMount() {
     this.markDmNotificationsSeen();
+    this.subscribe();
+  }
+
+  componentWillUnmount() {
+    this.unsubscribe();
   }
 
   setActiveThread = id => {

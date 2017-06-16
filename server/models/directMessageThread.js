@@ -1,5 +1,6 @@
 //@flow
 const { db } = require('./db');
+import { NEW_DOCUMENTS } from './utils';
 
 const getDirectMessageThread = (
   directMessageThreadId: String
@@ -48,9 +49,36 @@ const setDirectMessageThreadLastActive = (id: string): Object => {
     .run();
 };
 
+const hasChanged = (field: string) =>
+  db.row('old_val')(field).ne(db.row('new_val')(field));
+const THREAD_LAST_ACTIVE_CHANGED = hasChanged('threadLastActive');
+
+const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
+  return db
+    .table('usersDirectMessageThreads')
+    .changes({
+      includeInitial: false,
+    })
+    .filter(NEW_DOCUMENTS.or(THREAD_LAST_ACTIVE_CHANGED))('new_val')
+    .eqJoin('threadId', db.table('directMessageThreads'))
+    .without({
+      left: ['id', 'createdAt', 'threadId', 'userId', 'lastActive', 'lastSeen'],
+    })
+    .zip()
+    .run({ cursor: true }, (err, cursor) => {
+      if (err) throw err;
+      cursor.each((err, data) => {
+        if (err) throw err;
+        // Call the passed callback with the notification
+        cb(data);
+      });
+    });
+};
+
 module.exports = {
   createDirectMessageThread,
   getDirectMessageThread,
   getDirectMessageThreadsByUser,
   setDirectMessageThreadLastActive,
+  listenToUpdatedDirectMessageThreads,
 };

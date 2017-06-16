@@ -5,6 +5,9 @@ import { messageInfoFragment } from './fragments/message/messageInfo';
 import {
   notificationInfoFragment,
 } from './fragments/notification/notificationInfo';
+import {
+  directMessageThreadInfoFragment,
+} from './fragments/directMessageThread/directMessageThreadInfo';
 
 export const subscribeToNewMessages = gql`
 	subscription subscribeToNewMessages($thread: ID!) {
@@ -22,4 +25,13 @@ export const subscribeToNewNotifications = gql`
     }
   }
   ${notificationInfoFragment}
+`;
+
+export const subscribeToUpdatedDirectMessageThreads = gql`
+  subscription subscribeToUpdatedDirectMessageThreads {
+    directMessageThreadUpdated {
+      ...directMessageThreadInfo
+    }
+  }
+  ${directMessageThreadInfoFragment}
 `;
