@@ -80,8 +80,6 @@ const getChannelsByUser = (userId: string): Promise<Array<Object>> => {
       .zip()
       // ensure we don't return any deleted channels
       .filter(channel => db.not(channel.hasFields('deletedAt')))
-      // sort by channel creation date
-      .orderBy('createdAt')
       .run()
   );
 };

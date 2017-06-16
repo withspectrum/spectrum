@@ -51,8 +51,6 @@ const getCommunitiesByUser = (userId: string): Promise<Array<Object>> => {
       // ensure we don't return any deleted communities
       .filter(community => db.not(community.hasFields('deletedAt')))
       .filter(row => row('isMember').eq(true).or(row('isOwner').eq(true)))
-      // sort by community creation date
-      .orderBy('createdAt')
       .run()
   );
 };
