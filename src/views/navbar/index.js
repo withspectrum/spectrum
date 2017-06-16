@@ -20,6 +20,7 @@ import { displayLoadingNavbar } from '../../components/loading';
 import { Button } from '../../components/buttons';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
+import Head from '../../components/head';
 import { getDistinctNotifications } from '../../views/notifications/utils';
 import {
   saveUserDataToLocalStorage,
@@ -256,8 +257,10 @@ class Navbar extends Component {
         </Nav>
       );
     } else {
+      const showUnreadFavicon = dmUnseenCount > 0 || allUnseenCount > 0;
       return (
         <Nav>
+          <Head showUnreadFavicon={showUnreadFavicon} />
           <Section left hideOnMobile>
             <LogoLink to="/">
               <Logo src="/img/mark-white.png" role="presentation" />
