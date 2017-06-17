@@ -71,8 +71,8 @@ export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_OPTIONS = {
             subscriptionData.data.directMessageThreadUpdated;
           if (!updatedDirectMessageThread) return prev;
 
-          console.log('prev', prev);
-          console.log('subscriptionData', subscriptionData);
+          // console.log('prev', prev);
+          // console.log('subscriptionData', subscriptionData);
 
           // Add the new notification to the data
           return Object.assign({}, prev, {

@@ -15,50 +15,7 @@ import {
 } from './style';
 
 class ListCardItemDirectMessageThread extends Component {
-  state: {
-    isUnread: boolean,
-  };
-
-  constructor(props) {
-    super(props);
-    const { thread, currentUser } = props;
-
-    // convert the server time to an iso timestamp
-    const timestamp = new Date(thread.threadLastActive).getTime();
-
-    const currentParticipant = thread.participants.filter(
-      user => user.userId === currentUser.id
-    )[0];
-
-    const currentParticipantLastActiveTimestamp = new Date(
-      currentParticipant.lastSeen
-    ).getTime();
-
-    const isUnread = currentParticipantLastActiveTimestamp < timestamp;
-
-    this.state = {
-      isUnread,
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (
-      prevProps.thread.threadLastActive !== this.props.thread.threadLastActive
-    ) {
-      this.setState({
-        isUnread: true,
-      });
-    }
-  }
-
-  markAsRead = () => {
-    this.setState({
-      isUnread: false,
-    });
-  };
-
   render() {
-    const { isUnread } = this.state;
     const { thread, currentUser, active } = this.props;
 
     // convert the server time to an iso timestamp
@@ -81,8 +38,18 @@ class ListCardItemDirectMessageThread extends Component {
     // pass participants to a helper function to generate the avatar displays
     const avatars = renderAvatars(participants);
 
+    const currentParticipant = thread.participants.filter(
+      user => user.userId === currentUser.id
+    )[0];
+
+    const currentParticipantLastActiveTimestamp = new Date(
+      currentParticipant.lastSeen
+    ).getTime();
+
+    const isUnread = currentParticipantLastActiveTimestamp < timestamp;
+
     return (
-      <Wrapper active={active} isUnread={isUnread} onClick={this.markAsRead}>
+      <Wrapper active={active} isUnread={isUnread}>
         <Link to={`/messages/${thread.id}`}>
           <Row>
             {avatars}
