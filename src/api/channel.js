@@ -226,3 +226,59 @@ export const getChannelById = graphql(
 	`,
   getChannelByIdOptions
 );
+
+/*
+  Gets pending users in a channel
+*/
+const getPendingUsersOptions = {
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+    fetchPolicy: 'cache-and-network',
+  }),
+};
+
+export const getPendingUsersQuery = graphql(
+  gql`
+		query getChannel($id: ID) {
+			channel(id: $id) {
+        ...channelInfo
+        pendingUsers {
+          ...userInfo
+        }
+      }
+		}
+    ${userInfoFragment}
+    ${channelInfoFragment}
+	`,
+  getPendingUsersOptions
+);
+
+/*
+  Gets pending users in a channel
+*/
+const getBlockedUsersOptions = {
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+    fetchPolicy: 'cache-and-network',
+  }),
+};
+
+export const getBlockedUsersQuery = graphql(
+  gql`
+		query getChannel($id: ID) {
+			channel(id: $id) {
+        ...channelInfo
+        blockedUsers {
+          ...userInfo
+        }
+      }
+		}
+    ${userInfoFragment}
+    ${channelInfoFragment}
+	`,
+  getBlockedUsersOptions
+);

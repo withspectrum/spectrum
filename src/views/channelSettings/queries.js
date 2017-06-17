@@ -1,6 +1,5 @@
 import { graphql, gql } from 'react-apollo';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
-import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import {
   channelMetaDataFragment,
 } from '../../api/fragments/channel/channelMetaData';
@@ -11,17 +10,10 @@ export const getThisChannel = graphql(
 			channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
         ...channelInfo
         ...channelMetaData
-        pendingUsers {
-          ...userInfo
-        }
-        blockedUsers {
-          ...userInfo
-        }
       }
 		}
     ${channelInfoFragment}
     ${channelMetaDataFragment}
-    ${userInfoFragment}
 	`,
   {
     options: ({ match }) => ({

@@ -2,6 +2,10 @@
 import React from 'react';
 import { UserListItem } from '../../../components/listItems';
 import { TextButton } from '../../../components/buttons';
+import pure from 'recompose/pure';
+import compose from 'recompose/compose';
+import { displayLoadingCard } from '../../../components/loading';
+import { getPendingUsersQuery } from '../../../api/channel';
 import {
   StyledCard,
   LargeListHeading,
@@ -9,20 +13,22 @@ import {
   Description,
 } from '../../../components/listItems/style';
 
-const PendingUsers = ({ users, togglePending }) => {
+const PendingUsers = ({
+  data: { channel: { pendingUsers }, togglePending },
+}) => {
   return (
     <StyledCard>
       <LargeListHeading>
         Pending Users
       </LargeListHeading>
-      {users.length > 0 &&
+      {pendingUsers.length > 0 &&
         <Description>
           Approving requests will allow a person to view all threads and messages in this channel, as well as allow them to post their own threads.
         </Description>}
 
       <ListContainer>
-        {users &&
-          users.map(user => {
+        {pendingUsers &&
+          pendingUsers.map(user => {
             return (
               <section key={user.id}>
                 <UserListItem user={user}>
@@ -50,7 +56,7 @@ const PendingUsers = ({ users, togglePending }) => {
             );
           })}
 
-        {users.length <= 0 &&
+        {pendingUsers.length <= 0 &&
           <Description>
             There are no pending requests to join this channel.
           </Description>}
@@ -60,4 +66,6 @@ const PendingUsers = ({ users, togglePending }) => {
   );
 };
 
-export default PendingUsers;
+export default compose(getPendingUsersQuery, displayLoadingCard, pure)(
+  PendingUsers
+);
