@@ -5,6 +5,7 @@
 const messageListeners = require('./message');
 const threadListeners = require('./thread');
 const notificationListeners = require('./notification');
+const directMessageThreadListeners = require('./directMessageThread');
 
 module.exports = {
   // Start listening to database changes
@@ -12,5 +13,6 @@ module.exports = {
     threadListeners();
     messageListeners();
     notificationListeners();
+    directMessageThreadListeners();
   },
 };

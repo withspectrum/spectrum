@@ -9,6 +9,7 @@ import Icon from '../../../components/icons';
 import { HorizontalRule } from '../../../components/globals';
 import { getDirectMessageThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
+import { MessagesScrollWrapper } from './style';
 
 class MessagesWithData extends Component {
   state: {
@@ -66,7 +67,7 @@ class MessagesWithData extends Component {
     const sortedMessages = sortAndGroupMessages(messages);
 
     return (
-      <div style={{ width: '100%' }}>
+      <MessagesScrollWrapper>
         <div style={{ padding: '24px 0', background: '#fff' }}>
           <HorizontalRule>
             <hr />
@@ -82,7 +83,7 @@ class MessagesWithData extends Component {
           threadId={this.props.id}
           threadType={'directMessageThread'}
         />
-      </div>
+      </MessagesScrollWrapper>
     );
   }
 }

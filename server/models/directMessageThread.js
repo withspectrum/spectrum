@@ -1,5 +1,6 @@
 //@flow
 const { db } = require('./db');
+import { NEW_DOCUMENTS } from './utils';
 
 const getDirectMessageThread = (
   directMessageThreadId: String
@@ -18,7 +19,6 @@ const getDirectMessageThreadsByUser = (
       left: ['id', 'createdAt', 'threadId', 'userId', 'lastActive', 'lastSeen'],
     })
     .zip()
-    .orderBy(db.desc('threadLastActive'))
     .run();
 };
 
@@ -48,9 +48,37 @@ const setDirectMessageThreadLastActive = (id: string): Object => {
     .run();
 };
 
+const hasChanged = (field: string) =>
+  db.row('old_val')(field).ne(db.row('new_val')(field));
+const THREAD_LAST_ACTIVE_CHANGED = hasChanged('threadLastActive');
+
+const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
+  return db
+    .table('directMessageThreads')
+    .changes({
+      includeInitial: false,
+    })
+    .filter(NEW_DOCUMENTS.or(THREAD_LAST_ACTIVE_CHANGED))('new_val')
+    .eqJoin('id', db.table('usersDirectMessageThreads'), { index: 'threadId' })
+    .without({
+      right: ['id', 'createdAt', 'threadId', 'lastActive', 'lastSeen'],
+    })
+    .zip()
+    .run({ cursor: true }, (err, cursor) => {
+      if (err) throw err;
+      cursor.each((err, data) => {
+        console.log('Returning new thread to client', data);
+        if (err) throw err;
+        // Call the passed callback with the notification
+        cb(data);
+      });
+    });
+};
+
 module.exports = {
   createDirectMessageThread,
   getDirectMessageThread,
   getDirectMessageThreadsByUser,
   setDirectMessageThreadLastActive,
+  listenToUpdatedDirectMessageThreads,
 };

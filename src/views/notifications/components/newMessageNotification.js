@@ -29,7 +29,6 @@ import {
   TextContent,
   BubbleContainer,
   NotificationListRow,
-  Timestamp,
   AttachmentsWash,
   SuccessContext,
   HzRule,

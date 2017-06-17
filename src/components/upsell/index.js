@@ -288,7 +288,7 @@ export class UpsellNewUser extends Component {
     return (
       <NullCard bg="pro">
         <LargeEmoji>
-          👋
+          <span role="img" aria-label="Howdy!">👋</span>
         </LargeEmoji>
         <Title>Howdy, {user.name}!</Title>
         <Subtitle>

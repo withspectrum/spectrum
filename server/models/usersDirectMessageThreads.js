@@ -92,7 +92,7 @@ const getMembersInDirectMessageThread = (
     .table('usersDirectMessageThreads')
     .getAll(threadId, { index: 'threadId' })
     .eqJoin('userId', db.table('users'))
-    .without({ left: ['createdAt', 'lastSeen'], right: ['id'] })
+    .without({ left: ['createdAt'], right: ['id', 'lastSeen'] })
     .zip()
     .run();
 };

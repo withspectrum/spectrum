@@ -8,6 +8,7 @@ import {
   userDirectMessageThreadsFragment,
 } from './fragments/user/userDirectMessageThreads';
 import { userInfoFragment } from './fragments/user/userInfo';
+import { subscribeToUpdatedDirectMessageThreads } from './subscriptions';
 
 /*
   Create a new direct message group
@@ -56,8 +57,47 @@ export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY = gql`
   ${userDirectMessageThreadsFragment}
 `;
 
+export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_OPTIONS = {
+  options: {
+    fetchPolicy: 'network-only',
+  },
+  props: props => ({
+    ...props,
+    subscribeToUpdatedDirectMessageThreads: () => {
+      return props.data.subscribeToMore({
+        document: subscribeToUpdatedDirectMessageThreads,
+        updateQuery: (prev, { subscriptionData }) => {
+          const updatedDirectMessageThread =
+            subscriptionData.data.directMessageThreadUpdated;
+          if (!updatedDirectMessageThread) return prev;
+
+          // console.log('prev', prev);
+          // console.log('subscriptionData', subscriptionData);
+
+          // Add the new notification to the data
+          return Object.assign({}, prev, {
+            ...prev,
+            directMessageThreadsConnection: {
+              ...prev.user.directMessageThreadsConnection,
+              edges: [
+                ...prev.user.directMessageThreadsConnection.edges,
+                {
+                  node: updatedDirectMessageThread,
+                  cursor: '__this-is-a-cursor__',
+                  __typename: 'DirectMessageThread',
+                },
+              ],
+            },
+          });
+        },
+      });
+    },
+  }),
+};
+
 export const getCurrentUserDirectMessageThreads = graphql(
-  GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY
+  GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY,
+  GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_OPTIONS
 );
 
 /*

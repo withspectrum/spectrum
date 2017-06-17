@@ -12,7 +12,6 @@ import {
   TextContent,
   BubbleGroupContainer,
   BubbleContainer,
-  Timestamp,
   NotificationListRow,
   AttachmentsWash,
   ReactionContext,

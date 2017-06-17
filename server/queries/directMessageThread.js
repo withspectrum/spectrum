@@ -48,11 +48,8 @@ module.exports = {
     },
     snippet: ({ id }) => {
       return getLastMessage(id).then(message => {
-        if (message) {
-          return message.content.body;
-        } else {
-          return 'No messages yet...';
-        }
+        if (!message) return 'No messages yet...';
+        return message.content.body;
       });
     },
   },

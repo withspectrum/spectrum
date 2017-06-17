@@ -426,6 +426,7 @@ class CreateCommunityModal extends Component {
                 <a
                   href="https://github.com/withspectrum/code-of-conduct"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Spectrum Code of Conduct
                 </a>

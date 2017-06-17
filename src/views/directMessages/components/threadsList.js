@@ -2,7 +2,7 @@
 import React from 'react';
 // $FlowFixMe
 import pure from 'recompose/pure';
-import { ListCardItemDirectMessageThread } from './messageThreadListItem';
+import ListCardItemDirectMessageThread from './messageThreadListItem';
 import { ThreadsListScrollContainer } from './style';
 
 const ThreadsList = ({ threads, currentUser, active }) => {

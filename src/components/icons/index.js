@@ -459,9 +459,4 @@ Icon.defaultProps = {
   size: 32,
 };
 
-Icon.propTypes = {
-  glyph: React.PropTypes.string,
-  size: React.PropTypes.number.isRequired,
-};
-
 export default Icon;

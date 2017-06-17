@@ -10,15 +10,11 @@ import { parseNotificationDate, parseContext } from '../utils';
 import Icon from '../../../components/icons';
 import {
   SegmentedNotificationCard,
-  NotificationCard,
   TextContent,
   SegmentedNotificationListRow,
-  Timestamp,
   AttachmentsWash,
   CreatedContext,
-  Content,
   ContentWash,
-  HzRule,
 } from '../style';
 import { ChannelProfile } from '../../../components/profile';
 

@@ -17,7 +17,7 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import Editor, { toPlainText, fromPlainText, toJSON } from '../editor';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
-import { getLinkPreviewFromUrl, isMobile } from '../../helpers/utils';
+import { getLinkPreviewFromUrl } from '../../helpers/utils';
 import { URLS } from '../../helpers/regexps';
 import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
@@ -34,7 +34,6 @@ import {
   ContentContainer,
   Actions,
   Dropdowns,
-  PublishActions,
 } from './style';
 
 class ThreadComposerWithData extends Component {
