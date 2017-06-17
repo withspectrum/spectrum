@@ -77,32 +77,29 @@ const SEND_MESSAGE_OPTIONS = {
             });
           } else if (ownProps.threadType === 'directMessageThread') {
             // Read the data from our cache for this query.
-            const data = store.readQuery({
-              query: GET_DIRECT_MESSAGE_THREAD_QUERY,
-              variables: {
-                id: ownProps.thread,
-              },
-            });
-
-            // ignore the addMessage from the server, apollo will automatically
-            // override the optimistic object
-            if (addMessage && typeof addMessage.id === 'string') {
-              return;
-            }
-
-            data.directMessageThread.messageConnection.edges.push({
-              node: addMessage,
-              __typename: 'DirectMessageEdge',
-            });
-
-            // Write our data back to the cache.
-            store.writeQuery({
-              query: GET_DIRECT_MESSAGE_THREAD_QUERY,
-              data,
-              variables: {
-                id: ownProps.thread,
-              },
-            });
+            // const data = store.readQuery({
+            //   query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+            //   variables: {
+            //     id: ownProps.thread,
+            //   },
+            // });
+            // // ignore the addMessage from the server, apollo will automatically
+            // // override the optimistic object
+            // if (addMessage && typeof addMessage.id === 'string') {
+            //   return;
+            // }
+            // data.directMessageThread.messageConnection.edges.push({
+            //   node: addMessage,
+            //   __typename: 'DirectMessageEdge',
+            // });
+            // // Write our data back to the cache.
+            // store.writeQuery({
+            //   query: GET_DIRECT_MESSAGE_THREAD_QUERY,
+            //   data,
+            //   variables: {
+            //     id: ownProps.thread,
+            //   },
+            // });
           }
         },
       }),

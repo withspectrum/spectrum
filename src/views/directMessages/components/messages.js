@@ -64,7 +64,6 @@ class MessagesWithData extends Component {
     }
 
     const sortedMessages = sortAndGroupMessages(messages);
-
     return (
       <div style={{ width: '100%', flex: '1 0 auto' }}>
         <div style={{ padding: '24px 0', background: '#fff' }}>

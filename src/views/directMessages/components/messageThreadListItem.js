@@ -46,7 +46,8 @@ class ListCardItemDirectMessageThread extends Component {
       currentParticipant.lastSeen
     ).getTime();
 
-    const isUnread = currentParticipantLastActiveTimestamp < timestamp;
+    let isUnread = currentParticipantLastActiveTimestamp < timestamp;
+    isUnread = active ? false : isUnread;
 
     return (
       <Wrapper active={active} isUnread={isUnread}>

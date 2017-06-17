@@ -65,6 +65,10 @@ class DirectMessages extends Component {
     this.subscribe();
   }
 
+  componentDidUpdate() {
+    this.markDmNotificationsSeen();
+  }
+
   componentWillUnmount() {
     this.unsubscribe();
   }
