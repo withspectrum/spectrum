@@ -412,3 +412,8 @@ export const Username = styled.h3`
   margin: 0;
   display: flex;
 `;
+
+export const MessagesScrollWrapper = styled.div`
+  width: 100%;
+  flex: 1 0 auto;
+`;
