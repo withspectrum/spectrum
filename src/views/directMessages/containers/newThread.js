@@ -766,17 +766,16 @@ class NewThread extends Component {
               {loadingExistingThreadMessages &&
                 <Spinner size={16} color={'brand.default'} />}
             </Grow>}
-
-          <ChatInput
-            thread={
-              existingThreadBasedOnSelectedUsers || 'newDirectMessageThread'
-            }
-            createThread={this.createThread}
-            onFocus={this.onChatInputFocus}
-            onBlur={this.onChatInputBlur}
-            threadType={'directMessageThread'}
-          />
         </ViewContent>
+        <ChatInput
+          thread={
+            existingThreadBasedOnSelectedUsers || 'newDirectMessageThread'
+          }
+          createThread={this.createThread}
+          onFocus={this.onChatInputFocus}
+          onBlur={this.onChatInputBlur}
+          threadType={'directMessageThread'}
+        />
       </MessagesContainer>
     );
   }
