@@ -41,6 +41,16 @@ class ListCardItemDirectMessageThread extends Component {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.thread.threadLastActive !== this.props.thread.threadLastActive
+    ) {
+      this.setState({
+        isUnread: true,
+      });
+    }
+  }
+
   markAsRead = () => {
     this.setState({
       isUnread: false,
