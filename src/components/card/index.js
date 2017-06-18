@@ -17,7 +17,7 @@ const StyledCard = styled(FlexCol)`
   max-width: 100%;
   background-clip: padding-box;
   overflow: visible;
-  flex: 0 0 auto;
+  flex: none;
 
   + div,
   + span {

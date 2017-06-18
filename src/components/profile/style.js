@@ -28,7 +28,7 @@ export const ProfileHeaderLink = styled(Link)`
   align-items: center;
   justify-content: flex-start;
   flex-wrap: nowrap;
-  flex: 1 1 auto;
+  flex: auto;
   min-width: 0;
 
   &:hover h3{
@@ -77,6 +77,7 @@ export const ExtLink = styled(FlexRow)`
   color: ${({ theme }) => theme.brand.alt};
   font-weight: 600;
   transition: ${Transition.hover.off};
+  ${Truncate};
 
   > a:hover {
     text-decoration: underline;

@@ -10,7 +10,7 @@ export const Form = styled.form`
   display: inline-block;
   flex-direction: column;
   align-self: stretch;
-  flex: 1 0 100%;
+  flex: none;
   max-width: 100%;
 `;
 
