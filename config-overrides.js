@@ -9,6 +9,7 @@ const isServiceWorkerPlugin = plugin => plugin instanceof swPrecachePlugin;
 const whitelist = path => new RegExp(`^(?!\/${path}).*`);
 // Don't cache server routes with the ServiceWorker
 const setCustomSwPrecacheOptions = config => {
+  if (process.env.NODE_ENV !== 'production') return;
   const swPlugin = config.plugins.find(isServiceWorkerPlugin);
   const { navigateFallbackWhitelist } = swPlugin.options;
   // Add all /api and /auth routes to the whitelist to not be cached by the ServiceWorker
