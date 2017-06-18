@@ -53,8 +53,8 @@ class Navbar extends Component {
     };
   }
 
-  calculateUnseenCounts = props => {
-    const { data: { user }, notificationsQuery, match } = props || this.props;
+  calculateUnseenCounts = () => {
+    const { data: { user }, notificationsQuery, match } = this.props;
     const currentUser = user;
     let notifications =
       currentUser &&
