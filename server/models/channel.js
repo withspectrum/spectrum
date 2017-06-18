@@ -49,10 +49,13 @@ const getChannelsByUserAndCommunity = (
       .eqJoin('id', db.table('usersChannels'), { index: 'channelId' })
       // get channels where the user is a member OR the channel is public
       .filter(row =>
-        row('right')('isMember')
-          .eq(true)
-          .and(row('right')('userId').eq(userId))
-          .or(row('left')('isPrivate').eq(false))
+        row('left')('isPrivate')
+          .eq(false)
+          .or(
+            row('right')('isMember')
+              .eq(true)
+              .and(row('right')('userId').eq(userId))
+          )
       )
       .without({ right: 'id' })
       .zip()
