@@ -42,15 +42,17 @@ module.exports = {
     isAdmin: ({ id }: { id: string }) => {
       return isAdmin(id);
     },
-    isPro: ({ id }: { id: string }) => {
-      return getUserRecurringPayments(id).then(
-        sub =>
-          (sub !== null &&
-            sub[0].stripeData &&
-            sub[0].stripeData.status === 'active'
-            ? true
-            : false)
-      );
+    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+      return loaders.userRecurringPayments
+        .load(id)
+        .then(
+          sub =>
+            (!(sub == null) &&
+              sub.stripeData &&
+              sub.stripeData.status === 'active'
+              ? true
+              : false)
+        );
     },
     everything: (
       { id }: { id: string },

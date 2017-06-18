@@ -1,5 +1,9 @@
 // @flow
-import { __createUserLoader, __createUserThreadCountLoader } from './user';
+import {
+  __createUserLoader,
+  __createUserThreadCountLoader,
+  __createUserRecurringPaymentsLoader,
+} from './user';
 import { __createThreadLoader } from './thread';
 import { __createNotificationLoader } from './notification';
 import { __createChannelLoader } from './channel';
@@ -12,6 +16,7 @@ import {
 const createLoaders = () => ({
   user: __createUserLoader(),
   userThreadCount: __createUserThreadCountLoader(),
+  userRecurringPayments: __createUserRecurringPaymentsLoader(),
   thread: __createThreadLoader(),
   notification: __createNotificationLoader(),
   channel: __createChannelLoader(),
