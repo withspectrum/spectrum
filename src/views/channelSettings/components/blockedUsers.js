@@ -2,6 +2,10 @@
 import React from 'react';
 import { UserListItem } from '../../../components/listItems';
 import { TextButton } from '../../../components/buttons';
+import pure from 'recompose/pure';
+import compose from 'recompose/compose';
+import { displayLoadingCard } from '../../../components/loading';
+import { getBlockedUsersQuery } from '../../../api/channel';
 import {
   StyledCard,
   LargeListHeading,
@@ -10,16 +14,16 @@ import {
   Notice,
 } from '../../../components/listItems/style';
 
-const BlockedUsers = ({ users, unblock }) => {
+const BlockedUsers = ({ data: { channel: { blockedUsers }, unblock } }) => {
   return (
     <StyledCard>
       <LargeListHeading>Blocked Users</LargeListHeading>
-      {users.length > 0 &&
+      {blockedUsers.length > 0 &&
         <Description>
           Blocked users can not see threads or messages posted in this channel. They will still be able to join any other public channels in the Spectrum community and request access to other private channels.
         </Description>}
 
-      {users.length > 0 &&
+      {blockedUsers.length > 0 &&
         <Notice>
           Unblocking a user will
           {' '}
@@ -29,8 +33,8 @@ const BlockedUsers = ({ users, unblock }) => {
         </Notice>}
 
       <ListContainer>
-        {users &&
-          users.map(user => {
+        {blockedUsers &&
+          blockedUsers.map(user => {
             return (
               <section key={user.id}>
                 <UserListItem user={user}>
@@ -46,7 +50,7 @@ const BlockedUsers = ({ users, unblock }) => {
             );
           })}
 
-        {users.length <= 0 &&
+        {blockedUsers.length <= 0 &&
           <Description>
             There are no blocked users in this channel.
           </Description>}
@@ -56,4 +60,6 @@ const BlockedUsers = ({ users, unblock }) => {
   );
 };
 
-export default BlockedUsers;
+export default compose(getBlockedUsersQuery, displayLoadingCard, pure)(
+  BlockedUsers
+);

@@ -150,17 +150,15 @@ const SettingsPure = ({
         <ChannelEditForm channel={channel} />
       </Column>
       <Column type="primary">
-        <PendingUsers
-          users={channel.pendingUsers}
-          togglePending={togglePending}
-          channel={channel}
-        />
-        {channel.blockedUsers.length > 0 &&
-          <BlockedUsers
-            users={channel.blockedUsers}
-            unblock={unblock}
-            channel={channel}
-          />}
+        {channel.isPrivate &&
+          <span>
+            <PendingUsers
+              togglePending={togglePending}
+              channel={channel}
+              id={channel.id}
+            />
+            <BlockedUsers unblock={unblock} channel={channel} id={channel.id} />
+          </span>}
       </Column>
     </AppViewWrapper>
   );

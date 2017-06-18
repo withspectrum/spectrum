@@ -176,12 +176,8 @@ export const getChannel = graphql(
 			channel(channelSlug: $channelSlug, communitySlug: $communitySlug) {
         ...channelInfo
         ...channelMetaData
-        pendingUsers {
-          ...userInfo
-        }
       }
 		}
-    ${userInfoFragment}
     ${channelInfoFragment}
     ${channelMetaDataFragment}
 	`,

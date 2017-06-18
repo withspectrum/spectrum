@@ -209,7 +209,7 @@ class ChannelViewPure extends Component {
             {channel.isPrivate &&
               (channel.channelPermissions.isOwner ||
                 channel.community.communityPermissions.isOwner) &&
-              <PendingUsersNotification channel={channel} />}
+              <PendingUsersNotification channel={channel} id={channel.id} />}
           </Column>
 
           <Column type="primary" alignItems="center">
