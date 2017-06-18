@@ -23,6 +23,9 @@ export default ({ title, description, showUnreadFavicon }: Props) => {
           id="dynamic-favicon"
           href={`${process.env.PUBLIC_URL}/img/favicon_unread.ico`}
         />}
+      <meta name="apple-mobile-web-app-title" content="Spectrum" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     </Helmet>
   );
 };
