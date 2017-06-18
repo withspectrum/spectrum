@@ -231,7 +231,8 @@ class Navbar extends Component {
 
   login = () => {
     // log the user in and return them to this page
-    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window.location.href}`);
+    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window
+      .location.href}`);
   };
 
   render() {
@@ -286,7 +287,10 @@ class Navbar extends Component {
           </Section>
 
           <Section right hideOnMobile>
-            <IconDrop onMouseLeave={this.markAllNotificationsSeen}>
+            <IconDrop
+              onMouseLeave={this.markAllNotificationsSeen}
+              onClick={this.markAllNotificationsSeen}
+            >
               <IconLink
                 data-active={match.url === '/notifications'}
                 to="/notifications"
