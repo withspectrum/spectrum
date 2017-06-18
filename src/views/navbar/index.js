@@ -53,8 +53,8 @@ class Navbar extends Component {
     };
   }
 
-  calculateUnseenCounts = props => {
-    const { data: { user }, notificationsQuery, match } = props || this.props;
+  calculateUnseenCounts = () => {
+    const { data: { user }, notificationsQuery, match } = this.props;
     const currentUser = user;
     let notifications =
       currentUser &&
@@ -181,6 +181,9 @@ class Navbar extends Component {
         .markAllNotificationsSeen()
         .then(({ data: { markAllNotificationsSeen } }) => {
           // notifs were marked as seen
+          this.setState({
+            allUnseenCount: 0,
+          });
         })
         .catch(err => {
           // error
@@ -231,7 +234,8 @@ class Navbar extends Component {
 
   login = () => {
     // log the user in and return them to this page
-    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window.location.href}`);
+    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window
+      .location.href}`);
   };
 
   render() {
@@ -286,7 +290,10 @@ class Navbar extends Component {
           </Section>
 
           <Section right hideOnMobile>
-            <IconDrop onMouseLeave={this.markAllNotificationsSeen}>
+            <IconDrop
+              onMouseLeave={this.markAllNotificationsSeen}
+              onClick={this.markAllNotificationsSeen}
+            >
               <IconLink
                 data-active={match.url === '/notifications'}
                 to="/notifications"
