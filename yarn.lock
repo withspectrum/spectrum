@@ -2152,6 +2152,12 @@ deep-extend@~0.4.0:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/deep-extend/-/deep-extend-0.4.1.tgz#efe4113d08085f4e6f9687759810f807469e2253"
 
+deep-for-each@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/deep-for-each/-/deep-for-each-1.0.6.tgz#afa0ce249c58492a9720539478a18d37e1b10bae"
+  dependencies:
+    is-plain-object "^2.0.1"
+
 deep-is@~0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
@@ -3310,6 +3316,13 @@ graphql-date@^1.0.3:
   resolved "https://registry.yarnpkg.com/graphql-date/-/graphql-date-1.0.3.tgz#31ce05ae40ed8c8ceb040364060109771e712e91"
   dependencies:
     assert-err "^1.0.0"
+
+graphql-log@0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/graphql-log/-/graphql-log-0.1.2.tgz#d733fc58b14cbb336effa2bb355274d13683c6b5"
+  dependencies:
+    deep-for-each "^1.0.6"
+    is-function "^1.0.1"
 
 graphql-server-core@^0.8.0:
   version "0.8.0"
