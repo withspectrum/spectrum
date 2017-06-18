@@ -181,6 +181,9 @@ class Navbar extends Component {
         .markAllNotificationsSeen()
         .then(({ data: { markAllNotificationsSeen } }) => {
           // notifs were marked as seen
+          this.setState({
+            allUnseenCount: 0,
+          });
         })
         .catch(err => {
           // error
