@@ -51,3 +51,12 @@ export const getUserRecurringPayments = (userId: string): Promise<Object> => {
     .run()
     .then(result => (result && result.length > 0 ? result : null));
 };
+
+export const getUsersRecurringPayments = (
+  userIds: Array<string>
+): Promise<Object> => {
+  return db
+    .table('recurringPayments')
+    .getAll(...userIds, { index: 'userId' })
+    .run();
+};
