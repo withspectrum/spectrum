@@ -30,6 +30,7 @@
     "express-session": "^1.15.2",
     "faker": "^4.1.0",
     "graphql-date": "^1.0.3",
+    "graphql-log": "0.1.2",
     "graphql-server-express": "0.8.x",
     "graphql-subscriptions": "0.4.2",
     "graphql-tools": "^0.11.0",

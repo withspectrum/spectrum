@@ -4,6 +4,10 @@
  */
 //$FlowFixMe
 const { makeExecutableSchema } = require('graphql-tools');
+const debug = require('debug')('server:resolvers');
+const logExecutions = require('graphql-log')({
+  logger: debug,
+});
 //$FlowFixMe
 const { merge } = require('lodash');
 import OpticsAgent from 'optics-agent';
@@ -69,6 +73,39 @@ const Root = /* GraphQL */ `
 	}
 `;
 
+const resolvers = merge(
+  {},
+  //queries
+  scalars.resolvers,
+  ThreadQueries,
+  channelQueries,
+  communityQueries,
+  messageQueries,
+  userQueries,
+  directMessageThreadQueries,
+  reactionQueries,
+  notificationQueries,
+  metaQueries,
+  // mutations
+  messageMutations,
+  threadMutations,
+  directMessageThreadMutations,
+  reactionMutations,
+  recurringPaymentMutations,
+  communityMutations,
+  channelMutations,
+  notificationMutations,
+  userMutations,
+  // subscriptions
+  messageSubscriptions,
+  notificationSubscriptions,
+  directMessageThreadSubscriptions
+);
+
+if (process.env.NODE_ENV === 'development' && debug.enabled) {
+  logExecutions(resolvers);
+}
+
 // Create the final GraphQL schema out of the type definitions
 // and the resolvers
 const schema = makeExecutableSchema({
@@ -86,34 +123,7 @@ const schema = makeExecutableSchema({
     Notification,
     Meta,
   ],
-  resolvers: merge(
-    {},
-    //queries
-    scalars.resolvers,
-    ThreadQueries,
-    channelQueries,
-    communityQueries,
-    messageQueries,
-    userQueries,
-    directMessageThreadQueries,
-    reactionQueries,
-    notificationQueries,
-    metaQueries,
-    // mutations
-    messageMutations,
-    threadMutations,
-    directMessageThreadMutations,
-    reactionMutations,
-    recurringPaymentMutations,
-    communityMutations,
-    channelMutations,
-    notificationMutations,
-    userMutations,
-    // subscriptions
-    messageSubscriptions,
-    notificationSubscriptions,
-    directMessageThreadSubscriptions
-  ),
+  resolvers,
 });
 
 // Instrument the schema with Apollo Optics
