@@ -1,6 +1,8 @@
 // Regex to match "~channel-slug" in text
+// eslint-disable-next-line
 export const CHANNELS = /(^|\s)(~[A-Z0-9\-]+)/gi;
 // Regex to match ">spectrum.chat/~channel</a>"
+// eslint-disable-next-line
 export const CHANNEL_ANCHORS = />spectrum\.chat\/[A-Z0-9\-]+\/(~[A-Z0-9\-]+)<\/a>/gi;
 // Prevent community slugs from being created
 export const COMMUNITY_SLUG_BLACKLIST = [
@@ -41,5 +43,5 @@ export const COMMUNITY_SLUG_BLACKLIST = [
   'api',
   'shop',
 ];
-
+// eslint-disable-next-line
 export const URLS = /(^|\s)(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;

@@ -88,7 +88,7 @@ export function isMobile() {
   return false;
 }
 
-export function timeDifference(current, previous) {
+export function timeDifference(current: Date, previous: Date) {
   const msPerMinute = 60 * 1000;
   const msPerHour = msPerMinute * 60;
   const msPerDay = msPerHour * 24;
@@ -143,7 +143,7 @@ export function timeDifference(current, previous) {
   }
 }
 
-export function timeDifferenceShort(current, previous) {
+export function timeDifferenceShort(current: Date, previous: Date) {
   const msPerSecond = 1000;
   const msPerMinute = 60 * 1000;
   const msPerHour = msPerMinute * 60;
