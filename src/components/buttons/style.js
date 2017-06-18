@@ -20,7 +20,7 @@ const baseButton = css`
   line-height: 1;
   position: relative;
   text-align: center;
-  padding: ${props => (props.icon ? '4px' : '12px 16px')};
+  padding: ${props => (props.icon ? '4px 8px 4px 4px' : '12px 16px')};
 
   &:hover {
     transition: ${Transition.hover.on};
@@ -53,7 +53,7 @@ export const StyledSolidButton = styled.button`
 
   &:hover {
     background-color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`))};
-    padding: ${props => (props.icon ? '4px 6px' : '12px 18px')};
+    padding: ${props => (props.icon ? '4px 10px 4px 6px' : '12px 18px')};
   }
 
   &:active {
@@ -86,6 +86,7 @@ export const StyledOutlineButton = styled(StyledTextButton)`
     color: ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`))};
     box-shadow: inset 0 0 0 2px ${props => (props.disabled ? props.theme.inactive : eval(`props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`))};
     transition: ${Transition.hover.on};
+    padding: 12px 16px;
   }
 `;
 
