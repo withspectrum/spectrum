@@ -53,8 +53,12 @@ if (IS_PROD) {
       // In production inject the meta title and description
       res.send(
         index
-          .replace(/%OG_TITLE%/g, title)
-          .replace(/%OG_DESCRIPTION%/g, description)
+          // Replace "Spectrum" with proper title, but make sure to not replace the twitter site:name
+          // (which is set to Spectrum.chat)
+          .replace(/Spectrum(?!\.chat)/g, title)
+          // Replace "Where communities live." with proper description for page
+          .replace(/Where communities live\./g, description)
+          // Add any extra meta tags at the end
           .replace(/<meta name="%OG_EXTRA%">/g, extra || '')
       );
     });
