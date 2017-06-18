@@ -32,9 +32,7 @@ const getPublicChannelsByCommunity = (
 };
 
 /*
-  If a user is viewing a community, they should only see threads from the
-  channels they are members of in order to avoid accidentally seeing threads
-  from a private channel.
+  If a user is viewing a community, they should see threads from all public channels as well as from private channels they are a member of.
 
   This function returns an array of objects with the field 'id' that corresponds
   to a channelId. This array of IDs will be passed into a threads method which
