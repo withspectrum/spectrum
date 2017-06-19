@@ -5,7 +5,6 @@ import { graphql, gql } from 'react-apollo';
 import update from 'immutability-helper';
 import { encode } from '../../helpers/utils';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
-import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import {
   channelThreadsFragment,
 } from '../../api/fragments/channel/channelThreads';
