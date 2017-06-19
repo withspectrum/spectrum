@@ -10,7 +10,7 @@ import { openModal } from '../../actions/modals';
 import { track } from '../../helpers/events';
 import ThreadComposer from '../../components/threadComposer';
 import Head from '../../components/head';
-import generateMetaInfo from 'server/shared/generate-meta-info';
+import generateMetaInfo from 'iris/shared/generate-meta-info';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
