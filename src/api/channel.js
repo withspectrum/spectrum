@@ -285,7 +285,7 @@ export const getBlockedUsersQuery = graphql(
 /*
   Toggle notifications on or off for channel threads
 */
-const TOGGLE_CHANNEL_NOTIFICAIONTS_MUTATION = gql`
+const TOGGLE_CHANNEL_NOTIFICATIONS_MUTATION = gql`
   mutation toggleChannelNotifications($channelId: ID!) {
     toggleChannelNotifications(channelId: $channelId) {
       ...channelInfo
@@ -294,7 +294,7 @@ const TOGGLE_CHANNEL_NOTIFICAIONTS_MUTATION = gql`
   ${channelInfoFragment}
 `;
 
-const TOGGLE_CHANNEL_NOTIFICAIONTS_OPTIONS = {
+const TOGGLE_CHANNEL_NOTIFICATIONS_OPTIONS = {
   props: ({ input, mutate }) => ({
     toggleChannelNotifications: channelId =>
       mutate({
@@ -306,6 +306,6 @@ const TOGGLE_CHANNEL_NOTIFICAIONTS_OPTIONS = {
 };
 
 export const toggleChannelNotificationsMutation = graphql(
-  TOGGLE_CHANNEL_NOTIFICAIONTS_MUTATION,
-  TOGGLE_CHANNEL_NOTIFICAIONTS_OPTIONS
+  TOGGLE_CHANNEL_NOTIFICATIONS_MUTATION,
+  TOGGLE_CHANNEL_NOTIFICATIONS_OPTIONS
 );
