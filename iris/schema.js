@@ -4,7 +4,7 @@
  */
 //$FlowFixMe
 const { makeExecutableSchema } = require('graphql-tools');
-const debug = require('debug')('server:resolvers');
+const debug = require('debug')('iris:resolvers');
 const logExecutions = require('graphql-log')({
   logger: debug,
 });

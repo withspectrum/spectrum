@@ -5,5 +5,5 @@ module.exports = {
   db: 'spectrum',
   host: 'localhost',
   port: 28015,
-  migrationsDirectory: 'server/migrations',
+  migrationsDirectory: 'iris/migrations',
 };

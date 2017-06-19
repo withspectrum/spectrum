@@ -7,7 +7,7 @@ src/config/FirebaseConfig.js
 npm-debug.log
 rethinkdb_data
 debug
-server/.env
-build-server
+iris/.env
+build-iris
 build-athena
 package-lock.json
