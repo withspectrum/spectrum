@@ -13,8 +13,10 @@ import { ProfileCard } from './style';
 
 class ThreadWithData extends Component {
   render() {
-    const { data: { thread } } = this.props;
-
+    const { data: { thread, error } } = this.props;
+    if (error || !thread) {
+      return null;
+    }
     return (
       <ProfileCard>
         <Link to={`/thread/${thread.id}`}>

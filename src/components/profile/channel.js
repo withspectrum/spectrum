@@ -52,17 +52,20 @@ class ChannelWithData extends Component {
         let str;
         if (isPending) {
           track('channel', 'requested to join', null);
-          str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}`;
+          str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
+            .community.name}`;
         }
 
         if (!isPending && isMember) {
           track('channel', 'joined', null);
-          str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`;
+          str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription
+            .community.name}!`;
         }
 
         if (!isPending && !isMember) {
           track('channel', 'unjoined', null);
-          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
+          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription
+            .community.name}.`;
         }
 
         const type = isMember || isPending ? 'success' : 'neutral';
@@ -83,12 +86,36 @@ class ChannelWithData extends Component {
       currentUser,
     } = this.props;
     const { isLoading } = this.state;
+    const componentSize = profileSize || 'mini';
+
+    if (loading) {
+      return <LoadingListItem />;
+    }
+
+    if (error || !channel) {
+      if (
+        componentSize === 'miniWithAction' ||
+        componentSize === 'listItemWithAction'
+      ) {
+        return null;
+      } else {
+        return (
+          <NullCard
+            bg="error"
+            heading="Whoa there!"
+            copy="This is uncharted space. Let's get you safely back home, huh?"
+          >
+            <Link to={'/home'}>
+              <Button>Take me home</Button>
+            </Link>
+          </NullCard>
+        );
+      }
+    }
 
     const communityOwner = channel.community.communityPermissions.isOwner;
     const channelOwner = channel.channelPermissions.isOwner;
     const member = channel.channelPermissions.isMember;
-
-    const componentSize = profileSize || 'mini';
 
     const communityLink = () => {
       return (
@@ -131,30 +158,10 @@ class ChannelWithData extends Component {
             onClick={() => this.toggleSubscription(channel.id)}
           />
         );
-      } else {
-        // return (
-        //   <Link to={`/${channel.community.slug}/${channel.slug}`}>
-        //     <ProfileHeaderAction glyph="view-forward" />
-        //   </Link>
-        // );
       }
     };
 
-    if (loading) {
-      return <LoadingListItem />;
-    } else if (error || !channel) {
-      return (
-        <NullCard
-          bg="error"
-          heading="Whoa there!"
-          copy="This is uncharted space. Let's get you safely back home, huh?"
-        >
-          <Link to={'/home'}>
-            <Button>Take me home</Button>
-          </Link>
-        </NullCard>
-      );
-    } else if (componentSize === 'full') {
+    if (componentSize === 'full') {
       return (
         <ProfileCard>
           <ChannelListItem
