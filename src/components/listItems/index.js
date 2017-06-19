@@ -81,6 +81,21 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
   );
 };
 
+export const ThreadListItem = (props: CardProps): React$Element<any> => {
+  return (
+    <Wrapper clickable={props.clickable}>
+      <Row>
+        <Col>
+          <Heading>
+            {props.contents.content.title}
+          </Heading>
+          <Meta>{props.meta}</Meta>
+        </Col>
+      </Row>
+    </Wrapper>
+  );
+};
+
 export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
   return (
     <WrapperLi clickable={props.clickable}>

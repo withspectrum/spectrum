@@ -17,6 +17,7 @@ import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import { ChannelProfile } from '../../components/profile';
 import PendingUsersNotification from './components/pendingUsersNotification';
+import NotificationsToggle from './components/notificationsToggle';
 import { getChannelThreads, getChannel } from './queries';
 import { displayLoadingScreen } from '../../components/loading';
 import {
@@ -63,8 +64,10 @@ class ChannelViewPure extends Component {
         }
 
         const str = isPending
-          ? `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
-          : `Canceled request to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
+          ? `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
+              .community.name}!`
+          : `Canceled request to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
+              .community.name}.`;
 
         const type = isPending ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
@@ -205,6 +208,13 @@ class ChannelViewPure extends Component {
           />
           <Column type="secondary">
             <ChannelProfile data={{ channel }} profileSize="full" />
+
+            {currentUser &&
+              channel.channelPermissions.isMember &&
+              <NotificationsToggle
+                value={channel.channelPermissions.receiveNotifications}
+                channel={channel}
+              />}
 
             {channel.isPrivate &&
               (channel.channelPermissions.isOwner ||

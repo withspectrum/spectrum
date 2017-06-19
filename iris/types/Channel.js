@@ -88,6 +88,7 @@ const Channel = /* GraphQL */ `
 		editChannel(input: EditChannelInput!): Channel
 		deleteChannel(channelId: ID!): Boolean
 		toggleChannelSubscription(channelId: ID!): Channel
+		toggleChannelNotifications(channelId: ID!): Channel
 		togglePendingUser(input: TogglePendingUserInput!): Channel
 		unblockUser(input: UnblockUserInput!): Channel
 	}

@@ -1,5 +1,8 @@
 // @flow
 const { db } = require('./db');
+// $FlowFixMe
+const { createQueue } = require('./utils');
+const threadNotificationQueue = createQueue('thread notification');
 const { listenToNewDocumentsIn } = require('./utils');
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 
@@ -176,7 +179,16 @@ export const publishThread = (
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => {
+      const thread = result.changes[0].new_val;
+
+      threadNotificationQueue.add({
+        thread,
+        userId,
+      });
+
+      return thread;
+    });
 };
 
 export const setThreadLock = (
@@ -198,9 +210,9 @@ export const setThreadLock = (
       .run()
       .then(
         result =>
-          (result.changes.length > 0
+          result.changes.length > 0
             ? result.changes[0].new_val
-            : db.table('threads').get(threadId).run())
+            : db.table('threads').get(threadId).run()
       )
   );
 };
