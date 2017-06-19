@@ -14,6 +14,7 @@ import Homepage from './views/homepage';
 import { addToastWithTimeout } from './actions/toasts';
 import registerServiceWorker from './registerServiceWorker';
 import type { ServiceWorkerResult } from './registerServiceWorker';
+import { track } from './helpers/events';
 
 const existingUser = getItemFromStorage('spectrum');
 let store;
@@ -73,4 +74,17 @@ registerServiceWorker().then(({ newContent }: ServiceWorkerResult) => {
   }
   // We don't show a message on first cache, simply because the API isn't cached offline
   // so the app isn't offline usable, it's just cached so the first pageload is much faster
+});
+
+// This fires when a user is prompted to add the app to their homescreen
+// We use it to track it happening in Google Analytics so we have those sweet metrics
+window.addEventListener('beforeinstallprompt', e => {
+  track('user', 'prompted to add to homescreen');
+  e.userChoice.then(choiceResult => {
+    if (choiceResult.outcome == 'dismissed') {
+      track('user', 'did not add to homescreen');
+    } else {
+      track('user', 'added to homescreen');
+    }
+  });
 });
