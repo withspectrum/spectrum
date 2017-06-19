@@ -36,14 +36,14 @@ export const NewThreadNotification = ({ notification, currentUser }) => {
   );
 
   const newThreadCount = threads.length > 1
-    ? `${notification.entities.length} new threads were`
+    ? `New threads were`
     : 'A new thread was';
 
   if (threads && threads.length > 0) {
     return (
       <SegmentedNotificationCard>
         <ThreadContext>
-          <Icon glyph="post" />
+          <Icon glyph="post-fill" />
           <TextContent pointer={true}>
             {newThreadCount} published in {context.asString} {date}
           </TextContent>
@@ -83,7 +83,7 @@ export const MiniNewThreadNotification = ({
   );
 
   const newThreadCount = threads.length > 1
-    ? `${notification.entities.length} new threads were`
+    ? `New threads were`
     : 'A new thread was';
 
   if (threads && threads.length > 0) {
