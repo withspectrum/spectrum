@@ -209,9 +209,6 @@ const getCommunityMembersOptions = {
               return prev;
             }
 
-            console.log('prev', prev);
-            console.log('fetchMoreResult', fetchMoreResult);
-
             return {
               ...prev,
               community: {
