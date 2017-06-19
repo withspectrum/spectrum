@@ -11,3 +11,4 @@ iris/.env
 build-iris
 build-athena
 package-lock.json
+.vscode
