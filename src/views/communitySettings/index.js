@@ -14,6 +14,7 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ListCard from './components/listCard';
 import { CommunityEditForm } from '../../components/editForm';
+import CommunityMembers from '../../components/communityMembers';
 import { Upsell404Community } from '../../components/upsell';
 import Titlebar from '../titlebar';
 const ChannelListCard = compose(getChannelsByCommunity)(ListCard);
@@ -99,6 +100,7 @@ const SettingsPure = ({
       </Column>
       <Column type="primary">
         <ChannelListCard slug={communitySlug} />
+        <CommunityMembers id={community.id} />
       </Column>
     </AppViewWrapper>
   );

@@ -7,7 +7,10 @@ const {
   getTopCommunities,
   getRecentCommunities,
 } = require('../models/community');
-const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
+const {
+  getUserPermissionsInCommunity,
+  getMembersInCommunity,
+} = require('../models/usersCommunities');
 const { getThreadsByChannels } = require('../models/thread');
 const {
   getChannelsByCommunity,
@@ -59,23 +62,27 @@ module.exports = {
     coverPhoto: ({ coverPhoto }) => encodeURI(coverPhoto),
     profilePhoto: ({ profilePhoto }) => encodeURI(profilePhoto),
     memberConnection: (
-      { members }: { members: Array<string> },
-      { first = 10, after }: PaginationOptions,
+      { id },
+      { first = 20, after }: PaginationOptions,
       { loaders }: GraphQLContext
     ) => {
-      const { list, hasMoreItems } = paginate(members, {
-        first,
-        after: decode(after),
-      });
-      return loaders.user.loadMany(list).then(users => ({
-        pageInfo: {
-          hasNextPage: hasMoreItems,
-        },
-        edges: users.map(user => ({
-          cursor: encode(user.id),
-          node: user,
-        })),
-      }));
+      const cursor = decode(after);
+
+      // TODO: Make this more performant by doing an actual db query rather than this hacking around
+      return getMembersInCommunity(id)
+        .then(users => loaders.user.loadMany(users))
+        .then(users =>
+          paginate(users, { first, after: cursor }, user => user.id === cursor)
+        )
+        .then(result => ({
+          pageInfo: {
+            hasNextPage: result.hasMoreItems,
+          },
+          edges: result.list.map(user => ({
+            cursor: encode(user.id),
+            node: user,
+          })),
+        }));
     },
     threadConnection: (
       { id }: { id: string },
