@@ -86,7 +86,7 @@ export const MiniNewThreadNotification = ({
     return (
       <SegmentedNotificationListRow>
         <ThreadContext>
-          <Icon glyph="post" />
+          <Icon glyph="post-fill" />
           <TextContent pointer={false}>
             {newThreadCount} published in {context.asString} {date}
           </TextContent>
