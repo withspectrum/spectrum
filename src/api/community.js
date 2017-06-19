@@ -2,6 +2,7 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { communityInfoFragment } from './fragments/community/communityInfo';
+import { communityMetaDataFragment } from './fragments/community/communityMetaData';
 import { channelInfoFragment } from './fragments/channel/channelInfo';
 import { userInfoFragment } from './fragments/user/userInfo';
 import { channelMetaDataFragment } from './fragments/channel/channelMetaData';
@@ -157,3 +158,111 @@ export const CHECK_UNIQUE_COMMUNITY_SLUG_QUERY = gql`
   }
   ${communityInfoFragment}
 `;
+
+const LoadMoreMembers = gql`
+  query loadMoreCommunityMembers($id: ID, $after: String) {
+    community(id: $id) {
+      id
+      ...communityMetaData
+      memberConnection(after: $after) {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+        edges {
+          cursor
+          node {
+            ...userInfo
+          }
+        }
+      }
+    }
+  }
+  ${userInfoFragment}
+  ${communityMetaDataFragment}
+`;
+
+const getCommunityMembersOptions = {
+  props: ({
+    data: { fetchMore, error, loading, community, networkStatus },
+  }) => ({
+    data: {
+      error,
+      loading,
+      community,
+      networkStatus: networkStatus,
+      hasNextPage: community
+        ? community.memberConnection.pageInfo.hasNextPage
+        : false,
+      fetchMore: () =>
+        fetchMore({
+          query: LoadMoreMembers,
+          variables: {
+            id: community.id,
+            after:
+              community.memberConnection.edges[
+                community.memberConnection.edges.length - 1
+              ].cursor,
+          },
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult.community) {
+              return prev;
+            }
+
+            console.log('prev', prev);
+            console.log('fetchMoreResult', fetchMoreResult);
+
+            return {
+              ...prev,
+              community: {
+                ...prev.community,
+                memberConnection: {
+                  ...prev.community.memberConnection,
+                  pageInfo: {
+                    ...prev.community.memberConnection.pageInfo,
+                    ...fetchMoreResult.community.memberConnection.pageInfo,
+                  },
+                  edges: [
+                    ...prev.community.memberConnection.edges,
+                    ...fetchMoreResult.community.memberConnection.edges,
+                  ],
+                },
+              },
+            };
+          },
+        }),
+    },
+  }),
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+    fetchPolicy: 'cache-and-network',
+  }),
+};
+
+export const getCommunityMembersQuery = graphql(
+  gql`
+		query getCommunity($id: ID) {
+      community(id: $id) {
+        id
+        ...communityMetaData
+        memberConnection {
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+          }
+          edges {
+            cursor
+            node {
+              ...userInfo
+            }
+          }
+        }
+      }
+		}
+    ${userInfoFragment}
+    ${communityMetaDataFragment}
+	`,
+  getCommunityMembersOptions
+);
