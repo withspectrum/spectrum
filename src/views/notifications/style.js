@@ -177,7 +177,7 @@ export const JoinContext = styled(ContextRow)`
 `;
 
 export const ThreadContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.space.soft};
+  color: ${({ theme }) => theme.brand.default};
   margin: 0 16px;
   margin-bottom: 16px;
 `;
