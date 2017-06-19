@@ -33,25 +33,38 @@ export const NewThreadNotification = ({ notification, currentUser }) => {
     ? `${notification.entities.length} new threads were`
     : 'A new thread was';
 
-  return (
-    <SegmentedNotificationCard>
-      <ThreadContext>
-        <Icon glyph="post" />
-        <TextContent pointer={true}>
-          {newThreadCount} published in {context.asString} {date}
-        </TextContent>
-      </ThreadContext>
-      <ContentWash>
-        <AttachmentsWash>
-          {notification.entities.map(thread => {
-            return (
-              <ThreadCreated key={thread.payload.id} id={thread.payload.id} />
-            );
-          })}
-        </AttachmentsWash>
-      </ContentWash>
-    </SegmentedNotificationCard>
+  // determine if there are non-currentUser created threads
+  const threads = notification.entities.filter(
+    thread => thread.payload.creatorId !== currentUser.id
   );
+  if (threads && threads.length > 0) {
+    return (
+      <SegmentedNotificationCard>
+        <ThreadContext>
+          <Icon glyph="post" />
+          <TextContent pointer={true}>
+            {newThreadCount} published in {context.asString} {date}
+          </TextContent>
+        </ThreadContext>
+        <ContentWash>
+          <AttachmentsWash>
+            {notification.entities
+              .filter(thread => thread.payload.creatorId !== currentUser.id)
+              .map(thread => {
+                return (
+                  <ThreadCreated
+                    key={thread.payload.id}
+                    id={thread.payload.id}
+                  />
+                );
+              })}
+          </AttachmentsWash>
+        </ContentWash>
+      </SegmentedNotificationCard>
+    );
+  } else {
+    return null;
+  }
 };
 
 export const MiniNewThreadNotification = ({
@@ -65,23 +78,36 @@ export const MiniNewThreadNotification = ({
     ? `${notification.entities.length} new threads were`
     : 'A new thread was';
 
-  return (
-    <SegmentedNotificationListRow>
-      <ThreadContext>
-        <Icon glyph="post" />
-        <TextContent pointer={false}>
-          {newThreadCount} published in {context.asString} {date}
-        </TextContent>
-      </ThreadContext>
-      <ContentWash mini>
-        <AttachmentsWash>
-          {notification.entities.map(thread => {
-            return (
-              <ThreadCreated key={thread.payload.id} id={thread.payload.id} />
-            );
-          })}
-        </AttachmentsWash>
-      </ContentWash>
-    </SegmentedNotificationListRow>
+  // determine if there are non-currentUser created threads
+  const threads = notification.entities.filter(
+    thread => thread.payload.creatorId !== currentUser.id
   );
+  if (threads && threads.length > 0) {
+    return (
+      <SegmentedNotificationListRow>
+        <ThreadContext>
+          <Icon glyph="post-fill" />
+          <TextContent pointer={false}>
+            {newThreadCount} published in {context.asString} {date}
+          </TextContent>
+        </ThreadContext>
+        <ContentWash mini>
+          <AttachmentsWash>
+            {notification.entities
+              .filter(thread => thread.payload.creatorId !== currentUser.id)
+              .map(thread => {
+                return (
+                  <ThreadCreated
+                    key={thread.payload.id}
+                    id={thread.payload.id}
+                  />
+                );
+              })}
+          </AttachmentsWash>
+        </ContentWash>
+      </SegmentedNotificationListRow>
+    );
+  } else {
+    return null;
+  }
 };

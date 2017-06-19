@@ -74,11 +74,14 @@ export default () =>
             })
             .then(([notification, recipients]) => {
               debug('mark notification as new for all recipients');
-              // for each owner, trigger a notification
+              // for each user trigger a notification
               return Promise.all(
-                recipients.map(recipient =>
-                  markUsersNotificationsAsNew(notification.id, recipient)
-                )
+                recipients
+                  // don't trigger a notification for the person who just posted the thread
+                  .filter(recipient => recipient !== incomingThread.creatorId)
+                  .map(recipient =>
+                    markUsersNotificationsAsNew(notification.id, recipient)
+                  )
               );
             });
         } else {
@@ -110,9 +113,12 @@ export default () =>
             .then(([notification, recipients]) => {
               debug('create a notification for every recipient');
               return Promise.all(
-                recipients.map(recipient =>
-                  storeUsersNotifications(notification.id, recipient)
-                )
+                recipients
+                  // don't trigger a notification for the person who just posted the thread
+                  .filter(recipient => recipient !== incomingThread.creatorId)
+                  .map(recipient =>
+                    storeUsersNotifications(notification.id, recipient)
+                  )
               );
             });
         }
