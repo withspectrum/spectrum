@@ -20,7 +20,7 @@ import {
 } from '../style';
 import Icon from '../../../components/icons';
 import { ReactionWrapper } from '../../../components/reaction/style';
-import { convertTimestampToTime } from '../../../helpers/utils';
+import { convertTimestampToTime, truncate } from '../../../helpers/utils';
 import {
   MessagesWrapper,
   MessageWrapper,
@@ -128,6 +128,10 @@ export const MiniNewReactionNotification = ({
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
+  const isText = notification.context.payload.messageType === 'text';
+  const messageStr = isText
+    ? truncate(notification.context.payload.content.body, 40)
+    : null;
 
   return (
     <NotificationListRow
@@ -140,7 +144,8 @@ export const MiniNewReactionNotification = ({
       </ReactionContext>
       <Content>
         <TextContent pointer={false}>
-          {' '}{actors.asString} {event} {context.asString} {date}{' '}
+          {' '}{actors.asString} {event} {context.asString}{' '}
+          {messageStr && `"${messageStr}"`} {date}{' '}
         </TextContent>
       </Content>
     </NotificationListRow>
