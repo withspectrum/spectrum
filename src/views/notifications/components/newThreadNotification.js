@@ -31,9 +31,19 @@ export const NewThreadNotification = ({ notification, currentUser }) => {
   const context = parseContext(notification.context);
 
   // determine if there are non-currentUser created threads
-  const threads = notification.entities.filter(
+  let threads = notification.entities.filter(
     thread => thread.payload.creatorId !== currentUser.id
   );
+
+  // sort by most recently created
+  threads =
+    threads &&
+    threads.sort((a, b) => {
+      const x = new Date(a.payload.createdAt).getTime();
+      const y = new Date(b.payload.createdAt).getTime();
+      const val = y - x;
+      return val;
+    });
 
   const newThreadCount = threads.length > 1
     ? `New threads were`
@@ -50,16 +60,11 @@ export const NewThreadNotification = ({ notification, currentUser }) => {
         </ThreadContext>
         <ContentWash>
           <AttachmentsWash>
-            {notification.entities
-              .filter(thread => thread.payload.creatorId !== currentUser.id)
-              .map(thread => {
-                return (
-                  <ThreadCreated
-                    key={thread.payload.id}
-                    id={thread.payload.id}
-                  />
-                );
-              })}
+            {threads.map(thread => {
+              return (
+                <ThreadCreated key={thread.payload.id} id={thread.payload.id} />
+              );
+            })}
           </AttachmentsWash>
         </ContentWash>
       </SegmentedNotificationCard>
@@ -78,9 +83,19 @@ export const MiniNewThreadNotification = ({
   const context = parseContext(notification.context);
 
   // determine if there are non-currentUser created threads
-  const threads = notification.entities.filter(
+  let threads = notification.entities.filter(
     thread => thread.payload.creatorId !== currentUser.id
   );
+
+  // sort by most recently created
+  threads =
+    threads &&
+    threads.sort((a, b) => {
+      const x = new Date(a.payload.createdAt).getTime();
+      const y = new Date(b.payload.createdAt).getTime();
+      const val = y - x;
+      return val;
+    });
 
   const newThreadCount = threads.length > 1
     ? `New threads were`
@@ -97,16 +112,11 @@ export const MiniNewThreadNotification = ({
         </ThreadContext>
         <ContentWash mini>
           <AttachmentsWash>
-            {notification.entities
-              .filter(thread => thread.payload.creatorId !== currentUser.id)
-              .map(thread => {
-                return (
-                  <ThreadCreated
-                    key={thread.payload.id}
-                    id={thread.payload.id}
-                  />
-                );
-              })}
+            {threads.map(thread => {
+              return (
+                <ThreadCreated key={thread.payload.id} id={thread.payload.id} />
+              );
+            })}
           </AttachmentsWash>
         </ContentWash>
       </SegmentedNotificationListRow>
