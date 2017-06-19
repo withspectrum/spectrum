@@ -58,6 +58,10 @@ foreach@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/foreach/-/foreach-2.0.5.tgz#0bee005018aeb260d0a3af3ae658dd0136ec1b99"
 
+git-rev@0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/git-rev/-/git-rev-0.2.1.tgz#8ccbd2092b345bc2c9149548396df549646ca63f"
+
 ioredis@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/ioredis/-/ioredis-3.1.1.tgz#cc2f1d3232b8c95cc153046bce168f2baa1186e8"
@@ -81,6 +85,10 @@ lodash@^4.17.4, lodash@^4.8.2:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
+merge@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/merge/-/merge-1.2.0.tgz#7531e39d4949c281a66b8c5a6e0265e8b05894da"
+
 moment-timezone@^0.5.0:
   version "0.5.13"
   resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.13.tgz#99ce5c7d827262eb0f1f702044177f60745d7b90"
@@ -98,6 +106,13 @@ ms@2.0.0:
 object-keys@^1.0.8:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/object-keys/-/object-keys-1.0.11.tgz#c54601778ad560f1142ce0e01bcca8b56d13426d"
+
+postmark@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/postmark/-/postmark-1.3.1.tgz#ffd0c36c6a7459295e8d1bf1ca97cfe9e4aaf144"
+  dependencies:
+    git-rev "0.2.1"
+    merge "1.2.0"
 
 redis-commands@^1.2.0:
   version "1.3.1"
