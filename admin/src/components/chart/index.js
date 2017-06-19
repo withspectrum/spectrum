@@ -21,16 +21,14 @@ const Chart = (props: Props) => {
     : relativeToAbsolute(props.data);
 
   return (
-    <div>
-      <Trend
-        gradient={['#1CD2F2', '#00D6A9']}
-        strokeWidth={2}
-        smooth
-        strokeLinecap="round"
-        {...props}
-        data={data}
-      />
-    </div>
+    <Trend
+      gradient={['#1CD2F2', '#00D6A9']}
+      strokeWidth={2}
+      smooth
+      strokeLinecap="round"
+      {...props}
+      data={data}
+    />
   );
 };
 
