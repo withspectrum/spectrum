@@ -29,19 +29,21 @@ const ThreadCreated = compose(getThreadById, displayLoadingCard, pure)(
 export const NewThreadNotification = ({ notification, currentUser }) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
-  const newThreadCount = notification.entities.length > 1
-    ? `${notification.entities.length} new threads were`
-    : 'A new thread was';
 
   // determine if there are non-currentUser created threads
   const threads = notification.entities.filter(
     thread => thread.payload.creatorId !== currentUser.id
   );
+
+  const newThreadCount = threads.length > 1
+    ? `New threads were`
+    : 'A new thread was';
+
   if (threads && threads.length > 0) {
     return (
       <SegmentedNotificationCard>
         <ThreadContext>
-          <Icon glyph="post" />
+          <Icon glyph="post-fill" />
           <TextContent pointer={true}>
             {newThreadCount} published in {context.asString} {date}
           </TextContent>
@@ -74,14 +76,16 @@ export const MiniNewThreadNotification = ({
 }) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
-  const newThreadCount = notification.entities.length > 1
-    ? `${notification.entities.length} new threads were`
-    : 'A new thread was';
 
   // determine if there are non-currentUser created threads
   const threads = notification.entities.filter(
     thread => thread.payload.creatorId !== currentUser.id
   );
+
+  const newThreadCount = threads.length > 1
+    ? `New threads were`
+    : 'A new thread was';
+
   if (threads && threads.length > 0) {
     return (
       <SegmentedNotificationListRow>
