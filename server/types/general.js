@@ -14,6 +14,7 @@ const general = /* GraphQL */ `
 		isPending: Boolean
 		isOwner: Boolean
 		isModerator: Boolean
+		receiveNotifications: Boolean
 	}
 
 	type CommunityPermissions {

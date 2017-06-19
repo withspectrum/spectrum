@@ -356,10 +356,10 @@ const createMemberInDefaultChannels = (
     .getAll(userId, { index: 'userId' })
     .run();
 
-  return Promise.all([defaultChannels, usersChannels]).then(([
+  return Promise.all([
     defaultChannels,
     usersChannels,
-  ]) => {
+  ]).then(([defaultChannels, usersChannels]) => {
     // convert default channels and users channels to arrays of ids
     // to efficiently filter down to find the default channels that exist
     // which a user has not joined
@@ -379,6 +379,19 @@ const createMemberInDefaultChannels = (
       )
     );
   });
+};
+
+const toggleUserChannelNotifications = (
+  userId: string,
+  channelId: string,
+  value: boolean
+) => {
+  return db
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ userId })
+    .update({ receiveNotifications: value })
+    .run();
 };
 
 /*
@@ -497,6 +510,7 @@ module.exports = {
   makeMemberModeratorInChannel,
   removeModeratorInChannel,
   createMemberInDefaultChannels,
+  toggleUserChannelNotifications,
   // get
   getMembersInChannel,
   getPendingUsersInChannel,

@@ -6,3 +6,4 @@ export const MESSAGE_NOTIFICATION = 'message notification';
 export const REACTION_NOTIFICATION = 'reaction notification';
 export const CHANNEL_NOTIFICATION = 'channel notification';
 export const COMMUNITY_NOTIFICATION = 'community notification';
+export const THREAD_NOTIFICATION = 'thread notification';

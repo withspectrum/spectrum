@@ -81,7 +81,7 @@ registerServiceWorker().then(({ newContent }: ServiceWorkerResult) => {
 window.addEventListener('beforeinstallprompt', e => {
   track('user', 'prompted to add to homescreen');
   e.userChoice.then(choiceResult => {
-    if (choiceResult.outcome == 'dismissed') {
+    if (choiceResult.outcome === 'dismissed') {
       track('user', 'did not add to homescreen');
     } else {
       track('user', 'added to homescreen');

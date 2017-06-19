@@ -1,8 +1,10 @@
 //@flow
 import React, { Component } from 'react';
 import { UserListItem } from '../listItems';
-import { TextButton, Button } from '../buttons';
+import { Button } from '../buttons';
+// $FlowFixMe
 import pure from 'recompose/pure';
+// $FlowFixMe
 import compose from 'recompose/compose';
 import { LoadingCard } from '../loading';
 import { NullCard } from '../upsell';
@@ -13,7 +15,6 @@ import {
   ListHeader,
   LargeListHeading,
   ListContainer,
-  Description,
   ListFooter,
 } from '../listItems/style';
 
@@ -30,9 +31,7 @@ const ErrorState = () =>
 
 class CommunityMembers extends Component {
   render() {
-    const {
-      data: { error, loading, community, networkStatus, fetchMore },
-    } = this.props;
+    const { data: { error, community, networkStatus, fetchMore } } = this.props;
     const members =
       community &&
       community.memberConnection &&

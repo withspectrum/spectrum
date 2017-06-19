@@ -100,7 +100,8 @@ export const ChatMessage = styled.p`
   border-radius: 16px;
   font-size: 14px;
   background-color: ${({ theme }) => theme.generic.alt};
-  background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
+  background-image: ${({ theme }) =>
+    Gradient(theme.generic.alt, theme.generic.default)};
   float: left;
   max-width: 75%;
   margin-top: 24px;
@@ -174,6 +175,12 @@ export const ReactionContext = styled(ContextRow)`
 
 export const JoinContext = styled(ContextRow)`
   color: ${({ theme }) => theme.space.light};
+`;
+
+export const ThreadContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.text.default};
+  margin: 0 16px;
+  margin-bottom: 16px;
 `;
 
 export const CreatedContext = styled(ContextRow)`
