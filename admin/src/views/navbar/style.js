@@ -79,6 +79,52 @@ export const IconLink = styled(Link)`
   &:hover {
     opacity: 1;
   }
+
+${/* handles unseen notification counts for both DMs and Notifications */ ''}
+  ${props =>
+    props.withCount &&
+    css`
+    > .icon:after {
+      content: ${props.withCount ? `'${props.withCount}'` : `''`};
+      position: absolute;
+      left: calc(100% - 12px);
+      top: -2px;
+      font-size: 14px;
+      font-weight: 600;
+      background: ${({ theme }) => theme.bg.default};
+      color: ${({ theme }) =>
+        process.env.NODE_ENV === 'production'
+          ? theme.text.default
+          : theme.warn.alt};;
+      border-radius: 8px;
+      padding: 2px 4px;
+      border: 2px solid ${({ theme }) =>
+        process.env.NODE_ENV === 'production'
+          ? theme.text.default
+          : theme.warn.alt};
+    }
+  `}
+
+  &[data-active~="true"] {
+    box-shadow: inset 0 -4px 0 ${({ theme }) => theme.bg.default};
+    opacity: 1;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    opacity: 0.7;
+    margin: 0;
+
+    &[data-active~="true"] {
+      box-shadow: inset 0 0 0 ${({ theme }) => theme.bg.default};
+      opacity: 1;
+    }
+
+    div {
+      width: 32px;
+      height: 32px;
+    }
+  }
 `;
 
 export const Label = styled.span`

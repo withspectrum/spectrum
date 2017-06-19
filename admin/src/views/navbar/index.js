@@ -10,6 +10,7 @@ import { Section, Nav, LogoLink, Logo, IconLink, Label } from './style';
 class Navbar extends Component {
   render() {
     const { match } = this.props;
+    console.log('match', match);
     return (
       <Nav>
         <Section left hideOnMobile>
