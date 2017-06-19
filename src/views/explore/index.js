@@ -39,7 +39,7 @@ const ExplorePure = props => {
   });
   const featureSlug = 'react';
   const featureNotes =
-    "React is a JavaScript library for component-based user interfaces. The React community has members from the core team as well as developers of several of the top frameworks and plugins for React. This community makes it quick and easy to get support or advice from people who know what they're doing so you can get up and running quickly.";
+    "React is a JavaScript library for creating component-based user interfaces. The React community has members from the core team as well as developers of several of the top frameworks and plugins for React. This community makes it quick and easy to get support or advice from people who know what they're doing so you can get up and running quickly.";
 
   return (
     <AppViewWrapper>
