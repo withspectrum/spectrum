@@ -56,7 +56,7 @@ export default () =>
               const newNotification = Object.assign({}, notification, {
                 actors: [...distinctActors],
                 context,
-                entities: [notification.entities, ...entity],
+                entities: [...notification.entities, entity],
               });
 
               debug('update existing notification in database with new data');
