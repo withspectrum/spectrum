@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('worker:queue:reaction-notification');
+const debug = require('debug')('athena:queue:reaction-notification');
 import processQueue from '../process-queue';
 import { REACTION_NOTIFICATION, TIME_BUFFER } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';

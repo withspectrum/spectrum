@@ -1,11 +1,11 @@
 // @flow
-const debug = require('debug')('worker:queue:channel-notification');
+const debug = require('debug')('athena:queue:community-notification');
 import processQueue from '../process-queue';
-import { CHANNEL_NOTIFICATION } from './constants';
+import { COMMUNITY_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import { getCommunityById } from '../models/community';
-import { getMembersInCommunity } from '../models/usersCommunities';
+import { getOwnersInCommunity } from '../models/usersCommunities';
 import {
   storeNotification,
   updateNotification,
@@ -17,45 +17,38 @@ import {
 } from '../models/usersNotifications';
 
 export default () =>
-  processQueue(CHANNEL_NOTIFICATION, job => {
-    const incomingChannel = job.data.channel;
+  processQueue(COMMUNITY_NOTIFICATION, job => {
+    const incomingCommunityId = job.data.communityId;
     const currentUserId = job.data.userId;
 
     debug(
       `
-new job for ${incomingChannel.id} by ${currentUserId}`
+new job for ${incomingCommunityId} by ${currentUserId}`
     );
-
-    // if the channel is the default channel being created at community creation time, don't create a notification
-    if (incomingChannel.slug === 'general') {
-      debug('ignored new job for default channel');
-      return;
-    }
 
     /*
       These promises are used to create or modify a notification. The order is:
       - actor
       - context
-      - entity
+
+      In this case the actor and entity (user who is joing the community) will be the same
     */
     const promises = [
-      //get the user who created the channel (probably won't be used in the UI)
+      // actor and entity
       fetchPayload('USER', currentUserId),
-      // get the community where the channel was created
-      fetchPayload('COMMUNITY', incomingChannel.communityId),
-      // create an entity payload of the channel that was created
-      createPayload('CHANNEL', incomingChannel),
+      // get the community the user just joined
+      fetchPayload('COMMUNITY', incomingCommunityId),
     ];
 
     return checkForExistingNotification(
-      'CHANNEL_CREATED',
-      incomingChannel.communityId
+      'USER_JOINED_COMMUNITY',
+      incomingCommunityId
     )
       .then(notification => {
         if (notification) {
-          debug('found existing channel creation notification');
+          debug('found existing notification');
           return Promise.all([notification, ...promises])
-            .then(([notification, actor, context, entity]) => {
+            .then(([notification, actor, context]) => {
               // actors should always be distinct to make client side rendering easier
               const distinctActors = getDistinctActors([
                 ...notification.actors,
@@ -63,34 +56,29 @@ new job for ${incomingChannel.id} by ${currentUserId}`
               ]);
 
               // create a new notification
+              // in this case we always want the actors and entities to be in sync because the notification should only ever reflect who has actually joined the community
               const newNotification = Object.assign({}, notification, {
                 actors: [...distinctActors],
                 context,
-                entities: [...notification.entities, entity],
+                entities: [...distinctActors],
               });
 
               debug('update existing notification in database with new data');
               return updateNotification(newNotification);
             })
             .then(notification => {
-              // get the recipients of the notification by finding all members in the community that have notifications turned on
-              const recipients = getMembersInCommunity(notification.context.id);
+              // get the owners of the community
+              const recipients = getOwnersInCommunity(incomingCommunityId);
 
               debug('find recipients of notification');
 
               return Promise.all([notification, recipients]);
             })
             .then(([notification, recipients]) => {
-              // filter out the user who created the channel
-              let filteredRecipients = recipients.filter(
-                recipient => recipient !== currentUserId
-              );
-
               debug('mark notification as new for all recipients');
-
-              // for each person who should receie an updated notification, mark their notification as unseen and unread
+              // for each owner, trigger a notification
               return Promise.all(
-                filteredRecipients.map(recipient =>
+                recipients.map(recipient =>
                   markUsersNotificationsAsNew(notification.id, recipient)
                 )
               );
@@ -98,13 +86,13 @@ new job for ${incomingChannel.id} by ${currentUserId}`
         } else {
           // if no notification was found that matches our bundling criteria, create a new notification
           return Promise.all([...promises])
-            .then(([actor, context, entity]) => {
+            .then(([actor, context]) => {
               // create the notification record
               const notification = {
                 actors: [actor],
-                event: 'CHANNEL_CREATED',
+                event: 'USER_JOINED_COMMUNITY',
                 context,
-                entities: [entity],
+                entities: [actor],
               };
 
               debug('create notification in db');
@@ -112,23 +100,17 @@ new job for ${incomingChannel.id} by ${currentUserId}`
               return storeNotification(notification);
             })
             .then(notification => {
-              // get the recipients of the notification by finding all members in the community that have notifications turned on
-              const recipients = getMembersInCommunity(notification.context.id);
+              // get the owners of the community
+              const recipients = getOwnersInCommunity(incomingCommunityId);
 
               debug('find recipients of notification');
 
               return Promise.all([notification, recipients]);
             })
             .then(([notification, recipients]) => {
-              // filter out the user who created the channel
-              let filteredRecipients = recipients.filter(
-                recipient => recipient !== currentUserId
-              );
-
               debug('create a notification for every recipient');
-              // for each recipient, create a notification
               return Promise.all(
-                filteredRecipients.map(recipient =>
+                recipients.map(recipient =>
                   storeUsersNotifications(notification.id, recipient)
                 )
               );

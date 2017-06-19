@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('worker:actors');
+const debug = require('debug')('athena:actors');
 
 // takes an array of objects containing user data and returns an array with unique objects
 export const getDistinctActors = array => {

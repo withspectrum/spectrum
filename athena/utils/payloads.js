@@ -6,7 +6,7 @@ import { getChannelById } from '../models/channel';
 import { getCommunityById } from '../models/community';
 import { getUserById } from '../models/user';
 import { getDirectMessageThreadById } from '../models/directMessageThread';
-const debug = require('debug')('worker:payloads');
+const debug = require('debug')('athena:payloads');
 
 /*
   Fetch a payload from the database when we only have access to an id.
