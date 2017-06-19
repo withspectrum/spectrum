@@ -9,5 +9,5 @@ rethinkdb_data
 debug
 server/.env
 build-server
-build-worker
+build-athena
 package-lock.json
