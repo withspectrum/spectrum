@@ -99,6 +99,7 @@ const ImagePlugin = () => ({
   onDrop: (e, data, state, editor) => {
     switch (data.type) {
       case 'files':
+      default:
         return onDropOrPasteFiles(e, data, state, editor);
       case 'node':
         return onDropNode(e, data, state);
@@ -107,6 +108,7 @@ const ImagePlugin = () => ({
   onPaste: (e, data, state, editor) => {
     switch (data.type) {
       case 'files':
+      default:
         return onDropOrPasteFiles(e, data, state, editor);
     }
   },
