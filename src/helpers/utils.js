@@ -173,7 +173,8 @@ export function timeDifferenceShort(current: Date, previous: Date) {
 export const debounce = (func, wait, immediate) => {
   let timeout;
   return () => {
-    let context = this, args = arguments;
+    let context = this,
+      args = arguments;
     let later = () => {
       timeout = null;
       if (!immediate) func.apply(context, args);
@@ -191,7 +192,8 @@ export const throttle = (func, threshhold, scope) => {
   return function() {
     let context = scope || this;
 
-    let now = +new Date(), args = arguments;
+    let now = +new Date(),
+      args = arguments;
     if (last && now < last + threshhold) {
       // hold on to it
       clearTimeout(deferTimer);
@@ -237,4 +239,14 @@ export const addProtocolToString = string => {
     // otherwise it doesn't start with a protocol, prepend http
     return `http://${string}`;
   }
+};
+
+export const sortByDate = (array, key, order) => {
+  return array.sort((a, b) => {
+    const x = new Date(a[key]).getTime();
+    const y = new Date(b[key]).getTime();
+    // desc = older to newest from top to bottom
+    const val = order === 'desc' ? y - x : x - y;
+    return val;
+  });
 };
