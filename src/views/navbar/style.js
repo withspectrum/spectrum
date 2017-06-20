@@ -28,7 +28,10 @@ export const UserProfileAvatar = styled(Avatar)`
 
 export const Nav = styled(FlexRow)`
   width: 100%;
-  background: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
+  background: ${({ theme }) =>
+    process.env.NODE_ENV === 'production'
+      ? theme.text.default
+      : theme.warn.alt};
   display: flex;
   align-items: stretch;
   color: ${({ theme }) => theme.text.reverse};
@@ -64,7 +67,9 @@ export const LogoLink = styled(Link)`
   flex-direction: column;
   justify-content: center;
 
-  ${() => process.env.NODE_ENV !== 'production' && css`
+  ${() =>
+    process.env.NODE_ENV !== 'production' &&
+    css`
     &:after {
       content: "Dev";
       margin-top: 4px;
@@ -141,7 +146,9 @@ export const IconLink = styled(Link)`
   }
 
 ${/* handles unseen notification counts for both DMs and Notifications */ ''}
-  ${props => props.withCount && css`
+  ${props =>
+    props.withCount &&
+    css`
     > .icon:after {
       content: ${props.withCount ? `'${props.withCount}'` : `''`};
       position: absolute;
@@ -150,10 +157,16 @@ ${/* handles unseen notification counts for both DMs and Notifications */ ''}
       font-size: 14px;
       font-weight: 600;
       background: ${({ theme }) => theme.bg.default};
-      color: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};;
+      color: ${({ theme }) =>
+        process.env.NODE_ENV === 'production'
+          ? theme.text.default
+          : theme.warn.alt};;
       border-radius: 8px;
       padding: 2px 4px;
-      border: 2px solid ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
+      border: 2px solid ${({ theme }) =>
+        process.env.NODE_ENV === 'production'
+          ? theme.text.default
+          : theme.warn.alt};
     }
   `}
 
@@ -201,9 +214,9 @@ export const DropdownHeader = styled(FlexRow)`
   border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
   flex: 0 0 auto;
   align-self: stretch;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 8px 16px;
   font-weight: 800;
   font-size: 14px;
   color: ${({ theme }) => theme.text.alt};
