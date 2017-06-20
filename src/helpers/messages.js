@@ -59,8 +59,8 @@ export const sortAndGroupMessages = messagesToSort => {
         than the previous evaulated message by a certain integer to determine
         if we should render a timestamp in the UI and create a new bubbleGroup
       */
-      const c = new Date(current.timestamp).getTime() / 1000;
-      const p = new Date(current.timestamp).getTime() / 1000;
+      const c = new Date(current.timestamp).getTime();
+      const p = new Date(previous.timestamp).getTime();
       return c > p + 900000;
     };
 
