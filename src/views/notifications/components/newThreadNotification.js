@@ -5,6 +5,7 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
 import { getThreadById } from '../../../api/thread';
+import { sortByDate } from '../../../helpers/utils';
 import { displayLoadingCard } from '../../../components/loading';
 import { parseNotificationDate, parseContext } from '../utils';
 import Icon from '../../../components/icons';
@@ -18,6 +19,21 @@ import {
   ContentWash,
 } from '../style';
 
+const sortThreads = (entities, currentUser) => {
+  // filter out the current user's threads
+  let threads = entities.filter(
+    thread => thread.payload.creatorId !== currentUser.id
+  );
+
+  // create an array of payloads
+  threads = threads && threads.map(thread => thread.payload);
+
+  // sort the threads by created at date
+  threads = threads && sortByDate(threads, 'createdAt', 'desc');
+
+  return threads;
+};
+
 const ThreadCreatedComponent = ({ data }) => {
   return <ThreadProfile profileSize="mini" data={data} />;
 };
@@ -30,20 +46,8 @@ export const NewThreadNotification = ({ notification, currentUser }) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
 
-  // determine if there are non-currentUser created threads
-  let threads = notification.entities.filter(
-    thread => thread.payload.creatorId !== currentUser.id
-  );
-
-  // sort by most recently created
-  threads =
-    threads &&
-    threads.sort((a, b) => {
-      const x = new Date(a.payload.createdAt).getTime();
-      const y = new Date(b.payload.createdAt).getTime();
-      const val = y - x;
-      return val;
-    });
+  // sort and order the threads
+  const threads = sortThreads(notification.entities, currentUser);
 
   const newThreadCount = threads.length > 1
     ? `New threads were`
@@ -61,9 +65,7 @@ export const NewThreadNotification = ({ notification, currentUser }) => {
         <ContentWash>
           <AttachmentsWash>
             {threads.map(thread => {
-              return (
-                <ThreadCreated key={thread.payload.id} id={thread.payload.id} />
-              );
+              return <ThreadCreated key={thread.id} id={thread.id} />;
             })}
           </AttachmentsWash>
         </ContentWash>
@@ -82,20 +84,8 @@ export const MiniNewThreadNotification = ({
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
 
-  // determine if there are non-currentUser created threads
-  let threads = notification.entities.filter(
-    thread => thread.payload.creatorId !== currentUser.id
-  );
-
-  // sort by most recently created
-  threads =
-    threads &&
-    threads.sort((a, b) => {
-      const x = new Date(a.payload.createdAt).getTime();
-      const y = new Date(b.payload.createdAt).getTime();
-      const val = y - x;
-      return val;
-    });
+  // sort and order the threads
+  const threads = sortThreads(notification.entities, currentUser);
 
   const newThreadCount = threads.length > 1
     ? `New threads were`
@@ -113,9 +103,7 @@ export const MiniNewThreadNotification = ({
         <ContentWash mini>
           <AttachmentsWash>
             {threads.map(thread => {
-              return (
-                <ThreadCreated key={thread.payload.id} id={thread.payload.id} />
-              );
+              return <ThreadCreated key={thread.id} id={thread.id} />;
             })}
           </AttachmentsWash>
         </ContentWash>

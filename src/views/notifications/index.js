@@ -19,6 +19,7 @@ import Titlebar from '../../views/titlebar';
 import { displayLoadingNotifications } from '../../components/loading';
 import { FetchMoreButton } from '../../components/threadFeed/style';
 import { FlexCol } from '../../components/globals';
+import { sortByDate } from '../../helpers/utils';
 import {
   getNotifications,
   markNotificationsSeenMutation,
@@ -103,6 +104,7 @@ class NotificationsPure extends Component {
       );
 
     notifications = getDistinctNotifications(notifications);
+    notifications = sortByDate(notifications, 'modifiedAt', 'desc');
 
     const { notifications: { pageInfo: { hasNextPage } } } = data;
 
