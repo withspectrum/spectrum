@@ -1,366 +1,350 @@
-<!doctype html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>{{notification.sender.displayName}} replied to your story!</title>
-    <style>
-      /* -------------------------------------
-          GLOBAL RESETS
-      ------------------------------------- */
-      img {
-        border: none;
-        -ms-interpolation-mode: bicubic;
-        max-width: 100%; }
+    <title>{{threads[0].replies[0].sender}} replied to your thread</title>
+    <!--
+    The style block is collapsed on page load to save you some scrolling.
+    Postmark automatically inlines all CSS properties for maximum email client
+    compatibility. You can just update styles here, and Postmark does the rest.
+    -->
+    <style type="text/css" rel="stylesheet" media="all">
+    /* Base ------------------------------ */
 
-      body {
-        background-color: #f6f6f6;
-        font-family: sans-serif;
-        -webkit-font-smoothing: antialiased;
-        font-size: 14px;
-        line-height: 1.4;
-        margin: 0;
-        padding: 0; 
-        -ms-text-size-adjust: 100%;
-        -webkit-text-size-adjust: 100%; }
+    *:not(br):not(tr):not(html) {
+      font-family: -apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif;
+      box-sizing: border-box;
+    }
 
-      table {
-        border-collapse: separate;
-        mso-table-lspace: 0pt;
-        mso-table-rspace: 0pt;
-        width: 100%; }
-        table td {
-          font-family: sans-serif;
-          font-size: 14px;
-          vertical-align: top; }
+    body {
+      width: 100% !important;
+      height: 100%;
+      margin: 0;
+      line-height: 1.4;
+      background-color: #F2F5F9;
+      color: #171a21;
+      -webkit-text-size-adjust: none;
+    }
 
-      /* -------------------------------------
-          BODY & CONTAINER
-      ------------------------------------- */
+    p,
+    ul,
+    ol,
+    blockquote {
+      line-height: 1.4;
+      text-align: left;
+    }
 
-      .body {
-        background-color: #f6f6f6;
-        width: 100%; }
+    a {
+      color: #7b16ff;
+      font-weight: bold;
+      text-decoration: none;
 
-      /* Set a max-width, and make it display as block so it will automatically stretch to that width, but will also shrink down on a phone or something */
-      .container {
-        display: block;
-        Margin: 0 auto !important;
-        /* makes it centered */
-        max-width: 580px;
-        padding: 10px;
-        width: 580px; }
+      &:hover {
+        text-decoration: underline;
+      }
+    }
 
-      /* This should also be a block element, so that it will fill 100% of the .container */
-      .content {
-        box-sizing: border-box;
-        display: block;
-        Margin: 0 auto;
-        max-width: 580px;
-        padding: 10px; }
+    a img {
+      border: none;
+    }
 
-      /* -------------------------------------
-          HEADER, FOOTER, MAIN
-      ------------------------------------- */
-      .main {
-        background: #fff;
-        border-radius: 24px;
-        width: 100%; }
+    td {
+      word-break: break-word;
+    }
+    /* Layout ------------------------------ */
 
-      .wrapper {
-        box-sizing: border-box;
-        padding: 20px; }
+    .email-wrapper {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      background-color: #F2F5f9;
+    }
 
-      .footer {
-        clear: both;
-        padding-top: 10px;
-        text-align: center;
-        width: 100%; }
-        .footer td,
-        .footer p,
-        .footer span,
-        .footer a {
-          color: #999999;
-          font-size: 12px;
-          text-align: center; }
+    .email-content {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
 
-      /* -------------------------------------
-          TYPOGRAPHY
-      ------------------------------------- */
-      h1,
-      h2,
-      h3,
-      h4 {
-        color: #171a21;
-        font-family: sans-serif;
-        font-weight: 400;
-        line-height: 1.4;
-        margin: 0;
-        Margin-bottom: 30px; }
+    /* Body ------------------------------ */
 
-      h1 {
-        font-size: 35px;
-        font-weight: 300;
-        text-align: center;
-        text-transform: capitalize; }
+    .email-body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      border-top: 1px solid #DFE7EF;
+      border-bottom: 1px solid #DFE7EF;
+      background-color: #FFFFFF;
+    }
 
-      p,
-      ul,
-      ol {
-        font-family: sans-serif;
-        font-size: 14px;
-        font-weight: normal;
-        margin: 0;
-        Margin-bottom: 15px; }
-        p li,
-        ul li,
-        ol li {
-          list-style-position: inside;
-          margin-left: 5px; }
+    .email-body_inner {
+      width: 560px;
+      margin: 0 auto;
+      padding: 0;
+      -premailer-width: 560px;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      background-color: #FFFFFF;
+    }
 
-      a {
-        color: #3818e5;
-        text-decoration: underline; }
+    .email-footer {
+      width: 560px;
+      margin: 0 auto;
+      padding: 0;
+      -premailer-width: 560px;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      text-align: center;
+    }
 
-      /* -------------------------------------
-          BUTTONS
-      ------------------------------------- */
-      .btn {
-        box-sizing: border-box;
-        width: 100%; }
-        .btn > tbody > tr > td {
-          padding-bottom: 15px; }
-        .btn table {
-          width: auto; }
-        .btn table td {
-          background-color: #ffffff;
-          border-radius: 16px;
-          text-align: center; }
-        .btn a {
-          background-color: #ffffff;
-          border: solid 1px #3818e5;
-          border-radius: 12px;
-          box-sizing: border-box;
-          color: #3818e5;
-          cursor: pointer;
-          display: inline-block;
-          font-size: 14px;
-          font-weight: bold;
-          margin: 0;
-          padding: 12px 25px;
-          text-decoration: none;
-          text-transform: capitalize; }
+    .email-footer p {
+      color: #AEAEAE;
+    }
 
-      .btn-primary table td {
-        background-color: #3818e5; }
+    .body-action {
+      width: 100%;
+      margin: 32px auto;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      text-align: center;
+    }
 
-      .btn-primary a {
-        background-color: #3818e5;
-        border-color: #3818e5;
-        color: #ffffff; }
+    .body-sub {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid #DFE7EF;
+    }
 
-      /* -------------------------------------
-          OTHER STYLES THAT MIGHT BE USEFUL
-      ------------------------------------- */
-      .last {
-        margin-bottom: 0; }
+    .header-cell {
+      padding: 32px 32px 0 32px
+    }
 
-      .first {
-        margin-top: 0; }
+    .content-cell {
+      padding: 32px;
+    }
 
-      .align-center {
-        text-align: center; }
+    .footer-cell {
+      padding: 0 32px 32px 32px;
+    }
 
-      .align-right {
-        text-align: right; }
+    .preheader {
+      display: none !important;
+      visibility: hidden;
+      mso-hide: all;
+      font-size: 1px;
+      line-height: 1px;
+      max-height: 0;
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
 
-      .align-left {
-        text-align: left; }
+    img.avatar {
+      height: 40px;
+      width: 40px;
+      border-radius: 20px;
+      margin-right: 8px;
+    }
 
-      .clear {
-        clear: both; }
+    /* Utilities ------------------------------ */
 
-      .mt0 {
-        margin-top: 0; }
+    .align-right {
+      text-align: right;
+    }
 
-      .mb0 {
-        margin-bottom: 0; }
+    .align-left {
+      text-align: left;
+    }
 
-      .preheader {
-        color: transparent;
-        display: none;
-        height: 0;
-        max-height: 0;
-        max-width: 0;
-        opacity: 0;
-        overflow: hidden;
-        mso-hide: all;
-        visibility: hidden;
-        width: 0; }
+    .align-center {
+      text-align: center;
+    }
 
-      .powered-by a {
-        text-decoration: none; }
+    .collapse {
+      border-collapse: collapse;
+    }
+    /*Media Queries ------------------------------ */
 
-      hr {
-        border: 0;
-        border-bottom: 1px solid #f6f7f8;
-        Margin: 20px 0; }
+    @media only screen and (max-width: 600px) {
+      .email-body_inner,
+      .email-footer {
+        width: 100% !important;
+      }
+    }
 
-      /* -------------------------------------
-          RESPONSIVE AND MOBILE FRIENDLY STYLES
-      ------------------------------------- */
-      @media only screen and (max-width: 620px) {
-        table[class=body] h1 {
-          font-size: 28px !important;
-          margin-bottom: 10px !important; }
-        table[class=body] p,
-        table[class=body] ul,
-        table[class=body] ol,
-        table[class=body] td,
-        table[class=body] span,
-        table[class=body] a {
-          font-size: 16px !important; }
-        table[class=body] .wrapper,
-        table[class=body] .article {
-          padding: 10px !important; }
-        table[class=body] .content {
-          padding: 0 !important; }
-        table[class=body] .container {
-          padding: 0 !important;
-          width: 100% !important; }
-        table[class=body] .main {
-          border-left-width: 0 !important;
-          border-radius: 0 !important;
-          border-right-width: 0 !important; }
-        table[class=body] .btn table {
-          width: 100% !important; }
-        table[class=body] .btn a {
-          width: 100% !important; }
-        table[class=body] .img-responsive {
-          height: auto !important;
-          max-width: 100% !important;
-          width: auto !important; }}
+    /* Buttons ------------------------------ */
 
-      /* -------------------------------------
-          PRESERVE THESE STYLES IN THE HEAD
-      ------------------------------------- */
-      @media all {
-        .ExternalClass {
-          width: 100%; }
-        .ExternalClass,
-        .ExternalClass p,
-        .ExternalClass span,
-        .ExternalClass font,
-        .ExternalClass td,
-        .ExternalClass div {
-          line-height: 100%; }
-        .apple-link a {
-          color: inherit !important;
-          font-family: inherit !important;
-          font-size: inherit !important;
-          font-weight: inherit !important;
-          line-height: inherit !important;
-          text-decoration: none !important; } 
-        .btn-primary table td:hover {
-          background-color: #34495e !important; }
-        .btn-primary a:hover {
-          background-color: #34495e !important;
-          border-color: #34495e !important; } }
+    .button {
+      background-color: #7B16FF;
+      display: inline-block;
+      color: #FFF;
+      padding: 12px 16px;
+      text-decoration: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      -webkit-text-size-adjust: none;
+      word-break: keep-all;
+      white-space: nowrap;
 
+      &:hover {
+        text-decoration: none;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    /* Type ------------------------------ */
+
+    h1 {
+      margin: 0;
+      padding: 0;
+      color: #171A21;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    h2 {
+      margin: 0;
+      padding: 0;
+      color: #171A21;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    h3 {
+      margin: 0;
+      padding: 0;
+      color: #171A21;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    p {
+      margin: 0;
+      padding: 0;
+      color: #171A21;
+      font-size: 16px;
+      line-height: 1.5em;
+      text-align: left;
+    }
+
+    p.sub {
+      color: #747E8D;
+    }
+
+    p.emoji, span.emoji {
+      font-size: 32px;
+      vertical-align: middle;
+      line-height: 1.6;
+    }
+
+    span.name {
+      font-size: 11px;
+      color: #747E8D;
+    }
+
+    h1.title {
+      margin-bottom: 16px;
+    }
     </style>
   </head>
-  <body class="">
-    <table border="0" cellpadding="0" cellspacing="0" class="body">
+  <body>
+    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
       <tr>
-        <td>&nbsp;</td>
-        <td class="container">
-          <div class="content">
-
-            <!-- START CENTERED WHITE CONTAINER -->
-            <table class="main">
-
-              <!-- START MAIN CONTENT AREA -->
-              <tr>
-                <td class="wrapper">
-                  <table border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td class="wrapper">
-                        <table border="0" cellpadding="0" cellspacing="0">
+        <td align="center">
+          <table class="email-content" width="100%" cellpadding="0" cellspacing="0">
+            <!-- Email Body -->
+            <tr>
+              <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
+                <table class="email-body_inner" align="center" width="560" cellpadding="0" cellspacing="0">
+                  <!-- Body content -->
+                  <tr>
+                    <td class="header-cell">
+                      <p>Heads up, {{user.displayName}}!</p>
+                      <p>You've got new replies - check em out <span class="emoji">👇</span></p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="content-cell">
+                      {{#each threads}}
+                        <table class="attributes" width="100%" cellpadding="0" cellspacing="0">
                           <tr>
                             <td>
-                              <h2>Heads up, {{user.displayName}}!</h2>
-                              <p>{{notification.sender.displayName}} replied to your story...</p>
-                              <p>Check it out:</p>
+                              <a href="https://spectrum.chat/threads/{{id}}"><h1 class="title">{{title}}</h1></a>
                             </td>
                           </tr>
-                          {{#each notification.message}}
                           <tr>
-                            <td>
-                              <table border="0" cellpadding="16" cellspacing="0">
-                                <tr>
-                                  <td align="center">
-                                    <table>
-                                      <tr>
-                                        <td style="background-color: #E6ECF7; border-radius: 16px;">
-                                          <p style="margin: 12px;">
-                                            {{notification.message.body}}
-                                          </p>
-                                        </td>
-                                      </tr>
-                                    </table>
-                                  </td>
-                                </tr>
-                                <tr></tr>
-                              </table>
-                            </td>
-                          </tr>
-                          {{/each}}
-                          <tr>
-                            <td>
-                              <table border="0" cellpadding="16" cellspacing="0" class="btn btn-primary">
-                                <tbody>
+                          {{#each replies}}
+                            <tr>
+                              <td class="attributes_item">
+                                <table>
                                   <tr>
-                                    <td align="center">
-                                      <table border="0" cellpadding="0" cellspacing="0">
-                                        <tbody>
-                                          <tr>
-                                            <td> <a href="http://htmlemail.io" target="_blank">Reply</a> </td>
-                                          </tr>
-                                        </tbody>
+                                    <td>
+                                      <img class="avatar" src="{{sender.profilePhoto}}" />
+                                    </td>
+                                    <td>
+                                      <table>
+                                        <tr>
+                                          <td>
+                                            <span class="name">{{sender.name}}</span>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td>
+                                            <p class="reply">{{content.body}}</p>
+                                          </td>
+                                        </tr>
                                       </table>
                                     </td>
                                   </tr>
-                                </tbody>
-                              </table>
-                            </td>
+                                </table>
+                              </td>
+                            </tr>
+                          {{/each}}
                           </tr>
                         </table>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-
-              <!-- END MAIN CONTENT AREA -->
-              </table>
-
-            <!-- START FOOTER -->
-            <div class="footer">
-              <table border="0" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td class="content-block">
-                    <span class="apple-link">Thanks for being a part of Spectrum!</span>
-                    <br> Don't like these emails? <a href="http://i.imgur.com/CScmqnj.gif">Unsubscribe</a>.
-                  </td>
-                </tr>
-              </table>
-            </div>
-
-            <!-- END FOOTER -->
-            
-<!-- END CENTERED WHITE CONTAINER --></div>
+                      {{/each}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="footer-cell">
+                      <a class="button" href="https://spectrum.chat/home">Go to my feed</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="footer-cell">
+                      <p>That's all for now. Catch ya later!</p>
+                      <br />
+                      <p class="emoji">✌️</p>
+                      <p>Spectrum</p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+          <table class="email-footer" align="center" width="560" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="content-cell">
+                <p class="sub">Easily change your <a href="https://spectrum.chat/users/{{user.username}}/settings">email settings</a> or <a href="{{notifications_url}}">unsubscribe</a> with just a click.</p>
+              </td>
+            </tr>
+          </table>
         </td>
-        <td>&nbsp;</td>
       </tr>
     </table>
   </body>
