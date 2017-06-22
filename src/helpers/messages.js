@@ -61,7 +61,7 @@ export const sortAndGroupMessages = messagesToSort => {
       */
       const c = new Date(current.timestamp).getTime();
       const p = new Date(previous.timestamp).getTime();
-      return c > p + 900000;
+      return c > p + 21600000;
     };
 
     // if we are evaulating a bubble from the same user
