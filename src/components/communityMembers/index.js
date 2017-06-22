@@ -42,7 +42,6 @@ class CommunityMembers extends Component {
     if (networkStatus === 1) {
       return <LoadingCard />;
     } else if (error) {
-      console.log('error', error);
       return <ErrorState />;
     } else {
       return (
