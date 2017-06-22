@@ -81,6 +81,21 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
   );
 };
 
+export const ThreadListItem = (props: CardProps): React$Element<any> => {
+  return (
+    <Wrapper clickable={props.clickable}>
+      <Row>
+        <Col>
+          <Heading>
+            {props.contents.content.title}
+          </Heading>
+          <Meta>{props.meta}</Meta>
+        </Col>
+      </Row>
+    </Wrapper>
+  );
+};
+
 export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
   return (
     <WrapperLi clickable={props.clickable}>
@@ -111,9 +126,10 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
   );
 };
 
-export const UserListItem = ({ user, children }: Object): React$Element<
-  any
-> => {
+export const UserListItem = ({
+  user,
+  children,
+}: Object): React$Element<any> => {
   return (
     <Wrapper>
       <Row>
@@ -129,9 +145,10 @@ export const UserListItem = ({ user, children }: Object): React$Element<
           <Heading>
             <Link to={`/users/${user.username}`}>{user.name}</Link>
           </Heading>
-          <Meta>
-            <Link to={`/users/${user.username}`}>@{user.username}</Link>
-          </Meta>
+          {user.username &&
+            <Meta>
+              <Link to={`/users/${user.username}`}>@{user.username}</Link>
+            </Meta>}
         </Col>
         <ActionContainer className={'action'}>{children}</ActionContainer>
       </Row>

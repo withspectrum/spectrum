@@ -11,15 +11,15 @@ import { parseNotification, getDistinctNotifications } from './utils';
 import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
 import { NewChannelNotification } from './components/newChannelNotification';
-import {
-  NewUserInCommunityNotification,
-} from './components/newUserInCommunityNotification';
+import { NewThreadNotification } from './components/newThreadNotification';
+import { NewUserInCommunityNotification } from './components/newUserInCommunityNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Titlebar from '../../views/titlebar';
 import { displayLoadingNotifications } from '../../components/loading';
 import { FetchMoreButton } from '../../components/threadFeed/style';
 import { FlexCol } from '../../components/globals';
+import { sortByDate } from '../../helpers/utils';
 import {
   getNotifications,
   markNotificationsSeenMutation,
@@ -104,6 +104,7 @@ class NotificationsPure extends Component {
       );
 
     notifications = getDistinctNotifications(notifications);
+    notifications = sortByDate(notifications, 'modifiedAt', 'desc');
 
     const { notifications: { pageInfo: { hasNextPage } } } = data;
 
@@ -154,6 +155,15 @@ class NotificationsPure extends Component {
                 case 'USER_JOINED_COMMUNITY': {
                   return (
                     <NewUserInCommunityNotification
+                      key={notification.id}
+                      notification={notification}
+                      currentUser={currentUser}
+                    />
+                  );
+                }
+                case 'THREAD_CREATED': {
+                  return (
+                    <NewThreadNotification
                       key={notification.id}
                       notification={notification}
                       currentUser={currentUser}

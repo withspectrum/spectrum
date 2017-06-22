@@ -14,6 +14,7 @@ export const channelInfoFragment = gql`
       isBlocked
       isOwner
       isModerator
+      receiveNotifications
     }
     community {
       ...communityInfo

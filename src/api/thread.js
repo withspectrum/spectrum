@@ -51,3 +51,23 @@ export const editThreadMutation = graphql(
   EDIT_THREAD_MUTATION,
   EDIT_THREAD_OPTIONS
 );
+
+const getThreadByIdOptions = {
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+  }),
+};
+
+export const getThreadById = graphql(
+  gql`
+		query getThread($id: ID!) {
+			thread(id: $id) {
+        ...threadInfo
+      }
+		}
+    ${threadInfoFragment}
+	`,
+  getThreadByIdOptions
+);

@@ -176,6 +176,12 @@ export const JoinContext = styled(ContextRow)`
   color: ${({ theme }) => theme.space.light};
 `;
 
+export const ThreadContext = styled(ContextRow)`
+  color: ${({ theme }) => theme.brand.default};
+  margin: 0 16px;
+  margin-bottom: 16px;
+`;
+
 export const CreatedContext = styled(ContextRow)`
   color: ${({ theme }) => theme.brand.default};
   margin: 0 16px;

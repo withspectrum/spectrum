@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-import generateMetaInfo from 'server/shared/generate-meta-info';
+import generateMetaInfo from 'iris/shared/generate-meta-info';
 import Titlebar from '../titlebar';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
@@ -37,9 +37,9 @@ const ExplorePure = props => {
   const { title, description } = generateMetaInfo({
     type: 'explore',
   });
-  const featureSlug = 'vectors';
+  const featureSlug = 'react';
   const featureNotes =
-    'Vectors is a project focused on exposing people to more perspectives. Although primarily tech-oriented, the goals of this conference are very much inline with our goals here on Spectrum - encouraging diversity and constructive conversation in a forum where people can feel safe.';
+    "React is a JavaScript library for creating component-based user interfaces. The React community has members from the core team as well as developers of several of the top frameworks and plugins for React. This community makes it quick and easy to get support or advice from people who know what they're doing so you can get up and running quickly.";
 
   return (
     <AppViewWrapper>

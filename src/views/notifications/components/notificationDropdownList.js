@@ -2,12 +2,12 @@
 import React from 'react';
 import { NotificationListContainer } from '../style';
 import { parseNotification } from '../utils';
+import { sortByDate } from '../../../helpers/utils';
 import { MiniNewMessageNotification } from './newMessageNotification';
 import { MiniNewReactionNotification } from './newReactionNotification';
 import { MiniNewChannelNotification } from './newChannelNotification';
-import {
-  MiniNewUserInCommunityNotification,
-} from './newUserInCommunityNotification';
+import { MiniNewThreadNotification } from './newThreadNotification';
+import { MiniNewUserInCommunityNotification } from './newUserInCommunityNotification';
 
 export const NotificationDropdownList = ({
   rawNotifications,
@@ -17,12 +17,14 @@ export const NotificationDropdownList = ({
   /*
     parse the notifications and cut it down to the latest 5
   */
-  const notifications = rawNotifications
+  let notifications = rawNotifications
     .map(notification => parseNotification(notification))
     .slice(0, 10)
     .filter(
       notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
     );
+
+  notifications = sortByDate(notifications, 'modifiedAt', 'desc');
 
   return (
     <NotificationListContainer>
@@ -61,6 +63,16 @@ export const NotificationDropdownList = ({
           case 'USER_JOINED_COMMUNITY': {
             return (
               <MiniNewUserInCommunityNotification
+                key={notification.id}
+                notification={notification}
+                currentUser={currentUser}
+                history={history}
+              />
+            );
+          }
+          case 'THREAD_CREATED': {
+            return (
+              <MiniNewThreadNotification
                 key={notification.id}
                 notification={notification}
                 currentUser={currentUser}

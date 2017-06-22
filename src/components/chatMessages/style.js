@@ -52,7 +52,8 @@ export const Byline = styled.span`
   -webkit-user-select: none; /* Chrome/Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */
-  color: ${props => (props.op ? props.theme.brand.default : props.theme.text.alt)};
+  color: ${props =>
+    props.op ? props.theme.brand.default : props.theme.text.alt};
   cursor: pointer;
   max-width: 100%;
 `;
@@ -91,7 +92,8 @@ export const MessageWrapper = styled.span`
     transition: ${Transition.hover.off};
     content: ${props => (props.timestamp ? `'${props.timestamp}'` : '')};
     position: absolute;
-    ${props => (props.me ? 'right: calc(100% + 8px)' : 'left: calc(100% + 8px)')};
+    ${props =>
+      props.me ? 'right: calc(100% + 8px)' : 'left: calc(100% + 8px)'};
     top: -4px;
     white-space: nowrap;
     font-size: 12px;
@@ -106,7 +108,7 @@ export const MessageWrapper = styled.span`
 `;
 
 export const Timestamp = styled(HorizontalRule)`
-	margin: 8px 32px;
+	margin: 16px 32px 8px 32px;
 	text-align: center;
 	-webkit-user-select: none; /* Chrome/Safari */
 	-moz-user-select: none; /* Firefox */
