@@ -42,12 +42,13 @@ class CommunityMembers extends Component {
     if (networkStatus === 1) {
       return <LoadingCard />;
     } else if (error) {
+      console.log('error', error);
       return <ErrorState />;
     } else {
       return (
         <StyledCard>
           <ListHeader>
-            <LargeListHeading>Members · {totalCount}</LargeListHeading>
+            <LargeListHeading>{totalCount} Members</LargeListHeading>
           </ListHeader>
 
           <ListContainer>
