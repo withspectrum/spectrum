@@ -13,6 +13,7 @@ import { displayLoadingScreen } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ListCard from './components/listCard';
+import ImportSlack from './components/importSlack';
 import { CommunityEditForm } from '../../components/editForm';
 import CommunityMembers from '../../components/communityMembers';
 import { Upsell404Community } from '../../components/upsell';
@@ -99,6 +100,7 @@ const SettingsPure = ({
         <CommunityEditForm community={community} />
       </Column>
       <Column type="primary">
+        <ImportSlack />
         <ChannelListCard slug={communitySlug} />
         <CommunityMembers id={community.id} />
       </Column>
