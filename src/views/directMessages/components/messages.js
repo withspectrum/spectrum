@@ -53,9 +53,8 @@ class MessagesWithData extends Component {
   };
 
   render() {
-    const { data: { error, messages } } = this.props;
+    const { data: { error, messages }, data } = this.props;
     const { subscription } = this.state;
-
     if (error) {
       return <div>Error!</div>;
     }

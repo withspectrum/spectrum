@@ -54,7 +54,7 @@ class ExistingThread extends Component {
 
       return (
         <MessagesContainer>
-          <ViewContent innerRef={scrollBody => this.scrollBody = scrollBody}>
+          <ViewContent innerRef={scrollBody => (this.scrollBody = scrollBody)}>
             <Header thread={thread} currentUser={currentUser} />
             <Messages
               id={id}
@@ -66,6 +66,7 @@ class ExistingThread extends Component {
 
           <ChatInput
             thread={id}
+            currentUser={currentUser}
             threadType={'directMessageThread'}
             forceScrollToBottom={this.forceScrollToBottom}
           />
