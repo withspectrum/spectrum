@@ -41,10 +41,7 @@ class CommunityMembers extends Component {
 
     if (networkStatus === 1) {
       return <LoadingCard />;
-    } else if (
-      (error && community.memberConnection.edges.length > 0) ||
-      (error && community.memberConnection.edges.length === 0)
-    ) {
+    } else if (error) {
       return <ErrorState />;
     } else {
       return (
