@@ -3,14 +3,15 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
+import { withRouter } from 'react-router';
+// $FlowFixMe
 import compose from 'recompose/compose';
 import Icon from '../../components/icons';
 import { Section, Nav, LogoLink, Logo, IconLink, Label } from './style';
 
 class Navbar extends Component {
   render() {
-    const { match } = this.props;
-    console.log('match', match);
+    const url = this.props.location.pathname;
     return (
       <Nav>
         <Section left hideOnMobile>
@@ -18,12 +19,12 @@ class Navbar extends Component {
             <Logo src="/img/mark-white.png" role="presentation" />
           </LogoLink>
 
-          <IconLink data-active={match.url === '/' && match.isExact} to="/">
+          <IconLink data-active={url === '/'} to="/">
             <Icon glyph="home" />
             <Label>Home</Label>
           </IconLink>
 
-          <IconLink data-active={match.url.includes('/users')} to="/users">
+          <IconLink data-active={url.includes('/users')} to="/users">
             <Icon glyph={'profile'} />
             <Label>Users</Label>
           </IconLink>
@@ -33,4 +34,4 @@ class Navbar extends Component {
   }
 }
 
-export default compose(connect())(Navbar);
+export default compose(withRouter, connect())(Navbar);

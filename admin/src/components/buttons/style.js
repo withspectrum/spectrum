@@ -72,7 +72,6 @@ export const StyledSolidButton = styled.button`
         : eval(
             `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
           )};
-    padding: ${props => (props.icon ? '4px 10px 4px 6px' : '12px 18px')};
   }
 
   &:active {
@@ -132,7 +131,6 @@ export const StyledOutlineButton = styled(StyledTextButton)`
             `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
           )};
     transition: ${Transition.hover.on};
-    padding: 12px 16px;
   }
 `;
 

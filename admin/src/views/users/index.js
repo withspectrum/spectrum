@@ -4,35 +4,41 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
-// $FlowFixMe
-import { Link } from 'react-router-dom';
-// $FlowFixMe
-import { connect } from 'react-redux';
-import Icon from '../../components/icons';
+import { View } from './style';
+import { usersQuery } from '../../api/queries';
 import { displayLoadingState } from '../../components/loading';
-import { View, MessagesList, ComposeHeader } from './style';
-import NewThread from './containers/newThread';
+import Chart from '../../components/chart';
+import getGrowthPerDay from '../../utils/get-growth-per-day';
+import formatNumber from '../../utils/format-number';
+import Search from './components/search';
+import UserContainer from './containers/user';
 
-class DirectMessages extends Component {
+class UsersViewIndex extends Component {
   render() {
-    return (
-      <View>
-        <MessagesList>
-          <Link to="/messages/new">
-            <ComposeHeader>
-              <Icon glyph="message-new" />
-            </ComposeHeader>
-          </Link>
-        </MessagesList>
+    const { data: { error, meta }, match } = this.props;
+    if (!meta || error) {
+      return <div />;
+    }
 
-        <NewThread />
-      </View>
-    );
+    const userCount = formatNumber(meta.userGrowth.length);
+    const userGrowth = getGrowthPerDay(meta.userGrowth);
+
+    if (match.params.username) {
+      return (
+        <View>
+          <Search />
+          <UserContainer username={match.params.username} />
+        </View>
+      );
+    } else {
+      return (
+        <View>
+          <Search />
+          <Chart height={128} data={userGrowth} />
+        </View>
+      );
+    }
   }
 }
 
-const DirectMessagesWithQuery = compose(displayLoadingState, pure)(
-  DirectMessages
-);
-
-export default connect()(DirectMessagesWithQuery);
+export default compose(usersQuery, displayLoadingState, pure)(UsersViewIndex);

@@ -45,8 +45,8 @@ class Routes extends Component {
               <Route exact path="/" component={Dashboard} />
 
               {/* App Pages */}
-              <Route path="/users" component={Users} />
               <Route path="/users/:username" component={Users} />
+              <Route path="/users" component={Users} />
             </Switch>
 
           </Body>
