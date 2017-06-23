@@ -13,7 +13,7 @@ type BubbleProps = {
 };
 
 export const Bubble = (props: BubbleProps) => {
-  const { me, pending, message } = props;
+  const { me, message } = props;
 
   // const formatMessageForLinks = (body: string): string => {
   //   if (!body) {
@@ -25,16 +25,16 @@ export const Bubble = (props: BubbleProps) => {
   // };
 
   return (
-    <TextBubble me={me} pending={pending}>
+    <TextBubble me={me}>
       {message.body}
     </TextBubble>
   );
 };
 
 export const EmojiBubble = (props: BubbleProps) => {
-  const { me, pending, message } = props;
+  const { me, message } = props;
   return (
-    <Emoji me={me} pending={pending}>
+    <Emoji me={me}>
       {message.body}
     </Emoji>
   );
