@@ -1,6 +1,7 @@
+// @flow
 import React, { Component } from 'react';
+// $FlowFixMe
 import compose from 'recompose/compose';
-import Trend from 'react-trend';
 import {
   Section,
   SectionTitle,
@@ -13,9 +14,9 @@ import {
   HeaderZoneBoy,
   Column,
 } from './style';
-import Chart from '../chart';
+import Chart from '../../components/chart';
 import { overviewQuery } from '../../api/queries';
-import { displayLoadingState } from '../loading';
+import { displayLoadingState } from '../../components/loading';
 import getGrowthPerDay from '../../utils/get-growth-per-day';
 import formatNumber from '../../utils/format-number';
 

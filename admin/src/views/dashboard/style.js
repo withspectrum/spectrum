@@ -78,7 +78,8 @@ export const RangeItem = styled.li`
   display: inline-block;
   padding: 8px 24px;
   margin: 8px 0;
-  background: ${props => (props.active ? props.theme.brand.default : props.theme.bg.wash)};
+  background: ${props =>
+    props.active ? props.theme.brand.default : props.theme.bg.wash};
   color: ${props => (props.active ? '#fff' : props.theme.text.default)};
   box-shadow: inset -1px 0 ${props => props.theme.border.default};
   font-size: 14px;
@@ -86,7 +87,8 @@ export const RangeItem = styled.li`
   text-align: center;
 
   &:hover {
-    background: ${props => (props.active ? props.theme.brand.default : props.theme.border.default)};
+    background: ${props =>
+      props.active ? props.theme.brand.default : props.theme.border.default};
     cursor: pointer;
   }
 
