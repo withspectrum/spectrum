@@ -11,9 +11,9 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-import { Spinner } from '../../../components/globals';
-import { throttle } from '../../../helpers/utils';
-import { SEARCH_USERS_QUERY } from '../../../api/queries';
+import { Spinner } from '../../../../components/globals';
+import { throttle } from '../../../../helpers/utils';
+import { SEARCH_USERS_QUERY } from '../../../../api/queries';
 import {
   ComposerInputWrapper,
   SearchSpinnerContainer,
@@ -25,7 +25,7 @@ import {
   SearchResultDisplayName,
   SearchResultTextContainer,
   SearchResultImage,
-} from './searchStyle';
+} from './style';
 
 class Search extends Component {
   state: {

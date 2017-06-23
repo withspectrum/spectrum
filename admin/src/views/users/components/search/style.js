@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Truncate } from '../../../components/globals';
-import { Avatar } from '../../../components/avatar';
+import { Truncate } from '../../../../components/globals';
+import { Avatar } from '../../../../components/avatar';
 
 export const ComposerInputWrapper = styled.div`
   position: relative;

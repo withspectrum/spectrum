@@ -4,13 +4,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Avatar } from '../avatar';
 import { Container, Row, Column, Name, Username } from './style';
-import { Button } from '../buttons';
+import { OutlineButton } from '../buttons';
 
 export const ProfileHeader = ({ user }) => {
   return (
     <Container>
       <Row>
-        <Avatar size={64} radius={64} src={user.profilePhoto} />
+        <Avatar size={48} radius={48} src={user.profilePhoto} />
         <Column>
           <Name>{user.name}</Name>
           <Username>@{user.username}</Username>
@@ -22,7 +22,7 @@ export const ProfileHeader = ({ user }) => {
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Button>View Profile</Button>
+        <OutlineButton>View Profile</OutlineButton>
       </Link>
     </Container>
   );

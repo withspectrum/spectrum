@@ -44,6 +44,7 @@ const channelMutations = require('./mutations/channel');
 const directMessageThreadMutations = require('./mutations/directMessageThread');
 const notificationMutations = require('./mutations/notification');
 const userMutations = require('./mutations/user');
+const metaMutations = require('./mutations/meta');
 
 const messageSubscriptions = require('./subscriptions/message');
 const notificationSubscriptions = require('./subscriptions/notification');
@@ -96,6 +97,7 @@ const resolvers = merge(
   channelMutations,
   notificationMutations,
   userMutations,
+  metaMutations,
   // subscriptions
   messageSubscriptions,
   notificationSubscriptions,

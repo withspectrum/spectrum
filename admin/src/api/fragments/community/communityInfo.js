@@ -18,6 +18,7 @@ export const communityInfoFragment = gql`
       isBlocked
       isOwner
       isModerator
+      receiveNotifications
     }
     # counts
     metaData {
