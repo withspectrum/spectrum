@@ -32,12 +32,13 @@ const sendEmail = (options: Options) => {
         To: To,
         TemplateModel: TemplateModel,
       },
-      (err, res) => {
+      err => {
         if (err) {
           console.log('Error sending email:');
           console.log(err);
-          return;
+          return rej(err);
         }
+        res();
         debug(`email to ${To} sent successfully`);
       }
     );

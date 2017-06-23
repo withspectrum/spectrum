@@ -2,9 +2,9 @@
 const debug = require('debug')('hermes:queue:send-new-message-email');
 import sendEmail from '../send-email';
 import processQueue from '../process-queue';
-import { SEND_NEW_MESSAGE_EMAIL } from './constants';
+import { SEND_NEW_MESSAGE_EMAIL, NEW_MESSAGE_TEMPLATE } from './constants';
 
-type MessageData = {
+type ReplyData = {
   sender: {
     profilePhoto: string,
     name: string,
@@ -14,17 +14,19 @@ type MessageData = {
   },
 };
 
+type ThreadData = {
+  title: string,
+  id: string,
+  replies: Array<ReplyData>,
+};
+
 type SendNewMessageEmailJobData = {
   user: {
     displayName: string,
     username: string,
   },
-  thread: {
-    title: string,
-    id: string,
-  },
   to: string,
-  messages: Array<MessageData>,
+  threads: Array<ThreadData>,
 };
 
 type SendNewMessageEmailJob = {
@@ -36,7 +38,7 @@ export default () =>
   processQueue(SEND_NEW_MESSAGE_EMAIL, (job: SendNewMessageEmailJob) => {
     debug(`new job: ${job.id}`);
     sendEmail({
-      TemplateId: 'new-message-email-template',
+      TemplateId: NEW_MESSAGE_TEMPLATE,
       To: job.data.to,
       TemplateModel: {
         user: job.data.user,
