@@ -23,7 +23,7 @@ export const theme = {
   },
   success: {
     default: '#00C383',
-    alt: '#00D6A9',
+    alt: '#00D5BD',
   },
   bg: {
     default: '#FFFFFF',
