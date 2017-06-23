@@ -7,16 +7,20 @@ slackRouter.get('/', (req, res) => {
   const communityId = req.query.state;
   const user = req.user;
 
-  // store a record of the
-  const importRecord = createSlackImport(code, user, communityId);
-  const oauthToken = generateOAuthToken(code);
-  const communityRecord = getCommunities([communityId]);
+  console.log('code', code);
+  console.log('communityId', communityId);
+  console.log('user', user);
 
-  return Promise.all([
-    importRecord,
-    oauthToken,
-    communityRecord,
-  ]).then(([record, token, community]) => {});
+  // store a record of the
+  // const importRecord = createSlackImport(code, user, communityId);
+  // const oauthToken = generateOAuthToken(code);
+  // const communityRecord = getCommunities([communityId]);
+
+  // return Promise.all([
+  //   importRecord,
+  //   oauthToken,
+  //   communityRecord,
+  // ]).then(([record, token, community]) => {});
 });
 
 export default slackRouter;

@@ -100,7 +100,7 @@ const SettingsPure = ({
         <CommunityEditForm community={community} />
       </Column>
       <Column type="primary">
-        <ImportSlack />
+        <ImportSlack community={community} />
         <ChannelListCard slug={communitySlug} />
         <CommunityMembers id={community.id} />
       </Column>

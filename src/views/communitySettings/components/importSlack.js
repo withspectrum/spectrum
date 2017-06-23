@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 class ImportSlack extends Component {
   import = () => {
+    console.log('importing');
     const { community } = this.props;
     window.location.href = `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read&state=${community.id}`;
     const code =
@@ -10,7 +11,7 @@ class ImportSlack extends Component {
   };
 
   render() {
-    return <div onClick={this.import}>foo</div>;
+    return <div onClick={this.import}>Import slack</div>;
   }
 }
 
