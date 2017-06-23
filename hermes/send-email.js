@@ -16,7 +16,7 @@ if (process.env.POSTMARK_SERVER_KEY) {
 }
 
 type Options = {
-  TemplateId: string,
+  TemplateId: number,
   To: string,
   TemplateModel?: Object,
 };
