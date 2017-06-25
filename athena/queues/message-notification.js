@@ -85,6 +85,7 @@ new job for ${incomingMessage.id} by ${currentUserId} in ${contextType.toLowerCa
 
               const thread = JSON.parse(context.payload);
               const message = JSON.parse(entity.payload);
+              const user = JSON.parse(actor.payload);
 
               addToSendNewMessageEmailQueue = createAddToNewMessageEmailQueue({
                 threads: [
@@ -95,8 +96,8 @@ new job for ${incomingMessage.id} by ${currentUserId} in ${contextType.toLowerCa
                     replies: [
                       {
                         sender: {
-                          name: actor.name,
-                          profilePhoto: actor.profilePhoto,
+                          name: user.name,
+                          profilePhoto: user.profilePhoto,
                         },
                         content: {
                           body: message.content.body,
@@ -164,6 +165,7 @@ new job for ${incomingMessage.id} by ${currentUserId} in ${contextType.toLowerCa
 
               const thread = JSON.parse(context.payload);
               const message = JSON.parse(entity.payload);
+              const user = JSON.parse(actor.payload);
 
               addToSendNewMessageEmailQueue = createAddToNewMessageEmailQueue({
                 threads: [
@@ -174,8 +176,8 @@ new job for ${incomingMessage.id} by ${currentUserId} in ${contextType.toLowerCa
                     replies: [
                       {
                         sender: {
-                          name: actor.name,
-                          profilePhoto: actor.profilePhoto,
+                          name: user.name,
+                          profilePhoto: user.profilePhoto,
                         },
                         content: {
                           body: message.content.body,
