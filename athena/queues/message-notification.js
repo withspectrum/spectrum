@@ -64,9 +64,9 @@ const processMessageNotificationQueue = job => {
     : 'THREAD';
 
   debug(
-    `new job for message sent by ${currentUserId} in a ${contextType
+    `new job: message sent by ${currentUserId} in ${contextType
       .toLowerCase()
-      .replace('_', ' ')}`
+      .replace('_', ' ')}#${incomingMessage.threadId}`
   );
 
   /*
@@ -75,7 +75,7 @@ const processMessageNotificationQueue = job => {
     - context
     - entity
   */
-  const promises = [
+  const getPayloads = [
     // Check to see if an existing notif exists by matching the 'event' type, with the context of the notification, within a certain time period.
     checkForExistingNotification('MESSAGE_CREATED', incomingMessage.threadId),
     //get the user who left the message
@@ -86,8 +86,7 @@ const processMessageNotificationQueue = job => {
     createPayload('MESSAGE', incomingMessage),
   ];
 
-  debug('loading payloads');
-  return Promise.all(promises)
+  return Promise.all(getPayloads)
     .then(([existing, actor, context, entity]) => {
       debug(`payloads loaded, generating notification data`);
       // Calculate actors
@@ -115,40 +114,43 @@ const processMessageNotificationQueue = job => {
         ? updateNotification(newNotification)
         : storeNotification(newNotification);
 
-      return notificationPromise
-        .then(notification => {
-          const getRecipients = contextType === 'DIRECT_MESSAGE_THREAD'
-            ? getDirectMessageThreadMembers(notification.context.id)
-            : getThreadNotificationUsers(notification.context.id);
+      return (
+        notificationPromise
+          // Do the .then here so we keep the loaded data in scope
+          .then(notification => {
+            const getRecipients = contextType === 'DIRECT_MESSAGE_THREAD'
+              ? getDirectMessageThreadMembers(notification.context.id)
+              : getThreadNotificationUsers(notification.context.id);
 
-          debug('get recipients for notification');
-          return Promise.all([notification, getRecipients]);
-        })
-        .then(([notification, recipients]) => {
-          // filter out the user who sent the message, as they should not recieve a notification for their own messages
-          const filteredRecipients = recipients.filter(
-            recipient => recipient.userId !== currentUserId
-          );
+            debug('get recipients for notification');
+            return Promise.all([notification, getRecipients]);
+          })
+          .then(([notification, recipients]) => {
+            // filter out the user who sent the message, as they should not recieve a notification for their own messages
+            const filteredRecipients = recipients.filter(
+              recipient => recipient.userId !== currentUserId
+            );
 
-          debug(
-            (existing
-              ? 'mark existing usersnotifications as new'
-              : 'store new usersnotifications records') +
-              ' and add notification emails to queue for all recipients'
-          );
-          const thread = JSON.parse(context.payload);
-          const message = JSON.parse(entity.payload);
-          const user = JSON.parse(actor.payload);
-          const dbMethod = existing
-            ? markUsersNotificationsAsNew
-            : storeUsersNotifications;
-          return Promise.all(
-            filteredRecipients.map(recipient => {
-              addToSendNewMessageEmailQueue(recipient, thread, user, message);
-              return dbMethod(notification.id, recipient.userId);
-            })
-          );
-        });
+            debug(
+              (existing
+                ? 'mark existing usersnotifications as new'
+                : 'store new usersnotifications records') +
+                ' and add notification emails to queue for all recipients'
+            );
+            const thread = JSON.parse(context.payload);
+            const message = JSON.parse(entity.payload);
+            const user = JSON.parse(actor.payload);
+            const dbMethod = existing
+              ? markUsersNotificationsAsNew
+              : storeUsersNotifications;
+            return Promise.all(
+              filteredRecipients.map(recipient => {
+                addToSendNewMessageEmailQueue(recipient, thread, user, message);
+                return dbMethod(notification.id, recipient.userId);
+              })
+            );
+          })
+      );
     })
     .catch(err => {
       console.log(err);
