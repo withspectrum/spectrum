@@ -24,6 +24,7 @@ const SettingsPure = ({
   match,
   data: { community, error },
   history,
+  location,
   dispatch,
 }) => {
   track('community', 'settings viewed', null);
@@ -100,7 +101,7 @@ const SettingsPure = ({
         <CommunityEditForm community={community} />
       </Column>
       <Column type="primary">
-        <ImportSlack community={community} />
+        <ImportSlack community={community} id={community.id} />
         <ChannelListCard slug={communitySlug} />
         <CommunityMembers id={community.id} />
       </Column>
