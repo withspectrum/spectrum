@@ -1,6 +1,6 @@
 # `iris`: The web server
 
-Iris is a Node.js web server based on Express.js and GraphQL.
+Iris is a Node.js web server based on Express.js and GraphQL. It's also houses a websocket server for all of our subscription needs.
 
 ## Structure
 
