@@ -1,24 +1,19 @@
 // @flow
 import postmark from 'postmark';
 const debug = require('debug')('hermes:send-email');
+const stringify = require('json-stringify-pretty-compact');
 
 let client;
 if (process.env.POSTMARK_SERVER_KEY) {
   client = new postmark.Client(process.env.POSTMARK_SERVER_KEY);
 } else {
-  const stringify = require('json-stringify-pretty-compact');
   console.log(
     '\nℹ️ POSTMARK_SERVER_KEY not provided, debug mode enabled. Will log emails instead of actually sending them.'
   );
   // If no postmark API key is provided don't crash the server but log instead
   client = {
     sendEmailWithTemplate: ({ To, TemplateModel }, cb) => {
-      console.log('\n---Send email---');
-      console.log(
-        `To: ${To}\nSubject: ${TemplateModel.subject}\nTemplateModel:\n`,
-        stringify(TemplateModel),
-        '\n'
-      );
+      debug('debug mode enabled, mocking email sending');
       cb();
     },
   };
@@ -33,7 +28,7 @@ type Options = {
 const sendEmail = (options: Options) => {
   const { TemplateId, To, TemplateModel } = options;
   debug(
-    `send "${TemplateModel.subject}" to "${To}" with template ${TemplateId}`
+    `--Send email with template ${TemplateId}--\nTo: ${To}\nRe: ${TemplateModel.subject}\nTemplateModel: ${stringify(TemplateModel)}`
   );
   return new Promise((res, rej) => {
     client.sendEmailWithTemplate(
