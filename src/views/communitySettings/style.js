@@ -35,3 +35,10 @@ export const MoreLink = styled(Link)`
 export const StyledCard = styled(Card)`
   padding: 16px 16px 16px 20px;
 `;
+
+export const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 16px 0 8px;
+`;

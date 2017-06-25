@@ -138,6 +138,11 @@ export const Description = styled.p`
   line-height: 1.4;
   color: ${({ theme }) => theme.text.alt};
 
+  strong {
+    font-weight: 600;
+    color: ${props => props.theme.text.default};
+  }
+
   &:last-of-type {
     margin-bottom: 16px;
   }

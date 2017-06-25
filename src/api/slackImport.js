@@ -7,7 +7,6 @@ const getSlackImportOptions = {
     variables: {
       id,
     },
-    pollInterval: 2000,
   }),
 };
 
