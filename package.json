@@ -81,7 +81,7 @@
     "start:hermes": "NODE_ENV=production node build-hermes/index.js",
     "dev:client": "NODE_PATH=./ react-app-rewired start",
     "dev:iris": "NODE_ENV=development nodemon iris/index.js --watch iris --exec babel-node",
-    "dev:athena": "NODE_ENV=development nodemon athena/index.js --watch athena --exec babel-node",
+    "dev:athena": "NODE_ENV=development DEBUG=athena* nodemon athena/index.js --watch athena --exec babel-node",
     "dev:hermes": "NODE_ENV=development DEBUG=hermes* nodemon hermes/index.js --watch hermes --exec babel-node",
     "build": "npm run build:iris && npm run build:client",
     "prebuild:iris": "rimraf build-iris",
