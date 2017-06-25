@@ -7,6 +7,9 @@ export const getDirectMessageThreadMembers = (
   return db
     .table('usersDirectMessageThreads')
     .getAll(id, { index: 'threadId' })
+    .eqJoin('userId', db.table('users'))
+    .without({ right: ['id', 'createdAt'] })
+    .zip()
     .run();
 };
 

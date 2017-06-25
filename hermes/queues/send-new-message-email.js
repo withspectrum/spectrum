@@ -41,6 +41,7 @@ export default () =>
       TemplateId: NEW_MESSAGE_TEMPLATE,
       To: job.data.to,
       TemplateModel: {
+        subject: `You've got new replies in "${job.data.threads[0].title}"`,
         user: job.data.user,
         threads: job.data.threads,
       },
