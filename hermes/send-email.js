@@ -6,12 +6,18 @@ let client;
 if (process.env.POSTMARK_SERVER_KEY) {
   client = new postmark.Client(process.env.POSTMARK_SERVER_KEY);
 } else {
-  console.log('\nℹ️ POSTMARK_SERVER_KEY not provided, not sending any mails.');
+  const stringify = require('json-stringify-pretty-compact');
+  console.log(
+    '\nℹ️ POSTMARK_SERVER_KEY not provided, debug mode enabled. Will log emails instead of actually sending them.'
+  );
   // If no postmark API key is provided don't crash the server but log instead
   client = {
-    sendEmailWithTemplate: ({ To }, cb) => {
+    sendEmailWithTemplate: ({ To, TemplateModel }, cb) => {
+      console.log('\n---Send email---');
       console.log(
-        `pretending to email ${To}, POSTMARK_SERVER_KEY not provided so not actually sending.`
+        `To: ${To}\nSubject: ${TemplateModel.subject}\nTemplateModel:\n`,
+        stringify(TemplateModel),
+        '\n'
       );
       cb();
     },
