@@ -38,5 +38,7 @@ export default () =>
         return saveSlackImportData(importId, members);
       })
       .then(() => job.remove())
-      .catch(err => new Error(err));
+      .catch(err => {
+        throw new Error(err);
+      });
   });

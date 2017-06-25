@@ -46,5 +46,8 @@ exports.up = function(r, conn) {
 };
 
 exports.down = function(r, conn) {
-  // must return a Promise!
+  return Promise.all([
+    r.tableDrop('communityInvitations').run(conn),
+    r.tableDrop('slackImports').run(conn),
+  ]);
 };
