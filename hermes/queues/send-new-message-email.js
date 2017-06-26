@@ -3,6 +3,7 @@ const debug = require('debug')('hermes:queue:send-new-message-email');
 import sendEmail from '../send-email';
 import processQueue from '../../shared/bull/process-queue';
 import { SEND_NEW_MESSAGE_EMAIL, NEW_MESSAGE_TEMPLATE } from './constants';
+import capitalize from '../utils/capitalize';
 
 type ReplyData = {
   sender: {
@@ -41,9 +42,15 @@ export default () =>
       TemplateId: NEW_MESSAGE_TEMPLATE,
       To: job.data.to,
       TemplateModel: {
-        subject: `You've got new replies in "${job.data.threads[0].title}"`,
+        subject: `You've got new replies in ${job.data.threads[0].title}`,
         user: job.data.user,
-        threads: job.data.threads,
+        threads: job.data.threads.map(thread => ({
+          ...thread,
+          // Capitalize the first letter of all titles in the body of the email
+          // Don't capitalize the one in the subject though because in a DM thread
+          // that is "your conversation with X", so we don't want to capitalize it.
+          title: capitalize(thread.title),
+        })),
       },
     });
   });

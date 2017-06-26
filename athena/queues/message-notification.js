@@ -18,14 +18,34 @@ import { getThreadNotificationUsers } from '../models/usersThreads';
 import {
   getDirectMessageThreadMembers,
 } from '../models/usersDirectMessageThreads';
+import sentencify from '../utils/sentencify';
 
 const sendNewMessageEmailQueue = createQueue(SEND_NEW_MESSAGE_EMAIL);
 
-const addToSendNewMessageEmailQueue = (recipient, thread, user, message) => {
+const addToSendNewMessageEmailQueue = (
+  recipient,
+  thread,
+  user,
+  message,
+  contextType
+) => {
   if (!recipient || !recipient.email || !thread || !user || !message) {
     debug('aborting adding to email queue due to invalid data');
     return Promise.resolve();
   }
+
+  const constructedThread = contextType !== 'DIRECT_MESSAGE_THREAD'
+    ? thread
+    : {
+        // Return direct message thread data in the same format as normal threads
+        content: {
+          // Contruct title out of direct message thread users
+          title: `your conversation with ${sentencify(thread
+              .filter(userThread => userThread.userId !== recipient.userId)
+              .map(user => user.name))}`,
+        },
+        id: thread[0].threadId,
+      };
 
   return sendNewMessageEmailQueue.add({
     to: recipient.email,
@@ -35,9 +55,8 @@ const addToSendNewMessageEmailQueue = (recipient, thread, user, message) => {
     },
     threads: [
       {
-        // TODO: Figure out what to do as the title in DMs
-        title: thread.content.title,
-        id: thread.id,
+        title: constructedThread.content.title,
+        id: constructedThread.id,
         replies: [
           {
             sender: {
@@ -81,7 +100,7 @@ const processMessageNotificationQueue = job => {
     //get the user who left the message
     fetchPayload('USER', incomingMessage.senderId),
     // get the thread the message was left in - could be a dm or story depending on the contextType
-    fetchPayload(contextType, incomingMessage.threadId),
+    fetchPayload(contextType, incomingMessage.threadId, currentUserId),
     // create an entity payload with the message that was sent
     createPayload('MESSAGE', incomingMessage),
   ];
@@ -145,7 +164,13 @@ const processMessageNotificationQueue = job => {
               : storeUsersNotifications;
             return Promise.all(
               filteredRecipients.map(recipient => {
-                addToSendNewMessageEmailQueue(recipient, thread, user, message);
+                addToSendNewMessageEmailQueue(
+                  recipient,
+                  thread,
+                  user,
+                  message,
+                  contextType
+                );
                 return dbMethod(notification.id, recipient.userId);
               })
             );
