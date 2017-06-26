@@ -92,3 +92,19 @@ export const getSlackImport = communityId => {
       return results[0];
     });
 };
+
+export const markSlackImportAsSent = communityId => {
+  return db
+    .table('slackImports')
+    .getAll(communityId, { index: 'communityId' })
+    .update(
+      {
+        sent: new Date(),
+      },
+      { returnChanges: true }
+    )
+    .run()
+    .then(results => {
+      return results.changes[0].new_val;
+    });
+};

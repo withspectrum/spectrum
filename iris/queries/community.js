@@ -149,6 +149,7 @@ module.exports = {
         return {
           teamName: data.teamName,
           members: data.members ? JSON.stringify(data.members) : null,
+          sent: data.sent || null,
         };
       });
     },

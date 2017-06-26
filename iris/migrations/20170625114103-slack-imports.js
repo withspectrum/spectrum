@@ -37,6 +37,7 @@ exports.up = function(r, conn) {
             console.log(err);
             throw err;
           }),
+        r.table('users').indexCreate('email', r.row('email')).run(conn),
       ])
     )
     .catch(err => {

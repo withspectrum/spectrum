@@ -11,7 +11,7 @@ const slackRouter = Router();
 slackRouter.get('/', (req, res) => {
   const code = req.query.code;
   const communityId = req.query.state;
-  const userId = req.user.id;
+  const senderId = req.user.id;
 
   // generate an oauth token. This token will be used to communicate with the Slack API to get user information, and we'll store the token in the db record to allow for the user to access their Slack team info in the future.
   return generateOAuthToken(code)
@@ -24,7 +24,7 @@ slackRouter.get('/', (req, res) => {
         token,
         teamName,
         teamId,
-        userId,
+        senderId,
         communityId,
       };
       return createSlackImportRecord(input);

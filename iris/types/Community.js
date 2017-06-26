@@ -36,6 +36,7 @@ const Community = /* GraphQL */ `
 	type SlackImport {
 		members: String
 		teamName: String
+		sent: Date
 	}
 
 	input CreateCommunityInput {
@@ -88,6 +89,7 @@ const Community = /* GraphQL */ `
 		editCommunity(input: EditCommunityInput!): Community
 		deleteCommunity(communityId: ID!): Boolean
 		toggleCommunityMembership(communityId: ID!): Community
+		sendSlackInvites(id: ID!): Community
 	}
 `;
 

@@ -4,7 +4,13 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
-import { getSlackImport } from '../../../api/slackImport';
+// $FlowFixMe
+import { connect } from 'react-redux';
+import { addToastWithTimeout } from '../../../actions/toasts';
+import {
+  getSlackImport,
+  sendSlackInvitationsMutation,
+} from '../../../api/slackImport';
 import { displayLoadingCard } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
 import { ButtonContainer } from '../style';
@@ -17,17 +23,53 @@ import {
 } from '../../../components/listItems/style';
 
 class ImportSlack extends Component {
+  state: {
+    isLoading: boolean,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      isLoading: false,
+    };
+  }
+
   import = () => {
     const { community } = this.props;
     window.location.href = `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read&state=${community.id}`;
   };
 
-  sendInvites = () => {};
+  sendInvites = () => {
+    const { community } = this.props.data;
+
+    this.setState({
+      isLoading: true,
+    });
+
+    this.props
+      .sendSlackInvites(community.id)
+      .then(({ data: { sendSlackInvites } }) => {
+        this.setState({
+          isLoading: false,
+        });
+        this.props.dispatch(
+          addToastWithTimeout('success', 'Your invitations are being sent!')
+        );
+      })
+      .catch(err => {
+        this.setState({
+          isLoading: false,
+        });
+        this.props.dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
 
   render() {
     const {
       data: { error, community, networkStatus, startPolling, stopPolling },
     } = this.props;
+    const { isLoading } = this.state;
 
     if (!community || error !== undefined) {
       return <StyledCard>Error</StyledCard>;
@@ -42,6 +84,7 @@ class ImportSlack extends Component {
       !community.slackImport.members;
     // if an import has been created and we have members
     const fullImport = community.slackImport && community.slackImport.members;
+    const hasAlreadyBeenSent = fullImport && community.slackImport.sent;
 
     if (noImport) {
       return (
@@ -75,29 +118,59 @@ class ImportSlack extends Component {
       const teamName = community.slackImport.teamName;
       const count = members.length.toLocaleString();
 
-      return (
-        <StyledCard>
-          <LargeListHeading>Import a Slack Team</LargeListHeading>
-          <Description>
-            This community has been connected to the
-            {' '}
-            <strong>{teamName}</strong>
-            {' '}
-            Slack team. We found
-            {' '}
-            {count}
-            {' '}
-            members with email addresses - you can invite them to your Spectrum community in one click.
-          </Description>
-          <ButtonContainer>
-            <Button onClick={this.sendInvites}>
-              Invite {count} people to Spectrum
-            </Button>
-          </ButtonContainer>
-        </StyledCard>
-      );
+      if (hasAlreadyBeenSent) {
+        return (
+          <StyledCard>
+            <LargeListHeading>Import a Slack Team</LargeListHeading>
+            <Description>
+              This community has been connected to the
+              {' '}
+              <strong>{teamName}</strong>
+              {' '}
+              Slack team. We found
+              {' '}
+              {count}
+              {' '}
+              members with email addresses - you have already invited them to join your community.
+            </Description>
+            <ButtonContainer>
+              <Button disabled>
+                Invites sent to {count} people
+              </Button>
+            </ButtonContainer>
+          </StyledCard>
+        );
+      } else {
+        return (
+          <StyledCard>
+            <LargeListHeading>Import a Slack Team</LargeListHeading>
+            <Description>
+              This community has been connected to the
+              {' '}
+              <strong>{teamName}</strong>
+              {' '}
+              Slack team. We found
+              {' '}
+              {count}
+              {' '}
+              members with email addresses - you can invite them to your Spectrum community in one click.
+            </Description>
+            <ButtonContainer>
+              <Button onClick={this.sendInvites} loading={isLoading}>
+                Invite {count} people to Spectrum
+              </Button>
+            </ButtonContainer>
+          </StyledCard>
+        );
+      }
     }
   }
 }
 
-export default compose(getSlackImport, displayLoadingCard, pure)(ImportSlack);
+export default compose(
+  sendSlackInvitationsMutation,
+  getSlackImport,
+  displayLoadingCard,
+  connect(),
+  pure
+)(ImportSlack);
