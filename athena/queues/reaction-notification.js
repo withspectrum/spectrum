@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('athena:queue:reaction-notification');
-import processQueue from '../process-queue';
+import processQueue from '../../shared/bull/process-queue';
 import { REACTION_NOTIFICATION, TIME_BUFFER } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';

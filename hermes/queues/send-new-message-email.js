@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-new-message-email');
 import sendEmail from '../send-email';
-import processQueue from '../process-queue';
+import processQueue from '../../shared/bull/process-queue';
 import { SEND_NEW_MESSAGE_EMAIL, NEW_MESSAGE_TEMPLATE } from './constants';
 
 type ReplyData = {

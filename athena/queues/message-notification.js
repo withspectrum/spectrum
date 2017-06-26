@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('athena:queue:message-notification');
-import processQueue from '../process-queue';
+import processQueue from '../../shared/bull/process-queue';
 import createQueue from '../create-queue';
 import { MESSAGE_NOTIFICATION, SEND_NEW_MESSAGE_EMAIL } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
