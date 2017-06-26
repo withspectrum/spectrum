@@ -1,6 +1,7 @@
-const Queue = require('bull');
+// @flow
+var Queue = require('bull');
 
-const redis = process.env.NODE_ENV === 'production'
+var redis = process.env.NODE_ENV === 'production'
   ? {
       port: process.env.COMPOSE_REDIS_PORT,
       host: process.env.COMPOSE_REDIS_URL,
@@ -9,6 +10,10 @@ const redis = process.env.NODE_ENV === 'production'
   : undefined; // Use the local instance of Redis in development by not passing any connection string
 
 // Leave the options undefined if we're using the default redis connection
-const options = redis && { redis };
+const options = redis && { redis: redis };
 
-export default name => new Queue(name, options);
+function createQueue(name /*: string */) {
+  return new Queue(name, options);
+}
+
+module.exports = createQueue;
