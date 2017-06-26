@@ -2,7 +2,9 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { communityInfoFragment } from './fragments/community/communityInfo';
-import { communityMetaDataFragment } from './fragments/community/communityMetaData';
+import {
+  communityMetaDataFragment,
+} from './fragments/community/communityMetaData';
 import { channelInfoFragment } from './fragments/channel/channelInfo';
 import { userInfoFragment } from './fragments/user/userInfo';
 import { channelMetaDataFragment } from './fragments/channel/channelMetaData';
@@ -199,10 +201,9 @@ const getCommunityMembersOptions = {
           query: LoadMoreMembers,
           variables: {
             id: community.id,
-            after:
-              community.memberConnection.edges[
-                community.memberConnection.edges.length - 1
-              ].cursor,
+            after: community.memberConnection.edges[
+              community.memberConnection.edges.length - 1
+            ].cursor,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult.community) {
@@ -262,4 +263,24 @@ export const getCommunityMembersQuery = graphql(
     ${communityMetaDataFragment}
 	`,
   getCommunityMembersOptions
+);
+
+const getCommunityByIdOptions = {
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+  }),
+};
+
+export const getCommunityById = graphql(
+  gql`
+		query getCommunity($id: ID) {
+			community(id: $id) {
+        ...communityInfo
+      }
+		}
+    ${communityInfoFragment}
+	`,
+  getCommunityByIdOptions
 );

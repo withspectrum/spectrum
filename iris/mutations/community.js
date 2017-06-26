@@ -381,9 +381,11 @@ module.exports = {
             // for each member on the invite record, send a community invitation
             return inviteRecord.members.map(user => {
               return communityInvitationQueue.add({
-                email: user.email,
-                firstName: user.firstName ? user.firstName : null,
-                lastName: user.lastName ? user.lastName : null,
+                recipient: {
+                  email: user.email,
+                  firstName: user.firstName ? user.firstName : null,
+                  lastName: user.lastName ? user.lastName : null,
+                },
                 communityId: inviteRecord.communityId,
                 inviteMethod: 'SLACK',
                 inviteMethodId: inviteRecord.id,

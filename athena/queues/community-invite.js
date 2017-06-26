@@ -7,109 +7,121 @@ import { getDistinctActors } from '../utils/actors';
 import { getCommunityById } from '../models/community';
 import { getOwnersInCommunity } from '../models/usersCommunities';
 import { storeNotification } from '../models/notification';
+import { getUserByEmail } from '../models/user';
+import { createQueue } from '../create-queue';
 import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
 
-export default () =>
-  processQueue(COMMUNITY_INVITE_NOTIFICATION, job => {
-    const {
-      email,
-      firstName,
-      lastName,
-      communityId,
-      inviteMethod,
-      inviteMethodId,
-      userId,
-    } = job.data;
+// const sendCommunityInvitateEmailQueue = createQueue(SEND_COMMUNITY_INVITE_EMAIL);
 
-    debug(`new job for ${communityId} by ${userId}`);
+const addToSendCommunityInviteEmailQueue = (recipient, community, sender) => {
+  if (!recipient || !recipient.email || !community || !sender) {
+    debug('aborting adding to email queue due to invalid data');
+    return Promise.resolve();
+  }
 
-    const promises = [
-      // actor and entity
-      fetchPayload('USER', currentUserId),
-      // get the community the user just joined
-      fetchPayload('COMMUNITY', incomingCommunityId),
-    ];
+  // return sendCommunityInvitateEmailQueue.add({
+  //   // email info
+  // });
+};
 
-    return checkForExistingNotification(
-      'USER_JOINED_COMMUNITY',
-      incomingCommunityId
-    )
-      .then(notification => {
-        if (notification) {
-          debug('found existing notification');
-          return Promise.all([notification, ...promises])
-            .then(([notification, actor, context]) => {
-              // actors should always be distinct to make client side rendering easier
-              const distinctActors = getDistinctActors([
-                ...notification.actors,
-                actor,
-              ]);
+/*
+  LOOSE OUTLINE:
 
-              // create a new notification
-              // in this case we always want the actors and entities to be in sync because the notification should only ever reflect who has actually joined the community
-              const newNotification = Object.assign({}, notification, {
-                actors: [...distinctActors],
-                context,
-                entities: [...distinctActors],
-              });
+  1. See if a user with that email already exists
+      1a. If user exists, see if user is a member of the community
+        1aa. If they are already a member of the community, skip
+        1ab. If they are not a member of the community, proceed to 2
+      1b. If the user does not exist, proceed to 3
+  2. For users who are already on Specrum and are not in the community, generate a new
+      notification with the invitation. We don't worry at all about bundling for this
+      type of notification since they will rarely overlap, and are high enough signal
+      that showing multiple community invitation notifications is fine.
+      For each of these users, proceed to 3
+  3. For users who are both on Spectrum but not a member of the community, and users who
+      are not on Spectrum, send an email invitation
+      3a. generate a communityInvitation record in the db
+      3b. send an email
+*/
 
-              debug('update existing notification in database with new data');
-              return updateNotification(newNotification);
-            })
-            .then(notification => {
-              // get the owners of the community
-              const recipients = getOwnersInCommunity(incomingCommunityId);
+const processMessageNotificationQueue = job => {
+  const {
+    recipient,
+    communityId,
+    inviteMethod,
+    inviteMethodId,
+    senderId,
+  } = job.data;
 
-              debug('find recipients of notification');
+  const inboundRecipient = recipient;
 
-              return Promise.all([notification, recipients]);
-            })
-            .then(([notification, recipients]) => {
-              debug('mark notification as new for all recipients');
-              // for each owner, trigger a notification
-              return Promise.all(
-                recipients.map(recipient =>
-                  markUsersNotificationsAsNew(notification.id, recipient)
-                )
-              );
-            });
-        } else {
-          // if no notification was found that matches our bundling criteria, create a new notification
-          return Promise.all([...promises])
-            .then(([actor, context]) => {
-              // create the notification record
-              const notification = {
-                actors: [actor],
-                event: 'USER_JOINED_COMMUNITY',
-                context,
-                entities: [actor],
-              };
+  /*
+    These promises are used to create or modify a notification. The order is:
+    - actor
+    - context
+    - entity
+    In this case the context and entity are the same
+  */
+  const getPayloads = [
+    // see if the user being invited is already a member of spectrum
+    getUserByEmail(inboundRecipient.email),
+    //get the user who sent the invitation
+    fetchPayload('USER', senderId),
+    // get the community that the user is being invited to - this will be reused for the notification entity
+    fetchPayload('COMMUNITY', communityId),
+  ];
 
-              debug('create notification in db');
+  return Promise.all(getPayloads)
+    .then(([existingUser, actor, context]) => {
+      // if the recipient of the email is not a member of spectrum, pass their information along to the email queue
+      if (!existingUser) {
+        debug(`recipient does not exist on spectrum, sending an email`);
+        return addToSendCommunityInviteEmailQueue(
+          inboundRecipient,
+          context,
+          actor
+        );
+      }
 
-              return storeNotification(notification);
-            })
-            .then(notification => {
-              // get the owners of the community
-              const recipients = getOwnersInCommunity(incomingCommunityId);
+      debug(
+        `payloads loaded, recipient is on spectrum. generating notification data`
+      );
 
-              debug('find recipients of notification');
-
-              return Promise.all([notification, recipients]);
-            })
-            .then(([notification, recipients]) => {
-              debug('create a notification for every recipient');
-              return Promise.all(
-                recipients.map(recipient =>
-                  storeUsersNotifications(notification.id, recipient)
-                )
-              );
-            });
+      // Create notification
+      const newNotification = Object.assign(
+        {},
+        {},
+        {
+          actors: [actor],
+          event: 'COMMUNITY_INVITE',
+          context,
+          entities: [context], // entity and context are the same for this type of notification
         }
-      })
-      .then(() => job.remove())
-      .catch(err => new Error(err));
-  });
+      );
+
+      debug('creating new notification');
+
+      return storeNotification(newNotification).then(notification => {
+        debug('store new usersnotifications records');
+        const community = JSON.parse(context.payload);
+        const sender = JSON.parse(actor.payload);
+
+        return Promise.all([
+          addToSendCommunityInviteEmailQueue(
+            inboundRecipient,
+            community,
+            sender
+          ),
+          storeUsersNotifications(notification.id, existingUser.id),
+        ]);
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
+
+export default () =>
+  processQueue(COMMUNITY_INVITE_NOTIFICATION, processMessageNotificationQueue);

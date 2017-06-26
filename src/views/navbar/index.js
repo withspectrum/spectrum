@@ -56,6 +56,7 @@ class Navbar extends Component {
   calculateUnseenCounts = () => {
     const { data: { user }, notificationsQuery, match } = this.props;
     const currentUser = user;
+    console.log('notificationsQuery', notificationsQuery);
     let notifications =
       currentUser &&
       notificationsQuery.notifications.edges.map(
@@ -234,8 +235,7 @@ class Navbar extends Component {
 
   login = () => {
     // log the user in and return them to this page
-    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window
-      .location.href}`);
+    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window.location.href}`);
   };
 
   render() {
