@@ -289,31 +289,33 @@
                           </tr>
                           <tr>
                           {{#each replies}}
-                            <tr>
-                              <td class="attributes_item">
-                                <table>
-                                  <tr>
-                                    <td>
-                                      <img class="avatar" src="{{sender.profilePhoto}}" />
-                                    </td>
-                                    <td>
-                                      <table>
-                                        <tr>
-                                          <td>
-                                            <span class="name">{{sender.name}}</span>
-                                          </td>
-                                        </tr>
-                                        <tr>
-                                          <td>
-                                            <p class="reply">{{content.body}}</p>
-                                          </td>
-                                        </tr>
-                                      </table>
-                                    </td>
-                                  </tr>
-                                </table>
-                              </td>
-                            </tr>
+                            <a href="https://spectrum.chat/threads/{{id}}">
+                              <tr>
+                                <td class="attributes_item">
+                                  <table>
+                                    <tr>
+                                      <td>
+                                        <img class="avatar" src="{{sender.profilePhoto}}" />
+                                      </td>
+                                      <td>
+                                        <table>
+                                          <tr>
+                                            <td>
+                                              <span class="name">{{sender.name}}</span>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td>
+                                              <p class="reply">{{content.body}}</p>
+                                            </td>
+                                          </tr>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </a>
                           {{/each}}
                           </tr>
                         </table>
