@@ -1,8 +1,12 @@
+// @flow
+import { sortByDate } from './utils';
+
 export const sortAndGroupMessages = messagesToSort => {
   if (!messagesToSort.length > 0) return [];
   let messages = messagesToSort
     .map(message => message.node)
     .filter(message => message);
+  messages = sortByDate(messages, 'timestamp', 'asc');
   let masterArray = [];
   let newArray = [];
   let checkId;

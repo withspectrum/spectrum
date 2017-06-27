@@ -23,13 +23,14 @@ module.exports = {
   DirectMessageThread: {
     messageConnection: (
       { id }: { id: String },
-      { first = 50, after }: PaginationOptions
+      { first = 30, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
       return getMessages(id, {
         first,
         after: cursor,
       })
+        .then(messages => messages.reverse())
         .then(messages =>
           paginate(
             messages,
