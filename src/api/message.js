@@ -3,7 +3,9 @@
 import { graphql, gql } from 'react-apollo';
 import { messageInfoFragment } from './fragments/message/messageInfo';
 import { GET_THREAD_MESSAGES_QUERY } from '../views/thread/queries';
-import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../views/directMessages/queries';
+import {
+  GET_DIRECT_MESSAGE_THREAD_QUERY,
+} from '../views/directMessages/queries';
 
 /*
   Updates UI automatically via the containers subscribeToNewMessages helper
@@ -61,6 +63,7 @@ const SEND_MESSAGE_OPTIONS = {
             }
 
             data.thread.messageConnection.edges.push({
+              cursor: addMessage.id,
               node: addMessage,
               __typename: 'ThreadMessageEdge',
             });
@@ -88,6 +91,7 @@ const SEND_MESSAGE_OPTIONS = {
               return;
             }
             data.directMessageThread.messageConnection.edges.push({
+              cursor: addMessage.id,
               node: addMessage,
               __typename: 'DirectMessageEdge',
             });

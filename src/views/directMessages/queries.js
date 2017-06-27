@@ -8,12 +8,17 @@ import {
   directMessageThreadInfoFragment,
 } from '../../api/fragments/directMessageThread/directMessageThreadInfo';
 
-export const GET_DIRECT_MESSAGE_THREAD_QUERY = gql`
-  query getDirectMessageThreadMessages($id: ID!) {
+const LoadMoreMessages = gql`
+  query loadMoreMessages($id: ID!, $after: String) {
     directMessageThread(id: $id) {
       ...directMessageThreadInfo
-      messageConnection {
+      messageConnection(after: $after) {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
         edges {
+          cursor
           node {
             ...messageInfo
           }
@@ -22,7 +27,28 @@ export const GET_DIRECT_MESSAGE_THREAD_QUERY = gql`
     }
   }
   ${directMessageThreadInfoFragment}
-  ${userInfoFragment}
+  ${messageInfoFragment}
+`;
+
+export const GET_DIRECT_MESSAGE_THREAD_QUERY = gql`
+  query getDirectMessageThreadMessages($id: ID!) {
+    directMessageThread(id: $id) {
+      ...directMessageThreadInfo
+      messageConnection {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+        edges {
+          cursor
+          node {
+            ...messageInfo
+          }
+        }
+      }
+    }
+  }
+  ${directMessageThreadInfoFragment}
   ${messageInfoFragment}
 `;
 
@@ -34,7 +60,14 @@ export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
     fetchPolicy: 'cache-and-network',
   }),
   props: ({
-    data: { error, loading, directMessageThread, subscribeToMore },
+    data: {
+      error,
+      loading,
+      directMessageThread,
+      subscribeToMore,
+      networkStatus,
+      fetchMore,
+    },
     ownProps,
   }) => ({
     data: {
@@ -43,6 +76,45 @@ export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
       messages: directMessageThread
         ? directMessageThread.messageConnection.edges
         : '',
+      networkStatus: networkStatus,
+      hasNextPage: directMessageThread
+        ? directMessageThread.messageConnection.pageInfo.hasNextPage
+        : false,
+      fetchMore: () =>
+        fetchMore({
+          query: LoadMoreMessages,
+          variables: {
+            id: directMessageThread.id,
+            after: directMessageThread.messageConnection.edges[
+              directMessageThread.messageConnection.edges.length - 1
+            ].cursor,
+          },
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult.directMessageThread) {
+              return prev;
+            }
+
+            return {
+              ...prev,
+              directMessageThread: {
+                ...prev.directMessageThread,
+                messageConnection: {
+                  ...prev.directMessageThread.messageConnection,
+                  pageInfo: {
+                    ...prev.directMessageThread.messageConnection.pageInfo,
+                    ...fetchMoreResult.directMessageThread.messageConnection
+                      .pageInfo,
+                  },
+                  edges: [
+                    ...prev.directMessageThread.messageConnection.edges,
+                    ...fetchMoreResult.directMessageThread.messageConnection
+                      .edges,
+                  ],
+                },
+              },
+            };
+          },
+        }),
     },
     subscribeToNewMessages: () => {
       if (!directMessageThread) {
@@ -66,6 +138,7 @@ export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
                   ...prev.directMessageThread.messageConnection.edges,
                   // NOTE(@mxstbr): The __typename hack is to work around react-apollo/issues/658
                   {
+                    cursor: newMessage.id,
                     node: newMessage,
                     __typename: 'DirectMessageThreadMessageEdge',
                   },
