@@ -65,6 +65,7 @@ class MessagesWithData extends Component {
   render() {
     const {
       data: { error, loading, messages, hasNextPage, fetchMore, networkStatus },
+      data,
     } = this.props;
     const { subscription } = this.state;
 

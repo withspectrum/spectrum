@@ -138,6 +138,7 @@ export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
                   ...prev.directMessageThread.messageConnection.edges,
                   // NOTE(@mxstbr): The __typename hack is to work around react-apollo/issues/658
                   {
+                    cursor: newMessage.id,
                     node: newMessage,
                     __typename: 'DirectMessageThreadMessageEdge',
                   },
