@@ -13,6 +13,7 @@ import { displayLoadingState } from '../../components/loading';
 import { UserEditForm } from '../../components/editForm';
 import { Upsell404User } from '../../components/upsell';
 import RecurringPaymentsList from './components/recurringPaymentsList';
+import EmailSettings from './components/emailSettings';
 import { GetUserProfile } from './queries';
 import { FlexCol } from '../../components/globals';
 import Titlebar from '../titlebar';
@@ -72,6 +73,7 @@ const UserSettings = ({ data, currentUser, match }) => {
 
         <Column type="primary">
           <RecurringPaymentsList data={data} currentUser={data.user} />
+          <EmailSettings currentUser={data.user} />
         </Column>
       </AppViewWrapper>
     </FlexCol>
