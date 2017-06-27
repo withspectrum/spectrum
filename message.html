@@ -289,33 +289,33 @@
                           </tr>
                           <tr>
                           {{#each replies}}
-                            <a href="https://spectrum.chat/threads/{{id}}">
-                              <tr>
-                                <td class="attributes_item">
-                                  <table>
-                                    <tr>
-                                      <td>
+                            <tr>
+                              <td class="attributes_item">
+                                <table>
+                                  <tr>
+                                    <td>
+                                      <a href="https://spectrum.chat/threads/{{id}}">
                                         <img class="avatar" src="{{sender.profilePhoto}}" />
-                                      </td>
-                                      <td>
-                                        <table>
-                                          <tr>
-                                            <td>
-                                              <span class="name">{{sender.name}}</span>
-                                            </td>
-                                          </tr>
-                                          <tr>
-                                            <td>
-                                              <p class="reply">{{content.body}}</p>
-                                            </td>
-                                          </tr>
-                                        </table>
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </td>
-                              </tr>
-                            </a>
+                                      </a>
+                                    </td>
+                                    <td>
+                                      <table>
+                                        <tr>
+                                          <td>
+                                            <a href="https://spectrum.chat/threads/{{id}}"><span class="name">{{sender.name}}</span></a>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td>
+                                            <a href="https://spectrum.chat/threads/{{id}}"><p class="reply">{{content.body}}</p></a>
+                                          </td>
+                                        </tr>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
                           {{/each}}
                           </tr>
                         </table>
