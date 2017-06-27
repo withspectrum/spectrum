@@ -2,6 +2,7 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from './fragments/user/userInfo';
+import { userSettingsFragment } from './fragments/user/userSettings';
 
 /*
   Upload a new profilePhoto for the given currentUser
@@ -185,3 +186,31 @@ export const GET_CURRENT_USER_PROFILE_QUERY = gql`
   ${userInfoFragment}
 `;
 export const getCurrentUserProfile = graphql(GET_CURRENT_USER_PROFILE_QUERY);
+
+/*
+  Delete a thread
+*/
+const TOGGLE_NOTIFICATION_SETTINGS_MUTATION = gql`
+  mutation toggleNotificationSettings($input: ToggleNotificationSettingsInput) {
+    toggleNotificationSettings(input: $input) {
+      ...userInfo,
+      ...userSettings
+    }
+  }
+  ${userInfoFragment}
+  ${userSettingsFragment}
+`;
+const TOGGLE_NOTIFICATION_SETTINGS_OPTIONS = {
+  props: ({ input, mutate }) => ({
+    toggleNotificationSettings: input =>
+      mutate({
+        variables: {
+          input,
+        },
+      }),
+  }),
+};
+export const toggleNotificationSettingsMutation = graphql(
+  TOGGLE_NOTIFICATION_SETTINGS_MUTATION,
+  TOGGLE_NOTIFICATION_SETTINGS_OPTIONS
+);

@@ -58,6 +58,22 @@ const User = /* GraphQL */ `
 		status: String
 	}
 
+	type NotificationKindSettings {
+		email: Boolean
+	}
+
+	type NotificationSettingsType {
+		newMessageInThreads: NotificationKindSettings
+	}
+
+	type UserNotificationsSettings {
+		types: NotificationSettingsType
+	}
+
+	type UserSettings {
+		notifications: UserNotificationsSettings
+	}
+
 	type User {
 		id: ID!
 		name: String
@@ -82,6 +98,7 @@ const User = /* GraphQL */ `
 		threadConnection(first: Int = 10, after: String): UserThreadsConnection!
 		everything(first: Int = 10, after: String): EverythingThreadsConnection!
 		recurringPayments: [RecurringPayment]
+		settings: UserSettings
 	}
 
 	extend type Query {
@@ -103,10 +120,16 @@ const User = /* GraphQL */ `
 		token: String!
 	}
 
+	input ToggleNotificationSettingsInput {
+		deliveryMethod: String!
+		notificationType: String!
+	}
+
 	extend type Mutation {
 		editUser(input: EditUserInput!): User
 		upgradeToPro(input: UpgradeToProInput!): User
 		downgradeFromPro: User
+		toggleNotificationSettings(input: ToggleNotificationSettingsInput): User
 	}
 `;
 
