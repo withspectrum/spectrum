@@ -38,19 +38,29 @@ type SendNewMessageEmailJob = {
 export default () =>
   processQueue(SEND_NEW_MESSAGE_EMAIL, (job: SendNewMessageEmailJob) => {
     debug(`\nnew job: ${job.id}`);
+    const repliesAmount = job.data.threads.reduce(
+      (total, thread) => total + thread.replies.length,
+      0
+    );
+    const repliesText = repliesAmount > 1 ? 'new replies' : 'a new reply';
+    const postfix = job.data.threads.length > 1 ? ' and other threads' : '';
+    const subject = `You've got ${repliesText} in ${job.data.threads[0].content.title}${postfix}`;
     try {
       return sendEmail({
         TemplateId: NEW_MESSAGE_TEMPLATE,
         To: job.data.to,
         TemplateModel: {
-          subject: `You've got new replies in ${job.data.threads[0].content.title}`,
+          subject,
           user: job.data.user,
           threads: job.data.threads.map(thread => ({
             ...thread,
-            // Capitalize the first letter of all titles in the body of the email
-            // Don't capitalize the one in the subject though because in a DM thread
-            // that is "your conversation with X", so we don't want to capitalize it.
-            title: capitalize(thread.content.title),
+            content: {
+              ...thread.content,
+              // Capitalize the first letter of all titles in the body of the email
+              // Don't capitalize the one in the subject though because in a DM thread
+              // that is "your conversation with X", so we don't want to capitalize it.
+              title: capitalize(thread.content.title),
+            },
           })),
         },
       });
