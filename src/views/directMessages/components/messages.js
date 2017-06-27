@@ -2,9 +2,11 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
+// $FlowFixMe
+import pure from 'recompose/pure';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
-import { displayLoadingState } from '../../../components/loading';
+import { Loading } from '../../../components/loading';
 import Icon from '../../../components/icons';
 import { HorizontalRule } from '../../../components/globals';
 import { getDirectMessageThreadMessages } from '../queries';
@@ -28,6 +30,10 @@ class MessagesWithData extends Component {
   componentDidUpdate(prev) {
     const { contextualScrollToBottom, data } = this.props;
 
+    if (prev.data.loading && !this.props.data.loading) {
+      this.subscribe();
+      setTimeout(() => this.props.forceScrollToBottom());
+    }
     // force scroll to bottom when a message is sent in the same thread
     if (prev.data.messages !== data.messages && contextualScrollToBottom) {
       contextualScrollToBottom();
@@ -53,18 +59,22 @@ class MessagesWithData extends Component {
   };
 
   render() {
-    const { data: { error, messages }, data } = this.props;
+    const { data: { error, loading, messages }, data } = this.props;
     const { subscription } = this.state;
+
     if (error) {
       return <div>Error!</div>;
     }
 
-    if (!messages || !subscription) {
+    if (loading) {
+      return <Loading />;
+    }
+
+    if ((!loading && !messages) || !subscription) {
       return <div />;
     }
 
     const sortedMessages = sortAndGroupMessages(messages);
-
     return (
       <MessagesScrollWrapper>
         <div style={{ padding: '24px 0', background: '#fff' }}>
@@ -90,7 +100,7 @@ class MessagesWithData extends Component {
 const Messages = compose(
   toggleReactionMutation,
   getDirectMessageThreadMessages,
-  displayLoadingState
+  pure
 )(MessagesWithData);
 
 export default Messages;
