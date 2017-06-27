@@ -2,14 +2,16 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import compose from 'recompose/compose';
+// $FlowFixMe
+import pure from 'recompose/pure';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
-import { displayLoadingState } from '../../../components/loading';
+import { Loading } from '../../../components/loading';
 import Icon from '../../../components/icons';
-import { HorizontalRule } from '../../../components/globals';
+import { HorizontalRule, Spinner } from '../../../components/globals';
 import { getDirectMessageThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
-import { MessagesScrollWrapper } from './style';
+import { MessagesScrollWrapper, HasNextPage, NextPageButton } from './style';
 
 class MessagesWithData extends Component {
   state: {
@@ -28,6 +30,14 @@ class MessagesWithData extends Component {
   componentDidUpdate(prev) {
     const { contextualScrollToBottom, data } = this.props;
 
+    if (
+      prev.data.networkStatus === 1 &&
+      prev.data.loading &&
+      !this.props.data.loading
+    ) {
+      this.subscribe();
+      setTimeout(() => this.props.forceScrollToBottom());
+    }
     // force scroll to bottom when a message is sent in the same thread
     if (prev.data.messages !== data.messages && contextualScrollToBottom) {
       contextualScrollToBottom();
@@ -53,27 +63,39 @@ class MessagesWithData extends Component {
   };
 
   render() {
-    const { data: { error, messages }, data } = this.props;
+    const {
+      data: { error, loading, messages, hasNextPage, fetchMore, networkStatus },
+      data,
+    } = this.props;
     const { subscription } = this.state;
+
     if (error) {
       return <div>Error!</div>;
     }
 
-    if (!messages || !subscription) {
+    if (networkStatus === 1) {
+      return <Loading />;
+    }
+
+    if ((!loading && !messages) || !subscription) {
       return <div />;
     }
 
-    const sortedMessages = sortAndGroupMessages(messages);
+    let sortedMessages = sortAndGroupMessages(messages);
 
     return (
       <MessagesScrollWrapper>
-        <div style={{ padding: '24px 0', background: '#fff' }}>
-          <HorizontalRule>
-            <hr />
-            <Icon glyph="message" />
-            <hr />
-          </HorizontalRule>
-        </div>
+        {hasNextPage &&
+          <HasNextPage>
+            <NextPageButton
+              loading={networkStatus === 3}
+              onClick={() => fetchMore()}
+            >
+              {networkStatus === 3
+                ? <Spinner size={16} color={'brand.default'} />
+                : 'Load previous messages'}
+            </NextPageButton>
+          </HasNextPage>}
         <ChatMessages
           toggleReaction={this.props.toggleReaction}
           messages={sortedMessages}
@@ -90,7 +112,7 @@ class MessagesWithData extends Component {
 const Messages = compose(
   toggleReactionMutation,
   getDirectMessageThreadMessages,
-  displayLoadingState
+  pure
 )(MessagesWithData);
 
 export default Messages;

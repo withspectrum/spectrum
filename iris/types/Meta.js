@@ -21,6 +21,19 @@ const Meta = /* GraphQL */ `
   extend type Query {
     meta: Meta
   }
+
+  input SaveUserCommunityPermissionsInput {
+    isOwner: Boolean
+    isMember: Boolean
+    isBlocked: Boolean
+    isModerator: Boolean
+    receiveNotifications: Boolean
+    id: ID!
+  }
+
+  extend type Mutation {
+    saveUserCommunityPermissions(input: SaveUserCommunityPermissionsInput!): User
+  }
 `;
 
 module.exports = Meta;

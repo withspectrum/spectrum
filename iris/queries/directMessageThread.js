@@ -23,25 +23,30 @@ module.exports = {
   DirectMessageThread: {
     messageConnection: (
       { id }: { id: String },
-      { first = 100, after }: PaginationOptions
+      { first = 30, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
       return getMessages(id, {
         first,
         after: cursor,
-      }).then(messages => {
-        // Don't paginate messages for now...
-        return {
+      })
+        .then(messages => messages.reverse())
+        .then(messages =>
+          paginate(
+            messages,
+            { first, after: cursor },
+            message => message.id === cursor
+          )
+        )
+        .then(result => ({
           pageInfo: {
-            hasNextPage: false,
+            hasNextPage: result.hasMoreItems,
           },
-          edges: messages.map(message => ({
-            node: {
-              ...message,
-            },
+          edges: result.list.map(message => ({
+            cursor: encode(message.id),
+            node: message,
           })),
-        };
-      });
+        }));
     },
     participants: ({ id }, _, { loaders, user }) => {
       return getMembersInDirectMessageThread(id);

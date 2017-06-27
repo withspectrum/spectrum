@@ -24,9 +24,9 @@ const getUserByUsername = (username: string): Promise<Object> => {
     .run()
     .then(
       result =>
-        (result
+        result
           ? result[0]
-          : new UserError(`No user found with the username ${username}`))
+          : new UserError(`No user found with the username ${username}`)
     );
 };
 
@@ -317,6 +317,7 @@ const setUserOnline = (id: string, isOnline: boolean) => {
 
 module.exports = {
   getUser,
+  getUserById,
   getUsersThreadCount,
   getUsers,
   getUsersBySearchString,

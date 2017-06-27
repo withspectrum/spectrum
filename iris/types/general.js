@@ -22,6 +22,7 @@ const general = /* GraphQL */ `
 		isBlocked: Boolean
 		isOwner: Boolean
 		isModerator: Boolean
+		receiveNotifications: Boolean
 	}
 
   input File {
