@@ -38,19 +38,23 @@ type SendNewMessageEmailJob = {
 export default () =>
   processQueue(SEND_NEW_MESSAGE_EMAIL, (job: SendNewMessageEmailJob) => {
     debug(`new job: ${job.id}`);
-    return sendEmail({
-      TemplateId: NEW_MESSAGE_TEMPLATE,
-      To: job.data.to,
-      TemplateModel: {
-        subject: `You've got new replies in ${job.data.threads[0].title}`,
-        user: job.data.user,
-        threads: job.data.threads.map(thread => ({
-          ...thread,
-          // Capitalize the first letter of all titles in the body of the email
-          // Don't capitalize the one in the subject though because in a DM thread
-          // that is "your conversation with X", so we don't want to capitalize it.
-          title: capitalize(thread.title),
-        })),
-      },
-    });
+    try {
+      return sendEmail({
+        TemplateId: NEW_MESSAGE_TEMPLATE,
+        To: job.data.to,
+        TemplateModel: {
+          subject: `You've got new replies in ${job.data.threads[0].content.title}`,
+          user: job.data.user,
+          threads: job.data.threads.map(thread => ({
+            ...thread,
+            // Capitalize the first letter of all titles in the body of the email
+            // Don't capitalize the one in the subject though because in a DM thread
+            // that is "your conversation with X", so we don't want to capitalize it.
+            title: capitalize(thread.content.title),
+          })),
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
   });

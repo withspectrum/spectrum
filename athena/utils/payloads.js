@@ -5,9 +5,7 @@ import { getThreadById } from '../models/thread';
 import { getChannelById } from '../models/channel';
 import { getCommunityById } from '../models/community';
 import { getUserById } from '../models/user';
-import {
-  getDirectMessageThreadMembers,
-} from '../models/usersDirectMessageThreads';
+import { getDirectMessageThreadById } from '../models/directMessageThread';
 const debug = require('debug')('athena:payloads');
 
 /*
@@ -37,7 +35,7 @@ export const fetchPayload = (
       return getUserById(id).then(data => createPayload(type, data));
     }
     case 'DIRECT_MESSAGE_THREAD': {
-      return getDirectMessageThreadMembers(id).then(data =>
+      return getDirectMessageThreadById(id).then(data =>
         createPayload(type, data)
       );
     }

@@ -18,13 +18,17 @@ const addToSendNewMessageEmailQueue = (recipient, threads) =>
   });
 
 const sendEmail = recipient => {
-  debug(
-    `send email to ${recipient.email}\nthreads: %O`,
-    timeouts[recipient.email].threads
-  );
-  debug('replies\n%O', timeouts[recipient.email].threads[0].replies);
-  // Clear buffer timeout for this recipient
+  const threads = timeouts[recipient.email].threads;
+  // Clear timeout buffer for this recipient
   delete timeouts[recipient.email];
+  debug(
+    `send notification email for %n threads to ${recipient.email}\nthreads: %O`,
+    threads.length,
+    threads
+  );
+  debug('replies\n%O', threads[0].replies);
+  // Add to sendMessageEmailQueue
+  addToSendNewMessageEmailQueue(recipient, threads);
 };
 
 type Timeouts = {

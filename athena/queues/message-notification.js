@@ -39,25 +39,10 @@ const addToSendNewMessageEmailQueue = (
     return Promise.resolve();
   }
 
-  debug('preparing thread data for email');
-  const constructedThread = contextType !== 'DIRECT_MESSAGE_THREAD'
-    ? {
-        content: { title: thread.content.title },
-        id: thread.id,
-      }
-    : {
-        // Return direct message thread data in the same format as normal threads
-        content: {
-          // Contruct title out of direct message thread users
-          title: `your conversation with ${sentencify(thread
-              .filter(userThread => userThread.userId !== recipient.userId)
-              .map(user => user.name))}`,
-        },
-        id: thread[0].threadId,
-      };
+  debug('thread: %O', thread);
 
   return sendMessageNotificationEmail(recipient, {
-    ...constructedThread,
+    ...thread,
     replies: [
       {
         sender: {
@@ -99,7 +84,7 @@ const processMessageNotificationQueue = job => {
     //get the user who left the message
     fetchPayload('USER', incomingMessage.senderId),
     // get the thread the message was left in - could be a dm or story depending on the contextType
-    fetchPayload(contextType, incomingMessage.threadId, currentUserId),
+    fetchPayload(contextType, incomingMessage.threadId),
     // create an entity payload with the message that was sent
     createPayload('MESSAGE', incomingMessage),
   ];
@@ -155,7 +140,7 @@ const processMessageNotificationQueue = job => {
                 : 'store new usersnotifications records') +
                 ' and add notification emails to queue for all recipients'
             );
-            const thread = JSON.parse(context.payload);
+            let thread = JSON.parse(context.payload);
             const message = JSON.parse(entity.payload);
             const user = JSON.parse(actor.payload);
             const dbMethod = existing
@@ -165,7 +150,21 @@ const processMessageNotificationQueue = job => {
               filteredRecipients.map(recipient => {
                 addToSendNewMessageEmailQueue(
                   recipient,
-                  thread,
+                  // Return direct message thread data in the same format as normal threads
+                  contextType === 'DIRECT_MESSAGE_THREAD'
+                    ? {
+                        content: {
+                          // Contruct title out of direct message thread users
+                          title: `your conversation with ${sentencify(recipients
+                              .filter(
+                                userThread =>
+                                  userThread.userId !== recipient.userId
+                              )
+                              .map(user => user.name))}`,
+                        },
+                        id: thread.id,
+                      }
+                    : thread,
                   user,
                   message,
                   contextType
