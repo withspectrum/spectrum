@@ -37,7 +37,7 @@ type SendNewMessageEmailJob = {
 
 export default () =>
   processQueue(SEND_NEW_MESSAGE_EMAIL, (job: SendNewMessageEmailJob) => {
-    debug(`new job: ${job.id}`);
+    debug(`\nnew job: ${job.id}`);
     try {
       return sendEmail({
         TemplateId: NEW_MESSAGE_TEMPLATE,

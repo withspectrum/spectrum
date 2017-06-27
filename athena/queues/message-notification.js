@@ -39,8 +39,6 @@ const addToSendNewMessageEmailQueue = (
     return Promise.resolve();
   }
 
-  debug('thread: %O', thread);
-
   return sendMessageNotificationEmail(recipient, {
     ...thread,
     replies: [
@@ -67,9 +65,7 @@ const processMessageNotificationQueue = job => {
     : 'THREAD';
 
   debug(
-    `new job: message sent by ${currentUserId} in ${contextType
-      .toLowerCase()
-      .replace('_', ' ')}#${incomingMessage.threadId}`
+    `new job: message sent by ${currentUserId} in ${contextType.toLowerCase()}#${incomingMessage.threadId}`
   );
 
   /*
@@ -140,7 +136,7 @@ const processMessageNotificationQueue = job => {
                 : 'store new usersnotifications records') +
                 ' and add notification emails to queue for all recipients'
             );
-            let thread = JSON.parse(context.payload);
+            const thread = JSON.parse(context.payload);
             const message = JSON.parse(entity.payload);
             const user = JSON.parse(actor.payload);
             const dbMethod = existing

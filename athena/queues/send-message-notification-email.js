@@ -22,11 +22,8 @@ const sendEmail = recipient => {
   // Clear timeout buffer for this recipient
   delete timeouts[recipient.email];
   debug(
-    `send notification email for %n threads to ${recipient.email}\nthreads: %O`,
-    threads.length,
-    threads
+    `send notification email for ${threads.length} threads to ${recipient.email}`
   );
-  debug('replies\n%O', threads[0].replies);
   // Add to sendMessageEmailQueue
   addToSendNewMessageEmailQueue(recipient, threads);
 };
@@ -56,7 +53,7 @@ const sendMessageNotificationEmail = (recipient, thread) => {
   );
   if (!timeouts[recipient.email]) {
     debug(
-      `creating new timeout for ${recipient.email}, sending email in one minute`
+      `creating new timeout for ${recipient.email}, sending email after ${BUFFER}ms`
     );
     timeouts[recipient.email] = {
       timeout: setTimeout(() => sendEmail(recipient), BUFFER),
@@ -94,7 +91,7 @@ const sendMessageNotificationEmail = (recipient, thread) => {
     // keep coming send an email now to avoid not sending a notification for hours
     if (timeouts[recipient.email].firstTimeout < Date.now() - MAX_WAIT) {
       debug(
-        `force send email to ${recipient.email} because it's been too long without an email`
+        `force send email to ${recipient.email} because it's been over ${MAX_WAIT}ms without an email`
       );
       sendEmail(recipient);
     } else {
