@@ -7,6 +7,23 @@ const BUFFER = 60000;
 const MAX_WAIT = 300000;
 const sendNewMessageEmailQueue = createQueue(SEND_NEW_MESSAGE_EMAIL);
 
+const groupReplies = replies => {
+  let newReplies = [];
+  replies.forEach((reply, index) => {
+    if (
+      replies[index - 1] && replies[index - 1].sender.id === reply.sender.id
+    ) {
+      newReplies[newReplies.length - 1].content.body =
+        newReplies[newReplies.length - 1].content.body +
+        '\n' +
+        reply.content.body;
+    } else {
+      newReplies.push(reply);
+    }
+  });
+  return newReplies;
+};
+
 const addToSendNewMessageEmailQueue = (recipient, threads) =>
   sendNewMessageEmailQueue.add({
     to: recipient.email,
@@ -24,8 +41,13 @@ const sendEmail = recipient => {
   debug(
     `send notification email for ${threads.length} threads to ${recipient.email}`
   );
+  // Group replies by sender
+  const threadsWithGroupedReplies = threads.map(thread => ({
+    ...thread,
+    replies: groupReplies(thread.replies),
+  }));
   // Add to sendMessageEmailQueue
-  addToSendNewMessageEmailQueue(recipient, threads);
+  addToSendNewMessageEmailQueue(recipient, threadsWithGroupedReplies);
 };
 
 type Timeouts = {

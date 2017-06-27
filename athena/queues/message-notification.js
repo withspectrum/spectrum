@@ -44,6 +44,7 @@ const addToSendNewMessageEmailQueue = (
     replies: [
       {
         sender: {
+          id: user.id,
           profilePhoto: user.profilePhoto,
           name: user.name,
         },
