@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 node_modules
 .sass-cache
 npm-debug.log
@@ -12,3 +13,6 @@ build-iris
 build-athena
 package-lock.json
 .vscode
+=======
+npm-debug.log
+>>>>>>> email-tempaltes/master
