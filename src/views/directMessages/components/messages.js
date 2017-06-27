@@ -53,7 +53,10 @@ class MessagesWithData extends Component {
   };
 
   render() {
-    const { data: { error, messages }, data } = this.props;
+    const {
+      data: { error, messages, hasNextPage, fetchMore },
+      data,
+    } = this.props;
     const { subscription } = this.state;
     if (error) {
       return <div>Error!</div>;
@@ -74,6 +77,8 @@ class MessagesWithData extends Component {
             <hr />
           </HorizontalRule>
         </div>
+        {hasNextPage &&
+          <span onClick={() => fetchMore()}>Load more messages...</span>}
         <ChatMessages
           toggleReaction={this.props.toggleReaction}
           messages={sortedMessages}
