@@ -15,8 +15,9 @@ const groupReplies = replies => {
     ) {
       newReplies[newReplies.length - 1].content.body =
         newReplies[newReplies.length - 1].content.body +
-        '<br />' +
-        reply.content.body;
+        '<p class="reply">' +
+        reply.content.body +
+        '</p>';
     } else {
       newReplies.push(reply);
     }

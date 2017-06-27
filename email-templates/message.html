@@ -126,9 +126,16 @@
       padding-top: 24px;
       border-top: 1px solid #DFE7EF;
     }
-    
-    .attributes {
-      padding: 24px 0;
+
+    .divider {
+      height: 0px;
+      border-bottom: 2px solid #DFE7EF;
+      display: block;
+      width: 100%;
+    }
+
+    .post {
+      padding: 32px 0 24px;
       border-bottom: 2px solid #DFE7EF;
     }
 
@@ -259,6 +266,10 @@
     p.reply {
       font-weight: 400;
       margin-bottom: 16px;
+      background: #E6ECF7;
+      margin-bottom: 2px;
+      padding: 8px 12px;
+      border-radius: 12px;
     }
 
     p.emoji, span.emoji {
@@ -295,14 +306,16 @@
                   <!-- Body content -->
                   <tr>
                     <td class="header-cell">
-                      <p>Heads up, {{user.displayName}}!</p>
-                      <p>You've got new replies - check em out <span class="emoji">👇</span></p>
+                      <p>Hey there!</p>
+                      <p>You've got new replies on Spectrum - check 'em out 👇</p>
                     </td>
                   </tr>
                   <tr>
                     <td class="content-cell">
+                      <div class="divider"></div>
+                    
                       {{#each threads}}
-                        <table class="attributes" width="100%" cellpadding="0" cellspacing="0">
+                        <table class="attributes post" width="100%" cellpadding="0" cellspacing="0">
                           <tr>
                             <td>
                               <a href="https://spectrum.chat/threads/{{id}}"><h2 class="title">{{title}}</h2></a>
@@ -313,13 +326,12 @@
                               <a class="small-link" href="https://spectrum.chat/threads/{{id}}">Go to thread</a>
                             </td>
                           </tr>
-                          <tr>
                           {{#each replies}}
                             <tr class="reply-container">
                               <td class="attributes_item">
                                 <table>
                                   <tr>
-                                    <td>
+                                    <td valign="top">
                                       <a href="https://spectrum.chat/threads/{{id}}">
                                         <img class="avatar" src="{{sender.profilePhoto}}" />
                                       </a>
@@ -333,7 +345,7 @@
                                         </tr>
                                         <tr>
                                           <td>
-                                            <a href="https://spectrum.chat/threads/{{id}}"><p class="reply">{{content.body}}</p></a>
+                                            <a href="https://spectrum.chat/threads/{{id}}"><p class="reply">{{{content.body}}}</p></a>
                                           </td>
                                         </tr>
                                       </table>
@@ -343,7 +355,6 @@
                               </td>
                             </tr>
                           {{/each}}
-                          </tr>
                         </table>
                       {{/each}}
                     </td>
@@ -355,10 +366,8 @@
                   </tr>
                   <tr>
                     <td class="footer-cell">
-                      <p>That's all for now. Catch ya later!</p>
-                      <br />
                       <p class="emoji">✌️</p>
-                      <p>Spectrum</p>
+                      <p>- The Spectrum team</p>
                     </td>
                   </tr>
                 </table>
@@ -369,6 +378,9 @@
             <tr>
               <td class="content-cell">
                 <p class="sub">Easily <a href="https://spectrum.chat/users/{{user.username}}/settings">unsubscribe in your email settings</a>.</p>
+                <br />
+                <br />
+                <p class="sub"><strong>Spectrum</strong> is made by <strong>Space Program, Inc.</strong><br/>542 Brannan St. 409, San Francisco, CA 94107</p>
               </td>
             </tr>
           </table>
