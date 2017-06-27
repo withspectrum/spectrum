@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 # Spectrum
 
@@ -50,6 +49,3 @@ npm run use:staging
 npm run deploy:rules
 npm run deploy:functions
 ```
-=======
-# email-templates
->>>>>>> email-tempaltes/master

@@ -126,6 +126,16 @@
       padding-top: 24px;
       border-top: 1px solid #DFE7EF;
     }
+    
+    .attributes {
+      padding: 24px 0;
+      border-bottom: 2px solid #DFE7EF;
+    }
+
+    .reply-container {
+      margin-top: 16px;
+      display: block;
+    }
 
     .header-cell {
       padding: 32px 32px 0 32px
@@ -237,7 +247,7 @@
       margin: 0;
       padding: 0;
       color: #171A21;
-      font-size: 16px;
+      font-size: 14px;
       line-height: 1.5em;
       text-align: left;
     }
@@ -248,6 +258,7 @@
 
     p.reply {
       font-weight: 400;
+      margin-bottom: 16px;
     }
 
     p.emoji, span.emoji {
@@ -258,11 +269,17 @@
 
     span.name {
       font-size: 11px;
+      font-weight: 400;
       color: #747E8D;
     }
 
     h1.title {
       margin-bottom: 16px;
+    }
+
+    .small-link {
+      font-size: 12px;
+      font-weight: 500;
     }
     </style>
   </head>
@@ -288,12 +305,17 @@
                         <table class="attributes" width="100%" cellpadding="0" cellspacing="0">
                           <tr>
                             <td>
-                              <a href="https://spectrum.chat/threads/{{id}}"><h1 class="title">{{title}}</h1></a>
+                              <a href="https://spectrum.chat/threads/{{id}}"><h2 class="title">{{title}}</h2></a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <a class="small-link" href="https://spectrum.chat/threads/{{id}}">Go to thread</a>
                             </td>
                           </tr>
                           <tr>
                           {{#each replies}}
-                            <tr>
+                            <tr class="reply-container">
                               <td class="attributes_item">
                                 <table>
                                   <tr>
