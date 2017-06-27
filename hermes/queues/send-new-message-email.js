@@ -54,13 +54,10 @@ export default () =>
           user: job.data.user,
           threads: job.data.threads.map(thread => ({
             ...thread,
-            content: {
-              ...thread.content,
-              // Capitalize the first letter of all titles in the body of the email
-              // Don't capitalize the one in the subject though because in a DM thread
-              // that is "your conversation with X", so we don't want to capitalize it.
-              title: capitalize(thread.content.title),
-            },
+            // Capitalize the first letter of all titles in the body of the email
+            // Don't capitalize the one in the subject though because in a DM thread
+            // that is "your conversation with X", so we don't want to capitalize it.
+            title: capitalize(thread.content.title),
           })),
         },
       });
