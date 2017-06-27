@@ -3,8 +3,8 @@ const debug = require('debug')('athena:send-message-notification-email');
 import createQueue from '../../shared/bull/create-queue';
 import { SEND_NEW_MESSAGE_EMAIL } from './constants';
 
-// TODO: Make one minute
-const BUFFER = 6000;
+const BUFFER = 60000;
+const MAX_WAIT = 300000;
 const sendNewMessageEmailQueue = createQueue(SEND_NEW_MESSAGE_EMAIL);
 
 const addToSendNewMessageEmailQueue = (recipient, threads) =>
@@ -60,54 +60,24 @@ const sendMessageNotificationEmail = (recipient, thread) => {
     );
     timeouts[recipient.email] = {
       timeout: setTimeout(() => sendEmail(recipient), BUFFER),
-      firstTimout: Date.now(),
+      firstTimeout: Date.now(),
       threads: [thread],
     };
 
-    // FIXME this condition likely doesn't work
-
-    // If it's been x minutes and we still haven't sent an email because messages
-
-    // keep coming send an email now and start buffering the next emails
-
-    // } else if (timeouts[recipient.email].firstTimeout < Date.now() - FIVE_MINUTES) {
-
-    //  clearTimeout(timeouts[recipient.email].timeout);
-
-    //  sendEmailWithCurrentThreads
-
-    //  timeouts[recipient.email] = {
-
-    //    timeout: setTimeout(() => sendEmail(recipient), BUFFER),
-
-    //    firstTimout: Date.now(),
-
-    //    threads: [thread],
-
-    //  };
-
-    // If we already have a timeout going but it's not been five minutes reset
-
-    // the timer and add the new message
+    // If we already have a timeout going
   } else {
-    debug(
-      `refresh timeout for ${recipient.email} with new thread#${thread.id}`
-    );
+    debug(`timeout exists for ${recipient.email}, clearing`);
     clearTimeout(timeouts[recipient.email].timeout);
-    timeouts[recipient.email].timeout = setTimeout(
-      () => sendEmail(recipient),
-      BUFFER
-    );
     const existingThread = timeouts[recipient.email].threads.find(
       previous => previous.id === thread.id
     );
     // If there's already a notification for this thread buffered add the new reply to the threads replies
     if (existingThread) {
+      debug(`thread already has a record in memory, adding new reply`);
       timeouts[recipient.email].threads = timeouts[
         recipient.email
       ].threads.map(previous => {
         if (previous.id !== thread.id) return previous;
-
         return {
           ...previous,
           replies: previous.replies.concat(thread.replies),
@@ -116,7 +86,25 @@ const sendMessageNotificationEmail = (recipient, thread) => {
 
       // If there's no notification for this specific thread yet just push it to the threads
     } else {
+      debug(`adding new thread to ${recipient.email}'s threads`);
       timeouts[recipient.email].threads.push(thread);
+    }
+
+    // If it's been a few minutes and we still haven't sent an email because messages
+    // keep coming send an email now to avoid not sending a notification for hours
+    if (timeouts[recipient.email].firstTimeout < Date.now() - MAX_WAIT) {
+      debug(
+        `force send email to ${recipient.email} because it's been too long without an email`
+      );
+      sendEmail(recipient);
+    } else {
+      debug(
+        `refresh timeout for ${recipient.email} with new thread#${thread.id}`
+      );
+      timeouts[recipient.email].timeout = setTimeout(
+        () => sendEmail(recipient),
+        BUFFER
+      );
     }
   }
 };
