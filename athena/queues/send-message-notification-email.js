@@ -94,8 +94,26 @@ const sendMessageNotificationEmail = (recipient, thread) => {
       () => sendEmail(recipient),
       BUFFER
     );
-    // TODO Merge replies if we already got a thread like this
-    timeouts[recipient.email].threads.push(thread);
+    const existingThread = timeouts[recipient.email].threads.find(
+      previous => previous.id === thread.id
+    );
+    // If there's already a notification for this thread buffered add the new reply to the threads replies
+    if (existingThread) {
+      timeouts[recipient.email].threads = timeouts[
+        recipient.email
+      ].threads.map(previous => {
+        if (previous.id !== thread.id) return previous;
+
+        return {
+          ...previous,
+          replies: previous.replies.concat(thread.replies),
+        };
+      });
+
+      // If there's no notification for this specific thread yet just push it to the threads
+    } else {
+      timeouts[recipient.email].threads.push(thread);
+    }
   }
 };
 
