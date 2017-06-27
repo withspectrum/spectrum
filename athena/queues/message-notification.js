@@ -2,7 +2,7 @@
 const debug = require('debug')('athena:queue:message-notification');
 import processQueue from '../../shared/bull/process-queue';
 import createQueue from '../../shared/bull/create-queue';
-import { MESSAGE_NOTIFICATION, SEND_NEW_MESSAGE_EMAIL } from './constants';
+import { MESSAGE_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import {
@@ -19,8 +19,7 @@ import {
   getDirectMessageThreadMembers,
 } from '../models/usersDirectMessageThreads';
 import sentencify from '../utils/sentencify';
-
-const sendNewMessageEmailQueue = createQueue(SEND_NEW_MESSAGE_EMAIL);
+import sendMessageNotificationEmail from './send-message-notification-email';
 
 const addToSendNewMessageEmailQueue = (
   recipient,
@@ -30,12 +29,22 @@ const addToSendNewMessageEmailQueue = (
   contextType
 ) => {
   if (!recipient || !recipient.email || !thread || !user || !message) {
-    debug('aborting adding to email queue due to invalid data');
+    debug(
+      '⚠ aborting adding to email queue due to invalid data\nrecipient\n%O\nthread\n%O\nuser\n%O\nmessage\n%O',
+      recipient,
+      thread,
+      user,
+      message
+    );
     return Promise.resolve();
   }
 
+  debug('preparing thread data for email');
   const constructedThread = contextType !== 'DIRECT_MESSAGE_THREAD'
-    ? thread
+    ? {
+        content: { title: thread.content.title },
+        id: thread.id,
+      }
     : {
         // Return direct message thread data in the same format as normal threads
         content: {
@@ -47,27 +56,17 @@ const addToSendNewMessageEmailQueue = (
         id: thread[0].threadId,
       };
 
-  return sendNewMessageEmailQueue.add({
-    to: recipient.email,
-    user: {
-      displayName: recipient.name,
-      username: recipient.username,
-    },
-    threads: [
+  return sendMessageNotificationEmail(recipient, {
+    ...constructedThread,
+    replies: [
       {
-        title: constructedThread.content.title,
-        id: constructedThread.id,
-        replies: [
-          {
-            sender: {
-              name: user.name,
-              profilePhoto: user.profilePhoto,
-            },
-            content: {
-              body: message.content.body,
-            },
-          },
-        ],
+        sender: {
+          profilePhoto: user.profilePhoto,
+          name: user.name,
+        },
+        content: {
+          body: message.content.body,
+        },
       },
     ],
   });
