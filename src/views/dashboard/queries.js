@@ -27,11 +27,12 @@ const LoadMoreThreads = gql`
 `;
 
 const threadsQueryOptions = {
-  props: ({ data: { fetchMore, error, loading, user } }) => ({
+  props: ({ data: { fetchMore, error, loading, user, networkStatus } }) => ({
     data: {
       error,
       loading,
       user,
+      networkStatus,
       threads: user ? user.everything.edges : '',
       hasNextPage: user ? user.everything.pageInfo.hasNextPage : false,
       fetchMore: () =>

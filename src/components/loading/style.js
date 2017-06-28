@@ -2,7 +2,7 @@
 // $FlowFixMe
 import styled, { keyframes } from 'styled-components';
 import { Card } from '../card';
-import { hexa } from '../globals';
+import { hexa, FlexCol } from '../globals';
 import { Link } from 'react-router-dom';
 
 const containerFadeIn = keyframes`
@@ -54,11 +54,11 @@ export const ShimmerProfile = styled(Card)`
   }
 `;
 
-export const ShimmerListItem = styled(Card)`
-  padding: 16px;
+export const ShimmerListItem = styled(FlexCol)`
+  padding: 8px 0;
 
   section {
-    min-height: 40px;
+    min-height: 32px;
   }
 `;
 
@@ -82,7 +82,7 @@ export const ShimmerComposer = styled(Card)`
   padding: 16px;
 
   section {
-    min-height: 24px;
+    min-height: 32px;
   }
 `;
 
@@ -114,9 +114,9 @@ export const ShimmerLine = styled.span`
   animation-iteration-count: infinite;
   animation-timing-function: ease-out;
   background: linear-gradient(to right,
-		${({ theme }) => theme.bg.wash} 8%,
-		${({ theme }) => hexa(theme.generic.default, 0.9)} 18%,
-		${({ theme }) => theme.bg.wash} 33%);
+		${({ theme }) => theme.bg.wash} 10%,
+		${({ theme }) => hexa(theme.generic.default, 0.65)} 20%,
+		${({ theme }) => theme.bg.wash} 30%);
   background-size: 100% 140px;
   animation-name: ${placeHolderShimmer};
 `;

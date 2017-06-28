@@ -6,7 +6,7 @@ import branch from 'recompose/branch';
 import renderComponent from 'recompose/renderComponent';
 // $FlowFixMe
 import styled from 'styled-components';
-import { Spinner } from '../globals';
+import { Spinner, FlexCol } from '../globals';
 import { Card } from '../card';
 import { Column } from '../column';
 import {
@@ -188,13 +188,28 @@ export const LoadingThread = () => (
   </ShimmerThread>
 );
 
+export const LoadingFeed = () => (
+  <FlexCol>
+    <LoadingThread />
+    <LoadingThread />
+    <LoadingThread />
+    <LoadingThread />
+    <LoadingThread />
+    <LoadingThread />
+    <LoadingThread />
+    <LoadingThread />
+    <LoadingThread />
+    <LoadingThread />
+  </FlexCol>
+);
+
 export const LoadingListItem = () => (
   <ShimmerListItem>
     <ShimmerBase>
       <ShimmerLine />
       <Cover
         style={{
-          top: '20px',
+          top: '16px',
           left: '40px',
           height: '8px',
           width: 'calc(100% - 72px)',
@@ -203,8 +218,8 @@ export const LoadingListItem = () => (
       <Cover
         style={{
           top: '0',
-          left: '40px',
-          height: '40px',
+          left: '32px',
+          height: '32px',
           width: '12px',
         }}
       />
@@ -219,9 +234,17 @@ export const LoadingListItem = () => (
       <Cover
         style={{
           bottom: '0',
-          right: '32px',
-          height: '16px',
+          right: '26px',
+          height: '32px',
           width: '64px',
+        }}
+      />
+      <Cover
+        style={{
+          bottom: '0',
+          right: '0',
+          height: '32px',
+          width: '2px',
         }}
       />
       <Cover
@@ -242,6 +265,21 @@ export const LoadingListItem = () => (
       />
     </ShimmerBase>
   </ShimmerListItem>
+);
+
+export const LoadingList = () => (
+  <ShimmerList>
+    <LoadingListItem />
+    <LoadingListItem />
+    <LoadingListItem />
+    <LoadingListItem />
+    <LoadingListItem />
+    <LoadingListItem />
+    <LoadingListItem />
+    <LoadingListItem />
+    <LoadingListItem />
+    <LoadingListItem />
+  </ShimmerList>
 );
 
 export const LoadingDM = () => (
@@ -315,15 +353,15 @@ export const LoadingComposer = () => (
       <Cover
         style={{
           top: '0',
-          left: '24px',
-          height: '8px',
+          left: '28px',
+          height: '12px',
           width: '100%',
         }}
       />
       <Cover
         style={{
           top: '8px',
-          left: '24px',
+          left: '28px',
           height: '16px',
           width: '16px',
         }}
@@ -338,17 +376,41 @@ export const LoadingComposer = () => (
       />
       <Cover
         style={{
-          top: '4px',
-          left: '4px',
+          top: '0px',
+          left: '0px',
+          height: '4px',
+          width: '32px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0px',
+          left: '0px',
+          height: '100%',
+          width: '4px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '8px',
+          left: '8px',
           height: '16px',
           width: '16px',
         }}
       />
       <Cover
         style={{
+          bottom: '0px',
+          left: '0px',
+          height: '4px',
+          width: '32px',
+        }}
+      />
+      <Cover
+        style={{
           bottom: '0',
-          left: '24px',
-          height: '8px',
+          left: '28px',
+          height: '12px',
           width: '100%',
         }}
       />
@@ -436,274 +498,13 @@ export const LoadingProfile = () => (
 export const LoadingScreen = (): React$Element<any> => (
   <LoadingScreenContainer>
     <Column type="secondary">
-      <ShimmerProfile>
-        <ShimmerBase>
-          <ShimmerLine />
-          <Cover
-            style={{
-              top: '0',
-              left: '40px',
-              height: '10px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '24px',
-              left: '40px',
-              height: '16px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '10px',
-              left: '40px',
-              height: '18px',
-              width: '16px',
-            }}
-          />
-          <Cover
-            style={{
-              top: '40px',
-              left: '0',
-              height: '16px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '64px',
-              left: '0',
-              height: '16px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '88px',
-              left: '0',
-              height: '16px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '48px',
-              right: '0',
-              height: '16px',
-              width: '32px',
-            }}
-          />
-          <Cover
-            style={{
-              top: '72px',
-              right: '0',
-              height: '16px',
-              width: '64px',
-            }}
-          />
-        </ShimmerBase>
-      </ShimmerProfile>
-      <ShimmerList>
-        <ShimmerBase>
-          <ShimmerLine />
-
-          <Cover
-            style={{
-              top: '16px',
-              left: '0',
-              height: '16px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '40px',
-              left: '0',
-              height: '24px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '0px',
-              right: '0',
-              height: '16px',
-              width: '10%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '24px',
-              right: '0',
-              height: '16px',
-              width: '35%',
-            }}
-          />
-
-          <Cover
-            style={{
-              top: '80px',
-              left: '0',
-              height: '16px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '104px',
-              left: '0',
-              height: '16px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '64px',
-              right: '0',
-              height: '16px',
-              width: '40%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '96px',
-              right: '0',
-              height: '16px',
-              width: '20%',
-            }}
-          />
-
-          <Cover
-            style={{
-              top: '136px',
-              left: '0',
-              height: '16px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '160px',
-              left: '0',
-              height: '24px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '120px',
-              right: '0',
-              height: '16px',
-              width: '30%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '148px',
-              right: '0',
-              height: '16px',
-              width: '50%',
-            }}
-          />
-
-        </ShimmerBase>
-      </ShimmerList>
+      <LoadingProfile />
+      <LoadingList />
     </Column>
 
     <Column type="primary" alignItems="center">
       <LoadingComposer />
-
-      <LoadingThread />
-
-      <ShimmerThread>
-        <ShimmerBase>
-          <ShimmerLine />
-          <Cover
-            style={{
-              top: '16px',
-              left: '84px',
-              height: '16px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '24px',
-              left: '84px',
-              height: '10px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '44px',
-              left: '84px',
-              height: '10px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '64px',
-              left: '84px',
-              height: '10px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '84px',
-              left: '84px',
-              height: '10px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '0px',
-              left: '84px',
-              height: '84px',
-              width: '16px',
-            }}
-          />
-          <Cover
-            style={{
-              top: '0',
-              right: '0',
-              height: '16px',
-              width: '128px',
-            }}
-          />
-          <Cover
-            style={{
-              top: '32px',
-              right: '0',
-              height: '12px',
-              width: '32px',
-            }}
-          />
-          <Cover
-            style={{
-              top: '52px',
-              right: '0',
-              height: '12px',
-              width: '90px',
-            }}
-          />
-          <Cover
-            style={{
-              top: '72px',
-              right: '0',
-              height: '12px',
-              width: '156px',
-            }}
-          />
-        </ShimmerBase>
-      </ShimmerThread>
-
-      <LoadingThread />
+      <LoadingFeed />
     </Column>
   </LoadingScreenContainer>
 );
@@ -711,95 +512,7 @@ export const LoadingScreen = (): React$Element<any> => (
 export const LoadingNotifications = (): React$Element<any> => (
   <LoadingScreenContainer>
     <Column type="primary" alignItems="center">
-      <LoadingThread />
-
-      <ShimmerThread>
-        <ShimmerBase>
-          <ShimmerLine />
-          <Cover
-            style={{
-              top: '16px',
-              left: '84px',
-              height: '16px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '24px',
-              left: '84px',
-              height: '10px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '44px',
-              left: '84px',
-              height: '10px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '64px',
-              left: '84px',
-              height: '10px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '84px',
-              left: '84px',
-              height: '10px',
-              width: '100%',
-            }}
-          />
-          <Cover
-            style={{
-              top: '0px',
-              left: '84px',
-              height: '84px',
-              width: '16px',
-            }}
-          />
-          <Cover
-            style={{
-              top: '0',
-              right: '0',
-              height: '16px',
-              width: '128px',
-            }}
-          />
-          <Cover
-            style={{
-              top: '32px',
-              right: '0',
-              height: '12px',
-              width: '32px',
-            }}
-          />
-          <Cover
-            style={{
-              top: '52px',
-              right: '0',
-              height: '12px',
-              width: '90px',
-            }}
-          />
-          <Cover
-            style={{
-              top: '72px',
-              right: '0',
-              height: '12px',
-              width: '156px',
-            }}
-          />
-        </ShimmerBase>
-      </ShimmerThread>
-
-      <LoadingThread />
+      <LoadingFeed />
     </Column>
   </LoadingScreenContainer>
 );

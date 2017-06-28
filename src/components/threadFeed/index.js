@@ -84,7 +84,7 @@ class ThreadFeedPure extends Component {
 
   render() {
     const {
-      data: { threads, loading, error, hasNextPage },
+      data: { threads, loading, error, hasNextPage, networkStatus },
       currentUser,
       viewContext,
     } = this.props;
@@ -92,6 +92,10 @@ class ThreadFeedPure extends Component {
     if (loading) {
       return (
         <Threads>
+          <LoadingThread />
+          <LoadingThread />
+          <LoadingThread />
+          <LoadingThread />
           <LoadingThread />
           <LoadingThread />
           <LoadingThread />
