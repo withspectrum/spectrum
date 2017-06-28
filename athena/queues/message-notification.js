@@ -21,13 +21,7 @@ import {
 import sentencify from '../utils/sentencify';
 import bufferNotificationEmail from './buffer-message-notification-email';
 
-const formatAndBufferNotificationEmail = (
-  recipient,
-  thread,
-  user,
-  message,
-  contextType
-) => {
+const formatAndBufferNotificationEmail = (recipient, thread, user, message) => {
   if (!recipient || !recipient.email || !thread || !user || !message) {
     debug(
       '⚠ aborting adding to email queue due to invalid data\nrecipient\n%O\nthread\n%O\nuser\n%O\nmessage\n%O',
@@ -164,7 +158,8 @@ const processMessageNotificationQueue = job => {
                     : thread,
                   user,
                   message,
-                  contextType
+                  contextType,
+                  notification
                 );
                 return dbMethod(notification.id, recipient.userId);
               })

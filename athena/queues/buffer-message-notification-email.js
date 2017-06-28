@@ -4,18 +4,19 @@ import createQueue from '../../shared/bull/create-queue';
 import { SEND_NEW_MESSAGE_EMAIL } from './constants';
 import { getUsersSettings } from '../models/usersSettings';
 import groupReplies from '../utils/group-replies';
+import getEmailStatus from '../utils/get-email-status';
 
-const BUFFER = 60000;
+const BUFFER = 600;
 const MAX_WAIT = 300000;
 const sendNewMessageEmailQueue = createQueue(SEND_NEW_MESSAGE_EMAIL);
 
 // Called when the buffer time is over to actually send an email
 const timedOut = recipient => {
+  const threads = timeouts[recipient.email].threads;
   // Clear timeout buffer for this recipient
   delete timeouts[recipient.email];
-  const threads = timeouts[recipient.email].threads;
   debug(
-    `send notification email for ${threads.length} threads to ${recipient.email}`
+    `send notification email for ${threads.length} threads to @${recipient.username} (${recipient.email})`
   );
   // Group replies by sender
   const threadsWithGroupedReplies = threads.map(thread => ({
@@ -23,26 +24,24 @@ const timedOut = recipient => {
     replies: groupReplies(thread.replies),
   }));
 
-  debug(`get email notifications settings for @${recipient.username}`);
-  // Make sure we should be sending an email by checking the settings
-  return getUsersSettings(recipient.userId).then(settings => {
-    if (
-      settings &&
-      settings.notifications.types.newMessageInThreads.email !== false
-    ) {
-      debug(`@${recipient.username} has email notifications enabled`);
-      return sendNewMessageEmailQueue.add({
-        to: recipient.email,
-        user: {
-          displayName: recipient.name,
-          username: recipient.username,
-        },
-        threads: threadsWithGroupedReplies,
-      });
+  // Make sure we should be sending an email to this user
+  return getEmailStatus(
+    recipient.userId,
+    'newMessageInThreads'
+  ).then(shouldGetEmail => {
+    if (!shouldGetEmail) {
+      debug(`@${recipient.username} should not get email, aborting`);
+      return Promise.resolve();
     }
-
-    debug(`@${recipient.username} disabled email notifications`);
-    return Promise.resolve();
+    debug(`adding email for @${recipient.username} to queue`);
+    return sendNewMessageEmailQueue.add({
+      to: recipient.email,
+      user: {
+        displayName: recipient.name,
+        username: recipient.username,
+      },
+      threads: threadsWithGroupedReplies,
+    });
   });
 };
 
@@ -51,6 +50,7 @@ type Timeouts = {
     timeout: any,
     firstTimeout: number, // timestamp
     threads: Array<any>,
+    notifications: Array<any>,
   },
 };
 
@@ -65,7 +65,7 @@ const timeouts: Timeouts = {};
  * - We repeat this process for each further message notification until we have a one minute break
  * - Because we do want people to get emails in a timely manner we force push them out after 5 minutes. Basically, if we get a message notification and no email has been sent but it's been more than five minutes since the very first notification we send the email with all current notifications batched into one email.
  */
-const bufferMessageNotificationEmail = (recipient, thread) => {
+const bufferMessageNotificationEmail = (recipient, thread, notification) => {
   debug(
     `send message notification email to ${recipient.email} for thread#${thread.id}`
   );
@@ -77,6 +77,7 @@ const bufferMessageNotificationEmail = (recipient, thread) => {
       timeout: setTimeout(() => timedOut(recipient), BUFFER),
       firstTimeout: Date.now(),
       threads: [thread],
+      notifications: [notification],
     };
 
     // If we already have a timeout going
@@ -103,6 +104,7 @@ const bufferMessageNotificationEmail = (recipient, thread) => {
     } else {
       debug(`adding new thread to ${recipient.email}'s threads`);
       timeouts[recipient.email].threads.push(thread);
+      timeouts[recipient.email].notifications.push(notification);
     }
 
     // If it's been a few minutes and we still haven't sent an email because messages
