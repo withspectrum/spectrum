@@ -2,6 +2,7 @@
 const debug = require('debug')('athena:send-message-notification-email');
 import createQueue from '../../shared/bull/create-queue';
 import { SEND_NEW_MESSAGE_EMAIL } from './constants';
+import { getUsersSettings } from '../models/usersSettings';
 
 const BUFFER = 60000;
 const MAX_WAIT = 300000;
@@ -47,8 +48,23 @@ const sendEmail = recipient => {
     ...thread,
     replies: groupReplies(thread.replies),
   }));
-  // Add to sendMessageEmailQueue
-  addToSendNewMessageEmailQueue(recipient, threadsWithGroupedReplies);
+
+  debug(`get email notifications settings for @${recipient.username}`);
+  return getUsersSettings(recipient.userId).then(settings => {
+    if (
+      settings &&
+      settings.notifications.types.newMessageInThreads.email !== false
+    ) {
+      debug(`@${recipient.username} has email notifications enabled`);
+      return addToSendNewMessageEmailQueue(
+        recipient,
+        threadsWithGroupedReplies
+      );
+    }
+
+    debug(`@${recipient.username} disabled email notifications`);
+    return Promise.resolve();
+  });
 };
 
 type Timeouts = {
