@@ -6,7 +6,7 @@ import { getUsersSettings } from '../models/usersSettings';
 import groupReplies from '../utils/group-replies';
 import getEmailStatus from '../utils/get-email-status';
 
-const BUFFER = 600;
+const BUFFER = 60000;
 const MAX_WAIT = 300000;
 const sendNewMessageEmailQueue = createQueue(SEND_NEW_MESSAGE_EMAIL);
 
