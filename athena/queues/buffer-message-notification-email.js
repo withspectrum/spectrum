@@ -3,43 +3,17 @@ const debug = require('debug')('athena:send-message-notification-email');
 import createQueue from '../../shared/bull/create-queue';
 import { SEND_NEW_MESSAGE_EMAIL } from './constants';
 import { getUsersSettings } from '../models/usersSettings';
+import groupReplies from '../utils/group-replies';
 
 const BUFFER = 60000;
 const MAX_WAIT = 300000;
 const sendNewMessageEmailQueue = createQueue(SEND_NEW_MESSAGE_EMAIL);
 
-const groupReplies = replies => {
-  let newReplies = [];
-  replies.forEach((reply, index) => {
-    if (
-      replies[index - 1] && replies[index - 1].sender.id === reply.sender.id
-    ) {
-      newReplies[newReplies.length - 1].content.body =
-        newReplies[newReplies.length - 1].content.body +
-        '<p class="reply">' +
-        reply.content.body +
-        '</p>';
-    } else {
-      newReplies.push(reply);
-    }
-  });
-  return newReplies;
-};
-
-const addToSendNewMessageEmailQueue = (recipient, threads) =>
-  sendNewMessageEmailQueue.add({
-    to: recipient.email,
-    user: {
-      displayName: recipient.name,
-      username: recipient.username,
-    },
-    threads,
-  });
-
-const sendEmail = recipient => {
-  const threads = timeouts[recipient.email].threads;
+// Called when the buffer time is over to actually send an email
+const timedOut = recipient => {
   // Clear timeout buffer for this recipient
   delete timeouts[recipient.email];
+  const threads = timeouts[recipient.email].threads;
   debug(
     `send notification email for ${threads.length} threads to ${recipient.email}`
   );
@@ -50,16 +24,21 @@ const sendEmail = recipient => {
   }));
 
   debug(`get email notifications settings for @${recipient.username}`);
+  // Make sure we should be sending an email by checking the settings
   return getUsersSettings(recipient.userId).then(settings => {
     if (
       settings &&
       settings.notifications.types.newMessageInThreads.email !== false
     ) {
       debug(`@${recipient.username} has email notifications enabled`);
-      return addToSendNewMessageEmailQueue(
-        recipient,
-        threadsWithGroupedReplies
-      );
+      return sendNewMessageEmailQueue.add({
+        to: recipient.email,
+        user: {
+          displayName: recipient.name,
+          username: recipient.username,
+        },
+        threads: threadsWithGroupedReplies,
+      });
     }
 
     debug(`@${recipient.username} disabled email notifications`);
@@ -71,7 +50,7 @@ type Timeouts = {
   [email: string]: {
     timeout: any,
     firstTimeout: number, // timestamp
-    data: Array<any>,
+    threads: Array<any>,
   },
 };
 
@@ -86,7 +65,7 @@ const timeouts: Timeouts = {};
  * - We repeat this process for each further message notification until we have a one minute break
  * - Because we do want people to get emails in a timely manner we force push them out after 5 minutes. Basically, if we get a message notification and no email has been sent but it's been more than five minutes since the very first notification we send the email with all current notifications batched into one email.
  */
-const sendMessageNotificationEmail = (recipient, thread) => {
+const bufferMessageNotificationEmail = (recipient, thread) => {
   debug(
     `send message notification email to ${recipient.email} for thread#${thread.id}`
   );
@@ -95,7 +74,7 @@ const sendMessageNotificationEmail = (recipient, thread) => {
       `creating new timeout for ${recipient.email}, sending email after ${BUFFER}ms`
     );
     timeouts[recipient.email] = {
-      timeout: setTimeout(() => sendEmail(recipient), BUFFER),
+      timeout: setTimeout(() => timedOut(recipient), BUFFER),
       firstTimeout: Date.now(),
       threads: [thread],
     };
@@ -132,17 +111,17 @@ const sendMessageNotificationEmail = (recipient, thread) => {
       debug(
         `force send email to ${recipient.email} because it's been over ${MAX_WAIT}ms without an email`
       );
-      sendEmail(recipient);
+      timedOut(recipient);
     } else {
       debug(
         `refresh timeout for ${recipient.email} with new thread#${thread.id}`
       );
       timeouts[recipient.email].timeout = setTimeout(
-        () => sendEmail(recipient),
+        () => timedOut(recipient),
         BUFFER
       );
     }
   }
 };
 
-export default sendMessageNotificationEmail;
+export default bufferMessageNotificationEmail;

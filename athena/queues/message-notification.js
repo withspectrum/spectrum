@@ -19,9 +19,9 @@ import {
   getDirectMessageThreadMembers,
 } from '../models/usersDirectMessageThreads';
 import sentencify from '../utils/sentencify';
-import sendMessageNotificationEmail from './send-message-notification-email';
+import bufferNotificationEmail from './buffer-message-notification-email';
 
-const addToSendNewMessageEmailQueue = (
+const formatAndBufferNotificationEmail = (
   recipient,
   thread,
   user,
@@ -39,7 +39,7 @@ const addToSendNewMessageEmailQueue = (
     return Promise.resolve();
   }
 
-  return sendMessageNotificationEmail(recipient, {
+  return bufferNotificationEmail(recipient, {
     ...thread,
     replies: [
       {
@@ -145,7 +145,7 @@ const processMessageNotificationQueue = job => {
               : storeUsersNotifications;
             return Promise.all(
               filteredRecipients.map(recipient => {
-                addToSendNewMessageEmailQueue(
+                formatAndBufferNotificationEmail(
                   recipient,
                   // Return direct message thread data in the same format as normal threads
                   contextType === 'DIRECT_MESSAGE_THREAD'
