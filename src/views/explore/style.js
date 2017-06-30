@@ -16,7 +16,6 @@ import { StyledCard } from '../../components/listItems/style';
 import ScrollRow from '../../components/scrollRow';
 
 import { Button } from '../../components/buttons';
-// import ScrollRow from '../../../shared/ScrollRow';
 
 export const ViewContainer = styled(FlexCol)`
   flex: auto;

@@ -35,5 +35,5 @@ exports.up = function(r, conn) {
 };
 
 exports.down = function(r, conn) {
-  // must return a Promise!
+  return Promise.resolve();
 };

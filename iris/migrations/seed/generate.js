@@ -37,6 +37,20 @@ const generateUser = () => {
   };
 };
 
+const generateUsersSettings = userId => {
+  return {
+    id: uuid(),
+    userId,
+    notifications: {
+      types: {
+        newMessageInThreads: {
+          email: true,
+        },
+      },
+    },
+  };
+};
+
 const generateCommunity = () => {
   const name = faker.company.companyName();
 
@@ -238,6 +252,7 @@ const generateReaction = (userId, messageId) => {
 module.exports = {
   randomAmount,
   generateUser,
+  generateUsersSettings,
   generateCommunity,
   generateChannel,
   generateUsersCommunities,

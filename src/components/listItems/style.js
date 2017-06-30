@@ -159,6 +159,15 @@ export const Notice = styled(Description)`
   background: #FFF1CC;
   border: 1px solid #ffd566;
   color: #715818;
+
+  strong {
+    font-weight: 600;
+  }
+`;
+
+export const InlineIcon = styled.span`
+  position: relative;
+  top: 2px;
 `;
 
 export const BadgeContainer = styled(FlexCol)`

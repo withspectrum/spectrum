@@ -16,7 +16,9 @@ import { UserProfile } from '../../components/profile';
 import ThreadFeed from '../../components/threadFeed';
 import ThreadComposer from '../../components/threadComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
+import Head from '../../components/head';
 import CommunityList from '../user/components/communityList';
+import generateMetaInfo from 'shared/generate-meta-info';
 
 const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 
@@ -49,9 +51,12 @@ class DashboardPure extends Component {
     const { isNewUser } = this.state;
     const isMobile = window.innerWidth < 768;
 
+    const { title, description } = generateMetaInfo();
+
     if (error) {
       return (
         <FlexCol style={{ flex: 'auto' }}>
+          <Head title={title} description={description} />
           <Titlebar noComposer />
           <AppViewWrapper>
             <Column type="primary" alignItems="center">
@@ -66,6 +71,7 @@ class DashboardPure extends Component {
 
       return (
         <FlexCol style={{ flex: 'auto' }}>
+          <Head title={title} description={description} />
           <Titlebar />
           <AppViewWrapper>
 
@@ -98,6 +104,7 @@ class DashboardPure extends Component {
     } else {
       return (
         <FlexCol style={{ flex: 'auto' }}>
+          <Head title={title} description={description} />
           <Titlebar noComposer />
           <AppViewWrapper>
             <Column type="primary" alignItems="center">

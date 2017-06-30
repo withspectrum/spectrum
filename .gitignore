@@ -10,5 +10,6 @@ debug
 iris/.env
 build-iris
 build-athena
+build-hermes
 package-lock.json
 .vscode

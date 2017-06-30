@@ -7,6 +7,7 @@ import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
 import { Gradient } from '../globals';
+import { optimize } from '../../helpers/images';
 
 const StyledAvatar = styled.img`
   position: absolute;
@@ -49,7 +50,13 @@ const StyledAvatarContainer = styled.object`
 
 const AvatarPure = (props: Object): React$Element<any> => (
   <StyledAvatarContainer {...props}>
-    <StyledAvatar {...props} />
+    <StyledAvatar
+      {...props}
+      src={optimize(props.src, {
+        w: props.size,
+        dpr: 2,
+      })}
+    />
   </StyledAvatarContainer>
 );
 

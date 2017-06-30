@@ -2,7 +2,7 @@
 import striptags from 'striptags';
 const { db } = require('./db');
 // $FlowFixMe
-const { createQueue } = require('./utils');
+const createQueue = require('../../shared/bull/create-queue');
 const messageNotificationQueue = createQueue('message notification');
 const { listenToNewDocumentsIn } = require('./utils');
 const { setThreadLastActive } = require('./thread');

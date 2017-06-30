@@ -1,7 +1,7 @@
 // @flow
 const { db } = require('./db');
 // $FlowFixMe
-const { createQueue } = require('./utils');
+const createQueue = require('../../shared/bull/create-queue');
 const threadNotificationQueue = createQueue('thread notification');
 const { listenToNewDocumentsIn } = require('./utils');
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
@@ -210,9 +210,9 @@ export const setThreadLock = (
       .run()
       .then(
         result =>
-          result.changes.length > 0
+          (result.changes.length > 0
             ? result.changes[0].new_val
-            : db.table('threads').get(threadId).run()
+            : db.table('threads').get(threadId).run())
       )
   );
 };
