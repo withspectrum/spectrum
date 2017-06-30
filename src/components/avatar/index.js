@@ -54,6 +54,7 @@ const AvatarPure = (props: Object): React$Element<any> => (
       {...props}
       src={optimize(props.src, {
         w: props.size,
+        dpr: 2,
       })}
     />
   </StyledAvatarContainer>

@@ -42,12 +42,21 @@ module.exports = {
       getUsersBySearchString(string),
   },
   User: {
-    coverPhoto: ({ coverPhoto }) => encodeURI(coverPhoto),
+    coverPhoto: ({ coverPhoto }) => {
+      const encodedURI = encodeURI(coverPhoto);
+      // if the image is not being served from our S3 imgix source, serve it from our web proxy
+      if (encodedURI.indexOf('spectrum.imgix.net') < 0) {
+        return imgix.buildURL(encodedURI, { w: 640, h: 192 });
+      }
+      // if the image is being served from the S3 imgix source, return that url
+      return encodedURI;
+    },
     profilePhoto: ({ profilePhoto }) => {
       const encodedURI = encodeURI(profilePhoto);
       // if the image is not being served from our S3 imgix source, serve it from our web proxy
-      if (encodedURI.indexOf('spectrum.imgix.net') < 0)
-        return imgix.buildURL(encodedURI);
+      if (encodedURI.indexOf('spectrum.imgix.net') < 0) {
+        return imgix.buildURL(encodedURI, { w: 128, h: 128 });
+      }
       // if the image is being served from the S3 imgix source, return that url
       return encodedURI;
     },
