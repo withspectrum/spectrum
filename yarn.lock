@@ -3649,6 +3649,13 @@ ignore@^3.2.0:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.3.3.tgz#432352e57accd87ab3110e82d3fea0e47812156d"
 
+imgix-core-js@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/imgix-core-js/-/imgix-core-js-1.0.6.tgz#35a3bc533b4a854dd4fd1269b367e75cea7b2b91"
+  dependencies:
+    js-base64 "^2.1.9"
+    js-md5 "^0.4.0"
+
 immutability-helper@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/immutability-helper/-/immutability-helper-2.2.0.tgz#c4385ad4f68315843efaf0cff3575ee82ffa405f"
@@ -4365,6 +4372,10 @@ joi@^10.1.0:
 js-base64@^2.1.9:
   version "2.1.9"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.1.9.tgz#f0e80ae039a4bd654b5f281fc93f04a914a7fcce"
+
+js-md5@^0.4.0:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/js-md5/-/js-md5-0.4.2.tgz#8a1231e60ab392a6d3a75db6d532ec0c59667bc3"
 
 js-tokens@^3.0.0:
   version "3.0.1"

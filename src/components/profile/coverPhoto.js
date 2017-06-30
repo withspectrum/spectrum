@@ -6,13 +6,20 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Gradient } from '../globals';
 import { ProfileHeaderAction } from './style';
+import { optimize } from '../../helpers/images';
 
 const PhotoContainer = styled.div`
   position: relative;
   width: 100%;
   flex: 0 0 ${props => (props.large ? '320px' : '96px')};
   background-color: ${({ theme }) => theme.space.light};
-  background-image: ${props => (props.coverURL ? `url(${props.coverURL}?w=${props.large ? 1024 : 320}&dpr=2)` : Gradient(props.theme.space.light, props.theme.space.dark))};
+  background-image: ${props => (props.coverURL ? `url(${optimize(
+        props.coverURL,
+        {
+          w: props.large ? 1024 : 320,
+          dpr: 2,
+        }
+      )})` : Gradient(props.theme.space.light, props.theme.space.dark))};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
