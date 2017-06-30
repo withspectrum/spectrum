@@ -153,9 +153,13 @@ const processMessageNotificationQueue = job => {
                               )
                               .map(user => user.name))}`,
                         },
+                        path: `messages/${thread.id}`,
                         id: thread.id,
                       }
-                    : thread,
+                    : {
+                        ...thread,
+                        path: `threads/${thread.id}`,
+                      },
                   user,
                   message,
                   contextType,

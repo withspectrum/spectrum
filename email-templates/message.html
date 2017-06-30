@@ -313,17 +313,17 @@
                   <tr>
                     <td class="content-cell">
                       <div class="divider"></div>
-                    
+
                       {{#each threads}}
                         <table class="attributes post" width="100%" cellpadding="0" cellspacing="0">
                           <tr>
                             <td>
-                              <a href="https://spectrum.chat/threads/{{id}}"><h2 class="title">{{title}}</h2></a>
+                              <a href="https://spectrum.chat/{{path}}{{^path}}threads/{{id}}{{/path}}"><h2 class="title">{{title}}</h2></a>
                             </td>
                           </tr>
                           <tr>
                             <td>
-                              <a class="small-link" href="https://spectrum.chat/threads/{{id}}">Go to thread</a>
+                              <a class="small-link" href="https://spectrum.chat/{{path}}{{^path}}threads/{{../id}}{{/path}}">Go to thread</a>
                             </td>
                           </tr>
                           {{#each replies}}
@@ -332,7 +332,7 @@
                                 <table>
                                   <tr>
                                     <td valign="top">
-                                      <a href="https://spectrum.chat/threads/{{id}}">
+                                      <a href="https://spectrum.chat/{{../../path}}{{^../../path}}threads/{{../id}}{{/../../path}}">
                                         <img class="avatar" src="{{sender.profilePhoto}}" />
                                       </a>
                                     </td>
@@ -340,12 +340,12 @@
                                       <table>
                                         <tr>
                                           <td>
-                                            <a href="https://spectrum.chat/threads/{{id}}"><span class="name">{{sender.name}}</span></a>
+                                            <a href="https://spectrum.chat/{{../path}}{{^../path}}threads/{{../../id}}{{/../path}}"><span class="name">{{sender.name}}</span></a>
                                           </td>
                                         </tr>
                                         <tr>
                                           <td>
-                                            <a href="https://spectrum.chat/threads/{{id}}"><p class="reply">{{{content.body}}}</p></a>
+                                            <a href="https://spectrum.chat/{{../path}}{{^../path}}threads/{{../../id}}{{/../path}}"><p class="reply">{{{content.body}}}</p></a>
                                           </td>
                                         </tr>
                                       </table>
