@@ -16,11 +16,14 @@ import {
 } from '../../../api/user';
 import { displayLoadingCard } from '../../../components/loading';
 import { Checkbox } from '../../../components/formElements';
+import Icon from '../../../components/icons';
 import {
   StyledCard,
   LargeListHeading,
   ListHeader,
   ListContainer,
+  Notice,
+  InlineIcon,
 } from '../../../components/listItems/style';
 import { EmailListItem, ChannelListCheckbox } from '../style';
 
@@ -34,7 +37,7 @@ const parseNotificationTypes = notifications => {
         return {
           type,
           emailValue: notifications.types[type].email,
-          label: "Email me when people respond in the conversations where I'm active.",
+          label: "Email me when people respond in the threads and private conversations where I'm active - this includes direct messages.",
         };
       }
     }
@@ -80,6 +83,17 @@ class EmailSettings extends Component {
                 >
                   {setting.label}
                 </Checkbox>
+                <Notice>
+                  <strong>Trying to mute a specific conversation?</strong>
+                  {' '}
+                  You can turn off email notifications for individual threads by clicking on the notification icon
+                  {' '}
+                  <InlineIcon>
+                    <Icon glyph="notification" size="16" />
+                  </InlineIcon>
+                  {' '}
+                  at the top of a post.
+                </Notice>
               </EmailListItem>
             );
           })}
