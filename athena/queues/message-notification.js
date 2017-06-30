@@ -158,7 +158,7 @@ const processMessageNotificationQueue = job => {
                       }
                     : {
                         ...thread,
-                        path: `threads/${thread.id}`,
+                        path: `thread/${thread.id}`,
                       },
                   user,
                   message,
