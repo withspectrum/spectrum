@@ -1,6 +1,6 @@
 // @flow
 const debug = require('debug')('athena:queue:community-notification');
-import processQueue from '../process-queue';
+import processQueue from '../../shared/bull/process-queue';
 import { COMMUNITY_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';

@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { Router, Route, Switch, Redirect } from 'react-router';
 //$FlowFixMe
 import styled from 'styled-components';
-import generateMetaInfo from 'iris/shared/generate-meta-info';
+import generateMetaInfo from 'shared/generate-meta-info';
 import { FlexCol } from './components/globals';
 import { history } from './helpers/history';
 import ScrollManager from './components/scrollManager';

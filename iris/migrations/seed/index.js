@@ -17,6 +17,7 @@ const {
 const {
   randomAmount,
   generateUser,
+  generateUsersSettings,
   generateCommunity,
   generateChannel,
   generateUsersCommunities,
@@ -34,6 +35,11 @@ const users = [
   ...DEFAULT_USERS,
   ...randomAmount({ max: userAmount, min: 1 }, generateUser),
 ];
+
+const usersSettings = [];
+users.forEach(user => {
+  usersSettings.push(generateUsersSettings(user.id));
+});
 
 console.log('Generating communities...');
 const communities = [
@@ -171,6 +177,7 @@ Promise.all([
   db.table('threads').insert(threads).run(),
   db.table('messages').insert(messages).run(),
   db.table('users').insert(users).run(),
+  db.table('usersSettings').insert(usersSettings).run(),
   db.table('reactions').insert(reactions).run(),
   db.table('directMessageThreads').insert(directMessageThreads).run(),
   db.table('messages').insert(direct_messages).run(),

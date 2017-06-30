@@ -4,6 +4,7 @@ const {
   getUser,
   getUsersBySearchString,
 } = require('../models/user');
+const { getUsersSettings } = require('../models/usersSettings');
 const { getCommunitiesByUser } = require('../models/community');
 const { getChannelsByUser } = require('../models/channel');
 const {
@@ -186,5 +187,6 @@ module.exports = {
           });
         }
       }),
+    settings: (_, __, { user }) => getUsersSettings(user.id),
   },
 };
