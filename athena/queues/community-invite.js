@@ -1,6 +1,5 @@
 // @flow
 const debug = require('debug')('athena:queue:community-invitation');
-import processQueue from '../process-queue';
 import { COMMUNITY_INVITE_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
@@ -8,7 +7,8 @@ import { getCommunityById } from '../models/community';
 import { getOwnersInCommunity } from '../models/usersCommunities';
 import { storeNotification } from '../models/notification';
 import { getUserByEmail } from '../models/user';
-import { createQueue } from '../create-queue';
+import processQueue from '../../shared/bull/process-queue';
+import createQueue from '../../shared/bull/create-queue';
 import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,

@@ -35,7 +35,7 @@ import type {
 import { getSlackImport, markSlackImportAsSent } from '../models/slackImport';
 import { getThreadsByCommunity, deleteThread } from '../models/thread';
 import { slugIsBlacklisted } from '../utils/permissions';
-const { createQueue } = require('../models/utils');
+const createQueue = require('../../shared/bull/create-queue');
 const communityInvitationQueue = createQueue('community invite notification');
 
 module.exports = {

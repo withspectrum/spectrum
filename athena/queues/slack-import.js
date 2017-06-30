@@ -1,6 +1,7 @@
 // @flow
 const debug = require('debug')('athena:queue:slack-import');
-import processQueue from '../process-queue';
+import processQueue from '../../shared/bull/process-queue';
+import createQueue from '../../shared/bull/create-queue';
 import { SLACK_IMPORT } from './constants';
 import {
   getSlackUserListData,

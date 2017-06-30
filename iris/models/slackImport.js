@@ -4,7 +4,7 @@ import axios from 'axios';
 const querystring = require('querystring');
 const { db } = require('./db');
 // $FlowFixMe
-const { createQueue } = require('./utils');
+const createQueue = require('../../shared/bull/create-queue');
 const slackImportQueue = createQueue('slack import');
 const env = require('node-env-file');
 const IS_PROD = process.env.NODE_ENV === 'production';
