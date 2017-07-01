@@ -1,28 +1,13 @@
 //@flow
 import striptags from 'striptags';
-import Linkify from 'linkify-it';
 const { db } = require('./db');
 // $FlowFixMe
 const createQueue = require('../../shared/bull/create-queue');
 const messageNotificationQueue = createQueue('message notification');
 const { listenToNewDocumentsIn } = require('./utils');
 const { setThreadLastActive } = require('./thread');
+import markdownLinkify from '../utils/markdown-linkify';
 import type { PaginationOptions } from '../utils/paginate-arrays';
-
-const linkifier = new Linkify(undefined, {
-  fuzzyEmail: false,
-});
-
-const linkify = (text: string): string => {
-  const matches = linkifier.match(text);
-  if (!matches) return text;
-  let newText = text;
-  // Replace each URL match with a markdown URL
-  matches.forEach(match => {
-    newText = `${newText.substr(0, match.index)}[${match.text}](${match.url})${newText.substr(match.lastIndex)}`;
-  });
-  return newText;
-};
 
 export type MessageTypes = 'text' | 'media';
 
@@ -65,7 +50,7 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
         timestamp: new Date(),
         senderId: userId,
         content: {
-          body: linkify(striptags(message.content.body)),
+          body: markdownLinkify(striptags(message.content.body)),
         },
       }),
       { returnChanges: true }
