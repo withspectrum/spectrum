@@ -378,6 +378,10 @@ module.exports = {
             return markSlackImportAsSent(id);
           })
           .then(inviteRecord => {
+            if (inviteRecord.members.length === 0) {
+              return new UserError('This Slack team has no members to invite!');
+            }
+
             // for each member on the invite record, send a community invitation
             return inviteRecord.members.map(user => {
               return communityInvitationQueue.add({

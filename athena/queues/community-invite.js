@@ -13,6 +13,7 @@ import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
+import bufferCommunityInviteEmail from './buffer-community-invite-email';
 
 // const sendCommunityInvitateEmailQueue = createQueue(SEND_COMMUNITY_INVITE_EMAIL);
 
@@ -22,9 +23,7 @@ const addToSendCommunityInviteEmailQueue = (recipient, community, sender) => {
     return Promise.resolve();
   }
 
-  // return sendCommunityInvitateEmailQueue.add({
-  //   // email info
-  // });
+  return bufferCommunityInviteEmail(recipient, community, sender);
 };
 
 /*
@@ -75,12 +74,14 @@ const processMessageNotificationQueue = job => {
 
   return Promise.all(getPayloads)
     .then(([existingUser, actor, context]) => {
+      const communityToInvite = JSON.parse(context.payload);
+
       // if the recipient of the email is not a member of spectrum, pass their information along to the email queue
       if (!existingUser) {
         debug(`recipient does not exist on spectrum, sending an email`);
         return addToSendCommunityInviteEmailQueue(
           inboundRecipient,
-          context,
+          communityToInvite,
           actor
         );
       }
@@ -105,13 +106,12 @@ const processMessageNotificationQueue = job => {
 
       return storeNotification(newNotification).then(notification => {
         debug('store new usersnotifications records');
-        const community = JSON.parse(context.payload);
         const sender = JSON.parse(actor.payload);
 
         return Promise.all([
           addToSendCommunityInviteEmailQueue(
             inboundRecipient,
-            community,
+            communityToInvite,
             sender
           ),
           storeUsersNotifications(notification.id, existingUser.id),
