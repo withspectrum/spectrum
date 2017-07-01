@@ -40,7 +40,6 @@
     "immutability-helper": "^2.2.0",
     "linkify-it": "^2.0.3",
     "lodash": "^4.17.4",
-    "marksy": "^4.0.0",
     "moment": "^2.18.1",
     "node-env-file": "^0.1.8",
     "optics-agent": "^1.1.2",
