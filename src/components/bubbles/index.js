@@ -1,8 +1,15 @@
 //@flow
 import React from 'react';
-//$FlowFixMe
-// import * as Autolinker from 'autolinker';
+import replace from 'string-replace-to-array';
 import { TextBubble, Emoji, ImageBubble } from './style';
+
+const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
+
+const renderMarkdownLinks = text => {
+  return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
+    <a href={url}>{text}</a>
+  ));
+};
 
 type BubbleProps = {
   me: boolean,
@@ -15,18 +22,9 @@ type BubbleProps = {
 export const Bubble = (props: BubbleProps) => {
   const { me, message } = props;
 
-  // const formatMessageForLinks = (body: string): string => {
-  //   if (!body) {
-  //     return '';
-  //   } else {
-  //     const linkedMessage = Autolinker.link(body);
-  //     return linkedMessage;
-  //   }
-  // };
-
   return (
     <TextBubble me={me}>
-      {message.body}
+      {renderMarkdownLinks(message.body)}
     </TextBubble>
   );
 };
