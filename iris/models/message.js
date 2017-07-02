@@ -50,7 +50,10 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
         timestamp: new Date(),
         senderId: userId,
         content: {
-          body: markdownLinkify(striptags(message.content.body)),
+          body: message.messageType === 'media'
+            ? message.content.body
+            : // For text messages linkify URLs and strip HTML tags
+              markdownLinkify(striptags(message.content.body)),
         },
       }),
       { returnChanges: true }
