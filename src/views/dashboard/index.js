@@ -60,7 +60,6 @@ class DashboardPure extends Component {
     const { title, description } = generateMetaInfo();
 
     if (networkStatus < 7) {
-      console.log('loading');
       return (
         <AppViewWrapper>
           <Head title={title} description={description} />
@@ -75,10 +74,43 @@ class DashboardPure extends Component {
           </Column>
         </AppViewWrapper>
       );
-    } else if (networkStatus === 7 && (user && (user !== null && !isNewUser))) {
+    } else if (networkStatus === 8) {
+      return (
+        <AppViewWrapper>
+          <Head title={title} description={description} />
+          <Titlebar noComposer />
+          <Column type="primary" alignItems="center">
+            <UpsellToReload />
+          </Column>
+        </AppViewWrapper>
+      );
+    } else if (!user || user === null) {
+      return (
+        <AppViewWrapper>
+          {console.log(user)}
+          <Head title={title} description={description} />
+          <Titlebar noComposer />
+          <Column type="primary" alignItems="center">
+            <UpsellSignIn />
+          </Column>
+        </AppViewWrapper>
+      );
+    } else if (isNewUser) {
       const currentUser = user;
       const communities = user.communityConnection.edges;
-      console.log('isNotNewUser');
+      console.log('isNewUser');
+      return (
+        <AppViewWrapper>
+          <Head title={title} description={description} />
+          <Titlebar />
+          <Column type="primary">
+            <UpsellNewUser user={user} graduate={this.graduate} />
+          </Column>
+        </AppViewWrapper>
+      );
+    } else {
+      const currentUser = user;
+      const communities = user.communityConnection.edges;
       return (
         <AppViewWrapper>
           <Head title={title} description={description} />
@@ -101,30 +133,6 @@ class DashboardPure extends Component {
               <ThreadComposer />
               <EverythingThreadFeed viewContext="dashboard" />
             </FlexCol>
-          </Column>
-        </AppViewWrapper>
-      );
-    } else if (networkStatus === 7 && (user && isNewUser)) {
-      const currentUser = user;
-      const communities = user.communityConnection.edges;
-      console.log('isNewUser');
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar />
-          <Column type="primary">
-            <UpsellNewUser user={user} graduate={this.graduate} />
-          </Column>
-        </AppViewWrapper>
-      );
-    } else {
-      console.log('error');
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar noComposer />
-          <Column type="primary" alignItems="center">
-            <UpsellToReload />
           </Column>
         </AppViewWrapper>
       );
