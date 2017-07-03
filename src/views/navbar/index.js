@@ -22,6 +22,7 @@ import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
 import Head from '../../components/head';
 import { getDistinctNotifications } from '../../views/notifications/utils';
+import { storeItem } from '../../helpers/localStorage';
 import {
   saveUserDataToLocalStorage,
   logout,
@@ -117,11 +118,40 @@ class Navbar extends Component {
     } else return false;
   };
 
-  componentDidMount() {
-    const { data: { user }, dispatch, history, match } = this.props;
-    const currentUser = user;
+  // componentDidMount() {
+  //   const { data: { user }, dispatch, history, match } = this.props;
+  //
+  //   if (user && user !== null) {
+  //     dispatch(saveUserDataToLocalStorage(user));
+  //
+  //     // if the user lands on /home, it means they just logged in. If this code
+  //     // runs, we know a user was returned successfully and set to localStorage,
+  //     // so we can redirect to the root url
+  //     if (match.url === '/home') {
+  //       history.push('/');
+  //     }
+  //     this.subscribe();
+  //   }
+  // }
 
-    if (currentUser && currentUser !== null) {
+  componentDidUpdate(prevProps) {
+    if (!this.props.data.user) return;
+    if (!this.props.notificationsQuery) return;
+    if (!prevProps.notificationsQuery) {
+      this.setState(this.calculateUnseenCounts());
+      return;
+    }
+    if (!this.props.notificationsQuery.notifications) return;
+    if (
+      prevProps.notificationsQuery.notifications.edges.length !==
+      this.props.notificationsQuery.notifications.edges.length
+    ) {
+      this.setState(this.calculateUnseenCounts());
+    }
+
+    const { data: { user }, dispatch, history, match } = this.props;
+
+    if (prevProps.data.user !== user && user !== null) {
       dispatch(saveUserDataToLocalStorage(user));
 
       // if the user lands on /home, it means they just logged in. If this code
@@ -131,22 +161,6 @@ class Navbar extends Component {
         history.push('/');
       }
       this.subscribe();
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!this.props.data.user) return;
-    if (!this.props.notificationsQuery) return;
-    if (!prevProps.notificationsQuery) {
-      this.setState(this.calculateUnseenCounts());
-      return;
-    }
-
-    if (
-      prevProps.notificationsQuery.notifications.edges.length !==
-      this.props.notificationsQuery.notifications.edges.length
-    ) {
-      this.setState(this.calculateUnseenCounts());
     }
   }
 
@@ -238,14 +252,25 @@ class Navbar extends Component {
   };
 
   render() {
-    const { match, data: { user, networkStatus }, data } = this.props;
-    const currentUser = user;
-    const currentUserExists = currentUser !== null && currentUser !== undefined;
+    const {
+      match,
+      data: { user, networkStatus },
+      data,
+      currentUser,
+    } = this.props;
+    const loggedInUser = user || currentUser;
+    const currentUserExists =
+      loggedInUser !== null && loggedInUser !== undefined;
     const { allUnseenCount, dmUnseenCount, notifications } = this.state;
     const isMobile = window.innerWidth < 768;
 
+    console.log('loggedinUser: ', loggedInUser);
+    console.log('user: ', user);
+    console.log('currentUser: ', currentUser);
+
     if (networkStatus < 8 && currentUserExists) {
       const showUnreadFavicon = dmUnseenCount > 0 || allUnseenCount > 0;
+
       return (
         <Nav>
           <Head showUnreadFavicon={showUnreadFavicon} />
@@ -301,15 +326,15 @@ class Navbar extends Component {
 
             <IconDrop>
               <IconLink
-                data-active={match.url === `/users/${currentUser.username}`}
-                to={`/users/${currentUser.username}`}
+                data-active={match.url === `/users/${loggedInUser.username}`}
+                to={`/users/${loggedInUser.username}`}
               >
                 <UserProfileAvatar
-                  src={`${currentUser.profilePhoto}`}
-                  isPro={currentUser.isPro}
+                  src={`${loggedInUser.profilePhoto}`}
+                  isPro={loggedInUser.isPro}
                 />
               </IconLink>
-              <ProfileDropdown logout={this.logout} user={currentUser} />
+              <ProfileDropdown logout={this.logout} user={loggedInUser} />
             </IconDrop>
           </Section>
           <Section hideOnDesktop>
@@ -347,8 +372,8 @@ class Navbar extends Component {
             </IconLink>
 
             <IconLink
-              data-active={match.url === `/users/${currentUser.username}`}
-              to={`/users/${currentUser.username}`}
+              data-active={match.url === `/users/${loggedInUser.username}`}
+              to={`/users/${loggedInUser.username}`}
             >
               <Icon glyph="profile" />
               <Label>Profile</Label>
