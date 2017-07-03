@@ -44,9 +44,12 @@ export const ProfileDropdown = props => {
   return (
     <UserProfileDropdown className={'dropdown'}>
       <UserProfileDropdownList>
-        <Link to={`/users/${props.user.username}/settings`}>
-          <UserProfileDropdownListItem>My Settings</UserProfileDropdownListItem>
-        </Link>
+        {props.user.username &&
+          <Link to={`/users/${props.user.username}/settings`}>
+            <UserProfileDropdownListItem>
+              My Settings
+            </UserProfileDropdownListItem>
+          </Link>}
         <UserProfileDropdownListItem onClick={props.logout}>
           Log Out
         </UserProfileDropdownListItem>

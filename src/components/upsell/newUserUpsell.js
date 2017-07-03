@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
 import { openModal } from '../../actions/modals';
+import SetUsername from '../../components/setUsername';
 import { Button, OutlineButton } from '../../components/buttons';
 import TopCommunities from '../../views/dashboard/components/topCommunities';
 import { NullCard } from './index';
@@ -101,6 +102,19 @@ class UpsellNewUser extends Component {
             <SectionHeaderNumber>1</SectionHeaderNumber>
           </SectionHeader>
 
+          <SmallTitle>Set your username</SmallTitle>
+          <SmallSubtitle>
+            Pick a username so that people can find you on Spectrum!
+          </SmallSubtitle>
+
+          <SetUsername user={user} />
+        </Section>
+
+        <Section noPadding>
+          <SectionHeader>
+            <SectionHeaderNumber>2</SectionHeaderNumber>
+          </SectionHeader>
+
           <SmallTitle>Find your people</SmallTitle>
           <SmallSubtitle>
             Join communities that look interesting or fun, and threads posted to those communities will start showing up in your home feed!
@@ -111,7 +125,7 @@ class UpsellNewUser extends Component {
 
         <Section>
           <SectionHeader>
-            <SectionHeaderNumber>2</SectionHeaderNumber>
+            <SectionHeaderNumber>3</SectionHeaderNumber>
           </SectionHeader>
 
           <SmallTitle>More fun with friends</SmallTitle>
@@ -153,7 +167,7 @@ class UpsellNewUser extends Component {
 
         <Section>
           <SectionHeader>
-            <SectionHeaderNumber>3</SectionHeaderNumber>
+            <SectionHeaderNumber>4</SectionHeaderNumber>
           </SectionHeader>
 
           <SmallTitle>Build a community</SmallTitle>
@@ -168,7 +182,7 @@ class UpsellNewUser extends Component {
 
         <Section>
           <SectionHeader>
-            <SectionHeaderNumber>4</SectionHeaderNumber>
+            <SectionHeaderNumber>5</SectionHeaderNumber>
           </SectionHeader>
 
           <SmallTitle>All set?</SmallTitle>

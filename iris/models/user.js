@@ -165,7 +165,9 @@ const editUser = (
   input: EditUserArguments,
   userId: string
 ): Promise<Object> => {
-  const { input: { name, description, website, file, coverFile } } = input;
+  const {
+    input: { name, description, website, file, coverFile, username },
+  } = input;
   return db
     .table('users')
     .get(userId)
@@ -175,6 +177,7 @@ const editUser = (
         name,
         description,
         website,
+        username,
       });
     })
     .then(user => {
