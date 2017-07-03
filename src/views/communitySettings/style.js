@@ -58,7 +58,7 @@ export const EmailInviteInput = styled.input`
   padding: 8px 12px;
   font-size: 14px;
   border-radius: 4px;
-  border: 1px solid ${props => (props.error ? props.theme.warn.default : props.theme.border.default)};
+  border: 2px solid ${props => (props.error ? props.theme.warn.default : props.theme.border.default)};
   margin-bottom: 8px;
   margin-top: 8px;
   margin-left: 4px;
@@ -73,7 +73,7 @@ export const EmailInviteInput = styled.input`
   }
 
   &:focus {
-    border: 1px solid ${props => props.theme.brand.default};
+    border: 2px solid ${props => props.theme.brand.default};
   }
 `;
 

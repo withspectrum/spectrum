@@ -90,6 +90,16 @@ class EmailInvites extends Component {
     // make sure to uniqify the emails so you can't enter on email multiple times
     validContacts = this.uniqueEmails(validContacts);
 
+    if (validContacts.length === 0) {
+      this.setState({
+        isLoading: false,
+      });
+
+      return dispatch(
+        addToastWithTimeout('error', 'No emails entered - try again!')
+      );
+    }
+
     this.props
       .sendEmailInvites({
         id: community.id,
