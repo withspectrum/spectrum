@@ -22,7 +22,7 @@
       height: 100%;
       margin: 0;
       line-height: 1.4;
-      background-color: #F2F5F9;
+      background-color: #FFF;
       color: #171a21;
       -webkit-text-size-adjust: none;
     }
@@ -61,7 +61,7 @@
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      background-color: #F2F5f9;
+      background-color: #FFF;
     }
 
     .email-content {
@@ -77,18 +77,18 @@
 
     .email-body {
       width: 100%;
+      max-width: 560px;
       margin: 0;
       padding: 0;
       -premailer-width: 100%;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
-      border-top: 1px solid #DFE7EF;
-      border-bottom: 1px solid #DFE7EF;
       background-color: #FFFFFF;
     }
 
     .email-body_inner {
-      width: 560px;
+      width: 100%;
+      max-width: 560px;
       margin: 0 auto;
       padding: 0;
       -premailer-width: 560px;
@@ -98,13 +98,15 @@
     }
 
     .email-footer {
-      width: 560px;
+      width: 100%;
+      max-width: 560px;
       margin: 0 auto;
       padding: 0;
       -premailer-width: 560px;
       -premailer-cellpadding: 0;
       -premailer-cellspacing: 0;
       text-align: center;
+      background-color: #F2F5F9;
     }
 
     .email-footer p {
@@ -127,16 +129,33 @@
       border-top: 1px solid #DFE7EF;
     }
 
+    .divider {
+      height: 0px;
+      border-bottom: 2px solid #DFE7EF;
+      display: block;
+      width: 100%;
+    }
+
+    .post {
+      padding: 24px 0 24px;
+      border-bottom: 2px solid #DFE7EF;
+    }
+
+    .reply-container {
+      margin-top: 24px;
+      display: block;
+    }
+
     .header-cell {
-      padding: 32px 32px 0 32px
+      padding: 24px 24px 0 24px
     }
 
     .content-cell {
-      padding: 32px;
+      padding: 24px;
     }
 
     .footer-cell {
-      padding: 0 32px 32px 32px;
+      padding: 24px;
     }
 
     .preheader {
@@ -197,6 +216,7 @@
       -webkit-text-size-adjust: none;
       word-break: keep-all;
       white-space: nowrap;
+      font-size: 16px;
 
       &:hover {
         text-decoration: none;
@@ -244,6 +264,16 @@
 
     p.sub {
       color: #747E8D;
+      font-size: 14px;
+    }
+
+    p.reply {
+      font-weight: 400;
+      margin-bottom: 16px;
+      background: #E6ECF7;
+      margin-bottom: 2px;
+      padding: 8px 12px;
+      border-radius: 12px;
     }
 
     p.emoji, span.emoji {
@@ -254,11 +284,17 @@
 
     span.name {
       font-size: 11px;
+      font-weight: 400;
       color: #747E8D;
     }
 
     h1.title {
       margin-bottom: 16px;
+    }
+
+    .small-link {
+      font-size: 12px;
+      font-weight: 500;
     }
     </style>
   </head>
@@ -270,18 +306,19 @@
             <!-- Email Body -->
             <tr>
               <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
-                <table class="email-body_inner" align="center" width="560" cellpadding="0" cellspacing="0">
+                <table class="email-body_inner" align="center" cellpadding="0" cellspacing="0">
                   <!-- Body content -->
                   <tr>
                     <td class="header-cell">
-                      <p>Hey there, {{recipient.firstName}}!</p>
+                      <p>Hey {{recipient.firstName}},</p>
                     </td>
                   </tr>
                   <tr>
                     <td class="content-cell">
-                      <p>{{sender.name}} has invited you to join the {{community.name}} community on Spectrum! Join now to get started.</p>
+                      <p>{{sender.name}} has invited you to join the <a href="https://spectrum.chat/{{community.slug}}">{{community.name}} community</a> on Spectrum! Join now to get started.</p>
                     </td>
                   </tr>
+
                   <tr>
                     <td class="footer-cell">
                       <a class="button" href="https://spectrum.chat/{{community.slug}}">Join Now</a>
@@ -289,12 +326,18 @@
                   </tr>
                   <tr>
                     <td class="footer-cell">
-                      <br />
                       <p class="emoji">✌️</p>
-                      <p>Spectrum</p>
+                      <p>- The Spectrum team</p>
                     </td>
                   </tr>
                 </table>
+              </td>
+            </tr>
+          </table>
+          <table class="email-footer" align="center" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="content-cell">
+                <p class="sub"><strong>Spectrum</strong> is made by <strong>Space Program, Inc.</strong><br/>542 Brannan St. 409, San Francisco, CA 94107</p>
               </td>
             </tr>
           </table>
