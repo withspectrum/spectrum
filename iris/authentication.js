@@ -51,7 +51,7 @@ const init = () => {
           lastSeen: new Date(),
         };
 
-        createOrFindUser(user)
+        createOrFindUser(user, 'providerId')
           .then(user => Promise.all([user, createNewUsersSettings(user.id)]))
           .then(([user]) => {
             done(null, user);
@@ -92,7 +92,7 @@ const init = () => {
           lastSeen: new Date(),
         };
 
-        createOrFindUser(user)
+        createOrFindUser(user, 'fbProviderId')
           .then(user => Promise.all([user, createNewUsersSettings(user.id)]))
           .then(([user]) => {
             done(null, user);
@@ -116,7 +116,8 @@ const init = () => {
         const user = {
           providerId: null,
           fbProviderId: null,
-          username: profile.id,
+          googleProviderId: profile.id,
+          username: null,
           name: profile.displayName ||
             (profile.name &&
               `${profile.name.givenName} ${profile.name.familyName}`) ||
@@ -133,7 +134,7 @@ const init = () => {
           lastSeen: new Date(),
         };
 
-        createOrFindUser(user)
+        createOrFindUser(user, 'googleProviderId')
           .then(user => Promise.all([user, createNewUsersSettings(user.id)]))
           .then(([user]) => {
             done(null, user);

@@ -73,7 +73,35 @@ const storeUser = (user: Object): Promise<Object> => {
     .then(result => result.changes[0].new_val);
 };
 
-const createOrFindUser = (user: Object): Promise<Object> => {
+const saveUserProvider = (userId, providerMethod, providerId) => {
+  return db
+    .table('users')
+    .get(userId)
+    .run()
+    .then(result => {
+      let obj = Object.assign({}, result);
+      obj[providerMethod] = providerId;
+      return obj;
+    })
+    .then(user => {
+      return db
+        .table('users')
+        .get(userId)
+        .update(
+          {
+            ...user,
+          },
+          { returnChanges: true }
+        )
+        .run()
+        .then(result => result.changes[0].new_val);
+    });
+};
+
+const createOrFindUser = (
+  user: Object,
+  providerMethod: string
+): Promise<Object> => {
   // if a user id gets passed in, we know that a user most likely exists and we just need to retrieve them from the db
   // however, if a user id doesn't exist we need to do a lookup by the email address passed in - if an email address doesn't exist, we know that we're going to be creating a new user
   const promise = user.id
@@ -84,7 +112,16 @@ const createOrFindUser = (user: Object): Promise<Object> => {
     .then(storedUser => {
       // if a user is found with an id or email, return the user in the db
       if (storedUser && storedUser.id) {
-        return Promise.resolve(storedUser);
+        // if a user is signing in with a second auth method from what their user was created with, store the new auth method
+        if (!storedUser[providerMethod]) {
+          return saveUserProvider(
+            storedUser.id,
+            providerMethod,
+            user[providerMethod]
+          ).then(user => Promise.resolve(storedUser));
+        } else {
+          return Promise.resolve(storedUser);
+        }
       }
 
       // if no user exists, create a new one with the oauth profile data
