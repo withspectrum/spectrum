@@ -5529,6 +5529,12 @@ passport-facebook@^2.1.1:
   dependencies:
     passport-oauth2 "1.x.x"
 
+passport-github2@^0.1.10:
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/passport-github2/-/passport-github2-0.1.10.tgz#50a21c1e95b83113e4da32c81c2c1a64429bb5bd"
+  dependencies:
+    passport-oauth2 "1.x.x"
+
 passport-google-oauth2@^0.1.6:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/passport-google-oauth2/-/passport-google-oauth2-0.1.6.tgz#dfd7016ac7449fe27cfeb252ae974afc23257a0d"

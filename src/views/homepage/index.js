@@ -70,6 +70,13 @@ class Homepage extends Component {
               >
                 <span>Sign in with Google</span>
               </Button>
+
+              <Button
+                href={`${SERVER_URL}/auth/github`}
+                onClick={() => this.trackSignin('primary cta')}
+              >
+                <span>Sign in with GitHub</span>
+              </Button>
             </FlexCol>
             <img src="/img/login.svg" alt="Where communities are built." />
           </SectionContent>

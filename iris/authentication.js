@@ -2,6 +2,7 @@ const passport = require('passport');
 const { Strategy: TwitterStrategy } = require('passport-twitter');
 const { Strategy: FacebookStrategy } = require('passport-facebook');
 const { Strategy: GoogleStrategy } = require('passport-google-oauth2');
+const { Strategy: GitHubStrategy } = require('passport-github2');
 const { getUser, createOrFindUser } = require('./models/user');
 const { createNewUsersSettings } = require('./models/usersSettings');
 
@@ -34,6 +35,7 @@ const init = () => {
           providerId: profile.id,
           fbProviderId: null,
           googleProviderId: null,
+          githubProviderId: null,
           username: null,
           name: profile.displayName ||
             (profile.name &&
@@ -77,6 +79,7 @@ const init = () => {
           providerId: null,
           fbProviderId: profile.id,
           googleProviderId: null,
+          githubProviderId: null,
           username: null,
           name: profile.displayName,
           email: profile.emails.length > 0 &&
@@ -117,6 +120,7 @@ const init = () => {
           providerId: null,
           fbProviderId: null,
           googleProviderId: profile.id,
+          githubProviderId: null,
           username: null,
           name: profile.displayName ||
             (profile.name &&
@@ -135,6 +139,46 @@ const init = () => {
         };
 
         createOrFindUser(user, 'googleProviderId')
+          .then(user => Promise.all([user, createNewUsersSettings(user.id)]))
+          .then(([user]) => {
+            done(null, user);
+          })
+          .catch(err => {
+            done(err);
+          });
+      }
+    )
+  );
+
+  // Set up GitHub login
+  passport.use(
+    new GitHubStrategy(
+      {
+        clientID: '208a2e8684d88883eded',
+        clientSecret: '56d46f0fac78e4581a2dfa3e9bda25407eb1363d',
+        callbackURL: `/auth/github/callback`,
+        scope: ['user'],
+      },
+      (token, tokenSecret, profile, done) => {
+        const user = {
+          providerId: null,
+          fbProviderId: null,
+          googleProviderId: null,
+          githubProviderId: profile.id,
+          username: null,
+          name: profile.displayName || null,
+          email: (profile.emails &&
+            profile.emails.length > 0 &&
+            profile.emails[0].value) ||
+            null,
+          profilePhoto: (profile._json.avatar_url &&
+            profile._json.avatar_url) ||
+            null,
+          createdAt: new Date(),
+          lastSeen: new Date(),
+        };
+
+        createOrFindUser(user, 'githubProviderId')
           .then(user => Promise.all([user, createNewUsersSettings(user.id)]))
           .then(([user]) => {
             done(null, user);

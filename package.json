@@ -45,6 +45,7 @@
     "optics-agent": "^1.1.2",
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
+    "passport-github2": "^0.1.10",
     "passport-google-oauth2": "^0.1.6",
     "passport-twitter": "^1.0.4",
     "pre-commit": "^1.2.2",
