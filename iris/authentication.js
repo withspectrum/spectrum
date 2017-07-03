@@ -1,6 +1,7 @@
 const passport = require('passport');
 const { Strategy: TwitterStrategy } = require('passport-twitter');
 const { Strategy: FacebookStrategy } = require('passport-facebook');
+const { Strategy: GoogleStrategy } = require('passport-google-oauth2');
 const { getUser, createOrFindUser } = require('./models/user');
 const { createNewUsersSettings } = require('./models/usersSettings');
 
@@ -32,6 +33,7 @@ const init = () => {
         const user = {
           providerId: profile.id,
           fbProviderId: null,
+          googleProviderId: null,
           username: null,
           name: profile.displayName ||
             (profile.name &&
@@ -74,6 +76,7 @@ const init = () => {
         const user = {
           providerId: null,
           fbProviderId: profile.id,
+          googleProviderId: null,
           username: null,
           name: profile.displayName,
           email: profile.emails.length > 0 &&
@@ -85,6 +88,47 @@ const init = () => {
             profile.photos[0].value !== undefined
             ? profile.photos[0].value
             : null,
+          createdAt: new Date(),
+          lastSeen: new Date(),
+        };
+
+        createOrFindUser(user)
+          .then(user => Promise.all([user, createNewUsersSettings(user.id)]))
+          .then(([user]) => {
+            done(null, user);
+          })
+          .catch(err => {
+            done(err);
+          });
+      }
+    )
+  );
+
+  // Set up Google login
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: '923611718470-chv7p9ep65m3fqqjr154r1p3a5j6oidc.apps.googleusercontent.com',
+        clientSecret: '2nUM1y27p3RosWt-8YqhMJKI',
+        callbackURL: `/auth/google/callback`,
+      },
+      (token, tokenSecret, profile, done) => {
+        const user = {
+          providerId: null,
+          fbProviderId: null,
+          username: profile.id,
+          name: profile.displayName ||
+            (profile.name &&
+              `${profile.name.givenName} ${profile.name.familyName}`) ||
+            null,
+          email: (profile.emails &&
+            profile.emails.length > 0 &&
+            profile.emails[0].value) ||
+            null,
+          profilePhoto: (profile.photos &&
+            profile.photos.length > 0 &&
+            profile.photos[0].value) ||
+            null,
           createdAt: new Date(),
           lastSeen: new Date(),
         };
