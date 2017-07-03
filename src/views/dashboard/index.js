@@ -64,12 +64,13 @@ class DashboardPure extends Component {
         <AppViewWrapper>
           <Head title={title} description={description} />
           <Titlebar noComposer />
-          <Column type="secondary">
-            <LoadingProfile />
-            <LoadingList />
-          </Column>
+          {!isMobile &&
+            <Column type="secondary">
+              <LoadingProfile />
+              <LoadingList />
+            </Column>}
           <Column type="primary">
-            <LoadingComposer />
+            {!isMobile && <LoadingComposer />}
             <LoadingFeed />
           </Column>
         </AppViewWrapper>
@@ -87,7 +88,6 @@ class DashboardPure extends Component {
     } else if (!user || user === null) {
       return (
         <AppViewWrapper>
-          {console.log(user)}
           <Head title={title} description={description} />
           <Titlebar noComposer />
           <Column type="primary" alignItems="center">
@@ -98,7 +98,7 @@ class DashboardPure extends Component {
     } else if (isNewUser) {
       const currentUser = user;
       const communities = user.communityConnection.edges;
-      console.log('isNewUser');
+
       return (
         <AppViewWrapper>
           <Head title={title} description={description} />

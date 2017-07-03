@@ -16,7 +16,7 @@ import {
 } from '../../api/notification';
 import { SERVER_URL } from '../../api';
 import Icon from '../../components/icons';
-import { displayLoadingNavbar } from '../../components/loading';
+import { displayLoadingNavbar, LoadingNavbar } from '../../components/loading';
 import { Button } from '../../components/buttons';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
@@ -234,31 +234,17 @@ class Navbar extends Component {
 
   login = () => {
     // log the user in and return them to this page
-    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window
-      .location.href}`);
+    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window.location.href}`);
   };
 
   render() {
-    const { match, data: { user } } = this.props;
+    const { match, data: { user, networkStatus }, data } = this.props;
     const currentUser = user;
+    const currentUserExists = currentUser !== null && currentUser !== undefined;
     const { allUnseenCount, dmUnseenCount, notifications } = this.state;
+    const isMobile = window.innerWidth < 768;
 
-    if (!currentUser || currentUser === null) {
-      return (
-        <Nav>
-          <Section left hideOnMobile>
-            <LogoLink to="/">
-              <Logo src="/img/mark-white.png" role="presentation" />
-            </LogoLink>
-          </Section>
-          <Section right>
-            <Button onClick={this.login} icon="twitter">
-              Sign in
-            </Button>
-          </Section>
-        </Nav>
-      );
-    } else {
+    if (networkStatus < 8 && currentUserExists) {
       const showUnreadFavicon = dmUnseenCount > 0 || allUnseenCount > 0;
       return (
         <Nav>
@@ -370,6 +356,24 @@ class Navbar extends Component {
           </Section>
         </Nav>
       );
+    } else if (networkStatus >= 7) {
+      return (
+        <Nav>
+          <Section left hideOnMobile>
+            <LogoLink to="/">
+              <Logo src="/img/mark-white.png" role="presentation" />
+            </LogoLink>
+          </Section>
+          <Section right>
+            <Button onClick={this.login} icon="twitter">
+              Sign in
+            </Button>
+          </Section>
+        </Nav>
+      );
+    } else {
+      console.log('data', data);
+      return <LoadingNavbar />;
     }
   }
 }
@@ -385,6 +389,6 @@ export default compose(
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
   withRouter,
-  displayLoadingNavbar,
+  // displayLoadingNavbar,
   connect(mapStateToProps)
 )(Navbar);

@@ -74,19 +74,7 @@ const CommunityList = props => {
       </StyledCard>
     );
   } else {
-    return (
-      <NullCard
-        bg="community"
-        heading={`You're fresh out of communities!`}
-        copy={`Let's find you something worth joining...`}
-      >
-        <Link to={`/explore`}>
-          <Button icon="explore" color="text.alt" gradientTheme="">
-            Browse communities
-          </Button>
-        </Link>
-      </NullCard>
-    );
+    return <div />;
   }
 };
 

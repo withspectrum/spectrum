@@ -84,6 +84,10 @@ export const ShimmerComposer = styled(Card)`
   section {
     min-height: 32px;
   }
+
+	@media (max-width: 768px) {
+		display: none;
+	}
 `;
 
 const placeHolderShimmer = keyframes`

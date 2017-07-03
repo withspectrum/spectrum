@@ -104,9 +104,7 @@ class ThreadFeedPure extends Component {
           <LoadingThread />
         </Threads>
       );
-    } else if (
-      (error && threads.length > 0) || (error && threads.length === 0)
-    ) {
+    } else if (error) {
       return <ErrorState />;
     } else if (threads.length === 0 && currentUser) {
       return <NullState />;
