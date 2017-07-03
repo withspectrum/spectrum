@@ -284,3 +284,24 @@ export const getCommunityById = graphql(
 	`,
   getCommunityByIdOptions
 );
+
+const SEND_EMAIL_INVITATIONS_MUTATION = gql`
+  mutation sendEmailInvites($input: EmailInvitesInput!) {
+    sendEmailInvites(input: $input)
+  }
+`;
+const SEND_EMAIL_INVITATIONS_OPTIONS = {
+  props: ({ input, mutate }) => ({
+    sendEmailInvites: input =>
+      mutate({
+        variables: {
+          input,
+        },
+      }),
+  }),
+};
+
+export const sendEmailInvitationsMutation = graphql(
+  SEND_EMAIL_INVITATIONS_MUTATION,
+  SEND_EMAIL_INVITATIONS_OPTIONS
+);

@@ -14,6 +14,7 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ListCard from './components/listCard';
 import ImportSlack from './components/importSlack';
+import EmailInvites from './components/emailInvites';
 import { CommunityEditForm } from '../../components/editForm';
 import CommunityMembers from '../../components/communityMembers';
 import { Upsell404Community } from '../../components/upsell';
@@ -102,6 +103,7 @@ const SettingsPure = ({
       </Column>
       <Column type="primary">
         <ImportSlack community={community} id={community.id} />
+        <EmailInvites community={community} />
         <ChannelListCard slug={communitySlug} />
         <CommunityMembers id={community.id} />
       </Column>

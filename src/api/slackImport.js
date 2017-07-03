@@ -26,9 +26,6 @@ export const getSlackImport = graphql(
   getSlackImportOptions
 );
 
-/*
-  Delete a thread
-*/
 const SEND_SLACK_INVITATIONS_MUTATION = gql`
   mutation sendSlackInvites($id: ID!) {
     sendSlackInvites(id: $id) {
