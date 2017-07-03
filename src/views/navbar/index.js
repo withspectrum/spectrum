@@ -56,7 +56,7 @@ class Navbar extends Component {
   calculateUnseenCounts = () => {
     const { data: { user }, notificationsQuery, match } = this.props;
     const currentUser = user;
-    console.log('notificationsQuery', notificationsQuery);
+
     let notifications =
       currentUser &&
       notificationsQuery.notifications.edges.map(

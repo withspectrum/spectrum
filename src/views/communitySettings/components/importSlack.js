@@ -89,12 +89,14 @@ class ImportSlack extends Component {
     if (noImport) {
       return (
         <StyledCard>
-          <LargeListHeading>Import a Slack Team</LargeListHeading>
+          <LargeListHeading>Invite a Slack Team</LargeListHeading>
           <Description>
-            Easily import an existing Slack team into Spectrum. Get started by connecting your team below.
+            Easily invite your team from an existing Slack team to Spectrum. Get started by connecting your team below.
             {' '}
           </Description>
           <Notice>
+            <strong>Note:</strong>
+            {' '}
             We will not invite any of your team members until you're ready.
           </Notice>
           <ButtonContainer>
@@ -106,7 +108,7 @@ class ImportSlack extends Component {
       startPolling(5000);
       return (
         <StyledCard>
-          <LargeListHeading>Import a Slack Team</LargeListHeading>
+          <LargeListHeading>Inivite a Slack Team</LargeListHeading>
           <ButtonContainer>
             <Button loading>Connecting with Slack...</Button>
           </ButtonContainer>
@@ -121,7 +123,7 @@ class ImportSlack extends Component {
       if (hasAlreadyBeenSent) {
         return (
           <StyledCard>
-            <LargeListHeading>Import a Slack Team</LargeListHeading>
+            <LargeListHeading>Invite a Slack Team</LargeListHeading>
             <Description>
               This community has been connected to the
               {' '}
@@ -143,7 +145,7 @@ class ImportSlack extends Component {
       } else {
         return (
           <StyledCard>
-            <LargeListHeading>Import a Slack Team</LargeListHeading>
+            <LargeListHeading>Invite a Slack Team</LargeListHeading>
             <Description>
               This community has been connected to the
               {' '}

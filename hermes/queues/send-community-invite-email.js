@@ -29,10 +29,9 @@ export default () =>
     (job: SendCommunityInviteEmailJob) => {
       debug(`\nnew job: ${job.id}`);
       debug(`\nsending community invite to: ${job.data.to}`);
-      debug(`\nrecipient: ${job.data.recipient}`);
-      debug(`\nsender: ${job.data.sender}`);
-      debug(`\ncommunity: ${job.data.community}`);
+
       const subject = `${job.data.sender.name} has invited you to join the ${job.data.community.name} community on Spectrum`;
+
       try {
         return sendEmail({
           TemplateId: COMMUNITY_INVITE_TEMPLATE,
