@@ -10,14 +10,9 @@ export const TextBubble = styled.p`
   font-size: 14px;
   line-height: 20px;
   transition: opacity 0.2s ease-out;
-  background-color: ${props =>
-    props.me ? props.theme.brand.default : props.theme.generic.default};
-  background-image: ${props =>
-    props.me
-      ? Gradient(props.theme.brand.alt, props.theme.brand.default)
-      : Gradient(props.theme.generic.alt, props.theme.generic.default)}
-  color: ${props =>
-    props.me ? props.theme.text.reverse : props.theme.text.default};
+  background-color: ${props => (props.me ? props.theme.brand.default : props.theme.generic.default)};
+  background-image: ${props => (props.me ? Gradient(props.theme.brand.alt, props.theme.brand.default) : Gradient(props.theme.generic.alt, props.theme.generic.default))}
+  color: ${props => (props.me ? props.theme.text.reverse : props.theme.text.default)};
   align-self: ${props => (props.me ? `flex-end;` : `flex-start;`)}
   font-weight: ${props => (props.me ? `500` : `400`)};
   clear: both;
@@ -35,8 +30,7 @@ export const TextBubble = styled.p`
   }
 
   &::selection {
-    background-color: ${props =>
-      props.me ? props.theme.text.default : props.theme.brand.alt};
+    background-color: ${props => (props.me ? props.theme.text.default : props.theme.brand.alt)};
   }
 `;
 
