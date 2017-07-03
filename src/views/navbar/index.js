@@ -118,22 +118,6 @@ class Navbar extends Component {
     } else return false;
   };
 
-  // componentDidMount() {
-  //   const { data: { user }, dispatch, history, match } = this.props;
-  //
-  //   if (user && user !== null) {
-  //     dispatch(saveUserDataToLocalStorage(user));
-  //
-  //     // if the user lands on /home, it means they just logged in. If this code
-  //     // runs, we know a user was returned successfully and set to localStorage,
-  //     // so we can redirect to the root url
-  //     if (match.url === '/home') {
-  //       history.push('/');
-  //     }
-  //     this.subscribe();
-  //   }
-  // }
-
   componentDidUpdate(prevProps) {
     if (!this.props.data.user) return;
     if (!this.props.notificationsQuery) return;
