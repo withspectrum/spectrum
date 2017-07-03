@@ -58,6 +58,8 @@ class Navbar extends Component {
     const currentUser = user;
     let notifications =
       currentUser &&
+      notificationsQuery &&
+      notificationsQuery.notifications &&
       notificationsQuery.notifications.edges.map(
         notification => notification.node
       );
@@ -135,8 +137,13 @@ class Navbar extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.props.data.user) return;
-    if (!this.props.notificationsQuery) return;
+    if (
+      !this.props.data.user ||
+      !this.props.notificationsQuery ||
+      !this.props.notificationsQuery.notifications
+    )
+      return;
+
     if (!prevProps.notificationsQuery) {
       this.setState(this.calculateUnseenCounts());
       return;
@@ -234,8 +241,7 @@ class Navbar extends Component {
 
   login = () => {
     // log the user in and return them to this page
-    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window
-      .location.href}`);
+    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window.location.href}`);
   };
 
   render() {

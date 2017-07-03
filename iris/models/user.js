@@ -17,6 +17,14 @@ const getUserById = (userId: string): Promise<Object> => {
   return db.table('users').get(userId).run();
 };
 
+const getUserByEmail = (email: string): Promise<Object> => {
+  return db
+    .table('users')
+    .filter({ email })
+    .run()
+    .then(results => (results.length > 0 ? results[0] : null));
+};
+
 const getUserByUsername = (username: string): Promise<Object> => {
   return db
     .table('users')
@@ -24,9 +32,9 @@ const getUserByUsername = (username: string): Promise<Object> => {
     .run()
     .then(
       result =>
-        result
+        (result
           ? result[0]
-          : new UserError(`No user found with the username ${username}`)
+          : new UserError(`No user found with the username ${username}`))
     );
 };
 
@@ -66,20 +74,20 @@ const storeUser = (user: Object): Promise<Object> => {
 };
 
 const createOrFindUser = (user: Object): Promise<Object> => {
+  // if a user id gets passed in, we know that a user most likely exists and we just need to retrieve them from the db
+  // however, if a user id doesn't exist we need to do a lookup by the email address passed in - if an email address doesn't exist, we know that we're going to be creating a new user
   const promise = user.id
     ? getUser({ id: user.id })
-    : getUserByProviderId(user.providerId);
+    : user.email ? getUserByEmail(user.email) : Promise.resolve({});
+
   return promise
     .then(storedUser => {
-      if (storedUser) {
-        if (!storedUser.username && user.username) {
-          return setUsername(storedUser.id, user.username).then(newStoredUser =>
-            Promise.resolve(newStoredUser)
-          );
-        }
+      // if a user is found with an id or email, return the user in the db
+      if (storedUser && storedUser.id) {
         return Promise.resolve(storedUser);
       }
 
+      // if no user exists, create a new one with the oauth profile data
       return storeUser(user);
     })
     .catch(err => {

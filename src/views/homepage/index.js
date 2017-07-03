@@ -54,6 +54,15 @@ class Homepage extends Component {
                 {' '}
                 <span>Sign in with Twitter</span>
               </Button>
+
+              <Button
+                href={`${SERVER_URL}/auth/facebook`}
+                onClick={() => this.trackSignin('primary cta')}
+              >
+                <Icon glyph="facebook" />
+                {' '}
+                <span>Sign in with Facebook</span>
+              </Button>
             </FlexCol>
             <img src="/img/login.svg" alt="Where communities are built." />
           </SectionContent>
