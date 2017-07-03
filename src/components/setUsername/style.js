@@ -1,16 +1,6 @@
 // @flow
 import styled from 'styled-components';
 
-export const Container = styled.div`
-  margin: 0 32px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  width: 100%;
-  max-width: 320px;
-`;
-
 export const Row = styled.div`
   display: flex;
 `;
@@ -24,4 +14,12 @@ export const Loading = styled.span`
 export const Action = styled.div`
   margin-top: 14px;
   margin-left: 8px;
+`;
+
+export const Form = styled.form`
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 100%;
+  max-width: 320px;
 `;

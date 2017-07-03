@@ -12,7 +12,7 @@ import { Input, Error, Success, UnderlineInput } from '../formElements';
 import { Spinner } from '../globals';
 import { Button } from '../buttons';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { Container, Loading, Row, Action } from './style';
+import { Form, Loading, Row, Action } from './style';
 import { throttle } from '../../helpers/utils';
 import { CHECK_UNIQUE_USERNAME_QUERY, editUserMutation } from '../../api/user';
 
@@ -105,7 +105,7 @@ class SetUsername extends Component {
             username,
           },
         })
-        .then(({ data: { user, loading } }) => {
+        .then(({ data, data: { user } }) => {
           if (this.state.username.length > 20) {
             return this.setState({
               error: 'Usernames can be up to 20 characters',
@@ -116,6 +116,7 @@ class SetUsername extends Component {
             return this.setState({
               error: 'This username is already taken, sorry!',
               isSearching: false,
+              success: '',
             });
           } else {
             return this.setState({
@@ -128,7 +129,8 @@ class SetUsername extends Component {
     }
   };
 
-  saveUsername = () => {
+  saveUsername = e => {
+    e.preventDefault();
     const { username } = this.state;
 
     this.setState({
@@ -161,7 +163,7 @@ class SetUsername extends Component {
     const { username, isSearching, isLoading, error, success } = this.state;
 
     return (
-      <Container>
+      <Form onSubmit={this.saveUsername}>
         <Row>
           <Input
             placeholder={'Set a username...'}
@@ -195,7 +197,7 @@ class SetUsername extends Component {
 
           {success && <Success>{success}</Success>}
         </Row>
-      </Container>
+      </Form>
     );
   }
 }
