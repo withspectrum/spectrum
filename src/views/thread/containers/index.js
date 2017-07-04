@@ -28,12 +28,43 @@ import {
   ChatWrapper,
 } from '../style';
 import {
-  UpsellSignIn,
+  UpsellSignInState,
   UpsellRequestToJoinChannel,
-  UpsellJoinChannel,
+  UpsellJoinChannelState,
   Upsell404Thread,
   NullState,
 } from '../../../components/upsell';
+
+const EmptyChat = () => (
+  <ChatWrapper>
+    <HorizontalRule>
+      <hr />
+      <Icon glyph={'message'} />
+      <hr />
+    </HorizontalRule>
+    <NullState
+      heading={`🔥 This thread is hot off the presses...`}
+      copy={`Why don't you kick off the conversation?`}
+    />
+  </ChatWrapper>
+);
+
+const LoadingView = () => (
+  <View>
+    <Titlebar provideBack={true} backRoute={`/`} noComposer />
+    <Content>
+      <Detail type="only">
+        <LoadingThreadDetail />
+        <ChatWrapper>
+          <HorizontalRule>
+            <hr /><Icon glyph={'message'} /><hr />
+          </HorizontalRule>
+          <LoadingChat />
+        </ChatWrapper>
+      </Detail>
+    </Content>
+  </View>
+);
 
 class ThreadContainerPure extends Component {
   state: {
@@ -116,35 +147,22 @@ class ThreadContainerPure extends Component {
       currentUser,
     } = this.props;
     const { isLoading } = this.state;
+    const dataExists = thread && (thread.content && thread.channel);
     const loggedInUser = user || currentUser;
     const isUnavailable = !thread || thread.deleted;
     const isRestricted =
-      thread &&
-      thread.channel &&
+      dataExists &&
       (thread.channel.isPrivate && !thread.channel.channelPermissions.isMember);
-    const allClear =
-      thread && thread.channel && (!isUnavailable && !isRestricted);
+    const isFrozen = dataExists && thread.channel.isLocked;
+    const hasRights =
+      dataExists &&
+      loggedInUser &&
+      (thread.isCreator || thread.channel.channelPermissions.isMember);
+    const allClear = dataExists && (!isUnavailable && !isRestricted);
 
     if (networkStatus < 7 && !thread) {
-      return (
-        <View>
-          <Titlebar provideBack={true} backRoute={`/`} noComposer />
-          <Content>
-            <Detail type="only">
-              <LoadingThreadDetail />
-              <ChatWrapper>
-                <HorizontalRule>
-                  <hr />
-                  <Icon glyph={'message'} />
-                  <hr />
-                </HorizontalRule>
-                <LoadingChat />
-              </ChatWrapper>
-            </Detail>
-          </Content>
-        </View>
-      );
-    } else if (networkStatus < 8 && allClear) {
+      return <LoadingView />;
+    } else if (networkStatus === 7 && allClear) {
       const { title, description } = generateMetaInfo({
         type: 'thread',
         data: {
@@ -181,42 +199,41 @@ class ThreadContainerPure extends Component {
           <Content innerRef={scrollBody => this.scrollBody = scrollBody}>
             <Detail type="only">
               <ThreadDetail thread={thread} viewStatus={networkStatus} />
-              {loggedInUser && thread.messageCount > 0
-                ? <Messages
-                    id={thread.id}
-                    participants={participantsAndCreator}
-                    currentUser={loggedInUser}
-                    forceScrollToBottom={this.forceScrollToBottom}
-                    contextualScrollToBottom={this.contextualScrollToBottom}
-                    viewStatus={networkStatus}
-                  />
-                : <ChatWrapper>
-                    <HorizontalRule>
-                      <hr />
-                      <Icon glyph={'message'} />
-                      <hr />
-                    </HorizontalRule>
-                    <NullState
-                      heading={`🔥 This thread is hot off the presses...`}
-                      copy={`Why don't you kick off the conversation?`}
-                    />
-                  </ChatWrapper>}
-              {!loggedInUser && <UpsellSignIn />}
-              {// if the user exists but isn't a subscriber to the channel,
-              // show an upsell to join the channel
-              loggedInUser &&
-                !thread.isLocked &&
-                !thread.channel.channelPermissions.isMember &&
-                <UpsellJoinChannel
+
+              {thread.messageCount > 0 &&
+                <Messages
+                  id={thread.id}
+                  participants={participantsAndCreator}
+                  currentUser={loggedInUser}
+                  forceScrollToBottom={this.forceScrollToBottom}
+                  contextualScrollToBottom={this.contextualScrollToBottom}
+                  viewStatus={networkStatus}
+                />}
+
+              {!loggedInUser && <UpsellSignInState />}
+
+              {loggedInUser &&
+                !hasRights &&
+                <UpsellJoinChannelState
                   channel={thread.channel}
                   subscribe={this.toggleSubscription}
                   loading={isLoading}
                 />}
+
+              {loggedInUser &&
+                !isFrozen &&
+                hasRights &&
+                thread.messageCount === 0 &&
+                <EmptyChat />}
+
+              {isFrozen &&
+                hasRights &&
+                <NullState copy="This conversation has been frozen by a moderator." />}
             </Detail>
           </Content>
           {loggedInUser &&
-            !thread.isLocked &&
-            (thread.isCreator || thread.channel.channelPermissions.isMember) &&
+            hasRights &&
+            !isFrozen &&
             <Input>
               <ChatInputWrapper type="only">
                 <ChatInput
@@ -268,21 +285,7 @@ class ThreadContainerPure extends Component {
         </View>
       );
     } else {
-      return (
-        <View>
-          <Titlebar
-            title={'Thread not found'}
-            provideBack={true}
-            backRoute={`/`}
-            noComposer
-          />
-          <Content>
-            <Detail type="primary">
-              <Upsell404Thread />
-            </Detail>
-          </Content>
-        </View>
-      );
+      return <LoadingView />;
     }
   }
 }

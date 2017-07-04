@@ -368,6 +368,10 @@ class Navbar extends Component {
             <LogoLink to="/">
               <Logo src="/img/mark-white.png" role="presentation" />
             </LogoLink>
+            <IconLink data-active={match.url === '/explore'} to="/explore">
+              <Icon glyph="explore" />
+              <Label>Explore</Label>
+            </IconLink>
           </Section>
           <Section right>
             <Button onClick={this.login} icon="twitter">
