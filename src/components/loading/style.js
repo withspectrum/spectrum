@@ -38,6 +38,14 @@ export const ShimmerList = styled(Card)`
   }
 `;
 
+export const ShimmerThreadDetail = styled(FlexCol)`
+  padding: 32px;
+
+  section {
+    min-height: 308px;
+  }
+`;
+
 export const ShimmerThread = styled(Card)`
   padding: 16px;
 
@@ -78,6 +86,73 @@ export const ShimmerDM = styled(ShimmerProfile)`
 	}
 `;
 
+export const ShimmerBubble = styled(FlexCol)`
+	margin-top: 4px;
+	margin-left: 32px;
+	align-self: flex-start;
+	width: 60%;
+
+	section {
+		min-height: 48px;
+		border-radius: 12px;
+	}
+`;
+
+export const ShimmerChat = styled(FlexCol)`
+	> div:nth-of-type(2n+2) {
+		width: 40%;
+
+		section {
+			min-height: 32px;
+		}
+	}
+
+	> div:nth-of-type(3n+1) {
+		width: 25%;
+
+		section {
+			min-height: 32px;
+		}
+	}
+
+	> div:nth-of-type(4n) {
+		align-self: flex-end;
+		margin-top: 16px;
+		margin-left: 0;
+		margin-right: 32px;
+
+		> section {
+			background: ${({ theme }) => theme.brand.alt};
+
+			> span {
+				background: linear-gradient(to right,
+					${({ theme }) => theme.brand.alt} 10%,
+					${({ theme }) => hexa(theme.brand.default, 0.35)} 20%,
+					${({ theme }) => theme.brand.alt} 30%);
+			}
+		}
+	}
+
+	> div:nth-of-type(5n) {
+		align-self: flex-end;
+		margin-top: 4px;
+		margin-bottom: 16px;
+		margin-left: 0;
+		margin-right: 32px;
+
+		> section {
+			background: ${({ theme }) => theme.brand.alt};
+
+			> span {
+				background: linear-gradient(to right,
+					${({ theme }) => theme.brand.alt} 10%,
+					${({ theme }) => hexa(theme.brand.default, 0.25)} 20%,
+					${({ theme }) => theme.brand.alt} 30%);
+			}
+		}
+	}
+`;
+
 export const ShimmerComposer = styled(Card)`
   padding: 16px;
 
@@ -93,9 +168,13 @@ export const ShimmerComposer = styled(Card)`
 const placeHolderShimmer = keyframes`
 	0%{
 			transform: translateX(-100%) translateY(0%);
+			background-size: 100%;
+			opacity: 1;
 	}
 	100%{
-			transform: translateX(100%) translateY(0%);
+			transform: translateX(200%) translateY(0%);
+			background-size: 500%;
+			opacity: 0;
 	}
 `;
 
@@ -113,15 +192,15 @@ export const ShimmerLine = styled.span`
   height: 100%;
   position: absolute;
   z-index: 4;
-  animation-duration: 2s;
+  animation-duration: 2.5s;
   animation-fill-mode: forwards;
   animation-iteration-count: infinite;
-  animation-timing-function: ease-out;
+  animation-timing-function: ease-in-out;
   background: linear-gradient(to right,
 		${({ theme }) => theme.bg.wash} 10%,
 		${({ theme }) => hexa(theme.generic.default, 0.65)} 20%,
 		${({ theme }) => theme.bg.wash} 30%);
-  background-size: 100% 140px;
+  ${/* background-size: 100%; */ ''}
   animation-name: ${placeHolderShimmer};
 `;
 

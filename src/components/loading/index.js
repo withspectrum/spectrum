@@ -9,13 +9,17 @@ import styled from 'styled-components';
 import { Spinner, FlexCol } from '../globals';
 import { Card } from '../card';
 import { Column } from '../column';
+import { View, Detail, Content } from '../../views/thread/style';
 import {
   LoadingScreenContainer,
   ShimmerList,
   ShimmerThread,
+  ShimmerThreadDetail,
   ShimmerProfile,
   ShimmerListItem,
   ShimmerDM,
+  ShimmerBubble,
+  ShimmerChat,
   ShimmerComposer,
   ShimmerBase,
   ShimmerLine,
@@ -201,6 +205,165 @@ export const LoadingFeed = () => (
     <LoadingThread />
     <LoadingThread />
   </FlexCol>
+);
+
+export const LoadingBubble = () => (
+  <ShimmerBubble>
+    <ShimmerBase>
+      <ShimmerLine />
+    </ShimmerBase>
+  </ShimmerBubble>
+);
+
+export const LoadingChat = () => (
+  <ShimmerChat>
+    <LoadingBubble />
+    <LoadingBubble />
+    <LoadingBubble />
+    <LoadingBubble />
+    <LoadingBubble />
+    <LoadingBubble />
+    <LoadingBubble />
+    <LoadingBubble />
+    <LoadingBubble />
+    <LoadingBubble />
+  </ShimmerChat>
+);
+
+export const LoadingThreadDetail = () => (
+  <ShimmerThreadDetail>
+    <ShimmerBase>
+      <ShimmerLine />
+      <Cover
+        style={{
+          top: '0',
+          left: '40px',
+          height: '40px',
+          width: '12px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '40px',
+          left: '0',
+          height: '24px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '20px',
+          left: '40px',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '0',
+          right: '0',
+          height: '20px',
+          width: 'calc(100% - 240px)',
+        }}
+      />
+      <Cover
+        style={{
+          top: '28px',
+          right: '0',
+          height: '12px',
+          width: 'calc(100% - 200px)',
+        }}
+      />
+      <Cover
+        style={{
+          top: '64px',
+          right: '0',
+          height: '40px',
+          width: '20%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '104px',
+          left: '0',
+          height: '24px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '148px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '128px',
+          right: '0',
+          height: '20px',
+          width: '48px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '176px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '184px',
+          right: '0',
+          height: '20px',
+          width: '24px',
+        }}
+      />
+      <Cover
+        style={{
+          top: '204px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '212px',
+          right: '0',
+          height: '20px',
+          width: '80%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '232px',
+          left: '0',
+          height: '28px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '280px',
+          left: '0',
+          height: '8px',
+          width: '100%',
+        }}
+      />
+      <Cover
+        style={{
+          top: '288px',
+          right: '0',
+          height: '20px',
+          width: '40%',
+        }}
+      />
+    </ShimmerBase>
+  </ShimmerThreadDetail>
 );
 
 export const LoadingListItem = () => (
@@ -509,6 +672,17 @@ export const LoadingScreen = (): React$Element<any> => (
   </LoadingScreenContainer>
 );
 
+export const LoadingThreadView = (): React$Element<any> => (
+  <View>
+    <Content>
+      <Detail type="only">
+        <LoadingThreadDetail />
+        <LoadingChat />
+      </Detail>
+    </Content>
+  </View>
+);
+
 export const LoadingNotifications = (): React$Element<any> => (
   <LoadingScreenContainer>
     <Column type="primary" alignItems="center">
@@ -544,6 +718,11 @@ export const displayLoadingCard = branch(
 export const displayLoadingScreen = branch(
   props => !props.data || props.data.loading,
   renderComponent(LoadingScreen)
+);
+
+export const displayLoadingThreadView = branch(
+  props => !props.data,
+  renderComponent(LoadingThreadView)
 );
 
 export const displayLoadingNotifications = branch(

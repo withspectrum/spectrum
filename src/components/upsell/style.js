@@ -60,9 +60,9 @@ export const Cost = styled(Subtitle)`
 `;
 
 export const NullCol = styled(FlexCol)`
-  background-image: url('/img/fills/${props => (props.bg ? `${props.bg}` : 'locked')}.svg');
+  background-image: ${props => (props.bg ? `url('/img/fills/${props.bg}.svg')` : 'none')};
   background-color: transparent;
-  background-size: 110% auto;
+  background-size: 100% auto;
   background-repeat: ${props => (props.repeat ? 'repeat-y' : 'no-repeat')};
   background-position: ${props => (props.repeat ? 'center top' : 'center center')};
   width: 100%;

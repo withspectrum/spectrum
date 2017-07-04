@@ -36,12 +36,12 @@ const StyledAvatarContainer = styled.object`
     content: '';
     position: absolute;
     display: ${props => (props.isOnline ? 'inline-block' : 'none')};
-    width: ${props => (props.onlineSize === 'large' ? '10px' : props.onlineSize === 'small' ? '4px' : '6px')};
-    height: ${props => (props.onlineSize === 'large' ? '10px' : props.onlineSize === 'small' ? '4px' : '6px')};
+    width: ${props => (props.onlineSize === 'large' ? '8px' : props.onlineSize === 'small' ? '4px' : '6px')};
+    height: ${props => (props.onlineSize === 'large' ? '8px' : props.onlineSize === 'small' ? '4px' : '6px')};
     background: ${props => props.theme.pro.alt};
-    border-radius: ${props => (props.onlineSize === 'large' ? '10px' : props.onlineSize === 'small' ? '4px' : '6px')};
+    border-radius: 100%;
     border: 2px solid ${props => props.theme.text.reverse};
-    bottom: 0;
+    bottom: ${props => (props.onlineSize === 'large' ? '0' : '-1px')};
     right: ${props => (props.onlineSize === 'large' ? '0' : '-4px')};
     z-index: 10;
   }

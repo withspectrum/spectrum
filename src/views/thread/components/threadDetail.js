@@ -393,11 +393,24 @@ class ThreadDetailPure extends Component {
 
     return (
       <ThreadWrapper>
+        {!isEditing &&
+          <Location>
+            <Icon glyph="view-back" size={16} />
+            <Link to={`/${thread.channel.community.slug}`}>
+              {thread.channel.community.name}
+            </Link>
+            <span>/</span>
+            <Link
+              to={`/${thread.channel.community.slug}/${thread.channel.slug}`}
+            >
+              {thread.channel.name}
+            </Link>
+          </Location>}
         <ContextRow>
           <Byline to={`/users/${thread.creator.username}`}>
             <AuthorAvatar
-              size={48}
-              radius={48}
+              size={40}
+              radius={40}
               onlineSize={'large'}
               isOnline={thread.creator.isOnline}
               src={thread.creator.profilePhoto}
@@ -481,18 +494,6 @@ class ThreadDetailPure extends Component {
 
         {!isEditing &&
           <span>
-            <Location>
-              <Icon glyph="view-back" size={16} />
-              <Link to={`/${thread.channel.community.slug}`}>
-                {thread.channel.community.name}
-              </Link>
-              <span>/</span>
-              <Link
-                to={`/${thread.channel.community.slug}/${thread.channel.slug}`}
-              >
-                {thread.channel.name}
-              </Link>
-            </Location>
             <ThreadHeading>
               {thread.content.title}
             </ThreadHeading>

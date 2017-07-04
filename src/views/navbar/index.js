@@ -56,9 +56,9 @@ class Navbar extends Component {
 
   calculateUnseenCounts = () => {
     const { data: { user }, notificationsQuery, match } = this.props;
-    const currentUser = user;
+    const loggedInUser = user;
     let notifications =
-      currentUser &&
+      loggedInUser &&
       notificationsQuery.notifications.edges.map(
         notification => notification.node
       );
@@ -127,8 +127,9 @@ class Navbar extends Component {
     }
     if (!this.props.notificationsQuery.notifications) return;
     if (
+      prevProps.notificationsQuery.notifications &&
       prevProps.notificationsQuery.notifications.edges.length !==
-      this.props.notificationsQuery.notifications.edges.length
+        this.props.notificationsQuery.notifications.edges.length
     ) {
       this.setState(this.calculateUnseenCounts());
     }
@@ -246,11 +247,6 @@ class Navbar extends Component {
     const currentUserExists =
       loggedInUser !== null && loggedInUser !== undefined;
     const { allUnseenCount, dmUnseenCount, notifications } = this.state;
-    const isMobile = window.innerWidth < 768;
-
-    console.log('loggedinUser: ', loggedInUser);
-    console.log('user: ', user);
-    console.log('currentUser: ', currentUser);
 
     if (networkStatus < 8 && currentUserExists) {
       const showUnreadFavicon = dmUnseenCount > 0 || allUnseenCount > 0;
