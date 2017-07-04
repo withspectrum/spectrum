@@ -111,8 +111,12 @@ class ThreadContainerPure extends Component {
   };
 
   render() {
-    const { data: { thread, error, networkStatus }, currentUser } = this.props;
+    const {
+      data: { thread, error, networkStatus, user },
+      currentUser,
+    } = this.props;
     const { isLoading } = this.state;
+    const loggedInUser = user || currentUser;
     const isUnavailable = !thread || thread.deleted;
     const isRestricted =
       thread &&
@@ -177,11 +181,11 @@ class ThreadContainerPure extends Component {
           <Content innerRef={scrollBody => this.scrollBody = scrollBody}>
             <Detail type="only">
               <ThreadDetail thread={thread} viewStatus={networkStatus} />
-              {thread.messageCount > 0
+              {loggedInUser && thread.messageCount > 0
                 ? <Messages
                     id={thread.id}
                     participants={participantsAndCreator}
-                    currentUser={currentUser}
+                    currentUser={loggedInUser}
                     forceScrollToBottom={this.forceScrollToBottom}
                     contextualScrollToBottom={this.contextualScrollToBottom}
                     viewStatus={networkStatus}
@@ -197,10 +201,10 @@ class ThreadContainerPure extends Component {
                       copy={`Why don't you kick off the conversation?`}
                     />
                   </ChatWrapper>}
-
+              {!loggedInUser && <UpsellSignIn />}
               {// if the user exists but isn't a subscriber to the channel,
               // show an upsell to join the channel
-              currentUser &&
+              loggedInUser &&
                 !thread.isLocked &&
                 !thread.channel.channelPermissions.isMember &&
                 <UpsellJoinChannel
@@ -210,13 +214,7 @@ class ThreadContainerPure extends Component {
                 />}
             </Detail>
           </Content>
-          {!currentUser &&
-            <Input>
-              <ChatInputWrapper type="only">
-                <UpsellSignIn />
-              </ChatInputWrapper>
-            </Input>}
-          {currentUser &&
+          {loggedInUser &&
             !thread.isLocked &&
             (thread.isCreator || thread.channel.channelPermissions.isMember) &&
             <Input>
@@ -224,7 +222,7 @@ class ThreadContainerPure extends Component {
                 <ChatInput
                   threadType="story"
                   thread={thread.id}
-                  currentUser={currentUser}
+                  currentUser={loggedInUser}
                   forceScrollToBottom={this.forceScrollToBottom}
                 />
               </ChatInputWrapper>
@@ -263,7 +261,7 @@ class ThreadContainerPure extends Component {
                 community={thread.channel.community.slug}
                 isPending={thread.channel.channelPermissions.isPending}
                 subscribe={() => this.toggleSubscription(thread.channel.id)}
-                currentUser={currentUser}
+                currentUser={loggedInUser}
               />
             </Detail>
           </Content>

@@ -377,7 +377,6 @@ class Navbar extends Component {
         </Nav>
       );
     } else {
-      console.log('data', data);
       return (
         <Nav>
           <LogoLink to="/">

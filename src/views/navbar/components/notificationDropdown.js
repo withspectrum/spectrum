@@ -31,7 +31,6 @@ const NotificationDropdownPure = ({
   currentUser,
   history,
 }) => {
-  console.log(currentUser);
   return (
     <Dropdown style={{ width: '400px' }}>
       <DropdownHeader>
