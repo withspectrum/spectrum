@@ -16,7 +16,7 @@ import {
 } from '../../api/notification';
 import { SERVER_URL } from '../../api';
 import Icon from '../../components/icons';
-import { displayLoadingNavbar, LoadingNavbar } from '../../components/loading';
+import { Loading } from '../../components/loading';
 import { Button } from '../../components/buttons';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
@@ -299,7 +299,7 @@ class Navbar extends Component {
               <NotificationDropdown
                 rawNotifications={notifications}
                 markAllRead={this.markAllNotificationsRead}
-                currentUser={currentUser}
+                currentUser={loggedInUser}
                 width={'480px'}
               />
             </IconDrop>
@@ -378,7 +378,14 @@ class Navbar extends Component {
       );
     } else {
       console.log('data', data);
-      return <LoadingNavbar />;
+      return (
+        <Nav>
+          <LogoLink to="/">
+            <Logo src="/img/mark-white.png" role="presentation" />
+          </LogoLink>
+          <Loading size={'20'} color={'bg.default'} />
+        </Nav>
+      );
     }
   }
 }
@@ -394,6 +401,5 @@ export default compose(
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
   withRouter,
-  // displayLoadingNavbar,
   connect(mapStateToProps)
 )(Navbar);

@@ -126,7 +126,7 @@ class ThreadContainerPure extends Component {
         <View>
           <Titlebar provideBack={true} backRoute={`/`} noComposer />
           <Content>
-            <Detail>
+            <Detail type="only">
               <LoadingThreadDetail />
               <ChatWrapper>
                 <HorizontalRule>
@@ -176,7 +176,6 @@ class ThreadContainerPure extends Component {
           />
           <Content innerRef={scrollBody => this.scrollBody = scrollBody}>
             <Detail type="only">
-              {!currentUser && <UpsellSignIn />}
               <ThreadDetail thread={thread} viewStatus={networkStatus} />
               {thread.messageCount > 0
                 ? <Messages
@@ -211,6 +210,12 @@ class ThreadContainerPure extends Component {
                 />}
             </Detail>
           </Content>
+          {!currentUser &&
+            <Input>
+              <ChatInputWrapper type="only">
+                <UpsellSignIn />
+              </ChatInputWrapper>
+            </Input>}
           {currentUser &&
             !thread.isLocked &&
             (thread.isCreator || thread.channel.channelPermissions.isMember) &&
