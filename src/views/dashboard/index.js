@@ -4,8 +4,6 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import generateMetaInfo from 'iris/shared/generate-meta-info';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
 import { UpsellSignIn, UpsellToReload } from '../../components/upsell';
@@ -25,6 +23,7 @@ import ThreadComposer from '../../components/threadComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import CommunityList from '../user/components/communityList';
+//$FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 
 const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
