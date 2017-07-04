@@ -28,7 +28,6 @@ import {
   ChatWrapper,
 } from '../style';
 import {
-  UpsellSignInState,
   UpsellRequestToJoinChannel,
   UpsellJoinChannelState,
   Upsell404Thread,
@@ -142,13 +141,10 @@ class ThreadContainerPure extends Component {
   };
 
   render() {
-    const {
-      data: { thread, error, networkStatus, user },
-      currentUser,
-    } = this.props;
+    const { data: { thread, networkStatus, user }, currentUser } = this.props;
     const { isLoading } = this.state;
-    const dataExists = thread && (thread.content && thread.channel);
     const loggedInUser = user || currentUser;
+    const dataExists = thread && (thread.content && thread.channel);
     const isUnavailable = !thread || thread.deleted;
     const isRestricted =
       dataExists &&
@@ -156,7 +152,6 @@ class ThreadContainerPure extends Component {
     const isFrozen = dataExists && thread.channel.isLocked;
     const hasRights =
       dataExists &&
-      loggedInUser &&
       (thread.isCreator || thread.channel.channelPermissions.isMember);
     const allClear = dataExists && (!isUnavailable && !isRestricted);
 
