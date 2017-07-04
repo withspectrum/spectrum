@@ -157,7 +157,7 @@ class ThreadContainerPure extends Component {
 
     if (networkStatus < 7 && !thread) {
       return <LoadingView />;
-    } else if (networkStatus === 7 && allClear) {
+    } else if (networkStatus < 8 && allClear) {
       const { title, description } = generateMetaInfo({
         type: 'thread',
         data: {
