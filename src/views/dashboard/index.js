@@ -25,6 +25,7 @@ import ThreadComposer from '../../components/threadComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import CommunityList from '../user/components/communityList';
+import generateMetaInfo from 'shared/generate-meta-info';
 
 const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
 

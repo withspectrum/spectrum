@@ -8,6 +8,9 @@ export const getThreadNotificationUsers = (
     .table('usersThreads')
     .getAll(id, { index: 'threadId' })
     .filter({ receiveNotifications: true })
+    .eqJoin('userId', db.table('users'))
+    .without({ right: ['id', 'createdAt'] })
+    .zip()
     .run();
 };
 

@@ -201,9 +201,9 @@ export const DropdownHeader = styled(FlexRow)`
   border-bottom: 2px solid ${({ theme }) => theme.bg.wash};
   flex: 0 0 auto;
   align-self: stretch;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 8px 16px;
   font-weight: 800;
   font-size: 14px;
   color: ${({ theme }) => theme.text.alt};

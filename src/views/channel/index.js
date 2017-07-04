@@ -7,7 +7,7 @@ import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
-import generateMetaInfo from 'iris/shared/generate-meta-info';
+import generateMetaInfo from 'shared/generate-meta-info';
 import { toggleChannelSubscriptionMutation } from '../../api/channel';
 import { addToastWithTimeout } from '../../actions/toasts';
 import ThreadComposer from '../../components/threadComposer';
@@ -64,10 +64,8 @@ class ChannelViewPure extends Component {
         }
 
         const str = isPending
-          ? `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-              .community.name}!`
-          : `Canceled request to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
-              .community.name}.`;
+          ? `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
+          : `Canceled request to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
 
         const type = isPending ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));

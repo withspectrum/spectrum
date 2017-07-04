@@ -1,6 +1,7 @@
 const passport = require('passport');
 const { Strategy: TwitterStrategy } = require('passport-twitter');
 const { getUser, createOrFindUser } = require('./models/user');
+const { createNewUsersSettings } = require('./models/usersSettings');
 
 const init = () => {
   // Setup use serialization
@@ -47,7 +48,8 @@ const init = () => {
         };
 
         createOrFindUser(user)
-          .then(user => {
+          .then(user => Promise.all([user, createNewUsersSettings(user.id)]))
+          .then(([user]) => {
             done(null, user);
           })
           .catch(err => {

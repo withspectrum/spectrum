@@ -1,7 +1,7 @@
 // @flow
 const { db } = require('./db');
 // $FlowFixMe
-const { createQueue } = require('./utils');
+const createQueue = require('../../shared/bull/create-queue');
 const channelNotificationQueue = createQueue('channel notification');
 import UserError from '../utils/UserError';
 

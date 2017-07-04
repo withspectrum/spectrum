@@ -427,6 +427,7 @@ class ThreadDetailPure extends Component {
           {currentUser &&
             !isEditing &&
             isChannelMember &&
+            (isChannelOwner || isCommunityOwner || thread.isCreator) &&
             <DropWrap className={flyoutOpen ? 'open' : ''}>
               <IconButton glyph="settings" onClick={this.toggleFlyout} />
               <Flyout>
@@ -452,24 +453,6 @@ class ThreadDetailPure extends Component {
                       onClick={this.triggerDelete}
                     />
                   </FlyoutRow>}
-                {isChannelMember &&
-                  <FlyoutRow>
-                    <IconButton
-                      glyph={
-                        thread.receiveNotifications
-                          ? 'notification-fill'
-                          : 'notification'
-                      }
-                      hoverColor="text.alt"
-                      tipText={
-                        thread.receiveNotifications
-                          ? 'Turn off notifications'
-                          : 'Get notifications'
-                      }
-                      tipLocation="top-left"
-                      onClick={this.toggleNotification}
-                    />
-                  </FlyoutRow>}
                 {thread.isCreator &&
                   thread.type === 'SLATE' &&
                   <FlyoutRow>
@@ -482,6 +465,27 @@ class ThreadDetailPure extends Component {
                     />
                   </FlyoutRow>}
               </Flyout>
+            </DropWrap>}
+
+          {isChannelMember &&
+            !isEditing &&
+            currentUser &&
+            <DropWrap>
+              <IconButton
+                glyph={
+                  thread.receiveNotifications
+                    ? 'notification-fill'
+                    : 'notification'
+                }
+                hoverColor="text.alt"
+                tipText={
+                  thread.receiveNotifications
+                    ? 'Turn off notifications'
+                    : 'Get notifications'
+                }
+                tipLocation="top-left"
+                onClick={this.toggleNotification}
+              />
             </DropWrap>}
 
           {isEditing &&

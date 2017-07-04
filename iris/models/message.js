@@ -2,10 +2,11 @@
 import striptags from 'striptags';
 const { db } = require('./db');
 // $FlowFixMe
-const { createQueue } = require('./utils');
+const createQueue = require('../../shared/bull/create-queue');
 const messageNotificationQueue = createQueue('message notification');
 const { listenToNewDocumentsIn } = require('./utils');
 const { setThreadLastActive } = require('./thread');
+import markdownLinkify from '../utils/markdown-linkify';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 
 export type MessageTypes = 'text' | 'media';
@@ -49,7 +50,10 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
         timestamp: new Date(),
         senderId: userId,
         content: {
-          body: striptags(message.content.body),
+          body: message.messageType === 'media'
+            ? message.content.body
+            : // For text messages linkify URLs and strip HTML tags
+              markdownLinkify(striptags(message.content.body)),
         },
       }),
       { returnChanges: true }
