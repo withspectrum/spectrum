@@ -210,7 +210,8 @@ class ThreadContainerPure extends Component {
                   viewStatus={networkStatus}
                 />}
 
-              {!loggedInUser && <UpsellSignInState />}
+              {isFrozen &&
+                <NullState copy="This conversation has been frozen by a moderator." />}
 
               {loggedInUser &&
                 !hasRights &&
@@ -226,11 +227,9 @@ class ThreadContainerPure extends Component {
                 thread.messageCount === 0 &&
                 <EmptyChat />}
 
-              {isFrozen &&
-                hasRights &&
-                <NullState copy="This conversation has been frozen by a moderator." />}
             </Detail>
           </Content>
+
           {loggedInUser &&
             hasRights &&
             !isFrozen &&
