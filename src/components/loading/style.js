@@ -3,6 +3,7 @@
 import styled, { keyframes } from 'styled-components';
 import { Card } from '../card';
 import { hexa, FlexCol } from '../globals';
+// $FlowFixMe
 import { Link } from 'react-router-dom';
 
 const containerFadeIn = keyframes`
@@ -226,8 +227,6 @@ export const LoadingOverlay = styled.div`
 export const LoadingNavbarContainer = styled.nav`
 	width: 100%;
 	background: ${({ theme }) => theme.text.default};
-	position: fixed;
-	top: 0;
 	display: flex;
 	align-items: center;
 	color: #fff;

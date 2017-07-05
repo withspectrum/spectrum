@@ -84,51 +84,56 @@ class ThreadFeedPure extends Component {
 
   render() {
     const {
-      data: { threads, loading, error, hasNextPage },
+      data: { threads, loading, user, error, hasNextPage, networkStatus },
+      data,
       currentUser,
       viewContext,
     } = this.props;
+    const dataExists = threads && threads.length;
+    const loggedInUser = user || currentUser;
 
-    if (loading) {
-      return (
-        <Threads>
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-          <LoadingThread />
-        </Threads>
-      );
-    } else if (error) {
+    if (networkStatus === 7) {
+      if (threads.length === 0) {
+        return <NullState />;
+      } else {
+        return (
+          <Threads>
+            {threads.map(thread => {
+              return (
+                <ThreadFeedCard
+                  key={thread.node.id}
+                  data={thread.node}
+                  viewContext={viewContext}
+                />
+              );
+            })}
+
+            {hasNextPage &&
+              <FetchMoreButton
+                color={'brand.default'}
+                loading={this.state.isFetching}
+                onClick={this.fetchMore}
+              >
+                Load more threads
+              </FetchMoreButton>}
+          </Threads>
+        );
+      }
+    } else if (networkStatus === 8) {
       return <ErrorState />;
-    } else if (threads.length === 0 && currentUser) {
-      return <NullState />;
     } else {
       return (
         <Threads>
-          {threads.map(thread => {
-            return (
-              <ThreadFeedCard
-                key={thread.node.id}
-                data={thread.node}
-                viewContext={viewContext}
-              />
-            );
-          })}
-
-          {hasNextPage &&
-            <FetchMoreButton
-              color={'brand.default'}
-              loading={this.state.isFetching}
-              onClick={this.fetchMore}
-            >
-              Load more threads
-            </FetchMoreButton>}
+          <LoadingThread />
+          <LoadingThread />
+          <LoadingThread />
+          <LoadingThread />
+          <LoadingThread />
+          <LoadingThread />
+          <LoadingThread />
+          <LoadingThread />
+          <LoadingThread />
+          <LoadingThread />
         </Threads>
       );
     }

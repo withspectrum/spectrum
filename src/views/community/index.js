@@ -98,9 +98,15 @@ class CommunityViewPure extends Component {
   };
 
   render() {
-    const { match, data: { community, error }, currentUser } = this.props;
+    const { match, data: { community, error, user }, currentUser } = this.props;
     const { isLoading } = this.state;
     const communitySlug = match.params.communitySlug;
+    const dataExists = community && community.communityPermissions;
+    const hasRights =
+      dataExists &&
+      (community.communityPermissions.isMember ||
+        community.communityPermissions.isOwner);
+    const loggedInUser = user || currentUser;
 
     if (error) {
       return (
@@ -156,7 +162,7 @@ class CommunityViewPure extends Component {
         <Head title={title} description={description} />
         <CoverColumn>
           <CoverPhoto src={community.coverPhoto}>
-            {currentUser &&
+            {loggedInUser &&
               (!community.communityPermissions.isOwner &&
                 community.communityPermissions.isMember) &&
               <CoverButton
@@ -174,27 +180,25 @@ class CommunityViewPure extends Component {
               <CommunityProfile data={{ community }} profileSize="full" />
               <ChannelListCard
                 slug={communitySlug.toLowerCase()}
-                currentUser={currentUser}
+                currentUser={loggedInUser}
               />
             </Column>
 
             <Column type="primary">
-              {!currentUser && <UpsellSignIn entity={community} />}
-              {currentUser &&
-                !community.communityPermissions.isMember &&
-                <UpsellJoinCommunity
-                  community={community}
-                  loading={isLoading}
-                  join={this.toggleMembership}
-                />}
-              {currentUser &&
-                (community.communityPermissions.isMember ||
-                  community.communityPermissions.isOwner) &&
-                <ThreadComposer activeCommunity={communitySlug} />}
+
+              {loggedInUser
+                ? hasRights
+                    ? <ThreadComposer activeCommunity={communitySlug} />
+                    : <UpsellJoinCommunity
+                        community={community}
+                        loading={isLoading}
+                        join={this.toggleMembership}
+                      />
+                : <UpsellSignIn entity={community} />}
               <CommunityThreadFeed
                 viewContext="community"
                 slug={communitySlug}
-                currentUser={currentUser}
+                currentUser={loggedInUser}
               />
             </Column>
           </CoverRow>
