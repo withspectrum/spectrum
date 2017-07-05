@@ -180,15 +180,14 @@ class ThreadContainerPure extends Component {
             <Detail type="only">
               <ThreadDetail thread={thread} viewStatus={networkStatus} />
 
-              {thread.messageCount > 0 &&
-                <Messages
-                  id={thread.id}
-                  participants={participantsAndCreator}
-                  currentUser={loggedInUser}
-                  forceScrollToBottom={this.forceScrollToBottom}
-                  contextualScrollToBottom={this.contextualScrollToBottom}
-                  viewStatus={networkStatus}
-                />}
+              <Messages
+                id={thread.id}
+                participants={participantsAndCreator}
+                currentUser={loggedInUser}
+                forceScrollToBottom={this.forceScrollToBottom}
+                contextualScrollToBottom={this.contextualScrollToBottom}
+                viewStatus={networkStatus}
+              />
 
               {isFrozen &&
                 <NullState copy="This conversation has been frozen by a moderator." />}
@@ -200,12 +199,6 @@ class ThreadContainerPure extends Component {
                   subscribe={this.toggleSubscription}
                   loading={isLoading}
                 />}
-
-              {loggedInUser &&
-                !isFrozen &&
-                hasRights &&
-                thread.messageCount === 0 &&
-                <EmptyChat />}
 
             </Detail>
           </Content>
