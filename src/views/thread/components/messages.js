@@ -84,13 +84,14 @@ class MessagesWithData extends Component {
       data,
       toggleReaction,
       forceScrollToBottom,
+      messageCount,
     } = this.props;
     const dataExists = data.thread && data.thread.messageConnection;
-    console.log('data', data);
-    console.log('subscription', this.state.subscription);
+    const messagesExist =
+      dataExists && data.thread.messageConnection.edges.length > 0;
 
     if (networkStatus === 7) {
-      if (dataExists) {
+      if (messagesExist) {
         const sortedMessages = sortAndGroupMessages(
           data.thread.messageConnection.edges
         );
