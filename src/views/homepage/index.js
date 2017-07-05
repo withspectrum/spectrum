@@ -20,6 +20,9 @@ import {
   Wrapper,
   Tagline,
   Button,
+  ButtonTwitter,
+  ButtonFacebook,
+  ButtonGoogle,
   LinkButton,
   LogoContainer,
   LogoWhite,
@@ -27,6 +30,7 @@ import {
   Copy,
   Footer,
   LinkBlock,
+  LoginCard,
 } from './style';
 
 class Homepage extends Component {
@@ -46,37 +50,34 @@ class Homepage extends Component {
             <FlexCol>
               <LogoContainer><LogoWhite /></LogoContainer>
               <Tagline>Where communities are built.</Tagline>
-              <Button
-                href={`${SERVER_URL}/auth/twitter`}
-                onClick={() => this.trackSignin('primary cta')}
-              >
-                <Icon glyph="twitter" />
-                {' '}
-                <span>Sign in with Twitter</span>
-              </Button>
+              <LoginCard>
+                <ButtonTwitter
+                  href={`${SERVER_URL}/auth/twitter`}
+                  onClick={() => this.trackSignin('primary cta')}
+                >
+                  <Icon glyph="twitter" />
+                  {' '}
+                  <span>Sign in with Twitter</span>
+                </ButtonTwitter>
 
-              <Button
-                href={`${SERVER_URL}/auth/facebook`}
-                onClick={() => this.trackSignin('primary cta')}
-              >
-                <Icon glyph="facebook" />
-                {' '}
-                <span>Sign in with Facebook</span>
-              </Button>
+                <ButtonFacebook
+                  href={`${SERVER_URL}/auth/facebook`}
+                  onClick={() => this.trackSignin('primary cta')}
+                >
+                  <Icon glyph="facebook" />
+                  {' '}
+                  <span>Sign in with Facebook</span>
+                </ButtonFacebook>
 
-              <Button
-                href={`${SERVER_URL}/auth/google`}
-                onClick={() => this.trackSignin('primary cta')}
-              >
-                <span>Sign in with Google</span>
-              </Button>
-
-              <Button
-                href={`${SERVER_URL}/auth/github`}
-                onClick={() => this.trackSignin('primary cta')}
-              >
-                <span>Sign in with GitHub</span>
-              </Button>
+                <ButtonGoogle
+                  href={`${SERVER_URL}/auth/google`}
+                  onClick={() => this.trackSignin('primary cta')}
+                >
+                  <Icon glyph="google" />
+                  {' '}
+                  <span>Sign in with Google</span>
+                </ButtonGoogle>
+              </LoginCard>
             </FlexCol>
             <img src="/img/login.svg" alt="Where communities are built." />
           </SectionContent>
@@ -131,14 +132,34 @@ class Homepage extends Component {
               <Copy>
                 Spectrum is free for everyone, so dive on in!
               </Copy>
-              <LinkButton
-                href={`${SERVER_URL}/auth/twitter`}
-                onClick={() => this.trackSignin('secondary cta')}
-              >
-                <Icon glyph="twitter" />
-                {' '}
-                <span>Sign in with Twitter</span>
-              </LinkButton>
+              <LoginCard noShadow>
+                <ButtonTwitter
+                  href={`${SERVER_URL}/auth/twitter`}
+                  onClick={() => this.trackSignin('secondary cta')}
+                >
+                  <Icon glyph="twitter" />
+                  {' '}
+                  <span>Sign in with Twitter</span>
+                </ButtonTwitter>
+
+                <ButtonFacebook
+                  href={`${SERVER_URL}/auth/facebook`}
+                  onClick={() => this.trackSignin('secondary cta')}
+                >
+                  <Icon glyph="facebook" />
+                  {' '}
+                  <span>Sign in with Facebook</span>
+                </ButtonFacebook>
+
+                <ButtonGoogle
+                  href={`${SERVER_URL}/auth/google`}
+                  onClick={() => this.trackSignin('secondary cta')}
+                >
+                  <Icon glyph="google" />
+                  {' '}
+                  <span>Sign in with Google</span>
+                </ButtonGoogle>
+              </LoginCard>
             </FlexCol>
           </SectionContent>
           <GoopyFour />

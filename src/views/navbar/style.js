@@ -28,11 +28,8 @@ export const UserProfileAvatar = styled(Avatar)`
 
 export const Nav = styled(FlexRow)`
   width: 100%;
-  background: ${({ theme }) =>
-    process.env.NODE_ENV === 'production'
-      ? theme.text.default
-      : theme.warn.alt};
-  display: flex;
+  background: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
+  display: ${props => (props.hideOnMobile ? 'none' : 'flex')};
   align-items: stretch;
   color: ${({ theme }) => theme.text.reverse};
   justify-content: space-between;
@@ -67,9 +64,7 @@ export const LogoLink = styled(Link)`
   flex-direction: column;
   justify-content: center;
 
-  ${() =>
-    process.env.NODE_ENV !== 'production' &&
-    css`
+  ${() => process.env.NODE_ENV !== 'production' && css`
     &:after {
       content: "Dev";
       margin-top: 4px;
@@ -78,10 +73,22 @@ export const LogoLink = styled(Link)`
   `}
 `;
 
-export const SigninLink = styled(Link)`
+export const SigninLink = styled.button`
   width: 100%;
   display: flex;
   justify-content: center;
+  align-self: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 14px;
+  background: transparent;
+  border: none;
+  webkit-display: none;
+  color: #fff;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const Logo = styled.img`
@@ -146,9 +153,7 @@ export const IconLink = styled(Link)`
   }
 
 ${/* handles unseen notification counts for both DMs and Notifications */ ''}
-  ${props =>
-    props.withCount &&
-    css`
+  ${props => props.withCount && css`
     > .icon:after {
       content: ${props.withCount ? `'${props.withCount}'` : `''`};
       position: absolute;
@@ -157,16 +162,10 @@ ${/* handles unseen notification counts for both DMs and Notifications */ ''}
       font-size: 14px;
       font-weight: 600;
       background: ${({ theme }) => theme.bg.default};
-      color: ${({ theme }) =>
-        process.env.NODE_ENV === 'production'
-          ? theme.text.default
-          : theme.warn.alt};;
+      color: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};;
       border-radius: 8px;
       padding: 2px 4px;
-      border: 2px solid ${({ theme }) =>
-        process.env.NODE_ENV === 'production'
-          ? theme.text.default
-          : theme.warn.alt};
+      border: 2px solid ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
     }
   `}
 

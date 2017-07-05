@@ -7,6 +7,7 @@ import CreateCommunityModal from './CreateCommunityModal';
 import CreateChannelModal from './CreateChannelModal';
 import DeleteDoubleCheckModal from './DeleteDoubleCheckModal';
 import UpgradeModal from './UpgradeModal';
+import LoginModal from './LoginModal';
 
 const MODAL_COMPONENTS = {
   USER_PROFILE_MODAL: UserProfileModal,
@@ -14,6 +15,7 @@ const MODAL_COMPONENTS = {
   CREATE_CHANNEL_MODAL: CreateChannelModal,
   DELETE_DOUBLE_CHECK_MODAL: DeleteDoubleCheckModal,
   UPGRADE_MODAL: UpgradeModal,
+  LOGIN: LoginModal,
 };
 
 /*

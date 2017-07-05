@@ -261,14 +261,12 @@ export const Tagline = styled(H2)`
 
 export const Button = styled.a`
   display: flex;
-  flex: 0 0 auto;
+  flex-shrink: 1;
   z-index: 2;
   flex-direction: flex-row;
   align-self: flex-start;
   align-items: center;
   color: ${({ theme }) => theme.text.reverse};
-  background-color: transparent;
-  border: 2px solid currentColor;
   border-radius: 8px;
   padding: 8px;
   padding-right: 16px;
@@ -292,20 +290,25 @@ export const Button = styled.a`
   }
 
   &:hover {
-    border-radius: 16px;
-    border: 2px solid transparent;
-    background-color: ${({ theme }) => theme.bg.default};
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     transition: ${Transition.hover.on};
     cursor: pointer;
-
-    span {
-      color: ${({ theme }) => theme.brand.default};
-    }
-
-    svg {
-      fill: ${({ theme }) => theme.brand.default} !important;
-    }
   }
+`;
+
+export const ButtonTwitter = styled(Button)`
+	background: ${props => props.theme.social.twitter.default};
+	color: #fff;
+`;
+
+export const ButtonFacebook = styled(Button)`
+	background: ${props => props.theme.social.facebook.default};
+	color: #fff;
+`;
+
+export const ButtonGoogle = styled(Button)`
+	background: ${props => props.theme.social.google.default};
+	color: #fff;
 `;
 
 export const LinkButton = styled(Button)`
@@ -350,5 +353,21 @@ export const Copy = styled(P)`
 
 	&:not(:first-of-type){
 		margin-top: 24px;
+	}
+`;
+
+export const LoginCard = styled.div`
+	border-radius: 12px;
+	padding: 16px 0;
+	margin-top: 16px;
+	align-self: flex-start;
+	align-items: flex-start;
+
+	a {
+		box-shadow: ${props => (props.noShadow ? 'none' : '0 4px 8px rgba(0,0,0,0.1)')};
+	}
+
+	a + a {
+		margin-top: 16px;
 	}
 `;

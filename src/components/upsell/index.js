@@ -19,6 +19,7 @@ import {
   Profile,
   Cost,
   LargeEmoji,
+  SignInButtons,
 } from './style';
 // $FlowFixMe
 import StripeCheckout from 'react-stripe-checkout';
@@ -44,9 +45,9 @@ export const NullState = props => (
   </NullCol>
 );
 
-const login = () => {
+const login = method => {
   // log the user in and return them to this page
-  return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window.location.href}`);
+  return (window.location.href = `${SERVER_URL}/auth/${method}?r=${window.location.href}`);
 };
 
 export const UpsellSignIn = ({ entity }) => {
@@ -58,7 +59,38 @@ export const UpsellSignIn = ({ entity }) => {
     <NullCard bg="chat">
       <Title>Come on in, the chatter's fine.</Title>
       <Subtitle>{subtitle}</Subtitle>
-      <Button onClick={login} icon="twitter" label>Sign in with Twitter</Button>
+      <SignInButtons>
+        <Button
+          gradientTheme={'none'}
+          hoverColor={'social.twitter.default'}
+          color={'social.twitter.default'}
+          onClick={() => login('twitter')}
+          icon="twitter"
+          label
+        >
+          Sign in with Twitter
+        </Button>
+        <Button
+          gradientTheme={'none'}
+          hoverColor={'social.facebook.default'}
+          color={'social.facebook.default'}
+          onClick={() => login('facebook')}
+          icon="facebook"
+          label
+        >
+          Sign in with Facebook
+        </Button>
+        <Button
+          gradientTheme={'none'}
+          hoverColor={'social.google.default'}
+          color={'social.google.default'}
+          onClick={() => login('google')}
+          icon="google"
+          label
+        >
+          Sign in with Google
+        </Button>
+      </SignInButtons>
     </NullCard>
   );
 };

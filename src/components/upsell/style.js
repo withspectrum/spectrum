@@ -9,7 +9,7 @@ export const Title = styled.h1`
   font-weight: 700;
   font-size: 1.25rem;
   line-height: 1.25;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   padding: 0;
   font-weight: 700;
   font-size: 24px;
@@ -126,4 +126,18 @@ export const LargeEmoji = styled.div`
   flex 1;
   padding: 16px 0 32px;
   font-size: 48px;
+`;
+
+export const SignInButtons = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  button {
+    margin-top: 8px;
+  }
+
+  button + button {
+    margin-left: 8px;
+  }
 `;
