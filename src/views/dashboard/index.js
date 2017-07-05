@@ -55,9 +55,7 @@ class DashboardPure extends Component {
   }
 
   graduate = () => {
-    this.setState({
-      isNewUser: false,
-    });
+    window.location.href = '/';
   };
 
   render() {
