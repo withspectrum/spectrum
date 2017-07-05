@@ -60,7 +60,7 @@ export const Cost = styled(Subtitle)`
 `;
 
 export const NullCol = styled(FlexCol)`
-  background-image: url('/img/fills/${props => (props.bg ? `${props.bg}` : 'locked')}.svg');
+  background-image: ${props => (props.bg ? `url('/img/fills/${props.bg}.svg')` : 'none')};
   background-color: transparent;
   background-size: 110% auto;
   background-repeat: ${props => (props.repeat ? 'repeat-y' : 'no-repeat')};
@@ -79,7 +79,7 @@ export const NullCol = styled(FlexCol)`
 export const NullRow = styled(FlexRow)`
   background-image: url('/img/fills/${props => (props.bg ? `${props.bg}` : 'locked')}.svg');
   background-color: transparent;
-  background-size: 100% auto;
+  background-size: 110% auto;
   background-repeat: no-repeat;
   background-attachment: center;
   width: 100%;

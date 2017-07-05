@@ -6,7 +6,7 @@ import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
 import Icon from '../../../components/icons';
 import { HorizontalRule } from '../../../components/globals';
-import { displayLoadingState } from '../../../components/loading';
+import { LoadingChat } from '../../../components/loading';
 import { ChatWrapper } from '../style';
 import { getThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
@@ -63,42 +63,56 @@ class MessagesWithData extends Component {
   };
 
   render() {
-    const { data, toggleReaction, forceScrollToBottom } = this.props;
-    if (data.error) {
+    const {
+      data: { networkStatus },
+      data,
+      toggleReaction,
+      forceScrollToBottom,
+    } = this.props;
+    const hasThreadData = data.thread && data.thread.messageConnection;
+
+    if (networkStatus < 8 && hasThreadData) {
+      const sortedMessages = sortAndGroupMessages(
+        data.thread.messageConnection.edges
+      );
+
+      return (
+        <ChatWrapper>
+          <HorizontalRule>
+            <hr />
+            <Icon glyph={'message'} />
+            <hr />
+          </HorizontalRule>
+          <ChatMessages
+            threadId={data.thread.id}
+            toggleReaction={toggleReaction}
+            messages={sortedMessages}
+            threadType={'story'}
+            forceScrollToBottom={forceScrollToBottom}
+          />
+        </ChatWrapper>
+      );
+    } else if (networkStatus === 7 && !hasThreadData) {
+      return <div>No messages yet!</div>;
+    } else if (networkStatus < 7 && !hasThreadData) {
+      return (
+        <ChatWrapper>
+          <HorizontalRule>
+            <hr />
+            <Icon glyph={'message'} />
+            <hr />
+          </HorizontalRule>
+          <LoadingChat />
+        </ChatWrapper>
+      );
+    } else {
       return <div>Error!</div>;
     }
-
-    if (!data.thread || !data.thread.messageConnection) {
-      return <div>No messages yet!</div>;
-    }
-
-    const sortedMessages = sortAndGroupMessages(
-      data.thread.messageConnection.edges
-    );
-
-    return (
-      <ChatWrapper>
-        <HorizontalRule>
-          <hr />
-          <Icon glyph={'message'} />
-          <hr />
-        </HorizontalRule>
-        <ChatMessages
-          threadId={data.thread.id}
-          toggleReaction={toggleReaction}
-          messages={sortedMessages}
-          threadType={'story'}
-          forceScrollToBottom={forceScrollToBottom}
-        />
-      </ChatWrapper>
-    );
   }
 }
 
-const Messages = compose(
-  toggleReactionMutation,
-  getThreadMessages,
-  displayLoadingState
-)(MessagesWithData);
+const Messages = compose(toggleReactionMutation, getThreadMessages)(
+  MessagesWithData
+);
 
 export default Messages;

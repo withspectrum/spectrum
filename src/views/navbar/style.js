@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
+import Icon from '../../components/icons';
 import { Transition, FlexRow, hexa } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
 
@@ -28,10 +29,7 @@ export const UserProfileAvatar = styled(Avatar)`
 
 export const Nav = styled(FlexRow)`
   width: 100%;
-  background: ${({ theme }) =>
-    process.env.NODE_ENV === 'production'
-      ? theme.text.default
-      : theme.warn.alt};
+  background: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
   display: flex;
   align-items: stretch;
   color: ${({ theme }) => theme.text.reverse};
@@ -67,9 +65,7 @@ export const LogoLink = styled(Link)`
   flex-direction: column;
   justify-content: center;
 
-  ${() =>
-    process.env.NODE_ENV !== 'production' &&
-    css`
+  ${() => process.env.NODE_ENV !== 'production' && css`
     &:after {
       content: "Dev";
       margin-top: 4px;
@@ -146,9 +142,7 @@ export const IconLink = styled(Link)`
   }
 
 ${/* handles unseen notification counts for both DMs and Notifications */ ''}
-  ${props =>
-    props.withCount &&
-    css`
+  ${/* ${props => props.withCount && css`
     > .icon:after {
       content: ${props.withCount ? `'${props.withCount}'` : `''`};
       position: absolute;
@@ -157,18 +151,12 @@ ${/* handles unseen notification counts for both DMs and Notifications */ ''}
       font-size: 14px;
       font-weight: 600;
       background: ${({ theme }) => theme.bg.default};
-      color: ${({ theme }) =>
-        process.env.NODE_ENV === 'production'
-          ? theme.text.default
-          : theme.warn.alt};;
+      color: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};;
       border-radius: 8px;
       padding: 2px 4px;
-      border: 2px solid ${({ theme }) =>
-        process.env.NODE_ENV === 'production'
-          ? theme.text.default
-          : theme.warn.alt};
+      border: 2px solid ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
     }
-  `}
+  `} */ ''}
 
   &[data-active~="true"] {
     box-shadow: inset 0 -4px 0 ${({ theme }) => theme.bg.default};
@@ -190,6 +178,28 @@ ${/* handles unseen notification counts for both DMs and Notifications */ ''}
       height: 32px;
     }
   }
+`;
+
+export const IconWithCount = styled(Icon)`
+
+&:after {
+  content: ${props => (props.withCount ? `'${props.withCount}'` : `''`)};
+${/* handles unseen notification counts for both DMs and Notifications */ ''}
+  ${/* ${props => props.withCount && css`
+    &:after {
+      content: ${props.withCount ? `'${props.withCount}'` : `''`};
+      position: absolute;
+      left: calc(100% - 12px);
+      top: -2px;
+      font-size: 14px;
+      font-weight: 600;
+      background: ${({ theme }) => theme.bg.default};
+      color: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};;
+      border-radius: 8px;
+      padding: 2px 4px;
+      border: 2px solid ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
+    }
+  `} */ ''}
 `;
 
 export const Label = styled.span`

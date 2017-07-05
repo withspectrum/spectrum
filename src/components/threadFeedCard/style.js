@@ -97,6 +97,11 @@ export const Creator = styled.div`
   border-radius: 100%;
   border: 2px solid ${({ theme }) => theme.brand.alt};
   pointer-events: all;
+
+  object:after{
+    right: -6px;
+    bottom: -1px;
+  }
 `;
 
 export const Meta = styled.span`

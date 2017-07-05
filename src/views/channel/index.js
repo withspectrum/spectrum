@@ -80,7 +80,7 @@ class ChannelViewPure extends Component {
   };
 
   render() {
-    const { match, data: { error, channel }, currentUser } = this.props;
+    const { match, data: { error, channel }, data, currentUser } = this.props;
     const { isLoading } = this.state;
     const communitySlug = match.params.communitySlug;
     const channelSlug = match.params.channelSlug;
@@ -205,6 +205,7 @@ class ChannelViewPure extends Component {
             noComposer={!channel.channelPermissions.isMember}
           />
           <Column type="secondary">
+            {console.log(channel)}
             <ChannelProfile data={{ channel }} profileSize="full" />
 
             {currentUser &&

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Tooltip } from '../globals';
 
 /* eslint no-eval: 0 */
@@ -26,6 +26,22 @@ export const SvgWrapper = styled.div`
   position: relative;
   color: inherit;
   ${props => (props.tipText ? Tooltip(props) : '')};
+
+  ${props => props.count && css`
+    &:after {
+      content: ${props.count ? `'${props.count}'` : `''`};
+      position: absolute;
+      left: calc(100% - 12px);
+      top: -2px;
+      font-size: 14px;
+      font-weight: 600;
+      background: ${({ theme }) => theme.bg.default};
+      color: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};;
+      border-radius: 8px;
+      padding: 2px 4px;
+      border: 2px solid ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
+    }
+  `}
 `;
 
 class Icon extends React.Component {
@@ -433,6 +449,7 @@ class Icon extends React.Component {
         tipText={this.props.tipText}
         tipLocation={this.props.tipLocation}
         onboarding={this.props.onboarding}
+        count={this.props.withCount}
         className={'icon'}
       >
         <InlineSvg

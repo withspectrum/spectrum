@@ -16,12 +16,13 @@ import {
 } from '../../api/notification';
 import { SERVER_URL } from '../../api';
 import Icon from '../../components/icons';
-import { displayLoadingNavbar } from '../../components/loading';
+import { Loading } from '../../components/loading';
 import { Button } from '../../components/buttons';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
 import Head from '../../components/head';
 import { getDistinctNotifications } from '../../views/notifications/utils';
+import { storeItem } from '../../helpers/localStorage';
 import {
   saveUserDataToLocalStorage,
   logout,
@@ -54,59 +55,71 @@ class Navbar extends Component {
   }
 
   calculateUnseenCounts = () => {
-    const { data: { user }, notificationsQuery, match } = this.props;
-    const currentUser = user;
-    let notifications =
-      currentUser &&
-      notificationsQuery.notifications.edges.map(
-        notification => notification.node
-      );
+    const {
+      data: { user },
+      notificationsQuery: { networkStatus },
+      notificationsQuery,
+      currentUser,
+      match,
+    } = this.props;
+    const loggedInUser = user || currentUser;
 
-    notifications = getDistinctNotifications(notifications);
+    if (networkStatus === 7) {
+      let notifications =
+        loggedInUser &&
+        notificationsQuery.notifications.edges.map(
+          notification => notification.node
+        );
+      notifications = getDistinctNotifications(notifications);
 
-    /*
-      NOTE:
-      This is hacky, but by getting the string after the last slash in the current url, we can compare it against in the incoming notifications in order to not show a new notification bubble on views the user is already looking at. This only applies to /messages/:threadId or /thread/:id - by matching this url param with the incoming notification.context.id we can determine whether or not to increment the count.
-    */
-    const id = match.url.substr(match.url.lastIndexOf('/') + 1);
+      /*
+        NOTE:
+        This is hacky, but by getting the string after the last slash in the current url, we can compare it against in the incoming notifications in order to not show a new notification bubble on views the user is already looking at. This only applies to /messages/:threadId or /thread/:id - by matching this url param with the incoming notification.context.id we can determine whether or not to increment the count.
+      */
+      const id = match.url.substr(match.url.lastIndexOf('/') + 1);
 
-    const dmUnseenCount =
-      notifications &&
-      notifications.length > 0 &&
-      notifications
-        .filter(notification => notification.isSeen === false)
-        .filter(notification => {
-          // SEE NOTE ABOVE
-          if (notification.context.id !== id) return notification;
-          // if the notification context matches the current route, go ahead and mark it as seen
-          this.props.markSingleNotificationSeen(notification.id);
-          return null;
-        })
-        .filter(
-          notification => notification.context.type === 'DIRECT_MESSAGE_THREAD'
-        ).length;
+      const dmUnseenCount =
+        notifications &&
+        notifications.length > 0 &&
+        notifications
+          .filter(notification => notification.isSeen === false)
+          .filter(notification => {
+            // SEE NOTE ABOVE
+            if (notification.context.id !== id) return notification;
+            // if the notification context matches the current route, go ahead and mark it as seen
+            this.props.markSingleNotificationSeen(notification.id);
+            return null;
+          })
+          .filter(
+            notification =>
+              notification.context.type === 'DIRECT_MESSAGE_THREAD'
+          ).length;
 
-    const allUnseenCount =
-      notifications &&
-      notifications.length > 0 &&
-      notifications
-        .filter(notification => notification.isSeen === false)
-        .filter(notification => {
-          // SEE NOTE ABOVE
-          if (notification.context.id !== id) return notification;
-          // if the notification context matches the current route, go ahead and mark it as seen
-          this.props.markSingleNotificationSeen(notification.id);
-          return null;
-        })
-        .filter(
-          notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
-        ).length;
+      const allUnseenCount =
+        notifications &&
+        notifications.length > 0 &&
+        notifications
+          .filter(notification => notification.isSeen === false)
+          .filter(notification => {
+            // SEE NOTE ABOVE
+            if (notification.context.id !== id) return notification;
+            // if the notification context matches the current route, go ahead and mark it as seen
+            this.props.markSingleNotificationSeen(notification.id);
+            return null;
+          })
+          .filter(
+            notification =>
+              notification.context.type !== 'DIRECT_MESSAGE_THREAD'
+          ).length;
 
-    return {
-      allUnseenCount,
-      dmUnseenCount,
-      notifications,
-    };
+      return {
+        allUnseenCount,
+        dmUnseenCount,
+        notifications,
+      };
+    } else {
+      return;
+    }
   };
 
   formattedCount = count => {
@@ -117,11 +130,30 @@ class Navbar extends Component {
     } else return false;
   };
 
-  componentDidMount() {
-    const { data: { user }, dispatch, history, match } = this.props;
-    const currentUser = user;
+  componentDidUpdate(prevProps) {
+    // if the query returned notifications
+    if (
+      this.props.notificationsQuery.notifications &&
+      !prevProps.notificationsQuery.notifications
+    ) {
+      this.setState(this.calculateUnseenCounts());
+    }
 
-    if (currentUser && currentUser !== null) {
+    // listen for incoming changes and recalculate notifications count
+    if (
+      prevProps.notificationsQuery.notifications &&
+      prevProps.notificationsQuery.notifications.edges.length !==
+        this.props.notificationsQuery.notifications.edges.length
+    ) {
+      this.setState(this.calculateUnseenCounts());
+    }
+
+    const { data: { user }, dispatch, history, match } = this.props;
+
+    // if no user was found, escape
+    if (!user) return;
+
+    if (prevProps.data.user !== user && user !== null) {
       dispatch(saveUserDataToLocalStorage(user));
 
       // if the user lands on /home, it means they just logged in. If this code
@@ -131,22 +163,6 @@ class Navbar extends Component {
         history.push('/');
       }
       this.subscribe();
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!this.props.data.user) return;
-    if (!this.props.notificationsQuery) return;
-    if (!prevProps.notificationsQuery) {
-      this.setState(this.calculateUnseenCounts());
-      return;
-    }
-
-    if (
-      prevProps.notificationsQuery.notifications.edges.length !==
-      this.props.notificationsQuery.notifications.edges.length
-    ) {
-      this.setState(this.calculateUnseenCounts());
     }
   }
 
@@ -234,32 +250,24 @@ class Navbar extends Component {
 
   login = () => {
     // log the user in and return them to this page
-    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window
-      .location.href}`);
+    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window.location.href}`);
   };
 
   render() {
-    const { match, data: { user } } = this.props;
-    const currentUser = user;
+    const {
+      match,
+      data: { user, networkStatus },
+      data,
+      currentUser,
+    } = this.props;
+    const loggedInUser = user || currentUser;
+    const currentUserExists =
+      loggedInUser !== null && loggedInUser !== undefined;
     const { allUnseenCount, dmUnseenCount, notifications } = this.state;
 
-    if (!currentUser || currentUser === null) {
-      return (
-        <Nav>
-          <Section left hideOnMobile>
-            <LogoLink to="/">
-              <Logo src="/img/mark-white.png" role="presentation" />
-            </LogoLink>
-          </Section>
-          <Section right>
-            <Button onClick={this.login} icon="twitter">
-              Sign in
-            </Button>
-          </Section>
-        </Nav>
-      );
-    } else {
+    if (networkStatus < 8 && currentUserExists) {
       const showUnreadFavicon = dmUnseenCount > 0 || allUnseenCount > 0;
+
       return (
         <Nav>
           <Head showUnreadFavicon={showUnreadFavicon} />
@@ -277,9 +285,11 @@ class Navbar extends Component {
               data-active={match.url.includes('/messages')}
               to="/messages"
               onClick={this.markDmNotificationsAsSeen}
-              withCount={this.formattedCount(dmUnseenCount)}
             >
-              <Icon glyph={dmUnseenCount > 0 ? 'message-fill' : 'message'} />
+              <Icon
+                glyph={dmUnseenCount > 0 ? 'message-fill' : 'message'}
+                withCount={this.formattedCount(dmUnseenCount)}
+              />
               <Label>Messages</Label>
             </IconLink>
 
@@ -297,33 +307,33 @@ class Navbar extends Component {
               <IconLink
                 data-active={match.url === '/notifications'}
                 to="/notifications"
-                withCount={this.formattedCount(allUnseenCount)}
               >
                 <Icon
                   glyph={
                     allUnseenCount > 0 ? 'notification-fill' : 'notification'
                   }
+                  withCount={this.formattedCount(allUnseenCount)}
                 />
               </IconLink>
               <NotificationDropdown
                 rawNotifications={notifications}
                 markAllRead={this.markAllNotificationsRead}
-                currentUser={currentUser}
+                currentUser={loggedInUser}
                 width={'480px'}
               />
             </IconDrop>
 
             <IconDrop>
               <IconLink
-                data-active={match.url === `/users/${currentUser.username}`}
-                to={`/users/${currentUser.username}`}
+                data-active={match.url === `/users/${loggedInUser.username}`}
+                to={`/users/${loggedInUser.username}`}
               >
                 <UserProfileAvatar
-                  src={`${currentUser.profilePhoto}`}
-                  isPro={currentUser.isPro}
+                  src={`${loggedInUser.profilePhoto}`}
+                  isPro={loggedInUser.isPro}
                 />
               </IconLink>
-              <ProfileDropdown logout={this.logout} user={currentUser} />
+              <ProfileDropdown logout={this.logout} user={loggedInUser} />
             </IconDrop>
           </Section>
           <Section hideOnDesktop>
@@ -336,21 +346,23 @@ class Navbar extends Component {
               data-active={match.url.includes('/messages')}
               to="/messages"
               onClick={this.markDmNotificationsAsSeen}
-              withCount={this.formattedCount(dmUnseenCount)}
             >
-              <Icon glyph={dmUnseenCount > 0 ? 'message-fill' : 'message'} />
+              <Icon
+                glyph={dmUnseenCount > 0 ? 'message-fill' : 'message'}
+                withCount={this.formattedCount(dmUnseenCount)}
+              />
 
               <Label>Messages</Label>
             </IconLink>
             <IconLink
               data-active={match.url === '/notifications'}
               to="/notifications"
-              withCount={this.formattedCount(allUnseenCount)}
             >
               <Icon
                 glyph={
                   allUnseenCount > 0 ? 'notification-fill' : 'notification'
                 }
+                withCount={this.formattedCount(allUnseenCount)}
               />
               <Label>Notifications</Label>
             </IconLink>
@@ -361,13 +373,41 @@ class Navbar extends Component {
             </IconLink>
 
             <IconLink
-              data-active={match.url === `/users/${currentUser.username}`}
-              to={`/users/${currentUser.username}`}
+              data-active={match.url === `/users/${loggedInUser.username}`}
+              to={`/users/${loggedInUser.username}`}
             >
               <Icon glyph="profile" />
               <Label>Profile</Label>
             </IconLink>
           </Section>
+        </Nav>
+      );
+    } else if (networkStatus >= 7) {
+      return (
+        <Nav>
+          <Section left hideOnMobile>
+            <LogoLink to="/">
+              <Logo src="/img/mark-white.png" role="presentation" />
+            </LogoLink>
+            <IconLink data-active={match.url === '/explore'} to="/explore">
+              <Icon glyph="explore" />
+              <Label>Explore</Label>
+            </IconLink>
+          </Section>
+          <Section right>
+            <Button onClick={this.login} icon="twitter">
+              Sign in
+            </Button>
+          </Section>
+        </Nav>
+      );
+    } else {
+      return (
+        <Nav>
+          <LogoLink to="/">
+            <Logo src="/img/mark-white.png" role="presentation" />
+          </LogoLink>
+          <Loading size={'20'} color={'bg.default'} />
         </Nav>
       );
     }
@@ -385,6 +425,5 @@ export default compose(
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
   withRouter,
-  displayLoadingNavbar,
   connect(mapStateToProps)
 )(Navbar);

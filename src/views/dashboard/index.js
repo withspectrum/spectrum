@@ -8,7 +8,12 @@ import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
 import { UpsellSignIn, UpsellToReload } from '../../components/upsell';
 import UpsellNewUser from '../../components/upsell/newUserUpsell';
-import { displayLoadingScreen } from '../../components/loading';
+import {
+  LoadingProfile,
+  LoadingList,
+  LoadingFeed,
+  LoadingComposer,
+} from '../../components/loading';
 import { FlexCol } from '../../components/globals';
 import { withInfiniteScroll } from '../../components/infiniteScroll';
 import { Column } from '../../components/column';
@@ -18,6 +23,7 @@ import ThreadComposer from '../../components/threadComposer';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import CommunityList from '../user/components/communityList';
+//$FlowFixMe
 import generateMetaInfo from 'shared/generate-meta-info';
 
 const EverythingThreadFeed = compose(getEverythingThreads)(ThreadFeed);
@@ -47,80 +53,94 @@ class DashboardPure extends Component {
   };
 
   render() {
-    const { data: { user, error } } = this.props;
+    const { data: { user, error, networkStatus } } = this.props;
     const { isNewUser } = this.state;
     const isMobile = window.innerWidth < 768;
 
     const { title, description } = generateMetaInfo();
 
-    if (error) {
+    if (networkStatus < 7) {
       return (
-        <FlexCol style={{ flex: 'auto' }}>
+        <AppViewWrapper>
           <Head title={title} description={description} />
           <Titlebar noComposer />
-          <AppViewWrapper>
-            <Column type="primary" alignItems="center">
-              <UpsellToReload />
-            </Column>
-          </AppViewWrapper>
-        </FlexCol>
+          {!isMobile &&
+            <Column type="secondary">
+              <LoadingProfile />
+              <LoadingList />
+            </Column>}
+          <Column type="primary">
+            {!isMobile && <LoadingComposer />}
+            <LoadingFeed />
+          </Column>
+        </AppViewWrapper>
       );
-    } else if (user && user !== null) {
+    } else if (networkStatus === 8) {
+      return (
+        <AppViewWrapper>
+          <Head title={title} description={description} />
+          <Titlebar noComposer />
+          <Column type="primary" alignItems="center">
+            <UpsellToReload />
+          </Column>
+        </AppViewWrapper>
+      );
+    } else if (!user || user === null) {
+      return (
+        <AppViewWrapper>
+          <Head title={title} description={description} />
+          <Titlebar noComposer />
+          <Column type="primary" alignItems="center">
+            <UpsellSignIn />
+          </Column>
+        </AppViewWrapper>
+      );
+    } else if (isNewUser) {
       const currentUser = user;
       const communities = user.communityConnection.edges;
 
       return (
-        <FlexCol style={{ flex: 'auto' }}>
+        <AppViewWrapper>
           <Head title={title} description={description} />
           <Titlebar />
-          <AppViewWrapper>
-
-            {!isNewUser &&
-              !isMobile &&
-              <Column type="secondary">
-                <UserProfile profileSize="mini" data={{ user: user }} />
-                {!isNewUser &&
-                  <CommunityList
-                    withDescription={false}
-                    currentUser={currentUser}
-                    user={user}
-                    communities={communities}
-                  />}
-              </Column>}
-
-            <Column type="primary">
-              {!isNewUser &&
-                <span>
-                  <ThreadComposer />
-                  <EverythingThreadFeed viewContext="dashboard" />
-                </span>}
-
-              {isNewUser &&
-                <UpsellNewUser user={user} graduate={this.graduate} />}
-            </Column>
-          </AppViewWrapper>
-        </FlexCol>
+          <Column type="primary">
+            <UpsellNewUser user={user} graduate={this.graduate} />
+          </Column>
+        </AppViewWrapper>
       );
     } else {
+      const currentUser = user;
+      const communities = user.communityConnection.edges;
       return (
-        <FlexCol style={{ flex: 'auto' }}>
+        <AppViewWrapper>
           <Head title={title} description={description} />
-          <Titlebar noComposer />
-          <AppViewWrapper>
-            <Column type="primary" alignItems="center">
-              <UpsellSignIn />
-            </Column>
-          </AppViewWrapper>
-        </FlexCol>
+          <Titlebar />
+
+          {!isMobile &&
+            <Column type="secondary">
+              <UserProfile profileSize="mini" data={{ user: user }} />
+              <CommunityList
+                withDescription={false}
+                currentUser={currentUser}
+                user={user}
+                communities={communities}
+                networkStatus={networkStatus}
+              />
+            </Column>}
+
+          <Column type="primary">
+            <FlexCol>
+              <ThreadComposer />
+              <EverythingThreadFeed viewContext="dashboard" />
+            </FlexCol>
+          </Column>
+        </AppViewWrapper>
       );
     }
   }
 }
 
-const Dashboard = compose(
-  getCurrentUserProfile,
-  displayLoadingScreen,
-  withInfiniteScroll,
-  pure
-)(DashboardPure);
+const Dashboard = compose(getCurrentUserProfile, withInfiniteScroll, pure)(
+  DashboardPure
+);
 export default Dashboard;

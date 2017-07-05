@@ -2,7 +2,8 @@
 // $FlowFixMe
 import styled, { keyframes } from 'styled-components';
 import { Card } from '../card';
-import { hexa } from '../globals';
+import { hexa, FlexCol } from '../globals';
+// $FlowFixMe
 import { Link } from 'react-router-dom';
 
 const containerFadeIn = keyframes`
@@ -38,6 +39,14 @@ export const ShimmerList = styled(Card)`
   }
 `;
 
+export const ShimmerThreadDetail = styled(FlexCol)`
+  padding: 32px;
+
+  section {
+    min-height: 308px;
+  }
+`;
+
 export const ShimmerThread = styled(Card)`
   padding: 16px;
 
@@ -54,11 +63,11 @@ export const ShimmerProfile = styled(Card)`
   }
 `;
 
-export const ShimmerListItem = styled(Card)`
-  padding: 16px;
+export const ShimmerListItem = styled(FlexCol)`
+  padding: 8px 0;
 
   section {
-    min-height: 40px;
+    min-height: 32px;
   }
 `;
 
@@ -78,20 +87,95 @@ export const ShimmerDM = styled(ShimmerProfile)`
 	}
 `;
 
+export const ShimmerBubble = styled(FlexCol)`
+	margin-top: 4px;
+	margin-left: 32px;
+	align-self: flex-start;
+	width: 60%;
+
+	section {
+		min-height: 48px;
+		border-radius: 12px;
+	}
+`;
+
+export const ShimmerChat = styled(FlexCol)`
+	> div:nth-of-type(2n+2) {
+		width: 40%;
+
+		section {
+			min-height: 32px;
+		}
+	}
+
+	> div:nth-of-type(3n+1) {
+		width: 25%;
+
+		section {
+			min-height: 32px;
+		}
+	}
+
+	> div:nth-of-type(4n) {
+		align-self: flex-end;
+		margin-top: 16px;
+		margin-left: 0;
+		margin-right: 32px;
+
+		> section {
+			background: ${({ theme }) => theme.brand.alt};
+
+			> span {
+				background: linear-gradient(to right,
+					${({ theme }) => theme.brand.alt} 10%,
+					${({ theme }) => hexa(theme.brand.default, 0.35)} 20%,
+					${({ theme }) => theme.brand.alt} 30%);
+			}
+		}
+	}
+
+	> div:nth-of-type(5n) {
+		align-self: flex-end;
+		margin-top: 4px;
+		margin-bottom: 16px;
+		margin-left: 0;
+		margin-right: 32px;
+
+		> section {
+			background: ${({ theme }) => theme.brand.alt};
+
+			> span {
+				background: linear-gradient(to right,
+					${({ theme }) => theme.brand.alt} 10%,
+					${({ theme }) => hexa(theme.brand.default, 0.25)} 20%,
+					${({ theme }) => theme.brand.alt} 30%);
+			}
+		}
+	}
+`;
+
 export const ShimmerComposer = styled(Card)`
   padding: 16px;
 
   section {
-    min-height: 24px;
+    min-height: 32px;
   }
+
+	@media (max-width: 768px) {
+		display: none;
+	}
 `;
 
 const placeHolderShimmer = keyframes`
 	0%{
 			transform: translateX(-100%) translateY(0%);
+			background-size: 100%;
+			opacity: 1;
 	}
 	100%{
-			transform: translateX(100%) translateY(0%);
+			transform: translateX(200%) translateY(0%);
+			background-size: 500%;
+			opacity: 0;
 	}
 `;
 
@@ -109,15 +193,15 @@ export const ShimmerLine = styled.span`
   height: 100%;
   position: absolute;
   z-index: 4;
-  animation-duration: 2s;
+  animation-duration: 2.5s;
   animation-fill-mode: forwards;
   animation-iteration-count: infinite;
-  animation-timing-function: ease-out;
+  animation-timing-function: ease-in-out;
   background: linear-gradient(to right,
-		${({ theme }) => theme.bg.wash} 8%,
-		${({ theme }) => hexa(theme.generic.default, 0.9)} 18%,
-		${({ theme }) => theme.bg.wash} 33%);
-  background-size: 100% 140px;
+		${({ theme }) => theme.bg.wash} 10%,
+		${({ theme }) => hexa(theme.generic.default, 0.65)} 20%,
+		${({ theme }) => theme.bg.wash} 30%);
+  ${/* background-size: 100%; */ ''}
   animation-name: ${placeHolderShimmer};
 `;
 
@@ -143,8 +227,6 @@ export const LoadingOverlay = styled.div`
 export const LoadingNavbarContainer = styled.nav`
 	width: 100%;
 	background: ${({ theme }) => theme.text.default};
-	position: fixed;
-	top: 0;
 	display: flex;
 	align-items: center;
 	color: #fff;

@@ -185,7 +185,10 @@ export const GET_CURRENT_USER_PROFILE_QUERY = gql`
   }
   ${userInfoFragment}
 `;
-export const getCurrentUserProfile = graphql(GET_CURRENT_USER_PROFILE_QUERY);
+
+export const getCurrentUserProfile = graphql(GET_CURRENT_USER_PROFILE_QUERY, {
+  options: { fetchPolicy: 'cache-and-network' },
+});
 
 /*
   Delete a thread

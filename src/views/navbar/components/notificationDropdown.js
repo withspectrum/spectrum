@@ -13,14 +13,17 @@ import Dropdown from '../../../components/dropdown';
 import { NullState } from '../../../components/upsell';
 import { TextButton } from '../../../components/buttons';
 import { DropdownHeader, DropdownFooter } from '../style';
-import { NotificationDropdownList } from '../../../views/notifications/components/notificationDropdownList';
+import {
+  NotificationDropdownList,
+} from '../../../views/notifications/components/notificationDropdownList';
 
-const NullNotifications = () =>
+const NullNotifications = () => (
   <NullState
     bg="notification"
     heading={`No notifications`}
     copy={`You're all good! 🎉`}
-  />;
+  />
+);
 
 const NotificationDropdownPure = ({
   rawNotifications,
