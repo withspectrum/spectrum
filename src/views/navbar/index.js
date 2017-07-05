@@ -261,6 +261,7 @@ class Navbar extends Component {
       currentUser,
     } = this.props;
     const loggedInUser = user || currentUser;
+    const isMobile = window.innerWidth < 768;
     const currentUserExists =
       loggedInUser !== null && loggedInUser !== undefined;
     const { allUnseenCount, dmUnseenCount, notifications } = this.state;
@@ -404,9 +405,10 @@ class Navbar extends Component {
     } else {
       return (
         <Nav>
-          <LogoLink to="/">
-            <Logo src="/img/mark-white.png" role="presentation" />
-          </LogoLink>
+          {isMobile ||
+            <LogoLink to="/">
+              <Logo src="/img/mark-white.png" role="presentation" />
+            </LogoLink>}
           <Loading size={'20'} color={'bg.default'} />
         </Nav>
       );

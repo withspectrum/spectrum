@@ -40,7 +40,11 @@ export const ShimmerList = styled(Card)`
 `;
 
 export const ShimmerThreadDetail = styled(FlexCol)`
-  padding: 32px;
+  padding: 40px 32px;
+
+	@media(max-width: 768px) {
+		padding: 16px;
+	}
 
   section {
     min-height: 308px;
