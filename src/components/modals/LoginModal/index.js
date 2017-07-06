@@ -4,13 +4,20 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import Modal from 'react-modal';
+import { getItemFromStorage, storeItem } from '../../../helpers/localStorage';
 import { SERVER_URL } from '../../../api';
 import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import ModalContainer from '../modalContainer';
-import { Button } from '../../buttons';
 import { modalStyles } from '../styles';
-import { SignInButtons, Description } from './style';
+import Icon from '../../../components/icons';
+import {
+  SignInButtons,
+  Description,
+  ButtonTwitter,
+  ButtonFacebook,
+  ButtonGoogle,
+} from './style';
 
 class LoginModal extends Component {
   close = () => {
@@ -19,12 +26,14 @@ class LoginModal extends Component {
 
   login = method => {
     // log the user in and return them to this page
+    storeItem('preferred_signin_method', method);
     return (window.location.href = `${SERVER_URL}/auth/${method}?r=${window.location.href}`);
   };
 
   render() {
     const { isOpen, modalProps } = this.props;
     const styles = modalStyles(300);
+    const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
 
     return (
       <Modal
@@ -39,38 +48,80 @@ class LoginModal extends Component {
           <Description>
             Sign up or log in below to join the conversation
           </Description>
-          <SignInButtons>
-            <Button
-              gradientTheme={'none'}
-              hoverColor={'social.twitter.default'}
-              color={'social.twitter.default'}
-              onClick={() => this.login('twitter')}
-              icon="twitter"
-              label
-            >
-              Sign in with Twitter
-            </Button>
-            <Button
-              gradientTheme={'none'}
-              hoverColor={'social.facebook.default'}
-              color={'social.facebook.default'}
-              onClick={() => this.login('facebook')}
-              icon="facebook"
-              label
-            >
-              Sign in with Facebook
-            </Button>
-            <Button
-              gradientTheme={'none'}
-              hoverColor={'social.google.default'}
-              color={'social.google.default'}
-              onClick={() => this.login('google')}
-              icon="google"
-              label
-            >
-              Sign in with Google
-            </Button>
-          </SignInButtons>
+          {preferredSigninMethod &&
+            <SignInButtons>
+              <ButtonTwitter
+                preferred={preferredSigninMethod === 'twitter'}
+                after={preferredSigninMethod === 'twitter'}
+                whitebg={preferredSigninMethod !== 'twitter'}
+                href={`${SERVER_URL}/auth/twitter`}
+                onClick={() => this.login('twitter')}
+              >
+                <Icon glyph="twitter" />
+                {' '}
+                <span>Sign in with Twitter</span>
+              </ButtonTwitter>
+
+              <ButtonFacebook
+                preferred={preferredSigninMethod === 'facebook'}
+                whitebg={preferredSigninMethod !== 'facebook'}
+                after={preferredSigninMethod === 'facebook'}
+                href={`${SERVER_URL}/auth/facebook`}
+                onClick={() => this.login('facebook')}
+              >
+                <Icon glyph="facebook" />
+                {' '}
+                <span>Sign in with Facebook</span>
+              </ButtonFacebook>
+
+              <ButtonGoogle
+                preferred={preferredSigninMethod === 'google'}
+                whitebg={preferredSigninMethod !== 'google'}
+                after={preferredSigninMethod === 'google'}
+                href={`${SERVER_URL}/auth/google`}
+                onClick={() => this.login('google')}
+              >
+                <Icon glyph="google" />
+                {' '}
+                <span>Sign in with Google</span>
+              </ButtonGoogle>
+            </SignInButtons>}
+
+          {!preferredSigninMethod &&
+            <SignInButtons>
+              <ButtonTwitter
+                preferred
+                after={preferredSigninMethod === 'twitter'}
+                href={`${SERVER_URL}/auth/twitter`}
+                onClick={() => this.login('twitter')}
+              >
+                <Icon glyph="twitter" />
+                {' '}
+                <span>Sign in with Twitter</span>
+              </ButtonTwitter>
+
+              <ButtonFacebook
+                preferred
+                after={preferredSigninMethod === 'facebook'}
+                href={`${SERVER_URL}/auth/facebook`}
+                onClick={() => this.login('facebook')}
+              >
+                <Icon glyph="facebook" />
+                {' '}
+                <span>Sign in with Facebook</span>
+              </ButtonFacebook>
+
+              <ButtonGoogle
+                preferred
+                after={preferredSigninMethod === 'google'}
+                href={`${SERVER_URL}/auth/google`}
+                onClick={() => this.login('google')}
+              >
+                <Icon glyph="google" />
+                {' '}
+                <span>Sign in with Google</span>
+              </ButtonGoogle>
+            </SignInButtons>}
         </ModalContainer>
       </Modal>
     );

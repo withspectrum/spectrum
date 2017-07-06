@@ -47,7 +47,7 @@ export const SectionOne = styled(Section)`
 	}
 
 	@media (max-width: 768px) {
-		flex-basis: 400px;
+		flex-basis: 600px;
 	}
 `;
 
@@ -272,7 +272,31 @@ export const Button = styled.a`
   padding-right: 16px;
   font-size: 14px;
   font-weight: 700;
-  transition: ${Transition.hover.off}; 
+  transition: ${Transition.hover.off};
+	position: relative;
+
+	&:nth-of-type:not(1) {
+		margin-top: 16px;
+	}
+
+	${props => props.preferred && `
+			margin: 24px 0;
+
+			&:after {
+				content: 'Previously signed in with';
+				position: absolute;
+				top: -23px;
+				font-size: 10px;
+				font-weight: 500;
+				text-transform: uppercase;
+				opacity: 0.8;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 100%;
+				text-align: center;
+				color: #fff;
+			}
+		`}
 
   span {
     display: inline-block;
@@ -296,7 +320,7 @@ export const Button = styled.a`
 
 export const ButtonTwitter = styled(Button)`
 	background: ${props => (props.preferred ? props.theme.social.twitter.default : 'none')};
-	color: ${props => (props.whitebg ? props.theme.social.twitter.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};;
+	color: ${props => (props.whitebg ? props.theme.social.twitter.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
 
 	&:hover {
 		color: ${props => (props.whitebg ? props.theme.social.twitter.default : '#fff')}
@@ -305,7 +329,8 @@ export const ButtonTwitter = styled(Button)`
 
 export const ButtonFacebook = styled(Button)`
 	background: ${props => (props.preferred ? props.theme.social.facebook.default : 'none')};
-	color: ${props => (props.whitebg ? props.theme.social.facebook.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};;
+	color: ${props => (props.whitebg ? props.theme.social.facebook.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
+
 
 	&:hover {
 		color: ${props => (props.whitebg ? props.theme.social.facebook.default : '#fff')}
@@ -314,7 +339,7 @@ export const ButtonFacebook = styled(Button)`
 
 export const ButtonGoogle = styled(Button)`
 	background: ${props => (props.preferred ? props.theme.social.google.default : 'none')};
-	color: ${props => (props.whitebg ? props.theme.social.google.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};;
+	color: ${props => (props.whitebg ? props.theme.social.google.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
 
 	&:hover {
 		color: ${props => (props.whitebg ? props.theme.social.google.default : '#fff')}
@@ -372,8 +397,4 @@ export const LoginCard = styled.div`
 	margin-top: 16px;
 	align-self: flex-start;
 	align-items: flex-start;
-
-	a + a {
-		margin-top: 16px;
-	}
 `;

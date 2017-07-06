@@ -1,10 +1,28 @@
+// @flow
+// $FlowFixMe
+const env = require('node-env-file');
+const IS_PROD = process.env.NODE_ENV === 'production';
+const path = require('path');
+if (!IS_PROD) {
+  env(path.resolve(__dirname, './.env'), { raise: false });
+}
+// $FlowFixMe
 const passport = require('passport');
+// $FlowFixMe
 const { Strategy: TwitterStrategy } = require('passport-twitter');
+// $FlowFixMe
 const { Strategy: FacebookStrategy } = require('passport-facebook');
+// $FlowFixMe
 const { Strategy: GoogleStrategy } = require('passport-google-oauth2');
+// $FlowFixMe
 const { Strategy: GitHubStrategy } = require('passport-github2');
 const { getUser, createOrFindUser } = require('./models/user');
 const { createNewUsersSettings } = require('./models/usersSettings');
+
+let TWITTER_OAUTH_CLIENT_SECRET = process.env.TWITTER_OAUTH_CLIENT_SECRET;
+let FACEBOOK_OAUTH_CLIENT_SECRET = process.env.FACEBOOK_OAUTH_CLIENT_SECRET;
+let GOOGLE_OAUTH_CLIENT_SECRET = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
+let GITHUB_OAUTH_CLIENT_SECRET = process.env.GITHUB_OAUTH_CLIENT_SECRET;
 
 const init = () => {
   // Setup use serialization
@@ -27,12 +45,11 @@ const init = () => {
     new TwitterStrategy(
       {
         consumerKey: 'vxmsICGyIIoT5NEYi1I8baPrf',
-        consumerSecret: 'uH7CqsEWPTgMHu7rp8UhiaoS7bzgN53h3od95BEJBFEgUQzMOq',
+        consumerSecret: TWITTER_OAUTH_CLIENT_SECRET,
         callbackURL: `/auth/twitter/callback`,
         includeEmail: true,
       },
       (token, tokenSecret, profile, done) => {
-        console.log('profile', profile);
         const user = {
           providerId: profile.id,
           fbProviderId: null,
@@ -72,7 +89,7 @@ const init = () => {
     new FacebookStrategy(
       {
         clientID: '130723117513387',
-        clientSecret: 'a153e155c4562f9c04826629f4b8f21c',
+        clientSecret: FACEBOOK_OAUTH_CLIENT_SECRET,
         callbackURL: `/auth/facebook/callback`,
         profileFields: ['id', 'displayName', 'email', 'photos'],
       },
@@ -114,7 +131,7 @@ const init = () => {
     new GoogleStrategy(
       {
         clientID: '923611718470-chv7p9ep65m3fqqjr154r1p3a5j6oidc.apps.googleusercontent.com',
-        clientSecret: '2nUM1y27p3RosWt-8YqhMJKI',
+        clientSecret: GOOGLE_OAUTH_CLIENT_SECRET,
         callbackURL: `/auth/google/callback`,
       },
       (token, tokenSecret, profile, done) => {
@@ -157,7 +174,7 @@ const init = () => {
     new GitHubStrategy(
       {
         clientID: '208a2e8684d88883eded',
-        clientSecret: '56d46f0fac78e4581a2dfa3e9bda25407eb1363d',
+        clientSecret: GITHUB_OAUTH_CLIENT_SECRET,
         callbackURL: `/auth/github/callback`,
         scope: ['user'],
       },

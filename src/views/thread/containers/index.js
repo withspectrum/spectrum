@@ -201,7 +201,6 @@ class ThreadContainerPure extends Component {
         />
         <Content innerRef={scrollBody => this.scrollBody = scrollBody}>
           <Detail type="only">
-            {!currentUser && <UpsellSignIn />}
             <ThreadDetail thread={thread} />
             <Messages
               id={thread.id}
@@ -210,6 +209,7 @@ class ThreadContainerPure extends Component {
               forceScrollToBottom={this.forceScrollToBottom}
               contextualScrollToBottom={this.contextualScrollToBottom}
             />
+            {!currentUser && <UpsellSignIn />}
 
             {// if the user exists but isn't a subscriber to the channel,
             // show an upsell to join the channel

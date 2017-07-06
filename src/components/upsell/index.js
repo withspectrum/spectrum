@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
+import Icon from '../../components/icons';
+import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
 import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../api';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Card from '../card';
@@ -20,6 +22,9 @@ import {
   Cost,
   LargeEmoji,
   SignInButtons,
+  ButtonTwitter,
+  ButtonFacebook,
+  ButtonGoogle,
 } from './style';
 // $FlowFixMe
 import StripeCheckout from 'react-stripe-checkout';
@@ -47,6 +52,7 @@ export const NullState = props => (
 
 const login = method => {
   // log the user in and return them to this page
+  storeItem('preferred_signin_method', method);
   return (window.location.href = `${SERVER_URL}/auth/${method}?r=${window.location.href}`);
 };
 
@@ -55,42 +61,87 @@ export const UpsellSignIn = ({ entity }) => {
     ? `Ready to join the conversation in ${entity.name}?`
     : 'Ready to join the conversation? ';
 
+  const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
+
   return (
     <NullCard bg="chat">
       <Title>Come on in, the chatter's fine.</Title>
       <Subtitle>{subtitle}</Subtitle>
-      <SignInButtons>
-        <Button
-          gradientTheme={'none'}
-          hoverColor={'social.twitter.default'}
-          color={'social.twitter.default'}
-          onClick={() => login('twitter')}
-          icon="twitter"
-          label
-        >
-          Sign in with Twitter
-        </Button>
-        <Button
-          gradientTheme={'none'}
-          hoverColor={'social.facebook.default'}
-          color={'social.facebook.default'}
-          onClick={() => login('facebook')}
-          icon="facebook"
-          label
-        >
-          Sign in with Facebook
-        </Button>
-        <Button
-          gradientTheme={'none'}
-          hoverColor={'social.google.default'}
-          color={'social.google.default'}
-          onClick={() => login('google')}
-          icon="google"
-          label
-        >
-          Sign in with Google
-        </Button>
-      </SignInButtons>
+
+      {preferredSigninMethod &&
+        <SignInButtons>
+          <ButtonTwitter
+            preferred={preferredSigninMethod === 'twitter'}
+            after={preferredSigninMethod === 'twitter'}
+            whitebg={preferredSigninMethod !== 'twitter'}
+            href={`${SERVER_URL}/auth/twitter`}
+            onClick={() => login('twitter')}
+          >
+            <Icon glyph="twitter" />
+            {' '}
+            <span>Sign in with Twitter</span>
+          </ButtonTwitter>
+
+          <ButtonFacebook
+            preferred={preferredSigninMethod === 'facebook'}
+            whitebg={preferredSigninMethod !== 'facebook'}
+            after={preferredSigninMethod === 'facebook'}
+            href={`${SERVER_URL}/auth/facebook`}
+            onClick={() => login('facebook')}
+          >
+            <Icon glyph="facebook" />
+            {' '}
+            <span>Sign in with Facebook</span>
+          </ButtonFacebook>
+
+          <ButtonGoogle
+            preferred={preferredSigninMethod === 'google'}
+            whitebg={preferredSigninMethod !== 'google'}
+            after={preferredSigninMethod === 'google'}
+            href={`${SERVER_URL}/auth/google`}
+            onClick={() => login('google')}
+          >
+            <Icon glyph="google" />
+            {' '}
+            <span>Sign in with Google</span>
+          </ButtonGoogle>
+        </SignInButtons>}
+
+      {!preferredSigninMethod &&
+        <SignInButtons>
+          <ButtonTwitter
+            preferred
+            after={preferredSigninMethod === 'twitter'}
+            href={`${SERVER_URL}/auth/twitter`}
+            onClick={() => login('twitter')}
+          >
+            <Icon glyph="twitter" />
+            {' '}
+            <span>Sign in with Twitter</span>
+          </ButtonTwitter>
+
+          <ButtonFacebook
+            preferred
+            after={preferredSigninMethod === 'facebook'}
+            href={`${SERVER_URL}/auth/facebook`}
+            onClick={() => login('facebook')}
+          >
+            <Icon glyph="facebook" />
+            {' '}
+            <span>Sign in with Facebook</span>
+          </ButtonFacebook>
+
+          <ButtonGoogle
+            preferred
+            after={preferredSigninMethod === 'google'}
+            href={`${SERVER_URL}/auth/google`}
+            onClick={() => login('google')}
+          >
+            <Icon glyph="google" />
+            {' '}
+            <span>Sign in with Google</span>
+          </ButtonGoogle>
+        </SignInButtons>}
     </NullCard>
   );
 };
