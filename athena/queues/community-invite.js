@@ -13,7 +13,8 @@ import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
-import bufferCommunityInviteEmail from './buffer-community-invite-email';
+import { SEND_COMMUNITY_INVITE_EMAIL } from './constants';
+const sendCommunityInviteEmailQueue = createQueue(SEND_COMMUNITY_INVITE_EMAIL);
 
 // const sendCommunityInvitateEmailQueue = createQueue(SEND_COMMUNITY_INVITE_EMAIL);
 
@@ -23,7 +24,12 @@ const addToSendCommunityInviteEmailQueue = (recipient, community, sender) => {
     return Promise.resolve();
   }
 
-  return bufferCommunityInviteEmail(recipient, community, sender);
+  return sendCommunityInviteEmailQueue.add({
+    to: recipient.email,
+    recipient,
+    sender,
+    community,
+  });
 };
 
 /*
