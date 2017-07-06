@@ -4,6 +4,7 @@ import { track } from '../../helpers/events';
 import Icon from '../../components/icons';
 import { FlexCol, FlexRow } from '../../components/globals';
 import { SERVER_URL } from '../../api';
+import { storeItem, getItemFromStorage } from '../../helpers/localStorage';
 import {
   SectionOne,
   SectionTwo,
@@ -34,15 +35,31 @@ import {
 } from './style';
 
 class Homepage extends Component {
+  state: {
+    preferredSigninMethod: string,
+  };
+
+  constructor() {
+    super();
+
+    const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
+    this.state = {
+      preferredSigninMethod,
+    };
+  }
+
   componentDidMount() {
     track('homepage', 'viewed', null);
   }
 
-  trackSignin = type => {
+  trackSignin = (type, method) => {
     track('homepage', 'logged in', type);
+    storeItem('preferred_signin_method', method);
   };
 
   render() {
+    const { preferredSigninMethod } = this.state;
+
     return (
       <Wrapper>
         <SectionOne>
@@ -52,8 +69,12 @@ class Homepage extends Component {
               <Tagline>Where communities are built.</Tagline>
               <LoginCard>
                 <ButtonTwitter
+                  preferred={
+                    preferredSigninMethod === 'twitter' ||
+                      !preferredSigninMethod
+                  }
                   href={`${SERVER_URL}/auth/twitter`}
-                  onClick={() => this.trackSignin('primary cta')}
+                  onClick={() => this.trackSignin('primary cta', 'twitter')}
                 >
                   <Icon glyph="twitter" />
                   {' '}
@@ -61,8 +82,12 @@ class Homepage extends Component {
                 </ButtonTwitter>
 
                 <ButtonFacebook
+                  preferred={
+                    preferredSigninMethod === 'facebook' ||
+                      !preferredSigninMethod
+                  }
                   href={`${SERVER_URL}/auth/facebook`}
-                  onClick={() => this.trackSignin('primary cta')}
+                  onClick={() => this.trackSignin('primary cta', 'facebook')}
                 >
                   <Icon glyph="facebook" />
                   {' '}
@@ -70,8 +95,11 @@ class Homepage extends Component {
                 </ButtonFacebook>
 
                 <ButtonGoogle
+                  preferred={
+                    preferredSigninMethod === 'google' || !preferredSigninMethod
+                  }
                   href={`${SERVER_URL}/auth/google`}
-                  onClick={() => this.trackSignin('primary cta')}
+                  onClick={() => this.trackSignin('primary cta', 'google')}
                 >
                   <Icon glyph="google" />
                   {' '}
@@ -133,32 +161,80 @@ class Homepage extends Component {
                 Spectrum is free for everyone, so dive on in!
               </Copy>
               <LoginCard noShadow>
-                <ButtonTwitter
-                  href={`${SERVER_URL}/auth/twitter`}
-                  onClick={() => this.trackSignin('secondary cta')}
-                >
-                  <Icon glyph="twitter" />
-                  {' '}
-                  <span>Sign in with Twitter</span>
-                </ButtonTwitter>
+                {preferredSigninMethod &&
+                  <span>
+                    <ButtonTwitter
+                      preferred={preferredSigninMethod === 'twitter'}
+                      whitebg={preferredSigninMethod !== 'twitter'}
+                      href={`${SERVER_URL}/auth/twitter`}
+                      onClick={() =>
+                        this.trackSignin('secondary cta', 'twitter')}
+                    >
+                      <Icon glyph="twitter" />
+                      {' '}
+                      <span>Sign in with Twitter</span>
+                    </ButtonTwitter>
 
-                <ButtonFacebook
-                  href={`${SERVER_URL}/auth/facebook`}
-                  onClick={() => this.trackSignin('secondary cta')}
-                >
-                  <Icon glyph="facebook" />
-                  {' '}
-                  <span>Sign in with Facebook</span>
-                </ButtonFacebook>
+                    <ButtonFacebook
+                      preferred={preferredSigninMethod === 'facebook'}
+                      whitebg={preferredSigninMethod !== 'facebook'}
+                      href={`${SERVER_URL}/auth/facebook`}
+                      onClick={() =>
+                        this.trackSignin('secondary cta', 'facebook')}
+                    >
+                      <Icon glyph="facebook" />
+                      {' '}
+                      <span>Sign in with Facebook</span>
+                    </ButtonFacebook>
 
-                <ButtonGoogle
-                  href={`${SERVER_URL}/auth/google`}
-                  onClick={() => this.trackSignin('secondary cta')}
-                >
-                  <Icon glyph="google" />
-                  {' '}
-                  <span>Sign in with Google</span>
-                </ButtonGoogle>
+                    <ButtonGoogle
+                      preferred={preferredSigninMethod === 'google'}
+                      whitebg={preferredSigninMethod !== 'google'}
+                      href={`${SERVER_URL}/auth/google`}
+                      onClick={() =>
+                        this.trackSignin('secondary cta', 'google')}
+                    >
+                      <Icon glyph="google" />
+                      {' '}
+                      <span>Sign in with Google</span>
+                    </ButtonGoogle>
+                  </span>}
+
+                {!preferredSigninMethod &&
+                  <span>
+                    <ButtonTwitter
+                      preferred
+                      href={`${SERVER_URL}/auth/twitter`}
+                      onClick={() =>
+                        this.trackSignin('secondary cta', 'twitter')}
+                    >
+                      <Icon glyph="twitter" />
+                      {' '}
+                      <span>Sign in with Twitter</span>
+                    </ButtonTwitter>
+
+                    <ButtonFacebook
+                      preferred
+                      href={`${SERVER_URL}/auth/facebook`}
+                      onClick={() =>
+                        this.trackSignin('secondary cta', 'facebook')}
+                    >
+                      <Icon glyph="facebook" />
+                      {' '}
+                      <span>Sign in with Facebook</span>
+                    </ButtonFacebook>
+
+                    <ButtonGoogle
+                      preferred
+                      href={`${SERVER_URL}/auth/google`}
+                      onClick={() =>
+                        this.trackSignin('secondary cta', 'google')}
+                    >
+                      <Icon glyph="google" />
+                      {' '}
+                      <span>Sign in with Google</span>
+                    </ButtonGoogle>
+                  </span>}
               </LoginCard>
             </FlexCol>
           </SectionContent>

@@ -272,7 +272,7 @@ export const Button = styled.a`
   padding-right: 16px;
   font-size: 14px;
   font-weight: 700;
-  transition: ${Transition.hover.off};
+  transition: ${Transition.hover.off}; 
 
   span {
     display: inline-block;
@@ -290,25 +290,35 @@ export const Button = styled.a`
   }
 
   &:hover {
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    transition: ${Transition.hover.on};
     cursor: pointer;
   }
 `;
 
 export const ButtonTwitter = styled(Button)`
-	background: ${props => props.theme.social.twitter.default};
-	color: #fff;
+	background: ${props => (props.preferred ? props.theme.social.twitter.default : 'none')};
+	color: ${props => (props.whitebg ? props.theme.social.twitter.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};;
+
+	&:hover {
+		color: ${props => (props.whitebg ? props.theme.social.twitter.default : '#fff')}
+	}
 `;
 
 export const ButtonFacebook = styled(Button)`
-	background: ${props => props.theme.social.facebook.default};
-	color: #fff;
+	background: ${props => (props.preferred ? props.theme.social.facebook.default : 'none')};
+	color: ${props => (props.whitebg ? props.theme.social.facebook.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};;
+
+	&:hover {
+		color: ${props => (props.whitebg ? props.theme.social.facebook.default : '#fff')}
+	}
 `;
 
 export const ButtonGoogle = styled(Button)`
-	background: ${props => props.theme.social.google.default};
-	color: #fff;
+	background: ${props => (props.preferred ? props.theme.social.google.default : 'none')};
+	color: ${props => (props.whitebg ? props.theme.social.google.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};;
+
+	&:hover {
+		color: ${props => (props.whitebg ? props.theme.social.google.default : '#fff')}
+	}
 `;
 
 export const LinkButton = styled(Button)`
@@ -362,10 +372,6 @@ export const LoginCard = styled.div`
 	margin-top: 16px;
 	align-self: flex-start;
 	align-items: flex-start;
-
-	a {
-		box-shadow: ${props => (props.noShadow ? 'none' : '0 4px 8px rgba(0,0,0,0.1)')};
-	}
 
 	a + a {
 		margin-top: 16px;

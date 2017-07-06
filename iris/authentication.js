@@ -29,8 +29,10 @@ const init = () => {
         consumerKey: 'vxmsICGyIIoT5NEYi1I8baPrf',
         consumerSecret: 'uH7CqsEWPTgMHu7rp8UhiaoS7bzgN53h3od95BEJBFEgUQzMOq',
         callbackURL: `/auth/twitter/callback`,
+        includeEmail: true,
       },
       (token, tokenSecret, profile, done) => {
+        console.log('profile', profile);
         const user = {
           providerId: profile.id,
           fbProviderId: null,
