@@ -98,15 +98,47 @@ const saveUserProvider = (userId, providerMethod, providerId) => {
     });
 };
 
+const getUserByIndex = (indexName, indexValue) => {
+  return db
+    .table('users')
+    .getAll(indexValue, { index: indexName })
+    .run()
+    .then(results => results && results.length > 0 && results[0]);
+};
+
 const createOrFindUser = (
   user: Object,
   providerMethod: string
 ): Promise<Object> => {
   // if a user id gets passed in, we know that a user most likely exists and we just need to retrieve them from the db
   // however, if a user id doesn't exist we need to do a lookup by the email address passed in - if an email address doesn't exist, we know that we're going to be creating a new user
-  const promise = user.id
-    ? getUser({ id: user.id })
-    : user.email ? getUserByEmail(user.email) : Promise.resolve({});
+  let promise;
+  if (user.id) {
+    promise = getUser({ id: user.id });
+  } else {
+    if (user[providerMethod]) {
+      promise = getUserByIndex(
+        providerMethod,
+        user[providerMethod]
+      ).then(storedUser => {
+        if (storedUser) {
+          return storedUser;
+        }
+
+        if (user.email) {
+          return getUserByEmail(user.email);
+        } else {
+          return Promise.resolve({});
+        }
+      });
+    } else {
+      if (user.email) {
+        promise = getUserByEmail(user.email);
+      } else {
+        promise = Promise.resolve({});
+      }
+    }
+  }
 
   return promise
     .then(storedUser => {
