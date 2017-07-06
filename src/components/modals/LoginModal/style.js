@@ -44,13 +44,10 @@ export const Button = styled.a`
 	position: relative;
   width: 100%;
   justify-content: center;
-
-  &:nth-of-type:not(1) {
-		margin-top: 24px;
-	}
+  margin: 8px 0;
 
 	${props => props.after && `
-      margin: 16px 0;
+      margin: 16px 0 8px;
 
 			&:after {
 				content: 'Previously signed in with';
