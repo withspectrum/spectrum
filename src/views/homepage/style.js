@@ -15,6 +15,7 @@ export const Wrapper = styled(FlexCol)`
 	width: 100%;
 	background-color: ${({ theme }) => theme.bg.default};
   overflow: auto;
+	overflow-x: hidden;
 `;
 
 export const Section = styled(FlexCol)`
@@ -274,12 +275,9 @@ export const Button = styled.a`
   font-weight: 700;
   transition: ${Transition.hover.off};
 	position: relative;
+	margin: 16px 0;
 
-	&:nth-of-type:not(1) {
-		margin-top: 16px;
-	}
-
-	${props => props.preferred && `
+	${props => props.after && `
 			margin: 24px 0;
 
 			&:after {

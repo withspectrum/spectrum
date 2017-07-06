@@ -73,6 +73,7 @@ class Homepage extends Component {
                     preferredSigninMethod === 'twitter' ||
                       !preferredSigninMethod
                   }
+                  after={preferredSigninMethod === 'twitter'}
                   href={`${SERVER_URL}/auth/twitter`}
                   onClick={() => this.trackSignin('primary cta', 'twitter')}
                 >
@@ -86,6 +87,7 @@ class Homepage extends Component {
                     preferredSigninMethod === 'facebook' ||
                       !preferredSigninMethod
                   }
+                  after={preferredSigninMethod === 'facebook'}
                   href={`${SERVER_URL}/auth/facebook`}
                   onClick={() => this.trackSignin('primary cta', 'facebook')}
                 >
@@ -98,6 +100,7 @@ class Homepage extends Component {
                   preferred={
                     preferredSigninMethod === 'google' || !preferredSigninMethod
                   }
+                  after={preferredSigninMethod === 'google'}
                   href={`${SERVER_URL}/auth/google`}
                   onClick={() => this.trackSignin('primary cta', 'google')}
                 >
@@ -165,6 +168,7 @@ class Homepage extends Component {
                   <span>
                     <ButtonTwitter
                       preferred={preferredSigninMethod === 'twitter'}
+                      after={preferredSigninMethod === 'twitter'}
                       whitebg={preferredSigninMethod !== 'twitter'}
                       href={`${SERVER_URL}/auth/twitter`}
                       onClick={() =>
@@ -177,6 +181,7 @@ class Homepage extends Component {
 
                     <ButtonFacebook
                       preferred={preferredSigninMethod === 'facebook'}
+                      after={preferredSigninMethod === 'facebook'}
                       whitebg={preferredSigninMethod !== 'facebook'}
                       href={`${SERVER_URL}/auth/facebook`}
                       onClick={() =>
@@ -189,6 +194,7 @@ class Homepage extends Component {
 
                     <ButtonGoogle
                       preferred={preferredSigninMethod === 'google'}
+                      after={preferredSigninMethod === 'google'}
                       whitebg={preferredSigninMethod !== 'google'}
                       href={`${SERVER_URL}/auth/google`}
                       onClick={() =>
@@ -205,6 +211,7 @@ class Homepage extends Component {
                     <ButtonTwitter
                       preferred
                       href={`${SERVER_URL}/auth/twitter`}
+                      after={preferredSigninMethod === 'twitter'}
                       onClick={() =>
                         this.trackSignin('secondary cta', 'twitter')}
                     >
@@ -216,6 +223,7 @@ class Homepage extends Component {
                     <ButtonFacebook
                       preferred
                       href={`${SERVER_URL}/auth/facebook`}
+                      after={preferredSigninMethod === 'facebook'}
                       onClick={() =>
                         this.trackSignin('secondary cta', 'facebook')}
                     >
@@ -227,6 +235,7 @@ class Homepage extends Component {
                     <ButtonGoogle
                       preferred
                       href={`${SERVER_URL}/auth/google`}
+                      after={preferredSigninMethod === 'google'}
                       onClick={() =>
                         this.trackSignin('secondary cta', 'google')}
                     >

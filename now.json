@@ -13,6 +13,6 @@
 		"TWITTER_OAUTH_CLIENT_SECRET": "@twitter-oauth-client-secret",
 		"FACEBOOK_OAUTH_CLIENT_SECRET": "@facebook-oauth-client-secret",
 		"GOOGLE_OAUTH_CLIENT_SECRET": "@google-oauth-client-secret",
-		"GITHUB_OAUTH_CLIENT_SECRET": "@github-oauth-client-secret",
+		"GITHUB_OAUTH_CLIENT_SECRET": "@github-oauth-client-secret"
 	}
 }
