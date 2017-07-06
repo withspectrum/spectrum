@@ -14,15 +14,11 @@ import {
 } from '../../components/globals';
 
 export const View = styled(FlexCol)`
-  background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 15%, ${theme.bg.default} 85%, ${theme.bg.wash})`};
+  background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 10%, ${theme.bg.default} 90%, ${theme.bg.wash})`};
   flex: auto;
   align-items: stretch;
 
   @media (max-width: 1024px) {
-    background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 5%, ${theme.bg.default} 95%, ${theme.bg.wash})`};
-  }
-
-  @media (max-width: 768px) {
     background-color: ${({ theme }) => theme.bg.default};
     background-image: none;
   }
@@ -165,7 +161,7 @@ export const Byline = styled(Link)`
 `;
 
 export const BylineMeta = styled(FlexCol)`
-  margin-left: 16px;
+  margin-left: 12px;
 
   @media (max-width: 768px) {
     margin-left: 8px;
@@ -202,7 +198,14 @@ export const Location = styled(FlexRow)`
   font-weight: 500;
   color: ${({ theme }) => theme.text.alt};
   font-size: 14px;
-  margin-top: 8px;
+  margin-top: -16px;
+  margin-left: -16px;
+  margin-bottom: 16px;
+  align-self: flex-start;
+
+  &:hover > div {
+    color: ${({ theme }) => theme.brand.alt};
+  }
 
   > div {
     color: ${({ theme }) => theme.text.placeholder};

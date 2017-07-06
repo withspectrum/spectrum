@@ -24,10 +24,11 @@ const LoadMoreThreads = gql`
 `;
 
 const threadsQueryOptions = {
-  props: ({ data: { fetchMore, error, loading, channel } }) => ({
+  props: ({ data: { fetchMore, error, loading, channel, networkStatus } }) => ({
     data: {
       error,
       loading,
+      networkStatus,
       channel,
       threads: channel ? channel.threadConnection.edges : '',
       hasNextPage: channel

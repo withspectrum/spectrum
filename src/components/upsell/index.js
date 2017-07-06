@@ -146,6 +146,20 @@ export const UpsellSignIn = ({ entity }) => {
   );
 };
 
+export const UpsellSignInState = ({ entity }) => {
+  const subtitle = entity
+    ? `Ready to join the conversation in ${entity.name}?`
+    : 'Ready to join the conversation? ';
+
+  return (
+    <NullState bg="chat">
+      <Title>Come on in, the chatter's fine.</Title>
+      <Subtitle>{subtitle}</Subtitle>
+      <Button onClick={login} icon="twitter" label>Sign in with Twitter</Button>
+    </NullState>
+  );
+};
+
 export const UpsellJoinChannel = ({
   channel,
   subscribe,
@@ -169,6 +183,32 @@ export const UpsellJoinChannel = ({
         Join
       </Button>
     </NullCard>
+  );
+};
+
+export const UpsellJoinChannelState = ({
+  channel,
+  subscribe,
+  loading,
+}: {
+  channel: Object,
+  subscribe: Function,
+}) => {
+  return (
+    <NullState bg="channel">
+      <Title>Ready to join the conversation?</Title>
+      <Subtitle>
+        Join ~{channel.name} to get involved!
+      </Subtitle>
+      <Button
+        loading={loading}
+        onClick={() => subscribe(channel.id)}
+        icon="plus"
+        label
+      >
+        Join
+      </Button>
+    </NullState>
   );
 };
 
