@@ -27,7 +27,6 @@ class LoginModal extends Component {
   login = method => {
     // log the user in and return them to this page
     storeItem('preferred_signin_method', method);
-    return (window.location.href = `${SERVER_URL}/auth/${method}?r=${window.location.href}`);
   };
 
   render() {
@@ -54,7 +53,7 @@ class LoginModal extends Component {
                 preferred={preferredSigninMethod === 'twitter'}
                 after={preferredSigninMethod === 'twitter'}
                 whitebg={preferredSigninMethod !== 'twitter'}
-                href={`${SERVER_URL}/auth/twitter`}
+                href={`${SERVER_URL}/auth/twitter?r=${window.location.href}`}
                 onClick={() => this.login('twitter')}
               >
                 <Icon glyph="twitter" />
@@ -66,7 +65,7 @@ class LoginModal extends Component {
                 preferred={preferredSigninMethod === 'facebook'}
                 whitebg={preferredSigninMethod !== 'facebook'}
                 after={preferredSigninMethod === 'facebook'}
-                href={`${SERVER_URL}/auth/facebook`}
+                href={`${SERVER_URL}/auth/facebook?r=${window.location.href}`}
                 onClick={() => this.login('facebook')}
               >
                 <Icon glyph="facebook" />
@@ -78,7 +77,7 @@ class LoginModal extends Component {
                 preferred={preferredSigninMethod === 'google'}
                 whitebg={preferredSigninMethod !== 'google'}
                 after={preferredSigninMethod === 'google'}
-                href={`${SERVER_URL}/auth/google`}
+                href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
                 onClick={() => this.login('google')}
               >
                 <Icon glyph="google" />
@@ -92,7 +91,7 @@ class LoginModal extends Component {
               <ButtonTwitter
                 preferred
                 after={preferredSigninMethod === 'twitter'}
-                href={`${SERVER_URL}/auth/twitter`}
+                href={`${SERVER_URL}/auth/twitter?r=${window.location.href}`}
                 onClick={() => this.login('twitter')}
               >
                 <Icon glyph="twitter" />
@@ -103,7 +102,7 @@ class LoginModal extends Component {
               <ButtonFacebook
                 preferred
                 after={preferredSigninMethod === 'facebook'}
-                href={`${SERVER_URL}/auth/facebook`}
+                href={`${SERVER_URL}/auth/facebook?r=${window.location.href}`}
                 onClick={() => this.login('facebook')}
               >
                 <Icon glyph="facebook" />
@@ -114,7 +113,7 @@ class LoginModal extends Component {
               <ButtonGoogle
                 preferred
                 after={preferredSigninMethod === 'google'}
-                href={`${SERVER_URL}/auth/google`}
+                href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
                 onClick={() => this.login('google')}
               >
                 <Icon glyph="google" />

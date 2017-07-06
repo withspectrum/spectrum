@@ -53,7 +53,6 @@ export const NullState = props => (
 const login = method => {
   // log the user in and return them to this page
   storeItem('preferred_signin_method', method);
-  return (window.location.href = `${SERVER_URL}/auth/${method}?r=${window.location.href}`);
 };
 
 export const UpsellSignIn = ({ entity }) => {
@@ -74,7 +73,7 @@ export const UpsellSignIn = ({ entity }) => {
             preferred={preferredSigninMethod === 'twitter'}
             after={preferredSigninMethod === 'twitter'}
             whitebg={preferredSigninMethod !== 'twitter'}
-            href={`${SERVER_URL}/auth/twitter`}
+            href={`${SERVER_URL}/auth/twitter?r=${window.location.href}`}
             onClick={() => login('twitter')}
           >
             <Icon glyph="twitter" />
@@ -86,7 +85,7 @@ export const UpsellSignIn = ({ entity }) => {
             preferred={preferredSigninMethod === 'facebook'}
             whitebg={preferredSigninMethod !== 'facebook'}
             after={preferredSigninMethod === 'facebook'}
-            href={`${SERVER_URL}/auth/facebook`}
+            href={`${SERVER_URL}/auth/facebook?r=${window.location.href}`}
             onClick={() => login('facebook')}
           >
             <Icon glyph="facebook" />
@@ -98,7 +97,7 @@ export const UpsellSignIn = ({ entity }) => {
             preferred={preferredSigninMethod === 'google'}
             whitebg={preferredSigninMethod !== 'google'}
             after={preferredSigninMethod === 'google'}
-            href={`${SERVER_URL}/auth/google`}
+            href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
             onClick={() => login('google')}
           >
             <Icon glyph="google" />
@@ -112,7 +111,7 @@ export const UpsellSignIn = ({ entity }) => {
           <ButtonTwitter
             preferred
             after={preferredSigninMethod === 'twitter'}
-            href={`${SERVER_URL}/auth/twitter`}
+            href={`${SERVER_URL}/auth/twitter?r=${window.location.href}`}
             onClick={() => login('twitter')}
           >
             <Icon glyph="twitter" />
@@ -123,7 +122,7 @@ export const UpsellSignIn = ({ entity }) => {
           <ButtonFacebook
             preferred
             after={preferredSigninMethod === 'facebook'}
-            href={`${SERVER_URL}/auth/facebook`}
+            href={`${SERVER_URL}/auth/facebook?r=${window.location.href}`}
             onClick={() => login('facebook')}
           >
             <Icon glyph="facebook" />
@@ -134,7 +133,7 @@ export const UpsellSignIn = ({ entity }) => {
           <ButtonGoogle
             preferred
             after={preferredSigninMethod === 'google'}
-            href={`${SERVER_URL}/auth/google`}
+            href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
             onClick={() => login('google')}
           >
             <Icon glyph="google" />
