@@ -24,7 +24,7 @@ export const generateOAuthToken = (code, redirect_uri) => {
       'https://slack.com/api/oauth.access',
       querystring.stringify({
         code: code,
-        scope: 'users:read.email,users:read',
+        scope: 'users:read.email,users:read,admin',
         client_id: '201769987287.200380534417',
         client_secret: SLACK_SECRET,
         redirect_uri,

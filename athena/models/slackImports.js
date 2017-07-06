@@ -10,7 +10,7 @@ export const getSlackUserListData = token => {
       'https://slack.com/api/users.list',
       querystring.stringify({
         token: token,
-        scope: 'users:read.email,users:read',
+        scope: 'users:read.email,users:read, admin',
       })
     )
     .then(response => {

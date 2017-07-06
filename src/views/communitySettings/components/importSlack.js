@@ -39,8 +39,8 @@ class ImportSlack extends Component {
     const { community, isOnboarding } = this.props;
 
     const url = isOnboarding
-      ? `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read&state=${community.id}&redirect_uri=http://localhost:3001/api/slack/onboarding`
-      : `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read&state=${community.id}`;
+      ? `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read,admin&state=${community.id}&redirect_uri=http://localhost:3001/api/slack/onboarding`
+      : `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read,admin&state=${community.id}`;
 
     window.location.href = url;
   };
