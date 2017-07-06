@@ -15,6 +15,7 @@ export const Wrapper = styled(FlexCol)`
 	width: 100%;
 	background-color: ${({ theme }) => theme.bg.default};
   overflow: auto;
+	overflow-x: hidden;
 `;
 
 export const Section = styled(FlexCol)`
@@ -47,7 +48,7 @@ export const SectionOne = styled(Section)`
 	}
 
 	@media (max-width: 768px) {
-		flex-basis: 400px;
+		flex-basis: 600px;
 	}
 `;
 
@@ -261,20 +262,39 @@ export const Tagline = styled(H2)`
 
 export const Button = styled.a`
   display: flex;
-  flex: 0 0 auto;
+  flex-shrink: 1;
   z-index: 2;
   flex-direction: flex-row;
   align-self: flex-start;
   align-items: center;
   color: ${({ theme }) => theme.text.reverse};
-  background-color: transparent;
-  border: 2px solid currentColor;
   border-radius: 8px;
   padding: 8px;
   padding-right: 16px;
   font-size: 14px;
   font-weight: 700;
   transition: ${Transition.hover.off};
+	position: relative;
+	margin: 16px 0;
+
+	${props => props.after && `
+			margin: 24px 0;
+
+			&:after {
+				content: 'Previously signed in with';
+				position: absolute;
+				top: -23px;
+				font-size: 10px;
+				font-weight: 500;
+				text-transform: uppercase;
+				opacity: 0.8;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 100%;
+				text-align: center;
+				color: #fff;
+			}
+		`}
 
   span {
     display: inline-block;
@@ -292,20 +312,36 @@ export const Button = styled.a`
   }
 
   &:hover {
-    border-radius: 16px;
-    border: 2px solid transparent;
-    background-color: ${({ theme }) => theme.bg.default};
-    transition: ${Transition.hover.on};
     cursor: pointer;
-
-    span {
-      color: ${({ theme }) => theme.brand.default};
-    }
-
-    svg {
-      fill: ${({ theme }) => theme.brand.default} !important;
-    }
   }
+`;
+
+export const ButtonTwitter = styled(Button)`
+	background: ${props => (props.preferred ? props.theme.social.twitter.default : 'none')};
+	color: ${props => (props.whitebg ? props.theme.social.twitter.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
+
+	&:hover {
+		color: ${props => (props.whitebg ? props.theme.social.twitter.default : '#fff')}
+	}
+`;
+
+export const ButtonFacebook = styled(Button)`
+	background: ${props => (props.preferred ? props.theme.social.facebook.default : 'none')};
+	color: ${props => (props.whitebg ? props.theme.social.facebook.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
+
+
+	&:hover {
+		color: ${props => (props.whitebg ? props.theme.social.facebook.default : '#fff')}
+	}
+`;
+
+export const ButtonGoogle = styled(Button)`
+	background: ${props => (props.preferred ? props.theme.social.google.default : 'none')};
+	color: ${props => (props.whitebg ? props.theme.social.google.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
+
+	&:hover {
+		color: ${props => (props.whitebg ? props.theme.social.google.default : '#fff')}
+	}
 `;
 
 export const LinkButton = styled(Button)`
@@ -351,4 +387,12 @@ export const Copy = styled(P)`
 	&:not(:first-of-type){
 		margin-top: 24px;
 	}
+`;
+
+export const LoginCard = styled.div`
+	border-radius: 12px;
+	padding: 16px 0;
+	margin-top: 16px;
+	align-self: flex-start;
+	align-items: flex-start;
 `;

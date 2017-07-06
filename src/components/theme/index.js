@@ -53,5 +53,9 @@ export const theme = {
       default: '#00ACED',
       alt: '#53D0FF',
     },
+    google: {
+      default: '#ea4335',
+      alt: '#ea4335',
+    },
   },
 };

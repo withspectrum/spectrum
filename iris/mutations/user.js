@@ -1,5 +1,5 @@
 // @flow
-import { editUser, getUsers } from '../models/user';
+import { editUser, getUsers, getUser } from '../models/user';
 import type { EditUserArguments } from '../models/user';
 import {
   getUsersSettings,
@@ -25,7 +25,18 @@ module.exports = {
         );
       }
 
-      return editUser(args, currentUser.id);
+      // if the user is changing their username, check for uniqueness on the server
+      if (args.input.username) {
+        return getUser({ username: args.input.username }).then(user => {
+          // no user exists
+          if (!user) return editUser(args, currentUser.id);
+          return new UserError(
+            'Looks like that username got swooped! Try another?'
+          );
+        });
+      } else {
+        return editUser(args, currentUser.id);
+      }
     },
     toggleNotificationSettings: (
       _,

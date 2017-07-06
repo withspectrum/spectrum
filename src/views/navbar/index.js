@@ -7,6 +7,7 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import { getCurrentUserProfile } from '../../api/user';
+import { openModal } from '../../actions/modals';
 import {
   getNotificationsForNavbar,
   markNotificationsSeenMutation,
@@ -36,6 +37,7 @@ import {
   IconLink,
   Label,
   UserProfileAvatar,
+  SigninLink,
 } from './style';
 
 class Navbar extends Component {
@@ -249,8 +251,7 @@ class Navbar extends Component {
   };
 
   login = () => {
-    // log the user in and return them to this page
-    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window.location.href}`);
+    this.props.dispatch(openModal('LOGIN'));
   };
 
   render() {
@@ -396,9 +397,9 @@ class Navbar extends Component {
             </IconLink>
           </Section>
           <Section right>
-            <Button onClick={this.login} icon="twitter">
-              Sign in
-            </Button>
+            <SigninLink onClick={this.login} icon="twitter">
+              Sign up or log in
+            </SigninLink>
           </Section>
         </Nav>
       );

@@ -33,6 +33,7 @@ import {
   UpsellJoinChannelState,
   Upsell404Thread,
   NullState,
+  UpsellSignIn,
 } from '../../../components/upsell';
 
 const LoadingView = () => (
@@ -199,6 +200,8 @@ class ThreadContainerPure extends Component {
                   subscribe={this.toggleSubscription}
                   loading={isLoading}
                 />}
+
+              {!loggedInUser && <UpsellSignIn />}
 
             </Detail>
           </Content>

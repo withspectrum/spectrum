@@ -74,10 +74,22 @@ export const LogoLink = styled(Link)`
   `}
 `;
 
-export const SigninLink = styled(Link)`
+export const SigninLink = styled.button`
   width: 100%;
   display: flex;
   justify-content: center;
+  align-self: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 14px;
+  background: transparent;
+  border: none;
+  webkit-display: none;
+  color: #fff;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const Logo = styled.img`
