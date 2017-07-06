@@ -42,6 +42,7 @@ export const COMMUNITY_SLUG_BLACKLIST = [
   'security',
   'api',
   'shop',
+  'new',
 ];
 
 // eslint-disable-next-line

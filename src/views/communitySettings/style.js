@@ -40,7 +40,7 @@ export const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 8px 0 8px;
+  padding: 16px 0 8px;
 `;
 
 export const EmailInviteForm = styled.div`

@@ -74,7 +74,7 @@ class EmailInvites extends Component {
 
   sendInvitations = () => {
     const { contacts } = this.state;
-    const { community, dispatch } = this.props;
+    const { community, dispatch, currentUser } = this.props;
 
     this.setState({
       isLoading: true,
@@ -83,6 +83,7 @@ class EmailInvites extends Component {
     let validContacts = contacts
       .filter(contact => contact.error === false)
       .filter(contact => contact.email.length > 0)
+      .filter(contact => contact.email !== currentUser.email)
       .map(({ error, ...contact }) => {
         return { ...contact };
       });
@@ -193,10 +194,10 @@ class EmailInvites extends Component {
 
   render() {
     const { community } = this.props;
-    const { contacts, isLoading, success } = this.state;
+    const { contacts, isLoading } = this.state;
 
     return (
-      <StyledCard>
+      <div>
         <LargeListHeading>Invite by Email</LargeListHeading>
         <Description>
           Invite people to your community directly by email.
@@ -231,11 +232,31 @@ class EmailInvites extends Component {
             Send Invitations
           </Button>
         </ButtonContainer>
-      </StyledCard>
+      </div>
     );
   }
 }
 
-export default compose(sendEmailInvitationsMutation, connect(), pure)(
-  EmailInvites
+const EmailInvitesCard = props => (
+  <StyledCard>
+    <EmailInvites {...props} />
+  </StyledCard>
 );
+
+const EmailInvitesNoCard = props => <EmailInvites {...props} />;
+
+const map = state => ({
+  currentUser: state.users.currentUser,
+});
+
+export const EmailInvitesWithoutCard = compose(
+  sendEmailInvitationsMutation,
+  connect(map),
+  pure
+)(EmailInvitesNoCard);
+export const EmailInvitesWithCard = compose(
+  sendEmailInvitationsMutation,
+  connect(map),
+  pure
+)(EmailInvitesCard);
+export default EmailInvitesWithCard;

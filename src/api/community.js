@@ -265,6 +265,15 @@ export const getCommunityMembersQuery = graphql(
   getCommunityMembersOptions
 );
 
+export const getCommunityByIdQuery = gql`
+  query getCommunity($id: ID) {
+    community(id: $id) {
+      ...communityInfo
+    }
+  }
+  ${communityInfoFragment}
+`;
+
 const getCommunityByIdOptions = {
   options: ({ id }) => ({
     variables: {
@@ -274,14 +283,7 @@ const getCommunityByIdOptions = {
 };
 
 export const getCommunityById = graphql(
-  gql`
-		query getCommunity($id: ID) {
-			community(id: $id) {
-        ...communityInfo
-      }
-		}
-    ${communityInfoFragment}
-	`,
+  getCommunityByIdQuery,
   getCommunityByIdOptions
 );
 

@@ -44,6 +44,7 @@ const COMMUNITY_SLUG_BLACKLIST = [
   'security',
   'api',
   'shop',
+  'new',
 ];
 
 const slugIsBlacklisted = slug => {

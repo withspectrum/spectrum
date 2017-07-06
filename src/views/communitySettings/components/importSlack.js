@@ -36,8 +36,13 @@ class ImportSlack extends Component {
   }
 
   import = () => {
-    const { community } = this.props;
-    window.location.href = `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read&state=${community.id}`;
+    const { community, isOnboarding } = this.props;
+
+    const url = isOnboarding
+      ? `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read&state=${community.id}&redirect_uri=http://localhost:3001/api/slack/onboarding`
+      : `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read&state=${community.id}`;
+
+    window.location.href = url;
   };
 
   sendInvites = () => {
@@ -72,7 +77,7 @@ class ImportSlack extends Component {
     const { isLoading } = this.state;
 
     if (!community || error !== undefined) {
-      return <StyledCard>Error</StyledCard>;
+      return null;
     }
 
     // if no import has been created yet, we won't have a team name or a record at all
@@ -88,7 +93,7 @@ class ImportSlack extends Component {
 
     if (noImport) {
       return (
-        <StyledCard>
+        <div>
           <LargeListHeading>Invite a Slack Team</LargeListHeading>
           <Description>
             Easily invite your team from an existing Slack team to Spectrum. Get started by connecting your team below.
@@ -102,17 +107,17 @@ class ImportSlack extends Component {
           <ButtonContainer>
             <Button onClick={this.import}>Connect a Slack Team</Button>
           </ButtonContainer>
-        </StyledCard>
+        </div>
       );
     } else if (partialImport) {
       startPolling(5000);
       return (
-        <StyledCard>
+        <div>
           <LargeListHeading>Inivite a Slack Team</LargeListHeading>
           <ButtonContainer>
             <Button loading>Connecting with Slack...</Button>
           </ButtonContainer>
-        </StyledCard>
+        </div>
       );
     } else if (fullImport) {
       stopPolling();
@@ -122,7 +127,7 @@ class ImportSlack extends Component {
 
       if (hasAlreadyBeenSent) {
         return (
-          <StyledCard>
+          <div>
             <LargeListHeading>Invite a Slack Team</LargeListHeading>
             <Description>
               This community has been connected to the
@@ -140,11 +145,11 @@ class ImportSlack extends Component {
                 Invites sent to {count} people
               </Button>
             </ButtonContainer>
-          </StyledCard>
+          </div>
         );
       } else {
         return (
-          <StyledCard>
+          <div>
             <LargeListHeading>Invite a Slack Team</LargeListHeading>
             <Description>
               This community has been connected to the
@@ -158,21 +163,41 @@ class ImportSlack extends Component {
               members with email addresses - you can invite them to your Spectrum community in one click.
             </Description>
             <ButtonContainer>
-              <Button onClick={this.sendInvites} loading={isLoading}>
+              <Button
+                gradientTheme="success"
+                onClick={this.sendInvites}
+                loading={isLoading}
+              >
                 Invite {count} people to Spectrum
               </Button>
             </ButtonContainer>
-          </StyledCard>
+          </div>
         );
       }
     }
   }
 }
 
-export default compose(
+const ImportSlackCard = props => (
+  <StyledCard>
+    <ImportSlack {...props} />
+  </StyledCard>
+);
+
+const ImportSlackNoCard = props => <ImportSlack {...props} />;
+
+export const ImportSlackWithoutCard = compose(
   sendSlackInvitationsMutation,
   getSlackImport,
   displayLoadingCard,
   connect(),
   pure
-)(ImportSlack);
+)(ImportSlackNoCard);
+export const ImportSlackWithCard = compose(
+  sendSlackInvitationsMutation,
+  getSlackImport,
+  displayLoadingCard,
+  connect(),
+  pure
+)(ImportSlackCard);
+export default ImportSlackWithCard;

@@ -18,7 +18,7 @@ if (!IS_PROD) {
   SLACK_SECRET = SLACK_SECRET || 'asdf123';
 }
 
-export const generateOAuthToken = code => {
+export const generateOAuthToken = (code, redirect_uri) => {
   return axios
     .post(
       'https://slack.com/api/oauth.access',
@@ -27,6 +27,7 @@ export const generateOAuthToken = code => {
         scope: 'users:read.email,users:read',
         client_id: '201769987287.200380534417',
         client_secret: SLACK_SECRET,
+        redirect_uri,
       })
     )
     .then(response => {
