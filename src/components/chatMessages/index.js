@@ -59,17 +59,18 @@ class ChatMessages extends Component {
         if (me || robo) return;
 
         return (
-          <Link
-            to={`/users/${sender.username}`}
+          <AvatarLabel
+            tipText={sender.name}
+            tipLocation="right"
             style={{ alignSelf: 'flex-end' }}
           >
-            <AvatarLabel tipText={sender.name} tipLocation="right">
-              <UserAvatar
-                isOnline={sender.isOnline}
-                src={sender.profilePhoto}
-              />
-            </AvatarLabel>
-          </Link>
+            <UserAvatar
+              isOnline={sender.isOnline}
+              src={sender.profilePhoto}
+              username={sender.username}
+              link={sender.username ? `/users/${sender.username}` : null}
+            />
+          </AvatarLabel>
         );
       };
 
@@ -99,7 +100,9 @@ class ChatMessages extends Component {
               return (
                 <Timestamp border={'2px solid'} color={'bg.wash'} key={i}>
                   <hr />
-                  <Time>{time}</Time>
+                  <Time>
+                    {time}
+                  </Time>
                   <hr />
                 </Timestamp>
               );
