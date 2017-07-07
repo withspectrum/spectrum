@@ -4,7 +4,7 @@ import { COMMUNITY_INVITE_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import { getCommunityById } from '../models/community';
-import { getOwnersInCommunity } from '../models/usersCommunities';
+import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { storeNotification } from '../models/notification';
 import { getUserByEmail } from '../models/user';
 import processQueue from '../../shared/bull/process-queue';
@@ -91,40 +91,50 @@ const processMessageNotificationQueue = job => {
           actor,
           customMessage
         );
+      } else {
+        return getUserPermissionsInCommunity(
+          communityId,
+          existingUser.id
+        ).then(permissions => {
+          // if user is blocked, is already a member, owns the community, don't send a notification
+          if (
+            permissions.isBlocked ||
+            permissions.isModerator ||
+            permissions.isOwner ||
+            permissions.isMember
+          )
+            return;
+
+          // Create notification if user is not a member
+          const newNotification = Object.assign(
+            {},
+            {},
+            {
+              actors: [actor],
+              event: 'COMMUNITY_INVITE',
+              context,
+              entities: [context], // entity and context are the same for this type of notification
+            }
+          );
+
+          debug('creating new notification');
+
+          return storeNotification(newNotification).then(notification => {
+            debug('store new usersnotifications records');
+            const sender = JSON.parse(actor.payload);
+
+            return Promise.all([
+              addToSendCommunityInviteEmailQueue(
+                inboundRecipient,
+                communityToInvite,
+                sender,
+                customMessage
+              ),
+              storeUsersNotifications(notification.id, existingUser.id),
+            ]);
+          });
+        });
       }
-
-      debug(
-        `payloads loaded, recipient is on spectrum. generating notification data`
-      );
-
-      // Create notification
-      const newNotification = Object.assign(
-        {},
-        {},
-        {
-          actors: [actor],
-          event: 'COMMUNITY_INVITE',
-          context,
-          entities: [context], // entity and context are the same for this type of notification
-        }
-      );
-
-      debug('creating new notification');
-
-      return storeNotification(newNotification).then(notification => {
-        debug('store new usersnotifications records');
-        const sender = JSON.parse(actor.payload);
-
-        return Promise.all([
-          addToSendCommunityInviteEmailQueue(
-            inboundRecipient,
-            communityToInvite,
-            sender,
-            customMessage
-          ),
-          storeUsersNotifications(notification.id, existingUser.id),
-        ]);
-      });
     })
     .catch(err => {
       console.log(err);

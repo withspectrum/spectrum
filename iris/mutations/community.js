@@ -385,6 +385,7 @@ module.exports = {
             // for each member on the invite record, send a community invitation
             return inviteRecord.members
               .filter(user => !!user.email)
+              .filter(user => user.email !== currentUser.email)
               .map(user => {
                 return communityInvitationQueue.add({
                   recipient: {
@@ -422,18 +423,20 @@ module.exports = {
             "You don't have permission to invite people to this community."
           );
         } else {
-          return input.contacts.map(user => {
-            return communityInvitationQueue.add({
-              recipient: {
-                email: user.email,
-                firstName: user.firstName ? user.firstName : null,
-                lastName: user.lastName ? user.lastName : null,
-              },
-              communityId: input.id,
-              senderId: currentUser.id,
-              customMessage: input.customMessage ? input.customMessage : null,
+          return input.contacts
+            .filter(user => user.email !== currentUser.email)
+            .map(user => {
+              return communityInvitationQueue.add({
+                recipient: {
+                  email: user.email,
+                  firstName: user.firstName ? user.firstName : null,
+                  lastName: user.lastName ? user.lastName : null,
+                },
+                communityId: input.id,
+                senderId: currentUser.id,
+                customMessage: input.customMessage ? input.customMessage : null,
+              });
             });
-          });
         }
       });
     },
