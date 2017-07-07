@@ -32,9 +32,9 @@ const getUserByUsername = (username: string): Promise<Object> => {
     .run()
     .then(
       result =>
-        (result
+        result
           ? result[0]
-          : new UserError(`No user found with the username ${username}`))
+          : new UserError(`No user found with the username ${username}`)
     );
 };
 
@@ -189,18 +189,11 @@ const getEverything = (userId: string): Promise<Array<any>> => {
       index: 'channelId',
     })
     .without({
-      left: [
-        'id',
-        'channelId',
-        'createdAt',
-        'isMember',
-        'isModerator',
-        'isOwner',
-      ],
+      left: ['id', 'channelId', 'createdAt', 'isModerator', 'isOwner'],
     })
     .zip()
-    .filter({ isBlocked: false, isPending: false })
-    .without('isBlocked', 'isPending')
+    .filter({ isBlocked: false, isPending: false, isMember: true })
+    .without('isBlocked', 'isPending', 'isMember')
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .run();

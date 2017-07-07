@@ -33,7 +33,7 @@
     "graphql-date": "^1.0.3",
     "graphql-log": "0.1.2",
     "graphql-server-express": "0.8.x",
-    "graphql-subscriptions": "0.4.2",
+    "graphql-subscriptions": "0.4.x",
     "graphql-tools": "^0.11.0",
     "highlight.js": "^9.10.0",
     "history": "^4.6.1",

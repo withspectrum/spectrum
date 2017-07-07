@@ -18,13 +18,15 @@ export const StyledLabel = styled.label`
 
   &:hover > input,
   &:hover > textarea {
-    border-color: ${props => (props.disabled ? props.theme.border.default : props.theme.text.alt)};
+    border-color: ${props =>
+      props.disabled ? props.theme.border.default : props.theme.text.alt};
     transition: ${Transition.hover.on};
   }
 
   &:hover > input:focus,
   &:hover > textarea:focus {
-    border-color: ${props => (props.disabled ? props.theme.inactive : props.theme.brand.alt)};
+    border-color: ${props =>
+      props.disabled ? props.theme.inactive : props.theme.brand.alt};
   }
 `;
 
@@ -39,38 +41,50 @@ export const StyledPrefixLabel = styled.label`
   text-overflow: ellipsis;
 
   > input {
-  	margin-left: 2px;
+    margin-left: 2px;
   }
 
   &:hover > input {
-    border-color: ${props => (props.disabled ? props.theme.inactive : props.theme.text.alt)};
+    border-color: ${props =>
+      props.disabled ? props.theme.inactive : props.theme.text.alt};
     transition: ${Transition.hover.on};
   }
 `;
 
 export const StyledInput = styled.input`
   flex: 1 0 auto;
-  background: ${props => (props.disabled ? props.theme.bg.wash : props.theme.bg.default)};
+  background: ${props =>
+    props.disabled ? props.theme.bg.wash : props.theme.bg.default};
   font-weight: 500;
   width: 100%;
   font-size: 14px;
-  border: 2px solid ${props => (props.disabled ? props.theme.border.default : props.theme.inactive)};
+  border: 2px solid
+    ${props =>
+      props.disabled ? props.theme.border.default : props.theme.inactive};
   border-radius: 4px;
   padding: 8px 12px;
   margin-top: 2px;
   box-shadow: none;
   transition: ${Transition.hover.off};
 
-  ${props => props.type === 'checkbox' && css`
+  ${props =>
+    props.type === 'checkbox' &&
+    css`
     flex: initial;
     width: initial;
     margin-right: 0.5em;
-  `}
-
-  &::placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &::-webkit-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &:-moz-placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &:-ms-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
+  `} &::placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &::-webkit-input-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &:-moz-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &:-ms-input-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
 
   &:focus {
     border-color: ${({ theme }) => theme.brand.default};
@@ -86,8 +100,8 @@ export const StyledInput = styled.input`
 `;
 
 export const StyledTextArea = styled.textarea`
-	flex: 1 0 auto;
-	width: 100%;
+  flex: 1 0 auto;
+  width: 100%;
   background: ${({ theme }) => theme.bg.default};
   font-weight: 500;
   font-size: 14px;
@@ -98,10 +112,18 @@ export const StyledTextArea = styled.textarea`
   box-shadow: none;
   transition: ${Transition.hover.off};
 
-  &::placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &::-webkit-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &:-moz-placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &:-ms-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
+  &::placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &::-webkit-input-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &:-moz-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &:-ms-input-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
 
   &:focus {
     border-color: ${({ theme }) => theme.brand.default};
@@ -110,16 +132,20 @@ export const StyledTextArea = styled.textarea`
 `;
 
 export const StyledUnderlineInput = styled.input`
-	font-size: inherit;
-	font-weight: inherit;
-	color: ${props => (props.disabled ? props.theme.text.alt : props.theme.text.default)};
-  border-bottom: ${props => (props.disabled ? '2px solid transparent' : `2px solid ${props.theme.inactive}`)};
+  font-size: inherit;
+  font-weight: inherit;
+  color: ${props =>
+    props.disabled ? props.theme.text.alt : props.theme.text.default};
+  border-bottom: ${props =>
+    props.disabled
+      ? '2px solid transparent'
+      : `2px solid ${props.theme.inactive}`};
   width: 50%;
   transition: ${Transition.hover.off};
 
   &:hover {
     border-color: ${props => (props.disabled ? 'transparent' : 'inherit')};
-    transition: ${Transition.hover.on}
+    transition: ${Transition.hover.on};
   }
 
   &:focus {
@@ -242,25 +268,19 @@ export const InputOverlay = styled.div`
   width: 100%;
   height: 100%;
   color: ${({ theme }) => theme.text.reverse};
-  ${/* background-color: ${({ theme }) => theme.bg.reverse}; */ ''}
-  padding: 8px;
+  ${/* background-color: ${({ theme }) => theme.bg.reverse}; */ ''} padding: 8px;
   border-radius: ${props => (props.user ? '100%' : '8px')};
-
+  opacity: 1;
 
   &:hover {
-    + img, + div {
+    + img,
+    + div {
       transition: ${Transition.hover.on};
       opacity: 0.25;
     }
   }
 
-  div {
-    transition: ${Transition.hover.off};
-    opacity: 0;
-  }
-
   &:hover div {
     transition: ${Transition.hover.on};
-    opacity: 1;
   }
 `;
