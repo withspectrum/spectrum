@@ -173,6 +173,13 @@ export const StyledError = styled.p`
   line-height: 1.4;
 `;
 
+export const StyledSuccess = styled.p`
+  font-size: 14px;
+  color: ${props => props.theme.success.default};
+  padding: 8px 0 16px;
+  line-height: 1.4;
+`;
+
 export const PhotoInputLabel = styled.label`
   position: relative;
   height: 48px;

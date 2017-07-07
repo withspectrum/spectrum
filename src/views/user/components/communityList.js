@@ -12,6 +12,7 @@ import { CommunityListItem } from '../../../components/listItems';
 import { Button, IconButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { NullCard } from '../../../components/upsell';
+import { LoadingList, LoadingListItem } from '../../../components/loading';
 import { openModal } from '../../../actions/modals';
 
 import {
@@ -32,9 +33,15 @@ const CommunityList = props => {
     withDescription,
     withMeta,
     history,
+    networkStatus,
   } = props;
 
-  if (communities && (communities.length !== 0 && communities !== null)) {
+  if (networkStatus < 7) {
+    return <LoadingList />;
+  } else if (
+    networkStatus === 7 &&
+    (communities && (communities.length !== 0 && communities !== null))
+  ) {
     return (
       <StyledCard>
         <ListHeader>
@@ -72,17 +79,7 @@ const CommunityList = props => {
       </StyledCard>
     );
   } else {
-    return (
-      <NullCard
-        bg="community"
-        heading={`You're fresh out of communities!`}
-        copy={`Let's find you something worth joining...`}
-      >
-        <Button icon="explore" color="text.alt" gradientTheme="">
-          Browse communities
-        </Button>
-      </NullCard>
-    );
+    return <div />;
   }
 };
 

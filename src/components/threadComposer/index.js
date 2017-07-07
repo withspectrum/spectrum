@@ -9,6 +9,8 @@ import Textarea from 'react-textarea-autosize';
 // $FlowFixMe
 import { withRouter } from 'react-router';
 // $FlowFixMe
+import { Link } from 'react-router-dom';
+// $FlowFixMe
 import { connect } from 'react-redux';
 
 import { track } from '../../helpers/events';
@@ -23,6 +25,7 @@ import { TextButton, Button } from '../buttons';
 import { FlexRow } from '../../components/globals';
 import Icon from '../icons';
 import { displayLoadingComposer } from '../loading';
+import { NullCard } from '../upsell';
 import {
   Container,
   Composer,
@@ -140,10 +143,6 @@ class ThreadComposerWithData extends Component {
       linkPreviewLength: 0,
       fetchingLinkPreview: false,
     };
-  }
-
-  componentDidMount() {
-    this.refs.titleTextarea.focus();
   }
 
   componentWillUpdate(nextProps) {
@@ -452,102 +451,126 @@ class ThreadComposerWithData extends Component {
       fetchingLinkPreview,
     } = this.state;
 
-    const { isOpen } = this.props;
+    const { isOpen, data: { networkStatus } } = this.props;
 
-    return (
-      <Container isOpen={isOpen}>
-        <Overlay isOpen={isOpen} onClick={this.closeComposer} />
-        <Composer isOpen={isOpen} onClick={this.handleOpenComposer}>
+    if (networkStatus === 7 && (!availableCommunities || !availableChannels)) {
+      return (
+        <NullCard
+          bg="community"
+          heading={`Once you join a community, you can start conversations there!`}
+          copy={`Let's find you something worth joining...`}
+        >
+          <Link to={`/explore`}>
+            <Button icon="explore" color="text.alt">
+              Browse communities
+            </Button>
+          </Link>
+        </NullCard>
+      );
+    } else {
+      return (
+        <Container isOpen={isOpen}>
+          <Overlay isOpen={isOpen} onClick={this.closeComposer} />
+          <Composer isOpen={isOpen} onClick={this.handleOpenComposer}>
 
-          <Placeholder isOpen={isOpen}>
-            <Icon glyph="post" />
-            <PlaceholderLabel>
-              Start a new thread...
-            </PlaceholderLabel>
-          </Placeholder>
+            <Placeholder isOpen={isOpen}>
+              <Icon glyph="post" />
+              <PlaceholderLabel>
+                Start a new thread...
+              </PlaceholderLabel>
+            </Placeholder>
 
-          <ContentContainer isOpen={isOpen}>
-            <Textarea
-              onChange={this.changeTitle}
-              style={ThreadTitle}
-              value={this.state.title}
-              placeholder={'A title for your thread...'}
-              ref="titleTextarea"
-              autoFocus
-            />
+            <ContentContainer isOpen={isOpen}>
+              <Textarea
+                onChange={this.changeTitle}
+                style={ThreadTitle}
+                value={this.state.title}
+                placeholder={'A title for your thread...'}
+                ref="titleTextarea"
+                autoFocus
+              />
 
-            <Editor
-              onChange={this.changeBody}
-              onKeyDown={this.listenForUrl}
-              state={this.state.body}
-              style={ThreadDescription}
-              editorRef={editor => this.bodyEditor = editor}
-              placeholder="Write more thoughts here, add photos, and anything else!"
-              className={'threadComposer'}
-              showLinkPreview={true}
-              linkPreview={{
-                loading: fetchingLinkPreview,
-                remove: this.removeLinkPreview,
-                trueUrl: linkPreviewTrueUrl,
-                data: linkPreview,
-              }}
-            />
+              <Editor
+                onChange={this.changeBody}
+                onKeyDown={this.listenForUrl}
+                state={this.state.body}
+                style={ThreadDescription}
+                editorRef={editor => this.bodyEditor = editor}
+                placeholder="Write more thoughts here, add photos, and anything else!"
+                className={'threadComposer'}
+                showLinkPreview={true}
+                linkPreview={{
+                  loading: fetchingLinkPreview,
+                  remove: this.removeLinkPreview,
+                  trueUrl: linkPreviewTrueUrl,
+                  data: linkPreview,
+                }}
+              />
 
-            <Actions>
-              <Dropdowns>
-                <Icon
-                  glyph="community"
-                  tipText="Select a community"
-                  tipLocation="top-right"
-                />
-                <select
-                  onChange={this.setActiveCommunity}
-                  value={activeCommunity}
-                >
-                  {availableCommunities.map(community => {
-                    return (
-                      <option key={community.id} value={community.id}>
-                        {community.name}
-                      </option>
-                    );
-                  })}
-                </select>
-                <Icon
-                  glyph="channel"
-                  tipText="Select a channel"
-                  tipLocation="top-right"
-                />
-                <select onChange={this.setActiveChannel} value={activeChannel}>
-                  {availableChannels
-                    .filter(channel => channel.community.id === activeCommunity)
-                    .map((channel, i) => {
+              <Actions>
+                <Dropdowns>
+                  <Icon
+                    glyph="community"
+                    tipText="Select a community"
+                    tipLocation="top-right"
+                  />
+                  <select
+                    onChange={this.setActiveCommunity}
+                    value={activeCommunity}
+                  >
+                    {availableCommunities.map(community => {
                       return (
-                        <option key={channel.id} value={channel.id}>
-                          {channel.name}
+                        <option key={community.id} value={community.id}>
+                          {community.name}
                         </option>
                       );
                     })}
-                </select>
-              </Dropdowns>
-              <FlexRow>
-                <TextButton hoverColor="warn.alt" onClick={this.closeComposer}>
-                  Cancel
-                </TextButton>
-                <Button
-                  onClick={this.publishThread}
-                  loading={isPublishing}
-                  disabled={!title || isPublishing}
-                  color={'brand'}
-                >
-                  Publish
-                </Button>
-              </FlexRow>
-            </Actions>
-          </ContentContainer>
+                  </select>
+                  <Icon
+                    glyph="channel"
+                    tipText="Select a channel"
+                    tipLocation="top-right"
+                  />
+                  <select
+                    onChange={this.setActiveChannel}
+                    value={activeChannel}
+                  >
+                    {availableChannels
+                      .filter(
+                        channel => channel.community.id === activeCommunity
+                      )
+                      .map((channel, i) => {
+                        return (
+                          <option key={channel.id} value={channel.id}>
+                            {channel.name}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </Dropdowns>
+                <FlexRow>
+                  <TextButton
+                    hoverColor="warn.alt"
+                    onClick={this.closeComposer}
+                  >
+                    Cancel
+                  </TextButton>
+                  <Button
+                    onClick={this.publishThread}
+                    loading={isPublishing}
+                    disabled={!title || isPublishing}
+                    color={'brand'}
+                  >
+                    Publish
+                  </Button>
+                </FlexRow>
+              </Actions>
+            </ContentContainer>
 
-        </Composer>
-      </Container>
-    );
+          </Composer>
+        </Container>
+      );
+    }
   }
 }
 

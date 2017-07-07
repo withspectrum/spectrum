@@ -12,6 +12,7 @@ import {
   StyledHiddenInput,
   StyledCheckboxWrapper,
   StyledError,
+  StyledSuccess,
   PhotoInputLabel,
   CoverInputLabel,
   InputOverlay,
@@ -146,4 +147,8 @@ export class UnderlineInput extends Component {
 
 export const Error = (props: Object) => {
   return <StyledError>{props.children}</StyledError>;
+};
+
+export const Success = (props: Object) => {
+  return <StyledSuccess>{props.children}</StyledSuccess>;
 };

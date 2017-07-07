@@ -36,6 +36,7 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
         return channel;
       }
     })
+    .filter(channel => !channel.node.channelPermissions.isBlocked)
     .map(channel => channel.node);
 
   const joinedChannels = channels.filter(
