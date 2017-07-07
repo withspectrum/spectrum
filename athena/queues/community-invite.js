@@ -18,7 +18,12 @@ const sendCommunityInviteEmailQueue = createQueue(SEND_COMMUNITY_INVITE_EMAIL);
 
 // const sendCommunityInvitateEmailQueue = createQueue(SEND_COMMUNITY_INVITE_EMAIL);
 
-const addToSendCommunityInviteEmailQueue = (recipient, community, sender) => {
+const addToSendCommunityInviteEmailQueue = (
+  recipient,
+  community,
+  sender,
+  customMessage
+) => {
   if (!recipient || !recipient.email || !community || !sender) {
     debug('aborting adding to email queue due to invalid data');
     return Promise.resolve();
@@ -29,6 +34,7 @@ const addToSendCommunityInviteEmailQueue = (recipient, community, sender) => {
     recipient,
     sender,
     community,
+    customMessage,
   });
 };
 
@@ -52,7 +58,7 @@ const addToSendCommunityInviteEmailQueue = (recipient, community, sender) => {
 */
 
 const processMessageNotificationQueue = job => {
-  const { recipient, communityId, senderId } = job.data;
+  const { recipient, communityId, senderId, customMessage } = job.data;
 
   const inboundRecipient = recipient;
 
@@ -82,7 +88,8 @@ const processMessageNotificationQueue = job => {
         return addToSendCommunityInviteEmailQueue(
           inboundRecipient,
           communityToInvite,
-          actor
+          actor,
+          customMessage
         );
       }
 
@@ -112,7 +119,8 @@ const processMessageNotificationQueue = job => {
           addToSendCommunityInviteEmailQueue(
             inboundRecipient,
             communityToInvite,
-            sender
+            sender,
+            customMessage
           ),
           storeUsersNotifications(notification.id, existingUser.id),
         ]);

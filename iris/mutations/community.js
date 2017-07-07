@@ -338,7 +338,7 @@ module.exports = {
         }
       });
     },
-    sendSlackInvites: (_, { id }, { user }) => {
+    sendSlackInvites: (_, { input }, { user }) => {
       const currentUser = user;
 
       if (!currentUser) {
@@ -349,7 +349,7 @@ module.exports = {
 
       // make sure the user is the owner of the community
       return (
-        getUserPermissionsInCommunity(id, currentUser.id)
+        getUserPermissionsInCommunity(input.id, currentUser.id)
           .then(permissions => {
             if (!permissions.isOwner) {
               return new UserError(
@@ -358,7 +358,7 @@ module.exports = {
             }
 
             // get the slack import to make sure it hasn't already been sent before
-            return getSlackImport(id);
+            return getSlackImport(input.id);
           })
           .then(result => {
             // if no slack import exists
@@ -375,7 +375,7 @@ module.exports = {
             }
 
             // mark the slack import for this community as sent
-            return markSlackImportAsSent(id);
+            return markSlackImportAsSent(input.id);
           })
           .then(inviteRecord => {
             if (inviteRecord.members.length === 0) {
@@ -383,20 +383,23 @@ module.exports = {
             }
 
             // for each member on the invite record, send a community invitation
-            return inviteRecord.members.map(user => {
-              return communityInvitationQueue.add({
-                recipient: {
-                  email: user.email,
-                  firstName: user.firstName ? user.firstName : null,
-                  lastName: user.lastName ? user.lastName : null,
-                },
-                communityId: inviteRecord.communityId,
-                senderId: inviteRecord.senderId,
+            return inviteRecord.members
+              .filter(user => !!user.email)
+              .map(user => {
+                return communityInvitationQueue.add({
+                  recipient: {
+                    email: user.email,
+                    firstName: user.firstName ? user.firstName : null,
+                    lastName: user.lastName ? user.lastName : null,
+                  },
+                  communityId: inviteRecord.communityId,
+                  senderId: inviteRecord.senderId,
+                  customMessage: input.customMessage,
+                });
               });
-            });
           })
           // send the community record back to the client
-          .then(() => getCommunities([id]))
+          .then(() => getCommunities([input.id]))
           .then(data => data[0])
       );
     },
@@ -428,6 +431,7 @@ module.exports = {
               },
               communityId: input.id,
               senderId: currentUser.id,
+              customMessage: input.customMessage ? input.customMessage : null,
             });
           });
         }

@@ -16,6 +16,7 @@ type SendCommunityInviteJobData = {
     email: string,
   },
   community: Object,
+  customMessage: string,
 };
 
 type SendCommunityInviteEmailJob = {
@@ -29,7 +30,6 @@ export default () =>
     (job: SendCommunityInviteEmailJob) => {
       debug(`\nnew job: ${job.id}`);
       debug(`\nsending community invite to: ${job.data.to}`);
-
       const sender = JSON.parse(job.data.sender.payload);
       const subject = `${sender.name} has invited you to join the ${job.data.community.name} community on Spectrum`;
 
@@ -42,6 +42,7 @@ export default () =>
             sender,
             recipient: job.data.recipient,
             community: job.data.community,
+            customMessage: job.data.customMessage,
           },
         });
       } catch (err) {

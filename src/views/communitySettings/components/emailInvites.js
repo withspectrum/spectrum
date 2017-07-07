@@ -6,18 +6,23 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
+import Textarea from 'react-textarea-autosize';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import Icon from '../../../components/icons';
 import { IS_EMAIL } from '../../../helpers/regexps';
 import { sendEmailInvitationsMutation } from '../../../api/community';
 import { displayLoadingCard } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
+import { Error } from '../../../components/formElements';
 import {
   ButtonContainer,
   EmailInviteForm,
   EmailInviteInput,
   AddRow,
   RemoveRow,
+  CustomMessageToggle,
+  CustomMessageTextAreaStyles,
 } from '../style';
 import {
   StyledCard,
@@ -30,6 +35,9 @@ class EmailInvites extends Component {
   state: {
     isLoading: boolean,
     contacts: Array<any>,
+    hasCustomMessage: boolean,
+    customMessageString: string,
+    customMessageError: boolean,
   };
 
   constructor() {
@@ -57,6 +65,9 @@ class EmailInvites extends Component {
           error: false,
         },
       ],
+      hasCustomMessage: false,
+      customMessageString: '',
+      customMessageError: false,
     };
   }
 
@@ -73,7 +84,12 @@ class EmailInvites extends Component {
   };
 
   sendInvitations = () => {
-    const { contacts } = this.state;
+    const {
+      contacts,
+      hasCustomMessage,
+      customMessageError,
+      customMessageString,
+    } = this.state;
     const { community, dispatch, currentUser } = this.props;
 
     this.setState({
@@ -87,6 +103,10 @@ class EmailInvites extends Component {
       .map(({ error, ...contact }) => {
         return { ...contact };
       });
+
+    let customMessage = hasCustomMessage && !customMessageError
+      ? customMessageString
+      : null;
 
     // make sure to uniqify the emails so you can't enter on email multiple times
     validContacts = this.uniqueEmails(validContacts);
@@ -105,6 +125,7 @@ class EmailInvites extends Component {
       .sendEmailInvites({
         id: community.id,
         contacts: validContacts,
+        customMessage,
       })
       .then(({ data: { sendEmailInvites } }) => {
         this.setState({
@@ -129,6 +150,7 @@ class EmailInvites extends Component {
             },
           ],
           isLoading: false,
+          hasCustomMessage: false,
         });
         dispatch(
           addToastWithTimeout(
@@ -192,9 +214,37 @@ class EmailInvites extends Component {
     });
   };
 
+  handleCustomMessageChange = e => {
+    const customMessageString = e.target.value;
+    if (customMessageString.length > 500) {
+      this.setState({
+        customMessageString,
+        customMessageError: true,
+      });
+    } else {
+      this.setState({
+        customMessageString,
+        customMessageError: false,
+      });
+    }
+  };
+
+  toggleCustomMessage = () => {
+    const { hasCustomMessage } = this.state;
+    this.setState({
+      hasCustomMessage: !hasCustomMessage,
+    });
+  };
+
   render() {
     const { community } = this.props;
-    const { contacts, isLoading } = this.state;
+    const {
+      contacts,
+      isLoading,
+      hasCustomMessage,
+      customMessageString,
+      customMessageError,
+    } = this.state;
 
     return (
       <div>
@@ -227,8 +277,39 @@ class EmailInvites extends Component {
         })}
         <AddRow onClick={this.addRow}>+ Add another</AddRow>
 
+        <CustomMessageToggle onClick={this.toggleCustomMessage}>
+          <Icon glyph={hasCustomMessage ? 'view-close' : 'post'} size={20} />
+          {hasCustomMessage
+            ? 'Remove custom message'
+            : 'Optional: Add a custom message to your invitation'}
+        </CustomMessageToggle>
+
+        {hasCustomMessage &&
+          <Textarea
+            autoFocus
+            value={customMessageString}
+            placeholder="Write something sweet here..."
+            style={{
+              ...CustomMessageTextAreaStyles,
+              border: customMessageError
+                ? '2px solid #E3353C'
+                : '2px solid #DFE7EF',
+            }}
+            onChange={this.handleCustomMessageChange}
+          />}
+
+        {hasCustomMessage &&
+          customMessageError &&
+          <Error>
+            Your custom invitation message can be up to 500 characters.
+          </Error>}
+
         <ButtonContainer>
-          <Button loading={isLoading} onClick={this.sendInvitations}>
+          <Button
+            loading={isLoading}
+            onClick={this.sendInvitations}
+            disabled={hasCustomMessage && customMessageError}
+          >
             Send Invitations
           </Button>
         </ButtonContainer>

@@ -66,6 +66,12 @@ const Community = /* GraphQL */ `
 	input EmailInvitesInput {
 		id: ID!
 		contacts: [ EmailInviteContactInput ]
+		customMessage: String
+	}
+
+	input SendSlackInvitesInput {
+		id: ID!
+		customMessage: String
 	}
 
 	type Community {
@@ -100,7 +106,7 @@ const Community = /* GraphQL */ `
 		editCommunity(input: EditCommunityInput!): Community
 		deleteCommunity(communityId: ID!): Boolean
 		toggleCommunityMembership(communityId: ID!): Community
-		sendSlackInvites(id: ID!): Community
+		sendSlackInvites(input: SendSlackInvitesInput!): Community
 		sendEmailInvites(input: EmailInvitesInput!): Boolean
 	}
 `;

@@ -6,6 +6,8 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
+import Textarea from 'react-textarea-autosize';
 import { addToastWithTimeout } from '../../../actions/toasts';
 import {
   getSlackImport,
@@ -13,7 +15,12 @@ import {
 } from '../../../api/slackImport';
 import { displayLoadingCard } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
-import { ButtonContainer } from '../style';
+import Icon from '../../../components/icons';
+import {
+  ButtonContainer,
+  CustomMessageToggle,
+  CustomMessageTextAreaStyles,
+} from '../style';
 import {
   StyledCard,
   LargeListHeading,
@@ -21,10 +28,14 @@ import {
   Description,
   Notice,
 } from '../../../components/listItems/style';
+import { Error } from '../../../components/formElements';
 
 class ImportSlack extends Component {
   state: {
     isLoading: boolean,
+    hasCustomMessage: boolean,
+    customMessageString: string,
+    customMessageError: boolean,
   };
 
   constructor() {
@@ -32,6 +43,9 @@ class ImportSlack extends Component {
 
     this.state = {
       isLoading: false,
+      hasCustomMessage: false,
+      customMessageString: '',
+      customMessageError: false,
     };
   }
 
@@ -47,16 +61,29 @@ class ImportSlack extends Component {
 
   sendInvites = () => {
     const { community } = this.props.data;
+    const {
+      customMessageError,
+      customMessageString,
+      hasCustomMessage,
+    } = this.state;
+
+    let customMessage = hasCustomMessage && !customMessageError
+      ? customMessageString
+      : null;
 
     this.setState({
       isLoading: true,
     });
 
     this.props
-      .sendSlackInvites(community.id)
+      .sendSlackInvites({
+        id: community.id,
+        customMessage,
+      })
       .then(({ data: { sendSlackInvites } }) => {
         this.setState({
           isLoading: false,
+          hasCustomMessage: false,
         });
         this.props.dispatch(
           addToastWithTimeout('success', 'Your invitations are being sent!')
@@ -70,11 +97,38 @@ class ImportSlack extends Component {
       });
   };
 
+  handleChange = e => {
+    const customMessageString = e.target.value;
+    if (customMessageString.length > 500) {
+      this.setState({
+        customMessageString,
+        customMessageError: true,
+      });
+    } else {
+      this.setState({
+        customMessageString,
+        customMessageError: false,
+      });
+    }
+  };
+
+  toggleCustomMessage = () => {
+    const { hasCustomMessage } = this.state;
+    this.setState({
+      hasCustomMessage: !hasCustomMessage,
+    });
+  };
+
   render() {
     const {
       data: { error, community, networkStatus, startPolling, stopPolling },
     } = this.props;
-    const { isLoading } = this.state;
+    const {
+      isLoading,
+      customMessageString,
+      hasCustomMessage,
+      customMessageError,
+    } = this.state;
 
     if (!community || error !== undefined) {
       return null;
@@ -167,10 +221,41 @@ class ImportSlack extends Component {
                 gradientTheme="success"
                 onClick={this.sendInvites}
                 loading={isLoading}
+                disabled={hasCustomMessage && customMessageError}
               >
                 Invite {count} people to Spectrum
               </Button>
             </ButtonContainer>
+
+            <CustomMessageToggle onClick={this.toggleCustomMessage}>
+              <Icon
+                glyph={hasCustomMessage ? 'view-close' : 'post'}
+                size={20}
+              />
+              {hasCustomMessage
+                ? 'Remove custom message'
+                : 'Optional: Add a custom message to your invitation'}
+            </CustomMessageToggle>
+
+            {hasCustomMessage &&
+              <Textarea
+                autoFocus
+                value={customMessageString}
+                placeholder="Write something sweet here..."
+                style={{
+                  ...CustomMessageTextAreaStyles,
+                  border: customMessageError
+                    ? '2px solid #E3353C'
+                    : '2px solid #DFE7EF',
+                }}
+                onChange={this.handleChange}
+              />}
+
+            {hasCustomMessage &&
+              customMessageError &&
+              <Error>
+                Your custom invitation message can be up to 500 characters.
+              </Error>}
           </div>
         );
       }

@@ -27,8 +27,8 @@ export const getSlackImport = graphql(
 );
 
 const SEND_SLACK_INVITATIONS_MUTATION = gql`
-  mutation sendSlackInvites($id: ID!) {
-    sendSlackInvites(id: $id) {
+  mutation sendSlackInvites($input: SendSlackInvitesInput!) {
+    sendSlackInvites(input: $input) {
       id
       slackImport {
         members
@@ -39,11 +39,11 @@ const SEND_SLACK_INVITATIONS_MUTATION = gql`
   }
 `;
 const SEND_SLACK_INVITATIONS_OPTIONS = {
-  props: ({ id, mutate }) => ({
-    sendSlackInvites: id =>
+  props: ({ input, mutate }) => ({
+    sendSlackInvites: input =>
       mutate({
         variables: {
-          id,
+          input,
         },
       }),
   }),
