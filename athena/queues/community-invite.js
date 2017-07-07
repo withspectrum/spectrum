@@ -81,6 +81,7 @@ const processMessageNotificationQueue = job => {
   return Promise.all(getPayloads)
     .then(([existingUser, actor, context]) => {
       const communityToInvite = JSON.parse(context.payload);
+      const sender = JSON.parse(actor.payload);
 
       // if the recipient of the email is not a member of spectrum, pass their information along to the email queue
       if (!existingUser) {
@@ -88,7 +89,7 @@ const processMessageNotificationQueue = job => {
         return addToSendCommunityInviteEmailQueue(
           inboundRecipient,
           communityToInvite,
-          actor,
+          sender,
           customMessage
         );
       } else {
@@ -121,7 +122,6 @@ const processMessageNotificationQueue = job => {
 
           return storeNotification(newNotification).then(notification => {
             debug('store new usersnotifications records');
-            const sender = JSON.parse(actor.payload);
 
             return Promise.all([
               addToSendCommunityInviteEmailQueue(

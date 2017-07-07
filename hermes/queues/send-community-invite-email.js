@@ -30,8 +30,7 @@ export default () =>
     (job: SendCommunityInviteEmailJob) => {
       debug(`\nnew job: ${job.id}`);
       debug(`\nsending community invite to: ${job.data.to}`);
-      const sender = JSON.parse(job.data.sender.payload);
-      const subject = `${sender.name} has invited you to join the ${job.data.community.name} community on Spectrum`;
+      const subject = `${job.data.sender.name} has invited you to join the ${job.data.community.name} community on Spectrum`;
 
       try {
         return sendEmail({
@@ -39,7 +38,7 @@ export default () =>
           To: job.data.to,
           TemplateModel: {
             subject,
-            sender,
+            sender: job.data.sender,
             recipient: job.data.recipient,
             community: job.data.community,
             customMessage: job.data.customMessage,
