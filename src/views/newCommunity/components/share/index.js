@@ -39,7 +39,7 @@ const Share = ({ community, history }) => {
           </Button>
         </a>
         <a
-          href={`https://twitter.com/share?text=Come hang out with me in the ${community.name} community on @withspectrum!&url=https://spectrum.chat${community.slug}`}
+          href={`https://twitter.com/share?text=Come hang out with me in the ${community.name} community on @withspectrum!&url=https://spectrum.chat/${community.slug}`}
           target="_blank"
           rel="noopener noreferrer"
         >

@@ -52,13 +52,7 @@ const addToSendCommunityInviteEmailQueue = (recipient, community, sender) => {
 */
 
 const processMessageNotificationQueue = job => {
-  const {
-    recipient,
-    communityId,
-    inviteMethod,
-    inviteMethodId,
-    senderId,
-  } = job.data;
+  const { recipient, communityId, senderId } = job.data;
 
   const inboundRecipient = recipient;
 

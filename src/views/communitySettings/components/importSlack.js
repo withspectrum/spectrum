@@ -102,7 +102,7 @@ class ImportSlack extends Component {
           <Notice>
             <strong>Note:</strong>
             {' '}
-            We will not invite any of your team members until you're ready.
+            We will not invite any of your team members until you're ready. We will prompt for admin access to ensure that you own the Slack team.
           </Notice>
           <ButtonContainer>
             <Button onClick={this.import}>Connect a Slack Team</Button>

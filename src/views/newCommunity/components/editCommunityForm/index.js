@@ -26,6 +26,7 @@ import {
   TextArea,
   PhotoInput,
   CoverInput,
+  Error,
 } from '../../../../components/formElements';
 import {
   StyledCard,
@@ -50,6 +51,7 @@ class CommunityWithData extends Component {
     coverFile: ?Object,
     communityData: Object,
     photoSizeError: boolean,
+    nameError: boolean,
     isLoading: boolean,
   };
   constructor(props) {
@@ -68,14 +70,26 @@ class CommunityWithData extends Component {
       coverFile: null,
       communityData: community,
       photoSizeError: false,
+      nameError: false,
       isLoading: false,
     };
   }
 
   changeName = e => {
     const name = e.target.value;
+
+    if (name.length >= 20) {
+      this.setState({
+        name,
+        nameError: true,
+      });
+
+      return;
+    }
+
     this.setState({
       name,
+      nameError: false,
     });
   };
 
@@ -228,6 +242,7 @@ class CommunityWithData extends Component {
       coverPhoto,
       website,
       photoSizeError,
+      nameError,
       isLoading,
     } = this.state;
     const { community } = this.props;
@@ -252,6 +267,10 @@ class CommunityWithData extends Component {
           <UnderlineInput defaultValue={slug} disabled>
             sp.chat/
           </UnderlineInput>
+
+          {nameError &&
+            <Error>Community names can be up to 20 characters long.</Error>}
+
           <TextArea
             defaultValue={description}
             onChange={this.changeDescription}

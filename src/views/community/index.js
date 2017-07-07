@@ -90,11 +90,7 @@ class CommunityViewPure extends Component {
   };
 
   create = () => {
-    const communitySlug = this.props.match.params.communitySlug;
-
-    return this.props.dispatch(
-      openModal('CREATE_COMMUNITY_MODAL', { name: communitySlug })
-    );
+    return this.props.history.push('/new/community');
   };
 
   render() {

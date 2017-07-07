@@ -62,9 +62,11 @@ class NewCommunity extends Component {
   }
 
   componentDidMount() {
+    track('community', 'create inited', null);
+
     const { existingId } = this.state;
     if (!existingId) return;
-    console.log('existingId', existingId);
+
     this.props.client
       .query({
         query: getCommunityByIdQuery,

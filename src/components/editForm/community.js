@@ -25,6 +25,7 @@ import {
   UnderlineInput,
   TextArea,
   PhotoInput,
+  Error,
   CoverInput,
 } from '../formElements';
 import {
@@ -51,6 +52,7 @@ class CommunityWithData extends Component {
     coverFile: ?Object,
     communityData: Object,
     photoSizeError: boolean,
+    nameError: boolean,
     isLoading: boolean,
   };
   constructor(props) {
@@ -67,6 +69,7 @@ class CommunityWithData extends Component {
       coverPhoto: community.coverPhoto,
       file: null,
       coverFile: null,
+      nameError: false,
       communityData: community,
       photoSizeError: false,
       isLoading: false,
@@ -75,8 +78,19 @@ class CommunityWithData extends Component {
 
   changeName = e => {
     const name = e.target.value;
+
+    if (name.length >= 20) {
+      this.setState({
+        name,
+        nameError: true,
+      });
+
+      return;
+    }
+
     this.setState({
       name,
+      nameError: false,
     });
   };
 
@@ -267,6 +281,7 @@ class CommunityWithData extends Component {
       coverPhoto,
       website,
       photoSizeError,
+      nameError,
       isLoading,
     } = this.state;
     const { community } = this.props;
@@ -310,6 +325,10 @@ class CommunityWithData extends Component {
           <UnderlineInput defaultValue={slug} disabled>
             sp.chat/
           </UnderlineInput>
+
+          {nameError &&
+            <Error>Community names can be up to 20 characters long.</Error>}
+
           <TextArea
             defaultValue={description}
             onChange={this.changeDescription}

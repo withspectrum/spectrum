@@ -391,8 +391,6 @@ module.exports = {
                   lastName: user.lastName ? user.lastName : null,
                 },
                 communityId: inviteRecord.communityId,
-                inviteMethod: 'SLACK',
-                inviteMethodId: inviteRecord.id,
                 senderId: inviteRecord.senderId,
               });
             });
@@ -429,8 +427,6 @@ module.exports = {
                 lastName: user.lastName ? user.lastName : null,
               },
               communityId: input.id,
-              inviteMethod: 'EMAIL',
-              inviteMethodId: null,
               senderId: currentUser.id,
             });
           });

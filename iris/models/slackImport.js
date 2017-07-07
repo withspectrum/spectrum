@@ -53,7 +53,7 @@ export const createSlackImportRecord = input => {
     .filter({ userId: input.userId })
     .run()
     .then(result => {
-      // if a record already exists, return out - TODO: Figure out how we want to handle people who trigger this import flow twice, as we want to make sure we're not spamming invites
+      // if a record already exists, return out
       if (result && result.length > 0) return;
 
       // if no result is found, we can create a new record

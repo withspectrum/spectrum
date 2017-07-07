@@ -23,8 +23,8 @@ const ChannelListCard = compose(getChannelsByCommunity)(ListCard);
 
 const SettingsPure = ({
   match,
-  data: { community, error },
   history,
+  data: { community, error },
   location,
   dispatch,
 }) => {
@@ -33,9 +33,7 @@ const SettingsPure = ({
   const communitySlug = match.params.communitySlug;
 
   const create = () => {
-    return dispatch(
-      openModal('CREATE_COMMUNITY_MODAL', { name: communitySlug })
-    );
+    return history.push('/new/community');
   };
 
   if (error) {
