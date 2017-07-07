@@ -12,7 +12,9 @@ import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
 import { NewChannelNotification } from './components/newChannelNotification';
 import { NewThreadNotification } from './components/newThreadNotification';
-import { NewUserInCommunityNotification } from './components/newUserInCommunityNotification';
+import {
+  NewUserInCommunityNotification,
+} from './components/newUserInCommunityNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Titlebar from '../../views/titlebar';
@@ -20,10 +22,12 @@ import { displayLoadingNotifications } from '../../components/loading';
 import { FetchMoreButton } from '../../components/threadFeed/style';
 import { FlexCol } from '../../components/globals';
 import { sortByDate } from '../../helpers/utils';
+import WebPushManager from '../../helpers/web-push-manager';
 import {
   getNotifications,
   markNotificationsSeenMutation,
 } from '../../api/notification';
+import { subscribeToWebPush } from '../../api/web-push-subscriptions';
 import {
   UpsellSignIn,
   UpsellToReload,
@@ -74,6 +78,13 @@ class NotificationsPure extends Component {
     }
   }
 
+  subscribeToWebPush = () => {
+    WebPushManager.subscribe().then(subscription => {
+      if (!subscription) return;
+      this.props.subscribeToWebPush(subscription);
+    });
+  };
+
   render() {
     const { currentUser, data } = this.props;
 
@@ -112,6 +123,7 @@ class NotificationsPure extends Component {
       return (
         <AppViewWrapper>
           <Column type={'primary'}>
+            <button onClick={this.subscribeToWebPush}>Subscribe</button>
             <UpsellNullNotifications />
           </Column>
         </AppViewWrapper>
@@ -122,6 +134,7 @@ class NotificationsPure extends Component {
       <FlexCol style={{ flex: '1 1 auto' }}>
         <Titlebar title={'Notifications'} provideBack={false} noComposer />
         <AppViewWrapper>
+          <button onClick={this.subscribeToWebPush}>Subscribe</button>
           <Column type={'primary'}>
             {notifications.map(notification => {
               switch (notification.event) {
@@ -198,6 +211,7 @@ const mapStateToProps = state => ({
 });
 
 export default compose(
+  subscribeToWebPush,
   getNotifications,
   displayLoadingNotifications,
   markNotificationsSeenMutation,

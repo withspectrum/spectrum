@@ -89,6 +89,9 @@ module.exports = {
         .then(() => {
           return sendWebPushNotification(subscription, subscribeNotification, {
             TTL: 300, // If the user doesn't go online for five minutes don't send him this notification anymore
+          }).catch(err => {
+            console.log('error sending welcome notification');
+            console.log(err);
           });
         })
         .then(() => true)

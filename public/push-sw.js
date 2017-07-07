@@ -6,9 +6,12 @@
 self.addEventListener('push', function(event) {
   var notificationData = {};
 
+  console.log('PUSH NOTIFICATION!!!!');
+
   try {
     notificationData = event.data.json();
   } catch (e) {
+    console.log('event.data.json() failed', e);
     // 🚨 We either got no data or it's malformatted, ABORT ABORT ABORT
     return;
   }
