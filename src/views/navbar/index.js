@@ -328,7 +328,11 @@ class Navbar extends Component {
             <IconDrop>
               <IconLink
                 data-active={match.url === `/users/${loggedInUser.username}`}
-                to={`/users/${loggedInUser.username}`}
+                to={
+                  loggedInUser.username
+                    ? `/users/${loggedInUser.username}`
+                    : '/'
+                }
               >
                 <UserProfileAvatar
                   src={`${loggedInUser.profilePhoto}`}
@@ -376,7 +380,9 @@ class Navbar extends Component {
 
             <IconLink
               data-active={match.url === `/users/${loggedInUser.username}`}
-              to={`/users/${loggedInUser.username}`}
+              to={
+                loggedInUser.username ? `/users/${loggedInUser.username}` : '/'
+              }
             >
               <Icon glyph="profile" />
               <Label>Profile</Label>
