@@ -74,6 +74,7 @@ export const ParticipantHeads = styled(FlexRow)`
     margin-left: 4px;
     margin-top: 4px;
     pointer-events: all;
+    height: 24px;
   }
 `;
 
