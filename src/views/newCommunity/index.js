@@ -84,8 +84,13 @@ class NewCommunity extends Component {
   }
 
   step = direction => {
-    const { activeStep } = this.state;
+    const { activeStep, community } = this.state;
     let newStep = direction === 'next' ? activeStep + 1 : activeStep - 1;
+    this.props.history.replace(
+      `/new/community?s=${newStep}${community &&
+        community.id &&
+        `&id=${community.id}`}`
+    );
     this.setState({
       activeStep: newStep,
     });
@@ -135,7 +140,7 @@ class NewCommunity extends Component {
     this.setState({
       community: { ...community },
     });
-
+    this.props.history.replace(`/new/community?id=${community.id}`);
     return this.step('next');
   };
 
