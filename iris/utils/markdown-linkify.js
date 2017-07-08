@@ -12,12 +12,23 @@ const linkifier = new Linkify(undefined, {
 const linkify = (text /*: string*/ /*: string*/) => {
   const matches = linkifier.match(text);
   if (!matches) return text;
-  let newText = text;
-  // Replace each URL match with a markdown URL
-  matches.forEach(match => {
-    newText = `${newText.substr(0, match.index)}[${match.text}](${match.url})${newText.substr(match.lastIndex)}`;
-  });
-  return newText;
+  let out = text;
+  let last = 0;
+  const result = [];
+  if (matches) {
+    matches.forEach(function(match) {
+      if (last < match.index) {
+        result.push(text.slice(last, match.index));
+      }
+      result.push(`[${match.text}](${match.url})`);
+      last = match.lastIndex;
+    });
+    if (last < text.length) {
+      result.push(text.slice(last));
+    }
+    out = result.join('');
+  }
+  return out;
 };
 
 module.exports = linkify;
