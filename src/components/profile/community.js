@@ -26,6 +26,7 @@ import {
   ProfileHeaderMeta,
   ProfileHeaderAction,
   Title,
+  Subtitle,
   Description,
   Actions,
   ActionOutline,
@@ -105,32 +106,54 @@ class CommunityWithData extends Component {
     } = this.props;
     const { isLoading } = this.state;
     const componentSize = profileSize || 'mini';
-    const member = community.communityPermissions.isMember;
 
     if (loading) {
       return <LoadingProfile />;
     } else if (!community || error) {
-      return (
-        <Card>
-          <ProfileHeader>
-            <ProfileHeaderMeta>
-              <Title>This community doesn't exist yet.</Title>
-            </ProfileHeaderMeta>
-          </ProfileHeader>
-          <Description>Want to make it?</Description>
-          <Actions>
-            <ActionOutline>Create</ActionOutline>
-          </Actions>
-        </Card>
-      );
-    } else if (componentSize === 'full') {
+      if (
+        componentSize === 'miniWithAction' ||
+        componentSize === 'listItemWithAction'
+      ) {
+        return (
+          <ProfileCard>
+            <ProfileHeader>
+              <ProfileHeaderMeta>
+                <Subtitle>
+                  <Icon glyph="delete" size={20} /> This community was deleted
+                </Subtitle>
+              </ProfileHeaderMeta>
+            </ProfileHeader>
+          </ProfileCard>
+        );
+      } else {
+        return (
+          <Card>
+            <ProfileHeader>
+              <ProfileHeaderMeta>
+                <Title>This community doesn't exist yet.</Title>
+              </ProfileHeaderMeta>
+            </ProfileHeader>
+            <Description>Want to make it?</Description>
+            <Actions>
+              <ActionOutline>Create</ActionOutline>
+            </Actions>
+          </Card>
+        );
+      }
+    }
+
+    const member = community.communityPermissions.isMember;
+
+    if (componentSize === 'full') {
       return (
         <Card>
           <ProfileHeader>
             <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
             <ProfileHeaderLink to={`/${community.slug}`}>
               <ProfileHeaderMeta>
-                <Title>{community.name}</Title>
+                <Title>
+                  {community.name}
+                </Title>
               </ProfileHeaderMeta>
             </ProfileHeaderLink>
             {currentUser &&
@@ -144,7 +167,9 @@ class CommunityWithData extends Component {
               </Link>}
           </ProfileHeader>
           <Description>
-            <p>{community.description}</p>
+            <p>
+              {community.description}
+            </p>
             {community.website &&
               <ExtLink>
                 <Icon glyph="link" size={24} />
@@ -163,7 +188,9 @@ class CommunityWithData extends Component {
             <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
             <ProfileHeaderLink to={`/${community.slug}`}>
               <ProfileHeaderMeta>
-                <Title>{community.name}</Title>
+                <Title>
+                  {community.name}
+                </Title>
               </ProfileHeaderMeta>
             </ProfileHeaderLink>
             {currentUser &&
@@ -198,7 +225,9 @@ class CommunityWithData extends Component {
             <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
             <ProfileHeaderLink to={`/${community.slug}`}>
               <ProfileHeaderMeta>
-                <Title>{community.name}</Title>
+                <Title>
+                  {community.name}
+                </Title>
               </ProfileHeaderMeta>
             </ProfileHeaderLink>
 
@@ -238,7 +267,6 @@ class CommunityWithData extends Component {
                   tipLocation="top-left"
                 />
               </Link>}
-
           </ProfileHeader>
         </Card>
       );

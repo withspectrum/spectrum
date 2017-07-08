@@ -91,6 +91,7 @@ class EmailInvites extends Component {
       customMessageString,
     } = this.state;
     const { community, dispatch, currentUser } = this.props;
+    this.props.hasInvitedPeople && this.props.hasInvitedPeople();
 
     this.setState({
       isLoading: true,
@@ -104,9 +105,8 @@ class EmailInvites extends Component {
         return { ...contact };
       });
 
-    let customMessage = hasCustomMessage && !customMessageError
-      ? customMessageString
-      : null;
+    let customMessage =
+      hasCustomMessage && !customMessageError ? customMessageString : null;
 
     // make sure to uniqify the emails so you can't enter on email multiple times
     validContacts = this.uniqueEmails(validContacts);
@@ -155,7 +155,9 @@ class EmailInvites extends Component {
         dispatch(
           addToastWithTimeout(
             'success',
-            `Invitations sent to ${validContacts.length > 1 ? `${validContacts.length} people` : `${validContacts.length} person`}!`
+            `Invitations sent to ${validContacts.length > 1
+              ? `${validContacts.length} people`
+              : `${validContacts.length} person`}!`
           )
         );
       })
@@ -318,11 +320,10 @@ class EmailInvites extends Component {
   }
 }
 
-const EmailInvitesCard = props => (
+const EmailInvitesCard = props =>
   <StyledCard>
     <EmailInvites {...props} />
-  </StyledCard>
-);
+  </StyledCard>;
 
 const EmailInvitesNoCard = props => <EmailInvites {...props} />;
 
