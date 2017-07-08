@@ -57,6 +57,25 @@ class ThreadComposerWithData extends Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      title: props.title || '',
+      body: props.body || fromPlainText(''),
+      availableCommunities: [],
+      availableChannels: [],
+      activeCommunity: '',
+      activeChannel: '',
+      isPublishing: false,
+      linkPreview: null,
+      linkPreviewTrueUrl: '',
+      linkPreviewLength: 0,
+      fetchingLinkPreview: false,
+    };
+  }
+
+  setActiveStuff = () => {
+    const props = this.props;
+
     /*
       Create a new array of communities only containing the `node` data from
       graphQL. Then filter the resulting channel to remove any communities
@@ -102,47 +121,59 @@ class ThreadComposerWithData extends Component {
               community.slug.toLowerCase() ===
               props.activeCommunity.toLowerCase()
             );
-          })[0].id
-        : availableCommunities[0].id);
+          })
+        : availableCommunities);
 
-    // get the channels for the proper community
-    const activeCommunityChannels = availableChannels.filter(
-      channel => channel.community.id === activeCommunity
-    );
-    let activeChannel = [];
+    activeCommunity = activeCommunity ? activeCommunity[0].id : null;
 
-    // Get the active channel if there is one
-    if (props.activeChannel) {
-      activeChannel = activeCommunityChannels.filter(
-        channel =>
-          channel.slug.toLowerCase() === props.activeChannel.toLowerCase()
-      );
+    if (!activeCommunity) {
+      return props.data.refetch().then(() => {
+        this.setActiveStuff();
+      });
     } else {
-      // Try and get the default channel for the active community
-      activeChannel = activeCommunityChannels.filter(
-        channel => channel.isDefault
+      // get the channels for the proper community
+      const activeCommunityChannels = availableChannels.filter(
+        channel => channel.community.id === activeCommunity
       );
-      // If there is no default channel capitulate and take the first one
-      if (activeChannel.length === 0) activeChannel = activeCommunityChannels;
+      let activeChannel = [];
+
+      // Get the active channel if there is one
+      if (props.activeChannel) {
+        activeChannel = activeCommunityChannels.filter(
+          channel =>
+            channel.slug.toLowerCase() === props.activeChannel.toLowerCase()
+        );
+      } else {
+        // Try and get the default channel for the active community
+        activeChannel = activeCommunityChannels.filter(
+          channel => channel.isDefault
+        );
+        // If there is no default channel capitulate and take the first one
+        if (activeChannel.length === 0) activeChannel = activeCommunityChannels;
+      }
+
+      // ensure that if no items were found for some reason, we don't crash the app
+      // and instead just set null values on the composer
+      activeChannel = activeChannel.length > 0 ? activeChannel[0].id : null;
+
+      this.setState({
+        title: props.title || '',
+        body: props.body || fromPlainText(''),
+        availableCommunities,
+        availableChannels,
+        activeCommunity,
+        activeChannel,
+        isPublishing: false,
+        linkPreview: null,
+        linkPreviewTrueUrl: '',
+        linkPreviewLength: 0,
+        fetchingLinkPreview: false,
+      });
     }
+  };
 
-    // ensure that if no items were found for some reason, we don't crash the app
-    // and instead just set null values on the composer
-    activeChannel = activeChannel.length > 0 ? activeChannel[0].id : null;
-
-    this.state = {
-      title: props.title || '',
-      body: props.body || fromPlainText(''),
-      availableCommunities,
-      availableChannels,
-      activeCommunity,
-      activeChannel,
-      isPublishing: false,
-      linkPreview: null,
-      linkPreviewTrueUrl: '',
-      linkPreviewLength: 0,
-      fetchingLinkPreview: false,
-    };
+  componentDidMount() {
+    this.setActiveStuff();
   }
 
   componentWillUpdate(nextProps) {
@@ -424,7 +455,8 @@ class ThreadComposerWithData extends Component {
         })
         .catch(err => {
           this.setState({
-            error: "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
+            error:
+              "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
             fetchingLinkPreview: false,
           });
         });
@@ -472,12 +504,9 @@ class ThreadComposerWithData extends Component {
         <Container isOpen={isOpen}>
           <Overlay isOpen={isOpen} onClick={this.closeComposer} />
           <Composer isOpen={isOpen} onClick={this.handleOpenComposer}>
-
             <Placeholder isOpen={isOpen}>
               <Icon glyph="post" />
-              <PlaceholderLabel>
-                Start a new thread...
-              </PlaceholderLabel>
+              <PlaceholderLabel>Start a new thread...</PlaceholderLabel>
             </Placeholder>
 
             <ContentContainer isOpen={isOpen}>
@@ -495,7 +524,7 @@ class ThreadComposerWithData extends Component {
                 onKeyDown={this.listenForUrl}
                 state={this.state.body}
                 style={ThreadDescription}
-                editorRef={editor => this.bodyEditor = editor}
+                editorRef={editor => (this.bodyEditor = editor)}
                 placeholder="Write more thoughts here, add photos, and anything else!"
                 className={'threadComposer'}
                 showLinkPreview={true}
@@ -566,7 +595,6 @@ class ThreadComposerWithData extends Component {
                 </FlexRow>
               </Actions>
             </ContentContainer>
-
           </Composer>
         </Container>
       );
