@@ -9,6 +9,7 @@ const {
   getPendingUsersInChannel,
   getBlockedUsersInChannel,
   getModeratorsInChannel,
+  getMembersInChannel,
   getOwnersInChannel,
 } = require('../models/usersChannels');
 const { getUserPermissionsInCommunity } = require('../models/usersCommunities');
@@ -69,23 +70,27 @@ module.exports = {
       return getUserPermissionsInCommunity(communityId, user.id);
     },
     memberConnection: (
-      { members }: { members: Array<string> },
-      { first = 10, after }: PaginationOptions,
+      { id },
+      { first = 20, after }: PaginationOptions,
       { loaders }: GraphQLContext
     ) => {
-      const { list, hasMoreItems } = paginate(members, {
-        first,
-        after: decode(after),
-      });
-      return loaders.user.loadMany(list).then(users => ({
-        pageInfo: {
-          hasNextPage: hasMoreItems,
-        },
-        edges: users.map(user => ({
-          cursor: encode(user.id),
-          node: user,
-        })),
-      }));
+      const cursor = decode(after);
+
+      // TODO: Make this more performant by doing an actual db query rather than this hacking around
+      return getMembersInChannel(id)
+        .then(users => loaders.user.loadMany(users))
+        .then(users =>
+          paginate(users, { first, after: cursor }, user => user.id === cursor)
+        )
+        .then(result => ({
+          pageInfo: {
+            hasNextPage: result.hasMoreItems,
+          },
+          edges: result.list.map(user => ({
+            cursor: encode(user.id),
+            node: user,
+          })),
+        }));
     },
     metaData: ({ id }: { id: string }) => {
       return getChannelMetaData(id).then(data => {
