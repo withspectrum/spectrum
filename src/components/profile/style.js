@@ -64,6 +64,7 @@ export const Subtitle = styled.div`
   font-size: 14px;
   color: ${props => props.theme.text.alt};
   line-height: 1.3;
+  justify-content: center;
   ${Truncate} div {
     margin-right: 8px;
   }
