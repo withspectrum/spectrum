@@ -64,7 +64,7 @@ export const Subtitle = styled.div`
   font-size: 14px;
   color: ${props => props.theme.text.alt};
   line-height: 1.3;
-  justify-content: center;
+
   ${Truncate} div {
     margin-right: 8px;
   }
@@ -188,6 +188,7 @@ export const CoverSubtitle = styled(Subtitle)`
   text-align: center;
   margin-top: 64px;
   margin-bottom: 16px;
+  justify-content: center;
 `;
 
 export const CoverDescription = styled(Description)`
