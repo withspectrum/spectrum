@@ -24,6 +24,7 @@ import { ProfileDropdown } from './components/profileDropdown';
 import Head from '../../components/head';
 import { getDistinctNotifications } from '../../views/notifications/utils';
 import { storeItem } from '../../helpers/localStorage';
+import { throttle } from '../../helpers/utils';
 import {
   saveUserDataToLocalStorage,
   logout,
@@ -54,6 +55,11 @@ class Navbar extends Component {
       ...this.calculateUnseenCounts(),
       subscription: null,
     };
+
+    this.markAllNotificationsSeen = throttle(
+      this.markAllNotificationsSeen,
+      5000
+    );
   }
 
   calculateUnseenCounts = () => {

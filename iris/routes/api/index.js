@@ -9,6 +9,9 @@ if (process.env.NODE_ENV === 'development') {
   apiRouter.use('/graphiql', graphiql);
 }
 
+import slackImporter from './slackImporter';
+apiRouter.use('/slack', slackImporter);
+
 import graphql from './graphql';
 apiRouter.use('/', graphql);
 

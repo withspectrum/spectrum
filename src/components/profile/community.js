@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, { Component } from 'react';
 import Card from '../card';
 //$FlowFixMe
 import compose from 'recompose/compose';
@@ -17,6 +17,8 @@ import type { ProfileSizeProps } from './index';
 import { MetaData } from './metaData';
 import { displayLoadingCard, LoadingProfile } from '../loading';
 import Icon from '../icons';
+import { ChannelListItem } from '../listItems';
+import { Button } from '../buttons';
 import {
   ProfileHeader,
   CommunityAvatar,
@@ -24,10 +26,12 @@ import {
   ProfileHeaderMeta,
   ProfileHeaderAction,
   Title,
+  Subtitle,
   Description,
   Actions,
   ActionOutline,
   ExtLink,
+  ProfileCard,
 } from './style';
 
 type CommunityProps = {
@@ -49,25 +53,31 @@ type CommunityProps = {
   },
 };
 
-const CommunityWithData = ({
-  data: { community, loading, error },
-  profileSize,
-  toggleCommunityMembership,
-  data,
-  dispatch,
-  currentUser,
-}: {
-  data: { community: CommunityProps },
-  profileSize: ProfileSizeProps,
-  toggleCommunityMembership: Function,
-  dispatch: Function,
-  currentUser: Object,
-}): React$Element<any> => {
-  const componentSize = profileSize || 'mini';
+class CommunityWithData extends Component {
+  state: {
+    isLoading: boolean,
+  };
 
-  const toggleMembership = communityId => {
-    toggleCommunityMembership({ communityId })
+  constructor() {
+    super();
+
+    this.state = {
+      isLoading: false,
+    };
+  }
+
+  toggleMembership = communityId => {
+    this.setState({
+      isLoading: true,
+    });
+
+    this.props
+      .toggleCommunityMembership({ communityId })
       .then(({ data: { toggleCommunityMembership } }) => {
+        this.setState({
+          isLoading: false,
+        });
+
         const isMember =
           toggleCommunityMembership.communityPermissions.isMember;
 
@@ -78,121 +88,198 @@ const CommunityWithData = ({
           : `Left ${toggleCommunityMembership.name}.`;
 
         const type = isMember ? 'success' : 'neutral';
-        dispatch(addToastWithTimeout(type, str));
+        this.props.dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
-        dispatch(addToastWithTimeout('error', err.message));
+        this.setState({
+          isLoading: false,
+        });
+        this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
-  if (loading) {
-    return <LoadingProfile />;
-  } else if (!community || error) {
-    return (
-      <Card>
-        <ProfileHeader>
-          <ProfileHeaderMeta>
-            <Title>This community doesn't exist yet.</Title>
-          </ProfileHeaderMeta>
-        </ProfileHeader>
-        <Description>Want to make it?</Description>
-        <Actions>
-          <ActionOutline>Create</ActionOutline>
-        </Actions>
-      </Card>
-    );
-  } else if (componentSize === 'full') {
-    return (
-      <Card>
-        <ProfileHeader>
-          <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
-          <ProfileHeaderLink to={`/${community.slug}`}>
-            <ProfileHeaderMeta>
-              <Title>{community.name}</Title>
-            </ProfileHeaderMeta>
-          </ProfileHeaderLink>
-          {currentUser &&
-            community.communityPermissions.isOwner &&
-            <Link to={`/${community.slug}/settings`}>
+  render() {
+    const {
+      data: { community, loading, error },
+      profileSize,
+      currentUser,
+    } = this.props;
+    const { isLoading } = this.state;
+    const componentSize = profileSize || 'mini';
+
+    if (loading) {
+      return <LoadingProfile />;
+    } else if (!community || error) {
+      if (
+        componentSize === 'miniWithAction' ||
+        componentSize === 'listItemWithAction'
+      ) {
+        return (
+          <ProfileCard>
+            <ProfileHeader>
+              <ProfileHeaderMeta>
+                <Subtitle>
+                  <Icon glyph="delete" size={20} /> This community was deleted
+                </Subtitle>
+              </ProfileHeaderMeta>
+            </ProfileHeader>
+          </ProfileCard>
+        );
+      } else {
+        return (
+          <Card>
+            <ProfileHeader>
+              <ProfileHeaderMeta>
+                <Title>This community doesn't exist yet.</Title>
+              </ProfileHeaderMeta>
+            </ProfileHeader>
+            <Description>Want to make it?</Description>
+            <Actions>
+              <ActionOutline>Create</ActionOutline>
+            </Actions>
+          </Card>
+        );
+      }
+    }
+
+    const member = community.communityPermissions.isMember;
+
+    if (componentSize === 'full') {
+      return (
+        <Card>
+          <ProfileHeader>
+            <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
+            <ProfileHeaderLink to={`/${community.slug}`}>
+              <ProfileHeaderMeta>
+                <Title>
+                  {community.name}
+                </Title>
+              </ProfileHeaderMeta>
+            </ProfileHeaderLink>
+            {currentUser &&
+              community.communityPermissions.isOwner &&
+              <Link to={`/${community.slug}/settings`}>
+                <ProfileHeaderAction
+                  glyph="settings"
+                  tipText="Edit community"
+                  tipLocation="top-left"
+                />
+              </Link>}
+          </ProfileHeader>
+          <Description>
+            <p>
+              {community.description}
+            </p>
+            {community.website &&
+              <ExtLink>
+                <Icon glyph="link" size={24} />
+                <a href={addProtocolToString(community.website)}>
+                  {community.website}
+                </a>
+              </ExtLink>}
+          </Description>
+          <MetaData data={community.metaData} />
+        </Card>
+      );
+    } else if (componentSize === 'miniWithAction') {
+      return (
+        <ProfileCard>
+          <ProfileHeader>
+            <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
+            <ProfileHeaderLink to={`/${community.slug}`}>
+              <ProfileHeaderMeta>
+                <Title>
+                  {community.name}
+                </Title>
+              </ProfileHeaderMeta>
+            </ProfileHeaderLink>
+            {currentUser &&
+              member &&
+              <Button
+                loading={isLoading}
+                icon="checkmark"
+                gradientTheme="none"
+                color="text.placeholder"
+                hoverColor="text.placeholder"
+                onClick={() => this.toggleMembership(community.id)}
+              >
+                Joined
+              </Button>}
+            {currentUser &&
+              !member &&
+              <Button
+                loading={isLoading}
+                icon="plus-fill"
+                gradientTheme="success"
+                onClick={() => this.toggleMembership(community.id)}
+              >
+                Join
+              </Button>}
+          </ProfileHeader>
+        </ProfileCard>
+      );
+    } else {
+      return (
+        <Card>
+          <ProfileHeader>
+            <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
+            <ProfileHeaderLink to={`/${community.slug}`}>
+              <ProfileHeaderMeta>
+                <Title>
+                  {community.name}
+                </Title>
+              </ProfileHeaderMeta>
+            </ProfileHeaderLink>
+
+            {currentUser &&
+              !community.communityPermissions.isOwner &&
               <ProfileHeaderAction
-                glyph="settings"
-                tipText="Edit community"
+                glyph={
+                  community.communityPermissions.isMember
+                    ? 'minus'
+                    : 'plus-fill'
+                }
+                color={
+                  community.communityPermissions.isMember
+                    ? 'text.placeholder'
+                    : 'brand.alt'
+                }
+                hoverColor={
+                  community.communityPermissions.isMember
+                    ? 'warn.default'
+                    : 'brand.alt'
+                }
+                tipText={
+                  community.communityPermissions.isMember
+                    ? `Leave community`
+                    : 'Join community'
+                }
                 tipLocation="top-left"
-              />
-            </Link>}
-        </ProfileHeader>
-        <Description>
-          <p>{community.description}</p>
-          {community.website &&
-            <ExtLink>
-              <Icon glyph="link" size={24} />
-              <a href={addProtocolToString(community.website)}>
-                {community.website}
-              </a>
-            </ExtLink>}
-        </Description>
-        <MetaData data={community.metaData} />
-      </Card>
-    );
-  } else {
-    return (
-      <Card>
-        <ProfileHeader>
-          <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
-          <ProfileHeaderLink to={`/${community.slug}`}>
-            <ProfileHeaderMeta>
-              <Title>{community.name}</Title>
-            </ProfileHeaderMeta>
-          </ProfileHeaderLink>
+                onClick={() => this.toggleMembership(community.id)}
+              />}
 
-          {currentUser &&
-            !community.communityPermissions.isOwner &&
-            <ProfileHeaderAction
-              glyph={
-                community.communityPermissions.isMember ? 'minus' : 'plus-fill'
-              }
-              color={
-                community.communityPermissions.isMember
-                  ? 'text.placeholder'
-                  : 'brand.alt'
-              }
-              hoverColor={
-                community.communityPermissions.isMember
-                  ? 'warn.default'
-                  : 'brand.alt'
-              }
-              tipText={
-                community.communityPermissions.isMember
-                  ? `Leave community`
-                  : 'Join community'
-              }
-              tipLocation="top-left"
-              onClick={() => toggleMembership(community.id)}
-            />}
-
-          {currentUser &&
-            community.communityPermissions.isOwner &&
-            <Link to={`/${community.slug}/settings`}>
-              <ProfileHeaderAction
-                glyph="settings"
-                tipText="Edit community"
-                tipLocation="top-left"
-              />
-            </Link>}
-
-        </ProfileHeader>
-      </Card>
-    );
+            {currentUser &&
+              community.communityPermissions.isOwner &&
+              <Link to={`/${community.slug}/settings`}>
+                <ProfileHeaderAction
+                  glyph="settings"
+                  tipText="Edit community"
+                  tipLocation="top-left"
+                />
+              </Link>}
+          </ProfileHeader>
+        </Card>
+      );
+    }
   }
-};
+}
 
-const Community = compose(
-  toggleCommunityMembershipMutation,
-  displayLoadingCard,
-  pure
-)(CommunityWithData);
+const Community = compose(toggleCommunityMembershipMutation, pure)(
+  CommunityWithData
+);
 
 const mapStateToProps = state => ({
   currentUser: state.users.currentUser,
 });
+
 export default connect(mapStateToProps)(Community);

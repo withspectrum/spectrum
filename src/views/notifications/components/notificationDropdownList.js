@@ -7,7 +7,10 @@ import { MiniNewMessageNotification } from './newMessageNotification';
 import { MiniNewReactionNotification } from './newReactionNotification';
 import { MiniNewChannelNotification } from './newChannelNotification';
 import { MiniNewThreadNotification } from './newThreadNotification';
-import { MiniNewUserInCommunityNotification } from './newUserInCommunityNotification';
+import {
+  MiniNewUserInCommunityNotification,
+} from './newUserInCommunityNotification';
+import { MiniCommunityInviteNotification } from './communityInviteNotification';
 
 export const NotificationDropdownList = ({
   rawNotifications,
@@ -73,6 +76,16 @@ export const NotificationDropdownList = ({
           case 'THREAD_CREATED': {
             return (
               <MiniNewThreadNotification
+                key={notification.id}
+                notification={notification}
+                currentUser={currentUser}
+                history={history}
+              />
+            );
+          }
+          case 'COMMUNITY_INVITE': {
+            return (
+              <MiniCommunityInviteNotification
                 key={notification.id}
                 notification={notification}
                 currentUser={currentUser}

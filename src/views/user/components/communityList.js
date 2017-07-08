@@ -4,6 +4,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 //$FlowFixMe
 import { connect } from 'react-redux';
+//$FlowFixMe
+import { withRouter } from 'react-router';
+//$FlowFixMe
+import compose from 'recompose/compose';
 import { CommunityListItem } from '../../../components/listItems';
 import { Button, IconButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
@@ -28,6 +32,7 @@ const CommunityList = props => {
     user,
     withDescription,
     withMeta,
+    history,
     networkStatus,
   } = props;
 
@@ -47,7 +52,7 @@ const CommunityList = props => {
               glyph="plus"
               color="text.placeholder"
               hoverColor="brand.alt"
-              onClick={() => dispatch(openModal('CREATE_COMMUNITY_MODAL'))}
+              onClick={() => history.push('/new/community')}
             />}
         </ListHeader>
         <ListContainer>
@@ -78,4 +83,4 @@ const CommunityList = props => {
   }
 };
 
-export default connect()(CommunityList);
+export default compose(withRouter, connect())(CommunityList);

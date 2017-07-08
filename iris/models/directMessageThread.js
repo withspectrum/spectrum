@@ -67,7 +67,6 @@ const listenToUpdatedDirectMessageThreads = (cb: Function): Function => {
     .run({ cursor: true }, (err, cursor) => {
       if (err) throw err;
       cursor.each((err, data) => {
-        console.log('Returning new thread to client', data);
         if (err) throw err;
         // Call the passed callback with the notification
         cb(data);

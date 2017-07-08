@@ -6,7 +6,11 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
-import { UpsellSignIn, UpsellToReload } from '../../components/upsell';
+import {
+  UpsellSignIn,
+  UpsellToReload,
+  UpsellMiniCreateCommunity,
+} from '../../components/upsell';
 import UpsellNewUser from '../../components/upsell/newUserUpsell';
 import {
   LoadingProfile,
@@ -98,6 +102,7 @@ class DashboardPure extends Component {
                   communities={communities}
                   networkStatus={networkStatus}
                 />
+                <UpsellMiniCreateCommunity />
               </Column>}
 
             <Column type="primary">

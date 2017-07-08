@@ -16,6 +16,8 @@ if (RUN_IN_PROD && process.argv[4] === 'down') {
   process.exit(1);
 }
 
+if (RUN_IN_PROD) console.log('Running migration in production...');
+
 module.exports = !RUN_IN_PROD
   ? DEFAULT_CONFIG
   : Object.assign({}, DEFAULT_CONFIG, {

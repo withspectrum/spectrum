@@ -13,6 +13,8 @@ import { displayLoadingScreen } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ListCard from './components/listCard';
+import ImportSlack from './components/importSlack';
+import EmailInvites from './components/emailInvites';
 import { CommunityEditForm } from '../../components/editForm';
 import CommunityMembers from '../../components/communityMembers';
 import { Upsell404Community } from '../../components/upsell';
@@ -21,8 +23,9 @@ const ChannelListCard = compose(getChannelsByCommunity)(ListCard);
 
 const SettingsPure = ({
   match,
-  data: { community, error },
   history,
+  data: { community, error },
+  location,
   dispatch,
 }) => {
   track('community', 'settings viewed', null);
@@ -30,9 +33,7 @@ const SettingsPure = ({
   const communitySlug = match.params.communitySlug;
 
   const create = () => {
-    return dispatch(
-      openModal('CREATE_COMMUNITY_MODAL', { name: communitySlug })
-    );
+    return history.push('/new/community');
   };
 
   if (error) {
@@ -99,6 +100,8 @@ const SettingsPure = ({
         <CommunityEditForm community={community} />
       </Column>
       <Column type="primary">
+        <ImportSlack community={community} id={community.id} />
+        <EmailInvites community={community} />
         <ChannelListCard slug={communitySlug} />
         <CommunityMembers id={community.id} />
       </Column>

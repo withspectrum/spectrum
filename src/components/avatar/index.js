@@ -6,7 +6,9 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
-import { Gradient } from '../globals';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
+import { Gradient, Tooltip } from '../globals';
 import { optimize } from '../../helpers/images';
 
 const StyledAvatar = styled.img`
@@ -21,7 +23,8 @@ const StyledAvatar = styled.img`
   margin: ${props => (props.margin ? `${props.margin}` : '0')};
   object-fit: cover;
   background-color: ${({ theme }) => theme.generic.default};
-  background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
+  background-image: ${({ theme }) =>
+    Gradient(theme.generic.alt, theme.generic.default)};
   position: relative;
   z-index: 9;
 `;
@@ -37,8 +40,14 @@ const StyledAvatarContainer = styled.object`
     content: '';
     position: absolute;
     display: ${props => (props.isOnline ? 'inline-block' : 'none')};
-    width: ${props => (props.onlineSize === 'large' ? '8px' : props.onlineSize === 'small' ? '4px' : '6px')};
-    height: ${props => (props.onlineSize === 'large' ? '8px' : props.onlineSize === 'small' ? '4px' : '6px')};
+    width: ${props =>
+      props.onlineSize === 'large'
+        ? '8px'
+        : props.onlineSize === 'small' ? '4px' : '6px'};
+    height: ${props =>
+      props.onlineSize === 'large'
+        ? '8px'
+        : props.onlineSize === 'small' ? '4px' : '6px'};
     background: ${props => props.theme.pro.alt};
     border-radius: 100%;
     border: 2px solid ${props => props.theme.text.reverse};
@@ -48,21 +57,34 @@ const StyledAvatarContainer = styled.object`
   }
 `;
 
-const AvatarPure = (props: Object): React$Element<any> => (
-  <StyledAvatarContainer {...props}>
-    <StyledAvatar
-      {...props}
-      src={optimize(props.src, {
-        w: props.size,
-        dpr: 2,
-      })}
-    />
-  </StyledAvatarContainer>
-);
-
-// TODO: handle fallback/loading images more gracefully, like so (make StyledAvatar an object tag)
-// <StyledAvatar {...props}>
-//   <img src={props.defaultImage ? props.defaultImage : '/public/img/default_avatar.svg'} />
-// </StyledAvatar>
+const AvatarPure = (props: Object): React$Element<any> => {
+  if (props.link) {
+    return (
+      <Link to={props.link}>
+        <StyledAvatarContainer {...props}>
+          <StyledAvatar
+            {...props}
+            src={optimize(props.src, {
+              w: props.size,
+              dpr: 2,
+            })}
+          />
+        </StyledAvatarContainer>
+      </Link>
+    );
+  } else {
+    return (
+      <StyledAvatarContainer {...props}>
+        <StyledAvatar
+          {...props}
+          src={optimize(props.src, {
+            w: props.size,
+            dpr: 2,
+          })}
+        />
+      </StyledAvatarContainer>
+    );
+  }
+};
 
 export const Avatar = compose(pure)(AvatarPure);
