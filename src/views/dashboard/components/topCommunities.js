@@ -23,10 +23,28 @@ import {
 import { CoverLink, CoverSubtitle } from '../../../components/profile/style';
 
 class TopCommunitiesPure extends Component {
+  state: {
+    loading: string,
+  };
+
+  constructor() {
+    super();
+
+    this.state = { loading: '' };
+  }
+
   toggleMembership = communityId => {
+    this.setState({
+      loading: communityId,
+    });
+
     this.props
       .toggleCommunityMembership({ communityId })
       .then(({ data: { toggleCommunityMembership } }) => {
+        this.setState({
+          loading: '',
+        });
+
         const isMember =
           toggleCommunityMembership.communityPermissions.isMember;
 
@@ -48,12 +66,16 @@ class TopCommunitiesPure extends Component {
         this.props.dispatch(addToastWithTimeout(type, str));
       })
       .catch(err => {
+        this.setState({
+          loading: '',
+        });
         this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
   render() {
     const { data: { topCommunities, error } } = this.props;
+    const { loading } = this.state;
 
     if (!error && topCommunities.length > 0) {
       return (
@@ -64,7 +86,9 @@ class TopCommunitiesPure extends Component {
                 <CoverPhoto url={community.coverPhoto}>
                   <CoverLink to={`/${community.slug}`}>
                     <CoverAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
-                    <CoverTitle>{community.name}</CoverTitle>
+                    <CoverTitle>
+                      {community.name}
+                    </CoverTitle>
                   </CoverLink>
                 </CoverPhoto>
                 <CoverSubtitle>
@@ -78,11 +102,13 @@ class TopCommunitiesPure extends Component {
                         gradientTheme="none"
                         color={'pro.alt'}
                         hoverColor={'pro.default'}
+                        loading={loading === community.id}
                       >
                         Joined!
                       </OutlineButton>
                     : <Button
                         onClick={() => this.toggleMembership(community.id)}
+                        loading={loading === community.id}
                       >
                         Join
                       </Button>}

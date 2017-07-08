@@ -31,14 +31,16 @@ class UpsellNewUser extends Component {
   state: {
     joinedCommunities: number,
     error: string,
+    savedUsername: boolean,
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       joinedCommunities: 0,
       error: '',
+      savedUsername: props.user.username ? props.user.username : false,
     };
   }
 
@@ -47,13 +49,23 @@ class UpsellNewUser extends Component {
   }
 
   graduate = () => {
-    const { joinedCommunities } = this.state;
-    if (joinedCommunities > 0) {
+    const { joinedCommunities, savedUsername } = this.state;
+    const { communities } = this.props;
+
+    if ((joinedCommunities > 0 || communities) && savedUsername) {
       track('onboarding', 'graduated', null);
       this.props.graduate();
     } else {
+      let error;
+      if (joinedCommunities === 0 && !communities) {
+        error =
+          'To get started, try joining some communities above, or creating your own!';
+      } else if (!savedUsername) {
+        error = 'Be sure to save your username!';
+      }
+
       this.setState({
-        error: 'To get started, try joining some communities above, or creating your own!',
+        error,
       });
     }
   };
@@ -85,6 +97,12 @@ class UpsellNewUser extends Component {
     track('onboarding', 'share link clicked', value);
   };
 
+  savedUsername = () => {
+    this.setState({
+      savedUsername: true,
+    });
+  };
+
   render() {
     const { user } = this.props;
 
@@ -92,11 +110,17 @@ class UpsellNewUser extends Component {
       <NullCard bg="onboarding" repeat={true} noPadding>
         <Section>
           <LargeEmoji>
-            <span role="img" aria-label="Howdy!">👋</span>
+            <span role="img" aria-label="Howdy!">
+              👋
+            </span>
           </LargeEmoji>
-          <Title>Howdy, {user.name}!</Title>
+          <Title>
+            Howdy, {user.name}!
+          </Title>
           <Subtitle>
-            Spectrum is a place where communities live. It's easy to follow the things that you care about most, or even create your own community to share with the world.
+            Spectrum is a place where communities live. It's easy to follow the
+            things that you care about most, or even create your own community
+            to share with the world.
           </Subtitle>
         </Section>
 
@@ -110,7 +134,7 @@ class UpsellNewUser extends Component {
             Pick a username so that people can find you on Spectrum!
           </SmallSubtitle>
 
-          <SetUsername user={user} />
+          <SetUsername user={user} usernameSaved={this.savedUsername} />
         </Section>
 
         <Section noPadding>
@@ -120,7 +144,8 @@ class UpsellNewUser extends Component {
 
           <SmallTitle>Find your people</SmallTitle>
           <SmallSubtitle>
-            Join communities that look interesting or fun, and threads posted to those communities will start showing up in your home feed!
+            Join communities that look interesting or fun, and threads posted to
+            those communities will start showing up in your home feed!
           </SmallSubtitle>
 
           <TopCommunities join={this.joined} leave={this.left} />
@@ -133,7 +158,8 @@ class UpsellNewUser extends Component {
 
           <SmallTitle>More fun with friends</SmallTitle>
           <SmallSubtitle>
-            Interneting is more fun with friends - invite your favorite people to join the conversation!
+            Interneting is more fun with friends - invite your favorite people
+            to join the conversation!
           </SmallSubtitle>
 
           <ButtonRow>
@@ -175,7 +201,9 @@ class UpsellNewUser extends Component {
 
           <SmallTitle>Build a community</SmallTitle>
           <SmallSubtitle>
-            Already run an online community? Or have you been dreaming of building a new space for people who like the same things? Create a community in less than a minute:
+            Already run an online community? Or have you been dreaming of
+            building a new space for people who like the same things? Create a
+            community in less than a minute:
           </SmallSubtitle>
 
           <OutlineButton onClick={this.createCommunity} icon="plus">
@@ -190,11 +218,14 @@ class UpsellNewUser extends Component {
 
           <SmallTitle>All set?</SmallTitle>
           <SmallSubtitle>
-            Once you've found a few communities and topics, or created your own, you're ready to go!
+            Once you've found a few communities and topics, or created your own,
+            you're ready to go!
           </SmallSubtitle>
 
           {this.state.error &&
-            <FriendlyError>{this.state.error}</FriendlyError>}
+            <FriendlyError>
+              {this.state.error}
+            </FriendlyError>}
 
           <Button onClick={this.graduate} icon="logo">
             Cool! Take me home.
