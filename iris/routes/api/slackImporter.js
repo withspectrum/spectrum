@@ -15,9 +15,12 @@ slackRouter.get('/', (req, res) => {
   const code = req.query.code;
   const communityId = req.query.state;
   const senderId = req.user.id;
+  const returnURI = IS_PROD
+    ? `https://spectrum.chat/api/slack`
+    : `http://localhost:3001/api/slack`;
 
   // generate an oauth token. This token will be used to communicate with the Slack API to get user information, and we'll store the token in the db record to allow for the user to access their Slack team info in the future.
-  return generateOAuthToken(code, null)
+  return generateOAuthToken(code, returnURI)
     .then(data => {
       if (!data) return new UserError('No token generated for this Slack team');
       const token = data.access_token;
