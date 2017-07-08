@@ -99,7 +99,11 @@ export const markAllNotificationsSeen = (userId: string): Promise<Object> => {
     .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
     .run()
     .then(notifications =>
-      markNotificationsSeen(notifications.map(notification => notification.id))
+      markNotificationsSeen(
+        notifications
+          .filter(notification => !!notification)
+          .map(notification => notification.id)
+      )
     )
     .then(() => getNotificationsByUser(userId));
 };
@@ -136,7 +140,11 @@ export const markDirectMessageNotificationsSeen = (
     .filter(row => row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
     .run()
     .then(notifications =>
-      markNotificationsSeen(notifications.map(notification => notification.id))
+      markNotificationsSeen(
+        notifications
+          .filter(notification => !!notification)
+          .map(notification => notification.id)
+      )
     )
     .then(() => getNotificationsByUser(userId));
 };
