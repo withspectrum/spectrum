@@ -25,6 +25,7 @@ import Notifications from './views/notifications';
 import UserSettings from './views/userSettings';
 import communitySettings from './views/communitySettings';
 import channelSettings from './views/channelSettings';
+import NewCommunity from './views/newCommunity';
 
 const About = () => (
   <div>
@@ -76,6 +77,11 @@ class Routes extends Component {
               <Route path="/style-guide" component={StyleGuide} />
 
               {/* App Pages */}
+              <Route path="/new/community" component={NewCommunity} />
+              <Route
+                path="/new"
+                render={() => <Redirect to="/new/community" />}
+              />
               <Route path="/explore" component={Explore} />
               <Route path="/messages/new" component={DirectMessages} />
               <Route path="/messages/:threadId" component={DirectMessages} />

@@ -34,18 +34,27 @@ export const CommunityListItem = (props: CardProps): React$Element<any> => {
       <Row>
         <Avatar
           radius={4}
+          link={`/${props.contents.slug}`}
           src={`${props.contents.profilePhoto}`}
           size={32}
           style={{ marginRight: '12px' }}
         />
         <Col>
-          <Heading>{props.contents.name}</Heading>
-          <Meta>{props.meta}</Meta>
+          <Heading>
+            {props.contents.name}
+          </Heading>
+          <Meta>
+            {props.meta}
+          </Meta>
         </Col>
-        <ActionContainer className={'action'}>{props.children}</ActionContainer>
+        <ActionContainer className={'action'}>
+          {props.children}
+        </ActionContainer>
       </Row>
       {!!props.contents.description && props.withDescription
-        ? <Description>{props.contents.description}</Description>
+        ? <Description>
+            {props.contents.description}
+          </Description>
         : ''}
     </Wrapper>
   );
@@ -70,12 +79,18 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
               {props.contents.name}
             </Heading>
           </Link>
-          <Meta>{props.meta}</Meta>
+          <Meta>
+            {props.meta}
+          </Meta>
         </Col>
-        <ActionContainer className={'action'}>{props.children}</ActionContainer>
+        <ActionContainer className={'action'}>
+          {props.children}
+        </ActionContainer>
       </Row>
       {!!props.contents.description && props.withDescription
-        ? <Description>{props.contents.description}</Description>
+        ? <Description>
+            {props.contents.description}
+          </Description>
         : ''}
     </Wrapper>
   );
@@ -89,7 +104,9 @@ export const ThreadListItem = (props: CardProps): React$Element<any> => {
           <Heading>
             {props.contents.content.title}
           </Heading>
-          <Meta>{props.meta}</Meta>
+          <Meta>
+            {props.meta}
+          </Meta>
         </Col>
       </Row>
     </Wrapper>
@@ -115,12 +132,18 @@ export const ChannelListItemLi = (props: CardProps): React$Element<any> => {
               {props.contents.name}
             </Heading>
           </Link>
-          <Meta>{props.meta}</Meta>
+          <Meta>
+            {props.meta}
+          </Meta>
         </Col>
-        <ActionContainer className={'action'}>{props.children}</ActionContainer>
+        <ActionContainer className={'action'}>
+          {props.children}
+        </ActionContainer>
       </Row>
       {!!props.contents.description && props.withDescription
-        ? <Description>{props.contents.description}</Description>
+        ? <Description>
+            {props.contents.description}
+          </Description>
         : ''}
     </WrapperLi>
   );
@@ -143,14 +166,20 @@ export const UserListItem = ({
         </Link>
         <Col>
           <Heading>
-            <Link to={`/users/${user.username}`}>{user.name}</Link>
+            <Link to={`/users/${user.username}`}>
+              {user.name}
+            </Link>
           </Heading>
           {user.username &&
             <Meta>
-              <Link to={`/users/${user.username}`}>@{user.username}</Link>
+              <Link to={`/users/${user.username}`}>
+                @{user.username}
+              </Link>
             </Meta>}
         </Col>
-        <ActionContainer className={'action'}>{children}</ActionContainer>
+        <ActionContainer className={'action'}>
+          {children}
+        </ActionContainer>
       </Row>
     </Wrapper>
   );
@@ -165,15 +194,21 @@ export const BillingListItem = props => {
             <Badge type="pro" />
           </BadgeContainer>
           <Col>
-            <Heading>{props.contents.name}</Heading>
-            <Meta>{props.meta}</Meta>
+            <Heading>
+              {props.contents.name}
+            </Heading>
+            <Meta>
+              {props.meta}
+            </Meta>
           </Col>
           <ActionContainer className={'action'}>
             {props.children}
           </ActionContainer>
         </Row>
         {!!props.contents.description && props.withDescription
-          ? <Description>{props.contents.description}</Description>
+          ? <Description>
+              {props.contents.description}
+            </Description>
           : ''}
       </Wrapper>
     </div>

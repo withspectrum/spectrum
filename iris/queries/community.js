@@ -2,6 +2,7 @@
 /**
  * Community query resolvers
  */
+import UserError from '../utils/UserError';
 const {
   getCommunityMetaData,
   getTopCommunities,
@@ -17,6 +18,7 @@ const {
   getChannelsByUserAndCommunity,
   getPublicChannelsByCommunity,
 } = require('../models/channel');
+import { getSlackImport } from '../models/slackImport';
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetCommunityArgs } from '../models/community';
@@ -133,6 +135,21 @@ module.exports = {
         return {
           channels: data[0],
           members: data[1],
+        };
+      });
+    },
+    slackImport: ({ id }, _, { user }) => {
+      const currentUser = user;
+      if (!currentUser)
+        return new UserError(
+          'You must be logged in to view community settings.'
+        );
+      return getSlackImport(id).then(data => {
+        if (!data) return null;
+        return {
+          teamName: data.teamName,
+          members: data.members ? JSON.stringify(data.members) : null,
+          sent: data.sent || null,
         };
       });
     },

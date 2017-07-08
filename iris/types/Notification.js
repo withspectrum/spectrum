@@ -10,6 +10,7 @@ const Notification = /* GraphQL */ `
 	  USER_APPROVED_TO_JOIN_PRIVATE_CHANNEL
 	  THREAD_LOCKED_BY_OWNER
 	  THREAD_DELETED_BY_OWNER
+		COMMUNITY_INVITE
 	}
 
 	enum EntityType {

@@ -20,7 +20,7 @@ const getUserById = (userId: string): Promise<Object> => {
 const getUserByEmail = (email: string): Promise<Object> => {
   return db
     .table('users')
-    .filter({ email })
+    .getAll(email, { index: 'email' })
     .run()
     .then(results => (results.length > 0 ? results[0] : null));
 };

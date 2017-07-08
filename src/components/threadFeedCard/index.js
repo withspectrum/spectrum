@@ -35,10 +35,11 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
           <Location>
             <Link to={`/${props.data.channel.community.slug}`}>
               {props.data.channel.community.name}
-            </Link>
-            {' '}/{' '}
+            </Link>{' '}
+            /{' '}
             <Link
-              to={`/${props.data.channel.community.slug}/${props.data.channel.slug}`}
+              to={`/${props.data.channel.community.slug}/${props.data.channel
+                .slug}`}
             >
               {props.data.channel.isPrivate &&
                 <Lock>
@@ -57,7 +58,8 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
         return (
           <Location>
             <Link
-              to={`/${props.data.channel.community.slug}/${props.data.channel.slug}`}
+              to={`/${props.data.channel.community.slug}/${props.data.channel
+                .slug}`}
             >
               {props.data.channel.isPrivate &&
                 <Lock>
@@ -84,17 +86,17 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
 
   const messageAvatars = list => {
     const avatarList = list.slice(0, 10);
-    return avatarList.map(participant => (
-      <Link key={participant.id} to={`/users/${participant.username}`}>
-        <Avatar
-          size={24}
-          radius={24}
-          isOnline={participant.isOnline}
-          src={`${participant.profilePhoto}`}
-          role="presentation"
-        />
-      </Link>
-    ));
+    return avatarList.map(participant =>
+      <Avatar
+        size={24}
+        radius={24}
+        isOnline={participant.isOnline}
+        link={participant.username ? `/users/${participant.username}` : null}
+        src={participant.profilePhoto}
+        role="presentation"
+        key={participant.id}
+      />
+    );
   };
 
   return (
@@ -132,43 +134,48 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
           <ParticipantHeads>
             {/* TODO: Creator/participants should all be links, not fire modals. */}
             <Creator role="presentation">
-              <Link
+              <Avatar
+                size={24}
+                radius={24}
+                isOnline={props.data.creator.isOnline}
+                src={props.data.creator.profilePhoto}
+                link={
+                  props.data.creator.username
+                    ? `/users/${props.data.creator.username}`
+                    : null
+                }
+                role="presentation"
                 key={props.data.creator.id}
-                to={`/users/${props.data.creator.username}`}
-              >
-                <Avatar
-                  size={24}
-                  radius={24}
-                  isOnline={props.data.creator.isOnline}
-                  src={props.data.creator.profilePhoto}
-                />
-              </Link>
+              />
             </Creator>
             {messageAvatars(participantList)}
             {participantList.length > 10 &&
-              <ParticipantCount
-              >{`+${participantList.length - 10}`}</ParticipantCount>}
+              <ParticipantCount>{`+${participantList.length -
+                10}`}</ParticipantCount>}
           </ParticipantHeads>
           {props.data.messageCount > 0
             ? <Meta>
                 <Icon
                   size={24}
                   glyph="message-fill"
-                  tipText={`${props.data.messageCount} ${props.data.messageCount > 1 ? 'messages' : 'message'}`}
+                  tipText={`${props.data.messageCount} ${props.data
+                    .messageCount > 1
+                    ? 'messages'
+                    : 'message'}`}
                   tipLocation="top-left"
                 />
                 {props.data.messageCount}
               </Meta>
             : !props.data.isCreator &&
-                <MetaNew>
-                  <Icon
-                    size={24}
-                    glyph="notification-fill"
-                    tipText={`New thread!`}
-                    tipLocation="top-left"
-                  />
-                  New
-                </MetaNew>}
+              <MetaNew>
+                <Icon
+                  size={24}
+                  glyph="notification-fill"
+                  tipText={`New thread!`}
+                  tipLocation="top-left"
+                />
+                New
+              </MetaNew>}
         </MetaRow>
       </CardContent>
     </StyledThreadFeedCard>

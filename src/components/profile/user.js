@@ -93,7 +93,9 @@ const UserWithData = ({
               isOnline={user.isOnline}
               src={`${user.profilePhoto}`}
             />
-            <CoverTitle>{user.name}</CoverTitle>
+            <CoverTitle>
+              {user.name}
+            </CoverTitle>
           </CoverLink>
         </CoverPhoto>
         <CoverSubtitle>
@@ -104,7 +106,10 @@ const UserWithData = ({
 
         {(user.description || user.website) &&
           <CoverDescription>
-            {user.description && <p>{user.description}</p>}
+            {user.description &&
+              <p>
+                {user.description}
+              </p>}
             {user.website &&
               <ExtLink>
                 <Icon glyph="link" size={24} />
@@ -129,9 +134,12 @@ const UserWithData = ({
               radius={32}
               isOnline={user.isOnline}
               src={`${user.profilePhoto}`}
+              link={user.username ? `/users/${user.username}` : null}
             />
             <ProfileHeaderMeta>
-              <Title>{user.name}</Title>
+              <Title>
+                {user.name}
+              </Title>
               <Subtitle>
                 @{user.username}
                 {user.isAdmin && <Badge type="admin" />}

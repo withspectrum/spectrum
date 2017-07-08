@@ -16,6 +16,12 @@ export const Title = styled.h1`
   text-align: center;
 `;
 
+export const MiniTitle = styled(Title)`
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.25;
+`;
+
 export const Actions = styled.div`
   display: flex;
   justify-content: center;
@@ -38,12 +44,19 @@ export const Subtitle = styled.h2`
   text-align: center;
 
   b {
-    font-weight: 700
+    font-weight: 700;
   }
 
   a {
-    color: ${props => props.theme.brand.default}
+    color: ${props => props.theme.brand.default};
   }
+`;
+
+export const MiniSubtitle = styled(Subtitle)`
+  font-weight: 600;
+  color: ${props => props.theme.text.alt};
+  font-size: 0.875rem;
+  line-height: 1.4;
 `;
 
 export const SmallTitle = styled(Title)`
@@ -60,11 +73,13 @@ export const Cost = styled(Subtitle)`
 `;
 
 export const NullCol = styled(FlexCol)`
-  background-image: ${props => (props.bg ? `url('/img/fills/${props.bg}.svg')` : 'none')};
+  background-image: ${props =>
+    props.bg ? `url('/img/fills/${props.bg}.svg')` : 'none'};
   background-color: transparent;
   background-size: 110% auto;
   background-repeat: ${props => (props.repeat ? 'repeat-y' : 'no-repeat')};
-  background-position: ${props => (props.repeat ? 'center top' : 'center center')};
+  background-position: ${props =>
+    props.repeat ? 'center top' : 'center center'};
   width: 100%;
   height: auto;
   min-height: 160px;
@@ -77,7 +92,8 @@ export const NullCol = styled(FlexCol)`
 `;
 
 export const NullRow = styled(FlexRow)`
-  background-image: url('/img/fills/${props => (props.bg ? `${props.bg}` : 'locked')}.svg');
+  background-image: url('/img/fills/${props =>
+    props.bg ? `${props.bg}` : 'locked'}.svg');
   background-color: transparent;
   background-size: 110% auto;
   background-repeat: no-repeat;
@@ -106,7 +122,8 @@ export const Profile = styled.div`
 
   span {
     background-color: ${({ theme }) => theme.success.default};
-    background-image: ${({ theme }) => Gradient(theme.space.light, theme.success.default)};
+    background-image: ${({ theme }) =>
+      Gradient(theme.space.light, theme.success.default)};
     position: absolute;
     left: 75%;
     top: 48px;
@@ -142,8 +159,7 @@ export const SignInButtons = styled.div`
     margin-left: 8px;
   }
 
-
-  @media(max-width: 768px) {
+  @media (max-width: 768px) {
     flex-direction: column;
   }
 `;
@@ -162,10 +178,12 @@ export const Button = styled.a`
   font-size: 14px;
   font-weight: 700;
   transition: ${Transition.hover.off};
-	position: relative;
+  position: relative;
   margin: 8px;
 
-	${props => props.after && `
+  ${props =>
+    props.after &&
+    `
 			&:after {
 				content: 'Previously signed in with';
 				position: absolute;
@@ -179,9 +197,7 @@ export const Button = styled.a`
 				width: 100%;
 				text-align: center;
 			}
-		`}
-
-  @media(max-width: 768px) {
+		`} @media(max-width: 768px) {
     margin: 8px 0;
   }
 
@@ -206,40 +222,55 @@ export const Button = styled.a`
 `;
 
 export const ButtonTwitter = styled(Button)`
-	background: ${props => (props.preferred ? props.theme.social.twitter.default : 'none')};
-	color: ${props => (props.whitebg ? props.theme.social.twitter.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
+	background: ${props =>
+    props.preferred ? props.theme.social.twitter.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.twitter.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
   
   &:after {
     color: ${props => props.theme.social.twitter.default};
   }
 
 	&:hover {
-		color: ${props => (props.whitebg ? props.theme.social.twitter.default : '#fff')}
+		color: ${props =>
+      props.whitebg ? props.theme.social.twitter.default : '#fff'}
 	}
 `;
 
 export const ButtonFacebook = styled(Button)`
-	background: ${props => (props.preferred ? props.theme.social.facebook.default : 'none')};
-	color: ${props => (props.whitebg ? props.theme.social.facebook.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
+	background: ${props =>
+    props.preferred ? props.theme.social.facebook.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.facebook.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
 
   &:after {
     color: ${props => props.theme.social.facebook.default};
   }
 
 	&:hover {
-		color: ${props => (props.whitebg ? props.theme.social.facebook.default : '#fff')}
+		color: ${props =>
+      props.whitebg ? props.theme.social.facebook.default : '#fff'}
 	}
 `;
 
 export const ButtonGoogle = styled(Button)`
-	background: ${props => (props.preferred ? props.theme.social.google.default : 'none')};
-	color: ${props => (props.whitebg ? props.theme.social.google.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
+	background: ${props =>
+    props.preferred ? props.theme.social.google.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.google.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
 
   &:after {
     color: ${props => props.theme.social.google.default};
   }
 
 	&:hover {
-		color: ${props => (props.whitebg ? props.theme.social.google.default : '#fff')}
+		color: ${props =>
+      props.whitebg ? props.theme.social.google.default : '#fff'}
 	}
 `;

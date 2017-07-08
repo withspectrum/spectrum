@@ -69,24 +69,27 @@ class ThreadDetailPure extends Component {
 
     const { thread } = props;
 
-    let rawLinkPreview = thread.attachments && thread.attachments.length > 0
-      ? thread.attachments.filter(
-          attachment => attachment.attachmentType === 'linkPreview'
-        )[0]
-      : null;
+    let rawLinkPreview =
+      thread.attachments && thread.attachments.length > 0
+        ? thread.attachments.filter(
+            attachment => attachment.attachmentType === 'linkPreview'
+          )[0]
+        : null;
 
     let cleanLinkPreview = rawLinkPreview && {
       attachmentType: rawLinkPreview.attachmentType,
       data: JSON.parse(rawLinkPreview.data),
     };
 
-    const viewBody = thread.type === 'SLATE'
-      ? toPlainText(toState(JSON.parse(thread.content.body)))
-      : thread.content.body;
+    const viewBody =
+      thread.type === 'SLATE'
+        ? toPlainText(toState(JSON.parse(thread.content.body)))
+        : thread.content.body;
 
-    const editBody = thread.type === 'SLATE'
-      ? toState(JSON.parse(thread.content.body))
-      : thread.content.body;
+    const editBody =
+      thread.type === 'SLATE'
+        ? toState(JSON.parse(thread.content.body))
+        : thread.content.body;
 
     this.state = {
       isEditing: false,
@@ -94,9 +97,8 @@ class ThreadDetailPure extends Component {
       editBody,
       title: thread.content.title,
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
-      linkPreviewTrueUrl: thread.attachments.length > 0
-        ? thread.attachments[0].trueUrl
-        : '',
+      linkPreviewTrueUrl:
+        thread.attachments.length > 0 ? thread.attachments[0].trueUrl : '',
       linkPreviewLength: thread.attachments.length > 0 ? 1 : 0,
       fetchingLinkPreview: false,
       flyoutOpen: false,
@@ -150,7 +152,9 @@ class ThreadDetailPure extends Component {
     let message;
 
     if (isCommunityOwner && !thread.isCreator) {
-      message = `You are about to delete another person's thread. As the owner of the ${thread.channel.community.name} community, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
+      message = `You are about to delete another person's thread. As the owner of the ${thread
+        .channel.community
+        .name} community, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
     } else if (isChannelOwner && !thread.isCreator) {
       message = `You are about to delete another person's thread. As the owner of the ${thread.channel} channel, you have permission to do this. The thread creator will be notified that this thread was deleted.`;
     } else if (thread.isCreator) {
@@ -263,9 +267,10 @@ class ThreadDetailPure extends Component {
           dispatch(addToastWithTimeout('success', 'Thread saved!'));
 
           this.setState({
-            viewBody: thread.type === 'SLATE'
-              ? toPlainText(toState(JSON.parse(editThread.content.body)))
-              : editThread.content.body,
+            viewBody:
+              thread.type === 'SLATE'
+                ? toPlainText(toState(JSON.parse(editThread.content.body)))
+                : editThread.content.body,
           });
         } else {
           dispatch(
@@ -354,7 +359,8 @@ class ThreadDetailPure extends Component {
         })
         .catch(err => {
           this.setState({
-            error: "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
+            error:
+              "Oops, that URL didn't seem to want to work. You can still publish your story anyways 👍",
             fetchingLinkPreview: false,
           });
         });
@@ -414,9 +420,16 @@ class ThreadDetailPure extends Component {
               onlineSize={'large'}
               isOnline={thread.creator.isOnline}
               src={thread.creator.profilePhoto}
+              link={
+                thread.creator.username
+                  ? `/users/${thread.creator.username}`
+                  : null
+              }
             />
             <BylineMeta>
-              <AuthorName>{thread.creator.name}</AuthorName>
+              <AuthorName>
+                {thread.creator.name}
+              </AuthorName>
               <AuthorUsername>
                 @{thread.creator.username}
                 {thread.creator.isAdmin && <Badge type="admin" />}
@@ -539,7 +552,7 @@ class ThreadDetailPure extends Component {
               state={this.state.editBody}
               style={ThreadDescription}
               ref="bodyTextarea"
-              editorRef={editor => this.bodyEditor = editor}
+              editorRef={editor => (this.bodyEditor = editor)}
               placeholder="Write more thoughts here, add photos, and anything else!"
               showLinkPreview={true}
               linkPreview={{
@@ -549,7 +562,6 @@ class ThreadDetailPure extends Component {
                 data: linkPreview,
               }}
             />
-
           </span>}
       </ThreadWrapper>
     );

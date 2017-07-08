@@ -2,6 +2,10 @@
 import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
+// $FlowFixMe
+import { withRouter } from 'react-router';
+// $FlowFixMe
+import compose from 'recompose/compose';
 import { track } from '../../helpers/events';
 import { openModal } from '../../actions/modals';
 import SetUsername from '../../components/setUsername';
@@ -74,8 +78,7 @@ class UpsellNewUser extends Component {
   };
 
   createCommunity = () => {
-    track('onboarding', 'community create inited', null);
-    this.props.dispatch(openModal('CREATE_COMMUNITY_MODAL'));
+    this.props.history.push('/new/community');
   };
 
   clickShareLink = value => {
@@ -202,4 +205,4 @@ class UpsellNewUser extends Component {
   }
 }
 
-export default connect()(UpsellNewUser);
+export default compose(withRouter, connect())(UpsellNewUser);
