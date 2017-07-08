@@ -49,16 +49,6 @@ class ImportSlack extends Component {
     };
   }
 
-  import = () => {
-    const { community, isOnboarding } = this.props;
-
-    const url = isOnboarding
-      ? `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read,admin&state=${community.id}&redirect_uri=http://localhost:3001/api/slack/onboarding`
-      : `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read,admin&state=${community.id}`;
-
-    window.location.href = url;
-  };
-
   sendInvites = () => {
     const { community } = this.props.data;
     const {
@@ -146,6 +136,16 @@ class ImportSlack extends Component {
     const fullImport = community.slackImport && community.slackImport.members;
     const hasAlreadyBeenSent = fullImport && community.slackImport.sent;
 
+    const url = this.props.isOnboarding
+      ? `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read,admin&state=${community.id}&redirect_uri=${process
+          .env.NODE_ENV === 'development'
+          ? 'http://localhost:3001/api/slack/onboarding'
+          : 'https://spectrum.chat/api/slack/onboarding'}`
+      : `https://slack.com/oauth/authorize?&client_id=201769987287.200380534417&scope=users:read.email,users:read,team:read,admin&state=${community.id}&redirect_uri=${process
+          .env.NODE_ENV === 'development'
+          ? 'http://localhost:3001/api/slack'
+          : 'https://spectrum.chat/api/slack'}`;
+
     if (noImport) {
       return (
         <div>
@@ -160,7 +160,9 @@ class ImportSlack extends Component {
             you own the Slack team.
           </Notice>
           <ButtonContainer>
-            <Button onClick={this.import}>Connect a Slack Team</Button>
+            <a href={url}>
+              <Button>Connect a Slack Team</Button>
+            </a>
           </ButtonContainer>
         </div>
       );
