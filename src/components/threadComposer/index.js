@@ -124,7 +124,10 @@ class ThreadComposerWithData extends Component {
           })
         : availableCommunities);
 
-    activeCommunity = activeCommunity ? activeCommunity[0].id : null;
+    activeCommunity =
+      activeCommunity && activeCommunity.length > 0
+        ? activeCommunity[0].id
+        : null;
 
     if (!activeCommunity) {
       return props.data.refetch().then(() => {
