@@ -41,7 +41,7 @@ export const StyledPrefixLabel = styled.label`
   text-overflow: ellipsis;
 
   > input {
-  	margin-left: 2px;
+    margin-left: 2px;
   }
 
   &:hover > input {
@@ -58,8 +58,9 @@ export const StyledInput = styled.input`
   font-weight: 500;
   width: 100%;
   font-size: 14px;
-  border: 2px solid ${props =>
-    props.disabled ? props.theme.border.default : props.theme.inactive};
+  border: 2px solid
+    ${props =>
+      props.disabled ? props.theme.border.default : props.theme.inactive};
   border-radius: 4px;
   padding: 8px 12px;
   margin-top: 2px;
@@ -72,13 +73,18 @@ export const StyledInput = styled.input`
     flex: initial;
     width: initial;
     margin-right: 0.5em;
-  `}
-
-  &::placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &::-webkit-input-placeholder { color: ${({ theme }) =>
-    theme.text.placeholder} }
-  &:-moz-placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &:-ms-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
+  `} &::placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &::-webkit-input-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &:-moz-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &:-ms-input-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
 
   &:focus {
     border-color: ${({ theme }) => theme.brand.default};
@@ -94,8 +100,8 @@ export const StyledInput = styled.input`
 `;
 
 export const StyledTextArea = styled.textarea`
-	flex: 1 0 auto;
-	width: 100%;
+  flex: 1 0 auto;
+  width: 100%;
   background: ${({ theme }) => theme.bg.default};
   font-weight: 500;
   font-size: 14px;
@@ -106,11 +112,18 @@ export const StyledTextArea = styled.textarea`
   box-shadow: none;
   transition: ${Transition.hover.off};
 
-  &::placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &::-webkit-input-placeholder { color: ${({ theme }) =>
-    theme.text.placeholder} }
-  &:-moz-placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &:-ms-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
+  &::placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &::-webkit-input-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &:-moz-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
+  &:-ms-input-placeholder {
+    color: ${({ theme }) => theme.text.placeholder};
+  }
 
   &:focus {
     border-color: ${({ theme }) => theme.brand.default};
@@ -119,9 +132,9 @@ export const StyledTextArea = styled.textarea`
 `;
 
 export const StyledUnderlineInput = styled.input`
-	font-size: inherit;
-	font-weight: inherit;
-	color: ${props =>
+  font-size: inherit;
+  font-weight: inherit;
+  color: ${props =>
     props.disabled ? props.theme.text.alt : props.theme.text.default};
   border-bottom: ${props =>
     props.disabled
@@ -132,7 +145,7 @@ export const StyledUnderlineInput = styled.input`
 
   &:hover {
     border-color: ${props => (props.disabled ? 'transparent' : 'inherit')};
-    transition: ${Transition.hover.on}
+    transition: ${Transition.hover.on};
   }
 
   &:focus {
@@ -150,7 +163,7 @@ export const StyledHiddenInput = styled.input`
 export const StyledCheckboxWrapper = styled(FlexRow)`
   color: ${({ theme }) => theme.text.alt};
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   line-height: 1.4;
 
   &:hover {
@@ -182,6 +195,13 @@ export const StyledCheckboxWrapper = styled(FlexRow)`
 export const StyledError = styled.p`
   font-size: 14px;
   color: ${props => props.theme.warn.default};
+  padding: 8px 0 16px;
+  line-height: 1.4;
+`;
+
+export const StyledSuccess = styled.p`
+  font-size: 14px;
+  color: ${props => props.theme.success.default};
   padding: 8px 0 16px;
   line-height: 1.4;
 `;
@@ -248,25 +268,19 @@ export const InputOverlay = styled.div`
   width: 100%;
   height: 100%;
   color: ${({ theme }) => theme.text.reverse};
-  ${/* background-color: ${({ theme }) => theme.bg.reverse}; */ ''}
-  padding: 8px;
+  ${/* background-color: ${({ theme }) => theme.bg.reverse}; */ ''} padding: 8px;
   border-radius: ${props => (props.user ? '100%' : '8px')};
-
+  opacity: 1;
 
   &:hover {
-    + img, + div {
+    + img,
+    + div {
       transition: ${Transition.hover.on};
       opacity: 0.25;
     }
   }
 
-  div {
-    transition: ${Transition.hover.off};
-    opacity: 0;
-  }
-
   &:hover div {
     transition: ${Transition.hover.on};
-    opacity: 1;
   }
 `;

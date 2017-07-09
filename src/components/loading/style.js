@@ -40,7 +40,11 @@ export const ShimmerList = styled(Card)`
 `;
 
 export const ShimmerThreadDetail = styled(FlexCol)`
-  padding: 32px;
+  padding: 40px 32px;
+
+	@media(max-width: 768px) {
+		padding: 16px;
+	}
 
   section {
     min-height: 308px;
@@ -197,12 +201,13 @@ export const ShimmerLine = styled.span`
   animation-fill-mode: forwards;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
-  background: linear-gradient(to right,
-		${({ theme }) => theme.bg.wash} 10%,
-		${({ theme }) => hexa(theme.generic.default, 0.65)} 20%,
-		${({ theme }) => theme.bg.wash} 30%);
-  ${/* background-size: 100%; */ ''}
-  animation-name: ${placeHolderShimmer};
+  background: linear-gradient(
+    to right,
+    ${({ theme }) => theme.bg.wash} 10%,
+    ${({ theme }) => hexa(theme.generic.default, 0.65)} 20%,
+    ${({ theme }) => theme.bg.wash} 30%
+  );
+  ${/* background-size: 100%; */ ''} animation-name: ${placeHolderShimmer};
 `;
 
 export const Cover = styled.span`
@@ -212,41 +217,41 @@ export const Cover = styled.span`
 `;
 
 export const LoadingOverlay = styled.div`
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: ${({ theme }) => theme.bg.reverse};
-	opacity: 0.95;
-	width: 100%;
-	height: 100%;
-	z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: ${({ theme }) => theme.bg.reverse};
+  opacity: 0.95;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
 `;
 
 export const LoadingNavbarContainer = styled.nav`
-	width: 100%;
-	background: ${({ theme }) => theme.text.default};
-	display: flex;
-	align-items: center;
-	color: #fff;
-	justify-content: space-between;
-	height: 48px;
-	padding: 0 32px 0 16px;
-	line-height: 1;
-	box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-	z-index: 1000;
+  width: 100%;
+  background: ${({ theme }) => theme.text.default};
+  display: flex;
+  align-items: center;
+  color: #fff;
+  justify-content: space-between;
+  height: 48px;
+  padding: 0 32px 0 16px;
+  line-height: 1;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
 
-	span {
-		position: relative;
-	}
+  span {
+    position: relative;
+  }
 
-	@media (max-width: 768px) {
-		bottom: 0;
-		top: auto;
-		box-shadow: 0 -4px 8px rgba(0,0,0,0.15);
-		padding: 0;
-	}
+  @media (max-width: 768px) {
+    bottom: 0;
+    top: auto;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.15);
+    padding: 0;
+  }
 `;
 
 export const LogoLink = styled(Link)`

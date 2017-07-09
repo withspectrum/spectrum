@@ -73,19 +73,6 @@ const EDIT_USER_OPTIONS = {
 export const editUserMutation = graphql(EDIT_USER_MUTATION, EDIT_USER_OPTIONS);
 
 /*
-  Checks a slug against the db to make sure a community with that slug
-  doesn't already exist
-*/
-export const CHECK_UNIQUE_USERNAME_QUERY = gql`
-  query user($username: String) {
-    user(username: $username) {
-      ...userInfo
-    }
-  }
-  ${userInfoFragment}
-`;
-
-/*
   Upgrade a user to Pro
 */
 const UPGRADE_TO_PRO_MUTATION = gql`
@@ -217,3 +204,11 @@ export const toggleNotificationSettingsMutation = graphql(
   TOGGLE_NOTIFICATION_SETTINGS_MUTATION,
   TOGGLE_NOTIFICATION_SETTINGS_OPTIONS
 );
+
+export const CHECK_UNIQUE_USERNAME_QUERY = gql`
+  query user($username: String) {
+    user(username: $username) {
+      id
+    }
+  }
+`;

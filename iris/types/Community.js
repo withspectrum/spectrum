@@ -33,6 +33,12 @@ const Community = /* GraphQL */ `
 		channels: Int
 	}
 
+	type SlackImport {
+		members: String
+		teamName: String
+		sent: Date
+	}
+
 	input CreateCommunityInput {
 		name: String!
 		slug: String!
@@ -49,6 +55,23 @@ const Community = /* GraphQL */ `
 		file: File
 		coverFile: File
 		communityId: ID!
+	}
+
+	input EmailInviteContactInput {
+		email: String!
+		firstName: String
+		lastName: String
+	}
+
+	input EmailInvitesInput {
+		id: ID!
+		contacts: [ EmailInviteContactInput ]
+		customMessage: String
+	}
+
+	input SendSlackInvitesInput {
+		id: ID!
+		customMessage: String
 	}
 
 	type Community {
@@ -69,6 +92,7 @@ const Community = /* GraphQL */ `
 		memberConnection(first: Int = 20, after: String): CommunityMembersConnection!
 		threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!
 		metaData: CommunityMetaData
+		slackImport: SlackImport
 	}
 
 	extend type Query {
@@ -79,12 +103,11 @@ const Community = /* GraphQL */ `
 
 	extend type Mutation {
 		createCommunity(input: CreateCommunityInput!): Community
-		# todo return the community + channel objects to update the store
 		editCommunity(input: EditCommunityInput!): Community
-		# todo return the community + channel objects to clear the store
 		deleteCommunity(communityId: ID!): Boolean
-		# todo return the community object to update the store on client
 		toggleCommunityMembership(communityId: ID!): Community
+		sendSlackInvites(input: SendSlackInvitesInput!): Community
+		sendEmailInvites(input: EmailInvitesInput!): Boolean
 	}
 `;
 

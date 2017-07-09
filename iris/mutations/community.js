@@ -32,8 +32,11 @@ import type {
   CreateCommunityArguments,
   EditCommunityArguments,
 } from '../models/community';
+import { getSlackImport, markSlackImportAsSent } from '../models/slackImport';
 import { getThreadsByCommunity, deleteThread } from '../models/thread';
 import { slugIsBlacklisted } from '../utils/permissions';
+const createQueue = require('../../shared/bull/create-queue');
+const communityInvitationQueue = createQueue('community invite notification');
 
 module.exports = {
   Mutation: {
@@ -152,34 +155,38 @@ module.exports = {
               getAllChannelsInCommunity,
             ]);
           })
-          .then(([
-            communityToEvaluate,
-            deletedCommunity,
-            allThreadsInCommunity,
-            relationshipsToCommunity,
-            allChannelsInCommunity,
-          ]) => {
-            // after a community has been deleted, we need to mark all the channels
-            // as deleted
-            const removeAllChannels = allChannelsInCommunity.map(channel =>
-              deleteChannel(channel.id)
-            );
-            // and remove all relationships to the deleted channels
-            const removeAllRelationshipsToChannels = allChannelsInCommunity.map(
-              channel => removeMembersInChannel(channel.id)
-            );
-            // and mark all the threads in that community as deleted
-            const removeAllThreadsInCommunity = allThreadsInCommunity.map(
-              thread => deleteThread(thread.id)
-            );
+          .then(
+            (
+              [
+                communityToEvaluate,
+                deletedCommunity,
+                allThreadsInCommunity,
+                relationshipsToCommunity,
+                allChannelsInCommunity,
+              ]
+            ) => {
+              // after a community has been deleted, we need to mark all the channels
+              // as deleted
+              const removeAllChannels = allChannelsInCommunity.map(channel =>
+                deleteChannel(channel.id)
+              );
+              // and remove all relationships to the deleted channels
+              const removeAllRelationshipsToChannels = allChannelsInCommunity.map(
+                channel => removeMembersInChannel(channel.id)
+              );
+              // and mark all the threads in that community as deleted
+              const removeAllThreadsInCommunity = allThreadsInCommunity.map(
+                thread => deleteThread(thread.id)
+              );
 
-            return Promise.all([
-              communityToEvaluate,
-              removeAllChannels,
-              removeAllRelationshipsToChannels,
-              removeAllThreadsInCommunity,
-            ]);
-          })
+              return Promise.all([
+                communityToEvaluate,
+                removeAllChannels,
+                removeAllRelationshipsToChannels,
+                removeAllThreadsInCommunity,
+              ]);
+            }
+          )
           // return only the community that was being evaluated
           .then(data => data[0])
       );
@@ -200,10 +207,10 @@ module.exports = {
       );
       const communities = getCommunities([args.input.communityId]);
 
-      return Promise.all([currentUserCommunityPermissions, communities]).then(([
+      return Promise.all([
         currentUserCommunityPermissions,
         communities,
-      ]) => {
+      ]).then(([currentUserCommunityPermissions, communities]) => {
         const communityToEvaluate = communities[0];
 
         // if no community was found or was deleted
@@ -239,10 +246,10 @@ module.exports = {
       // get the community to evaluate
       const communities = getCommunities([communityId]);
 
-      return Promise.all([currentUserCommunityPermissions, communities]).then(([
+      return Promise.all([
         currentUserCommunityPermissions,
         communities,
-      ]) => {
+      ]).then(([currentUserCommunityPermissions, communities]) => {
         // select the community
         const communityToEvaluate = communities[0];
 
@@ -283,27 +290,31 @@ module.exports = {
             communityToEvaluate,
             removeRelationshipToCommunity,
             getAllChannelsInCommunity,
-          ]).then(([
-            communityToEvaluate,
-            removedRelationshipToCommunity,
-            allChannelsInCommunity,
-          ]) => {
-            // remove all relationships to the community's channels
-            const removeAllRelationshipsToChannels = Promise.all(
-              allChannelsInCommunity.map(channel =>
-                removeMemberInChannel(channel.id, currentUser.id)
-              )
-            );
-
-            return (
-              Promise.all([
+          ]).then(
+            (
+              [
                 communityToEvaluate,
-                removeAllRelationshipsToChannels,
-              ])
-                // return the community that was being evaluated
-                .then(data => data[0])
-            );
-          });
+                removedRelationshipToCommunity,
+                allChannelsInCommunity,
+              ]
+            ) => {
+              // remove all relationships to the community's channels
+              const removeAllRelationshipsToChannels = Promise.all(
+                allChannelsInCommunity.map(channel =>
+                  removeMemberInChannel(channel.id, currentUser.id)
+                )
+              );
+
+              return (
+                Promise.all([
+                  communityToEvaluate,
+                  removeAllRelationshipsToChannels,
+                ])
+                  // return the community that was being evaluated
+                  .then(data => data[0])
+              );
+            }
+          );
         } else {
           // the user is not a member of the current community, so create a new
           // relationship to the community and then create a relationship
@@ -332,6 +343,108 @@ module.exports = {
               // return the evaluated cmomunity
               .then(data => data[0])
           );
+        }
+      });
+    },
+    sendSlackInvites: (_, { input }, { user }) => {
+      const currentUser = user;
+
+      if (!currentUser) {
+        return new UserError(
+          'You must be signed in to invite people to this community.'
+        );
+      }
+
+      // make sure the user is the owner of the community
+      return (
+        getUserPermissionsInCommunity(input.id, currentUser.id)
+          .then(permissions => {
+            if (!permissions.isOwner) {
+              return new UserError(
+                "You don't have permission to invite people to this community."
+              );
+            }
+
+            // get the slack import to make sure it hasn't already been sent before
+            return getSlackImport(input.id);
+          })
+          .then(result => {
+            // if no slack import exists
+            if (!result) {
+              return new UserError(
+                'No Slack team is connected to this community. Try reconnecting.'
+              );
+            }
+            // if the slack import was already sent
+            if (result.sent && result.sent !== null) {
+              return new UserError(
+                'This Slack team has already been invited to join your community!'
+              );
+            }
+
+            // mark the slack import for this community as sent
+            return markSlackImportAsSent(input.id);
+          })
+          .then(inviteRecord => {
+            if (inviteRecord.members.length === 0) {
+              return new UserError('This Slack team has no members to invite!');
+            }
+
+            // for each member on the invite record, send a community invitation
+            return inviteRecord.members
+              .filter(user => !!user.email)
+              .filter(user => user.email !== currentUser.email)
+              .map(user => {
+                return communityInvitationQueue.add({
+                  recipient: {
+                    email: user.email,
+                    firstName: user.firstName ? user.firstName : null,
+                    lastName: user.lastName ? user.lastName : null,
+                  },
+                  communityId: inviteRecord.communityId,
+                  senderId: inviteRecord.senderId,
+                  customMessage: input.customMessage,
+                });
+              });
+          })
+          // send the community record back to the client
+          .then(() => getCommunities([input.id]))
+          .then(data => data[0])
+      );
+    },
+    sendEmailInvites: (_, { input }, { user }) => {
+      const currentUser = user;
+
+      if (!currentUser) {
+        return new UserError(
+          'You must be signed in to invite people to this community.'
+        );
+      }
+
+      // make sure the user is the owner of the community
+      return getUserPermissionsInCommunity(
+        input.id,
+        currentUser.id
+      ).then(permissions => {
+        if (!permissions.isOwner) {
+          return new UserError(
+            "You don't have permission to invite people to this community."
+          );
+        } else {
+          return input.contacts
+            .filter(user => user.email !== currentUser.email)
+            .map(user => {
+              return communityInvitationQueue.add({
+                recipient: {
+                  email: user.email,
+                  firstName: user.firstName ? user.firstName : null,
+                  lastName: user.lastName ? user.lastName : null,
+                },
+                communityId: input.id,
+                senderId: currentUser.id,
+                customMessage: input.customMessage ? input.customMessage : null,
+              });
+            });
         }
       });
     },

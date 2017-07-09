@@ -20,7 +20,8 @@ export const CommunityAvatar = styled.img`
   border-radius: 8px;
   object-fit: cover;
   background-color: ${({ theme }) => theme.generic.default};
-  background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
+  background-image: ${({ theme }) =>
+    Gradient(theme.generic.alt, theme.generic.default)};
 `;
 
 export const ProfileHeaderLink = styled(Link)`
@@ -57,11 +58,16 @@ export const Title = styled.h3`
   transition: ${Transition.hover.off};
 `;
 
-export const Subtitle = styled.h4`
+export const Subtitle = styled.div`
+  display: flex;
+  align-items: center;
   font-size: 14px;
   color: ${props => props.theme.text.alt};
   line-height: 1.3;
-  ${Truncate}
+
+  ${Truncate} div {
+    margin-right: 8px;
+  }
 `;
 
 export const Description = styled.div`
@@ -115,16 +121,14 @@ export const ActionOutline = styled(OutlineButton)`
 `;
 
 export const Meta = styled.div`
-  background: #F8FBFE;
+  background: #f8fbfe;
   border-top: 2px solid ${props => props.theme.border.default};
   padding: 8px 16px;
   width: 100%;
   border-radius: 0 0 12px 12px;
 `;
 
-export const MetaList = styled.ul`
-
-`;
+export const MetaList = styled.ul``;
 
 export const MetaListItem = styled.li`
   list-style-type: none;
@@ -157,9 +161,7 @@ export const Label = styled.span`
   }
 `;
 
-export const Count = styled.span`
-  font-weight: 700;
-`;
+export const Count = styled.span`font-weight: 700;`;
 
 export const CoverLink = styled(ProfileHeaderLink)`
   position: absolute;
@@ -186,6 +188,7 @@ export const CoverSubtitle = styled(Subtitle)`
   text-align: center;
   margin-top: 64px;
   margin-bottom: 16px;
+  justify-content: center;
 `;
 
 export const CoverDescription = styled(Description)`

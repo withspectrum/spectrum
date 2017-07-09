@@ -29,13 +29,15 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
       if (!channel.node.isPrivate) {
         return channel;
       } else if (
-        channel.node.isPrivate && !channel.node.channelPermissions.isMember
+        channel.node.isPrivate &&
+        !channel.node.channelPermissions.isMember
       ) {
         return null;
       } else {
         return channel;
       }
     })
+    .filter(channel => !channel.node.channelPermissions.isBlocked)
     .map(channel => channel.node);
 
   const joinedChannels = channels.filter(
@@ -74,8 +76,16 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                     channelIcon
                     meta={
                       channel.metaData.members > 1
-                        ? `${channel.metaData.members} members ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `(${channel.pendingUsers.length} pending)` : ``}`
-                        : `${channel.metaData.members} member ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `(${channel.pendingUsers.length} pending)` : ``}`
+                        ? `${channel.metaData.members} members ${data.community
+                            .communityPermissions.isOwner &&
+                          channel.pendingUsers.length > 0
+                            ? `(${channel.pendingUsers.length} pending)`
+                            : ``}`
+                        : `${channel.metaData.members} member ${data.community
+                            .communityPermissions.isOwner &&
+                          channel.pendingUsers.length > 0
+                            ? `(${channel.pendingUsers.length} pending)`
+                            : ``}`
                     }
                   >
                     <Icon glyph="view-forward" />
@@ -101,8 +111,16 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                     channelIcon
                     meta={
                       channel.metaData.members > 1
-                        ? `${channel.metaData.members} members ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `(${channel.pendingUsers.length} pending)` : ``}`
-                        : `${channel.metaData.members} member ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `(${channel.pendingUsers.length} pending)` : ``}`
+                        ? `${channel.metaData.members} members ${data.community
+                            .communityPermissions.isOwner &&
+                          channel.pendingUsers.length > 0
+                            ? `(${channel.pendingUsers.length} pending)`
+                            : ``}`
+                        : `${channel.metaData.members} member ${data.community
+                            .communityPermissions.isOwner &&
+                          channel.pendingUsers.length > 0
+                            ? `(${channel.pendingUsers.length} pending)`
+                            : ``}`
                     }
                   >
                     <Icon glyph="view-forward" />
@@ -128,8 +146,16 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                     channelIcon
                     meta={
                       channel.metaData.members > 1
-                        ? `${channel.metaData.members} members ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `(${channel.pendingUsers.length} pending)` : ``}`
-                        : `${channel.metaData.members} member ${data.community.communityPermissions.isOwner && channel.pendingUsers.length > 0 ? `(${channel.pendingUsers.length} pending)` : ``}`
+                        ? `${channel.metaData.members} members ${data.community
+                            .communityPermissions.isOwner &&
+                          channel.pendingUsers.length > 0
+                            ? `(${channel.pendingUsers.length} pending)`
+                            : ``}`
+                        : `${channel.metaData.members} member ${data.community
+                            .communityPermissions.isOwner &&
+                          channel.pendingUsers.length > 0
+                            ? `(${channel.pendingUsers.length} pending)`
+                            : ``}`
                     }
                   >
                     <Icon glyph="view-forward" />

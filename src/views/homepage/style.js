@@ -15,6 +15,7 @@ export const Wrapper = styled(FlexCol)`
 	width: 100%;
 	background-color: ${({ theme }) => theme.bg.default};
   overflow: auto;
+	overflow-x: hidden;
 `;
 
 export const Section = styled(FlexCol)`
@@ -38,7 +39,8 @@ export const Section = styled(FlexCol)`
 
 export const SectionOne = styled(Section)`
 	background-color: ${({ theme }) => theme.space.dark};
-	background-image: ${({ theme }) => Gradient(theme.space.dark, theme.brand.alt)};
+	background-image: ${({ theme }) =>
+    Gradient(theme.space.dark, theme.brand.alt)};
 	color: ${({ theme }) => theme.text.reverse};
 
 	img {
@@ -47,7 +49,7 @@ export const SectionOne = styled(Section)`
 	}
 
 	@media (max-width: 768px) {
-		flex-basis: 400px;
+		flex-basis: 600px;
 	}
 `;
 
@@ -68,7 +70,8 @@ export const SectionThree = styled(Section)`
 	height: 640px;
 	justify-content: space-around;
 	background-color: ${({ theme }) => theme.space.dark};
-	background-image: linear-gradient(to bottom, ${({ theme }) => `${theme.space.dark}, ${theme.brand.default}`});
+	background-image: linear-gradient(to bottom, ${({ theme }) =>
+    `${theme.space.dark}, ${theme.brand.default}`});
 	color: ${({ theme }) => theme.text.reverse};
 
 	img {
@@ -115,49 +118,47 @@ export const Footer = styled(Section)`
 `;
 
 export const LinkBlock = styled.a`
-	display: inline-block;
-	margin: 0 24px;
-	flex: 0 0 auto;
-	position: relative;
+  display: inline-block;
+  margin: 0 24px;
+  flex: 0 0 auto;
+  position: relative;
 
-	div {
-		font-size: 16px;
-		font-weight: 700;
-		padding: 12px 16px;
-		top: 4px;
-		position: relative;
-		text-align: center;
-		transition: ${Transition.hover.off};
-		border-radius: 4px;
+  div {
+    font-size: 16px;
+    font-weight: 700;
+    padding: 12px 16px;
+    top: 4px;
+    position: relative;
+    text-align: center;
+    transition: ${Transition.hover.off};
+    border-radius: 4px;
 
-		&:hover {
-			border-radius: 12px;
-			background-color: ${({ theme }) => theme.bg.default};
-			color: #009EBA;
-			transition: ${Transition.hover.on};
-		}
-	}
+    &:hover {
+      border-radius: 12px;
+      background-color: ${({ theme }) => theme.bg.default};
+      color: #009eba;
+      transition: ${Transition.hover.on};
+    }
+  }
 
-	@media (max-width: 768px) {
-		flex-direction: column;
-		justify-content: flex-start;
-		padding-bottom: 16px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-bottom: 16px;
 
-		div {
-			border-bottom: none;
+    div {
+      border-bottom: none;
 
-			&:hover {
-				border-bottom: none;
-				padding-bottom: 0;
-				text-decoration: underline;
-			}
-		}
-	}
+      &:hover {
+        border-bottom: none;
+        padding-bottom: 0;
+        text-decoration: underline;
+      }
+    }
+  }
 `;
 
-export const Cluster = styled.img`
-	position: absolute;
-`;
+export const Cluster = styled.img`position: absolute;`;
 
 export const ClusterOne = styled(Cluster)`
 	max-width: 120px;
@@ -196,59 +197,59 @@ export const ClusterFour = styled(Cluster)`
 `;
 
 export const GoopyOne = styled.div`
-	background-color: transparent;
-	background: url(/img/goopy.svg) center bottom no-repeat;
-	position: absolute;
-	background-size: 100%;
-	z-index: 0;
-	height: calc(100% + 4px);
-	width: 110%;
-	top: 0;
-	bottom: -2px;
-	left: -5%;
-	right: -5%;
+  background-color: transparent;
+  background: url(/img/goopy.svg) center bottom no-repeat;
+  position: absolute;
+  background-size: 100%;
+  z-index: 0;
+  height: calc(100% + 4px);
+  width: 110%;
+  top: 0;
+  bottom: -2px;
+  left: -5%;
+  right: -5%;
 `;
 
 export const GoopyTwo = styled.div`
-	background-color: transparent;
-	background: url(/img/goopy-2.svg) center bottom no-repeat;
-	position: absolute;
-	background-size: 100%;
-	z-index: 0;
-	height: calc(100% + 2px);
-	top: 0;
-	width: 110%;
-	bottom: -2px;
-	left: -5%;
-	right: -5%;
+  background-color: transparent;
+  background: url(/img/goopy-2.svg) center bottom no-repeat;
+  position: absolute;
+  background-size: 100%;
+  z-index: 0;
+  height: calc(100% + 2px);
+  top: 0;
+  width: 110%;
+  bottom: -2px;
+  left: -5%;
+  right: -5%;
 `;
 
 export const GoopyThree = styled.div`
-	background-color: transparent;
-	background: url(/img/goopy-3.svg) center bottom no-repeat;
-	position: absolute;
-	background-size: 100%;
-	z-index: 0;
-	height: calc(100% + 2px);
-	top: 0;
-	width: 110%;
-	bottom: -2px;
-	left: -5%;
-	right: -5%;
+  background-color: transparent;
+  background: url(/img/goopy-3.svg) center bottom no-repeat;
+  position: absolute;
+  background-size: 100%;
+  z-index: 0;
+  height: calc(100% + 2px);
+  top: 0;
+  width: 110%;
+  bottom: -2px;
+  left: -5%;
+  right: -5%;
 `;
 
 export const GoopyFour = styled.div`
-	background-color: transparent;
-	background: url(/img/goopy-4.svg) center bottom no-repeat;
-	position: absolute;
-	background-size: 100%;
-	z-index: 0;
-	height: calc(100% + 2px);
-	top: 0;
-	width: 110%;
-	bottom: -2px;
-	left: -5%;
-	right: -5%;
+  background-color: transparent;
+  background: url(/img/goopy-4.svg) center bottom no-repeat;
+  position: absolute;
+  background-size: 100%;
+  z-index: 0;
+  height: calc(100% + 2px);
+  top: 0;
+  width: 110%;
+  bottom: -2px;
+  left: -5%;
+  right: -5%;
 `;
 
 export const Tagline = styled(H2)`
@@ -261,22 +262,41 @@ export const Tagline = styled(H2)`
 
 export const Button = styled.a`
   display: flex;
-  flex: 0 0 auto;
+  flex-shrink: 1;
   z-index: 2;
   flex-direction: flex-row;
   align-self: flex-start;
   align-items: center;
   color: ${({ theme }) => theme.text.reverse};
-  background-color: transparent;
-  border: 2px solid currentColor;
   border-radius: 8px;
   padding: 8px;
   padding-right: 16px;
   font-size: 14px;
   font-weight: 700;
   transition: ${Transition.hover.off};
+  position: relative;
+  margin: 16px 0;
 
-  span {
+  ${props =>
+    props.after &&
+    `
+			margin: 24px 0;
+
+			&:after {
+				content: 'Previously signed in with';
+				position: absolute;
+				top: -23px;
+				font-size: 10px;
+				font-weight: 500;
+				text-transform: uppercase;
+				opacity: 0.8;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 100%;
+				text-align: center;
+				color: #fff;
+			}
+		`} span {
     display: inline-block;
     flex: 0 0 auto;
     margin-top: -1px;
@@ -292,20 +312,51 @@ export const Button = styled.a`
   }
 
   &:hover {
-    border-radius: 16px;
-    border: 2px solid transparent;
-    background-color: ${({ theme }) => theme.bg.default};
-    transition: ${Transition.hover.on};
     cursor: pointer;
-
-    span {
-      color: ${({ theme }) => theme.brand.default};
-    }
-
-    svg {
-      fill: ${({ theme }) => theme.brand.default} !important;
-    }
   }
+`;
+
+export const ButtonTwitter = styled(Button)`
+	background: ${props =>
+    props.preferred ? props.theme.social.twitter.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.twitter.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+
+	&:hover {
+		color: ${props =>
+      props.whitebg ? props.theme.social.twitter.default : '#fff'}
+	}
+`;
+
+export const ButtonFacebook = styled(Button)`
+	background: ${props =>
+    props.preferred ? props.theme.social.facebook.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.facebook.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+
+
+	&:hover {
+		color: ${props =>
+      props.whitebg ? props.theme.social.facebook.default : '#fff'}
+	}
+`;
+
+export const ButtonGoogle = styled(Button)`
+	background: ${props =>
+    props.preferred ? props.theme.social.google.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.google.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+
+	&:hover {
+		color: ${props =>
+      props.whitebg ? props.theme.social.google.default : '#fff'}
+	}
 `;
 
 export const LinkButton = styled(Button)`
@@ -322,9 +373,7 @@ export const LogoWhite = styled(Logo)`
 	max-width: 360px;
 `;
 
-export const LogoContainer = styled.div`
-	max-width: 360px;
-`;
+export const LogoContainer = styled.div`max-width: 360px;`;
 
 export const SectionContent = styled(FlexRow)`
 	flex-grow: 1;
@@ -351,4 +400,12 @@ export const Copy = styled(P)`
 	&:not(:first-of-type){
 		margin-top: 24px;
 	}
+`;
+
+export const LoginCard = styled.div`
+  border-radius: 12px;
+  padding: 16px 0;
+  margin-top: 16px;
+  align-self: flex-start;
+  align-items: flex-start;
 `;

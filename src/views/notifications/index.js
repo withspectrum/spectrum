@@ -12,9 +12,8 @@ import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
 import { NewChannelNotification } from './components/newChannelNotification';
 import { NewThreadNotification } from './components/newThreadNotification';
-import {
-  NewUserInCommunityNotification,
-} from './components/newUserInCommunityNotification';
+import { CommunityInviteNotification } from './components/communityInviteNotification';
+import { NewUserInCommunityNotification } from './components/newUserInCommunityNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Titlebar from '../../views/titlebar';
@@ -177,6 +176,15 @@ class NotificationsPure extends Component {
                 case 'THREAD_CREATED': {
                   return (
                     <NewThreadNotification
+                      key={notification.id}
+                      notification={notification}
+                      currentUser={currentUser}
+                    />
+                  );
+                }
+                case 'COMMUNITY_INVITE': {
+                  return (
+                    <CommunityInviteNotification
                       key={notification.id}
                       notification={notification}
                       currentUser={currentUser}

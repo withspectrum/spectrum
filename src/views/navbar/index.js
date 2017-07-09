@@ -7,6 +7,7 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import { getCurrentUserProfile } from '../../api/user';
+import { openModal } from '../../actions/modals';
 import {
   getNotificationsForNavbar,
   markNotificationsSeenMutation,
@@ -23,6 +24,7 @@ import { ProfileDropdown } from './components/profileDropdown';
 import Head from '../../components/head';
 import { getDistinctNotifications } from '../../views/notifications/utils';
 import { storeItem } from '../../helpers/localStorage';
+import { throttle } from '../../helpers/utils';
 import {
   saveUserDataToLocalStorage,
   logout,
@@ -36,6 +38,7 @@ import {
   IconLink,
   Label,
   UserProfileAvatar,
+  SigninLink,
 } from './style';
 
 class Navbar extends Component {
@@ -52,6 +55,11 @@ class Navbar extends Component {
       ...this.calculateUnseenCounts(),
       subscription: null,
     };
+
+    this.markAllNotificationsSeen = throttle(
+      this.markAllNotificationsSeen,
+      5000
+    );
   }
 
   calculateUnseenCounts = () => {
@@ -249,8 +257,7 @@ class Navbar extends Component {
   };
 
   login = () => {
-    // log the user in and return them to this page
-    return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window.location.href}`);
+    this.props.dispatch(openModal('LOGIN'));
   };
 
   render() {
@@ -261,6 +268,7 @@ class Navbar extends Component {
       currentUser,
     } = this.props;
     const loggedInUser = user || currentUser;
+    const isMobile = window.innerWidth < 768;
     const currentUserExists =
       loggedInUser !== null && loggedInUser !== undefined;
     const { allUnseenCount, dmUnseenCount, notifications } = this.state;
@@ -326,7 +334,11 @@ class Navbar extends Component {
             <IconDrop>
               <IconLink
                 data-active={match.url === `/users/${loggedInUser.username}`}
-                to={`/users/${loggedInUser.username}`}
+                to={
+                  loggedInUser.username
+                    ? `/users/${loggedInUser.username}`
+                    : '/'
+                }
               >
                 <UserProfileAvatar
                   src={`${loggedInUser.profilePhoto}`}
@@ -374,7 +386,9 @@ class Navbar extends Component {
 
             <IconLink
               data-active={match.url === `/users/${loggedInUser.username}`}
-              to={`/users/${loggedInUser.username}`}
+              to={
+                loggedInUser.username ? `/users/${loggedInUser.username}` : '/'
+              }
             >
               <Icon glyph="profile" />
               <Label>Profile</Label>
@@ -395,18 +409,19 @@ class Navbar extends Component {
             </IconLink>
           </Section>
           <Section right>
-            <Button onClick={this.login} icon="twitter">
-              Sign in
-            </Button>
+            <SigninLink onClick={this.login} icon="twitter">
+              Sign up or log in
+            </SigninLink>
           </Section>
         </Nav>
       );
     } else {
       return (
         <Nav>
-          <LogoLink to="/">
-            <Logo src="/img/mark-white.png" role="presentation" />
-          </LogoLink>
+          {isMobile ||
+            <LogoLink to="/">
+              <Logo src="/img/mark-white.png" role="presentation" />
+            </LogoLink>}
           <Loading size={'20'} color={'bg.default'} />
         </Nav>
       );

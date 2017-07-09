@@ -17,6 +17,14 @@ const getUserById = (userId: string): Promise<Object> => {
   return db.table('users').get(userId).run();
 };
 
+const getUserByEmail = (email: string): Promise<Object> => {
+  return db
+    .table('users')
+    .getAll(email, { index: 'email' })
+    .run()
+    .then(results => (results.length > 0 ? results[0] : null));
+};
+
 const getUserByUsername = (username: string): Promise<Object> => {
   return db
     .table('users')
@@ -65,21 +73,90 @@ const storeUser = (user: Object): Promise<Object> => {
     .then(result => result.changes[0].new_val);
 };
 
-const createOrFindUser = (user: Object): Promise<Object> => {
-  const promise = user.id
-    ? getUser({ id: user.id })
-    : getUserByProviderId(user.providerId);
+const saveUserProvider = (userId, providerMethod, providerId) => {
+  return db
+    .table('users')
+    .get(userId)
+    .run()
+    .then(result => {
+      let obj = Object.assign({}, result);
+      obj[providerMethod] = providerId;
+      return obj;
+    })
+    .then(user => {
+      return db
+        .table('users')
+        .get(userId)
+        .update(
+          {
+            ...user,
+          },
+          { returnChanges: true }
+        )
+        .run()
+        .then(result => result.changes[0].new_val);
+    });
+};
+
+const getUserByIndex = (indexName, indexValue) => {
+  return db
+    .table('users')
+    .getAll(indexValue, { index: indexName })
+    .run()
+    .then(results => results && results.length > 0 && results[0]);
+};
+
+const createOrFindUser = (
+  user: Object,
+  providerMethod: string
+): Promise<Object> => {
+  // if a user id gets passed in, we know that a user most likely exists and we just need to retrieve them from the db
+  // however, if a user id doesn't exist we need to do a lookup by the email address passed in - if an email address doesn't exist, we know that we're going to be creating a new user
+  let promise;
+  if (user.id) {
+    promise = getUser({ id: user.id });
+  } else {
+    if (user[providerMethod]) {
+      promise = getUserByIndex(
+        providerMethod,
+        user[providerMethod]
+      ).then(storedUser => {
+        if (storedUser) {
+          return storedUser;
+        }
+
+        if (user.email) {
+          return getUserByEmail(user.email);
+        } else {
+          return Promise.resolve({});
+        }
+      });
+    } else {
+      if (user.email) {
+        promise = getUserByEmail(user.email);
+      } else {
+        promise = Promise.resolve({});
+      }
+    }
+  }
+
   return promise
     .then(storedUser => {
-      if (storedUser) {
-        if (!storedUser.username && user.username) {
-          return setUsername(storedUser.id, user.username).then(newStoredUser =>
-            Promise.resolve(newStoredUser)
-          );
+      // if a user is found with an id or email, return the user in the db
+      if (storedUser && storedUser.id) {
+        // if a user is signing in with a second auth method from what their user was created with, store the new auth method
+        if (!storedUser[providerMethod]) {
+          return saveUserProvider(
+            storedUser.id,
+            providerMethod,
+            user[providerMethod]
+          ).then(user => Promise.resolve(storedUser));
+        } else {
+          return Promise.resolve(storedUser);
         }
-        return Promise.resolve(storedUser);
       }
 
+      // if no user exists, create a new one with the oauth profile data
       return storeUser(user);
     })
     .catch(err => {
@@ -112,18 +189,11 @@ const getEverything = (userId: string): Promise<Array<any>> => {
       index: 'channelId',
     })
     .without({
-      left: [
-        'id',
-        'channelId',
-        'createdAt',
-        'isMember',
-        'isModerator',
-        'isOwner',
-      ],
+      left: ['id', 'channelId', 'createdAt', 'isModerator', 'isOwner'],
     })
     .zip()
-    .filter({ isBlocked: false, isPending: false })
-    .without('isBlocked', 'isPending')
+    .filter({ isBlocked: false, isPending: false, isMember: true })
+    .without('isBlocked', 'isPending', 'isMember')
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .orderBy(db.desc('lastActive'), db.desc('createdAt'))
     .run();
@@ -157,7 +227,9 @@ const editUser = (
   input: EditUserArguments,
   userId: string
 ): Promise<Object> => {
-  const { input: { name, description, website, file, coverFile } } = input;
+  const {
+    input: { name, description, website, file, coverFile, username },
+  } = input;
   return db
     .table('users')
     .get(userId)
@@ -167,6 +239,7 @@ const editUser = (
         name,
         description,
         website,
+        username,
       });
     })
     .then(user => {

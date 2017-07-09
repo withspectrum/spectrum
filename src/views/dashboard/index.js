@@ -6,7 +6,11 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
-import { UpsellSignIn, UpsellToReload } from '../../components/upsell';
+import {
+  UpsellSignIn,
+  UpsellToReload,
+  UpsellMiniCreateCommunity,
+} from '../../components/upsell';
 import UpsellNewUser from '../../components/upsell/newUserUpsell';
 import {
   LoadingProfile,
@@ -36,30 +40,105 @@ class DashboardPure extends Component {
   constructor(props) {
     super(props);
 
-    const user = this.props.data.user;
-    const communities =
-      this.props.data.user && this.props.data.user.communityConnection.edges;
-    const isNewUser = user && communities.length <= 0;
-
     this.state = {
-      isNewUser,
+      isNewUser: false,
     };
   }
 
+  componentDidUpdate(prevProps) {
+    if (!prevProps.data.user && this.props.data.user) {
+      const user = this.props.data.user;
+      const communities =
+        this.props.data.user && this.props.data.user.communityConnection.edges;
+      const isNewUser =
+        (user && communities.length <= 0) || (user && !user.username);
+
+      this.setState({
+        isNewUser,
+      });
+    }
+  }
+
   graduate = () => {
-    this.setState({
-      isNewUser: false,
-    });
+    window.location.href = '/';
   };
 
   render() {
-    const { data: { user, error, networkStatus } } = this.props;
+    const { data: { user, error, networkStatus }, data } = this.props;
     const { isNewUser } = this.state;
     const isMobile = window.innerWidth < 768;
-
+    const dataExists = user && user.communityConnection;
     const { title, description } = generateMetaInfo();
 
-    if (networkStatus < 7) {
+    if (networkStatus === 7) {
+      if (isNewUser) {
+        const currentUser = user;
+        const communities = user.communityConnection.edges;
+
+        return (
+          <AppViewWrapper>
+            <Head title={title} description={description} />
+            <Titlebar />
+            <Column type="primary">
+              <UpsellNewUser
+                user={user}
+                graduate={this.graduate}
+                communities={communities}
+              />
+            </Column>
+          </AppViewWrapper>
+        );
+      } else if (dataExists) {
+        const currentUser = user;
+        const communities = user.communityConnection.edges;
+        return (
+          <AppViewWrapper>
+            <Head title={title} description={description} />
+            <Titlebar />
+
+            {!isMobile &&
+              <Column type="secondary">
+                <UserProfile profileSize="mini" data={{ user: user }} />
+                <CommunityList
+                  withDescription={false}
+                  currentUser={currentUser}
+                  user={user}
+                  communities={communities}
+                  networkStatus={networkStatus}
+                />
+                <UpsellMiniCreateCommunity />
+              </Column>}
+
+            <Column type="primary">
+              <FlexCol>
+                <ThreadComposer />
+                <EverythingThreadFeed viewContext="dashboard" />
+              </FlexCol>
+            </Column>
+          </AppViewWrapper>
+        );
+      } else {
+        return (
+          <AppViewWrapper>
+            <Head title={title} description={description} />
+            <Titlebar noComposer />
+            <Column type="primary" alignItems="center">
+              <UpsellSignIn />
+            </Column>
+          </AppViewWrapper>
+        );
+      }
+    } else if (networkStatus === 8) {
+      return (
+        <AppViewWrapper>
+          <Head title={title} description={description} />
+          <Titlebar noComposer />
+          <Column type="primary" alignItems="center">
+            <UpsellToReload />
+          </Column>
+        </AppViewWrapper>
+      );
+    } else {
       return (
         <AppViewWrapper>
           <Head title={title} description={description} />
@@ -72,67 +151,6 @@ class DashboardPure extends Component {
           <Column type="primary">
             {!isMobile && <LoadingComposer />}
             <LoadingFeed />
-          </Column>
-        </AppViewWrapper>
-      );
-    } else if (networkStatus === 8) {
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar noComposer />
-          <Column type="primary" alignItems="center">
-            <UpsellToReload />
-          </Column>
-        </AppViewWrapper>
-      );
-    } else if (!user || user === null) {
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar noComposer />
-          <Column type="primary" alignItems="center">
-            <UpsellSignIn />
-          </Column>
-        </AppViewWrapper>
-      );
-    } else if (isNewUser) {
-      const currentUser = user;
-      const communities = user.communityConnection.edges;
-
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar />
-          <Column type="primary">
-            <UpsellNewUser user={user} graduate={this.graduate} />
-          </Column>
-        </AppViewWrapper>
-      );
-    } else {
-      const currentUser = user;
-      const communities = user.communityConnection.edges;
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar />
-
-          {!isMobile &&
-            <Column type="secondary">
-              <UserProfile profileSize="mini" data={{ user: user }} />
-              <CommunityList
-                withDescription={false}
-                currentUser={currentUser}
-                user={user}
-                communities={communities}
-                networkStatus={networkStatus}
-              />
-            </Column>}
-
-          <Column type="primary">
-            <FlexCol>
-              <ThreadComposer />
-              <EverythingThreadFeed viewContext="dashboard" />
-            </FlexCol>
           </Column>
         </AppViewWrapper>
       );

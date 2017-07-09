@@ -15,6 +15,7 @@ import { GoopyThree } from '../../views/homepage/style';
 import { FeaturedCommunity } from '../../components/curation';
 import TopCommunityList from './components/topCommunities';
 import RecentCommunityList from './components/recentCommunities';
+import { UpsellCreateCommunity } from '../../components/upsell';
 import {
   ViewContainer,
   ViewHeader,
@@ -61,6 +62,14 @@ const ExplorePure = props => {
             <Column type="primary">
               <SectionTitle>Most recent communities</SectionTitle>
               <RecentCommunityList withMeta={true} withDescription={false} />
+            </Column>
+          </SectionWrapper>
+        </Section>
+
+        <Section>
+          <SectionWrapper>
+            <Column type="primary">
+              <UpsellCreateCommunity />
             </Column>
           </SectionWrapper>
         </Section>

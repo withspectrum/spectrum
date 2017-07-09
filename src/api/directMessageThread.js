@@ -1,12 +1,8 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import {
-  directMessageThreadInfoFragment,
-} from './fragments/directMessageThread/directMessageThreadInfo';
-import {
-  userDirectMessageThreadsFragment,
-} from './fragments/user/userDirectMessageThreads';
+import { directMessageThreadInfoFragment } from './fragments/directMessageThread/directMessageThreadInfo';
+import { userDirectMessageThreadsFragment } from './fragments/user/userDirectMessageThreads';
 import { userInfoFragment } from './fragments/user/userInfo';
 import { subscribeToUpdatedDirectMessageThreads } from './subscriptions';
 
@@ -70,9 +66,6 @@ export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_OPTIONS = {
           const updatedDirectMessageThread =
             subscriptionData.data.directMessageThreadUpdated;
           if (!updatedDirectMessageThread) return prev;
-
-          // console.log('prev', prev);
-          // console.log('subscriptionData', subscriptionData);
 
           // Add the new notification to the data
           return Object.assign({}, prev, {

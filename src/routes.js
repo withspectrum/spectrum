@@ -25,12 +25,12 @@ import Notifications from './views/notifications';
 import UserSettings from './views/userSettings';
 import communitySettings from './views/communitySettings';
 import channelSettings from './views/channelSettings';
+import NewCommunity from './views/newCommunity';
 
-const About = () => (
+const About = () =>
   <div>
     <h3>About</h3>
-  </div>
-);
+  </div>;
 
 const Body = styled(FlexCol)`
   display: flex;
@@ -76,6 +76,11 @@ class Routes extends Component {
               <Route path="/style-guide" component={StyleGuide} />
 
               {/* App Pages */}
+              <Route path="/new/community" component={NewCommunity} />
+              <Route
+                path="/new"
+                render={() => <Redirect to="/new/community" />}
+              />
               <Route path="/explore" component={Explore} />
               <Route path="/messages/new" component={DirectMessages} />
               <Route path="/messages/:threadId" component={DirectMessages} />
@@ -109,7 +114,6 @@ class Routes extends Component {
               />
               <Route path="/:communitySlug" component={CommunityView} />
             </Switch>
-
           </Body>
         </ScrollManager>
       </Router>

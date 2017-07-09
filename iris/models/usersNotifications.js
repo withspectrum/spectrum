@@ -52,9 +52,9 @@ export const markNotificationRead = (
     .run()
     .then(
       result =>
-        (result.changes.length > 0
+        result.changes.length > 0
           ? result.changes[0].new_val
-          : result.changes[0].old_val)
+          : result.changes[0].old_val
     );
 };
 
@@ -78,6 +78,16 @@ export const markSingleNotificationSeen = (
     .run();
 };
 
+export const markNotificationsSeen = (notifications: Array<string>) => {
+  return db
+    .table('usersNotifications')
+    .getAll(...notifications, { index: 'notificationId' })
+    .update({
+      isSeen: true,
+    })
+    .run();
+};
+
 // marks all notifications for a user as seen
 export const markAllNotificationsSeen = (userId: string): Promise<Object> => {
   return db
@@ -88,16 +98,13 @@ export const markAllNotificationsSeen = (userId: string): Promise<Object> => {
     .zip()
     .filter(row => row('context')('type').ne('DIRECT_MESSAGE_THREAD'))
     .run()
-    .then(notifications => {
-      return Promise.all(
-        notifications.map(notification => {
-          return markSingleNotificationSeen(
-            notification.notificationId,
-            userId
-          );
-        })
-      );
-    })
+    .then(notifications =>
+      markNotificationsSeen(
+        notifications
+          .filter(notification => !!notification)
+          .map(notification => notification.id)
+      )
+    )
     .then(() => getNotificationsByUser(userId));
 };
 
@@ -132,16 +139,13 @@ export const markDirectMessageNotificationsSeen = (
     .zip()
     .filter(row => row('context')('type').eq('DIRECT_MESSAGE_THREAD'))
     .run()
-    .then(notifications => {
-      return Promise.all(
-        notifications.map(notification => {
-          return markSingleNotificationSeen(
-            notification.notificationId,
-            userId
-          );
-        })
-      );
-    })
+    .then(notifications =>
+      markNotificationsSeen(
+        notifications
+          .filter(notification => !!notification)
+          .map(notification => notification.id)
+      )
+    )
     .then(() => getNotificationsByUser(userId));
 };
 

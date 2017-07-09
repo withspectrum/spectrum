@@ -1,7 +1,7 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
-import { FlexRow, FlexCol, Gradient } from '../globals';
+import { FlexRow, FlexCol, Gradient, Transition } from '../globals';
 
 export const Title = styled.h1`
   color: ${props => props.theme.text.default};
@@ -9,11 +9,17 @@ export const Title = styled.h1`
   font-weight: 700;
   font-size: 1.25rem;
   line-height: 1.25;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   padding: 0;
   font-weight: 700;
   font-size: 24px;
   text-align: center;
+`;
+
+export const MiniTitle = styled(Title)`
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.25;
 `;
 
 export const Actions = styled.div`
@@ -38,12 +44,19 @@ export const Subtitle = styled.h2`
   text-align: center;
 
   b {
-    font-weight: 700
+    font-weight: 700;
   }
 
   a {
-    color: ${props => props.theme.brand.default}
+    color: ${props => props.theme.brand.default};
   }
+`;
+
+export const MiniSubtitle = styled(Subtitle)`
+  font-weight: 600;
+  color: ${props => props.theme.text.alt};
+  font-size: 0.875rem;
+  line-height: 1.4;
 `;
 
 export const SmallTitle = styled(Title)`
@@ -60,11 +73,13 @@ export const Cost = styled(Subtitle)`
 `;
 
 export const NullCol = styled(FlexCol)`
-  background-image: ${props => (props.bg ? `url('/img/fills/${props.bg}.svg')` : 'none')};
+  background-image: ${props =>
+    props.bg ? `url('/img/fills/${props.bg}.svg')` : 'none'};
   background-color: transparent;
   background-size: 110% auto;
   background-repeat: ${props => (props.repeat ? 'repeat-y' : 'no-repeat')};
-  background-position: ${props => (props.repeat ? 'center top' : 'center center')};
+  background-position: ${props =>
+    props.repeat ? 'center top' : 'center center'};
   width: 100%;
   height: auto;
   min-height: 160px;
@@ -77,7 +92,8 @@ export const NullCol = styled(FlexCol)`
 `;
 
 export const NullRow = styled(FlexRow)`
-  background-image: url('/img/fills/${props => (props.bg ? `${props.bg}` : 'locked')}.svg');
+  background-image: url('/img/fills/${props =>
+    props.bg ? `${props.bg}` : 'locked'}.svg');
   background-color: transparent;
   background-size: 110% auto;
   background-repeat: no-repeat;
@@ -106,7 +122,8 @@ export const Profile = styled.div`
 
   span {
     background-color: ${({ theme }) => theme.success.default};
-    background-image: ${({ theme }) => Gradient(theme.space.light, theme.success.default)};
+    background-image: ${({ theme }) =>
+      Gradient(theme.space.light, theme.success.default)};
     position: absolute;
     left: 75%;
     top: 48px;
@@ -126,4 +143,134 @@ export const LargeEmoji = styled.div`
   flex 1;
   padding: 16px 0 32px;
   font-size: 48px;
+`;
+
+export const SignInButtons = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 24px;
+
+  button {
+    margin-top: 8px;
+  }
+
+  button + button {
+    margin-left: 8px;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+export const Button = styled.a`
+  display: flex;
+  flex-shrink: 1;
+  z-index: 2;
+  flex-direction: flex-row;
+  align-self: flex-start;
+  align-items: center;
+  color: ${({ theme }) => theme.text.reverse};
+  border-radius: 8px;
+  padding: 8px;
+  padding-right: 16px;
+  font-size: 14px;
+  font-weight: 700;
+  transition: ${Transition.hover.off};
+  position: relative;
+  margin: 8px;
+
+  ${props =>
+    props.after &&
+    `
+			&:after {
+				content: 'Previously signed in with';
+				position: absolute;
+				top: -23px;
+				font-size: 10px;
+				font-weight: 500;
+				text-transform: uppercase;
+				opacity: 0.8;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 100%;
+				text-align: center;
+			}
+		`} @media(max-width: 768px) {
+    margin: 8px 0;
+  }
+
+  span {
+    display: inline-block;
+    flex: 0 0 auto;
+    margin-top: -1px;
+    margin-left: 8px;
+    line-height: 2.45;
+    word-break: keep-all;
+    white-space: nowrap;
+    color: currentColor;
+  }
+
+  svg {
+    fill: currentColor !important;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+export const ButtonTwitter = styled(Button)`
+	background: ${props =>
+    props.preferred ? props.theme.social.twitter.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.twitter.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+  
+  &:after {
+    color: ${props => props.theme.social.twitter.default};
+  }
+
+	&:hover {
+		color: ${props =>
+      props.whitebg ? props.theme.social.twitter.default : '#fff'}
+	}
+`;
+
+export const ButtonFacebook = styled(Button)`
+	background: ${props =>
+    props.preferred ? props.theme.social.facebook.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.facebook.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+
+  &:after {
+    color: ${props => props.theme.social.facebook.default};
+  }
+
+	&:hover {
+		color: ${props =>
+      props.whitebg ? props.theme.social.facebook.default : '#fff'}
+	}
+`;
+
+export const ButtonGoogle = styled(Button)`
+	background: ${props =>
+    props.preferred ? props.theme.social.google.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.google.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+
+  &:after {
+    color: ${props => props.theme.social.google.default};
+  }
+
+	&:hover {
+		color: ${props =>
+      props.whitebg ? props.theme.social.google.default : '#fff'}
+	}
 `;

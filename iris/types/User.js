@@ -110,9 +110,10 @@ const User = /* GraphQL */ `
 	input EditUserInput {
 		file: File
 		coverFile: File
-		name: String!
-		description: String!
+		name: String
+		description: String
 		website: String
+		username: String
 	}
 
 	input UpgradeToProInput {

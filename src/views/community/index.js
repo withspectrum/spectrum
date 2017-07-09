@@ -20,7 +20,12 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import Titlebar from '../titlebar';
 import { CommunityProfile } from '../../components/profile';
-import { displayLoadingScreen } from '../../components/loading';
+import {
+  LoadingProfile,
+  LoadingList,
+  LoadingComposer,
+  LoadingFeed,
+} from '../../components/loading';
 import {
   UpsellSignIn,
   UpsellJoinCommunity,
@@ -90,25 +95,108 @@ class CommunityViewPure extends Component {
   };
 
   create = () => {
-    const communitySlug = this.props.match.params.communitySlug;
-
-    return this.props.dispatch(
-      openModal('CREATE_COMMUNITY_MODAL', { name: communitySlug })
-    );
+    return this.props.history.push('/new/community');
   };
 
   render() {
-    const { match, data: { community, error, user }, currentUser } = this.props;
+    const {
+      match,
+      data: { community, user, networkStatus },
+      currentUser,
+    } = this.props;
     const { isLoading } = this.state;
     const communitySlug = match.params.communitySlug;
-    const dataExists = community && community.communityPermissions;
+    const isMobile = window.innerWidth < 768;
+    const dataExists =
+      community && !community.deleted && community.communityPermissions;
     const hasRights =
       dataExists &&
       (community.communityPermissions.isMember ||
         community.communityPermissions.isOwner);
     const loggedInUser = user || currentUser;
 
-    if (error) {
+    if (networkStatus === 7) {
+      if (dataExists) {
+        const { title, description } = generateMetaInfo({
+          type: 'community',
+          data: {
+            name: community.name,
+            description: community.description,
+          },
+        });
+
+        return (
+          <AppViewWrapper>
+            <Titlebar
+              title={community.name}
+              provideBack={true}
+              backRoute={`/`}
+              noComposer={!community.communityPermissions.isMember}
+            />
+            <Head title={title} description={description} />
+            <CoverColumn>
+              <CoverPhoto src={community.coverPhoto}>
+                {loggedInUser &&
+                  (!community.communityPermissions.isOwner &&
+                    community.communityPermissions.isMember) &&
+                  <CoverButton
+                    glyph="minus-fill"
+                    color="bg.default"
+                    hoverColor="bg.default"
+                    opacity="0.5"
+                    tipText="Leave community"
+                    tipLocation="left"
+                    onClick={() => this.toggleMembership(community.id)}
+                  />}
+              </CoverPhoto>
+              <CoverRow className={'flexy'}>
+                <Column type="secondary" className={'inset'}>
+                  <CommunityProfile data={{ community }} profileSize="full" />
+                  <ChannelListCard
+                    slug={communitySlug.toLowerCase()}
+                    currentUser={loggedInUser}
+                  />
+                </Column>
+
+                <Column type="primary">
+                  {loggedInUser
+                    ? hasRights
+                      ? <ThreadComposer activeCommunity={communitySlug} />
+                      : <UpsellJoinCommunity
+                          community={community}
+                          loading={isLoading}
+                          join={this.toggleMembership}
+                        />
+                    : <UpsellSignIn entity={community} />}
+                  <CommunityThreadFeed
+                    viewContext="community"
+                    slug={communitySlug}
+                    currentUser={loggedInUser}
+                  />
+                </Column>
+              </CoverRow>
+            </CoverColumn>
+          </AppViewWrapper>
+        );
+      } else {
+        return (
+          <AppViewWrapper>
+            <Titlebar
+              title={'Community Not Found'}
+              provideBack={true}
+              backRoute={`/`}
+              noComposer
+            />
+            <Column type="primary">
+              <Upsell404Community
+                community={communitySlug}
+                create={this.create}
+              />
+            </Column>
+          </AppViewWrapper>
+        );
+      }
+    } else if (networkStatus === 8) {
       return (
         <AppViewWrapper>
           <Titlebar
@@ -122,96 +210,29 @@ class CommunityViewPure extends Component {
           </Column>
         </AppViewWrapper>
       );
-    }
-
-    if (!community || community.deleted) {
+    } else {
       return (
         <AppViewWrapper>
-          <Titlebar
-            title={'Community Not Found'}
-            provideBack={true}
-            backRoute={`/`}
-            noComposer
-          />
+          <Titlebar noComposer />
+          {!isMobile &&
+            <Column type="secondary">
+              <LoadingProfile />
+              <LoadingList />
+            </Column>}
           <Column type="primary">
-            <Upsell404Community
-              community={communitySlug}
-              create={this.create}
-            />
+            {!isMobile && <LoadingComposer />}
+            <LoadingFeed />
           </Column>
         </AppViewWrapper>
       );
     }
-
-    const { title, description } = generateMetaInfo({
-      type: 'community',
-      data: {
-        name: community.name,
-        description: community.description,
-      },
-    });
-
-    return (
-      <AppViewWrapper>
-        <Titlebar
-          title={community.name}
-          provideBack={true}
-          backRoute={`/`}
-          noComposer={!community.communityPermissions.isMember}
-        />
-        <Head title={title} description={description} />
-        <CoverColumn>
-          <CoverPhoto src={community.coverPhoto}>
-            {loggedInUser &&
-              (!community.communityPermissions.isOwner &&
-                community.communityPermissions.isMember) &&
-              <CoverButton
-                glyph="minus-fill"
-                color="bg.default"
-                hoverColor="bg.default"
-                opacity="0.5"
-                tipText="Leave community"
-                tipLocation="left"
-                onClick={() => this.toggleMembership(community.id)}
-              />}
-          </CoverPhoto>
-          <CoverRow className={'flexy'}>
-            <Column type="secondary" className={'inset'}>
-              <CommunityProfile data={{ community }} profileSize="full" />
-              <ChannelListCard
-                slug={communitySlug.toLowerCase()}
-                currentUser={loggedInUser}
-              />
-            </Column>
-
-            <Column type="primary">
-
-              {loggedInUser
-                ? hasRights
-                    ? <ThreadComposer activeCommunity={communitySlug} />
-                    : <UpsellJoinCommunity
-                        community={community}
-                        loading={isLoading}
-                        join={this.toggleMembership}
-                      />
-                : <UpsellSignIn entity={community} />}
-              <CommunityThreadFeed
-                viewContext="community"
-                slug={communitySlug}
-                currentUser={loggedInUser}
-              />
-            </Column>
-          </CoverRow>
-        </CoverColumn>
-      </AppViewWrapper>
-    );
   }
 }
 
 export const CommunityView = compose(
   toggleCommunityMembershipMutation,
   getCommunity,
-  displayLoadingScreen,
+  // displayLoadingScreen,
   pure
 )(CommunityViewPure);
 

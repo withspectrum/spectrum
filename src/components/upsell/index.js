@@ -6,19 +6,27 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
+import Icon from '../../components/icons';
+import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
 import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../api';
 import { addToastWithTimeout } from '../../actions/toasts';
 import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
 import {
   Title,
+  MiniTitle,
   Subtitle,
+  MiniSubtitle,
   Actions,
   NullCol,
   UpgradeError,
   Profile,
   Cost,
   LargeEmoji,
+  SignInButtons,
+  ButtonTwitter,
+  ButtonFacebook,
+  ButtonGoogle,
 } from './style';
 // $FlowFixMe
 import StripeCheckout from 'react-stripe-checkout';
@@ -28,25 +36,91 @@ export const NullCard = props => {
   return (
     <Card>
       <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
-        {props.heading && <Title>{props.heading}</Title>}
-        {props.copy && <Subtitle>{props.copy}</Subtitle>}
+        {props.heading &&
+          <Title>
+            {props.heading}
+          </Title>}
+        {props.copy &&
+          <Subtitle>
+            {props.copy}
+          </Subtitle>}
         {props.children}
       </NullCol>
     </Card>
   );
 };
 
-export const NullState = props => (
-  <NullCol bg={props.bg}>
-    {props.heading && <Title>{props.heading}</Title>}
-    {props.copy && <Subtitle>{props.copy}</Subtitle>}
-    {props.children}
-  </NullCol>
-);
+export const MiniNullCard = props => {
+  return (
+    <Card>
+      <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
+        {props.heading &&
+          <MiniTitle>
+            {props.heading}
+          </MiniTitle>}
+        {props.copy &&
+          <MiniSubtitle>
+            {props.copy}
+          </MiniSubtitle>}
+        {props.children}
+      </NullCol>
+    </Card>
+  );
+};
 
-const login = () => {
+export const NullState = props =>
+  <NullCol bg={props.bg}>
+    {props.heading &&
+      <Title>
+        {props.heading}
+      </Title>}
+    {props.copy &&
+      <Subtitle>
+        {props.copy}
+      </Subtitle>}
+    {props.children}
+  </NullCol>;
+
+const login = method => {
   // log the user in and return them to this page
-  return (window.location.href = `${SERVER_URL}/auth/twitter?r=${window.location.href}`);
+  storeItem('preferred_signin_method', method);
+};
+
+export const UpsellMiniCreateCommunity = () => {
+  return (
+    <MiniNullCard
+      bg="onboarding"
+      heading="Create a community"
+      copy="Building communities on Spectrum is easy, and free forever"
+    >
+      <Link to="/new/community">
+        <Button icon="plus" label>
+          Get Started
+        </Button>
+      </Link>
+    </MiniNullCard>
+  );
+};
+
+export const UpsellCreateCommunity = () => {
+  const title = 'Create a community';
+  const subtitle = 'Building communities on Spectrum is easy, and free forever';
+
+  return (
+    <NullCard bg={'onboarding'}>
+      <Title>
+        {title}
+      </Title>
+      <Subtitle>
+        {subtitle}
+      </Subtitle>
+      <Actions>
+        <Link to="/new/community">
+          <Button>Get Started</Button>
+        </Link>
+      </Actions>
+    </NullCard>
+  );
 };
 
 export const UpsellSignIn = ({ entity }) => {
@@ -54,11 +128,77 @@ export const UpsellSignIn = ({ entity }) => {
     ? `Ready to join the conversation in ${entity.name}?`
     : 'Ready to join the conversation? ';
 
+  const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
+
   return (
     <NullCard bg="chat">
       <Title>Come on in, the chatter's fine.</Title>
-      <Subtitle>{subtitle}</Subtitle>
-      <Button onClick={login} icon="twitter" label>Sign in with Twitter</Button>
+      <Subtitle>
+        {subtitle}
+      </Subtitle>
+
+      {preferredSigninMethod &&
+        <SignInButtons>
+          <ButtonTwitter
+            preferred={preferredSigninMethod === 'twitter'}
+            after={preferredSigninMethod === 'twitter'}
+            whitebg={preferredSigninMethod !== 'twitter'}
+            href={`${SERVER_URL}/auth/twitter?r=${window.location.href}`}
+            onClick={() => login('twitter')}
+          >
+            <Icon glyph="twitter" /> <span>Sign in with Twitter</span>
+          </ButtonTwitter>
+
+          <ButtonFacebook
+            preferred={preferredSigninMethod === 'facebook'}
+            whitebg={preferredSigninMethod !== 'facebook'}
+            after={preferredSigninMethod === 'facebook'}
+            href={`${SERVER_URL}/auth/facebook?r=${window.location.href}`}
+            onClick={() => login('facebook')}
+          >
+            <Icon glyph="facebook" /> <span>Sign in with Facebook</span>
+          </ButtonFacebook>
+
+          <ButtonGoogle
+            preferred={preferredSigninMethod === 'google'}
+            whitebg={preferredSigninMethod !== 'google'}
+            after={preferredSigninMethod === 'google'}
+            href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
+            onClick={() => login('google')}
+          >
+            <Icon glyph="google" /> <span>Sign in with Google</span>
+          </ButtonGoogle>
+        </SignInButtons>}
+
+      {!preferredSigninMethod &&
+        <SignInButtons>
+          <ButtonTwitter
+            preferred
+            after={preferredSigninMethod === 'twitter'}
+            href={`${SERVER_URL}/auth/twitter?r=${window.location.href}`}
+            onClick={() => login('twitter')}
+          >
+            <Icon glyph="twitter" /> <span>Sign in with Twitter</span>
+          </ButtonTwitter>
+
+          <ButtonFacebook
+            preferred
+            after={preferredSigninMethod === 'facebook'}
+            href={`${SERVER_URL}/auth/facebook?r=${window.location.href}`}
+            onClick={() => login('facebook')}
+          >
+            <Icon glyph="facebook" /> <span>Sign in with Facebook</span>
+          </ButtonFacebook>
+
+          <ButtonGoogle
+            preferred
+            after={preferredSigninMethod === 'google'}
+            href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
+            onClick={() => login('google')}
+          >
+            <Icon glyph="google" /> <span>Sign in with Google</span>
+          </ButtonGoogle>
+        </SignInButtons>}
     </NullCard>
   );
 };
@@ -71,8 +211,12 @@ export const UpsellSignInState = ({ entity }) => {
   return (
     <NullState bg="chat">
       <Title>Come on in, the chatter's fine.</Title>
-      <Subtitle>{subtitle}</Subtitle>
-      <Button onClick={login} icon="twitter" label>Sign in with Twitter</Button>
+      <Subtitle>
+        {subtitle}
+      </Subtitle>
+      <Button onClick={login} icon="twitter" label>
+        Sign in with Twitter
+      </Button>
     </NullState>
   );
 };
@@ -148,13 +292,8 @@ export const UpsellRequestToJoinChannel = ({
     <NullCard bg="locked">
       <Title>Top secret!</Title>
       <Subtitle>
-        This channel is private - you may request to join
-        {' '}
-        <b>{channel.name}</b>
-        {' '}
-        or
-        {' '}
-        <Link to={`/${community}`}>Go back</Link>
+        This channel is private - you may request to join <b>{channel.name}</b>{' '}
+        or <Link to={`/${community}`}>Go back</Link>
         .
       </Subtitle>
 
@@ -175,14 +314,14 @@ export const UpsellRequestToJoinChannel = ({
             Cancel request
           </OutlineButton>
         : currentUser &&
-            <Button
-              onClick={() => subscribe(channel.id)}
-              icon="private-unlocked"
-              loading={loading}
-              label
-            >
-              Request to join {channel.name}
-            </Button>}
+          <Button
+            onClick={() => subscribe(channel.id)}
+            icon="private-unlocked"
+            loading={loading}
+            label
+          >
+            Request to join {channel.name}
+          </Button>}
     </NullCard>
   );
 };
@@ -214,10 +353,14 @@ export const Upsell404Channel = ({
 
   return (
     <NullCard bg={noPermission ? 'locked' : 'channel'}>
-      <Title>{title}</Title>
-      <Subtitle>{subtitle}</Subtitle>
+      <Title>
+        {title}
+      </Title>
+      <Subtitle>
+        {subtitle}
+      </Subtitle>
       <Actions>
-        <Button onClick={() => window.location.href = returnUrl}>
+        <Button onClick={() => (window.location.href = returnUrl)}>
           Take me back
         </Button>
       </Actions>
@@ -251,27 +394,24 @@ export const Upsell404Community = ({
 
   return (
     <NullCard bg={noPermission ? 'locked' : 'channel'}>
-      <Title>{title}</Title>
-      <Subtitle>{subtitle}</Subtitle>
+      <Title>
+        {title}
+      </Title>
+      <Subtitle>
+        {subtitle}
+      </Subtitle>
 
       <Actions>
         {// de-emphasizes the 'take me home' button if a create prompt is shown
         create
           ? <Link to={`/home`}>
-              <OutlineButton>
-                Take me home
-              </OutlineButton>
+              <OutlineButton>Take me home</OutlineButton>
             </Link>
           : <Link to={`/home`}>
-              <Button>
-                Take me home
-              </Button>
+              <Button>Take me home</Button>
             </Link>}
 
-        {create &&
-          <Button onClick={create}>
-            Create this Community
-          </Button>}
+        {create && <Button onClick={create}>Create this Community</Button>}
       </Actions>
     </NullCard>
   );
@@ -314,7 +454,7 @@ export const Upsell404User = ({
 
   return (
     <NullCard bg="user" heading={title} copy={subtitle}>
-      <Button onClick={() => window.location.href = '/home'}>
+      <Button onClick={() => (window.location.href = '/home')}>
         Take me home
       </Button>
     </NullCard>
@@ -328,11 +468,17 @@ export class UpsellNewUser extends Component {
     return (
       <NullCard bg="pro">
         <LargeEmoji>
-          <span role="img" aria-label="Howdy!">👋</span>
+          <span role="img" aria-label="Howdy!">
+            👋
+          </span>
         </LargeEmoji>
-        <Title>Howdy, {user.name}!</Title>
+        <Title>
+          Howdy, {user.name}!
+        </Title>
         <Subtitle>
-          Spectrum is a place where communities live. It's easy to follow the things that you care about most, or even create your own community to share with the world.
+          Spectrum is a place where communities live. It's easy to follow the
+          things that you care about most, or even create your own community to
+          share with the world.
         </Subtitle>
       </NullCard>
     );
@@ -346,7 +492,7 @@ export const Upsell404Thread = () => {
       heading="Oops, something got lost!"
       copy="We can't find that thread. Maybe it floated off into space..."
     >
-      <Button onClick={() => window.location.href = `/home`}>
+      <Button onClick={() => (window.location.href = `/home`)}>
         Take me home
       </Button>
     </NullCard>
@@ -408,7 +554,8 @@ class UpsellUpgradeToProPure extends Component {
         </Profile>
         <Title>Upgrade to Pro</Title>
         <Subtitle>
-          We're hard at work building features for Spectrum Pro. Your early support helps us get there faster – thank you!
+          We're hard at work building features for Spectrum Pro. Your early
+          support helps us get there faster – thank you!
         </Subtitle>
         <Cost>Spectrum Pro costs $5/month and you can cancel at any time.</Cost>
         <StripeCheckout
@@ -425,7 +572,10 @@ class UpsellUpgradeToProPure extends Component {
           </Button>
         </StripeCheckout>
 
-        {!upgradeError && <UpgradeError>{upgradeError}</UpgradeError>}
+        {!upgradeError &&
+          <UpgradeError>
+            {upgradeError}
+          </UpgradeError>}
       </NullCard>
     );
   }

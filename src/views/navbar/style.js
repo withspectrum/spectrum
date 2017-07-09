@@ -29,7 +29,10 @@ export const UserProfileAvatar = styled(Avatar)`
 
 export const Nav = styled(FlexRow)`
   width: 100%;
-  background: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
+  background: ${({ theme }) =>
+    process.env.NODE_ENV === 'production'
+      ? theme.text.default
+      : theme.warn.alt};
   display: flex;
   align-items: stretch;
   color: ${({ theme }) => theme.text.reverse};
@@ -65,7 +68,9 @@ export const LogoLink = styled(Link)`
   flex-direction: column;
   justify-content: center;
 
-  ${() => process.env.NODE_ENV !== 'production' && css`
+  ${() =>
+    process.env.NODE_ENV !== 'production' &&
+    css`
     &:after {
       content: "Dev";
       margin-top: 4px;
@@ -74,10 +79,22 @@ export const LogoLink = styled(Link)`
   `}
 `;
 
-export const SigninLink = styled(Link)`
+export const SigninLink = styled.button`
   width: 100%;
   display: flex;
   justify-content: center;
+  align-self: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 14px;
+  background: transparent;
+  border: none;
+  webkit-display: none;
+  color: #fff;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export const Logo = styled.img`

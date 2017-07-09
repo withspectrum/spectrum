@@ -56,7 +56,7 @@ export const createCommunityMutation = graphql(
 */
 const DELETE_COMMUNITY_MUTATION = gql`
   mutation deleteCommunity($communityId: ID!) {
-    deleteCommunity (communityId: $communityId)
+    deleteCommunity(communityId: $communityId)
   }
 `;
 
@@ -262,4 +262,47 @@ export const getCommunityMembersQuery = graphql(
     ${communityMetaDataFragment}
 	`,
   getCommunityMembersOptions
+);
+
+export const getCommunityByIdQuery = gql`
+  query getCommunity($id: ID) {
+    community(id: $id) {
+      ...communityInfo
+    }
+  }
+  ${communityInfoFragment}
+`;
+
+const getCommunityByIdOptions = {
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+  }),
+};
+
+export const getCommunityById = graphql(
+  getCommunityByIdQuery,
+  getCommunityByIdOptions
+);
+
+const SEND_EMAIL_INVITATIONS_MUTATION = gql`
+  mutation sendEmailInvites($input: EmailInvitesInput!) {
+    sendEmailInvites(input: $input)
+  }
+`;
+const SEND_EMAIL_INVITATIONS_OPTIONS = {
+  props: ({ input, mutate }) => ({
+    sendEmailInvites: input =>
+      mutate({
+        variables: {
+          input,
+        },
+      }),
+  }),
+};
+
+export const sendEmailInvitationsMutation = graphql(
+  SEND_EMAIL_INVITATIONS_MUTATION,
+  SEND_EMAIL_INVITATIONS_OPTIONS
 );
