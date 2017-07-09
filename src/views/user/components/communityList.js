@@ -81,11 +81,7 @@ const CommunityList = props => {
       );
     }
   } else if (networkStatus === 8) {
-    console.log(
-      "communities didn't load. here's some info",
-      networkStatus,
-      communities
-    );
+    console.log("communities didn't load. here's the props", props);
     return (
       <NullCard
         heading={`Something went wrong loading ${user.username}'s communities...`}
@@ -93,11 +89,7 @@ const CommunityList = props => {
       />
     );
   } else {
-    console.log(
-      "communities didn't load. here's some info",
-      networkStatus,
-      communities
-    );
+    console.log("communities didn't load. here's the props", props);
     return <LoadingList />;
   }
 };
