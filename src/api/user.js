@@ -174,7 +174,7 @@ export const GET_CURRENT_USER_PROFILE_QUERY = gql`
 `;
 
 export const getCurrentUserProfile = graphql(GET_CURRENT_USER_PROFILE_QUERY, {
-  options: { fetchPolicy: 'cache-and-network' },
+  options: { fetchPolicy: 'cache-first' },
 });
 
 /*
