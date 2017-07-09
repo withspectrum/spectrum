@@ -27,19 +27,6 @@ const StyledAvatar = styled.img`
     Gradient(theme.generic.alt, theme.generic.default)};
   position: relative;
   z-index: 9;
-
-  &:after {
-    content: ' ';
-    display: block;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-image: url(/img/default_avatar.svg);
-  }
 `;
 
 const StyledAvatarContainer = styled.object`
@@ -74,14 +61,16 @@ const AvatarPure = (props: Object): React$Element<any> => {
   if (props.link) {
     return (
       <Link to={props.link}>
-        <StyledAvatarContainer {...props}>
-          <StyledAvatar
-            {...props}
-            src={optimize(props.src, {
-              w: props.size,
-              dpr: 2,
-            })}
-          />
+        <StyledAvatarContainer
+          data={optimize(props.src, {
+            w: props.size,
+            dpr: 2,
+            format: 'jpg',
+          })}
+          type={'image/jpg'}
+          {...props}
+        >
+          <StyledAvatar {...props} src={`/img/default_avatar.svg`} />
         </StyledAvatarContainer>
       </Link>
     );
