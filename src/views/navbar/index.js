@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
-import { getCurrentUserProfile } from '../../api/user';
+import { getCurrentUserProfile, editUserMutation } from '../../api/user';
 import { openModal } from '../../actions/modals';
 import {
   getNotificationsForNavbar,
@@ -137,6 +137,12 @@ class Navbar extends Component {
       return count;
     } else return false;
   };
+
+  componentDidMount() {
+    if (this.props.currentUser && !this.props.currentUser.timezone) {
+      this.props.editUser({ timezone: new Date().getTimezoneOffset() * -1 });
+    }
+  }
 
   componentDidUpdate(prevProps) {
     // if the query returned notifications
@@ -435,6 +441,7 @@ const mapStateToProps = state => ({
 export default compose(
   getCurrentUserProfile,
   getNotificationsForNavbar,
+  editUserMutation,
   markSingleNotificationSeenMutation,
   markNotificationsSeenMutation,
   markNotificationsReadMutation,
