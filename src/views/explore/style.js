@@ -86,6 +86,7 @@ export const Section = styled(FlexCol)`
 export const SectionWrapper = styled(FlexRow)`
   flex: none;
   align-items: flex-start;
+  justify-content: center;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -97,7 +98,11 @@ export const ViewHeader = styled(Section)`
   padding: 120px 0 160px 0;
   justify-content: flex-end;
   background-color: ${({ theme }) => theme.space.dark};
-  background-image: ${({ theme }) => `radial-gradient(farthest-corner at 50% 100%, ${hexa(theme.brand.alt, 0.75)}, ${theme.space.dark} )`};
+  background-image: ${({ theme }) =>
+    `radial-gradient(farthest-corner at 50% 100%, ${hexa(
+      theme.brand.alt,
+      0.75
+    )}, ${theme.space.dark} )`};
 
   @media (max-width: 768px) {
     padding: 48px 24px 96px 24px;
@@ -105,7 +110,8 @@ export const ViewHeader = styled(Section)`
 `;
 
 export const SectionWithGradientTransition = styled(Section)`
-  background-image: ${({ theme }) => `linear-gradient(${theme.bg.default}, ${theme.bg.wash})`};
+  background-image: ${({ theme }) =>
+    `linear-gradient(${theme.bg.default}, ${theme.bg.wash})`};
 
   @media (max-width: 768px) {
     padding: 32px;
@@ -166,7 +172,8 @@ export const Item = styled(FlexCol)`
   transition: ${Transition.hover.off};
 
   &:hover {
-    box-shadow: ${Shadow.high} ${props => hexa(props.theme.text.placeholder, 1)};
+    box-shadow: ${Shadow.high} ${props =>
+  hexa(props.theme.text.placeholder, 1)};
     transition: ${Transition.hover.on};
     opacity: 1;
   }
@@ -199,8 +206,12 @@ export const ButtonContainer = styled(FlexRow)`
 export const ItemButton = styled(Button)`
   font-weight: 700;
   color: ${({ theme }) => theme.text.reverse};
-  background-color: ${props => (props.joined ? props.theme.inactive : props.theme.brand.default)};
-  background-image: ${props => (props.joined ? 'none' : Gradient(props.theme.brand.alt, props.theme.brand.default))};
+  background-color: ${props =>
+    props.joined ? props.theme.inactive : props.theme.brand.default};
+  background-image: ${props =>
+    props.joined
+      ? 'none'
+      : Gradient(props.theme.brand.alt, props.theme.brand.default)};
   box-shadow: none;
   transition: ${Transition.hover.on};
 
@@ -210,17 +221,17 @@ export const ItemButton = styled(Button)`
 `;
 
 export const Constellations = styled.div`
-	background-color: transparent;
-	background: url(/img/constellations.svg) center top no-repeat;
-	position: absolute;
-	background-size: cover 100%;
-	z-index: 0;
-	height: calc(100% + 4px);
-	width: 110%;
-	top: -10px;
-	bottom: 0;
-	left: 0;
-	right: 0;
+  background-color: transparent;
+  background: url(/img/constellations.svg) center top no-repeat;
+  position: absolute;
+  background-size: cover 100%;
+  z-index: 0;
+  height: calc(100% + 4px);
+  width: 110%;
+  top: -10px;
+  bottom: 0;
+  left: 0;
+  right: 0;
   pointer-events: none;
 `;
 

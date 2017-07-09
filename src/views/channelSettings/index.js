@@ -15,6 +15,7 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import { ChannelEditForm } from '../../components/editForm';
 import PendingUsers from './components/pendingUsers';
 import BlockedUsers from './components/blockedUsers';
+import ChannelMembers from '../../components/channelMembers';
 import { Upsell404Channel } from '../../components/upsell';
 import {
   togglePendingUserInChannelMutation,
@@ -159,6 +160,7 @@ const SettingsPure = ({
             />
             <BlockedUsers unblock={unblock} channel={channel} id={channel.id} />
           </span>}
+        {!channel.isPrivate && <ChannelMembers id={channel.id} />}
       </Column>
     </AppViewWrapper>
   );

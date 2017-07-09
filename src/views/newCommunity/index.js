@@ -211,7 +211,10 @@ class NewCommunity extends Component {
                 </TextButton>
                 {hasInvitedPeople
                   ? <Button onClick={() => this.step('next')}>Continue</Button>
-                  : <TextButton onClick={() => this.step('next')}>
+                  : <TextButton
+                      color={'brand.default'}
+                      onClick={() => this.step('next')}
+                    >
                       Skip this step
                     </TextButton>}
               </Actions>}

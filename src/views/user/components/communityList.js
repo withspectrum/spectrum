@@ -46,14 +46,6 @@ const CommunityList = props => {
       <StyledCard>
         <ListHeader>
           <ListHeading>Member of</ListHeading>
-          {currentUser &&
-            currentUser.id === user.id &&
-            <IconButton
-              glyph="plus"
-              color="text.placeholder"
-              hoverColor="brand.alt"
-              onClick={() => history.push('/new/community')}
-            />}
         </ListHeader>
         <ListContainer>
           {communities.map(item => {
@@ -63,9 +55,13 @@ const CommunityList = props => {
                   contents={item.node}
                   withDescription={withDescription}
                   withMeta={withMeta}
-                  meta={`${item.node.metaData.members > 1 ? `${item.node.metaData.members} members` : `${item.node.metaData.members} member`}
+                  meta={`${item.node.metaData.members > 1
+                    ? `${item.node.metaData.members} members`
+                    : `${item.node.metaData.members} member`}
                      ·
-                    ${item.node.metaData.channels > 1 ? `${item.node.metaData.channels} channels` : `${item.node.metaData.channels} channel`}`}
+                    ${item.node.metaData.channels > 1
+                      ? `${item.node.metaData.channels} channels`
+                      : `${item.node.metaData.channels} channel`}`}
                 >
                   <Icon glyph="view-forward" />
                 </CommunityListItem>
@@ -74,7 +70,7 @@ const CommunityList = props => {
           })}
         </ListContainer>
         <ListFooter>
-          <MoreLink to={`/explore`}>Find more...</MoreLink>
+          <MoreLink to={`/explore`}>Explore Communities</MoreLink>
         </ListFooter>
       </StyledCard>
     );
