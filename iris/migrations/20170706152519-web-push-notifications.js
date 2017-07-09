@@ -2,11 +2,12 @@
 
 exports.up = function(r, conn) {
   return r
-    .tableCreate('webPushSubscriptions', { primaryKey: 'endpoint' })
+    .tableCreate('webPushSubscriptions')
     .run(conn)
     .catch(err => {
       throw new Error(err);
-    });
+    })
+    .then(() => r.table('webPushSubscriptions').indexCreate('userId'));
 };
 
 exports.down = function(r, conn) {

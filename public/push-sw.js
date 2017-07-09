@@ -39,6 +39,7 @@ self.addEventListener('push', function(event) {
           vibrate: [200],
           icon: '/img/homescreen-icon-192x192',
           body: notificationData.body,
+          title: notificationData.title,
           timestamp: notificationData.timestamp,
           image: notificationData.image,
           tag: notificationData.tag,
@@ -54,9 +55,10 @@ self.addEventListener('push', function(event) {
 self.addEventListener('notificationclick', function(event) {
   event.notification.close();
 
-  const urlToOpen = event.notification.data.href
-    ? new URL(event.notification.data.href, self.location.origin).href
-    : '/';
+  const urlToOpen =
+    event.notification.data && event.notification.data.href
+      ? new URL(event.notification.data.href, self.location.origin).href
+      : '/';
 
   // see if the current is open and if it is focus it
   event.waitUntil(
