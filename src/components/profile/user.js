@@ -98,7 +98,7 @@ const UserWithData = ({
             </CoverTitle>
           </CoverLink>
         </CoverPhoto>
-        <CoverSubtitle>
+        <CoverSubtitle center>
           @{user.username}
           {user.isAdmin && <Badge type="admin" />}
           {user.isPro && <Badge type="pro" />}

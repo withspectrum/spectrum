@@ -80,7 +80,11 @@ class DashboardPure extends Component {
             <Head title={title} description={description} />
             <Titlebar />
             <Column type="primary">
-              <UpsellNewUser user={user} graduate={this.graduate} />
+              <UpsellNewUser
+                user={user}
+                graduate={this.graduate}
+                communities={communities}
+              />
             </Column>
           </AppViewWrapper>
         );

@@ -148,6 +148,7 @@ class SetUsername extends Component {
           isLoading: false,
           success: '',
         });
+        this.props.usernameSaved();
         this.props.dispatch(addToastWithTimeout('success', 'Username saved!'));
       })
       .catch(err => {
@@ -193,9 +194,15 @@ class SetUsername extends Component {
           </UnderlineInput>
         </Row>
         <Row>
-          {error && <Error>{error}</Error>}
+          {error &&
+            <Error>
+              {error}
+            </Error>}
 
-          {success && <Success>{success}</Success>}
+          {success &&
+            <Success>
+              {success}
+            </Success>}
         </Row>
       </Form>
     );

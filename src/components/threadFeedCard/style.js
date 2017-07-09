@@ -70,10 +70,11 @@ export const MetaRow = styled(FlexRow)`
 export const ParticipantHeads = styled(FlexRow)`
   align-items: center;
 
-  > a {
+  > * {
     margin-left: 4px;
     margin-top: 4px;
     pointer-events: all;
+    height: 24px;
   }
 `;
 
@@ -83,9 +84,10 @@ export const Participant = styled.img`
   border-radius: 100%;
   object-fit: cover;
   background-color: ${({ theme }) => theme.generic.default};
-  background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
+  background-image: ${({ theme }) =>
+    Gradient(theme.generic.alt, theme.generic.default)};
 
-  &:hover{
+  &:hover {
     transform: scale(1.1);
   }
 `;
@@ -98,7 +100,7 @@ export const Creator = styled.div`
   border: 2px solid ${({ theme }) => theme.brand.alt};
   pointer-events: all;
 
-  object:after{
+  object:after {
     right: -6px;
     bottom: -1px;
   }
@@ -117,7 +119,7 @@ export const Meta = styled.span`
     margin-right: 4px;
   }
 
-  @media ( max-width: 480px ) {
+  @media (max-width: 480px) {
     display: none;
   }
 `;
