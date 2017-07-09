@@ -2,7 +2,8 @@
 import React from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { ActorPhotosContainer, ActorPhotoItem, ActorPhoto } from '../style';
+import { ActorPhotosContainer, ActorPhotoItem } from '../style';
+import { Avatar } from '../../../components/avatar';
 
 export const ActorsRow = ({ actors }) => {
   return (
@@ -10,9 +11,14 @@ export const ActorsRow = ({ actors }) => {
       {actors.map(actor => {
         return (
           <ActorPhotoItem key={actor.id}>
-            <Link to={`/users/${actor.username}`}>
-              <ActorPhoto src={actor.profilePhoto} />
-            </Link>
+            <Avatar
+              size={32}
+              radius={32}
+              isOnline={actor.isOnline}
+              src={actor.profilePhoto}
+              link={actor.username ? `/users/${actor.username}` : null}
+              role="presentation"
+            />
           </ActorPhotoItem>
         );
       })}

@@ -91,7 +91,7 @@ export const UpsellMiniCreateCommunity = () => {
     <MiniNullCard
       bg="onboarding"
       heading="Create a community"
-      copy="Get the conversation started for free in seconds"
+      copy="Building communities on Spectrum is easy, and free forever"
     >
       <Link to="/new/community">
         <Button icon="plus" label>
@@ -99,6 +99,27 @@ export const UpsellMiniCreateCommunity = () => {
         </Button>
       </Link>
     </MiniNullCard>
+  );
+};
+
+export const UpsellCreateCommunity = () => {
+  const title = 'Create a community';
+  const subtitle = 'Building communities on Spectrum is easy, and free forever';
+
+  return (
+    <NullCard bg={'onboarding'}>
+      <Title>
+        {title}
+      </Title>
+      <Subtitle>
+        {subtitle}
+      </Subtitle>
+      <Actions>
+        <Link to="/new/community">
+          <Button>Get Started</Button>
+        </Link>
+      </Actions>
+    </NullCard>
   );
 };
 

@@ -87,7 +87,7 @@ export const Message = styled.p`
     transition: ${Transition.hover.off};
     position: relative;
 
-    &:hover{
+    &:hover {
       color: inherit;
       transition: ${Transition.hover.on};
     }
@@ -100,7 +100,8 @@ export const ChatMessage = styled.p`
   border-radius: 16px;
   font-size: 14px;
   background-color: ${({ theme }) => theme.generic.alt};
-  background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
+  background-image: ${({ theme }) =>
+    Gradient(theme.generic.alt, theme.generic.default)};
   float: left;
   max-width: 75%;
   margin-top: 24px;
@@ -117,6 +118,8 @@ export const NotificationListRow = styled(FlexCol)`
   z-index: 2;
   flex: none;
   transition: ${Transition.hover.off};
+  max-width: 100%;
+  overflow-x: hidden;
 
   &:last-of-type {
     border-bottom: 2px solid transparent;
@@ -138,22 +141,13 @@ export const SegmentedNotificationListRow = styled(NotificationListRow)`
 export const ActorPhotosContainer = styled(FlexRow)`
   margin: 0;
   margin-left: 4px;
+  max-width: 100%;
+  overflow-x: hidden;
 `;
 
-export const ActorPhotoItem = styled.div`
-  display: inline-block;
-  margin: 0;
-  margin-right: 4px;
-  border: 1px solid rgba(0,0,0,0.05);
-  width: 32px;
-  height: 32px;
-  border-radius: 24px;
-  overflow: hidden;
-`;
+export const ActorPhotoItem = styled.div`margin-right: 4px;`;
 
-export const ActorPhoto = styled.img`
-  width: 100%;
-`;
+export const ActorPhoto = styled.img`width: 100%;`;
 
 export const ContextRow = styled(FlexRow)`
   align-items: center;
