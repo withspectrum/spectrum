@@ -156,19 +156,22 @@ export const UserListItem = ({
   return (
     <Wrapper>
       <Row>
-        <Link to={`/users/${user.username}`}>
-          <Avatar
-            radius={20}
-            src={`${user.profilePhoto}`}
-            size={40}
-            style={{ marginRight: '16px' }}
-          />
-        </Link>
+        <Avatar
+          radius={20}
+          src={`${user.profilePhoto}`}
+          size={40}
+          style={{ marginRight: '16px' }}
+          link={user.username ? `/users/${user.username}` : null}
+        />
         <Col>
           <Heading>
-            <Link to={`/users/${user.username}`}>
-              {user.name}
-            </Link>
+            {user.username
+              ? <Link to={`/users/${user.username}`}>
+                  {user.name}
+                </Link>
+              : <span>
+                  {user.name}
+                </span>}
           </Heading>
           {user.username &&
             <Meta>

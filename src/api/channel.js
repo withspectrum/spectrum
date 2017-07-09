@@ -39,7 +39,7 @@ export const createChannelMutation = graphql(
 */
 const DELETE_CHANNEL_MUTATION = gql`
   mutation deleteChannel($channelId: ID!) {
-    deleteChannel (channelId: $channelId)
+    deleteChannel(channelId: $channelId)
   }
 `;
 
@@ -308,4 +308,107 @@ const TOGGLE_CHANNEL_NOTIFICATIONS_OPTIONS = {
 export const toggleChannelNotificationsMutation = graphql(
   TOGGLE_CHANNEL_NOTIFICATIONS_MUTATION,
   TOGGLE_CHANNEL_NOTIFICATIONS_OPTIONS
+);
+
+const LoadMoreMembers = gql`
+  query loadMoreChannelMembers($id: ID, $after: String) {
+    channel(id: $id) {
+      id
+      ...channelMetaData
+      memberConnection(after: $after) {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+        edges {
+          cursor
+          node {
+            ...userInfo
+          }
+        }
+      }
+    }
+  }
+  ${userInfoFragment}
+  ${channelMetaDataFragment}
+`;
+
+const getChannelMembersOptions = {
+  props: ({ data: { fetchMore, error, loading, channel, networkStatus } }) => ({
+    data: {
+      error,
+      loading,
+      channel,
+      networkStatus: networkStatus,
+      hasNextPage: channel
+        ? channel.memberConnection.pageInfo.hasNextPage
+        : false,
+      fetchMore: () =>
+        fetchMore({
+          query: LoadMoreMembers,
+          variables: {
+            id: channel.id,
+            after:
+              channel.memberConnection.edges[
+                channel.memberConnection.edges.length - 1
+              ].cursor,
+          },
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult.channel) {
+              return prev;
+            }
+
+            return {
+              ...prev,
+              channel: {
+                ...prev.channel,
+                memberConnection: {
+                  ...prev.channel.memberConnection,
+                  pageInfo: {
+                    ...prev.channel.memberConnection.pageInfo,
+                    ...fetchMoreResult.channel.memberConnection.pageInfo,
+                  },
+                  edges: [
+                    ...prev.channel.memberConnection.edges,
+                    ...fetchMoreResult.channel.memberConnection.edges,
+                  ],
+                },
+              },
+            };
+          },
+        }),
+    },
+  }),
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+    fetchPolicy: 'cache-and-network',
+  }),
+};
+
+export const getChannelMembersQuery = graphql(
+  gql`
+		query getChannel($id: ID) {
+      channel(id: $id) {
+        id
+        ...channelMetaData
+        memberConnection {
+          pageInfo {
+            hasNextPage
+            hasPreviousPage
+          }
+          edges {
+            cursor
+            node {
+              ...userInfo
+            }
+          }
+        }
+      }
+		}
+    ${userInfoFragment}
+    ${channelMetaDataFragment}
+	`,
+  getChannelMembersOptions
 );
