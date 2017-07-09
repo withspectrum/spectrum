@@ -100,21 +100,21 @@ export const MoreLink = styled(Link)`
   line-height: 1;
   color: ${({ theme }) => theme.text.alt};
   transition: ${Transition.hover.off};
-  padding: 8px 0;
+  padding: 0;
 
   &:hover {
     color: ${({ theme }) => theme.brand.alt};
   }
 
   > div {
-    margin-right: 8px;
+    margin-right: 12px;
   }
 `;
 
 export const ListFooter = styled(FlexRow)`
   padding-top: 8px;
   border-top: 2px solid ${({ theme }) => theme.bg.wash};
-  justify-content: flex-end;
+  justify-content: flex-start;
   width: 100%;
 `;
 

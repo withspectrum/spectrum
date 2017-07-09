@@ -80,13 +80,12 @@ const UserViewPure = ({
       </Column>
 
       <Column type="primary" alignItems="center">
-        {user.threadCount === 0 &&
-          <NullState
-            bg="message"
-            heading={`${user.name} hasn't posted anything yet.`}
-          />}
-        {user.threadCount > 0 &&
-          <ThreadFeedWithData username={username} viewContext="profile" />}
+        {user.threadCount === 0
+          ? <NullState
+              bg="message"
+              heading={`${user.name} hasn't posted anything yet.`}
+            />
+          : <ThreadFeedWithData username={username} viewContext="profile" />}
       </Column>
     </AppViewWrapper>
   );
