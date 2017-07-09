@@ -16,11 +16,16 @@ export type ServiceWorkerResult = {
   firstCache?: boolean,
 };
 
+const IS_PROD = process.env.NODE_ENV === 'production';
+
+const swUrl = IS_PROD
+  ? `${process.env.PUBLIC_URL}/service-worker.js`
+  : `${process.env.PUBLIC_URL}/push-sw.js`;
+
 export default function register(): Promise<ServiceWorkerResult> {
-  if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+  if ('serviceWorker' in navigator) {
     return new Promise(res => {
       window.addEventListener('load', () => {
-        const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
         navigator.serviceWorker
           .register(swUrl)
           .then(registration => {

@@ -26,8 +26,12 @@ self.addEventListener('push', function(event) {
       .then(windowClients => {
         for (let i = 0; i < windowClients.length; i++) {
           const windowClient = windowClients[i];
-          // The user is looking at Spectrum right now, abort showing the notification!
-          if (windowClient.focused) {
+          // The user is looking at Spectrum right now abort showing the notification!
+          // (except for if we're on localhost, i.e. in development)
+          if (
+            windowClient.focused &&
+            !(self.registration.scope.indexOf('http://localhost:3000') === 0)
+          ) {
             return;
           }
         }
@@ -40,7 +44,7 @@ self.addEventListener('push', function(event) {
           tag: notificationData.tag,
           data: notificationData.data,
           // If we don't set a tag and set renotify to true this'll throw an error
-          renotify: !!notificationData.tag,
+          renotify: notificationData.renotify || !!notificationData.tag,
         });
       })
   );
