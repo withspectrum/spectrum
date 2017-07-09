@@ -27,6 +27,19 @@ const StyledAvatar = styled.img`
     Gradient(theme.generic.alt, theme.generic.default)};
   position: relative;
   z-index: 9;
+
+  &:after {
+    content: ' ';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-image: url(/img/default_avatar.svg);
+  }
 `;
 
 const StyledAvatarContainer = styled.object`

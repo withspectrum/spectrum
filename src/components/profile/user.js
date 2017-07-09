@@ -140,11 +140,12 @@ const UserWithData = ({
               <Title>
                 {user.name}
               </Title>
-              <Subtitle>
-                @{user.username}
-                {user.isAdmin && <Badge type="admin" />}
-                {user.isPro && <Badge type="pro" />}
-              </Subtitle>
+              {user.username &&
+                <Subtitle>
+                  @{user.username}
+                  {user.isAdmin && <Badge type="admin" />}
+                  {user.isPro && <Badge type="pro" />}
+                </Subtitle>}
             </ProfileHeaderMeta>
           </ProfileHeaderLink>
           {currentUser && currentUser.id === user.id
