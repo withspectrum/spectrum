@@ -17,7 +17,8 @@ export const sendWebPushNotification = (subscription, payload, options) => {
       );
     return Promise.resolve({});
   }
-  return webPush.sendNotification(subscription, payload, {
+  const pl = typeof payload === 'string' ? payload : JSON.stringify(payload);
+  return webPush.sendNotification(subscription, pl, {
     TTL: 86400, // Default TTL: One day
     ...options,
   });

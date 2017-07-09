@@ -26,11 +26,6 @@ export type WebPushSubscription = {
   endpoint: string,
 };
 
-const subscribeNotification = JSON.stringify({
-  title: 'A notification from Spectrum',
-  body: 'Yay, notifications are enabled! 🚀',
-});
-
 module.exports = {
   Mutation: {
     editUser: (_, args: EditUserArguments, { user }) => {
@@ -98,9 +93,16 @@ module.exports = {
 
       return storeSubscription(subscription, user.id)
         .then(() => {
-          return sendWebPushNotification(subscription, subscribeNotification, {
-            TTL: 300, // If the user doesn't go online for five minutes don't send him this notification anymore
-          }).catch(err => {
+          return sendWebPushNotification(
+            subscription,
+            {
+              title: 'A notification from Spectrum',
+              body: 'Yay, notifications are enabled! 🚀',
+            },
+            {
+              TTL: 300, // If the user doesn't go online for five minutes don't send him this notification anymore
+            }
+          ).catch(err => {
             console.log('error sending welcome notification');
             console.log(err);
           });
