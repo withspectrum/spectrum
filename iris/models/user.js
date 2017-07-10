@@ -3,6 +3,9 @@ const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
 import { uploadImage } from '../utils/s3';
+const createQueue = require('../../shared/bull/create-queue');
+
+const sendUserWelcomeEmailQueue = createQueue('send user welcome email');
 
 const getUser = (input: Object): Promise<Object> => {
   if (input.id) return getUserById(input.id);
@@ -70,7 +73,11 @@ const storeUser = (user: Object): Promise<Object> => {
     .table('users')
     .insert(user, { returnChanges: true })
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => {
+      const user = result.changes[0].new_val;
+      sendUserWelcomeEmailQueue.add(user);
+      return user;
+    });
 };
 
 const saveUserProvider = (userId, providerMethod, providerId) => {
