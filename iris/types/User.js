@@ -87,6 +87,7 @@ const User = /* GraphQL */ `
 		createdAt: Date!
 		lastSeen: Date!
 		isOnline: Boolean
+		timezone: Int
 
 		# non-schema fields
 		threadCount: Int
@@ -114,6 +115,7 @@ const User = /* GraphQL */ `
 		description: String
 		website: String
 		username: String
+		timezone: Int
 	}
 
 	input UpgradeToProInput {

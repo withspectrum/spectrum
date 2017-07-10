@@ -228,7 +228,7 @@ const editUser = (
   userId: string
 ): Promise<Object> => {
   const {
-    input: { name, description, website, file, coverFile, username },
+    input: { name, description, website, file, coverFile, username, timezone },
   } = input;
   return db
     .table('users')
@@ -240,6 +240,7 @@ const editUser = (
         description,
         website,
         username,
+        timezone,
       });
     })
     .then(user => {
