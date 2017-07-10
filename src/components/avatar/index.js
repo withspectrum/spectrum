@@ -11,12 +11,6 @@ import { Link } from 'react-router-dom';
 import { Gradient, Tooltip } from '../globals';
 import { optimize } from '../../helpers/images';
 
-var isSafari =
-  /constructor/i.test(window.HTMLElement) ||
-  (function(p) {
-    return p.toString() === '[object SafariRemoteNotification]';
-  })(!window['safari'] || window['safari'].pushNotification);
-
 const StyledAvatar = styled.img`
   position: absolute;
   top: 0;
@@ -83,7 +77,6 @@ const AvatarPure = (props: Object): React$Element<any> => {
             dpr: 2,
             format: 'png',
           })}
-          // type={isSafari ? null : "image/jpg"}
           type="image/png"
           {...props}
         >
@@ -106,7 +99,6 @@ const AvatarPure = (props: Object): React$Element<any> => {
           dpr: 2,
           format: 'png',
         })}
-        // type={isSafari ? null : "image/jpg"}
         type="image/png"
         {...props}
       >
