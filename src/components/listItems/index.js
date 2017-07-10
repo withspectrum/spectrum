@@ -33,6 +33,7 @@ export const CommunityListItem = (props: CardProps): React$Element<any> => {
     <Wrapper>
       <Row>
         <Avatar
+          community
           radius={4}
           link={`/${props.contents.slug}`}
           src={`${props.contents.profilePhoto}`}

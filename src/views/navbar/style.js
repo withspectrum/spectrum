@@ -29,7 +29,10 @@ export const UserProfileAvatar = styled(Avatar)`
 
 export const Nav = styled(FlexRow)`
   width: 100%;
-  background: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
+  background: ${({ theme }) =>
+    process.env.NODE_ENV === 'production'
+      ? theme.text.default
+      : theme.warn.alt};
   display: flex;
   align-items: stretch;
   color: ${({ theme }) => theme.text.reverse};
@@ -65,7 +68,9 @@ export const LogoLink = styled(Link)`
   flex-direction: column;
   justify-content: center;
 
-  ${() => process.env.NODE_ENV !== 'production' && css`
+  ${() =>
+    process.env.NODE_ENV !== 'production' &&
+    css`
     &:after {
       content: "Dev";
       margin-top: 4px;
@@ -144,7 +149,8 @@ export const IconLink = styled(Link)`
   align-items: center;
   align-self: stretch;
   margin: 0 8px;
-  padding: 0 8px;
+  padding: 0 4px;
+  padding-right: 8px;
   opacity: 0.8;
   position: relative;
   width: 100%;
@@ -266,4 +272,5 @@ export const Notification = styled.div`
   color: ${props => props.theme.text.default};
   padding: 8px;
   border-bottom: 1px solid ${props => props.theme.border.default};
+  overflow-x: hidden;
 `;

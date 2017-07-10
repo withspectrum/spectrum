@@ -12,16 +12,8 @@ export const ProfileHeader = styled(FlexRow)`
   flex-wrap: nowrap;
 `;
 
-export const CommunityAvatar = styled.img`
-  height: 40px;
-  width: 40px;
-  flex: 0 0 40px;
+export const CommunityAvatar = styled(Avatar)`
   margin-right: 8px;
-  border-radius: 8px;
-  object-fit: cover;
-  background-color: ${({ theme }) => theme.generic.default};
-  background-image: ${({ theme }) =>
-    Gradient(theme.generic.alt, theme.generic.default)};
 `;
 
 export const ProfileHeaderLink = styled(Link)`
@@ -42,7 +34,7 @@ export const ProfileHeaderMeta = styled(FlexCol)`
   flex: 1 1 auto;
   flex-wrap: nowrap;
   min-width: 0;
-  margin-left: 12px;
+  margin-left: 12px;z
 `;
 
 export const ProfileHeaderAction = styled(IconButton)`
@@ -173,7 +165,7 @@ export const CoverLink = styled(ProfileHeaderLink)`
 `;
 
 export const CoverAvatar = styled(Avatar)`
-  box-shadow: 0 0 0 2px #fff, 0 2px 1px 2px rgba(0,0,0,0.05);
+  box-shadow: 0 0 0 2px ${props => props.theme.bg.default};
   flex: 0 0 64px;
   margin-right: 0;
 `;

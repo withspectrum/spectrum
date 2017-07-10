@@ -64,11 +64,10 @@ export const Loading = ({
 }: {
   size?: Number,
   color?: String,
-}): React$Element<any> => (
+}): React$Element<any> =>
   <LoadingContainer>
     <Spinner size={size} color={color} />
-  </LoadingContainer>
-);
+  </LoadingContainer>;
 
 /*
   Outputs a spinner on top of a card. The card will fill the size of its parent.
@@ -81,19 +80,17 @@ export const LoadingCard = ({
 }: {
   size?: Number,
   color?: String,
-}): React$Element<any> => (
+}): React$Element<any> =>
   <LoadingCardContainer>
     <Spinner size={size} color={color} />
-  </LoadingCardContainer>
-);
+  </LoadingCardContainer>;
 
-export const LoadingGallery = (): React$Element<any> => (
+export const LoadingGallery = (): React$Element<any> =>
   <LoadingOverlay>
     <Spinner size={'32'} color={'bg.default'} />
-  </LoadingOverlay>
-);
+  </LoadingOverlay>;
 
-export const LoadingNavbar = (): React$Element<any> => (
+export const LoadingNavbar = (): React$Element<any> =>
   <LoadingNavbarContainer>
     <LogoLink to="/">
       <Logo src="/img/mark-white.png" role="presentation" />
@@ -101,10 +98,9 @@ export const LoadingNavbar = (): React$Element<any> => (
     <LoadingContainer>
       <Spinner size={'20'} color={'bg.default'} />
     </LoadingContainer>
-  </LoadingNavbarContainer>
-);
+  </LoadingNavbarContainer>;
 
-export const LoadingThread = () => (
+export const LoadingThread = () =>
   <ShimmerThread>
     <ShimmerBase>
       <ShimmerLine />
@@ -189,10 +185,9 @@ export const LoadingThread = () => (
         }}
       />
     </ShimmerBase>
-  </ShimmerThread>
-);
+  </ShimmerThread>;
 
-export const LoadingFeed = () => (
+export const LoadingFeed = () =>
   <FlexCol>
     <LoadingThread />
     <LoadingThread />
@@ -204,18 +199,16 @@ export const LoadingFeed = () => (
     <LoadingThread />
     <LoadingThread />
     <LoadingThread />
-  </FlexCol>
-);
+  </FlexCol>;
 
-export const LoadingBubble = () => (
+export const LoadingBubble = () =>
   <ShimmerBubble>
     <ShimmerBase>
       <ShimmerLine />
     </ShimmerBase>
-  </ShimmerBubble>
-);
+  </ShimmerBubble>;
 
-export const LoadingChat = () => (
+export const LoadingChat = () =>
   <ShimmerChat>
     <LoadingBubble />
     <LoadingBubble />
@@ -227,10 +220,9 @@ export const LoadingChat = () => (
     <LoadingBubble />
     <LoadingBubble />
     <LoadingBubble />
-  </ShimmerChat>
-);
+  </ShimmerChat>;
 
-export const LoadingThreadDetail = () => (
+export const LoadingThreadDetail = () =>
   <ShimmerThreadDetail>
     <ShimmerBase>
       <ShimmerLine />
@@ -363,10 +355,9 @@ export const LoadingThreadDetail = () => (
         }}
       />
     </ShimmerBase>
-  </ShimmerThreadDetail>
-);
+  </ShimmerThreadDetail>;
 
-export const LoadingListItem = () => (
+export const LoadingListItem = () =>
   <ShimmerListItem>
     <ShimmerBase>
       <ShimmerLine />
@@ -427,10 +418,9 @@ export const LoadingListItem = () => (
         }}
       />
     </ShimmerBase>
-  </ShimmerListItem>
-);
+  </ShimmerListItem>;
 
-export const LoadingList = () => (
+export const LoadingList = () =>
   <ShimmerList>
     <LoadingListItem />
     <LoadingListItem />
@@ -442,10 +432,9 @@ export const LoadingList = () => (
     <LoadingListItem />
     <LoadingListItem />
     <LoadingListItem />
-  </ShimmerList>
-);
+  </ShimmerList>;
 
-export const LoadingDM = () => (
+export const LoadingDM = () =>
   <ShimmerDM>
     <ShimmerBase>
       <ShimmerLine />
@@ -506,10 +495,9 @@ export const LoadingDM = () => (
         }}
       />
     </ShimmerBase>
-  </ShimmerDM>
-);
+  </ShimmerDM>;
 
-export const LoadingComposer = () => (
+export const LoadingComposer = () =>
   <ShimmerComposer>
     <ShimmerBase>
       <ShimmerLine />
@@ -578,10 +566,9 @@ export const LoadingComposer = () => (
         }}
       />
     </ShimmerBase>
-  </ShimmerComposer>
-);
+  </ShimmerComposer>;
 
-export const LoadingProfile = () => (
+export const LoadingProfile = () =>
   <ShimmerProfile>
     <ShimmerBase>
       <ShimmerLine />
@@ -650,29 +637,31 @@ export const LoadingProfile = () => (
         }}
       />
     </ShimmerBase>
-  </ShimmerProfile>
-);
+  </ShimmerProfile>;
 
 /*
   Outputs a full-screen loader with shimmering cards and columns. This is useful
   when an entire view is wrapped in a query and we need certain data (like
   permission checks) before we render anything.
 */
-export const LoadingScreen = (): React$Element<any> => (
+
+const isMobile = window.innerWidth < 768;
+
+export const LoadingScreen = (): React$Element<any> =>
   <LoadingScreenContainer>
-    <Column type="secondary">
-      <LoadingProfile />
-      <LoadingList />
-    </Column>
+    {!isMobile &&
+      <Column type="secondary">
+        <LoadingProfile />
+        <LoadingList />
+      </Column>}
 
     <Column type="primary" alignItems="center">
       <LoadingComposer />
       <LoadingFeed />
     </Column>
-  </LoadingScreenContainer>
-);
+  </LoadingScreenContainer>;
 
-export const LoadingThreadView = (): React$Element<any> => (
+export const LoadingThreadView = (): React$Element<any> =>
   <View>
     <Content>
       <Detail type="only">
@@ -680,16 +669,14 @@ export const LoadingThreadView = (): React$Element<any> => (
         <LoadingChat />
       </Detail>
     </Content>
-  </View>
-);
+  </View>;
 
-export const LoadingNotifications = (): React$Element<any> => (
+export const LoadingNotifications = (): React$Element<any> =>
   <LoadingScreenContainer>
     <Column type="primary" alignItems="center">
       <LoadingFeed />
     </Column>
-  </LoadingScreenContainer>
-);
+  </LoadingScreenContainer>;
 
 export const displayLoadingState = branch(
   props => !props.data || props.data.loading,

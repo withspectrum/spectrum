@@ -65,6 +65,7 @@ const UserViewPure = ({
               currentUser={currentUser}
               profileSize="small"
               user={user}
+              networkStatus={networkStatus}
               communities={user.communityConnection.edges}
             />
           </Column>
@@ -81,6 +82,7 @@ const UserViewPure = ({
         </AppViewWrapper>
       );
     } else {
+      // data is ready, but no user exists
       return (
         <AppViewWrapper>
           <Titlebar
