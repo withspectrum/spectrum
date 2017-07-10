@@ -68,31 +68,36 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
             <BubbleContainer me={false}>
               <BubbleGroupContainer me={false}>
                 <MessagesWrapper>
+                  {notification.entities.map(({ payload: message }) => {
+                    if (message.messageType !== 'media') {
+                      return (
+                        <MessageWrapper
+                          me={false}
+                          timestamp={convertTimestampToTime(message.timestamp)}
+                        >
+                          <TextBubble
+                            me={false}
+                            pending={false}
+                            message={message.content}
+                          />
+                        </MessageWrapper>
+                      );
+                    }
 
-                  {message.messageType !== 'media' &&
-                    <MessageWrapper
-                      me={false}
-                      timestamp={convertTimestampToTime(message.timestamp)}
-                    >
-                      <TextBubble
+                    return (
+                      <MessageWrapper
                         me={false}
-                        pending={false}
-                        message={message.content}
-                      />
-                    </MessageWrapper>}
-                  {message.messageType === 'media' &&
-                    <MessageWrapper
-                      me={false}
-                      timestamp={convertTimestampToTime(message.timestamp)}
-                    >
-                      <ImgBubble
-                        me={false}
-                        pending={false}
-                        imgSrc={message.content.body}
-                        message={message.content}
-                      />
-                    </MessageWrapper>}
-
+                        timestamp={convertTimestampToTime(message.timestamp)}
+                      >
+                        <ImgBubble
+                          me={false}
+                          pending={false}
+                          imgSrc={message.content.body}
+                          message={message.content}
+                        />
+                      </MessageWrapper>
+                    );
+                  })}
                 </MessagesWrapper>
               </BubbleGroupContainer>
             </BubbleContainer>
