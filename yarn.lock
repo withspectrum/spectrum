@@ -6370,6 +6370,10 @@ react-helmet@5.x:
     prop-types "^15.5.4"
     react-side-effect "^1.1.0"
 
+react-infinite-scroller-with-scroll-element@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-infinite-scroller-with-scroll-element/-/react-infinite-scroller-with-scroll-element-1.0.4.tgz#b2b724b06fe27e46af62d23759a21237a7d156d9"
+
 react-modal@^1.6.5:
   version "1.9.7"
   resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-1.9.7.tgz#07ef56790b953e3b98ef1e2989e347983c72871d"
