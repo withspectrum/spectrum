@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 //$FlowFixMe
 import { ThemeProvider } from 'styled-components';
+import Infinite from 'react-infinite';
 //$FlowFixMe
 import { ApolloProvider } from 'react-apollo';
 import { client } from './api';

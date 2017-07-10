@@ -37,12 +37,15 @@ export const sendNotificationAsWebPush = notification => {
         return Promise.resolve(false);
       }
 
+      const payload = formatNotification(notification, notification.userId);
+
+      console.log(payload);
+
       return Promise.all(
         subscriptions.map(subscription =>
           sendWebPushNotification(subscription, {
             tag: notification.id,
-            title: 'New notification',
-            body: "Somebody did something so yeah that's cool I guess",
+            ...payload,
           })
         )
       );
@@ -52,4 +55,77 @@ export const sendNotificationAsWebPush = notification => {
         console.log(err);
       }
     });
+};
+
+import {
+  parseActors,
+  parseEvent,
+  parseNotificationDate,
+  parseContext,
+  getLastMessageCreatedByAnotherUser,
+} from './notification-formatting';
+
+const formatNotification = (notification, currentUserId) => {
+  switch (notification.event) {
+    case 'MESSAGE_CREATED': {
+      const actors = parseActors(notification.actors, { id: currentUserId });
+      const event = parseEvent(notification.event);
+      const context = parseContext(notification.context, { id: currentUserId });
+      const message = getLastMessageCreatedByAnotherUser(
+        notification.entities,
+        { id: currentUserId }
+      );
+
+      return {
+        data: {
+          href: `/thread/${notification.context.id}`,
+        },
+        title: `${actors.asString} ${event} ${context.asString}`,
+        body: message.content.body,
+      };
+    }
+    case 'REACTION_CREATED': {
+      return undefined;
+      // <NewReactionNotification
+      //   key={notification.id}
+      //   notification={notification}
+      //   currentUser={currentUser}
+      // />
+    }
+    case 'CHANNEL_CREATED': {
+      return undefined;
+      // <NewChannelNotification
+      //   key={notification.id}
+      //   notification={notification}
+      //   currentUser={currentUser}
+      // />
+    }
+    case 'USER_JOINED_COMMUNITY': {
+      return undefined;
+      // <NewUserInCommunityNotification
+      //   key={notification.id}
+      //   notification={notification}
+      //   currentUser={currentUser}
+      // />
+    }
+    case 'THREAD_CREATED': {
+      return undefined;
+      // <NewThreadNotification
+      //   key={notification.id}
+      //   notification={notification}
+      //   currentUser={currentUser}
+      // />
+    }
+    case 'COMMUNITY_INVITE': {
+      return undefined;
+      // <CommunityInviteNotification
+      //   key={notification.id}
+      //   notification={notification}
+      //   currentUser={currentUser}
+      // />
+    }
+    default: {
+      return {};
+    }
+  }
 };
