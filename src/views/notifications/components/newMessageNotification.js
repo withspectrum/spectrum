@@ -5,7 +5,6 @@ import {
   parseEvent,
   parseNotificationDate,
   parseContext,
-  getLastMessageCreatedByAnotherUser,
 } from '../utils';
 import {
   convertTimestampToTime,
@@ -40,10 +39,6 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context, currentUser);
-  const message = getLastMessageCreatedByAnotherUser(
-    notification.entities,
-    currentUser
-  );
   const emojiOnly = onlyContainsEmoji(message.content.body);
   const TextBubble = emojiOnly ? EmojiBubble : Bubble;
 

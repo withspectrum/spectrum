@@ -51,7 +51,9 @@ export const parseNotification = notification => {
 export const renderBubbleHeader = actor =>
   <Byline>
     <Link to={`/users/${actor.username}`}>
-      <Name>{actor.name}</Name>
+      <Name>
+        {actor.name}
+      </Name>
       {actor.isAdmin && <Badge type="admin" />}
       {actor.isPro && <Badge type="pro" />}
     </Link>
@@ -84,44 +86,25 @@ const actorsToString = actors => {
   } else if (actors.length === 2) {
     return (
       <span>
-        <Link to={`/users/${data[0].username}`}>
-          {`${names[0]}`}
-        </Link>
-        {' '}
-        and
-        {' '}
-        <Link to={`/users/${data[1].username}`}>
-          {`${names[1]}`}
-        </Link>
+        <Link to={`/users/${data[0].username}`}>{`${names[0]}`}</Link> and{' '}
+        <Link to={`/users/${data[1].username}`}>{`${names[1]}`}</Link>
       </span>
     );
   } else if (actors.length === 3) {
     return (
       <span>
-        <Link to={`/users/${data[0].username}`}>
-          {`${names[0]}`}
-        </Link>
-        ,
-        {' '}
-        <Link to={`/users/${data[1].username}`}>
+        <Link to={`/users/${data[0].username}`}>{`${names[0]}`}</Link>
+        , <Link to={`/users/${data[1].username}`}>
           {`${names[1]}`}
-        </Link>
-        {' '}
-        and
-        {' '}
-        <Link to={`/users/${data[2].username}`}>
-          {`${names[2]}`}
-        </Link>
+        </Link> and{' '}
+        <Link to={`/users/${data[2].username}`}>{`${names[2]}`}</Link>
       </span>
     );
   } else {
     return (
       <span>
-        <Link to={`/users/${data[0].username}`}>
-          {`${names[0]}`}
-        </Link>
-        {' '}
-        and {names.length - 1} others{' '}
+        <Link to={`/users/${data[0].username}`}>{`${names[0]}`}</Link> and{' '}
+        {names.length - 1} others{' '}
       </span>
     );
   }
@@ -179,7 +162,11 @@ export const parseEvent = event => {
 export const parseNotificationDate = date => {
   const now = new Date().getTime();
   const timestamp = new Date(date).getTime();
-  return <Timestamp>· {timeDifferenceShort(now, timestamp)}</Timestamp>;
+  return (
+    <Timestamp>
+      · {timeDifferenceShort(now, timestamp)}
+    </Timestamp>
+  );
 };
 
 const threadToString = (context, currentUser) => {
@@ -187,9 +174,7 @@ const threadToString = (context, currentUser) => {
   const str = isCreator ? 'in your thread' : 'in';
   return (
     <span>
-      {' '}
-      {str}
-      {' '}
+      {' '}{str}{' '}
       <Link to={`/thread/${context.payload.id}`}>
         {context.payload.content.title}
       </Link>
@@ -198,18 +183,13 @@ const threadToString = (context, currentUser) => {
 };
 
 const messageToString = context => {
-  return (
-    <span>
-      {' '}your reply
-    </span>
-  );
+  return <span> your reply</span>;
 };
 
 const communityToString = context => {
   return (
     <span>
-      {' '}
-      <Link to={`/${context.payload.slug}`}>{context.payload.name}</Link>
+      {' '}<Link to={`/${context.payload.slug}`}>{context.payload.name}</Link>
     </span>
   );
 };
@@ -253,11 +233,4 @@ export const parseContext = (context, currentUser) => {
       console.log('Invalid notification context type');
     }
   }
-};
-
-export const getLastMessageCreatedByAnotherUser = (entities, currentUser) => {
-  const filteredMessages = entities.filter(
-    entity => entity.payload.senderId !== currentUser.id
-  );
-  return filteredMessages[filteredMessages.length - 1].payload;
 };
