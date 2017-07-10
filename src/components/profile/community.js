@@ -148,7 +148,7 @@ class CommunityWithData extends Component {
       return (
         <Card>
           <ProfileHeader>
-            <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
+            <CommunityAvatar community size={40} src={community.profilePhoto} />
             <ProfileHeaderLink to={`/${community.slug}`}>
               <ProfileHeaderMeta>
                 <Title>
@@ -185,7 +185,7 @@ class CommunityWithData extends Component {
       return (
         <ProfileCard>
           <ProfileHeader>
-            <CommunityAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
+            <CommunityAvatar community src={community.profilePhoto} />
             <ProfileHeaderLink to={`/${community.slug}`}>
               <ProfileHeaderMeta>
                 <Title>

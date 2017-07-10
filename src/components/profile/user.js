@@ -69,7 +69,7 @@ const UserWithData = ({
   const componentSize = profileSize || 'mini';
 
   if (!user) {
-    return <div />;
+    return null;
   }
 
   const initMessage = () => {

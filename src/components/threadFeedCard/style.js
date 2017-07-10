@@ -70,35 +70,23 @@ export const MetaRow = styled(FlexRow)`
 export const ParticipantHeads = styled(FlexRow)`
   align-items: center;
 
-  > * {
+  > *:not(:first-child) {
     margin-left: 4px;
-    margin-top: 4px;
     pointer-events: all;
-    height: 24px;
-  }
-`;
-
-export const Participant = styled.img`
-  height: 1.5rem;
-  width: 1.5rem;
-  border-radius: 100%;
-  object-fit: cover;
-  background-color: ${({ theme }) => theme.generic.default};
-  background-image: ${({ theme }) =>
-    Gradient(theme.generic.alt, theme.generic.default)};
-
-  &:hover {
-    transform: scale(1.1);
   }
 `;
 
 export const Creator = styled.div`
   height: 2rem;
   width: 2rem;
-  padding: 0.125rem;
+  padding: 1px;
   border-radius: 100%;
   border: 2px solid ${({ theme }) => theme.brand.alt};
   pointer-events: all;
+  display: flex;
+  flex: none;
+  justify-content: center;
+  align-items: center;
 
   object:after {
     right: -6px;

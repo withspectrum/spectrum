@@ -12,16 +12,8 @@ export const ProfileHeader = styled(FlexRow)`
   flex-wrap: nowrap;
 `;
 
-export const CommunityAvatar = styled.img`
-  height: 40px;
-  width: 40px;
-  flex: 0 0 40px;
+export const CommunityAvatar = styled(Avatar)`
   margin-right: 8px;
-  border-radius: 8px;
-  object-fit: cover;
-  background-color: ${({ theme }) => theme.generic.default};
-  background-image: ${({ theme }) =>
-    Gradient(theme.generic.alt, theme.generic.default)};
 `;
 
 export const ProfileHeaderLink = styled(Link)`

@@ -11,16 +11,22 @@ import { Link } from 'react-router-dom';
 import { Gradient, Tooltip } from '../globals';
 import { optimize } from '../../helpers/images';
 
+var isSafari =
+  /constructor/i.test(window.HTMLElement) ||
+  (function(p) {
+    return p.toString() === '[object SafariRemoteNotification]';
+  })(!window['safari'] || window['safari'].pushNotification);
+
 const StyledAvatar = styled.img`
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: ${props => `${props.radius}px`};
+  border-radius: ${props => (props.community ? '8px' : '100%')};
   width: 100%;
   height: 100%;
-  margin: ${props => (props.margin ? `${props.margin}` : '0')};
+  margin: 0;
   object-fit: cover;
   background-color: ${({ theme }) => theme.generic.default};
   background-image: ${({ theme }) =>
@@ -31,10 +37,12 @@ const StyledAvatar = styled.img`
 
 const StyledAvatarContainer = styled.object`
   position: relative;
-  width: ${props => (props.size ? `${props.size}px` : '100%')};
-  height: ${props => (props.size ? `${props.size}px` : '100%')};
-  border-radius: ${props => `${props.radius}px`};
+  width: ${props => (props.size ? `${props.size}px` : '32px')};
+  height: ${props => (props.size ? `${props.size}px` : '32px')};
+  border-radius: ${props => (props.community ? '8px' : '100%')};
   display: inline-block;
+  overflow: hidden;
+  object-fit: cover;
 
   &:after {
     content: '';
@@ -57,33 +65,52 @@ const StyledAvatarContainer = styled.object`
   }
 `;
 
+const StyledAvatarLink = styled(Link)`
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const AvatarPure = (props: Object): React$Element<any> => {
   if (props.link) {
     return (
-      <Link to={props.link}>
+      <StyledAvatarLink to={props.link}>
         <StyledAvatarContainer
           data={optimize(props.src, {
             w: props.size,
             dpr: 2,
-            format: 'jpg',
+            format: 'png',
           })}
-          type={'image/jpg'}
+          // type={isSafari ? null : "image/jpg"}
+          type="image/png"
           {...props}
         >
-          <StyledAvatar {...props} src={`/img/default_avatar.svg`} />
+          <StyledAvatar
+            {...props}
+            src={
+              props.community
+                ? `/img/default_community.svg`
+                : `/img/default_avatar.svg`
+            }
+          />
         </StyledAvatarContainer>
-      </Link>
+      </StyledAvatarLink>
     );
   } else {
     return (
-      <StyledAvatarContainer {...props}>
-        <StyledAvatar
-          {...props}
-          src={optimize(props.src, {
-            w: props.size,
-            dpr: 2,
-          })}
-        />
+      <StyledAvatarContainer
+        data={optimize(props.src, {
+          w: props.size,
+          dpr: 2,
+          format: 'png',
+        })}
+        // type={isSafari ? null : "image/jpg"}
+        type="image/png"
+        {...props}
+      >
+        <StyledAvatar {...props} src={`/img/default_avatar.svg`} />
       </StyledAvatarContainer>
     );
   }
