@@ -39,8 +39,6 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context, currentUser);
-  const emojiOnly = onlyContainsEmoji(message.content.body);
-  const TextBubble = emojiOnly ? EmojiBubble : Bubble;
 
   return (
     <NotificationCard>
@@ -65,6 +63,9 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
                 <MessagesWrapper>
                   {notification.entities.map(({ payload: message }) => {
                     if (message.messageType !== 'media') {
+                      const TextBubble = onlyContainsEmoji(message.content.body)
+                        ? EmojiBubble
+                        : Bubble;
                       return (
                         <MessageWrapper
                           me={false}
