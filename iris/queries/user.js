@@ -69,16 +69,16 @@ module.exports = {
         .load(id)
         .then(
           sub =>
-            (!(sub == null) &&
-              sub.stripeData &&
-              sub.stripeData.status === 'active'
+            !(sub == null) &&
+            sub.stripeData &&
+            sub.stripeData.status === 'active'
               ? true
-              : false)
+              : false
         );
     },
     everything: (
       { id }: { id: string },
-      { first = 10, after }: PaginationOptions
+      { first, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
       // TODO: Make this more performant by doing an actual db query rather than this hacking around
@@ -135,16 +135,17 @@ module.exports = {
     }),
     threadConnection: (
       { id }: { id: string },
-      { first = 10, after }: PaginationOptions,
+      { first, after }: PaginationOptions,
       { user }
     ) => {
       const currentUser = user;
 
       // if a logged in user is viewing the profile, handle logic to get viewable threads
-      const getThreads = currentUser && currentUser !== null
-        ? getViewableThreadsByUser(id, currentUser.id)
-        : // if the viewing user is logged out, only return publicly viewable threads
-          getPublicThreadsByUser(id);
+      const getThreads =
+        currentUser && currentUser !== null
+          ? getViewableThreadsByUser(id, currentUser.id)
+          : // if the viewing user is logged out, only return publicly viewable threads
+            getPublicThreadsByUser(id);
 
       const cursor = decode(after);
       return getThreads
