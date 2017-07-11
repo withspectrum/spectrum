@@ -138,12 +138,6 @@ class Navbar extends Component {
     } else return false;
   };
 
-  componentDidMount() {
-    if (this.props.currentUser && !this.props.currentUser.timezone) {
-      this.props.editUser({ timezone: new Date().getTimezoneOffset() * -1 });
-    }
-  }
-
   componentDidUpdate(prevProps) {
     // if the query returned notifications
     if (
@@ -168,6 +162,9 @@ class Navbar extends Component {
     if (!user) return;
 
     if (prevProps.data.user !== user && user !== null) {
+      if (!user.timezone) {
+        this.props.editUser({ timezone: new Date().getTimezoneOffset() * -1 });
+      }
       dispatch(saveUserDataToLocalStorage(user));
 
       // if the user lands on /home, it means they just logged in. If this code
