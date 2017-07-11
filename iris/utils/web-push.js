@@ -38,9 +38,7 @@ export const sendNotificationAsWebPush = notification => {
       }
 
       const payload = formatNotification(notification, notification.userId);
-
-      console.log(payload);
-
+      debug('subscriptions found: %O', subscriptions);
       return Promise.all(
         subscriptions.map(subscription =>
           sendWebPushNotification(subscription, {

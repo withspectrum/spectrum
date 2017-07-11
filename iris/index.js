@@ -3,6 +3,8 @@
  * The entry point for the server, this is where everything starts
  */
 console.log('Server starting...');
+const debug = require('debug')('iris');
+debug('logging with debug enabled!');
 import path from 'path';
 import fs from 'fs';
 import { createServer } from 'http';
