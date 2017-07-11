@@ -1,13 +1,21 @@
 // @flow
 type Toasts = 'success' | 'error' | 'neutral';
 
-const addToast = (id: number, kind: Toasts, message: string) => {
+type Action = 'refresh';
+
+export const addToast = (
+  id: number,
+  kind: Toasts,
+  message: string,
+  action?: Action
+) => {
   return {
     type: 'ADD_TOAST',
     payload: {
       id,
       kind,
       message,
+      action,
     },
   };
 };
@@ -19,7 +27,8 @@ const removeToast = (id: number) => {
 let nextToastId = 0;
 export const addToastWithTimeout = (
   kind: Toasts,
-  message: string
+  message: string,
+  action?: Action
 ) => dispatch => {
   const id = nextToastId++;
   dispatch(addToast(id, kind, message));

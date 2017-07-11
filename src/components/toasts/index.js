@@ -16,15 +16,32 @@ const ToastsPure = ({ toasts }): React$Element<any> => {
   return (
     <Container>
       {toasts.map(toast => {
+        const onClick =
+          toast.action === 'refresh' &&
+          (() => {
+            window.location.reload(false);
+          });
         switch (toast.kind) {
           case 'error': {
-            return <ErrorToast key={toast.id}>{toast.message}</ErrorToast>;
+            return (
+              <ErrorToast onClick={onClick} key={toast.id}>
+                {toast.message}
+              </ErrorToast>
+            );
           }
           case 'success': {
-            return <SuccessToast key={toast.id}>{toast.message}</SuccessToast>;
+            return (
+              <SuccessToast onClick={onClick} key={toast.id}>
+                {toast.message}
+              </SuccessToast>
+            );
           }
           case 'neutral': {
-            return <NeutralToast key={toast.id}>{toast.message}</NeutralToast>;
+            return (
+              <NeutralToast onClick={onClick} key={toast.id}>
+                {toast.message}
+              </NeutralToast>
+            );
           }
           default: {
             return <span />;
