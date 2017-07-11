@@ -145,6 +145,7 @@ class NotificationsPure extends Component {
               useWindow={false}
               initialLoad={false}
               scrollElement={scrollElement}
+              threshold={750}
             >
               {notifications.map(notification => {
                 switch (notification.event) {

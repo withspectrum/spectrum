@@ -94,6 +94,7 @@ class ThreadFeedPure extends Component {
               useWindow={false}
               initialLoad={false}
               scrollElement={scrollElement}
+              threshold={750}
             >
               {threads.map(thread => {
                 return (
