@@ -1,6 +1,5 @@
 // @flow
 import { graphqlExpress } from 'graphql-server-express';
-import Raven from 'raven';
 import OpticsAgent from 'optics-agent';
 import createLoaders from '../../loaders/';
 

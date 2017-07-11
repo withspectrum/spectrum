@@ -3,9 +3,11 @@ import { Router } from 'express';
 
 const middlewares = Router();
 
-// Raven (Sentry client) needs to come before everything else
-import raven from './raven';
-middlewares.use(raven);
+if (process.env.NODE_ENV === 'production') {
+  // Raven (Sentry client) needs to come before everything else
+  const raven = require('./raven');
+  middlewares.use(raven);
+}
 
 // Apollo Optics middleware
 import OpticsAgent from 'optics-agent';
