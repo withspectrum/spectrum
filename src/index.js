@@ -11,7 +11,7 @@ import { getItemFromStorage } from './helpers/localStorage';
 import { theme } from './components/theme';
 import Routes from './routes';
 import Homepage from './views/homepage';
-import { addToastWithTimeout } from './actions/toasts';
+import { addToast } from './actions/toasts';
 import registerServiceWorker from './registerServiceWorker';
 import type { ServiceWorkerResult } from './registerServiceWorker';
 import { track } from './helpers/events';
@@ -66,9 +66,11 @@ try {
 registerServiceWorker().then(({ newContent }: ServiceWorkerResult) => {
   if (newContent) {
     store.dispatch(
-      addToastWithTimeout(
+      addToast(
+        Infinity,
         'success',
-        'A new version of Spectrum is available, refresh the page to see it! 🚀'
+        'A new version of Spectrum is available, refresh the page to see it! 🚀',
+        'refresh'
       )
     );
   }
