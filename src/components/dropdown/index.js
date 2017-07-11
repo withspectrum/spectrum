@@ -24,20 +24,20 @@ const StyledDropdown = styled(FlexCol)`
 const StyledCard = styled(Card)`
   display: flex;
   flex-direction: column;
-  box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
+  box-shadow: ${Shadow.high} ${({ theme }) =>
+  hexa(theme.text.placeholder, 0.5)};
   max-height: 640px;
-  overflow-y: hidden;
+  overflow: hidden;
   align-items: stretch;
   display: inline-block;
 `;
 
-const DropdownPure = (props: Object): React$Element<any> => (
+const DropdownPure = (props: Object): React$Element<any> =>
   <StyledDropdown className={'dropdown'} {...props}>
     <StyledCard>
       {props.children}
     </StyledCard>
-  </StyledDropdown>
-);
+  </StyledDropdown>;
 
 export const Dropdown = compose(pure)(DropdownPure);
 export default Dropdown;

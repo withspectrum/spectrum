@@ -51,7 +51,7 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
     return (
       <StyledCard>
         <ListHeader>
-          <ListHeading>Your Channels</ListHeading>
+          <ListHeading>My Channels</ListHeading>
           {data.community.communityPermissions.isOwner &&
             <IconButton
               glyph="plus"
@@ -169,7 +169,7 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
           data.community.communityPermissions.isMember &&
           <span>
             <ListHeader secondary>
-              <ListHeading>Discover Channels</ListHeading>
+              <ListHeading>Additional Channels</ListHeading>
             </ListHeader>
 
             <ListContainer>

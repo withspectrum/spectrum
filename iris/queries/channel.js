@@ -33,7 +33,7 @@ module.exports = {
     memberCount: ({ id }: { id: string }) => getChannelMemberCount(id),
     threadConnection: (
       { id }: { id: string },
-      { first = 10, after }: PaginationOptions
+      { first, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
       return getThreadsByChannel(id, { first, after: cursor })
@@ -71,7 +71,7 @@ module.exports = {
     },
     memberConnection: (
       { id },
-      { first = 20, after }: PaginationOptions,
+      { first, after }: PaginationOptions,
       { loaders }: GraphQLContext
     ) => {
       const cursor = decode(after);

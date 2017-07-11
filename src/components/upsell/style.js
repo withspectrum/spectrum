@@ -39,7 +39,6 @@ export const Subtitle = styled.h2`
   font-size: 1rem;
   line-height: 1.4;
   margin-bottom: 16px;
-  padding: 0 24px;
   font-weight: 500;
   text-align: center;
 
@@ -228,7 +227,7 @@ export const ButtonTwitter = styled(Button)`
     props.whitebg
       ? props.theme.social.twitter.default
       : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
-  
+
   &:after {
     color: ${props => props.theme.social.twitter.default};
   }

@@ -19,6 +19,7 @@ export const HzRule = styled(HorizontalRule)`
 export const NotificationCard = styled(Card)`
   padding: 16px;
   padding-bottom: 24px;
+  overflow: hidden;
   transition: ${Transition.hover.off};
 
   &:hover {
@@ -67,6 +68,7 @@ export const NotificationListContainer = styled(FlexCol)`
   align-self: stretch;
   max-height: 480px;
   overflow-y: scroll;
+  overflow-x: hidden;
 `;
 
 export const NotificationListContent = styled(Content)`

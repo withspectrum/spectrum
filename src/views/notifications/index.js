@@ -6,6 +6,9 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
+// NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
+// I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
+import InfiniteList from 'react-infinite-scroller-with-scroll-element';
 import { withInfiniteScroll } from '../../components/infiniteScroll';
 import { parseNotification, getDistinctNotifications } from './utils';
 import { NewMessageNotification } from './components/newMessageNotification';
@@ -17,7 +20,10 @@ import { NewUserInCommunityNotification } from './components/newUserInCommunityN
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Titlebar from '../../views/titlebar';
-import { displayLoadingNotifications } from '../../components/loading';
+import {
+  displayLoadingNotifications,
+  LoadingThread,
+} from '../../components/loading';
 import { FetchMoreButton } from '../../components/threadFeed/style';
 import { FlexCol } from '../../components/globals';
 import { sortByDate } from '../../helpers/utils';
@@ -67,6 +73,11 @@ class NotificationsPure extends Component {
 
   componentDidMount() {
     this.markAllNotificationsSeen();
+    this.setState({
+      // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
+      // the AppViewWrapper which is the scrolling part of the site.
+      scrollElement: document.getElementById('scroller-for-thread-feed'),
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -129,84 +140,86 @@ class NotificationsPure extends Component {
       );
     }
 
+    const { scrollElement } = this.state;
+
     return (
       <FlexCol style={{ flex: '1 1 auto' }}>
         <Titlebar title={'Notifications'} provideBack={false} noComposer />
         <AppViewWrapper>
           <button onClick={this.subscribeToWebPush}>Subscribe</button>
           <Column type={'primary'}>
-            {notifications.map(notification => {
-              switch (notification.event) {
-                case 'MESSAGE_CREATED': {
-                  return (
-                    <NewMessageNotification
-                      key={notification.id}
-                      notification={notification}
-                      currentUser={currentUser}
-                    />
-                  );
+            <InfiniteList
+              pageStart={0}
+              loadMore={data.fetchMore}
+              hasMore={data.hasNextPage}
+              loader={<LoadingThread />}
+              useWindow={false}
+              initialLoad={false}
+              scrollElement={scrollElement}
+              threshold={750}
+            >
+              {notifications.map(notification => {
+                switch (notification.event) {
+                  case 'MESSAGE_CREATED': {
+                    return (
+                      <NewMessageNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'REACTION_CREATED': {
+                    return (
+                      <NewReactionNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'CHANNEL_CREATED': {
+                    return (
+                      <NewChannelNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'USER_JOINED_COMMUNITY': {
+                    return (
+                      <NewUserInCommunityNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'THREAD_CREATED': {
+                    return (
+                      <NewThreadNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'COMMUNITY_INVITE': {
+                    return (
+                      <CommunityInviteNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  default: {
+                    return null;
+                  }
                 }
-                case 'REACTION_CREATED': {
-                  return (
-                    <NewReactionNotification
-                      key={notification.id}
-                      notification={notification}
-                      currentUser={currentUser}
-                    />
-                  );
-                }
-                case 'CHANNEL_CREATED': {
-                  return (
-                    <NewChannelNotification
-                      key={notification.id}
-                      notification={notification}
-                      currentUser={currentUser}
-                    />
-                  );
-                }
-                case 'USER_JOINED_COMMUNITY': {
-                  return (
-                    <NewUserInCommunityNotification
-                      key={notification.id}
-                      notification={notification}
-                      currentUser={currentUser}
-                    />
-                  );
-                }
-                case 'THREAD_CREATED': {
-                  return (
-                    <NewThreadNotification
-                      key={notification.id}
-                      notification={notification}
-                      currentUser={currentUser}
-                    />
-                  );
-                }
-                case 'COMMUNITY_INVITE': {
-                  return (
-                    <CommunityInviteNotification
-                      key={notification.id}
-                      notification={notification}
-                      currentUser={currentUser}
-                    />
-                  );
-                }
-                default: {
-                  return null;
-                }
-              }
-            })}
-
-            {hasNextPage &&
-              <div>
-                <FetchMoreButton
-                  color={'brand.default'}
-                  loading={this.state.isFetching}
-                  onClick={this.fetchMore}
-                >
-                  Load more notifications
-                </FetchMoreButton>
-              </div>}
+              })}
+            </InfiniteList>
           </Column>
         </AppViewWrapper>
       </FlexCol>

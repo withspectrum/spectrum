@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
-import { getCurrentUserProfile } from '../../api/user';
+import { getCurrentUserProfile, editUserMutation } from '../../api/user';
 import { openModal } from '../../actions/modals';
 import {
   getNotificationsForNavbar,
@@ -162,6 +162,9 @@ class Navbar extends Component {
     if (!user) return;
 
     if (prevProps.data.user !== user && user !== null) {
+      if (!user.timezone) {
+        this.props.editUser({ timezone: new Date().getTimezoneOffset() * -1 });
+      }
       dispatch(saveUserDataToLocalStorage(user));
 
       // if the user lands on /home, it means they just logged in. If this code
@@ -435,6 +438,7 @@ const mapStateToProps = state => ({
 export default compose(
   getCurrentUserProfile,
   getNotificationsForNavbar,
+  editUserMutation,
   markSingleNotificationSeenMutation,
   markNotificationsSeenMutation,
   markNotificationsReadMutation,

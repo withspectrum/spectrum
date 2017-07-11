@@ -58,7 +58,7 @@
     "react-app-rewired": "^1.0.5",
     "react-dom": "^15.4.1",
     "react-helmet": "5.x",
-    "react-infinite": "^0.11.0",
+    "react-infinite-scroller-with-scroll-element": "^1.0.4",
     "react-modal": "^1.6.5",
     "react-redux": "^5.0.2",
     "react-remarkable": "^1.1.1",

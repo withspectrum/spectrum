@@ -69,7 +69,7 @@ const Channel = /* GraphQL */ `
 		channelPermissions: ChannelPermissions!
 		communityPermissions: CommunityPermissions!
 		community: Community!
-		threadConnection(first: Int = 10, after: String): ChannelThreadsConnection!
+		threadConnection(first: Int = 20, after: String): ChannelThreadsConnection!
 		memberConnection(first: Int = 20, after: String): ChannelMembersConnection!
 		memberCount: Int!
 		metaData: ChannelMetaData

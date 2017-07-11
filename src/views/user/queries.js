@@ -7,9 +7,7 @@ import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { userThreadsFragment } from '../../api/fragments/user/userThreads';
 import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
-import {
-  userCommunitiesFragment,
-} from '../../api/fragments/user/userCommunities';
+import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
 
 const LoadMoreThreads = gql`
   query loadMoreUserThreads($username: String, $after: String) {
@@ -23,20 +21,22 @@ const LoadMoreThreads = gql`
 `;
 
 const threadsQueryOptions = {
-  props: ({ data: { fetchMore, error, loading, user } }) => ({
+  props: ({ data: { fetchMore, error, loading, networkStatus, user } }) => ({
     data: {
       error,
       loading,
       user,
+      networkStatus,
       threads: user ? user.threadConnection.edges : '',
       hasNextPage: user ? user.threadConnection.pageInfo.hasNextPage : false,
       fetchMore: () =>
         fetchMore({
           query: LoadMoreThreads,
           variables: {
-            after: user.threadConnection.edges[
-              user.threadConnection.edges.length - 1
-            ].cursor,
+            after:
+              user.threadConnection.edges[
+                user.threadConnection.edges.length - 1
+              ].cursor,
             username: user.username,
           },
           updateQuery: (prev, { fetchMoreResult }) => {

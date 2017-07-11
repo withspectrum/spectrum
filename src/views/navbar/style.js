@@ -149,7 +149,8 @@ export const IconLink = styled(Link)`
   align-items: center;
   align-self: stretch;
   margin: 0 8px;
-  padding: 0 8px;
+  padding: 0 4px;
+  padding-right: 8px;
   opacity: 0.8;
   position: relative;
   width: 100%;
@@ -271,4 +272,5 @@ export const Notification = styled.div`
   color: ${props => props.theme.text.default};
   padding: 8px;
   border-bottom: 1px solid ${props => props.theme.border.default};
+  overflow-x: hidden;
 `;
