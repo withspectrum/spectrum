@@ -5,7 +5,7 @@ const middlewares = Router();
 
 if (process.env.NODE_ENV === 'production') {
   // Raven (Sentry client) needs to come before everything else
-  const raven = require('./raven');
+  const raven = require('./raven').default;
   middlewares.use(raven);
 }
 
