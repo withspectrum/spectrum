@@ -24,14 +24,15 @@ module.exports = {
       { loaders, user }: GraphQLContext
     ) =>
       loaders.thread.load(id).then(thread => {
+        //if (!thread) return null;
         /*
           If no user exists, we need to make sure the thread being fetched is not in a private channel
         */
         if (!user) {
-          return Promise.all([thread, getChannels([thread.channelId])]).then(([
+          return Promise.all([
             thread,
-            channel,
-          ]) => {
+            getChannels([thread.channelId]),
+          ]).then(([thread, channel]) => {
             // if the channel is private, don't return any thread data
             if (channel[0].isPrivate) return null;
             return thread;
