@@ -9,6 +9,7 @@ export const storeUsersNotifications = (
     .table('usersNotifications')
     .insert({
       createdAt: new Date(),
+      entityAddedAt: new Date(),
       notificationId,
       userId,
       isSeen: false,
@@ -40,6 +41,7 @@ export const markUsersNotificationsAsNew = (
           .update({
             isRead: false,
             isSeen: false,
+            entityAddedAt: new Date(),
           })
           .run();
       } else {
