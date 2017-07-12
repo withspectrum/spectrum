@@ -6,8 +6,6 @@
 self.addEventListener('push', function(event) {
   var notificationData = {};
 
-  console.log('PUSH NOTIFICATION!!!!');
-
   try {
     notificationData = event.data.json();
   } catch (e) {
