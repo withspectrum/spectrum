@@ -37,7 +37,7 @@ self.addEventListener('push', function(event) {
         }
         return self.registration.showNotification(notificationData.title, {
           vibrate: [200],
-          icon: '/img/apple-icon-144x14-precomposed.png',
+          icon: '/img/apple-icon-144x144-precomposed.png',
           body: notificationData.body,
           title: notificationData.title,
           timestamp: notificationData.timestamp,
