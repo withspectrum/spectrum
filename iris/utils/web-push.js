@@ -83,7 +83,9 @@ const formatNotification = (notification, currentUserId) => {
           href: `/thread/${notification.context.id}`,
         },
         title: `${actors.asString} ${event} ${context.asString}`,
-        body: messages[messages.length - 1].payload.content.body,
+        body: sentencify(
+          messages.map(({ payload }) => `"${payload.content.body}"`)
+        ),
         raw: {
           actors,
           event,
@@ -165,7 +167,7 @@ const formatNotification = (notification, currentUserId) => {
 
       return {
         data: {
-          href: `/thread/${threads[threads.length - 1].id}`,
+          href: `/thread/${threads[0].id}`,
         },
         title: `${newThreadCount} published in ${context.asString}`,
         body: sentencify(threads.map(thread => `"${thread.content.title}"`)),
