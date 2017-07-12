@@ -312,7 +312,7 @@ class Navbar extends Component {
 
           <Section right hideOnMobile>
             <IconDrop
-              onMouseLeave={this.markAllNotificationsSeen}
+              onMouseEnter={this.markAllNotificationsSeen}
               onClick={this.markAllNotificationsSeen}
             >
               <IconLink
@@ -372,6 +372,7 @@ class Navbar extends Component {
             <IconLink
               data-active={match.url === '/notifications'}
               to="/notifications"
+              onClick={this.markAllNotificationsSeen}
             >
               <Icon
                 glyph={
