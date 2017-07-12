@@ -47,19 +47,13 @@ export const sortByDate = (array, key, order) => {
 
 export const sortThreads = (entities, currentUser) => {
   // filter out the current user's threads
-  let threads = entities
-    .map(thread => ({
-      ...thread,
-      payload: JSON.parse(thread.payload),
-    }))
-    .filter(thread => thread.payload.creatorId !== currentUser.id);
-
+  let threads = entities.filter(
+    thread => thread.payload.creatorId !== currentUser.id
+  );
   // create an array of payloads
   threads = threads && threads.map(thread => thread.payload);
-
   // sort the threads by created at date
   threads = threads && sortByDate(threads, 'createdAt', 'desc');
-
   return threads;
 };
 
@@ -80,48 +74,6 @@ export const getDistinctNotifications = array => {
     unique[array[i].id] = 0;
   }
   return distinct;
-};
-
-export const parseNotification = notification => {
-  return Object.assign({}, notification, {
-    actors: notification.actors.map(actor => {
-      return {
-        id: actor.id,
-        type: actor.type,
-        payload: JSON.parse(actor.payload),
-      };
-    }),
-    context: {
-      id: notification.context.id,
-      type: notification.context.type,
-      payload: JSON.parse(notification.context.payload),
-    },
-    entities: notification.entities.map(entity => {
-      return {
-        id: entity.id,
-        type: entity.type,
-        payload: JSON.parse(entity.payload),
-      };
-    }),
-  });
-};
-
-const actorsToString = actors => {
-  // reverse to show the most recent first
-  const names =
-    actors &&
-    actors.length > 0 &&
-    actors.map(actor => JSON.parse(actor.payload).name).reverse();
-
-  if (actors.length === 1) {
-    return names[0];
-  } else if (actors.length === 2) {
-    return `${names[0]} and ${names[1]}`;
-  } else if (actors.length === 3) {
-    return `${names[0]}, ${names[1]} and ${names[2]}`;
-  } else {
-    return `${names[0]} and ${names.length - 1} others`;
-  }
 };
 
 type Options = {
@@ -153,217 +105,124 @@ export const sentencify = (
   );
 };
 
-const actorsToObjects = actors => {
-  return (
-    actors &&
-    actors.length > 0 &&
-    actors
-      .map(actor => {
-        return {
-          name: actor.payload.name,
-          username: actor.payload.username,
-          profilePhoto: actor.payload.profilePhoto,
-          id: actor.payload.id,
-        };
-      })
-      .reverse()
-  );
-};
-
 export const parseActors = (actors, currentUser) => {
-  const filteredActors = actors.filter(actor => actor.id !== currentUser.id);
-  const asString = actorsToString(filteredActors);
-  const asObjects = actorsToObjects(filteredActors);
-
-  return {
-    asString,
-    asObjects,
-  };
+  const filteredActors = actors
+    .filter(actor => actor.id !== currentUser.id)
+    .reverse();
+  return sentencify(filteredActors.map(({ payload }) => payload.name));
 };
 
-export const parseEvent = event => {
-  switch (event) {
-    case 'MESSAGE_CREATED': {
-      return 'replied';
-    }
-    case 'REACTION_CREATED': {
-      return 'liked';
-    }
-    case 'CHANNEL_CREATED': {
-      return 'created a channel';
-    }
-    case 'USER_JOINED_COMMUNITY': {
-      return 'joined';
-    }
-    default: {
-      console.log('Not a valid event type');
-    }
-  }
+const EVENT_VERB = {
+  MESSAGE_CREATED: 'replied',
+  REACTION_CREATED: 'liked',
+  CHANNEL_CREATED: 'created in',
+  USER_JOINED_COMMUNITY: 'joined',
 };
 
-const threadToString = (context, currentUser) => {
-  const payload = JSON.parse(context.payload);
-  const isCreator = payload.creatorId === currentUser.id;
-  const str = isCreator ? 'in your thread' : 'in';
-  return `${str} ${payload.content.title}`;
-};
-
-const messageToString = () => 'your reply';
-
-const communityToString = context => {
-  return `${JSON.parse(context.payload).name}`;
-};
-
-const channelToString = context => {
-  return `${JSON.parse(context.payload).name}`;
-};
-
-export const parseContext = (context, currentUser) => {
+export const contextToString = (context, currentUser) => {
   switch (context.type) {
     case 'SLATE':
     case 'THREAD': {
-      const asString = threadToString(context, currentUser);
-      return {
-        asString,
-      };
+      const payload = context.payload;
+      const isCreator = payload.creatorId === currentUser.id;
+      const str = isCreator ? 'in your thread' : 'in';
+      return `${str} ${payload.content.title}`;
     }
     case 'MESSAGE': {
-      const asString = messageToString(context);
-      return {
-        asString,
-        asObject: {
-          ...context,
-          payload: JSON.parse(context.payload),
-        },
-      };
+      return 'your reply';
     }
     case 'COMMUNITY': {
-      const asString = communityToString(context);
-      return {
-        asString,
-        asObject: {
-          ...context,
-          payload: JSON.parse(context.payload),
-        },
-      };
+      return context.payload.name;
     }
     case 'CHANNEL': {
-      const asString = channelToString(context);
-      return {
-        asString,
-      };
-    }
-    default: {
-      console.log('Invalid notification context type');
+      return context.payload.name;
     }
   }
 };
 
-export const getMessages = (entities, currentUser) => {
-  return entities
-    .map(entity => ({
-      ...entity,
-      payload: JSON.parse(entity.payload),
-    }))
-    .filter(({ payload }) => payload.senderId !== currentUser.id);
+const parsePayload = input => ({
+  ...input,
+  payload: JSON.parse(input.payload),
+});
+
+const parseEntityPayload = entities => entities.map(parsePayload);
+
+const parseNotification = notification => {
+  return {
+    actors: notification.actors && parseEntityPayload(notification.actors),
+    context: notification.context && parsePayload(notification.context),
+    entities:
+      notification.entities && parseEntityPayload(notification.entities),
+    event: notification.event,
+    date: notification.modifiedAt,
+  };
 };
 
-const fs = require('fs');
+const formatNotification = (incomingNotification, currentUserId) => {
+  const notification = parseNotification(incomingNotification);
 
-const formatNotification = (notification, currentUserId) => {
+  const actors =
+    notification.actors &&
+    parseActors(notification.actors, { id: currentUserId });
+  const event = notification.event && EVENT_VERB[notification.event];
+  const context =
+    notification.context &&
+    contextToString(notification.context, { id: currentUserId });
+  const date =
+    notification.modifiedAt && parseNotificationDate(notification.modifiedAt);
+
   switch (notification.event) {
     case 'MESSAGE_CREATED': {
-      const actors = parseActors(notification.actors, { id: currentUserId });
-      const event = parseEvent(notification.event);
-      const context = parseContext(notification.context, { id: currentUserId });
-      const date = parseNotificationDate(notification.modifiedAt);
-      const messages = getMessages(notification.entities, {
-        id: currentUserId,
-      });
+      const entities = notification.entities.filter(
+        ({ payload }) => payload.senderId !== currentUserId
+      );
 
       return {
         data: {
           href: `/thread/${notification.context.id}`,
         },
-        title: `${actors.asString} ${event} ${context.asString}`,
+        title: `${actors} ${event} ${context}`,
         body: sentencify(
-          messages.map(({ payload }) => `"${payload.content.body}"`)
+          entities.map(({ payload }) => `"${payload.content.body}"`)
         ),
-        raw: {
-          actors,
-          event,
-          context,
-          entities: messages,
-          date,
-        },
+        raw: notification,
       };
     }
     case 'REACTION_CREATED': {
-      const actors = parseActors(notification.actors, { id: currentUserId });
-      const event = parseEvent(notification.event);
-      const date = parseNotificationDate(notification.modifiedAt);
-      const context = parseContext(notification.context);
-      const message = JSON.parse(notification.context.payload);
+      const message = notification.context.payload;
 
       return {
         data: {
-          href: `/thread/${context.asObject.payload.threadId}`,
+          href: `/thread/${message.threadId}`,
         },
-        title: `${actors.asString} ${event} ${context.asString}`,
+        title: `${actors} ${event} ${context}`,
         body: message.content.body,
-        raw: {
-          actors,
-          event,
-          context,
-          entity: message,
-          date,
-        },
+        raw: notification,
       };
     }
     case 'CHANNEL_CREATED': {
-      const date = parseNotificationDate(notification.modifiedAt);
-      const context = parseContext(notification.context);
-      const entities = notification.entities.map(entity => ({
-        ...entity,
-        payload: JSON.parse(entity.payload),
-      }));
+      const entities = notification.entities;
       const newChannelCount =
         entities.length > 1
           ? `${entities.length} new channels were`
           : 'A new channel was';
 
       return {
-        title: `${newChannelCount} created in ${context.asObject.payload.name}`,
+        title: `${newChannelCount} ${event} ${context}`,
         body: sentencify(entities.map(({ payload }) => `"${payload.name}"`)),
-        raw: {
-          date,
-          context,
-          entities,
-        },
+        raw: notification,
       };
     }
     case 'USER_JOINED_COMMUNITY': {
-      const actors = parseActors(notification.actors, { id: currentUserId });
-      const event = parseEvent(notification.event);
-      const date = parseNotificationDate(notification.modifiedAt);
-      const context = parseContext(notification.context);
-
       return {
         data: {
-          href: `/${context.asObject.payload.slug}`,
+          href: `/${notification.context.payload.slug}`,
         },
-        title: `${actors.asString} ${event} ${context.asString}`,
-        raw: {
-          actors,
-          event,
-          date,
-          context,
-        },
+        title: `${actors} ${event} ${context}`,
+        raw: notification,
       };
     }
     case 'THREAD_CREATED': {
-      const date = parseNotificationDate(notification.modifiedAt);
-      const context = parseContext(notification.context);
       // sort and order the threads
       const threads = sortThreads(notification.entities, { id: currentUserId });
 
@@ -374,30 +233,18 @@ const formatNotification = (notification, currentUserId) => {
         data: {
           href: `/thread/${threads[0].id}`,
         },
-        title: `${newThreadCount} published in ${context.asString}`,
+        title: `${newThreadCount} published in ${context}`,
         body: sentencify(threads.map(thread => `"${thread.content.title}"`)),
-        raw: {
-          date,
-          context,
-          threads,
-        },
+        raw: notification,
       };
     }
     case 'COMMUNITY_INVITE': {
-      const date = parseNotificationDate(notification.modifiedAt);
-      const context = parseContext(notification.context);
-      const actors = parseActors(notification.actors, { id: currentUserId });
-
       return {
         data: {
-          href: `/${context.asObject.payload.slug}`,
+          href: `/${notification.context.payload.slug}`,
         },
-        title: `${actors.asString} invited you to join their community, ${context.asString}`,
-        raw: {
-          date,
-          context,
-          actors,
-        },
+        title: `${actors} invited you to join their community, ${context}`,
+        raw: notification,
       };
     }
     default: {
