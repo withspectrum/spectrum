@@ -1,6 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`should format a channel creation notification 1`] = `Object {}`;
+exports[`should format a channel creation notification 1`] = `
+Object {
+  "body": "\\"New channel3\\" and \\"Test test 1,2,3\\"",
+  "title": "2 new channels were created in Whaddup",
+}
+`;
 
 exports[`should format a community invite notification 1`] = `
 Object {

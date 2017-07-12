@@ -147,7 +147,10 @@ export const sentencify = (
   const sentence = list.join(', ');
   if (strings.length <= 1) return sentence;
   if (strings.length > max) return sentence + overflowPostfix;
-  return sentence.replace(LAST_COMMA, ' and');
+  return sentence.replace(
+    `, ${strings[strings.length - 1]}`,
+    ` and ${strings[strings.length - 1]}`
+  );
 };
 
 const actorsToObjects = actors => {
@@ -330,6 +333,8 @@ const formatNotification = (notification, currentUserId) => {
           : 'A new channel was';
 
       return {
+        title: `${newChannelCount} created in ${context.asObject.payload.name}`,
+        body: sentencify(entities.map(({ payload }) => `"${payload.name}"`)),
         raw: {
           date,
           context,
