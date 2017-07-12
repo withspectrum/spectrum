@@ -24,7 +24,6 @@ import {
   displayLoadingNotifications,
   LoadingThread,
 } from '../../components/loading';
-import { FetchMoreButton } from '../../components/threadFeed/style';
 import { FlexCol } from '../../components/globals';
 import { sortByDate } from '../../helpers/utils';
 import {
@@ -117,8 +116,6 @@ class NotificationsPure extends Component {
 
     notifications = getDistinctNotifications(notifications);
     notifications = sortByDate(notifications, 'modifiedAt', 'desc');
-
-    const { notifications: { pageInfo: { hasNextPage } } } = data;
 
     if (!notifications || notifications.length === 0) {
       return (

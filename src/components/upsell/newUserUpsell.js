@@ -7,7 +7,6 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import { track } from '../../helpers/events';
-import { openModal } from '../../actions/modals';
 import SetUsername from '../../components/setUsername';
 import { Button, OutlineButton } from '../../components/buttons';
 import TopCommunities from '../../views/dashboard/components/topCommunities';

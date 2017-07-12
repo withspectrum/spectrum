@@ -8,7 +8,6 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
 import { getThisCommunity, getChannelsByCommunity } from './queries';
-import { openModal } from '../../actions/modals';
 import { displayLoadingScreen } from '../../components/loading';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';

@@ -69,8 +69,10 @@ class ChannelViewPure extends Component {
         }
 
         const str = isPending
-          ? `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`
-          : `Canceled request to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
+          ? `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
+              .community.name}!`
+          : `Canceled request to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
+              .community.name}.`;
 
         const type = isPending ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
@@ -88,7 +90,6 @@ class ChannelViewPure extends Component {
     const {
       match,
       data: { channel, networkStatus, user },
-      data,
       currentUser,
     } = this.props;
     const { isLoading } = this.state;

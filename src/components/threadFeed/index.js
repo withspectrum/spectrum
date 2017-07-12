@@ -14,7 +14,6 @@ import ThreadFeedCard from '../threadFeedCard';
 import { NullCard } from '../upsell';
 import { LoadingThread } from '../loading';
 import { Button } from '../buttons';
-import { FetchMoreButton } from './style';
 
 const NullState = () =>
   <NullCard
@@ -70,15 +69,10 @@ class ThreadFeedPure extends Component {
   }
 
   render() {
-    const {
-      data: { threads, loading, user, error, hasNextPage, networkStatus },
-      data,
-      currentUser,
-      viewContext,
-    } = this.props;
+    const { data: { threads, networkStatus }, viewContext } = this.props;
     const { scrollElement } = this.state;
-    const dataExists = threads && threads.length;
-    const loggedInUser = user || currentUser;
+    // const dataExists = threads && threads.length;
+    // const loggedInUser = user || currentUser;
 
     if (networkStatus === 7) {
       if (threads.length === 0) {

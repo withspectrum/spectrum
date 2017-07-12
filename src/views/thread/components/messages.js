@@ -13,7 +13,7 @@ import { ChatWrapper } from '../style';
 import { getThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 
-export const EmptyChat = () => (
+export const EmptyChat = () =>
   <ChatWrapper>
     <HorizontalRule>
       <hr />
@@ -24,8 +24,7 @@ export const EmptyChat = () => (
       heading={`🔥 This thread is hot off the presses...`}
       copy={`Why don't you kick off the conversation?`}
     />
-  </ChatWrapper>
-);
+  </ChatWrapper>;
 
 class MessagesWithData extends Component {
   state: {
@@ -84,7 +83,6 @@ class MessagesWithData extends Component {
       data,
       toggleReaction,
       forceScrollToBottom,
-      messageCount,
     } = this.props;
     const dataExists = data.thread && data.thread.messageConnection;
     const messagesExist =

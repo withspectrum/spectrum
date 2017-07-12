@@ -2,14 +2,15 @@
 // $FlowFixMe
 import styled from 'styled-components';
 import Card from '../../components/card';
-import { FlexCol } from '../../components/globals';
 
 export const Container = styled(Card)`
-  background-image: ${props => (props.bg ? `url('/img/fills/${props.bg}.svg')` : 'none')};
+  background-image: ${props =>
+    props.bg ? `url('/img/fills/${props.bg}.svg')` : 'none'};
   background-color: #fff;
   background-size: 110% auto;
   background-repeat: ${props => (props.repeat ? 'repeat-y' : 'no-repeat')};
-  background-position: ${props => (props.repeat ? 'center top' : 'center center')};
+  background-position: ${props =>
+    props.repeat ? 'center top' : 'center center'};
   width: 100%;
   height: auto;
   min-height: 160px;
@@ -51,13 +52,9 @@ export const Divider = styled.div`
   margin-bottom: 24px;
 `;
 
-export const ContentContainer = styled.div`
-  padding: 0 24px 24px;
-`;
+export const ContentContainer = styled.div`padding: 0 24px 24px;`;
 
-export const FormContainer = styled.div`
-  
-`;
+export const FormContainer = styled.div``;
 
 export const Form = styled.form`
   display: block;

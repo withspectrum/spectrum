@@ -9,30 +9,24 @@ import { withRouter } from 'react-router';
 //$FlowFixMe
 import compose from 'recompose/compose';
 import { CommunityListItem } from '../../../components/listItems';
-import { Button, IconButton } from '../../../components/buttons';
 import Icon from '../../../components/icons';
 import { NullCard } from '../../../components/upsell';
-import { LoadingList, LoadingListItem } from '../../../components/loading';
-import { openModal } from '../../../actions/modals';
+import { LoadingList } from '../../../components/loading';
 
 import {
   StyledCard,
   ListHeading,
   ListHeader,
   ListContainer,
-  ListFooter,
-  MoreLink,
 } from '../../../components/listItems/style';
 
 const CommunityList = props => {
   const {
     communities,
-    dispatch,
     currentUser,
     user,
     withDescription,
     withMeta,
-    history,
     networkStatus,
   } = props;
 

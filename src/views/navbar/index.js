@@ -15,15 +15,12 @@ import {
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
 } from '../../api/notification';
-import { SERVER_URL } from '../../api';
 import Icon from '../../components/icons';
 import { Loading } from '../../components/loading';
-import { Button } from '../../components/buttons';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
 import Head from '../../components/head';
 import { getDistinctNotifications } from '../../views/notifications/utils';
-import { storeItem } from '../../helpers/localStorage';
 import { throttle } from '../../helpers/utils';
 import {
   saveUserDataToLocalStorage,
@@ -264,12 +261,7 @@ class Navbar extends Component {
   };
 
   render() {
-    const {
-      match,
-      data: { user, networkStatus },
-      data,
-      currentUser,
-    } = this.props;
+    const { match, data: { user, networkStatus }, currentUser } = this.props;
     const loggedInUser = user || currentUser;
     const isMobile = window.innerWidth < 768;
     const currentUserExists =

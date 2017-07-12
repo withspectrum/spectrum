@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import { Link } from 'react-router-dom';
 import { ActorPhotosContainer, ActorPhotoItem } from '../style';
 import { Avatar } from '../../../components/avatar';
 

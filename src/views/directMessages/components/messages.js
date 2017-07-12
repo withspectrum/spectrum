@@ -7,8 +7,7 @@ import pure from 'recompose/pure';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
 import { Loading } from '../../../components/loading';
-import Icon from '../../../components/icons';
-import { HorizontalRule, Spinner } from '../../../components/globals';
+import { Spinner } from '../../../components/globals';
 import { getDirectMessageThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 import { MessagesScrollWrapper, HasNextPage, NextPageButton } from './style';
@@ -65,7 +64,6 @@ class MessagesWithData extends Component {
   render() {
     const {
       data: { error, loading, messages, hasNextPage, fetchMore, networkStatus },
-      data,
     } = this.props;
     const { subscription } = this.state;
 

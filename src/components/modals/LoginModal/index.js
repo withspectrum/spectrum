@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import { getItemFromStorage, storeItem } from '../../../helpers/localStorage';
 import { SERVER_URL } from '../../../api';
-import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import ModalContainer from '../modalContainer';
 import { modalStyles } from '../styles';
@@ -30,7 +29,7 @@ class LoginModal extends Component {
   };
 
   render() {
-    const { isOpen, modalProps } = this.props;
+    const { isOpen } = this.props;
     const styles = modalStyles(300);
     const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
 
@@ -56,9 +55,7 @@ class LoginModal extends Component {
                 href={`${SERVER_URL}/auth/twitter?r=${window.location.href}`}
                 onClick={() => this.login('twitter')}
               >
-                <Icon glyph="twitter" />
-                {' '}
-                <span>Sign in with Twitter</span>
+                <Icon glyph="twitter" /> <span>Sign in with Twitter</span>
               </ButtonTwitter>
 
               <ButtonFacebook
@@ -68,9 +65,7 @@ class LoginModal extends Component {
                 href={`${SERVER_URL}/auth/facebook?r=${window.location.href}`}
                 onClick={() => this.login('facebook')}
               >
-                <Icon glyph="facebook" />
-                {' '}
-                <span>Sign in with Facebook</span>
+                <Icon glyph="facebook" /> <span>Sign in with Facebook</span>
               </ButtonFacebook>
 
               <ButtonGoogle
@@ -80,9 +75,7 @@ class LoginModal extends Component {
                 href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
                 onClick={() => this.login('google')}
               >
-                <Icon glyph="google" />
-                {' '}
-                <span>Sign in with Google</span>
+                <Icon glyph="google" /> <span>Sign in with Google</span>
               </ButtonGoogle>
             </SignInButtons>}
 
@@ -94,9 +87,7 @@ class LoginModal extends Component {
                 href={`${SERVER_URL}/auth/twitter?r=${window.location.href}`}
                 onClick={() => this.login('twitter')}
               >
-                <Icon glyph="twitter" />
-                {' '}
-                <span>Sign in with Twitter</span>
+                <Icon glyph="twitter" /> <span>Sign in with Twitter</span>
               </ButtonTwitter>
 
               <ButtonFacebook
@@ -105,9 +96,7 @@ class LoginModal extends Component {
                 href={`${SERVER_URL}/auth/facebook?r=${window.location.href}`}
                 onClick={() => this.login('facebook')}
               >
-                <Icon glyph="facebook" />
-                {' '}
-                <span>Sign in with Facebook</span>
+                <Icon glyph="facebook" /> <span>Sign in with Facebook</span>
               </ButtonFacebook>
 
               <ButtonGoogle
@@ -116,9 +105,7 @@ class LoginModal extends Component {
                 href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
                 onClick={() => this.login('google')}
               >
-                <Icon glyph="google" />
-                {' '}
-                <span>Sign in with Google</span>
+                <Icon glyph="google" /> <span>Sign in with Google</span>
               </ButtonGoogle>
             </SignInButtons>}
         </ModalContainer>
