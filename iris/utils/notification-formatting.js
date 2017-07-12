@@ -1,51 +1,10 @@
 //@flow
-import createEmojiRegex from 'emoji-regex';
-// This regex matches every string with any emoji in it, not just strings that only have emojis
-const originalEmojiRegex = createEmojiRegex();
-// Make sure we match strings that only contain emojis (and whitespace)
-const regex = new RegExp(
-  `^(${originalEmojiRegex.toString().replace(/\/g$/, '')}|\\s)+$`
-);
-export const onlyContainsEmoji = (text: string) => regex.test(text);
+import onlyContainsEmoji from '../../shared/only-contains-emoji';
+import sentencify from '../../shared/sentencify';
+import { short as timeDifferenceShort } from '../../shared/time-difference';
+import sortByDate from '../../shared/sort-by-date';
 
-export function timeDifferenceShort(current: Date, previous: Date) {
-  const msPerSecond = 1000;
-  const msPerMinute = 60 * 1000;
-  const msPerHour = msPerMinute * 60;
-  const msPerDay = msPerHour * 24;
-  const msPerYear = msPerDay * 365;
-
-  let elapsed = current - previous;
-
-  if (elapsed < msPerMinute) {
-    const now = Math.round(elapsed / msPerSecond);
-    return `${now}s`;
-  } else if (elapsed < msPerHour) {
-    const now = Math.round(elapsed / msPerMinute);
-    return `${now}m`;
-  } else if (elapsed < msPerDay) {
-    const now = Math.round(elapsed / msPerHour);
-    return `${now}h`;
-  } else if (elapsed < msPerYear) {
-    const now = Math.round(elapsed / msPerDay);
-    return `${now}d`;
-  } else {
-    const now = Math.round(elapsed / msPerYear);
-    return `${now}y`;
-  }
-}
-
-export const sortByDate = (array, key, order) => {
-  return array.sort((a, b) => {
-    const x = new Date(a[key]).getTime();
-    const y = new Date(b[key]).getTime();
-    // desc = older to newest from top to bottom
-    const val = order === 'desc' ? y - x : x - y;
-    return val;
-  });
-};
-
-export const sortThreads = (entities, currentUser) => {
+const sortThreads = (entities, currentUser) => {
   // filter out the current user's threads
   let threads = entities.filter(
     thread => thread.payload.creatorId !== currentUser.id
@@ -58,51 +17,10 @@ export const sortThreads = (entities, currentUser) => {
 };
 
 // parse date => modifiedAt to timeAgo
-export const parseNotificationDate = date => {
+const parseNotificationDate = date => {
   const now = new Date().getTime();
   const timestamp = new Date(date).getTime();
   return timeDifferenceShort(now, timestamp);
-};
-
-export const getDistinctNotifications = array => {
-  let unique = {};
-  let distinct = [];
-  for (let i in array) {
-    if (typeof unique[array[i].id] === 'undefined') {
-      distinct.push(array[i]);
-    }
-    unique[array[i].id] = 0;
-  }
-  return distinct;
-};
-
-type Options = {
-  max?: number,
-  overflowPostfix?: string,
-};
-
-const defaultOptions = {
-  max: 3,
-  overflowPostfix: ' and others',
-};
-
-const LAST_COMMA = /,(?=[^,]*$)/;
-// Sentencify an array of strings
-export const sentencify = (
-  strings: Array<string>,
-  { max, overflowPostfix }: Options = defaultOptions
-) => {
-  // If we have more than three strings, only take the first 4
-  const list = strings.length > max ? strings.slice(0, max) : strings;
-  // ['Max Stoiber', 'Bryn Lovin', 'Bryn Jackson']
-  // => 'Max Stoiber, Brian Lovin, Bryn Jackson'
-  const sentence = list.join(', ');
-  if (strings.length <= 1) return sentence;
-  if (strings.length > max) return sentence + overflowPostfix;
-  return sentence.replace(
-    `, ${strings[strings.length - 1]}`,
-    ` and ${strings[strings.length - 1]}`
-  );
 };
 
 export const parseActors = (actors, currentUser) => {
@@ -119,7 +37,7 @@ const EVENT_VERB = {
   USER_JOINED_COMMUNITY: 'joined',
 };
 
-export const contextToString = (context, currentUser) => {
+const contextToString = (context, currentUser) => {
   switch (context.type) {
     case 'SLATE':
     case 'THREAD': {
@@ -128,15 +46,12 @@ export const contextToString = (context, currentUser) => {
       const str = isCreator ? 'in your thread' : 'in';
       return `${str} ${payload.content.title}`;
     }
-    case 'MESSAGE': {
+    case 'MESSAGE':
       return 'your reply';
-    }
-    case 'COMMUNITY': {
+    case 'COMMUNITY':
       return context.payload.name;
-    }
-    case 'CHANNEL': {
+    case 'CHANNEL':
       return context.payload.name;
-    }
   }
 };
 
@@ -146,6 +61,10 @@ const parsePayload = input => ({
 });
 
 const parseEntityPayload = entities => entities.map(parsePayload);
+
+// Turns out this isn't super slow! 😱 https://esbench.com/bench/5966ab9999634800a03489f6
+// Runs ~600k ops/s, which is way fast enough
+const removeUndefinedProperties = obj => JSON.parse(JSON.stringify(obj));
 
 const parseNotification = notification => {
   return {
@@ -171,34 +90,27 @@ const formatNotification = (incomingNotification, currentUserId) => {
   const date =
     notification.modifiedAt && parseNotificationDate(notification.modifiedAt);
 
+  let title = `${actors} ${event} ${context}`;
+  let href, body;
+
   switch (notification.event) {
     case 'MESSAGE_CREATED': {
       const entities = notification.entities.filter(
         ({ payload }) => payload.senderId !== currentUserId
       );
 
-      return {
-        data: {
-          href: `/thread/${notification.context.id}`,
-        },
-        title: `${actors} ${event} ${context}`,
-        body: sentencify(
-          entities.map(({ payload }) => `"${payload.content.body}"`)
-        ),
-        raw: notification,
-      };
+      href = `/thread/${notification.context.id}`;
+      body = sentencify(
+        entities.map(({ payload }) => `"${payload.content.body}"`)
+      );
+      break;
     }
     case 'REACTION_CREATED': {
       const message = notification.context.payload;
 
-      return {
-        data: {
-          href: `/thread/${message.threadId}`,
-        },
-        title: `${actors} ${event} ${context}`,
-        body: message.content.body,
-        raw: notification,
-      };
+      href = `/thread/${message.threadId}`;
+      body = message.content.body;
+      break;
     }
     case 'CHANNEL_CREATED': {
       const entities = notification.entities;
@@ -207,20 +119,14 @@ const formatNotification = (incomingNotification, currentUserId) => {
           ? `${entities.length} new channels were`
           : 'A new channel was';
 
-      return {
-        title: `${newChannelCount} ${event} ${context}`,
-        body: sentencify(entities.map(({ payload }) => `"${payload.name}"`)),
-        raw: notification,
-      };
+      title = `${newChannelCount} ${event} ${context}`;
+      body = sentencify(entities.map(({ payload }) => `"${payload.name}"`));
+      break;
     }
     case 'USER_JOINED_COMMUNITY': {
-      return {
-        data: {
-          href: `/${notification.context.payload.slug}`,
-        },
-        title: `${actors} ${event} ${context}`,
-        raw: notification,
-      };
+      href = `/${notification.context.payload.slug}`;
+      title = `${actors} ${event} ${context}`;
+      break;
     }
     case 'THREAD_CREATED': {
       // sort and order the threads
@@ -229,28 +135,28 @@ const formatNotification = (incomingNotification, currentUserId) => {
       const newThreadCount =
         threads.length > 1 ? `New threads were` : 'A new thread was';
 
-      return {
-        data: {
-          href: `/thread/${threads[0].id}`,
-        },
-        title: `${newThreadCount} published in ${context}`,
-        body: sentencify(threads.map(thread => `"${thread.content.title}"`)),
-        raw: notification,
-      };
+      href = `/thread/${threads[0].id}`;
+      title = `${newThreadCount} published in ${context}`;
+      body = sentencify(threads.map(thread => `"${thread.content.title}"`));
+      break;
     }
     case 'COMMUNITY_INVITE': {
-      return {
-        data: {
-          href: `/${notification.context.payload.slug}`,
-        },
-        title: `${actors} invited you to join their community, ${context}`,
-        raw: notification,
-      };
-    }
-    default: {
-      return {};
+      href = `/${notification.context.payload.slug}`;
+      title = `${actors} invited you to join their community, ${context}`;
+      break;
     }
   }
+
+  const data = href && {
+    href,
+  };
+
+  return removeUndefinedProperties({
+    raw: notification,
+    data,
+    title,
+    body,
+  });
 };
 
 export default formatNotification;
