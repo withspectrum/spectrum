@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should format a channel creation notification 1`] = `Object {}`;
+
+exports[`should format a community invite notification 1`] = `
+Object {
+  "data": Object {
+    "href": "/whaddup",
+  },
+  "title": "Max Stoiber invited you to join their community, Whaddup",
+}
+`;
+
+exports[`should format a message creation notification 1`] = `
+Object {
+  "body": "\\"Testing\\"",
+  "data": Object {
+    "href": "/thread/ef021b3b-c520-4133-8749-e96252eff5fc",
+  },
+  "title": "Max Stoiber replied in your thread New thread by @mxstbr",
+}
+`;
+
+exports[`should format a reaction creation notification 1`] = `
+Object {
+  "body": "Test 1",
+  "data": Object {
+    "href": "/thread/2f8087cf-b74d-4587-8ef6-c1b73a751953",
+  },
+  "title": "Max Stoiber liked your reply",
+}
+`;
+
+exports[`should format a thread creation notification 1`] = `
+Object {
+  "body": "\\"Bla\\"",
+  "data": Object {
+    "href": "/thread/4fbdc540-2ad9-4d6b-8404-736e658be9f9",
+  },
+  "title": "A new thread was published in General",
+}
+`;
+
+exports[`should format a user joined community notification 1`] = `
+Object {
+  "data": Object {
+    "href": "/test",
+  },
+  "title": "Max Stoiber joined Test",
+}
+`;
