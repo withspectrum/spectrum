@@ -30,6 +30,7 @@ export const sendWebPushNotification = (subscription, payload, options) => {
 // Send a notification as a web push notification (maybe)
 export const sendNotificationAsWebPush = notification => {
   debug('send notification as web push notification');
+  if (notification.event === 'CHANNEL_CREATED') return;
   return getSubscription(notification.userId)
     .then(subscriptions => {
       if (!subscriptions || subscriptions.length === 0) {
@@ -60,7 +61,9 @@ import {
   parseEvent,
   parseNotificationDate,
   parseContext,
-  getLastMessageCreatedByAnotherUser,
+  getMessages,
+  sortThreads,
+  sentencify,
 } from './notification-formatting';
 
 const formatNotification = (notification, currentUserId) => {
@@ -69,58 +72,122 @@ const formatNotification = (notification, currentUserId) => {
       const actors = parseActors(notification.actors, { id: currentUserId });
       const event = parseEvent(notification.event);
       const context = parseContext(notification.context, { id: currentUserId });
-      const message = getLastMessageCreatedByAnotherUser(
-        notification.entities,
-        { id: currentUserId }
-      );
+      const date = parseNotificationDate(notification.modifiedAt);
+      const messages = getMessages(notification.entities, {
+        id: currentUserId,
+      });
 
       return {
         data: {
           href: `/thread/${notification.context.id}`,
         },
         title: `${actors.asString} ${event} ${context.asString}`,
-        body: message.content.body,
+        body: messages[messages.length - 1].payload.content.body,
+        raw: {
+          actors,
+          event,
+          context,
+          entities: messages,
+          date,
+        },
       };
     }
     case 'REACTION_CREATED': {
-      return undefined;
-      // <NewReactionNotification
-      //   key={notification.id}
-      //   notification={notification}
-      //   currentUser={currentUser}
-      // />
+      const actors = parseActors(notification.actors, { id: currentUserId });
+      const event = parseEvent(notification.event);
+      const date = parseNotificationDate(notification.modifiedAt);
+      const context = parseContext(notification.context);
+      const message = JSON.parse(notification.context.payload);
+
+      return {
+        data: {
+          href: `/thread/${notification.context.payload.threadId}`,
+        },
+        title: `${actors.asString} ${event} ${context.asString}`,
+        body: message.content.body,
+        raw: {
+          actors,
+          event,
+          context,
+          entity: message,
+          date,
+        },
+      };
     }
     case 'CHANNEL_CREATED': {
-      return undefined;
-      // <NewChannelNotification
-      //   key={notification.id}
-      //   notification={notification}
-      //   currentUser={currentUser}
-      // />
+      const date = parseNotificationDate(notification.modifiedAt);
+      const context = parseContext(notification.context);
+      const entities = notification.entities.map(entity => ({
+        ...entity,
+        payload: JSON.parse(entity.payload),
+      }));
+      const newChannelCount =
+        entities.length > 1
+          ? `${entities.length} new channels were`
+          : 'A new channel was';
+
+      return {
+        raw: {
+          date,
+          context,
+          entities,
+        },
+      };
     }
     case 'USER_JOINED_COMMUNITY': {
-      return undefined;
-      // <NewUserInCommunityNotification
-      //   key={notification.id}
-      //   notification={notification}
-      //   currentUser={currentUser}
-      // />
+      const actors = parseActors(notification.actors, { id: currentUserId });
+      const event = parseEvent(notification.event);
+      const date = parseNotificationDate(notification.modifiedAt);
+      const context = parseContext(notification.context);
+
+      return {
+        data: {
+          href: `/${notification.context.payload.slug}`,
+        },
+        title: `${actors.asString} ${event} ${context.asString}`,
+        raw: {
+          actors,
+          event,
+          date,
+          context,
+        },
+      };
     }
     case 'THREAD_CREATED': {
-      return undefined;
-      // <NewThreadNotification
-      //   key={notification.id}
-      //   notification={notification}
-      //   currentUser={currentUser}
-      // />
+      const date = parseNotificationDate(notification.modifiedAt);
+      const context = parseContext(notification.context);
+      // sort and order the threads
+      const threads = sortThreads(notification.entities, { id: currentUserId });
+
+      const newThreadCount =
+        threads.length > 1 ? `New threads were` : 'A new thread was';
+
+      return {
+        title: `${newThreadCount} published in ${context.asString}`,
+        body: sentencify(threads.map(thread => `"${thread.content.title}"`)),
+        raw: {
+          date,
+          context,
+          threads,
+        },
+      };
     }
     case 'COMMUNITY_INVITE': {
-      return undefined;
-      // <CommunityInviteNotification
-      //   key={notification.id}
-      //   notification={notification}
-      //   currentUser={currentUser}
-      // />
+      const date = parseNotificationDate(notification.modifiedAt);
+      const context = parseContext(notification.context);
+      const actors = parseActors(notification.actors, { id: currentUserId });
+
+      return {
+        data: {
+          href: `/${context.asObject.slug}`,
+        },
+        title: `${actors.asString} invited you to join their community, ${context.asString}`,
+        raw: {
+          date,
+          context,
+          actors,
+        },
+      };
     }
     default: {
       return {};

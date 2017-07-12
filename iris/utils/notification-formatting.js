@@ -8,6 +8,68 @@ const regex = new RegExp(
 );
 export const onlyContainsEmoji = (text: string) => regex.test(text);
 
+export function timeDifferenceShort(current: Date, previous: Date) {
+  const msPerSecond = 1000;
+  const msPerMinute = 60 * 1000;
+  const msPerHour = msPerMinute * 60;
+  const msPerDay = msPerHour * 24;
+  const msPerYear = msPerDay * 365;
+
+  let elapsed = current - previous;
+
+  if (elapsed < msPerMinute) {
+    const now = Math.round(elapsed / msPerSecond);
+    return `${now}s`;
+  } else if (elapsed < msPerHour) {
+    const now = Math.round(elapsed / msPerMinute);
+    return `${now}m`;
+  } else if (elapsed < msPerDay) {
+    const now = Math.round(elapsed / msPerHour);
+    return `${now}h`;
+  } else if (elapsed < msPerYear) {
+    const now = Math.round(elapsed / msPerDay);
+    return `${now}d`;
+  } else {
+    const now = Math.round(elapsed / msPerYear);
+    return `${now}y`;
+  }
+}
+
+export const sortByDate = (array, key, order) => {
+  return array.sort((a, b) => {
+    const x = new Date(a[key]).getTime();
+    const y = new Date(b[key]).getTime();
+    // desc = older to newest from top to bottom
+    const val = order === 'desc' ? y - x : x - y;
+    return val;
+  });
+};
+
+export const sortThreads = (entities, currentUser) => {
+  // filter out the current user's threads
+  let threads = entities
+    .map(thread => ({
+      ...thread,
+      payload: JSON.parse(thread.payload),
+    }))
+    .filter(thread => thread.payload.creatorId !== currentUser.id);
+
+  // create an array of payloads
+  threads = threads && threads.map(thread => thread.payload);
+
+  // sort the threads by created at date
+  threads = threads && sortByDate(threads, 'createdAt', 'desc');
+
+  return threads;
+};
+
+// parse date => modifiedAt to timeAgo
+export const parseNotificationDate = date => {
+  const now = new Date().getTime();
+  const timestamp = new Date(date).getTime();
+  return timeDifferenceShort(now, timestamp);
+};
+
 export const getDistinctNotifications = array => {
   let unique = {};
   let distinct = [];
@@ -60,6 +122,32 @@ const actorsToString = actors => {
   } else {
     return `${names[0]} and ${names.length - 1} others`;
   }
+};
+
+type Options = {
+  max?: number,
+  overflowPostfix?: string,
+};
+
+const defaultOptions = {
+  max: 3,
+  overflowPostfix: ' and others',
+};
+
+const LAST_COMMA = /,(?=[^,]*$)/;
+// Sentencify an array of strings
+export const sentencify = (
+  strings: Array<string>,
+  { max, overflowPostfix }: Options = defaultOptions
+) => {
+  // If we have more than three strings, only take the first 4
+  const list = strings.length > max ? strings.slice(0, max) : strings;
+  // ['Max Stoiber', 'Bryn Lovin', 'Bryn Jackson']
+  // => 'Max Stoiber, Brian Lovin, Bryn Jackson'
+  const sentence = list.join(', ');
+  if (strings.length <= 1) return sentence;
+  if (strings.length > max) return sentence + overflowPostfix;
+  return sentence.replace(LAST_COMMA, ' and');
 };
 
 const actorsToObjects = actors => {
@@ -146,6 +234,10 @@ export const parseContext = (context, currentUser) => {
       const asString = communityToString(context);
       return {
         asString,
+        asObject: {
+          ...context,
+          payload: JSON.parse(context.payload),
+        },
       };
     }
     case 'CHANNEL': {
@@ -160,9 +252,11 @@ export const parseContext = (context, currentUser) => {
   }
 };
 
-export const getLastMessageCreatedByAnotherUser = (entities, currentUser) => {
-  const filteredMessages = entities.filter(
-    entity => JSON.parse(entity.payload).senderId !== currentUser.id
-  );
-  return JSON.parse(filteredMessages[filteredMessages.length - 1].payload);
+export const getMessages = (entities, currentUser) => {
+  return entities
+    .map(entity => ({
+      ...entity,
+      payload: JSON.parse(entity.payload),
+    }))
+    .filter(({ payload }) => payload.senderId !== currentUser.id);
 };
