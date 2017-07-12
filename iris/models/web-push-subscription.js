@@ -20,8 +20,8 @@ export const storeSubscription = (
     .run();
 };
 
-export const getSubscription = (userId: string) => {
-  debug(`get subscription for user#${userId}`);
+export const getSubscriptions = (userId: string) => {
+  debug(`get subscriptions for user#${userId}`);
   return db
     .table('webPushSubscriptions')
     .getAll(userId, { index: 'userId' })

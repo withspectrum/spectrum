@@ -1,6 +1,6 @@
 import webPush from 'web-push';
 const debug = require('debug')('iris:utils:web-push');
-import { getSubscription } from '../models/web-push-subscription';
+import { getSubscriptions } from '../models/web-push-subscription';
 
 try {
   webPush.setVapidDetails(
@@ -30,8 +30,9 @@ export const sendWebPushNotification = (subscription, payload, options) => {
 // Send a notification as a web push notification (maybe)
 export const sendNotificationAsWebPush = notification => {
   debug('send notification as web push notification');
+  // Don't sent push notifications for channel creation
   if (notification.event === 'CHANNEL_CREATED') return;
-  return getSubscription(notification.userId)
+  return getSubscriptions(notification.userId)
     .then(subscriptions => {
       if (!subscriptions || subscriptions.length === 0) {
         debug(`no subscription for user#${notification.userId}, `);
@@ -101,7 +102,7 @@ const formatNotification = (notification, currentUserId) => {
 
       return {
         data: {
-          href: `/thread/${notification.context.payload.threadId}`,
+          href: `/thread/${context.asObject.payload.threadId}`,
         },
         title: `${actors.asString} ${event} ${context.asString}`,
         body: message.content.body,
@@ -142,7 +143,7 @@ const formatNotification = (notification, currentUserId) => {
 
       return {
         data: {
-          href: `/${notification.context.payload.slug}`,
+          href: `/${context.asObject.payload.slug}`,
         },
         title: `${actors.asString} ${event} ${context.asString}`,
         raw: {
@@ -163,6 +164,9 @@ const formatNotification = (notification, currentUserId) => {
         threads.length > 1 ? `New threads were` : 'A new thread was';
 
       return {
+        data: {
+          href: `/thread/${threads[threads.length - 1].id}`,
+        },
         title: `${newThreadCount} published in ${context.asString}`,
         body: sentencify(threads.map(thread => `"${thread.content.title}"`)),
         raw: {

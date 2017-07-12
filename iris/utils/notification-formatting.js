@@ -228,6 +228,10 @@ export const parseContext = (context, currentUser) => {
       const asString = messageToString(context);
       return {
         asString,
+        asObject: {
+          ...context,
+          payload: JSON.parse(context.payload),
+        },
       };
     }
     case 'COMMUNITY': {
