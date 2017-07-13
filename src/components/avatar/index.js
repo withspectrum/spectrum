@@ -65,6 +65,7 @@ const StyledAvatarLink = styled(Link)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  pointer-events: auto;
 `;
 
 const AvatarPure = (props: Object): React$Element<any> => {
