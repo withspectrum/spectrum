@@ -123,9 +123,7 @@ export const MiniNewMessageNotification = ({
   const context = parseContext(notification.context, currentUser);
 
   return (
-    <NotificationListRow
-      onClick={() => history.push(`/thread/${notification.context.id}`)}
-    >
+    <NotificationListRow>
       <CardLink to={`/thread/${notification.context.id}`} />
       <CardContent>
         <SuccessContext>

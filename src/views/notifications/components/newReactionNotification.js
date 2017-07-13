@@ -134,10 +134,7 @@ export const MiniNewReactionNotification = ({
     : null;
 
   return (
-    <NotificationListRow
-      onClick={() =>
-        history.push(`/thread/${notification.context.payload.threadId}`)}
-    >
+    <NotificationListRow>
       <ReactionContext>
         <Icon glyph="like-fill" />
         <ActorsRow actors={actors.asObjects} />
