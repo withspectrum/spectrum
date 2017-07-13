@@ -30,5 +30,9 @@ export const getSubscriptions = (userId: string) => {
 
 export const removeSubscription = (endpoint: string) => {
   debug(`remove subscription ${endpoint}`);
-  return db.table('webPushSubscriptions').get(endpoint).delete().run();
+  return db
+    .table('webPushSubscriptions')
+    .getAll(endpoint, { index: 'endpoint' })
+    .delete()
+    .run();
 };

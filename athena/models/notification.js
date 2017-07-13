@@ -64,3 +64,13 @@ export const updateNotification = (notification: Object): Promise<Object> => {
     .run()
     .then(result => result.changes[0].new_val);
 };
+
+export const getNotifications = (notificationIds: Array<string>) => {
+  return db
+    .table('notifications')
+    .getAll(...notificationIds)
+    .eqJoin('id', db.table('usersNotifications'), { index: 'notificationId' })
+    .without({ right: ['id'] })
+    .zip()
+    .run();
+};
