@@ -41,6 +41,10 @@ const timedOut = recipient => {
       const unseenThreadIds = notifications
         .filter(notification => !notification.isSeen && !notification.isRead)
         .map(notification => notification.context.id);
+      if (unseenThreadIds.length === 0) {
+        debug('aborting, no unseen threads');
+        return;
+      }
       debug(`filter unseen threads, merge replies`);
       // Convert threads to object, merge replies to same thread
       const threads = threadsInScope
