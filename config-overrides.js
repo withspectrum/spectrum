@@ -4,6 +4,7 @@
  * This is using react-app-rewired by @timarney
  */
 
+const rewireStyledComponents = require('react-app-rewire-styled-components');
 const swPrecachePlugin = require('sw-precache-webpack-plugin');
 const isServiceWorkerPlugin = plugin => plugin instanceof swPrecachePlugin;
 const whitelist = path => new RegExp(`^(?!\/${path}).*`);
@@ -20,5 +21,5 @@ const setCustomSwPrecacheOptions = config => {
 
 module.exports = function override(config, env) {
   setCustomSwPrecacheOptions(config);
-  return config;
+  return rewireStyledComponents(config, env);
 };

@@ -19,7 +19,6 @@ import { HorizontalRule } from '../../../components/globals';
 import { getThread } from '../queries';
 import { LoadingThreadDetail, LoadingChat } from '../../../components/loading';
 import Icon from '../../../components/icons';
-import { EmptyChat } from '../components/messages';
 import {
   View,
   Content,

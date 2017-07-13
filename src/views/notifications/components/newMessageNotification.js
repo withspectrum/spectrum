@@ -63,7 +63,7 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
                 <MessagesWrapper>
                   {notification.entities
                     .filter(
-                      ({ payload }) => payload.senderId === currentUser.id
+                      ({ payload }) => payload.senderId !== currentUser.id
                     )
                     .map(({ payload: message }) => {
                       if (message.messageType !== 'media') {

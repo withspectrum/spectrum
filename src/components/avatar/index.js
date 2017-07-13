@@ -8,7 +8,7 @@ import compose from 'recompose/compose';
 import styled from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { Gradient, Tooltip } from '../globals';
+import { Gradient } from '../globals';
 import { optimize } from '../../helpers/images';
 
 const StyledAvatar = styled.img`
@@ -65,6 +65,7 @@ const StyledAvatarLink = styled(Link)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  pointer-events: auto;
 `;
 
 const AvatarPure = (props: Object): React$Element<any> => {

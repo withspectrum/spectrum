@@ -58,6 +58,7 @@ class Editor extends Component {
     const state = this.props.state || this.state.state;
     // files is a FileList, not an array, so it doesn't have .reduce
     let filesArray = [];
+    // eslint-disable-next-line
     for (var i = 0, f; (f = files[i]); i++) {
       filesArray.push(f);
     }
@@ -120,19 +121,21 @@ class Editor extends Component {
         {showLinkPreview && linkPreview && linkPreview.loading
           ? <LinkPreviewLoading margin={'16px 0 24px 0'} />
           : showLinkPreview && linkPreview && linkPreview.data
-              ? <LinkPreview
-                  data={linkPreview.data}
-                  size={'large'}
-                  remove={linkPreview.remove}
-                  editable={true}
-                  trueUrl={linkPreview.trueUrl}
-                  margin={'16px 0 24px 0'}
-                />
-              : null}
+            ? <LinkPreview
+                data={linkPreview.data}
+                size={'large'}
+                remove={linkPreview.remove}
+                editable={true}
+                trueUrl={linkPreview.trueUrl}
+                margin={'16px 0 24px 0'}
+              />
+            : null}
 
         {images !== false &&
           <MediaRow>
-            <MediaInput onChange={this.addImage} multiple>Add</MediaInput>
+            <MediaInput onChange={this.addImage} multiple>
+              Add
+            </MediaInput>
           </MediaRow>}
       </Wrapper>
     );

@@ -8,18 +8,14 @@ import pure from 'recompose/pure';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { withRouter } from 'react-router';
-// $FlowFixMe
-import { Link } from 'react-router-dom';
 import { track } from '../../../../helpers/events';
 import {
   editCommunityMutation,
   deleteCommunityMutation,
 } from '../../../../api/community';
-import { openModal } from '../../../../actions/modals';
 import { addToastWithTimeout } from '../../../../actions/toasts';
-import { Button, TextButton, IconButton } from '../../../../components/buttons';
+import { Button } from '../../../../components/buttons';
 import { Notice } from '../../../../components/listItems/style';
-import Icon from '../../../../components/icons';
 import {
   Input,
   UnderlineInput,
@@ -28,14 +24,7 @@ import {
   CoverInput,
   Error,
 } from '../../../../components/formElements';
-import {
-  StyledCard,
-  FormTitle,
-  Description,
-  TertiaryActionContainer,
-  ImageInputWrapper,
-  Location,
-} from '../../../../components/editForm/style';
+import { ImageInputWrapper } from '../../../../components/editForm/style';
 import { Actions, FormContainer, Form } from '../../style';
 
 class CommunityWithData extends Component {
@@ -245,7 +234,6 @@ class CommunityWithData extends Component {
       nameError,
       isLoading,
     } = this.state;
-    const { community } = this.props;
 
     return (
       <FormContainer>

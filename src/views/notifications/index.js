@@ -24,10 +24,8 @@ import {
   displayLoadingNotifications,
   LoadingThread,
 } from '../../components/loading';
-import { FetchMoreButton } from '../../components/threadFeed/style';
 import { FlexCol, FlexRow } from '../../components/globals';
-import { Card } from '../../components/card';
-import { Button, IconButton } from '../../components/buttons';
+import { Button } from '../../components/buttons';
 import { sortByDate } from '../../helpers/utils';
 import WebPushManager from '../../helpers/web-push-manager';
 import {
@@ -150,8 +148,6 @@ class NotificationsPure extends Component {
 
     notifications = getDistinctNotifications(notifications);
     notifications = sortByDate(notifications, 'modifiedAt', 'desc');
-
-    const { notifications: { pageInfo: { hasNextPage } } } = data;
 
     if (!notifications || notifications.length === 0) {
       return (

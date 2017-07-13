@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
-import Modal from 'react-modal';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { withRouter } from 'react-router';
@@ -14,7 +12,6 @@ import slugg from 'slugg';
 import { withApollo } from 'react-apollo';
 import { track } from '../../../../helpers/events';
 import { Notice } from '../../../../components/listItems/style';
-import { closeModal } from '../../../../actions/modals';
 import { throttle } from '../../../../helpers/utils';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { COMMUNITY_SLUG_BLACKLIST } from '../../../../helpers/regexps';
@@ -22,7 +19,7 @@ import {
   createCommunityMutation,
   CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,
 } from '../../../../api/community';
-import { TextButton, Button } from '../../../../components/buttons';
+import { Button } from '../../../../components/buttons';
 import {
   Input,
   UnderlineInput,

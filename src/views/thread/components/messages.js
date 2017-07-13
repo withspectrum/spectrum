@@ -83,7 +83,6 @@ class MessagesWithData extends Component {
       data,
       toggleReaction,
       forceScrollToBottom,
-      messageCount,
     } = this.props;
     const dataExists = data.thread && data.thread.messageConnection;
     const messagesExist =

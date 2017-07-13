@@ -5,16 +5,7 @@ import { connect } from 'react-redux';
 //$FlowFixMe
 import compose from 'recompose/compose';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import { BillingListItem } from '../../../components/listItems';
-import { IconButton } from '../../../components/buttons';
-import { UpsellUpgradeToPro } from '../../../components/upsell';
-import { openModal } from '../../../actions/modals';
-import { convertTimestampToDate } from '../../../helpers/utils';
-import {
-  getCurrentUserRecurringPayments,
-  toggleNotificationSettingsMutation,
-} from '../../../api/user';
-import { displayLoadingCard } from '../../../components/loading';
+import { toggleNotificationSettingsMutation } from '../../../api/user';
 import { Checkbox } from '../../../components/formElements';
 import Icon from '../../../components/icons';
 import {
@@ -25,7 +16,7 @@ import {
   Notice,
   InlineIcon,
 } from '../../../components/listItems/style';
-import { EmailListItem, ChannelListCheckbox } from '../style';
+import { EmailListItem } from '../style';
 
 const parseNotificationTypes = notifications => {
   const types = Object.keys(notifications.types).filter(
@@ -33,14 +24,16 @@ const parseNotificationTypes = notifications => {
   );
   return types.map(type => {
     switch (type) {
-      case 'newMessageInThreads': {
+      case 'newMessageInThreads':
         return {
           type,
           emailValue: notifications.types[type].email,
           label:
-            'Email me when people reply to my conversations (including direct messages).',
+            "Email me when people respond in the threads and private conversations where I'm active - this includes direct messages.",
         };
-      }
+      default:
+      case 'null':
+        return null;
     }
   });
 };

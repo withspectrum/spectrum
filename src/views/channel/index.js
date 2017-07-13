@@ -90,7 +90,6 @@ class ChannelViewPure extends Component {
     const {
       match,
       data: { channel, networkStatus, user },
-      data,
       currentUser,
     } = this.props;
     const { isLoading } = this.state;

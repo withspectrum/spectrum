@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import { getItemFromStorage, storeItem } from '../../../helpers/localStorage';
 import { SERVER_URL } from '../../../api';
-import { track } from '../../../helpers/events';
 import { closeModal } from '../../../actions/modals';
 import ModalContainer from '../modalContainer';
 import { modalStyles } from '../styles';
@@ -30,7 +29,7 @@ class LoginModal extends Component {
   };
 
   render() {
-    const { isOpen, modalProps } = this.props;
+    const { isOpen } = this.props;
     const styles = modalStyles(300);
     const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
 

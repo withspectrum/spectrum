@@ -2,7 +2,6 @@
 // $FlowFixMe
 import styled from 'styled-components';
 import Card from '../../components/card';
-import { FlexCol } from '../../components/globals';
 
 export const Container = styled(Card)`
   background-image: ${props =>
