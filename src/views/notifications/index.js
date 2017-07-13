@@ -25,7 +25,9 @@ import {
   LoadingThread,
 } from '../../components/loading';
 import { FetchMoreButton } from '../../components/threadFeed/style';
-import { FlexCol } from '../../components/globals';
+import { FlexCol, FlexRow } from '../../components/globals';
+import { Card } from '../../components/card';
+import { Button, IconButton } from '../../components/buttons';
 import { sortByDate } from '../../helpers/utils';
 import WebPushManager from '../../helpers/web-push-manager';
 import {
@@ -38,6 +40,28 @@ import {
   UpsellToReload,
   UpsellNullNotifications,
 } from '../../components/upsell';
+import { RequestCard, CloseRequest } from './style';
+
+const BrowserNotificationRequest = () =>
+  <RequestCard>
+    <p>Would you like browser notifications?</p>
+    <FlexRow>
+      <Button
+        icon="notification-fill"
+        gradientTheme={'success'}
+        onClick={this.subscribeToWebPush}
+      >
+        Enable
+      </Button>
+      <CloseRequest
+        glyph="view-close"
+        color="text.placeholder"
+        hoverColor="warn.alt"
+        tipText="Dismiss"
+        tipLocation="top-left"
+      />
+    </FlexRow>
+  </RequestCard>;
 
 class NotificationsPure extends Component {
   state: {
@@ -133,7 +157,7 @@ class NotificationsPure extends Component {
       return (
         <AppViewWrapper>
           <Column type={'primary'}>
-            <button onClick={this.subscribeToWebPush}>Subscribe</button>
+            <BrowserNotificationRequest />
             <UpsellNullNotifications />
           </Column>
         </AppViewWrapper>
@@ -146,8 +170,8 @@ class NotificationsPure extends Component {
       <FlexCol style={{ flex: '1 1 auto' }}>
         <Titlebar title={'Notifications'} provideBack={false} noComposer />
         <AppViewWrapper>
-          <button onClick={this.subscribeToWebPush}>Subscribe</button>
           <Column type={'primary'}>
+            <BrowserNotificationRequest />
             <InfiniteList
               pageStart={0}
               loadMore={data.fetchMore}
