@@ -1,6 +1,10 @@
 import webPush from 'web-push';
 const debug = require('debug')('iris:utils:web-push');
-import { getSubscriptions } from '../models/web-push-subscription';
+import {
+  getSubscriptions,
+  removeSubscription,
+} from '../models/web-push-subscription';
+import { markSingleNotificationSeen } from '../models/usersNotifications';
 import formatNotification from './notification-formatting';
 
 try {
@@ -20,23 +24,33 @@ export const sendWebPushNotification = (subscription, payload, options) => {
       );
     return Promise.resolve({});
   }
-  debug(`send notification to endpoint ${subscription.endpoint}`);
-  const pl = typeof payload === 'string' ? payload : JSON.stringify(payload);
-  return webPush.sendNotification(subscription, pl, {
-    TTL: 86400, // Default TTL: One day
-    ...options,
-  });
+  const pl =
+    typeof payload === 'string'
+      ? payload
+      : JSON.stringify({
+          ...payload,
+          raw: undefined,
+        });
+  return webPush
+    .sendNotification(subscription, pl, {
+      TTL: 86400, // Default TTL: One day
+      ...options,
+    })
+    .catch(err => {
+      if (err.statusCode === 410 && err.endpoint) {
+        debug(`old subscription found (${err.endpoint}), removing`, err);
+        return removeSubscription(err.endpoint);
+      }
+    });
 };
 
 // Send a notification as a web push notification (maybe)
 export const sendNotificationAsWebPush = notification => {
   debug('send notification as web push notification');
-  // Don't sent push notifications for channel creation
-  // if (notification.event === 'CHANNEL_CREATED') return;
   return getSubscriptions(notification.userId)
     .then(subscriptions => {
       if (!subscriptions || subscriptions.length === 0) {
-        debug(`no subscription for user#${notification.userId}, `);
+        debug(`no subscription for user#${notification.userId}`);
         return Promise.resolve(false);
       }
 
@@ -49,6 +63,8 @@ export const sendNotificationAsWebPush = notification => {
             ...payload,
           })
         )
+      ).then(() =>
+        markSingleNotificationSeen(notification.id, notification.userId)
       );
     })
     .catch(err => {

@@ -9,7 +9,7 @@ import getEmailStatus from '../utils/get-email-status';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 // Change buffer in dev to 10 seconds vs 3 minutes in prod
-const BUFFER = IS_PROD ? 180000 : 20000;
+const BUFFER = IS_PROD ? 180000 : 10000;
 const MAX_WAIT = 600000;
 const sendNewMessageEmailQueue = createQueue(SEND_NEW_MESSAGE_EMAIL);
 

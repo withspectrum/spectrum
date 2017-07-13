@@ -7,7 +7,8 @@ exports.up = function(r, conn) {
     .catch(err => {
       throw new Error(err);
     })
-    .then(() => r.table('webPushSubscriptions').indexCreate('userId'));
+    .then(() => r.table('webPushSubscriptions').indexCreate('userId'))
+    .then(() => r.table('webPushSubscriptions').indexCreate('endpoint'));
 };
 
 exports.down = function(r, conn) {
