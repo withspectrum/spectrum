@@ -24,10 +24,12 @@ import {
   displayLoadingNotifications,
   LoadingThread,
 } from '../../components/loading';
-import { FlexCol, FlexRow } from '../../components/globals';
-import { Button } from '../../components/buttons';
+import { FlexCol } from '../../components/globals';
 import { sortByDate } from '../../helpers/utils';
+import { storeItem, getItemFromStorage } from '../../helpers/localStorage';
 import WebPushManager from '../../helpers/web-push-manager';
+import { track } from '../../helpers/events';
+import { addToastWithTimeout } from '../../actions/toasts';
 import {
   getNotifications,
   markNotificationsSeenMutation,
@@ -38,32 +40,12 @@ import {
   UpsellToReload,
   UpsellNullNotifications,
 } from '../../components/upsell';
-import { RequestCard, CloseRequest } from './style';
-
-const BrowserNotificationRequest = () =>
-  <RequestCard>
-    <p>Would you like browser notifications?</p>
-    <FlexRow>
-      <Button
-        icon="notification-fill"
-        gradientTheme={'success'}
-        onClick={this.subscribeToWebPush}
-      >
-        Enable
-      </Button>
-      <CloseRequest
-        glyph="view-close"
-        color="text.placeholder"
-        hoverColor="warn.alt"
-        tipText="Dismiss"
-        tipLocation="top-left"
-      />
-    </FlexRow>
-  </RequestCard>;
+import BrowserNotificationRequest from './components/browserNotificationRequest';
 
 class NotificationsPure extends Component {
   state: {
     isFetching: boolean,
+    showWebPushPrompt: boolean,
   };
 
   constructor() {
@@ -71,6 +53,7 @@ class NotificationsPure extends Component {
 
     this.state = {
       isFetching: false,
+      showWebPushPrompt: false,
     };
   }
 
@@ -100,6 +83,17 @@ class NotificationsPure extends Component {
       // the AppViewWrapper which is the scrolling part of the site.
       scrollElement: document.getElementById('scroller-for-thread-feed'),
     });
+
+    if (getItemFromStorage('webPushPromptDismissed')) return;
+
+    WebPushManager.getPermissionState().then(result => {
+      if (result === 'prompt') {
+        track('browser push notifications', 'prompted');
+        this.setState({
+          showWebPushPrompt: true,
+        });
+      }
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -111,10 +105,29 @@ class NotificationsPure extends Component {
   }
 
   subscribeToWebPush = () => {
-    WebPushManager.subscribe().then(subscription => {
-      if (!subscription) return;
-      this.props.subscribeToWebPush(subscription);
+    track('browser push notifications', 'prompt triggered');
+    WebPushManager.subscribe()
+      .then(subscription => {
+        track('browser push notifications', 'subscribed');
+        return this.props.subscribeToWebPush(subscription);
+      })
+      .catch(err => {
+        track('browser push notifications', 'blocked');
+        return this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            "Oops, we couldn't enable browser notifications for you. Please try again!"
+          )
+        );
+      });
+  };
+
+  dismissWebPushRequest = () => {
+    this.setState({
+      showWebPushPrompt: false,
     });
+    track('browser push notifications', 'dismissed');
+    storeItem('webPushPromptDismissed', { timestamp: Date.now() });
   };
 
   render() {
@@ -153,7 +166,11 @@ class NotificationsPure extends Component {
       return (
         <AppViewWrapper>
           <Column type={'primary'}>
-            <BrowserNotificationRequest />
+            {this.state.showWebPushPrompt &&
+              <BrowserNotificationRequest
+                onSubscribe={this.subscribeToWebPush}
+                onDismiss={this.dismissWebPushRequest}
+              />}
             <UpsellNullNotifications />
           </Column>
         </AppViewWrapper>
@@ -167,7 +184,11 @@ class NotificationsPure extends Component {
         <Titlebar title={'Notifications'} provideBack={false} noComposer />
         <AppViewWrapper>
           <Column type={'primary'}>
-            <BrowserNotificationRequest />
+            {this.state.showWebPushPrompt &&
+              <BrowserNotificationRequest
+                onSubscribe={this.subscribeToWebPush}
+                onDismiss={this.dismissWebPushRequest}
+              />}
             <InfiniteList
               pageStart={0}
               loadMore={data.fetchMore}

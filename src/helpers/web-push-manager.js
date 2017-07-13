@@ -42,6 +42,25 @@ class WebPushManager {
     });
   };
 
+  getPermissionState = () => {
+    // No compat
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+      return new Promise(res => {
+        res(false);
+      });
+    }
+    // Old API
+    if (navigator.permissions) {
+      return navigator.permissions
+        .query({ name: 'notifications' })
+        .then(result => result.state);
+    }
+    // New API
+    return new Promise(res => {
+      res(Notification.permission);
+    });
+  };
+
   getSubscription = () => this.manager.getSubscription();
 }
 

@@ -10,7 +10,6 @@ const SUBSCRIBE_TO_WEB_PUSH_MUTATION = gql`
 const SUBSCRIBE_TO_WEB_PUSH_OPTIONS = {
   props: ({ mutate }) => ({
     subscribeToWebPush: subscription =>
-      console.log('subscribeToWebPush') ||
       mutate({
         variables: {
           subscription,
