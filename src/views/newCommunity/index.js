@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 // $FlowFixMe
 import { withApollo } from 'react-apollo';
 // $FlowFixMe
-import queryString from 'query-string';
 import { track } from '../../helpers/events';
 import { Button, TextButton } from '../../components/buttons';
 import AppViewWrapper from '../../components/appViewWrapper';
@@ -29,7 +28,6 @@ import {
   Description,
   Divider,
   ContentContainer,
-  NullCol,
 } from './style';
 
 class NewCommunity extends Component {
@@ -47,7 +45,7 @@ class NewCommunity extends Component {
     const search = window.location.search;
     const params = new URLSearchParams(search);
     let step = params.get('s');
-    step = step ? parseInt(step) : 1;
+    step = step ? parseInt(step, 10) : 1;
     const id = params.get('id');
 
     this.state = {

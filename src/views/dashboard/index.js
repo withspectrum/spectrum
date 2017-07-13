@@ -64,7 +64,7 @@ class DashboardPure extends Component {
   };
 
   render() {
-    const { data: { user, error, networkStatus }, data } = this.props;
+    const { data: { user, networkStatus } } = this.props;
     const { isNewUser } = this.state;
     const isMobile = window.innerWidth < 768;
     const dataExists = user && user.communityConnection;
@@ -72,7 +72,6 @@ class DashboardPure extends Component {
 
     if (networkStatus === 7) {
       if (isNewUser) {
-        const currentUser = user;
         const communities = user.communityConnection.edges;
 
         return (

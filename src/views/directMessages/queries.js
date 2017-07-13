@@ -2,11 +2,8 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { subscribeToNewMessages } from '../../api/subscriptions';
-import { userInfoFragment } from '../../api/fragments/user/userInfo';
 import { messageInfoFragment } from '../../api/fragments/message/messageInfo';
-import {
-  directMessageThreadInfoFragment,
-} from '../../api/fragments/directMessageThread/directMessageThreadInfo';
+import { directMessageThreadInfoFragment } from '../../api/fragments/directMessageThread/directMessageThreadInfo';
 
 const LoadMoreMessages = gql`
   query loadMoreMessages($id: ID!, $after: String) {
@@ -85,9 +82,10 @@ export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
           query: LoadMoreMessages,
           variables: {
             id: directMessageThread.id,
-            after: directMessageThread.messageConnection.edges[
-              directMessageThread.messageConnection.edges.length - 1
-            ].cursor,
+            after:
+              directMessageThread.messageConnection.edges[
+                directMessageThread.messageConnection.edges.length - 1
+              ].cursor,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult.directMessageThread) {

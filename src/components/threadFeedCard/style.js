@@ -1,13 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import {
-  FlexCol,
-  FlexRow,
-  Transition,
-  Shadow,
-  hexa,
-  Gradient,
-} from '../globals';
+import { FlexCol, FlexRow, Transition, Shadow, hexa } from '../globals';
 import Card from '../card';
 
 export const StyledThreadFeedCard = styled(Card)`

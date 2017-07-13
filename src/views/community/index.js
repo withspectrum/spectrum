@@ -6,7 +6,6 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { openModal } from '../../actions/modals';
 import { track } from '../../helpers/events';
 import ThreadComposer from '../../components/threadComposer';
 import Head from '../../components/head';
@@ -159,15 +158,14 @@ class CommunityViewPure extends Component {
                 </Column>
 
                 <Column type="primary">
-
                   {loggedInUser
                     ? hasRights
-                        ? <ThreadComposer activeCommunity={communitySlug} />
-                        : <UpsellJoinCommunity
-                            community={community}
-                            loading={isLoading}
-                            join={this.toggleMembership}
-                          />
+                      ? <ThreadComposer activeCommunity={communitySlug} />
+                      : <UpsellJoinCommunity
+                          community={community}
+                          loading={isLoading}
+                          join={this.toggleMembership}
+                        />
                     : <UpsellSignIn entity={community} />}
                   <CommunityThreadFeed
                     viewContext="community"
