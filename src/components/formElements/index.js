@@ -97,12 +97,13 @@ export const CoverInput = (props: InputProps) => {
 export const Checkbox = (props: InputProps) => {
   return (
     <StyledLabel>
-      <StyledCheckboxWrapper>
+      <StyledCheckboxWrapper disabled={props.disabled || false}>
         {props.checked ? <Icon glyph="checkmark" /> : <Icon glyph="checkbox" />}
         <StyledHiddenInput
           type="checkbox"
           id={props.id}
           checked={props.checked}
+          disabled={props.disabled || false}
           onChange={props.onChange}
         />
         {props.children}

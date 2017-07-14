@@ -26,7 +26,11 @@ import {
 } from '../../components/loading';
 import { FlexCol } from '../../components/globals';
 import { sortByDate } from '../../helpers/utils';
-import { storeItem, getItemFromStorage } from '../../helpers/localStorage';
+import {
+  storeItem,
+  getItemFromStorage,
+  removeItemFromStorage,
+} from '../../helpers/localStorage';
 import WebPushManager from '../../helpers/web-push-manager';
 import { track } from '../../helpers/events';
 import { addToastWithTimeout } from '../../actions/toasts';
@@ -84,7 +88,11 @@ class NotificationsPure extends Component {
       scrollElement: document.getElementById('scroller-for-thread-feed'),
     });
 
-    if (getItemFromStorage('webPushPromptDismissed')) return;
+    if (getItemFromStorage('webPushPromptDismissed')) {
+      return this.setState({
+        showWebPushPrompt: false,
+      });
+    }
 
     WebPushManager.getPermissionState().then(result => {
       if (result === 'prompt') {
@@ -109,6 +117,7 @@ class NotificationsPure extends Component {
     WebPushManager.subscribe()
       .then(subscription => {
         track('browser push notifications', 'subscribed');
+        removeItemFromStorage('webPushPromptDismissed');
         return this.props.subscribeToWebPush(subscription);
       })
       .catch(err => {

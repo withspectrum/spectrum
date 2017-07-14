@@ -26,7 +26,11 @@ class WebPushManager {
 
   set = manager => {
     this.manager = manager;
-    if (this.subscriptionAttempt) this.subscribe();
+    if (this.subscriptionAttempt) {
+      this.subscribe();
+    } else if (this.unsubscriptionAttempt) {
+      this.unsubscribe();
+    }
   };
 
   subscribe = () => {
@@ -40,6 +44,16 @@ class WebPushManager {
         'BPJAFt0MO2BkTYSuzNdGHbVD6lbk2bzYqMBp1gBXLKUupEIIV7yXViZ1D7SyrJfFbYkKuoxwyaP8YcHU8nRDQsA'
       ),
     });
+  };
+
+  unsubscribe = () => {
+    if (!this.manager) {
+      this.unsubscriptionAttempt = true;
+      return Promise.resolve(true);
+    }
+    return this.getSubscription().then(subscription =>
+      subscription.unsubscribe()
+    );
   };
 
   getPermissionState = () => {
@@ -61,7 +75,21 @@ class WebPushManager {
     });
   };
 
-  getSubscription = () => this.manager.getSubscription();
+  _getSubscription = () => {
+    return this.manager.getSubscription();
+  };
+
+  getSubscription = () =>
+    new Promise(res => {
+      // Recursively call this method until we got a manager
+      if (!this.manager) {
+        setTimeout(() => {
+          res(this.getSubscription());
+        }, 500);
+      } else {
+        res(this._getSubscription());
+      }
+    });
 }
 
 export default new WebPushManager();

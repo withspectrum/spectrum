@@ -75,7 +75,9 @@ const UserSettings = ({ data, currentUser, match }) => {
         <Column type="primary">
           <RecurringPaymentsList data={data} currentUser={data.user} />
           <EmailSettings currentUser={data.user} />
-          <NotificationSettings />
+          {'serviceWorker' in navigator &&
+            'PushManager' in window &&
+            <NotificationSettings />}
         </Column>
       </AppViewWrapper>
     </FlexCol>

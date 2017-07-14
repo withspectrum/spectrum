@@ -160,6 +160,10 @@ export const Notice = styled(Description)`
   border: 1px solid #ffd566;
   color: #715818;
 
+  a {
+    text-decoration: underline;
+  }
+
   strong {
     font-weight: 600;
   }
