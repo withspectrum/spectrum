@@ -91,16 +91,13 @@ const getChannelBySlug = (
 ): Promise<Object> => {
   return db
     .table('channels')
+    .filter(channel =>
+      channel('slug')
+        .eq(channelSlug)
+        .and(db.not(channel.hasFields('deletedAt')))
+    )
     .eqJoin('communityId', db.table('communities'))
-    .filter({
-      left: {
-        slug: channelSlug,
-      },
-      right: {
-        slug: communitySlug,
-      },
-    })
-    .filter(channel => db.not(channel.hasFields('deletedAt')))
+    .filter({ right: { slug: communitySlug } })
     .run()
     .then(result => {
       if (result && result[0]) {
