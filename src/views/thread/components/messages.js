@@ -79,7 +79,7 @@ class MessagesWithData extends Component {
 
   render() {
     const {
-      data: { networkStatus },
+      data: { networkStatus, error },
       data,
       toggleReaction,
       forceScrollToBottom,
@@ -88,32 +88,7 @@ class MessagesWithData extends Component {
     const messagesExist =
       dataExists && data.thread.messageConnection.edges.length > 0;
 
-    if (networkStatus === 7) {
-      if (messagesExist) {
-        const sortedMessages = sortAndGroupMessages(
-          data.thread.messageConnection.edges
-        );
-
-        return (
-          <ChatWrapper>
-            <HorizontalRule>
-              <hr />
-              <Icon glyph={'message'} />
-              <hr />
-            </HorizontalRule>
-            <ChatMessages
-              threadId={data.thread.id}
-              toggleReaction={toggleReaction}
-              messages={sortedMessages}
-              threadType={'story'}
-              forceScrollToBottom={forceScrollToBottom}
-            />
-          </ChatWrapper>
-        );
-      } else {
-        return <EmptyChat />;
-      }
-    } else if (networkStatus === 8) {
+    if (networkStatus === 8 || error) {
       return (
         <NullState
           heading="Sorry, we lost connection to the server..."
@@ -127,6 +102,33 @@ class MessagesWithData extends Component {
           </Button>
         </NullState>
       );
+    }
+
+    if (messagesExist) {
+      const sortedMessages = sortAndGroupMessages(
+        data.thread.messageConnection.edges
+      );
+
+      return (
+        <ChatWrapper>
+          <HorizontalRule>
+            <hr />
+            <Icon glyph={'message'} />
+            <hr />
+          </HorizontalRule>
+          <ChatMessages
+            threadId={data.thread.id}
+            toggleReaction={toggleReaction}
+            messages={sortedMessages}
+            threadType={'story'}
+            forceScrollToBottom={forceScrollToBottom}
+          />
+        </ChatWrapper>
+      );
+    }
+
+    if (networkStatus === 7) {
+      return <EmptyChat />;
     } else {
       return (
         <ChatWrapper>
