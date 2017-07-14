@@ -698,7 +698,7 @@ export const displayLoadingNavbar = branch(
 );
 
 export const displayLoadingCard = branch(
-  props => console.log(props.data) || !props.data || props.data.loading,
+  props => !props.data || props.data.loading,
   renderComponent(LoadingCard)
 );
 
