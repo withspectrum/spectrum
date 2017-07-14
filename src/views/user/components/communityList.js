@@ -33,48 +33,7 @@ const CommunityList = props => {
   const dataExists =
     communities && communities.length !== 0 && communities !== null;
 
-  if (networkStatus === 7) {
-    if (dataExists) {
-      return (
-        <StyledCard>
-          <ListHeader>
-            {user === currentUser
-              ? <ListHeading>My Communities</ListHeading>
-              : <ListHeading>Member of</ListHeading>}
-          </ListHeader>
-          <ListContainer>
-            {communities.map(item => {
-              return (
-                <Link key={item.node.id} to={`/${item.node.slug}`}>
-                  <CommunityListItem
-                    contents={item.node}
-                    withDescription={withDescription}
-                    withMeta={withMeta}
-                    meta={`${item.node.metaData.members > 1
-                      ? `${item.node.metaData.members} members`
-                      : `${item.node.metaData.members} member`}
-                       ·
-                      ${item.node.metaData.channels > 1
-                        ? `${item.node.metaData.channels} channels`
-                        : `${item.node.metaData.channels} channel`}`}
-                  >
-                    <Icon glyph="view-forward" />
-                  </CommunityListItem>
-                </Link>
-              );
-            })}
-          </ListContainer>
-        </StyledCard>
-      );
-    } else {
-      return (
-        <NullCard
-          heading={`${user.username} isn't a member of any communities yet.`}
-          bg={'community'}
-        />
-      );
-    }
-  } else if (networkStatus === 8) {
+  if (networkStatus === 8) {
     console.log("communities didn't load. here's the props", props);
     return (
       <NullCard
@@ -82,8 +41,50 @@ const CommunityList = props => {
         bg={'error'}
       />
     );
+  }
+
+  if (dataExists) {
+    return (
+      <StyledCard>
+        <ListHeader>
+          {user === currentUser
+            ? <ListHeading>My Communities</ListHeading>
+            : <ListHeading>Member of</ListHeading>}
+        </ListHeader>
+        <ListContainer>
+          {communities.map(item => {
+            return (
+              <Link key={item.node.id} to={`/${item.node.slug}`}>
+                <CommunityListItem
+                  contents={item.node}
+                  withDescription={withDescription}
+                  withMeta={withMeta}
+                  meta={`${item.node.metaData.members > 1
+                    ? `${item.node.metaData.members} members`
+                    : `${item.node.metaData.members} member`}
+                     ·
+                    ${item.node.metaData.channels > 1
+                      ? `${item.node.metaData.channels} channels`
+                      : `${item.node.metaData.channels} channel`}`}
+                >
+                  <Icon glyph="view-forward" />
+                </CommunityListItem>
+              </Link>
+            );
+          })}
+        </ListContainer>
+      </StyledCard>
+    );
+  }
+
+  if (networkStatus === 7) {
+    return (
+      <NullCard
+        heading={`${user.username} isn't a member of any communities yet.`}
+        bg={'community'}
+      />
+    );
   } else {
-    console.log("communities didn't load. here's the props", props);
     return <LoadingList />;
   }
 };
