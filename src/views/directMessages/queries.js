@@ -50,35 +50,24 @@ export const GET_DIRECT_MESSAGE_THREAD_QUERY = gql`
 `;
 
 export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
-  options: ({ id }) => ({
-    variables: {
-      id,
+  options: ({ id }) =>
+    console.log(id) || {
+      variables: {
+        id,
+      },
+      fetchPolicy: 'cache-and-network',
     },
-    fetchPolicy: 'cache-and-network',
-  }),
-  props: ({
+  props: ({ data: { directMessageThread }, data, ownProps, ...rest }) => ({
+    ...rest,
     data: {
-      error,
-      loading,
-      directMessageThread,
-      subscribeToMore,
-      networkStatus,
-      fetchMore,
-    },
-    ownProps,
-  }) => ({
-    data: {
-      error,
-      loading,
-      messages: directMessageThread
-        ? directMessageThread.messageConnection.edges
-        : '',
-      networkStatus: networkStatus,
+      ...data,
+      messages:
+        directMessageThread && directMessageThread.messageConnection.edges,
       hasNextPage: directMessageThread
         ? directMessageThread.messageConnection.pageInfo.hasNextPage
         : false,
       fetchMore: () =>
-        fetchMore({
+        data.fetchMore({
           query: LoadMoreMessages,
           variables: {
             id: directMessageThread.id,
@@ -118,7 +107,7 @@ export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
       if (!directMessageThread) {
         return;
       }
-      return subscribeToMore({
+      return data.subscribeToMore({
         document: subscribeToNewMessages,
         variables: {
           thread: ownProps.id,
