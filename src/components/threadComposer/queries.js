@@ -59,5 +59,5 @@ ${userInfoFragment}
 
 export const getComposerCommunitiesAndChannels = graphql(
   GET_COMPOSER_COMMUNITIES_AND_CHANNELS_QUERY,
-  { options: { fetchPolicy: 'cache-and-network' } }
+  { options: { fetchPolicy: 'cache-first' } }
 );

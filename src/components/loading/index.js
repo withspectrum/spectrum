@@ -698,7 +698,7 @@ export const displayLoadingNavbar = branch(
 );
 
 export const displayLoadingCard = branch(
-  props => !props.data || props.data.loading,
+  props => console.log(props.data) || !props.data || props.data.loading,
   renderComponent(LoadingCard)
 );
 
@@ -718,6 +718,6 @@ export const displayLoadingNotifications = branch(
 );
 
 export const displayLoadingComposer = branch(
-  props => props.data.loading,
+  props => !props.data.user && !props.data.error,
   renderComponent(LoadingComposer)
 );
