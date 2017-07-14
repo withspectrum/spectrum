@@ -23,7 +23,7 @@ const ThreadFeedWithData = compose(getUserThreads)(ThreadFeed);
 
 const UserViewPure = ({
   match,
-  data: { user, networkStatus, channel, community },
+  data: { user, networkStatus, channel, community, error },
   data,
   currentUser,
 }) => {
@@ -32,73 +32,71 @@ const UserViewPure = ({
   const username = match.params.username;
   const dataExists = user;
 
+  if (networkStatus === 8 || error) {
+    return (
+      <AppViewWrapper>
+        <Titlebar
+          title={`No User Found`}
+          provideBack={true}
+          backRoute={`/`}
+          noComposer
+        />
+
+        <Column type="primary" alignItems="center">
+          <Upsell404User username={username} />
+        </Column>
+      </AppViewWrapper>
+    );
+  }
+
+  if (dataExists) {
+    const { title, description } = generateMetaInfo({
+      type: 'user',
+      data: {
+        name: user.name,
+        username: user.username,
+        description: user.description,
+      },
+    });
+
+    return (
+      <AppViewWrapper>
+        <Head title={title} description={description} />
+        <Titlebar
+          title={user.name}
+          subtitle={'Posts By'}
+          provideBack={true}
+          backRoute={`/`}
+          noComposer
+        />
+        <Column type="secondary">
+          <UserProfile data={{ user }} username={username} profileSize="full" />
+          <CommunityList
+            withMeta={false}
+            withDescription={true}
+            currentUser={currentUser}
+            profileSize="small"
+            user={user}
+            networkStatus={networkStatus}
+            communities={user.communityConnection.edges}
+          />
+        </Column>
+
+        <Column type="primary" alignItems="center">
+          {user.threadCount === 0 &&
+            <NullState
+              bg="message"
+              heading={`${user.name} hasn't posted anything yet.`}
+            />}
+          {user.threadCount > 0 &&
+            <ThreadFeedWithData username={username} viewContext="profile" />}
+        </Column>
+      </AppViewWrapper>
+    );
+  }
+
   if (networkStatus === 7) {
-    if (dataExists) {
-      const { title, description } = generateMetaInfo({
-        type: 'user',
-        data: {
-          name: user.name,
-          username: user.username,
-          description: user.description,
-        },
-      });
-
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar
-            title={user.name}
-            subtitle={'Posts By'}
-            provideBack={true}
-            backRoute={`/`}
-            noComposer
-          />
-          <Column type="secondary">
-            <UserProfile
-              data={{ user }}
-              username={username}
-              profileSize="full"
-            />
-            <CommunityList
-              withMeta={false}
-              withDescription={true}
-              currentUser={currentUser}
-              profileSize="small"
-              user={user}
-              networkStatus={networkStatus}
-              communities={user.communityConnection.edges}
-            />
-          </Column>
-
-          <Column type="primary" alignItems="center">
-            {user.threadCount === 0 &&
-              <NullState
-                bg="message"
-                heading={`${user.name} hasn't posted anything yet.`}
-              />}
-            {user.threadCount > 0 &&
-              <ThreadFeedWithData username={username} viewContext="profile" />}
-          </Column>
-        </AppViewWrapper>
-      );
-    } else {
-      // data is ready, but no user exists
-      return (
-        <AppViewWrapper>
-          <Titlebar
-            title={`No User Found`}
-            provideBack={true}
-            backRoute={`/`}
-            noComposer
-          />
-
-          <Column type="primary" alignItems="center">
-            <Upsell404User username={username} />
-          </Column>
-        </AppViewWrapper>
-      );
-    }
-  } else if (networkStatus === 8) {
+    // data is ready, but no user exists
     return (
       <AppViewWrapper>
         <Titlebar

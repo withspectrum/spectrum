@@ -68,6 +68,7 @@ const threadsQueryOptions = {
     variables: {
       username: username,
     },
+    fetchPolicy: 'cache-first',
     reducer: (prev, action, variables) => {
       /*
         Every apollo action triggers internal store updates via reducers.
@@ -160,7 +161,7 @@ const profileQueryOptions = {
     variables: {
       username: username,
     },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   }),
 };
 
