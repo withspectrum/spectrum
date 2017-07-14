@@ -117,7 +117,7 @@ export const IconDrop = styled(FlexRow)`
   }
 
   .dropdown {
-    opacity: 0;
+    display: none;
     pointer-events: none;
     position: absolute;
     top: 100%;
@@ -131,7 +131,7 @@ export const IconDrop = styled(FlexRow)`
 
   &:hover .dropdown,
   .dropdown:hover {
-    opacity: 1;
+    display: flex;
     pointer-events: auto;
     transition: ${Transition.hover.on};
 
