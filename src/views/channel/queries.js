@@ -5,12 +5,8 @@ import { graphql, gql } from 'react-apollo';
 import update from 'immutability-helper';
 import { encode } from '../../helpers/utils';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
-import {
-  channelThreadsFragment,
-} from '../../api/fragments/channel/channelThreads';
-import {
-  channelMetaDataFragment,
-} from '../../api/fragments/channel/channelMetaData';
+import { channelThreadsFragment } from '../../api/fragments/channel/channelThreads';
+import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
 
 const LoadMoreThreads = gql`
   query loadMoreChannelThreads($id: ID, $after: String) {
@@ -38,9 +34,10 @@ const threadsQueryOptions = {
         fetchMore({
           query: LoadMoreThreads,
           variables: {
-            after: channel.threadConnection.edges[
-              channel.threadConnection.edges.length - 1
-            ].cursor,
+            after:
+              channel.threadConnection.edges[
+                channel.threadConnection.edges.length - 1
+              ].cursor,
             id: channel.id,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
@@ -73,6 +70,7 @@ const threadsQueryOptions = {
       channelSlug: channelSlug.toLowerCase(),
       communitySlug: communitySlug.toLowerCase(),
     },
+    fetchPolicy: 'cache-and-network',
     reducer: (prev, action, variables) => {
       /*
         Every apollo action triggers internal store updates via reducers.
@@ -166,7 +164,7 @@ const profileQueryOptions = {
       channelSlug: channelSlug.toLowerCase(),
       communitySlug: communitySlug.toLowerCase(),
     },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   }),
 };
 
