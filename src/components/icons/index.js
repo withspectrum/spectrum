@@ -27,7 +27,10 @@ export const SvgWrapper = styled.div`
   color: inherit;
   ${props => (props.tipText ? Tooltip(props) : '')};
 
-  ${props => props.count && css`
+  ${props =>
+    props.count &&
+    css`
+    background-color: transparent;
     &:after {
       content: ${props.count ? `'${props.count}'` : `''`};
       position: absolute;
@@ -36,12 +39,18 @@ export const SvgWrapper = styled.div`
       font-size: 14px;
       font-weight: 600;
       background: ${({ theme }) => theme.bg.default};
-      color: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};;
+      color: ${({ theme }) =>
+        process.env.NODE_ENV === 'production'
+          ? theme.text.default
+          : theme.warn.alt};
       border-radius: 8px;
       padding: 2px 4px;
-      border: 2px solid ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
+      border: 2px solid ${({ theme }) =>
+        process.env.NODE_ENV === 'production'
+          ? theme.text.default
+          : theme.warn.alt};
     }
-  `}
+  `};
 `;
 
 class Icon extends React.Component {
@@ -300,7 +309,6 @@ class Icon extends React.Component {
         return (
           <g>
             <path d="M19,13c0,1.683 -0.271,2.241 -0.47,2.456c-0.162,0.176 -0.679,0.544 -2.53,0.544c-1.851,0 -2.368,-0.368 -2.53,-0.544c-0.199,-0.215 -0.47,-0.773 -0.47,-2.456c0,-1.657 1.343,-3 3,-3c1.657,0 3,1.343 3,3Zm0.835,3.977c0.879,-0.804 1.165,-2.104 1.165,-3.977c0,-2.761 -2.239,-5 -5,-5c-2.761,0 -5,2.239 -5,5c0,1.873 0.286,3.173 1.165,3.977c-1.664,0.911 -2.969,2.396 -3.649,4.189c-0.124,0.328 -0.153,0.708 0.052,0.993c0.568,0.789 1.674,-0.111 2.13,-0.97c1.007,-1.897 3.004,-3.189 5.302,-3.189c2.298,0 4.295,1.292 5.302,3.189c0.456,0.859 1.562,1.759 2.13,0.97c0.205,-0.285 0.176,-0.665 0.052,-0.993c-0.68,-1.793 -1.985,-3.278 -3.649,-4.189Z" />
-
           </g>
         );
       case 'photo':
@@ -476,7 +484,9 @@ class Icon extends React.Component {
           fit
           id={this.props.glyph}
         >
-          <title id="title">{this.props.glyph}</title>
+          <title id="title">
+            {this.props.glyph}
+          </title>
           {this.returnGlyph()}
         </InlineSvg>
       </SvgWrapper>

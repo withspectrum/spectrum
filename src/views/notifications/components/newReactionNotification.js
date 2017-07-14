@@ -135,16 +135,19 @@ export const MiniNewReactionNotification = ({
 
   return (
     <NotificationListRow>
-      <ReactionContext>
-        <Icon glyph="like-fill" />
-        <ActorsRow actors={actors.asObjects} />
-      </ReactionContext>
-      <Content>
-        <TextContent pointer={false}>
-          {' '}{actors.asString} {event} {context.asString}{' '}
-          {messageStr && `"${messageStr}"`} {date}{' '}
-        </TextContent>
-      </Content>
+      <CardLink to={`/thread/${notification.context.payload.threadId}`} />
+      <CardContent>
+        <ReactionContext>
+          <Icon glyph="like-fill" />
+          <ActorsRow actors={actors.asObjects} />
+        </ReactionContext>
+        <Content>
+          <TextContent pointer={false}>
+            {' '}{actors.asString} {event} {context.asString}{' '}
+            {messageStr && `"${messageStr}"`} {date}{' '}
+          </TextContent>
+        </Content>
+      </CardContent>
     </NotificationListRow>
   );
 };

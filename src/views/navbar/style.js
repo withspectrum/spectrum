@@ -117,7 +117,7 @@ export const IconDrop = styled(FlexRow)`
   }
 
   .dropdown {
-    display: none;
+    opacity: 0;
     pointer-events: none;
     position: absolute;
     top: 100%;
@@ -131,7 +131,7 @@ export const IconDrop = styled(FlexRow)`
 
   &:hover .dropdown,
   .dropdown:hover {
-    display: flex;
+    opacity: 1;
     pointer-events: auto;
     transition: ${Transition.hover.on};
 
@@ -159,23 +159,6 @@ export const IconLink = styled(Link)`
     opacity: 1;
   }
 
-${/* handles unseen notification counts for both DMs and Notifications */ ''}
-  ${/* ${props => props.withCount && css`
-    > .icon:after {
-      content: ${props.withCount ? `'${props.withCount}'` : `''`};
-      position: absolute;
-      left: calc(100% - 12px);
-      top: -2px;
-      font-size: 14px;
-      font-weight: 600;
-      background: ${({ theme }) => theme.bg.default};
-      color: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};;
-      border-radius: 8px;
-      padding: 2px 4px;
-      border: 2px solid ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
-    }
-  `} */ ''}
-
   &[data-active~="true"] {
     box-shadow: inset 0 -4px 0 ${({ theme }) => theme.bg.default};
     opacity: 1;
@@ -196,28 +179,6 @@ ${/* handles unseen notification counts for both DMs and Notifications */ ''}
       height: 32px;
     }
   }
-`;
-
-export const IconWithCount = styled(Icon)`
-
-&:after {
-  content: ${props => (props.withCount ? `'${props.withCount}'` : `''`)};
-${/* handles unseen notification counts for both DMs and Notifications */ ''}
-  ${/* ${props => props.withCount && css`
-    &:after {
-      content: ${props.withCount ? `'${props.withCount}'` : `''`};
-      position: absolute;
-      left: calc(100% - 12px);
-      top: -2px;
-      font-size: 14px;
-      font-weight: 600;
-      background: ${({ theme }) => theme.bg.default};
-      color: ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};;
-      border-radius: 8px;
-      padding: 2px 4px;
-      border: 2px solid ${({ theme }) => (process.env.NODE_ENV === 'production' ? theme.text.default : theme.warn.alt)};
-    }
-  `} */ ''}
 `;
 
 export const Label = styled.span`
