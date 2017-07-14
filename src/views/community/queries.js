@@ -5,16 +5,10 @@ import { graphql, gql } from 'react-apollo';
 import update from 'immutability-helper';
 import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
-import {
-  communityInfoFragment,
-} from '../../api/fragments/community/communityInfo';
-import {
-  communityThreadsFragment,
-} from '../../api/fragments/community/communityThreads';
+import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
+import { communityThreadsFragment } from '../../api/fragments/community/communityThreads';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
-import {
-  channelMetaDataFragment,
-} from '../../api/fragments/channel/channelMetaData';
+import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
 
 const LoadMoreThreads = gql`
   query communityThreads($slug: String, $after: String) {
@@ -44,9 +38,10 @@ const threadsQueryOptions = {
         fetchMore({
           query: LoadMoreThreads,
           variables: {
-            after: community.threadConnection.edges[
-              community.threadConnection.edges.length - 1
-            ].cursor,
+            after:
+              community.threadConnection.edges[
+                community.threadConnection.edges.length - 1
+              ].cursor,
             slug: community.slug,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
@@ -78,6 +73,7 @@ const threadsQueryOptions = {
     variables: {
       slug: slug.toLowerCase(),
     },
+    fetchPolicy: 'cache-and-network',
     reducer: (prev, action, variables) => {
       /*
         Every apollo action triggers internal store updates via reducers.
@@ -170,7 +166,7 @@ const profileQueryOptions = {
     variables: {
       slug: communitySlug.toLowerCase(),
     },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   }),
 };
 

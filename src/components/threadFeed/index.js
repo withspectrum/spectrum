@@ -69,42 +69,44 @@ class ThreadFeedPure extends Component {
   }
 
   render() {
-    const { data: { threads, networkStatus }, viewContext } = this.props;
+    const { data: { threads, networkStatus, error }, viewContext } = this.props;
     const { scrollElement } = this.state;
-    // const dataExists = threads && threads.length;
+    const dataExists = threads && threads.length > 0;
     // const loggedInUser = user || currentUser;
 
-    if (networkStatus === 7) {
-      if (threads.length === 0) {
-        return <NullState />;
-      } else {
-        return (
-          <Threads>
-            <InfiniteList
-              pageStart={0}
-              loadMore={this.props.data.fetchMore}
-              hasMore={this.props.data.hasNextPage}
-              loader={<LoadingThread />}
-              useWindow={false}
-              initialLoad={false}
-              scrollElement={scrollElement}
-              threshold={750}
-            >
-              {threads.map(thread => {
-                return (
-                  <ThreadFeedCard
-                    key={thread.node.id}
-                    data={thread.node}
-                    viewContext={viewContext}
-                  />
-                );
-              })}
-            </InfiniteList>
-          </Threads>
-        );
-      }
-    } else if (networkStatus === 8) {
+    if (networkStatus === 8 || error) {
       return <ErrorState />;
+    }
+
+    if (dataExists) {
+      return (
+        <Threads>
+          <InfiniteList
+            pageStart={0}
+            loadMore={this.props.data.fetchMore}
+            hasMore={this.props.data.hasNextPage}
+            loader={<LoadingThread />}
+            useWindow={false}
+            initialLoad={false}
+            scrollElement={scrollElement}
+            threshold={750}
+          >
+            {threads.map(thread => {
+              return (
+                <ThreadFeedCard
+                  key={thread.node.id}
+                  data={thread.node}
+                  viewContext={viewContext}
+                />
+              );
+            })}
+          </InfiniteList>
+        </Threads>
+      );
+    }
+
+    if (networkStatus === 7) {
+      return <NullState />;
     } else {
       return (
         <Threads>
