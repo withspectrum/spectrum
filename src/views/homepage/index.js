@@ -238,7 +238,7 @@ class Homepage extends Component {
         </SectionFour>
         <Footer>
           <FlexRow>
-            <a href="https://spectrum.chat/spectrum/~general">
+            <a href="https://spectrum.chat/spectrum">
               <Icon glyph="logo" size={48} />
             </a>
           </FlexRow>
