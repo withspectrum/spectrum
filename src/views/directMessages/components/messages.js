@@ -71,7 +71,11 @@ class MessagesWithData extends Component {
       return <div>Error!</div>;
     }
 
-    if (messages) {
+    // NOTE(@mxstbr): The networkStatus check shouldn't be there, but if I remove
+    // it the loading indicator doesn't show when switching between threads which
+    // is hella annoying as the old msgs stick around until the new ones are there.
+    // TODO: FIXME and remove the networkStatus === 7
+    if (messages && networkStatus === 7) {
       let sortedMessages = sortAndGroupMessages(messages);
 
       return (
