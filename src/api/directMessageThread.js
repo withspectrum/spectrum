@@ -55,7 +55,7 @@ export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY = gql`
 
 export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_OPTIONS = {
   options: {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   },
   props: props => ({
     ...props,

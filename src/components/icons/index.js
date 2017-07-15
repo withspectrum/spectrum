@@ -30,6 +30,7 @@ export const SvgWrapper = styled.div`
   ${props =>
     props.count &&
     css`
+    background-color: transparent;
     &:after {
       content: ${props.count ? `'${props.count}'` : `''`};
       position: absolute;
@@ -41,7 +42,7 @@ export const SvgWrapper = styled.div`
       color: ${({ theme }) =>
         process.env.NODE_ENV === 'production'
           ? theme.text.default
-          : theme.warn.alt};;
+          : theme.warn.alt};
       border-radius: 8px;
       padding: 2px 4px;
       border: 2px solid ${({ theme }) =>

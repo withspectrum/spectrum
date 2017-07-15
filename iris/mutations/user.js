@@ -40,6 +40,12 @@ module.exports = {
 
       // if the user is changing their username, check for uniqueness on the server
       if (args.input.username) {
+        if (
+          args.input.username === 'null' ||
+          args.input.username === 'undefined'
+        ) {
+          throw new UserError('Nice try! 😉');
+        }
         return getUser({ username: args.input.username }).then(user => {
           // no user exists
           if (!user) return editUser(args, currentUser.id);

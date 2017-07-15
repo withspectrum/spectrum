@@ -718,6 +718,6 @@ export const displayLoadingNotifications = branch(
 );
 
 export const displayLoadingComposer = branch(
-  props => props.data.loading,
+  props => !props.data.user && !props.data.error,
   renderComponent(LoadingComposer)
 );
