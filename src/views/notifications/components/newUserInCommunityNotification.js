@@ -34,7 +34,7 @@ export const NewUserInCommunityNotification = ({
       <CardLink to={`/${notification.context.payload.slug}`} />
       <CardContent>
         <JoinContext>
-          <Icon glyph="plus-fill" />
+          <Icon glyph="member-add" />
           <ActorsRow actors={actors.asObjects} />
         </JoinContext>
       </CardContent>
@@ -62,7 +62,7 @@ export const MiniNewUserInCommunityNotification = ({
       <CardLink to={`/${notification.context.payload.slug}`} />
       <CardContent>
         <JoinContext>
-          <Icon glyph="plus-fill" />
+          <Icon glyph="member-add" />
           <ActorsRow actors={actors.asObjects} />
         </JoinContext>
       </CardContent>

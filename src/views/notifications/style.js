@@ -169,7 +169,7 @@ export const ReactionContext = styled(ContextRow)`
 `;
 
 export const JoinContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.space.light};
+  color: ${({ theme }) => theme.success.alt};
 `;
 
 export const ThreadContext = styled(ContextRow)`
