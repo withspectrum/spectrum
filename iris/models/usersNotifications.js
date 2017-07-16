@@ -93,6 +93,7 @@ export const markAllNotificationsSeen = (userId: string): Promise<Object> => {
   return db
     .table('usersNotifications')
     .getAll(userId, { index: 'userId' })
+    .filter({ isSeen: false })
     .eqJoin('notificationId', db.table('notifications'))
     .without({ left: ['createdAt', 'id'] })
     .zip()
@@ -134,6 +135,7 @@ export const markDirectMessageNotificationsSeen = (
   return db
     .table('usersNotifications')
     .getAll(userId, { index: 'userId' })
+    .filter({ isSeen: false })
     .eqJoin('notificationId', db.table('notifications'))
     .without({ left: ['createdAt', 'id'] })
     .zip()
