@@ -21,17 +21,23 @@ export const getThreads = (
 };
 
 export const getThreadsByChannel = (
-  channelId: string
+  channelId: string,
+  { first, after }
 ): Promise<Array<Object>> => {
   return db
     .table('threads')
-    .between([channelId, db.minval], [channelId, db.maxval], {
-      index: 'channelIdAndLastActive',
-      leftBound: 'open',
-      rightBound: 'open',
-    })
+    .between(
+      [channelId, db.minval],
+      [channelId, after ? new Date(after) : db.maxval],
+      {
+        index: 'channelIdAndLastActive',
+        leftBound: 'open',
+        rightBound: 'open',
+      }
+    )
     .orderBy({ index: db.desc('channelIdAndLastActive') })
     .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .limit(first)
     .run();
 };
 
@@ -210,9 +216,9 @@ export const setThreadLock = (
       .run()
       .then(
         result =>
-          (result.changes.length > 0
+          result.changes.length > 0
             ? result.changes[0].new_val
-            : db.table('threads').get(threadId).run())
+            : db.table('threads').get(threadId).run()
       )
   );
 };

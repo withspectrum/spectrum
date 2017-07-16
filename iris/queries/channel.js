@@ -35,24 +35,18 @@ module.exports = {
       { id }: { id: string },
       { first, after }: PaginationOptions
     ) => {
-      const cursor = decode(after);
-      return getThreadsByChannel(id, { first, after: cursor })
-        .then(threads =>
-          paginate(
-            threads,
-            { first, after: cursor },
-            thread => thread.id === cursor
-          )
-        )
-        .then(result => ({
-          pageInfo: {
-            hasNextPage: result.hasMoreItems,
-          },
-          edges: result.list.map(thread => ({
-            cursor: encode(thread.id),
-            node: thread,
-          })),
-        }));
+      return getThreadsByChannel(id, {
+        first,
+        after: after && parseInt(decode(after), 10),
+      }).then(threads => ({
+        pageInfo: {
+          hasNextPage: threads.length > 0,
+        },
+        edges: threads.map(thread => ({
+          cursor: encode(String(thread.lastActive.getTime())),
+          node: thread,
+        })),
+      }));
     },
     community: (
       { communityId }: { communityId: string },
