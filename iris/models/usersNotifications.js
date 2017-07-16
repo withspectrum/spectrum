@@ -106,7 +106,10 @@ export const markAllNotificationsSeen = (userId: string): Promise<Object> => {
           .map(notification => notification.id)
       )
     )
-    .then(() => getNotificationsByUser(userId));
+    .then(() => true)
+    .catch(err => {
+      return false;
+    });
 };
 
 // marks all notifications for a user as read
@@ -148,7 +151,10 @@ export const markDirectMessageNotificationsSeen = (
           .map(notification => notification.id)
       )
     )
-    .then(() => getNotificationsByUser(userId));
+    .then(() => true)
+    .catch(err => {
+      return false;
+    });
 };
 
 /*

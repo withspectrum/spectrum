@@ -1,9 +1,7 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import {
-  notificationInfoFragment,
-} from './fragments/notification/notificationInfo';
+import { notificationInfoFragment } from './fragments/notification/notificationInfo';
 import { subscribeToNewNotifications } from './subscriptions';
 
 const LoadMoreNotifications = gql`
@@ -175,11 +173,8 @@ export const markNotificationsReadMutation = graphql(
 
 export const MARK_NOTIFICATIONS_SEEN_MUTATION = gql`
   mutation markAllNotificationsSeen {
-    markAllNotificationsSeen {
-      ...notificationInfo
-    }
+    markAllNotificationsSeen
   }
-  ${notificationInfoFragment}
 `;
 
 export const MARK_NOTIFICATIONS_SEEN_OPTIONS = {
@@ -195,11 +190,8 @@ export const markNotificationsSeenMutation = graphql(
 
 export const MARK_DM_NOTIFICATIONS_SEEN_MUTATION = gql`
   mutation markDirectMessageNotificationsSeen {
-    markDirectMessageNotificationsSeen {
-      ...notificationInfo
-    }
+    markDirectMessageNotificationsSeen
   }
-  ${notificationInfoFragment}
 `;
 
 export const MARK_DM_NOTIFICATIONS_SEEN_OPTIONS = {
