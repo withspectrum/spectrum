@@ -93,6 +93,7 @@ export const markAllNotificationsSeen = (userId: string): Promise<Object> => {
   return db
     .table('usersNotifications')
     .getAll(userId, { index: 'userId' })
+    .filter({ isSeen: false })
     .eqJoin('notificationId', db.table('notifications'))
     .without({ left: ['createdAt', 'id'] })
     .zip()
@@ -105,7 +106,10 @@ export const markAllNotificationsSeen = (userId: string): Promise<Object> => {
           .map(notification => notification.id)
       )
     )
-    .then(() => getNotificationsByUser(userId));
+    .then(() => true)
+    .catch(err => {
+      return false;
+    });
 };
 
 // marks all notifications for a user as read
@@ -134,6 +138,7 @@ export const markDirectMessageNotificationsSeen = (
   return db
     .table('usersNotifications')
     .getAll(userId, { index: 'userId' })
+    .filter({ isSeen: false })
     .eqJoin('notificationId', db.table('notifications'))
     .without({ left: ['createdAt', 'id'] })
     .zip()
@@ -146,7 +151,10 @@ export const markDirectMessageNotificationsSeen = (
           .map(notification => notification.id)
       )
     )
-    .then(() => getNotificationsByUser(userId));
+    .then(() => true)
+    .catch(err => {
+      return false;
+    });
 };
 
 /*
