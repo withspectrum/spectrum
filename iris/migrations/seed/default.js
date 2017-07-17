@@ -7,12 +7,14 @@ const DEFAULT_USERS = [
   {
     id: 'gVk5mYwccUOEKiN5vtOouqroGKo1',
     name: 'Max Stoiber',
-    description: 'Makes styled-components, react-boilerplate and micro-analytics 💅 Speciality coffee geek, skier, traveller ☕',
+    description:
+      'Makes styled-components, react-boilerplate and micro-analytics 💅 Speciality coffee geek, skier, traveller ☕',
     website: 'https://mxstbr.com',
     username: 'mxstbr',
     profilePhoto: 'https://img.gs/jztmrqvgzv/500/mxstbr.com/headshot.jpeg',
-    coverPhoto: 'https://pbs.twimg.com/profile_banners/2451223458/1479507323/1500x500',
-    email: 'hi@mxstbr.com',
+    coverPhoto:
+      'https://pbs.twimg.com/profile_banners/2451223458/1479507323/1500x500',
+    email: 'contact@mxstbr.com',
     subscriptions: [],
     providerId: '2451223458',
     createdAt: new Date(DATE),
@@ -24,8 +26,10 @@ const DEFAULT_USERS = [
     description: 'Chief Nice Boy™',
     website: 'https://brianlovin.com',
     username: 'brian',
-    profilePhoto: 'https://pbs.twimg.com/profile_images/570313913648955392/cf4tgX7M_bigger.jpeg',
-    coverPhoto: 'https://pbs.twimg.com/profile_banners/465068802/1490051733/1500x500',
+    profilePhoto:
+      'https://pbs.twimg.com/profile_images/570313913648955392/cf4tgX7M_bigger.jpeg',
+    coverPhoto:
+      'https://pbs.twimg.com/profile_banners/465068802/1490051733/1500x500',
     email: 'briandlovin@gmail.com',
     subscriptions: [],
     providerId: '465068802',
@@ -38,8 +42,10 @@ const DEFAULT_USERS = [
     description: 'full-stack flapjack',
     website: 'https://bryn.io',
     username: 'bryn',
-    profilePhoto: 'https://pbs.twimg.com/profile_images/848823167699230721/-9CbPtto_bigger.jpg',
-    coverPhoto: 'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
+    profilePhoto:
+      'https://pbs.twimg.com/profile_images/848823167699230721/-9CbPtto_bigger.jpg',
+    coverPhoto:
+      'https://pbs.twimg.com/profile_banners/17106008/1491444958/1500x500',
     email: 'hi@bryn.io',
     subscriptions: [],
     providerId: '17106008',
@@ -148,11 +154,14 @@ const DEFAULT_USERS_CHANNELS = [
   },
 ];
 
+const DEFAULT_NOTIFICATIONS = [];
+
 module.exports = {
   DEFAULT_USERS,
   DEFAULT_COMMUNITIES,
   DEFAULT_CHANNELS,
   DEFAULT_THREADS,
+  DEFAULT_NOTIFICATIONS,
   DEFAULT_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_DIRECT_MESSAGE_THREADS,
   DEFAULT_USERS_COMMUNITIES,
