@@ -46,6 +46,9 @@ const contextToString = (context, currentUser) => {
       const str = isCreator ? 'in your thread' : 'in';
       return `${str} ${payload.content.title}`;
     }
+    case 'DIRECT_MESSAGE_THREAD': {
+      return 'in a direct message thread';
+    }
     case 'MESSAGE':
       return 'your reply';
     case 'COMMUNITY':
