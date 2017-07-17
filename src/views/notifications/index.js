@@ -123,13 +123,11 @@ class NotificationsPure extends Component {
       .then(subscription => {
         track('browser push notifications', 'subscribed');
         removeItemFromStorage('webPushPromptDismissed');
-        return this.props.subscribeToWebPush(subscription);
-      })
-      .then(() => {
         this.setState({
           webPushPromptLoading: false,
           showWebPushPrompt: false,
         });
+        return this.props.subscribeToWebPush(subscription);
       })
       .catch(err => {
         track('browser push notifications', 'blocked');
