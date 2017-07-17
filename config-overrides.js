@@ -12,9 +12,11 @@ const whitelist = path => new RegExp(`^(?!\/${path}).*`);
 const setCustomSwPrecacheOptions = config => {
   if (process.env.NODE_ENV !== 'production') return;
   const swPlugin = config.plugins.find(isServiceWorkerPlugin);
-  const { navigateFallbackWhitelist } = swPlugin.options;
   // Add all /api and /auth routes to the whitelist to not be cached by the ServiceWorker
   swPlugin.options.navigateFallbackWhitelist = [whitelist('(api|auth|__)')];
+  const { importScripts = [] } = swPlugin.options;
+  // Import our push ServiceWorker
+  swPlugin.options.importScripts = [...importScripts, 'push-sw.js'];
 };
 
 module.exports = function override(config, env) {

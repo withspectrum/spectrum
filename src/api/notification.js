@@ -1,9 +1,7 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import {
-  notificationInfoFragment,
-} from './fragments/notification/notificationInfo';
+import { notificationInfoFragment } from './fragments/notification/notificationInfo';
 import { subscribeToNewNotifications } from './subscriptions';
 
 const LoadMoreNotifications = gql`
@@ -184,7 +182,22 @@ export const MARK_NOTIFICATIONS_SEEN_MUTATION = gql`
 
 export const MARK_NOTIFICATIONS_SEEN_OPTIONS = {
   props: ({ mutate }) => ({
-    markAllNotificationsSeen: () => mutate(),
+    markAllNotificationsSeen: () =>
+      mutate({
+        update: store => {
+          const data = store.readQuery({ query: GET_NOTIFICATIONS_QUERY });
+
+          // Mark all notifications as seen optimistically
+          data.notifications.edges.forEach((_, index) => {
+            data.notifications.edges[index].node.isSeen = true;
+          });
+
+          store.writeQuery({
+            query: GET_NOTIFICATIONS_QUERY,
+            data,
+          });
+        },
+      }),
   }),
 };
 

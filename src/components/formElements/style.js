@@ -165,9 +165,11 @@ export const StyledCheckboxWrapper = styled(FlexRow)`
   display: flex;
   align-items: center;
   line-height: 1.4;
+  cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
 
   &:hover {
-    color: ${({ theme }) => theme.brand.alt};
+    color: ${({ theme, disabled }) =>
+      disabled ? theme.text.alt : theme.brand.alt};
   }
 
   > div {

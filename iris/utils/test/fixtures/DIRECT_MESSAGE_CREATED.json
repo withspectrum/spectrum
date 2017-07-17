@@ -1,0 +1,33 @@
+{
+  "actors": [
+    {
+      "id": "41f5151f-7309-4c95-b2af-d45ea2b0ad82",
+      "payload": "{\"createdAt\":\"2017-07-09T21:47:15.354Z\",\"email\":\"vutpaisawesome@gmail.com\",\"fbProviderId\":null,\"githubProviderId\":null,\"googleProviderId\":null,\"id\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"isOnline\":true,\"lastSeen\":\"2017-07-14T23:50:58.932Z\",\"name\":\"Max Stoiber\",\"profilePhoto\":\"https://pbs.twimg.com/profile_images/802074607222132736/G_LVLtD7_normal.jpg\",\"providerId\":\"3195884567\",\"timezone\":-420,\"username\":\"mstoiber05\"}",
+      "type": "USER"
+    }
+  ],
+  "context": {
+    "id": "7e37e582-3a06-47c9-b799-9a9f7f330ae4",
+    "payload": "{\"createdAt\":\"2017-07-09T21:50:12.720Z\",\"id\":\"7e37e582-3a06-47c9-b799-9a9f7f330ae4\",\"isGroup\":false,\"name\":null,\"threadLastActive\":\"2017-07-17T17:39:20.140Z\"}",
+    "type": "DIRECT_MESSAGE_THREAD"
+  },
+  "createdAt": "2017-07-17T17:38:13.279Z",
+  "entities": [
+    {
+      "id": "91fff467-927d-4946-8810-44875760d980",
+      "payload": "{\"content\":{\"body\":\"Hey man what's up\"},\"id\":\"91fff467-927d-4946-8810-44875760d980\",\"messageType\":\"text\",\"senderId\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"threadId\":\"7e37e582-3a06-47c9-b799-9a9f7f330ae4\",\"threadType\":\"directMessageThread\",\"timestamp\":\"2017-07-17T17:38:12.601Z\"}",
+      "type": "MESSAGE"
+    },
+    {
+      "id": "7b967b61-f84f-4363-93d4-ad7553cb59e3",
+      "payload": "{\"content\":{\"body\":\"Testin\"},\"id\":\"7b967b61-f84f-4363-93d4-ad7553cb59e3\",\"messageType\":\"text\",\"senderId\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"threadId\":\"7e37e582-3a06-47c9-b799-9a9f7f330ae4\",\"threadType\":\"directMessageThread\",\"timestamp\":\"2017-07-17T17:39:20.129Z\"}",
+      "type": "MESSAGE"
+    }
+  ],
+  "event": "MESSAGE_CREATED",
+  "id": "9518d65b-db9d-4d19-bca4-181c045d988d",
+  "isRead": false,
+  "isSeen": false,
+  "modifiedAt": "2017-07-17T17:39:20.463Z",
+  "userId": "gVk5mYwccUOEKiN5vtOouqroGKo1"
+}

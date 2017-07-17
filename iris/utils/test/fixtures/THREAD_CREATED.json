@@ -1,0 +1,38 @@
+{
+  "actors": [
+    {
+      "id": "gVk5mYwccUOEKiN5vtOouqroGKo1",
+      "payload": "{\"coverPhoto\":\"https://pbs.twimg.com/profile_banners/2451223458/1479507323/1500x500\",\"createdAt\":\"2016-12-31T23:00:00.000Z\",\"description\":\"Makes styled-components, react-boilerplate and micro-analytics 💅 Speciality coffee geek, skier, traveller ☕\",\"email\":\"hi@mxstbr.com\",\"id\":\"gVk5mYwccUOEKiN5vtOouqroGKo1\",\"isOnline\":true,\"lastSeen\":\"2017-07-12T04:31:27.943Z\",\"name\":\"Max Stoiber\",\"profilePhoto\":\"https://img.gs/jztmrqvgzv/500/mxstbr.com/headshot.jpeg\",\"providerId\":\"2451223458\",\"subscriptions\":[],\"timezone\":-420,\"username\":\"mxstbr\",\"website\":\"https://mxstbr.com\"}",
+      "type": "USER"
+    },
+    {
+      "id": "41f5151f-7309-4c95-b2af-d45ea2b0ad82",
+      "payload": "{\"createdAt\":\"2017-07-09T21:47:15.354Z\",\"email\":\"vutpaisawesome@gmail.com\",\"fbProviderId\":null,\"githubProviderId\":null,\"googleProviderId\":null,\"id\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"isOnline\":true,\"lastSeen\":\"2017-07-12T21:47:24.617Z\",\"name\":\"Max Stoiber\",\"profilePhoto\":\"https://pbs.twimg.com/profile_images/802074607222132736/G_LVLtD7_normal.jpg\",\"providerId\":\"3195884567\",\"timezone\":-420,\"username\":\"mstoiber05\"}",
+      "type": "USER"
+    }
+  ],
+  "context": {
+    "id": "0961e72c-087f-4e80-a5d6-3714022094c2",
+    "payload": "{\"communityId\":\"a719409a-3964-49f6-a570-edfe9db641a9\",\"createdAt\":\"2017-07-12T01:22:05.909Z\",\"description\":\"General Chatter\",\"id\":\"0961e72c-087f-4e80-a5d6-3714022094c2\",\"isDefault\":true,\"isPrivate\":false,\"name\":\"General\",\"slug\":\"general\"}",
+    "type": "CHANNEL"
+  },
+  "createdAt": "2017-07-12T21:43:28.695Z",
+  "entities": [
+    {
+      "id": "ef021b3b-c520-4133-8749-e96252eff5fc",
+      "payload": "{\"attachments\":[],\"channelId\":\"0961e72c-087f-4e80-a5d6-3714022094c2\",\"communityId\":\"a719409a-3964-49f6-a570-edfe9db641a9\",\"content\":{\"body\":\"{\\\"nodes\\\":[{\\\"kind\\\":\\\"block\\\",\\\"type\\\":\\\"line\\\",\\\"nodes\\\":[{\\\"kind\\\":\\\"text\\\",\\\"text\\\":\\\"\\\"}]}]}\",\"title\":\"New thread by @mxstbr\"},\"createdAt\":\"2017-07-12T21:43:28.409Z\",\"creatorId\":\"gVk5mYwccUOEKiN5vtOouqroGKo1\",\"edits\":[],\"id\":\"ef021b3b-c520-4133-8749-e96252eff5fc\",\"isLocked\":false,\"isPublished\":true,\"lastActive\":\"2017-07-12T21:43:28.409Z\",\"modifiedAt\":null,\"type\":\"SLATE\"}",
+      "type": "THREAD"
+    },
+    {
+      "id": "4fbdc540-2ad9-4d6b-8404-736e658be9f9",
+      "payload": "{\"attachments\":[],\"channelId\":\"0961e72c-087f-4e80-a5d6-3714022094c2\",\"communityId\":\"a719409a-3964-49f6-a570-edfe9db641a9\",\"content\":{\"body\":\"{\\\"nodes\\\":[{\\\"kind\\\":\\\"block\\\",\\\"type\\\":\\\"line\\\",\\\"nodes\\\":[{\\\"kind\\\":\\\"text\\\",\\\"text\\\":\\\"Bla\\\"}]}]}\",\"title\":\"Bla\"},\"createdAt\":\"2017-07-12T21:47:32.170Z\",\"creatorId\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"edits\":[],\"id\":\"4fbdc540-2ad9-4d6b-8404-736e658be9f9\",\"isLocked\":false,\"isPublished\":true,\"lastActive\":\"2017-07-12T21:47:32.170Z\",\"modifiedAt\":null,\"type\":\"SLATE\"}",
+      "type": "THREAD"
+    }
+  ],
+  "event": "THREAD_CREATED",
+  "id": "9b5ee0a4-c889-4ae6-8ce7-78176d125717",
+  "isRead": false,
+  "isSeen": false,
+  "modifiedAt": "2017-07-12T21:47:32.277Z",
+  "userId": "gVk5mYwccUOEKiN5vtOouqroGKo1"
+}

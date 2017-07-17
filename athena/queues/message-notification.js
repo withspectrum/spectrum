@@ -15,13 +15,17 @@ import {
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
 import { getThreadNotificationUsers } from '../models/usersThreads';
-import {
-  getDirectMessageThreadMembers,
-} from '../models/usersDirectMessageThreads';
+import { getDirectMessageThreadMembers } from '../models/usersDirectMessageThreads';
 import sentencify from '../utils/sentencify';
 import bufferNotificationEmail from './buffer-message-notification-email';
 
-const formatAndBufferNotificationEmail = (recipient, thread, user, message) => {
+const formatAndBufferNotificationEmail = (
+  recipient,
+  thread,
+  user,
+  message,
+  notification
+) => {
   if (!recipient || !recipient.email || !thread || !user || !message) {
     debug(
       '⚠ aborting adding to email queue due to invalid data\nrecipient\n%O\nthread\n%O\nuser\n%O\nmessage\n%O',
@@ -33,21 +37,25 @@ const formatAndBufferNotificationEmail = (recipient, thread, user, message) => {
     return Promise.resolve();
   }
 
-  return bufferNotificationEmail(recipient, {
-    ...thread,
-    replies: [
-      {
-        sender: {
-          id: user.id,
-          profilePhoto: user.profilePhoto,
-          name: user.name,
+  return bufferNotificationEmail(
+    recipient,
+    {
+      ...thread,
+      replies: [
+        {
+          sender: {
+            id: user.id,
+            profilePhoto: user.profilePhoto,
+            name: user.name,
+          },
+          content: {
+            body: message.content.body,
+          },
         },
-        content: {
-          body: message.content.body,
-        },
-      },
-    ],
-  });
+      ],
+    },
+    notification
+  );
 };
 
 const processMessageNotificationQueue = job => {
@@ -55,9 +63,10 @@ const processMessageNotificationQueue = job => {
   const currentUserId = job.data.userId;
 
   // Determine what the context type should be based on the message that was sent
-  const contextType = incomingMessage.threadType === 'directMessageThread'
-    ? 'DIRECT_MESSAGE_THREAD'
-    : 'THREAD';
+  const contextType =
+    incomingMessage.threadType === 'directMessageThread'
+      ? 'DIRECT_MESSAGE_THREAD'
+      : 'THREAD';
 
   debug(
     `new job: message sent by ${currentUserId} in ${contextType.toLowerCase()}#${incomingMessage.threadId}`
@@ -112,9 +121,10 @@ const processMessageNotificationQueue = job => {
         notificationPromise
           // Do the .then here so we keep the loaded data in scope
           .then(notification => {
-            const getRecipients = contextType === 'DIRECT_MESSAGE_THREAD'
-              ? getDirectMessageThreadMembers(notification.context.id)
-              : getThreadNotificationUsers(notification.context.id);
+            const getRecipients =
+              contextType === 'DIRECT_MESSAGE_THREAD'
+                ? getDirectMessageThreadMembers(notification.context.id)
+                : getThreadNotificationUsers(notification.context.id);
 
             debug('get recipients for notification');
             return Promise.all([notification, getRecipients]);
@@ -146,12 +156,14 @@ const processMessageNotificationQueue = job => {
                     ? {
                         content: {
                           // Contruct title out of direct message thread users
-                          title: `your conversation with ${sentencify(recipients
+                          title: `your conversation with ${sentencify(
+                            recipients
                               .filter(
                                 userThread =>
                                   userThread.userId !== recipient.userId
                               )
-                              .map(user => user.name))}`,
+                              .map(user => user.name)
+                          )}`,
                         },
                         path: `messages/${thread.id}`,
                         id: thread.id,
@@ -162,7 +174,6 @@ const processMessageNotificationQueue = job => {
                       },
                   user,
                   message,
-                  contextType,
                   notification
                 );
                 return dbMethod(notification.id, recipient.userId);

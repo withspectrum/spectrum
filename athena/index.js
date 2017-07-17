@@ -21,5 +21,7 @@ startThreadNotificationQueue();
 startSlackImportQueue();
 startCommunityInviteQueue();
 console.log(
-  `\n🗄 Queues open for business ${(process.env.NODE_ENV === 'production' && `at ${process.env.COMPOSE_REDIS_URL}:${process.env.COMPOSE_REDIS_PORT}`) || 'locally'}`
+  `\n🗄 Queues open for business ${(process.env.NODE_ENV === 'production' &&
+    `at ${process.env.COMPOSE_REDIS_URL}:${process.env.COMPOSE_REDIS_PORT}`) ||
+    'locally'}`
 );

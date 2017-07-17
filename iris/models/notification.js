@@ -22,9 +22,7 @@ const getNotificationsByUser = (userId: string) => {
 const hasChanged = (field: string) =>
   db.row('old_val')(field).ne(db.row('new_val')(field));
 
-const SEEN_STATUS_CHANGED = hasChanged('isSeen');
-const READ_STATUS_CHANGED = hasChanged('isRead');
-const STATUS_CHANGED = SEEN_STATUS_CHANGED.or(READ_STATUS_CHANGED);
+const MODIFIED_AT_CHANGED = hasChanged('entityAddedAt');
 
 const listenToNewNotifications = (cb: Function): Function => {
   return db
@@ -32,10 +30,10 @@ const listenToNewNotifications = (cb: Function): Function => {
     .changes({
       includeInitial: false,
     })
-    .filter(NEW_DOCUMENTS.or(STATUS_CHANGED))('new_val')
+    .filter(NEW_DOCUMENTS.or(MODIFIED_AT_CHANGED))('new_val')
     .eqJoin('notificationId', db.table('notifications'))
     .without({
-      left: ['notificationId', 'createdAt', 'id'],
+      left: ['notificationId', 'createdAt', 'id', 'entityAddedAt'],
     })
     .zip()
     .run({ cursor: true }, (err, cursor) => {

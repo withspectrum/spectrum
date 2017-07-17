@@ -2,9 +2,7 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { communityInfoFragment } from './fragments/community/communityInfo';
-import {
-  communityMetaDataFragment,
-} from './fragments/community/communityMetaData';
+import { communityMetaDataFragment } from './fragments/community/communityMetaData';
 import { channelInfoFragment } from './fragments/channel/channelInfo';
 import { userInfoFragment } from './fragments/user/userInfo';
 import { channelMetaDataFragment } from './fragments/channel/channelMetaData';
@@ -58,7 +56,7 @@ export const createCommunityMutation = graphql(
 */
 const DELETE_COMMUNITY_MUTATION = gql`
   mutation deleteCommunity($communityId: ID!) {
-    deleteCommunity (communityId: $communityId)
+    deleteCommunity(communityId: $communityId)
   }
 `;
 
@@ -201,9 +199,10 @@ const getCommunityMembersOptions = {
           query: LoadMoreMembers,
           variables: {
             id: community.id,
-            after: community.memberConnection.edges[
-              community.memberConnection.edges.length - 1
-            ].cursor,
+            after:
+              community.memberConnection.edges[
+                community.memberConnection.edges.length - 1
+              ].cursor,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult.community) {

@@ -13,3 +13,4 @@ build-athena
 build-hermes
 package-lock.json
 .vscode
+dump.rdb

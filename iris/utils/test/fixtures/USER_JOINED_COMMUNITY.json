@@ -1,0 +1,28 @@
+{
+  "actors": [
+    {
+      "id": "41f5151f-7309-4c95-b2af-d45ea2b0ad82",
+      "payload": "{\"createdAt\":\"2017-07-09T21:47:15.354Z\",\"email\":\"vutpaisawesome@gmail.com\",\"fbProviderId\":null,\"githubProviderId\":null,\"googleProviderId\":null,\"id\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"isOnline\":true,\"lastSeen\":\"2017-07-12T21:48:01.476Z\",\"name\":\"Max Stoiber\",\"profilePhoto\":\"https://pbs.twimg.com/profile_images/802074607222132736/G_LVLtD7_normal.jpg\",\"providerId\":\"3195884567\",\"timezone\":-420,\"username\":\"mstoiber05\"}",
+      "type": "USER"
+    }
+  ],
+  "context": {
+    "id": "a719409a-3964-49f6-a570-edfe9db641a9",
+    "payload": "{\"coverPhoto\":\"https://s3.amazonaws.com/spectrum-chat/default_images/cover-peach.png\",\"createdAt\":\"2017-07-12T01:22:05.834Z\",\"description\":\"Test\",\"id\":\"a719409a-3964-49f6-a570-edfe9db641a9\",\"name\":\"Test\",\"profilePhoto\":\"https://s3.amazonaws.com/spectrum-chat/default_images/profile-peach.png\",\"slug\":\"test\",\"website\":\"\"}",
+    "type": "COMMUNITY"
+  },
+  "createdAt": "2017-07-12T21:48:05.875Z",
+  "entities": [
+    {
+      "id": "41f5151f-7309-4c95-b2af-d45ea2b0ad82",
+      "payload": "{\"createdAt\":\"2017-07-09T21:47:15.354Z\",\"email\":\"vutpaisawesome@gmail.com\",\"fbProviderId\":null,\"githubProviderId\":null,\"googleProviderId\":null,\"id\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"isOnline\":true,\"lastSeen\":\"2017-07-12T21:48:01.476Z\",\"name\":\"Max Stoiber\",\"profilePhoto\":\"https://pbs.twimg.com/profile_images/802074607222132736/G_LVLtD7_normal.jpg\",\"providerId\":\"3195884567\",\"timezone\":-420,\"username\":\"mstoiber05\"}",
+      "type": "USER"
+    }
+  ],
+  "event": "USER_JOINED_COMMUNITY",
+  "id": "aee9ec57-f51b-43c4-b909-559a2cb24f46",
+  "isRead": false,
+  "isSeen": false,
+  "modifiedAt": "2017-07-12T21:48:05.875Z",
+  "userId": "gVk5mYwccUOEKiN5vtOouqroGKo1"
+}

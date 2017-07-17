@@ -27,11 +27,10 @@ import communitySettings from './views/communitySettings';
 import channelSettings from './views/channelSettings';
 import NewCommunity from './views/newCommunity';
 
-const About = () => (
+const About = () =>
   <div>
     <h3>About</h3>
-  </div>
-);
+  </div>;
 
 const Body = styled(FlexCol)`
   display: flex;
@@ -115,7 +114,6 @@ class Routes extends Component {
               />
               <Route path="/:communitySlug" component={CommunityView} />
             </Switch>
-
           </Body>
         </ScrollManager>
       </Router>

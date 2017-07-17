@@ -3,9 +3,7 @@
 import { graphql, gql } from 'react-apollo';
 import { messageInfoFragment } from './fragments/message/messageInfo';
 import { GET_THREAD_MESSAGES_QUERY } from '../views/thread/queries';
-import {
-  GET_DIRECT_MESSAGE_THREAD_QUERY,
-} from '../views/directMessages/queries';
+import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../views/directMessages/queries';
 
 /*
   Updates UI automatically via the containers subscribeToNewMessages helper
@@ -119,7 +117,7 @@ export const sendMessageMutation = graphql(
 const GET_MEDIA_MESSAGES_FOR_THREAD_QUERY = gql`
   query getMediaMessagesForThread($threadId: ID!) {
     getMediaMessagesForThread(threadId: $threadId) {
-      id,
+      id
       content {
         body
       }
