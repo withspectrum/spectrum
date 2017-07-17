@@ -3,6 +3,7 @@ const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
 import { uploadImage } from '../utils/s3';
+import { createNewUsersSettings } from './usersSettings';
 
 const getUser = (input: Object): Promise<Object> => {
   if (input.id) return getUserById(input.id);
@@ -70,7 +71,12 @@ const storeUser = (user: Object): Promise<Object> => {
     .table('users')
     .insert(user, { returnChanges: true })
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => {
+      const user = result.changes[0].new_val;
+      // whenever a new user is created, create a usersSettings record
+      return Promise.all([user, createNewUsersSettings(user.id)]);
+    })
+    .then(([user, settings]) => user);
 };
 
 const saveUserProvider = (userId, providerMethod, providerId) => {
