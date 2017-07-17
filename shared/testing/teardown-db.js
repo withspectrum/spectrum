@@ -9,8 +9,9 @@ const db = require('rethinkdbdash')({
  * This is run after all tests in src/setupTests.js
  */
 export const teardown = () => {
-  return Promise.all(tables.map(table => db.tableDrop(table).run()))
-    .then(() => db.getPool().drain())
+  return db
+    .getPool()
+    .drain()
     .then(() => {
       // Tests would stall on CI because for some reason Rethinkdbdash doesn't exit
       // even after draining the connection pool, so we force it to exit.
