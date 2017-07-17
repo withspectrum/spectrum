@@ -16,6 +16,16 @@ Object {
 }
 `;
 
+exports[`should format a direct message creation notification 1`] = `
+Object {
+  "body": "\\"Hey man what's up\\" and \\"Testin\\"",
+  "data": Object {
+    "href": "/thread/7e37e582-3a06-47c9-b799-9a9f7f330ae4",
+  },
+  "title": "Max Stoiber replied undefined",
+}
+`;
+
 exports[`should format a message creation notification 1`] = `
 Object {
   "body": "\\"Testing\\"",
