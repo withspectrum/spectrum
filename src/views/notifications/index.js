@@ -50,6 +50,7 @@ class NotificationsPure extends Component {
   state: {
     isFetching: boolean,
     showWebPushPrompt: boolean,
+    webPushPromptLoading: boolean,
   };
 
   constructor() {
@@ -58,6 +59,7 @@ class NotificationsPure extends Component {
     this.state = {
       isFetching: false,
       showWebPushPrompt: false,
+      webPushPromptLoading: false,
     };
   }
 
@@ -114,14 +116,26 @@ class NotificationsPure extends Component {
 
   subscribeToWebPush = () => {
     track('browser push notifications', 'prompt triggered');
+    this.setState({
+      webPushPromptLoading: true,
+    });
     WebPushManager.subscribe()
       .then(subscription => {
         track('browser push notifications', 'subscribed');
         removeItemFromStorage('webPushPromptDismissed');
         return this.props.subscribeToWebPush(subscription);
       })
+      .then(() => {
+        this.setState({
+          webPushPromptLoading: false,
+          showWebPushPrompt: false,
+        });
+      })
       .catch(err => {
         track('browser push notifications', 'blocked');
+        this.setState({
+          webPushPromptLoading: false,
+        });
         return this.props.dispatch(
           addToastWithTimeout(
             'error',
@@ -175,11 +189,6 @@ class NotificationsPure extends Component {
       return (
         <AppViewWrapper>
           <Column type={'primary'}>
-            {this.state.showWebPushPrompt &&
-              <BrowserNotificationRequest
-                onSubscribe={this.subscribeToWebPush}
-                onDismiss={this.dismissWebPushRequest}
-              />}
             <UpsellNullNotifications />
           </Column>
         </AppViewWrapper>
@@ -197,6 +206,7 @@ class NotificationsPure extends Component {
               <BrowserNotificationRequest
                 onSubscribe={this.subscribeToWebPush}
                 onDismiss={this.dismissWebPushRequest}
+                loading={this.state.webPushPromptLoading}
               />}
             <InfiniteList
               pageStart={0}

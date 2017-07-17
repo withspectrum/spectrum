@@ -4,7 +4,7 @@ import { RequestCard, CloseRequest } from '../style';
 import { FlexRow } from '../../../components/globals';
 import { Button } from '../../../components/buttons';
 
-const FirstRequest = ({ onSubscribe, onDismiss }) =>
+const FirstRequest = ({ onSubscribe, onDismiss, loading }) =>
   <RequestCard>
     <p>📬 We need your permission to enable push notifications:</p>
     <FlexRow>
@@ -12,6 +12,7 @@ const FirstRequest = ({ onSubscribe, onDismiss }) =>
         icon="notification-fill"
         gradientTheme={'success'}
         onClick={onSubscribe}
+        loading={loading}
       >
         Enable
       </Button>
@@ -26,7 +27,11 @@ const FirstRequest = ({ onSubscribe, onDismiss }) =>
     </FlexRow>
   </RequestCard>;
 
-const BrowserNotificationRequest = ({ onSubscribe, onDismiss }) =>
-  <FirstRequest onSubscribe={onSubscribe} onDismiss={onDismiss} />;
+const BrowserNotificationRequest = ({ onSubscribe, onDismiss, loading }) =>
+  <FirstRequest
+    onSubscribe={onSubscribe}
+    onDismiss={onDismiss}
+    loading={loading}
+  />;
 
 export default BrowserNotificationRequest;
