@@ -13,8 +13,10 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 import { addProtocolToString } from '../../helpers/utils';
 import { initNewThreadWithUser } from '../../actions/directMessageThreads';
+import { openModal } from '../../actions/modals';
 import Icon from '../icons';
 import { CoverPhoto } from './coverPhoto';
+import { Button } from '../buttons';
 import type { ProfileSizeProps } from './index';
 import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
@@ -32,6 +34,7 @@ import {
   Title,
   Subtitle,
   ExtLink,
+  ProUpgrade,
 } from './style';
 
 type UserProps = {
@@ -75,6 +78,10 @@ const UserWithData = ({
   const initMessage = () => {
     dispatch(initNewThreadWithUser(user));
     history.push('/messages/new');
+  };
+
+  const triggerUpgrade = () => {
+    dispatch(openModal('UPGRADE_MODAL', { user: currentUser }));
   };
 
   if (componentSize === 'full') {
@@ -122,6 +129,13 @@ const UserWithData = ({
                 </a>
               </ExtLink>}
           </CoverDescription>}
+
+        {!user.isPro &&
+          <ProUpgrade>
+            <Button onClick={() => triggerUpgrade()} gradientTheme={'success'}>
+              Upgrade to Pro
+            </Button>
+          </ProUpgrade>}
       </Card>
     );
   } else {

@@ -202,3 +202,16 @@ export const ProfileCard = styled(Card)`
     }
   }
 `;
+
+export const ProUpgrade = styled.div`
+  margin: 16px;
+  display: flex;
+  align-items: stretch;
+  align-content: stretch;
+  justify-content: center;
+
+  button {
+    width: 100%;
+    text-align: center;
+  }
+`;
