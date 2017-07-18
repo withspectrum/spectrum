@@ -11,6 +11,7 @@ export const StyledLabel = styled.label`
   letter-spacing: -0.4px;
   color: ${({ theme }) => theme.text.default};
   transition: ${Transition.hover.off};
+  position: relative;
 
   a {
     text-decoration: underline;

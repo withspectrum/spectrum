@@ -549,7 +549,7 @@ class UpsellUpgradeToProPure extends Component {
     const { currentUser } = this.props;
 
     return (
-      <NullCard bg="pro">
+      <NullCard bg="onboarding">
         <Profile>
           <img alt={currentUser.name} src={`${currentUser.profilePhoto}`} />
           <span>PRO</span>
@@ -557,7 +557,18 @@ class UpsellUpgradeToProPure extends Component {
         <Title>Upgrade to Pro</Title>
         <Subtitle>
           We're hard at work building features for Spectrum Pro. Your early
-          support helps us get there faster – thank you!
+          support helps us get there faster – thank you! In the meantime, here's
+          what happens when you upgrade to Pro:
+        </Subtitle>
+        <Subtitle>
+          <ul>
+            <li>
+              ✨ A spiffy new Pro badge will adorn your name everywhere on
+              Spectrum
+            </li>
+            <li>😍 You can set a gif as your profile photo or cover photo</li>
+            <li>❤️ You'll be able to change your username at any time</li>
+          </ul>
         </Subtitle>
         <Cost>Spectrum Pro costs $5/month and you can cancel at any time.</Cost>
         <StripeCheckout
@@ -570,7 +581,7 @@ class UpsellUpgradeToProPure extends Component {
           currency="USD"
         >
           <Button disabled={isLoading} loading={isLoading} icon="payment">
-            Upgrade
+            Make me a Pro!
           </Button>
         </StripeCheckout>
 

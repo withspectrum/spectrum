@@ -131,6 +131,7 @@ const UserWithData = ({
           </CoverDescription>}
 
         {!user.isPro &&
+          user.id === currentUser.id &&
           <ProUpgrade>
             <Button onClick={() => triggerUpgrade()} gradientTheme={'success'}>
               Upgrade to Pro
