@@ -1,5 +1,9 @@
 /*
  * Push notificiations ServiceWorker
+ *
+ * NOTE(@mxstbr): This only gets updated if you change the filename, not if you
+ * update the contents. Make sure to change the version number in the filename
+ * after updating the code!
  */
 
 // A new notification is coming in, yay!
@@ -44,7 +48,7 @@ self.addEventListener('push', function(event) {
           tag: notificationData.tag,
           data: notificationData.data,
           // If we don't set a tag and set renotify to true this'll throw an error
-          renotify: notificationData.renotify || !!notificationData.tag,
+          // renotify: notificationData.renotify || !!notificationData.tag,
         });
       })
   );
