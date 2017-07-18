@@ -83,9 +83,9 @@ class ChatMessages extends Component {
               <Name>
                 {me ? 'You' : user.name}
               </Name>
-              {user.isAdmin && <Badge type="admin" />}
-              {user.isPro && <Badge type="pro" />}
             </Link>
+            {user.isAdmin && <Badge type="admin" />}
+            {user.isPro && <Badge type="pro" />}
           </Byline>
         );
       };
