@@ -19,6 +19,12 @@ exports.up = function(r, conn) {
       return r.tableCreate('usersSettings').run(conn);
     })
     .then(() => {
+      return r
+        .table('usersSettings')
+        .indexCreate('userId', r.row('userId'))
+        .run(conn);
+    })
+    .then(() => {
       // insert the unique-ified usersSettings records into the now-empty usersSettings table
       return r
         .table('usersSettings')
