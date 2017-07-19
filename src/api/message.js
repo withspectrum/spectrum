@@ -21,7 +21,12 @@ const SEND_MESSAGE_OPTIONS = {
     sendMessage: message =>
       mutate({
         variables: {
-          message,
+          message: {
+            ...message,
+            content: {
+              body: '',
+            },
+          },
         },
         optimisticResponse: {
           __typename: 'Mutation',
@@ -37,7 +42,11 @@ const SEND_MESSAGE_OPTIONS = {
               __typename: 'MessageContent',
             },
             id: Math.round(Math.random() * -1000000),
-            reactions: [],
+            reactions: {
+              count: 0,
+              hasReacted: false,
+              __typename: 'ReactionData',
+            },
             messageType: message.messageType,
           },
         },
@@ -130,6 +139,7 @@ const GET_MEDIA_MESSAGES_FOR_THREAD_OPTIONS = {
     variables: {
       threadId,
     },
+    fetchPolicy: 'network-only',
   }),
   props: ({ data: { error, loading, getMediaMessagesForThread } }) => ({
     data: {

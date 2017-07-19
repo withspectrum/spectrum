@@ -184,7 +184,7 @@ anymatch@^1.3.0:
     arrify "^1.0.0"
     micromatch "^2.1.5"
 
-apollo-client@^1.4.0, apollo-client@^1.5.0:
+apollo-client@^1.4.0, apollo-client@^1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/apollo-client/-/apollo-client-1.8.0.tgz#3b5d1976a06a0f82b2fc66fe71754868193dadb9"
   dependencies:
@@ -199,16 +199,17 @@ apollo-client@^1.4.0, apollo-client@^1.5.0:
     "@types/graphql" "^0.9.0"
     "@types/isomorphic-fetch" "0.0.34"
 
-apollo-upload-client@^4.0.3:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-4.1.1.tgz#638ae7fa8392fc4ba481966bb0b987b367b15923"
+apollo-upload-client@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-5.1.0.tgz#51f5a88f150b4332a58f704023292fb0e34392b3"
   dependencies:
-    apollo-client "^1.5.0"
+    apollo-client "^1.8.0"
     babel-runtime "^6.23.0"
+    extract-files "^1.1.0"
 
-apollo-upload-server@^2.0.1:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/apollo-upload-server/-/apollo-upload-server-2.0.3.tgz#01e9971f96912b2524d953a6481df9aa861cb061"
+apollo-upload-server@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/apollo-upload-server/-/apollo-upload-server-2.0.4.tgz#5105081b6c061638ef7a04ef848758d30f3ba96b"
   dependencies:
     formidable "^1.1.1"
     mkdirp "^0.5.1"
@@ -2883,6 +2884,12 @@ extglob@^0.3.1:
   resolved "https://registry.yarnpkg.com/extglob/-/extglob-0.3.2.tgz#2e18ff3d2f49ab2765cec9023f011daa8d8349a1"
   dependencies:
     is-extglob "^1.0.0"
+
+extract-files@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-1.1.0.tgz#da55e55d8b718b6b8e25a77df353c8909e65497a"
+  dependencies:
+    babel-runtime "^6.23.0"
 
 extract-text-webpack-plugin@2.1.2:
   version "2.1.2"

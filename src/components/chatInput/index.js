@@ -14,6 +14,7 @@ import Icon from '../../components/icons';
 import { track } from '../../helpers/events';
 import { toPlainText, fromPlainText } from '../../components/editor';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { openModal } from '../../actions/modals';
 import {
   Form,
   EditorInput,
@@ -207,17 +208,27 @@ class ChatInputWithMutation extends Component {
   };
 
   render() {
-    const { state, onChange } = this.props;
+    const { state, onChange, currentUser } = this.props;
     const { isFocused, photoSizeError } = this.state;
 
     return (
       <div>
         {photoSizeError &&
-          <PhotoSizeError onClick={() => this.setState({ photoSizeError: '' })}>
-            <p>
+          <PhotoSizeError>
+            <p
+              onClick={() =>
+                this.props.dispatch(
+                  openModal('UPGRADE_MODAL', { user: currentUser })
+                )}
+            >
               {photoSizeError}
             </p>
-            <Icon glyph="view-close" size={16} color={'warn.default'} />
+            <Icon
+              onClick={() => this.setState({ photoSizeError: '' })}
+              glyph="view-close"
+              size={16}
+              color={'warn.default'}
+            />
           </PhotoSizeError>}
         <ChatInputWrapper focus={isFocused}>
           <MediaInput onChange={this.sendMediaMessage} />

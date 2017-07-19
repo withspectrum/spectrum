@@ -112,6 +112,7 @@ class Browser extends Component {
 
   render() {
     const { images, index } = this.state;
+
     return (
       <GalleryWrapper>
         <CloseButton onClick={this.closeGallery}>✕</CloseButton>

@@ -592,7 +592,7 @@ class UpsellUpgradeToProPure extends Component {
         <Subtitle>
           We're hard at work building features for Spectrum Pro. Your early
           support helps us get there faster – thank you! In the meantime, here's
-          what happens when you upgrade to Pro:
+          what's unlocked on Pro:
         </Subtitle>
         <Subtitle>
           <ul>
@@ -600,7 +600,8 @@ class UpsellUpgradeToProPure extends Component {
               ✨ A spiffy new Pro badge will adorn your name everywhere on
               Spectrum
             </li>
-            <li>😍 You can set a gif as your profile photo or cover photo</li>
+            <li>😍 Set a gif as your profile photo or cover photo</li>
+            <li>🛠 Upload images up to 25mb, making sharing work easier</li>
             <li>❤️ More to come!</li>
           </ul>
         </Subtitle>

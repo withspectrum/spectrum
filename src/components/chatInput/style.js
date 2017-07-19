@@ -126,6 +126,14 @@ export const PhotoSizeError = styled.div`
   background: #fff1cc;
   border-top: 1px solid #ffd566;
 
+  &:hover {
+    cursor: pointer;
+
+    p {
+      color: ${props => props.theme.brand.default};
+    }
+  }
+
   p {
     font-size: 14px;
     line-height: 1.4;
