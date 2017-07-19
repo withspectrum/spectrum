@@ -129,7 +129,7 @@ class Editor extends React.Component {
 
   render() {
     const {
-      state = this.state.state,
+      state = this.state.editorState,
       onChange = this.onChange,
       onEnter,
       className,
@@ -149,8 +149,8 @@ class Editor extends React.Component {
         focus={focus}
       >
         <DraftEditor
-          editorState={this.state.editorState}
-          onChange={this.onChange}
+          editorState={state}
+          onChange={onChange}
           plugins={this.state.plugins}
           handleDroppedFiles={this.handleDroppedFiles}
           ref={editor => {

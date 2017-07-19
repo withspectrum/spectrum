@@ -16,7 +16,10 @@ import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
 import { openComposer, closeComposer } from '../../actions/composer';
 import { addToastWithTimeout } from '../../actions/toasts';
-import Editor, { toPlainText, fromPlainText, toJSON } from '../editor';
+import Editor, {
+  toPlainText,
+  fromPlainText /*, toJSON*/,
+} from '../draftjs-editor';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
 import { getLinkPreviewFromUrl } from '../../helpers/utils';
@@ -38,6 +41,10 @@ import {
   Actions,
   Dropdowns,
 } from './style';
+
+const toJSON = () => console.log('dummy');
+
+const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
 class ThreadComposerWithData extends Component {
   // prop types
@@ -223,6 +230,7 @@ class ThreadComposerWithData extends Component {
   };
 
   changeBody = state => {
+    this.listenForUrl(state);
     this.setState({
       body: state,
     });
@@ -417,24 +425,21 @@ class ThreadComposerWithData extends Component {
       });
   };
 
-  listenForUrl = (e, data, state) => {
-    const text = toPlainText(state);
+  listenForUrl = state => {
+    const { linkPreview, linkPreviewLength } = this.state;
+    if (linkPreview !== null) return;
 
+    const lastChangeType = state.getLastChangeType();
     if (
-      e.keyCode !== 8 &&
-      e.keyCode !== 9 &&
-      e.keyCode !== 13 &&
-      e.keyCode !== 32 &&
-      e.keyCode !== 46
+      lastChangeType !== 'backspace-character' &&
+      lastChangeType !== 'insert-characters'
     ) {
-      // Return if backspace, tab, enter, space or delete was not pressed.
       return;
     }
 
-    const { linkPreview, linkPreviewLength } = this.state;
+    const text = toPlainText(state);
 
-    // also don't check if we already have a url in the linkPreview state
-    if (linkPreview !== null) return;
+    if (!ENDS_IN_WHITESPACE.test(text)) return;
 
     const toCheck = text.match(URLS);
 
