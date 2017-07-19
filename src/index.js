@@ -16,8 +16,6 @@ import registerServiceWorker from './registerServiceWorker';
 import type { ServiceWorkerResult } from './registerServiceWorker';
 import { track } from './helpers/events';
 
-import Editor from './components/draftjs-editor';
-
 const existingUser = getItemFromStorage('spectrum');
 let store;
 if (existingUser) {
@@ -59,18 +57,11 @@ function render() {
   }
 }
 
-ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <Editor />
-  </ThemeProvider>,
-  document.querySelector('#root')
-);
-
-// try {
-//   render();
-// } catch (err) {
-//   render();
-// }
+try {
+  render();
+} catch (err) {
+  render();
+}
 
 registerServiceWorker().then(({ newContent }: ServiceWorkerResult) => {
   if (newContent) {
