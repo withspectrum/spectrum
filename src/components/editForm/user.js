@@ -37,6 +37,12 @@ import {
 import { Spinner } from '../../components/globals';
 import { editUserMutation, CHECK_UNIQUE_USERNAME_QUERY } from '../../api/user';
 import { addToastWithTimeout } from '../../actions/toasts';
+import {
+  PRO_USER_MAX_IMAGE_SIZE_STRING,
+  PRO_USER_MAX_IMAGE_SIZE_BYTES,
+  FREE_USER_MAX_IMAGE_SIZE_BYTES,
+  FREE_USER_MAX_IMAGE_SIZE_STRING,
+} from '../../helpers/images';
 import { Notice } from '../../components/listItems/style';
 
 class UserWithData extends Component {
@@ -53,7 +59,7 @@ class UserWithData extends Component {
     nameError: boolean,
     createError: boolean,
     isLoading: boolean,
-    photoSizeError: boolean,
+    photoSizeError: string,
     proGifError: boolean,
     usernameError: string,
     isUsernameSearching: boolean,
@@ -77,7 +83,7 @@ class UserWithData extends Component {
       nameError: false,
       createError: false,
       isLoading: false,
-      photoSizeError: false,
+      photoSizeError: '',
       proGifError: false,
       usernameError: '',
       isUsernameSearching: false,
@@ -134,9 +140,24 @@ class UserWithData extends Component {
 
     if (!file) return;
 
-    if (file && file.size > 3000000) {
+    if (
+      file &&
+      file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES &&
+      !this.props.currentUser.isPro
+    ) {
       return this.setState({
-        photoSizeError: true,
+        photoSizeError: `Upgrade to Pro to upload files up to ${PRO_USER_MAX_IMAGE_SIZE_STRING}. Otherwise, try uploading a photo less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`,
+        isLoading: false,
+      });
+    }
+
+    if (
+      file &&
+      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
+      this.props.currentUser.isPro
+    ) {
+      return this.setState({
+        photoSizeError: `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`,
         isLoading: false,
       });
     }
@@ -154,7 +175,7 @@ class UserWithData extends Component {
       this.setState({
         file: file,
         image: reader.result,
-        photoSizeError: false,
+        photoSizeError: '',
         proGifError: false,
         isLoading: false,
       });
@@ -173,9 +194,24 @@ class UserWithData extends Component {
       isLoading: true,
     });
 
-    if (file && file.size > 3000000) {
+    if (
+      file &&
+      file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES &&
+      !this.props.currentUser.isPro
+    ) {
       return this.setState({
-        photoSizeError: true,
+        photoSizeError: `Upgrade to Pro to upload files up to ${PRO_USER_MAX_IMAGE_SIZE_STRING}. Otherwise, try uploading a photo less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`,
+        isLoading: false,
+      });
+    }
+
+    if (
+      file &&
+      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
+      this.props.currentUser.isPro
+    ) {
+      return this.setState({
+        photoSizeError: `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`,
         isLoading: false,
       });
     }
@@ -193,7 +229,7 @@ class UserWithData extends Component {
       this.setState({
         coverFile: file,
         coverPhoto: reader.result,
-        photoSizeError: false,
+        photoSizeError: '',
         proGifError: false,
         isLoading: false,
       });
@@ -376,7 +412,7 @@ class UserWithData extends Component {
 
           {photoSizeError &&
             <Notice style={{ marginTop: '32px' }}>
-              Photo uploads should be less than 3mb
+              {photoSizeError}
             </Notice>}
 
           {proGifError &&

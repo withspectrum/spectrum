@@ -13,3 +13,8 @@ export const optimize = (src: string, params?: QueryParams = {}): string => {
   }, '');
   return `${src}?auto=compress${queryparams}`;
 };
+
+export const FREE_USER_MAX_IMAGE_SIZE_BYTES = 3000000;
+export const PRO_USER_MAX_IMAGE_SIZE_BYTES = 25000000;
+export const FREE_USER_MAX_IMAGE_SIZE_STRING = '3mb';
+export const PRO_USER_MAX_IMAGE_SIZE_STRING = '25mb';
