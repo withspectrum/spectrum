@@ -104,8 +104,7 @@ class Editor extends React.Component {
     });
   };
 
-  addImage = e => {
-    const files = e.target.files;
+  addImages = files => {
     let { editorState, addImage } = this.state;
     // Add images to editorState
     // eslint-disable-next-line
@@ -114,6 +113,14 @@ class Editor extends React.Component {
     }
 
     this.onChange(editorState);
+  };
+
+  addImage = e => {
+    this.addImages(e.target.files);
+  };
+
+  handleDroppedFiles = (selection, files) => {
+    this.addImages(files);
   };
 
   focus = () => {
@@ -145,6 +152,7 @@ class Editor extends React.Component {
           editorState={this.state.editorState}
           onChange={this.onChange}
           plugins={this.state.plugins}
+          handleDroppedFiles={this.handleDroppedFiles}
           ref={editor => {
             this.editor = editor;
             if (this.props.editorRef) this.props.editorRef(editor);
