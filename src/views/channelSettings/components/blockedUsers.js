@@ -14,22 +14,22 @@ import {
   Notice,
 } from '../../../components/listItems/style';
 
-const BlockedUsers = ({ data: { channel: { blockedUsers }, unblock } }) => {
+const BlockedUsers = ({ data: { channel: { blockedUsers } }, unblock }) => {
   return (
     <StyledCard>
       <LargeListHeading>Blocked Users</LargeListHeading>
       {blockedUsers.length > 0 &&
         <Description>
-          Blocked users can not see threads or messages posted in this channel. They will still be able to join any other public channels in the Spectrum community and request access to other private channels.
+          Blocked users can not see threads or messages posted in this channel.
+          They will still be able to join any other public channels in the
+          Spectrum community and request access to other private channels.
         </Description>}
 
       {blockedUsers.length > 0 &&
         <Notice>
-          Unblocking a user will
-          {' '}
-          <b>not</b>
-          {' '}
-          add them to this channel. It will only allow them to re-request access in the future as long as this channel remains private.
+          Unblocking a user will <b>not</b> add them to this channel. It will
+          only allow them to re-request access in the future as long as this
+          channel remains private.
         </Notice>}
 
       <ListContainer>
@@ -54,7 +54,6 @@ const BlockedUsers = ({ data: { channel: { blockedUsers }, unblock } }) => {
           <Description>
             There are no blocked users in this channel.
           </Description>}
-
       </ListContainer>
     </StyledCard>
   );

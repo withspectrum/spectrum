@@ -14,16 +14,17 @@ import {
 } from '../../../components/listItems/style';
 
 const PendingUsers = ({
-  data: { channel: { pendingUsers }, togglePending },
+  data: { channel: { pendingUsers } },
+  togglePending,
 }) => {
   return (
     <StyledCard>
-      <LargeListHeading>
-        Pending Users
-      </LargeListHeading>
+      <LargeListHeading>Pending Users</LargeListHeading>
       {pendingUsers.length > 0 &&
         <Description>
-          Approving requests will allow a person to view all threads and messages in this channel, as well as allow them to post their own threads.
+          Approving requests will allow a person to view all threads and
+          messages in this channel, as well as allow them to post their own
+          threads.
         </Description>}
 
       <ListContainer>
@@ -60,7 +61,6 @@ const PendingUsers = ({
           <Description>
             There are no pending requests to join this channel.
           </Description>}
-
       </ListContainer>
     </StyledCard>
   );
