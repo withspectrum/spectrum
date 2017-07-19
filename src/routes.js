@@ -27,6 +27,8 @@ import communitySettings from './views/communitySettings';
 import channelSettings from './views/channelSettings';
 import NewCommunity from './views/newCommunity';
 
+import Editor from './components/draftjs-editor';
+
 const About = () =>
   <div>
     <h3>About</h3>
