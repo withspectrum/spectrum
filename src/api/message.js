@@ -24,7 +24,7 @@ const SEND_MESSAGE_OPTIONS = {
           message: {
             ...message,
             content: {
-              body: '',
+              body: message.messageType === 'media' ? '' : message.content.body,
             },
           },
         },
