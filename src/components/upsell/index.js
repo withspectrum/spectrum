@@ -514,7 +514,7 @@ class UpsellMiniUpgradePure extends Component {
       <MiniNullCard
         bg="null"
         heading="Upgrade to Pro"
-        copy="Upgrade to Pro for badges, gifs, usernames, and more!"
+        copy="Upgrade to Pro for badges, gif avatars, and more!"
         emoji="😍"
       >
         <Button
@@ -601,7 +601,7 @@ class UpsellUpgradeToProPure extends Component {
               Spectrum
             </li>
             <li>😍 You can set a gif as your profile photo or cover photo</li>
-            <li>❤️ You'll be able to change your username at any time</li>
+            <li>❤️ More to come!</li>
           </ul>
         </Subtitle>
         <Cost>Spectrum Pro costs $5/month and you can cancel at any time.</Cost>

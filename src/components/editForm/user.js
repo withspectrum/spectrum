@@ -263,8 +263,6 @@ class UserWithData extends Component {
   };
 
   changeUsername = e => {
-    if (!this.props.currentUser.isPro) return;
-
     let username = e.target.value.trim();
     username = slugg(username);
 
@@ -401,7 +399,6 @@ class UserWithData extends Component {
             type={'text'}
             defaultValue={username}
             onChange={this.changeUsername}
-            disabled={!currentUser.isPro}
           >
             Username
             {isUsernameSearching &&
@@ -409,11 +406,6 @@ class UserWithData extends Component {
                 <Spinner size={16} color={'brand.default'} />
               </Loading>}
           </Input>
-
-          {!currentUser.isPro &&
-            <Notice style={{ marginTop: '8px' }}>
-              Upgrade to Pro to change your username at any time 👉
-            </Notice>}
 
           {usernameError &&
             <Notice style={{ marginTop: '16px' }}>
