@@ -13,7 +13,7 @@ export default function gallery(state = initialState, action) {
         messageId: action.messageId,
       };
     case 'HIDE_GALLERY':
-      return { initialState };
+      return initialState;
     default:
       return state;
   }

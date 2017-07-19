@@ -130,7 +130,7 @@ module.exports = {
                 nodes: [
                   {
                     kind: 'text',
-                    text: `![](${urls[fileIndex - 1]})`,
+                    text: `![](${urls[fileIndex - 1]}?max-w=800)`,
                   },
                 ],
               };
@@ -274,27 +274,31 @@ module.exports = {
             currentUserCommunityPermissions,
           ]);
         })
-        .then(([
-          thread,
-          currentUserChannelPermissions,
-          currentUserCommunityPermissions,
-        ]) => {
-          // if the user owns the community or the channel, or they are the original creator, they can delete the thread
-          if (
-            currentUserChannelPermissions.isOwner ||
-            currentUserChannelPermissions.isModerator ||
-            currentUserCommunityPermissions.isOwner ||
-            currentUserCommunityPermissions.isModerator ||
-            thread.creatorId === currentUser.id
-          ) {
-            return deleteThread(threadId);
-          }
+        .then(
+          (
+            [
+              thread,
+              currentUserChannelPermissions,
+              currentUserCommunityPermissions,
+            ]
+          ) => {
+            // if the user owns the community or the channel, or they are the original creator, they can delete the thread
+            if (
+              currentUserChannelPermissions.isOwner ||
+              currentUserChannelPermissions.isModerator ||
+              currentUserCommunityPermissions.isOwner ||
+              currentUserCommunityPermissions.isModerator ||
+              thread.creatorId === currentUser.id
+            ) {
+              return deleteThread(threadId);
+            }
 
-          // if the user is not a channel or community owner, the thread can't be locked
-          return new UserError(
-            "You don't have permission to make changes to this thread."
-          );
-        });
+            // if the user is not a channel or community owner, the thread can't be locked
+            return new UserError(
+              "You don't have permission to make changes to this thread."
+            );
+          }
+        );
     },
     setThreadLock: (_, { threadId, value }, { user }) => {
       const currentUser = user;
@@ -335,26 +339,30 @@ module.exports = {
             currentUserCommunityPermissions,
           ]);
         })
-        .then(([
-          thread,
-          currentUserChannelPermissions,
-          currentUserCommunityPermissions,
-        ]) => {
-          // user owns the community or the channel, they can lock the thread
-          if (
-            currentUserChannelPermissions.isOwner ||
-            currentUserChannelPermissions.isModerator ||
-            currentUserCommunityPermissions.isOwner ||
-            currentUserCommunityPermissions.isModerator
-          ) {
-            return setThreadLock(threadId, value);
-          }
+        .then(
+          (
+            [
+              thread,
+              currentUserChannelPermissions,
+              currentUserCommunityPermissions,
+            ]
+          ) => {
+            // user owns the community or the channel, they can lock the thread
+            if (
+              currentUserChannelPermissions.isOwner ||
+              currentUserChannelPermissions.isModerator ||
+              currentUserCommunityPermissions.isOwner ||
+              currentUserCommunityPermissions.isModerator
+            ) {
+              return setThreadLock(threadId, value);
+            }
 
-          // if the user is not a channel or community owner, the thread can't be locked
-          return new UserError(
-            "You don't have permission to make changes to this thread."
-          );
-        });
+            // if the user is not a channel or community owner, the thread can't be locked
+            return new UserError(
+              "You don't have permission to make changes to this thread."
+            );
+          }
+        );
     },
     toggleThreadNotifications: (_, { threadId }, { user }) => {
       const currentUser = user;

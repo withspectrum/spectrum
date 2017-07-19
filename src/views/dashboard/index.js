@@ -10,6 +10,7 @@ import {
   UpsellSignIn,
   UpsellToReload,
   UpsellMiniCreateCommunity,
+  UpsellMiniUpgrade,
 } from '../../components/upsell';
 import UpsellNewUser from '../../components/upsell/newUserUpsell';
 import {
@@ -141,6 +142,7 @@ class DashboardPure extends Component {
                 networkStatus={networkStatus}
               />
               <UpsellMiniCreateCommunity />
+              {!currentUser.isPro && <UpsellMiniUpgrade />}
             </Column>}
 
           <Column type="primary">

@@ -20,7 +20,7 @@ export const FormTitle = styled.h1`
   font-weight: 800;
   line-height: 1.2;
   flex: 1 0 auto;
-  ${Truncate}
+  ${Truncate};
 `;
 
 export const Subtitle = styled.h4`
@@ -28,7 +28,7 @@ export const Subtitle = styled.h4`
   color: ${props => props.theme.text.alt};
   line-height: 1.3;
   width: 100%;
-  ${Truncate}
+  ${Truncate};
 `;
 
 export const Description = styled.p`
@@ -113,4 +113,11 @@ export const Location = styled(FlexRow)`
   @media (max-width: 768px) {
     display: none;
   }
+`;
+
+export const Loading = styled.span`
+  display: inline-block;
+  position: absolute;
+  right: 19px;
+  top: 45px;
 `;

@@ -10,6 +10,7 @@ import Icon from '../../components/icons';
 import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
 import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../api';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { openModal } from '../../actions/modals';
 import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
 import {
@@ -54,6 +55,12 @@ export const MiniNullCard = props => {
   return (
     <Card>
       <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
+        {props.emoji &&
+          <LargeEmoji>
+            <span role="img" aria-label="Howdy!">
+              {props.emoji}
+            </span>
+          </LargeEmoji>}
         {props.heading &&
           <MiniTitle>
             {props.heading}
@@ -499,6 +506,33 @@ export const Upsell404Thread = () => {
   );
 };
 
+class UpsellMiniUpgradePure extends Component {
+  render() {
+    const { currentUser, dispatch } = this.props;
+
+    return (
+      <MiniNullCard
+        bg="null"
+        heading="Upgrade to Pro"
+        copy="Upgrade to Pro for badges, gif avatars, and more!"
+        emoji="😍"
+      >
+        <Button
+          icon="payment"
+          label
+          onClick={() =>
+            dispatch(openModal('UPGRADE_MODAL', { user: currentUser }))}
+        >
+          Upgrade
+        </Button>
+      </MiniNullCard>
+    );
+  }
+}
+
+const map = state => ({ currentUser: state.users.currentUser });
+export const UpsellMiniUpgrade = connect(map)(UpsellMiniUpgradePure);
+
 class UpsellUpgradeToProPure extends Component {
   state: {
     upgradeError: string,
@@ -532,6 +566,8 @@ class UpsellUpgradeToProPure extends Component {
           isLoading: false,
           upgradeError: '',
         });
+        // if the upgrade is triggered from a modal, close the modal
+        this.props.complete();
       })
       .catch(err => {
         this.setState({
@@ -547,7 +583,7 @@ class UpsellUpgradeToProPure extends Component {
     const { currentUser } = this.props;
 
     return (
-      <NullCard bg="pro">
+      <NullCard bg="onboarding">
         <Profile>
           <img alt={currentUser.name} src={`${currentUser.profilePhoto}`} />
           <span>PRO</span>
@@ -555,7 +591,19 @@ class UpsellUpgradeToProPure extends Component {
         <Title>Upgrade to Pro</Title>
         <Subtitle>
           We're hard at work building features for Spectrum Pro. Your early
-          support helps us get there faster – thank you!
+          support helps us get there faster – thank you! In the meantime, here's
+          what's unlocked on Pro:
+        </Subtitle>
+        <Subtitle>
+          <ul>
+            <li>
+              ✨ A spiffy new Pro badge will adorn your name everywhere on
+              Spectrum
+            </li>
+            <li>😍 Set a gif as your profile photo or cover photo</li>
+            <li>🛠 Upload images up to 25mb, making sharing work easier</li>
+            <li>❤️ More to come!</li>
+          </ul>
         </Subtitle>
         <Cost>Spectrum Pro costs $5/month and you can cancel at any time.</Cost>
         <StripeCheckout
@@ -568,7 +616,7 @@ class UpsellUpgradeToProPure extends Component {
           currency="USD"
         >
           <Button disabled={isLoading} loading={isLoading} icon="payment">
-            Upgrade
+            Make me a Pro!
           </Button>
         </StripeCheckout>
 

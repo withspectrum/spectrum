@@ -112,20 +112,21 @@ class Browser extends Component {
 
   render() {
     const { images, index } = this.state;
+
     return (
       <GalleryWrapper>
         <CloseButton onClick={this.closeGallery}>✕</CloseButton>
         <Overlay onClick={this.closeGallery} onKeyDown={this.handleKeyPress} />
         <ActiveImage
           onClick={this.nextImage}
-          src={images[index].content.body}
+          src={`${images[index].content.body}?max-w=${window.innerWidth}`}
         />
         <Minigallery>
           <MiniContainer>
             {images.map((image, i) => {
               return (
                 <MiniImg
-                  src={image.content.body}
+                  src={`${image.content.body}?max-w=64`}
                   key={i}
                   onClick={() => this.setCount(i)}
                   active={i === index}

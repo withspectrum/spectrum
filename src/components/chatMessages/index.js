@@ -37,7 +37,7 @@ import {
   each group render each bubble.
 */
 class ChatMessages extends Component {
-  openGallery = messageId => {
+  toggleOpenGallery = messageId => {
     const { threadId } = this.props;
     this.props.dispatch(openGallery(threadId, messageId));
   };
@@ -83,9 +83,9 @@ class ChatMessages extends Component {
               <Name>
                 {me ? 'You' : user.name}
               </Name>
-              {user.isAdmin && <Badge type="admin" />}
-              {user.isPro && <Badge type="pro" />}
             </Link>
+            {user.isAdmin && <Badge type="admin" />}
+            {user.isPro && <Badge type="pro" />}
           </Byline>
         );
       };
@@ -169,7 +169,8 @@ class ChatMessages extends Component {
                             sender={sender}
                             imgSrc={message.content.body}
                             message={message.content}
-                            openGallery={() => this.openGallery(message.id)}
+                            openGallery={() =>
+                              this.toggleOpenGallery(message.id)}
                             pending={message.id < 0}
                           />
                           {typeof message.id === 'string' &&
