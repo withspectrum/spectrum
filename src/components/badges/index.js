@@ -21,7 +21,6 @@ const Span = styled.span`
   font-size: 9px;
   font-weight: 800;
   border-radius: 4px;
-  cursor: pointer;
   ${props => (props.tipText ? Tooltip(props) : '')};
   align-self: center;
   line-height: 1.4;
@@ -31,6 +30,11 @@ const ProBadge = styled(Span)`
   background-color: ${props => props.theme.success.alt};
   background-image: ${props =>
     Gradient(props.theme.space.light, props.theme.success.default)}
+  cursor: pointer;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 class Badge extends Component {
