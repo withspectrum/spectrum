@@ -10,6 +10,7 @@ import Icon from '../../components/icons';
 import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
 import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../api';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { openModal } from '../../actions/modals';
 import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
 import {
@@ -54,6 +55,12 @@ export const MiniNullCard = props => {
   return (
     <Card>
       <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
+        {props.emoji &&
+          <LargeEmoji>
+            <span role="img" aria-label="Howdy!">
+              {props.emoji}
+            </span>
+          </LargeEmoji>}
         {props.heading &&
           <MiniTitle>
             {props.heading}
@@ -498,6 +505,33 @@ export const Upsell404Thread = () => {
     </NullCard>
   );
 };
+
+class UpsellMiniUpgradePure extends Component {
+  render() {
+    const { currentUser, dispatch } = this.props;
+
+    return (
+      <MiniNullCard
+        bg="null"
+        heading="Upgrade to Pro"
+        copy="Upgrade to Pro for badges, gifs, usernames, and more!"
+        emoji="😍"
+      >
+        <Button
+          icon="payment"
+          label
+          onClick={() =>
+            dispatch(openModal('UPGRADE_MODAL', { user: currentUser }))}
+        >
+          Upgrade
+        </Button>
+      </MiniNullCard>
+    );
+  }
+}
+
+const map = state => ({ currentUser: state.users.currentUser });
+export const UpsellMiniUpgrade = connect(map)(UpsellMiniUpgradePure);
 
 class UpsellUpgradeToProPure extends Component {
   state: {
