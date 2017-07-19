@@ -215,6 +215,7 @@ class UserWithData extends Component {
       coverFile,
       photoSizeError,
       username,
+      usernameError,
     } = this.state;
 
     const input = {
@@ -226,7 +227,7 @@ class UserWithData extends Component {
       username,
     };
 
-    if (photoSizeError) {
+    if (photoSizeError || usernameError) {
       return;
     }
 
@@ -268,13 +269,13 @@ class UserWithData extends Component {
     username = slugg(username);
 
     this.setState({
-      usernameError: 'Usernames can be up to 20 characters',
+      usernameError: '',
       username,
     });
 
     if (username.length > 20) {
       return this.setState({
-        usernameError: '',
+        usernameError: 'Usernames can be up to 20 characters',
       });
     } else if (username.length === 0) {
       this.setState({
@@ -436,7 +437,9 @@ class UserWithData extends Component {
           <Actions>
             <TextButton hoverColor={'warn.alt'}>Cancel</TextButton>
             <Button
-              disabled={!name || nameError}
+              disabled={
+                !name || nameError || !username || usernameError || proGifError
+              }
               loading={isLoading}
               onClick={this.save}
             >
