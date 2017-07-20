@@ -2470,7 +2470,7 @@ draft-js-checkable-list-item@^2.0.5:
   dependencies:
     draft-js-modifiers "^0.1.2"
 
-draft-js-drag-n-drop-plugin@2.0.0-beta2:
+draft-js-drag-n-drop-plugin@2.0.0-rc2:
   version "2.0.0-rc2"
   resolved "https://registry.yarnpkg.com/draft-js-drag-n-drop-plugin/-/draft-js-drag-n-drop-plugin-2.0.0-rc2.tgz#81ffee2323f91daf0ba01312cb4ae3a46b9ba85b"
   dependencies:
@@ -2480,7 +2480,7 @@ draft-js-drag-n-drop-plugin@2.0.0-beta2:
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
-draft-js-focus-plugin@2.0.0-beta2:
+draft-js-focus-plugin@2.0.0-rc2:
   version "2.0.0-rc2"
   resolved "https://registry.yarnpkg.com/draft-js-focus-plugin/-/draft-js-focus-plugin-2.0.0-rc2.tgz#6b65e0c489a0cedc9cfad414b3313d44168375d9"
   dependencies:

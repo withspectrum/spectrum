@@ -131,6 +131,7 @@ class Editor extends React.Component {
     const {
       state = this.state.editorState,
       onChange = this.onChange,
+      markdown,
       onEnter,
       className,
       style,
@@ -143,7 +144,7 @@ class Editor extends React.Component {
 
     return (
       <Wrapper
-        className={className}
+        className={`${className} ${markdown !== false && 'markdown'}`}
         style={style}
         onClick={this.focus}
         focus={focus}
