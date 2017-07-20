@@ -8,7 +8,6 @@ import {
 } from 'draft-js';
 import DraftEditor, { composeDecorators } from 'draft-js-plugins-editor';
 import createImagePlugin from 'draft-js-image-plugin';
-import draftToMarkdown from 'draftjs-to-markdown';
 import createFocusPlugin from 'draft-js-focus-plugin';
 import createBlockDndPlugin from 'draft-js-drag-n-drop-plugin';
 import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin';
@@ -48,14 +47,14 @@ const ImageComponent = props => {
   );
 };
 
-const toMarkdown = editorState =>
-  draftToMarkdown(convertToRaw(editorState.getCurrentContent()));
-
 const toPlainText = editorState =>
   editorState.getCurrentContent().getPlainText();
 
 const fromPlainText = text =>
   EditorState.createWithContent(ContentState.createFromText(text));
+
+const toJSON = editorState => convertToRaw(editorState.getCurrentContent());
+const fromJSON = json => convertFromRaw(json);
 
 type EditorProps = {
   markdown?: boolean,
@@ -194,6 +193,6 @@ class Editor extends React.Component {
   }
 }
 
-export { toMarkdown, convertFromRaw, toPlainText, fromPlainText };
+export { toPlainText, fromPlainText, toJSON, fromJSON };
 
 export default Editor;

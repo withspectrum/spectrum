@@ -16,10 +16,7 @@ import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
 import { openComposer, closeComposer } from '../../actions/composer';
 import { addToastWithTimeout } from '../../actions/toasts';
-import Editor, {
-  toPlainText,
-  fromPlainText /*, toJSON*/,
-} from '../draftjs-editor';
+import Editor, { toPlainText, fromPlainText, toJSON } from '../draftjs-editor';
 import { getComposerCommunitiesAndChannels } from './queries';
 import { publishThread } from './mutations';
 import { getLinkPreviewFromUrl } from '../../helpers/utils';
@@ -41,8 +38,6 @@ import {
   Actions,
   Dropdowns,
 } from './style';
-
-const toJSON = () => console.log('dummy');
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
 
@@ -358,6 +353,8 @@ class ThreadComposerWithData extends Component {
     const channelId = activeChannel;
     const communityId = activeCommunity;
 
+    console.log(body);
+
     const content = {
       title,
       body: JSON.stringify(toJSON(body)),
@@ -375,11 +372,13 @@ class ThreadComposerWithData extends Component {
       });
     }
 
+    // TODO(@mxstbr): FIX FILE UPLOADING
+    const filesToUpload = [];
     // Get the images
-    const filesToUpload = body.document.nodes
-      .filter(node => node.type === 'image')
-      .map(image => image.getIn(['data', 'file']))
-      .toJS();
+    // const filesToUpload = body.document.nodes
+    //   .filter(node => node.type === 'image')
+    //   .map(image => image.getIn(['data', 'file']))
+    //   .toJS();
 
     // this.props.mutate comes from a higher order component defined at the
     // bottom of this file
@@ -389,7 +388,7 @@ class ThreadComposerWithData extends Component {
           thread: {
             channelId,
             communityId,
-            type: 'SLATE',
+            type: 'DRAFTJS',
             content,
             attachments,
             filesToUpload,

@@ -60,12 +60,12 @@ module.exports = {
 
           /*
             If the thread has attachments, we have to iterate through each attachment and JSON.parse() the data payload. This is because we want a generic data shape in the graphQL layer like this:
-            
+
             {
               attachmentType: enum String
               data: String
             }
-            
+
             But when we get the data onto the client we JSON.parse the `data` field so that we can have any generic shape for attachments in the future.
           */
           let attachments = [];
@@ -114,8 +114,9 @@ module.exports = {
         })
         .then(([newThread, urls]) => {
           // if no files were uploaded, return the new thread object
-          if (!urls) return newThread;
+          return newThread;
 
+          // TODO: MAYBE FIXME MOTHERFUCKER
           // otherwise we need to update the slate object of the thread to replace the image nodes with markdown image text
           const slateState = JSON.parse(newThread.content.body);
           let fileIndex = 0;
@@ -274,27 +275,31 @@ module.exports = {
             currentUserCommunityPermissions,
           ]);
         })
-        .then(([
-          thread,
-          currentUserChannelPermissions,
-          currentUserCommunityPermissions,
-        ]) => {
-          // if the user owns the community or the channel, or they are the original creator, they can delete the thread
-          if (
-            currentUserChannelPermissions.isOwner ||
-            currentUserChannelPermissions.isModerator ||
-            currentUserCommunityPermissions.isOwner ||
-            currentUserCommunityPermissions.isModerator ||
-            thread.creatorId === currentUser.id
-          ) {
-            return deleteThread(threadId);
-          }
+        .then(
+          (
+            [
+              thread,
+              currentUserChannelPermissions,
+              currentUserCommunityPermissions,
+            ]
+          ) => {
+            // if the user owns the community or the channel, or they are the original creator, they can delete the thread
+            if (
+              currentUserChannelPermissions.isOwner ||
+              currentUserChannelPermissions.isModerator ||
+              currentUserCommunityPermissions.isOwner ||
+              currentUserCommunityPermissions.isModerator ||
+              thread.creatorId === currentUser.id
+            ) {
+              return deleteThread(threadId);
+            }
 
-          // if the user is not a channel or community owner, the thread can't be locked
-          return new UserError(
-            "You don't have permission to make changes to this thread."
-          );
-        });
+            // if the user is not a channel or community owner, the thread can't be locked
+            return new UserError(
+              "You don't have permission to make changes to this thread."
+            );
+          }
+        );
     },
     setThreadLock: (_, { threadId, value }, { user }) => {
       const currentUser = user;
@@ -335,26 +340,30 @@ module.exports = {
             currentUserCommunityPermissions,
           ]);
         })
-        .then(([
-          thread,
-          currentUserChannelPermissions,
-          currentUserCommunityPermissions,
-        ]) => {
-          // user owns the community or the channel, they can lock the thread
-          if (
-            currentUserChannelPermissions.isOwner ||
-            currentUserChannelPermissions.isModerator ||
-            currentUserCommunityPermissions.isOwner ||
-            currentUserCommunityPermissions.isModerator
-          ) {
-            return setThreadLock(threadId, value);
-          }
+        .then(
+          (
+            [
+              thread,
+              currentUserChannelPermissions,
+              currentUserCommunityPermissions,
+            ]
+          ) => {
+            // user owns the community or the channel, they can lock the thread
+            if (
+              currentUserChannelPermissions.isOwner ||
+              currentUserChannelPermissions.isModerator ||
+              currentUserCommunityPermissions.isOwner ||
+              currentUserCommunityPermissions.isModerator
+            ) {
+              return setThreadLock(threadId, value);
+            }
 
-          // if the user is not a channel or community owner, the thread can't be locked
-          return new UserError(
-            "You don't have permission to make changes to this thread."
-          );
-        });
+            // if the user is not a channel or community owner, the thread can't be locked
+            return new UserError(
+              "You don't have permission to make changes to this thread."
+            );
+          }
+        );
     },
     toggleThreadNotifications: (_, { threadId }, { user }) => {
       const currentUser = user;
