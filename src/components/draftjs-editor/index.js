@@ -12,6 +12,7 @@ import draftToMarkdown from 'draftjs-to-markdown';
 import createFocusPlugin from 'draft-js-focus-plugin';
 import createBlockDndPlugin from 'draft-js-drag-n-drop-plugin';
 import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin';
+import createSingleLinePlugin from 'draft-js-single-line-plugin';
 // NOTE(@mxstbr): This is necessary to make sure the placeholder is aligned
 // and stuff like that.
 import 'draft-js/dist/Draft.css';
@@ -88,13 +89,17 @@ class Editor extends React.Component {
       imageComponent: ImageComponent,
     });
 
+    const singleLine = createSingleLinePlugin();
+
     this.state = {
       plugins: [
         props.image !== false && imagePlugin,
         props.markdown !== false && createMarkdownShortcutsPlugin(),
         props.image !== false && dndPlugin,
         props.image !== false && focusPlugin,
+        props.singleLine === true && singleLine,
       ],
+      singleLineBlockRenderMap: singleLine.blockRenderMap,
       addImage: imagePlugin.addImage,
       editorState: props.initialState || EditorState.createEmpty(),
     };
@@ -141,6 +146,7 @@ class Editor extends React.Component {
       showLinkPreview,
       linkPreview,
       focus,
+      singleLine,
       ...rest
     } = this.props;
 
@@ -156,6 +162,9 @@ class Editor extends React.Component {
           onChange={onChange}
           plugins={this.state.plugins}
           handleDroppedFiles={this.handleDroppedFiles}
+          blockRenderMap={
+            singleLine === true && this.state.singleLineBlockRenderMap
+          }
           ref={editor => {
             this.editor = editor;
             if (this.props.editorRef) this.props.editorRef(editor);
