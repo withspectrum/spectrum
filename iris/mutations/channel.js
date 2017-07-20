@@ -573,11 +573,11 @@ module.exports = {
                     channelToEvaluate,
                     createMemberInCommunity(
                       channelToEvaluate.communityId,
-                      currentUser.id
+                      input.userId
                     ),
                     createMemberInDefaultChannels(
                       channelToEvaluate.communityId,
-                      currentUser.id
+                      input.userId
                     ),
                     approveUser,
                   ]).then(() => channelToEvaluate);

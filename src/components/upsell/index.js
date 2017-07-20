@@ -335,6 +335,7 @@ export const UpsellRequestToJoinChannel = ({
 
 export const Upsell404Channel = ({
   channel,
+  community,
   noPermission,
 }: {
   channel: Object,
@@ -346,9 +347,7 @@ export const Upsell404Channel = ({
   // if the user does have permission, but this component gets rendered, it means
   // something went wrong - most likely the channel doesn't exists (404) so
   // we should return the user back to the community url
-  const returnUrl = noPermission
-    ? `/${channel.community}/${channel.slug}`
-    : `/${channel.community}`;
+  const returnUrl = noPermission ? `/${community}/${channel}` : `/${community}`;
 
   const title = noPermission
     ? "I see you sneakin' around here..."
