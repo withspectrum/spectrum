@@ -34,7 +34,7 @@ const ImageComponent = props => {
     offsetKey, // eslint-disable-line no-unused-vars
     selection, // eslint-disable-line no-unused-vars
     tree, // eslint-disable-line no-unused-vars
-    contentState,
+    contentState, // eslint-disable-line no-unused-vars
     ...elementProps
   } = props;
   const active = props.blockProps.isFocused;
