@@ -12,6 +12,8 @@ import draftToMarkdown from 'draftjs-to-markdown';
 import createFocusPlugin from 'draft-js-focus-plugin';
 import createBlockDndPlugin from 'draft-js-drag-n-drop-plugin';
 import createMarkdownShortcutsPlugin from 'draft-js-markdown-shortcuts-plugin';
+// NOTE(@mxstbr): This is necessary to make sure the placeholder is aligned
+// and stuff like that.
 import 'draft-js/dist/Draft.css';
 
 import MediaInput from '../mediaInput';
