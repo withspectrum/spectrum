@@ -11,7 +11,7 @@ import withHandlers from 'recompose/withHandlers';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
-import { toPlainText, fromPlainText } from '../../components/editor';
+import { toPlainText, fromPlainText } from '../../components/draftjs-editor';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { Form, EditorInput, ChatInputWrapper, SendButton } from './style';
 import { sendMessageMutation } from '../../api/message';
@@ -31,7 +31,7 @@ class ChatInputWithMutation extends Component {
   }
 
   submit = e => {
-    e.preventDefault();
+    if (e) e.preventDefault();
 
     const {
       state,
@@ -85,12 +85,6 @@ class ChatInputWithMutation extends Component {
       clear();
       this.editor.focus();
     });
-  };
-
-  handleEnter = e => {
-    //=> make the enter key send a message, not create a new line in the next autoexpanding textarea unless shift is pressed.
-    e.preventDefault(); //=> prevent linebreak
-    this.submit(e); //=> send the message instead
   };
 
   sendMediaMessage = e => {
@@ -177,14 +171,14 @@ class ChatInputWithMutation extends Component {
             focus={isFocused}
             placeholder="Your message here..."
             state={state}
-            onEnter={this.handleEnter}
+            handleReturn={this.submit}
             onChange={onChange}
             markdown={false}
             onFocus={this.onFocus}
             onBlur={this.onBlur}
             singleLine
             images={false}
-            editorRef={editor => this.editor = editor}
+            editorRef={editor => (this.editor = editor)}
           />
           <SendButton glyph="send-fill" onClick={this.submit} />
         </Form>
