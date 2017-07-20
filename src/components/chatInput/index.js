@@ -11,7 +11,11 @@ import withHandlers from 'recompose/withHandlers';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { track } from '../../helpers/events';
-import { toPlainText, fromPlainText } from '../../components/draftjs-editor';
+import {
+  toJSON,
+  fromPlainText,
+  toPlainText,
+} from '../../components/draftjs-editor';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { Form, EditorInput, ChatInputWrapper, SendButton } from './style';
 import { sendMessageMutation } from '../../api/message';
@@ -58,7 +62,7 @@ class ChatInputWithMutation extends Component {
     // in views/directMessages/containers/newThread.js
     if (thread === 'newDirectMessageThread') {
       return createThread({
-        messageBody: toPlainText(state),
+        messageBody: JSON.stringify(toJSON(state)),
         messageType: 'text',
       });
     }
@@ -70,7 +74,7 @@ class ChatInputWithMutation extends Component {
       messageType: 'text',
       threadType,
       content: {
-        body: toPlainText(state),
+        body: JSON.stringify(toJSON(state)),
       },
     })
       .then(({ data: { addMessage } }) => {
