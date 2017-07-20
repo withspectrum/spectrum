@@ -60,9 +60,6 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
   props: props => ({
     data: props.data,
     subscribeToNewMessages: () => {
-      if (!props.data.thread) {
-        return;
-      }
       return props.data.subscribeToMore({
         document: subscribeToNewMessages,
         variables: {
