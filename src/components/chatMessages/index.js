@@ -10,13 +10,14 @@ import {
   convertTimestampToDate,
   convertTimestampToTime,
   onlyContainsEmoji,
+  draftOnlyContainsEmoji,
 } from '../../helpers/utils';
 import { NullState } from '../upsell';
 import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
 import { TextBubble as RawBubble } from '../bubbles/style';
 import Badge from '../badges';
 import Reaction from '../reaction';
-import { toState } from '../draftjs-editor';
+import { toState, toPlainText } from '../draftjs-editor';
 
 import {
   UserAvatar,
@@ -186,23 +187,24 @@ class ChatMessages extends Component {
                         </MessageWrapper>
                       );
                     } else if (message.messageType === 'draftjs') {
-                      // const emojiOnly = onlyContainsEmoji(message.content.body);
-                      // const TextBubble = emojiOnly ? EmojiBubble : Bubble;
+                      const body = JSON.parse(message.content.body);
+                      const emojiOnly = draftOnlyContainsEmoji(body);
+                      const TextBubble = emojiOnly ? EmojiBubble : RawBubble;
                       return (
                         <MessageWrapper
                           me={me}
                           key={message.id}
                           timestamp={convertTimestampToTime(message.timestamp)}
                         >
-                          <RawBubble
+                          <TextBubble
                             me={me}
                             persisted={message.persisted}
                             sender={sender}
                             type={message.messageType}
                             pending={message.id < 0}
                           >
-                            {redraft(JSON.parse(message.content.body))}
-                          </RawBubble>
+                            {redraft(body)}
+                          </TextBubble>
                           {/*
                             we check if typof equals a string to determine
                             if the message is coming from the server, or

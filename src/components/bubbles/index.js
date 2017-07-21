@@ -32,10 +32,10 @@ export const Bubble = (props: BubbleProps) => {
 };
 
 export const EmojiBubble = (props: BubbleProps) => {
-  const { me, message } = props;
+  const { me } = props;
   return (
     <Emoji me={me}>
-      {message.body}
+      {props.children || props.message.body}
     </Emoji>
   );
 };

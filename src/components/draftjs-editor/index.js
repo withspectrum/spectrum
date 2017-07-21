@@ -183,6 +183,7 @@ class Editor extends React.Component {
               />
             : null}
         {images !== false &&
+          !this.props.readOnly &&
           <MediaRow>
             <MediaInput onChange={this.addImage} multiple>
               Add

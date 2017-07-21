@@ -61,6 +61,10 @@ const regex = new RegExp(
 );
 export const onlyContainsEmoji = (text: string) => regex.test(text);
 
+export const draftOnlyContainsEmoji = (raw: object) =>
+  raw.blocks.length === 1 &&
+  raw.blocks[0].type === 'unstyled' &&
+  onlyContainsEmoji(raw.blocks[0].text);
 /**
  * Encode a string to base64 (using the Node built-in Buffer)
  *
