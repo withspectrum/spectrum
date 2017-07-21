@@ -16,36 +16,11 @@ import createSingleLinePlugin from 'draft-js-single-line-plugin';
 // and stuff like that.
 import 'draft-js/dist/Draft.css';
 
+import Image from './Image';
+import { Wrapper, MediaRow } from './style';
 import MediaInput from '../mediaInput';
-import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
-import { Wrapper, MediaRow } from '../editor/style';
 import { ThreadDescription } from '../threadComposer/style';
-import Image, { ImageContainer, ActiveOverlay } from '../editor/Image';
-
-const ImageComponent = props => {
-  const {
-    block, // eslint-disable-line no-unused-vars
-    theme, // eslint-disable-line no-unused-vars
-    blockProps, // eslint-disable-line no-unused-vars
-    customStyleMap, // eslint-disable-line no-unused-vars
-    customStyleFn, // eslint-disable-line no-unused-vars
-    decorator, // eslint-disable-line no-unused-vars
-    forceSelection, // eslint-disable-line no-unused-vars
-    offsetKey, // eslint-disable-line no-unused-vars
-    selection, // eslint-disable-line no-unused-vars
-    tree, // eslint-disable-line no-unused-vars
-    contentState, // eslint-disable-line no-unused-vars
-    ...elementProps
-  } = props;
-  const active = props.blockProps.isFocused;
-  const { src } = contentState.getEntity(block.getEntityAt(0)).getData();
-  return (
-    <ImageContainer active={active}>
-      <ActiveOverlay active={active} />
-      <Image src={src} active={active} {...elementProps} />
-    </ImageContainer>
-  );
-};
+import { LinkPreview, LinkPreviewLoading } from '../linkPreview';
 
 const toPlainText = editorState =>
   editorState.getCurrentContent().getPlainText();
@@ -85,7 +60,7 @@ class Editor extends React.Component {
 
     const imagePlugin = createImagePlugin({
       decorator,
-      imageComponent: ImageComponent,
+      imageComponent: Image,
     });
 
     const singleLine = createSingleLinePlugin();
