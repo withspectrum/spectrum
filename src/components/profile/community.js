@@ -13,11 +13,9 @@ import { track } from '../../helpers/events';
 import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { addProtocolToString } from '../../helpers/utils';
-import type { ProfileSizeProps } from './index';
 import { MetaData } from './metaData';
-import { displayLoadingCard, LoadingProfile } from '../loading';
+import { LoadingProfile } from '../loading';
 import Icon from '../icons';
-import { ChannelListItem } from '../listItems';
 import { Button } from '../buttons';
 import {
   ProfileHeader,
@@ -34,24 +32,24 @@ import {
   ProfileCard,
 } from './style';
 
-type CommunityProps = {
-  id: string,
-  name: string,
-  slug: string,
-  isMember: boolean,
-  website: string,
-  profilePhoto: string,
-  metaData: {
-    channels: number,
-    members: number,
-  },
-  communityPermissions: {
-    isOwner: boolean,
-    isMember: boolean,
-    isModerator: boolean,
-    isBlocked: boolean,
-  },
-};
+// type CommunityProps = {
+//   id: string,
+//   name: string,
+//   slug: string,
+//   isMember: boolean,
+//   website: string,
+//   profilePhoto: string,
+//   metaData: {
+//     channels: number,
+//     members: number,
+//   },
+//   communityPermissions: {
+//     isOwner: boolean,
+//     isMember: boolean,
+//     isModerator: boolean,
+//     isBlocked: boolean,
+//   },
+// };
 
 class CommunityWithData extends Component {
   state: {

@@ -44,22 +44,20 @@ module.exports = {
   },
   User: {
     coverPhoto: ({ coverPhoto }) => {
-      const encodedURI = encodeURI(coverPhoto);
       // if the image is not being served from our S3 imgix source, serve it from our web proxy
-      if (encodedURI.indexOf('spectrum.imgix.net') < 0) {
-        return imgix.buildURL(encodedURI, { w: 640, h: 192 });
+      if (coverPhoto && coverPhoto.indexOf('spectrum.imgix.net') < 0) {
+        return imgix.buildURL(coverPhoto, { w: 640, h: 192 });
       }
       // if the image is being served from the S3 imgix source, return that url
-      return encodedURI;
+      return coverPhoto;
     },
     profilePhoto: ({ profilePhoto }) => {
-      const encodedURI = encodeURI(profilePhoto);
       // if the image is not being served from our S3 imgix source, serve it from our web proxy
-      if (encodedURI.indexOf('spectrum.imgix.net') < 0) {
-        return imgix.buildURL(encodedURI, { w: 128, h: 128 });
+      if (profilePhoto && profilePhoto.indexOf('spectrum.imgix.net') < 0) {
+        return imgix.buildURL(profilePhoto, { w: 128, h: 128 });
       }
       // if the image is being served from the S3 imgix source, return that url
-      return encodedURI;
+      return profilePhoto;
     },
     isAdmin: ({ id }: { id: string }) => {
       return isAdmin(id);
@@ -69,16 +67,16 @@ module.exports = {
         .load(id)
         .then(
           sub =>
-            (!(sub == null) &&
-              sub.stripeData &&
-              sub.stripeData.status === 'active'
+            !(sub == null) &&
+            sub.stripeData &&
+            sub.stripeData.status === 'active'
               ? true
-              : false)
+              : false
         );
     },
     everything: (
       { id }: { id: string },
-      { first = 10, after }: PaginationOptions
+      { first, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
       // TODO: Make this more performant by doing an actual db query rather than this hacking around
@@ -135,16 +133,17 @@ module.exports = {
     }),
     threadConnection: (
       { id }: { id: string },
-      { first = 10, after }: PaginationOptions,
+      { first, after }: PaginationOptions,
       { user }
     ) => {
       const currentUser = user;
 
       // if a logged in user is viewing the profile, handle logic to get viewable threads
-      const getThreads = currentUser && currentUser !== null
-        ? getViewableThreadsByUser(id, currentUser.id)
-        : // if the viewing user is logged out, only return publicly viewable threads
-          getPublicThreadsByUser(id);
+      const getThreads =
+        currentUser && currentUser !== null
+          ? getViewableThreadsByUser(id, currentUser.id)
+          : // if the viewing user is logged out, only return publicly viewable threads
+            getPublicThreadsByUser(id);
 
       const cursor = decode(after);
       return getThreads

@@ -12,7 +12,6 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 import Icon from '../../../components/icons';
 import { IS_EMAIL } from '../../../helpers/regexps';
 import { sendEmailInvitationsMutation } from '../../../api/community';
-import { displayLoadingCard } from '../../../components/loading';
 import { Button } from '../../../components/buttons';
 import { Error } from '../../../components/formElements';
 import {
@@ -27,7 +26,6 @@ import {
 import {
   StyledCard,
   LargeListHeading,
-  ListContainer,
   Description,
 } from '../../../components/listItems/style';
 
@@ -75,7 +73,7 @@ class EmailInvites extends Component {
     let unique = {};
     let distinct = [];
     for (let i in array) {
-      if (typeof unique[array[i].email] == 'undefined') {
+      if (typeof unique[array[i].email] === 'undefined') {
         distinct.push(array[i]);
       }
       unique[array[i].email] = 0;
@@ -239,7 +237,6 @@ class EmailInvites extends Component {
   };
 
   render() {
-    const { community } = this.props;
     const {
       contacts,
       isLoading,

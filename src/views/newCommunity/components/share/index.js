@@ -62,7 +62,8 @@ const Share = ({ community, history }) => {
 
       <ButtonRow>
         <Description centered>
-          You're ready to start building your community - you can view it now, or manage your settings at any time
+          You're ready to start building your community - you can view it now,
+          or manage your settings at any time
         </Description>
         <OutlineButton
           onClick={() => history.push(`/${community.slug}/settings`)}

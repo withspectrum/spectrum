@@ -13,7 +13,7 @@ import { ChatWrapper } from '../style';
 import { getThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 
-export const EmptyChat = () => (
+export const EmptyChat = () =>
   <ChatWrapper>
     <HorizontalRule>
       <hr />
@@ -24,8 +24,7 @@ export const EmptyChat = () => (
       heading={`🔥 This thread is hot off the presses...`}
       copy={`Why don't you kick off the conversation?`}
     />
-  </ChatWrapper>
-);
+  </ChatWrapper>;
 
 class MessagesWithData extends Component {
   state: {
@@ -80,42 +79,16 @@ class MessagesWithData extends Component {
 
   render() {
     const {
-      data: { networkStatus },
+      data: { networkStatus, error },
       data,
       toggleReaction,
       forceScrollToBottom,
-      messageCount,
     } = this.props;
     const dataExists = data.thread && data.thread.messageConnection;
     const messagesExist =
       dataExists && data.thread.messageConnection.edges.length > 0;
 
-    if (networkStatus === 7) {
-      if (messagesExist) {
-        const sortedMessages = sortAndGroupMessages(
-          data.thread.messageConnection.edges
-        );
-
-        return (
-          <ChatWrapper>
-            <HorizontalRule>
-              <hr />
-              <Icon glyph={'message'} />
-              <hr />
-            </HorizontalRule>
-            <ChatMessages
-              threadId={data.thread.id}
-              toggleReaction={toggleReaction}
-              messages={sortedMessages}
-              threadType={'story'}
-              forceScrollToBottom={forceScrollToBottom}
-            />
-          </ChatWrapper>
-        );
-      } else {
-        return <EmptyChat />;
-      }
-    } else if (networkStatus === 8) {
+    if (networkStatus === 8 || error) {
       return (
         <NullState
           heading="Sorry, we lost connection to the server..."
@@ -129,6 +102,33 @@ class MessagesWithData extends Component {
           </Button>
         </NullState>
       );
+    }
+
+    if (messagesExist) {
+      const sortedMessages = sortAndGroupMessages(
+        data.thread.messageConnection.edges
+      );
+
+      return (
+        <ChatWrapper>
+          <HorizontalRule>
+            <hr />
+            <Icon glyph={'message'} />
+            <hr />
+          </HorizontalRule>
+          <ChatMessages
+            threadId={data.thread.id}
+            toggleReaction={toggleReaction}
+            messages={sortedMessages}
+            threadType={'story'}
+            forceScrollToBottom={forceScrollToBottom}
+          />
+        </ChatWrapper>
+      );
+    }
+
+    if (networkStatus === 7) {
+      return <EmptyChat />;
     } else {
       return (
         <ChatWrapper>

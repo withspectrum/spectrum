@@ -49,6 +49,11 @@ export const Subtitle = styled.h2`
   a {
     color: ${props => props.theme.brand.default};
   }
+
+  li {
+    margin-top: 8px;
+    list-style-type: none;
+  }
 `;
 
 export const MiniSubtitle = styled(Subtitle)`

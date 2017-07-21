@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import { connect } from 'react-redux';
 // $FlowFixMe
-import Modal from 'react-modal';
-// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { withRouter } from 'react-router';
@@ -14,7 +12,6 @@ import slugg from 'slugg';
 import { withApollo } from 'react-apollo';
 import { track } from '../../../../helpers/events';
 import { Notice } from '../../../../components/listItems/style';
-import { closeModal } from '../../../../actions/modals';
 import { throttle } from '../../../../helpers/utils';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { COMMUNITY_SLUG_BLACKLIST } from '../../../../helpers/regexps';
@@ -22,7 +19,7 @@ import {
   createCommunityMutation,
   CHECK_UNIQUE_COMMUNITY_SLUG_QUERY,
 } from '../../../../api/community';
-import { TextButton, Button } from '../../../../components/buttons';
+import { Button } from '../../../../components/buttons';
 import {
   Input,
   UnderlineInput,
@@ -374,14 +371,11 @@ class CreateCommunityForm extends Component {
 
           {slugTaken &&
             <Error>
-              This url is already taken - feel free to change it if
-              you're set on the name {name}!
+              This url is already taken - feel free to change it if you're set
+              on the name {name}!
             </Error>}
 
-          {slugError &&
-            <Error>
-              Slugs can be up to 24 characters long.
-            </Error>}
+          {slugError && <Error>Slugs can be up to 24 characters long.</Error>}
 
           <TextArea
             defaultValue={description}
@@ -412,8 +406,8 @@ class CreateCommunityForm extends Component {
                 rel="noopener noreferrer"
               >
                 Spectrum Code of Conduct
-              </a>
-              {' '}and agree to enforce it in my community.
+              </a>{' '}
+              and agree to enforce it in my community.
             </span>
           </Checkbox>
 
@@ -429,13 +423,13 @@ class CreateCommunityForm extends Component {
             onClick={this.create}
             disabled={
               slugTaken ||
-                slugError ||
-                nameError ||
-                createError ||
-                descriptionError ||
-                !name ||
-                !description ||
-                !agreeCoC
+              slugError ||
+              nameError ||
+              createError ||
+              descriptionError ||
+              !name ||
+              !description ||
+              !agreeCoC
             }
             loading={isLoading}
           >

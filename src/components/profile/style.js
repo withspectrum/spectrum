@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { FlexRow, FlexCol, Truncate, Transition, Gradient } from '../globals';
+import { FlexRow, FlexCol, Truncate, Transition } from '../globals';
 import { Avatar } from '../avatar';
 import { Button, OutlineButton, IconButton } from '../buttons';
 import Card from '../card';
@@ -200,5 +200,18 @@ export const ProfileCard = styled(Card)`
       color: ${({ theme }) => theme.brand.alt};
       text-decoration: underline;
     }
+  }
+`;
+
+export const ProUpgrade = styled.div`
+  margin: 16px;
+  display: flex;
+  align-items: stretch;
+  align-content: stretch;
+  justify-content: center;
+
+  button {
+    width: 100%;
+    text-align: center;
   }
 `;

@@ -11,6 +11,7 @@ import {
 } from '../../components/globals';
 import { HorizontalRule } from '../../components/globals';
 import Card from '../../components/card';
+import { IconButton } from '../../components/buttons';
 
 export const HzRule = styled(HorizontalRule)`
   margin: 0;
@@ -169,7 +170,7 @@ export const ReactionContext = styled(ContextRow)`
 `;
 
 export const JoinContext = styled(ContextRow)`
-  color: ${({ theme }) => theme.space.light};
+  color: ${({ theme }) => theme.success.alt};
 `;
 
 export const ThreadContext = styled(ContextRow)`
@@ -223,4 +224,21 @@ export const AttachmentsWash = styled(FlexCol)`
   margin-top: 8px;
   align-self: stretch;
   flex: none;
+`;
+
+export const RequestCard = styled(Card)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 16px 24px;
+
+  > p {
+    font-weight: 700;
+    font-size: 16px;
+  }
+`;
+
+export const CloseRequest = styled(IconButton)`
+  margin-left: 8px;
+  color: ${props => props.theme.text.placeholder};
 `;

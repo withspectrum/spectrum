@@ -6,38 +6,51 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
+// NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
+// I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
+import InfiniteList from 'react-infinite-scroller-with-scroll-element';
 import { withInfiniteScroll } from '../../components/infiniteScroll';
 import { parseNotification, getDistinctNotifications } from './utils';
 import { NewMessageNotification } from './components/newMessageNotification';
 import { NewReactionNotification } from './components/newReactionNotification';
 import { NewChannelNotification } from './components/newChannelNotification';
 import { NewThreadNotification } from './components/newThreadNotification';
-import {
-  CommunityInviteNotification,
-} from './components/communityInviteNotification';
-import {
-  NewUserInCommunityNotification,
-} from './components/newUserInCommunityNotification';
+import { CommunityInviteNotification } from './components/communityInviteNotification';
+import { NewUserInCommunityNotification } from './components/newUserInCommunityNotification';
 import { Column } from '../../components/column';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Titlebar from '../../views/titlebar';
-import { displayLoadingNotifications } from '../../components/loading';
-import { FetchMoreButton } from '../../components/threadFeed/style';
+import {
+  displayLoadingNotifications,
+  LoadingThread,
+} from '../../components/loading';
 import { FlexCol } from '../../components/globals';
 import { sortByDate } from '../../helpers/utils';
+import {
+  storeItem,
+  getItemFromStorage,
+  removeItemFromStorage,
+} from '../../helpers/localStorage';
+import WebPushManager from '../../helpers/web-push-manager';
+import { track } from '../../helpers/events';
+import { addToastWithTimeout } from '../../actions/toasts';
 import {
   getNotifications,
   markNotificationsSeenMutation,
 } from '../../api/notification';
+import { subscribeToWebPush } from '../../api/web-push-subscriptions';
 import {
   UpsellSignIn,
   UpsellToReload,
   UpsellNullNotifications,
 } from '../../components/upsell';
+import BrowserNotificationRequest from './components/browserNotificationRequest';
 
 class NotificationsPure extends Component {
   state: {
     isFetching: boolean,
+    showWebPushPrompt: boolean,
+    webPushPromptLoading: boolean,
   };
 
   constructor() {
@@ -45,6 +58,8 @@ class NotificationsPure extends Component {
 
     this.state = {
       isFetching: false,
+      showWebPushPrompt: false,
+      webPushPromptLoading: false,
     };
   }
 
@@ -69,6 +84,26 @@ class NotificationsPure extends Component {
 
   componentDidMount() {
     this.markAllNotificationsSeen();
+    this.setState({
+      // NOTE(@mxstbr): This is super un-reacty but it works. This refers to
+      // the AppViewWrapper which is the scrolling part of the site.
+      scrollElement: document.getElementById('scroller-for-thread-feed'),
+    });
+
+    if (getItemFromStorage('webPushPromptDismissed')) {
+      return this.setState({
+        showWebPushPrompt: false,
+      });
+    }
+
+    WebPushManager.getPermissionState().then(result => {
+      if (result === 'prompt') {
+        track('browser push notifications', 'prompted');
+        this.setState({
+          showWebPushPrompt: true,
+        });
+      }
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -78,6 +113,43 @@ class NotificationsPure extends Component {
       });
     }
   }
+
+  subscribeToWebPush = () => {
+    track('browser push notifications', 'prompt triggered');
+    this.setState({
+      webPushPromptLoading: true,
+    });
+    WebPushManager.subscribe()
+      .then(subscription => {
+        track('browser push notifications', 'subscribed');
+        removeItemFromStorage('webPushPromptDismissed');
+        this.setState({
+          webPushPromptLoading: false,
+          showWebPushPrompt: false,
+        });
+        return this.props.subscribeToWebPush(subscription);
+      })
+      .catch(err => {
+        track('browser push notifications', 'blocked');
+        this.setState({
+          webPushPromptLoading: false,
+        });
+        return this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            "Oops, we couldn't enable browser notifications for you. Please try again!"
+          )
+        );
+      });
+  };
+
+  dismissWebPushRequest = () => {
+    this.setState({
+      showWebPushPrompt: false,
+    });
+    track('browser push notifications', 'dismissed');
+    storeItem('webPushPromptDismissed', { timestamp: Date.now() });
+  };
 
   render() {
     const { currentUser, data } = this.props;
@@ -111,8 +183,6 @@ class NotificationsPure extends Component {
     notifications = getDistinctNotifications(notifications);
     notifications = sortByDate(notifications, 'modifiedAt', 'desc');
 
-    const { notifications: { pageInfo: { hasNextPage } } } = data;
-
     if (!notifications || notifications.length === 0) {
       return (
         <AppViewWrapper>
@@ -123,83 +193,91 @@ class NotificationsPure extends Component {
       );
     }
 
+    const { scrollElement } = this.state;
+
     return (
       <FlexCol style={{ flex: '1 1 auto' }}>
         <Titlebar title={'Notifications'} provideBack={false} noComposer />
         <AppViewWrapper>
           <Column type={'primary'}>
-            {notifications.map(notification => {
-              switch (notification.event) {
-                case 'MESSAGE_CREATED': {
-                  return (
-                    <NewMessageNotification
-                      key={notification.id}
-                      notification={notification}
-                      currentUser={currentUser}
-                    />
-                  );
+            {this.state.showWebPushPrompt &&
+              <BrowserNotificationRequest
+                onSubscribe={this.subscribeToWebPush}
+                onDismiss={this.dismissWebPushRequest}
+                loading={this.state.webPushPromptLoading}
+              />}
+            <InfiniteList
+              pageStart={0}
+              loadMore={data.fetchMore}
+              hasMore={data.hasNextPage}
+              loader={<LoadingThread />}
+              useWindow={false}
+              initialLoad={false}
+              scrollElement={scrollElement}
+              threshold={750}
+            >
+              {notifications.map(notification => {
+                switch (notification.event) {
+                  case 'MESSAGE_CREATED': {
+                    return (
+                      <NewMessageNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'REACTION_CREATED': {
+                    return (
+                      <NewReactionNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'CHANNEL_CREATED': {
+                    return (
+                      <NewChannelNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'USER_JOINED_COMMUNITY': {
+                    return (
+                      <NewUserInCommunityNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'THREAD_CREATED': {
+                    return (
+                      <NewThreadNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  case 'COMMUNITY_INVITE': {
+                    return (
+                      <CommunityInviteNotification
+                        key={notification.id}
+                        notification={notification}
+                        currentUser={currentUser}
+                      />
+                    );
+                  }
+                  default: {
+                    return null;
+                  }
                 }
-                case 'REACTION_CREATED': {
-                  return (
-                    <NewReactionNotification
-                      key={notification.id}
-                      notification={notification}
-                      currentUser={currentUser}
-                    />
-                  );
-                }
-                case 'CHANNEL_CREATED': {
-                  return (
-                    <NewChannelNotification
-                      key={notification.id}
-                      notification={notification}
-                      currentUser={currentUser}
-                    />
-                  );
-                }
-                case 'USER_JOINED_COMMUNITY': {
-                  return (
-                    <NewUserInCommunityNotification
-                      key={notification.id}
-                      notification={notification}
-                      currentUser={currentUser}
-                    />
-                  );
-                }
-                case 'THREAD_CREATED': {
-                  return (
-                    <NewThreadNotification
-                      key={notification.id}
-                      notification={notification}
-                      currentUser={currentUser}
-                    />
-                  );
-                }
-                case 'COMMUNITY_INVITE': {
-                  return (
-                    <CommunityInviteNotification
-                      key={notification.id}
-                      notification={notification}
-                      currentUser={currentUser}
-                    />
-                  );
-                }
-                default: {
-                  return null;
-                }
-              }
-            })}
-
-            {hasNextPage &&
-              <div>
-                <FetchMoreButton
-                  color={'brand.default'}
-                  loading={this.state.isFetching}
-                  onClick={this.fetchMore}
-                >
-                  Load more notifications
-                </FetchMoreButton>
-              </div>}
+              })}
+            </InfiniteList>
           </Column>
         </AppViewWrapper>
       </FlexCol>
@@ -212,6 +290,7 @@ const mapStateToProps = state => ({
 });
 
 export default compose(
+  subscribeToWebPush,
   getNotifications,
   displayLoadingNotifications,
   markNotificationsSeenMutation,

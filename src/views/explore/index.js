@@ -38,9 +38,9 @@ const ExplorePure = props => {
   const { title, description } = generateMetaInfo({
     type: 'explore',
   });
-  const featureSlug = 'react';
+  const featureSlug = 'abstract';
   const featureNotes =
-    "React is a JavaScript library for creating component-based user interfaces. The React community has members from the core team as well as developers of several of the top frameworks and plugins for React. This community makes it quick and easy to get support or advice from people who know what they're doing so you can get up and running quickly.";
+    'Abstract is a version control system for design files that enables product teams to be more effective. Abstract is built by an incredibly talented team and they just launched into open beta to rave reviews from their early users. We love the strong focus on collaboration and reducing friction for product teams and their community is a great place to learn from and collaborate with other designers using Abstract and ask the team questions.';
 
   return (
     <AppViewWrapper>

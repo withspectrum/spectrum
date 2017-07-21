@@ -15,15 +15,12 @@ import {
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
 } from '../../api/notification';
-import { SERVER_URL } from '../../api';
 import Icon from '../../components/icons';
 import { Loading } from '../../components/loading';
-import { Button } from '../../components/buttons';
 import { NotificationDropdown } from './components/notificationDropdown';
 import { ProfileDropdown } from './components/profileDropdown';
 import Head from '../../components/head';
 import { getDistinctNotifications } from '../../views/notifications/utils';
-import { storeItem } from '../../helpers/localStorage';
 import { throttle } from '../../helpers/utils';
 import {
   saveUserDataToLocalStorage,
@@ -138,12 +135,6 @@ class Navbar extends Component {
     } else return false;
   };
 
-  componentDidMount() {
-    if (this.props.currentUser && !this.props.currentUser.timezone) {
-      this.props.editUser({ timezone: new Date().getTimezoneOffset() * -1 });
-    }
-  }
-
   componentDidUpdate(prevProps) {
     // if the query returned notifications
     if (
@@ -168,6 +159,9 @@ class Navbar extends Component {
     if (!user) return;
 
     if (prevProps.data.user !== user && user !== null) {
+      if (!user.timezone) {
+        this.props.editUser({ timezone: new Date().getTimezoneOffset() * -1 });
+      }
       dispatch(saveUserDataToLocalStorage(user));
 
       // if the user lands on /home, it means they just logged in. If this code
@@ -267,12 +261,7 @@ class Navbar extends Component {
   };
 
   render() {
-    const {
-      match,
-      data: { user, networkStatus },
-      data,
-      currentUser,
-    } = this.props;
+    const { match, data: { user, networkStatus }, currentUser } = this.props;
     const loggedInUser = user || currentUser;
     const isMobile = window.innerWidth < 768;
     const currentUserExists =
@@ -315,7 +304,7 @@ class Navbar extends Component {
 
           <Section right hideOnMobile>
             <IconDrop
-              onMouseLeave={this.markAllNotificationsSeen}
+              onMouseEnter={this.markAllNotificationsSeen}
               onClick={this.markAllNotificationsSeen}
             >
               <IconLink
@@ -375,6 +364,7 @@ class Navbar extends Component {
             <IconLink
               data-active={match.url === '/notifications'}
               to="/notifications"
+              onClick={this.markAllNotificationsSeen}
             >
               <Icon
                 glyph={

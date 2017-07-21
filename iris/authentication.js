@@ -56,17 +56,20 @@ const init = () => {
           googleProviderId: null,
           githubProviderId: null,
           username: null,
-          name: profile.displayName ||
+          name:
+            profile.displayName ||
             (profile.name &&
               `${profile.name.givenName} ${profile.name.familyName}`) ||
             null,
-          email: (profile.emails &&
-            profile.emails.length > 0 &&
-            profile.emails[0].value) ||
+          email:
+            (profile.emails &&
+              profile.emails.length > 0 &&
+              profile.emails[0].value) ||
             null,
-          profilePhoto: (profile.photos &&
-            profile.photos.length > 0 &&
-            profile.photos[0].value) ||
+          profilePhoto:
+            (profile.photos &&
+              profile.photos.length > 0 &&
+              profile.photos[0].value) ||
             null,
           createdAt: new Date(),
           lastSeen: new Date(),
@@ -101,15 +104,16 @@ const init = () => {
           githubProviderId: null,
           username: null,
           name: profile.displayName,
-          email: profile.emails.length > 0 &&
-            profile.emails[0].value !== undefined
-            ? profile.emails[0].value
-            : null,
-          profilePhoto: profile.photos &&
+          email:
+            profile.emails.length > 0 && profile.emails[0].value !== undefined
+              ? profile.emails[0].value
+              : null,
+          profilePhoto:
+            profile.photos &&
             profile.photos.length > 0 &&
             profile.photos[0].value !== undefined
-            ? profile.photos[0].value
-            : null,
+              ? profile.photos[0].value
+              : null,
           createdAt: new Date(),
           lastSeen: new Date(),
         };
@@ -130,7 +134,8 @@ const init = () => {
   passport.use(
     new GoogleStrategy(
       {
-        clientID: '923611718470-chv7p9ep65m3fqqjr154r1p3a5j6oidc.apps.googleusercontent.com',
+        clientID:
+          '923611718470-chv7p9ep65m3fqqjr154r1p3a5j6oidc.apps.googleusercontent.com',
         clientSecret: GOOGLE_OAUTH_CLIENT_SECRET,
         callbackURL: `/auth/google/callback`,
       },
@@ -141,17 +146,20 @@ const init = () => {
           googleProviderId: profile.id,
           githubProviderId: null,
           username: null,
-          name: profile.displayName ||
+          name:
+            profile.displayName ||
             (profile.name &&
               `${profile.name.givenName} ${profile.name.familyName}`) ||
             null,
-          email: (profile.emails &&
-            profile.emails.length > 0 &&
-            profile.emails[0].value) ||
+          email:
+            (profile.emails &&
+              profile.emails.length > 0 &&
+              profile.emails[0].value) ||
             null,
-          profilePhoto: (profile.photos &&
-            profile.photos.length > 0 &&
-            profile.photos[0].value) ||
+          profilePhoto:
+            (profile.photos &&
+              profile.photos.length > 0 &&
+              profile.photos[0].value) ||
             null,
           createdAt: new Date(),
           lastSeen: new Date(),
@@ -186,13 +194,13 @@ const init = () => {
           githubProviderId: profile.id,
           username: null,
           name: profile.displayName || null,
-          email: (profile.emails &&
-            profile.emails.length > 0 &&
-            profile.emails[0].value) ||
+          email:
+            (profile.emails &&
+              profile.emails.length > 0 &&
+              profile.emails[0].value) ||
             null,
-          profilePhoto: (profile._json.avatar_url &&
-            profile._json.avatar_url) ||
-            null,
+          profilePhoto:
+            (profile._json.avatar_url && profile._json.avatar_url) || null,
           createdAt: new Date(),
           lastSeen: new Date(),
         };

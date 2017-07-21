@@ -10,6 +10,7 @@ import {
   UpsellSignIn,
   UpsellToReload,
   UpsellMiniCreateCommunity,
+  UpsellMiniUpgrade,
 } from '../../components/upsell';
 import UpsellNewUser from '../../components/upsell/newUserUpsell';
 import {
@@ -64,81 +65,15 @@ class DashboardPure extends Component {
   };
 
   render() {
-    const { data: { user, error, networkStatus }, data } = this.props;
+    const { data: { user, networkStatus, error } } = this.props;
     const { isNewUser } = this.state;
     const isMobile = window.innerWidth < 768;
     const dataExists = user && user.communityConnection;
+    const noData = !user && !error;
     const { title, description } = generateMetaInfo();
 
-    if (networkStatus === 7) {
-      if (isNewUser) {
-        const currentUser = user;
-        const communities = user.communityConnection.edges;
-
-        return (
-          <AppViewWrapper>
-            <Head title={title} description={description} />
-            <Titlebar />
-            <Column type="primary">
-              <UpsellNewUser
-                user={user}
-                graduate={this.graduate}
-                communities={communities}
-              />
-            </Column>
-          </AppViewWrapper>
-        );
-      } else if (dataExists) {
-        const currentUser = user;
-        const communities = user.communityConnection.edges;
-        return (
-          <AppViewWrapper>
-            <Head title={title} description={description} />
-            <Titlebar />
-
-            {!isMobile &&
-              <Column type="secondary">
-                <UserProfile profileSize="mini" data={{ user: user }} />
-                <CommunityList
-                  withDescription={false}
-                  currentUser={currentUser}
-                  user={user}
-                  communities={communities}
-                  networkStatus={networkStatus}
-                />
-                <UpsellMiniCreateCommunity />
-              </Column>}
-
-            <Column type="primary">
-              <FlexCol>
-                <ThreadComposer />
-                <EverythingThreadFeed viewContext="dashboard" />
-              </FlexCol>
-            </Column>
-          </AppViewWrapper>
-        );
-      } else {
-        return (
-          <AppViewWrapper>
-            <Head title={title} description={description} />
-            <Titlebar noComposer />
-            <Column type="primary" alignItems="center">
-              <UpsellSignIn />
-            </Column>
-          </AppViewWrapper>
-        );
-      }
-    } else if (networkStatus === 8) {
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar noComposer />
-          <Column type="primary" alignItems="center">
-            <UpsellToReload />
-          </Column>
-        </AppViewWrapper>
-      );
-    } else {
+    // Got no data
+    if (noData) {
       return (
         <AppViewWrapper>
           <Head title={title} description={description} />
@@ -155,6 +90,81 @@ class DashboardPure extends Component {
         </AppViewWrapper>
       );
     }
+
+    // Error, prompt reload
+    if (error || networkStatus === 8) {
+      return (
+        <AppViewWrapper>
+          <Head title={title} description={description} />
+          <Titlebar noComposer />
+          <Column type="primary" alignItems="center">
+            <UpsellToReload />
+          </Column>
+        </AppViewWrapper>
+      );
+    }
+
+    // New user onboarding
+    if (isNewUser) {
+      const communities = user.communityConnection.edges;
+
+      return (
+        <AppViewWrapper>
+          <Head title={title} description={description} />
+          <Titlebar />
+          <Column type="primary">
+            <UpsellNewUser
+              user={user}
+              graduate={this.graduate}
+              communities={communities}
+            />
+          </Column>
+        </AppViewWrapper>
+      );
+    }
+
+    if (dataExists) {
+      const currentUser = user;
+      const communities = user.communityConnection.edges;
+      return (
+        <AppViewWrapper>
+          <Head title={title} description={description} />
+          <Titlebar />
+
+          {!isMobile &&
+            <Column type="secondary">
+              <UserProfile profileSize="mini" data={{ user: user }} />
+              <CommunityList
+                withDescription={false}
+                currentUser={currentUser}
+                user={user}
+                communities={communities}
+                networkStatus={networkStatus}
+              />
+              <UpsellMiniCreateCommunity />
+              {!currentUser.isPro && <UpsellMiniUpgrade />}
+            </Column>}
+
+          <Column type="primary">
+            <FlexCol>
+              <ThreadComposer />
+              <EverythingThreadFeed viewContext="dashboard" />
+            </FlexCol>
+          </Column>
+        </AppViewWrapper>
+      );
+    }
+
+    // If there's no error but also no user they gotta sign in
+    return (
+      <AppViewWrapper>
+        <Head title={title} description={description} />
+        <Titlebar noComposer />
+        <Column type="primary" alignItems="center">
+          <UpsellSignIn />
+        </Column>
+      </AppViewWrapper>
+    );
   }
 }
 

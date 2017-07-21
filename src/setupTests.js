@@ -1,4 +1,2 @@
-const { setup, teardown } = require('../iris/test/db');
-
-beforeAll(setup);
-afterAll(teardown);
+// Make sure Jest mocks the db
+import { db } from '../iris/test/db';

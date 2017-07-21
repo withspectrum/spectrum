@@ -96,8 +96,8 @@ const User = /* GraphQL */ `
 		communityConnection: UserCommunitiesConnection!
 		channelConnection: UserChannelsConnection!
 		directMessageThreadsConnection: UserDirectMessageThreadsConnection!
-		threadConnection(first: Int = 10, after: String): UserThreadsConnection!
-		everything(first: Int = 10, after: String): EverythingThreadsConnection!
+		threadConnection(first: Int = 20, after: String): UserThreadsConnection!
+		everything(first: Int = 20, after: String): EverythingThreadsConnection!
 		recurringPayments: [RecurringPayment]
 		settings: UserSettings
 	}
@@ -128,11 +128,23 @@ const User = /* GraphQL */ `
 		notificationType: String!
 	}
 
+	input WebPushSubscriptionKeys {
+		p256dh: String!
+		auth: String!
+	}
+
+	input WebPushSubscription {
+		endpoint: String!
+		keys: WebPushSubscriptionKeys!
+	}
+
 	extend type Mutation {
 		editUser(input: EditUserInput!): User
 		upgradeToPro(input: UpgradeToProInput!): User
 		downgradeFromPro: User
 		toggleNotificationSettings(input: ToggleNotificationSettingsInput): User
+		subscribeWebPush(subscription: WebPushSubscription!): Boolean
+		unsubscribeWebPush(endpoint: String!): Boolean
 	}
 `;
 

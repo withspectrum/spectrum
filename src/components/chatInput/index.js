@@ -10,16 +10,31 @@ import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
 // $FlowFixMe
 import { connect } from 'react-redux';
+import Icon from '../../components/icons';
 import { track } from '../../helpers/events';
 import { toPlainText, fromPlainText } from '../../components/editor';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { Form, EditorInput, ChatInputWrapper, SendButton } from './style';
+import { openModal } from '../../actions/modals';
+import {
+  Form,
+  EditorInput,
+  ChatInputWrapper,
+  SendButton,
+  PhotoSizeError,
+} from './style';
 import { sendMessageMutation } from '../../api/message';
+import {
+  PRO_USER_MAX_IMAGE_SIZE_STRING,
+  PRO_USER_MAX_IMAGE_SIZE_BYTES,
+  FREE_USER_MAX_IMAGE_SIZE_BYTES,
+  FREE_USER_MAX_IMAGE_SIZE_STRING,
+} from '../../helpers/images';
 import MediaInput from '../mediaInput';
 
 class ChatInputWithMutation extends Component {
   state: {
     isFocused: boolean,
+    photoSizeError: string,
   };
 
   constructor() {
@@ -27,6 +42,7 @@ class ChatInputWithMutation extends Component {
 
     this.state = {
       isFocused: false,
+      photoSizeError: '',
     };
   }
 
@@ -96,8 +112,6 @@ class ChatInputWithMutation extends Component {
   sendMediaMessage = e => {
     let reader = new FileReader();
     const file = e.target.files[0];
-    reader.readAsDataURL(file);
-
     const {
       thread,
       threadType,
@@ -105,6 +119,34 @@ class ChatInputWithMutation extends Component {
       dispatch,
       forceScrollToBottom,
     } = this.props;
+
+    if (!file) return;
+
+    reader.readAsDataURL(file);
+
+    if (
+      file &&
+      file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES &&
+      !this.props.currentUser.isPro
+    ) {
+      return this.setState({
+        photoSizeError: `Upgrade to Pro to upload files up to ${PRO_USER_MAX_IMAGE_SIZE_STRING}. Otherwise, try uploading a photo less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`,
+      });
+    }
+
+    if (
+      file &&
+      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
+      this.props.currentUser.isPro
+    ) {
+      return this.setState({
+        photoSizeError: `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`,
+      });
+    }
+
+    this.setState({
+      photoSizeError: '',
+    });
 
     reader.onloadend = () => {
       if (forceScrollToBottom) {
@@ -166,33 +208,55 @@ class ChatInputWithMutation extends Component {
   };
 
   render() {
-    const { state, onChange } = this.props;
-    const { isFocused } = this.state;
+    const { state, onChange, currentUser } = this.props;
+    const { isFocused, photoSizeError } = this.state;
 
     return (
-      <ChatInputWrapper focus={isFocused}>
-        <MediaInput onChange={this.sendMediaMessage} />
-        <Form focus={isFocused}>
-          <EditorInput
-            focus={isFocused}
-            placeholder="Your message here..."
-            state={state}
-            onEnter={this.handleEnter}
-            onChange={onChange}
-            markdown={false}
-            onFocus={this.onFocus}
-            onBlur={this.onBlur}
-            singleLine
-            images={false}
-            editorRef={editor => this.editor = editor}
-          />
-          <SendButton glyph="send-fill" onClick={this.submit} />
-        </Form>
-      </ChatInputWrapper>
+      <div>
+        {photoSizeError &&
+          <PhotoSizeError>
+            <p
+              onClick={() =>
+                this.props.dispatch(
+                  openModal('UPGRADE_MODAL', { user: currentUser })
+                )}
+            >
+              {photoSizeError}
+            </p>
+            <Icon
+              onClick={() => this.setState({ photoSizeError: '' })}
+              glyph="view-close"
+              size={16}
+              color={'warn.default'}
+            />
+          </PhotoSizeError>}
+        <ChatInputWrapper focus={isFocused}>
+          <MediaInput onChange={this.sendMediaMessage} />
+          <Form focus={isFocused}>
+            <EditorInput
+              focus={isFocused}
+              placeholder="Your message here..."
+              state={state}
+              onEnter={this.handleEnter}
+              onChange={onChange}
+              markdown={false}
+              onFocus={this.onFocus}
+              onBlur={this.onBlur}
+              singleLine
+              images={false}
+              editorRef={editor => (this.editor = editor)}
+            />
+            <SendButton glyph="send-fill" onClick={this.submit} />
+          </Form>
+        </ChatInputWrapper>
+      </div>
     );
   }
 }
 
+const map = state => ({
+  currentUser: state.users.currentUser,
+});
 const ChatInput = compose(
   sendMessageMutation,
   withState('state', 'changeState', fromPlainText('')),
@@ -200,7 +264,7 @@ const ChatInput = compose(
     onChange: ({ changeState }) => state => changeState(state),
     clear: ({ changeState }) => () => changeState(fromPlainText('')),
   }),
-  connect(),
+  connect(map),
   pure
 )(ChatInputWithMutation);
 

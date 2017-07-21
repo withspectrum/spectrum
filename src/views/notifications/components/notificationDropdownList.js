@@ -7,9 +7,7 @@ import { MiniNewMessageNotification } from './newMessageNotification';
 import { MiniNewReactionNotification } from './newReactionNotification';
 import { MiniNewChannelNotification } from './newChannelNotification';
 import { MiniNewThreadNotification } from './newThreadNotification';
-import {
-  MiniNewUserInCommunityNotification,
-} from './newUserInCommunityNotification';
+import { MiniNewUserInCommunityNotification } from './newUserInCommunityNotification';
 import { MiniCommunityInviteNotification } from './communityInviteNotification';
 
 export const NotificationDropdownList = ({

@@ -50,7 +50,8 @@ export const modalStyles = (maxWidth: number = 360) => {
       right: 'auto',
       backgroundColor: 'rgba(0,0,0,0)',
       boxShadow: '0 4px 24px rgba(0,0,0,0.40)',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+      fontFamily:
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
     },
   };
 };

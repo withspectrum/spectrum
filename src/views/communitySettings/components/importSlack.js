@@ -24,7 +24,6 @@ import {
 import {
   StyledCard,
   LargeListHeading,
-  ListContainer,
   Description,
   Notice,
 } from '../../../components/listItems/style';
@@ -112,7 +111,7 @@ class ImportSlack extends Component {
 
   render() {
     const {
-      data: { error, community, networkStatus, startPolling, stopPolling },
+      data: { error, community, startPolling, stopPolling },
     } = this.props;
     const {
       isLoading,

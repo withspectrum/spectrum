@@ -19,7 +19,6 @@ import { HorizontalRule } from '../../../components/globals';
 import { getThread } from '../queries';
 import { LoadingThreadDetail, LoadingChat } from '../../../components/loading';
 import Icon from '../../../components/icons';
-import { EmptyChat } from '../components/messages';
 import {
   View,
   Content,
@@ -36,7 +35,7 @@ import {
   UpsellSignIn,
 } from '../../../components/upsell';
 
-const LoadingView = () => (
+const LoadingView = () =>
   <View>
     <Titlebar provideBack={true} backRoute={`/`} noComposer />
     <Content>
@@ -44,14 +43,15 @@ const LoadingView = () => (
         <LoadingThreadDetail />
         <ChatWrapper>
           <HorizontalRule>
-            <hr /><Icon glyph={'message'} /><hr />
+            <hr />
+            <Icon glyph={'message'} />
+            <hr />
           </HorizontalRule>
           <LoadingChat />
         </ChatWrapper>
       </Detail>
     </Content>
-  </View>
-);
+  </View>;
 
 class ThreadContainerPure extends Component {
   state: {
@@ -103,17 +103,20 @@ class ThreadContainerPure extends Component {
         let str;
         if (isPending) {
           track('channel', 'requested to join', null);
-          str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}`;
+          str = `Requested to join ${toggleChannelSubscription.name} in ${toggleChannelSubscription
+            .community.name}`;
         }
 
         if (!isPending && isMember) {
           track('channel', 'joined', null);
-          str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}!`;
+          str = `Joined ${toggleChannelSubscription.name} in ${toggleChannelSubscription
+            .community.name}!`;
         }
 
         if (!isPending && !isMember) {
           track('channel', 'unjoined', null);
-          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription.community.name}.`;
+          str = `Left the channel ${toggleChannelSubscription.name} in ${toggleChannelSubscription
+            .community.name}.`;
         }
 
         const type = isMember || isPending ? 'success' : 'neutral';
@@ -163,21 +166,23 @@ class ThreadContainerPure extends Component {
       // add checks to make sure that participantIds has ids in it. if there
       // are no participants yet, only pass the creator id to the forceScrollToBottom
       // method
-      const participantsAndCreator = participantIds.length > 0
-        ? [...participantIds, thread.creator.id]
-        : [thread.creator.id];
+      const participantsAndCreator =
+        participantIds.length > 0
+          ? [...participantIds, thread.creator.id]
+          : [thread.creator.id];
 
       return (
         <View>
           <Head title={title} description={description} />
           <Titlebar
             title={thread.content.title}
-            subtitle={`${thread.channel.community.name} / ${thread.channel.name}`}
+            subtitle={`${thread.channel.community.name} / ${thread.channel
+              .name}`}
             provideBack={true}
             backRoute={`/`}
             noComposer
           />
-          <Content innerRef={scrollBody => this.scrollBody = scrollBody}>
+          <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
             <Detail type="only">
               <ThreadDetail thread={thread} viewStatus={networkStatus} />
 
@@ -202,7 +207,6 @@ class ThreadContainerPure extends Component {
                 />}
 
               {!loggedInUser && <UpsellSignIn />}
-
             </Detail>
           </Content>
 

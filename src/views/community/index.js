@@ -6,7 +6,6 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { openModal } from '../../actions/modals';
 import { track } from '../../helpers/events';
 import ThreadComposer from '../../components/threadComposer';
 import Head from '../../components/head';
@@ -101,7 +100,7 @@ class CommunityViewPure extends Component {
   render() {
     const {
       match,
-      data: { community, user, networkStatus },
+      data: { community, user, networkStatus, error },
       currentUser,
     } = this.props;
     const { isLoading } = this.state;
@@ -115,89 +114,7 @@ class CommunityViewPure extends Component {
         community.communityPermissions.isOwner);
     const loggedInUser = user || currentUser;
 
-    if (networkStatus === 7) {
-      if (dataExists) {
-        const { title, description } = generateMetaInfo({
-          type: 'community',
-          data: {
-            name: community.name,
-            description: community.description,
-          },
-        });
-
-        return (
-          <AppViewWrapper>
-            <Titlebar
-              title={community.name}
-              provideBack={true}
-              backRoute={`/`}
-              noComposer={!community.communityPermissions.isMember}
-            />
-            <Head title={title} description={description} />
-            <CoverColumn>
-              <CoverPhoto src={community.coverPhoto}>
-                {loggedInUser &&
-                  (!community.communityPermissions.isOwner &&
-                    community.communityPermissions.isMember) &&
-                  <CoverButton
-                    glyph="minus-fill"
-                    color="bg.default"
-                    hoverColor="bg.default"
-                    opacity="0.5"
-                    tipText="Leave community"
-                    tipLocation="left"
-                    onClick={() => this.toggleMembership(community.id)}
-                  />}
-              </CoverPhoto>
-              <CoverRow className={'flexy'}>
-                <Column type="secondary" className={'inset'}>
-                  <CommunityProfile data={{ community }} profileSize="full" />
-                  <ChannelListCard
-                    slug={communitySlug.toLowerCase()}
-                    currentUser={loggedInUser}
-                  />
-                </Column>
-
-                <Column type="primary">
-
-                  {loggedInUser
-                    ? hasRights
-                        ? <ThreadComposer activeCommunity={communitySlug} />
-                        : <UpsellJoinCommunity
-                            community={community}
-                            loading={isLoading}
-                            join={this.toggleMembership}
-                          />
-                    : <UpsellSignIn entity={community} />}
-                  <CommunityThreadFeed
-                    viewContext="community"
-                    slug={communitySlug}
-                    currentUser={loggedInUser}
-                  />
-                </Column>
-              </CoverRow>
-            </CoverColumn>
-          </AppViewWrapper>
-        );
-      } else {
-        return (
-          <AppViewWrapper>
-            <Titlebar
-              title={'Community Not Found'}
-              provideBack={true}
-              backRoute={`/`}
-              noComposer
-            />
-            <Column type="primary">
-              <Upsell404Community
-                community={communitySlug}
-                create={this.create}
-              />
-            </Column>
-          </AppViewWrapper>
-        );
-      }
-    } else if (networkStatus === 8) {
+    if (networkStatus === 8 || error) {
       return (
         <AppViewWrapper>
           <Titlebar
@@ -208,6 +125,89 @@ class CommunityViewPure extends Component {
           />
           <Column type="primary">
             <Upsell404Community community={communitySlug} />;
+          </Column>
+        </AppViewWrapper>
+      );
+    }
+
+    if (dataExists) {
+      const { title, description } = generateMetaInfo({
+        type: 'community',
+        data: {
+          name: community.name,
+          description: community.description,
+        },
+      });
+
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={community.name}
+            provideBack={true}
+            backRoute={`/`}
+            noComposer={!community.communityPermissions.isMember}
+          />
+          <Head title={title} description={description} />
+          <CoverColumn>
+            <CoverPhoto src={community.coverPhoto}>
+              {loggedInUser &&
+                (!community.communityPermissions.isOwner &&
+                  community.communityPermissions.isMember) &&
+                <CoverButton
+                  glyph="minus-fill"
+                  color="bg.default"
+                  hoverColor="bg.default"
+                  opacity="0.5"
+                  tipText="Leave community"
+                  tipLocation="left"
+                  onClick={() => this.toggleMembership(community.id)}
+                />}
+            </CoverPhoto>
+            <CoverRow className={'flexy'}>
+              <Column type="secondary" className={'inset'}>
+                <CommunityProfile data={{ community }} profileSize="full" />
+                <ChannelListCard
+                  slug={communitySlug.toLowerCase()}
+                  currentUser={loggedInUser}
+                />
+              </Column>
+
+              <Column type="primary">
+                {loggedInUser
+                  ? hasRights
+                    ? <ThreadComposer activeCommunity={communitySlug} />
+                    : <UpsellJoinCommunity
+                        community={community}
+                        loading={isLoading}
+                        join={this.toggleMembership}
+                      />
+                  : <UpsellSignIn entity={community} />}
+                <CommunityThreadFeed
+                  viewContext="community"
+                  slug={communitySlug}
+                  currentUser={loggedInUser}
+                />
+              </Column>
+            </CoverRow>
+          </CoverColumn>
+        </AppViewWrapper>
+      );
+    }
+
+    if (networkStatus === 7) {
+      return (
+        <AppViewWrapper>
+          <Titlebar
+            title={'Community Not Found'}
+            provideBack={true}
+            backRoute={`/`}
+            noComposer
+          />
+          <Column type="primary">
+            <Upsell404Community
+              community={communitySlug}
+              create={this.create}
+            />
           </Column>
         </AppViewWrapper>
       );
@@ -233,7 +233,6 @@ class CommunityViewPure extends Component {
 export const CommunityView = compose(
   toggleCommunityMembershipMutation,
   getCommunity,
-  // displayLoadingScreen,
   pure
 )(CommunityViewPure);
 

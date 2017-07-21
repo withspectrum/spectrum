@@ -245,19 +245,18 @@ class CommunityWithData extends Component {
     const { name, communityData } = this.state;
     const message = (
       <div>
-        <p>Are you sure you want to delete your community, <b>{name}</b>?</p>
-        {' '}
         <p>
-          <b>{communityData.metaData.members} members</b>
-          {' '}
-          will be removed from the community and the
-          {' '}
-          <b>{communityData.metaData.channels} channels</b>
-          {' '}
-          you've created will be deleted.
+          Are you sure you want to delete your community, <b>{name}</b>?
+        </p>{' '}
+        <p>
+          <b>{communityData.metaData.members} members</b> will be removed from
+          the community and the{' '}
+          <b>{communityData.metaData.channels} channels</b> you've created will
+          be deleted.
         </p>
         <p>
-          All threads, messages, reactions, and media shared in your community will be deleted.
+          All threads, messages, reactions, and media shared in your community
+          will be deleted.
         </p>
         <p>This cannot be undone.</p>
       </div>
@@ -302,9 +301,7 @@ class CommunityWithData extends Component {
       <StyledCard>
         <Location>
           <Icon glyph="view-back" size={16} />
-          <Link to={`/${community.slug}`}>
-            Return to Community
-          </Link>
+          <Link to={`/${community.slug}`}>Return to Community</Link>
         </Location>
         <FormTitle>Community Settings</FormTitle>
         <Form onSubmit={this.save}>
@@ -321,7 +318,9 @@ class CommunityWithData extends Component {
             />
           </ImageInputWrapper>
 
-          <Input defaultValue={name} onChange={this.changeName}>Name</Input>
+          <Input defaultValue={name} onChange={this.changeName}>
+            Name
+          </Input>
           <UnderlineInput defaultValue={slug} disabled>
             sp.chat/
           </UnderlineInput>

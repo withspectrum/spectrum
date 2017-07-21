@@ -41,12 +41,14 @@ export const Button = styled.a`
   font-size: 14px;
   font-weight: 700;
   transition: ${Transition.hover.off};
-	position: relative;
+  position: relative;
   width: 100%;
   justify-content: center;
   margin: 8px 0;
 
-	${props => props.after && `
+  ${props =>
+    props.after &&
+    `
       margin: 16px 0 8px;
 
 			&:after {
@@ -62,9 +64,7 @@ export const Button = styled.a`
 				width: 100%;
 				text-align: center;
 			}
-		`}
-
-  span {
+		`} span {
     display: inline-block;
     flex: 0 0 auto;
     margin-top: -1px;
@@ -85,40 +85,55 @@ export const Button = styled.a`
 `;
 
 export const ButtonTwitter = styled(Button)`
-	background: ${props => (props.preferred ? props.theme.social.twitter.default : 'none')};
-	color: ${props => (props.whitebg ? props.theme.social.twitter.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
+	background: ${props =>
+    props.preferred ? props.theme.social.twitter.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.twitter.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
   
   &:after {
     color: ${props => props.theme.social.twitter.default};
   }
 
 	&:hover {
-		color: ${props => (props.whitebg ? props.theme.social.twitter.default : '#fff')}
+		color: ${props =>
+      props.whitebg ? props.theme.social.twitter.default : '#fff'}
 	}
 `;
 
 export const ButtonFacebook = styled(Button)`
-	background: ${props => (props.preferred ? props.theme.social.facebook.default : 'none')};
-	color: ${props => (props.whitebg ? props.theme.social.facebook.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
+	background: ${props =>
+    props.preferred ? props.theme.social.facebook.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.facebook.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
 
   &:after {
     color: ${props => props.theme.social.facebook.default};
   }
 
 	&:hover {
-		color: ${props => (props.whitebg ? props.theme.social.facebook.default : '#fff')}
+		color: ${props =>
+      props.whitebg ? props.theme.social.facebook.default : '#fff'}
 	}
 `;
 
 export const ButtonGoogle = styled(Button)`
-	background: ${props => (props.preferred ? props.theme.social.google.default : 'none')};
-	color: ${props => (props.whitebg ? props.theme.social.google.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
+	background: ${props =>
+    props.preferred ? props.theme.social.google.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.google.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
 
   &:after {
     color: ${props => props.theme.social.google.default};
   }
 
 	&:hover {
-		color: ${props => (props.whitebg ? props.theme.social.google.default : '#fff')}
+		color: ${props =>
+      props.whitebg ? props.theme.social.google.default : '#fff'}
 	}
 `;

@@ -10,7 +10,8 @@ export const ButtonRow = styled.div`
   margin-top: 16px;
   justify-content: center;
 
-  a, button {
+  a,
+  button {
     margin-top: 16px;
   }
 
@@ -52,7 +53,7 @@ export const Input = styled.div`
 
   &:hover {
     cursor: pointer;
-    
+
     &:after {
       background: ${props => props.theme.bg.wash};
     }

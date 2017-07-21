@@ -34,7 +34,7 @@ export const NewUserInCommunityNotification = ({
       <CardLink to={`/${notification.context.payload.slug}`} />
       <CardContent>
         <JoinContext>
-          <Icon glyph="plus-fill" />
+          <Icon glyph="member-add" />
           <ActorsRow actors={actors.asObjects} />
         </JoinContext>
       </CardContent>
@@ -58,13 +58,11 @@ export const MiniNewUserInCommunityNotification = ({
   const context = parseContext(notification.context);
 
   return (
-    <NotificationListRow
-      onClick={() => history.push(`/${notification.context.payload.slug}`)}
-    >
+    <NotificationListRow>
       <CardLink to={`/${notification.context.payload.slug}`} />
       <CardContent>
         <JoinContext>
-          <Icon glyph="plus-fill" />
+          <Icon glyph="member-add" />
           <ActorsRow actors={actors.asObjects} />
         </JoinContext>
       </CardContent>

@@ -36,13 +36,8 @@ export const CommunityInviteNotification = ({ notification, currentUser }) => {
       <CreatedContext>
         <Icon glyph="community" />
         <TextContent pointer={true}>
-          {actors.asObjects[0].name}
-          {' '}
-          invited you to join their community,
-          {' '}
-          {context.asString}
-          {' '}
-          {date}
+          {actors.asObjects[0].name} invited you to join their community,{' '}
+          {context.asString} {date}
         </TextContent>
       </CreatedContext>
       <ContentWash>
@@ -68,13 +63,8 @@ export const MiniCommunityInviteNotification = ({
       <CreatedContext>
         <Icon glyph="community" />
         <TextContent pointer={false}>
-          {actors.asObjects[0].name}
-          {' '}
-          invited you to join their community,
-          {' '}
-          {context.asString}
-          {' '}
-          {date}
+          {actors.asObjects[0].name} invited you to join their community,{' '}
+          {context.asString} {date}
         </TextContent>
       </CreatedContext>
       <ContentWash mini>

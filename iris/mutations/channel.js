@@ -22,9 +22,10 @@ import {
   getUserPermissionsInChannel,
   createMemberInChannel,
   removeMemberInChannel,
+  unblockMemberInChannel,
   removeMembersInChannel,
   createOwnerInChannel,
-  createPendingUserInChannel,
+  createOrUpdatePendingUserInChannel,
   createMemberInDefaultChannels,
   blockUserInChannel,
   approvePendingUserInChannel,
@@ -285,17 +286,11 @@ module.exports = {
         return new UserError('You must be signed in to follow this channel.');
       }
 
-      // get the current user's permissions in the channel
-      const currentUserChannelPermissions = getUserPermissionsInChannel(
-        channelId,
-        currentUser.id
-      );
-
       // get the channel to evaluate
       const channels = getChannels([channelId]);
 
       return Promise.all([
-        currentUserChannelPermissions,
+        getUserPermissionsInChannel(channelId, currentUser.id),
         channels,
       ]).then(([currentUserChannelPermissions, channels]) => {
         // select the channel
@@ -386,7 +381,10 @@ module.exports = {
           // community - those actions will instead be handled when the channel
           // owner approves the user
           if (channelToEvaluate.isPrivate) {
-            return createPendingUserInChannel(channelId, currentUser.id);
+            return createOrUpdatePendingUserInChannel(
+              channelId,
+              currentUser.id
+            );
           }
 
           // otherwise the channel is not private so the user can just join.
@@ -575,11 +573,11 @@ module.exports = {
                     channelToEvaluate,
                     createMemberInCommunity(
                       channelToEvaluate.communityId,
-                      currentUser.id
+                      input.userId
                     ),
                     createMemberInDefaultChannels(
                       channelToEvaluate.communityId,
-                      currentUser.id
+                      input.userId
                     ),
                     approveUser,
                   ]).then(() => channelToEvaluate);
@@ -672,7 +670,7 @@ module.exports = {
               currentUserChannelPermissions.isOwner ||
               currentUserCommunityPermissions.isOwner
             ) {
-              return removeMemberInChannel(input.channelId, input.userId).then(
+              return unblockMemberInChannel(input.channelId, input.userId).then(
                 () => channelToEvaluate
               );
             }

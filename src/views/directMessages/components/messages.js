@@ -7,8 +7,7 @@ import pure from 'recompose/pure';
 import { sortAndGroupMessages } from '../../../helpers/messages';
 import ChatMessages from '../../../components/chatMessages';
 import { Loading } from '../../../components/loading';
-import Icon from '../../../components/icons';
-import { HorizontalRule, Spinner } from '../../../components/globals';
+import { Spinner } from '../../../components/globals';
 import { getDirectMessageThreadMessages } from '../queries';
 import { toggleReactionMutation } from '../mutations';
 import { MessagesScrollWrapper, HasNextPage, NextPageButton } from './style';
@@ -65,7 +64,6 @@ class MessagesWithData extends Component {
   render() {
     const {
       data: { error, loading, messages, hasNextPage, fetchMore, networkStatus },
-      data,
     } = this.props;
     const { subscription } = this.state;
 
@@ -73,39 +71,43 @@ class MessagesWithData extends Component {
       return <div>Error!</div>;
     }
 
-    if (networkStatus === 1) {
+    // NOTE(@mxstbr): The networkStatus check shouldn't be there, but if I remove
+    // it the loading indicator doesn't show when switching between threads which
+    // is hella annoying as the old msgs stick around until the new ones are there.
+    // TODO: FIXME and remove the networkStatus === 7
+    if (messages && networkStatus === 7) {
+      let sortedMessages = sortAndGroupMessages(messages);
+
+      return (
+        <MessagesScrollWrapper>
+          {hasNextPage &&
+            <HasNextPage>
+              <NextPageButton
+                loading={networkStatus === 3}
+                onClick={() => fetchMore()}
+              >
+                {networkStatus === 3
+                  ? <Spinner size={16} color={'brand.default'} />
+                  : 'Load previous messages'}
+              </NextPageButton>
+            </HasNextPage>}
+          <ChatMessages
+            toggleReaction={this.props.toggleReaction}
+            messages={sortedMessages}
+            forceScrollToBottom={this.props.forceScrollToBottom}
+            contextualScrollToBottom={this.props.contextualScrollToBottom}
+            threadId={this.props.id}
+            threadType={'directMessageThread'}
+          />
+        </MessagesScrollWrapper>
+      );
+    }
+
+    if (networkStatus === 7) {
+      return null;
+    } else {
       return <Loading />;
     }
-
-    if ((!loading && !messages) || !subscription) {
-      return <div />;
-    }
-
-    let sortedMessages = sortAndGroupMessages(messages);
-
-    return (
-      <MessagesScrollWrapper>
-        {hasNextPage &&
-          <HasNextPage>
-            <NextPageButton
-              loading={networkStatus === 3}
-              onClick={() => fetchMore()}
-            >
-              {networkStatus === 3
-                ? <Spinner size={16} color={'brand.default'} />
-                : 'Load previous messages'}
-            </NextPageButton>
-          </HasNextPage>}
-        <ChatMessages
-          toggleReaction={this.props.toggleReaction}
-          messages={sortedMessages}
-          forceScrollToBottom={this.props.forceScrollToBottom}
-          contextualScrollToBottom={this.props.contextualScrollToBottom}
-          threadId={this.props.id}
-          threadType={'directMessageThread'}
-        />
-      </MessagesScrollWrapper>
-    );
   }
 }
 

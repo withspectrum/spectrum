@@ -1,12 +1,8 @@
 // @flow
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
-import {
-  directMessageThreadInfoFragment,
-} from './fragments/directMessageThread/directMessageThreadInfo';
-import {
-  userDirectMessageThreadsFragment,
-} from './fragments/user/userDirectMessageThreads';
+import { directMessageThreadInfoFragment } from './fragments/directMessageThread/directMessageThreadInfo';
+import { userDirectMessageThreadsFragment } from './fragments/user/userDirectMessageThreads';
 import { userInfoFragment } from './fragments/user/userInfo';
 import { subscribeToUpdatedDirectMessageThreads } from './subscriptions';
 
@@ -59,7 +55,7 @@ export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY = gql`
 
 export const GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_OPTIONS = {
   options: {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   },
   props: props => ({
     ...props,

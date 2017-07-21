@@ -12,8 +12,8 @@ const getSlackImportOptions = {
 
 export const getSlackImport = graphql(
   gql`
-		query getSlackImport($id: ID!) {
-			community(id: $id) {
+    query getSlackImport($id: ID!) {
+      community(id: $id) {
         id
         slackImport {
           members
@@ -21,8 +21,8 @@ export const getSlackImport = graphql(
           sent
         }
       }
-		}
-	`,
+    }
+  `,
   getSlackImportOptions
 );
 

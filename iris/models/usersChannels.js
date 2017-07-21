@@ -118,6 +118,30 @@ const removeMemberInChannel = (
     });
 };
 
+const unblockMemberInChannel = (
+  channelId: string,
+  userId: string
+): Promise<Object> => {
+  return db
+    .table('usersChannels')
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ userId })
+    .update(
+      {
+        isBlocked: false,
+      },
+      { returnChanges: 'always' }
+    )
+    .run()
+    .then(result => {
+      if (result && result.changes && result.changes.length > 0) {
+        return db.table('channels').get(channelId);
+      } else {
+        return;
+      }
+    });
+};
+
 // removes all the user relationships to a channel. will be invoked when a
 // channel is deleted, at which point we don't want any records in the
 // database to show a user relationship to the deleted channel
@@ -134,30 +158,50 @@ const removeMembersInChannel = (channelId: string): Promise<Object> => {
 
 // creates a single pending user in channel. invoked only when a user is requesting
 // to join a private channel
-const createPendingUserInChannel = (
+const createOrUpdatePendingUserInChannel = (
   channelId: string,
   userId: string
 ): Promise<Object> => {
   return db
     .table('usersChannels')
-    .insert(
-      {
-        channelId,
-        userId,
-        createdAt: new Date(),
-        isMember: false,
-        isOwner: false,
-        isModerator: false,
-        isBlocked: false,
-        isPending: true,
-        receiveNotifications: false,
-      },
-      { returnChanges: true }
-    )
+    .getAll(channelId, { index: 'channelId' })
+    .filter({ userId })
     .run()
+    .then(data => {
+      if (data && data.length > 0) {
+        return db
+          .table('usersChannels')
+          .getAll(channelId, { index: 'channelId' })
+          .filter({ userId })
+          .update(
+            {
+              isPending: true,
+            },
+            { returnChanges: true }
+          )
+          .run();
+      } else {
+        return db
+          .table('usersChannels')
+          .insert(
+            {
+              channelId,
+              userId,
+              createdAt: new Date(),
+              isMember: false,
+              isOwner: false,
+              isModerator: false,
+              isBlocked: false,
+              isPending: true,
+              receiveNotifications: false,
+            },
+            { returnChanges: true }
+          )
+          .run();
+      }
+    })
     .then(result => {
-      const join = result.changes[0].new_val;
-      return db.table('channels').get(join.channelId);
+      return db.table('channels').get(channelId);
     });
 };
 
@@ -499,8 +543,9 @@ module.exports = {
   createOwnerInChannel,
   createMemberInChannel,
   removeMemberInChannel,
+  unblockMemberInChannel,
   removeMembersInChannel,
-  createPendingUserInChannel,
+  createOrUpdatePendingUserInChannel,
   removePendingUsersInChannel,
   blockUserInChannel,
   approvePendingUserInChannel,

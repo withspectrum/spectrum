@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 
-export const withInfiniteScroll = Component => {
+export const withInfiniteScroll = Comp => {
   return class InfiniteScroll extends Component {
     componentDidMount() {
       // if (!this.scrollBody) return;
@@ -25,8 +25,8 @@ export const withInfiniteScroll = Component => {
 
     render() {
       return (
-        <Component
-          ref={scrollBody => this.scrollBody = scrollBody}
+        <Comp
+          ref={scrollBody => (this.scrollBody = scrollBody)}
           {...this.props}
           fetchMore={this.fetchMore}
         />

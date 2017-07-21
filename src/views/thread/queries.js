@@ -1,18 +1,12 @@
 import { graphql, gql } from 'react-apollo';
 import { subscribeToNewMessages } from '../../api/subscriptions';
 import { threadInfoFragment } from '../../api/fragments/thread/threadInfo';
-import {
-  threadMessagesFragment,
-} from '../../api/fragments/thread/threadMessages';
+import { threadMessagesFragment } from '../../api/fragments/thread/threadMessages';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
-import {
-  communityInfoFragment,
-} from '../../api/fragments/community/communityInfo';
+import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
 import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
-import {
-  channelMetaDataFragment,
-} from '../../api/fragments/channel/channelMetaData';
+import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
 
 export const GET_THREAD_QUERY = gql`
   query getThread($id: ID!) {
@@ -44,7 +38,7 @@ export const GET_THREAD_OPTIONS = {
     variables: {
       id: props.match.params.threadId,
     },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'cache-first',
   }),
 };
 export const getThread = graphql(GET_THREAD_QUERY, GET_THREAD_OPTIONS);
@@ -66,9 +60,6 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
   props: props => ({
     data: props.data,
     subscribeToNewMessages: () => {
-      if (!props.data.thread) {
-        return;
-      }
       return props.data.subscribeToMore({
         document: subscribeToNewMessages,
         variables: {

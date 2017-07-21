@@ -11,6 +11,7 @@ export const StyledLabel = styled.label`
   letter-spacing: -0.4px;
   color: ${({ theme }) => theme.text.default};
   transition: ${Transition.hover.off};
+  position: relative;
 
   a {
     text-decoration: underline;
@@ -165,9 +166,11 @@ export const StyledCheckboxWrapper = styled(FlexRow)`
   display: flex;
   align-items: center;
   line-height: 1.4;
+  cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
 
   &:hover {
-    color: ${({ theme }) => theme.brand.alt};
+    color: ${({ theme, disabled }) =>
+      disabled ? theme.text.alt : theme.brand.alt};
   }
 
   > div {
