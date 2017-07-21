@@ -1,6 +1,10 @@
 // @flow
 // $FlowFixMe
-import { ApolloClient, IntrospectionFragmentMatcher } from 'react-apollo';
+import {
+  ApolloClient,
+  IntrospectionFragmentMatcher,
+  toIdValue,
+} from 'react-apollo';
 // $FlowFixMe
 import { createNetworkInterface } from 'apollo-upload-client';
 // $FlowFixMe
@@ -39,6 +43,12 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 export const client = new ApolloClient({
   networkInterface: networkInterfaceWithSubscriptions,
   fragmentMatcher,
+  customResolvers: {
+    Query: {
+      thread: (_, { id }) =>
+        toIdValue(client.dataIdFromObject({ __typename: 'Thread', id })),
+    },
+  },
 });
 
 export const clearApolloStore = () => {
@@ -49,10 +59,12 @@ export const clearApolloStore = () => {
   }
 };
 
-export const SERVER_URL = process.env.NODE_ENV === 'production'
-  ? `${window.location.protocol}//${window.location.host}`
-  : 'http://localhost:3001';
+export const SERVER_URL =
+  process.env.NODE_ENV === 'production'
+    ? `${window.location.protocol}//${window.location.host}`
+    : 'http://localhost:3001';
 
-export const PUBLIC_STRIPE_KEY = process.env.NODE_ENV === 'production'
-  ? 'pk_live_8piI030RqVnqDc8QGTUwUj0Z'
-  : 'pk_test_A6pKi4xXOdgg9FrZJ84NW9mP';
+export const PUBLIC_STRIPE_KEY =
+  process.env.NODE_ENV === 'production'
+    ? 'pk_live_8piI030RqVnqDc8QGTUwUj0Z'
+    : 'pk_test_A6pKi4xXOdgg9FrZJ84NW9mP';
