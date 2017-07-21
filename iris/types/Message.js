@@ -2,6 +2,7 @@ const Message = /* GraphQL */ `
 	enum MessageTypes {
 		text
 		media
+		draftjs
 	}
 
 	enum ThreadTypes {

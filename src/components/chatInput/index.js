@@ -63,7 +63,7 @@ class ChatInputWithMutation extends Component {
     if (thread === 'newDirectMessageThread') {
       return createThread({
         messageBody: JSON.stringify(toJSON(state)),
-        messageType: 'text',
+        messageType: 'draftjs',
       });
     }
 
@@ -71,7 +71,7 @@ class ChatInputWithMutation extends Component {
     // or direct message thread
     sendMessage({
       threadId: thread,
-      messageType: 'text',
+      messageType: 'draftjs',
       threadType,
       content: {
         body: JSON.stringify(toJSON(state)),

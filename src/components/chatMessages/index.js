@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+import redraft from 'redraft';
 import { openGallery } from '../../actions/gallery';
 import {
   convertTimestampToDate,
@@ -12,8 +13,10 @@ import {
 } from '../../helpers/utils';
 import { NullState } from '../upsell';
 import { Bubble, EmojiBubble, ImgBubble } from '../bubbles';
+import { TextBubble as RawBubble } from '../bubbles/style';
 import Badge from '../badges';
 import Reaction from '../reaction';
+import { toState } from '../draftjs-editor';
 
 import {
   UserAvatar,
@@ -173,6 +176,41 @@ class ChatMessages extends Component {
                             pending={message.id < 0}
                           />
                           {typeof message.id === 'string' &&
+                            <Reaction
+                              message={message}
+                              toggleReaction={toggleReaction}
+                              me={me}
+                              currentUser={currentUser}
+                              dispatch={dispatch}
+                            />}
+                        </MessageWrapper>
+                      );
+                    } else if (message.messageType === 'draftjs') {
+                      // const emojiOnly = onlyContainsEmoji(message.content.body);
+                      // const TextBubble = emojiOnly ? EmojiBubble : Bubble;
+                      return (
+                        <MessageWrapper
+                          me={me}
+                          key={message.id}
+                          timestamp={convertTimestampToTime(message.timestamp)}
+                        >
+                          <RawBubble
+                            me={me}
+                            persisted={message.persisted}
+                            sender={sender}
+                            type={message.messageType}
+                            pending={message.id < 0}
+                          >
+                            {redraft(JSON.parse(message.content.body))}
+                          </RawBubble>
+                          {/*
+                            we check if typof equals a string to determine
+                            if the message is coming from the server, or
+                            generated via an optimistic response with apollo
+                            (which has a typeof number)
+                          */}
+                          {/*!emojiOnly &&*/
+                          typeof message.id === 'string' &&
                             <Reaction
                               message={message}
                               toggleReaction={toggleReaction}

@@ -6962,6 +6962,10 @@ redis-parser@^2.4.0:
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/redis-parser/-/redis-parser-2.6.0.tgz#52ed09dacac108f1a631c07e9b69941e7a19504b"
 
+redraft@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/redraft/-/redraft-0.8.0.tgz#db2a5c01a8eb6b553f46cc8382c1ed085325e99f"
+
 reduce-css-calc@^1.2.6:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/reduce-css-calc/-/reduce-css-calc-1.3.0.tgz#747c914e049614a4c9cfbba629871ad1d2927716"

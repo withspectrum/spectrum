@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+import redraft from 'redraft';
 import { getLinkPreviewFromUrl, timeDifference } from '../../../helpers/utils';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
@@ -28,7 +29,7 @@ import Editor, {
   toJSON,
   toPlainText,
   toState,
-} from '../../../components/editor';
+} from '../../../components/draftjs-editor';
 import { LinkPreview } from '../../../components/linkPreview';
 import { ThreadTitle, ThreadDescription } from '../style';
 // $FlowFixMe
@@ -81,10 +82,13 @@ class ThreadDetailPure extends Component {
       data: JSON.parse(rawLinkPreview.data),
     };
 
-    const viewBody =
+    let viewBody =
       thread.type === 'SLATE'
         ? toPlainText(toState(JSON.parse(thread.content.body)))
         : thread.content.body;
+
+    if (thread.type === 'DRAFTJS')
+      viewBody = toState(JSON.parse(thread.content.body));
 
     const editBody =
       thread.type === 'SLATE'
@@ -519,9 +523,11 @@ class ThreadDetailPure extends Component {
                 Edited {timeDifference(Date.now(), editedTimestamp)}
               </Edited>}
             <div className="markdown">
-              <ThreadContent>
-                {viewBody}
-              </ThreadContent>
+              {thread.type !== 'DRAFTJS'
+                ? <ThreadContent>
+                    {viewBody}
+                  </ThreadContent>
+                : <Editor readOnly state={viewBody} />}
             </div>
 
             {linkPreview &&

@@ -54,7 +54,7 @@ const fromPlainText = text =>
   EditorState.createWithContent(ContentState.createFromText(text));
 
 const toJSON = editorState => convertToRaw(editorState.getCurrentContent());
-const fromJSON = json => convertFromRaw(json);
+const toState = json => EditorState.createWithContent(convertFromRaw(json));
 
 type EditorProps = {
   markdown?: boolean,
@@ -193,6 +193,6 @@ class Editor extends React.Component {
   }
 }
 
-export { toPlainText, fromPlainText, toJSON, fromJSON };
+export { toPlainText, fromPlainText, toJSON, toState };
 
 export default Editor;
