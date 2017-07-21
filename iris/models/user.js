@@ -4,8 +4,7 @@ const { db } = require('./db');
 import UserError from '../utils/UserError';
 import { uploadImage } from '../utils/s3';
 const createQueue = require('../../shared/bull/create-queue');
-
-const sendUserWelcomeEmailQueue = createQueue('send user welcome email');
+const sendUserWelcomeEmailQueue = createQueue('send new user welcome email');
 
 const getUser = (input: Object): Promise<Object> => {
   if (input.id) return getUserById(input.id);

@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>You've been invited to join {{community.name}} on Spectrum</title>
+    <title>Welcome to Spectrum!</title>
     <!--
     The style block is collapsed on page load to save you some scrolling.
     Postmark automatically inlines all CSS properties for maximum email client
@@ -107,10 +107,12 @@
       -premailer-cellspacing: 0;
       text-align: center;
       background-color: #F2F5F9;
+      margin-top: 32px;
     }
 
     .email-footer p {
       color: #AEAEAE;
+      margin-bottom: 0;
     }
 
     .body-action {
@@ -146,11 +148,11 @@
     }
 
     .header-cell {
-      padding: 24px 24px 0 24px
+      padding: 24px;
     }
 
     .content-cell {
-      padding: 24px;
+      padding: 8px 24px;
     }
 
     .footer-cell {
@@ -255,6 +257,7 @@
 
     p {
       margin: 0;
+      margin-bottom: 16px;
       padding: 0;
       color: #171A21;
       font-size: 16px;
@@ -280,6 +283,10 @@
       font-size: 32px;
       vertical-align: middle;
       line-height: 1.6;
+    }
+
+    p.emoji.large {
+      font-size: 48px;
     }
 
     span.name {
@@ -335,60 +342,22 @@
                 <table class="email-body_inner" align="center" cellpadding="0" cellspacing="0">
                   <!-- Body content -->
                   <tr>
-                    <td class="header-cell">
-                      <p>Hey {{recipient.firstName}} –</p>
-                    </td>
+                    <td class="header-cell"></td>
                   </tr>
                   <tr>
                     <td class="content-cell">
-                      <p>{{sender.name}} has invited you to join the <a href="https://spectrum.chat/{{community.slug}}">{{community.name}} community</a> on Spectrum! Join now to get started.</p>
+                      <p class="emoji large">👋</p>
+                      <p><b>Welcome to Spectrum!</b></p>
+                      <p>Spectrum is a platform built to keep you connected with the communities you care about, all in one simple feed.</p>
+                      <p>If you want to discover communities, head on over to our <a href="https://spectrum.chat/explore">Explore page</a> to see what's popular and new.</p>
+                      <p>We're also posting regularly in <a href="https://spectrum.chat/spectrum">our own community</a>, which is a great place to <a href="https://spectrum.chat/spectrum/feature-requests">request new features</a> or <a href="https://spectrum.chat/spectrum/hugs-n-bugs">report any bugs you might find.</a></p>
+                      <p>In the meantime, we're looking forward to seeing you around!</p>
                     </td>
                   </tr>
 
-                  {{#customMessage}}
-                    <tr>
-                      <td class="content-cell custom-message">
-                        <table>
-                          <tr class="reply-container">
-                            <td class="attributes_item">
-                              <table>
-                                <tr valign="middle">
-                                  <td valign="middle">
-                                    <img class="avatar" src="{{../sender.profilePhoto}}" />
-                                  </td>
-                                  <td valign="middle">
-                                    <table>
-                                      <tr valign="middle">
-                                        <td valign="bottom">
-                                          <span class="name">A note from</span>
-                                        </td>
-                                      </tr>
-                                      <tr valign="middle">
-                                        <td valign="top">
-                                          <span class="name-large">{{../../sender.name}}</span>
-                                        </td>
-                                      </tr>
-                                    </table>
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-                        <p>{{.}}</p>
-                      </td>
-                    </tr>
-                  {{/customMessage}}
-
                   <tr>
                     <td class="footer-cell">
-                      <a class="button" href="https://spectrum.chat/{{community.slug}}">Join {{community.name}}</a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="footer-cell">
-                      <p class="emoji">✌️</p>
-                      <p>- The Spectrum team</p>
+                      <a class="button" href="https://spectrum.chat/">Go to my dashboard</a>
                     </td>
                   </tr>
                 </table>
