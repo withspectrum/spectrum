@@ -2500,6 +2500,20 @@ draft-js-image-plugin@2.0.0-rc2:
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
+draft-js-import-element@^0.4.0:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/draft-js-import-element/-/draft-js-import-element-0.4.3.tgz#785381a2e0323a9836cfa856c442e9013bd482a4"
+  dependencies:
+    draft-js-utils "^0.1.5"
+    synthetic-dom "^0.2.0"
+
+draft-js-import-markdown@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-0.2.1.tgz#194fccd2df6dd0301a25e80b2c0614de02d09549"
+  dependencies:
+    draft-js-import-element "^0.4.0"
+    synthetic-dom "^0.2.0"
+
 draft-js-markdown-shortcuts-plugin@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/draft-js-markdown-shortcuts-plugin/-/draft-js-markdown-shortcuts-plugin-0.3.0.tgz#f928cdff941d89a93e5ec2dd8f23df053c8f7ceb"
@@ -2531,6 +2545,10 @@ draft-js-single-line-plugin@^2.0.1:
   resolved "https://registry.yarnpkg.com/draft-js-single-line-plugin/-/draft-js-single-line-plugin-2.0.1.tgz#3aea1b100b1562d7ef3d5d02e73190da12953857"
   dependencies:
     immutable "^3.8.1"
+
+draft-js-utils@^0.1.5:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-0.1.7.tgz#e2b6927ca620edf1855a4bfc1cf1d21080a70f16"
 
 draft-js@^0.10.1, draft-js@~0.10.0, draft-js@~0.10.1:
   version "0.10.1"
@@ -7976,6 +7994,10 @@ symbol-observable@^1.0.1, symbol-observable@^1.0.2, symbol-observable@^1.0.3, sy
 symbol-tree@^3.2.1:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.2.tgz#ae27db38f660a7ae2e1c3b7d1bc290819b8519e6"
+
+synthetic-dom@^0.2.0:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/synthetic-dom/-/synthetic-dom-0.2.1.tgz#6c76fcf91ea9a5231318f8f415e27883d534df86"
 
 table@^3.7.8:
   version "3.8.3"
