@@ -103,7 +103,14 @@ const AvatarPure = (props: Object): React$Element<any> => {
         type="image/png"
         {...props}
       >
-        <StyledAvatar {...props} src={`/img/default_avatar.svg`} />
+        <StyledAvatar
+          {...props}
+          src={
+            props.community
+              ? `/img/default_community.svg`
+              : `/img/default_avatar.svg`
+          }
+        />
       </StyledAvatarContainer>
     );
   }
