@@ -1,6 +1,10 @@
 // @flow
 // $FlowFixMe
-import { ApolloClient, IntrospectionFragmentMatcher } from 'react-apollo';
+import {
+  ApolloClient,
+  IntrospectionFragmentMatcher,
+  toIdValue,
+} from 'react-apollo';
 // $FlowFixMe
 import { createNetworkInterface } from 'apollo-upload-client';
 // $FlowFixMe
@@ -39,6 +43,47 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 export const client = new ApolloClient({
   networkInterface: networkInterfaceWithSubscriptions,
   fragmentMatcher,
+  dataIdFromObject: result => {
+    if (result.__typename) {
+      // Custom Community cache key based on slug
+      if (result.__typename === 'Community' && !!result.slug) {
+        return `${result.__typename}:${result.slug}`;
+      }
+      // Custom Channel cache key based on slug and community slug
+      if (
+        result.__typename === 'Channel' &&
+        !!result.slug &&
+        !!result.community &&
+        !!result.community.slug
+      ) {
+        return `${result.__typename}:${result.community.slug}:${result.slug}`;
+      }
+      // This was copied from the default dataIdFromObject
+      if (result.id !== undefined) {
+        return `${result.__typename}:${result.id}`;
+      }
+      if (result._id !== undefined) {
+        return `${result.__typename}:${result._id}`;
+      }
+    }
+    return null;
+  },
+  customResolvers: {
+    Query: {
+      thread: (_, { id }) =>
+        toIdValue(client.dataIdFromObject({ __typename: 'Thread', id })),
+      community: (_, { slug }) =>
+        toIdValue(client.dataIdFromObject({ __typename: 'Community', slug })),
+      channel: (_, { channelSlug, communitySlug }) =>
+        toIdValue(
+          client.dataIdFromObject({
+            __typename: 'Channel',
+            slug: channelSlug,
+            community: { slug: communitySlug },
+          })
+        ),
+    },
+  },
 });
 
 export const clearApolloStore = () => {
@@ -49,10 +94,12 @@ export const clearApolloStore = () => {
   }
 };
 
-export const SERVER_URL = process.env.NODE_ENV === 'production'
-  ? `${window.location.protocol}//${window.location.host}`
-  : 'http://localhost:3001';
+export const SERVER_URL =
+  process.env.NODE_ENV === 'production'
+    ? `${window.location.protocol}//${window.location.host}`
+    : 'http://localhost:3001';
 
-export const PUBLIC_STRIPE_KEY = process.env.NODE_ENV === 'production'
-  ? 'pk_live_8piI030RqVnqDc8QGTUwUj0Z'
-  : 'pk_test_A6pKi4xXOdgg9FrZJ84NW9mP';
+export const PUBLIC_STRIPE_KEY =
+  process.env.NODE_ENV === 'production'
+    ? 'pk_live_8piI030RqVnqDc8QGTUwUj0Z'
+    : 'pk_test_A6pKi4xXOdgg9FrZJ84NW9mP';
