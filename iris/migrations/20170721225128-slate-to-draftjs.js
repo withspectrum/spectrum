@@ -1,13 +1,13 @@
 'use strict';
 const compose = require('redux/lib/compose').default;
+const { convertToRaw } = require('draft-js');
 const { stateFromMarkdown } = require('draft-js-import-markdown');
 const { toPlainText, toState } = require('../../shared/slate-utils');
 
 const slateToDraft = compose(
   JSON.stringify,
-  console.log.bind(console),
+  convertToRaw,
   stateFromMarkdown,
-  console.log.bind(console),
   toPlainText,
   toState,
   JSON.parse
@@ -31,9 +31,6 @@ exports.up = function(r, conn) {
           })
         )
       )
-      .then(() => {
-        throw new Error('fuck you motherfucker');
-      })
       // Store the transformed threads
       .then(threads =>
         Promise.all(
