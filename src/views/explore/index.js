@@ -38,9 +38,8 @@ const ExplorePure = props => {
   const { title, description } = generateMetaInfo({
     type: 'explore',
   });
-  const featureSlug = 'abstract';
-  const featureNotes =
-    'Abstract is a version control system for design files that enables product teams to be more effective. Abstract is built by an incredibly talented team and they just launched into open beta to rave reviews from their early users. We love the strong focus on collaboration and reducing friction for product teams and their community is a great place to learn from and collaborate with other designers using Abstract and ask the team questions.';
+  const featureSlug = 'frontend';
+  const featureNotes = `Frontend News is a channel for sharing your favorite resources about frontend engineering. It's been super active since its inception last week and we think news aggregation a really interesting use of Spectrum. Check it out and share your favorite resources!`;
 
   return (
     <AppViewWrapper>
