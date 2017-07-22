@@ -5,6 +5,10 @@ import UserError from '../utils/UserError';
 import { createChannel, deleteChannel } from './channel';
 import { uploadImage } from '../utils/s3';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
+const createQueue = require('../../shared/bull/create-queue');
+const sendNewCommunityWelcomeEmailQueue = createQueue(
+  'send new community welcome email'
+);
 
 type GetCommunityByIdArgs = {
   id: string,
@@ -99,7 +103,7 @@ const createCommunity = (
   {
     input: { name, slug, description, website, file, coverFile },
   }: CreateCommunityArguments,
-  creatorId: string
+  user
 ): Promise<Object> => {
   return db
     .table('communities')
@@ -118,6 +122,9 @@ const createCommunity = (
     .run()
     .then(result => result.changes[0].new_val)
     .then(community => {
+      // send a welcome email to the community creator
+      sendNewCommunityWelcomeEmailQueue.add({ user, community });
+
       // if no file was uploaded, update the community with new string values
       if (!file && !coverFile) {
         const { coverPhoto, profilePhoto } = getRandomDefaultPhoto();
