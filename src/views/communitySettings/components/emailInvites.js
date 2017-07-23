@@ -246,7 +246,7 @@ class EmailInvites extends Component {
     } = this.state;
 
     return (
-      <div>
+      <div style={{ width: '100%' }}>
         <LargeListHeading>Invite by Email</LargeListHeading>
         <Description>
           Invite people to your community directly by email.

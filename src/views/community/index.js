@@ -32,11 +32,8 @@ import {
 } from '../../components/upsell';
 import { CoverRow, CoverColumn, CoverButton } from './style';
 
-import {
-  getCommunityThreads,
-  getCommunity,
-  getCommunityChannels,
-} from './queries';
+import { getCommunityThreads, getCommunityChannels } from './queries';
+import { getCommunity } from '../../api/community';
 
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
@@ -45,6 +42,7 @@ const ChannelListCard = compose(getCommunityChannels)(ListCard);
 class CommunityViewPure extends Component {
   state: {
     isLoading: boolean,
+    showComposerUpsell: boolean,
   };
 
   constructor() {
@@ -52,6 +50,7 @@ class CommunityViewPure extends Component {
 
     this.state = {
       isLoading: false,
+      showComposerUpsell: false,
     };
   }
 
@@ -97,13 +96,24 @@ class CommunityViewPure extends Component {
     return this.props.history.push('/new/community');
   };
 
+  setComposerUpsell = () => {
+    const { data: { community } } = this.props;
+    const dataExists =
+      community && !community.deleted && community.communityPermissions;
+    if (!dataExists) return;
+
+    const isNewAndOwned =
+      community.communityPermissions.isOwner && community.metaData.members < 5;
+    return this.setState({ showComposerUpsell: isNewAndOwned ? true : false });
+  };
+
   render() {
     const {
       match,
       data: { community, user, networkStatus, error },
       currentUser,
     } = this.props;
-    const { isLoading } = this.state;
+    const { isLoading, showComposerUpsell } = this.state;
     const communitySlug = match.params.communitySlug;
     const isMobile = window.innerWidth < 768;
     const dataExists =
@@ -138,6 +148,10 @@ class CommunityViewPure extends Component {
           description: community.description,
         },
       });
+
+      const isNewAndOwned =
+        community.communityPermissions.isOwner &&
+        community.metaData.members < 5;
 
       return (
         <AppViewWrapper>
@@ -175,7 +189,10 @@ class CommunityViewPure extends Component {
               <Column type="primary">
                 {loggedInUser
                   ? hasRights
-                    ? <ThreadComposer activeCommunity={communitySlug} />
+                    ? <ThreadComposer
+                        activeCommunity={communitySlug}
+                        showComposerUpsell={showComposerUpsell}
+                      />
                     : <UpsellJoinCommunity
                         community={community}
                         loading={isLoading}
@@ -186,6 +203,11 @@ class CommunityViewPure extends Component {
                   viewContext="community"
                   slug={communitySlug}
                   currentUser={loggedInUser}
+                  setThreadsStatus={
+                    !this.showComposerUpsell && this.setComposerUpsell
+                  }
+                  isNewAndOwned={isNewAndOwned}
+                  community={community}
                 />
               </Column>
             </CoverRow>
