@@ -213,7 +213,6 @@ const getEverything = (
           .skip(after || 0)
           .limit(first)
           .run()
-          .then(res => console.log(res) || res)
     );
 };
 
