@@ -35,7 +35,6 @@ const StyledAvatarContainer = styled.object`
   height: ${props => (props.size ? `${props.size}px` : '32px')};
   border-radius: ${props => (props.community ? '8px' : '100%')};
   display: inline-block;
-  overflow: hidden;
   object-fit: cover;
 
   &:after {
