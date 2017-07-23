@@ -46,31 +46,6 @@ const CREATE_COMMUNITY_OPTIONS = {
         variables: {
           input,
         },
-        update: (proxy, { data: { createCommunity } }) => {
-          proxy.writeQuery({
-            query: GET_COMMUNITY_QUERY,
-            variables: {
-              slug: input.slug,
-            },
-            data: createCommunity,
-          });
-        },
-        // update: (proxy, { data: { createCommunity } }) => {
-        //   // read the data from the cache for the queries this affects
-        //   const data = proxy.readQuery({
-        //     query: GET_CURRENT_USER_COMMUNITIES_QUERY,
-        //   });
-        //
-        //   // insert the new community
-        //   data.user.communityConnection.edges.push({
-        //     node: {
-        //       ...createCommunity,
-        //     },
-        //   });
-        //
-        //   // write the new data back to the cache
-        //   proxy.writeQuery({ query: GET_CURRENT_USER_COMMUNITIES_QUERY, data });
-        // },
       }),
   }),
 };
