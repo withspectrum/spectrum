@@ -187,33 +187,33 @@ const setUsername = (id: string, username: string) => {
     .then(result => result.changes[0].new_val);
 };
 
-const getThreadsByChannel = channelId => {
-  return db
-    .table('threads')
-    .between([channelId, db.minval], [channelId, db.maxval], {
-      index: 'channelIdAndLastActive',
-    });
-};
-
-const getEverything = (userId: string): Promise<Array<any>> => {
+const getEverything = (
+  userId: string,
+  { first, after }
+): Promise<Array<any>> => {
   return db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
+    .filter(userChannel => userChannel('isMember').eq(true))
+    .map(userChannel => userChannel('channelId'))
     .run()
     .then(
       userChannels =>
         userChannels &&
         userChannels.length > 0 &&
-        getThreadsByChannel(userChannels[0].channelId)
-          .union(
-            ...userChannels
-              // Omit first item as we already got that above ^
-              .slice(1)
-              // Get threads for each channel and interleave them
-              .map(({ channelId }) => getThreadsByChannel(channelId)),
-            { interleave: 'channelIdAndLastActive' }
+        db
+          .table('threads')
+          .orderBy({ index: db.desc('lastActive') })
+          .filter(thread =>
+            db
+              .expr(userChannels)
+              .contains(thread('channelId'))
+              .and(db.not(thread.hasFields('deletedAt')))
           )
+          .skip(after || 0)
+          .limit(first)
           .run()
+          .then(res => console.log(res) || res)
     );
 };
 
