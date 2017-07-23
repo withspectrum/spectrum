@@ -39,7 +39,8 @@ const ExplorePure = props => {
     type: 'explore',
   });
   const featureSlug = 'frontend';
-  const featureNotes = `Frontend News is a channel for sharing your favorite resources about frontend engineering. It's been super active since its inception last week and we think news aggregation a really interesting use of Spectrum. Check it out and share your favorite resources!`;
+  const featureNotes = `Frontend News is a community for sharing your favorite resources for frontend engineering. It's been super active since its inception last week and we think news aggregation a really interesting use of Spectrum. Check it out and share your favorite resources!`;
+
 
   return (
     <AppViewWrapper>
