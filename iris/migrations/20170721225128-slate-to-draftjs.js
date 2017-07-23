@@ -4,20 +4,15 @@ const { convertToRaw } = require('draft-js');
 const { stateFromMarkdown } = require('draft-js-import-markdown');
 const { toPlainText, toState } = require('../../shared/slate-utils');
 
-const slateToDraft = compose(
-  JSON.stringify,
-  convertToRaw,
-  stateFromMarkdown,
-  toPlainText,
-  toState,
-  JSON.parse
-);
+const plainToDraft = compose(JSON.stringify, convertToRaw, stateFromMarkdown);
+
+const slateToDraft = compose(plainToDraft, toPlainText, toState, JSON.parse);
 
 exports.up = function(r, conn) {
   return (
     r
       .table('threads')
-      .filter({ type: 'SLATE' })
+      .filter(thread => thread('type').ne('DRAFTJS'))
       .run(conn)
       .then(cursor => cursor.toArray())
       // Transform slate state to draftjs state
@@ -26,7 +21,10 @@ exports.up = function(r, conn) {
           Object.assign({}, thread, {
             type: 'DRAFTJS',
             content: Object.assign({}, thread.content, {
-              body: slateToDraft(thread.content.body),
+              body:
+                thread.type === 'SLATE'
+                  ? slateToDraft(thread.content.body)
+                  : plainToDraft(thread.content.body),
             }),
           })
         )
