@@ -13,8 +13,6 @@ const ToastsPure = ({ toasts }): React$Element<any> => {
     return <span />;
   }
 
-  console.log(toasts);
-
   return (
     <Container>
       {toasts.map(toast => {
