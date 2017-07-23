@@ -76,27 +76,26 @@ module.exports = {
     },
     everything: (
       { id }: { id: string },
-      { first, after }: PaginationOptions
+      { first, after }: PaginationOptions,
+      { user }
     ) => {
       const cursor = decode(after);
-      // TODO: Make this more performant by doing an actual db query rather than this hacking around
-      return getEverything(id)
-        .then(threads =>
-          paginate(
-            threads,
-            { first, after: cursor },
-            thread => thread.id === cursor
-          )
-        )
-        .then(result => ({
-          pageInfo: {
-            hasNextPage: result.hasMoreItems,
-          },
-          edges: result.list.map(thread => ({
-            cursor: encode(thread.id),
-            node: thread,
-          })),
-        }));
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      // TODO: Make this more performant by doingan actual db query rather than this hacking around
+      return getEverything(user.id, {
+        first,
+        after:
+          lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10),
+      }).then(result => ({
+        pageInfo: {
+          hasNextPage: result.length >= first,
+        },
+        edges: result.map((thread, index) => ({
+          cursor: encode(`${thread.id}-${index}`),
+          node: thread,
+        })),
+      }));
     },
     communityConnection: (user: Object) => ({
       // Don't paginate communities and channels of a user
