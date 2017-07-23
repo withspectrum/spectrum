@@ -173,8 +173,8 @@ export const Dropdowns = styled(FlexRow)`
 export const ComposerUpsell = styled.div`
   position: relative;
   padding: 4px 16px;
-  background: ${props => props.theme.brand.default};
-  border-bottom: 2px solid ${props => props.theme.brand.default};
+  background: ${props => props.theme.brand.alt};
+  border-bottom: 2px solid ${props => props.theme.brand.alt};
   color: #fff;
   text-align: center;
   border-radius: 12px 12px 0 0;
@@ -188,11 +188,11 @@ export const ComposerUpsell = styled.div`
 export const UpsellPulse = styled.div`
   width: 10px;
   height: 10px;
-  border: 5px solid ${props => props.theme.brand.default};
+  border: 5px solid ${props => props.theme.brand.alt};
   -webkit-border-radius: 30px;
   -moz-border-radius: 30px;
   border-radius: 30px;
-  background-color: ${props => props.theme.brand.default};
+  background-color: ${props => props.theme.brand.alt};
   z-index: 10;
   position: absolute;
   top: -4px;
