@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Card } from '../card';
 import { Transition, hexa, Shadow, FlexRow } from '../globals';
 
@@ -31,7 +31,8 @@ export const Composer = styled(Card)`
 
   &:hover {
     transition: none;
-    box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.text.placeholder, 0.5)};
+    box-shadow: ${Shadow.high} ${({ theme }) =>
+  hexa(theme.text.placeholder, 0.5)};
   }
 
   @media (max-width: 768px) {
@@ -44,7 +45,9 @@ export const Composer = styled(Card)`
 `;
 
 export const Overlay = styled.div`
-  ${props => (props.isOpen ? `
+  ${props =>
+    props.isOpen
+      ? `
       position: fixed;
       top: 0;
       left: 0;
@@ -56,16 +59,17 @@ export const Overlay = styled.div`
       background: #000;
       pointer-events: auto;
       opacity: 0.4;
-    ` : `
+    `
+      : `
       opacity: 0;
       pointer-events: none;
 
-    `)}
+    `};
 `;
 
 export const Placeholder = styled.div`
-  ${/* either the placeholder *or* the content container shows at a time. */ ''}
-  display: ${props => (props.isOpen ? 'none' : 'flex')};
+  ${/* either the placeholder *or* the content container shows at a time. */ ''} display: ${props =>
+      props.isOpen ? 'none' : 'flex'};
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
@@ -81,7 +85,6 @@ export const Placeholder = styled.div`
   @media (max-width: 768px) {
     opacity: 0;
   }
-
 `;
 
 export const PlaceholderLabel = styled.h3`
@@ -165,6 +168,85 @@ export const Dropdowns = styled(FlexRow)`
       }
     }
   }
+`;
+
+export const ComposerUpsell = styled.div`
+  position: relative;
+  padding: 4px 16px;
+  background: ${props => props.theme.brand.default};
+  border-bottom: 2px solid ${props => props.theme.brand.default};
+  color: #fff;
+  text-align: center;
+  border-radius: 12px 12px 0 0;
+
+  p {
+    font-size: 14px;
+    font-weight: 700;
+  }
+`;
+
+export const UpsellPulse = styled.div`
+  width: 10px;
+  height: 10px;
+  border: 5px solid ${props => props.theme.brand.default};
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  border-radius: 30px;
+  background-color: ${props => props.theme.brand.default};
+  z-index: 10;
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  box-shadow: 0 0 0 2px #fff;
+`;
+
+const pulse = keyframes`
+  0% {
+    -webkit-transform: scale(0);
+    -moz-transform: scale(0);
+    opacity: 0.0;
+  }
+  25% {
+    -webkit-transform: scale(0);
+      -moz-transform: scale(0);
+      opacity: 0.1;
+  }
+  50% {
+      -webkit-transform: scale(0.1);
+      -moz-transform: scale(0.1);
+      opacity: 0.3;
+  }
+  75% {
+      -webkit-transform: scale(0.5);
+      -moz-transform: scale(0.5);
+      opacity: 0.5;
+  }
+  100% {
+      -webkit-transform: scale(1);
+      -moz-transform: scale(1);
+      opacity: 0.0;
+  }
+`;
+
+export const UpsellDot = styled.div`
+  border: 10px solid ${props => props.theme.brand.default};
+  background: transparent;
+  -webkit-border-radius: 60px;
+  -moz-border-radius: 60px;
+  border-radius: 60px;
+  height: 50px;
+  width: 50px;
+  -webkit-animation: ${pulse} 3s ease-out;
+  -moz-animation: ${pulse} 3s ease-out;
+  animation: ${pulse} 3s ease-out;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  position: absolute;
+  top: -24px;
+  left: -24px;
+  z-index: 1;
+  opacity: 0;
 `;
 
 // these are style objects because i'm custom styling another react component to handle autoresizing

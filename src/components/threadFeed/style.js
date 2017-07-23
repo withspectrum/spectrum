@@ -25,3 +25,11 @@ export const FetchMoreButton = styled(OutlineButton)`
     }
   }
 `;
+
+export const Divider = styled.div`
+  border-bottom: 2px solid ${props => props.theme.border.default};
+  width: 100%;
+  display: block;
+  padding-top: 24px;
+  margin-bottom: 24px;
+`;

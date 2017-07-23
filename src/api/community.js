@@ -7,6 +7,26 @@ import { channelInfoFragment } from './fragments/channel/channelInfo';
 import { userInfoFragment } from './fragments/user/userInfo';
 import { channelMetaDataFragment } from './fragments/channel/channelMetaData';
 
+const profileQueryOptions = {
+  options: ({ match: { params: { communitySlug } } }) => ({
+    variables: {
+      slug: communitySlug.toLowerCase(),
+    },
+    fetchPolicy: 'cache-and-network',
+  }),
+};
+
+const GET_COMMUNITY_QUERY = gql`
+  query getCommunity($slug: String) {
+    community(slug: $slug) {
+      ...communityInfo
+    }
+  }
+  ${communityInfoFragment}
+`;
+
+export const getCommunity = graphql(GET_COMMUNITY_QUERY, profileQueryOptions);
+
 /*
   Create a new community
 */
@@ -25,6 +45,15 @@ const CREATE_COMMUNITY_OPTIONS = {
       mutate({
         variables: {
           input,
+        },
+        update: (proxy, { data: { createCommunity } }) => {
+          proxy.writeQuery({
+            query: GET_COMMUNITY_QUERY,
+            variables: {
+              slug: input.slug,
+            },
+            data: createCommunity,
+          });
         },
         // update: (proxy, { data: { createCommunity } }) => {
         //   // read the data from the cache for the queries this affects
