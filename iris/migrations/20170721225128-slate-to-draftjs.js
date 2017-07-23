@@ -12,7 +12,9 @@ exports.up = function(r, conn) {
   return (
     r
       .table('threads')
-      .filter(thread => thread('type').ne('DRAFTJS'))
+      .filter(thread =>
+        r.not(thread.hasFields('type')).or(thread('type').ne('DRAFTJS'))
+      )
       .run(conn)
       .then(cursor => cursor.toArray())
       // Transform slate state to draftjs state
