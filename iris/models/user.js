@@ -187,22 +187,33 @@ const setUsername = (id: string, username: string) => {
     .then(result => result.changes[0].new_val);
 };
 
-const getEverything = (userId: string): Promise<Array<any>> => {
+const getEverything = (
+  userId: string,
+  { first, after }
+): Promise<Array<any>> => {
   return db
     .table('usersChannels')
     .getAll(userId, { index: 'userId' })
-    .eqJoin('channelId', db.table('threads'), {
-      index: 'channelId',
-    })
-    .without({
-      left: ['id', 'channelId', 'createdAt', 'isModerator', 'isOwner'],
-    })
-    .zip()
-    .filter({ isBlocked: false, isPending: false, isMember: true })
-    .without('isBlocked', 'isPending', 'isMember')
-    .filter(thread => db.not(thread.hasFields('deletedAt')))
-    .orderBy(db.desc('lastActive'), db.desc('createdAt'))
-    .run();
+    .filter(userChannel => userChannel('isMember').eq(true))
+    .map(userChannel => userChannel('channelId'))
+    .run()
+    .then(
+      userChannels =>
+        userChannels &&
+        userChannels.length > 0 &&
+        db
+          .table('threads')
+          .orderBy({ index: db.desc('lastActive') })
+          .filter(thread =>
+            db
+              .expr(userChannels)
+              .contains(thread('channelId'))
+              .and(db.not(thread.hasFields('deletedAt')))
+          )
+          .skip(after || 0)
+          .limit(first)
+          .run()
+    );
 };
 
 const getUsersThreadCount = (
