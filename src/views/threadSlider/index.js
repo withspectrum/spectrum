@@ -16,7 +16,23 @@ import Icon from '../../components/icons';
 import ThreadContainer from '../thread/containers';
 
 class ThreadSlider extends Component {
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyPress, false);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyPress, false);
+  }
+
+  handleKeyPress = e => {
+    // if user presses esc
+    if (e.keyCode === 27) {
+      return this.props.history.push(this.props.location.pathname);
+    }
+  };
+
   close = () => {};
+
   render() {
     const parsed = queryString.parse(this.props.location.search);
     const threadId = parsed.thread;
