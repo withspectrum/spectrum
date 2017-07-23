@@ -14,11 +14,11 @@ export const ChatInputWrapper = styled(FlexRow)`
   border-top: 2px solid ${({ theme }) => theme.border.default};
 
   @media (max-width: 768px) {
-    bottom: ${props => (props.focus ? '0' : 'auto')};
+    bottom: ${props => (props.focus ? '48px' : 'auto')};
     position: ${props => (props.focus ? 'fixed' : 'relative')};
     background-color: ${props =>
       props.focus ? props.theme.bg.default : 'transparent'};
-    z-index: 1001;
+    z-index: 1003;
   }
 `;
 

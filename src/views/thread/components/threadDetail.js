@@ -400,6 +400,7 @@ class ThreadDetailPure extends Component {
     return (
       <ThreadWrapper>
         {!isEditing &&
+          !this.props.slider &&
           <Location>
             <Icon glyph="view-back" size={16} />
             <Link to={`/${thread.channel.community.slug}`}>
@@ -412,6 +413,7 @@ class ThreadDetailPure extends Component {
               {thread.channel.name}
             </Link>
           </Location>}
+
         <ContextRow>
           <Byline>
             <AuthorAvatar

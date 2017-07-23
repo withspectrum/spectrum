@@ -4,7 +4,15 @@ import React, { Component } from 'react';
 import queryString from 'query-string';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { Container, Overlay, Thread } from './style';
+import {
+  Container,
+  Overlay,
+  Thread,
+  Close,
+  CloseButton,
+  CloseLabel,
+} from './style';
+import Icon from '../../components/icons';
 import ThreadContainer from '../thread/containers';
 
 class ThreadSlider extends Component {
@@ -20,7 +28,14 @@ class ThreadSlider extends Component {
           <Overlay />
         </Link>
         <Thread>
-          <ThreadContainer threadId={threadId} />
+          <Close to={this.props.location.pathname}>
+            <CloseButton>
+              <Icon glyph="view-back" size={24} />
+            </CloseButton>
+            <CloseLabel>Close</CloseLabel>
+          </Close>
+
+          <ThreadContainer threadId={threadId} slider />
         </Thread>
       </Container>
     );
