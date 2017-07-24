@@ -1,5 +1,8 @@
+// @flow
+// $FlowFixMe
 import styled from 'styled-components';
-
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 import {
   FlexCol,
   FlexRow,
@@ -11,6 +14,7 @@ import {
   Gradient,
   Shadow,
   hexa,
+  Truncate,
 } from '../../components/globals';
 import { StyledCard } from '../../components/listItems/style';
 import ScrollRow from '../../components/scrollRow';
@@ -62,6 +66,7 @@ export const ViewSubtitle = styled(H2)`
 `;
 
 export const ListCard = styled(StyledCard)`
+padding: 0;
 @media (max-width: 768px) {
   display: flex;
   margin-bottom: 32px;
@@ -250,4 +255,150 @@ export const ErrorState = styled(FlexCol)`
   &:not(:first-of-type) {
     display: none;
   }
+`;
+
+export const ComposerInputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  display: block;
+  margin-bottom: 48px;
+`;
+
+export const ComposerInput = styled.input`
+  font-size: 16px;
+  padding: 15px 16px;
+  width: 100%;
+  border: 2px solid ${props => props.theme.border.default};
+  border-radius: 8px;
+  position: relative;
+  z-index: 2;
+
+  @media (max-width: 768px) {
+    padding: 20px 16px;
+  }
+`;
+
+export const SearchSpinnerContainer = styled.span`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  z-index: 5;
+`;
+
+export const SearchResultsDropdown = styled.ul`
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 54px;
+  left: 0;
+  display: inline-block;
+  width: 100%;
+  max-height: 420px;
+  overflow-y: scroll;
+  z-index: 1000;
+  background: #fff;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    left: 0;
+    border-radius: 0 0 8px 8px;
+  }
+`;
+
+export const SearchResultTextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+`;
+
+export const SearchResult = styled.li`
+  display: flex;
+  background: ${props => (props.focused ? props.theme.bg.wash : '#fff')};
+  border-bottom: 2px solid ${props => props.theme.border.default};
+
+  &:hover {
+    background: ${props => props.theme.bg.wash};
+    cursor: pointer;
+  }
+
+  &:only-child {
+    border-bottom: none;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+export const SearchLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  ${Truncate()}
+  padding: 8px 16px 8px 8px;
+`;
+
+export const SearchResultImage = styled.img`
+  margin-right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+`;
+
+export const SearchResultDisplayName = styled.p`
+  font-size: 16px;
+  font-weight: 600;
+  color: ${props => props.theme.text.default};
+  line-height: 1.4;
+`;
+
+export const SearchResultUsername = styled.p`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.text.alt};
+  line-height: 1.4;
+`;
+
+export const SearchResultNull = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+
+  a {
+    margin-top: 16px;
+  }
+
+  p {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    color: ${props => props.theme.text.alt};
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+  }
+`;
+
+export const TopCommunityItem = styled.div`
+  border-bottom: 2px solid ${props => props.theme.bg.wash};
+
+  &:last-of-type {
+    border-bottom: 0;
+  }
+`;
+
+export const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: transparent;
 `;

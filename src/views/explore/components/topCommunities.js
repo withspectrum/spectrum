@@ -13,7 +13,8 @@ import { CommunityListItem } from '../../../components/listItems';
 import { displayLoadingState } from '../../../components/loading';
 import Icon from '../../../components/icons';
 import { ListContainer } from '../../../components/listItems/style';
-import { ListCard } from '../style';
+import { ListCard, TopCommunityItem } from '../style';
+import { CommunityProfile } from '../../../components/profile';
 
 class CommunityList extends Component {
   render() {
@@ -23,9 +24,12 @@ class CommunityList extends Component {
       withMeta,
     } = this.props;
 
-    const sorted = topCommunities.slice().sort((a, b) => {
-      return b.metaData.members - a.metaData.members;
-    });
+    const sorted = topCommunities
+      .slice()
+      .sort((a, b) => {
+        return b.metaData.members - a.metaData.members;
+      })
+      .filter(comm => !comm.communityPermissions.isBlocked);
 
     if (!error && topCommunities.length > 0) {
       return (
@@ -33,16 +37,13 @@ class CommunityList extends Component {
           <ListContainer>
             {sorted.map(community => {
               return (
-                <Link key={community.id} to={`/${community.slug}`}>
-                  <CommunityListItem
-                    contents={community}
-                    withDescription={withDescription}
-                    withMeta={withMeta}
-                    meta={`${community.metaData.members > 1 ? `${community.metaData.members} members` : `${community.metaData.members} member`}`}
-                  >
-                    <Icon glyph="view-forward" />
-                  </CommunityListItem>
-                </Link>
+                <TopCommunityItem>
+                  <CommunityProfile
+                    key={community.id}
+                    profileSize={'listItemWithAction'}
+                    data={{ community }}
+                  />
+                </TopCommunityItem>
               );
             })}
           </ListContainer>
