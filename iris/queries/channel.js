@@ -40,7 +40,7 @@ module.exports = {
         after: after && parseInt(decode(after), 10),
       }).then(threads => ({
         pageInfo: {
-          hasNextPage: threads.length > 0,
+          hasNextPage: threads.length >= first,
         },
         edges: threads.map(thread => ({
           cursor: encode(String(thread.lastActive.getTime())),
