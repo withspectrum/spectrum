@@ -163,7 +163,10 @@ class Search extends Component {
   };
 
   onFocus = (e: any) => {
-    const string = e.target.value.toLowerCase().trim();
+    const val = e.target.val;
+    if (!val || val.length === 0) return;
+
+    const string = val.toLowerCase().trim();
     this.search(string);
 
     return this.setState({

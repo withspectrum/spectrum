@@ -37,9 +37,8 @@ class CommunityList extends Component {
           <ListContainer>
             {sorted.map(community => {
               return (
-                <TopCommunityItem>
+                <TopCommunityItem key={community.id}>
                   <CommunityProfile
-                    key={community.id}
                     profileSize={'listItemWithAction'}
                     data={{ community }}
                   />
