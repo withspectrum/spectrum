@@ -1,8 +1,24 @@
 // @flow
 // $FlowFixMe
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+
+const animation = css`
+  opacity: 0;
+  transform: translateX(1em);
+  transition: opacity ${props =>
+    props.duration}ms ease-out, transform ${props =>
+  props.duration}ms ease-in-out;
+
+  ${props =>
+    props.entering || props.entered
+      ? css`
+    opacity: 1;
+    transform: translateX(0em);
+  `
+      : ''}
+`;
 
 export const Container = styled.div``;
 
@@ -14,6 +30,8 @@ export const Overlay = styled.div`
   bottom: 0;
   background: rgba(0, 0, 0, 0.15);
   z-index: 1000;
+
+  ${animation};
 `;
 
 export const Thread = styled.div`
@@ -29,7 +47,7 @@ export const Thread = styled.div`
   flex-direction: column;
   max-width: 100%;
 
-  @media (max-width: 768px) {
+  ${animation} @media (max-width: 768px) {
     top: -48px;
     bottom: 48px;
   }

@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import queryString from 'query-string';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+import Transition from 'react-transition-group/Transition';
 import {
   Container,
   Overlay,
@@ -14,6 +15,8 @@ import {
 } from './style';
 import Icon from '../../components/icons';
 import ThreadContainer from '../thread/containers';
+
+const ANIMATION_DURATION = 50;
 
 class ThreadSlider extends Component {
   componentDidMount() {
@@ -31,29 +34,42 @@ class ThreadSlider extends Component {
     }
   };
 
-  close = () => {};
-
   render() {
     const parsed = queryString.parse(this.props.location.search);
     const threadId = parsed.thread;
 
-    if (!threadId) return null;
     return (
-      <Container>
-        <Link to={this.props.location.pathname}>
-          <Overlay />
-        </Link>
-        <Thread>
-          <Close to={this.props.location.pathname}>
-            <CloseButton>
-              <Icon glyph="view-back" size={24} />
-            </CloseButton>
-            <CloseLabel>Close</CloseLabel>
-          </Close>
+      <div>
+        <Transition in={!!threadId} timeout={ANIMATION_DURATION}>
+          {state =>
+            <div>
+              {threadId &&
+                <Container>
+                  <Link to={this.props.location.pathname}>
+                    <Overlay
+                      entering={state === 'entering'}
+                      entered={state === 'entered'}
+                      duration={ANIMATION_DURATION}
+                    />
+                  </Link>
+                  <Thread
+                    entering={state === 'entering'}
+                    entered={state === 'entered'}
+                    duration={ANIMATION_DURATION}
+                  >
+                    <Close to={this.props.location.pathname}>
+                      <CloseButton>
+                        <Icon glyph="view-back" size={24} />
+                      </CloseButton>
+                      <CloseLabel>Close</CloseLabel>
+                    </Close>
 
-          <ThreadContainer threadId={threadId} slider />
-        </Thread>
-      </Container>
+                    <ThreadContainer threadId={threadId} slider />
+                  </Thread>
+                </Container>}
+            </div>}
+        </Transition>
+      </div>
     );
   }
 }
