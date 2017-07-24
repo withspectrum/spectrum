@@ -40,7 +40,7 @@ export const Thread = styled.div`
   right: 0;
   top: 48px;
   bottom: 0;
-  width: 500px;
+  width: 650px;
   background: #fff;
   z-index: 1001;
   box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
