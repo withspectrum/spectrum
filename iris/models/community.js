@@ -535,7 +535,8 @@ const getCommunitiesBySearchString = (
   return db
     .table('communities')
     .filter(community => community.coerceTo('string').match(`(?i)${string}`))
-    .limit(10)
+    .filter(community => db.not(community.hasFields('deletedAt')))
+    .limit(15)
     .run();
 };
 
