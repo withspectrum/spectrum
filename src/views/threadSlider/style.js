@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const animation = css`
   opacity: 0;
-  transform: translateX(1em);
+  transform: translateX(1em) translate3d(0, 0, 0);
   transition: opacity ${props =>
     props.duration}ms ease-out, transform ${props =>
   props.duration}ms ease-in-out;
@@ -15,7 +15,7 @@ const animation = css`
     props.entering || props.entered
       ? css`
     opacity: 1;
-    transform: translateX(0em);
+    transform: translateX(0em) translate3d(0, 0, 0);
   `
       : ''}
 `;
@@ -47,9 +47,14 @@ export const Thread = styled.div`
   flex-direction: column;
   max-width: 100%;
 
-  ${animation} @media (max-width: 768px) {
+  @media (max-width: 768px) {
     top: -48px;
     bottom: 48px;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    ${animation};
   }
 `;
 
