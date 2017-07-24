@@ -89,12 +89,14 @@ module.exports = {
           lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10),
       }).then(result => ({
         pageInfo: {
-          hasNextPage: result.length >= first,
+          hasNextPage: result && result.length >= first,
         },
-        edges: result.map((thread, index) => ({
-          cursor: encode(`${thread.id}-${index}`),
-          node: thread,
-        })),
+        edges: result
+          ? result.map((thread, index) => ({
+              cursor: encode(`${thread.id}-${index}`),
+              node: thread,
+            }))
+          : [],
       }));
     },
     communityConnection: (user: Object) => ({
