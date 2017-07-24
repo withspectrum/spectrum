@@ -6,16 +6,25 @@ import type { PaginationOptions } from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import { NEW_DOCUMENTS } from './utils';
 
-const getNotificationsByUser = (userId: string) => {
+const getNotificationsByUser = (userId: string, { first, after }) => {
   return db
     .table('usersNotifications')
-    .getAll(userId, { index: 'userId' })
+    .between(
+      [userId, db.minval],
+      [userId, after ? new Date(after) : db.maxval],
+      {
+        index: 'userIdAndEntityAddedAt',
+        leftBound: 'open',
+        rightBound: 'open',
+      }
+    )
+    .orderBy({ index: db.desc('userIdAndEntityAddedAt') })
+    .limit(10)
     .eqJoin('notificationId', db.table('notifications'))
     .without({
       left: ['notificationId', 'userId', 'createdAt', 'id'],
     })
     .zip()
-    .orderBy(db.desc('modifiedAt'))
     .run();
 };
 
