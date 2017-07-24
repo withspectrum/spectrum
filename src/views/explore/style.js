@@ -276,7 +276,9 @@ export const ComposerInput = styled.input`
   z-index: 2;
 
   @media (max-width: 768px) {
-    padding: 20px 16px;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
   }
 `;
 
