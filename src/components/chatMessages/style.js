@@ -39,6 +39,7 @@ export const AvatarLabel = styled.div`
     border-radius: 100%;
     height: 100%;
     width: 100%;
+    pointer-events: none;
     box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.15);
   }
 `;
