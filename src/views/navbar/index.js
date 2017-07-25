@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
+// $FlowFixMe
+import queryString from 'query-string';
 import { getCurrentUserProfile, editUserMutation } from '../../api/user';
 import { openModal } from '../../actions/modals';
 import {
@@ -66,6 +68,7 @@ class Navbar extends Component {
       notificationsQuery,
       currentUser,
       match,
+      history,
     } = this.props;
     const loggedInUser = user || currentUser;
 
@@ -82,6 +85,8 @@ class Navbar extends Component {
         This is hacky, but by getting the string after the last slash in the current url, we can compare it against in the incoming notifications in order to not show a new notification bubble on views the user is already looking at. This only applies to /messages/:threadId or /thread/:id - by matching this url param with the incoming notification.context.id we can determine whether or not to increment the count.
       */
       const id = match.url.substr(match.url.lastIndexOf('/') + 1);
+      const params = queryString.parse(history.location.search);
+      const threadParam = params.thread;
 
       const dmUnseenCount =
         notifications &&
@@ -107,7 +112,11 @@ class Navbar extends Component {
           .filter(notification => notification.isSeen === false)
           .filter(notification => {
             // SEE NOTE ABOVE
-            if (notification.context.id !== id) return notification;
+            if (
+              notification.context.id !== id ||
+              notification.context.id !== threadParam
+            )
+              return notification;
             // if the notification context matches the current route, go ahead and mark it as seen
             this.props.markSingleNotificationSeen(notification.id);
             return null;

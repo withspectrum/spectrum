@@ -76,7 +76,8 @@ class MessagesWithData extends Component {
     // is hella annoying as the old msgs stick around until the new ones are there.
     // TODO: FIXME and remove the networkStatus === 7
     if (messages && networkStatus === 7) {
-      let sortedMessages = sortAndGroupMessages(messages);
+      let unsortedMessages = messages.map(message => message.node);
+      let sortedMessages = sortAndGroupMessages(unsortedMessages);
 
       return (
         <MessagesScrollWrapper>

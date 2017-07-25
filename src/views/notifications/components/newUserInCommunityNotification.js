@@ -24,7 +24,7 @@ export const NewUserInCommunityNotification = ({
   notification,
   currentUser,
 }) => {
-  const actors = parseActors(notification.actors, currentUser);
+  const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
@@ -52,7 +52,7 @@ export const MiniNewUserInCommunityNotification = ({
   currentUser,
   history,
 }) => {
-  const actors = parseActors(notification.actors, currentUser);
+  const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);

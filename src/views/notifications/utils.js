@@ -127,8 +127,11 @@ const actorsToObjects = actors => {
   );
 };
 
-export const parseActors = (actors, currentUser) => {
-  const filteredActors = actors.filter(actor => actor.id !== currentUser.id);
+export const parseActors = (actors, currentUser, removeCurrentUser) => {
+  let filteredActors = actors;
+  if (removeCurrentUser) {
+    filteredActors = actors.filter(actor => actor.id !== currentUser.id);
+  }
   const asString = actorsToString(filteredActors);
   const asObjects = actorsToObjects(filteredActors);
 
@@ -175,7 +178,7 @@ const threadToString = (context, currentUser) => {
   return (
     <span>
       {' '}{str}{' '}
-      <Link to={`/thread/${context.payload.id}`}>
+      <Link to={`?thread=${context.payload.id}`}>
         {context.payload.content.title}
       </Link>
     </span>

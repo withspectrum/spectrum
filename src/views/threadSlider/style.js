@@ -77,6 +77,7 @@ export const CloseButton = styled.span`
   width: 32px;
   height: 32px;
   border-radius: 32px;
+  color: ${props => props.theme.text.alt};
 `;
 
 export const CloseLabel = styled.span`
