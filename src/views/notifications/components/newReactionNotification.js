@@ -40,7 +40,7 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
 
   return (
     <NotificationCard key={notification.id}>
-      <CardLink to={`/thread/${notification.context.payload.threadId}`} />
+      <CardLink to={`?thread=${notification.context.payload.threadId}`} />
       <CardContent>
         <ReactionContext>
           <Icon glyph="like-fill" />
@@ -135,7 +135,7 @@ export const MiniNewReactionNotification = ({
 
   return (
     <NotificationListRow>
-      <CardLink to={`/thread/${notification.context.payload.threadId}`} />
+      <CardLink to={`?thread=${notification.context.payload.threadId}`} />
       <CardContent>
         <ReactionContext>
           <Icon glyph="like-fill" />

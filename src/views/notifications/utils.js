@@ -178,7 +178,7 @@ const threadToString = (context, currentUser) => {
   return (
     <span>
       {' '}{str}{' '}
-      <Link to={`/thread/${context.payload.id}`}>
+      <Link to={`?thread=${context.payload.id}`}>
         {context.payload.content.title}
       </Link>
     </span>
