@@ -16,7 +16,10 @@ import {
   hexa,
   Truncate,
 } from '../../components/globals';
+import Card from '../../components/card';
 import { StyledCard } from '../../components/listItems/style';
+import Icon from '../../components/icons';
+import { Avatar } from '../../components/avatar';
 import ScrollRow from '../../components/scrollRow';
 
 import { Button } from '../../components/buttons';
@@ -257,28 +260,28 @@ export const ErrorState = styled(FlexCol)`
   }
 `;
 
-export const ComposerInputWrapper = styled.div`
+export const SearchWrapper = styled(Card)`
   position: relative;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  display: block;
   margin-bottom: 48px;
+  padding: 12px 16px;
 `;
 
-export const ComposerInput = styled.input`
+export const SearchInputWrapper = styled(FlexRow)`
+  flex: auto;
+  color: ${props => props.theme.text.placeholder};
+`;
+
+export const SearchIcon = styled(Icon)`
+`;
+
+export const SearchInput = styled.input`
   font-size: 16px;
-  padding: 15px 16px;
-  width: 100%;
-  border: 2px solid ${props => props.theme.border.default};
-  border-radius: 8px;
+  padding: 4px 20px;
+  flex: auto;
   position: relative;
   z-index: 2;
 
-  @media (max-width: 768px) {
-    border-radius: 0;
-    border-left: 0;
-    border-right: 0;
+  &:hover {
   }
 `;
 
@@ -294,20 +297,19 @@ export const SearchSpinnerContainer = styled.span`
 export const SearchResultsDropdown = styled.ul`
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: ${Shadow.mid} ${props => hexa(props.theme.bg.reverse, 0.1)};
   position: absolute;
-  top: 54px;
+  top: 64px;
   left: 0;
   display: inline-block;
   width: 100%;
-  max-height: 420px;
+  flex: auto;
+  max-height: 400px;
   overflow-y: scroll;
   z-index: 1000;
-  background: #fff;
+  background: ${props => props.theme.bg.default};
 
   @media (max-width: 768px) {
-    width: 100%;
-    left: 0;
     border-radius: 0 0 8px 8px;
   }
 `;
@@ -315,17 +317,37 @@ export const SearchResultsDropdown = styled.ul`
 export const SearchResultTextContainer = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
+  flex: auto;
 `;
 
 export const SearchResult = styled.li`
   display: flex;
-  background: ${props => (props.focused ? props.theme.bg.wash : '#fff')};
-  border-bottom: 2px solid ${props => props.theme.border.default};
+  background: ${props =>
+    props.focused ? props.theme.brand.alt : props.theme.bg.default};
+  border-bottom: 2px solid
+    ${props => (props.focused ? 'transparent' : props.theme.border.default)};
 
   &:hover {
-    background: ${props => props.theme.bg.wash};
+    background: ${props => props.theme.brand.alt};
     cursor: pointer;
+
+    h2 {
+      color: ${props => props.theme.text.reverse};
+    }
+
+    p {
+      color: ${props => props.theme.text.reverse};
+    }
+  }
+
+  h2 {
+    color: ${props =>
+      props.focused ? props.theme.text.reverse : props.theme.text.default};
+  }
+
+  p {
+    color: ${props =>
+      props.focused ? props.theme.text.reverse : props.theme.text.alt};
   }
 
   &:only-child {
@@ -345,24 +367,23 @@ export const SearchLink = styled(Link)`
   padding: 8px 16px 8px 8px;
 `;
 
-export const SearchResultImage = styled.img`
-  margin-right: 12px;
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
+export const SearchResultImage = styled(Avatar)`
+  margin: 8px 16px 8px 8px;
 `;
 
-export const SearchResultDisplayName = styled.p`
+export const SearchResultMetaWrapper = styled(FlexCol)`
+  margin-left: 4px;
+`;
+
+export const SearchResultName = styled.h2`
   font-size: 16px;
-  font-weight: 600;
-  color: ${props => props.theme.text.default};
+  font-weight: 700;
   line-height: 1.4;
 `;
 
-export const SearchResultUsername = styled.p`
+export const SearchResultMetadata = styled.p`
   font-size: 14px;
-  font-weight: 500;
-  color: ${props => props.theme.text.alt};
+  font-weight: 400;
   line-height: 1.4;
 `;
 
@@ -372,6 +393,12 @@ export const SearchResultNull = styled.div`
   justify-content: center;
   align-items: center;
   padding: 24px;
+  background-color: ${props => props.theme.bg.default};
+  border: 0;
+
+  &:hover {
+    border: 0;
+  }
 
   a {
     margin-top: 16px;
@@ -396,7 +423,7 @@ export const TopCommunityItem = styled.div`
   }
 `;
 
-export const Overlay = styled.div`
+export const ClickAway = styled.div`
   position: fixed;
   top: 0;
   right: 0;

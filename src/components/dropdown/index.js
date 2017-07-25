@@ -24,8 +24,7 @@ const StyledDropdown = styled(FlexCol)`
 const StyledCard = styled(Card)`
   display: flex;
   flex-direction: column;
-  box-shadow: ${Shadow.high} ${({ theme }) =>
-  hexa(theme.text.placeholder, 0.5)};
+  box-shadow: ${Shadow.high} ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
   max-height: 640px;
   overflow: hidden;
   align-items: stretch;

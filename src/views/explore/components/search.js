@@ -15,18 +15,21 @@ import { SEARCH_COMMUNITIES_QUERY } from '../../../api/community';
 import { Spinner } from '../../../components/globals';
 import { CommunityProfile } from '../../../components/profile';
 import {
-  ComposerInputWrapper,
-  ComposerInput,
+  SearchWrapper,
+  SearchInput,
+  SearchInputWrapper,
   SearchSpinnerContainer,
   SearchResultsDropdown,
   SearchResult,
   SearchResultTextContainer,
   SearchResultNull,
   SearchResultImage,
-  SearchResultDisplayName,
-  SearchResultUsername,
+  SearchResultMetaWrapper,
+  SearchResultName,
+  SearchResultMetadata,
   SearchLink,
-  Overlay,
+  SearchIcon,
+  ClickAway,
 } from '../style';
 
 class Search extends Component {
@@ -184,23 +187,25 @@ class Search extends Component {
     } = this.state;
 
     return (
-      <ComposerInputWrapper>
-        <Overlay onClick={this.onBlur} />
+      <SearchWrapper>
+        <ClickAway onClick={this.onBlur} />
 
         {searchIsLoading &&
           <SearchSpinnerContainer>
             <Spinner size={16} color={'brand.default'} />
           </SearchSpinnerContainer>}
-
-        <ComposerInput
-          ref="input"
-          type="text"
-          value={searchString}
-          placeholder="Search for communities or topics..."
-          onChange={this.handleChange}
-          onFocus={this.onFocus}
-          autoFocus={true}
-        />
+        <SearchInputWrapper>
+          <SearchIcon glyph="search" onClick={this.onFocus} />
+          <SearchInput
+            ref="input"
+            type="text"
+            value={searchString}
+            placeholder="Search for communities or topics..."
+            onChange={this.handleChange}
+            onFocus={this.onFocus}
+            autoFocus={true}
+          />
+        </SearchInputWrapper>
 
         {// user has typed in a search string
         searchString &&
@@ -213,15 +218,20 @@ class Search extends Component {
                     key={community.id}
                   >
                     <SearchLink to={`/${community.slug}`}>
-                      <SearchResultImage src={community.profilePhoto} />
+                      <SearchResultImage
+                        community
+                        src={community.profilePhoto}
+                      />
                       <SearchResultTextContainer>
-                        <SearchResultDisplayName>
-                          {community.name}
-                        </SearchResultDisplayName>
-                        {community.metaData &&
-                          <SearchResultUsername>
-                            {community.metaData.members} members
-                          </SearchResultUsername>}
+                        <SearchResultMetaWrapper>
+                          <SearchResultName>
+                            {community.name}
+                          </SearchResultName>
+                          {community.metaData &&
+                            <SearchResultMetadata>
+                              {community.metaData.members} members
+                            </SearchResultMetadata>}
+                        </SearchResultMetaWrapper>
                       </SearchResultTextContainer>
                     </SearchLink>
                   </SearchResult>
@@ -243,7 +253,7 @@ class Search extends Component {
                 </SearchResultTextContainer>
               </SearchResult>}
           </SearchResultsDropdown>}
-      </ComposerInputWrapper>
+      </SearchWrapper>
     );
   }
 }
