@@ -42,7 +42,7 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
 
   return (
     <NotificationCard>
-      <CardLink to={`/thread/${notification.context.id}`} />
+      <CardLink to={`?thread=${notification.context.id}`} />
       <CardContent>
         <SuccessContext>
           <Icon glyph="message-fill" />
