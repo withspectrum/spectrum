@@ -71,8 +71,11 @@ class Search extends Component {
       })
       .then(({ data: { searchCommunities } }) => {
         const searchResults = searchCommunities;
+        const sorted = searchResults.slice().sort((a, b) => {
+          return b.metaData.members - a.metaData.members;
+        });
 
-        if (!searchResults || searchResults.length === 0) {
+        if (!sorted || sorted.length === 0) {
           return this.setState({
             searchResults: [],
             searchIsLoading: false,
@@ -80,9 +83,9 @@ class Search extends Component {
           });
         } else {
           return this.setState({
-            searchResults,
+            searchResults: sorted,
             searchIsLoading: false,
-            focusedSearchResult: searchResults[0].id,
+            focusedSearchResult: sorted[0].id,
           });
         }
       });
@@ -178,6 +181,8 @@ class Search extends Component {
       isFocused,
     } = this.state;
 
+    const isMobile = window.innerWidth < 768;
+
     return (
       <SearchWrapper>
         {searchIsLoading &&
@@ -193,7 +198,7 @@ class Search extends Component {
             placeholder="Search for communities or topics..."
             onChange={this.handleChange}
             onFocus={this.onFocus}
-            autoFocus={true}
+            autoFocus={!isMobile}
           />
         </SearchInputWrapper>
 
