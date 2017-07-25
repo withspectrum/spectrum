@@ -30,7 +30,7 @@ export const modalStyles = (maxWidth: number = 360) => {
       bottom: 0,
       overflowY: 'visible',
       overflowX: 'hidden',
-      zIndex: 1000,
+      zIndex: 1004,
       padding: '1.2rem',
     },
     // modal root
