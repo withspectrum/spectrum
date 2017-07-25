@@ -400,9 +400,10 @@ class ThreadDetailPure extends Component {
     return (
       <ThreadWrapper>
         {!isEditing &&
-          !this.props.slider &&
           <Location>
-            <Icon glyph="view-back" size={16} />
+            {this.props.slider
+              ? <div style={{ width: '16px' }} />
+              : <Icon glyph="view-back" size={16} />}
             <Link to={`/${thread.channel.community.slug}`}>
               {thread.channel.community.name}
             </Link>

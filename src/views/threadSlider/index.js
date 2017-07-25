@@ -45,10 +45,10 @@ class ThreadSlider extends Component {
         </Link>
         <Thread>
           <Close to={this.props.location.pathname}>
-            <CloseButton>
-              <Icon glyph="view-back" size={24} />
-            </CloseButton>
             <CloseLabel>Close</CloseLabel>
+            <CloseButton>
+              <Icon glyph="view-forward" size={24} />
+            </CloseButton>
           </Close>
 
           <ThreadContainer threadId={threadId} slider />

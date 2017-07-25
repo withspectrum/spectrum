@@ -177,7 +177,7 @@ class ThreadContainerPure extends Component {
           : [thread.creator.id];
 
       return (
-        <View>
+        <View slider={this.props.slider}>
           <Head title={title} description={description} />
           <Titlebar
             title={thread.content.title}

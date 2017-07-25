@@ -44,6 +44,7 @@ export const Close = styled(Link)`
   flex: 1 0 auto;
   background: ${props => props.theme.bg.wash};
   max-height: 48px;
+  justify-content: flex-end;
 `;
 
 export const CloseButton = styled.span`
