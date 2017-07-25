@@ -54,8 +54,7 @@ import {
 class ThreadDetailPure extends Component {
   state: {
     isEditing: boolean,
-    viewBody: string,
-    editBody: string,
+    body: any,
     title: string,
     linkPreview: Object,
     linkPreviewTrueUrl: string,
@@ -82,23 +81,9 @@ class ThreadDetailPure extends Component {
       data: JSON.parse(rawLinkPreview.data),
     };
 
-    let viewBody =
-      thread.type === 'SLATE'
-        ? toPlainText(toState(JSON.parse(thread.content.body)))
-        : thread.content.body;
-
-    if (thread.type === 'DRAFTJS')
-      viewBody = toState(JSON.parse(thread.content.body));
-
-    const editBody =
-      thread.type === 'SLATE'
-        ? toState(JSON.parse(thread.content.body))
-        : thread.content.body;
-
     this.state = {
       isEditing: false,
-      viewBody,
-      editBody,
+      body: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
       linkPreview: rawLinkPreview ? cleanLinkPreview.data : null,
       linkPreviewTrueUrl:
@@ -211,7 +196,7 @@ class ThreadDetailPure extends Component {
 
   saveEdit = () => {
     const { dispatch, editThread, thread } = this.props;
-    const { linkPreview, linkPreviewTrueUrl, title, editBody } = this.state;
+    const { linkPreview, linkPreviewTrueUrl, title, body } = this.state;
     const threadId = thread.id;
 
     if (!title || title.length === 0) {
@@ -237,27 +222,24 @@ class ThreadDetailPure extends Component {
       });
     }
 
-    let bodyToSave = editBody;
-    if (thread.type === 'SLATE') {
-      bodyToSave = JSON.stringify(toJSON(bodyToSave));
-    }
-
     const content = {
       title,
-      body: bodyToSave,
+      body: JSON.stringify(toJSON(body)),
     };
 
     // Get the images
-    const filesToUpload = editBody.document.nodes
-      .filter(node => node.type === 'image')
-      .map(image => image.getIn(['data', 'file']))
-      .toJS();
+    const filesToUpload =
+      [] ||
+      body.document.nodes
+        .filter(node => node.type === 'image')
+        .map(image => image.getIn(['data', 'file']))
+        .toJS();
 
     const input = {
       threadId,
       content,
       attachments,
-      filesToUpload,
+      // filesToUpload,
     };
 
     editThread(input)
@@ -269,13 +251,6 @@ class ThreadDetailPure extends Component {
         if (editThread && editThread !== null) {
           this.toggleEdit();
           dispatch(addToastWithTimeout('success', 'Thread saved!'));
-
-          this.setState({
-            viewBody:
-              thread.type === 'SLATE'
-                ? toPlainText(toState(JSON.parse(editThread.content.body)))
-                : editThread.content.body,
-          });
         } else {
           dispatch(
             addToastWithTimeout(
@@ -306,7 +281,7 @@ class ThreadDetailPure extends Component {
 
   changeBody = state => {
     this.setState({
-      editBody: state,
+      body: state,
     });
   };
 
@@ -385,7 +360,7 @@ class ThreadDetailPure extends Component {
       isEditing,
       linkPreview,
       linkPreviewTrueUrl,
-      viewBody,
+      body,
       fetchingLinkPreview,
       flyoutOpen,
       isSavingEdit,
@@ -471,7 +446,6 @@ class ThreadDetailPure extends Component {
                     />
                   </FlyoutRow>}
                 {thread.isCreator &&
-                  thread.type === 'SLATE' &&
                   <FlyoutRow>
                     <IconButton
                       glyph="edit"
@@ -513,62 +487,41 @@ class ThreadDetailPure extends Component {
             </EditDone>}
         </ContextRow>
 
-        {!isEditing &&
-          <span>
-            <ThreadHeading>
-              {thread.content.title}
-            </ThreadHeading>
-            {thread.modifiedAt &&
-              <Edited>
-                Edited {timeDifference(Date.now(), editedTimestamp)}
-              </Edited>}
-            <div className="markdown">
-              {thread.type !== 'DRAFTJS'
-                ? <ThreadContent>
-                    {viewBody}
-                  </ThreadContent>
-                : <Editor readOnly state={viewBody} />}
-            </div>
-
-            {linkPreview &&
-              !fetchingLinkPreview &&
-              <LinkPreview
-                trueUrl={linkPreview.url}
-                data={linkPreview}
-                size={'large'}
-                editable={false}
-                margin={'16px 0 0 0'}
-              />}
-          </span>}
-
-        {isEditing &&
-          <span>
-            <Textarea
-              onChange={this.changeTitle}
-              style={ThreadTitle}
-              value={this.state.title}
-              placeholder={'A title for your thread...'}
-              ref="titleTextarea"
-              autoFocus
-            />
-
+        <span>
+          {isEditing
+            ? <Textarea
+                onChange={this.changeTitle}
+                style={ThreadTitle}
+                value={this.state.title}
+                placeholder={'A title for your thread...'}
+                ref="titleTextarea"
+                autoFocus
+              />
+            : <ThreadHeading>
+                {thread.content.title}
+              </ThreadHeading>}
+          {thread.modifiedAt &&
+            <Edited>
+              Edited {timeDifference(Date.now(), editedTimestamp)}
+            </Edited>}
+          <div className="markdown">
             <Editor
+              readOnly={!this.state.isEditing}
+              state={body}
               onChange={this.changeBody}
-              onKeyDown={this.listenForUrl}
-              state={this.state.editBody}
-              style={ThreadDescription}
-              ref="bodyTextarea"
-              editorRef={editor => (this.bodyEditor = editor)}
-              placeholder="Write more thoughts here, add photos, and anything else!"
-              showLinkPreview={true}
-              linkPreview={{
-                loading: fetchingLinkPreview,
-                remove: this.removeLinkPreview,
-                trueUrl: linkPreviewTrueUrl,
-                data: linkPreview,
-              }}
             />
-          </span>}
+          </div>
+
+          {linkPreview &&
+            !fetchingLinkPreview &&
+            <LinkPreview
+              trueUrl={linkPreview.url}
+              data={linkPreview}
+              size={'large'}
+              editable={false}
+              margin={'16px 0 0 0'}
+            />}
+        </span>
       </ThreadWrapper>
     );
   }
