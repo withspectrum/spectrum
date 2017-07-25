@@ -380,7 +380,9 @@ class ThreadDetailPure extends Component {
       <ThreadWrapper>
         {!isEditing &&
           <Location>
-            <Icon glyph="view-back" size={16} />
+            {this.props.slider
+              ? <div style={{ width: '16px' }} />
+              : <Icon glyph="view-back" size={16} />}
             <Link to={`/${thread.channel.community.slug}`}>
               {thread.channel.community.name}
             </Link>
@@ -391,8 +393,9 @@ class ThreadDetailPure extends Component {
               {thread.channel.name}
             </Link>
           </Location>}
+
         <ContextRow>
-          <Byline to={`/users/${thread.creator.username}`}>
+          <Byline>
             <AuthorAvatar
               size={40}
               radius={40}
@@ -406,9 +409,11 @@ class ThreadDetailPure extends Component {
               }
             />
             <BylineMeta>
-              <AuthorName>
-                {thread.creator.name}
-              </AuthorName>
+              <Link to={`/users/${thread.creator.username}`}>
+                <AuthorName>
+                  {thread.creator.name}
+                </AuthorName>
+              </Link>
               <AuthorUsername>
                 @{thread.creator.username}
                 {thread.creator.isAdmin && <Badge type="admin" />}

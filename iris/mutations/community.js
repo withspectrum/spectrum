@@ -67,7 +67,7 @@ module.exports = {
               );
             }
             // all checks passed
-            return createCommunity(args, currentUser.id);
+            return createCommunity(args, currentUser);
           })
           .then(community => {
             // create a new relationship with the community

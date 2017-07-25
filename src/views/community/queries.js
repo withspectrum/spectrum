@@ -155,33 +155,6 @@ export const getCommunityThreads = graphql(
   threadsQueryOptions
 );
 
-/*
-  Loads the sidebar profile component widget independent of the thread feed.
-  In the future we can compose these queries together since they are fetching
-  such similar data, but for now we're making a decision to keep the data
-  queries specific to each component.
-*/
-const profileQueryOptions = {
-  options: ({ match: { params: { communitySlug } } }) => ({
-    variables: {
-      slug: communitySlug.toLowerCase(),
-    },
-    fetchPolicy: 'cache-first',
-  }),
-};
-
-export const getCommunity = graphql(
-  gql`
-		query getCommunity($slug: String) {
-			community(slug: $slug) {
-        ...communityInfo
-      }
-		}
-    ${communityInfoFragment}
-	`,
-  profileQueryOptions
-);
-
 export const GET_COMMUNITY_CHANNELS_QUERY = gql`
   query getCommunityChannels($slug: String) {
     community(slug: $slug) {

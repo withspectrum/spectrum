@@ -67,9 +67,9 @@ class EmailSettings extends Component {
           <LargeListHeading>Email Preferences</LargeListHeading>
         </ListHeader>
         <ListContainer>
-          {settings.map(setting => {
+          {settings.map((setting, i) => {
             return (
-              <EmailListItem>
+              <EmailListItem key={i}>
                 <Checkbox
                   checked={setting.emailValue}
                   onChange={this.handleChange}

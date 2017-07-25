@@ -18,7 +18,7 @@ export const ChatInputWrapper = styled(FlexRow)`
     position: ${props => (props.focus ? 'fixed' : 'relative')};
     background-color: ${props =>
       props.focus ? props.theme.bg.default : 'transparent'};
-    z-index: 1001;
+    z-index: 1008;
   }
 `;
 
@@ -115,4 +115,33 @@ export const EmojiToggle = styled(IconButton)`
 	@media (max-width: 768px) {
 		display: none;
 	}
+`;
+
+export const PhotoSizeError = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  padding: 8px 16px;
+  background: #fff1cc;
+  border-top: 1px solid #ffd566;
+
+  &:hover {
+    cursor: pointer;
+
+    p {
+      color: ${props => props.theme.brand.default};
+    }
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #715818;
+    max-width: calc(100% - 48px);
+  }
+
+  div {
+    align-self: center;
+  }
 `;

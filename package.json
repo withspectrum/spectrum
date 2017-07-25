@@ -14,8 +14,8 @@
     "uuid": "^3.0.1"
   },
   "dependencies": {
-    "apollo-upload-client": "^4.0.3",
-    "apollo-upload-server": "^2.0.1",
+    "apollo-upload-client": "^5.1.0",
+    "apollo-upload-server": "^2.0.4",
     "axios": "^0.16.2",
     "babel-plugin-styled-components": "^1.1.7",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
@@ -61,7 +61,7 @@
     "passport-google-oauth2": "^0.1.6",
     "passport-twitter": "^1.0.4",
     "pre-commit": "^1.2.2",
-    "query-string": "^4.3.4",
+    "query-string": "^5.0.0",
     "raven": "^2.0.2",
     "raven-js": "^3.14.0",
     "react": "^15.4.1",
@@ -78,7 +78,7 @@
     "react-router-dom": "^4.0.0-beta.7",
     "react-stripe-checkout": "^2.2.5",
     "react-textarea-autosize": "^4.0.5",
-    "react-transition-group": "^1.1.2",
+    "react-transition-group": "^2.2.0",
     "react-trend": "^1.2.4",
     "recompose": "^0.23.1",
     "redraft": "^0.8.0",

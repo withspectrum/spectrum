@@ -49,6 +49,8 @@ module.exports = {
         return getUser({ username: args.input.username }).then(user => {
           // no user exists
           if (!user) return editUser(args, currentUser.id);
+          // if the user is saving themselves, it's safe to edit
+          if (user.id === currentUser.id) return editUser(args, currentUser.id);
           return new UserError(
             'Looks like that username got swooped! Try another?'
           );

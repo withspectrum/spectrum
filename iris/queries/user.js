@@ -44,22 +44,20 @@ module.exports = {
   },
   User: {
     coverPhoto: ({ coverPhoto }) => {
-      const encodedURI = encodeURI(coverPhoto);
       // if the image is not being served from our S3 imgix source, serve it from our web proxy
-      if (encodedURI.indexOf('spectrum.imgix.net') < 0) {
-        return imgix.buildURL(encodedURI, { w: 640, h: 192 });
+      if (coverPhoto && coverPhoto.indexOf('spectrum.imgix.net') < 0) {
+        return imgix.buildURL(coverPhoto, { w: 640, h: 192 });
       }
       // if the image is being served from the S3 imgix source, return that url
-      return encodedURI;
+      return coverPhoto;
     },
     profilePhoto: ({ profilePhoto }) => {
-      const encodedURI = encodeURI(profilePhoto);
       // if the image is not being served from our S3 imgix source, serve it from our web proxy
-      if (encodedURI.indexOf('spectrum.imgix.net') < 0) {
-        return imgix.buildURL(encodedURI, { w: 128, h: 128 });
+      if (profilePhoto && profilePhoto.indexOf('spectrum.imgix.net') < 0) {
+        return imgix.buildURL(profilePhoto, { w: 128, h: 128 });
       }
       // if the image is being served from the S3 imgix source, return that url
-      return encodedURI;
+      return profilePhoto;
     },
     isAdmin: ({ id }: { id: string }) => {
       return isAdmin(id);
@@ -78,27 +76,28 @@ module.exports = {
     },
     everything: (
       { id }: { id: string },
-      { first, after }: PaginationOptions
+      { first, after }: PaginationOptions,
+      { user }
     ) => {
       const cursor = decode(after);
-      // TODO: Make this more performant by doing an actual db query rather than this hacking around
-      return getEverything(id)
-        .then(threads =>
-          paginate(
-            threads,
-            { first, after: cursor },
-            thread => thread.id === cursor
-          )
-        )
-        .then(result => ({
-          pageInfo: {
-            hasNextPage: result.hasMoreItems,
-          },
-          edges: result.list.map(thread => ({
-            cursor: encode(thread.id),
-            node: thread,
-          })),
-        }));
+      // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
+      const lastDigits = cursor.match(/-(\d+)$/);
+      // TODO: Make this more performant by doingan actual db query rather than this hacking around
+      return getEverything(user.id, {
+        first,
+        after:
+          lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10),
+      }).then(result => ({
+        pageInfo: {
+          hasNextPage: result && result.length >= first,
+        },
+        edges: result
+          ? result.map((thread, index) => ({
+              cursor: encode(`${thread.id}-${index}`),
+              node: thread,
+            }))
+          : [],
+      }));
     },
     communityConnection: (user: Object) => ({
       // Don't paginate communities and channels of a user

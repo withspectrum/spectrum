@@ -26,6 +26,7 @@ import UserSettings from './views/userSettings';
 import communitySettings from './views/communitySettings';
 import channelSettings from './views/channelSettings';
 import NewCommunity from './views/newCommunity';
+import ThreadSlider from './views/threadSlider';
 
 import Editor from './components/draftjs-editor';
 
@@ -61,6 +62,7 @@ class Routes extends Component {
             <Route component={ModalRoot} />
             <Route component={Toasts} />
             <Route component={Gallery} />
+            <Route component={ThreadSlider} />
 
             {/*
               Switch only renders the first match. Subrouting happens downstream

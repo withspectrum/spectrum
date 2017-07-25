@@ -30,7 +30,7 @@ export const Title = styled.h1`
   font-weight: 900;
   color: ${props => props.theme.text.default};
   font-size: 24px;
-  letter-spacing: -0.1px
+  letter-spacing: -0.1px;
   padding: 24px 24px 8px;
   text-align: ${props => (props.centered ? 'center' : 'left')};
 `;

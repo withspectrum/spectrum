@@ -50,13 +50,12 @@ export const GET_DIRECT_MESSAGE_THREAD_QUERY = gql`
 `;
 
 export const GET_DIRECT_MESSAGE_THREAD_OPTIONS = {
-  options: ({ id }) =>
-    console.log(id) || {
-      variables: {
-        id,
-      },
-      fetchPolicy: 'cache-and-network',
+  options: ({ id }) => ({
+    variables: {
+      id,
     },
+    fetchPolicy: 'cache-and-network',
+  }),
   props: ({ data: { directMessageThread }, data, ownProps, ...rest }) => ({
     ...rest,
     data: {

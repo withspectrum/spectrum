@@ -4,12 +4,14 @@ import React from 'react';
 import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 import { OutlineButton, Button } from '../../../../components/buttons';
 import { ButtonRow, InputRow, Input } from './style';
 import { Description } from '../../style';
 import { Loading } from '../../../../components/loading';
 
-const Share = ({ community, history }) => {
+const Share = ({ community, history, onboarding }) => {
   if (!community) return <Loading />;
 
   const highlightAndCopy = e => {
@@ -60,20 +62,19 @@ const Share = ({ community, history }) => {
         </Input>
       </InputRow>
 
-      <ButtonRow>
-        <Description centered>
-          You're ready to start building your community - you can view it now,
-          or manage your settings at any time
-        </Description>
-        <OutlineButton
-          onClick={() => history.push(`/${community.slug}/settings`)}
-        >
-          View community settings
-        </OutlineButton>
-        <Button onClick={() => history.push(`/${community.slug}`)}>
-          Go to my community
-        </Button>
-      </ButtonRow>
+      {onboarding &&
+        <ButtonRow>
+          <Description centered>
+            You're ready to start building your community - you can view it now,
+            or manage your settings at any time
+          </Description>
+          <a href={`/${community.slug}/settings`}>
+            <OutlineButton>View community settings</OutlineButton>
+          </a>
+          <a href={`/${community.slug}`}>
+            <Button>Go to my community</Button>
+          </a>
+        </ButtonRow>}
     </div>
   );
 };

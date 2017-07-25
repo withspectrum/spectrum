@@ -55,9 +55,7 @@ module.exports = {
             });
             return newMessage;
           })
-          .then(newMessage => {
-            storeMessage(newMessage, currentUser.id);
-          });
+          .then(newMessage => storeMessage(newMessage, currentUser.id));
       } else {
         return new UserError('Unknown message type on this bad boy.');
       }

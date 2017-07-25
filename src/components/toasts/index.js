@@ -16,15 +16,28 @@ const ToastsPure = ({ toasts }): React$Element<any> => {
   return (
     <Container>
       {toasts.map(toast => {
-        switch (toast.kind) {
+        const { kind, timeout, message, id } = toast;
+        switch (kind) {
           case 'error': {
-            return <ErrorToast key={toast.id}>{toast.message}</ErrorToast>;
+            return (
+              <ErrorToast key={id} timeout={timeout}>
+                {message}
+              </ErrorToast>
+            );
           }
           case 'success': {
-            return <SuccessToast key={toast.id}>{toast.message}</SuccessToast>;
+            return (
+              <SuccessToast key={id} timeout={timeout}>
+                {message}
+              </SuccessToast>
+            );
           }
           case 'neutral': {
-            return <NeutralToast key={toast.id}>{toast.message}</NeutralToast>;
+            return (
+              <NeutralToast key={id} timeout={timeout}>
+                {message}
+              </NeutralToast>
+            );
           }
           default: {
             return <span />;
@@ -35,8 +48,7 @@ const ToastsPure = ({ toasts }): React$Element<any> => {
   );
 };
 
-const Toasts = compose(pure)(ToastsPure);
 const mapStateToProps = state => ({
   toasts: state.toasts.toasts,
 });
-export default connect(mapStateToProps)(Toasts);
+export default connect(mapStateToProps)(ToastsPure);

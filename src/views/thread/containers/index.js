@@ -132,7 +132,11 @@ class ThreadContainerPure extends Component {
   };
 
   render() {
-    const { data: { thread, networkStatus, user }, currentUser } = this.props;
+    const {
+      data: { thread, networkStatus, user },
+      data,
+      currentUser,
+    } = this.props;
     const { isLoading } = this.state;
     const loggedInUser = user || currentUser;
     const dataExists = thread && (thread.content && thread.channel);
@@ -140,7 +144,7 @@ class ThreadContainerPure extends Component {
     const isRestricted =
       dataExists &&
       (thread.channel.isPrivate && !thread.channel.channelPermissions.isMember);
-    const isFrozen = dataExists && thread.channel.isLocked;
+    const isFrozen = dataExists && thread.isLocked;
     const hasRights =
       dataExists &&
       (thread.isCreator || thread.channel.channelPermissions.isMember);
@@ -172,7 +176,7 @@ class ThreadContainerPure extends Component {
           : [thread.creator.id];
 
       return (
-        <View>
+        <View slider={this.props.slider}>
           <Head title={title} description={description} />
           <Titlebar
             title={thread.content.title}
@@ -184,7 +188,11 @@ class ThreadContainerPure extends Component {
           />
           <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
             <Detail type="only">
-              <ThreadDetail thread={thread} viewStatus={networkStatus} />
+              <ThreadDetail
+                thread={thread}
+                viewStatus={networkStatus}
+                slider={this.props.slider}
+              />
 
               <Messages
                 id={thread.id}
@@ -231,7 +239,7 @@ class ThreadContainerPure extends Component {
           <Titlebar
             title={'Thread not found'}
             provideBack={true}
-            backRoute={`/`}
+            backRoute={this.props.slider ? this.props.location.pathname : '/'}
             noComposer
           />
           <Content>
@@ -272,7 +280,6 @@ class ThreadContainerPure extends Component {
 const ThreadContainer = compose(
   toggleChannelSubscriptionMutation,
   getThread,
-  // displayLoadingThreadView,
   pure
 )(ThreadContainerPure);
 

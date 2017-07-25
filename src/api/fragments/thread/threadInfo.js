@@ -1,5 +1,9 @@
 import { gql } from 'react-apollo';
 import { userInfoFragment } from '../user/userInfo';
+import { communityInfoFragment } from '../community/communityInfo';
+import { channelInfoFragment } from '../channel/channelInfo';
+import { userMetaDataFragment } from '../user/userMetaData';
+import { channelMetaDataFragment } from '../channel/channelMetaData';
 
 export const threadInfoFragment = gql`
   fragment threadInfo on Thread {
@@ -7,15 +11,16 @@ export const threadInfoFragment = gql`
     messageCount
     createdAt
     modifiedAt
+    receiveNotifications
+    creator {
+      ...userInfo
+      ...userMetaData
+    }
     channel {
-      id
-      name
-      slug
-      isPrivate
+      ...channelInfo
+      ...channelMetaData
       community {
-        id
-        name
-        slug
+        ...communityInfo
       }
     }
     community {
@@ -34,13 +39,15 @@ export const threadInfoFragment = gql`
       title
       body
     }
-    creator {
-      ...userInfo
-    }
     attachments {
       attachmentType
       data
     }
   }
   ${userInfoFragment}
+  ${userInfoFragment}
+  ${userMetaDataFragment}
+  ${channelMetaDataFragment}
+  ${channelInfoFragment}
+  ${communityInfoFragment}
 `;

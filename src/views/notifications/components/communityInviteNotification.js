@@ -29,7 +29,7 @@ const CommunityInvite = compose(getCommunityById, displayLoadingCard, pure)(
 export const CommunityInviteNotification = ({ notification, currentUser }) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
-  const actors = parseActors(notification.actors, currentUser);
+  const actors = parseActors(notification.actors, currentUser, true);
 
   return (
     <SegmentedNotificationCard>
@@ -56,7 +56,7 @@ export const MiniCommunityInviteNotification = ({
 }) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
-  const actors = parseActors(notification.actors, currentUser);
+  const actors = parseActors(notification.actors, currentUser, true);
 
   return (
     <SegmentedNotificationListRow>

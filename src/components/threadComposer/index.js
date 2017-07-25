@@ -37,9 +37,22 @@ import {
   ContentContainer,
   Actions,
   Dropdowns,
+  ComposerUpsell,
+  UpsellPulse,
+  UpsellDot,
 } from './style';
 
 const ENDS_IN_WHITESPACE = /(\s|\n)$/;
+
+const Upsell = () => {
+  return (
+    <ComposerUpsell>
+      <UpsellDot />
+      <UpsellPulse />
+      <p>Create a thread to get a conversation started in your community.</p>
+    </ComposerUpsell>
+  );
+};
 
 class ThreadComposerWithData extends Component {
   // prop types
@@ -503,6 +516,7 @@ class ThreadComposerWithData extends Component {
     } = this.state;
 
     const { isOpen, data: { networkStatus } } = this.props;
+    const showCommunityOwnerUpsell = this.props.showComposerUpsell || false;
 
     if (networkStatus === 7 && (!availableCommunities || !availableChannels)) {
       return (
@@ -523,8 +537,9 @@ class ThreadComposerWithData extends Component {
         <Container isOpen={isOpen}>
           <Overlay isOpen={isOpen} onClick={this.closeComposer} />
           <Composer isOpen={isOpen} onClick={this.handleOpenComposer}>
+            {!isOpen && showCommunityOwnerUpsell && <Upsell />}
             <Placeholder isOpen={isOpen}>
-              <Icon glyph="post" />
+              <Icon glyph="post" onboarding="foo" tipLocation="top" />
               <PlaceholderLabel>Start a new thread...</PlaceholderLabel>
             </Placeholder>
 

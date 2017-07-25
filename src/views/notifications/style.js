@@ -52,7 +52,7 @@ export const NotificationListContentHeading = styled(ContentHeading)`
 `;
 
 export const Content = styled(FlexCol)`
-  margin-left: 40px;
+  margin-left: 32px;
   align-self: stretch;
 `;
 
@@ -205,13 +205,16 @@ export const TextContent = styled.p`
 
 export const BubbleContainer = styled(FlexRow)`
   flex: none;
-  justify-content: ${props => (props.me ? 'flex-end' : 'flex-start')};
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: ${props => (props.me ? 'flex-end' : 'flex-start')};
 `;
 
 export const BubbleGroupContainer = styled(FlexCol)`
   flex: none;
   max-width: 70%;
   position: relative;
+  flex-direction: row;
 `;
 
 export const Timestamp = styled.span`

@@ -131,7 +131,7 @@ module.exports = {
                 nodes: [
                   {
                     kind: 'text',
-                    text: `![](${urls[fileIndex - 1]})`,
+                    text: `![](${urls[fileIndex - 1]}?max-w=800)`,
                   },
                 ],
               };

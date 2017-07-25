@@ -7,6 +7,7 @@ const {
   getCommunityMetaData,
   getTopCommunities,
   getRecentCommunities,
+  getCommunitiesBySearchString,
 } = require('../models/community');
 const {
   getUserPermissionsInCommunity,
@@ -37,10 +38,12 @@ module.exports = {
 
       return null;
     },
-    topCommunities: (_: any, { amount = 30 }: { amount: number }) =>
+    topCommunities: (_: any, { amount = 20 }: { amount: number }) =>
       getTopCommunities(amount),
     recentCommunities: (_: any, { amount = 10 }: { amount: number }) =>
       getRecentCommunities(),
+    searchCommunities: (_: any, { string }: { string: string }) =>
+      getCommunitiesBySearchString(string),
   },
   Community: {
     communityPermissions: (
@@ -61,8 +64,6 @@ module.exports = {
         }))
       ),
     }),
-    coverPhoto: ({ coverPhoto }) => encodeURI(coverPhoto),
-    profilePhoto: ({ profilePhoto }) => encodeURI(profilePhoto),
     memberConnection: (
       { id },
       { first = 20, after }: PaginationOptions,
