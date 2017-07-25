@@ -18,7 +18,7 @@ export const ChatInputWrapper = styled(FlexRow)`
     position: ${props => (props.focus ? 'fixed' : 'relative')};
     background-color: ${props =>
       props.focus ? props.theme.bg.default : 'transparent'};
-    z-index: 1003;
+    z-index: 1008;
   }
 `;
 
