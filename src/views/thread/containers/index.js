@@ -140,12 +140,11 @@ class ThreadContainerPure extends Component {
     const { isLoading } = this.state;
     const loggedInUser = user || currentUser;
     const dataExists = thread && (thread.content && thread.channel);
-    console.log(data);
     const isUnavailable = !thread || thread.deleted;
     const isRestricted =
       dataExists &&
       (thread.channel.isPrivate && !thread.channel.channelPermissions.isMember);
-    const isFrozen = dataExists && thread.channel.isLocked;
+    const isFrozen = dataExists && thread.isLocked;
     const hasRights =
       dataExists &&
       (thread.isCreator || thread.channel.channelPermissions.isMember);
