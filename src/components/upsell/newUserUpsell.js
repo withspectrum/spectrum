@@ -97,7 +97,6 @@ class UpsellNewUser extends Component {
   };
 
   savedUsername = () => {
-    console.log('savingusername');
     this.setState({
       savedUsername: true,
     });
@@ -105,7 +104,6 @@ class UpsellNewUser extends Component {
 
   render() {
     const { user } = this.props;
-    console.log(this.state);
 
     return (
       <NullCard bg="onboarding" repeat={true} noPadding>
