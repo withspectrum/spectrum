@@ -1,14 +1,14 @@
 import styled, { keyframes } from 'styled-components';
-import { Transition } from '../globals';
+import { Transition, Shadow, hexa } from '../globals';
 
 export const LinkPreviewContainer = styled.a`
   display: flex;
-  flex-direction: ${props => (props.size === 'large' ? 'row' : 'column')};
-  align-items:  ${props => (props.size === 'large' ? 'center' : 'flex-start')};
+  flex-direction: ${props => (props.size === 'large' ? 'row' : 'row')};
+  align-items: ${props => (props.size === 'large' ? 'flex-start' : 'center')};
   border-radius: 4px;
-  background: #fff;
+  background: ${props => props.theme.bg.default};
   border: 1px solid ${({ theme }) => theme.border.default};
-  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.1)};
   overflow: hidden;
   position: relative;
   padding: ${props => (props.padding ? 0 : '16px')};
@@ -19,8 +19,8 @@ export const LinkPreviewContainer = styled.a`
 
   &:hover {
     transition: ${Transition.reaction.on};
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-    border: 1px solid ${({ theme }) => '#cfd7e0'};
+    box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.1)};
+    border: 1px solid ${({ theme }) => theme.border.default};
   }
 `;
 
@@ -32,34 +32,37 @@ export const Close = styled.span`
 
 export const LinkPreviewImage = styled.div`
   overflow: hidden;
-  min-width: ${props => (props.size === 'large' ? '140px' : '100%')};
-  min-height: ${props => (props.size === 'large' ? '140px' : '140px')};
-  background: #f6f78;
+  min-width: ${props => (props.size === 'large' ? '100%' : '140px')};
+  min-height: 140px;
+  background: ${props => props.theme.bg.wash};
   background: ${props => `url("${props.image}") no-repeat center center`};
   background-size: cover;
-  ${props => (props.size === 'large' ? `border-right: 1px solid ${props.theme.border.default}` : `border-bottom: 1px solid ${props.theme.border.default}`)};
+  ${props =>
+    props.size === 'large'
+      ? `border-bottom: 1px solid ${props.theme.border.default}`
+      : `border-right: 1px solid ${props.theme.border.default}`};
 `;
 
 export const LinkPreviewTextContainer = styled.div`
   display: flex;
-  flex: 1 1 auto;
+  flex: auto;
   overflow: hidden;
   flex-direction: column;
-  justify-content: ${props => (props.size === 'large' ? 'center' : 'flex-start')};
-  padding: ${props => (props.padding ? '8px 12px' : 0)};
-  max-width: 100%;
+  justify-content: space-between;
+  padding: ${props => (props.padding ? '12px 16px' : 0)};
+  align-self: stretch;
 `;
 
 export const BaseMeta = styled.p`
   display: flex;
-  flex: 1 1 auto;
+  flex: none;
   line-height: 1.2;
   margin: 2px 0;
-  width: calc(100% - 16px);
   display: inline-block;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: calc(100% - 16px);
 `;
 
 export const MetaTitle = styled(BaseMeta)`
@@ -77,24 +80,24 @@ export const MetaDescription = styled(BaseMeta)`
 `;
 
 export const MetaUrl = styled(BaseMeta)`
-  color: #9FA7B5;
+  color: ${({ theme }) => theme.text.placeholder};
   font-weight: 500;
   margin-top: 8px;
   font-size: 12px;
 `;
 
 export const LinkPreviewSkeleton = styled.div`
-	display: flex;
-	flex-direction: row;
-	align-items:  center;
-	border-radius: 4px;
-	background: #fff;
-	border: 1px solid ${({ theme }) => theme.border.default};
-	box-shadow: 0 1px 2px rgba(0,0,0,0.08);
-	overflow: hidden;
-	position: relative;
-	height: 140px;
-	z-index: 2;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 4px;
+  background: #fff;
+  border: 1px solid ${({ theme }) => theme.border.default};
+  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.1)};
+  overflow: hidden;
+  position: relative;
+  height: 140px;
+  z-index: 2;
   margin: ${props => (props.margin ? props.margin : '16px')};
 `;
 
@@ -108,24 +111,28 @@ const placeHolderShimmer = keyframes`
 `;
 
 export const AnimatedBackground = styled.div`
-	width: 100%;
-	height: 100%;
-	animation-duration: 2s;
-	animation-fill-mode: forwards;
-	animation-iteration-count: infinite;
-	animation-name: ${placeHolderShimmer};
-	animation-timing-function: linear;
-	background: #f6f7f8;
-	background: linear-gradient(to right, #f6f7f8 8%, #F0F1F3 18%, #f6f7f8 33%);
-	background-size: 100% 140px;
-	position: relative;
-	z-index: 3;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 4;
+  animation-duration: 2.5s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  background: linear-gradient(
+    to right,
+    ${({ theme }) => theme.bg.wash} 10%,
+    ${({ theme }) => hexa(theme.generic.default, 0.65)} 20%,
+    ${({ theme }) => theme.bg.wash} 30%
+  );
+  animation-name: ${placeHolderShimmer};
+  z-index: 3;
 `;
 
 const Cover = styled.div`
-	position: absolute;
-	background: #fff;
-	z-index: 4;
+  position: absolute;
+  background: ${props => props.theme.bg.default};
+  z-index: 4;
 `;
 
 export const CoverLeft = styled(Cover)`
