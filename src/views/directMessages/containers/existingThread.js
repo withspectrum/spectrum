@@ -49,7 +49,6 @@ class ExistingThread extends Component {
 
     if (id !== 'new') {
       const thread = threads.filter(thread => thread.id === id)[0];
-      console.log('thread', thread);
 
       return (
         <MessagesContainer>
