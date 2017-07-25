@@ -287,8 +287,8 @@ export const SearchInput = styled.input`
 
 export const SearchSpinnerContainer = styled.span`
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 12px;
+  right: 12px;
   width: 32px;
   height: 32px;
   z-index: 5;
