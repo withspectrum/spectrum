@@ -137,6 +137,7 @@ class ThreadContainerPure extends Component {
       data,
       currentUser,
     } = this.props;
+
     const { isLoading } = this.state;
     const loggedInUser = user || currentUser;
     const dataExists = thread && (thread.content && thread.channel);

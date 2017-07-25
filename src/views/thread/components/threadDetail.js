@@ -66,8 +66,11 @@ class ThreadDetailPure extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {};
+  }
 
-    const { thread } = props;
+  setThreadState() {
+    const { thread } = this.props;
 
     let rawLinkPreview =
       thread.attachments && thread.attachments.length > 0
@@ -91,7 +94,7 @@ class ThreadDetailPure extends Component {
         ? toState(JSON.parse(thread.content.body))
         : thread.content.body;
 
-    this.state = {
+    this.setState({
       isEditing: false,
       viewBody,
       editBody,
@@ -104,7 +107,17 @@ class ThreadDetailPure extends Component {
       flyoutOpen: false,
       receiveNotifications: thread.receiveNotifications,
       isSavingEdit: false,
-    };
+    });
+  }
+
+  componentWillMount() {
+    this.setThreadState();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.thread.id !== this.props.thread.id) {
+      this.setThreadState();
+    }
   }
 
   toggleFlyout = () => {
