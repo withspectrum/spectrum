@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Avatar } from '../../components/avatar';
 import Markdown from '../../components/markdown';
@@ -14,9 +14,13 @@ import {
 } from '../../components/globals';
 
 export const View = styled(FlexCol)`
-  background-image: ${({ theme }) =>
-    `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg
-      .default} 10%, ${theme.bg.default} 90%, ${theme.bg.wash})`};
+  ${props =>
+    !props.slider &&
+    css`
+      background-image: linear-gradient(to right, ${props.theme.bg
+        .wash}, ${props.theme.bg.default} 10%, ${props.theme.bg
+      .default} 90%, ${props.theme.bg.wash});
+    `}
   flex: auto;
   align-items: stretch;
 

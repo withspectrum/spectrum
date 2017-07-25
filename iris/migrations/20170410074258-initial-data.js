@@ -173,6 +173,15 @@ exports.up = function(r, conn) {
               console.log(err);
               throw err;
             }),
+          // index threads by lastActive
+          r
+            .table('threads')
+            .indexCreate('lastActive', r.row('lastActive'))
+            .run(conn)
+            .catch(err => {
+              console.log(err);
+              throw err;
+            }),
           // index reactions by message
           r
             .table('reactions')

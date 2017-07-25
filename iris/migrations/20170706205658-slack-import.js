@@ -27,8 +27,5 @@ exports.up = function(r, conn) {
 };
 
 exports.down = function(r, conn) {
-  return Promise.all([
-    r.tableDrop('communityInvitations').run(conn),
-    r.tableDrop('slackImports').run(conn),
-  ]);
+  return Promise.all([r.tableDrop('slackImports').run(conn)]);
 };

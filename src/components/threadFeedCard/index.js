@@ -101,10 +101,10 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
 
   return (
     <StyledThreadFeedCard hoverable>
-      <CardLink to={`/thread/${props.data.id}`} />
+      <CardLink to={`?thread=${props.data.id}`} />
       <CardContent>
         {formatLocation()}
-        <Link to={`/thread/${props.data.id}`}>
+        <Link to={`?thread=${props.data.id}`}>
           <Title>
             {props.data.content.title}
           </Title>
