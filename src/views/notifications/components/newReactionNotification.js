@@ -32,7 +32,7 @@ import {
 } from '../../../components/threadFeedCard/style';
 
 export const NewReactionNotification = ({ notification, currentUser }) => {
-  const actors = parseActors(notification.actors, currentUser);
+  const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
@@ -124,7 +124,7 @@ export const MiniNewReactionNotification = ({
   currentUser,
   history,
 }) => {
-  const actors = parseActors(notification.actors, currentUser);
+  const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);

@@ -1,7 +1,7 @@
 // @flow
-import { sortByDate } from './utils';
+import { sortByDate } from '../../../helpers/utils';
 
-export const sortAndGroupMessages = messagesToSort => {
+export const sortAndGroupNotificationMessages = messagesToSort => {
   if (!messagesToSort.length > 0) return [];
   let messages = messagesToSort;
   messages = sortByDate(messages, 'timestamp', 'asc');
@@ -12,38 +12,10 @@ export const sortAndGroupMessages = messagesToSort => {
   for (let i = 0; i < messages.length; i++) {
     // on the first message, get the user id and set it to be checked against
     if (i === 0) {
-      checkId = messages[i].sender.id;
-
-      // show a timestamp for when the first message in the conversation was sent
-      masterArray.push([
-        {
-          sender: {
-            id: 'robo',
-          },
-          timestamp: messages[0].timestamp,
-          message: {
-            content: messages[0].timestamp,
-            type: 'robo',
-          },
-        },
-      ]);
+      checkId = messages[i].senderId;
     }
 
-    const robo = [
-      {
-        sender: {
-          id: 'robo',
-        },
-        timestamp: messages[i].timestamp,
-        message: {
-          content: messages[i].timestamp,
-          type: 'robo',
-        },
-      },
-    ];
-
-    const sameUser =
-      messages[i].sender.id !== 'robo' && messages[i].sender.id === checkId; //=> boolean
+    const sameUser = messages[i].senderId === checkId; //=> boolean
     const oldMessage = (current: Object, previous: Object) => {
       //=> boolean
       /*
@@ -78,8 +50,6 @@ export const sortAndGroupMessages = messagesToSort => {
         if (oldMessage(messages[i], messages[i - 1])) {
           // push the batch of messages to master array
           masterArray.push(newArray);
-          // insert a new robotext timestamp
-          masterArray.push(robo);
           // reset the batch of new messages
           newArray = [];
           // populate the new batch of messages with this next old message
@@ -91,15 +61,13 @@ export const sortAndGroupMessages = messagesToSort => {
         }
       }
       // and maintain the checkid
-      checkId = messages[i].sender.id;
+      checkId = messages[i].senderId;
       // if the next message is from a new user
     } else {
       // we push the previous user's messages to the masterarray
       masterArray.push(newArray);
       // if the new users message is older than our preferred variance
       if (i > 0 && oldMessage(messages[i], messages[i - 1])) {
-        // push a robo timestamp
-        masterArray.push(robo);
         newArray = [];
         newArray.push(messages[i]);
       } else {
@@ -110,7 +78,7 @@ export const sortAndGroupMessages = messagesToSort => {
       }
 
       // set a new checkid for the next user
-      checkId = messages[i].sender.id;
+      checkId = messages[i].senderId;
     }
   }
 

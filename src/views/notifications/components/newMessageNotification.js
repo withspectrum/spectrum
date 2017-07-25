@@ -1,5 +1,7 @@
 // @flow
 import React from 'react';
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 import {
   parseActors,
   parseEvent,
@@ -7,6 +9,7 @@ import {
   parseContext,
 } from '../utils';
 import {
+  convertTimestampToDate,
   convertTimestampToTime,
   onlyContainsEmoji,
 } from '../../../helpers/utils';
@@ -18,10 +21,18 @@ import {
 } from '../../../components/threadFeedCard/style';
 import { Bubble, EmojiBubble, ImgBubble } from '../../../components/bubbles';
 import Icon from '../../../components/icons';
+import Badge from '../../../components/badges';
 import {
   MessagesWrapper,
   MessageWrapper,
+  Byline,
+  Name,
+  Timestamp,
+  Time,
+  AvatarLabel,
+  UserAvatar,
 } from '../../../components/chatMessages/style';
+import { sortAndGroupNotificationMessages } from './sortAndGroupNotificationMessages';
 import {
   BubbleGroupContainer,
   NotificationCard,
@@ -34,11 +45,46 @@ import {
   Content,
 } from '../style';
 
+const renderBubbleHeader = (sender: Object, me: boolean) => {
+  if (!sender.name) return;
+
+  return (
+    <Byline me={me}>
+      <Link to={sender.username ? `/users/${sender.username}` : '/'}>
+        <Name>
+          {me ? 'You' : sender.name}
+        </Name>
+      </Link>
+    </Byline>
+  );
+};
+
+const renderAvatar = (sender: Object, me: boolean) => {
+  if (me) return;
+
+  return (
+    <AvatarLabel
+      tipText={sender.name}
+      tipLocation="right"
+      style={{ alignSelf: 'flex-end' }}
+    >
+      <UserAvatar
+        isOnline={sender.isOnline}
+        src={sender.profilePhoto}
+        username={sender.username}
+        link={sender.username ? `/users/${sender.username}` : null}
+      />
+    </AvatarLabel>
+  );
+};
+
 export const NewMessageNotification = ({ notification, currentUser }) => {
-  const actors = parseActors(notification.actors, currentUser);
+  const actors = parseActors(notification.actors, currentUser, false);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context, currentUser);
+  const unsortedMessages = notification.entities.map(notif => notif.payload);
+  const sortedMessages = sortAndGroupNotificationMessages(unsortedMessages);
 
   return (
     <NotificationCard>
@@ -58,53 +104,81 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
               <Icon glyph="message" />
               <hr />
             </HzRule>
-            <BubbleContainer me={false}>
-              <BubbleGroupContainer me={false}>
-                <MessagesWrapper>
-                  {notification.entities
-                    .filter(
-                      ({ payload }) => payload.senderId !== currentUser.id
-                    )
-                    .map(({ payload: message }) => {
-                      if (message.messageType !== 'media') {
-                        const TextBubble = onlyContainsEmoji(
-                          message.content.body
-                        )
-                          ? EmojiBubble
-                          : Bubble;
-                        return (
-                          <MessageWrapper
-                            me={false}
-                            timestamp={convertTimestampToTime(
-                              message.timestamp
-                            )}
-                          >
-                            <TextBubble
-                              me={false}
-                              pending={false}
-                              message={message.content}
-                            />
-                          </MessageWrapper>
-                        );
-                      }
+            {sortedMessages.map((group, i) => {
+              const evaluating = group[0];
+              let sender = actors.asObjects.filter(
+                user => user.id === evaluating.senderId
+              )[0];
+              const me = currentUser ? sender.id === currentUser.id : false;
 
-                      return (
-                        <MessageWrapper
-                          me={false}
-                          timestamp={convertTimestampToTime(message.timestamp)}
-                        >
-                          <ImgBubble
-                            me={false}
-                            pending={false}
-                            imgSrc={message.content.body}
-                            message={message.content}
-                          />
-                        </MessageWrapper>
-                      );
-                    })}
-                </MessagesWrapper>
-              </BubbleGroupContainer>
-            </BubbleContainer>
+              return (
+                <BubbleContainer me={me}>
+                  <BubbleGroupContainer
+                    style={{ marginTop: '16px' }}
+                    me={me}
+                    key={i}
+                  >
+                    {sender.profilePhoto && renderAvatar(sender, me)}
+
+                    <MessagesWrapper>
+                      {renderBubbleHeader(sender, me)}
+                      {group.map((message, i) => {
+                        if (
+                          message.messageType === 'text' ||
+                          message.messageType === 'emoji'
+                        ) {
+                          const emojiOnly = onlyContainsEmoji(
+                            message.content.body
+                          );
+                          const TextBubble = emojiOnly ? EmojiBubble : Bubble;
+                          return (
+                            <MessageWrapper
+                              me={me}
+                              key={message.id}
+                              timestamp={convertTimestampToTime(
+                                message.timestamp
+                              )}
+                            >
+                              <TextBubble
+                                me={me}
+                                persisted={message.persisted}
+                                sender={sender}
+                                message={message.content}
+                                type={message.messageType}
+                                pending={message.id < 0}
+                              />
+                            </MessageWrapper>
+                          );
+                        } else if (message.messageType === 'media') {
+                          return (
+                            <MessageWrapper
+                              me={me}
+                              key={message.id}
+                              timestamp={convertTimestampToTime(
+                                message.timestamp
+                              )}
+                            >
+                              <ImgBubble
+                                me={me}
+                                persisted={message.persisted}
+                                sender={sender}
+                                imgSrc={message.content.body}
+                                message={message.content}
+                                openGallery={() =>
+                                  this.toggleOpenGallery(message.id)}
+                                pending={message.id < 0}
+                              />
+                            </MessageWrapper>
+                          );
+                        } else {
+                          return <div key={i} />;
+                        }
+                      })}
+                    </MessagesWrapper>
+                  </BubbleGroupContainer>
+                </BubbleContainer>
+              );
+            })}
           </AttachmentsWash>
         </Content>
       </CardContent>
@@ -117,14 +191,14 @@ export const MiniNewMessageNotification = ({
   currentUser,
   history,
 }) => {
-  const actors = parseActors(notification.actors, currentUser);
+  const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context, currentUser);
 
   return (
     <NotificationListRow>
-      <CardLink to={`/thread/${notification.context.id}`} />
+      <CardLink to={`?thread=${notification.context.id}`} />
       <CardContent>
         <SuccessContext>
           <Icon glyph="message-fill" />

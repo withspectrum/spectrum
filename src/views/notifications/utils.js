@@ -127,8 +127,11 @@ const actorsToObjects = actors => {
   );
 };
 
-export const parseActors = (actors, currentUser) => {
-  const filteredActors = actors.filter(actor => actor.id !== currentUser.id);
+export const parseActors = (actors, currentUser, removeCurrentUser) => {
+  let filteredActors = actors;
+  if (removeCurrentUser) {
+    filteredActors = actors.filter(actor => actor.id !== currentUser.id);
+  }
   const asString = actorsToString(filteredActors);
   const asObjects = actorsToObjects(filteredActors);
 
