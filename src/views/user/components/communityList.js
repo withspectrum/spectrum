@@ -34,7 +34,6 @@ const CommunityList = props => {
     communities && communities.length !== 0 && communities !== null;
 
   if (networkStatus === 8) {
-    console.log("communities didn't load. here's the props", props);
     return (
       <NullCard
         heading={`Something went wrong loading ${user.username}'s communities...`}

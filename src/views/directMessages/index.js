@@ -8,12 +8,8 @@ import pure from 'recompose/pure';
 import { Link } from 'react-router-dom';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import {
-  getCurrentUserDirectMessageThreads,
-} from '../../api/directMessageThread';
-import {
-  markDirectMessageNotificationsSeenMutation,
-} from '../../api/notification';
+import { getCurrentUserDirectMessageThreads } from '../../api/directMessageThread';
+import { markDirectMessageNotificationsSeenMutation } from '../../api/notification';
 import Icon from '../../components/icons';
 import { displayLoadingState } from './components/loading';
 import ThreadsList from './components/threadsList';
@@ -35,17 +31,6 @@ class DirectMessages extends Component {
     };
   }
 
-  markDmNotificationsSeen = () => {
-    this.props
-      .markDirectMessageNotificationsSeen()
-      .then(({ data: { markAllUserDirectMessageNotificationsRead } }) => {
-        // notifs were marked as seen
-      })
-      .catch(err => {
-        // err
-      });
-  };
-
   subscribe = () => {
     this.setState({
       subscription: this.props.subscribeToUpdatedDirectMessageThreads(),
@@ -61,12 +46,12 @@ class DirectMessages extends Component {
   };
 
   componentDidMount() {
-    this.markDmNotificationsSeen();
+    this.props.markDirectMessageNotificationsSeen();
     this.subscribe();
   }
 
   componentDidUpdate() {
-    this.markDmNotificationsSeen();
+    this.props.markDirectMessageNotificationsSeen();
   }
 
   componentWillUnmount() {
@@ -122,7 +107,11 @@ class DirectMessages extends Component {
         // if they're in the newMessage flow, it should be the composer
         return (
           <View>
-            <NewThread threads={threads} currentUser={currentUser} />
+            <NewThread
+              threads={threads}
+              currentUser={currentUser}
+              setActiveThread={this.setActiveThread}
+            />
           </View>
         );
       } else {
@@ -143,7 +132,8 @@ class DirectMessages extends Component {
     } else {
       // if there is a user, but they've never had a dmThread, send them to /messages/new
       if (
-        data.user && data.user.directMessageThreadsConnection.edges.length === 0
+        data.user &&
+        data.user.directMessageThreadsConnection.edges.length === 0
       ) {
         return (
           <View>
@@ -155,7 +145,11 @@ class DirectMessages extends Component {
               </Link>
             </MessagesList>
 
-            <NewThread threads={threads} currentUser={currentUser} />
+            <NewThread
+              threads={threads}
+              currentUser={currentUser}
+              setActiveThread={this.setActiveThread}
+            />
           </View>
         );
       } else {
@@ -211,6 +205,7 @@ class DirectMessages extends Component {
                 match={match}
                 threads={threads}
                 currentUser={currentUser}
+                setActiveThread={this.setActiveThread}
               />
             </View>
           );

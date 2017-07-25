@@ -33,8 +33,8 @@ export const constructMessage = notification => {
     case 'NEW_THREAD':
       return (
         <span>
-          <Link to={`/@${sender.username}`}>{sender.name}</Link>
-          {' '}posted a new thread in{' '}
+          <Link to={`/@${sender.username}`}>{sender.name}</Link> posted a new
+          thread in{' '}
           <Link to={`/${community.slug}/${channel.slug}`}>
             {community.name}/{channel.name}
           </Link>
@@ -44,9 +44,8 @@ export const constructMessage = notification => {
     case 'NEW_MESSAGE':
       return (
         <span>
-          <Link to={`/@${sender.username}`}>{sender.name}</Link>
-          {' '}replied to your{' '}
-          <Link to={`/thread/${thread.id}`}>thread</Link>:
+          <Link to={`/@${sender.username}`}>{sender.name}</Link> replied to your{' '}
+          <Link to={`?thread=${thread.id}`}>thread</Link>:
         </span>
       );
     default:
@@ -60,17 +59,16 @@ export const constructLinklessMessage = notification => {
     case 'NEW_THREAD':
       return (
         <span>
-          <b>{sender.name}</b>
-          {' '}posted a new thread in{' '}
-          <b>{community.name}/{channel.name}</b>
+          <b>{sender.name}</b> posted a new thread in{' '}
+          <b>
+            {community.name}/{channel.name}
+          </b>
         </span>
       );
     case 'NEW_MESSAGE':
       return (
         <span>
-          <b>{sender.name}</b>
-          {' '}replied to your{' '}
-          <b>thread</b>
+          <b>{sender.name}</b> replied to your <b>thread</b>
         </span>
       );
     default:
@@ -82,7 +80,11 @@ export const constructContent = notification => {
   const { type, sender, content } = notification;
   switch (type) {
     case 'NEW_THREAD':
-      return <p>{content.excerpt}</p>;
+      return (
+        <p>
+          {content.excerpt}
+        </p>
+      );
     case 'NEW_MESSAGE':
       return (
         <div>

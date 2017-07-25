@@ -34,6 +34,23 @@ const CREATE_DIRECT_MESSAGE_THREAD_OPTIONS = {
         variables: {
           input,
         },
+        update: (store, { data: { createDirectMessageThread } }) => {
+          const data = store.readQuery({
+            query: GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY,
+          });
+
+          data.user.directMessageThreadsConnection.edges.push({
+            cursor: createDirectMessageThread.id,
+            node: createDirectMessageThread,
+            __typename: 'DirectMessageThreadEdge',
+          });
+
+          // Write our data back to the cache.
+          store.writeQuery({
+            query: GET_CURRENT_USER_DIRECT_MESSAGE_THREADS_QUERY,
+            data,
+          });
+        },
       }),
   }),
 };

@@ -105,9 +105,10 @@ class MessagesWithData extends Component {
     }
 
     if (messagesExist) {
-      const sortedMessages = sortAndGroupMessages(
-        data.thread.messageConnection.edges
+      const unsortedMessages = data.thread.messageConnection.edges.map(
+        message => message.node
       );
+      const sortedMessages = sortAndGroupMessages(unsortedMessages);
 
       return (
         <ChatWrapper>

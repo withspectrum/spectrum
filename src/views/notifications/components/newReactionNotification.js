@@ -32,7 +32,7 @@ import {
 } from '../../../components/threadFeedCard/style';
 
 export const NewReactionNotification = ({ notification, currentUser }) => {
-  const actors = parseActors(notification.actors, currentUser);
+  const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
@@ -40,7 +40,7 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
 
   return (
     <NotificationCard key={notification.id}>
-      <CardLink to={`/thread/${notification.context.payload.threadId}`} />
+      <CardLink to={`?thread=${notification.context.payload.threadId}`} />
       <CardContent>
         <ReactionContext>
           <Icon glyph="like-fill" />
@@ -124,7 +124,7 @@ export const MiniNewReactionNotification = ({
   currentUser,
   history,
 }) => {
-  const actors = parseActors(notification.actors, currentUser);
+  const actors = parseActors(notification.actors, currentUser, true);
   const event = parseEvent(notification.event);
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
@@ -135,7 +135,7 @@ export const MiniNewReactionNotification = ({
 
   return (
     <NotificationListRow>
-      <CardLink to={`/thread/${notification.context.payload.threadId}`} />
+      <CardLink to={`?thread=${notification.context.payload.threadId}`} />
       <CardContent>
         <ReactionContext>
           <Icon glyph="like-fill" />
