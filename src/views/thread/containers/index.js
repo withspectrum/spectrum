@@ -176,7 +176,7 @@ class ThreadContainerPure extends Component {
           : [thread.creator.id];
 
       return (
-        <View>
+        <View slider={this.props.slider}>
           <Head title={title} description={description} />
           <Titlebar
             title={thread.content.title}
@@ -188,7 +188,11 @@ class ThreadContainerPure extends Component {
           />
           <Content innerRef={scrollBody => (this.scrollBody = scrollBody)}>
             <Detail type="only">
-              <ThreadDetail thread={thread} viewStatus={networkStatus} />
+              <ThreadDetail
+                thread={thread}
+                viewStatus={networkStatus}
+                slider={this.props.slider}
+              />
 
               <Messages
                 id={thread.id}
@@ -235,7 +239,7 @@ class ThreadContainerPure extends Component {
           <Titlebar
             title={'Thread not found'}
             provideBack={true}
-            backRoute={`/`}
+            backRoute={this.props.slider ? this.props.location.pathname : '/'}
             noComposer
           />
           <Content>
@@ -276,7 +280,6 @@ class ThreadContainerPure extends Component {
 const ThreadContainer = compose(
   toggleChannelSubscriptionMutation,
   getThread,
-  // displayLoadingThreadView,
   pure
 )(ThreadContainerPure);
 

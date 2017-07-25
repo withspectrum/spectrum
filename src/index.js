@@ -5,6 +5,8 @@ import ReactDOM from 'react-dom';
 import { ThemeProvider } from 'styled-components';
 //$FlowFixMe
 import { ApolloProvider } from 'react-apollo';
+import queryString from 'query-string';
+import { history } from './helpers/history';
 import { client } from './api';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
@@ -15,6 +17,11 @@ import { addToastWithTimeout } from './actions/toasts';
 import registerServiceWorker from './registerServiceWorker';
 import type { ServiceWorkerResult } from './registerServiceWorker';
 import { track } from './helpers/events';
+
+const { thread } = queryString.parse(history.location.search);
+if (thread) {
+  history.replace(`/thread/${thread}`);
+}
 
 const existingUser = getItemFromStorage('spectrum');
 let store;

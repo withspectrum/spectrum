@@ -41,7 +41,7 @@ export const Nav = styled(FlexRow)`
   padding: 0 16px;
   line-height: 1;
   box-shadow: 0 4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
-  z-index: 1000;
+  z-index: 1001;
 
   @media (max-width: 768px) {
     padding: 0;

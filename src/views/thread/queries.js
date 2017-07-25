@@ -19,7 +19,7 @@ export const GET_THREAD_QUERY = gql`
 export const GET_THREAD_OPTIONS = {
   options: props => ({
     variables: {
-      id: props.match.params.threadId,
+      id: props.threadId || props.match.params.threadId,
     },
     fetchPolicy: 'cache-first',
   }),

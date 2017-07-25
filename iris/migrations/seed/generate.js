@@ -89,9 +89,8 @@ const generateUsersCommunities = (communityId, userId) => {
   // otherwise random chance
   const isMember = isOwner || isModerator ? true : faker.random.boolean();
   // might be blocked as long as they aren't an admin, mod, or member
-  const isBlocked = isOwner || isModerator || isMember
-    ? false
-    : faker.random.boolean();
+  const isBlocked =
+    isOwner || isModerator || isMember ? false : faker.random.boolean();
 
   return {
     id: uuid(),
@@ -132,13 +131,13 @@ const generateUsersChannels = (channels, usersCommunities, userId) => {
     // otherwise random chance
     const isMember = isOwner || isModerator ? true : faker.random.boolean();
     // if a user is admin, mod, or member, they can't be pending, otherwise random
-    const isPending = isOwner || isModerator || isMember
-      ? false
-      : faker.random.boolean();
+    const isPending =
+      isOwner || isModerator || isMember ? false : faker.random.boolean();
     // might be blocked as long as they aren't an admin, mod, pending, or member
-    const isBlocked = isOwner || isModerator || isMember || isPending
-      ? false
-      : faker.random.boolean();
+    const isBlocked =
+      isOwner || isModerator || isMember || isPending
+        ? false
+        : faker.random.boolean();
 
     return {
       id: uuid(),
@@ -173,6 +172,7 @@ const generateThread = (communityId, channelId, creatorId) => {
     isPublished: faker.random.boolean(),
     content,
     attachments: [],
+    lastActive: faker.date.between(createdAt, new Date()),
     edits: [
       {
         timestamp: createdAt,
