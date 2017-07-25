@@ -422,12 +422,3 @@ export const TopCommunityItem = styled.div`
     border-bottom: 0;
   }
 `;
-
-export const ClickAway = styled.div`
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  background: transparent;
-`;

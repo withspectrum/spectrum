@@ -29,7 +29,6 @@ import {
   SearchResultMetadata,
   SearchLink,
   SearchIcon,
-  ClickAway,
 } from '../style';
 
 class Search extends Component {
@@ -158,13 +157,6 @@ class Search extends Component {
     document.removeEventListener('keydown', this.handleKeyPress, false);
   }
 
-  onBlur = () => {
-    return this.setState({
-      searchResults: [],
-      isFocused: false,
-    });
-  };
-
   onFocus = (e: any) => {
     const val = e.target.val;
     if (!val || val.length === 0) return;
@@ -188,8 +180,6 @@ class Search extends Component {
 
     return (
       <SearchWrapper>
-        <ClickAway onClick={this.onBlur} />
-
         {searchIsLoading &&
           <SearchSpinnerContainer>
             <Spinner size={16} color={'brand.default'} />
