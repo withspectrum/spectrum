@@ -398,6 +398,10 @@ export const SearchResultNull = styled.div`
 
   &:hover {
     border: 0;
+
+    p {
+      color: ${props => props.theme.text.alt};
+    }
   }
 
   a {
