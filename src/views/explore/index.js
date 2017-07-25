@@ -14,6 +14,7 @@ import { Column } from '../../components/column';
 import { GoopyThree } from '../../views/homepage/style';
 import { FeaturedCommunity } from '../../components/curation';
 import TopCommunityList from './components/topCommunities';
+import Search from './components/search';
 import RecentCommunityList from './components/recentCommunities';
 import { UpsellCreateCommunity } from '../../components/upsell';
 import {
@@ -26,11 +27,7 @@ import {
   Constellations,
 } from './style';
 
-import {
-  getCommunity,
-  // getTopChannels,
-  // getUserCommunities,
-} from './queries';
+import { getCommunity } from './queries';
 
 const Feature = compose(getCommunity, pure)(FeaturedCommunity);
 
@@ -40,7 +37,6 @@ const ExplorePure = props => {
   });
   const featureSlug = 'frontend';
   const featureNotes = `Frontend News is a community for sharing your favorite resources for frontend engineering. It's been super active since its inception last week and we think news aggregation a really interesting use of Spectrum. Check it out and share your favorite resources!`;
-
 
   return (
     <AppViewWrapper>
@@ -56,19 +52,12 @@ const ExplorePure = props => {
         <Section>
           <SectionWrapper>
             <Column type="primary">
+              <SectionTitle>Search for communities</SectionTitle>
+              <Search />
+
               <SectionTitle>Most popular communities</SectionTitle>
               <TopCommunityList withMeta={true} withDescription={false} />
-            </Column>
-            <Column type="primary">
-              <SectionTitle>Most recent communities</SectionTitle>
-              <RecentCommunityList withMeta={true} withDescription={false} />
-            </Column>
-          </SectionWrapper>
-        </Section>
 
-        <Section>
-          <SectionWrapper>
-            <Column type="primary">
               <UpsellCreateCommunity />
             </Column>
           </SectionWrapper>

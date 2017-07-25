@@ -510,7 +510,7 @@ const getTopCommunities = (amount: number): Array<Object> => {
           return y.count - x.count;
         })
         .map(community => community.id)
-        .slice(0, 10);
+        .slice(0, amount);
 
       return db
         .table('communities')
@@ -529,6 +529,17 @@ const getRecentCommunities = (amount: number): Array<Object> => {
     .run();
 };
 
+const getCommunitiesBySearchString = (
+  string: string
+): Promise<Array<Object>> => {
+  return db
+    .table('communities')
+    .filter(community => community.coerceTo('string').match(`(?i)${string}`))
+    .filter(community => db.not(community.hasFields('deletedAt')))
+    .limit(15)
+    .run();
+};
+
 module.exports = {
   getCommunities,
   getCommunitiesBySlug,
@@ -542,4 +553,5 @@ module.exports = {
   userIsMemberOfAnyChannelInCommunity,
   getTopCommunities,
   getRecentCommunities,
+  getCommunitiesBySearchString,
 };

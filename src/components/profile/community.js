@@ -189,6 +189,10 @@ class CommunityWithData extends Component {
                 <Title>
                   {community.name}
                 </Title>
+                {community.metaData &&
+                  <Subtitle>
+                    {community.metaData.members}
+                  </Subtitle>}
               </ProfileHeaderMeta>
             </ProfileHeaderLink>
             {currentUser &&
@@ -215,6 +219,45 @@ class CommunityWithData extends Component {
               </Button>}
           </ProfileHeader>
         </ProfileCard>
+      );
+    } else if (componentSize === 'listItemWithAction') {
+      return (
+        <ProfileHeader>
+          <CommunityAvatar community src={community.profilePhoto} />
+          <ProfileHeaderLink to={`/${community.slug}`}>
+            <ProfileHeaderMeta>
+              <Title>
+                {community.name}
+              </Title>
+              {community.metaData &&
+                <Subtitle>
+                  {community.metaData.members} members
+                </Subtitle>}
+            </ProfileHeaderMeta>
+          </ProfileHeaderLink>
+          {currentUser &&
+            member &&
+            <Button
+              loading={isLoading}
+              icon="checkmark"
+              gradientTheme="none"
+              color="text.placeholder"
+              hoverColor="text.placeholder"
+              onClick={() => this.toggleMembership(community.id)}
+            >
+              Joined
+            </Button>}
+          {currentUser &&
+            !member &&
+            <Button
+              loading={isLoading}
+              icon="plus-fill"
+              gradientTheme="success"
+              onClick={() => this.toggleMembership(community.id)}
+            >
+              Join
+            </Button>}
+        </ProfileHeader>
       );
     } else {
       return (

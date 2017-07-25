@@ -38,7 +38,7 @@ export const theme = {
   },
   generic: {
     default: '#E6ECF7',
-    alt: '#F6FBFF',
+    alt: '#F6FBFC',
   },
   inactive: '#D6E0EE',
   border: {
