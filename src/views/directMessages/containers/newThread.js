@@ -603,6 +603,7 @@ class NewThread extends Component {
             threadIsBeingCreated: false,
           });
 
+          this.props.setActiveThread(createDirectMessageThread.id);
           this.props.history.push(`/messages/${createDirectMessageThread.id}`);
         })
         .catch(err => {
