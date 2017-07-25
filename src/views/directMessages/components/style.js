@@ -7,6 +7,7 @@ import {
   H3,
   H4,
   P,
+  hexa,
 } from '../../../components/globals';
 
 export const ThreadsListScrollContainer = styled.div`
@@ -24,7 +25,8 @@ export const Wrapper = styled(FlexCol)`
   height: 64px;
   position: relative;
   background: ${props => (props.active ? props.theme.bg.wash : '#fff')};
-  box-shadow: ${props => (props.isUnread ? `inset -2px 0 0 ${props.theme.brand.default}` : 'none')};
+  box-shadow: ${props =>
+    props.isUnread ? `inset -2px 0 0 ${props.theme.brand.default}` : 'none'};
 
   a {
     padding: 8px 12px;
@@ -77,7 +79,8 @@ export const Heading = styled(H3)`
 
 export const Meta = styled(H4)`
   font-weight: ${props => (props.isUnread ? 600 : 400)};
-  color: ${props => (props.isUnread ? props.theme.text.default : props.theme.text.alt)};
+  color: ${props =>
+    props.isUnread ? props.theme.text.default : props.theme.text.alt};
 
   ${props => (props.nowrap ? Truncate() : '')}
 `;
@@ -89,62 +92,63 @@ export const Description = styled(P)`
 `;
 
 export const MessageGroupTextContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	flex: 1 0 calc(100% - 64px);
-	overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 calc(100% - 64px);
+  overflow: hidden;
   position: relative;
   top: -1px;
 `;
 
 export const MessageGroupByline = styled.div`
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: baseline;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
 `;
 
 export const Usernames = styled.span`
-	display: flex;
-	overflow: hidden;
-	flex-wrap: nowrap;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow: hidden;
-	color: ${({ theme }) => theme.text.default};
-	font-weight: ${props => (props.isUnread ? 800 : 600)};
-	line-height: 1.1;
-	margin-bottom: 1px;
-	font-size: 14px;
-	flex: 1 1 100%;
+  display: flex;
+  overflow: hidden;
+  flex-wrap: nowrap;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  color: ${({ theme }) => theme.text.default};
+  font-weight: ${props => (props.isUnread ? 800 : 600)};
+  line-height: 1.1;
+  margin-bottom: 1px;
+  font-size: 14px;
+  flex: 1 1 100%;
 
-	p {
-		${Truncate()}
-	}
+  p {
+    ${Truncate()};
+  }
 `;
 
 export const Timestamp = styled.span`
-	font-size: 12px;
-	text-align: right;
-	color: ${props => (props.isUnread ? props.theme.brand.default : '#909aa7')};
-	padding-right: 4px;
-	display: inline-block;
-	flex: 1 0 auto;
-	margin-left: 8px;
+  font-size: 12px;
+  text-align: right;
+  color: ${props => (props.isUnread ? props.theme.brand.default : '#909aa7')};
+  padding-right: 4px;
+  display: inline-block;
+  flex: 1 0 auto;
+  margin-left: 8px;
 `;
 
 export const Snippet = styled.p`
-	font-size: 13px;
-	font-weight: ${props => (props.unread ? 700 : 500)};
-	color: ${props => (props.unread ? props.theme.text.default : props.theme.text.alt)};
-	padding-right: 4px;
-	display: inline-block;
-	line-height: 1.3;
-	margin-top: 0;
-	max-width: 100%;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+  font-size: 13px;
+  font-weight: ${props => (props.unread ? 700 : 500)};
+  color: ${props =>
+    props.unread ? props.theme.text.default : props.theme.text.alt};
+  padding-right: 4px;
+  display: inline-block;
+  line-height: 1.3;
+  margin-top: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 export const AvatarContainer = styled.div`
@@ -275,7 +279,7 @@ export const SearchSpinnerContainer = styled.span`
 export const SearchResultsDropdown = styled.ul`
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   position: absolute;
   top: ${props => (props.moved ? '104px' : '60px')};
   left: 8px;
@@ -298,8 +302,7 @@ export const SearchResult = styled.li`
   border-bottom: 1px solid ${props => props.theme.border.default};
   background: ${props => (props.focused ? props.theme.bg.wash : '#fff')};
   width: 100%;
-  ${Truncate()}
-  padding: 8px 16px 8px 8px;
+  ${Truncate()} padding: 8px 16px 8px 8px;
 
   &:only-child {
     border-bottom: none;
@@ -360,9 +363,13 @@ export const Pill = styled.li`
   list-style-type: none;
   display: inline-block;
   font-size: 14px;
-  background: ${props => (props.selected ? props.theme.brand.default : 'rgba(123,22,255,0.1)')};
-  box-shadow: inset 0 0 1px rgba(123,22,255,0.15);
-  color: ${props => (props.selected ? '#fff' : props.theme.brand.default)}
+  background: ${props =>
+    props.selected
+      ? props.theme.brand.default
+      : hexa(props.theme.brand.default, 0.1)};
+  box-shadow: inset 0 0 1px rgba(123, 22, 255, 0.15);
+  color: ${props =>
+    props.selected ? props.theme.bg.default : props.theme.brand.default};
   border-radius: 4px;
   padding: 2px 12px;
   margin-right: 4px;
