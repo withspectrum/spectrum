@@ -274,7 +274,6 @@ class InvoiceListItemPure extends Component {
   render() {
     const { isLoading } = this.state;
     const { invoice } = this.props;
-    console.log(invoice);
 
     return (
       <WrapperLi>
