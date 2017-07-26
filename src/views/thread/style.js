@@ -45,6 +45,7 @@ export const Content = styled(FlexRow)`
 export const Input = styled(FlexRow)`
   flex: none;
   justify-content: center;
+  z-index: 1003;
 `;
 
 export const Detail = styled(Column)`
