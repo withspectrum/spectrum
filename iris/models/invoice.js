@@ -12,13 +12,14 @@ export const getInvoicesByCommunity = (id: string): Promise<Array<Object>> => {
   return db.table('invoices').getAll(id, { index: 'communityId' }).run();
 };
 
-export const payInvoice = (input): Promise<Object> => {
+export const payInvoice = (id, stripeData): Promise<Object> => {
   return db
     .table('invoices')
-    .get(input.id)
+    .get(id)
     .update({
       paidAt: new Date(),
+      stripeData,
     })
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(() => db.table('invoices').get(id).run());
 };

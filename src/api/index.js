@@ -101,5 +101,5 @@ export const SERVER_URL =
 
 export const PUBLIC_STRIPE_KEY =
   process.env.NODE_ENV === 'production'
-    ? 'pk_live_8piI030RqVnqDc8QGTUwUj0Z'
-    : 'pk_test_A6pKi4xXOdgg9FrZJ84NW9mP';
+    ? 'pk_live_viV7X5XXD1sw8aN2NgQjiff6'
+    : 'pk_test_8aqk2JeScufGk1zAMe5GxaRq';

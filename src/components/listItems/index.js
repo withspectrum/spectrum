@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 // $FlowFixMe
+import { connect } from 'react-redux';
+// $FlowFixMe
 import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
@@ -14,7 +16,7 @@ import { Avatar } from '../avatar';
 import { Button } from '../buttons';
 import { convertTimestampToDate } from '../../helpers/utils';
 import { PUBLIC_STRIPE_KEY } from '../../api';
-import { payInvoiceMutation } from '../../api/community';
+import { payInvoiceMutation } from '../../api/invoice';
 import { addToastWithTimeout } from '../../actions/toasts';
 import {
   Wrapper,
@@ -272,30 +274,45 @@ class InvoiceListItemPure extends Component {
   render() {
     const { isLoading } = this.state;
     const { invoice } = this.props;
+    console.log(invoice);
 
     return (
-      <div>
-        <Wrapper>
-          <Row>
-            <Col>
-              <Heading>
-                {invoice.note}
-              </Heading>
-              <Meta>
-                ${invoice.amount / 100} ·{' '}
-                {invoice.paidAt
-                  ? `Paid ${convertTimestampToDate(invoice.paidAt)}`
-                  : 'Unpaid'}
-              </Meta>
-            </Col>
-            <ActionContainer className={'action'} />
-          </Row>
-        </Wrapper>
-      </div>
+      <WrapperLi>
+        <Row>
+          <Col>
+            <Heading>
+              {invoice.note}
+            </Heading>
+            <Meta>
+              ${(invoice.amount / 100)
+                .toFixed(2)
+                .replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}{' '}
+              ·{' '}
+              {invoice.paidAt
+                ? `Paid ${convertTimestampToDate(invoice.paidAt)}`
+                : 'Unpaid'}
+            </Meta>
+          </Col>
+          {!invoice.paidAt &&
+            <StripeCheckout
+              token={this.initPayInvoice}
+              stripeKey={PUBLIC_STRIPE_KEY}
+              name="🔐   Pay Securely"
+              description="Secured and Encrypted by Stripe"
+              panelLabel="Pay "
+              amount={invoice.amount}
+              currency="USD"
+            >
+              <Button disabled={isLoading} loading={isLoading}>
+                Pay Now
+              </Button>
+            </StripeCheckout>}
+        </Row>
+      </WrapperLi>
     );
   }
 }
 
-export const InvoiceListItem = compose(payInvoiceMutation, pure)(
+export const InvoiceListItem = compose(payInvoiceMutation, pure, connect())(
   InvoiceListItemPure
 );

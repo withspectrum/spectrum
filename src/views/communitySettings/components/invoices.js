@@ -38,11 +38,7 @@ class InvoicesPure extends Component {
         <ListContainer>
           {invoices &&
             invoices.map(invoice => {
-              return (
-                <section key={invoice.id}>
-                  <InvoiceListItem invoice={invoice} />
-                </section>
-              );
+              return <InvoiceListItem invoice={invoice} key={invoice.id} />;
             })}
         </ListContainer>
       </StyledCard>
