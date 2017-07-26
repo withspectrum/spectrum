@@ -44,6 +44,7 @@ export const Nav = styled(FlexRow)`
   z-index: 1002;
 
   @media (max-width: 768px) {
+    z-index: 1001;
     padding: 0;
     order: 3;
     position: relative;
