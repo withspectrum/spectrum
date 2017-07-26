@@ -291,29 +291,6 @@ export const getCommunityById = graphql(
   getCommunityByIdOptions
 );
 
-const GET_COMMUNITY_BY_SLUG_OPTIONS = {
-  options: ({ slug }) => ({
-    variables: {
-      slug: slug.toLowerCase(),
-    },
-    fetchPolicy: 'cache-and-network',
-  }),
-};
-
-const GET_COMMUNITY_BY_SLUG_QUERY = gql`
-  query getCommunity($slug: String) {
-    community(slug: $slug) {
-      ...communityInfo
-    }
-  }
-  ${communityInfoFragment}
-`;
-
-export const getCommunityBySlug = graphql(
-  GET_COMMUNITY_BY_SLUG_QUERY,
-  GET_COMMUNITY_BY_SLUG_OPTIONS
-);
-
 const SEND_EMAIL_INVITATIONS_MUTATION = gql`
   mutation sendEmailInvites($input: EmailInvitesInput!) {
     sendEmailInvites(input: $input)
