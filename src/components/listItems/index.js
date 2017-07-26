@@ -1,11 +1,23 @@
 //@flow
-import React from 'react';
+import React, { Component } from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+// $FlowFixMe
+import { connect } from 'react-redux';
+// $FlowFixMe
+import compose from 'recompose/compose';
+// $FlowFixMe
+import pure from 'recompose/pure';
+// $FlowFixMe
+import StripeCheckout from 'react-stripe-checkout';
 import Icon from '../icons';
 import Badge from '../badges';
 import { Avatar } from '../avatar';
-
+import { Button } from '../buttons';
+import { convertTimestampToDate } from '../../helpers/utils';
+import { PUBLIC_STRIPE_KEY } from '../../api';
+import { payInvoiceMutation } from '../../api/invoice';
+import { addToastWithTimeout } from '../../actions/toasts';
 import {
   Wrapper,
   WrapperLi,
@@ -18,7 +30,6 @@ import {
   BadgeContainer,
   Lock,
 } from './style';
-
 type CardProps = {
   contents: {
     name: string,
@@ -218,3 +229,89 @@ export const BillingListItem = props => {
     </div>
   );
 };
+
+class InvoiceListItemPure extends Component {
+  state: {
+    isLoading: boolean,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      isLoading: false,
+    };
+  }
+
+  initPayInvoice = token => {
+    this.setState({
+      isLoading: true,
+    });
+
+    const input = {
+      id: this.props.invoice.id,
+      token: JSON.stringify(token),
+    };
+
+    this.props
+      .payInvoice(input)
+      .then(({ data: { payInvoice }, data }) => {
+        this.props.dispatch(
+          addToastWithTimeout('success', 'Invoice paid - thank you!')
+        );
+        this.setState({
+          isLoading: false,
+        });
+      })
+      .catch(err => {
+        this.setState({
+          isLoading: false,
+        });
+        this.props.dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
+  render() {
+    const { isLoading } = this.state;
+    const { invoice } = this.props;
+
+    return (
+      <WrapperLi>
+        <Row>
+          <Col>
+            <Heading>
+              {invoice.note}
+            </Heading>
+            <Meta>
+              ${(invoice.amount / 100)
+                .toFixed(2)
+                .replace(/(\d)(?=(\d{3})+\.)/g, '$1,')}{' '}
+              ·{' '}
+              {invoice.paidAt
+                ? `Paid ${convertTimestampToDate(invoice.paidAt)}`
+                : 'Unpaid'}
+            </Meta>
+          </Col>
+          {!invoice.paidAt &&
+            <StripeCheckout
+              token={this.initPayInvoice}
+              stripeKey={PUBLIC_STRIPE_KEY}
+              name="🔐   Pay Securely"
+              description="Secured and Encrypted by Stripe"
+              panelLabel="Pay "
+              amount={invoice.amount}
+              currency="USD"
+            >
+              <Button disabled={isLoading} loading={isLoading}>
+                Pay Now
+              </Button>
+            </StripeCheckout>}
+        </Row>
+      </WrapperLi>
+    );
+  }
+}
+
+export const InvoiceListItem = compose(payInvoiceMutation, pure, connect())(
+  InvoiceListItemPure
+);

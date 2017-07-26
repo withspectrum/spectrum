@@ -20,6 +20,7 @@ const {
   getPublicChannelsByCommunity,
 } = require('../models/channel');
 import { getSlackImport } from '../models/slackImport';
+import { getInvoicesByCommunity } from '../models/invoice';
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetCommunityArgs } from '../models/community';
@@ -153,6 +154,15 @@ module.exports = {
           sent: data.sent || null,
         };
       });
+    },
+    invoices: ({ id }, _, { user }) => {
+      const currentUser = user;
+      if (!currentUser)
+        return new UserError(
+          'You must be logged in to view community settings.'
+        );
+
+      return getInvoicesByCommunity(id);
     },
   },
 };

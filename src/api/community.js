@@ -5,6 +5,7 @@ import { communityInfoFragment } from './fragments/community/communityInfo';
 import { communityMetaDataFragment } from './fragments/community/communityMetaData';
 import { channelInfoFragment } from './fragments/channel/channelInfo';
 import { userInfoFragment } from './fragments/user/userInfo';
+import { invoiceInfoFragment } from './fragments/invoice/invoiceInfo';
 import { channelMetaDataFragment } from './fragments/channel/channelMetaData';
 
 const profileQueryOptions = {
@@ -321,3 +322,29 @@ export const SEARCH_COMMUNITIES_QUERY = gql`
   ${communityInfoFragment}
   ${communityMetaDataFragment}
 `;
+
+const GET_COMMUNITY_INVOICES_OPTIONS = {
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+    fetchPolicy: 'network-only',
+  }),
+};
+
+const GET_COMMUNITY_INVOICES_QUERY = gql`
+  query getCommunityInvoices($id: ID) {
+    community(id: $id) {
+      id
+      invoices {
+        ...invoiceInfo
+      }
+    }
+  }
+  ${invoiceInfoFragment}
+`;
+
+export const getCommunityInvoices = graphql(
+  GET_COMMUNITY_INVOICES_QUERY,
+  GET_COMMUNITY_INVOICES_OPTIONS
+);

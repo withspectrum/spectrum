@@ -24,6 +24,7 @@ const User = require('./types/User');
 const DirectMessageThread = require('./types/DirectMessageThread');
 const Notification = require('./types/Notification');
 const Meta = require('./types/Meta');
+const Invoice = require('./types/Invoice');
 
 const ThreadQueries = require('./queries/thread');
 const channelQueries = require('./queries/channel');
@@ -45,6 +46,7 @@ const directMessageThreadMutations = require('./mutations/directMessageThread');
 const notificationMutations = require('./mutations/notification');
 const userMutations = require('./mutations/user');
 const metaMutations = require('./mutations/meta');
+const invoiceMutations = require('./mutations/invoice');
 
 const messageSubscriptions = require('./subscriptions/message');
 const notificationSubscriptions = require('./subscriptions/notification');
@@ -98,6 +100,7 @@ const resolvers = merge(
   notificationMutations,
   userMutations,
   metaMutations,
+  invoiceMutations,
   // subscriptions
   messageSubscriptions,
   notificationSubscriptions,
@@ -124,6 +127,7 @@ const schema = makeExecutableSchema({
     DirectMessageThread,
     Notification,
     Meta,
+    Invoice,
   ],
   resolvers,
 });
