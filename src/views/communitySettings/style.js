@@ -131,3 +131,12 @@ export const CustomMessageTextAreaStyles = {
   marginTop: '8px',
   fontSize: '16px',
 };
+
+export const UnpaidBadge = styled.div`
+  padding: 4px 16px;
+  background: ${props => props.theme.brand.default};
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 100px;
+`;

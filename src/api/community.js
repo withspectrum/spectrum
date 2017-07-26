@@ -5,6 +5,7 @@ import { communityInfoFragment } from './fragments/community/communityInfo';
 import { communityMetaDataFragment } from './fragments/community/communityMetaData';
 import { channelInfoFragment } from './fragments/channel/channelInfo';
 import { userInfoFragment } from './fragments/user/userInfo';
+import { invoiceInfoFragment } from './fragments/invoice/invoiceInfo';
 import { channelMetaDataFragment } from './fragments/channel/channelMetaData';
 
 const profileQueryOptions = {
@@ -290,6 +291,29 @@ export const getCommunityById = graphql(
   getCommunityByIdOptions
 );
 
+const GET_COMMUNITY_BY_SLUG_OPTIONS = {
+  options: ({ slug }) => ({
+    variables: {
+      slug: slug.toLowerCase(),
+    },
+    fetchPolicy: 'cache-and-network',
+  }),
+};
+
+const GET_COMMUNITY_BY_SLUG_QUERY = gql`
+  query getCommunity($slug: String) {
+    community(slug: $slug) {
+      ...communityInfo
+    }
+  }
+  ${communityInfoFragment}
+`;
+
+export const getCommunityBySlug = graphql(
+  GET_COMMUNITY_BY_SLUG_QUERY,
+  GET_COMMUNITY_BY_SLUG_OPTIONS
+);
+
 const SEND_EMAIL_INVITATIONS_MUTATION = gql`
   mutation sendEmailInvites($input: EmailInvitesInput!) {
     sendEmailInvites(input: $input)
@@ -321,3 +345,54 @@ export const SEARCH_COMMUNITIES_QUERY = gql`
   ${communityInfoFragment}
   ${communityMetaDataFragment}
 `;
+
+const GET_COMMUNITY_INVOICES_OPTIONS = {
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+    fetchPolicy: 'network-only',
+  }),
+};
+
+const GET_COMMUNITY_INVOICES_QUERY = gql`
+  query getCommunityInvoices($id: ID) {
+    community(id: $id) {
+      id
+      invoices {
+        ...invoiceInfo
+      }
+    }
+  }
+  ${invoiceInfoFragment}
+`;
+
+export const getCommunityInvoices = graphql(
+  GET_COMMUNITY_INVOICES_QUERY,
+  GET_COMMUNITY_INVOICES_OPTIONS
+);
+
+const PAY_INVOICE_MUTATION = gql`
+  mutation payInvoice($input: PayInvoiceInput!) {
+    payInvoice(input: $input) {
+      ...invoiceInfo
+    }
+  }
+  ${invoiceInfoFragment}
+`;
+
+const PAY_INVOICE_OPTIONS = {
+  props: ({ input, mutate }) => ({
+    payInvoice: input =>
+      mutate({
+        variables: {
+          input,
+        },
+      }),
+  }),
+};
+
+export const payInvoiceMutation = graphql(
+  PAY_INVOICE_MUTATION,
+  PAY_INVOICE_OPTIONS
+);

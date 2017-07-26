@@ -93,6 +93,7 @@ const Community = /* GraphQL */ `
 		threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!
 		metaData: CommunityMetaData
 		slackImport: SlackImport
+		invoices: [Invoice]
 	}
 
 	extend type Query {

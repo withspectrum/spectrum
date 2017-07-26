@@ -24,6 +24,7 @@ const User = require('./types/User');
 const DirectMessageThread = require('./types/DirectMessageThread');
 const Notification = require('./types/Notification');
 const Meta = require('./types/Meta');
+const Invoice = require('./types/Invoice');
 
 const ThreadQueries = require('./queries/thread');
 const channelQueries = require('./queries/channel');
@@ -124,6 +125,7 @@ const schema = makeExecutableSchema({
     DirectMessageThread,
     Notification,
     Meta,
+    Invoice,
   ],
   resolvers,
 });
