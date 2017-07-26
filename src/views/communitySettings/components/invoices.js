@@ -16,6 +16,7 @@ import {
   LargeListHeading,
   ListContainer,
   ListFooter,
+  Description,
 } from '../../../components/listItems/style';
 import { UnpaidBadge } from '../style';
 
@@ -31,11 +32,12 @@ class InvoicesPure extends Component {
 
     return (
       <StyledCard>
-        <ListHeader>
-          <LargeListHeading>Invoices</LargeListHeading>
-        </ListHeader>
+        <LargeListHeading>Community Billing</LargeListHeading>
+        <Description>
+          Communities are billed 10¢ per member, per month.
+        </Description>
 
-        <ListContainer>
+        <ListContainer style={{ marginTop: '16px' }}>
           {invoices &&
             invoices.map(invoice => {
               return <InvoiceListItem invoice={invoice} key={invoice.id} />;
