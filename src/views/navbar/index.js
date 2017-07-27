@@ -281,7 +281,7 @@ class Navbar extends Component {
       const showUnreadFavicon = dmUnseenCount > 0 || allUnseenCount > 0;
 
       return (
-        <Nav>
+        <Nav isMobile>
           <Head showUnreadFavicon={showUnreadFavicon} />
           <Section left hideOnMobile>
             <LogoLink to="/">
