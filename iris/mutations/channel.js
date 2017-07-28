@@ -36,7 +36,7 @@ import type {
   CreateChannelArguments,
   EditChannelArguments,
 } from '../models/channel';
-import { getThreadsByChannel, deleteThread } from '../models/thread';
+import { getThreadsByChannelToDelete, deleteThread } from '../models/thread';
 
 type Context = {
   user: Object,
@@ -170,7 +170,9 @@ module.exports = {
               // delete the channel requested from the client side user
               const deleteTheInputChannel = deleteChannel(channelId);
               // get all the threads in the channel to prepare for deletion
-              const getAllThreadsInChannel = getThreadsByChannel(channelId);
+              const getAllThreadsInChannel = getThreadsByChannelToDelete(
+                channelId
+              );
               // update all the UsersChannels objects in the db to be non-members
               const removeRelationships = removeMembersInChannel(channelId);
 
