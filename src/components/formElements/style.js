@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { FlexRow, Transition } from '../globals';
+import { FlexRow, Transition, hexa } from '../globals';
 
 export const StyledLabel = styled.label`
   display: flex;
@@ -271,7 +271,8 @@ export const InputOverlay = styled.div`
   width: 100%;
   height: 100%;
   color: ${({ theme }) => theme.text.reverse};
-  ${/* background-color: ${({ theme }) => theme.bg.reverse}; */ ''} padding: 8px;
+  background-color: ${({ theme }) => hexa(theme.bg.reverse, 0.6)};
+  padding: 8px;
   border-radius: ${props => (props.user ? '100%' : '8px')};
   opacity: 1;
 

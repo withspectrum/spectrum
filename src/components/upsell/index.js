@@ -11,6 +11,7 @@ import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
 import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../api';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
+import { Avatar } from '../avatar';
 import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
 import {
@@ -584,7 +585,7 @@ class UpsellUpgradeToProPure extends Component {
     return (
       <NullCard bg="onboarding">
         <Profile>
-          <img alt={currentUser.name} src={`${currentUser.profilePhoto}`} />
+          <Avatar src={`${currentUser.profilePhoto}`} />
           <span>PRO</span>
         </Profile>
         <Title>Upgrade to Pro</Title>
