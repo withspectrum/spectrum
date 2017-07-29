@@ -122,7 +122,7 @@ class UpgradeModal extends React.Component {
     const { user } = this.props;
     const { upgradeError, isOpen, isLoading } = this.state;
     const emailProps = {
-      emailAddress: 'support@spectrum.chat',
+      emailAddress: 'help@spectrum.chat',
       subject: 'Cancel my Pro plan on Spectrum',
       body: `Hi there, please cancel my Pro plan on Spectrum for ${user.id}`,
     };
