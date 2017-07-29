@@ -62,7 +62,10 @@ class EmailSettings extends Component {
     const settings = parseNotificationTypes(notifications);
 
     return (
-      <StyledCard>
+      <StyledCard
+        smallOnly={this.props.smallOnly}
+        largeOnly={this.props.largeOnly}
+      >
         <ListHeader>
           <LargeListHeading>Email Preferences</LargeListHeading>
         </ListHeader>
