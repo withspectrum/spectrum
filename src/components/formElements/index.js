@@ -1,6 +1,6 @@
 //@flow
 import React, { Component } from 'react';
-
+import { Avatar } from '../avatar';
 import Icon from '../icons';
 
 import {
@@ -55,11 +55,7 @@ export const PhotoInput = (props: InputProps) => {
       <InputOverlay user={props.user}>
         <Icon glyph="photo" />
       </InputOverlay>
-      <ProfileImage
-        src={`${props.defaultValue}`}
-        user={props.user}
-        role="presentation"
-      />
+      <Avatar size={48} src={`${props.defaultValue}`} user={props.user} />
       <StyledHiddenInput
         type="file"
         id="file"

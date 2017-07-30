@@ -138,6 +138,7 @@ export const Profile = styled.div`
     border-radius: 8px;
     line-height: 1.5;
     border: 2px solid #fff;
+    z-index: 9;
   }
 `;
 

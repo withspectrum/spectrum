@@ -71,9 +71,10 @@ export const ActionContainer = styled(FlexCol)`
 
 export const StyledCard = styled(Card)`
   padding: 12px 16px 12px 20px;
+  display: ${props => (props.smallOnly ? 'none' : 'flex')};
 
   @media (max-width: 768px) {
-    display: none;
+    display: ${props => (props.largeOnly ? 'none' : 'flex')};
   }
 `;
 
