@@ -567,7 +567,7 @@ class UpsellUpgradeToProPure extends Component {
           upgradeError: '',
         });
         // if the upgrade is triggered from a modal, close the modal
-        this.props.complete();
+        this.props.complete && this.props.complete();
       })
       .catch(err => {
         this.setState({
