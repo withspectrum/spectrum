@@ -20,6 +20,15 @@ export const getThreads = (
     .run();
 };
 
+// this is used to get all threads that need to be marked as deleted whenever a channel is deleted
+export const getThreadsByChannelToDelete = channelId => {
+  return db
+    .table('threads')
+    .getAll(channelId, { index: 'channelId' })
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .run();
+};
+
 export const getThreadsByChannel = (
   channelId: string,
   { first, after }

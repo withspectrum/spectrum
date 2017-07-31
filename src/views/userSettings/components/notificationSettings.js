@@ -102,7 +102,10 @@ class NotificationSettings extends Component {
       : this.unsubscribeFromWebPush;
 
     return (
-      <StyledCard>
+      <StyledCard
+        smallOnly={this.props.smallOnly}
+        largeOnly={this.props.largeOnly}
+      >
         <ListHeader>
           <LargeListHeading>Notification Preferences</LargeListHeading>
         </ListHeader>

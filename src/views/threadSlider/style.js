@@ -29,7 +29,7 @@ export const Overlay = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+  z-index: 1004;
 
   ${animation};
 `;
@@ -42,7 +42,7 @@ export const Thread = styled.div`
   bottom: 0;
   width: 650px;
   background: #fff;
-  z-index: 1001;
+  z-index: 1008;
   box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
   flex-direction: column;
   max-width: 100%;
