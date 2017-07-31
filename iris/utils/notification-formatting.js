@@ -138,7 +138,12 @@ const formatNotification = (incomingNotification, currentUserId) => {
       const newThreadCount =
         threads.length > 1 ? `New threads were` : 'A new thread was';
 
-      href = `/thread/${threads[0].id}`;
+      const urlBase =
+        notification.context.type === 'DIRECT_MESSAGE_THREAD'
+          ? 'messages'
+          : 'thread';
+
+      href = `/${urlBase}/${threads[0].id}`;
       title = `${newThreadCount} published in ${context}`;
       body = sentencify(threads.map(thread => `"${thread.content.title}"`));
       break;
