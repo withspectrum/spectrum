@@ -12,9 +12,9 @@ import {
 export default () =>
   processQueue(SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL, job => {
     debug(`\nnew job: ${job.id}`);
-    const { invoice, community, user } = job.data;
+    const { invoice, community, to } = job.data;
 
-    if (!user.email) {
+    if (!to) {
       debug(`user#${user.id} does not have an email, aborting`);
       return Promise.resolve();
     }
@@ -22,7 +22,7 @@ export default () =>
     try {
       return sendEmail({
         TemplateId: COMMUNITY_INVOICE_RECEIPT_TEMPLATE,
-        To: user.email,
+        To: to,
         TemplateModel: {
           invoice,
           community,

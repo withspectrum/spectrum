@@ -302,13 +302,9 @@
       font-size: 48px;
     }
 
-    span.name {
+    .invoice-id {
       font-size: 14px;
-      font-weight: 400;
-      line-height: 1;
       color: #747E8D;
-      font-style: normal;
-      vertical-align: bottom;
     }
 
     span.name-large {
@@ -371,10 +367,14 @@
       color: #00C383;
       border-radius: 8px;
       background: #fff;
+      display: block;
+      margin: 16px 0;
+      text-align: center;
+      font-weight: 600;
     }
 
     .branding {
-      margin: 32px 0 64px;;
+      margin: 32px 0;;
     }
 
     </style>
@@ -396,30 +396,26 @@
                     <td class="content-cell">
                       <div class="branding"><img src="https://s3.amazonaws.com/spectrum-chat/default_images/logomark.png" width="140" /></div>
                       <h1 class="title">Your payment has been received.</h1>
-                      <p>Your payment for {{invoice.amount}} was received for the {{community.name}} community on Spectrum. Thank you!</p>
+                      <p>Your payment for <b>{{invoice.amount}}</b> was received for the {{community.name}} community on Spectrum. Thank you!</p>
  
                       <div class="section-divider"></div>
                       <table class="invoice-receipt">
                         <tr>
-                          <td align="left">
-                            <table>
-                              <tr>
-                                <td><b>{{invoice.note}}</b></td>
-                              </tr>
-                              <tr>
-                                <td>{{invoice.paidAt}}</td>
-                              </tr>
-                              <tr>
-                                <td>Paid with {{invoice.brand}} ending in {{invoice.last4}}</td>
-                              </tr>
-                              <tr>
-                                <td>Invoice #{{invoice.id}}</td>
-                              </tr>
-                            </table>
-                          </td>
-                          <td align="right">
+                          <td>For <b>{{invoice.note}}</b></td>
+                        </tr>
+                        <tr>
+                          <td>Paid on {{invoice.paidAt}}</td>
+                        </tr>
+                        <tr>
+                          <td>Paid with {{invoice.brand}} ending in {{invoice.last4}}</td>
+                        </tr>
+                        <tr>
+                          <td>
                             <span class="paid-button">Paid</span>
                           </td>
+                        </tr>
+                        <tr>
+                          <td class="invoice-id">Invoice #{{invoice.id}}</td>
                         </tr>
                       </table>
                       <div class="section-divider"></div>

@@ -8,7 +8,7 @@ import startCommunityNotificationQueue from './queues/community-notification';
 import startThreadNotificationQueue from './queues/thread-notification';
 import startSlackImportQueue from './queues/slack-import';
 import startCommunityInviteQueue from './queues/community-invite';
-// import startCommunityInvoicePaidQueue from './queues/community-invoice-paid';
+import startCommunityInvoicePaidQueue from './queues/community-invoice-paid';
 
 console.log('\n🛠 Athena, the processing worker, is starting...');
 debug('Logging with debug enabled!');
@@ -21,7 +21,7 @@ startCommunityNotificationQueue();
 startThreadNotificationQueue();
 startSlackImportQueue();
 startCommunityInviteQueue();
-// startCommunityInvoicePaidQueue();
+startCommunityInvoicePaidQueue();
 
 console.log(
   `\n🗄 Queues open for business ${(process.env.NODE_ENV === 'production' &&

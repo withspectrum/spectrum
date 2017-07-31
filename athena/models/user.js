@@ -1,6 +1,10 @@
 // @flow
 const { db } = require('./db');
 
+export const getUsers = (ids: Array<string>): Promise<Array<Object>> => {
+  return db.table('users').getAll(...ids).run();
+};
+
 export const getUserById = (id: string): Promise<Object> => {
   return db.table('users').get(id).run();
 };
