@@ -1,6 +1,7 @@
 // @flow
 const debug = require('debug')('hermes');
 import startSendNewMessageEmailWorker from './queues/send-new-message-email';
+import startSendNewThreadEmailWorker from './queues/send-new-thread-email';
 import startSendCommunityInviteEmailWorker from './queues/send-community-invite-email';
 import startSendUserWelcomeEmailWorker from './queues/send-user-welcome-email';
 import startSendNewCommunityWelcomeEmailWorker from './queues/send-new-community-welcome-email';
@@ -11,6 +12,7 @@ debug('Logging with debug enabled!');
 console.log('');
 
 startSendNewMessageEmailWorker();
+startSendNewThreadEmailWorker();
 startSendCommunityInviteEmailWorker();
 startSendUserWelcomeEmailWorker();
 startSendNewCommunityWelcomeEmailWorker();

@@ -72,22 +72,26 @@ module.exports = {
         );
       }
 
-      return getUsersSettings(currentUser.id)
-        .then(settings => {
-          let newSettings = Object.assign({}, settings, {
-            ...settings,
-          });
-          let oldVal =
-            settings.notifications.types[input.notificationType][
+      return (
+        getUsersSettings(currentUser.id)
+          // destructure the notifications so we don't pass the id into the model downstream
+          // trying to update a primary key 'id' will throw a reql error
+          .then(({ id, ...settings }) => {
+            let newSettings = Object.assign({}, settings, {
+              ...settings,
+            });
+            let oldVal =
+              settings.notifications.types[input.notificationType][
+                input.deliveryMethod
+              ];
+            newSettings['notifications']['types'][input.notificationType][
               input.deliveryMethod
-            ];
-          newSettings['notifications']['types'][input.notificationType][
-            input.deliveryMethod
-          ] = !oldVal;
+            ] = !oldVal;
 
-          return updateUsersNotificationSettings(currentUser.id, newSettings);
-        })
-        .then(() => getUsers([currentUser.id]).then(users => users[0]));
+            return updateUsersNotificationSettings(currentUser.id, newSettings);
+          })
+          .then(() => getUsers([currentUser.id]).then(users => users[0]))
+      );
     },
     subscribeWebPush: (
       _,

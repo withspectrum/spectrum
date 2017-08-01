@@ -15,3 +15,5 @@ export const COMMUNITY_INVOICE_PAID_NOTIFICATION =
   'community invoice paid notification';
 export const SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL =
   'send community invoice receipt email';
+export const SEND_THREAD_CREATED_NOTIFICATION_EMAIL =
+  'send thread created notification email';

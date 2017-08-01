@@ -39,5 +39,6 @@ export const updateUsersNotificationSettings = (
     .update({
       ...settings,
     })
-    .run();
+    .run()
+    .then(results => console.log('results', results));
 };

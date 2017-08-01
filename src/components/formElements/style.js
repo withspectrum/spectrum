@@ -164,7 +164,7 @@ export const StyledHiddenInput = styled.input`
 export const StyledCheckboxWrapper = styled(FlexRow)`
   color: ${({ theme }) => theme.text.alt};
   display: flex;
-  align-items: center;
+  align-items: ${props => props.align};
   line-height: 1.4;
   cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
 
