@@ -7,7 +7,7 @@ import pure from 'recompose/pure';
 import { View } from './style';
 import { usersQuery } from '../../api/queries';
 import { displayLoadingState } from '../../components/loading';
-import Chart from '../../components/chart';
+import Chart from '../../components/spark-line';
 import getGrowthPerDay from '../../utils/get-growth-per-day';
 import formatNumber from '../../utils/format-number';
 import Search from './components/search';
