@@ -130,10 +130,6 @@ export default () =>
               return Promise.all([notification, recipients]);
             })
             .then(([notification, recipients]) => {
-              console.log(
-                'the existing notification object is :\n',
-                notification
-              );
               debug('mark notification as new for all recipients');
               // for each user trigger a notification
               return Promise.all(
@@ -176,7 +172,6 @@ export default () =>
             })
             .then(([notification, recipients]) => {
               debug('create a notification for every recipient');
-              console.log('the new notification object is :\n', notification);
               return Promise.all(
                 recipients
                   // don't trigger a notification for the person who just posted the thread
