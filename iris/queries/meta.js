@@ -32,14 +32,14 @@ module.exports = {
     },
     subscriptionGrowth: (_: any, __: any, { user }: GraphQLContext) => {
       if (!isAdmin(user.id)) return null;
-      return getGrowth('subscriptions', {
-        subscription: ['amount', 'created'],
+      return getGrowth('recurringPayments', {
+        stripeData: { created: true, plan: ['amount'] },
       }).then(subscriptions =>
-        subscriptions.map(({ subscription }) => ({
+        subscriptions.map(({ stripeData }) => ({
           // convert .created from seconds to ms
-          createdAt: new Date(subscription.created * 1000),
-          amount: subscription.amount,
-          plan: subscription.plan,
+          createdAt: new Date(stripeData.created * 1000),
+          amount: stripeData.plan.amount,
+          plan: stripeData.plan.name,
         }))
       );
     },

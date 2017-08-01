@@ -15,10 +15,9 @@ type Props = {
   type?: Type,
 };
 
-const Chart = (props: Props) => {
-  const data = props.type !== 'absolute'
-    ? props.data
-    : relativeToAbsolute(props.data);
+const SparkLine = (props: Props) => {
+  const data =
+    props.type !== 'absolute' ? props.data : relativeToAbsolute(props.data);
 
   return (
     <Trend
@@ -32,4 +31,4 @@ const Chart = (props: Props) => {
   );
 };
 
-export default Chart;
+export default SparkLine;
