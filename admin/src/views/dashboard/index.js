@@ -14,7 +14,7 @@ import {
   HeaderZoneBoy,
   Column,
 } from './style';
-import Chart from '../../components/chart';
+import Chart from '../../components/spark-line';
 import { overviewQuery } from '../../api/queries';
 import { displayLoadingState } from '../../components/loading';
 import getGrowthPerDay from '../../utils/get-growth-per-day';
@@ -48,7 +48,7 @@ const OverviewNumbers = ({ data }) => {
   const threadGrowth = getGrowthPerDay(meta.threadGrowth);
   const messageGrowth = getGrowthPerDay(meta.messageGrowth);
   const subscriptionGrowth = getGrowthPerDay(meta.subscriptionGrowth, day =>
-    day.reduce((total, sub) => total + sub.amount, 0)
+    day.reduce((total, { amount }) => total + amount, 0)
   );
 
   return (
@@ -56,7 +56,9 @@ const OverviewNumbers = ({ data }) => {
       <Subsection>
         <Column>
           <Subtext>Users</Subtext>
-          <Count>{userCount}</Count>
+          <Count>
+            {userCount}
+          </Count>
         </Column>
         <Chart height={56} data={userGrowth} />
       </Subsection>
@@ -64,7 +66,9 @@ const OverviewNumbers = ({ data }) => {
       <Subsection>
         <Column>
           <Subtext>Communities</Subtext>
-          <Count>{communityCount}</Count>
+          <Count>
+            {communityCount}
+          </Count>
         </Column>
         <Chart height={56} data={communityGrowth} />
       </Subsection>
@@ -72,7 +76,9 @@ const OverviewNumbers = ({ data }) => {
       <Subsection>
         <Column>
           <Subtext>Channels</Subtext>
-          <Count>{channelCount}</Count>
+          <Count>
+            {channelCount}
+          </Count>
         </Column>
         <Chart height={56} data={channelGrowth} />
       </Subsection>
@@ -80,7 +86,9 @@ const OverviewNumbers = ({ data }) => {
       <Subsection>
         <Column>
           <Subtext>Threads</Subtext>
-          <Count>{threadCount}</Count>
+          <Count>
+            {threadCount}
+          </Count>
         </Column>
         <Chart height={56} data={threadGrowth} />
       </Subsection>
@@ -88,7 +96,9 @@ const OverviewNumbers = ({ data }) => {
       <Subsection>
         <Column>
           <Subtext>Messages</Subtext>
-          <Count>{messageCount}</Count>
+          <Count>
+            {messageCount}
+          </Count>
         </Column>
         <Chart height={56} data={messageGrowth} />
       </Subsection>
@@ -96,7 +106,9 @@ const OverviewNumbers = ({ data }) => {
       <Subsection>
         <Column>
           <Subtext>Money</Subtext>
-          <Count>${totalPerMonth}/m</Count>
+          <Count>
+            ${totalPerMonth}/m
+          </Count>
         </Column>
         <Chart type="absolute" height={56} data={subscriptionGrowth} />
       </Subsection>

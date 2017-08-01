@@ -8,6 +8,14 @@
     "styled-components": "^2.0.0"
   },
   "dependencies": {
+    "@vx/curve": "^0.0.127",
+    "@vx/event": "^0.0.127",
+    "@vx/gradient": "^0.0.129",
+    "@vx/grid": "^0.0.131",
+    "@vx/scale": "^0.0.127",
+    "@vx/shape": "^0.0.131",
+    "@vx/tooltip": "^0.0.134",
+    "d3-array": "^1.2.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.5",
