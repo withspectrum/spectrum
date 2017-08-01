@@ -74,6 +74,11 @@ class DashboardPure extends Component {
 
     // Got no data
     if (noData) {
+      // if no data exists and the fetch is done, redirect home
+      if (networkStatus === 7) {
+        return this.graduate();
+      }
+
       return (
         <AppViewWrapper>
           <Head title={title} description={description} />
