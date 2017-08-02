@@ -1,13 +1,11 @@
 // @flow
 const debug = require('debug')('athena:queue:community-invitation');
-import { COMMUNITY_INVITE_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import { getCommunityById } from '../models/community';
 import { getUserPermissionsInCommunity } from '../models/usersCommunities';
 import { storeNotification } from '../models/notification';
 import { getUserByEmail } from '../models/user';
-import processQueue from '../../shared/bull/process-queue';
 import createQueue from '../../shared/bull/create-queue';
 import {
   storeUsersNotifications,
@@ -15,8 +13,6 @@ import {
 } from '../models/usersNotifications';
 import { SEND_COMMUNITY_INVITE_EMAIL } from './constants';
 const sendCommunityInviteEmailQueue = createQueue(SEND_COMMUNITY_INVITE_EMAIL);
-
-// const sendCommunityInvitateEmailQueue = createQueue(SEND_COMMUNITY_INVITE_EMAIL);
 
 const addToSendCommunityInviteEmailQueue = (
   recipient,
@@ -141,5 +137,4 @@ const processMessageNotificationQueue = job => {
     });
 };
 
-export default () =>
-  processQueue(COMMUNITY_INVITE_NOTIFICATION, processMessageNotificationQueue);
+export default processMessageNotificationQueue;
