@@ -28,6 +28,14 @@ class Navbar extends Component {
             <Icon glyph={'profile'} />
             <Label>Users</Label>
           </IconLink>
+
+          <IconLink
+            data-active={url.includes('/communities')}
+            to="/communities"
+          >
+            <Icon glyph={'community'} />
+            <Label>Communities</Label>
+          </IconLink>
         </Section>
       </Nav>
     );
