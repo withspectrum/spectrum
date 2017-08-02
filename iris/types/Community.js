@@ -111,6 +111,7 @@ const Community = /* GraphQL */ `
 		toggleCommunityMembership(communityId: ID!): Community
 		sendSlackInvites(input: SendSlackInvitesInput!): Community
 		sendEmailInvites(input: EmailInvitesInput!): Boolean
+		pinThread(threadId: ID!, communityId: ID!, value: String): Community
 	}
 `;
 

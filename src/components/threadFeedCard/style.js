@@ -143,3 +143,30 @@ export const Lock = styled.span`
   position: relative;
   top: 1px;
 `;
+
+export const Pinned = styled.span`
+  position: absolute;
+  top: -16px;
+  right: -20px;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  border-radius: 0 12px 0 0;
+`;
+
+export const PinnedBanner = styled.span`
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  background: #ffd566;
+  transform: rotate(45deg);
+  top: -22px;
+  right: -22px;
+`;
+
+export const PinnedIconWrapper = styled.span`
+  position: relative;
+  right: -28px;
+  top: -1px;
+  color: ${props => props.theme.bg.default};
+`;

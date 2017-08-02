@@ -8,6 +8,7 @@ import {
   getCommunities,
   getCommunitiesBySlug,
   unsubscribeFromAllChannelsInCommunity,
+  setPinnedThreadInCommunity,
 } from '../models/community';
 import {
   createGeneralChannel,
@@ -446,6 +447,30 @@ module.exports = {
               });
             });
         }
+      });
+    },
+    pinThread: (_, { threadId, communityId, value }, { user }) => {
+      const currentUser = user;
+      if (!currentUser) {
+        return new UserError(
+          'You must be signed in to pin a thread in this community.'
+        );
+      }
+
+      return getUserPermissionsInCommunity(
+        communityId,
+        currentUser.id
+      ).then(permissions => {
+        if (!permissions.isOwner) {
+          return new UserError("You don't have permission to do this.");
+        }
+        console.log(
+          'updating community pinned thread ',
+          communityId,
+          'with value',
+          value
+        );
+        return setPinnedThreadInCommunity(communityId, value);
       });
     },
   },
