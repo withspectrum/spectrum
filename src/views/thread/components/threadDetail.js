@@ -486,6 +486,7 @@ class ThreadDetailPure extends Component {
               <IconButton glyph="settings" onClick={this.toggleFlyout} />
               <Flyout>
                 {isCommunityOwner &&
+                  !thread.channel.isPrivate &&
                   <FlyoutRow>
                     <IconButton
                       glyph={isPinned ? 'pin-fill' : 'pin'}
