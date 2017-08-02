@@ -368,10 +368,11 @@ const PIN_THREAD_OPTIONS = {
           value,
         },
         update: (store, { data: { pinThread } }) => {
-          console.log('data in update', pinThread);
-
           const data = store.readQuery({
             query: GET_THREAD_QUERY,
+            variables: {
+              id: threadId,
+            },
           });
 
           const newVal = Object.assign({}, ...data, {

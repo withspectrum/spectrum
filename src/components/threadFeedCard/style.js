@@ -148,25 +148,25 @@ export const Pinned = styled.span`
   position: absolute;
   top: -16px;
   right: -20px;
-  width: 44px;
-  height: 44px;
+  width: 60px;
+  height: 60px;
   overflow: hidden;
   border-radius: 0 12px 0 0;
 `;
 
 export const PinnedBanner = styled.span`
   position: absolute;
-  width: 44px;
-  height: 44px;
-  background: #ffd566;
+  width: 60px;
+  height: 60px;
+  background: #f1a32e;
   transform: rotate(45deg);
-  top: -22px;
-  right: -22px;
+  top: -30px;
+  right: -30px;
 `;
 
 export const PinnedIconWrapper = styled.span`
   position: relative;
-  right: -28px;
-  top: -1px;
-  color: ${props => props.theme.bg.default};
+  right: -34px;
+  top: 2px;
+  color: #fff;
 `;

@@ -479,7 +479,7 @@ class ThreadDetailPure extends Component {
                 {isCommunityOwner &&
                   <FlyoutRow>
                     <IconButton
-                      glyph={isPinned ? 'flag-fill' : 'freeze'}
+                      glyph={isPinned ? 'pin-fill' : 'pin'}
                       hoverColor="space.light"
                       tipText={
                         isPinned

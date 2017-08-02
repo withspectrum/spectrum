@@ -115,7 +115,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
             <Pinned>
               <PinnedBanner />
               <PinnedIconWrapper>
-                <Icon glyph="flag-fill" size={16} />
+                <Icon glyph="pin-fill" size={24} />
               </PinnedIconWrapper>
             </Pinned>}
         </Link>
