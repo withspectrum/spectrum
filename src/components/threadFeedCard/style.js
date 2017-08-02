@@ -159,6 +159,10 @@ export const Pinned = styled.span`
   height: 64px;
   overflow: hidden;
   border-radius: 0 12px 0 0;
+
+  @media (max-width: 768px) {
+    border-radius: 0;
+  }
 `;
 
 export const PinnedBanner = styled.span`
