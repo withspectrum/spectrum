@@ -47,7 +47,6 @@ module.exports = {
       getCommunitiesBySearchString(string),
   },
   Community: {
-    pinnedThreadId: (community, _, __) => community.pinnedThreadId || null,
     communityPermissions: (
       { id }: { id: String },
       _: any,
