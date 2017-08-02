@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { FlexCol } from '../globals';
 
 const BaseColumn = styled(FlexCol)`
-  padding: 32px 16px;
+  margin: 32px 16px;
   align-items: stretch;
 
   @media(max-width: 768px) {
