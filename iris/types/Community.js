@@ -87,6 +87,7 @@ const Community = /* GraphQL */ `
 		isMember: Boolean
 		isModerator: Boolean
 		isBlocked: Boolean
+		pinnedThreadId: String
 		communityPermissions: CommunityPermissions!
 		channelConnection: CommunityChannelsConnection!
 		memberConnection(first: Int = 20, after: String): CommunityMembersConnection!

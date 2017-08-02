@@ -108,6 +108,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
           <Title>
             {props.data.content.title}
           </Title>
+          {props.isPinned && <p>I'm pinned!</p>}
         </Link>
         <MetaRow>
           {// for now we know this means there is a link attachment

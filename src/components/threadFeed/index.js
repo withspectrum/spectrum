@@ -117,6 +117,7 @@ class ThreadFeedPure extends Component {
                   key={thread.node.id}
                   data={thread.node}
                   viewContext={viewContext}
+                  isPinned={thread.node.id === this.props.pinnedThreadId}
                 />
               );
             })}

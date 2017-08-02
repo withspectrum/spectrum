@@ -208,6 +208,7 @@ class CommunityViewPure extends Component {
                   }
                   isNewAndOwned={isNewAndOwned}
                   community={community}
+                  pinnedThreadId={community.pinnedThreadId}
                 />
               </Column>
             </CoverRow>
