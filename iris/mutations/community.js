@@ -8,12 +8,14 @@ import {
   getCommunities,
   getCommunitiesBySlug,
   unsubscribeFromAllChannelsInCommunity,
+  setPinnedThreadInCommunity,
 } from '../models/community';
 import {
   createGeneralChannel,
   getChannelsByCommunity,
   getChannelsByUserAndCommunity,
   deleteChannel,
+  getChannels,
 } from '../models/channel';
 import {
   createMemberInDefaultChannels,
@@ -32,6 +34,7 @@ import type {
   CreateCommunityArguments,
   EditCommunityArguments,
 } from '../models/community';
+import { getThreads } from '../models/thread';
 import { getSlackImport, markSlackImportAsSent } from '../models/slackImport';
 import { getThreadsByCommunity, deleteThread } from '../models/thread';
 import { slugIsBlacklisted } from '../utils/permissions';
@@ -447,6 +450,39 @@ module.exports = {
             });
         }
       });
+    },
+    pinThread: (_, { threadId, communityId, value }, { user }) => {
+      const currentUser = user;
+      if (!currentUser) {
+        return new UserError(
+          'You must be signed in to pin a thread in this community.'
+        );
+      }
+
+      const promises = [
+        getUserPermissionsInCommunity(communityId, currentUser.id),
+        getThreads([threadId]),
+      ];
+
+      return Promise.all([...promises])
+        .then(([permissions, threads]) => {
+          if (!permissions.isOwner) {
+            return new UserError("You don't have permission to do this.");
+          }
+
+          const threadToEvaluate = threads[0];
+
+          // we have to ensure the thread isn't in a private channel
+          return getChannels([threadToEvaluate.channelId]);
+        })
+        .then(channels => {
+          if (channels[0].isPrivate) {
+            return new UserError(
+              'Only threads in public channels can be pinned.'
+            );
+          }
+          return setPinnedThreadInCommunity(communityId, value);
+        });
     },
   },
 };
