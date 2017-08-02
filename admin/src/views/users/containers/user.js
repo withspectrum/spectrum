@@ -27,6 +27,7 @@ class UserContainer extends Component {
             return (
               <UserCommunitySettings
                 community={community}
+                user={user}
                 key={Math.random()}
               />
             );

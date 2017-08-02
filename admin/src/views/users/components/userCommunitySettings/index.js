@@ -75,6 +75,7 @@ class UserCommunitySettings extends Component {
   save = () => {
     let input = { ...this.state.permissions };
     input['id'] = this.props.community.id;
+    input['userId'] = this.props.user.id;
 
     this.setState({
       isLoading: true,
@@ -82,7 +83,7 @@ class UserCommunitySettings extends Component {
 
     this.props
       .saveUserCommunityPermissions(input)
-      .then(({ data: { saveUserCommunityPermissions } }) => {
+      .then(({ data: { saveUserCommunityPermissions }, data }) => {
         this.setState({
           isLoading: false,
         });
@@ -113,9 +114,8 @@ class UserCommunitySettings extends Component {
     const roles = Object.keys(community.communityPermissions).filter(
       key => community.communityPermissions[key] && key.indexOf('__') === -1
     );
-    const role = roles.indexOf('isOwner') > -1
-      ? 'isOwner'
-      : (roles && roles[0]) || '';
+    const role =
+      roles.indexOf('isOwner') > -1 ? 'isOwner' : (roles && roles[0]) || '';
     const permissions = Object.keys(this.state.permissions);
 
     return (
@@ -123,8 +123,12 @@ class UserCommunitySettings extends Component {
         <Row>
           <Avatar size={32} radius={4} src={community.profilePhoto} />
           <Column>
-            <Name>{community.name}</Name>
-            <Username>{role.substr(2)}</Username>
+            <Name>
+              {community.name}
+            </Name>
+            <Username>
+              {role.substr(2)}
+            </Username>
           </Column>
         </Row>
 
@@ -147,7 +151,9 @@ class UserCommunitySettings extends Component {
               })}
             </List>
             <Save>
-              <Button onClick={this.save} loading={isLoading}>Save</Button>
+              <Button onClick={this.save} loading={isLoading}>
+                Save
+              </Button>
             </Save>
           </EditForm>}
       </Container>
