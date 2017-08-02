@@ -490,7 +490,7 @@ class ThreadDetailPure extends Component {
                   <FlyoutRow>
                     <IconButton
                       glyph={isPinned ? 'pin-fill' : 'pin'}
-                      hoverColor="space.light"
+                      hoverColor={isPinned ? 'warn.default' : 'special.default'}
                       tipText={
                         isPinned
                           ? 'Un-pin thread'

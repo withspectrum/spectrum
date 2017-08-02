@@ -79,7 +79,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
         );
       case 'channel':
       default:
-        return;
+        return null;
     }
   };
 

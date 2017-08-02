@@ -1,6 +1,13 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { FlexCol, FlexRow, Transition, Shadow, hexa } from '../globals';
+import {
+  FlexCol,
+  FlexRow,
+  Transition,
+  Shadow,
+  hexa,
+  Gradient,
+} from '../globals';
 import Card from '../card';
 
 export const StyledThreadFeedCard = styled(Card)`
@@ -148,25 +155,27 @@ export const Pinned = styled.span`
   position: absolute;
   top: -16px;
   right: -20px;
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   overflow: hidden;
   border-radius: 0 12px 0 0;
 `;
 
 export const PinnedBanner = styled.span`
   position: absolute;
-  width: 60px;
-  height: 60px;
-  background: #f1a32e;
+  width: 72px;
+  height: 72px;
+  background-color: ${props => props.theme.special.default};
+  background-image: ${props =>
+    Gradient(props.theme.special.alt, props.theme.special.default)};
   transform: rotate(45deg);
-  top: -30px;
-  right: -30px;
+  top: -36px;
+  right: -36px;
 `;
 
 export const PinnedIconWrapper = styled.span`
   position: relative;
-  right: -34px;
-  top: 2px;
-  color: #fff;
+  right: -36px;
+  top: 4px;
+  color: ${props => props.theme.text.reverse};
 `;
