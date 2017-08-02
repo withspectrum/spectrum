@@ -13,7 +13,7 @@ import { withApollo } from 'react-apollo';
 import { withRouter } from 'react-router';
 import { Spinner } from '../../../../components/globals';
 import { throttle } from '../../../../helpers/utils';
-import { SEARCH_COMMUNITIES_QUERY } from '../../../../api/queries';
+import { SEARCH_COMMUNITIES_QUERY } from '../../../../api/community';
 import {
   ComposerInputWrapper,
   SearchSpinnerContainer,

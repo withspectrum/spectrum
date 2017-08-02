@@ -20,3 +20,8 @@ export const SectionHeader = styled.h1`
   background: ${props => props.theme.bg.default};
   color: ${props => props.theme.text.default};
 `;
+
+export const ListWrapper = styled.div`
+  display: flex;
+  flex: 0 1 auto;
+`;

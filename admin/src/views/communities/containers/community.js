@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import pure from 'recompose/pure';
-import { getCommunityBySlug } from '../../../api/queries';
+import { getCommunityBySlug } from '../../../api/community';
 import { displayLoadingState } from '../../../components/loading';
 import { CommunityProfileHeader } from '../../../components/profileHeader';
 import CommunitySettings from '../components/communitySettings';

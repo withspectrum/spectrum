@@ -44,18 +44,6 @@ const USER_INFORMATION_QUERY = gql`
 
 export const usersQuery = graphql(USER_INFORMATION_QUERY);
 
-const COMMUNITY_INFORMATION_QUERY = gql`
-  query {
-    meta {
-      communityGrowth {
-        createdAt
-      }
-    }
-  }
-`;
-
-export const communitiesQuery = graphql(COMMUNITY_INFORMATION_QUERY);
-
 export const SEARCH_USERS_QUERY = gql`
   query searchUsers($string: String) {
     searchUsers(string: $string) {
@@ -88,36 +76,4 @@ export const GET_USER_BY_USERNAME_OPTIONS = {
 export const getUserByUsername = graphql(
   GET_USER_BY_USERNAME_QUERY,
   GET_USER_BY_USERNAME_OPTIONS
-);
-
-export const SEARCH_COMMUNITIES_QUERY = gql`
-  query searchCommunities($string: String) {
-    searchCommunities(string: $string) {
-      ...communityInfo
-    }
-  }
-  ${communityInfoFragment}
-`;
-
-export const GET_COMMUNITY_BY_SLUG_QUERY = gql`
-  query community($slug: String) {
-    community(slug: $slug) {
-      ...communityInfo
-    }
-  }
-  ${communityInfoFragment}
-`;
-
-export const GET_COMMUNITY_BY_SLUG_OPTIONS = {
-  options: ({ slug }) => ({
-    variables: {
-      slug,
-    },
-    fetchPolicy: 'cache-and-network',
-  }),
-};
-
-export const getCommunityBySlug = graphql(
-  GET_COMMUNITY_BY_SLUG_QUERY,
-  GET_COMMUNITY_BY_SLUG_OPTIONS
 );
