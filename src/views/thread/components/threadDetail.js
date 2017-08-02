@@ -393,6 +393,15 @@ class ThreadDetailPure extends Component {
     const isPinned = thread.channel.community.pinnedThreadId === thread.id;
     const communityId = thread.channel.community.id;
 
+    if (thread.channel.isPrivate) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Only threads in public channels can be pinned.'
+        )
+      );
+    }
+
     return pinThread({
       threadId: thread.id,
       communityId,

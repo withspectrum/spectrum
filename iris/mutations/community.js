@@ -15,6 +15,7 @@ import {
   getChannelsByCommunity,
   getChannelsByUserAndCommunity,
   deleteChannel,
+  getChannels,
 } from '../models/channel';
 import {
   createMemberInDefaultChannels,
@@ -33,6 +34,7 @@ import type {
   CreateCommunityArguments,
   EditCommunityArguments,
 } from '../models/community';
+import { getThreads } from '../models/thread';
 import { getSlackImport, markSlackImportAsSent } from '../models/slackImport';
 import { getThreadsByCommunity, deleteThread } from '../models/thread';
 import { slugIsBlacklisted } from '../utils/permissions';
@@ -457,21 +459,30 @@ module.exports = {
         );
       }
 
-      return getUserPermissionsInCommunity(
-        communityId,
-        currentUser.id
-      ).then(permissions => {
-        if (!permissions.isOwner) {
-          return new UserError("You don't have permission to do this.");
-        }
-        console.log(
-          'updating community pinned thread ',
-          communityId,
-          'with value',
-          value
-        );
-        return setPinnedThreadInCommunity(communityId, value);
-      });
+      const promises = [
+        getUserPermissionsInCommunity(communityId, currentUser.id),
+        getThreads([threadId]),
+      ];
+
+      return Promise.all([...promises])
+        .then(([permissions, threads]) => {
+          if (!permissions.isOwner) {
+            return new UserError("You don't have permission to do this.");
+          }
+
+          const threadToEvaluate = threads[0];
+
+          // we have to ensure the thread isn't in a private channel
+          return getChannels([threadToEvaluate.channelId]);
+        })
+        .then(channels => {
+          if (channels[0].isPrivate) {
+            return new UserError(
+              'Only threads in public channels can be pinned.'
+            );
+          }
+          return setPinnedThreadInCommunity(communityId, value);
+        });
     },
   },
 };
