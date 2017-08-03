@@ -8,6 +8,9 @@ export const userSettingsFragment = gql`
           newMessageInThreads {
             email
           }
+          newThreadCreated {
+            email
+          }
         }
       }
     }
