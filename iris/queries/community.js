@@ -13,7 +13,7 @@ const {
   getUserPermissionsInCommunity,
   getMembersInCommunity,
 } = require('../models/usersCommunities');
-const { getThreadsByChannels } = require('../models/thread');
+const { getThreadsByChannels, getThreads } = require('../models/thread');
 const {
   getChannelsByCommunity,
   getChannelsByUserAndCommunity,
@@ -89,12 +89,14 @@ module.exports = {
         }));
     },
     threadConnection: (
-      { id }: { id: string },
+      { id, ...community }: { id: string, community: object },
       { first = 10, after }: PaginationOptions,
       { user }
     ) => {
       const cursor = decode(after);
       const currentUser = user;
+      const hasPinnedThread =
+        community.pinnedThreadId && community.pinnedThreadId !== null;
 
       // if the user is signed in, only return stories for the channels
       // the user is a member of -> this will ensure that they don't see
@@ -115,22 +117,48 @@ module.exports = {
       return channelsToGetThreadsFor
         .then(channels => channels.map(channel => channel.id))
         .then(channels => getThreadsByChannels(channels))
-        .then(threads =>
-          paginate(
+        .then(threads => {
+          const paginatedThreads = paginate(
             threads,
             { first, after: cursor },
             thread => thread.id === cursor
-          )
-        )
-        .then(result => ({
-          pageInfo: {
-            hasNextPage: result.hasMoreItems,
-          },
-          edges: result.list.map(thread => ({
-            cursor: encode(thread.id),
-            node: thread,
-          })),
-        }));
+          );
+
+          // if the community has a pinnedThreadId, fetch it
+          const getPinnedThread = hasPinnedThread
+            ? getThreads([community.pinnedThreadId])
+            : null;
+
+          return Promise.all([paginatedThreads, getPinnedThread]);
+        })
+        .then(([paginatedThreads, pinnedThread]) => {
+          // result will be used to return the graphQL pagination data
+          let result;
+
+          if (pinnedThread !== null && pinnedThread.length > 0) {
+            // if a pinnedThread was found, filter it out of the list of fetched threads
+            // to avoid duplication in the feed, and then add the pinned thread to the
+            // Front of the array
+            let arr = paginatedThreads.list.filter(
+              thread => thread.id !== pinnedThread[0].id
+            );
+            arr.unshift(pinnedThread[0]);
+            result = arr;
+          } else {
+            // if no pinnedThread was found, we can just return the threads list normally
+            result = paginatedThreads.list;
+          }
+
+          return {
+            pageInfo: {
+              hasNextPage: paginatedThreads.hasMoreItems,
+            },
+            edges: result.map(thread => ({
+              cursor: encode(thread.id),
+              node: thread,
+            })),
+          };
+        });
     },
     metaData: ({ id }: { id: string }) => {
       return getCommunityMetaData(id).then(data => {

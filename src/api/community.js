@@ -7,6 +7,7 @@ import { channelInfoFragment } from './fragments/channel/channelInfo';
 import { userInfoFragment } from './fragments/user/userInfo';
 import { invoiceInfoFragment } from './fragments/invoice/invoiceInfo';
 import { channelMetaDataFragment } from './fragments/channel/channelMetaData';
+import { GET_THREAD_QUERY } from '../views/thread/queries';
 
 const profileQueryOptions = {
   options: ({ match: { params: { communitySlug } } }) => ({
@@ -347,4 +348,56 @@ const GET_COMMUNITY_INVOICES_QUERY = gql`
 export const getCommunityInvoices = graphql(
   GET_COMMUNITY_INVOICES_QUERY,
   GET_COMMUNITY_INVOICES_OPTIONS
+);
+
+const PIN_THREAD_MUTATION = gql`
+  mutation pinThread($threadId: ID!, $communityId: ID!, $value: String) {
+    pinThread(threadId: $threadId, communityId: $communityId, value: $value) {
+      ...communityInfo
+    }
+  }
+  ${communityInfoFragment}
+`;
+const PIN_THREAD_OPTIONS = {
+  props: ({ mutate }) => ({
+    pinThread: ({ threadId, communityId, value }) =>
+      mutate({
+        variables: {
+          threadId,
+          communityId,
+          value,
+        },
+        update: (store, { data: { pinThread } }) => {
+          const data = store.readQuery({
+            query: GET_THREAD_QUERY,
+            variables: {
+              id: threadId,
+            },
+          });
+
+          const newVal = Object.assign({}, ...data, {
+            ...data,
+            channel: {
+              ...data.channel,
+              __typename: 'Channel',
+              community: {
+                ...pinThread,
+                __typename: 'Community',
+              },
+            },
+            __typename: 'Thread',
+          });
+
+          // Write our data back to the cache.
+          store.writeQuery({
+            query: GET_THREAD_QUERY,
+            data: newVal,
+          });
+        },
+      }),
+  }),
+};
+export const pinThreadMutation = graphql(
+  PIN_THREAD_MUTATION,
+  PIN_THREAD_OPTIONS
 );
