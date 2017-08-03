@@ -3,46 +3,79 @@ const debug = require('debug')('athena:send-message-notification-email');
 import createQueue from '../../shared/bull/create-queue';
 import { SEND_NEW_MESSAGE_EMAIL } from './constants';
 import { getUsersSettings } from '../models/usersSettings';
+import { getNotifications } from '../models/notification';
 import groupReplies from '../utils/group-replies';
 import getEmailStatus from '../utils/get-email-status';
 
-const BUFFER = 180000;
+const IS_PROD = process.env.NODE_ENV === 'production';
+// Change buffer in dev to 10 seconds vs 3 minutes in prod
+const BUFFER = IS_PROD ? 180000 : 10000;
 const MAX_WAIT = 600000;
 const sendNewMessageEmailQueue = createQueue(SEND_NEW_MESSAGE_EMAIL);
 
 // Called when the buffer time is over to actually send an email
 const timedOut = recipient => {
-  const threads = timeouts[recipient.email].threads;
+  const threadsInScope = timeouts[recipient.email].threads;
+  const notificationsInScope = timeouts[recipient.email].notifications;
   // Clear timeout buffer for this recipient
   delete timeouts[recipient.email];
   debug(
-    `send notification email for ${threads.length} threads to @${recipient.username} (${recipient.email})`
+    `send notification email for ${threadsInScope.length} threads to @${recipient.username} (${recipient.email})`
   );
-  // Group replies by sender
-  const threadsWithGroupedReplies = threads.map(thread => ({
-    ...thread,
-    replies: groupReplies(thread.replies),
-  }));
 
   // Make sure we should be sending an email to this user
-  return getEmailStatus(
-    recipient.userId,
-    'newMessageInThreads'
-  ).then(shouldGetEmail => {
-    if (!shouldGetEmail) {
-      debug(`@${recipient.username} should not get email, aborting`);
-      return Promise.resolve();
-    }
-    debug(`adding email for @${recipient.username} to queue`);
-    return sendNewMessageEmailQueue.add({
-      to: recipient.email,
-      user: {
-        displayName: recipient.name,
-        username: recipient.username,
-      },
-      threads: threadsWithGroupedReplies,
+  return getEmailStatus(recipient.userId, 'newMessageInThreads')
+    .then(shouldGetEmail => {
+      if (!shouldGetEmail) {
+        debug(`@${recipient.username} should not get email, aborting`);
+        return;
+      }
+      debug(`@${recipient.username} should get email, getting notifications`);
+      return getNotifications(
+        notificationsInScope.map(notification => notification.id)
+      );
+    })
+    .then(notifications => {
+      if (!notifications) return;
+      debug('notifications loaded, finding unseen threads');
+      const unseenThreadIds = notifications
+        .filter(notification => !notification.isSeen && !notification.isRead)
+        .map(notification => notification.context.id);
+      if (unseenThreadIds.length === 0) {
+        debug('aborting, no unseen threads');
+        return;
+      }
+      debug(`filter unseen threads, merge replies`);
+      // Convert threads to object, merge replies to same thread
+      const threads = threadsInScope
+        .filter(thread => unseenThreadIds.includes(thread.id))
+        .reduce((map, thread) => {
+          if (!map[thread.id]) {
+            map[thread.id] = thread;
+            return map;
+          }
+          map[thread.id] = {
+            ...map[thread.id],
+            replies: map[thread.id].replies.concat(thread.replies),
+          };
+          return map;
+        }, {});
+      debug(`group replies`);
+      // Group replies by sender, turn it back into an array
+      const threadsWithGroupedReplies = Object.keys(threads).map(threadId => ({
+        ...threads[threadId],
+        replies: groupReplies(threads[threadId].replies),
+      }));
+      debug(`adding email for @${recipient.username} to queue`);
+      return sendNewMessageEmailQueue.add({
+        to: recipient.email,
+        user: {
+          displayName: recipient.name,
+          username: recipient.username,
+        },
+        threads: threadsWithGroupedReplies,
+      });
     });
-  });
 };
 
 type Timeouts = {
@@ -84,28 +117,9 @@ const bufferMessageNotificationEmail = (recipient, thread, notification) => {
   } else {
     debug(`timeout exists for ${recipient.email}, clearing`);
     clearTimeout(timeouts[recipient.email].timeout);
-    const existingThread = timeouts[recipient.email].threads.find(
-      previous => previous.id === thread.id
-    );
-    // If there's already a notification for this thread buffered add the new reply to the threads replies
-    if (existingThread) {
-      debug(`thread already has a record in memory, adding new reply`);
-      timeouts[recipient.email].threads = timeouts[
-        recipient.email
-      ].threads.map(previous => {
-        if (previous.id !== thread.id) return previous;
-        return {
-          ...previous,
-          replies: previous.replies.concat(thread.replies),
-        };
-      });
-
-      // If there's no notification for this specific thread yet just push it to the threads
-    } else {
-      debug(`adding new thread to ${recipient.email}'s threads`);
-      timeouts[recipient.email].threads.push(thread);
-      timeouts[recipient.email].notifications.push(notification);
-    }
+    debug(`adding new thread to ${recipient.email}'s threads`);
+    timeouts[recipient.email].threads.push(thread);
+    timeouts[recipient.email].notifications.push(notification);
 
     // If it's been a few minutes and we still haven't sent an email because messages
     // keep coming send an email now to avoid not sending a notification for hours
@@ -116,7 +130,7 @@ const bufferMessageNotificationEmail = (recipient, thread, notification) => {
       timedOut(recipient);
     } else {
       debug(
-        `refresh timeout for ${recipient.email} with new thread#${thread.id}`
+        `refresh  ${BUFFER}ms timeout for ${recipient.email} with new thread#${thread.id}`
       );
       timeouts[recipient.email].timeout = setTimeout(
         () => timedOut(recipient),

@@ -49,6 +49,11 @@ export const Subtitle = styled.h2`
   a {
     color: ${props => props.theme.brand.default};
   }
+
+  li {
+    margin-top: 8px;
+    list-style-type: none;
+  }
 `;
 
 export const MiniSubtitle = styled(Subtitle)`
@@ -133,6 +138,7 @@ export const Profile = styled.div`
     border-radius: 8px;
     line-height: 1.5;
     border: 2px solid #fff;
+    z-index: 9;
   }
 `;
 

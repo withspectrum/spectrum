@@ -1,5 +1,8 @@
+// @flow
+// $FlowFixMe
 import styled from 'styled-components';
-
+// $FlowFixMe
+import { Link } from 'react-router-dom';
 import {
   FlexCol,
   FlexRow,
@@ -11,8 +14,12 @@ import {
   Gradient,
   Shadow,
   hexa,
+  Truncate,
 } from '../../components/globals';
+import Card from '../../components/card';
 import { StyledCard } from '../../components/listItems/style';
+import Icon from '../../components/icons';
+import { Avatar } from '../../components/avatar';
 import ScrollRow from '../../components/scrollRow';
 
 import { Button } from '../../components/buttons';
@@ -62,6 +69,7 @@ export const ViewSubtitle = styled(H2)`
 `;
 
 export const ListCard = styled(StyledCard)`
+padding: 0;
 @media (max-width: 768px) {
   display: flex;
   margin-bottom: 32px;
@@ -249,5 +257,172 @@ export const ErrorState = styled(FlexCol)`
   }
   &:not(:first-of-type) {
     display: none;
+  }
+`;
+
+export const SearchWrapper = styled(Card)`
+  position: relative;
+  margin-bottom: 48px;
+  padding: 12px 16px;
+`;
+
+export const SearchInputWrapper = styled(FlexRow)`
+  flex: auto;
+  color: ${props => props.theme.text.placeholder};
+`;
+
+export const SearchIcon = styled(Icon)`
+`;
+
+export const SearchInput = styled.input`
+  font-size: 16px;
+  padding: 4px 20px;
+  flex: auto;
+  position: relative;
+  z-index: 2;
+
+  &:hover {
+  }
+`;
+
+export const SearchSpinnerContainer = styled.span`
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  z-index: 5;
+`;
+
+export const SearchResultsDropdown = styled.ul`
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: ${Shadow.mid} ${props => hexa(props.theme.bg.reverse, 0.1)};
+  position: absolute;
+  top: 64px;
+  left: 0;
+  display: inline-block;
+  width: 100%;
+  flex: auto;
+  max-height: 400px;
+  overflow-y: scroll;
+  z-index: 1000;
+  background: ${props => props.theme.bg.default};
+
+  @media (max-width: 768px) {
+    border-radius: 0 0 8px 8px;
+  }
+`;
+
+export const SearchResultTextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: auto;
+`;
+
+export const SearchResult = styled.li`
+  display: flex;
+  background: ${props =>
+    props.focused ? props.theme.brand.alt : props.theme.bg.default};
+  border-bottom: 2px solid
+    ${props => (props.focused ? 'transparent' : props.theme.border.default)};
+
+  &:hover {
+    background: ${props => props.theme.brand.alt};
+    cursor: pointer;
+
+    h2 {
+      color: ${props => props.theme.text.reverse};
+    }
+
+    p {
+      color: ${props => props.theme.text.reverse};
+    }
+  }
+
+  h2 {
+    color: ${props =>
+      props.focused ? props.theme.text.reverse : props.theme.text.default};
+  }
+
+  p {
+    color: ${props =>
+      props.focused ? props.theme.text.reverse : props.theme.text.alt};
+  }
+
+  &:only-child {
+    border-bottom: none;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+export const SearchLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  ${Truncate()}
+  padding: 8px 16px 8px 8px;
+`;
+
+export const SearchResultImage = styled(Avatar)`
+  margin: 8px 16px 8px 8px;
+`;
+
+export const SearchResultMetaWrapper = styled(FlexCol)`
+  margin-left: 4px;
+`;
+
+export const SearchResultName = styled.h2`
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+`;
+
+export const SearchResultMetadata = styled.p`
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+`;
+
+export const SearchResultNull = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  background-color: ${props => props.theme.bg.default};
+  border: 0;
+
+  &:hover {
+    border: 0;
+
+    p {
+      color: ${props => props.theme.text.alt};
+    }
+  }
+
+  a {
+    margin-top: 16px;
+  }
+
+  p {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    color: ${props => props.theme.text.alt};
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+  }
+`;
+
+export const TopCommunityItem = styled.div`
+  border-bottom: 2px solid ${props => props.theme.bg.wash};
+
+  &:last-of-type {
+    border-bottom: 0;
   }
 `;

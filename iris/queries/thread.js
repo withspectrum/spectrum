@@ -96,7 +96,7 @@ module.exports = {
     },
     messageConnection: (
       { id }: { id: String },
-      { first = 100, after }: PaginationOptions
+      { first = Infinity, after }: PaginationOptions
     ) => {
       const cursor = decode(after);
       return getMessages(id, {

@@ -16,20 +16,21 @@ export const ChatInputWrapper = styled(FlexRow)`
   @media (max-width: 768px) {
     bottom: ${props => (props.focus ? '0' : 'auto')};
     position: ${props => (props.focus ? 'fixed' : 'relative')};
-    background-color: ${props => (props.focus ? props.theme.bg.default : 'transparent')};
-    z-index: 1001;
+    background-color: ${props =>
+      props.focus ? props.theme.bg.default : 'transparent'};
+    z-index: 1000;
   }
 `;
 
 export const Form = styled.form`
-	flex: auto;
-	display: flex;
+  flex: auto;
+  display: flex;
   min-width: 1px;
   max-width: 100%;
-	align-items: center;
-	margin-left: 4px;
-	border-radius: 24px;
-	background-color: transparent;
+  align-items: center;
+  margin-left: 4px;
+  border-radius: 24px;
+  background-color: transparent;
   position: relative;
 `;
 
@@ -44,7 +45,8 @@ export const EditorInput = styled(Editor)`
 	padding: 8px 40px 8px 16px;
 	border-radius: 24px;
 	border: 2px solid ${props => props.theme.text.placeholder};
-  border-color: ${props => (props.focus ? props.theme.brand.default : props.theme.text.placeholder)};
+  border-color: ${props =>
+    props.focus ? props.theme.brand.default : props.theme.text.placeholder};
 	transition: border 0.3s ease-out;
 	color: ${props => props.theme.text.default};
   overflow-y: scroll;
@@ -56,7 +58,8 @@ export const EditorInput = styled(Editor)`
   }
 
 	&::placeholder { color: ${({ theme }) => theme.text.placeholder} }
-  &::-webkit-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
+  &::-webkit-input-placeholder { color: ${({ theme }) =>
+    theme.text.placeholder} }
   &:-moz-placeholder { color: ${({ theme }) => theme.text.placeholder} }
   &:-ms-input-placeholder { color: ${({ theme }) => theme.text.placeholder} }
 
@@ -77,30 +80,30 @@ export const SendButton = styled(IconButton)`
 `;
 
 export const MediaInput = styled.input`
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
 `;
 
 export const MediaLabel = styled.label`
-	border: none;
-	outline: 0;
-	display: inline-block;
-	background: transparent;
-	transition: all 0.3s ease-out;
-	border-radius: 4px;
-	padding: 4px;
-	position: relative;
-	top: 2px;
+  border: none;
+  outline: 0;
+  display: inline-block;
+  background: transparent;
+  transition: all 0.3s ease-out;
+  border-radius: 4px;
+  padding: 4px;
+  position: relative;
+  top: 2px;
   color: ${({ theme }) => theme.text.alt};
 
-	&:hover {
-		cursor: pointer;
+  &:hover {
+    cursor: pointer;
     color: ${({ theme }) => theme.brand.default};
-	}
+  }
 `;
 
 export const EmojiToggle = styled(IconButton)`
@@ -112,4 +115,33 @@ export const EmojiToggle = styled(IconButton)`
 	@media (max-width: 768px) {
 		display: none;
 	}
+`;
+
+export const PhotoSizeError = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  padding: 8px 16px;
+  background: #fff1cc;
+  border-top: 1px solid #ffd566;
+
+  &:hover {
+    cursor: pointer;
+
+    p {
+      color: ${props => props.theme.brand.default};
+    }
+  }
+
+  p {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #715818;
+    max-width: calc(100% - 48px);
+  }
+
+  div {
+    align-self: center;
+  }
 `;

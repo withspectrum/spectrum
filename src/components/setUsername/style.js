@@ -1,9 +1,7 @@
 // @flow
 import styled from 'styled-components';
 
-export const Row = styled.div`
-  display: flex;
-`;
+export const Row = styled.div`display: flex;`;
 
 export const Loading = styled.span`
   position: absolute;

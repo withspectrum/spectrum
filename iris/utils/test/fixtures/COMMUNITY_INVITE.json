@@ -1,0 +1,28 @@
+{
+  "actors": [
+    {
+      "id": "41f5151f-7309-4c95-b2af-d45ea2b0ad82",
+      "payload": "{\"createdAt\":\"2017-07-09T21:47:15.354Z\",\"email\":\"vutpaisawesome@gmail.com\",\"fbProviderId\":null,\"githubProviderId\":null,\"googleProviderId\":null,\"id\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"isOnline\":true,\"lastSeen\":\"2017-07-12T21:48:21.629Z\",\"name\":\"Max Stoiber\",\"profilePhoto\":\"https://pbs.twimg.com/profile_images/802074607222132736/G_LVLtD7_normal.jpg\",\"providerId\":\"3195884567\",\"timezone\":-420,\"username\":\"mstoiber05\"}",
+      "type": "USER"
+    }
+  ],
+  "context": {
+    "id": "db72709f-b27a-4494-b536-7bacbb0e6ca2",
+    "payload": "{\"coverPhoto\":\"https://s3.amazonaws.com/spectrum-chat/default_images/cover-green.png\",\"createdAt\":\"2017-07-12T21:46:14.591Z\",\"description\":\"Damn son\",\"id\":\"db72709f-b27a-4494-b536-7bacbb0e6ca2\",\"name\":\"Whaddup\",\"profilePhoto\":\"https://s3.amazonaws.com/spectrum-chat/default_images/profile-green.png\",\"slug\":\"whaddup\",\"website\":\"\"}",
+    "type": "COMMUNITY"
+  },
+  "createdAt": "2017-07-12T21:48:33.882Z",
+  "entities": [
+    {
+      "id": "db72709f-b27a-4494-b536-7bacbb0e6ca2",
+      "payload": "{\"coverPhoto\":\"https://s3.amazonaws.com/spectrum-chat/default_images/cover-green.png\",\"createdAt\":\"2017-07-12T21:46:14.591Z\",\"description\":\"Damn son\",\"id\":\"db72709f-b27a-4494-b536-7bacbb0e6ca2\",\"name\":\"Whaddup\",\"profilePhoto\":\"https://s3.amazonaws.com/spectrum-chat/default_images/profile-green.png\",\"slug\":\"whaddup\",\"website\":\"\"}",
+      "type": "COMMUNITY"
+    }
+  ],
+  "event": "COMMUNITY_INVITE",
+  "id": "ad75b507-f83d-4bbf-9bca-664107ae4302",
+  "isRead": false,
+  "isSeen": false,
+  "modifiedAt": "2017-07-12T21:48:33.882Z",
+  "userId": "gVk5mYwccUOEKiN5vtOouqroGKo1"
+}

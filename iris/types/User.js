@@ -64,6 +64,7 @@ const User = /* GraphQL */ `
 
 	type NotificationSettingsType {
 		newMessageInThreads: NotificationKindSettings
+		newThreadCreated: NotificationKindSettings
 	}
 
 	type UserNotificationsSettings {
@@ -128,11 +129,23 @@ const User = /* GraphQL */ `
 		notificationType: String!
 	}
 
+	input WebPushSubscriptionKeys {
+		p256dh: String!
+		auth: String!
+	}
+
+	input WebPushSubscription {
+		endpoint: String!
+		keys: WebPushSubscriptionKeys!
+	}
+
 	extend type Mutation {
 		editUser(input: EditUserInput!): User
 		upgradeToPro(input: UpgradeToProInput!): User
 		downgradeFromPro: User
 		toggleNotificationSettings(input: ToggleNotificationSettingsInput): User
+		subscribeWebPush(subscription: WebPushSubscription!): Boolean
+		unsubscribeWebPush(endpoint: String!): Boolean
 	}
 `;
 

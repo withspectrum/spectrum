@@ -11,6 +11,7 @@ import {
 } from '../../components/globals';
 import { HorizontalRule } from '../../components/globals';
 import Card from '../../components/card';
+import { IconButton } from '../../components/buttons';
 
 export const HzRule = styled(HorizontalRule)`
   margin: 0;
@@ -51,7 +52,7 @@ export const NotificationListContentHeading = styled(ContentHeading)`
 `;
 
 export const Content = styled(FlexCol)`
-  margin-left: 40px;
+  margin-left: 32px;
   align-self: stretch;
 `;
 
@@ -204,13 +205,16 @@ export const TextContent = styled.p`
 
 export const BubbleContainer = styled(FlexRow)`
   flex: none;
-  justify-content: ${props => (props.me ? 'flex-end' : 'flex-start')};
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: ${props => (props.me ? 'flex-end' : 'flex-start')};
 `;
 
 export const BubbleGroupContainer = styled(FlexCol)`
   flex: none;
   max-width: 70%;
   position: relative;
+  flex-direction: row;
 `;
 
 export const Timestamp = styled.span`
@@ -223,4 +227,21 @@ export const AttachmentsWash = styled(FlexCol)`
   margin-top: 8px;
   align-self: stretch;
   flex: none;
+`;
+
+export const RequestCard = styled(Card)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 16px 24px;
+
+  > p {
+    font-weight: 700;
+    font-size: 16px;
+  }
+`;
+
+export const CloseRequest = styled(IconButton)`
+  margin-left: 8px;
+  color: ${props => props.theme.text.placeholder};
 `;

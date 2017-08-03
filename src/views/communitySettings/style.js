@@ -46,7 +46,7 @@ export const ButtonContainer = styled.div`
 export const EmailInviteForm = styled.div`
   display: flex;
   align-items: center;
-  
+
   &:first-of-type {
     margin-top: 16px;
   }
@@ -58,7 +58,9 @@ export const EmailInviteInput = styled.input`
   padding: 8px 12px;
   font-size: 14px;
   border-radius: 4px;
-  border: 2px solid ${props => (props.error ? props.theme.warn.default : props.theme.border.default)};
+  border: 2px solid
+    ${props =>
+      props.error ? props.theme.warn.default : props.theme.border.default};
   margin-bottom: 8px;
   margin-top: 8px;
   margin-left: 4px;

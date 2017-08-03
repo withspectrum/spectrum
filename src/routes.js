@@ -26,12 +26,12 @@ import UserSettings from './views/userSettings';
 import communitySettings from './views/communitySettings';
 import channelSettings from './views/channelSettings';
 import NewCommunity from './views/newCommunity';
+import ThreadSlider from './views/threadSlider';
 
-const About = () => (
+const About = () =>
   <div>
     <h3>About</h3>
-  </div>
-);
+  </div>;
 
 const Body = styled(FlexCol)`
   display: flex;
@@ -60,6 +60,7 @@ class Routes extends Component {
             <Route component={ModalRoot} />
             <Route component={Toasts} />
             <Route component={Gallery} />
+            <Route component={ThreadSlider} />
 
             {/*
               Switch only renders the first match. Subrouting happens downstream
@@ -115,7 +116,6 @@ class Routes extends Component {
               />
               <Route path="/:communitySlug" component={CommunityView} />
             </Switch>
-
           </Body>
         </ScrollManager>
       </Router>

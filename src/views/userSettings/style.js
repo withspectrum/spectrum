@@ -9,11 +9,12 @@ export const EmailListItem = styled.div`
     border-bottom: none;
   }
 
-  > label > div {
-    align-items: center;
-  }
-
   input {
     margin-right: 8px;
   }
+`;
+
+export const CheckboxContent = styled.div`
+  display: flex;
+  flex-direction: column;
 `;

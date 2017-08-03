@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Avatar } from '../../components/avatar';
 import Markdown from '../../components/markdown';
@@ -14,7 +14,13 @@ import {
 } from '../../components/globals';
 
 export const View = styled(FlexCol)`
-  background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 10%, ${theme.bg.default} 90%, ${theme.bg.wash})`};
+  ${props =>
+    !props.slider &&
+    css`
+      background-image: linear-gradient(to right, ${props.theme.bg
+        .wash}, ${props.theme.bg.default} 10%, ${props.theme.bg
+      .default} 90%, ${props.theme.bg.wash});
+    `}
   flex: auto;
   align-items: stretch;
 
@@ -39,6 +45,7 @@ export const Content = styled(FlexRow)`
 export const Input = styled(FlexRow)`
   flex: none;
   justify-content: center;
+  z-index: 1003;
 `;
 
 export const Detail = styled(Column)`
@@ -53,7 +60,11 @@ export const ChatInputWrapper = styled(Column)`
   flex: auto;
 
   > div {
-    background-image: ${({ theme }) => `linear-gradient(to right, ${hexa(theme.bg.wash, 0.01)}, ${hexa(theme.bg.wash, 0.25)} 2%, ${hexa(theme.bg.wash, 0.25)} 98%, ${hexa(theme.bg.wash, 0.01)})`};
+    background-image: ${({ theme }) =>
+      `linear-gradient(to right, ${hexa(theme.bg.wash, 0.01)}, ${hexa(
+        theme.bg.wash,
+        0.25
+      )} 2%, ${hexa(theme.bg.wash, 0.25)} 98%, ${hexa(theme.bg.wash, 0.01)})`};
 
     > form > div {
       background-color: ${({ theme }) => theme.bg.default};
@@ -62,7 +73,9 @@ export const ChatInputWrapper = styled(Column)`
 `;
 
 export const DetailViewWrapper = styled(FlexCol)`
-  background-image: ${({ theme }) => `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg.default} 15%, ${theme.bg.default} 85%, ${theme.bg.wash})`};
+  background-image: ${({ theme }) =>
+    `linear-gradient(to right, ${theme.bg.wash}, ${theme.bg
+      .default} 15%, ${theme.bg.default} 85%, ${theme.bg.wash})`};
   flex: auto;
   justify-content: flex-start;
   align-items: center;
@@ -111,9 +124,7 @@ export const ContextRow = styled(FlexRow)`
   align-content: flex-start;
 `;
 
-export const EditDone = styled.div`
-  position: relative;
-`;
+export const EditDone = styled.div`position: relative;`;
 
 export const DropWrap = styled(FlexCol)`
   width: 32px;
@@ -147,7 +158,7 @@ export const FlyoutRow = styled(FlexRow)`
   padding: 8px;
 `;
 
-export const Byline = styled(Link)`
+export const Byline = styled.div`
   font-weight: 500;
   color: ${({ theme }) => theme.brand.alt};
   display: flex;
@@ -155,7 +166,7 @@ export const Byline = styled(Link)`
   align-items: center;
   flex: auto;
 
-  &:hover h3{
+  &:hover h3 {
     color: ${({ theme }) => theme.brand.alt};
   }
 `;
@@ -187,7 +198,6 @@ export const AuthorUsername = styled(H4)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  cursor: pointer;
 
   @media (max-width: 768px) {
     font-size: 12px;
@@ -233,9 +243,7 @@ export const Edited = styled.div`
   color: ${({ theme }) => theme.text.alt};
 `;
 
-export const ChatWrapper = styled.div`
-  width: 100%;
-`;
+export const ChatWrapper = styled.div`width: 100%;`;
 
 export const ThreadContent = styled(Markdown)`
   margin-top: 1rem;

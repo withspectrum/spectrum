@@ -8,6 +8,8 @@
 		"COMPOSE_REDIS_PASSWORD": "@compose-redis-password",
 		"COMPOSE_REDIS_URL": "@compose-redis-url",
 		"COMPOSE_REDIS_PORT": "@compose-redis-port",
+		"VAPID_PUBLIC_KEY": "@vapid-public-key",
+		"VAPID_PRIVATE_KEY": "@vapid-private-key",
     "OPTICS_API_KEY": "@optics-api-key",
 		"STRIPE_TOKEN": "@stripe-token",
 		"TWITTER_OAUTH_CLIENT_SECRET": "@twitter-oauth-client-secret",

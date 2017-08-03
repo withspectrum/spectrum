@@ -220,7 +220,7 @@ class NewCommunity extends Component {
             {// share the community
             activeStep === 3 &&
               <ContentContainer>
-                <Share community={community} />
+                <Share community={community} onboarding={true} />
               </ContentContainer>}
           </Container>
         </Column>

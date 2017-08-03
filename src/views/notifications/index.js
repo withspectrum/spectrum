@@ -27,18 +27,30 @@ import {
 import { FlexCol } from '../../components/globals';
 import { sortByDate } from '../../helpers/utils';
 import {
+  storeItem,
+  getItemFromStorage,
+  removeItemFromStorage,
+} from '../../helpers/localStorage';
+import WebPushManager from '../../helpers/web-push-manager';
+import { track } from '../../helpers/events';
+import { addToastWithTimeout } from '../../actions/toasts';
+import {
   getNotifications,
   markNotificationsSeenMutation,
 } from '../../api/notification';
+import { subscribeToWebPush } from '../../api/web-push-subscriptions';
 import {
   UpsellSignIn,
   UpsellToReload,
   UpsellNullNotifications,
 } from '../../components/upsell';
+import BrowserNotificationRequest from './components/browserNotificationRequest';
 
 class NotificationsPure extends Component {
   state: {
     isFetching: boolean,
+    showWebPushPrompt: boolean,
+    webPushPromptLoading: boolean,
   };
 
   constructor() {
@@ -46,6 +58,8 @@ class NotificationsPure extends Component {
 
     this.state = {
       isFetching: false,
+      showWebPushPrompt: false,
+      webPushPromptLoading: false,
     };
   }
 
@@ -75,6 +89,21 @@ class NotificationsPure extends Component {
       // the AppViewWrapper which is the scrolling part of the site.
       scrollElement: document.getElementById('scroller-for-thread-feed'),
     });
+
+    if (getItemFromStorage('webPushPromptDismissed')) {
+      return this.setState({
+        showWebPushPrompt: false,
+      });
+    }
+
+    WebPushManager.getPermissionState().then(result => {
+      if (result === 'prompt') {
+        track('browser push notifications', 'prompted');
+        this.setState({
+          showWebPushPrompt: true,
+        });
+      }
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -84,6 +113,43 @@ class NotificationsPure extends Component {
       });
     }
   }
+
+  subscribeToWebPush = () => {
+    track('browser push notifications', 'prompt triggered');
+    this.setState({
+      webPushPromptLoading: true,
+    });
+    WebPushManager.subscribe()
+      .then(subscription => {
+        track('browser push notifications', 'subscribed');
+        removeItemFromStorage('webPushPromptDismissed');
+        this.setState({
+          webPushPromptLoading: false,
+          showWebPushPrompt: false,
+        });
+        return this.props.subscribeToWebPush(subscription);
+      })
+      .catch(err => {
+        track('browser push notifications', 'blocked');
+        this.setState({
+          webPushPromptLoading: false,
+        });
+        return this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            "Oops, we couldn't enable browser notifications for you. Please try again!"
+          )
+        );
+      });
+  };
+
+  dismissWebPushRequest = () => {
+    this.setState({
+      showWebPushPrompt: false,
+    });
+    track('browser push notifications', 'dismissed');
+    storeItem('webPushPromptDismissed', { timestamp: Date.now() });
+  };
 
   render() {
     const { currentUser, data } = this.props;
@@ -134,6 +200,12 @@ class NotificationsPure extends Component {
         <Titlebar title={'Notifications'} provideBack={false} noComposer />
         <AppViewWrapper>
           <Column type={'primary'}>
+            {this.state.showWebPushPrompt &&
+              <BrowserNotificationRequest
+                onSubscribe={this.subscribeToWebPush}
+                onDismiss={this.dismissWebPushRequest}
+                loading={this.state.webPushPromptLoading}
+              />}
             <InfiniteList
               pageStart={0}
               loadMore={data.fetchMore}
@@ -218,6 +290,7 @@ const mapStateToProps = state => ({
 });
 
 export default compose(
+  subscribeToWebPush,
   getNotifications,
   displayLoadingNotifications,
   markNotificationsSeenMutation,

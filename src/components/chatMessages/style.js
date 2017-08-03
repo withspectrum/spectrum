@@ -32,10 +32,14 @@ export const AvatarLabel = styled.div`
   &:after {
     content: '';
     position: absolute;
-    top: 0; bottom: 0; left: 0; right: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     border-radius: 100%;
     height: 100%;
     width: 100%;
+    pointer-events: none;
     box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.15);
   }
 `;
@@ -54,7 +58,6 @@ export const Byline = styled.span`
   -ms-user-select: none; /* IE10+ */
   color: ${props =>
     props.op ? props.theme.brand.default : props.theme.text.alt};
-  cursor: pointer;
   max-width: 100%;
 `;
 
@@ -62,6 +65,7 @@ export const Name = styled.span`
   margin-right: 4px;
   &:hover {
     color: ${({ theme }) => theme.brand.default};
+    cursor: pointer;
   }
 `;
 
@@ -77,7 +81,7 @@ export const BubbleGroupContainer = styled.div`
 export const MessagesWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: ${props => (props.me ? `flex-end;` : `flex-start;`)}
+  align-items: ${props => (props.me ? `flex-end;` : `flex-start;`)};
 `;
 
 export const MessageWrapper = styled.span`

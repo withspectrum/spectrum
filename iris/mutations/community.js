@@ -8,12 +8,14 @@ import {
   getCommunities,
   getCommunitiesBySlug,
   unsubscribeFromAllChannelsInCommunity,
+  setPinnedThreadInCommunity,
 } from '../models/community';
 import {
   createGeneralChannel,
   getChannelsByCommunity,
   getChannelsByUserAndCommunity,
   deleteChannel,
+  getChannels,
 } from '../models/channel';
 import {
   createMemberInDefaultChannels,
@@ -32,6 +34,7 @@ import type {
   CreateCommunityArguments,
   EditCommunityArguments,
 } from '../models/community';
+import { getThreads } from '../models/thread';
 import { getSlackImport, markSlackImportAsSent } from '../models/slackImport';
 import { getThreadsByCommunity, deleteThread } from '../models/thread';
 import { slugIsBlacklisted } from '../utils/permissions';
@@ -67,7 +70,7 @@ module.exports = {
               );
             }
             // all checks passed
-            return createCommunity(args, currentUser.id);
+            return createCommunity(args, currentUser);
           })
           .then(community => {
             // create a new relationship with the community
@@ -155,34 +158,38 @@ module.exports = {
               getAllChannelsInCommunity,
             ]);
           })
-          .then(([
-            communityToEvaluate,
-            deletedCommunity,
-            allThreadsInCommunity,
-            relationshipsToCommunity,
-            allChannelsInCommunity,
-          ]) => {
-            // after a community has been deleted, we need to mark all the channels
-            // as deleted
-            const removeAllChannels = allChannelsInCommunity.map(channel =>
-              deleteChannel(channel.id)
-            );
-            // and remove all relationships to the deleted channels
-            const removeAllRelationshipsToChannels = allChannelsInCommunity.map(
-              channel => removeMembersInChannel(channel.id)
-            );
-            // and mark all the threads in that community as deleted
-            const removeAllThreadsInCommunity = allThreadsInCommunity.map(
-              thread => deleteThread(thread.id)
-            );
+          .then(
+            (
+              [
+                communityToEvaluate,
+                deletedCommunity,
+                allThreadsInCommunity,
+                relationshipsToCommunity,
+                allChannelsInCommunity,
+              ]
+            ) => {
+              // after a community has been deleted, we need to mark all the channels
+              // as deleted
+              const removeAllChannels = allChannelsInCommunity.map(channel =>
+                deleteChannel(channel.id)
+              );
+              // and remove all relationships to the deleted channels
+              const removeAllRelationshipsToChannels = allChannelsInCommunity.map(
+                channel => removeMembersInChannel(channel.id)
+              );
+              // and mark all the threads in that community as deleted
+              const removeAllThreadsInCommunity = allThreadsInCommunity.map(
+                thread => deleteThread(thread.id)
+              );
 
-            return Promise.all([
-              communityToEvaluate,
-              removeAllChannels,
-              removeAllRelationshipsToChannels,
-              removeAllThreadsInCommunity,
-            ]);
-          })
+              return Promise.all([
+                communityToEvaluate,
+                removeAllChannels,
+                removeAllRelationshipsToChannels,
+                removeAllThreadsInCommunity,
+              ]);
+            }
+          )
           // return only the community that was being evaluated
           .then(data => data[0])
       );
@@ -203,10 +210,10 @@ module.exports = {
       );
       const communities = getCommunities([args.input.communityId]);
 
-      return Promise.all([currentUserCommunityPermissions, communities]).then(([
+      return Promise.all([
         currentUserCommunityPermissions,
         communities,
-      ]) => {
+      ]).then(([currentUserCommunityPermissions, communities]) => {
         const communityToEvaluate = communities[0];
 
         // if no community was found or was deleted
@@ -242,10 +249,10 @@ module.exports = {
       // get the community to evaluate
       const communities = getCommunities([communityId]);
 
-      return Promise.all([currentUserCommunityPermissions, communities]).then(([
+      return Promise.all([
         currentUserCommunityPermissions,
         communities,
-      ]) => {
+      ]).then(([currentUserCommunityPermissions, communities]) => {
         // select the community
         const communityToEvaluate = communities[0];
 
@@ -286,27 +293,31 @@ module.exports = {
             communityToEvaluate,
             removeRelationshipToCommunity,
             getAllChannelsInCommunity,
-          ]).then(([
-            communityToEvaluate,
-            removedRelationshipToCommunity,
-            allChannelsInCommunity,
-          ]) => {
-            // remove all relationships to the community's channels
-            const removeAllRelationshipsToChannels = Promise.all(
-              allChannelsInCommunity.map(channel =>
-                removeMemberInChannel(channel.id, currentUser.id)
-              )
-            );
-
-            return (
-              Promise.all([
+          ]).then(
+            (
+              [
                 communityToEvaluate,
-                removeAllRelationshipsToChannels,
-              ])
-                // return the community that was being evaluated
-                .then(data => data[0])
-            );
-          });
+                removedRelationshipToCommunity,
+                allChannelsInCommunity,
+              ]
+            ) => {
+              // remove all relationships to the community's channels
+              const removeAllRelationshipsToChannels = Promise.all(
+                allChannelsInCommunity.map(channel =>
+                  removeMemberInChannel(channel.id, currentUser.id)
+                )
+              );
+
+              return (
+                Promise.all([
+                  communityToEvaluate,
+                  removeAllRelationshipsToChannels,
+                ])
+                  // return the community that was being evaluated
+                  .then(data => data[0])
+              );
+            }
+          );
         } else {
           // the user is not a member of the current community, so create a new
           // relationship to the community and then create a relationship
@@ -439,6 +450,39 @@ module.exports = {
             });
         }
       });
+    },
+    pinThread: (_, { threadId, communityId, value }, { user }) => {
+      const currentUser = user;
+      if (!currentUser) {
+        return new UserError(
+          'You must be signed in to pin a thread in this community.'
+        );
+      }
+
+      const promises = [
+        getUserPermissionsInCommunity(communityId, currentUser.id),
+        getThreads([threadId]),
+      ];
+
+      return Promise.all([...promises])
+        .then(([permissions, threads]) => {
+          if (!permissions.isOwner) {
+            return new UserError("You don't have permission to do this.");
+          }
+
+          const threadToEvaluate = threads[0];
+
+          // we have to ensure the thread isn't in a private channel
+          return getChannels([threadToEvaluate.channelId]);
+        })
+        .then(channels => {
+          if (channels[0].isPrivate) {
+            return new UserError(
+              'Only threads in public channels can be pinned.'
+            );
+          }
+          return setPinnedThreadInCommunity(communityId, value);
+        });
     },
   },
 };

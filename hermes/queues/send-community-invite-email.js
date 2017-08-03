@@ -30,7 +30,8 @@ export default () =>
     (job: SendCommunityInviteEmailJob) => {
       debug(`\nnew job: ${job.id}`);
       debug(`\nsending community invite to: ${job.data.to}`);
-      const subject = `${job.data.sender.name} has invited you to join the ${job.data.community.name} community on Spectrum`;
+      const subject = `${job.data.sender.name} has invited you to join the ${job
+        .data.community.name} community on Spectrum`;
 
       try {
         return sendEmail({

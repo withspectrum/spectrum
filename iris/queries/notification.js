@@ -17,27 +17,21 @@ module.exports = {
       { first = 10, after }: PaginationOptions,
       { user }: GraphQLContext
     ) => {
-      const cursor = decode(after);
       const currentUser = user;
       if (!currentUser) return;
 
-      return getNotificationsByUser(currentUser.id, { first, after })
-        .then(notifications =>
-          paginate(
-            notifications,
-            { first, after: cursor },
-            notification => notification.id === cursor
-          )
-        )
-        .then(result => ({
-          pageInfo: {
-            hasNextPage: result.hasMoreItems,
-          },
-          edges: result.list.map(notification => ({
-            cursor: encode(notification.id),
-            node: notification,
-          })),
-        }));
+      return getNotificationsByUser(currentUser.id, {
+        first,
+        after: after && parseInt(decode(after), 10),
+      }).then(result => ({
+        pageInfo: {
+          hasNextPage: result.length >= first,
+        },
+        edges: result.map((notification, index) => ({
+          cursor: encode(String(notification.entityAddedAt.getTime())),
+          node: notification,
+        })),
+      }));
     },
   },
 };

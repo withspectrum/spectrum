@@ -14,6 +14,7 @@ import { UserEditForm } from '../../components/editForm';
 import { Upsell404User } from '../../components/upsell';
 import RecurringPaymentsList from './components/recurringPaymentsList';
 import EmailSettings from './components/emailSettings';
+import NotificationSettings from './components/notificationSettings';
 import { GetUserProfile } from './queries';
 import { FlexCol } from '../../components/globals';
 import Titlebar from '../titlebar';
@@ -69,11 +70,15 @@ const UserSettings = ({ data, currentUser, match }) => {
       <AppViewWrapper>
         <Column type="secondary">
           <UserEditForm user={data} />
+          <EmailSettings smallOnly currentUser={data.user} />
         </Column>
 
         <Column type="primary">
           <RecurringPaymentsList data={data} currentUser={data.user} />
-          <EmailSettings currentUser={data.user} />
+          <EmailSettings largeOnly currentUser={data.user} />
+          {'serviceWorker' in navigator &&
+            'PushManager' in window &&
+            <NotificationSettings largeOnly />}
         </Column>
       </AppViewWrapper>
     </FlexCol>

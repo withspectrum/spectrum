@@ -3,9 +3,7 @@
 import { graphql, gql } from 'react-apollo';
 import { messageInfoFragment } from './fragments/message/messageInfo';
 import { GET_THREAD_MESSAGES_QUERY } from '../views/thread/queries';
-import {
-  GET_DIRECT_MESSAGE_THREAD_QUERY,
-} from '../views/directMessages/queries';
+import { GET_DIRECT_MESSAGE_THREAD_QUERY } from '../views/directMessages/queries';
 
 /*
   Updates UI automatically via the containers subscribeToNewMessages helper
@@ -23,7 +21,12 @@ const SEND_MESSAGE_OPTIONS = {
     sendMessage: message =>
       mutate({
         variables: {
-          message,
+          message: {
+            ...message,
+            content: {
+              body: message.messageType === 'media' ? '' : message.content.body,
+            },
+          },
         },
         optimisticResponse: {
           __typename: 'Mutation',
@@ -39,7 +42,11 @@ const SEND_MESSAGE_OPTIONS = {
               __typename: 'MessageContent',
             },
             id: Math.round(Math.random() * -1000000),
-            reactions: [],
+            reactions: {
+              count: 0,
+              hasReacted: false,
+              __typename: 'ReactionData',
+            },
             messageType: message.messageType,
           },
         },
@@ -58,9 +65,9 @@ const SEND_MESSAGE_OPTIONS = {
 
             // ignore the addMessage from the server, apollo will automatically
             // override the optimistic object
-            // if (addMessage && typeof addMessage.id === 'string') {
-            //   return;
-            // }
+            if (!addMessage || typeof addMessage.id === 'string') {
+              return;
+            }
 
             data.thread.messageConnection.edges.push({
               cursor: addMessage.id,
@@ -119,7 +126,7 @@ export const sendMessageMutation = graphql(
 const GET_MEDIA_MESSAGES_FOR_THREAD_QUERY = gql`
   query getMediaMessagesForThread($threadId: ID!) {
     getMediaMessagesForThread(threadId: $threadId) {
-      id,
+      id
       content {
         body
       }
@@ -132,6 +139,7 @@ const GET_MEDIA_MESSAGES_FOR_THREAD_OPTIONS = {
     variables: {
       threadId,
     },
+    fetchPolicy: 'network-only',
   }),
   props: ({ data: { error, loading, getMediaMessagesForThread } }) => ({
     data: {

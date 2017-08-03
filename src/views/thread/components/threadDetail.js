@@ -19,6 +19,7 @@ import {
   toggleThreadNotificationsMutation,
 } from '../mutations';
 import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
+import { pinThreadMutation } from '../../../api/community';
 import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
 import Badge from '../../../components/badges';
@@ -66,8 +67,11 @@ class ThreadDetailPure extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {};
+  }
 
-    const { thread } = props;
+  setThreadState() {
+    const { thread } = this.props;
 
     let rawLinkPreview =
       thread.attachments && thread.attachments.length > 0
@@ -91,7 +95,7 @@ class ThreadDetailPure extends Component {
         ? toState(JSON.parse(thread.content.body))
         : thread.content.body;
 
-    this.state = {
+    this.setState({
       isEditing: false,
       viewBody,
       editBody,
@@ -104,7 +108,17 @@ class ThreadDetailPure extends Component {
       flyoutOpen: false,
       receiveNotifications: thread.receiveNotifications,
       isSavingEdit: false,
-    };
+    });
+  }
+
+  componentWillMount() {
+    this.setThreadState();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.thread.id !== this.props.thread.id) {
+      this.setThreadState();
+    }
   }
 
   toggleFlyout = () => {
@@ -374,6 +388,27 @@ class ThreadDetailPure extends Component {
     });
   };
 
+  togglePinThread = () => {
+    const { pinThread, thread, dispatch } = this.props;
+    const isPinned = thread.channel.community.pinnedThreadId === thread.id;
+    const communityId = thread.channel.community.id;
+
+    if (thread.channel.isPrivate) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Only threads in public channels can be pinned.'
+        )
+      );
+    }
+
+    return pinThread({
+      threadId: thread.id,
+      communityId,
+      value: isPinned ? null : thread.id,
+    }).catch(err => dispatch(addToastWithTimeout('error', err.message)));
+  };
+
   render() {
     const { currentUser, thread } = this.props;
 
@@ -391,6 +426,7 @@ class ThreadDetailPure extends Component {
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner =
       thread.channel.community.communityPermissions.isOwner;
+    const isPinned = thread.channel.community.pinnedThreadId === thread.id;
 
     const isEdited = thread.modifiedAt;
     const editedTimestamp = isEdited
@@ -401,7 +437,9 @@ class ThreadDetailPure extends Component {
       <ThreadWrapper>
         {!isEditing &&
           <Location>
-            <Icon glyph="view-back" size={16} />
+            {this.props.slider
+              ? <div style={{ width: '16px' }} />
+              : <Icon glyph="view-back" size={16} />}
             <Link to={`/${thread.channel.community.slug}`}>
               {thread.channel.community.name}
             </Link>
@@ -412,8 +450,9 @@ class ThreadDetailPure extends Component {
               {thread.channel.name}
             </Link>
           </Location>}
+
         <ContextRow>
-          <Byline to={`/users/${thread.creator.username}`}>
+          <Byline>
             <AuthorAvatar
               size={40}
               radius={40}
@@ -427,9 +466,11 @@ class ThreadDetailPure extends Component {
               }
             />
             <BylineMeta>
-              <AuthorName>
-                {thread.creator.name}
-              </AuthorName>
+              <Link to={`/users/${thread.creator.username}`}>
+                <AuthorName>
+                  {thread.creator.name}
+                </AuthorName>
+              </Link>
               <AuthorUsername>
                 @{thread.creator.username}
                 {thread.creator.isAdmin && <Badge type="admin" />}
@@ -444,6 +485,21 @@ class ThreadDetailPure extends Component {
             <DropWrap className={flyoutOpen ? 'open' : ''}>
               <IconButton glyph="settings" onClick={this.toggleFlyout} />
               <Flyout>
+                {isCommunityOwner &&
+                  !thread.channel.isPrivate &&
+                  <FlyoutRow>
+                    <IconButton
+                      glyph={isPinned ? 'pin-fill' : 'pin'}
+                      hoverColor={isPinned ? 'warn.default' : 'special.default'}
+                      tipText={
+                        isPinned
+                          ? 'Un-pin thread'
+                          : `Pin in ${thread.channel.community.name}`
+                      }
+                      tipLocation="top-left"
+                      onClick={this.togglePinThread}
+                    />
+                  </FlyoutRow>}
                 {(isChannelOwner || isCommunityOwner) &&
                   <FlyoutRow>
                     <IconButton
@@ -572,6 +628,7 @@ const ThreadDetail = compose(
   setThreadLockMutation,
   deleteThreadMutation,
   editThreadMutation,
+  pinThreadMutation,
   toggleThreadNotificationsMutation,
   withRouter,
   pure

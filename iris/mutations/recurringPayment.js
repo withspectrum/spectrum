@@ -12,7 +12,8 @@ if (!IS_PROD) {
 
 const STRIPE_TOKEN = process.env.STRIPE_TOKEN;
 
-const stripe = require('stripe')(STRIPE_TOKEN), currency = 'USD';
+const stripe = require('stripe')(STRIPE_TOKEN),
+  currency = 'USD';
 
 import {
   createRecurringPayment,
@@ -90,9 +91,8 @@ module.exports = {
       // they have a recurringPayment recrod in the db
       return getUserRecurringPayments(currentUser.id)
         .then(result => {
-          const recurringPaymentToEvaluate = result && result.length > 0
-            ? result[0]
-            : null;
+          const recurringPaymentToEvaluate =
+            result && result.length > 0 ? result[0] : null;
           // if the result is null, the user has never been a pro user
           // which means we need to create a stripe customer and then
           // create the recurringPayment
@@ -153,7 +153,9 @@ module.exports = {
             }
           }
         })
-        .catch(err => parseStripeErrors(err));
+        .catch(
+          err => console.log('error: ', err.message) || parseStripeErrors(err)
+        );
     },
     downgradeFromPro: (_, __, { user }) => {
       const currentUser = user;
@@ -169,9 +171,8 @@ module.exports = {
       // they have a recurringPayment record in the db
       return getUserRecurringPayments(currentUser.id)
         .then(result => {
-          const recurringPaymentToEvaluate = result && result.length > 0
-            ? result[0]
-            : null;
+          const recurringPaymentToEvaluate =
+            result && result.length > 0 ? result[0] : null;
 
           // if the result is null, we don't have a record of the recurringPayment
           if (recurringPaymentToEvaluate === null) {
@@ -194,7 +195,9 @@ module.exports = {
               )
           );
         })
-        .catch(err => parseStripeErrors(err));
+        .catch(
+          err => console.log('error: ', err.message) || parseStripeErrors(err)
+        );
     },
   },
 };

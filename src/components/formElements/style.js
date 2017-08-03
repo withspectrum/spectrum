@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { FlexRow, Transition } from '../globals';
+import { FlexRow, Transition, hexa } from '../globals';
 
 export const StyledLabel = styled.label`
   display: flex;
@@ -11,6 +11,7 @@ export const StyledLabel = styled.label`
   letter-spacing: -0.4px;
   color: ${({ theme }) => theme.text.default};
   transition: ${Transition.hover.off};
+  position: relative;
 
   a {
     text-decoration: underline;
@@ -163,11 +164,13 @@ export const StyledHiddenInput = styled.input`
 export const StyledCheckboxWrapper = styled(FlexRow)`
   color: ${({ theme }) => theme.text.alt};
   display: flex;
-  align-items: center;
+  align-items: ${props => props.align};
   line-height: 1.4;
+  cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
 
   &:hover {
-    color: ${({ theme }) => theme.brand.alt};
+    color: ${({ theme, disabled }) =>
+      disabled ? theme.text.alt : theme.brand.alt};
   }
 
   > div {
@@ -268,7 +271,8 @@ export const InputOverlay = styled.div`
   width: 100%;
   height: 100%;
   color: ${({ theme }) => theme.text.reverse};
-  ${/* background-color: ${({ theme }) => theme.bg.reverse}; */ ''} padding: 8px;
+  background-color: ${({ theme }) => hexa(theme.bg.reverse, 0.6)};
+  padding: 8px;
   border-radius: ${props => (props.user ? '100%' : '8px')};
   opacity: 1;
 

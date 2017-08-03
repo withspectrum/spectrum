@@ -20,12 +20,8 @@ import { track } from '../../../helpers/events';
 import { SEARCH_USERS_QUERY } from '../../../api/user';
 import { Spinner } from '../../../components/globals';
 import { addToastWithTimeout } from '../../../actions/toasts';
-import {
-  clearDirectMessagesComposer,
-} from '../../../actions/directMessageThreads';
-import {
-  createDirectMessageThreadMutation,
-} from '../../../api/directMessageThread';
+import { clearDirectMessagesComposer } from '../../../actions/directMessageThreads';
+import { createDirectMessageThreadMutation } from '../../../api/directMessageThread';
 import {
   ComposerInputWrapper,
   Grow,
@@ -156,9 +152,8 @@ class NewThread extends Component {
             searchResults: searchResults.length > 0 ? searchResults : [],
             searchIsLoading: false,
             // if all results are filtered, clear the focused search result
-            focusedSearchResult: searchResults.length > 0
-              ? searchResults[0].id
-              : '',
+            focusedSearchResult:
+              searchResults.length > 0 ? searchResults[0].id : '',
           });
           // otherwise if no results are found, clear the above
         } else {
@@ -193,16 +188,6 @@ class NewThread extends Component {
     const indexOfFocusedSearchResult = searchResultIds.indexOf(
       focusedSearchResult
     );
-
-    // if person presses esc, clear all results, stop loading
-    if (e.keyCode === 27) {
-      this.setState({
-        searchResults: [],
-        searchIsLoading: false,
-      });
-
-      return;
-    }
 
     /*
       if a user presses backspace
@@ -618,6 +603,7 @@ class NewThread extends Component {
             threadIsBeingCreated: false,
           });
 
+          this.props.setActiveThread(createDirectMessageThread.id);
           this.props.history.push(`/messages/${createDirectMessageThread.id}`);
         })
         .catch(err => {
@@ -670,7 +656,6 @@ class NewThread extends Component {
           {// if users have been selected, show them as pills
           selectedUsersForNewThread.length > 0 &&
             <SelectedUsersPills>
-
               {selectedUsersForNewThread.map(user => {
                 return (
                   <Pill
@@ -682,7 +667,6 @@ class NewThread extends Component {
                   </Pill>
                 );
               })}
-
             </SelectedUsersPills>}
 
           {searchIsLoading &&
@@ -704,7 +688,6 @@ class NewThread extends Component {
             //if there are selected users already, we manually shift
             // the search results position down
             <SearchResultsDropdown moved={selectedUsersForNewThread.length > 0}>
-
               {searchResults.length > 0 &&
                 searchResults.map(user => {
                   return (
@@ -745,7 +728,7 @@ class NewThread extends Component {
 
         <ViewContent
           moved={selectedUsersForNewThread.length > 0}
-          innerRef={scrollBody => this.scrollBody = scrollBody}
+          innerRef={scrollBody => (this.scrollBody = scrollBody)}
         >
           {existingThreadWithMessages &&
             existingThreadWithMessages.id &&

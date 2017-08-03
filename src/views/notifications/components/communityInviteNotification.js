@@ -29,20 +29,15 @@ const CommunityInvite = compose(getCommunityById, displayLoadingCard, pure)(
 export const CommunityInviteNotification = ({ notification, currentUser }) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
-  const actors = parseActors(notification.actors, currentUser);
+  const actors = parseActors(notification.actors, currentUser, true);
 
   return (
     <SegmentedNotificationCard>
       <CreatedContext>
         <Icon glyph="community" />
         <TextContent pointer={true}>
-          {actors.asObjects[0].name}
-          {' '}
-          invited you to join their community,
-          {' '}
-          {context.asString}
-          {' '}
-          {date}
+          {actors.asObjects[0].name} invited you to join their community,{' '}
+          {context.asString} {date}
         </TextContent>
       </CreatedContext>
       <ContentWash>
@@ -61,20 +56,15 @@ export const MiniCommunityInviteNotification = ({
 }) => {
   const date = parseNotificationDate(notification.modifiedAt);
   const context = parseContext(notification.context);
-  const actors = parseActors(notification.actors, currentUser);
+  const actors = parseActors(notification.actors, currentUser, true);
 
   return (
     <SegmentedNotificationListRow>
       <CreatedContext>
         <Icon glyph="community" />
         <TextContent pointer={false}>
-          {actors.asObjects[0].name}
-          {' '}
-          invited you to join their community,
-          {' '}
-          {context.asString}
-          {' '}
-          {date}
+          {actors.asObjects[0].name} invited you to join their community,{' '}
+          {context.asString} {date}
         </TextContent>
       </CreatedContext>
       <ContentWash mini>

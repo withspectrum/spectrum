@@ -71,9 +71,10 @@ export const ActionContainer = styled(FlexCol)`
 
 export const StyledCard = styled(Card)`
   padding: 12px 16px 12px 20px;
+  display: ${props => (props.smallOnly ? 'none' : 'flex')};
 
   @media (max-width: 768px) {
-    display: none;
+    display: ${props => (props.largeOnly ? 'none' : 'flex')};
   }
 `;
 
@@ -159,6 +160,10 @@ export const Notice = styled(Description)`
   background: #FFF1CC;
   border: 1px solid #ffd566;
   color: #715818;
+
+  a {
+    text-decoration: underline;
+  }
 
   strong {
     font-weight: 600;

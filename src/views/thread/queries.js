@@ -12,31 +12,14 @@ export const GET_THREAD_QUERY = gql`
   query getThread($id: ID!) {
     thread(id: $id) {
       ...threadInfo
-      receiveNotifications
-      creator {
-        ...userInfo
-        ...userMetaData
-      }
-      channel {
-        ...channelInfo
-        ...channelMetaData
-        community {
-          ...communityInfo
-        }
-      }
     }
   }
   ${threadInfoFragment}
-  ${userInfoFragment}
-  ${userMetaDataFragment}
-  ${channelMetaDataFragment}
-  ${channelInfoFragment}
-  ${communityInfoFragment}
 `;
 export const GET_THREAD_OPTIONS = {
   options: props => ({
     variables: {
-      id: props.match.params.threadId,
+      id: props.threadId || props.match.params.threadId,
     },
     fetchPolicy: 'cache-first',
   }),
@@ -60,9 +43,6 @@ export const GET_THREAD_MESSAGES_OPTIONS = {
   props: props => ({
     data: props.data,
     subscribeToNewMessages: () => {
-      if (!props.data.thread) {
-        return;
-      }
       return props.data.subscribeToMore({
         document: subscribeToNewMessages,
         variables: {

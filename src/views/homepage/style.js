@@ -39,7 +39,8 @@ export const Section = styled(FlexCol)`
 
 export const SectionOne = styled(Section)`
 	background-color: ${({ theme }) => theme.space.dark};
-	background-image: ${({ theme }) => Gradient(theme.space.dark, theme.brand.alt)};
+	background-image: ${({ theme }) =>
+    Gradient(theme.space.dark, theme.brand.alt)};
 	color: ${({ theme }) => theme.text.reverse};
 
 	img {
@@ -69,7 +70,8 @@ export const SectionThree = styled(Section)`
 	height: 640px;
 	justify-content: space-around;
 	background-color: ${({ theme }) => theme.space.dark};
-	background-image: linear-gradient(to bottom, ${({ theme }) => `${theme.space.dark}, ${theme.brand.default}`});
+	background-image: linear-gradient(to bottom, ${({ theme }) =>
+    `${theme.space.dark}, ${theme.brand.default}`});
 	color: ${({ theme }) => theme.text.reverse};
 
 	img {
@@ -116,49 +118,47 @@ export const Footer = styled(Section)`
 `;
 
 export const LinkBlock = styled.a`
-	display: inline-block;
-	margin: 0 24px;
-	flex: 0 0 auto;
-	position: relative;
+  display: inline-block;
+  margin: 0 24px;
+  flex: 0 0 auto;
+  position: relative;
 
-	div {
-		font-size: 16px;
-		font-weight: 700;
-		padding: 12px 16px;
-		top: 4px;
-		position: relative;
-		text-align: center;
-		transition: ${Transition.hover.off};
-		border-radius: 4px;
+  div {
+    font-size: 16px;
+    font-weight: 700;
+    padding: 12px 16px;
+    top: 4px;
+    position: relative;
+    text-align: center;
+    transition: ${Transition.hover.off};
+    border-radius: 4px;
 
-		&:hover {
-			border-radius: 12px;
-			background-color: ${({ theme }) => theme.bg.default};
-			color: #009EBA;
-			transition: ${Transition.hover.on};
-		}
-	}
+    &:hover {
+      border-radius: 12px;
+      background-color: ${({ theme }) => theme.bg.default};
+      color: #009eba;
+      transition: ${Transition.hover.on};
+    }
+  }
 
-	@media (max-width: 768px) {
-		flex-direction: column;
-		justify-content: flex-start;
-		padding-bottom: 16px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-bottom: 16px;
 
-		div {
-			border-bottom: none;
+    div {
+      border-bottom: none;
 
-			&:hover {
-				border-bottom: none;
-				padding-bottom: 0;
-				text-decoration: underline;
-			}
-		}
-	}
+      &:hover {
+        border-bottom: none;
+        padding-bottom: 0;
+        text-decoration: underline;
+      }
+    }
+  }
 `;
 
-export const Cluster = styled.img`
-	position: absolute;
-`;
+export const Cluster = styled.img`position: absolute;`;
 
 export const ClusterOne = styled(Cluster)`
 	max-width: 120px;
@@ -197,59 +197,59 @@ export const ClusterFour = styled(Cluster)`
 `;
 
 export const GoopyOne = styled.div`
-	background-color: transparent;
-	background: url(/img/goopy.svg) center bottom no-repeat;
-	position: absolute;
-	background-size: 100%;
-	z-index: 0;
-	height: calc(100% + 4px);
-	width: 110%;
-	top: 0;
-	bottom: -2px;
-	left: -5%;
-	right: -5%;
+  background-color: transparent;
+  background: url(/img/goopy.svg) center bottom no-repeat;
+  position: absolute;
+  background-size: 100%;
+  z-index: 0;
+  height: calc(100% + 4px);
+  width: 110%;
+  top: 0;
+  bottom: -2px;
+  left: -5%;
+  right: -5%;
 `;
 
 export const GoopyTwo = styled.div`
-	background-color: transparent;
-	background: url(/img/goopy-2.svg) center bottom no-repeat;
-	position: absolute;
-	background-size: 100%;
-	z-index: 0;
-	height: calc(100% + 2px);
-	top: 0;
-	width: 110%;
-	bottom: -2px;
-	left: -5%;
-	right: -5%;
+  background-color: transparent;
+  background: url(/img/goopy-2.svg) center bottom no-repeat;
+  position: absolute;
+  background-size: 100%;
+  z-index: 0;
+  height: calc(100% + 2px);
+  top: 0;
+  width: 110%;
+  bottom: -2px;
+  left: -5%;
+  right: -5%;
 `;
 
 export const GoopyThree = styled.div`
-	background-color: transparent;
-	background: url(/img/goopy-3.svg) center bottom no-repeat;
-	position: absolute;
-	background-size: 100%;
-	z-index: 0;
-	height: calc(100% + 2px);
-	top: 0;
-	width: 110%;
-	bottom: -2px;
-	left: -5%;
-	right: -5%;
+  background-color: transparent;
+  background: url(/img/goopy-3.svg) center bottom no-repeat;
+  position: absolute;
+  background-size: 100%;
+  z-index: 0;
+  height: calc(100% + 2px);
+  top: 0;
+  width: 110%;
+  bottom: -2px;
+  left: -5%;
+  right: -5%;
 `;
 
 export const GoopyFour = styled.div`
-	background-color: transparent;
-	background: url(/img/goopy-4.svg) center bottom no-repeat;
-	position: absolute;
-	background-size: 100%;
-	z-index: 0;
-	height: calc(100% + 2px);
-	top: 0;
-	width: 110%;
-	bottom: -2px;
-	left: -5%;
-	right: -5%;
+  background-color: transparent;
+  background: url(/img/goopy-4.svg) center bottom no-repeat;
+  position: absolute;
+  background-size: 100%;
+  z-index: 0;
+  height: calc(100% + 2px);
+  top: 0;
+  width: 110%;
+  bottom: -2px;
+  left: -5%;
+  right: -5%;
 `;
 
 export const Tagline = styled(H2)`
@@ -274,10 +274,12 @@ export const Button = styled.a`
   font-size: 14px;
   font-weight: 700;
   transition: ${Transition.hover.off};
-	position: relative;
-	margin: 16px 0;
+  position: relative;
+  margin: 16px 0;
 
-	${props => props.after && `
+  ${props =>
+    props.after &&
+    `
 			margin: 24px 0;
 
 			&:after {
@@ -294,9 +296,7 @@ export const Button = styled.a`
 				text-align: center;
 				color: #fff;
 			}
-		`}
-
-  span {
+		`} span {
     display: inline-block;
     flex: 0 0 auto;
     margin-top: -1px;
@@ -317,30 +317,45 @@ export const Button = styled.a`
 `;
 
 export const ButtonTwitter = styled(Button)`
-	background: ${props => (props.preferred ? props.theme.social.twitter.default : 'none')};
-	color: ${props => (props.whitebg ? props.theme.social.twitter.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
+	background: ${props =>
+    props.preferred ? props.theme.social.twitter.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.twitter.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
 
 	&:hover {
-		color: ${props => (props.whitebg ? props.theme.social.twitter.default : '#fff')}
+		color: ${props =>
+      props.whitebg ? props.theme.social.twitter.default : '#fff'}
 	}
 `;
 
 export const ButtonFacebook = styled(Button)`
-	background: ${props => (props.preferred ? props.theme.social.facebook.default : 'none')};
-	color: ${props => (props.whitebg ? props.theme.social.facebook.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
+	background: ${props =>
+    props.preferred ? props.theme.social.facebook.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.facebook.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
 
 
 	&:hover {
-		color: ${props => (props.whitebg ? props.theme.social.facebook.default : '#fff')}
+		color: ${props =>
+      props.whitebg ? props.theme.social.facebook.default : '#fff'}
 	}
 `;
 
 export const ButtonGoogle = styled(Button)`
-	background: ${props => (props.preferred ? props.theme.social.google.default : 'none')};
-	color: ${props => (props.whitebg ? props.theme.social.google.default : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)')};
+	background: ${props =>
+    props.preferred ? props.theme.social.google.default : 'none'};
+	color: ${props =>
+    props.whitebg
+      ? props.theme.social.google.default
+      : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
 
 	&:hover {
-		color: ${props => (props.whitebg ? props.theme.social.google.default : '#fff')}
+		color: ${props =>
+      props.whitebg ? props.theme.social.google.default : '#fff'}
 	}
 `;
 
@@ -358,9 +373,7 @@ export const LogoWhite = styled(Logo)`
 	max-width: 360px;
 `;
 
-export const LogoContainer = styled.div`
-	max-width: 360px;
-`;
+export const LogoContainer = styled.div`max-width: 360px;`;
 
 export const SectionContent = styled(FlexRow)`
 	flex-grow: 1;
@@ -390,9 +403,9 @@ export const Copy = styled(P)`
 `;
 
 export const LoginCard = styled.div`
-	border-radius: 12px;
-	padding: 16px 0;
-	margin-top: 16px;
-	align-self: flex-start;
-	align-items: flex-start;
+  border-radius: 12px;
+  padding: 16px 0;
+  margin-top: 16px;
+  align-self: flex-start;
+  align-items: flex-start;
 `;

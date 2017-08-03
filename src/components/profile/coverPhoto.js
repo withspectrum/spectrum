@@ -12,14 +12,14 @@ const PhotoContainer = styled.div`
   position: relative;
   width: 100%;
   flex: 0 0 ${props => (props.large ? '320px' : '96px')};
-  background-color: ${({ theme }) => theme.space.light};
-  background-image: ${props => (props.coverURL ? `url(${optimize(
-        props.coverURL,
-        {
+  background-color: ${({ theme }) => theme.bg.reverse};
+  background-image: ${props =>
+    props.coverURL
+      ? `url("${optimize(props.coverURL, {
           w: props.large ? 1024 : 320,
           dpr: 2,
-        }
-      )})` : Gradient(props.theme.space.light, props.theme.space.dark))};
+        })}")`
+      : 'none'};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

@@ -1,6 +1,6 @@
 //@flow
 import React, { Component } from 'react';
-
+import { Avatar } from '../avatar';
 import Icon from '../icons';
 
 import {
@@ -55,11 +55,7 @@ export const PhotoInput = (props: InputProps) => {
       <InputOverlay user={props.user}>
         <Icon glyph="photo" />
       </InputOverlay>
-      <ProfileImage
-        src={`${props.defaultValue}`}
-        user={props.user}
-        role="presentation"
-      />
+      <Avatar size={48} src={`${props.defaultValue}`} user={props.user} />
       <StyledHiddenInput
         type="file"
         id="file"
@@ -97,12 +93,16 @@ export const CoverInput = (props: InputProps) => {
 export const Checkbox = (props: InputProps) => {
   return (
     <StyledLabel>
-      <StyledCheckboxWrapper>
+      <StyledCheckboxWrapper
+        disabled={props.disabled || false}
+        align={props.align || 'center'}
+      >
         {props.checked ? <Icon glyph="checkmark" /> : <Icon glyph="checkbox" />}
         <StyledHiddenInput
           type="checkbox"
           id={props.id}
           checked={props.checked}
+          disabled={props.disabled || false}
           onChange={props.onChange}
         />
         {props.children}
@@ -146,9 +146,17 @@ export class UnderlineInput extends Component {
 }
 
 export const Error = (props: Object) => {
-  return <StyledError>{props.children}</StyledError>;
+  return (
+    <StyledError>
+      {props.children}
+    </StyledError>
+  );
 };
 
 export const Success = (props: Object) => {
-  return <StyledSuccess>{props.children}</StyledSuccess>;
+  return (
+    <StyledSuccess>
+      {props.children}
+    </StyledSuccess>
+  );
 };

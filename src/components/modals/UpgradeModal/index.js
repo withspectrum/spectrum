@@ -16,6 +16,7 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 import { connect } from 'react-redux';
 import { Button, OutlineButton } from '../../buttons';
 import { UpsellUpgradeToPro } from '../../upsell';
+import { Notice } from '../../listItems/style';
 import {
   modalStyles,
   Section,
@@ -120,7 +121,12 @@ class UpgradeModal extends React.Component {
   render() {
     const { user } = this.props;
     const { upgradeError, isOpen, isLoading } = this.state;
-
+    const emailProps = {
+      emailAddress: 'help@spectrum.chat',
+      subject: 'Cancel my Pro plan on Spectrum',
+      body: `Hi there, please cancel my Pro plan on Spectrum for ${user.id}`,
+    };
+    const email = `mailto:${emailProps.emailAddress}?subject=${emailProps.subject}&body=${emailProps.body}`;
     return (
       <Modal
         isOpen={isOpen}
@@ -132,7 +138,6 @@ class UpgradeModal extends React.Component {
         style={modalStyles}
         closeTimeoutMS={330}
       >
-
         <ModalContainer
           noHeader={!user.isPro}
           title={!user.isPro ? 'Upgrade to Pro' : 'Manage your Subscription'}
@@ -141,24 +146,26 @@ class UpgradeModal extends React.Component {
           {user.isPro &&
             <Section>
               <Subheading>
-                We're sorry to see you go! If you are having trouble and want
-                to talk to a human, please
-                {' '}
+                We're sorry to see you go! If you are having trouble and want to
+                talk to a human, please{' '}
                 <a href="mailto:support@spectrum.chat">get in touch</a>
-                . Otherwise if you're ready to go, you can
-                cancel your Pro subscription instantly below. Thanks for your support!
+                . Otherwise if you're ready to go, you can cancel your Pro
+                subscription instantly below. Thanks for your support!
               </Subheading>
+
+              <Notice>
+                Note: We're currently moving Stripe accounts - cancel your
+                subscription below and we will get you taken care of!
+              </Notice>
               <SectionActions centered={true}>
-                <OutlineButton
-                  disabled={isLoading}
-                  loading={isLoading}
-                  onClick={this.downgradeFromPro}
-                >
-                  Cancel my Pro Subscription
-                </OutlineButton>
+                <a href={email}>
+                  <OutlineButton disabled={isLoading} loading={isLoading}>
+                    Cancel my Pro Subscription
+                  </OutlineButton>
+                </a>
 
                 <Button
-                  onClick={() => window.location.href = '/spectrum/support'}
+                  onClick={() => (window.location.href = '/spectrum/support')}
                 >
                   Get Support
                 </Button>
@@ -175,7 +182,7 @@ class UpgradeModal extends React.Component {
                 </SectionError>}
             </Section>}
 
-          {!user.isPro && <UpsellUpgradeToPro />}
+          {!user.isPro && <UpsellUpgradeToPro complete={this.closeModal} />}
         </ModalContainer>
       </Modal>
     );

@@ -1,0 +1,28 @@
+{
+  "actors": [
+    {
+      "id": "41f5151f-7309-4c95-b2af-d45ea2b0ad82",
+      "payload": "{\"createdAt\":\"2017-07-09T21:47:15.354Z\",\"email\":\"vutpaisawesome@gmail.com\",\"fbProviderId\":null,\"githubProviderId\":null,\"googleProviderId\":null,\"id\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\",\"isOnline\":true,\"lastSeen\":\"2017-07-12T04:31:27.939Z\",\"name\":\"Max Stoiber\",\"profilePhoto\":\"https://pbs.twimg.com/profile_images/802074607222132736/G_LVLtD7_normal.jpg\",\"providerId\":\"3195884567\",\"timezone\":-420,\"username\":\"mstoiber05\"}",
+      "type": "USER"
+    }
+  ],
+  "context": {
+    "id": "249a41d1-50cc-43b9-80b7-aed12e06065e",
+    "payload": "{\"content\":{\"body\":\"Test 1\"},\"id\":\"249a41d1-50cc-43b9-80b7-aed12e06065e\",\"messageType\":\"text\",\"senderId\":\"gVk5mYwccUOEKiN5vtOouqroGKo1\",\"threadId\":\"2f8087cf-b74d-4587-8ef6-c1b73a751953\",\"threadType\":\"story\",\"timestamp\":\"2017-07-10T22:44:30.456Z\"}",
+    "type": "MESSAGE"
+  },
+  "createdAt": "2017-07-12T21:44:30.017Z",
+  "entities": [
+    {
+      "id": "aa39348d-d63a-4742-ab63-6709d69a0bdc",
+      "payload": "{\"id\":\"aa39348d-d63a-4742-ab63-6709d69a0bdc\",\"messageId\":\"249a41d1-50cc-43b9-80b7-aed12e06065e\",\"timestamp\":1499895869874,\"type\":\"like\",\"userId\":\"41f5151f-7309-4c95-b2af-d45ea2b0ad82\"}",
+      "type": "REACTION"
+    }
+  ],
+  "event": "REACTION_CREATED",
+  "id": "8a5e0a65-4e2a-4c92-8a44-956f9950dda4",
+  "isRead": false,
+  "isSeen": false,
+  "modifiedAt": "2017-07-12T21:44:30.017Z",
+  "userId": "gVk5mYwccUOEKiN5vtOouqroGKo1"
+}

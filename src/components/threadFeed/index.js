@@ -9,11 +9,14 @@ import pure from 'recompose/pure';
 // NOTE(@mxstbr): This is a custom fork published of off this (as of this writing) unmerged PR: https://github.com/CassetteRocks/react-infinite-scroller/pull/38
 // I literally took it, renamed the package.json and published to add support for scrollElement since our scrollable container is further outside
 import InfiniteList from 'react-infinite-scroller-with-scroll-element';
-
+import { ImportSlackWithoutCard } from '../../views/communitySettings/components/importSlack';
+import { EmailInvitesWithoutCard } from '../../views/communitySettings/components/emailInvites';
+import Share from '../../views/newCommunity/components/share';
 import ThreadFeedCard from '../threadFeedCard';
 import { NullCard } from '../upsell';
 import { LoadingThread } from '../loading';
 import { Button } from '../buttons';
+import { Divider } from './style';
 
 const NullState = () =>
   <NullCard
@@ -21,6 +24,23 @@ const NullState = () =>
     heading={`Sorry, no threads here yet...`}
     copy={`But you could start one!`}
   />;
+
+const UpsellState = ({ community }) => {
+  return (
+    <NullCard
+      bg="onboarding"
+      repeat
+      heading={'Every community has to start somewhere...'}
+      copy={`${community.name} just needs more friends - invite people to your community to get a conversation started!`}
+    >
+      <Share community={community} onboarding={false} />
+      <Divider />
+      <EmailInvitesWithoutCard community={community} />
+      <Divider />
+      <ImportSlackWithoutCard community={community} id={community.id} />
+    </NullCard>
+  );
+};
 
 const ErrorState = () =>
   <NullCard
@@ -97,6 +117,7 @@ class ThreadFeedPure extends Component {
                   key={thread.node.id}
                   data={thread.node}
                   viewContext={viewContext}
+                  isPinned={thread.node.id === this.props.pinnedThreadId}
                 />
               );
             })}
@@ -106,7 +127,15 @@ class ThreadFeedPure extends Component {
     }
 
     if (networkStatus === 7) {
-      return <NullState />;
+      // if there are no threads, tell the parent container so that we can render upsells to community owners in the parent container
+      if (this.props.setThreadsStatus) {
+        this.props.setThreadsStatus();
+      }
+      if (this.props.isNewAndOwned) {
+        return <UpsellState community={this.props.community} />;
+      } else {
+        return <NullState />;
+      }
     } else {
       return (
         <Threads>
