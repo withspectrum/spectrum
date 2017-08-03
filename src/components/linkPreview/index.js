@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react';
 import Icon from '../icons';
+import { FlexCol } from '../globals';
 import { truncate } from '../../helpers/utils';
 import {
   LinkPreviewContainer,
@@ -54,7 +55,7 @@ export class LinkPreview extends Component {
         {image && <LinkPreviewImage image={image} />}
 
         <LinkPreviewTextContainer padding={image}>
-          <div>
+          <FlexCol>
             {title &&
               <MetaTitle>
                 {title}
@@ -64,7 +65,7 @@ export class LinkPreview extends Component {
               <MetaDescription>
                 {description}
               </MetaDescription>}
-          </div>
+          </FlexCol>
 
           <MetaUrl>
             {url ? url : trueUrl}
