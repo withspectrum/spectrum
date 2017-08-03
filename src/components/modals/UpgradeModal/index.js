@@ -121,12 +121,7 @@ class UpgradeModal extends React.Component {
   render() {
     const { user } = this.props;
     const { upgradeError, isOpen, isLoading } = this.state;
-    const emailProps = {
-      emailAddress: 'help@spectrum.chat',
-      subject: 'Cancel my Pro plan on Spectrum',
-      body: `Hi there, please cancel my Pro plan on Spectrum for ${user.id}`,
-    };
-    const email = `mailto:${emailProps.emailAddress}?subject=${emailProps.subject}&body=${emailProps.body}`;
+
     return (
       <Modal
         isOpen={isOpen}
@@ -153,16 +148,14 @@ class UpgradeModal extends React.Component {
                 subscription instantly below. Thanks for your support!
               </Subheading>
 
-              <Notice>
-                Note: We're currently moving Stripe accounts - cancel your
-                subscription below and we will get you taken care of!
-              </Notice>
               <SectionActions centered={true}>
-                <a href={email}>
-                  <OutlineButton disabled={isLoading} loading={isLoading}>
-                    Cancel my Pro Subscription
-                  </OutlineButton>
-                </a>
+                <OutlineButton
+                  disabled={isLoading}
+                  loading={isLoading}
+                  onClick={this.downgradeFromPro}
+                >
+                  Cancel my Pro Subscription
+                </OutlineButton>
 
                 <Button
                   onClick={() => (window.location.href = '/spectrum/support')}
