@@ -1,9 +1,12 @@
 {
   "scripts": {
-    "start": "NODE_ENV=production node index.js"
+    "start": "NODE_ENV=production node main.js"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "bull": "^3.0.0-rc.2",
-    "rethinkdbdash": "^2.3.29"
+    "raven": "^2.1.1",
+    "rethinkdbdash": "^2.3.29",
+    "source-map-support": "^0.4.15"
   }
 }
