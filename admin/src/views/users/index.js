@@ -9,7 +9,6 @@ import { usersQuery } from '../../api/queries';
 import { displayLoadingState } from '../../components/loading';
 import Chart from '../../components/spark-line';
 import getGrowthPerDay from '../../utils/get-growth-per-day';
-import formatNumber from '../../utils/format-number';
 import Search from './components/search';
 import UserContainer from './containers/user';
 
@@ -20,7 +19,6 @@ class UsersViewIndex extends Component {
       return <div />;
     }
 
-    const userCount = formatNumber(meta.userGrowth.length);
     const userGrowth = getGrowthPerDay(meta.userGrowth);
 
     if (match.params.username) {
