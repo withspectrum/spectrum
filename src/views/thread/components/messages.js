@@ -81,13 +81,13 @@ class MessagesWithData extends Component {
     const {
       data: { networkStatus, error },
       data,
+      currentUser,
       toggleReaction,
       forceScrollToBottom,
     } = this.props;
     const dataExists = data.thread && data.thread.messageConnection;
     const messagesExist =
       dataExists && data.thread.messageConnection.edges.length > 0;
-
     if (networkStatus === 8 || error) {
       return (
         <NullState
@@ -129,7 +129,11 @@ class MessagesWithData extends Component {
     }
 
     if (networkStatus === 7) {
-      return <EmptyChat />;
+      if (currentUser) {
+        return <EmptyChat />;
+      } else {
+        return null;
+      }
     } else {
       return (
         <ChatWrapper>
