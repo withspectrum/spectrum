@@ -12,6 +12,7 @@ const getEmailStatus = (
     .then(([userSettings, user]) => {
       if (
         !userSettings ||
+        !userSettings.notifications.types[notificationType] ||
         userSettings.notifications.types[notificationType].email === false
       ) {
         debug(`user#${userId} disabled email notifications`);

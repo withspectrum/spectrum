@@ -24,6 +24,9 @@ import {
   ParticipantHeads,
   Location,
   Lock,
+  Pinned,
+  PinnedBanner,
+  PinnedIconWrapper,
 } from './style';
 
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
@@ -76,7 +79,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
         );
       case 'channel':
       default:
-        return;
+        return null;
     }
   };
 
@@ -108,6 +111,13 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
           <Title>
             {props.data.content.title}
           </Title>
+          {props.isPinned &&
+            <Pinned>
+              <PinnedBanner />
+              <PinnedIconWrapper>
+                <Icon glyph="pin-fill" size={24} />
+              </PinnedIconWrapper>
+            </Pinned>}
         </Link>
         <MetaRow>
           {// for now we know this means there is a link attachment

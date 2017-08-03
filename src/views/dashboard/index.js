@@ -97,7 +97,7 @@ class DashboardPure extends Component {
     }
 
     // Error, prompt reload
-    if (error || networkStatus === 8) {
+    if (networkStatus === 8) {
       return (
         <AppViewWrapper>
           <Head title={title} description={description} />

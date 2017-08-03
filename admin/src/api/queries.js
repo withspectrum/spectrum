@@ -1,5 +1,6 @@
 import { graphql, gql } from 'react-apollo';
 import { userInfoFragment } from './fragments/user/userInfo';
+import { communityInfoFragment } from './fragments/community/communityInfo';
 import { userCommunitiesFragment } from './fragments/user/userCommunities';
 
 const META_INFORMATION_QUERY = gql`

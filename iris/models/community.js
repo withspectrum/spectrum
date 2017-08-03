@@ -440,6 +440,23 @@ const deleteCommunity = (communityId: string): Promise<Object> => {
     .run();
 };
 
+const setPinnedThreadInCommunity = (
+  communityId: string,
+  value: string
+): Promise<Object> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(
+      {
+        pinnedThreadId: value,
+      },
+      { returnChanges: 'always' }
+    )
+    .run()
+    .then(result => result.changes[0].new_val);
+};
+
 const unsubscribeFromAllChannelsInCommunity = (
   communityId: string,
   userId: string
@@ -548,6 +565,7 @@ module.exports = {
   createCommunity,
   editCommunity,
   deleteCommunity,
+  setPinnedThreadInCommunity,
   unsubscribeFromAllChannelsInCommunity,
   userIsMemberOfCommunity,
   userIsMemberOfAnyChannelInCommunity,

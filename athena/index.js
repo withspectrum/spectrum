@@ -38,10 +38,15 @@ const server = createWorker({
   [COMMUNITY_INVOICE_PAID_NOTIFICATION]: processCommunityInvoicePaid,
 });
 
-server.listen(PORT);
-
 console.log(
-  `\n🗄 Queues open for business ${(process.env.NODE_ENV === 'production' &&
+  `🗄 Queues open for business ${(process.env.NODE_ENV === 'production' &&
     `at ${process.env.COMPOSE_REDIS_URL}:${process.env.COMPOSE_REDIS_PORT}`) ||
-    'locally'}; Server listening at localhost:${PORT}`
+    'locally'}`
 );
+
+server.listen(PORT, 'localhost', () => {
+  console.log(
+    `💉 Healthcheck server running at ${server.address()
+      .address}:${server.address().port}`
+  );
+});

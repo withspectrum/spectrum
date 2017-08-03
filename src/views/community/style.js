@@ -6,10 +6,6 @@ export const CoverRow = styled(FlexRow)`
   align-items: flex-start;
 ${/* See class .flexy below - there's a hack on this element bc reasons 🙄 */ ''}
 
-  > div {
-    margin-top: 24px;
-  }
-
   > .inset {
     position: relative;
     top: -64px;

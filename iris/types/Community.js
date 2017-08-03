@@ -87,6 +87,7 @@ const Community = /* GraphQL */ `
 		isMember: Boolean
 		isModerator: Boolean
 		isBlocked: Boolean
+		pinnedThreadId: String
 		communityPermissions: CommunityPermissions!
 		channelConnection: CommunityChannelsConnection!
 		memberConnection(first: Int = 20, after: String): CommunityMembersConnection!
@@ -110,6 +111,7 @@ const Community = /* GraphQL */ `
 		toggleCommunityMembership(communityId: ID!): Community
 		sendSlackInvites(input: SendSlackInvitesInput!): Community
 		sendEmailInvites(input: EmailInvitesInput!): Boolean
+		pinThread(threadId: ID!, communityId: ID!, value: String): Community
 	}
 `;
 
