@@ -10,12 +10,6 @@ export const Truncate = width => css`
   white-space: nowrap;
 `;
 
-// export const Shadow = {
-//   low: '0 2px 8px rgba(23,26,33, 0.15)',
-//   mid: '0 4px 12px rgba(23,26,33, 0.2)',
-//   high: '0 8px 16px rgba(23,26,33, 0.25)',
-// };
-
 export const hexa = (hex, alpha) => {
   var r = parseInt(hex.slice(1, 3), 16),
     g = parseInt(hex.slice(3, 5), 16),

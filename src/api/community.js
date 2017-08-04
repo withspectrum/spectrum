@@ -246,7 +246,7 @@ const getCommunityMembersOptions = {
 
 export const getCommunityMembersQuery = graphql(
   gql`
-		query getCommunity($id: ID) {
+		query getCommunityMembers($id: ID) {
       community(id: $id) {
         id
         ...communityMetaData

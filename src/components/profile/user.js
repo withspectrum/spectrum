@@ -139,6 +139,41 @@ const UserWithData = ({
           </ProUpgrade>}
       </Card>
     );
+  } else if (componentSize === 'simple') {
+    return (
+      <Card>
+        <CoverPhoto
+          user={user}
+          onClick={() => initMessage()}
+          currentUser={currentUser}
+        >
+          <CoverLink to={`/users/${user.username}`}>
+            <CoverAvatar
+              size={64}
+              radius={64}
+              onlineSize={'large'}
+              isOnline={user.isOnline}
+              src={`${user.profilePhoto}`}
+            />
+            <CoverTitle>
+              {user.name}
+            </CoverTitle>
+          </CoverLink>
+        </CoverPhoto>
+        <CoverSubtitle center>
+          {user.username && `@${user.username}`}
+          {user.isAdmin && <Badge type="admin" />}
+          {user.isPro && <Badge type="pro" />}
+        </CoverSubtitle>
+
+        {user.description &&
+          <CoverDescription>
+            <p>
+              {user.description}
+            </p>
+          </CoverDescription>}
+      </Card>
+    );
   } else {
     return (
       <Card>
