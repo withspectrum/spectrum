@@ -1,30 +1,52 @@
 // @flow
 const debug = require('debug')('athena');
+import createWorker from '../shared/bull/create-worker';
 // Our job-processing worker server
-import startMessageNotificationQueue from './queues/message-notification';
-import startReactionNotificationQueue from './queues/reaction-notification';
-import startChannelNotificationQueue from './queues/channel-notification';
-import startCommunityNotificationQueue from './queues/community-notification';
-import startThreadNotificationQueue from './queues/thread-notification';
-import startSlackImportQueue from './queues/slack-import';
-import startCommunityInviteQueue from './queues/community-invite';
-import startCommunityInvoicePaidQueue from './queues/community-invoice-paid';
+import processMessageNotification from './queues/message-notification';
+import processReactionNotification from './queues/reaction-notification';
+import processChannelNotification from './queues/channel-notification';
+import processCommunityNotification from './queues/community-notification';
+import processThreadNotification from './queues/thread-notification';
+import processSlackImport from './queues/slack-import';
+import processCommunityInvite from './queues/community-invite';
+import processCommunityInvoicePaid from './queues/community-invoice-paid';
+import {
+  MESSAGE_NOTIFICATION,
+  REACTION_NOTIFICATION,
+  CHANNEL_NOTIFICATION,
+  COMMUNITY_NOTIFICATION,
+  THREAD_NOTIFICATION,
+  SLACK_IMPORT,
+  COMMUNITY_INVITE_NOTIFICATION,
+  COMMUNITY_INVOICE_PAID_NOTIFICATION,
+} from './queues/constants';
+
+const PORT = process.env.PORT || 3003;
 
 console.log('\n🛠 Athena, the processing worker, is starting...');
 debug('Logging with debug enabled!');
 console.log('');
 
-startMessageNotificationQueue();
-startReactionNotificationQueue();
-startChannelNotificationQueue();
-startCommunityNotificationQueue();
-startThreadNotificationQueue();
-startSlackImportQueue();
-startCommunityInviteQueue();
-startCommunityInvoicePaidQueue();
+const server = createWorker({
+  [MESSAGE_NOTIFICATION]: processMessageNotification,
+  [REACTION_NOTIFICATION]: processReactionNotification,
+  [CHANNEL_NOTIFICATION]: processChannelNotification,
+  [COMMUNITY_NOTIFICATION]: processCommunityNotification,
+  [THREAD_NOTIFICATION]: processThreadNotification,
+  [SLACK_IMPORT]: processSlackImport,
+  [COMMUNITY_INVITE_NOTIFICATION]: processCommunityInvite,
+  [COMMUNITY_INVOICE_PAID_NOTIFICATION]: processCommunityInvoicePaid,
+});
 
 console.log(
-  `\n🗄 Queues open for business ${(process.env.NODE_ENV === 'production' &&
+  `🗄 Queues open for business ${(process.env.NODE_ENV === 'production' &&
     `at ${process.env.COMPOSE_REDIS_URL}:${process.env.COMPOSE_REDIS_PORT}`) ||
     'locally'}`
 );
+
+server.listen(PORT, 'localhost', () => {
+  console.log(
+    `💉 Healthcheck server running at ${server.address()
+      .address}:${server.address().port}`
+  );
+});

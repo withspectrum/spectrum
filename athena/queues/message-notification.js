@@ -1,8 +1,5 @@
 // @flow
 const debug = require('debug')('athena:queue:message-notification');
-import processQueue from '../../shared/bull/process-queue';
-import createQueue from '../../shared/bull/create-queue';
-import { MESSAGE_NOTIFICATION } from './constants';
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import {
@@ -187,5 +184,4 @@ const processMessageNotificationQueue = job => {
     });
 };
 
-export default () =>
-  processQueue(MESSAGE_NOTIFICATION, processMessageNotificationQueue);
+export default processMessageNotificationQueue;
