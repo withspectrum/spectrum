@@ -129,17 +129,17 @@ export default job => {
           .then(([notification, recipients]) => {
             debug('mark notification as new for all recipients');
             // for each user trigger a notification
-            return Promise.all(
+            return Promise.all([
+              createThreadNotificationEmail(incomingThread),
               recipients
                 // don't trigger a notification for the person who just posted the thread
                 .filter(recipient => recipient !== incomingThread.creatorId)
                 .map(recipient => {
                   return Promise.all([
                     markUsersNotificationsAsNew(notification.id, recipient),
-                    createThreadNotificationEmail(incomingThread),
                   ]);
-                })
-            );
+                }),
+            ]);
           });
       } else {
         // if no notification was found that matches our bundling criteria, create a new notification
@@ -169,17 +169,17 @@ export default job => {
           })
           .then(([notification, recipients]) => {
             debug('create a notification for every recipient');
-            return Promise.all(
+            return Promise.all([
+              createThreadNotificationEmail(incomingThread),
               recipients
                 // don't trigger a notification for the person who just posted the thread
                 .filter(recipient => recipient !== incomingThread.creatorId)
                 .map(recipient => {
                   return Promise.all([
                     storeUsersNotifications(notification.id, recipient),
-                    createThreadNotificationEmail(incomingThread),
                   ]);
-                })
-            );
+                }),
+            ]);
           });
       }
     })
