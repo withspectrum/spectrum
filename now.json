@@ -17,6 +17,6 @@
 		"GOOGLE_OAUTH_CLIENT_SECRET": "@google-oauth-client-secret",
 		"GITHUB_OAUTH_CLIENT_SECRET": "@github-oauth-client-secret",
 		"SLACK_SECRET": "@slack-secret",
-		"POSTMARK_SERVER_KEY": "@ce1ba25d-85ad-4e4f-a906-8fb7ea311fea"
+		"POSTMARK_SERVER_KEY": "@postmark-server-key"
 	}
 }
