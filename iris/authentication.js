@@ -17,7 +17,6 @@ const { Strategy: GoogleStrategy } = require('passport-google-oauth2');
 // $FlowFixMe
 const { Strategy: GitHubStrategy } = require('passport-github2');
 const { getUser, createOrFindUser } = require('./models/user');
-const { createNewUsersSettings } = require('./models/usersSettings');
 
 let TWITTER_OAUTH_CLIENT_SECRET = process.env.TWITTER_OAUTH_CLIENT_SECRET;
 let FACEBOOK_OAUTH_CLIENT_SECRET = process.env.FACEBOOK_OAUTH_CLIENT_SECRET;
@@ -76,8 +75,7 @@ const init = () => {
         };
 
         createOrFindUser(user, 'providerId')
-          .then(user => Promise.all([user, createNewUsersSettings(user.id)]))
-          .then(([user]) => {
+          .then(user => {
             done(null, user);
           })
           .catch(err => {
@@ -119,8 +117,7 @@ const init = () => {
         };
 
         createOrFindUser(user, 'fbProviderId')
-          .then(user => Promise.all([user, createNewUsersSettings(user.id)]))
-          .then(([user]) => {
+          .then(user => {
             done(null, user);
           })
           .catch(err => {
@@ -166,8 +163,7 @@ const init = () => {
         };
 
         createOrFindUser(user, 'googleProviderId')
-          .then(user => Promise.all([user, createNewUsersSettings(user.id)]))
-          .then(([user]) => {
+          .then(user => {
             done(null, user);
           })
           .catch(err => {
@@ -206,8 +202,7 @@ const init = () => {
         };
 
         createOrFindUser(user, 'githubProviderId')
-          .then(user => Promise.all([user, createNewUsersSettings(user.id)]))
-          .then(([user]) => {
+          .then(user => {
             done(null, user);
           })
           .catch(err => {

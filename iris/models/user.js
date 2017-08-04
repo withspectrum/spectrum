@@ -3,6 +3,7 @@ const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
 import { uploadImage } from '../utils/s3';
+import { createNewUsersSettings } from './usersSettings';
 const createQueue = require('../../shared/bull/create-queue');
 const sendUserWelcomeEmailQueue = createQueue('send new user welcome email');
 
@@ -74,9 +75,13 @@ const storeUser = (user: Object): Promise<Object> => {
     .run()
     .then(result => {
       const user = result.changes[0].new_val;
+
+      // whenever a new user is created, create a usersSettings record
+      // and send a welcome email
       sendUserWelcomeEmailQueue.add(user);
-      return user;
-    });
+      return Promise.all([user, createNewUsersSettings(user.id)]);
+    })
+    .then(([user, settings]) => user);
 };
 
 const saveUserProvider = (userId, providerMethod, providerId) => {
