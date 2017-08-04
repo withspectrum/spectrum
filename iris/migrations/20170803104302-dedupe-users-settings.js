@@ -80,6 +80,9 @@ exports.up = function(r, conn) {
                   newMessageInThreads: {
                     email: false,
                   },
+                  newThreadCreated: {
+                    email: true,
+                  },
                 },
               },
             })
@@ -94,6 +97,9 @@ exports.up = function(r, conn) {
               notifications: {
                 types: {
                   newMessageInThreads: {
+                    email: true,
+                  },
+                  newThreadCreated: {
                     email: true,
                   },
                 },
