@@ -13,6 +13,5 @@ export const Wrapper = styled(FlexRow)`
     padding: 0;
     justify-content: flex-start;
     flex-direction: column;
-    overflow-y: hidden;
   }
 `;
