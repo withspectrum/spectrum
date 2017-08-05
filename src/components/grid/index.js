@@ -17,6 +17,24 @@ const StyledGrid = styled(FlexRow)`
       margin-top: 0;
     }
   }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex: auto;
+
+    > * {
+      max-width: none;
+      margin: 0;
+
+      + div,
+      + span {
+        margin-top: 2px;
+      }
+    }
+  }
 `;
 
 const Grid = props =>

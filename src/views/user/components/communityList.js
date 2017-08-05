@@ -44,7 +44,7 @@ const CommunityList = props => {
 
   if (dataExists) {
     return (
-      <StyledCard>
+      <StyledCard largeOnly>
         <ListHeader>
           {user === currentUser
             ? <ListHeading>My Communities</ListHeading>

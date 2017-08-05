@@ -40,6 +40,7 @@ ${/* For some goddamn reason, CoverRow will *not* take this property... ughhhhhh
   @media (max-width: 768px) {
     padding-top: 0;
     width: 100%;
+    overflow-y: scroll;
   }
 `;
 
@@ -59,8 +60,15 @@ export const SegmentedControl = styled(FlexRow)`
   align-self: flex-end;
   margin-top: -24px;
   margin-bottom: 8px;
-  border-radius: 12px;
   padding: 8px 4px;
+
+  @media (max-width: 768px) {
+    background-color: ${props => props.theme.bg.default};
+    align-self: stretch;
+    margin: 0;
+    padding: 16px 8px;
+    margin-bottom: 2px;
+  }
 `;
 
 // export const Segment = styled(FlexRow)`
@@ -130,6 +138,11 @@ export const Segment = styled(FlexRow)`
   &:hover{
     color: ${props =>
       props.selected ? props.theme.text.default : props.theme.text.default};
+  }
+
+  @media (max-width: 768px) {
+    flex: auto;
+    justify-content: space-around;
   }
 
 `;
