@@ -14,6 +14,7 @@ import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
 import ThreadFeed from '../../components/threadFeed';
 import ListCard from './components/listCard';
+import MemberGrid from './components/memberGrid';
 import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
@@ -30,10 +31,18 @@ import {
   UpsellJoinCommunity,
   Upsell404Community,
 } from '../../components/upsell';
-import { CoverRow, CoverColumn, CoverButton } from './style';
+import {
+  CoverRow,
+  CoverColumn,
+  CoverButton,
+  SegmentedControl,
+  Segment,
+} from './style';
 
 import { getCommunityThreads, getCommunityChannels } from './queries';
-import { getCommunity } from '../../api/community';
+import { getCommunity, getCommunityMembersQuery } from '../../api/community';
+
+const CommunityMemberGrid = compose(getCommunityMembersQuery)(MemberGrid);
 
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
 
@@ -43,6 +52,7 @@ class CommunityViewPure extends Component {
   state: {
     isLoading: boolean,
     showComposerUpsell: boolean,
+    selectedView: string,
   };
 
   constructor() {
@@ -51,6 +61,7 @@ class CommunityViewPure extends Component {
     this.state = {
       isLoading: false,
       showComposerUpsell: false,
+      selectedView: 'threads',
     };
   }
 
@@ -107,13 +118,23 @@ class CommunityViewPure extends Component {
     return this.setState({ showComposerUpsell: isNewAndOwned ? true : false });
   };
 
+  handleSegmentClick = label => {
+    if (this.state.selectedView === label) {
+      return;
+    } else {
+      this.setState({
+        selectedView: label,
+      });
+    }
+  };
+
   render() {
     const {
       match,
       data: { community, user, networkStatus, error },
       currentUser,
     } = this.props;
-    const { isLoading, showComposerUpsell } = this.state;
+    const { isLoading, showComposerUpsell, selectedView } = this.state;
     const communitySlug = match.params.communitySlug;
     const isMobile = window.innerWidth < 768;
     const dataExists =
@@ -186,31 +207,67 @@ class CommunityViewPure extends Component {
                 />
               </Column>
 
-              <Column type="primary">
-                {loggedInUser
-                  ? hasRights
-                    ? <ThreadComposer
-                        activeCommunity={communitySlug}
-                        showComposerUpsell={showComposerUpsell}
-                      />
-                    : <UpsellJoinCommunity
-                        community={community}
-                        loading={isLoading}
-                        join={this.toggleMembership}
-                      />
-                  : <UpsellSignIn entity={community} />}
-                <CommunityThreadFeed
-                  viewContext="community"
-                  slug={communitySlug}
-                  currentUser={loggedInUser}
-                  setThreadsStatus={
-                    !this.showComposerUpsell && this.setComposerUpsell
-                  }
-                  isNewAndOwned={isNewAndOwned}
-                  community={community}
-                  pinnedThreadId={community.pinnedThreadId}
-                />
-              </Column>
+              {selectedView === 'threads'
+                ? <Column type="primary">
+                    <SegmentedControl>
+                      <Segment
+                        segmentLabel="threads"
+                        onClick={() => this.handleSegmentClick('threads')}
+                        selected={selectedView === 'threads'}
+                      >
+                        Threads
+                      </Segment>
+                      <Segment
+                        segmentLabel="members"
+                        onClick={() => this.handleSegmentClick('members')}
+                        selected={selectedView === 'members'}
+                      >
+                        Members
+                      </Segment>
+                    </SegmentedControl>
+                    {loggedInUser
+                      ? hasRights
+                        ? <ThreadComposer
+                            activeCommunity={communitySlug}
+                            showComposerUpsell={showComposerUpsell}
+                          />
+                        : <UpsellJoinCommunity
+                            community={community}
+                            loading={isLoading}
+                            join={this.toggleMembership}
+                          />
+                      : <UpsellSignIn entity={community} />}
+                    <CommunityThreadFeed
+                      viewContext="community"
+                      slug={communitySlug}
+                      currentUser={loggedInUser}
+                      setThreadsStatus={
+                        !this.showComposerUpsell && this.setComposerUpsell
+                      }
+                      isNewAndOwned={isNewAndOwned}
+                      community={community}
+                      pinnedThreadId={community.pinnedThreadId}
+                    />
+                  </Column>
+                : <Column type="primary">
+                    <SegmentedControl>
+                      <Segment
+                        segmentLabel="threads"
+                        onClick={() => this.handleSegmentClick('threads')}
+                        selected={selectedView === 'threads'}
+                      >
+                        Threads
+                      </Segment>
+                      <Segment
+                        segmentLabel="members"
+                        onClick={() => this.handleSegmentClick('members')}
+                        selected={selectedView === 'members'}
+                      >
+                        Members
+                      </Segment>
+                    </SegmentedControl>
+                    <CommunityMemberGrid id={community.id} />
+                  </Column>}
             </CoverRow>
           </CoverColumn>
         </AppViewWrapper>

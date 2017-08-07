@@ -1,6 +1,7 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { IconButton } from '../../components/buttons';
-import { FlexRow, FlexCol } from '../../components/globals';
+import { FlexRow, FlexCol, Transition, hexa } from '../../components/globals';
+import { UserProfile } from '../../components/profile';
 
 export const CoverRow = styled(FlexRow)`
   align-items: flex-start;
@@ -39,6 +40,7 @@ ${/* For some goddamn reason, CoverRow will *not* take this property... ughhhhhh
   @media (max-width: 768px) {
     padding-top: 0;
     width: 100%;
+    overflow-y: scroll;
   }
 `;
 
@@ -52,4 +54,95 @@ export const CoverButton = styled(IconButton)`
     bottom: 16px;
     top: auto;
   }
+`;
+
+export const SegmentedControl = styled(FlexRow)`
+  align-self: flex-end;
+  margin-top: -24px;
+  margin-bottom: 8px;
+  padding: 8px 4px;
+
+  @media (max-width: 768px) {
+    background-color: ${props => props.theme.bg.default};
+    align-self: stretch;
+    margin: 0;
+    padding: 16px 8px;
+    margin-bottom: 2px;
+  }
+`;
+
+// export const Segment = styled(FlexRow)`
+//   border: 2px solid ${props => props.theme.text.alt};
+//   border-right: none;
+//   border-left: none;
+//   background-color: ${props => props.selected ? props.theme.text.alt : 'transparent'};
+//   color: ${props => props.selected ? props.theme.text.reverse : props.theme.text.alt };
+//   flex: auto;
+//   justify-content: center;
+//   align-items: center;
+//   font-size: 14px;
+//   font-weight: bold;
+//   padding: 8px 0;
+//   cursor: pointer;
+//   transition: ${Transition.hover.off};
+//
+//   ${'' /*
+//   Trying to figure out borders between sections that disappear when adjacent to a selected item. So far... not easy.
+//   ${props => props.selected || css`
+//     + & {
+//       border-left: ${props => props.selected ? 'none' : `2px solid ${props.theme.text.alt}`};
+//     }
+//   `}; */}
+//
+//   &:hover {
+//     transition: ${Transition.hover.on};
+//     border-color: ${props => props.selected ? hexa(props.theme.text.alt, 0.01) : props.theme.text.alt};
+//     background-color: ${props => props.selected ? hexa(props.theme.text.alt, 0.75) : props.theme.border.default};
+//   }
+//
+//   &:first-of-type {
+//     border: 2px solid ${props => props.theme.text.alt};
+//     border-right: none;
+//     border-radius: 12px 0 0 12px;
+//     &:hover {
+//       border-color: ${props => props.selected ? hexa(props.theme.text.alt, 0.01) : props.theme.text.alt};
+//     }
+//   }
+//
+//   &:last-of-type {
+//     border: 2px solid ${props => props.theme.text.alt};
+//     border-left: none;
+//     border-radius: 0 12px 12px 0;
+//     &:hover {
+//       border-color: ${props => props.selected ? hexa(props.theme.text.alt, 0.01) : props.theme.text.alt};
+//     }
+//   }
+// `;
+
+export const Segment = styled(FlexRow)`
+  padding: 4px 16px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  line-height: 1;
+  font-size: 14px;
+  font-weight: ${props => (props.selected ? '900' : '500')};
+  color: ${props =>
+    props.selected ? props.theme.text.default : props.theme.text.alt};
+  cursor: pointer;
+
+  + div {
+    border-left: 2px solid ${props => props.theme.border.default};
+  }
+
+  &:hover{
+    color: ${props =>
+      props.selected ? props.theme.text.default : props.theme.text.default};
+  }
+
+  @media (max-width: 768px) {
+    flex: auto;
+    justify-content: space-around;
+  }
+
 `;

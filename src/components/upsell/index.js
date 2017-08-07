@@ -660,3 +660,14 @@ export const UpsellNullNotifications = () => {
     </NullCard>
   );
 };
+
+export const UpsellReload = () =>
+  <NullCard
+    bg="error"
+    heading={`Whoops!`}
+    copy={`Something went wrong on our end... Mind reloading?`}
+  >
+    <Button icon="view-reload" onClick={() => window.location.reload(true)}>
+      Reload
+    </Button>
+  </NullCard>;

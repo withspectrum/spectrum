@@ -76,7 +76,11 @@ module.exports = {
       return getMembersInCommunity(id)
         .then(users => loaders.user.loadMany(users))
         .then(users =>
-          paginate(users, { first, after: cursor }, user => user.id === cursor)
+          paginate(
+            users,
+            { first, after: cursor },
+            user => user && user.id === cursor
+          )
         )
         .then(result => ({
           pageInfo: {

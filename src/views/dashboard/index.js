@@ -146,8 +146,8 @@ class DashboardPure extends Component {
                 communities={communities}
                 networkStatus={networkStatus}
               />
-              <UpsellMiniCreateCommunity />
-              {!currentUser.isPro && <UpsellMiniUpgrade />}
+              <UpsellMiniCreateCommunity largeOnly />
+              {!currentUser.isPro && <UpsellMiniUpgrade largeOnly />}
             </Column>}
 
           <Column type="primary">

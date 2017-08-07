@@ -58,7 +58,7 @@ class NotificationsTogglePure extends Component {
     const { channel } = this.props;
 
     return (
-      <StyledCard>
+      <StyledCard largeOnly>
         <ListHeader>
           <ListHeading>New Thread Notifications</ListHeading>
         </ListHeader>
