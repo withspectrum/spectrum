@@ -5,6 +5,10 @@ export const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   cursor: text;
+
+  .DraftEditor-root {
+    margin-top: 0;
+  }
 `;
 
 export const MediaRow = styled.div`
