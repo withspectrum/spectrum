@@ -557,6 +557,18 @@ const getCommunitiesBySearchString = (
     .run();
 };
 
+const searchThreadsInCommunity = (
+  communityId: string,
+  searchString: string
+): Promise<Array<Object>> => {
+  return db
+    .table('threads')
+    .getAll(communityId, { index: 'communityId' })
+    .filter(thread => thread.coerceTo('string').match(`(?i)${searchString}`))
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .run();
+};
+
 module.exports = {
   getCommunities,
   getCommunitiesBySlug,
@@ -572,4 +584,5 @@ module.exports = {
   getTopCommunities,
   getRecentCommunities,
   getCommunitiesBySearchString,
+  searchThreadsInCommunity,
 };

@@ -102,6 +102,7 @@ const Community = /* GraphQL */ `
 		topCommunities(amount: Int = 20): [Community!]
 		recentCommunities: [Community!]
 		searchCommunities(string: String): [Community]
+		searchCommunityThreads(communityId: ID!, searchString: String): [Thread]
 	}
 
 	extend type Mutation {

@@ -8,6 +8,7 @@ const {
   getTopCommunities,
   getRecentCommunities,
   getCommunitiesBySearchString,
+  searchThreadsInCommunity,
 } = require('../models/community');
 const {
   getUserPermissionsInCommunity,
@@ -45,6 +46,8 @@ module.exports = {
       getRecentCommunities(),
     searchCommunities: (_: any, { string }: { string: string }) =>
       getCommunitiesBySearchString(string),
+    searchCommunityThreads: (_, { communityId, searchString }, __) =>
+      searchThreadsInCommunity(communityId, searchString),
   },
   Community: {
     communityPermissions: (

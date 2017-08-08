@@ -2,6 +2,7 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { communityInfoFragment } from './fragments/community/communityInfo';
+import { threadInfoFragment } from './fragments/thread/threadInfo';
 import { communityMetaDataFragment } from './fragments/community/communityMetaData';
 import { channelInfoFragment } from './fragments/channel/channelInfo';
 import { userInfoFragment } from './fragments/user/userInfo';
@@ -400,4 +401,40 @@ const PIN_THREAD_OPTIONS = {
 export const pinThreadMutation = graphql(
   PIN_THREAD_MUTATION,
   PIN_THREAD_OPTIONS
+);
+
+export const SEARCH_THREADS_IN_COMMUNITY_QUERY = gql`
+  query searchCommunityThreads($communityId: ID!, $searchString: String!) {
+    searchCommunityThreads(communityId: $communityId, searchString: $searchString) {
+      ...threadInfo
+    }
+  }
+  ${threadInfoFragment}
+`;
+
+const SEARCH_THREADS_IN_COMMUNITY_OPTIONS = {
+  props: ({
+    data: { fetchMore, error, loading, searchCommunityThreads, networkStatus },
+  }) => ({
+    data: {
+      error,
+      loading,
+      networkStatus,
+      threads: searchCommunityThreads
+        ? searchCommunityThreads.map(thread => ({ node: { ...thread } }))
+        : [],
+    },
+  }),
+  options: ({ communityId, searchString }) => ({
+    variables: {
+      communityId,
+      searchString,
+    },
+    fetchPolicy: 'cache-and-network',
+  }),
+};
+
+export const searchCommunityThreadsQuery = graphql(
+  SEARCH_THREADS_IN_COMMUNITY_QUERY,
+  SEARCH_THREADS_IN_COMMUNITY_OPTIONS
 );
