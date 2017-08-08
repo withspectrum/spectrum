@@ -88,7 +88,6 @@ const AvatarWithFallback = props =>
       type="image/png"
       {...props}
     >
-      {console.log(props)}
       <StyledAvatarFallback
         {...props}
         src={
