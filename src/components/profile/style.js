@@ -13,7 +13,7 @@ export const ProfileHeader = styled(FlexRow)`
 `;
 
 export const CommunityAvatar = styled(Avatar)`
-  width: 48px;
+  ${'' /* width: 48px; */}
   ${'' /* margin-right: 16px; */}
 `;
 
