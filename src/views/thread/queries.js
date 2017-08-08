@@ -2,11 +2,6 @@ import { graphql, gql } from 'react-apollo';
 import { subscribeToNewMessages } from '../../api/subscriptions';
 import { threadInfoFragment } from '../../api/fragments/thread/threadInfo';
 import { threadMessagesFragment } from '../../api/fragments/thread/threadMessages';
-import { userInfoFragment } from '../../api/fragments/user/userInfo';
-import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
-import { channelInfoFragment } from '../../api/fragments/channel/channelInfo';
-import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
-import { channelMetaDataFragment } from '../../api/fragments/channel/channelMetaData';
 
 export const GET_THREAD_QUERY = gql`
   query getThread($id: ID!) {

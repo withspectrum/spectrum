@@ -9,7 +9,6 @@ import {
   parseContext,
 } from '../utils';
 import {
-  convertTimestampToDate,
   convertTimestampToTime,
   onlyContainsEmoji,
 } from '../../../helpers/utils';
@@ -21,14 +20,11 @@ import {
 } from '../../../components/threadFeedCard/style';
 import { Bubble, EmojiBubble, ImgBubble } from '../../../components/bubbles';
 import Icon from '../../../components/icons';
-import Badge from '../../../components/badges';
 import {
   MessagesWrapper,
   MessageWrapper,
   Byline,
   Name,
-  Timestamp,
-  Time,
   AvatarLabel,
   UserAvatar,
 } from '../../../components/chatMessages/style';

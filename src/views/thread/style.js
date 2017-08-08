@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components';
-import { Link } from 'react-router-dom';
 import { Avatar } from '../../components/avatar';
 import Markdown from '../../components/markdown';
 import Column from '../../components/column';

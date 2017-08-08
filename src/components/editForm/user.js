@@ -387,7 +387,6 @@ class UserWithData extends Component {
       usernameError,
       isUsernameSearching,
     } = this.state;
-    const { currentUser } = this.props;
 
     return (
       <StyledCard>
@@ -417,7 +416,10 @@ class UserWithData extends Component {
 
           {proGifError &&
             <Notice style={{ marginTop: '32px' }}>
-              Upgrade to Pro to use a gif as your profile or cover photo 👉
+              Upgrade to Pro to use a gif as your profile or cover photo{' '}
+              <span role="img" aria-label="finger pointing right emoji">
+                👉
+              </span>
             </Notice>}
 
           <Input

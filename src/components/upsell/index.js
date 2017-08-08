@@ -597,12 +597,29 @@ class UpsellUpgradeToProPure extends Component {
         <Subtitle>
           <ul>
             <li>
-              ✨ A spiffy new Pro badge will adorn your name everywhere on
-              Spectrum
+              <span role="img" aria-label="sparkle emoji">
+                ✨
+              </span>{' '}
+              A spiffy new Pro badge will adorn your name everywhere on Spectrum
             </li>
-            <li>😍 Set a gif as your profile photo or cover photo</li>
-            <li>🛠 Upload images up to 25mb, making sharing work easier</li>
-            <li>❤️ More to come!</li>
+            <li>
+              <span role="img" aria-label="smile with heart eyes emoji">
+                😍
+              </span>{' '}
+              Set a gif as your profile photo or cover photo
+            </li>
+            <li>
+              <span role="img" aria-label="tools emoji">
+                🛠
+              </span>{' '}
+              Upload images up to 25mb, making sharing work easier
+            </li>
+            <li>
+              <span role="img" aria-label="heart emoji">
+                ❤️
+              </span>{' '}
+              More to come!
+            </li>
           </ul>
         </Subtitle>
         <Cost>Spectrum Pro costs $5/month and you can cancel at any time.</Cost>

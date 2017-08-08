@@ -132,11 +132,7 @@ class ThreadContainerPure extends Component {
   };
 
   render() {
-    const {
-      data: { thread, networkStatus, user },
-      data,
-      currentUser,
-    } = this.props;
+    const { data: { thread, networkStatus, user }, currentUser } = this.props;
 
     const { isLoading } = this.state;
     const loggedInUser = user || currentUser;

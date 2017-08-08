@@ -1,10 +1,6 @@
 // @flow
 import React from 'react';
 // $FlowFixMe
-import pure from 'recompose/pure';
-// $FlowFixMe
-import compose from 'recompose/compose';
-// $FlowFixMe
 import { connect } from 'react-redux';
 import { Container, ErrorToast, SuccessToast, NeutralToast } from './style';
 

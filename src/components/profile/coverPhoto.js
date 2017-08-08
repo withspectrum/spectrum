@@ -4,7 +4,6 @@ import React from 'react';
 import styled from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { Gradient } from '../globals';
 import { ProfileHeaderAction } from './style';
 import { optimize } from '../../helpers/images';
 

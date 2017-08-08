@@ -6,19 +6,15 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { addToastWithTimeout } from '../../../actions/toasts';
 import { getCommunityInvoices } from '../../../api/community';
 import { displayLoadingCard } from '../../../components/loading';
 import { InvoiceListItem } from '../../../components/listItems';
 import {
   StyledCard,
-  ListHeader,
   LargeListHeading,
   ListContainer,
-  ListFooter,
   Description,
 } from '../../../components/listItems/style';
-import { UnpaidBadge } from '../style';
 
 class InvoicesPure extends Component {
   render() {
