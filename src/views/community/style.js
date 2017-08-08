@@ -170,11 +170,9 @@ export const SearchContainer = styled(Card)`
   }
 
   @media (max-width: 768px) {
-    width: calc(100% - 16px);
-    margin: 48px 8px;
-    height: calc(100% - 112px);
-    min-height: 240px;
+    border-radius: 0;
     pointer-events: all;
+    margin-bottom: 0;
   }
 `;
 
@@ -183,7 +181,7 @@ export const SearchInput = styled.input`
   align-items: center;
   cursor: pointer;
   padding: 20px;
-  color: ${props => props.theme.text.alt};
+  color: ${props => props.theme.text.default};
   transition: ${Transition.hover.off};
   font-size: 20px;
   font-weight: 800;
