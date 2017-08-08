@@ -558,12 +558,12 @@ const getCommunitiesBySearchString = (
 };
 
 const searchThreadsInCommunity = (
-  communityId: string,
+  channels: Array<string>,
   searchString: string
 ): Promise<Array<Object>> => {
   return db
     .table('threads')
-    .getAll(communityId, { index: 'communityId' })
+    .getAll(...channels, { index: 'channelId' })
     .filter(thread => thread.coerceTo('string').match(`(?i)${searchString}`))
     .filter(thread => db.not(thread.hasFields('deletedAt')))
     .run();

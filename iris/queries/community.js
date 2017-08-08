@@ -46,8 +46,23 @@ module.exports = {
       getRecentCommunities(),
     searchCommunities: (_: any, { string }: { string: string }) =>
       getCommunitiesBySearchString(string),
-    searchCommunityThreads: (_, { communityId, searchString }, __) =>
-      searchThreadsInCommunity(communityId, searchString),
+    searchCommunityThreads: (_, { communityId, searchString }, { user }) => {
+      const currentUser = user;
+
+      let channelsToGetThreadsFor;
+      if (currentUser) {
+        channelsToGetThreadsFor = getChannelsByUserAndCommunity(
+          communityId,
+          currentUser.id
+        );
+      } else {
+        channelsToGetThreadsFor = getPublicChannelsByCommunity(communityId);
+      }
+
+      return channelsToGetThreadsFor
+        .then(channels => channels.map(channel => channel.id))
+        .then(channels => searchThreadsInCommunity(channels, searchString));
+    },
   },
   Community: {
     communityPermissions: (
