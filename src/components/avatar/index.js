@@ -67,51 +67,31 @@ const StyledAvatarLink = styled(Link)`
   pointer-events: auto;
 `;
 
+const AvatarWithFallback = props =>
+  <StyledAvatarContainer
+    data={optimize(props.src, { w: props.size, dpr: 2, format: 'png' })}
+    type="image/png"
+    {...props}
+  >
+    <StyledAvatar
+      {...props}
+      src={
+        props.community
+          ? `/img/default_community.svg`
+          : `/img/default_avatar.svg`
+      }
+    />
+  </StyledAvatarContainer>;
+
 const AvatarPure = (props: Object): React$Element<any> => {
   if (props.link) {
     return (
       <StyledAvatarLink to={props.link}>
-        <StyledAvatarContainer
-          data={optimize(props.src, {
-            w: props.size,
-            dpr: 2,
-            format: 'png',
-          })}
-          type="image/png"
-          {...props}
-        >
-          <StyledAvatar
-            {...props}
-            src={
-              props.community
-                ? `/img/default_community.svg`
-                : `/img/default_avatar.svg`
-            }
-          />
-        </StyledAvatarContainer>
+        <AvatarWithFallback {...props} />
       </StyledAvatarLink>
     );
   } else {
-    return (
-      <StyledAvatarContainer
-        data={optimize(props.src, {
-          w: props.size,
-          dpr: 2,
-          format: 'png',
-        })}
-        type="image/png"
-        {...props}
-      >
-        <StyledAvatar
-          {...props}
-          src={
-            props.community
-              ? `/img/default_community.svg`
-              : `/img/default_avatar.svg`
-          }
-        />
-      </StyledAvatarContainer>
-    );
+    return <AvatarWithFallback {...props} />;
   }
 };
 
