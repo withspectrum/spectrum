@@ -156,6 +156,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
                 }
                 role="presentation"
                 key={props.data.creator.id}
+                onlineSize={'small'}
               />
             </Creator>
             {messageAvatars(participantList)}
