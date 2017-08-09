@@ -566,6 +566,7 @@ const searchThreadsInCommunity = (
     .getAll(...channels, { index: 'channelId' })
     .filter(thread => thread.coerceTo('string').match(`(?i)${searchString}`))
     .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .orderBy(db.desc('lastActive'))
     .run();
 };
 
