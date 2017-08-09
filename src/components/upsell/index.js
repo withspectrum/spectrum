@@ -283,7 +283,7 @@ export class UpsellSignIn extends Component {
               .data.name} community and get in on the conversation.`
           : `Spectrum is a place where communities can share, discuss, and grow together. Sign up to join the ${view
               .data.community.name} community and get in on the conversation.`
-        : 'Spectrum helps you connect with the communities you care about. Sign in below to get in on the conversation.';
+        : 'Spectrum is a place where communities can share, discuss, and grow together. Sign up below to get in on the conversation.';
 
       return (
         <NullCard bg={'signup'} noPadding noShadow={noShadow}>
