@@ -20,7 +20,12 @@ import { track } from './helpers/events';
 
 const { thread } = queryString.parse(history.location.search);
 if (thread) {
-  history.replace(`/thread/${thread}`);
+  const hash = window.location.hash.substr(1);
+  if (hash && hash.length > 1) {
+    history.replace(`/thread/${thread}#${hash}`);
+  } else {
+    history.replace(`/thread/${thread}`);
+  }
 }
 
 const existingUser = getItemFromStorage('spectrum');

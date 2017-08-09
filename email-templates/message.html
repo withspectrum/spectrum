@@ -288,9 +288,8 @@
       margin-bottom: 16px;
     }
 
-    .small-link {
-      font-size: 12px;
-      font-weight: 500;
+    .button.feed {
+      margin-top: 16px;
     }
     </style>
   </head>
@@ -321,11 +320,6 @@
                               <a href="https://spectrum.chat/{{path}}{{^path}}thread/{{id}}{{/path}}"><h2 class="title">{{title}}</h2></a>
                             </td>
                           </tr>
-                          <tr>
-                            <td>
-                              <a class="small-link" href="https://spectrum.chat/{{path}}{{^path}}thread/{{../id}}{{/path}}">Go to thread</a>
-                            </td>
-                          </tr>
                           {{#each replies}}
                             <tr class="reply-container">
                               <td class="attributes_item">
@@ -354,14 +348,14 @@
                                 </table>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <a class="feed button" href="https://spectrum.chat/{{path}}{{^path}}thread/{{../id}}{{/path}}">Go to thread</a>
+                              </td>
+                            </tr>
                           {{/each}}
                         </table>
                       {{/each}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="footer-cell">
-                      <a class="button" href="https://spectrum.chat/home">Go to my feed</a>
                     </td>
                   </tr>
                   <tr>

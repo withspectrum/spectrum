@@ -106,7 +106,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
     <StyledThreadFeedCard hoverable>
       <CardLink to={`?thread=${props.data.id}`} />
       <CardContent>
-        {formatLocation()}
+        {/* {formatLocation()} */}
         <Link to={`?thread=${props.data.id}`}>
           <Title>
             {props.data.content.title}
@@ -141,8 +141,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
             })}
         </MetaRow>
         <MetaRow>
-          <ParticipantHeads>
-            {/* TODO: Creator/participants should all be links, not fire modals. */}
+          {/* <ParticipantHeads>
             <Creator role="presentation">
               <Avatar
                 size={24}
@@ -163,7 +162,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
             {participantList.length > 10 &&
               <ParticipantCount>{`+${participantList.length -
                 10}`}</ParticipantCount>}
-          </ParticipantHeads>
+          </ParticipantHeads> */}
           {props.data.messageCount > 0
             ? <Meta>
                 <Icon

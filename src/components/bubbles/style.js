@@ -24,6 +24,13 @@ export const TextBubble = styled.p`
   white-space: pre-line;
   word-wrap: break-word;
   word-break: break-word;
+  box-shadow: ${props =>
+    props.hashed
+      ? `0 0 0 2px ${props.theme.bg.default}, 0 0 0 4px ${props.theme.brand
+          .default}`
+      : ''};
+  margin-top: ${props => (props.hashed ? '4px' : '0')};
+  margin-bottom: ${props => (props.hashed ? '4px' : '0')};
 
   & + & {
     margin-top: 2px;
@@ -85,4 +92,11 @@ export const ImageBubble = styled.img`
   opacity: ${props => (props.pending ? 0.5 : 1)};
   transition: opacity 0.2s ease-out;
   border: 1px solid #f6f7f8;
+  margin-top: ${props => (props.hashed ? '4px' : '0')};
+  margin-bottom: ${props => (props.hashed ? '4px' : '0')};
+  box-shadow: ${props =>
+    props.hashed
+      ? `0 0 0 2px ${props.theme.bg.default}, 0 0 0 4px ${props.theme.brand
+          .default}`
+      : ''};
 `;

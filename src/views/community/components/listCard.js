@@ -51,7 +51,7 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
     return (
       <StyledCard largeOnly>
         <ListHeader>
-          <ListHeading>My Channels</ListHeading>
+          <ListHeading>Channels</ListHeading>
           {data.community.communityPermissions.isOwner &&
             <IconButton
               glyph="plus"

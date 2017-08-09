@@ -56,6 +56,7 @@ class ExistingThread extends Component {
             <Header thread={thread} currentUser={currentUser} />
             <Messages
               id={id}
+              threadType={thread.threadType}
               currentUser={currentUser}
               forceScrollToBottom={this.forceScrollToBottom}
               contextualScrollToBottom={this.contextualScrollToBottom}

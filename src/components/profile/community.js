@@ -176,7 +176,6 @@ class CommunityWithData extends Component {
                 </a>
               </ExtLink>}
           </Description>
-          <MetaData data={community.metaData} />
         </Card>
       );
     } else if (componentSize === 'miniWithAction') {

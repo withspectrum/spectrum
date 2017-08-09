@@ -92,24 +92,23 @@ export const MessageWrapper = styled.span`
   padding: 1px 0;
   position: relative;
 
-  &:after {
-    transition: ${Transition.hover.off};
-    content: ${props => (props.timestamp ? `'${props.timestamp}'` : '')};
-    position: absolute;
-    ${props =>
-      props.me ? 'right: calc(100% + 8px)' : 'left: calc(100% + 8px)'};
-    top: -4px;
-    white-space: nowrap;
-    font-size: 12px;
-    color: ${({ theme }) => theme.text.alt};
+  .message-link,
+  .message-timestamp {
     opacity: 0;
+    transition: ${Transition.hover.off};
+    position: absolute;
   }
 
-  &:hover:after {
-    opacity: 1;
-    transition: ${Transition.hover.on};
+  &:hover {
+    .message-link,
+    .message-timestamp {
+      opacity: 1;
+      transition: ${Transition.hover.on};
+    }
   }
 `;
+
+export const MessageTimestamp = styled.p`display: inline;`;
 
 export const Timestamp = styled(HorizontalRule)`
 	margin: 16px 32px 8px 32px;
@@ -146,5 +145,34 @@ export const Container = styled.div`
 
   @media (max-width: 768px) {
     padding-bottom: 16px;
+  }
+`;
+
+export const MessageLink = styled.a`
+  ${props =>
+    props.me ? 'right: calc(100% + 48px)' : 'left: calc(100% + 4px)'};
+  white-space: nowrap;
+  font-size: 12px;
+  top: -3px;
+  color: ${({ theme }) => theme.text.alt};
+
+  div {
+    top: 3px;
+    left: -2px;
+  }
+`;
+
+export const MessageNonLink = styled.span`
+  ${props =>
+    props.me ? 'right: calc(100% + 48px)' : 'left: calc(100% + 8px)'};
+  white-space: nowrap;
+  font-size: 12px;
+  top: -3px;
+  color: ${({ theme }) => theme.text.alt};
+  display: inline-block;
+
+  div {
+    top: 3px;
+    left: -2px;
   }
 `;

@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+import Icon from '../../components/icons';
 import { openGallery } from '../../actions/gallery';
 import {
   convertTimestampToDate,
@@ -26,6 +27,9 @@ import {
   Container,
   MessagesWrapper,
   MessageWrapper,
+  MessageLink,
+  MessageNonLink,
+  MessageTimestamp,
 } from './style';
 
 /*
@@ -42,8 +46,22 @@ class ChatMessages extends Component {
     this.props.dispatch(openGallery(threadId, messageId));
   };
 
+  componentDidMount() {
+    const hash = window.location.hash.substr(1);
+    if (hash && hash.length > 1) {
+      window.location.href = `#${hash}`;
+    }
+  }
+
   render() {
-    const { messages, currentUser, toggleReaction, dispatch } = this.props;
+    const {
+      messages,
+      currentUser,
+      toggleReaction,
+      dispatch,
+      threadType,
+    } = this.props;
+    const hash = window.location.hash.substr(1);
 
     if (!messages || messages.length === 0) {
       return (
@@ -54,6 +72,31 @@ class ChatMessages extends Component {
         />
       );
     } else {
+      const renderTimestamp = (me, message) => {
+        if (threadType === 'directMessageThread') {
+          return (
+            <MessageNonLink me={me} className={'message-link'}>
+              <MessageTimestamp className={'message-timestamp'}>
+                {convertTimestampToTime(message.timestamp)}
+              </MessageTimestamp>
+            </MessageNonLink>
+          );
+        } else {
+          return (
+            <MessageLink
+              me={me}
+              className={'message-link'}
+              href={`#${message.id}`}
+            >
+              <Icon glyph="link" size={16} />
+              <MessageTimestamp className={'message-timestamp'}>
+                {convertTimestampToTime(message.timestamp)}
+              </MessageTimestamp>
+            </MessageLink>
+          );
+        }
+      };
+
       const renderAvatar = (sender: Object, me: boolean) => {
         const robo = sender.id === 'robo';
         if (me || robo) return;
@@ -125,11 +168,9 @@ class ChatMessages extends Component {
                       const emojiOnly = onlyContainsEmoji(message.content.body);
                       const TextBubble = emojiOnly ? EmojiBubble : Bubble;
                       return (
-                        <MessageWrapper
-                          me={me}
-                          key={message.id}
-                          timestamp={convertTimestampToTime(message.timestamp)}
-                        >
+                        <MessageWrapper me={me} key={message.id}>
+                          <a name={`${message.id}`} />
+                          {renderTimestamp(me, message)}
                           <TextBubble
                             me={me}
                             persisted={message.persisted}
@@ -137,6 +178,7 @@ class ChatMessages extends Component {
                             message={message.content}
                             type={message.messageType}
                             pending={message.id < 0}
+                            hashed={hash === message.id}
                           />
 
                           {/*
@@ -158,11 +200,9 @@ class ChatMessages extends Component {
                       );
                     } else if (message.messageType === 'media') {
                       return (
-                        <MessageWrapper
-                          me={me}
-                          key={message.id}
-                          timestamp={convertTimestampToTime(message.timestamp)}
-                        >
+                        <MessageWrapper me={me} key={message.id}>
+                          <a name={`${message.id}`} />
+                          {renderTimestamp(me, message)}
                           <ImgBubble
                             me={me}
                             persisted={message.persisted}
@@ -172,6 +212,7 @@ class ChatMessages extends Component {
                             openGallery={() =>
                               this.toggleOpenGallery(message.id)}
                             pending={message.id < 0}
+                            hashed={hash === message.id}
                           />
                           {typeof message.id === 'string' &&
                             <Reaction
