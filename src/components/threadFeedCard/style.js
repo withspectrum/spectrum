@@ -11,7 +11,7 @@ import {
 import Card from '../card';
 
 export const StyledThreadFeedCard = styled(Card)`
-  padding: 16px 20px 16px 20px;
+  padding: 16px 20px;
   margin-bottom: 16px;
   transition: ${Transition.hover.off};
 
@@ -52,8 +52,8 @@ export const CardContent = styled(FlexCol)`
 
 export const Title = styled.h2`
   font-weight: 800;
-  font-size: 20px;
-  line-height: 1.4;
+  font-size: 24px;
+  line-height: 1.2;
   flex: 0 0 auto;
   color: ${({ theme }) => theme.text.default};
   pointer-events: all;
@@ -64,7 +64,6 @@ export const MetaRow = styled(FlexRow)`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 8px;
 `;
 
 export const ParticipantHeads = styled(FlexRow)`
@@ -94,26 +93,42 @@ export const Creator = styled.div`
   }
 `;
 
+export const CreatorName = styled.span`
+  font-weight: 500;
+  font-size: 13px;
+  color: ${props => props.theme.text.alt};
+  line-height: 1;
+`;
+
+export const ThreadContext = styled(FlexRow)`
+  margin-top: 16px;
+`;
+
+export const ThreadContextMeta = styled(FlexCol)`
+  margin-left: 12px;
+  justify-content: center;
+  align-items: flex-start;
+`;
+
 export const Meta = styled.span`
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1;
   vertical-align: middle;
   color: ${({ theme }) => theme.text.alt};
   display: flex;
   align-items: center;
-
-  div {
+  margin-left: -2px;
+  ${'' /* margin-bottom: 4px; */} div {
     margin-right: 4px;
   }
 
-  @media (max-width: 480px) {
+  ${'' /* @media (max-width: 480px) {
     display: none;
-  }
+  } */};
 `;
 
 export const MetaNew = styled(Meta)`
-  font-weight: 700;
   color: ${({ theme }) => theme.success.default};
 `;
 
@@ -132,9 +147,12 @@ export const ParticipantCount = styled.span`
 export const Location = styled.span`
   display: inline-block;
   flex: 0 0 auto;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${({ theme }) => theme.text.default};
+  line-height: 1;
+  margin-top: -2px;
+  margin-bottom: 4px;
 
   > a {
     pointer-events: all;

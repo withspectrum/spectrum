@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { LinkPreview } from '../../components/linkPreview';
 import Icon from '../../components/icons';
+import { FlexRow, FlexCol } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
 import {
   StyledThreadFeedCard,
@@ -20,7 +21,9 @@ import {
   MetaNew,
   MetaRow,
   ParticipantCount,
-  Creator,
+  CreatorName,
+  ThreadContext,
+  ThreadContextMeta,
   ParticipantHeads,
   Location,
   Lock,
@@ -31,8 +34,51 @@ import {
 
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
   const formatLocation = () => {
+    console.log('>>', props);
     switch (props.viewContext) {
       case 'dashboard':
+      default:
+        return (
+          <ThreadContext>
+            <Avatar
+              community
+              size={32}
+              src={props.data.channel.community.profilePhoto}
+            />
+            <ThreadContextMeta>
+              <Location>
+                <Link to={`/${props.data.channel.community.slug}`}>
+                  {props.data.channel.community.name}
+                </Link>{' '}
+                /{' '}
+                <Link
+                  to={`/${props.data.channel.community.slug}/${props.data
+                    .channel.slug}`}
+                >
+                  {props.data.channel.isPrivate &&
+                    <Lock>
+                      <Icon
+                        glyph="private"
+                        tipText={'Private channel'}
+                        tipLocation="top-right"
+                        size={12}
+                      />
+                    </Lock>}
+                  {props.data.channel.name}
+                </Link>
+              </Location>
+              <FlexRow>
+                <CreatorName>
+                  {props.data.creator.name}
+                </CreatorName>
+                {participantList.length > 1 &&
+                  <ParticipantCount>
+                    {`+${participantList.length - 1} more`}
+                  </ParticipantCount>}
+              </FlexRow>
+            </ThreadContextMeta>
+          </ThreadContext>
+        );
       case 'profile':
         return (
           <Location>
@@ -78,7 +124,6 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
           </Location>
         );
       case 'channel':
-      default:
         return null;
     }
   };
@@ -106,40 +151,6 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
     <StyledThreadFeedCard hoverable>
       <CardLink to={`?thread=${props.data.id}`} />
       <CardContent>
-        {/* {formatLocation()} */}
-        <Link to={`?thread=${props.data.id}`}>
-          <Title>
-            {props.data.content.title}
-          </Title>
-          {props.isPinned &&
-            <Pinned>
-              <PinnedBanner />
-              <PinnedIconWrapper>
-                <Icon glyph="pin-fill" size={24} />
-              </PinnedIconWrapper>
-            </Pinned>}
-        </Link>
-        <MetaRow>
-          {// for now we know this means there is a link attachment
-          props.data.attachments &&
-            props.data.attachments.length > 0 &&
-            props.data.attachments.map((attachment, i) => {
-              if (attachment.attachmentType === 'linkPreview') {
-                return (
-                  <LinkPreview
-                    trueUrl={attachment.data.trueUrl}
-                    data={JSON.parse(attachment.data)}
-                    size={'small'}
-                    editable={false}
-                    margin={'8px 0 12px'}
-                    key={i}
-                  />
-                );
-              } else {
-                return <span key={i} />;
-              }
-            })}
-        </MetaRow>
         <MetaRow>
           {/* <ParticipantHeads>
             <Creator role="presentation">
@@ -165,28 +176,50 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
           </ParticipantHeads> */}
           {props.data.messageCount > 0
             ? <Meta>
-                <Icon
-                  size={24}
-                  glyph="message-fill"
-                  tipText={`${props.data.messageCount} ${props.data
-                    .messageCount > 1
-                    ? 'messages'
-                    : 'message'}`}
-                  tipLocation="top-left"
-                />
-                {props.data.messageCount}
+                <Icon size={20} glyph="message-fill" />
+                {props.data.messageCount}{' '}
+                {props.data.messageCount > 1 ? ' messages' : ' message'}
               </Meta>
             : !props.data.isCreator &&
               <MetaNew>
-                <Icon
-                  size={24}
-                  glyph="notification-fill"
-                  tipText={`New thread!`}
-                  tipLocation="top-left"
-                />
-                New
+                <Icon size={20} glyph="post-fill" />
+                New thread!
               </MetaNew>}
         </MetaRow>
+        <Link to={`?thread=${props.data.id}`}>
+          <Title>
+            {props.data.content.title}
+          </Title>
+          {props.isPinned &&
+            <Pinned>
+              <PinnedBanner />
+              <PinnedIconWrapper>
+                <Icon glyph="pin-fill" size={24} />
+              </PinnedIconWrapper>
+            </Pinned>}
+        </Link>
+        {// for now we know this means there is a link attachment
+        props.data.attachments &&
+          props.data.attachments.length > 0 &&
+          props.data.attachments.map((attachment, i) => {
+            if (attachment.attachmentType === 'linkPreview') {
+              return (
+                <MetaRow>
+                  <LinkPreview
+                    trueUrl={attachment.data.trueUrl}
+                    data={JSON.parse(attachment.data)}
+                    size={'small'}
+                    editable={false}
+                    margin={'8px 0 12px'}
+                    key={i}
+                  />
+                </MetaRow>
+              );
+            } else {
+              return null;
+            }
+          })}
+        {formatLocation()}
       </CardContent>
     </StyledThreadFeedCard>
   );
