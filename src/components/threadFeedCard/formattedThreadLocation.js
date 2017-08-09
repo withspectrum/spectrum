@@ -9,6 +9,7 @@ import {
   ParticipantCount,
   CreatorName,
   ThreadContext,
+  ThreadContextAvatar,
   ThreadContextMeta,
   Location,
   Lock,
@@ -34,13 +35,14 @@ const FormattedThreadLocation = props => {
 
   return (
     <ThreadContext>
-      {needsCommunityDetails
-        ? <Avatar
+      {needsCommunityDetails &&
+        <ThreadContextAvatar>
+          <Avatar
             community
             size={32}
             src={props.data.channel.community.profilePhoto}
           />
-        : <Avatar size={32} src={props.data.creator.profilePhoto} />}
+        </ThreadContextAvatar>}
       <ThreadContextMeta>
         {(needsCommunityDetails || needsChannelDetails) &&
           <Location>
@@ -77,7 +79,7 @@ const FormattedThreadLocation = props => {
             </CreatorName>
             {participantList.length >= 1 &&
               <ParticipantCount>
-                {`+ ${participantList.length - 1} more`}
+                {`+ ${participantList.length} more`}
               </ParticipantCount>}
           </FlexRow>}
       </ThreadContextMeta>

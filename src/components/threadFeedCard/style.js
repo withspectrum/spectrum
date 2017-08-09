@@ -78,8 +78,9 @@ export const ThreadContext = styled(FlexRow)`
   margin-top: 4px;
 `;
 
+export const ThreadContextAvatar = styled.div`margin-right: 12px;`;
+
 export const ThreadContextMeta = styled(FlexCol)`
-  margin-left: 12px;
   justify-content: center;
   align-items: flex-start;
 `;
@@ -92,7 +93,6 @@ export const Meta = styled.span`
   color: ${({ theme }) => theme.text.alt};
   display: flex;
   align-items: center;
-  margin-left: -2px;
   margin-bottom: 4px;
 
   div {
