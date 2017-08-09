@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+import Icon from '../../components/icons';
 import { openGallery } from '../../actions/gallery';
 import {
   convertTimestampToDate,
@@ -26,6 +27,8 @@ import {
   Container,
   MessagesWrapper,
   MessageWrapper,
+  MessageLink,
+  MessageTimestamp,
 } from './style';
 
 /*
@@ -125,11 +128,18 @@ class ChatMessages extends Component {
                       const emojiOnly = onlyContainsEmoji(message.content.body);
                       const TextBubble = emojiOnly ? EmojiBubble : Bubble;
                       return (
-                        <MessageWrapper
-                          me={me}
-                          key={message.id}
-                          timestamp={convertTimestampToTime(message.timestamp)}
-                        >
+                        <MessageWrapper me={me} key={message.id}>
+                          <a name={`${message.id}`} />
+                          <MessageLink
+                            me={me}
+                            className={'message-link'}
+                            href={`#${message.id}`}
+                          >
+                            <Icon glyph="link" size={16} />
+                            <MessageTimestamp className={'message-timestamp'}>
+                              {convertTimestampToTime(message.timestamp)}
+                            </MessageTimestamp>
+                          </MessageLink>
                           <TextBubble
                             me={me}
                             persisted={message.persisted}
@@ -158,11 +168,18 @@ class ChatMessages extends Component {
                       );
                     } else if (message.messageType === 'media') {
                       return (
-                        <MessageWrapper
-                          me={me}
-                          key={message.id}
-                          timestamp={convertTimestampToTime(message.timestamp)}
-                        >
+                        <MessageWrapper me={me} key={message.id}>
+                          <a name={`${message.id}`} />
+                          <MessageLink
+                            me={me}
+                            className={'message-link'}
+                            href={`#${message.id}`}
+                          >
+                            <Icon glyph="link" size={16} />
+                            <MessageTimestamp className={'message-timestamp'}>
+                              {convertTimestampToTime(message.timestamp)}
+                            </MessageTimestamp>
+                          </MessageLink>
                           <ImgBubble
                             me={me}
                             persisted={message.persisted}
