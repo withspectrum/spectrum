@@ -150,14 +150,14 @@ export const Container = styled.div`
 
 export const MessageLink = styled.a`
   ${props =>
-    props.me ? 'right: calc(100% + 48px)' : 'left: calc(100% + 8px)'};
+    props.me ? 'right: calc(100% + 48px)' : 'left: calc(100% + 4px)'};
   white-space: nowrap;
   font-size: 12px;
-  top: 0;
+  top: -3px;
   color: ${({ theme }) => theme.text.alt};
 
   div {
-    top: 4px;
+    top: 3px;
     left: -2px;
   }
 `;
@@ -167,12 +167,12 @@ export const MessageNonLink = styled.span`
     props.me ? 'right: calc(100% + 48px)' : 'left: calc(100% + 8px)'};
   white-space: nowrap;
   font-size: 12px;
-  top: 0;
+  top: -3px;
   color: ${({ theme }) => theme.text.alt};
   display: inline-block;
 
   div {
-    top: 4px;
+    top: 3px;
     left: -2px;
   }
 `;
