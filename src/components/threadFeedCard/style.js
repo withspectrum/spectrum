@@ -60,9 +60,25 @@ export const Title = styled.h2`
   margin-bottom: 8px;
 `;
 
-export const MetaRow = styled(FlexRow)`
-  width: 100%;
-  display: flex;
+export const MessageCount = styled(FlexRow)`
+  align-self: stretch;
+  align-items: center;
+  justify-content: flex-start;
+
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
+  color: ${({ theme }) => theme.text.alt};
+  margin-bottom: 4px;
+
+  div {
+    margin-right: 4px;
+  }
+`;
+
+export const Attachments = styled(FlexRow)`
+  align-self: stretch;
   align-items: center;
   justify-content: space-between;
 `;
@@ -81,8 +97,9 @@ export const ThreadContext = styled(FlexRow)`
 export const ThreadContextAvatar = styled.div`margin-right: 12px;`;
 
 export const ThreadContextMeta = styled(FlexCol)`
-  justify-content: center;
+  justify-content: space-between;
   align-items: flex-start;
+  align-self: stretch;
 `;
 
 export const Meta = styled.span`
@@ -120,7 +137,6 @@ export const Location = styled.span`
   font-weight: 500;
   color: ${({ theme }) => theme.text.default};
   line-height: 1;
-  margin-bottom: 4px;
 
   > a {
     pointer-events: all;
@@ -134,6 +150,7 @@ export const Location = styled.span`
 
 export const Lock = styled.span`
   position: relative;
+  color: ${props => props.theme.text.alt};
   top: 1px;
 `;
 

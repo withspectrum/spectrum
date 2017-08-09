@@ -13,6 +13,8 @@ import {
   ThreadContextMeta,
   Location,
   Lock,
+  Meta,
+  InlineIcon,
 } from './style';
 
 const FormattedThreadLocation = props => {
@@ -26,6 +28,12 @@ const FormattedThreadLocation = props => {
 
   const needsAuthorDetails =
     props.viewContext === 'dashboard' ||
+    props.viewContext === 'community' ||
+    props.viewContext === 'channel';
+
+  const needsParticipantDetails =
+    props.viewContext === 'dashboard' ||
+    props.viewContext === 'profile' ||
     props.viewContext === 'community' ||
     props.viewContext === 'channel';
 
@@ -72,15 +80,14 @@ const FormattedThreadLocation = props => {
                 {props.data.channel.name}
               </Link>}
           </Location>}
-        {needsAuthorDetails &&
+        {(needsAuthorDetails || needsParticipantDetails) &&
           <FlexRow>
-            <CreatorName>
-              {props.data.creator.name}
-            </CreatorName>
-            {participantList.length >= 1 &&
-              <ParticipantCount>
-                {`+ ${participantList.length} more`}
-              </ParticipantCount>}
+            {needsAuthorDetails &&
+              <FlexRow>
+                <CreatorName>
+                  by {props.data.creator.name}
+                </CreatorName>
+              </FlexRow>}
           </FlexRow>}
       </ThreadContextMeta>
     </ThreadContext>

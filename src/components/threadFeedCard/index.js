@@ -20,7 +20,8 @@ import {
   Title,
   Meta,
   MetaNew,
-  MetaRow,
+  MessageCount,
+  Attachments,
   ParticipantCount,
   CreatorName,
   ThreadContext,
@@ -38,19 +39,14 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
     <StyledThreadFeedCard>
       <CardLink to={`?thread=${props.data.id}`} />
       <CardContent>
-        <MetaRow>
-          {props.data.messageCount > 0
-            ? <Meta>
-                <Icon size={20} glyph="message-fill" />
-                {props.data.messageCount}{' '}
-                {props.data.messageCount > 1 ? ' messages' : ' message'}
-              </Meta>
-            : !props.data.isCreator &&
-              <MetaNew>
-                <Icon size={20} glyph="post-fill" />
-                New thread!
-              </MetaNew>}
-        </MetaRow>
+        {props.data.messageCount > 0 &&
+          <MessageCount>
+            <Icon size={20} glyph="message-fill" />
+            <span>
+              {props.data.messageCount}{' '}
+              {props.data.messageCount > 1 ? ' messages' : ' message'}
+            </span>
+          </MessageCount>}
         <Link to={`?thread=${props.data.id}`}>
           <Title>
             {props.data.content.title}
@@ -69,7 +65,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
           props.data.attachments.map((attachment, i) => {
             if (attachment.attachmentType === 'linkPreview') {
               return (
-                <MetaRow>
+                <Attachments>
                   <LinkPreview
                     trueUrl={attachment.data.trueUrl}
                     data={JSON.parse(attachment.data)}
@@ -78,7 +74,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
                     margin={'8px 0 12px'}
                     key={i}
                   />
-                </MetaRow>
+                </Attachments>
               );
             } else {
               return null;
