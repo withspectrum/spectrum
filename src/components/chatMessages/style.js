@@ -161,3 +161,18 @@ export const MessageLink = styled.a`
     left: -2px;
   }
 `;
+
+export const MessageNonLink = styled.span`
+  ${props =>
+    props.me ? 'right: calc(100% + 48px)' : 'left: calc(100% + 8px)'};
+  white-space: nowrap;
+  font-size: 12px;
+  top: 0;
+  color: ${({ theme }) => theme.text.alt};
+  display: inline-block;
+
+  div {
+    top: 4px;
+    left: -2px;
+  }
+`;

@@ -196,6 +196,7 @@ class ThreadContainerPure extends Component {
               />
 
               <Messages
+                threadType={thread.threadType}
                 id={thread.id}
                 participants={participantsAndCreator}
                 currentUser={loggedInUser}
