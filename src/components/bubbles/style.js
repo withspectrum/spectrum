@@ -24,6 +24,11 @@ export const TextBubble = styled.p`
   white-space: pre-line;
   word-wrap: break-word;
   word-break: break-word;
+  box-shadow: ${props =>
+    props.hashed
+      ? `0 0 0 2px ${props.theme.bg.default}, 0 0 0 4px ${props.theme.brand
+          .default}`
+      : ''};
 
   & + & {
     margin-top: 2px;

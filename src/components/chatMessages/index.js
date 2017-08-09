@@ -4,10 +4,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-// $FlowFixMe
-import { withRouter } from 'react-router';
-// $FlowFixMe
-import compose from 'recompose/compose';
 import Icon from '../../components/icons';
 import { openGallery } from '../../actions/gallery';
 import {
@@ -51,7 +47,6 @@ class ChatMessages extends Component {
   };
 
   componentDidMount() {
-    const { history } = this.props;
     const hash = window.location.hash.substr(1);
     if (hash && hash.length > 1) {
       window.location.href = `#${hash}`;
@@ -66,6 +61,7 @@ class ChatMessages extends Component {
       dispatch,
       threadType,
     } = this.props;
+    const hash = window.location.hash.substr(1);
 
     if (!messages || messages.length === 0) {
       return (
@@ -182,6 +178,7 @@ class ChatMessages extends Component {
                             message={message.content}
                             type={message.messageType}
                             pending={message.id < 0}
+                            hashed={hash === message.id}
                           />
 
                           {/*
@@ -215,6 +212,7 @@ class ChatMessages extends Component {
                             openGallery={() =>
                               this.toggleOpenGallery(message.id)}
                             pending={message.id < 0}
+                            hashed={hash === message.id}
                           />
                           {typeof message.id === 'string' &&
                             <Reaction
@@ -242,8 +240,6 @@ class ChatMessages extends Component {
 
 // get the current user from the store for evaulation of message bubbles
 const mapStateToProps = state => ({ currentUser: state.users.currentUser });
-const ConnectedChatMessages = compose(withRouter, connect(mapStateToProps))(
-  ChatMessages
-);
+const ConnectedChatMessages = connect(mapStateToProps)(ChatMessages);
 
 export default ConnectedChatMessages;
