@@ -57,6 +57,7 @@ export const Title = styled.h2`
   flex: 0 0 auto;
   color: ${({ theme }) => theme.text.default};
   pointer-events: all;
+  margin-bottom: 8px;
 `;
 
 export const MetaRow = styled(FlexRow)`
@@ -64,33 +65,6 @@ export const MetaRow = styled(FlexRow)`
   display: flex;
   align-items: center;
   justify-content: space-between;
-`;
-
-export const ParticipantHeads = styled(FlexRow)`
-  align-items: center;
-
-  > *:not(:first-child) {
-    margin-left: 4px;
-    pointer-events: all;
-  }
-`;
-
-export const Creator = styled.div`
-  height: 2rem;
-  width: 2rem;
-  padding: 1px;
-  border-radius: 100%;
-  border: 2px solid ${({ theme }) => theme.brand.alt};
-  pointer-events: all;
-  display: flex;
-  flex: none;
-  justify-content: center;
-  align-items: center;
-
-  object:after {
-    right: -6px;
-    bottom: -1px;
-  }
 `;
 
 export const CreatorName = styled.span`
@@ -101,7 +75,7 @@ export const CreatorName = styled.span`
 `;
 
 export const ThreadContext = styled(FlexRow)`
-  margin-top: 16px;
+  margin-top: 4px;
 `;
 
 export const ThreadContextMeta = styled(FlexCol)`
@@ -119,13 +93,11 @@ export const Meta = styled.span`
   display: flex;
   align-items: center;
   margin-left: -2px;
-  ${'' /* margin-bottom: 4px; */} div {
+  margin-bottom: 4px;
+
+  div {
     margin-right: 4px;
   }
-
-  ${'' /* @media (max-width: 480px) {
-    display: none;
-  } */};
 `;
 
 export const MetaNew = styled(Meta)`
@@ -133,15 +105,12 @@ export const MetaNew = styled(Meta)`
 `;
 
 export const ParticipantCount = styled.span`
-  height: 1.5rem;
-  padding: 0 8px;
   margin-left: 4px;
-  border-radius: .75rem;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
   vertical-align: middle;
-  color: ${({ theme }) => theme.text.reverse};
-  background-color: ${({ theme }) => theme.brand.alt};
+  color: ${({ theme }) => theme.text.alt};
 `;
 
 export const Location = styled.span`

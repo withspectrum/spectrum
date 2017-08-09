@@ -12,6 +12,7 @@ import { LinkPreview } from '../../components/linkPreview';
 import Icon from '../../components/icons';
 import { FlexRow, FlexCol } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
+import FormattedThreadLocation from './formattedThreadLocation';
 import {
   StyledThreadFeedCard,
   CardContent,
@@ -33,147 +34,11 @@ import {
 } from './style';
 
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
-  const formatLocation = () => {
-    console.log('>>', props);
-    switch (props.viewContext) {
-      case 'dashboard':
-      default:
-        return (
-          <ThreadContext>
-            <Avatar
-              community
-              size={32}
-              src={props.data.channel.community.profilePhoto}
-            />
-            <ThreadContextMeta>
-              <Location>
-                <Link to={`/${props.data.channel.community.slug}`}>
-                  {props.data.channel.community.name}
-                </Link>{' '}
-                /{' '}
-                <Link
-                  to={`/${props.data.channel.community.slug}/${props.data
-                    .channel.slug}`}
-                >
-                  {props.data.channel.isPrivate &&
-                    <Lock>
-                      <Icon
-                        glyph="private"
-                        tipText={'Private channel'}
-                        tipLocation="top-right"
-                        size={12}
-                      />
-                    </Lock>}
-                  {props.data.channel.name}
-                </Link>
-              </Location>
-              <FlexRow>
-                <CreatorName>
-                  {props.data.creator.name}
-                </CreatorName>
-                {participantList.length > 1 &&
-                  <ParticipantCount>
-                    {`+${participantList.length - 1} more`}
-                  </ParticipantCount>}
-              </FlexRow>
-            </ThreadContextMeta>
-          </ThreadContext>
-        );
-      case 'profile':
-        return (
-          <Location>
-            <Link to={`/${props.data.channel.community.slug}`}>
-              {props.data.channel.community.name}
-            </Link>{' '}
-            /{' '}
-            <Link
-              to={`/${props.data.channel.community.slug}/${props.data.channel
-                .slug}`}
-            >
-              {props.data.channel.isPrivate &&
-                <Lock>
-                  <Icon
-                    glyph="private"
-                    tipText={'Private channel'}
-                    tipLocation="top-right"
-                    size={12}
-                  />
-                </Lock>}
-              {props.data.channel.name}
-            </Link>
-          </Location>
-        );
-      case 'community':
-        return (
-          <Location>
-            <Link
-              to={`/${props.data.channel.community.slug}/${props.data.channel
-                .slug}`}
-            >
-              {props.data.channel.isPrivate &&
-                <Lock>
-                  <Icon
-                    glyph="private"
-                    tipText={'Private channel'}
-                    tipLocation="top-right"
-                    size={12}
-                  />
-                </Lock>}
-              {props.data.channel.name}
-            </Link>
-          </Location>
-        );
-      case 'channel':
-        return null;
-    }
-  };
-
-  const participantList = props.data.participants.filter(
-    participant => participant.id !== props.data.creator.id
-  );
-
-  const messageAvatars = list => {
-    const avatarList = list.slice(0, 10);
-    return avatarList.map(participant =>
-      <Avatar
-        size={24}
-        radius={24}
-        isOnline={participant.isOnline}
-        link={participant.username ? `/users/${participant.username}` : null}
-        src={participant.profilePhoto}
-        role="presentation"
-        key={participant.id}
-      />
-    );
-  };
-
   return (
-    <StyledThreadFeedCard hoverable>
+    <StyledThreadFeedCard>
       <CardLink to={`?thread=${props.data.id}`} />
       <CardContent>
         <MetaRow>
-          {/* <ParticipantHeads>
-            <Creator role="presentation">
-              <Avatar
-                size={24}
-                radius={24}
-                isOnline={props.data.creator.isOnline}
-                src={props.data.creator.profilePhoto}
-                link={
-                  props.data.creator.username
-                    ? `/users/${props.data.creator.username}`
-                    : null
-                }
-                role="presentation"
-                key={props.data.creator.id}
-                onlineSize={'small'}
-              />
-            </Creator>
-            {messageAvatars(participantList)}
-            {participantList.length > 10 &&
-              <ParticipantCount>{`+${participantList.length -
-                10}`}</ParticipantCount>}
-          </ParticipantHeads> */}
           {props.data.messageCount > 0
             ? <Meta>
                 <Icon size={20} glyph="message-fill" />
@@ -219,7 +84,7 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
               return null;
             }
           })}
-        {formatLocation()}
+        <FormattedThreadLocation {...props} />
       </CardContent>
     </StyledThreadFeedCard>
   );
