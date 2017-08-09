@@ -186,5 +186,6 @@ export const SearchInput = styled.input`
   font-size: 20px;
   font-weight: 800;
   margin-left: 8px;
+  width: 100%;
   border-radius: 12px;
 `;
