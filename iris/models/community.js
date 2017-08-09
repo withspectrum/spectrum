@@ -557,6 +557,19 @@ const getCommunitiesBySearchString = (
     .run();
 };
 
+const searchThreadsInCommunity = (
+  channels: Array<string>,
+  searchString: string
+): Promise<Array<Object>> => {
+  return db
+    .table('threads')
+    .getAll(...channels, { index: 'channelId' })
+    .filter(thread => thread.coerceTo('string').match(`(?i)${searchString}`))
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .orderBy(db.desc('lastActive'))
+    .run();
+};
+
 module.exports = {
   getCommunities,
   getCommunitiesBySlug,
@@ -572,4 +585,5 @@ module.exports = {
   getTopCommunities,
   getRecentCommunities,
   getCommunitiesBySearchString,
+  searchThreadsInCommunity,
 };

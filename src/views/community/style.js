@@ -1,7 +1,14 @@
 import styled, { css } from 'styled-components';
 import { IconButton } from '../../components/buttons';
-import { FlexRow, FlexCol, Transition, hexa } from '../../components/globals';
+import {
+  FlexRow,
+  FlexCol,
+  Transition,
+  hexa,
+  Shadow,
+} from '../../components/globals';
 import { UserProfile } from '../../components/profile';
+import Card from '../../components/card';
 
 export const CoverRow = styled(FlexRow)`
   align-items: flex-start;
@@ -144,5 +151,40 @@ export const Segment = styled(FlexRow)`
     flex: auto;
     justify-content: space-around;
   }
+`;
 
+export const SearchContainer = styled(Card)`
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 11;
+  width: 100%;
+  display: block;
+  min-height: 64px;
+  border-radius: 12px;
+  transition: ${Transition.hover.off};
+
+  &:hover {
+    transition: none;
+    box-shadow: ${Shadow.high} ${({ theme }) =>
+  hexa(theme.text.placeholder, 0.5)};
+  }
+
+  @media (max-width: 768px) {
+    border-radius: 0;
+    pointer-events: all;
+    margin-bottom: 0;
+  }
+`;
+
+export const SearchInput = styled.input`
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+  padding: 20px;
+  color: ${props => props.theme.text.default};
+  transition: ${Transition.hover.off};
+  font-size: 20px;
+  font-weight: 800;
+  margin-left: 8px;
+  border-radius: 12px;
 `;
