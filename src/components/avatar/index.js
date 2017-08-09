@@ -36,6 +36,7 @@ const StyledAvatarStatus = styled.div`
   align-items: center;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
+  border-radius: 100%;
 
   &:after {
     content: '';
