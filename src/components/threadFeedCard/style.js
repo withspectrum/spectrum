@@ -120,7 +120,6 @@ export const Location = styled.span`
   font-weight: 500;
   color: ${({ theme }) => theme.text.default};
   line-height: 1;
-  margin-top: -2px;
   margin-bottom: 4px;
 
   > a {
