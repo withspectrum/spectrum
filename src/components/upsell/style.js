@@ -175,6 +175,7 @@ export const UpsellIconContainer = styled.div`
   justify-content: center;
   margin-bottom: 16px;
   margin-top: 32px;
+  color: ${props => props.theme.text.alt};
 `;
 
 export const SignupButton = styled(Button)`
@@ -237,7 +238,24 @@ export const CodeOfConduct = styled.p`
 
 export const SigninButtonsContainer = styled.div`
   display: flex;
-  padding-top: 32px;
+  padding-top: 48px;
+  max-width: 100%;
+
+  @media (max-width: 768px) {
+    padding-top: 24px;
+  }
+`;
+
+export const Col = styled.div`
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 export const SigninButton = styled.a`
@@ -255,12 +273,11 @@ export const SigninButton = styled.a`
   font-weight: 700;
   transition: ${Transition.hover.off};
   position: relative;
+  margin: 16px;
 
   ${props =>
     props.after &&
     `
-			margin: 48px 0 16px;
-
 			&:after {
 				content: 'Previously signed in with';
 				position: absolute;
@@ -288,6 +305,16 @@ export const SigninButton = styled.a`
     fill: currentColor !important;
   }
 
+  @media (max-width: 768px) {
+    margin: 16px 0;
+
+    ${props =>
+      props.after &&
+      `
+        margin: 48px 0 16px 0;
+      `};
+  }
+
   &:hover {
     cursor: pointer;
   }
@@ -300,6 +327,10 @@ export const ButtonTwitter = styled(SigninButton)`
     props.whitebg
       ? props.theme.social.twitter.default
       : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+
+  &:after {
+    color: ${props => props.theme.social.twitter.default};
+  }
 
 	&:hover {
 		color: ${props =>
@@ -315,6 +346,9 @@ export const ButtonFacebook = styled(SigninButton)`
       ? props.theme.social.facebook.default
       : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
 
+  &:after {
+    color: ${props => props.theme.social.facebook.default};
+  }
 
 	&:hover {
 		color: ${props =>
@@ -329,6 +363,10 @@ export const ButtonGoogle = styled(SigninButton)`
     props.whitebg
       ? props.theme.social.google.default
       : props.preferred ? '#fff' : 'rgba(255,255,255,0.8)'};
+
+  &:after {
+    color: ${props => props.theme.social.google.default};
+  }
 
 	&:hover {
 		color: ${props =>

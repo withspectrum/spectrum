@@ -39,6 +39,7 @@ import {
   ButtonTwitter,
   ButtonFacebook,
   ButtonGoogle,
+  Col,
 } from './style';
 // $FlowFixMe
 import StripeCheckout from 'react-stripe-checkout';
@@ -144,6 +145,7 @@ export const UpsellCreateCommunity = () => {
 export class UpsellSignIn extends Component {
   state: {
     isSigningIn: Boolean,
+    signinType: string,
   };
 
   constructor() {
@@ -151,13 +153,15 @@ export class UpsellSignIn extends Component {
 
     this.state = {
       isSigningIn: false,
+      signinType: '',
     };
   }
 
-  toggleSigningIn = () => {
+  toggleSigningIn = type => {
     const { isSigningIn } = this.state;
     this.setState({
       isSigningIn: !isSigningIn,
+      signinType: type,
     });
   };
 
@@ -167,12 +171,17 @@ export class UpsellSignIn extends Component {
 
   render() {
     const { view, noShadow, title, glyph } = this.props;
-    const { isSigningIn } = this.state;
+    const { isSigningIn, signinType } = this.state;
     const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
 
     if (isSigningIn) {
+      const title =
+        signinType === 'signup' ? 'Good times ahead!' : 'Welcome back!';
       const subtitle =
-        'Spectrum helps you connect with the communities you care about. Sign in below to join the conversation.';
+        signinType === 'signup'
+          ? 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.'
+          : "We're happy to see you again - sign in below to get back into the conversation!";
+      const verb = signinType === 'signup' ? 'Sign up' : 'Log in';
 
       return (
         <FullscreenView hasBackground close={this.toggleSigningIn}>
@@ -180,14 +189,16 @@ export class UpsellSignIn extends Component {
             <UpsellIconContainer>
               <Icon glyph={'emoji'} size={64} />
             </UpsellIconContainer>
-            <LargeTitle>Good times ahead!</LargeTitle>
+            <LargeTitle>
+              {title}
+            </LargeTitle>
             <LargeSubtitle>
               {subtitle}
             </LargeSubtitle>
 
             <SigninButtonsContainer noShadow>
               {preferredSigninMethod &&
-                <span>
+                <Col>
                   <ButtonTwitter
                     preferred={preferredSigninMethod === 'twitter'}
                     after={preferredSigninMethod === 'twitter'}
@@ -195,7 +206,7 @@ export class UpsellSignIn extends Component {
                     href={`${SERVER_URL}/auth/twitter`}
                     onClick={() => this.trackSignin('secondary cta', 'twitter')}
                   >
-                    <Icon glyph="twitter" /> <span>Sign in with Twitter</span>
+                    <Icon glyph="twitter" /> <span>{verb} with Twitter</span>
                   </ButtonTwitter>
 
                   <ButtonFacebook
@@ -206,7 +217,7 @@ export class UpsellSignIn extends Component {
                     onClick={() =>
                       this.trackSignin('secondary cta', 'facebook')}
                   >
-                    <Icon glyph="facebook" /> <span>Sign in with Facebook</span>
+                    <Icon glyph="facebook" /> <span>{verb} with Facebook</span>
                   </ButtonFacebook>
 
                   <ButtonGoogle
@@ -216,19 +227,19 @@ export class UpsellSignIn extends Component {
                     href={`${SERVER_URL}/auth/google`}
                     onClick={() => this.trackSignin('secondary cta', 'google')}
                   >
-                    <Icon glyph="google" /> <span>Sign in with Google</span>
+                    <Icon glyph="google" /> <span>{verb} with Google</span>
                   </ButtonGoogle>
-                </span>}
+                </Col>}
 
               {!preferredSigninMethod &&
-                <span>
+                <Col>
                   <ButtonTwitter
                     preferred
                     href={`${SERVER_URL}/auth/twitter`}
                     after={preferredSigninMethod === 'twitter'}
                     onClick={() => this.trackSignin('secondary cta', 'twitter')}
                   >
-                    <Icon glyph="twitter" /> <span>Sign in with Twitter</span>
+                    <Icon glyph="twitter" /> <span>{verb} with Twitter</span>
                   </ButtonTwitter>
 
                   <ButtonFacebook
@@ -238,7 +249,7 @@ export class UpsellSignIn extends Component {
                     onClick={() =>
                       this.trackSignin('secondary cta', 'facebook')}
                   >
-                    <Icon glyph="facebook" /> <span>Sign in with Facebook</span>
+                    <Icon glyph="facebook" /> <span>{verb} with Facebook</span>
                   </ButtonFacebook>
 
                   <ButtonGoogle
@@ -247,9 +258,9 @@ export class UpsellSignIn extends Component {
                     after={preferredSigninMethod === 'google'}
                     onClick={() => this.trackSignin('secondary cta', 'google')}
                   >
-                    <Icon glyph="google" /> <span>Sign in with Google</span>
+                    <Icon glyph="google" /> <span>{verb} with Google</span>
                   </ButtonGoogle>
-                </span>}
+                </Col>}
             </SigninButtonsContainer>
 
             <CodeOfConduct>
@@ -268,11 +279,11 @@ export class UpsellSignIn extends Component {
     } else {
       const subtitle = view
         ? view.type === 'community'
-          ? `Spectrum is where communities can share, discuss, and grow together. Sign up to discover the ${view
-              .data.name} community and join the conversation.`
-          : `Spectrum is where communities can share, discuss, and grow together. Sign up to discover the ${view
-              .data.community.name} community and join the conversation.`
-        : 'Spectrum helps you connect with the communities you care about. Sign in below to join the conversation.';
+          ? `Spectrum is a place where communities can share, discuss, and grow together. Sign up to join the ${view
+              .data.name} community and get in on the conversation.`
+          : `Spectrum is a place where communities can share, discuss, and grow together. Sign up to join the ${view
+              .data.community.name} community and get in on the conversation.`
+        : 'Spectrum helps you connect with the communities you care about. Sign in below to get in on the conversation.';
 
       return (
         <NullCard bg={'signup'} noPadding noShadow={noShadow}>
@@ -280,16 +291,20 @@ export class UpsellSignIn extends Component {
             <Icon glyph={glyph || 'explore'} size={56} />
           </UpsellIconContainer>
           <Title>
-            {title || 'Find your people on Spectrum'}
+            {title || 'Find your people.'}
           </Title>
           <Subtitle>
             {subtitle}
           </Subtitle>
 
-          <SignupButton onClick={this.toggleSigningIn}>Sign up</SignupButton>
+          <SignupButton onClick={() => this.toggleSigningIn('signup')}>
+            Sign up
+          </SignupButton>
           <SignupFooter>
             Already have an account?{' '}
-            <SigninLink onClick={this.toggleSigningIn}> Log in</SigninLink>
+            <SigninLink onClick={() => this.toggleSigningIn('login')}>
+              {' '}Log in
+            </SigninLink>
           </SignupFooter>
         </NullCard>
       );
