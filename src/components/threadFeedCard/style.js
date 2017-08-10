@@ -91,7 +91,8 @@ export const CreatorName = styled.span`
 `;
 
 export const ThreadContext = styled(FlexRow)`
-  margin-top: 4px;
+  align-items: flex-start;
+  margin-top: 8px;
 `;
 
 export const ThreadContextAvatar = styled.div`margin-right: 12px;`;
