@@ -576,7 +576,6 @@ class ThreadDetailPure extends Component {
             <ThreadHeading>
               {thread.content.title}
             </ThreadHeading>
-            {console.log('>>', thread)}
             <FlexRow>
               <Timestamp>
                 {convertTimestampToDate(thread.createdAt)}
