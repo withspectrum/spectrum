@@ -31,9 +31,7 @@ const StyledAvatarFallback = styled.img`
 
 const StyledAvatarStatus = styled.div`
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
   border-radius: 100%;
