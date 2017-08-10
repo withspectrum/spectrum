@@ -17,7 +17,7 @@ const StyledAvatarFallback = styled.img`
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: ${props => (props.community ? '8px' : '100%')};
+  border-radius: ${props => (props.community ? `${props.size / 4}px` : '100%')};
   width: 100%;
   height: 100%;
   margin: 0;

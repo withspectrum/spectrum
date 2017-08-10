@@ -85,7 +85,7 @@ const FormattedThreadLocation = props => {
             {needsAuthorDetails &&
               <FlexRow>
                 <CreatorName>
-                  by {props.data.creator.name}
+                  {props.data.creator.name}
                 </CreatorName>
               </FlexRow>}
           </FlexRow>}

@@ -99,7 +99,6 @@ export const ThreadContextAvatar = styled.div`margin-right: 12px;`;
 export const ThreadContextMeta = styled(FlexCol)`
   justify-content: space-between;
   align-items: flex-start;
-  align-self: stretch;
 `;
 
 export const Meta = styled.span`
@@ -137,6 +136,7 @@ export const Location = styled.span`
   font-weight: 500;
   color: ${({ theme }) => theme.text.default};
   line-height: 1;
+  margin-bottom: 4px;
 
   > a {
     pointer-events: all;
