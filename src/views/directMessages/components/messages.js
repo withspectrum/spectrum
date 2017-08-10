@@ -67,10 +67,8 @@ class MessagesWithData extends Component {
 
   render() {
     const {
-      threadType,
-      data: { error, loading, messages, hasNextPage, fetchMore, networkStatus },
+      data: { error, messages, hasNextPage, fetchMore, networkStatus },
     } = this.props;
-    const { subscription } = this.state;
 
     if (error) {
       return <div>Error!</div>;

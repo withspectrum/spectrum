@@ -16,7 +16,6 @@ import {
   PhotoInputLabel,
   CoverInputLabel,
   InputOverlay,
-  ProfileImage,
   CoverImage,
 } from './style';
 

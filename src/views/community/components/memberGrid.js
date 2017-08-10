@@ -24,7 +24,7 @@ const StyledButton = styled(Button)`
 `;
 
 const MemberGridPure = props => {
-  const { data: { community, networkStatus, fetchMore }, data } = props;
+  const { data: { community, networkStatus, fetchMore } } = props;
   const dataExists = community && community.memberConnection;
 
   if (networkStatus < 7 && !dataExists) {

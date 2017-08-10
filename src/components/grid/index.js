@@ -8,7 +8,7 @@ const StyledGrid = styled(FlexRow)`
   align-items: flex-start;
 
   > * {
-    max-width: calc(50% - 8px);
+    flex: 0 0 calc(50% - 8px);
     margin: 0;
     margin-bottom: 16px;
 

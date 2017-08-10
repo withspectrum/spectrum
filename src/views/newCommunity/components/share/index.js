@@ -4,8 +4,6 @@ import React from 'react';
 import { withRouter } from 'react-router';
 // $FlowFixMe
 import compose from 'recompose/compose';
-// $FlowFixMe
-import { Link } from 'react-router-dom';
 import { OutlineButton, Button } from '../../../../components/buttons';
 import { ButtonRow, InputRow, Input } from './style';
 import { Description } from '../../style';

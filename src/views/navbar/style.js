@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import Icon from '../../components/icons';
 import { Transition, FlexRow, hexa } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
 
