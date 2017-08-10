@@ -235,11 +235,14 @@ export const Location = styled(FlexRow)`
   }
 `;
 
-export const Edited = styled.div`
-  display: block;
+export const Timestamp = styled.span`
   font-weight: 500;
   font-size: 12px;
   color: ${({ theme }) => theme.text.alt};
+`;
+
+export const Edited = styled(Timestamp)`
+  margin-left: 4px;
 `;
 
 export const ChatWrapper = styled.div`width: 100%;`;

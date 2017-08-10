@@ -10,7 +10,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { getLinkPreviewFromUrl, timeDifference } from '../../../helpers/utils';
+import {
+  getLinkPreviewFromUrl,
+  timeDifference,
+  convertTimestampToDate,
+} from '../../../helpers/utils';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -20,6 +24,7 @@ import {
 } from '../mutations';
 import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
 import { pinThreadMutation } from '../../../api/community';
+import { FlexRow } from '../../../components/globals';
 import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
 import Badge from '../../../components/badges';
@@ -43,6 +48,7 @@ import {
   DropWrap,
   FlyoutRow,
   EditDone,
+  Timestamp,
   Edited,
   BylineMeta,
   AuthorAvatar,
@@ -570,10 +576,15 @@ class ThreadDetailPure extends Component {
             <ThreadHeading>
               {thread.content.title}
             </ThreadHeading>
-            {thread.modifiedAt &&
-              <Edited>
-                Edited {timeDifference(Date.now(), editedTimestamp)}
-              </Edited>}
+            <FlexRow>
+              <Timestamp>
+                {convertTimestampToDate(thread.createdAt)}
+              </Timestamp>
+              {thread.modifiedAt &&
+                <Edited>
+                  (Edited {timeDifference(Date.now(), editedTimestamp)})
+                </Edited>}
+            </FlexRow>
             <div className="markdown">
               <ThreadContent>
                 {viewBody}
