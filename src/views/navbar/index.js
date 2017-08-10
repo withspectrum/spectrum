@@ -37,7 +37,6 @@ import {
   IconLink,
   Label,
   UserProfileAvatar,
-  SigninLink,
 } from './style';
 
 class Navbar extends Component {

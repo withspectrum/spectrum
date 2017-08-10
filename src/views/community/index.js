@@ -10,7 +10,6 @@ import { track } from '../../helpers/events';
 import ThreadComposer from '../../components/threadComposer';
 import Head from '../../components/head';
 import Icon from '../../components/icons';
-import { TextButton } from '../../components/buttons';
 import generateMetaInfo from 'shared/generate-meta-info';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';

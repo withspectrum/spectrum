@@ -99,7 +99,7 @@ const AvatarWithFallback = props =>
   </StyledAvatarStatus>;
 
 const AvatarPure = (props: Object): React$Element<any> => {
-  if (props.link) {
+  if (props.link && !props.noLink) {
     return (
       <StyledAvatarLink to={props.link}>
         <AvatarWithFallback {...props} />
