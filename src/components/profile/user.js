@@ -22,6 +22,7 @@ import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
 import { Avatar } from '../avatar';
 import {
+  ProfileAvatar,
   ProfileHeader,
   ProfileHeaderLink,
   ProfileHeaderMeta,
@@ -180,7 +181,7 @@ const UserWithData = ({
       <Card>
         <ProfileHeader>
           <ProfileHeaderLink to={`/users/${user.username}`}>
-            <Avatar
+            <ProfileAvatar
               size={32}
               radius={32}
               isOnline={user.isOnline}

@@ -49,6 +49,7 @@ export const CommunityListItem = (props: CardProps): React$Element<any> => {
           link={`/${props.contents.slug}`}
           src={`${props.contents.profilePhoto}`}
           size={32}
+          style={{ marginRight: '12px' }}
         />
         <Col>
           <Heading>
