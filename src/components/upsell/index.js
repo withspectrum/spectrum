@@ -203,7 +203,8 @@ export class UpsellSignIn extends Component {
                     preferred={preferredSigninMethod === 'twitter'}
                     after={preferredSigninMethod === 'twitter'}
                     whitebg={preferredSigninMethod !== 'twitter'}
-                    href={`${SERVER_URL}/auth/twitter`}
+                    href={`${SERVER_URL}/auth/twitter?r=${window.location
+                      .href}`}
                     onClick={() => this.trackSignin('secondary cta', 'twitter')}
                   >
                     <Icon glyph="twitter" /> <span>{verb} with Twitter</span>
@@ -213,7 +214,8 @@ export class UpsellSignIn extends Component {
                     preferred={preferredSigninMethod === 'facebook'}
                     after={preferredSigninMethod === 'facebook'}
                     whitebg={preferredSigninMethod !== 'facebook'}
-                    href={`${SERVER_URL}/auth/facebook`}
+                    href={`${SERVER_URL}/auth/facebook?r=${window.location
+                      .href}`}
                     onClick={() =>
                       this.trackSignin('secondary cta', 'facebook')}
                   >
@@ -224,7 +226,7 @@ export class UpsellSignIn extends Component {
                     preferred={preferredSigninMethod === 'google'}
                     after={preferredSigninMethod === 'google'}
                     whitebg={preferredSigninMethod !== 'google'}
-                    href={`${SERVER_URL}/auth/google`}
+                    href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
                     onClick={() => this.trackSignin('secondary cta', 'google')}
                   >
                     <Icon glyph="google" /> <span>{verb} with Google</span>
@@ -235,7 +237,8 @@ export class UpsellSignIn extends Component {
                 <Col>
                   <ButtonTwitter
                     preferred
-                    href={`${SERVER_URL}/auth/twitter`}
+                    href={`${SERVER_URL}/auth/twitter?r=${window.location
+                      .href}`}
                     after={preferredSigninMethod === 'twitter'}
                     onClick={() => this.trackSignin('secondary cta', 'twitter')}
                   >
@@ -244,7 +247,8 @@ export class UpsellSignIn extends Component {
 
                   <ButtonFacebook
                     preferred
-                    href={`${SERVER_URL}/auth/facebook`}
+                    href={`${SERVER_URL}/auth/facebook?r=${window.location
+                      .href}`}
                     after={preferredSigninMethod === 'facebook'}
                     onClick={() =>
                       this.trackSignin('secondary cta', 'facebook')}
@@ -254,7 +258,7 @@ export class UpsellSignIn extends Component {
 
                   <ButtonGoogle
                     preferred
-                    href={`${SERVER_URL}/auth/google`}
+                    href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
                     after={preferredSigninMethod === 'google'}
                     onClick={() => this.trackSignin('secondary cta', 'google')}
                   >

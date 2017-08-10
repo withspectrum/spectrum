@@ -110,7 +110,7 @@ class DashboardPure extends Component {
     }
 
     // New user onboarding
-    if (isNewUser) {
+    if (!isNewUser) {
       const communities = user.communityConnection.edges;
 
       return (

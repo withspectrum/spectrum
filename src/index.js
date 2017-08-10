@@ -56,8 +56,6 @@ function render() {
       document.querySelector('#root')
     );
   } else {
-    // otherwise load the app and we'll handle logged-out and logged-in users
-    // further down the tree
     return ReactDOM.render(
       <ApolloProvider store={store} client={client}>
         <ThemeProvider theme={theme}>
