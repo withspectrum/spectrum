@@ -16,7 +16,7 @@ import { FeaturedCommunity } from '../../components/curation';
 import TopCommunityList from './components/topCommunities';
 import Search from './components/search';
 import RecentCommunityList from './components/recentCommunities';
-import { UpsellCreateCommunity } from '../../components/upsell';
+import { UpsellCreateCommunity, UpsellSignIn } from '../../components/upsell';
 import {
   ViewContainer,
   ViewHeader,
@@ -58,7 +58,7 @@ const ExplorePure = props => {
               <SectionTitle>Most popular communities</SectionTitle>
               <TopCommunityList withMeta={true} withDescription={false} />
 
-              <UpsellCreateCommunity />
+              {props.currentUser ? <UpsellCreateCommunity /> : <UpsellSignIn />}
             </Column>
           </SectionWrapper>
         </Section>

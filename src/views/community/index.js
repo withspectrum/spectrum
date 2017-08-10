@@ -138,6 +138,8 @@ class CommunityViewPure extends Component {
       (community.communityPermissions.isMember ||
         community.communityPermissions.isOwner);
     const isLoggedIn = user || currentUser;
+    // if the network request is not done, show a loading state
+    const isMobile = window.innerWidth < 768;
 
     // error state
     if (networkStatus === 8) {
@@ -208,10 +210,11 @@ class CommunityViewPure extends Component {
               <Column type="secondary" className={'inset'}>
                 <CommunityProfile data={{ community }} profileSize="full" />
 
-                <ChannelListCard
-                  slug={communitySlug.toLowerCase()}
-                  currentUser={isLoggedIn}
-                />
+                {!isMobile &&
+                  <ChannelListCard
+                    slug={communitySlug.toLowerCase()}
+                    currentUser={isLoggedIn}
+                  />}
               </Column>
 
               <Column type="primary">
@@ -265,7 +268,11 @@ class CommunityViewPure extends Component {
 
                 {// if the user hasn't signed up yet, show them a spectrum
                 // upsell signup prompt
-                !isLoggedIn && <UpsellSignIn entity={community} />}
+                !isLoggedIn &&
+                  selectedView === 'threads' &&
+                  <UpsellSignIn
+                    view={{ data: community, type: 'community' }}
+                  />}
 
                 {// thread list
                 selectedView === 'threads' &&
@@ -315,9 +322,6 @@ class CommunityViewPure extends Component {
         </AppViewWrapper>
       );
     } else {
-      // if the network request is not done, show a loading state
-      const isMobile = window.innerWidth < 768;
-
       return (
         <AppViewWrapper>
           <Titlebar noComposer />

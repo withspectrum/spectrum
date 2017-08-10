@@ -7,7 +7,9 @@ import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
 import Icon from '../../components/icons';
+import FullscreenView from '../../components/fullscreenView';
 import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
+import { track } from '../../helpers/events';
 import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../api';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';
@@ -17,18 +19,27 @@ import { Button, OutlineButton } from '../buttons';
 import {
   Title,
   MiniTitle,
+  LargeTitle,
   Subtitle,
   MiniSubtitle,
+  LargeSubtitle,
   Actions,
   NullCol,
   UpgradeError,
   Profile,
   Cost,
   LargeEmoji,
-  SignInButtons,
+  UpsellIconContainer,
+  SignupButton,
+  SignupFooter,
+  SigninLink,
+  FullscreenContent,
+  CodeOfConduct,
+  SigninButtonsContainer,
   ButtonTwitter,
   ButtonFacebook,
   ButtonGoogle,
+  Col,
 } from './style';
 // $FlowFixMe
 import StripeCheckout from 'react-stripe-checkout';
@@ -36,7 +47,7 @@ import { upgradeToProMutation } from '../../api/user';
 
 export const NullCard = props => {
   return (
-    <Card>
+    <Card noShadow={props.noShadow}>
       <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
         {props.heading &&
           <Title>
@@ -131,129 +142,175 @@ export const UpsellCreateCommunity = () => {
   );
 };
 
-export const UpsellSignIn = ({ entity }) => {
-  const subtitle = entity
-    ? `Ready to join the conversation in ${entity.name}?`
-    : 'Ready to join the conversation? ';
+export class UpsellSignIn extends Component {
+  state: {
+    isSigningIn: Boolean,
+    signinType: string,
+  };
 
-  const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
+  constructor() {
+    super();
 
-  return (
-    <NullCard bg="chat">
-      <Title>Come on in, the chatter's fine.</Title>
-      <Subtitle>
-        {subtitle}
-      </Subtitle>
+    this.state = {
+      isSigningIn: false,
+      signinType: '',
+    };
+  }
 
-      {preferredSigninMethod &&
-        <SignInButtons>
-          <ButtonTwitter
-            preferred={preferredSigninMethod === 'twitter'}
-            after={preferredSigninMethod === 'twitter'}
-            whitebg={preferredSigninMethod !== 'twitter'}
-            href={`${SERVER_URL}/auth/twitter?r=${window.location.href}`}
-            onClick={() => login('twitter')}
-          >
-            <Icon glyph="twitter" /> <span>Sign in with Twitter</span>
-          </ButtonTwitter>
+  toggleSigningIn = type => {
+    const { isSigningIn } = this.state;
+    this.setState({
+      isSigningIn: !isSigningIn,
+      signinType: type,
+    });
+  };
 
-          <ButtonFacebook
-            preferred={preferredSigninMethod === 'facebook'}
-            whitebg={preferredSigninMethod !== 'facebook'}
-            after={preferredSigninMethod === 'facebook'}
-            href={`${SERVER_URL}/auth/facebook?r=${window.location.href}`}
-            onClick={() => login('facebook')}
-          >
-            <Icon glyph="facebook" /> <span>Sign in with Facebook</span>
-          </ButtonFacebook>
+  trackSignin = (type, method) => {
+    storeItem('preferred_signin_method', method);
+  };
 
-          <ButtonGoogle
-            preferred={preferredSigninMethod === 'google'}
-            whitebg={preferredSigninMethod !== 'google'}
-            after={preferredSigninMethod === 'google'}
-            href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
-            onClick={() => login('google')}
-          >
-            <Icon glyph="google" /> <span>Sign in with Google</span>
-          </ButtonGoogle>
-        </SignInButtons>}
+  render() {
+    const { view, noShadow, title, glyph } = this.props;
+    const { isSigningIn, signinType } = this.state;
+    const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
 
-      {!preferredSigninMethod &&
-        <SignInButtons>
-          <ButtonTwitter
-            preferred
-            after={preferredSigninMethod === 'twitter'}
-            href={`${SERVER_URL}/auth/twitter?r=${window.location.href}`}
-            onClick={() => login('twitter')}
-          >
-            <Icon glyph="twitter" /> <span>Sign in with Twitter</span>
-          </ButtonTwitter>
+    if (isSigningIn) {
+      const title =
+        signinType === 'signup' ? 'Good times ahead!' : 'Welcome back!';
+      const subtitle =
+        signinType === 'signup'
+          ? 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.'
+          : "We're happy to see you again - log in below to get back into the conversation!";
+      const verb = signinType === 'signup' ? 'Sign up' : 'Log in';
 
-          <ButtonFacebook
-            preferred
-            after={preferredSigninMethod === 'facebook'}
-            href={`${SERVER_URL}/auth/facebook?r=${window.location.href}`}
-            onClick={() => login('facebook')}
-          >
-            <Icon glyph="facebook" /> <span>Sign in with Facebook</span>
-          </ButtonFacebook>
+      return (
+        <FullscreenView hasBackground close={this.toggleSigningIn}>
+          <FullscreenContent>
+            <UpsellIconContainer>
+              <Icon glyph={'emoji'} size={64} />
+            </UpsellIconContainer>
+            <LargeTitle>
+              {title}
+            </LargeTitle>
+            <LargeSubtitle>
+              {subtitle}
+            </LargeSubtitle>
 
-          <ButtonGoogle
-            preferred
-            after={preferredSigninMethod === 'google'}
-            href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
-            onClick={() => login('google')}
-          >
-            <Icon glyph="google" /> <span>Sign in with Google</span>
-          </ButtonGoogle>
-        </SignInButtons>}
-    </NullCard>
-  );
-};
+            <SigninButtonsContainer noShadow>
+              {preferredSigninMethod &&
+                <Col>
+                  <ButtonTwitter
+                    preferred={preferredSigninMethod === 'twitter'}
+                    after={preferredSigninMethod === 'twitter'}
+                    whitebg={preferredSigninMethod !== 'twitter'}
+                    href={`${SERVER_URL}/auth/twitter`}
+                    onClick={() => this.trackSignin('secondary cta', 'twitter')}
+                  >
+                    <Icon glyph="twitter" /> <span>{verb} with Twitter</span>
+                  </ButtonTwitter>
 
-export const UpsellSignInState = ({ entity }) => {
-  const subtitle = entity
-    ? `Ready to join the conversation in ${entity.name}?`
-    : 'Ready to join the conversation? ';
+                  <ButtonFacebook
+                    preferred={preferredSigninMethod === 'facebook'}
+                    after={preferredSigninMethod === 'facebook'}
+                    whitebg={preferredSigninMethod !== 'facebook'}
+                    href={`${SERVER_URL}/auth/facebook`}
+                    onClick={() =>
+                      this.trackSignin('secondary cta', 'facebook')}
+                  >
+                    <Icon glyph="facebook" /> <span>{verb} with Facebook</span>
+                  </ButtonFacebook>
 
-  return (
-    <NullState bg="chat">
-      <Title>Come on in, the chatter's fine.</Title>
-      <Subtitle>
-        {subtitle}
-      </Subtitle>
-      <Button onClick={login} icon="twitter" label>
-        Sign in with Twitter
-      </Button>
-    </NullState>
-  );
-};
+                  <ButtonGoogle
+                    preferred={preferredSigninMethod === 'google'}
+                    after={preferredSigninMethod === 'google'}
+                    whitebg={preferredSigninMethod !== 'google'}
+                    href={`${SERVER_URL}/auth/google`}
+                    onClick={() => this.trackSignin('secondary cta', 'google')}
+                  >
+                    <Icon glyph="google" /> <span>{verb} with Google</span>
+                  </ButtonGoogle>
+                </Col>}
 
-export const UpsellJoinChannel = ({
-  channel,
-  subscribe,
-  loading,
-}: {
-  channel: Object,
-  subscribe: Function,
-}) => {
-  return (
-    <NullCard bg="channel">
-      <Title>Ready to join the conversation?</Title>
-      <Subtitle>
-        Join ~{channel.name} to get involved!
-      </Subtitle>
-      <Button
-        loading={loading}
-        onClick={() => subscribe(channel.id)}
-        icon="plus"
-        label
-      >
-        Join
-      </Button>
-    </NullCard>
-  );
-};
+              {!preferredSigninMethod &&
+                <Col>
+                  <ButtonTwitter
+                    preferred
+                    href={`${SERVER_URL}/auth/twitter`}
+                    after={preferredSigninMethod === 'twitter'}
+                    onClick={() => this.trackSignin('secondary cta', 'twitter')}
+                  >
+                    <Icon glyph="twitter" /> <span>{verb} with Twitter</span>
+                  </ButtonTwitter>
+
+                  <ButtonFacebook
+                    preferred
+                    href={`${SERVER_URL}/auth/facebook`}
+                    after={preferredSigninMethod === 'facebook'}
+                    onClick={() =>
+                      this.trackSignin('secondary cta', 'facebook')}
+                  >
+                    <Icon glyph="facebook" /> <span>{verb} with Facebook</span>
+                  </ButtonFacebook>
+
+                  <ButtonGoogle
+                    preferred
+                    href={`${SERVER_URL}/auth/google`}
+                    after={preferredSigninMethod === 'google'}
+                    onClick={() => this.trackSignin('secondary cta', 'google')}
+                  >
+                    <Icon glyph="google" /> <span>{verb} with Google</span>
+                  </ButtonGoogle>
+                </Col>}
+            </SigninButtonsContainer>
+
+            <CodeOfConduct>
+              By using Spectrum, you agree to our{' '}
+              <a
+                href="https://github.com/withspectrum/code-of-conduct"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Code of Conduct
+              </a>
+            </CodeOfConduct>
+          </FullscreenContent>
+        </FullscreenView>
+      );
+    } else {
+      const subtitle = view
+        ? view.type === 'community'
+          ? `Spectrum is a place where communities can share, discuss, and grow together. Sign up to join the ${view
+              .data.name} community and get in on the conversation.`
+          : `Spectrum is a place where communities can share, discuss, and grow together. Sign up to join the ${view
+              .data.community.name} community and get in on the conversation.`
+        : 'Spectrum is a place where communities can share, discuss, and grow together. Sign up below to get in on the conversation.';
+
+      return (
+        <NullCard bg={'signup'} noPadding noShadow={noShadow}>
+          <UpsellIconContainer>
+            <Icon glyph={glyph || 'explore'} size={56} />
+          </UpsellIconContainer>
+          <Title>
+            {title || 'Find your people.'}
+          </Title>
+          <Subtitle>
+            {subtitle}
+          </Subtitle>
+
+          <SignupButton onClick={() => this.toggleSigningIn('signup')}>
+            Sign up
+          </SignupButton>
+          <SignupFooter>
+            Already have an account?{' '}
+            <SigninLink onClick={() => this.toggleSigningIn('login')}>
+              {' '}Log in
+            </SigninLink>
+          </SignupFooter>
+        </NullCard>
+      );
+    }
+  }
+}
 
 export const UpsellJoinChannelState = ({
   channel,
