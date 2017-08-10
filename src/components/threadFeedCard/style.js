@@ -91,10 +91,14 @@ export const CreatorName = styled.span`
 `;
 
 export const ThreadContext = styled(FlexRow)`
-  margin-top: 4px;
+  align-items: center;
+  margin-top: 8px;
 `;
 
-export const ThreadContextAvatar = styled.div`margin-right: 12px;`;
+export const ThreadContextAvatar = styled(FlexRow)`
+  margin-right: 12px;
+  align-items: center;
+`;
 
 export const ThreadContextMeta = styled(FlexCol)`
   justify-content: space-between;
@@ -132,7 +136,7 @@ export const ParticipantCount = styled.span`
 export const Location = styled.span`
   display: inline-block;
   flex: 0 0 auto;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: ${({ theme }) => theme.text.default};
   line-height: 1;

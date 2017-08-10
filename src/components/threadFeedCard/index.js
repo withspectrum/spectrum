@@ -10,25 +10,14 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { LinkPreview } from '../../components/linkPreview';
 import Icon from '../../components/icons';
-import { FlexRow, FlexCol } from '../../components/globals';
-import { Avatar } from '../../components/avatar';
 import FormattedThreadLocation from './formattedThreadLocation';
 import {
   StyledThreadFeedCard,
   CardContent,
   CardLink,
   Title,
-  Meta,
-  MetaNew,
   MessageCount,
   Attachments,
-  ParticipantCount,
-  CreatorName,
-  ThreadContext,
-  ThreadContextMeta,
-  ParticipantHeads,
-  Location,
-  Lock,
   Pinned,
   PinnedBanner,
   PinnedIconWrapper,
@@ -65,14 +54,13 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
           props.data.attachments.map((attachment, i) => {
             if (attachment.attachmentType === 'linkPreview') {
               return (
-                <Attachments>
+                <Attachments key={i}>
                   <LinkPreview
                     trueUrl={attachment.data.trueUrl}
                     data={JSON.parse(attachment.data)}
                     size={'small'}
                     editable={false}
                     margin={'8px 0 12px'}
-                    key={i}
                   />
                 </Attachments>
               );

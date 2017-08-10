@@ -22,6 +22,7 @@ export const View = styled(FlexCol)`
     `}
   flex: auto;
   align-items: stretch;
+  overflow-y: scroll;
 
   @media (max-width: 1024px) {
     background-color: ${({ theme }) => theme.bg.default};
