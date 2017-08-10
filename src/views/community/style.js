@@ -1,14 +1,13 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { IconButton } from '../../components/buttons';
+import Card from '../../components/card';
 import {
   FlexRow,
   FlexCol,
   Transition,
-  hexa,
   Shadow,
+  hexa,
 } from '../../components/globals';
-import { UserProfile } from '../../components/profile';
-import Card from '../../components/card';
 
 export const CoverRow = styled(FlexRow)`
   align-items: flex-start;

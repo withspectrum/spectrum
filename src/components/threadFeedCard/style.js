@@ -11,7 +11,7 @@ import {
 import Card from '../card';
 
 export const StyledThreadFeedCard = styled(Card)`
-  padding: 16px 20px 16px 20px;
+  padding: 16px 20px;
   margin-bottom: 16px;
   transition: ${Transition.hover.off};
 
@@ -52,89 +52,91 @@ export const CardContent = styled(FlexCol)`
 
 export const Title = styled.h2`
   font-weight: 800;
-  font-size: 20px;
-  line-height: 1.4;
+  font-size: 24px;
+  line-height: 1.2;
   flex: 0 0 auto;
   color: ${({ theme }) => theme.text.default};
   pointer-events: all;
+  margin-bottom: 8px;
 `;
 
-export const MetaRow = styled(FlexRow)`
-  width: 100%;
-  display: flex;
+export const MessageCount = styled(FlexRow)`
+  align-self: stretch;
+  align-items: center;
+  justify-content: flex-start;
+
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
+  color: ${({ theme }) => theme.text.alt};
+  margin-bottom: 4px;
+
+  div {
+    margin-right: 4px;
+  }
+`;
+
+export const Attachments = styled(FlexRow)`
+  align-self: stretch;
   align-items: center;
   justify-content: space-between;
-  margin-top: 8px;
 `;
 
-export const ParticipantHeads = styled(FlexRow)`
-  align-items: center;
-
-  > *:not(:first-child) {
-    margin-left: 4px;
-    pointer-events: all;
-  }
+export const CreatorName = styled.span`
+  font-weight: 500;
+  font-size: 13px;
+  color: ${props => props.theme.text.alt};
+  line-height: 1;
 `;
 
-export const Creator = styled.div`
-  height: 2rem;
-  width: 2rem;
-  padding: 1px;
-  border-radius: 100%;
-  border: 2px solid ${({ theme }) => theme.brand.alt};
-  pointer-events: all;
-  display: flex;
-  flex: none;
-  justify-content: center;
-  align-items: center;
+export const ThreadContext = styled(FlexRow)`
+  margin-top: 4px;
+`;
 
-  object:after {
-    right: -6px;
-    bottom: -1px;
-  }
+export const ThreadContextAvatar = styled.div`margin-right: 12px;`;
+
+export const ThreadContextMeta = styled(FlexCol)`
+  justify-content: space-between;
+  align-items: flex-start;
 `;
 
 export const Meta = styled.span`
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1;
   vertical-align: middle;
   color: ${({ theme }) => theme.text.alt};
   display: flex;
   align-items: center;
+  margin-bottom: 4px;
 
   div {
     margin-right: 4px;
   }
-
-  @media (max-width: 480px) {
-    display: none;
-  }
 `;
 
 export const MetaNew = styled(Meta)`
-  font-weight: 700;
   color: ${({ theme }) => theme.success.default};
 `;
 
 export const ParticipantCount = styled.span`
-  height: 1.5rem;
-  padding: 0 8px;
   margin-left: 4px;
-  border-radius: .75rem;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
   vertical-align: middle;
-  color: ${({ theme }) => theme.text.reverse};
-  background-color: ${({ theme }) => theme.brand.alt};
+  color: ${({ theme }) => theme.text.alt};
 `;
 
 export const Location = styled.span`
   display: inline-block;
   flex: 0 0 auto;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
-  color: ${({ theme }) => theme.text.alt};
+  color: ${({ theme }) => theme.text.default};
+  line-height: 1;
+  margin-bottom: 4px;
 
   > a {
     pointer-events: all;
@@ -148,6 +150,7 @@ export const Location = styled.span`
 
 export const Lock = styled.span`
   position: relative;
+  color: ${props => props.theme.text.alt};
   top: 1px;
 `;
 

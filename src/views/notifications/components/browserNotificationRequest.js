@@ -6,7 +6,12 @@ import { Button } from '../../../components/buttons';
 
 const FirstRequest = ({ onSubscribe, onDismiss, loading }) =>
   <RequestCard>
-    <p>📬 We need your permission to enable push notifications:</p>
+    <p>
+      <span role="img" aria-label="mailbox emoji">
+        📬
+      </span>{' '}
+      We need your permission to enable push notifications:
+    </p>
     <FlexRow>
       <Button
         icon="notification-fill"

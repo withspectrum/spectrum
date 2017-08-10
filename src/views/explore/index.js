@@ -15,7 +15,6 @@ import { GoopyThree } from '../../views/homepage/style';
 import { FeaturedCommunity } from '../../components/curation';
 import TopCommunityList from './components/topCommunities';
 import Search from './components/search';
-import RecentCommunityList from './components/recentCommunities';
 import { UpsellCreateCommunity, UpsellSignIn } from '../../components/upsell';
 import {
   ViewContainer,

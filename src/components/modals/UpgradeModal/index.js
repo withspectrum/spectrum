@@ -16,7 +16,6 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 import { connect } from 'react-redux';
 import { Button, OutlineButton } from '../../buttons';
 import { UpsellUpgradeToPro } from '../../upsell';
-import { Notice } from '../../listItems/style';
 import {
   modalStyles,
   Section,

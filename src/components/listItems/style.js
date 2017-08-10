@@ -36,7 +36,8 @@ export const WrapperLi = styled.li`
 `;
 
 export const Col = styled(FlexCol)`
-  flex: 1;
+  flex: auto;
+  margin-left: 12px;
 `;
 
 export const Row = styled(FlexRow)`
