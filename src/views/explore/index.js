@@ -34,8 +34,8 @@ const ExplorePure = props => {
   const { title, description } = generateMetaInfo({
     type: 'explore',
   });
-  const featureSlug = 'frontend';
-  const featureNotes = `Frontend Cafe is a community for sharing your favorite resources for frontend engineering. It's been super active since its inception last week and we think news aggregation a really interesting use of Spectrum. Check it out and share your favorite resources!`;
+  const featureSlug = 'wip';
+  const featureNotes = `Work In Progress is a community where people can show what they're working on, get feedback, and find help in a friendly, constructive setting. Creating this kind of space was a goal from the very beginning of our work on Spectrum and we're super excited to see others creating this kind of community to share with others!`;
 
   return (
     <AppViewWrapper>
