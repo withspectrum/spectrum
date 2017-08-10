@@ -212,7 +212,13 @@ class ThreadContainerPure extends Component {
                   loading={isLoading}
                 />}
 
-              {!loggedInUser && <UpsellSignIn />}
+              {!loggedInUser &&
+                <UpsellSignIn
+                  title={'Join the conversation'}
+                  glyph={'message-new'}
+                  view={{ data: thread.community, type: 'community' }}
+                  noShadow
+                />}
             </Detail>
           </Content>
 

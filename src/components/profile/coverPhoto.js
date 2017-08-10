@@ -51,14 +51,16 @@ export const CoverPhoto = (props: Object) => {
                 tipLocation={'left'}
               />
             </Link>
-          : <CoverAction
-              glyph="message-fill"
-              color="text.reverse"
-              hoverColor="text.reverse"
-              onClick={props.onClick}
-              tipText={`Message ${props.user.name}`}
-              tipLocation={'left'}
-            />}
+          : props.currentUser
+            ? <CoverAction
+                glyph="message-fill"
+                color="text.reverse"
+                hoverColor="text.reverse"
+                onClick={props.onClick}
+                tipText={`Message ${props.user.name}`}
+                tipLocation={'left'}
+              />
+            : null}
         {props.children}
       </PhotoContainer>
     );

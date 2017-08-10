@@ -204,7 +204,8 @@ class ChannelViewPure extends Component {
             </Column>
 
             <Column type="primary" alignItems="center">
-              {!loggedInUser && <UpsellSignIn entity={channel} />}
+              {!loggedInUser &&
+                <UpsellSignIn view={{ data: channel, type: 'channel' }} />}
 
               {loggedInUser &&
                 hasRights &&
