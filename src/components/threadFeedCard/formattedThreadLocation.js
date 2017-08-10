@@ -44,7 +44,7 @@ const FormattedThreadLocation = props => {
         <ThreadContextAvatar>
           <Avatar
             community
-            size={32}
+            size={24}
             src={props.data.channel.community.profilePhoto}
           />
         </ThreadContextAvatar>}

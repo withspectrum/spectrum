@@ -34,7 +34,7 @@ const StyledAvatarStatus = styled.div`
   display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: 100%;
+  border-radius: ${props => (props.community ? `${props.size / 4}px` : '100%')};
 
   &:after {
     content: '';
@@ -67,7 +67,7 @@ const StyledAvatar = styled.object`
   position: relative;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? '8px' : '100%')};
+  border-radius: ${props => (props.community ? `${props.size / 4}px` : '100%')};
   object-fit: cover;
 `;
 
