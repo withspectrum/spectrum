@@ -10,6 +10,7 @@ import { track } from '../../../helpers/events';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { toggleChannelSubscriptionMutation } from '../../../api/channel';
 import { addToastWithTimeout } from '../../../actions/toasts';
+import { addCommunityToOnboarding } from '../../../actions/newUserOnboarding';
 import Titlebar from '../../../views/titlebar';
 import ThreadDetail from '../components/threadDetail';
 import Messages from '../components/messages';
@@ -171,6 +172,11 @@ class ThreadContainerPure extends Component {
         participantIds.length > 0
           ? [...participantIds, thread.creator.id]
           : [thread.creator.id];
+
+      // if the user is new and signed up through a thread view, push
+      // the thread's community data into the store to hydrate the new user experience
+      // with their first community they should join
+      this.props.dispatch(addCommunityToOnboarding(thread.channel.community));
 
       return (
         <View slider={this.props.slider}>

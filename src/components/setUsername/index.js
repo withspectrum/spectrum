@@ -8,11 +8,11 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 // $FlowFixMe
 import compose from 'recompose/compose';
-import { Input, Error, Success, UnderlineInput } from '../formElements';
+import { Error, Success, UnderlineInput } from '../formElements';
 import { Spinner } from '../globals';
 import { Button } from '../buttons';
 import { addToastWithTimeout } from '../../actions/toasts';
-import { Form, Loading, Row, Action } from './style';
+import { Form, Input, Loading, Row, Action } from './style';
 import { throttle } from '../../helpers/utils';
 import { CHECK_UNIQUE_USERNAME_QUERY, editUserMutation } from '../../api/user';
 
@@ -27,8 +27,13 @@ class SetUsername extends Component {
 
   constructor(props) {
     super(props);
-    const { user } = props;
-    const username = user.name ? slugg(user.name) : '';
+    const { user, initialUsername } = props;
+    let username;
+    if (initialUsername) {
+      username = initialUsername;
+    } else {
+      username = user.name ? slugg(user.name) : '';
+    }
 
     this.state = {
       username: username,
@@ -80,18 +85,21 @@ class SetUsername extends Component {
 
   search = username => {
     if (username.length > 20) {
+      this.props.isAvailable(null);
       return this.setState({
         error: 'Usernames can be up to 20 characters',
         success: '',
         isSearching: false,
       });
     } else if (username.length === 0) {
+      this.props.isAvailable(null);
       return this.setState({
-        error: 'Be sure to set a username so that people can find you!',
+        error: "Your username can't be nothing...or can it?",
         success: '',
         isSearching: false,
       });
     } else {
+      this.props.isAvailable(null);
       this.setState({
         error: '',
         isSearching: true,
@@ -107,22 +115,26 @@ class SetUsername extends Component {
         })
         .then(({ data, data: { user } }) => {
           if (this.state.username.length > 20) {
+            this.props.isAvailable(null);
             return this.setState({
-              error: 'Usernames can be up to 20 characters',
+              error: 'Usernames can be up to 20 characters because of reasons.',
               success: '',
               isSearching: false,
             });
           } else if (user && user.id) {
+            this.props.isAvailable(null);
             return this.setState({
-              error: 'This username is already taken, sorry!',
+              error:
+                'Someone already swooped this username – not feeling too original today, huh?',
               isSearching: false,
               success: '',
             });
           } else {
+            this.props.isAvailable(username);
             return this.setState({
               error: '',
               isSearching: false,
-              success: 'This username is available! Save it to continue...',
+              success: "Now that's one-of-a-kind!",
             });
           }
         });
@@ -148,7 +160,7 @@ class SetUsername extends Component {
           isLoading: false,
           success: '',
         });
-        this.props.usernameSaved();
+        this.props.save(user.username);
         this.props.dispatch(addToastWithTimeout('success', 'Username saved!'));
       })
       .catch(err => {
@@ -177,32 +189,15 @@ class SetUsername extends Component {
             <Loading>
               <Spinner size={16} color={'brand.default'} />
             </Loading>}
-
-          <Action>
-            <Button
-              disabled={error || username.length > 20}
-              loading={isLoading}
-              onClick={this.saveUsername}
-            >
-              Save
-            </Button>
-          </Action>
         </Row>
         <Row>
-          <UnderlineInput disabled defaultValue={username}>
-            spectrum.chat/users/
-          </UnderlineInput>
-        </Row>
-        <Row>
-          {error &&
-            <Error>
-              {error}
-            </Error>}
+          <Error>
+            {error ? error : <span>&nbsp;</span>}
+          </Error>
 
-          {success &&
-            <Success>
-              {success}
-            </Success>}
+          <Success>
+            {success ? success : <span>&nbsp;</span>}
+          </Success>
         </Row>
       </Form>
     );

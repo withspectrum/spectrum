@@ -41,7 +41,7 @@ export const Input = (props: InputProps) => {
         defaultValue={props.defaultValue}
         placeholder={props.placeholder}
         onChange={props.onChange}
-        autofocus={props.autofocus}
+        autoFocus={props.autoFocus}
         disabled={props.disabled}
       />
     </StyledLabel>
