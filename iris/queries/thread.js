@@ -6,10 +6,7 @@ const {
 } = require('../models/community');
 const { getUsers } = require('../models/user');
 import { getUserPermissionsInChannel } from '../models/usersChannels';
-import {
-  getParticipantsInThread,
-  getThreadNotificationStatusForUser,
-} from '../models/usersThreads';
+import { getThreadNotificationStatusForUser } from '../models/usersThreads';
 const { getMessages, getMessageCount } = require('../models/message');
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
@@ -70,9 +67,6 @@ module.exports = {
       _: any,
       { loaders }: GraphQLContext
     ) => loaders.community.load(communityId),
-    participants: ({ id, creatorId }, _, { loaders }) => {
-      return getParticipantsInThread(id);
-    },
     isCreator: (
       { creatorId }: { creatorId: String },
       _: any,

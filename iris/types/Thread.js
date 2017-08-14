@@ -43,7 +43,6 @@ const Thread = /* GraphQL */ `
 		receiveNotifications: Boolean
 		type: ThreadType
 		edits: [Edit!]
-		participants: [User]
 		messageConnection(first: Int, after: String): ThreadMessagesConnection!
 		messageCount: Int
 		creator: User!

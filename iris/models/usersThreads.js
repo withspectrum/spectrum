@@ -49,21 +49,6 @@ export const createNotifiedUserInThread = (
   });
 };
 
-export const getParticipantsInThread = (
-  threadId: string
-): Promise<Array<Object>> => {
-  return db
-    .table('usersThreads')
-    .getAll(threadId, { index: 'threadId' })
-    .filter({ isParticipant: true })
-    .eqJoin('userId', db.table('users'))
-    .without({
-      left: ['createdAt', 'id', 'threadId', 'userId'],
-    })
-    .zip()
-    .run();
-};
-
 export const getThreadNotificationStatusForUser = (
   threadId: string,
   userId: string
