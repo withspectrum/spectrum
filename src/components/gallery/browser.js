@@ -22,6 +22,8 @@ class Browser extends Component {
 
   constructor(props) {
     super(props);
+    // if there are no messages found
+    if (!props.data.messages || props.data.messages.length === 0) return;
 
     let index;
     props.data.messages.map((message, i) => {
@@ -112,6 +114,9 @@ class Browser extends Component {
 
   render() {
     const { images, index } = this.state;
+    const { data: { messages } } = this.props;
+
+    if (!messages || messages.length === 0) return null;
 
     return (
       <GalleryWrapper>
