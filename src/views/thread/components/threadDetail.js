@@ -247,13 +247,12 @@ class ThreadDetailPure extends Component {
       body: JSON.stringify(toJSON(body)),
     };
 
+    // TODO(@mxstbr): FIX FILE UPLOADING
+    const filesToUpload = [];
     // Get the images
-    const filesToUpload =
-      [] ||
-      body.document.nodes
-        .filter(node => node.type === 'image')
-        .map(image => image.getIn(['data', 'file']))
-        .toJS();
+    // const filesToUpload = Object.keys(body.entityMap)
+    //   .filter(key => body.entityMap[key].type === 'image')
+    //   .map(key => body.entityMap[key].data.src);
 
     const input = {
       threadId,
