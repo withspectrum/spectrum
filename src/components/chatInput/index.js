@@ -208,7 +208,7 @@ class ChatInputWithMutation extends Component {
   };
 
   render() {
-    const { state, onChange, currentUser } = this.props;
+    const { state, onChange, currentUser, autoFocus } = this.props;
     const { isFocused, photoSizeError } = this.state;
 
     return (
@@ -245,6 +245,7 @@ class ChatInputWithMutation extends Component {
               singleLine
               images={false}
               editorRef={editor => (this.editor = editor)}
+              autoFocus={autoFocus}
             />
             <SendButton glyph="send-fill" onClick={this.submit} />
           </Form>

@@ -651,7 +651,7 @@ class NewThread extends Component {
       loadingExistingThreadMessages,
       existingThreadWithMessages,
     } = this.state;
-    const { currentUser } = this.props;
+    const { currentUser, initNewThreadWithUser } = this.props;
 
     return (
       <MessagesContainer>
@@ -689,7 +689,7 @@ class NewThread extends Component {
             value={searchString}
             placeholder="Search for people..."
             onChange={this.handleChange}
-            autoFocus={true}
+            autoFocus={!initNewThreadWithUser}
           />
 
           {// user has typed in a search string
@@ -767,6 +767,7 @@ class NewThread extends Component {
           onFocus={this.onChatInputFocus}
           onBlur={this.onChatInputBlur}
           threadType={'directMessageThread'}
+          autoFocus={initNewThreadWithUser}
         />
       </MessagesContainer>
     );
