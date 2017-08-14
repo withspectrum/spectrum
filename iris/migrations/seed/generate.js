@@ -46,6 +46,9 @@ const generateUsersSettings = userId => {
         newMessageInThreads: {
           email: true,
         },
+        newThreadCreated: {
+          email: true,
+        },
       },
     },
   };
