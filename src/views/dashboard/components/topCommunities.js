@@ -18,6 +18,7 @@ import {
   Container,
   CoverAvatar,
   CoverTitle,
+  CoverDescription,
   ButtonContainer,
 } from './topCommunitiesStyle';
 import { CoverLink, CoverSubtitle } from '../../../components/profile/style';
@@ -54,8 +55,6 @@ class TopCommunitiesPure extends Component {
           isMember ? 'community joined' : 'community unjoined',
           null
         );
-
-        isMember ? this.props.join() : this.props.leave();
 
         const str = isMember
           ? `Joined ${toggleCommunityMembership.name}!`
@@ -95,6 +94,10 @@ class TopCommunitiesPure extends Component {
                   {community.metaData.members} members
                 </CoverSubtitle>
 
+                <CoverDescription>
+                  {community.description}
+                </CoverDescription>
+
                 <ButtonContainer>
                   {community.communityPermissions.isMember
                     ? <OutlineButton
@@ -109,6 +112,7 @@ class TopCommunitiesPure extends Component {
                     : <Button
                         onClick={() => this.toggleMembership(community.id)}
                         loading={loading === community.id}
+                        gradientTheme={'success'}
                       >
                         Join
                       </Button>}

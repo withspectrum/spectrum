@@ -11,6 +11,13 @@ export const OnboardingContainer = styled.div`
   flex: 1;
 `;
 
+export const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+`;
+
 export const OnboardingContent = styled.div`
   display: flex;
   flex-direction: column;

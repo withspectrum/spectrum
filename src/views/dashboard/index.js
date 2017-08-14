@@ -6,6 +6,7 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
+import NewUserOnboarding from '../../views/newUserOnboarding';
 import {
   UpsellSignIn,
   UpsellToReload,
@@ -109,16 +110,14 @@ class DashboardPure extends Component {
     }
 
     // New user onboarding
-    if (!isNewUser) {
-      const communities = user.communityConnection.edges;
+    if (isNewUser) {
+      // we pass a 'hasUsername' prop so that for returning visitors
+      // who have set a username already but haven't joined a community yet
+      // will still go through the onboarding flow. it will trigger the
+      // onboarding flow to skip the username step
+      const hasUsername = user.username;
 
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar />
-          <Column type="primary">Join communities!</Column>
-        </AppViewWrapper>
-      );
+      return <NewUserOnboarding noClose hasUsername={hasUsername} />;
     }
 
     if (dataExists) {

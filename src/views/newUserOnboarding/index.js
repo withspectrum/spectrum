@@ -11,6 +11,7 @@ import { Button, TextButton } from '../../components/buttons';
 import UserInfo from './components/userInfo';
 import SetUsername from './components/setUsername';
 import JoinFirstCommunity from './components/joinFirstCommunity';
+import TopCommunities from '../../views/dashboard/components/topCommunities';
 import { editUserMutation } from '../../api/user';
 import {
   OnboardingContainer,
@@ -21,6 +22,7 @@ import {
   Subtitle,
   Emoji,
   ContinueButton,
+  Container,
 } from './style';
 
 class NewUserOnboarding extends Component {
@@ -30,11 +32,11 @@ class NewUserOnboarding extends Component {
     username: any,
   };
 
-  constructor() {
-    super();
-
+  constructor(props) {
+    super(props);
+    const { hasUsername } = this.props;
     this.state = {
-      activeStep: 'welcome',
+      activeStep: hasUsername ? 'discoverCommunities' : 'welcome',
       isLoading: false,
       username: null,
     };
@@ -67,14 +69,14 @@ class NewUserOnboarding extends Component {
   };
 
   render() {
-    const { community, currentUser } = this.props;
+    const { community, currentUser, hasUsername } = this.props;
     const { activeStep, isLoading, username } = this.state;
 
     const steps = {
       welcome: {
         title: 'Welcome to Spectrum!',
         subtitle:
-          'Spectrum is a place where communities can share, discuss, and grow together. Before we jump into your first community, there are just a few things we need to do.',
+          'Spectrum is a place where communities can share, discuss, and grow together. Before we jump into your first community, there are just a few things we need to do...',
         icon: null,
         emoji: '👋',
       },
@@ -102,7 +104,7 @@ class NewUserOnboarding extends Component {
       discoverCommunities: {
         title: 'The internet is more fun with friends.',
         subtitle:
-          'There are hundreds of communities on Spectrum to explore. Check out some of our favorites, or search for topics.',
+          'There are hundreds of communities on Spectrum to explore. Check out some of our favorites below.',
         icon: null,
         emoji: '✨',
       },
@@ -118,7 +120,11 @@ class NewUserOnboarding extends Component {
     const isMobile = window.innerWidth < 768;
 
     return (
-      <FullscreenView hasBackground={!isMobile} close={this.props.close}>
+      <FullscreenView
+        hasBackground={!isMobile}
+        close={this.props.close}
+        noClose={this.props.noClose}
+      >
         <OnboardingContainer>
           <OnboardingContent>
             <IconContainer>
@@ -137,7 +143,12 @@ class NewUserOnboarding extends Component {
             </Subtitle>
 
             {activeStep === 'welcome' &&
-              <ContinueButton onClick={() => this.toStep('setUsername')}>
+              <ContinueButton
+                onClick={() =>
+                  this.toStep(
+                    hasUsername ? 'discoverCommunities' : 'setUsername'
+                  )}
+              >
                 Get Started
               </ContinueButton>}
 
@@ -164,10 +175,17 @@ class NewUserOnboarding extends Component {
               <JoinFirstCommunity community={community} />}
 
             {activeStep === 'discoverCommunities' &&
-              <div>Discover communities</div>}
+              <Container>
+                <TopCommunities />
+              </Container>}
 
             {activeStep === 'done' &&
-              <ContinueButton onClick={this.props.close}>
+              <ContinueButton
+                onClick={() =>
+                  this.props.close
+                    ? this.props.close()
+                    : (window.location.href = '/')}
+              >
                 Finish this dang onboarding
               </ContinueButton>}
           </OnboardingContent>

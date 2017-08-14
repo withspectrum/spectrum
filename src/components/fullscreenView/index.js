@@ -28,13 +28,14 @@ class FullscreenView extends Component {
   };
 
   render() {
-    const { close, hasBackground, children } = this.props;
+    const { close, hasBackground, children, noClose } = this.props;
 
     return (
       <FullscreenViewContainer>
-        <Close onClick={close}>
-          <Icon glyph={'view-close'} size={32} />
-        </Close>
+        {!noClose &&
+          <Close onClick={close}>
+            <Icon glyph={'view-close'} size={32} />
+          </Close>}
 
         {hasBackground &&
           <span>

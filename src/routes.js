@@ -88,7 +88,7 @@ class Routes extends Component {
 
             {// only load the user onboarding if the user doesn't
             // have a username yet
-            !showNewUserOnboarding &&
+            showNewUserOnboarding &&
               <NewUserOnboarding close={this.closeNewUserOnboarding} />}
 
             {/*
