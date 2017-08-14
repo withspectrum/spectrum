@@ -86,14 +86,16 @@ class Editor extends React.Component {
   };
 
   addImages = files => {
-    let { editorState, addImage } = this.state;
+    const { addImage } = this.state;
+    const {
+      state = this.state.editorState,
+      onChange = this.onChange,
+    } = this.props;
     // Add images to editorState
     // eslint-disable-next-line
     for (var i = 0, file; (file = files[i]); i++) {
-      editorState = addImage(editorState, window.URL.createObjectURL(file));
+      onChange(addImage(state, window.URL.createObjectURL(file)));
     }
-
-    this.onChange(editorState);
   };
 
   addImage = e => {
