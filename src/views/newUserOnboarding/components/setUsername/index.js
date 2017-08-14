@@ -8,13 +8,21 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 // $FlowFixMe
 import compose from 'recompose/compose';
-import { Error, Success, UnderlineInput } from '../formElements';
-import { Spinner } from '../globals';
-import { Button } from '../buttons';
-import { addToastWithTimeout } from '../../actions/toasts';
+import {
+  Error,
+  Success,
+  UnderlineInput,
+} from '../../../../components/formElements';
+import { Spinner } from '../../../../components/globals';
+import { Button } from '../../../../components/buttons';
+import { addToastWithTimeout } from '../../../../actions/toasts';
 import { Form, Input, Loading, Row, Action } from './style';
-import { throttle } from '../../helpers/utils';
-import { CHECK_UNIQUE_USERNAME_QUERY, editUserMutation } from '../../api/user';
+import { throttle } from '../../../../helpers/utils';
+import {
+  CHECK_UNIQUE_USERNAME_QUERY,
+  editUserMutation,
+} from '../../../../api/user';
+import { ContinueButton } from '../../style';
 
 class SetUsername extends Component {
   state: {
@@ -155,13 +163,12 @@ class SetUsername extends Component {
 
     this.props
       .editUser(input)
-      .then(({ data: { user } }) => {
+      .then(({ data: { editUser } }) => {
         this.setState({
           isLoading: false,
           success: '',
         });
-        this.props.save(user.username);
-        this.props.dispatch(addToastWithTimeout('success', 'Username saved!'));
+        this.props.save(editUser.username);
       })
       .catch(err => {
         this.setState({
@@ -198,6 +205,16 @@ class SetUsername extends Component {
           <Success>
             {success ? success : <span>&nbsp;</span>}
           </Success>
+        </Row>
+
+        <Row>
+          <ContinueButton
+            onClick={this.saveUsername}
+            disabled={!username || error}
+            loading={isLoading}
+          >
+            Save and Continue
+          </ContinueButton>
         </Row>
       </Form>
     );

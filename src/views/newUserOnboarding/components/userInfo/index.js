@@ -14,17 +14,18 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { track } from '../../../helpers/events';
-import { throttle } from '../../../helpers/utils';
-import { Button, TextButton } from '../../../components/buttons';
-import Icon from '../../../components/icons';
+import { track } from '../../../../helpers/events';
+import { throttle } from '../../../../helpers/utils';
+import { Button, TextButton } from '../../../../components/buttons';
+import { ContinueButton } from '../../style';
+import Icon from '../../../../components/icons';
 import {
   Input,
   TextArea,
   Error,
   PhotoInput,
   CoverInput,
-} from '../../../components/formElements';
+} from '../../../../components/formElements';
 import {
   StyledCard,
   Form,
@@ -34,19 +35,19 @@ import {
   Location,
   Loading,
 } from './style';
-import { Spinner } from '../../../components/globals';
+import { Spinner } from '../../../../components/globals';
 import {
   editUserMutation,
   CHECK_UNIQUE_USERNAME_QUERY,
-} from '../../../api/user';
-import { addToastWithTimeout } from '../../../actions/toasts';
+} from '../../../../api/user';
+import { addToastWithTimeout } from '../../../../actions/toasts';
 import {
   PRO_USER_MAX_IMAGE_SIZE_STRING,
   PRO_USER_MAX_IMAGE_SIZE_BYTES,
   FREE_USER_MAX_IMAGE_SIZE_BYTES,
   FREE_USER_MAX_IMAGE_SIZE_STRING,
-} from '../../../helpers/images';
-import { Notice } from '../../../components/listItems/style';
+} from '../../../../helpers/images';
+import { Notice } from '../../../../components/listItems/style';
 
 class UserInfoPure extends Component {
   state: {
@@ -70,6 +71,7 @@ class UserInfoPure extends Component {
     super(props);
 
     const user = this.props.currentUser;
+    console.log('user', user);
 
     this.state = {
       website: user.website ? user.website : '',
@@ -249,8 +251,6 @@ class UserInfoPure extends Component {
       file,
       coverFile,
       photoSizeError,
-      username,
-      usernameError,
     } = this.state;
 
     const input = {
@@ -259,10 +259,9 @@ class UserInfoPure extends Component {
       website,
       file,
       coverFile,
-      username,
     };
 
-    if (photoSizeError || usernameError) {
+    if (photoSizeError) {
       return;
     }
 
@@ -281,11 +280,11 @@ class UserInfoPure extends Component {
 
         // the mutation returns a user object. if it exists,
         if (user !== undefined) {
-          this.props.dispatch(addToastWithTimeout('success', 'Changes saved!'));
+          this.props.save();
+
           this.setState({
             file: null,
           });
-          window.location.href = `/users/${user.username}`;
         }
       })
       .catch(err => {
@@ -325,6 +324,7 @@ class UserInfoPure extends Component {
             <PhotoInput
               onChange={this.setProfilePhoto}
               defaultValue={image}
+              size={64}
               user
             />
           </ImageInputWrapper>
@@ -342,7 +342,7 @@ class UserInfoPure extends Component {
               </span>
             </Notice>}
 
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex', marginTop: '40px' }}>
             <Input
               style={{ marginRight: '8px' }}
               type="text"
@@ -377,6 +377,16 @@ class UserInfoPure extends Component {
               Whoa there Homer, let's try and keep this brief - like, 140
               characters brief.
             </Error>}
+
+          <ContinueButton
+            onClick={this.save}
+            disabled={
+              nameError || descriptionError || photoSizeError || proGifError
+            }
+            loading={isLoading}
+          >
+            Save and Continue
+          </ContinueButton>
         </Form>
       </StyledCard>
     );

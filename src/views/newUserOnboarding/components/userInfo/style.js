@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { FlexRow, FlexCol, Truncate } from '../../../components/globals';
+import { FlexRow, FlexCol, Truncate } from '../../../../components/globals';
 
 export const StyledCard = styled.div`
   padding: 16px;
@@ -7,13 +7,14 @@ export const StyledCard = styled.div`
   z-index: 3;
   background: transparent;
   width: 100%;
-  max-width: 640px;
+  max-width: 540px;
   display: flex;
 `;
 
 export const Form = styled.form`
   display: inline-block;
   flex-direction: column;
+  justify-content: center;
   align-self: stretch;
   flex: 1;
   max-width: 100%;
@@ -90,8 +91,9 @@ export const ImageInputWrapper = styled(FlexCol)`
 
   > label:nth-of-type(2) {
     position: absolute;
-    bottom: -24px;
-    left: 24px;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
   }
 `;
 

@@ -86,5 +86,5 @@ export const ContinueButton = styled(Button)`
   max-width: 100%;
   box-shadow: ${props =>
     `${Shadow.high} ${hexa(props.theme.bg.reverse, 0.15)}`};
-  margin-top: 16px;
+  margin: 32px auto 0;
 `;

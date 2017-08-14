@@ -12,7 +12,6 @@ import {
   UpsellMiniCreateCommunity,
   UpsellMiniUpgrade,
 } from '../../components/upsell';
-import UpsellNewUser from '../../components/upsell/newUserUpsell';
 import {
   LoadingProfile,
   LoadingList,
@@ -117,13 +116,7 @@ class DashboardPure extends Component {
         <AppViewWrapper>
           <Head title={title} description={description} />
           <Titlebar />
-          <Column type="primary">
-            <UpsellNewUser
-              user={user}
-              graduate={this.graduate}
-              communities={communities}
-            />
-          </Column>
+          <Column type="primary">Join communities!</Column>
         </AppViewWrapper>
       );
     }

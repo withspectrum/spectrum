@@ -211,9 +211,9 @@ export const StyledSuccess = styled.p`
 
 export const PhotoInputLabel = styled.label`
   position: relative;
-  height: 48px;
+  height: ${props => props.size}px;
   z-index: 9;
-  width: 48px;
+  width: ${props => props.size}px;
   border-radius: ${props => (props.user ? '100%' : '8px')};
   margin-top: 8px;
   background-color: ${({ theme }) => theme.bg.reverse};
@@ -244,6 +244,7 @@ export const ProfileImage = styled.img`
 `;
 
 export const CoverImage = styled.div`
+  background-color: ${props => props.theme.brand.default};
   background-image: url('${props => props.src}');
   background-position: center;
   background-size: cover;
@@ -274,9 +275,13 @@ export const InputOverlay = styled.div`
   background-color: ${({ theme }) => hexa(theme.bg.reverse, 0.6)};
   padding: 8px;
   border-radius: ${props => (props.user ? '100%' : '8px')};
-  opacity: 1;
+  opacity: 0;
+  transition: ${Transition.hover.off};
 
   &:hover {
+    opacity: 1;
+    transition: ${Transition.hover.on};
+
     + img,
     + div {
       transition: ${Transition.hover.on};

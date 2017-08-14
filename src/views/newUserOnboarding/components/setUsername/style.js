@@ -2,7 +2,7 @@
 import React from 'react';
 // $FlowFixMe
 import styled from 'styled-components';
-import { Transition } from '../globals';
+import { Transition } from '../../../../components/globals';
 
 export const Row = styled.div`
   display: flex;

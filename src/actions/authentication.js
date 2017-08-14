@@ -11,9 +11,10 @@ export const logout = () => {
   // clear Apollo's query cache
   clearApolloStore();
   // redirect to home page
-  window.location.href = process.env.NODE_ENV === 'production'
-    ? '/auth/logout'
-    : 'http://localhost:3001/auth/logout';
+  window.location.href =
+    process.env.NODE_ENV === 'production'
+      ? '/auth/logout'
+      : 'http://localhost:3001/auth/logout';
 };
 
 export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
@@ -29,6 +30,8 @@ export const saveUserDataToLocalStorage = (user: Object) => dispatch => {
     name: user.name,
     username: user.username,
     profilePhoto: user.profilePhoto,
+    coverPhoto: user.coverPhoto,
+    website: user.website,
   };
 
   // logs the user id to sentry errors
