@@ -4,7 +4,6 @@ import React from 'react';
 import styled from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { Gradient } from '../globals';
 import { ProfileHeaderAction } from './style';
 import { optimize } from '../../helpers/images';
 
@@ -12,14 +11,14 @@ const PhotoContainer = styled.div`
   position: relative;
   width: 100%;
   flex: 0 0 ${props => (props.large ? '320px' : '96px')};
-  background-color: ${({ theme }) => theme.space.light};
-  background-image: ${props => (props.coverURL ? `url(${optimize(
-        props.coverURL,
-        {
+  background-color: ${({ theme }) => theme.bg.reverse};
+  background-image: ${props =>
+    props.coverURL
+      ? `url("${optimize(props.coverURL, {
           w: props.large ? 1024 : 320,
           dpr: 2,
-        }
-      )})` : Gradient(props.theme.space.light, props.theme.space.dark))};
+        })}")`
+      : 'none'};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -52,14 +51,16 @@ export const CoverPhoto = (props: Object) => {
                 tipLocation={'left'}
               />
             </Link>
-          : <CoverAction
-              glyph="message-fill"
-              color="text.reverse"
-              hoverColor="text.reverse"
-              onClick={props.onClick}
-              tipText={`Message ${props.user.name}`}
-              tipLocation={'left'}
-            />}
+          : props.currentUser
+            ? <CoverAction
+                glyph="message-fill"
+                color="text.reverse"
+                hoverColor="text.reverse"
+                onClick={props.onClick}
+                tipText={`Message ${props.user.name}`}
+                tipLocation={'left'}
+              />
+            : null}
         {props.children}
       </PhotoContainer>
     );

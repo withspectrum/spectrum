@@ -132,11 +132,8 @@ class ThreadContainerPure extends Component {
   };
 
   render() {
-    const {
-      data: { thread, networkStatus, user },
-      data,
-      currentUser,
-    } = this.props;
+    const { data: { thread, networkStatus, user }, currentUser } = this.props;
+
     const { isLoading } = this.state;
     const loggedInUser = user || currentUser;
     const dataExists = thread && (thread.content && thread.channel);
@@ -195,6 +192,7 @@ class ThreadContainerPure extends Component {
               />
 
               <Messages
+                threadType={thread.threadType}
                 id={thread.id}
                 participants={participantsAndCreator}
                 currentUser={loggedInUser}
@@ -214,7 +212,13 @@ class ThreadContainerPure extends Component {
                   loading={isLoading}
                 />}
 
-              {!loggedInUser && <UpsellSignIn />}
+              {!loggedInUser &&
+                <UpsellSignIn
+                  title={'Join the conversation'}
+                  glyph={'message-new'}
+                  view={{ data: thread.community, type: 'community' }}
+                  noShadow
+                />}
             </Detail>
           </Content>
 

@@ -13,7 +13,6 @@ import { findDOMNode } from 'react-dom';
 import { throttle } from '../../../helpers/utils';
 import { SEARCH_COMMUNITIES_QUERY } from '../../../api/community';
 import { Spinner } from '../../../components/globals';
-import { CommunityProfile } from '../../../components/profile';
 import {
   SearchWrapper,
   SearchInput,
@@ -93,7 +92,7 @@ class Search extends Component {
 
   handleKeyPress = (e: any) => {
     // destructure the whole state object
-    const { searchString, searchResults, focusedSearchResult } = this.state;
+    const { searchResults, focusedSearchResult } = this.state;
 
     const input = findDOMNode(this.refs.input);
     const searchResultIds =

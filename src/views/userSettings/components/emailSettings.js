@@ -16,7 +16,7 @@ import {
   Notice,
   InlineIcon,
 } from '../../../components/listItems/style';
-import { EmailListItem } from '../style';
+import { EmailListItem, CheckboxContent } from '../style';
 
 const parseNotificationTypes = notifications => {
   const types = Object.keys(notifications.types).filter(
@@ -30,6 +30,13 @@ const parseNotificationTypes = notifications => {
           emailValue: notifications.types[type].email,
           label:
             "Email me when people respond in the threads and private conversations where I'm active - this includes direct messages.",
+        };
+      case 'newThreadCreated':
+        return {
+          type,
+          emailValue: notifications.types[type].email,
+          label:
+            'Email me when a new thread is published in channels where I receive notifications.',
         };
       default:
       case 'null':
@@ -62,7 +69,10 @@ class EmailSettings extends Component {
     const settings = parseNotificationTypes(notifications);
 
     return (
-      <StyledCard>
+      <StyledCard
+        smallOnly={this.props.smallOnly}
+        largeOnly={this.props.largeOnly}
+      >
         <ListHeader>
           <LargeListHeading>Email Preferences</LargeListHeading>
         </ListHeader>
@@ -74,18 +84,31 @@ class EmailSettings extends Component {
                   checked={setting.emailValue}
                   onChange={this.handleChange}
                   id={setting.type}
+                  align={'flex-start'}
                 >
-                  {setting.label}
+                  <CheckboxContent>
+                    {setting.label}
+                    {setting.type === 'newMessageInThreads' &&
+                      <Notice>
+                        <strong>
+                          Trying to mute a specific conversation?
+                        </strong>{' '}
+                        You can turn off email notifications for individual
+                        threads by clicking on the notification icon{' '}
+                        <InlineIcon>
+                          <Icon glyph="notification" size="16" />
+                        </InlineIcon>{' '}
+                        at the top of a post.
+                      </Notice>}
+
+                    {setting.type === 'newThreadCreated' &&
+                      <Notice>
+                        You can turn off email notifications for individual
+                        channels by turning thread notifications off on in the
+                        sidebar of the individual channel's page.
+                      </Notice>}
+                  </CheckboxContent>
                 </Checkbox>
-                <Notice>
-                  <strong>Trying to mute a specific conversation?</strong> You
-                  can turn off email notifications for individual threads by
-                  clicking on the notification icon{' '}
-                  <InlineIcon>
-                    <Icon glyph="notification" size="16" />
-                  </InlineIcon>{' '}
-                  at the top of a post.
-                </Notice>
               </EmailListItem>
             );
           })}

@@ -22,10 +22,10 @@ type BubbleProps = {
 };
 
 export const Bubble = (props: BubbleProps) => {
-  const { me, message } = props;
+  const { me, message, hashed } = props;
 
   return (
-    <TextBubble me={me}>
+    <TextBubble hashed={hashed} me={me}>
       {renderMarkdownLinks(message.body)}
     </TextBubble>
   );
@@ -41,13 +41,14 @@ export const EmojiBubble = (props: BubbleProps) => {
 };
 
 export const ImgBubble = (props: Object) => {
-  const { me, pending, imgSrc } = props;
+  const { me, pending, imgSrc, hashed } = props;
   return (
     <ImageBubble
       onClick={props.openGallery}
       me={me}
       pending={pending}
       src={`${imgSrc}${pending ? '' : `?max-w=${window.innerWidth * 0.6}`}`}
+      hashed={hashed}
     />
   );
 };

@@ -36,12 +36,12 @@ export const WrapperLi = styled.li`
 `;
 
 export const Col = styled(FlexCol)`
-  flex: 1;
+  flex: auto;
 `;
 
 export const Row = styled(FlexRow)`
   flex: 0 0 auto;
-  align-items: center;
+  align-items: flex-center;
 
   a {
     display: flex;
@@ -52,6 +52,7 @@ export const Row = styled(FlexRow)`
 export const Heading = styled(H3)`
   font-weight: 700;
   transition: ${Transition.hover.off};
+  line-height: 1.2;
 `;
 
 export const Meta = styled(H4)`
@@ -71,9 +72,10 @@ export const ActionContainer = styled(FlexCol)`
 
 export const StyledCard = styled(Card)`
   padding: 12px 16px 12px 20px;
+  display: ${props => (props.smallOnly ? 'none' : 'flex')};
 
   @media (max-width: 768px) {
-    display: none;
+    display: ${props => (props.largeOnly ? 'none' : 'flex')};
   }
 `;
 

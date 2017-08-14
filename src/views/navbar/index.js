@@ -37,7 +37,6 @@ import {
   IconLink,
   Label,
   UserProfileAvatar,
-  SigninLink,
 } from './style';
 
 class Navbar extends Component {
@@ -408,15 +407,12 @@ class Navbar extends Component {
             <LogoLink to="/">
               <Logo src="/img/mark-white.png" role="presentation" />
             </LogoLink>
-            <IconLink data-active={match.url === '/explore'} to="/explore">
-              <Icon glyph="explore" />
-              <Label>Explore</Label>
-            </IconLink>
           </Section>
           <Section right>
-            <SigninLink onClick={this.login} icon="twitter">
-              Sign up or log in
-            </SigninLink>
+            <IconLink data-active={match.url === '/explore'} to="/explore">
+              <Icon glyph="explore" />
+              <Label>Explore Communities on Spectrum</Label>
+            </IconLink>
           </Section>
         </Nav>
       );

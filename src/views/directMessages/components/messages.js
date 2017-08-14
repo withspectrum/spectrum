@@ -29,6 +29,10 @@ class MessagesWithData extends Component {
   componentDidUpdate(prev) {
     const { contextualScrollToBottom, data } = this.props;
 
+    if (this.props.data.loading) {
+      this.unsubscribe();
+    }
+
     if (
       prev.data.networkStatus === 1 &&
       prev.data.loading &&
@@ -63,9 +67,8 @@ class MessagesWithData extends Component {
 
   render() {
     const {
-      data: { error, loading, messages, hasNextPage, fetchMore, networkStatus },
+      data: { error, messages, hasNextPage, fetchMore, networkStatus },
     } = this.props;
-    const { subscription } = this.state;
 
     if (error) {
       return <div>Error!</div>;

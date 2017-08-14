@@ -13,7 +13,6 @@ import { track } from '../../helpers/events';
 import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { addProtocolToString } from '../../helpers/utils';
-import { MetaData } from './metaData';
 import { LoadingProfile } from '../loading';
 import Icon from '../icons';
 import { Button } from '../buttons';
@@ -176,7 +175,6 @@ class CommunityWithData extends Component {
                 </a>
               </ExtLink>}
           </Description>
-          <MetaData data={community.metaData} />
         </Card>
       );
     } else if (componentSize === 'miniWithAction') {

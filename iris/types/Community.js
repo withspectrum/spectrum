@@ -87,12 +87,14 @@ const Community = /* GraphQL */ `
 		isMember: Boolean
 		isModerator: Boolean
 		isBlocked: Boolean
+		pinnedThreadId: String
 		communityPermissions: CommunityPermissions!
 		channelConnection: CommunityChannelsConnection!
 		memberConnection(first: Int = 20, after: String): CommunityMembersConnection!
 		threadConnection(first: Int = 10, after: String): CommunityThreadsConnection!
 		metaData: CommunityMetaData
 		slackImport: SlackImport
+		invoices: [Invoice]
 	}
 
 	extend type Query {
@@ -100,6 +102,7 @@ const Community = /* GraphQL */ `
 		topCommunities(amount: Int = 20): [Community!]
 		recentCommunities: [Community!]
 		searchCommunities(string: String): [Community]
+		searchCommunityThreads(communityId: ID!, searchString: String): [Thread]
 	}
 
 	extend type Mutation {
@@ -109,6 +112,7 @@ const Community = /* GraphQL */ `
 		toggleCommunityMembership(communityId: ID!): Community
 		sendSlackInvites(input: SendSlackInvitesInput!): Community
 		sendEmailInvites(input: EmailInvitesInput!): Boolean
+		pinThread(threadId: ID!, communityId: ID!, value: String): Community
 	}
 `;
 

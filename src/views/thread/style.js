@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components';
-import { Link } from 'react-router-dom';
 import { Avatar } from '../../components/avatar';
 import Markdown from '../../components/markdown';
 import Column from '../../components/column';
@@ -23,6 +22,7 @@ export const View = styled(FlexCol)`
     `}
   flex: auto;
   align-items: stretch;
+  overflow-y: scroll;
 
   @media (max-width: 1024px) {
     background-color: ${({ theme }) => theme.bg.default};
@@ -45,6 +45,7 @@ export const Content = styled(FlexRow)`
 export const Input = styled(FlexRow)`
   flex: none;
   justify-content: center;
+  z-index: 1003;
 `;
 
 export const Detail = styled(Column)`
@@ -235,11 +236,14 @@ export const Location = styled(FlexRow)`
   }
 `;
 
-export const Edited = styled.div`
-  display: block;
+export const Timestamp = styled.span`
   font-weight: 500;
   font-size: 12px;
   color: ${({ theme }) => theme.text.alt};
+`;
+
+export const Edited = styled(Timestamp)`
+  margin-left: 4px;
 `;
 
 export const ChatWrapper = styled.div`width: 100%;`;

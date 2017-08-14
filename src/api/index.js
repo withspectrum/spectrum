@@ -6,7 +6,7 @@ import {
   toIdValue,
 } from 'react-apollo';
 // $FlowFixMe
-import { createNetworkInterface } from 'apollo-upload-client';
+import { createBatchingNetworkInterface } from 'apollo-upload-client';
 // $FlowFixMe
 import {
   SubscriptionClient,
@@ -24,8 +24,9 @@ const wsClient = new SubscriptionClient(
 
 // In production the API is at the same URL, in development it's at a different port
 const API_URI = IS_PROD ? '/api' : 'http://localhost:3001/api';
-const networkInterface = createNetworkInterface({
+const networkInterface = createBatchingNetworkInterface({
   uri: API_URI,
+  batchInterval: 10,
   opts: {
     credentials: 'include',
   },
@@ -43,6 +44,7 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 export const client = new ApolloClient({
   networkInterface: networkInterfaceWithSubscriptions,
   fragmentMatcher,
+  queryDeduplication: true,
   dataIdFromObject: result => {
     if (result.__typename) {
       // Custom Community cache key based on slug
@@ -101,5 +103,5 @@ export const SERVER_URL =
 
 export const PUBLIC_STRIPE_KEY =
   process.env.NODE_ENV === 'production'
-    ? 'pk_live_8piI030RqVnqDc8QGTUwUj0Z'
-    : 'pk_test_A6pKi4xXOdgg9FrZJ84NW9mP';
+    ? 'pk_live_viV7X5XXD1sw8aN2NgQjiff6'
+    : 'pk_test_8aqk2JeScufGk1zAMe5GxaRq';

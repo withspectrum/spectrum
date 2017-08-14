@@ -20,8 +20,8 @@ import { Button } from '../buttons';
 import type { ProfileSizeProps } from './index';
 import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
-import { Avatar } from '../avatar';
 import {
+  ProfileAvatar,
   ProfileHeader,
   ProfileHeaderLink,
   ProfileHeaderMeta,
@@ -99,6 +99,7 @@ const UserWithData = ({
               onlineSize={'large'}
               isOnline={user.isOnline}
               src={`${user.profilePhoto}`}
+              noLink
             />
             <CoverTitle>
               {user.name}
@@ -131,6 +132,7 @@ const UserWithData = ({
           </CoverDescription>}
 
         {!user.isPro &&
+          currentUser &&
           user.id === currentUser.id &&
           <ProUpgrade>
             <Button onClick={() => triggerUpgrade()} gradientTheme={'success'}>
@@ -139,17 +141,55 @@ const UserWithData = ({
           </ProUpgrade>}
       </Card>
     );
+  } else if (componentSize === 'simple') {
+    return (
+      <Card>
+        <CoverPhoto
+          user={user}
+          onClick={() => initMessage()}
+          currentUser={currentUser}
+        >
+          <CoverLink to={`/users/${user.username}`}>
+            <CoverAvatar
+              size={64}
+              radius={64}
+              onlineSize={'large'}
+              isOnline={user.isOnline}
+              src={`${user.profilePhoto}`}
+              noLink
+            />
+            <CoverTitle>
+              {user.name}
+            </CoverTitle>
+          </CoverLink>
+        </CoverPhoto>
+        <CoverSubtitle center>
+          {user.username && `@${user.username}`}
+          {user.isAdmin && <Badge type="admin" />}
+          {user.isPro && <Badge type="pro" />}
+        </CoverSubtitle>
+
+        {user.description &&
+          <CoverDescription>
+            <p>
+              {user.description}
+            </p>
+          </CoverDescription>}
+      </Card>
+    );
   } else {
     return (
       <Card>
         <ProfileHeader>
-          <ProfileHeaderLink to={`/users/${user.username}`}>
-            <Avatar
+          <ProfileHeaderLink
+            to={user.username ? `/users/${user.username}` : null}
+          >
+            <ProfileAvatar
               size={32}
               radius={32}
               isOnline={user.isOnline}
               src={`${user.profilePhoto}`}
-              link={user.username ? `/users/${user.username}` : null}
+              noLink
             />
             <ProfileHeaderMeta>
               <Title>

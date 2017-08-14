@@ -440,6 +440,23 @@ const deleteCommunity = (communityId: string): Promise<Object> => {
     .run();
 };
 
+const setPinnedThreadInCommunity = (
+  communityId: string,
+  value: string
+): Promise<Object> => {
+  return db
+    .table('communities')
+    .get(communityId)
+    .update(
+      {
+        pinnedThreadId: value,
+      },
+      { returnChanges: 'always' }
+    )
+    .run()
+    .then(result => result.changes[0].new_val);
+};
+
 const unsubscribeFromAllChannelsInCommunity = (
   communityId: string,
   userId: string
@@ -540,6 +557,19 @@ const getCommunitiesBySearchString = (
     .run();
 };
 
+const searchThreadsInCommunity = (
+  channels: Array<string>,
+  searchString: string
+): Promise<Array<Object>> => {
+  return db
+    .table('threads')
+    .getAll(...channels, { index: 'channelId' })
+    .filter(thread => thread.coerceTo('string').match(`(?i)${searchString}`))
+    .filter(thread => db.not(thread.hasFields('deletedAt')))
+    .orderBy(db.desc('lastActive'))
+    .run();
+};
+
 module.exports = {
   getCommunities,
   getCommunitiesBySlug,
@@ -548,10 +578,12 @@ module.exports = {
   createCommunity,
   editCommunity,
   deleteCommunity,
+  setPinnedThreadInCommunity,
   unsubscribeFromAllChannelsInCommunity,
   userIsMemberOfCommunity,
   userIsMemberOfAnyChannelInCommunity,
   getTopCommunities,
   getRecentCommunities,
   getCommunitiesBySearchString,
+  searchThreadsInCommunity,
 };

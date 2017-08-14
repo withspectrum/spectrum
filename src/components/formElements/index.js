@@ -1,6 +1,6 @@
 //@flow
 import React, { Component } from 'react';
-
+import { Avatar } from '../avatar';
 import Icon from '../icons';
 
 import {
@@ -16,7 +16,6 @@ import {
   PhotoInputLabel,
   CoverInputLabel,
   InputOverlay,
-  ProfileImage,
   CoverImage,
 } from './style';
 
@@ -55,11 +54,7 @@ export const PhotoInput = (props: InputProps) => {
       <InputOverlay user={props.user}>
         <Icon glyph="photo" />
       </InputOverlay>
-      <ProfileImage
-        src={`${props.defaultValue}`}
-        user={props.user}
-        role="presentation"
-      />
+      <Avatar size={48} src={`${props.defaultValue}`} user={props.user} />
       <StyledHiddenInput
         type="file"
         id="file"
@@ -97,7 +92,10 @@ export const CoverInput = (props: InputProps) => {
 export const Checkbox = (props: InputProps) => {
   return (
     <StyledLabel>
-      <StyledCheckboxWrapper disabled={props.disabled || false}>
+      <StyledCheckboxWrapper
+        disabled={props.disabled || false}
+        align={props.align || 'center'}
+      >
         {props.checked ? <Icon glyph="checkmark" /> : <Icon glyph="checkbox" />}
         <StyledHiddenInput
           type="checkbox"

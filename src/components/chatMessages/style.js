@@ -39,6 +39,7 @@ export const AvatarLabel = styled.div`
     border-radius: 100%;
     height: 100%;
     width: 100%;
+    pointer-events: none;
     box-shadow: inset 0 0 2px 0 rgba(0, 0, 0, 0.15);
   }
 `;
@@ -91,23 +92,24 @@ export const MessageWrapper = styled.span`
   padding: 1px 0;
   position: relative;
 
-  &:after {
-    transition: ${Transition.hover.off};
-    content: ${props => (props.timestamp ? `'${props.timestamp}'` : '')};
-    position: absolute;
-    ${props =>
-      props.me ? 'right: calc(100% + 8px)' : 'left: calc(100% + 8px)'};
-    top: -4px;
-    white-space: nowrap;
-    font-size: 12px;
-    color: ${({ theme }) => theme.text.alt};
+  .message-link,
+  .message-timestamp {
     opacity: 0;
+    transition: ${Transition.hover.off};
   }
 
-  &:hover:after {
-    opacity: 1;
-    transition: ${Transition.hover.on};
+  &:hover {
+    .message-link,
+    .message-timestamp {
+      opacity: 1;
+      transition: ${Transition.hover.on};
+    }
   }
+`;
+
+export const MessageTimestamp = styled.p`
+  display: inline;
+  line-height: 1;
 `;
 
 export const Timestamp = styled(HorizontalRule)`
@@ -147,3 +149,19 @@ export const Container = styled.div`
     padding-bottom: 16px;
   }
 `;
+
+export const MessageLink = styled.a`
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  font-size: 12px;
+  top: 0;
+  color: ${({ theme }) => theme.text.alt};
+
+  ${props => (props.me ? 'right: calc(100% + 4px)' : 'left: calc(100% + 4px)')};
+`;
+
+export const MessageNonLink = MessageLink.withComponent('span');

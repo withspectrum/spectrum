@@ -12,8 +12,12 @@ export const ProfileHeader = styled(FlexRow)`
   flex-wrap: nowrap;
 `;
 
-export const CommunityAvatar = styled(Avatar)`
-  margin-right: 8px;
+export const ProfileAvatar = styled(Avatar)`
+  margin-right: 16px;
+`;
+
+export const CommunityAvatar = styled(ProfileAvatar)`
+  margin-right: 16px;
 `;
 
 export const ProfileHeaderLink = styled(Link)`
@@ -34,7 +38,6 @@ export const ProfileHeaderMeta = styled(FlexCol)`
   flex: 1 1 auto;
   flex-wrap: nowrap;
   min-width: 0;
-  margin-left: 12px;z
 `;
 
 export const ProfileHeaderAction = styled(IconButton)`

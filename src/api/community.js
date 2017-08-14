@@ -2,10 +2,13 @@
 // $FlowFixMe
 import { graphql, gql } from 'react-apollo';
 import { communityInfoFragment } from './fragments/community/communityInfo';
+import { threadInfoFragment } from './fragments/thread/threadInfo';
 import { communityMetaDataFragment } from './fragments/community/communityMetaData';
 import { channelInfoFragment } from './fragments/channel/channelInfo';
 import { userInfoFragment } from './fragments/user/userInfo';
+import { invoiceInfoFragment } from './fragments/invoice/invoiceInfo';
 import { channelMetaDataFragment } from './fragments/channel/channelMetaData';
+import { GET_THREAD_QUERY } from '../views/thread/queries';
 
 const profileQueryOptions = {
   options: ({ match: { params: { communitySlug } } }) => ({
@@ -244,7 +247,7 @@ const getCommunityMembersOptions = {
 
 export const getCommunityMembersQuery = graphql(
   gql`
-		query getCommunity($id: ID) {
+		query getCommunityMembers($id: ID) {
       community(id: $id) {
         id
         ...communityMetaData
@@ -321,3 +324,117 @@ export const SEARCH_COMMUNITIES_QUERY = gql`
   ${communityInfoFragment}
   ${communityMetaDataFragment}
 `;
+
+const GET_COMMUNITY_INVOICES_OPTIONS = {
+  options: ({ id }) => ({
+    variables: {
+      id,
+    },
+    fetchPolicy: 'network-only',
+  }),
+};
+
+const GET_COMMUNITY_INVOICES_QUERY = gql`
+  query getCommunityInvoices($id: ID) {
+    community(id: $id) {
+      id
+      invoices {
+        ...invoiceInfo
+      }
+    }
+  }
+  ${invoiceInfoFragment}
+`;
+
+export const getCommunityInvoices = graphql(
+  GET_COMMUNITY_INVOICES_QUERY,
+  GET_COMMUNITY_INVOICES_OPTIONS
+);
+
+const PIN_THREAD_MUTATION = gql`
+  mutation pinThread($threadId: ID!, $communityId: ID!, $value: String) {
+    pinThread(threadId: $threadId, communityId: $communityId, value: $value) {
+      ...communityInfo
+    }
+  }
+  ${communityInfoFragment}
+`;
+const PIN_THREAD_OPTIONS = {
+  props: ({ mutate }) => ({
+    pinThread: ({ threadId, communityId, value }) =>
+      mutate({
+        variables: {
+          threadId,
+          communityId,
+          value,
+        },
+        update: (store, { data: { pinThread } }) => {
+          const data = store.readQuery({
+            query: GET_THREAD_QUERY,
+            variables: {
+              id: threadId,
+            },
+          });
+
+          const newVal = Object.assign({}, ...data, {
+            ...data,
+            channel: {
+              ...data.channel,
+              __typename: 'Channel',
+              community: {
+                ...pinThread,
+                __typename: 'Community',
+              },
+            },
+            __typename: 'Thread',
+          });
+
+          // Write our data back to the cache.
+          store.writeQuery({
+            query: GET_THREAD_QUERY,
+            data: newVal,
+          });
+        },
+      }),
+  }),
+};
+export const pinThreadMutation = graphql(
+  PIN_THREAD_MUTATION,
+  PIN_THREAD_OPTIONS
+);
+
+export const SEARCH_THREADS_IN_COMMUNITY_QUERY = gql`
+  query searchCommunityThreads($communityId: ID!, $searchString: String!) {
+    searchCommunityThreads(communityId: $communityId, searchString: $searchString) {
+      ...threadInfo
+    }
+  }
+  ${threadInfoFragment}
+`;
+
+const SEARCH_THREADS_IN_COMMUNITY_OPTIONS = {
+  props: ({
+    data: { fetchMore, error, loading, searchCommunityThreads, networkStatus },
+  }) => ({
+    data: {
+      error,
+      loading,
+      networkStatus,
+      threads: searchCommunityThreads
+        ? searchCommunityThreads.map(thread => ({ node: { ...thread } }))
+        : [],
+    },
+  }),
+  options: ({ communityId, searchString }) => ({
+    variables: {
+      communityId,
+      searchString,
+    },
+    fetchPolicy: 'cache-and-network',
+  }),
+};
+
+export const searchCommunityThreadsQuery = graphql(
+  SEARCH_THREADS_IN_COMMUNITY_QUERY,
+  SEARCH_THREADS_IN_COMMUNITY_OPTIONS
+);

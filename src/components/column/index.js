@@ -24,7 +24,8 @@ const PrimaryColumn = styled(BaseColumn)`
   @media(max-width: 768px) {
     width: 100%;
     margin-top: 2px;
-    flex: auto;
+    ${'' /* flex: auto; */}
+    flex: none;
   }
 `;
 
@@ -53,13 +54,29 @@ const OnlyColumn = styled(PrimaryColumn)`
 
 const ColumnPure = (props: Object): React$Element<any> => {
   if (props.type === 'primary') {
-    return <PrimaryColumn {...props}>{props.children}</PrimaryColumn>;
+    return (
+      <PrimaryColumn {...props}>
+        {props.children}
+      </PrimaryColumn>
+    );
   } else if (props.type === 'secondary') {
-    return <SecondaryColumn {...props}>{props.children}</SecondaryColumn>;
+    return (
+      <SecondaryColumn {...props}>
+        {props.children}
+      </SecondaryColumn>
+    );
   } else if (props.type === 'only') {
-    return <OnlyColumn {...props}>{props.children}</OnlyColumn>;
+    return (
+      <OnlyColumn {...props}>
+        {props.children}
+      </OnlyColumn>
+    );
   } else {
-    return <BaseColumn {...props}>{props.children}</BaseColumn>;
+    return (
+      <BaseColumn {...props}>
+        {props.children}
+      </BaseColumn>
+    );
   }
 };
 

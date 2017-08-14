@@ -146,6 +146,7 @@ class UpgradeModal extends React.Component {
                 . Otherwise if you're ready to go, you can cancel your Pro
                 subscription instantly below. Thanks for your support!
               </Subheading>
+
               <SectionActions centered={true}>
                 <OutlineButton
                   disabled={isLoading}

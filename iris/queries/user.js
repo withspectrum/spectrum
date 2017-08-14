@@ -82,18 +82,19 @@ module.exports = {
       const cursor = decode(after);
       // Get the index from the encoded cursor, asdf234gsdf-2 => ["-2", "2"]
       const lastDigits = cursor.match(/-(\d+)$/);
+      const lastThreadIndex =
+        lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10);
       // TODO: Make this more performant by doingan actual db query rather than this hacking around
       return getEverything(user.id, {
         first,
-        after:
-          lastDigits && lastDigits.length > 0 && parseInt(lastDigits[1], 10),
+        after: lastThreadIndex,
       }).then(result => ({
         pageInfo: {
           hasNextPage: result && result.length >= first,
         },
         edges: result
           ? result.map((thread, index) => ({
-              cursor: encode(`${thread.id}-${index}`),
+              cursor: encode(`${thread.id}-${lastThreadIndex + index + 1}`),
               node: thread,
             }))
           : [],

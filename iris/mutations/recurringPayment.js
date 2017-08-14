@@ -12,7 +12,8 @@ if (!IS_PROD) {
 
 const STRIPE_TOKEN = process.env.STRIPE_TOKEN;
 
-const stripe = require('stripe')(STRIPE_TOKEN), currency = 'USD';
+const stripe = require('stripe')(STRIPE_TOKEN),
+  currency = 'USD';
 
 import {
   createRecurringPayment,
@@ -90,9 +91,8 @@ module.exports = {
       // they have a recurringPayment recrod in the db
       return getUserRecurringPayments(currentUser.id)
         .then(result => {
-          const recurringPaymentToEvaluate = result && result.length > 0
-            ? result[0]
-            : null;
+          const recurringPaymentToEvaluate =
+            result && result.length > 0 ? result[0] : null;
           // if the result is null, the user has never been a pro user
           // which means we need to create a stripe customer and then
           // create the recurringPayment
@@ -153,7 +153,9 @@ module.exports = {
             }
           }
         })
-        .catch(err => parseStripeErrors(err));
+        .catch(
+          err => console.log('error: ', err.message) || parseStripeErrors(err)
+        );
     },
     downgradeFromPro: (_, __, { user }) => {
       const currentUser = user;
@@ -169,32 +171,44 @@ module.exports = {
       // they have a recurringPayment record in the db
       return getUserRecurringPayments(currentUser.id)
         .then(result => {
-          const recurringPaymentToEvaluate = result && result.length > 0
-            ? result[0]
-            : null;
+          const recurringPaymentToEvaluate =
+            result && result.length > 0 ? result[0] : null;
 
           // if the result is null, we don't have a record of the recurringPayment
           if (recurringPaymentToEvaluate === null) {
             return new UserError(
-              'We couldn\t find a record of a Pro recurringPayment.'
+              "We couldn't find a record of a Pro subscription."
             );
           }
 
-          const recurringPaymentId = recurringPaymentToEvaluate.stripeData.id;
+          const customerId = recurringPaymentToEvaluate.stripeData.customer;
+
           // delete the recurringPayment
-          return (
-            stripe.subscriptions
-              .del(recurringPaymentId)
-              // update the record in the database
-              .then(recurringPayment =>
-                updateRecurringPayment(
-                  recurringPaymentToEvaluate.id,
-                  recurringPayment
+          return stripe.customers.retrieve(customerId).then(customer => {
+            if (!customer || !customer.id) {
+              return new UserError(
+                "We couln't find a record of this subscription."
+              );
+            }
+
+            const subscriptionId = customer.subscriptions.data[0].id;
+
+            return (
+              stripe.subscriptions
+                .del(subscriptionId)
+                // update the record in the database
+                .then(recurringPayment =>
+                  updateRecurringPayment(
+                    recurringPaymentToEvaluate.id,
+                    recurringPayment
+                  )
                 )
-              )
-          );
+            );
+          });
         })
-        .catch(err => parseStripeErrors(err));
+        .catch(
+          err => console.log('error: ', err.message) || parseStripeErrors(err)
+        );
     },
   },
 };

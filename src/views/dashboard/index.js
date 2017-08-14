@@ -74,6 +74,11 @@ class DashboardPure extends Component {
 
     // Got no data
     if (noData) {
+      // if no data exists and the fetch is done, redirect home
+      if (networkStatus === 7) {
+        return this.graduate();
+      }
+
       return (
         <AppViewWrapper>
           <Head title={title} description={description} />
@@ -92,7 +97,7 @@ class DashboardPure extends Component {
     }
 
     // Error, prompt reload
-    if (error || networkStatus === 8) {
+    if (networkStatus === 8) {
       return (
         <AppViewWrapper>
           <Head title={title} description={description} />
@@ -141,8 +146,8 @@ class DashboardPure extends Component {
                 communities={communities}
                 networkStatus={networkStatus}
               />
-              <UpsellMiniCreateCommunity />
-              {!currentUser.isPro && <UpsellMiniUpgrade />}
+              <UpsellMiniCreateCommunity largeOnly />
+              {!currentUser.isPro && <UpsellMiniUpgrade largeOnly />}
             </Column>}
 
           <Column type="primary">

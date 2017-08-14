@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import Icon from '../../components/icons';
 import { Transition, FlexRow, hexa } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
 
@@ -41,9 +40,10 @@ export const Nav = styled(FlexRow)`
   padding: 0 16px;
   line-height: 1;
   box-shadow: 0 4px 8px ${({ theme }) => hexa(theme.bg.reverse, 0.15)};
-  z-index: 1006;
+  z-index: 1010;
 
   @media (max-width: 768px) {
+    z-index: 1000;
     padding: 0;
     order: 3;
     position: relative;

@@ -11,6 +11,7 @@ export const Wrapper = styled(FlexRow)`
 
   @media (max-width: 768px) {
     padding: 0;
+    justify-content: flex-start;
     flex-direction: column;
   }
 `;

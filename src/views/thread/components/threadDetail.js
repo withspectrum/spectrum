@@ -11,7 +11,11 @@ import { withRouter } from 'react-router';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 import redraft from 'redraft';
-import { getLinkPreviewFromUrl, timeDifference } from '../../../helpers/utils';
+import {
+  getLinkPreviewFromUrl,
+  timeDifference,
+  convertTimestampToDate,
+} from '../../../helpers/utils';
 import { URLS } from '../../../helpers/regexps';
 import { openModal } from '../../../actions/modals';
 import { addToastWithTimeout } from '../../../actions/toasts';
@@ -20,6 +24,8 @@ import {
   toggleThreadNotificationsMutation,
 } from '../mutations';
 import { deleteThreadMutation, editThreadMutation } from '../../../api/thread';
+import { pinThreadMutation } from '../../../api/community';
+import { FlexRow } from '../../../components/globals';
 import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
 import Badge from '../../../components/badges';
@@ -43,6 +49,7 @@ import {
   DropWrap,
   FlyoutRow,
   EditDone,
+  Timestamp,
   Edited,
   BylineMeta,
   AuthorAvatar,
@@ -66,8 +73,11 @@ class ThreadDetailPure extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {};
+  }
 
-    const { thread } = props;
+  setThreadState() {
+    const { thread } = this.props;
 
     let rawLinkPreview =
       thread.attachments && thread.attachments.length > 0
@@ -81,7 +91,7 @@ class ThreadDetailPure extends Component {
       data: JSON.parse(rawLinkPreview.data),
     };
 
-    this.state = {
+    this.setState({
       isEditing: false,
       body: toState(JSON.parse(thread.content.body)),
       title: thread.content.title,
@@ -93,7 +103,17 @@ class ThreadDetailPure extends Component {
       flyoutOpen: false,
       receiveNotifications: thread.receiveNotifications,
       isSavingEdit: false,
-    };
+    });
+  }
+
+  componentWillMount() {
+    this.setThreadState();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.thread.id !== this.props.thread.id) {
+      this.setThreadState();
+    }
   }
 
   toggleFlyout = () => {
@@ -353,6 +373,27 @@ class ThreadDetailPure extends Component {
     });
   };
 
+  togglePinThread = () => {
+    const { pinThread, thread, dispatch } = this.props;
+    const isPinned = thread.channel.community.pinnedThreadId === thread.id;
+    const communityId = thread.channel.community.id;
+
+    if (thread.channel.isPrivate) {
+      return dispatch(
+        addToastWithTimeout(
+          'error',
+          'Only threads in public channels can be pinned.'
+        )
+      );
+    }
+
+    return pinThread({
+      threadId: thread.id,
+      communityId,
+      value: isPinned ? null : thread.id,
+    }).catch(err => dispatch(addToastWithTimeout('error', err.message)));
+  };
+
   render() {
     const { currentUser, thread } = this.props;
 
@@ -370,6 +411,7 @@ class ThreadDetailPure extends Component {
     const isChannelOwner = thread.channel.channelPermissions.isOwner;
     const isCommunityOwner =
       thread.channel.community.communityPermissions.isOwner;
+    const isPinned = thread.channel.community.pinnedThreadId === thread.id;
 
     const isEdited = thread.modifiedAt;
     const editedTimestamp = isEdited
@@ -428,6 +470,21 @@ class ThreadDetailPure extends Component {
             <DropWrap className={flyoutOpen ? 'open' : ''}>
               <IconButton glyph="settings" onClick={this.toggleFlyout} />
               <Flyout>
+                {isCommunityOwner &&
+                  !thread.channel.isPrivate &&
+                  <FlyoutRow>
+                    <IconButton
+                      glyph={isPinned ? 'pin-fill' : 'pin'}
+                      hoverColor={isPinned ? 'warn.default' : 'special.default'}
+                      tipText={
+                        isPinned
+                          ? 'Un-pin thread'
+                          : `Pin in ${thread.channel.community.name}`
+                      }
+                      tipLocation="top-left"
+                      onClick={this.togglePinThread}
+                    />
+                  </FlyoutRow>}
                 {(isChannelOwner || isCommunityOwner) &&
                   <FlyoutRow>
                     <IconButton
@@ -505,10 +562,15 @@ class ThreadDetailPure extends Component {
             : <ThreadHeading>
                 {thread.content.title}
               </ThreadHeading>}
-          {thread.modifiedAt &&
-            <Edited>
-              Edited {timeDifference(Date.now(), editedTimestamp)}
-            </Edited>}
+          <FlexRow>
+            <Timestamp>
+              {convertTimestampToDate(thread.createdAt)}
+            </Timestamp>
+            {thread.modifiedAt &&
+              <Edited>
+                (Edited {timeDifference(Date.now(), editedTimestamp)})
+              </Edited>}
+          </FlexRow>
           <div className="markdown">
             <Editor
               readOnly={!this.state.isEditing}
@@ -536,6 +598,7 @@ const ThreadDetail = compose(
   setThreadLockMutation,
   deleteThreadMutation,
   editThreadMutation,
+  pinThreadMutation,
   toggleThreadNotificationsMutation,
   withRouter,
   pure

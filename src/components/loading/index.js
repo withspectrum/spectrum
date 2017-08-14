@@ -7,6 +7,7 @@ import renderComponent from 'recompose/renderComponent';
 // $FlowFixMe
 import styled from 'styled-components';
 import { Spinner, FlexCol } from '../globals';
+import Grid from '../grid';
 import { Card } from '../card';
 import { Column } from '../column';
 import { View, Detail, Content } from '../../views/thread/style';
@@ -638,6 +639,20 @@ export const LoadingProfile = () =>
       />
     </ShimmerBase>
   </ShimmerProfile>;
+
+export const LoadingProfileGrid = () =>
+  <Grid>
+    <LoadingProfile />
+    <LoadingProfile />
+    <LoadingProfile />
+    <LoadingProfile />
+    <LoadingProfile />
+    <LoadingProfile />
+    <LoadingProfile />
+    <LoadingProfile />
+    <LoadingProfile />
+    <LoadingProfile />
+  </Grid>;
 
 /*
   Outputs a full-screen loader with shimmering cards and columns. This is useful

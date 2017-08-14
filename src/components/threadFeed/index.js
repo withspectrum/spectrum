@@ -92,7 +92,6 @@ class ThreadFeedPure extends Component {
     const { data: { threads, networkStatus, error }, viewContext } = this.props;
     const { scrollElement } = this.state;
     const dataExists = threads && threads.length > 0;
-    // const loggedInUser = user || currentUser;
 
     if (networkStatus === 8 || error) {
       return <ErrorState />;
@@ -117,6 +116,7 @@ class ThreadFeedPure extends Component {
                   key={thread.node.id}
                   data={thread.node}
                   viewContext={viewContext}
+                  isPinned={thread.node.id === this.props.pinnedThreadId}
                 />
               );
             })}

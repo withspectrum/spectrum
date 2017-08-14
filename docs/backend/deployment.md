@@ -1,10 +1,8 @@
 # Deployment
 
-## Frontend and Iris
+We use [`now`](https://now.sh) by Zeit for all of our deployments.
 
-We use [`now`](https://now.sh) by Zeit for deploying iris, our web server. (and frontend) This makes deploying a new version of our app easy as pie!
-
-### Installation
+## Installation
 
 We recommend installing the [now desktop app](http://zeit.co/download) as it'll keep the command line tool up to date automatically!
 
@@ -13,6 +11,10 @@ If you'd rather not install an app (or are using Windows Substem for Linux) you 
 ```
 npm install -g now
 ```
+
+## Frontend and Iris
+
+Since the frontend and iris are the parts that change the most often the repo is set up such that typing `now` in the root directory will deploy them.
 
 ### Deploying
 
@@ -44,61 +46,47 @@ And that's it, you've now deployed a new version of iris and the frontend!
 
 ## Workers
 
-Both athena and hermes are hosted manually in the cloud on AWS EC2 boxes. The machines run Ubuntu 16.04 and are accessible via SSH. Deployment happens manually via SCP and SSH using [`forever`](https://npm.im/forever) to run the processes, well, forever!
+We use [`backpack`](https://github.com/palmerhq/backpack) to get a nice development setup and build process in place for our workers. Since this is a mono-repo and `now` doesn't have any special functionality to handle monorepos we have to deploy the _built_ version of the workers. (compared to the frontend/iris deploy where you deploy the raw code which gets built on the server) We alias them to `<name>.workers.spectrum.chat` to make sure only one version of the code is running at any given point.
 
-### Getting an SSH key
+### Deploying
 
-You need a private SSH key to connect to the machines which you can find in the shared 1Password under "AWS EC2 private SSH key". Copy the text to a file called `aws.pem` in your `~/.ssh` folder.
-
-### Getting the URL
-
-Each machine has a unique URL that you need to connect. Open the [AWS EC2 dashboard](https://console.aws.amazon.com/ec2/v2/home), click on the worker you want to deploy and copy the `amazonaws` URL.
-
-### Uploading the new files
-
-To upload the newest build to the worker run this set of commands:
+First, build the worker you want to deploy to get a bundle with the newest code rather than deploying a stale version:
 
 ```sh
-# Build a fresh version of the worker with the latest code
-npm run build:<worker> # e.g. build:athena
-# Upload the latest code with scp
-scp -i ~/.ssh/aws.pem -r build-<worker> ubuntu@<url>:~/<commit hash>
+yarn run build:<workername>
 ```
 
-Make sure to replace `<worker>` with the worker name, `<url>` with the URL you copied in the last step and `<commit hash>` with the six character hash of the latest commit. This is what a full command might look like: (note: this is pseudo, this is not what you should actually run)
+> Note: Replace `<workername>` with the name of the worker you want to deploy
 
-```
-scp -i ~/.ssh/aws.pem -r build-athena ubuntu@c2-98-124-34-85.compute-1.amazonaws.com:~/hgu89t
-```
-
-### Running the new version of the code
-
-To run the new version of the code you'll have to SSH into the machine, start the new version and then stop the old version.
-
-First, connect to the server:
-
-```
-ssh -i ~/.ssh/aws.pem ubuntu@<url>
-```
-
-Replace `<url>` with the copied URL again.
-
-Once you're connected start the new version of the code with `forever`:
-
-```
-forever start ~/<commit hash>/index.js
-```
-
-> Note: Depending on the worker you might need to run `npm install` in the new folder first.
-
-Once that's running without errors stop the old version by running
+Then deploy the `build-<workername>` folder with `now`:
 
 ```sh
-# Get a list of all running worker processes
-forever list
-# Find the one that points to the old folder and copy its PID
-# Stop the old process by PID
-forever stop <pid>
+now build-<workername>
 ```
 
-This is a pretty manual process but we're looking to improve it in the future.
+As an example, to deploy `athena` I'd run these commands:
+
+```sh
+# First:  Build the worker
+yarn run build:athena
+# Second: Deploy the built bundle
+now build-athena
+```
+
+This will give you an immutable deploy with a unique URL of this worker, something like `https://build-athena-ahsgut23sdyf.now.sh`.
+
+### Replacing the old deploy
+
+Since we want to keep the workers alive even if nobody sends a request to their healthcheck endpoints we alias them to `<workername>.workers.spectrum.chat`. This ensures `now` overrides the older deploy and only the newest code is running.
+
+To alias your deploy run `now alias`:
+
+```sh
+now alias <uniqueurl>.now.sh <workername>.workers.spectrum.chat
+```
+
+For example, for our `athena` deploy from above this would be:
+
+```sh
+now alias build-athena-ahsgut23sdyf.now.sh athena.workers.spectrum.chat
+```
