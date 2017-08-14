@@ -94,9 +94,10 @@ const SEND_MESSAGE_OPTIONS = {
 
             // ignore the addMessage from the server, apollo will automatically
             // override the optimistic object
-            if (addMessage && typeof addMessage.id === 'string') {
+            if (!addMessage || typeof addMessage.id === 'string') {
               return;
             }
+
             data.directMessageThread.messageConnection.edges.push({
               cursor: addMessage.id,
               node: addMessage,
