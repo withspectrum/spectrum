@@ -72,30 +72,6 @@ class DashboardPure extends Component {
     const noData = !user && !error;
     const { title, description } = generateMetaInfo();
 
-    // Got no data
-    if (noData) {
-      // if no data exists and the fetch is done, redirect home
-      if (networkStatus === 7) {
-        return this.graduate();
-      }
-
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar noComposer />
-          {!isMobile &&
-            <Column type="secondary">
-              <LoadingProfile />
-              <LoadingList />
-            </Column>}
-          <Column type="primary">
-            {!isMobile && <LoadingComposer />}
-            <LoadingFeed />
-          </Column>
-        </AppViewWrapper>
-      );
-    }
-
     // Error, prompt reload
     if (networkStatus === 8) {
       return (
@@ -155,6 +131,25 @@ class DashboardPure extends Component {
               <ThreadComposer />
               <EverythingThreadFeed viewContext="dashboard" />
             </FlexCol>
+          </Column>
+        </AppViewWrapper>
+      );
+    }
+
+    // Got no data
+    if (networkStatus !== 7) {
+      return (
+        <AppViewWrapper>
+          <Head title={title} description={description} />
+          <Titlebar noComposer />
+          {!isMobile &&
+            <Column type="secondary">
+              <LoadingProfile />
+              <LoadingList />
+            </Column>}
+          <Column type="primary">
+            {!isMobile && <LoadingComposer />}
+            <LoadingFeed />
           </Column>
         </AppViewWrapper>
       );
