@@ -37,12 +37,11 @@ export const WrapperLi = styled.li`
 
 export const Col = styled(FlexCol)`
   flex: auto;
-  margin-left: 12px;
 `;
 
 export const Row = styled(FlexRow)`
   flex: 0 0 auto;
-  align-items: center;
+  align-items: flex-center;
 
   a {
     display: flex;
@@ -53,6 +52,7 @@ export const Row = styled(FlexRow)`
 export const Heading = styled(H3)`
   font-weight: 700;
   transition: ${Transition.hover.off};
+  line-height: 1.2;
 `;
 
 export const Meta = styled(H4)`

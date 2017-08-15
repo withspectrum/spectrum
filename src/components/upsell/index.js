@@ -9,7 +9,6 @@ import compose from 'recompose/compose';
 import Icon from '../../components/icons';
 import FullscreenView from '../../components/fullscreenView';
 import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
-import { track } from '../../helpers/events';
 import { SERVER_URL, PUBLIC_STRIPE_KEY } from '../../api';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { openModal } from '../../actions/modals';

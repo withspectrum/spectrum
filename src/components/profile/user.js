@@ -20,10 +20,11 @@ import { Button } from '../buttons';
 import type { ProfileSizeProps } from './index';
 import Badge from '../badges';
 import { displayLoadingCard } from '../loading';
-import { Avatar } from '../avatar';
 import {
+  ProfileAvatar,
   ProfileHeader,
   ProfileHeaderLink,
+  ProfileHeaderNoLink,
   ProfileHeaderMeta,
   ProfileHeaderAction,
   CoverLink,
@@ -99,6 +100,7 @@ const UserWithData = ({
               onlineSize={'large'}
               isOnline={user.isOnline}
               src={`${user.profilePhoto}`}
+              noLink
             />
             <CoverTitle>
               {user.name}
@@ -155,6 +157,7 @@ const UserWithData = ({
               onlineSize={'large'}
               isOnline={user.isOnline}
               src={`${user.profilePhoto}`}
+              noLink
             />
             <CoverTitle>
               {user.name}
@@ -179,26 +182,47 @@ const UserWithData = ({
     return (
       <Card>
         <ProfileHeader>
-          <ProfileHeaderLink to={`/users/${user.username}`}>
-            <Avatar
-              size={32}
-              radius={32}
-              isOnline={user.isOnline}
-              src={`${user.profilePhoto}`}
-              link={user.username ? `/users/${user.username}` : null}
-            />
-            <ProfileHeaderMeta>
-              <Title>
-                {user.name}
-              </Title>
-              {user.username &&
-                <Subtitle>
-                  @{user.username}
-                  {user.isAdmin && <Badge type="admin" />}
-                  {user.isPro && <Badge type="pro" />}
-                </Subtitle>}
-            </ProfileHeaderMeta>
-          </ProfileHeaderLink>
+          {user.username
+            ? <ProfileHeaderLink to={user.username}>
+                <ProfileAvatar
+                  size={32}
+                  radius={32}
+                  isOnline={user.isOnline}
+                  src={`${user.profilePhoto}`}
+                  noLink
+                />
+                <ProfileHeaderMeta>
+                  <Title>
+                    {user.name}
+                  </Title>
+                  {user.username &&
+                    <Subtitle>
+                      @{user.username}
+                      {user.isAdmin && <Badge type="admin" />}
+                      {user.isPro && <Badge type="pro" />}
+                    </Subtitle>}
+                </ProfileHeaderMeta>
+              </ProfileHeaderLink>
+            : <ProfileHeaderNoLink>
+                <ProfileAvatar
+                  size={32}
+                  radius={32}
+                  isOnline={user.isOnline}
+                  src={`${user.profilePhoto}`}
+                  noLink
+                />
+                <ProfileHeaderMeta>
+                  <Title>
+                    {user.name}
+                  </Title>
+                  {user.username &&
+                    <Subtitle>
+                      @{user.username}
+                      {user.isAdmin && <Badge type="admin" />}
+                      {user.isPro && <Badge type="pro" />}
+                    </Subtitle>}
+                </ProfileHeaderMeta>
+              </ProfileHeaderNoLink>}
           {currentUser && currentUser.id === user.id
             ? <Link to={`../users/${currentUser.username}/settings`}>
                 <ProfileHeaderAction

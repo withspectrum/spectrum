@@ -31,12 +31,10 @@ const StyledAvatarFallback = styled.img`
 
 const StyledAvatarStatus = styled.div`
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: 100%;
+  border-radius: ${props => (props.community ? `${props.size / 4}px` : '100%')};
 
   &:after {
     content: '';
@@ -69,7 +67,7 @@ const StyledAvatar = styled.object`
   position: relative;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  border-radius: ${props => (props.community ? '8px' : '100%')};
+  border-radius: ${props => (props.community ? `${props.size / 4}px` : '100%')};
   object-fit: cover;
 `;
 
@@ -101,7 +99,7 @@ const AvatarWithFallback = props =>
   </StyledAvatarStatus>;
 
 const AvatarPure = (props: Object): React$Element<any> => {
-  if (props.link) {
+  if (props.link && !props.noLink) {
     return (
       <StyledAvatarLink to={props.link}>
         <AvatarWithFallback {...props} />

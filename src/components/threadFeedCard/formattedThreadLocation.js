@@ -3,18 +3,15 @@ import React from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 import Icon from '../../components/icons';
-import { FlexRow, FlexCol } from '../../components/globals';
+import { FlexRow } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
 import {
-  ParticipantCount,
   CreatorName,
   ThreadContext,
   ThreadContextAvatar,
   ThreadContextMeta,
   Location,
   Lock,
-  Meta,
-  InlineIcon,
 } from './style';
 
 const FormattedThreadLocation = props => {
@@ -37,9 +34,9 @@ const FormattedThreadLocation = props => {
     props.viewContext === 'community' ||
     props.viewContext === 'channel';
 
-  const participantList = props.data.participants.filter(
-    participant => participant.id !== props.data.creator.id
-  );
+  // const participantList = props.data.participants.filter(
+  //   participant => participant.id !== props.data.creator.id
+  // );
 
   return (
     <ThreadContext>
@@ -47,7 +44,7 @@ const FormattedThreadLocation = props => {
         <ThreadContextAvatar>
           <Avatar
             community
-            size={32}
+            size={24}
             src={props.data.channel.community.profilePhoto}
           />
         </ThreadContextAvatar>}

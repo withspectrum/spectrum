@@ -4,8 +4,6 @@ import React, { Component } from 'react';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import pure from 'recompose/pure';
-//$FlowFixMe
-import { withApollo } from 'react-apollo';
 import { throttle } from '../../../helpers/utils';
 import { searchCommunityThreadsQuery } from '../../../api/community';
 import ThreadFeed from '../../../components/threadFeed';
@@ -43,8 +41,6 @@ class Search extends Component {
   };
 
   search = (searchString: string) => {
-    const { community } = this.props;
-
     // don't start searching until at least 3 characters are typed
     if (searchString.length < 3) return;
 

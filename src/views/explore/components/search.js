@@ -114,6 +114,11 @@ class Search extends Component {
 
     // if user presses enter
     if (e.keyCode === 13) {
+      if (
+        searchResults.length === 0 ||
+        searchResults[indexOfFocusedSearchResult] === undefined
+      )
+        return;
       const slug = searchResults[indexOfFocusedSearchResult].slug;
       return this.props.history.push(`/${slug}`);
     }

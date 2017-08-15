@@ -95,6 +95,9 @@ class ThreadComposerWithData extends Component {
       that don't have any channels yet
     */
 
+    // if the user doesn't exist, bust outta here
+    if (!props.data.user) return;
+
     const availableCommunities = props.data.user.communityConnection.edges
       .map(edge => edge.node)
       .filter(

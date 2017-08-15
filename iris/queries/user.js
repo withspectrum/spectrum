@@ -20,6 +20,7 @@ import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import { isAdmin } from '../utils/permissions';
 import type { PaginationOptions } from '../utils/paginate-arrays';
+import UserError from '../utils/UserError';
 import type { GraphQLContext } from '../';
 import ImgixClient from 'imgix-core-js';
 let imgix = new ImgixClient({
@@ -139,6 +140,7 @@ module.exports = {
       { user }
     ) => {
       const currentUser = user;
+      if (!user) return new UserError("User wasn't found");
 
       // if a logged in user is viewing the profile, handle logic to get viewable threads
       const getThreads =
@@ -173,8 +175,12 @@ module.exports = {
     ) => {
       return loaders.userThreadCount.load(id).then(data => data.count);
     },
-    recurringPayments: (_, __, { user }) =>
-      getUserRecurringPayments(user.id).then(subs => {
+    recurringPayments: (_, __, { user }) => {
+      if (!user) {
+        return new UserError('You must be signed in to continue.');
+      }
+
+      return getUserRecurringPayments(user.id).then(subs => {
         if (!subs || subs.length === 0) {
           return [];
         } else {
@@ -187,7 +193,11 @@ module.exports = {
             };
           });
         }
-      }),
-    settings: (_, __, { user }) => getUsersSettings(user.id),
+      });
+    },
+    settings: (_, __, { user }) => {
+      if (!user) return new UserError('You must be signed in to continue.');
+      return getUsersSettings(user.id);
+    },
   },
 };

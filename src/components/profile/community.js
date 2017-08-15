@@ -13,7 +13,6 @@ import { track } from '../../helpers/events';
 import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
 import { addProtocolToString } from '../../helpers/utils';
-import { MetaData } from './metaData';
 import { LoadingProfile } from '../loading';
 import Icon from '../icons';
 import { Button } from '../buttons';

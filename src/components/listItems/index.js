@@ -46,9 +46,10 @@ export const CommunityListItem = (props: CardProps): React$Element<any> => {
         <Avatar
           community
           radius={4}
-          link={`/${props.contents.slug}`}
           src={`${props.contents.profilePhoto}`}
           size={32}
+          style={{ marginRight: '12px' }}
+          noLink
         />
         <Col>
           <Heading>
@@ -76,20 +77,18 @@ export const ChannelListItem = (props: CardProps): React$Element<any> => {
     <Wrapper clickable={props.clickable}>
       <Row>
         <Col>
-          <Link to={`/${props.contents.community.slug}/${props.contents.slug}`}>
-            <Heading>
-              {props.contents.isPrivate &&
-                <Lock>
-                  <Icon
-                    glyph={'private'}
-                    tipText={'Private channel'}
-                    tipLocation="top-right"
-                    size={16}
-                  />
-                </Lock>}
-              {props.contents.name}
-            </Heading>
-          </Link>
+          <Heading>
+            {props.contents.isPrivate &&
+              <Lock>
+                <Icon
+                  glyph={'private'}
+                  tipText={'Private channel'}
+                  tipLocation="top-right"
+                  size={16}
+                />
+              </Lock>}
+            {props.contents.name}
+          </Heading>
           <Meta>
             {props.meta}
           </Meta>
