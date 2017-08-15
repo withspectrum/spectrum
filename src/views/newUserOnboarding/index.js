@@ -11,7 +11,8 @@ import { Button, TextButton } from '../../components/buttons';
 import UserInfo from './components/userInfo';
 import SetUsername from './components/setUsername';
 import JoinFirstCommunity from './components/joinFirstCommunity';
-import TopCommunities from '../../views/dashboard/components/topCommunities';
+import TopCommunities from './components/discoverCommunities';
+import Search from './components/communitySearch';
 import { editUserMutation } from '../../api/user';
 import {
   OnboardingContainer,
@@ -102,9 +103,9 @@ class NewUserOnboarding extends Component {
         emoji: null,
       },
       discoverCommunities: {
-        title: 'The internet is more fun with friends.',
+        title: community ? "One just isn't enough..." : 'Find your people.',
         subtitle:
-          'There are hundreds of communities on Spectrum to explore. Check out some of our favorites below.',
+          'There are hundreds of communities on Spectrum to explore. Check out some of our favorites below or search for topics.',
         icon: null,
         emoji: '✨',
       },
@@ -176,6 +177,7 @@ class NewUserOnboarding extends Component {
 
             {activeStep === 'discoverCommunities' &&
               <Container>
+                <Search />
                 <TopCommunities />
               </Container>}
 

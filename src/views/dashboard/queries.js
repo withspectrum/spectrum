@@ -5,15 +5,9 @@ import { graphql, gql } from 'react-apollo';
 import update from 'immutability-helper';
 import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
-import {
-  communityInfoFragment,
-} from '../../api/fragments/community/communityInfo';
-import {
-  userEverythingFragment,
-} from '../../api/fragments/user/userEverything';
-import {
-  userCommunitiesFragment,
-} from '../../api/fragments/user/userCommunities';
+import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
+import { userEverythingFragment } from '../../api/fragments/user/userEverything';
+import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
 // import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
 
 const LoadMoreThreads = gql`
@@ -39,8 +33,8 @@ const threadsQueryOptions = {
         fetchMore({
           query: LoadMoreThreads,
           variables: {
-            after: user.everything.edges[user.everything.edges.length - 1]
-              .cursor,
+            after:
+              user.everything.edges[user.everything.edges.length - 1].cursor,
           },
           updateQuery: (prev, { fetchMoreResult }) => {
             if (!fetchMoreResult.user) {
@@ -127,31 +121,4 @@ export const getCurrentUserProfile = graphql(
     ${userCommunitiesFragment}
 	`,
   { options: { fetchPolicy: 'cache-and-network' } }
-);
-
-/*
-  Gets top communities for the onboarding flow.
-*/
-export const getTopCommunities = graphql(
-  gql`
-		{
-		  topCommunities {
-        ...communityInfo
-        metaData {
-          members
-        }
-      }
-    }
-    ${communityInfoFragment}
-	`,
-  {
-    props: ({ data: { error, loading, topCommunities } }) => ({
-      data: {
-        error,
-        loading,
-        topCommunities,
-      },
-    }),
-    options: { fetchPolicy: 'cache-and-network' },
-  }
 );

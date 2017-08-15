@@ -1,8 +1,7 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
-import { Gradient, Truncate, Transition } from '../../../components/globals';
-import ScrollRow from '../../../components/scrollRow';
+import { Gradient, Truncate, Transition } from '../../../../components/globals';
 
 export const Row = styled.div`
   width: 100%;

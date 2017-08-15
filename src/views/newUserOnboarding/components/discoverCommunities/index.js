@@ -6,12 +6,12 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import pure from 'recompose/pure';
-import { track } from '../../../helpers/events';
-import { getTopCommunities } from '../queries';
-import { toggleCommunityMembershipMutation } from '../../../api/community';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { displayLoadingState } from '../../../components/loading';
-import { Button, OutlineButton } from '../../../components/buttons';
+import { track } from '../../../../helpers/events';
+import { getTopCommunities } from '../../../../api/community';
+import { toggleCommunityMembershipMutation } from '../../../../api/community';
+import { addToastWithTimeout } from '../../../../actions/toasts';
+import { displayLoadingState } from '../../../../components/loading';
+import { Button, OutlineButton } from '../../../../components/buttons';
 import {
   Row,
   CoverPhoto,
@@ -20,8 +20,8 @@ import {
   CoverTitle,
   CoverDescription,
   ButtonContainer,
-} from './topCommunitiesStyle';
-import { CoverLink, CoverSubtitle } from '../../../components/profile/style';
+} from './style';
+import { CoverLink, CoverSubtitle } from '../../../../components/profile/style';
 
 class TopCommunitiesPure extends Component {
   state: {
@@ -113,6 +113,7 @@ class TopCommunitiesPure extends Component {
                         onClick={() => this.toggleMembership(community.id)}
                         loading={loading === community.id}
                         gradientTheme={'success'}
+                        style={{ fontSize: '16px' }}
                       >
                         Join
                       </Button>}
