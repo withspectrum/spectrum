@@ -24,7 +24,9 @@ module.exports = {
       { loaders, user }: GraphQLContext
     ) =>
       loaders.thread.load(id).then(thread => {
-        //if (!thread) return null;
+        // if a thread wasn't found
+        if (!thread) return null;
+
         /*
           If no user exists, we need to make sure the thread being fetched is not in a private channel
         */
