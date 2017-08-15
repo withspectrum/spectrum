@@ -3,7 +3,7 @@ body {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
-  background: #F2F5F9;
+  background: #f2f5f9;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
@@ -35,7 +35,8 @@ textarea {
   resize: none;
 }
 
-::-moz-selection { /* Code for Firefox */
+::-moz-selection {
+  /* Code for Firefox */
   background: #3818e5;
   color: #ffffff;
 }
@@ -46,7 +47,7 @@ textarea {
 }
 
 ::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 body {
@@ -60,24 +61,29 @@ body {
   background: #fff;
   color: #171a21;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 }
 
-::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color:    #B2B9C6;
+::-webkit-input-placeholder {
+  /* WebKit, Blink, Edge */
+  color: #b2b9c6;
 }
-:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-   color:    #B2B9C6;
-   opacity:  1;
+:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  color: #b2b9c6;
+  opacity: 1;
 }
-::-moz-placeholder { /* Mozilla Firefox 19+ */
-   color:    #B2B9C6;
-   opacity:  1;
+::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  color: #b2b9c6;
+  opacity: 1;
 }
-:-ms-input-placeholder { /* Internet Explorer 10-11 */
-   color:    #B2B9C6;
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #b2b9c6;
 }
 
 #root {
@@ -130,7 +136,7 @@ body {
 .markdown img:hover {
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .markdown em {
@@ -173,8 +179,8 @@ body {
 }
 
 .markdown blockquote {
-  color: #747E8D;
-  border-left: 4px solid #747E8D;
+  color: #747e8d;
+  border-left: 4px solid #747e8d;
   padding: 4px 8px 4px 16px;
   font-size: 24px;
   font-weight: 300;
@@ -214,7 +220,7 @@ body {
   padding: 2px 4px;
   display: inline;
   width: 100%;
-  border: 1px solid #D6E0EE;
+  border: 1px solid #d6e0ee;
   border-radius: 4px;
   margin-bottom: 16px;
 }
@@ -245,7 +251,7 @@ body {
 .markdown hr {
   width: 100%;
   height: 1px;
-  background: #DFE7EF;
+  background: #dfe7ef;
   display: block;
   margin: 32px 0;
 }
@@ -253,7 +259,7 @@ body {
 .markdown h1 {
   font-size: 24px;
   line-height: 40px;
-  border-bottom: 1px solid #DFE7EF;
+  border-bottom: 1px solid #dfe7ef;
   font-weight: 800;
   margin-top: 1rem;
   margin-bottom: 8px;
@@ -303,4 +309,71 @@ body {
   margin-bottom: 8px;
   text-transform: lowercase;
   font-variant: small-caps;
+}
+
+.hljs {
+  display: block;
+  background: white;
+  padding: 0.5em;
+  color: #333333;
+  overflow-x: auto;
+}
+
+.hljs-comment,
+.hljs-meta {
+  color: #969896;
+}
+
+.hljs-string,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-strong,
+.hljs-emphasis,
+.hljs-quote {
+  color: #df5000;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-type {
+  color: #a71d5d;
+}
+
+.hljs-literal,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-attribute {
+  color: #0086b3;
+}
+
+.hljs-section,
+.hljs-name {
+  color: #63a35c;
+}
+
+.hljs-tag {
+  color: #333333;
+}
+
+.hljs-title,
+.hljs-attr,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-selector-attr,
+.hljs-selector-pseudo {
+  color: #795da3;
+}
+
+.hljs-addition {
+  color: #55a532;
+  background-color: #eaffea;
+}
+
+.hljs-deletion {
+  color: #bd2c00;
+  background-color: #ffecec;
+}
+
+.hljs-link {
+  text-decoration: underline;
 }

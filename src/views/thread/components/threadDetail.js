@@ -30,6 +30,7 @@ import Icon from '../../../components/icons';
 import Flyout from '../../../components/flyout';
 import Badge from '../../../components/badges';
 import { IconButton, Button } from '../../../components/buttons';
+import Highlight from '../../../components/highlight';
 import { track } from '../../../helpers/events';
 import Editor, {
   toJSON,
@@ -571,11 +572,13 @@ class ThreadDetailPure extends Component {
               </Edited>}
           </FlexRow>
           <div className="markdown">
-            <Editor
-              readOnly={!this.state.isEditing}
-              state={body}
-              onChange={this.changeBody}
-            />
+            <Highlight continuously={false}>
+              <Editor
+                readOnly={!this.state.isEditing}
+                state={body}
+                onChange={this.changeBody}
+              />
+            </Highlight>
           </div>
 
           {linkPreview &&

@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components';
 import { Avatar } from '../../components/avatar';
-import Markdown from '../../components/markdown';
 import Column from '../../components/column';
 import {
   FlexCol,
@@ -247,12 +246,6 @@ export const Edited = styled(Timestamp)`
 `;
 
 export const ChatWrapper = styled.div`width: 100%;`;
-
-export const ThreadContent = styled(Markdown)`
-  margin-top: 1rem;
-  font-size: 1rem;
-  line-height: 1.5rem;
-`;
 
 export const ThreadTitle = {
   fontSize: '32px',
