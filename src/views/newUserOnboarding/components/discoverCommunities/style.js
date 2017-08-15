@@ -26,15 +26,14 @@ export const CoverPhoto = styled.div`
 
 export const Container = styled.div`
   background: #fff;
-  box-shadow: 0 1px 12px rgba(0, 0, 0, 0.08);
-  flex-basis: 22%;
-  flex: 1;
+  box-shadow: inset 0 0 0 2px ${props => props.theme.border.default};
+  flex: 0 0 22%;
   display: flex;
   flex-direction: column;
   border-radius: 12px;
   position: relative;
   z-index: 3;
-  margin: 16px 16px 0;
+  margin: 16px;
 
   @media (max-width: 768px) {
     flex-basis: 44%;
@@ -88,6 +87,7 @@ export const CoverDescription = styled.p`
   align-self: stretch;
   flex-direction: column;
   flex: 1;
+  line-height: 1.3;
 `;
 
 export const ButtonContainer = styled.div`

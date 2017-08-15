@@ -107,7 +107,7 @@ class NewUserOnboarding extends Component {
         subtitle:
           'There are hundreds of communities on Spectrum to explore. Check out some of our favorites below or search for topics.',
         icon: null,
-        emoji: '✨',
+        emoji: null,
       },
       done: {
         title: "You're going to do great things here.",
@@ -178,7 +178,7 @@ class NewUserOnboarding extends Component {
             {activeStep === 'discoverCommunities' &&
               <Container>
                 <Search />
-                <TopCommunities />
+                <TopCommunities doneExploring={() => this.toStep('done')} />
               </Container>}
 
             {activeStep === 'done' &&
@@ -191,17 +191,6 @@ class NewUserOnboarding extends Component {
                 Finish this dang onboarding
               </ContinueButton>}
           </OnboardingContent>
-
-          {activeStep === 'discoverCommunities' &&
-            <OnboardingNav>
-              <div />
-              <Button
-                onClick={() => this.toStep('done')}
-                style={{ fontSize: '16px', padding: '16px 24px' }}
-              >
-                I'm done exploring
-              </Button>
-            </OnboardingNav>}
         </OnboardingContainer>
       </FullscreenView>
     );

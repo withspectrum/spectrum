@@ -25,13 +25,11 @@ import {
   SearchSpinnerContainer,
   SearchResultsDropdown,
   SearchResult,
-  SearchResultTextContainer,
   SearchResultNull,
   SearchResultImage,
   SearchResultMetaWrapper,
   SearchResultName,
   SearchResultMetadata,
-  SearchLink,
   SearchIcon,
   SearchResultDescription,
 } from './style';
@@ -91,6 +89,32 @@ class Search extends Component {
         const type = isMember ? 'success' : 'neutral';
 
         this.props.dispatch(addToastWithTimeout(type, str));
+
+        const { searchResults } = this.state;
+
+        // because we are using state to display the search results,
+        // we can't rely on the apollo cache to automatically update the
+        // display of the join/leave buttons in the search results dropdown
+        // so we update the state manually with the new membership boolean
+        // returned from the mutation
+        const newSearchResults = searchResults.map(community => {
+          if (community.id === toggleCommunityMembership.id) {
+            const newObj = Object.assign({}, ...community, {
+              ...community,
+              communityPermissions: {
+                ...community.communityPermissions,
+                isMember: isMember,
+              },
+            });
+
+            return newObj;
+          }
+          return community;
+        });
+
+        this.setState({
+          searchResults: newSearchResults,
+        });
       })
       .catch(err => {
         this.setState({
@@ -116,9 +140,14 @@ class Search extends Component {
       })
       .then(({ data: { searchCommunities } }) => {
         const searchResults = searchCommunities;
-        const sorted = searchResults.slice().sort((a, b) => {
-          return b.metaData.members - a.metaData.members;
-        });
+        // sort by membership count
+        const sorted = searchResults
+          .slice()
+          .sort((a, b) => {
+            return b.metaData.members - a.metaData.members;
+          })
+          // don't display communities where the user is blocked
+          .filter(community => !community.communityPermissions.isBlocked);
 
         if (!sorted || sorted.length === 0) {
           return this.setState({
@@ -258,45 +287,40 @@ class Search extends Component {
                     focused={focusedSearchResult === community.id}
                     key={community.id}
                   >
-                    <SearchLink to={`/${community.slug}`}>
-                      <SearchResultImage
-                        community
-                        src={community.profilePhoto}
-                      />
-                      <SearchResultTextContainer>
-                        <SearchResultMetaWrapper>
-                          <SearchResultName>
-                            {community.name}
-                          </SearchResultName>
-                          {community.metaData &&
-                            <SearchResultMetadata>
-                              {community.metaData.members} members
-                            </SearchResultMetadata>}
-                          <SearchResultDescription>
-                            {community.description}
-                          </SearchResultDescription>
-                        </SearchResultMetaWrapper>
-                      </SearchResultTextContainer>
-                      {community.communityPermissions.isMember
-                        ? <OutlineButton
-                            onClick={() => this.toggleMembership(community.id)}
-                            gradientTheme="none"
-                            color={'pro.alt'}
-                            hoverColor={'pro.default'}
-                            loading={loading === community.id}
-                          >
-                            Joined!
-                          </OutlineButton>
-                        : <Button
-                            onClick={() => this.toggleMembership(community.id)}
-                            loading={loading === community.id}
-                            gradientTheme={'success'}
-                            style={{ fontSize: '16px' }}
-                            icon={'plus'}
-                          >
-                            Join
-                          </Button>}
-                    </SearchLink>
+                    <SearchResultImage community src={community.profilePhoto} />
+
+                    <SearchResultMetaWrapper>
+                      <SearchResultName>
+                        {community.name}
+                      </SearchResultName>
+                      {community.metaData &&
+                        <SearchResultMetadata>
+                          {community.metaData.members} members
+                        </SearchResultMetadata>}
+                      <SearchResultDescription>
+                        {community.description}
+                      </SearchResultDescription>
+                    </SearchResultMetaWrapper>
+
+                    {community.communityPermissions.isMember
+                      ? <OutlineButton
+                          onClick={() => this.toggleMembership(community.id)}
+                          gradientTheme="none"
+                          color={'pro.alt'}
+                          hoverColor={'pro.default'}
+                          loading={loading === community.id}
+                        >
+                          Joined!
+                        </OutlineButton>
+                      : <Button
+                          onClick={() => this.toggleMembership(community.id)}
+                          loading={loading === community.id}
+                          gradientTheme={'success'}
+                          style={{ fontSize: '16px' }}
+                          icon={'plus'}
+                        >
+                          Join
+                        </Button>}
                   </SearchResult>
                 );
               })}
@@ -304,16 +328,14 @@ class Search extends Component {
             {searchResults.length === 0 &&
               isFocused &&
               <SearchResult>
-                <SearchResultTextContainer>
-                  <SearchResultNull>
-                    <p>
-                      No communities found matching "{searchString}"
-                    </p>
-                    <Link to={'/new/community'}>
-                      <Button>Create a Community</Button>
-                    </Link>
-                  </SearchResultNull>
-                </SearchResultTextContainer>
+                <SearchResultNull>
+                  <p>
+                    No communities found matching "{searchString}"
+                  </p>
+                  <Link to={'/new/community'}>
+                    <Button>Create a Community</Button>
+                  </Link>
+                </SearchResultNull>
               </SearchResult>}
           </SearchResultsDropdown>}
       </SearchWrapper>

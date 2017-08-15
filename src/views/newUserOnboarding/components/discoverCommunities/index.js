@@ -12,6 +12,7 @@ import { toggleCommunityMembershipMutation } from '../../../../api/community';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import { displayLoadingState } from '../../../../components/loading';
 import { Button, OutlineButton } from '../../../../components/buttons';
+import { ContinueButton } from '../../style';
 import {
   Row,
   CoverPhoto,
@@ -75,11 +76,15 @@ class TopCommunitiesPure extends Component {
   render() {
     const { data: { topCommunities, error } } = this.props;
     const { loading } = this.state;
+    // don't display communities where the user is blocked
+    const filteredCommunities = topCommunities.filter(
+      community => !community.communityPermissions.isBlocked
+    );
 
-    if (!error && topCommunities.length > 0) {
+    if (!error && filteredCommunities.length > 0) {
       return (
         <Row>
-          {topCommunities.map(community => {
+          {filteredCommunities.map(community => {
             return (
               <Container key={community.id}>
                 <CoverPhoto url={community.coverPhoto}>
@@ -114,6 +119,7 @@ class TopCommunitiesPure extends Component {
                         loading={loading === community.id}
                         gradientTheme={'success'}
                         style={{ fontSize: '16px' }}
+                        icon={'plus'}
                       >
                         Join
                       </Button>}
@@ -121,6 +127,12 @@ class TopCommunitiesPure extends Component {
               </Container>
             );
           })}
+
+          <Row>
+            <ContinueButton onClick={this.props.doneExploring}>
+              Save and Continue
+            </ContinueButton>
+          </Row>
         </Row>
       );
     }

@@ -79,17 +79,15 @@ export const SearchResultsDropdown = styled.ul`
   }
 `;
 
-export const SearchResultTextContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: auto;
-`;
-
 export const SearchResult = styled.li`
   display: flex;
+  flex: 1;
   background: ${props =>
     props.focused ? props.theme.bg.wash : props.theme.bg.default};
   border-bottom: 2px solid ${props => props.theme.border.default};
+  align-items: center;
+  ${Truncate()};
+  padding: 8px 16px 8px 8px;
 
   &:hover {
     background: ${props => props.theme.bg.wash};
@@ -111,14 +109,6 @@ export const SearchResult = styled.li`
   &:last-child {
     border-bottom: none;
   }
-`;
-
-export const SearchLink = styled(Link)`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  ${Truncate()}
-  padding: 8px 16px 8px 8px;
 `;
 
 export const SearchResultImage = styled(Avatar)`
