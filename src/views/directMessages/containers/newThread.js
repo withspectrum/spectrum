@@ -110,6 +110,15 @@ class NewThread extends Component {
     user's displayNames and usernames
   */
   search = (string: string) => {
+    // if the user has cleared the search input, make sure there are no search
+    // results or focused users
+    if (!string || string.length === 0) {
+      return this.setState({
+        searchResults: [],
+        focusedSearchResult: '',
+      });
+    }
+
     const { selectedUsersForNewThread } = this.state;
     const { currentUser, client } = this.props;
 
@@ -330,6 +339,7 @@ class NewThread extends Component {
     if (e.keyCode === 13) {
       // 0. if the chat input is focused, don't do anything
       if (chatInputIsFocused) return;
+      if (!searchResults || searchResults.length === 0) return;
 
       // 1
       this.addUserToSelectedUsersList(
@@ -559,14 +569,13 @@ class NewThread extends Component {
 
     // if no users have been selected, break out of this function and throw
     // an error
-    if (selectedUsersForNewThread.length < 1) {
-      this.props.dispatch(
+    if (selectedUsersForNewThread.length === 0) {
+      return this.props.dispatch(
         addToastWithTimeout(
           'error',
           'Choose some people to send this message to first!'
         )
       );
-      return;
     }
 
     const input = {
@@ -642,7 +651,7 @@ class NewThread extends Component {
       loadingExistingThreadMessages,
       existingThreadWithMessages,
     } = this.state;
-    const { currentUser } = this.props;
+    const { currentUser, initNewThreadWithUser } = this.props;
 
     return (
       <MessagesContainer>
@@ -680,7 +689,7 @@ class NewThread extends Component {
             value={searchString}
             placeholder="Search for people..."
             onChange={this.handleChange}
-            autoFocus={true}
+            autoFocus={!initNewThreadWithUser}
           />
 
           {// user has typed in a search string
@@ -758,6 +767,7 @@ class NewThread extends Component {
           onFocus={this.onChatInputFocus}
           onBlur={this.onChatInputBlur}
           threadType={'directMessageThread'}
+          autoFocus={initNewThreadWithUser}
         />
       </MessagesContainer>
     );

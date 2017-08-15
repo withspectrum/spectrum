@@ -478,7 +478,7 @@ class ThreadDetailPure extends Component {
                 </AuthorName>
               </Link>
               <AuthorUsername>
-                @{thread.creator.username}
+                {thread.creator.username && `@${thread.creator.username}`}
                 {thread.creator.isAdmin && <Badge type="admin" />}
                 {thread.creator.isPro && <Badge type="pro" />}
               </AuthorUsername>

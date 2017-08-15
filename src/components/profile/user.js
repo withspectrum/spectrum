@@ -24,6 +24,7 @@ import {
   ProfileAvatar,
   ProfileHeader,
   ProfileHeaderLink,
+  ProfileHeaderNoLink,
   ProfileHeaderMeta,
   ProfileHeaderAction,
   CoverLink,
@@ -181,28 +182,47 @@ const UserWithData = ({
     return (
       <Card>
         <ProfileHeader>
-          <ProfileHeaderLink
-            to={user.username ? `/users/${user.username}` : null}
-          >
-            <ProfileAvatar
-              size={32}
-              radius={32}
-              isOnline={user.isOnline}
-              src={`${user.profilePhoto}`}
-              noLink
-            />
-            <ProfileHeaderMeta>
-              <Title>
-                {user.name}
-              </Title>
-              {user.username &&
-                <Subtitle>
-                  @{user.username}
-                  {user.isAdmin && <Badge type="admin" />}
-                  {user.isPro && <Badge type="pro" />}
-                </Subtitle>}
-            </ProfileHeaderMeta>
-          </ProfileHeaderLink>
+          {user.username
+            ? <ProfileHeaderLink to={user.username}>
+                <ProfileAvatar
+                  size={32}
+                  radius={32}
+                  isOnline={user.isOnline}
+                  src={`${user.profilePhoto}`}
+                  noLink
+                />
+                <ProfileHeaderMeta>
+                  <Title>
+                    {user.name}
+                  </Title>
+                  {user.username &&
+                    <Subtitle>
+                      @{user.username}
+                      {user.isAdmin && <Badge type="admin" />}
+                      {user.isPro && <Badge type="pro" />}
+                    </Subtitle>}
+                </ProfileHeaderMeta>
+              </ProfileHeaderLink>
+            : <ProfileHeaderNoLink>
+                <ProfileAvatar
+                  size={32}
+                  radius={32}
+                  isOnline={user.isOnline}
+                  src={`${user.profilePhoto}`}
+                  noLink
+                />
+                <ProfileHeaderMeta>
+                  <Title>
+                    {user.name}
+                  </Title>
+                  {user.username &&
+                    <Subtitle>
+                      @{user.username}
+                      {user.isAdmin && <Badge type="admin" />}
+                      {user.isPro && <Badge type="pro" />}
+                    </Subtitle>}
+                </ProfileHeaderMeta>
+              </ProfileHeaderNoLink>}
           {currentUser && currentUser.id === user.id
             ? <Link to={`../users/${currentUser.username}/settings`}>
                 <ProfileHeaderAction
