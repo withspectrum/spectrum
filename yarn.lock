@@ -2550,18 +2550,18 @@ draft-js-image-plugin@2.0.0-rc2:
     prop-types "^15.5.8"
     union-class-names "^1.0.0"
 
-draft-js-import-element@^0.4.0:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/draft-js-import-element/-/draft-js-import-element-0.4.3.tgz#785381a2e0323a9836cfa856c442e9013bd482a4"
+draft-js-import-element@>=0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/draft-js-import-element/-/draft-js-import-element-0.5.0.tgz#1d6c470561d6e4d40aa23d9b6d338b1e8d180fe1"
   dependencies:
-    draft-js-utils "^0.1.5"
+    draft-js-utils ">=0.2.0"
     synthetic-dom "^0.2.0"
 
-draft-js-import-markdown@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-0.2.3.tgz#f2db157a5209321f57e77763dc31ffd35f1a8b09"
+draft-js-import-markdown@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-0.3.0.tgz#e4500c6ff52c9d66d01f7cdc94328a5eaee14956"
   dependencies:
-    draft-js-import-element "^0.4.0"
+    draft-js-import-element ">=0.5.0"
     synthetic-dom "^0.2.0"
 
 draft-js-markdown-shortcuts-plugin@^0.3.0:
@@ -2596,9 +2596,9 @@ draft-js-single-line-plugin@^2.0.1:
   dependencies:
     immutable "^3.8.1"
 
-draft-js-utils@^0.1.5:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-0.1.7.tgz#e2b6927ca620edf1855a4bfc1cf1d21080a70f16"
+draft-js-utils@>=0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-0.2.0.tgz#2403a314a055f73952517ef96a7cc4ccdf132c4f"
 
 draft-js@^0.10.1, draft-js@~0.10.0, draft-js@~0.10.1:
   version "0.10.1"
@@ -6880,13 +6880,14 @@ react-apollo@^1.2.0:
     object-assign "^4.0.1"
     prop-types "^15.5.8"
 
-react-app-rewire-styled-components@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-app-rewire-styled-components/-/react-app-rewire-styled-components-2.0.0.tgz#7ebdb1033993da98c853e623fe52b8a75025db6a"
+react-app-rewire-styled-components@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-app-rewire-styled-components/-/react-app-rewire-styled-components-3.0.0.tgz#0dd37b9ee1bd5245ccc5fb8d6fc93971019d8036"
   dependencies:
     babel-plugin-styled-components "^1.1.4"
+    react-app-rewired "^1.2.0"
 
-react-app-rewired@^1.0.5:
+react-app-rewired@^1.0.5, react-app-rewired@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/react-app-rewired/-/react-app-rewired-1.2.0.tgz#0ecab9007292ee5ed50812eb93818065d12da561"
   dependencies:
