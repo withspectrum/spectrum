@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Shadow } from '../globals';
+import { Shadow, zIndex } from '../globals';
 
 export const GalleryWrapper = styled.div`
   position: fixed;
@@ -9,7 +9,7 @@ export const GalleryWrapper = styled.div`
   bottom: 0;
   width: 100%;
   height: 100%;
-  z-index: 1012;
+  z-index: ${zIndex.fullscreen};
 `;
 
 export const Overlay = styled.div`
@@ -20,7 +20,7 @@ export const Overlay = styled.div`
   bottom: 0;
   background: ${({ theme }) => theme.bg.reverse};
   opacity: 0.95;
-  z-index: 1013;
+  z-index: ${zIndex.fullscreen + 1};
 `;
 
 export const ActiveImage = styled.img`
@@ -33,7 +33,7 @@ export const ActiveImage = styled.img`
   max-width: 100%;
   margin: auto 0 5rem;
   box-shadow: ${Shadow.high};
-  z-index: 1014;
+  z-index: ${zIndex.fullscreen + 2};
 `;
 
 export const Minigallery = styled.div`
@@ -45,7 +45,7 @@ export const Minigallery = styled.div`
   padding: 0.25rem;
   background: #000;
   max-height: 3rem;
-  z-index: 1013;
+  z-index: ${zIndex.fullscreen + 1};
 `;
 export const MiniImg = styled.img`
   height: 2rem;
@@ -83,7 +83,7 @@ export const CloseButton = styled.button`
   font-size: 20px;
   font-weight: 400;
   text-transform: uppercase;
-  z-index: 1014;
+  z-index: ${zIndex.fullscreen + 2};
   cursor: pointer;
 
   &:hover {

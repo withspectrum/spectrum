@@ -3,7 +3,16 @@ import styled from 'styled-components';
 //$FlowFixMe
 import { Link } from 'react-router-dom';
 import { Button } from '../buttons';
-import { FlexCol, FlexRow, Shadow, hexa, H1, H4, Transition } from '../globals';
+import {
+  FlexCol,
+  FlexRow,
+  Shadow,
+  hexa,
+  H1,
+  H4,
+  Transition,
+  zIndex,
+} from '../globals';
 
 export const FeaturePhoto = styled.img`
   height: 120px;
@@ -119,7 +128,7 @@ export const MemberButton = styled(Button)`
 export const FeatureWrapper = styled(FlexCol)`
   position: relative;
   align-self: center;
-  z-index: 3;
+  z-index: ${zIndex.base + 1};
   color: ${({ theme }) => theme.text.reverse};
 `;
 
