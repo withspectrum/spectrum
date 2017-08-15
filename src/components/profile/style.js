@@ -34,6 +34,20 @@ export const ProfileHeaderLink = styled(Link)`
   }
 `;
 
+export const ProfileHeaderNoLink = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  flex: auto;
+  min-width: 0;
+
+  &:hover h3 {
+    transition: ${Transition.hover.on};
+    color: ${props => props.theme.brand.alt};
+  }
+`;
+
 export const ProfileHeaderMeta = styled(FlexCol)`
   flex: 1 1 auto;
   flex-wrap: nowrap;
