@@ -8,6 +8,7 @@ import {
   Transition,
   hexa,
   Shadow,
+  zIndex,
 } from '../../components/globals';
 import { HorizontalRule } from '../../components/globals';
 import Card from '../../components/card';
@@ -118,7 +119,7 @@ export const NotificationListRow = styled(FlexCol)`
   align-items: flex-start;
   color: ${({ theme }) => theme.text.default};
   position: relative;
-  z-index: 2;
+  z-index: ${zIndex.card};
   flex: none;
   transition: ${Transition.hover.off};
   max-width: 100%;

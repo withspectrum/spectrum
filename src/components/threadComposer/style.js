@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { Card } from '../card';
-import { Transition, hexa, Shadow, FlexRow } from '../globals';
+import { Transition, hexa, Shadow, FlexRow, zIndex } from '../globals';
 
 export const Container = styled(FlexRow)`
   align-self: stretch;
@@ -15,14 +15,14 @@ export const Container = styled(FlexRow)`
     top: 8px;
     flex-direction: column;
     justify-content: flex-start;
-    z-index: 11;
+    z-index: ${zIndex.composer + 1};
   }
 `;
 
 export const Composer = styled(Card)`
   margin-bottom: 16px;
   position: relative;
-  z-index: 11;
+  z-index: ${zIndex.composer + 1};
   width: 100%;
   display: block;
   min-height: 64px;
@@ -55,7 +55,7 @@ export const Overlay = styled.div`
       bottom: 0;
       width: 100%;
       height: 100%;
-      z-index: 10;
+      z-index: ${zIndex.composer - 1};
       background: #000;
       pointer-events: auto;
       opacity: 0.4;
@@ -193,7 +193,7 @@ export const UpsellPulse = styled.div`
   -moz-border-radius: 30px;
   border-radius: 30px;
   background-color: ${props => props.theme.brand.alt};
-  z-index: 10;
+  z-index: ${zIndex.composer + 1};
   position: absolute;
   top: -4px;
   left: -4px;
@@ -245,7 +245,7 @@ export const UpsellDot = styled.div`
   position: absolute;
   top: -24px;
   left: -24px;
-  z-index: 1;
+  z-index: ${zIndex.composer + 1};
   opacity: 0;
 `;
 

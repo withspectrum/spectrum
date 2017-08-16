@@ -8,7 +8,7 @@ import compose from 'recompose/compose';
 import styled from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { Gradient } from '../globals';
+import { Gradient, zIndex } from '../globals';
 import { optimize } from '../../helpers/images';
 
 const StyledAvatarFallback = styled.img`
@@ -26,7 +26,7 @@ const StyledAvatarFallback = styled.img`
   background-image: ${({ theme }) =>
     Gradient(theme.generic.alt, theme.generic.default)};
   position: relative;
-  z-index: 9;
+  z-index: ${zIndex.avatar - 1};
 `;
 
 const StyledAvatarStatus = styled.div`
@@ -59,7 +59,7 @@ const StyledAvatarStatus = styled.div`
       props.onlineSize === 'large'
         ? '0'
         : props.onlineSize === 'small' ? '-6px' : '-3px'};
-    z-index: 10;
+    z-index: ${zIndex.avatar};
   }
 `;
 

@@ -7,6 +7,7 @@ import {
   Transition,
   Shadow,
   hexa,
+  zIndex,
 } from '../../components/globals';
 
 export const CoverRow = styled(FlexRow)`
@@ -155,7 +156,7 @@ export const Segment = styled(FlexRow)`
 export const SearchContainer = styled(Card)`
   margin-bottom: 16px;
   position: relative;
-  z-index: 11;
+  z-index: ${zIndex.search};
   width: 100%;
   display: block;
   min-height: 64px;

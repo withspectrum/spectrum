@@ -8,6 +8,7 @@ import {
   P,
   Transition,
   Shadow,
+  zIndex,
 } from '../../components/globals';
 
 export const Wrapper = styled(FlexCol)`
@@ -166,7 +167,7 @@ export const ClusterOne = styled(Cluster)`
 	opacity: 0.15;
 	top: 10%;
 	left: 10%;
-	z-index: 1;
+	z-index: ${zIndex.base};
 `;
 
 export const ClusterTwo = styled(Cluster)`
@@ -175,7 +176,7 @@ export const ClusterTwo = styled(Cluster)`
 	opacity: 0.15;
 	top: 60%;
 	right: 10%;
-	z-index: 1;
+	z-index: ${zIndex.base};
 `;
 
 export const ClusterThree = styled(Cluster)`
@@ -184,7 +185,7 @@ export const ClusterThree = styled(Cluster)`
 	opacity: 0.15;
 	top: 10%;
 	right: 40%;
-	z-index: 1;
+	z-index: ${zIndex.base};
 `;
 
 export const ClusterFour = styled(Cluster)`
@@ -193,7 +194,7 @@ export const ClusterFour = styled(Cluster)`
 	opacity: 0.15;
 	top: 80%;
 	left: 40%;
-	z-index: 1;
+	z-index: ${zIndex.base};
 `;
 
 export const GoopyOne = styled.div`
@@ -201,7 +202,7 @@ export const GoopyOne = styled.div`
   background: url(/img/goopy.svg) center bottom no-repeat;
   position: absolute;
   background-size: 100%;
-  z-index: 0;
+  z-index: ${zIndex.background};
   height: calc(100% + 4px);
   width: 110%;
   top: 0;
@@ -215,7 +216,7 @@ export const GoopyTwo = styled.div`
   background: url(/img/goopy-2.svg) center bottom no-repeat;
   position: absolute;
   background-size: 100%;
-  z-index: 0;
+  z-index: ${zIndex.background};
   height: calc(100% + 2px);
   top: 0;
   width: 110%;
@@ -229,7 +230,7 @@ export const GoopyThree = styled.div`
   background: url(/img/goopy-3.svg) center bottom no-repeat;
   position: absolute;
   background-size: 100%;
-  z-index: 0;
+  z-index: ${zIndex.background};
   height: calc(100% + 2px);
   top: 0;
   width: 110%;
@@ -243,7 +244,7 @@ export const GoopyFour = styled.div`
   background: url(/img/goopy-4.svg) center bottom no-repeat;
   position: absolute;
   background-size: 100%;
-  z-index: 0;
+  z-index: ${zIndex.background};
   height: calc(100% + 2px);
   top: 0;
   width: 110%;
@@ -263,7 +264,7 @@ export const Tagline = styled(H2)`
 export const Button = styled.a`
   display: flex;
   flex-shrink: 1;
-  z-index: 2;
+  z-index: ${zIndex.base + 1};
   flex-direction: flex-row;
   align-self: flex-start;
   align-items: center;
@@ -381,7 +382,7 @@ export const SectionContent = styled(FlexRow)`
 	align-items: center;
 	justify-content: center;
 	position: relative;
-	z-index: 2;
+	z-index: ${zIndex.base + 1};
 	padding: 0 10%;
 
 	@media (max-width: 768px) {

@@ -1,6 +1,7 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
+import { zIndex } from '../globals';
 import { isMobile } from '../../helpers/utils';
 import { IconButton } from '../buttons';
 
@@ -86,7 +87,7 @@ export const CloseButton = styled(IconButton)`
   position: absolute;
   right: 8px;
   top: 8px;
-  z-index: 2;
+  z-index: ${zIndex.modal + 1};
   color: ${({ theme }) => theme.text.placeholder};
 
   &:hover {

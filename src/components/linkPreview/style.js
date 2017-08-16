@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import { Transition, Shadow, hexa } from '../globals';
+import { Transition, Shadow, hexa, zIndex } from '../globals';
 
 export const LinkPreviewContainer = styled.a`
   display: flex;
@@ -97,7 +97,7 @@ export const LinkPreviewSkeleton = styled.div`
   overflow: hidden;
   position: relative;
   height: 140px;
-  z-index: 2;
+  z-index: ${zIndex.loading};
   margin: ${props => (props.margin ? props.margin : '16px')};
 `;
 
@@ -114,7 +114,7 @@ export const AnimatedBackground = styled.div`
   width: 100%;
   height: 100%;
   position: absolute;
-  z-index: 4;
+  z-index: ${zIndex.loading + 2};
   animation-duration: 2.5s;
   animation-fill-mode: forwards;
   animation-iteration-count: infinite;
@@ -126,13 +126,13 @@ export const AnimatedBackground = styled.div`
     ${({ theme }) => theme.bg.wash} 30%
   );
   animation-name: ${placeHolderShimmer};
-  z-index: 3;
+  z-index: ${zIndex.loading + 1};
 `;
 
 const Cover = styled.div`
   position: absolute;
   background: ${props => props.theme.bg.default};
-  z-index: 4;
+  z-index: ${zIndex.loading + 2};
 `;
 
 export const CoverLeft = styled(Cover)`
