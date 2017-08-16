@@ -16,6 +16,8 @@ class CommunityList extends Component {
   render() {
     const { data: { topCommunities, error } } = this.props;
 
+    if (!topCommunities || topCommunities.length === 0) return null;
+
     const sorted = topCommunities
       .slice()
       .sort((a, b) => {
