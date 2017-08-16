@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import { IconButton } from '../buttons';
-import { FlexRow, Transition } from '../globals';
+import { FlexRow, Transition, zIndex } from '../globals';
 import Editor from '../../components/editor';
 
 export const ChatInputWrapper = styled(FlexRow)`
   flex: none;
   align-items: center;
-  z-index: 200;
+  z-index: ${zIndex.chatInput};
   position: relative;
   width: 100%;
   margin: 0;
@@ -18,7 +18,7 @@ export const ChatInputWrapper = styled(FlexRow)`
     position: ${props => (props.focus ? 'fixed' : 'relative')};
     background-color: ${props =>
       props.focus ? props.theme.bg.default : 'transparent'};
-    z-index: 1000;
+    z-index: ${zIndex.mobileInput};
   }
 `;
 
@@ -85,7 +85,7 @@ export const MediaInput = styled.input`
   opacity: 0;
   overflow: hidden;
   position: absolute;
-  z-index: -1;
+  z-index: ${zIndex.hidden};
 `;
 
 export const MediaLabel = styled.label`

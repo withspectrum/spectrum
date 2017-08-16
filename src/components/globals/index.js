@@ -42,6 +42,40 @@ export const Transition = {
   },
 };
 
+export const zIndex = new function() {
+  // Write down a camel-cased element descriptor as the name (e.g. modal or chatInput).
+  // Define at a component level here, then use math to handle order at a local level.
+  // (e.g. const ModalInput = styled.input`z-index: zIndex.modal + 1`;)
+  // This uses constructor syntax because that allows self-referential math
+
+  this.base = 1;
+  this.background = this.base - 1;
+  this.hidden = this.base - 2;
+  this.card = this.base + 1;
+  this.loading = this.card + 1;
+  this.avatar = this.card + 1;
+  this.tooltip = this.card + 1;
+  this.form = this.card + 1;
+  this.composer = this.form;
+  this.search = this.form;
+
+  this.slider = 1000;
+  this.chatInput = this.slider + 1;
+  this.flyout = this.slider + 2;
+
+  this.modal = 2000;
+
+  this.chrome = 3000;
+  this.navBar = this.chrome;
+  this.mobileInput = this.chrome + 1;
+  this.dropDown = this.chrome + 1;
+
+  this.fullscreen = 3000;
+  this.gallery = this.fullscreen;
+
+  this.toast = 5000;
+}();
+
 export const fontStack = css`
 	font-family: -apple-system, BlinkMacSystemFont, 'Helvetica', 'Segoe', sans-serif
 `;
@@ -400,13 +434,13 @@ export const Tooltip = props => css`
 
 	&:before {
 		content: '';
-    z-index: 9999;
+    z-index: ${zIndex.tooltip + 1};
     border: 5px solid transparent;
   }
 
 	&:after {
 		content: ${props.tipText && !props.onboarding ? `'${props.tipText}'` : `''`};
-    z-index: 9998;
+    z-index: ${zIndex.tooltip};
     ${fontStack};
     font-size: 14px;
     font-weight: 500;
@@ -446,13 +480,13 @@ export const Onboarding = props => css`
 
   &:before {
     content: '';
-    z-index: 1000;
+    z-index: ${zIndex.tooltip + 1};
     border: 5px solid transparent;
   }
 
   &:after {
     content: ${props.onboarding ? `'${props.onboarding}'` : `''`};
-    z-index: 1000;
+    z-index: ${zIndex.tooltip};
     ${fontStack};
     text-align: left;
     line-height: 20px;

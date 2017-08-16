@@ -3,6 +3,7 @@
 import styled, { css } from 'styled-components';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
+import { zIndex } from '../../components/globals';
 
 const animation = css`
   opacity: 0;
@@ -29,7 +30,7 @@ export const Overlay = styled.div`
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.15);
-  z-index: 1004;
+  z-index: ${zIndex.slider - 1};
 
   ${animation};
 `;
@@ -42,7 +43,7 @@ export const Thread = styled.div`
   bottom: 0;
   width: 650px;
   background: #fff;
-  z-index: 1008;
+  z-index: ${zIndex.slider};
   box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
   flex-direction: column;
   max-width: 100%;

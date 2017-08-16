@@ -8,6 +8,7 @@ import {
   H4,
   P,
   hexa,
+  zIndex,
 } from '../../../components/globals';
 
 export const ThreadsListScrollContainer = styled.div`
@@ -172,14 +173,14 @@ export const TwoAvatarContainer = styled(AvatarContainer)`
 
     &:first-child {
       position: absolute;
-      z-index: 2;
+      z-index: ${zIndex.avatar};
       top: 4px;
       left: 0;
     }
 
     &:last-child {
       position: absolute;
-      z-index: 3;
+      z-index: ${zIndex.avatar + 1};
       bottom: 4px;
       right: 0;
     }
@@ -189,7 +190,7 @@ export const TwoAvatarContainer = styled(AvatarContainer)`
 export const TwoAvatarWrap = styled(AvatarContainer)`
   &:first-child {
     position: absolute;
-    z-index: 2;
+    z-index: ${zIndex.avatar};
     top: 4px;
     left: 0;
     width: 34px;
@@ -198,7 +199,7 @@ export const TwoAvatarWrap = styled(AvatarContainer)`
 
   &:last-child {
     position: absolute;
-    z-index: 3;
+    z-index: ${zIndex.avatar + 1};
     bottom: 4px;
     right: 0;
     margin: 0;
@@ -260,7 +261,7 @@ export const ComposerInput = styled.input`
   width: 100%;
   border-bottom: 2px solid ${props => props.theme.border.default};
   position: relative;
-  z-index: 2;
+  z-index: ${zIndex.chatInput};
 
   @media (max-width: 768px) {
     padding: 20px 16px;
@@ -273,7 +274,7 @@ export const SearchSpinnerContainer = styled.span`
   right: 8px;
   width: 32px;
   height: 32px;
-  z-index: 5;
+  z-index: ${zIndex.loading};
 `;
 
 export const SearchResultsDropdown = styled.ul`
@@ -287,7 +288,7 @@ export const SearchResultsDropdown = styled.ul`
   width: 320px;
   max-height: 420px;
   overflow-y: scroll;
-  z-index: 1000;
+  z-index: ${zIndex.dropdown};
 
   @media (max-width: 768px) {
     width: 100%;
@@ -355,7 +356,7 @@ export const SelectedUsersPills = styled.ul`
   font-size: 16px;
   padding: 9px 12px;
   width: 100%;
-  z-index: 3;
+  z-index: ${zIndex.chatInput + 1};
   background: #fff;
 `;
 

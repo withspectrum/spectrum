@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { FlexRow, Transition, hexa } from '../globals';
+import { FlexRow, Transition, hexa, zIndex } from '../globals';
 
 export const StyledLabel = styled.label`
   display: flex;
@@ -211,9 +211,9 @@ export const StyledSuccess = styled.p`
 
 export const PhotoInputLabel = styled.label`
   position: relative;
-  height: ${props => props.size}px;
-  z-index: 9;
-  width: ${props => props.size}px;
+  height: 48px;
+  z-index: ${zIndex.form + 1};
+  width: 48px;
   border-radius: ${props => (props.user ? '100%' : '8px')};
   margin-top: 8px;
   background-color: ${({ theme }) => theme.bg.reverse};
@@ -222,7 +222,7 @@ export const PhotoInputLabel = styled.label`
 export const CoverInputLabel = styled.label`
   position: relative;
   height: 96px;
-  z-index: 8;
+  z-index: ${zIndex.form};
   width: 100%;
   margin-top: 8px;
   border-radius: 8px;
@@ -232,7 +232,7 @@ export const CoverInputLabel = styled.label`
 export const ProfileImage = styled.img`
   position: absolute;
   object-fit: cover;
-  z-index: 9;
+  z-index: ${zIndex.form + 1};
   top: 0;
   right: 0;
   bottom: 0;
@@ -249,7 +249,7 @@ export const CoverImage = styled.div`
   background-position: center;
   background-size: cover;
   position: absolute;
-  z-index: 8;
+  z-index: ${zIndex.form};
   top: 0;
   right: 0;
   bottom: 0;
@@ -264,7 +264,7 @@ export const InputOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  z-index: ${zIndex.form + 2};
   top: 0;
   right: 0;
   bottom: 0;

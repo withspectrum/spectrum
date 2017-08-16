@@ -12,7 +12,13 @@ const SUBSCRIBE_TO_WEB_PUSH_OPTIONS = {
     subscribeToWebPush: subscription =>
       mutate({
         variables: {
-          subscription,
+          subscription: {
+            endpoint: subscription.endpoint,
+            keys: {
+              p256dh: subscription.getKey('p256dh'),
+              auth: subscription.getKey('auth'),
+            },
+          },
         },
       }),
   }),
