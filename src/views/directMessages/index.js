@@ -69,7 +69,6 @@ class DirectMessages extends Component {
     const isMobile = window.innerWidth < 768;
 
     const { activeThread } = this.state;
-    console.log('activeThread', activeThread);
 
     // no user found, get them to the home page to log in
     if (!data.user) {
