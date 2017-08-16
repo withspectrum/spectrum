@@ -53,6 +53,7 @@ class NotificationSettings extends Component {
       })
       .catch(err => {
         track('browser push notifications', 'blocked');
+        console.log('err', err);
         return this.props.dispatch(
           addToastWithTimeout(
             'error',
