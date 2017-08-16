@@ -689,7 +689,7 @@ class NewThread extends Component {
             value={searchString}
             placeholder="Search for people..."
             onChange={this.handleChange}
-            autoFocus={!initNewThreadWithUser}
+            autoFocus={!initNewThreadWithUser.length > 0}
           />
 
           {// user has typed in a search string
@@ -767,7 +767,7 @@ class NewThread extends Component {
           onFocus={this.onChatInputFocus}
           onBlur={this.onChatInputBlur}
           threadType={'directMessageThread'}
-          autoFocus={initNewThreadWithUser}
+          autoFocus={initNewThreadWithUser.length > 0}
         />
       </MessagesContainer>
     );

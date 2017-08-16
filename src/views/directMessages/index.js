@@ -69,13 +69,75 @@ class DirectMessages extends Component {
     const isMobile = window.innerWidth < 768;
 
     const { activeThread } = this.state;
-    console.log('activeThread', activeThread);
 
     // no user found, get them to the home page to log in
     if (!data.user) {
       window.location.href = '/';
     }
 
+    // if the user exists, but does not have any dm threads, show the null state
+    if (
+      (data.user && !data.user.directMessageThreadsConnection) ||
+      (data.user && data.user.directMessageThreadsConnection.edges.length === 0)
+    ) {
+      // if the user is viewing mobile
+      if (isMobile) {
+        // if the user is trying to compose a new message, show the new thread composer
+        if (match.url === '/messages/new' && match.isExact) {
+          return (
+            <View>
+              <NewThread
+                threads={null}
+                currentUser={currentUser}
+                setActiveThread={this.setActiveThread}
+              />
+            </View>
+          );
+        } else {
+          // otherwise just show the messages list
+          return (
+            <View>
+              <Titlebar
+                title={'Messages'}
+                provideBack={false}
+                messageComposer
+              />
+              <MessagesList>
+                <ThreadsList
+                  active={activeThread}
+                  threads={null}
+                  currentUser={currentUser}
+                />
+              </MessagesList>
+            </View>
+          );
+        }
+      } else {
+        // if no data exists and the user is not on mobile
+        return (
+          <View>
+            <MessagesList>
+              <Link
+                to="/messages/new"
+                onClick={() => this.setActiveThread('new')}
+              >
+                <ComposeHeader>
+                  <Icon glyph="message-new" />
+                </ComposeHeader>
+              </Link>
+            </MessagesList>
+
+            <NewThread
+              threads={null}
+              currentUser={currentUser}
+              setActiveThread={this.setActiveThread}
+            />
+          </View>
+        );
+      }
+    }
+
+    // at this point we know that data exists
     const threads = data.user.directMessageThreadsConnection.edges
       .map(thread => thread.node)
       .sort((a, b) => {
@@ -84,6 +146,7 @@ class DirectMessages extends Component {
         const val = y - x;
         return val;
       });
+
     // if the user is on a phone, only render one view column at a time
     if (isMobile) {
       // if there's a threadId, that column should be a threadDetail
@@ -131,11 +194,12 @@ class DirectMessages extends Component {
         );
       }
     } else {
-      // if there is a user, but they've never had a dmThread, send them to /messages/new
-      if (
-        data.user &&
-        data.user.directMessageThreadsConnection.edges.length === 0
-      ) {
+      if (match.params.threadId) {
+        /*
+        pass the user's existing DM threads into the composer so that we can more quickly
+        determine if the user is creating a new thread or has typed the names that map
+        to an existing DM thread
+        */
         return (
           <View>
             <MessagesList>
@@ -147,9 +211,14 @@ class DirectMessages extends Component {
                   <Icon glyph="message-new" />
                 </ComposeHeader>
               </Link>
+              <ThreadsList
+                active={activeThread}
+                threads={threads}
+                currentUser={currentUser}
+              />
             </MessagesList>
-
-            <NewThread
+            <ExistingThread
+              match={match}
               threads={threads}
               currentUser={currentUser}
               setActiveThread={this.setActiveThread}
@@ -157,69 +226,35 @@ class DirectMessages extends Component {
           </View>
         );
       } else {
-        //otherwise, let the route handle which detailView to see
-        if (match.params.threadId) {
-          /*
-          pass the user's existing DM threads into the composer so that we can more quickly
-          determine if the user is creating a new thread or has typed the names that map
-          to an existing DM thread
-          */
-          return (
-            <View>
-              <MessagesList>
-                <Link
-                  to="/messages/new"
-                  onClick={() => this.setActiveThread('new')}
-                >
-                  <ComposeHeader>
-                    <Icon glyph="message-new" />
-                  </ComposeHeader>
-                </Link>
-                <ThreadsList
-                  active={activeThread}
-                  threads={threads}
-                  currentUser={currentUser}
-                />
-              </MessagesList>
-              <ExistingThread
-                match={match}
+        /*
+        if a thread is being viewed and the threadId !== 'new', pass the
+        threads down the tree to fetch the messages for the urls threadId
+        */
+        return (
+          <View>
+            <MessagesList>
+              <Link
+                to="/messages/new"
+                onClick={() => this.setActiveThread('new')}
+              >
+                <ComposeHeader>
+                  <Icon glyph="message-new" />
+                </ComposeHeader>
+              </Link>
+              <ThreadsList
+                active={activeThread}
                 threads={threads}
                 currentUser={currentUser}
-                setActiveThread={this.setActiveThread}
               />
-            </View>
-          );
-        } else {
-          /*
-          if a thread is being viewed and the threadId !== 'new', pass the
-          threads down the tree to fetch the messages for the urls threadId
-          */
-          return (
-            <View>
-              <MessagesList>
-                <Link
-                  to="/messages/new"
-                  onClick={() => this.setActiveThread('new')}
-                >
-                  <ComposeHeader>
-                    <Icon glyph="message-new" />
-                  </ComposeHeader>
-                </Link>
-                <ThreadsList
-                  active={activeThread}
-                  threads={threads}
-                  currentUser={currentUser}
-                />
-              </MessagesList>
-              <NewThread
-                match={match}
-                threads={threads}
-                currentUser={currentUser}
-                setActiveThread={this.setActiveThread}
-              />
-            </View>
-          );
-        }
+            </MessagesList>
+            <NewThread
+              match={match}
+              threads={threads}
+              currentUser={currentUser}
+              setActiveThread={this.setActiveThread}
+            />
+          </View>
+        );
       }
     }
   }
