@@ -34,7 +34,7 @@ class WebPushManager {
   subscribe = () => {
     if (!this.manager) {
       this.subscriptionAttempt = true;
-      return Promise.resolve({});
+      return Promise.reject('Please try again.');
     }
     return this.manager.subscribe({
       userVisibleOnly: true,
