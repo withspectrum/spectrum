@@ -7,6 +7,7 @@ import {
   Shadow,
   hexa,
   Gradient,
+  zIndex,
 } from '../globals';
 import Card from '../card';
 
@@ -38,13 +39,13 @@ export const CardLink = styled(Link)`
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 1;
+  z-index: ${zIndex.card};
 `;
 
 export const CardContent = styled(FlexCol)`
   align-self: flex-start;
   position: relative;
-  z-index: 2;
+  z-index: ${zIndex.card + 1};
   align-items: flex-start;
   pointer-events: none;
   width: 100%;

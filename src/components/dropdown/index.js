@@ -6,7 +6,7 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
-import { Shadow, FlexCol, hexa, Transition } from '../globals';
+import { Shadow, FlexCol, hexa, Transition, zIndex } from '../globals';
 import Card from '../card';
 
 const StyledDropdown = styled(FlexCol)`
@@ -15,7 +15,7 @@ const StyledDropdown = styled(FlexCol)`
   width: 400px;
   top: 100%;
   right: 0px;
-  z-index: 5;
+  z-index: ${zIndex.dropdown};
   padding-top: 8px;
   color: ${({ theme }) => theme.text.default};
   transition: ${Transition.dropdown.off};

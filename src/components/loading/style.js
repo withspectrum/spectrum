@@ -2,7 +2,7 @@
 // $FlowFixMe
 import styled, { keyframes } from 'styled-components';
 import { Card } from '../card';
-import { hexa, FlexCol } from '../globals';
+import { hexa, FlexCol, zIndex } from '../globals';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 
@@ -187,7 +187,7 @@ export const ShimmerBase = styled.section`
   width: 100%;
   height: 100%;
   position: relative;
-  z-index: 3;
+  z-index: ${zIndex.loading};
   background: ${({ theme }) => theme.bg.wash};
   overflow: hidden;
 `;
@@ -196,7 +196,7 @@ export const ShimmerLine = styled.span`
   width: 100%;
   height: 100%;
   position: absolute;
-  z-index: 4;
+  z-index: ${zIndex.loading + 1};
   animation-duration: 2.5s;
   animation-fill-mode: forwards;
   animation-iteration-count: infinite;
@@ -213,7 +213,7 @@ export const ShimmerLine = styled.span`
 export const Cover = styled.span`
   position: absolute;
   background: ${({ theme }) => theme.bg.default};
-  z-index: 5;
+  z-index: ${zIndex.loading + 2};
 `;
 
 export const LoadingOverlay = styled.div`
@@ -226,7 +226,7 @@ export const LoadingOverlay = styled.div`
   opacity: 0.95;
   width: 100%;
   height: 100%;
-  z-index: 1000;
+  z-index: ${zIndex.fullscreen};
 `;
 
 export const LoadingNavbarContainer = styled.nav`
@@ -240,7 +240,7 @@ export const LoadingNavbarContainer = styled.nav`
   padding: 0 32px 0 16px;
   line-height: 1;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
+  z-index: ${zIndex.chrome};
 
   span {
     position: relative;

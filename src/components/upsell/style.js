@@ -8,6 +8,7 @@ import {
   Transition,
   Shadow,
   hexa,
+  zIndex,
 } from '../globals';
 import { Button } from '../buttons';
 
@@ -157,7 +158,7 @@ export const Profile = styled.div`
     border-radius: 8px;
     line-height: 1.5;
     border: 2px solid #fff;
-    z-index: 9;
+    z-index: ${zIndex.avatar + 1};
   }
 `;
 
@@ -228,7 +229,7 @@ export const CodeOfConduct = styled.p`
   margin-right: 32px;
   text-align: center;
   position: relative;
-  z-index: 2;
+  z-index: ${zIndex.card + 1};
 
   a {
     color: ${props => props.theme.brand.default};
@@ -261,7 +262,7 @@ export const Col = styled.div`
 export const SigninButton = styled.a`
   display: flex;
   flex-shrink: 1;
-  z-index: 2;
+  z-index: ${zIndex.card + 1};
   flex-direction: flex-row;
   align-self: flex-start;
   align-items: center;

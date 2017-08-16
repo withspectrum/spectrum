@@ -6,7 +6,7 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import styled from 'styled-components';
-import { FlexRow, Transition } from '../globals';
+import { FlexRow, Transition, zIndex } from '../globals';
 
 const StyledFlyout = styled(FlexRow)`
   background-color: transparent;
@@ -14,7 +14,7 @@ const StyledFlyout = styled(FlexRow)`
   flex: 0 0 auto;
   right: 100%;
   top: 0;
-  z-index: 5;
+  z-index: ${zIndex.flyout};
   color: ${({ theme }) => theme.text.default};
   transition: ${Transition.dropdown.off};
 `;
@@ -27,13 +27,12 @@ const StyledRow = styled(FlexRow)`
   top: -8px;
 `;
 
-const FlyoutPure = (props: Object): React$Element<any> => (
+const FlyoutPure = (props: Object): React$Element<any> =>
   <StyledFlyout className={'flyout'} {...props}>
     <StyledRow>
       {props.children}
     </StyledRow>
-  </StyledFlyout>
-);
+  </StyledFlyout>;
 
 export const Flyout = compose(pure)(FlyoutPure);
 export default Flyout;

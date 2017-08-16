@@ -15,6 +15,7 @@ import {
   Shadow,
   hexa,
   Truncate,
+  zIndex,
 } from '../../components/globals';
 import Card from '../../components/card';
 import { StyledCard } from '../../components/listItems/style';
@@ -36,7 +37,7 @@ export const ScrollBody = styled(FlexCol)`
   overflow-x: hidden;
   overflow-y: scroll;
   position: relative;
-  z-index: 1;
+  z-index: ${zIndex.base};
   background-color: ${({ theme }) => theme.bg.wash};
 `;
 
@@ -47,7 +48,7 @@ export const ViewTitle = styled(H1)`
   font-weight: 900;
   color: ${({ theme }) => theme.text.reverse};
   position: relative;
-  z-index: 1;
+  z-index: ${zIndex.base};
 
   @media (max-width: 768px) {
     margin-left: 16px;
@@ -59,7 +60,7 @@ export const ViewSubtitle = styled(H2)`
   margin-left: 48px;
   color: ${({ theme }) => theme.text.reverse};
   position: relative;
-  z-index: 1;
+  z-index: ${zIndex.base};
 
   @media (max-width: 768px) {
     margin-left: 16px;
@@ -83,7 +84,7 @@ export const Section = styled(FlexCol)`
   flex: none;
   justify-content: space-between;
   position: relative;
-  z-index: 1;
+  z-index: ${zIndex.base};
   align-self: stretch;
 
   @media (max-width: 768px) {
@@ -233,7 +234,7 @@ export const Constellations = styled.div`
   background: url(/img/constellations.svg) center top no-repeat;
   position: absolute;
   background-size: cover 100%;
-  z-index: 0;
+  z-index: ${zIndex.background};
   height: calc(100% + 4px);
   width: 110%;
   top: -10px;
@@ -279,7 +280,7 @@ export const SearchInput = styled.input`
   padding: 4px 20px;
   flex: auto;
   position: relative;
-  z-index: 2;
+  z-index: ${zIndex.search};
 
   &:hover {
   }
@@ -291,7 +292,7 @@ export const SearchSpinnerContainer = styled.span`
   right: 12px;
   width: 32px;
   height: 32px;
-  z-index: 5;
+  z-index: ${zIndex.search + 1};
 `;
 
 export const SearchResultsDropdown = styled.ul`
@@ -306,7 +307,7 @@ export const SearchResultsDropdown = styled.ul`
   flex: auto;
   max-height: 400px;
   overflow-y: scroll;
-  z-index: 1000;
+  z-index: ${zIndex.dropdown};
   background: ${props => props.theme.bg.default};
 
   @media (max-width: 768px) {

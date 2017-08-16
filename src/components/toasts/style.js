@@ -1,6 +1,7 @@
 // @flow
 // $FlowFixMe
 import styled, { keyframes } from 'styled-components';
+import { zIndex } from '../globals';
 
 export const Container = styled.div`
   position: fixed;
@@ -12,7 +13,7 @@ export const Container = styled.div`
   max-width: 256px;
   background: transparent;
   pointer-events: none;
-  z-index: 2000;
+  z-index: ${zIndex.toast};
 `;
 
 const toastFade = keyframes`
