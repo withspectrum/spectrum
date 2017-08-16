@@ -125,15 +125,6 @@ export const MetaNew = styled(Meta)`
   color: ${({ theme }) => theme.success.default};
 `;
 
-export const ParticipantCount = styled.span`
-  margin-left: 4px;
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1;
-  vertical-align: middle;
-  color: ${({ theme }) => theme.text.alt};
-`;
-
 export const Location = styled.span`
   display: inline-block;
   flex: 0 0 auto;
