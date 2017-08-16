@@ -32,9 +32,6 @@ export const threadInfoFragment = gql`
     isLocked
     isCreator
 		type
-    participants {
-      ...userInfo
-    }
     content {
       title
       body
