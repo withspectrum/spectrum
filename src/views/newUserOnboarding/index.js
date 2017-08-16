@@ -103,7 +103,7 @@ class NewUserOnboarding extends Component {
         emoji: null,
       },
       discoverCommunities: {
-        title: community ? "One just isn't enough..." : 'Find your people.',
+        title: 'Find your people.',
         subtitle:
           'There are hundreds of communities on Spectrum to explore. Check out some of our favorites below or search for topics.',
         icon: null,
@@ -173,7 +173,10 @@ class NewUserOnboarding extends Component {
               />}
 
             {activeStep === 'joinFirstCommunity' &&
-              <JoinFirstCommunity community={community} />}
+              <JoinFirstCommunity
+                community={community}
+                joinedFirstCommunity={() => this.toStep('discoverCommunities')}
+              />}
 
             {activeStep === 'discoverCommunities' &&
               <Container>

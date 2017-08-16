@@ -6,68 +6,104 @@ import pure from 'recompose/pure';
 import compose from 'recompose/compose';
 //$FlowFixMe
 import { connect } from 'react-redux';
+import { track } from '../../../../helpers/events';
+import { addToastWithTimeout } from '../../../../actions/toasts';
 import { TextButton } from '../../../../components/buttons';
 import { ContinueButton } from '../../style';
 import { toggleCommunityMembershipMutation } from '../../../../api/community';
+import { Button, OutlineButton } from '../../../../components/buttons';
+import {
+  Row,
+  CoverPhoto,
+  Container,
+  CoverAvatar,
+  CoverTitle,
+  CoverDescription,
+  ButtonContainer,
+} from '../discoverCommunities/style';
+import { CoverLink, CoverSubtitle } from '../../../../components/profile/style';
 
 class JoinFirstCommunityPure extends Component {
-  save = e => {
-    e.preventDefault();
+  state: {
+    isLoading: boolean,
+  };
 
-    const {
-      name,
-      description,
-      website,
-      file,
-      coverFile,
-      photoSizeError,
-    } = this.state;
+  constructor() {
+    super();
 
-    const input = {
-      name,
-      description,
-      website,
-      file,
-      coverFile,
+    this.state = {
+      isLoading: false,
     };
-
-    if (photoSizeError) {
-      return;
-    }
-
+  }
+  toggleMembership = communityId => {
     this.setState({
       isLoading: true,
     });
 
     this.props
-      .editUser(input)
-      .then(({ data: { editUser } }) => {
-        const user = editUser;
-
+      .toggleCommunityMembership({ communityId })
+      .then(({ data: { toggleCommunityMembership } }) => {
         this.setState({
           isLoading: false,
         });
 
-        // the mutation returns a user object. if it exists,
-        if (user !== undefined) {
-          this.props.save();
+        const isMember =
+          toggleCommunityMembership.communityPermissions.isMember;
 
-          this.setState({
-            file: null,
-          });
-        }
+        track('community', isMember ? 'joined' : 'unjoined', null);
+        track(
+          'onboarding',
+          isMember ? 'community joined' : 'community unjoined',
+          null
+        );
+
+        const str = isMember
+          ? `Joined ${toggleCommunityMembership.name}!`
+          : `Left ${toggleCommunityMembership.name}.`;
+
+        const type = isMember ? 'success' : 'neutral';
+
+        this.props.dispatch(addToastWithTimeout(type, str));
+        this.props.joinedFirstCommunity();
       })
       .catch(err => {
         this.setState({
           isLoading: false,
         });
+        this.props.dispatch(addToastWithTimeout('error', err.message));
       });
   };
 
   render() {
     const { community } = this.props;
 
-    return <div>community!</div>;
+    return (
+      <Row>
+        <Container key={community.id}>
+          <CoverPhoto url={community.coverPhoto}>
+            <CoverLink to={`/${community.slug}`}>
+              <CoverAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
+              <CoverTitle>
+                {community.name}
+              </CoverTitle>
+            </CoverLink>
+          </CoverPhoto>
+          <CoverSubtitle>
+            {community.metaData.members} members
+          </CoverSubtitle>
+
+          <CoverDescription>
+            {community.description}
+          </CoverDescription>
+        </Container>
+
+        <Row>
+          <ContinueButton onClick={() => this.toggleMembership(community.id)}>
+            Join {community.name} and Continue
+          </ContinueButton>
+        </Row>
+      </Row>
+    );
   }
 }
 
