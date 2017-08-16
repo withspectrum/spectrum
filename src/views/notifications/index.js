@@ -153,6 +153,7 @@ class NotificationsPure extends Component {
 
   render() {
     const { currentUser, data } = this.props;
+    console.log('data', data);
 
     if (!currentUser) {
       return (
@@ -174,16 +175,7 @@ class NotificationsPure extends Component {
       );
     }
 
-    let notifications = data.notifications.edges
-      .map(notification => parseNotification(notification.node))
-      .filter(
-        notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
-      );
-
-    notifications = getDistinctNotifications(notifications);
-    notifications = sortByDate(notifications, 'modifiedAt', 'desc');
-
-    if (!notifications || notifications.length === 0) {
+    if (!data.notifications || data.notifications.edges.length === 0) {
       return (
         <AppViewWrapper>
           <Column type={'primary'}>
@@ -192,6 +184,15 @@ class NotificationsPure extends Component {
         </AppViewWrapper>
       );
     }
+
+    let notifications = data.notifications.edges
+      .map(notification => parseNotification(notification.node))
+      .filter(
+        notification => notification.context.type !== 'DIRECT_MESSAGE_THREAD'
+      );
+
+    notifications = getDistinctNotifications(notifications);
+    notifications = sortByDate(notifications, 'modifiedAt', 'desc');
 
     const { scrollElement } = this.state;
 
