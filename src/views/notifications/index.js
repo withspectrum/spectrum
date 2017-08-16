@@ -153,7 +153,6 @@ class NotificationsPure extends Component {
 
   render() {
     const { currentUser, data } = this.props;
-    console.log('data', data);
 
     if (!currentUser) {
       return (
