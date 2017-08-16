@@ -28,16 +28,6 @@ const FormattedThreadLocation = props => {
     props.viewContext === 'community' ||
     props.viewContext === 'channel';
 
-  const needsParticipantDetails =
-    props.viewContext === 'dashboard' ||
-    props.viewContext === 'profile' ||
-    props.viewContext === 'community' ||
-    props.viewContext === 'channel';
-
-  // const participantList = props.data.participants.filter(
-  //   participant => participant.id !== props.data.creator.id
-  // );
-
   return (
     <ThreadContext>
       {needsCommunityDetails &&
@@ -77,7 +67,7 @@ const FormattedThreadLocation = props => {
                 {props.data.channel.name}
               </Link>}
           </Location>}
-        {(needsAuthorDetails || needsParticipantDetails) &&
+        {needsAuthorDetails &&
           <FlexRow>
             {needsAuthorDetails &&
               <FlexRow>
