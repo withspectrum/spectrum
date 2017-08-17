@@ -35,19 +35,14 @@ const StyledAvatarStatus = styled.div`
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
   border-radius: ${props => (props.community ? `${props.size / 4}px` : '100%')};
+  border: none;
 
   &:after {
     content: '';
     position: absolute;
     display: ${props => (props.isOnline ? 'inline-block' : 'none')};
-    width: ${props =>
-      props.onlineSize === 'large'
-        ? '8px'
-        : props.onlineSize === 'small' ? '6px' : '6px'};
-    height: ${props =>
-      props.onlineSize === 'large'
-        ? '8px'
-        : props.onlineSize === 'small' ? '6px' : '6px'};
+    width: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
+    height: ${props => (props.onlineSize === 'large' ? '8px' : '6px')};
     background: ${props => props.theme.pro.alt};
     border-radius: 100%;
     border: 2px solid ${props => props.theme.text.reverse};
@@ -65,6 +60,7 @@ const StyledAvatarStatus = styled.div`
 
 const StyledAvatar = styled.object`
   position: relative;
+  display: inline-block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
   border-radius: ${props => (props.community ? `${props.size / 4}px` : '100%')};
@@ -81,10 +77,11 @@ const StyledAvatarLink = styled(Link)`
 `;
 
 const AvatarWithFallback = props =>
-  <StyledAvatarStatus {...props}>
+  <StyledAvatarStatus size={props.size || 32} {...props}>
     <StyledAvatar
       data={optimize(props.src, { w: props.size, dpr: 2, format: 'png' })}
       type="image/png"
+      size={props.size || 32}
       {...props}
     >
       <StyledAvatarFallback
