@@ -42,8 +42,6 @@ import {
 } from '../../../../api/user';
 import { addToastWithTimeout } from '../../../../actions/toasts';
 import {
-  PRO_USER_MAX_IMAGE_SIZE_STRING,
-  PRO_USER_MAX_IMAGE_SIZE_BYTES,
   FREE_USER_MAX_IMAGE_SIZE_BYTES,
   FREE_USER_MAX_IMAGE_SIZE_STRING,
 } from '../../../../helpers/images';
@@ -64,7 +62,6 @@ class UserInfoPure extends Component {
     createError: boolean,
     isLoading: boolean,
     photoSizeError: string,
-    proGifError: boolean,
   };
 
   constructor(props) {
@@ -87,7 +84,6 @@ class UserInfoPure extends Component {
       createError: false,
       isLoading: false,
       photoSizeError: '',
-      proGifError: false,
     };
 
     this.search = throttle(this.search, 500);
@@ -95,14 +91,21 @@ class UserInfoPure extends Component {
 
   changeName = e => {
     const name = e.target.value;
+
     if (name.length > 50) {
-      this.setState({
+      return this.setState({
         name,
         nameError: true,
       });
-
-      return;
     }
+
+    if (name.length === 0) {
+      return this.setState({
+        name,
+        nameError: true,
+      });
+    }
+
     this.setState({
       name,
       nameError: false,
@@ -141,32 +144,10 @@ class UserInfoPure extends Component {
 
     if (!file) return;
 
-    if (
-      file &&
-      file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES &&
-      !this.props.currentUser.isPro
-    ) {
+    if (file && file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES) {
       return this.setState({
-        photoSizeError: `Upgrade to Pro to upload files up to ${PRO_USER_MAX_IMAGE_SIZE_STRING}. Otherwise, try uploading a photo less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`,
+        photoSizeError: `Try uploading a file less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`,
         isLoading: false,
-      });
-    }
-
-    if (
-      file &&
-      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
-      this.props.currentUser.isPro
-    ) {
-      return this.setState({
-        photoSizeError: `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`,
-        isLoading: false,
-      });
-    }
-
-    if (file && file.type === 'image/gif' && !this.props.currentUser.isPro) {
-      return this.setState({
-        isLoading: false,
-        proGifError: true,
       });
     }
 
@@ -177,7 +158,6 @@ class UserInfoPure extends Component {
         file: file,
         image: reader.result,
         photoSizeError: '',
-        proGifError: false,
         isLoading: false,
       });
     };
@@ -195,32 +175,10 @@ class UserInfoPure extends Component {
       isLoading: true,
     });
 
-    if (
-      file &&
-      file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES &&
-      !this.props.currentUser.isPro
-    ) {
+    if (file && file.size > FREE_USER_MAX_IMAGE_SIZE_BYTES) {
       return this.setState({
-        photoSizeError: `Upgrade to Pro to upload files up to ${PRO_USER_MAX_IMAGE_SIZE_STRING}. Otherwise, try uploading a photo less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`,
+        photoSizeError: `Try uploading a file less than ${FREE_USER_MAX_IMAGE_SIZE_STRING}.`,
         isLoading: false,
-      });
-    }
-
-    if (
-      file &&
-      file.size > PRO_USER_MAX_IMAGE_SIZE_BYTES &&
-      this.props.currentUser.isPro
-    ) {
-      return this.setState({
-        photoSizeError: `Try uploading a file less than ${PRO_USER_MAX_IMAGE_SIZE_STRING}.`,
-        isLoading: false,
-      });
-    }
-
-    if (file && file.type === 'image/gif' && !this.props.currentUser.isPro) {
-      return this.setState({
-        isLoading: false,
-        proGifError: true,
       });
     }
 
@@ -231,7 +189,6 @@ class UserInfoPure extends Component {
         coverFile: file,
         coverPhoto: reader.result,
         photoSizeError: '',
-        proGifError: false,
         isLoading: false,
       });
     };
@@ -309,7 +266,6 @@ class UserInfoPure extends Component {
       nameError,
       isLoading,
       photoSizeError,
-      proGifError,
     } = this.state;
 
     return (
@@ -320,26 +276,20 @@ class UserInfoPure extends Component {
               onChange={this.setCoverPhoto}
               defaultValue={coverPhoto}
               preview={true}
+              allowGif={false}
             />
             <PhotoInput
               onChange={this.setProfilePhoto}
               defaultValue={image}
               size={64}
               user
+              allowGif={false}
             />
           </ImageInputWrapper>
 
           {photoSizeError &&
-            <Notice style={{ marginTop: '32px' }}>
+            <Notice style={{ marginTop: '64px', marginBottom: '-32px' }}>
               {photoSizeError}
-            </Notice>}
-
-          {proGifError &&
-            <Notice style={{ marginTop: '32px' }}>
-              Upgrade to Pro to use a gif as your profile or cover photo{' '}
-              <span role="img" aria-label="finger pointing right emoji">
-                👉
-              </span>
             </Notice>}
 
           <div style={{ display: 'flex', marginTop: '40px' }}>
@@ -356,6 +306,7 @@ class UserInfoPure extends Component {
             <Input
               style={{ marginLeft: '8px' }}
               defaultValue={website}
+              placeholder={'Have a website?'}
               onChange={this.changeWebsite}
             >
               Your website (optional)
@@ -380,9 +331,7 @@ class UserInfoPure extends Component {
 
           <ContinueButton
             onClick={this.save}
-            disabled={
-              nameError || descriptionError || photoSizeError || proGifError
-            }
+            disabled={nameError || descriptionError}
             loading={isLoading}
           >
             Save and Continue

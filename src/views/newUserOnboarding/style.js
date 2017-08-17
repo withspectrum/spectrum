@@ -97,3 +97,14 @@ export const ContinueButton = styled(Button)`
     `${Shadow.high} ${hexa(props.theme.bg.reverse, 0.15)}`};
   margin: 32px auto 0;
 `;
+
+export const CreateUpsellContainer = styled.div`
+  margin-top: 32px;
+  background: ${props => props.theme.bg.wash};
+  padding: ${props => (props.extra ? '32px 32px 116px' : '32px')};
+  border-top: 2px solid ${props => props.theme.border.default};
+  width: calc(100% + 64px);
+  margin-bottom: -32px;
+  margin-left: -32px;
+  margin-right: -32px;
+`;

@@ -15,6 +15,7 @@ import { Button, OutlineButton } from '../../../../components/buttons';
 import { ContinueButton } from '../../style';
 import {
   Row,
+  StickyRow,
   CoverPhoto,
   Container,
   CoverAvatar,
@@ -27,12 +28,13 @@ import { CoverLink, CoverSubtitle } from '../../../../components/profile/style';
 class TopCommunitiesPure extends Component {
   state: {
     loading: string,
+    hasJoined: number,
   };
 
   constructor() {
     super();
 
-    this.state = { loading: '' };
+    this.state = { loading: '', hasJoined: 0 };
   }
 
   toggleMembership = communityId => {
@@ -64,6 +66,8 @@ class TopCommunitiesPure extends Component {
         const type = isMember ? 'success' : 'neutral';
 
         this.props.dispatch(addToastWithTimeout(type, str));
+
+        this.props.joinedCommunity(isMember ? 1 : -1);
       })
       .catch(err => {
         this.setState({
@@ -74,7 +78,7 @@ class TopCommunitiesPure extends Component {
   };
 
   render() {
-    const { data: { topCommunities, error } } = this.props;
+    const { data: { topCommunities, error }, hasJoined } = this.props;
     const { loading } = this.state;
     // don't display communities where the user is blocked
     const filteredCommunities = topCommunities.filter(
@@ -83,7 +87,7 @@ class TopCommunitiesPure extends Component {
 
     if (!error && filteredCommunities.length > 0) {
       return (
-        <Row>
+        <Row hasJoined={hasJoined > 0}>
           {filteredCommunities.map(community => {
             return (
               <Container key={community.id}>
@@ -128,11 +132,15 @@ class TopCommunitiesPure extends Component {
             );
           })}
 
-          <Row>
-            <ContinueButton onClick={this.props.doneExploring}>
-              Save and Continue
-            </ContinueButton>
-          </Row>
+          {hasJoined > 0 &&
+            <StickyRow>
+              <ContinueButton
+                style={{ marginTop: '0' }}
+                onClick={this.props.doneExploring}
+              >
+                Continue to my home feed
+              </ContinueButton>
+            </StickyRow>}
         </Row>
       );
     }

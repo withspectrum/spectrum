@@ -16,7 +16,7 @@ import {
 import { Spinner } from '../../../../components/globals';
 import { Button } from '../../../../components/buttons';
 import { addToastWithTimeout } from '../../../../actions/toasts';
-import { Form, Input, Loading, Row, Action } from './style';
+import { Form, Input, Loading, Row, Action, InputLabel } from './style';
 import { throttle } from '../../../../helpers/utils';
 import {
   CHECK_UNIQUE_USERNAME_QUERY,
@@ -102,7 +102,7 @@ class SetUsername extends Component {
     } else if (username.length === 0) {
       this.props.isAvailable(null);
       return this.setState({
-        error: "Your username can't be nothing...or can it?",
+        error: "Your username can't be nothing...",
         success: '',
         isSearching: false,
       });
@@ -142,7 +142,7 @@ class SetUsername extends Component {
             return this.setState({
               error: '',
               isSearching: false,
-              success: "Now that's one-of-a-kind!",
+              success: "That's one good looking username!",
             });
           }
         });
@@ -184,6 +184,8 @@ class SetUsername extends Component {
 
     return (
       <Form onSubmit={this.saveUsername}>
+        <InputLabel>What's your username?</InputLabel>
+
         <Row>
           <Input
             placeholder={'Set a username...'}

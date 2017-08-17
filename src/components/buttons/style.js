@@ -40,7 +40,7 @@ const baseButton = css`
 
 export const Label = styled.span`
   display: block;
-  flex: 1 0 auto;
+  flex: 0 0 auto;
   line-height: inherit;
   color: inherit;
   ${props => (props.loading && !props.hasIcon ? 'opacity: 0;' : 'opacity: 1;')};

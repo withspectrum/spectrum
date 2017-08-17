@@ -28,6 +28,10 @@ export const SearchWrapper = styled.div`
   border-radius: 12px;
   width: 100%;
   max-width: 640px;
+
+  @media (max-width: 768px) {
+    margin: 32px 32px 16px;
+  }
 `;
 
 export const SearchInputWrapper = styled(FlexRow)`
@@ -46,7 +50,8 @@ export const SearchInput = styled.input`
   position: relative;
   z-index: 2;
 
-  &:hover {
+  @media (max-width: 768px) {
+    font-size: 16px;
   }
 `;
 

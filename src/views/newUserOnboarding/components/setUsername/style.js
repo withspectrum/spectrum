@@ -12,7 +12,7 @@ export const Row = styled.div`
 export const Loading = styled.span`
   position: absolute;
   left: 296px;
-  top: 26px;
+  top: 58px;
 `;
 
 export const Action = styled.div`
@@ -27,6 +27,13 @@ export const Form = styled.form`
   width: 100%;
   max-width: 320px;
   margin-top: 32px;
+`;
+
+export const InputLabel = styled.h3`
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
 `;
 
 export const StyledLabel = styled.label`

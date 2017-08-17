@@ -401,11 +401,13 @@ class UserWithData extends Component {
               onChange={this.setCoverPhoto}
               defaultValue={coverPhoto}
               preview={true}
+              allowGif
             />
             <PhotoInput
               onChange={this.setProfilePhoto}
               defaultValue={image}
               user
+              allowGif
             />
           </ImageInputWrapper>
 

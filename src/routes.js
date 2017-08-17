@@ -72,6 +72,7 @@ class Routes extends Component {
   render() {
     const { title, description } = generateMetaInfo();
     const { showNewUserOnboarding } = this.state;
+    const { currentUser } = this.props;
 
     return (
       <Router history={history}>
@@ -89,7 +90,10 @@ class Routes extends Component {
             {// only load the user onboarding if the user doesn't
             // have a username yet
             showNewUserOnboarding &&
-              <NewUserOnboarding close={this.closeNewUserOnboarding} />}
+              <NewUserOnboarding
+                hasUsername={currentUser && currentUser.username}
+                close={this.closeNewUserOnboarding}
+              />}
 
             {/*
               Switch only renders the first match. Subrouting happens downstream

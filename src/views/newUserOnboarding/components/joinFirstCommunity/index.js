@@ -76,6 +76,7 @@ class JoinFirstCommunityPure extends Component {
 
   render() {
     const { community } = this.props;
+    const { isLoading } = this.state;
 
     return (
       <Row>
@@ -98,7 +99,10 @@ class JoinFirstCommunityPure extends Component {
         </Container>
 
         <Row>
-          <ContinueButton onClick={() => this.toggleMembership(community.id)}>
+          <ContinueButton
+            loading={isLoading}
+            onClick={() => this.toggleMembership(community.id)}
+          >
             Join {community.name} and Continue
           </ContinueButton>
         </Row>

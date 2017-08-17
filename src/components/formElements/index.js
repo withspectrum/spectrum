@@ -65,7 +65,9 @@ export const PhotoInput = (props: InputProps) => {
         type="file"
         id="file"
         name="file"
-        accept=".png, .jpg, .jpeg, .gif, .mp4"
+        accept={
+          props.allowGif ? '.png, .jpg, .jpeg, .gif, .mp4' : '.png, .jpg, .jpeg'
+        }
         multiple={false}
         onChange={props.onChange}
       />
@@ -93,7 +95,9 @@ export const CoverInput = (props: InputProps) => {
         type="file"
         id="file"
         name="file"
-        accept=".png, .jpg, .jpeg, .gif, .mp4"
+        accept={
+          props.allowGif ? '.png, .jpg, .jpeg, .gif, .mp4' : '.png, .jpg, .jpeg'
+        }
         multiple={false}
         onChange={props.onChange}
       />

@@ -49,6 +49,7 @@ const init = () => {
         includeEmail: true,
       },
       (token, tokenSecret, profile, done) => {
+        console.log('profile', profile);
         const user = {
           providerId: profile.id,
           fbProviderId: null,

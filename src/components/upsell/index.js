@@ -120,7 +120,11 @@ export const UpsellMiniCreateCommunity = () => {
   );
 };
 
-export const UpsellCreateCommunity = () => {
+// takes a 'close' props from the new user onboarding which allows a user
+// to create a community rather than joining communities - if they choose
+// to go down the path of creating a community, clicking on the 'get started'
+// button will close the new user onboarding
+export const UpsellCreateCommunity = ({ close }) => {
   const title = 'Create a community';
   const subtitle = 'Building communities on Spectrum is easy and free forever';
 
@@ -134,7 +138,7 @@ export const UpsellCreateCommunity = () => {
       </Subtitle>
       <Actions>
         <Link to="/new/community">
-          <Button>Get Started</Button>
+          <Button onClick={close}>Get Started</Button>
         </Link>
       </Actions>
     </NullCard>

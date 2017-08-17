@@ -8,6 +8,7 @@ import { addToastWithTimeout } from '../../actions/toasts';
 import FullscreenView from '../../components/fullscreenView';
 import Icon from '../../components/icons';
 import { Button, TextButton } from '../../components/buttons';
+import { UpsellCreateCommunity } from '../../components/upsell';
 import UserInfo from './components/userInfo';
 import SetUsername from './components/setUsername';
 import JoinFirstCommunity from './components/joinFirstCommunity';
@@ -24,6 +25,7 @@ import {
   Emoji,
   ContinueButton,
   Container,
+  CreateUpsellContainer,
 } from './style';
 
 class NewUserOnboarding extends Component {
@@ -31,6 +33,7 @@ class NewUserOnboarding extends Component {
     activeStep: string,
     isLoading: boolean,
     username: any,
+    joinedCommunities: number,
   };
 
   constructor(props) {
@@ -40,6 +43,7 @@ class NewUserOnboarding extends Component {
       activeStep: hasUsername ? 'discoverCommunities' : 'welcome',
       isLoading: false,
       username: null,
+      joinedCommunities: 0,
     };
   }
 
@@ -69,52 +73,45 @@ class NewUserOnboarding extends Component {
     });
   };
 
+  joinedCommunity = (number, step) => {
+    const { joinedCommunities } = this.state;
+    let newCount = joinedCommunities + number;
+
+    this.setState({ joinedCommunities: newCount });
+
+    if (step) {
+      this.toStep(step);
+    }
+  };
+
   render() {
     const { community, currentUser, hasUsername } = this.props;
-    const { activeStep, isLoading, username } = this.state;
+    const { activeStep, isLoading, username, joinedCommunities } = this.state;
 
     const steps = {
       welcome: {
         title: 'Welcome to Spectrum!',
         subtitle:
-          'Spectrum is a place where communities can share, discuss, and grow together. Before we jump into your first community, there are just a few things we need to do...',
-        icon: null,
+          'Spectrum is a place where communities can share, discuss, and grow together. To get started, create a username.',
         emoji: '👋',
-      },
-      setUsername: {
-        title: 'Who goes there, stranger?',
-        subtitle:
-          "Everyone around here has a special, one-of-a-kind username. What's yours going to be?",
-        icon: null,
-        emoji: '👩‍🚀',
       },
       joinFirstCommunity: {
         // will be triggered if the user signed up via a community, channel, or thread view
         title: 'Now, where were we...',
         subtitle: `You were in the middle of something. Let's get back on track and join your first community.`,
-        icon: null,
         emoji: '🤔',
       },
       updateUserInfo: {
         title: 'Allow you to reintroduce yourself.',
         subtitle:
           "This isn't your grandma's social network! Customize your look and share a bit more about who you are.",
-        icon: null,
         emoji: null,
       },
       discoverCommunities: {
         title: 'Find your people.',
         subtitle:
           'There are hundreds of communities on Spectrum to explore. Check out some of our favorites below or search for topics.',
-        icon: null,
         emoji: null,
-      },
-      done: {
-        title: "You're going to do great things here.",
-        subtitle:
-          "We've reached the end of our time together – now it's time to venture forth and join the conversation!",
-        icon: null,
-        emoji: '🎉',
       },
     };
 
@@ -129,8 +126,6 @@ class NewUserOnboarding extends Component {
         <OnboardingContainer>
           <OnboardingContent>
             <IconContainer>
-              {steps[activeStep].icon &&
-                <Icon glyph={steps[activeStep].icon} size={64} />}
               {steps[activeStep].emoji &&
                 <Emoji>
                   {steps[activeStep].emoji}
@@ -144,16 +139,6 @@ class NewUserOnboarding extends Component {
             </Subtitle>
 
             {activeStep === 'welcome' &&
-              <ContinueButton
-                onClick={() =>
-                  this.toStep(
-                    hasUsername ? 'discoverCommunities' : 'setUsername'
-                  )}
-              >
-                Get Started
-              </ContinueButton>}
-
-            {activeStep === 'setUsername' &&
               <SetUsername
                 user={currentUser}
                 initialUsername={username}
@@ -175,24 +160,22 @@ class NewUserOnboarding extends Component {
             {activeStep === 'joinFirstCommunity' &&
               <JoinFirstCommunity
                 community={community}
-                joinedFirstCommunity={() => this.toStep('discoverCommunities')}
+                joinedFirstCommunity={() =>
+                  this.joinedCommunity(1, 'discoverCommunities')}
               />}
 
             {activeStep === 'discoverCommunities' &&
               <Container>
                 <Search />
-                <TopCommunities doneExploring={() => this.toStep('done')} />
+                <TopCommunities
+                  joinedCommunity={this.joinedCommunity}
+                  hasJoined={joinedCommunities > 0}
+                  doneExploring={() => (window.location.href = '/')}
+                />
+                <CreateUpsellContainer extra={joinedCommunities > 0}>
+                  <UpsellCreateCommunity close={this.props.close} />
+                </CreateUpsellContainer>
               </Container>}
-
-            {activeStep === 'done' &&
-              <ContinueButton
-                onClick={() =>
-                  this.props.close
-                    ? this.props.close()
-                    : (window.location.href = '/')}
-              >
-                Finish this dang onboarding
-              </ContinueButton>}
           </OnboardingContent>
         </OnboardingContainer>
       </FullscreenView>

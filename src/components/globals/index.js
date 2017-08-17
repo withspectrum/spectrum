@@ -70,8 +70,8 @@ export const zIndex = new function() {
   this.mobileInput = this.chrome + 1;
   this.dropDown = this.chrome + 1;
 
-  this.fullscreen = 3000;
-  this.gallery = this.fullscreen;
+  this.fullscreen = 4000;
+  this.gallery = this.fullscreen + 1;
 
   this.toast = 5000;
 }();

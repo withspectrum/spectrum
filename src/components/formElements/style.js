@@ -200,6 +200,7 @@ export const StyledError = styled.p`
   color: ${props => props.theme.warn.default};
   padding: 8px 0 16px;
   line-height: 1.4;
+  font-weight: 600;
 `;
 
 export const StyledSuccess = styled.p`
@@ -207,13 +208,14 @@ export const StyledSuccess = styled.p`
   color: ${props => props.theme.success.default};
   padding: 8px 0 16px;
   line-height: 1.4;
+  font-weight: 600;
 `;
 
 export const PhotoInputLabel = styled.label`
   position: relative;
-  height: 48px;
+  height: ${props => (props.size ? `${props.size}px` : '48px')};
   z-index: ${zIndex.form + 1};
-  width: 48px;
+  width: ${props => (props.size ? `${props.size}px` : '48px')};
   border-radius: ${props => (props.user ? '100%' : '8px')};
   margin-top: 8px;
   background-color: ${({ theme }) => theme.bg.reverse};

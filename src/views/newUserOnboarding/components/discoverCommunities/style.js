@@ -1,6 +1,6 @@
 // @flow
 // $FlowFixMe
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Gradient, Truncate, Transition } from '../../../../components/globals';
 
 export const Row = styled.div`
@@ -10,6 +10,26 @@ export const Row = styled.div`
   display: flex;
   justify-content: center;
   padding: 8px 16px 0 16px;
+
+  @media (max-width: 768px) {
+    padding: 8px 0 0;
+  }
+`;
+
+export const StickyRow = styled.div`
+  width: 100%;
+  flex: 1 0 100%;
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: ${props => props.theme.bg.default};
+  border-top: 2px solid ${props => props.theme.border.default};
+  z-index: 10;
 `;
 
 export const CoverPhoto = styled.div`
@@ -35,7 +55,7 @@ export const Container = styled.div`
   z-index: 3;
   margin: 16px;
 
-  @media (max-width: 768px) {
+  @media (max-width: 1168px) {
     flex-basis: 44%;
   }
 
