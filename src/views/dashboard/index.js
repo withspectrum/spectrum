@@ -93,7 +93,8 @@ class DashboardPure extends Component {
       // onboarding flow to skip the username step
       const hasUsername = user.username;
 
-      return <NewUserOnboarding noClose hasUsername={hasUsername} />;
+      // return <NewUserOnboarding noClose hasUsername={hasUsername} />;
+      return null;
     }
 
     if (dataExists) {

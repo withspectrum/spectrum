@@ -65,7 +65,7 @@ class Routes extends Component {
 
   closeNewUserOnboarding = () => {
     return this.setState({
-      showNewUserOnboarding: true,
+      showNewUserOnboarding: false,
     });
   };
 
