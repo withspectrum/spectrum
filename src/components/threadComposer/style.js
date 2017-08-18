@@ -15,14 +15,14 @@ export const Container = styled(FlexRow)`
     top: 8px;
     flex-direction: column;
     justify-content: flex-start;
-    z-index: ${zIndex.composer + 1};
+    z-index: ${zIndex.composer};
   }
 `;
 
 export const Composer = styled(Card)`
   margin-bottom: 16px;
   position: relative;
-  z-index: ${zIndex.composer + 1};
+  z-index: ${zIndex.composer};
   width: 100%;
   display: block;
   min-height: 64px;
@@ -193,7 +193,7 @@ export const UpsellPulse = styled.div`
   -moz-border-radius: 30px;
   border-radius: 30px;
   background-color: ${props => props.theme.brand.alt};
-  z-index: ${zIndex.composer + 1};
+  z-index: ${zIndex.composer};
   position: absolute;
   top: -4px;
   left: -4px;
@@ -245,7 +245,7 @@ export const UpsellDot = styled.div`
   position: absolute;
   top: -24px;
   left: -24px;
-  z-index: ${zIndex.composer + 1};
+  z-index: ${zIndex.composer};
   opacity: 0;
 `;
 
