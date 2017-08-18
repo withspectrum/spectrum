@@ -28,7 +28,7 @@ const timedOut = recipient => {
   );
 
   // Make sure we should be sending an email to this user
-  return getEmailStatus(recipient.userId, 'newMessageInThreads')
+  return getEmailStatus(recipient.userId, 'newDirectMessage')
     .then(shouldGetEmail => {
       if (!shouldGetEmail) {
         debug(`@${recipient.username} should not get email, aborting`);
