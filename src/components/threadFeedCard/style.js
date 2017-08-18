@@ -96,7 +96,7 @@ export const ThreadContext = styled(FlexRow)`
 `;
 
 export const ThreadContextAvatar = styled(FlexRow)`
-  margin-right: 12px;
+  margin-right: 8px;
   align-items: center;
 `;
 
