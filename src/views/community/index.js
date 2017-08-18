@@ -78,10 +78,6 @@ class CommunityViewPure extends Component {
 
     toggleCommunityMembership({ communityId })
       .then(({ data: { toggleCommunityMembership } }) => {
-        this.setState({
-          isLoading: false,
-        });
-
         const isMember =
           toggleCommunityMembership.communityPermissions.isMember;
 
@@ -93,6 +89,10 @@ class CommunityViewPure extends Component {
 
         const type = isMember ? 'success' : 'neutral';
         dispatch(addToastWithTimeout(type, str));
+
+        this.setState({
+          isLoading: false,
+        });
       })
       .catch(err => {
         this.setState({

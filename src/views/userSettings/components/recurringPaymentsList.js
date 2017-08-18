@@ -23,11 +23,13 @@ const RecurringPaymentsList = ({ data: { user }, currentUser, dispatch }) => {
     dispatch(openModal('UPGRADE_MODAL', { user: currentUser }));
   };
 
+  if (!user || user === undefined) return null;
+
   // make sure to only display active subs for now
-  const filteredRecurringPayments = user.recurringPayments &&
-    user.recurringPayments.length > 0
-    ? user.recurringPayments.filter(sub => sub.status === 'active')
-    : [];
+  const filteredRecurringPayments =
+    user.recurringPayments && user.recurringPayments.length > 0
+      ? user.recurringPayments.filter(sub => sub.status === 'active')
+      : [];
 
   if (filteredRecurringPayments.length > 0) {
     return (

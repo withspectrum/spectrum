@@ -47,6 +47,10 @@ export const Input = styled(FlexRow)`
   flex: none;
   justify-content: center;
   z-index: ${zIndex.chatInput};
+
+  @media (max-width: 768px) {
+    z-index: ${zIndex.mobileInput};
+  }
 `;
 
 export const Detail = styled(Column)`

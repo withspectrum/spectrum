@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { LinkPreview } from '../../components/linkPreview';
 import Icon from '../../components/icons';
+import FacePile from './facePile';
 import FormattedThreadLocation from './formattedThreadLocation';
 import {
   StyledThreadFeedCard,
@@ -21,21 +22,20 @@ import {
   Pinned,
   PinnedBanner,
   PinnedIconWrapper,
+  ContentInfo,
+  MetaNew,
 } from './style';
 
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
+  const { data: { attachments, participants } } = props;
+  const attachmentsExist = attachments && attachments.length > 0;
+  const participantsExist = participants && participants.length > 0;
+
   return (
     <StyledThreadFeedCard>
       <CardLink to={`?thread=${props.data.id}`} />
       <CardContent>
-        {props.data.messageCount > 0 &&
-          <MessageCount>
-            <Icon size={20} glyph="message-fill" />
-            <span>
-              {props.data.messageCount}{' '}
-              {props.data.messageCount > 1 ? ' messages' : ' message'}
-            </span>
-          </MessageCount>}
+        <FormattedThreadLocation {...props} />
         <Link to={`?thread=${props.data.id}`}>
           <Title>
             {props.data.content.title}
@@ -48,10 +48,8 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
               </PinnedIconWrapper>
             </Pinned>}
         </Link>
-        {// for now we know this means there is a link attachment
-        props.data.attachments &&
-          props.data.attachments.length > 0 &&
-          props.data.attachments.map((attachment, i) => {
+        {attachmentsExist &&
+          attachments.map((attachment, i) => {
             if (attachment.attachmentType === 'linkPreview') {
               return (
                 <Attachments key={i}>
@@ -68,7 +66,20 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
               return null;
             }
           })}
-        <FormattedThreadLocation {...props} />
+        <ContentInfo>
+          {participantsExist && <FacePile {...props} />}
+          {props.data.messageCount > 0
+            ? <MessageCount>
+                <Icon size={20} glyph="message-fill" />
+                <span>
+                  {props.data.messageCount}
+                </span>
+              </MessageCount>
+            : <MetaNew>
+                <Icon size={20} glyph="notification-fill" />
+                <span>Fresh thread!</span>
+              </MetaNew>}
+        </ContentInfo>
       </CardContent>
     </StyledThreadFeedCard>
   );

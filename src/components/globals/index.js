@@ -49,13 +49,15 @@ export const zIndex = new function() {
   // This uses constructor syntax because that allows self-referential math
 
   this.base = 1; // z-index: auto content will go here or inherit z-index from a parent
+
   this.background = this.base - 1; // content that should always be behind other things (e.g. textures/illos)
   this.hidden = this.base - 2; // this content should be hidden completely (USE ADD'L MEANS OF HIDING)
+
   this.card = this.base + 1; // all cards should default to one layer above the base content
   this.loading = this.card + 1; // loading elements should never appear behind cards
   this.avatar = this.card + 1; // avatars should never appear behind cards
   this.tooltip = this.card + 1; // tooltips should never appear behind cards
-  this.form = this.card + 1; // forms should never appear behind cards
+  this.form = this.card + 1; // form elements should never appear behind cards
   this.search = this.form; // search is a type of form and should appear at the same level
 
   this.slider = 1000; // slider should appear significantly above the base to leave room for other elements

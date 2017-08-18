@@ -86,9 +86,7 @@ class ThreadComposerWithData extends Component {
     };
   }
 
-  handleIncomingProps = () => {
-    const props = this.props;
-
+  handleIncomingProps = props => {
     /*
       Create a new array of communities only containing the `node` data from
       graphQL. Then filter the resulting channel to remove any communities
@@ -96,7 +94,7 @@ class ThreadComposerWithData extends Component {
     */
 
     // if the user doesn't exist, bust outta here
-    if (!props.data.user) return;
+    if (!props.data.user || props.data.user === undefined) return;
 
     const availableCommunities = props.data.user.communityConnection.edges
       .map(edge => edge.node)
@@ -204,7 +202,7 @@ class ThreadComposerWithData extends Component {
   };
 
   componentDidMount() {
-    this.handleIncomingProps();
+    this.handleIncomingProps(this.props);
   }
 
   componentWillUpdate(nextProps) {
@@ -296,6 +294,9 @@ class ThreadComposerWithData extends Component {
     const isOpen = this.props.isOpen;
     if (!isOpen) {
       this.props.dispatch(openComposer());
+      this.props.data
+        .refetch()
+        .then(result => this.handleIncomingProps(result));
       this.refs.titleTextarea.focus();
     }
   };

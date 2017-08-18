@@ -60,11 +60,6 @@ export class LinkPreview extends Component {
               <MetaTitle>
                 {title}
               </MetaTitle>}
-
-            {description &&
-              <MetaDescription>
-                {description}
-              </MetaDescription>}
           </FlexCol>
 
           <MetaUrl>
