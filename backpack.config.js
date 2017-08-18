@@ -12,7 +12,13 @@ module.exports = {
     config.entry.main = [`./${dir}/index.js`];
 
     config.output.path = path.join(process.cwd(), `build-${dir}`);
+    const nodePath = (process.env.NODE_PATH || '')
+      .split(path.delimiter)
+      .filter(folder => folder && !path.isAbsolute(folder))
+      .map(folder => path.resolve('./', folder))
+      .join(path.delimiter);
 
+    config.resolve.modules.push(nodePath);
     return config;
   },
 };
