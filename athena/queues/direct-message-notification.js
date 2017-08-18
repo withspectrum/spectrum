@@ -55,7 +55,7 @@ const formatAndBufferNotificationEmail = (
   );
 };
 
-const processMessageNotificationQueue = job => {
+const processDirectMessageNotificationQueue = job => {
   const incomingMessage = job.data.message;
   const currentUserId = job.data.userId;
 
@@ -184,4 +184,4 @@ const processMessageNotificationQueue = job => {
     });
 };
 
-export default processMessageNotificationQueue;
+export default processDirectMessageNotificationQueue;
