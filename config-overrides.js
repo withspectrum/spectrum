@@ -8,6 +8,12 @@ const rewireStyledComponents = require('react-app-rewire-styled-components');
 const swPrecachePlugin = require('sw-precache-webpack-plugin');
 const fs = require('fs');
 const match = require('micromatch');
+const webpack = require('webpack');
+
+// Get hash of latest commit
+const commitHash = require('child_process')
+  .execSync('git rev-parse --short HEAD')
+  .toString();
 
 const isServiceWorkerPlugin = plugin => plugin instanceof swPrecachePlugin;
 const whitelist = path => new RegExp(`^(?!\/${path}).*`);
@@ -29,5 +35,12 @@ const setCustomSwPrecacheOptions = config => {
 
 module.exports = function override(config, env) {
   setCustomSwPrecacheOptions(config);
+
+  // Add __COMMIT_HASH__ env variable to be able to track releases in Sentry
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      'process.env.COMMIT_HASH': JSON.stringify(commitHash),
+    })
+  );
   return rewireStyledComponents(config, env);
 };
