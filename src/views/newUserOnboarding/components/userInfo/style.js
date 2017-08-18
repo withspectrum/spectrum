@@ -1,10 +1,15 @@
 import styled from 'styled-components';
-import { FlexRow, FlexCol, Truncate } from '../../../../components/globals';
+import {
+  FlexRow,
+  FlexCol,
+  Truncate,
+  zIndex,
+} from '../../../../components/globals';
 
 export const StyledCard = styled.div`
   padding: 16px;
   position: relative;
-  z-index: 3;
+  z-index: ${zIndex.card};
   background: transparent;
   width: 100%;
   max-width: 540px;

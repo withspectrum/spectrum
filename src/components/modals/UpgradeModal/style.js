@@ -1,5 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import { Gradient, Transition } from '../../globals';
+import { Gradient, Transition, zIndex } from '../../globals';
 import { isMobile } from '../../../helpers/utils';
 
 const maxWidth = '440px';
@@ -17,7 +17,7 @@ export const modalStyles = {
     bottom: 0,
     overflowY: 'auto',
     overflowX: 'hidden',
-    zIndex: 200,
+    zIndex: zIndex.modal - 1,
     padding: '1.2rem',
   },
   content: {
@@ -27,7 +27,7 @@ export const modalStyles = {
     borderRadius: '8px',
     border: '0',
     padding: '0',
-    zIndex: 201,
+    zIndex: zIndex.modal,
     width: '100%',
     maxWidth: maxWidth,
     top: 'auto',
@@ -36,7 +36,8 @@ export const modalStyles = {
     right: 'auto',
     backgroundColor: 'rgba(0,0,0,0)',
     boxShadow: '0 4px 24px rgba(0,0,0,0.40)',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
   },
 };
 
@@ -69,7 +70,8 @@ export const SectionActions = styled(Section)`
 
 export const SectionAlert = styled(Section)`
   background-color: ${({ theme }) => theme.success.default};
-  background-image: ${({ theme }) => Gradient(theme.space.light, theme.success.default)};
+  background-image: ${({ theme }) =>
+    Gradient(theme.space.light, theme.success.default)};
   color: ${({ theme }) => theme.text.reverse};
   line-height: 1.3;
   font-weight: 600;
@@ -169,7 +171,8 @@ export const Profile = styled.div`
 
   span {
     background-color: ${({ theme }) => theme.success.default};
-    background-image: ${({ theme }) => Gradient(theme.space.light, theme.success.default)};
+    background-image: ${({ theme }) =>
+      Gradient(theme.space.light, theme.success.default)};
     position: absolute;
     left: 52%;
     top: 32px;

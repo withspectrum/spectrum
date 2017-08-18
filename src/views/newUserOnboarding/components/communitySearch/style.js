@@ -7,6 +7,7 @@ import {
   Shadow,
   hexa,
   Truncate,
+  zIndex,
 } from '../../../../components/globals';
 import { Avatar } from '../../../../components/avatar';
 import Icon from '../../../../components/icons';
@@ -39,7 +40,7 @@ export const SearchInput = styled.input`
   padding: 4px 20px;
   flex: auto;
   position: relative;
-  z-index: 2;
+  z-index: ${zIndex.search};
 
   @media (max-width: 768px) {
     font-size: 16px;
@@ -52,7 +53,7 @@ export const SearchSpinnerContainer = styled.span`
   right: 12px;
   width: 32px;
   height: 32px;
-  z-index: 5;
+  z-index: ${zIndex.search + 1};
 `;
 
 export const SearchResultsDropdown = styled.ul`
@@ -67,7 +68,7 @@ export const SearchResultsDropdown = styled.ul`
   flex: auto;
   max-height: 400px;
   overflow-y: scroll;
-  z-index: 1000;
+  z-index: ${zIndex.search};
   background: ${props => props.theme.bg.default};
 
   @media (max-width: 768px) {

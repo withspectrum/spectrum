@@ -1,7 +1,12 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
-import { Gradient, Truncate, Transition } from '../../../../components/globals';
+import {
+  Gradient,
+  Truncate,
+  Transition,
+  zIndex,
+} from '../../../../components/globals';
 
 export const Row = styled.div`
   width: 100%;
@@ -29,7 +34,7 @@ export const StickyRow = styled.div`
   right: 0;
   background: ${props => props.theme.bg.default};
   border-top: 2px solid ${props => props.theme.border.default};
-  z-index: 10;
+  z-index: ${zIndex.chrome};
   transition: all 0.3s ease-in-out;
 `;
 
@@ -53,7 +58,7 @@ export const Container = styled.div`
   flex-direction: column;
   border-radius: 12px;
   position: relative;
-  z-index: 3;
+  z-index: ${zIndex.card};
   margin: 16px;
 
   @media (max-width: 1168px) {

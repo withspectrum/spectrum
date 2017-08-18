@@ -21,7 +21,7 @@ export const FullscreenViewContainer = styled.div`
   padding-top: 32px;
 `;
 
-export const Illustrations = styled.span``;
+export const Illustrations = styled.span`z-index: ${zIndex.background};`;
 
 export const Close = styled.div`
   color: ${props => props.theme.text.default};
