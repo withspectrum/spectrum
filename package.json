@@ -95,7 +95,7 @@
     "web-push": "^3.2.2"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=production node build-iris/index.js",
+    "start": "cross-env NODE_ENV=production node build-iris/main.js",
     "start:athena": "cross-env NODE_ENV=production node build-athena/main.js",
     "start:hermes": "cross-env NODE_ENV=production node build-hermes/main.js",
     "dev:client": "cross-env NODE_PATH=./ react-app-rewired start",
@@ -104,7 +104,7 @@
     "dev:hermes": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=hermes* cross-env DIR=hermes backpack",
     "build": "npm run build:iris && npm run build:client",
     "prebuild:iris": "rimraf build-iris",
-    "build:iris": "cross-env NODE_PATH=./ cross-env NODE_ENV=production babel iris --out-dir build-iris --ignore 'test/*.js'",
+    "build:iris": "cross-env NODE_PATH=./ cross-env DIR=iris backpack build",
     "prebuild:athena": "rimraf build-athena",
     "build:athena": "cross-env NODE_PATH=./ cross-env DIR=athena backpack build",
     "postbuild:athena": "cp athena/package.json build-athena/package.json && cp now.json build-athena/now.json",
