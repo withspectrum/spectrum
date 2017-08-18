@@ -4,26 +4,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import compose from 'recompose/compose';
-import { addToastWithTimeout } from '../../actions/toasts';
 import FullscreenView from '../../components/fullscreenView';
-import Icon from '../../components/icons';
-import { Button, TextButton } from '../../components/buttons';
 import { UpsellCreateCommunity } from '../../components/upsell';
-import UserInfo from './components/userInfo';
 import SetUsername from './components/setUsername';
 import JoinFirstCommunity from './components/joinFirstCommunity';
 import TopCommunities from './components/discoverCommunities';
 import Search from './components/communitySearch';
-import { editUserMutation } from '../../api/user';
 import {
   OnboardingContainer,
   OnboardingContent,
-  OnboardingNav,
   IconContainer,
   Title,
   Subtitle,
   Emoji,
-  ContinueButton,
   Container,
   CreateUpsellContainer,
 } from './style';
@@ -31,40 +24,49 @@ import {
 class NewUserOnboarding extends Component {
   state: {
     activeStep: string,
-    isLoading: boolean,
-    username: any,
     joinedCommunities: number,
   };
 
   constructor(props) {
     super(props);
-    const { hasUsername } = this.props;
+
+    const { currentUser } = this.props;
+
     this.state = {
-      activeStep: hasUsername ? 'discoverCommunities' : 'welcome',
-      isLoading: false,
-      username: null,
+      // if the user has a username already, we know that the onboarding
+      // was triggered because the user has not joined any communities yet
+      activeStep: currentUser.username ? 'discoverCommunities' : 'setUsername',
+      // we make sure to only let the user continue to their dashboard
+      // if they have joined one or more communities - because it's possible
+      // to join and then leave a community in this onboarding component,
+      // we keep track of the total joined count with a number, rathern than
+      // a boolean
       joinedCommunities: 0,
     };
   }
+  //
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   // don't reload the component as the user saves info
+  //   if (!this.props.currentUser.username && nextProps.currentUser.username)
+  //     return false;
+  //
+  //   return true;
+  // }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    // don't reload the component as the user saves info
-    if (!this.props.currentUser.username && nextProps.currentUser.username)
-      return false;
+  saveUsername = () => {
+    const { community } = this.props;
 
-    return true;
-  }
-
-  saveUsername = e => {
-    this.setState({
-      activeStep: 'updateUserInfo',
-    });
-  };
-
-  usernameIsAvailable = (username: string) => {
-    return this.setState({
-      username,
-    });
+    // if the user signed up via a community, channel, or thread view, the first
+    // thing they will be asked to do is set a username. After they save their
+    // username, they should proceed to the 'joinFirstCommunity' step; otherwise
+    // we can just close the onboarding
+    if (!community) return this.props.close();
+    // if the user signed in via a comunity, channel, or thread view, but they
+    // are already members of that community, we can escape the onboarding
+    if (community.communityPermissions.isMember) return this.props.close();
+    // if the user signed up via a community, channel, or thread view and
+    // has not yet joined that community, move them to that step in the onboarding
+    return this.toStep('joinFirstCommunity');
   };
 
   toStep = (step: string) => {
@@ -73,23 +75,29 @@ class NewUserOnboarding extends Component {
     });
   };
 
-  joinedCommunity = (number, step) => {
+  joinedCommunity = (number: number, done: boolean) => {
     const { joinedCommunities } = this.state;
+    // number will be either '1' or '-1' - so it will either increment
+    // or decrement the joinedCommunities count in state
     let newCount = joinedCommunities + number;
-
     this.setState({ joinedCommunities: newCount });
 
-    if (step) {
-      this.toStep(step);
+    // if the user signed up from a community, channel, or thread view,
+    // they will see an onboarding step to join that community they were
+    // viewing in order to complete their onboarding. when they do join
+    // that community, we pass a finish argument which will push them forward
+    // in the onboarding flow
+    if (done) {
+      return this.props.close();
     }
   };
 
   render() {
-    const { community, currentUser, hasUsername } = this.props;
-    const { activeStep, isLoading, username, joinedCommunities } = this.state;
+    const { community, currentUser } = this.props;
+    const { activeStep, joinedCommunities } = this.state;
 
     const steps = {
-      welcome: {
+      setUsername: {
         title: 'Welcome to Spectrum!',
         subtitle:
           'Spectrum is a place where communities can share, discuss, and grow together. To get started, create a username.',
@@ -97,15 +105,9 @@ class NewUserOnboarding extends Component {
       },
       joinFirstCommunity: {
         // will be triggered if the user signed up via a community, channel, or thread view
-        title: 'Now, where were we...',
-        subtitle: `You were in the middle of something. Let's get back on track and join your first community.`,
+        title: 'Join your first community',
+        subtitle: `You were in the middle of something. Let's get back on track and join your first community!`,
         emoji: '🤔',
-      },
-      updateUserInfo: {
-        title: 'Allow you to reintroduce yourself.',
-        subtitle:
-          "This isn't your grandma's social network! Customize your look and share a bit more about who you are.",
-        emoji: null,
       },
       discoverCommunities: {
         title: 'Find your people.',
@@ -121,7 +123,7 @@ class NewUserOnboarding extends Component {
       <FullscreenView
         hasBackground={!isMobile}
         close={this.props.close}
-        noClose={this.props.noClose}
+        noCloseButton={this.props.noCloseButton}
       >
         <OnboardingContainer>
           <OnboardingContent>
@@ -138,30 +140,13 @@ class NewUserOnboarding extends Component {
               {steps[activeStep].subtitle}
             </Subtitle>
 
-            {activeStep === 'welcome' &&
-              <SetUsername
-                user={currentUser}
-                initialUsername={username}
-                save={this.saveUsername}
-                isAvailable={this.usernameIsAvailable}
-              />}
-
-            {activeStep === 'updateUserInfo' &&
-              <UserInfo
-                save={() =>
-                  this.toStep(
-                    community && community.id
-                      ? 'joinFirstCommunity'
-                      : 'discoverCommunities'
-                  )}
-                user={currentUser}
-              />}
+            {activeStep === 'setUsername' &&
+              <SetUsername user={currentUser} save={this.saveUsername} />}
 
             {activeStep === 'joinFirstCommunity' &&
               <JoinFirstCommunity
                 community={community}
-                joinedFirstCommunity={() =>
-                  this.joinedCommunity(1, 'discoverCommunities')}
+                joinedFirstCommunity={() => this.joinedCommunity(1, true)}
               />}
 
             {activeStep === 'discoverCommunities' &&
@@ -183,6 +168,7 @@ class NewUserOnboarding extends Component {
   }
 }
 
+//
 const map = state => ({
   currentUser: state.users.currentUser,
   community: state.newUserOnboarding.community,

@@ -8,15 +8,10 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 // $FlowFixMe
 import compose from 'recompose/compose';
-import {
-  Error,
-  Success,
-  UnderlineInput,
-} from '../../../../components/formElements';
+import { Error, Success } from '../../../../components/formElements';
 import { Spinner } from '../../../../components/globals';
-import { Button } from '../../../../components/buttons';
 import { addToastWithTimeout } from '../../../../actions/toasts';
-import { Form, Input, Loading, Row, Action, InputLabel } from './style';
+import { Form, Input, Loading, Row, InputLabel, InputSubLabel } from './style';
 import { throttle } from '../../../../helpers/utils';
 import {
   CHECK_UNIQUE_USERNAME_QUERY,
@@ -35,13 +30,15 @@ class SetUsername extends Component {
 
   constructor(props) {
     super(props);
-    const { user, initialUsername } = props;
-    let username;
-    if (initialUsername) {
-      username = initialUsername;
-    } else {
-      username = user.name ? slugg(user.name) : '';
-    }
+    const { user } = props;
+
+    // try to intelligently suggest a starting username based on the
+    // person's name, or firstname/lastname
+    let username = user.name
+      ? slugg(user.name)
+      : user.firstName && user.lastName
+        ? `${user.firstName}-${user.lastName}`
+        : '';
 
     this.state = {
       username: username,
@@ -56,8 +53,9 @@ class SetUsername extends Component {
 
   componentDidMount() {
     const { username } = this.state;
-    // if no username
-    if (!username.length > 0) return;
+    // if no username was able to be suggested, don't kick off a search
+    // with an empty string
+    if (username.length === 0) return;
     this.search(username);
   }
 
@@ -72,13 +70,11 @@ class SetUsername extends Component {
     });
 
     if (username.length > 20) {
-      this.setState({
+      return this.setState({
         error: 'Usernames can be up to 20 characters',
       });
-
-      return;
     } else if (username.length === 0) {
-      this.setState({
+      return this.setState({
         error: 'Be sure to set a username so that people can find you!',
         success: '',
       });
@@ -88,26 +84,23 @@ class SetUsername extends Component {
       });
     }
 
-    this.search(username);
+    return this.search(username);
   };
 
-  search = username => {
+  search = (username: string) => {
     if (username.length > 20) {
-      this.props.isAvailable(null);
       return this.setState({
         error: 'Usernames can be up to 20 characters',
         success: '',
         isSearching: false,
       });
     } else if (username.length === 0) {
-      this.props.isAvailable(null);
       return this.setState({
         error: "Your username can't be nothing...",
         success: '',
         isSearching: false,
       });
     } else {
-      this.props.isAvailable(null);
       this.setState({
         error: '',
         isSearching: true,
@@ -121,16 +114,14 @@ class SetUsername extends Component {
             username,
           },
         })
-        .then(({ data, data: { user } }) => {
+        .then(({ data: { user } }) => {
           if (this.state.username.length > 20) {
-            this.props.isAvailable(null);
             return this.setState({
               error: 'Usernames can be up to 20 characters because of reasons.',
               success: '',
               isSearching: false,
             });
           } else if (user && user.id) {
-            this.props.isAvailable(null);
             return this.setState({
               error:
                 'Someone already swooped this username – not feeling too original today, huh?',
@@ -138,7 +129,6 @@ class SetUsername extends Component {
               success: '',
             });
           } else {
-            this.props.isAvailable(username);
             return this.setState({
               error: '',
               isSearching: false,
@@ -168,7 +158,11 @@ class SetUsername extends Component {
           isLoading: false,
           success: '',
         });
-        this.props.save(editUser.username);
+
+        // trigger a method in the newUserOnboarding component class
+        // to determine what to do next with this user - either push them
+        // to community discovery or close the onboarding completely
+        this.props.save();
       })
       .catch(err => {
         this.setState({
@@ -184,7 +178,10 @@ class SetUsername extends Component {
 
     return (
       <Form onSubmit={this.saveUsername}>
-        <InputLabel>What's your username?</InputLabel>
+        <InputLabel>Create your username</InputLabel>
+        <InputSubLabel>
+          You can change this later, so no pressure!
+        </InputSubLabel>
 
         <Row>
           <Input

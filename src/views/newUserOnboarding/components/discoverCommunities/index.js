@@ -67,7 +67,7 @@ class TopCommunitiesPure extends Component {
 
         this.props.dispatch(addToastWithTimeout(type, str));
 
-        this.props.joinedCommunity(isMember ? 1 : -1);
+        this.props.joinedCommunity(isMember ? 1 : -1, false);
       })
       .catch(err => {
         this.setState({

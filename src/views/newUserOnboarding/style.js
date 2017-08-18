@@ -33,19 +33,6 @@ export const OnboardingContent = styled.div`
   }
 `;
 
-export const OnboardingNav = styled.div`
-  display: flex;
-  flex: none;
-  justify-content: space-between;
-  align-self: flex-end;
-  width: 100%;
-  border-top: 2px solid ${props => props.theme.border.default};
-  background: ${props => props.theme.bg.default};
-  padding: 16px;
-  position: relative;
-  z-index: 3;
-`;
-
 export const IconContainer = styled.div`
   display: flex;
   align-items: center;

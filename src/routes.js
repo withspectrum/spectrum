@@ -58,6 +58,9 @@ class Routes extends Component {
     super(props);
     const { currentUser } = props;
 
+    // if the user doesn't have a username, no matter where they are in the app
+    // we trigger the 'set username' onboarding step - this step can be closed
+    // so that if the user is viewing a thread they can get back to that context
     this.state = {
       showNewUserOnboarding: currentUser && !currentUser.username,
     };
@@ -72,7 +75,6 @@ class Routes extends Component {
   render() {
     const { title, description } = generateMetaInfo();
     const { showNewUserOnboarding } = this.state;
-    const { currentUser } = this.props;
 
     return (
       <Router history={history}>
@@ -87,12 +89,16 @@ class Routes extends Component {
             <Route component={Gallery} />
             <Route component={ThreadSlider} />
 
-            {// only load the user onboarding if the user doesn't
-            // have a username yet
+            {// this only shows if the user does not have a username
+            // if the user is viewing their dashboard and has not joined
+            // any communities, that will be handled separately in
+            // dashboard/index.js
             showNewUserOnboarding &&
               <NewUserOnboarding
-                hasUsername={currentUser && currentUser.username}
                 close={this.closeNewUserOnboarding}
+                // if the user doesn't have a username, they can't close
+                // the onboarding
+                noCloseButton
               />}
 
             {/*

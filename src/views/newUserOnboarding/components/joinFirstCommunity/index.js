@@ -8,10 +8,8 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import { track } from '../../../../helpers/events';
 import { addToastWithTimeout } from '../../../../actions/toasts';
-import { TextButton } from '../../../../components/buttons';
 import { ContinueButton } from '../../style';
 import { toggleCommunityMembershipMutation } from '../../../../api/community';
-import { Button, OutlineButton } from '../../../../components/buttons';
 import {
   Row,
   CoverPhoto,
@@ -19,7 +17,6 @@ import {
   CoverAvatar,
   CoverTitle,
   CoverDescription,
-  ButtonContainer,
 } from '../discoverCommunities/style';
 import { CoverLink, CoverSubtitle } from '../../../../components/profile/style';
 

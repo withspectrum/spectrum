@@ -65,11 +65,10 @@ class DashboardPure extends Component {
   };
 
   render() {
-    const { data: { user, networkStatus, error } } = this.props;
+    const { data: { user, networkStatus } } = this.props;
     const { isNewUser } = this.state;
     const isMobile = window.innerWidth < 768;
     const dataExists = user && user.communityConnection;
-    const noData = !user && !error;
     const { title, description } = generateMetaInfo();
 
     // Error, prompt reload
@@ -87,14 +86,7 @@ class DashboardPure extends Component {
 
     // New user onboarding
     if (isNewUser) {
-      // we pass a 'hasUsername' prop so that for returning visitors
-      // who have set a username already but haven't joined a community yet
-      // will still go through the onboarding flow. it will trigger the
-      // onboarding flow to skip the username step
-      const hasUsername = user.username;
-
-      // return <NewUserOnboarding noClose hasUsername={hasUsername} />;
-      return null;
+      return <NewUserOnboarding noCloseButton close={() => {}} />;
     }
 
     if (dataExists) {

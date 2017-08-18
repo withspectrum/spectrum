@@ -5,10 +5,8 @@ import { graphql, gql } from 'react-apollo';
 import update from 'immutability-helper';
 import { encode } from '../../helpers/utils';
 import { userInfoFragment } from '../../api/fragments/user/userInfo';
-import { communityInfoFragment } from '../../api/fragments/community/communityInfo';
 import { userEverythingFragment } from '../../api/fragments/user/userEverything';
 import { userCommunitiesFragment } from '../../api/fragments/user/userCommunities';
-// import { userMetaDataFragment } from '../../api/fragments/user/userMetaData';
 
 const LoadMoreThreads = gql`
   query loadMoreEverythingThreads($after: String) {

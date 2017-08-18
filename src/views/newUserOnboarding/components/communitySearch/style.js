@@ -1,22 +1,13 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
-// $FlowFixMe
-import { Link } from 'react-router-dom';
 import {
   FlexCol,
   FlexRow,
-  H1,
-  H2,
-  H3,
-  P,
-  Transition,
-  Gradient,
   Shadow,
   hexa,
   Truncate,
 } from '../../../../components/globals';
-import Card from '../../../../components/card';
 import { Avatar } from '../../../../components/avatar';
 import Icon from '../../../../components/icons';
 

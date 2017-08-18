@@ -19,6 +19,7 @@ const { Strategy: GitHubStrategy } = require('passport-github2');
 const { getUser, createOrFindUser } = require('./models/user');
 
 let TWITTER_OAUTH_CLIENT_SECRET = process.env.TWITTER_OAUTH_CLIENT_SECRET;
+let FACEBOOK_OAUTH_CLIENT_ID = IS_PROD ? '130723117513387' : '231715924020859';
 let FACEBOOK_OAUTH_CLIENT_SECRET = process.env.FACEBOOK_OAUTH_CLIENT_SECRET;
 let GOOGLE_OAUTH_CLIENT_SECRET = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
 let GITHUB_OAUTH_CLIENT_SECRET = process.env.GITHUB_OAUTH_CLIENT_SECRET;
@@ -102,10 +103,8 @@ const init = () => {
   passport.use(
     new FacebookStrategy(
       {
-        // clientID: '130723117513387',
-        // clientSecret: FACEBOOK_OAUTH_CLIENT_SECRET,
-        clientID: '231715924020859',
-        clientSecret: '0c3a5b3521fe79636b568f3f4db67f2b',
+        clientID: FACEBOOK_OAUTH_CLIENT_ID,
+        clientSecret: FACEBOOK_OAUTH_CLIENT_SECRET,
         callbackURL: `/auth/facebook/callback`,
         profileFields: [
           'id',

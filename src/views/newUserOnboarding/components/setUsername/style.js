@@ -12,7 +12,7 @@ export const Row = styled.div`
 export const Loading = styled.span`
   position: absolute;
   left: 296px;
-  top: 58px;
+  top: 86px;
 `;
 
 export const Action = styled.div`
@@ -33,6 +33,15 @@ export const InputLabel = styled.h3`
   text-align: center;
   font-size: 20px;
   font-weight: 600;
+  color: ${props => props.theme.text.default};
+  margin-bottom: 4px;
+`;
+
+export const InputSubLabel = styled.h4`
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.text.alt};
   margin-bottom: 8px;
 `;
 

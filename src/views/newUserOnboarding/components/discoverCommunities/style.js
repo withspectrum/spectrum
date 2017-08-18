@@ -1,6 +1,6 @@
 // @flow
 // $FlowFixMe
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { Gradient, Truncate, Transition } from '../../../../components/globals';
 
 export const Row = styled.div`

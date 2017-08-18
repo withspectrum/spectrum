@@ -19,7 +19,11 @@ class FullscreenView extends Component {
   }
 
   handleKeyPress = e => {
-    const { close } = this.props;
+    const { close, noCloseButton } = this.props;
+
+    // if we don't want the user to close the onboarding flow - when they
+    // are setting a username - ignore esc key presses
+    if (noCloseButton) return;
 
     // if person taps esc, close the dialog
     if (e.keyCode === 27) {
@@ -28,11 +32,11 @@ class FullscreenView extends Component {
   };
 
   render() {
-    const { close, hasBackground, children, noClose } = this.props;
+    const { close, hasBackground, children, noCloseButton } = this.props;
 
     return (
       <FullscreenViewContainer>
-        {!noClose &&
+        {!noCloseButton &&
           <Close onClick={close}>
             <Icon glyph={'view-close'} size={32} />
           </Close>}
