@@ -201,7 +201,8 @@ export const ParticipantCount = styled.span`
   background-color: ${props => props.theme.text.alt};
   font-size: 11px;
   font-weight: 700;
-  line-height: 1;
+  line-height: 32px;
+  text-align: center;
   vertical-align: middle;
   text-overflow: clip;
 `;
