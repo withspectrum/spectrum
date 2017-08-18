@@ -8,14 +8,13 @@ export const LinkPreviewContainer = styled.a`
   border-radius: 4px;
   background: ${props => props.theme.bg.default};
   border: 1px solid ${({ theme }) => theme.border.default};
-  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.1)};
-  overflow: hidden;
+  ${'' /* box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.1)}; */} overflow: hidden;
   position: relative;
-  padding: ${props => (props.padding ? 0 : '16px')};
+  margin: 0;
+  padding: 0;
   transition: ${Transition.reaction.off};
-  max-height: ${props => (props.size === 'large' ? '140px' : '100%')};
-  margin: ${props => (props.margin ? props.margin : '16px')};
-  flex: 1;
+  flex: auto;
+  pointer-events: auto;
 
   &:hover {
     transition: ${Transition.reaction.on};
@@ -32,15 +31,11 @@ export const Close = styled.span`
 
 export const LinkPreviewImage = styled.div`
   overflow: hidden;
-  min-width: ${props => (props.size === 'large' ? '100%' : '140px')};
-  min-height: 140px;
-  background: ${props => props.theme.bg.wash};
-  background: ${props => `url("${props.image}") no-repeat center center`};
+  min-width: ${props => (props.size === 'large' ? '100%' : '64px')};
+  min-height: 64px;
+  background: ${props =>
+    `${props.theme.bg.wash} url("${props.image}") no-repeat center center`};
   background-size: cover;
-  ${props =>
-    props.size === 'large'
-      ? `border-bottom: 1px solid ${props.theme.border.default}`
-      : `border-right: 1px solid ${props.theme.border.default}`};
 `;
 
 export const LinkPreviewTextContainer = styled.div`
@@ -49,7 +44,7 @@ export const LinkPreviewTextContainer = styled.div`
   overflow: hidden;
   flex-direction: column;
   justify-content: space-between;
-  padding: ${props => (props.padding ? '12px 16px' : 0)};
+  padding: 8px 12px;
   align-self: stretch;
 `;
 
@@ -62,11 +57,11 @@ export const BaseMeta = styled.p`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(100% - 16px);
+  align-self: stretch;
 `;
 
 export const MetaTitle = styled(BaseMeta)`
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 800;
   white-space: normal;
   color: ${({ theme }) => theme.text.default};

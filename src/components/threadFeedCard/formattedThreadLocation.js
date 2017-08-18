@@ -3,10 +3,8 @@ import React from 'react';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
 import Icon from '../../components/icons';
-import { FlexRow } from '../../components/globals';
 import { Avatar } from '../../components/avatar';
 import {
-  CreatorName,
   ThreadContext,
   ThreadContextAvatar,
   ThreadContextMeta,
@@ -23,18 +21,13 @@ const FormattedThreadLocation = props => {
     props.viewContext === 'profile' ||
     props.viewContext === 'community';
 
-  const needsAuthorDetails =
-    props.viewContext === 'dashboard' ||
-    props.viewContext === 'community' ||
-    props.viewContext === 'channel';
-
   return (
     <ThreadContext>
       {needsCommunityDetails &&
         <ThreadContextAvatar>
           <Avatar
             community
-            size={24}
+            size={20}
             src={props.data.channel.community.profilePhoto}
           />
         </ThreadContextAvatar>}
@@ -67,15 +60,6 @@ const FormattedThreadLocation = props => {
                 {props.data.channel.name}
               </Link>}
           </Location>}
-        {needsAuthorDetails &&
-          <FlexRow>
-            {needsAuthorDetails &&
-              <FlexRow>
-                <CreatorName>
-                  {props.data.creator.name}
-                </CreatorName>
-              </FlexRow>}
-          </FlexRow>}
       </ThreadContextMeta>
     </ThreadContext>
   );
