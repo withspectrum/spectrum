@@ -151,7 +151,7 @@ class NewUserOnboarding extends Component {
 
             {activeStep === 'discoverCommunities' &&
               <Container>
-                <Search />
+                <Search joinedCommunity={this.joinedCommunity} />
                 <TopCommunities
                   joinedCommunity={this.joinedCommunity}
                   hasJoined={joinedCommunities > 0}

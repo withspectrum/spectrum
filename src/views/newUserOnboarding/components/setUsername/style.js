@@ -25,7 +25,7 @@ export const Form = styled.form`
   position: relative;
   flex-direction: column;
   width: 100%;
-  max-width: 320px;
+  max-width: 400px;
   margin-top: 32px;
 `;
 
@@ -34,15 +34,16 @@ export const InputLabel = styled.h3`
   font-size: 20px;
   font-weight: 600;
   color: ${props => props.theme.text.default};
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 `;
 
 export const InputSubLabel = styled.h4`
   text-align: center;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
   color: ${props => props.theme.text.alt};
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+  line-height: 1.4;
 `;
 
 export const StyledLabel = styled.label`

@@ -77,12 +77,11 @@ export const SearchResultsDropdown = styled.ul`
 
 export const SearchResult = styled.li`
   display: flex;
-  flex: 1;
+  flex: auto;
   background: ${props =>
     props.focused ? props.theme.bg.wash : props.theme.bg.default};
   border-bottom: 2px solid ${props => props.theme.border.default};
   align-items: center;
-  ${Truncate()};
   padding: 8px 16px 8px 8px;
 
   &:hover {
@@ -96,6 +95,7 @@ export const SearchResult = styled.li`
 
   p {
     color: ${props => props.theme.text.alt};
+    line-height: 1.4;
   }
 
   &:only-child {
@@ -108,13 +108,17 @@ export const SearchResult = styled.li`
 `;
 
 export const SearchResultImage = styled(Avatar)`
-  margin: 8px 16px 8px 8px;
+  margin: 4px 16px 0 4px;
   width: 48px;
   height: 48px;
+  border-radius: 8px;
+  align-self: flex-start;
 `;
 
 export const SearchResultMetaWrapper = styled(FlexCol)`
   margin-left: 4px;
+  flex: auto;
+  padding-right: 16px;
 `;
 
 export const SearchResultName = styled.h2`
@@ -134,6 +138,7 @@ export const SearchResultNull = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex: auto;
   padding: 24px;
   background-color: ${props => props.theme.bg.default};
   border: 0;

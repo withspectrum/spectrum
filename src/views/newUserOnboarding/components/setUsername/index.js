@@ -132,7 +132,7 @@ class SetUsername extends Component {
             return this.setState({
               error: '',
               isSearching: false,
-              success: "That's one good looking username!",
+              success: 'That username is available!',
             });
           }
         });
@@ -179,9 +179,7 @@ class SetUsername extends Component {
     return (
       <Form onSubmit={this.saveUsername}>
         <InputLabel>Create your username</InputLabel>
-        <InputSubLabel>
-          You can change this later, so no pressure!
-        </InputSubLabel>
+        <InputSubLabel>You can change this later - no pressure!</InputSubLabel>
 
         <Row>
           <Input

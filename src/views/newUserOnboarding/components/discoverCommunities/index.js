@@ -65,8 +65,6 @@ class TopCommunitiesPure extends Component {
 
         const type = isMember ? 'success' : 'neutral';
 
-        this.props.dispatch(addToastWithTimeout(type, str));
-
         this.props.joinedCommunity(isMember ? 1 : -1, false);
       })
       .catch(err => {
@@ -114,6 +112,7 @@ class TopCommunitiesPure extends Component {
                         gradientTheme="none"
                         color={'pro.alt'}
                         hoverColor={'pro.default'}
+                        style={{ fontSize: '16px' }}
                         loading={loading === community.id}
                       >
                         Joined!
@@ -132,15 +131,14 @@ class TopCommunitiesPure extends Component {
             );
           })}
 
-          {hasJoined > 0 &&
-            <StickyRow>
-              <ContinueButton
-                style={{ marginTop: '0' }}
-                onClick={this.props.doneExploring}
-              >
-                Continue to my home feed
-              </ContinueButton>
-            </StickyRow>}
+          <StickyRow hasJoined={hasJoined > 0}>
+            <ContinueButton
+              style={{ marginTop: '0' }}
+              onClick={this.props.doneExploring}
+            >
+              Continue to my home feed
+            </ContinueButton>
+          </StickyRow>
         </Row>
       );
     }

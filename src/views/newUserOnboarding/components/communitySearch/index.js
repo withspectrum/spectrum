@@ -88,7 +88,7 @@ class Search extends Component {
 
         const type = isMember ? 'success' : 'neutral';
 
-        this.props.dispatch(addToastWithTimeout(type, str));
+        this.props.joinedCommunity(isMember ? 1 : -1, false);
 
         const { searchResults } = this.state;
 
@@ -302,25 +302,27 @@ class Search extends Component {
                       </SearchResultDescription>
                     </SearchResultMetaWrapper>
 
-                    {community.communityPermissions.isMember
-                      ? <OutlineButton
-                          onClick={() => this.toggleMembership(community.id)}
-                          gradientTheme="none"
-                          color={'pro.alt'}
-                          hoverColor={'pro.default'}
-                          loading={loading === community.id}
-                        >
-                          Joined!
-                        </OutlineButton>
-                      : <Button
-                          onClick={() => this.toggleMembership(community.id)}
-                          loading={loading === community.id}
-                          gradientTheme={'success'}
-                          style={{ fontSize: '16px' }}
-                          icon={'plus'}
-                        >
-                          Join
-                        </Button>}
+                    <div>
+                      {community.communityPermissions.isMember
+                        ? <OutlineButton
+                            onClick={() => this.toggleMembership(community.id)}
+                            gradientTheme="none"
+                            color={'pro.alt'}
+                            hoverColor={'pro.default'}
+                            loading={loading === community.id}
+                          >
+                            Joined!
+                          </OutlineButton>
+                        : <Button
+                            onClick={() => this.toggleMembership(community.id)}
+                            loading={loading === community.id}
+                            gradientTheme={'success'}
+                            style={{ fontSize: '16px' }}
+                            icon={'plus'}
+                          >
+                            Join
+                          </Button>}
+                    </div>
                   </SearchResult>
                 );
               })}

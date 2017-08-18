@@ -24,12 +24,13 @@ export const StickyRow = styled.div`
   justify-content: center;
   padding: 16px;
   position: fixed;
-  bottom: 0;
+  bottom: ${props => (props.hasJoined ? '0' : '-200px')};
   left: 0;
   right: 0;
   background: ${props => props.theme.bg.default};
   border-top: 2px solid ${props => props.theme.border.default};
   z-index: 10;
+  transition: all 0.3s ease-in-out;
 `;
 
 export const CoverPhoto = styled.div`
