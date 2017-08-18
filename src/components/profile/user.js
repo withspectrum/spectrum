@@ -183,7 +183,7 @@ const UserWithData = ({
       <Card>
         <ProfileHeader>
           {user.username
-            ? <ProfileHeaderLink to={user.username}>
+            ? <ProfileHeaderLink to={`/users/${user.username}`}>
                 <ProfileAvatar
                   size={32}
                   radius={32}
