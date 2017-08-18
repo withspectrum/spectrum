@@ -6,10 +6,6 @@ import { ThemeProvider } from 'styled-components';
 //$FlowFixMe
 import { ApolloProvider } from 'react-apollo';
 import queryString from 'query-string';
-// The import from ./helpers/events HAS to come as the first import of our own code
-// because it contains the RavenJS initialisation code which needs to run before
-// any of our code to catch any and all exceptions! (but after the libraries we use)
-import { track } from './helpers/events';
 import { history } from './helpers/history';
 import { client } from './api';
 import { initStore } from './store';
@@ -20,6 +16,7 @@ import Homepage from './views/homepage';
 import { addToastWithTimeout } from './actions/toasts';
 import registerServiceWorker from './registerServiceWorker';
 import type { ServiceWorkerResult } from './registerServiceWorker';
+import { track } from './helpers/events';
 
 const { thread } = queryString.parse(history.location.search);
 if (thread) {
