@@ -53,16 +53,15 @@ export const CardContent = styled(FlexCol)`
 
 export const Title = styled.h2`
   font-weight: 800;
-  font-size: 24px;
+  font-size: 20px;
   line-height: 1.2;
   flex: 0 0 auto;
   color: ${({ theme }) => theme.text.default};
   pointer-events: all;
-  margin-bottom: 8px;
 `;
 
 export const MessageCount = styled(FlexRow)`
-  align-self: stretch;
+  align-self: flex-end;
   align-items: center;
   justify-content: flex-start;
 
@@ -71,7 +70,6 @@ export const MessageCount = styled(FlexRow)`
   line-height: 1;
   vertical-align: middle;
   color: ${({ theme }) => theme.text.alt};
-  margin-bottom: 4px;
 
   div {
     margin-right: 4px;
@@ -82,6 +80,7 @@ export const Attachments = styled(FlexRow)`
   align-self: stretch;
   align-items: center;
   justify-content: space-between;
+  margin: 12px 0 8px;
 `;
 
 export const CreatorName = styled.span`
@@ -123,6 +122,7 @@ export const Meta = styled.span`
 
 export const MetaNew = styled(Meta)`
   color: ${({ theme }) => theme.success.default};
+  align-self: flex-end;
 `;
 
 export const Location = styled.span`

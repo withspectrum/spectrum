@@ -23,6 +23,7 @@ import {
   PinnedBanner,
   PinnedIconWrapper,
   ContentInfo,
+  MetaNew,
 } from './style';
 
 const ThreadFeedCardPure = (props: Object): React$Element<any> => {
@@ -74,10 +75,10 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
                   {props.data.messageCount}
                 </span>
               </MessageCount>
-            : <MessageCount>
+            : <MetaNew>
                 <Icon size={20} glyph="notification-fill" />
                 <span>Fresh thread!</span>
-              </MessageCount>}
+              </MetaNew>}
         </ContentInfo>
       </CardContent>
     </StyledThreadFeedCard>
