@@ -1,4 +1,5 @@
 //@flow
+// $FlowFixMe
 import striptags from 'striptags';
 const { db } = require('./db');
 // $FlowFixMe
@@ -67,6 +68,10 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
     .run()
     .then(result => result.changes[0].new_val)
     .then(message => {
+      // we want to handle direct message and thread message notifications
+      // differently, with different time buffers and different email
+      // templates. splitting them at this point in time makes the most
+      // sense to keep the code in athena/hermes as clear as possible
       if (message.threadType === 'story') {
         threadMessageNotificationQueue.add({
           message,

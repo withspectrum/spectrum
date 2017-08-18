@@ -1,7 +1,7 @@
 // @flow
 const debug = require('debug')('hermes:queue:send-new-message-email');
 import sendEmail from '../send-email';
-import { NEW_MESSAGE_TEMPLATE } from './constants';
+import { NEW_THREAD_MESSAGE_TEMPLATE } from './constants';
 import capitalize from '../utils/capitalize';
 
 type ReplyData = {

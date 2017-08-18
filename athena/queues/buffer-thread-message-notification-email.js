@@ -1,5 +1,6 @@
 // @flow
-const debug = require('debug')('athena:send-message-notification-email');
+// $FlowFixMe
+const debug = require('debug')('athena:send-thread-message-notification-email');
 import createQueue from '../../shared/bull/create-queue';
 import { SEND_NEW_MESSAGE_EMAIL } from './constants';
 import { getUsersSettings } from '../models/usersSettings';
@@ -8,10 +9,13 @@ import groupReplies from '../utils/group-replies';
 import getEmailStatus from '../utils/get-email-status';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
-// Change buffer in dev to 10 seconds vs 3 minutes in prod
-const BUFFER = IS_PROD ? 180000 : 10000;
+// Change buffer in dev to 10 seconds vs 6 minutes in prod
+const BUFFER = IS_PROD ? 360000 : 10000;
+// max wait of 10 minutes before an email is force-sent
 const MAX_WAIT = 600000;
-const sendNewMessageEmailQueue = createQueue(SEND_NEW_MESSAGE_EMAIL);
+const sendNewThreadMessageEmailQueue = createQueue(
+  SEND_NEW_THRED_MESSAGE_EMAIL
+);
 
 // Called when the buffer time is over to actually send an email
 const timedOut = recipient => {
@@ -98,7 +102,11 @@ const timeouts: Timeouts = {};
  * - We repeat this process for each further message notification until we have a one minute break
  * - Because we do want people to get emails in a timely manner we force push them out after 5 minutes. Basically, if we get a message notification and no email has been sent but it's been more than five minutes since the very first notification we send the email with all current notifications batched into one email.
  */
-const bufferMessageNotificationEmail = (recipient, thread, notification) => {
+const bufferThreadMessageNotificationEmail = (
+  recipient,
+  thread,
+  notification
+) => {
   debug(
     `send message notification email to ${recipient.email} for thread#${thread.id}`
   );
@@ -140,4 +148,4 @@ const bufferMessageNotificationEmail = (recipient, thread, notification) => {
   }
 };
 
-export default bufferMessageNotificationEmail;
+export default bufferThreadMessageNotificationEmail;

@@ -11,7 +11,8 @@ export const THREAD_NOTIFICATION = 'thread notification';
 export const COMMUNITY_INVITE_NOTIFICATION = 'community invite notification';
 export const SEND_COMMUNITY_INVITE_EMAIL = 'send community invite email';
 export const SLACK_IMPORT = 'slack import';
-export const SEND_NEW_MESSAGE_EMAIL = 'send new message email';
+export const SEND_NEW_THREAD_MESSAGE_EMAIL = 'send new thread message email';
+export const SEND_NEW_DIRECT_MESSAGE_EMAIL = 'send new direct message email';
 export const COMMUNITY_INVOICE_PAID_NOTIFICATION =
   'community invoice paid notification';
 export const SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL =
