@@ -130,9 +130,9 @@ export const Location = styled.span`
   flex: 0 0 auto;
   font-size: 13px;
   font-weight: 500;
-  color: ${({ theme }) => theme.text.default};
+  color: ${({ theme }) => theme.text.alt};
   line-height: 1;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 
   > a {
     pointer-events: all;
@@ -216,9 +216,10 @@ export const Creator = styled.div`
   justify-content: center;
   align-items: center;
 
-  object:after {
-    right: -6px;
-    bottom: -1px;
+  > div:after,
+  > a > div:after {
+    right: -3px;
+    bottom: -2px;
   }
 `;
 
