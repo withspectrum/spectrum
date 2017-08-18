@@ -19,6 +19,7 @@ export const FullscreenViewContainer = styled.div`
   z-index: ${zIndex.fullscreen};
   overflow-y: scroll;
   padding-top: 32px;
+  -webkit-transform: translate3d(0, 0, 0);
 `;
 
 export const Illustrations = styled.span`z-index: ${zIndex.background};`;

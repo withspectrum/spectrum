@@ -36,6 +36,7 @@ export const StickyRow = styled.div`
   border-top: 2px solid ${props => props.theme.border.default};
   z-index: ${zIndex.fullscreen + 1};
   transition: all 0.3s ease-in-out;
+  -webkit-transform: translate3d(0, 0, 0);
 `;
 
 export const CoverPhoto = styled.div`
