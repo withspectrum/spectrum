@@ -93,7 +93,7 @@ export const CreatorName = styled.span`
 
 export const ThreadContext = styled(FlexRow)`
   align-items: center;
-  margin-top: 8px;
+  margin-bottom: 8px;
 `;
 
 export const ThreadContextAvatar = styled(FlexRow)`
@@ -181,4 +181,51 @@ export const PinnedIconWrapper = styled.span`
   right: -36px;
   top: 4px;
   color: ${props => props.theme.text.reverse};
+`;
+
+export const ParticipantHeads = styled(FlexRow)`
+  align-items: center;
+
+  > *:not(:first-child) {
+    margin-left: 4px;
+    pointer-events: auto;
+  }
+`;
+
+export const ParticipantCount = styled.span`
+  display: inline-block;
+  border-radius: 100%;
+  height: 32px;
+  width: 32px;
+  color: ${props => props.theme.text.reverse};
+  background-color: ${props => props.theme.text.alt};
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
+  text-overflow: clip;
+`;
+
+export const Creator = styled.div`
+  padding: 2px;
+  border-radius: 100%;
+  border: 2px solid ${({ theme }) => theme.brand.alt};
+  pointer-events: all;
+  display: flex;
+  flex: none;
+  justify-content: center;
+  align-items: center;
+
+  object:after {
+    right: -6px;
+    bottom: -1px;
+  }
+`;
+
+export const ContentInfo = styled(FlexRow)`
+  margin-top: 8px;
+  justify-content: space-between;
+  flex: none;
+  align-self: stretch;
+  align-items: center;
 `;
