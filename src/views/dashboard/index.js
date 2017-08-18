@@ -88,14 +88,14 @@ class DashboardPure extends Component {
       const currentUser = user;
       const communities = user.communityConnection.edges;
 
-      if (currentUser.username && communities.length === 0) {
-        return <NewUserOnboarding noCloseButton close={() => {}} />;
-      }
-
       return (
         <AppViewWrapper>
           <Head title={title} description={description} />
           <Titlebar />
+
+          {currentUser.username &&
+            communities.length === 0 &&
+            <NewUserOnboarding noCloseButton close={() => {}} />}
 
           {!isMobile &&
             <Column type="secondary">

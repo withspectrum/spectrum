@@ -11,8 +11,8 @@ export const Row = styled.div`
 
 export const Loading = styled.span`
   position: absolute;
-  left: 296px;
-  top: 86px;
+  left: 376px;
+  top: 93px;
 `;
 
 export const Action = styled.div`
