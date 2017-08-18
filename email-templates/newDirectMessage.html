@@ -1,0 +1,385 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>New direct message on Spectrum!</title>
+    <!--
+    The style block is collapsed on page load to save you some scrolling.
+    Postmark automatically inlines all CSS properties for maximum email client
+    compatibility. You can just update styles here, and Postmark does the rest.
+    -->
+    <style type="text/css" rel="stylesheet" media="all">
+    /* Base ------------------------------ */
+
+    *:not(br):not(tr):not(html) {
+      font-family: -apple-system, BlinkMacSystemFont, Helvetica, "Segoe", Arial, Helvetica, sans-serif;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 100% !important;
+      height: 100%;
+      margin: 0;
+      line-height: 1.4;
+      background-color: #F2F5F9;
+      color: #171a21;
+      -webkit-text-size-adjust: none;
+    }
+
+    p,
+    ul,
+    ol,
+    blockquote {
+      line-height: 1.4;
+      text-align: left;
+    }
+
+    a {
+      color: #7b16ff;
+      font-weight: bold;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    a img {
+      border: none;
+    }
+
+    td {
+      word-break: break-word;
+    }
+    /* Layout ------------------------------ */
+
+    .email-wrapper {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      background-color: #F2F5f9;
+    }
+
+    .email-content {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+    }
+
+    /* Body ------------------------------ */
+
+    .email-body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      border-top: 1px solid #DFE7EF;
+      border-bottom: 1px solid #DFE7EF;
+      background-color: #FFFFFF;
+    }
+
+    .email-body_inner {
+      width: 560px;
+      margin: 0 auto;
+      padding: 0;
+      -premailer-width: 560px;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      background-color: #FFFFFF;
+    }
+
+    .email-footer {
+      width: 560px;
+      margin: 0 auto;
+      padding: 0;
+      -premailer-width: 560px;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      text-align: center;
+    }
+
+    .email-footer p {
+      color: #AEAEAE;
+    }
+
+    .body-action {
+      width: 100%;
+      margin: 32px auto;
+      padding: 0;
+      -premailer-width: 100%;
+      -premailer-cellpadding: 0;
+      -premailer-cellspacing: 0;
+      text-align: center;
+    }
+
+    .body-sub {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid #DFE7EF;
+    }
+
+    .divider {
+      height: 0px;
+      border-bottom: 2px solid #DFE7EF;
+      display: block;
+      width: 100%;
+    }
+
+    .post {
+      padding: 32px 0 24px;
+      border-bottom: 2px solid #DFE7EF;
+    }
+
+    .reply-container {
+      margin-top: 16px;
+      display: block;
+    }
+
+    .header-cell {
+      padding: 32px 32px 0 32px
+    }
+
+    .content-cell {
+      padding: 32px;
+    }
+
+    .footer-cell {
+      padding: 0 32px 32px 32px;
+    }
+
+    .preheader {
+      display: none !important;
+      visibility: hidden;
+      mso-hide: all;
+      font-size: 1px;
+      line-height: 1px;
+      max-height: 0;
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    img.avatar {
+      height: 40px;
+      width: 40px;
+      border-radius: 20px;
+      margin-right: 8px;
+    }
+
+    /* Utilities ------------------------------ */
+
+    .align-right {
+      text-align: right;
+    }
+
+    .align-left {
+      text-align: left;
+    }
+
+    .align-center {
+      text-align: center;
+    }
+
+    .collapse {
+      border-collapse: collapse;
+    }
+    /*Media Queries ------------------------------ */
+
+    @media only screen and (max-width: 600px) {
+      .email-body_inner,
+      .email-footer {
+        width: 100% !important;
+      }
+    }
+
+    /* Buttons ------------------------------ */
+
+    .button {
+      background-color: #7B16FF;
+      display: inline-block;
+      color: #FFF;
+      padding: 12px 16px;
+      text-decoration: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      -webkit-text-size-adjust: none;
+      word-break: keep-all;
+      white-space: nowrap;
+
+      &:hover {
+        text-decoration: none;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    /* Type ------------------------------ */
+
+    h1 {
+      margin: 0;
+      padding: 0;
+      color: #171A21;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    h2 {
+      margin: 0;
+      padding: 0;
+      color: #171A21;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    h3 {
+      margin: 0;
+      padding: 0;
+      color: #171A21;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    p {
+      margin: 0;
+      padding: 0;
+      color: #171A21;
+      font-size: 14px;
+      line-height: 1.5em;
+      text-align: left;
+    }
+
+    p.sub {
+      color: #747E8D;
+    }
+
+    p.reply {
+      font-weight: 400;
+      margin-bottom: 16px;
+      background: #E6ECF7;
+      margin-bottom: 2px;
+      padding: 8px 12px;
+      border-radius: 12px;
+    }
+
+    p.emoji, span.emoji {
+      font-size: 32px;
+      vertical-align: middle;
+      line-height: 1.6;
+    }
+
+    span.name {
+      font-size: 11px;
+      font-weight: 400;
+      color: #747E8D;
+    }
+
+    h1.title {
+      margin-bottom: 16px;
+    }
+
+    .button.feed {
+      margin-top: 16px;
+    }
+    </style>
+  </head>
+  <body>
+    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center">
+          <table class="email-content" width="100%" cellpadding="0" cellspacing="0">
+            <!-- Email Body -->
+            <tr>
+              <td class="email-body" width="100%" cellpadding="0" cellspacing="0">
+                <table class="email-body_inner" align="center" width="560" cellpadding="0" cellspacing="0">
+                  <!-- Body content -->
+                  <tr>
+                    <td class="header-cell">
+                      <p>Hey there!</p>
+                      <p>You have new direct messages on Spectrum</p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="content-cell">
+                      <div class="divider"></div>
+
+                      {{#each threads}}
+                        <table class="attributes post" width="100%" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td>
+                              <a href="https://spectrum.chat/{{path}}{{^path}}thread/{{id}}{{/path}}"><h2 class="title">{{title}}</h2></a>
+                            </td>
+                          </tr>
+                          {{#each replies}}
+                            <tr class="reply-container">
+                              <td class="attributes_item">
+                                <table>
+                                  <tr>
+                                    <td valign="top">
+                                      <a href="https://spectrum.chat/{{../../path}}{{^../../path}}thread/{{../id}}{{/../../path}}">
+                                        <img class="avatar" src="{{sender.profilePhoto}}" />
+                                      </a>
+                                    </td>
+                                    <td>
+                                      <table>
+                                        <tr>
+                                          <td>
+                                            <a href="https://spectrum.chat/{{../path}}{{^../path}}thread/{{../../id}}{{/../path}}"><span class="name">{{sender.name}}</span></a>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td>
+                                            <a href="https://spectrum.chat/{{../path}}{{^../path}}thread/{{../../id}}{{/../path}}"><p class="reply">{{{content.body}}}</p></a>
+                                          </td>
+                                        </tr>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          {{/each}}
+                            <tr>
+                              <td>
+                                <a class="feed button" href="https://spectrum.chat/{{path}}{{^path}}thread/{{id}}{{/path}}">Go to conversation</a>
+                              </td>
+                            </tr>
+                        </table>
+                      {{/each}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="footer-cell">
+                      <p class="emoji">✌️</p>
+                      <p>- The Spectrum team</p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+          <table class="email-footer" align="center" width="560" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="content-cell">
+                <p class="sub">Easily <a href="https://spectrum.chat/users/{{user.username}}/settings">unsubscribe in your email settings</a>.</p>
+                <br />
+                <br />
+                <p class="sub"><strong>Spectrum</strong> is made by <strong>Space Program, Inc.</strong><br/>542 Brannan St. 409, San Francisco, CA 94107</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
