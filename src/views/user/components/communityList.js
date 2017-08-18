@@ -51,26 +51,31 @@ const CommunityList = props => {
             : <ListHeading>Member of</ListHeading>}
         </ListHeader>
         <ListContainer>
-          {communities.map(item => {
-            return (
-              <Link key={item.node.id} to={`/${item.node.slug}`}>
-                <CommunityListItem
-                  contents={item.node}
-                  withDescription={withDescription}
-                  withMeta={withMeta}
-                  meta={`${item.node.metaData.members > 1
-                    ? `${item.node.metaData.members} members`
-                    : `${item.node.metaData.members} member`}
+          {communities
+            // Copy the array so .sort doesn't mutate the original
+            .concat()
+            // Sort descending by members
+            .sort((a, b) => a.node.metaData.members - b.node.metaData.members)
+            .map(item => {
+              return (
+                <Link key={item.node.id} to={`/${item.node.slug}`}>
+                  <CommunityListItem
+                    contents={item.node}
+                    withDescription={withDescription}
+                    withMeta={withMeta}
+                    meta={`${item.node.metaData.members > 1
+                      ? `${item.node.metaData.members} members`
+                      : `${item.node.metaData.members} member`}
                      ·
                     ${item.node.metaData.channels > 1
                       ? `${item.node.metaData.channels} channels`
                       : `${item.node.metaData.channels} channel`}`}
-                >
-                  <Icon glyph="view-forward" />
-                </CommunityListItem>
-              </Link>
-            );
-          })}
+                  >
+                    <Icon glyph="view-forward" />
+                  </CommunityListItem>
+                </Link>
+              );
+            })}
         </ListContainer>
       </StyledCard>
     );
