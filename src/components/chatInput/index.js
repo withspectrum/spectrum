@@ -212,7 +212,7 @@ class ChatInputWithMutation extends Component {
     const { isFocused, photoSizeError } = this.state;
 
     return (
-      <div>
+      <ChatInputWrapper focus={isFocused}>
         {photoSizeError &&
           <PhotoSizeError>
             <p
@@ -230,27 +230,25 @@ class ChatInputWithMutation extends Component {
               color={'warn.default'}
             />
           </PhotoSizeError>}
-        <ChatInputWrapper focus={isFocused}>
-          <MediaInput onChange={this.sendMediaMessage} />
-          <Form focus={isFocused}>
-            <EditorInput
-              focus={isFocused}
-              placeholder="Your message here..."
-              state={state}
-              onEnter={this.handleEnter}
-              onChange={onChange}
-              markdown={false}
-              onFocus={this.onFocus}
-              onBlur={this.onBlur}
-              singleLine
-              images={false}
-              editorRef={editor => (this.editor = editor)}
-              autoFocus={autoFocus}
-            />
-            <SendButton glyph="send-fill" onClick={this.submit} />
-          </Form>
-        </ChatInputWrapper>
-      </div>
+        <MediaInput onChange={this.sendMediaMessage} />
+        <Form focus={isFocused}>
+          <EditorInput
+            focus={isFocused}
+            placeholder="Your message here..."
+            state={state}
+            onEnter={this.handleEnter}
+            onChange={onChange}
+            markdown={false}
+            onFocus={this.onFocus}
+            onBlur={this.onBlur}
+            singleLine
+            images={false}
+            editorRef={editor => (this.editor = editor)}
+            autoFocus={autoFocus}
+          />
+          <SendButton glyph="send-fill" onClick={this.submit} />
+        </Form>
+      </ChatInputWrapper>
     );
   }
 }

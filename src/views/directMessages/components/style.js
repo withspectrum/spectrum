@@ -261,7 +261,7 @@ export const ComposerInput = styled.input`
   width: 100%;
   border-bottom: 2px solid ${props => props.theme.border.default};
   position: relative;
-  z-index: ${zIndex.chatInput};
+  z-index: ${zIndex.search};
 
   @media (max-width: 768px) {
     padding: 20px 16px;

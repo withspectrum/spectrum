@@ -6,7 +6,7 @@ import Editor from '../../components/editor';
 export const ChatInputWrapper = styled(FlexRow)`
   flex: none;
   align-items: center;
-  z-index: ${zIndex.chatInput};
+  z-index: inherit;
   position: relative;
   width: 100%;
   margin: 0;

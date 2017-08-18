@@ -59,9 +59,10 @@ export const zIndex = new function() {
   this.tooltip = this.card + 1; // tooltips should never appear behind cards
   this.form = this.card + 1; // form elements should never appear behind cards
   this.search = this.form; // search is a type of form and should appear at the same level
+  this.dmInput = this.form;
 
   this.slider = 1000; // slider should appear significantly above the base to leave room for other elements
-  this.composer = this.slider - 1; // composer should never appear above the slider
+  this.composer = this.slider - 2; // composer should never appear above the slider
   this.chatInput = this.slider + 1; // the slider chatInput should always appear above the slider
   this.flyout = this.chatInput + 1; // flyout may overlap with chatInput and should take precedence
 

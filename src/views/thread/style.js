@@ -63,6 +63,7 @@ export const ChatInputWrapper = styled(Column)`
   align-items: stretch;
   margin: 0;
   flex: auto;
+  position: relative;
 
   > div {
     background-image: ${({ theme }) =>
