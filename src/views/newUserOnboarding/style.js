@@ -27,6 +27,7 @@ export const OnboardingContent = styled.div`
   padding: 32px;
   justify-content: center;
   align-items: center;
+  overflow-x: hidden;
 
   @media (max-width: 768px) {
     padding: 32px 16px;

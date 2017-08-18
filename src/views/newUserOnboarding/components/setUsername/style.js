@@ -7,12 +7,13 @@ import { Transition } from '../../../../components/globals';
 export const Row = styled.div`
   display: flex;
   justify-content: center;
+  position: relative;
 `;
 
 export const Loading = styled.span`
   position: absolute;
-  left: 376px;
-  top: 93px;
+  left: calc(100% - 24px);
+  top: 50%;
 `;
 
 export const Action = styled.div`
