@@ -34,7 +34,7 @@ export const StickyRow = styled.div`
   right: 0;
   background: ${props => props.theme.bg.default};
   border-top: 2px solid ${props => props.theme.border.default};
-  z-index: ${zIndex.chrome};
+  z-index: ${zIndex.fullscreen + 1};
   transition: all 0.3s ease-in-out;
 `;
 
