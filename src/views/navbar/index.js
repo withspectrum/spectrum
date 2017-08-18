@@ -28,6 +28,7 @@ import {
   saveUserDataToLocalStorage,
   logout,
 } from '../../actions/authentication';
+import NewUserOnboarding from '../../views/newUserOnboarding';
 import {
   Section,
   Nav,
@@ -45,6 +46,7 @@ class Navbar extends Component {
     dmUnseenCount: number,
     notifications: Array<Object>,
     subscription: ?Function,
+    showNewUserOnboarding: boolean,
   };
 
   constructor(props) {
@@ -52,6 +54,7 @@ class Navbar extends Component {
     this.state = {
       ...this.calculateUnseenCounts(),
       subscription: null,
+      showNewUserOnboarding: false,
     };
 
     this.markAllNotificationsSeen = throttle(
@@ -171,6 +174,11 @@ class Navbar extends Component {
         this.props.editUser({ timezone: new Date().getTimezoneOffset() * -1 });
       }
       dispatch(saveUserDataToLocalStorage(user));
+      if (!user.username) {
+        this.setState({
+          showNewUserOnboarding: true,
+        });
+      }
 
       // if the user lands on /home, it means they just logged in. If this code
       // runs, we know a user was returned successfully and set to localStorage,
@@ -268,13 +276,24 @@ class Navbar extends Component {
     this.props.dispatch(openModal('LOGIN'));
   };
 
+  closeNewUserOnboarding = () => {
+    return this.setState({
+      showNewUserOnboarding: false,
+    });
+  };
+
   render() {
     const { match, data: { user, networkStatus }, currentUser } = this.props;
     const loggedInUser = user || currentUser;
     const isMobile = window.innerWidth < 768;
     const currentUserExists =
       loggedInUser !== null && loggedInUser !== undefined;
-    const { allUnseenCount, dmUnseenCount, notifications } = this.state;
+    const {
+      allUnseenCount,
+      dmUnseenCount,
+      notifications,
+      showNewUserOnboarding,
+    } = this.state;
 
     if (networkStatus < 8 && currentUserExists) {
       const showUnreadFavicon = dmUnseenCount > 0 || allUnseenCount > 0;
@@ -282,6 +301,18 @@ class Navbar extends Component {
       return (
         <Nav>
           <Head showUnreadFavicon={showUnreadFavicon} />
+          {// this only shows if the user does not have a username
+          // if the user is viewing their dashboard and has not joined
+          // any communities, that will be handled separately in
+          // dashboard/index.js
+          showNewUserOnboarding &&
+            <NewUserOnboarding
+              close={this.closeNewUserOnboarding}
+              // if the user doesn't have a username, they can't close
+              // the onboarding
+              noCloseButton
+            />}
+
           <Section left hideOnMobile>
             <LogoLink to="/">
               <Logo src="/img/mark-white.png" role="presentation" />

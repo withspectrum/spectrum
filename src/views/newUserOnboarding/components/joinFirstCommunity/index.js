@@ -77,7 +77,7 @@ class JoinFirstCommunityPure extends Component {
 
     return (
       <Row>
-        <Container key={community.id}>
+        <Container key={community.id} style={{ alignSelf: 'flex-start' }}>
           <CoverPhoto url={community.coverPhoto}>
             <CoverLink to={`/${community.slug}`}>
               <CoverAvatar src={`${community.profilePhoto}?w=40&dpr=2`} />
@@ -90,7 +90,7 @@ class JoinFirstCommunityPure extends Component {
             {community.metaData.members} members
           </CoverSubtitle>
 
-          <CoverDescription>
+          <CoverDescription style={{ paddingBottom: '16px' }}>
             {community.description}
           </CoverDescription>
         </Container>

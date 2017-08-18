@@ -5,8 +5,6 @@ import { Router, Route, Switch, Redirect } from 'react-router';
 //$FlowFixMe
 import styled from 'styled-components';
 import generateMetaInfo from 'shared/generate-meta-info';
-//$FlowFixMe
-import { connect } from 'react-redux';
 import { FlexCol } from './components/globals';
 import { history } from './helpers/history';
 import ScrollManager from './components/scrollManager';
@@ -29,7 +27,6 @@ import communitySettings from './views/communitySettings';
 import channelSettings from './views/channelSettings';
 import NewCommunity from './views/newCommunity';
 import ThreadSlider from './views/threadSlider';
-import NewUserOnboarding from './views/newUserOnboarding';
 
 const About = () =>
   <div>
@@ -50,31 +47,8 @@ const Body = styled(FlexCol)`
 `;
 
 class Routes extends Component {
-  state: {
-    showNewUserOnboarding: boolean,
-  };
-
-  constructor(props) {
-    super(props);
-    const { currentUser } = props;
-
-    // if the user doesn't have a username, no matter where they are in the app
-    // we trigger the 'set username' onboarding step - this step can be closed
-    // so that if the user is viewing a thread they can get back to that context
-    this.state = {
-      showNewUserOnboarding: currentUser && !currentUser.username,
-    };
-  }
-
-  closeNewUserOnboarding = () => {
-    return this.setState({
-      showNewUserOnboarding: false,
-    });
-  };
-
   render() {
     const { title, description } = generateMetaInfo();
-    const { showNewUserOnboarding } = this.state;
 
     return (
       <Router history={history}>
@@ -88,18 +62,6 @@ class Routes extends Component {
             <Route component={Toasts} />
             <Route component={Gallery} />
             <Route component={ThreadSlider} />
-
-            {// this only shows if the user does not have a username
-            // if the user is viewing their dashboard and has not joined
-            // any communities, that will be handled separately in
-            // dashboard/index.js
-            showNewUserOnboarding &&
-              <NewUserOnboarding
-                close={this.closeNewUserOnboarding}
-                // if the user doesn't have a username, they can't close
-                // the onboarding
-                noCloseButton
-              />}
 
             {/*
               Switch only renders the first match. Subrouting happens downstream
@@ -162,5 +124,4 @@ class Routes extends Component {
   }
 }
 
-const map = state => ({ currentUser: state.users.currentUser });
-export default connect(map)(Routes);
+export default Routes;

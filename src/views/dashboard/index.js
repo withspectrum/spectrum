@@ -84,14 +84,14 @@ class DashboardPure extends Component {
       );
     }
 
-    // New user onboarding
-    if (isNewUser) {
-      return <NewUserOnboarding noCloseButton close={() => {}} />;
-    }
-
     if (dataExists) {
       const currentUser = user;
       const communities = user.communityConnection.edges;
+
+      if (currentUser.username && communities.length === 0) {
+        return <NewUserOnboarding noCloseButton close={() => {}} />;
+      }
+
       return (
         <AppViewWrapper>
           <Head title={title} description={description} />

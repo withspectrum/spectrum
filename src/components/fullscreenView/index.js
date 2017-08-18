@@ -7,7 +7,7 @@ import {
   ClusterFour,
 } from '../../views/homepage/style';
 import Icon from '../../components/icons';
-import { FullscreenViewContainer, Close } from './style';
+import { FullscreenViewContainer, Illustrations, Close } from './style';
 
 class FullscreenView extends Component {
   componentDidMount() {
@@ -42,12 +42,12 @@ class FullscreenView extends Component {
           </Close>}
 
         {hasBackground &&
-          <span>
+          <Illustrations>
             <ClusterOne src="/img/cluster-2.svg" role="presentation" />
             <ClusterTwo src="/img/cluster-1.svg" role="presentation" />
             <ClusterThree src="/img/cluster-5.svg" role="presentation" />
             <ClusterFour src="/img/cluster-4.svg" role="presentation" />
-          </span>}
+          </Illustrations>}
 
         {children}
       </FullscreenViewContainer>
