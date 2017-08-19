@@ -127,13 +127,16 @@ class ThreadComposerWithData extends Component {
       If no defaults are set, we use the first available community, and then
       find the first available channel within that available community
     */
+    const activeCommunityFromPropsOrState =
+      props.activeCommunity || this.state.activeCommunity;
+
     let activeCommunity =
       availableCommunities &&
-      (props.activeCommunity
+      (activeCommunityFromPropsOrState
         ? availableCommunities.filter(community => {
             return (
               community.slug.toLowerCase() ===
-              props.activeCommunity.toLowerCase()
+              activeCommunityFromPropsOrState.toLowerCase()
             );
           })
         : availableCommunities);
@@ -294,9 +297,22 @@ class ThreadComposerWithData extends Component {
     const isOpen = this.props.isOpen;
     if (!isOpen) {
       this.props.dispatch(openComposer());
-      this.props.data
-        .refetch()
-        .then(result => this.handleIncomingProps(result));
+      this.props.data.refetch().then(result => {
+        // we have to rebuild a new props object to pass to `this.handleIncomingProps`
+        // in order to retain all the previous props passed in from the parent
+        // component and the initial data functions provided by apollo
+        const newProps = Object.assign({}, this.props, {
+          ...this.props,
+          data: {
+            ...this.props.data,
+            user: {
+              ...this.props.data.user,
+              ...result.data.user,
+            },
+          },
+        });
+        this.handleIncomingProps(newProps);
+      });
       this.refs.titleTextarea.focus();
     }
   };
