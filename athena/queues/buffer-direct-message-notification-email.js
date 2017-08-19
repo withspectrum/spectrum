@@ -1,17 +1,20 @@
 // @flow
-const debug = require('debug')('athena:send-message-notification-email');
+// $FlowFixMe
+const debug = require('debug')('athena:send-direct-message-notification-email');
 import createQueue from '../../shared/bull/create-queue';
-import { SEND_NEW_MESSAGE_EMAIL } from './constants';
+import { SEND_NEW_DIRECT_MESSAGE_EMAIL } from './constants';
 import { getUsersSettings } from '../models/usersSettings';
 import { getNotifications } from '../models/notification';
 import groupReplies from '../utils/group-replies';
 import getEmailStatus from '../utils/get-email-status';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
-// Change buffer in dev to 10 seconds vs 3 minutes in prod
-const BUFFER = IS_PROD ? 180000 : 10000;
-const MAX_WAIT = 600000;
-const sendNewMessageEmailQueue = createQueue(SEND_NEW_MESSAGE_EMAIL);
+// Change buffer in dev to 10 seconds vs 2 minutes in prod
+const BUFFER = IS_PROD ? 90000 : 10000;
+const MAX_WAIT = 300000;
+const sendNewDirectMessageEmailQueue = createQueue(
+  SEND_NEW_DIRECT_MESSAGE_EMAIL
+);
 
 // Called when the buffer time is over to actually send an email
 const timedOut = recipient => {
@@ -24,7 +27,7 @@ const timedOut = recipient => {
   );
 
   // Make sure we should be sending an email to this user
-  return getEmailStatus(recipient.userId, 'newMessageInThreads')
+  return getEmailStatus(recipient.userId, 'newDirectMessage')
     .then(shouldGetEmail => {
       if (!shouldGetEmail) {
         debug(`@${recipient.username} should not get email, aborting`);
@@ -67,7 +70,7 @@ const timedOut = recipient => {
         replies: groupReplies(threads[threadId].replies),
       }));
       debug(`adding email for @${recipient.username} to queue`);
-      return sendNewMessageEmailQueue.add({
+      return sendNewDirectMessageEmailQueue.add({
         to: recipient.email,
         user: {
           displayName: recipient.name,

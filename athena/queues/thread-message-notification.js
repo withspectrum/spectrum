@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('athena:queue:message-notification');
+const debug = require('debug')('athena:queue:thread-message-notification');
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import {

@@ -2,7 +2,7 @@
 // $FlowFixMe
 const debug = require('debug')('athena:send-thread-message-notification-email');
 import createQueue from '../../shared/bull/create-queue';
-import { SEND_NEW_MESSAGE_EMAIL } from './constants';
+import { SEND_NEW_THREAD_MESSAGE_EMAIL } from './constants';
 import { getUsersSettings } from '../models/usersSettings';
 import { getNotifications } from '../models/notification';
 import groupReplies from '../utils/group-replies';
@@ -14,7 +14,7 @@ const BUFFER = IS_PROD ? 360000 : 10000;
 // max wait of 10 minutes before an email is force-sent
 const MAX_WAIT = 600000;
 const sendNewThreadMessageEmailQueue = createQueue(
-  SEND_NEW_THRED_MESSAGE_EMAIL
+  SEND_NEW_THREAD_MESSAGE_EMAIL
 );
 
 // Called when the buffer time is over to actually send an email
@@ -28,7 +28,7 @@ const timedOut = recipient => {
   );
 
   // Make sure we should be sending an email to this user
-  return getEmailStatus(recipient.userId, 'newDirectMessage')
+  return getEmailStatus(recipient.userId, 'newMessageInThreads')
     .then(shouldGetEmail => {
       if (!shouldGetEmail) {
         debug(`@${recipient.username} should not get email, aborting`);
@@ -71,7 +71,7 @@ const timedOut = recipient => {
         replies: groupReplies(threads[threadId].replies),
       }));
       debug(`adding email for @${recipient.username} to queue`);
-      return sendNewMessageEmailQueue.add({
+      return sendNewThreadMessageEmailQueue.add({
         to: recipient.email,
         user: {
           displayName: recipient.name,

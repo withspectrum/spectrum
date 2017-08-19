@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('hermes:queue:send-new-message-email');
+const debug = require('debug')('hermes:queue:send-new-thread-message-email');
 import sendEmail from '../send-email';
 import { NEW_THREAD_MESSAGE_TEMPLATE } from './constants';
 import capitalize from '../utils/capitalize';
@@ -51,7 +51,7 @@ export default (job: SendNewMessageEmailJob) => {
     .title}${postfix}`;
   try {
     return sendEmail({
-      TemplateId: NEW_MESSAGE_TEMPLATE,
+      TemplateId: NEW_THREAD_MESSAGE_TEMPLATE,
       To: job.data.to,
       TemplateModel: {
         subject,
