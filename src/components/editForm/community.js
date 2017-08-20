@@ -316,6 +316,8 @@ class CommunityWithData extends Component {
             <PhotoInput
               onChange={this.setCommunityPhoto}
               defaultValue={image}
+              community
+              user={null}
               allowGif
             />
           </ImageInputWrapper>

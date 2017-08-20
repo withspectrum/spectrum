@@ -60,6 +60,7 @@ export const PhotoInput = (props: InputProps) => {
         size={props.size || 48}
         src={`${props.defaultValue}`}
         user={props.user}
+        community={props.community}
       />
       <StyledHiddenInput
         type="file"
