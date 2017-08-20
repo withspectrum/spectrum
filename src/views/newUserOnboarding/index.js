@@ -180,7 +180,6 @@ class NewUserOnboarding extends Component {
 
 //
 const map = state => ({
-  currentUser: state.users.currentUser,
   community: state.newUserOnboarding.community,
 });
 export default compose(connect(map))(NewUserOnboarding);

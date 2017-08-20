@@ -95,7 +95,11 @@ class DashboardPure extends Component {
 
           {currentUser.username &&
             communities.length === 0 &&
-            <NewUserOnboarding noCloseButton close={() => {}} />}
+            <NewUserOnboarding
+              noCloseButton
+              close={() => {}}
+              currentUser={currentUser}
+            />}
 
           {!isMobile &&
             <Column type="secondary">

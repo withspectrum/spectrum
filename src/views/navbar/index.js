@@ -304,46 +304,47 @@ class Navbar extends Component {
       showNewUserOnboarding,
     } = this.state;
 
+    // if the user is mobile and is viewing a thread or DM thread, don't
+    // render a navbar - it will be replaced with a chat input
+    const params = queryString.parse(history.location.search);
+    const threadParam = params.thread;
+    const parts = history.location.pathname.split('/');
+    const isViewingThread = parts[1] === 'thread';
+    const isViewingDm =
+      parts[1] === 'messages' && parts[2] && parts[2] !== 'new';
+    const isComposingDm = history.location.pathname === '/messages/new';
+    const isViewingThreadSlider = threadParam !== undefined;
+    if (
+      isMobile &&
+      (isViewingThreadSlider || isComposingDm || isViewingThread || isViewingDm)
+    ) {
+      return null;
+    }
+
+    console.log('user', user);
+    console.log('currentUser', currentUser);
+
+    // this only shows if the user does not have a username
+    if (
+      (user && showNewUserOnboarding) ||
+      ((history.location.pathname === '/' ||
+        history.location.pathname === '/home') &&
+        user &&
+        user.communityConnection.edges.length === 0)
+    ) {
+      return (
+        <NewUserOnboarding
+          close={this.closeNewUserOnboarding}
+          currentUser={user}
+          // if the user doesn't have a username, they can't close
+          // the onboarding
+          noCloseButton
+        />
+      );
+    }
+
     if (networkStatus < 8 && currentUserExists) {
       const showUnreadFavicon = dmUnseenCount > 0 || allUnseenCount > 0;
-
-      // if the user is mobile and is viewing a thread or DM thread, don't
-      // render a navbar - it will be replaced with a chat input
-      const params = queryString.parse(history.location.search);
-      const threadParam = params.thread;
-      const parts = history.location.pathname.split('/');
-      const isViewingThread = parts[1] === 'thread';
-      const isViewingDm =
-        parts[1] === 'messages' && parts[2] && parts[2] !== 'new';
-      const isComposingDm = history.location.pathname === '/messages/new';
-      const isViewingThreadSlider = threadParam !== undefined;
-      if (
-        isMobile &&
-        (isViewingThreadSlider ||
-          isComposingDm ||
-          isViewingThread ||
-          isViewingDm)
-      ) {
-        return null;
-      }
-
-      // this only shows if the user does not have a username
-      if (
-        showNewUserOnboarding ||
-        ((history.location.pathname === '/' ||
-          history.location.pathname === '/home') &&
-          user &&
-          user.communityConnection.edges.length === 0)
-      ) {
-        return (
-          <NewUserOnboarding
-            close={this.closeNewUserOnboarding}
-            // if the user doesn't have a username, they can't close
-            // the onboarding
-            noCloseButton
-          />
-        );
-      }
 
       return (
         <Nav>

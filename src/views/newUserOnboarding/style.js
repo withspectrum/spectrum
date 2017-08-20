@@ -10,6 +10,7 @@ export const OnboardingContainer = styled.div`
   width: 100%;
   flex: 1;
   overflow-y: scroll;
+  padding-top: 32px;
 `;
 
 export const Container = styled.div`
