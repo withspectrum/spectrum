@@ -321,9 +321,6 @@ class Navbar extends Component {
       return null;
     }
 
-    console.log('user', user);
-    console.log('currentUser', currentUser);
-
     // this only shows if the user does not have a username
     if (
       (user && showNewUserOnboarding) ||

@@ -29,7 +29,6 @@ if (thread) {
 }
 
 const existingUser = getItemFromStorage('spectrum');
-console.log('existing user from ls', existingUser);
 let store;
 if (existingUser) {
   store = initStore({

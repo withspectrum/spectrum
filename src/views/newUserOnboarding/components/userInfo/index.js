@@ -68,7 +68,6 @@ class UserInfoPure extends Component {
     super(props);
 
     const user = this.props.currentUser;
-    console.log('user', user);
 
     this.state = {
       website: user.website ? user.website : '',
