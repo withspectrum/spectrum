@@ -19,6 +19,8 @@ import {
   Emoji,
   Container,
   CreateUpsellContainer,
+  StickyRow,
+  ContinueButton,
 } from './style';
 
 class NewUserOnboarding extends Component {
@@ -155,11 +157,19 @@ class NewUserOnboarding extends Component {
                 <TopCommunities
                   joinedCommunity={this.joinedCommunity}
                   hasJoined={joinedCommunities > 0}
-                  doneExploring={() => (window.location.href = '/')}
                 />
                 <CreateUpsellContainer extra={joinedCommunities > 0}>
                   <UpsellCreateCommunity close={this.props.close} />
                 </CreateUpsellContainer>
+
+                <StickyRow hasJoined={joinedCommunities > 0}>
+                  <ContinueButton
+                    style={{ marginTop: '0' }}
+                    onClick={() => (window.location.href = '/')}
+                  >
+                    Continue to my home feed
+                  </ContinueButton>
+                </StickyRow>
               </Container>}
           </OnboardingContent>
         </OnboardingContainer>

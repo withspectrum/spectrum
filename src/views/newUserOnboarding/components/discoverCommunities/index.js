@@ -28,13 +28,12 @@ import { CoverLink, CoverSubtitle } from '../../../../components/profile/style';
 class TopCommunitiesPure extends Component {
   state: {
     loading: string,
-    hasJoined: number,
   };
 
   constructor() {
     super();
 
-    this.state = { loading: '', hasJoined: 0 };
+    this.state = { loading: '' };
   }
 
   toggleMembership = communityId => {
@@ -130,15 +129,6 @@ class TopCommunitiesPure extends Component {
               </Container>
             );
           })}
-
-          <StickyRow hasJoined={hasJoined > 0}>
-            <ContinueButton
-              style={{ marginTop: '0' }}
-              onClick={this.props.doneExploring}
-            >
-              Continue to my home feed
-            </ContinueButton>
-          </StickyRow>
         </Row>
       );
     }

@@ -61,11 +61,6 @@ export const zIndex = new function() {
   this.search = this.form; // search is a type of form and should appear at the same level
   this.dmInput = this.form;
 
-  this.slider = 1000; // slider should appear significantly above the base to leave room for other elements
-  this.composer = this.slider - 2; // composer should never appear above the slider
-  this.chatInput = this.slider + 1; // the slider chatInput should always appear above the slider
-  this.flyout = this.chatInput + 1; // flyout may overlap with chatInput and should take precedence
-
   this.modal = 2000; // modals should completely cover base content and slider as well
   this.gallery = this.modal + 1; // gallery should never appear behind a modal
 
@@ -73,6 +68,11 @@ export const zIndex = new function() {
   this.navBar = this.chrome; // navBar is chrome and should appear at the same level
   this.mobileInput = this.chrome + 1; // the chatInput on mobile should appear above the navBar
   this.dropDown = this.chrome + 1; // dropDowns shouldn't appear behind the navBar
+
+  this.slider = window.innerWidth < 768 ? this.chrome + 1 : this.chrome; // slider should appear significantly above the base to leave room for other elements
+  this.composer = this.slider - 2; // composer should never appear above the slider
+  this.chatInput = this.slider + 1; // the slider chatInput should always appear above the slider
+  this.flyout = this.chatInput + 1; // flyout may overlap with chatInput and should take precedence
 
   this.fullscreen = 4000; // fullscreen elements should cover all screen content except toasts
 

@@ -283,7 +283,12 @@ class Navbar extends Component {
   };
 
   render() {
-    const { match, data: { user, networkStatus }, currentUser } = this.props;
+    const {
+      history,
+      match,
+      data: { user, networkStatus },
+      currentUser,
+    } = this.props;
     const loggedInUser = user || currentUser;
     const isMobile = window.innerWidth < 768;
     const currentUserExists =
@@ -294,6 +299,39 @@ class Navbar extends Component {
       notifications,
       showNewUserOnboarding,
     } = this.state;
+    const params = queryString.parse(history.location.search);
+    const threadParam = params.thread;
+
+    // if the user is mobile and is viewing a thread or DM thread, don't
+    // render a navbar - it will be replaced with a chat input
+    console.log('match', history);
+    const parts = history.location.pathname.split('/');
+    const isViewingThread = parts[1] === 'thread';
+    const isViewingDm =
+      parts[1] === 'messages' && parts[2] && parts[2] !== 'new';
+    const isComposingDm = history.location.pathname === '/messages/new';
+    const isViewingThreadSlider = threadParam !== undefined;
+    if (
+      isMobile &&
+      (isViewingThreadSlider || isComposingDm || isViewingThread || isViewingDm)
+    ) {
+      return null;
+    }
+
+    // this only shows if the user does not have a username
+    // if the user is viewing their dashboard and has not joined
+    // any communities, that will be handled separately in
+    // dashboard/index.js
+    if (showNewUserOnboarding) {
+      return (
+        <NewUserOnboarding
+          close={this.closeNewUserOnboarding}
+          // if the user doesn't have a username, they can't close
+          // the onboarding
+          noCloseButton
+        />
+      );
+    }
 
     if (networkStatus < 8 && currentUserExists) {
       const showUnreadFavicon = dmUnseenCount > 0 || allUnseenCount > 0;
@@ -301,17 +339,6 @@ class Navbar extends Component {
       return (
         <Nav>
           <Head showUnreadFavicon={showUnreadFavicon} />
-          {// this only shows if the user does not have a username
-          // if the user is viewing their dashboard and has not joined
-          // any communities, that will be handled separately in
-          // dashboard/index.js
-          showNewUserOnboarding &&
-            <NewUserOnboarding
-              close={this.closeNewUserOnboarding}
-              // if the user doesn't have a username, they can't close
-              // the onboarding
-              noCloseButton
-            />}
 
           <Section left hideOnMobile>
             <LogoLink to="/">

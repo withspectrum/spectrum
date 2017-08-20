@@ -21,24 +21,6 @@ export const Row = styled.div`
   }
 `;
 
-export const StickyRow = styled.div`
-  width: 100%;
-  flex: 1 0 100%;
-  flex-wrap: wrap;
-  display: flex;
-  justify-content: center;
-  padding: 16px;
-  position: fixed;
-  bottom: ${props => (props.hasJoined ? '0' : '-200px')};
-  left: 0;
-  right: 0;
-  background: ${props => props.theme.bg.default};
-  border-top: 2px solid ${props => props.theme.border.default};
-  z-index: ${zIndex.fullscreen + 1};
-  transition: all 0.3s ease-in-out;
-  -webkit-transform: translate3d(0, 0, 0);
-`;
-
 export const CoverPhoto = styled.div`
   position: relative;
   width: 100%;

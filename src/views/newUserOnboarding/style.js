@@ -2,13 +2,14 @@
 // $FlowFixMe
 import styled from 'styled-components';
 import { Button } from '../../components/buttons';
-import { Shadow, hexa } from '../../components/globals';
+import { Shadow, hexa, zIndex } from '../../components/globals';
 
 export const OnboardingContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   flex: 1;
+  overflow-y: scroll;
 `;
 
 export const Container = styled.div`
@@ -95,4 +96,24 @@ export const CreateUpsellContainer = styled.div`
   margin-bottom: -32px;
   margin-left: -32px;
   margin-right: -32px;
+`;
+
+export const StickyRow = styled.div`
+  width: 100%;
+  flex: 1 0 100%;
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  position: fixed;
+  bottom: ${props => (props.hasJoined ? '0' : '-200px')};
+  opacity: ${props => (props.hasJoined ? '1' : '0')};
+  pointer-events: ${props => (props.hasJoined ? 'auto' : 'none')};
+  left: 0;
+  right: 0;
+  background: ${props => props.theme.bg.default};
+  border-top: 2px solid ${props => props.theme.border.default};
+  z-index: ${zIndex.fullscreen + 1};
+  transition: all 0.3s ease-in-out;
+  -webkit-transform: translate3d(0, 0, 0);
 `;
