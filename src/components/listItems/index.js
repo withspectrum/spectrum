@@ -48,10 +48,9 @@ export const CommunityListItem = (props: CardProps): React$Element<any> => {
           radius={4}
           src={`${props.contents.profilePhoto}`}
           size={32}
-          style={{ marginRight: '12px' }}
           noLink
         />
-        <Col>
+        <Col style={{ marginLeft: '12px' }}>
           <Heading>
             {props.contents.name}
           </Heading>
