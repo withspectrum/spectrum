@@ -40,7 +40,7 @@ const UserSettings = ({ data, currentUser, match }) => {
     );
   }
 
-  if (data.user.id !== currentUser.id) {
+  if (!currentUser.id || data.user.id !== currentUser.id) {
     return (
       <FlexCol style={{ flex: 'auto' }}>
         <Titlebar
