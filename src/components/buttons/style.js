@@ -40,7 +40,7 @@ const baseButton = css`
 
 export const Label = styled.span`
   display: block;
-  flex: 1 0 auto;
+  flex: 0 0 auto;
   line-height: inherit;
   color: inherit;
   ${props => (props.loading && !props.hasIcon ? 'opacity: 0;' : 'opacity: 1;')};
@@ -49,11 +49,10 @@ export const Label = styled.span`
 `;
 
 export const StyledSolidButton = styled.button`
-  ${baseButton}
-  background-color: ${props =>
-    props.disabled
-      ? props.theme.inactive
-      : eval(`props.theme.${props.color ? props.color : `brand.alt`}`)};
+  ${baseButton} background-color: ${props =>
+      props.disabled
+        ? props.theme.inactive
+        : eval(`props.theme.${props.color ? props.color : `brand.alt`}`)};
   background-image: ${props =>
     props.disabled || props.gradientTheme === 'none'
       ? 'none'
@@ -117,7 +116,7 @@ export const StyledOutlineButton = styled(StyledTextButton)`
   transition: ${Transition.hover.on};
 
   &:hover {
-    background-color: ${({ theme }) => theme.bg.default};
+    background-color: transparent;
     color: ${props =>
       props.disabled
         ? props.theme.inactive
@@ -134,9 +133,38 @@ export const StyledOutlineButton = styled(StyledTextButton)`
   }
 `;
 
+export const StyledFauxOutlineButton = styled.span`
+  ${baseButton} box-shadow: inset 0 0 0 2px ${props =>
+      props.disabled
+        ? props.theme.inactive
+        : eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
+  color: ${props =>
+    props.disabled
+      ? props.theme.inactive
+      : eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
+  transition: ${Transition.hover.on};
+
+  &:hover {
+    background-color: transparent;
+    color: ${props =>
+      props.disabled
+        ? props.theme.inactive
+        : eval(
+            `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
+          )};
+    box-shadow: inset 0 0 0 2px
+      ${props =>
+        props.disabled
+          ? props.theme.inactive
+          : eval(
+              `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
+            )};
+    transition: ${Transition.hover.on};
+  }
+`;
+
 export const StyledIconButton = styled.button`
-  ${baseButton}
-  padding: 0;
+  ${baseButton} padding: 0;
   width: 32px;
   height: 32px;
   background-color: transparent;

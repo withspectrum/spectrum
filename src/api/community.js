@@ -438,3 +438,30 @@ export const searchCommunityThreadsQuery = graphql(
   SEARCH_THREADS_IN_COMMUNITY_QUERY,
   SEARCH_THREADS_IN_COMMUNITY_OPTIONS
 );
+
+/*
+  Gets top communities for the onboarding flow.
+*/
+export const getTopCommunities = graphql(
+  gql`
+		{
+		  topCommunities {
+        ...communityInfo
+        metaData {
+          members
+        }
+      }
+    }
+    ${communityInfoFragment}
+	`,
+  {
+    props: ({ data: { error, loading, topCommunities } }) => ({
+      data: {
+        error,
+        loading,
+        topCommunities,
+      },
+    }),
+    options: { fetchPolicy: 'cache-and-network' },
+  }
+);

@@ -8,13 +8,16 @@ import { connect } from 'react-redux';
 import { withApollo } from 'react-apollo';
 // $FlowFixMe
 import compose from 'recompose/compose';
-import { Input, Error, Success, UnderlineInput } from '../formElements';
-import { Spinner } from '../globals';
-import { Button } from '../buttons';
-import { addToastWithTimeout } from '../../actions/toasts';
-import { Form, Loading, Row, Action } from './style';
-import { throttle } from '../../helpers/utils';
-import { CHECK_UNIQUE_USERNAME_QUERY, editUserMutation } from '../../api/user';
+import { Error, Success } from '../../../../components/formElements';
+import { Spinner } from '../../../../components/globals';
+import { addToastWithTimeout } from '../../../../actions/toasts';
+import { Form, Input, Loading, Row, InputLabel, InputSubLabel } from './style';
+import { throttle } from '../../../../helpers/utils';
+import {
+  CHECK_UNIQUE_USERNAME_QUERY,
+  editUserMutation,
+} from '../../../../api/user';
+import { ContinueButton } from '../../style';
 
 class SetUsername extends Component {
   state: {
@@ -28,7 +31,14 @@ class SetUsername extends Component {
   constructor(props) {
     super(props);
     const { user } = props;
-    const username = user.name ? slugg(user.name) : '';
+
+    // try to intelligently suggest a starting username based on the
+    // person's name, or firstname/lastname
+    let username = user.name
+      ? slugg(user.name)
+      : user.firstName && user.lastName
+        ? `${user.firstName}-${user.lastName}`
+        : '';
 
     this.state = {
       username: username,
@@ -43,8 +53,9 @@ class SetUsername extends Component {
 
   componentDidMount() {
     const { username } = this.state;
-    // if no username
-    if (!username.length > 0) return;
+    // if no username was able to be suggested, don't kick off a search
+    // with an empty string
+    if (username.length === 0) return;
     this.search(username);
   }
 
@@ -59,13 +70,11 @@ class SetUsername extends Component {
     });
 
     if (username.length > 20) {
-      this.setState({
+      return this.setState({
         error: 'Usernames can be up to 20 characters',
       });
-
-      return;
     } else if (username.length === 0) {
-      this.setState({
+      return this.setState({
         error: 'Be sure to set a username so that people can find you!',
         success: '',
       });
@@ -75,10 +84,10 @@ class SetUsername extends Component {
       });
     }
 
-    this.search(username);
+    return this.search(username);
   };
 
-  search = username => {
+  search = (username: string) => {
     if (username.length > 20) {
       return this.setState({
         error: 'Usernames can be up to 20 characters',
@@ -87,7 +96,7 @@ class SetUsername extends Component {
       });
     } else if (username.length === 0) {
       return this.setState({
-        error: 'Be sure to set a username so that people can find you!',
+        error: "Your username can't be nothing...",
         success: '',
         isSearching: false,
       });
@@ -105,16 +114,17 @@ class SetUsername extends Component {
             username,
           },
         })
-        .then(({ data, data: { user } }) => {
+        .then(({ data: { user } }) => {
           if (this.state.username.length > 20) {
             return this.setState({
-              error: 'Usernames can be up to 20 characters',
+              error: 'Usernames can be up to 20 characters because of reasons.',
               success: '',
               isSearching: false,
             });
           } else if (user && user.id) {
             return this.setState({
-              error: 'This username is already taken, sorry!',
+              error:
+                'Someone already swooped this username – not feeling too original today, huh?',
               isSearching: false,
               success: '',
             });
@@ -122,7 +132,7 @@ class SetUsername extends Component {
             return this.setState({
               error: '',
               isSearching: false,
-              success: 'This username is available! Save it to continue...',
+              success: 'That username is available!',
             });
           }
         });
@@ -143,13 +153,16 @@ class SetUsername extends Component {
 
     this.props
       .editUser(input)
-      .then(({ data: { user } }) => {
+      .then(({ data: { editUser } }) => {
         this.setState({
           isLoading: false,
           success: '',
         });
-        this.props.usernameSaved();
-        this.props.dispatch(addToastWithTimeout('success', 'Username saved!'));
+
+        // trigger a method in the newUserOnboarding component class
+        // to determine what to do next with this user - either push them
+        // to community discovery or close the onboarding completely
+        this.props.save();
       })
       .catch(err => {
         this.setState({
@@ -165,6 +178,9 @@ class SetUsername extends Component {
 
     return (
       <Form onSubmit={this.saveUsername}>
+        <InputLabel>Create your username</InputLabel>
+        <InputSubLabel>You can change this later - no pressure!</InputSubLabel>
+
         <Row>
           <Input
             placeholder={'Set a username...'}
@@ -177,32 +193,25 @@ class SetUsername extends Component {
             <Loading>
               <Spinner size={16} color={'brand.default'} />
             </Loading>}
-
-          <Action>
-            <Button
-              disabled={error || username.length > 20}
-              loading={isLoading}
-              onClick={this.saveUsername}
-            >
-              Save
-            </Button>
-          </Action>
         </Row>
         <Row>
-          <UnderlineInput disabled defaultValue={username}>
-            spectrum.chat/users/
-          </UnderlineInput>
-        </Row>
-        <Row>
-          {error &&
-            <Error>
-              {error}
-            </Error>}
+          <Error>
+            {error ? error : <span>&nbsp;</span>}
+          </Error>
 
-          {success &&
-            <Success>
-              {success}
-            </Success>}
+          <Success>
+            {success ? success : <span>&nbsp;</span>}
+          </Success>
+        </Row>
+
+        <Row>
+          <ContinueButton
+            onClick={this.saveUsername}
+            disabled={!username || error}
+            loading={isLoading}
+          >
+            Save and Continue
+          </ContinueButton>
         </Row>
       </Form>
     );

@@ -1,23 +1,23 @@
 // @flow
 // $FlowFixMe
 import styled from 'styled-components';
-import { Gradient, Truncate, Transition } from '../../../components/globals';
-import ScrollRow from '../../../components/scrollRow';
+import {
+  Gradient,
+  Truncate,
+  Transition,
+  zIndex,
+} from '../../../../components/globals';
 
-export const Row = styled(ScrollRow)`
-  max-width: 100%;
+export const Row = styled.div`
   width: 100%;
-  flex: 0 0 300px;
+  flex: 1 0 100%;
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
   padding: 8px 16px 0 16px;
-  overflow-x: scroll;
-  align-items: flex-start;
 
-  &:after, &:before{
-    content: '';
-    display: inline-block;
-    flex: 0 0 32px;
-    align-self: stretch;
-    background-color: transparent;
+  @media (max-width: 768px) {
+    padding: 8px 0 0;
   }
 `;
 
@@ -35,12 +35,21 @@ export const CoverPhoto = styled.div`
 
 export const Container = styled.div`
   background: #fff;
-  box-shadow: 0 1px 12px rgba(0,0,0,0.12);
-  min-width: 240px;
+  box-shadow: inset 0 0 0 2px ${props => props.theme.border.default};
+  flex: 0 0 22%;
+  display: flex;
+  flex-direction: column;
   border-radius: 12px;
+  position: relative;
+  z-index: ${zIndex.card};
+  margin: 16px;
 
-  &:not(:last-child):not(:first-child) {
-    margin: 0 16px;
+  @media (max-width: 1168px) {
+    flex-basis: 44%;
+  }
+
+  @media (max-width: 540px) {
+    flex-basis: 100%;
   }
 `;
 
@@ -52,7 +61,8 @@ export const ProfileAvatar = styled.img`
   border-radius: 8px;
   object-fit: cover;
   background-color: ${({ theme }) => theme.generic.default};
-  background-image: ${({ theme }) => Gradient(theme.generic.alt, theme.generic.default)};
+  background-image: ${({ theme }) =>
+    Gradient(theme.generic.alt, theme.generic.default)};
 `;
 
 export const CoverAvatar = styled(ProfileAvatar)`
@@ -68,14 +78,25 @@ export const Title = styled.h3`
   color: ${props => props.theme.text.default};
   font-weight: 700;
   line-height: 1.2;
-  ${Truncate}
-  transition: ${Transition.hover.off};
+  ${Truncate} transition: ${Transition.hover.off};
 `;
 
 export const CoverTitle = styled(Title)`
   font-size: 16px;
   margin-top: 8px;
   max-width: 100%;
+`;
+
+export const CoverDescription = styled.p`
+  margin: 0 16px 8px 16px;
+  text-align: center;
+  font-size: 16px;
+  color: ${props => props.theme.text.alt};
+  display: flex;
+  align-self: stretch;
+  flex-direction: column;
+  flex: 1;
+  line-height: 1.3;
 `;
 
 export const ButtonContainer = styled.div`

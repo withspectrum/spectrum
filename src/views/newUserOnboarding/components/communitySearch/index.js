@@ -8,11 +8,16 @@ import { withRouter } from 'react-router';
 import compose from 'recompose/compose';
 // $FlowFixMe
 import { Link } from 'react-router-dom';
-import { Button } from '../../../components/buttons';
+// $FlowFixMe
+import { connect } from 'react-redux';
+import { track } from '../../../../helpers/events';
+import { addToastWithTimeout } from '../../../../actions/toasts';
+import { Button, OutlineButton } from '../../../../components/buttons';
+import { toggleCommunityMembershipMutation } from '../../../../api/community';
 import { findDOMNode } from 'react-dom';
-import { throttle } from '../../../helpers/utils';
-import { SEARCH_COMMUNITIES_QUERY } from '../../../api/community';
-import { Spinner } from '../../../components/globals';
+import { throttle } from '../../../../helpers/utils';
+import { SEARCH_COMMUNITIES_QUERY } from '../../../../api/community';
+import { Spinner } from '../../../../components/globals';
 import {
   SearchWrapper,
   SearchInput,
@@ -20,15 +25,14 @@ import {
   SearchSpinnerContainer,
   SearchResultsDropdown,
   SearchResult,
-  SearchResultTextContainer,
   SearchResultNull,
   SearchResultImage,
   SearchResultMetaWrapper,
   SearchResultName,
   SearchResultMetadata,
-  SearchLink,
   SearchIcon,
-} from '../style';
+  SearchResultDescription,
+} from './style';
 
 class Search extends Component {
   state: {
@@ -37,6 +41,7 @@ class Search extends Component {
     searchIsLoading: boolean,
     focusedSearchResult: string,
     isFocused: boolean,
+    loading: string,
   };
 
   constructor() {
@@ -48,11 +53,76 @@ class Search extends Component {
       searchIsLoading: false,
       focusedSearchResult: '',
       isFocused: true,
+      loading: '',
     };
 
     // only kick off search query every 200ms
     this.search = throttle(this.search, 500);
   }
+
+  toggleMembership = communityId => {
+    this.setState({
+      loading: communityId,
+    });
+
+    this.props
+      .toggleCommunityMembership({ communityId })
+      .then(({ data: { toggleCommunityMembership } }) => {
+        this.setState({
+          loading: '',
+        });
+
+        const isMember =
+          toggleCommunityMembership.communityPermissions.isMember;
+
+        track('community', isMember ? 'joined' : 'unjoined', null);
+        track(
+          'onboarding',
+          isMember ? 'community joined' : 'community unjoined',
+          null
+        );
+
+        const str = isMember
+          ? `Joined ${toggleCommunityMembership.name}!`
+          : `Left ${toggleCommunityMembership.name}.`;
+
+        const type = isMember ? 'success' : 'neutral';
+
+        this.props.joinedCommunity(isMember ? 1 : -1, false);
+
+        const { searchResults } = this.state;
+
+        // because we are using state to display the search results,
+        // we can't rely on the apollo cache to automatically update the
+        // display of the join/leave buttons in the search results dropdown
+        // so we update the state manually with the new membership boolean
+        // returned from the mutation
+        const newSearchResults = searchResults.map(community => {
+          if (community.id === toggleCommunityMembership.id) {
+            const newObj = Object.assign({}, ...community, {
+              ...community,
+              communityPermissions: {
+                ...community.communityPermissions,
+                isMember: isMember,
+              },
+            });
+
+            return newObj;
+          }
+          return community;
+        });
+
+        this.setState({
+          searchResults: newSearchResults,
+        });
+      })
+      .catch(err => {
+        this.setState({
+          loading: '',
+        });
+        this.props.dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
 
   search = (searchString: string) => {
     const { client } = this.props;
@@ -70,9 +140,14 @@ class Search extends Component {
       })
       .then(({ data: { searchCommunities } }) => {
         const searchResults = searchCommunities;
-        const sorted = searchResults.slice().sort((a, b) => {
-          return b.metaData.members - a.metaData.members;
-        });
+        // sort by membership count
+        const sorted = searchResults
+          .slice()
+          .sort((a, b) => {
+            return b.metaData.members - a.metaData.members;
+          })
+          // don't display communities where the user is blocked
+          .filter(community => !community.communityPermissions.isBlocked);
 
         if (!sorted || sorted.length === 0) {
           return this.setState({
@@ -91,7 +166,6 @@ class Search extends Component {
   };
 
   handleKeyPress = (e: any) => {
-    // destructure the whole state object
     const { searchResults, focusedSearchResult } = this.state;
 
     const input = findDOMNode(this.refs.input);
@@ -106,6 +180,7 @@ class Search extends Component {
       this.setState({
         searchResults: [],
         searchIsLoading: false,
+        searchString: '',
       });
 
       input.focus();
@@ -114,13 +189,8 @@ class Search extends Component {
 
     // if user presses enter
     if (e.keyCode === 13) {
-      if (
-        searchResults.length === 0 ||
-        searchResults[indexOfFocusedSearchResult] === undefined
-      )
-        return;
-      const slug = searchResults[indexOfFocusedSearchResult].slug;
-      return this.props.history.push(`/${slug}`);
+      const id = searchResults[indexOfFocusedSearchResult].id;
+      return this.toggleMembership(id);
     }
 
     // if person presses down
@@ -183,7 +253,10 @@ class Search extends Component {
       searchResults,
       focusedSearchResult,
       isFocused,
+      loading,
     } = this.state;
+
+    const isMobile = window.innerWidth < 768;
 
     return (
       <SearchWrapper>
@@ -200,6 +273,7 @@ class Search extends Component {
             placeholder="Search for communities or topics..."
             onChange={this.handleChange}
             onFocus={this.onFocus}
+            autoFocus={!isMobile}
           />
         </SearchInputWrapper>
 
@@ -213,23 +287,42 @@ class Search extends Component {
                     focused={focusedSearchResult === community.id}
                     key={community.id}
                   >
-                    <SearchLink to={`/${community.slug}`}>
-                      <SearchResultImage
-                        community
-                        src={community.profilePhoto}
-                      />
-                      <SearchResultTextContainer>
-                        <SearchResultMetaWrapper>
-                          <SearchResultName>
-                            {community.name}
-                          </SearchResultName>
-                          {community.metaData &&
-                            <SearchResultMetadata>
-                              {community.metaData.members} members
-                            </SearchResultMetadata>}
-                        </SearchResultMetaWrapper>
-                      </SearchResultTextContainer>
-                    </SearchLink>
+                    <SearchResultImage community src={community.profilePhoto} />
+
+                    <SearchResultMetaWrapper>
+                      <SearchResultName>
+                        {community.name}
+                      </SearchResultName>
+                      {community.metaData &&
+                        <SearchResultMetadata>
+                          {community.metaData.members} members
+                        </SearchResultMetadata>}
+                      <SearchResultDescription>
+                        {community.description}
+                      </SearchResultDescription>
+                    </SearchResultMetaWrapper>
+
+                    <div>
+                      {community.communityPermissions.isMember
+                        ? <OutlineButton
+                            onClick={() => this.toggleMembership(community.id)}
+                            gradientTheme="none"
+                            color={'pro.alt'}
+                            hoverColor={'pro.default'}
+                            loading={loading === community.id}
+                          >
+                            Joined!
+                          </OutlineButton>
+                        : <Button
+                            onClick={() => this.toggleMembership(community.id)}
+                            loading={loading === community.id}
+                            gradientTheme={'success'}
+                            style={{ fontSize: '16px' }}
+                            icon={'plus'}
+                          >
+                            Join
+                          </Button>}
+                    </div>
                   </SearchResult>
                 );
               })}
@@ -237,16 +330,14 @@ class Search extends Component {
             {searchResults.length === 0 &&
               isFocused &&
               <SearchResult>
-                <SearchResultTextContainer>
-                  <SearchResultNull>
-                    <p>
-                      No communities found matching "{searchString}"
-                    </p>
-                    <Link to={'/new/community'}>
-                      <Button>Create a Community</Button>
-                    </Link>
-                  </SearchResultNull>
-                </SearchResultTextContainer>
+                <SearchResultNull>
+                  <p>
+                    No communities found matching "{searchString}"
+                  </p>
+                  <Link to={'/new/community'}>
+                    <Button>Create a Community</Button>
+                  </Link>
+                </SearchResultNull>
               </SearchResult>}
           </SearchResultsDropdown>}
       </SearchWrapper>
@@ -254,4 +345,9 @@ class Search extends Component {
   }
 }
 
-export default compose(withApollo, withRouter)(Search);
+export default compose(
+  withApollo,
+  withRouter,
+  toggleCommunityMembershipMutation,
+  connect()
+)(Search);

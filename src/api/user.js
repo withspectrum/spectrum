@@ -168,6 +168,17 @@ export const GET_CURRENT_USER_PROFILE_QUERY = gql`
   query getCurrentUserProfile {
     user: currentUser {
       ...userInfo
+      communityConnection {
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+        }
+        edges {
+          node {
+            id
+          }
+        }
+      }
     }
   }
   ${userInfoFragment}

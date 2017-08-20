@@ -49,6 +49,7 @@ const Body = styled(FlexCol)`
 class Routes extends Component {
   render() {
     const { title, description } = generateMetaInfo();
+
     return (
       <Router history={history}>
         <ScrollManager>

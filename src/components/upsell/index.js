@@ -120,7 +120,11 @@ export const UpsellMiniCreateCommunity = () => {
   );
 };
 
-export const UpsellCreateCommunity = () => {
+// takes a 'close' props from the new user onboarding which allows a user
+// to create a community rather than joining communities - if they choose
+// to go down the path of creating a community, clicking on the 'get started'
+// button will close the new user onboarding
+export const UpsellCreateCommunity = ({ close }) => {
   const title = 'Create a community';
   const subtitle = 'Building communities on Spectrum is easy and free forever';
 
@@ -134,7 +138,7 @@ export const UpsellCreateCommunity = () => {
       </Subtitle>
       <Actions>
         <Link to="/new/community">
-          <Button>Get Started</Button>
+          <Button onClick={close}>Get Started</Button>
         </Link>
       </Actions>
     </NullCard>
@@ -202,7 +206,8 @@ export class UpsellSignIn extends Component {
                     preferred={preferredSigninMethod === 'twitter'}
                     after={preferredSigninMethod === 'twitter'}
                     whitebg={preferredSigninMethod !== 'twitter'}
-                    href={`${SERVER_URL}/auth/twitter`}
+                    href={`${SERVER_URL}/auth/twitter?r=${window.location
+                      .href}`}
                     onClick={() => this.trackSignin('secondary cta', 'twitter')}
                   >
                     <Icon glyph="twitter" /> <span>{verb} with Twitter</span>
@@ -212,7 +217,8 @@ export class UpsellSignIn extends Component {
                     preferred={preferredSigninMethod === 'facebook'}
                     after={preferredSigninMethod === 'facebook'}
                     whitebg={preferredSigninMethod !== 'facebook'}
-                    href={`${SERVER_URL}/auth/facebook`}
+                    href={`${SERVER_URL}/auth/facebook?r=${window.location
+                      .href}`}
                     onClick={() =>
                       this.trackSignin('secondary cta', 'facebook')}
                   >
@@ -223,7 +229,7 @@ export class UpsellSignIn extends Component {
                     preferred={preferredSigninMethod === 'google'}
                     after={preferredSigninMethod === 'google'}
                     whitebg={preferredSigninMethod !== 'google'}
-                    href={`${SERVER_URL}/auth/google`}
+                    href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
                     onClick={() => this.trackSignin('secondary cta', 'google')}
                   >
                     <Icon glyph="google" /> <span>{verb} with Google</span>
@@ -234,7 +240,8 @@ export class UpsellSignIn extends Component {
                 <Col>
                   <ButtonTwitter
                     preferred
-                    href={`${SERVER_URL}/auth/twitter`}
+                    href={`${SERVER_URL}/auth/twitter?r=${window.location
+                      .href}`}
                     after={preferredSigninMethod === 'twitter'}
                     onClick={() => this.trackSignin('secondary cta', 'twitter')}
                   >
@@ -243,7 +250,8 @@ export class UpsellSignIn extends Component {
 
                   <ButtonFacebook
                     preferred
-                    href={`${SERVER_URL}/auth/facebook`}
+                    href={`${SERVER_URL}/auth/facebook?r=${window.location
+                      .href}`}
                     after={preferredSigninMethod === 'facebook'}
                     onClick={() =>
                       this.trackSignin('secondary cta', 'facebook')}
@@ -253,7 +261,7 @@ export class UpsellSignIn extends Component {
 
                   <ButtonGoogle
                     preferred
-                    href={`${SERVER_URL}/auth/google`}
+                    href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
                     after={preferredSigninMethod === 'google'}
                     onClick={() => this.trackSignin('secondary cta', 'google')}
                   >

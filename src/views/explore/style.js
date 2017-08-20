@@ -307,7 +307,7 @@ export const SearchResultsDropdown = styled.ul`
   flex: auto;
   max-height: 400px;
   overflow-y: scroll;
-  z-index: ${zIndex.dropdown};
+  z-index: ${zIndex.dropDown};
   background: ${props => props.theme.bg.default};
 
   @media (max-width: 768px) {

@@ -6,6 +6,7 @@ import {
   StyledTextButton,
   StyledIconButton,
   StyledOutlineButton,
+  StyledFauxOutlineButton,
   SpinnerContainer,
 } from './style';
 import { Spinner } from '../globals';
@@ -66,6 +67,22 @@ export const OutlineButton = (props: ButtonProps) =>
       {props.children}
     </Label>
   </StyledOutlineButton>;
+
+// looks like a button, but isn't a button so it won't submit forms
+export const FauxOutlineButton = (props: ButtonProps) =>
+  <StyledFauxOutlineButton {...props}>
+    {props.icon
+      ? props.loading
+        ? <SpinnerContainer>
+            <Spinner color="brand.alt" size="16" />
+          </SpinnerContainer>
+        : <Icon glyph={props.icon} />
+      : ''}
+    {props.loading && !props.icon && <Spinner color="brand.alt" size="16" />}
+    <Label loading={props.loading} hasIcon={props.icon}>
+      {props.children}
+    </Label>
+  </StyledFauxOutlineButton>;
 
 export const TextButton = (props: ButtonProps) =>
   <StyledTextButton {...props}>

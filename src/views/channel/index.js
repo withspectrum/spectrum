@@ -10,6 +10,7 @@ import { track } from '../../helpers/events';
 import generateMetaInfo from 'shared/generate-meta-info';
 import { toggleChannelSubscriptionMutation } from '../../api/channel';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import ThreadComposer from '../../components/threadComposer';
 import Head from '../../components/head';
 import AppViewWrapper from '../../components/appViewWrapper';
@@ -175,6 +176,11 @@ class ChannelViewPure extends Component {
             description: channel.description,
           },
         });
+
+        // if the user is new and signed up through a channel page, push
+        // the channel's community data into the store to hydrate the new user experience
+        // with their first community they should join
+        this.props.dispatch(addCommunityToOnboarding(channel.community));
 
         track('channel', 'profile viewed', null);
 

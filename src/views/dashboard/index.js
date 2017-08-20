@@ -6,13 +6,13 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 import { getEverythingThreads, getCurrentUserProfile } from './queries';
 import Titlebar from '../../views/titlebar';
+import NewUserOnboarding from '../../views/newUserOnboarding';
 import {
   UpsellSignIn,
   UpsellToReload,
   UpsellMiniCreateCommunity,
   UpsellMiniUpgrade,
 } from '../../components/upsell';
-import UpsellNewUser from '../../components/upsell/newUserUpsell';
 import {
   LoadingProfile,
   LoadingList,
@@ -65,11 +65,10 @@ class DashboardPure extends Component {
   };
 
   render() {
-    const { data: { user, networkStatus, error } } = this.props;
+    const { data: { user, networkStatus } } = this.props;
     const { isNewUser } = this.state;
     const isMobile = window.innerWidth < 768;
     const dataExists = user && user.communityConnection;
-    const noData = !user && !error;
     const { title, description } = generateMetaInfo();
 
     // Error, prompt reload
@@ -85,32 +84,22 @@ class DashboardPure extends Component {
       );
     }
 
-    // New user onboarding
-    if (isNewUser) {
-      const communities = user.communityConnection.edges;
-
-      return (
-        <AppViewWrapper>
-          <Head title={title} description={description} />
-          <Titlebar />
-          <Column type="primary">
-            <UpsellNewUser
-              user={user}
-              graduate={this.graduate}
-              communities={communities}
-            />
-          </Column>
-        </AppViewWrapper>
-      );
-    }
-
     if (dataExists) {
       const currentUser = user;
       const communities = user.communityConnection.edges;
+
       return (
         <AppViewWrapper>
           <Head title={title} description={description} />
           <Titlebar />
+
+          {currentUser.username &&
+            communities.length === 0 &&
+            <NewUserOnboarding
+              noCloseButton
+              close={() => {}}
+              currentUser={currentUser}
+            />}
 
           {!isMobile &&
             <Column type="secondary">

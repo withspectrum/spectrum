@@ -47,6 +47,10 @@ export const Input = styled(FlexRow)`
   flex: none;
   justify-content: center;
   z-index: ${zIndex.chatInput};
+
+  @media (max-width: 768px) {
+    z-index: ${zIndex.mobileInput};
+  }
 `;
 
 export const Detail = styled(Column)`
@@ -59,6 +63,7 @@ export const ChatInputWrapper = styled(Column)`
   align-items: stretch;
   margin: 0;
   flex: auto;
+  position: relative;
 
   > div {
     background-image: ${({ theme }) =>

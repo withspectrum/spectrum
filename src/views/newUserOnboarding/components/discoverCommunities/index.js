@@ -6,21 +6,24 @@ import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 // $FlowFixMe
 import pure from 'recompose/pure';
-import { track } from '../../../helpers/events';
-import { getTopCommunities } from '../queries';
-import { toggleCommunityMembershipMutation } from '../../../api/community';
-import { addToastWithTimeout } from '../../../actions/toasts';
-import { displayLoadingState } from '../../../components/loading';
-import { Button, OutlineButton } from '../../../components/buttons';
+import { track } from '../../../../helpers/events';
+import { getTopCommunities } from '../../../../api/community';
+import { toggleCommunityMembershipMutation } from '../../../../api/community';
+import { addToastWithTimeout } from '../../../../actions/toasts';
+import { displayLoadingState } from '../../../../components/loading';
+import { Button, OutlineButton } from '../../../../components/buttons';
+import { ContinueButton } from '../../style';
 import {
   Row,
+  StickyRow,
   CoverPhoto,
   Container,
   CoverAvatar,
   CoverTitle,
+  CoverDescription,
   ButtonContainer,
-} from './topCommunitiesStyle';
-import { CoverLink, CoverSubtitle } from '../../../components/profile/style';
+} from './style';
+import { CoverLink, CoverSubtitle } from '../../../../components/profile/style';
 
 class TopCommunitiesPure extends Component {
   state: {
@@ -55,15 +58,13 @@ class TopCommunitiesPure extends Component {
           null
         );
 
-        isMember ? this.props.join() : this.props.leave();
-
         const str = isMember
           ? `Joined ${toggleCommunityMembership.name}!`
           : `Left ${toggleCommunityMembership.name}.`;
 
         const type = isMember ? 'success' : 'neutral';
 
-        this.props.dispatch(addToastWithTimeout(type, str));
+        this.props.joinedCommunity(isMember ? 1 : -1, false);
       })
       .catch(err => {
         this.setState({
@@ -74,13 +75,17 @@ class TopCommunitiesPure extends Component {
   };
 
   render() {
-    const { data: { topCommunities, error } } = this.props;
+    const { data: { topCommunities, error }, hasJoined } = this.props;
     const { loading } = this.state;
+    // don't display communities where the user is blocked
+    const filteredCommunities = topCommunities.filter(
+      community => !community.communityPermissions.isBlocked
+    );
 
-    if (!error && topCommunities.length > 0) {
+    if (!error && filteredCommunities.length > 0) {
       return (
-        <Row>
-          {topCommunities.map(community => {
+        <Row hasJoined={hasJoined > 0}>
+          {filteredCommunities.map(community => {
             return (
               <Container key={community.id}>
                 <CoverPhoto url={community.coverPhoto}>
@@ -95,6 +100,10 @@ class TopCommunitiesPure extends Component {
                   {community.metaData.members} members
                 </CoverSubtitle>
 
+                <CoverDescription>
+                  {community.description}
+                </CoverDescription>
+
                 <ButtonContainer>
                   {community.communityPermissions.isMember
                     ? <OutlineButton
@@ -102,6 +111,7 @@ class TopCommunitiesPure extends Component {
                         gradientTheme="none"
                         color={'pro.alt'}
                         hoverColor={'pro.default'}
+                        style={{ fontSize: '16px' }}
                         loading={loading === community.id}
                       >
                         Joined!
@@ -109,6 +119,9 @@ class TopCommunitiesPure extends Component {
                     : <Button
                         onClick={() => this.toggleMembership(community.id)}
                         loading={loading === community.id}
+                        gradientTheme={'success'}
+                        style={{ fontSize: '16px' }}
+                        icon={'plus'}
                       >
                         Join
                       </Button>}

@@ -44,7 +44,7 @@ users.forEach(user => {
 console.log('Generating communities...');
 const communities = [
   ...DEFAULT_COMMUNITIES,
-  ...randomAmount({ max: 10 }, () => {
+  ...randomAmount({ min: 10, max: 20 }, () => {
     return generateCommunity();
   }),
 ];
@@ -169,7 +169,8 @@ const db = require('rethinkdbdash')({
 
 console.log(
   `Inserting ${users.length} users,
-  ${communities.length} communities, ${channels.length} channels, ${threads.length} threads, ${messages.length + direct_messages.length} messages, ${reactions.length} reactions, ${directMessageThreads.length} direct message threads, ${usersCommunities.length} usersCommunities objects, ${usersChannels.length} usersChannels objects, and ${usersDirectMessageThreads.length} usersDirectMessageThreads objects into the database... (this might take a while!)`
+  ${communities.length} communities, ${channels.length} channels, ${threads.length} threads, ${messages.length +
+    direct_messages.length} messages, ${reactions.length} reactions, ${directMessageThreads.length} direct message threads, ${usersCommunities.length} usersCommunities objects, ${usersChannels.length} usersChannels objects, and ${usersDirectMessageThreads.length} usersDirectMessageThreads objects into the database... (this might take a while!)`
 );
 Promise.all([
   db.table('communities').insert(communities).run(),

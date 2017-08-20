@@ -19,6 +19,7 @@ import Search from './components/search';
 import MemberGrid from './components/memberGrid';
 import { toggleCommunityMembershipMutation } from '../../api/community';
 import { addToastWithTimeout } from '../../actions/toasts';
+import { addCommunityToOnboarding } from '../../actions/newUserOnboarding';
 import { CoverPhoto } from '../../components/profile/coverPhoto';
 import Titlebar from '../titlebar';
 import { CommunityProfile } from '../../components/profile';
@@ -166,6 +167,11 @@ class CommunityViewPure extends Component {
           description: community.description,
         },
       });
+
+      // if the user is new and signed up through a community page, push
+      // the community data into the store to hydrate the new user experience
+      // with their first community they should join
+      this.props.dispatch(addCommunityToOnboarding(community));
 
       // if the person viewing the community recently created this community,
       // we'll mark it as "new and owned" - this tells the downstream

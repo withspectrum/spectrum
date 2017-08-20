@@ -331,6 +331,8 @@ class CreateCommunityForm extends Component {
       photoSizeError,
     } = this.state;
 
+    const isMobile = window.innerWidth < 768;
+
     return (
       <FormContainer>
         <Form>
@@ -339,11 +341,15 @@ class CreateCommunityForm extends Component {
               onChange={this.setCommunityCover}
               defaultValue={coverPhoto}
               preview={true}
+              allowGif
             />
 
             <PhotoInput
               onChange={this.setCommunityPhoto}
               defaultValue={image}
+              user={null}
+              community
+              allowGif
             />
           </ImageInputWrapper>
 
@@ -357,7 +363,7 @@ class CreateCommunityForm extends Component {
           <Input
             defaultValue={name}
             onChange={this.changeName}
-            autoFocus={true}
+            autoFocus={!isMobile}
           >
             What is your community called?
           </Input>
@@ -389,11 +395,7 @@ class CreateCommunityForm extends Component {
               Oop, that's more than 140 characters - try trimming that up.
             </Error>}
 
-          <Input
-            defaultValue={website}
-            onChange={this.changeWebsite}
-            autoFocus={true}
-          >
+          <Input defaultValue={website} onChange={this.changeWebsite}>
             Optional: Add your community's website
           </Input>
 
