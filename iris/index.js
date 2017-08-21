@@ -10,6 +10,7 @@ import fs from 'fs';
 import { createServer } from 'http';
 //$FlowFixMe
 import express from 'express';
+import * as graphql from 'graphql';
 
 import schema from './schema';
 import { init as initPassport } from './authentication.js';
@@ -33,6 +34,114 @@ app.use('/auth', authRoutes);
 
 import apiRoutes from './routes/api';
 app.use('/api', apiRoutes);
+
+global.window = {
+  location: {
+    protocol: 'https:',
+    host: 'spectrum.chat',
+    hash: '',
+  },
+};
+var LocalStorage = require('node-localstorage').LocalStorage,
+  localStorage = new LocalStorage('./test');
+global.localStorage = localStorage;
+global.navigator = {
+  userAgent: '',
+};
+const Routes = require('../src/routes').default;
+import React from 'react';
+import ReactDOM from 'react-dom/server';
+import { ServerStyleSheet } from 'styled-components';
+import {
+  ApolloClient,
+  createNetworkInterface,
+  ApolloProvider,
+  renderToStringWithData,
+} from 'react-apollo';
+import { StaticRouter } from 'react-router';
+import { createStore } from 'redux';
+import { createLocalInterface } from 'apollo-local-query';
+
+import { initStore } from '../src/store';
+
+function Html({ content, state, styleElement }) {
+  return (
+    <html>
+      <head>
+        <link rel="stylesheet" type="text/css" href="/reset.css" />
+        {styleElement}
+      </head>
+      <body>
+        <div id="content" dangerouslySetInnerHTML={{ __html: content }} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.__APOLLO_STATE__=${JSON.stringify(state).replace(
+              /</g,
+              '\\u003c'
+            )};`,
+          }}
+        />
+      </body>
+    </html>
+  );
+}
+app.use(
+  express.static(path.resolve(__dirname, '..', 'build'), { index: false })
+);
+app.get('*', function(req, res) {
+  const client = new ApolloClient({
+    ssrMode: true,
+    networkInterface: createLocalInterface(graphql, schema, {
+      context: {
+        loaders: createLoaders(),
+      },
+    }),
+  });
+  const store = initStore(
+    {
+      // users: {
+      //   currentUser: existingUser.currentUser,
+      // },
+    },
+    {
+      middleware: [client.middleware()],
+      reducers: {
+        apollo: client.reducer(),
+      },
+    }
+  );
+  const context = {};
+  // The client-side app will instead use <BrowserRouter>
+  const frontend = (
+    <ApolloProvider store={store} client={client}>
+      <StaticRouter location={req.url} context={context}>
+        <Routes />
+      </StaticRouter>
+    </ApolloProvider>
+  );
+  const sheet = new ServerStyleSheet();
+  renderToStringWithData(sheet.collectStyles(frontend))
+    .then(content => {
+      // We are ready to render for real
+      const initialState = store.getState();
+      const html = (
+        <Html
+          content={content}
+          state={initialState}
+          styleElement={sheet.getStyleElement()}
+        />
+      );
+      res.status(200);
+      res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(html)}`);
+      res.end();
+    })
+    .catch(err => {
+      res.status(500);
+      res.end();
+      console.log(err);
+      throw err;
+    });
+});
 
 // In production use express to serve the React app
 // In development this is done by react-scripts, which starts its own server

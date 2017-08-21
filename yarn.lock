@@ -203,6 +203,12 @@ apollo-client@^1.4.0, apollo-client@^1.8.0:
     "@types/graphql" "^0.9.0"
     "@types/isomorphic-fetch" "0.0.34"
 
+apollo-local-query@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/apollo-local-query/-/apollo-local-query-0.3.0.tgz#8f4be210a6a1d07caf61662a555c6c38e2ac2858"
+  dependencies:
+    debug "2.3.3"
+
 apollo-upload-client@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-5.1.0.tgz#51f5a88f150b4332a58f704023292fb0e34392b3"
@@ -2264,6 +2270,12 @@ date-now@^0.1.4:
 debug@0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-0.7.0.tgz#f5be05ec0434c992d79940e50b2695cfb2e01b08"
+
+debug@2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-2.3.3.tgz#40c453e67e6e13c901ddec317af8986cda9eff8c"
+  dependencies:
+    ms "0.7.2"
 
 debug@2.6.7:
   version "2.6.7"
@@ -5478,6 +5490,10 @@ moment-timezone@^0.5.0:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
+ms@0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.2.tgz#ae25cf2512b3885a1d95d7f037868d8431124765"
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
@@ -5602,6 +5618,12 @@ node-libs-browser@^2.0.0:
     url "^0.11.0"
     util "^0.10.3"
     vm-browserify "0.0.4"
+
+node-localstorage@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/node-localstorage/-/node-localstorage-1.3.0.tgz#2e436aae8dcc9ace97b43c65c16c0d577be0a55c"
+  dependencies:
+    write-file-atomic "^1.1.4"
 
 node-notifier@^5.0.2:
   version "5.1.2"
@@ -8798,7 +8820,7 @@ wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
 
-write-file-atomic@^1.1.2:
+write-file-atomic@^1.1.2, write-file-atomic@^1.1.4:
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-1.3.4.tgz#f807a4f0b1d9e913ae7a48112e6cc3af1991b45f"
   dependencies:
