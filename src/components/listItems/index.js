@@ -15,7 +15,7 @@ import Badge from '../badges';
 import { Avatar } from '../avatar';
 import { Button } from '../buttons';
 import { convertTimestampToDate } from '../../helpers/utils';
-import { PUBLIC_STRIPE_KEY } from '../../api';
+import { PUBLIC_STRIPE_KEY } from '../../api/constants';
 import { payInvoiceMutation } from '../../api/invoice';
 import { addToastWithTimeout } from '../../actions/toasts';
 import {

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { track } from '../../helpers/events';
 import Icon from '../../components/icons';
 import { FlexCol, FlexRow } from '../../components/globals';
-import { SERVER_URL } from '../../api';
+import { SERVER_URL } from '../../api/constants';
 import { storeItem, getItemFromStorage } from '../../helpers/localStorage';
 import {
   SectionOne,

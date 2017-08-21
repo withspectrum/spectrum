@@ -6,6 +6,7 @@ import { ThemeProvider } from 'styled-components';
 //$FlowFixMe
 import { ApolloProvider } from 'react-apollo';
 import queryString from 'query-string';
+import { Router } from 'react-router';
 import { history } from './helpers/history';
 import { client } from './api';
 import { initStore } from './store';
@@ -50,18 +51,22 @@ function render() {
       window.location.pathname === '/notifications')
   ) {
     return ReactDOM.render(
-      <ThemeProvider theme={theme}>
-        <Homepage />
-      </ThemeProvider>,
+      <Router history={history}>
+        <ThemeProvider theme={theme}>
+          <Homepage />
+        </ThemeProvider>
+      </Router>,
       document.querySelector('#root')
     );
   } else {
     return ReactDOM.render(
-      <ApolloProvider store={store} client={client}>
-        <ThemeProvider theme={theme}>
-          <Routes />
-        </ThemeProvider>
-      </ApolloProvider>,
+      <Router history={history}>
+        <ApolloProvider store={store} client={client}>
+          <ThemeProvider theme={theme}>
+            <Routes />
+          </ThemeProvider>
+        </ApolloProvider>
+      </Router>,
       document.querySelector('#root')
     );
   }

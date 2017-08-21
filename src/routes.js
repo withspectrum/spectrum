@@ -1,12 +1,12 @@
 // @flow
 import React, { Component } from 'react';
 //$FlowFixMe
-import { Router, Route, Switch, Redirect } from 'react-router';
+import { Route, Switch, Redirect } from 'react-router';
 //$FlowFixMe
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import generateMetaInfo from 'shared/generate-meta-info';
+import { theme } from './components/theme';
 import { FlexCol } from './components/globals';
-import { history } from './helpers/history';
 import ScrollManager from './components/scrollManager';
 import Head from './components/head';
 import ModalRoot from './components/modals/modalRoot';
@@ -51,7 +51,7 @@ class Routes extends Component {
     const { title, description } = generateMetaInfo();
 
     return (
-      <Router history={history}>
+      <ThemeProvider theme={theme}>
         <ScrollManager>
           <Body>
             {/* Default meta tags, get overriden by anything further down the tree */}
@@ -119,7 +119,7 @@ class Routes extends Component {
             </Switch>
           </Body>
         </ScrollManager>
-      </Router>
+      </ThemeProvider>
     );
   }
 }
