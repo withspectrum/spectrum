@@ -28,6 +28,7 @@ import {
   LoadingList,
   LoadingComposer,
   LoadingFeed,
+  displayLoadingCard,
 } from '../../components/loading';
 import {
   UpsellSignIn,
@@ -46,7 +47,9 @@ import { getCommunity, getCommunityMembersQuery } from '../../api/community';
 
 const CommunityMemberGrid = compose(getCommunityMembersQuery)(MemberGrid);
 const CommunityThreadFeed = compose(getCommunityThreads)(ThreadFeed);
-const ChannelListCard = compose(getCommunityChannels)(ListCard);
+const ChannelListCard = compose(getCommunityChannels, displayLoadingCard)(
+  ListCard
+);
 
 class CommunityViewPure extends Component {
   state: {

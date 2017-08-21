@@ -189,6 +189,13 @@ class Search extends Component {
 
     // if user presses enter
     if (e.keyCode === 13) {
+      if (
+        !searchResults[indexOfFocusedSearchResult] ||
+        searchResults[indexOfFocusedSearchResult] === undefined
+      ) {
+        return;
+      }
+
       const id = searchResults[indexOfFocusedSearchResult].id;
       return this.toggleMembership(id);
     }
