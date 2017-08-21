@@ -32,13 +32,29 @@ if (thread) {
 const existingUser = getItemFromStorage('spectrum');
 let store;
 if (existingUser) {
-  store = initStore({
-    users: {
-      currentUser: existingUser.currentUser,
+  store = initStore(
+    {
+      users: {
+        currentUser: existingUser.currentUser,
+      },
     },
-  });
+    {
+      middleware: [client.middleware()],
+      reducers: {
+        apollo: client.reducer(),
+      },
+    }
+  );
 } else {
-  store = initStore({});
+  store = initStore(
+    {},
+    {
+      middleware: [client.middleware()],
+      reducers: {
+        apollo: client.reducer(),
+      },
+    }
+  );
 }
 
 function render() {
