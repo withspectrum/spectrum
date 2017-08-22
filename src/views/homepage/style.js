@@ -375,7 +375,7 @@ export const SectionContent = styled(FlexRow)`
 	justify-content: center;
 	position: relative;
 	z-index: ${zIndex.base + 1};
-	padding: 0 10%;
+	padding: 0 40px;
 
 	@media (max-width: 768px) {
 		margin-top: 80px;
@@ -402,3 +402,46 @@ export const LoginCard = styled.div`
   align-self: flex-start;
   align-items: flex-start;
 `;
+
+export const Bullets = styled(FlexCol)`
+  align-self: stretch;
+  flex: 0 0 100%;
+  align-items: center;
+`;
+
+export const Bullet = styled(FlexCol)`
+  display: inline-block;
+  width: 60%;
+  max-width: 480px;
+  margin-top: 48px;
+
+  &:first-of-type {
+    margin-top: 16px;
+    margin-left: 16px;
+    align-self: flex-start;
+  }
+
+  &:last-of-type {
+    margin-left: 16px;
+    align-self: flex-end;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+export const BulletHeading = styled(FlexRow)`
+  align-items: center;
+  white-space: nowrap;
+  position: relative;
+  left: -40px;
+`;
+
+export const BulletTitle = styled.h2`
+  margin-left: 8px;
+  font-size: 18px;
+  font-weight: 700;
+`;
+
+export const BulletCopy = styled.p`margin-top: 8px;`;
