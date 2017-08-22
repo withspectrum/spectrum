@@ -11,6 +11,9 @@ export const userSettingsFragment = gql`
           newThreadCreated {
             email
           }
+          newDirectMessage {
+            email
+          }
         }
       }
     }

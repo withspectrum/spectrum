@@ -17,4 +17,5 @@ export const EmailListItem = styled.div`
 export const CheckboxContent = styled.div`
   display: flex;
   flex-direction: column;
+  align-self: center;
 `;
