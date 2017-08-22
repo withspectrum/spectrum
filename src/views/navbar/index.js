@@ -358,7 +358,7 @@ class Navbar extends Component {
             </IconLink>
 
             <IconLink
-              data-active={match.url.includes('/messages')}
+              data-active={history.location.pathname.includes('/messages')}
               to="/messages"
               onClick={this.markDmNotificationsAsSeen}
             >
@@ -369,7 +369,10 @@ class Navbar extends Component {
               <Label>Messages</Label>
             </IconLink>
 
-            <IconLink data-active={match.url === '/explore'} to="/explore">
+            <IconLink
+              data-active={history.location.pathname === '/explore'}
+              to="/explore"
+            >
               <Icon glyph="explore" />
               <Label>Explore</Label>
             </IconLink>
@@ -381,7 +384,7 @@ class Navbar extends Component {
               onClick={this.markAllNotificationsSeen}
             >
               <IconLink
-                data-active={match.url === '/notifications'}
+                data-active={history.location.pathname === '/notifications'}
                 to="/notifications"
               >
                 <Icon
@@ -401,7 +404,10 @@ class Navbar extends Component {
 
             <IconDrop>
               <IconLink
-                data-active={match.url === `/users/${loggedInUser.username}`}
+                data-active={
+                  history.location.pathname ===
+                  `/users/${loggedInUser.username}`
+                }
                 to={
                   loggedInUser.username
                     ? `/users/${loggedInUser.username}`
@@ -423,7 +429,7 @@ class Navbar extends Component {
             </IconLink>
 
             <IconLink
-              data-active={match.url.includes('/messages')}
+              data-active={history.location.pathname.includes('/messages')}
               to="/messages"
               onClick={this.markDmNotificationsAsSeen}
             >
@@ -435,7 +441,7 @@ class Navbar extends Component {
               <Label>Messages</Label>
             </IconLink>
             <IconLink
-              data-active={match.url === '/notifications'}
+              data-active={history.location.pathname === '/notifications'}
               to="/notifications"
               onClick={this.markAllNotificationsSeen}
             >
@@ -448,13 +454,18 @@ class Navbar extends Component {
               <Label>Notifications</Label>
             </IconLink>
 
-            <IconLink data-active={match.url === '/explore'} to="/explore">
+            <IconLink
+              data-active={history.location.pathname === '/explore'}
+              to="/explore"
+            >
               <Icon glyph="explore" />
               <Label>Explore</Label>
             </IconLink>
 
             <IconLink
-              data-active={match.url === `/users/${loggedInUser.username}`}
+              data-active={
+                history.location.pathname === `/users/${loggedInUser.username}`
+              }
               to={
                 loggedInUser.username ? `/users/${loggedInUser.username}` : '/'
               }
