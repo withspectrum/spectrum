@@ -61,9 +61,6 @@ export const zIndex = new function() {
   this.search = this.form; // search is a type of form and should appear at the same level
   this.dmInput = this.form;
 
-  this.modal = 2000; // modals should completely cover base content and slider as well
-  this.gallery = this.modal + 1; // gallery should never appear behind a modal
-
   this.chrome = 3000; // chrome should be visible in modal contexts
   this.navBar = this.chrome; // navBar is chrome and should appear at the same level
   this.mobileInput = this.chrome + 1; // the chatInput on mobile should appear above the navBar
@@ -76,7 +73,10 @@ export const zIndex = new function() {
 
   this.fullscreen = 4000; // fullscreen elements should cover all screen content except toasts
 
-  this.toast = 5000; // toasts should be visible in every context
+  this.modal = 5000; // modals should completely cover base content and slider as well
+  this.gallery = this.modal + 1; // gallery should never appear behind a modal
+
+  this.toast = 6000; // toasts should be visible in every context
 }();
 
 export const fontStack = css`
