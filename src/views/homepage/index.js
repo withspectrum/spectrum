@@ -20,13 +20,15 @@ import {
   GoopyFour,
   Wrapper,
   Tagline,
-  ButtonTwitter,
-  ButtonFacebook,
-  ButtonGoogle,
+  Copy,
+  Bullets,
+  Bullet,
+  BulletHeading,
+  BulletTitle,
+  BulletCopy,
   LogoContainer,
   LogoWhite,
   SectionContent,
-  Copy,
   Footer,
   LinkBlock,
   LoginCard,
@@ -132,30 +134,50 @@ class Homepage extends Component {
             <ClusterTwo src="/img/cluster-1.svg" role="presentation" />
             <ClusterThree src="/img/cluster-5.svg" role="presentation" />
             <ClusterFour src="/img/cluster-4.svg" role="presentation" />
-            <img src="/img/create.svg" alt="Come on in, the chatter's fine." />
-            <FlexCol>
+            <Bullets>
               <Tagline>A better way to...</Tagline>
-              <Copy>Bring people together</Copy>
-              <Copy>
-                Help members help each other - Spectrum is a place where your
-                top supporters can help newcomers and foster a place of
-                belonging for everyone.
-              </Copy>
-              <Copy>Supercharge customer support</Copy>
-              <Copy>
-                On Spectrum it's easy to have conversations about issues or bugs
-                directly with your community. These conversations are shareable
-                and searchable, helping anyone who has the same issue down the
-                road resolve a problem on their own.
-              </Copy>
-              <Copy>Get better feedback</Copy>
-              <Copy>
-                There's no better feedback than the insights that come directly
-                from your customers. Spectrum makes it easy to get direct
-                feedback from anyone in your community - think of it as a new
-                direct line to discovering what people want the most.
-              </Copy>
-            </FlexCol>
+              <Bullet>
+                <BulletHeading>
+                  <Icon />
+                  <BulletTitle>Bring people together</BulletTitle>
+                </BulletHeading>
+                <BulletCopy>
+                  Help members help each other - Spectrum is a place where your
+                  top supporters can help newcomers and foster a place of
+                  belonging for everyone.
+                </BulletCopy>
+              </Bullet>
+              <Bullet>
+                <BulletHeading>
+                  <Icon />
+                  <BulletTitle>Supercharge customer support</BulletTitle>
+                </BulletHeading>
+                <BulletCopy>
+                  On Spectrum it's easy to have conversations about issues or
+                  bugs directly with your community.
+                </BulletCopy>
+                <BulletCopy>
+                  These conversations are shareable and searchable, helping
+                  anyone who has the same issue down the road resolve a problem
+                  on their own.
+                </BulletCopy>
+              </Bullet>
+              <Bullet>
+                <BulletHeading>
+                  <Icon />
+                  <BulletTitle>Get better feedback</BulletTitle>
+                </BulletHeading>
+                <BulletCopy>
+                  There's no better feedback than the insights that come
+                  directly from your customers.
+                </BulletCopy>
+                <BulletCopy>
+                  Spectrum makes it easy to get direct feedback from anyone in
+                  your community - think of it as a new direct line to
+                  discovering what people want the most.
+                </BulletCopy>
+              </Bullet>
+            </Bullets>
           </SectionContent>
           <GoopyFour />
         </SectionTwo>
