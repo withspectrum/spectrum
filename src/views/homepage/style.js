@@ -21,13 +21,9 @@ export const Wrapper = styled(FlexCol)`
 
 export const Section = styled(FlexCol)`
 	position: relative;
-	flex: 1 0 720px;
+	flex: auto;
 	justify-content: center;
 	padding-bottom: 80px;
-
-	@media (max-width: 768px) {
-		flex-basis: 480px;
-	}
 
 	img {
 		width: 320px;
@@ -49,9 +45,6 @@ export const SectionOne = styled(Section)`
 		width: 240px;
 	}
 
-	@media (max-width: 768px) {
-		flex-basis: 600px;
-	}
 `;
 
 export const SectionTwo = styled(Section)`
@@ -81,7 +74,6 @@ export const SectionThree = styled(Section)`
 `;
 
 export const SectionFour = styled(Section)`
-	height: 480px;
 	justify-content: space-around;
 	background-color: ${({ theme }) => theme.bg.default};
 	color: ${({ theme }) => theme.text.default};

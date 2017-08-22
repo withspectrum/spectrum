@@ -66,43 +66,15 @@ class Homepage extends Component {
               <LogoContainer>
                 <LogoWhite />
               </LogoContainer>
-              <Tagline>Where communities are built.</Tagline>
-              <LoginCard>
-                <ButtonTwitter
-                  preferred={
-                    preferredSigninMethod === 'twitter' ||
-                    !preferredSigninMethod
-                  }
-                  after={preferredSigninMethod === 'twitter'}
-                  href={`${SERVER_URL}/auth/twitter`}
-                  onClick={() => this.trackSignin('primary cta', 'twitter')}
-                >
-                  <Icon glyph="twitter" /> <span>Sign in with Twitter</span>
-                </ButtonTwitter>
-
-                <ButtonFacebook
-                  preferred={
-                    preferredSigninMethod === 'facebook' ||
-                    !preferredSigninMethod
-                  }
-                  after={preferredSigninMethod === 'facebook'}
-                  href={`${SERVER_URL}/auth/facebook`}
-                  onClick={() => this.trackSignin('primary cta', 'facebook')}
-                >
-                  <Icon glyph="facebook" /> <span>Sign in with Facebook</span>
-                </ButtonFacebook>
-
-                <ButtonGoogle
-                  preferred={
-                    preferredSigninMethod === 'google' || !preferredSigninMethod
-                  }
-                  after={preferredSigninMethod === 'google'}
-                  href={`${SERVER_URL}/auth/google`}
-                  onClick={() => this.trackSignin('primary cta', 'google')}
-                >
-                  <Icon glyph="google" /> <span>Sign in with Google</span>
-                </ButtonGoogle>
-              </LoginCard>
+              <Tagline>Build better communities.</Tagline>
+              <Copy>
+                Spectrum makes it easy to find your people and create the
+                conversations that matter.
+              </Copy>
+              <Copy>
+                {' '}It’s built from the ground up to enable healthy, scalable
+                online communities.
+              </Copy>
             </FlexCol>
             <img src="/img/login.svg" alt="Where communities are built." />
           </SectionContent>
@@ -118,15 +90,19 @@ class Homepage extends Component {
               alt="All your favorite communities. Only one you."
             />
             <FlexCol>
-              <Tagline>All your favorite communities. Only one you.</Tagline>
+              <Tagline>A new way to grow</Tagline>
 
               <Copy>
-                For years people have been hacking different messaging platforms
-                to support growing online communities.
+                When communities live together in one place, it becomes easier
+                for the right people to be a part of the right conversations.
+                Spectrum makes it easy for people to find your community through
+                sharing, search, and curation.
               </Copy>
               <Copy>
-                Spectrum was built from the ground up to keep you connected with
-                the communities you care about in one simple feed.
+                Already run an existing community, and need a new home with the
+                right set of tools to do your job? We’ve built easy migration
+                tools to quickly invite your entire Slack team or Facebook Group
+                to your new community on Spectrum.
               </Copy>
             </FlexCol>
           </SectionContent>
@@ -150,6 +126,58 @@ class Homepage extends Component {
           </SectionContent>
           <GoopyThree />
         </SectionThree>
+        <SectionTwo>
+          <SectionContent>
+            <ClusterOne src="/img/cluster-2.svg" role="presentation" />
+            <ClusterTwo src="/img/cluster-1.svg" role="presentation" />
+            <ClusterThree src="/img/cluster-5.svg" role="presentation" />
+            <ClusterFour src="/img/cluster-4.svg" role="presentation" />
+            <img src="/img/create.svg" alt="Come on in, the chatter's fine." />
+            <FlexCol>
+              <Tagline>A better way to...</Tagline>
+              <Copy>Bring people together</Copy>
+              <Copy>
+                Help members help each other - Spectrum is a place where your
+                top supporters can help newcomers and foster a place of
+                belonging for everyone.
+              </Copy>
+              <Copy>Supercharge customer support</Copy>
+              <Copy>
+                On Spectrum it's easy to have conversations about issues or bugs
+                directly with your community. These conversations are shareable
+                and searchable, helping anyone who has the same issue down the
+                road resolve a problem on their own.
+              </Copy>
+              <Copy>Get better feedback</Copy>
+              <Copy>
+                There's no better feedback than the insights that come directly
+                from your customers. Spectrum makes it easy to get direct
+                feedback from anyone in your community - think of it as a new
+                direct line to discovering what people want the most.
+              </Copy>
+            </FlexCol>
+          </SectionContent>
+          <GoopyFour />
+        </SectionTwo>
+        <SectionThree>
+          <SectionContent>
+            <FlexCol>
+              <Tagline>Better conversations.</Tagline>
+              <Copy>
+                Every conversation on Spectrum is focused on a specific topic.
+                Conversations can be shared, saved for later, or discovered at
+                any point in time in search.
+              </Copy>
+              <Copy>
+                We’ve scrapped the always-on, always-distracting real time chat
+                feed and built conversations in a way that lets you join at your
+                own pace.
+              </Copy>
+            </FlexCol>
+            <img src="/img/share.svg" alt="A better way to stay connected." />
+          </SectionContent>
+          <GoopyThree />
+        </SectionThree>
         <SectionFour>
           <SectionContent>
             <ClusterOne src="/img/cluster-2.svg" role="presentation" />
@@ -158,80 +186,18 @@ class Homepage extends Component {
             <ClusterFour src="/img/cluster-4.svg" role="presentation" />
             <img src="/img/create.svg" alt="Come on in, the chatter's fine." />
             <FlexCol>
-              <Tagline>Come on in, the chatter's fine.</Tagline>
-              <Copy>Spectrum is free for everyone, so dive on in!</Copy>
-              <LoginCard noShadow>
-                {preferredSigninMethod &&
-                  <span>
-                    <ButtonTwitter
-                      preferred={preferredSigninMethod === 'twitter'}
-                      after={preferredSigninMethod === 'twitter'}
-                      whitebg={preferredSigninMethod !== 'twitter'}
-                      href={`${SERVER_URL}/auth/twitter`}
-                      onClick={() =>
-                        this.trackSignin('secondary cta', 'twitter')}
-                    >
-                      <Icon glyph="twitter" /> <span>Sign in with Twitter</span>
-                    </ButtonTwitter>
-
-                    <ButtonFacebook
-                      preferred={preferredSigninMethod === 'facebook'}
-                      after={preferredSigninMethod === 'facebook'}
-                      whitebg={preferredSigninMethod !== 'facebook'}
-                      href={`${SERVER_URL}/auth/facebook`}
-                      onClick={() =>
-                        this.trackSignin('secondary cta', 'facebook')}
-                    >
-                      <Icon glyph="facebook" />{' '}
-                      <span>Sign in with Facebook</span>
-                    </ButtonFacebook>
-
-                    <ButtonGoogle
-                      preferred={preferredSigninMethod === 'google'}
-                      after={preferredSigninMethod === 'google'}
-                      whitebg={preferredSigninMethod !== 'google'}
-                      href={`${SERVER_URL}/auth/google`}
-                      onClick={() =>
-                        this.trackSignin('secondary cta', 'google')}
-                    >
-                      <Icon glyph="google" /> <span>Sign in with Google</span>
-                    </ButtonGoogle>
-                  </span>}
-
-                {!preferredSigninMethod &&
-                  <span>
-                    <ButtonTwitter
-                      preferred
-                      href={`${SERVER_URL}/auth/twitter`}
-                      after={preferredSigninMethod === 'twitter'}
-                      onClick={() =>
-                        this.trackSignin('secondary cta', 'twitter')}
-                    >
-                      <Icon glyph="twitter" /> <span>Sign in with Twitter</span>
-                    </ButtonTwitter>
-
-                    <ButtonFacebook
-                      preferred
-                      href={`${SERVER_URL}/auth/facebook`}
-                      after={preferredSigninMethod === 'facebook'}
-                      onClick={() =>
-                        this.trackSignin('secondary cta', 'facebook')}
-                    >
-                      <Icon glyph="facebook" />{' '}
-                      <span>Sign in with Facebook</span>
-                    </ButtonFacebook>
-
-                    <ButtonGoogle
-                      preferred
-                      href={`${SERVER_URL}/auth/google`}
-                      after={preferredSigninMethod === 'google'}
-                      onClick={() =>
-                        this.trackSignin('secondary cta', 'google')}
-                    >
-                      <Icon glyph="google" /> <span>Sign in with Google</span>
-                    </ButtonGoogle>
-                  </span>}
-              </LoginCard>
+              <Tagline>Your communities, one simple feed</Tagline>
+              <Copy>
+                Spectrum makes it easy to follow all of your communities in one
+                simple feed. No more silos of notifications or direct messages,
+                and no more login to remember for each community where you're a
+                member.
+              </Copy>
+              <Copy>
+                The Spectrum feed knows the conversations where you’re active,
+                and resurfaces those threads so that you never miss an important
+                message.
+              </Copy>
             </FlexCol>
           </SectionContent>
           <GoopyFour />
