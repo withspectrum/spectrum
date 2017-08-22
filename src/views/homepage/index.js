@@ -68,13 +68,19 @@ class Homepage extends Component {
               </LogoContainer>
               <Tagline>Build better communities.</Tagline>
               <Copy>
-                Spectrum makes it easy to find your people and create the
-                conversations that matter.
+                Spectrum makes it easy to start and grow your online community.
+                It was built from the ground up to help your community connect
+                and start conversations that matter.
               </Copy>
-              <Copy>
-                {' '}It’s built from the ground up to enable healthy, scalable
-                online communities.
-              </Copy>
+
+              {/*
+
+                  Primary call to action:
+                  [Create a community] - should open an auth flow where user can sign in with fb/twitter/google
+
+                  Secondary call to action could be to explore communities already being built on Spectrum
+
+              */}
             </FlexCol>
             <img src="/img/login.svg" alt="Where communities are built." />
           </SectionContent>
@@ -90,20 +96,29 @@ class Homepage extends Component {
               alt="All your favorite communities. Only one you."
             />
             <FlexCol>
-              <Tagline>A new way to grow</Tagline>
+              <Tagline>Be discovered</Tagline>
 
               <Copy>
-                When communities live together in one place, it becomes easier
-                for the right people to be a part of the right conversations.
-                Spectrum makes it easy for people to find your community through
-                sharing, search, and curation.
+                Whether your community is brand new, or just needs a little
+                nudge, Spectrum is built to help your community be discovered.
               </Copy>
               <Copy>
-                Already run an existing community, and need a new home with the
-                right set of tools to do your job? We’ve built easy migration
-                tools to quickly invite your entire Slack team or Facebook Group
-                to your new community on Spectrum.
+                People can find your community on Spectrum when they search on
+                Google, and we've built our own search and discovery features to
+                make it easy for people to connect with your community inside
+                the app.
               </Copy>
+
+              {/*
+
+                  We could put community search here, primary CTA to view /explore
+                  or just load in some featured community cards
+
+                  We could do things like:
+                  - manually insert a first "fake" search result saying something like "Your community here - create one now"
+                  - also feels pretty powerful if someone were to search for themselves or search for a community they want to start, and probably find a null state, and we have a really compelling cta to create a communty from that search query
+
+              */}
             </FlexCol>
           </SectionContent>
           <GoopyTwo />
@@ -111,16 +126,25 @@ class Homepage extends Component {
         <SectionThree>
           <SectionContent>
             <FlexCol>
-              <Tagline>A better way to stay connected.</Tagline>
+              <Tagline>Your community, connected</Tagline>
               <Copy>
-                In most apps, channels get jumbled, messages are lost, and that
+                On other apps, channels get jumbled, messages are lost, and that
                 really great answer to your question from way-back-when is
                 nowhere to be found.
               </Copy>
               <Copy>
                 Spectrum keeps each conversation in its own unique and shareable
-                place so that you can find it whenever you're ready.
+                place so that you can search for it whenever you're ready. There
+                are no limits to how many conversations your community can
+                create.
               </Copy>
+
+              {/*
+
+                  We could link to a thread here, or maybe link people to an example community
+                  to see examples of how threads work?
+
+              */}
             </FlexCol>
             <img src="/img/share.svg" alt="A better way to stay connected." />
           </SectionContent>
@@ -137,8 +161,8 @@ class Homepage extends Component {
               <Tagline>A better way to...</Tagline>
               <Copy>Bring people together</Copy>
               <Copy>
-                Help members help each other - Spectrum is a place where your
-                top supporters can help newcomers and foster a place of
+                Help your community help each other - Spectrum is a place where
+                your top supporters can help newcomers and foster a place of
                 belonging for everyone.
               </Copy>
               <Copy>Supercharge customer support</Copy>
@@ -152,8 +176,8 @@ class Homepage extends Component {
               <Copy>
                 There's no better feedback than the insights that come directly
                 from your customers. Spectrum makes it easy to get direct
-                feedback from anyone in your community - think of it as a new
-                direct line to discovering what people want the most.
+                feedback from anyone - it's a new direct line to discovering
+                what your community wants the most.
               </Copy>
             </FlexCol>
           </SectionContent>
@@ -162,7 +186,7 @@ class Homepage extends Component {
         <SectionThree>
           <SectionContent>
             <FlexCol>
-              <Tagline>Better conversations.</Tagline>
+              <Tagline>Bringing sanity to conversations</Tagline>
               <Copy>
                 Every conversation on Spectrum is focused on a specific topic.
                 Conversations can be shared, saved for later, or discovered at
@@ -195,8 +219,8 @@ class Homepage extends Component {
               </Copy>
               <Copy>
                 The Spectrum feed knows the conversations where you’re active,
-                and resurfaces those threads so that you never miss an important
-                message.
+                and resurfaces those conversations so that you never miss an
+                important message.
               </Copy>
             </FlexCol>
           </SectionContent>
