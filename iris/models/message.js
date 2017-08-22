@@ -1,15 +1,9 @@
 //@flow
-// $FlowFixMe
 import striptags from 'striptags';
 const { db } = require('./db');
 // $FlowFixMe
 const createQueue = require('../../shared/bull/create-queue');
-const threadMessageNotificationQueue = createQueue(
-  'thread message notification'
-);
-const directMessageNotificationQueue = createQueue(
-  'direct message notification'
-);
+const messageNotificationQueue = createQueue('message notification');
 const { listenToNewDocumentsIn } = require('./utils');
 const { setThreadLastActive } = require('./thread');
 import markdownLinkify from '../utils/markdown-linkify';
@@ -56,11 +50,10 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
         timestamp: new Date(),
         senderId: userId,
         content: {
-          body:
-            message.messageType === 'media'
-              ? message.content.body
-              : // For text messages linkify URLs and strip HTML tags
-                markdownLinkify(striptags(message.content.body)),
+          body: message.messageType === 'media'
+            ? message.content.body
+            : // For text messages linkify URLs and strip HTML tags
+              markdownLinkify(striptags(message.content.body)),
         },
       }),
       { returnChanges: true }
@@ -68,23 +61,10 @@ const storeMessage = (message: Object, userId: string): Promise<Object> => {
     .run()
     .then(result => result.changes[0].new_val)
     .then(message => {
-      // we want to handle direct message and thread message notifications
-      // differently, with different time buffers and different email
-      // templates. splitting them at this point in time makes the most
-      // sense to keep the code in athena/hermes as clear as possible
-      if (message.threadType === 'story') {
-        threadMessageNotificationQueue.add({
-          message,
-          userId,
-        });
-      }
-
-      if (message.threadType === 'directMessageThread') {
-        directMessageNotificationQueue.add({
-          message,
-          userId,
-        });
-      }
+      messageNotificationQueue.add({
+        message,
+        userId,
+      });
 
       if (message.threadType === 'story') {
         setThreadLastActive(message.threadId, message.timestamp);

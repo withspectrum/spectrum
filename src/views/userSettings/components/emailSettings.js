@@ -29,7 +29,7 @@ const parseNotificationTypes = notifications => {
           type,
           emailValue: notifications.types[type].email,
           label:
-            "Email me when people respond in the threads and private conversations where I'm active",
+            "Email me when people respond in the threads and private conversations where I'm active - this includes direct messages.",
         };
       case 'newThreadCreated':
         return {
@@ -37,12 +37,6 @@ const parseNotificationTypes = notifications => {
           emailValue: notifications.types[type].email,
           label:
             'Email me when a new thread is published in channels where I receive notifications.',
-        };
-      case 'newDirectMessage':
-        return {
-          type,
-          emailValue: notifications.types[type].email,
-          label: 'Email me when someone sends me a private messages.',
         };
       default:
       case 'null':
@@ -90,11 +84,7 @@ class EmailSettings extends Component {
                   checked={setting.emailValue}
                   onChange={this.handleChange}
                   id={setting.type}
-                  align={
-                    settings.type === 'newDirectMessage'
-                      ? 'center'
-                      : 'flex-start'
-                  }
+                  align={'flex-start'}
                 >
                   <CheckboxContent>
                     {setting.label}

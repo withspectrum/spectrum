@@ -1,5 +1,5 @@
 {
-  "presets": ["backpack-core/babel", "flow", ["env", {
+  "presets": ["backpack-core/babel", ["env", {
     "targets": {
       "node": "current"
     }
