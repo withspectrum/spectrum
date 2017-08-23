@@ -13,26 +13,14 @@ import { StaticRouter } from 'react-router';
 import { createStore } from 'redux';
 import { createLocalInterface } from 'apollo-local-query';
 import Helmet from 'react-helmet';
-
 import * as graphql from 'graphql';
+
 import schema from '../schema';
 import createLoaders from '../loaders';
 import { getHTML } from './get-html';
 
-// Gotta shim all the browser stuff we use
-global.window = {
-  location: {
-    protocol: 'https:',
-    host: 'spectrum.chat',
-    hash: '',
-  },
-};
-var LocalStorage = require('node-localstorage').LocalStorage,
-  localStorage = new LocalStorage('./test');
-global.localStorage = localStorage;
-global.navigator = {
-  userAgent: '',
-};
+// Browser shim has to come before any client imports
+import './browser-shim';
 const Routes = require('../../src/routes').default;
 import { initStore } from '../../src/store';
 
@@ -79,14 +67,17 @@ const renderer = (req, res) => {
       // Get the resulting data
       const state = store.getState();
       const helmet = Helmet.renderStatic();
-      res.status(200);
       // Compile the HTML and send it down
+      res.status(200);
       res.send(
         getHTML({
           content,
           state,
           styleTags: sheet.getStyleTags(),
-          metaTags: `${helmet.title.toString()}${helmet.meta.toString()}${helmet.link.toString()}`,
+          metaTags:
+            helmet.title.toString() +
+            helmet.meta.toString() +
+            helmet.link.toString(),
         })
       );
       res.end();
