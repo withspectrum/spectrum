@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('athena:queue:direct-message-notification');
+const debug = require('debug')('athena:queue:message-notification');
 import { fetchPayload, createPayload } from '../utils/payloads';
 import { getDistinctActors } from '../utils/actors';
 import {
@@ -11,9 +11,10 @@ import {
   storeUsersNotifications,
   markUsersNotificationsAsNew,
 } from '../models/usersNotifications';
+import { getThreadNotificationUsers } from '../models/usersThreads';
 import { getDirectMessageThreadMembers } from '../models/usersDirectMessageThreads';
 import sentencify from '../utils/sentencify';
-import bufferNotificationEmail from './buffer-direct-message-notification-email';
+import bufferNotificationEmail from './buffer-message-notification-email';
 
 const formatAndBufferNotificationEmail = (
   recipient,
@@ -54,10 +55,15 @@ const formatAndBufferNotificationEmail = (
   );
 };
 
-const processDirectMessageNotificationQueue = job => {
+const processMessageNotificationQueue = job => {
   const incomingMessage = job.data.message;
   const currentUserId = job.data.userId;
-  const contextType = 'DIRECT_MESSAGE_THREAD';
+
+  // Determine what the context type should be based on the message that was sent
+  const contextType =
+    incomingMessage.threadType === 'directMessageThread'
+      ? 'DIRECT_MESSAGE_THREAD'
+      : 'THREAD';
 
   debug(
     `new job: message sent by ${currentUserId} in ${contextType.toLowerCase()}#${incomingMessage.threadId}`
@@ -112,9 +118,10 @@ const processDirectMessageNotificationQueue = job => {
         notificationPromise
           // Do the .then here so we keep the loaded data in scope
           .then(notification => {
-            const getRecipients = getDirectMessageThreadMembers(
-              notification.context.id
-            );
+            const getRecipients =
+              contextType === 'DIRECT_MESSAGE_THREAD'
+                ? getDirectMessageThreadMembers(notification.context.id)
+                : getThreadNotificationUsers(notification.context.id);
 
             debug('get recipients for notification');
             return Promise.all([notification, getRecipients]);
@@ -142,20 +149,26 @@ const processDirectMessageNotificationQueue = job => {
                 formatAndBufferNotificationEmail(
                   recipient,
                   // Return direct message thread data in the same format as normal threads
-                  {
-                    content: {
-                      // Contruct title out of direct message thread users
-                      title: `your conversation with ${sentencify(
-                        recipients
-                          .filter(
-                            userThread => userThread.userId !== recipient.userId
-                          )
-                          .map(user => user.name)
-                      )}`,
-                    },
-                    path: `messages/${thread.id}`,
-                    id: thread.id,
-                  },
+                  contextType === 'DIRECT_MESSAGE_THREAD'
+                    ? {
+                        content: {
+                          // Contruct title out of direct message thread users
+                          title: `your conversation with ${sentencify(
+                            recipients
+                              .filter(
+                                userThread =>
+                                  userThread.userId !== recipient.userId
+                              )
+                              .map(user => user.name)
+                          )}`,
+                        },
+                        path: `messages/${thread.id}`,
+                        id: thread.id,
+                      }
+                    : {
+                        ...thread,
+                        path: `thread/${thread.id}`,
+                      },
                   user,
                   message,
                   notification
@@ -171,4 +184,4 @@ const processDirectMessageNotificationQueue = job => {
     });
 };
 
-export default processDirectMessageNotificationQueue;
+export default processMessageNotificationQueue;

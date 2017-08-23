@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-flow": "^6.23.0",
+    "babel-cli": "^6.24.1",
     "cross-env": "^5.0.5",
-    "flow-bin": "^0.53.1",
+    "flow-bin": "^0.43.0",
     "lint-staged": "^3.3.0",
     "micromatch": "^3.0.4",
     "nodemon": "^1.11.0",
