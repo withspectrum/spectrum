@@ -67,6 +67,7 @@ class EmailSettings extends Component {
   render() {
     const { currentUser: { settings: { notifications } } } = this.props;
     const settings = parseNotificationTypes(notifications);
+    console.log('settings', settings);
 
     return (
       <StyledCard
