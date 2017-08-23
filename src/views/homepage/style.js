@@ -24,26 +24,13 @@ export const Section = styled(FlexCol)`
 	flex: auto;
 	justify-content: center;
 	padding-bottom: 80px;
-
-	img {
-		width: 320px;
-
-		@media (max-width: 768px) {
-			display: none;
-		}
-	}
 `;
 
 export const SectionOne = styled(Section)`
 	background-color: ${({ theme }) => theme.space.dark};
 	background-image: ${({ theme }) =>
     Gradient(theme.space.dark, theme.brand.alt)};
-	color: ${({ theme }) => theme.text.reverse};
-
-	img {
-		margin-left: 40px;
-		width: 240px;
-	}
+	olor: ${({ theme }) => theme.text.reverse};
 
 `;
 
@@ -53,11 +40,6 @@ export const SectionTwo = styled(Section)`
 	background-color: ${({ theme }) => theme.bg.default};
 	color: ${({ theme }) => theme.text.default};
 	padding-bottom: 160px;
-
-	img {
-		margin-right: 80px;
-		width: 360px;
-	}
 `;
 
 export const SectionThree = styled(Section)`
@@ -67,30 +49,12 @@ export const SectionThree = styled(Section)`
 	background-image: linear-gradient(to bottom, ${({ theme }) =>
     `${theme.space.dark}, ${theme.brand.default}`});
 	color: ${({ theme }) => theme.text.reverse};
-
-	img {
-		margin-left: 80px;
-	}
 `;
 
 export const SectionFour = styled(Section)`
 	justify-content: space-around;
 	background-color: ${({ theme }) => theme.bg.default};
 	color: ${({ theme }) => theme.text.default};
-
-	img {
-		margin-right: 80px;
-		width: 420px;
-	}
-
-	button {
-		margin-top: 24px;
-		color: ${({ theme }) => theme.brand.default};
-
-		&:hover {
-			box-shadow: 0 4px 16px rgba(56, 24, 229, 0.5);
-		}
-	}
 `;
 
 export const Footer = styled(Section)`
@@ -363,10 +327,10 @@ export const LinkButton = styled(Button)`
 `;
 
 export const LogoWhite = styled(Logo)`
-	max-width: 360px;
+	width: 240px;
 `;
 
-export const LogoContainer = styled.div`max-width: 360px;`;
+export const LogoContainer = styled.div`width: 240px;`;
 
 export const SectionContent = styled(FlexRow)`
 	flex-grow: 1;
@@ -403,28 +367,22 @@ export const LoginCard = styled.div`
   align-items: flex-start;
 `;
 
-export const Bullets = styled(FlexCol)`
+export const Bullets = styled(FlexRow)`
   align-self: stretch;
-  flex: 0 0 100%;
-  align-items: center;
+  flex: auto;
+  align-items: flex-start;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export const Bullet = styled(FlexCol)`
   display: inline-block;
-  width: 60%;
+  width: calc(33% - 64px);
   max-width: 480px;
-  margin-top: 48px;
-
-  &:first-of-type {
-    margin-top: 16px;
-    margin-left: 16px;
-    align-self: flex-start;
-  }
-
-  &:last-of-type {
-    margin-left: 16px;
-    align-self: flex-end;
-  }
+  margin: 32px;
+  margin-bottom: 0;
 
   @media (max-width: 768px) {
     width: 100%;
@@ -435,11 +393,9 @@ export const BulletHeading = styled(FlexRow)`
   align-items: center;
   white-space: nowrap;
   position: relative;
-  left: -40px;
 `;
 
 export const BulletTitle = styled.h2`
-  margin-left: 8px;
   font-size: 18px;
   font-weight: 700;
 `;
