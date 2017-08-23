@@ -35,21 +35,20 @@ const renderer = (req, res) => {
       },
     }),
   });
-  // Create the Redux store
-  const store = initStore(
-    {
-      users: {
-        currentUser: req.user,
-      },
+  // Define the initial redux state
+  const initialReduxState = {
+    users: {
+      currentUser: req.user,
     },
+  };
+  // Create the Redux store
+  const store = initStore(initialReduxState, {
     // Inject the server-side client's middleware and reducer
-    {
-      middleware: [client.middleware()],
-      reducers: {
-        apollo: client.reducer(),
-      },
-    }
-  );
+    middleware: [client.middleware()],
+    reducers: {
+      apollo: client.reducer(),
+    },
+  });
   // TODO(@mxstbr): Fix context, whatever it's for
   const context = {};
   // The client-side app will instead use <BrowserRouter>

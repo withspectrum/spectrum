@@ -30,32 +30,23 @@ if (thread) {
 }
 
 const existingUser = getItemFromStorage('spectrum');
-let store;
+let initialState;
 if (existingUser) {
-  store = initStore(
-    {
-      users: {
-        currentUser: existingUser.currentUser,
-      },
+  initialState = {
+    users: {
+      currentUser: existingUser.currentUser,
     },
-    {
-      middleware: [client.middleware()],
-      reducers: {
-        apollo: client.reducer(),
-      },
-    }
-  );
+  };
 } else {
-  store = initStore(
-    {},
-    {
-      middleware: [client.middleware()],
-      reducers: {
-        apollo: client.reducer(),
-      },
-    }
-  );
+  initialState = {};
 }
+
+const store = initStore(window.__SERVER_STATE__ || initialState, {
+  middleware: [client.middleware()],
+  reducers: {
+    apollo: client.reducer(),
+  },
+});
 
 function render() {
   // if user is not stored in localStorage and they visit a blacklist url

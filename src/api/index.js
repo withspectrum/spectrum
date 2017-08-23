@@ -44,7 +44,7 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 export const client = new ApolloClient({
   networkInterface: networkInterfaceWithSubscriptions,
   fragmentMatcher,
-  initialState: window.__SERVER_STATE__.apollo,
+  initialState: window.__SERVER_STATE__ && window.__SERVER_STATE__.apollo,
   queryDeduplication: true,
   dataIdFromObject: result => {
     if (result.__typename) {
