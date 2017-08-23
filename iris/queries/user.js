@@ -140,8 +140,6 @@ module.exports = {
       { user }
     ) => {
       const currentUser = user;
-      if (!user) return new UserError("User wasn't found");
-
       // if a logged in user is viewing the profile, handle logic to get viewable threads
       const getThreads =
         currentUser && currentUser !== null
