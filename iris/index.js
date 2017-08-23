@@ -61,30 +61,13 @@ import {
 import { StaticRouter } from 'react-router';
 import { createStore } from 'redux';
 import { createLocalInterface } from 'apollo-local-query';
+import Helmet from 'react-helmet';
 
 import { initStore } from '../src/store';
+const html = fs
+  .readFileSync(path.resolve(__dirname, '..', 'build', 'index.html'))
+  .toString();
 
-function Html({ content, state, styleElement }) {
-  return (
-    <html>
-      <head>
-        <link rel="stylesheet" type="text/css" href="/reset.css" />
-        {styleElement}
-      </head>
-      <body>
-        <div id="content" dangerouslySetInnerHTML={{ __html: content }} />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.__APOLLO_STATE__=${JSON.stringify(state).replace(
-              /</g,
-              '\\u003c'
-            )};`,
-          }}
-        />
-      </body>
-    </html>
-  );
-}
 app.use(
   express.static(path.resolve(__dirname, '..', 'build'), { index: false })
 );
@@ -124,15 +107,20 @@ app.get('*', function(req, res) {
     .then(content => {
       // We are ready to render for real
       const initialState = store.getState();
-      const html = (
-        <Html
-          content={content}
-          state={initialState}
-          styleElement={sheet.getStyleElement()}
-        />
-      );
+      const helmet = Helmet.renderStatic();
+      const final = html
+        .replace(
+          '<div id="root"></div>',
+          `${sheet.getStyleTags()}<script>window.__SERVER_STATE__=${JSON.stringify(
+            initialState
+          ).replace(/</g, '\\u003c')}</script><div id="root">${content}</div>`
+        )
+        .replace(
+          '</head>',
+          `${helmet.title.toString()}${helmet.meta.toString()}${helmet.link.toString()}</head>`
+        );
       res.status(200);
-      res.send(`<!doctype html>\n${ReactDOM.renderToStaticMarkup(html)}`);
+      res.send(final);
       res.end();
     })
     .catch(err => {
