@@ -1,8 +1,6 @@
 // @flow
 import { db } from './db';
-// $FlowFixMe
-const createQueue = require('../../shared/bull/create-queue');
-const reactionNotificationQueue = createQueue('reaction notification');
+import { addQueue } from '../utils/workerQueue';
 
 type ReactionType = 'like';
 
@@ -47,10 +45,7 @@ export const toggleReaction = (
           .run()
           .then(result => result.changes[0].new_val)
           .then(reaction => {
-            reactionNotificationQueue.add({
-              reaction,
-              userId,
-            });
+            addQueue('reaction notification', { reaction, userId });
 
             return reaction;
           });
