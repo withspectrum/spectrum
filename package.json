@@ -104,7 +104,7 @@
     "dev:iris": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=iris*,-iris:resolvers cross-env DIR=iris backpack",
     "dev:athena": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=athena* cross-env DIR=athena backpack",
     "dev:hermes": "cross-env NODE_PATH=./ cross-env NODE_ENV=development cross-env DEBUG=hermes* cross-env DIR=hermes backpack",
-    "build": "npm run build:iris && npm run build:client",
+    "build": "npm run build:client && npm run build:iris",
     "prebuild:iris": "rimraf build-iris",
     "build:iris": "cross-env NODE_PATH=./ cross-env DIR=iris backpack build",
     "prebuild:athena": "rimraf build-athena",

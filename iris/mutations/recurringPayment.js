@@ -6,9 +6,7 @@ const env = require('node-env-file');
 const IS_PROD = process.env.NODE_ENV === 'production';
 // $FlowFixMe
 const path = require('path');
-if (!IS_PROD) {
-  env(path.resolve(__dirname, '../.env'), { raise: false });
-}
+env(path.resolve(__dirname, '../.env'), { raise: false });
 
 const STRIPE_TOKEN = process.env.STRIPE_TOKEN;
 
