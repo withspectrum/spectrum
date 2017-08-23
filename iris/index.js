@@ -35,133 +35,17 @@ app.use('/auth', authRoutes);
 import apiRoutes from './routes/api';
 app.use('/api', apiRoutes);
 
-global.window = {
-  location: {
-    protocol: 'https:',
-    host: 'spectrum.chat',
-    hash: '',
-  },
-};
-var LocalStorage = require('node-localstorage').LocalStorage,
-  localStorage = new LocalStorage('./test');
-global.localStorage = localStorage;
-global.navigator = {
-  userAgent: '',
-};
-const Routes = require('../src/routes').default;
-import React from 'react';
-import ReactDOM from 'react-dom/server';
-import { ServerStyleSheet } from 'styled-components';
-import {
-  ApolloClient,
-  createNetworkInterface,
-  ApolloProvider,
-  renderToStringWithData,
-} from 'react-apollo';
-import { StaticRouter } from 'react-router';
-import { createStore } from 'redux';
-import { createLocalInterface } from 'apollo-local-query';
-import Helmet from 'react-helmet';
-
-import { initStore } from '../src/store';
-const html = fs
-  .readFileSync(path.resolve(__dirname, '..', 'build', 'index.html'))
-  .toString();
-
-app.use(
-  express.static(path.resolve(__dirname, '..', 'build'), { index: false })
-);
-app.get('*', function(req, res) {
-  const client = new ApolloClient({
-    ssrMode: true,
-    networkInterface: createLocalInterface(graphql, schema, {
-      context: {
-        loaders: createLoaders(),
-      },
-    }),
-  });
-  const store = initStore(
-    {
-      // users: {
-      //   currentUser: existingUser.currentUser,
-      // },
-    },
-    {
-      middleware: [client.middleware()],
-      reducers: {
-        apollo: client.reducer(),
-      },
-    }
-  );
-  const context = {};
-  // The client-side app will instead use <BrowserRouter>
-  const frontend = (
-    <ApolloProvider store={store} client={client}>
-      <StaticRouter location={req.url} context={context}>
-        <Routes />
-      </StaticRouter>
-    </ApolloProvider>
-  );
-  const sheet = new ServerStyleSheet();
-  renderToStringWithData(sheet.collectStyles(frontend))
-    .then(content => {
-      // We are ready to render for real
-      const initialState = store.getState();
-      const helmet = Helmet.renderStatic();
-      const final = html
-        .replace(
-          '<div id="root"></div>',
-          `${sheet.getStyleTags()}<script>window.__SERVER_STATE__=${JSON.stringify(
-            initialState
-          ).replace(/</g, '\\u003c')}</script><div id="root">${content}</div>`
-        )
-        .replace(
-          '</head>',
-          `${helmet.title.toString()}${helmet.meta.toString()}${helmet.link.toString()}</head>`
-        );
-      res.status(200);
-      res.send(final);
-      res.end();
-    })
-    .catch(err => {
-      res.status(500);
-      res.end();
-      console.log(err);
-      throw err;
-    });
-});
-
 // In production use express to serve the React app
 // In development this is done by react-scripts, which starts its own server
-if (IS_PROD) {
-  const { graphql } = require('graphql');
-  // Load index.html into memory
-  var index = fs
-    .readFileSync(path.resolve(__dirname, '..', 'build', 'index.html'))
-    .toString();
+if (IS_PROD || process.env.DEV_SSR) {
+  console.log('Enabled server-side rendering');
+  const renderer = require('./renderer').default;
   app.use(
     express.static(path.resolve(__dirname, '..', 'build'), { index: false })
   );
-  app.get('*', function(req, res) {
-    getMeta(req.url, (query: string): Promise =>
-      graphql(schema, query, undefined, {
-        loaders: createLoaders(),
-        user: req.user,
-      })
-    ).then(({ title, description, extra }) => {
-      // In production inject the meta title and description
-      res.send(
-        index
-          // Replace "Spectrum" with proper title, but make sure to not replace the twitter site:name
-          // (which is set to Spectrum.chat)
-          .replace(/Spectrum(?!\.chat)/g, title)
-          // Replace "Where communities live." with proper description for page
-          .replace(/Where communities live\./g, description)
-          // Add any extra meta tags at the end
-          .replace(/<meta name="%OG_EXTRA%">/g, extra || '')
-      );
-    });
-  });
+  app.get('*', renderer);
+} else {
+  console.log('Server-side rendering disabled for development');
 }
 
 import type { Loader } from './loaders/types';
