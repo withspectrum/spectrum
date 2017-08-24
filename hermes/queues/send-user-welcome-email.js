@@ -5,7 +5,7 @@ import { NEW_USER_WELCOME_TEMPLATE } from './constants';
 
 export default job => {
   debug(`\nnew job: ${job.id}`);
-  const user = job.data;
+  const { user } = job.data;
 
   if (!user.email) {
     debug(`user#${user.id} does not have an email, aborting`);
