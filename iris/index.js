@@ -27,7 +27,13 @@ initPassport();
 const app = express();
 // $FlowFixMe
 if (IS_PROD) {
-  require('newrelic');
+  try {
+    require('newrelic');
+  } catch (e) {
+    // If newrelic is throwing an error, that means it's not properly configured
+    // On local dev, you can safely ignore this error
+    console.log(e.message);
+  }
 }
 
 import middlewares from './routes/middlewares';

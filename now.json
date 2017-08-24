@@ -18,6 +18,9 @@
 		"GOOGLE_OAUTH_CLIENT_SECRET": "@google-oauth-client-secret",
 		"GITHUB_OAUTH_CLIENT_SECRET": "@github-oauth-client-secret",
 		"SLACK_SECRET": "@slack-secret",
-		"POSTMARK_SERVER_KEY": "@postmark-server-key"
+		"POSTMARK_SERVER_KEY": "@postmark-server-key",
+		"NEW_RELIC_LICENSE_KEY": "@newrelic-license-key",
+		"NEW_RELIC_APP_NAME": "Spectrum",
+		"NEW_RELIC_NO_CONFIG_FILE": "true"
 	}
 }
