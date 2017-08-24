@@ -5,10 +5,7 @@ import UserError from '../utils/UserError';
 import { createChannel, deleteChannel } from './channel';
 import { uploadImage } from '../utils/s3';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
-const createQueue = require('../../shared/bull/create-queue');
-const sendNewCommunityWelcomeEmailQueue = createQueue(
-  'send new community welcome email'
-);
+import { addQueue } from '../utils/workerQueue';
 
 type GetCommunityByIdArgs = {
   id: string,
@@ -123,7 +120,7 @@ const createCommunity = (
     .then(result => result.changes[0].new_val)
     .then(community => {
       // send a welcome email to the community creator
-      sendNewCommunityWelcomeEmailQueue.add({ user, community });
+      addQueue('send new community welcome email', { user, community });
 
       // if no file was uploaded, update the community with new string values
       if (!file && !coverFile) {

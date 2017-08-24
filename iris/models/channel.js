@@ -1,8 +1,6 @@
 // @flow
 const { db } = require('./db');
-// $FlowFixMe
-const createQueue = require('../../shared/bull/create-queue');
-const channelNotificationQueue = createQueue('channel notification');
+import { addQueue } from '../utils/workerQueue';
 import UserError from '../utils/UserError';
 
 const getChannelsByCommunity = (
@@ -188,10 +186,7 @@ const createChannel = (
     .then(channel => {
       // only trigger a new channel notification is the channel is public
       if (!channel.isPrivate) {
-        channelNotificationQueue.add({
-          channel,
-          userId,
-        });
+        addQueue('channel notification', { channel, userId });
       }
 
       return channel;

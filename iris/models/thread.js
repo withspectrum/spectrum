@@ -1,8 +1,7 @@
 // @flow
 const { db } = require('./db');
 // $FlowFixMe
-const createQueue = require('../../shared/bull/create-queue');
-const threadNotificationQueue = createQueue('thread notification');
+import { addQueue } from '../utils/workerQueue';
 const { listenToNewDocumentsIn } = require('./utils');
 import { turnOffAllThreadNotifications } from '../models/usersThreads';
 
@@ -197,10 +196,7 @@ export const publishThread = (
     .then(result => {
       const thread = result.changes[0].new_val;
 
-      threadNotificationQueue.add({
-        thread,
-        userId,
-      });
+      addQueue('thread notification', { thread, userId });
 
       return thread;
     });
