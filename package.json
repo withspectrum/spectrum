@@ -48,6 +48,7 @@
     "immutability-helper": "^2.2.0",
     "json-stringify-pretty-compact": "^1.0.4",
     "linkify-it": "^2.0.3",
+    "localstorage-memory": "^1.0.2",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "node-env-file": "^0.1.8",

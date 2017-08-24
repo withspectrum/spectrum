@@ -8,8 +8,7 @@ global.window = {
     hash: '',
   },
 };
-var LocalStorage = require('node-localstorage').LocalStorage,
-  localStorage = new LocalStorage('./test');
+var localStorage = require('localstorage-memory');
 global.localStorage = localStorage;
 global.navigator = {
   userAgent: '',
