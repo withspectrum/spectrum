@@ -26,7 +26,9 @@ initPassport();
 // API server
 const app = express();
 // $FlowFixMe
-require('newrelic');
+if (IS_PROD) {
+  require('newrelic');
+}
 
 import middlewares from './routes/middlewares';
 app.use(middlewares);
