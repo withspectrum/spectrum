@@ -8,8 +8,10 @@ global.window = {
     hash: '',
   },
 };
-var localStorage = require('localstorage-memory');
-global.localStorage = localStorage;
+global.localStorage = {
+  getItem: () => null,
+  setItem: () => {},
+};
 global.navigator = {
   userAgent: '',
 };
