@@ -112,14 +112,14 @@ module.exports = {
                   })
                 )
                 // store a new record in the recurringPayments table
-                .then(recurringPayment =>
-                  createRecurringPayment(currentUser.id, recurringPayment)
+                .then(stripeData =>
+                  createRecurringPayment({ userId: currentUser.id, stripeData })
                 )
             );
           } else {
             // if a result is returned, lets make sure that they don't
             // already have an active recurringPayment
-            if (recurringPaymentToEvaluate.stripeData.status === 'active') {
+            if (recurringPaymentToEvaluate.status === 'active') {
               return new UserError("You're already a Pro member - thanks!");
             } else {
               // if a result exists, and it is not active, it means
@@ -131,7 +131,7 @@ module.exports = {
               // a newly updated source
               return (
                 stripe.customers
-                  .update(recurringPaymentToEvaluate.stripeData.customer, {
+                  .update(recurringPaymentToEvaluate.customerId, {
                     email: currentUser.email,
                     source: token.id,
                   })
@@ -143,11 +143,11 @@ module.exports = {
                     })
                   )
                   // update the record in the database
-                  .then(recurringPayment =>
-                    updateRecurringPayment(
-                      recurringPaymentToEvaluate.id,
-                      recurringPayment
-                    )
+                  .then(stripeData =>
+                    updateRecurringPayment({
+                      id: recurringPaymentToEvaluate.id,
+                      stripeData,
+                    })
                   )
               );
             }
@@ -181,7 +181,7 @@ module.exports = {
             );
           }
 
-          const customerId = recurringPaymentToEvaluate.stripeData.customer;
+          const customerId = recurringPaymentToEvaluate.customerId;
 
           // delete the recurringPayment
           return stripe.customers.retrieve(customerId).then(customer => {
@@ -197,11 +197,11 @@ module.exports = {
               stripe.subscriptions
                 .del(subscriptionId)
                 // update the record in the database
-                .then(recurringPayment =>
-                  updateRecurringPayment(
-                    recurringPaymentToEvaluate.id,
-                    recurringPayment
-                  )
+                .then(stripeData =>
+                  updateRecurringPayment({
+                    id: recurringPaymentToEvaluate.id,
+                    stripeData,
+                  })
                 )
             );
           });

@@ -40,12 +40,12 @@ const RecurringPaymentsList = ({ data: { user }, currentUser, dispatch }) => {
         <ListContainer>
           {filteredRecurringPayments.map(payment => {
             const amount = payment.amount / 100;
-            const timestamp = new Date(payment.created * 1000).getTime();
+            const timestamp = new Date(payment.createdAt * 1000).getTime();
             const created = convertTimestampToDate(timestamp);
             const meta = `$${amount}/month · Upgraded on ${created}`;
             return (
               <BillingListItem
-                key={payment.created}
+                key={payment.createdAt}
                 contents={{ name: payment.plan }}
                 withDescription={false}
                 meta={meta}

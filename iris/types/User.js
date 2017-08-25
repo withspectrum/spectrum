@@ -54,7 +54,7 @@ const User = /* GraphQL */ `
 	type RecurringPayment {
 		plan: String
 		amount: String
-		created: String
+		createdAt: String
 		status: String
 	}
 

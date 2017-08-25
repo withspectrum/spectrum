@@ -82,7 +82,7 @@ const UPGRADE_TO_PRO_MUTATION = gql`
       recurringPayments {
         plan
         amount
-        created
+        createdAt
         status
       }
     }
@@ -116,7 +116,7 @@ const DOWNGRADE_FROM_PRO_MUTATION = gql`
       recurringPayments {
         plan
         amount
-        created
+        createdAt
         status
       }
     }
@@ -145,7 +145,7 @@ const GET_CURRENT_USER_RECURRING_PAYMENTS_QUERY = gql`
       recurringPayments {
         plan
         amount
-        created
+        createdAt
         status
       }
     }

@@ -1,16 +1,25 @@
 // @flow
 import { db } from './db';
 
-export const createRecurringPayment = (
-  userId: string,
-  stripeData: Object
-): Promise<Object> => {
+export const createRecurringPayment = (props): Promise<Object> => {
+  const { userId, communityId, stripeData } = props;
   return (
     db
       .table('recurringPayments')
       .insert({
-        userId,
-        stripeData,
+        userId: userId ? userId : null,
+        communityId: communityId ? communityId : null,
+        customerId: stripeData.customer,
+        subscriptionId: stripeData.id,
+        planId: stripeData.plan.id,
+        planName: stripeData.plan.name,
+        amount: stripeData.plan.amount,
+        quantity: stripeData.quantity,
+        status: stripeData.status,
+        currentPeriodStart: stripeData.current_period_start,
+        currentPeriodEnd: stripeData.current_period_end,
+        createdAt: stripeData.plan.created,
+        canceledAt: null,
       })
       .run()
       // return the user object to update the clientside cache
@@ -24,16 +33,22 @@ export const createRecurringPayment = (
   false, without having to do anything destructive or complicated with the
   subscription record itself in the db
 */
-export const updateRecurringPayment = (
-  id: string,
-  stripeData: Object
-): Promise<Object> => {
+export const updateRecurringPayment = (props): Promise<Object> => {
+  const { id, stripeData } = props;
   return db
     .table('recurringPayments')
     .get(id)
     .update(
       {
-        stripeData,
+        planId: stripeData.plan.id,
+        planName: stripeData.plan.name,
+        amount: stripeData.plan.amount,
+        quantity: stripeData.quantity,
+        status: stripeData.status,
+        currentPeriodStart: stripeData.current_period_start,
+        currentPeriodEnd: stripeData.current_period_end,
+        createdAt: stripeData.plan.created,
+        canceledAt: stripeData.status === 'canceled' ? new Date() : null,
       },
       { returnChanges: true }
     )

@@ -29,7 +29,7 @@ exports.up = function(r, conn) {
             // the following field dates will be used for client side rendering - we will need to implement webhooks to keep the currentPeriodStart and currentPeriodEnd timestamps up to date
             currentPeriodStart: subscription.stripeData.current_period_start,
             currentPeriodEnd: subscription.stripeData.current_period_end,
-            created: subscription.stripeData.plan.created,
+            createdAt: subscription.stripeData.plan.created,
           }
         );
       });

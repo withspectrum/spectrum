@@ -67,12 +67,7 @@ module.exports = {
       return loaders.userRecurringPayments
         .load(id)
         .then(
-          sub =>
-            !(sub == null) &&
-            sub.stripeData &&
-            sub.stripeData.status === 'active'
-              ? true
-              : false
+          sub => (!(sub == null) && sub.status === 'active' ? true : false)
         );
     },
     everything: (
@@ -184,10 +179,10 @@ module.exports = {
         } else {
           return subs.map(sub => {
             return {
-              amount: subs[0].stripeData.plan.amount,
-              created: subs[0].stripeData.created,
-              plan: subs[0].stripeData.plan.name,
-              status: subs[0].stripeData.status,
+              amount: subs[0].amount,
+              createdAt: subs[0].createdAt,
+              plan: subs[0].planName,
+              status: subs[0].status,
             };
           });
         }
