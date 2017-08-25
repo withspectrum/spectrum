@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Logo } from '../../components/logo';
+import { Button } from '../../components/buttons';
 import {
   Gradient,
   H2,
@@ -9,6 +9,7 @@ import {
   Transition,
   Shadow,
   zIndex,
+  hexa,
 } from '../../components/globals';
 
 export const Wrapper = styled(FlexCol)`
@@ -17,196 +18,7 @@ export const Wrapper = styled(FlexCol)`
 	background-color: ${({ theme }) => theme.bg.default};
   overflow: auto;
 	overflow-x: hidden;
-`;
-
-export const Section = styled(FlexCol)`
-	position: relative;
-	flex: auto;
-	justify-content: center;
-	padding-bottom: 80px;
-`;
-
-export const SectionOne = styled(Section)`
-	background-color: ${({ theme }) => theme.space.dark};
-	background-image: ${({ theme }) =>
-    Gradient(theme.space.dark, theme.brand.alt)};
-	olor: ${({ theme }) => theme.text.reverse};
-
-`;
-
-export const SectionTwo = styled(Section)`
-	justify-content: space-between;
-	height: 640px;
-	background-color: ${({ theme }) => theme.bg.default};
-	color: ${({ theme }) => theme.text.default};
-	padding-bottom: 160px;
-`;
-
-export const SectionThree = styled(Section)`
-	height: 640px;
-	justify-content: space-around;
-	background-color: ${({ theme }) => theme.space.dark};
-	background-image: linear-gradient(to bottom, ${({ theme }) =>
-    `${theme.space.dark}, ${theme.brand.default}`});
-	color: ${({ theme }) => theme.text.reverse};
-`;
-
-export const SectionFour = styled(Section)`
-	justify-content: space-around;
-	background-color: ${({ theme }) => theme.bg.default};
-	color: ${({ theme }) => theme.text.default};
-`;
-
-export const Footer = styled(Section)`
-	flex-direction: row;
-	flex: 0 0 80px;
-	background-color: ${({ theme }) => theme.space.light};
-	color: ${({ theme }) => theme.text.reverse};
-	justify-content: space-between;
-	align-items: center;
-	padding: 0 40px;
-
-	@media (max-width: 768px) {
-		flex-basis: auto;
-		flex-direction: column;
-		justify-content: flex-start;
-		padding: 40px;
-	}
-`;
-
-export const LinkBlock = styled.a`
-  display: inline-block;
-  margin: 0 24px;
-  flex: 0 0 auto;
-  position: relative;
-
-  div {
-    font-size: 16px;
-    font-weight: 700;
-    padding: 12px 16px;
-    top: 4px;
-    position: relative;
-    text-align: center;
-    transition: ${Transition.hover.off};
-    border-radius: 4px;
-
-    &:hover {
-      border-radius: 12px;
-      background-color: ${({ theme }) => theme.bg.default};
-      color: #009eba;
-      transition: ${Transition.hover.on};
-    }
-  }
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-    justify-content: flex-start;
-    padding-bottom: 16px;
-
-    div {
-      border-bottom: none;
-
-      &:hover {
-        border-bottom: none;
-        padding-bottom: 0;
-        text-decoration: underline;
-      }
-    }
-  }
-`;
-
-export const Cluster = styled.img`position: absolute;`;
-
-export const ClusterOne = styled(Cluster)`
-	max-width: 120px;
-	max-height: 120px;
-	opacity: 0.15;
-	top: 10%;
-	left: 10%;
-	z-index: ${zIndex.base};
-`;
-
-export const ClusterTwo = styled(Cluster)`
-	max-width: 160px;
-	max-height: 160px;
-	opacity: 0.15;
-	top: 60%;
-	right: 10%;
-	z-index: ${zIndex.base};
-`;
-
-export const ClusterThree = styled(Cluster)`
-	max-width: 80px;
-	max-height: 80px;
-	opacity: 0.15;
-	top: 10%;
-	right: 40%;
-	z-index: ${zIndex.base};
-`;
-
-export const ClusterFour = styled(Cluster)`
-	max-width: 80px;
-	max-height: 80px;
-	opacity: 0.15;
-	top: 80%;
-	left: 40%;
-	z-index: ${zIndex.base};
-`;
-
-export const GoopyOne = styled.div`
-  background-color: transparent;
-  background: url(/img/goopy.svg) center bottom no-repeat;
-  position: absolute;
-  background-size: 100%;
-  z-index: ${zIndex.background};
-  height: calc(100% + 4px);
-  width: 110%;
-  top: 0;
-  bottom: -2px;
-  left: -5%;
-  right: -5%;
-`;
-
-export const GoopyTwo = styled.div`
-  background-color: transparent;
-  background: url(/img/goopy-2.svg) center bottom no-repeat;
-  position: absolute;
-  background-size: 100%;
-  z-index: ${zIndex.background};
-  height: calc(100% + 2px);
-  top: 0;
-  width: 110%;
-  bottom: -2px;
-  left: -5%;
-  right: -5%;
-`;
-
-export const GoopyThree = styled.div`
-  background-color: transparent;
-  background: url(/img/goopy-3.svg) center bottom no-repeat;
-  position: absolute;
-  background-size: 100%;
-  z-index: ${zIndex.background};
-  height: calc(100% + 2px);
-  top: 0;
-  width: 110%;
-  bottom: -2px;
-  left: -5%;
-  right: -5%;
-`;
-
-export const GoopyFour = styled.div`
-  background-color: transparent;
-  background: url(/img/goopy-4.svg) center bottom no-repeat;
-  position: absolute;
-  background-size: 100%;
-  z-index: ${zIndex.background};
-  height: calc(100% + 2px);
-  top: 0;
-  width: 110%;
-  bottom: -2px;
-  left: -5%;
-  right: -5%;
+  z-index: ${zIndex.base};
 `;
 
 export const Tagline = styled(H2)`
@@ -217,7 +29,99 @@ export const Tagline = styled(H2)`
 	color: inherit;
 `;
 
-export const Button = styled.a`
+export const Flexer = styled(FlexRow)`
+  flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+export const Copy = styled(P)`
+	max-width: 400px;
+	width: 100%;
+	font-size: 18px;
+	line-height: 24px;
+	color: inherit;
+	font-weight: 500;
+
+	&:not(:first-of-type){
+		margin-top: 24px;
+	}
+`;
+
+export const Bullets = styled(FlexRow)`
+  align-self: stretch;
+  flex: auto;
+  align-items: flex-start;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+export const Bullet = styled(FlexCol)`
+  display: inline-block;
+  width: calc(33% - 64px);
+  min-width: 256px;
+  max-width: 480px;
+  margin: 32px;
+  margin-bottom: 0;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin: 0;
+    margin-top: 48px;
+  }
+`;
+
+export const BulletHeading = styled(FlexRow)`
+  align-items: center;
+  white-space: nowrap;
+  position: relative;
+`;
+
+export const BulletTitle = styled.h2`
+  font-size: 20px;
+  font-weight: 700;
+`;
+
+export const BulletCopy = styled.p`margin-top: 8px;`;
+
+export const PrimaryCTA = styled(Button)`
+  padding: 8px 12px;
+  font-weight: 700;
+  font-size: 14px;
+  border-radius: 12px;
+  background-color: ${props => props.theme.bg.default};
+  background-image: none;
+  color: ${props => props.theme.brand.alt};
+  transition: ${Transition.hover.off};
+  z-index: ${zIndex.card};
+
+  &:hover {
+    background-color: ${props => props.theme.bg.default};
+    color: ${props => props.theme.brand.default};
+    box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.5)};
+    transition: ${Transition.hover.on};
+  }
+`;
+
+export const SecondaryCTA = styled(PrimaryCTA)`
+  color: ${props => props.theme.text.reverse};
+  background-color: transparent;
+  border: 2px solid transparent;
+  margin-left: 16px;
+
+  &:hover {
+    color: ${props => props.theme.text.reverse};
+    background-color: transparent;
+    border-color: ${props => props.theme.bg.default};
+    box-shadow: none;
+  }
+`;
+
+export const SignInButton = styled.a`
   display: flex;
   flex-shrink: 1;
   z-index: ${zIndex.base + 1};
@@ -273,6 +177,14 @@ export const Button = styled.a`
   }
 `;
 
+export const LoginCard = styled.div`
+  border-radius: 12px;
+  padding: 16px 0;
+  margin-top: 16px;
+  align-self: flex-start;
+  align-items: flex-start;
+`;
+
 export const ButtonTwitter = styled(Button)`
 	background: ${props =>
     props.preferred ? props.theme.social.twitter.default : 'none'};
@@ -316,6 +228,60 @@ export const ButtonGoogle = styled(Button)`
 	}
 `;
 
+export const Footer = styled(FlexRow)`
+	position: relative;
+	flex: auto;
+  justify-content: space-between;
+  padding: 24px 24px 24px 40px;
+  background-color: ${({ theme }) => theme.bg.reverse};
+	color: ${({ theme }) => theme.text.reverse};
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 20px;
+  }
+`;
+
+export const LinkBlock = styled.a`
+  display: inline-block;
+  margin: 0 24px;
+  flex: 0 0 auto;
+  position: relative;
+
+  div {
+    font-size: 16px;
+    font-weight: 700;
+    padding: 12px 16px;
+    top: 4px;
+    position: relative;
+    text-align: center;
+    transition: ${Transition.hover.off};
+    border-radius: 12px;
+
+    &:hover {
+      background-color: ${({ theme }) => theme.bg.default};
+      color: ${({ theme }) => theme.text.default};
+      transition: ${Transition.hover.on};
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-bottom: 16px;
+
+    div {
+      border-bottom: none;
+
+      &:hover {
+        border-bottom: none;
+        padding-bottom: 0;
+        text-decoration: underline;
+      }
+    }
+  }
+`;
+
 export const LinkButton = styled(Button)`
   margin-top: 24px;
   color: ${({ theme }) => theme.brand.default};
@@ -325,79 +291,3 @@ export const LinkButton = styled(Button)`
     box-shadow: ${Shadow.high} ${({ theme }) => theme.space.soft};
   }
 `;
-
-export const LogoWhite = styled(Logo)`
-	width: 240px;
-`;
-
-export const LogoContainer = styled.div`width: 240px;`;
-
-export const SectionContent = styled(FlexRow)`
-	flex-grow: 1;
-	width: 100%;
-	align-items: center;
-	justify-content: center;
-	position: relative;
-	z-index: ${zIndex.base + 1};
-	padding: 0 40px;
-
-	@media (max-width: 768px) {
-		margin-top: 80px;
-	}
-`;
-
-export const Copy = styled(P)`
-	max-width: 400px;
-	width: 100%;
-	font-size: 18px;
-	line-height: 24px;
-	color: inherit;
-	font-weight: 500;
-
-	&:not(:first-of-type){
-		margin-top: 24px;
-	}
-`;
-
-export const LoginCard = styled.div`
-  border-radius: 12px;
-  padding: 16px 0;
-  margin-top: 16px;
-  align-self: flex-start;
-  align-items: flex-start;
-`;
-
-export const Bullets = styled(FlexRow)`
-  align-self: stretch;
-  flex: auto;
-  align-items: flex-start;
-
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`;
-
-export const Bullet = styled(FlexCol)`
-  display: inline-block;
-  width: calc(33% - 64px);
-  max-width: 480px;
-  margin: 32px;
-  margin-bottom: 0;
-
-  @media (max-width: 768px) {
-    width: 100%;
-  }
-`;
-
-export const BulletHeading = styled(FlexRow)`
-  align-items: center;
-  white-space: nowrap;
-  position: relative;
-`;
-
-export const BulletTitle = styled.h2`
-  font-size: 18px;
-  font-weight: 700;
-`;
-
-export const BulletCopy = styled.p`margin-top: 8px;`;

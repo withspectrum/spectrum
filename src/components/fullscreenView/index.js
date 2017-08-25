@@ -5,7 +5,7 @@ import {
   ClusterTwo,
   ClusterThree,
   ClusterFour,
-} from '../../views/homepage/style';
+} from '../../views/homepage/components/illustrations';
 import Icon from '../../components/icons';
 import { FullscreenViewContainer, Illustrations, Close } from './style';
 

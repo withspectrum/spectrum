@@ -5,8 +5,10 @@ import ReactDOM from 'react-dom';
 import { ThemeProvider } from 'styled-components';
 //$FlowFixMe
 import { ApolloProvider } from 'react-apollo';
-import queryString from 'query-string';
+//$FlowFixMe
+import { Router } from 'react-router';
 import { history } from './helpers/history';
+import queryString from 'query-string';
 import { client } from './api';
 import { initStore } from './store';
 import { getItemFromStorage } from './helpers/localStorage';
@@ -50,9 +52,13 @@ function render() {
       window.location.pathname === '/notifications')
   ) {
     return ReactDOM.render(
-      <ThemeProvider theme={theme}>
-        <Homepage />
-      </ThemeProvider>,
+      <ApolloProvider store={store} client={client}>
+        <ThemeProvider theme={theme}>
+          <Router history={history}>
+            <Homepage />
+          </Router>
+        </ThemeProvider>
+      </ApolloProvider>,
       document.querySelector('#root')
     );
   } else {
