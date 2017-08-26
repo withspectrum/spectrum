@@ -69,7 +69,7 @@ export const ConversationWrapper = styled.div`
   @media (max-width: 768px) {
     left: auto;
     order: 2;
-    width: calc(100% + 40px);
+    width: 100%;
   }
 
   > img {
@@ -96,14 +96,14 @@ export const Conversation = () =>
 
 const DiscoverImage = styled.img`
   position: relative;
-  right: -40px;
+  left: -24px;
   max-width: 400px;
   height: auto;
   object-fit: contain;
 
   @media (max-width: 768px) {
-    right: auto;
-    margin-top: 40px;
+    left: auto;
+    margin-top: 32px;
     max-width: 100%;
     min-width: 256px;
   }

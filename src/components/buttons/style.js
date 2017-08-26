@@ -20,7 +20,7 @@ const baseButton = css`
   line-height: 1;
   position: relative;
   text-align: center;
-  padding: ${props => (props.icon ? '4px 8px 4px 4px' : '12px 16px')};
+  padding: ${props => (props.icon ? '4px 8px' : '12px 16px')};
 
   &:hover {
     transition: ${Transition.hover.on};

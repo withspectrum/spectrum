@@ -1,4 +1,15 @@
+// @flow
+import React from 'react';
+// @Flow Fix Me
 import styled from 'styled-components';
+import Goop from '../../../components/goop';
+import {
+  ClusterOne,
+  ClusterTwo,
+  ClusterThree,
+  ClusterFour,
+  Constellations,
+} from './illustrations';
 import { Gradient, FlexCol, hexa } from '../../../components/globals';
 
 export const Default = styled(FlexCol)`
@@ -17,7 +28,6 @@ export const Primary = styled(Default)`
       ${hexa(theme.brand.alt, 0.75)}, ${theme.space.dark}
     )`};
 	color: ${({ theme }) => theme.text.reverse};
-  min-height: 75vh;
 `;
 
 export const Brand = styled(Default)`
@@ -59,3 +69,78 @@ export const Grayscale = styled(Default)`
     `${theme.text.alt}, ${theme.bg.reverse}`});
   color: ${({ theme }) => theme.text.reverse};
 `;
+
+const Theme = props => {
+  switch (props.background) {
+    default:
+      return (
+        <Default>
+          <ClusterOne src="/img/cluster-1.svg" role="presentation" />
+          <ClusterTwo src="/img/cluster-2.svg" role="presentation" />
+          <ClusterThree src="/img/cluster-5.svg" role="presentation" />
+          <ClusterFour src="/img/cluster-4.svg" role="presentation" />
+          {props.children}
+          <Goop {...props} />
+        </Default>
+      );
+    case 'primary':
+      return (
+        <Primary>
+          {props.children}
+          <Goop {...props} />
+        </Primary>
+      );
+    case 'brand':
+      return (
+        <Brand>
+          {props.children}
+          <Goop {...props} />
+        </Brand>
+      );
+    case 'constellations':
+      return (
+        <Primary>
+          {props.children}
+          <Constellations />
+          <Goop {...props} />
+        </Primary>
+      );
+    case 'dark':
+      return (
+        <Dark>
+          {props.children}
+          <Goop {...props} />
+        </Dark>
+      );
+    case 'space':
+      return (
+        <Space>
+          {props.children}
+          <Goop {...props} />
+        </Space>
+      );
+    case 'bright':
+      return (
+        <Bright>
+          {props.children}
+          <Goop {...props} />
+        </Bright>
+      );
+    case 'light':
+      return (
+        <Light>
+          {props.children}
+          <Goop {...props} />
+        </Light>
+      );
+    case 'grayscale':
+      return (
+        <Grayscale>
+          {props.children}
+          <Goop {...props} />
+        </Grayscale>
+      );
+  }
+};
+
+export default Theme;

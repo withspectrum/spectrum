@@ -21,14 +21,6 @@ export const Wrapper = styled(FlexCol)`
   z-index: ${zIndex.base};
 `;
 
-export const Tagline = styled(H2)`
-	font-weight: 700;
-	font-size: 24px;
-	margin-top: 8px;
-	margin-bottom: 24px;
-	color: inherit;
-`;
-
 export const Flexer = styled(FlexRow)`
   flex-wrap: wrap;
 
@@ -37,23 +29,58 @@ export const Flexer = styled(FlexRow)`
   }
 `;
 
+export const Header = styled(FlexRow)`
+  padding: 32px;
+  justify-content: space-between;
+`;
+
+export const Content = styled(FlexRow)`
+	flex: auto;
+	align-self: stretch;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+
+	@media (max-width: 768px) {
+    flex-direction: column;
+	}
+`;
+
+export const Tagline = styled(H2)`
+	font-weight: 900;
+	font-size: 32px;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	color: inherit;
+
+  @media (max-width: 768px) {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+`;
+
 export const Copy = styled(P)`
-	max-width: 400px;
+	max-width: 480px;
 	width: 100%;
-	font-size: 18px;
-	line-height: 24px;
+	font-size: 16px;
+	line-height: 1.5;
 	color: inherit;
 	font-weight: 500;
 
 	&:not(:first-of-type){
-		margin-top: 24px;
+		margin-top: 16px;
 	}
+
+  @media (max-width: 768px) {
+    text-align: center;
+  }
 `;
 
 export const Bullets = styled(FlexRow)`
   align-self: stretch;
   flex: auto;
   align-items: flex-start;
+  margin: 32px 16px 16px;
 
   @media (max-width: 768px) {
     flex-direction: column;
