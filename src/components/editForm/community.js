@@ -341,11 +341,7 @@ class CommunityWithData extends Component {
             Description
           </TextArea>
 
-          <Input
-            defaultValue={website}
-            onChange={this.changeWebsite}
-            autoFocus={true}
-          >
+          <Input defaultValue={website} onChange={this.changeWebsite}>
             Optional: Add your community's website
           </Input>
 

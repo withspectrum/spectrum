@@ -752,3 +752,109 @@ export const UpsellReload = () =>
       Reload
     </Button>
   </NullCard>;
+
+class UpsellUpgradeCommunityPure extends Component {
+  state: {
+    upgradeError: string,
+    isLoading: boolean,
+  };
+
+  constructor() {
+    super();
+
+    this.state = {
+      upgradeError: '',
+      isLoading: false,
+    };
+  }
+
+  upgradeToPro = token => {
+    this.setState({
+      isLoading: true,
+    });
+
+    const input = {
+      plan: 'community-pro',
+      token: JSON.stringify(token),
+    };
+
+    this.props
+      .upgradeToPro(input)
+      .then(({ data: { upgradeToPro }, data }) => {
+        this.props.dispatch(addToastWithTimeout('success', 'Upgraded to Pro!'));
+        this.setState({
+          isLoading: false,
+          upgradeError: '',
+        });
+        // if the upgrade is triggered from a modal, close the modal
+        this.props.complete && this.props.complete();
+      })
+      .catch(err => {
+        this.setState({
+          isLoading: false,
+          upgradeError: err.message,
+        });
+        this.props.dispatch(addToastWithTimeout('error', err.message));
+      });
+  };
+
+  render() {
+    console.log('render upsell');
+    const { upgradeError, isLoading } = this.state;
+    const { currentUser, community } = this.props;
+
+    return (
+      <NullCard bg="null">
+        <Title>Upgrade Your Community</Title>
+        <Subtitle>
+          Upgrade your community for more powerful tools and features to help
+          you grow.
+        </Subtitle>
+        <Subtitle>
+          <ul>
+            <li>
+              <span role="img" aria-label="sparkle emoji">
+                 🔐
+              </span>{' '}
+              Create private, invitation-only channels for private conversations
+              with specific members of your community
+            </li>
+            <li>
+              <span role="img" aria-label="heart emoji">
+                ❤️
+              </span>{' '}
+              More to come!
+            </li>
+          </ul>
+        </Subtitle>
+        <Cost>
+          Upgraded communities cost $100 per month, per 1,000 community members
+          and you can cancel at any time.
+        </Cost>
+
+        <StripeCheckout
+          token={this.upgradeToPro}
+          stripeKey={PUBLIC_STRIPE_KEY}
+          name="🔐   Pay Securely"
+          description="Secured and Encrypted by Stripe"
+          panelLabel="Subscribe for "
+          amount={Math.ceil(community.metaData.members / 1000) * 10000}
+          currency="USD"
+        >
+          <Button disabled={isLoading} loading={isLoading} icon="payment">
+            Upgrade my community
+          </Button>
+        </StripeCheckout>
+
+        {!upgradeError &&
+          <UpgradeError>
+            {upgradeError}
+          </UpgradeError>}
+      </NullCard>
+    );
+  }
+}
+
+export const UpsellUpgradeCommunity = compose(upgradeToProMutation, connect())(
+  UpsellUpgradeCommunityPure
+);

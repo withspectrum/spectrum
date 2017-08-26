@@ -51,13 +51,6 @@ const User = /* GraphQL */ `
 		threads: Int
 	}
 
-	type RecurringPayment {
-		plan: String
-		amount: String
-		createdAt: String
-		status: String
-	}
-
 	type NotificationKindSettings {
 		email: Boolean
 	}

@@ -95,6 +95,7 @@ const Community = /* GraphQL */ `
 		metaData: CommunityMetaData
 		slackImport: SlackImport
 		invoices: [Invoice]
+		recurringPayments: [RecurringPayment]
 	}
 
 	extend type Query {

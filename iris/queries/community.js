@@ -22,6 +22,7 @@ const {
 } = require('../models/channel');
 import { getSlackImport } from '../models/slackImport';
 import { getInvoicesByCommunity } from '../models/invoice';
+import { getCommunityRecurringPayments } from '../models/recurringPayment';
 import paginate from '../utils/paginate-arrays';
 import type { PaginationOptions } from '../utils/paginate-arrays';
 import type { GetCommunityArgs } from '../models/community';
@@ -213,6 +214,26 @@ module.exports = {
         );
 
       return getInvoicesByCommunity(id);
+    },
+    recurringPayments: ({ id }, _, { user }) => {
+      if (!user) {
+        return new UserError('You must be signed in to continue.');
+      }
+
+      return getCommunityRecurringPayments(id).then(subs => {
+        if (!subs || subs.length === 0) {
+          return [];
+        } else {
+          return subs.map(subscription => {
+            return {
+              amount: subscription.amount,
+              createdAt: subscription.createdAt,
+              plan: subscription.planName,
+              status: subscription.status,
+            };
+          });
+        }
+      });
     },
   },
 };

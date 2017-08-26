@@ -15,6 +15,7 @@ import ListCard from './components/listCard';
 import ImportSlack from './components/importSlack';
 import EmailInvites from './components/emailInvites';
 import Invoices from './components/invoices';
+import RecurringPaymentsList from './components/recurringPaymentsList';
 import { CommunityEditForm } from '../../components/editForm';
 import CommunityMembers from '../../components/communityMembers';
 import { Upsell404Community } from '../../components/upsell';
@@ -29,6 +30,7 @@ const SettingsPure = ({
   dispatch,
 }) => {
   track('community', 'settings viewed', null);
+  console.log('parent community', community);
 
   const communitySlug = match.params.communitySlug;
 
@@ -101,6 +103,7 @@ const SettingsPure = ({
       </Column>
       <Column type="primary">
         <Invoices id={community.id} />
+        <RecurringPaymentsList community={community} />
         <ImportSlack community={community} id={community.id} />
         <EmailInvites community={community} />
         <ChannelListCard slug={communitySlug} />

@@ -465,3 +465,32 @@ export const getTopCommunities = graphql(
     options: { fetchPolicy: 'cache-and-network' },
   }
 );
+
+/*
+  Get a current user's recurring payments
+*/
+const GET_COMMUNITY_RECURRING_PAYMENTS_QUERY = gql`
+  query getCommunityRecurringPayments($id: ID!) {
+    community(id: $id) {
+      ...communityInfo
+      recurringPayments {
+        plan
+        amount
+        createdAt
+        status
+      }
+    }
+  }
+  ${communityInfoFragment}
+`;
+
+export const getCommunityRecurringPayments = graphql(
+  GET_COMMUNITY_RECURRING_PAYMENTS_QUERY,
+  {
+    options: ({ id }) => ({
+      variables: {
+        id,
+      },
+    }),
+  }
+);
