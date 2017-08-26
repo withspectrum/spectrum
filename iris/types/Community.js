@@ -74,6 +74,12 @@ const Community = /* GraphQL */ `
 		customMessage: String
 	}
 
+	input UpgradeCommunityInput {
+		plan: String!
+		token: String!
+		communityId: String!
+	}
+
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -114,6 +120,8 @@ const Community = /* GraphQL */ `
 		sendSlackInvites(input: SendSlackInvitesInput!): Community
 		sendEmailInvites(input: EmailInvitesInput!): Boolean
 		pinThread(threadId: ID!, communityId: ID!, value: String): Community
+		upgradeCommunity(input: UpgradeCommunityInput!): Community
+		downgradeCommunity(id: ID!): Community
 	}
 `;
 

@@ -43,6 +43,7 @@ import {
 // $FlowFixMe
 import StripeCheckout from 'react-stripe-checkout';
 import { upgradeToProMutation } from '../../api/user';
+import { upgradeCommunityMutation } from '../../api/community';
 
 export const NullCard = props => {
   return (
@@ -776,11 +777,12 @@ class UpsellUpgradeCommunityPure extends Component {
     const input = {
       plan: 'community-pro',
       token: JSON.stringify(token),
+      communityId: this.props.community.id,
     };
 
     this.props
-      .upgradeToPro(input)
-      .then(({ data: { upgradeToPro }, data }) => {
+      .upgradeCommunity(input)
+      .then(({ data: { upgradeCommunity }, data }) => {
         this.props.dispatch(addToastWithTimeout('success', 'Upgraded to Pro!'));
         this.setState({
           isLoading: false,
@@ -855,6 +857,7 @@ class UpsellUpgradeCommunityPure extends Component {
   }
 }
 
-export const UpsellUpgradeCommunity = compose(upgradeToProMutation, connect())(
-  UpsellUpgradeCommunityPure
-);
+export const UpsellUpgradeCommunity = compose(
+  upgradeCommunityMutation,
+  connect()
+)(UpsellUpgradeCommunityPure);

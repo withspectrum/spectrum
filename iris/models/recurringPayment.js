@@ -3,28 +3,24 @@ import { db } from './db';
 
 export const createRecurringPayment = (props): Promise<Object> => {
   const { userId, communityId, stripeData } = props;
-  return (
-    db
-      .table('recurringPayments')
-      .insert({
-        userId: userId ? userId : null,
-        communityId: communityId ? communityId : null,
-        customerId: stripeData.customer,
-        subscriptionId: stripeData.id,
-        planId: stripeData.plan.id,
-        planName: stripeData.plan.name,
-        amount: stripeData.plan.amount,
-        quantity: stripeData.quantity,
-        status: stripeData.status,
-        currentPeriodStart: stripeData.current_period_start,
-        currentPeriodEnd: stripeData.current_period_end,
-        createdAt: stripeData.plan.created,
-        canceledAt: null,
-      })
-      .run()
-      // return the user object to update the clientside cache
-      .then(() => db.table('users').get(userId).run())
-  );
+  return db
+    .table('recurringPayments')
+    .insert({
+      userId: userId ? userId : null,
+      communityId: communityId ? communityId : null,
+      customerId: stripeData.customer,
+      subscriptionId: stripeData.id,
+      planId: stripeData.plan.id,
+      planName: stripeData.plan.name,
+      amount: stripeData.plan.amount,
+      quantity: stripeData.quantity,
+      status: stripeData.status,
+      currentPeriodStart: stripeData.current_period_start,
+      currentPeriodEnd: stripeData.current_period_end,
+      createdAt: stripeData.plan.created,
+      canceledAt: null,
+    })
+    .run();
 };
 
 /*
@@ -52,11 +48,7 @@ export const updateRecurringPayment = (props): Promise<Object> => {
       },
       { returnChanges: true }
     )
-    .run()
-    .then(result => {
-      const userId = result.changes[0].new_val.userId;
-      return db.table('users').get(userId).run();
-    });
+    .run();
 };
 
 export const getUserRecurringPayments = (userId: string): Promise<Object> => {
