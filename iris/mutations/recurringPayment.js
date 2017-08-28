@@ -17,7 +17,6 @@ import {
   createRecurringPayment,
   updateRecurringPayment,
   getUserRecurringPayments,
-  getCommunityRecurringPayments,
 } from '../models/recurringPayment';
 import {
   getMembersInCommunity,
@@ -66,6 +65,14 @@ const parseStripeErrors = err => {
       // Handle any other types of unexpected errors
       return new UserError('Something went wrong, try again later: 6');
       break;
+  }
+};
+
+const getStripeCustomer = (customerId: string) => {
+  try {
+    return stripe.customers.retrieve(customerId);
+  } catch (err) {
+    return console.log(err) || err;
   }
 };
 
@@ -158,13 +165,19 @@ module.exports = {
           rPayments && rPayments.filter(pmt => pmt.planId === 'beta-pro');
 
         const recurringPaymentToEvaluate =
-          proSubscriptions.length > 0 ? proSubscriptions[0] : null;
+          proSubscriptions && proSubscriptions.length > 0
+            ? proSubscriptions[0]
+            : null;
 
+        // we still want to know globally if a user has a customerId already so that we avoid create duplicate customers in Stripe
+        const hasCustomerId = rPayments && rPayments.length > 0;
+
+        // if no recurringPaymentToEvaluate is found, it means the user has never been pro and we can go ahead and create a new subscription
         if (!recurringPaymentToEvaluate) {
-          const customer = await createStripeCustomer(
-            currentUser.email,
-            token.id
-          );
+          const customer = hasCustomerId
+            ? await getStripeCustomer(rPayments[0].customerId)
+            : await createStripeCustomer(currentUser.email, token.id);
+
           const stripeData = await createStripeSubscription(
             customer.id,
             plan,
@@ -230,7 +243,9 @@ module.exports = {
           rPayments && rPayments.filter(pmt => pmt.planId === 'beta-pro');
 
         const recurringPaymentToEvaluate =
-          proSubscriptions.length > 0 ? proSubscriptions[0] : null;
+          proSubscriptions && proSubscriptions.length > 0
+            ? proSubscriptions[0]
+            : null;
 
         // if the result is null, we don't have a record of the recurringPayment
         if (!recurringPaymentToEvaluate) {
@@ -240,7 +255,7 @@ module.exports = {
         }
 
         const customerId = recurringPaymentToEvaluate.customerId;
-        const customer = await stripe.customers.retrieve(customerId);
+        const customer = await getStripeCustomer(customerId);
 
         // if we can't find a customer record on stripe, we will have nobody to downgrade
         if (!customer || !customer.id) {
@@ -296,24 +311,29 @@ module.exports = {
 
         // get the number of members in a community to determine the quantity of subscriptions to create, as well as retreive any existing recurringPayments records for this community to determine if the user is re-upgrading
         const members = await getMembersInCommunity(communityId);
-        const rPayments = await getCommunityRecurringPayments(communityId);
+        const rPayments = await getUserRecurringPayments(currentUser.id);
+
+        // only evaluate community subscriptions, and not pro subscriptions
+        const proSubscriptions =
+          // if payments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
+          rPayments &&
+          rPayments
+            .filter(pmt => pmt.communityId === communityId)
+            .filter(pmt => pmt.planId === 'community-pro');
 
         const recurringPaymentToEvaluate =
-          // if payments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
-          rPayments
-            ? // we will evaluate the first returned recurring payment where the plan is community-pro. In theory a community should never have more than one of these records, so we instantly select the first record
-              rPayments
-                .filter(pmt => pmt.communityId === communityId)
-                .filter(pmt => pmt.planId === 'community-pro')[0]
+          proSubscriptions && proSubscriptions.length > 0
+            ? proSubscriptions[0]
             : null;
+
+        // we still want to know globally if a user has a customerId already so that we avoid create duplicate customers in Stripe
+        const hasCustomerId = (await rPayments) && rPayments.length > 0;
 
         // if the result is null, the user has never upgraded this community which means we need to create a stripe customer and then create the recurringPayment record in the database
         if (!recurringPaymentToEvaluate) {
-          // create a customer in stripe
-          const customer = await createStripeCustomer(
-            currentUser.email,
-            token.id
-          );
+          const customer = hasCustomerId
+            ? await getStripeCustomer(rPayments[0].customerId)
+            : await createStripeCustomer(currentUser.email, token.id);
 
           // create the subscription in stripe
           const subscription = await createStripeSubscription(
@@ -382,7 +402,7 @@ module.exports = {
         );
 
         // get any recurringPayments records from the database matching this community
-        const rPayments = await getCommunityRecurringPayments(input.id);
+        const rPayments = await getUserRecurringPayments(currentUser.id);
 
         // if the current user doesn't own the community, break out
         if (!permissions.isOwner) {
@@ -391,14 +411,17 @@ module.exports = {
           );
         }
 
-        // make sure we are only ever evaluating one recurring payment
-        const recurringPaymentToEvaluate =
-          // if recurringPayments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
+        // only evaluate community subscriptions, and not pro subscriptions
+        const proSubscriptions =
+          // if payments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
+          rPayments &&
           rPayments
-            ? // we will evaluate the first returned recurring payment where the plan is community-pro. In theory a community should never have more than one of these records, so we instantly select the first record
-              rPayments
-                .filter(pmt => pmt.communityId === input.id)
-                .filter(pmt => pmt.planId === 'community-pro')[0]
+            .filter(pmt => pmt.communityId === input.id)
+            .filter(pmt => pmt.planId === 'community-pro');
+
+        const recurringPaymentToEvaluate =
+          proSubscriptions && proSubscriptions.length > 0
+            ? proSubscriptions[0]
             : null;
 
         // if no recurringPayments exist on the 'community-pro' plan, there is nothing to downgrade

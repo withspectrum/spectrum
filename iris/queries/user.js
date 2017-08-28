@@ -174,7 +174,8 @@ module.exports = {
       }
 
       return getUserRecurringPayments(user.id).then(subs => {
-        const userProSubs = subs.filter(obj => obj.planId === 'beta-pro');
+        const userProSubs =
+          subs && subs.filter(obj => obj.planId === 'beta-pro');
         if (!userProSubs || userProSubs.length === 0) {
           return [];
         } else {

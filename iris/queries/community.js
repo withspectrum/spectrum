@@ -221,9 +221,8 @@ module.exports = {
       }
 
       return getCommunityRecurringPayments(id).then(subs => {
-        const communityProSubs = subs.filter(
-          obj => obj.planId === 'community-pro'
-        );
+        const communityProSubs =
+          subs && subs.filter(obj => obj.planId === 'community-pro');
 
         if (!communityProSubs || communityProSubs.length === 0) {
           return [];
