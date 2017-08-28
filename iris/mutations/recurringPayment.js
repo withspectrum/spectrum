@@ -218,9 +218,12 @@ module.exports = {
         handleProUpgrade()
           // return the user record to update the cilent side cache for isPro
           .then(() => getUserById(currentUser.id))
-          .catch(
-            err => console.log('error: ', err.message) || parseStripeErrors(err)
-          )
+          .catch(err => {
+            console.log('Error upgrading to Pro: ', err.message);
+            return new UserError(
+              "We weren't able to upgrade you to Pro: " + err.message
+            );
+          })
       );
     },
     downgradeFromPro: (_, __, { user }) => {
@@ -282,9 +285,12 @@ module.exports = {
       // handle all downgrade logic and then return the user record to the client to bust the isPro cache
       return handleProDowngrade()
         .then(() => getUserById(currentUser.id))
-        .catch(
-          err => console.log('error: ', err.message) || parseStripeErrors(err)
-        );
+        .catch(err => {
+          console.log('Error downgrading from Pro: ', err.message);
+          return new UserError(
+            "We weren't able to cancel your subsciption: " + err.message
+          );
+        });
     },
     upgradeCommunity: (_, args, { user }) => {
       const currentUser = user;
@@ -381,9 +387,12 @@ module.exports = {
       return handleCommunityUpgrade()
         .then(() => getCommunities([args.input.communityId]))
         .then(communities => communities[0])
-        .catch(
-          err => console.log('error: ', err.message) || parseStripeErrors(err)
-        );
+        .catch(err => {
+          console.log('Error upgrading a community: ', err.message);
+          return new UserError(
+            "We weren't able to upgrade your community: " + err.message
+          );
+        });
     },
     downgradeCommunity: (_, { input }, { user }) => {
       const currentUser = user;
@@ -462,11 +471,12 @@ module.exports = {
           // return the community to update the client side cache for isPro
           .then(() => getCommunities([input.id]))
           .then(communities => communities[0])
-          .catch(
-            err =>
-              console.log('Error downgrading community: ', err.message) ||
-              parseStripeErrors(err)
-          )
+          .catch(err => {
+            console.log('Error downgrading a community: ', err.message);
+            return new UserError(
+              "We weren't able to downgrade your community: " + err.message
+            );
+          })
       );
     },
   },
