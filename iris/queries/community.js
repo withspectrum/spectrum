@@ -235,5 +235,10 @@ module.exports = {
         }
       });
     },
+    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+      return getCommunityRecurringPayments(id).then(
+        subs => (!subs || subs.length === 0 ? false : true)
+      );
+    },
   },
 };

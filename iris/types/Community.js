@@ -80,6 +80,10 @@ const Community = /* GraphQL */ `
 		communityId: String!
 	}
 
+	input DowngradeCommunityInput {
+		id: String!
+	}
+
 	type Community {
 		id: ID!
 		createdAt: Date!
@@ -102,6 +106,7 @@ const Community = /* GraphQL */ `
 		slackImport: SlackImport
 		invoices: [Invoice]
 		recurringPayments: [RecurringPayment]
+		isPro: Boolean
 	}
 
 	extend type Query {
@@ -121,7 +126,7 @@ const Community = /* GraphQL */ `
 		sendEmailInvites(input: EmailInvitesInput!): Boolean
 		pinThread(threadId: ID!, communityId: ID!, value: String): Community
 		upgradeCommunity(input: UpgradeCommunityInput!): Community
-		downgradeCommunity(id: ID!): Community
+		downgradeCommunity(input: DowngradeCommunityInput!): Community
 	}
 `;
 

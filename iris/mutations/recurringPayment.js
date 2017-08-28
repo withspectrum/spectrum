@@ -70,14 +70,14 @@ const parseStripeErrors = err => {
 };
 
 async function createStripeCustomer(email: string, source: string) {
-  return stripe.customers.create({
+  return await stripe.customers.create({
     email,
     source,
   });
 }
 
 async function updateStripeCustomer(customer, email, source) {
-  return stripe.customers.update(customer, {
+  return await stripe.customers.update(customer, {
     email,
     source,
   });
@@ -88,7 +88,7 @@ async function createStripeSubscription(
   plan: string,
   quantity: number
 ) {
-  return stripe.subscriptions.create({
+  return await stripe.subscriptions.create({
     customer,
     items: [
       {
@@ -100,7 +100,7 @@ async function createStripeSubscription(
 }
 
 async function deleteStripeSubscription(subscription: string) {
-  return stripe.subscriptions.del(subscription);
+  return await stripe.subscriptions.del(subscription);
 }
 
 type UpgradeToProArguments = {
@@ -285,8 +285,8 @@ module.exports = {
 
       // get the number of members in a community to determine the quantity of subscriptions to create, as well as retreive any existing recurringPayments records for this community to determine if the user is re-upgrading
       async function getCommunityInfo() {
-        const members = getMembersInCommunity(communityId);
-        const rPayments = getCommunityRecurringPayments(communityId);
+        const members = await getMembersInCommunity(communityId);
+        const rPayments = await getCommunityRecurringPayments(communityId);
         return { members, rPayments };
       }
 
@@ -366,7 +366,7 @@ module.exports = {
           )
       );
     },
-    downgradeCommunity: (_, id, { user }) => {
+    downgradeCommunity: (_, { input: { id } }, { user }) => {
       const currentUser = user;
 
       // user must be authed to create a community
@@ -376,8 +376,11 @@ module.exports = {
 
       // get the recurring payment to cancel as well as the community permission for the user to make sure they are an owner and are allowed to downgrade
       async function getCommunityInfo() {
-        const permissions = getUserPermissionsInCommunity(id, currentUser.id);
-        const rPayments = getCommunityRecurringPayments(id);
+        const permissions = await getUserPermissionsInCommunity(
+          id,
+          currentUser.id
+        );
+        const rPayments = await getCommunityRecurringPayments(id);
         return { permissions, rPayments };
       }
 

@@ -30,7 +30,6 @@ const SettingsPure = ({
   dispatch,
 }) => {
   track('community', 'settings viewed', null);
-  console.log('parent community', community);
 
   const communitySlug = match.params.communitySlug;
 

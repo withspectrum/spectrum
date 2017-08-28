@@ -13,6 +13,7 @@ export const communityInfoFragment = gql`
     profilePhoto
     coverPhoto
     pinnedThreadId
+    isPro
     # roles
     communityPermissions {
       isMember

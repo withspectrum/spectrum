@@ -19,10 +19,10 @@ import {
 } from '../../../components/listItems/style';
 
 const RecurringPaymentsList = ({ community, currentUser, dispatch }) => {
-  console.log('community  a', community);
-
-  const openProModal = () => {
-    dispatch(openModal('UPGRADE_MODAL', { user: currentUser }));
+  const openCommunityProModal = () => {
+    dispatch(
+      openModal('COMMUNITY_UPGRADE_MODAL', { user: currentUser, community })
+    );
   };
 
   if (!community || community === undefined) return null;
@@ -36,7 +36,6 @@ const RecurringPaymentsList = ({ community, currentUser, dispatch }) => {
       : [];
 
   if (filteredRecurringPayments.length > 0) {
-    console.log('1');
     return (
       <StyledCard>
         <ListHeader>
@@ -55,7 +54,7 @@ const RecurringPaymentsList = ({ community, currentUser, dispatch }) => {
                 withDescription={false}
                 meta={meta}
               >
-                <IconButton glyph="settings" onClick={openProModal} />
+                <IconButton glyph="settings" onClick={openCommunityProModal} />
               </BillingListItem>
             );
           })}
@@ -63,10 +62,7 @@ const RecurringPaymentsList = ({ community, currentUser, dispatch }) => {
       </StyledCard>
     );
   } else {
-    console.log('2');
-    return (
-      <UpsellUpgradeCommunity community={community} currentUser={currentUser} />
-    );
+    return <UpsellUpgradeCommunity community={community} />;
   }
 };
 

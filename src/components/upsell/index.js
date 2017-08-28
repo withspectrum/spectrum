@@ -801,9 +801,8 @@ class UpsellUpgradeCommunityPure extends Component {
   };
 
   render() {
-    console.log('render upsell');
     const { upgradeError, isLoading } = this.state;
-    const { currentUser, community } = this.props;
+    const { community } = this.props;
 
     return (
       <NullCard bg="null">

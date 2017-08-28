@@ -533,8 +533,8 @@ export const upgradeCommunityMutation = graphql(
   Downgrade from pro
 */
 const DOWNGRADE_COMMUNITY_MUTATION = gql`
-  mutation downgradeCommunity {
-    downgradeCommunity {
+  mutation downgradeCommunity($input: DowngradeCommunityInput!) {
+    downgradeCommunity(input: $input) {
       ...communityInfo
       recurringPayments {
         plan
@@ -549,7 +549,12 @@ const DOWNGRADE_COMMUNITY_MUTATION = gql`
 
 const DOWNGRADE_COMMUNITY_OPTIONS = {
   props: ({ input, mutate }) => ({
-    downgradeCommunity: () => mutate(),
+    downgradeCommunity: input =>
+      mutate({
+        variables: {
+          input,
+        },
+      }),
   }),
 };
 
