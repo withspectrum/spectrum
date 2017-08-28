@@ -221,10 +221,14 @@ module.exports = {
       }
 
       return getCommunityRecurringPayments(id).then(subs => {
-        if (!subs || subs.length === 0) {
+        const communityProSubs = subs.filter(
+          obj => obj.planId === 'community-pro'
+        );
+
+        if (!communityProSubs || communityProSubs.length === 0) {
           return [];
         } else {
-          return subs.map(subscription => {
+          return communityProSubs.map(subscription => {
             return {
               amount: subscription.amount,
               createdAt: subscription.createdAt,

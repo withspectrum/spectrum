@@ -174,15 +174,16 @@ module.exports = {
       }
 
       return getUserRecurringPayments(user.id).then(subs => {
-        if (!subs || subs.length === 0) {
+        const userProSubs = subs.filter(obj => obj.planId === 'beta-pro');
+        if (!userProSubs || userProSubs.length === 0) {
           return [];
         } else {
-          return subs.map(sub => {
+          return userProSubs.map(subscription => {
             return {
-              amount: subs[0].amount,
-              createdAt: subs[0].createdAt,
-              plan: subs[0].planName,
-              status: subs[0].status,
+              amount: subscription.amount,
+              createdAt: subscription.createdAt,
+              plan: subscription.planName,
+              status: subscription.status,
             };
           });
         }

@@ -69,39 +69,55 @@ const parseStripeErrors = err => {
   }
 };
 
-async function createStripeCustomer(email: string, source: string) {
-  return await stripe.customers.create({
-    email,
-    source,
-  });
-}
+const createStripeCustomer = (email: string, source: string) => {
+  try {
+    return stripe.customers.create({
+      email,
+      source,
+    });
+  } catch (err) {
+    return console.log(err) || err;
+  }
+};
 
-async function updateStripeCustomer(customer, email, source) {
-  return await stripe.customers.update(customer, {
-    email,
-    source,
-  });
-}
+const updateStripeCustomer = (customer, email, source) => {
+  try {
+    return stripe.customers.update(customer, {
+      email,
+      source,
+    });
+  } catch (err) {
+    return console.log(err) || err;
+  }
+};
 
-async function createStripeSubscription(
+const createStripeSubscription = (
   customer: string,
   plan: string,
   quantity: number
-) {
-  return await stripe.subscriptions.create({
-    customer,
-    items: [
-      {
-        plan,
-        quantity: quantity ? quantity : 1, // if no quantity is provided, default to one
-      },
-    ],
-  });
-}
+) => {
+  try {
+    return stripe.subscriptions.create({
+      customer,
+      items: [
+        {
+          plan,
+          quantity: quantity ? quantity : 1, // if no quantity is provided, default to one
+        },
+      ],
+    });
+  } catch (err) {
+    return console.log(err) || err;
+  }
+};
 
-async function deleteStripeSubscription(subscription: string) {
-  return await stripe.subscriptions.del(subscription);
-}
+const deleteStripeSubscription = (subscription: string) => {
+  try {
+    return stripe.subscriptions.del(subscription);
+  } catch (err) {
+    return console.log(err) || err;
+  }
+};
 
 type UpgradeToProArguments = {
   input: {
@@ -128,75 +144,65 @@ module.exports = {
         );
       }
 
-      // parse the token string into an object
-      let token = JSON.parse(args.input.token);
-      const { input: { plan } } = args;
+      const handleProUpgrade = async () => {
+        // parse the token string into an object
+        let token = JSON.parse(args.input.token);
+        const { input: { plan } } = args;
 
-      // determine if this user has been a pro member before by seeing if
-      // they have a recurringPayment recrod in the db
+        // get any recurring payments for the current user
+        const rPayments = await getUserRecurringPayments(currentUser.id);
+
+        // only evaluate pro subscriptions, and not community subscriptions
+        const proSubscriptions =
+          // if payments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
+          rPayments && rPayments.filter(pmt => pmt.planId === 'beta-pro');
+
+        const recurringPaymentToEvaluate =
+          proSubscriptions.length > 0 ? proSubscriptions[0] : null;
+
+        if (!recurringPaymentToEvaluate) {
+          const customer = await createStripeCustomer(
+            currentUser.email,
+            token.id
+          );
+          const stripeData = await createStripeSubscription(
+            customer.id,
+            plan,
+            1
+          );
+          return await createRecurringPayment({
+            userId: currentUser.id,
+            stripeData,
+          });
+        }
+
+        if (recurringPaymentToEvaluate.status === 'active') {
+          return new UserError("You're already a Pro member - thank you!");
+        }
+
+        if (recurringPaymentToEvaluate) {
+          const customer = await updateStripeCustomer(
+            recurringPaymentToEvaluate.customerId,
+            currentUser.email,
+            token.id
+          );
+
+          const subscription = await createStripeSubscription(
+            customer.id,
+            plan,
+            1
+          );
+
+          return await updateRecurringPayment({
+            id: recurringPaymentToEvaluate.id,
+            stripeData: subscription,
+          });
+        }
+      };
+
+      // handle pro upgrade logic
       return (
-        getUserRecurringPayments(currentUser.id)
-          .then(rPayments => {
-            const proSubscriptions =
-              rPayments && rPayments.filter(pmt => pmt.planId === 'beta-pro');
-            const recurringPaymentToEvaluate =
-              proSubscriptions.length > 0 ? proSubscriptions[0] : null;
-
-            // if the result is null, the user has never been a pro user
-            // which means we need to create a stripe customer and then
-            // create the recurringPayment
-            if (!recurringPaymentToEvaluate) {
-              // create a customer in stripe
-              return (
-                createStripeCustomer(currentUser.email, token.id)
-                  // creat the recurringPayment object
-                  .then(customer =>
-                    createStripeSubscription(customer.id, plan, 1)
-                  )
-                  // store a new record in the recurringPayments table
-                  .then(stripeData =>
-                    createRecurringPayment({
-                      userId: currentUser.id,
-                      stripeData,
-                    })
-                  )
-              );
-            } else {
-              // if a result is returned, lets make sure that they don't
-              // already have an active recurringPayment
-              if (recurringPaymentToEvaluate.status === 'active') {
-                return new UserError(
-                  "You're already a Pro member - thank you!"
-                );
-              } else {
-                // if a result exists, and it is not active, it means
-                // the user was previously pro and is upgrading again. this means
-                // we can just update their stripe customer with the new
-                // payment method and renew the recurringPayment
-
-                // update the customer, keeping the email up to date and adding
-                // a newly updated source
-                return (
-                  updateStripeCustomer(
-                    recurringPaymentToEvaluate.customerId,
-                    currentUser.email,
-                    token.id
-                  )
-                    // then create a new subscription
-                    .then(customer =>
-                      createStripeSubscription(customer.id, plan, 1)
-                    )
-                    // update the recurring payment record in the database
-                    .then(stripeData =>
-                      updateRecurringPayment({
-                        id: recurringPaymentToEvaluate.id,
-                        stripeData,
-                      })
-                    )
-                );
-              }
-            }
-          })
+        handleProUpgrade()
           // return the user record to update the cilent side cache for isPro
           .then(() => getUserById(currentUser.id))
           .catch(
@@ -214,48 +220,52 @@ module.exports = {
         );
       }
 
-      // determine if this user has been a pro member before by seeing if
-      // they have a recurringPayment record in the db
-      return getUserRecurringPayments(currentUser.id)
-        .then(result => {
-          const proSubscriptions =
-            rPayments && rPayments.filter(pmt => pmt.planId === 'beta-pro');
-          const recurringPaymentToEvaluate =
-            proSubscriptions.length > 0 ? proSubscriptions[0] : null;
+      const handleProDowngrade = async () => {
+        // get any recurring payments for the current user
+        const rPayments = await getUserRecurringPayments(currentUser.id);
 
-          // if the result is null, we don't have a record of the recurringPayment
-          if (!recurringPaymentToEvaluate) {
-            return new UserError(
-              "We couldn't find a record of a Pro subscription."
-            );
-          }
+        // only evaluate pro subscriptions, and not community subscriptions
+        const proSubscriptions =
+          // if payments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
+          rPayments && rPayments.filter(pmt => pmt.planId === 'beta-pro');
 
-          const customerId = recurringPaymentToEvaluate.customerId;
+        const recurringPaymentToEvaluate =
+          proSubscriptions.length > 0 ? proSubscriptions[0] : null;
 
-          // delete the recurringPayment
-          return stripe.customers.retrieve(customerId).then(customer => {
-            if (!customer || !customer.id) {
-              return new UserError(
-                "We couldn't find a record of this subscription."
-              );
-            }
+        // if the result is null, we don't have a record of the recurringPayment
+        if (!recurringPaymentToEvaluate) {
+          return new UserError(
+            "We couldn't find a record of a Pro subscription."
+          );
+        }
 
-            const subscriptionId = customer.subscriptions.data.filter(
-              pmt => pmt.plan.id === 'beta-pro'
-            )[0].id;
+        const customerId = recurringPaymentToEvaluate.customerId;
+        const customer = await stripe.customers.retrieve(customerId);
 
-            return (
-              deleteStripeSubscription(subscriptionId)
-                // update the record in the database
-                .then(stripeData =>
-                  updateRecurringPayment({
-                    id: recurringPaymentToEvaluate.id,
-                    stripeData,
-                  })
-                )
-            );
-          });
-        })
+        // if we can't find a customer record on stripe, we will have nobody to downgrade
+        if (!customer || !customer.id) {
+          return new UserError(
+            "We couldn't find a record of this subscription."
+          );
+        }
+
+        // a customer record from stripe returns all of their subscriptions - we need to ensure we are only deleting the subscription for Pro
+        const subscriptionId = customer.subscriptions.data.filter(
+          pmt => pmt.plan.id === 'beta-pro'
+        )[0].id;
+
+        // delete the subscription on stripe
+        const stripeData = await deleteStripeSubscription(subscriptionId);
+
+        // update the recurringPayment record in the database
+        return await updateRecurringPayment({
+          id: recurringPaymentToEvaluate.id,
+          stripeData,
+        });
+      };
+
+      // handle all downgrade logic and then return the user record to the client to bust the isPro cache
+      return handleProDowngrade()
         .then(() => getUserById(currentUser.id))
         .catch(
           err => console.log('error: ', err.message) || parseStripeErrors(err)
@@ -279,94 +289,78 @@ module.exports = {
         );
       }
 
-      // parse the token string into an object
-      let token = JSON.parse(args.input.token);
-      const { input: { plan, communityId } } = args;
+      const handleCommunityUpgrade = async () => {
+        // parse the token string into an object
+        let token = JSON.parse(args.input.token);
+        const { input: { plan, communityId } } = args;
 
-      // get the number of members in a community to determine the quantity of subscriptions to create, as well as retreive any existing recurringPayments records for this community to determine if the user is re-upgrading
-      async function getCommunityInfo() {
+        // get the number of members in a community to determine the quantity of subscriptions to create, as well as retreive any existing recurringPayments records for this community to determine if the user is re-upgrading
         const members = await getMembersInCommunity(communityId);
         const rPayments = await getCommunityRecurringPayments(communityId);
-        return { members, rPayments };
-      }
 
-      return (
-        getCommunityInfo()
-          .then(({ members, rPayments }) => {
-            const recurringPaymentToEvaluate =
-              // if payments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
-              rPayments
-                ? // we will evaluate the first returned recurring payment where the plan is community-pro. In theory a community should never have more than one of these records, so we instantly select the first record
-                  rPayments.filter(pmt => pmt.planId === 'community-pro')[0]
-                : null;
+        const recurringPaymentToEvaluate =
+          // if payments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
+          rPayments
+            ? // we will evaluate the first returned recurring payment where the plan is community-pro. In theory a community should never have more than one of these records, so we instantly select the first record
+              rPayments.filter(pmt => pmt.planId === 'community-pro')[0]
+            : null;
 
-            // if the result is null, the user has never upgraded this community which means we need to create a stripe customer and then create the recurringPayment record in the database
-            if (!recurringPaymentToEvaluate) {
-              // create a customer in stripe
-              return (
-                createStripeCustomer(currentUser.email, token.id)
-                  // creat the subscription
-                  .then(customer =>
-                    createStripeSubscription(
-                      customer.id,
-                      plan,
-                      Math.ceil(members.length / 1000) // round up from the nearest 1,000 members
-                    )
-                      // store a new record in the recurringPayments table
-                      .then(stripeData =>
-                        createRecurringPayment({
-                          communityId,
-                          userId: currentUser.id,
-                          stripeData,
-                        })
-                      )
-                  )
-              );
-            } else {
-              // if a result is returned, lets make sure that they don't
-              // already have an active recurringPayment
-              if (recurringPaymentToEvaluate.status === 'active') {
-                return new UserError(
-                  'This community is already upgraded - thank you!'
-                );
-              } else {
-                // if a result exists, and it is not active, it means the user was previously pro and is upgrading the community again. This means we can just update their stripe customer with the new payment method and renew the recurringPayment
+        // if the result is null, the user has never upgraded this community which means we need to create a stripe customer and then create the recurringPayment record in the database
+        if (!recurringPaymentToEvaluate) {
+          // create a customer in stripe
+          const customer = await createStripeCustomer(
+            currentUser.email,
+            token.id
+          );
+          const subscription = await createStripeSubscription(
+            customer.id,
+            plan,
+            Math.ceil(members.length / 1000) // round up from the nearest 1,000 members
+          );
 
-                // update the customer, keeping the email up to date and adding a newly updated source
-                return (
-                  updateStripeCustomer(
-                    recurringPaymentToEvaluate.customerId,
-                    currentUser.email,
-                    token.id
-                  )
-                    // then create a new recurringPayment
-                    .then(customer =>
-                      createStripeSubscription(
-                        customer.id,
-                        plan,
-                        Math.ceil(members.length / 1000) // round up from the nearest 1,000 members
-                      )
-                        // update the record in the database
-                        .then(stripeData =>
-                          updateRecurringPayment({
-                            id: recurringPaymentToEvaluate.id,
-                            stripeData,
-                          })
-                        )
-                    )
-                );
-              }
-            }
-          })
-          // return the community record to update the client side cache for isPro
-          .then(() => getCommunities([communityId]))
-          .then(communities => communities[0])
-          .catch(
-            err => console.log('error: ', err.message) || parseStripeErrors(err)
-          )
-      );
+          return await createRecurringPayment({
+            communityId,
+            userId: currentUser.id,
+            stripeData: subscription,
+          });
+        }
+
+        if (recurringPaymentToEvaluate) {
+          // if a result is returned, lets make sure that they don't
+          // already have an active recurringPayment
+          if (recurringPaymentToEvaluate.status === 'active') {
+            return new UserError(
+              'This community is already upgraded - thank you!'
+            );
+          }
+
+          const customer = await updateStripeCustomer(
+            recurringPaymentToEvaluate.customerId,
+            currentUser.email,
+            token.id
+          );
+
+          const subscription = await createStripeSubscription(
+            customer.id,
+            plan,
+            Math.ceil(members.length / 1000) // round up from the nearest 1,000 members
+          );
+
+          return await updateRecurringPayment({
+            id: recurringPaymentToEvaluate.id,
+            stripeData: subscription,
+          });
+        }
+      };
+
+      return handleCommunityUpgrade()
+        .then(() => getCommunities([args.input.communityId]))
+        .then(communities => communities[0])
+        .catch(
+          err => console.log('error: ', err.message) || parseStripeErrors(err)
+        );
     },
-    downgradeCommunity: (_, { input: { id } }, { user }) => {
+    downgradeCommunity: (_, { input }, { user }) => {
       const currentUser = user;
 
       // user must be authed to create a community
@@ -374,76 +368,76 @@ module.exports = {
         return new UserError('You must be signed in to continue.');
       }
 
-      // get the recurring payment to cancel as well as the community permission for the user to make sure they are an owner and are allowed to downgrade
-      async function getCommunityInfo() {
+      // one async function to handle all downgrade logic
+      const handleCommunityDowngrade = async () => {
+        // get the current user's permissions in the community being downgraded
         const permissions = await getUserPermissionsInCommunity(
-          id,
+          input.id,
           currentUser.id
         );
-        const rPayments = await getCommunityRecurringPayments(id);
-        return { permissions, rPayments };
-      }
 
-      // fetch the recurring payment to cancel
-      return getCommunityInfo()
-        .then(({ permissions, rPayments }) => {
-          // if the user doesn't own the community they can't downgrade the community
-          if (!permissions.isOwner) {
-            return new UserError(
-              "You don't have permission to downgrade this community."
-            );
-          }
+        // get any recurringPayments records from the database matching this community
+        const rPayments = await getCommunityRecurringPayments(input.id);
 
-          const recurringPaymentToEvaluate =
-            // if payments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
-            rPayments
-              ? // we will evaluate the first returned recurring payment where the plan is community-pro. In theory a community should never have more than one of these records, so we instantly select the first record
-                rPayments.filter(pmt => pmt.planId === 'community-pro')[0]
-              : null;
-
-          // if the result is null, we don't have a record of the recurringPayment
-          if (!recurringPaymentToEvaluate) {
-            return new UserError(
-              "We couldn't find a record of this community being upgraded."
-            );
-          }
-
-          const customerId = recurringPaymentToEvaluate.customerId;
-
-          // delete the recurringPayment
-          return (
-            stripe.customers
-              .retrieve(customerId)
-              .then(customer => {
-                if (!customer || !customer.id) {
-                  return new UserError(
-                    "We couln't find a record of this subscription."
-                  );
-                }
-
-                const subscriptionId = customer.subscriptions.data.filter(
-                  pmt => pmt.plan.id === 'community-pro'
-                )[0].id;
-
-                return (
-                  deleteStripeSubscription(subscriptionId)
-                    // update the record in the database
-                    .then(stripeData =>
-                      updateRecurringPayment({
-                        id: recurringPaymentToEvaluate.id,
-                        stripeData,
-                      })
-                    )
-                );
-              })
-              // return the community to update the client side cache for isPro
-              .then(() => getCommunities([id]))
-              .then(communities => communities[0])
+        // if the current user doesn't own the community, break out
+        if (!permissions.isOwner) {
+          return new UserError(
+            "You don't have permission to downgrade this community."
           );
-        })
-        .catch(
-          err => console.log('error: ', err.message) || parseStripeErrors(err)
-        );
+        }
+
+        // make sure we are only ever evaluating one recurring payment
+        const recurringPaymentToEvaluate =
+          // if recurringPayments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
+          rPayments
+            ? // we will evaluate the first returned recurring payment where the plan is community-pro. In theory a community should never have more than one of these records, so we instantly select the first record
+              rPayments.filter(pmt => pmt.planId === 'community-pro')[0]
+            : null;
+
+        // if no recurringPayments exist on the 'community-pro' plan, there is nothing to downgrade
+        if (!recurringPaymentToEvaluate) {
+          return new UserError(
+            "We couldn't find a record of this community being upgraded."
+          );
+        }
+
+        const customerId = recurringPaymentToEvaluate.customerId;
+        const customer = await stripe.customers.retrieve(customerId);
+
+        // if no customer could be found on stripe, we have no way to delete the right subscription
+        if (!customer || !customer.id) {
+          return new UserError(
+            "We couln't find a record of this subscription."
+          );
+        }
+
+        // a customer record from stripe returns all of their subscriptions - we need to ensure we are only deleting the subscription for their community upgrade
+        const subscriptionId = customer.subscriptions.data.filter(
+          pmt => pmt.plan.id === 'community-pro'
+        )[0].id;
+
+        // delete the subscription
+        const stripeData = await deleteStripeSubscription(subscriptionId);
+
+        // update the recurringPayment record in the database to reflect the new canceled status
+        return await updateRecurringPayment({
+          id: recurringPaymentToEvaluate.id,
+          stripeData,
+        });
+      };
+
+      // handle the entire downgrade flow
+      return (
+        handleCommunityDowngrade()
+          // return the community to update the client side cache for isPro
+          .then(() => getCommunities([input.id]))
+          .then(communities => communities[0])
+          .catch(
+            err =>
+              console.log('Error downgrading community: ', err.message) ||
+              parseStripeErrors(err)
+          )
+      );
     },
   },
 };
