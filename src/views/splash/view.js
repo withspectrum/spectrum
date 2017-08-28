@@ -2,10 +2,19 @@
 import React from 'react';
 // @Flow Fix Me
 import styled from 'styled-components';
+// @Flow Fix Me
+import { Link } from 'react-router-dom';
+import { SERVER_URL } from '../../api';
 import { Button } from '../../components/buttons';
 import { Logo } from '../../components/logo';
 import Icon from '../../components/icons';
-import { Gradient, FlexCol, FlexRow } from '../../components/globals';
+import {
+  Shadow,
+  hexa,
+  Gradient,
+  FlexCol,
+  FlexRow,
+} from '../../components/globals';
 import Search from '../explore/components/search';
 
 import Theme from './components/themes';
@@ -26,6 +35,8 @@ import {
   SecondaryCTA,
   Content,
 } from './style';
+
+// const Link = styled.a``;
 
 const Section = props =>
   <Theme {...props}>
@@ -67,11 +78,19 @@ export const Overview = props => {
     }
   `;
 
+  const ThisButton = styled(Button)`
+    &:hover {
+      box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.5)};
+    }
+  `;
+
   return (
     <Section background="constellations" goop={2}>
       <Header>
         <Logo />
-        <Button icon="like">Sign in</Button>
+        <Link to="/login">
+          <ThisButton icon="like">Sign in</ThisButton>
+        </Link>
       </Header>
       <Content>
         <Text>
@@ -82,10 +101,14 @@ export const Overview = props => {
             company, Spectrum makes managing your community simple.
           </ThisCopy>
           <Actions>
-            <PrimaryCTA icon="plus-fill">Create a free community</PrimaryCTA>
-            <ThisSecondaryCTA icon="explore">
-              Explore communities
-            </ThisSecondaryCTA>
+            <Link to="/new/community">
+              <PrimaryCTA icon="plus-fill">Create a free community</PrimaryCTA>
+            </Link>
+            <Link to="/explore">
+              <ThisSecondaryCTA icon="explore">
+                Explore communities
+              </ThisSecondaryCTA>
+            </Link>
           </Actions>
         </Text>
       </Content>
@@ -257,7 +280,6 @@ export const Yours = props => {
   `;
 
   const ThisPrimaryCTA = styled(PrimaryCTA)`
-    margin-top: 32px;
     background-color: ${props => props.theme.brand.alt};
     background-image: ${props =>
       Gradient(props.theme.brand.alt, props.theme.brand.default)};
@@ -266,9 +288,31 @@ export const Yours = props => {
     &:hover {
       color: ${props => props.theme.text.reverse};
     }
+  `;
+
+  const ThisSecondaryCTA = styled(SecondaryCTA)`
+    padding: 16px 20px;
+    margin-left: 16px;
+    background-color: transparent;
+    color: ${props => props.theme.brand.alt};
+
+    &:hover {
+      border-color: ${props => props.theme.brand.alt};
+      color: ${props => props.theme.brand.alt};
+    }
 
     > div {
       top: -1px;
+    }
+  `;
+
+  const Actions = styled(Flexer)`
+    margin-top: 32px;
+    margin-left: 16px;
+    justify-content: center;
+
+    > a {
+      display: inline-block;
     }
   `;
 
@@ -287,7 +331,14 @@ export const Yours = props => {
             conversations that matter come to you &mdash; no matter which
             community they're in.
           </ThisCopy>
-          <ThisPrimaryCTA icon="like">Sign up</ThisPrimaryCTA>
+          <Actions>
+            <Link to="/login">
+              <ThisPrimaryCTA icon="like">Sign up</ThisPrimaryCTA>
+            </Link>
+            <Link to="/login">
+              <ThisSecondaryCTA>Sign in</ThisSecondaryCTA>
+            </Link>
+          </Actions>
         </FlexCol>
       </ThisContent>
     </Section>
@@ -298,7 +349,7 @@ export const PageFooter = props => {
   return (
     <Footer>
       <FlexRow>
-        <a href="https://spectrum.chat/spectrum">
+        <a href="/spectrum">
           <Icon glyph="logo" size={48} />
         </a>
       </FlexRow>

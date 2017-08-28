@@ -26,6 +26,8 @@ import UserSettings from './views/userSettings';
 import communitySettings from './views/communitySettings';
 import channelSettings from './views/channelSettings';
 import NewCommunity from './views/newCommunity';
+import Splash from './views/splash';
+import { Login } from './views/login';
 import ThreadSlider from './views/threadSlider';
 
 const About = () =>
@@ -49,6 +51,7 @@ const Body = styled(FlexCol)`
 class Routes extends Component {
   render() {
     const { title, description } = generateMetaInfo();
+    const { existingUser, redirectToHome } = this.props;
 
     return (
       <Router history={history}>
@@ -57,7 +60,11 @@ class Routes extends Component {
             {/* Default meta tags, get overriden by anything further down the tree */}
             <Head title={title} description={description} />
             {/* Global navigation, notifications, message notifications, etc */}
+
             <Route component={Navbar} />
+
+            {redirectToHome && <Redirect to="/" />}
+
             <Route component={ModalRoot} />
             <Route component={Toasts} />
             <Route component={Gallery} />
@@ -68,8 +75,16 @@ class Routes extends Component {
               https://reacttraining.com/react-router/web/api/Switch
             */}
             <Switch>
-              <Route exact path="/" component={Dashboard} />
-              <Route exact path="/home" component={Dashboard} />
+              <Route
+                exact
+                path="/"
+                component={existingUser ? Dashboard : Splash}
+              />
+              <Route
+                exact
+                path="/home"
+                component={existingUser ? Dashboard : Splash}
+              />
 
               {/* Public Business Pages */}
               <Route path="/about" component={About} />
@@ -84,6 +99,7 @@ class Routes extends Component {
                 path="/new"
                 render={() => <Redirect to="/new/community" />}
               />
+              <Route path="/login" component={Login} />
               <Route path="/explore" component={Explore} />
               <Route path="/messages/new" component={DirectMessages} />
               <Route path="/messages/:threadId" component={DirectMessages} />

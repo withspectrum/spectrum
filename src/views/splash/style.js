@@ -307,13 +307,3 @@ export const LinkBlock = styled.a`
     }
   }
 `;
-
-export const LinkButton = styled(Button)`
-  margin-top: 24px;
-  color: ${({ theme }) => theme.brand.default};
-  background: ${({ theme }) => theme.bg.default};
-
-  &:hover {
-    box-shadow: ${Shadow.high} ${({ theme }) => theme.space.soft};
-  }
-`;

@@ -15,6 +15,7 @@ import { openModal } from '../../actions/modals';
 import { Avatar } from '../avatar';
 import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
+import { Login } from '../../views/login';
 import {
   Title,
   MiniTitle,
@@ -186,103 +187,7 @@ export class UpsellSignIn extends Component {
           : "We're happy to see you again - log in below to get back into the conversation!";
       const verb = signinType === 'signup' ? 'Sign up' : 'Log in';
 
-      return (
-        <FullscreenView hasBackground close={this.toggleSigningIn}>
-          <FullscreenContent>
-            <UpsellIconContainer>
-              <Icon glyph={'emoji'} size={64} />
-            </UpsellIconContainer>
-            <LargeTitle>
-              {title}
-            </LargeTitle>
-            <LargeSubtitle>
-              {subtitle}
-            </LargeSubtitle>
-
-            <SigninButtonsContainer noShadow>
-              {preferredSigninMethod &&
-                <Col>
-                  <ButtonTwitter
-                    preferred={preferredSigninMethod === 'twitter'}
-                    after={preferredSigninMethod === 'twitter'}
-                    whitebg={preferredSigninMethod !== 'twitter'}
-                    href={`${SERVER_URL}/auth/twitter?r=${window.location
-                      .href}`}
-                    onClick={() => this.trackSignin('secondary cta', 'twitter')}
-                  >
-                    <Icon glyph="twitter" /> <span>{verb} with Twitter</span>
-                  </ButtonTwitter>
-
-                  <ButtonFacebook
-                    preferred={preferredSigninMethod === 'facebook'}
-                    after={preferredSigninMethod === 'facebook'}
-                    whitebg={preferredSigninMethod !== 'facebook'}
-                    href={`${SERVER_URL}/auth/facebook?r=${window.location
-                      .href}`}
-                    onClick={() =>
-                      this.trackSignin('secondary cta', 'facebook')}
-                  >
-                    <Icon glyph="facebook" /> <span>{verb} with Facebook</span>
-                  </ButtonFacebook>
-
-                  <ButtonGoogle
-                    preferred={preferredSigninMethod === 'google'}
-                    after={preferredSigninMethod === 'google'}
-                    whitebg={preferredSigninMethod !== 'google'}
-                    href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
-                    onClick={() => this.trackSignin('secondary cta', 'google')}
-                  >
-                    <Icon glyph="google" /> <span>{verb} with Google</span>
-                  </ButtonGoogle>
-                </Col>}
-
-              {!preferredSigninMethod &&
-                <Col>
-                  <ButtonTwitter
-                    preferred
-                    href={`${SERVER_URL}/auth/twitter?r=${window.location
-                      .href}`}
-                    after={preferredSigninMethod === 'twitter'}
-                    onClick={() => this.trackSignin('secondary cta', 'twitter')}
-                  >
-                    <Icon glyph="twitter" /> <span>{verb} with Twitter</span>
-                  </ButtonTwitter>
-
-                  <ButtonFacebook
-                    preferred
-                    href={`${SERVER_URL}/auth/facebook?r=${window.location
-                      .href}`}
-                    after={preferredSigninMethod === 'facebook'}
-                    onClick={() =>
-                      this.trackSignin('secondary cta', 'facebook')}
-                  >
-                    <Icon glyph="facebook" /> <span>{verb} with Facebook</span>
-                  </ButtonFacebook>
-
-                  <ButtonGoogle
-                    preferred
-                    href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
-                    after={preferredSigninMethod === 'google'}
-                    onClick={() => this.trackSignin('secondary cta', 'google')}
-                  >
-                    <Icon glyph="google" /> <span>{verb} with Google</span>
-                  </ButtonGoogle>
-                </Col>}
-            </SigninButtonsContainer>
-
-            <CodeOfConduct>
-              By using Spectrum, you agree to our{' '}
-              <a
-                href="https://github.com/withspectrum/code-of-conduct"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Code of Conduct
-              </a>
-            </CodeOfConduct>
-          </FullscreenContent>
-        </FullscreenView>
-      );
+      return <Login close={this.toggleSigningIn} />;
     } else {
       const subtitle = view
         ? view.type === 'community'

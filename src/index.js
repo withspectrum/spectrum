@@ -6,7 +6,7 @@ import { ThemeProvider } from 'styled-components';
 //$FlowFixMe
 import { ApolloProvider } from 'react-apollo';
 //$FlowFixMe
-import { Router } from 'react-router';
+import { Route, Switch, Router, Redirect } from 'react-router';
 import { history } from './helpers/history';
 import queryString from 'query-string';
 import { client } from './api';
@@ -19,6 +19,11 @@ import { addToastWithTimeout } from './actions/toasts';
 import registerServiceWorker from './registerServiceWorker';
 import type { ServiceWorkerResult } from './registerServiceWorker';
 import { track } from './helpers/events';
+//
+// import { Login } from './views/login';
+// import Explore from './views/explore';
+// import NewCommunity from './views/newCommunity';
+// import CommunityView from './views/community';
 
 const { thread } = queryString.parse(history.location.search);
 if (thread) {
@@ -44,33 +49,21 @@ if (existingUser) {
 
 function render() {
   // if user is not stored in localStorage and they visit a blacklist url
-  if (
-    (!existingUser || existingUser === null) &&
+  const redirectToHome =
+    !existingUser &&
     (window.location.pathname === '/' ||
       window.location.pathname === '/messages' ||
       window.location.pathname === '/messages/new' ||
-      window.location.pathname === '/notifications')
-  ) {
-    return ReactDOM.render(
-      <ApolloProvider store={store} client={client}>
-        <ThemeProvider theme={theme}>
-          <Router history={history}>
-            <Splash />
-          </Router>
-        </ThemeProvider>
-      </ApolloProvider>,
-      document.querySelector('#root')
-    );
-  } else {
-    return ReactDOM.render(
-      <ApolloProvider store={store} client={client}>
-        <ThemeProvider theme={theme}>
-          <Routes />
-        </ThemeProvider>
-      </ApolloProvider>,
-      document.querySelector('#root')
-    );
-  }
+      window.location.pathname === '/notifications');
+
+  return ReactDOM.render(
+    <ApolloProvider store={store} client={client}>
+      <ThemeProvider theme={theme}>
+        <Routes redirectToHome={redirectToHome} existingUser={existingUser} />
+      </ThemeProvider>
+    </ApolloProvider>,
+    document.querySelector('#root')
+  );
 }
 
 try {
