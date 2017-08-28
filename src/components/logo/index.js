@@ -20,6 +20,7 @@ export const SvgWrapper = styled.div`
   flex: none;
   width: 160px;
   height: 24px;
+  top: 4px;
   position: relative;
   color: inherit;
 `;

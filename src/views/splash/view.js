@@ -5,19 +5,12 @@ import styled from 'styled-components';
 import { Button } from '../../components/buttons';
 import { Logo } from '../../components/logo';
 import Icon from '../../components/icons';
-import {
-  Gradient,
-  FlexCol,
-  FlexRow,
-  zIndex,
-  hexa,
-} from '../../components/globals';
+import { Gradient, FlexCol, FlexRow } from '../../components/globals';
 import Search from '../explore/components/search';
 
 import Theme from './components/themes';
 import { Conversation, Discover } from './components/illustrations';
 import {
-  Wrapper,
   Header,
   Tagline,
   Copy,
@@ -26,11 +19,7 @@ import {
   BulletHeading,
   BulletTitle,
   BulletCopy,
-  LogoContainer,
-  LogoWhite,
-  SectionContent,
   LinkBlock,
-  LoginCard,
   Footer,
   Flexer,
   PrimaryCTA,
@@ -69,11 +58,20 @@ export const Overview = props => {
     justify-content: space-between;
   `;
 
+  const ThisSecondaryCTA = styled(SecondaryCTA)`
+    margin-left: 16px;
+
+    @media (max-width: 768px) {
+      margin-left: 0;
+      margin-top: 16px;
+    }
+  `;
+
   return (
     <Section background="constellations" goop={2}>
       <Header>
         <Logo />
-        <Button icon="like">Sign In</Button>
+        <Button icon="like">Sign in</Button>
       </Header>
       <Content>
         <Text>
@@ -84,8 +82,10 @@ export const Overview = props => {
             company, Spectrum makes managing your community simple.
           </ThisCopy>
           <Actions>
-            <PrimaryCTA icon="plus-fill">Create your community</PrimaryCTA>
-            <SecondaryCTA icon="explore">Explore communities</SecondaryCTA>
+            <PrimaryCTA icon="plus-fill">Create a free community</PrimaryCTA>
+            <ThisSecondaryCTA icon="explore">
+              Explore communities
+            </ThisSecondaryCTA>
           </Actions>
         </Text>
       </Content>
@@ -130,10 +130,6 @@ export const Centralized = props => {
 };
 
 export const CommunitySearch = props => {
-  const ThisSection = styled(Section)`
-    z-index: ${zIndex.search};
-  `;
-
   const ThisContent = styled(Content)`
     flex-direction: column;
     width: 640px;
@@ -154,7 +150,7 @@ export const CommunitySearch = props => {
   return (
     <Section goop={4} background="bright">
       <ThisContent>
-        <ThisTagline>Find a community for you...</ThisTagline>
+        <ThisTagline>Find a community for you!</ThisTagline>
         <Search />
       </ThisContent>
     </Section>
@@ -176,7 +172,7 @@ export const Chat = props => {
       <ThisContent>
         <Conversation />
         <FlexCol>
-          <Tagline>Real-time messaging; long-term value.</Tagline>
+          <Tagline>Real-time messaging; long-term value</Tagline>
           <ThisCopy>
             Conversations are chat-based just like your favorite messaging app,
             but on Spectrum they continue to provide value to more and more
@@ -195,18 +191,18 @@ export const Chat = props => {
 export const Sell = props => {
   const Text = styled(FlexCol)`
     align-items: center;
-    margin: 40px 0 16px;
+    margin: 40px 0;
   `;
 
   return (
     <Section goop={2} background="dark">
       <Content>
         <Text>
-          <Tagline>Spectrum saves you time and money by...</Tagline>
+          <Tagline>Spectrum saves you time and money...</Tagline>
           <Bullets>
             <Bullet>
               <BulletHeading>
-                <BulletTitle>Supercharging support</BulletTitle>
+                <BulletTitle>Supercharge support</BulletTitle>
               </BulletHeading>
               <BulletCopy>
                 Stop wasting time with a million private customer support
@@ -220,7 +216,7 @@ export const Sell = props => {
             </Bullet>
             <Bullet>
               <BulletHeading>
-                <BulletTitle>Bringing people together</BulletTitle>
+                <BulletTitle>Bring people together</BulletTitle>
               </BulletHeading>
               <BulletCopy>
                 Spectrum enables your top supporters and advocates to share
@@ -230,7 +226,7 @@ export const Sell = props => {
             </Bullet>
             <Bullet>
               <BulletHeading>
-                <BulletTitle>Tightening your feedback loop</BulletTitle>
+                <BulletTitle>Tighten your feedback loop</BulletTitle>
               </BulletHeading>
               <BulletCopy>
                 There's no better feedback than the insights that come directly
@@ -280,7 +276,7 @@ export const Yours = props => {
     <Section goop={1} color="bg.reverse">
       <ThisContent>
         <FlexCol>
-          <Tagline>One account: yours.</Tagline>
+          <Tagline>Any community, only one you</Tagline>
           <ThisCopy>
             On other platforms, community members need to create separate
             accounts for each community, so people end up constantly switching
@@ -291,7 +287,7 @@ export const Yours = props => {
             conversations that matter come to you &mdash; no matter which
             community they're in.
           </ThisCopy>
-          <ThisPrimaryCTA icon="like">Sign Up</ThisPrimaryCTA>
+          <ThisPrimaryCTA icon="like">Sign up</ThisPrimaryCTA>
         </FlexCol>
       </ThisContent>
     </Section>

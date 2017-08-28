@@ -8,7 +8,6 @@ import {
   LinkPreviewImage,
   LinkPreviewTextContainer,
   MetaTitle,
-  MetaDescription,
   MetaUrl,
   Close,
   LinkPreviewSkeleton,
@@ -30,12 +29,7 @@ export class LinkPreview extends Component {
   };
 
   render() {
-    let {
-      data: { description, image, title, url, trueUrl },
-      editable,
-      margin,
-    } = this.props;
-    description = description ? truncate(description, 80) : '';
+    let { data: { image, title, url, trueUrl }, editable, margin } = this.props;
     title = title ? truncate(title, 72) : '';
 
     return (

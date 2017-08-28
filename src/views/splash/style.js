@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { Button } from '../../components/buttons';
 import {
-  Gradient,
   H2,
   FlexCol,
   FlexRow,
@@ -32,6 +31,7 @@ export const Flexer = styled(FlexRow)`
 export const Header = styled(FlexRow)`
   padding: 32px;
   justify-content: space-between;
+  z-index: ${zIndex.card}
 `;
 
 export const Content = styled(FlexRow)`
@@ -138,7 +138,6 @@ export const SecondaryCTA = styled(PrimaryCTA)`
   color: ${props => props.theme.text.reverse};
   background-color: transparent;
   border: 2px solid transparent;
-  margin-left: 16px;
 
   &:hover {
     color: ${props => props.theme.text.reverse};

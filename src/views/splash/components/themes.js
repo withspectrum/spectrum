@@ -10,7 +10,7 @@ import {
   ClusterFour,
   Constellations,
 } from './illustrations';
-import { Gradient, FlexCol, hexa } from '../../../components/globals';
+import { FlexCol, hexa } from '../../../components/globals';
 
 export const Default = styled(FlexCol)`
   display: flex;

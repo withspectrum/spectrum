@@ -1,12 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import compose from 'recompose/compose';
 import { track } from '../../helpers/events';
-import Column from '../../components/column';
-import Icon from '../../components/icons';
-import Search from '../explore/components/search';
-import { FlexCol, FlexRow } from '../../components/globals';
-import { SERVER_URL } from '../../api';
 import { storeItem, getItemFromStorage } from '../../helpers/localStorage';
 import {
   Overview,
@@ -16,28 +10,10 @@ import {
   Sell,
   Yours,
   PageFooter,
-} from './sections';
-import { Conversation, Discover } from './components/illustrations';
-import {
-  Wrapper,
-  Tagline,
-  Copy,
-  Bullets,
-  Bullet,
-  BulletHeading,
-  BulletTitle,
-  BulletCopy,
-  LogoContainer,
-  LogoWhite,
-  SectionContent,
-  LinkBlock,
-  LoginCard,
-  Flexer,
-  PrimaryCTA,
-  SecondaryCTA,
-} from './style';
+} from './view';
+import { Wrapper } from './style';
 
-class Homepage extends Component {
+class Splash extends Component {
   state: {
     preferredSigninMethod: string,
   };
@@ -76,4 +52,4 @@ class Homepage extends Component {
     );
   }
 }
-export default Homepage;
+export default Splash;
