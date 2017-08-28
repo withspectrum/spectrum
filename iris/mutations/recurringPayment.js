@@ -302,7 +302,9 @@ module.exports = {
           // if payments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
           rPayments
             ? // we will evaluate the first returned recurring payment where the plan is community-pro. In theory a community should never have more than one of these records, so we instantly select the first record
-              rPayments.filter(pmt => pmt.planId === 'community-pro')[0]
+              rPayments
+                .filter(pmt => pmt.communityId === communityId)
+                .filter(pmt => pmt.planId === 'community-pro')[0]
             : null;
 
         // if the result is null, the user has never upgraded this community which means we need to create a stripe customer and then create the recurringPayment record in the database
@@ -312,12 +314,15 @@ module.exports = {
             currentUser.email,
             token.id
           );
+
+          // create the subscription in stripe
           const subscription = await createStripeSubscription(
             customer.id,
             plan,
             Math.ceil(members.length / 1000) // round up from the nearest 1,000 members
           );
 
+          // create a recurringPayment record in the database
           return await createRecurringPayment({
             communityId,
             userId: currentUser.id,
@@ -391,7 +396,9 @@ module.exports = {
           // if recurringPayments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
           rPayments
             ? // we will evaluate the first returned recurring payment where the plan is community-pro. In theory a community should never have more than one of these records, so we instantly select the first record
-              rPayments.filter(pmt => pmt.planId === 'community-pro')[0]
+              rPayments
+                .filter(pmt => pmt.communityId === input.id)
+                .filter(pmt => pmt.planId === 'community-pro')[0]
             : null;
 
         // if no recurringPayments exist on the 'community-pro' plan, there is nothing to downgrade
