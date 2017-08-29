@@ -19,6 +19,8 @@ export const createRecurringPayment = (props): Promise<Object> => {
       currentPeriodEnd: stripeData.current_period_end,
       createdAt: stripeData.plan.created,
       canceledAt: null,
+      sourceBrand: stripeData.sourceBrand,
+      sourceLast4: stripeData.sourceLast4,
     })
     .run();
 };
@@ -45,6 +47,9 @@ export const updateRecurringPayment = (props): Promise<Object> => {
         currentPeriodEnd: stripeData.current_period_end,
         createdAt: stripeData.plan.created,
         canceledAt: stripeData.status === 'canceled' ? new Date() : null,
+        sourceBrand: stripeData.sourceBrand,
+        sourceLast4: stripeData.sourceLast4,
+        subscriptionId: stripeData.id,
       },
       { returnChanges: true }
     )

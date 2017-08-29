@@ -13,6 +13,7 @@ export const getInvoicesByCommunity = (id: string): Promise<Array<Object>> => {
 export const createInvoice = (
   event: Object,
   subscription: Object,
+  customer: Object,
   communityId: string
 ): Promise<Object> => {
   return db
@@ -28,12 +29,24 @@ export const createInvoice = (
         quantity: subscription.quantity,
         paidAt: event.date,
         chargeId: event.charge,
+        sourceBrand: customer.sources.data[0].brand,
+        sourceLast4: customer.sources.data[0].last4,
         communityId,
       },
       { returnChanges: true }
     )
     .run()
-    .then(result => result.changes[0].new_val);
+    .then(result => {
+      // if a communityId was passed in, we know the invoice was for an upgraded community. if no community Id exists, we know the user paid for a Pro subscription
+      const queueName = communityId
+        ? 'community invoice paid notification'
+        : 'pro invoice paid notification';
+      const invoice = result.changes[0].new_val;
+
+      // trigger an email to the user for the invoice receipt
+      addQueue(queueName, { invoice });
+      return invoice;
+    });
 };
 
 export const payInvoice = (id, stripeData): Promise<Object> => {

@@ -31,8 +31,15 @@ export const processInvoicePaid = async (event: Object) => {
   const communityId = await getCommunityIdFromRecurringPayment(
     object.subscription
   );
+  // get the customer object from stripe
+  const customer = await stripe.customers.retrieve(object.customer);
   // create an invoice record in the database (receipt)
-  const invoice = await createInvoice(object, getSubscription, communityId);
+  const invoice = await createInvoice(
+    object,
+    getSubscription,
+    customer,
+    communityId
+  );
   // update the recurringPayment record in the database that triggered this invoice payment and update the period_end and period_start dates to show in the ui
   const updateRecurringPayment = await updateRecurringPaymentPeriod(object);
 

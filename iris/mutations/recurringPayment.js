@@ -183,9 +183,14 @@ module.exports = {
             plan,
             1
           );
+
           return await createRecurringPayment({
             userId: currentUser.id,
-            stripeData,
+            stripeData: {
+              ...stripeData,
+              sourceBrand: customer.sources.data[0].brand,
+              sourceLast4: customer.sources.data[0].last4,
+            },
           });
         }
 
@@ -208,7 +213,11 @@ module.exports = {
 
           return await updateRecurringPayment({
             id: recurringPaymentToEvaluate.id,
-            stripeData: subscription,
+            stripeData: {
+              ...subscription,
+              sourceBrand: customer.sources.data[0].brand,
+              sourceLast4: customer.sources.data[0].last4,
+            },
           });
         }
       };
@@ -278,7 +287,11 @@ module.exports = {
         // update the recurringPayment record in the database
         return await updateRecurringPayment({
           id: recurringPaymentToEvaluate.id,
-          stripeData,
+          stripeData: {
+            ...stripeData,
+            sourceBrand: customer.sources.data[0].brand,
+            sourceLast4: customer.sources.data[0].last4,
+          },
         });
       };
 
@@ -352,7 +365,11 @@ module.exports = {
           return await createRecurringPayment({
             communityId,
             userId: currentUser.id,
-            stripeData: subscription,
+            stripeData: {
+              ...subscription,
+              sourceBrand: customer.sources.data[0].brand,
+              sourceLast4: customer.sources.data[0].last4,
+            },
           });
         }
 
@@ -379,7 +396,11 @@ module.exports = {
 
           return await updateRecurringPayment({
             id: recurringPaymentToEvaluate.id,
-            stripeData: subscription,
+            stripeData: {
+              ...subscription,
+              sourceBrand: customer.sources.data[0].brand,
+              sourceLast4: customer.sources.data[0].last4,
+            },
           });
         }
       };
@@ -461,7 +482,11 @@ module.exports = {
         // update the recurringPayment record in the database to reflect the new canceled status
         return await updateRecurringPayment({
           id: recurringPaymentToEvaluate.id,
-          stripeData,
+          stripeData: {
+            ...stripeData,
+            sourceBrand: customer.sources.data[0].brand,
+            sourceLast4: customer.sources.data[0].last4,
+          },
         });
       };
 
