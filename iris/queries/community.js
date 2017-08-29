@@ -229,7 +229,7 @@ module.exports = {
         } else {
           return communityProSubs.map(subscription => {
             return {
-              amount: subscription.amount,
+              amount: subscription.amount * subscription.quantity,
               createdAt: subscription.createdAt,
               plan: subscription.planName,
               status: subscription.status,
