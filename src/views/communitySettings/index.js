@@ -101,12 +101,12 @@ const SettingsPure = ({
         <CommunityEditForm community={community} />
       </Column>
       <Column type="primary">
-        <Invoices id={community.id} />
         <RecurringPaymentsList community={community} />
         <ImportSlack community={community} id={community.id} />
         <EmailInvites community={community} />
         <ChannelListCard slug={communitySlug} />
         <CommunityMembers id={community.id} />
+        <Invoices id={community.id} />
       </Column>
     </AppViewWrapper>
   );

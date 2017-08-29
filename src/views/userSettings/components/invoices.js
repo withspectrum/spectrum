@@ -6,7 +6,7 @@ import compose from 'recompose/compose';
 import pure from 'recompose/pure';
 // $FlowFixMe
 import { connect } from 'react-redux';
-import { getCommunityInvoices } from '../../../api/community';
+import { getUserInvoices } from '../../../api/user';
 import { displayLoadingCard } from '../../../components/loading';
 import { InvoiceListItem } from '../../../components/listItems';
 import {
@@ -18,13 +18,13 @@ import {
 
 class InvoicesPure extends Component {
   render() {
-    const { data: { error, community } } = this.props;
+    const { data: { error, user } } = this.props;
 
-    if (!community || community.invoices.length === 0 || error !== undefined) {
+    if (!user || user.invoices.length === 0 || error !== undefined) {
       return null;
     }
 
-    const { invoices } = community;
+    const { invoices } = user;
 
     return (
       <StyledCard>
@@ -41,11 +41,8 @@ class InvoicesPure extends Component {
   }
 }
 
-const Invoices = compose(
-  getCommunityInvoices,
-  displayLoadingCard,
-  connect(),
-  pure
-)(InvoicesPure);
+const Invoices = compose(getUserInvoices, displayLoadingCard, connect(), pure)(
+  InvoicesPure
+);
 
 export default Invoices;

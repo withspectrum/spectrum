@@ -1,16 +1,17 @@
 const Invoice = /* GraphQL */ `
 	type Invoice {
 		id: ID!
-    createdAt: Date!
+    paidAt: Int
     amount: Int
-		paidAt: Date
-		note: String!
+		sourceBrand: String
+		sourceLast4: String
+		planName: String
 	}
 
 	extend type Query {
     invoice(id: ID): Invoice
   }
-  
+
   input PayInvoiceInput {
 		id: ID!
 		token: String!

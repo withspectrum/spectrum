@@ -112,7 +112,7 @@ export const getUsersRecurringPayments = (
     .run();
 };
 
-export const getCommunityIdFromRecurringPayment = (
+export const getRecurringPaymentFromSubscriptionId = (
   subscriptionId: string
 ): Promise<any> => {
   return db
@@ -121,6 +121,6 @@ export const getCommunityIdFromRecurringPayment = (
     .run()
     .then(results => {
       if (!results || results.length === 0) return null;
-      return results[0].communityId;
+      return results[0];
     });
 };

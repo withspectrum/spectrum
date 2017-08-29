@@ -93,6 +93,7 @@ const User = /* GraphQL */ `
 		threadConnection(first: Int = 20, after: String): UserThreadsConnection!
 		everything(first: Int = 20, after: String): EverythingThreadsConnection!
 		recurringPayments: [RecurringPayment]
+		invoices: [Invoice]
 		settings: UserSettings
 	}
 

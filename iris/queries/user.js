@@ -16,6 +16,7 @@ const {
   getDirectMessageThreadsByUser,
 } = require('../models/directMessageThread');
 const { getNotificationsByUser } = require('../models/notification');
+import { getInvoicesByUser } from '../models/invoice';
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import { isAdmin } from '../utils/permissions';
@@ -193,6 +194,13 @@ module.exports = {
     settings: (_, __, { user }) => {
       if (!user) return new UserError('You must be signed in to continue.');
       return getUsersSettings(user.id);
+    },
+    invoices: ({ id }, _, { user }) => {
+      const currentUser = user;
+      if (!currentUser)
+        return new UserError('You must be logged in to view these settings.');
+
+      return getInvoicesByUser(currentUser.id);
     },
   },
 };

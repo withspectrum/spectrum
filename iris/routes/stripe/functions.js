@@ -16,7 +16,7 @@ const stripe = require('stripe')(STRIPE_TOKEN),
 import { createInvoice } from '../../models/invoice';
 import {
   updateRecurringPaymentPeriod,
-  getCommunityIdFromRecurringPayment,
+  getRecurringPaymentFromSubscriptionId,
 } from '../../models/recurringPayment';
 
 export const processInvoicePaid = async (event: Object) => {
@@ -28,7 +28,7 @@ export const processInvoicePaid = async (event: Object) => {
     object.subscription
   );
   // we need to retrieve a community id for the payment, if one exists
-  const communityId = await getCommunityIdFromRecurringPayment(
+  const rPayment = await getRecurringPaymentFromSubscriptionId(
     object.subscription
   );
   // get the customer object from stripe
@@ -38,11 +38,11 @@ export const processInvoicePaid = async (event: Object) => {
     object,
     getSubscription,
     customer,
-    communityId
+    rPayment
   );
   // update the recurringPayment record in the database that triggered this invoice payment and update the period_end and period_start dates to show in the ui
   const updateRecurringPayment = await updateRecurringPaymentPeriod(object);
 
-  // return all three awaits to process them
-  return { getSubscription, invoice, updateRecurringPayment, communityId };
+  // return all awaits to process them
+  return { getSubscription, invoice, updateRecurringPayment };
 };
