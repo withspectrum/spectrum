@@ -106,3 +106,16 @@ export const getUsersRecurringPayments = (
     .getAll(...userIds, { index: 'userId' })
     .run();
 };
+
+export const getCommunityIdFromRecurringPayment = (
+  subscriptionId: string
+): Promise<any> => {
+  return db
+    .table('recurringPayments')
+    .filter({ subscriptionId })
+    .run()
+    .then(results => {
+      if (!results || results.length === 0) return null;
+      return results[0].communityId;
+    });
+};

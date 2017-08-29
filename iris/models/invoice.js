@@ -12,7 +12,8 @@ export const getInvoicesByCommunity = (id: string): Promise<Array<Object>> => {
 
 export const createInvoice = (
   event: Object,
-  subscription: Object
+  subscription: Object,
+  communityId: string
 ): Promise<Object> => {
   return db
     .table('invoices')
@@ -27,6 +28,7 @@ export const createInvoice = (
         quantity: subscription.quantity,
         paidAt: event.date,
         chargeId: event.charge,
+        communityId,
       },
       { returnChanges: true }
     )

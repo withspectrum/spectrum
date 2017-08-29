@@ -14,17 +14,28 @@ const stripe = require('stripe')(STRIPE_TOKEN),
   currency = 'USD';
 
 import { createInvoice } from '../../models/invoice';
-import { updateRecurringPaymentPeriod } from '../../models/recurringPayment';
+import {
+  updateRecurringPaymentPeriod,
+  getCommunityIdFromRecurringPayment,
+} from '../../models/recurringPayment';
 
-export const invoicePaid = async (event: Object) => {
+export const processInvoicePaid = async (event: Object) => {
   // the object field contains all the data related to the event
   const { data: { object } } = event;
 
+  // fetch the subscription record from stripe as it contains a few new fields we need below
   const getSubscription = await stripe.subscriptions.retrieve(
     object.subscription
   );
-  const invoice = await createInvoice(object, getSubscription);
-  const updateRecurringPayment = updateRecurringPaymentPeriod(object);
+  // we need to retrieve a community id for the payment, if one exists
+  const communityId = await getCommunityIdFromRecurringPayment(
+    object.subscription
+  );
+  // create an invoice record in the database (receipt)
+  const invoice = await createInvoice(object, getSubscription, communityId);
+  // update the recurringPayment record in the database that triggered this invoice payment and update the period_end and period_start dates to show in the ui
+  const updateRecurringPayment = await updateRecurringPaymentPeriod(object);
 
-  return { getSubscription, invoice, updateRecurringPayment };
+  // return all three awaits to process them
+  return { getSubscription, invoice, updateRecurringPayment, communityId };
 };

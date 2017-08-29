@@ -39,7 +39,7 @@ const RecurringPaymentsList = ({ community, currentUser, dispatch }) => {
     return (
       <StyledCard>
         <ListHeader>
-          <LargeListHeading>Billing</LargeListHeading>
+          <LargeListHeading>Subscriptions Billing</LargeListHeading>
         </ListHeader>
         <ListContainer>
           {filteredRecurringPayments.map(payment => {

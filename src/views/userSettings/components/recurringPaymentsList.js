@@ -35,7 +35,7 @@ const RecurringPaymentsList = ({ data: { user }, currentUser, dispatch }) => {
     return (
       <StyledCard>
         <ListHeader>
-          <LargeListHeading>Billing</LargeListHeading>
+          <LargeListHeading>Pro</LargeListHeading>
         </ListHeader>
         <ListContainer>
           {filteredRecurringPayments.map(payment => {
