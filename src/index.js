@@ -6,7 +6,7 @@ import { ThemeProvider } from 'styled-components';
 //$FlowFixMe
 import { ApolloProvider } from 'react-apollo';
 //$FlowFixMe
-import { Route, Switch, Router, Redirect } from 'react-router';
+import { Router } from 'react-router';
 import { history } from './helpers/history';
 import queryString from 'query-string';
 import { client } from './api';
@@ -48,20 +48,14 @@ if (existingUser) {
 }
 
 function render() {
-  // if user is not stored in localStorage and they visit a blacklist url
-  const redirectToHome =
-    !existingUser &&
-    (window.location.pathname === '/' ||
-      window.location.pathname === '/messages' ||
-      window.location.pathname === '/messages/new' ||
-      window.location.pathname === '/notifications');
-
   return ReactDOM.render(
-    <ApolloProvider store={store} client={client}>
-      <ThemeProvider theme={theme}>
-        <Routes redirectToHome={redirectToHome} existingUser={existingUser} />
-      </ThemeProvider>
-    </ApolloProvider>,
+    <Router history={history}>
+      <ApolloProvider store={store} client={client}>
+        <ThemeProvider theme={theme}>
+          <Routes />
+        </ThemeProvider>
+      </ApolloProvider>
+    </Router>,
     document.querySelector('#root')
   );
 }
