@@ -82,7 +82,7 @@ export class Login extends Component {
                   preferred={preferredSigninMethod === 'twitter'}
                   after={preferredSigninMethod === 'twitter'}
                   whitebg={preferredSigninMethod !== 'twitter'}
-                  href={`${SERVER_URL}/auth/twitter?r=${window.location.href}`}
+                  href={`${SERVER_URL}/auth/twitter?r=/home`}
                   onClick={() => this.trackSignin('secondary cta', 'twitter')}
                 >
                   <Icon glyph="twitter" /> <span>{verb} with Twitter</span>
@@ -92,7 +92,7 @@ export class Login extends Component {
                   preferred={preferredSigninMethod === 'facebook'}
                   after={preferredSigninMethod === 'facebook'}
                   whitebg={preferredSigninMethod !== 'facebook'}
-                  href={`${SERVER_URL}/auth/facebook?r=${window.location.href}`}
+                  href={`${SERVER_URL}/auth/facebook?r=/home`}
                   onClick={() => this.trackSignin('secondary cta', 'facebook')}
                 >
                   <Icon glyph="facebook" /> <span>{verb} with Facebook</span>
@@ -102,7 +102,7 @@ export class Login extends Component {
                   preferred={preferredSigninMethod === 'google'}
                   after={preferredSigninMethod === 'google'}
                   whitebg={preferredSigninMethod !== 'google'}
-                  href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
+                  href={`${SERVER_URL}/auth/google?r=/home`}
                   onClick={() => this.trackSignin('secondary cta', 'google')}
                 >
                   <Icon glyph="google" /> <span>{verb} with Google</span>
@@ -113,7 +113,7 @@ export class Login extends Component {
               <Col>
                 <ButtonTwitter
                   preferred
-                  href={`${SERVER_URL}/auth/twitter?r=${window.location.href}`}
+                  href={`${SERVER_URL}/auth/twitter?r=/home`}
                   after={preferredSigninMethod === 'twitter'}
                   onClick={() => this.trackSignin('secondary cta', 'twitter')}
                 >
@@ -122,7 +122,7 @@ export class Login extends Component {
 
                 <ButtonFacebook
                   preferred
-                  href={`${SERVER_URL}/auth/facebook?r=${window.location.href}`}
+                  href={`${SERVER_URL}/auth/facebook?r=/home`}
                   after={preferredSigninMethod === 'facebook'}
                   onClick={() => this.trackSignin('secondary cta', 'facebook')}
                 >
@@ -131,7 +131,7 @@ export class Login extends Component {
 
                 <ButtonGoogle
                   preferred
-                  href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
+                  href={`${SERVER_URL}/auth/google?r=/home`}
                   after={preferredSigninMethod === 'google'}
                   onClick={() => this.trackSignin('secondary cta', 'google')}
                 >
