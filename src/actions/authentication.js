@@ -4,7 +4,7 @@ import { clearApolloStore } from '../api';
 import { removeItemFromStorage, storeItem } from '../helpers/localStorage';
 import Raven from 'raven-js';
 
-export const logout = () => {
+export const logout = dispatch => {
   track(`user`, `sign out`, null);
   // clear localStorage
   removeItemFromStorage('spectrum');
@@ -15,6 +15,10 @@ export const logout = () => {
     process.env.NODE_ENV === 'production'
       ? '/auth/logout'
       : 'http://localhost:3001/auth/logout';
+
+  dispatch({
+    type: 'CLEAR_USER',
+  });
 };
 
 export const saveUserDataToLocalStorage = (user: Object) => dispatch => {

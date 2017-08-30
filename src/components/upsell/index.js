@@ -180,7 +180,7 @@ export class UpsellSignIn extends Component {
 
     if (isSigningIn) {
       const title =
-        signinType === 'signup' ? 'Good times ahead!' : 'Welcome back!';
+        signinType === 'signup' ? 'Welcome to Spectrum!' : 'Welcome back!';
       const subtitle =
         signinType === 'signup'
           ? 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.'

@@ -1,14 +1,19 @@
 // @flow
 // Fallback to the <Splash /> component if there's no current user
 import React from 'react';
+// @FlowFixMe
 import { connect } from 'react-redux';
 import Splash from './';
 
 // This is the component that determines at render time what to do
 const SplashFallbackComp = props => {
   const { Component, currentUser, ...rest } = props;
-  if (!currentUser || !Component) return <Splash {...rest} />;
-  return <Component {...rest} />;
+
+  if (!currentUser || !Component) {
+    return <Splash {...rest} />;
+  } else {
+    return <Component {...rest} />;
+  }
 };
 
 // Connect that component to the Redux state

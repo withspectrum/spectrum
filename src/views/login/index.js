@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Icon from '../../components/icons';
 import FullscreenView from '../../components/fullscreenView';
 import { getItemFromStorage, storeItem } from '../../helpers/localStorage';
-import { SERVER_URL } from '../../api';
+import { SERVER_URL, CLIENT_URL } from '../../api';
 import {
   LargeTitle,
   LargeSubtitle,
@@ -47,16 +47,23 @@ export class Login extends Component {
   render() {
     const { signinType } = this.state;
     const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
+    const { redirectPath } = this.props;
 
     const viewTitle =
-      signinType === 'signup' ? 'Good times ahead!' : 'Welcome back!';
+      signinType === 'login' ? 'Welcome back!' : 'Welcome to Spectrum!';
 
     const viewSubtitle =
-      signinType === 'signup'
-        ? 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.'
-        : "We're happy to see you again - log in below to get back into the conversation!";
+      signinType === 'login'
+        ? "We're happy to see you again - log in below to get back into the conversation!"
+        : 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.';
 
-    const verb = signinType === 'signup' ? 'Sign up' : 'Sign in';
+    const verb = 'Sign in';
+
+    const postAuthRedirectPath = redirectPath
+      ? `?r=${redirectPath}`
+      : `?r=${CLIENT_URL}/home`;
+
+    console.log(postAuthRedirectPath);
 
     return (
       <FullscreenView
@@ -82,7 +89,7 @@ export class Login extends Component {
                   preferred={preferredSigninMethod === 'twitter'}
                   after={preferredSigninMethod === 'twitter'}
                   whitebg={preferredSigninMethod !== 'twitter'}
-                  href={`${SERVER_URL}/auth/twitter?r=/home`}
+                  href={`${SERVER_URL}/auth/twitter${postAuthRedirectPath}`}
                   onClick={() => this.trackSignin('secondary cta', 'twitter')}
                 >
                   <Icon glyph="twitter" /> <span>{verb} with Twitter</span>
@@ -92,7 +99,7 @@ export class Login extends Component {
                   preferred={preferredSigninMethod === 'facebook'}
                   after={preferredSigninMethod === 'facebook'}
                   whitebg={preferredSigninMethod !== 'facebook'}
-                  href={`${SERVER_URL}/auth/facebook?r=/home`}
+                  href={`${SERVER_URL}/auth/facebook${postAuthRedirectPath}`}
                   onClick={() => this.trackSignin('secondary cta', 'facebook')}
                 >
                   <Icon glyph="facebook" /> <span>{verb} with Facebook</span>
@@ -102,7 +109,7 @@ export class Login extends Component {
                   preferred={preferredSigninMethod === 'google'}
                   after={preferredSigninMethod === 'google'}
                   whitebg={preferredSigninMethod !== 'google'}
-                  href={`${SERVER_URL}/auth/google?r=/home`}
+                  href={`${SERVER_URL}/auth/google${postAuthRedirectPath}`}
                   onClick={() => this.trackSignin('secondary cta', 'google')}
                 >
                   <Icon glyph="google" /> <span>{verb} with Google</span>
@@ -113,7 +120,7 @@ export class Login extends Component {
               <Col>
                 <ButtonTwitter
                   preferred
-                  href={`${SERVER_URL}/auth/twitter?r=/home`}
+                  href={`${SERVER_URL}/auth/twitter${postAuthRedirectPath}`}
                   after={preferredSigninMethod === 'twitter'}
                   onClick={() => this.trackSignin('secondary cta', 'twitter')}
                 >
@@ -122,7 +129,7 @@ export class Login extends Component {
 
                 <ButtonFacebook
                   preferred
-                  href={`${SERVER_URL}/auth/facebook?r=/home`}
+                  href={`${SERVER_URL}/auth/facebook${postAuthRedirectPath}`}
                   after={preferredSigninMethod === 'facebook'}
                   onClick={() => this.trackSignin('secondary cta', 'facebook')}
                 >
@@ -131,7 +138,7 @@ export class Login extends Component {
 
                 <ButtonGoogle
                   preferred
-                  href={`${SERVER_URL}/auth/google?r=/home`}
+                  href={`${SERVER_URL}/auth/google${postAuthRedirectPath}`}
                   after={preferredSigninMethod === 'google'}
                   onClick={() => this.trackSignin('secondary cta', 'google')}
                 >

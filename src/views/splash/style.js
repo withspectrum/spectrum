@@ -79,8 +79,10 @@ export const Copy = styled(P)`
 export const Bullets = styled(FlexRow)`
   align-self: stretch;
   flex: auto;
+  justify-content: center;
   align-items: flex-start;
   margin: 32px 16px 16px;
+  flex-wrap: wrap;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -90,7 +92,7 @@ export const Bullets = styled(FlexRow)`
 export const Bullet = styled(FlexCol)`
   display: inline-block;
   width: calc(33% - 64px);
-  min-width: 256px;
+  min-width: 320px;
   max-width: 480px;
   margin: 32px;
   margin-bottom: 0;

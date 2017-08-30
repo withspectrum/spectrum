@@ -232,9 +232,9 @@ export const Sell = props => {
                 threads about the same thing.
               </BulletCopy>
               <BulletCopy>
-                Save your team from extra work by having conversations with your
-                community as a whole and chat privately when a particular issue
-                is sensitive.
+                Save your team from unnecessary work by having conversations
+                with your community as a whole and chat privately when a
+                particular issue is sensitive.
               </BulletCopy>
             </Bullet>
             <Bullet>
@@ -242,9 +242,9 @@ export const Sell = props => {
                 <BulletTitle>Bring people together</BulletTitle>
               </BulletHeading>
               <BulletCopy>
-                Spectrum enables your top supporters and advocates to share
-                their knowledge, support other members, and foster a place of
-                belonging for everyone.
+                Spectrum gives your top supporters and advocates a place to
+                share their knowledge, empower other members, and foster a place
+                of belonging for everyone.
               </BulletCopy>
             </Bullet>
             <Bullet>
