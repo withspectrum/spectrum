@@ -860,3 +860,35 @@ export const UpsellUpgradeCommunity = compose(
   upgradeCommunityMutation,
   connect()
 )(UpsellUpgradeCommunityPure);
+
+class UpsellUpgradeCommunityPrivateChannelPure extends Component {
+  openCommunityUpgradeModal = () => {
+    const { dispatch, currentUser, community } = this.props;
+
+    this.props.dispatch(
+      openModal('COMMUNITY_UPGRADE_MODAL', { user: currentUser, community })
+    );
+  };
+
+  render() {
+    const { community } = this.props;
+
+    return (
+      <NullCard
+        bg="post"
+        heading="This channel has been closed."
+        copy="Private channels are available to communities on the Pro plan. If you want to upgrade to re-open this channel you gotta re-upgrade it."
+      >
+        {community.communityPermissions.isOwner &&
+          <Button onClick={this.openCommunityUpgradeModal}>
+            Upgrade {community.name} to Pro
+          </Button>}
+      </NullCard>
+    );
+  }
+}
+
+const mapUpgrade = state => ({ currentUser: state.users.currentUser });
+export const UpsellUpgradeCommunityPrivateChannel = compose(
+  connect(mapUpgrade)
+)(UpsellUpgradeCommunityPrivateChannelPure);

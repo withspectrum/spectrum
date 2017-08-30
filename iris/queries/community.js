@@ -239,9 +239,10 @@ module.exports = {
       });
     },
     isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
-      return getCommunityRecurringPayments(id).then(
-        subs => (!subs || subs.length === 0 ? false : true)
-      );
+      return getCommunityRecurringPayments(id).then(subs => {
+        let filtered = subs && subs.filter(sub => sub.status === 'active');
+        return !filtered || filtered.length === 0 ? false : true;
+      });
     },
   },
 };

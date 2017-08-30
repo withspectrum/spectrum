@@ -30,6 +30,7 @@ import {
   UpsellSignIn,
   Upsell404Channel,
   UpsellRequestToJoinChannel,
+  UpsellUpgradeCommunityPrivateChannel,
 } from '../../components/upsell';
 import Titlebar from '../titlebar';
 
@@ -215,6 +216,14 @@ class ChannelViewPure extends Component {
 
               {loggedInUser &&
                 hasRights &&
+                !channel.community.isPro &&
+                <UpsellUpgradeCommunityPrivateChannel
+                  community={channel.community}
+                />}
+
+              {loggedInUser &&
+                hasRights &&
+                channel.community.isPro &&
                 <ThreadComposer
                   activeCommunity={communitySlug}
                   activeChannel={channelSlug}
