@@ -4,8 +4,7 @@ const { db } = require('./db');
 import UserError from '../utils/UserError';
 import { uploadImage } from '../utils/s3';
 import { createNewUsersSettings } from './usersSettings';
-const createQueue = require('../../shared/bull/create-queue');
-const sendUserWelcomeEmailQueue = createQueue('send new user welcome email');
+import { addQueue } from '../utils/workerQueue';
 
 const getUser = (input: Object): Promise<Object> => {
   if (input.id) return getUserById(input.id);
@@ -78,7 +77,7 @@ const storeUser = (user: Object): Promise<Object> => {
 
       // whenever a new user is created, create a usersSettings record
       // and send a welcome email
-      sendUserWelcomeEmailQueue.add(user);
+      addQueue('send new user welcome email', { user });
       return Promise.all([user, createNewUsersSettings(user.id)]);
     })
     .then(([user, settings]) => user);

@@ -18,12 +18,17 @@ import getMeta from './utils/get-page-meta';
 import listeners from './subscriptions/listeners';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
+
 const PORT = 3001;
 
 // Initialize authentication
 initPassport();
 // API server
 const app = express();
+// $FlowFixMe
+if (IS_PROD) {
+  require('newrelic');
+}
 
 import middlewares from './routes/middlewares';
 app.use(middlewares);
