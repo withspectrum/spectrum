@@ -45,7 +45,7 @@ const Section = props =>
 
 export const Overview = props => {
   const Text = styled(FlexCol)`
-    margin: 40px 16px 80px 16px;
+    margin: 60px 16px 120px 16px;
     text-align: center;
     align-items: center;
 
@@ -55,22 +55,36 @@ export const Overview = props => {
   `;
 
   const ThisCopy = styled(Copy)`
-    font-size: 18px;
-    line-height: 1.6;
+    font-size: 24px;
+    line-height: 1.3;
+    font-weight: 500;
+    opacity: 0.95;
+
+    @media (max-width: 768px) {
+      font-size: 20px;
+      text-align: center;
+    }
   `;
 
   const ThisTagline = styled(Tagline)`
     margin-bottom: 16px;
+    font-size: 64px;
+
+    @media (max-width: 768px) {
+      font-size: 40px;
+    }
   `;
 
   const Actions = styled(Flexer)`
-    margin-top: 32px;
+    margin-top: 48px;
     margin-left: 16px;
     justify-content: space-between;
   `;
 
   const ThisSecondaryCTA = styled(SecondaryCTA)`
     margin-left: 16px;
+    font-size: 18px;
+    border: 2px solid ${props => props.theme.text.reverse};
 
     @media (max-width: 768px) {
       margin-left: 0;
@@ -78,10 +92,12 @@ export const Overview = props => {
     }
   `;
 
-  const ThisButton = styled(Button)`
-    &:hover {
-      box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.5)};
-    }
+  const ThisPrimaryCTA = styled(PrimaryCTA)`
+    font-size: 18px;
+  `;
+
+  const ThisButton = styled(SecondaryCTA)`
+    border: 2px solid ${props => props.theme.text.reverse};
   `;
 
   return (
@@ -89,20 +105,21 @@ export const Overview = props => {
       <Header>
         <Logo />
         <Link to="/login">
-          <ThisButton icon="like">Sign in</ThisButton>
+          <ThisButton>Log in</ThisButton>
         </Link>
       </Header>
       <Content>
         <Text>
-          <ThisTagline>Build better communities.</ThisTagline>
+          <ThisTagline>Find your people.</ThisTagline>
           <ThisCopy>
-            Spectrum helps you create and grow your online community in a
-            healthy, scalable way. Whether you’re an informal group or a massive
-            company, Spectrum makes managing your community simple.
+            Spectrum is the best way to build a healthy, scalable online
+            community.
           </ThisCopy>
           <Actions>
             <Link to="/new/community">
-              <PrimaryCTA icon="plus-fill">Create a free community</PrimaryCTA>
+              <ThisPrimaryCTA icon="plus-fill">
+                Create a community
+              </ThisPrimaryCTA>
             </Link>
             <Link to="/explore">
               <ThisSecondaryCTA icon="explore">
@@ -124,11 +141,41 @@ export const Centralized = props => {
   `;
 
   const Text = styled(FlexCol)`
-    margin: 40px 16px;
+    margin: 40px 16px 64px;
+
+    @media (max-width: 768px) {
+      margin-top: 20px;
+      margin-bottom: 44px;
+    }
   `;
 
   const ThisCopy = styled(Copy)`
-    font-weight: 400;
+    margin-top: 16px;
+  `;
+
+  const ThisPrimaryCTA = styled(PrimaryCTA)`
+    margin-top: 32px;
+    background-color: ${props => props.theme.brand.alt};
+    background-image: ${props =>
+      Gradient(props.theme.brand.alt, props.theme.brand.default)};
+    color: ${props => props.theme.text.reverse};
+
+    &:hover {
+      color: ${props => props.theme.text.reverse};
+    }
+  `;
+
+  const Actions = styled.div`
+    @media (max-width: 768px) {
+      display: flex;
+      justify-content: center;
+    }
+  `;
+
+  const ThisTagline = styled(Tagline)`
+    @media (max-width: 768px) {
+      margin-bottom: 0;
+    }
   `;
 
   return (
@@ -136,16 +183,23 @@ export const Centralized = props => {
       <ThisContent>
         <Discover />
         <Text>
-          <Tagline>Be where your people are.</Tagline>
+          <ThisTagline>Be where your people are.</ThisTagline>
           <ThisCopy>
             People shouldn't have to hunt down an email invite or search through
             a help center to find your community.
           </ThisCopy>
           <ThisCopy>
             When it's built on Spectrum, people can find your community
-            organically through search, curation, or even other community
+            organically through search, curation, or through other community
             members.
           </ThisCopy>
+          <Actions>
+            <Link to="/new/community">
+              <ThisPrimaryCTA icon="plus-fill">
+                Create a community
+              </ThisPrimaryCTA>
+            </Link>
+          </Actions>
         </Text>
       </ThisContent>
     </Section>
@@ -159,21 +213,39 @@ export const CommunitySearch = props => {
     align-content: center;
     align-self: center;
     margin-top: 40px;
+    margin-bottom: 40px;
+    padding: 16px;
 
     @media (max-width: 640px) {
       margin-top: 80px;
+      margin-bottom: 0;
       width: 100%;
     }
   `;
 
   const ThisTagline = styled(Tagline)`
+    margin-bottom: 16px;
+  `;
+
+  const ThisCopy = styled(Copy)`
+    font-size: 18px;
     margin-bottom: 32px;
+    font-weight: 500;
+    text-align: center;
+    max-width: 640px;
+
+    @media (max-width: 768px) {
+      text-align: left;
+    }
   `;
 
   return (
     <Section goop={4} background="bright">
       <ThisContent>
         <ThisTagline>Find a community for you!</ThisTagline>
+        <ThisCopy>
+          Try searching for topics like "design" or for tools like "Sketch"!
+        </ThisCopy>
         <Search />
       </ThisContent>
     </Section>
@@ -184,10 +256,39 @@ export const Chat = props => {
   const ThisContent = styled(Content)`
     overflow: hidden;
     margin: 40px 16px;
+
+    @media (max-width: 768px) {
+      margin-bottom: 0;
+    }
   `;
 
   const ThisCopy = styled(Copy)`
-    font-weight: 400;
+    margin-top: 16px;
+  `;
+
+  const ThisPrimaryCTA = styled(PrimaryCTA)`
+    background-color: ${props => props.theme.brand.alt};
+    background-image: ${props =>
+      Gradient(props.theme.brand.alt, props.theme.brand.default)};
+    color: ${props => props.theme.text.reverse};
+    margin-top: 32px;
+
+    &:hover {
+      color: ${props => props.theme.text.reverse};
+    }
+  `;
+
+  const Actions = styled.div`
+    @media (max-width: 768px) {
+      display: flex;
+      justify-content: center;
+    }
+  `;
+
+  const ThisTagline = styled(Tagline)`
+    @media (max-width: 768px) {
+      margin-bottom: 0;
+    }
   `;
 
   return (
@@ -195,16 +296,24 @@ export const Chat = props => {
       <ThisContent>
         <Conversation />
         <FlexCol>
-          <Tagline>Real-time messaging; long-term value</Tagline>
+          <ThisTagline>Real-time messaging with long-term value.</ThisTagline>
           <ThisCopy>
-            Conversations are chat-based just like your favorite messaging app,
-            but on Spectrum they continue to provide value to more and more
-            people over time.
+            Conversations on Spectrum are real-time chat, just like your
+            favorite messaging app. But on Spectrum, conversations continue to
+            provide value to more and more people over time.
           </ThisCopy>
           <ThisCopy>
-            Every conversation gets a unique link to make it easy for users to
-            discover, share, embed, or save conversations for later.
+            Every conversation gets a unique link to make it easy for people to
+            discover, share, embed, or save for later.
           </ThisCopy>
+
+          <Actions>
+            <Link to="/new/community">
+              <ThisPrimaryCTA icon="plus-fill">
+                Create a community
+              </ThisPrimaryCTA>
+            </Link>
+          </Actions>
         </FlexCol>
       </ThisContent>
     </Section>
@@ -217,24 +326,51 @@ export const Sell = props => {
     margin: 40px 0;
   `;
 
+  const ThisContent = styled(Content)`
+
+  `;
+
+  const ThisTagline = styled(Tagline)`
+    margin-bottom: 0;
+    margin-left: 16px;
+    margin-right: 16px;
+  `;
+
+  const Actions = styled(Flexer)`
+    margin-bottom: 48px;
+    justify-content: center;
+  `;
+
+  const ThisSecondaryCTA = styled(SecondaryCTA)`
+    margin-left: 16px;
+
+    @media (max-width: 768px) {
+      margin-left: 0;
+      margin-top: 16px;
+    }
+  `;
+
+  const ThisSection = styled(Section)`
+    margin-bottom: 40px;
+  `;
+
   return (
-    <Section goop={2} background="dark">
-      <Content>
+    <ThisSection goop={2} background="dark">
+      <ThisContent>
         <Text>
-          <Tagline>Spectrum saves you time and money...</Tagline>
+          <ThisTagline>Spectrum saves you time and money.</ThisTagline>
           <Bullets>
             <Bullet>
               <BulletHeading>
                 <BulletTitle>Supercharge support</BulletTitle>
               </BulletHeading>
               <BulletCopy>
-                Stop wasting time with a million private customer support
-                threads about the same thing.
+                Stop wasting time with endless private customer support threads
+                answering the same question over and over.
               </BulletCopy>
               <BulletCopy>
-                Save your team from unnecessary work by having conversations
-                with your community as a whole and chat privately when a
-                particular issue is sensitive.
+                Now your team can have conversations with your community as a
+                whole and chat privately when a particular issue is sensitive.
               </BulletCopy>
             </Bullet>
             <Bullet>
@@ -243,8 +379,8 @@ export const Sell = props => {
               </BulletHeading>
               <BulletCopy>
                 Spectrum gives your top supporters and advocates a place to
-                share their knowledge, empower other members, and foster a place
-                of belonging for everyone.
+                share their knowledge, empower others, and foster a place of
+                belonging for everyone.
               </BulletCopy>
             </Bullet>
             <Bullet>
@@ -262,21 +398,26 @@ export const Sell = props => {
             </Bullet>
           </Bullets>
         </Text>
-      </Content>
-    </Section>
+      </ThisContent>
+      <Actions>
+        <Link to="/new/community">
+          <PrimaryCTA icon="plus-fill">Create a community</PrimaryCTA>
+        </Link>
+      </Actions>
+    </ThisSection>
   );
 };
 
 export const Yours = props => {
   const ThisCopy = styled(Copy)`
-    font-weight: 400;
+    max-width: 640px;
   `;
 
   const ThisContent = styled(Content)`
-    margin: 80px 16px 40px;
+    margin: 60px 16px 40px;
     font-size: 18px;
     align-items: center;
-    text-align: center;
+    text-align: left;
   `;
 
   const ThisPrimaryCTA = styled(PrimaryCTA)`
@@ -291,10 +432,10 @@ export const Yours = props => {
   `;
 
   const ThisSecondaryCTA = styled(SecondaryCTA)`
-    padding: 16px 20px;
     margin-left: 16px;
     background-color: transparent;
     color: ${props => props.theme.brand.alt};
+    border-color: ${props => props.theme.brand.alt};
 
     &:hover {
       border-color: ${props => props.theme.brand.alt};
@@ -304,15 +445,23 @@ export const Yours = props => {
     > div {
       top: -1px;
     }
+
+    @media (max-width: 768px) {
+      margin-left: 0;
+      margin-top: 16px;
+    }
   `;
 
   const Actions = styled(Flexer)`
     margin-top: 32px;
-    margin-left: 16px;
-    justify-content: center;
+    justify-content: flex-start;
 
     > a {
       display: inline-block;
+    }
+
+    @media (max-width: 768px) {
+      justify-content: center;
     }
   `;
 
@@ -320,23 +469,28 @@ export const Yours = props => {
     <Section goop={1} color="bg.reverse">
       <ThisContent>
         <FlexCol>
-          <Tagline>Any community, only one you</Tagline>
+          <Tagline>All your communities in one place.</Tagline>
           <ThisCopy>
-            On other platforms, community members need to create separate
-            accounts for each community, so people end up constantly switching
-            groups to manage notifications and keep up with the latest messages.
+            On other platforms, keeping up with all your communities requires
+            new logins, playing a constant game of whack-a-mole with
+            notifications, and often feeling like it's actual work just to keep
+            up to date.
           </ThisCopy>
           <ThisCopy>
-            On Spectrum, you only have one account to manage and the
-            conversations that matter come to you &mdash; no matter which
-            community they're in.
+            On Spectrum, you only have one account to join all your favorite
+            communities, and the conversations that matter come to you in one
+            simple feed &mdash; no matter which community they're in.
           </ThisCopy>
           <Actions>
-            <Link to="/login">
-              <ThisPrimaryCTA icon="like">Sign up</ThisPrimaryCTA>
+            <Link to="/new/community">
+              <ThisPrimaryCTA icon="plus-fill">
+                Create a community
+              </ThisPrimaryCTA>
             </Link>
-            <Link to="/login">
-              <ThisSecondaryCTA>Sign in</ThisSecondaryCTA>
+            <Link to="/explore">
+              <ThisSecondaryCTA icon="explore">
+                Explore communities
+              </ThisSecondaryCTA>
             </Link>
           </Actions>
         </FlexCol>

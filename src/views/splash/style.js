@@ -54,7 +54,6 @@ export const Tagline = styled(H2)`
 	color: inherit;
 
   @media (max-width: 768px) {
-    text-align: center;
     margin-bottom: 32px;
   }
 `;
@@ -72,7 +71,7 @@ export const Copy = styled(P)`
 	}
 
   @media (max-width: 768px) {
-    text-align: center;
+    text-align: left;
   }
 `;
 
@@ -86,6 +85,7 @@ export const Bullets = styled(FlexRow)`
 
   @media (max-width: 768px) {
     flex-direction: column;
+    margin-top: 0;
   }
 `;
 
@@ -115,12 +115,15 @@ export const BulletTitle = styled.h2`
   font-weight: 700;
 `;
 
-export const BulletCopy = styled.p`margin-top: 8px;`;
+export const BulletCopy = styled.p`
+  margin-top: 8px;
+  font-weight: 500;
+`;
 
 export const PrimaryCTA = styled(Button)`
   padding: 8px 12px;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   border-radius: 12px;
   background-color: ${props => props.theme.bg.default};
   background-image: none;
@@ -276,6 +279,10 @@ export const LinkBlock = styled.a`
   flex: 0 0 auto;
   position: relative;
 
+  &:hover {
+    text-decoration: none;
+  }
+
   div {
     font-size: 16px;
     font-weight: 700;
@@ -303,8 +310,6 @@ export const LinkBlock = styled.a`
 
       &:hover {
         border-bottom: none;
-        padding-bottom: 0;
-        text-decoration: underline;
       }
     }
   }

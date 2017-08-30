@@ -67,9 +67,7 @@ export const ConversationWrapper = styled.div`
   justify-content: center;
 
   @media (max-width: 768px) {
-    left: auto;
-    order: 2;
-    width: 100%;
+    display: none;
   }
 
   > img {

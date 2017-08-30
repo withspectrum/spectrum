@@ -376,11 +376,11 @@ export const SearchLink = styled(Link)`
 `;
 
 export const SearchResultImage = styled(Avatar)`
-  margin: 8px 16px 8px 8px;
+  margin: 4px 6px 8px 4px;
 `;
 
 export const SearchResultMetaWrapper = styled(FlexCol)`
-  margin-left: 4px;
+  margin-left: 16px;
 `;
 
 export const SearchResultName = styled.h2`
