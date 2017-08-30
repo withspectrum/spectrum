@@ -50,9 +50,9 @@ export const ProfileDropdown = props => {
               My Settings
             </UserProfileDropdownListItem>
           </Link>}
-        <UserProfileDropdownListItem onClick={props.logout}>
+        {/* <UserProfileDropdownListItem onClick={props.logout}>
           Log Out
-        </UserProfileDropdownListItem>
+        </UserProfileDropdownListItem> */}
       </UserProfileDropdownList>
     </UserProfileDropdown>
   );
