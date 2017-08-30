@@ -1,5 +1,5 @@
 session_name: spectrum
-start_directory: ~/sites/withspectrum/spectrum
+start_directory: ./
 windows:
   - window_name: dev
     layout: main-vertical
