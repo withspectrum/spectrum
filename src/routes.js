@@ -27,7 +27,7 @@ import communitySettings from './views/communitySettings';
 import channelSettings from './views/channelSettings';
 import NewCommunity from './views/newCommunity';
 import Splash from './views/splash';
-import splashFallback from './views/splash/fallback';
+import signedOutFallback from './helpers/signed-out-fallback';
 import { Login } from './views/login';
 import ThreadSlider from './views/threadSlider';
 
@@ -72,8 +72,16 @@ class Routes extends Component {
             https://reacttraining.com/react-router/web/api/Switch
           */}
           <Switch>
-            <Route exact path="/" component={splashFallback(Dashboard)} />
-            <Route exact path="/home" component={splashFallback(Dashboard)} />
+            <Route
+              exact
+              path="/"
+              component={signedOutFallback(Dashboard, Splash)}
+            />
+            <Route
+              exact
+              path="/home"
+              component={signedOutFallback(Dashboard, Splash)}
+            />
 
             {/* Public Business Pages */}
             <Route path="/about" component={About} />
@@ -83,16 +91,28 @@ class Routes extends Component {
             <Route path="/style-guide" component={StyleGuide} />
 
             {/* App Pages */}
-            <Route path="/new/community" component={NewCommunity} />
+            <Route
+              path="/new/community"
+              component={signedOutFallback(NewCommunity, Login)}
+            />
             <Route
               path="/new"
               render={() => <Redirect to="/new/community" />}
             />
             <Route path="/login" component={Login} />
             <Route path="/explore" component={Explore} />
-            <Route path="/messages/new" component={DirectMessages} />
-            <Route path="/messages/:threadId" component={DirectMessages} />
-            <Route path="/messages" component={DirectMessages} />
+            <Route
+              path="/messages/new"
+              component={signedOutFallback(DirectMessages, Login)}
+            />
+            <Route
+              path="/messages/:threadId"
+              component={signedOutFallback(DirectMessages, Login)}
+            />
+            <Route
+              path="/messages"
+              component={signedOutFallback(DirectMessages, Login)}
+            />
             <Route path="/thread" component={Thread} />
             <Route exact path="/users" render={() => <Redirect to="/" />} />
             <Route exact path="/users/:username" component={UserView} />
@@ -101,7 +121,10 @@ class Routes extends Component {
               path="/users/:username/settings"
               component={UserSettings}
             />
-            <Route path="/notifications" component={Notifications} />
+            <Route
+              path="/notifications"
+              component={signedOutFallback(Notifications, Login)}
+            />
 
             {/*
             We check communitySlug last to ensure none of the above routes
