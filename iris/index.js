@@ -19,6 +19,7 @@ import getMeta from './utils/get-page-meta';
 import listeners from './subscriptions/listeners';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
+
 const PORT = 3001;
 
 // Initialize authentication

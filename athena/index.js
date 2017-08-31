@@ -3,6 +3,7 @@ const debug = require('debug')('athena');
 import createWorker from '../shared/bull/create-worker';
 // Our job-processing worker server
 import processMessageNotification from './queues/message-notification';
+import processDirectMessageNotification from './queues/direct-message-notification';
 import processReactionNotification from './queues/reaction-notification';
 import processChannelNotification from './queues/channel-notification';
 import processCommunityNotification from './queues/community-notification';
@@ -12,6 +13,7 @@ import processCommunityInvite from './queues/community-invite';
 import processCommunityInvoicePaid from './queues/community-invoice-paid';
 import {
   MESSAGE_NOTIFICATION,
+  DIRECT_MESSAGE_NOTIFICATION,
   REACTION_NOTIFICATION,
   CHANNEL_NOTIFICATION,
   COMMUNITY_NOTIFICATION,
@@ -29,6 +31,7 @@ console.log('');
 
 const server = createWorker({
   [MESSAGE_NOTIFICATION]: processMessageNotification,
+  [DIRECT_MESSAGE_NOTIFICATION]: processDirectMessageNotification,
   [REACTION_NOTIFICATION]: processReactionNotification,
   [CHANNEL_NOTIFICATION]: processChannelNotification,
   [COMMUNITY_NOTIFICATION]: processCommunityNotification,

@@ -14,7 +14,7 @@ export default session({
   // Forces a session that is "uninitialized" to be saved to the store
   // NOTE(@mxstbr): This might not be necessary or even useful, but the default example of
   // session-rethinkdb uses it. Ref: llambda/session-rethinkdb#12
-  saveUninitialized: true,
+  saveUninitialized: false,
   // Force a session identifier cookie to be set on every response, resets the expire date of the
   // cookie to one year from the time of the response, meaning you'll only get logged out after a
   // year of inactivity.

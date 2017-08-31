@@ -70,11 +70,11 @@ export const ViewSubtitle = styled(H2)`
 `;
 
 export const ListCard = styled(StyledCard)`
-padding: 0;
-@media (max-width: 768px) {
-  display: flex;
-  margin-bottom: 32px;
-}
+  padding: 0;
+  @media (max-width: 768px) {
+    display: flex;
+    margin-bottom: 32px;
+  }
 `;
 
 export const Section = styled(FlexCol)`
@@ -104,7 +104,7 @@ export const SectionWrapper = styled(FlexRow)`
 
 export const ViewHeader = styled(Section)`
   flex: none;
-  padding: 120px 0 160px 0;
+  padding: 120px 0 0 0;
   justify-content: flex-end;
   background-color: ${({ theme }) => theme.space.dark};
   background-image: ${({ theme }) =>
@@ -114,7 +114,7 @@ export const ViewHeader = styled(Section)`
     )}, ${theme.space.dark} )`};
 
   @media (max-width: 768px) {
-    padding: 48px 24px 96px 24px;
+    padding: 48px 24px 0 24px;
   }
 `;
 
@@ -157,7 +157,8 @@ export const Row = styled(ScrollRow)`
   overflow-x: scroll;
   align-items: flex-start;
 
-  &:after, &:before{
+  &:after,
+  &:before {
     content: '';
     display: inline-block;
     flex: 0 0 32px;
@@ -182,7 +183,7 @@ export const Item = styled(FlexCol)`
 
   &:hover {
     box-shadow: ${Shadow.high} ${props =>
-  hexa(props.theme.text.placeholder, 1)};
+        hexa(props.theme.text.placeholder, 1)};
     transition: ${Transition.hover.on};
     opacity: 1;
   }
@@ -265,6 +266,14 @@ export const SearchWrapper = styled(Card)`
   position: relative;
   margin-bottom: 48px;
   padding: 12px 16px;
+  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
+  transition: ${Transition.hover.off};
+  z-index: ${zIndex.search};
+
+  &:hover {
+    box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.25)};
+    transition: ${Transition.hover.on};
+  }
 `;
 
 export const SearchInputWrapper = styled(FlexRow)`
@@ -272,8 +281,7 @@ export const SearchInputWrapper = styled(FlexRow)`
   color: ${props => props.theme.text.placeholder};
 `;
 
-export const SearchIcon = styled(Icon)`
-`;
+export const SearchIcon = styled(Icon)``;
 
 export const SearchInput = styled.input`
   font-size: 16px;
@@ -307,7 +315,6 @@ export const SearchResultsDropdown = styled.ul`
   flex: auto;
   max-height: 400px;
   overflow-y: scroll;
-  z-index: ${zIndex.dropDown};
   background: ${props => props.theme.bg.default};
 
   @media (max-width: 768px) {
@@ -364,17 +371,12 @@ export const SearchLink = styled(Link)`
   display: flex;
   align-items: center;
   width: 100%;
-  ${Truncate()}
-  padding: 8px 16px 8px 8px;
+  ${Truncate()} padding: 8px 16px 8px 8px;
 `;
 
-export const SearchResultImage = styled(Avatar)`
-  margin: 8px 16px 8px 8px;
-`;
+export const SearchResultImage = styled(Avatar)`margin: 4px 6px 8px 4px;`;
 
-export const SearchResultMetaWrapper = styled(FlexCol)`
-  margin-left: 4px;
-`;
+export const SearchResultMetaWrapper = styled(FlexCol)`margin-left: 16px;`;
 
 export const SearchResultName = styled.h2`
   font-size: 16px;

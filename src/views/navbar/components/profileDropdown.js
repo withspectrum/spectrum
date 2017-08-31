@@ -6,9 +6,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Dropdown from '../../../components/dropdown';
 
-const UserProfileDropdown = styled(Dropdown)`
-  width: 160px;
-`;
+const UserProfileDropdown = styled(Dropdown)`width: 160px;`;
 
 const UserProfileDropdownList = styled.ul`
   list-style-type: none;
@@ -44,15 +42,16 @@ export const ProfileDropdown = props => {
   return (
     <UserProfileDropdown className={'dropdown'}>
       <UserProfileDropdownList>
-        {props.user.username &&
+        {props.user.username && (
           <Link to={`/users/${props.user.username}/settings`}>
             <UserProfileDropdownListItem>
               My Settings
             </UserProfileDropdownListItem>
-          </Link>}
-        <UserProfileDropdownListItem onClick={props.logout}>
+          </Link>
+        )}
+        {/* <UserProfileDropdownListItem onClick={props.logout}>
           Log Out
-        </UserProfileDropdownListItem>
+        </UserProfileDropdownListItem> */}
       </UserProfileDropdownList>
     </UserProfileDropdown>
   );

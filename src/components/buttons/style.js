@@ -20,7 +20,7 @@ const baseButton = css`
   line-height: 1;
   position: relative;
   text-align: center;
-  padding: ${props => (props.icon ? '4px 8px 4px 4px' : '12px 16px')};
+  padding: ${props => (props.icon ? '4px 8px' : '12px 16px')};
 
   &:hover {
     transition: ${Transition.hover.on};
@@ -105,10 +105,11 @@ export const StyledTextButton = styled(StyledSolidButton)`
 `;
 
 export const StyledOutlineButton = styled(StyledTextButton)`
-  box-shadow: inset 0 0 0 2px ${props =>
-    props.disabled
-      ? props.theme.inactive
-      : eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
+  box-shadow: inset 0 0 0 2px
+    ${props =>
+      props.disabled
+        ? props.theme.inactive
+        : eval(`props.theme.${props.color ? props.color : 'brand.default'}`)};
   color: ${props =>
     props.disabled
       ? props.theme.inactive
@@ -123,12 +124,13 @@ export const StyledOutlineButton = styled(StyledTextButton)`
         : eval(
             `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
           )};
-    box-shadow: inset 0 0 0 2px ${props =>
-      props.disabled
-        ? props.theme.inactive
-        : eval(
-            `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
-          )};
+    box-shadow: inset 0 0 0 2px
+      ${props =>
+        props.disabled
+          ? props.theme.inactive
+          : eval(
+              `props.theme.${props.hoverColor ? props.hoverColor : 'brand.alt'}`
+            )};
     transition: ${Transition.hover.on};
   }
 `;

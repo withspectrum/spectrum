@@ -1,16 +1,19 @@
 // @flow
 import { db } from './db';
-const createQueue = require('../../shared/bull/create-queue');
-const communityInvoicePaidNotificationQueue = createQueue(
-  'community invoice paid notification'
-);
+import { addQueue } from '../utils/workerQueue';
 
 export const getInvoice = (id: string): Promise<Array<Object>> => {
-  return db.table('invoices').get(id).run();
+  return db
+    .table('invoices')
+    .get(id)
+    .run();
 };
 
 export const getInvoicesByCommunity = (id: string): Promise<Array<Object>> => {
-  return db.table('invoices').getAll(id, { index: 'communityId' }).run();
+  return db
+    .table('invoices')
+    .getAll(id, { index: 'communityId' })
+    .run();
 };
 
 export const payInvoice = (id, stripeData): Promise<Object> => {
@@ -22,9 +25,14 @@ export const payInvoice = (id, stripeData): Promise<Object> => {
       stripeData,
     })
     .run()
-    .then(() => db.table('invoices').get(id).run())
+    .then(() =>
+      db
+        .table('invoices')
+        .get(id)
+        .run()
+    )
     .then(invoice => {
-      communityInvoicePaidNotificationQueue.add({ invoice });
+      addQueue('community invoice paid notification', { invoice });
       return invoice;
     });
 };

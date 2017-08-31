@@ -5,7 +5,7 @@ import {
   ClusterTwo,
   ClusterThree,
   ClusterFour,
-} from '../../views/homepage/style';
+} from '../../views/splash/components/illustrations';
 import Icon from '../../components/icons';
 import { FullscreenViewContainer, Illustrations, Close } from './style';
 
@@ -36,18 +36,20 @@ class FullscreenView extends Component {
 
     return (
       <FullscreenViewContainer>
-        {!noCloseButton &&
+        {!noCloseButton && (
           <Close onClick={close}>
             <Icon glyph={'view-close'} size={32} />
-          </Close>}
+          </Close>
+        )}
 
-        {hasBackground &&
+        {hasBackground && (
           <Illustrations>
             <ClusterOne src="/img/cluster-2.svg" role="presentation" />
             <ClusterTwo src="/img/cluster-1.svg" role="presentation" />
             <ClusterThree src="/img/cluster-5.svg" role="presentation" />
             <ClusterFour src="/img/cluster-4.svg" role="presentation" />
-          </Illustrations>}
+          </Illustrations>
+        )}
 
         {children}
       </FullscreenViewContainer>

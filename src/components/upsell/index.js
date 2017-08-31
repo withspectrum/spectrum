@@ -15,6 +15,7 @@ import { openModal } from '../../actions/modals';
 import { Avatar } from '../avatar';
 import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
+import { Login } from '../../views/login';
 import {
   Title,
   MiniTitle,
@@ -48,14 +49,8 @@ export const NullCard = props => {
   return (
     <Card noShadow={props.noShadow}>
       <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
-        {props.heading &&
-          <Title>
-            {props.heading}
-          </Title>}
-        {props.copy &&
-          <Subtitle>
-            {props.copy}
-          </Subtitle>}
+        {props.heading && <Title>{props.heading}</Title>}
+        {props.copy && <Subtitle>{props.copy}</Subtitle>}
         {props.children}
       </NullCol>
     </Card>
@@ -66,38 +61,28 @@ export const MiniNullCard = props => {
   return (
     <Card>
       <NullCol bg={props.bg} repeat={props.repeat} noPadding={props.noPadding}>
-        {props.emoji &&
+        {props.emoji && (
           <LargeEmoji>
             <span role="img" aria-label="Howdy!">
               {props.emoji}
             </span>
-          </LargeEmoji>}
-        {props.heading &&
-          <MiniTitle>
-            {props.heading}
-          </MiniTitle>}
-        {props.copy &&
-          <MiniSubtitle>
-            {props.copy}
-          </MiniSubtitle>}
+          </LargeEmoji>
+        )}
+        {props.heading && <MiniTitle>{props.heading}</MiniTitle>}
+        {props.copy && <MiniSubtitle>{props.copy}</MiniSubtitle>}
         {props.children}
       </NullCol>
     </Card>
   );
 };
 
-export const NullState = props =>
+export const NullState = props => (
   <NullCol bg={props.bg}>
-    {props.heading &&
-      <Title>
-        {props.heading}
-      </Title>}
-    {props.copy &&
-      <Subtitle>
-        {props.copy}
-      </Subtitle>}
+    {props.heading && <Title>{props.heading}</Title>}
+    {props.copy && <Subtitle>{props.copy}</Subtitle>}
     {props.children}
-  </NullCol>;
+  </NullCol>
+);
 
 const login = method => {
   // log the user in and return them to this page
@@ -130,12 +115,8 @@ export const UpsellCreateCommunity = ({ close }) => {
 
   return (
     <NullCard bg={'onboarding'}>
-      <Title>
-        {title}
-      </Title>
-      <Subtitle>
-        {subtitle}
-      </Subtitle>
+      <Title>{title}</Title>
+      <Subtitle>{subtitle}</Subtitle>
       <Actions>
         <Link to="/new/community">
           <Button onClick={close}>Get Started</Button>
@@ -178,111 +159,7 @@ export class UpsellSignIn extends Component {
     const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
 
     if (isSigningIn) {
-      const title =
-        signinType === 'signup' ? 'Good times ahead!' : 'Welcome back!';
-      const subtitle =
-        signinType === 'signup'
-          ? 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.'
-          : "We're happy to see you again - log in below to get back into the conversation!";
-      const verb = signinType === 'signup' ? 'Sign up' : 'Log in';
-
-      return (
-        <FullscreenView hasBackground close={this.toggleSigningIn}>
-          <FullscreenContent>
-            <UpsellIconContainer>
-              <Icon glyph={'emoji'} size={64} />
-            </UpsellIconContainer>
-            <LargeTitle>
-              {title}
-            </LargeTitle>
-            <LargeSubtitle>
-              {subtitle}
-            </LargeSubtitle>
-
-            <SigninButtonsContainer noShadow>
-              {preferredSigninMethod &&
-                <Col>
-                  <ButtonTwitter
-                    preferred={preferredSigninMethod === 'twitter'}
-                    after={preferredSigninMethod === 'twitter'}
-                    whitebg={preferredSigninMethod !== 'twitter'}
-                    href={`${SERVER_URL}/auth/twitter?r=${window.location
-                      .href}`}
-                    onClick={() => this.trackSignin('secondary cta', 'twitter')}
-                  >
-                    <Icon glyph="twitter" /> <span>{verb} with Twitter</span>
-                  </ButtonTwitter>
-
-                  <ButtonFacebook
-                    preferred={preferredSigninMethod === 'facebook'}
-                    after={preferredSigninMethod === 'facebook'}
-                    whitebg={preferredSigninMethod !== 'facebook'}
-                    href={`${SERVER_URL}/auth/facebook?r=${window.location
-                      .href}`}
-                    onClick={() =>
-                      this.trackSignin('secondary cta', 'facebook')}
-                  >
-                    <Icon glyph="facebook" /> <span>{verb} with Facebook</span>
-                  </ButtonFacebook>
-
-                  <ButtonGoogle
-                    preferred={preferredSigninMethod === 'google'}
-                    after={preferredSigninMethod === 'google'}
-                    whitebg={preferredSigninMethod !== 'google'}
-                    href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
-                    onClick={() => this.trackSignin('secondary cta', 'google')}
-                  >
-                    <Icon glyph="google" /> <span>{verb} with Google</span>
-                  </ButtonGoogle>
-                </Col>}
-
-              {!preferredSigninMethod &&
-                <Col>
-                  <ButtonTwitter
-                    preferred
-                    href={`${SERVER_URL}/auth/twitter?r=${window.location
-                      .href}`}
-                    after={preferredSigninMethod === 'twitter'}
-                    onClick={() => this.trackSignin('secondary cta', 'twitter')}
-                  >
-                    <Icon glyph="twitter" /> <span>{verb} with Twitter</span>
-                  </ButtonTwitter>
-
-                  <ButtonFacebook
-                    preferred
-                    href={`${SERVER_URL}/auth/facebook?r=${window.location
-                      .href}`}
-                    after={preferredSigninMethod === 'facebook'}
-                    onClick={() =>
-                      this.trackSignin('secondary cta', 'facebook')}
-                  >
-                    <Icon glyph="facebook" /> <span>{verb} with Facebook</span>
-                  </ButtonFacebook>
-
-                  <ButtonGoogle
-                    preferred
-                    href={`${SERVER_URL}/auth/google?r=${window.location.href}`}
-                    after={preferredSigninMethod === 'google'}
-                    onClick={() => this.trackSignin('secondary cta', 'google')}
-                  >
-                    <Icon glyph="google" /> <span>{verb} with Google</span>
-                  </ButtonGoogle>
-                </Col>}
-            </SigninButtonsContainer>
-
-            <CodeOfConduct>
-              By using Spectrum, you agree to our{' '}
-              <a
-                href="https://github.com/withspectrum/code-of-conduct"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Code of Conduct
-              </a>
-            </CodeOfConduct>
-          </FullscreenContent>
-        </FullscreenView>
-      );
+      return <Login close={this.toggleSigningIn} signinType={signinType} />;
     } else {
       const subtitle = view
         ? view.type === 'community'
@@ -297,12 +174,8 @@ export class UpsellSignIn extends Component {
           <UpsellIconContainer>
             <Icon glyph={glyph || 'explore'} size={56} />
           </UpsellIconContainer>
-          <Title>
-            {title || 'Find your people.'}
-          </Title>
-          <Subtitle>
-            {subtitle}
-          </Subtitle>
+          <Title>{title || 'Find your people.'}</Title>
+          <Subtitle>{subtitle}</Subtitle>
 
           <SignupButton onClick={() => this.toggleSigningIn('signup')}>
             Sign up
@@ -310,7 +183,8 @@ export class UpsellSignIn extends Component {
           <SignupFooter>
             Already have an account?{' '}
             <SigninLink onClick={() => this.toggleSigningIn('login')}>
-              {' '}Log in
+              {' '}
+              Log in
             </SigninLink>
           </SignupFooter>
         </NullCard>
@@ -330,9 +204,7 @@ export const UpsellJoinChannelState = ({
   return (
     <NullState bg="channel">
       <Title>Ready to join the conversation?</Title>
-      <Subtitle>
-        Join ~{channel.name} to get involved!
-      </Subtitle>
+      <Subtitle>Join ~{channel.name} to get involved!</Subtitle>
       <Button
         loading={loading}
         onClick={() => subscribe(channel.id)}
@@ -370,22 +242,24 @@ export const UpsellRequestToJoinChannel = ({
       </Subtitle>
 
       {// user is not logged in
-      !currentUser &&
+      !currentUser && (
         <Button icon="twitter" onClick={login}>
           Sign in with Twitter
-        </Button>}
+        </Button>
+      )}
 
       {// has user already requested to join?
-      currentUser && isPending
-        ? <OutlineButton
-            onClick={() => subscribe(channel.id)}
-            icon="minus"
-            loading={loading}
-            label
-          >
-            Cancel request
-          </OutlineButton>
-        : currentUser &&
+      currentUser && isPending ? (
+        <OutlineButton
+          onClick={() => subscribe(channel.id)}
+          icon="minus"
+          loading={loading}
+          label
+        >
+          Cancel request
+        </OutlineButton>
+      ) : (
+        currentUser && (
           <Button
             onClick={() => subscribe(channel.id)}
             icon="private-unlocked"
@@ -393,7 +267,9 @@ export const UpsellRequestToJoinChannel = ({
             label
           >
             Request to join {channel.name}
-          </Button>}
+          </Button>
+        )
+      )}
     </NullCard>
   );
 };
@@ -424,12 +300,8 @@ export const Upsell404Channel = ({
 
   return (
     <NullCard bg={noPermission ? 'locked' : 'channel'}>
-      <Title>
-        {title}
-      </Title>
-      <Subtitle>
-        {subtitle}
-      </Subtitle>
+      <Title>{title}</Title>
+      <Subtitle>{subtitle}</Subtitle>
       <Actions>
         <Button onClick={() => (window.location.href = returnUrl)}>
           Take me back
@@ -465,22 +337,20 @@ export const Upsell404Community = ({
 
   return (
     <NullCard bg={noPermission ? 'locked' : 'channel'}>
-      <Title>
-        {title}
-      </Title>
-      <Subtitle>
-        {subtitle}
-      </Subtitle>
+      <Title>{title}</Title>
+      <Subtitle>{subtitle}</Subtitle>
 
       <Actions>
         {// de-emphasizes the 'take me home' button if a create prompt is shown
-        create
-          ? <Link to={`/home`}>
-              <OutlineButton>Take me home</OutlineButton>
-            </Link>
-          : <Link to={`/home`}>
-              <Button>Take me home</Button>
-            </Link>}
+        create ? (
+          <Link to={`/home`}>
+            <OutlineButton>Take me home</OutlineButton>
+          </Link>
+        ) : (
+          <Link to={`/home`}>
+            <Button>Take me home</Button>
+          </Link>
+        )}
 
         {create && <Button onClick={create}>Create this Community</Button>}
       </Actions>
@@ -543,9 +413,7 @@ export class UpsellNewUser extends Component {
             👋
           </span>
         </LargeEmoji>
-        <Title>
-          Howdy, {user.name}!
-        </Title>
+        <Title>Howdy, {user.name}!</Title>
         <Subtitle>
           Spectrum is a place where communities live. It's easy to follow the
           things that you care about most, or even create your own community to
@@ -701,10 +569,7 @@ class UpsellUpgradeToProPure extends Component {
           </Button>
         </StripeCheckout>
 
-        {!upgradeError &&
-          <UpgradeError>
-            {upgradeError}
-          </UpgradeError>}
+        {!upgradeError && <UpgradeError>{upgradeError}</UpgradeError>}
       </NullCard>
     );
   }
@@ -742,7 +607,7 @@ export const UpsellNullNotifications = () => {
   );
 };
 
-export const UpsellReload = () =>
+export const UpsellReload = () => (
   <NullCard
     bg="error"
     heading={`Whoops!`}
@@ -751,4 +616,5 @@ export const UpsellReload = () =>
     <Button icon="view-reload" onClick={() => window.location.reload(true)}>
       Reload
     </Button>
-  </NullCard>;
+  </NullCard>
+);

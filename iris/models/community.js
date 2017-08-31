@@ -5,10 +5,7 @@ import UserError from '../utils/UserError';
 import { createChannel, deleteChannel } from './channel';
 import { uploadImage } from '../utils/s3';
 import getRandomDefaultPhoto from '../utils/get-random-default-photo';
-const createQueue = require('../../shared/bull/create-queue');
-const sendNewCommunityWelcomeEmailQueue = createQueue(
-  'send new community welcome email'
-);
+import { addQueue } from '../utils/workerQueue';
 
 type GetCommunityByIdArgs = {
   id: string,
@@ -54,7 +51,11 @@ const getCommunitiesByUser = (userId: string): Promise<Array<Object>> => {
       .zip()
       // ensure we don't return any deleted communities
       .filter(community => db.not(community.hasFields('deletedAt')))
-      .filter(row => row('isMember').eq(true).or(row('isOwner').eq(true)))
+      .filter(row =>
+        row('isMember')
+          .eq(true)
+          .or(row('isOwner').eq(true))
+      )
       .run()
   );
 };
@@ -123,7 +124,7 @@ const createCommunity = (
     .then(result => result.changes[0].new_val)
     .then(community => {
       // send a welcome email to the community creator
-      sendNewCommunityWelcomeEmailQueue.add({ user, community });
+      addQueue('send new community welcome email', { user, community });
 
       // if no file was uploaded, update the community with new string values
       if (!file && !coverFile) {
@@ -474,9 +475,13 @@ const userIsMemberOfCommunity = (
   communityId: string,
   userId: string
 ): Promise<Boolean> => {
-  return db.table('communities').get(communityId).run().then(community => {
-    return community.members.indexOf(userId) > -1;
-  });
+  return db
+    .table('communities')
+    .get(communityId)
+    .run()
+    .then(community => {
+      return community.members.indexOf(userId) > -1;
+    });
 };
 
 const userIsMemberOfAnyChannelInCommunity = (

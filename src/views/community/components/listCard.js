@@ -23,6 +23,15 @@ import {
 } from '../../../components/listItems/style';
 
 const ListCardPure = ({ data, dispatch, currentUser }) => {
+  if (
+    !data ||
+    !data.community ||
+    !data.community.channelConnection ||
+    data.community.channelConnection.edges.length === 0
+  ) {
+    return null;
+  }
+
   let channels = data.community.channelConnection.edges;
   channels = channels
     .filter(channel => {
@@ -52,16 +61,17 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
       <StyledCard largeOnly>
         <ListHeader>
           <ListHeading>Channels</ListHeading>
-          {data.community.communityPermissions.isOwner &&
+          {data.community.communityPermissions.isOwner && (
             <IconButton
               glyph="plus"
               color="text.placeholder"
               onClick={() =>
                 dispatch(openModal('CREATE_CHANNEL_MODAL', data.community))}
-            />}
+            />
+          )}
         </ListHeader>
 
-        {!currentUser &&
+        {!currentUser && (
           <ListContainer>
             {channels.map(channel => {
               return (
@@ -75,17 +85,19 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                     withDescription={false}
                     channelIcon
                     meta={
-                      channel.metaData.members > 1
-                        ? `${channel.metaData.members} members ${data.community
-                            .communityPermissions.isOwner &&
-                          channel.pendingUsers.length > 0
-                            ? `(${channel.pendingUsers.length} pending)`
-                            : ``}`
-                        : `${channel.metaData.members} member ${data.community
-                            .communityPermissions.isOwner &&
-                          channel.pendingUsers.length > 0
-                            ? `(${channel.pendingUsers.length} pending)`
-                            : ``}`
+                      channel.metaData.members > 1 ? (
+                        `${channel.metaData.members} members ${data.community
+                          .communityPermissions.isOwner &&
+                        channel.pendingUsers.length > 0
+                          ? `(${channel.pendingUsers.length} pending)`
+                          : ``}`
+                      ) : (
+                        `${channel.metaData.members} member ${data.community
+                          .communityPermissions.isOwner &&
+                        channel.pendingUsers.length > 0
+                          ? `(${channel.pendingUsers.length} pending)`
+                          : ``}`
+                      )
                     }
                   >
                     <Icon glyph="view-forward" />
@@ -93,10 +105,11 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                 </Link>
               );
             })}
-          </ListContainer>}
+          </ListContainer>
+        )}
 
         {currentUser &&
-          !data.community.communityPermissions.isMember &&
+        !data.community.communityPermissions.isMember && (
           <ListContainer>
             {channels.map(channel => {
               return (
@@ -110,17 +123,19 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                     withDescription={false}
                     channelIcon
                     meta={
-                      channel.metaData.members > 1
-                        ? `${channel.metaData.members} members ${data.community
-                            .communityPermissions.isOwner &&
-                          channel.pendingUsers.length > 0
-                            ? `(${channel.pendingUsers.length} pending)`
-                            : ``}`
-                        : `${channel.metaData.members} member ${data.community
-                            .communityPermissions.isOwner &&
-                          channel.pendingUsers.length > 0
-                            ? `(${channel.pendingUsers.length} pending)`
-                            : ``}`
+                      channel.metaData.members > 1 ? (
+                        `${channel.metaData.members} members ${data.community
+                          .communityPermissions.isOwner &&
+                        channel.pendingUsers.length > 0
+                          ? `(${channel.pendingUsers.length} pending)`
+                          : ``}`
+                      ) : (
+                        `${channel.metaData.members} member ${data.community
+                          .communityPermissions.isOwner &&
+                        channel.pendingUsers.length > 0
+                          ? `(${channel.pendingUsers.length} pending)`
+                          : ``}`
+                      )
                     }
                   >
                     <Icon glyph="view-forward" />
@@ -128,10 +143,11 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                 </Link>
               );
             })}
-          </ListContainer>}
+          </ListContainer>
+        )}
 
         {joinedChannels &&
-          data.community.communityPermissions.isMember &&
+        data.community.communityPermissions.isMember && (
           <ListContainer>
             {joinedChannels.map(channel => {
               return (
@@ -145,17 +161,19 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                     withDescription={false}
                     channelIcon
                     meta={
-                      channel.metaData.members > 1
-                        ? `${channel.metaData.members} members ${data.community
-                            .communityPermissions.isOwner &&
-                          channel.pendingUsers.length > 0
-                            ? `(${channel.pendingUsers.length} pending)`
-                            : ``}`
-                        : `${channel.metaData.members} member ${data.community
-                            .communityPermissions.isOwner &&
-                          channel.pendingUsers.length > 0
-                            ? `(${channel.pendingUsers.length} pending)`
-                            : ``}`
+                      channel.metaData.members > 1 ? (
+                        `${channel.metaData.members} members ${data.community
+                          .communityPermissions.isOwner &&
+                        channel.pendingUsers.length > 0
+                          ? `(${channel.pendingUsers.length} pending)`
+                          : ``}`
+                      ) : (
+                        `${channel.metaData.members} member ${data.community
+                          .communityPermissions.isOwner &&
+                        channel.pendingUsers.length > 0
+                          ? `(${channel.pendingUsers.length} pending)`
+                          : ``}`
+                      )
                     }
                   >
                     <Icon glyph="view-forward" />
@@ -163,10 +181,11 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                 </Link>
               );
             })}
-          </ListContainer>}
+          </ListContainer>
+        )}
 
         {nonJoinedChannels.length > 0 &&
-          data.community.communityPermissions.isMember &&
+        data.community.communityPermissions.isMember && (
           <span>
             <ListHeader secondary>
               <ListHeading>Additional Channels</ListHeading>
@@ -185,9 +204,10 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
                 })}
               </ul>
             </ListContainer>
-          </span>}
+          </span>
+        )}
 
-        {data.community.communityPermissions.isOwner &&
+        {data.community.communityPermissions.isOwner && (
           <ListFooter>
             <TextButton
               onClick={() =>
@@ -195,7 +215,8 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
             >
               Create a Channel
             </TextButton>
-          </ListFooter>}
+          </ListFooter>
+        )}
       </StyledCard>
     );
   } else {
@@ -203,7 +224,7 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
       <NullCard
         bg="community"
         heading={`There are no channels here...`}
-        copy={`Which really shouldn't be possible. Mind reloading?`}
+        copy={`Which really shouldn\'t be possible. Mind reloading?`}
       >
         <Button icon="view-reload" onClick={() => window.location.reload(true)}>
           Reload
@@ -213,6 +234,6 @@ const ListCardPure = ({ data, dispatch, currentUser }) => {
   }
 };
 
-const ListCard = compose(displayLoadingCard)(ListCardPure);
+const ListCard = compose(connect())(ListCardPure);
 
 export default connect()(ListCard);

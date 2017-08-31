@@ -141,7 +141,9 @@ class CommunityWithData extends Component {
       });
     };
 
-    reader.readAsDataURL(file);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
   setCommunityCover = e => {
@@ -329,8 +331,9 @@ class CommunityWithData extends Component {
             sp.chat/
           </UnderlineInput>
 
-          {nameError &&
-            <Error>Community names can be up to 20 characters long.</Error>}
+          {nameError && (
+            <Error>Community names can be up to 20 characters long.</Error>
+          )}
 
           <TextArea
             defaultValue={description}
@@ -370,10 +373,11 @@ class CommunityWithData extends Component {
             </Button>
           </Actions>
 
-          {photoSizeError &&
+          {photoSizeError && (
             <Notice style={{ marginTop: '16px' }}>
               Photo uploads should be less than 3mb
-            </Notice>}
+            </Notice>
+          )}
         </Form>
       </StyledCard>
     );

@@ -2,9 +2,7 @@
 const { db } = require('./db');
 // $FlowFixMe
 import UserError from '../utils/UserError';
-// $FlowFixMe
-const createQueue = require('../../shared/bull/create-queue');
-const communityNotificationQueue = createQueue('community notification');
+import { addQueue } from '../utils/workerQueue';
 
 /*
 ===========================================================
@@ -91,11 +89,7 @@ const createMemberInCommunity = (
       }
     })
     .then(result => {
-      communityNotificationQueue.add({
-        communityId,
-        userId,
-      });
-
+      addQueue('community notification', { communityId, userId });
       return result.changes[0].new_val;
     });
 };
@@ -115,7 +109,12 @@ const removeMemberInCommunity = (
       receiveNotifications: false,
     })
     .run()
-    .then(() => db.table('communities').get(communityId).run());
+    .then(() =>
+      db
+        .table('communities')
+        .get(communityId)
+        .run()
+    );
 };
 
 // removes all the user relationships to a community. will be invoked when a
