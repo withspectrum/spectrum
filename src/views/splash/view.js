@@ -469,14 +469,15 @@ export const Yours = props => {
         <FlexCol>
           <Tagline>All your communities in one place</Tagline>
           <ThisCopy>
-            On other platforms, keeping up with all your communities requires
-            new logins, playing a constant game of whack-a-mole with
-            notifications, and quickly becomes management instead of enjoyment.
+            On other problems, staying up-to-date with all your communities
+            means managing multiple accounts, playing whack-a-mole with
+            notifications, and just keeping up can quickly become a full-time
+            job.
           </ThisCopy>
           <ThisCopy>
-            On Spectrum, you only have one account to join all your favorite
-            communities, and the conversations that matter come to you in one
-            simple feed &mdash; no matter which community they're in.
+            On Spectrum, you only have one account and the conversations that
+            matter come to you in one simple feed &mdash; no matter which
+            community they're in.
           </ThisCopy>
           <Actions>
             <Link to="/new/community">
