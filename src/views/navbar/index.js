@@ -366,6 +366,7 @@ class Navbar extends Component {
             <IconLink
               data-active={history.location.pathname.includes('/messages')}
               to="/messages"
+              rel="nofollow"
               onClick={this.markDmNotificationsAsSeen}
             >
               <Icon
@@ -392,6 +393,7 @@ class Navbar extends Component {
               <IconLink
                 data-active={history.location.pathname === '/notifications'}
                 to="/notifications"
+                rel="nofollow"
               >
                 <Icon
                   glyph={
@@ -439,6 +441,7 @@ class Navbar extends Component {
             <IconLink
               data-active={history.location.pathname.includes('/messages')}
               to="/messages"
+              rel="nofollow"
               onClick={this.markDmNotificationsAsSeen}
             >
               <Icon
@@ -451,6 +454,7 @@ class Navbar extends Component {
             <IconLink
               data-active={history.location.pathname === '/notifications'}
               to="/notifications"
+              rel="nofollow"
               onClick={this.markAllNotificationsSeen}
             >
               <Icon
