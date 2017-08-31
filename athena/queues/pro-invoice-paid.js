@@ -44,6 +44,7 @@ export default job => {
         paidAt,
         brand,
         last4,
+        planName: invoice.planName,
         id: invoice.id,
       },
     });

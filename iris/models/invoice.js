@@ -11,7 +11,11 @@ export const getInvoicesByCommunity = (id: string): Promise<Array<Object>> => {
 };
 
 export const getInvoicesByUser = (id: string): Promise<Array<Object>> => {
-  return db.table('invoices').getAll(id, { index: 'userId' }).run();
+  return db
+    .table('invoices')
+    .getAll(id, { index: 'userId' })
+    .filter({ planId: 'beta-pro' })
+    .run();
 };
 
 export const createInvoice = (

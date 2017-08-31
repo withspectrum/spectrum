@@ -112,9 +112,10 @@ export const Heading = styled.h2`
 `;
 
 export const Subheading = styled.h4`
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 500;
   line-height: 1.3;
+  margin-bottom: 16px;
   color: ${({ theme }) => theme.text.alt};
 `;
 

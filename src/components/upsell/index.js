@@ -17,9 +17,11 @@ import Card from '../card';
 import { Button, OutlineButton } from '../buttons';
 import {
   Title,
+  CommunityUpsellTitle,
   MiniTitle,
   LargeTitle,
   Subtitle,
+  CommunityUpsellSubtitle,
   MiniSubtitle,
   LargeSubtitle,
   Actions,
@@ -27,6 +29,7 @@ import {
   UpgradeError,
   Profile,
   Cost,
+  CommunityUpsellCost,
   LargeEmoji,
   UpsellIconContainer,
   SignupButton,
@@ -806,12 +809,8 @@ class UpsellUpgradeCommunityPure extends Component {
 
     return (
       <NullCard bg="null">
-        <Title>Upgrade Your Community</Title>
-        <Subtitle>
-          Upgrade your community for more powerful tools and features to help
-          you grow.
-        </Subtitle>
-        <Subtitle>
+        <CommunityUpsellTitle>Upgrade your community</CommunityUpsellTitle>
+        <CommunityUpsellSubtitle>
           <ul>
             <li>
               <span role="img" aria-label="sparkle emoji">
@@ -824,14 +823,25 @@ class UpsellUpgradeCommunityPure extends Component {
               <span role="img" aria-label="heart emoji">
                 ❤️
               </span>{' '}
-              More to come!
+              Get priority support from the Spectrum team - any questions about
+              starting, growing, or managing your community will have a reply in
+              under 24 hours.
+            </li>
+
+            <li>
+              <span role="img" aria-label="heart emoji">
+                💌
+              </span>{' '}
+              Create unlimited channels, threads, and messages as your community
+              grows. There's no message limit to slow you and your community
+              down.
             </li>
           </ul>
-        </Subtitle>
-        <Cost>
-          Upgraded communities cost $100 per month, per 1,000 community members
+        </CommunityUpsellSubtitle>
+        <CommunityUpsellCost>
+          The Standard Plan costs $100 per month, per 1,000 community members
           and you can cancel at any time.
-        </Cost>
+        </CommunityUpsellCost>
 
         <StripeCheckout
           token={this.upgradeToPro}
@@ -842,8 +852,8 @@ class UpsellUpgradeCommunityPure extends Component {
           amount={Math.ceil(community.metaData.members / 1000) * 10000}
           currency="USD"
         >
-          <Button disabled={isLoading} loading={isLoading} icon="payment">
-            Upgrade my community
+          <Button disabled={isLoading} loading={isLoading} icon="plus-fill">
+            Upgrade to the Standard Plan
           </Button>
         </StripeCheckout>
 
@@ -873,15 +883,15 @@ class UpsellUpgradeCommunityPrivateChannelPure extends Component {
   render() {
     const { community } = this.props;
 
+    const str = community.communityPermissions.isOwner
+      ? `Private channels are available to communities on the Standard plan. Upgrade your community to re-activate this channel.`
+      : `Private channels are available to communities on the Standard plan. The owner of the ${community.name} community can upgrade it by visiting the community settings page.`;
+
     return (
-      <NullCard
-        bg="post"
-        heading="This channel has been closed."
-        copy="Private channels are available to communities on the Pro plan. If you want to upgrade to re-open this channel you gotta re-upgrade it."
-      >
+      <NullCard bg="post" heading="This channel has been closed." copy={str}>
         {community.communityPermissions.isOwner &&
           <Button onClick={this.openCommunityUpgradeModal}>
-            Upgrade {community.name} to Pro
+            Upgrade {community.name} to Standard
           </Button>}
       </NullCard>
     );

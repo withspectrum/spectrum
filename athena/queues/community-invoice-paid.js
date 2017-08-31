@@ -38,6 +38,12 @@ export default job => {
       const last4 = invoice.sourceLast4;
       const { id } = invoice;
 
+      const memberCountString = quantity => {
+        return `${quantity <= 1 ? `1` : (quantity - 1) * 1000} - ${quantity <= 1
+          ? ``
+          : `${quantity - 1},`}999 members`;
+      };
+
       return sendCommunityInvoiceReceiptQueue.add({
         to: owner.email,
         community: {
@@ -48,6 +54,8 @@ export default job => {
           paidAt,
           brand,
           last4,
+          planName: invoice.planName,
+          memberCount: memberCountString(invoice.quantity),
           id,
         },
       });

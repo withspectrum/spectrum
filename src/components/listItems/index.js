@@ -202,7 +202,7 @@ export const BillingListItem = props => {
       <Wrapper>
         <Row>
           <BadgeContainer>
-            <Badge type="pro" />
+            <Badge type={props.badge || 'pro'} />
           </BadgeContainer>
           <Col>
             <Heading>

@@ -124,6 +124,12 @@ class CommunityUpgradeModal extends React.Component {
                 support!
               </Subheading>
 
+              <Subheading>
+                Any private channels you've created will be locked. Any
+                conversations in your private channels will still be accessible,
+                but new threads will not be able to be created.
+              </Subheading>
+
               <SectionActions centered={true}>
                 <OutlineButton
                   disabled={isLoading}
