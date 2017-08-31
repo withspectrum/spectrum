@@ -106,7 +106,7 @@ export const Overview = props => {
       </Header>
       <Content>
         <Text>
-          <ThisTagline>Build better communities.</ThisTagline>
+          <ThisTagline>Build better communities</ThisTagline>
           <ThisCopy>
             Spectrum makes it easy to create and grow your online community.
           </ThisCopy>
@@ -185,7 +185,7 @@ export const Centralized = props => {
           </ThisCopy>
           <ThisCopy>
             When it's built on Spectrum, people can find your community
-            organically through search, curation, and even other community
+            organically with search, curation, and through other community
             members.
           </ThisCopy>
           <Actions>
@@ -299,7 +299,7 @@ export const Chat = props => {
           </ThisCopy>
           <ThisCopy>
             Every conversation gets a unique link to make it easy for people to
-            discover, share, embed, or save for later.
+            discover, share, or save for later.
           </ThisCopy>
 
           <Actions>
@@ -353,7 +353,7 @@ export const Sell = props => {
     <ThisSection goop={2} background="dark">
       <ThisContent>
         <Text>
-          <ThisTagline>Spectrum saves you time and money.</ThisTagline>
+          <ThisTagline>Spectrum saves you time and money</ThisTagline>
           <Bullets>
             <Bullet>
               <BulletHeading>
@@ -387,8 +387,8 @@ export const Sell = props => {
                 from your customers.
               </BulletCopy>
               <BulletCopy>
-                Think of your Spectrum community as a new direct line to
-                discovering what people want the most.
+                Think of Spectrum as a new direct line to discovering what your
+                audience want the most.
               </BulletCopy>
             </Bullet>
           </Bullets>
@@ -408,6 +408,7 @@ export const Sell = props => {
 export const Yours = props => {
   const ThisCopy = styled(Copy)`
     max-width: 640px;
+    margin-top: 16px;
   `;
 
   const ThisContent = styled(Content)`
@@ -469,10 +470,9 @@ export const Yours = props => {
         <FlexCol>
           <Tagline>All your communities in one place</Tagline>
           <ThisCopy>
-            On other problems, staying up-to-date with all your communities
-            means managing multiple accounts, playing whack-a-mole with
-            notifications, and just keeping up can quickly become a full-time
-            job.
+            Before Spectrum, participating in online communities meant joining
+            multiple platforms, remembering different logins, and managing
+            endless notifications.
           </ThisCopy>
           <ThisCopy>
             On Spectrum, you only have one account and the conversations that
