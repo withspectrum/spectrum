@@ -179,15 +179,7 @@ export class UpsellSignIn extends Component {
     const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
 
     if (isSigningIn) {
-      const title =
-        signinType === 'signup' ? 'Welcome to Spectrum!' : 'Welcome back!';
-      const subtitle =
-        signinType === 'signup'
-          ? 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.'
-          : "We're happy to see you again - log in below to get back into the conversation!";
-      const verb = signinType === 'signup' ? 'Sign up' : 'Log in';
-
-      return <Login close={this.toggleSigningIn} />;
+      return <Login close={this.toggleSigningIn} signinType={signinType} />;
     } else {
       const subtitle = view
         ? view.type === 'community'

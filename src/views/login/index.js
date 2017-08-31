@@ -23,12 +23,14 @@ export class Login extends Component {
     signinType: string,
   };
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
+    console.log('props', props);
 
     this.state = {
       isSigningIn: false,
-      signinType: '',
+      signinType: props.signinType || 'signup',
     };
   }
 
@@ -57,13 +59,11 @@ export class Login extends Component {
         ? "We're happy to see you again - log in below to get back into the conversation!"
         : 'Spectrum is a place where communities can share, discuss, and grow together. Sign in below to get in on the conversation.';
 
-    const verb = 'Sign in';
+    const verb = signinType === 'login' ? 'Log in ' : 'Sign up ';
 
     const postAuthRedirectPath = redirectPath
       ? `?r=${redirectPath}`
       : `?r=${CLIENT_URL}/home`;
-
-    console.log(postAuthRedirectPath);
 
     return (
       <FullscreenView
@@ -71,7 +71,7 @@ export class Login extends Component {
         noCloseButton={!this.props.close}
         close={this.props.close}
       >
-        <FullscreenContent>
+        <FullscreenContent style={{ justifyContent: 'center' }}>
           <UpsellIconContainer>
             <Icon glyph={'emoji'} size={64} />
           </UpsellIconContainer>
