@@ -297,12 +297,18 @@ class Navbar extends Component {
     const isMobile = window.innerWidth < 768;
     const currentUserExists =
       loggedInUser !== null && loggedInUser !== undefined;
+    const isHome =
+      history.location.pathname === '/' ||
+      history.location.pathname === '/home';
     const {
       allUnseenCount,
       dmUnseenCount,
       notifications,
       showNewUserOnboarding,
     } = this.state;
+
+    // Bail out if the splash page is showing
+    if (!currentUserExists && isHome) return null;
 
     // if the user is mobile and is viewing a thread or DM thread, don't
     // render a navbar - it will be replaced with a chat input
@@ -517,6 +523,5 @@ export default compose(
   markNotificationsSeenMutation,
   markNotificationsReadMutation,
   markDirectMessageNotificationsSeenMutation,
-  withRouter,
   connect(mapStateToProps)
 )(Navbar);
