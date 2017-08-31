@@ -104,7 +104,7 @@ export const SectionWrapper = styled(FlexRow)`
 
 export const ViewHeader = styled(Section)`
   flex: none;
-  padding: 120px 0 160px 0;
+  padding: 120px 0 0 0;
   justify-content: flex-end;
   background-color: ${({ theme }) => theme.space.dark};
   background-image: ${({ theme }) =>
@@ -114,7 +114,7 @@ export const ViewHeader = styled(Section)`
     )}, ${theme.space.dark} )`};
 
   @media (max-width: 768px) {
-    padding: 48px 24px 96px 24px;
+    padding: 48px 24px 0 24px;
   }
 `;
 
@@ -265,6 +265,14 @@ export const SearchWrapper = styled(Card)`
   position: relative;
   margin-bottom: 48px;
   padding: 12px 16px;
+  box-shadow: ${Shadow.low} ${props => hexa(props.theme.bg.reverse, 0.15)};
+  transition: ${Transition.hover.off};
+  z-index: ${zIndex.search};
+
+  &:hover{
+    box-shadow: ${Shadow.high} ${props => hexa(props.theme.bg.reverse, 0.25)};
+    transition: ${Transition.hover.on};
+  }
 `;
 
 export const SearchInputWrapper = styled(FlexRow)`
@@ -307,7 +315,6 @@ export const SearchResultsDropdown = styled.ul`
   flex: auto;
   max-height: 400px;
   overflow-y: scroll;
-  z-index: ${zIndex.dropDown};
   background: ${props => props.theme.bg.default};
 
   @media (max-width: 768px) {
@@ -369,11 +376,11 @@ export const SearchLink = styled(Link)`
 `;
 
 export const SearchResultImage = styled(Avatar)`
-  margin: 8px 16px 8px 8px;
+  margin: 4px 6px 8px 4px;
 `;
 
 export const SearchResultMetaWrapper = styled(FlexCol)`
-  margin-left: 4px;
+  margin-left: 16px;
 `;
 
 export const SearchResultName = styled.h2`

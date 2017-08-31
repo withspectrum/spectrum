@@ -6,7 +6,6 @@ import {
   FlexRow,
   Shadow,
   hexa,
-  Truncate,
   zIndex,
 } from '../../../../components/globals';
 import { Avatar } from '../../../../components/avatar';
