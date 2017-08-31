@@ -8,6 +8,7 @@
     "flow-bin": "^0.43.0",
     "lint-staged": "^3.3.0",
     "micromatch": "^3.0.4",
+    "newrelic": "^2.2.0",
     "nodemon": "^1.11.0",
     "prettier": "^1.0.0",
     "raw-loader": "^0.5.1",

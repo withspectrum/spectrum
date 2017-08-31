@@ -11,7 +11,7 @@ import Titlebar from '../titlebar';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Head from '../../components/head';
 import { Column } from '../../components/column';
-import { GoopyThree } from '../../views/homepage/style';
+import Goop from '../../components/goop';
 import { FeaturedCommunity } from '../../components/curation';
 import TopCommunityList from './components/topCommunities';
 import Search from './components/search';
@@ -45,9 +45,8 @@ const ExplorePure = props => {
         <ViewHeader>
           <Feature slug={featureSlug} notes={featureNotes} />
           <Constellations />
-          <GoopyThree />
+          <Goop goop={5} color={'bg.wash'} />
         </ViewHeader>
-        <SectionWithGradientTransition />
         <Section>
           <SectionWrapper>
             <Column type="primary">
