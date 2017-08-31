@@ -68,7 +68,7 @@ export const Overview = props => {
 
   const ThisTagline = styled(Tagline)`
     margin-bottom: 16px;
-    font-size: 64px;
+    font-size: 56px;
 
     @media (max-width: 768px) {
       font-size: 40px;
@@ -110,7 +110,7 @@ export const Overview = props => {
       </Header>
       <Content>
         <Text>
-          <ThisTagline>Find your people.</ThisTagline>
+          <ThisTagline>Build better communities.</ThisTagline>
           <ThisCopy>
             Spectrum is the best way to build a healthy, scalable online
             community.
@@ -183,7 +183,7 @@ export const Centralized = props => {
       <ThisContent>
         <Discover />
         <Text>
-          <ThisTagline>Be where your people are.</ThisTagline>
+          <ThisTagline>Discoverable by default.</ThisTagline>
           <ThisCopy>
             People shouldn't have to hunt down an email invite or search through
             a help center to find your community.
