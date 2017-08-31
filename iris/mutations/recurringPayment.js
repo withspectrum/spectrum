@@ -161,7 +161,7 @@ module.exports = {
 
         // only evaluate pro subscriptions, and not community subscriptions
         const proSubscriptions =
-          // if payments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
+          // if payments were found, make sure to select the first community-standard plan to update, otherwise return null and we will be creating a new payment
           rPayments && rPayments.filter(pmt => pmt.planId === 'beta-pro');
 
         const recurringPaymentToEvaluate =
@@ -251,7 +251,7 @@ module.exports = {
 
         // only evaluate pro subscriptions, and not community subscriptions
         const proSubscriptions =
-          // if payments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
+          // if payments were found, make sure to select the first community-standard plan to update, otherwise return null and we will be creating a new payment
           rPayments && rPayments.filter(pmt => pmt.planId === 'beta-pro');
 
         const recurringPaymentToEvaluate =
@@ -334,11 +334,11 @@ module.exports = {
 
         // only evaluate community subscriptions, and not pro subscriptions
         const proSubscriptions =
-          // if payments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
+          // if payments were found, make sure to select the first community-standard plan to update, otherwise return null and we will be creating a new payment
           rPayments &&
           rPayments
             .filter(pmt => pmt.communityId === communityId)
-            .filter(pmt => pmt.planId === 'community-pro');
+            .filter(pmt => pmt.planId === 'community-standard');
 
         const recurringPaymentToEvaluate =
           proSubscriptions && proSubscriptions.length > 0
@@ -443,18 +443,18 @@ module.exports = {
 
         // only evaluate community subscriptions, and not pro subscriptions
         const proSubscriptions =
-          // if payments were found, make sure to select the first community-pro plan to update, otherwise return null and we will be creating a new payment
+          // if payments were found, make sure to select the first community-standard plan to update, otherwise return null and we will be creating a new payment
           rPayments &&
           rPayments
             .filter(pmt => pmt.communityId === input.id)
-            .filter(pmt => pmt.planId === 'community-pro');
+            .filter(pmt => pmt.planId === 'community-standard');
 
         const recurringPaymentToEvaluate =
           proSubscriptions && proSubscriptions.length > 0
             ? proSubscriptions[0]
             : null;
 
-        // if no recurringPayments exist on the 'community-pro' plan, there is nothing to downgrade
+        // if no recurringPayments exist on the 'community-standard' plan, there is nothing to downgrade
         if (!recurringPaymentToEvaluate) {
           return new UserError(
             "We couldn't find a record of this community being upgraded."
@@ -473,7 +473,7 @@ module.exports = {
 
         // a customer record from stripe returns all of their subscriptions - we need to ensure we are only deleting the subscription for their community upgrade
         const subscriptionId = customer.subscriptions.data.filter(
-          pmt => pmt.plan.id === 'community-pro'
+          pmt => pmt.plan.id === 'community-standard'
         )[0].id;
 
         // delete the subscription

@@ -16,7 +16,6 @@ import { Avatar } from '../avatar';
 import { Button } from '../buttons';
 import { convertTimestampToDate } from '../../helpers/utils';
 import { PUBLIC_STRIPE_KEY } from '../../api';
-import { payInvoiceMutation } from '../../api/invoice';
 import { addToastWithTimeout } from '../../actions/toasts';
 import {
   Wrapper,
@@ -252,6 +251,4 @@ class InvoiceListItemPure extends Component {
   }
 }
 
-export const InvoiceListItem = compose(payInvoiceMutation, pure, connect())(
-  InvoiceListItemPure
-);
+export const InvoiceListItem = compose(pure, connect())(InvoiceListItemPure);

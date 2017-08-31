@@ -11,15 +11,6 @@ const Invoice = /* GraphQL */ `
 	extend type Query {
     invoice(id: ID): Invoice
   }
-
-  input PayInvoiceInput {
-		id: ID!
-		token: String!
-	}
-
-	extend type Mutation {
-		payInvoice(input: PayInvoiceInput!): Invoice
-	}
 `;
 
 module.exports = Invoice;

@@ -778,7 +778,7 @@ class UpsellUpgradeCommunityPure extends Component {
     });
 
     const input = {
-      plan: 'community-pro',
+      plan: 'community-standard',
       token: JSON.stringify(token),
       communityId: this.props.community.id,
     };

@@ -57,19 +57,3 @@ export const createInvoice = (
       return invoice;
     });
 };
-
-export const payInvoice = (id, stripeData): Promise<Object> => {
-  return db
-    .table('invoices')
-    .get(id)
-    .update({
-      paidAt: new Date(),
-      stripeData,
-    })
-    .run()
-    .then(() => db.table('invoices').get(id).run())
-    .then(invoice => {
-      addQueue('community invoice paid notification', { invoice });
-      return invoice;
-    });
-};
