@@ -82,7 +82,9 @@ class Routes extends Component {
               <Route
                 exact
                 path="/home"
-                component={signedOutFallback(Dashboard, Splash)}
+                component={signedOutFallback(Dashboard, () => (
+                  <Redirect to="/" />
+                ))}
               />
 
               {/* Public Business Pages */}
@@ -102,15 +104,21 @@ class Routes extends Component {
               <Route path="/explore" component={Explore} />
               <Route
                 path="/messages/new"
-                component={signedOutFallback(DirectMessages, Login)}
+                component={signedOutFallback(DirectMessages, () => (
+                  <Redirect to="/login" />
+                ))}
               />
               <Route
                 path="/messages/:threadId"
-                component={signedOutFallback(DirectMessages, Login)}
+                component={signedOutFallback(DirectMessages, () => (
+                  <Redirect to="/login" />
+                ))}
               />
               <Route
                 path="/messages"
-                component={signedOutFallback(DirectMessages, Login)}
+                component={signedOutFallback(DirectMessages, () => (
+                  <Redirect to="/login" />
+                ))}
               />
               <Route path="/thread" component={Thread} />
               <Route exact path="/users" render={() => <Redirect to="/" />} />
@@ -118,11 +126,15 @@ class Routes extends Component {
               <Route
                 exact
                 path="/users/:username/settings"
-                component={UserSettings}
+                component={signedOutFallback(UserSettings, () => (
+                  <Redirect to="/login" />
+                ))}
               />
               <Route
                 path="/notifications"
-                component={signedOutFallback(Notifications, Login)}
+                component={signedOutFallback(Notifications, () => (
+                  <Redirect to="/login" />
+                ))}
               />
 
               {/*

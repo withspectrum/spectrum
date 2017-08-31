@@ -49,7 +49,6 @@ const renderer = (req, res) => {
       apollo: client.reducer(),
     },
   });
-  // TODO(@mxstbr): Fix context, whatever it's for
   const context = {};
   // The client-side app will instead use <BrowserRouter>
   const frontend = (
@@ -63,6 +62,11 @@ const renderer = (req, res) => {
   const sheet = new ServerStyleSheet();
   renderToStringWithData(sheet.collectStyles(frontend))
     .then(content => {
+      if (context.url) {
+        // Somewhere a `<Redirect>` was rendered, so let's redirect server-side
+        res.redirect(301, context.url);
+        return;
+      }
       // Get the resulting data
       const state = store.getState();
       const helmet = Helmet.renderStatic();
