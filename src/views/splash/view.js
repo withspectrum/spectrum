@@ -388,7 +388,7 @@ export const Sell = props => {
               </BulletCopy>
               <BulletCopy>
                 Think of Spectrum as a new direct line to discovering what your
-                audience want the most.
+                audience wants the most.
               </BulletCopy>
             </Bullet>
           </Bullets>
@@ -475,7 +475,7 @@ export const Yours = props => {
             endless notifications.
           </ThisCopy>
           <ThisCopy>
-            On Spectrum, you only have one account and the conversations that
+            On Spectrum you only have one account, and the conversations that
             matter come to you in one simple feed &mdash; no matter which
             community they're in.
           </ThisCopy>

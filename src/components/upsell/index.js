@@ -179,7 +179,6 @@ export class UpsellSignIn extends Component {
     const preferredSigninMethod = getItemFromStorage('preferred_signin_method');
 
     if (isSigningIn) {
-      console.log('bar');
       return <Login close={this.toggleSigningIn} signinType={signinType} />;
     } else {
       const subtitle = view
