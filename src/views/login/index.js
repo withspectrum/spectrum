@@ -26,8 +26,6 @@ export class Login extends Component {
   constructor(props) {
     super(props);
 
-    console.log('props', props);
-
     this.state = {
       isSigningIn: false,
       signinType: props.signinType || 'signup',

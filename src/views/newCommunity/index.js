@@ -154,7 +154,6 @@ class NewCommunity extends Component {
     const { activeStep, community, existingId, hasInvitedPeople } = this.state;
     const title = this.title();
     const description = this.description();
-    console.log(this.props);
 
     if (!currentUser) {
       return <Login redirectPath={`${window.location.href}`} />;

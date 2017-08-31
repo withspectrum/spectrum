@@ -19,11 +19,6 @@ import { addToastWithTimeout } from './actions/toasts';
 import registerServiceWorker from './registerServiceWorker';
 import type { ServiceWorkerResult } from './registerServiceWorker';
 import { track } from './helpers/events';
-//
-// import { Login } from './views/login';
-// import Explore from './views/explore';
-// import NewCommunity from './views/newCommunity';
-// import CommunityView from './views/community';
 
 const { thread } = queryString.parse(history.location.search);
 if (thread) {

@@ -91,10 +91,7 @@ class Routes extends Component {
             <Route path="/style-guide" component={StyleGuide} />
 
             {/* App Pages */}
-            <Route
-              path="/new/community"
-              component={signedOutFallback(NewCommunity, Login)}
-            />
+            <Route path="/new/community" component={NewCommunity} />
             <Route
               path="/new"
               render={() => <Redirect to="/new/community" />}
