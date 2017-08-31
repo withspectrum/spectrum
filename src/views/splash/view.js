@@ -55,7 +55,7 @@ export const Overview = props => {
   `;
 
   const ThisCopy = styled(Copy)`
-    font-size: 24px;
+    font-size: 20px;
     line-height: 1.3;
     font-weight: 500;
     opacity: 0.95;
@@ -68,22 +68,17 @@ export const Overview = props => {
 
   const ThisTagline = styled(Tagline)`
     margin-bottom: 16px;
-    font-size: 56px;
-
-    @media (max-width: 768px) {
-      font-size: 40px;
-    }
+    font-size: 40px;
   `;
 
   const Actions = styled(Flexer)`
     margin-top: 48px;
-    margin-left: 16px;
     justify-content: space-between;
   `;
 
   const ThisSecondaryCTA = styled(SecondaryCTA)`
     margin-left: 16px;
-    font-size: 18px;
+    font-size: 16px;
     border: 2px solid ${props => props.theme.text.reverse};
 
     @media (max-width: 768px) {
@@ -93,10 +88,11 @@ export const Overview = props => {
   `;
 
   const ThisPrimaryCTA = styled(PrimaryCTA)`
-    font-size: 18px;
+    font-size: 16px;
   `;
 
   const ThisButton = styled(SecondaryCTA)`
+    padding: 12px 16px;
     border: 2px solid ${props => props.theme.text.reverse};
   `;
 
@@ -112,8 +108,7 @@ export const Overview = props => {
         <Text>
           <ThisTagline>Build better communities.</ThisTagline>
           <ThisCopy>
-            Spectrum is the best way to build a healthy, scalable online
-            community.
+            Spectrum makes it easy to create and grow your online community.
           </ThisCopy>
           <Actions>
             <Link to="/new/community">
@@ -123,7 +118,7 @@ export const Overview = props => {
             </Link>
             <Link to="/explore">
               <ThisSecondaryCTA icon="explore">
-                Explore communities
+                Find communities
               </ThisSecondaryCTA>
             </Link>
           </Actions>
@@ -183,20 +178,20 @@ export const Centralized = props => {
       <ThisContent>
         <Discover />
         <Text>
-          <ThisTagline>Discoverable by default.</ThisTagline>
+          <ThisTagline>Discoverable by default</ThisTagline>
           <ThisCopy>
             People shouldn't have to hunt down an email invite or search through
             a help center to find your community.
           </ThisCopy>
           <ThisCopy>
             When it's built on Spectrum, people can find your community
-            organically through search, curation, or through other community
+            organically through search, curation, and even other community
             members.
           </ThisCopy>
           <Actions>
-            <Link to="/new/community">
-              <ThisPrimaryCTA icon="plus-fill">
-                Create a community
+            <Link to="/explore">
+              <ThisPrimaryCTA icon="explore">
+                Check out our top communities
               </ThisPrimaryCTA>
             </Link>
           </Actions>
@@ -244,7 +239,7 @@ export const CommunitySearch = props => {
       <ThisContent>
         <ThisTagline>Find a community for you!</ThisTagline>
         <ThisCopy>
-          Try searching for topics like "design" or for tools like "Sketch"!
+          Try searching for topics like "crypto" or for products like "React"!
         </ThisCopy>
         <Search />
       </ThisContent>
@@ -296,7 +291,7 @@ export const Chat = props => {
       <ThisContent>
         <Conversation />
         <FlexCol>
-          <ThisTagline>Real-time messaging with long-term value.</ThisTagline>
+          <ThisTagline>Real-time messaging with long-term value</ThisTagline>
           <ThisCopy>
             Conversations on Spectrum are real-time chat, just like your
             favorite messaging app. But on Spectrum, conversations continue to
@@ -308,9 +303,9 @@ export const Chat = props => {
           </ThisCopy>
 
           <Actions>
-            <Link to="/new/community">
-              <ThisPrimaryCTA icon="plus-fill">
-                Create a community
+            <Link to="/thread/764331db-16dd-4fc4-a2c5-aabd735a64a9">
+              <ThisPrimaryCTA icon="message-fill">
+                View a live conversation
               </ThisPrimaryCTA>
             </Link>
           </Actions>
@@ -401,7 +396,9 @@ export const Sell = props => {
       </ThisContent>
       <Actions>
         <Link to="/new/community">
-          <PrimaryCTA icon="plus-fill">Create a community</PrimaryCTA>
+          <PrimaryCTA icon="plus-fill">
+            Start building your community
+          </PrimaryCTA>
         </Link>
       </Actions>
     </ThisSection>
@@ -440,6 +437,7 @@ export const Yours = props => {
     &:hover {
       border-color: ${props => props.theme.brand.alt};
       color: ${props => props.theme.brand.alt};
+      box-shadow: 0 0 8px ${props => hexa(props.theme.brand.alt, 1)};
     }
 
     > div {
@@ -469,12 +467,11 @@ export const Yours = props => {
     <Section goop={1} color="bg.reverse">
       <ThisContent>
         <FlexCol>
-          <Tagline>All your communities in one place.</Tagline>
+          <Tagline>All your communities in one place</Tagline>
           <ThisCopy>
             On other platforms, keeping up with all your communities requires
             new logins, playing a constant game of whack-a-mole with
-            notifications, and often feeling like it's actual work just to keep
-            up to date.
+            notifications, and quickly becomes management instead of enjoyment.
           </ThisCopy>
           <ThisCopy>
             On Spectrum, you only have one account to join all your favorite
@@ -489,7 +486,7 @@ export const Yours = props => {
             </Link>
             <Link to="/explore">
               <ThisSecondaryCTA icon="explore">
-                Explore communities
+                Find communities
               </ThisSecondaryCTA>
             </Link>
           </Actions>

@@ -148,7 +148,7 @@ export const SecondaryCTA = styled(PrimaryCTA)`
     color: ${props => props.theme.text.reverse};
     background-color: transparent;
     border-color: ${props => props.theme.bg.default};
-    box-shadow: none;
+    box-shadow: 0 0 8px 4px ${props => hexa(props.theme.bg.default, 0.5)};
   }
 `;
 
