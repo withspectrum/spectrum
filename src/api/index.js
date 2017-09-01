@@ -45,6 +45,7 @@ export const client = new ApolloClient({
   networkInterface: networkInterfaceWithSubscriptions,
   fragmentMatcher,
   initialState: window.__SERVER_STATE__ && window.__SERVER_STATE__.apollo,
+  ssrForceFetchDelay: 100,
   queryDeduplication: true,
   dataIdFromObject: result => {
     if (result.__typename) {
