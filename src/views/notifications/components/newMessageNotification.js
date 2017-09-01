@@ -47,9 +47,7 @@ const renderBubbleHeader = (sender: Object, me: boolean) => {
   return (
     <Byline me={me}>
       <Link to={sender.username ? `/users/${sender.username}` : '/'}>
-        <Name>
-          {me ? 'You' : sender.name}
-        </Name>
+        <Name>{me ? 'You' : sender.name}</Name>
       </Link>
     </Byline>
   );
@@ -84,7 +82,7 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
 
   return (
     <NotificationCard>
-      <CardLink to={`?thread=${notification.context.id}`} />
+      <CardLink to={{ search: `?thread=${notification.context.id}` }} />
       <CardContent>
         <SuccessContext>
           <Icon glyph="message-fill" />
@@ -92,7 +90,8 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
         </SuccessContext>
         <Content>
           <TextContent pointer={true}>
-            {' '}{actors.asString} {event} {context.asString} {date}{' '}
+            {' '}
+            {actors.asString} {event} {context.asString} {date}{' '}
           </TextContent>
           <AttachmentsWash>
             <HzRule>
@@ -194,7 +193,7 @@ export const MiniNewMessageNotification = ({
 
   return (
     <NotificationListRow>
-      <CardLink to={`?thread=${notification.context.id}`} />
+      <CardLink to={{ search: `?thread=${notification.context.id}` }} />
       <CardContent>
         <SuccessContext>
           <Icon glyph="message-fill" />

@@ -45,7 +45,7 @@ export const constructMessage = notification => {
       return (
         <span>
           <Link to={`/@${sender.username}`}>{sender.name}</Link> replied to your{' '}
-          <Link to={`?thread=${thread.id}`}>thread</Link>:
+          <Link to={{ search: `?thread=${thread.id}` }}>thread</Link>:
         </span>
       );
     default:
@@ -80,11 +80,7 @@ export const constructContent = notification => {
   const { type, sender, content } = notification;
   switch (type) {
     case 'NEW_THREAD':
-      return (
-        <p>
-          {content.excerpt}
-        </p>
-      );
+      return <p>{content.excerpt}</p>;
     case 'NEW_MESSAGE':
       return (
         <div>
@@ -93,9 +89,7 @@ export const constructContent = notification => {
             <Icon glyph={'messages'} />
             <hr />
           </HorizontalRuleWithIcon>
-          <ChatMessage data-from={sender.name}>
-            {content.excerpt}
-          </ChatMessage>
+          <ChatMessage data-from={sender.name}>{content.excerpt}</ChatMessage>
         </div>
       );
     default:
