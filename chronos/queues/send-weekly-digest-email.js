@@ -2,12 +2,15 @@
 const debug = require('debug')('chronos:queue:send-weekly-digest-email');
 // $FlowFixMe
 import intersection from 'lodash.intersection';
+import createQueue from '../../shared/bull/create-queue';
 import {
   SEND_WEEKLY_DIGEST_EMAIL,
   MIN_MESSAGE_COUNT,
   MAX_THREAD_COUNT_PER_CHANNEL,
   MIN_THREADS_REQUIRED_FOR_DIGEST,
+  MAX_THREAD_COUNT_PER_DIGEST,
 } from './constants';
+const sendWeeklyDigestEmailQueue = createQueue(SEND_WEEKLY_DIGEST_EMAIL);
 import { getActiveThreadsInPastWeek } from '../models/thread';
 import { getUsersForWeeklyDigest } from '../models/usersSettings';
 import { getUsersChannelsEligibleForWeeklyDigest } from '../models/usersChannels';
@@ -85,6 +88,7 @@ export default job => {
         channelId: thread.channelId,
         title: thread.title,
         threadId: thread.id,
+        messageCount: thread.messageCount,
       };
       return obj;
     });
@@ -178,7 +182,9 @@ export default job => {
       // and finally, sort the user's threads in descending order by message count
       .map(({ channels, ...user }) => ({
         ...user,
-        threads: user.threads.sort((a, b) => b.messageCount - a.messageCount),
+        threads: user.threads
+          .sort((a, b) => b.messageCount - a.messageCount)
+          .slice(0, MAX_THREAD_COUNT_PER_DIGEST),
       }));
 
     debug(
@@ -222,12 +228,10 @@ export default job => {
     debug(eligibleUsers[0].threads[0]);
 
     const sendDigestPromises = eligibleUsers.map(
-      async user =>
-        await sendWeeklyDigestEmail(SEND_WEEKLY_DIGEST_EMAIL, { ...user })
+      async user => await sendWeeklyDigestEmailQueue.add({ ...user })
     );
 
-    const sendAllWeeklyDigests = await Promise.all(sendDigestPromises);
-    return sendAllWeeklyDigests;
+    return await Promise.all(sendDigestPromises);
   };
 
   return processSendWeeklyDigests().catch(err =>
