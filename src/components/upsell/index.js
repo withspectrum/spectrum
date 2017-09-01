@@ -749,7 +749,7 @@ class UpsellUpgradeCommunityPure extends Component {
           amount={Math.ceil(community.metaData.members / 1000) * 10000}
           currency="USD"
         >
-          <Button disabled={isLoading} loading={isLoading} icon="plus-fill">
+          <Button disabled={isLoading} loading={isLoading}>
             Upgrade to the Standard Plan
           </Button>
         </StripeCheckout>

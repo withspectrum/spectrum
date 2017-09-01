@@ -99,9 +99,9 @@ const SettingsPure = ({
 
       <Column type="secondary">
         <CommunityEditForm community={community} />
+        <RecurringPaymentsList community={community} />
       </Column>
       <Column type="primary">
-        <RecurringPaymentsList community={community} />
         <ImportSlack community={community} id={community.id} />
         <EmailInvites community={community} />
         <ChannelListCard slug={communitySlug} />
