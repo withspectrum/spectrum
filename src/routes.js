@@ -46,7 +46,7 @@ const Body = styled(FlexCol)`
 
   @media (max-width: 768px) {
     height: 100vh;
-    max-height: ${window.innerHeight}px;
+    max-height: 100vh;
   }
 `;
 
