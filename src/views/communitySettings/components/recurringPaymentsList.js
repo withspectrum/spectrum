@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { BillingListItem } from '../../../components/listItems';
 import { IconButton } from '../../../components/buttons';
-import { UpsellUpgradeCommunity } from '../../../components/upsell';
+import { UpsellUpgradeCommunity } from './upgradeCommunity';
 import { openModal } from '../../../actions/modals';
 import { convertTimestampToDate } from '../../../helpers/utils';
 import { getCommunityRecurringPayments } from '../../../api/community';

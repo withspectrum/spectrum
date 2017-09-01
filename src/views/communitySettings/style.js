@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Card from '../../components/card';
 import { Link } from 'react-router-dom';
-import { FlexCol, H3 } from '../../components/globals';
+import { FlexCol, H1, H2, H3, Span } from '../../components/globals';
 
 export const ListHeader = styled.div`
   display: flex;
@@ -131,3 +131,94 @@ export const CustomMessageTextAreaStyles = {
   marginTop: '8px',
   fontSize: '16px',
 };
+
+export const Title = styled(H1)`
+  font-size: 20px;
+`;
+
+export const Pitch = styled(FlexCol)`
+  margin: 0 0 32px 0;
+`;
+
+export const PitchItem = styled(FlexCol)`
+  display: inline-block;
+  font-size: 14px;
+  line-height: 1.4;
+
+  div {
+    font-size: 32px;
+    text-align: center;
+    align-self: center;
+  }
+
+  p {
+    margin-top: 8px;
+    text-align: center;
+  }
+
+  b {
+    font-weight: 700;
+  }
+
+  & + & {
+    margin-top: 16px;
+  }
+`;
+
+export const Cost = styled(FlexCol)`
+  align-items: center;
+  text-align: center;
+  justify-content: flex-end;
+  flex: none;
+`;
+
+export const CostNumber = styled(H2)`
+  margin-top: 16px;
+  font-size: 56px;
+  letter-spacing: -2px;
+  vertical-align: baseline;
+  position: relative;
+  left: -16px;
+  color: ${props => props.theme.brand.alt};
+
+  &:before {
+    content: '$';
+    vertical-align: top;
+    position: absolute;
+    top: 16px;
+    right: calc(100% + 2px);
+    font-weight: 400;
+    font-size: 20px;
+    letter-spacing: normal;
+    color: ${({ theme }) => theme.text.alt};
+  }
+
+  &:after {
+    content: ${props => (props.per ? `'/ ${props.per}'` : `''`)};
+    color: ${({ theme }) => theme.text.alt};
+    position: absolute;
+    font-size: 14px;
+    white-space: nowrap;
+    left: calc(100% + 4px);
+    bottom: 16px;
+    font-weight: 500;
+    letter-spacing: normal;
+  }
+`;
+
+export const CostPer = styled(Span)`
+  color: ${({ theme }) => theme.text.alt};
+  position: relative;
+  left: -12px;
+  font-weight: 500;
+  letter-spacing: normal;
+`;
+
+export const CostSubtext = styled(FlexCol)`
+  color: ${({ theme }) => theme.text.alt};
+  flex: none;
+  margin-bottom: 24px;
+  justify-content: flex-start;
+  font-size: 14px;
+  font-weight: 700;
+`;
