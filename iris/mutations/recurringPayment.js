@@ -407,10 +407,7 @@ module.exports = {
 
       return handleCommunityUpgrade()
         .then(() => getCommunities([args.input.communityId]))
-        .then(
-          communities =>
-            console.log('should be returing a community') || communities[0]
-        )
+        .then(communities => communities[0])
         .catch(err => {
           console.log('Error upgrading a community: ', err.message);
           return new UserError(
