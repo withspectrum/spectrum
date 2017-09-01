@@ -179,7 +179,7 @@ export const CostNumber = styled(H2)`
   vertical-align: baseline;
   position: relative;
   left: -16px;
-  color: ${props => props.theme.brand.alt};
+  color: ${props => props.theme.success.default};
 
   &:before {
     content: '$';
