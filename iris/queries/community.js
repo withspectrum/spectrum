@@ -216,29 +216,37 @@ module.exports = {
       return getInvoicesByCommunity(id);
     },
     recurringPayments: ({ id }, _, { user }) => {
-      if (!user) {
+      const currentUser = user;
+
+      if (!currentUser) {
         return new UserError('You must be signed in to continue.');
       }
 
-      return getCommunityRecurringPayments(id).then(subs => {
-        const communityProSubs =
-          subs && subs.filter(obj => obj.planId === 'community-standard');
+      const queryRecurringPayments = async () => {
+        const userPermissions = await getUserPermissionsInCommunity(
+          id,
+          currentUser.id
+        );
+        if (!userPermissions.isOwner) return;
 
-        if (!communityProSubs || communityProSubs.length === 0) {
-          return [];
-        } else {
-          return communityProSubs.map(subscription => {
-            return {
-              amount: subscription.amount * subscription.quantity,
-              createdAt: subscription.createdAt,
-              plan: subscription.planName,
-              status: subscription.status,
-            };
-          });
-        }
-      });
+        const rPayments = await getCommunityRecurringPayments(id);
+        const communitySubscriptions =
+          rPayments &&
+          rPayments.filter(obj => obj.planId === 'community-standard');
+
+        if (!communitySubscriptions || communitySubscriptions.length === 0)
+          return;
+        return communitySubscriptions.map(subscription => ({
+          amount: subscription.amount * subscription.quantity,
+          createdAt: subscription.createdAt,
+          plan: subscription.planName,
+          status: subscription.status,
+        }));
+      };
+
+      return queryRecurringPayments();
     },
-    isPro: ({ id }: { id: string }, _: any, { loaders }: GraphQLContext) => {
+    isPro: ({ id }: { id: string }, _: any, __: any) => {
       return getCommunityRecurringPayments(id).then(subs => {
         let filtered = subs && subs.filter(sub => sub.status === 'active');
         return !filtered || filtered.length === 0 ? false : true;

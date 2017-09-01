@@ -36,7 +36,7 @@ export default job => {
 
     debug('sending pro invoice receipt email');
 
-    return await sendProInvoiceReceiptQueue.add({
+    return sendProInvoiceReceiptQueue.add({
       to: email,
       invoice: {
         plan: invoice.planName,

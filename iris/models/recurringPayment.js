@@ -1,26 +1,31 @@
 // @flow
 import { db } from './db';
 
+const parseStripeDataToDb = (stripeData): Object => ({
+  customerId: stripeData.customer,
+  subscriptionId: stripeData.id,
+  planId: stripeData.plan.id,
+  planName: stripeData.plan.name,
+  amount: stripeData.plan.amount,
+  quantity: stripeData.quantity,
+  status: stripeData.status,
+  currentPeriodStart: stripeData.current_period_start,
+  currentPeriodEnd: stripeData.current_period_end,
+  createdAt: stripeData.plan.created,
+  canceledAt: stripeData.status === 'canceled' ? new Date() : null,
+  sourceBrand: stripeData.sourceBrand,
+  sourceLast4: stripeData.sourceLast4,
+});
+
 export const createRecurringPayment = (props): Promise<Object> => {
   const { userId, communityId, stripeData } = props;
+
   return db
     .table('recurringPayments')
     .insert({
       userId: userId ? userId : null,
       communityId: communityId ? communityId : null,
-      customerId: stripeData.customer,
-      subscriptionId: stripeData.id,
-      planId: stripeData.plan.id,
-      planName: stripeData.plan.name,
-      amount: stripeData.plan.amount,
-      quantity: stripeData.quantity,
-      status: stripeData.status,
-      currentPeriodStart: stripeData.current_period_start,
-      currentPeriodEnd: stripeData.current_period_end,
-      createdAt: stripeData.plan.created,
-      canceledAt: null,
-      sourceBrand: stripeData.sourceBrand,
-      sourceLast4: stripeData.sourceLast4,
+      ...parseStripeDataToDb(stripeData),
     })
     .run();
 };
@@ -36,23 +41,9 @@ export const updateRecurringPayment = (props): Promise<Object> => {
   return db
     .table('recurringPayments')
     .get(id)
-    .update(
-      {
-        planId: stripeData.plan.id,
-        planName: stripeData.plan.name,
-        amount: stripeData.plan.amount,
-        quantity: stripeData.quantity,
-        status: stripeData.status,
-        currentPeriodStart: stripeData.current_period_start,
-        currentPeriodEnd: stripeData.current_period_end,
-        createdAt: stripeData.plan.created,
-        canceledAt: stripeData.status === 'canceled' ? new Date() : null,
-        sourceBrand: stripeData.sourceBrand,
-        sourceLast4: stripeData.sourceLast4,
-        subscriptionId: stripeData.id,
-      },
-      { returnChanges: true }
-    )
+    .update({
+      ...parseStripeDataToDb(stripeData),
+    })
     .run();
 };
 
