@@ -14,7 +14,8 @@
     "raw-loader": "^0.5.1",
     "react-scripts": "^1.0.0",
     "rimraf": "^2.6.1",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "write-file-webpack-plugin": "^4.1.0"
   },
   "dependencies": {
     "apollo-local-query": "^0.3.0",
@@ -95,7 +96,7 @@
     "string-replace-to-array": "^1.0.3",
     "stripe": "^4.15.0",
     "striptags": "2.x",
-    "styled-components": "2.x",
+    "styled-components": "2.1.2",
     "subscriptions-transport-ws": "^0.7.0",
     "web-push": "^3.2.2"
   },

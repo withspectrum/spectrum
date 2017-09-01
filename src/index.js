@@ -2,8 +2,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 //$FlowFixMe
-import { ThemeProvider } from 'styled-components';
-//$FlowFixMe
 import { ApolloProvider } from 'react-apollo';
 //$FlowFixMe
 import { Router } from 'react-router';
@@ -51,13 +49,11 @@ const store = initStore(window.__SERVER_STATE__ || initialState, {
 
 function render() {
   return ReactDOM.render(
-    <Router history={history}>
-      <ApolloProvider store={store} client={client}>
-        <ThemeProvider theme={theme}>
-          <Routes />
-        </ThemeProvider>
-      </ApolloProvider>
-    </Router>,
+    <ApolloProvider store={store} client={client}>
+      <Router history={history}>
+        <Routes />
+      </Router>
+    </ApolloProvider>,
     document.querySelector('#root')
   );
 }
