@@ -6,7 +6,7 @@ import { SEND_WEEKLY_DIGEST_EMAIL } from './queues/constants';
 
 const PORT = process.env.PORT || 3004;
 
-console.log('\n✉️ Cronos, the chron worker, is starting...');
+console.log('\n✉️ Chronos, the chron worker, is starting...');
 debug('Logging with debug enabled!');
 console.log('');
 

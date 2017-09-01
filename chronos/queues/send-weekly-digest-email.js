@@ -1,5 +1,5 @@
 // @flow
-const debug = require('debug')('cronos:queue:send-weekly-digest-email');
+const debug = require('debug')('chronos:queue:send-weekly-digest-email');
 // $FlowFixMe
 import intersection from 'lodash.intersection';
 import {

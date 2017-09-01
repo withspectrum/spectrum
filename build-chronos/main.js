@@ -183,7 +183,7 @@ module.exports = /******/ (function(modules) {
       }
 
       var debug = __webpack_require__(2)('hermes');
-      var createWorker = __webpack_require__(17);
+      var createWorker = __webpack_require__(18);
 
       var PORT = process.env.PORT || 3004;
 
@@ -260,7 +260,7 @@ module.exports = /******/ (function(modules) {
 
       var _message = __webpack_require__(16);
 
-      var _community = __webpack_require__(22);
+      var _community = __webpack_require__(17);
 
       function _interopRequireDefault(obj) {
         return obj && obj.__esModule ? obj : { default: obj };
@@ -318,7 +318,7 @@ module.exports = /******/ (function(modules) {
       }
 
       var debug = __webpack_require__(2)(
-        'cronos:queue:send-weekly-digest-email'
+        'chronos:queue:send-weekly-digest-email'
       );
       // $FlowFixMe
 
@@ -1124,10 +1124,29 @@ module.exports = /******/ (function(modules) {
     /***/ function(module, exports, __webpack_require__) {
       'use strict';
 
+      Object.defineProperty(exports, '__esModule', {
+        value: true,
+      });
+
+      var _require = __webpack_require__(0),
+        db = _require.db;
+
+      var getCommunityById = (exports.getCommunityById = function getCommunityById(
+        id
+      ) {
+        return db.table('communities').get(id).run();
+      });
+
+      /***/
+    },
+    /* 18 */
+    /***/ function(module, exports, __webpack_require__) {
+      'use strict';
+
       // Create a worker with bull and start a small webserver which responds with
       // health information
-      var http = __webpack_require__(18);
-      var createQueue = __webpack_require__(19);
+      var http = __webpack_require__(19);
+      var createQueue = __webpack_require__(20);
 
       /*::
 type QueueMap = {
@@ -1179,18 +1198,18 @@ type QueueMap = {
 
       /***/
     },
-    /* 18 */
+    /* 19 */
     /***/ function(module, exports) {
       module.exports = require('http');
 
       /***/
     },
-    /* 19 */
+    /* 20 */
     /***/ function(module, exports, __webpack_require__) {
       'use strict';
 
-      var Queue = __webpack_require__(20);
-      var Raven = __webpack_require__(21);
+      var Queue = __webpack_require__(21);
+      var Raven = __webpack_require__(22);
 
       if (false) {
         Raven.config(
@@ -1230,34 +1249,15 @@ type QueueMap = {
 
       /***/
     },
-    /* 20 */
+    /* 21 */
     /***/ function(module, exports) {
       module.exports = require('bull');
 
       /***/
     },
-    /* 21 */
+    /* 22 */
     /***/ function(module, exports) {
       module.exports = require('raven');
-
-      /***/
-    },
-    /* 22 */
-    /***/ function(module, exports, __webpack_require__) {
-      'use strict';
-
-      Object.defineProperty(exports, '__esModule', {
-        value: true,
-      });
-
-      var _require = __webpack_require__(0),
-        db = _require.db;
-
-      var getCommunityById = (exports.getCommunityById = function getCommunityById(
-        id
-      ) {
-        return db.table('communities').get(id).run();
-      });
 
       /***/
     },
