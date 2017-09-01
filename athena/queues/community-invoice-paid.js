@@ -2,6 +2,7 @@
 const debug = require('debug')(
   'athena:queue:community-invoice-paid-notification'
 );
+import Raven from '../../shared/raven';
 import createQueue from '../../shared/bull/create-queue';
 import { SEND_COMMUNITY_INVOICE_RECEIPT_EMAIL } from './constants';
 import { convertTimestampToDate } from '../utils/timestamp-to-date';
@@ -24,11 +25,14 @@ export default job => {
     const ownersIds = await getOwnersInCommunity(invoice.communityId);
     const owners = await getUsers(ownersIds);
 
-    if (!owners || !community) return;
+    if (!owners || !community)
+      return new Error(
+        'No owners or community found for an invoice being generated'
+      );
     debug('owners and community found');
 
     const sendOwnerEmails = owners.map(owner => {
-      // converst 5000 => $50.00
+      // convert 5000 => $50.00
       debug('sending an owner email');
       const amount = `$${(invoice.amount / 100)
         .toFixed(2)
@@ -60,11 +64,11 @@ export default job => {
         },
       });
     });
-    const send = await Promise.all(sendOwnerEmails);
-    return { send };
+
+    return Promise.all(sendOwnerEmails);
   };
 
   return processCommunityInvoice()
     .then(() => job.remove())
-    .catch(err => new Error(err));
+    .catch(err => Raven.captureException(err));
 };

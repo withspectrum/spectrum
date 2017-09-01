@@ -4,7 +4,6 @@ const { db } = require('./db');
 export const getRecurringPaymentFromInvoice = (
   invoice: Object
 ): Promise<Object> => {
-  console.log('finding invoice', invoice);
   return db
     .table('recurringPayments')
     .filter({

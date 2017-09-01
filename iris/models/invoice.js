@@ -46,10 +46,12 @@ export const createInvoice = (
     )
     .run()
     .then(result => {
-      // if a communityId was passed in, we know the invoice was for an upgraded community. if no community Id exists, we know the user paid for a Pro subscription
-      const queueName = recurringPayment.communityId
-        ? 'community invoice paid notification'
-        : 'pro invoice paid notification';
+      // in the future if we have more plans we can check for each plan name individually to return the correct queue name
+      const queueName =
+        subscription.plan.id === 'community-standard'
+          ? 'community invoice paid notification'
+          : 'pro invoice paid notification';
+
       const invoice = result.changes[0].new_val;
 
       // trigger an email to the user for the invoice receipt
