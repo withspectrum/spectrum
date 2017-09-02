@@ -1,6 +1,7 @@
 // @flow
 import fs from 'fs';
 import path from 'path';
+import serialize from 'serialize-javascript';
 
 const html = fs
   .readFileSync(path.resolve(__dirname, '..', '..', 'build', 'index.html'))
@@ -14,16 +15,14 @@ type Arguments = {
 };
 
 export const getHTML = ({ styleTags, metaTags, state, content }: Arguments) => {
-  // TODO: Proper sanitization
-  // NOTE(@mxstbr): There's some library by Yahoo (I think)
-  // specifically for this purpose
-  const sanitizedState = JSON.stringify(state).replace(/</g, '\\u003c');
   return (
     html
       // Inject the state and the content instead of <div id="root">
       .replace(
         '<div id="root"></div>',
-        `<script>window.__SERVER_STATE__=${sanitizedState}</script><div id="root">${content}</div>`
+        `<script>window.__SERVER_STATE__=${serialize(
+          state
+        )}</script><div id="root">${content}</div>`
       )
       // Inject the meta tags at the start of the <head>
       .replace('<head>', `<head>${metaTags}`)
