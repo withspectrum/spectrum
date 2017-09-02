@@ -9,13 +9,15 @@ import {
   MAX_THREAD_COUNT_PER_CHANNEL,
   MIN_THREADS_REQUIRED_FOR_DIGEST,
   MAX_THREAD_COUNT_PER_DIGEST,
+  COMMUNITY_UPSELL_THRESHOLD,
 } from './constants';
 const sendWeeklyDigestEmailQueue = createQueue(SEND_WEEKLY_DIGEST_EMAIL);
 import { getActiveThreadsInPastWeek } from '../models/thread';
 import { getUsersForWeeklyDigest } from '../models/usersSettings';
 import { getUsersChannelsEligibleForWeeklyDigest } from '../models/usersChannels';
+import { getUsersCommunityIds } from '../models/usersCommunities';
 import { getMessageCount } from '../models/message';
-import { getCommunityById } from '../models/community';
+import { getCommunityById, getTopCommunities } from '../models/community';
 
 export default job => {
   debug(`\nnew job: ${job.id}`);
@@ -30,7 +32,10 @@ export default job => {
     debug('\n ⚙️ Fetched all active threads this week');
 
     // if no threadIds, escape
-    if (!threadIds || threadIds.length === 0) return;
+    if (!threadIds || threadIds.length === 0) {
+      debug('\n ❌  No active threads found');
+      return;
+    }
 
     // for each thread that was active in the last week, return a new array containing a record for each thread with the thread data and the message count
     const messageCountPromises = threadIds.map(
@@ -67,7 +72,10 @@ export default job => {
     const topThreads = await allActiveThreadsThisWeek();
 
     // if no topThreads, escape
-    if (!topThreads || topThreads.length === 0) return;
+    if (!topThreads || topThreads.length === 0) {
+      debug('\n ❌  No topThreads found');
+      return;
+    }
 
     // create an empty object for the final output
     let obj = {};
@@ -118,7 +126,7 @@ export default job => {
       b. for each person, get an array of channelIds where that user is a member
       c. determine if there is any overlap between the user's channels and the active threads from the past week. Note: this filters out people who are members of inactive communities, even if they are opted in to receive a weekly digest
   */
-  const eligbleUsersForWeeklyDigest = async () => {
+  const eligibleUsersForWeeklyDigest = async () => {
     // get users who have opted to receive a weekly digest
     const users = await getUsersForWeeklyDigest();
     debug('\n ⚙️ Fetched users who want to receive a weekly digest');
@@ -143,7 +151,10 @@ export default job => {
     const threadData = await activeThreadsByChannel();
 
     // if no threads exist
-    if (!threadData) return;
+    if (!threadData) {
+      debug('\n ❌  No threadData found');
+      return;
+    }
 
     // get an array of all channels where there are active threads this week
     const threadChannelKeys = Object.keys(threadData);
@@ -173,8 +184,10 @@ export default job => {
     );
 
     // if no rawThreadsForUsersEmail, escape
-    if (!rawThreadsForUsersEmail || rawThreadsForUsersEmail.length === 0)
+    if (!rawThreadsForUsersEmail || rawThreadsForUsersEmail.length === 0) {
+      debug('\n ❌  No rawThreads found');
       return;
+    }
 
     // we don't want to send a weekly digest to someone with only one thread for that week - so in this step we filter out any results where the thread count is less than the miminimum acceptable threshhold
     const eligibleUsersForWeeklyDigest = rawThreadsForUsersEmail
@@ -217,21 +230,43 @@ export default job => {
   };
 
   const processSendWeeklyDigests = async () => {
-    const eligibleUsers = await eligbleUsersForWeeklyDigest();
+    const eligibleUsers = await eligibleUsersForWeeklyDigest();
+    debug('\n ⚙️  Got eligible users');
+    const topCommunities = await getTopCommunities(20);
+    debug('\n ⚙️  Got top communities');
 
     // if no elegible users, escape
-    if (!eligibleUsers || eligibleUsers.length === 0) return;
+    if (!eligibleUsers || eligibleUsers.length === 0) {
+      debug('\n ❌  No eligible users');
+      return;
+    }
 
     debug('\n👉 Eligible users data');
     debug(eligibleUsers);
     debug('\n👉 Example thread data for email');
     debug(eligibleUsers[0].threads[0]);
 
-    const sendDigestPromises = eligibleUsers.map(
-      async user => await sendWeeklyDigestEmailQueue.add({ ...user })
-    );
+    const sendDigestPromises = topCommunities =>
+      eligibleUsers.map(async user => {
+        // see what communities the user is in. if they are a member of less than 3 communities, we will upsell communities to join in the weekly digest
+        const usersCommunityIds = await getUsersCommunityIds(user.userId);
+        debug('\n ⚙️  Got users communities');
+        // if the user has joined less than three communities, take the top communities on Spectrum, remove any that the user has already joined, and slice the first 3 to send into the email template
+        const communities =
+          usersCommunityIds.length < COMMUNITY_UPSELL_THRESHOLD
+            ? topCommunities
+                .filter(
+                  community => usersCommunityIds.indexOf(community.id) <= -1
+                )
+                .slice(0, 3)
+            : null;
 
-    return await Promise.all(sendDigestPromises);
+        debug('\n ⚙️  Processed community upsells for email digest');
+
+        return await sendWeeklyDigestEmailQueue.add({ ...user, communities });
+      });
+
+    return await Promise.all(sendDigestPromises(topCommunities));
   };
 
   return processSendWeeklyDigests().catch(err =>

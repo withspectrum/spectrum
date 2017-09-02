@@ -9,6 +9,15 @@ type CommunityType = {
   profilePhoto: string,
 };
 
+type TopCommunityType = {
+  name: string,
+  slug: string,
+  profilePhoto: string,
+  coverPhoto: string,
+  description: string,
+  id: string,
+};
+
 type ThreadType = {
   community: CommunityType,
   channelId: string,
@@ -21,6 +30,7 @@ type SendWeeklyDigestJobData = {
   name?: string,
   userId: string,
   threads: ThreadType,
+  communities?: Array<TopCommunityType>,
 };
 
 type SendWeeklyDigestJob = {
@@ -32,7 +42,7 @@ export default (job: SendWeeklyDigestJob) => {
   debug(`\nnew job: ${job.id}`);
   debug(`\nsending weekly digest to: ${job.data.email}`);
 
-  const { email, name, threads } = job.data;
+  const { email, name, threads, communities } = job.data;
   if (!email) return;
 
   const greeting = name ? `Hey ${name},` : 'Hey there,';
@@ -44,6 +54,7 @@ export default (job: SendWeeklyDigestJob) => {
       TemplateModel: {
         threads,
         greeting,
+        communities,
       },
     });
   } catch (err) {
