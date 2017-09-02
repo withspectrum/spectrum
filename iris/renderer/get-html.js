@@ -25,7 +25,9 @@ export const getHTML = ({ styleTags, metaTags, state, content }: Arguments) => {
         '<div id="root"></div>',
         `<script>window.__SERVER_STATE__=${sanitizedState}</script><div id="root">${content}</div>`
       )
-      // Inject the meta and style tags at the end of the <head>
-      .replace('</head>', `${metaTags}${styleTags}</head>`)
+      // Inject the meta tags at the start of the <head>
+      .replace('<head>', `<head>${metaTags}`)
+      // Inject the style tags at the end of the <head>
+      .replace('</head>', `${styleTags}</head>`)
   );
 };
