@@ -1,7 +1,15 @@
 // @flow
 const { db } = require('./db');
 
-export const getMessageCount = (threadId: string): Promise<number> => {
+export const getTotalMessageCount = (threadId: string): Promise<number> => {
+  return db
+    .table('messages')
+    .getAll(threadId, { index: 'threadId' })
+    .count()
+    .run();
+};
+
+export const getNewMessageCount = (threadId: string): Promise<number> => {
   return db
     .table('messages')
     .getAll(threadId, { index: 'threadId' })

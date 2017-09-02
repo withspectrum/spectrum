@@ -5,18 +5,21 @@ import intersection from 'lodash.intersection';
 import createQueue from '../../shared/bull/create-queue';
 import {
   SEND_WEEKLY_DIGEST_EMAIL,
-  MIN_MESSAGE_COUNT,
+  MIN_TOTAL_MESSAGE_COUNT,
+  MIN_NEW_MESSAGE_COUNT,
   MAX_THREAD_COUNT_PER_CHANNEL,
   MIN_THREADS_REQUIRED_FOR_DIGEST,
   MAX_THREAD_COUNT_PER_DIGEST,
   COMMUNITY_UPSELL_THRESHOLD,
+  TOTAL_MESSAGE_COUNT_WEIGHT,
+  NEW_MESSAGE_COUNT_WEIGHT,
 } from './constants';
 const sendWeeklyDigestEmailQueue = createQueue(SEND_WEEKLY_DIGEST_EMAIL);
 import { getActiveThreadsInPastWeek } from '../models/thread';
 import { getUsersForWeeklyDigest } from '../models/usersSettings';
 import { getUsersChannelsEligibleForWeeklyDigest } from '../models/usersChannels';
 import { getUsersCommunityIds } from '../models/usersCommunities';
-import { getMessageCount } from '../models/message';
+import { getTotalMessageCount, getNewMessageCount } from '../models/message';
 import { getCommunityById, getTopCommunities } from '../models/community';
 
 export default job => {
@@ -44,7 +47,8 @@ export default job => {
         channelId,
         id,
         title: content.title,
-        messageCount: await getMessageCount(id),
+        newMessageCount: await getNewMessageCount(id),
+        totalMessageCount: await getTotalMessageCount(id),
       })
     );
 
@@ -52,10 +56,10 @@ export default job => {
     const messageCounts = await Promise.all(messageCountPromises);
     debug('\n ⚙️ Fetched message counts for threads');
 
-    // remove any threads where the message count is less than 10
-    const filteredTopThreads = messageCounts.filter(
-      thread => thread.messageCount >= MIN_MESSAGE_COUNT
-    );
+    // remove any threads where the total message count is less than 10
+    const filteredTopThreads = messageCounts
+      .filter(thread => thread.totalMessageCount >= MIN_TOTAL_MESSAGE_COUNT)
+      .filter(thread => thread.newMessageCount >= MIN_NEW_MESSAGE_COUNT);
     debug('\n ⚙️ Filtered threads with enough messages');
 
     // returns an array of threads that are active in the last week and have the minimum required message count to be considered valuable
@@ -96,7 +100,8 @@ export default job => {
         channelId: thread.channelId,
         title: thread.title,
         threadId: thread.id,
-        messageCount: thread.messageCount,
+        newMessageCount: thread.newMessageCount,
+        totalMessageCount: thread.totalMessageCount,
       };
       return obj;
     });
@@ -193,12 +198,22 @@ export default job => {
     const eligibleUsersForWeeklyDigest = rawThreadsForUsersEmail
       .filter(user => user.threads.length > MIN_THREADS_REQUIRED_FOR_DIGEST)
       // and finally, sort the user's threads in descending order by message count
-      .map(({ channels, ...user }) => ({
-        ...user,
-        threads: user.threads
-          .sort((a, b) => b.messageCount - a.messageCount)
-          .slice(0, MAX_THREAD_COUNT_PER_DIGEST),
-      }));
+      .map(({ channels, ...user }) => {
+        // for each thread, assign a score based on the total message count and new message count
+        const threadsWithScores = user.threads.map(thread => ({
+          ...thread,
+          score:
+            thread.newMessageCount * NEW_MESSAGE_COUNT_WEIGHT +
+            thread.totalMessageCount * TOTAL_MESSAGE_COUNT_WEIGHT,
+        }));
+
+        return {
+          ...user,
+          threads: threadsWithScores
+            .sort((a, b) => b.score - a.score)
+            .slice(0, MAX_THREAD_COUNT_PER_DIGEST),
+        };
+      });
 
     debug(
       '\n ⚙️ Filtered users who have enough threads to qualify for a weekly digest'
@@ -243,6 +258,8 @@ export default job => {
 
     debug('\n👉 Eligible users data');
     debug(eligibleUsers);
+    debug('\n👉 Example array of threads');
+    debug(eligibleUsers[0].threads);
     debug('\n👉 Example thread data for email');
     debug(eligibleUsers[0].threads[0]);
 
