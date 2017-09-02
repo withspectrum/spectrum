@@ -15,6 +15,7 @@ import { createLocalInterface } from 'apollo-local-query';
 import Helmet from 'react-helmet';
 import * as graphql from 'graphql';
 
+import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
 import schema from '../schema';
 import createLoaders from '../loaders';
 import { getHTML } from './get-html';
@@ -34,6 +35,7 @@ const renderer = (req, res) => {
         user: req.user,
       },
     }),
+    ...getSharedApolloClientOptions(),
   });
   // Define the initial redux state
   const initialReduxState = {

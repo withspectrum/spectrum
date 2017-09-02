@@ -13,6 +13,7 @@ import {
   addGraphQLSubscriptions,
 } from 'subscriptions-transport-ws';
 import introspectionQueryResultData from './schema.json';
+import getSharedApolloClientOptions from 'shared/graphql/apollo-client-options';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 const wsClient = new SubscriptionClient(
@@ -44,50 +45,11 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 export const client = new ApolloClient({
   networkInterface: networkInterfaceWithSubscriptions,
   fragmentMatcher,
-  initialState: window.__SERVER_STATE__ && window.__SERVER_STATE__.apollo,
+  initialState: window.__SERVER_STATE__ && {
+    apollo: window.__SERVER_STATE__.apollo,
+  },
   ssrForceFetchDelay: 100,
-  queryDeduplication: true,
-  dataIdFromObject: result => {
-    if (result.__typename) {
-      // Custom Community cache key based on slug
-      if (result.__typename === 'Community' && !!result.slug) {
-        return `${result.__typename}:${result.slug}`;
-      }
-      // Custom Channel cache key based on slug and community slug
-      if (
-        result.__typename === 'Channel' &&
-        !!result.slug &&
-        !!result.community &&
-        !!result.community.slug
-      ) {
-        return `${result.__typename}:${result.community.slug}:${result.slug}`;
-      }
-      // This was copied from the default dataIdFromObject
-      if (result.id !== undefined) {
-        return `${result.__typename}:${result.id}`;
-      }
-      if (result._id !== undefined) {
-        return `${result.__typename}:${result._id}`;
-      }
-    }
-    return null;
-  },
-  customResolvers: {
-    Query: {
-      thread: (_, { id }) =>
-        toIdValue(client.dataIdFromObject({ __typename: 'Thread', id })),
-      community: (_, { slug }) =>
-        toIdValue(client.dataIdFromObject({ __typename: 'Community', slug })),
-      channel: (_, { channelSlug, communitySlug }) =>
-        toIdValue(
-          client.dataIdFromObject({
-            __typename: 'Channel',
-            slug: channelSlug,
-            community: { slug: communitySlug },
-          })
-        ),
-    },
-  },
+  ...getSharedApolloClientOptions(),
 });
 
 export const clearApolloStore = () => {
