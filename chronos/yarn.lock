@@ -33,6 +33,12 @@ cron-parser@^2.4.1:
     is-nan "^1.2.1"
     moment-timezone "^0.5.0"
 
+cron@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/cron/-/cron-1.2.1.tgz#3a86c09b41b8f261ac863a7cc85ea4735857eab2"
+  dependencies:
+    moment-timezone "^0.5.x"
+
 debug@^2.2.0, debug@^2.6.8:
   version "2.6.8"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.8.tgz#e731531ca2ede27d188222427da17821d68ff4fc"
@@ -184,7 +190,7 @@ merge@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/merge/-/merge-1.2.0.tgz#7531e39d4949c281a66b8c5a6e0265e8b05894da"
 
-moment-timezone@^0.5.0:
+moment-timezone@^0.5.0, moment-timezone@^0.5.x:
   version "0.5.13"
   resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.13.tgz#99ce5c7d827262eb0f1f702044177f60745d7b90"
   dependencies:

@@ -286,9 +286,11 @@ export default job => {
     return await Promise.all(sendDigestPromises(topCommunities));
   };
 
-  return processSendWeeklyDigests().catch(err =>
-    console.log('Error sending weekly digests: ', err)
-  );
+  return processSendWeeklyDigests().then(() => job.remove()).catch(err => {
+    debug('❌  Error sending weekly digest');
+    debug(err);
+    console.log('Error sending weekly digests: ', err);
+  });
 };
 
 // migration

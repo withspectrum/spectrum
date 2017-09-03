@@ -12,9 +12,6 @@ if (process.env.NODE_ENV === 'development') {
 import slackImporter from './slackImporter';
 apiRouter.use('/slack', slackImporter);
 
-import weeklyDigest from './weeklyDigest';
-apiRouter.use('/weekly-digest', weeklyDigest);
-
 import graphql from './graphql';
 apiRouter.use('/', graphql);
 

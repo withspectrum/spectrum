@@ -4,6 +4,7 @@
   },
   "dependencies": {
     "bull": "^3.0.0-rc.2",
+    "cron": "^1.2.1",
     "debug": "^2.6.8",
     "lodash.intersection": "^4.4.0",
     "postmark": "^1.3.1",
