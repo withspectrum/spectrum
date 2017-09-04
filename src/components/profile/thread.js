@@ -19,7 +19,12 @@ class ThreadWithData extends Component {
     }
     return (
       <ProfileCard>
-        <Link to={{ search: `?thread=${thread.id}` }}>
+        <Link
+          to={{
+            pathname: window.location.pathname,
+            search: `?thread=${thread.id}`,
+          }}
+        >
           <ThreadListItem
             contents={thread}
             withDescription={false}

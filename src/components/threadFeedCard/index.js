@@ -33,10 +33,20 @@ const ThreadFeedCardPure = (props: Object): React$Element<any> => {
 
   return (
     <StyledThreadFeedCard>
-      <CardLink to={{ search: `?thread=${props.data.id}` }} />
+      <CardLink
+        to={{
+          pathname: window.location.pathname,
+          search: `?thread=${props.data.id}`,
+        }}
+      />
       <CardContent>
         <FormattedThreadLocation {...props} />
-        <Link to={{ search: `?thread=${props.data.id}` }}>
+        <Link
+          to={{
+            pathname: window.location.pathname,
+            search: `?thread=${props.data.id}`,
+          }}
+        >
           <Title>{props.data.content.title}</Title>
           {props.isPinned && (
             <Pinned>

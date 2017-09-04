@@ -45,7 +45,14 @@ export const constructMessage = notification => {
       return (
         <span>
           <Link to={`/@${sender.username}`}>{sender.name}</Link> replied to your{' '}
-          <Link to={{ search: `?thread=${thread.id}` }}>thread</Link>:
+          <Link
+            to={{
+              pathname: window.location.pathname,
+              search: `?thread=${thread.id}`,
+            }}
+          >
+            thread
+          </Link>:
         </span>
       );
     default:

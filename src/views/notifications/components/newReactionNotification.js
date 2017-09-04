@@ -41,7 +41,10 @@ export const NewReactionNotification = ({ notification, currentUser }) => {
   return (
     <NotificationCard key={notification.id}>
       <CardLink
-        to={{ search: `?thread=${notification.context.payload.threadId}` }}
+        to={{
+          pathname: window.location.pathname,
+          search: `?thread=${notification.context.payload.threadId}`,
+        }}
       />
       <CardContent>
         <ReactionContext>
@@ -141,7 +144,10 @@ export const MiniNewReactionNotification = ({
   return (
     <NotificationListRow>
       <CardLink
-        to={{ search: `?thread=${notification.context.payload.threadId}` }}
+        to={{
+          pathname: window.location.pathname,
+          search: `?thread=${notification.context.payload.threadId}`,
+        }}
       />
       <CardContent>
         <ReactionContext>

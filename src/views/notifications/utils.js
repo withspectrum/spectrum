@@ -173,7 +173,12 @@ const threadToString = (context, currentUser) => {
     <span>
       {' '}
       {str}{' '}
-      <Link to={{ search: `?thread=${context.payload.id}` }}>
+      <Link
+        to={{
+          pathname: window.location.pathname,
+          search: `?thread=${context.payload.id}`,
+        }}
+      >
         {context.payload.content.title}
       </Link>
     </span>

@@ -82,7 +82,12 @@ export const NewMessageNotification = ({ notification, currentUser }) => {
 
   return (
     <NotificationCard>
-      <CardLink to={{ search: `?thread=${notification.context.id}` }} />
+      <CardLink
+        to={{
+          pathname: window.location.pathname,
+          search: `?thread=${notification.context.id}`,
+        }}
+      />
       <CardContent>
         <SuccessContext>
           <Icon glyph="message-fill" />
@@ -193,7 +198,12 @@ export const MiniNewMessageNotification = ({
 
   return (
     <NotificationListRow>
-      <CardLink to={{ search: `?thread=${notification.context.id}` }} />
+      <CardLink
+        to={{
+          pathname: window.location.pathname,
+          search: `?thread=${notification.context.id}`,
+        }}
+      />
       <CardContent>
         <SuccessContext>
           <Icon glyph="message-fill" />
