@@ -200,9 +200,10 @@ export const BillingListItem = props => {
     <div>
       <Wrapper>
         <Row>
-          <BadgeContainer>
-            <Badge type={props.badge || 'pro'} />
-          </BadgeContainer>
+          {props.badge &&
+            <BadgeContainer>
+              <Badge type={props.badge || 'pro'} />
+            </BadgeContainer>}
           <Col>
             <Heading>
               {props.contents.name}

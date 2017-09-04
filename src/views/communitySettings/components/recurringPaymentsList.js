@@ -53,7 +53,6 @@ const RecurringPaymentsList = ({ community, currentUser, dispatch }) => {
                 contents={{ name: payment.plan }}
                 withDescription={false}
                 meta={meta}
-                badge={'Standard'}
               >
                 <IconButton glyph="settings" onClick={openCommunityProModal} />
               </BillingListItem>
