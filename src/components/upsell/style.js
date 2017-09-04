@@ -27,6 +27,7 @@ export const Title = styled.h1`
 
 export const CommunityUpsellTitle = styled(Title)`
   text-align: left;
+  font-size: 20px;
 `;
 
 export const MiniTitle = styled(Title)`
@@ -72,6 +73,8 @@ export const Subtitle = styled.h2`
 export const CommunityUpsellSubtitle = styled(Subtitle)`
   text-align: left;
   padding: 0;
+  font-size: 14px;
+  color: ${props => props.theme.text.default};
 
   li {
     margin-top: 16px;

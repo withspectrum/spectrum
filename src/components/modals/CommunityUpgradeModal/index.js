@@ -12,7 +12,7 @@ import { addToastWithTimeout } from '../../../actions/toasts';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { Button, OutlineButton } from '../../buttons';
-import { UpsellUpgradeCommunity } from '../../upsell';
+import { UpsellUpgradeCommunity } from '../../../views/communitySettings/components/upgradeCommunity';
 import {
   modalStyles,
   Section,
@@ -127,7 +127,7 @@ class CommunityUpgradeModal extends React.Component {
               <Subheading>
                 Any private channels you've created will be locked. Any
                 conversations in your private channels will still be accessible,
-                but new threads will not be able to be created.
+                but creating new threads and messages will be disabled.
               </Subheading>
 
               <SectionActions centered={true}>

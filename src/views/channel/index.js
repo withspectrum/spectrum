@@ -30,8 +30,8 @@ import {
   UpsellSignIn,
   Upsell404Channel,
   UpsellRequestToJoinChannel,
-  UpsellUpgradeCommunityPrivateChannel,
 } from '../../components/upsell';
+import { UpsellUpgradeCommunityPrivateChannel } from '../communitySettings/components/upgradeCommunity';
 import Titlebar from '../titlebar';
 
 const ThreadFeedWithData = compose(getChannelThreads)(ThreadFeed);
