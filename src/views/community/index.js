@@ -13,6 +13,7 @@ import Icon from '../../components/icons';
 import generateMetaInfo from 'shared/generate-meta-info';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
+import { Button } from '../../components/buttons';
 import ThreadFeed from '../../components/threadFeed';
 import ListCard from './components/listCard';
 import Search from './components/search';
@@ -196,28 +197,26 @@ class CommunityViewPure extends Component {
           <Head title={title} description={description} />
 
           <CoverColumn>
-            <CoverPhoto src={community.coverPhoto}>
-              {// if the user is logged in and doesn't own the community,
-              // add a button on top of the cover photo that will allow
-              // the person to leave the community
-              isLoggedIn &&
-                (!community.communityPermissions.isOwner &&
-                  community.communityPermissions.isMember) &&
-                <CoverButton
-                  glyph="minus-fill"
-                  color="bg.default"
-                  hoverColor="bg.default"
-                  opacity="0.5"
-                  tipText="Leave community"
-                  tipLocation="left"
-                  onClick={() => this.toggleMembership(community.id)}
-                />}
-            </CoverPhoto>
-
+            <CoverPhoto src={community.coverPhoto} />
             <CoverRow className={'flexy'}>
               <Column type="secondary" className={'inset'}>
                 <CommunityProfile data={{ community }} profileSize="full" />
-
+                {isLoggedIn &&
+                  (!community.communityPermissions.isOwner &&
+                    community.communityPermissions.isMember) &&
+                  <Button
+                    onClick={() => this.toggleMembership(community.id)}
+                    gradientTheme={'text'}
+                    color={'text.alt'}
+                    hoverColor={'warn.default'}
+                    style={{
+                      width: '100%',
+                      margin: '16px 0',
+                      backgroundImage: 'none',
+                    }}
+                  >
+                    Leave {community.name}
+                  </Button>}
                 {!isMobile &&
                   <ChannelListCard
                     slug={communitySlug.toLowerCase()}
