@@ -13,7 +13,7 @@ import Icon from '../../components/icons';
 import generateMetaInfo from 'shared/generate-meta-info';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
-import { Button } from '../../components/buttons';
+// import { Button } from '../../components/buttons';
 import ThreadFeed from '../../components/threadFeed';
 import ListCard from './components/listCard';
 import Search from './components/search';
@@ -42,6 +42,7 @@ import {
   CoverButton,
   SegmentedControl,
   Segment,
+  LogoutButton,
 } from './style';
 import { getCommunityThreads, getCommunityChannels } from './queries';
 import { getCommunity, getCommunityMembersQuery } from '../../api/community';
@@ -204,19 +205,11 @@ class CommunityViewPure extends Component {
                 {isLoggedIn &&
                   (!community.communityPermissions.isOwner &&
                     community.communityPermissions.isMember) &&
-                  <Button
+                  <LogoutButton
                     onClick={() => this.toggleMembership(community.id)}
-                    gradientTheme={'text'}
-                    color={'text.alt'}
-                    hoverColor={'warn.default'}
-                    style={{
-                      width: '100%',
-                      margin: '16px 0',
-                      backgroundImage: 'none',
-                    }}
                   >
                     Leave {community.name}
-                  </Button>}
+                  </LogoutButton>}
                 {!isMobile &&
                   <ChannelListCard
                     slug={communitySlug.toLowerCase()}
