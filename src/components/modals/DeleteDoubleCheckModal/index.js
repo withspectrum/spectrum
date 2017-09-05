@@ -86,7 +86,7 @@ class DeleteDoubleCheckModal extends Component {
             dispatch(
               addToastWithTimeout(
                 'error',
-                `Something went wrong and we weren't able to delete this thread. ${err.message}`
+                `Something went wrong and we weren't able to delete this thread.`
               )
             );
           });
@@ -109,7 +109,7 @@ class DeleteDoubleCheckModal extends Component {
             dispatch(
               addToastWithTimeout(
                 'error',
-                `Something went wrong and we weren't able to delete this channel. ${err.message}`
+                `Something went wrong and we weren't able to delete this channel.`
               )
             );
           });
@@ -134,7 +134,7 @@ class DeleteDoubleCheckModal extends Component {
             dispatch(
               addToastWithTimeout(
                 'error',
-                `Something went wrong and we weren't able to delete this community. ${err.message}`
+                `Something went wrong and we weren't able to delete this community.`
               )
             );
             this.setState({
@@ -175,7 +175,9 @@ class DeleteDoubleCheckModal extends Component {
           the action to the 'close' icon in the top right corner of all modals
         */}
         <ModalContainer title={'Are you sure?'} closeModal={this.close}>
-          <Message>{message ? message : 'Are you sure?'}</Message>
+          <Message>
+            {message ? message : 'Are you sure?'}
+          </Message>
 
           <Actions>
             <TextButton onClick={this.close} color={'warn.alt'}>

@@ -93,7 +93,12 @@ class ChatInputWithMutation extends Component {
         track(`${threadType} message`, 'text message created', null);
       })
       .catch(err => {
-        dispatch(addToastWithTimeout('error', err.message));
+        dispatch(
+          addToastWithTimeout(
+            'error',
+            `Whoops! We weren't able to send that message... Try again?`
+          )
+        );
       });
 
     // refocus the input
@@ -174,7 +179,12 @@ class ChatInputWithMutation extends Component {
           track(`${threadType} message`, 'media message created', null);
         })
         .catch(err => {
-          dispatch(addToastWithTimeout('error', err.message));
+          dispatch(
+            addToastWithTimeout(
+              'error',
+              `Whoops! We weren't able to send that message... Try again?`
+            )
+          );
         });
     };
   };

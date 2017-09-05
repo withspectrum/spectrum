@@ -82,7 +82,12 @@ class UpgradeModal extends React.Component {
           isLoading: false,
           upgradeError: err.message,
         });
-        this.props.dispatch(addToastWithTimeout('error', err.message));
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            `Oh no! Something went wrong while we were upgrading you. Mind trying again?`
+          )
+        );
       });
   };
 
@@ -113,7 +118,12 @@ class UpgradeModal extends React.Component {
           isLoading: false,
           upgradeError: err.message,
         });
-        this.props.dispatch(addToastWithTimeout('error', err.message));
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            `The server disconnected while we were processing your downgrade. Please try again.`
+          )
+        );
       });
   };
 

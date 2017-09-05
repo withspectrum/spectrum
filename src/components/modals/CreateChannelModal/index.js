@@ -212,7 +212,12 @@ class CreateChannelModal extends Component {
           loading: false,
         });
 
-        this.props.dispatch(addToastWithTimeout('error', err.toString()));
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            `We weren't able to save your channel. Mind trying again?`
+          )
+        );
       });
   };
 
@@ -265,14 +270,11 @@ class CreateChannelModal extends Component {
 
             {slugTaken &&
               <Error>
-                This url is already taken - feel free to change it if
-                you're set on the name {name}!
+                This url is already taken - feel free to change it if you're set
+                on the name {name}!
               </Error>}
 
-            {slugError &&
-              <Error>
-                Slugs can be up to 24 characters long.
-              </Error>}
+            {slugError && <Error>Slugs can be up to 24 characters long.</Error>}
 
             <TextArea
               id="slug"
@@ -297,11 +299,14 @@ class CreateChannelModal extends Component {
 
             {isPrivate
               ? <Description>
-                  Only approved people on Spectrum can see the threads, messages, and members in this channel. You can manually approve users who request to join this channel.
+                  Only approved people on Spectrum can see the threads,
+                  messages, and members in this channel. You can manually
+                  approve users who request to join this channel.
                 </Description>
               : <Description>
-                  Anyone on Spectrum can join this channel, post threads and messages, and will be able to see other members. If you want to create private channels,
-                  {' '}
+                  Anyone on Spectrum can join this channel, post threads and
+                  messages, and will be able to see other members. If you want
+                  to create private channels,{' '}
                   <a href="mailto:hi@spectrum.chat">get in touch</a>
                   .
                 </Description>}
