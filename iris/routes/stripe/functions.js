@@ -43,6 +43,5 @@ export const processInvoicePaid = async (event: Object) => {
   // update the recurringPayment record in the database that triggered this invoice payment and update the period_end and period_start dates to show in the ui
   const updateRecurringPayment = await updateRecurringPaymentPeriod(object);
 
-  // return all awaits to process them
-  return { getSubscription, invoice, updateRecurringPayment };
+  return Promise.all([getSubscription, invoice, updateRecurringPayment]);
 };

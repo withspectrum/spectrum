@@ -77,8 +77,10 @@ class UpsellUpgradeCommunityPure extends Component {
       <Card style={{ padding: '16px' }}>
         <Title>Upgrade to Spectrum Standard</Title>
         <Cost>
-          <CostNumber per="month">100</CostNumber>
-          <CostSubtext>per 1,000 community members</CostSubtext>
+          <CostNumber per="month">
+            {Math.ceil(community.metaData.members / 1000) * 100}
+          </CostNumber>
+          <CostSubtext>$100/month/1k community members</CostSubtext>
         </Cost>
         <Pitch>
           <PitchItem>

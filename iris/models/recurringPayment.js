@@ -11,7 +11,7 @@ const parseStripeDataToDb = (stripeData): Object => ({
   status: stripeData.status,
   currentPeriodStart: stripeData.current_period_start,
   currentPeriodEnd: stripeData.current_period_end,
-  createdAt: stripeData.plan.created,
+  createdAt: stripeData.created,
   canceledAt: stripeData.status === 'canceled' ? new Date() : null,
   sourceBrand: stripeData.sourceBrand,
   sourceLast4: stripeData.sourceLast4,

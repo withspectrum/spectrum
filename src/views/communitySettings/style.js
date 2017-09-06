@@ -174,12 +174,12 @@ export const Cost = styled(FlexCol)`
 
 export const CostNumber = styled(H2)`
   margin-top: 16px;
-  font-size: 56px;
+  font-size: 44px;
   letter-spacing: -2px;
   vertical-align: baseline;
   position: relative;
   left: -16px;
-  color: ${props => props.theme.success.default};
+  color: ${props => props.theme.text.default};
 
   &:before {
     content: '$';
@@ -220,5 +220,5 @@ export const CostSubtext = styled(FlexCol)`
   margin-bottom: 24px;
   justify-content: flex-start;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
 `;
