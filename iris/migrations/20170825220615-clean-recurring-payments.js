@@ -46,7 +46,10 @@ exports.up = function(r, conn) {
     .then(([cleanSubscriptions]) => {
       // insert each new clean record into the table
       return cleanSubscriptions.map(subscription => {
-        return r.table('recurringPayments').insert(subscription).run(conn);
+        return r
+          .table('recurringPayments')
+          .insert({ ...subscription })
+          .run(conn);
       });
     });
 };
