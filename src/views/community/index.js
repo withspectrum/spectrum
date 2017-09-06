@@ -13,6 +13,7 @@ import Icon from '../../components/icons';
 import generateMetaInfo from 'shared/generate-meta-info';
 import AppViewWrapper from '../../components/appViewWrapper';
 import Column from '../../components/column';
+// import { Button } from '../../components/buttons';
 import ThreadFeed from '../../components/threadFeed';
 import ListCard from './components/listCard';
 import Search from './components/search';
@@ -41,6 +42,7 @@ import {
   CoverButton,
   SegmentedControl,
   Segment,
+  LogoutButton,
 } from './style';
 import { getCommunityThreads, getCommunityChannels } from './queries';
 import { getCommunity, getCommunityMembersQuery } from '../../api/community';
@@ -196,29 +198,19 @@ class CommunityViewPure extends Component {
           <Head title={title} description={description} />
 
           <CoverColumn>
-            <CoverPhoto src={community.coverPhoto}>
-              {// if the user is logged in and doesn't own the community,
-              // add a button on top of the cover photo that will allow
-              // the person to leave the community
-              isLoggedIn &&
-              (!community.communityPermissions.isOwner &&
-                community.communityPermissions.isMember) && (
-                <CoverButton
-                  glyph="minus-fill"
-                  color="bg.default"
-                  hoverColor="bg.default"
-                  opacity="0.5"
-                  tipText="Leave community"
-                  tipLocation="left"
-                  onClick={() => this.toggleMembership(community.id)}
-                />
-              )}
-            </CoverPhoto>
-
+            <CoverPhoto src={community.coverPhoto} />
             <CoverRow className={'flexy'}>
               <Column type="secondary" className={'inset'}>
                 <CommunityProfile data={{ community }} profileSize="full" />
-
+                {isLoggedIn &&
+                (!community.communityPermissions.isOwner &&
+                  community.communityPermissions.isMember) && (
+                  <LogoutButton
+                    onClick={() => this.toggleMembership(community.id)}
+                  >
+                    Leave {community.name}
+                  </LogoutButton>
+                )}
                 {!isMobile && (
                   <ChannelListCard
                     slug={communitySlug.toLowerCase()}
