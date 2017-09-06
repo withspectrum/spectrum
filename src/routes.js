@@ -31,10 +31,11 @@ import signedOutFallback from './helpers/signed-out-fallback';
 import { Login } from './views/login';
 import ThreadSlider from './views/threadSlider';
 
-const About = () =>
+const About = () => (
   <div>
     <h3>About</h3>
-  </div>;
+  </div>
+);
 
 const Body = styled(FlexCol)`
   display: flex;
@@ -43,7 +44,7 @@ const Body = styled(FlexCol)`
   overflow-y: scroll;
   background: ${props => props.theme.bg.wash};
 
-  @media(max-width: 768px) {
+  @media (max-width: 768px) {
     height: 100vh;
     max-height: ${window.innerHeight}px;
   }
@@ -91,7 +92,10 @@ class Routes extends Component {
             <Route path="/style-guide" component={StyleGuide} />
 
             {/* App Pages */}
-            <Route path="/new/community" component={NewCommunity} />
+            <Route
+              path="/new/community"
+              component={signedOutFallback(NewCommunity, Login)}
+            />
             <Route
               path="/new"
               render={() => <Redirect to="/new/community" />}
