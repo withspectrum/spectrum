@@ -39,8 +39,10 @@ query getComposerCommunitiesAndChannels {
           name
           slug
           isDefault
+          isPrivate
           community {
             id
+            isPro
           }
           channelPermissions {
             isMember

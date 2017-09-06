@@ -6,10 +6,10 @@ import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import { BillingListItem } from '../../../components/listItems';
 import { IconButton } from '../../../components/buttons';
-import { UpsellUpgradeToPro } from '../../../components/upsell';
+import { UpsellUpgradeCommunity } from './upgradeCommunity';
 import { openModal } from '../../../actions/modals';
 import { convertTimestampToDate } from '../../../helpers/utils';
-import { getCurrentUserRecurringPayments } from '../../../api/user';
+import { getCommunityRecurringPayments } from '../../../api/community';
 import { displayLoadingCard } from '../../../components/loading';
 import {
   StyledCard,
@@ -18,24 +18,28 @@ import {
   ListContainer,
 } from '../../../components/listItems/style';
 
-const RecurringPaymentsList = ({ data: { user }, currentUser, dispatch }) => {
-  const openProModal = () => {
-    dispatch(openModal('UPGRADE_MODAL', { user: currentUser }));
+const RecurringPaymentsList = ({ community, currentUser, dispatch }) => {
+  const openCommunityProModal = () => {
+    dispatch(
+      openModal('COMMUNITY_UPGRADE_MODAL', { user: currentUser, community })
+    );
   };
 
-  if (!user || user === undefined) return null;
+  if (!community || community === undefined) return null;
 
   // make sure to only display active subs for now
   const filteredRecurringPayments =
-    user.recurringPayments && user.recurringPayments.length > 0
-      ? user.recurringPayments.filter(sub => sub.status === 'active')
+    community.recurringPayments && community.recurringPayments.length > 0
+      ? community.recurringPayments.filter(
+          subscription => subscription.status === 'active'
+        )
       : [];
 
   if (filteredRecurringPayments.length > 0) {
     return (
       <StyledCard>
         <ListHeader>
-          <LargeListHeading>Pro</LargeListHeading>
+          <LargeListHeading>Subscriptions</LargeListHeading>
         </ListHeader>
         <ListContainer>
           {filteredRecurringPayments.map(payment => {
@@ -50,7 +54,7 @@ const RecurringPaymentsList = ({ data: { user }, currentUser, dispatch }) => {
                 withDescription={false}
                 meta={meta}
               >
-                <IconButton glyph="settings" onClick={openProModal} />
+                <IconButton glyph="settings" onClick={openCommunityProModal} />
               </BillingListItem>
             );
           })}
@@ -58,12 +62,11 @@ const RecurringPaymentsList = ({ data: { user }, currentUser, dispatch }) => {
       </StyledCard>
     );
   } else {
-    return <UpsellUpgradeToPro />;
+    return <UpsellUpgradeCommunity community={community} />;
   }
 };
 
-export default compose(
-  getCurrentUserRecurringPayments,
-  displayLoadingCard,
-  connect()
-)(RecurringPaymentsList);
+const map = state => ({
+  currentUser: state.users.currentUser,
+});
+export default compose(connect(map))(RecurringPaymentsList);

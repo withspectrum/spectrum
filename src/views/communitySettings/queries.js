@@ -8,6 +8,12 @@ export const getThisCommunity = graphql(
     query thisCommunity($slug: String) {
 			community(slug: $slug) {
         ...communityInfo
+        recurringPayments {
+          plan
+          amount
+          createdAt
+          status
+        }
       }
 		}
     ${communityInfoFragment}

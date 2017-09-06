@@ -5,9 +5,10 @@ import { gql } from 'react-apollo';
 export const invoiceInfoFragment = gql`
   fragment invoiceInfo on Invoice {
     id
-    createdAt
     paidAt
-    note
     amount
+    sourceBrand
+    sourceLast4
+    planName
   }
 `;

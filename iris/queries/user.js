@@ -16,6 +16,7 @@ const {
   getDirectMessageThreadsByUser,
 } = require('../models/directMessageThread');
 const { getNotificationsByUser } = require('../models/notification');
+import { getInvoicesByUser } from '../models/invoice';
 import paginate from '../utils/paginate-arrays';
 import { encode, decode } from '../utils/base64';
 import { isAdmin } from '../utils/permissions';
@@ -67,12 +68,7 @@ module.exports = {
       return loaders.userRecurringPayments
         .load(id)
         .then(
-          sub =>
-            !(sub == null) &&
-            sub.stripeData &&
-            sub.stripeData.status === 'active'
-              ? true
-              : false
+          sub => (!(sub == null) && sub.status === 'active' ? true : false)
         );
     },
     everything: (
@@ -179,15 +175,17 @@ module.exports = {
       }
 
       return getUserRecurringPayments(user.id).then(subs => {
-        if (!subs || subs.length === 0) {
+        const userProSubs =
+          subs && subs.filter(obj => obj.planId === 'beta-pro');
+        if (!userProSubs || userProSubs.length === 0) {
           return [];
         } else {
-          return subs.map(sub => {
+          return userProSubs.map(subscription => {
             return {
-              amount: subs[0].stripeData.plan.amount,
-              created: subs[0].stripeData.created,
-              plan: subs[0].stripeData.plan.name,
-              status: subs[0].stripeData.status,
+              amount: subscription.amount,
+              createdAt: subscription.createdAt,
+              plan: subscription.planName,
+              status: subscription.status,
             };
           });
         }
@@ -196,6 +194,13 @@ module.exports = {
     settings: (_, __, { user }) => {
       if (!user) return new UserError('You must be signed in to continue.');
       return getUsersSettings(user.id);
+    },
+    invoices: ({ id }, _, { user }) => {
+      const currentUser = user;
+      if (!currentUser)
+        return new UserError('You must be logged in to view these settings.');
+
+      return getInvoicesByUser(currentUser.id);
     },
   },
 };

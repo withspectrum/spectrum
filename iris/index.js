@@ -35,6 +35,9 @@ app.use('/auth', authRoutes);
 import apiRoutes from './routes/api';
 app.use('/api', apiRoutes);
 
+import stripeRoutes from './routes/stripe';
+app.use('/stripe', stripeRoutes);
+
 // In production use express to serve the React app
 // In development this is done by react-scripts, which starts its own server
 if (IS_PROD) {

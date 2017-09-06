@@ -7,12 +7,12 @@ import compose from 'recompose/compose';
 import ModalContainer from '../modalContainer';
 import { closeModal } from '../../../actions/modals';
 import { track } from '../../../helpers/events';
-import { downgradeFromProMutation } from '../../../api/user';
+import { downgradeCommunityMutation } from '../../../api/community';
 import { addToastWithTimeout } from '../../../actions/toasts';
 // $FlowFixMe
 import { connect } from 'react-redux';
 import { Button, OutlineButton } from '../../buttons';
-import { UpsellUpgradeToPro } from '../../upsell';
+import { UpsellUpgradeCommunity } from '../../../views/communitySettings/components/upgradeCommunity';
 import {
   modalStyles,
   Section,
@@ -22,7 +22,7 @@ import {
   Padding,
 } from './style';
 
-class UpgradeModal extends React.Component {
+class CommunityUpgradeModal extends React.Component {
   state: {
     isOpen: boolean,
     upgradeError: string,
@@ -42,9 +42,9 @@ class UpgradeModal extends React.Component {
   componentDidMount() {
     const { user } = this.props;
     if (user.isPro) {
-      track('pro', 'downgrade inited', null);
+      track('community pro', 'downgrade inited', null);
     } else {
-      track('pro', 'upgrade inited', null);
+      track('community pro', 'upgrade inited', null);
     }
   }
 
@@ -57,10 +57,14 @@ class UpgradeModal extends React.Component {
       isLoading: true,
     });
 
+    const input = {
+      id: this.props.community.id,
+    };
+
     this.props
-      .downgradeFromPro()
-      .then(({ data: { downgradeFromPro } }) => {
-        track('pro', 'downgraded', null);
+      .downgradeCommunity(input)
+      .then(({ data: { downgradeCommunity } }) => {
+        track('community pro', 'downgraded', null);
 
         this.props.dispatch(
           addToastWithTimeout(
@@ -84,14 +88,16 @@ class UpgradeModal extends React.Component {
   };
 
   render() {
-    const { user } = this.props;
+    const { user, community } = this.props;
     const { upgradeError, isOpen, isLoading } = this.state;
 
     return (
       <Modal
         isOpen={isOpen}
         contentLabel={
-          !user.isPro ? 'Upgrade to Pro' : 'Manage your Subscription'
+          !community.isPro
+            ? 'Upgrade your community'
+            : 'Manage your subscription'
         }
         onRequestClose={this.closeModal}
         shouldCloseOnOverlayClick={true}
@@ -100,17 +106,28 @@ class UpgradeModal extends React.Component {
       >
         <ModalContainer
           noHeader={!user.isPro}
-          title={!user.isPro ? 'Upgrade to Pro' : 'Manage your Subscription'}
+          title={
+            !community.isPro
+              ? 'Upgrade your community'
+              : 'Manage your subscription'
+          }
           closeModal={this.closeModal}
         >
-          {user.isPro &&
+          {community.isPro &&
             <Section>
               <Subheading>
                 We're sorry to see you go! If you are having trouble and want to
                 talk to a human, please{' '}
                 <a href="mailto:support@spectrum.chat">get in touch</a>
-                . Otherwise if you're ready to go, you can cancel your Pro
-                subscription instantly below. Thanks for your support!
+                . Otherwise if you're ready to go, you can cancel your
+                community's Pro subscription instantly below. Thanks for your
+                support!
+              </Subheading>
+
+              <Subheading>
+                Any private channels you've created will be locked. Any
+                conversations in your private channels will still be accessible,
+                but creating new threads and messages will be disabled.
               </Subheading>
 
               <SectionActions centered={true}>
@@ -119,7 +136,7 @@ class UpgradeModal extends React.Component {
                   loading={isLoading}
                   onClick={this.downgradeFromPro}
                 >
-                  Cancel my Pro Subscription
+                  Downgrade my community
                 </OutlineButton>
 
                 <Button
@@ -140,7 +157,11 @@ class UpgradeModal extends React.Component {
                 </SectionError>}
             </Section>}
 
-          {!user.isPro && <UpsellUpgradeToPro complete={this.closeModal} />}
+          {!community.isPro &&
+            <UpsellUpgradeCommunity
+              community={community}
+              complete={this.closeModal}
+            />}
         </ModalContainer>
       </Modal>
     );
@@ -151,6 +172,6 @@ const mapStateToProps = state => ({
   isOpen: state.modals.isOpen,
 });
 
-export default compose(downgradeFromProMutation, connect(mapStateToProps))(
-  UpgradeModal
+export default compose(downgradeCommunityMutation, connect(mapStateToProps))(
+  CommunityUpgradeModal
 );
