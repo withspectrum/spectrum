@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { IconButton } from '../../components/buttons';
 import Card from '../../components/card';
+import { Button } from '../../components/buttons';
 import {
   FlexRow,
   FlexCol,
@@ -9,6 +10,23 @@ import {
   hexa,
   zIndex,
 } from '../../components/globals';
+
+export const LogoutButton = styled(Button)`
+  width: 100%;
+  margin: 16px 0;
+  padding: 16px 0;
+  background-image: none;
+  background-color: ${props => props.theme.text.alt};
+
+  &:hover{
+    background-color: ${props => props.theme.warn.default};
+  }
+
+  @media (max-width: 768px) {
+    border-radius: 0;
+    margin: 0;
+  }
+`;
 
 export const CoverRow = styled(FlexRow)`
   align-items: flex-start;
