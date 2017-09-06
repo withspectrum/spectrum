@@ -264,7 +264,12 @@ class InvoiceListItemPure extends Component {
         this.setState({
           isLoading: false,
         });
-        this.props.dispatch(addToastWithTimeout('error', err.message));
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            `Sorry, we couldn't finish this transaction. Please try again.`
+          )
+        );
       });
   };
 

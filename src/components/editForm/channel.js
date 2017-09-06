@@ -117,13 +117,19 @@ class ChannelWithData extends Component {
           isLoading: false,
         });
 
-        this.props.dispatch(addToastWithTimeout('error', err.message));
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            `Hmmm... Something went wrong while saving your changes. Try again?`
+          )
+        );
       });
   };
 
   cancelForm = e => {
     e.preventDefault();
-    return (window.location.href = `/${this.props.channel.community.slug}/${this.props.channel.slug}`);
+    return (window.location.href = `/${this.props.channel.community.slug}/${this
+      .props.channel.slug}`);
   };
 
   triggerDeleteChannel = (e, channelId) => {
@@ -133,23 +139,24 @@ class ChannelWithData extends Component {
     const message = (
       <div>
         <p>
-          Are you sure you want to delete
-          {' '}
-          <b>{channelData.community.name}/{name}</b>
+          Are you sure you want to delete{' '}
+          <b>
+            {channelData.community.name}/{name}
+          </b>
           ?
         </p>
         {channelData.metaData.threads > 0 &&
           <p>
-            The
-            {' '}
-            <b>{channelData.metaData.threads} threads</b>
-            {' '}
-            posted in this channel will be deleted.
+            The <b>{channelData.metaData.threads} threads</b> posted in this
+            channel will be deleted.
           </p>}
         <p>
-          All messages, reactions, and media shared in this channel will be deleted.
+          All messages, reactions, and media shared in this channel will be
+          deleted.
         </p>
-        <p><b>This cannot be undone.</b></p>
+        <p>
+          <b>This cannot be undone.</b>
+        </p>
       </div>
     );
 
@@ -213,11 +220,14 @@ class ChannelWithData extends Component {
               </Checkbox>} */}
             {isPrivate
               ? <Description>
-                  Only approved people on Spectrum can see the threads, messages, and members in this channel. You can manually approve users who request to join this channel.
+                  Only approved people on Spectrum can see the threads,
+                  messages, and members in this channel. You can manually
+                  approve users who request to join this channel.
                 </Description>
               : <Description>
-                  Anyone on Spectrum can join this channel, post threads and messages, and will be able to see other members. If you want to create private channels,
-                  {' '}
+                  Anyone on Spectrum can join this channel, post threads and
+                  messages, and will be able to see other members. If you want
+                  to create private channels,{' '}
                   <a href="mailto:hi@spectrum.chat">get in touch</a>
                   .
                 </Description>}
@@ -226,7 +236,10 @@ class ChannelWithData extends Component {
             this.props.channel.isPrivate &&
               !isPrivate &&
               <Notice>
-                When a private channel is made public all pending users will be added as members of the channel. Blocked users will remain blocked from viewing all content in this channel but in the future any new person will be able to join.
+                When a private channel is made public all pending users will be
+                added as members of the channel. Blocked users will remain
+                blocked from viewing all content in this channel but in the
+                future any new person will be able to join.
               </Notice>}
 
             <Actions>
@@ -244,12 +257,16 @@ class ChannelWithData extends Component {
               <TextButton color={'text.alt'} onClick={this.cancelForm}>
                 Cancel
               </TextButton>
-              <Button onClick={this.save} loading={isLoading}>Save</Button>
+              <Button onClick={this.save} loading={isLoading}>
+                Save
+              </Button>
             </Actions>
 
             {slug === 'general' &&
               <GeneralNotice>
-                The General channel is the default channel for your community. It can't be deleted or private, but you can still change the name and description.
+                The General channel is the default channel for your community.
+                It can't be deleted or private, but you can still change the
+                name and description.
               </GeneralNotice>}
           </Form>
         </StyledCard>

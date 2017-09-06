@@ -461,7 +461,12 @@ class ThreadComposerWithData extends Component {
         this.setState({
           isPublishing: false,
         });
-        this.props.dispatch(addToastWithTimeout('error', err.message));
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            `Whoops! We weren't able to save that thread... Mind giving it another shot?`
+          )
+        );
       });
   };
 

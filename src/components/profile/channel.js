@@ -75,7 +75,12 @@ class ChannelWithData extends Component {
         this.setState({
           isLoading: false,
         });
-        this.props.dispatch(addToastWithTimeout('error', err.message));
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            `Whoops! We weren't able to save your membership... Try again?`
+          )
+        );
       });
   };
 

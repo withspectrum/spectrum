@@ -294,7 +294,12 @@ class UserWithData extends Component {
           isLoading: false,
         });
 
-        this.props.dispatch(addToastWithTimeout('error', err.message));
+        this.props.dispatch(
+          addToastWithTimeout(
+            'error',
+            `Dang. We couldn't save your changes. Mind trying again?`
+          )
+        );
       });
   };
 
