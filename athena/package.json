@@ -4,6 +4,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "babel-polyfill": "^6.26.0",
     "bull": "^3.0.0-rc.2",
     "raven": "^2.1.1",
     "rethinkdbdash": "^2.3.29",

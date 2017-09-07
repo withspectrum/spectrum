@@ -3,6 +3,7 @@
  * The entry point for the server, this is where everything starts
  */
 console.log('Server starting...');
+require('babel-polyfill');
 const debug = require('debug')('iris');
 debug('logging with debug enabled!');
 import path from 'path';

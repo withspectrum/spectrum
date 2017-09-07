@@ -4,5 +4,13 @@
       "node": "current"
     }
   }]],
-  "plugins": ["transform-flow-strip-types", "transform-object-rest-spread", "babel-plugin-transform-react-jsx", "syntax-dynamic-import"]
+  "plugins": [
+    "transform-flow-strip-types",
+    "transform-object-rest-spread",
+    "babel-plugin-transform-react-jsx",
+    "syntax-dynamic-import",
+    "syntax-async-functions",
+    "transform-regenerator",
+    "transform-runtime"
+  ]
 }
