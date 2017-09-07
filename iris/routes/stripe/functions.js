@@ -13,7 +13,7 @@ const STRIPE_WEBHOOK_SECRET = process.env['STRIPE_WEBHOOK_SECRET'];
 const stripe = require('stripe')(STRIPE_TOKEN),
   currency = 'USD';
 
-import { createInvoice } from '../../models/invoice';
+import { createInvoice, getInvoiceByChargeId } from '../../models/invoice';
 import {
   updateRecurringPaymentPeriod,
   getRecurringPaymentFromSubscriptionId,
@@ -23,6 +23,11 @@ export const processInvoicePaid = async (event: Object) => {
   // the object field contains all the data related to the event
   const { data: { object } } = event;
 
+  // ensure we aren't duplicating an invoice in the db
+  // chargeIds should be unique on stripe, so if we have a record of an invoice with the same charge id we can assume it is a duplicate
+  const existingInvoice = await getInvoiceByChargeId(object.charge);
+  if (existingInvoice) return Promise.all([]);
+
   // fetch the subscription record from stripe as it contains a few new fields we need below
   const getSubscription = await stripe.subscriptions.retrieve(
     object.subscription
@@ -31,6 +36,7 @@ export const processInvoicePaid = async (event: Object) => {
   const rPayment = await getRecurringPaymentFromSubscriptionId(
     object.subscription
   );
+
   // get the customer object from stripe
   const customer = await stripe.customers.retrieve(object.customer);
   // create an invoice record in the database (receipt)
