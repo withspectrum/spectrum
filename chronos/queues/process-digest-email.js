@@ -293,32 +293,3 @@ export default job => {
     console.log('Error sending weekly digests: ', err);
   });
 };
-
-// migration
-// r.db('spectrum')
-//   .table('usersSettings')
-//   .filter({userId: '01p2A7kDCWUjGj6zQLlMQUOSQL42'})
-//   .update({
-//     notifications: {
-//       types: {
-//         newMessageInThreads: {
-//          email: r.row('notifications')('types')('newMessageInThreads')(
-//            'email'
-//          ),
-//         },
-//         newThreadCreated: {
-//          email: r.row('notifications')('types')('newThreadCreated')(
-//            'email'
-//          ),
-//         },
-//         newDirectMessage: {
-//          email: r.row('notifications')('types')('newDirectMessage')(
-//            'email'
-//          ),
-//         },
-//         weeklyDigest: {
-//          email: true
-//         },
-//       },
-//     },
-//   })
