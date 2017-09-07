@@ -15,7 +15,7 @@
     ]
   ],
   "plugins": [
-    ["styled-components", { "ssr": true }]
+    ["styled-components", { "ssr": true }],
     "transform-flow-strip-types",
     "transform-object-rest-spread",
     "babel-plugin-transform-react-jsx",
