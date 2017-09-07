@@ -108,7 +108,6 @@ class CommunityWithData extends Component {
     const MARKDOWN_LINK = /(?:\[(.*?)\]\((.*?)\))/g;
 
     const renderDescriptionWithLinks = text => {
-      console.log('incomingText', text);
       return replace(text, MARKDOWN_LINK, (fullLink, text, url) => (
         <a href={url} target="_blank" rel="noopener nofollower">
           {text}
@@ -175,9 +174,8 @@ class CommunityWithData extends Component {
             )}
           </ProfileHeader>
           <Description>
-            <Description>
-              {renderDescriptionWithLinks(community.description)}
-            </Description>
+            {renderDescriptionWithLinks(community.description)}
+
             {community.website && (
               <ExtLink>
                 <Icon glyph="link" size={24} />
