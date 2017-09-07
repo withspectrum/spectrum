@@ -39,18 +39,12 @@ app.use('/api', apiRoutes);
 import stripeRoutes from './routes/stripe';
 app.use('/stripe', stripeRoutes);
 
-// In production use express to server-side render the React app
-// In development we don't server-side render to get live reloading etc.
-if (IS_PROD || process.env.DEV_SSR) {
-  console.log('Enabled server-side rendering');
-  const renderer = require('./renderer').default;
-  app.use(
-    express.static(path.resolve(__dirname, '..', 'build'), { index: false })
-  );
-  app.get('*', renderer);
-} else {
-  console.log('Server-side rendering disabled for development');
-}
+// Use express to server-side render the React app
+const renderer = require('./renderer').default;
+app.use(
+  express.static(path.resolve(__dirname, '..', 'build'), { index: false })
+);
+app.get('*', renderer);
 
 import type { Loader } from './loaders/types';
 export type GraphQLContext = {
@@ -71,4 +65,7 @@ server.listen(PORT);
 
 // Start database listeners
 listeners.start();
-console.log(`GraphQL server running at port ${PORT}!`);
+console.log(`GraphQL server running at http://localhost:${PORT}/api`);
+console.log(
+  `Web server running at http://localhost:${PORT}, server-side rendering enabled`
+);
